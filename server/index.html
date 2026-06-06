@@ -833,15 +833,31 @@
                                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                                     <div>
                                         <p class="text-surface-200/70 text-sm">Your home for member-led talk, game week analysis, recruiting debate, and insider reaction.</p>
-                                        <p class="text-surface-200/60 text-xs mt-2">Threads are refreshed daily; the hottest topics get pushed to the top.</p>
+                                        <p class="text-surface-200/60 text-xs mt-2">Sorted by engagement — pinned first, then trending velocity (replies × 2 + views × 0.1 + recency).</p>
                                     </div>
-                                    <div class="flex flex-wrap gap-2">
-                                        <span class="px-3 py-2 rounded-full text-xs font-bold bg-gator-orange/10 text-gator-orange">Active threads</span>
-                                        <span class="px-3 py-2 rounded-full text-xs font-bold bg-surface-800 text-surface-200">Founding Member</span>
+                                    <div class="flex flex-wrap gap-2 items-center">
+                                        <select id="community-sort" class="reg-input text-xs py-2 px-3 min-w-[140px]">
+                                            <option value="trending">🔥 Trending</option>
+                                            <option value="recent">🕐 Recent reply</option>
+                                            <option value="active">📈 Most active</option>
+                                            <option value="replies">💬 Most replies</option>
+                                        </select>
+                                        <select id="community-category" class="reg-input text-xs py-2 px-3 min-w-[130px]">
+                                            <option value="">All categories</option>
+                                        </select>
+                                        <button id="community-new-btn" class="bg-gator-orange hover:bg-gator-orangedk text-white text-xs font-bold px-4 py-2 rounded-lg transition min-h-[36px]">+ New Thread</button>
                                     </div>
                                 </div>
+                                <div id="community-new-form" class="hidden mt-4 pt-4 border-t border-gator-blue/20">
+                                    <input id="community-new-title" class="reg-input text-sm mb-2" placeholder="Thread title" maxlength="200">
+                                    <textarea id="community-new-body" class="reg-input text-sm mb-2 resize-none" rows="3" placeholder="Start the conversation…"></textarea>
+                                    <select id="community-new-category" class="reg-input text-sm mb-2"></select>
+                                    <button id="community-new-submit" class="bg-gator-orange text-white text-xs font-bold px-4 py-2 rounded-lg">Post Thread</button>
+                                </div>
                             </div>
-                            <div data-id="638" id="threads-list" class="space-y-4"></div>
+                            <div data-id="638" id="threads-list" class="space-y-4">
+                                <p class="text-surface-200/50 text-sm">Loading community threads…</p>
+                            </div>
                         </div>
                         <div class="space-y-4">
                             <div class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-5">
@@ -852,28 +868,14 @@
                                     </div>
                                     <span class="text-[.65rem] uppercase tracking-[.18em] text-surface-200/50 font-semibold">Weekend Pulse</span>
                                 </div>
-                                <div class="space-y-3">
-                                    <div class="bg-surface-800 rounded-xl p-4 border border-gator-blue/10">
-                                        <p class="text-gator-orange font-bold text-sm mb-1">🟢 Portal Watch Room</p>
-                                        <p class="text-surface-200 text-xs">Live analysis the moment transfer window news breaks.</p>
-                                    </div>
-                                    <div class="bg-surface-800 rounded-xl p-4 border border-gator-blue/10">
-                                        <p class="text-surface-200 font-bold text-sm mb-1">🟡 Signing Day Strategy</p>
-                                        <p class="text-surface-200 text-xs">Scheduled for Feb 2027 — preview the board before the big day.</p>
-                                    </div>
-                                    <div class="bg-surface-800 rounded-xl p-4 border border-gator-blue/10">
-                                        <p class="text-surface-200 font-bold text-sm mb-1">🔵 Game Day Locker Room</p>
-                                        <p class="text-surface-200 text-xs">Opens two hours before kickoff for live game talk and play calls.</p>
-                                    </div>
+                                <div id="community-live-rooms" class="space-y-3">
+                                    <p class="text-surface-200/50 text-xs">Loading live rooms…</p>
                                 </div>
                             </div>
                             <div class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-5">
                                 <h3 class="font-display text-lg font-bold text-white mb-3">Community Pulse</h3>
-                                <div class="grid grid-cols-2 gap-3 text-sm text-surface-200">
-                                    <div class="bg-surface-800 rounded-xl p-3">+12 new replies today</div>
-                                    <div class="bg-surface-800 rounded-xl p-3">5 trending topics</div>
-                                    <div class="bg-surface-800 rounded-xl p-3">3 pinned threads</div>
-                                    <div class="bg-surface-800 rounded-xl p-3">1 member poll live</div>
+                                <div id="community-pulse" class="grid grid-cols-2 gap-3 text-sm text-surface-200">
+                                    <div class="bg-surface-800 rounded-xl p-3">Loading…</div>
                                 </div>
                             </div>
                         </div>
@@ -1876,6 +1878,7 @@
         if(tab==='highlights'){try{renderHighlights();}catch(e){}}
         if(tab==='recruit'||tab==='portal'){try{gvLoadRecruitingLive(true);}catch(e){}}
         if(tab==='articles'){try{gvLoadPublishedContent(true);}catch(e){}}
+        if(tab==='community'){try{gvLoadCommunity(true);}catch(e){}}
         if(tab==='alerts'){try{applyPrefUI();renderAlerts();if(typeof gvSyncAlertSubscription==='function')gvSyncAlertSubscription();}catch(e){}}
         document.querySelectorAll('.vpane').forEach(function(p){p.classList.remove('active');p.style.display='none';});
         document.querySelectorAll('.vtab').forEach(function(t){t.classList.remove('active');t.classList.remove('text-gator-orange');t.classList.add('text-surface-200');});
@@ -2001,15 +2004,6 @@
         {id:'auburn',label:'Sep 19 @ Auburn',opp:'Auburn Tigers',date:'September 19, 2026 · 7:00 PM ET',venue:'Jordan-Hare Stadium',ufPct:52,keys:['Control LOS','Limit explosive plays','Win 3rd down'],swing:[{name:'Singleton Jr.',role:'First road SEC test'},{name:'Jaden Robinson',role:'Communication in noise'},{name:'Cormani McClain',role:'Neutralize their #1 WR'}],film:'Auburn runs physical downhill ball. Jordan-Hare in September is one of the toughest environments.',pred:'UF 24 · Auburn 21'},
         {id:'uga',label:'Oct 31 vs Georgia',opp:'Georgia Bulldogs',date:'October 31, 2026 · TBD',venue:'EverBank Stadium (Jacksonville)',ufPct:41,keys:['Control time of possession','Get pressure on their QB','Establish run before going downfield'],swing:[{name:'Jadan Baugh',role:'Must go 100+ yards'},{name:'Jayden Woods',role:'Must generate pressure'},{name:'Cormani McClain',role:'Must neutralize Georgia WR1'}],film:'Georgia has owned this series. UF\'s only path is controlling ball.',pred:'UF 27 · Georgia 24'},
         {id:'fsu',label:'Nov 27 @ FSU',opp:'Florida State Seminoles',date:'November 27, 2026 · Noon ET',venue:'Doak Campbell Stadium',ufPct:48,keys:['Win field position battle','Avoid penalties','Win turnover margin'],swing:[{name:'QB1',role:'Composure in hostile environment'},{name:'Jaden Robinson',role:'Field general in noise'},{name:'Myles Graham',role:'Contain their TE weapon'}],film:'Everything on the line. Preparation wins this type of game.',pred:'UF 31 · FSU 28'}
-    ];
-    var threads=[
-        {id:'t1',title:'🏈 Who wins the QB battle — Jones Jr. or Philo?',pinned:true,comments:[{badge:'🎬 FILM ROOM',badgeClass:'tier-film',text:'Philo wins by week 3 if the OL protects him. He has the cleaner pro-style delivery.',time:'2 hours ago'},{badge:'🏟️ LOCKER ROOM',badgeClass:'tier-locker',text:'Jones Jr. has the experience edge, especially on the road. That matters in the first three games.',time:'1 hour ago'},{badge:'⚔️ WAR ROOM',badgeClass:'tier-war',text:'They split series time Weeks 1-3, then the starter gets hot. This is the biggest decision of the offseason.',time:'45 min ago'},{badge:'🏅 FOUNDING',badgeClass:'tier-founding',text:'Was at spring game. Both looked sharp, but the offense still needs faster reads.',time:'20 min ago'}]},
-        {id:'t2',title:'📋 McClain & Hanks — can UF field a top SEC CB duo?',pinned:true,comments:[{badge:'🎬 FILM ROOM',badgeClass:'tier-film',text:'McClain enrolled last portal cycle, not this offseason. His return as LCB lets White play more press-man — different from calling him a new portal add.',time:'3 hours ago'},{badge:'⚔️ WAR ROOM',badgeClass:'tier-war',text:'Top-5 CB duo in the SEC if McClain and Hanks stay healthy.',time:'2 hours ago'}]},
-        {id:'t3',title:'💪 OL questions — can five new starters hold up?',comments:[{badge:'🎬 FILM ROOM',badgeClass:'tier-film',text:'Boyer and Moore are plug-and-play, but depth behind them is the real concern.',time:'4 hours ago'}]},
-        {id:'t4',title:'🎯 2026 schedule — what is the make-or-break stretch?',comments:[{badge:'🏟️ LOCKER ROOM',badgeClass:'tier-locker',text:'Oct at Texas then Georgia... brutal. Win those and the season is saved.',time:'5 hours ago'}]},
-        {id:'t5',title:'🔄 Portal recap — A or B offseason overall?',comments:[{badge:'⚔️ WAR ROOM',badgeClass:'tier-war',text:'A- overall. The portal class addressed the biggest weaknesses, but the defense still needs depth.',time:'6 hours ago'}]},
-        {id:'t6',title:'📊 Member poll — Should UF prioritize WR or OL in 2027?',comments:[{badge:'🏅 FOUNDING',badgeClass:'tier-founding',text:'WR is the priority. The offense needs explosive playmakers.',time:'Just now'}]},
-        {id:'t7',title:'👋 Welcome Thread — Introduce yourself!',comments:[{badge:'🏅 FOUNDING',badgeClass:'tier-founding',text:'Charles from Bartow, FL checking in! Go Gators! 🐊',time:'Just now'}]}
     ];
     var ticketGames=[
         {game:'🐊 UF vs FAU',date:'September 5, 2026 · 7:45 PM ET',venue:'Ben Hill Griffin Stadium, Gainesville FL',type:'HOME',note:''},
@@ -2574,7 +2568,7 @@
         try{renderStorylines();}catch(e){console.warn('renderStorylines error:',e);}
         try{renderArticles();}catch(e){console.warn('renderArticles error:',e);}
         try{renderGames();}catch(e){console.warn('renderGames error:',e);}
-        try{renderThreads();}catch(e){console.warn('renderThreads error:',e);}
+        try{gvLoadCommunity();}catch(e){console.warn('gvLoadCommunity error:',e);}
         try{renderTickets();}catch(e){console.warn('renderTickets error:',e);}
         try{renderHighlights();}catch(e){console.warn('renderHighlights error:',e);}
         try{renderLiveScores();}catch(e){console.warn('renderLiveScores error:',e);}
@@ -3128,43 +3122,305 @@
         card.innerHTML=html;
     }
 
-    // ---- Threads ----
+    // ---- Community (API-backed) ----
+    window._gvCommunity=window._gvCommunity||{threads:[],followed:[],categories:[],sort:'trending',category:'',details:{},pollTimer:null,loading:false};
+
+    function gvCommunityApiBase(){return window.GV_API_BASE||((window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1')?'http://localhost:3000':window.location.origin);}
+
+    function gvCommunityHeaders(){
+        var h={'Content-Type':'application/json'};
+        var s=loadSession();
+        if(s&&s.token)h['Authorization']='Bearer '+s.token;
+        return h;
+    }
+
+    function gvFmtRelativeTime(iso){
+        if(!iso)return '';
+        var ms=Date.now()-new Date(iso).getTime();
+        if(ms<60000)return 'Just now';
+        var m=Math.floor(ms/60000);
+        if(m<60)return m+' min ago';
+        var hr=Math.floor(m/60);
+        if(hr<24)return hr+' hour'+(hr===1?'':'s')+' ago';
+        var d=Math.floor(hr/24);
+        return d+' day'+(d===1?'':'s')+' ago';
+    }
+
+    function gvAuthorLine(author,badge,badgeClass){
+        if(!author)return '';
+        var name=gvEscHtml(author.displayName||'Member');
+        var founding=author.isFounding?' <span class="text-[.55rem] font-bold text-amber-400">🏅 Founding</span>':'';
+        var badgeHtml=badge?'<span class="text-[.6rem] font-bold px-2 py-0.5 rounded-full '+(badgeClass||'')+'">'+gvEscHtml(badge)+'</span>':'';
+        return '<div class="flex items-center gap-2 flex-wrap mb-1">'+badgeHtml+'<span class="text-white text-xs font-semibold">'+name+'</span>'+founding+'</div>';
+    }
+
+    function gvRenderCommunityPulse(pulse){
+        var el=document.getElementById('community-pulse');if(!el||!pulse)return;
+        el.innerHTML='<div class="bg-surface-800 rounded-xl p-3">+'+pulse.repliesToday+' new replies today</div>'
+            +'<div class="bg-surface-800 rounded-xl p-3">'+pulse.trending+' trending topics</div>'
+            +'<div class="bg-surface-800 rounded-xl p-3">'+pulse.pinned+' pinned threads</div>'
+            +'<div class="bg-surface-800 rounded-xl p-3">'+pulse.liveRooms+' live room'+(pulse.liveRooms===1?'':'s')+'</div>';
+    }
+
+    function gvRenderLiveRooms(rooms){
+        var el=document.getElementById('community-live-rooms');if(!el)return;
+        if(!rooms||!rooms.length){el.innerHTML='<p class="text-surface-200/50 text-xs">No live rooms scheduled.</p>';return;}
+        el.innerHTML=rooms.map(function(r){
+            var icon=r.status==='live'?'🟢':r.status==='closed'?'⚫':'🟡';
+            var when=r.startsAt?new Date(r.startsAt).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'';
+            return '<div class="bg-surface-800 rounded-xl p-4 border border-gator-blue/10" data-room="'+r.id+'">'
+                +'<p class="'+(r.status==='live'?'text-gator-orange':'text-surface-200')+' font-bold text-sm mb-1">'+icon+' '+gvEscHtml(r.title)+'</p>'
+                +'<p class="text-surface-200 text-xs">'+gvEscHtml(r.description||'')+'</p>'
+                +(when?'<p class="text-surface-200/40 text-[.65rem] mt-2">'+when+(r.status==='live'?' · LIVE':'')+'</p>':'')
+                +'<div class="live-room-chat hidden mt-3 border-t border-gator-blue/10 pt-3" id="live-chat-'+r.id+'"></div>'
+                +(r.status==='live'?'<button class="live-room-open mt-2 text-xs text-gator-orange font-bold" data-room="'+r.id+'">Open chat →</button>':'')
+                +'</div>';
+        }).join('');
+        el.querySelectorAll('.live-room-open').forEach(function(btn){
+            btn.addEventListener('click',function(){gvOpenLiveRoom(this.dataset.room);});
+        });
+    }
+
+    function gvOpenLiveRoom(roomId){
+        var chat=document.getElementById('live-chat-'+roomId);if(!chat)return;
+        chat.classList.remove('hidden');
+        gvFetchLiveMessages(roomId,chat);
+    }
+
+    function gvFetchLiveMessages(roomId,chatEl){
+        fetch(gvCommunityApiBase()+'/api/community/live-rooms/'+roomId+'/messages',{headers:gvCommunityHeaders()})
+            .then(function(r){return r.json();})
+            .then(function(j){
+                if(!j.ok)return;
+                var html='<div class="space-y-2 max-h-40 overflow-y-auto mb-2">';
+                j.messages.forEach(function(m){
+                    html+='<div class="text-xs"><span class="text-gator-orange font-bold">'+gvEscHtml(m.displayName||'Member')+':</span> <span class="text-surface-200">'+gvEscHtml(m.body)+'</span></div>';
+                });
+                html+='</div>';
+                if(!loadSession()){
+                    html+='<p class="text-xs text-surface-200/50">Sign in to chat.</p>';
+                }else{
+                    html+='<div class="flex gap-2"><input class="live-msg-input reg-input text-xs flex-1" data-room="'+roomId+'" placeholder="Say something…"><button class="live-msg-btn bg-gator-orange text-white text-xs font-bold px-3 py-1 rounded" data-room="'+roomId+'">Send</button></div>';
+                }
+                chatEl.innerHTML=html;
+                chatEl.querySelectorAll('.live-msg-btn').forEach(function(b){
+                    b.addEventListener('click',function(){
+                        var inp=chatEl.querySelector('.live-msg-input[data-room="'+roomId+'"]');
+                        var text=inp&&inp.value.trim();if(!text)return;
+                        fetch(gvCommunityApiBase()+'/api/community/live-rooms/'+roomId+'/messages',{method:'POST',headers:gvCommunityHeaders(),body:JSON.stringify({body:text})})
+                            .then(function(r){return r.json();})
+                            .then(function(res){if(res.ok){inp.value='';gvFetchLiveMessages(roomId,chatEl);}});
+                    });
+                });
+            });
+    }
+
+    function gvPopulateCategorySelects(cats){
+        var filter=document.getElementById('community-category');
+        var create=document.getElementById('community-new-category');
+        if(filter){
+            var cur=filter.value||'';
+            filter.innerHTML='<option value="">All categories</option>'+cats.map(function(c){return '<option value="'+c.slug+'">'+gvEscHtml(c.name)+'</option>';}).join('');
+            filter.value=cur;
+        }
+        if(create){
+            create.innerHTML=cats.map(function(c){return '<option value="'+c.slug+'">'+gvEscHtml(c.name)+'</option>';}).join('');
+        }
+    }
+
+    function gvRenderThreadPosts(tid,detail){
+        var area=document.getElementById('tposts-'+tid);if(!area||!detail)return;
+        var html='';
+        if(detail.thread&&detail.thread.body){
+            html+='<div class="bg-surface-800/80 rounded-lg p-3 border border-gator-blue/10 mb-2">'
+                +gvAuthorLine(detail.author,detail.author&&detail.author.badge,detail.author&&detail.author.badgeClass)
+                +'<p class="text-surface-200 text-sm">'+gvEscHtml(detail.thread.body)+'</p>'
+                +'<p class="text-[.6rem] text-surface-200/40 mt-1">'+gvFmtRelativeTime(detail.thread.createdAt)+'</p></div>';
+        }
+        (detail.posts||[]).forEach(function(p){
+            html+='<div class="bg-surface-800 rounded-lg p-3" data-pid="'+p.id+'"><div class="flex items-start justify-between gap-2">'
+                +'<div class="flex-1">'+gvAuthorLine(p.author,p.badge,p.badgeClass)
+                +'<p class="text-surface-200 text-sm">'+gvEscHtml(p.body)+'</p>'
+                +'<p class="text-[.6rem] text-surface-200/40 mt-1">'+gvFmtRelativeTime(p.createdAt)+'</p></div>'
+                +(loadSession()?'<button class="flag-post-btn text-[.6rem] text-surface-200/40 hover:text-red-400 shrink-0" data-pid="'+p.id+'" title="Flag">⚑</button>':'')
+                +'</div></div>';
+        });
+        area.innerHTML=html;
+        area.querySelectorAll('.flag-post-btn').forEach(function(b){
+            b.addEventListener('click',function(){
+                fetch(gvCommunityApiBase()+'/api/community/post/'+this.dataset.pid+'/flag',{method:'POST',headers:gvCommunityHeaders(),body:JSON.stringify({reason:'review'})})
+                    .then(function(r){return r.json();})
+                    .then(function(j){showToast(j.ok?'Flagged for review':'Could not flag',j.ok?'Moderators will review this reply.':(j.error||''),'',3000);});
+            });
+        });
+    }
+
+    function gvLoadThreadDetail(tid){
+        return fetch(gvCommunityApiBase()+'/api/community/thread/'+tid,{headers:gvCommunityHeaders()})
+            .then(function(r){return r.json();})
+            .then(function(j){
+                if(!j.ok)throw new Error(j.error||'Failed to load thread');
+                window._gvCommunity.details[tid]=j;
+                gvRenderThreadPosts(tid,j);
+                return j;
+            });
+    }
+
     function renderThreads(){
-        var el=document.getElementById('threads-list');el.innerHTML='';
-        threads.slice().sort(function(a,b){return (b.pinned?1:0)-(a.pinned?1:0);}).forEach(function(t){
-            var html='<div class="bg-surface-700 border border-gator-blue/20 rounded-xl overflow-hidden">';
-            html+='<div class="flex items-center justify-between p-4">';
-            html+='<button class="thread-toggle flex-1 text-left" data-tid="'+t.id+'"><span class="text-white font-semibold text-sm">'+t.title+(t.pinned? ' <span class="text-gator-orange text-[.65rem] font-semibold ml-2">PINNED</span>':'')+'</span></button>';
-            var following=(window.alertPrefs&&window.alertPrefs.followThreads&&window.alertPrefs.followThreads.indexOf(t.id)!==-1);
-            html+='<button class="ml-3 follow-thread-btn text-xs px-3 py-1 rounded-lg '+(following? 'bg-gator-orange text-black':'bg-surface-800 text-surface-200 border border-gator-blue/10')+'" data-thread="'+t.id+'">'+(following? 'Following':'Follow')+'</button>';
+        var el=document.getElementById('threads-list');if(!el)return;
+        var st=window._gvCommunity;
+        if(!st.threads||!st.threads.length){
+            el.innerHTML='<p class="text-surface-200/50 text-sm">No threads yet. Start the conversation!</p>';
+            return;
+        }
+        el.innerHTML='';
+        st.threads.forEach(function(t){
+            var following=st.followed&&st.followed.indexOf(t.id)!==-1;
+            var catBadge=t.category?'<span class="text-[.55rem] font-bold px-2 py-0.5 rounded-full '+(t.category.badgeClass||'')+' ml-2">'+gvEscHtml(t.category.badgeLabel||t.category.name)+'</span>':'';
+            var meta='<span class="text-[.6rem] text-surface-200/40">'+gvFmtRelativeTime(t.lastActivityAt)+' · '+(t.replyCount||0)+' replies · '+(t.viewCount||0)+' views</span>';
+            var html='<div class="bg-surface-700 border border-gator-blue/20 rounded-xl overflow-hidden'+(t.featured?' ring-1 ring-gator-orange/30':'')+'">';
+            html+='<div class="flex items-center justify-between p-4 gap-2">';
+            html+='<button class="thread-toggle flex-1 text-left min-w-0" data-tid="'+t.id+'"><span class="text-white font-semibold text-sm block truncate">'+gvEscHtml(t.title)
+                +(t.pinned?' <span class="text-gator-orange text-[.65rem] font-semibold">PINNED</span>':'')
+                +(t.locked?' <span class="text-red-400 text-[.65rem]">🔒</span>':'')
+                +catBadge+'</span>'+meta+'</button>';
+            html+='<button class="follow-thread-btn text-xs px-3 py-1 rounded-lg shrink-0 '+(following?'bg-gator-orange text-black':'bg-surface-800 text-surface-200 border border-gator-blue/10')+'" data-thread="'+t.id+'">'+(following?'Following':'Follow')+'</button>';
             html+='</div>';
             html+='<div class="thread-body" id="tbody-'+t.id+'">';
-            html+='<div class="px-4 pb-2 space-y-2">';
-            t.comments.forEach(function(c){
-                html+='<div class="bg-surface-800 rounded-lg p-3"><div class="flex items-center gap-2 mb-1"><span class="text-[.6rem] font-bold px-2 py-0.5 rounded-full '+c.badgeClass+'">'+c.badge+'</span><span class="text-[.6rem] text-surface-200/40">'+c.time+'</span></div><p class="text-surface-200 text-sm">'+c.text+'</p></div>';
-            });
-            html+='</div>';
-            html+='<div class="px-4 pb-4 flex gap-2"><textarea class="thread-reply flex-1 bg-surface-800 border border-gator-blue/20 rounded-lg px-3 py-2 text-sm text-white resize-none" rows="1" placeholder="Post a reply..." data-tid="'+t.id+'"></textarea><button class="reply-btn bg-gator-orange hover:bg-gator-orangedk text-white text-xs font-bold px-4 py-2 rounded-lg transition min-h-[36px]" data-tid="'+t.id+'">Post</button></div>';
+            html+='<div class="px-4 pb-2 space-y-2" id="tposts-'+t.id+'"><p class="text-xs text-surface-200/40">Expand to load replies…</p></div>';
+            if(!t.locked){
+                html+='<div class="px-4 pb-4 flex gap-2"><textarea class="thread-reply flex-1 bg-surface-800 border border-gator-blue/20 rounded-lg px-3 py-2 text-sm text-white resize-none" rows="1" placeholder="'+(loadSession()?'Post a reply…':'Sign in to reply')+'" data-tid="'+t.id+'"'+(loadSession()?'':' disabled')+'></textarea><button class="reply-btn bg-gator-orange hover:bg-gator-orangedk text-white text-xs font-bold px-4 py-2 rounded-lg transition min-h-[36px]" data-tid="'+t.id+'"'+(loadSession()?'':' disabled')+'>Post</button></div>';
+            }else{
+                html+='<p class="px-4 pb-4 text-xs text-red-400/80">This thread is locked.</p>';
+            }
             html+='</div></div>';
             el.innerHTML+=html;
         });
-        el.querySelectorAll('.thread-toggle').forEach(function(b){b.addEventListener('click',function(){
-            var body=document.getElementById('tbody-'+this.dataset.tid);body.classList.toggle('open');
-        });});
-        el.querySelectorAll('.reply-btn').forEach(function(b){b.addEventListener('click',function(){
-            var tid=this.dataset.tid;
-            var ta=el.querySelector('textarea[data-tid="'+tid+'"]');
-            var text=ta.value.trim();if(!text)return;
-            var role=window.GV_ROLE||'locker';var td=TIERS[role]||TIERS.locker;
-            var badgeClass=td.badgeClass;var badgeText=td.badgeText;
-            if(window.GV_OPERATOR){badgeClass='';badgeText='⚙️ OPERATOR';}
-            var commArea=document.getElementById('tbody-'+tid).querySelector('.space-y-2');
-            var div=document.createElement('div');div.className='bg-surface-800 rounded-lg p-3';
-            div.innerHTML='<div class="flex items-center gap-2 mb-1"><span class="text-[.6rem] font-bold px-2 py-0.5 rounded-full '+badgeClass+'"'+(window.GV_OPERATOR?' style="background:#FA4616;color:#fff;"':'')+'>'+badgeText+'</span><span class="text-[.6rem] text-surface-200/40">Just now</span></div><p class="text-surface-200 text-sm">'+text.replace(/</g,'&lt;')+'</p>';
-            commArea.appendChild(div);ta.value='';
-            showToast('Reply posted! 🐊');
-        });});
+        el.querySelectorAll('.thread-toggle').forEach(function(b){
+            b.addEventListener('click',function(){
+                var tid=this.dataset.tid;
+                var body=document.getElementById('tbody-'+tid);
+                body.classList.toggle('open');
+                if(body.classList.contains('open')&&!window._gvCommunity.details[tid])gvLoadThreadDetail(tid);
+            });
+        });
+        el.querySelectorAll('.follow-thread-btn').forEach(function(b){
+            b.addEventListener('click',function(){
+                var tid=this.dataset.thread;
+                var sess=loadSession();
+                if(!sess){showToast('Sign in required','Create an account to follow threads.','',3500);return;}
+                fetch(gvCommunityApiBase()+'/api/community/thread/'+tid+'/follow',{method:'POST',headers:gvCommunityHeaders()})
+                    .then(function(r){return r.json();})
+                    .then(function(j){
+                        if(!j.ok){showToast('Follow failed',j.error||'','',3000);return;}
+                        var followed=window._gvCommunity.followed=window._gvCommunity.followed||[];
+                        if(j.following){if(followed.indexOf(tid)===-1)followed.push(tid);this.classList.remove('bg-surface-800','text-surface-200','border');this.classList.add('bg-gator-orange','text-black');this.innerText='Following';}
+                        else{window._gvCommunity.followed=followed.filter(function(x){return x!==tid;});this.classList.remove('bg-gator-orange','text-black');this.classList.add('bg-surface-800','text-surface-200','border','border-gator-blue/10');this.innerText='Follow';}
+                    }.bind(this));
+            });
+        });
+        el.querySelectorAll('.reply-btn').forEach(function(b){
+            b.addEventListener('click',function(){
+                var tid=this.dataset.tid;
+                var ta=el.querySelector('textarea[data-tid="'+tid+'"]');
+                var text=ta&&ta.value.trim();if(!text)return;
+                if(!loadSession()){showToast('Sign in required','','',3000);return;}
+                this.disabled=true;
+                fetch(gvCommunityApiBase()+'/api/community/thread/'+tid+'/reply',{method:'POST',headers:gvCommunityHeaders(),body:JSON.stringify({body:text})})
+                    .then(function(r){return r.json();})
+                    .then(function(j){
+                        this.disabled=false;
+                        if(!j.ok){showToast('Reply failed',j.error||'','',3500);return;}
+                        ta.value='';
+                        window._gvCommunity.details[tid]=null;
+                        gvLoadThreadDetail(tid);
+                        gvLoadCommunity(false);
+                        showToast('Reply posted! 🐊');
+                    }.bind(this))
+                    .catch(function(){this.disabled=false;}.bind(this));
+            });
+        });
     }
+
+    function gvLoadCommunity(force){
+        var st=window._gvCommunity;
+        if(st.loading&&!force)return Promise.resolve();
+        st.loading=true;
+        var sortEl=document.getElementById('community-sort');
+        var catEl=document.getElementById('community-category');
+        var sort=sortEl?sortEl.value:st.sort||'trending';
+        var category=catEl?catEl.value:st.category||'';
+        st.sort=sort;st.category=category;
+        var q='?sort='+encodeURIComponent(sort)+(category?'&category='+encodeURIComponent(category):'');
+        return Promise.all([
+            fetch(gvCommunityApiBase()+'/api/community/threads'+q,{headers:gvCommunityHeaders()}).then(function(r){return r.json();}),
+            fetch(gvCommunityApiBase()+'/api/community/pulse').then(function(r){return r.json();}),
+            fetch(gvCommunityApiBase()+'/api/community/live-rooms').then(function(r){return r.json();}),
+            fetch(gvCommunityApiBase()+'/api/community/categories').then(function(r){return r.json();})
+        ]).then(function(results){
+            st.loading=false;
+            var threadsRes=results[0],pulseRes=results[1],roomsRes=results[2],catsRes=results[3];
+            if(threadsRes.ok){
+                st.threads=threadsRes.threads||[];
+                st.followed=threadsRes.followed||[];
+            }
+            if(catsRes.ok){
+                st.categories=catsRes.categories||[];
+                gvPopulateCategorySelects(st.categories);
+            }
+            if(pulseRes.ok)gvRenderCommunityPulse(pulseRes.pulse);
+            if(roomsRes.ok)gvRenderLiveRooms(roomsRes.rooms);
+            renderThreads();
+        }).catch(function(e){
+            st.loading=false;
+            console.warn('gvLoadCommunity',e);
+            var el=document.getElementById('threads-list');
+            if(el)el.innerHTML='<p class="text-red-400/80 text-sm">Could not load community. Retry from the Community tab.</p>';
+        });
+    }
+
+    function gvStartCommunityPoll(){
+        var st=window._gvCommunity;
+        if(st.pollTimer)clearInterval(st.pollTimer);
+        st.pollTimer=setInterval(function(){
+            var pane=document.getElementById('vpane-community');
+            if(pane&&pane.classList.contains('active'))gvLoadCommunity(false);
+        },30000);
+    }
+
+    setTimeout(function(){
+        var sortEl=document.getElementById('community-sort');
+        var catEl=document.getElementById('community-category');
+        var newBtn=document.getElementById('community-new-btn');
+        var newForm=document.getElementById('community-new-form');
+        var newSubmit=document.getElementById('community-new-submit');
+        if(sortEl)sortEl.addEventListener('change',function(){gvLoadCommunity(true);});
+        if(catEl)catEl.addEventListener('change',function(){gvLoadCommunity(true);});
+        if(newBtn&&newForm)newBtn.addEventListener('click',function(){
+            if(!loadSession()){showToast('Sign in required','Create an account to start threads.','',3500);return;}
+            newForm.classList.toggle('hidden');
+        });
+        if(newSubmit)newSubmit.addEventListener('click',function(){
+            var title=document.getElementById('community-new-title');
+            var body=document.getElementById('community-new-body');
+            var cat=document.getElementById('community-new-category');
+            if(!title||!body||!cat)return;
+            var payload={title:title.value.trim(),body:body.value.trim(),category:cat.value};
+            if(!payload.title||!payload.body){showToast('Title and body required','','',3000);return;}
+            newSubmit.disabled=true;
+            fetch(gvCommunityApiBase()+'/api/community/thread',{method:'POST',headers:gvCommunityHeaders(),body:JSON.stringify(payload)})
+                .then(function(r){return r.json();})
+                .then(function(j){
+                    newSubmit.disabled=false;
+                    if(!j.ok){showToast('Could not post',j.error||'','',3500);return;}
+                    title.value='';body.value='';newForm.classList.add('hidden');
+                    gvLoadCommunity(true);
+                    showToast('Thread posted! 🐊');
+                })
+                .catch(function(){newSubmit.disabled=false;});
+        });
+        gvStartCommunityPoll();
+    },600);
 
     // ---- Tickets ----
     function renderTickets(){

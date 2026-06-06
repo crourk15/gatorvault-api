@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GatorVault — Community Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#030712;color:#e2e8f0}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 48px}
+    h1{color:#FA4616;font-family:Oswald,Arial,sans-serif;letter-spacing:2px}
+    h2{font-size:16px;color:#93c5fd;margin:0 0 12px}
+    .card{background:#0b1220;border:1px solid #1e3a5f;border-radius:12px;padding:20px;margin-bottom:16px}
+    label{display:block;font-size:12px;color:#94a3b8;margin-bottom:6px;text-transform:uppercase}
+    input,select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#111827;color:#f8fafc;margin-bottom:12px}
+    button{border:0;border-radius:8px;padding:8px 12px;font-weight:700;cursor:pointer;background:#FA4616;color:#fff;margin-right:6px;margin-bottom:6px;font-size:12px}
+    button.secondary{background:#1e3a5f;color:#e2e8f0}
+    button.danger{background:#991b1b}
+    button.ok{background:#166534}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:720px){.row{grid-template-columns:1fr}}
+    .item{border:1px solid #334155;border-radius:8px;padding:12px;margin-bottom:10px;background:#111827}
+    .meta{font-size:12px;color:#64748b;margin-top:6px}
+    .pill{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;margin-right:6px}
+    .pill-pin{background:#854d0e;color:#fef08a}
+    .pill-lock{background:#7f1d1d;color:#fecaca}
+    .pill-feature{background:#1e3a8a;color:#bfdbfe}
+    .help{font-size:12px;color:#64748b;line-height:1.5}
+    .err{color:#f87171}.oktxt{color:#4ade80}
+    a{color:#60a5fa}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🐊 Community Admin</h1>
+    <p class="help">Pin, lock, feature, delete threads · resolve flags · edit categories. <a href="/">← Back to vault</a></p>
+
+    <div class="card">
+      <label>Admin PIN</label>
+      <input id="pin" type="password" placeholder="GV2026admin" autocomplete="off">
+      <button class="secondary" id="refresh" type="button">Refresh queue</button>
+    </div>
+
+    <div class="card">
+      <h2>Flagged posts</h2>
+      <div id="flags"></div>
+    </div>
+
+    <div class="card">
+      <h2>Threads</h2>
+      <div id="threads"></div>
+    </div>
+
+    <div class="card">
+      <h2>Categories</h2>
+      <div id="categories"></div>
+    </div>
+
+    <div class="card">
+      <h2>Log</h2>
+      <div id="log" style="font-family:monospace;font-size:12px;white-space:pre-wrap"></div>
+    </div>
+  </div>
+
+  <script>
+    var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000' : 'https://gatorvault-api.onrender.com';
+
+    function pin() { return document.getElementById('pin').value.trim(); }
+    function headers() {
+      return { 'Content-Type': 'application/json', 'X-Community-Pin': pin() };
+    }
+    function log(msg, cls) {
+      var el = document.getElementById('log');
+      el.innerHTML = '<span class="' + (cls || 'oktxt') + '">[' + new Date().toLocaleTimeString() + '] ' + msg + '</span>\n' + el.innerHTML;
+    }
+    function api(path, opts) {
+      opts = opts || {};
+      return fetch(API + path, {
+        method: opts.method || 'GET',
+        headers: headers(),
+        body: opts.body ? JSON.stringify(opts.body) : undefined
+      }).then(function(r) { return r.json().then(function(j) { return { status: r.status, json: j }; }); });
+    }
+
+    function renderFlags(flags) {
+      var el = document.getElementById('flags');
+      if (!flags || !flags.length) { el.innerHTML = '<p class="help">No open flags.</p>'; return; }
+      el.innerHTML = flags.map(function(f) {
+        return '<div class="item"><strong>Post ' + f.postId + '</strong> · thread ' + (f.threadId || '—')
+          + '<div class="meta">' + (f.reason || 'review') + ' · reported by ' + (f.reporterEmail || '—') + '</div>'
+          + '<button class="ok" onclick="resolveFlag(\'' + f.id + '\')">Resolve</button>'
+          + '<button class="danger" onclick="deleteFlagPost(\'' + f.postId + '\',\'' + f.id + '\')">Delete post</button></div>';
+      }).join('');
+    }
+
+    function renderThreads(threads) {
+      var el = document.getElementById('threads');
+      if (!threads || !threads.length) { el.innerHTML = '<p class="help">No threads.</p>'; return; }
+      el.innerHTML = threads.map(function(t) {
+        var pills = '';
+        if (t.pinned) pills += '<span class="pill pill-pin">PINNED</span>';
+        if (t.locked) pills += '<span class="pill pill-lock">LOCKED</span>';
+        if (t.featured) pills += '<span class="pill pill-feature">FEATURED</span>';
+        return '<div class="item"><strong>' + t.title + '</strong> ' + pills
+          + '<div class="meta">' + (t.category && t.category.name ? t.category.name : t.categorySlug)
+          + ' · ' + (t.replyCount || 0) + ' replies · ' + (t.viewCount || 0) + ' views · score ' + (t.trendingScore || 0) + '</div>'
+          + '<button class="secondary" onclick="pinThread(\'' + t.id + '\',' + !t.pinned + ')">' + (t.pinned ? 'Unpin' : 'Pin') + '</button>'
+          + '<button class="secondary" onclick="lockThread(\'' + t.id + '\',' + !t.locked + ')">' + (t.locked ? 'Unlock' : 'Lock') + '</button>'
+          + '<button class="secondary" onclick="featureThread(\'' + t.id + '\',' + !t.featured + ')">' + (t.featured ? 'Unfeature' : 'Feature') + '</button>'
+          + '<button class="danger" onclick="deleteThread(\'' + t.id + '\')">Delete</button></div>';
+      }).join('');
+    }
+
+    function renderCategories(cats) {
+      var el = document.getElementById('categories');
+      el.innerHTML = (cats || []).map(function(c) {
+        return '<div class="item"><strong>' + c.name + '</strong> (' + c.slug + ')'
+          + '<label style="margin-top:8px">Display name</label>'
+          + '<input id="cat-name-' + c.id + '" value="' + c.name.replace(/"/g, '&quot;') + '">'
+          + '<label>Badge label</label>'
+          + '<input id="cat-badge-' + c.id + '" value="' + (c.badgeLabel || '').replace(/"/g, '&quot;') + '">'
+          + '<button onclick="saveCategory(\'' + c.id + '\')">Save</button></div>';
+      }).join('');
+    }
+
+    window.resolveFlag = function(id) {
+      api('/api/community/admin/flags/' + id + '/resolve', { method: 'POST', body: { status: 'resolved' } })
+        .then(function(r) { if (!r.json.ok) throw new Error(r.json.error); log('Flag resolved'); loadQueue(); });
+    };
+    window.deleteFlagPost = function(postId, flagId) {
+      if (!confirm('Delete flagged post?')) return;
+      api('/api/community/admin/post/' + postId, { method: 'DELETE' })
+        .then(function(r) { if (!r.json.ok) throw new Error(r.json.error); return api('/api/community/admin/flags/' + flagId + '/resolve', { method: 'POST', body: { status: 'resolved' } }); })
+        .then(function() { log('Post deleted'); loadQueue(); });
+    };
+    window.pinThread = function(id, pinned) {
+      api('/api/community/admin/thread/' + id + '/pin', { method: 'POST', body: { pinned: pinned } })
+        .then(function(r) { if (!r.json.ok) throw new Error(r.json.error); log(pinned ? 'Pinned' : 'Unpinned'); loadQueue(); });
+    };
+    window.lockThread = function(id, locked) {
+      api('/api/community/admin/thread/' + id + '/lock', { method: 'POST', body: { locked: locked } })
+        .then(function(r) { if (!r.json.ok) throw new Error(r.json.error); log(locked ? 'Locked' : 'Unlocked'); loadQueue(); });
+    };
+    window.featureThread = function(id, featured) {
+      api('/api/community/admin/thread/' + id + '/feature', { method: 'POST', body: { featured: featured } })
+        .then(function(r) { if (!r.json.ok) throw new Error(r.json.error); log(featured ? 'Featured' : 'Unfeatured'); loadQueue(); });
+    };
+    window.deleteThread = function(id) {
+      if (!confirm('Delete this thread?')) return;
+      api('/api/community/admin/thread/' + id, { method: 'DELETE' })
+        .then(function(r) { if (!r.json.ok) throw new Error(r.json.error); log('Thread deleted'); loadQueue(); });
+    };
+    window.saveCategory = function(id) {
+      var name = document.getElementById('cat-name-' + id).value.trim();
+      var badgeLabel = document.getElementById('cat-badge-' + id).value.trim();
+      api('/api/community/admin/categories/' + id, { method: 'POST', body: { name: name, badgeLabel: badgeLabel } })
+        .then(function(r) { if (!r.json.ok) throw new Error(r.json.error); log('Category saved'); loadQueue(); });
+    };
+
+    function loadQueue() {
+      if (!pin()) { log('Enter PIN first', 'err'); return; }
+      api('/api/community/admin/queue').then(function(r) {
+        if (!r.json.ok) { log(r.json.error || 'Failed', 'err'); return; }
+        renderFlags(r.json.flags);
+        renderThreads(r.json.threads);
+        renderCategories(r.json.categories);
+        log('Queue loaded (' + r.json.threads.length + ' threads, ' + r.json.flags.length + ' flags)');
+      }).catch(function(e) { log(e.message, 'err'); });
+    }
+
+    document.getElementById('refresh').addEventListener('click', loadQueue);
+  </script>
+</body>
+</html>
