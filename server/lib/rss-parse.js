@@ -26,6 +26,11 @@ function parseRssItems(xml, limit = 20) {
       decodeEntities((block.match(/<link[^>]*>([\s\S]*?)<\/link>/i) || [])[1]) ||
       ((block.match(/<link[^>]+href=["']([^"']+)["']/i) || [])[1]);
     const guid = decodeEntities((block.match(/<guid[^>]*>([\s\S]*?)<\/guid>/i) || [])[1]);
+    if (!link) {
+      const enclosure = (block.match(/<enclosure[^>]+url=["']([^"']+)["']/i) || [])[1];
+      if (enclosure) link = decodeEntities(enclosure);
+    }
+    if (!link && guid && /^https?:\/\//i.test(guid)) link = guid;
     const pubDate =
       decodeEntities((block.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i) || [])[1]) ||
       decodeEntities((block.match(/<published[^>]*>([\s\S]*?)<\/published>/i) || [])[1]) ||

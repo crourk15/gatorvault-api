@@ -263,11 +263,18 @@
       try { localStorage.setItem('gv_roster_updated', String(Date.now())); } catch (e) {}
     }
 
+    function rosterHeadshotPreviewSrc(url) {
+      if (!url) return '';
+      if (/^https?:\/\//i.test(url) || url.indexOf('data:') === 0) return url;
+      var path = url.charAt(0) === '/' ? url : '/headshots/' + url;
+      return API.replace(/\/$/, '') + path + '?t=' + Date.now();
+    }
+
     function updateRosterHeadshotPreview(url) {
       var el = document.getElementById('roster-headshot-preview');
       if (!url) { el.innerHTML = '<span style="color:#64748b;font-size:12px">No headshot — initials fallback on site.</span>'; return; }
-      var bust = url.indexOf('data:') === 0 ? '' : ('?t=' + Date.now());
-      el.innerHTML = '<img src="' + url + bust + '" alt="preview" style="width:80px;height:80px;border-radius:10px;object-fit:cover;border:1px solid #334155" onerror="this.style.display=\'none\'">';
+      var src = rosterHeadshotPreviewSrc(url);
+      el.innerHTML = '<img src="' + src + '" alt="preview" style="width:80px;height:80px;border-radius:10px;object-fit:cover;border:1px solid #334155" onerror="this.style.display=\'none\'">';
     }
 
     document.getElementById('roster-slug').addEventListener('input', function() {

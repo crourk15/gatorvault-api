@@ -9,6 +9,82 @@ const NITTER_BASES = (process.env.NITTER_BASES || 'https://nitter.poast.org,http
 
 const X_BEARER = process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN || null;
 
+let _xTokenStatus = {
+  configured: false,
+  ok: false,
+  error: null,
+  checkedAt: null
+};
+
+function getXBearerToken() {
+  return X_BEARER;
+}
+
+async function validateXBearerToken({ force = false } = {}) {
+  const token = X_BEARER;
+  if (!token) {
+    _xTokenStatus = {
+      configured: false,
+      ok: false,
+      error:
+        'X_BEARER_TOKEN is not set. In Render → gatorvault-api → Environment, add X_BEARER_TOKEN with your Twitter API v2 Bearer Token, then redeploy.',
+      checkedAt: store.nowIso()
+    };
+    return _xTokenStatus;
+  }
+
+  const stale =
+    !_xTokenStatus.checkedAt ||
+    Date.now() - new Date(_xTokenStatus.checkedAt).getTime() > 5 * 60 * 1000;
+  if (!force && _xTokenStatus.configured && _xTokenStatus.ok && !stale) {
+    return _xTokenStatus;
+  }
+
+  try {
+    const res = await fetch('https://api.twitter.com/2/users/by/username/Corey_Bender', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (res.status === 401 || res.status === 403) {
+      _xTokenStatus = {
+        configured: true,
+        ok: false,
+        error: `X_BEARER_TOKEN was rejected (HTTP ${res.status}). Regenerate the Bearer Token in the X Developer Portal and update Render.`,
+        checkedAt: store.nowIso()
+      };
+      return _xTokenStatus;
+    }
+    if (!res.ok) {
+      const body = await res.text().catch(() => '');
+      _xTokenStatus = {
+        configured: true,
+        ok: false,
+        error: `X API validation failed (HTTP ${res.status})${body ? `: ${body.slice(0, 120)}` : ''}.`,
+        checkedAt: store.nowIso()
+      };
+      return _xTokenStatus;
+    }
+    _xTokenStatus = {
+      configured: true,
+      ok: true,
+      error: null,
+      checkedAt: store.nowIso()
+    };
+    return _xTokenStatus;
+  } catch (e) {
+    _xTokenStatus = {
+      configured: true,
+      ok: false,
+      error: `X API unreachable: ${e.message}`,
+      checkedAt: store.nowIso()
+    };
+    return _xTokenStatus;
+  }
+}
+
+function getXTokenStatus() {
+  return { ..._xTokenStatus };
+}
+
 async function fetchText(url, timeoutMs = 12000) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -88,6 +164,7 @@ async function fetchWriterPosts(writer) {
     if (X_BEARER) {
       const posts = await fetchXUserTimeline(writer.handle);
       if (posts && posts.length) return posts;
+      return [];
     }
     return await fetchNitterRss(writer.handle);
   } catch (e) {
@@ -96,9 +173,22 @@ async function fetchWriterPosts(writer) {
 }
 
 async function refreshBeatStream() {
+  const tokenStatus = await validateXBearerToken({ force: true });
+  const cache = store.loadBeatCache();
   const writers = store.loadWriters();
+
+  if (!tokenStatus.ok) {
+    const next = {
+      posts: cache.posts || [],
+      fetchedAt: store.nowIso(),
+      source: 'x_token_error',
+      error: tokenStatus.error
+    };
+    store.saveBeatCache(next);
+    return next;
+  }
+
   const all = [];
-  let source = X_BEARER ? 'x' : 'nitter';
   let errors = 0;
 
   for (const writer of writers) {
@@ -107,16 +197,14 @@ async function refreshBeatStream() {
     posts.forEach((p) => all.push(p));
   }
 
-  if (!all.length && errors === writers.length) source = 'cache';
-
   all.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
 
-  const cache = store.loadBeatCache();
   const merged = all.length ? all.slice(0, 80) : cache.posts || [];
   const next = {
     posts: merged,
     fetchedAt: store.nowIso(),
-    source: all.length ? source : cache.source || 'unavailable'
+    source: all.length ? 'x' : errors === writers.length ? 'x_empty' : 'x',
+    error: all.length ? null : 'X API token is valid but no beat writer posts were returned yet. Retrying on the next poll.'
   };
   store.saveBeatCache(next);
 
@@ -141,15 +229,21 @@ async function refreshBeatStream() {
 
 function getBeatPosts(limit = 40) {
   const cache = store.loadBeatCache();
+  const tokenStatus = getXTokenStatus();
   return {
     posts: (cache.posts || []).slice(0, limit),
     fetchedAt: cache.fetchedAt,
-    source: cache.source
+    source: cache.source,
+    error: cache.error || (!tokenStatus.ok ? tokenStatus.error : null),
+    tokenStatus
   };
 }
 
 module.exports = {
   refreshBeatStream,
   getBeatPosts,
-  fetchWriterPosts
+  fetchWriterPosts,
+  validateXBearerToken,
+  getXTokenStatus,
+  getXBearerToken
 };

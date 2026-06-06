@@ -34,7 +34,7 @@ async function fetchPodcastShow(podcast) {
     title: ep.title,
     description: ep.summary,
     imageUrl: ep.imageUrl || channelImage || null,
-    playUrl: ep.link,
+    playUrl: ep.link || podcast.siteUrl || null,
     publishedAt: ep.publishedAt
   }));
   return {

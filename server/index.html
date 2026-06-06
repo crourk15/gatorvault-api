@@ -268,6 +268,8 @@
         .live-type-staff,.live-type-injury,.live-type-depth{background:rgba(96,165,250,.12);color:#93c5fd;}
         .live-beat-post{padding:.7rem;border-radius:.65rem;background:#060f1f;border-left:3px solid #a855f7;margin-bottom:.5rem;}
         .live-pod-ep{display:flex;gap:.75rem;padding:.75rem;border-radius:.65rem;background:#060f1f;border:1px solid rgba(0,48,135,.2);margin-bottom:.5rem;}
+        a.live-pod-ep{display:flex;gap:.75rem;padding:.75rem;border-radius:.65rem;background:#060f1f;border:1px solid rgba(0,48,135,.2);margin-bottom:.5rem;text-decoration:none;color:inherit;cursor:pointer;pointer-events:auto;transition:border-color .15s;}
+        a.live-pod-ep:hover{border-color:rgba(250,70,22,.45);}
         .live-pod-thumb{width:56px;height:56px;border-radius:.5rem;object-fit:cover;background:#111827;flex-shrink:0;}
         .live-status-bar{font-size:.7rem;color:#64748b;display:flex;flex-wrap:wrap;gap:.75rem;margin-top:.5rem;}
         .score-input{width:60px;background:#060f1f;border:2px solid rgba(0,48,135,.4);border-radius:.5rem;padding:.5rem;color:white;font-family:'Oswald',sans-serif;font-size:1.25rem;text-align:center;}
@@ -2487,24 +2489,24 @@
         return p.rating!=null?Number(p.rating):null;
     }
 
-    function gvResolveHeadshotUrl(url){
+    function gvResolveHeadshotUrl(url,updatedAt){
         if(!url)return '';
         if(/^https?:\/\//i.test(url)||String(url).indexOf('data:')===0)return String(url);
         var path=String(url).trim();
         if(path.charAt(0)!=='/')path='/headshots/'+path;
-        if(window.location.protocol==='file:'){
-            return (gvRecruitApiBase()||'').replace(/\/$/,'')+path;
-        }
-        return path;
+        var base=(gvRecruitApiBase()||window.GV_API_BASE||'').replace(/\/$/,'');
+        var src=base?base+path:path;
+        if(updatedAt&&src.indexOf('data:')!==0)src+=(src.indexOf('?')>=0?'&':'?')+'v='+encodeURIComponent(updatedAt);
+        return src;
     }
 
     function gvPlayerHeadshotHtml(p,size){
         var cls='player-headshot';
         var fbCls='player-headshot-fallback';
-        var src=gvResolveHeadshotUrl(p.headshotUrl);
         var wrapOpen='<div class="player-headshot-wrap">';
         var wrapClose='</div>';
-        if(src&&p.hasHeadshot!==false){
+        if(p.headshotUrl){
+            var src=gvResolveHeadshotUrl(p.headshotUrl,p.updatedAt);
             return wrapOpen
                 +'<img src="'+gvEscHtml(src)+'" alt="'+gvEscHtml(p.name||'')+'" class="'+cls+'" loading="lazy" onerror="this.style.display=\'none\';var fb=this.nextElementSibling;if(fb)fb.style.display=\'flex\';">'
                 +'<div class="'+fbCls+'" style="display:none" aria-hidden="true">'+playerInitials(p.name)+'</div>'
@@ -3700,9 +3702,15 @@
         var el=document.getElementById('live-beat-list');
         if(!el)return;
         var posts=(beat&&beat.posts)||[];
+        var beatErr=beat&&(beat.error||(beat.tokenStatus&&beat.tokenStatus.error));
         if(!posts.length){
-            var src=beat&&beat.source?beat.source:'unavailable';
-            el.innerHTML='<p class="text-surface-200/50 text-sm">Beat stream empty ('+gvLiveEsc(src)+'). Set X_BEARER_TOKEN on the API for reliable X feeds.</p>';
+            if(beatErr){
+                el.innerHTML='<p class="text-amber-400/90 text-sm leading-relaxed">⚠️ '+gvLiveEsc(beatErr)+'</p>'
+                    +'<p class="text-surface-200/50 text-xs mt-2">Beat writers refresh automatically every 3 minutes once X_BEARER_TOKEN is set on Render.</p>';
+            }else{
+                var src=beat&&beat.source?beat.source:'unavailable';
+                el.innerHTML='<p class="text-surface-200/50 text-sm">Beat stream empty ('+gvLiveEsc(src)+'). Waiting for posts from X API.</p>';
+            }
             return;
         }
         var html='';
@@ -3740,17 +3748,18 @@
         eps.slice(0,16).forEach(function(row){
             var ep=row.ep,show=row.show;
             var thumb=ep.imageUrl||show.imageUrl;
-            var href=gvLiveResolveUrl(ep.playUrl);
-            html+='<div class="live-pod-ep">';
+            var href=gvLiveResolveUrl(ep.playUrl||show.siteUrl||show.feedUrl);
+            var tag=href?'<a href="'+gvLiveEsc(href)+'" target="_blank" rel="noopener noreferrer" class="live-pod-ep">':'<div class="live-pod-ep">';
+            var tagEnd=href?'</a>':'</div>';
+            html+=tag;
             if(thumb)html+='<img class="live-pod-thumb" src="'+gvLiveEsc(thumb)+'" alt="" loading="lazy">';
             else html+='<div class="live-pod-thumb flex items-center justify-center text-lg">🎙️</div>';
             html+='<div class="min-w-0 flex-1">';
             html+='<p class="text-[.65rem] text-green-300/80 font-bold uppercase tracking-wide">'+gvLiveEsc(show.name)+'</p>';
-            if(href)html+='<a href="'+gvLiveEsc(href)+'" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-white hover:text-gator-orange leading-snug block">'+gvLiveEsc(ep.title)+'</a>';
-            else html+='<p class="text-sm font-semibold text-white leading-snug">'+gvLiveEsc(ep.title)+'</p>';
+            html+='<p class="text-sm font-semibold text-white leading-snug">'+gvLiveEsc(ep.title)+'</p>';
             if(ep.description)html+='<p class="text-xs text-surface-200/60 mt-1 line-clamp-2">'+gvLiveEsc(String(ep.description).replace(/<[^>]+>/g,'').slice(0,160))+'</p>';
-            html+='<p class="text-[.65rem] text-surface-200/40 mt-1">'+gvLiveEsc(gvLiveTimeAgo(ep.publishedAt))+(href?' · <span class="text-gator-orange">Play</span>':'')+'</p>';
-            html+='</div></div>';
+            html+='<p class="text-[.65rem] text-surface-200/40 mt-1">'+gvLiveEsc(gvLiveTimeAgo(ep.publishedAt))+(href?' · <span class="text-gator-orange">Play →</span>':'')+'</p>';
+            html+='</div>'+tagEnd;
         });
         el.innerHTML=html;
     }
@@ -3776,7 +3785,8 @@
         var beatAt=dash.beat&&dash.beat.fetchedAt?gvLiveTimeAgo(dash.beat.fetchedAt):'—';
         var podAt=dash.podcasts&&dash.podcasts.fetchedAt?gvLiveTimeAgo(dash.podcasts.fetchedAt):'—';
         var feedN=(dash.feed||[]).length;
-        el.innerHTML='<span>📡 '+feedN+' feed items</span><span>✍️ Beat: '+gvLiveEsc(beatSrc)+' · '+gvLiveEsc(beatAt)+'</span><span>🎙️ Podcasts · '+gvLiveEsc(podAt)+'</span><span>🔄 Updated '+gvLiveEsc(gvLiveTimeAgo(dash.updatedAt))+'</span>';
+        var beatNote=dash.beat&&dash.beat.error?(' · <span class="text-amber-400/80">'+gvLiveEsc(dash.beat.error)+'</span>'):'';
+        el.innerHTML='<span>📡 '+feedN+' feed items</span><span>✍️ Beat: '+gvLiveEsc(beatSrc)+' · '+gvLiveEsc(beatAt)+beatNote+'</span><span>🎙️ Podcasts · '+gvLiveEsc(podAt)+'</span><span>🔄 Updated '+gvLiveEsc(gvLiveTimeAgo(dash.updatedAt))+'</span>';
     }
 
     function gvLoadLiveDashboard(showLoading){

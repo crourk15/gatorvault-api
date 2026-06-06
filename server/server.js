@@ -647,7 +647,7 @@ function startLiveDashboardScheduler() {
   if (_gvLiveSchedulerStarted) return;
   _gvLiveSchedulerStarted = true;
   const { refreshLiveDashboard } = require('./lib/live-aggregator');
-  const intervalMs = Math.max(60000, parseInt(process.env.LIVE_POLL_INTERVAL_MS || '180000', 10) || 180000);
+  const intervalMs = Math.max(60000, parseInt(process.env.LIVE_POLL_INTERVAL_MS || '180000', 10) || 180000); // default 3 min
   const bootDelay = Math.max(8000, parseInt(process.env.LIVE_POLL_BOOT_DELAY_MS || '20000', 10) || 20000);
   const tick = () => {
     refreshLiveDashboard()
@@ -714,6 +714,13 @@ app.listen(PORT, () => {
     console.warn('On3 ingest scheduler failed to start', e.message);
   }
   try {
+    const { validateXBearerToken } = require('./lib/live-beat');
+    validateXBearerToken()
+      .then((s) => {
+        if (s.ok) console.log('[live-dashboard] Beat stream: X_BEARER_TOKEN validated');
+        else console.warn('[live-dashboard] Beat stream:', s.error);
+      })
+      .catch((err) => console.warn('[live-dashboard] Beat token check failed', err.message));
     startLiveDashboardScheduler();
   } catch (e) {
     console.warn('Live dashboard scheduler failed to start', e.message);

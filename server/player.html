@@ -74,17 +74,25 @@
       return 'rating-solid';
     }
 
-    function headshotSrc(url) {
+    function apiBase() {
+      return (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:3000'
+        : 'https://gatorvault-api.onrender.com';
+    }
+
+    function headshotSrc(url, updatedAt) {
       if (!url) return '';
       if (/^https?:\/\//i.test(url) || String(url).indexOf('data:') === 0) return String(url);
       var path = String(url).trim();
       if (path.charAt(0) !== '/') path = '/headshots/' + path;
-      return path;
+      var src = apiBase().replace(/\/$/, '') + path;
+      if (updatedAt) src += (src.indexOf('?') >= 0 ? '&' : '?') + 'v=' + encodeURIComponent(updatedAt);
+      return src;
     }
 
     function headshotHtml(p) {
-      var src = headshotSrc(p.headshotUrl);
-      if (src && p.hasHeadshot !== false) {
+      if (p.headshotUrl) {
+        var src = headshotSrc(p.headshotUrl, p.updatedAt);
         return '<img src="' + src + '" alt="" class="headshot" onerror="this.outerHTML=\'<div class=headshot-fb>' + initials(p.name) + '</div>\'">';
       }
       return '<div class="headshot-fb">' + initials(p.name) + '</div>';
