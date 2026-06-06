@@ -1,0 +1,3 @@
+# Netlify publishes the static vault from server/ (index.html, _redirects, etc.)
+[build]
+  publish = "server"

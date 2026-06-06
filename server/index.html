@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>window.GV_API_BASE='http://localhost:3000';</script>
+    <script>window.GV_API_BASE=(window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1')?'http://localhost:3000':'https://gatorvault-api.onrender.com';</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
@@ -2786,13 +2786,18 @@
         }
     }
 
-    function gvPollRecruitingEvents(force){
+    function gvPollRecruitingEvents(force,retry){
         if(!gvIsAlertsSubscribed()&&!force)return;
         var base=gvRecruitApiBase();
+        if(!base||base.indexOf('localhost')!==-1&&window.location.hostname!=='localhost'&&window.location.hostname!=='127.0.0.1'){
+            if(window.GV_ALERT_DEBUG)console.warn('gvPollRecruitingEvents: bad API base',base);
+            return;
+        }
         var since=window._gvRecruitingLive.lastEventTs||0;
         var url=base+'/api/recruiting/events?limit=20';
         if(since&&!force)url+='&since='+encodeURIComponent(new Date(since).toISOString());
         fetch(url).then(function(r){if(!r.ok)throw new Error('events HTTP '+r.status);return r.json();}).then(function(data){
+            window._gvPollErrShown=false;
             if(!data.ok||!data.events||!data.events.length){
                 if(force)gvFlushUndelivered();
                 return;
@@ -2816,6 +2821,10 @@
             if(force)gvFlushUndelivered();
         }).catch(function(err){
             if(window.GV_ALERT_DEBUG)console.warn('gvPollRecruitingEvents',err);
+            if(!retry&&gvIsAlertsSubscribed()){
+                setTimeout(function(){gvPollRecruitingEvents(force,true);},45000);
+                return;
+            }
             if(gvIsAlertsSubscribed()&&!window._gvPollErrShown){
                 window._gvPollErrShown=true;
                 showToast('Alert sync paused','Could not reach the recruiting API. If the API runs on another host, set window.GV_API_BASE in index.html.','',7000);
