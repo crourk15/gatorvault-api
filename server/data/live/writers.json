@@ -1,0 +1,10 @@
+[
+  { "id": "bender", "name": "Corey Bender", "handle": "Corey_Bender", "outlet": "On3 / Gators Online" },
+  { "id": "abolverdi", "name": "Zach Abolverdi", "handle": "ZachAbolverdi", "outlet": "Gators Online / On3" },
+  { "id": "niebuhr", "name": "Keith Niebuhr", "handle": "KeithNiebuhr", "outlet": "On3" },
+  { "id": "alderman", "name": "Blake Alderman", "handle": "BAlderman3", "outlet": "Gators Online / On3" },
+  { "id": "waters", "name": "David Waters", "handle": "DavidWatersTTI", "outlet": "Gators Breakdown / TTI" },
+  { "id": "delatorre", "name": "Nick de la Torre", "handle": "ndelatorre", "outlet": "The Gainesville Sun" },
+  { "id": "hall", "name": "Graham Hall", "handle": "GrahamHall_", "outlet": "The Gainesville Sun" },
+  { "id": "thompson", "name": "Edgar Thompson", "handle": "osgator", "outlet": "Orlando Sentinel" }
+]

@@ -1,0 +1,146 @@
+[
+  {
+    "id": "gators-breakdown_ecc49b4c-6108-11f1-ab67-f757a2cedece",
+    "dedupeKey": "gators-breakdown_ecc49b4c-6108-11f1-ab67-f757a2cedece",
+    "type": "podcast",
+    "title": "New episode: Gators Breakdown — Florida Stacks Two Defenders in a Day: Cahron Wheeler & Kamarion Johnson Commit for 2027",
+    "summary": "Florida just landed back-to-back commitments on the defensive side of the ball, and both stories are worth your time. Four-star edge Cahron Wheeler picks the Gators on his official visit, then athlete Kamarion Johnson follows right after over Florida State and Cincinnati. We dig into the recruitments, the evaluations, and what Jon Sumrall's staff is putting together for 2027. Sign up for PrizePicks with code: HMA and get $50 in lineups instantly when you play your first $5+ lineup! https://link.",
+    "url": null,
+    "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
+    "source": "rss",
+    "author": "Gators Breakdown",
+    "createdAt": "2026-06-05T18:11:00.000Z",
+    "meta": {
+      "showId": "gators-breakdown"
+    },
+    "updatedAt": "2026-06-06T17:58:56.939Z"
+  },
+  {
+    "id": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+    "dedupeKey": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+    "type": "podcast",
+    "title": "New episode: Gators Online Podcast — Ep. 187: Official visits underway for Florida football, baseball | Gators Online Show",
+    "summary": "Welcome to the Gators Online Show! In the latest episode, we discuss official visits starting for the Florida football and baseball programs. Hosted by Simplecast, an AdsWizz company. See pcm.adswizz.com for information about our collection and use of personal data for advertising.",
+    "url": "https://www.on3.com/teams/florida-gators/",
+    "imageUrl": "https://image.simplecastcdn.com/images/3cc5de72-bc68-492d-a510-2d5236a0a9b6/f8486d0e-44e1-45e2-8e77-d82d9340cad3/untitled_design_2pdf_69.jpg",
+    "source": "rss",
+    "author": "Gators Online Podcast",
+    "createdAt": "2026-06-05T17:23:52.000Z",
+    "meta": {
+      "showId": "gators-online"
+    },
+    "updatedAt": "2026-06-06T17:58:57.212Z"
+  },
+  {
+    "id": "art_art-summer-battles",
+    "dedupeKey": "art_art-summer-battles",
+    "type": "article",
+    "title": "Summer Camp Preview: 5 Position Battles to Watch",
+    "summary": "Fall camp opens August 2nd. These five position battles will shape the starting lineup, the two-deep, and how {{ coach.HC }}'s first season unfolds.",
+    "url": "/#articles",
+    "imageUrl": null,
+    "source": "content",
+    "author": "GatorVault Staff",
+    "createdAt": "June 4, 2026",
+    "meta": {
+      "tier": "locker"
+    },
+    "updatedAt": "2026-06-06T17:58:55.412Z"
+  },
+  {
+    "id": "art_art-win-model",
+    "dedupeKey": "art_art-win-model",
+    "type": "article",
+    "title": "War Room: 2026 Schedule Win Probability Model",
+    "summary": "Our proprietary model simulates every game 10,000 times using roster data, returning production, and opponent strength. Here's where UF wins, where it's vulnerable, and the two games that decide the season.",
+    "url": "/#articles",
+    "imageUrl": null,
+    "source": "content",
+    "author": "GatorVault Analytics",
+    "createdAt": "June 3, 2026",
+    "meta": {
+      "tier": "war"
+    },
+    "updatedAt": "2026-06-06T17:58:55.411Z"
+  },
+  {
+    "id": "gnfp_b37211a8-96f7-46c7-93f2-447f4b88b214",
+    "dedupeKey": "gnfp_b37211a8-96f7-46c7-93f2-447f4b88b214",
+    "type": "podcast",
+    "title": "New episode: Gator Nation Football Podcast — 2026- June Mailbag",
+    "summary": "2026- June Mailbag If you enjoy the content, drop us a dono for as little as $7. Full GNFP Film Review Access starts at $15. https://www.patreon.com/1165790/join Merch https://gnfp.sellfy.store/ Join the GNFP SAMI WhatsApp Group: https://chat.whatsapp.com/CxPmbYiMwDyCTgh7nLcVQE?mode=ems_qr_t Join the GNFP JAVA Discord Group: https://discord.com/invite/j324a9FdZY From our sponsors! Cary and Nadine David https://www.floridaprobatelawgroup.com/ Hosted by Simplecast, an AdsWizz company. See pcm.adsw",
+    "url": "https://bleav.com/shows/the-gator-nation-football-podcast/episodes/2026-june-mailbag/",
+    "imageUrl": "https://image.simplecastcdn.com/images/6215cda8-011d-4ccd-9fe8-c389912a62af/e256885d-0642-4524-a606-6ff2bbf10eb3/3000x3000/gator-nation-football.jpg?aid=rss_feed",
+    "source": "rss",
+    "author": "Gator Nation Football Podcast",
+    "createdAt": "2026-06-01T20:46:00.000Z",
+    "meta": {
+      "showId": "gnfp"
+    },
+    "updatedAt": "2026-06-06T17:58:57.266Z"
+  },
+  {
+    "id": "art_art-sumrall-6mo",
+    "dedupeKey": "art_art-sumrall-6mo",
+    "type": "article",
+    "title": "{{ coach.HC }}'s First 6 Months: A Real Assessment",
+    "summary": "Six months in, {{ coach.HC }} has rebuilt the roster through the portal, installed a new defensive identity, and kept the locker room bought in. We grade every major decision.",
+    "url": "/#articles",
+    "imageUrl": null,
+    "source": "content",
+    "author": "GatorVault Staff",
+    "createdAt": "June 1, 2026",
+    "meta": {
+      "tier": "locker"
+    },
+    "updatedAt": "2026-06-06T17:58:55.409Z"
+  },
+  {
+    "id": "art_art-335-revolution",
+    "dedupeKey": "art_art-335-revolution",
+    "type": "article",
+    "title": "The 3-3-5 Revolution: Why {{ coach.DC }}'s Scheme Changes Everything",
+    "summary": "{{ coach.DC }}'s 3-3-5 isn't a gimmick — it's a personnel-driven answer to modern spread offenses. Here's how it works, who benefits, and why Jayden Woods makes it dangerous.",
+    "url": "/#articles",
+    "imageUrl": null,
+    "source": "content",
+    "author": "GatorVault Film Desk",
+    "createdAt": "May 28, 2026",
+    "meta": {
+      "tier": "locker"
+    },
+    "updatedAt": "2026-06-06T17:58:55.403Z"
+  },
+  {
+    "id": "gator-tales_tag:soundcloud,2010:tracks/2328301979",
+    "dedupeKey": "gator-tales_tag:soundcloud,2010:tracks/2328301979",
+    "type": "podcast",
+    "title": "New episode: Gator Tales — Gator Tales #60: Duke Werner - Executive Associate Athletics Director / Director of Sport",
+    "summary": "In the latest episode of Gator Tales, Presented by UF Health, Voice of the Gators Sean Kelley sits down for an exclusive conversation with Executive Associate Athletics Director/Director of Sport Dave Werner. During Episode 60, Kelley and Werner look back on the 2025-26 athletic year and discuss his new role with the Gators. They also dive into recent UF coaching changes along with a slew of other topics in a candid and informative visit for Gator Nation.",
+    "url": "https://soundcloud.com/gatortales/gator-tales-60-duke-werner",
+    "imageUrl": "https://i1.sndcdn.com/artworks-ktoVXbVH7C9XVMQo-yq0AWg-t3000x3000.png",
+    "source": "rss",
+    "author": "Gator Tales",
+    "createdAt": "2026-05-27T12:47:35.000Z",
+    "meta": {
+      "showId": "gator-tales"
+    },
+    "updatedAt": "2026-06-06T17:58:59.180Z"
+  },
+  {
+    "id": "art_art-philo-film",
+    "dedupeKey": "art_art-philo-film",
+    "type": "article",
+    "title": "Aaron Philo Film Study: Who Is The New UF Quarterback?",
+    "summary": "Georgia Tech transfer Aaron Philo brings pro-style mechanics and anticipatory throwing to Gainesville. We broke down 12 games of film to map his strengths, weaknesses, and fit in {{ coach.OC }}'s offense.",
+    "url": "/#articles",
+    "imageUrl": null,
+    "source": "content",
+    "author": "GatorVault Film Desk",
+    "createdAt": "May 22, 2026",
+    "meta": {
+      "tier": "film"
+    },
+    "updatedAt": "2026-06-06T17:58:55.410Z"
+  }
+]

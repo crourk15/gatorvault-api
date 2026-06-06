@@ -1,0 +1,26 @@
+[
+  {
+    "id": "gators-breakdown",
+    "name": "Gators Breakdown",
+    "rssUrl": "https://feeds.megaphone.fm/gatorsbreakdown",
+    "siteUrl": "https://gatorsbreakdown.com"
+  },
+  {
+    "id": "gators-online",
+    "name": "Gators Online Podcast",
+    "appleId": "1618949280",
+    "siteUrl": "https://www.on3.com/colleges/florida-gators/"
+  },
+  {
+    "id": "gnfp",
+    "name": "Gator Nation Football Podcast",
+    "rssUrl": "https://feeds.simplecast.com/WN52YflC",
+    "siteUrl": "https://gnfp.com"
+  },
+  {
+    "id": "gator-tales",
+    "name": "Gator Tales",
+    "rssUrl": "https://floridagators.com/gatortales-rss",
+    "siteUrl": "https://floridagators.com/gatortales"
+  }
+]

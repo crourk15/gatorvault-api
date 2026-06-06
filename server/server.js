@@ -5,6 +5,7 @@ const { mountRecruitingRoutes } = require('./lib/recruiting-routes');
 const { mountContentRoutes } = require('./lib/content-routes');
 const { mountCommunityRoutes } = require('./lib/community-routes');
 const { mountRosterRoutes } = require('./lib/roster-routes');
+const { mountLiveRoutes } = require('./lib/live-routes');
 const { ensurePublishedSeed } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 
@@ -31,7 +32,7 @@ app.use((req, res, next) => {
   } else {
     res.header('Access-Control-Allow-Origin', '*');
   }
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin, X-Live-Pin, X-Live-Cron');
   res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
@@ -43,6 +44,7 @@ mountRecruitingRoutes(app);
 mountContentRoutes(app);
 mountCommunityRoutes(app);
 mountRosterRoutes(app);
+mountLiveRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;
@@ -640,6 +642,23 @@ app.get('/api/test/logs/stream', (req, res) => {
   req.on('close', () => clearInterval(timer));
 });
 
+let _gvLiveSchedulerStarted = false;
+function startLiveDashboardScheduler() {
+  if (_gvLiveSchedulerStarted) return;
+  _gvLiveSchedulerStarted = true;
+  const { refreshLiveDashboard } = require('./lib/live-aggregator');
+  const intervalMs = Math.max(60000, parseInt(process.env.LIVE_POLL_INTERVAL_MS || '180000', 10) || 180000);
+  const bootDelay = Math.max(8000, parseInt(process.env.LIVE_POLL_BOOT_DELAY_MS || '20000', 10) || 20000);
+  const tick = () => {
+    refreshLiveDashboard()
+      .then(() => console.log('[live-dashboard] refreshed'))
+      .catch((err) => console.warn('[live-dashboard]', err.message));
+  };
+  setTimeout(tick, bootDelay);
+  setInterval(tick, intervalMs);
+  console.log('Live dashboard: polling every', Math.round(intervalMs / 1000), 's');
+}
+
 let _gvIngestSchedulerStarted = false;
 function startOn3IngestScheduler() {
   if (process.env.ON3_INGEST_ENABLED !== 'true') return;
@@ -693,6 +712,11 @@ app.listen(PORT, () => {
     startOn3IngestScheduler();
   } catch (e) {
     console.warn('On3 ingest scheduler failed to start', e.message);
+  }
+  try {
+    startLiveDashboardScheduler();
+  } catch (e) {
+    console.warn('Live dashboard scheduler failed to start', e.message);
   }
   if (providers.length) {
     console.log('Email delivery: configured (' + providers.join(', ') + ')');
