@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GatorVault — Welcome Email Test</title>
+  <meta name="robots" content="noindex, nofollow">
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, Arial, sans-serif; background: #030712; color: #e2e8f0; }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 24px 16px 48px; }
+    h1 { font-family: Oswald, Arial, sans-serif; color: #FA4616; letter-spacing: 2px; margin: 0 0 8px; }
+    .sub { color: #94a3b8; font-size: 14px; margin-bottom: 24px; }
+    .card { background: #0b1220; border: 1px solid #1e3a5f; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+    label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+    input, select { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #334155; background: #111827; color: #f8fafc; margin-bottom: 14px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+    button { border: 0; border-radius: 8px; padding: 12px 16px; font-weight: 700; cursor: pointer; }
+    .btn-primary { background: #FA4616; color: #fff; }
+    .btn-secondary { background: #1e3a5f; color: #e2e8f0; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+    #log { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 14px; min-height: 280px; max-height: 420px; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; line-height: 1.5; white-space: pre-wrap; }
+    .ok { color: #4ade80; }
+    .err { color: #f87171; }
+    .info { color: #93c5fd; }
+    .warn { color: #fbbf24; }
+    .status-pill { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; margin-right: 8px; }
+    .pill-ok { background: #14532d; color: #86efac; }
+    .pill-bad { background: #7f1d1d; color: #fecaca; }
+    .pill-warn { background: #78350f; color: #fde68a; }
+    a { color: #60a5fa; }
+    #gate { max-width: 420px; margin: 80px auto; }
+  </style>
+</head>
+<body>
+  <div id="gate" class="wrap">
+    <div class="card">
+      <h1>Email Test Lab</h1>
+      <p class="sub">Operator PIN required. Default: same as Admin Access.</p>
+      <label>Test PIN</label>
+      <input id="pin" type="password" placeholder="Enter operator PIN" autocomplete="off">
+      <button class="btn-primary" id="unlock-btn" style="width:100%">Unlock</button>
+      <p id="gate-err" class="err" style="display:none;margin-top:10px;font-size:13px;">Invalid PIN</p>
+    </div>
+  </div>
+
+  <div id="app" class="wrap" style="display:none">
+    <h1>🐊 Welcome Email Test Lab</h1>
+    <p class="sub">Trigger welcome emails without registering. Use any inbox you control (or a test alias).</p>
+
+    <div class="card">
+      <div id="status-line" style="margin-bottom:14px;font-size:13px;">Checking server…</div>
+      <div class="row">
+        <div>
+          <label>Test recipient email</label>
+          <input id="email" type="email" placeholder="you+test@gmail.com">
+        </div>
+        <div>
+          <label>Display name</label>
+          <input id="name" type="text" value="Test Gator" placeholder="Test Gator">
+        </div>
+      </div>
+      <label>Tier</label>
+      <select id="tier">
+        <option value="film">Film Room</option>
+        <option value="locker">Locker Room</option>
+        <option value="war">War Room</option>
+      </select>
+      <div class="btn-row">
+        <button class="btn-primary" id="send-server">Send via Server API</button>
+        <button class="btn-secondary" id="send-browser">Send via Browser EmailJS</button>
+        <button class="btn-secondary" id="send-both">Run Both (compare)</button>
+        <button class="btn-secondary" id="clear-log">Clear log</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <strong>Live log</strong>
+        <label style="margin:0;text-transform:none;letter-spacing:0;font-size:13px;color:#cbd5e1;">
+          <input type="checkbox" id="live-tail" checked style="width:auto;margin:0 6px 0 0;"> Stream server logs
+        </label>
+      </div>
+      <div id="log"></div>
+    </div>
+
+    <p class="sub" style="margin-top:8px;">
+      <a href="/">← Back to site</a> ·
+      <a href="/api/email-status" target="_blank" rel="noopener">/api/email-status</a>
+    </p>
+  </div>
+
+  <script>
+    var GV_EJS_PUBLIC_KEY = 'UBDYrVEVLqoWE1rqm';
+    var GV_EJS_SERVICE_ID = 'service_ul7ju9p';
+    var GV_EJS_TEMPLATE_ID = 'template_okh1hj8';
+    var API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000'
+      : location.origin;
+
+    var pin = '';
+    var logEl = document.getElementById('log');
+    var eventSource = null;
+
+    function ts() {
+      return new Date().toLocaleTimeString();
+    }
+
+    function log(level, msg, detail) {
+      var cls = level === 'error' ? 'err' : (level === 'success' ? 'ok' : (level === 'warn' ? 'warn' : 'info'));
+      var line = '[' + ts() + '] ' + msg;
+      if (detail) line += '\n' + (typeof detail === 'string' ? detail : JSON.stringify(detail, null, 2));
+      var div = document.createElement('div');
+      div.className = cls;
+      div.textContent = line;
+      logEl.appendChild(div);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function tierLabel(key) {
+      if (key === 'war') return 'War Room';
+      if (key === 'locker') return 'Locker Room';
+      return 'Film Room';
+    }
+
+    function welcomeTemplateParams(email, name, tier, trialEnd) {
+      return {
+        to_email: email,
+        user_email: email,
+        email: email,
+        to_name: name,
+        user_name: name,
+        tier_name: tierLabel(tier),
+        trial_end: trialEnd,
+        login_url: 'https://gatorvaultinsider.com',
+        support_x: '@GatorVaultInsider',
+        from_name: 'GatorVault',
+        reply_to: 'gatorvaultinsider@gmail.com'
+      };
+    }
+
+    function logRecipientFix() {
+      log('warn', 'Fix in EmailJS dashboard (template_okh1hj8):');
+      log('warn', '1. Open Email Templates → template_okh1hj8');
+      log('warn', '2. At the TOP of the editor (not in HTML body), set To Email to: {{to_email}}');
+      log('warn', '3. Save template, wait 1 min, retry. Admin emails use a static To address — welcome needs {{to_email}}.');
+    }
+
+    function trialEndStr() {
+      var d = new Date();
+      d.setDate(d.getDate() + 30);
+      return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function getPayload() {
+      var email = document.getElementById('email').value.trim().toLowerCase();
+      var name = document.getElementById('name').value.trim() || 'Test Gator';
+      var tier = document.getElementById('tier').value;
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        log('error', 'Enter a valid test email address');
+        return null;
+      }
+      return { email: email, name: name, tier: tier, trialEnd: trialEndStr() };
+    }
+
+    async function refreshStatus() {
+      var el = document.getElementById('status-line');
+      try {
+        var r = await fetch(API_BASE + '/api/email-status');
+        var data = await r.json();
+        if (data.configured) {
+          el.innerHTML = '<span class="status-pill pill-ok">Server API online</span> Provider: ' + (data.providers || []).join(', ');
+        } else {
+          el.innerHTML = '<span class="status-pill pill-warn">Server API reachable, email not configured</span> Use Browser EmailJS test below.';
+        }
+      } catch (e) {
+        el.innerHTML = '<span class="status-pill pill-bad">No server API on this host</span> Static deploy — only Browser EmailJS will work unless you host server.js.';
+      }
+    }
+
+    async function sendViaServer() {
+      var p = getPayload();
+      if (!p) return;
+      log('info', 'POST /api/test/welcome → ' + p.email);
+      try {
+        var r = await fetch(API_BASE + '/api/test/welcome', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Test-Pin': pin },
+          body: JSON.stringify({ pin: pin, email: p.email, name: p.name, tier: p.tier })
+        });
+        var data = await r.json();
+        if (data.ok && data.emailSent) {
+          log('success', 'Server welcome email sent', data);
+        } else {
+          log('error', 'Server send failed', data);
+        }
+      } catch (e) {
+        log('error', 'Server request failed — is Node server running?', String(e));
+      }
+    }
+
+    async function sendViaBrowser() {
+      var p = getPayload();
+      if (!p) return;
+      log('info', 'Browser EmailJS send → ' + p.email);
+      if (typeof emailjs === 'undefined') {
+        log('error', 'EmailJS browser SDK not loaded');
+        return;
+      }
+      try {
+        var params = welcomeTemplateParams(p.email, p.name, p.tier, p.trialEnd);
+        log('info', 'Template params sent', params);
+        emailjs.init({ publicKey: GV_EJS_PUBLIC_KEY });
+        var res = await emailjs.send(GV_EJS_SERVICE_ID, GV_EJS_TEMPLATE_ID, params);
+        log('success', 'Browser EmailJS accepted request', { status: res.status, text: res.text });
+      } catch (e) {
+        log('error', 'Browser EmailJS failed', {
+          status: e.status,
+          text: e.text,
+          message: e.message || String(e)
+        });
+        if (e.status === 422 && e.text && e.text.toLowerCase().indexOf('recipient') !== -1) {
+          logRecipientFix();
+        }
+      }
+    }
+
+    function startLogStream() {
+      stopLogStream();
+      if (!document.getElementById('live-tail').checked) return;
+      try {
+        eventSource = new EventSource(API_BASE + '/api/test/logs/stream?pin=' + encodeURIComponent(pin));
+        eventSource.onmessage = function(ev) {
+          try {
+            var data = JSON.parse(ev.data);
+            if (!data.logs || !data.logs.length) return;
+            var latest = data.logs[0];
+            if (latest._seen) return;
+            latest._seen = true;
+            log(latest.level || 'info', '[server] ' + latest.message, latest.detail || null);
+          } catch (err) {}
+        };
+        eventSource.onerror = function() {
+          log('warn', 'Server log stream unavailable (static host or server not running)');
+          stopLogStream();
+        };
+      } catch (e) {}
+    }
+
+    function stopLogStream() {
+      if (eventSource) { eventSource.close(); eventSource = null; }
+    }
+
+    document.getElementById('unlock-btn').addEventListener('click', function() {
+      pin = document.getElementById('pin').value.trim();
+      if (!pin) return;
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      refreshStatus();
+      startLogStream();
+      log('info', 'Test lab unlocked. Ready to send.');
+    });
+
+    document.getElementById('send-server').addEventListener('click', sendViaServer);
+    document.getElementById('send-browser').addEventListener('click', sendViaBrowser);
+    document.getElementById('send-both').addEventListener('click', async function() {
+      await sendViaServer();
+      await sendViaBrowser();
+    });
+    document.getElementById('clear-log').addEventListener('click', function() { logEl.innerHTML = ''; });
+    document.getElementById('live-tail').addEventListener('change', function() {
+      if (this.checked) startLogStream(); else stopLogStream();
+    });
+  </script>
+</body>
+</html>

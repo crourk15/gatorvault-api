@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Welcome to GatorVault 🐊</title>
+<meta name="theme-color" content="#003087"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:#060f1f;color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+  .card{background:#0a1628;border:1px solid #003087;border-radius:20px;max-width:560px;width:100%;padding:48px 40px;text-align:center;box-shadow:0 0 60px rgba(0,48,135,0.3)}
+  .logo{font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;color:#FA4616;letter-spacing:2px;margin-bottom:8px}
+  .checkmark{font-size:72px;margin-bottom:24px;display:block}
+  h1{font-family:'Oswald',sans-serif;font-size:36px;font-weight:700;color:#fff;margin-bottom:12px;line-height:1.1}
+  .tier-badge{display:inline-block;background:#FA4616;color:#fff;font-family:'Oswald',sans-serif;font-weight:700;font-size:13px;letter-spacing:2px;padding:6px 16px;border-radius:30px;margin-bottom:28px;text-transform:uppercase}
+  .code-box{background:#060f1f;border:2px solid #FA4616;border-radius:14px;padding:28px 24px;margin:24px 0}
+  .code-label{font-size:12px;font-weight:600;color:#FA4616;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+  .code{font-family:'Oswald',sans-serif;font-size:42px;font-weight:700;color:#fff;letter-spacing:6px;margin-bottom:6px}
+  .code-sub{font-size:13px;color:#94a3b8}
+  .intro{font-size:15px;color:#cbd5e1;line-height:1.7;margin:0 auto 24px;max-width:460px}
+  .steps{text-align:left;margin:28px 0;display:flex;flex-direction:column;gap:14px}
+  .step{display:flex;gap:14px;align-items:flex-start}
+  .step-num{background:#003087;color:#FA4616;font-family:'Oswald',sans-serif;font-weight:700;font-size:14px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .step-text{font-size:14px;color:#cbd5e1;line-height:1.5}
+  .step-text strong{color:#fff}
+  .cta-btn{display:block;background:#FA4616;color:#fff;font-family:'Oswald',sans-serif;font-weight:700;font-size:18px;letter-spacing:1px;text-decoration:none;padding:18px 32px;border-radius:12px;margin-top:28px;transition:background 0.2s;box-shadow:0 0 20px rgba(250,70,22,0.4)}
+  .cta-btn:hover{background:#d63a12}
+  .footer{margin-top:28px;font-size:12px;color:#64748b;line-height:1.6}
+  .footer a{color:#FA4616;text-decoration:none}
+  .divider{border:none;border-top:1px solid #0f2040;margin:28px 0}
+  .features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;text-align:left}
+  .feature{background:#060f1f;border-radius:10px;padding:12px 14px;font-size:13px;color:#94a3b8}
+  .feature span{display:block;font-weight:600;color:#e2e8f0;margin-top:2px}
+  @media(max-width:480px){.card{padding:32px 20px}.code{font-size:32px}.features{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">🐊 GATOVAULT</div>
+  <span class="checkmark">✅</span>
+  <h1 id="headline">Welcome to GatorVault</h1>
+  <div class="tier-badge" id="tier-badge">Loading...</div>
+  <p class="intro">Thanks for joining GatorVault. Your access code is below — use it to unlock the members-only Vault at gatorvaultinsider.com.</p>
+
+  <div class="code-box">
+    <div class="code-label">Your Access Code</div>
+    <div class="code" id="access-code">———</div>
+    <div class="code-sub">Keep this code handy — you’ll need it to unlock the Vault.</div>
+  </div>
+
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-text">Go to <strong>gatorvaultinsider.com</strong></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-text">Click <strong>🔒 THE VAULT</strong> in the top navigation bar</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-text">Enter your access code above and click <strong>Unlock the Vault</strong>.</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-text">You're in. Bookmark the page and check back regularly for new content.</div></div>
+  </div>
+
+  <a href="https://gatorvaultinsider.com" class="cta-btn" id="cta">🔐 UNLOCK THE VAULT</a>
+
+  <hr class="divider"/>
+
+  <div style="font-size:13px;color:#94a3b8;text-align:left;margin-bottom:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase">What's waiting inside</div>
+  <div class="features" id="features-grid">
+    <div class="feature">📋 <span>Full Depth Chart</span></div>
+    <div class="feature">🎯 <span>Recruiting Board</span></div>
+    <div class="feature">🔄 <span>Transfer Portal</span></div>
+    <div class="feature">📰 <span>Weekly Briefing</span></div>
+  </div>
+
+  <div class="footer" style="margin-top:28px">
+    Questions? Email us at <a href="mailto:gatorvaultinsider@gmail.com">gatorvaultinsider@gmail.com</a><br/>
+    <a href="https://gatorvaultinsider.com">gatorvaultinsider.com</a> · Go Gators 🐊
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const tier = (params.get('tier') || 'vault').toLowerCase();
+
+const tiers = {
+  vault: {
+    badge: 'Vault Access — $9.99/mo',
+    headline: "You're Inside the Vault",
+    code: 'GATOR26',
+    features: ['📋 <span>Full Depth Chart</span>','🎯 <span>Recruiting Board</span>','🔄 <span>Transfer Portal</span>','📰 <span>Weekly Briefing</span>','🏈 <span>QB Battle Breakdown</span>','📅 <span>2026 Schedule</span>']
+  },
+  insider: {
+    badge: 'Insider Pass — $19.99/mo',
+    headline: "Insider Access Unlocked",
+    code: 'INSIDER26',
+    features: ['📋 <span>Full Depth Chart</span>','🎯 <span>Recruiting Intel</span>','🔄 <span>Transfer Portal Board</span>','📰 <span>Weekly Briefing</span>','🏈 <span>QB Battle Breakdown</span>','🕵️ <span>5 Target Recruits Report</span>']
+  },
+  elite: {
+    badge: 'All-Access Elite — $39.99/mo',
+    headline: "Elite Access — All In",
+    code: 'ELITE26',
+    features: ['📋 <span>Full Depth Chart</span>','🎯 <span>Recruiting Intel</span>','🔄 <span>Transfer Portal Board</span>','📰 <span>Weekly Briefing</span>','🎬 <span>Film Room (Elite Exclusive)</span>','🧠 <span>Coaching Intel (Elite Exclusive)</span>']
+  }
+};
+
+const t = tiers[tier] || tiers.vault;
+document.getElementById('headline').textContent = t.headline;
+document.getElementById('tier-badge').textContent = t.badge;
+document.getElementById('access-code').textContent = t.code;
+document.getElementById('features-grid').innerHTML = t.features.map(f=>`<div class="feature">${f}</div>`).join('');
+</script>
+</body>
+</html>

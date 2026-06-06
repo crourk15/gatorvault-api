@@ -1,0 +1,44 @@
+GatorVault Phase 2 — On3 Ingest Install
+========================================
+
+The ingest API routes are NOT defined inline in server.js.
+They are registered inside lib/recruiting-routes.js via mountRecruitingRoutes(app).
+
+FILES TO COPY (into your server/ folder)
+----------------------------------------
+  lib/on3-client.js          (NEW — fetches On3 commit pages)
+  lib/on3-ingest.js          (NEW — snapshot diff + auto-fire events)
+  lib/recruiting-routes.js   (REPLACE — adds /api/recruiting/ingest routes)
+  scripts/run-on3-ingest.js  (NEW — CLI for baseline + diff runs)
+
+PATCH server.js
+---------------
+After:  mountRecruitingRoutes(app);
+
+Add the startOn3IngestScheduler function and call it inside app.listen (see server-ingest-snippet.js).
+
+PATCH package.json scripts
+--------------------------
+  "ingest:on3": "node scripts/run-on3-ingest.js",
+  "ingest:on3:baseline": "node scripts/run-on3-ingest.js --baseline"
+
+PATCH .env (optional, for cron)
+-------------------------------
+ON3_INGEST_ENABLED=false
+ON3_INGEST_INTERVAL_MS=120000
+ON3_CLASS_YEARS=2026,2027
+
+VERIFY
+------
+1. Restart server: npm start
+2. curl http://localhost:3000/api/recruiting/ingest/status
+3. npm run ingest:on3:baseline   (first time only)
+4. npm run ingest:on3            (diff — should fire: [] if unchanged)
+
+API ENDPOINTS
+-------------
+  GET  /api/recruiting/ingest/status
+  POST /api/recruiting/ingest
+       Headers: X-Ingest-Secret: GV2026admin
+       Body: { "baselineOnly": true }  (baseline)
+       Body: {}                        (diff run)

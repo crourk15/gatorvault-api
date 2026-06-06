@@ -1,0 +1,6 @@
+.tools/
+temp_*.js
+*.zip
+server/node_modules/
+server/.env
+server/data/users.json

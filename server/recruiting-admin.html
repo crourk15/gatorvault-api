@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GatorVault — Recruiting Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#030712;color:#e2e8f0}
+    .wrap{max-width:960px;margin:0 auto;padding:24px 16px 48px}h1{color:#FA4616;font-family:Oswald,Arial,sans-serif;letter-spacing:2px}
+    .card{background:#0b1220;border:1px solid #1e3a5f;border-radius:12px;padding:20px;margin-bottom:16px}
+    label{display:block;font-size:12px;color:#94a3b8;margin-bottom:6px;text-transform:uppercase}
+    input,select,textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#111827;color:#f8fafc;margin-bottom:12px}
+    textarea{min-height:80px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:640px){.row{grid-template-columns:1fr}}
+    button{border:0;border-radius:8px;padding:12px 16px;font-weight:700;cursor:pointer;background:#FA4616;color:#fff}
+    button.secondary{background:#1e3a5f;color:#e2e8f0}#log{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:14px;min-height:200px;font-family:monospace;font-size:12px;white-space:pre-wrap}
+    .ok{color:#4ade80}.err{color:#f87171}.info{color:#93c5fd}
+    a{color:#60a5fa}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🐊 Recruiting Admin</h1>
+    <p style="color:#94a3b8;font-size:14px;margin-bottom:20px">Fire commit / flip / portal alerts manually. Updates the live board + member alerts instantly.</p>
+
+    <div class="card">
+      <label>Admin PIN</label>
+      <input id="pin" type="password" placeholder="GV2026admin" autocomplete="off">
+    </div>
+
+    <div class="card">
+      <label>Event type</label>
+      <select id="eventType">
+        <option value="commit">Commit to Florida</option>
+        <option value="flip">Flip to Florida</option>
+        <option value="decommit">Decommit</option>
+        <option value="portal_in">Portal addition (incoming)</option>
+        <option value="portal_out">Portal exit</option>
+        <option value="target_update">Target update</option>
+        <option value="ranking_change">Class ranking update</option>
+      </select>
+      <div class="row">
+        <div><label>Player name *</label><input id="name" placeholder="Maxwell Hiller"></div>
+        <div><label>Position</label><input id="pos" placeholder="IOL"></div>
+      </div>
+      <div class="row">
+        <div><label>Class year</label><input id="classYear" type="number" placeholder="2027"></div>
+        <div><label>Stars</label><input id="stars" type="number" min="1" max="5" value="4"></div>
+      </div>
+      <div class="row">
+        <div><label>School / origin</label><input id="school" placeholder="Coatesville, PA"></div>
+        <div><label>Height / weight</label><input id="htWt" placeholder="6-5.5 / 305"></div>
+      </div>
+      <label>Alert skinny (short summary for My Alerts)</label>
+      <textarea id="skinny" placeholder="5★ IOL · #3 nationally · program-defining commit for 2027."></textarea>
+      <label>Profile note (optional, longer)</label>
+      <textarea id="profileNote" placeholder="Full context for player profile page."></textarea>
+      <div id="ranking-fields" style="display:none" class="row">
+        <div><label>National rank</label><input id="nationalRank" type="number" placeholder="5"></div>
+        <div><label>SEC rank</label><input id="secRank" type="number" placeholder="3"></div>
+        <div><label>Class score</label><input id="classScore" type="number" step="0.01" placeholder="92.58"></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+        <button id="fire">Fire alert + update board</button>
+        <button class="secondary" id="preview-slug" type="button">Preview slug</button>
+      </div>
+      <p style="font-size:12px;color:#64748b;margin-top:10px">Profile URL: <a id="profile-link" href="#">/player/…</a></p>
+    </div>
+
+    <div class="card">
+      <strong>On3 Ingest (Phase 2)</strong>
+      <p style="font-size:13px;color:#94a3b8;margin:8px 0 12px">Auto-polls On3 Florida boards and fires vault alerts when commits change. Baseline must be saved before diff runs.</p>
+      <div id="ingest-status" style="font-size:13px;line-height:1.6;color:#cbd5e1;margin-bottom:12px">Loading ingest status…</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="secondary" id="ingest-refresh" type="button">Refresh status</button>
+        <button class="secondary" id="ingest-run" type="button">Run diff now</button>
+        <button class="secondary" id="ingest-baseline" type="button">Reset baseline</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <strong>Log</strong>
+      <div id="log" style="margin-top:10px"></div>
+    </div>
+    <p style="font-size:13px;color:#94a3b8"><a href="/">← Vault</a> · <a href="/test-email.html">Email test</a> · <a href="/api/recruiting/status" target="_blank">API status</a> · <a href="/api/recruiting/ingest/status" target="_blank">Ingest status</a></p>
+  </div>
+  <script>
+    var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? 'http://localhost:3000' : location.origin;
+    var logEl = document.getElementById('log');
+    function log(cls, msg, obj) {
+      var line = '[' + new Date().toLocaleTimeString() + '] ' + msg + (obj ? '\n' + JSON.stringify(obj, null, 2) : '');
+      var d = document.createElement('div'); d.className = cls; d.textContent = line; logEl.prepend(d);
+    }
+    function slugify(n) {
+      return String(n||'').toLowerCase().replace(/['']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    }
+    function updateLink() {
+      var slug = slugify(document.getElementById('name').value);
+      var a = document.getElementById('profile-link');
+      a.href = '/player/' + slug; a.textContent = '/player/' + slug;
+    }
+    document.getElementById('name').addEventListener('input', updateLink);
+    document.getElementById('eventType').addEventListener('change', function() {
+      document.getElementById('ranking-fields').style.display = this.value === 'ranking_change' ? 'grid' : 'none';
+    });
+    document.getElementById('preview-slug').addEventListener('click', updateLink);
+    function renderIngestStatus(data) {
+      var el = document.getElementById('ingest-status');
+      if (!data || !data.ok) {
+        el.innerHTML = '<span class="err">Ingest status unavailable</span>';
+        return;
+      }
+      var years = data.years || {};
+      var y2026 = years['2026'] || {};
+      var y2027 = years['2027'] || {};
+      el.innerHTML =
+        '<div><strong>Cron:</strong> ' + (data.enabled ? '<span class="ok">ON</span>' : 'off (set ON3_INGEST_ENABLED=true)') + '</div>' +
+        '<div><strong>Snapshot:</strong> ' + (data.initialized ? '<span class="ok">ready</span>' : '<span class="err">not initialized — run baseline</span>') + '</div>' +
+        '<div><strong>Last run:</strong> ' + (data.lastRun ? new Date(data.lastRun).toLocaleString() : 'never') + '</div>' +
+        '<div><strong>2026 board:</strong> ' + (y2026.commitCount || 0) + ' commits' + (y2026.rankings ? ' · #' + y2026.rankings.nationalRank + ' natl' : '') + '</div>' +
+        '<div><strong>2027 board:</strong> ' + (y2027.commitCount || 0) + ' commits' + (y2027.rankings ? ' · #' + y2027.rankings.nationalRank + ' natl' : '') + '</div>';
+    }
+    async function loadIngestStatus() {
+      try {
+        var r = await fetch(API + '/api/recruiting/ingest/status');
+        renderIngestStatus(await r.json());
+      } catch (e) {
+        renderIngestStatus(null);
+      }
+    }
+    async function postIngest(body) {
+      var pin = document.getElementById('pin').value.trim();
+      if (!pin) return log('err', 'PIN required for ingest actions');
+      log('info', 'POST /api/recruiting/ingest', body);
+      try {
+        var r = await fetch(API + '/api/recruiting/ingest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Ingest-Secret': pin },
+          body: JSON.stringify(Object.assign({ pin: pin }, body))
+        });
+        var data = await r.json();
+        if (data.ok) {
+          log('ok', 'Ingest complete', data);
+          loadIngestStatus();
+        } else log('err', 'Ingest failed', data);
+      } catch (e) { log('err', String(e)); }
+    }
+    document.getElementById('ingest-refresh').addEventListener('click', loadIngestStatus);
+    document.getElementById('ingest-run').addEventListener('click', function() { postIngest({}); });
+    document.getElementById('ingest-baseline').addEventListener('click', function() {
+      if (!confirm('Reset On3 baseline? This re-saves the current board without firing alerts.')) return;
+      postIngest({ baselineOnly: true });
+    });
+    loadIngestStatus();
+
+    document.getElementById('fire').addEventListener('click', async function() {
+      var pin = document.getElementById('pin').value.trim();
+      var eventType = document.getElementById('eventType').value;
+      var body = {
+        pin: pin,
+        eventType: eventType,
+        name: document.getElementById('name').value.trim(),
+        pos: document.getElementById('pos').value.trim(),
+        classYear: document.getElementById('classYear').value ? parseInt(document.getElementById('classYear').value, 10) : null,
+        stars: parseInt(document.getElementById('stars').value || '3', 10),
+        school: document.getElementById('school').value.trim(),
+        htWt: document.getElementById('htWt').value.trim(),
+        skinny: document.getElementById('skinny').value.trim(),
+        profileNote: document.getElementById('profileNote').value.trim(),
+        category: eventType.startsWith('portal') ? 'portal' : (eventType === 'target_update' ? 'target' : 'recruit')
+      };
+      if (eventType === 'ranking_change') {
+        body.classYear = parseInt(document.getElementById('classYear').value, 10);
+        body.nationalRank = parseInt(document.getElementById('nationalRank').value, 10);
+        body.secRank = parseInt(document.getElementById('secRank').value, 10);
+        body.classScore = parseFloat(document.getElementById('classScore').value);
+      }
+      if (!pin) return log('err', 'PIN required');
+      if (eventType !== 'ranking_change' && !body.name) return log('err', 'Player name required');
+      log('info', 'POST /api/recruiting/events', body);
+      try {
+        var r = await fetch(API + '/api/recruiting/events', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        var data = await r.json();
+        if (data.ok) log('ok', 'Live update published', data);
+        else log('err', 'Failed', data);
+      } catch (e) { log('err', String(e)); }
+    });
+    updateLink();
+  </script>
+</body>
+</html>

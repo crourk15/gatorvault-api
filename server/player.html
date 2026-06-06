@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GatorVault Player Profile</title>
+  <meta name="robots" content="noindex">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{'gator-orange':'#FA4616','gator-blue':'#003087','surface-700':'#0b1220','surface-800':'#111827','surface-200':'#94a3b8'}}}};</script>
+  <style>body{background:#030712;color:#e2e8f0;font-family:Inter,Arial,sans-serif;}</style>
+</head>
+<body class="min-h-screen">
+  <div class="max-w-3xl mx-auto px-4 py-8">
+    <a href="/" class="text-sm text-blue-400 hover:text-blue-300">← Back to GatorVault</a>
+    <div id="loading" class="mt-8 text-surface-200">Loading profile…</div>
+    <div id="error" class="mt-8 text-red-400 hidden"></div>
+    <div id="profile" class="hidden mt-6 space-y-6">
+      <div class="bg-surface-700 border border-gator-blue/30 rounded-2xl p-6">
+        <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+          <div>
+            <h1 id="p-name" class="font-bold text-3xl text-white"></h1>
+            <p id="p-meta" class="text-gator-orange font-semibold mt-1"></p>
+          </div>
+          <span id="p-status" class="text-xs font-bold px-3 py-1 rounded-full bg-gator-orange/20 text-gator-orange"></span>
+        </div>
+        <p id="p-school" class="text-surface-200 text-sm mb-2"></p>
+        <p id="p-htwt" class="text-surface-200/70 text-sm mb-4"></p>
+        <p id="p-skinny" class="text-white text-sm leading-relaxed border-l-4 border-gator-orange pl-4"></p>
+        <p id="p-note" class="text-surface-200 text-sm leading-relaxed mt-4 hidden"></p>
+      </div>
+      <div class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6">
+        <h2 class="font-bold text-white mb-3">Recruiting timeline</h2>
+        <div id="p-events" class="space-y-3 text-sm"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000' : location.origin;
+    var slug = (location.pathname.match(/\/player\/([^/]+)/) || [])[1] || new URLSearchParams(location.search).get('slug') || '';
+
+    function stars(n) {
+      var s = '';
+      for (var i = 0; i < (n || 0); i++) s += '★';
+      return s || '—';
+    }
+
+    async function load() {
+      if (!slug) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('error').classList.remove('hidden');
+        document.getElementById('error').textContent = 'No player slug in URL. Example: /player/maxwell-hiller';
+        return;
+      }
+      try {
+        var r = await fetch(API + '/api/players/' + encodeURIComponent(slug));
+        var data = await r.json();
+        if (!data.ok || !data.player) throw new Error(data.error || 'Player not found');
+        var p = data.player;
+        document.title = p.name + ' — GatorVault';
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('profile').classList.remove('hidden');
+        document.getElementById('p-name').textContent = p.name;
+        document.getElementById('p-meta').textContent = [p.pos, p.classYear ? 'Class of ' + p.classYear : '', stars(p.stars)].filter(Boolean).join(' · ');
+        document.getElementById('p-school').textContent = p.category === 'portal' ? ('From: ' + (p.fromSchool || p.school)) : (p.school || '');
+        document.getElementById('p-htwt').textContent = p.htWt || '';
+        document.getElementById('p-status').textContent = (p.status || '').replace(/_/g, ' ').toUpperCase();
+        document.getElementById('p-skinny').textContent = p.skinny || 'GatorVault recruit profile.';
+        if (p.profileNote) {
+          document.getElementById('p-note').textContent = p.profileNote;
+          document.getElementById('p-note').classList.remove('hidden');
+        }
+        var evEl = document.getElementById('p-events');
+        if (!data.events || !data.events.length) {
+          evEl.innerHTML = '<p class="text-surface-200/60">No events yet.</p>';
+        } else {
+          evEl.innerHTML = data.events.map(function(e) {
+            return '<div class="bg-surface-800 rounded-lg p-3"><div class="font-semibold text-white">' + e.title + '</div>'
+              + '<div class="text-xs text-surface-200/60 mt-1">' + new Date(e.createdAt).toLocaleString() + '</div>'
+              + (e.skinny ? '<div class="text-surface-200 mt-2">' + e.skinny + '</div>' : '') + '</div>';
+          }).join('');
+        }
+      } catch (e) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('error').classList.remove('hidden');
+        document.getElementById('error').textContent = e.message || String(e);
+      }
+    }
+    load();
+  </script>
+</body>
+</html>

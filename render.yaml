@@ -1,0 +1,45 @@
+# GatorVault API — Render Blueprint
+# Dashboard: New → Blueprint → connect repo → Deploy Blueprint
+# Secrets (sync: false) are prompted in Render; paste values from server/.env
+
+services:
+  - type: web
+    name: gatorvault-api
+    runtime: node
+    plan: free
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/recruiting/ingest/status
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SITE_URL
+        value: https://gatorvaultinsider.com
+      - key: EMAIL_PROVIDER
+        value: emailjs
+      - key: ON3_INGEST_ENABLED
+        value: "true"
+      - key: ON3_INGEST_INTERVAL_MS
+        value: "120000"
+      - key: ON3_CLASS_YEARS
+        value: "2026,2027"
+      - key: ON3_INGEST_BOOT_DELAY_MS
+        value: "15000"
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: EMAILJS_PUBLIC_KEY
+        sync: false
+      - key: EMAILJS_PRIVATE_KEY
+        sync: false
+      - key: EMAILJS_SERVICE_ID
+        sync: false
+      - key: EMAILJS_TEMPLATE_ID
+        sync: false
+      - key: EMAILJS_REPLY_TO
+        sync: false
+      - key: RECRUITING_ADMIN_PIN
+        sync: false
+      - key: EMAIL_TEST_PIN
+        sync: false
