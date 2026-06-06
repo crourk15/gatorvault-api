@@ -74,9 +74,18 @@
       return 'rating-solid';
     }
 
+    function headshotSrc(url) {
+      if (!url) return '';
+      if (/^https?:\/\//i.test(url) || String(url).indexOf('data:') === 0) return String(url);
+      var path = String(url).trim();
+      if (path.charAt(0) !== '/') path = '/headshots/' + path;
+      return path;
+    }
+
     function headshotHtml(p) {
-      if (p.headshotUrl && p.hasHeadshot !== false) {
-        return '<img src="' + p.headshotUrl + '" alt="" class="headshot" onerror="this.outerHTML=\'<div class=headshot-fb>' + initials(p.name) + '</div>\'">';
+      var src = headshotSrc(p.headshotUrl);
+      if (src && p.hasHeadshot !== false) {
+        return '<img src="' + src + '" alt="" class="headshot" onerror="this.outerHTML=\'<div class=headshot-fb>' + initials(p.name) + '</div>\'">';
       }
       return '<div class="headshot-fb">' + initials(p.name) + '</div>';
     }

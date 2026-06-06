@@ -206,9 +206,15 @@
         .rating-solid{border-color:#003087;color:#60a5fa;background:rgba(0,48,135,.2);}
         .player-card{cursor:pointer;}
         .player-card-pro{display:flex;flex-direction:column;gap:.85rem;}
-        .player-card-top{display:flex;gap:1rem;align-items:flex-start;}
-        .player-headshot{width:72px;height:72px;border-radius:12px;object-fit:cover;border:2px solid rgba(0,48,135,.45);flex-shrink:0;background:#060f1f;}
-        .player-headshot-fallback{width:72px;height:72px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#001a4d,#003087);border:2px solid rgba(250,70,22,.35);color:#FA4616;font-family:'Oswald',sans-serif;font-weight:700;font-size:1.35rem;flex-shrink:0;}
+        .player-card-top{display:flex;gap:.85rem;align-items:flex-start;}
+        .player-headshot-wrap{width:76px;flex-shrink:0;position:relative;}
+        .player-headshot{width:76px;height:76px;border-radius:12px;object-fit:cover;border:2px solid rgba(0,48,135,.45);display:block;background:#060f1f;}
+        .player-headshot-fallback{width:76px;height:76px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#001a4d,#003087);border:2px solid rgba(250,70,22,.35);color:#FA4616;font-family:'Oswald',sans-serif;font-weight:700;font-size:1.35rem;}
+        .player-card-body{flex:1;min-width:0;}
+        .player-card-header{display:flex;align-items:flex-start;gap:.5rem;width:100%;}
+        .player-name-block{flex:1;min-width:0;max-width:100%;}
+        .player-card-name{font-family:'Oswald',sans-serif;font-weight:700;font-size:1.02rem;line-height:1.25;color:#fff;margin:0;word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+        .player-rating-slot{flex-shrink:0;margin-left:auto;padding-left:.25rem;}
         .player-rating-badge{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-weight:700;font-size:1.15rem;flex-shrink:0;border:2px solid;position:relative;}
         .player-rating-override{position:absolute;top:-6px;right:-10px;font-size:.55rem;font-weight:700;background:#854d0e;color:#fef08a;padding:2px 5px;border-radius:999px;letter-spacing:.04em;}
         .player-meas-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.45rem .75rem;font-size:.7rem;color:#94a3b8;}
@@ -242,6 +248,28 @@
         .vault-points-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#FA4616,#fbbf24);transition:width 1s ease-out;}
         @keyframes livePulse{0%,100%{opacity:1}50%{opacity:.3}}
         .live-dot{width:8px;height:8px;border-radius:50%;background:#ef4444;animation:livePulse 1.5s ease-in-out infinite;display:inline-block;}
+        .live-dash-grid{display:grid;grid-template-columns:1fr;gap:1.25rem;}
+        @media(min-width:1024px){.live-dash-grid{grid-template-columns:1.2fr 1fr 1fr;}}
+        .live-panel{background:#0a1628;border:1px solid rgba(0,48,135,.35);border-radius:1rem;padding:1rem;min-height:320px;display:flex;flex-direction:column;}
+        .live-panel h3{font-family:'Oswald',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin:0 0 .75rem;display:flex;align-items:center;gap:.5rem;}
+        .live-ticker-wrap{overflow:hidden;border-radius:.75rem;background:#060f1f;border:1px solid rgba(250,70,22,.2);margin-bottom:1rem;}
+        .live-ticker{display:flex;gap:2rem;padding:.65rem 0;animation:liveTicker 40s linear infinite;white-space:nowrap;}
+        @keyframes liveTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+        .live-ticker-item{font-size:.75rem;color:#e2e8f0;padding:0 1rem;border-right:1px solid rgba(255,255,255,.08);}
+        .live-feed-list{flex:1;overflow-y:auto;max-height:520px;space-y:.5rem;}
+        .live-feed-item{padding:.75rem;border-radius:.65rem;background:#060f1f;border:1px solid rgba(0,48,135,.25);margin-bottom:.5rem;}
+        .live-feed-item:hover{border-color:rgba(250,70,22,.35);}
+        .live-type-pill{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em;}
+        .live-type-commit{background:rgba(250,70,22,.15);color:#fb923c;}
+        .live-type-portal{background:rgba(59,130,246,.15);color:#93c5fd;}
+        .live-type-beat{background:rgba(168,85,247,.15);color:#d8b4fe;}
+        .live-type-podcast{background:rgba(34,197,94,.15);color:#86efac;}
+        .live-type-breaking,.live-type-article{background:rgba(251,191,36,.12);color:#fde047;}
+        .live-type-staff,.live-type-injury,.live-type-depth{background:rgba(96,165,250,.12);color:#93c5fd;}
+        .live-beat-post{padding:.7rem;border-radius:.65rem;background:#060f1f;border-left:3px solid #a855f7;margin-bottom:.5rem;}
+        .live-pod-ep{display:flex;gap:.75rem;padding:.75rem;border-radius:.65rem;background:#060f1f;border:1px solid rgba(0,48,135,.2);margin-bottom:.5rem;}
+        .live-pod-thumb{width:56px;height:56px;border-radius:.5rem;object-fit:cover;background:#111827;flex-shrink:0;}
+        .live-status-bar{font-size:.7rem;color:#64748b;display:flex;flex-wrap:wrap;gap:.75rem;margin-top:.5rem;}
         .score-input{width:60px;background:#060f1f;border:2px solid rgba(0,48,135,.4);border-radius:.5rem;padding:.5rem;color:white;font-family:'Oswald',sans-serif;font-size:1.25rem;text-align:center;}
         .score-input:focus{border-color:#FA4616;box-shadow:0 0 0 3px rgba(250,70,22,.2);}
         .op-access-form{background:rgba(0,48,135,.1);border:1px solid rgba(0,48,135,.2);border-radius:.75rem;padding:12px 16px;margin-top:16px;}
@@ -657,6 +685,7 @@
                     <button data-id="476" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="community">💬 Community</button>
                     <button data-id="477" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="highlights">📺 Film Room</button>
                     <button data-id="478" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="livescores">📊 Live Scores</button>
+                    <button data-id="478b" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="live">⚡ Live</button>
                     <button data-id="479" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="alerts">🔔 My Alerts</button>
                     <button data-id="480" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="players">👤 Players</button>
                     <button data-id="481" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="gamezone">🏆 Game Zone</button>
@@ -926,6 +955,33 @@
                     </div>
                 </div>
 
+                <!-- ====== LIVE DASHBOARD ====== -->
+                <div id="vpane-live" class="vpane fade-in space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                        <div>
+                            <h1 class="font-display text-2xl md:text-3xl font-bold text-white flex items-center gap-2">⚡ GatorNation Live Dashboard <span class="live-dot"></span></h1>
+                            <p class="text-surface-200 text-sm mt-1 max-w-2xl">Real-time command center — commits, portal, beat writers, podcasts, and breaking Gator news.</p>
+                        </div>
+                        <button id="live-refresh-btn" type="button" class="bg-gator-orange hover:bg-gator-orangedk text-white text-xs font-bold px-4 py-2 rounded-lg min-h-[36px]">Refresh now</button>
+                    </div>
+                    <div id="live-ticker-wrap" class="live-ticker-wrap hidden"><div id="live-ticker" class="live-ticker"></div></div>
+                    <div id="live-status-bar" class="live-status-bar"></div>
+                    <div class="live-dash-grid">
+                        <div class="live-panel">
+                            <h3>📡 Live Feed</h3>
+                            <div id="live-feed-list" class="live-feed-list"><p class="text-surface-200/50 text-sm">Loading live feed…</p></div>
+                        </div>
+                        <div class="live-panel">
+                            <h3>✍️ Beat Writer Stream</h3>
+                            <div id="live-beat-list" class="live-feed-list"><p class="text-surface-200/50 text-sm">Loading beat stream…</p></div>
+                        </div>
+                        <div class="live-panel">
+                            <h3>🎙️ Podcast Hub</h3>
+                            <div id="live-podcast-list" class="live-feed-list"><p class="text-surface-200/50 text-sm">Loading podcasts…</p></div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- ====== MY ALERTS ====== -->
                 <div data-id="691" id="vpane-alerts" class="vpane fade-in space-y-6">
                     <div>
@@ -1005,14 +1061,8 @@
                             </div>
                             <div data-id="716" class="space-y-3" id="recent-alerts-list"></div>
                             <div id="alerts-empty" class="hidden text-center py-8 text-surface-200 text-sm">No alerts yet. Turn on categories on the left, or follow players in Player Profiles to get personalized updates.</div>
-                            <div class="mt-4 border-t border-gator-blue/20 pt-4">
-                                <p class="text-xs text-surface-200/50 mb-2">Preview how alerts look (demo only)</p>
-                                <div class="flex flex-wrap gap-2 items-center">
-                                    <button id="test-commit" class="px-3 py-2 rounded-lg bg-surface-800 text-surface-200 text-xs font-semibold border border-gator-blue/20">Preview Commit</button>
-                                    <button id="test-portal" class="px-3 py-2 rounded-lg bg-surface-800 text-surface-200 text-xs font-semibold border border-gator-blue/20">Preview Portal</button>
-                                    <button id="test-score" class="px-3 py-2 rounded-lg bg-surface-800 text-surface-200 text-xs font-semibold border border-gator-blue/20">Preview Score</button>
-                                    <button id="view-digest" class="ml-auto px-3 py-2 rounded-lg bg-gator-orange text-black text-xs font-semibold">View Digest</button>
-                                </div>
+                            <div class="mt-4 border-t border-gator-blue/20 pt-4 flex flex-wrap gap-2 items-center">
+                                <button id="view-digest" class="px-3 py-2 rounded-lg bg-gator-orange text-black text-xs font-semibold">View Digest</button>
                             </div>
                             <div id="digest-drawer" class="fixed right-6 bottom-6 w-96 max-h-[70vh] overflow-auto bg-surface-900 border border-gator-blue/20 rounded-2xl p-4 z-60 hidden">
                                 <div class="flex items-center justify-between mb-3">
@@ -1905,6 +1955,7 @@
         if(tab==='articles'){try{gvLoadPublishedContent(true);}catch(e){}}
         if(tab==='community'){try{gvLoadCommunity(true);}catch(e){}}
         if(tab==='players'){try{gvLoadRosterProfiles(true);}catch(e){}}
+        if(tab==='live'){try{gvLoadLiveDashboard(true);}catch(e){}}
         if(tab==='alerts'){try{applyPrefUI();renderAlerts();if(typeof gvSyncAlertSubscription==='function')gvSyncAlertSubscription();}catch(e){}}
         document.querySelectorAll('.vpane').forEach(function(p){p.classList.remove('active');p.style.display='none';});
         document.querySelectorAll('.vtab').forEach(function(t){t.classList.remove('active');t.classList.remove('text-gator-orange');t.classList.add('text-surface-200');});
@@ -2049,7 +2100,7 @@
         {season:'2026',title:'Sumrall post-spring presser',meta:'Media · interviews',note:'Press clips ship only when sourced natively — no scrubbed reels.'}
     ];
     var recentAlerts=[];
-    var GV_ALERTS_FEED_VERSION=2;
+    var GV_ALERTS_FEED_VERSION=3;
     var ALERT_TYPE_META={
         recruiting:{icon:'🔥',label:'Recruiting',pill:'bg-gator-orange/15 text-gator-orange'},
         depth:{icon:'📋',label:'Depth Chart',pill:'bg-blue-500/15 text-blue-300'},
@@ -2350,12 +2401,6 @@
     };
 
     // preview buttons wiring (if DOM exists)
-    setTimeout(function(){
-        var tc=document.getElementById('test-commit');if(tc)tc.addEventListener('click',function(){notifyEvent({text:'Preview: 4★ WR flips to Florida',detail:'Demo alert — this is how commit notifications appear in your feed.',type:'commit',time:'Just now',preview:true});});
-        var tp=document.getElementById('test-portal');if(tp)tp.addEventListener('click',function(){notifyEvent({text:'Preview: Starting LB enters portal',detail:'Demo alert — portal moves show up here with context so you know who to watch.',type:'portal',time:'Just now',preview:true});});
-        var ts=document.getElementById('test-score');if(ts)ts.addEventListener('click',function(){notifyEvent({text:'Preview: UF 28 – FAU 14 (Q3)',detail:'Demo alert — live score updates appear during game windows.',type:'score',time:'Just now',preview:true});});
-    },400);
-
     // wire preference buttons
     setTimeout(function(){
         var save=document.getElementById('save-alerts-btn');if(save&&!save._gvWired){save._gvWired=true;save.addEventListener('click',function(){
@@ -2442,14 +2487,30 @@
         return p.rating!=null?Number(p.rating):null;
     }
 
-    function gvPlayerHeadshotHtml(p,size){
-        var cls=size==='lg'?'player-headshot':'player-headshot';
-        var fbCls=size==='lg'?'player-headshot-fallback':'player-headshot-fallback';
-        if(p.headshotUrl&&p.hasHeadshot!==false){
-            return '<img src="'+gvEscHtml(p.headshotUrl)+'" alt="'+gvEscHtml(p.name||'')+'" class="'+cls+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling&&(this.nextElementSibling.style.display=\'flex\');">'
-                +'<div class="'+fbCls+'" style="display:none">'+playerInitials(p.name)+'</div>';
+    function gvResolveHeadshotUrl(url){
+        if(!url)return '';
+        if(/^https?:\/\//i.test(url)||String(url).indexOf('data:')===0)return String(url);
+        var path=String(url).trim();
+        if(path.charAt(0)!=='/')path='/headshots/'+path;
+        if(window.location.protocol==='file:'){
+            return (gvRecruitApiBase()||'').replace(/\/$/,'')+path;
         }
-        return '<div class="'+fbCls+'">'+playerInitials(p.name)+'</div>';
+        return path;
+    }
+
+    function gvPlayerHeadshotHtml(p,size){
+        var cls='player-headshot';
+        var fbCls='player-headshot-fallback';
+        var src=gvResolveHeadshotUrl(p.headshotUrl);
+        var wrapOpen='<div class="player-headshot-wrap">';
+        var wrapClose='</div>';
+        if(src&&p.hasHeadshot!==false){
+            return wrapOpen
+                +'<img src="'+gvEscHtml(src)+'" alt="'+gvEscHtml(p.name||'')+'" class="'+cls+'" loading="lazy" onerror="this.style.display=\'none\';var fb=this.nextElementSibling;if(fb)fb.style.display=\'flex\';">'
+                +'<div class="'+fbCls+'" style="display:none" aria-hidden="true">'+playerInitials(p.name)+'</div>'
+                +wrapClose;
+        }
+        return wrapOpen+'<div class="'+fbCls+'">'+playerInitials(p.name)+'</div>'+wrapClose;
     }
 
     function gvPlayerStarsHtml(p){
@@ -2526,7 +2587,7 @@
 
     function gvLoadRosterProfiles(force){
         var base=gvRecruitApiBase();
-        return fetch(base+'/api/roster/players').then(function(r){if(!r.ok)throw new Error('roster HTTP '+r.status);return r.json();}).then(function(data){
+        return fetch(base+'/api/roster/players?_='+Date.now()).then(function(r){if(!r.ok)throw new Error('roster HTTP '+r.status);return r.json();}).then(function(data){
             if(data.ok&&data.players&&data.players.length){
                 window.playerProfiles=data.players;
                 renderPlayers();
@@ -2606,13 +2667,14 @@
             card.dataset.slug=p.slug||'';
             card.innerHTML='<div class="player-card-top">'
                 +gvPlayerHeadshotHtml(p)
-                +'<div class="flex-1 min-w-0">'
-                +'<div class="flex items-start justify-between gap-2">'
-                +'<div class="min-w-0"><div class="font-display font-bold text-white truncate">'+(p.name||'')+'</div>'
-                +'<div class="text-xs text-gator-orange font-semibold mt-0.5">'+(pos||'—')+(p.year||p.class?' · '+(p.year||p.class):'')+'</div>'
+                +'<div class="player-card-body">'
+                +'<div class="player-card-header">'
+                +'<div class="player-name-block">'
+                +'<h4 class="player-card-name">'+gvEscHtml(p.name||'')+'</h4>'
+                +'<div class="text-xs text-gator-orange font-semibold mt-0.5">'+gvEscHtml(pos||'—')+(p.year||p.class?' · '+gvEscHtml(p.year||p.class):'')+'</div>'
                 +gvPlayerStarsHtml(p)
                 +'</div>'
-                +gvPlayerRatingBadgeHtml(p)
+                +'<div class="player-rating-slot">'+gvPlayerRatingBadgeHtml(p)+'</div>'
                 +'</div></div></div>'
                 +gvPlayerMeasGrid(p)
                 +'<p class="text-xs text-surface-200/85 leading-relaxed line-clamp-3">'+(gvEscHtml(p.bio||p.stats||''))+'</p>'
@@ -2660,6 +2722,12 @@
             var modal=document.getElementById('player-profile-modal');
             if(closeBtn)closeBtn.addEventListener('click',closePlayerProfile);
             if(modal)modal.addEventListener('click',function(e){if(e.target===modal)closePlayerProfile();});
+        }
+        if(!window._gvRosterSyncWired){
+            window._gvRosterSyncWired=true;
+            window.addEventListener('storage',function(e){
+                if(e.key==='gv_roster_updated')gvLoadRosterProfiles(true);
+            });
         }
     }
 
@@ -2963,7 +3031,16 @@
         }).catch(function(){window._gvRecruitingLiveReady=false;});
     }
 
+    function gvIsTestRecruitEvent(ev){
+        if(!ev)return true;
+        var title=String(ev.title||'').toLowerCase();
+        var slug=String(ev.playerSlug||'').toLowerCase();
+        if(slug==='maxwell-hiller'&&ev.source==='manual')return true;
+        if(title.indexOf('preview:')!==-1)return true;
+        return false;
+    }
     function gvProcessRecruitEvent(ev){
+        if(gvIsTestRecruitEvent(ev))return;
         var payload={text:ev.title,detail:ev.skinny||ev.detail||'',title:ev.title,skinny:ev.skinny,playerSlug:ev.playerSlug,name:ev.payload&&ev.payload.player?ev.payload.player.name:'',eventId:ev.id};
         if(ev.eventType==='portal_in'||ev.eventType==='portal_out'){
             window.onPortalMove(payload);
@@ -3561,6 +3638,194 @@
                 .catch(function(){newSubmit.disabled=false;});
         });
         gvStartCommunityPoll();
+    },600);
+
+    // ---- Live Dashboard ----
+    window._gvLive={feed:[],beat:{posts:[]},podcasts:{shows:[]},loading:false,pollTimer:null,lastUpdated:null};
+
+    function gvLiveApiBase(){return window.GV_API_BASE||((window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1')?'http://localhost:3000':window.location.origin);}
+
+    function gvLiveEsc(s){
+        return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function gvLiveTimeAgo(iso){
+        if(!iso)return '';
+        var ms=Date.now()-new Date(iso).getTime();
+        if(ms<60000)return 'Just now';
+        if(ms<3600000)return Math.floor(ms/60000)+'m ago';
+        if(ms<86400000)return Math.floor(ms/3600000)+'h ago';
+        if(ms<604800000)return Math.floor(ms/86400000)+'d ago';
+        return new Date(iso).toLocaleDateString();
+    }
+
+    function gvLiveTypeLabel(type){
+        var map={commit:'Commit',portal:'Portal',staff:'Staff',injury:'Injury',depth:'Depth',beat:'Beat',breaking:'Breaking',podcast:'Podcast',article:'Article'};
+        return map[type]||type||'Update';
+    }
+
+    function gvLiveResolveUrl(url){
+        if(!url)return null;
+        if(/^https?:\/\//i.test(url))return url;
+        if(url.charAt(0)==='/')return window.location.origin+url;
+        return url;
+    }
+
+    function gvRenderLiveFeed(items){
+        var el=document.getElementById('live-feed-list');
+        if(!el)return;
+        if(!items||!items.length){
+            el.innerHTML='<p class="text-surface-200/50 text-sm">No live items yet. The server refreshes beat writers, podcasts, and recruiting events automatically.</p>';
+            return;
+        }
+        var html='';
+        items.forEach(function(item){
+            var href=gvLiveResolveUrl(item.url);
+            var pill='live-type-'+(item.type||'breaking');
+            html+='<div class="live-feed-item">';
+            html+='<div class="flex items-start justify-between gap-2 mb-1">';
+            html+='<span class="live-type-pill '+pill+'">'+gvLiveEsc(gvLiveTypeLabel(item.type))+'</span>';
+            html+='<span class="text-[.65rem] text-surface-200/50 shrink-0">'+gvLiveEsc(gvLiveTimeAgo(item.createdAt))+'</span>';
+            html+='</div>';
+            if(href)html+='<a href="'+gvLiveEsc(href)+'" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-white hover:text-gator-orange leading-snug block">'+gvLiveEsc(item.title)+'</a>';
+            else html+='<p class="text-sm font-semibold text-white leading-snug">'+gvLiveEsc(item.title)+'</p>';
+            if(item.summary)html+='<p class="text-xs text-surface-200/70 mt-1 line-clamp-2">'+gvLiveEsc(String(item.summary).slice(0,220))+'</p>';
+            if(item.author)html+='<p class="text-[.65rem] text-surface-200/40 mt-1">'+gvLiveEsc(item.author)+(item.source?' · '+gvLiveEsc(item.source):'')+'</p>';
+            html+='</div>';
+        });
+        el.innerHTML=html;
+    }
+
+    function gvRenderLiveBeat(beat){
+        var el=document.getElementById('live-beat-list');
+        if(!el)return;
+        var posts=(beat&&beat.posts)||[];
+        if(!posts.length){
+            var src=beat&&beat.source?beat.source:'unavailable';
+            el.innerHTML='<p class="text-surface-200/50 text-sm">Beat stream empty ('+gvLiveEsc(src)+'). Set X_BEARER_TOKEN on the API for reliable X feeds.</p>';
+            return;
+        }
+        var html='';
+        posts.forEach(function(p){
+            var href=gvLiveResolveUrl(p.url);
+            html+='<div class="live-beat-post">';
+            html+='<div class="flex items-center justify-between gap-2 mb-1">';
+            html+='<span class="text-xs font-bold text-purple-300">@'+gvLiveEsc(p.handle||'')+'</span>';
+            html+='<span class="text-[.65rem] text-surface-200/50">'+gvLiveEsc(gvLiveTimeAgo(p.publishedAt))+'</span>';
+            html+='</div>';
+            html+='<p class="text-sm text-surface-100 leading-snug">'+gvLiveEsc(p.text)+'</p>';
+            if(p.outlet)html+='<p class="text-[.65rem] text-surface-200/40 mt-1">'+gvLiveEsc(p.writerName)+' · '+gvLiveEsc(p.outlet)+'</p>';
+            if(href)html+='<a href="'+gvLiveEsc(href)+'" target="_blank" rel="noopener noreferrer" class="text-[.65rem] text-gator-orange font-semibold mt-1 inline-block hover:underline">View on X →</a>';
+            html+='</div>';
+        });
+        el.innerHTML=html;
+    }
+
+    function gvRenderLivePodcasts(hub){
+        var el=document.getElementById('live-podcast-list');
+        if(!el)return;
+        var shows=(hub&&hub.shows)||[];
+        var eps=[];
+        shows.forEach(function(show){
+            (show.episodes||[]).slice(0,4).forEach(function(ep){
+                eps.push({show:show,ep:ep});
+            });
+        });
+        eps.sort(function(a,b){return new Date(b.ep.publishedAt)-new Date(a.ep.publishedAt);});
+        if(!eps.length){
+            el.innerHTML='<p class="text-surface-200/50 text-sm">Podcast feeds loading… New episodes appear here automatically.</p>';
+            return;
+        }
+        var html='';
+        eps.slice(0,16).forEach(function(row){
+            var ep=row.ep,show=row.show;
+            var thumb=ep.imageUrl||show.imageUrl;
+            var href=gvLiveResolveUrl(ep.playUrl);
+            html+='<div class="live-pod-ep">';
+            if(thumb)html+='<img class="live-pod-thumb" src="'+gvLiveEsc(thumb)+'" alt="" loading="lazy">';
+            else html+='<div class="live-pod-thumb flex items-center justify-center text-lg">🎙️</div>';
+            html+='<div class="min-w-0 flex-1">';
+            html+='<p class="text-[.65rem] text-green-300/80 font-bold uppercase tracking-wide">'+gvLiveEsc(show.name)+'</p>';
+            if(href)html+='<a href="'+gvLiveEsc(href)+'" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-white hover:text-gator-orange leading-snug block">'+gvLiveEsc(ep.title)+'</a>';
+            else html+='<p class="text-sm font-semibold text-white leading-snug">'+gvLiveEsc(ep.title)+'</p>';
+            if(ep.description)html+='<p class="text-xs text-surface-200/60 mt-1 line-clamp-2">'+gvLiveEsc(String(ep.description).replace(/<[^>]+>/g,'').slice(0,160))+'</p>';
+            html+='<p class="text-[.65rem] text-surface-200/40 mt-1">'+gvLiveEsc(gvLiveTimeAgo(ep.publishedAt))+(href?' · <span class="text-gator-orange">Play</span>':'')+'</p>';
+            html+='</div></div>';
+        });
+        el.innerHTML=html;
+    }
+
+    function gvRenderLiveTicker(items){
+        var wrap=document.getElementById('live-ticker-wrap');
+        var el=document.getElementById('live-ticker');
+        if(!wrap||!el)return;
+        var top=(items||[]).slice(0,12);
+        if(!top.length){wrap.classList.add('hidden');return;}
+        wrap.classList.remove('hidden');
+        var chunk='';
+        top.forEach(function(item){
+            chunk+='<span class="live-ticker-item"><strong class="text-gator-orange">'+gvLiveEsc(gvLiveTypeLabel(item.type))+'</strong> '+gvLiveEsc(item.title)+' <span class="text-surface-200/40">· '+gvLiveEsc(gvLiveTimeAgo(item.createdAt))+'</span></span>';
+        });
+        el.innerHTML=chunk+chunk;
+    }
+
+    function gvRenderLiveStatusBar(dash){
+        var el=document.getElementById('live-status-bar');
+        if(!el)return;
+        var beatSrc=dash.beat&&dash.beat.source?dash.beat.source:'—';
+        var beatAt=dash.beat&&dash.beat.fetchedAt?gvLiveTimeAgo(dash.beat.fetchedAt):'—';
+        var podAt=dash.podcasts&&dash.podcasts.fetchedAt?gvLiveTimeAgo(dash.podcasts.fetchedAt):'—';
+        var feedN=(dash.feed||[]).length;
+        el.innerHTML='<span>📡 '+feedN+' feed items</span><span>✍️ Beat: '+gvLiveEsc(beatSrc)+' · '+gvLiveEsc(beatAt)+'</span><span>🎙️ Podcasts · '+gvLiveEsc(podAt)+'</span><span>🔄 Updated '+gvLiveEsc(gvLiveTimeAgo(dash.updatedAt))+'</span>';
+    }
+
+    function gvLoadLiveDashboard(showLoading){
+        var st=window._gvLive;
+        if(showLoading&&st.loading)return Promise.resolve();
+        st.loading=true;
+        if(showLoading){
+            var fl=document.getElementById('live-feed-list');
+            if(fl&&!st.feed.length)fl.innerHTML='<p class="text-surface-200/50 text-sm">Loading live feed…</p>';
+        }
+        return fetch(gvLiveApiBase()+'/api/live/dashboard?limit=60')
+            .then(function(r){return r.json();})
+            .then(function(j){
+                st.loading=false;
+                if(!j.ok)throw new Error(j.error||'Live dashboard unavailable');
+                st.feed=j.feed||[];
+                st.beat=j.beat||{posts:[]};
+                st.podcasts=j.podcasts||{shows:[]};
+                st.lastUpdated=j.updatedAt||new Date().toISOString();
+                gvRenderLiveFeed(st.feed);
+                gvRenderLiveBeat(st.beat);
+                gvRenderLivePodcasts(st.podcasts);
+                gvRenderLiveTicker(st.feed);
+                gvRenderLiveStatusBar(j);
+            })
+            .catch(function(e){
+                st.loading=false;
+                console.warn('gvLoadLiveDashboard',e);
+                var fl=document.getElementById('live-feed-list');
+                if(fl)fl.innerHTML='<p class="text-red-400/80 text-sm">Could not load live dashboard. Check API at '+gvLiveEsc(gvLiveApiBase())+'.</p>';
+            });
+    }
+
+    function gvStartLivePoll(){
+        var st=window._gvLive;
+        if(st.pollTimer)clearInterval(st.pollTimer);
+        st.pollTimer=setInterval(function(){
+            var pane=document.getElementById('vpane-live');
+            if(pane&&pane.classList.contains('active'))gvLoadLiveDashboard(false);
+        },45000);
+    }
+
+    setTimeout(function(){
+        var refreshBtn=document.getElementById('live-refresh-btn');
+        if(refreshBtn)refreshBtn.addEventListener('click',function(){
+            refreshBtn.disabled=true;
+            gvLoadLiveDashboard(true).finally(function(){refreshBtn.disabled=false;});
+        });
+        gvStartLivePoll();
     },600);
 
     // ---- Tickets ----
