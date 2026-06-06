@@ -44,6 +44,16 @@ function mountLiveRoutes(app) {
     }
   });
 
+  app.get('/api/live/beat/status', async (req, res) => {
+    try {
+      const { validateXBearerToken, getXTokenStatus } = require('./live-beat');
+      const status = req.query.validate === '1' ? await validateXBearerToken({ force: true }) : getXTokenStatus();
+      return res.json({ ok: true, status });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/live/podcasts', (req, res) => {
     try {
       const { getPodcastHub } = require('./live-podcasts');

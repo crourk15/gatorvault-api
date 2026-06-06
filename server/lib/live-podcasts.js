@@ -2,6 +2,18 @@ const fetch = require('node-fetch');
 const { parseRssItems } = require('./rss-parse');
 const store = require('./live-store');
 
+function buildPlatforms(podcast) {
+  const platforms = [];
+  const apple =
+    podcast.appleUrl ||
+    (podcast.appleId ? `https://podcasts.apple.com/podcast/id${podcast.appleId}` : null);
+  if (apple) platforms.push({ id: 'apple', label: 'Apple Podcasts', url: apple });
+  if (podcast.spotifyUrl) platforms.push({ id: 'spotify', label: 'Spotify', url: podcast.spotifyUrl });
+  if (podcast.youtubeUrl) platforms.push({ id: 'youtube', label: 'YouTube', url: podcast.youtubeUrl });
+  if (podcast.siteUrl) platforms.push({ id: 'web', label: 'Website', url: podcast.siteUrl });
+  return platforms;
+}
+
 async function resolveFeedUrl(podcast) {
   if (podcast.rssUrl) return podcast.rssUrl;
   if (!podcast.appleId) return null;
@@ -43,6 +55,7 @@ async function fetchPodcastShow(podcast) {
     feedUrl,
     siteUrl: podcast.siteUrl || null,
     imageUrl: channelImage || episodes[0]?.imageUrl || null,
+    platforms: buildPlatforms(podcast),
     episodes
   };
 }

@@ -3,24 +3,35 @@
     "id": "gators-breakdown",
     "name": "Gators Breakdown",
     "rssUrl": "https://feeds.megaphone.fm/gatorsbreakdown",
-    "siteUrl": "https://gatorsbreakdown.com"
+    "siteUrl": "https://gatorsbreakdown.com",
+    "appleUrl": "https://podcasts.apple.com/us/podcast/gators-breakdown/id1169061256",
+    "spotifyUrl": "https://open.spotify.com/show/1nLRyUN4rWzgTy0Tu0HjGQ",
+    "youtubeUrl": "https://www.youtube.com/gatorsbreakdown"
   },
   {
     "id": "gators-online",
     "name": "Gators Online Podcast",
     "appleId": "1618949280",
-    "siteUrl": "https://www.on3.com/colleges/florida-gators/"
+    "appleUrl": "https://podcasts.apple.com/us/podcast/gators-online-podcast/id1618949280",
+    "spotifyUrl": "https://open.spotify.com/show/2TJLOsWkqpA7UoLmJuXi6W",
+    "youtubeUrl": "https://www.youtube.com/channel/UCVGYXzMCXsvQZtHRLeCG8jA",
+    "siteUrl": "https://www.on3.com/teams/florida-gators/page/podcasts/"
   },
   {
     "id": "gnfp",
     "name": "Gator Nation Football Podcast",
     "rssUrl": "https://feeds.simplecast.com/WN52YflC",
-    "siteUrl": "https://gnfp.com"
+    "siteUrl": "https://gnfp.com",
+    "appleUrl": "https://podcasts.apple.com/us/podcast/the-gator-nation-football-podcast/id1035206093",
+    "spotifyUrl": "https://open.spotify.com/show/5g6RBSb7vQCglyfXkm5Pce"
   },
   {
     "id": "gator-tales",
     "name": "Gator Tales",
     "rssUrl": "https://floridagators.com/gatortales-rss",
-    "siteUrl": "https://floridagators.com/gatortales"
+    "siteUrl": "https://floridagators.com/gatortales",
+    "appleUrl": "https://podcasts.apple.com/us/podcast/gator-tales-with-sean-kelley/id1036270178",
+    "spotifyUrl": "https://open.spotify.com/show/1Cd7mcwvB2IfsR2WzOWsQq",
+    "youtubeUrl": "https://youtube.com/playlist?list=PLSvDmFCp0zGOPSLFuuOLtkmuLVIn_6ynh"
   }
 ]

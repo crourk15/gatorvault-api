@@ -651,7 +651,11 @@ function startLiveDashboardScheduler() {
   const bootDelay = Math.max(8000, parseInt(process.env.LIVE_POLL_BOOT_DELAY_MS || '20000', 10) || 20000);
   const tick = () => {
     refreshLiveDashboard()
-      .then(() => console.log('[live-dashboard] refreshed'))
+      .then((result) => {
+        const beatErr = result?.beat?.error;
+        if (beatErr) console.warn('[live-dashboard] beat:', beatErr);
+        else console.log('[live-dashboard] refreshed');
+      })
       .catch((err) => console.warn('[live-dashboard]', err.message));
   };
   setTimeout(tick, bootDelay);

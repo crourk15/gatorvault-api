@@ -206,14 +206,11 @@
         .rating-solid{border-color:#003087;color:#60a5fa;background:rgba(0,48,135,.2);}
         .player-card{cursor:pointer;}
         .player-card-pro{display:flex;flex-direction:column;gap:.85rem;}
-        .player-card-top{display:flex;gap:.85rem;align-items:flex-start;}
-        .player-headshot-wrap{width:76px;flex-shrink:0;position:relative;}
-        .player-headshot{width:76px;height:76px;border-radius:12px;object-fit:cover;border:2px solid rgba(0,48,135,.45);display:block;background:#060f1f;}
-        .player-headshot-fallback{width:76px;height:76px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#001a4d,#003087);border:2px solid rgba(250,70,22,.35);color:#FA4616;font-family:'Oswald',sans-serif;font-weight:700;font-size:1.35rem;}
-        .player-card-body{flex:1;min-width:0;}
+        .player-card-top{display:flex;align-items:flex-start;width:100%;}
+        .player-card-body{flex:1;min-width:0;width:100%;}
         .player-card-header{display:flex;align-items:flex-start;gap:.5rem;width:100%;}
         .player-name-block{flex:1;min-width:0;max-width:100%;}
-        .player-card-name{font-family:'Oswald',sans-serif;font-weight:700;font-size:1.02rem;line-height:1.25;color:#fff;margin:0;word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+        .player-card-name{font-family:'Oswald',sans-serif;font-weight:700;font-size:1.15rem;line-height:1.3;color:#fff;margin:0;word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
         .player-rating-slot{flex-shrink:0;margin-left:auto;padding-left:.25rem;}
         .player-rating-badge{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-weight:700;font-size:1.15rem;flex-shrink:0;border:2px solid;position:relative;}
         .player-rating-override{position:absolute;top:-6px;right:-10px;font-size:.55rem;font-weight:700;background:#854d0e;color:#fef08a;padding:2px 5px;border-radius:999px;letter-spacing:.04em;}
@@ -223,9 +220,7 @@
         .player-profile-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(3,7,18,.85);}
         .player-profile-modal.open{display:flex;}
         .player-profile-sheet{background:#0b1220;border:1px solid rgba(0,48,135,.45);border-radius:1.25rem;max-width:42rem;width:100%;max-height:90vh;overflow-y:auto;padding:1.5rem;}
-        .player-profile-hero{display:flex;gap:1.25rem;align-items:flex-start;margin-bottom:1rem;}
-        .player-profile-hero img,.player-profile-hero .player-headshot-fallback{width:120px;height:120px;border-radius:1rem;}
-        .player-profile-hero .player-headshot-fallback{font-size:2rem;}
+        .player-profile-hero{margin-bottom:1rem;}
         .score-game-card{background:#0a1628;border:2px solid rgba(0,48,135,.25);border-radius:1rem;padding:1.5rem;}
         .score-game-card:hover{transform:translateY(-1px);border-color:rgba(250,70,22,.3);}
         .game-zone-card{background:#0a1628;border:1px solid rgba(250,70,22,.12);border-radius:1.25rem;padding:1.5rem;}
@@ -270,6 +265,12 @@
         .live-pod-ep{display:flex;gap:.75rem;padding:.75rem;border-radius:.65rem;background:#060f1f;border:1px solid rgba(0,48,135,.2);margin-bottom:.5rem;}
         a.live-pod-ep{display:flex;gap:.75rem;padding:.75rem;border-radius:.65rem;background:#060f1f;border:1px solid rgba(0,48,135,.2);margin-bottom:.5rem;text-decoration:none;color:inherit;cursor:pointer;pointer-events:auto;transition:border-color .15s;}
         a.live-pod-ep:hover{border-color:rgba(250,70,22,.45);}
+        .live-pod-card{display:flex;gap:.75rem;padding:.85rem;border-radius:.65rem;background:#060f1f;border:1px solid rgba(0,48,135,.2);margin-bottom:.65rem;cursor:pointer;transition:border-color .15s;pointer-events:auto;}
+        .live-pod-card:hover{border-color:rgba(250,70,22,.45);}
+        .live-pod-platforms{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem;pointer-events:auto;}
+        .live-pod-platform-pill{font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:999px;background:rgba(0,48,135,.35);color:#93c5fd;text-decoration:none;border:1px solid rgba(0,48,135,.5);pointer-events:auto;}
+        .live-pod-platform-pill:hover{background:rgba(250,70,22,.2);color:#fb923c;border-color:rgba(250,70,22,.4);}
+        .live-beat-alert{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:.65rem;padding:.75rem;margin-bottom:.65rem;font-size:.75rem;color:#fde68a;line-height:1.45;}
         .live-pod-thumb{width:56px;height:56px;border-radius:.5rem;object-fit:cover;background:#111827;flex-shrink:0;}
         .live-status-bar{font-size:.7rem;color:#64748b;display:flex;flex-wrap:wrap;gap:.75rem;margin-top:.5rem;}
         .score-input{width:60px;background:#060f1f;border:2px solid rgba(0,48,135,.4);border-radius:.5rem;padding:.5rem;color:white;font-family:'Oswald',sans-serif;font-size:1.25rem;text-align:center;}
@@ -975,6 +976,7 @@
                         </div>
                         <div class="live-panel">
                             <h3>✍️ Beat Writer Stream</h3>
+                            <div id="live-beat-alert" class="live-beat-alert hidden"></div>
                             <div id="live-beat-list" class="live-feed-list"><p class="text-surface-200/50 text-sm">Loading beat stream…</p></div>
                         </div>
                         <div class="live-panel">
@@ -2489,32 +2491,6 @@
         return p.rating!=null?Number(p.rating):null;
     }
 
-    function gvResolveHeadshotUrl(url,updatedAt){
-        if(!url)return '';
-        if(/^https?:\/\//i.test(url)||String(url).indexOf('data:')===0)return String(url);
-        var path=String(url).trim();
-        if(path.charAt(0)!=='/')path='/headshots/'+path;
-        var base=(gvRecruitApiBase()||window.GV_API_BASE||'').replace(/\/$/,'');
-        var src=base?base+path:path;
-        if(updatedAt&&src.indexOf('data:')!==0)src+=(src.indexOf('?')>=0?'&':'?')+'v='+encodeURIComponent(updatedAt);
-        return src;
-    }
-
-    function gvPlayerHeadshotHtml(p,size){
-        var cls='player-headshot';
-        var fbCls='player-headshot-fallback';
-        var wrapOpen='<div class="player-headshot-wrap">';
-        var wrapClose='</div>';
-        if(p.headshotUrl){
-            var src=gvResolveHeadshotUrl(p.headshotUrl,p.updatedAt);
-            return wrapOpen
-                +'<img src="'+gvEscHtml(src)+'" alt="'+gvEscHtml(p.name||'')+'" class="'+cls+'" loading="lazy" onerror="this.style.display=\'none\';var fb=this.nextElementSibling;if(fb)fb.style.display=\'flex\';">'
-                +'<div class="'+fbCls+'" style="display:none" aria-hidden="true">'+playerInitials(p.name)+'</div>'
-                +wrapClose;
-        }
-        return wrapOpen+'<div class="'+fbCls+'">'+playerInitials(p.name)+'</div>'+wrapClose;
-    }
-
     function gvPlayerStarsHtml(p){
         if(!p.stars)return '';
         var n=Math.min(5,parseInt(p.stars,10)||0);
@@ -2547,7 +2523,6 @@
         var rating=playerDisplayRating(p);
         var override=p.ratingIsOverride||(p.ratingOverride!=null&&p.ratingOverride!=='');
         body.innerHTML='<div class="player-profile-hero">'
-            +gvPlayerHeadshotHtml(p,'lg')
             +'<div class="flex-1 min-w-0">'
             +'<h3 class="font-display text-2xl font-bold text-white">'+gvEscHtml(p.name||'')+'</h3>'
             +'<p class="text-gator-orange font-semibold text-sm mt-1">'+(p.pos||'—')+(p.year||p.class?' · '+(p.year||p.class):'')+'</p>'
@@ -2668,7 +2643,6 @@
             card.dataset.pos=pos;
             card.dataset.slug=p.slug||'';
             card.innerHTML='<div class="player-card-top">'
-                +gvPlayerHeadshotHtml(p)
                 +'<div class="player-card-body">'
                 +'<div class="player-card-header">'
                 +'<div class="player-name-block">'
@@ -3698,15 +3672,29 @@
         el.innerHTML=html;
     }
 
+    function gvRenderLiveBeatAlert(beat){
+        var alertEl=document.getElementById('live-beat-alert');
+        if(!alertEl)return;
+        var beatErr=beat&&(beat.error||(beat.tokenStatus&&beat.tokenStatus.error));
+        if(beatErr){
+            alertEl.classList.remove('hidden');
+            alertEl.innerHTML='<strong>Beat stream needs X_BEARER_TOKEN</strong><br>'+gvLiveEsc(beatErr)
+                +'<br><span class="text-surface-200/60">Render → gatorvault-api → Environment → add X_BEARER_TOKEN → redeploy. Auto-retries every 3 minutes.</span>';
+        }else{
+            alertEl.classList.add('hidden');
+            alertEl.innerHTML='';
+        }
+    }
+
     function gvRenderLiveBeat(beat){
         var el=document.getElementById('live-beat-list');
         if(!el)return;
+        gvRenderLiveBeatAlert(beat);
         var posts=(beat&&beat.posts)||[];
         var beatErr=beat&&(beat.error||(beat.tokenStatus&&beat.tokenStatus.error));
         if(!posts.length){
             if(beatErr){
-                el.innerHTML='<p class="text-amber-400/90 text-sm leading-relaxed">⚠️ '+gvLiveEsc(beatErr)+'</p>'
-                    +'<p class="text-surface-200/50 text-xs mt-2">Beat writers refresh automatically every 3 minutes once X_BEARER_TOKEN is set on Render.</p>';
+                el.innerHTML='<p class="text-surface-200/50 text-sm">No beat writer posts yet. Feed will populate automatically once the token is active.</p>';
             }else{
                 var src=beat&&beat.source?beat.source:'unavailable';
                 el.innerHTML='<p class="text-surface-200/50 text-sm">Beat stream empty ('+gvLiveEsc(src)+'). Waiting for posts from X API.</p>';
@@ -3729,39 +3717,62 @@
         el.innerHTML=html;
     }
 
+    function gvPodcastPlatformsHtml(show){
+        var platforms=(show&&show.platforms)||[];
+        if(!platforms.length)return '';
+        return '<div class="live-pod-platforms">'+platforms.map(function(pl){
+            return '<a href="'+gvLiveEsc(gvLiveResolveUrl(pl.url))+'" target="_blank" rel="noopener noreferrer" class="live-pod-platform-pill">'+gvLiveEsc(pl.label)+'</a>';
+        }).join('')+'</div>';
+    }
+
+    function gvWirePodcastCards(root){
+        if(!root)return;
+        root.querySelectorAll('.live-pod-card').forEach(function(card){
+            card.addEventListener('click',function(e){
+                if(e.target.closest('.live-pod-platform-pill'))return;
+                var href=card.getAttribute('data-href');
+                if(href)window.open(href,'_blank','noopener,noreferrer');
+            });
+            card.addEventListener('keydown',function(e){
+                if(e.key!=='Enter'&&e.key!==' ')return;
+                e.preventDefault();
+                if(e.target.closest('.live-pod-platform-pill'))return;
+                var href=card.getAttribute('data-href');
+                if(href)window.open(href,'_blank','noopener,noreferrer');
+            });
+        });
+    }
+
     function gvRenderLivePodcasts(hub){
         var el=document.getElementById('live-podcast-list');
         if(!el)return;
         var shows=(hub&&hub.shows)||[];
-        var eps=[];
-        shows.forEach(function(show){
-            (show.episodes||[]).slice(0,4).forEach(function(ep){
-                eps.push({show:show,ep:ep});
-            });
-        });
-        eps.sort(function(a,b){return new Date(b.ep.publishedAt)-new Date(a.ep.publishedAt);});
-        if(!eps.length){
+        if(!shows.length){
             el.innerHTML='<p class="text-surface-200/50 text-sm">Podcast feeds loading… New episodes appear here automatically.</p>';
             return;
         }
         var html='';
-        eps.slice(0,16).forEach(function(row){
-            var ep=row.ep,show=row.show;
-            var thumb=ep.imageUrl||show.imageUrl;
-            var href=gvLiveResolveUrl(ep.playUrl||show.siteUrl||show.feedUrl);
-            var tag=href?'<a href="'+gvLiveEsc(href)+'" target="_blank" rel="noopener noreferrer" class="live-pod-ep">':'<div class="live-pod-ep">';
-            var tagEnd=href?'</a>':'</div>';
-            html+=tag;
+        shows.forEach(function(show){
+            var latest=(show.episodes&&show.episodes[0])||null;
+            var thumb=(latest&&latest.imageUrl)||show.imageUrl;
+            var cardHref=gvLiveResolveUrl((latest&&latest.playUrl)||show.siteUrl||(show.platforms&&show.platforms[0]&&show.platforms[0].url)||show.feedUrl);
+            html+='<div class="live-pod-card" data-href="'+gvLiveEsc(cardHref||'')+'" tabindex="0" role="link" aria-label="'+gvLiveEsc(show.name)+' latest episode">';
             if(thumb)html+='<img class="live-pod-thumb" src="'+gvLiveEsc(thumb)+'" alt="" loading="lazy">';
             else html+='<div class="live-pod-thumb flex items-center justify-center text-lg">🎙️</div>';
             html+='<div class="min-w-0 flex-1">';
             html+='<p class="text-[.65rem] text-green-300/80 font-bold uppercase tracking-wide">'+gvLiveEsc(show.name)+'</p>';
-            html+='<p class="text-sm font-semibold text-white leading-snug">'+gvLiveEsc(ep.title)+'</p>';
-            if(ep.description)html+='<p class="text-xs text-surface-200/60 mt-1 line-clamp-2">'+gvLiveEsc(String(ep.description).replace(/<[^>]+>/g,'').slice(0,160))+'</p>';
-            html+='<p class="text-[.65rem] text-surface-200/40 mt-1">'+gvLiveEsc(gvLiveTimeAgo(ep.publishedAt))+(href?' · <span class="text-gator-orange">Play →</span>':'')+'</p>';
-            html+='</div>'+tagEnd;
+            if(latest){
+                html+='<p class="text-sm font-semibold text-white leading-snug">'+gvLiveEsc(latest.title)+'</p>';
+                if(latest.description)html+='<p class="text-xs text-surface-200/60 mt-1 line-clamp-2">'+gvLiveEsc(String(latest.description).replace(/<[^>]+>/g,'').slice(0,160))+'</p>';
+                html+='<p class="text-[.65rem] text-surface-200/40 mt-1">'+gvLiveEsc(gvLiveTimeAgo(latest.publishedAt))+(cardHref?' · <span class="text-gator-orange">Play latest →</span>':'')+'</p>';
+            }else{
+                html+='<p class="text-sm text-surface-200/60">Latest episode loading…</p>';
+            }
+            html+=gvPodcastPlatformsHtml(show);
+            html+='</div></div>';
         });
         el.innerHTML=html;
+        gvWirePodcastCards(el);
     }
 
     function gvRenderLiveTicker(items){
