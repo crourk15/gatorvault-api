@@ -15,17 +15,11 @@ let _xTokenStatus = {
 };
 
 function getXBearerToken() {
-  const envToken = process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN || null;
-  if (!envToken) return null;
-  try {
-    return decodeURIComponent(envToken);
-  } catch {
-    return envToken;
-  }
+  return process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN || null;
 }
 
 function xAuthHeaders() {
-  const rawToken = getXBearerToken();
+  const rawToken = process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN;
   if (!rawToken) return null;
   return { Authorization: `Bearer ${rawToken}` };
 }
