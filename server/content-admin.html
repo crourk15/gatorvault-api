@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GatorVault — Content Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#030712;color:#e2e8f0}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 48px}
+    h1{color:#FA4616;font-family:Oswald,Arial,sans-serif;letter-spacing:2px}
+    h2{font-size:16px;color:#93c5fd;margin:0 0 12px}
+    .card{background:#0b1220;border:1px solid #1e3a5f;border-radius:12px;padding:20px;margin-bottom:16px}
+    label{display:block;font-size:12px;color:#94a3b8;margin-bottom:6px;text-transform:uppercase}
+    input,select,textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#111827;color:#f8fafc;margin-bottom:12px}
+    textarea{min-height:120px;resize:vertical;font-family:Consolas,monospace;font-size:13px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:720px){.row{grid-template-columns:1fr}}
+    button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;background:#FA4616;color:#fff;margin-right:8px;margin-bottom:8px}
+    button.secondary{background:#1e3a5f;color:#e2e8f0}
+    button.ok{background:#166534}
+    #log,#errors{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:14px;min-height:160px;font-family:monospace;font-size:12px;white-space:pre-wrap}
+    .queue-item{border:1px solid #334155;border-radius:8px;padding:12px;margin-bottom:10px;background:#111827}
+    .pill{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;margin-left:8px}
+    .pill-draft{background:#334155;color:#e2e8f0}
+    .pill-review{background:#854d0e;color:#fef08a}
+    .pill-published{background:#166534;color:#bbf7d0}
+    .err{color:#f87171}.oktxt{color:#4ade80}.info{color:#93c5fd}
+    a{color:#60a5fa}
+    .help{font-size:12px;color:#64748b;line-height:1.5}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🐊 Content Accuracy Admin</h1>
+    <p class="help">Draft → <strong>Validate</strong> → <strong>Review</strong> → <strong>Publish</strong>. Use official name tokens: <code>{{ coach.HC }}</code>, <code>{{ coach.OC }}</code>, <code>{{ coach.DC }}</code>, <code>{{ staff.SC }}</code>, <code>{{ former.Napier }}</code></p>
+
+    <div class="card">
+      <label>Admin PIN</label>
+      <input id="pin" type="password" placeholder="GV2026admin" autocomplete="off">
+    </div>
+
+    <div class="card">
+      <h2>New draft</h2>
+      <div class="row">
+        <div><label>Type</label><select id="type"><option value="article">Article</option><option value="storyline">Storyline</option></select></div>
+        <div><label>Tier (articles)</label><select id="tier"><option value="locker">Locker</option><option value="film">Film</option><option value="war">War</option></select></div>
+      </div>
+      <label>Title *</label>
+      <input id="title" placeholder="{{ coach.HC }}'s First 6 Months: A Real Assessment">
+      <label>Excerpt / summary</label>
+      <textarea id="excerpt" placeholder="Short summary. Use {{ coach.OC }} instead of free-typed coach names."></textarea>
+      <label>Body (HTML) *</label>
+      <textarea id="body" style="min-height:200px" placeholder="<p>{{ coach.HC }} inherited a program...</p>"></textarea>
+      <label>Takeaways (one per line, articles only)</label>
+      <textarea id="takeaways" placeholder="Key point one&#10;Key point two"></textarea>
+      <div class="row">
+        <div><label>Storyline status label</label><input id="storylineStatus" placeholder="WATCH"></div>
+        <div><label>Status CSS class</label><input id="statusClass" placeholder="text-yellow-400 bg-yellow-400/10"></div>
+      </div>
+      <button id="save-draft">Save draft</button>
+      <button class="secondary" id="validate-preview" type="button">Validate preview</button>
+      <button class="secondary" id="resolve-preview" type="button">Preview resolved tokens</button>
+    </div>
+
+    <div class="card">
+      <h2>Review queue</h2>
+      <button class="secondary" id="refresh-queue" type="button">Refresh queue</button>
+      <div id="queue" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card">
+      <h2>Validation log</h2>
+      <button class="secondary" id="refresh-log" type="button">Refresh log</button>
+      <div id="log" style="margin-top:12px">Loading…</div>
+    </div>
+
+    <div class="card">
+      <h2>Validation errors</h2>
+      <div id="errors"></div>
+    </div>
+  </div>
+
+  <script>
+    var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000' : 'https://gatorvault-api.onrender.com';
+
+    function pin() { return document.getElementById('pin').value.trim(); }
+    function headers() {
+      return { 'Content-Type': 'application/json', 'X-Content-Pin': pin() };
+    }
+    function log(msg, cls) {
+      var el = document.getElementById('log');
+      var line = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+      el.innerHTML = '<span class="' + (cls || 'info') + '">' + line + '</span>\n' + el.innerHTML;
+    }
+    function showErrors(errors) {
+      var el = document.getElementById('errors');
+      if (!errors || !errors.length) { el.innerHTML = '<span class="oktxt">No validation errors.</span>'; return; }
+      el.innerHTML = errors.map(function(e) {
+        return '<div class="err">' + (e.field ? '[' + e.field + '] ' : '') + e.message + '</div>';
+      }).join('');
+    }
+    function draftPayload() {
+      var type = document.getElementById('type').value;
+      var takeaways = document.getElementById('takeaways').value.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+      return {
+        type: type,
+        title: document.getElementById('title').value.trim(),
+        excerpt: document.getElementById('excerpt').value.trim(),
+        body: document.getElementById('body').value.trim(),
+        tier: document.getElementById('tier').value,
+        takeaways: takeaways,
+        storylineStatus: document.getElementById('storylineStatus').value.trim(),
+        statusClass: document.getElementById('statusClass').value.trim(),
+        badge: 'INSIDER',
+        badgeClass: 'bg-gator-blue/20 text-blue-300',
+        author: 'GatorVault Staff',
+        date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+        readMin: 6
+      };
+    }
+
+    async function saveDraft() {
+      var payload = draftPayload();
+      if (!payload.title || !payload.body) return alert('Title and body required.');
+      var r = await fetch(API + '/api/content/drafts', { method: 'POST', headers: headers(), body: JSON.stringify(payload) });
+      var d = await r.json();
+      if (!d.ok) return alert(d.error || 'Save failed');
+      log('Draft saved: ' + d.item.id, 'oktxt');
+      refreshQueue();
+    }
+
+    async function validatePreview() {
+      var r = await fetch(API + '/api/content/validate', { method: 'POST', headers: headers(), body: JSON.stringify(draftPayload()) });
+      var d = await r.json();
+      if (!d.ok) return alert(d.error || 'Validate failed');
+      showErrors(d.errors);
+      log(d.valid ? 'Preview validation passed' : 'Preview validation FAILED', d.valid ? 'oktxt' : 'err');
+    }
+
+    async function resolvePreview() {
+      var r = await fetch(API + '/api/content/preview-resolve', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(draftPayload()) });
+      var d = await r.json();
+      if (!d.ok) return alert(d.error || 'Resolve failed');
+      log('Resolved title: ' + d.resolved.title, 'info');
+      document.getElementById('errors').innerHTML = '<pre style="color:#cbd5e1;white-space:pre-wrap">' + JSON.stringify(d.resolved, null, 2) + '</pre>';
+    }
+
+    async function refreshQueue() {
+      var r = await fetch(API + '/api/content/queue', { headers: { 'X-Content-Pin': pin() } });
+      var d = await r.json();
+      var el = document.getElementById('queue');
+      if (!d.ok) { el.innerHTML = '<span class="err">' + (d.error || 'Failed') + '</span>'; return; }
+      if (!d.queue.length) { el.innerHTML = '<p class="help">Queue empty.</p>'; return; }
+      el.innerHTML = d.queue.map(function(item) {
+        var pill = 'pill-' + (item.status === 'published' ? 'published' : item.status === 'review' ? 'review' : 'draft');
+        var btns = '';
+        if (item.status === 'draft') {
+          btns += '<button class="secondary" data-act="validate" data-id="' + item.id + '">Validate</button>';
+          btns += '<button data-act="submit" data-id="' + item.id + '">Submit review</button>';
+        }
+        if (item.status === 'review') {
+          btns += '<button class="ok" data-act="publish" data-id="' + item.id + '">Publish</button>';
+          btns += '<button class="secondary" data-act="reject" data-id="' + item.id + '">Reject to draft</button>';
+        }
+        return '<div class="queue-item"><strong>' + item.title + '</strong><span class="pill ' + pill + '">' + item.status + '</span>'
+          + '<div class="help" style="margin:6px 0">' + item.type + ' · ' + item.id + '</div>' + btns + '</div>';
+      }).join('');
+      el.querySelectorAll('button[data-act]').forEach(function(btn) {
+        btn.addEventListener('click', function() { queueAction(btn.dataset.act, btn.dataset.id); });
+      });
+    }
+
+    async function queueAction(act, id) {
+      var url = API + '/api/content/';
+      if (act === 'validate') url += 'drafts/' + id + '/validate';
+      else if (act === 'submit') url += 'drafts/' + id + '/submit-review';
+      else if (act === 'publish') url += 'review/' + id + '/publish';
+      else if (act === 'reject') url += 'review/' + id + '/reject';
+      var r = await fetch(url, { method: 'POST', headers: headers(), body: act === 'reject' ? JSON.stringify({ notes: 'Needs edits' }) : '{}' });
+      var d = await r.json();
+      if (!d.ok || d.blocked) {
+        showErrors(d.errors || [{ message: d.message || d.error }]);
+        log((d.message || d.error || 'Action blocked'), 'err');
+        return;
+      }
+      log(act + ' OK for ' + id, 'oktxt');
+      showErrors([]);
+      refreshQueue();
+    }
+
+    async function refreshLog() {
+      var r = await fetch(API + '/api/content/validation-log', { headers: { 'X-Content-Pin': pin() } });
+      var d = await r.json();
+      if (!d.ok) return;
+      document.getElementById('log').textContent = (d.log || []).slice(0, 20).map(function(row) {
+        return row.ts + ' | ' + (row.action || '') + ' | ' + (row.message || '') + (row.title ? ' | ' + row.title : '');
+      }).join('\n') || 'No validation failures logged.';
+    }
+
+    document.getElementById('save-draft').addEventListener('click', saveDraft);
+    document.getElementById('validate-preview').addEventListener('click', validatePreview);
+    document.getElementById('resolve-preview').addEventListener('click', resolvePreview);
+    document.getElementById('refresh-queue').addEventListener('click', refreshQueue);
+    document.getElementById('refresh-log').addEventListener('click', refreshLog);
+    refreshQueue();
+    refreshLog();
+  </script>
+</body>
+</html>

@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const { mountRecruitingRoutes } = require('./lib/recruiting-routes');
+const { mountContentRoutes } = require('./lib/content-routes');
+const { ensurePublishedSeed } = require('./lib/content-store');
 
 const fetch = require('node-fetch');
 const nodemailer = require('nodemailer');
@@ -26,7 +28,7 @@ app.use((req, res, next) => {
   } else {
     res.header('Access-Control-Allow-Origin', '*');
   }
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret, X-Content-Pin');
   res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
@@ -35,6 +37,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json({ limit: '1mb' }));
 
 mountRecruitingRoutes(app);
+mountContentRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;
@@ -666,6 +669,12 @@ app.listen(PORT, () => {
     console.log('Recruiting API: ready (storage:', store.storageMode() + ')');
   } catch (e) {
     console.warn('Recruiting API: failed to init', e.message);
+  }
+  try {
+    ensurePublishedSeed();
+    console.log('Content API: ready (accuracy validation + review queue)');
+  } catch (e) {
+    console.warn('Content API: failed to init', e.message);
   }
   try {
     startOn3IngestScheduler();
