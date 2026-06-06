@@ -254,60 +254,38 @@ async function deliverEmail(to, subject, html, templateParams = {}) {
   return { sent: false, provider: null, error: msg };
 }
 
-function welcomeEmailHtml({ name, email, tier, trialEnd }) {
-  const displayName = name || email.split('@')[0];
-  const tierLabel = tier === 'war' ? 'War Room' : tier === 'locker' ? 'Locker Room' : 'Film Room';
-  const logoUrl = `${SITE_URL}/favicon.ico`;
-  return `<!DOCTYPE html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#030712;font-family:Inter,Arial,sans-serif;">
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#030712;padding:32px 16px;">
-<tr><td align="center">
-<table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;border-radius:16px;overflow:hidden;border:1px solid #1e3a5f;">
-<tr><td style="background:linear-gradient(135deg,#001a4d 0%,#003087 100%);padding:28px 32px;text-align:center;">
-  <div style="font-size:42px;line-height:1;margin-bottom:8px;">🐊</div>
-  <div style="font-family:Oswald,Arial,sans-serif;font-size:28px;font-weight:700;color:#FA4616;letter-spacing:4px;">GATORVAULT</div>
-  <div style="font-size:11px;color:#94a3b8;letter-spacing:2px;margin-top:6px;text-transform:uppercase;">The Film Room of Gator Nation</div>
-</td></tr>
-<tr><td style="background:#060f1f;padding:32px;color:#e2e8f0;">
-  <p style="margin:0 0 8px;font-size:18px;font-weight:700;color:#fff;">Welcome, ${displayName}!</p>
-  <p style="margin:0 0 20px;color:#94a3b8;font-size:15px;line-height:1.6;">Your GatorVault account is active. You're on the <strong style="color:#fbbf24;">${tierLabel}</strong> plan.</p>
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#0a1628;border:1px solid #1e3a5f;border-radius:12px;margin-bottom:24px;">
-  <tr><td style="padding:20px;">
-    <p style="margin:0 0 6px;font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:1px;">30-Day Free Trial</p>
-    <p style="margin:0;font-size:16px;color:#fff;font-weight:600;">Active through <span style="color:#FA4616;">${trialEnd}</span></p>
-    <p style="margin:10px 0 0;font-size:13px;color:#94a3b8;line-height:1.5;">No credit card was charged today. You'll be prompted to add payment after Day 30 if you choose to continue.</p>
-  </td></tr></table>
-  <table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 auto 24px;"><tr><td style="border-radius:10px;background:#FA4616;">
-    <a href="${SITE_URL}" style="display:inline-block;padding:16px 36px;color:#ffffff;font-weight:700;font-size:15px;text-decoration:none;font-family:Oswald,Arial,sans-serif;letter-spacing:1px;">ENTER THE VAULT →</a>
-  </td></tr></table>
-  <p style="margin:0 0 8px;font-size:14px;color:#cbd5e1;line-height:1.6;"><strong>Sign-in email:</strong> ${email}</p>
-  <p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">Use the password you created at signup. Questions? Reply to this email or message <strong>@GatorVaultInsider</strong> on X.</p>
-</td></tr>
-<tr><td style="background:#030712;padding:20px 32px;text-align:center;border-top:1px solid #1e3a5f;">
-  <p style="margin:0;font-size:11px;color:#475569;">GatorVault © 2026 · Not affiliated with the University of Florida</p>
-  <p style="margin:6px 0 0;font-size:11px;color:#334155;">Built for Gator Nation 🐊</p>
-</td></tr>
-</table>
-</td></tr></table>
-</body></html>`;
-}
+const { getDay0Email, ONBOARDING_SEQUENCE } = require('./lib/onboarding-emails');
+const { enrollOnboarding, isBeehiivConfigured, validateBeehiivOnBoot } = require('./lib/beehiiv');
 
-async function sendWelcomeEmail({ email, name, tier }) {
+async function sendWelcomeEmail({ email, name, tier, skipIfBeehiiv = false }) {
   const trialEnd = new Date();
   trialEnd.setDate(trialEnd.getDate() + 30);
   const trialEndStr = trialEnd.toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   });
   const tierLabel = tier === 'war' ? 'War Room' : tier === 'locker' ? 'Locker Room' : 'Film Room';
-  const subject = 'Welcome to GatorVault — Your 30-Day Trial Starts Now 🐊';
-  const html = welcomeEmailHtml({ name, email, tier, trialEnd: trialEndStr });
-  const delivery = await deliverEmail(email, subject, html, {
+  if (skipIfBeehiiv) {
+    return { trialEndStr, emailSent: true, provider: 'beehiiv', onboardingHandled: true, error: null };
+  }
+  const day0 = getDay0Email({ name, email, tier });
+  const delivery = await deliverEmail(email, day0.subject, day0.html, {
     name: name || email.split('@')[0],
     tierName: tierLabel,
     trialEnd: trialEndStr
   });
   return { trialEndStr, emailSent: delivery.sent, provider: delivery.provider, error: delivery.error || null };
+}
+
+async function enrollOnboardingSequence({ email, name, tier }) {
+  const beehiiv = await enrollOnboarding({ email, name, tier });
+  if (beehiiv.enrolled && beehiiv.automationId) {
+    return { ...beehiiv, sequenceStarted: true };
+  }
+  if (beehiiv.enrolled && !beehiiv.automationId) {
+    console.warn('[onboarding] Beehiiv subscriber added but automation ID missing — Day 0 fallback email will send');
+    return { ...beehiiv, sequenceStarted: false };
+  }
+  return { ...beehiiv, sequenceStarted: false };
 }
 
 async function runWelcomeEmailTest({ email, name, tier }) {
@@ -388,14 +366,28 @@ app.post('/api/register', async (req, res) => {
     });
     let emailSent = false;
     let emailProvider = null;
+    let onboardingEnrolled = false;
+    let onboardingProvider = null;
     try {
-      const welcome = await sendWelcomeEmail({ email, name, tier });
+      const onboarding = await enrollOnboardingSequence({ email, name, tier });
+      onboardingEnrolled = !!onboarding.enrolled;
+      onboardingProvider = onboarding.provider || null;
+      const welcome = await sendWelcomeEmail({
+        email,
+        name,
+        tier,
+        skipIfBeehiiv: onboarding.sequenceStarted
+      });
       trialEndStr = welcome.trialEndStr;
-      emailSent = welcome.emailSent;
-      emailProvider = welcome.provider;
-      if (!emailSent) console.warn('welcome email not delivered for', email, '— configure .env or client EmailJS will retry');
+      emailSent = welcome.emailSent || onboarding.sequenceStarted;
+      emailProvider = onboarding.sequenceStarted ? 'beehiiv' : welcome.provider;
+      if (!emailSent) {
+        console.warn('onboarding email not delivered for', email, '— configure Beehiiv or EmailJS in .env');
+      }
+      if (onboarding.warning) console.warn('[onboarding]', onboarding.warning);
+      if (onboarding.error && !onboarding.enrolled) console.warn('[onboarding] Beehiiv enroll failed:', onboarding.error);
     } catch (e) {
-      console.warn('welcome email failed:', e.message);
+      console.warn('onboarding email failed:', e.message);
     }
 
     const token = signSession({ email, tier, name, exp: Date.now() + TOKEN_TTL_MS });
@@ -403,6 +395,9 @@ app.post('/api/register', async (req, res) => {
       ok: true,
       emailSent,
       emailProvider,
+      onboardingEnrolled,
+      onboardingProvider,
+      onboardingSequence: ONBOARDING_SEQUENCE.map((e) => ({ day: e.day, subject: e.subject, delayDays: e.delayDays })),
       session: {
         token,
         email,
@@ -474,6 +469,20 @@ app.get('/api/session', (req, res) => {
   const session = verifySession(token);
   if (!session) return res.status(401).json({ ok: false, error: 'Session expired. Sign in again.' });
   return res.json({ ok: true, session: { email: session.email, tier: session.tier, name: session.name } });
+});
+
+app.get('/api/onboarding/sequence', (req, res) => {
+  return res.json({
+    ok: true,
+    provider: isBeehiivConfigured() ? 'beehiiv' : 'emailjs_fallback',
+    emails: ONBOARDING_SEQUENCE.map((e) => ({
+      day: e.day,
+      delayDays: e.delayDays,
+      delayLabel: e.delayLabel,
+      subject: e.subject,
+      cta: e.cta
+    }))
+  });
 });
 
 app.post('/api/welcome', async (req, res) => {
@@ -728,6 +737,11 @@ app.listen(PORT, () => {
     startLiveDashboardScheduler();
   } catch (e) {
     console.warn('Live dashboard scheduler failed to start', e.message);
+  }
+  try {
+    validateBeehiivOnBoot();
+  } catch (e) {
+    console.warn('Beehiiv onboarding check failed', e.message);
   }
   if (providers.length) {
     console.log('Email delivery: configured (' + providers.join(', ') + ')');

@@ -7,8 +7,6 @@ const NITTER_BASES = (process.env.NITTER_BASES || 'https://nitter.poast.org,http
   .map((s) => s.trim())
   .filter(Boolean);
 
-const X_BEARER = process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN || null;
-
 let _xTokenStatus = {
   configured: false,
   ok: false,
@@ -17,12 +15,24 @@ let _xTokenStatus = {
 };
 
 function getXBearerToken() {
-  return X_BEARER;
+  const envToken = process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN || null;
+  if (!envToken) return null;
+  try {
+    return decodeURIComponent(envToken);
+  } catch {
+    return envToken;
+  }
+}
+
+function xAuthHeaders() {
+  const rawToken = getXBearerToken();
+  if (!rawToken) return null;
+  return { Authorization: `Bearer ${rawToken}` };
 }
 
 async function validateXBearerToken({ force = false } = {}) {
-  const token = X_BEARER;
-  if (!token) {
+  const headers = xAuthHeaders();
+  if (!headers) {
     _xTokenStatus = {
       configured: false,
       ok: false,
@@ -41,9 +51,7 @@ async function validateXBearerToken({ force = false } = {}) {
   }
 
   try {
-    const res = await fetch('https://api.twitter.com/2/users/by/username/Corey_Bender', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    const res = await fetch('https://api.twitter.com/2/users/by/username/Corey_Bender', { headers });
     if (res.status === 401 || res.status === 403) {
       _xTokenStatus = {
         configured: true,
@@ -104,10 +112,11 @@ async function fetchText(url, timeoutMs = 12000) {
 }
 
 async function fetchXUserTimeline(handle) {
-  if (!X_BEARER) return null;
+  const headers = xAuthHeaders();
+  if (!headers) return null;
   const userRes = await fetch(
     `https://api.twitter.com/2/users/by/username/${encodeURIComponent(handle)}?user.fields=profile_image_url`,
-    { headers: { Authorization: `Bearer ${X_BEARER}` } }
+    { headers }
   );
   if (!userRes.ok) throw new Error(`X user lookup ${userRes.status}`);
   const userJson = await userRes.json();
@@ -116,7 +125,7 @@ async function fetchXUserTimeline(handle) {
 
   const tweetsRes = await fetch(
     `https://api.twitter.com/2/users/${userId}/tweets?max_results=10&tweet.fields=created_at,entities&exclude=retweets,replies`,
-    { headers: { Authorization: `Bearer ${X_BEARER}` } }
+    { headers }
   );
   if (!tweetsRes.ok) throw new Error(`X tweets ${tweetsRes.status}`);
   const tweetsJson = await tweetsRes.json();
@@ -161,7 +170,7 @@ async function fetchNitterRss(handle) {
 
 async function fetchWriterPosts(writer) {
   try {
-    if (X_BEARER) {
+    if (getXBearerToken()) {
       const posts = await fetchXUserTimeline(writer.handle);
       if (posts && posts.length) return posts;
       return [];

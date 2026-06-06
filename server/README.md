@@ -4,7 +4,8 @@ Express API for member registration, sign-in, welcome emails, and digest deliver
 
 ## Features
 
-- `POST /api/register` — create account, hash password, send welcome email, return session token
+- `POST /api/register` — create account, enroll Beehiiv onboarding automation, return session token
+- `GET /api/onboarding/sequence` — list 7-email onboarding schedule (Days 0–14)
 - `POST /api/login` — sign in with email + password
 - `GET /api/session` — validate session token
 - `POST /api/welcome` — send branded GatorVault welcome email (no Netlify branding)
@@ -23,7 +24,13 @@ npm start
 
 Server runs at `http://localhost:3000`.
 
-## Email (welcome messages) — EmailJS only
+## Onboarding emails — Beehiiv (primary) + EmailJS fallback
+
+New members are enrolled in a **7-email Beehiiv automation** (Days 0, 1, 3, 5, 7, 10, 14). Setup: [docs/beehiiv-onboarding-setup.md](docs/beehiiv-onboarding-setup.md).
+
+Export HTML for Beehiiv paste: `node scripts/export-onboarding-html.js`
+
+## Email (Day 0 fallback) — EmailJS
 
 `server/.env` is pre-created for **EmailJS + Gmail** (`gatorvaultinsider@gmail.com`). No SMTP or SendGrid.
 
@@ -45,7 +52,7 @@ EMAILJS_PRIVATE_KEY=YOUR_PRIVATE_KEY_HERE   # ← paste real key from emailjs.co
 |-------|--------|
 | To email | `{{to_email}}` |
 | From name | `GatorVault` |
-| Subject | `Welcome to GatorVault — Your 30-Day Trial Starts Now 🐊` |
+| Subject | `Welcome to GatorVault — Your Insider Access Is Live 🐊` |
 
 Variables: `{{to_name}}`, `{{tier_name}}`, `{{trial_end}}`, `{{login_url}}`, `{{support_x}}`
 
