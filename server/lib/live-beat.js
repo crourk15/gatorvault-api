@@ -15,11 +15,13 @@ let _xTokenStatus = {
 };
 
 function getXBearerToken() {
-  return process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN || null;
+  const rawToken = process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN;
+  if (!rawToken) return null;
+  return rawToken.trim();
 }
 
 function xAuthHeaders() {
-  const rawToken = process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN;
+  const rawToken = getXBearerToken();
   if (!rawToken) return null;
   return { Authorization: `Bearer ${rawToken}` };
 }
