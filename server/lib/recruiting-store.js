@@ -181,6 +181,16 @@ async function getPlayerBySlug(slug) {
   return p ? normalizePlayer(p) : null;
 }
 
+function preservePlayerFields(existing, incoming) {
+  const merged = { ...existing, ...incoming };
+  ['natlRank', 'posRank', 'stateRank', 'rating', 'stars', 'htWt', 'school', 'on3Id', 'commitDate', 'classYear'].forEach((field) => {
+    if (merged[field] == null && existing[field] != null) merged[field] = existing[field];
+  });
+  if (!merged.skinny && existing.skinny) merged.skinny = existing.skinny;
+  merged.updatedAt = nowIso();
+  return merged;
+}
+
 async function upsertPlayer(player) {
   const normalized = normalizePlayer(player);
   const sb = initSupabase();
@@ -191,10 +201,10 @@ async function upsertPlayer(player) {
   }
   const players = await loadPlayersLocal();
   const idx = players.findIndex((p) => p.slug === normalized.slug);
-  if (idx >= 0) players[idx] = { ...players[idx], ...normalized, updatedAt: nowIso() };
+  if (idx >= 0) players[idx] = preservePlayerFields(players[idx], normalized);
   else players.push({ ...normalized, updatedAt: nowIso() });
   await savePlayersLocal(players);
-  return normalized;
+  return idx >= 0 ? players[idx] : normalized;
 }
 
 async function getRankings() {
@@ -333,7 +343,9 @@ async function getPortalBoard() {
 }
 
 async function fireRecruitingEvent({ eventType, player, skinny, detail, source }) {
-  const normalized = normalizePlayer(player);
+  let normalized = normalizePlayer(player);
+  const existing = await getPlayerBySlug(normalized.slug);
+  if (existing) normalized = preservePlayerFields(existing, normalized);
   const statusMap = {
     commit: 'committed',
     decommit: 'decommitted',

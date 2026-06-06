@@ -45,6 +45,11 @@
       return s || '—';
     }
 
+    function fmtRank(v) {
+      if (v == null || v === '' || Number.isNaN(Number(v))) return '—';
+      return '#' + v;
+    }
+
     async function load() {
       if (!slug) {
         document.getElementById('loading').classList.add('hidden');
@@ -63,7 +68,11 @@
         document.getElementById('p-name').textContent = p.name;
         document.getElementById('p-meta').textContent = [p.pos, p.classYear ? 'Class of ' + p.classYear : '', stars(p.stars)].filter(Boolean).join(' · ');
         document.getElementById('p-school').textContent = p.category === 'portal' ? ('From: ' + (p.fromSchool || p.school)) : (p.school || '');
-        document.getElementById('p-htwt').textContent = p.htWt || '';
+        var rankBits = [];
+        if (p.natlRank != null) rankBits.push(fmtRank(p.natlRank) + ' natl');
+        if (p.posRank != null) rankBits.push(fmtRank(p.posRank) + ' pos');
+        if (p.stateRank != null) rankBits.push(fmtRank(p.stateRank) + ' state');
+        document.getElementById('p-htwt').textContent = [p.htWt, rankBits.join(' · ')].filter(Boolean).join(' · ');
         document.getElementById('p-status').textContent = (p.status || '').replace(/_/g, ' ').toUpperCase();
         document.getElementById('p-skinny').textContent = p.skinny || 'GatorVault recruit profile.';
         if (p.profileNote) {

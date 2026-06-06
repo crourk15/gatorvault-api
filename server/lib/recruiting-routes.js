@@ -159,6 +159,8 @@ function mountRecruitingRoutes(app) {
         stars: parseInt(req.body.stars || '3', 10),
         rating: req.body.rating != null ? Number(req.body.rating) : null,
         natlRank: req.body.natlRank != null ? parseInt(req.body.natlRank, 10) : null,
+        posRank: req.body.posRank != null ? parseInt(req.body.posRank, 10) : null,
+        stateRank: req.body.stateRank != null ? parseInt(req.body.stateRank, 10) : null,
         inState: !!req.body.inState,
         category: req.body.category || (eventType.startsWith('portal') ? 'portal' : 'recruit'),
         fromSchool: req.body.fromSchool || null,
