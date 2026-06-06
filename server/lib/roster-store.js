@@ -4,6 +4,8 @@ const { slugify } = require('./slug');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'roster');
 const PLAYERS_PATH = path.join(DATA_DIR, 'players.json');
+const HEADSHOTS_MAP_PATH = path.join(DATA_DIR, 'headshots.json');
+const HEADSHOTS_DIR = path.join(__dirname, '..', 'headshots');
 
 function readJson(filePath, fallback) {
   try {
@@ -30,6 +32,34 @@ function displayRating(player) {
   return null;
 }
 
+function loadHeadshotMap() {
+  return readJson(HEADSHOTS_MAP_PATH, {});
+}
+
+function resolveHeadshotPath(url) {
+  if (!url) return null;
+  const s = String(url).trim();
+  if (s.startsWith('http://') || s.startsWith('https://')) return s;
+  if (s.startsWith('/')) return s;
+  return `/headshots/${s}`;
+}
+
+function findLocalHeadshot(slug) {
+  const exts = ['webp', 'jpg', 'jpeg', 'png', 'svg'];
+  for (const ext of exts) {
+    const filePath = path.join(HEADSHOTS_DIR, `${slug}.${ext}`);
+    if (fs.existsSync(filePath)) return `/headshots/${slug}.${ext}`;
+  }
+  return null;
+}
+
+function resolveHeadshotUrl(player) {
+  if (player.headshotUrl) return resolveHeadshotPath(player.headshotUrl);
+  const map = loadHeadshotMap();
+  if (map[player.slug]) return resolveHeadshotPath(map[player.slug]);
+  return findLocalHeadshot(player.slug);
+}
+
 function normalizeRosterPlayer(raw) {
   const slug = raw.slug || slugify(raw.name);
   const player = {
@@ -53,7 +83,10 @@ function normalizeRosterPlayer(raw) {
     injury: raw.injury || 'green',
     updatedAt: raw.updatedAt || nowIso()
   };
+  player.headshotUrl = resolveHeadshotUrl(player);
+  player.hasHeadshot = !!player.headshotUrl;
   player.displayRating = displayRating(player);
+  player.ratingIsOverride = player.ratingOverride != null && player.ratingOverride !== '';
   return player;
 }
 
@@ -88,13 +121,30 @@ function upsertRosterPlayer(patch) {
   return merged;
 }
 
+function getHeadshotMap() {
+  return loadHeadshotMap();
+}
+
+function updateHeadshotMapping(slug, url) {
+  const map = loadHeadshotMap();
+  if (url) map[slug] = resolveHeadshotPath(url);
+  else delete map[slug];
+  writeJson(HEADSHOTS_MAP_PATH, map);
+  return map;
+}
+
 module.exports = {
   DATA_DIR,
   PLAYERS_PATH,
+  HEADSHOTS_MAP_PATH,
+  HEADSHOTS_DIR,
   displayRating,
+  resolveHeadshotUrl,
   normalizeRosterPlayer,
   getAllRosterPlayers,
   getRosterPlayerBySlug,
   upsertRosterPlayer,
-  loadPlayers
+  loadPlayers,
+  getHeadshotMap,
+  updateHeadshotMapping
 };

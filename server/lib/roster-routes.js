@@ -12,6 +12,14 @@ function pinFromReq(req) {
 }
 
 function mountRosterRoutes(app) {
+  app.get('/api/roster/headshots', (req, res) => {
+    try {
+      return res.json({ ok: true, headshots: rosterStore.getHeadshotMap() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/roster/players', (req, res) => {
     try {
       return res.json({ ok: true, players: rosterStore.getAllRosterPlayers() });
@@ -36,12 +44,18 @@ function mountRosterRoutes(app) {
     }
     try {
       const existing = rosterStore.getRosterPlayerBySlug(req.params.slug);
+      const slug = req.params.slug;
       const player = rosterStore.upsertRosterPlayer({
         ...(existing || {}),
         ...req.body,
-        slug: req.params.slug,
+        slug,
         name: req.body.name || (existing && existing.name)
       });
+      if (req.body.headshotUrl !== undefined || req.body.headshotMap) {
+        rosterStore.updateHeadshotMapping(slug, req.body.headshotUrl || req.body.headshotMap);
+        const refreshed = rosterStore.getRosterPlayerBySlug(slug);
+        return res.json({ ok: true, player: refreshed || player });
+      }
       return res.json({ ok: true, player });
     } catch (err) {
       return res.status(400).json({ ok: false, error: err.message });

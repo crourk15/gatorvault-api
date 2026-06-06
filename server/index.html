@@ -204,6 +204,22 @@
         .rating-elite{border-color:#fbbf24;color:#fbbf24;background:rgba(251,191,36,.1);}
         .rating-strong{border-color:#FA4616;color:#FA4616;background:rgba(250,70,22,.1);}
         .rating-solid{border-color:#003087;color:#60a5fa;background:rgba(0,48,135,.2);}
+        .player-card{cursor:pointer;}
+        .player-card-pro{display:flex;flex-direction:column;gap:.85rem;}
+        .player-card-top{display:flex;gap:1rem;align-items:flex-start;}
+        .player-headshot{width:72px;height:72px;border-radius:12px;object-fit:cover;border:2px solid rgba(0,48,135,.45);flex-shrink:0;background:#060f1f;}
+        .player-headshot-fallback{width:72px;height:72px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#001a4d,#003087);border:2px solid rgba(250,70,22,.35);color:#FA4616;font-family:'Oswald',sans-serif;font-weight:700;font-size:1.35rem;flex-shrink:0;}
+        .player-rating-badge{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-weight:700;font-size:1.15rem;flex-shrink:0;border:2px solid;position:relative;}
+        .player-rating-override{position:absolute;top:-6px;right:-10px;font-size:.55rem;font-weight:700;background:#854d0e;color:#fef08a;padding:2px 5px;border-radius:999px;letter-spacing:.04em;}
+        .player-meas-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.45rem .75rem;font-size:.7rem;color:#94a3b8;}
+        .player-meas-grid span{color:#e2e8f0;font-weight:600;}
+        .player-stars-row{color:#fbbf24;font-size:.8rem;letter-spacing:.08em;}
+        .player-profile-modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(3,7,18,.85);}
+        .player-profile-modal.open{display:flex;}
+        .player-profile-sheet{background:#0b1220;border:1px solid rgba(0,48,135,.45);border-radius:1.25rem;max-width:42rem;width:100%;max-height:90vh;overflow-y:auto;padding:1.5rem;}
+        .player-profile-hero{display:flex;gap:1.25rem;align-items:flex-start;margin-bottom:1rem;}
+        .player-profile-hero img,.player-profile-hero .player-headshot-fallback{width:120px;height:120px;border-radius:1rem;}
+        .player-profile-hero .player-headshot-fallback{font-size:2rem;}
         .score-game-card{background:#0a1628;border:2px solid rgba(0,48,135,.25);border-radius:1rem;padding:1.5rem;}
         .score-game-card:hover{transform:translateY(-1px);border-color:rgba(250,70,22,.3);}
         .game-zone-card{background:#0a1628;border:1px solid rgba(250,70,22,.12);border-radius:1.25rem;padding:1.5rem;}
@@ -1030,6 +1046,15 @@
                     <div data-id="720" class="flex gap-2 overflow-x-auto pb-2" id="player-pos-tabs"></div>
                     <div data-id="721" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="players-grid"></div>
                     <div id="players-empty" class="hidden bg-surface-800 border border-gator-blue/20 rounded-xl p-6 text-center text-surface-200 text-sm">No players match your search. Try a different name or position.</div>
+                    <div id="player-profile-modal" class="player-profile-modal" aria-hidden="true">
+                        <div class="player-profile-sheet">
+                            <div class="flex items-center justify-between gap-3 mb-4">
+                                <h2 class="font-display text-lg font-bold text-white">Player Profile</h2>
+                                <button type="button" id="player-profile-close" class="text-surface-200 hover:text-white text-xl leading-none px-2" aria-label="Close">×</button>
+                            </div>
+                            <div id="player-profile-body"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- ====== GAME ZONE ====== -->
@@ -2417,6 +2442,88 @@
         return p.rating!=null?Number(p.rating):null;
     }
 
+    function gvPlayerHeadshotHtml(p,size){
+        var cls=size==='lg'?'player-headshot':'player-headshot';
+        var fbCls=size==='lg'?'player-headshot-fallback':'player-headshot-fallback';
+        if(p.headshotUrl&&p.hasHeadshot!==false){
+            return '<img src="'+gvEscHtml(p.headshotUrl)+'" alt="'+gvEscHtml(p.name||'')+'" class="'+cls+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling&&(this.nextElementSibling.style.display=\'flex\');">'
+                +'<div class="'+fbCls+'" style="display:none">'+playerInitials(p.name)+'</div>';
+        }
+        return '<div class="'+fbCls+'">'+playerInitials(p.name)+'</div>';
+    }
+
+    function gvPlayerStarsHtml(p){
+        if(!p.stars)return '';
+        var n=Math.min(5,parseInt(p.stars,10)||0);
+        return '<div class="player-stars-row">'+('★'.repeat(n))+(p.rank?' <span class="text-surface-200/50">· Vault rank #'+p.rank+'</span>':'')+'</div>';
+    }
+
+    function gvPlayerMeasGrid(p){
+        var rows=[];
+        if(p.pos||p.position)rows.push(['Position',p.pos||p.position]);
+        if(p.year||p.class)rows.push(['Class',p.year||p.class]);
+        if(p.height)rows.push(['Height',p.height]);
+        if(p.weight)rows.push(['Weight',p.weight+' lbs']);
+        if(p.hometown)rows.push(['Hometown',p.hometown]);
+        if(!rows.length)return '';
+        return '<div class="player-meas-grid">'+rows.map(function(r){return '<div>'+r[0]+'</div><span>'+gvEscHtml(String(r[1]))+'</span>';}).join('')+'</div>';
+    }
+
+    function gvPlayerRatingBadgeHtml(p){
+        var rating=playerDisplayRating(p);
+        var tier=ratingTier(rating||0);
+        var override=p.ratingIsOverride||(p.ratingOverride!=null&&p.ratingOverride!=='');
+        return '<div class="player-rating-badge '+tier+'">'+(rating!=null?rating:'—')+(override?'<span class="player-rating-override">OVR</span>':'')+'</div>';
+    }
+
+    function openPlayerProfile(p){
+        var modal=document.getElementById('player-profile-modal');
+        var body=document.getElementById('player-profile-body');
+        if(!modal||!body||!p)return;
+        var inj=injuryMeta(p.injury||'green');
+        var rating=playerDisplayRating(p);
+        var override=p.ratingIsOverride||(p.ratingOverride!=null&&p.ratingOverride!=='');
+        body.innerHTML='<div class="player-profile-hero">'
+            +gvPlayerHeadshotHtml(p,'lg')
+            +'<div class="flex-1 min-w-0">'
+            +'<h3 class="font-display text-2xl font-bold text-white">'+gvEscHtml(p.name||'')+'</h3>'
+            +'<p class="text-gator-orange font-semibold text-sm mt-1">'+(p.pos||'—')+(p.year||p.class?' · '+(p.year||p.class):'')+'</p>'
+            +gvPlayerStarsHtml(p)
+            +'<div class="flex items-center gap-3 mt-3">'+gvPlayerRatingBadgeHtml(p)
+            +'<div class="text-xs text-surface-200/70">'+(override?'Vault rating (manual override)':'Vault rating')+(p.rating!=null&&!override?' · base '+p.rating:'')+'</div></div>'
+            +'<div class="flex items-center gap-1.5 mt-2 text-xs font-semibold '+inj.cls+'"><span>'+inj.dot+'</span><span>'+inj.label+'</span></div>'
+            +'</div></div>'
+            +gvPlayerMeasGrid(p)
+            +'<p class="text-sm text-surface-200 leading-relaxed mt-4 border-l-4 border-gator-orange pl-4">'+(gvEscHtml(p.bio||p.stats||''))+'</p>'
+            +(p.stats&&p.bio?'<p class="text-xs text-surface-200/60 mt-3">'+gvEscHtml(p.stats)+'</p>':'')
+            +'<div class="flex flex-wrap gap-2 mt-5">'
+            +'<a href="/player/'+gvEscHtml(p.slug||'')+'" class="text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white">Full profile →</a>'
+            +'<button type="button" class="player-modal-follow text-xs font-bold px-4 py-2 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">Follow</button>'
+            +'</div>';
+        var followBtn=body.querySelector('.player-modal-follow');
+        if(followBtn){
+            var followed=(window.alertPrefs.followPlayers||[]).indexOf(p.name)!==-1;
+            followBtn.textContent=followed?'Following':'Follow';
+            if(followed)followBtn.classList.add('bg-gator-orange','text-black');
+            followBtn.addEventListener('click',function(){
+                window.alertPrefs.followPlayers=window.alertPrefs.followPlayers||[];
+                var idx=window.alertPrefs.followPlayers.indexOf(p.name);
+                if(idx===-1)window.alertPrefs.followPlayers.push(p.name);
+                else window.alertPrefs.followPlayers.splice(idx,1);
+                saveAlertPrefs();
+                openPlayerProfile(p);
+                renderPlayers();
+            });
+        }
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden','false');
+    }
+
+    function closePlayerProfile(){
+        var modal=document.getElementById('player-profile-modal');
+        if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}
+    }
+
     function gvLoadRosterProfiles(force){
         var base=gvRecruitApiBase();
         return fetch(base+'/api/roster/players').then(function(r){if(!r.ok)throw new Error('roster HTTP '+r.status);return r.json();}).then(function(data){
@@ -2491,37 +2598,32 @@
         filtered.forEach(function(p){
             var pos=playerPos(p);
             var inj=injuryMeta(p.injury||'green');
-            var rating=playerDisplayRating(p);
-            var tier=ratingTier(rating||0);
             var followed=(window.alertPrefs.followPlayers||[]).indexOf(p.name)!==-1;
             var followClass=followed?'bg-gator-orange text-black':'bg-surface-700 text-surface-200';
-            var meas=[];
-            if(p.height)meas.push(p.height);
-            if(p.weight)meas.push(p.weight+' lbs');
-            if(p.hometown)meas.push(p.hometown);
-            var measLine=meas.length?meas.join(' · '):'';
-            var starsLine=p.stars?('★'.repeat(Math.min(5,parseInt(p.stars,10)||0))+(p.rank?' · #'+p.rank:'')):'';
-            var head=p.headshotUrl
-                ?'<img src="'+gvEscHtml(p.headshotUrl)+'" alt="" class="w-12 h-12 rounded-full object-cover border border-gator-blue/20 flex-shrink-0">'
-                :'<div class="w-12 h-12 rounded-full bg-surface-800 border border-gator-blue/20 flex items-center justify-center text-gator-orange font-bold text-sm flex-shrink-0">'+playerInitials(p.name)+'</div>';
             var card=document.createElement('div');
-            card.className='player-card';
+            card.className='player-card player-card-pro';
             card.dataset.pos=pos;
-            card.innerHTML='<div class="flex items-start gap-3">'
-                +head
-                +'<div class="rating-circle '+tier+' flex-shrink-0">'+(rating!=null?rating:'—')+'</div>'
+            card.dataset.slug=p.slug||'';
+            card.innerHTML='<div class="player-card-top">'
+                +gvPlayerHeadshotHtml(p)
                 +'<div class="flex-1 min-w-0">'
                 +'<div class="flex items-start justify-between gap-2">'
-                +'<div class="min-w-0"><div class="font-semibold text-white truncate">'+(p.name||'')+'</div>'
-                +'<div class="text-xs text-surface-200/60 mt-0.5">'+(pos||'—')+(p.year||p.class?' · '+(p.year||p.class):'')+'</div>'
-                +(measLine?'<div class="text-[.65rem] text-surface-200/50 mt-0.5">'+gvEscHtml(measLine)+'</div>':'')
-                +(starsLine?'<div class="text-[.65rem] text-yellow-400 mt-0.5">'+starsLine+'</div>':'')
+                +'<div class="min-w-0"><div class="font-display font-bold text-white truncate">'+(p.name||'')+'</div>'
+                +'<div class="text-xs text-gator-orange font-semibold mt-0.5">'+(pos||'—')+(p.year||p.class?' · '+(p.year||p.class):'')+'</div>'
+                +gvPlayerStarsHtml(p)
                 +'</div>'
+                +gvPlayerRatingBadgeHtml(p)
+                +'</div></div></div>'
+                +gvPlayerMeasGrid(p)
+                +'<p class="text-xs text-surface-200/85 leading-relaxed line-clamp-3">'+(gvEscHtml(p.bio||p.stats||''))+'</p>'
+                +'<div class="flex items-center justify-between gap-2 mt-1">'
+                +'<div class="flex items-center gap-1.5 text-xs font-semibold '+inj.cls+'"><span>'+inj.dot+'</span><span>'+inj.label+'</span></div>'
                 +'<button class="follow-player-btn text-xs px-2 py-1 rounded-lg flex-shrink-0 '+followClass+'" data-player="'+(p.name||'')+'">'+(followed?'Following':'Follow')+'</button>'
-                +'</div>'
-                +'<p class="text-xs text-surface-200/80 mt-2 leading-relaxed">'+(p.bio||p.stats||'')+'</p>'
-                +'<div class="flex items-center gap-1.5 mt-2 text-xs font-semibold '+inj.cls+'"><span>'+inj.dot+'</span><span>'+inj.label+'</span></div>'
-                +'</div></div>';
+                +'</div>';
+            card.addEventListener('click',function(e){
+                if(e.target.closest('.follow-player-btn'))return;
+                openPlayerProfile(p);
+            });
             grid.appendChild(card);
         });
 
@@ -2551,6 +2653,13 @@
         if(search && !window._playerSearchWired){
             window._playerSearchWired=true;
             search.addEventListener('input',renderPlayers);
+        }
+        if(!window._playerModalWired){
+            window._playerModalWired=true;
+            var closeBtn=document.getElementById('player-profile-close');
+            var modal=document.getElementById('player-profile-modal');
+            if(closeBtn)closeBtn.addEventListener('click',closePlayerProfile);
+            if(modal)modal.addEventListener('click',function(e){if(e.target===modal)closePlayerProfile();});
         }
     }
 

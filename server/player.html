@@ -7,7 +7,19 @@
   <meta name="robots" content="noindex">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{'gator-orange':'#FA4616','gator-blue':'#003087','surface-700':'#0b1220','surface-800':'#111827','surface-200':'#94a3b8'}}}};</script>
-  <style>body{background:#030712;color:#e2e8f0;font-family:Inter,Arial,sans-serif;}</style>
+  <style>
+    body{background:#030712;color:#e2e8f0;font-family:Inter,Arial,sans-serif;}
+    .headshot{width:140px;height:140px;border-radius:1rem;object-fit:cover;border:2px solid rgba(0,48,135,.5);background:#060f1f;}
+    .headshot-fb{width:140px;height:140px;border-radius:1rem;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#001a4d,#003087);border:2px solid rgba(250,70,22,.35);color:#FA4616;font-family:Oswald,Arial,sans-serif;font-size:2.5rem;font-weight:700;}
+    .rating-badge{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Oswald,Arial,sans-serif;font-weight:700;font-size:1.35rem;border:2px solid;position:relative;}
+    .rating-elite{border-color:#fbbf24;color:#fbbf24;background:rgba(251,191,36,.1);}
+    .rating-strong{border-color:#FA4616;color:#FA4616;background:rgba(250,70,22,.1);}
+    .rating-solid{border-color:#003087;color:#60a5fa;background:rgba(0,48,135,.2);}
+    .override-pill{position:absolute;top:-6px;right:-12px;font-size:.55rem;font-weight:700;background:#854d0e;color:#fef08a;padding:2px 6px;border-radius:999px;}
+    .meas-card{background:#111827;border:1px solid rgba(0,48,135,.25);border-radius:.75rem;padding:.75rem 1rem;}
+    .meas-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:#64748b;}
+    .meas-value{font-weight:600;color:#fff;margin-top:.15rem;}
+  </style>
 </head>
 <body class="min-h-screen">
   <div class="max-w-3xl mx-auto px-4 py-8">
@@ -16,19 +28,24 @@
     <div id="error" class="mt-8 text-red-400 hidden"></div>
     <div id="profile" class="hidden mt-6 space-y-6">
       <div class="bg-surface-700 border border-gator-blue/30 rounded-2xl p-6">
-        <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
-          <div>
+        <div class="flex flex-wrap gap-5 items-start">
+          <div id="p-headshot-wrap"></div>
+          <div class="flex-1 min-w-[200px]">
             <h1 id="p-name" class="font-bold text-3xl text-white"></h1>
             <p id="p-meta" class="text-gator-orange font-semibold mt-1"></p>
+            <p id="p-stars" class="text-yellow-400 text-sm mt-2 tracking-wider"></p>
+            <div class="flex items-center gap-3 mt-3">
+              <div id="p-rating" class="rating-badge rating-solid"></div>
+              <p id="p-rating-note" class="text-xs text-surface-200/70"></p>
+            </div>
+            <p id="p-injury" class="text-sm mt-3 font-semibold text-green-400"></p>
           </div>
-          <span id="p-status" class="text-xs font-bold px-3 py-1 rounded-full bg-gator-orange/20 text-gator-orange"></span>
         </div>
-        <p id="p-school" class="text-surface-200 text-sm mb-2"></p>
-        <p id="p-htwt" class="text-surface-200/70 text-sm mb-4"></p>
-        <p id="p-skinny" class="text-white text-sm leading-relaxed border-l-4 border-gator-orange pl-4"></p>
-        <p id="p-note" class="text-surface-200 text-sm leading-relaxed mt-4 hidden"></p>
+        <div id="p-meas" class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-6"></div>
+        <p id="p-bio" class="text-white text-sm leading-relaxed border-l-4 border-gator-orange pl-4 mt-6"></p>
+        <p id="p-stats" class="text-surface-200 text-xs mt-3 hidden"></p>
       </div>
-      <div class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6">
+      <div id="p-recruit-block" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 hidden">
         <h2 class="font-bold text-white mb-3">Recruiting timeline</h2>
         <div id="p-events" class="space-y-3 text-sm"></div>
       </div>
@@ -36,59 +53,120 @@
   </div>
   <script>
     var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-      ? 'http://localhost:3000' : location.origin;
+      ? 'http://localhost:3000' : 'https://gatorvault-api.onrender.com';
     var slug = (location.pathname.match(/\/player\/([^/]+)/) || [])[1] || new URLSearchParams(location.search).get('slug') || '';
+
+    function initials(name) {
+      var parts = String(name || '').replace(/\s+(Jr\.|Sr\.|III|II|IV)$/i, '').trim().split(/\s+/);
+      if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+      return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+    }
 
     function stars(n) {
       var s = '';
       for (var i = 0; i < (n || 0); i++) s += '★';
-      return s || '—';
+      return s || '';
     }
 
-    function fmtRank(v) {
-      if (v == null || v === '' || Number.isNaN(Number(v))) return '—';
-      return '#' + v;
+    function ratingTier(r) {
+      if (r >= 90) return 'rating-elite';
+      if (r >= 85) return 'rating-strong';
+      return 'rating-solid';
+    }
+
+    function headshotHtml(p) {
+      if (p.headshotUrl && p.hasHeadshot !== false) {
+        return '<img src="' + p.headshotUrl + '" alt="" class="headshot" onerror="this.outerHTML=\'<div class=headshot-fb>' + initials(p.name) + '</div>\'">';
+      }
+      return '<div class="headshot-fb">' + initials(p.name) + '</div>';
+    }
+
+    function renderRoster(p) {
+      document.title = p.name + ' — GatorVault Roster';
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('profile').classList.remove('hidden');
+      document.getElementById('p-headshot-wrap').innerHTML = headshotHtml(p);
+      document.getElementById('p-name').textContent = p.name;
+      document.getElementById('p-meta').textContent = [p.pos, p.year || p.class].filter(Boolean).join(' · ');
+      document.getElementById('p-stars').textContent = stars(p.stars) + (p.rank ? '  ·  #' + p.rank + ' rank' : '');
+      var rating = p.displayRating != null ? p.displayRating : p.rating;
+      var el = document.getElementById('p-rating');
+      el.textContent = rating != null ? rating : '—';
+      el.className = 'rating-badge ' + ratingTier(rating || 0);
+      if (p.ratingIsOverride || (p.ratingOverride != null && p.ratingOverride !== '')) {
+        el.innerHTML = rating + '<span class="override-pill">OVR</span>';
+      }
+      document.getElementById('p-rating-note').textContent = (p.ratingIsOverride ? 'Manual vault override' : 'Vault rating')
+        + (p.rating != null && !p.ratingIsOverride ? ' · base ' + p.rating : '');
+      var inj = p.injury === 'yellow' ? ['🟡', 'Questionable', 'text-yellow-400'] : p.injury === 'red' ? ['🔴', 'Out', 'text-red-400'] : ['🟢', 'Healthy', 'text-green-400'];
+      var injEl = document.getElementById('p-injury');
+      injEl.className = 'text-sm mt-3 font-semibold ' + inj[2];
+      injEl.textContent = inj[0] + ' ' + inj[1];
+      var meas = [
+        ['Position', p.pos],
+        ['Class', p.year || p.class],
+        ['Height', p.height],
+        ['Weight', p.weight ? p.weight + ' lbs' : ''],
+        ['Hometown', p.hometown],
+        ['Stars', p.stars ? stars(p.stars) : '']
+      ].filter(function (m) { return m[1]; });
+      document.getElementById('p-meas').innerHTML = meas.map(function (m) {
+        return '<div class="meas-card"><div class="meas-label">' + m[0] + '</div><div class="meas-value">' + m[1] + '</div></div>';
+      }).join('');
+      document.getElementById('p-bio').textContent = p.bio || p.stats || 'GatorVault roster profile.';
+      if (p.stats && p.bio) {
+        document.getElementById('p-stats').textContent = p.stats;
+        document.getElementById('p-stats').classList.remove('hidden');
+      }
+    }
+
+    function renderRecruit(p, events) {
+      document.title = p.name + ' — GatorVault';
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('profile').classList.remove('hidden');
+      document.getElementById('p-headshot-wrap').innerHTML = '<div class="headshot-fb">' + initials(p.name) + '</div>';
+      document.getElementById('p-name').textContent = p.name;
+      document.getElementById('p-meta').textContent = [p.pos, p.classYear ? 'Class of ' + p.classYear : '', stars(p.stars)].filter(Boolean).join(' · ');
+      document.getElementById('p-stars').textContent = '';
+      document.getElementById('p-rating').textContent = p.rating != null ? Number(p.rating).toFixed(1) : '—';
+      document.getElementById('p-rating-note').textContent = 'Recruiting composite';
+      document.getElementById('p-injury').textContent = '';
+      document.getElementById('p-meas').innerHTML = '<div class="meas-card"><div class="meas-label">School</div><div class="meas-value">' + (p.school || '—') + '</div></div>'
+        + '<div class="meas-card"><div class="meas-label">Ht / Wt</div><div class="meas-value">' + (p.htWt || '—') + '</div></div>';
+      document.getElementById('p-bio').textContent = p.skinny || p.profileNote || 'GatorVault recruit profile.';
+      document.getElementById('p-recruit-block').classList.remove('hidden');
+      var evEl = document.getElementById('p-events');
+      if (!events || !events.length) {
+        evEl.innerHTML = '<p class="text-surface-200/60">No events yet.</p>';
+      } else {
+        evEl.innerHTML = events.map(function (e) {
+          return '<div class="bg-surface-800 rounded-lg p-3"><div class="font-semibold text-white">' + e.title + '</div>'
+            + '<div class="text-xs text-surface-200/60 mt-1">' + new Date(e.createdAt).toLocaleString() + '</div>'
+            + (e.skinny ? '<div class="text-surface-200 mt-2">' + e.skinny + '</div>' : '') + '</div>';
+        }).join('');
+      }
     }
 
     async function load() {
       if (!slug) {
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('error').classList.remove('hidden');
-        document.getElementById('error').textContent = 'No player slug in URL. Example: /player/maxwell-hiller';
+        document.getElementById('error').textContent = 'No player slug in URL. Example: /player/vernell-brown-iii';
         return;
       }
       try {
+        var rr = await fetch(API + '/api/roster/players/' + encodeURIComponent(slug));
+        if (rr.ok) {
+          var roster = await rr.json();
+          if (roster.ok && roster.player) {
+            renderRoster(roster.player);
+            return;
+          }
+        }
         var r = await fetch(API + '/api/players/' + encodeURIComponent(slug));
         var data = await r.json();
         if (!data.ok || !data.player) throw new Error(data.error || 'Player not found');
-        var p = data.player;
-        document.title = p.name + ' — GatorVault';
-        document.getElementById('loading').classList.add('hidden');
-        document.getElementById('profile').classList.remove('hidden');
-        document.getElementById('p-name').textContent = p.name;
-        document.getElementById('p-meta').textContent = [p.pos, p.classYear ? 'Class of ' + p.classYear : '', stars(p.stars)].filter(Boolean).join(' · ');
-        document.getElementById('p-school').textContent = p.category === 'portal' ? ('From: ' + (p.fromSchool || p.school)) : (p.school || '');
-        var rankBits = [];
-        if (p.natlRank != null) rankBits.push(fmtRank(p.natlRank) + ' natl');
-        if (p.posRank != null) rankBits.push(fmtRank(p.posRank) + ' pos');
-        if (p.stateRank != null) rankBits.push(fmtRank(p.stateRank) + ' state');
-        document.getElementById('p-htwt').textContent = [p.htWt, rankBits.join(' · ')].filter(Boolean).join(' · ');
-        document.getElementById('p-status').textContent = (p.status || '').replace(/_/g, ' ').toUpperCase();
-        document.getElementById('p-skinny').textContent = p.skinny || 'GatorVault recruit profile.';
-        if (p.profileNote) {
-          document.getElementById('p-note').textContent = p.profileNote;
-          document.getElementById('p-note').classList.remove('hidden');
-        }
-        var evEl = document.getElementById('p-events');
-        if (!data.events || !data.events.length) {
-          evEl.innerHTML = '<p class="text-surface-200/60">No events yet.</p>';
-        } else {
-          evEl.innerHTML = data.events.map(function(e) {
-            return '<div class="bg-surface-800 rounded-lg p-3"><div class="font-semibold text-white">' + e.title + '</div>'
-              + '<div class="text-xs text-surface-200/60 mt-1">' + new Date(e.createdAt).toLocaleString() + '</div>'
-              + (e.skinny ? '<div class="text-surface-200 mt-2">' + e.skinny + '</div>' : '') + '</div>';
-          }).join('');
-        }
+        renderRecruit(data.player, data.events);
       } catch (e) {
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('error').classList.remove('hidden');

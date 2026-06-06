@@ -69,15 +69,21 @@
     </div>
 
     <div class="card">
-      <strong>Roster profile override</strong>
-      <p style="font-size:13px;color:#94a3b8;margin:8px 0 12px">Edit vault roster ratings, bios, and measurables shown in Player Profiles.</p>
+      <strong>Roster profile editor</strong>
+      <p style="font-size:13px;color:#94a3b8;margin:8px 0 12px">Full control over vault roster profiles (Player Profiles tab + <code>/player/{slug}</code>). Headshots: paste a URL, use <code>/headshots/{slug}.webp</code>, or drop <code>{slug}.webp</code> in <code>server/headshots/</code>.</p>
       <div class="row">
         <div><label>Player slug *</label><input id="roster-slug" placeholder="vernell-brown-iii"></div>
-        <div><label>Display name</label><input id="roster-name" placeholder="Vernell Brown III"></div>
+        <div style="display:flex;align-items:flex-end;gap:8px">
+          <button class="secondary" id="roster-load" type="button" style="margin-bottom:12px">Load profile</button>
+        </div>
       </div>
       <div class="row">
+        <div><label>Display name</label><input id="roster-name" placeholder="Vernell Brown III"></div>
         <div><label>Position</label><input id="roster-pos" placeholder="WR"></div>
-        <div><label>Class year</label><input id="roster-year" placeholder="So."></div>
+      </div>
+      <div class="row">
+        <div><label>Class</label><input id="roster-year" placeholder="So."></div>
+        <div><label>Vault rank (#)</label><input id="roster-rank" type="number" placeholder="Optional"></div>
       </div>
       <div class="row">
         <div><label>Height</label><input id="roster-height" placeholder="5-11"></div>
@@ -85,19 +91,32 @@
       </div>
       <div class="row">
         <div><label>Hometown</label><input id="roster-hometown" placeholder="Tampa, FL"></div>
-        <div><label>Stars</label><input id="roster-stars" type="number" min="0" max="5" placeholder="4"></div>
+        <div><label>Stars (0–5)</label><input id="roster-stars" type="number" min="0" max="5" placeholder="4"></div>
       </div>
       <div class="row">
         <div><label>Base rating</label><input id="roster-rating" type="number" placeholder="86"></div>
         <div><label>Rating override (wins)</label><input id="roster-rating-override" type="number" placeholder="Leave blank to use base"></div>
       </div>
-      <label>Headshot URL</label>
-      <input id="roster-headshot" placeholder="https://…">
+      <div class="row">
+        <div><label>Injury status</label>
+          <select id="roster-injury">
+            <option value="green">Healthy</option>
+            <option value="yellow">Questionable</option>
+            <option value="red">Out</option>
+          </select>
+        </div>
+        <div><label>Role line (short)</label><input id="roster-stats" placeholder="Slot weapon at F · Versatile route runner"></div>
+      </div>
+      <label>Headshot URL or path</label>
+      <input id="roster-headshot" placeholder="/headshots/vernell-brown-iii.webp or https://…">
+      <p style="font-size:11px;color:#64748b;margin:-6px 0 10px">Convention: <code id="roster-headshot-hint">/headshots/{slug}.webp</code> · mapping in <code>data/roster/headshots.json</code></p>
+      <div id="roster-headshot-preview" style="margin-bottom:12px;min-height:80px"></div>
       <label>Bio</label>
-      <textarea id="roster-bio" placeholder="Full profile bio shown on the card."></textarea>
-      <label>Role line (short)</label>
-      <input id="roster-stats" placeholder="Slot weapon at F · Versatile route runner">
-      <button class="secondary" id="roster-save" type="button">Save roster profile</button>
+      <textarea id="roster-bio" style="min-height:100px" placeholder="Full profile bio — shown on cards and profile page."></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button id="roster-save" type="button">Save roster profile</button>
+        <a id="roster-preview-link" href="#" target="_blank" class="secondary" style="display:inline-block;padding:12px 16px;border-radius:8px;text-decoration:none;font-weight:700;background:#1e3a5f;color:#e2e8f0">Preview profile →</a>
+      </div>
     </div>
 
     <div class="card">
@@ -192,6 +211,54 @@
     });
     loadIngestStatus();
 
+    function fillRosterForm(p) {
+      if (!p) return;
+      document.getElementById('roster-name').value = p.name || '';
+      document.getElementById('roster-pos').value = p.pos || '';
+      document.getElementById('roster-year').value = p.year || p.class || '';
+      document.getElementById('roster-height').value = p.height || '';
+      document.getElementById('roster-weight').value = p.weight || '';
+      document.getElementById('roster-hometown').value = p.hometown || '';
+      document.getElementById('roster-stars').value = p.stars != null ? p.stars : '';
+      document.getElementById('roster-rank').value = p.rank != null ? p.rank : '';
+      document.getElementById('roster-rating').value = p.rating != null ? p.rating : '';
+      document.getElementById('roster-rating-override').value = p.ratingOverride != null ? p.ratingOverride : '';
+      document.getElementById('roster-headshot').value = p.headshotUrl || '';
+      document.getElementById('roster-bio').value = p.bio || '';
+      document.getElementById('roster-stats').value = p.stats || '';
+      document.getElementById('roster-injury').value = p.injury || 'green';
+      updateRosterHeadshotPreview(p.headshotUrl);
+      var prev = document.getElementById('roster-preview-link');
+      prev.href = '/player/' + (p.slug || document.getElementById('roster-slug').value);
+    }
+
+    function updateRosterHeadshotPreview(url) {
+      var el = document.getElementById('roster-headshot-preview');
+      if (!url) { el.innerHTML = '<span style="color:#64748b;font-size:12px">No headshot — initials fallback on site.</span>'; return; }
+      el.innerHTML = '<img src="' + url + '" alt="preview" style="width:80px;height:80px;border-radius:10px;object-fit:cover;border:1px solid #334155" onerror="this.style.display=\'none\'">';
+    }
+
+    document.getElementById('roster-slug').addEventListener('input', function() {
+      var slug = this.value.trim();
+      document.getElementById('roster-headshot-hint').textContent = '/headshots/' + (slug || '{slug}') + '.webp';
+      document.getElementById('roster-preview-link').href = '/player/' + slug;
+    });
+    document.getElementById('roster-headshot').addEventListener('input', function() {
+      updateRosterHeadshotPreview(this.value.trim());
+    });
+
+    document.getElementById('roster-load').addEventListener('click', async function() {
+      var slug = document.getElementById('roster-slug').value.trim();
+      if (!slug) return log('err', 'Enter a roster slug');
+      try {
+        var r = await fetch(API + '/api/roster/players/' + encodeURIComponent(slug));
+        var data = await r.json();
+        if (!data.ok || !data.player) return log('err', data.error || 'Not found');
+        fillRosterForm(data.player);
+        log('ok', 'Loaded ' + data.player.name);
+      } catch (e) { log('err', String(e)); }
+    });
+
     document.getElementById('roster-save').addEventListener('click', async function() {
       var pin = document.getElementById('pin').value.trim();
       var slug = document.getElementById('roster-slug').value.trim();
@@ -206,11 +273,13 @@
         weight: document.getElementById('roster-weight').value.trim(),
         hometown: document.getElementById('roster-hometown').value.trim(),
         stars: document.getElementById('roster-stars').value ? parseInt(document.getElementById('roster-stars').value, 10) : null,
+        rank: document.getElementById('roster-rank').value ? parseInt(document.getElementById('roster-rank').value, 10) : null,
         rating: document.getElementById('roster-rating').value ? parseFloat(document.getElementById('roster-rating').value) : null,
         ratingOverride: document.getElementById('roster-rating-override').value ? parseFloat(document.getElementById('roster-rating-override').value) : null,
         headshotUrl: document.getElementById('roster-headshot').value.trim() || null,
         bio: document.getElementById('roster-bio').value.trim(),
-        stats: document.getElementById('roster-stats').value.trim()
+        stats: document.getElementById('roster-stats').value.trim(),
+        injury: document.getElementById('roster-injury').value
       };
       log('info', 'POST /api/roster/players/' + slug, body);
       try {
@@ -220,7 +289,7 @@
           body: JSON.stringify(body)
         });
         var data = await r.json();
-        if (data.ok) log('ok', 'Roster profile saved', data.player);
+        if (data.ok) { fillRosterForm(data.player); log('ok', 'Roster profile saved', data.player); }
         else log('err', 'Failed', data);
       } catch (e) { log('err', String(e)); }
     });
