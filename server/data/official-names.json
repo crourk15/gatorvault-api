@@ -1,5 +1,5 @@
 {
-  "version": "2026-06-05",
+  "version": "2026-06-06",
   "coaches": {
     "HC": {
       "name": "Jon Sumrall",
@@ -15,13 +15,18 @@
       "name": "Brad White",
       "title": "Defensive Coordinator",
       "aliases": ["White"]
+    },
+    "DB": {
+      "name": "Anthony Harris",
+      "title": "Defensive Backs Coach",
+      "aliases": ["Coach Harris"]
     }
   },
   "staff": {
     "SC": {
-      "name": "Anthony Harris",
-      "title": "Director of Strength & Conditioning",
-      "aliases": ["Coach Harris", "Harris"]
+      "name": "Rusty Whitt",
+      "title": "Head Strength & Conditioning Coach",
+      "aliases": ["Coach Whitt", "Whitt", "Rusty Whitt"]
     }
   },
   "formerCoaches": {
@@ -75,6 +80,10 @@
   },
   "blockedNames": [
     "Taylor Faulkner"
+  ],
+  "blockedScNames": [
+    "Anthony Harris",
+    "Coach Harris"
   ],
   "ignoreTerms": [
     "Florida", "Gators", "Gainesville", "SEC", "Georgia", "Auburn", "Tennessee",

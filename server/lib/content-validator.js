@@ -134,12 +134,54 @@ function extractCandidateNames(text) {
   return [...found];
 }
 
+const SC_CONTEXT_RE = /(?:S\s*&\s*C|strength\s*(?:&|and)\s*conditioning|strength\s+coach|director\s+of\s+strength|revamped\s+S\s*&\s*C)/i;
+
+function isScContext(text, name) {
+  const raw = String(text || '');
+  const idx = raw.toLowerCase().indexOf(String(name).toLowerCase());
+  if (idx < 0) return false;
+  const window = raw.slice(Math.max(0, idx - 140), Math.min(raw.length, idx + name.length + 140));
+  return SC_CONTEXT_RE.test(window) || /S&C\s+staff/i.test(window) || /under\s+{{?\s*staff\.SC/i.test(raw);
+}
+
+function validateScMisuse(fieldName, text, official) {
+  const errors = [];
+  const raw = String(text || '');
+  const blockedSc = official.blockedScNames || ['Anthony Harris', 'Coach Harris'];
+
+  blockedSc.forEach((name) => {
+    if (!raw.includes(name)) return;
+    if (isScContext(raw, name)) {
+      errors.push({
+        field: fieldName,
+        type: 'blocked_sc_coach',
+        message:
+          `${name} is the DBs coach, not S&C. Use {{ staff.SC }} for Rusty Whitt (or {{ coach.DB }} for DB references).`
+      });
+    }
+  });
+
+  if (/Anthony\s+Harris/i.test(raw) && SC_CONTEXT_RE.test(raw)) {
+    const already = errors.some((e) => e.type === 'blocked_sc_coach');
+    if (!already) {
+      errors.push({
+        field: fieldName,
+        type: 'blocked_sc_coach',
+        message:
+          'Anthony Harris named in S&C context. Use {{ staff.SC }} for Rusty Whitt (head S&C coach).'
+      });
+    }
+  }
+
+  return errors;
+}
+
 function isCoachLikeName(name, official) {
   const lower = name.toLowerCase();
   if (lower.includes('faulkner') && !official.coaches?.OC?.name?.toLowerCase().includes(name.toLowerCase())) {
     return true;
   }
-  if (/^coach\s/i.test(name)) return true;
+  if (/^coach\s/i.test(name) && !/^coach\s+harris$/i.test(name)) return true;
   return false;
 }
 
@@ -152,6 +194,8 @@ function validateTextField(fieldName, text, official, allowlist) {
       errors.push({ field: fieldName, type: 'blocked', message: `Blocked name: ${blocked}` });
     }
   });
+
+  errors.push(...validateScMisuse(fieldName, raw, official));
 
   const withoutTokens = raw.replace(TOKEN_RE, ' ');
   extractCandidateNames(withoutTokens).forEach((name) => {

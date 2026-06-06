@@ -1,0 +1,30 @@
+[
+  {
+    "id": "stl_1",
+    "title": "💪 OL Cohesion — 5 new starters, can they gel?",
+    "status": "WATCH",
+    "statusClass": "text-red-400 bg-red-400/10",
+    "body": "Entirely rebuilt through the 2026 portal class. Building chemistry is the biggest question heading into fall camp."
+  },
+  {
+    "id": "stl_2",
+    "title": "🛡️ Defensive 3-3-5 Install",
+    "status": "ON TRACK",
+    "statusClass": "text-green-400 bg-green-400/10",
+    "body": "Spring practice showed the scheme ahead of schedule. Woods at JACK is the best player on this defense."
+  },
+  {
+    "id": "stl_3",
+    "title": "🎯 Recruiting Class Health",
+    "status": "STRONG",
+    "statusClass": "text-green-400 bg-green-400/10",
+    "body": "No attrition concerns. Groce and Morris are the two most closely watched freshmen."
+  },
+  {
+    "id": "stl_4",
+    "title": "📈 Quarterback Competition — Jones Jr. vs Philo",
+    "status": "HEATING UP",
+    "statusClass": "text-yellow-400 bg-yellow-400/10",
+    "body": "The spring battle is real. Jones Jr. offers special teams experience, while Philo provides a pro-style floor. The winner must control turnovers and make back-shoulder throws consistently."
+  }
+]
