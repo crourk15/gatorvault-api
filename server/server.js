@@ -11,6 +11,27 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  const allowed = [
+    'https://gatorvaultinsider.com',
+    'https://www.gatorvaultinsider.com',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
+  ];
+  if (origin && allowed.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Vary', 'Origin');
+  } else {
+    res.header('Access-Control-Allow-Origin', '*');
+  }
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
+
 app.use(bodyParser.json({ limit: '1mb' }));
 
 mountRecruitingRoutes(app);
@@ -41,14 +62,6 @@ function verifyTestPin(pin) {
 if (process.env.SENDGRID_API_KEY) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 }
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-  if (req.method === 'OPTIONS') return res.sendStatus(204);
-  next();
-});
 
 function loadUsers() {
   try {
