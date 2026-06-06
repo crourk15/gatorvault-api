@@ -209,6 +209,19 @@ function mountRecruitingRoutes(app) {
     }
   });
 
+  app.post('/api/recruiting/admin/clear-events', async (req, res) => {
+    try {
+      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || '');
+      if (!verifyAdminPin(pin)) {
+        return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+      }
+      await store.clearEvents();
+      return res.json({ ok: true, cleared: true });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/recruiting/ingest', async (req, res) => {
     try {
       const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.get('X-Ingest-Secret') || '');

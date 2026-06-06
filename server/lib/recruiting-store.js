@@ -287,12 +287,38 @@ function normalizeEvent(raw) {
   };
 }
 
+async function clearEvents() {
+  const sb = initSupabase();
+  if (sb) {
+    const { error } = await sb.from('recruiting_events').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    if (error) throw error;
+    return [];
+  }
+  await saveEventsLocal([]);
+  return [];
+}
+
+async function isDuplicateEvent(row) {
+  const events = await loadEventsLocal();
+  const since = Date.now() - 24 * 60 * 60 * 1000;
+  return events.some(
+    (e) =>
+      e.playerSlug === row.playerSlug &&
+      e.eventType === row.eventType &&
+      e.title === row.title &&
+      new Date(e.createdAt).getTime() > since
+  );
+}
+
 async function createEvent(event) {
   const row = normalizeEvent({
     id: `evt_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     ...event,
     createdAt: nowIso()
   });
+  if ((row.source || 'manual') === 'manual' && (await isDuplicateEvent(row))) {
+    return row;
+  }
   const sb = initSupabase();
   if (sb) {
     const { data, error } = await sb.from('recruiting_events').insert({
@@ -398,6 +424,7 @@ module.exports = {
   upsertRanking,
   getEvents,
   createEvent,
+  clearEvents,
   getBoard,
   getPortalBoard,
   fireRecruitingEvent,

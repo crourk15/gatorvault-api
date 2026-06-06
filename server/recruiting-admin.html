@@ -69,6 +69,44 @@
     </div>
 
     <div class="card">
+      <strong>Roster profile override</strong>
+      <p style="font-size:13px;color:#94a3b8;margin:8px 0 12px">Edit vault roster ratings, bios, and measurables shown in Player Profiles.</p>
+      <div class="row">
+        <div><label>Player slug *</label><input id="roster-slug" placeholder="vernell-brown-iii"></div>
+        <div><label>Display name</label><input id="roster-name" placeholder="Vernell Brown III"></div>
+      </div>
+      <div class="row">
+        <div><label>Position</label><input id="roster-pos" placeholder="WR"></div>
+        <div><label>Class year</label><input id="roster-year" placeholder="So."></div>
+      </div>
+      <div class="row">
+        <div><label>Height</label><input id="roster-height" placeholder="5-11"></div>
+        <div><label>Weight (lbs)</label><input id="roster-weight" placeholder="185"></div>
+      </div>
+      <div class="row">
+        <div><label>Hometown</label><input id="roster-hometown" placeholder="Tampa, FL"></div>
+        <div><label>Stars</label><input id="roster-stars" type="number" min="0" max="5" placeholder="4"></div>
+      </div>
+      <div class="row">
+        <div><label>Base rating</label><input id="roster-rating" type="number" placeholder="86"></div>
+        <div><label>Rating override (wins)</label><input id="roster-rating-override" type="number" placeholder="Leave blank to use base"></div>
+      </div>
+      <label>Headshot URL</label>
+      <input id="roster-headshot" placeholder="https://…">
+      <label>Bio</label>
+      <textarea id="roster-bio" placeholder="Full profile bio shown on the card."></textarea>
+      <label>Role line (short)</label>
+      <input id="roster-stats" placeholder="Slot weapon at F · Versatile route runner">
+      <button class="secondary" id="roster-save" type="button">Save roster profile</button>
+    </div>
+
+    <div class="card">
+      <strong>Alert feed maintenance</strong>
+      <p style="font-size:13px;color:#94a3b8;margin:8px 0 12px">Clears all recruiting event log entries (removes test commits from the live alert feed).</p>
+      <button class="secondary" id="clear-events" type="button">Clear event log</button>
+    </div>
+
+    <div class="card">
       <strong>On3 Ingest (Phase 2)</strong>
       <p style="font-size:13px;color:#94a3b8;margin:8px 0 12px">Auto-polls On3 Florida boards and fires vault alerts when commits change. Baseline must be saved before diff runs.</p>
       <div id="ingest-status" style="font-size:13px;line-height:1.6;color:#cbd5e1;margin-bottom:12px">Loading ingest status…</div>
@@ -153,6 +191,55 @@
       postIngest({ baselineOnly: true });
     });
     loadIngestStatus();
+
+    document.getElementById('roster-save').addEventListener('click', async function() {
+      var pin = document.getElementById('pin').value.trim();
+      var slug = document.getElementById('roster-slug').value.trim();
+      if (!pin) return log('err', 'PIN required');
+      if (!slug) return log('err', 'Roster slug required');
+      var body = {
+        pin: pin,
+        name: document.getElementById('roster-name').value.trim(),
+        pos: document.getElementById('roster-pos').value.trim(),
+        year: document.getElementById('roster-year').value.trim(),
+        height: document.getElementById('roster-height').value.trim(),
+        weight: document.getElementById('roster-weight').value.trim(),
+        hometown: document.getElementById('roster-hometown').value.trim(),
+        stars: document.getElementById('roster-stars').value ? parseInt(document.getElementById('roster-stars').value, 10) : null,
+        rating: document.getElementById('roster-rating').value ? parseFloat(document.getElementById('roster-rating').value) : null,
+        ratingOverride: document.getElementById('roster-rating-override').value ? parseFloat(document.getElementById('roster-rating-override').value) : null,
+        headshotUrl: document.getElementById('roster-headshot').value.trim() || null,
+        bio: document.getElementById('roster-bio').value.trim(),
+        stats: document.getElementById('roster-stats').value.trim()
+      };
+      log('info', 'POST /api/roster/players/' + slug, body);
+      try {
+        var r = await fetch(API + '/api/roster/players/' + slug, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Recruiting-Pin': pin },
+          body: JSON.stringify(body)
+        });
+        var data = await r.json();
+        if (data.ok) log('ok', 'Roster profile saved', data.player);
+        else log('err', 'Failed', data);
+      } catch (e) { log('err', String(e)); }
+    });
+
+    document.getElementById('clear-events').addEventListener('click', async function() {
+      var pin = document.getElementById('pin').value.trim();
+      if (!pin) return log('err', 'PIN required');
+      if (!confirm('Clear all recruiting events from the alert feed?')) return;
+      try {
+        var r = await fetch(API + '/api/recruiting/admin/clear-events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Recruiting-Pin': pin },
+          body: JSON.stringify({ pin: pin })
+        });
+        var data = await r.json();
+        if (data.ok) log('ok', 'Event log cleared');
+        else log('err', 'Failed', data);
+      } catch (e) { log('err', String(e)); }
+    });
 
     document.getElementById('fire').addEventListener('click', async function() {
       var pin = document.getElementById('pin').value.trim();

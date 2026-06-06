@@ -1,6 +1,7 @@
 /**
- * Seed community threads, posts, users, categories, and live rooms.
- * Run: node scripts/seed-community.js
+ * DEV ONLY — seeds demo community threads. Not used in production.
+ * Run locally: COMMUNITY_SEED_ENABLED=true node scripts/seed-community.js
+ * Or set COMMUNITY_SEED_ENABLED=true on the server (not recommended for live).
  */
 const path = require('path');
 const store = require('../lib/community-store');

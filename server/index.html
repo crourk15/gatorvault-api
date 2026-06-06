@@ -1879,6 +1879,7 @@
         if(tab==='recruit'||tab==='portal'){try{gvLoadRecruitingLive(true);}catch(e){}}
         if(tab==='articles'){try{gvLoadPublishedContent(true);}catch(e){}}
         if(tab==='community'){try{gvLoadCommunity(true);}catch(e){}}
+        if(tab==='players'){try{gvLoadRosterProfiles(true);}catch(e){}}
         if(tab==='alerts'){try{applyPrefUI();renderAlerts();if(typeof gvSyncAlertSubscription==='function')gvSyncAlertSubscription();}catch(e){}}
         document.querySelectorAll('.vpane').forEach(function(p){p.classList.remove('active');p.style.display='none';});
         document.querySelectorAll('.vtab').forEach(function(t){t.classList.remove('active');t.classList.remove('text-gator-orange');t.classList.add('text-surface-200');});
@@ -2012,21 +2013,7 @@
         {game:'🐊 UF vs Georgia',date:'October 31, 2026 · TBD',venue:'EverBank Stadium, Jacksonville FL',type:'NEUTRAL',note:'World\'s Largest Outdoor Cocktail Party — get tickets early'},
         {game:'🐊 UF @ FSU',date:'November 27, 2026 · Noon ET',venue:'Doak Campbell Stadium, Tallahassee FL',type:'AWAY',note:'Black Friday Rivalry Game'}
     ];
-    var playerProfiles=[
-        {name:'Tramell Jones Jr.',pos:'QB',year:'R-Fr.',stats:'Spring starter candidate · Dual-threat',rating:85,injury:'green'},
-        {name:'Aaron Philo',pos:'QB',year:'R-So.',stats:'GT transfer · 47% 3rd-down conv.',rating:84,injury:'green'},
-        {name:'Jadan Baugh',pos:'RB',year:'Jr.',stats:'Workhorse starter · 3-down back',rating:88,injury:'green'},
-        {name:'Dallas Wilson',pos:'WR',year:'R-Fr.',stats:'X receiver · Projected starter',rating:86,injury:'green'},
-        {name:'Eric Singleton Jr.',pos:'WR',year:'Sr.',stats:'Auburn transfer · WR1 · Go-to weapon',rating:87,injury:'green'},
-        {name:'Vernell Brown III',pos:'WR',year:'So.',stats:'Slot weapon at F · Versatile route runner',rating:84,injury:'green'},
-        {name:'Lacota Dippre',pos:'TE',year:'R-Jr.',stats:'Top TE · Legitimate weapon in Faulkner\'s system',rating:87,injury:'green'},
-        {name:'Cormani McClain',pos:'CB',year:'R-So.',stats:'Former #1 CB recruit · Elite lockdown',rating:89,injury:'green'},
-        {name:'Dijon Johnson',pos:'CB',year:'R-Jr.',stats:'Press-man corner · Physical coverage',rating:86,injury:'green'},
-        {name:'Jayden Woods',pos:'EDGE',year:'So.',stats:'Best player on defense · JACK',rating:90,injury:'green'},
-        {name:'Myles Graham',pos:'LB',year:'Jr.',stats:'All-SEC candidate · Speed/instinct',rating:86,injury:'green'},
-        {name:'Jaden Robinson',pos:'LB',year:'Sr.',stats:'Field general · MIKE · Communication',rating:85,injury:'green'},
-        {name:'Bryce Thornton',pos:'S',year:'Sr.',stats:'SS enforcer · Physical leader in secondary',rating:85,injury:'green'}
-    ];
+    var playerProfiles=[];
     var GV_HIGHLIGHTS_LIVE=false;
     var highlightMomentWatchlist=[
         {season:'2025',title:'Baugh & Wilson — Texas upset in The Swamp',meta:'Oct 2025 · UF 29, Texas 21',note:'Opening-drive score and Wilson\'s 55-yard debut touchdown.'},
@@ -2036,13 +2023,8 @@
         {season:'2026',title:'Jayden Woods at JACK — scheme install',meta:'Defensive identity',note:'3-3-5 edge pressure package breakdown.'},
         {season:'2026',title:'Sumrall post-spring presser',meta:'Media · interviews',note:'Press clips ship only when sourced natively — no scrubbed reels.'}
     ];
-    var recentAlerts=[
-        {text:'Kennedee Jackson committed to Florida',detail:'4★ OT from Lithonia, GA — committed June 2 to the 2027 class.',time:'2 hours ago',type:'recruiting'},
-        {text:'Depth chart updated: QB battle still dead even',detail:'Tramell Jones Jr. and Aaron Philo remain in a dead heat. No starter named before fall camp.',time:'Yesterday',type:'depth'},
-        {text:'Lacota Dippre officially enrolled at UF',detail:'Alabama transfer TE is now on campus. Expected to be the top tight end in Faulkner\'s system.',time:'2 days ago',type:'portal'},
-        {text:'New insider article published',detail:'"Summer Camp Preview: 5 Position Battles to Watch" — fall camp opens August 2nd.',time:'3 days ago',type:'article'},
-        {text:'Heat Check: Tra\'Von Hall rising',detail:'4★ WR had a strong OV weekend. Confidence rating moved from Medium to High.',time:'4 days ago',type:'recruiting'}
-    ];
+    var recentAlerts=[];
+    var GV_ALERTS_FEED_VERSION=2;
     var ALERT_TYPE_META={
         recruiting:{icon:'🔥',label:'Recruiting',pill:'bg-gator-orange/15 text-gator-orange'},
         depth:{icon:'📋',label:'Depth Chart',pill:'bg-blue-500/15 text-blue-300'},
@@ -2269,7 +2251,20 @@
     }
 
     function loadRecentAlerts(){
-        try{var s=localStorage.getItem('gv_recentAlerts');if(s){recentAlerts=JSON.parse(s);} }catch(e){console.warn('loadRecentAlerts',e);}renderAlerts();}
+        try{
+            if(localStorage.getItem('gv_alertsFeedVersion')!==String(GV_ALERTS_FEED_VERSION)){
+                recentAlerts=[];
+                localStorage.removeItem('gv_recentAlerts');
+                localStorage.setItem('gv_alertsFeedVersion',String(GV_ALERTS_FEED_VERSION));
+                localStorage.removeItem('gv_lastRecruitEvent');
+                if(window._gvRecruitingLive)window._gvRecruitingLive.lastEventTs=0;
+            }else{
+                var s=localStorage.getItem('gv_recentAlerts');
+                if(s)recentAlerts=JSON.parse(s);
+            }
+        }catch(e){console.warn('loadRecentAlerts',e);}
+        renderAlerts();
+    }
     function persistRecentAlerts(){
         try{localStorage.setItem('gv_recentAlerts',JSON.stringify(recentAlerts.slice(-200)));}catch(e){console.warn('persistRecentAlerts',e);}    }
 
@@ -2412,8 +2407,31 @@
     }
     function playerMatchesQuery(p,q){
         if(!q) return true;
-        var hay=[p.name,p.pos,p.position,p.year,p.stats,p.team].join(' ').toLowerCase();
+        var hay=[p.name,p.pos,p.position,p.year,p.class,p.stats,p.team,p.bio,p.hometown,p.height,p.weight].join(' ').toLowerCase();
         return hay.indexOf(q)!==-1;
+    }
+
+    function playerDisplayRating(p){
+        if(p.displayRating!=null)return p.displayRating;
+        if(p.ratingOverride!=null&&p.ratingOverride!=='')return Number(p.ratingOverride);
+        return p.rating!=null?Number(p.rating):null;
+    }
+
+    function gvLoadRosterProfiles(force){
+        var base=gvRecruitApiBase();
+        return fetch(base+'/api/roster/players').then(function(r){if(!r.ok)throw new Error('roster HTTP '+r.status);return r.json();}).then(function(data){
+            if(data.ok&&data.players&&data.players.length){
+                window.playerProfiles=data.players;
+                renderPlayers();
+            }else if(force){
+                window.playerProfiles=window.playerProfiles||[];
+                renderPlayers();
+            }
+        }).catch(function(e){
+            console.warn('gvLoadRosterProfiles',e);
+            if(!window.playerProfiles||!window.playerProfiles.length)window.playerProfiles=[];
+            renderPlayers();
+        });
     }
 
     function renderLiveScores(){
@@ -2443,7 +2461,7 @@
 
         if(statsBar){
             var followed=(window.alertPrefs.followPlayers||[]).length;
-            var avgRating=filtered.length?Math.round(filtered.reduce(function(s,p){return s+(p.rating||0);},0)/filtered.length):0;
+            var avgRating=filtered.length?Math.round(filtered.reduce(function(s,p){return s+(playerDisplayRating(p)||0);},0)/filtered.length):0;
             statsBar.innerHTML='<div class="player-stat-pill"><p class="text-[.65rem] uppercase tracking-[.12em] text-surface-400">Profiles</p><p class="font-display text-xl font-bold text-white">'+filtered.length+'</p></div>'
                 +'<div class="player-stat-pill"><p class="text-[.65rem] uppercase tracking-[.12em] text-surface-400">Following</p><p class="font-display text-xl font-bold text-gator-orange">'+followed+'</p></div>'
                 +'<div class="player-stat-pill"><p class="text-[.65rem] uppercase tracking-[.12em] text-surface-400">Avg Rating</p><p class="font-display text-xl font-bold text-white">'+(avgRating||'—')+'</p></div>';
@@ -2473,21 +2491,35 @@
         filtered.forEach(function(p){
             var pos=playerPos(p);
             var inj=injuryMeta(p.injury||'green');
-            var tier=ratingTier(p.rating||0);
+            var rating=playerDisplayRating(p);
+            var tier=ratingTier(rating||0);
             var followed=(window.alertPrefs.followPlayers||[]).indexOf(p.name)!==-1;
             var followClass=followed?'bg-gator-orange text-black':'bg-surface-700 text-surface-200';
+            var meas=[];
+            if(p.height)meas.push(p.height);
+            if(p.weight)meas.push(p.weight+' lbs');
+            if(p.hometown)meas.push(p.hometown);
+            var measLine=meas.length?meas.join(' · '):'';
+            var starsLine=p.stars?('★'.repeat(Math.min(5,parseInt(p.stars,10)||0))+(p.rank?' · #'+p.rank:'')):'';
+            var head=p.headshotUrl
+                ?'<img src="'+gvEscHtml(p.headshotUrl)+'" alt="" class="w-12 h-12 rounded-full object-cover border border-gator-blue/20 flex-shrink-0">'
+                :'<div class="w-12 h-12 rounded-full bg-surface-800 border border-gator-blue/20 flex items-center justify-center text-gator-orange font-bold text-sm flex-shrink-0">'+playerInitials(p.name)+'</div>';
             var card=document.createElement('div');
             card.className='player-card';
             card.dataset.pos=pos;
             card.innerHTML='<div class="flex items-start gap-3">'
-                +'<div class="rating-circle '+tier+'">'+(p.rating||'—')+'</div>'
+                +head
+                +'<div class="rating-circle '+tier+' flex-shrink-0">'+(rating!=null?rating:'—')+'</div>'
                 +'<div class="flex-1 min-w-0">'
                 +'<div class="flex items-start justify-between gap-2">'
                 +'<div class="min-w-0"><div class="font-semibold text-white truncate">'+(p.name||'')+'</div>'
-                +'<div class="text-xs text-surface-200/60 mt-0.5">'+(pos||'—')+(p.year?' · '+p.year:'')+'</div></div>'
+                +'<div class="text-xs text-surface-200/60 mt-0.5">'+(pos||'—')+(p.year||p.class?' · '+(p.year||p.class):'')+'</div>'
+                +(measLine?'<div class="text-[.65rem] text-surface-200/50 mt-0.5">'+gvEscHtml(measLine)+'</div>':'')
+                +(starsLine?'<div class="text-[.65rem] text-yellow-400 mt-0.5">'+starsLine+'</div>':'')
+                +'</div>'
                 +'<button class="follow-player-btn text-xs px-2 py-1 rounded-lg flex-shrink-0 '+followClass+'" data-player="'+(p.name||'')+'">'+(followed?'Following':'Follow')+'</button>'
                 +'</div>'
-                +'<p class="text-xs text-surface-200/80 mt-2 leading-relaxed">'+(p.stats||'')+'</p>'
+                +'<p class="text-xs text-surface-200/80 mt-2 leading-relaxed">'+(p.bio||p.stats||'')+'</p>'
                 +'<div class="flex items-center gap-1.5 mt-2 text-xs font-semibold '+inj.cls+'"><span>'+inj.dot+'</span><span>'+inj.label+'</span></div>'
                 +'</div></div>';
             grid.appendChild(card);
@@ -2573,7 +2605,7 @@
         try{renderHighlights();}catch(e){console.warn('renderHighlights error:',e);}
         try{renderLiveScores();}catch(e){console.warn('renderLiveScores error:',e);}
         try{renderAlerts();}catch(e){console.warn('renderAlerts error:',e);}
-        try{renderPlayers();}catch(e){console.warn('renderPlayers error:',e);}
+        try{gvLoadRosterProfiles();}catch(e){console.warn('gvLoadRosterProfiles error:',e);}
         try{renderGameZone();}catch(e){console.warn('renderGameZone error:',e);}
         try{renderApparel();}catch(e){console.warn('renderApparel error:',e);}
     }

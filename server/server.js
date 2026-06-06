@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const { mountRecruitingRoutes } = require('./lib/recruiting-routes');
 const { mountContentRoutes } = require('./lib/content-routes');
 const { mountCommunityRoutes } = require('./lib/community-routes');
+const { mountRosterRoutes } = require('./lib/roster-routes');
 const { ensurePublishedSeed } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 
@@ -41,6 +42,7 @@ app.use(bodyParser.json({ limit: '1mb' }));
 mountRecruitingRoutes(app);
 mountContentRoutes(app);
 mountCommunityRoutes(app);
+mountRosterRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;
@@ -680,7 +682,7 @@ app.listen(PORT, () => {
     console.warn('Content API: failed to init', e.message);
   }
   try {
-    if (!communityStore.isSeeded()) {
+    if (process.env.COMMUNITY_SEED_ENABLED === 'true' && !communityStore.isSeeded()) {
       require('./scripts/seed-community');
     }
     console.log('Community API: ready (' + communityStore.loadThreads().filter((t) => !t.deleted).length + ' threads)');
