@@ -87,6 +87,13 @@ function saveQueue(queue) {
   writeJson(QUEUE_PATH, queue);
 }
 
+function getArticleById(id) {
+  const articles = loadPublishedArticles();
+  const raw = articles.find((a) => a.id === id);
+  if (!raw) return null;
+  return { ...resolveContentItem(raw), id: raw.id, source: 'published' };
+}
+
 function getPublishedFeed() {
   const articles = loadPublishedArticles().map((a) => ({
     ...resolveContentItem(a),
@@ -266,6 +273,7 @@ module.exports = {
   loadPublishedArticles,
   loadPublishedStorylines,
   getPublishedFeed,
+  getArticleById,
   upsertDraft,
   validateQueueItem,
   submitForReview,

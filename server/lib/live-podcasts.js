@@ -77,7 +77,7 @@ async function refreshPodcasts() {
           type: 'podcast',
           title: `New episode: ${show.name} — ${latest.title}`,
           summary: latest.description,
-          url: latest.playUrl,
+          source_url: latest.playUrl || null,
           imageUrl: latest.imageUrl || show.imageUrl,
           source: 'rss',
           author: show.name,

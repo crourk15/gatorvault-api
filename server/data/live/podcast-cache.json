@@ -133,7 +133,7 @@
       "id": "gators-online",
       "name": "Gators Online Podcast",
       "feedUrl": "https://feeds.simplecast.com/xAayO76o",
-      "siteUrl": "https://www.on3.com/colleges/florida-gators/",
+      "siteUrl": "https://www.on3.com/teams/florida-gators/page/podcasts/",
       "imageUrl": "https://image.simplecastcdn.com/images/4e90f643-1af4-46f0-95d6-6183e0a87ef2/cca5b366-6eab-4f61-ba5c-8ae616f505c6/3000x3000/go-podcast-1.jpg?aid=rss_feed",
       "episodes": [
         {
@@ -517,6 +517,6 @@
       ]
     }
   ],
-  "fetchedAt": "2026-06-06T17:58:59.182Z",
+  "fetchedAt": "2026-06-07T03:48:15.505Z",
   "errors": []
 }

@@ -23,7 +23,7 @@ function isTestRecruitingEvent(ev) {
 }
 
 async function ingestRecruitingEvents() {
-  const events = await recruitingStore.getEvents({ limit: 40 });
+  const events = await recruitingStore.getEvents({ limit: 200 });
   let count = 0;
   events.forEach((ev) => {
     if (isTestRecruitingEvent(ev)) return;
@@ -34,12 +34,12 @@ async function ingestRecruitingEvents() {
       type,
       title: ev.title,
       summary: ev.skinny || ev.detail || '',
-      url: ev.playerSlug ? `/player/${ev.playerSlug}` : null,
+      source_url: ev.playerSlug ? `/player/${ev.playerSlug}` : '/recruit',
       imageUrl: null,
-      source: ev.source || 'recruiting',
+      source: ev.source || 'on3',
       author: 'GatorVault Recruiting',
       createdAt: ev.createdAt,
-      meta: { eventType: ev.eventType, playerSlug: ev.playerSlug }
+      meta: { eventType: ev.eventType, playerSlug: ev.playerSlug, on3: true }
     });
     count += 1;
   });
@@ -57,12 +57,12 @@ function ingestPublishedContent() {
         type: 'article',
         title: a.title,
         summary: a.excerpt || '',
-        url: '/#articles',
+        source_url: a.id ? `/article/${a.id}` : '/articles',
         imageUrl: null,
         source: 'content',
         author: a.author || 'GatorVault',
         createdAt: a.publishedAt || a.date || liveStore.nowIso(),
-        meta: { tier: a.tier }
+        meta: { tier: a.tier, articleId: a.id }
       });
       count += 1;
     });

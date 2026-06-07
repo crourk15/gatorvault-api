@@ -1230,6 +1230,25 @@
           "skinny": "",
           "sourceStatus": "Committed"
         },
+        "on3:180930": {
+          "on3Id": "180930",
+          "name": "Ellis McGaskin",
+          "pos": "LB",
+          "classYear": 2027,
+          "school": "Mobile, AL",
+          "htWt": "5-11.5 / 210",
+          "stars": 4,
+          "rating": 89.32608695652173,
+          "natlRank": 347,
+          "posRank": 30,
+          "stateRank": 17,
+          "inState": false,
+          "status": "committed",
+          "commitDate": "2026-06-06",
+          "committedTo": "Florida",
+          "skinny": "",
+          "sourceStatus": "Committed"
+        },
         "on3:244244": {
           "on3Id": "244244",
           "name": "Jackson Ballinger",
@@ -1334,7 +1353,7 @@
           "htWt": "6-0 / 185",
           "stars": 3,
           "rating": 86,
-          "natlRank": 812,
+          "natlRank": 813,
           "posRank": 26,
           "stateRank": 94,
           "inState": false,
@@ -1349,10 +1368,10 @@
         "classYear": 2027,
         "nationalRank": 5,
         "secRank": 3,
-        "classScore": 92.582865825152,
+        "classScore": 92.419619760012,
         "source": "on3"
       }
     }
   },
-  "lastRun": "2026-06-06T05:53:30.544Z"
+  "lastRun": "2026-06-07T03:48:12.304Z"
 }

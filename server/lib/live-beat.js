@@ -220,7 +220,7 @@ async function refreshBeatStream() {
       type: 'beat',
       title: `${post.writerName}: ${String(post.text || '').slice(0, 120)}`,
       summary: post.text,
-      url: post.url,
+      source_url: post.url || null,
       imageUrl: null,
       source: post.source,
       author: post.writerName,

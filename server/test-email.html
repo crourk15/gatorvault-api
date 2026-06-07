@@ -136,15 +136,17 @@
         trial_end: trialEnd,
         login_url: 'https://gatorvaultinsider.com',
         support_x: '@GatorVaultInsider',
-        from_name: 'GatorVault',
-        reply_to: 'gatorvaultinsider@gmail.com'
+        from_name: 'GatorVault Team',
+        reply_to: 'support@gatorvaultinsider.com',
+        community_url: 'https://gatorvaultinsider.com',
+        onboarding_intro: 'Your GatorVault account is live. Here is everything included in your membership and how to get started.'
       };
     }
 
     function logRecipientFix() {
       log('warn', 'Fix in EmailJS dashboard (template_okh1hj8):');
       log('warn', '1. Open Email Templates → template_okh1hj8');
-      log('warn', '2. At the TOP of the editor (not in HTML body), set To Email to: {{to_email}}');
+      log('warn', '2. At the TOP of the editor (not in HTML body), set To Email to: {{to_email}} and From name to: GatorVault Team');
       log('warn', '3. Save template, wait 1 min, retry. Admin emails use a static To address — welcome needs {{to_email}}.');
     }
 

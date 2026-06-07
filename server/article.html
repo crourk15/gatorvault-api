@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GatorVault Article</title>
+  <meta name="robots" content="noindex">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{'gator-orange':'#FA4616','gator-blue':'#003087','surface-700':'#0b1220','surface-800':'#111827','surface-200':'#94a3b8'}}}};</script>
+  <style>
+    body{background:#030712;color:#e2e8f0;font-family:Inter,Arial,sans-serif;}
+    .article-body p{margin:0 0 1rem;line-height:1.65;}
+    .article-body strong{color:#fff;}
+    .article-takeaways ul{margin:.5rem 0 0 1.25rem;}
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="max-w-3xl mx-auto px-4 py-8">
+    <a href="#" id="back-link" class="text-sm text-blue-400 hover:text-blue-300">← Back to GatorVault</a>
+    <div id="loading" class="mt-8 text-surface-200">Loading article…</div>
+    <div id="error" class="mt-8 text-red-400 hidden"></div>
+    <article id="article" class="hidden mt-6 space-y-6">
+      <header class="bg-surface-700 border border-gator-blue/30 rounded-2xl p-6">
+        <span id="a-badge" class="text-xs font-semibold px-2 py-1 rounded-full bg-gator-orange/20 text-gator-orange"></span>
+        <h1 id="a-title" class="font-bold text-2xl md:text-3xl text-white mt-3"></h1>
+        <p id="a-meta" class="text-sm text-surface-200 mt-2"></p>
+        <p id="a-excerpt" class="text-surface-200 text-sm mt-4 leading-relaxed border-l-4 border-gator-orange pl-4"></p>
+      </header>
+      <div id="a-body" class="article-body bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 text-sm text-surface-200"></div>
+      <div id="a-takeaways" class="bg-surface-800 border border-gator-blue/20 rounded-2xl p-5 hidden">
+        <p class="text-xs font-bold text-gator-orange uppercase tracking-wider mb-2">Key Takeaways</p>
+        <ul id="a-takeaways-list" class="list-disc pl-4 text-sm text-surface-200 space-y-1"></ul>
+      </div>
+    </article>
+  </div>
+  <script>
+    var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000' : 'https://gatorvault-api.onrender.com';
+    var articleId = (location.pathname.match(/\/article\/([^/]+)/) || [])[1]
+      || new URLSearchParams(location.search).get('id') || '';
+
+    document.getElementById('back-link').addEventListener('click', function (e) {
+      e.preventDefault();
+      if (document.referrer && document.referrer.indexOf(location.host) >= 0) history.back();
+      else location.href = '/?open=vault&tab=articles';
+    });
+
+    function renderArticle(a) {
+      document.title = (a.title || 'Article') + ' — GatorVault';
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('article').classList.remove('hidden');
+      document.getElementById('a-badge').textContent = a.badge || 'ARTICLE';
+      document.getElementById('a-title').textContent = a.title || '';
+      var meta = [];
+      if (a.author) meta.push('By ' + a.author);
+      if (a.date) meta.push(a.date);
+      if (a.readMin) meta.push(a.readMin + ' min read');
+      document.getElementById('a-meta').textContent = meta.join(' · ');
+      document.getElementById('a-excerpt').textContent = a.excerpt || '';
+      document.getElementById('a-body').innerHTML = a.body || '';
+      if (a.takeaways && a.takeaways.length) {
+        document.getElementById('a-takeaways').classList.remove('hidden');
+        document.getElementById('a-takeaways-list').innerHTML = a.takeaways.map(function (t) {
+          return '<li>' + t + '</li>';
+        }).join('');
+      }
+    }
+
+    async function load() {
+      if (!articleId) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('error').classList.remove('hidden');
+        document.getElementById('error').textContent = 'No article id in URL. Example: /article/art-portal-class-2026';
+        return;
+      }
+      try {
+        var r = await fetch(API + '/api/content/articles/' + encodeURIComponent(articleId));
+        var data = await r.json();
+        if (!data.ok || !data.article) throw new Error(data.error || 'Article not found');
+        renderArticle(data.article);
+      } catch (e) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('error').classList.remove('hidden');
+        document.getElementById('error').textContent = e.message || String(e);
+      }
+    }
+    load();
+  </script>
+</body>
+</html>

@@ -9,8 +9,8 @@
     <meta name="color-scheme" content="dark" />
 
     <!-- SEO & Google Search -->
-    <title>GatorVault — Florida Gators Football Insider Platform</title>
-    <meta name="description" content="The Film Room & Truth Serum of Gator Nation. Depth charts, recruiting intel, transfer portal, scheme breakdowns, and game week analysis — all in one place. 30-day free trial." />
+    <title>GatorVault — Your UF Football Hub</title>
+    <meta name="description" content="Built for passionate Florida Gators football fans. Depth charts, recruiting intel, transfer portal, scheme breakdowns, and game week analysis — your full UF Football hub. 30-day free trial." />
     <meta name="keywords" content="Florida Gators football, UF football, Gators recruiting, Florida Gators depth chart, Gators transfer portal, Jon Sumrall, SEC football, Gator Nation" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://gatorvaultinsider.com" />
@@ -19,8 +19,8 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://gatorvaultinsider.com" />
-    <meta property="og:title" content="GatorVault — Florida Gators Football Insider Platform" />
-    <meta property="og:description" content="The Film Room & Truth Serum of Gator Nation. Depth charts, recruiting intel, transfer portal, scheme breakdowns — all in one place. Try free for 30 days." />
+    <meta property="og:title" content="GatorVault — Your UF Football Hub" />
+    <meta property="og:description" content="Built for passionate Florida Gators football fans. Your full UF Football hub — depth charts, recruiting, portal, film, and live updates. Try free for 30 days." />
     <meta property="og:image" content="https://gatorvaultinsider.com/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -29,8 +29,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@GatorVaultInsider" />
-    <meta name="twitter:title" content="GatorVault — Florida Gators Football Insider Platform" />
-    <meta name="twitter:description" content="Depth charts. Recruiting intel. Transfer portal. Scheme breakdowns. The Film Room & Truth Serum of Gator Nation. Try free for 30 days." />
+    <meta name="twitter:title" content="GatorVault — Your UF Football Hub" />
+    <meta name="twitter:description" content="Built for passionate Florida Gators football fans. Depth charts, recruiting, portal, film, and live updates — your full UF Football hub. Try free for 30 days." />
     <meta name="twitter:image" content="https://gatorvaultinsider.com/og-image.png" />
 
     <!-- Favicon -->
@@ -254,7 +254,11 @@
         .live-ticker-item{font-size:.75rem;color:#e2e8f0;padding:0 1rem;border-right:1px solid rgba(255,255,255,.08);}
         .live-feed-list{flex:1;overflow-y:auto;overflow-x:hidden;max-height:520px;min-width:0;width:100%;}
         .live-feed-item{padding:.75rem;border-radius:.65rem;background:#060f1f;border:1px solid rgba(0,48,135,.25);margin-bottom:.5rem;}
-        .live-feed-item:hover{border-color:rgba(250,70,22,.35);}
+        .live-feed-item--linked{cursor:pointer;}
+        .live-feed-item--linked:hover{border-color:rgba(250,70,22,.35);}
+        .live-feed-item--static{cursor:default;}
+        .live-feed-item--static:hover{border-color:rgba(0,48,135,.25);}
+        .live-feed-no-link{font-size:.6rem;color:#475569;margin-top:.35rem;}
         .live-type-pill{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em;}
         .live-type-commit{background:rgba(250,70,22,.15);color:#fb923c;}
         .live-type-portal{background:rgba(59,130,246,.15);color:#93c5fd;}
@@ -277,6 +281,74 @@
         .score-input{width:60px;background:#060f1f;border:2px solid rgba(0,48,135,.4);border-radius:.5rem;padding:.5rem;color:white;font-family:'Oswald',sans-serif;font-size:1.25rem;text-align:center;}
         .score-input:focus{border-color:#FA4616;box-shadow:0 0 0 3px rgba(250,70,22,.2);}
         .op-access-form{background:rgba(0,48,135,.1);border:1px solid rgba(0,48,135,.2);border-radius:.75rem;padding:12px 16px;margin-top:16px;}
+
+        /* ===== ESPN-Style Mobile (vault) ===== */
+        .gv-mob-only{display:none;}
+        @media(max-width:767px){
+            .gv-mob-only{display:block;}
+            .gv-mob-only.gv-mob-header,
+            .gv-mob-only.gv-bottom-nav{display:flex;}
+            .gv-desk-only{display:none!important;}
+            #vault-interior.gv-mobile-active{background:#f5f5f5;color:#111111;}
+            #vault-interior.gv-mobile-active #gv-vault-content{padding:56px 0 76px;}
+            #vault-interior.gv-mobile-active.gv-has-breaking #gv-vault-content{padding-top:100px;}
+            #vault-interior.gv-mobile-active .vpane{padding:0 0 16px;}
+            #vault-interior.gv-mobile-active #vpane-live>.flex p.text-surface-200{display:none;}
+            #vault-interior.gv-mobile-active #changelog-strip,
+            #vault-interior.gv-mobile-active #live-ticker-wrap{display:none!important;}
+
+            .gv-mob-header{position:fixed;top:0;left:0;right:0;height:56px;background:#fff;border-bottom:1px solid #E5E5E5;display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:120;}
+            .gv-mob-logo{width:36px;height:36px;border-radius:8px;background:#0021A5;color:#fff;font-family:'Oswald',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+            .gv-mob-title{font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:#111111;letter-spacing:.5px;}
+            .gv-mob-icon-btn{width:44px;height:44px;border:none;background:transparent;color:#111111;display:flex;align-items:center;justify-content:center;border-radius:8px;}
+
+            .gv-breaking-banner{position:fixed;top:56px;left:0;right:0;background:#FA4616;color:#fff;z-index:115;min-height:44px;display:flex;align-items:center;overflow:hidden;}
+            .gv-breaking-track{display:flex;animation:gvBreakingScroll 28s linear infinite;white-space:nowrap;padding:10px 0;}
+            .gv-breaking-item{padding:0 20px;font-size:14px;font-weight:600;min-height:44px;display:inline-flex;align-items:center;}
+            @keyframes gvBreakingScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+            .gv-bottom-nav{position:fixed;bottom:0;left:0;right:0;height:60px;background:#fff;border-top:1px solid #E5E5E5;display:flex;align-items:stretch;justify-content:space-around;z-index:120;padding-bottom:env(safe-area-inset-bottom,0);}
+            .gv-bnav-btn{flex:1;border:none;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#666;font-size:10px;font-weight:600;min-height:60px;padding:4px 2px;}
+            .gv-bnav-btn.active{color:#0021A5;}
+            .gv-bnav-btn svg,.gv-bnav-btn i{width:22px;height:22px;}
+
+            .gv-mob-module{background:#fff;margin:0 0 12px;padding:16px;border-top:1px solid #E5E5E5;border-bottom:1px solid #E5E5E5;}
+            .gv-mob-module-hdr{font-size:21px;font-weight:700;color:#111111;padding-bottom:10px;margin-bottom:12px;border-bottom:2px solid #0021A5;font-family:'Oswald',sans-serif;}
+            .gv-espn-card{background:#fff;border:1px solid #E5E5E5;border-radius:12px;padding:14px 16px;margin-bottom:10px;min-height:44px;}
+            .gv-espn-card-title{font-size:18px;font-weight:600;color:#111111;line-height:1.35;margin:0 0 6px;}
+            .gv-espn-card-body{font-size:16px;color:#333;line-height:1.45;margin:0;}
+            .gv-espn-card-time{font-size:14px;color:#888;margin-top:8px;}
+
+            #vault-interior.gv-mobile-active .live-panel,
+            #vault-interior.gv-mobile-active .live-feed-item,
+            #vault-interior.gv-mobile-active .live-beat-post,
+            #vault-interior.gv-mobile-active .live-pod-card{background:#fff;border-color:#E5E5E5;}
+            #vault-interior.gv-mobile-active .live-panel h3,
+            #vault-interior.gv-mobile-active .font-display,
+            #vault-interior.gv-mobile-active h1{color:#111111;}
+            #vault-interior.gv-mobile-active .live-dash-grid{grid-template-columns:1fr;gap:0;}
+            #vault-interior.gv-mobile-active .live-panel{border-radius:0;border-left:0;border-right:0;margin-bottom:12px;padding:16px;}
+            #vault-interior.gv-mobile-active .live-panel h3{font-size:21px;border-bottom:2px solid #0021A5;padding-bottom:10px;margin-bottom:12px;}
+            #vault-interior.gv-mobile-active .live-feed-item--linked:hover{border-color:#E5E5E5;}
+            #vault-interior.gv-mobile-active .live-feed-item .text-white,
+            #vault-interior.gv-mobile-active .live-beat-post .text-surface-100{color:#111111!important;}
+            #vault-interior.gv-mobile-active #vpane-recruit .bg-surface-700,
+            #vault-interior.gv-mobile-active #vpane-dc .bg-surface-700{background:#fff;border-color:#E5E5E5;}
+
+            .gv-hscroll-track{display:flex;flex-wrap:nowrap;gap:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-bottom:4px;}
+            .gv-hscroll-track>*{flex:0 0 82%;max-width:82%;scroll-snap-align:start;}
+            .gv-hscroll-track .ticket-card,
+            .gv-hscroll-track .apparel-card,
+            .gv-hscroll-track .gv-espn-card{min-width:280px;}
+
+            .gv-ptr-indicator{position:fixed;top:56px;left:50%;transform:translateX(-50%) translateY(-120%);background:#0021A5;color:#fff;font-size:13px;font-weight:600;padding:8px 16px;border-radius:20px;z-index:130;transition:transform .2s;}
+            .gv-ptr-indicator.visible{transform:translateX(-50%) translateY(8px);}
+
+            .gv-more-sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;}
+            .gv-more-sheet.open{display:block;}
+            .gv-more-panel{position:absolute;bottom:60px;left:0;right:0;background:#fff;border-top-left-radius:16px;border-top-right-radius:16px;padding:16px;max-height:70vh;overflow-y:auto;}
+            .gv-more-link{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;border:none;background:#fff;border-bottom:1px solid #E5E5E5;font-size:16px;font-weight:600;color:#111;text-align:left;padding:12px 4px;}
+        }
     </style>
 
     <!-- Google Analytics 4 -->
@@ -491,8 +563,8 @@
             <div data-id="164" class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-surface-800 to-transparent z-[1]"></div>
             <div data-id="165" class="relative z-10 text-center max-w-4xl mx-auto px-4 md:px-6">
                 <div data-id="166" class="inline-flex items-center gap-2 bg-gator-orange/10 border border-gator-orange/30 text-gator-orange text-sm font-medium px-4 py-1.5 rounded-full mb-6"><span data-id="167" class="w-2 h-2 bg-gator-orange rounded-full animate-pulse"></span>Beta — Charter Memberships Now Open</div>
-                <h1 data-id="168" class="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6 tracking-tight">The Film Room & Truth Serum of <span data-id="169" class="text-gator-orange">Gator Nation.</span></h1>
-                <p data-id="170" class="text-lg md:text-xl text-surface-200 max-w-2xl mx-auto mb-5 leading-relaxed">Depth charts. Scheme breakdowns. Recruiting intel. Transfer portal. Everything a true Gator fan needs — all in one place.</p>
+                <h1 data-id="168" class="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-6 tracking-tight">Your Full <span data-id="169" class="text-gator-orange">UF Football Hub.</span></h1>
+                <p data-id="170" class="text-lg md:text-xl text-surface-200 max-w-2xl mx-auto mb-5 leading-relaxed">Built for passionate Florida Gators football fans. Depth charts, recruiting, transfer portal, film room, live feed, and game week — all in one place.</p>
                 <div data-id="171" style="display:inline-block;background:#064e3b;border:1px solid #22c55e;border-radius:20px;padding:6px 18px;font-size:13px;color:#34d399;font-weight:700;margin-bottom:24px;">🎟️ Try FREE for 30 days · No credit card required</div>
                 <div data-id="172" class="flex flex-col sm:flex-row gap-4 justify-center">
                     <button data-id="173" id="hero-join" class="bg-gator-orange hover:bg-gator-orangedk text-white font-bold text-lg px-8 py-4 rounded-xl transition pulse-glow min-h-[44px] inline-flex items-center justify-center gap-2" onclick="if(window.openRegModal)openRegModal('film')">>🔐 Start Free — No Card Required</button>
@@ -616,7 +688,7 @@
             <div data-id="414" class="max-w-7xl mx-auto px-4 md:px-6">
                 <div data-id="415" class="flex flex-col md:flex-row justify-between items-center gap-6">
                     <div data-id="416" class="flex items-center gap-2"><span data-id="417" class="text-2xl">🐊</span><span data-id="418" class="font-display text-xl font-bold text-gator-orange">GATORVAULT</span></div>
-                    <p data-id="419" class="text-surface-200 text-sm text-center">The Film Room & Truth Serum of Gator Nation</p>
+                    <p data-id="419" class="text-surface-200 text-sm text-center">Built for passionate Florida Gators football fans.</p>
                     <p data-id="420" class="text-surface-200 text-sm">gatorvaultinsider@gmail.com</p>
                 </div>
                 <div data-id="421" class="text-center text-xs text-surface-200/50 mt-6"><p data-id="422">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p></div>
@@ -664,8 +736,19 @@
 
         <!-- Vault Interior -->
         <div data-id="453" id="vault-interior" class="hidden min-h-screen">
+            <!-- Mobile ESPN chrome -->
+            <header id="gv-mobile-header" class="gv-mob-only gv-mob-header" aria-label="GatorVault mobile header">
+                <div class="gv-mob-logo" aria-hidden="true">UF</div>
+                <div class="gv-mob-title">GatorVault</div>
+                <button type="button" id="gv-mobile-profile" class="gv-mob-icon-btn" aria-label="Profile and settings"><i data-lucide="user-circle" class="w-6 h-6"></i></button>
+            </header>
+            <div id="gv-breaking-banner" class="gv-mob-only gv-breaking-banner hidden" aria-live="polite">
+                <div id="gv-breaking-track" class="gv-breaking-track"></div>
+            </div>
+            <div id="gv-ptr-indicator" class="gv-mob-only gv-ptr-indicator">Release to refresh</div>
+
             <!-- Vault Header -->
-            <header data-id="454" class="sticky top-0 z-50 bg-gator-navy/95 backdrop-blur-md border-b border-gator-blue/30">
+            <header data-id="454" class="gv-desk-only sticky top-0 z-50 bg-gator-navy/95 backdrop-blur-md border-b border-gator-blue/30">
                 <div data-id="455" class="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between h-14">
                     <div data-id="456" class="flex items-center gap-2"><span data-id="457" class="text-xl">🐊</span><span data-id="458" class="font-display text-lg font-bold text-white tracking-wide">THE VAULT</span></div>
                     <div data-id="459" id="vault-tier-pill" class="hidden md:flex items-center gap-2 text-sm font-bold px-4 py-1.5 rounded-full tier-film"><i data-id="460" data-lucide="shield-check" class="w-4 h-4"></i><span data-id="461" id="vault-tier-lbl">FILM ROOM</span> ✓</div>
@@ -678,7 +761,7 @@
             </header>
 
             <!-- Vault Tabs -->
-            <div data-id="468" class="sticky top-14 z-40 bg-surface-800 border-b border-gator-blue/20 overflow-x-auto">
+            <div data-id="468" class="gv-desk-only sticky top-14 z-40 bg-surface-800 border-b border-gator-blue/20 overflow-x-auto">
                 <div data-id="469" class="max-w-7xl mx-auto px-4 flex gap-1 min-w-max">
                     <button data-id="470" class="vtab active px-3 py-3 text-xs md:text-sm font-semibold text-gator-orange whitespace-nowrap" data-vtab="start">🏠 Start Here</button>
                     <button data-id="471" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="dc">📋 Depth Chart</button>
@@ -727,10 +810,45 @@
                 </div>
             </div>
 
-            <div data-id="499" class="max-w-7xl mx-auto px-4 md:px-6 py-6">
+            <div data-id="499" id="gv-vault-content" class="max-w-7xl mx-auto px-4 md:px-6 py-6">
+                <!-- ====== MOBILE HOME (ESPN stacked modules) ====== -->
+                <div id="vpane-mhome" class="vpane gv-mob-only fade-in">
+                    <section class="gv-mob-module" id="gv-mhome-breaking-mod">
+                        <h2 class="gv-mob-module-hdr">Breaking</h2>
+                        <div id="gv-mhome-breaking"></div>
+                    </section>
+                    <section class="gv-mob-module">
+                        <h2 class="gv-mob-module-hdr">Live Feed</h2>
+                        <div id="gv-mhome-feed"></div>
+                    </section>
+                    <section class="gv-mob-module">
+                        <h2 class="gv-mob-module-hdr">Beat Writer Stream</h2>
+                        <div id="gv-mhome-beat"></div>
+                    </section>
+                    <section class="gv-mob-module">
+                        <h2 class="gv-mob-module-hdr">Recruiting</h2>
+                        <div id="gv-mhome-recruit" class="gv-hscroll-track"></div>
+                    </section>
+                    <section class="gv-mob-module">
+                        <h2 class="gv-mob-module-hdr">Podcasts</h2>
+                        <div id="gv-mhome-podcasts" class="gv-hscroll-track"></div>
+                    </section>
+                    <section class="gv-mob-module">
+                        <h2 class="gv-mob-module-hdr">Team / Depth Chart</h2>
+                        <button type="button" class="gv-espn-card w-full text-left" data-goto="dc" style="cursor:pointer;border:none;">
+                            <p class="gv-espn-card-title">2026 Depth Chart</p>
+                            <p class="gv-espn-card-body">Spring projections · 3-3-5 Defense · Tap to open</p>
+                        </button>
+                    </section>
+                    <section class="gv-mob-module">
+                        <h2 class="gv-mob-module-hdr">Tickets &amp; Apparel</h2>
+                        <div id="gv-mhome-shop" class="gv-hscroll-track"></div>
+                    </section>
+                </div>
+
                 <!-- ====== START HERE ====== -->
                 <div data-id="500" id="vpane-start" class="vpane active fade-in space-y-6">
-                    <h1 data-id="501" class="font-display text-2xl md:text-3xl font-bold text-white">Welcome to The Vault, Charles 🐊</h1>
+                    <h1 data-id="501" id="vault-welcome-title" class="font-display text-2xl md:text-3xl font-bold text-white">Welcome to GatorVault 🐊</h1>
                     <div data-id="502" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <button data-id="503" class="start-nav bg-surface-700 border border-gator-blue/20 rounded-2xl p-5 text-left card-h" data-goto="articles"><div data-id="504" class="text-2xl mb-2">📖</div><h3 data-id="505" class="font-display text-lg font-bold text-white mb-1">Read Season Bible</h3><p data-id="506" class="text-surface-200 text-xs">Start with the full Season Bible inside Articles.</p></button>
                         <button data-id="507" class="start-nav bg-surface-700 border border-gator-blue/20 rounded-2xl p-5 text-left card-h" data-goto="dc"><div data-id="508" class="text-2xl mb-2">📋</div><h3 data-id="509" class="font-display text-lg font-bold text-white mb-1">Check Depth Chart</h3><p data-id="510" class="text-surface-200 text-xs">Interactive position cards with analysis.</p></button>
@@ -788,7 +906,7 @@
                             <div data-id="564" class="bg-surface-700 border border-gator-blue/20 rounded-xl px-4 py-3"><p data-id="565" class="text-xs text-surface-200 uppercase">Enrolled</p><p id="class-enrolled" data-id="566" class="font-display text-2xl font-bold text-white">21</p></div>
                             <div data-id="567" class="bg-surface-700 border border-gator-blue/20 rounded-xl px-4 py-3"><p data-id="568" class="text-xs text-surface-200 uppercase">Committed</p><p id="class-committed" data-id="569" class="font-display text-2xl font-bold text-white">1</p></div>
                         </div>
-                        <div data-id="570" id="class-2026-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+                        <div data-id="570" id="class-2026-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 gv-hscroll-track"></div>
                     </div>
                     <div data-id="571" id="rpane-b2027" class="rpane" style="display:none;"><div data-id="572" id="board-2027-grid" class="space-y-4"></div></div>
                     <div data-id="573" id="rpane-heat" class="rpane" style="display:none;">
@@ -822,38 +940,8 @@
                         <div data-id="603" id="portal-incoming" class="divide-y divide-gator-blue/10"></div>
                     </div>
                     <div data-id="604" class="bg-surface-700 border border-gator-blue/20 rounded-2xl overflow-hidden opacity-60">
-                        <div data-id="605" class="p-4 border-b border-gator-blue/20"><h3 data-id="606" class="font-display text-lg font-bold text-surface-200">CONFIRMED PORTAL EXITS</h3></div>
-                        <div data-id="607" class="divide-y divide-gator-blue/10 text-sm">
-                            <div data-id="608" class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Cameron Kossmann</span><span class="text-surface-200/60 ml-2">TE</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Tony Livingston</span><span class="text-surface-200/60 ml-2">TE</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Enoch Wangoy</span><span class="text-surface-200/60 ml-2">OT</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Scott Isacks</span><span class="text-surface-200/60 ml-2">TE</span></div><span class="text-surface-200/50">Committed</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Noel Portnjagin</span><span class="text-surface-200/60 ml-2">OT</span></div><span class="text-surface-200/50">Committed</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Ja'Kobi Jackson</span><span class="text-surface-200/60 ml-2">RB</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Muizz Tounkara</span><span class="text-surface-200/60 ml-2">WR</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Devon Manuel</span><span class="text-surface-200/60 ml-2">OT</span></div><span class="text-surface-200/50">Committed</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Brien Taylor</span><span class="text-surface-200/60 ml-2">EDGE</span></div><span class="text-surface-200/50">Entered</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Evan Noel</span><span class="text-surface-200/60 ml-2">K</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Treyaun Webb</span><span class="text-surface-200/60 ml-2">RB</span></div><span class="text-surface-200/50">Committed</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Marcus Mascoll</span><span class="text-surface-200/60 ml-2">OT</span></div><span class="text-surface-200/50">Committed</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Naeshaun Montgomery</span><span class="text-surface-200/60 ml-2">WR</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">DJ Lagway</span><span class="text-surface-200/60 ml-2">QB</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Mack Mulhern</span><span class="text-surface-200/60 ml-2">LST</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Hayden Craig</span><span class="text-surface-200/60 ml-2">P</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Aidan Mizell</span><span class="text-surface-200/60 ml-2">WR</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Eugene Wilson III</span><span class="text-surface-200/60 ml-2">WR</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Jameer Grimsley</span><span class="text-surface-200/60 ml-2">CB</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Jordan Castell</span><span class="text-surface-200/60 ml-2">ST</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Tank Hawkins</span><span class="text-surface-200/60 ml-2">WR</span></div><span class="text-surface-200/50">Committed</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Aaron Gates</span><span class="text-surface-200/60 ml-2">CB</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Teddy Foster</span><span class="text-surface-200/60 ml-2">ST</span></div><span class="text-surface-200/50">Committed</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Grayson Howard</span><span class="text-surface-200/60 ml-2">LB</span></div><span class="text-surface-200/50">Committed</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Michai Boireau</span><span class="text-surface-200/60 ml-2">DL</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">KD Daniels</span><span class="text-surface-200/60 ml-2">RB</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Jackson Wade</span><span class="text-surface-200/60 ml-2">WR</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Hayden Hansen</span><span class="text-surface-200/60 ml-2">TE</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                            <div class="p-4 flex items-center justify-between"><div><span class="text-surface-200 font-medium">Sharif Denson</span><span class="text-surface-200/60 ml-2">CB</span></div><span class="text-surface-200/50">Enrolled</span></div>
-                        </div>
+                        <div data-id="605" class="p-4 border-b border-gator-blue/20"><h3 data-id="606" class="font-display text-lg font-bold text-surface-200">CONFIRMED PORTAL EXITS — <span id="portal-exit-count">29</span></h3></div>
+                        <div data-id="607" id="portal-outgoing" class="divide-y divide-gator-blue/10 text-sm"></div>
                     </div>
                 </div>
 
@@ -981,7 +1069,7 @@
                                 <div id="live-feed-list" class="live-feed-list"><p class="text-surface-200/50 text-sm">Loading live feed…</p></div>
                             </div>
                         </div>
-                        <div class="live-panel">
+                        <div class="live-panel" id="gv-beat-panel">
                             <h3>✍️ Beat Writer Stream</h3>
                             <div class="live-panel-body">
                                 <div id="live-beat-alert" class="live-beat-alert hidden"></div>
@@ -1118,6 +1206,15 @@
                                 <button type="button" id="player-profile-close" class="text-surface-200 hover:text-white text-xl leading-none px-2" aria-label="Close">×</button>
                             </div>
                             <div id="player-profile-body"></div>
+                        </div>
+                    </div>
+                    <div id="recruit-profile-modal" class="player-profile-modal" aria-hidden="true">
+                        <div class="player-profile-sheet" style="max-width:520px;">
+                            <div class="flex items-center justify-between gap-3 mb-4">
+                                <h2 class="font-display text-lg font-bold text-white">Recruit Profile</h2>
+                                <button type="button" id="recruit-profile-close" class="text-surface-200 hover:text-white text-xl leading-none px-2" aria-label="Close">×</button>
+                            </div>
+                            <div id="recruit-profile-body"><p class="text-surface-200 text-sm">Loading…</p></div>
                         </div>
                     </div>
                 </div>
@@ -1258,7 +1355,7 @@
                 <!-- ====== TICKETS ====== -->
                 <div data-id="823" id="vpane-tickets" class="vpane fade-in space-y-6">
                     <div data-id="824"><h1 data-id="825" class="font-display text-2xl md:text-3xl font-bold text-white">🎟️ Find Your Seats — 2026 Gators Football</h1><p data-id="826" class="text-surface-200 text-sm mt-1">Get the best prices on UF home games, road trips, and The World's Largest Outdoor Cocktail Party</p></div>
-                    <div data-id="827" class="space-y-4" id="tickets-list"></div>
+                    <div data-id="827" class="space-y-4 gv-hscroll-track" id="tickets-list"></div>
                     <div data-id="828" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div data-id="829" class="bg-surface-700 border border-gator-orange/30 rounded-xl p-4"><p data-id="830" class="text-sm text-gator-orange font-semibold mb-1">💡 Pro Tip</p><p data-id="831" class="text-xs text-surface-200 leading-relaxed">The Florida-Georgia game in Jacksonville sells out fast. Buy early and check SeatGeek for best resale prices.</p></div>
                         <div data-id="832" class="bg-surface-700 border border-gator-blue/20 rounded-xl p-4"><p data-id="833" class="text-sm text-white font-semibold mb-1">🎟️ Season Ticket Holders</p><p data-id="834" class="text-xs text-surface-200 leading-relaxed">Manage your tickets and parking at <a data-id="835" href="https://floridagators.com/tickets" target="_blank" rel="noopener noreferrer" class="text-gator-orange hover:underline">floridagators.com/tickets</a></p></div>
@@ -1275,7 +1372,7 @@
                             <span class="apparel-pill">On Campus Pickup</span>
                         </div>
                     </div>
-                    <div data-id="840" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="apparel-grid"></div>
+                    <div data-id="840" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 gv-hscroll-track" id="apparel-grid"></div>
                     <div data-id="871" class="bg-surface-700 border border-gator-orange/30 rounded-xl p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div><p data-id="872" class="text-sm text-gator-orange font-semibold mb-1">🐊 GatorVault Tip</p><p data-id="873" class="text-xs text-surface-200 leading-relaxed">For authentic game-day jerseys, start with the Gator Sportshop (shop.floridagators.com) or Fanatics. Both are officially licensed.</p></div>
                         <div><p class="text-sm text-gator-orange font-semibold mb-1">🎁 Gift Idea</p><p class="text-xs text-surface-200 leading-relaxed">Campus-exclusive designs live at the UF Bookstore (bkstr.com). For fast shipping, Amazon's Gators search is your best last-minute option.</p></div>
@@ -1311,7 +1408,31 @@
                 </div>
 
             </div>
-            <footer data-id="914" class="text-center text-xs text-surface-200/40 py-6 border-t border-gator-blue/10 mt-8"><p data-id="915">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p></footer>
+
+            <nav id="gv-bottom-nav" class="gv-mob-only gv-bottom-nav" aria-label="Mobile navigation">
+                <button type="button" class="gv-bnav-btn active" data-mnav="mhome" aria-label="Home"><i data-lucide="home"></i><span>Home</span></button>
+                <button type="button" class="gv-bnav-btn" data-mnav="live" aria-label="Live"><i data-lucide="zap"></i><span>Live</span></button>
+                <button type="button" class="gv-bnav-btn" data-mnav="recruit" aria-label="Recruiting"><i data-lucide="target"></i><span>Recruiting</span></button>
+                <button type="button" class="gv-bnav-btn" data-mnav="beat" aria-label="Beat"><i data-lucide="pen-line"></i><span>Beat</span></button>
+                <button type="button" class="gv-bnav-btn" data-mnav="more" aria-label="More"><i data-lucide="menu"></i><span>More</span></button>
+            </nav>
+            <div id="gv-more-sheet" class="gv-mob-only gv-more-sheet" aria-hidden="true">
+                <div class="gv-more-panel">
+                    <button type="button" class="gv-more-link" data-goto="start">🏠 Start Here</button>
+                    <button type="button" class="gv-more-link" data-goto="dc">📋 Depth Chart</button>
+                    <button type="button" class="gv-more-link" data-goto="portal">🔄 Portal</button>
+                    <button type="button" class="gv-more-link" data-goto="articles">📰 Articles</button>
+                    <button type="button" class="gv-more-link" data-goto="community">💬 Community</button>
+                    <button type="button" class="gv-more-link" data-goto="highlights">📺 Film Room</button>
+                    <button type="button" class="gv-more-link" data-goto="alerts">🔔 My Alerts</button>
+                    <button type="button" class="gv-more-link" data-goto="players">👤 Players</button>
+                    <button type="button" class="gv-more-link" data-goto="tickets">🎟️ Tickets</button>
+                    <button type="button" class="gv-more-link" data-goto="apparel">👕 Apparel</button>
+                    <button type="button" class="gv-more-link" data-goto="gamezone">🏆 Game Zone</button>
+                </div>
+            </div>
+
+            <footer data-id="914" class="gv-desk-only text-center text-xs text-surface-200/40 py-6 border-t border-gator-blue/10 mt-8"><p data-id="915">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p></footer>
         </div>
     </div>
 
@@ -1351,9 +1472,11 @@
                 tier_name: tierLabel || 'Film Room',
                 trial_end: trialEnd,
                 login_url: 'https://gatorvaultinsider.com',
+                community_url: 'https://gatorvaultinsider.com',
                 support_x: '@GatorVaultInsider',
-                from_name: 'GatorVault',
-                reply_to: 'gatorvaultinsider@gmail.com'
+                from_name: 'GatorVault Team',
+                reply_to: 'support@gatorvaultinsider.com',
+                onboarding_intro: 'Your GatorVault account is live. Here is everything included in your membership and how to get started.'
             };
         }
         function tryEmailJS() {
@@ -1580,6 +1703,13 @@
         window.GV_EMAIL=session.email||'';
         window.GV_NAME=session.name||'';
         window.GV_TRIAL_END=session.trialEndISO||session.trialEnd||null;
+        gvUpdateWelcomeTitle();
+    }
+    function gvUpdateWelcomeTitle(){
+        var el=document.getElementById('vault-welcome-title');
+        if(!el)return;
+        var name=(window.GV_NAME||'').trim();
+        el.textContent=name?'Welcome to GatorVault, '+name.split(' ')[0]+' 🐊':'Welcome to GatorVault 🐊';
     }
     function loadSession(){
         try{
@@ -1942,7 +2072,9 @@
             else{cb.style.background='';cb.style.color='';cb.style.border='';cb.className='px-4 py-2 rounded-full text-sm font-bold '+t.badgeClass;cb.textContent=t.badgeText;}
         }
         enforceTrialAccess(loadSession());
-        showVTab('start');
+        gvUpdateWelcomeTitle();
+        showVTab(gvIsMobile()?'mhome':'start');
+        if(gvIsMobile()){var vi2=document.getElementById('vault-interior');if(vi2)vi2.classList.add('gv-mobile-active');}
         renderAllVaultContent();
         if(typeof lucide!=="undefined"&&typeof lucide.createIcons==="function")lucide.createIcons();
         }catch(e){console.error('showVaultInterior error:',e);}
@@ -1974,6 +2106,7 @@
         if(tab==='community'){try{gvLoadCommunity(true);}catch(e){}}
         if(tab==='players'){try{gvLoadRosterProfiles(true);}catch(e){}}
         if(tab==='live'){try{gvLoadLiveDashboard(true);}catch(e){}}
+        if(tab==='gamezone'){try{gvRenderGameZoneLive();}catch(e){}}
         if(tab==='alerts'){try{applyPrefUI();renderAlerts();if(typeof gvSyncAlertSubscription==='function')gvSyncAlertSubscription();}catch(e){}}
         document.querySelectorAll('.vpane').forEach(function(p){p.classList.remove('active');p.style.display='none';});
         document.querySelectorAll('.vtab').forEach(function(t){t.classList.remove('active');t.classList.remove('text-gator-orange');t.classList.add('text-surface-200');});
@@ -1984,6 +2117,130 @@
         }catch(e){console.error('showVTab error:',e);}
     }
     window.showVTab=showVTab;
+
+    function gvNavigate(url,opts){
+        opts=opts||{};
+        if(!url)return false;
+        var s=String(url).trim();
+        if(/^https?:\/\//i.test(s)){
+            if(opts.newTab)window.open(s,'_blank','noopener,noreferrer');
+            else location.href=s;
+            return true;
+        }
+        var articleM=s.match(/\/article\/([^/?#]+)/);
+        if(articleM){gvOpenArticle(decodeURIComponent(articleM[1]));return true;}
+        if(s==='/articles'||s==='articles'||s.indexOf('#articles')>=0){if(typeof openVault==='function')openVault();showVTab('articles');return true;}
+        if(s==='/recruit'||s==='recruit'||s.indexOf('#recruit')>=0){if(typeof openVault==='function')openVault();showVTab('recruit');return true;}
+        if(s==='/portal'||s==='portal'||s.indexOf('#portal')>=0){if(typeof openVault==='function')openVault();showVTab('portal');return true;}
+        var playerM=s.match(/\/player\/([^/?#]+)/);
+        if(playerM){
+            if(opts.recruitModal!==false&&(opts.type==='commit'||opts.forceModal))gvOpenRecruitProfile(decodeURIComponent(playerM[1]));
+            else location.href='/player/'+decodeURIComponent(playerM[1]);
+            return true;
+        }
+        if(s.charAt(0)==='#'){if(typeof openVault==='function')openVault();return true;}
+        if(s.charAt(0)==='/'&&typeof openVault==='function'){openVault();}
+        return false;
+    }
+    window.gvNavigate=gvNavigate;
+
+    function gvOpenArticle(id){
+        if(!id)return;
+        if(typeof openVault==='function')openVault();
+        showVTab('articles');
+        var done=function(){
+            var idx=-1;
+            for(var i=0;i<articles.length;i++){if(articles[i].id===id){idx=i;break;}}
+            if(idx<0){location.href='/article/'+encodeURIComponent(id);return;}
+            var list=document.getElementById('articles-list');
+            if(!list)return;
+            var cards=list.querySelectorAll('.bg-surface-700');
+            var card=cards[idx];
+            if(!card)return;
+            card.scrollIntoView({behavior:'smooth',block:'start'});
+            var toggle=card.querySelector('.art-toggle');
+            var body=card.querySelector('.art-body');
+            if(body&&body.classList.contains('hidden')&&toggle)toggle.click();
+        };
+        if(window._gvContentLiveReady)done();
+        else gvLoadPublishedContent(true).then(done).catch(function(){location.href='/article/'+encodeURIComponent(id);});
+    }
+    window.gvOpenArticle=gvOpenArticle;
+
+    function gvRecruitSchemeFit(p){
+        var pos=String(p.pos||'').toUpperCase();
+        if(pos==='QB')return 'Rhythm/RPO distributor — fits mesh and play-action concepts in {{ coach.OC }}\'s offense.';
+        if(pos==='WR')return 'Spread-friendly route runner who projects in 11-personnel packages.';
+        if(pos==='LB'||pos==='EDGE')return 'Fits {{ coach.DC }}\'s 3-3-5 flow — speed to the ball and assignment discipline.';
+        if(pos==='CB'||pos==='S')return 'Secondary depth piece in STAR/nickel rotations.';
+        if(pos.indexOf('OL')>=0||pos==='OT'||pos==='IOL')return 'Trench add for a rebuilt OL room that must gel quickly.';
+        return 'Projects as Year-1 depth with special-teams utility.';
+    }
+    function gvOn3ProfileUrl(p){
+        if(p.on3Id)return 'https://www.on3.com/db/'+p.on3Id+'-';
+        return 'https://www.on3.com/college/florida-gators/recruiting/';
+    }
+    function gvCloseRecruitProfile(){
+        var modal=document.getElementById('recruit-profile-modal');
+        if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}
+    }
+    function gvOpenRecruitProfile(slug){
+        if(!slug)return;
+        var modal=document.getElementById('recruit-profile-modal');
+        var body=document.getElementById('recruit-profile-body');
+        if(!modal||!body)return;
+        if(typeof openVault==='function')openVault();
+        body.innerHTML='<p class="text-surface-200 text-sm">Loading profile…</p>';
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden','false');
+        var base=gvRecruitApiBase();
+        fetch(base+'/api/players/'+encodeURIComponent(slug)).then(function(r){return r.json();}).then(function(data){
+            if(!data.ok||!data.player)throw new Error(data.error||'Not found');
+            var p=data.player;
+            var row=gvResolveContentFields?gvResolveContentFields(p):p;
+            var starsStr=p.stars?('★'.repeat(Math.min(5,p.stars))):'';
+            var head='<div class="flex gap-4 items-start mb-4">'
+                +'<img src="/headshots/'+gvEscHtml(p.slug)+'.svg" alt="" class="w-20 h-20 rounded-full border-2 border-gator-orange/30 bg-surface-800 object-cover" onerror="this.style.display=\'none\'">'
+                +'<div><h3 class="font-display text-xl font-bold text-white">'+gvEscHtml(p.name)+'</h3>'
+                +'<p class="text-gator-orange text-sm font-semibold">'+gvEscHtml(p.pos)+(p.classYear?' · Class of '+p.classYear:'')+'</p>'
+                +(starsStr?'<p class="text-yellow-400 text-sm mt-1">'+starsStr+'</p>':'')+'</div></div>';
+            var meas='<div class="grid grid-cols-2 gap-2 text-xs mb-4">'
+                +'<div class="bg-surface-800 rounded-lg p-2"><span class="text-surface-200/50 block">School</span><span class="text-white font-semibold">'+gvEscHtml(p.school||'—')+'</span></div>'
+                +'<div class="bg-surface-800 rounded-lg p-2"><span class="text-surface-200/50 block">Ht / Wt</span><span class="text-white font-semibold">'+gvEscHtml(p.htWt||'—')+'</span></div>'
+                +'<div class="bg-surface-800 rounded-lg p-2"><span class="text-surface-200/50 block">Natl</span><span class="text-white font-semibold">'+(p.natlRank!=null?'#'+p.natlRank:'—')+'</span></div>'
+                +'<div class="bg-surface-800 rounded-lg p-2"><span class="text-surface-200/50 block">Pos</span><span class="text-white font-semibold">'+(p.posRank!=null?'#'+p.posRank:'—')+'</span></div>'
+                +'<div class="bg-surface-800 rounded-lg p-2"><span class="text-surface-200/50 block">State</span><span class="text-white font-semibold">'+(p.stateRank!=null?'#'+p.stateRank:'—')+'</span></div>'
+                +'<div class="bg-surface-800 rounded-lg p-2"><span class="text-surface-200/50 block">Rating</span><span class="text-white font-semibold">'+(p.rating!=null?Number(p.rating).toFixed(1):'—')+'</span></div>'
+                +'</div>';
+            var skinny='<p class="text-sm text-surface-200 border-l-4 border-gator-orange pl-3 mb-3">'+gvEscHtml(p.skinny||p.profileNote||'No scouting summary yet.')+'</p>';
+            var scheme='<p class="text-xs text-surface-200/80 mb-3"><strong class="text-white">Scheme fit:</strong> '+gvEscHtml(gvRecruitSchemeFit(p))+'</p>';
+            var commit=p.commitDate?'<p class="text-xs text-surface-200/60 mb-3">Committed: '+gvEscHtml(p.commitDate)+(p.committedTo?' to '+gvEscHtml(p.committedTo):'')+'</p>':'';
+            var links='<div class="flex flex-wrap gap-2 mt-2">'
+                +'<a href="/player/'+gvEscHtml(p.slug)+'" class="text-xs font-bold px-3 py-2 rounded-lg bg-gator-orange text-white">Full Profile →</a>'
+                +'<a href="'+gvOn3ProfileUrl(p)+'" target="_blank" rel="noopener noreferrer" class="text-xs font-bold px-3 py-2 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">On3 →</a>'
+                +'</div>';
+            body.innerHTML=head+meas+skinny+scheme+commit+links;
+        }).catch(function(err){
+            body.innerHTML='<p class="text-red-400 text-sm">'+gvEscHtml(err.message||'Could not load profile')+'</p>'
+                +'<a href="/player/'+gvEscHtml(slug)+'" class="text-xs font-bold text-gator-orange mt-2 inline-block">Try full profile page →</a>';
+        });
+    }
+    window.gvOpenRecruitProfile=gvOpenRecruitProfile;
+
+    function gvHandleDeepLink(){
+        var params=new URLSearchParams(location.search);
+        if(params.get('open')==='vault'&&typeof openVault==='function')openVault();
+        var tab=params.get('tab');
+        if(tab)setTimeout(function(){showVTab(tab);},300);
+        var pathMatch=location.pathname.match(/\/article\/([^/]+)/);
+        if(pathMatch){gvOpenArticle(decodeURIComponent(pathMatch[1]));return;}
+        var hash=(location.hash||'').replace(/^#/,'');
+        if(hash==='articles'){if(typeof openVault==='function')openVault();showVTab('articles');}
+        else if(hash==='recruit'){if(typeof openVault==='function')openVault();showVTab('recruit');}
+        else if(hash==='portal'){if(typeof openVault==='function')openVault();showVTab('portal');}
+        else if(hash.indexOf('article=')===0)gvOpenArticle(hash.split('=')[1]);
+    }
+    window.addEventListener('hashchange',gvHandleDeepLink);
 
     // Bind tab click handlers with better error handling
     var bindTabListeners=function(){
@@ -2070,20 +2327,52 @@
     ];
     var targets2027=[{name:'Tra\'Von Hall',pos:'WR',note:'on3 reports: Oklahoma commit visited Gainesville May 30-31 and remains a top flip candidate.'},{name:'Derrick Malone',pos:'EDGE',note:'on3 recruiting sources say Florida is trending, decision is close, and the in-home visit gave UF momentum.'},{name:'Devon Hall',pos:'S',note:'on3 intel: Ocala native with a visit scheduled, strong UF ties, and Florida viewed as a leading option.'}];
     var portalIncoming=[
-        {name:'Eric Singleton Jr.',pos:'WR',from:'Auburn',htWt:'6-2 / 185',stars:'★★★★',note:'Auburn transfer is the clear WR1.'},{name:'Harrison Moore',pos:'C',from:'Georgia Tech',htWt:'6-3 / 300',stars:'★★★',note:'Georgia Tech transfer starts at center.'},{name:'Eagan Boyer',pos:'LT',from:'Penn State',htWt:'6-5 / 305',stars:'★★★',note:'Penn State transfer. Backup tackle.'},{name:'TJ Shanahan Jr.',pos:'RG',from:'Penn State',htWt:'6-4 / 315',stars:'★★★',note:'Battling Bryce Lovett for RG.'},{name:'Evan Pryor',pos:'RB',from:'Cincinnati',htWt:'5-10 / 195',stars:'★★★',note:'Cincinnati transfer adds RB depth.'},{name:'Luke Harpring',pos:'TE',from:'Georgia Tech',htWt:'6-5 / 245',stars:'★★★',note:'Georgia Tech TE.'},{name:'Cam Dooley',pos:'FS/S',from:'Kentucky',htWt:'6-1 / 205',stars:'★★★',note:'Kentucky transfer.'},{name:'DJ Coleman',pos:'S/STAR',from:'Baylor',htWt:'6-2 / 210',stars:'★★★',note:'Baylor transfer. Rotates at STAR behind Kanye Clark; backs up at FS.'},{name:'Patrick Durkin',pos:'K',from:'Tulane',htWt:'6-1 / 195',stars:'★★★',note:'Tulane transfer won kicker job.'},{name:'Lacota Dippre',pos:'TE',from:'Charlotte / James Madison',htWt:'6-4 / 240',stars:'★★★',note:'Starting Y TE.'},{name:'Bailey Stockton',pos:'WR',from:'Georgia Tech',htWt:'5-9 / 175',stars:'★★★',note:'GT transfer. Slot WR.'},{name:'DK Kalu',pos:'DL/NOSE',from:'Baylor',htWt:'6-3 / 270',stars:'★★★',note:'Baylor transfer. Nose backup.'},{name:'Alec Clark',pos:'P',from:'Marshall / Tulane',htWt:'6-1 / 184',stars:'★★★',note:'Starting punter.'},{name:'Emmanuel Oyebadejo',pos:'DL/END',from:'Jacksonville State',htWt:'6-7 / 315',stars:'★★★',note:'England native. Massive frame.'},{name:'London Montgomery',pos:'RB',from:'Penn State / East Carolina',htWt:'5-10 / 185',stars:'★★★',note:'KR1 and RB depth.'},{name:'Carter Milliron',pos:'LS',from:'Louisiana',htWt:'6-0 / 257',stars:'★★★',note:'Starting long snapper.'},{name:'Miller Fealy',pos:'P',from:'UT Martin',htWt:'6-2 / 210',stars:'★★★',note:'Backup punter.'},{name:'TJ Bullard',pos:'LB',from:'UCF',htWt:'6-1 / 200',stars:'★★★',note:'UCF transfer. LB depth.'},{name:'Jaylen Lloyd',pos:'WR',from:'Nebraska / Oklahoma State',htWt:'5-11 / 180',stars:'★★★',note:'WR depth.'},{name:'Mason Clinton',pos:'DL',from:'Louisiana / Mississippi State',htWt:'6-5 / 265',stars:'★★★',note:'DT rotation.'},{name:'Evan Chieca',pos:'TE',from:'New Haven',htWt:'6-5 / 250',stars:'★★★',note:'Y TE backup.'},{name:'Jordy Lowery',pos:'CB',from:'Western Carolina / East Carolina',htWt:'5-11 / 167',stars:'★★★',note:'CB depth.'},{name:'Ace Ciongoli',pos:'WR',from:'Indiana',htWt:'5-11 / 190',stars:'★★★',note:'Indiana transfer WR.'}
+        {name:'Eric Singleton Jr.',pos:'WR',from:'Auburn',htWt:'6-2 / 185',stars:'★★★★',note:'Auburn transfer is the clear WR1.'},{name:'Harrison Moore',pos:'C',from:'Georgia Tech',htWt:'6-3 / 300',stars:'★★★',note:'Georgia Tech transfer starts at center.'},{name:'Eagan Boyer',pos:'LT',from:'Penn State',htWt:'6-5 / 305',stars:'★★★',note:'Penn State transfer. Backup tackle.'},{name:'TJ Shanahan Jr.',pos:'RG',from:'Penn State',htWt:'6-4 / 315',stars:'★★★',note:'Battling Bryce Lovett for RG.'},{name:'Evan Pryor',pos:'RB',from:'Cincinnati',htWt:'5-10 / 195',stars:'★★★',note:'Cincinnati transfer adds RB depth.'},{name:'Luke Harpring',pos:'TE',from:'Georgia Tech',htWt:'6-5 / 245',stars:'★★★',note:'Georgia Tech TE.'},{name:'Cam Dooley',pos:'FS/S',from:'Kentucky',htWt:'6-1 / 205',stars:'★★★',note:'Kentucky transfer.'},{name:'DJ Coleman',pos:'S/STAR',from:'Baylor',htWt:'6-2 / 210',stars:'★★★',note:'Baylor transfer. Rotates at STAR behind Kanye Clark; backs up at FS.'},{name:'Patrick Durkin',pos:'K',from:'Tulane',htWt:'6-1 / 195',stars:'★★★',note:'Tulane transfer won kicker job.'},{name:'Lacota Dippre',pos:'TE',from:'Charlotte / James Madison',htWt:'6-4 / 240',stars:'★★★',note:'Starting Y TE.'},{name:'Bailey Stockton',pos:'WR',from:'Georgia Tech',htWt:'5-9 / 175',stars:'★★★',note:'GT transfer. Slot WR.'},{name:'DK Kalu',pos:'DL/NOSE',from:'Baylor',htWt:'6-3 / 270',stars:'★★★',note:'Baylor transfer. Nose backup.'},{name:'Alec Clark',pos:'P',from:'Marshall / Tulane',htWt:'6-1 / 184',stars:'★★★',note:'Starting punter.'},{name:'Emmanuel Oyebadejo',pos:'DL/END',from:'Jacksonville State',htWt:'6-7 / 315',stars:'★★★',note:'England native. Massive frame.'},{name:'London Montgomery',pos:'RB',from:'Penn State / East Carolina',htWt:'5-10 / 185',stars:'★★★',note:'KR1 and RB depth.'},{name:'Carter Milliron',pos:'LS',from:'Louisiana',htWt:'6-0 / 257',stars:'★★★',note:'Starting long snapper.'},{name:'Miller Fealy',pos:'P',from:'UT Martin',htWt:'6-2 / 210',stars:'★★★',note:'Backup punter.'},{name:'TJ Bullard',pos:'LB',from:'UCF',htWt:'6-1 / 200',stars:'★★★',note:'UCF transfer. LB depth.'},{name:'Jaylen Lloyd',pos:'WR',from:'Nebraska / Oklahoma State',htWt:'5-11 / 180',stars:'★★★',note:'WR depth.'},{name:'Mason Clinton',pos:'DL',from:'Louisiana / Mississippi State',htWt:'6-5 / 265',stars:'★★★',note:'DT rotation.'},{name:'Evan Chieca',pos:'TE',from:'New Haven',htWt:'6-5 / 250',stars:'★★★',note:'Y TE backup.'},{name:'Jordy Lowery',pos:'CB',from:'Western Carolina / East Carolina',htWt:'5-11 / 167',stars:'★★★',note:'CB depth.'},        {name:'Ace Ciongoli',pos:'WR',from:'Indiana',htWt:'5-11 / 190',stars:'★★★',note:'Indiana transfer WR.'}
+    ];
+    var portalOutgoing=[
+        {name:'Cameron Kossmann',pos:'TE',status:'enrolled',enrolled_at:'2026-05-15',committed_to:null,transferred_to:null},
+        {name:'Tony Livingston',pos:'TE',status:'enrolled',enrolled_at:'2026-05-12',committed_to:null,transferred_to:null},
+        {name:'Enoch Wangoy',pos:'OT',status:'enrolled',enrolled_at:'2026-05-10',committed_to:null,transferred_to:null},
+        {name:'Scott Isacks',pos:'TE',status:'committed',committed_to:null,enrolled_at:null,transferred_to:null},
+        {name:'Noel Portnjagin',pos:'OT',status:'committed',committed_to:null,enrolled_at:null,transferred_to:null},
+        {name:'Ja\'Kobi Jackson',pos:'RB',status:'enrolled',enrolled_at:'2026-05-08',committed_to:null,transferred_to:null},
+        {name:'Muizz Tounkara',pos:'WR',status:'enrolled',enrolled_at:'2026-05-07',committed_to:null,transferred_to:null},
+        {name:'Devon Manuel',pos:'OT',status:'committed',committed_to:null,enrolled_at:null,transferred_to:null},
+        {name:'Brien Taylor',pos:'EDGE',status:'portal_in',committed_to:null,enrolled_at:null,transferred_to:null},
+        {name:'Evan Noel',pos:'K',status:'enrolled',enrolled_at:'2026-05-05',committed_to:null,transferred_to:null},
+        {name:'Treyaun Webb',pos:'RB',status:'committed',committed_to:null,enrolled_at:null,transferred_to:null},
+        {name:'Marcus Mascoll',pos:'OT',status:'committed',committed_to:null,enrolled_at:null,transferred_to:null},
+        {name:'Naeshaun Montgomery',pos:'WR',status:'enrolled',enrolled_at:'2026-05-03',committed_to:null,transferred_to:null},
+        {name:'DJ Lagway',pos:'QB',status:'enrolled',enrolled_at:'2026-05-01',committed_to:null,transferred_to:'Texas'},
+        {name:'Mack Mulhern',pos:'LST',status:'enrolled',enrolled_at:'2026-04-28',committed_to:null,transferred_to:null},
+        {name:'Hayden Craig',pos:'P',status:'enrolled',enrolled_at:'2026-04-25',committed_to:null,transferred_to:null},
+        {name:'Aidan Mizell',pos:'WR',status:'enrolled',enrolled_at:'2026-04-22',committed_to:null,transferred_to:null},
+        {name:'Eugene Wilson III',pos:'WR',status:'enrolled',enrolled_at:'2026-04-20',committed_to:null,transferred_to:null},
+        {name:'Jameer Grimsley',pos:'CB',status:'enrolled',enrolled_at:'2026-04-18',committed_to:null,transferred_to:null},
+        {name:'Jordan Castell',pos:'ST',status:'enrolled',enrolled_at:'2026-04-15',committed_to:null,transferred_to:null},
+        {name:'Tank Hawkins',pos:'WR',status:'committed',committed_to:null,enrolled_at:null,transferred_to:null},
+        {name:'Aaron Gates',pos:'CB',status:'enrolled',enrolled_at:'2026-04-12',committed_to:null,transferred_to:null},
+        {name:'Teddy Foster',pos:'ST',status:'committed',committed_to:null,enrolled_at:null,transferred_to:null},
+        {name:'Grayson Howard',pos:'LB',status:'committed',committed_to:null,enrolled_at:null,transferred_to:null},
+        {name:'Michai Boireau',pos:'DL',status:'enrolled',enrolled_at:'2026-04-08',committed_to:null,transferred_to:null},
+        {name:'KD Daniels',pos:'RB',status:'enrolled',enrolled_at:'2026-04-05',committed_to:null,transferred_to:null},
+        {name:'Jackson Wade',pos:'WR',status:'enrolled',enrolled_at:'2026-04-03',committed_to:null,transferred_to:null},
+        {name:'Hayden Hansen',pos:'TE',status:'enrolled',enrolled_at:'2026-04-01',committed_to:null,transferred_to:null},
+        {name:'Sharif Denson',pos:'CB',status:'enrolled',enrolled_at:'2026-03-28',committed_to:null,transferred_to:null}
     ];
     var storylines=[
         {title:'💪 OL Cohesion — 5 new starters, can they gel?',status:'WATCH',statusClass:'text-red-400 bg-red-400/10',body:'Entirely rebuilt through the 2026 portal class. Building chemistry is the biggest question heading into fall camp.'},
         {title:'🛡️ Defensive 3-3-5 Install',status:'ON TRACK',statusClass:'text-green-400 bg-green-400/10',body:'Spring practice showed the scheme ahead of schedule. Woods at JACK is the best player on this defense.'},
         {title:'🎯 Recruiting Class Health',status:'STRONG',statusClass:'text-green-400 bg-green-400/10',body:'No attrition concerns. Groce and Morris are the two most closely watched freshmen.'},
-        {title:'📈 Quarterback Competition — Jones Jr. vs Philo',status:'HEATING UP',statusClass:'text-yellow-400 bg-yellow-400/10',body:'The spring battle is real. Jones Jr. offers special teams experience, while Philo provides a pro-style floor. The winner must control turnovers and make back-shoulder throws consistently.'}
+        {title:'📈 Quarterback Competition — Jones Jr. vs Philo',status:'HEATING UP',statusClass:'text-yellow-400 bg-yellow-400/10',body:'The spring battle is real. Jones Jr. brings dual-threat ability and game experience, while Philo provides a pro-style floor. The winner must control turnovers and make back-shoulder throws consistently.'}
     ];
     var articles=[
+        {id:'art-portal-class-2026',title:'2026 Portal Class Recap: 23 In, 29 Out',tier:'locker',badge:'PORTAL RADAR',badgeClass:'bg-amber-500/20 text-amber-400',author:'GatorVault Staff',date:'June 6, 2026',readMin:9,excerpt:'UF\'s 2026 transfer cycle in one clean read — who arrived, who left, where exits landed, and which returning defenders anchor the new scheme.',body:'<p><strong>THE HEADLINE</strong> — Florida added 23 portal transfers this offseason and confirmed 29 exits. This recap covers the 2026 incoming class only. Prior-cycle enrollees are not counted here.</p><p><strong>INCOMING HEADLINERS</strong></p><ul><li><strong>Eric Singleton Jr. (WR, Auburn)</strong> — Immediate WR1 and vertical threat.</li><li><strong>Aaron Philo (QB, Georgia Tech)</strong> — Pro-style distributor in the QB battle.</li><li><strong>Lacota Dippre (TE)</strong> — Starting Y tight end.</li><li><strong>Five offensive linemen</strong> — Harrison Moore (C), Eagan Boyer (LT), TJ Shanahan Jr. (RG), and depth across the front.</li></ul><p><strong>RETURNING DEFENSIVE LEADERS</strong> — While the portal reshaped the roster, Myles Graham (LB) and Jayden Woods (JACK) return as the communication and edge anchors in {{ coach.DC }}\'s 3-3-5. Graham sets the second level; Woods is the scheme\'s centerpiece off the edge.</p><p><strong>PORTAL EXITS — CONFIRMED DESTINATIONS</strong></p><ul><li><strong>DJ Lagway (QB)</strong> — Transferred to Texas</li><li><strong>29 total exits</strong> — See Portal Radar for full list with enrolled, committed, and in-portal status</li></ul><p><strong>SCHEME FIT GRADE: B+</strong> — The class addressed QB, WR, TE, RB, S, and OL. The biggest question remains cohesion across five new OL starters. Defensive depth behind Graham and Woods is the other watch item.</p><p><strong>BOTTOM LINE</strong> — On paper, UF fixed every weakness from 2025. Fall camp will decide if the portal class plays to the ceiling or the OL learning curve caps the offense early.</p>',takeaways:['23 incoming transfers — Singleton, Philo, Dippre headline the class','Myles Graham and Jayden Woods anchor the returning defense','29 confirmed exits — DJ Lagway to Texas among notable departures','OL cohesion is the swing factor for Year 1 under {{ coach.HC }}']},
         {id:'art-335-revolution',title:'The 3-3-5 Revolution: Why {{ coach.DC }}\'s Scheme Changes Everything',tier:'locker',badge:'FILM ROOM',badgeClass:'bg-gator-orange/20 text-gator-orange',author:'GatorVault Film Desk',date:'May 28, 2026',readMin:8,excerpt:'{{ coach.DC }}\'s 3-3-5 isn\'t a gimmick — it\'s a personnel-driven answer to modern spread offenses. Here\'s how it works, who benefits, and why Jayden Woods makes it dangerous.',body:'<p>When {{ coach.HC }} hired {{ coach.DC }} from Kentucky, the assumption was UF would run a traditional 4-2-5. Spring camp told a different story. {{ coach.DC }} installed a 3-3-5 hybrid that uses three down linemen to eat double teams, freeing five linebackers and hybrid defenders to flow to the ball.</p><p>The front is built around a dominant nose (Brendan Bett) and two versatile ends (LJ McCray, Jeremiah McCloud) who can kick inside on passing downs. The JACK position — occupied by Jayden Woods — is the scheme\'s centerpiece. Woods sets the edge against the run, drops into coverage on 3rd-and-medium, and rushes the passer on obvious passing downs. He\'s the reason this defense can stay in base personnel against 11 personnel spread sets.</p><p>In the secondary, the STAR/nickel spot is anchored by Kanye Clark, with veteran DJ Coleman rotating in as the second nickel (per post-spring depth charts from GatorCountry and Prep Prospect Report). {{ coach.DC }} wants a defender who can cover slot receivers and fit the run alley. The 3-3-5 lives and dies on assignment discipline — one missed fit creates a 40-yard explosive.</p><p>Spring film showed the install ahead of schedule. UF held its own against a talented offense in the spring game, and Woods recorded two TFLs and a strip-sack. The concern: depth behind the starting eleven. If injuries hit the linebacker room, {{ coach.DC }} may need to sub in more traditional 4-man fronts.</p>',takeaways:['3-3-5 uses 3 DL + 3 LB + 5 DB — built for speed and versatility','Jayden Woods at JACK is the scheme\'s most important piece','STAR: Kanye Clark starts; DJ Coleman is the veteran nickel rotation','Depth is the biggest risk if injuries pile up mid-season']},
-        {id:'art-sumrall-6mo',title:'{{ coach.HC }}\'s First 6 Months: A Real Assessment',tier:'locker',badge:'INSIDER',badgeClass:'bg-gator-blue/20 text-blue-300',author:'GatorVault Staff',date:'June 1, 2026',readMin:7,excerpt:'Six months in, {{ coach.HC }} has rebuilt the roster through the portal, installed a new defensive identity, and kept the locker room bought in. We grade every major decision.',body:'<p>{{ coach.HC }} inherited a program in transition. {{ former.Napier }}\'s final season left questions at quarterback, offensive line, and defensive scheme. {{ coach.HC }}\'s first move was hiring coordinators who fit his culture-first philosophy: {{ coach.DC }} on defense, {{ coach.OC }} on offense, and a revamped S&C staff under {{ staff.SC }}.</p><p>The 2026 portal class was the headline. UF added Eric Singleton Jr. (WR), Aaron Philo (QB), Lacota Dippre (TE), Cam Dooley (S), Evan Pryor (RB), and five offensive linemen among 23 incoming transfers. On paper, it addressed every weakness from 2025. Cormani McClain enrolled via portal last cycle and returns as the starting LCB — he is not part of this offseason\'s incoming class. The concern: five new OL starters need time to gel, and the QB battle between Tramell Jones Jr. and Philo remains unresolved.</p><p>Spring practice was encouraging. The defense looked ahead of schedule — {{ coach.DC }}\'s 3-3-5 install clicked faster than expected. The offense showed flashes but struggled with consistency in the red zone. {{ coach.HC }}\'s public comments have been measured; he hasn\'t named a QB starter and has emphasized "earning it in fall camp."</p><p>Recruiting is holding steady. The 2027 class sits at #5 nationally with Maxwell Hiller as the headliner. {{ coach.HC }}\'s staff has maintained relationships from the {{ former.Napier }} era while adding their own pipeline in Georgia and Texas.</p><p>Our Year 1 projection: 8-4 with a bowl game. The floor is 6-6 if the OL struggles and the QB battle lingers into October. The ceiling is 10-2 if Philo or Jones Jr. takes a leap and McClain stays healthy all season.</p>',takeaways:['2026 portal class addressed QB, WR, TE, S, RB, and OL — McClain is a prior-cycle enrollee','Defense is ahead of schedule; offense needs red-zone consistency','QB battle is genuinely dead even — no lean as of early June','Year 1 projection: 8-4, with 10-2 ceiling if OL and QB click']},
-        {id:'art-philo-film',title:'Aaron Philo Film Study: Who Is The New UF Quarterback?',tier:'film',badge:'FILM ROOM',badgeClass:'bg-gator-orange/20 text-gator-orange',author:'GatorVault Film Desk',date:'May 22, 2026',readMin:10,excerpt:'Georgia Tech transfer Aaron Philo brings pro-style mechanics and anticipatory throwing to Gainesville. We broke down 12 games of film to map his strengths, weaknesses, and fit in {{ coach.OC }}\'s offense.',body:'<p>Aaron Philo arrived from Georgia Tech as a 6\'3", 215-pound quarterback with 47% third-down conversion rate — the best on his GT team in 2025. The film confirms what the stats suggest: Philo is a rhythm passer who thrives when the offense stays on schedule.</p><p><strong>Strengths:</strong> Philo\'s best trait is anticipatory throwing. On mesh concepts and levels routes, he throws before the receiver breaks — a skill that translates directly to {{ coach.OC }}\'s RPO-heavy system. His arm strength is above average; he drives intermediate crossers with velocity and places back-shoulder throws on the boundary. Mobility is underrated — he\'s not a runner, but he extends plays with subtle pocket movement.</p><p><strong>Weaknesses:</strong> Philo can be late on blitz recognition. Against simulated pressure in spring, he held the ball a beat too long on three occasions that would have been sacks in live action. His deep ball accuracy is streaky — when his base is clean, he drops it in; under pressure, he tends to overthrow.</p><p><strong>Scheme fit:</strong> {{ coach.OC }}\'s offense asks the QB to read conflict defenders on RPOs and make quick decisions on play-action. Philo\'s GT tape shows elite processing on these concepts. The question is whether UF\'s rebuilt OL can give him a clean enough pocket to operate. If they can, Philo projects as a top-30 QB nationally by Week 8.</p><p><strong>Competition note:</strong> Tramell Jones Jr. offers more dynamic rushing ability and special teams experience. Philo wins if the offense needs a distributor who limits turnovers. Jones Jr. wins if {{ coach.HC }} wants a dual-threat who can extend drives with his legs.</p>',takeaways:['Best trait: anticipatory throwing on mesh and levels concepts','Main concern: blitz recognition and deep-ball consistency under pressure','Fits {{ coach.OC }}\'s RPO system if the rebuilt OL protects him','Projects top-30 nationally by Week 8 in best-case scenario']},
+        {id:'art-sumrall-6mo',title:'{{ coach.HC }}\'s First 6 Months: A Real Assessment',tier:'locker',badge:'INSIDER',badgeClass:'bg-gator-blue/20 text-blue-300',author:'GatorVault Staff',date:'June 1, 2026',readMin:7,excerpt:'Six months in, {{ coach.HC }} has rebuilt the roster through the portal, installed a new defensive identity, and kept the locker room bought in. We grade every major decision.',body:'<p>{{ coach.HC }} inherited a program in transition. {{ former.Napier }}\'s final season left questions at quarterback, offensive line, and defensive scheme. {{ coach.HC }}\'s first move was hiring coordinators who fit his culture-first philosophy: {{ coach.DC }} on defense, {{ coach.OC }} on offense, and a revamped S&C staff under {{ staff.SC }}.</p><p>The 2026 portal class was the headline. UF added Eric Singleton Jr. (WR), Aaron Philo (QB), Lacota Dippre (TE), Cam Dooley (S), Evan Pryor (RB), and five offensive linemen among 23 incoming transfers. On paper, it addressed every weakness from 2025. Returning defenders Myles Graham (LB) and Jayden Woods (JACK) anchor the second level and edge. The concern: five new OL starters need time to gel, and the QB battle between Tramell Jones Jr. and Philo remains unresolved.</p><p>Spring practice was encouraging. The defense looked ahead of schedule — {{ coach.DC }}\'s 3-3-5 install clicked faster than expected. The offense showed flashes but struggled with consistency in the red zone. {{ coach.HC }}\'s public comments have been measured; he hasn\'t named a QB starter and has emphasized "earning it in fall camp."</p><p>Recruiting is holding steady. The 2027 class sits at #5 nationally with Maxwell Hiller as the headliner. {{ coach.HC }}\'s staff has maintained relationships from the {{ former.Napier }} era while adding their own pipeline in Georgia and Texas.</p><p>Our Year 1 projection: 8-4 with a bowl game. The floor is 6-6 if the OL struggles and the QB battle lingers into October. The ceiling is 10-2 if Philo or Jones Jr. takes a leap and the defense stays healthy up front.</p>',takeaways:['2026 portal class addressed QB, WR, TE, S, RB, and OL','Defense is ahead of schedule; offense needs red-zone consistency','QB battle is genuinely dead even — no lean as of early June','Year 1 projection: 8-4, with 10-2 ceiling if OL and QB click']},
+        {id:'art-philo-film',title:'Aaron Philo Film Study: Who Is The New UF Quarterback?',tier:'film',badge:'FILM ROOM',badgeClass:'bg-gator-orange/20 text-gator-orange',author:'GatorVault Film Desk',date:'May 22, 2026',readMin:10,excerpt:'Georgia Tech transfer Aaron Philo brings pro-style mechanics and anticipatory throwing to Gainesville. We broke down 12 games of film to map his strengths, weaknesses, and fit in {{ coach.OC }}\'s offense.',body:'<p>Aaron Philo arrived from Georgia Tech as a 6\'3", 215-pound quarterback with 47% third-down conversion rate — the best on his GT team in 2025. The film confirms what the stats suggest: Philo is a rhythm passer who thrives when the offense stays on schedule.</p><p><strong>Strengths:</strong> Philo\'s best trait is anticipatory throwing. On mesh concepts and levels routes, he throws before the receiver breaks — a skill that translates directly to {{ coach.OC }}\'s RPO-heavy system. His arm strength is above average; he drives intermediate crossers with velocity and places back-shoulder throws on the boundary. Mobility is underrated — he\'s not a runner, but he extends plays with subtle pocket movement.</p><p><strong>Weaknesses:</strong> Philo can be late on blitz recognition. Against simulated pressure in spring, he held the ball a beat too long on three occasions that would have been sacks in live action. His deep ball accuracy is streaky — when his base is clean, he drops it in; under pressure, he tends to overthrow.</p><p><strong>Scheme fit:</strong> {{ coach.OC }}\'s offense asks the QB to read conflict defenders on RPOs and make quick decisions on play-action. Philo\'s GT tape shows elite processing on these concepts. The question is whether UF\'s rebuilt OL can give him a clean enough pocket to operate. If they can, Philo projects as a top-30 QB nationally by Week 8.</p><p><strong>Competition note:</strong> Tramell Jones Jr. offers more dynamic rushing ability and escapability in the pocket. Philo wins if the offense needs a distributor who limits turnovers. Jones Jr. wins if {{ coach.HC }} wants a dual-threat who can extend drives with his legs.</p>',takeaways:['Best trait: anticipatory throwing on mesh and levels concepts','Main concern: blitz recognition and deep-ball consistency under pressure','Fits {{ coach.OC }}\'s RPO system if the rebuilt OL protects him','Projects top-30 nationally by Week 8 in best-case scenario']},
         {id:'art-win-model',title:'War Room: 2026 Schedule Win Probability Model',tier:'war',badge:'WAR ROOM',badgeClass:'bg-purple-500/20 text-purple-400',author:'GatorVault Analytics',date:'June 3, 2026',readMin:9,excerpt:'Our proprietary model simulates every game 10,000 times using roster data, returning production, and opponent strength. Here\'s where UF wins, where it\'s vulnerable, and the two games that decide the season.',body:'<p>GatorVault\'s 2026 win probability model factors in returning production (52nd nationally), portal additions (12th nationally), strength of schedule (4th in SEC), and coaching stability. We ran 10,000 Monte Carlo simulations for each game.</p><p><strong>Lock games (90%+):</strong> FAU (94%), Samford (97%), USF (91%), Kentucky (88%). These are games UF should win regardless of QB — the talent gap is too large.</p><p><strong>Toss-ups (40-60%):</strong> Auburn away (52%), LSU home (58%), Tennessee away (47%), FSU away (48%). These four games determine whether UF finishes 8-4 or 10-2. Auburn is the first true test — Jordan-Hare in September with a new QB is a recipe for variance.</p><p><strong>Stretch games (under 45%):</strong> Georgia (41%), Texas away (38%), Missouri home (55% — closer than you think). Georgia in Jacksonville is the hardest game on the schedule. Our model gives UF a puncher\'s chance only if Baugh goes for 100+ yards and Woods generates consistent pressure.</p><p><strong>Expected wins: 8.3.</strong> Most likely record: 8-4 (34% probability), followed by 9-3 (22%) and 7-5 (18%). The model\'s biggest swing factor is QB play — a full season from a settled starter adds 1.2 expected wins compared to a rotating duo.</p><p><strong>Bowl projection:</strong> 78% chance of a bowl game. Citrus Bowl (Orlando) is the most likely destination at 8-4. A 10-2 finish opens the door to New Year\'s Six conversation.</p>',takeaways:['Model projects 8.3 expected wins — most likely record is 8-4','Four toss-up games: Auburn, LSU, Tennessee, FSU decide the season','Georgia (41%) and Texas (38%) are the hardest matchups','Settled QB starter adds 1.2 expected wins vs. a rotating duo']},
-        {id:'art-summer-battles',title:'Summer Camp Preview: 5 Position Battles to Watch',tier:'locker',badge:'SUMMER PREVIEW',badgeClass:'bg-amber-500/20 text-amber-400',author:'GatorVault Staff',date:'June 4, 2026',readMin:6,excerpt:'Fall camp opens August 2nd. These five position battles will shape the starting lineup, the two-deep, and how {{ coach.HC }}\'s first season unfolds.',body:'<p>Summer workouts are closed to media, but our sources inside the program point to five battles that will dominate fall camp headlines.</p><p><strong>1. Quarterback — Jones Jr. vs. Philo:</strong> The biggest story of the offseason. Both quarterbacks have had strong spring moments. Jones Jr. offers dual-threat ability and special teams experience. Philo brings pro-style poise and third-down efficiency. {{ coach.HC }} has said he won\'t name a starter until after the FAU game — expect a split in Weeks 1-3.</p><p><strong>2. Right Guard — Lovett vs. Shanahan:</strong> A genuine dead heat. Both are R-Juniors with starting experience elsewhere. The winner likely starts; the loser becomes the top backup at RG and C.</p><p><strong>3. STAR/Nickel — Clark with Coleman rotation:</strong> Kanye Clark is the projected starter at STAR (GatorCountry / Prep Prospect Report). DJ Coleman — not Dylan Purter — is the veteran who rotates in as the second nickel while also backing up at FS. Purter and Owens are development pieces behind them.</p><p><strong>4. WR (X) — Wilson vs. Mays:</strong> Dallas Wilson is projected at X after spring practice reps, though he did not play in the spring game. Micah Mays brings size and veteran savvy and will push in fall camp.</p><p><strong>5. OL Right Side — Jones (RT) vs. depth:</strong> Caden Jones holds RT, but Eagan Boyer and Javarii Luckas are pushing. If Jones struggles in pass protection against Auburn, Boyer could get a look.</p><p>Fall camp report cards drop weekly inside the Vault starting August 5th.</p>',takeaways:['QB battle likely splits Weeks 1-3 before a starter emerges','RG (Lovett vs. Shanahan) is a genuine dead heat; STAR is Clark with Coleman rotating in','Wilson projects at WR(X) but did not play in the spring game; Mays is pushing','Weekly fall camp report cards start August 5th in the Vault']}
+        {id:'art-summer-battles',title:'Summer Camp Preview: 5 Position Battles to Watch',tier:'locker',badge:'SUMMER PREVIEW',badgeClass:'bg-amber-500/20 text-amber-400',author:'GatorVault Staff',date:'June 4, 2026',readMin:6,excerpt:'Fall camp opens August 2nd. These five position battles will shape the starting lineup, the two-deep, and how {{ coach.HC }}\'s first season unfolds.',body:'<p>Summer workouts are closed to media, but our sources inside the program point to five battles that will dominate fall camp headlines.</p><p><strong>1. Quarterback — Jones Jr. vs. Philo:</strong> The biggest story of the offseason. Both quarterbacks have had strong spring moments. Jones Jr. offers dual-threat ability and big-play upside with his legs. Philo brings pro-style poise and third-down efficiency. {{ coach.HC }} has said he won\'t name a starter until after the FAU game — expect a split in Weeks 1-3.</p><p><strong>2. Right Guard — Lovett vs. Shanahan:</strong> A genuine dead heat. Both are R-Juniors with starting experience elsewhere. The winner likely starts; the loser becomes the top backup at RG and C.</p><p><strong>3. STAR/Nickel — Clark with Coleman rotation:</strong> Kanye Clark is the projected starter at STAR (GatorCountry / Prep Prospect Report). DJ Coleman — not Dylan Purter — is the veteran who rotates in as the second nickel while also backing up at FS. Purter and Owens are development pieces behind them.</p><p><strong>4. WR (X) — Wilson vs. Mays:</strong> Dallas Wilson is projected at X after spring practice reps, though he did not play in the spring game. Micah Mays brings size and veteran savvy and will push in fall camp.</p><p><strong>5. OL Right Side — Jones (RT) vs. depth:</strong> Caden Jones holds RT, but Eagan Boyer and Javarii Luckas are pushing. If Jones struggles in pass protection against Auburn, Boyer could get a look.</p><p>Fall camp report cards drop weekly inside the Vault starting August 5th.</p>',takeaways:['QB battle likely splits Weeks 1-3 before a starter emerges','RG (Lovett vs. Shanahan) is a genuine dead heat; STAR is Clark with Coleman rotating in','Wilson projects at WR(X) but did not play in the spring game; Mays is pushing','Weekly fall camp report cards start August 5th in the Vault']}
     ];
     var apparelShops=[
         {icon:'🏟️',badge:'Official',name:'Gator Sportshop',desc:'The official Florida Gators online store — jerseys, hats, custom tees, and limited game-day drops. Operated by Fanatics.',url:'https://shop.floridagators.com/florida-gators/t-12944192+z-9975266-1087192852'},
@@ -2094,7 +2383,7 @@
         {icon:'🧡',badge:'Quick Ship',name:'Amazon — Gators Gear',desc:'Fast delivery on licensed and fan-made Gators apparel. Best for last-minute gifts or quick replacements.',url:'https://www.amazon.com/s?k=florida+gators+apparel'}
     ];
     var games=[
-        {id:'fau',label:'Sep 5 vs FAU',opp:'FAU Owls',date:'September 5, 2026 · 7:45 PM ET',venue:'Ben Hill Griffin Stadium',ufPct:94,keys:['Establish run with Baugh early','QB1: no turnovers in debut','Defense sets physical tone'],swing:[{name:'Jones Jr. / Philo',role:'Efficiency matters in debut'},{name:'Jayden Woods',role:'JACK sets the edge'},{name:'Patrick Durkin',role:'FG in new role'}],film:'FAU runs spread RPO. The 3-3-5 is built to neutralize this.',pred:'UF 38 · FAU 10'},
+        {id:'fau',label:'Sep 5 vs FAU',opp:'FAU Owls',date:'September 5, 2026 · 7:45 PM ET',venue:'Ben Hill Griffin Stadium',ufPct:94,tv:'SEC Network',kickoff:'7:45 PM ET',weather:'84°F · Partly cloudy · 8 mph SW',spread:'UF -31.5',total:'52.5',injuries:[{team:'UF',player:'Patrick Durkin',status:'Probable',note:'New kicker role'},{team:'UF',player:'Myles Graham',status:'Healthy',note:'Full go'},{team:'OPP',player:'FAU RB1',status:'Questionable',note:'Lower-body'}],matchups:[{uf:'Jayden Woods (JACK)',opp:'FAU LT',edge:'UF'},{uf:'Eric Singleton Jr.',opp:'CB1',edge:'UF'},{uf:'Rebuilt OL',opp:'FAU front',edge:'Even'}],opponentPreview:'FAU runs a spread-RPO attack with tempo. UF\'s 3-3-5 is built to neutralize quick-game concepts — watch edge setting and STAR fit early.',keys:['Establish run with Baugh early','QB1: no turnovers in debut','Defense sets physical tone'],swing:[{name:'Jones Jr. / Philo',role:'Efficiency matters in debut'},{name:'Jayden Woods',role:'JACK sets the edge'},{name:'Patrick Durkin',role:'FG in new role'}],film:'FAU runs spread RPO. The 3-3-5 is built to neutralize this.',pred:'UF 38 · FAU 10'},
         {id:'samford',label:'Sep 13 vs Samford',opp:'Samford Bulldogs',date:'September 13, 2026 · TBD',venue:'Ben Hill Griffin Stadium',ufPct:97,keys:['Rotate depth','Evaluate OL under live action','Sophomore WRs get extended looks'],swing:[{name:'Tramell Jones Jr.',role:'Showcase dual-threat'},{name:'Vernell Brown III',role:'Catch targets'},{name:'Freshman LBs',role:'Depth evaluation'}],film:'Wing-T misdirection. Treat as dress rehearsal.',pred:'UF 52 · Samford 3'},
         {id:'auburn',label:'Sep 19 @ Auburn',opp:'Auburn Tigers',date:'September 19, 2026 · 7:00 PM ET',venue:'Jordan-Hare Stadium',ufPct:52,keys:['Control LOS','Limit explosive plays','Win 3rd down'],swing:[{name:'Singleton Jr.',role:'First road SEC test'},{name:'Jaden Robinson',role:'Communication in noise'},{name:'Cormani McClain',role:'Neutralize their #1 WR'}],film:'Auburn runs physical downhill ball. Jordan-Hare in September is one of the toughest environments.',pred:'UF 24 · Auburn 21'},
         {id:'uga',label:'Oct 31 vs Georgia',opp:'Georgia Bulldogs',date:'October 31, 2026 · TBD',venue:'EverBank Stadium (Jacksonville)',ufPct:41,keys:['Control time of possession','Get pressure on their QB','Establish run before going downfield'],swing:[{name:'Jadan Baugh',role:'Must go 100+ yards'},{name:'Jayden Woods',role:'Must generate pressure'},{name:'Cormani McClain',role:'Must neutralize Georgia WR1'}],film:'Georgia has owned this series. UF\'s only path is controlling ball.',pred:'UF 27 · Georgia 24'},
@@ -2113,12 +2402,12 @@
         {season:'2025',title:'Baugh & Wilson — Texas upset in The Swamp',meta:'Oct 2025 · UF 29, Texas 21',note:'Opening-drive score and Wilson\'s 55-yard debut touchdown.'},
         {season:'2025',title:'Baugh rivalry finale vs Florida State',meta:'Nov 2025 · UF 40, FSU 21',note:'266-yard night to close the season — full cut in production.'},
         {season:'2025',title:'Boireau game-winning interception vs Mississippi State',meta:'Oct 2025 · UF 23, Miss State 21',note:'Swamp erupts with 21 seconds left.'},
-        {season:'2026',title:'QB room: Jones Jr. vs Philo — spring cut',meta:'Fall camp watch',note:'Split-squad reps once native spring film is cleared.'},
-        {season:'2026',title:'Jayden Woods at JACK — scheme install',meta:'Defensive identity',note:'3-3-5 edge pressure package breakdown.'},
+        {season:'2026',title:'2026 Portal Class Recap: 23 In, 29 Out',meta:'Portal Radar · Full breakdown',note:'ESPN-style class recap — headliners, scheme fits, and every confirmed exit with destination schools. No video embeds.'},
+        {season:'2026',title:'Jayden Woods at JACK — scheme install',meta:'Defensive identity',note:'3-3-5 edge pressure package breakdown — native clip when cleared.'},
         {season:'2026',title:'Sumrall post-spring presser',meta:'Media · interviews',note:'Press clips ship only when sourced natively — no scrubbed reels.'}
     ];
     var recentAlerts=[];
-    var GV_ALERTS_FEED_VERSION=3;
+    var GV_ALERTS_FEED_VERSION=4;
     var ALERT_TYPE_META={
         recruiting:{icon:'🔥',label:'Recruiting',pill:'bg-gator-orange/15 text-gator-orange'},
         depth:{icon:'📋',label:'Depth Chart',pill:'bg-blue-500/15 text-blue-300'},
@@ -2141,9 +2430,55 @@
             +'<div class="alert-stat-pill"><p class="text-[.65rem] uppercase tracking-[.12em] text-surface-400">Categories On</p><p class="font-display text-xl font-bold text-white">'+enabled+'/6</p></div>';
     }
 
+    function gvFmtRelativeTs(ts){
+        if(!ts)return '';
+        var ms=Date.now()-(typeof ts==='number'?ts:new Date(ts).getTime());
+        if(isNaN(ms)||ms<0)return 'Just now';
+        if(ms<60000)return 'Just now';
+        if(ms<3600000)return Math.floor(ms/60000)+'m ago';
+        if(ms<86400000)return Math.floor(ms/3600000)+'h ago';
+        var days=Math.floor(ms/86400000);
+        if(days===1)return 'Yesterday';
+        if(days<7)return days+'d ago';
+        return new Date(ts).toLocaleDateString();
+    }
+    function gvEnsureAlertTimestamps(){
+        var now=Date.now();
+        recentAlerts.forEach(function(a,i){
+            if(a._ts)return;
+            if(a.time&&a.time!=='Just now'){
+                var parsed=Date.parse(a.time);
+                if(!isNaN(parsed)){a._ts=parsed;return;}
+            }
+            a._ts=now-((recentAlerts.length-i)*900000);
+        });
+    }
+    function gvGetAlertEmailTo(){
+        var prefs=window.alertPrefs||defaultAlertPrefs;
+        var field=document.getElementById('digest-email-to');
+        var fromField=field?field.value.trim():'';
+        return fromField||(prefs.emailTo||'').trim()||(window.GV_EMAIL||'').trim()||'';
+    }
+    function gvSendInstantAlertEmail(payload){
+        var prefs=window.alertPrefs||defaultAlertPrefs;
+        if(prefs.freq&&prefs.freq!=='instant')return;
+        var emailTo=gvGetAlertEmailTo();
+        if(!emailTo)return;
+        var base=window.GV_API_BASE||((window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1')?'http://localhost:3000':window.location.origin);
+        var serverUrl=(prefs.serverUrl||'').trim()||(base+'/api/digest');
+        var serverToken=(prefs.serverToken||'').trim()||'';
+        var alertItem=Object.assign({},payload,{time:gvFmtRelativeTs(payload._ts||Date.now())});
+        var body={subject:'GatorVault Alert: '+(payload.title||payload.text||'Update'),emailTo:emailTo,alerts:[alertItem],summary:{total:1,byType:{}}};
+        if(payload.type)body.summary.byType[payload.type]=1;
+        fetch(serverUrl,{method:'POST',headers:{'Content-Type':'application/json','X-DIGEST-TOKEN':serverToken},body:JSON.stringify(body)}).then(function(r){
+            if(!r.ok&&window.GV_ALERT_DEBUG)console.warn('Alert email failed',r.status);
+        }).catch(function(e){if(window.GV_ALERT_DEBUG)console.warn('Alert email error',e);});
+    }
+
     function renderAlerts(){
         var el=document.getElementById('recent-alerts-list');var emptyEl=document.getElementById('alerts-empty');
         if(!el)return;
+        gvEnsureAlertTimestamps();
         renderAlertStats();
         el.innerHTML='';
         var items=recentAlerts.slice().reverse().slice(0,10);
@@ -2164,7 +2499,7 @@
             html+='</div>';
             html+='<div class="text-sm text-white'+(a.read?'':' font-semibold')+'">'+(a.title||a.text)+'</div>';
             if(a.detail) html+='<p class="text-xs text-surface-200/70 mt-1 leading-relaxed">'+a.detail+'</p>';
-            html+='<div class="text-xs text-surface-200/50 mt-2">'+a.time+'</div>';
+            html+='<div class="text-xs text-surface-200/50 mt-2 alert-time" data-ts="'+(a._ts||'')+'">'+gvFmtRelativeTs(a._ts)+'</div>';
             html+='</div>';
             html+='<div class="flex flex-col gap-1.5 flex-shrink-0">';
             html+='<button class="mark-read-btn text-xs px-2.5 py-1.5 rounded-lg bg-surface-700 text-surface-200 hover:bg-gator-orange hover:text-black transition" data-idx="'+idx+'">'+(a.read?'Mark unread':'Got it')+'</button>';
@@ -2333,7 +2668,8 @@
         }
         var webhookInput=document.getElementById('digest-webhook-url'); if(webhookInput){webhookInput.value=window.alertPrefs.webhookUrl||'';}
         var webhookEnabled=document.getElementById('digest-webhook-enabled'); if(webhookEnabled){webhookEnabled.checked=!!window.alertPrefs.webhookEnabled;}
-        var emailTo=document.getElementById('digest-email-to'); if(emailTo){emailTo.value=window.alertPrefs.emailTo||'';}
+        var emailTo=document.getElementById('digest-email-to'); if(emailTo){emailTo.value=window.alertPrefs.emailTo||window.GV_EMAIL||'';}
+        if(!window.alertPrefs.emailTo&&(window.GV_EMAIL||''))window.alertPrefs.emailTo=window.GV_EMAIL;
         var serverUrl=document.getElementById('digest-server-url'); if(serverUrl){serverUrl.value=window.alertPrefs.serverUrl||'';}
         var serverToken=document.getElementById('digest-server-token'); if(serverToken){serverToken.value=window.alertPrefs.serverToken||'';}
         // timezone selector change handler and IANA input visibility
@@ -2380,13 +2716,17 @@
     }
 
     function deliverAlert(payload){
-        payload.time=payload.time||'Just now';payload._ts=payload._ts||Date.now();
+        payload._ts=payload._ts||Date.now();
+        delete payload.time;
         if(payload.eventId&&gvAlertAlreadyInFeed(payload.eventId))return true;
         recentAlerts.push(payload);persistRecentAlerts();renderAlerts();
         var prefs=window.alertPrefs||defaultAlertPrefs;
         var method=prefs.method||'push';
         if(method==='push'||method==='both'){
             showToast(payload.type?payload.type.toUpperCase(): 'Alert', payload.text||payload.title||'', payload.type, 6000);
+        }
+        if((method==='email'||method==='both')&&(!prefs.freq||prefs.freq==='instant')){
+            try{gvSendInstantAlertEmail(payload);}catch(e){if(window.GV_ALERT_DEBUG)console.warn('gvSendInstantAlertEmail',e);}
         }
         return true;
     }
@@ -2404,14 +2744,14 @@
         var profileUrl=slug?('/player/'+slug):'';
         var detail=(commit.detail||commit.skinny||'');
         if(profileUrl) detail+=(detail?' ':'')+'<a href="'+profileUrl+'" class="text-gator-orange underline">View profile →</a>';
-        notifyEvent({text:commit.text||commit.title||('New commit: '+(commit.summary||'')),detail:detail,type:'commit',player:commit.playerName||commit.name,playerSlug:slug,link:profileUrl,eventId:commit.eventId||commit.id});
+        notifyEvent({text:commit.text||commit.title||('New commit: '+(commit.summary||'')),detail:detail,type:'commit',player:commit.playerName||commit.name,playerSlug:slug,link:profileUrl,eventId:commit.eventId||commit.id,_ts:commit._ts||Date.now()});
     };
     window.onPortalMove=function(info){
         var slug=info.playerSlug||info.slug;
         var profileUrl=slug?('/player/'+slug):'';
         var detail=(info.detail||info.skinny||'');
         if(profileUrl) detail+=(detail?' ':'')+'<a href="'+profileUrl+'" class="text-gator-orange underline">View profile →</a>';
-        notifyEvent({text:info.text||info.title||('Portal update: '+(info.summary||'')),detail:detail,type:'portal',playerSlug:slug,link:profileUrl,eventId:info.eventId||info.id});
+        notifyEvent({text:info.text||info.title||('Portal update: '+(info.summary||'')),detail:detail,type:'portal',playerSlug:slug,link:profileUrl,eventId:info.eventId||info.id,_ts:info._ts||Date.now()});
     };
     window.onScoreUpdate=function(score){
         if(score&&score.gameId){try{window.liveScores[score.gameId]=Object.assign(window.liveScores[score.gameId]||{},score);renderLiveScores();}catch(e){}}
@@ -2444,6 +2784,7 @@
 
     // initialize prefs & recent alerts
     loadAlertPrefs();loadRecentAlerts();
+    if(!window._gv_alertTimeTimer){window._gv_alertTimeTimer=setInterval(function(){try{renderAlerts();}catch(e){}},60000);}
     try{scheduleDailyDigest();}catch(e){}
 
     // ====== DIGEST GENERATOR & DRAWER ======
@@ -2461,7 +2802,7 @@
         c.innerHTML='';if(!s.total){c.innerHTML='<div class="text-surface-200">No new alerts since last digest.</div>';}else{
             var types=Object.keys(s.byType);var listHtml='';types.forEach(function(t){listHtml+='<div class="flex items-center justify-between bg-surface-800 p-2 rounded-lg"><div class="text-sm font-semibold">'+t.toUpperCase()+'</div><div class="text-xs text-surface-200/60">'+s.byType[t]+' items</div></div>';});
             c.innerHTML=listHtml+'<div class="mt-3"><div class="text-sm font-bold mb-2">Top updates</div>';
-            s.top.forEach(function(u){c.innerHTML+='<div class="bg-surface-800 p-2 rounded-lg mb-2"><div class="text-sm font-semibold">'+(u.title||u.text)+'</div><div class="text-xs text-surface-200/60">'+u.time+'</div></div>';});
+            s.top.forEach(function(u){c.innerHTML+='<div class="bg-surface-800 p-2 rounded-lg mb-2"><div class="text-sm font-semibold">'+(u.title||u.text)+'</div><div class="text-xs text-surface-200/60">'+gvFmtRelativeTs(u._ts)+'</div></div>';});
             c.innerHTML+='</div>';
         }
         m.innerText='Last digest sent: '+(localStorage.getItem('gv_lastDigest')?new Date(parseInt(localStorage.getItem('gv_lastDigest'),10)).toLocaleString():'Never');
@@ -2549,7 +2890,7 @@
             +'<p class="text-sm text-surface-200 leading-relaxed mt-4 border-l-4 border-gator-orange pl-4">'+(gvEscHtml(p.bio||p.stats||''))+'</p>'
             +(p.stats&&p.bio?'<p class="text-xs text-surface-200/60 mt-3">'+gvEscHtml(p.stats)+'</p>':'')
             +'<div class="flex flex-wrap gap-2 mt-5">'
-            +'<a href="/player/'+gvEscHtml(p.slug||'')+'" class="text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white">Full profile →</a>'
+            +'<button type="button" class="gv-full-profile-btn text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white" data-slug="'+gvEscHtml(p.slug||'')+'">Full profile →</button>'
             +'<button type="button" class="player-modal-follow text-xs font-bold px-4 py-2 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">Follow</button>'
             +'</div>';
         var followBtn=body.querySelector('.player-modal-follow');
@@ -2567,6 +2908,8 @@
                 renderPlayers();
             });
         }
+        var fullBtn=body.querySelector('.gv-full-profile-btn');
+        if(fullBtn)fullBtn.addEventListener('click',function(){var s=this.dataset.slug;if(s)location.href='/player/'+s;});
         modal.classList.add('open');
         modal.setAttribute('aria-hidden','false');
     }
@@ -2712,6 +3055,10 @@
             var modal=document.getElementById('player-profile-modal');
             if(closeBtn)closeBtn.addEventListener('click',closePlayerProfile);
             if(modal)modal.addEventListener('click',function(e){if(e.target===modal)closePlayerProfile();});
+            var rClose=document.getElementById('recruit-profile-close');
+            var rModal=document.getElementById('recruit-profile-modal');
+            if(rClose)rClose.addEventListener('click',gvCloseRecruitProfile);
+            if(rModal)rModal.addEventListener('click',function(e){if(e.target===rModal)gvCloseRecruitProfile();});
         }
         if(!window._gvRosterSyncWired){
             window._gvRosterSyncWired=true;
@@ -2749,7 +3096,7 @@
                 }catch(e){target=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0,0);if(target.getTime()<=now.getTime()) target.setDate(target.getDate()+1);} 
             }
             var ms=target.getTime()-now.getTime();
-            window._gv_digestTimer=setTimeout(function(){try{var prefsNow=window.alertPrefs||defaultAlertPrefs;if(!prefsNow.dailyOpenIfNew || generateDigest().total>0){showDigestDrawer();} }catch(e){};try{markDigestSent();}catch(e){};try{scheduleDailyDigest();}catch(e){};},ms);
+            window._gv_digestTimer=setTimeout(function(){try{var prefsNow=window.alertPrefs||defaultAlertPrefs;if(!prefsNow.dailyOpenIfNew || generateDigest().total>0){showDigestDrawer();if(prefsNow.method==='email'||prefsNow.method==='both'){try{sendDigestToWebhook();}catch(e){}}} }catch(e){};try{markDigestSent();}catch(e){};try{scheduleDailyDigest();}catch(e){};},ms);
             try{showToast('Digest scheduled','Next digest at '+target.toLocaleString()+' ('+(prefs.timeZone||'local')+')', '',4000);}catch(e){}
         }catch(e){console.warn('scheduleDailyDigest',e);}    }
 
@@ -2812,9 +3159,21 @@
             +'<h3 class="font-display text-lg font-bold text-white">Moments we\'re cutting first</h3>'
             +'<span class="text-xs text-surface-200/50">Editorial watchlist · playback disabled</span></div>'
             +'<div class="grid grid-cols-1 md:grid-cols-2 gap-4">'
-            +highlightMomentWatchlist.map(renderHighlightMomentCard).join('')
+            +highlightMomentWatchlist.map(function(m){
+                if(m.title.indexOf('Portal Class Recap')>=0){
+                    return '<button type="button" class="highlight-moment-card text-left w-full cursor-pointer" data-open-article="art-portal-class-2026">'
+                        +'<div class="flex items-start justify-between gap-3 mb-2"><span class="highlight-season-pill highlight-season-2026">2026 Preview</span><span class="highlight-moment-status text-gator-orange">Read now →</span></div>'
+                        +'<p class="text-sm font-semibold text-white leading-snug">'+gvEscHtml(m.title)+'</p>'
+                        +'<p class="highlight-game-tag mt-1">'+gvEscHtml(m.meta)+'</p>'
+                        +'<p class="text-xs text-surface-200/55 mt-2 leading-relaxed">'+gvEscHtml(m.note)+'</p></button>';
+                }
+                return renderHighlightMomentCard(m);
+            }).join('')
             +'</div></div>'
-            +'<p class="text-xs text-surface-200/45 text-center pt-2">Film Room unlocks automatically when native clips are wired. Follow <a href="https://x.com/GatorVaultInsider" target="_blank" rel="noopener" class="text-gator-orange hover:text-white font-semibold">@GatorVaultInsider</a> for drops.</p>';
+            +'<p class="text-xs text-surface-200/45 text-center pt-2">Portal recap is live in Articles. Film clips ship when native sources are cleared — follow <a href="https://x.com/GatorVaultInsider" target="_blank" rel="noopener" class="text-gator-orange hover:text-white font-semibold">@GatorVaultInsider</a>.</p>';
+        shell.querySelectorAll('[data-open-article]').forEach(function(btn){
+            btn.addEventListener('click',function(){gvOpenArticle(btn.getAttribute('data-open-article'));});
+        });
     }
     window.openHighlightPlayer=function(){};
     window.closeHighlightPlayer=function(){
@@ -2854,8 +3213,56 @@
             });
         });
     }
+    function gvRenderGameZoneLive(){
+        var pane=document.getElementById('vpane-gamezone');
+        if(!pane)return;
+        var g=games.find(function(x){return x.id==='fau';})||games[0];
+        if(!g)return;
+        var el=document.getElementById('gz-live-board');
+        if(!el){
+            el=document.createElement('div');
+            el.id='gz-live-board';
+            el.className='space-y-6';
+            var intro=pane.querySelector('.flex.flex-col.gap-3');
+            if(intro)intro.insertAdjacentElement('afterend',el);
+            else pane.insertAdjacentElement('afterbegin',el);
+        }
+        var schedHtml='<div class="game-zone-card"><h3 class="font-display text-xl font-bold text-gator-orange mb-3">📅 Upcoming Schedule</h3><div class="space-y-2">';
+        games.forEach(function(gg){
+            schedHtml+='<div class="flex justify-between gap-2 text-sm border-b border-gator-blue/10 pb-2"><span class="text-white font-semibold">'+gvEscHtml(gg.label)+'</span><span class="text-surface-200/60">'+gvEscHtml((gg.kickoff||gg.date||'').split('·')[0].trim())+'</span></div>';
+        });
+        schedHtml+='</div></div>';
+        var injHtml='';
+        if(g.injuries&&g.injuries.length){
+            injHtml='<div class="game-zone-card"><h3 class="font-display text-xl font-bold text-gator-orange mb-3">🏥 Injury Report</h3><div class="space-y-2">';
+            g.injuries.forEach(function(inj){
+                injHtml+='<div class="flex justify-between text-sm"><span class="text-white">'+gvEscHtml(inj.player)+' <span class="text-surface-200/50">('+inj.team+')</span></span><span class="text-yellow-400">'+gvEscHtml(inj.status)+'</span></div>';
+            });
+            injHtml+='</div></div>';
+        }
+        var matchHtml='<div class="game-zone-card"><h3 class="font-display text-xl font-bold text-gator-orange mb-3">⚔️ Depth Chart Matchups</h3><div class="space-y-2">';
+        (g.matchups||[]).forEach(function(m){
+            matchHtml+='<div class="text-sm"><span class="text-white font-semibold">'+gvEscHtml(m.uf)+'</span><span class="text-surface-200/50"> vs </span><span class="text-surface-200">'+gvEscHtml(m.opp)+'</span> <span class="text-gator-orange text-xs">('+m.edge+')</span></div>';
+        });
+        matchHtml+='</div><p class="text-xs text-surface-200/70 mt-3">'+gvEscHtml(g.opponentPreview||'')+'</p></div>';
+        el.innerHTML='<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">'
+            +'<div class="game-zone-card xl:col-span-1"><h3 class="font-display text-xl font-bold text-gator-orange mb-2">Next: '+gvEscHtml(g.opp)+'</h3>'
+            +'<p class="text-sm text-white font-semibold">'+gvEscHtml(g.date)+'</p>'
+            +'<p class="text-xs text-surface-200 mt-2">📺 '+gvEscHtml(g.tv||'TBD')+' · 🕐 '+gvEscHtml(g.kickoff||'TBD')+'</p>'
+            +'<p class="text-xs text-surface-200 mt-1">🌤 '+gvEscHtml(g.weather||'TBD')+'</p>'
+            +'<p class="text-xs text-surface-200 mt-1">📍 '+gvEscHtml(g.venue)+'</p>'
+            +'<div class="flex gap-4 mt-3 text-sm"><span><strong class="text-white">Spread:</strong> '+gvEscHtml(g.spread||'—')+'</span><span><strong class="text-white">O/U:</strong> '+gvEscHtml(g.total||'—')+'</span></div>'
+            +'<p class="text-gator-orange font-bold mt-3">GatorVault pred: '+gvEscHtml(g.pred||'')+'</p></div>'
+            +injHtml+matchHtml+'</div>'+schedHtml;
+        var predLabel=pane.querySelector('.game-zone-card p strong');
+        var predCards=pane.querySelectorAll('.game-zone-card p.text-sm');
+        predCards.forEach(function(p){
+            if(p.innerHTML.indexOf('Next Game')>=0)p.innerHTML='Next Game: <strong class="text-white">UF vs '+gvEscHtml(g.opp.replace(' Owls','').replace(' Bulldogs',''))+' — '+gvEscHtml(g.kickoff||'')+' · '+gvEscHtml(g.venue.split(',')[0])+'</strong>';
+        });
+    }
     function renderGameZone(){
         if(!document.getElementById('vpane-gamezone')) return;
+        gvRenderGameZoneLive();
         updateVaultPointsUI();
         if(window._gameZoneWired) return;
         window._gameZoneWired=true;
@@ -3002,8 +3409,11 @@
             portalIncoming=feed.portal.incoming.filter(function(p){
                 return p.slug!=='cormani-mcclain'&&String(p.name||'').toLowerCase().indexOf('cormani mcclain')<0;
             }).map(function(p){
-                return{name:p.name,pos:p.pos,from:p.fromSchool||p.school,htWt:p.htWt,stars:p.starsDisplay||('★'.repeat(p.stars||0)),note:p.skinny||p.profileNote||'',slug:p.slug};
+                return gvNormalizePortalPlayer(p,true);
             });
+        }
+        if(feed.portal&&feed.portal.outgoing&&feed.portal.outgoing.length){
+            portalOutgoing=feed.portal.outgoing.map(function(p){return gvNormalizePortalPlayer(p,false);});
         }
         if(feed.rankings){feed.rankings.forEach(function(r){window._gvRankings[r.classYear]=r;});}
         window._gvRecruitingLiveReady=true;
@@ -3031,13 +3441,14 @@
     }
     function gvProcessRecruitEvent(ev){
         if(gvIsTestRecruitEvent(ev))return;
-        var payload={text:ev.title,detail:ev.skinny||ev.detail||'',title:ev.title,skinny:ev.skinny,playerSlug:ev.playerSlug,name:ev.payload&&ev.payload.player?ev.payload.player.name:'',eventId:ev.id};
+        var evTs=ev.createdAt?new Date(ev.createdAt).getTime():Date.now();
+        var payload={text:ev.title,detail:ev.skinny||ev.detail||'',title:ev.title,skinny:ev.skinny,playerSlug:ev.playerSlug,name:ev.payload&&ev.payload.player?ev.payload.player.name:'',eventId:ev.id,_ts:evTs};
         if(ev.eventType==='portal_in'||ev.eventType==='portal_out'){
             window.onPortalMove(payload);
         }else if(ev.eventType==='commit'||ev.eventType==='flip'||ev.eventType==='decommit'){
             window.onNewCommit(payload);
         }else{
-            notifyEvent({text:ev.title,detail:ev.skinny||ev.detail||'',type:'recruiting',eventId:ev.id});
+            notifyEvent({text:ev.title,detail:ev.skinny||ev.detail||'',type:'recruiting',eventId:ev.id,_ts:evTs});
         }
     }
 
@@ -3224,6 +3635,29 @@
     }
 
     // ---- Portal ----
+    function gvNormalizePortalPlayer(p,incoming){
+        var status=String(p.status||'').toLowerCase();
+        return{
+            name:p.name,pos:p.pos,
+            from:p.fromSchool||p.from_school||p.school||'',
+            htWt:p.htWt||p.ht_wt||'',
+            stars:p.starsDisplay||p.stars_display||('★'.repeat(Math.min(5,parseInt(p.stars,10)||0))),
+            note:p.skinny||p.profileNote||p.profile_note||'',
+            slug:p.slug,
+            status:status||null,
+            committed_to:p.committedTo||p.committed_to||(incoming?'Florida':null),
+            enrolled_at:p.enrolledAt||p.enrolled_at||null,
+            transferred_to:p.transferredTo||p.transferred_to||null
+        };
+    }
+    function gvPortalStatusMeta(p){
+        if(p.transferred_to)return{label:'Transferred',detail:'Transferred to: '+p.transferred_to,cls:'text-amber-400'};
+        if(p.enrolled_at||p.status==='enrolled')return{label:'Enrolled',detail:p.committed_to&&p.committed_to!=='Florida'?'Committed to: '+p.committed_to:null,cls:'text-green-400'};
+        if(p.committed_to&&p.committed_to!=='Florida')return{label:'Committed',detail:'Committed to: '+p.committed_to,cls:'text-blue-300'};
+        if(p.status==='committed')return{label:'Committed',detail:null,cls:'text-blue-300'};
+        if(p.status==='portal_in'||p.status==='entered')return{label:'In Portal',detail:null,cls:'text-yellow-400'};
+        return{label:(p.status||'Update').charAt(0).toUpperCase()+(p.status||'update').slice(1),detail:null,cls:'text-surface-200/50'};
+    }
     function renderPortal(){
         var pane=document.getElementById('vpane-portal');
         var oldHead=pane?pane.querySelector('.portal-headliner-card'):null;
@@ -3241,17 +3675,37 @@
         var el=document.getElementById('portal-incoming');el.innerHTML='';
         document.getElementById('portal-count').textContent=portalIncoming.length;
         portalIncoming.forEach(function(p){
+            var status=gvPortalStatusMeta(p);
             el.innerHTML+='<div class="p-4 flex flex-col gap-2">'
                 +'<div class="flex flex-col md:flex-row md:items-center gap-2">'
                 +'<div class="flex-1"><span class="text-white font-medium text-sm">'+gvPlayerLink(p.name,p.slug)+'</span><span class="text-gator-orange text-xs ml-2 font-bold">'+p.pos+'</span></div>'
                 +'<div class="flex items-center gap-2 flex-wrap">'
                 +'<span class="text-[.6rem] font-bold px-2 py-0.5 rounded-full status-transfer">From: '+p.from+'</span>'
+                +(p.committed_to?'<span class="text-[.6rem] font-bold px-2 py-0.5 rounded-full bg-gator-blue/20 text-blue-200">Committed to: '+p.committed_to+'</span>':'')
                 +'<span class="text-xs text-surface-200/50">'+p.htWt+'</span>'
                 +'<span class="text-xs text-yellow-400">'+p.stars+'</span>'
                 +'</div></div>'
+                +(status.detail?'<p class="text-xs font-semibold '+status.cls+'">'+status.detail+'</p>':'')
                 +'<p class="text-xs text-surface-200/70">'+p.note+'</p>'
                 +'</div>';
         });
+        var outEl=document.getElementById('portal-outgoing');
+        if(outEl){
+            outEl.innerHTML='';
+            var exitCount=document.getElementById('portal-exit-count');
+            if(exitCount)exitCount.textContent=portalOutgoing.length;
+            portalOutgoing.forEach(function(p){
+                var status=gvPortalStatusMeta(p);
+                outEl.innerHTML+='<div class="p-4 flex flex-col gap-1.5">'
+                    +'<div class="flex items-center justify-between gap-3 flex-wrap">'
+                    +'<div><span class="text-surface-200 font-medium">'+gvPlayerLink(p.name,p.slug)+'</span><span class="text-surface-200/60 ml-2">'+p.pos+'</span></div>'
+                    +'<span class="text-xs font-semibold '+status.cls+'">'+status.label+'</span>'
+                    +'</div>'
+                    +(p.transferred_to?'<p class="text-xs font-semibold text-amber-400">Transferred to: '+p.transferred_to+'</p>':'')
+                    +(status.detail&&!p.transferred_to?'<p class="text-xs '+status.cls+'">'+status.detail+'</p>':'')
+                    +'</div>';
+            });
+        }
     }
 
     // ---- Storylines ----
@@ -3645,7 +4099,9 @@
         if(ms<60000)return 'Just now';
         if(ms<3600000)return Math.floor(ms/60000)+'m ago';
         if(ms<86400000)return Math.floor(ms/3600000)+'h ago';
-        if(ms<604800000)return Math.floor(ms/86400000)+'d ago';
+        var days=Math.floor(ms/86400000);
+        if(days===1)return 'Yesterday';
+        if(days<7)return days+'d ago';
         return new Date(iso).toLocaleDateString();
     }
 
@@ -3654,11 +4110,54 @@
         return map[type]||type||'Update';
     }
 
+    function gvLiveFeedSourceUrl(item){
+        if(!item)return null;
+        var raw=item.source_url!=null?item.source_url:item.url;
+        if(raw==null||raw===''||raw==='undefined'||raw==='null')return null;
+        var s=String(raw).trim();
+        return s||null;
+    }
+
     function gvLiveResolveUrl(url){
-        if(!url)return null;
-        if(/^https?:\/\//i.test(url))return url;
-        if(url.charAt(0)==='/')return window.location.origin+url;
-        return url;
+        if(url==null||url===''||url==='undefined'||url==='null')return null;
+        var s=String(url).trim();
+        if(!s)return null;
+        if(/^https?:\/\//i.test(s))return s;
+        if(s.charAt(0)==='/')return window.location.origin+s;
+        if(s.charAt(0)==='#')return window.location.origin+window.location.pathname+s;
+        return s;
+    }
+
+    function gvWireLiveFeedItems(root){
+        if(!root)return;
+        root.querySelectorAll('.live-feed-item--linked').forEach(function(card){
+            card.addEventListener('click',function(e){
+                if(e.target.closest('a')||e.target.closest('.gv-live-source-link'))return;
+                var feedType=card.getAttribute('data-feed-type');
+                var slug=card.getAttribute('data-recruit-slug');
+                if(feedType==='commit'&&slug){e.preventDefault();gvOpenRecruitProfile(slug);return;}
+                var sourceUrl=card.getAttribute('data-source-url');
+                if(!sourceUrl)return;
+                gvNavigate(sourceUrl,{type:feedType,recruitModal:feedType==='commit'});
+            });
+        });
+        root.querySelectorAll('.live-feed-item a.live-feed-link').forEach(function(a){
+            a.addEventListener('click',function(e){
+                e.preventDefault();
+                var card=a.closest('.live-feed-item');
+                var feedType=card?card.getAttribute('data-feed-type'):'';
+                var slug=card?card.getAttribute('data-recruit-slug'):'';
+                if(feedType==='commit'&&slug)gvOpenRecruitProfile(slug);
+                else gvNavigate(a.getAttribute('href')||'',{type:feedType,recruitModal:feedType==='commit'});
+            });
+        });
+        root.querySelectorAll('.gv-live-source-link').forEach(function(a){
+            a.addEventListener('click',function(e){
+                e.preventDefault();
+                if(typeof openVault==='function')openVault();
+                showVTab('recruit');
+            });
+        });
     }
 
     function gvRenderLiveFeed(items){
@@ -3670,20 +4169,41 @@
         }
         var html='';
         items.forEach(function(item){
-            var href=gvLiveResolveUrl(item.url);
+            var sourceUrl=gvLiveFeedSourceUrl(item);
+            var href=sourceUrl?gvLiveResolveUrl(sourceUrl):null;
             var pill='live-type-'+(item.type||'breaking');
-            html+='<div class="live-feed-item">';
+            var recruitSlug=(item.meta&&item.meta.playerSlug)||'';
+            if(item.type==='commit'&&recruitSlug)sourceUrl='/player/'+recruitSlug;
+            var cardClass='live-feed-item '+(sourceUrl||recruitSlug?'live-feed-item--linked':'live-feed-item--static');
+            var titleText=item.title;
+            try{if(typeof gvResolveContentFields==='function')titleText=gvResolveContentFields({title:item.title}).title||item.title;}catch(ex){}
+            html+='<div class="'+cardClass+'" data-feed-type="'+gvLiveEsc(item.type||'')+'"'+(recruitSlug?' data-recruit-slug="'+gvLiveEsc(recruitSlug)+'"':'')+(sourceUrl?' data-source-url="'+gvLiveEsc(sourceUrl)+'"':' title="No source link"')+'>';
             html+='<div class="flex items-start justify-between gap-2 mb-1">';
             html+='<span class="live-type-pill '+pill+'">'+gvLiveEsc(gvLiveTypeLabel(item.type))+'</span>';
             html+='<span class="text-[.65rem] text-surface-200/50 shrink-0">'+gvLiveEsc(gvLiveTimeAgo(item.createdAt))+'</span>';
             html+='</div>';
-            if(href)html+='<a href="'+gvLiveEsc(href)+'" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-white hover:text-gator-orange leading-snug block">'+gvLiveEsc(item.title)+'</a>';
-            else html+='<p class="text-sm font-semibold text-white leading-snug">'+gvLiveEsc(item.title)+'</p>';
-            if(item.summary)html+='<p class="text-xs text-surface-200/70 mt-1 line-clamp-2">'+gvLiveEsc(String(item.summary).slice(0,220))+'</p>';
-            if(item.author)html+='<p class="text-[.65rem] text-surface-200/40 mt-1">'+gvLiveEsc(item.author)+(item.source?' · '+gvLiveEsc(item.source):'')+'</p>';
+            if(sourceUrl||recruitSlug){
+                html+='<a href="'+gvLiveEsc(href||('/player/'+recruitSlug))+'" class="live-feed-link text-sm font-semibold text-white hover:text-gator-orange leading-snug block">'+gvLiveEsc(titleText)+'</a>';
+            }else{
+                html+='<p class="text-sm font-semibold text-white leading-snug">'+gvLiveEsc(titleText)+'</p>';
+                html+='<p class="live-feed-no-link">No source link</p>';
+            }
+            if(item.summary){
+                var sumText=item.summary;
+                try{if(typeof gvResolveContentFields==='function')sumText=gvResolveContentFields({body:item.summary}).body||item.summary;}catch(ex){}
+                html+='<p class="text-xs text-surface-200/70 mt-1 line-clamp-2">'+gvLiveEsc(String(sumText).slice(0,220))+'</p>';
+            }
+            if(item.author){
+                if(item.type==='commit'||(item.source&&String(item.source).toLowerCase().indexOf('on3')>=0)){
+                    html+='<p class="text-[.65rem] text-surface-200/40 mt-1"><a href="#" class="gv-live-source-link text-gator-orange hover:underline">GatorVault Recruiting · On3</a></p>';
+                }else{
+                    html+='<p class="text-[.65rem] text-surface-200/40 mt-1">'+gvLiveEsc(item.author)+(item.source?' · '+gvLiveEsc(item.source):'')+'</p>';
+                }
+            }
             html+='</div>';
         });
         el.innerHTML=html;
+        gvWireLiveFeedItems(el);
     }
 
     function gvLiveBeatErrorMessage(beat){
@@ -3772,6 +4292,7 @@
     function gvRenderLivePodcasts(hub){
         var el=document.getElementById('live-podcast-list');
         if(!el)return;
+        if(gvIsMobile&&gvIsMobile())el.classList.add('gv-hscroll-track');
         var shows=(hub&&hub.shows)||[];
         if(!shows.length){
             el.innerHTML='<p class="text-surface-200/50 text-sm">Podcast feeds loading… New episodes appear here automatically.</p>';
@@ -3896,6 +4417,283 @@
             el.innerHTML+=html;
         });
     }
+
+    // ========== ESPN MOBILE LAYOUT (front-end only) ==========
+    function gvIsMobile(){return window.matchMedia('(max-width:767px)').matches;}
+    var _gvShowVTabCore=window.showVTab;
+    var _gvMobileSwipeOrder=['mhome','live','recruit','beat'];
+
+    function gvMobileSetActive(tab){
+        document.querySelectorAll('.gv-bnav-btn').forEach(function(b){
+            b.classList.toggle('active',b.getAttribute('data-mnav')===tab);
+        });
+    }
+
+    function gvMobileShowTab(tab,opts){
+        opts=opts||{};
+        var interior=document.getElementById('vault-interior');
+        if(interior)interior.classList.add('gv-mobile-active');
+        if(tab==='more'){
+            var sheet=document.getElementById('gv-more-sheet');
+            if(sheet){sheet.classList.add('open');sheet.setAttribute('aria-hidden','false');}
+            return;
+        }
+        var map={beat:'live',mhome:'mhome'};
+        var paneTab=map[tab]||tab;
+        document.querySelectorAll('.vpane').forEach(function(p){p.classList.remove('active');p.style.display='none';});
+        var pane=document.getElementById('vpane-'+paneTab);
+        if(pane){pane.classList.add('active');pane.style.display='block';}
+        if(tab==='live'||tab==='beat'||tab==='mhome'){
+            try{gvLoadLiveDashboard(false);}catch(e){}
+        }
+        if(tab==='recruit'){try{renderRecruits();}catch(e){}}
+        if(tab==='beat'&&!opts.noScroll){
+            setTimeout(function(){
+                var beat=document.getElementById('gv-beat-panel');
+                if(beat)beat.scrollIntoView({behavior:'smooth',block:'start'});
+            },120);
+        }
+        gvMobileSetActive(tab==='mhome'?'mhome':tab);
+        var sheet=document.getElementById('gv-more-sheet');
+        if(sheet){sheet.classList.remove('open');sheet.setAttribute('aria-hidden','true');}
+    }
+
+    window.showVTab=function(tab){
+        if(gvIsMobile()){
+            if(tab==='start')tab='mhome';
+            gvMobileShowTab(tab);
+            return;
+        }
+        _gvShowVTabCore(tab);
+    };
+
+    function gvRenderBreakingBanner(items){
+        var wrap=document.getElementById('gv-breaking-banner');
+        var track=document.getElementById('gv-breaking-track');
+        var interior=document.getElementById('vault-interior');
+        if(!wrap||!track||!gvIsMobile())return;
+        var breaking=(items||[]).filter(function(i){return i.type==='breaking';}).slice(0,8);
+        if(!breaking.length){
+            wrap.classList.add('hidden');
+            wrap.classList.remove('has-alerts');
+            if(interior)interior.classList.remove('gv-has-breaking');
+            track.innerHTML='';
+            return;
+        }
+        var chunk='';
+        breaking.forEach(function(item){
+            chunk+='<span class="gv-breaking-item">BREAKING: '+gvLiveEsc(item.title)+'</span>';
+        });
+        track.innerHTML=chunk+chunk;
+        wrap.classList.remove('hidden');
+        wrap.classList.add('has-alerts');
+        if(interior)interior.classList.add('gv-has-breaking');
+    }
+
+    function gvRenderMobileHome(){
+        if(!gvIsMobile())return;
+        var feed=window._gvLive.feed||[];
+        var beat=window._gvLive.beat||{};
+        var brEl=document.getElementById('gv-mhome-breaking');
+        var feedEl=document.getElementById('gv-mhome-feed');
+        var beatEl=document.getElementById('gv-mhome-beat');
+        var recEl=document.getElementById('gv-mhome-recruit');
+        var podEl=document.getElementById('gv-mhome-podcasts');
+        var shopEl=document.getElementById('gv-mhome-shop');
+        if(!feedEl)return;
+
+        var breaking=feed.filter(function(i){return i.type==='breaking';}).slice(0,3);
+        if(brEl){
+            if(!breaking.length)brEl.innerHTML='<p class="gv-espn-card-body text-[#888]">No breaking alerts right now.</p>';
+            else brEl.innerHTML=breaking.map(function(item){
+                var href=gvLiveFeedSourceUrl(item)?gvLiveResolveUrl(gvLiveFeedSourceUrl(item)):null;
+                return '<div class="gv-espn-card"'+(href?' style="cursor:pointer" data-href="'+gvLiveEsc(href)+'"':'')+'>'
+                    +'<p class="gv-espn-card-title">'+gvLiveEsc(item.title)+'</p>'
+                    +(item.summary?'<p class="gv-espn-card-body">'+gvLiveEsc(String(item.summary).slice(0,120))+'</p>':'')
+                    +'<p class="gv-espn-card-time">'+gvLiveEsc(gvLiveTimeAgo(item.createdAt))+'</p></div>';
+            }).join('');
+            brEl.querySelectorAll('[data-href]').forEach(function(card){
+                card.addEventListener('click',function(){gvNavigate(card.getAttribute('data-href'));});
+            });
+        }
+
+        var topFeed=feed.slice(0,5);
+        feedEl.innerHTML=topFeed.length?topFeed.map(function(item){
+            var href=gvLiveFeedSourceUrl(item)?gvLiveResolveUrl(gvLiveFeedSourceUrl(item)):null;
+            return '<div class="gv-espn-card"'+(href?' style="cursor:pointer" data-href="'+gvLiveEsc(href)+'"':'')+'>'
+                +'<p class="gv-espn-card-title">'+gvLiveEsc(gvLiveTypeLabel(item.type))+': '+gvLiveEsc(item.title)+'</p>'
+                +(item.summary?'<p class="gv-espn-card-body">'+gvLiveEsc(String(item.summary).slice(0,100))+'</p>':'')
+                +'<p class="gv-espn-card-time">'+gvLiveEsc(gvLiveTimeAgo(item.createdAt))+'</p></div>';
+        }).join(''):'<p class="gv-espn-card-body text-[#888]">Feed loading…</p>';
+        feedEl.querySelectorAll('[data-href]').forEach(function(card){
+            card.addEventListener('click',function(){
+                var item=topFeed[Array.prototype.indexOf.call(feedEl.children,card)];
+                if(item&&item.type==='commit'&&item.meta&&item.meta.playerSlug)gvOpenRecruitProfile(item.meta.playerSlug);
+                else gvNavigate(card.getAttribute('data-href'));
+            });
+        });
+
+        var posts=(beat.posts||[]).slice(0,4);
+        if(beatEl){
+            beatEl.innerHTML=posts.length?posts.map(function(p){
+                var href=p.url?gvLiveResolveUrl(p.url):null;
+                return '<div class="gv-espn-card"'+(href?' style="cursor:pointer" data-href="'+gvLiveEsc(href)+'"':'')+'>'
+                    +'<p class="gv-espn-card-title">@'+gvLiveEsc(p.handle||'')+'</p>'
+                    +'<p class="gv-espn-card-body">'+gvLiveEsc(String(p.text||'').slice(0,140))+'</p>'
+                    +'<p class="gv-espn-card-time">'+gvLiveEsc(gvLiveTimeAgo(p.publishedAt))+'</p></div>';
+            }).join(''):'<p class="gv-espn-card-body text-[#888]">Beat stream loading…</p>';
+            beatEl.querySelectorAll('[data-href]').forEach(function(card){
+                card.addEventListener('click',function(){window.open(card.getAttribute('data-href'),'_blank','noopener,noreferrer');});
+            });
+        }
+
+        if(recEl&&typeof class2027!=='undefined'){
+            recEl.innerHTML=class2027.slice(0,8).map(function(c){
+                return '<div class="gv-espn-card"><p class="gv-espn-card-title">'+gvLiveEsc(c.name)+'</p>'
+                    +'<p class="gv-espn-card-body">'+gvLiveEsc(c.pos)+' · '+gvLiveEsc(c.school)+'</p>'
+                    +'<p class="gv-espn-card-time">'+gvLiveEsc(c.date||'')+'</p></div>';
+            }).join('');
+        }
+
+        var shows=(window._gvLive.podcasts&&window._gvLive.podcasts.shows)||[];
+        if(podEl){
+            podEl.innerHTML=shows.length?shows.slice(0,6).map(function(show){
+                var latest=show.episodes&&show.episodes[0];
+                return '<div class="gv-espn-card"><p class="gv-espn-card-title">'+gvLiveEsc(show.name)+'</p>'
+                    +'<p class="gv-espn-card-body">'+gvLiveEsc((latest&&latest.title)||'Latest episode')+'</p>'
+                    +'<p class="gv-espn-card-time">'+gvLiveEsc(latest?gvLiveTimeAgo(latest.publishedAt):'')+'</p></div>';
+            }).join(''):'<p class="gv-espn-card-body text-[#888]">Podcasts loading…</p>';
+        }
+
+        if(shopEl&&typeof ticketGames!=='undefined'){
+            var shopHtml='';
+            ticketGames.slice(0,4).forEach(function(tg){
+                shopHtml+='<div class="gv-espn-card ticket-card"><p class="gv-espn-card-title">'+gvLiveEsc(tg.game)+'</p>'
+                    +'<p class="gv-espn-card-body">'+gvLiveEsc(tg.date)+'</p></div>';
+            });
+            if(typeof apparelShops!=='undefined'){
+                apparelShops.slice(0,3).forEach(function(s){
+                    shopHtml+='<a href="'+gvLiveEsc(s.url)+'" target="_blank" rel="noopener noreferrer" class="gv-espn-card apparel-card" style="text-decoration:none;color:inherit;"><p class="gv-espn-card-title">'+gvLiveEsc(s.name)+'</p><p class="gv-espn-card-body">'+gvLiveEsc(s.desc.slice(0,80))+'…</p></a>';
+                });
+            }
+            shopEl.innerHTML=shopHtml||'<p class="gv-espn-card-body text-[#888]">Shop links loading…</p>';
+        }
+    }
+
+    function gvInitMobileChrome(){
+        var interior=document.getElementById('vault-interior');
+        if(!interior)return;
+        if(gvIsMobile()){
+            interior.classList.add('gv-mobile-active');
+            gvMobileShowTab('mhome',{noScroll:true});
+        }else{
+            interior.classList.remove('gv-mobile-active','gv-has-breaking');
+        }
+
+        document.querySelectorAll('#gv-bottom-nav .gv-bnav-btn').forEach(function(btn){
+            btn.addEventListener('click',function(){
+                var tab=btn.getAttribute('data-mnav');
+                if(tab==='more')gvMobileShowTab('more');
+                else gvMobileShowTab(tab);
+            });
+        });
+
+        var moreSheet=document.getElementById('gv-more-sheet');
+        if(moreSheet){
+            moreSheet.addEventListener('click',function(e){
+                if(e.target===moreSheet){moreSheet.classList.remove('open');moreSheet.setAttribute('aria-hidden','true');}
+            });
+            moreSheet.querySelectorAll('.gv-more-link').forEach(function(link){
+                link.addEventListener('click',function(){
+                    var tab=link.getAttribute('data-goto');
+                    moreSheet.classList.remove('open');
+                    if(tab)_gvShowVTabCore(tab);
+                    document.querySelectorAll('.vpane').forEach(function(p){p.classList.remove('active');p.style.display='none';});
+                    var pane=document.getElementById('vpane-'+tab);
+                    if(pane){pane.classList.add('active');pane.style.display='block';}
+                    gvMobileSetActive('more');
+                });
+            });
+        }
+
+        var profileBtn=document.getElementById('gv-mobile-profile');
+        if(profileBtn)profileBtn.addEventListener('click',function(){gvMobileShowTab('more');});
+
+        document.querySelectorAll('#vpane-mhome [data-goto]').forEach(function(btn){
+            btn.addEventListener('click',function(){var t=btn.getAttribute('data-goto');if(t)window.showVTab(t);});
+        });
+
+        var ptr=document.getElementById('gv-ptr-indicator');
+        var scrollRoot=document.getElementById('vault-overlay');
+        var ptrStartY=0,ptrPull=0,ptrActive=false;
+        function gvPtrRefresh(tab){
+            if(tab==='live'||tab==='beat'||tab==='mhome')gvLoadLiveDashboard(true);
+            if(tab==='recruit'){try{renderRecruits();}catch(e){}}
+            gvRenderMobileHome();
+        }
+        if(scrollRoot&&ptr){
+            scrollRoot.addEventListener('touchstart',function(e){
+                if(!gvIsMobile()||scrollRoot.scrollTop>8)return;
+                ptrStartY=e.touches[0].clientY;ptrPull=0;ptrActive=true;
+            },{passive:true});
+            scrollRoot.addEventListener('touchmove',function(e){
+                if(!ptrActive)return;
+                ptrPull=Math.max(0,e.touches[0].clientY-ptrStartY);
+                if(ptrPull>0&&ptrPull<90)ptr.classList.add('visible');
+            },{passive:true});
+            scrollRoot.addEventListener('touchend',function(){
+                if(!ptrActive)return;
+                ptrActive=false;
+                ptr.classList.remove('visible');
+                if(ptrPull>64){
+                    var active=document.querySelector('.gv-bnav-btn.active');
+                    gvPtrRefresh(active?active.getAttribute('data-mnav'):'mhome');
+                }
+                ptrPull=0;
+            });
+        }
+
+        var swipeStartX=0,swipeStartY=0;
+        if(scrollRoot){
+            scrollRoot.addEventListener('touchstart',function(e){
+                swipeStartX=e.touches[0].clientX;swipeStartY=e.touches[0].clientY;
+            },{passive:true});
+            scrollRoot.addEventListener('touchend',function(e){
+                if(!gvIsMobile())return;
+                var dx=e.changedTouches[0].clientX-swipeStartX;
+                var dy=e.changedTouches[0].clientY-swipeStartY;
+                if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy))return;
+                var active=document.querySelector('.gv-bnav-btn.active');
+                var cur=active?active.getAttribute('data-mnav'):'mhome';
+                if(cur==='more'||cur==='beat')cur='live';
+                var idx=_gvMobileSwipeOrder.indexOf(cur);
+                if(idx<0)return;
+                if(dx<0&&idx<_gvMobileSwipeOrder.length-1)gvMobileShowTab(_gvMobileSwipeOrder[idx+1]);
+                if(dx>0&&idx>0)gvMobileShowTab(_gvMobileSwipeOrder[idx-1]);
+            },{passive:true});
+        }
+
+        window.addEventListener('resize',function(){
+            if(gvIsMobile())interior.classList.add('gv-mobile-active');
+            else interior.classList.remove('gv-mobile-active','gv-has-breaking');
+        });
+    }
+
+    var _gvLoadLiveOrig=gvLoadLiveDashboard;
+    gvLoadLiveDashboard=function(showLoading){
+        var result=_gvLoadLiveOrig(showLoading);
+        function gvAfterLiveLoad(){
+            gvRenderBreakingBanner(window._gvLive.feed);
+            gvRenderMobileHome();
+        }
+        if(result&&typeof result.then==='function')return result.then(gvAfterLiveLoad);
+        gvAfterLiveLoad();
+        return result;
+    };
+
+    try{gvHandleDeepLink();}catch(e){}
+    gvInitMobileChrome();
+    if(gvIsMobile()){try{renderTickets();renderApparel();gvRenderMobileHome();}catch(e){}}
 
     // ========== INITIAL RENDER (icons) ==========
     setTimeout(function(){if(typeof lucide!=="undefined"&&typeof lucide.createIcons==="function")lucide.createIcons();},200);

@@ -36,6 +36,16 @@ function mountContentRoutes(app) {
     }
   });
 
+  app.get('/api/content/articles/:id', (req, res) => {
+    try {
+      const article = store.getArticleById(req.params.id);
+      if (!article) return res.status(404).json({ ok: false, error: 'Article not found' });
+      return res.json({ ok: true, article });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/content/queue', (req, res) => {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });

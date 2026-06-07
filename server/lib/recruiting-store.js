@@ -365,7 +365,8 @@ async function getBoard(classYear) {
 async function getPortalBoard() {
   const players = await getAllPlayers();
   const incoming = players.filter((p) => p.category === 'portal' && p.status !== 'portal_out');
-  return { incoming, count: incoming.length };
+  const outgoing = players.filter((p) => p.category === 'portal' && p.status === 'portal_out');
+  return { incoming, outgoing, count: incoming.length, outgoingCount: outgoing.length };
 }
 
 async function fireRecruitingEvent({ eventType, player, skinny, detail, source }) {

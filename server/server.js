@@ -194,9 +194,11 @@ async function sendEmailEmailJS(to, templateParams) {
       tier_name: templateParams.tierName || 'Film Room',
       trial_end: templateParams.trialEnd || '',
       login_url: SITE_URL,
+      community_url: SITE_URL,
       support_x: '@GatorVaultInsider',
-      from_name: 'GatorVault',
-      reply_to: process.env.EMAILJS_REPLY_TO || process.env.SMTP_USER || 'gatorvaultinsider@gmail.com'
+      from_name: 'GatorVault Team',
+      onboarding_intro: 'Your GatorVault account is live. Here is everything included in your membership and how to get started.',
+      reply_to: process.env.EMAILJS_REPLY_TO || process.env.SMTP_USER || 'support@gatorvaultinsider.com'
     }
   };
   if (privateKey) payload.accessToken = privateKey;
@@ -557,8 +559,14 @@ app.post('/api/digest', async (req, res) => {
     if (emailTo) {
       try {
         const subject = body.subject || 'GatorVault Daily Digest';
-        const html = '<h3>GatorVault Digest</h3><p>Total items: ' + (summary.total || 0) + '</p>'
-          + alerts.slice(0, 20).map((a) => '<div><strong>' + (a.title || a.text) + '</strong><div>' + (a.time || '') + '</div></div>').join('');
+        const html = '<div style="font-family:Inter,Arial,sans-serif;color:#e2e8f0;background:#030712;padding:24px;">'
+          + '<h2 style="color:#FA4616;margin:0 0 8px;">GatorVault</h2>'
+          + '<p style="margin:0 0 16px;color:#94a3b8;">' + (body.subject && body.subject.indexOf('Alert:') !== -1 ? 'New alert from your GatorVault feed.' : 'Your digest summary.') + '</p>'
+          + (summary.total ? '<p style="margin:0 0 12px;">Total items: ' + (summary.total || 0) + '</p>' : '')
+          + alerts.slice(0, 20).map((a) => '<div style="margin:0 0 12px;padding:12px;background:#0a1628;border-radius:8px;"><strong style="color:#fff;">' + (a.title || a.text) + '</strong>'
+            + (a.detail ? '<div style="font-size:13px;color:#94a3b8;margin-top:4px;">' + a.detail + '</div>' : '')
+            + '<div style="font-size:12px;color:#64748b;margin-top:4px;">' + (a.time || '') + '</div></div>').join('')
+          + '<p style="margin:16px 0 0;font-size:12px;color:#475569;">— GatorVault Team</p></div>';
         await deliverEmail(emailTo, subject, html);
         results.email = { to: emailTo };
       } catch (e) {
