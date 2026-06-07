@@ -4,6 +4,7 @@ const {
   logValidationFailure,
   validateContentItem,
   resolveContentItem,
+  TRUSTED_REPORTERS,
   LOG_PATH
 } = require('./content-validator');
 const fs = require('fs');
@@ -31,6 +32,23 @@ function mountContentRoutes(app) {
     try {
       const feed = store.getPublishedFeed();
       return res.json({ ok: true, ...feed });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/content/policy', (req, res) => {
+    try {
+      const audit = store.auditPublishedArticles();
+      return res.json({
+        ok: true,
+        sourcePolicy: 'gatorvault_original',
+        description:
+          'Original GatorVault writing based only on verified public beat and recruiting reporting. Every article must cite at least one trusted public source.',
+        trustedSources: TRUSTED_REPORTERS,
+        validatorEnforced: true,
+        publishedArticles: audit
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

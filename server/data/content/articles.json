@@ -15,6 +15,23 @@
       "Myles Graham and Jayden Woods anchor the returning defense",
       "29 confirmed exits — DJ Lagway to Baylor among notable departures",
       "OL cohesion is the swing factor for Year 1 under {{ coach.HC }}"
+    ],
+    "sources": [
+      {
+        "reporter": "On3 Staff",
+        "outlet": "On3",
+        "url": "https://www.on3.com/teams/florida-gators/category/transfer-portal/"
+      },
+      {
+        "reporter": "Rivals Florida",
+        "outlet": "Rivals",
+        "url": "https://florida.rivals.com/"
+      },
+      {
+        "reporter": "Thomas Goldkamp",
+        "outlet": "Gators Online",
+        "url": "https://www.gatorsports.com/"
+      }
     ]
   },
   {
@@ -33,6 +50,23 @@
       "Jayden Woods at JACK is the scheme's most important piece",
       "STAR: Kanye Clark starts; DJ Coleman is the veteran nickel rotation",
       "Depth is the biggest risk if injuries pile up mid-season"
+    ],
+    "sources": [
+      {
+        "reporter": "GatorCountry Staff",
+        "outlet": "GatorCountry",
+        "url": "https://www.gatorcountry.com/"
+      },
+      {
+        "reporter": "OnlyGators Staff",
+        "outlet": "OnlyGators",
+        "url": "https://www.onlygators.com/"
+      },
+      {
+        "reporter": "Zach Abolverdi",
+        "outlet": "On3",
+        "url": "https://www.on3.com/teams/florida-gators/"
+      }
     ]
   },
   {
@@ -51,6 +85,23 @@
       "Defense is ahead of schedule; offense needs red-zone consistency",
       "QB battle is genuinely dead even — no lean as of early June",
       "Year 1 projection: 8-4, with 10-2 ceiling if OL and QB click"
+    ],
+    "sources": [
+      {
+        "reporter": "Thomas Goldkamp",
+        "outlet": "Gators Online",
+        "url": "https://www.gatorsports.com/staff/thomas-goldkamp/"
+      },
+      {
+        "reporter": "Graham Hall",
+        "outlet": "On3",
+        "url": "https://www.on3.com/college/florida-gators/"
+      },
+      {
+        "reporter": "OnlyGators Staff",
+        "outlet": "OnlyGators",
+        "url": "https://www.onlygators.com/"
+      }
     ]
   },
   {
@@ -69,6 +120,18 @@
       "Main concern: blitz recognition and deep-ball consistency under pressure",
       "Fits {{ coach.OC }}'s RPO system if the rebuilt OL protects him",
       "Projects top-30 nationally by Week 8 in best-case scenario"
+    ],
+    "sources": [
+      {
+        "reporter": "On3 Staff",
+        "outlet": "On3",
+        "url": "https://www.on3.com/college/florida-gators/"
+      },
+      {
+        "reporter": "247Sports Staff",
+        "outlet": "247Sports",
+        "url": "https://247sports.com/college/florida/"
+      }
     ]
   },
   {
@@ -87,6 +150,18 @@
       "Four toss-up games: Auburn, LSU, Tennessee, FSU decide the season",
       "Georgia (41%) and Texas (38%) are the hardest matchups",
       "Settled QB starter adds 1.2 expected wins vs. a rotating duo"
+    ],
+    "sources": [
+      {
+        "reporter": "247Sports Staff",
+        "outlet": "247Sports",
+        "url": "https://247sports.com/college/florida/Schedule/"
+      },
+      {
+        "reporter": "On3 Staff",
+        "outlet": "On3",
+        "url": "https://www.on3.com/teams/florida-gators/"
+      }
     ]
   },
   {
@@ -105,6 +180,23 @@
       "RG (Lovett vs. Shanahan) is a genuine dead heat; STAR is Clark with Coleman rotating in",
       "Wilson projects at WR(X) but did not play in the spring game; Mays is pushing",
       "Weekly fall camp report cards start August 5th in the Vault"
+    ],
+    "sources": [
+      {
+        "reporter": "GatorCountry Staff",
+        "outlet": "GatorCountry",
+        "url": "https://www.gatorcountry.com/"
+      },
+      {
+        "reporter": "OnlyGators Staff",
+        "outlet": "OnlyGators",
+        "url": "https://www.onlygators.com/"
+      },
+      {
+        "reporter": "Corey Bender",
+        "outlet": "On3",
+        "url": "https://www.on3.com/college/florida-gators/"
+      }
     ]
   }
 ]

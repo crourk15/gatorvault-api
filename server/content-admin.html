@@ -54,6 +54,9 @@
       <textarea id="body" style="min-height:200px" placeholder="<p>{{ coach.HC }} inherited a program...</p>"></textarea>
       <label>Takeaways (one per line, articles only)</label>
       <textarea id="takeaways" placeholder="Key point one&#10;Key point two"></textarea>
+      <label>Sources (JSON array) * — articles only</label>
+      <textarea id="sources" style="min-height:100px" placeholder='[{"reporter":"Corey Bender","outlet":"On3","url":"https://www.on3.com/college/florida-gators/"}]'></textarea>
+      <p class="help">Required for articles. Each entry needs a public URL and trusted outlet or beat writer (On3, 247Sports, Rivals, Gators Online, OnlyGators, etc.).</p>
       <div class="row">
         <div><label>Storyline status label</label><input id="storylineStatus" placeholder="WATCH"></div>
         <div><label>Status CSS class</label><input id="statusClass" placeholder="text-yellow-400 bg-yellow-400/10"></div>
@@ -104,6 +107,12 @@
     function draftPayload() {
       var type = document.getElementById('type').value;
       var takeaways = document.getElementById('takeaways').value.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+      var sources = [];
+      var sourcesRaw = document.getElementById('sources').value.trim();
+      if (sourcesRaw) {
+        try { sources = JSON.parse(sourcesRaw); } catch (e) { alert('Sources must be valid JSON array.'); return null; }
+        if (!Array.isArray(sources)) { alert('Sources must be a JSON array.'); return null; }
+      }
       return {
         type: type,
         title: document.getElementById('title').value.trim(),
@@ -111,6 +120,7 @@
         body: document.getElementById('body').value.trim(),
         tier: document.getElementById('tier').value,
         takeaways: takeaways,
+        sources: sources,
         storylineStatus: document.getElementById('storylineStatus').value.trim(),
         statusClass: document.getElementById('statusClass').value.trim(),
         badge: 'INSIDER',
@@ -123,6 +133,7 @@
 
     async function saveDraft() {
       var payload = draftPayload();
+      if (!payload) return;
       if (!payload.title || !payload.body) return alert('Title and body required.');
       var r = await fetch(API + '/api/content/drafts', { method: 'POST', headers: headers(), body: JSON.stringify(payload) });
       var d = await r.json();
@@ -132,7 +143,9 @@
     }
 
     async function validatePreview() {
-      var r = await fetch(API + '/api/content/validate', { method: 'POST', headers: headers(), body: JSON.stringify(draftPayload()) });
+      var payload = draftPayload();
+      if (!payload) return;
+      var r = await fetch(API + '/api/content/validate', { method: 'POST', headers: headers(), body: JSON.stringify(payload) });
       var d = await r.json();
       if (!d.ok) return alert(d.error || 'Validate failed');
       showErrors(d.errors);
@@ -140,7 +153,9 @@
     }
 
     async function resolvePreview() {
-      var r = await fetch(API + '/api/content/preview-resolve', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(draftPayload()) });
+      var payload = draftPayload();
+      if (!payload) return;
+      var r = await fetch(API + '/api/content/preview-resolve', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       var d = await r.json();
       if (!d.ok) return alert(d.error || 'Resolve failed');
       log('Resolved title: ' + d.resolved.title, 'info');

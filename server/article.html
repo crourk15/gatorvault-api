@@ -31,6 +31,11 @@
         <p class="text-xs font-bold text-gator-orange uppercase tracking-wider mb-2">Key Takeaways</p>
         <ul id="a-takeaways-list" class="list-disc pl-4 text-sm text-surface-200 space-y-1"></ul>
       </div>
+      <div id="a-sources" class="bg-surface-800 border border-gator-blue/20 rounded-2xl p-5 hidden">
+        <p class="text-xs font-bold text-gator-orange uppercase tracking-wider mb-2">Verified Sources</p>
+        <ul id="a-sources-list" class="text-sm text-surface-200 space-y-1"></ul>
+        <p class="text-[11px] text-surface-200/50 mt-3">Original GatorVault analysis based on public beat and recruiting reporting only.</p>
+      </div>
     </article>
   </div>
   <script>
@@ -62,6 +67,16 @@
         document.getElementById('a-takeaways').classList.remove('hidden');
         document.getElementById('a-takeaways-list').innerHTML = a.takeaways.map(function (t) {
           return '<li>' + t + '</li>';
+        }).join('');
+      }
+      if (a.sources && a.sources.length) {
+        document.getElementById('a-sources').classList.remove('hidden');
+        document.getElementById('a-sources-list').innerHTML = a.sources.map(function (s) {
+          var label = (s.reporter ? s.reporter + ' · ' : '') + (s.outlet || s.label || s.name || 'Source');
+          var url = s.url || s.href;
+          return url
+            ? '<li><a href="' + url + '" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline">' + label + '</a></li>'
+            : '<li>' + label + '</li>';
         }).join('');
       }
     }

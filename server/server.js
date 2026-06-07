@@ -8,7 +8,7 @@ const { mountRosterRoutes } = require('./lib/roster-routes');
 const { mountLiveRoutes } = require('./lib/live-routes');
 const { mountHighlightsRoutes } = require('./lib/highlights-routes');
 const { mountWarRoomRoutes } = require('./lib/war-room-routes');
-const { ensurePublishedSeed } = require('./lib/content-store');
+const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 
 const fetch = require('node-fetch');
@@ -795,7 +795,8 @@ app.listen(PORT, () => {
   }
   try {
     ensurePublishedSeed();
-    console.log('Content API: ready (accuracy validation + review queue)');
+    const contentAudit = auditPublishedArticles();
+    console.log('Content API: ready (accuracy validation + review queue)', contentAudit);
   } catch (e) {
     console.warn('Content API: failed to init', e.message);
   }

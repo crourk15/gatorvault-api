@@ -61,6 +61,18 @@ function ensurePublishedSeed() {
   }
 }
 
+function auditPublishedArticles() {
+  const articles = readJson(ARTICLES_PATH, []);
+  const missing = articles.filter((a) => !Array.isArray(a.sources) || !a.sources.length);
+  if (missing.length) {
+    console.warn(
+      '[content-store] published articles missing sources:',
+      missing.map((a) => a.id).join(', ')
+    );
+  }
+  return { total: articles.length, missingSources: missing.length, ids: missing.map((a) => a.id) };
+}
+
 function loadPublishedArticles() {
   ensurePublishedSeed();
   return readJson(ARTICLES_PATH, []);
@@ -91,14 +103,22 @@ function getArticleById(id) {
   const articles = loadPublishedArticles();
   const raw = articles.find((a) => a.id === id);
   if (!raw) return null;
-  return { ...resolveContentItem(raw), id: raw.id, source: 'published' };
+  return {
+    ...resolveContentItem(raw),
+    id: raw.id,
+    source: 'published',
+    sources: raw.sources || [],
+    sourcePolicy: 'gatorvault_original'
+  };
 }
 
 function getPublishedFeed() {
   const articles = loadPublishedArticles().map((a) => ({
     ...resolveContentItem(a),
     id: a.id,
-    source: 'published'
+    source: 'published',
+    sources: a.sources || [],
+    sourcePolicy: 'gatorvault_original'
   }));
   const storylines = loadPublishedStorylines().map((s) => ({
     ...resolveContentItem(s),
@@ -123,6 +143,7 @@ function normalizeQueueItem(raw) {
     excerpt: raw.excerpt || '',
     body: raw.body || '',
     takeaways: raw.takeaways || [],
+    sources: raw.sources || raw.sourceUrls || raw.citations || [],
     statusClass: raw.statusClass || '',
     storylineStatus: raw.storylineStatus || raw.statusLabel || '',
     createdAt: raw.createdAt || nowIso(),
@@ -270,6 +291,7 @@ module.exports = {
   CONTENT_DIR,
   STATUSES,
   ensurePublishedSeed,
+  auditPublishedArticles,
   seedFromIndexHtml,
   loadPublishedArticles,
   loadPublishedStorylines,

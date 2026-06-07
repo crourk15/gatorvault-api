@@ -1,11 +1,18 @@
 /* GatorVault site-wide ticker + top alert banner — must sit above #vault-overlay (z-300) */
+:root {
+  --gv-ticker-h: 0px;
+}
+body.gv-has-site-ticker {
+  --gv-ticker-h: 44px;
+}
+
 .gv-site-ticker {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 500;
-  height: 44px;
+  height: var(--gv-ticker-h, 44px);
   background: linear-gradient(90deg, #030712 0%, #0a1628 50%, #030712 100%);
   border-bottom: 2px solid rgba(250, 70, 22, 0.55);
   overflow: hidden;
@@ -78,24 +85,29 @@
   }
 }
 
+/* Headers sit fully below the live ticker */
 body.gv-has-site-ticker nav.fixed,
 body.gv-has-site-ticker #nav-main {
-  top: 44px !important;
+  top: var(--gv-ticker-h) !important;
+}
+body.gv-has-site-ticker #gv-mobile-header,
+body.gv-has-site-ticker .gv-mob-header {
+  top: var(--gv-ticker-h) !important;
 }
 body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky {
-  top: 44px !important;
+  top: var(--gv-ticker-h) !important;
 }
 body.gv-has-site-ticker #vault-interior .gv-desk-only.sticky.top-14 {
-  top: calc(44px + 3.5rem) !important;
+  top: calc(var(--gv-ticker-h) + 3.5rem) !important;
 }
 body.gv-has-site-ticker #ticker-bar {
   display: none !important;
 }
 body.gv-has-site-ticker #install-banner {
-  top: calc(56px + 44px) !important;
+  top: calc(4rem + var(--gv-ticker-h)) !important;
 }
 body.gv-has-site-ticker #hero-sec {
-  padding-top: calc(8rem + 44px) !important;
+  padding-top: calc(8rem + var(--gv-ticker-h)) !important;
 }
 body.gv-has-site-ticker.gv-has-alert-banner {
   padding-top: 0;
@@ -115,7 +127,7 @@ body.gv-has-site-ticker.gv-has-alert-banner {
   min-height: 52px;
 }
 body.gv-has-site-ticker .gv-alert-banner {
-  top: 44px;
+  top: var(--gv-ticker-h);
 }
 .gv-alert-banner--visible {
   transform: translateY(0);
@@ -220,16 +232,13 @@ body.gv-has-site-ticker .gv-alert-banner {
 }
 
 @media (max-width: 767px) {
-  body.gv-has-site-ticker .gv-mob-header {
-    top: 44px !important;
-  }
   body.gv-has-site-ticker #vault-interior.gv-mobile-active #gv-vault-content {
-    padding-top: calc(56px + 44px) !important;
+    padding-top: calc(56px + var(--gv-ticker-h)) !important;
   }
   body.gv-has-site-ticker #vault-interior.gv-mobile-active.gv-has-breaking #gv-vault-content {
-    padding-top: calc(100px + 44px) !important;
+    padding-top: calc(100px + var(--gv-ticker-h)) !important;
   }
   body.gv-has-site-ticker .gv-breaking-banner {
-    top: calc(56px + 44px) !important;
+    top: calc(56px + var(--gv-ticker-h)) !important;
   }
 }
