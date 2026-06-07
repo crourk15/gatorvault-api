@@ -1,0 +1,255 @@
+{
+  "updatedAt": "2026-06-07T14:19:51.492Z",
+  "history": {
+    "raheem-floyd-242853": [
+      {
+        "direction": "cooling",
+        "trigger": "prediction_other",
+        "predictionSchool": "Indiana",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:15.535Z"
+      }
+    ],
+    "amare-patterson-243198": [
+      {
+        "direction": "rising",
+        "trigger": "rpm_uf",
+        "predictionSchool": "Florida",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:15.640Z"
+      },
+      {
+        "direction": "rising",
+        "trigger": "visit_uf_leads",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:17:15.640Z"
+      },
+      {
+        "direction": "rising",
+        "trigger": "decision_soon_uf",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:17:15.640Z"
+      },
+      {
+        "direction": "rising",
+        "trigger": "rpm_uf",
+        "predictionSchool": "Florida",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:19:49.324Z"
+      },
+      {
+        "direction": "rising",
+        "trigger": "visit_uf_leads",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:19:49.324Z"
+      },
+      {
+        "direction": "rising",
+        "trigger": "decision_soon_uf",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:19:49.324Z"
+      }
+    ],
+    "marquis-evans-250285": [
+      {
+        "direction": "cooling",
+        "trigger": "competitor_offer",
+        "predictionSchool": "Auburn",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:15.592Z"
+      }
+    ],
+    "seth-williams-284423": [
+      {
+        "direction": "rising",
+        "trigger": "visit_uf_leads",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:17:15.794Z"
+      },
+      {
+        "direction": "cooling",
+        "trigger": "competitor_offer",
+        "predictionSchool": "Clemson",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:15.794Z"
+      },
+      {
+        "direction": "rising",
+        "trigger": "visit_uf_leads",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:19:49.387Z"
+      },
+      {
+        "direction": "cooling",
+        "trigger": "competitor_offer",
+        "predictionSchool": "Clemson",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:19:49.387Z"
+      }
+    ],
+    "jaydee-lane-285808": [
+      {
+        "direction": "cooling",
+        "trigger": "prediction_other",
+        "predictionSchool": "Mississippi State",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:15.856Z"
+      }
+    ],
+    "eric-mcfarland-240411": [
+      {
+        "direction": "cooling",
+        "trigger": "competitor_offer",
+        "predictionSchool": "Texas A&M",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:15.809Z"
+      }
+    ],
+    "adryan-cole-238584": [
+      {
+        "direction": "rising",
+        "trigger": "visit_uf_leads",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:17:16.047Z"
+      },
+      {
+        "direction": "cooling",
+        "trigger": "competitor_offer",
+        "predictionSchool": "Georgia",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:16.047Z"
+      },
+      {
+        "direction": "rising",
+        "trigger": "visit_uf_leads",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:19:49.871Z"
+      },
+      {
+        "direction": "cooling",
+        "trigger": "competitor_offer",
+        "predictionSchool": "Georgia",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:19:49.871Z"
+      }
+    ],
+    "andre-hyppolite-285163": [
+      {
+        "direction": "rising",
+        "trigger": "visit_uf_leads",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:17:16.096Z"
+      },
+      {
+        "direction": "cooling",
+        "trigger": "competitor_offer",
+        "predictionSchool": "Miami",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:16.096Z"
+      },
+      {
+        "direction": "rising",
+        "trigger": "visit_uf_leads",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:19:50.034Z"
+      },
+      {
+        "direction": "cooling",
+        "trigger": "competitor_offer",
+        "predictionSchool": "Miami",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:19:50.034Z"
+      }
+    ],
+    "elijah-guertin-285233": [
+      {
+        "direction": "rising",
+        "trigger": "visit_uf_leads",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:17:16.255Z"
+      },
+      {
+        "direction": "rising",
+        "trigger": "decision_soon_uf",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:17:16.255Z"
+      },
+      {
+        "direction": "cooling",
+        "trigger": "prediction_other",
+        "predictionSchool": "Penn State",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:16.255Z"
+      },
+      {
+        "direction": "rising",
+        "trigger": "visit_uf_leads",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:19:50.129Z"
+      },
+      {
+        "direction": "rising",
+        "trigger": "decision_soon_uf",
+        "predictionSchool": "Florida",
+        "insider": "On3",
+        "recordedAt": "2026-06-07T14:19:50.129Z"
+      },
+      {
+        "direction": "cooling",
+        "trigger": "prediction_other",
+        "predictionSchool": "Penn State",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:19:50.129Z"
+      }
+    ],
+    "rashaad-silver-243501": [
+      {
+        "direction": "cooling",
+        "trigger": "competitor_offer",
+        "predictionSchool": "Georgia",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:16.416Z"
+      }
+    ],
+    "antonio-berry-250413": [
+      {
+        "direction": "cooling",
+        "trigger": "competitor_offer",
+        "predictionSchool": "Ole Miss",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:16.343Z"
+      }
+    ],
+    "trey-martin-260991": [
+      {
+        "direction": "cooling",
+        "trigger": "competitor_offer",
+        "predictionSchool": "Alabama",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:17.365Z"
+      }
+    ],
+    "kenaz-sullivan-250292": [
+      {
+        "direction": "cooling",
+        "trigger": "competitor_offer",
+        "predictionSchool": "Ohio State",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-07T14:17:16.637Z"
+      }
+    ]
+  }
+}

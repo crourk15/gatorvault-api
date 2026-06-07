@@ -55,7 +55,7 @@ function mountRecruitingRoutes(app) {
 
   app.get('/api/recruiting/heat-check', async (req, res) => {
     try {
-      const heatCheck = await buildHeatCheck();
+      const heatCheck = await buildHeatCheck({ force: req.query.force === '1' || req.query.live === '1' });
       return res.json(heatCheck);
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -64,13 +64,14 @@ function mountRecruitingRoutes(app) {
 
   app.get('/api/recruiting/feed', async (req, res) => {
     try {
+      const forceHeat = req.query.force === '1' || req.query.live === '1';
       const [board2027, board2026, portal, rankings, events, heatCheck] = await Promise.all([
         store.getBoard(2027),
         store.getBoard(2026),
         store.getPortalBoard(),
         store.getRankings(),
         store.getEvents({ since: req.query.since, limit: parseInt(req.query.limit || '30', 10) }),
-        buildHeatCheck()
+        buildHeatCheck({ force: forceHeat })
       ]);
       return res.json({
         ok: true,

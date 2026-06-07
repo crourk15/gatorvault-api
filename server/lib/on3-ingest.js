@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const store = require('./recruiting-store');
 const on3 = require('./on3-client');
+const { clearHeatCheckCache } = require('./heat-check-store');
 
 const SNAPSHOT_PATH = path.join(store.DATA_DIR, 'on3-snapshot.json');
 const INGEST_LOG_PATH = path.join(store.DATA_DIR, 'on3-ingest-log.json');
@@ -227,6 +228,7 @@ async function runOn3Ingest(options = {}) {
   snapshot.initialized = true;
   snapshot.lastRun = result.lastRun;
   saveSnapshot(snapshot);
+  clearHeatCheckCache();
   pushLog({
     level: 'info',
     baseline: result.baseline,

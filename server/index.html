@@ -3549,7 +3549,9 @@
         var html='<div class="heat-check-card '+cls+'">';
         html+='<div class="flex items-start justify-between gap-2 mb-2 flex-wrap">';
         html+='<div class="flex items-center gap-2 flex-wrap">';
-        html+=item.playerSlug?gvPlayerLink(item.playerName,item.playerSlug):('<span class="font-display font-bold text-white">'+gvEscHtml(item.playerName)+'</span>');
+        html+=item.on3Slug||/\d{5,}/.test(item.playerSlug||'')
+            ?'<a href="https://www.on3.com/rivals/'+gvEscHtml(item.playerSlug)+'/" target="_blank" rel="noopener noreferrer" class="font-display font-bold text-white hover:text-gator-orange">'+gvEscHtml(item.playerName)+'</a>'
+            :gvPlayerLink(item.playerName,item.playerSlug);
         if(item.pos)html+='<span class="pos-pill-2027">'+gvEscHtml(item.pos)+'</span>';
         if(item.classYear)html+='<span class="text-[.65rem] text-surface-200/50">'+item.classYear+'</span>';
         html+='</div>';
@@ -3583,10 +3585,14 @@
         var hc=window._gvHeatCheck||{rising:[],cooling:[]};
         var rising=hc.rising||[];
         var cooling=hc.cooling||[];
+        var meta=hc.meta||{};
+        var liveNote=hc.live?'Live On3 RPM + visits · Gators Online beat intel':'';
+        if(meta.fetchMs)liveNote+=' · refreshed '+Math.round(meta.fetchMs/1000)+'s ago';
+        if(meta.excludedCommitted)liveNote+=' · '+meta.excludedCommitted+' committed removed';
         el.innerHTML='<div class="flex flex-wrap items-center justify-between gap-2 mb-1">'
             +'<h3 class="font-display text-lg font-bold text-white">Heat Check — '+gvEscHtml(stamp)+'</h3>'
-            +'<span class="text-[.65rem] font-bold uppercase tracking-wider text-gator-orange bg-gator-orange/10 px-2 py-1 rounded-full">⚔️ War Room</span></div>'
-            +'<p class="text-surface-200 text-sm mb-4">Crystal Ball &amp; insider momentum only — uncommitted targets trending toward (or away from) Florida. Refreshes with the recruiting board.</p>'
+            +'<span class="text-[.65rem] font-bold uppercase tracking-wider text-gator-orange bg-gator-orange/10 px-2 py-1 rounded-full">⚔️ War Room · LIVE</span></div>'
+            +'<p class="text-surface-200 text-sm mb-4">Crystal Ball &amp; On3 RPM only — uncommitted targets trending toward (or away from) Florida. '+gvEscHtml(liveNote)+'</p>'
             +'<div class="bg-surface-700 border border-green-500/20 rounded-xl p-4"><h4 class="font-display font-bold text-green-400 mb-3">🔥 RISING</h4><div class="space-y-1">'
             +(rising.length?rising.map(gvRenderHeatCheckCard).join(''):'<p class="text-surface-200/60 text-sm">No rising insider signals right now.</p>')
             +'</div></div>'
@@ -3629,7 +3635,8 @@
 
     function gvLoadRecruitingLive(force){
         var base=gvRecruitApiBase();
-        return fetch(base+'/api/recruiting/feed').then(function(r){if(!r.ok)throw new Error('API '+r.status);return r.json();}).then(function(feed){
+        var url=base+'/api/recruiting/feed'+(force?'?force=1&live=1':'');
+        return fetch(url).then(function(r){if(!r.ok)throw new Error('API '+r.status);return r.json();}).then(function(feed){
             if(gvApplyRecruitingFeed(feed)){
                 try{renderRecruits();}catch(e){}
                 try{renderHeatCheck();}catch(e){}
