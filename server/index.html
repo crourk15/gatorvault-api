@@ -147,6 +147,13 @@
         .pos-pill-2027{background:rgba(0,48,135,.5);color:#93c5fd;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.5px;}
         .instate-tag{background:rgba(52,211,153,.12);color:#34d399;font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.5px;}
         .watch-card{background:#0a1628;border:1px solid rgba(251,191,36,.25);border-left:3px solid #fbbf24;border-radius:.75rem;padding:1rem 1.25rem;}
+        .heat-check-card{background:#060f1f;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:14px 16px;margin-bottom:10px;transition:border-color .18s ease,transform .18s ease;}
+        .heat-check-card.rising{border-left:3px solid #4ade80;}
+        .heat-check-card.cooling{border-left:3px solid #60a5fa;}
+        .heat-check-card:hover{border-color:rgba(250,70,22,.35);}
+        .heat-trigger-pill{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:9999px;background:rgba(250,70,22,.12);color:#fb923c;}
+        .heat-source-pill{font-size:.65rem;font-weight:600;padding:2px 8px;border-radius:9999px;background:rgba(0,48,135,.35);color:#93c5fd;}
+        .heat-lock-panel{background:linear-gradient(135deg,#1a0f05,#060f1f);border:2px solid rgba(250,70,22,.35);border-radius:1rem;padding:2rem;text-align:center;}
         .an-stat-card{background:#0a1628;border:2px solid rgba(0,48,135,.25);border-radius:1rem;padding:1.25rem;text-align:center;}
         .an-link-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.625rem 1.25rem;border-radius:.5rem;font-size:.85rem;font-weight:700;background:transparent;color:#FA4616;border:2px solid rgba(250,70,22,.4);cursor:pointer;transition:all .2s;text-decoration:none;min-height:44px;}
         .an-link-btn:hover{background:rgba(250,70,22,.1);border-color:#FA4616;}
@@ -662,7 +669,7 @@
                         <h3 data-id="336" class="font-display text-2xl font-bold text-white mb-1">🎬 Film Room</h3>
                         <div data-id="337" class="flex items-baseline gap-1 mb-1"><span data-id="338" class="font-display text-4xl font-bold text-white price-val" data-mo="19.99" data-yr="15.99">$19.99</span><span data-id="339" class="text-surface-200 text-sm price-per">/month</span></div>
                         <p data-id="340" class="text-xs text-green-400 mb-5 h-4 price-save hidden">$191.88/year — save 20%</p>
-                        <ul data-id="341" class="space-y-3 mb-8 flex-1 text-sm text-surface-200"><li data-id="342" class="flex items-start gap-2"><i data-id="343" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Everything in Locker Room</li><li data-id="344" class="flex items-start gap-2"><i data-id="345" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>🔥 Heat Check reports</li><li data-id="346" class="flex items-start gap-2"><i data-id="347" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>5 target profiles + comps</li><li data-id="348" class="flex items-start gap-2"><i data-id="349" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Game-week cards</li><li data-id="350" class="flex items-start gap-2"><i data-id="351" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Storyline tracking</li><li data-id="352" class="flex items-start gap-2"><i data-id="353" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>🏅 Founding Member badge</li></ul>
+                        <ul data-id="341" class="space-y-3 mb-8 flex-1 text-sm text-surface-200"><li data-id="342" class="flex items-start gap-2"><i data-id="343" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Everything in Locker Room</li><li data-id="346" class="flex items-start gap-2"><i data-id="347" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>5 target profiles + comps</li><li data-id="348" class="flex items-start gap-2"><i data-id="349" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Game-week cards</li><li data-id="350" class="flex items-start gap-2"><i data-id="351" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Storyline tracking</li><li data-id="352" class="flex items-start gap-2"><i data-id="353" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>🏅 Founding Member badge</li></ul>
                         <button data-id="354" class="join-btn w-full bg-gator-orange hover:bg-gator-orangedk text-white font-bold py-3 rounded-xl transition min-h-[44px]" data-tier="film" onclick="if(window.openRegModal)openRegModal(this.dataset.tier)">Start Free — No Card Required</button>
                         <p data-id="355" style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;">30 days free · No card needed · Then $19.99/mo</p>
                     </div>
@@ -670,7 +677,7 @@
                         <h3 data-id="357" class="font-display text-2xl font-bold text-white mb-1">⚔️ War Room</h3>
                         <div data-id="358" class="flex items-baseline gap-1 mb-1"><span data-id="359" class="font-display text-4xl font-bold text-white price-val" data-mo="39.99" data-yr="31.99">$39.99</span><span data-id="360" class="text-surface-200 text-sm price-per">/month</span></div>
                         <p data-id="361" class="text-xs text-green-400 mb-5 h-4 price-save hidden">$383.88/year — save 20%</p>
-                        <ul data-id="362" class="space-y-3 mb-8 flex-1 text-sm text-surface-200"><li data-id="363" class="flex items-start gap-2"><i data-id="364" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Everything in Film Room</li><li data-id="365" class="flex items-start gap-2"><i data-id="366" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Film Room exclusive articles</li><li data-id="367" class="flex items-start gap-2"><i data-id="368" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Coaching Intel</li><li data-id="369" class="flex items-start gap-2"><i data-id="370" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Game-day pack every game</li><li data-id="371" class="flex items-start gap-2"><i data-id="372" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Priority Q&A + early access</li><li data-id="373" class="flex items-start gap-2"><i data-id="374" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>🏅 Founding Member badge</li></ul>
+                        <ul data-id="362" class="space-y-3 mb-8 flex-1 text-sm text-surface-200"><li data-id="363" class="flex items-start gap-2"><i data-id="364" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Everything in Film Room</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>🔥 Heat Check — Crystal Ball &amp; insider momentum</li><li data-id="365" class="flex items-start gap-2"><i data-id="366" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Film Room exclusive articles</li><li data-id="367" class="flex items-start gap-2"><i data-id="368" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Coaching Intel</li><li data-id="369" class="flex items-start gap-2"><i data-id="370" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Game-day pack every game</li><li data-id="371" class="flex items-start gap-2"><i data-id="372" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Priority Q&amp;A + early access</li><li data-id="373" class="flex items-start gap-2"><i data-id="374" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>🏅 Founding Member badge</li></ul>
                         <button data-id="375" class="join-btn w-full bg-gator-blue hover:bg-gator-lightblue text-white font-semibold py-3 rounded-xl transition min-h-[44px]" data-tier="war" onclick="if(window.openRegModal)openRegModal(this.dataset.tier)">Start Free — No Card Required</button>
                         <p data-id="376" style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;">30 days free · No card needed · Then $39.99/mo</p>
                     </div>
@@ -689,7 +696,7 @@
                     <div data-id="393" class="bg-surface-700 border border-gator-blue/20 rounded-xl overflow-hidden"><button data-id="394" class="faq-btn w-full flex items-center justify-between p-5 text-left min-h-[44px]"><span data-id="395" class="font-semibold text-white text-sm md:text-base">How often is content updated?</span><span data-id="396" class="faq-arr text-surface-200 text-xl font-bold">+</span></button><div data-id="397" class="faq-ans px-5 pb-5 text-surface-200 text-sm leading-relaxed">Monday depth chart, Wednesday article, 72 hours before kickoff game-week content drops, and a Monday newsletter every week during the season.</div></div>
                     <div data-id="398" class="bg-surface-700 border border-gator-blue/20 rounded-xl overflow-hidden"><button data-id="399" class="faq-btn w-full flex items-center justify-between p-5 text-left min-h-[44px]"><span data-id="400" class="font-semibold text-white text-sm md:text-base">What is the Founding Member badge?</span><span data-id="401" class="faq-arr text-surface-200 text-xl font-bold">+</span></button><div data-id="402" class="faq-ans px-5 pb-5 text-surface-200 text-sm leading-relaxed">The first 100 subscribers receive a permanent 🏅 Founding Member badge displayed in the community and across their profile. It never expires.</div></div>
                     <div data-id="403" class="bg-surface-700 border border-gator-blue/20 rounded-xl overflow-hidden"><button data-id="404" class="faq-btn w-full flex items-center justify-between p-5 text-left min-h-[44px]"><span data-id="405" class="font-semibold text-white text-sm md:text-base">Can I cancel anytime?</span><span data-id="406" class="faq-arr text-surface-200 text-xl font-bold">+</span></button><div data-id="407" class="faq-ans px-5 pb-5 text-surface-200 text-sm leading-relaxed">Yes. Cancel anytime through the Stripe billing portal. You'll retain access through the end of your current billing period. Cancel during the free trial and you owe nothing.</div></div>
-                    <div data-id="408" class="bg-surface-700 border border-gator-blue/20 rounded-xl overflow-hidden"><button data-id="409" class="faq-btn w-full flex items-center justify-between p-5 text-left min-h-[44px]"><span data-id="410" class="font-semibold text-white text-sm md:text-base">Film Room vs War Room — what's the difference?</span><span data-id="411" class="faq-arr text-surface-200 text-xl font-bold">+</span></button><div data-id="412" class="faq-ans px-5 pb-5 text-surface-200 text-sm leading-relaxed">Film Room gets recruiting intel, Heat Check reports, and game-week cards. War Room adds exclusive film articles, coaching intel, game-day packs for every game, and priority Q&A with the editorial team.</div></div>
+                    <div data-id="408" class="bg-surface-700 border border-gator-blue/20 rounded-xl overflow-hidden"><button data-id="409" class="faq-btn w-full flex items-center justify-between p-5 text-left min-h-[44px]"><span data-id="410" class="font-semibold text-white text-sm md:text-base">Film Room vs War Room — what's the difference?</span><span data-id="411" class="faq-arr text-surface-200 text-xl font-bold">+</span></button><div data-id="412" class="faq-ans px-5 pb-5 text-surface-200 text-sm leading-relaxed">Film Room gets recruiting intel, target profiles, and game-week cards. War Room adds 🔥 Heat Check (Crystal Ball &amp; insider momentum), exclusive film articles, coaching intel, game-day packs for every game, and priority Q&amp;A with the editorial team.</div></div>
                 </div>
             </div>
         </section>
@@ -917,7 +924,7 @@
                     <div data-id="552" class="flex gap-2 flex-wrap">
                         <button data-id="553" class="rec-tab active bg-gator-orange text-white text-xs font-bold px-4 py-2 rounded-lg" data-rtab="c2026">2026 Class</button>
                         <button data-id="554" class="rec-tab bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-rtab="b2027">2027 Board</button>
-                        <button data-id="555" class="rec-tab bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-rtab="heat">🔥 Heat Check</button>
+                        <button data-id="555" class="rec-tab bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-rtab="heat">🔥 Heat Check <span class="text-[.6rem] opacity-70">⚔️</span></button>
                     </div>
                     <div data-id="556" id="rpane-c2026" class="rpane active">
                         <div data-id="557" class="flex flex-wrap gap-4 mb-4">
@@ -2290,10 +2297,15 @@
 
     // ========== RECRUITING TABS ==========
     document.querySelectorAll('.rec-tab').forEach(function(b){b.addEventListener('click',function(){
+        if(this.dataset.rtab==='heat'&&!canRead('war')){
+            showToast('War Room required','Heat Check is a War Room feature — Crystal Ball picks and insider momentum only.','',5000);
+            if(typeof openRegModal==='function')setTimeout(function(){openRegModal('war');},600);
+        }
         document.querySelectorAll('.rec-tab').forEach(function(x){x.classList.remove('active','bg-gator-orange','text-white');x.classList.add('bg-surface-700','text-surface-200');});
         this.classList.add('active','bg-gator-orange','text-white');this.classList.remove('bg-surface-700','text-surface-200');
         document.querySelectorAll('.rpane').forEach(function(p){p.style.display='none';});
         var target=document.getElementById('rpane-'+this.dataset.rtab);if(target)target.style.display='block';
+        if(this.dataset.rtab==='heat')try{renderHeatCheck();}catch(e){}
     });});
 
     // ========== DATA ==========
@@ -3531,27 +3543,56 @@
         var name=String(p.name||'').toLowerCase();
         return slug==='test-recruit'||name==='test recruit';
     }
+    function gvRenderHeatCheckCard(item){
+        var cls=item.direction==='rising'?'rising':'cooling';
+        var srcLabel=item.insider||(item.source==='gators_online'?'Gators Online':(item.source==='on3'?'On3':item.source));
+        var html='<div class="heat-check-card '+cls+'">';
+        html+='<div class="flex items-start justify-between gap-2 mb-2 flex-wrap">';
+        html+='<div class="flex items-center gap-2 flex-wrap">';
+        html+=item.playerSlug?gvPlayerLink(item.playerName,item.playerSlug):('<span class="font-display font-bold text-white">'+gvEscHtml(item.playerName)+'</span>');
+        if(item.pos)html+='<span class="pos-pill-2027">'+gvEscHtml(item.pos)+'</span>';
+        if(item.classYear)html+='<span class="text-[.65rem] text-surface-200/50">'+item.classYear+'</span>';
+        html+='</div>';
+        html+='<span class="heat-source-pill">'+gvEscHtml(srcLabel)+'</span></div>';
+        html+='<div class="flex flex-wrap gap-2 mb-2">';
+        html+='<span class="heat-trigger-pill">'+gvEscHtml(item.triggerLabel)+'</span>';
+        if(item.predictionSchool)html+='<span class="text-[.65rem] font-semibold text-surface-200/70">→ '+gvEscHtml(item.predictionSchool)+'</span>';
+        if(item.decisionDate)html+='<span class="text-[.65rem] text-yellow-400/90">Decision: '+gvEscHtml(item.decisionDate)+'</span>';
+        html+='</div>';
+        if(item.headline)html+='<p class="text-sm font-semibold text-white leading-snug mb-1">'+gvEscHtml(item.headline)+'</p>';
+        if(item.detail)html+='<p class="text-xs text-surface-200/75 leading-relaxed">'+gvEscHtml(item.detail)+'</p>';
+        if(item.movement)html+='<p class="text-[.65rem] text-gator-orange font-bold mt-2">↕ '+gvEscHtml(item.movement)+(item.priorTriggerLabel?' · was '+gvEscHtml(item.priorTriggerLabel):'')+'</p>';
+        else if(item.recordedAt)html+='<p class="text-[.65rem] text-surface-200/40 mt-2">Updated '+gvEscHtml(gvLiveTimeAgo(item.recordedAt))+'</p>';
+        html+='</div>';
+        return html;
+    }
+
     function renderHeatCheck(){
         var el=document.getElementById('heat-check-content');
         if(!el)return;
-        var now=new Date();
-        var stamp=now.toLocaleString('en-US',{month:'long',year:'numeric'});
-        var rising=[];
-        (class2027||[]).filter(function(c){return !gvIsTestRecruitPlayer(c);}).slice().sort(function(a,b){return String(b.date||'').localeCompare(String(a.date||''));}).slice(0,5).forEach(function(c){
-            var note=c.skinny||(c.inState?'In-state commit':'On3 composite '+gvFmtRating(c.rating));
-            rising.push('<p><strong class="text-white">'+gvEscHtml(c.name)+' ('+gvEscHtml(c.pos)+')</strong> — Committed '+gvEscHtml(c.date||'recently')+'. '+gvEscHtml(note)+'.</p>');
-        });
-        (targets2027||[]).forEach(function(t){
-            rising.push('<p><strong class="text-white">'+gvEscHtml(t.name)+' ('+gvEscHtml(t.pos)+')</strong> — '+gvEscHtml(t.note)+'</p>');
-        });
-        var cooling=[
-            '<p><strong class="text-white">Ryan Tillman (WR, Katy TX)</strong> — On3: Tennessee gaining ground; Florida needs an urgent campus visit.</p>',
-            '<p><strong class="text-white">Keondre Jackson (DL)</strong> — Gators Online (Corey Bender): Georgia offer has complicated Florida\'s lead.</p>'
-        ];
-        el.innerHTML='<h3 class="font-display text-lg font-bold text-white mb-1">Heat Check — '+gvEscHtml(stamp)+'</h3>'
-            +'<p class="text-surface-200 text-sm mb-4">Live momentum from On3 commits/targets and Gators Online intel. Refreshes with the recruiting board.</p>'
-            +'<div class="bg-surface-700 border border-green-500/20 rounded-xl p-4"><h4 class="font-display font-bold text-green-400 mb-2">🔥 RISING</h4><div class="space-y-2 text-sm text-surface-200">'+(rising.length?rising.join(''):'<p class="text-surface-200/60">No rising signals in the current board.</p>')+'</div></div>'
-            +'<div class="bg-surface-700 border border-blue-500/20 rounded-xl p-4 mt-3"><h4 class="font-display font-bold text-blue-400 mb-2">❄️ COOLING</h4><div class="space-y-2 text-sm text-surface-200">'+cooling.join('')+'</div></div>';
+        var stamp=new Date().toLocaleString('en-US',{month:'long',year:'numeric'});
+        if(!canRead('war')){
+            el.innerHTML='<div class="heat-lock-panel">'
+                +'<div class="text-4xl mb-3">⚔️</div>'
+                +'<h3 class="font-display text-xl font-bold text-white mb-2">Heat Check — War Room</h3>'
+                +'<p class="text-sm text-surface-200/80 mb-4 max-w-md mx-auto">Crystal Ball picks, On3 RPM, and insider momentum from Wiltfong, Bender, Alderman &amp; Gators Online. Who\'s next — not who already committed.</p>'
+                +'<button type="button" class="bg-gator-orange hover:bg-gator-orangedk text-white font-bold px-6 py-3 rounded-xl" onclick="if(window.openRegModal)openRegModal(\'war\')">Upgrade to War Room →</button>'
+                +'</div>';
+            return;
+        }
+        var hc=window._gvHeatCheck||{rising:[],cooling:[]};
+        var rising=hc.rising||[];
+        var cooling=hc.cooling||[];
+        el.innerHTML='<div class="flex flex-wrap items-center justify-between gap-2 mb-1">'
+            +'<h3 class="font-display text-lg font-bold text-white">Heat Check — '+gvEscHtml(stamp)+'</h3>'
+            +'<span class="text-[.65rem] font-bold uppercase tracking-wider text-gator-orange bg-gator-orange/10 px-2 py-1 rounded-full">⚔️ War Room</span></div>'
+            +'<p class="text-surface-200 text-sm mb-4">Crystal Ball &amp; insider momentum only — uncommitted targets trending toward (or away from) Florida. Refreshes with the recruiting board.</p>'
+            +'<div class="bg-surface-700 border border-green-500/20 rounded-xl p-4"><h4 class="font-display font-bold text-green-400 mb-3">🔥 RISING</h4><div class="space-y-1">'
+            +(rising.length?rising.map(gvRenderHeatCheckCard).join(''):'<p class="text-surface-200/60 text-sm">No rising insider signals right now.</p>')
+            +'</div></div>'
+            +'<div class="bg-surface-700 border border-blue-500/20 rounded-xl p-4 mt-3"><h4 class="font-display font-bold text-blue-400 mb-3">❄️ COOLING</h4><div class="space-y-1">'
+            +(cooling.length?cooling.map(gvRenderHeatCheckCard).join(''):'<p class="text-surface-200/60 text-sm">No cooling signals right now.</p>')
+            +'</div></div>';
     }
     function gvApplyRecruitingFeed(feed){
         if(!feed||!feed.ok)return false;
@@ -3576,6 +3617,7 @@
             gvRefreshPortalSlugSet();
         }
         if(feed.rankings){feed.rankings.forEach(function(r){window._gvRankings[r.classYear]=r;});}
+        if(feed.heatCheck){window._gvHeatCheck=feed.heatCheck;}
         window._gvRecruitingLiveReady=true;
         try{
             recentAlerts=recentAlerts.map(gvReclassifyAlert).filter(function(a){return a&&!gvIsSystemAlert(a);});

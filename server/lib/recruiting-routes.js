@@ -1,5 +1,6 @@
 const store = require('./recruiting-store');
 const { runOn3Ingest, getIngestStatus } = require('./on3-ingest');
+const { buildHeatCheck } = require('./heat-check-store');
 
 const RECRUITING_ADMIN_PIN = process.env.RECRUITING_ADMIN_PIN || process.env.EMAIL_TEST_PIN || 'GV2026admin';
 const INGEST_CRON_SECRET = process.env.INGEST_CRON_SECRET || RECRUITING_ADMIN_PIN;
@@ -52,14 +53,24 @@ function mountRecruitingRoutes(app) {
     }
   });
 
+  app.get('/api/recruiting/heat-check', async (req, res) => {
+    try {
+      const heatCheck = await buildHeatCheck();
+      return res.json(heatCheck);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/recruiting/feed', async (req, res) => {
     try {
-      const [board2027, board2026, portal, rankings, events] = await Promise.all([
+      const [board2027, board2026, portal, rankings, events, heatCheck] = await Promise.all([
         store.getBoard(2027),
         store.getBoard(2026),
         store.getPortalBoard(),
         store.getRankings(),
-        store.getEvents({ since: req.query.since, limit: parseInt(req.query.limit || '30', 10) })
+        store.getEvents({ since: req.query.since, limit: parseInt(req.query.limit || '30', 10) }),
+        buildHeatCheck()
       ]);
       return res.json({
         ok: true,
@@ -67,6 +78,7 @@ function mountRecruitingRoutes(app) {
         portal,
         rankings,
         events,
+        heatCheck,
         ts: Date.now()
       });
     } catch (err) {
