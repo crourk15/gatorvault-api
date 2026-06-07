@@ -94,6 +94,9 @@ body.gv-has-site-ticker #gv-mobile-header,
 body.gv-has-site-ticker .gv-mob-header {
   top: var(--gv-ticker-h) !important;
 }
+body.gv-has-site-ticker #vault-interior:not(.gv-mobile-active) {
+  padding-top: var(--gv-ticker-h) !important;
+}
 body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky {
   top: var(--gv-ticker-h) !important;
 }

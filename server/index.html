@@ -13,7 +13,7 @@
     <meta name="description" content="Built for passionate Florida Gators football fans. Depth charts, recruiting intel, transfer portal, scheme breakdowns, and game week analysis — your full UF Football hub. 30-day free trial." />
     <meta name="keywords" content="Florida Gators football, UF football, Gators recruiting, Florida Gators depth chart, Gators transfer portal, Jon Sumrall, SEC football, Gator Nation" />
     <meta name="robots" content="index, follow" />
-    <meta name="gv-build" content="c4a1f92e" />
+    <meta name="gv-build" content="c4a1f931" />
     <link rel="canonical" href="https://gatorvaultinsider.com" />
     <meta name="google-site-verification" content="CfKonZGeVMZBFJ3JhqaFhPfs7kS6-LvCmskXElgekTs" />
 
@@ -267,10 +267,6 @@
         .live-panel{background:#0a1628;border:1px solid rgba(0,48,135,.35);border-radius:1rem;padding:1rem;min-height:320px;display:flex;flex-direction:column;min-width:0;width:100%;box-sizing:border-box;align-self:stretch;}
         .live-panel h3{font-family:'Oswald',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin:0 0 .75rem;display:flex;align-items:center;gap:.5rem;flex-shrink:0;width:100%;}
         .live-panel-body{flex:1;display:flex;flex-direction:column;min-width:0;width:100%;}
-        .live-ticker-wrap{overflow:hidden;border-radius:.75rem;background:#060f1f;border:1px solid rgba(250,70,22,.2);margin-bottom:1rem;}
-        .live-ticker{display:flex;gap:2rem;padding:.65rem 0;animation:liveTicker 40s linear infinite;white-space:nowrap;}
-        @keyframes liveTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-        .live-ticker-item{font-size:.75rem;color:#e2e8f0;padding:0 1rem;border-right:1px solid rgba(255,255,255,.08);}
         .live-feed-list{flex:1;overflow-y:auto;overflow-x:hidden;max-height:520px;min-width:0;width:100%;}
         .live-feed-item{padding:.75rem;border-radius:.65rem;background:#060f1f;border:1px solid rgba(0,48,135,.25);margin-bottom:.5rem;}
         .live-feed-item--linked{cursor:pointer;}
@@ -321,10 +317,10 @@
             #vault-interior.gv-mobile-active .vpane{padding:0 16px 16px;}
             #vault-interior.gv-mobile-active #vpane-mhome,
             #vault-interior.gv-mobile-active #vpane-live,
-            #vault-interior.gv-mobile-active #vpane-beat{padding:0 0 16px;}
+            #vault-interior.gv-mobile-active #vpane-beat,
+            #vault-interior.gv-mobile-active #vpane-podcast{padding:0 0 16px;}
             #vault-interior.gv-mobile-active #vpane-live>.flex p.text-surface-200{display:none;}
             #vault-interior.gv-mobile-active #changelog-strip{display:none!important;}
-            #vault-interior.gv-mobile-active #live-ticker-wrap{display:none!important;}
 
             .gv-mob-header{position:fixed;top:var(--gv-ticker-h,44px);left:0;right:0;height:56px;background:rgba(0,18,58,.97);backdrop-filter:blur(8px);border-bottom:1px solid rgba(0,48,135,.35);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:120;}
             .gv-mob-logo{width:36px;height:36px;border-radius:8px;background:#003087;color:#fff;font-family:'Oswald',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -393,9 +389,9 @@
       };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <style id="gv-critical">:root{--gv-ticker-h:44px}#gv-site-ticker{z-index:500!important;position:fixed;top:0;left:0;right:0;height:44px}#gv-alert-banner{z-index:510!important;position:fixed;top:0;left:0;right:0}body.gv-has-site-ticker #nav-main,body.gv-has-site-ticker nav.fixed{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #gv-mobile-header,body.gv-has-site-ticker .gv-mob-header{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior .gv-desk-only.sticky.top-14{top:calc(var(--gv-ticker-h) + 3.5rem)!important}body.gv-has-site-ticker #hero-sec{padding-top:calc(8rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker #install-banner{top:calc(4rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker .gv-alert-banner{top:var(--gv-ticker-h)}</style>
-    <link rel="stylesheet" href="/gv-global.css?v=c4a1f92e">
-    <script src="/gv-global.js?v=c4a1f92e" defer></script>
+    <style id="gv-critical">:root{--gv-ticker-h:44px}#gv-site-ticker{z-index:500!important;position:fixed;top:0;left:0;right:0;height:44px}#gv-alert-banner{z-index:510!important;position:fixed;top:0;left:0;right:0}body.gv-has-site-ticker #nav-main,body.gv-has-site-ticker nav.fixed{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #gv-mobile-header,body.gv-has-site-ticker .gv-mob-header{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior:not(.gv-mobile-active){padding-top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior .gv-desk-only.sticky.top-14{top:calc(var(--gv-ticker-h) + 3.5rem)!important}body.gv-has-site-ticker #hero-sec{padding-top:calc(8rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker #install-banner{top:calc(4rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker .gv-alert-banner{top:var(--gv-ticker-h)}</style>
+    <link rel="stylesheet" href="/gv-global.css?v=c4a1f931">
+    <script src="/gv-global.js?v=c4a1f931" defer></script>
 </head>
 <body data-id="0" class="gv-has-site-ticker">
     <app-icon data-id="1" hidden data-icon="shield" data-palette="Blue"></app-icon>
@@ -904,6 +900,15 @@
                     </section>
                 </div>
 
+                <!-- ====== MOBILE PODCASTS (dedicated tab) ====== -->
+                <div id="vpane-podcast" class="vpane gv-mob-only fade-in">
+                    <section class="gv-mob-module">
+                        <h2 class="gv-mob-module-hdr">Podcasts</h2>
+                        <p class="text-sm text-surface-200/60 mb-3">Latest GatorNation shows and episodes — tap to listen.</p>
+                        <div id="gv-mobile-podcast-list" class="space-y-3"></div>
+                    </section>
+                </div>
+
                 <!-- ====== START HERE ====== -->
                 <div data-id="500" id="vpane-start" class="vpane active fade-in space-y-6">
                     <h1 data-id="501" id="vault-welcome-title" class="font-display text-2xl md:text-3xl font-bold text-white">Welcome to GatorVault 🐊</h1>
@@ -1015,11 +1020,6 @@
                         <h1 data-id="624" class="font-display text-2xl md:text-3xl font-bold text-white">📰 Insider Articles</h1>
                         <p class="text-surface-200 text-sm mt-1 max-w-2xl">Film breakdowns, coaching intel, and roster analysis written for members who want more than surface-level takes.</p>
                     </div>
-                    <div id="articles-policy-banner" class="bg-gator-blue/10 border border-gator-blue/30 rounded-2xl p-4 md:p-5">
-                        <p class="text-xs font-bold text-gator-orange uppercase tracking-wider mb-2">Sourcing Policy</p>
-                        <p class="text-sm text-surface-200 leading-relaxed">GatorVault articles are original analysis written from verified public beat and recruiting reporting only — On3, 247Sports, Rivals Florida, Gators Online, OnlyGators, and named beat writers. Every article lists its sources below. We do not publish AI-invented intel or unsourced rumors.</p>
-                        <p id="articles-source-status" class="text-[11px] text-surface-200/50 mt-2">Loading published content…</p>
-                    </div>
                     <div data-id="625" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-5">
                         <h3 data-id="626" class="font-display text-lg font-bold text-white mb-4">Season Storylines</h3>
                         <div data-id="627" class="space-y-2" id="storylines-list"></div>
@@ -1129,7 +1129,6 @@
                         </div>
                         <button id="live-refresh-btn" type="button" class="bg-gator-orange hover:bg-gator-orangedk text-white text-xs font-bold px-4 py-2 rounded-lg min-h-[36px]">Refresh now</button>
                     </div>
-                    <div id="live-ticker-wrap" class="live-ticker-wrap hidden"><div id="live-ticker" class="live-ticker"></div></div>
                     <div id="live-status-bar" class="live-status-bar"></div>
                     <div class="live-dash-grid">
                         <div class="live-panel">
@@ -1491,6 +1490,7 @@
                     <button type="button" class="gv-more-link" data-goto="community">💬 Community</button>
                     <button type="button" class="gv-more-link" data-goto="highlights">📺 Film Room</button>
                     <button type="button" class="gv-more-link" data-goto="beat">✍️ Beat Writers</button>
+                    <button type="button" class="gv-more-link" data-goto="podcast">🎙️ Podcast</button>
                     <button type="button" class="gv-more-link" data-goto="scouting">⚔️ Scouting Database</button>
                     <button type="button" class="gv-more-link" data-goto="alerts">🔔 My Alerts</button>
                     <button type="button" class="gv-more-link" data-goto="players">👤 Players</button>
@@ -1500,7 +1500,7 @@
                 </div>
             </div>
 
-            <footer data-id="914" class="gv-desk-only text-center text-xs text-surface-200/40 py-6 border-t border-gator-blue/10 mt-8"><p data-id="915">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p><p class="text-[10px] text-surface-200/25 mt-1" id="gv-build-stamp">UI c4a1f92e</p></footer>
+            <footer data-id="914" class="gv-desk-only text-center text-xs text-surface-200/40 py-6 border-t border-gator-blue/10 mt-8"><p data-id="915">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p><p class="text-[10px] text-surface-200/25 mt-1" id="gv-build-stamp">UI c4a1f931</p></footer>
         </div>
     </div>
 
@@ -4152,16 +4152,6 @@
         el.querySelectorAll('.story-btn').forEach(function(b){b.addEventListener('click',function(){this.nextElementSibling.classList.toggle('hidden');});});
     }
 
-    function gvUpdateArticlesSourceStatus(){
-        var el=document.getElementById('articles-source-status');if(!el)return;
-        var withSources=(articles||[]).filter(function(a){return a.sources&&a.sources.length;}).length;
-        var total=(articles||[]).length;
-        if(window._gvContentLiveReady){
-            el.textContent=withSources+' of '+total+' articles loaded with verified sources (validator enforced on publish).';
-        }else{
-            el.textContent='Offline fallback — '+withSources+' of '+total+' articles show sources. Connect to API for latest.';
-        }
-    }
     function gvFormatArticleSources(sources){
         if(!sources||!sources.length)return '';
         var html='<div class="article-sources mt-4 pt-4 border-t border-gator-blue/15">';
@@ -4182,7 +4172,6 @@
     // ---- Articles ----
     function renderArticles(){
         var el=document.getElementById('articles-list');if(!el)return;el.innerHTML='';
-        gvUpdateArticlesSourceStatus();
         articles.forEach(function(a){
             var row=gvResolveContentFields(a);
             var locked=!canRead(a.tier);
@@ -4857,11 +4846,8 @@
         });
     }
 
-    function gvRenderLivePodcasts(hub){
-        var el=document.getElementById('live-podcast-list');
+    function gvRenderPodcastCardsInto(el, shows){
         if(!el)return;
-        if(gvIsMobile&&gvIsMobile())el.classList.add('gv-hscroll-track');
-        var shows=(hub&&hub.shows)||[];
         if(!shows.length){
             el.innerHTML='<p class="text-surface-200/50 text-sm">Podcast feeds loading… New episodes appear here automatically.</p>';
             return;
@@ -4888,6 +4874,22 @@
         });
         el.innerHTML=html;
         gvWirePodcastCards(el);
+    }
+
+    function gvRenderMobilePodcasts(){
+        var el=document.getElementById('gv-mobile-podcast-list');
+        if(!el)return;
+        var shows=(window._gvLive.podcasts&&window._gvLive.podcasts.shows)||[];
+        gvRenderPodcastCardsInto(el,shows);
+    }
+
+    function gvRenderLivePodcasts(hub){
+        var el=document.getElementById('live-podcast-list');
+        if(!el)return;
+        if(gvIsMobile&&gvIsMobile())el.classList.add('gv-hscroll-track');
+        var shows=(hub&&hub.shows)||[];
+        gvRenderPodcastCardsInto(el,shows);
+        gvRenderMobilePodcasts();
     }
 
     function gvRenderChangelogStrip(items){
@@ -4921,21 +4923,6 @@
         el.innerHTML=html;
     }
 
-    function gvRenderLiveTicker(items){
-        var wrap=document.getElementById('live-ticker-wrap');
-        var el=document.getElementById('live-ticker');
-        if(!wrap||!el)return;
-        var top=gvFilterLiveFeedItems(items||[]).slice(0,12);
-        if(!top.length){wrap.classList.add('hidden');return;}
-        wrap.classList.remove('hidden');
-        var chunk='';
-        top.forEach(function(item){
-            chunk+='<span class="live-ticker-item"><strong class="text-gator-orange">'+gvLiveEsc(gvLiveTypeLabel(item.type))+'</strong> '+gvLiveEsc(item.title)+' <span class="text-surface-200/40">· '+gvLiveEsc(gvLiveTimeAgo(item.createdAt))+'</span></span>';
-        });
-        el.innerHTML=chunk+chunk;
-        if(window.GV_GLOBAL&&window.GV_GLOBAL.renderSiteTicker)window.GV_GLOBAL.renderSiteTicker(items);
-    }
-
     function gvRenderLiveStatusBar(dash){
         var el=document.getElementById('live-status-bar');
         if(!el)return;
@@ -4967,7 +4954,6 @@
                 gvRenderLiveFeed(st.feed);
                 gvRenderLiveBeat(st.beat);
                 gvRenderLivePodcasts(st.podcasts);
-                gvRenderLiveTicker(st.feed);
                 gvRenderChangelogStrip(st.feed);
                 gvRenderLiveStatusBar(j);
             })
@@ -5039,16 +5025,17 @@
             if(sheet){sheet.classList.add('open');sheet.setAttribute('aria-hidden','false');}
             return;
         }
-        var map={beat:'beat',mhome:'mhome'};
+        var map={beat:'beat',mhome:'mhome',podcast:'podcast',start:'start'};
         var paneTab=map[tab]||tab;
         document.querySelectorAll('.vpane').forEach(function(p){p.classList.remove('active');p.style.display='none';});
         var pane=document.getElementById('vpane-'+paneTab);
         if(pane){pane.classList.add('active');pane.style.display='block';}
-        if(tab==='live'||tab==='beat'||tab==='mhome'){
+        if(tab==='live'||tab==='beat'||tab==='mhome'||tab==='podcast'){
             try{gvLoadLiveDashboard(false);}catch(e){}
         }
         if(tab==='recruit'){try{renderRecruits();}catch(e){}}
         if(tab==='beat'){try{gvRenderMobileBeat();}catch(e){}}
+        if(tab==='podcast'){try{gvRenderMobilePodcasts();}catch(e){}}
         if(tab==='scouting'){try{gvLoadScoutingDatabase();}catch(e){}}
         if(tab==='highlights'){try{gvLoadHighlights();}catch(e){}}
         gvMobileSetActive(tab==='mhome'?'mhome':tab);
@@ -5215,11 +5202,11 @@
                 link.addEventListener('click',function(){
                     var tab=link.getAttribute('data-goto');
                     moreSheet.classList.remove('open');
-                    if(tab)_gvShowVTabCore(tab);
-                    document.querySelectorAll('.vpane').forEach(function(p){p.classList.remove('active');p.style.display='none';});
-                    var pane=document.getElementById('vpane-'+tab);
-                    if(pane){pane.classList.add('active');pane.style.display='block';}
-                    gvMobileSetActive('more');
+                    moreSheet.setAttribute('aria-hidden','true');
+                    if(tab){
+                        gvMobileShowTab(tab);
+                        gvMobileSetActive('more');
+                    }
                 });
             });
         }
@@ -5238,11 +5225,12 @@
         var scrollRoot=document.getElementById('vault-overlay');
         var ptrStartY=0,ptrPull=0,ptrActive=false;
         function gvPtrRefresh(tab){
-            if(tab==='live'||tab==='beat'||tab==='mhome')gvLoadLiveDashboard(true);
+            if(tab==='live'||tab==='beat'||tab==='mhome'||tab==='podcast')gvLoadLiveDashboard(true);
             if(tab==='recruit'){try{renderRecruits();}catch(e){}}
             if(tab==='scouting'){try{gvLoadScoutingDatabase();}catch(e){}}
             gvRenderMobileHome();
             if(tab==='beat')gvRenderMobileBeat();
+            if(tab==='podcast')gvRenderMobilePodcasts();
         }
         if(scrollRoot&&ptr){
             scrollRoot.addEventListener('touchstart',function(e){
