@@ -10,8 +10,8 @@ const EVENT_TYPE_MAP = {
   decommit: 'commit',
   portal_in: 'portal',
   portal_out: 'portal',
-  target_update: 'breaking',
-  ranking_change: 'breaking'
+  target_update: 'offers',
+  ranking_change: null
 };
 
 function isTestRecruitingEvent(ev) {
@@ -25,23 +25,29 @@ function isTestRecruitingEvent(ev) {
 
 async function ingestRecruitingEvents() {
   const events = await recruitingStore.getEvents({ limit: 200 });
+  const playerIndex = liveStore.loadPlayerIndex();
   let count = 0;
   events.forEach((ev) => {
     if (isTestRecruitingEvent(ev)) return;
-    const type = EVENT_TYPE_MAP[ev.eventType] || 'breaking';
-    liveStore.upsertFeedItem({
-      id: `rec_${ev.id}`,
-      dedupeKey: `rec_${ev.id}`,
-      type,
-      title: ev.title,
-      summary: ev.skinny || ev.detail || '',
-      source_url: ev.playerSlug ? `/player/${ev.playerSlug}` : '/recruit',
-      imageUrl: null,
-      source: ev.source || 'on3',
-      author: 'GatorVault Recruiting',
-      createdAt: ev.createdAt,
-      meta: { eventType: ev.eventType, playerSlug: ev.playerSlug, on3: true }
-    });
+    const player = playerIndex.bySlug.get(ev.playerSlug) || ev.payload?.player || null;
+    const classified = liveStore.classifyFeedItem(
+      {
+        id: `rec_${ev.id}`,
+        dedupeKey: `rec_${ev.id}`,
+        type: EVENT_TYPE_MAP[ev.eventType] || 'breaking',
+        title: ev.title,
+        summary: ev.skinny || ev.detail || '',
+        source_url: ev.playerSlug ? `/player/${ev.playerSlug}` : '/recruit',
+        imageUrl: null,
+        source: ev.source || 'on3',
+        author: 'GatorVault Recruiting',
+        createdAt: ev.createdAt,
+        meta: { eventType: ev.eventType, playerSlug: ev.playerSlug, player, on3: true }
+      },
+      playerIndex
+    );
+    if (!classified) return;
+    liveStore.upsertFeedItem(classified);
     count += 1;
   });
   return count;
@@ -74,8 +80,9 @@ function ingestPublishedContent() {
 }
 
 async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting = true } = {}) {
-  const results = { recruiting: 0, content: 0, beat: null, podcasts: null };
+  const results = { recruiting: 0, content: 0, beat: null, podcasts: null, reclassified: null };
   liveStore.purgeTestFeedItems();
+  results.reclassified = liveStore.reclassifyFeedItems();
   if (recruiting) results.recruiting = await ingestRecruitingEvents();
   results.content = ingestPublishedContent();
   if (beat) {
@@ -97,7 +104,7 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
 
 function getDashboard({ feedLimit = 60 } = {}) {
   return {
-    feed: liveStore.getFeedItems({ limit: feedLimit }),
+    feed: liveStore.getFeedItems({ limit: feedLimit, categoriesOnly: true }),
     beat: getBeatPosts(40),
     podcasts: getPodcastHub(),
     updatedAt: liveStore.nowIso()

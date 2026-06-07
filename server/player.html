@@ -104,7 +104,58 @@
 
     function on3Url(p) {
       if (p.on3Id) return 'https://www.on3.com/db/' + p.on3Id + '-';
+      if (p.category === 'portal') return 'https://www.on3.com/college/florida-gators/football/transfer-portal/';
       return 'https://www.on3.com/college/florida-gators/recruiting/';
+    }
+
+    function portalStatusLabel(s) {
+      var st = String(s || 'enrolled').toLowerCase();
+      if (st === 'enrolled') return 'Enrolled at Florida';
+      if (st === 'committed') return 'Committed to Florida';
+      if (st === 'portal_in') return 'In Transfer Portal';
+      return st.charAt(0).toUpperCase() + st.slice(1);
+    }
+
+    function renderPortal(p, events) {
+      document.title = p.name + ' — Portal Transfer · GatorVault';
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('profile').classList.remove('hidden');
+      document.getElementById('p-headshot-wrap').innerHTML = headshotHtml(p.slug || slug, p.name);
+      document.getElementById('p-name').textContent = p.name;
+      document.getElementById('p-meta').textContent = ['🔄 Portal Transfer', p.pos, stars(p.stars)].filter(Boolean).join(' · ');
+      document.getElementById('p-stars').textContent = (p.fromSchool ? 'From ' + p.fromSchool : '')
+        + (p.committedTo ? ' · To ' + p.committedTo : ' · To Florida');
+      document.getElementById('p-rating').textContent = 'On3';
+      document.getElementById('p-rating').className = 'rating-badge rating-solid text-xs';
+      document.getElementById('p-rating-note').textContent = 'Transfer portal profile';
+      document.getElementById('p-injury').textContent = '';
+      document.getElementById('p-meas').innerHTML = ''
+        + '<div class="meas-card"><div class="meas-label">Previous School</div><div class="meas-value">' + (p.fromSchool || p.school || '—') + '</div></div>'
+        + '<div class="meas-card"><div class="meas-label">Ht / Wt</div><div class="meas-value">' + (p.htWt || '—') + '</div></div>'
+        + '<div class="meas-card"><div class="meas-label">Position</div><div class="meas-value">' + (p.pos || '—') + '</div></div>'
+        + '<div class="meas-card"><div class="meas-label">Stars</div><div class="meas-value">' + (stars(p.stars) || '—') + '</div></div>'
+        + '<div class="meas-card"><div class="meas-label">Status</div><div class="meas-value">' + portalStatusLabel(p.status) + '</div></div>'
+        + '<div class="meas-card"><div class="meas-label">Source</div><div class="meas-value">On3</div></div>';
+      document.getElementById('p-bio').textContent = p.skinny || 'On3 transfer portal addition for Florida.';
+      var schemeEl = document.getElementById('p-scheme');
+      var fit = p.profileNote || schemeFit(p);
+      schemeEl.textContent = 'Vault fit: ' + fit.replace(/\{\{ coach\.OC \}\}/g, 'the OC').replace(/\{\{ coach\.DC \}\}/g, 'the DC');
+      schemeEl.classList.remove('hidden');
+      document.getElementById('p-recruit-block').classList.remove('hidden');
+      document.querySelector('#p-recruit-block h2').textContent = 'Portal timeline';
+      var evEl = document.getElementById('p-events');
+      if (!events || !events.length) {
+        evEl.innerHTML = '<p class="text-surface-200/60">Portal enrollment tracked via On3.</p>';
+      } else {
+        evEl.innerHTML = events.map(function (e) {
+          return '<div class="bg-surface-800 rounded-lg p-3"><div class="font-semibold text-white">' + e.title + '</div>'
+            + '<div class="text-xs text-surface-200/60 mt-1">' + new Date(e.createdAt).toLocaleString() + '</div>'
+            + (e.skinny ? '<div class="text-surface-200 mt-2">' + e.skinny + '</div>' : '') + '</div>';
+        }).join('');
+      }
+      document.getElementById('p-links').innerHTML = ''
+        + '<a href="' + on3Url(p) + '" target="_blank" rel="noopener noreferrer" class="text-xs font-bold px-4 py-2 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">On3 Profile →</a>'
+        + '<a href="/?open=vault&tab=portal" class="text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white">Portal Radar →</a>';
     }
 
     function renderRoster(p) {
@@ -211,7 +262,8 @@
         var r = await fetch(API + '/api/players/' + encodeURIComponent(slug));
         var data = await r.json();
         if (!data.ok || !data.player) throw new Error(data.error || 'Player not found');
-        renderRecruit(data.player, data.events);
+        if (data.player.category === 'portal') renderPortal(data.player, data.events);
+        else renderRecruit(data.player, data.events);
       } catch (e) {
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('error').classList.remove('hidden');

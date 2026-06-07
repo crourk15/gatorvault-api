@@ -26,7 +26,8 @@ function mountLiveRoutes(app) {
     try {
       const feed = liveStore.getFeedItems({
         limit: parseInt(req.query.limit || '50', 10),
-        since: req.query.since
+        since: req.query.since,
+        categoriesOnly: req.query.all !== '1'
       });
       return res.json({ ok: true, feed, updatedAt: liveStore.nowIso() });
     } catch (err) {
