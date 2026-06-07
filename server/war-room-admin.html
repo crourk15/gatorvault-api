@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GatorVault — War Room Scouting Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#030712;color:#e2e8f0}
+    .wrap{max-width:960px;margin:0 auto;padding:24px 16px 48px}
+    h1{color:#FA4616;font-family:Oswald,Arial,sans-serif;letter-spacing:2px}
+    h2{font-size:16px;color:#93c5fd;margin:0 0 12px}
+    .card{background:#0b1220;border:1px solid #1e3a5f;border-radius:12px;padding:20px;margin-bottom:16px}
+    label{display:block;font-size:12px;color:#94a3b8;margin-bottom:6px;text-transform:uppercase}
+    input,select,textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#111827;color:#f8fafc;margin-bottom:12px}
+    textarea{min-height:80px;resize:vertical;font-size:13px}
+    textarea.json{min-height:220px;font-family:Consolas,monospace;font-size:12px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:720px){.row{grid-template-columns:1fr}}
+    button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;background:#FA4616;color:#fff;margin-right:8px;margin-bottom:8px}
+    button.secondary{background:#1e3a5f;color:#e2e8f0}
+    #log{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:14px;min-height:120px;font-family:monospace;font-size:12px;white-space:pre-wrap}
+    .help{font-size:12px;color:#64748b;line-height:1.5}
+    .ok{color:#4ade80}.err{color:#f87171}
+    a{color:#60a5fa}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>⚔️ War Room Scouting Admin</h1>
+    <p class="help">Seed verified insider breakdowns only. Trusted writers: <strong>Charles Power</strong>, <strong>Corey Bender</strong>, <strong>Andrew Ivins</strong>, <strong>Blake Alderman</strong>, <strong>Steve Wiltfong</strong>. No AI content.</p>
+
+    <div class="card">
+      <label>Admin PIN</label>
+      <input id="pin" type="password" placeholder="GV2026admin" autocomplete="off">
+      <label>API base</label>
+      <input id="apiBase" type="text">
+    </div>
+
+    <div class="card">
+      <h2>Player breakdown</h2>
+      <div class="row">
+        <div><label>Player slug *</label><input id="slug" placeholder="ellis-mcgaskin"></div>
+        <div><label>Player name</label><input id="playerName" placeholder="Ellis McGaskin"></div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Player type</label>
+          <select id="playerType">
+            <option value="recruit">Recruit</option>
+            <option value="portal">Portal</option>
+            <option value="target">Target</option>
+            <option value="roster">Roster</option>
+          </select>
+        </div>
+        <div>
+          <label>Source writer *</label>
+          <select id="writer">
+            <option value="Corey Bender">Corey Bender</option>
+            <option value="Blake Alderman">Blake Alderman</option>
+            <option value="Steve Wiltfong">Steve Wiltfong</option>
+            <option value="Andrew Ivins">Andrew Ivins</option>
+            <option value="Charles Power">Charles Power</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div><label>Source outlet</label><input id="outlet" placeholder="On3 / Gators Online"></div>
+        <div><label>Source URL</label><input id="sourceUrl" placeholder="https://..."></div>
+      </div>
+      <label>Strengths (one per line)</label>
+      <textarea id="strengths" placeholder="Explosive first step&#10;Strong in the box"></textarea>
+      <label>Weaknesses (one per line)</label>
+      <textarea id="weaknesses"></textarea>
+      <label>Player comparison</label>
+      <textarea id="comparison"></textarea>
+      <label>Scheme fit</label>
+      <textarea id="schemeFit"></textarea>
+      <label>Staff evaluation notes</label>
+      <textarea id="staffNotes"></textarea>
+      <label>Projection (2–3 years)</label>
+      <textarea id="projection"></textarea>
+      <label>Insider notes</label>
+      <textarea id="insiderNotes"></textarea>
+      <label>Recruiting story (recruits/targets)</label>
+      <textarea id="recruitingStory"></textarea>
+      <label>NFL projection</label>
+      <textarea id="nflProjection"></textarea>
+      <button type="button" id="saveBtn">Save breakdown</button>
+      <button type="button" class="secondary" id="deleteBtn">Delete breakdown</button>
+      <button type="button" class="secondary" id="loadBtn">Load existing</button>
+    </div>
+
+    <div class="card">
+      <h2>Raw JSON (advanced)</h2>
+      <textarea id="rawJson" class="json" placeholder='Paste full breakdown JSON here, then click "Save from JSON"'></textarea>
+      <button type="button" class="secondary" id="saveJsonBtn">Save from JSON</button>
+    </div>
+
+    <div class="card">
+      <h2>Log</h2>
+      <div id="log"></div>
+    </div>
+  </div>
+  <script>
+    var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000' : 'https://gatorvault-api.onrender.com';
+    document.getElementById('apiBase').value = API;
+
+    function log(msg, cls) {
+      var el = document.getElementById('log');
+      var line = document.createElement('div');
+      if (cls) line.className = cls;
+      line.textContent = new Date().toLocaleTimeString() + ' — ' + msg;
+      el.prepend(line);
+    }
+
+    function lines(id) {
+      return document.getElementById(id).value.split(/\n/).map(function (s) { return s.trim(); }).filter(Boolean);
+    }
+
+    function buildPayload() {
+      return {
+        playerName: document.getElementById('playerName').value.trim(),
+        playerType: document.getElementById('playerType').value,
+        sources: [{
+          writer: document.getElementById('writer').value,
+          outlet: document.getElementById('outlet').value.trim(),
+          url: document.getElementById('sourceUrl').value.trim(),
+          publishedAt: new Date().toISOString().slice(0, 10)
+        }],
+        strengths: lines('strengths'),
+        weaknesses: lines('weaknesses'),
+        comparison: document.getElementById('comparison').value.trim(),
+        schemeFit: document.getElementById('schemeFit').value.trim(),
+        staffNotes: document.getElementById('staffNotes').value.trim(),
+        projection: document.getElementById('projection').value.trim(),
+        insiderNotes: document.getElementById('insiderNotes').value.trim(),
+        recruitingStory: document.getElementById('recruitingStory').value.trim(),
+        nflProjection: document.getElementById('nflProjection').value.trim()
+      };
+    }
+
+    function apiBase() {
+      return document.getElementById('apiBase').value.replace(/\/$/, '') || API;
+    }
+
+    function pin() {
+      return document.getElementById('pin').value;
+    }
+
+    function slug() {
+      return document.getElementById('slug').value.trim();
+    }
+
+    async function savePayload(payload) {
+      var s = slug();
+      if (!s) throw new Error('Player slug required');
+      var res = await fetch(apiBase() + '/api/war-room/breakdown/' + encodeURIComponent(s), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-War-Room-Pin': pin() },
+        body: JSON.stringify(payload)
+      });
+      var data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Save failed');
+      return data;
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', async function () {
+      try {
+        var data = await savePayload(buildPayload());
+        log('Saved breakdown for ' + data.breakdown.playerSlug, 'ok');
+      } catch (e) {
+        log(e.message, 'err');
+      }
+    });
+
+    document.getElementById('saveJsonBtn').addEventListener('click', async function () {
+      try {
+        var payload = JSON.parse(document.getElementById('rawJson').value);
+        var data = await savePayload(payload);
+        log('Saved from JSON: ' + data.breakdown.playerSlug, 'ok');
+      } catch (e) {
+        log(e.message, 'err');
+      }
+    });
+
+    document.getElementById('deleteBtn').addEventListener('click', async function () {
+      try {
+        var s = slug();
+        if (!s) throw new Error('Player slug required');
+        var res = await fetch(apiBase() + '/api/war-room/breakdown/' + encodeURIComponent(s), {
+          method: 'DELETE',
+          headers: { 'X-War-Room-Pin': pin() }
+        });
+        var data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'Delete failed');
+        log('Deleted ' + s, 'ok');
+      } catch (e) {
+        log(e.message, 'err');
+      }
+    });
+
+    document.getElementById('loadBtn').addEventListener('click', async function () {
+      try {
+        var s = slug();
+        if (!s) throw new Error('Player slug required');
+        var res = await fetch(apiBase() + '/api/war-room/breakdown/' + encodeURIComponent(s));
+        var data = await res.json();
+        if (!data.available || !data.breakdown) throw new Error(data.message || 'No breakdown found');
+        document.getElementById('rawJson').value = JSON.stringify(data.breakdown, null, 2);
+        var b = data.breakdown;
+        document.getElementById('playerName').value = b.playerName || '';
+        document.getElementById('playerType').value = b.playerType || 'recruit';
+        if (b.sources && b.sources[0]) {
+          document.getElementById('writer').value = b.sources[0].writer;
+          document.getElementById('outlet').value = b.sources[0].outlet || '';
+          document.getElementById('sourceUrl').value = b.sources[0].url || '';
+        }
+        document.getElementById('strengths').value = (b.strengths || []).join('\n');
+        document.getElementById('weaknesses').value = (b.weaknesses || []).join('\n');
+        document.getElementById('comparison').value = b.comparison || '';
+        document.getElementById('schemeFit').value = b.schemeFit || '';
+        document.getElementById('staffNotes').value = b.staffNotes || '';
+        document.getElementById('projection').value = b.projection || '';
+        document.getElementById('insiderNotes').value = b.insiderNotes || '';
+        document.getElementById('recruitingStory').value = b.recruitingStory || '';
+        document.getElementById('nflProjection').value = b.nflProjection || '';
+        log('Loaded ' + s, 'ok');
+      } catch (e) {
+        log(e.message, 'err');
+      }
+    });
+  </script>
+</body>
+</html>
