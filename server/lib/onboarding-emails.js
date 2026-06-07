@@ -28,102 +28,105 @@ const ONBOARDING_SEQUENCE = [
   {
     day: 1,
     delayDays: 1,
-    delayLabel: '1 day after Day 0',
-    subject: 'Your GatorVault Playbook — Start Here',
-    cta: { label: 'Open your Playbook', url: SITE_URL },
+    delayLabel: '1 day after signup',
+    subject: 'Getting Started — Your GatorVault Playbook',
+    cta: { label: 'Open your dashboard', url: SITE_URL },
     body: [
       'Hey,',
-      'Now that you\'re inside, here\'s the GatorVault Playbook — the five features that give you the most value right away.',
-      '1️⃣ Live Dashboard — Your real-time command center. If something happens in Gator Nation, it hits here first.',
-      '2️⃣ Film Room — Clean, simple breakdowns that explain why things happen — not just what happened.',
-      '3️⃣ Recruiting Board — Targets, commits, flips, evaluations, and movement. Updated constantly.',
-      '4️⃣ Roster Profiles — Every player\'s rating, measurables, bio, and role — all in one place.',
-      '5️⃣ Community Threads — Real conversations. Real fans. No clutter. No drama.',
-      'Start with these five and you\'ll get the full GatorVault experience.',
-      'Talk soon,',
-      'GatorVault Team'
+      'Day 1 inside the Vault — here\'s the fastest way to get value today.',
+      '1️⃣ Live Dashboard — Your real-time command center. Commits, portal moves, and beat writer posts land here first.',
+      '2️⃣ Film Room — Clean breakdowns that explain why things happen — not just what happened.',
+      '3️⃣ Recruiting Board — Targets, commits, flips, evaluations, and class movement.',
+      '4️⃣ Roster Profiles — Every player\'s rating, measurables, bio, and role in one place.',
+      '5️⃣ Community Threads — Real conversations. Real fans. No clutter.',
+      'Start with these five and you\'ll feel the full GatorVault experience by the end of the week.',
+      '— GatorVault Team'
+    ]
+  },
+  {
+    day: 2,
+    delayDays: 1,
+    delayLabel: '1 day after Day 1',
+    subject: 'Feature Highlight — Live Feed + Film Room',
+    cta: { label: 'Explore the Live Dashboard', url: SITE_URL },
+    body: [
+      'Hey,',
+      'Two features members use every single day:',
+      '🔹 Live Dashboard — The scrolling ticker and live feed pull from verified beat writers, On3, 247Sports, and Rivals public reporting. No noise, no rumors without a source.',
+      '🔹 Film Room — Original GatorVault write-ups based on real public reporting from trusted Florida beat writers. We synthesize — we don\'t invent.',
+      'Open the Vault, tap Live, and scroll the feed. Then open Film Room and read the latest drop.',
+      'That\'s the core loop — real intel, organized for you.',
+      '— GatorVault Team'
     ]
   },
   {
     day: 3,
-    delayDays: 2,
-    delayLabel: '2 days after Day 1 (Day 3 total)',
-    subject: 'Why GatorVault Was Built (And What Makes It Different)',
-    cta: { label: 'What feature do you want next?', url: `mailto:gatorvaultinsider@gmail.com?subject=${encodeURIComponent('GatorVault feature request')}` },
+    delayDays: 1,
+    delayLabel: '1 day after Day 2',
+    subject: 'Recruiting Tools — Board, Portal & Player Profiles',
+    cta: { label: 'Open the Recruiting Board', url: SITE_URL },
     body: [
       'Hey,',
-      'A quick story.',
-      'GatorVault was built because Florida fans deserved a place that wasn\'t:',
-      '❌ cluttered',
-      '❌ toxic',
-      '❌ full of ads',
-      '❌ impossible to navigate',
-      '❌ drowning in rumors',
-      'You deserved something better — something clean, accurate, and built for fans who actually care about the details.',
-      'So we built: a real-time Live Dashboard, a clean Film Room, a real message board, a real recruiting board, a real roster system, and a platform that updates constantly.',
-      'No noise. No nonsense. Just the information you actually want.',
-      'And we\'re building this with you — not at you.',
-      'If there\'s something you want added, improved, or changed, tell us.',
-      'Thanks for being here,',
-      'GatorVault Team'
+      'Recruiting season never stops — GatorVault keeps you ahead.',
+      '🔹 Recruiting Board — Class rankings, commits, and targets updated from public On3 / 247 / Rivals data.',
+      '🔹 Portal Radar — Incoming and outgoing portal movement with player profile links.',
+      '🔹 Player Profiles — Measurables, ratings, offers, and scouting context on every recruit.',
+      'Tip: follow specific players in Alerts to get commit and portal notifications instantly.',
+      '— GatorVault Team'
     ]
   },
   {
     day: 5,
     delayDays: 2,
-    delayLabel: '2 days after Day 3 (Day 5 total)',
-    subject: 'What\'s the ONE thing you want answered?',
-    cta: null,
+    delayLabel: '2 days after Day 3',
+    subject: 'War Room Overview — Insider Scouting Access',
+    cta: { label: 'See War Room features', url: SITE_URL },
     body: [
       'Hey,',
-      'We want to know one thing:',
-      'What\'s the #1 question you have about the Gators right now?',
-      'It could be: recruiting, QB battle, portal, coaching, scheme, depth chart, breakout players — anything.',
-      'Reply with your biggest question — we use these to shape content inside the Vault.',
-      'Your voice matters here.',
+      'War Room is the deepest tier in GatorVault — built for fans who want verified scouting intel, not message-board noise.',
+      '🔹 Scouting Database — Verified breakdowns sourced from Rivals, On3, and 247 public reporting. Original GatorVault presentation — never AI-generated filler.',
+      '🔹 Heat Check — Crystal Ball momentum and trending recruiting intel.',
+      '🔹 Full player breakdowns on every profile — strengths, weaknesses, scheme fit, and sources cited.',
+      'Film Room and Locker Room members see locked teasers. War Room unlocks everything.',
       '— GatorVault Team'
     ]
   },
   {
     day: 7,
     delayDays: 2,
-    delayLabel: '2 days after Day 5 (Day 7 total)',
-    subject: 'Your Trial Checklist — Don\'t Miss These',
-    cta: { label: 'Finish your checklist', url: SITE_URL },
+    delayLabel: '2 days after Day 5',
+    subject: 'Heat Check + Scouting — Trending Intel',
+    cta: { label: 'Open Heat Check', url: SITE_URL },
     body: [
       'Hey,',
-      'You\'re a week into your GatorVault access — here\'s your Trial Checklist to make sure you\'re getting everything out of it.',
-      '✔️ Check the Live Dashboard',
-      '✔️ Read a Film Room breakdown',
-      '✔️ View your favorite player\'s profile',
-      '✔️ Follow a thread in the Community',
-      '✔️ Check the Recruiting Board',
-      '✔️ Read the weekly Vault article',
-      '✔️ Explore the Podcast Hub',
-      'If you hit all seven, you\'re getting the full GatorVault experience.',
+      'You\'re a week in — two War Room features worth exploring:',
+      '🔹 Heat Check — Trending recruits, Crystal Ball movement, and momentum shifts pulled from public recruiting feeds.',
+      '🔹 Scouting Tab — Verified scouting summaries on top targets. Every breakdown cites real public sources.',
+      'Even on Film Room access, you can preview locked scouting cards and see what War Room unlocks.',
       '— GatorVault Team'
     ]
   },
   {
     day: 10,
     delayDays: 3,
-    delayLabel: '3 days after Day 7 (Day 10 total)',
-    subject: 'You\'re 10 Days In — Here\'s What You\'ve Unlocked',
-    cta: { label: 'Keep your access active', url: SITE_URL },
+    delayLabel: '3 days after Day 7',
+    subject: 'Mobile App Features — GatorVault On The Go',
+    cta: { label: 'Open GatorVault on mobile', url: SITE_URL },
     body: [
       'Hey,',
-      'You\'re 10 days into your GatorVault access — here\'s what you\'ve already unlocked:',
-      'Real-time Live Dashboard, Beat writer stream, Podcast Hub, Film Room, Recruiting Board, Roster Profiles, Community Threads, Breaking news alerts.',
-      'And here\'s what\'s coming next: more Film Room drops, more roster updates, more recruiting movement, more live features, and more insider-style breakdowns.',
-      'If you\'re enjoying the Vault, now\'s the perfect time to stay locked in.',
+      'GatorVault is built mobile-first — take the Vault everywhere.',
+      '🔹 Live ticker at the top of every page — commits and portal moves scroll in real time.',
+      '🔹 Bottom nav: Home, Live, Recruiting, Scouting, and More — one tap to any section.',
+      '🔹 Top banner alerts for commits, portal entries, and breaking intel — impossible to miss.',
+      'Add GatorVault to your home screen for instant access on gameday.',
       '— GatorVault Team'
     ]
   },
   {
     day: 14,
     delayDays: 4,
-    delayLabel: '4 days after Day 10 (Day 14 total)',
-    subject: 'Your Trial Ends Soon — Don\'t Lose Access',
+    delayLabel: '4 days after Day 10',
+    subject: 'Upgrade CTA — Keep Your Vault Access',
     cta: { label: 'Keep your access', url: SITE_URL },
     body: [
       'Hey,',
@@ -184,8 +187,19 @@ function getDay0Email({ name, email, tier }) {
   };
 }
 
+function getOnboardingEmailByDay(day, { name } = {}) {
+  const emailDef = ONBOARDING_SEQUENCE.find((e) => e.day === day);
+  if (!emailDef) return null;
+  return {
+    subject: emailDef.subject,
+    html: onboardingEmailHtml(emailDef, { name }),
+    day: emailDef.day
+  };
+}
+
 module.exports = {
   ONBOARDING_SEQUENCE,
   onboardingEmailHtml,
-  getDay0Email
+  getDay0Email,
+  getOnboardingEmailByDay
 };

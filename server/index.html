@@ -322,7 +322,7 @@
             #vault-interior.gv-mobile-active #vpane-live,
             #vault-interior.gv-mobile-active #vpane-beat{padding:0 0 16px;}
             #vault-interior.gv-mobile-active #vpane-live>.flex p.text-surface-200{display:none;}
-            #vault-interior.gv-mobile-active #changelog-strip,
+            #vault-interior.gv-mobile-active #changelog-strip{display:none!important;}
             #vault-interior.gv-mobile-active #live-ticker-wrap{display:none!important;}
 
             .gv-mob-header{position:fixed;top:0;left:0;right:0;height:56px;background:rgba(0,18,58,.97);backdrop-filter:blur(8px);border-bottom:1px solid rgba(0,48,135,.35);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:120;}
@@ -392,9 +392,24 @@
       };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <link rel="stylesheet" href="/gv-global.css">
+    <script src="/gv-global.js" defer></script>
 </head>
-<body data-id="0">
+<body data-id="0" class="gv-has-site-ticker">
     <app-icon data-id="1" hidden data-icon="shield" data-palette="Blue"></app-icon>
+    <div id="gv-site-ticker" class="gv-site-ticker" aria-live="polite" aria-label="Live GatorVault feed">
+        <div id="gv-site-ticker-track" class="gv-site-ticker-track"></div>
+    </div>
+    <div id="gv-alert-banner" class="gv-alert-banner" role="alert" aria-live="assertive">
+        <div class="gv-alert-banner-inner">
+            <span id="gv-alert-banner-icon" class="gv-alert-banner-icon">🔔</span>
+            <div class="gv-alert-banner-text">
+                <div id="gv-alert-banner-title" class="gv-alert-banner-title"></div>
+                <div id="gv-alert-banner-body" class="gv-alert-banner-body"></div>
+            </div>
+            <button type="button" id="gv-alert-banner-close" class="gv-alert-banner-close" aria-label="Dismiss alert">✕</button>
+        </div>
+    </div>
     <div data-id="2" id="toast-c" class="toast-c"></div>
 
     <!-- Admin PIN Modal (in-vault) -->
@@ -2591,17 +2606,19 @@
     var GV_ALERTS_FEED_VERSION=7;
     var GV_COMMIT_MIN_CLASS=2027;
     var GV_PORTAL_MIN_CLASS=2027;
-    var GV_ALERT_CATEGORY_KEYS=['commit','portal','offers','article','score','thread'];
+    var GV_ALERT_CATEGORY_KEYS=['commit','portal','offers','article','score','thread','breaking','scouting'];
     var ALERT_TYPE_META={
         commit:{icon:'🎯',label:'Commit',pill:'bg-gator-orange/15 text-gator-orange'},
         portal:{icon:'🔄',label:'Portal',pill:'bg-gator-orange/15 text-gator-orange'},
         offers:{icon:'📬',label:'Offers',pill:'bg-blue-500/15 text-blue-300'},
         article:{icon:'📰',label:'Article',pill:'bg-amber-500/15 text-amber-400'},
         score:{icon:'🏟️',label:'Score',pill:'bg-green-500/15 text-green-400'},
-        thread:{icon:'💬',label:'Thread',pill:'bg-purple-500/15 text-purple-300'}
+        thread:{icon:'💬',label:'Thread',pill:'bg-purple-500/15 text-purple-300'},
+        breaking:{icon:'🚨',label:'Breaking',pill:'bg-red-500/15 text-red-300'},
+        scouting:{icon:'⚔️',label:'Scouting',pill:'bg-yellow-500/15 text-yellow-300'}
     };
     var ALERT_TYPE_LABELS={
-        commit:'Commits',portal:'Portal',offers:'Offers',article:'Articles',score:'Scores',thread:'Threads'
+        commit:'Commits',portal:'Portal',offers:'Offers',article:'Articles',score:'Scores',thread:'Threads',breaking:'Breaking',scouting:'Scouting'
     };
 
     function gvPlayerClassYear(player){
@@ -2692,7 +2709,9 @@
         var t=String(type).toLowerCase();
         if(t==='flip'||t==='decommit')return 'commit';
         if(t==='recruiting'||t==='target_update')return 'offers';
-        if(t==='breaking'||t==='staff'||t==='injury'||t==='depth'||t==='beat'||t==='podcast')return '';
+        if(t==='scouting'||t==='war_room')return 'scouting';
+        if(t==='breaking')return 'breaking';
+        if(t==='staff'||t==='injury'||t==='depth'||t==='beat'||t==='podcast')return '';
         return t;
     }
     function gvIsSystemAlert(a){
@@ -2826,7 +2845,7 @@
     }
 
     // load/save prefs and recent alerts
-    var defaultAlertPrefs={method:'push',freq:'instant',types:{commit:true,portal:true,offers:true,article:true,score:true,thread:true},followPlayers:[],followThreads:[],snoozes:{globalUntil:null,types:{},threads:{},players:{}}};
+    var defaultAlertPrefs={method:'push',freq:'instant',types:{commit:true,portal:true,offers:true,article:true,score:true,thread:true,breaking:true,scouting:true},followPlayers:[],followThreads:[],snoozes:{globalUntil:null,types:{},threads:{},players:{}}};
     function mergeAlertPrefs(stored){
         var base=JSON.parse(JSON.stringify(defaultAlertPrefs));
         if(!stored||typeof stored!=='object')return base;
@@ -3038,7 +3057,17 @@
         var prefs=window.alertPrefs||defaultAlertPrefs;
         var method=prefs.method||'push';
         if(method==='push'||method==='both'){
-            showToast(payload.type?payload.type.toUpperCase(): 'Alert', payload.text||payload.title||'', payload.type, 6000);
+            var alertTitle=payload.type?payload.type.toUpperCase():'Alert';
+            var alertBody=payload.text||payload.title||'';
+            var alertDetail=payload.detail||'';
+            if(window.GV_GLOBAL&&window.GV_GLOBAL.showAlertBanner){
+                window.GV_GLOBAL.showAlertBanner(alertTitle, alertDetail||alertBody, payload.type, 9000);
+            }
+            if(window.GV_GLOBAL&&window.GV_GLOBAL.showToastSecondary){
+                window.GV_GLOBAL.showToastSecondary(alertTitle, alertBody, 4000);
+            }else{
+                showToast(alertTitle, alertBody, payload.type, 4000);
+            }
         }
         if((method==='email'||method==='both')&&(!prefs.freq||prefs.freq==='instant')){
             try{gvSendInstantAlertEmail(payload);}catch(e){if(window.GV_ALERT_DEBUG)console.warn('gvSendInstantAlertEmail',e);}
@@ -3079,6 +3108,14 @@
     window.onThreadAlert=function(thread){
         if(!thread)return;
         notifyEvent({text:thread.title||'New community thread',detail:thread.preview||thread.body||'',type:'thread',thread:thread.id||thread.threadId,eventId:thread.id||thread.eventId,_ts:thread.createdAt?new Date(thread.createdAt).getTime():Date.now()});
+    };
+    window.onScoutingAlert=function(info){
+        if(!info)return;
+        var slug=info.playerSlug||info.slug;
+        var profileUrl=slug?('/player/'+slug):'';
+        var detail=(info.detail||info.summary||'');
+        if(profileUrl)detail+=(detail?' ':'')+'<a href="'+profileUrl+'" class="text-gator-orange underline">View scouting →</a>';
+        notifyEvent({text:info.text||info.title||('War Room scouting update: '+(info.playerName||'')),detail:detail,type:'scouting',player:info.playerName,playerSlug:slug,link:profileUrl,eventId:info.eventId||info.id,_ts:info._ts||Date.now()});
     };
 
     // preview buttons wiring (if DOM exists)
@@ -4838,6 +4875,7 @@
             chunk+='<span class="live-ticker-item"><strong class="text-gator-orange">'+gvLiveEsc(gvLiveTypeLabel(item.type))+'</strong> '+gvLiveEsc(item.title)+' <span class="text-surface-200/40">· '+gvLiveEsc(gvLiveTimeAgo(item.createdAt))+'</span></span>';
         });
         el.innerHTML=chunk+chunk;
+        if(window.GV_GLOBAL&&window.GV_GLOBAL.renderSiteTicker)window.GV_GLOBAL.renderSiteTicker(items);
     }
 
     function gvRenderLiveStatusBar(dash){

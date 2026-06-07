@@ -235,7 +235,8 @@ function publishItem(id) {
       readMin: item.readMin,
       excerpt: item.excerpt,
       body: item.body,
-      takeaways: item.takeaways || []
+      takeaways: item.takeaways || [],
+      sources: item.sources || item.sourceUrls || item.citations || []
     };
     if (idx >= 0) articles[idx] = row;
     else articles.unshift(row);

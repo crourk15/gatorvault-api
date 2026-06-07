@@ -30,9 +30,25 @@
     .war-section ul{margin:.25rem 0 0 1rem;padding:0;list-style:disc;}
     .war-sources{font-size:.7rem;color:#64748b;margin-top:1rem;padding-top:.75rem;border-top:1px solid rgba(0,48,135,.25);}
     .war-upgrade{display:inline-block;background:#FA4616;color:#fff;font-weight:700;font-size:.75rem;padding:.5rem 1rem;border-radius:.5rem;text-decoration:none;}
+    body.gv-has-site-ticker{padding-top:36px;}
   </style>
+  <link rel="stylesheet" href="/gv-global.css">
+  <script src="/gv-global.js" defer></script>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen gv-has-site-ticker">
+  <div id="gv-site-ticker" class="gv-site-ticker" aria-live="polite" aria-label="Live GatorVault feed">
+    <div id="gv-site-ticker-track" class="gv-site-ticker-track"></div>
+  </div>
+  <div id="gv-alert-banner" class="gv-alert-banner" role="alert" aria-live="assertive">
+    <div class="gv-alert-banner-inner">
+      <span id="gv-alert-banner-icon" class="gv-alert-banner-icon">🔔</span>
+      <div class="gv-alert-banner-text">
+        <div id="gv-alert-banner-title" class="gv-alert-banner-title"></div>
+        <div id="gv-alert-banner-body" class="gv-alert-banner-body"></div>
+      </div>
+      <button type="button" id="gv-alert-banner-close" class="gv-alert-banner-close" aria-label="Dismiss alert">✕</button>
+    </div>
+  </div>
   <div class="max-w-3xl mx-auto px-4 py-8">
     <a href="/players" id="back-link" class="text-sm text-blue-400 hover:text-blue-300">← Back to Players</a>
     <div id="loading" class="mt-8 text-surface-200">Loading profile…</div>

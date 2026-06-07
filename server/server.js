@@ -179,7 +179,11 @@ function getEmailProviders() {
 
 async function sendEmailEmailJS(to, templateParams) {
   const serviceId = process.env.EMAILJS_SERVICE_ID;
-  const templateId = process.env.EMAILJS_TEMPLATE_ID;
+  const onboardingDay = templateParams.onboardingDay != null ? Number(templateParams.onboardingDay) : 0;
+  const templateId =
+    onboardingDay > 0 && process.env.EMAILJS_ONBOARDING_TEMPLATE_ID
+      ? process.env.EMAILJS_ONBOARDING_TEMPLATE_ID
+      : process.env.EMAILJS_TEMPLATE_ID;
   const publicKey = process.env.EMAILJS_PUBLIC_KEY;
   const privateKey = process.env.EMAILJS_PRIVATE_KEY;
   if (!isEmailJsReady()) throw new Error('EmailJS not configured — set EMAILJS_PRIVATE_KEY in server/.env');
@@ -201,7 +205,10 @@ async function sendEmailEmailJS(to, templateParams) {
       community_url: SITE_URL,
       support_x: '@GatorVaultInsider',
       from_name: 'GatorVault Team',
-      onboarding_intro: 'Your GatorVault account is live. Here is everything included in your membership and how to get started.',
+      email_subject: templateParams.emailSubject || templateParams.subject || 'GatorVault Update',
+      message_html: templateParams.html || templateParams.messageHtml || '',
+      onboarding_day: String(onboardingDay),
+      onboarding_intro: templateParams.onboardingIntro || 'Your GatorVault account is live. Here is everything included in your membership and how to get started.',
       reply_to: process.env.EMAILJS_REPLY_TO || process.env.SMTP_USER || 'support@gatorvaultinsider.com'
     }
   };
@@ -220,6 +227,7 @@ async function sendEmailEmailJS(to, templateParams) {
 }
 
 async function deliverEmail(to, subject, html, templateParams = {}) {
+  const params = { ...templateParams, html, emailSubject: subject, subject };
   if (EMAIL_PROVIDER === 'emailjs') {
     if (!isEmailJsReady()) {
       const msg = 'EmailJS private key missing or placeholder in server/.env';
@@ -227,11 +235,11 @@ async function deliverEmail(to, subject, html, templateParams = {}) {
       return { sent: false, provider: null, error: msg };
     }
     try {
-      await sendEmailEmailJS(to, templateParams);
-      pushEmailLog({ level: 'success', message: 'EmailJS send OK', detail: { to }, source: 'deliver' });
+      await sendEmailEmailJS(to, params);
+      pushEmailLog({ level: 'success', message: 'EmailJS send OK', detail: { to, subject }, source: 'deliver' });
       return { sent: true, provider: 'emailjs' };
     } catch (err) {
-      pushEmailLog({ level: 'error', message: err.message, detail: { to }, source: 'deliver' });
+      pushEmailLog({ level: 'error', message: err.message, detail: { to, subject }, source: 'deliver' });
       throw err;
     }
   }
@@ -247,11 +255,11 @@ async function deliverEmail(to, subject, html, templateParams = {}) {
   }
   if (isEmailJsReady()) {
     try {
-      await sendEmailEmailJS(to, templateParams);
-      pushEmailLog({ level: 'success', message: 'EmailJS send OK', detail: { to }, source: 'deliver' });
+      await sendEmailEmailJS(to, params);
+      pushEmailLog({ level: 'success', message: 'EmailJS send OK', detail: { to, subject }, source: 'deliver' });
       return { sent: true, provider: 'emailjs' };
     } catch (err) {
-      pushEmailLog({ level: 'error', message: err.message, detail: { to }, source: 'deliver' });
+      pushEmailLog({ level: 'error', message: err.message, detail: { to, subject }, source: 'deliver' });
       throw err;
     }
   }
@@ -262,6 +270,7 @@ async function deliverEmail(to, subject, html, templateParams = {}) {
 
 const { getDay0Email, ONBOARDING_SEQUENCE } = require('./lib/onboarding-emails');
 const { enrollOnboarding, isBeehiivConfigured, validateBeehiivOnBoot } = require('./lib/beehiiv');
+const { startOnboardingScheduler } = require('./lib/onboarding-scheduler');
 
 async function sendWelcomeEmail({ email, name, tier, skipIfBeehiiv = false }) {
   const trialEnd = new Date();
@@ -277,7 +286,8 @@ async function sendWelcomeEmail({ email, name, tier, skipIfBeehiiv = false }) {
   const delivery = await deliverEmail(email, day0.subject, day0.html, {
     name: name || email.split('@')[0],
     tierName: tierLabel,
-    trialEnd: trialEndStr
+    trialEnd: trialEndStr,
+    onboardingDay: 0
   });
   return { trialEndStr, emailSent: delivery.sent, provider: delivery.provider, error: delivery.error || null };
 }
@@ -392,6 +402,15 @@ app.post('/api/register', async (req, res) => {
       }
       if (onboarding.warning) console.warn('[onboarding]', onboarding.warning);
       if (onboarding.error && !onboarding.enrolled) console.warn('[onboarding] Beehiiv enroll failed:', onboarding.error);
+      user.onboardingSent = onboarding.sequenceStarted ? ['beehiiv'] : welcome.emailSent ? [0] : [];
+      user.onboardingProvider = onboarding.sequenceStarted ? 'beehiiv' : 'server';
+      const usersUpdated = loadUsers();
+      const uIdx = usersUpdated.findIndex((u) => u.email === email);
+      if (uIdx >= 0) {
+        usersUpdated[uIdx].onboardingSent = user.onboardingSent;
+        usersUpdated[uIdx].onboardingProvider = user.onboardingProvider;
+        saveUsers(usersUpdated);
+      }
     } catch (e) {
       console.warn('onboarding email failed:', e.message);
     }
@@ -791,6 +810,11 @@ app.listen(PORT, () => {
     validateBeehiivOnBoot();
   } catch (e) {
     console.warn('Beehiiv onboarding check failed', e.message);
+  }
+  try {
+    startOnboardingScheduler({ loadUsers, saveUsers, deliverEmail, pushEmailLog });
+  } catch (e) {
+    console.warn('Onboarding email scheduler failed to start', e.message);
   }
   if (providers.length) {
     console.log('Email delivery: configured (' + providers.join(', ') + ')');

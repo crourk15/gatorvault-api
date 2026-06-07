@@ -1,0 +1,196 @@
+/* GatorVault site-wide ticker + top alert banner */
+.gv-site-ticker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 135;
+  height: 36px;
+  background: rgba(6, 15, 31, 0.97);
+  border-bottom: 1px solid rgba(0, 48, 135, 0.35);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.gv-site-ticker--empty {
+  opacity: 0.85;
+}
+.gv-site-ticker-track {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+  animation: gvSiteTickerScroll 45s linear infinite;
+  white-space: nowrap;
+  padding-left: 100%;
+}
+.gv-site-ticker-item {
+  font-size: 0.8125rem;
+  color: #cbd5e1;
+  flex-shrink: 0;
+}
+.gv-site-ticker-item .text-gator-orange {
+  color: #fa4616;
+  margin-right: 0.35rem;
+}
+.gv-ticker-muted {
+  color: rgba(148, 163, 184, 0.55);
+  font-size: 0.7rem;
+}
+@keyframes gvSiteTickerScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+body.gv-has-site-ticker nav.fixed,
+body.gv-has-site-ticker #main-nav {
+  top: 36px !important;
+}
+body.gv-has-site-ticker #ticker-bar {
+  display: none !important;
+}
+body.gv-has-site-ticker #install-banner {
+  top: calc(56px + 36px) !important;
+}
+body.gv-has-site-ticker #hero-sec {
+  padding-top: calc(8rem + 36px) !important;
+}
+body.gv-has-site-ticker.gv-has-alert-banner {
+  padding-top: 0;
+}
+
+.gv-alert-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 140;
+  transform: translateY(-110%);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  background: linear-gradient(90deg, #001a4d 0%, #003087 55%, #001a4d 100%);
+  border-bottom: 2px solid #fa4616;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  min-height: 52px;
+}
+body.gv-has-site-ticker .gv-alert-banner {
+  top: 36px;
+}
+.gv-alert-banner--visible {
+  transform: translateY(0);
+}
+.gv-alert-banner--breaking {
+  background: linear-gradient(90deg, #7f1d1d 0%, #fa4616 50%, #7f1d1d 100%);
+  border-bottom-color: #fbbf24;
+}
+.gv-alert-banner--commit {
+  border-bottom-color: #22c55e;
+}
+.gv-alert-banner--portal,
+.gv-alert-banner--portal_in {
+  border-bottom-color: #60a5fa;
+}
+.gv-alert-banner--scouting {
+  border-bottom-color: #fbbf24;
+}
+.gv-alert-banner-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.gv-alert-banner-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+.gv-alert-banner-text {
+  flex: 1;
+  min-width: 0;
+}
+.gv-alert-banner-title {
+  font-family: Oswald, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.gv-alert-banner-body {
+  font-size: 0.8125rem;
+  color: #e2e8f0;
+  margin-top: 2px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.gv-alert-banner-body a {
+  color: #fb923c;
+  text-decoration: underline;
+}
+.gv-alert-banner-close {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.gv-alert-banner-close:hover {
+  color: #fff;
+}
+
+.gv-toast-secondary {
+  position: fixed;
+  right: 12px;
+  bottom: 72px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 280px;
+  pointer-events: none;
+}
+@media (min-width: 768px) {
+  .gv-toast-secondary {
+    bottom: 24px;
+    right: 24px;
+  }
+}
+.gv-toast-secondary-item {
+  background: rgba(17, 24, 39, 0.92);
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+.gv-toast-secondary-title {
+  color: #e2e8f0;
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+.gv-toast-secondary-body {
+  margin-top: 2px;
+}
+
+@media (max-width: 767px) {
+  body.gv-has-site-ticker .gv-mob-header {
+    top: 36px !important;
+  }
+  body.gv-has-site-ticker #vault-interior.gv-mobile-active #gv-vault-content {
+    padding-top: calc(56px + 36px) !important;
+  }
+  body.gv-has-site-ticker #vault-interior.gv-mobile-active.gv-has-breaking #gv-vault-content {
+    padding-top: calc(100px + 36px) !important;
+  }
+  body.gv-has-site-ticker .gv-breaking-banner {
+    top: calc(56px + 36px) !important;
+  }
+}
