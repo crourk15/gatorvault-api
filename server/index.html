@@ -269,6 +269,10 @@
         .live-type-podcast{background:rgba(34,197,94,.15);color:#86efac;}
         .live-type-breaking,.live-type-article{background:rgba(251,191,36,.12);color:#fde047;}
         .live-type-staff,.live-type-injury,.live-type-depth{background:rgba(96,165,250,.12);color:#93c5fd;}
+        #changelog-strip.hidden{display:none!important;}
+        #changelog-body{cursor:pointer;border:none;background:transparent;padding:0;width:100%;text-align:left;color:inherit;}
+        #changelog-body:hover .changelog-headline{color:#FA4616;}
+        .changelog-headline{transition:color .15s;}
         .live-beat-post{padding:.7rem;border-radius:.65rem;background:#060f1f;border-left:3px solid #a855f7;margin-bottom:.5rem;min-width:0;overflow-wrap:break-word;word-break:break-word;}
         .live-pod-ep{display:flex;gap:.75rem;padding:.75rem;border-radius:.65rem;background:#060f1f;border:1px solid rgba(0,48,135,.2);margin-bottom:.5rem;}
         a.live-pod-ep{display:flex;gap:.75rem;padding:.75rem;border-radius:.65rem;background:#060f1f;border:1px solid rgba(0,48,135,.2);margin-bottom:.5rem;text-decoration:none;color:inherit;cursor:pointer;pointer-events:auto;transition:border-color .15s;}
@@ -787,11 +791,13 @@
                 </div>
             </div>
 
-            <!-- Changelog -->
-            <div data-id="485" id="changelog-strip" class="max-w-7xl mx-auto px-4 md:px-6 mt-4">
-                <div data-id="486" class="bg-surface-700 border border-gator-orange/30 rounded-xl p-4 flex items-center justify-between gap-3">
-                    <p data-id="487" class="text-xs text-gator-orange flex-1">🔄 <strong data-id="488">Updated since your last visit:</strong> Depth Chart (QB Battle — Jones Jr. vs Philo), Recruiting (2 new targets), Portal Radar (Lacota Dippre enrolled)</p>
-                    <button data-id="489" id="changelog-close" class="text-surface-200 hover:text-white flex-shrink-0"><i data-id="490" data-lucide="x" class="w-4 h-4"></i></button>
+            <!-- Latest Live Feed headline -->
+            <div data-id="485" id="changelog-strip" class="max-w-7xl mx-auto px-4 md:px-6 mt-4 hidden">
+                <div data-id="486" class="bg-surface-700 border border-gator-blue/30 rounded-xl p-3 md:p-4 flex items-start justify-between gap-3">
+                    <button type="button" id="changelog-body" aria-label="Open latest live update">
+                        <div id="changelog-content"></div>
+                    </button>
+                    <button type="button" data-id="489" id="changelog-close" class="text-surface-200 hover:text-white flex-shrink-0 p-1" aria-label="Dismiss"><i data-id="490" data-lucide="x" class="w-4 h-4"></i></button>
                 </div>
             </div>
 
@@ -2249,7 +2255,17 @@
     bindTabListeners();
 
     var startGo=document.getElementById('start-go');if(startGo)startGo.addEventListener('click',function(){showVTab('dc');});
-    var clClose=document.getElementById('changelog-close');if(clClose)clClose.addEventListener('click',function(){var strip=document.getElementById('changelog-strip');if(strip)strip.style.display='none';});
+    var clClose=document.getElementById('changelog-close');if(clClose)clClose.addEventListener('click',function(e){e.stopPropagation();var strip=document.getElementById('changelog-strip');var latest=window._gvLatestFeedItem;if(strip){strip.classList.add('hidden');if(latest&&latest.id)try{localStorage.setItem('gv_changelogDismissed',latest.id);}catch(ex){}}});
+    var clBody=document.getElementById('changelog-body');if(clBody)clBody.addEventListener('click',function(){
+        var latest=window._gvLatestFeedItem;
+        if(latest){
+            var slug=latest.meta&&latest.meta.playerSlug;
+            var url=gvLiveFeedSourceUrl(latest);
+            if((latest.type==='commit'||latest.type==='portal')&&slug){gvOpenRecruitProfile(slug);return;}
+            if(url){gvNavigate(gvLiveResolveUrl(url),{type:latest.type,recruitModal:latest.type==='commit'});return;}
+        }
+        showVTab('live');
+    });
 
     // ========== ANALYTICS CLEAR ==========
     var anClear=document.getElementById('an-clear');if(anClear)anClear.addEventListener('click',function(){localStorage.removeItem('gv_events');refreshAnalytics();showToast('Event log cleared.');});
@@ -3243,6 +3259,7 @@
         try{gvLoadRosterProfiles();}catch(e){console.warn('gvLoadRosterProfiles error:',e);}
         try{renderGameZone();}catch(e){console.warn('renderGameZone error:',e);}
         try{renderApparel();}catch(e){console.warn('renderApparel error:',e);}
+        try{gvLoadLiveDashboard(false);}catch(e){console.warn('gvLoadLiveDashboard error:',e);}
     }
     function canRead(tier){var levels={locker:0,film:1,war:2};return(levels[window.GV_ROLE]||0)>=(levels[tier]||0)||window.GV_OPERATOR;}
     
@@ -4522,6 +4539,37 @@
         gvWirePodcastCards(el);
     }
 
+    function gvRenderChangelogStrip(items){
+        var strip=document.getElementById('changelog-strip');
+        var el=document.getElementById('changelog-content');
+        if(!strip||!el)return;
+        var filtered=gvFilterLiveFeedItems(items||[]);
+        var latest=filtered[0];
+        window._gvLatestFeedItem=latest||null;
+        if(!latest){strip.classList.add('hidden');return;}
+        try{if(localStorage.getItem('gv_changelogDismissed')===latest.id){strip.classList.add('hidden');return;}}catch(ex){}
+        strip.classList.remove('hidden');
+        var pill='live-type-'+(latest.type||'breaking');
+        var titleText=latest.title;
+        try{if(typeof gvResolveContentFields==='function')titleText=gvResolveContentFields({title:latest.title}).title||latest.title;}catch(ex){}
+        var html='<div class="flex items-start justify-between gap-2 mb-1.5">';
+        html+='<div class="flex items-center gap-2 flex-wrap min-w-0">';
+        html+='<span class="live-dot shrink-0"></span>';
+        html+='<span class="text-[.65rem] font-bold uppercase tracking-wider text-gator-orange">Latest</span>';
+        html+='<span class="live-type-pill '+pill+'">'+gvLiveEsc(gvLiveTypeLabel(latest.type))+'</span>';
+        html+='</div>';
+        html+='<span class="text-[.65rem] text-surface-200/50 shrink-0">'+gvLiveEsc(gvLiveTimeAgo(latest.createdAt))+'</span>';
+        html+='</div>';
+        html+='<p class="changelog-headline text-sm font-semibold text-white leading-snug">'+gvLiveEsc(titleText)+'</p>';
+        if(latest.summary){
+            var sumText=latest.summary;
+            try{if(typeof gvResolveContentFields==='function')sumText=gvResolveContentFields({body:latest.summary}).body||latest.summary;}catch(ex){}
+            html+='<p class="text-xs text-surface-200/60 mt-1 line-clamp-1">'+gvLiveEsc(String(sumText).slice(0,140))+'</p>';
+        }
+        html+='<p class="text-[.65rem] text-gator-orange/80 mt-1.5 font-semibold">View in Live Feed →</p>';
+        el.innerHTML=html;
+    }
+
     function gvRenderLiveTicker(items){
         var wrap=document.getElementById('live-ticker-wrap');
         var el=document.getElementById('live-ticker');
@@ -4568,6 +4616,7 @@
                 gvRenderLiveBeat(st.beat);
                 gvRenderLivePodcasts(st.podcasts);
                 gvRenderLiveTicker(st.feed);
+                gvRenderChangelogStrip(st.feed);
                 gvRenderLiveStatusBar(j);
             })
             .catch(function(e){
