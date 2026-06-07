@@ -5,15 +5,48 @@
   left: 0;
   right: 0;
   z-index: 135;
-  height: 36px;
-  background: rgba(6, 15, 31, 0.97);
-  border-bottom: 1px solid rgba(0, 48, 135, 0.35);
+  height: 44px;
+  background: linear-gradient(90deg, #030712 0%, #0a1628 50%, #030712 100%);
+  border-bottom: 2px solid rgba(250, 70, 22, 0.55);
   overflow: hidden;
   display: flex;
   align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+.gv-site-ticker-label {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px 0 14px;
+  height: 100%;
+  background: rgba(250, 70, 22, 0.12);
+  border-right: 1px solid rgba(250, 70, 22, 0.35);
+  font-family: Oswald, Arial, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #fa4616;
+  text-transform: uppercase;
+}
+.gv-site-ticker-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: gvTickerPulse 1.4s ease-in-out infinite;
+}
+@keyframes gvTickerPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.85); }
+}
+.gv-site-ticker-viewport {
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
 }
 .gv-site-ticker--empty {
-  opacity: 0.85;
+  opacity: 0.92;
 }
 .gv-site-ticker-track {
   display: flex;
@@ -21,7 +54,7 @@
   align-items: center;
   animation: gvSiteTickerScroll 45s linear infinite;
   white-space: nowrap;
-  padding-left: 100%;
+  padding: 0 1rem;
 }
 .gv-site-ticker-item {
   font-size: 0.8125rem;
@@ -47,16 +80,16 @@
 
 body.gv-has-site-ticker nav.fixed,
 body.gv-has-site-ticker #main-nav {
-  top: 36px !important;
+  top: 44px !important;
 }
 body.gv-has-site-ticker #ticker-bar {
   display: none !important;
 }
 body.gv-has-site-ticker #install-banner {
-  top: calc(56px + 36px) !important;
+  top: calc(56px + 44px) !important;
 }
 body.gv-has-site-ticker #hero-sec {
-  padding-top: calc(8rem + 36px) !important;
+  padding-top: calc(8rem + 44px) !important;
 }
 body.gv-has-site-ticker.gv-has-alert-banner {
   padding-top: 0;
@@ -76,7 +109,7 @@ body.gv-has-site-ticker.gv-has-alert-banner {
   min-height: 52px;
 }
 body.gv-has-site-ticker .gv-alert-banner {
-  top: 36px;
+  top: 44px;
 }
 .gv-alert-banner--visible {
   transform: translateY(0);
@@ -182,15 +215,15 @@ body.gv-has-site-ticker .gv-alert-banner {
 
 @media (max-width: 767px) {
   body.gv-has-site-ticker .gv-mob-header {
-    top: 36px !important;
+    top: 44px !important;
   }
   body.gv-has-site-ticker #vault-interior.gv-mobile-active #gv-vault-content {
-    padding-top: calc(56px + 36px) !important;
+    padding-top: calc(56px + 44px) !important;
   }
   body.gv-has-site-ticker #vault-interior.gv-mobile-active.gv-has-breaking #gv-vault-content {
-    padding-top: calc(100px + 36px) !important;
+    padding-top: calc(100px + 44px) !important;
   }
   body.gv-has-site-ticker .gv-breaking-banner {
-    top: calc(56px + 36px) !important;
+    top: calc(56px + 44px) !important;
   }
 }

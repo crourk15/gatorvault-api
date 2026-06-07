@@ -30,14 +30,18 @@
     .war-section ul{margin:.25rem 0 0 1rem;padding:0;list-style:disc;}
     .war-sources{font-size:.7rem;color:#64748b;margin-top:1rem;padding-top:.75rem;border-top:1px solid rgba(0,48,135,.25);}
     .war-upgrade{display:inline-block;background:#FA4616;color:#fff;font-weight:700;font-size:.75rem;padding:.5rem 1rem;border-radius:.5rem;text-decoration:none;}
-    body.gv-has-site-ticker{padding-top:36px;}
+    body.gv-has-site-ticker{padding-top:44px;}
   </style>
-  <link rel="stylesheet" href="/gv-global.css">
-  <script src="/gv-global.js" defer></script>
+  <meta name="gv-build" content="b3ee89c2" />
+  <link rel="stylesheet" href="/gv-global.css?v=b3ee89c2">
+  <script src="/gv-global.js?v=b3ee89c2" defer></script>
 </head>
 <body class="min-h-screen gv-has-site-ticker">
   <div id="gv-site-ticker" class="gv-site-ticker" aria-live="polite" aria-label="Live GatorVault feed">
-    <div id="gv-site-ticker-track" class="gv-site-ticker-track"></div>
+    <div class="gv-site-ticker-label"><span class="gv-site-ticker-dot" aria-hidden="true"></span>LIVE</div>
+    <div class="gv-site-ticker-viewport">
+      <div id="gv-site-ticker-track" class="gv-site-ticker-track"></div>
+    </div>
   </div>
   <div id="gv-alert-banner" class="gv-alert-banner" role="alert" aria-live="assertive">
     <div class="gv-alert-banner-inner">

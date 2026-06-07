@@ -547,6 +547,24 @@ app.get('/api/onboarding/sequence', (req, res) => {
   });
 });
 
+app.get('/api/version', (req, res) => {
+  const commit = process.env.RENDER_GIT_COMMIT || process.env.GV_BUILD || 'dev';
+  return res.json({
+    ok: true,
+    build: commit,
+    buildShort: String(commit).slice(0, 7),
+    uiBuild: 'b3ee89c2',
+    features: {
+      globalTicker: true,
+      bannerAlerts: true,
+      onboardingScheduler: true,
+      articleSourceValidation: true,
+      scoutingTeasers: true
+    },
+    onboardingDays: ONBOARDING_SEQUENCE.map((e) => e.day)
+  });
+});
+
 app.post('/api/welcome', async (req, res) => {
   try {
     const email = String(req.body.email || '').trim().toLowerCase();

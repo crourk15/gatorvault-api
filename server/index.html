@@ -13,6 +13,7 @@
     <meta name="description" content="Built for passionate Florida Gators football fans. Depth charts, recruiting intel, transfer portal, scheme breakdowns, and game week analysis — your full UF Football hub. 30-day free trial." />
     <meta name="keywords" content="Florida Gators football, UF football, Gators recruiting, Florida Gators depth chart, Gators transfer portal, Jon Sumrall, SEC football, Gator Nation" />
     <meta name="robots" content="index, follow" />
+    <meta name="gv-build" content="b3ee89c2" />
     <link rel="canonical" href="https://gatorvaultinsider.com" />
     <meta name="google-site-verification" content="CfKonZGeVMZBFJ3JhqaFhPfs7kS6-LvCmskXElgekTs" />
 
@@ -392,13 +393,16 @@
       };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <link rel="stylesheet" href="/gv-global.css">
-    <script src="/gv-global.js" defer></script>
+    <link rel="stylesheet" href="/gv-global.css?v=b3ee89c2">
+    <script src="/gv-global.js?v=b3ee89c2" defer></script>
 </head>
 <body data-id="0" class="gv-has-site-ticker">
     <app-icon data-id="1" hidden data-icon="shield" data-palette="Blue"></app-icon>
     <div id="gv-site-ticker" class="gv-site-ticker" aria-live="polite" aria-label="Live GatorVault feed">
-        <div id="gv-site-ticker-track" class="gv-site-ticker-track"></div>
+        <div class="gv-site-ticker-label"><span class="gv-site-ticker-dot" aria-hidden="true"></span>LIVE</div>
+        <div class="gv-site-ticker-viewport">
+            <div id="gv-site-ticker-track" class="gv-site-ticker-track"></div>
+        </div>
     </div>
     <div id="gv-alert-banner" class="gv-alert-banner" role="alert" aria-live="assertive">
         <div class="gv-alert-banner-inner">
@@ -912,13 +916,14 @@
                     <div data-id="521" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-5 mt-4">
                         <h3 data-id="522" class="font-display text-lg font-bold text-white mb-3">Onboarding Email Sequence</h3>
                         <div data-id="523" class="space-y-2 text-sm">
-                            <div data-id="524" class="flex items-center gap-3"><span data-id="525" class="text-green-400 font-bold text-xs">DAY 0</span><span data-id="526" class="text-surface-200">Welcome — Your Insider Access Is Live</span></div>
-                            <div class="flex items-center gap-3"><span class="text-gator-orange font-bold text-xs">DAY 1</span><span class="text-surface-200">Your GatorVault Playbook</span></div>
-                            <div class="flex items-center gap-3"><span class="text-gator-orange font-bold text-xs">DAY 3</span><span class="text-surface-200">Why GatorVault Was Built</span></div>
-                            <div data-id="530" class="flex items-center gap-3"><span data-id="531" class="text-gator-orange font-bold text-xs">DAY 5</span><span data-id="532" class="text-surface-200">What's your #1 Gators question?</span></div>
-                            <div class="flex items-center gap-3"><span class="text-gator-orange font-bold text-xs">DAY 7</span><span class="text-surface-200">Your Trial Checklist</span></div>
-                            <div class="flex items-center gap-3"><span class="text-gator-orange font-bold text-xs">DAY 10</span><span class="text-surface-200">What you've unlocked + what's next</span></div>
-                            <div class="flex items-center gap-3"><span class="text-gator-orange font-bold text-xs">DAY 14</span><span class="text-surface-200">Trial ending — keep your access</span></div>
+                            <div data-id="524" class="flex items-center gap-3"><span data-id="525" class="text-green-400 font-bold text-xs">DAY 0</span><span data-id="526" class="text-surface-200">Welcome Email</span></div>
+                            <div class="flex items-center gap-3"><span class="text-gator-orange font-bold text-xs">DAY 1</span><span class="text-surface-200">Getting Started</span></div>
+                            <div class="flex items-center gap-3"><span class="text-gator-orange font-bold text-xs">DAY 2</span><span class="text-surface-200">Feature Highlight</span></div>
+                            <div class="flex items-center gap-3"><span class="text-gator-orange font-bold text-xs">DAY 3</span><span class="text-surface-200">Recruiting Tools</span></div>
+                            <div data-id="530" class="flex items-center gap-3"><span data-id="531" class="text-gator-orange font-bold text-xs">DAY 5</span><span data-id="532" class="text-surface-200">War Room Overview</span></div>
+                            <div class="flex items-center gap-3"><span class="text-gator-orange font-bold text-xs">DAY 7</span><span class="text-surface-200">Heat Check + Scouting</span></div>
+                            <div class="flex items-center gap-3"><span class="text-gator-orange font-bold text-xs">DAY 10</span><span class="text-surface-200">Mobile App Features</span></div>
+                            <div class="flex items-center gap-3"><span class="text-gator-orange font-bold text-xs">DAY 14</span><span class="text-surface-200">Upgrade CTA</span></div>
                         </div>
                     </div>
                 </div>
@@ -2318,13 +2323,25 @@
     function gvScoutingTypeLabel(t){
         return {recruit:'Recruit',portal:'Portal',target:'Target',roster:'Roster'}[t]||t;
     }
-    function gvRenderScoutingDatabase(list){
+    function gvRenderScoutingDatabase(list, apiLocked){
         var el=document.getElementById('scouting-database-content');
         if(!el)return;
-        if(!canRead('war')){
-            el.innerHTML='<div class="heat-lock-panel"><div class="text-4xl mb-3">⚔️</div><h3 class="font-display text-xl font-bold text-white mb-2">Insider Scouting Database</h3>'
-                +'<p class="text-sm text-surface-200/80 mb-4 max-w-md mx-auto">Verified evaluations from Power, Bender, Ivins, Alderman &amp; Wiltfong — exclusive to War Room.</p>'
-                +'<button type="button" class="bg-gator-orange hover:bg-gator-orangedk text-white font-bold px-6 py-3 rounded-xl" onclick="if(window.openRegModal)openRegModal(\'war\')">Upgrade to War Room →</button></div>';
+        var rows=(list||[]).filter(Boolean);
+        var warAccess=canRead('war')&&!apiLocked;
+        if(!warAccess){
+            var teaserCards=rows.length?rows.map(function(b){
+                var writers=(b.sources||[]).join(' · ');
+                return '<div class="bg-surface-800 border border-gator-blue/20 rounded-xl p-4 opacity-90">'
+                    +'<div class="flex items-start justify-between gap-3"><div>'
+                    +'<div class="font-display font-bold text-white">'+gvEscHtml(b.playerName||b.playerSlug)+'</div>'
+                    +'<div class="text-xs text-gator-orange font-semibold mt-1">'+gvEscHtml(gvScoutingTypeLabel(b.playerType))+'</div>'
+                    +(writers?'<div class="text-[.65rem] text-surface-200/60 mt-2">'+gvEscHtml(writers)+'</div>':'')
+                    +'</div><span class="text-xs font-bold text-surface-200/50 whitespace-nowrap">🔒 War Room</span></div></div>';
+            }).join(''):'';
+            el.innerHTML='<div class="heat-lock-panel mb-4"><div class="text-4xl mb-3">⚔️</div><h3 class="font-display text-xl font-bold text-white mb-2">Insider Scouting Database</h3>'
+                +'<p class="text-sm text-surface-200/80 mb-4 max-w-md mx-auto">Verified evaluations from Power, Bender, Ivins, Alderman &amp; Wiltfong — '+rows.length+' profile'+(rows.length===1?'':'s')+' seeded from public Rivals/On3 reporting.</p>'
+                +'<button type="button" class="bg-gator-orange hover:bg-gator-orangedk text-white font-bold px-6 py-3 rounded-xl" onclick="if(window.openRegModal)openRegModal(\'war\')">Upgrade to War Room →</button></div>'
+                +(teaserCards?'<div class="space-y-3">'+teaserCards+'</div>':'');
             return;
         }
         var type=window._gvScoutingType||'all';
@@ -2348,17 +2365,17 @@
     function gvLoadScoutingDatabase(){
         var el=document.getElementById('scouting-database-content');
         if(el)el.innerHTML='<p class="text-surface-200 text-sm">Loading scouting database…</p>';
-        if(!canRead('war')){gvRenderScoutingDatabase([]);return Promise.resolve();}
         return gvEnsureSignedSession().then(function(){
             return fetch(gvWarRoomApiBase()+'/api/war-room/breakdowns',{headers:gvWarRoomHeaders()});
         }).then(function(r){return r.json();})
             .then(function(data){
-                if(data&&data.locked){gvRenderScoutingDatabase([]);return;}
+                var apiLocked=!!(data&&data.locked);
                 window._gvScoutingList=(data&&data.breakdowns)||[];
-                gvRenderScoutingDatabase(window._gvScoutingList);
+                window._gvScoutingLocked=apiLocked;
+                gvRenderScoutingDatabase(window._gvScoutingList,apiLocked);
             })
             .catch(function(){
-                gvRenderScoutingDatabase([]);
+                gvRenderScoutingDatabase([],true);
             });
     }
     function gvOn3ProfileUrl(p){
@@ -2455,7 +2472,7 @@
             document.querySelectorAll('.scouting-type-tab').forEach(function(x){x.classList.remove('active','bg-gator-orange','text-white');x.classList.add('bg-surface-700','text-surface-200');});
             this.classList.add('active','bg-gator-orange','text-white');this.classList.remove('bg-surface-700','text-surface-200');
             window._gvScoutingType=this.dataset.stype||'all';
-            gvRenderScoutingDatabase(window._gvScoutingList||[]);
+            gvRenderScoutingDatabase(window._gvScoutingList,window._gvScoutingLocked);
         });
     });
     if(typeof gvUpdateWarRoomNav==='function')gvUpdateWarRoomNav();

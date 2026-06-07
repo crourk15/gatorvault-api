@@ -1,0 +1,17 @@
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/player.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/article.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/highlight.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/gv-global.js
+  Cache-Control: public, max-age=300, must-revalidate
+
+/gv-global.css
+  Cache-Control: public, max-age=300, must-revalidate

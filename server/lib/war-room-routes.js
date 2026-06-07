@@ -50,7 +50,13 @@ function mountWarRoomRoutes(app) {
           locked: true,
           tier: 'war',
           count: all.length,
-          breakdowns: []
+          breakdowns: all.map((b) => ({
+            playerSlug: b.playerSlug,
+            playerName: b.playerName,
+            playerType: b.playerType,
+            locked: true,
+            sources: (b.sources || []).map((s) => s.writer)
+          }))
         });
       }
 
