@@ -152,9 +152,10 @@
         .an-link-btn:hover{background:rgba(250,70,22,.1);border-color:#FA4616;}
         .persona-card{background:#0a1628;border-top:4px solid #FA4616;border-left:1px solid rgba(0,48,135,.2);border-right:1px solid rgba(0,48,135,.2);border-bottom:1px solid rgba(0,48,135,.2);border-radius:1rem;padding:1.5rem;transition:all .2s;}
         .persona-card:hover{border-top-color:#fbbf24;transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,48,135,.25);}
-        .highlight-card{background:#0a1628;border:2px solid rgba(0,48,135,.25);border-radius:1rem;overflow:hidden;transition:all .2s;cursor:pointer;}
-        .highlight-card:hover{border-color:rgba(250,70,22,.4);transform:translateY(-2px);}
-        .highlight-thumb{position:relative;padding-top:56.25%;overflow:hidden;}
+        .highlight-card{background:#0a1628;border:2px solid rgba(0,48,135,.25);border-radius:1rem;overflow:hidden;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;text-decoration:none;color:inherit;}
+        .highlight-card:hover{border-color:rgba(250,70,22,.4);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,48,135,.25);}
+        .highlight-thumb{position:relative;padding-top:56.25%;overflow:hidden;background:#060f1f;}
+        .highlight-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
         .highlight-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
         .play-circle{width:56px;height:56px;border-radius:50%;background:rgba(250,70,22,.9);display:flex;align-items:center;justify-content:center;transition:transform .2s;}
         .highlight-card:hover .play-circle{transform:scale(1.1);}
@@ -301,7 +302,8 @@
             #vault-interior.gv-mobile-active.gv-has-breaking #gv-vault-content{padding-top:100px;}
             #vault-interior.gv-mobile-active .vpane{padding:0 16px 16px;}
             #vault-interior.gv-mobile-active #vpane-mhome,
-            #vault-interior.gv-mobile-active #vpane-live{padding:0 0 16px;}
+            #vault-interior.gv-mobile-active #vpane-live,
+            #vault-interior.gv-mobile-active #vpane-beat{padding:0 0 16px;}
             #vault-interior.gv-mobile-active #vpane-live>.flex p.text-surface-200{display:none;}
             #vault-interior.gv-mobile-active #changelog-strip,
             #vault-interior.gv-mobile-active #live-ticker-wrap{display:none!important;}
@@ -323,7 +325,7 @@
 
             .gv-mob-module{background:#0a1628;margin:0 0 12px;padding:16px;border-top:1px solid rgba(0,48,135,.35);border-bottom:1px solid rgba(0,48,135,.35);}
             .gv-mob-module-hdr{font-size:21px;font-weight:700;color:#fff;padding-bottom:10px;margin-bottom:12px;border-bottom:2px solid #FA4616;font-family:'Oswald',sans-serif;}
-            .gv-espn-card{background:#060f1f;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:14px 16px;margin-bottom:10px;min-height:44px;}
+            .gv-espn-card{background:#060f1f;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:14px 16px;margin-bottom:10px;min-height:44px;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;}
             .gv-espn-card-title{font-size:18px;font-weight:600;color:#fff;line-height:1.35;margin:0 0 6px;font-family:'Oswald',sans-serif;}
             .gv-espn-card-body{font-size:16px;color:#cbd5e1;line-height:1.45;margin:0;}
             .gv-espn-card-time{font-size:14px;color:#64748b;margin-top:8px;}
@@ -339,8 +341,18 @@
             .gv-hscroll-track .apparel-card,
             .gv-hscroll-track .gv-espn-card{min-width:280px;}
 
-            .gv-ptr-indicator{position:fixed;top:56px;left:50%;transform:translateX(-50%) translateY(-120%);background:#003087;color:#fff;font-size:13px;font-weight:600;padding:8px 16px;border-radius:20px;z-index:130;transition:transform .2s;box-shadow:0 4px 16px rgba(0,0,0,.35);}
-            .gv-ptr-indicator.visible{transform:translateX(-50%) translateY(8px);}
+            .gv-ptr-indicator{display:none!important;visibility:hidden;pointer-events:none;}
+            .gv-espn-card:active{transform:scale(.985);}
+            .gv-headline-card{background:#060f1f;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;transition:transform .18s ease,border-color .18s ease;}
+            .gv-headline-card:active{transform:scale(.985);}
+            .gv-headline-card:hover{border-color:rgba(250,70,22,.35);}
+            .gv-beat-scroll{display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch;}
+            .gv-beat-card{background:#060f1f;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:14px 16px;transition:border-color .18s ease,transform .18s ease;}
+            .gv-beat-card:active{transform:scale(.99);}
+            .gv-beat-card:hover{border-color:rgba(168,85,247,.35);}
+            .gv-beat-card .gv-beat-text{color:#e2e8f0;line-height:1.55;font-size:.95rem;white-space:pre-wrap;word-break:break-word;}
+            .gv-beat-module .gv-mob-module-hdr{border-bottom-color:rgba(168,85,247,.5);}
+            .gv-mob-module{transition:opacity .2s ease;}
 
             .gv-more-sheet{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;display:none;}
             .gv-more-sheet.open{display:block;}
@@ -814,17 +826,14 @@
             <div data-id="499" id="gv-vault-content" class="max-w-7xl mx-auto px-4 md:px-6 py-6">
                 <!-- ====== MOBILE HOME (ESPN stacked modules) ====== -->
                 <div id="vpane-mhome" class="vpane gv-mob-only fade-in">
-                    <section class="gv-mob-module" id="gv-mhome-breaking-mod">
-                        <h2 class="gv-mob-module-hdr">Breaking</h2>
-                        <div id="gv-mhome-breaking"></div>
-                    </section>
                     <section class="gv-mob-module">
-                        <h2 class="gv-mob-module-hdr">Live Feed</h2>
-                        <div id="gv-mhome-feed"></div>
+                        <h2 class="gv-mob-module-hdr">Top Headlines</h2>
+                        <div id="gv-mhome-headlines"></div>
                     </section>
-                    <section class="gv-mob-module">
+                    <section class="gv-mob-module gv-beat-module">
                         <h2 class="gv-mob-module-hdr">Beat Writer Stream</h2>
                         <div id="gv-mhome-beat"></div>
+                        <button type="button" class="text-gator-orange text-sm font-semibold mt-2 bg-transparent border-none p-0" data-mnav="beat">See all beat writers →</button>
                     </section>
                     <section class="gv-mob-module">
                         <h2 class="gv-mob-module-hdr">Recruiting</h2>
@@ -844,6 +853,16 @@
                     <section class="gv-mob-module">
                         <h2 class="gv-mob-module-hdr">Tickets &amp; Apparel</h2>
                         <div id="gv-mhome-shop" class="gv-hscroll-track"></div>
+                    </section>
+                </div>
+
+                <!-- ====== MOBILE BEAT (dedicated tab) ====== -->
+                <div id="vpane-beat" class="vpane gv-mob-only fade-in">
+                    <section class="gv-mob-module gv-beat-module">
+                        <h2 class="gv-mob-module-hdr">Beat Writer Stream</h2>
+                        <p class="text-sm text-surface-200/60 mb-3">Live from UF beat writers — tap any post to open on X.</p>
+                        <div id="live-beat-alert-mob" class="hidden text-sm text-yellow-300/90 bg-yellow-900/20 border border-yellow-700/30 rounded-lg p-3 mb-3"></div>
+                        <div id="gv-mobile-beat-list" class="gv-beat-scroll"></div>
                     </section>
                 </div>
 
@@ -2082,7 +2101,7 @@
             showAdminPinModal();
             return;
         }
-        if(tab==='highlights'){try{renderHighlights();}catch(e){}}
+        if(tab==='highlights'){try{gvLoadHighlights();}catch(e){}}
         if(tab==='recruit'||tab==='portal'){try{gvLoadRecruitingLive(true);}catch(e){}}
         if(tab==='articles'){try{gvLoadPublishedContent(true);}catch(e){}}
         if(tab==='community'){try{gvLoadCommunity(true);}catch(e){}}
@@ -2383,15 +2402,6 @@
         {game:'🐊 UF @ FSU',date:'November 27, 2026 · Noon ET',venue:'Doak Campbell Stadium, Tallahassee FL',type:'AWAY',note:'Black Friday Rivalry Game'}
     ];
     var playerProfiles=[];
-    var GV_HIGHLIGHTS_LIVE=false;
-    var highlightMomentWatchlist=[
-        {season:'2025',title:'Baugh & Wilson — Texas upset in The Swamp',meta:'Oct 2025 · UF 29, Texas 21',note:'Opening-drive score and Wilson\'s 55-yard debut touchdown.'},
-        {season:'2025',title:'Baugh rivalry finale vs Florida State',meta:'Nov 2025 · UF 40, FSU 21',note:'266-yard night to close the season — full cut in production.'},
-        {season:'2025',title:'Boireau game-winning interception vs Mississippi State',meta:'Oct 2025 · UF 23, Miss State 21',note:'Swamp erupts with 21 seconds left.'},
-        {season:'2026',title:'2026 Portal Class Recap: 23 In, 29 Out',meta:'Portal Radar · Full breakdown',note:'ESPN-style class recap — headliners, scheme fits, and every confirmed exit with destination schools. No video embeds.'},
-        {season:'2026',title:'Jayden Woods at JACK — scheme install',meta:'Defensive identity',note:'3-3-5 edge pressure package breakdown — native clip when cleared.'},
-        {season:'2026',title:'Sumrall post-spring presser',meta:'Media · interviews',note:'Press clips ship only when sourced natively — no scrubbed reels.'}
-    ];
     var recentAlerts=[];
     var GV_ALERTS_FEED_VERSION=7;
     var GV_COMMIT_MIN_CLASS=2027;
@@ -3244,6 +3254,7 @@
         try{renderGames();}catch(e){console.warn('renderGames error:',e);}
         try{gvLoadCommunity();}catch(e){console.warn('gvLoadCommunity error:',e);}
         try{renderTickets();}catch(e){console.warn('renderTickets error:',e);}
+        try{gvLoadHighlights();}catch(e){console.warn('gvLoadHighlights error:',e);}
         try{renderHighlights();}catch(e){console.warn('renderHighlights error:',e);}
         try{renderLiveScores();}catch(e){console.warn('renderLiveScores error:',e);}
         try{renderAlerts();}catch(e){console.warn('renderAlerts error:',e);}
@@ -3254,55 +3265,49 @@
     }
     function canRead(tier){var levels={locker:0,film:1,war:2};return(levels[window.GV_ROLE]||0)>=(levels[tier]||0)||window.GV_OPERATOR;}
     
-    // ========== FILM ROOM (highlights on hold until native clips) ==========
+    // ========== FILM ROOM (native ESPN-style highlights) ==========
+    var GV_HIGHLIGHTS_LIVE=true;
+    window._gvHighlights=[];
     function gvEscHtml(s){
         return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
-    function renderHighlightMomentCard(m){
-        var pill=m.season==='2026'?'highlight-season-2026':'highlight-season-2025';
-        var label=m.season==='2026'?'2026 Preview':'2025 Archive';
-        return '<div class="highlight-moment-card">'
-            +'<div class="flex items-start justify-between gap-3 mb-2">'
-            +'<span class="highlight-season-pill '+pill+'">'+label+'</span>'
-            +'<span class="highlight-moment-status">In production</span></div>'
-            +'<p class="text-sm font-semibold text-white leading-snug">'+gvEscHtml(m.title)+'</p>'
-            +'<p class="highlight-game-tag mt-1">'+gvEscHtml(m.meta)+'</p>'
-            +'<p class="text-xs text-surface-200/55 mt-2 leading-relaxed">'+gvEscHtml(m.note)+'</p></div>';
+    function gvLoadHighlights(){
+        return fetch(gvLiveApiBase()+'/api/highlights/clips')
+            .then(function(r){return r.json();})
+            .then(function(j){
+                if(j.ok)window._gvHighlights=j.clips||[];
+                renderHighlights();
+            })
+            .catch(function(){renderHighlights();});
+    }
+    function gvRenderHighlightCard(c){
+        var pill=c.season==='2026'?'highlight-season-2026':'highlight-season-2025';
+        var thumb=gvLiveResolveUrl(c.thumbUrl);
+        var href='/highlight/'+encodeURIComponent(c.slug);
+        return '<a href="'+gvEscHtml(href)+'" class="highlight-card block no-underline text-inherit">'
+            +'<div class="highlight-thumb">'
+            +'<img src="'+gvEscHtml(thumb)+'" alt="" loading="lazy">'
+            +'<div class="highlight-overlay"><div class="play-circle"><span class="text-white text-xl ml-0.5">▶</span></div></div>'
+            +'<span class="absolute top-3 left-3 highlight-season-pill '+pill+'">'+gvEscHtml(c.category)+'</span>'
+            +'<span class="absolute bottom-3 right-3 text-xs font-bold text-white bg-black/60 px-2 py-1 rounded">'+gvEscHtml(c.duration)+'</span>'
+            +'</div>'
+            +'<div class="p-4">'
+            +'<h3 class="font-display text-lg font-bold text-white leading-snug mb-1">'+gvEscHtml(c.title)+'</h3>'
+            +'<p class="highlight-game-tag text-gator-orange text-sm font-semibold">'+gvEscHtml(c.gameLine)+'</p>'
+            +'<p class="text-sm text-surface-200/70 mt-2 line-clamp-2">'+gvEscHtml(c.dek)+'</p>'
+            +'</div></a>';
     }
     function renderHighlights(){
         var shell=document.getElementById('highlights-shell');
         if(!shell||!document.getElementById('vpane-highlights'))return;
-        if(GV_HIGHLIGHTS_LIVE){return;}
-        var rewind=highlightMomentWatchlist.filter(function(m){return m.season==='2025';});
-        var preview=highlightMomentWatchlist.filter(function(m){return m.season==='2026';});
-        shell.innerHTML='<div class="highlight-soon-panel space-y-4">'
-            +'<div class="flex flex-wrap items-center gap-2"><span class="highlight-soon-badge">Film Room</span><span class="text-xs text-surface-200/50 uppercase tracking-wider font-semibold">Coming soon</span></div>'
-            +'<h2 class="font-display text-xl md:text-2xl font-bold text-white max-w-xl">Native highlight cuts — not scrubbed YouTube reels.</h2>'
-            +'<p class="text-sm text-surface-200/75 max-w-2xl leading-relaxed">We\'re holding playback until we can ship clean clips sourced from @GatorVaultInsider, UF Athletics, or rights-cleared X posts. No embedded third-party scrubbing — that stays off-brand for GatorVault.</p>'
-            +'<div class="flex flex-wrap gap-3 pt-1">'
-            +'<div class="player-stat-pill"><p class="text-[.65rem] uppercase tracking-[.12em] text-surface-400">On the board</p><p class="font-display text-xl font-bold text-white">'+highlightMomentWatchlist.length+'</p></div>'
-            +'<div class="player-stat-pill"><p class="text-[.65rem] uppercase tracking-[.12em] text-surface-400">2025 archive</p><p class="font-display text-xl font-bold text-gator-orange">'+rewind.length+'</p></div>'
-            +'<div class="player-stat-pill"><p class="text-[.65rem] uppercase tracking-[.12em] text-surface-400">2026 preview</p><p class="font-display text-xl font-bold text-white">'+preview.length+'</p></div>'
-            +'</div></div>'
-            +'<div class="mt-8"><div class="flex items-center justify-between gap-3 mb-4 flex-wrap">'
-            +'<h3 class="font-display text-lg font-bold text-white">Moments we\'re cutting first</h3>'
-            +'<span class="text-xs text-surface-200/50">Editorial watchlist · playback disabled</span></div>'
-            +'<div class="grid grid-cols-1 md:grid-cols-2 gap-4">'
-            +highlightMomentWatchlist.map(function(m){
-                if(m.title.indexOf('Portal Class Recap')>=0){
-                    return '<button type="button" class="highlight-moment-card text-left w-full cursor-pointer" data-open-article="art-portal-class-2026">'
-                        +'<div class="flex items-start justify-between gap-3 mb-2"><span class="highlight-season-pill highlight-season-2026">2026 Preview</span><span class="highlight-moment-status text-gator-orange">Read now →</span></div>'
-                        +'<p class="text-sm font-semibold text-white leading-snug">'+gvEscHtml(m.title)+'</p>'
-                        +'<p class="highlight-game-tag mt-1">'+gvEscHtml(m.meta)+'</p>'
-                        +'<p class="text-xs text-surface-200/55 mt-2 leading-relaxed">'+gvEscHtml(m.note)+'</p></button>';
-                }
-                return renderHighlightMomentCard(m);
-            }).join('')
-            +'</div></div>'
-            +'<p class="text-xs text-surface-200/45 text-center pt-2">Portal recap is live in Articles. Film clips ship when native sources are cleared — follow <a href="https://x.com/GatorVaultInsider" target="_blank" rel="noopener" class="text-gator-orange hover:text-white font-semibold">@GatorVaultInsider</a>.</p>';
-        shell.querySelectorAll('[data-open-article]').forEach(function(btn){
-            btn.addEventListener('click',function(){gvOpenArticle(btn.getAttribute('data-open-article'));});
-        });
+        var clips=window._gvHighlights||[];
+        if(!clips.length){
+            shell.innerHTML='<p class="text-surface-200/60 text-sm py-4">Loading Film Room highlights…</p>';
+            return;
+        }
+        shell.innerHTML='<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">'
+            +clips.map(gvRenderHighlightCard).join('')
+            +'</div>';
     }
     window.openHighlightPlayer=function(){};
     window.closeHighlightPlayer=function(){
@@ -4428,22 +4433,67 @@
 
     function gvRenderLiveBeatAlert(beat){
         var alertEl=document.getElementById('live-beat-alert');
-        if(!alertEl)return;
+        var mobAlert=document.getElementById('live-beat-alert-mob');
         var beatErr=gvLiveBeatErrorMessage(beat);
+        var html='';
         if(beatErr){
-            alertEl.classList.remove('hidden');
-            alertEl.innerHTML='<strong>Beat stream needs X_BEARER_TOKEN</strong><br>'+gvLiveEsc(beatErr)
+            html='<strong>Beat stream needs X_BEARER_TOKEN</strong><br>'+gvLiveEsc(beatErr)
                 +'<br><span class="text-surface-200/60">Render → gatorvault-api → Environment → add X_BEARER_TOKEN → redeploy. Auto-retries every 3 minutes.</span>';
-        }else{
-            alertEl.classList.add('hidden');
-            alertEl.innerHTML='';
         }
+        if(alertEl){
+            if(beatErr){alertEl.classList.remove('hidden');alertEl.innerHTML=html;}
+            else{alertEl.classList.add('hidden');alertEl.innerHTML='';}
+        }
+        if(mobAlert){
+            if(beatErr){mobAlert.classList.remove('hidden');mobAlert.innerHTML=html;}
+            else{mobAlert.classList.add('hidden');mobAlert.innerHTML='';}
+        }
+    }
+
+    function gvRenderBeatCardHtml(p,compact){
+        var href=p.url?gvLiveResolveUrl(p.url):null;
+        var text=compact?String(p.text||'').slice(0,160):String(p.text||'');
+        return '<div class="gv-beat-card"'+(href?' data-href="'+gvLiveEsc(href)+'" style="cursor:pointer"':'')+'>'
+            +'<div class="flex items-center justify-between gap-2 mb-2">'
+            +'<span class="text-xs font-bold text-purple-300 uppercase tracking-wide">@'+gvLiveEsc(p.handle||'')+'</span>'
+            +'<span class="text-[.65rem] text-surface-200/50 shrink-0">'+gvLiveEsc(gvLiveTimeAgo(p.publishedAt))+'</span></div>'
+            +'<p class="gv-beat-text">'+gvLiveEsc(text)+'</p>'
+            +(p.outlet?'<p class="text-xs text-surface-200/45 mt-2">'+gvLiveEsc(p.writerName)+' · '+gvLiveEsc(p.outlet)+'</p>':'')
+            +(href&&!compact?'<span class="text-xs text-gator-orange font-semibold mt-2 inline-block">View on X →</span>':'')
+            +'</div>';
+    }
+
+    function gvWireBeatCards(root){
+        if(!root)return;
+        root.querySelectorAll('.gv-beat-card[data-href]').forEach(function(card){
+            card.addEventListener('click',function(){
+                window.open(card.getAttribute('data-href'),'_blank','noopener,noreferrer');
+            });
+        });
+    }
+
+    function gvRenderMobileBeat(){
+        var el=document.getElementById('gv-mobile-beat-list');
+        if(!el||!gvIsMobile())return;
+        var beat=window._gvLive.beat||{};
+        gvRenderLiveBeatAlert(beat);
+        var posts=(beat.posts||[]);
+        if(!posts.length){
+            var beatErr=beat&&(beat.error||(beat.tokenStatus&&beat.tokenStatus.error));
+            el.innerHTML=beatErr
+                ?'<p class="text-surface-200/50 text-sm px-1">Beat stream will populate once the X token is active.</p>'
+                :'<p class="text-surface-200/50 text-sm px-1">Beat stream loading…</p>';
+            return;
+        }
+        el.innerHTML=posts.map(function(p){return gvRenderBeatCardHtml(p,false);}).join('');
+        gvWireBeatCards(el);
     }
 
     function gvRenderLiveBeat(beat){
         var el=document.getElementById('live-beat-list');
         if(!el)return;
         gvRenderLiveBeatAlert(beat);
+        gvRenderMobileBeat();
         var posts=(beat&&beat.posts)||[];
         var beatErr=beat&&(beat.error||(beat.tokenStatus&&beat.tokenStatus.error));
         if(!posts.length){
@@ -4455,8 +4505,13 @@
             }
             return;
         }
+        var useMobileCards=gvIsMobile&&gvIsMobile();
         var html='';
         posts.forEach(function(p){
+            if(useMobileCards){
+                html+=gvRenderBeatCardHtml(p,false);
+                return;
+            }
             var href=gvLiveResolveUrl(p.url);
             html+='<div class="live-beat-post">';
             html+='<div class="flex items-center justify-between gap-2 mb-1">';
@@ -4469,6 +4524,7 @@
             html+='</div>';
         });
         el.innerHTML=html;
+        if(useMobileCards)gvWireBeatCards(el);
     }
 
     function gvPodcastPlatformsHtml(show){
@@ -4678,7 +4734,7 @@
             if(sheet){sheet.classList.add('open');sheet.setAttribute('aria-hidden','false');}
             return;
         }
-        var map={beat:'live',mhome:'mhome'};
+        var map={beat:'beat',mhome:'mhome'};
         var paneTab=map[tab]||tab;
         document.querySelectorAll('.vpane').forEach(function(p){p.classList.remove('active');p.style.display='none';});
         var pane=document.getElementById('vpane-'+paneTab);
@@ -4687,12 +4743,8 @@
             try{gvLoadLiveDashboard(false);}catch(e){}
         }
         if(tab==='recruit'){try{renderRecruits();}catch(e){}}
-        if(tab==='beat'&&!opts.noScroll){
-            setTimeout(function(){
-                var beat=document.getElementById('gv-beat-panel');
-                if(beat)beat.scrollIntoView({behavior:'smooth',block:'start'});
-            },120);
-        }
+        if(tab==='beat'){try{gvRenderMobileBeat();}catch(e){}}
+        if(tab==='highlights'){try{gvLoadHighlights();}catch(e){}}
         gvMobileSetActive(tab==='mhome'?'mhome':tab);
         var sheet=document.getElementById('gv-more-sheet');
         if(sheet){sheet.classList.remove('open');sheet.setAttribute('aria-hidden','true');}
@@ -4730,61 +4782,71 @@
         if(interior)interior.classList.add('gv-has-breaking');
     }
 
+    function gvHeadlinePriority(item){
+        if(!item)return 99;
+        var type=item.type==='breaking'?'breaking':gvNormalizeLiveFeedType(item);
+        var rank={breaking:0,commit:1,portal:2,article:3,score:4,offers:5,thread:6};
+        return rank[type]!=null?rank[type]:50;
+    }
+
+    function gvRankHeadlines(feed){
+        return (feed||[]).slice().sort(function(a,b){
+            var pa=gvHeadlinePriority(a),pb=gvHeadlinePriority(b);
+            if(pa!==pb)return pa-pb;
+            return new Date(b.createdAt||0)-new Date(a.createdAt||0);
+        }).slice(0,12);
+    }
+
+    function gvRenderHeadlineCard(item){
+        var norm=gvNormalizeLiveFeedType(item);
+        var typeKey=item.type==='breaking'?'breaking':(norm||item.type||'update');
+        var typeLabel=gvLiveTypeLabel(typeKey);
+        var isBreaking=item.type==='breaking';
+        var href=gvLiveFeedSourceUrl(item)?gvLiveResolveUrl(gvLiveFeedSourceUrl(item)):null;
+        var slug=item.meta&&item.meta.playerSlug?item.meta.playerSlug:(item.meta&&item.meta.player&&item.meta.player.slug)||'';
+        return '<div class="gv-headline-card"'+(href?' data-href="'+gvLiveEsc(href)+'"':'')+' data-feed-type="'+gvLiveEsc(norm||item.type||'')+'"'+(slug?' data-slug="'+gvLiveEsc(slug)+'"':'')+'>'
+            +'<p class="text-xs font-bold uppercase tracking-wide mb-1 '+(isBreaking?'text-gator-orange':'text-surface-200/60')+'">'+gvLiveEsc(typeLabel)+(isBreaking?' · BREAKING':'')+'</p>'
+            +'<p class="gv-espn-card-title">'+gvLiveEsc(item.title)+'</p>'
+            +(item.summary?'<p class="gv-espn-card-body">'+gvLiveEsc(String(item.summary).slice(0,120))+'</p>':'')
+            +'<p class="gv-espn-card-time">'+gvLiveEsc(gvLiveTimeAgo(item.createdAt))+'</p></div>';
+    }
+
+    function gvWireHeadlineCards(root,items){
+        if(!root)return;
+        root.querySelectorAll('.gv-headline-card[data-href]').forEach(function(card){
+            card.addEventListener('click',function(){
+                var idx=Array.prototype.indexOf.call(root.children,card);
+                var item=items[idx];
+                var feedType=card.getAttribute('data-feed-type');
+                var slug=card.getAttribute('data-slug');
+                if(feedType==='commit'&&slug){gvOpenRecruitProfile(slug);return;}
+                if(feedType==='portal'&&slug){location.href='/player/'+slug;return;}
+                gvNavigate(card.getAttribute('data-href'));
+            });
+        });
+    }
+
     function gvRenderMobileHome(){
         if(!gvIsMobile())return;
         var feed=window._gvLive.feed||[];
         var beat=window._gvLive.beat||{};
-        var brEl=document.getElementById('gv-mhome-breaking');
-        var feedEl=document.getElementById('gv-mhome-feed');
+        var headEl=document.getElementById('gv-mhome-headlines');
         var beatEl=document.getElementById('gv-mhome-beat');
         var recEl=document.getElementById('gv-mhome-recruit');
         var podEl=document.getElementById('gv-mhome-podcasts');
         var shopEl=document.getElementById('gv-mhome-shop');
-        if(!feedEl)return;
+        if(!headEl)return;
 
-        var breaking=feed.filter(function(i){return i.type==='breaking';}).slice(0,3);
-        if(brEl){
-            if(!breaking.length)brEl.innerHTML='<p class="gv-espn-card-body text-surface-200/60">No breaking alerts right now.</p>';
-            else brEl.innerHTML=breaking.map(function(item){
-                var href=gvLiveFeedSourceUrl(item)?gvLiveResolveUrl(gvLiveFeedSourceUrl(item)):null;
-                return '<div class="gv-espn-card"'+(href?' style="cursor:pointer" data-href="'+gvLiveEsc(href)+'"':'')+'>'
-                    +'<p class="gv-espn-card-title">'+gvLiveEsc(item.title)+'</p>'
-                    +(item.summary?'<p class="gv-espn-card-body">'+gvLiveEsc(String(item.summary).slice(0,120))+'</p>':'')
-                    +'<p class="gv-espn-card-time">'+gvLiveEsc(gvLiveTimeAgo(item.createdAt))+'</p></div>';
-            }).join('');
-            brEl.querySelectorAll('[data-href]').forEach(function(card){
-                card.addEventListener('click',function(){gvNavigate(card.getAttribute('data-href'));});
-            });
-        }
+        var headlines=gvRankHeadlines(feed);
+        headEl.innerHTML=headlines.length?headlines.map(gvRenderHeadlineCard).join('')
+            :'<p class="gv-espn-card-body text-surface-200/60">Headlines loading…</p>';
+        gvWireHeadlineCards(headEl,headlines);
 
-        var topFeed=feed.slice(0,5);
-        feedEl.innerHTML=topFeed.length?topFeed.map(function(item){
-            var href=gvLiveFeedSourceUrl(item)?gvLiveResolveUrl(gvLiveFeedSourceUrl(item)):null;
-            return '<div class="gv-espn-card"'+(href?' style="cursor:pointer" data-href="'+gvLiveEsc(href)+'"':'')+'>'
-                +'<p class="gv-espn-card-title">'+gvLiveEsc(gvLiveTypeLabel(item.type))+': '+gvLiveEsc(item.title)+'</p>'
-                +(item.summary?'<p class="gv-espn-card-body">'+gvLiveEsc(String(item.summary).slice(0,100))+'</p>':'')
-                +'<p class="gv-espn-card-time">'+gvLiveEsc(gvLiveTimeAgo(item.createdAt))+'</p></div>';
-        }).join(''):'<p class="gv-espn-card-body text-surface-200/60">Feed loading…</p>';
-        feedEl.querySelectorAll('[data-href]').forEach(function(card){
-            card.addEventListener('click',function(){
-                var item=topFeed[Array.prototype.indexOf.call(feedEl.children,card)];
-                if(item&&item.type==='commit'&&item.meta&&item.meta.playerSlug)gvOpenRecruitProfile(item.meta.playerSlug);
-                else gvNavigate(card.getAttribute('data-href'));
-            });
-        });
-
-        var posts=(beat.posts||[]).slice(0,4);
+        var posts=(beat.posts||[]).slice(0,3);
         if(beatEl){
-            beatEl.innerHTML=posts.length?posts.map(function(p){
-                var href=p.url?gvLiveResolveUrl(p.url):null;
-                return '<div class="gv-espn-card"'+(href?' style="cursor:pointer" data-href="'+gvLiveEsc(href)+'"':'')+'>'
-                    +'<p class="gv-espn-card-title">@'+gvLiveEsc(p.handle||'')+'</p>'
-                    +'<p class="gv-espn-card-body">'+gvLiveEsc(String(p.text||'').slice(0,140))+'</p>'
-                    +'<p class="gv-espn-card-time">'+gvLiveEsc(gvLiveTimeAgo(p.publishedAt))+'</p></div>';
-            }).join(''):'<p class="gv-espn-card-body text-surface-200/60">Beat stream loading…</p>';
-            beatEl.querySelectorAll('[data-href]').forEach(function(card){
-                card.addEventListener('click',function(){window.open(card.getAttribute('data-href'),'_blank','noopener,noreferrer');});
-            });
+            beatEl.innerHTML=posts.length?posts.map(function(p){return gvRenderBeatCardHtml(p,true);}).join('')
+                :'<p class="gv-espn-card-body text-surface-200/60">Beat stream loading…</p>';
+            gvWireBeatCards(beatEl);
         }
 
         if(recEl&&typeof class2027!=='undefined'){
@@ -4862,6 +4924,9 @@
         document.querySelectorAll('#vpane-mhome [data-goto]').forEach(function(btn){
             btn.addEventListener('click',function(){var t=btn.getAttribute('data-goto');if(t)window.showVTab(t);});
         });
+        document.querySelectorAll('#vpane-mhome [data-mnav]').forEach(function(btn){
+            btn.addEventListener('click',function(){gvMobileShowTab(btn.getAttribute('data-mnav'));});
+        });
 
         var ptr=document.getElementById('gv-ptr-indicator');
         var scrollRoot=document.getElementById('vault-overlay');
@@ -4870,6 +4935,7 @@
             if(tab==='live'||tab==='beat'||tab==='mhome')gvLoadLiveDashboard(true);
             if(tab==='recruit'){try{renderRecruits();}catch(e){}}
             gvRenderMobileHome();
+            if(tab==='beat')gvRenderMobileBeat();
         }
         if(scrollRoot&&ptr){
             scrollRoot.addEventListener('touchstart',function(e){
@@ -4879,12 +4945,10 @@
             scrollRoot.addEventListener('touchmove',function(e){
                 if(!ptrActive)return;
                 ptrPull=Math.max(0,e.touches[0].clientY-ptrStartY);
-                if(ptrPull>0&&ptrPull<90)ptr.classList.add('visible');
             },{passive:true});
             scrollRoot.addEventListener('touchend',function(){
                 if(!ptrActive)return;
                 ptrActive=false;
-                ptr.classList.remove('visible');
                 if(ptrPull>64){
                     var active=document.querySelector('.gv-bnav-btn.active');
                     gvPtrRefresh(active?active.getAttribute('data-mnav'):'mhome');
@@ -4905,7 +4969,7 @@
                 if(Math.abs(dx)<70||Math.abs(dx)<Math.abs(dy))return;
                 var active=document.querySelector('.gv-bnav-btn.active');
                 var cur=active?active.getAttribute('data-mnav'):'mhome';
-                if(cur==='more'||cur==='beat')cur='live';
+                if(cur==='more')return;
                 var idx=_gvMobileSwipeOrder.indexOf(cur);
                 if(idx<0)return;
                 if(dx<0&&idx<_gvMobileSwipeOrder.length-1)gvMobileShowTab(_gvMobileSwipeOrder[idx+1]);
@@ -4925,6 +4989,7 @@
         function gvAfterLiveLoad(){
             gvRenderBreakingBanner(window._gvLive.feed);
             gvRenderMobileHome();
+            gvRenderMobileBeat();
         }
         if(result&&typeof result.then==='function')return result.then(gvAfterLiveLoad);
         gvAfterLiveLoad();

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-label="Portal class recap">
+  <rect width="1280" height="720" fill="#060f1f"/>
+  <rect x="64" y="64" width="180" height="36" rx="18" fill="rgba(250,70,22,0.2)" stroke="#FA4616"/>
+  <text x="154" y="88" fill="#FA4616" font-family="Arial,sans-serif" font-size="18" font-weight="700" text-anchor="middle">PORTAL RADAR</text>
+  <text x="64" y="200" fill="#ffffff" font-family="Arial,sans-serif" font-size="52" font-weight="700">23 IN · CLASS RECAP</text>
+  <text x="64" y="260" fill="#cbd5e1" font-family="Arial,sans-serif" font-size="30">Singleton · Philo · Dippre</text>
+  <circle cx="1100" cy="360" r="72" fill="rgba(250,70,22,0.9)"/>
+  <polygon points="1080,320 1080,400 1150,360" fill="#fff"/>
+</svg>

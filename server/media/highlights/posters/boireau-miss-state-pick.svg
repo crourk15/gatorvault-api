@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-label="Boireau interception">
+  <rect width="1280" height="720" fill="#060f1f"/>
+  <rect x="0" y="0" width="1280" height="8" fill="#FA4616"/>
+  <text x="64" y="140" fill="#FA4616" font-family="Arial,sans-serif" font-size="28" font-weight="700">DEFENSIVE MOMENT</text>
+  <text x="64" y="220" fill="#ffffff" font-family="Arial,sans-serif" font-size="48" font-weight="700">SWAMP ERUPTS</text>
+  <text x="64" y="280" fill="#cbd5e1" font-family="Arial,sans-serif" font-size="30">Boireau · 21 sec left</text>
+  <circle cx="1100" cy="360" r="72" fill="rgba(250,70,22,0.9)"/>
+  <polygon points="1080,320 1080,400 1150,360" fill="#fff"/>
+</svg>

@@ -6,6 +6,7 @@ const { mountContentRoutes } = require('./lib/content-routes');
 const { mountCommunityRoutes } = require('./lib/community-routes');
 const { mountRosterRoutes } = require('./lib/roster-routes');
 const { mountLiveRoutes } = require('./lib/live-routes');
+const { mountHighlightsRoutes } = require('./lib/highlights-routes');
 const { ensurePublishedSeed } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 
@@ -45,6 +46,7 @@ mountContentRoutes(app);
 mountCommunityRoutes(app);
 mountRosterRoutes(app);
 mountLiveRoutes(app);
+mountHighlightsRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;

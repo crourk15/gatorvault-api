@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-label="UF vs FSU highlight">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00123a"/>
+      <stop offset="100%" stop-color="#060f1f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <text x="64" y="120" fill="#FA4616" font-family="Arial,sans-serif" font-size="28" font-weight="700">RIVALRY FINALE</text>
+  <text x="64" y="200" fill="#ffffff" font-family="Arial,sans-serif" font-size="56" font-weight="700">UF 40 · FSU 21</text>
+  <text x="64" y="260" fill="#cbd5e1" font-family="Arial,sans-serif" font-size="32">Nov 2025</text>
+  <circle cx="1100" cy="360" r="72" fill="rgba(250,70,22,0.9)"/>
+  <polygon points="1080,320 1080,400 1150,360" fill="#fff"/>
+</svg>

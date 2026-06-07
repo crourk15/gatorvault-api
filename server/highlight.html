@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>GatorVault Highlight</title>
+  <meta name="robots" content="noindex">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{'gator-orange':'#FA4616','gator-blue':'#003087','surface-700':'#0a1628','surface-800':'#060f1f','surface-200':'#cbd5e1'},fontFamily:{display:['Oswald','sans-serif']}}}};</script>
+  <style>
+    body{background:#060f1f;color:#e2e8f0;font-family:Inter,Arial,sans-serif;}
+    .hl-video-wrap{background:#000;border-radius:0;overflow:hidden;}
+    @media(min-width:768px){.hl-video-wrap{border-radius:12px;}}
+    .hl-video-wrap video{width:100%;display:block;max-height:70vh;background:#000;}
+    .hl-badge{display:inline-flex;align-items:center;padding:.2rem .65rem;border-radius:9999px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:rgba(250,70,22,.15);color:#fb923c;}
+    .hl-meta-pill{font-size:.75rem;color:#64748b;}
+    .play-fallback{min-height:220px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#001a4d,#060f1f);padding:2rem;text-align:center;}
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="sticky top-0 z-50 bg-[#00123a]/95 backdrop-blur border-b border-gator-blue/30 px-4 py-3 flex items-center justify-between gap-3">
+    <a href="/?open=vault&tab=highlights" id="back-link" class="text-sm text-gator-orange font-semibold hover:text-white">← Film Room</a>
+    <span class="font-display text-sm font-bold text-white tracking-wide">GatorVault Highlights</span>
+  </header>
+  <main class="max-w-4xl mx-auto">
+    <div id="loading" class="px-4 py-12 text-surface-200">Loading highlight…</div>
+    <div id="error" class="px-4 py-12 text-red-400 hidden"></div>
+    <article id="highlight" class="hidden">
+      <div class="hl-video-wrap">
+        <video id="hl-video" controls playsinline preload="metadata" poster=""></video>
+        <div id="hl-fallback" class="play-fallback hidden">
+          <div>
+            <div class="w-16 h-16 rounded-full bg-gator-orange/90 flex items-center justify-center mx-auto mb-3 text-2xl text-white">▶</div>
+            <p class="text-surface-200 text-sm max-w-md mx-auto">Native clip is processing. Check back soon — no third-party embeds.</p>
+          </div>
+        </div>
+      </div>
+      <div class="px-4 py-5 md:px-6 md:py-6 space-y-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <span id="hl-badge" class="hl-badge"></span>
+          <span id="hl-season" class="hl-meta-pill"></span>
+          <span id="hl-duration" class="hl-meta-pill"></span>
+        </div>
+        <h1 id="hl-title" class="font-display text-2xl md:text-3xl font-bold text-white leading-tight"></h1>
+        <p id="hl-game" class="text-gator-orange text-sm font-semibold"></p>
+        <p id="hl-dek" class="text-surface-200 text-base leading-relaxed"></p>
+      </div>
+    </article>
+  </main>
+  <script>
+    var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000' : 'https://gatorvault-api.onrender.com';
+    var slug = (location.pathname.match(/\/highlight\/([^/]+)/) || [])[1] || new URLSearchParams(location.search).get('slug') || '';
+
+    document.getElementById('back-link').addEventListener('click', function (e) {
+      e.preventDefault();
+      if (document.referrer && document.referrer.indexOf('highlights') >= 0) history.back();
+      else location.href = '/?open=vault&tab=highlights';
+    });
+
+    function esc(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    async function load() {
+      if (!slug) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('error').textContent = 'Highlight not found.';
+        document.getElementById('error').classList.remove('hidden');
+        return;
+      }
+      try {
+        var r = await fetch(API + '/api/highlights/clips/' + encodeURIComponent(slug));
+        var j = await r.json();
+        if (!j.ok || !j.clip) throw new Error(j.error || 'Not found');
+        var c = j.clip;
+        document.title = c.title + ' · GatorVault';
+        document.getElementById('hl-badge').textContent = c.category || 'Highlight';
+        document.getElementById('hl-season').textContent = c.season ? c.season + ' Season' : '';
+        document.getElementById('hl-duration').textContent = c.duration || '';
+        document.getElementById('hl-title').textContent = c.title;
+        document.getElementById('hl-game').textContent = c.gameLine || '';
+        document.getElementById('hl-dek').textContent = c.dek || '';
+        var video = document.getElementById('hl-video');
+        var fallback = document.getElementById('hl-fallback');
+        if (c.thumbUrl) video.poster = c.thumbUrl;
+        if (c.videoUrl) {
+          video.src = c.videoUrl;
+          video.addEventListener('error', function () {
+            video.classList.add('hidden');
+            fallback.classList.remove('hidden');
+          }, { once: true });
+        } else {
+          video.classList.add('hidden');
+          fallback.classList.remove('hidden');
+        }
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('highlight').classList.remove('hidden');
+      } catch (e) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('error').textContent = e.message || 'Could not load highlight.';
+        document.getElementById('error').classList.remove('hidden');
+      }
+    }
+    load();
+  </script>
+</body>
+</html>
