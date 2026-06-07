@@ -43,16 +43,24 @@ function mountWarRoomRoutes(app) {
   app.get('/api/war-room/breakdowns', (req, res) => {
     try {
       const session = getSessionFromReq(req);
+      const all = warRoom.getAllBreakdowns();
       if (!sessionHasTier(session, 'war')) {
-        return res.status(403).json({ ok: false, error: 'War Room tier required', tier: 'war' });
+        return res.json({
+          ok: true,
+          locked: true,
+          tier: 'war',
+          count: all.length,
+          breakdowns: []
+        });
       }
 
       const playerType = req.query.playerType ? String(req.query.playerType).toLowerCase() : null;
-      let list = warRoom.getAllBreakdowns();
+      let list = all;
       if (playerType) list = list.filter((b) => b.playerType === playerType);
 
       return res.json({
         ok: true,
+        locked: false,
         count: list.length,
         breakdowns: list.map((b) => ({
           playerSlug: b.playerSlug,

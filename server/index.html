@@ -803,7 +803,7 @@
                     <button data-id="478b" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="live">⚡ Live</button>
                     <button data-id="479" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="alerts">🔔 My Alerts</button>
                     <button data-id="480" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="players">👤 Players</button>
-                    <button id="vtab-scouting" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap hidden" data-vtab="scouting">⚔️ Scouting</button>
+                    <button id="vtab-scouting" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="scouting">⚔️ Scouting</button>
                     <button data-id="481" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="gamezone">🏆 Game Zone</button>
                     <button data-id="482" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="tickets">🎟️ Tickets</button>
                     <button data-id="483" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="apparel">👕 Apparel</button>
@@ -1453,7 +1453,7 @@
                 <button type="button" class="gv-bnav-btn active" data-mnav="mhome" aria-label="Home"><i data-lucide="home"></i><span>Home</span></button>
                 <button type="button" class="gv-bnav-btn" data-mnav="live" aria-label="Live"><i data-lucide="zap"></i><span>Live</span></button>
                 <button type="button" class="gv-bnav-btn" data-mnav="recruit" aria-label="Recruiting"><i data-lucide="target"></i><span>Recruiting</span></button>
-                <button type="button" class="gv-bnav-btn" data-mnav="beat" aria-label="Beat"><i data-lucide="pen-line"></i><span>Beat</span></button>
+                <button type="button" class="gv-bnav-btn" data-mnav="scouting" aria-label="Scouting"><i data-lucide="shield"></i><span>Scouting</span></button>
                 <button type="button" class="gv-bnav-btn" data-mnav="more" aria-label="More"><i data-lucide="menu"></i><span>More</span></button>
             </nav>
             <div id="gv-more-sheet" class="gv-mob-only gv-more-sheet" aria-hidden="true">
@@ -1464,6 +1464,8 @@
                     <button type="button" class="gv-more-link" data-goto="articles">📰 Articles</button>
                     <button type="button" class="gv-more-link" data-goto="community">💬 Community</button>
                     <button type="button" class="gv-more-link" data-goto="highlights">📺 Film Room</button>
+                    <button type="button" class="gv-more-link" data-goto="beat">✍️ Beat Writers</button>
+                    <button type="button" class="gv-more-link" data-goto="scouting">⚔️ Scouting Database</button>
                     <button type="button" class="gv-more-link" data-goto="alerts">🔔 My Alerts</button>
                     <button type="button" class="gv-more-link" data-goto="players">👤 Players</button>
                     <button type="button" class="gv-more-link" data-goto="tickets">🎟️ Tickets</button>
@@ -1662,10 +1664,15 @@
         closeAdminPinModal();
         var panel=document.getElementById('op-access-panel');if(panel)panel.classList.add('hidden');
         window.GV_ROLE='war';window.GV_EMAIL='operator@gatorvault';window.GV_OPERATOR=true;
+        saveSession({email:'operator@gatorvault',tier:'war',name:'Operator',token:'ni-operator'});
         var vo=document.getElementById('vault-overlay');if(vo)vo.classList.remove('hidden');
-        showVaultInterior('war');
-        showVTab('analytics');
-        showToast('Admin access activated','Full War Room + Analytics unlocked.','',4000);
+        function finishOp(){
+            showVaultInterior('war');
+            showVTab('analytics');
+            showToast('Admin access activated','Full War Room + Analytics unlocked.','',4000);
+        }
+        if(typeof gvEnsureSignedSession==='function')gvEnsureSignedSession().then(finishOp);
+        else finishOp();
         return true;
     }
 
@@ -1780,13 +1787,16 @@
     function applyAuthSession(session,opts){
         opts=opts||{};
         saveSession(session);
-        if(opts.closeModal!==false) closeRegModal();
-        if(opts.enterVault!==false){
-            if(!enforceTrialAccess(session)){if(opts.toast!==false)showToast('Trial ended','Add payment to restore vault access.','',5000);return;}
-            var vo=document.getElementById('vault-overlay');if(vo)vo.classList.remove('hidden');
-            showVaultInterior(session.tier||'film');
+        function enter(){
+            if(opts.closeModal!==false) closeRegModal();
+            if(opts.enterVault!==false){
+                if(!enforceTrialAccess(session)){if(opts.toast!==false)showToast('Trial ended','Add payment to restore vault access.','',5000);return;}
+                var vo=document.getElementById('vault-overlay');if(vo)vo.classList.remove('hidden');
+                showVaultInterior(session.tier||'film');
+            }
+            if(opts.toast!==false) showToast('Welcome to GatorVault! 🐊','You\'re signed in and ready to go.','',4000);
         }
-        if(opts.toast!==false) showToast('Welcome to GatorVault! 🐊','You\'re signed in and ready to go.','',4000);
+        gvEnsureSignedSession().then(enter);
     }
     function authFetch(path,body){
         var base=window.GV_API_BASE;
@@ -2081,7 +2091,7 @@
         var meta=(user.user_metadata||user.app_metadata||{});
         saveSession({token:'ni-'+(user.id||Date.now()),email:user.email||'',tier:meta.tier||role,name:meta.full_name||''});
         if(typeof trackEvent==='function') trackEvent('Auth','user_logged_in',window.GV_ROLE||'unknown');
-        showVaultInterior(role);
+        gvEnsureSignedSession().then(function(){showVaultInterior(role);});
         }catch(e){console.warn('handleLoggedIn error:',e);}
     }
 
@@ -2219,6 +2229,25 @@
         if(s&&s.token)h['Authorization']='Bearer '+s.token;
         return h;
     }
+    function gvHasSignedApiToken(token){
+        return !!(token&&String(token).includes('.')&&!String(token).startsWith('ni-'));
+    }
+    function gvEnsureSignedSession(){
+        var s=typeof loadSession==='function'?loadSession():null;
+        if(!s||!s.email)return Promise.resolve(s);
+        if(gvHasSignedApiToken(s.token))return Promise.resolve(s);
+        return fetch(gvRecruitApiBase()+'/api/auth/bridge-session',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({email:s.email,tier:s.tier||window.GV_ROLE||'film',name:s.name||''})
+        }).then(function(r){return r.json();}).then(function(data){
+            if(data.ok&&data.session){
+                saveSession(Object.assign({},s,data.session));
+                return loadSession();
+            }
+            return s;
+        }).catch(function(){return s;});
+    }
     function gvWarRoomSection(title,content,isList){
         if(!content||(Array.isArray(content)&&!content.length))return '';
         var body=isList?'<ul>'+content.map(function(x){return '<li>'+gvEscHtml(x)+'</li>';}).join('')+'</ul>':'<p>'+gvEscHtml(content)+'</p>';
@@ -2257,13 +2286,18 @@
     }
     function gvFetchWarRoomBreakdown(slug){
         if(!slug)return Promise.resolve({locked:!canRead('war'),available:false,message:'No verified insider evaluation available.'});
-        return fetch(gvWarRoomApiBase()+'/api/war-room/breakdown/'+encodeURIComponent(slug),{headers:gvWarRoomHeaders()})
-            .then(function(r){return r.json();})
+        return gvEnsureSignedSession().then(function(){
+            return fetch(gvWarRoomApiBase()+'/api/war-room/breakdown/'+encodeURIComponent(slug),{headers:gvWarRoomHeaders()});
+        }).then(function(r){return r.json();})
             .catch(function(){return {locked:false,available:false,message:'No verified insider evaluation available.'};});
     }
     function gvUpdateWarRoomNav(){
         var scoutingTab=document.getElementById('vtab-scouting');
-        if(scoutingTab)scoutingTab.classList.toggle('hidden',!canRead('war'));
+        if(scoutingTab){
+            scoutingTab.classList.remove('hidden');
+            scoutingTab.style.display='inline-flex';
+            scoutingTab.title=canRead('war')?'Insider Scouting Database':'War Room exclusive — upgrade to unlock';
+        }
     }
     window._gvScoutingType='all';
     function gvScoutingTypeLabel(t){
@@ -2300,9 +2334,11 @@
         var el=document.getElementById('scouting-database-content');
         if(el)el.innerHTML='<p class="text-surface-200 text-sm">Loading scouting database…</p>';
         if(!canRead('war')){gvRenderScoutingDatabase([]);return Promise.resolve();}
-        return fetch(gvWarRoomApiBase()+'/api/war-room/breakdowns',{headers:gvWarRoomHeaders()})
-            .then(function(r){return r.json();})
+        return gvEnsureSignedSession().then(function(){
+            return fetch(gvWarRoomApiBase()+'/api/war-room/breakdowns',{headers:gvWarRoomHeaders()});
+        }).then(function(r){return r.json();})
             .then(function(data){
+                if(data&&data.locked){gvRenderScoutingDatabase([]);return;}
                 window._gvScoutingList=(data&&data.breakdowns)||[];
                 gvRenderScoutingDatabase(window._gvScoutingList);
             })
@@ -2488,7 +2524,6 @@
     var class2027=[
         {name:'Kennedee Jackson',pos:'OT',school:'Lithonia (Lithonia, GA)',htWt:'6-5.5 / 301',stars:4,rating:'91.77',natl:139,posRk:14,stRk:14,date:'06/02/26',inState:false},{name:'Ja\'Bios Smith',pos:'LB',school:'Swainsboro (Swainsboro, GA)',htWt:'6-2 / 205',stars:4,rating:'91.78',natl:138,posRk:11,stRk:13,date:'05/29/26',inState:false},{name:'Elias Pearl',pos:'WR',school:'Port Charlotte (Port Charlotte, FL)',htWt:'5-11 / 183',stars:4,rating:'92.47',natl:95,posRk:17,stRk:11,date:'05/19/26',inState:true},{name:'Peyton Miller',pos:'IOL',school:'Anna (Anna, TX)',htWt:'6-5 / 290',stars:4,rating:'91.85',natl:130,posRk:10,stRk:17,date:'04/27/26',inState:false},{name:'De\'Voun Kendrick',pos:'DL',school:'Carrollwood Day (Tampa, FL)',htWt:'6-4 / 300',stars:3,rating:'87.70',natl:555,posRk:59,stRk:45,date:'04/27/26',inState:true},{name:'Tommy Douglas',pos:'TE',school:'Hun School (Princeton, NJ)',htWt:'6-4.5 / 235',stars:4,rating:'89.33',natl:343,posRk:19,stRk:7,date:'04/16/26',inState:false},{name:'Aamaury Fountain',pos:'CB',school:'Northside (Warner Robins, GA)',htWt:'6-3 / 182',stars:4,rating:'91.80',natl:133,posRk:18,stRk:12,date:'04/11/26',inState:false},{name:'Davin Davidson',pos:'QB',school:'Cardinal Mooney (Sarasota, FL)',htWt:'6-6 / 215',stars:4,rating:'92.19',natl:113,posRk:9,stRk:13,date:'04/09/26',inState:true},{name:'Maxwell Hiller',pos:'IOL',school:'Coatesville (Coatesville, PA)',htWt:'6-5.5 / 305',stars:5,rating:'98.54',natl:3,posRk:1,stRk:1,date:'04/08/26',inState:false},{name:'Anthony Jennings',pos:'WR',school:'Dillard (Fort Lauderdale, FL)',htWt:'5-11 / 160',stars:4,rating:'89.99',natl:294,posRk:45,stRk:25,date:'04/25/26',inState:true},{name:'Andrew Beard',pos:'RB',school:'Prince Avenue Christian (Bogart, GA)',htWt:'5-9 / 195',stars:4,rating:'91.37',natl:166,posRk:9,stRk:18,date:'05/08/26',inState:false},{name:'Elijah Hutcheson',pos:'OT',school:'North Cross School (Roanoke, VA)',htWt:'6-6 / 255',stars:4,rating:'92.69',natl:91,posRk:7,stRk:2,date:'05/05/26',inState:false},{name:'Kailib Dillard',pos:'S',school:'Jenks (Tulsa, OK)',htWt:'6-2 / 170',stars:3,rating:'88.02',natl:497,posRk:44,stRk:12,date:'05/05/26',inState:false},{name:'Stive-Bentley Keumajou',pos:'DL',school:'Coral Gables Senior (Coral Gables, FL)',htWt:'6-2.5 / 295',stars:3,rating:'88.03',natl:496,posRk:52,stRk:40,date:'05/06/26',inState:true},{name:'Tramond Collins',pos:'WR',school:'Cottondale (Cottondale, FL)',htWt:'6-0 / 185',stars:4,rating:'92.07',natl:115,posRk:20,stRk:14,date:'03/11/26',inState:true},{name:'Jackson Ballinger',pos:'TE',school:'Centerburg (Centerburg, OH)',htWt:'6-5 / 230',stars:4,rating:'88.70',natl:409,posRk:25,stRk:16,date:'02/24/26',inState:false},{name:'Amare Nugent',pos:'CB',school:'American Heritage (Plantation, FL)',htWt:'5-11 / 180',stars:4,rating:'90.63',natl:233,posRk:26,stRk:21,date:'01/24/26',inState:true},{name:'Cain Van Norden',pos:'DL',school:'Bishop McNamara (District Heights, MD)',htWt:'6-7 / 299',stars:3,rating:'85.00',natl:879,posRk:88,stRk:22,date:'05/15/26',inState:false},{name:'Cahron Wheeler',pos:'EDGE',school:'St. Paul\'s School (Baltimore, MD)',htWt:'6-5 / 245',stars:4,rating:'91.89',natl:128,posRk:14,stRk:3,date:'06/05/26',inState:false},{name:'Zahmar Tookes',pos:'DL',school:'Brighton (Rochester, NY)',htWt:'6-3.5 / 260',stars:4,rating:'89.68',natl:318,posRk:33,stRk:2,date:'06/03/26',inState:false}
     ];
-    var targets2027=[{name:'Tra\'Von Hall',pos:'WR',note:'on3 reports: Oklahoma commit visited Gainesville May 30-31 and remains a top flip candidate.'},{name:'Derrick Malone',pos:'EDGE',note:'on3 recruiting sources say Florida is trending, decision is close, and the in-home visit gave UF momentum.'},{name:'Devon Hall',pos:'S',note:'on3 intel: Ocala native with a visit scheduled, strong UF ties, and Florida viewed as a leading option.'}];
     var portalIncoming=[
         {name:'Eric Singleton Jr.',pos:'WR',from:'Auburn',htWt:'6-2 / 185',stars:'★★★★',slug:'eric-singleton-jr',on3Id:'155719',status:'enrolled',note:'On3: Auburn transfer and immediate WR1 — led the Tigers in receiving production before entering the portal.',profile:'Vertical threat who projects as Florida\'s top outside receiver and red-zone weapon in Year 1.'},
         {name:'Aaron Philo',pos:'QB',from:'Georgia Tech',htWt:'6-3 / 210',stars:'★★★',slug:'aaron-philo',on3Id:'146069',status:'enrolled',note:'On3: Georgia Tech transfer with a 47% third-down conversion rate — pro-style distributor in the QB battle.',profile:'Rhythm passer with anticipatory throwing; fits Robby Faulkner\'s RPO-heavy offense if the OL protects.'},
@@ -3754,8 +3789,6 @@
             class2027=feed.boards[2027].commits.filter(function(p){return !gvIsTestRecruitPlayer(p);}).map(function(p){
                 return{name:p.name,pos:p.pos,school:p.school,htWt:p.htWt,stars:p.stars,rating:p.rating,natl:p.natlRank,posRk:p.posRank,stRk:p.stateRank,date:p.commitDate,inState:p.inState,slug:p.slug,skinny:p.skinny};
             });
-            var apiTargets=(feed.boards[2027].targets||[]);
-            if(apiTargets.length) targets2027=apiTargets.map(function(p){return{name:p.name,pos:p.pos,note:p.skinny||p.profileNote||'',slug:p.slug};});
         }
         if(feed.portal&&feed.portal.incoming){
             portalIncoming=feed.portal.incoming.filter(function(p){
@@ -3986,22 +4019,6 @@
         });
         posBreak+='</div></div>';
         bg.innerHTML+=posBreak;
-
-        // Targets to Watch
-        var watchHtml='<div class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-5">';
-        watchHtml+='<h3 class="font-display text-lg font-bold text-white mb-4">👀 TARGETS TO WATCH</h3>';
-        watchHtml+='<div class="space-y-3">';
-        targets2027.forEach(function(t){
-            watchHtml+='<div class="watch-card">';
-            watchHtml+='<div class="flex items-center gap-2 mb-1 flex-wrap">';
-            watchHtml+='<span class="font-display text-sm font-bold text-white">'+t.name+'</span>';
-            watchHtml+='<span class="pos-pill-2027">'+t.pos+'</span>';
-            watchHtml+='</div>';
-            watchHtml+='<p class="text-xs text-surface-200/70">'+t.note+'</p>';
-            watchHtml+='</div>';
-        });
-        watchHtml+='</div></div>';
-        bg.innerHTML+=watchHtml;
     }
 
     // ---- Portal ----
@@ -4909,7 +4926,7 @@
     // ========== MOBILE LAYOUT (ESPN structure · site dark theme) ==========
     function gvIsMobile(){return window.matchMedia('(max-width:767px)').matches;}
     var _gvShowVTabCore=window.showVTab;
-    var _gvMobileSwipeOrder=['mhome','live','recruit','beat'];
+    var _gvMobileSwipeOrder=['mhome','live','recruit','scouting','more'];
 
     function gvMobileSetActive(tab){
         document.querySelectorAll('.gv-bnav-btn').forEach(function(b){
@@ -4936,6 +4953,7 @@
         }
         if(tab==='recruit'){try{renderRecruits();}catch(e){}}
         if(tab==='beat'){try{gvRenderMobileBeat();}catch(e){}}
+        if(tab==='scouting'){try{gvLoadScoutingDatabase();}catch(e){}}
         if(tab==='highlights'){try{gvLoadHighlights();}catch(e){}}
         gvMobileSetActive(tab==='mhome'?'mhome':tab);
         var sheet=document.getElementById('gv-more-sheet');
@@ -5126,6 +5144,7 @@
         function gvPtrRefresh(tab){
             if(tab==='live'||tab==='beat'||tab==='mhome')gvLoadLiveDashboard(true);
             if(tab==='recruit'){try{renderRecruits();}catch(e){}}
+            if(tab==='scouting'){try{gvLoadScoutingDatabase();}catch(e){}}
             gvRenderMobileHome();
             if(tab==='beat')gvRenderMobileBeat();
         }

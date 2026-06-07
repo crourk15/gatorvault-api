@@ -185,12 +185,32 @@
 
     function loadWarRoomBreakdown(slug) {
       if (!slug) return;
-      fetch(API + '/api/war-room/breakdown/' + encodeURIComponent(slug), { headers: authHeaders() })
-        .then(function (r) { return r.json(); })
-        .then(renderWarRoomPanel)
-        .catch(function () {
-          renderWarRoomPanel({ locked: false, available: false, message: 'No verified insider evaluation available.' });
-        });
+      function fetchBreakdown() {
+        return fetch(API + '/api/war-room/breakdown/' + encodeURIComponent(slug), { headers: authHeaders() })
+          .then(function (r) { return r.json(); })
+          .then(renderWarRoomPanel)
+          .catch(function () {
+            renderWarRoomPanel({ locked: false, available: false, message: 'No verified insider evaluation available.' });
+          });
+      }
+      var s = loadSession();
+      if (s && s.email && (!s.token || String(s.token).startsWith('ni-') || !String(s.token).includes('.'))) {
+        fetch(API + '/api/auth/bridge-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: s.email, tier: s.tier || 'film', name: s.name || '' })
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data.ok && data.session) {
+              try { localStorage.setItem('gv_session', JSON.stringify(Object.assign({}, s, data.session))); } catch (e) {}
+            }
+            fetchBreakdown();
+          })
+          .catch(fetchBreakdown);
+        return;
+      }
+      fetchBreakdown();
     }
 
     function on3Url(p) {

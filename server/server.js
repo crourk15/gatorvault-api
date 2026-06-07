@@ -477,6 +477,43 @@ app.get('/api/session', (req, res) => {
   return res.json({ ok: true, session: { email: session.email, tier: session.tier, name: session.name } });
 });
 
+/** Mint a signed API token for Netlify Identity / legacy ni- sessions */
+app.post('/api/auth/bridge-session', (req, res) => {
+  try {
+    const email = String(req.body.email || '').trim().toLowerCase();
+    const tier = normalizeTier(req.body.tier);
+    const name = String(req.body.name || '').trim();
+    if (!email) return res.status(400).json({ ok: false, error: 'Email required.' });
+
+    const users = loadUsers();
+    const user = users.find((u) => u.email === email);
+    const finalTier = user ? user.tier : tier;
+    const finalName = (user && user.name) || name || email.split('@')[0];
+
+    const token = signSession({
+      email,
+      tier: finalTier,
+      name: finalName,
+      exp: Date.now() + TOKEN_TTL_MS
+    });
+
+    return res.json({
+      ok: true,
+      session: {
+        token,
+        email,
+        tier: finalTier,
+        name: finalName,
+        trialEndISO: user?.trialEnd || null,
+        createdAt: user?.createdAt || null
+      }
+    });
+  } catch (err) {
+    console.error('bridge-session error', err);
+    return res.status(500).json({ ok: false, error: 'Session bridge failed.' });
+  }
+});
+
 app.get('/api/onboarding/sequence', (req, res) => {
   return res.json({
     ok: true,
