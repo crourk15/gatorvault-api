@@ -1,5 +1,155 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-07T16:39:44.405Z",
-  "breakdowns": {}
+  "updatedAt": "2026-06-07T18:23:22.017Z",
+  "breakdowns": {
+    "elias-pearl": {
+      "playerSlug": "elias-pearl",
+      "playerName": "Elias Pearl",
+      "playerType": "recruit",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 / Rivals",
+          "url": "https://www.on3.com/rivals/elias-pearl-281377/",
+          "publishedAt": "2026-05-18"
+        }
+      ],
+      "strengths": [
+        "Versatile wide receiver who is both a YAC monster and technician.",
+        "Measured in at 5-foot-10, 183 pounds with plus length (6-foot-5 wing-span) at the Rivals Camp in Miami coming out of his junior season.",
+        "Tested as a top athlete at the Rivals Camp, ripping off a 4.5-second 40-yard dash, a 10 foot broad jump and 32.4-inch vertical.",
+        "Turned in a breakout junior season, accounting for over 1,300 yards and 24 touchdowns from scrimmage.",
+        "Has outstanding foundational movement skills with impressive lower body flexibility.",
+        "Able to easily stack corners off the line with his acceleration and long stride.",
+        "Long arms for his frame pair with coordination to result in a wide catch radius.",
+        "A natural hands catcher who shows high-end ball-tracking skills to locate the football over his shoulder."
+      ],
+      "weaknesses": [
+        "May not have prototypical height, but has the skills to play all over the formation."
+      ],
+      "comparison": "On3 Rivals player comp: Deebo Samuel — similar size, movement, YAC ability and catch radius at the same stage",
+      "schemeFit": "Versatile wideout who can play all over the formation in UF's spread passing game",
+      "staffNotes": null,
+      "projection": "Well-rounded skill set gives him one of the highest floors of 2027 wide receiver prospects per Charles Power",
+      "insiderNotes": "Versatile wide receiver who is both a YAC monster and technician. Measured in at 5-foot-10, 183 pounds with plus length (6-foot-5 wing-span) at the Rivals Camp in Miami coming out of his junior season. Tested as a top athlete at the Rivals Camp, ripping off a 4.5-second 40-yard dash, a 10 foot broad jump and 32.4-inch vertical. Turned in a breakout junior season, accounting for over 1,300 yards and 24 touchdowns from scrimmage. Has outstanding foundational movement skills with impressive lower body flexibility. Able to easily stack corners off the line with his acceleration and long stride. Long arms for his frame pair with coordination to result in a wide catch radius. A natural hands catcher who shows high-end ball-tracking skills to locate the football over his shoulder. One of the more dangerous wide receiver prospects after the catch in the 2027 cycle. Dynamic with the ball in his hands and maximizes yards after the catch. A slasher in space, quickly cutting to make defenders miss. Slips out of arm tackles and fights through contact. Shows his ability with the ball in his hands as a return man, taking back three kicks as a junior. May not have prototypical height, but has the skills to play all over the formation. A competitive player who makes key plays in big moments of games. Well-rounded skill set and versatility give him one of the highest floors of 2027 wide receiver prospects.",
+      "recruitingStory": "Committed to Florida in May 2026; Port Charlotte star ranked No. 95 nationally per On3 class article.",
+      "nflProjection": null,
+      "updatedAt": "2026-06-07T18:23:21.937Z"
+    },
+    "maxwell-hiller": {
+      "playerSlug": "maxwell-hiller",
+      "playerName": "Maxwell Hiller",
+      "playerType": "recruit",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 / Rivals",
+          "url": "https://www.on3.com/rivals/maxwell-hiller-180637/",
+          "publishedAt": "2026-04-08"
+        }
+      ],
+      "strengths": [
+        "Elite interior offensive line prospect with ready-to-play size, athleticism, and physicality.",
+        "Measured in at around 6-foot-5, 305 pounds as a junior.",
+        "Arm length checks in at 32 inches or a shade under.",
+        "Registers as a plus athlete in the combine setting.",
+        "A dominant run blocker on Friday nights.",
+        "A fluid, reactive mover at the second level.",
+        "Locks on defenders and imposes his will.",
+        "Not uncommon to see him drive defensive linemen to the sideline."
+      ],
+      "weaknesses": [
+        "Has the movement skills to play some tackle at the college level, but lack of arm length will ultimately force him inside."
+      ],
+      "comparison": "On3 Rivals player comp: David DeCastro — dominant run blocker with plus athleticism for the position",
+      "schemeFit": "Interior OL cornerstone in Florida's retool up front",
+      "staffNotes": null,
+      "projection": "Most ready-to-play interior offensive line prospect in the 2027 cycle; could be primed for instant impact",
+      "insiderNotes": "Elite interior offensive line prospect with ready-to-play size, athleticism, and physicality. Measured in at around 6-foot-5, 305 pounds as a junior. Arm length checks in at 32 inches or a shade under. Registers as a plus athlete in the combine setting. A dominant run blocker on Friday nights. A fluid, reactive mover at the second level. Locks on defenders and imposes his will. Not uncommon to see him drive defensive linemen to the sideline. Plays with an innate edge and level of physicality. Has the movement skills to project as a high-level pass protector. High level of coordination leads to a natural technical acuity with advanced hand placement and usage. Has the movement skills to play some tackle at the college level, but lack of arm length will ultimately force him inside. Also plays basketball. His younger brother, Colton Hiller, is a five-star basketball prospect in the 2028 cycle. Has a strong case as the most ready-to-play interior offensive line prospect in the 2027 cycle and could be primed for an instant impact at the college level.",
+      "recruitingStory": "Committed April 2026; Rivals No. 4 overall and No. 1 interior offensive lineman in the 2027 cycle.",
+      "nflProjection": "High-end interior prospect ceiling per Rivals scouting summary",
+      "updatedAt": "2026-06-07T18:23:22.007Z"
+    },
+    "davin-davidson": {
+      "playerSlug": "davin-davidson",
+      "playerName": "Davin Davidson",
+      "playerType": "recruit",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 / Rivals",
+          "url": "https://www.on3.com/rivals/davin-davidson-259412/",
+          "publishedAt": "2026-06-03"
+        }
+      ],
+      "strengths": [
+        "Towering quarterback prospect with a big-time arm and intriguing upside.",
+        "The tallest top quarterback in the 2027 cycle.",
+        "Measured in at 6-foot-6.5, 215 pounds with a 9.75-inch hand prior to his senior season.",
+        "Touts outstanding arm strength with the ability to generate a ton of zip on passes to the intermediate and deep areas of the field.",
+        "Can rip the football on a line from 30 yards out.",
+        "Shows flashes of arm dexterity.",
+        "A solid mover at his size.",
+        "Completed 64.6% of his passes for 2360 yards, 23 touchdowns against 6 interceptions while helping his team to a state title."
+      ],
+      "weaknesses": [
+        "As a result is still early in his development in comparison with his blue-chip peers.",
+        "As a taller, longer quarterback will need to continue tightening up his mechanics and footwork.",
+        "Will also need to improve at changing speeds, as he's primarily a fastball thrower at this point.",
+        "Has a high upside, but may be a few years away."
+      ],
+      "comparison": "On3 Rivals player comp: Josh Freeman — jumbo quarterback with big league arm and developmental profile",
+      "schemeFit": "Pro-style spread quarterback with intermediate and deep ball traits",
+      "staffNotes": null,
+      "projection": "High upside, but may be a few years away per Charles Power",
+      "insiderNotes": "Towering quarterback prospect with a big-time arm and intriguing upside. The tallest top quarterback in the 2027 cycle. Measured in at 6-foot-6.5, 215 pounds with a 9.75-inch hand prior to his senior season. Touts outstanding arm strength with the ability to generate a ton of zip on passes to the intermediate and deep areas of the field. Can rip the football on a line from 30 yards out. Shows flashes of arm dexterity. A solid mover at his size. Completed 64.6% of his passes for 2360 yards, 23 touchdowns against 6 interceptions while helping his team to a state title. A low volume passer attempting a little over 14 passes per game and accounting for 163 total yards per game as a junior. As a result is still early in his development in comparison with his blue-chip peers. As a taller, longer quarterback will need to continue tightening up his mechanics and footwork. Will also need to improve at changing speeds, as he's primarily a fastball thrower at this point. Should benefit greatly from increased in-game reps. Has a high upside, but may be a few years away.",
+      "recruitingStory": "Committed to Florida in April 2026 over Georgia and other SEC programs.",
+      "nflProjection": null,
+      "updatedAt": "2026-06-07T18:23:22.012Z"
+    },
+    "aamaury-fountain": {
+      "playerSlug": "aamaury-fountain",
+      "playerName": "Aamaury Fountain",
+      "playerType": "recruit",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 / Rivals",
+          "url": "https://www.on3.com/rivals/aamaury-fountain-281368/",
+          "publishedAt": "2026-05-11"
+        }
+      ],
+      "strengths": [
+        "Big-framed cornerback with length, coordination, and coverage instincts.",
+        "Has considerable length for the position.",
+        "Uses his big frame and long arms to disrupt wide receivers off the line when working in press coverage.",
+        "Able to reroute pass-catchers with ease.",
+        "Shows smooth movement skills with the ability to flip his hips and redirect in coverage, especially for a bigger cornerback.",
+        "Shows quality natural instincts when reading routes and breaking on the football.",
+        "Able to track and locate the ball.",
+        "Physical as a run defender."
+      ],
+      "weaknesses": [
+        "Has unverified size, but listed at around 6-foot-3, 185 pounds.",
+        "Does not have any verified athletic markers and pure top end speed remains a question.",
+        "Also older for the cycle, turning 19 years old in February of his junior year."
+      ],
+      "comparison": "On3 Rivals player comp: Julius Brents — tall, high-cut corner with considerable length",
+      "schemeFit": "Press-man corner with length to reroute receivers in UF's secondary",
+      "staffNotes": null,
+      "projection": "Upside to develop into one of the top cornerback prospects in the 2027 cycle per Charles Power",
+      "insiderNotes": "Big-framed cornerback with length, coordination, and coverage instincts. Has unverified size, but listed at around 6-foot-3, 185 pounds. Has considerable length for the position. Uses his big frame and long arms to disrupt wide receivers off the line when working in press coverage. Able to reroute pass-catchers with ease. Shows smooth movement skills with the ability to flip his hips and redirect in coverage, especially for a bigger cornerback. Shows quality natural instincts when reading routes and breaking on the football. Able to track and locate the ball. Physical as a run defender. Also worked at wide receiver some as a junior. Does not have any verified athletic markers and pure top end speed remains a question. Also older for the cycle, turning 19 years old in February of his junior year. Size and instincts make him an intriguing corner prospect with some remaining questions to be answered. Has the upside to develop into one of the top cornerback prospects in the 2027 cycle.",
+      "recruitingStory": "Flipped from South Carolina and committed to Florida in April 2026.",
+      "nflProjection": null,
+      "updatedAt": "2026-06-07T18:23:22.017Z"
+    }
+  }
 }
