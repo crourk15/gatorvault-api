@@ -24,4 +24,18 @@ function getSessionFromReq(req) {
   return verifySession(token);
 }
 
-module.exports = { verifySession, getSessionFromReq };
+const TIER_LEVELS = { locker: 0, film: 1, war: 2 };
+
+function tierLevel(tier) {
+  const t = String(tier || '').toLowerCase();
+  if (t === 'war' || t === 'elite') return TIER_LEVELS.war;
+  if (t === 'film') return TIER_LEVELS.film;
+  return TIER_LEVELS.locker;
+}
+
+function sessionHasTier(session, minTier) {
+  if (!session) return false;
+  return tierLevel(session.tier) >= tierLevel(minTier);
+}
+
+module.exports = { verifySession, getSessionFromReq, tierLevel, sessionHasTier, TIER_LEVELS };

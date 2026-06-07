@@ -19,6 +19,17 @@
     .meas-value{font-weight:600;color:#fff;margin-top:.15rem;}
     .headshot{width:96px;height:96px;border-radius:50%;object-fit:cover;border:2px solid rgba(250,70,22,.35);background:#0a1628;}
     .headshot-fallback{width:96px;height:96px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.5rem;background:#0a1628;border:2px solid rgba(0,48,135,.35);color:#FA4616;}
+    .war-room-panel{background:#111827;border:1px solid rgba(250,70,22,.35);border-radius:1rem;padding:1.25rem;margin-top:1.5rem;}
+    .war-room-panel h2{font-weight:700;font-size:1.1rem;color:#fff;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem;}
+    .war-room-lock{text-align:center;padding:1.5rem 1rem;}
+    .war-room-lock p{color:#94a3b8;font-size:.875rem;margin:.5rem 0 1rem;}
+    .war-room-empty{color:#94a3b8;font-size:.875rem;font-style:italic;padding:.5rem 0;}
+    .war-section{margin-top:1rem;}
+    .war-section h3{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:#FA4616;margin-bottom:.35rem;font-weight:700;}
+    .war-section p,.war-section li{font-size:.875rem;color:#e2e8f0;line-height:1.55;}
+    .war-section ul{margin:.25rem 0 0 1rem;padding:0;list-style:disc;}
+    .war-sources{font-size:.7rem;color:#64748b;margin-top:1rem;padding-top:.75rem;border-top:1px solid rgba(0,48,135,.25);}
+    .war-upgrade{display:inline-block;background:#FA4616;color:#fff;font-weight:700;font-size:.75rem;padding:.5rem 1rem;border-radius:.5rem;text-decoration:none;}
   </style>
 </head>
 <body class="min-h-screen">
@@ -51,6 +62,10 @@
       <div id="p-recruit-block" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 hidden">
         <h2 class="font-bold text-white mb-3">Recruiting timeline</h2>
         <div id="p-events" class="space-y-3 text-sm"></div>
+      </div>
+      <div id="p-war-room" class="war-room-panel hidden">
+        <h2>⚔️ War Room Scouting Report</h2>
+        <div id="p-war-room-body"><p class="war-room-empty">Loading…</p></div>
       </div>
     </div>
   </div>
@@ -92,14 +107,90 @@
       return '<img class="headshot" src="' + src + '" alt="" onerror="this.outerHTML=\'<div class=\\\'headshot-fallback\\\'>' + initials(name) + '</div>\'">';
     }
 
-    function schemeFit(p) {
-      var pos = (p.pos || '').toUpperCase();
-      if (pos === 'QB') return 'Rhythm/RPO distributor in {{ coach.OC }}\'s system — fits mesh and play-action concepts.';
-      if (pos === 'WR') return 'Spread-friendly route runner who projects in 11-personnel packages with Singleton and Wilson.';
-      if (pos === 'LB' || pos === 'EDGE') return 'Fits {{ coach.DC }}\'s 3-3-5 flow — speed to the ball and assignment discipline.';
-      if (pos === 'CB' || pos === 'S') return 'Secondary piece in STAR/nickel rotations behind returning starters.';
-      if (pos.indexOf('OL') >= 0 || pos === 'OT' || pos === 'IOL') return 'Portal/HS trench add for a rebuilt OL room that must gel quickly.';
-      return 'Projects as depth with special-teams utility in Year 1.';
+    function loadSession() {
+      try {
+        return JSON.parse(localStorage.getItem('gv_session') || 'null');
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function authHeaders() {
+      var h = {};
+      var s = loadSession();
+      if (s && s.token) h['Authorization'] = 'Bearer ' + s.token;
+      return h;
+    }
+
+    function escHtml(s) {
+      return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function warSection(title, content, isList) {
+      if (!content || (Array.isArray(content) && !content.length)) return '';
+      var body = isList
+        ? '<ul>' + content.map(function (x) { return '<li>' + escHtml(x) + '</li>'; }).join('') + '</ul>'
+        : '<p>' + escHtml(content) + '</p>';
+      return '<div class="war-section"><h3>' + escHtml(title) + '</h3>' + body + '</div>';
+    }
+
+    function renderWarRoomPanel(data) {
+      var panel = document.getElementById('p-war-room');
+      var body = document.getElementById('p-war-room-body');
+      if (!panel || !body) return;
+      panel.classList.remove('hidden');
+
+      if (data.locked) {
+        body.innerHTML = '<div class="war-room-lock">'
+          + '<div style="font-size:2rem;margin-bottom:.5rem">🔒</div>'
+          + '<p>Verified insider scouting from Power, Bender, Ivins, Alderman &amp; Wiltfong — exclusive to War Room.</p>'
+          + '<a class="war-upgrade" href="/?upgrade=war">Upgrade to War Room →</a>'
+          + '</div>';
+        return;
+      }
+
+      if (!data.available || !data.breakdown) {
+        body.innerHTML = '<p class="war-room-empty">' + escHtml(data.message || 'No verified insider evaluation available.') + '</p>';
+        return;
+      }
+
+      var b = data.breakdown;
+      var html = ''
+        + warSection('Strengths', b.strengths, true)
+        + warSection('Weaknesses', b.weaknesses, true)
+        + warSection('Player comparison', b.comparison)
+        + warSection('Scheme fit', b.schemeFit)
+        + warSection('Staff evaluation', b.staffNotes)
+        + warSection('Projection (2–3 years)', b.projection)
+        + warSection('Insider notes', b.insiderNotes)
+        + warSection('Recruiting story', b.recruitingStory)
+        + warSection('NFL projection', b.nflProjection);
+
+      if (!html) {
+        body.innerHTML = '<p class="war-room-empty">No verified insider evaluation available.</p>';
+        return;
+      }
+
+      if (b.sources && b.sources.length) {
+        html += '<div class="war-sources">Sources: '
+          + b.sources.map(function (s) {
+            var label = escHtml(s.writer) + (s.outlet ? ' · ' + escHtml(s.outlet) : '');
+            if (s.url) return '<a href="' + escHtml(s.url) + '" target="_blank" rel="noopener noreferrer" style="color:#60a5fa">' + label + '</a>';
+            return label;
+          }).join(' · ')
+          + '</div>';
+      }
+      body.innerHTML = html;
+    }
+
+    function loadWarRoomBreakdown(slug) {
+      if (!slug) return;
+      fetch(API + '/api/war-room/breakdown/' + encodeURIComponent(slug), { headers: authHeaders() })
+        .then(function (r) { return r.json(); })
+        .then(renderWarRoomPanel)
+        .catch(function () {
+          renderWarRoomPanel({ locked: false, available: false, message: 'No verified insider evaluation available.' });
+        });
     }
 
     function on3Url(p) {
@@ -137,10 +228,7 @@
         + '<div class="meas-card"><div class="meas-label">Status</div><div class="meas-value">' + portalStatusLabel(p.status) + '</div></div>'
         + '<div class="meas-card"><div class="meas-label">Source</div><div class="meas-value">On3</div></div>';
       document.getElementById('p-bio').textContent = p.skinny || 'On3 transfer portal addition for Florida.';
-      var schemeEl = document.getElementById('p-scheme');
-      var fit = p.profileNote || schemeFit(p);
-      schemeEl.textContent = 'Vault fit: ' + fit.replace(/\{\{ coach\.OC \}\}/g, 'the OC').replace(/\{\{ coach\.DC \}\}/g, 'the DC');
-      schemeEl.classList.remove('hidden');
+      document.getElementById('p-scheme').classList.add('hidden');
       document.getElementById('p-recruit-block').classList.remove('hidden');
       document.querySelector('#p-recruit-block h2').textContent = 'Portal timeline';
       var evEl = document.getElementById('p-events');
@@ -156,6 +244,7 @@
       document.getElementById('p-links').innerHTML = ''
         + '<a href="' + on3Url(p) + '" target="_blank" rel="noopener noreferrer" class="text-xs font-bold px-4 py-2 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">On3 Profile →</a>'
         + '<a href="/?open=vault&tab=portal" class="text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white">Portal Radar →</a>';
+      loadWarRoomBreakdown(p.slug || slug);
     }
 
     function renderRoster(p) {
@@ -196,6 +285,7 @@
         document.getElementById('p-stats').classList.remove('hidden');
       }
       document.getElementById('p-links').innerHTML = '<a href="/players" class="text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white">Back to Players →</a>';
+      loadWarRoomBreakdown(p.slug || slug);
     }
 
     function renderRecruit(p, events) {
@@ -219,9 +309,7 @@
         + '<div class="meas-card"><div class="meas-label">State Rank</div><div class="meas-value">' + (p.stateRank != null ? '#' + p.stateRank : '—') + '</div></div>'
         + '<div class="meas-card"><div class="meas-label">Status</div><div class="meas-value">' + (p.status || '—') + '</div></div>';
       document.getElementById('p-bio').textContent = p.skinny || p.profileNote || 'GatorVault recruit profile.';
-      var schemeEl = document.getElementById('p-scheme');
-      schemeEl.textContent = 'Scheme fit: ' + schemeFit(p).replace(/\{\{ coach\.OC \}\}/g, 'the OC').replace(/\{\{ coach\.DC \}\}/g, 'the DC');
-      schemeEl.classList.remove('hidden');
+      document.getElementById('p-scheme').classList.add('hidden');
       if (p.commitDate) {
         var cEl = document.getElementById('p-commit');
         cEl.textContent = 'Committed: ' + p.commitDate + (p.committedTo ? ' to ' + p.committedTo : '');
@@ -241,6 +329,7 @@
       document.getElementById('p-links').innerHTML = ''
         + '<a href="' + on3Url(p) + '" target="_blank" rel="noopener noreferrer" class="text-xs font-bold px-4 py-2 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">On3 Profile →</a>'
         + '<a href="/?open=vault&tab=recruit" class="text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white">Recruiting Board →</a>';
+      loadWarRoomBreakdown(p.slug || slug);
     }
 
     async function load() {

@@ -229,6 +229,16 @@
         .player-profile-modal.open{display:flex;}
         .player-profile-sheet{background:#0b1220;border:1px solid rgba(0,48,135,.45);border-radius:1.25rem;max-width:42rem;width:100%;max-height:90vh;overflow-y:auto;padding:1.5rem;}
         .player-profile-hero{margin-bottom:1rem;}
+        .war-room-panel{background:#111827;border:1px solid rgba(250,70,22,.35);border-radius:1rem;padding:1.25rem;margin-top:1.25rem;}
+        .war-room-panel h4{font-family:Oswald,Arial,sans-serif;font-weight:700;font-size:1rem;color:#fff;margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem;}
+        .war-room-lock{text-align:center;padding:1.25rem .75rem;}
+        .war-room-lock p{color:#94a3b8;font-size:.8rem;margin:.5rem 0 1rem;line-height:1.5;}
+        .war-room-empty{color:#94a3b8;font-size:.8rem;font-style:italic;}
+        .war-section{margin-top:.85rem;}
+        .war-section h5{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:#FA4616;margin-bottom:.25rem;font-weight:700;}
+        .war-section p,.war-section li{font-size:.8rem;color:#e2e8f0;line-height:1.5;}
+        .war-section ul{margin:.2rem 0 0 1rem;padding:0;list-style:disc;}
+        .war-sources{font-size:.65rem;color:#64748b;margin-top:.85rem;padding-top:.65rem;border-top:1px solid rgba(0,48,135,.25);}
         .score-game-card{background:#0a1628;border:2px solid rgba(0,48,135,.25);border-radius:1rem;padding:1.5rem;}
         .score-game-card:hover{transform:translateY(-1px);border-color:rgba(250,70,22,.3);}
         .game-zone-card{background:#0a1628;border:1px solid rgba(250,70,22,.12);border-radius:1.25rem;padding:1.5rem;}
@@ -2176,14 +2186,54 @@
     }
     window.gvOpenArticle=gvOpenArticle;
 
-    function gvRecruitSchemeFit(p){
-        var pos=String(p.pos||'').toUpperCase();
-        if(pos==='QB')return 'Rhythm/RPO distributor — fits mesh and play-action concepts in {{ coach.OC }}\'s offense.';
-        if(pos==='WR')return 'Spread-friendly route runner who projects in 11-personnel packages.';
-        if(pos==='LB'||pos==='EDGE')return 'Fits {{ coach.DC }}\'s 3-3-5 flow — speed to the ball and assignment discipline.';
-        if(pos==='CB'||pos==='S')return 'Secondary depth piece in STAR/nickel rotations.';
-        if(pos.indexOf('OL')>=0||pos==='OT'||pos==='IOL')return 'Trench add for a rebuilt OL room that must gel quickly.';
-        return 'Projects as Year-1 depth with special-teams utility.';
+    function gvWarRoomApiBase(){return gvRecruitApiBase();}
+    function gvWarRoomHeaders(){
+        var h={};
+        var s=typeof loadSession==='function'?loadSession():null;
+        if(s&&s.token)h['Authorization']='Bearer '+s.token;
+        return h;
+    }
+    function gvWarRoomSection(title,content,isList){
+        if(!content||(Array.isArray(content)&&!content.length))return '';
+        var body=isList?'<ul>'+content.map(function(x){return '<li>'+gvEscHtml(x)+'</li>';}).join('')+'</ul>':'<p>'+gvEscHtml(content)+'</p>';
+        return '<div class="war-section"><h5>'+gvEscHtml(title)+'</h5>'+body+'</div>';
+    }
+    function gvRenderWarRoomHtml(data){
+        if(data.locked){
+            return '<div class="war-room-panel"><h4>⚔️ War Room Scouting Report</h4><div class="war-room-lock">'
+                +'<div class="text-3xl mb-2">🔒</div>'
+                +'<p>Verified insider scouting from Power, Bender, Ivins, Alderman &amp; Wiltfong — exclusive to War Room.</p>'
+                +'<button type="button" class="bg-gator-orange hover:bg-gator-orangedk text-white font-bold text-xs px-5 py-2.5 rounded-xl" onclick="if(window.openRegModal)openRegModal(\'war\')">Upgrade to War Room →</button>'
+                +'</div></div>';
+        }
+        if(!data.available||!data.breakdown){
+            return '<div class="war-room-panel"><h4>⚔️ War Room Scouting Report</h4>'
+                +'<p class="war-room-empty">'+gvEscHtml(data.message||'No verified insider evaluation available.')+'</p></div>';
+        }
+        var b=data.breakdown;
+        var html='<div class="war-room-panel"><h4>⚔️ War Room Scouting Report</h4>'
+            +gvWarRoomSection('Strengths',b.strengths,true)
+            +gvWarRoomSection('Weaknesses',b.weaknesses,true)
+            +gvWarRoomSection('Player comparison',b.comparison)
+            +gvWarRoomSection('Scheme fit',b.schemeFit)
+            +gvWarRoomSection('Staff evaluation',b.staffNotes)
+            +gvWarRoomSection('Projection (2–3 years)',b.projection)
+            +gvWarRoomSection('Insider notes',b.insiderNotes)
+            +gvWarRoomSection('Recruiting story',b.recruitingStory)
+            +gvWarRoomSection('NFL projection',b.nflProjection);
+        if(b.sources&&b.sources.length){
+            html+='<div class="war-sources">Sources: '+b.sources.map(function(s){
+                var label=gvEscHtml(s.writer)+(s.outlet?' · '+gvEscHtml(s.outlet):'');
+                return s.url?'<a href="'+gvEscHtml(s.url)+'" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">'+label+'</a>':label;
+            }).join(' · ')+'</div>';
+        }
+        return html+'</div>';
+    }
+    function gvFetchWarRoomBreakdown(slug){
+        if(!slug)return Promise.resolve({locked:!canRead('war'),available:false,message:'No verified insider evaluation available.'});
+        return fetch(gvWarRoomApiBase()+'/api/war-room/breakdown/'+encodeURIComponent(slug),{headers:gvWarRoomHeaders()})
+            .then(function(r){return r.json();})
+            .catch(function(){return {locked:false,available:false,message:'No verified insider evaluation available.'};});
     }
     function gvOn3ProfileUrl(p){
         if(p.on3Id)return 'https://www.on3.com/db/'+p.on3Id+'-';
@@ -2222,13 +2272,17 @@
                 +'<div class="bg-surface-800 rounded-lg p-2"><span class="text-surface-200/50 block">Rating</span><span class="text-white font-semibold">'+(p.rating!=null?Number(p.rating).toFixed(1):'—')+'</span></div>'
                 +'</div>';
             var skinny='<p class="text-sm text-surface-200 border-l-4 border-gator-orange pl-3 mb-3">'+gvEscHtml(p.skinny||p.profileNote||'No scouting summary yet.')+'</p>';
-            var scheme='<p class="text-xs text-surface-200/80 mb-3"><strong class="text-white">Scheme fit:</strong> '+gvEscHtml(gvRecruitSchemeFit(p))+'</p>';
             var commit=p.commitDate?'<p class="text-xs text-surface-200/60 mb-3">Committed: '+gvEscHtml(p.commitDate)+(p.committedTo?' to '+gvEscHtml(p.committedTo):'')+'</p>':'';
+            var warPlaceholder='<div id="recruit-war-room-'+gvEscHtml(p.slug)+'" class="war-room-panel"><h4>⚔️ War Room Scouting Report</h4><p class="war-room-empty">Loading…</p></div>';
             var links='<div class="flex flex-wrap gap-2 mt-2">'
                 +'<a href="/player/'+gvEscHtml(p.slug)+'" class="text-xs font-bold px-3 py-2 rounded-lg bg-gator-orange text-white">Full Profile →</a>'
                 +'<a href="'+gvOn3ProfileUrl(p)+'" target="_blank" rel="noopener noreferrer" class="text-xs font-bold px-3 py-2 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">On3 →</a>'
                 +'</div>';
-            body.innerHTML=head+meas+skinny+scheme+commit+links;
+            body.innerHTML=head+meas+skinny+commit+warPlaceholder+links;
+            gvFetchWarRoomBreakdown(p.slug).then(function(war){
+                var warEl=document.getElementById('recruit-war-room-'+p.slug);
+                if(warEl)warEl.outerHTML=gvRenderWarRoomHtml(war);
+            });
         }).catch(function(err){
             body.innerHTML='<p class="text-red-400 text-sm">'+gvEscHtml(err.message||'Could not load profile')+'</p>'
                 +'<a href="/player/'+gvEscHtml(slug)+'" class="text-xs font-bold text-gator-orange mt-2 inline-block">Try full profile page →</a>';
@@ -3042,7 +3096,12 @@
             +'<div class="flex flex-wrap gap-2 mt-5">'
             +'<button type="button" class="gv-full-profile-btn text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white" data-slug="'+gvEscHtml(p.slug||'')+'">Full profile →</button>'
             +'<button type="button" class="player-modal-follow text-xs font-bold px-4 py-2 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">Follow</button>'
-            +'</div>';
+            +'</div>'
+            +'<div id="roster-war-room-'+gvEscHtml(p.slug||'')+'" class="war-room-panel mt-5"><h4>⚔️ War Room Scouting Report</h4><p class="war-room-empty">Loading…</p></div>';
+        gvFetchWarRoomBreakdown(p.slug).then(function(war){
+            var warEl=document.getElementById('roster-war-room-'+p.slug);
+            if(warEl)warEl.outerHTML=gvRenderWarRoomHtml(war);
+        });
         var followBtn=body.querySelector('.player-modal-follow');
         if(followBtn){
             var followed=(window.alertPrefs.followPlayers||[]).indexOf(p.name)!==-1;
