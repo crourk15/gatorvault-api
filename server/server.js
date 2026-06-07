@@ -553,7 +553,7 @@ app.get('/api/version', (req, res) => {
     ok: true,
     build: commit,
     buildShort: String(commit).slice(0, 7),
-    uiBuild: 'b3ee89c2',
+    uiBuild: 'baaf5783',
     features: {
       globalTicker: true,
       bannerAlerts: true,

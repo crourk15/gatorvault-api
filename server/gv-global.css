@@ -1,10 +1,10 @@
-/* GatorVault site-wide ticker + top alert banner */
+/* GatorVault site-wide ticker + top alert banner — must sit above #vault-overlay (z-300) */
 .gv-site-ticker {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 135;
+  z-index: 500;
   height: 44px;
   background: linear-gradient(90deg, #030712 0%, #0a1628 50%, #030712 100%);
   border-bottom: 2px solid rgba(250, 70, 22, 0.55);
@@ -79,8 +79,14 @@
 }
 
 body.gv-has-site-ticker nav.fixed,
-body.gv-has-site-ticker #main-nav {
+body.gv-has-site-ticker #nav-main {
   top: 44px !important;
+}
+body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky {
+  top: 44px !important;
+}
+body.gv-has-site-ticker #vault-interior .gv-desk-only.sticky.top-14 {
+  top: calc(44px + 3.5rem) !important;
 }
 body.gv-has-site-ticker #ticker-bar {
   display: none !important;
@@ -100,7 +106,7 @@ body.gv-has-site-ticker.gv-has-alert-banner {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 140;
+  z-index: 510;
   transform: translateY(-110%);
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   background: linear-gradient(90deg, #001a4d 0%, #003087 55%, #001a4d 100%);
