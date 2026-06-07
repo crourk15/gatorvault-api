@@ -30,8 +30,15 @@ const INSIDER_HANDLES = new Set([
   'zachabolverdi',
   'stevewiltfong',
   'gatorsonline',
-  'keithniebuhr'
+  'keithniebuhr',
+  'jamieivins',
+  'andrewpower'
 ]);
+
+const TRUSTED_INSIDER_PATTERN = /bender|alderman|wiltfong|ivins|power|abolverdi|niebuhr/i;
+
+/** UF within this many RPM points of the leader = "close/neutral" for visit intel */
+const RPM_CLOSE_GAP = parseFloat(process.env.HEAT_CHECK_RPM_CLOSE_GAP || '8', 10);
 
 const TRIGGER_LABELS = {
   crystal_ball_uf: 'Crystal Ball → Florida',
@@ -111,11 +118,16 @@ async function discoverRecruitSlugs(classYear) {
   return { slugs: prioritized, visitCount: visits.length };
 }
 
+function isTrustedInsider(post) {
+  const handle = String(post.handle || '').toLowerCase();
+  const writer = String(post.writerName || '');
+  return INSIDER_HANDLES.has(handle) || TRUSTED_INSIDER_PATTERN.test(writer) || TRUSTED_INSIDER_PATTERN.test(handle);
+}
+
 function parseBeatIntel(beatPosts) {
   const intel = [];
   for (const post of beatPosts || []) {
-    const handle = String(post.handle || '').toLowerCase();
-    if (!INSIDER_HANDLES.has(handle)) continue;
+    if (!isTrustedInsider(post)) continue;
     const text = String(post.text || '');
     const lower = text.toLowerCase();
     const insider = post.writerName || post.handle;
@@ -123,10 +135,12 @@ function parseBeatIntel(beatPosts) {
     if (/slipping|losing|cooling|concern|long shot|behind|trail/.test(lower) && /florida|gators|\buf\b/.test(lower)) {
       intel.push({ type: 'cooling', insider, text, url: post.url, publishedAt: post.publishedAt });
     }
-    if (/trending|lead|favorite|momentum|flip|commit soon|decision|visiting|official/.test(lower) && /florida|gators|\buf\b/.test(lower)) {
-      intel.push({ type: 'rising', insider, text, url: post.url, publishedAt: post.publishedAt });
+    if (/\b(uf|florida|gators)\b.*\b(lead|leading|favorite|top choice)\b|\b(lead|leading|favorite)\b.*\b(uf|florida|gators)\b/.test(lower)) {
+      intel.push({ type: 'uf_leads', insider, text, url: post.url, publishedAt: post.publishedAt });
+    } else if (/trending|momentum|flip|commit soon|decision|visiting|official/.test(lower) && /florida|gators|\buf\b/.test(lower)) {
+      intel.push({ type: 'uf_leads', insider, text, url: post.url, publishedAt: post.publishedAt });
     }
-    if (/crystal ball|prediction|rpm|247|wiltfong|bender|alderman/.test(lower)) {
+    if (/crystal ball|prediction|rpm|247|wiltfong|bender|alderman|ivins|power/.test(lower)) {
       intel.push({ type: 'prediction', insider, text, url: post.url, publishedAt: post.publishedAt });
     }
   }
@@ -140,10 +154,57 @@ function matchBeatForPlayer(name, beatIntel) {
   return beatIntel.filter((b) => b.text.toLowerCase().includes(last) && parts.some((p) => b.text.toLowerCase().includes(p)));
 }
 
+function pickInsiderUfLead(beatMatches) {
+  return beatMatches.find((b) => b.type === 'uf_leads' || (b.type === 'prediction' && /\b(lead|leading|favorite|trend|flip)\b/i.test(b.text)));
+}
+
+function pickInsiderUfSlipping(beatMatches) {
+  return beatMatches.find((b) => b.type === 'cooling');
+}
+
+function buildRpmContext(profile, classYear) {
+  const uf = on3.getFloridaTeam(profile.topTeams, classYear);
+  const teams = on3
+    .getYearTopTeams(profile.topTeams, classYear)
+    .filter((t) => typeof t.prediction === 'number' && t.prediction > 0)
+    .sort((a, b) => b.prediction - a.prediction);
+
+  const leader = teams[0] || null;
+  const ufLeads = !!(leader && on3.isFloridaTeam(leader));
+  const ufPct = uf?.prediction;
+  const leaderName = leader?.team?.name || leader?.team?.fullName || '';
+  const leaderPct = leader?.prediction;
+
+  const otherLeadsRpm = !!(leader && !on3.isFloridaTeam(leader));
+
+  const rpmNeutralOrClose =
+    !teams.length ||
+    ufLeads ||
+    !otherLeadsRpm ||
+    (typeof leaderPct === 'number' &&
+      typeof ufPct === 'number' &&
+      leaderPct - ufPct < RPM_CLOSE_GAP);
+
+  return { uf, teams, leader, ufLeads, ufPct, leaderName, leaderPct, otherLeadsRpm, rpmNeutralOrClose };
+}
+
+function baseSignal(profile, classYear, playerSlug) {
+  return {
+    playerSlug,
+    playerName: profile.name,
+    pos: profile.pos,
+    classYear,
+    recordedAt: profile.fetchedAt
+  };
+}
+
 function analyzeProfile(profile, beatMatches) {
   if (!profile || profile.error) return { excluded: true, reason: 'fetch_error' };
 
   const classYear = profile.classYear || CLASS_YEAR;
+  const playerSlug = profile.slug || on3.slugify(profile.name);
+
+  // Priority 1 — commitment removes player entirely
   const commit = on3.getCollegeCommit(profile.topTeams, classYear);
   if (commit) {
     return {
@@ -157,146 +218,135 @@ function analyzeProfile(profile, beatMatches) {
   const uf = on3.getFloridaTeam(profile.topTeams, classYear);
   if (!uf) return { excluded: true, reason: 'no_uf_interest' };
 
-  const teams = on3
-    .getYearTopTeams(profile.topTeams, classYear)
-    .filter((t) => typeof t.prediction === 'number' && t.prediction > 0)
-    .sort((a, b) => b.prediction - a.prediction);
-
-  const leader = teams[0];
-  const ufLeads = leader && on3.isFloridaTeam(leader);
-  const ufPct = uf.prediction;
-  const leaderName = leader?.team?.name || leader?.team?.fullName || '';
-  const leaderPct = leader?.prediction;
-
+  const rpm = buildRpmContext(profile, classYear);
   const visitTs = uf.latestVisit?.dateOccurred;
-  const recentVisit =
-    visitTs != null && Date.now() / 1000 - visitTs < 21 * 86400;
+  const recentVisit = visitTs != null && Date.now() / 1000 - visitTs < 21 * 86400;
 
-  const signals = [];
-  const playerSlug = profile.slug || on3.slugify(profile.name);
+  const insiderUfLead = pickInsiderUfLead(beatMatches);
+  const insiderSlipping = pickInsiderUfSlipping(beatMatches);
 
-  if (ufLeads && ufPct >= 12) {
-    signals.push({
-      playerSlug,
-      playerName: profile.name,
-      pos: profile.pos,
-      classYear,
-      direction: 'rising',
-      trigger: 'rpm_uf',
-      predictionType: 'rpm',
-      predictionSchool: 'Florida',
-      source: 'on3',
-      insider: 'On3 RPM',
-      headline: `${profile.name} — Florida leads On3 RPM`,
-      detail: `On3 Recruiting Prediction Machine: Florida ${fmtPct(ufPct)}% · next closest ${teams[1]?.team?.name || 'field'} ${fmtPct(teams[1]?.prediction)}%`,
-      recordedAt: profile.fetchedAt
-    });
-  }
-
-  if (recentVisit && (ufLeads || (teams[1] && on3.isFloridaTeam(teams[1])))) {
-    signals.push({
-      playerSlug,
-      playerName: profile.name,
-      pos: profile.pos,
-      classYear,
-      direction: 'rising',
-      trigger: 'visit_uf_leads',
-      predictionType: 'visit',
-      predictionSchool: 'Florida',
-      source: 'on3',
-      insider: 'On3',
-      headline: `UF visit on the board — ${profile.name}`,
-      detail: `Recent Florida visit logged on On3 · RPM ${fmtPct(ufPct)}% · ${uf.officialVisitCount || 0} official / ${uf.unOfficialVisitCount || 0} unofficial`,
-      recordedAt: profile.fetchedAt
-    });
-  }
-
-  if (uf.classRank != null && uf.classRank <= 6 && ufPct >= 18) {
-    signals.push({
-      playerSlug,
-      playerName: profile.name,
-      pos: profile.pos,
-      classYear,
-      direction: 'rising',
-      trigger: 'decision_soon_uf',
-      predictionType: 'rpm',
-      predictionSchool: 'Florida',
-      source: 'on3',
-      insider: 'On3',
-      headline: `UF class priority — ${profile.name}`,
-      detail: `Florida class rank #${uf.classRank} on On3 board · ${fmtPct(ufPct)}% RPM`,
-      recordedAt: profile.fetchedAt
-    });
-  }
-
-  if (!ufLeads && leader && !on3.isFloridaTeam(leader)) {
-    const isMajor = MAJOR_COMPETITORS.some((c) => leaderName.includes(c));
-    signals.push({
-      playerSlug,
-      playerName: profile.name,
-      pos: profile.pos,
-      classYear,
-      direction: 'cooling',
-      trigger: isMajor ? 'competitor_offer' : 'prediction_other',
-      predictionType: 'rpm',
-      predictionSchool: leaderName,
-      source: 'on3',
-      insider: 'On3 RPM',
-      headline: `${leaderName} leads — ${profile.name}`,
-      detail: `${leaderName} ${fmtPct(leaderPct)}% On3 RPM · Florida ${fmtPct(ufPct)}%`,
-      recordedAt: profile.fetchedAt
-    });
-  }
-
-  for (const beat of beatMatches) {
-    if (beat.type === 'rising' || beat.type === 'prediction') {
-      signals.push({
-        playerSlug,
-        playerName: profile.name,
-        pos: profile.pos,
-        classYear,
+  // Priority 3 — trusted insider explicitly says UF leads (overrides RPM cooling)
+  if (insiderUfLead) {
+    return {
+      excluded: false,
+      signal: {
+        ...baseSignal(profile, classYear, playerSlug),
         direction: 'rising',
-        trigger: beat.type === 'prediction' ? 'insider_prediction_uf' : 'staff_momentum',
+        trigger: insiderUfLead.type === 'prediction' ? 'insider_prediction_uf' : 'staff_momentum',
         predictionType: 'insider',
         predictionSchool: 'Florida',
         source: 'gators_online',
-        insider: beat.insider,
-        headline: `Insider momentum — ${profile.name}`,
-        detail: String(beat.text).slice(0, 220),
-        recordedAt: beat.publishedAt || profile.fetchedAt
-      });
-    }
-    if (beat.type === 'cooling') {
-      signals.push({
-        playerSlug,
-        playerName: profile.name,
-        pos: profile.pos,
-        classYear,
+        insider: insiderUfLead.insider,
+        headline: `Insider: UF leads — ${profile.name}`,
+        detail: String(insiderUfLead.text).slice(0, 220),
+        recordedAt: insiderUfLead.publishedAt || profile.fetchedAt,
+        priority: 3
+      }
+    };
+  }
+
+  // Priority 2 — another school leads On3 RPM → COOLING (overrides visit intel)
+  if (rpm.otherLeadsRpm && rpm.leader) {
+    const isMajor = MAJOR_COMPETITORS.some((c) => rpm.leaderName.includes(c));
+    return {
+      excluded: false,
+      signal: {
+        ...baseSignal(profile, classYear, playerSlug),
+        direction: 'cooling',
+        trigger: isMajor ? 'competitor_offer' : 'prediction_other',
+        predictionType: 'rpm',
+        predictionSchool: rpm.leaderName,
+        source: 'on3',
+        insider: 'On3 RPM',
+        headline: `${rpm.leaderName} leads RPM — ${profile.name}`,
+        detail: `${rpm.leaderName} ${fmtPct(rpm.leaderPct)}% On3 RPM · Florida ${fmtPct(rpm.ufPct)}%${recentVisit ? ' · UF visit does not override RPM lead' : ''}`,
+        recordedAt: profile.fetchedAt,
+        priority: 2
+      }
+    };
+  }
+
+  // Insider slipping when RPM is neutral/close (UF still in the mix)
+  if (insiderSlipping && rpm.rpmNeutralOrClose) {
+    return {
+      excluded: false,
+      signal: {
+        ...baseSignal(profile, classYear, playerSlug),
         direction: 'cooling',
         trigger: 'insider_slipping',
         predictionType: 'insider',
-        predictionSchool: leaderName || 'Field',
+        predictionSchool: rpm.leaderName || 'Field',
         source: 'gators_online',
-        insider: beat.insider,
-        headline: `UF slipping — ${profile.name}`,
-        detail: String(beat.text).slice(0, 220),
-        recordedAt: beat.publishedAt || profile.fetchedAt
-      });
-    }
+        insider: insiderSlipping.insider,
+        headline: `Insider: UF slipping — ${profile.name}`,
+        detail: String(insiderSlipping.text).slice(0, 220),
+        recordedAt: insiderSlipping.publishedAt || profile.fetchedAt,
+        priority: 3
+      }
+    };
   }
 
-  const deduped = [];
-  const seen = new Set();
-  for (const s of signals) {
-    const key = `${s.direction}:${s.trigger}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    deduped.push(s);
+  // UF leads RPM → RISING
+  if (rpm.ufLeads && typeof rpm.ufPct === 'number' && rpm.ufPct >= 12) {
+    return {
+      excluded: false,
+      signal: {
+        ...baseSignal(profile, classYear, playerSlug),
+        direction: 'rising',
+        trigger: 'rpm_uf',
+        predictionType: 'rpm',
+        predictionSchool: 'Florida',
+        source: 'on3',
+        insider: 'On3 RPM',
+        headline: `${profile.name} — Florida leads On3 RPM`,
+        detail: `On3 RPM: Florida ${fmtPct(rpm.ufPct)}% · next ${rpm.teams[1]?.team?.name || 'field'} ${fmtPct(rpm.teams[1]?.prediction)}%`,
+        recordedAt: profile.fetchedAt,
+        priority: 2
+      }
+    };
   }
 
-  if (!deduped.length) return { excluded: true, reason: 'no_momentum' };
+  // Priority 4 — visit intel only when RPM is neutral or UF is close
+  if (recentVisit && rpm.rpmNeutralOrClose) {
+    return {
+      excluded: false,
+      signal: {
+        ...baseSignal(profile, classYear, playerSlug),
+        direction: 'rising',
+        trigger: 'visit_uf_leads',
+        predictionType: 'visit',
+        predictionSchool: 'Florida',
+        source: 'on3',
+        insider: 'On3',
+        headline: `UF visit — ${profile.name}`,
+        detail: `Recent Florida visit · RPM ${fmtPct(rpm.ufPct)}%${rpm.leaderName && !rpm.ufLeads ? ` · close to ${rpm.leaderName} ${fmtPct(rpm.leaderPct)}%` : ''}`,
+        recordedAt: profile.fetchedAt,
+        priority: 4
+      }
+    };
+  }
 
-  return { excluded: false, signals: deduped };
+  // UF class-board priority when RPM is close
+  if (uf.classRank != null && uf.classRank <= 6 && rpm.rpmNeutralOrClose && typeof rpm.ufPct === 'number' && rpm.ufPct >= 15) {
+    return {
+      excluded: false,
+      signal: {
+        ...baseSignal(profile, classYear, playerSlug),
+        direction: 'rising',
+        trigger: 'decision_soon_uf',
+        predictionType: 'rpm',
+        predictionSchool: 'Florida',
+        source: 'on3',
+        insider: 'On3',
+        headline: `UF board priority — ${profile.name}`,
+        detail: `Florida class rank #${uf.classRank} · ${fmtPct(rpm.ufPct)}% RPM`,
+        recordedAt: profile.fetchedAt,
+        priority: 4
+      }
+    };
+  }
+
+  return { excluded: true, reason: 'no_momentum' };
 }
 
 function appendHistory(historyDoc, signal) {
@@ -339,11 +389,10 @@ function enrichWithHistory(signal, historyDoc) {
   };
 }
 
-function consolidateByPlayer(items) {
+function consolidateByPlayerSingle(items) {
   const map = new Map();
   for (const item of items) {
-    const key = `${item.playerSlug}:${item.direction}`;
-    if (!map.has(key)) map.set(key, item);
+    if (!map.has(item.playerSlug)) map.set(item.playerSlug, item);
   }
   return [...map.values()];
 }
@@ -384,12 +433,11 @@ async function buildLiveHeatCheck() {
       if (result.reason === 'committed') excludedCommitted += 1;
       continue;
     }
-    for (const signal of result.signals) {
-      appendHistory(historyDoc, signal);
-      const item = enrichWithHistory(signal, historyDoc);
-      if (item.direction === 'rising') rising.push(item);
-      else cooling.push(item);
-    }
+    if (!result.signal) continue;
+    appendHistory(historyDoc, result.signal);
+    const item = enrichWithHistory(result.signal, historyDoc);
+    if (item.direction === 'rising') rising.push(item);
+    else cooling.push(item);
   }
 
   historyDoc.updatedAt = new Date().toISOString();
@@ -398,8 +446,9 @@ async function buildLiveHeatCheck() {
   rising.sort((a, b) => new Date(b.recordedAt || 0) - new Date(a.recordedAt || 0));
   cooling.sort((a, b) => new Date(b.recordedAt || 0) - new Date(a.recordedAt || 0));
 
-  rising = consolidateByPlayer(rising);
-  cooling = consolidateByPlayer(cooling);
+  const all = consolidateByPlayerSingle([...rising, ...cooling]);
+  rising = all.filter((x) => x.direction === 'rising');
+  cooling = all.filter((x) => x.direction === 'cooling');
 
   return {
     ok: true,
