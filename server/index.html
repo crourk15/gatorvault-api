@@ -1744,6 +1744,7 @@
         window.GV_NAME=session.name||'';
         window.GV_TRIAL_END=session.trialEndISO||session.trialEnd||null;
         gvUpdateWelcomeTitle();
+        if(typeof gvUpdateWarRoomNav==='function')gvUpdateWarRoomNav();
     }
     function gvUpdateWelcomeTitle(){
         var el=document.getElementById('vault-welcome-title');
@@ -2117,6 +2118,8 @@
         if(gvIsMobile()){var vi2=document.getElementById('vault-interior');if(vi2)vi2.classList.add('gv-mobile-active');}
         renderAllVaultContent();
         if(typeof lucide!=="undefined"&&typeof lucide.createIcons==="function")lucide.createIcons();
+        window.GV_ROLE=role||window.GV_ROLE||'locker';
+        if(typeof gvUpdateWarRoomNav==='function')gvUpdateWarRoomNav();
         }catch(e){console.error('showVaultInterior error:',e);}
     }
 
