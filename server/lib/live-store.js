@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const gvClass = require('./gv-classification');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'live');
 const WRITERS_PATH = path.join(DATA_DIR, 'writers.json');
@@ -24,7 +25,7 @@ const FEED_TYPES = [
 ];
 
 /** Main Live Feed column — matches My Alerts categories */
-const LIVE_FEED_CATEGORIES = ['commit', 'portal', 'offers', 'article', 'score', 'thread'];
+const LIVE_FEED_CATEGORIES = gvClass.FEED_CATEGORIES;
 
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '..', 'data', 'recruiting', 'players.json');
 
@@ -40,42 +41,12 @@ function loadPlayerIndex() {
 }
 
 function resolveLiveFeedType(item, playerIndex) {
-  const raw = String(item.type || '').toLowerCase();
-  const slug = String(item.meta?.playerSlug || '').toLowerCase();
-  const eventType = String(item.meta?.eventType || '').toLowerCase();
-  const idx = playerIndex || loadPlayerIndex();
-  const portalSlugs = idx.portalSlugs || idx;
-  const bySlug = idx.bySlug || null;
-  const player = item.meta?.player || (slug && bySlug ? bySlug.get(slug) : null) || null;
-  const category = player?.category || null;
-  const classYear = player?.classYear != null ? Number(player.classYear) : null;
-
-  if (raw === 'article') return 'article';
-  if (raw === 'score') return 'score';
-  if (raw === 'thread') return 'thread';
-  if (raw === 'portal' || eventType === 'portal_in' || eventType === 'portal_out') return 'portal';
-  if (category === 'portal' || (slug && portalSlugs.has(slug))) return 'portal';
-  if (raw === 'offers' || eventType === 'target_update' || category === 'target') return 'offers';
-  if (raw === 'recruiting' || raw === 'target_update' || raw === 'breaking') return 'offers';
-
-  if (raw === 'commit' || raw === 'flip' || raw === 'decommit' || eventType === 'commit' || eventType === 'flip') {
-    if (category === 'recruit' && classYear >= 2026) return 'commit';
-    if (category === 'recruit' && classYear == null) return 'commit';
-    if (classYear >= 2026) return 'commit';
-    if (classYear != null && classYear < 2026) return 'portal';
-    if (slug && portalSlugs.has(slug)) return 'portal';
-    return 'commit';
-  }
-
-  return null;
+  return gvClass.classifyFeedItemType(item, playerIndex);
 }
 
 function normalizeLiveFeedTitle(item, type) {
-  let title = String(item.title || '').trim();
-  if (type === 'portal' && / commits to Florida/i.test(title)) {
-    title = title.replace(/ commits to Florida/i, ' enrolled via portal');
-  }
-  return title;
+  if (type === 'portal') return gvClass.formatPortalTitle(item.title);
+  return String(item.title || '').trim();
 }
 
 function classifyFeedItem(item, playerIndex) {

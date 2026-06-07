@@ -115,5 +115,6 @@ module.exports = {
   refreshLiveDashboard,
   getDashboard,
   isTestRecruitingEvent,
-  ingestRecruitingEvents
+  ingestRecruitingEvents,
+  ingestPublishedContent
 };

@@ -2385,7 +2385,9 @@
         {season:'2026',title:'Sumrall post-spring presser',meta:'Media · interviews',note:'Press clips ship only when sourced natively — no scrubbed reels.'}
     ];
     var recentAlerts=[];
-    var GV_ALERTS_FEED_VERSION=6;
+    var GV_ALERTS_FEED_VERSION=7;
+    var GV_COMMIT_MIN_CLASS=2027;
+    var GV_PORTAL_MIN_CLASS=2027;
     var GV_ALERT_CATEGORY_KEYS=['commit','portal','offers','article','score','thread'];
     var ALERT_TYPE_META={
         commit:{icon:'🎯',label:'Commit',pill:'bg-gator-orange/15 text-gator-orange'},
@@ -2399,47 +2401,88 @@
         commit:'Commits',portal:'Portal',offers:'Offers',article:'Articles',score:'Scores',thread:'Threads'
     };
 
-    function gvRefreshPortalSlugSet(){
-        window._gvPortalSlugs=window._gvPortalSlugs||{};
-        (portalIncoming||[]).forEach(function(p){if(p.slug)window._gvPortalSlugs[p.slug]=true;});
+    function gvPlayerClassYear(player){
+        if(!player||player.classYear==null)return null;
+        var cy=Number(player.classYear);
+        return isNaN(cy)?null:cy;
     }
-    function gvIsHsRecruitSlug(slug){
-        if(!slug)return false;
-        return (class2026||[]).some(function(p){return p.slug===slug;})
-            ||(class2027||[]).some(function(p){return p.slug===slug;});
-    }
-    function gvIsPortalAlertPlayer(slug,alert){
-        if(!slug)return false;
-        gvRefreshPortalSlugSet();
-        if(window._gvPortalSlugs&&window._gvPortalSlugs[slug])return true;
-        var player=alert&&alert._player;
-        if(player&&player.category==='portal')return true;
-        if(player&&player.classYear!=null&&Number(player.classYear)<2026)return true;
-        if(gvIsHsRecruitSlug(slug))return false;
-        var text=String((alert&&alert.text)||(alert&&alert.title)||'').toLowerCase();
-        if(text.indexOf('commits to florida')>=0||text.indexOf('enrolled via portal')>=0)return true;
-        return false;
+    function gvClassifyRecruitPlayer(player,eventType){
+        var et=String(eventType||'').toLowerCase();
+        var cy=gvPlayerClassYear(player);
+        var cat=player&&player.category;
+        if(et==='target_update'||et==='offer'||cat==='target')return 'offers';
+        if(et==='portal_in'||et==='portal_out'){
+            if(cy!=null&&cy>=GV_PORTAL_MIN_CLASS)return 'portal';
+            return null;
+        }
+        if(et==='commit'||et==='flip'||et==='decommit'){
+            if(cat==='portal'){
+                if(cy!=null&&cy>=GV_PORTAL_MIN_CLASS)return 'portal';
+                return null;
+            }
+            if(cy!=null&&cy>=GV_COMMIT_MIN_CLASS&&cat!=='portal')return 'commit';
+            return null;
+        }
+        if(cat==='portal'&&cy!=null&&cy>=GV_PORTAL_MIN_CLASS)return 'portal';
+        if(cat==='recruit'&&cy!=null&&cy>=GV_COMMIT_MIN_CLASS)return 'commit';
+        return null;
     }
     function gvFormatPortalAlertText(text){
         var t=String(text||'').trim();
-        if(/ commits to Florida/i.test(t))return t.replace(/ commits to Florida/i,' enrolled via portal');
+        if(/ commits to Florida/i.test(t))return t.replace(/ commits to Florida/i,' enrolls via portal');
+        if(/ committed to Florida/i.test(t))return t.replace(/ committed to Florida/i,' transfers to Florida');
         return t||'Portal update';
+    }
+    function gvIsEligibleCommitPlayer(player){
+        var cy=gvPlayerClassYear(player);
+        if(cy==null||cy<GV_COMMIT_MIN_CLASS)return false;
+        if(player&&player.category==='portal')return false;
+        return player.category==='recruit'||cy>=GV_COMMIT_MIN_CLASS;
+    }
+    function gvIsEligiblePortalPlayer(player){
+        var cy=gvPlayerClassYear(player);
+        if(cy==null||cy<GV_PORTAL_MIN_CLASS)return false;
+        return player.category==='portal'||player.fromSchool;
+    }
+    function gvShouldSuppressRecruitAlert(a){
+        if(!a)return true;
+        var player=a._player;
+        var cy=gvPlayerClassYear(player);
+        var type=gvNormalizeAlertType(a.type);
+        if(type==='offers'||type==='article'||type==='score'||type==='thread')return false;
+        if(!player&&(type==='commit'||type==='portal')){
+            var slug=a.playerSlug||'';
+            if(slug&&(class2027||[]).some(function(p){return p.slug===slug;}))return false;
+            return true;
+        }
+        if(type==='portal'&&!gvIsEligiblePortalPlayer(player))return true;
+        if(type==='commit'&&!gvIsEligibleCommitPlayer(player))return true;
+        if(cy!=null&&cy<GV_PORTAL_MIN_CLASS&&(type==='portal'||(player&&player.category==='portal')))return true;
+        return false;
     }
     function gvReclassifyAlert(a){
         if(!a)return a;
-        var slug=a.playerSlug||'';
-        if(!slug&&a.link){
-            var m=String(a.link).match(/\/player\/([^/?#]+)/);
-            if(m)slug=m[1];
-        }
-        if(gvIsPortalAlertPlayer(slug,a)){
+        var player=a._player;
+        var mapped=gvClassifyRecruitPlayer(player,a._eventType||(a.type==='offers'?'target_update':a.type));
+        if(mapped==='portal'){
             a.type='portal';
             a.text=gvFormatPortalAlertText(a.text||a.title);
             a.title=a.text;
+        }else if(mapped==='commit'){
+            a.type='commit';
+        }else if(mapped==='offers'){
+            a.type='offers';
+        }else if(mapped){
+            a.type=mapped;
         }else{
             a.type=gvNormalizeAlertType(a.type)||a.type;
         }
+        if(gvShouldSuppressRecruitAlert(a))return null;
         return a;
+    }
+    function gvRefreshPortalSlugSet(){
+        window._gvPortalSlugs=window._gvPortalSlugs||{};
+        (portalIncoming||[]).forEach(function(p){if(p.slug)window._gvPortalSlugs[p.slug]=true;});
     }
     function gvNormalizeAlertType(type){
         if(!type)return '';
@@ -2460,7 +2503,7 @@
         if(text.indexOf('preview:')>=0||text.indexOf('test recruit')>=0)return true;
         if(text.indexOf('ingest')>=0||text.indexOf('class ranking')>=0)return true;
         if(text.indexOf('pending commit')>=0)return true;
-        if(type==='commit'&&gvIsPortalAlertPlayer(a.playerSlug||'',a))return true;
+        if(gvShouldSuppressRecruitAlert(a))return true;
         return false;
     }
     function gvAlertVisibleInFeed(a){
@@ -2537,7 +2580,6 @@
     function renderAlerts(){
         var el=document.getElementById('recent-alerts-list');var emptyEl=document.getElementById('alerts-empty');
         if(!el)return;
-        gvRefreshPortalSlugSet();
         recentAlerts=recentAlerts.map(gvReclassifyAlert).filter(function(a){return a&&!gvIsSystemAlert(a);});
         persistRecentAlerts();
         gvEnsureAlertTimestamps();
@@ -2757,7 +2799,6 @@
             }
             var s=localStorage.getItem('gv_recentAlerts');
             if(s)recentAlerts=JSON.parse(s);
-            gvRefreshPortalSlugSet();
             recentAlerts=(recentAlerts||[]).map(gvReclassifyAlert).filter(function(a){return a&&!gvIsSystemAlert(a);});
             persistRecentAlerts();
         }catch(e){console.warn('loadRecentAlerts',e);}
@@ -2768,6 +2809,7 @@
 
     function shouldDeliver(payload){
         payload=gvReclassifyAlert(payload||{});
+        if(!payload)return false;
         var prefs=window.alertPrefs||defaultAlertPrefs;var now=Date.now();
         try{
             var s=prefs.snoozes||{};
@@ -2784,7 +2826,7 @@
 
     function deliverAlert(payload){
         payload=gvReclassifyAlert(payload||{});
-        if(gvIsSystemAlert(payload))return false;
+        if(!payload||gvIsSystemAlert(payload))return false;
         payload.type=gvNormalizeAlertType(payload.type)||payload.type;
         payload._ts=payload._ts||(payload.createdAt?new Date(payload.createdAt).getTime():Date.now());
         delete payload.time;
@@ -2814,14 +2856,14 @@
         var profileUrl=slug?('/player/'+slug):'';
         var detail=(commit.detail||commit.skinny||'');
         if(profileUrl) detail+=(detail?' ':'')+'<a href="'+profileUrl+'" class="text-gator-orange underline">View profile →</a>';
-        notifyEvent({text:commit.text||commit.title||('New commit: '+(commit.summary||'')),detail:detail,type:'commit',player:commit.playerName||commit.name,playerSlug:slug,link:profileUrl,eventId:commit.eventId||commit.id,_ts:commit._ts||Date.now()});
+        notifyEvent({text:commit.text||commit.title||('New commit: '+(commit.summary||'')),detail:detail,type:'commit',player:commit.playerName||commit.name,playerSlug:slug,link:profileUrl,eventId:commit.eventId||commit.id,_ts:commit._ts||Date.now(),_player:commit._player||null,_eventType:'commit'});
     };
     window.onPortalMove=function(info){
         var slug=info.playerSlug||info.slug;
         var profileUrl=slug?('/player/'+slug):'';
         var detail=(info.detail||info.skinny||'');
         if(profileUrl) detail+=(detail?' ':'')+'<a href="'+profileUrl+'" class="text-gator-orange underline">View profile →</a>';
-        notifyEvent({text:info.text||info.title||('Portal update: '+(info.summary||'')),detail:detail,type:'portal',playerSlug:slug,link:profileUrl,eventId:info.eventId||info.id,_ts:info._ts||Date.now()});
+        notifyEvent({text:info.text||info.title||('Portal update: '+(info.summary||'')),detail:detail,type:'portal',playerSlug:slug,link:profileUrl,eventId:info.eventId||info.id,_ts:info._ts||Date.now(),_player:info._player||null,_eventType:'portal_in'});
     };
     window.onScoreUpdate=function(score){
         if(score&&score.gameId){try{window.liveScores[score.gameId]=Object.assign(window.liveScores[score.gameId]||{},score);renderLiveScores();}catch(e){}}
@@ -3505,7 +3547,7 @@
             });
         }
         if(feed.boards&&feed.boards[2027]&&feed.boards[2027].commits){
-            class2027=feed.boards[2027].commits.filter(gvIsTestRecruitPlayer).map(function(p){
+            class2027=feed.boards[2027].commits.filter(function(p){return !gvIsTestRecruitPlayer(p);}).map(function(p){
                 return{name:p.name,pos:p.pos,school:p.school,htWt:p.htWt,stars:p.stars,rating:p.rating,natl:p.natlRank,posRk:p.posRank,stRk:p.stateRank,date:p.commitDate,inState:p.inState,slug:p.slug,skinny:p.skinny};
             });
             var apiTargets=(feed.boards[2027].targets||[]);
@@ -3552,32 +3594,21 @@
     }
     function gvMapEventToAlertType(ev){
         if(!ev||!ev.eventType)return null;
-        if(ev.eventType==='portal_in'||ev.eventType==='portal_out')return 'portal';
-        if(ev.eventType==='offer'||ev.eventType==='target_update')return 'offers';
-        if(ev.eventType==='commit'||ev.eventType==='flip'||ev.eventType==='decommit'){
-            var player=ev.payload&&ev.payload.player;
-            var slug=ev.playerSlug||(player&&player.slug)||'';
-            if(player&&player.category==='portal')return 'portal';
-            if(player&&player.classYear!=null&&Number(player.classYear)<2026)return 'portal';
-            gvRefreshPortalSlugSet();
-            if(slug&&window._gvPortalSlugs&&window._gvPortalSlugs[slug])return 'portal';
-            if(slug&&!gvIsHsRecruitSlug(slug))return 'portal';
-            return 'commit';
-        }
-        return null;
+        var player=ev.payload&&ev.payload.player;
+        return gvClassifyRecruitPlayer(player,ev.eventType);
     }
     function gvProcessRecruitEvent(ev){
         if(gvIsTestRecruitEvent(ev))return;
+        var player=ev.payload&&ev.payload.player;
         var alertType=gvMapEventToAlertType(ev);
         if(!alertType)return;
         var evTs=ev.createdAt?new Date(ev.createdAt).getTime():Date.now();
-        var player=ev.payload&&ev.payload.player;
         var title=ev.title||'';
         if(alertType==='portal')title=gvFormatPortalAlertText(title);
-        var payload={text:title,detail:ev.skinny||ev.detail||'',title:title,skinny:ev.skinny,playerSlug:ev.playerSlug,name:player?player.name:'',eventId:ev.id,_ts:evTs,_player:player||null};
+        var payload={text:title,detail:ev.skinny||ev.detail||'',title:title,skinny:ev.skinny,playerSlug:ev.playerSlug,name:player?player.name:'',eventId:ev.id,_ts:evTs,_player:player||null,_eventType:ev.eventType};
         if(alertType==='portal')window.onPortalMove(payload);
         else if(alertType==='commit')window.onNewCommit(payload);
-        else notifyEvent({text:title,detail:ev.skinny||ev.detail||'',type:'offers',eventId:ev.id,_ts:evTs,playerSlug:ev.playerSlug});
+        else notifyEvent({text:title,detail:ev.skinny||ev.detail||'',type:'offers',eventId:ev.id,_ts:evTs,playerSlug:ev.playerSlug,_player:player||null});
     }
 
     function gvPollRecruitingEvents(force,retry){
@@ -3683,7 +3714,8 @@
         bg.innerHTML+=statsHtml;
 
         // Headliner Card
-        var hl=class2027.find(function(c){return c.name==='Maxwell Hiller';});
+        var hl=class2027.find(function(c){return c.name==='Maxwell Hiller';})||class2027[0];
+        if(!hl){bg.innerHTML+=statsHtml;return;}
         var hlHtml='<div class="headliner-card mb-5">';
         hlHtml+='<div class="flex items-center gap-2 mb-3"><span class="text-2xl">🏆</span><span class="font-display text-lg font-bold tracking-wide" style="color:#fbbf24;">CLASS HEADLINER</span></div>';
         hlHtml+='<div class="flex flex-col md:flex-row md:items-start gap-4">';
@@ -4231,28 +4263,28 @@
 
     function gvNormalizeLiveFeedType(item){
         if(!item)return '';
-        var t=String(item.type||'').toLowerCase();
-        if(t==='flip'||t==='decommit')return 'commit';
-        if(t==='recruiting'||t==='target_update'||t==='breaking')return 'offers';
-        if(t==='beat'||t==='podcast'||t==='staff'||t==='injury'||t==='depth')return '';
-        if(t==='commit'&&item.meta&&item.meta.playerSlug){
-            var slug=item.meta.playerSlug;
-            var portalHit=(portalIncoming||[]).some(function(p){return p.slug===slug;});
-            if(portalHit)return 'portal';
-        }
-        return t;
+        var raw=String(item.type||'').toLowerCase();
+        if(raw==='article')return 'article';
+        if(raw==='score')return 'score';
+        if(raw==='thread')return 'thread';
+        if(raw==='beat'||raw==='podcast'||raw==='staff'||raw==='injury'||raw==='depth'||raw==='breaking')return '';
+        var player=item.meta&&item.meta.player;
+        var eventType=(item.meta&&item.meta.eventType)||raw;
+        var classified=gvClassifyRecruitPlayer(player,eventType);
+        if(classified)return classified;
+        if(GV_ALERT_CATEGORY_KEYS.indexOf(raw)>=0)return raw;
+        return '';
     }
 
     function gvFilterLiveFeedItems(items){
         return (items||[]).map(function(item){
             var copy=Object.assign({},item);
             copy.type=gvNormalizeLiveFeedType(copy);
-            if(copy.type==='portal'&&/commits to Florida/i.test(copy.title||'')){
-                copy.title=String(copy.title).replace(/ commits to Florida/i,' enrolled via portal');
-            }
+            if(!copy.type)return null;
+            if(copy.type==='portal')copy.title=gvFormatPortalAlertText(copy.title);
             return copy;
         }).filter(function(item){
-            return GV_ALERT_CATEGORY_KEYS.indexOf(item.type)>=0;
+            return item&&GV_ALERT_CATEGORY_KEYS.indexOf(item.type)>=0;
         });
     }
 

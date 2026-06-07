@@ -398,7 +398,10 @@ async function fireRecruitingEvent({ eventType, player, skinny, detail, source }
     commit: `${saved.name} commits to Florida`,
     decommit: `${saved.name} decommits from Florida`,
     flip: `${saved.name} flips to Florida`,
-    portal_in: `${saved.name} enters portal — UF target`,
+    portal_in:
+      saved.committedTo === 'Florida' || saved.status === 'enrolled'
+        ? `${saved.name} transfers to Florida`
+        : `${saved.name} enrolls via portal`,
     portal_out: `${saved.name} portal exit confirmed`,
     target_update: `Update: ${saved.name}`,
     ranking_change: `Class ranking update`
