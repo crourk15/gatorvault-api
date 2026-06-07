@@ -23,7 +23,7 @@
 </head>
 <body class="min-h-screen">
   <div class="max-w-3xl mx-auto px-4 py-8">
-    <a href="#" id="back-link" class="text-sm text-blue-400 hover:text-blue-300">← Back to GatorVault</a>
+    <a href="/players" id="back-link" class="text-sm text-blue-400 hover:text-blue-300">← Back to Players</a>
     <div id="loading" class="mt-8 text-surface-200">Loading profile…</div>
     <div id="error" class="mt-8 text-red-400 hidden"></div>
     <div id="profile" class="hidden mt-6 space-y-6">
@@ -61,8 +61,12 @@
 
     document.getElementById('back-link').addEventListener('click', function (e) {
       e.preventDefault();
-      if (document.referrer && document.referrer.indexOf(location.host) >= 0) history.back();
-      else location.href = '/?open=vault&tab=players';
+      var fromPlayers = document.referrer && (
+        document.referrer.indexOf('tab=players') >= 0 ||
+        document.referrer.replace(/\/$/, '').endsWith('/players')
+      );
+      if (fromPlayers) history.back();
+      else location.href = '/players';
     });
 
     function initials(name) {
@@ -140,7 +144,7 @@
         document.getElementById('p-stats').textContent = p.stats;
         document.getElementById('p-stats').classList.remove('hidden');
       }
-      document.getElementById('p-links').innerHTML = '<a href="/?open=vault&tab=players" class="text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white">Open in Vault →</a>';
+      document.getElementById('p-links').innerHTML = '<a href="/players" class="text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white">Back to Players →</a>';
     }
 
     function renderRecruit(p, events) {

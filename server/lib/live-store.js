@@ -127,8 +127,11 @@ function getFeedItems({ limit = 80, since } = {}) {
 function purgeTestFeedItems() {
   const items = loadFeedItems().filter((i) => {
     const t = `${i.title || ''} ${i.summary || ''}`.toLowerCase();
+    const slug = String(i.meta?.playerSlug || '').toLowerCase();
+    if (slug === 'test-recruit') return false;
+    if (t.includes('test recruit')) return false;
     if (t.includes('maxwell hiller') && i.source === 'manual') return false;
-    if (t.includes('preview:') || i.meta?.preview) return false;
+    if (t.includes('preview:') || t.includes('ingest') || i.meta?.preview) return false;
     return true;
   });
   saveFeedItems(items);

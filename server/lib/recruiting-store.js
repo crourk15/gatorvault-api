@@ -49,6 +49,12 @@ function nowIso() {
   return new Date().toISOString();
 }
 
+function isTestPlayer(p) {
+  const slug = String(p.slug || '').toLowerCase();
+  const name = String(p.name || '').toLowerCase();
+  return slug === 'test-recruit' || name === 'test recruit';
+}
+
 function normalizePlayer(raw) {
   const slug = raw.slug || slugify(raw.name);
   return {
@@ -161,12 +167,15 @@ async function saveRankingsLocal(rankings) {
 
 async function getAllPlayers() {
   const sb = initSupabase();
+  let players;
   if (sb) {
     const { data, error } = await sb.from('players').select('*').order('updated_at', { ascending: false });
     if (error) throw error;
-    return (data || []).map(rowToPlayer);
+    players = (data || []).map(rowToPlayer);
+  } else {
+    players = (await loadPlayersLocal()).map(normalizePlayer);
   }
-  return (await loadPlayersLocal()).map(normalizePlayer);
+  return players.filter((p) => !isTestPlayer(p));
 }
 
 async function getPlayerBySlug(slug) {

@@ -17,8 +17,9 @@ const EVENT_TYPE_MAP = {
 function isTestRecruitingEvent(ev) {
   const title = String(ev.title || '').toLowerCase();
   const slug = String(ev.playerSlug || '').toLowerCase();
-  if (slug === 'maxwell-hiller' && ev.source === 'manual') return true;
-  if (title.includes('preview:')) return true;
+  if (slug === 'test-recruit' || (slug === 'maxwell-hiller' && ev.source === 'manual')) return true;
+  if (title.includes('test recruit') || title.includes('preview:')) return true;
+  if (title.includes('ingest') || title.includes('class ranking')) return true;
   return false;
 }
 
