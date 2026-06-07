@@ -289,7 +289,7 @@
         .score-input:focus{border-color:#FA4616;box-shadow:0 0 0 3px rgba(250,70,22,.2);}
         .op-access-form{background:rgba(0,48,135,.1);border:1px solid rgba(0,48,135,.2);border-radius:.75rem;padding:12px 16px;margin-top:16px;}
 
-        /* ===== GatorVault Mobile (dark theme) ===== */
+        /* ===== Mobile layout (ESPN structure · GatorVault dark theme) ===== */
         .gv-mob-only{display:none;}
         @media(max-width:767px){
             .gv-mob-only{display:block;}
@@ -297,9 +297,11 @@
             .gv-mob-only.gv-bottom-nav{display:flex;}
             .gv-desk-only{display:none!important;}
             #vault-interior.gv-mobile-active{background:var(--dark);color:#e2e8f0;}
-            #vault-interior.gv-mobile-active #gv-vault-content{padding:56px 16px 76px;}
+            #vault-interior.gv-mobile-active #gv-vault-content{padding:56px 0 76px;}
             #vault-interior.gv-mobile-active.gv-has-breaking #gv-vault-content{padding-top:100px;}
-            #vault-interior.gv-mobile-active .vpane{padding:0 0 16px;}
+            #vault-interior.gv-mobile-active .vpane{padding:0 16px 16px;}
+            #vault-interior.gv-mobile-active #vpane-mhome,
+            #vault-interior.gv-mobile-active #vpane-live{padding:0 0 16px;}
             #vault-interior.gv-mobile-active #vpane-live>.flex p.text-surface-200{display:none;}
             #vault-interior.gv-mobile-active #changelog-strip,
             #vault-interior.gv-mobile-active #live-ticker-wrap{display:none!important;}
@@ -319,30 +321,19 @@
             .gv-bnav-btn.active{color:#FA4616;}
             .gv-bnav-btn svg,.gv-bnav-btn i{width:22px;height:22px;}
 
-            .gv-mob-module{background:transparent;margin:0 0 16px;padding:0;border:none;}
-            .gv-mob-module-hdr{font-size:1.15rem;font-weight:700;color:#fff;padding-bottom:10px;margin-bottom:12px;border-bottom:2px solid #FA4616;font-family:'Oswald',sans-serif;}
-            .gv-espn-card{background:#0a1628;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:14px 16px;margin-bottom:10px;min-height:44px;}
-            .gv-espn-card-title{font-size:1rem;font-weight:600;color:#fff;line-height:1.35;margin:0 0 6px;font-family:'Oswald',sans-serif;}
-            .gv-espn-card-body{font-size:.9rem;color:#cbd5e1;line-height:1.45;margin:0;}
-            .gv-espn-card-time{font-size:.75rem;color:#64748b;margin-top:8px;}
+            .gv-mob-module{background:#0a1628;margin:0 0 12px;padding:16px;border-top:1px solid rgba(0,48,135,.35);border-bottom:1px solid rgba(0,48,135,.35);}
+            .gv-mob-module-hdr{font-size:21px;font-weight:700;color:#fff;padding-bottom:10px;margin-bottom:12px;border-bottom:2px solid #FA4616;font-family:'Oswald',sans-serif;}
+            .gv-espn-card{background:#060f1f;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:14px 16px;margin-bottom:10px;min-height:44px;}
+            .gv-espn-card-title{font-size:18px;font-weight:600;color:#fff;line-height:1.35;margin:0 0 6px;font-family:'Oswald',sans-serif;}
+            .gv-espn-card-body{font-size:16px;color:#cbd5e1;line-height:1.45;margin:0;}
+            .gv-espn-card-time{font-size:14px;color:#64748b;margin-top:8px;}
 
-            #vault-interior.gv-mobile-active .live-dash-grid{grid-template-columns:1fr;gap:1rem;}
-            #vault-interior.gv-mobile-active .live-panel{border-radius:1rem;margin-bottom:0;padding:1rem;}
-            #vault-interior.gv-mobile-active .live-panel h3{font-size:1.05rem;border-bottom:1px solid rgba(0,48,135,.35);padding-bottom:8px;margin-bottom:12px;color:#fff;}
+            #vault-interior.gv-mobile-active .live-dash-grid{grid-template-columns:1fr;gap:0;}
+            #vault-interior.gv-mobile-active .live-panel{border-radius:0;border-left:0;border-right:0;margin-bottom:12px;padding:16px;background:#0a1628;border-color:rgba(0,48,135,.35);}
+            #vault-interior.gv-mobile-active .live-panel h3{font-size:21px;border-bottom:2px solid rgba(0,48,135,.45);padding-bottom:10px;margin-bottom:12px;color:#fff;}
             #vault-interior.gv-mobile-active .live-feed-list{max-height:none;}
-            #vault-interior.gv-mobile-active .alert-card,
-            #vault-interior.gv-mobile-active .commit-card-2027,
-            #vault-interior.gv-mobile-active .player-card,
-            #vault-interior.gv-mobile-active .game-zone-card,
-            #vault-interior.gv-mobile-active .ticket-card,
-            #vault-interior.gv-mobile-active .apparel-card{background:#0a1628;border-color:rgba(0,48,135,.35);}
-            #vault-interior.gv-mobile-active .text-surface-200{color:#cbd5e1;}
-            #vault-interior.gv-mobile-active h1,
-            #vault-interior.gv-mobile-active h2,
-            #vault-interior.gv-mobile-active h3,
-            #vault-interior.gv-mobile-active .font-display{color:#fff;}
 
-            .gv-hscroll-track{display:flex;flex-wrap:nowrap;gap:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-bottom:4px;}
+            .gv-hscroll-track{display:flex;flex-wrap:nowrap;gap:12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-bottom:4px;padding-left:16px;padding-right:16px;}
             .gv-hscroll-track>*{flex:0 0 82%;max-width:82%;scroll-snap-align:start;}
             .gv-hscroll-track .ticket-card,
             .gv-hscroll-track .apparel-card,
@@ -744,7 +735,7 @@
 
         <!-- Vault Interior -->
         <div data-id="453" id="vault-interior" class="hidden min-h-screen">
-            <!-- Mobile chrome -->
+            <!-- Mobile ESPN chrome -->
             <header id="gv-mobile-header" class="gv-mob-only gv-mob-header" aria-label="GatorVault mobile header">
                 <div class="gv-mob-logo" aria-hidden="true">UF</div>
                 <div class="gv-mob-title">GatorVault</div>
@@ -821,7 +812,7 @@
             </div>
 
             <div data-id="499" id="gv-vault-content" class="max-w-7xl mx-auto px-4 md:px-6 py-6">
-                <!-- ====== MOBILE HOME (stacked modules) ====== -->
+                <!-- ====== MOBILE HOME (ESPN stacked modules) ====== -->
                 <div id="vpane-mhome" class="vpane gv-mob-only fade-in">
                     <section class="gv-mob-module" id="gv-mhome-breaking-mod">
                         <h2 class="gv-mob-module-hdr">Breaking</h2>
@@ -4667,7 +4658,7 @@
         });
     }
 
-    // ========== GATORVAULT MOBILE LAYOUT ==========
+    // ========== MOBILE LAYOUT (ESPN structure · site dark theme) ==========
     function gvIsMobile(){return window.matchMedia('(max-width:767px)').matches;}
     var _gvShowVTabCore=window.showVTab;
     var _gvMobileSwipeOrder=['mhome','live','recruit','beat'];
