@@ -191,6 +191,7 @@ async function syncPortalFromOn3(options = {}) {
       on3ProfileUrl: t.on3ProfileUrl || buildOn3ProfileUrl(t),
       on3Source: t.on3Source || url,
       starsDisplay: starsDisplay(t.stars),
+      headliner: prev?.headliner || false,
       updatedAt: new Date().toISOString()
     };
     await store.upsertPlayer(player);

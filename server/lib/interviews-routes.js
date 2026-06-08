@@ -1,11 +1,10 @@
 const fs = require('fs');
-const path = require('path');
 const {
   loadClips,
   getClipBySlug,
   getMediaPathBySlug,
   auditMedia
-} = require('./highlights-store');
+} = require('./interviews-store');
 
 function apiBaseFromReq(req) {
   if (process.env.MEDIA_CDN_BASE) return process.env.MEDIA_CDN_BASE.replace(/\/$/, '');
@@ -51,8 +50,8 @@ function streamVideoFile(req, res, filePath) {
   fs.createReadStream(filePath).pipe(res);
 }
 
-function mountHighlightsRoutes(app) {
-  app.get('/api/highlights/status', (req, res) => {
+function mountInterviewsRoutes(app) {
+  app.get('/api/interviews/status', (req, res) => {
     try {
       const audit = auditMedia();
       const ready = audit.filter((a) => a.mediaReady).length;
@@ -68,7 +67,7 @@ function mountHighlightsRoutes(app) {
     }
   });
 
-  app.get('/api/highlights/clips', (req, res) => {
+  app.get('/api/interviews/clips', (req, res) => {
     try {
       const base = apiBaseFromReq(req);
       let clips = loadClips({
@@ -76,12 +75,7 @@ function mountHighlightsRoutes(app) {
         playerSlug: req.query.player || req.query.playerSlug,
         gameSlug: req.query.game || req.query.gameSlug
       });
-      if (req.query.featured === '1') {
-        clips = clips.filter((c) => c.featured);
-      }
-      if (req.query.ready === '1') {
-        clips = clips.filter((c) => c.mediaReady);
-      }
+      if (req.query.ready === '1') clips = clips.filter((c) => c.mediaReady);
       clips = clips.slice().sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
       return res.json({ ok: true, clips, cdnBase: base });
     } catch (err) {
@@ -89,18 +83,18 @@ function mountHighlightsRoutes(app) {
     }
   });
 
-  app.get('/api/highlights/clips/:slug', (req, res) => {
+  app.get('/api/interviews/clips/:slug', (req, res) => {
     try {
       const base = apiBaseFromReq(req);
       const clip = getClipBySlug(req.params.slug, { baseUrl: base });
-      if (!clip) return res.status(404).json({ ok: false, error: 'Highlight not found' });
+      if (!clip) return res.status(404).json({ ok: false, error: 'Interview not found' });
       return res.json({ ok: true, clip });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
   });
 
-  app.get('/api/highlights/stream/:slug', (req, res) => {
+  app.get('/api/interviews/stream/:slug', (req, res) => {
     try {
       const filePath = getMediaPathBySlug(req.params.slug);
       return streamVideoFile(req, res, filePath);
@@ -110,4 +104,4 @@ function mountHighlightsRoutes(app) {
   });
 }
 
-module.exports = { mountHighlightsRoutes };
+module.exports = { mountInterviewsRoutes };

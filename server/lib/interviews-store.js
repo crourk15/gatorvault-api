@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const CLIPS_PATH = path.join(__dirname, '..', 'data', 'highlights', 'clips.json');
+const CLIPS_PATH = path.join(__dirname, '..', 'data', 'interviews', 'clips.json');
 const SERVER_ROOT = path.join(__dirname, '..');
 
 function readJson(filePath, fallback) {
   try {
     return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  } catch (e) {
+  } catch {
     return fallback;
   }
 }
@@ -36,7 +36,7 @@ function resolveClipUrls(clip, baseUrl) {
     ...clip,
     thumbUrl: abs(clip.thumbUrl),
     videoUrl: ready ? abs(clip.videoUrl) : null,
-    streamUrl: ready ? `${base}/api/highlights/stream/${encodeURIComponent(clip.slug)}` : null,
+    streamUrl: ready ? `${base}/api/interviews/stream/${encodeURIComponent(clip.slug)}` : null,
     mediaReady: ready
   };
 }
