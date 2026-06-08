@@ -19,8 +19,8 @@ async function main() {
   console.log('  templateId:', templateId || '(missing)');
   console.log('  subject:', welcome.subject);
 
-  if (!privateKey || !serviceId || !templateId) {
-    console.error('\nMissing EMAILJS_PRIVATE_KEY, EMAILJS_SERVICE_ID, or EMAILJS_TEMPLATE_ID');
+  if (!privateKey || !publicKey || !serviceId || !templateId) {
+    console.error('\nMissing EMAILJS_USER_ID, EMAILJS_PRIVATE_KEY, EMAILJS_SERVICE_ID, or EMAILJS_TEMPLATE_ID');
     process.exit(1);
   }
 
@@ -38,6 +38,7 @@ async function main() {
     const res = await sendEmailViaEmailJS({
       serviceId,
       templateId,
+      publicKey,
       privateKey,
       templateParams: {
         to_email: to,
