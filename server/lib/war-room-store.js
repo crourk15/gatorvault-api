@@ -169,23 +169,57 @@ function deleteBreakdown(slug) {
 
 function buildBreakdownResponse(slug) {
   const entry = getBreakdownBySlug(slug);
-  if (!entry || !entry.verified) {
+  if (entry && entry.verified) {
     return {
       ok: true,
       tier: 'war',
       locked: false,
-      available: false,
+      available: true,
       playerSlug: slug,
-      message: PLACEHOLDER_MESSAGE
+      breakdown: entry
     };
   }
+
+  try {
+    const rosterStore = require('./roster-store');
+    const player = rosterStore.getRosterPlayerBySlug(slug);
+    if (player && (player.strengths || player.weaknesses || player.projection || player.schemeFit)) {
+      return {
+        ok: true,
+        tier: 'war',
+        locked: false,
+        available: true,
+        playerSlug: slug,
+        breakdown: {
+          playerSlug: slug,
+          playerName: player.name,
+          playerType: 'roster',
+          verified: true,
+          sources: [{ writer: 'GatorVault Roster Intel', outlet: 'GatorVault', url: null }],
+          strengths: Array.isArray(player.strengths) ? player.strengths : [],
+          weaknesses: Array.isArray(player.weaknesses) ? player.weaknesses : [],
+          projection: player.projection || null,
+          schemeFit: player.schemeFit || null,
+          comparison: null,
+          staffNotes: null,
+          insiderNotes: null,
+          recruitingStory: null,
+          nflProjection: null,
+          updatedAt: player.updatedAt || new Date().toISOString()
+        }
+      };
+    }
+  } catch (e) {
+    /* roster fallback optional */
+  }
+
   return {
     ok: true,
     tier: 'war',
     locked: false,
-    available: true,
+    available: false,
     playerSlug: slug,
-    breakdown: entry
+    message: PLACEHOLDER_MESSAGE
   };
 }
 

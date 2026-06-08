@@ -31,10 +31,10 @@
     .war-sources{font-size:.7rem;color:#64748b;margin-top:1rem;padding-top:.75rem;border-top:1px solid rgba(0,48,135,.25);}
     .war-upgrade{display:inline-block;background:#FA4616;color:#fff;font-weight:700;font-size:.75rem;padding:.5rem 1rem;border-radius:.5rem;text-decoration:none;}
   </style>
-  <meta name="gv-build" content="c4a1f92e" />
+  <meta name="gv-build" content="d8e2a41b" />
   <style>:root{--gv-ticker-h:44px}#gv-site-ticker{z-index:500!important;position:fixed;top:0;left:0;right:0;height:44px}#gv-alert-banner{z-index:510!important;position:fixed;top:0;left:0;right:0}body.gv-has-site-ticker{padding-top:var(--gv-ticker-h)}body.gv-has-site-ticker .gv-alert-banner{top:var(--gv-ticker-h)}</style>
-  <link rel="stylesheet" href="/gv-global.css?v=c4a1f92e">
-  <script src="/gv-global.js?v=c4a1f92e" defer></script>
+  <link rel="stylesheet" href="/gv-global.css?v=d8e2a41b">
+  <script src="/gv-global.js?v=d8e2a41b" defer></script>
 </head>
 <body class="min-h-screen gv-has-site-ticker">
   <div id="gv-site-ticker" class="gv-site-ticker" aria-live="polite" aria-label="Live GatorVault feed">
@@ -83,8 +83,8 @@
         <h2 class="font-bold text-white mb-3">Recruiting timeline</h2>
         <div id="p-events" class="space-y-3 text-sm"></div>
       </div>
-      <div id="p-war-room" class="war-room-panel hidden">
-        <h2>⚔️ War Room Scouting Report</h2>
+      <div id="p-war-room" class="war-room-panel">
+        <h2>War Room Scouting Report</h2>
         <div id="p-war-room-body"><p class="war-room-empty">Loading…</p></div>
       </div>
     </div>
@@ -122,9 +122,39 @@
       return 'rating-solid';
     }
 
-    function headshotHtml(slug, name) {
-      var src = '/headshots/' + slug + '.svg';
+    function headshotHtml(slug, name, url) {
+      var src = url || ('/headshots/' + slug + '.svg');
       return '<img class="headshot" src="' + src + '" alt="" onerror="this.outerHTML=\'<div class=\\\'headshot-fallback\\\'>' + initials(name) + '</div>\'">';
+    }
+
+    function healthMeta(inj) {
+      if (inj === 'yellow') return { dot: '🟡', label: 'Limited', cls: 'text-yellow-400' };
+      if (inj === 'red') return { dot: '🔴', label: 'Out', cls: 'text-red-400' };
+      return { dot: '🟢', label: 'Healthy', cls: 'text-green-400' };
+    }
+
+    function depthTierLabel(tier) {
+      if (!tier) return '';
+      var map = { starter: 'Starter', rotation: 'Rotation', developmental: 'Developmental' };
+      return map[tier] || tier;
+    }
+
+    function isFollowed(name) {
+      try {
+        var prefs = JSON.parse(localStorage.getItem('gv_alertPrefs') || '{}');
+        return (prefs.followPlayers || []).indexOf(name) !== -1;
+      } catch (e) { return false; }
+    }
+
+    function toggleFollow(name) {
+      try {
+        var prefs = JSON.parse(localStorage.getItem('gv_alertPrefs') || '{}');
+        prefs.followPlayers = prefs.followPlayers || [];
+        var idx = prefs.followPlayers.indexOf(name);
+        if (idx === -1) prefs.followPlayers.push(name);
+        else prefs.followPlayers.splice(idx, 1);
+        localStorage.setItem('gv_alertPrefs', JSON.stringify(prefs));
+      } catch (e) {}
     }
 
     function loadSession() {
@@ -163,7 +193,7 @@
       if (data.locked) {
         body.innerHTML = '<div class="war-room-lock">'
           + '<div style="font-size:2rem;margin-bottom:.5rem">🔒</div>'
-          + '<p>Verified insider scouting from Power, Bender, Ivins, Alderman &amp; Wiltfong — exclusive to War Room.</p>'
+          + '<p>Verified insider scouting from Power, Bender, Ivins, Alderman, and Wiltfong. Exclusive to War Room.</p>'
           + '<a class="war-upgrade" href="/?upgrade=war">Upgrade to War Room →</a>'
           + '</div>';
         return;
@@ -291,9 +321,10 @@
       document.title = p.name + ' — GatorVault Roster';
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('profile').classList.remove('hidden');
-      document.getElementById('p-headshot-wrap').innerHTML = headshotHtml(p.slug || slug, p.name);
+      document.getElementById('p-headshot-wrap').innerHTML = headshotHtml(p.slug || slug, p.name, p.headshotUrl);
       document.getElementById('p-name').textContent = p.name;
-      document.getElementById('p-meta').textContent = [p.pos, p.year || p.class].filter(Boolean).join(' · ');
+      var cls = p.year || p.class || '';
+      document.getElementById('p-meta').textContent = [p.pos, cls].filter(Boolean).join(' · ');
       document.getElementById('p-stars').textContent = stars(p.stars) + (p.rank ? '  ·  #' + p.rank + ' rank' : '');
       var rating = p.displayRating != null ? p.displayRating : p.rating;
       var el = document.getElementById('p-rating');
@@ -302,29 +333,47 @@
       if (p.ratingIsOverride || (p.ratingOverride != null && p.ratingOverride !== '')) {
         el.innerHTML = rating + '<span class="override-pill">OVR</span>';
       }
-      document.getElementById('p-rating-note').textContent = (p.ratingIsOverride ? 'Manual vault override' : 'Vault rating')
-        + (p.rating != null && !p.ratingIsOverride ? ' · base ' + p.rating : '');
-      var inj = p.injury === 'yellow' ? ['🟡', 'Questionable', 'text-yellow-400'] : p.injury === 'red' ? ['🔴', 'Out', 'text-red-400'] : ['🟢', 'Healthy', 'text-green-400'];
+      document.getElementById('p-rating-note').textContent = 'Vault Rating (0–100 scale)';
+      var inj = healthMeta(p.injury || 'green');
       var injEl = document.getElementById('p-injury');
-      injEl.className = 'text-sm mt-3 font-semibold ' + inj[2];
-      injEl.textContent = inj[0] + ' ' + inj[1];
+      injEl.className = 'text-sm mt-3 font-semibold ' + inj.cls;
+      injEl.textContent = inj.dot + ' ' + inj.label;
       var meas = [
-        ['Position', p.pos],
-        ['Class', p.year || p.class],
+        ['Jersey', p.jersey ? '#' + p.jersey : ''],
         ['Height', p.height],
         ['Weight', p.weight ? p.weight + ' lbs' : ''],
         ['Hometown', p.hometown],
+        ['Depth Chart', depthTierLabel(p.depthChartTier)],
         ['Stars', p.stars ? stars(p.stars) : '']
       ].filter(function (m) { return m[1]; });
       document.getElementById('p-meas').innerHTML = meas.map(function (m) {
-        return '<div class="meas-card"><div class="meas-label">' + m[0] + '</div><div class="meas-value">' + m[1] + '</div></div>';
+        return '<div class="meas-card"><div class="meas-label">' + m[0] + '</div><div class="meas-value">' + escHtml(String(m[1])) + '</div></div>';
       }).join('');
-      document.getElementById('p-bio').textContent = p.bio || p.stats || 'GatorVault roster profile.';
-      if (p.stats && p.bio) {
-        document.getElementById('p-stats').textContent = p.stats;
-        document.getElementById('p-stats').classList.remove('hidden');
+      if (p.transferInfo) {
+        document.getElementById('p-scheme').textContent = p.transferInfo;
+        document.getElementById('p-scheme').classList.remove('hidden');
+      } else {
+        document.getElementById('p-scheme').classList.add('hidden');
       }
-      document.getElementById('p-links').innerHTML = '<a href="/players" class="text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white">Back to Players →</a>';
+      document.getElementById('p-bio').textContent = p.stats || p.bio || 'GatorVault roster profile.';
+      if (p.bio && p.stats && p.bio !== p.stats) {
+        document.getElementById('p-stats').textContent = p.bio;
+        document.getElementById('p-stats').classList.remove('hidden');
+      } else {
+        document.getElementById('p-stats').classList.add('hidden');
+      }
+      var followed = isFollowed(p.name);
+      document.getElementById('p-links').innerHTML = ''
+        + '<button type="button" id="p-follow-btn" class="text-xs font-bold px-4 py-2 rounded-lg ' + (followed ? 'bg-gator-orange text-white' : 'bg-surface-800 text-surface-200 border border-gator-blue/20') + '">' + (followed ? 'Following' : 'Follow') + '</button>'
+        + '<a href="/players" class="text-xs font-bold px-4 py-2 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">← All Players</a>';
+      var followBtn = document.getElementById('p-follow-btn');
+      if (followBtn) {
+        followBtn.addEventListener('click', function () {
+          toggleFollow(p.name);
+          renderRoster(p);
+        });
+      }
+      document.getElementById('p-war-room').classList.remove('hidden');
       loadWarRoomBreakdown(p.slug || slug);
     }
 

@@ -13,7 +13,7 @@
     <meta name="description" content="Built for passionate Florida Gators football fans. Depth charts, recruiting intel, transfer portal, scheme breakdowns, and game week analysis — your full UF Football hub. 30-day free trial." />
     <meta name="keywords" content="Florida Gators football, UF football, Gators recruiting, Florida Gators depth chart, Gators transfer portal, Jon Sumrall, SEC football, Gator Nation" />
     <meta name="robots" content="index, follow" />
-    <meta name="gv-build" content="c4a1f931" />
+    <meta name="gv-build" content="d8e2a41b" />
     <link rel="canonical" href="https://gatorvaultinsider.com" />
     <meta name="google-site-verification" content="CfKonZGeVMZBFJ3JhqaFhPfs7kS6-LvCmskXElgekTs" />
 
@@ -390,8 +390,8 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style id="gv-critical">:root{--gv-ticker-h:44px}#gv-site-ticker{z-index:500!important;position:fixed;top:0;left:0;right:0;height:44px}#gv-alert-banner{z-index:510!important;position:fixed;top:0;left:0;right:0}body.gv-has-site-ticker #nav-main,body.gv-has-site-ticker nav.fixed{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #gv-mobile-header,body.gv-has-site-ticker .gv-mob-header{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior:not(.gv-mobile-active){padding-top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior .gv-desk-only.sticky.top-14{top:calc(var(--gv-ticker-h) + 3.5rem)!important}body.gv-has-site-ticker #hero-sec{padding-top:calc(8rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker #install-banner{top:calc(4rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker .gv-alert-banner{top:var(--gv-ticker-h)}</style>
-    <link rel="stylesheet" href="/gv-global.css?v=c4a1f931">
-    <script src="/gv-global.js?v=c4a1f931" defer></script>
+    <link rel="stylesheet" href="/gv-global.css?v=d8e2a41b">
+    <script src="/gv-global.js?v=d8e2a41b" defer></script>
 </head>
 <body data-id="0" class="gv-has-site-ticker">
     <app-icon data-id="1" hidden data-icon="shield" data-palette="Blue"></app-icon>
@@ -1258,7 +1258,7 @@
                         <div class="flex items-center justify-between gap-4 flex-wrap">
                             <div>
                                 <h1 data-id="718" class="font-display text-2xl md:text-3xl font-bold text-white">👤 Player Profiles</h1>
-                                <p class="text-surface-200 text-sm mt-1 max-w-2xl">Vault ratings, injury status, and role intel on every key Gator. Follow players to get alerts when they move on the depth chart or portal.</p>
+                                <p class="text-surface-200 text-sm mt-1 max-w-2xl">Roster profiles — ratings, measurables, and depth-chart context for every player on the 2026 Spring roster. Search, filter by unit, and follow players for depth-chart alerts.</p>
                             </div>
                             <span class="game-pill">Roster Intel</span>
                         </div>
@@ -1500,7 +1500,7 @@
                 </div>
             </div>
 
-            <footer data-id="914" class="gv-desk-only text-center text-xs text-surface-200/40 py-6 border-t border-gator-blue/10 mt-8"><p data-id="915">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p><p class="text-[10px] text-surface-200/25 mt-1" id="gv-build-stamp">UI c4a1f931</p></footer>
+            <footer data-id="914" class="gv-desk-only text-center text-xs text-surface-200/40 py-6 border-t border-gator-blue/10 mt-8"><p data-id="915">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p><p class="text-[10px] text-surface-200/25 mt-1" id="gv-build-stamp">UI d8e2a41b</p></footer>
         </div>
     </div>
 
@@ -2281,18 +2281,18 @@
     }
     function gvRenderWarRoomHtml(data){
         if(data.locked){
-            return '<div class="war-room-panel"><h4>⚔️ War Room Scouting Report</h4><div class="war-room-lock">'
+            return '<div class="war-room-panel"><h4>War Room Scouting Report</h4><div class="war-room-lock">'
                 +'<div class="text-3xl mb-2">🔒</div>'
-                +'<p>Verified insider scouting from Power, Bender, Ivins, Alderman &amp; Wiltfong — exclusive to War Room.</p>'
+                +'<p>Verified insider scouting from Power, Bender, Ivins, Alderman, and Wiltfong. Exclusive to War Room.</p>'
                 +'<button type="button" class="bg-gator-orange hover:bg-gator-orangedk text-white font-bold text-xs px-5 py-2.5 rounded-xl" onclick="if(window.openRegModal)openRegModal(\'war\')">Upgrade to War Room →</button>'
                 +'</div></div>';
         }
         if(!data.available||!data.breakdown){
-            return '<div class="war-room-panel"><h4>⚔️ War Room Scouting Report</h4>'
+            return '<div class="war-room-panel"><h4>War Room Scouting Report</h4>'
                 +'<p class="war-room-empty">'+gvEscHtml(data.message||'No verified insider evaluation available.')+'</p></div>';
         }
         var b=data.breakdown;
-        var html='<div class="war-room-panel"><h4>⚔️ War Room Scouting Report</h4>'
+        var html='<div class="war-room-panel"><h4>War Room Scouting Report</h4>'
             +gvWarRoomSection('Strengths',b.strengths,true)
             +gvWarRoomSection('Weaknesses',b.weaknesses,true)
             +gvWarRoomSection('Player comparison',b.comparison)
@@ -3197,7 +3197,7 @@
     function markDigestSent(){localStorage.setItem('gv_lastDigest',Date.now());showToast('Digest sent','Marked digest as sent locally.','',3000);closeDigestDrawer();}
 
     window.liveScores=window.liveScores||{};
-    window._playerActivePos='All';
+    window._playerActiveUnit='All';
     window._playerSearchWired=false;
 
     function playerPos(p){return p.pos||p.position||'';}
@@ -3213,13 +3213,20 @@
         return 'rating-solid';
     }
     function injuryMeta(inj){
-        if(inj==='yellow') return {label:'Questionable',cls:'injury-yellow',dot:'🟡'};
+        if(inj==='yellow') return {label:'Limited',cls:'injury-yellow',dot:'🟡'};
         if(inj==='red') return {label:'Out',cls:'injury-red',dot:'🔴'};
         return {label:'Healthy',cls:'injury-green',dot:'🟢'};
     }
+    function playerUnit(p){
+        if(p.unit) return p.unit;
+        var pos=playerPos(p).toUpperCase();
+        if(['QB','RB','WR','TE','OL'].indexOf(pos)>=0) return 'offense';
+        if(['P','K','LS'].indexOf(pos)>=0) return 'special';
+        return 'defense';
+    }
     function playerMatchesQuery(p,q){
         if(!q) return true;
-        var hay=[p.name,p.pos,p.position,p.year,p.class,p.stats,p.team,p.bio,p.hometown,p.height,p.weight].join(' ').toLowerCase();
+        var hay=[p.name,p.pos,p.position,p.year,p.class,p.stats,p.bio,p.hometown,p.height,p.weight,p.transferInfo,p.unit,p.depthChartTier].join(' ').toLowerCase();
         return hay.indexOf(q)!==-1;
     }
 
@@ -3266,17 +3273,18 @@
             +'<p class="text-gator-orange font-semibold text-sm mt-1">'+(p.pos||'—')+(p.year||p.class?' · '+(p.year||p.class):'')+'</p>'
             +gvPlayerStarsHtml(p)
             +'<div class="flex items-center gap-3 mt-3">'+gvPlayerRatingBadgeHtml(p)
-            +'<div class="text-xs text-surface-200/70">'+(override?'Vault rating (manual override)':'Vault rating')+(p.rating!=null&&!override?' · base '+p.rating:'')+'</div></div>'
+            +'<div class="text-xs text-surface-200/70">Vault Rating (0–100 scale)</div></div>'
             +'<div class="flex items-center gap-1.5 mt-2 text-xs font-semibold '+inj.cls+'"><span>'+inj.dot+'</span><span>'+inj.label+'</span></div>'
             +'</div></div>'
             +gvPlayerMeasGrid(p)
-            +'<p class="text-sm text-surface-200 leading-relaxed mt-4 border-l-4 border-gator-orange pl-4">'+(gvEscHtml(p.bio||p.stats||''))+'</p>'
-            +(p.stats&&p.bio?'<p class="text-xs text-surface-200/60 mt-3">'+gvEscHtml(p.stats)+'</p>':'')
+            +(p.transferInfo?'<p class="text-xs text-surface-200/80 mt-3">'+gvEscHtml(p.transferInfo)+'</p>':'')
+            +'<p class="text-sm text-white leading-relaxed mt-4 border-l-4 border-gator-orange pl-4">'+gvEscHtml(p.stats||p.bio||'')+'</p>'
+            +(p.bio&&p.stats&&p.bio!==p.stats?'<p class="text-xs text-surface-200/60 mt-3">'+gvEscHtml(p.bio)+'</p>':'')
             +'<div class="flex flex-wrap gap-2 mt-5">'
-            +'<button type="button" class="gv-full-profile-btn text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white" data-slug="'+gvEscHtml(p.slug||'')+'">Full profile →</button>'
+            +'<button type="button" class="gv-full-profile-btn text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white" data-slug="'+gvEscHtml(p.slug||'')+'">Full Profile →</button>'
             +'<button type="button" class="player-modal-follow text-xs font-bold px-4 py-2 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">Follow</button>'
             +'</div>'
-            +'<div id="roster-war-room-'+gvEscHtml(p.slug||'')+'" class="war-room-panel mt-5"><h4>⚔️ War Room Scouting Report</h4><p class="war-room-empty">Loading…</p></div>';
+            +'<div id="roster-war-room-'+gvEscHtml(p.slug||'')+'" class="war-room-panel mt-5"><h4>War Room Scouting Report</h4><p class="war-room-empty">Loading…</p></div>';
         gvFetchWarRoomBreakdown(p.slug).then(function(war){
             var warEl=document.getElementById('roster-war-room-'+p.slug);
             if(warEl)warEl.outerHTML=gvRenderWarRoomHtml(war);
@@ -3342,38 +3350,38 @@
         window.alertPrefs=window.alertPrefs||{};
         window.playerProfiles=window.playerProfiles||playerProfiles;
         var q=search?search.value.trim().toLowerCase():'';
-        var activePos=window._playerActivePos||'All';
+        var activeUnit=window._playerActiveUnit||'All';
         var filtered=window.playerProfiles.filter(function(p){
-            var pos=playerPos(p);
-            if(activePos!=='All' && pos!==activePos) return false;
+            var unit=playerUnit(p);
+            if(activeUnit!=='All'){
+                var want=activeUnit.toLowerCase();
+                if(want==='offense'&&unit!=='offense') return false;
+                if(want==='defense'&&unit!=='defense') return false;
+                if((want==='special teams'||want==='special')&&unit!=='special') return false;
+            }
             return playerMatchesQuery(p,q);
         });
 
         if(statsBar){
             var followed=(window.alertPrefs.followPlayers||[]).length;
             var avgRating=filtered.length?Math.round(filtered.reduce(function(s,p){return s+(playerDisplayRating(p)||0);},0)/filtered.length):0;
-            statsBar.innerHTML='<div class="player-stat-pill"><p class="text-[.65rem] uppercase tracking-[.12em] text-surface-400">Profiles</p><p class="font-display text-xl font-bold text-white">'+filtered.length+'</p></div>'
+            var total=window.playerProfiles.length;
+            statsBar.innerHTML='<div class="player-stat-pill"><p class="text-[.65rem] uppercase tracking-[.12em] text-surface-400">Roster</p><p class="font-display text-xl font-bold text-white">'+total+'</p></div>'
+                +'<div class="player-stat-pill"><p class="text-[.65rem] uppercase tracking-[.12em] text-surface-400">Showing</p><p class="font-display text-xl font-bold text-white">'+filtered.length+'</p></div>'
                 +'<div class="player-stat-pill"><p class="text-[.65rem] uppercase tracking-[.12em] text-surface-400">Following</p><p class="font-display text-xl font-bold text-gator-orange">'+followed+'</p></div>'
                 +'<div class="player-stat-pill"><p class="text-[.65rem] uppercase tracking-[.12em] text-surface-400">Avg Rating</p><p class="font-display text-xl font-bold text-white">'+(avgRating||'—')+'</p></div>';
         }
 
         posTabs.innerHTML='';
-        var positions={};
-        window.playerProfiles.forEach(function(p){var pos=playerPos(p);if(pos) positions[pos]=true;});
-        function setPosFilter(pos){
-            window._playerActivePos=pos;
+        function setUnitFilter(unit){
+            window._playerActiveUnit=unit;
             renderPlayers();
         }
-        var allBtn=document.createElement('button');
-        allBtn.className='player-pos-tab'+(activePos==='All'?' active':'');
-        allBtn.innerText='All';
-        allBtn.addEventListener('click',function(){setPosFilter('All');});
-        posTabs.appendChild(allBtn);
-        Object.keys(positions).sort().forEach(function(pos){
+        ['All','Offense','Defense','Special Teams'].forEach(function(unit){
             var b=document.createElement('button');
-            b.className='player-pos-tab'+(activePos===pos?' active':'');
-            b.innerText=pos;
-            b.addEventListener('click',function(){setPosFilter(pos);});
+            b.className='player-pos-tab'+(activeUnit===unit?' active':'');
+            b.innerText=unit;
+            b.addEventListener('click',function(){setUnitFilter(unit);});
             posTabs.appendChild(b);
         });
 
@@ -3398,13 +3406,16 @@
                 +'<div class="player-rating-slot">'+gvPlayerRatingBadgeHtml(p)+'</div>'
                 +'</div></div></div>'
                 +gvPlayerMeasGrid(p)
-                +'<p class="text-xs text-surface-200/85 leading-relaxed line-clamp-3">'+(gvEscHtml(p.bio||p.stats||''))+'</p>'
-                +'<div class="flex items-center justify-between gap-2 mt-1">'
+                +(p.transferInfo?'<p class="text-[.65rem] text-surface-200/70 mt-1">'+gvEscHtml(p.transferInfo)+'</p>':'')
+                +'<p class="text-xs text-surface-200/85 leading-relaxed line-clamp-3">'+(gvEscHtml(p.stats||p.bio||''))+'</p>'
+                +'<div class="flex items-center justify-between gap-2 mt-2 flex-wrap">'
                 +'<div class="flex items-center gap-1.5 text-xs font-semibold '+inj.cls+'"><span>'+inj.dot+'</span><span>'+inj.label+'</span></div>'
+                +'<div class="flex items-center gap-1.5">'
+                +'<a href="/player/'+(p.slug||'')+'" class="text-[.65rem] font-bold text-gator-orange hover:underline gv-card-full-profile" onclick="event.stopPropagation()">Full Profile →</a>'
                 +'<button class="follow-player-btn text-xs px-2 py-1 rounded-lg flex-shrink-0 '+followClass+'" data-player="'+(p.name||'')+'">'+(followed?'Following':'Follow')+'</button>'
-                +'</div>';
+                +'</div></div>';
             card.addEventListener('click',function(e){
-                if(e.target.closest('.follow-player-btn'))return;
+                if(e.target.closest('.follow-player-btn')||e.target.closest('.gv-card-full-profile'))return;
                 openPlayerProfile(p);
             });
             grid.appendChild(card);

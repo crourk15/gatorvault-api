@@ -1,0 +1,54 @@
+{
+  "jayden-woods": {
+    "bio": "Best player on the defense. JACK in Brad White's 3-3-5 — the edge pressure package runs through him.",
+    "stats": "Scheme centerpiece at JACK — sets the edge and rushes the passer.",
+    "stars": 4,
+    "strengths": ["Explosive first step off the edge", "High motor and finish rate as a pass rusher", "Versatile enough to drop into short zones"],
+    "weaknesses": ["Can be sealed on power runs without length leverage", "Still refining counter moves vs. elite tackles"],
+    "projection": "All-SEC caliber edge defender with NFL draft ceiling if he stays healthy through 2026.",
+    "schemeFit": "Ideal JACK in Brad White's 3-3-5 — primary blitzer and edge setter in the odd front."
+  },
+  "cormani-mcclain": {
+    "bio": "Lakeland product and former #1 CB recruit nationally. Portal addition who returns as the starting LCB.",
+    "stats": "Elite lockdown corner and boundary defender.",
+    "stars": 5,
+    "strengths": ["Rare length and twitch for the position", "Ball skills and recovery speed in phase"],
+    "weaknesses": ["Physicality vs. bigger receivers can waver", "Penalty discipline needs consistency"],
+    "projection": "First-round NFL corner projection if he re-establishes top-tier form in 2026.",
+    "schemeFit": "Press-man boundary corner — perfect fit for aggressive single-high looks."
+  },
+  "jadan-baugh": {
+    "bio": "Workhorse three-down back. Must-win games run through his ability to control time of possession.",
+    "stats": "Workhorse starter · 3-down back.",
+    "stars": 4,
+    "strengths": ["Vision and patience between the tackles", "Reliable hands and pass protection"],
+    "weaknesses": ["Lacks elite breakaway speed", "Durability through a heavy workload is the question"],
+    "projection": "SEC starter with 1,000-yard season upside in a balanced offense.",
+    "schemeFit": "Every-down back in a pro-style/run-first scheme — early-down and short-yardage hammer."
+  },
+  "eric-singleton-jr": {
+    "bio": "Auburn transfer and clear WR1. Go-to weapon on early downs and in the red zone.",
+    "stats": "Auburn transfer · WR1 · Go-to weapon.",
+    "stars": 4,
+    "strengths": ["Route nuance and separation at all three levels", "Reliable hands in traffic"],
+    "weaknesses": ["Not a pure vertical burner", "Contested catch rate vs. length can vary"],
+    "projection": "1,000-yard receiver and primary target for the new staff in 2026.",
+    "schemeFit": "Move-the-chains X/slot hybrid — early-down and red-zone focal point."
+  },
+  "vernell-brown-iii": { "bio": "Gainesville legacy and starting F/slot receiver. Quickness and vision make him the top return option.", "stats": "Slot weapon at F · Versatile route runner.", "stars": 4 },
+  "dallas-wilson": { "bio": "Tampa Bay Tech product and projected X receiver with size to win on the boundary.", "stats": "X receiver · Projected starter.", "stars": 4 },
+  "tramell-jones-jr": { "bio": "Jacksonville product and dual-threat spring starter candidate with game experience.", "stats": "Spring starter candidate · Dual-threat QB.", "stars": 4 },
+  "dijon-johnson": { "bio": "Press-man corner with physical coverage skills. Rotates with McClain in the secondary.", "stats": "Press-man corner · Physical coverage.", "stars": 4 },
+  "myles-graham": { "bio": "Gainesville native and All-SEC candidate with speed and instinct in space.", "stats": "All-SEC candidate · Second-level communicator.", "stars": 4 },
+  "lacota-dippre": { "bio": "James Madison transfer and starting Y tight end. Legitimate vertical weapon in the offense.", "stats": "Starting Y tight end · Red-zone threat.", "stars": 3 },
+  "aaron-philo": { "bio": "Georgia Tech transfer with a cleaner pro-style delivery. Strong on third downs in spring work.", "stats": "GT transfer · Rhythm passer in QB battle.", "stars": 4 },
+  "jaden-robinson": { "bio": "Lake City native and MIKE linebacker. Communication and pre-snap reads anchor the defense.", "stats": "Field general · MIKE linebacker.", "stars": 4 },
+  "bryce-thornton": { "bio": "Strong safety enforcer and physical leader in the secondary.", "stats": "SS enforcer · Physical leader in secondary.", "stars": 3 },
+  "kanye-clark": { "bio": "UCLA transfer projected as the starting STAR/nickel in the 3-3-5.", "stats": "Starting STAR · Nickel fit in 3-3-5.", "stars": 3 },
+  "cam-dooley": { "bio": "Kentucky transfer who projects as a starting safety in the new scheme.", "stats": "Portal safety · Starter candidate.", "stars": 3 },
+  "evan-pryor": { "bio": "Ohio State/Cincinnati transfer RB who adds experienced depth behind Baugh.", "stats": "Veteran RB depth · Change-of-pace back.", "stars": 3 },
+  "tj-shanahan-jr": { "bio": "Penn State/TAMU transfer competing for a starting guard spot on the rebuilt OL.", "stats": "Portal RG · Dead heat for starting job.", "stars": 3 },
+  "eagan-boyer": { "bio": "Penn State transfer with length at tackle. Push for RT or swing tackle role.", "stats": "Portal OL · RT depth/push.", "stars": 3 },
+  "harrison-moore": { "bio": "Southlake Carroll transfer who projects as the starting center.", "stats": "Starting center · OL anchor.", "stars": 3 },
+  "brendan-bett": { "bio": "Baylor transfer nose tackle — key piece in Brad White's 3-3-5 front.", "stats": "Starting nose · Run-stuffer in 3-3-5.", "stars": 3 }
+}

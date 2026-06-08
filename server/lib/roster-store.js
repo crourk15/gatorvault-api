@@ -73,6 +73,10 @@ function normalizeRosterPlayer(raw) {
     height: raw.height || '',
     weight: raw.weight || '',
     hometown: raw.hometown || '',
+    jersey: raw.jersey != null ? raw.jersey : null,
+    unit: raw.unit || null,
+    transferInfo: raw.transferInfo || raw.transferHistory || null,
+    depthChartTier: raw.depthChartTier || null,
     stars: raw.stars != null ? raw.stars : null,
     rank: raw.rank != null ? raw.rank : null,
     rating: raw.rating != null ? Number(raw.rating) : null,
@@ -81,8 +85,18 @@ function normalizeRosterPlayer(raw) {
     bio: raw.bio || '',
     stats: raw.stats || '',
     injury: raw.injury || 'green',
+    strengths: raw.strengths || null,
+    weaknesses: raw.weaknesses || null,
+    projection: raw.projection || null,
+    schemeFit: raw.schemeFit || null,
     updatedAt: raw.updatedAt || nowIso()
   };
+  if (!player.unit && player.pos) {
+    const p = player.pos.toUpperCase();
+    if (['QB', 'RB', 'WR', 'TE', 'OL'].includes(p)) player.unit = 'offense';
+    else if (['P', 'K', 'LS'].includes(p)) player.unit = 'special';
+    else player.unit = 'defense';
+  }
   player.headshotUrl = resolveHeadshotUrl(player);
   player.hasHeadshot = !!player.headshotUrl;
   player.displayRating = displayRating(player);
