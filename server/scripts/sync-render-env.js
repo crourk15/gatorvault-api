@@ -77,8 +77,12 @@ async function main() {
   }
 
   const updates = [];
+  const env = { ...process.env };
+  if (!env.EMAILJS_USER_ID && env.EMAILJS_PUBLIC_KEY) {
+    env.EMAILJS_USER_ID = env.EMAILJS_PUBLIC_KEY;
+  }
   for (const k of SYNC_KEYS) {
-    const val = process.env[k];
+    const val = env[k];
     if (val == null || val === '') continue;
     updates.push({ key: k, value: String(val) });
   }

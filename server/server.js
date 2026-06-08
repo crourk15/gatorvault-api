@@ -195,7 +195,6 @@ async function sendEmailEmailJS(to, templateParams) {
     vault_url: VAULT_URL,
     support_email: process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com',
     email_subject: templateParams.emailSubject || templateParams.subject || 'Welcome to GatorVault — Your Access Is Now Live 🐊🔥',
-    message_html: templateParams.html || templateParams.messageHtml || '',
     reply_to: process.env.EMAILJS_REPLY_TO || process.env.SMTP_USER || 'support@gatorvaultinsider.com'
   };
 
@@ -293,17 +292,27 @@ async function runWelcomeEmailTest({ email, name, tier }) {
   try {
     const welcome = await sendWelcomeEmail({ email, name, tier });
     if (welcome.emailSent) {
-      add('success', 'Welcome email sent', { provider: welcome.provider, trialEnd: welcome.trialEndStr });
-      return { ok: true, emailSent: true, provider: welcome.provider, trialEnd: welcome.trialEndStr, steps };
+      add('success', 'Welcome email sent via EmailJS', {
+        provider: welcome.provider,
+        trialEnd: welcome.trialEndStr,
+        emailJsContacted: true
+      });
+      return { ok: true, emailSent: true, provider: welcome.provider, trialEnd: welcome.trialEndStr, emailJsContacted: true, steps };
     }
     add('error', 'Email was not sent', {
       error: welcome.error,
-      hint: 'On EmailJS dashboard → Account → Security, enable API requests from non-browser apps'
+      emailJsContacted: false,
+      hint: 'EmailJS was never called — check EMAILJS_USER_ID, EMAILJS_PRIVATE_KEY, service and template IDs on Render'
     });
-    return { ok: false, emailSent: false, error: welcome.error || 'Delivery returned sent:false', steps };
+    return { ok: false, emailSent: false, error: welcome.error || 'Delivery returned sent:false', emailJsContacted: false, steps };
   } catch (err) {
-    add('error', err.message, { hint: 'Check EmailJS template variables and Gmail service connection' });
-    return { ok: false, emailSent: false, error: err.message, steps };
+    add('error', err.message, {
+      emailJsContacted: !/not configured/i.test(err.message),
+      hint: err.message.includes('404') || err.message.includes('Account not found')
+        ? 'Update Render env: EMAILJS_USER_ID and EMAILJS_PRIVATE_KEY must both be from the same EmailJS account (Account → API keys)'
+        : 'Check EmailJS template variables and Gmail service connection'
+    });
+    return { ok: false, emailSent: false, error: err.message, emailJsContacted: true, steps };
   }
 }
 
@@ -614,9 +623,15 @@ app.post('/api/digest', async (req, res) => {
 
 app.get('/api/ping', (req, res) => res.json({ ok: true, ts: Date.now() }));
 
-app.get('/api/email-status', (req, res) => {
+app.get('/api/email-status', async (req, res) => {
   const providers = getEmailProviders();
   const privateKeySet = !!getEmailJsPrivateKey();
+  const publicKey = getEmailJsPublicKey();
+  let probe = null;
+  if (req.query.probe === '1' && isEmailJsReady()) {
+    const { probeEmailJsAccount } = require('./lib/emailjs-server');
+    probe = await probeEmailJsAccount();
+  }
   return res.json({
     ok: true,
     configured: providers.length > 0,
@@ -625,15 +640,18 @@ app.get('/api/email-status', (req, res) => {
     emailjs: {
       mode: 'server-rest',
       sender: 'lib/emailjs-server.js',
+      endpoint: 'https://api.emailjs.com/api/v1.0/email/send',
       build: process.env.RENDER_GIT_COMMIT ? String(process.env.RENDER_GIT_COMMIT).slice(0, 7) : null,
       restPayloadKeys: ['service_id', 'template_id', 'user_id', 'accessToken', 'template_params'],
+      templateParamKeys: ['to_email', 'name', 'email', 'tier', 'tier_benefits', 'vault_url', 'support_email', 'email_subject'],
       serviceId: getEmailJsConfig().serviceId || null,
       templateId: getEmailJsConfig().templateId || null,
-      onboardingTemplateId: null,
-      userIdSet: !!getEmailJsPublicKey(),
+      userIdSet: !!publicKey,
       publicKeyHint: getEmailJsPublicKeyHint(),
       privateKeySet,
-      replyTo: process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com'
+      privateKeyLen: getEmailJsPrivateKey().length || 0,
+      replyTo: process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com',
+      probe: probe || undefined
     },
     hint: providers.length === 0
       ? (!getEmailJsPublicKey()
@@ -658,7 +676,8 @@ app.post('/api/test/welcome', async (req, res) => {
   }
   try {
     const result = await runWelcomeEmailTest({ email, name, tier });
-    return res.json(result);
+    const status = result.ok ? 200 : (result.emailJsContacted ? 502 : 503);
+    return res.status(status).json(result);
   } catch (err) {
     pushEmailLog({ level: 'error', message: err.message, email, source: 'test-route' });
     return res.status(500).json({ ok: false, error: err.message, emailSent: false });

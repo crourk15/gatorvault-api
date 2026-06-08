@@ -7,8 +7,16 @@ const PUBLIC_PLACEHOLDERS = new Set(['', 'YOUR_PUBLIC_KEY_HERE']);
 const PRIVATE_PLACEHOLDERS = new Set(['', 'YOUR_PRIVATE_KEY_HERE', 'your-emailjs-private-key-here']);
 
 function trimEnv(name) {
-  const value = process.env[name];
-  return value == null ? '' : String(value).trim();
+  let value = process.env[name];
+  if (value == null) return '';
+  value = String(value).trim();
+  if (
+    (value.startsWith('"') && value.endsWith('"')) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    value = value.slice(1, -1).trim();
+  }
+  return value;
 }
 
 /** Public key for REST `user_id` — no prefix/format validation. */
