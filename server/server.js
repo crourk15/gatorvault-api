@@ -8,6 +8,7 @@ const { mountRosterRoutes } = require('./lib/roster-routes');
 const { mountLiveRoutes } = require('./lib/live-routes');
 const { mountHighlightsRoutes } = require('./lib/highlights-routes');
 const { mountWarRoomRoutes } = require('./lib/war-room-routes');
+const { mountXAutoposterRoutes } = require('./lib/x-autoposter-routes');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 
@@ -34,7 +35,7 @@ app.use((req, res, next) => {
   } else {
     res.header('Access-Control-Allow-Origin', '*');
   }
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin, X-Live-Pin, X-Live-Cron, X-War-Room-Pin');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin, X-Live-Pin, X-Live-Cron, X-War-Room-Pin, X-X-Autopost-Pin, X-X-Cron');
   res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
@@ -49,6 +50,7 @@ mountRosterRoutes(app);
 mountLiveRoutes(app);
 mountHighlightsRoutes(app);
 mountWarRoomRoutes(app);
+mountXAutoposterRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;
@@ -822,6 +824,12 @@ app.listen(PORT, () => {
     startOnboardingScheduler({ loadUsers, saveUsers, deliverEmail, pushEmailLog });
   } catch (e) {
     console.warn('Onboarding scheduler init skipped', e.message);
+  }
+  try {
+    const { startXAutoposterScheduler } = require('./lib/x-autoposter');
+    startXAutoposterScheduler();
+  } catch (e) {
+    console.warn('X AutoPoster scheduler failed to start', e.message);
   }
   if (providers.length) {
     console.log('Email delivery: configured (' + providers.join(', ') + ')');

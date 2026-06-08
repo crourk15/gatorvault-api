@@ -2,6 +2,8 @@
 
 Express API for member registration, sign-in, welcome emails, and digest delivery.
 
+**X AutoPoster:** [docs/x-autoposter-setup.md](docs/x-autoposter-setup.md) — OAuth 1.0a posting as @gatorvault. Content rules: [docs/x-autoposter-content-directive.md](docs/x-autoposter-content-directive.md).
+
 ## Features
 
 - `POST /api/register` — create account, enroll Beehiiv onboarding automation, return session token
