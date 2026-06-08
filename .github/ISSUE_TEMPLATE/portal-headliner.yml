@@ -1,0 +1,36 @@
+name: "P0 — Portal Headliner (On3)"
+description: On3 source-driven portal measurables — no manual overrides
+title: "[P0] Portal Headliner: On3 measurables audit & alignment"
+labels: ["P0", "portal", "on3", "brand-critical"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Full spec: [docs/PLATFORM-DIRECTIVE.md#1-portal-headliner--on3-source-of-truth](https://github.com/crourk15/gatorvault-api/blob/main/docs/PLATFORM-DIRECTIVE.md#1-portal-headliner--on3-source-of-truth)
+  - type: textarea
+    id: requirement
+    attributes:
+      label: Requirement
+      value: |
+        Portal measurables (height/weight, stars, previous school) must be pulled from the correct On3 endpoint consistently. No manual overrides — everything source-driven and accurate.
+      render: markdown
+    validations:
+      required: true
+  - type: checkboxes
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      options:
+        - label: Headliner + portal list + player profiles read from same API (no hardcoded portalIncoming fallback)
+          required: false
+        - label: audit-portal-measurables.js passes with zero mismatches vs On3
+          required: false
+        - label: Scheduled sync on ingest keeps data current
+          required: false
+        - label: UI shows On3 source badge and profile links
+          required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Audit notes / blockers
+      placeholder: Current gaps, players to spot-check, PR links...

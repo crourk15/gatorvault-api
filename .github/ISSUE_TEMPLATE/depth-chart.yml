@@ -1,0 +1,38 @@
+name: "P0 — Depth Chart (Event-driven)"
+description: Event-driven depth chart with admin, version history, timestamps
+title: "[P0] Depth Chart: event-driven system + admin + version history"
+labels: ["P0", "depth-chart", "admin", "brand-critical"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Full spec: [docs/PLATFORM-DIRECTIVE.md#3-depth-chart--event-driven-with-admin--version-history](https://github.com/crourk15/gatorvault-api/blob/main/docs/PLATFORM-DIRECTIVE.md#3-depth-chart--event-driven-with-admin--version-history)
+  - type: textarea
+    id: requirement
+    attributes:
+      label: Requirement
+      value: |
+        Build an event-driven depth chart system with an admin tool for manual updates when news breaks. Track version history and show "Last updated" timestamps. Depth chart must reflect real news, not static placeholders.
+      render: markdown
+    validations:
+      required: true
+  - type: checkboxes
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      options:
+        - label: Backend depth chart store with offense / defense / ST units
+          required: false
+        - label: PIN-protected admin UI for position edits and status (Locked/Battle/Watch/Transfer)
+          required: false
+        - label: Version history on every save with prior snapshot view
+          required: false
+        - label: Public UI reads API + displays "Last updated" timestamp
+          required: false
+        - label: Hardcoded depth chart arrays removed from index.html
+          required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Audit notes / blockers
+      placeholder: Data model, admin UX, event hooks, PR links...

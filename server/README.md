@@ -2,6 +2,8 @@
 
 Express API for member registration, sign-in, welcome emails, and digest delivery.
 
+**Platform alignment (P0):** [docs/PLATFORM-DIRECTIVE.md](../docs/PLATFORM-DIRECTIVE.md) — Portal Headliner, Articles pipeline, Depth Chart, Film Room.
+
 ## Features
 
 - `POST /api/register` — create account, enroll Beehiiv onboarding automation, return session token

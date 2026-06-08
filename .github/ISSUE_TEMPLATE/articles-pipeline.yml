@@ -1,0 +1,36 @@
+name: "P0 — Articles Pipeline (Sourcing)"
+description: Scheduled article pipeline with strict source tagging
+title: "[P0] Articles: scheduled pipeline + strict sourcing rules"
+labels: ["P0", "articles", "content", "brand-critical"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Full spec: [docs/PLATFORM-DIRECTIVE.md#2-articles--scheduled-pipeline-with-strict-sourcing](https://github.com/crourk15/gatorvault-api/blob/main/docs/PLATFORM-DIRECTIVE.md#2-articles--scheduled-pipeline-with-strict-sourcing)
+  - type: textarea
+    id: requirement
+    attributes:
+      label: Requirement
+      value: |
+        Implement a scheduled article pipeline with strict sourcing rules. Every article must have a source tag (On3, official team site, approved outlets). No unsourced content goes live.
+      render: markdown
+    validations:
+      required: true
+  - type: checkboxes
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      options:
+        - label: Draft → validate → publish with server-side source enforcement
+          required: false
+        - label: Published articles show visible source tags + links in UI
+          required: false
+        - label: Scheduled publish cadence (e.g. Wednesday article) via cron
+          required: false
+        - label: Static inline articles in index.html removed or routed through pipeline
+          required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Audit notes / blockers
+      placeholder: Validator gaps, scheduler design, PR links...

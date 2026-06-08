@@ -1,0 +1,38 @@
+name: "P0 — Film Room Hub"
+description: Weekly scheme breakdown hub organized by game/week/opponent
+title: "[P0] Film Room: scheme hub (formations, personnel, defensive evolution)"
+labels: ["P0", "film-room", "content", "brand-critical"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Full spec: [docs/PLATFORM-DIRECTIVE.md#4-film-room--functional-scheme-hub-film-room-nerd-persona](https://github.com/crourk15/gatorvault-api/blob/main/docs/PLATFORM-DIRECTIVE.md#4-film-room--functional-scheme-hub-film-room-nerd-persona)
+  - type: textarea
+    id: requirement
+    attributes:
+      label: Requirement
+      value: |
+        Build a functional Film Room hub that supports weekly scheme breakdowns (formations, personnel packages, defensive evolution). Content organized by game/week/opponent. Match the "Film Room Nerd" persona — no surface-level ESPN-style takes.
+      render: markdown
+    validations:
+      required: true
+  - type: checkboxes
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      options:
+        - label: Content model with season, week, opponent, tags, tier
+          required: false
+        - label: Weekly breakdown template (formation ID, personnel, why plays worked/failed)
+          required: false
+        - label: Browse/filter by week and opponent on hub landing
+          required: false
+        - label: Film Room articles tied into sourced article pipeline
+          required: false
+        - label: No placeholder empty hub in production
+          required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Audit notes / blockers
+      placeholder: Content schema, UI wireframe, sample week 1 content, PR links...
