@@ -4,7 +4,6 @@
  *
  * Usage (from server/):
  *   Add RENDER_API_KEY=rnd_... to server/.env
- *   node scripts/set-render-emailjs-env.js
  *   node scripts/set-render-emailjs-env.js --deploy
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
@@ -12,14 +11,19 @@ require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }
 const API = 'https://api.render.com/v1';
 const SERVICE_NAME = 'gatorvault-api';
 
-const key = process.env.RENDER_API_KEY;
+function clean(val) {
+  if (val == null) return '';
+  return String(val).trim();
+}
+
+const key = clean(process.env.RENDER_API_KEY);
 if (!key) {
   console.error('Missing RENDER_API_KEY in server/.env');
   process.exit(1);
 }
 
-const publicKey = process.env.EMAILJS_USER_ID || process.env.EMAILJS_PUBLIC_KEY;
-const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+const publicKey = clean(process.env.EMAILJS_USER_ID || process.env.EMAILJS_PUBLIC_KEY);
+const privateKey = clean(process.env.EMAILJS_PRIVATE_KEY);
 
 if (!publicKey || !privateKey) {
   console.error('Missing EMAILJS_USER_ID (or EMAILJS_PUBLIC_KEY) and EMAILJS_PRIVATE_KEY in server/.env');
@@ -28,10 +32,11 @@ if (!publicKey || !privateKey) {
 
 const VARS = {
   EMAILJS_USER_ID: publicKey,
+  EMAILJS_PUBLIC_KEY: publicKey,
   EMAILJS_PRIVATE_KEY: privateKey,
-  EMAILJS_SERVICE_ID: process.env.EMAILJS_SERVICE_ID || 'service_ul7ju9p',
-  EMAILJS_TEMPLATE_ID: process.env.EMAILJS_TEMPLATE_ID || 'template_okh1hj8',
-  EMAILJS_REPLY_TO: process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com',
+  EMAILJS_SERVICE_ID: clean(process.env.EMAILJS_SERVICE_ID) || 'service_ul7ju9p',
+  EMAILJS_TEMPLATE_ID: clean(process.env.EMAILJS_TEMPLATE_ID) || 'template_okh1hj8',
+  EMAILJS_REPLY_TO: clean(process.env.EMAILJS_REPLY_TO) || 'gatorvaultinsider@gmail.com',
   EMAIL_PROVIDER: 'emailjs'
 };
 
@@ -46,13 +51,22 @@ async function api(path, opts = {}) {
   const text = await res.text();
   let body;
   try { body = text ? JSON.parse(text) : null; } catch { body = text; }
-  if (!res.ok) throw new Error(`${opts.method || 'GET'} ${path} → ${res.status}: ${typeof body === 'string' ? body : JSON.stringify(body)}`);
+  if (!res.ok) {
+    throw new Error(`${opts.method || 'GET'} ${path} → ${res.status}: ${typeof body === 'string' ? body : JSON.stringify(body)}`);
+  }
   return body;
 }
 
 function mask(val) {
   if (!val) return '(empty)';
   return `${val.slice(0, 4)}…${val.slice(-4)} (${val.length} chars)`;
+}
+
+async function upsertEnvVar(serviceId, envKey, value) {
+  await api(`/services/${serviceId}/env-vars/${encodeURIComponent(envKey)}`, {
+    method: 'PUT',
+    body: JSON.stringify({ value: String(value) })
+  });
 }
 
 async function main() {
@@ -63,41 +77,15 @@ async function main() {
   const service = svc.service || svc;
   console.log('Service:', service.id);
 
-  const existing = await api(`/services/${service.id}/env-vars?limit=100`);
-  const byKey = {};
-  for (const row of existing || []) {
-    const ev = row.envVar || row;
-    if (ev.key) byKey[ev.key] = ev;
-  }
-
-  console.log('\nSetting EmailJS env vars (must be from the same EmailJS account):');
+  console.log('\nSetting EmailJS env vars (trimmed, matching pair):');
   for (const [k, value] of Object.entries(VARS)) {
     console.log(`  ${k}: ${mask(value)}`);
-    const prev = byKey[k];
-    if (prev && prev.id) {
-      await api(`/services/${service.id}/env-vars/${prev.id}`, {
-        method: 'PUT',
-        body: JSON.stringify({ value: String(value) })
-      });
-    } else {
-      await api(`/services/${service.id}/env-vars`, {
-        method: 'POST',
-        body: JSON.stringify({ key: k, value: String(value) })
-      });
-    }
-  }
-
-  // Remove stale public key var if USER_ID is canonical
-  const stale = byKey.EMAILJS_PUBLIC_KEY;
-  if (stale && stale.id && publicKey !== process.env.EMAILJS_PUBLIC_KEY) {
-    console.log('  (keeping EMAILJS_PUBLIC_KEY in sync)');
-    await api(`/services/${service.id}/env-vars/${stale.id}`, {
-      method: 'PUT',
-      body: JSON.stringify({ value: String(publicKey) })
-    });
+    await upsertEnvVar(service.id, k, value);
   }
 
   console.log('\nEmailJS env vars updated on Render.');
+  console.log(`  Public key length: ${publicKey.length} chars`);
+  console.log(`  Private key length: ${privateKey.length} chars`);
 
   if (doDeploy) {
     const deploy = await api(`/services/${service.id}/deploys`, {
@@ -106,6 +94,7 @@ async function main() {
     });
     const row = deploy.deploy || deploy;
     console.log('Deploy triggered:', row.id, row.status || 'started');
+    console.log('Monitor: https://dashboard.render.com/web/' + service.id);
   } else {
     console.log('Re-run with --deploy to redeploy now.');
   }
