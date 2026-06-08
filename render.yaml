@@ -29,6 +29,8 @@ services:
         value: "15000"
       - key: SESSION_SECRET
         generateValue: true
+      - key: EMAILJS_USER_ID
+        sync: false
       - key: EMAILJS_PRIVATE_KEY
         sync: false
       - key: EMAILJS_SERVICE_ID
