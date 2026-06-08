@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { slugify } = require('./slug');
+const { buildOn3ProfileUrl } = require('./on3-urls');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const PLAYERS_PATH = path.join(DATA_DIR, 'players.json');
@@ -79,6 +80,9 @@ function normalizePlayer(raw) {
     skinny: raw.skinny || raw.note || '',
     profileNote: raw.profileNote || raw.profile_note || '',
     on3Id: raw.on3Id || raw.on3_id || null,
+    on3Slug: raw.on3Slug || raw.on3_slug || null,
+    on3ProfileUrl: raw.on3ProfileUrl || raw.on3_profile_url || null,
+    on3Source: raw.on3Source || raw.on3_source || null,
     starsDisplay: raw.starsDisplay || raw.stars_display || null,
     updatedAt: raw.updatedAt || raw.updated_at || nowIso()
   };
@@ -373,7 +377,13 @@ async function getBoard(classYear) {
 
 async function getPortalBoard() {
   const players = await getAllPlayers();
-  const incoming = players.filter((p) => p.category === 'portal' && p.status !== 'portal_out');
+  const incoming = players
+    .filter((p) => p.category === 'portal' && p.status !== 'portal_out')
+    .map((p) => ({
+      ...p,
+      on3ProfileUrl: p.on3ProfileUrl || buildOn3ProfileUrl(p),
+      starsDisplay: p.starsDisplay || '★'.repeat(Math.min(5, parseInt(p.stars, 10) || 0))
+    }));
   return { incoming, count: incoming.length };
 }
 

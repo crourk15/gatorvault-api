@@ -1,5 +1,6 @@
 const store = require('./recruiting-store');
-const { runOn3Ingest, getIngestStatus } = require('./on3-ingest');
+const { runOn3Ingest, syncPortalFromOn3, getIngestStatus } = require('./on3-ingest');
+const { buildOn3ProfileUrl } = require('./on3-urls');
 const { buildHeatCheck } = require('./heat-check-store');
 
 const RECRUITING_ADMIN_PIN = process.env.RECRUITING_ADMIN_PIN || process.env.EMAIL_TEST_PIN || 'GV2026admin';
@@ -38,7 +39,21 @@ function mountRecruitingRoutes(app) {
   app.get('/api/recruiting/portal', async (req, res) => {
     try {
       const portal = await store.getPortalBoard();
-      return res.json({ ok: true, ...portal });
+      const on3Source =
+        portal.incoming.find((p) => p.on3Source)?.on3Source ||
+        'https://www.on3.com/college/florida-gators/football/2026/commits/';
+      const incoming = portal.incoming.map((p) => ({
+        ...p,
+        on3ProfileUrl: p.on3ProfileUrl || buildOn3ProfileUrl(p),
+        starsDisplay: p.starsDisplay || '★'.repeat(Math.min(5, parseInt(p.stars, 10) || 0))
+      }));
+      return res.json({
+        ok: true,
+        incoming,
+        count: incoming.length,
+        on3Source,
+        headlinerSource: 'on3_commits_transfer_rows'
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

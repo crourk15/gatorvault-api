@@ -264,8 +264,15 @@
     }
 
     function on3Url(p) {
-      if (p.on3Id) return 'https://www.on3.com/db/' + p.on3Id + '-';
-      if (p.category === 'portal') return 'https://www.on3.com/college/florida-gators/football/transfer-portal/';
+      if (p.on3ProfileUrl || p.on3_profile_url) return p.on3ProfileUrl || p.on3_profile_url;
+      var on3Slug = p.on3Slug || p.on3_slug;
+      if (on3Slug) return 'https://www.on3.com/rivals/' + String(on3Slug).replace(/^\//, '').replace(/\/$/, '') + '/';
+      if (p.on3Id || p.on3_id) {
+        var id = String(p.on3Id || p.on3_id);
+        var base = (p.slug || slug).replace(/-\d+$/, '');
+        return 'https://www.on3.com/rivals/' + base + '-' + id + '/';
+      }
+      if (p.category === 'portal') return 'https://www.on3.com/college/florida-gators/football/2026/commits/';
       return 'https://www.on3.com/college/florida-gators/recruiting/';
     }
 
