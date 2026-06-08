@@ -13,15 +13,14 @@ async function main() {
   const { serviceId, templateId, publicKey, privateKey } = getEmailJsConfig();
   const welcome = getWelcomeEmail({ name: 'GatorVault Verify', email: to || 'test@example.com', tier: 'film' });
 
-  console.log('EmailJS welcome email config:');
-  console.log('  publicKey hint:', getEmailJsPublicKeyHint() || '(missing)');
+  console.log('EmailJS welcome email config (Private Key Mode — accessToken only):');
   console.log('  privateKey:', privateKey ? `${privateKey.slice(0, 4)}… (${privateKey.length} chars)` : '(missing)');
   console.log('  serviceId:', serviceId || '(missing)');
   console.log('  templateId:', templateId || '(missing)');
   console.log('  subject:', welcome.subject);
 
-  if (!privateKey || !publicKey || !serviceId || !templateId) {
-    console.error('\nMissing EMAILJS_USER_ID, EMAILJS_PRIVATE_KEY, EMAILJS_SERVICE_ID, or EMAILJS_TEMPLATE_ID');
+  if (!privateKey || !serviceId || !templateId) {
+    console.error('\nMissing EMAILJS_PRIVATE_KEY, EMAILJS_SERVICE_ID, or EMAILJS_TEMPLATE_ID');
     process.exit(1);
   }
 
@@ -39,7 +38,6 @@ async function main() {
     const res = await sendEmailViaEmailJS({
       serviceId,
       templateId,
-      publicKey,
       privateKey,
       templateParams: {
         to_email: to,

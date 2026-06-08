@@ -638,11 +638,11 @@ app.get('/api/email-status', async (req, res) => {
     providers,
     provider: EMAIL_PROVIDER,
     emailjs: {
-      mode: 'server-rest',
       sender: 'lib/emailjs-server.js',
       endpoint: 'https://api.emailjs.com/api/v1.0/email/send',
       build: process.env.RENDER_GIT_COMMIT ? String(process.env.RENDER_GIT_COMMIT).slice(0, 7) : null,
-      restPayloadKeys: ['service_id', 'template_id', 'user_id', 'accessToken', 'template_params'],
+      mode: 'private-key-rest',
+      restPayloadKeys: ['service_id', 'template_id', 'accessToken', 'template_params'],
       templateParamKeys: ['to_email', 'name', 'email', 'tier', 'tier_benefits', 'vault_url', 'support_email', 'email_subject'],
       serviceId: getEmailJsConfig().serviceId || null,
       templateId: getEmailJsConfig().templateId || null,
@@ -654,11 +654,9 @@ app.get('/api/email-status', async (req, res) => {
       probe: probe || undefined
     },
     hint: providers.length === 0
-      ? (!getEmailJsPublicKey()
-        ? 'Set EMAILJS_USER_ID to your EmailJS public key (any format) — sent as REST user_id'
-        : privateKeySet
-          ? 'EmailJS keys present but service/template may be invalid'
-          : 'Set EMAILJS_PRIVATE_KEY to your EmailJS private key')
+      ? (!privateKeySet
+        ? 'Set EMAILJS_PRIVATE_KEY (Private Key Mode — sent as REST accessToken, no user_id)'
+        : 'Set EMAILJS_SERVICE_ID and EMAILJS_TEMPLATE_ID')
       : `Sending via EmailJS (Gmail: ${process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com'})`
   });
 });

@@ -1,11 +1,11 @@
 /**
  * Server-side EmailJS send via raw REST POST (no SDK).
+ * Private Key Mode: accessToken only — do NOT send user_id (public key).
  * https://www.emailjs.com/docs/rest-api/send/
  */
 
 const fetch = require('node-fetch');
 const {
-  getEmailJsPublicKey,
   getEmailJsPrivateKey,
   getEmailJsServiceId,
   getEmailJsTemplateId
@@ -13,30 +13,28 @@ const {
 
 const EMAILJS_SEND_URL = 'https://api.emailjs.com/api/v1.0/email/send';
 
-function buildEmailJsPayload({ serviceId, templateId, publicKey, templateParams, privateKey }) {
+function buildEmailJsPayload({ serviceId, templateId, templateParams, privateKey }) {
+  const token = String(privateKey || '').trim();
   return {
     service_id: String(serviceId).trim(),
     template_id: String(templateId).trim(),
-    user_id: String(publicKey).trim(),
-    accessToken: String(privateKey).trim(),
+    accessToken: token,
     template_params: templateParams || {}
   };
 }
 
-async function sendEmailViaEmailJS({ serviceId, templateId, publicKey, templateParams, privateKey }) {
+async function sendEmailViaEmailJS({ serviceId, templateId, templateParams, privateKey }) {
   const resolvedServiceId = serviceId || getEmailJsServiceId();
   const resolvedTemplateId = templateId || getEmailJsTemplateId();
-  const userId = publicKey != null ? String(publicKey).trim() : getEmailJsPublicKey();
   const token = privateKey != null ? String(privateKey).trim() : getEmailJsPrivateKey();
 
-  if (!resolvedServiceId || !resolvedTemplateId || !userId || !token) {
-    throw new Error('EmailJS server send requires serviceId, templateId, publicKey (user_id), and privateKey (accessToken)');
+  if (!resolvedServiceId || !resolvedTemplateId || !token) {
+    throw new Error('EmailJS server send requires serviceId, templateId, and privateKey (accessToken)');
   }
 
   const payload = buildEmailJsPayload({
     serviceId: resolvedServiceId,
     templateId: resolvedTemplateId,
-    publicKey: userId,
     templateParams,
     privateKey: token
   });
@@ -44,9 +42,10 @@ async function sendEmailViaEmailJS({ serviceId, templateId, publicKey, templateP
   const paramKeys = Object.keys(payload.template_params || {}).sort();
 
   console.log('[emailjs] POST', EMAILJS_SEND_URL, {
+    mode: 'private-key',
     service_id: payload.service_id,
     template_id: payload.template_id,
-    user_id_hint: `${userId.slice(0, 4)}… (${userId.length} chars)`,
+    accessToken_hint: `${token.slice(0, 4)}… (${token.length} chars)`,
     template_param_keys: paramKeys
   });
 
@@ -80,13 +79,13 @@ async function sendEmailViaEmailJS({ serviceId, templateId, publicKey, templateP
 function emailJsErrorHint(status, text) {
   const body = String(text || '').toLowerCase();
   if (status === 404 || body.includes('account not found')) {
-    return 'Public and private keys must be from the same EmailJS account — update EMAILJS_USER_ID and EMAILJS_PRIVATE_KEY on Render';
+    return 'Private Key Mode: use accessToken only (no user_id). Check EMAILJS_PRIVATE_KEY and service/template IDs';
   }
   if (status === 403 || body.includes('non-browser')) {
     return 'Enable Allow EmailJS API for non-browser applications in EmailJS → Account → Security';
   }
   if (body.includes('public key is invalid') || body.includes('public key is required')) {
-    return 'Check EMAILJS_USER_ID matches your EmailJS dashboard Public Key exactly';
+    return 'Account may be in Private Key Mode — server must not send user_id; set EMAILJS_PRIVATE_KEY only';
   }
   return '';
 }
@@ -97,7 +96,6 @@ async function probeEmailJsAccount() {
     const payload = buildEmailJsPayload({
       serviceId: getEmailJsServiceId(),
       templateId: getEmailJsTemplateId(),
-      publicKey: getEmailJsPublicKey(),
       privateKey: getEmailJsPrivateKey(),
       templateParams: { email: 'probe@example.com', name: 'Probe', tier: 'Film Room' }
     });

@@ -1,6 +1,7 @@
 /**
- * EmailJS env config — accepts any key format (legacy or new short-format public keys).
- * Keys are trimmed and passed verbatim to the REST API as user_id / accessToken.
+ * EmailJS env config — Private Key Mode for server REST sends.
+ * Server payload uses accessToken (private key) only — no user_id.
+ * Public key env vars are optional (browser fallback only).
  */
 
 const PUBLIC_PLACEHOLDERS = new Set(['', 'YOUR_PUBLIC_KEY_HERE']);
@@ -54,8 +55,8 @@ function getEmailJsConfig() {
 }
 
 function isEmailJsReady() {
-  const { serviceId, templateId, publicKey, privateKey } = getEmailJsConfig();
-  return !!(serviceId && templateId && publicKey && privateKey);
+  const { serviceId, templateId, privateKey } = getEmailJsConfig();
+  return !!(serviceId && templateId && privateKey);
 }
 
 /** Safe hint for /api/email-status — first 4 chars only. */
