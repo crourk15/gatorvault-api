@@ -1,6 +1,8 @@
 #!/usr/bin/env node
-/** Verify EmailJS server-side keys from server/.env — does not send unless --send is passed. */
+/** Verify EmailJS server-side send (private key only — no public key). */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+
+const { sendEmailViaEmailJS } = require('../lib/emailjs-server');
 
 const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 const serviceId = process.env.EMAILJS_SERVICE_ID;
@@ -9,34 +11,18 @@ const to = process.argv.find((a) => a.startsWith('--to='))?.split('=')[1] || pro
 const doSend = process.argv.includes('--send');
 
 async function main() {
-  console.log('EmailJS server-side config check:');
+  console.log('EmailJS server-side config (private key only):');
   console.log('  privateKey:', privateKey ? `${privateKey.slice(0, 4)}… (${privateKey.length} chars)` : '(missing)');
   console.log('  serviceId:', serviceId || '(missing)');
   console.log('  templateId:', templateId || '(missing)');
 
   if (!privateKey || !serviceId || !templateId) {
-    console.error('\nMissing required EmailJS env vars in server/.env (private key + service + template)');
+    console.error('\nMissing EMAILJS_PRIVATE_KEY, EMAILJS_SERVICE_ID, or EMAILJS_TEMPLATE_ID in server/.env');
     process.exit(1);
   }
 
-  const emailjs = require('@emailjs/nodejs');
-  const params = {
-    to_email: to || 'verify@example.com',
-    user_email: to || 'verify@example.com',
-    email: to || 'verify@example.com',
-    to_name: 'GatorVault Verify',
-    user_name: 'GatorVault Verify',
-    user_tier: 'Film Room',
-    tier_name: 'Film Room',
-    trial_end: 'July 1, 2026',
-    login_url: process.env.SITE_URL || 'https://gatorvaultinsider.com',
-    email_subject: 'GatorVault EmailJS Verify',
-    message_html: '<p>EmailJS verification test from GatorVault server.</p>',
-    onboarding_day: '0'
-  };
-
   if (!doSend) {
-    console.log('\nDry run only. Pass --send --to=you@email.com to send a real test email.');
+    console.log('\nDry run only. Pass --send --to=you@email.com to send a test email.');
     process.exit(0);
   }
 
@@ -46,10 +32,26 @@ async function main() {
   }
 
   try {
-    const res = await emailjs.send(serviceId, templateId, params, { privateKey });
+    const res = await sendEmailViaEmailJS({
+      serviceId,
+      templateId,
+      privateKey,
+      templateParams: {
+        to_email: to,
+        user_email: to,
+        email: to,
+        to_name: 'GatorVault Verify',
+        user_name: 'GatorVault Verify',
+        user_tier: 'Film Room',
+        tier_name: 'Film Room',
+        email_subject: 'GatorVault EmailJS Verify',
+        message_html: '<p>EmailJS server verify test.</p>',
+        onboarding_day: '0'
+      }
+    });
     console.log('\nSUCCESS', res.status, res.text);
   } catch (err) {
-    console.error('\nFAILED', err.status || '', err.text || err.message || err);
+    console.error('\nFAILED', err.message || err);
     process.exit(1);
   }
 }

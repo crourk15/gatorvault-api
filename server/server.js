@@ -177,6 +177,7 @@ function getEmailProviders() {
 }
 
 async function sendEmailEmailJS(to, templateParams) {
+  const { sendEmailViaEmailJS } = require('./lib/emailjs-server');
   const serviceId = process.env.EMAILJS_SERVICE_ID;
   const onboardingDay = templateParams.onboardingDay != null ? Number(templateParams.onboardingDay) : 0;
   const templateId =
@@ -206,14 +207,7 @@ async function sendEmailEmailJS(to, templateParams) {
     reply_to: process.env.EMAILJS_REPLY_TO || process.env.SMTP_USER || 'support@gatorvaultinsider.com'
   };
 
-  try {
-    const emailjs = require('@emailjs/nodejs');
-    return await emailjs.send(serviceId, templateId, params, { privateKey });
-  } catch (err) {
-    const status = err && err.status;
-    const text = err && (err.text || err.message) || String(err);
-    throw new Error(`EmailJS failed (${status || 'error'}): ${text}`);
-  }
+  return sendEmailViaEmailJS({ serviceId, templateId, templateParams: params, privateKey });
 }
 
 async function deliverEmail(to, subject, html, templateParams = {}) {
@@ -662,8 +656,7 @@ app.get('/api/email-status', (req, res) => {
     providers,
     provider: EMAIL_PROVIDER,
     emailjs: {
-      mode: 'server',
-      publicKeyRequired: false,
+      mode: 'server-private-key-only',
       serviceId: process.env.EMAILJS_SERVICE_ID || null,
       templateId: process.env.EMAILJS_TEMPLATE_ID || null,
       onboardingTemplateId: process.env.EMAILJS_ONBOARDING_TEMPLATE_ID || null,

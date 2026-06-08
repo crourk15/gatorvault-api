@@ -14,7 +14,6 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@emailjs/nodejs": "^5.0.2",
     "@sendgrid/mail": "^8.1.0",
     "@supabase/supabase-js": "^2.49.1",
     "body-parser": "^1.20.2",

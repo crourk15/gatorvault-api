@@ -13,7 +13,6 @@ const API = 'https://api.render.com/v1';
 const SERVICE_NAME = 'gatorvault-api';
 
 const SYNC_KEYS = [
-  'EMAILJS_PUBLIC_KEY',
   'EMAILJS_PRIVATE_KEY',
   'EMAILJS_SERVICE_ID',
   'EMAILJS_TEMPLATE_ID',

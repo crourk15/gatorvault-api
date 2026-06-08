@@ -100,7 +100,6 @@ async function main() {
       envVar('ON3_CLASS_YEARS', '2026,2027'),
       envVar('ON3_INGEST_BOOT_DELAY_MS', '15000'),
       envVar('SESSION_SECRET', process.env.SESSION_SECRET || require('crypto').randomBytes(32).toString('hex')),
-      envVar('EMAILJS_PUBLIC_KEY', process.env.EMAILJS_PUBLIC_KEY),
       envVar('EMAILJS_PRIVATE_KEY', process.env.EMAILJS_PRIVATE_KEY),
       envVar('EMAILJS_SERVICE_ID', process.env.EMAILJS_SERVICE_ID),
       envVar('EMAILJS_TEMPLATE_ID', process.env.EMAILJS_TEMPLATE_ID),
