@@ -84,9 +84,16 @@
         document.getElementById('hl-dek').textContent = c.dek || '';
         var video = document.getElementById('hl-video');
         var fallback = document.getElementById('hl-fallback');
-        if (c.thumbUrl) video.poster = c.thumbUrl;
-        if (c.videoUrl) {
-          video.src = c.videoUrl;
+        function mediaUrl(url) {
+          if (!url) return null;
+          if (/^https?:\/\//i.test(url)) return url;
+          if (url.charAt(0) === '/') return API + url;
+          return url;
+        }
+        if (c.thumbUrl) video.poster = mediaUrl(c.thumbUrl);
+        var src = c.streamUrl || mediaUrl(c.videoUrl);
+        if (src) {
+          video.src = src;
           video.addEventListener('error', function () {
             video.classList.add('hidden');
             fallback.classList.remove('hidden');

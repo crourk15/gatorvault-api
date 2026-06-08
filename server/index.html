@@ -193,7 +193,7 @@
         #op-pin-input,#admin-pin-modal-input{pointer-events:auto;position:relative;z-index:1;}
         .highlight-modal{background:#0a1628;border:1px solid rgba(250,70,22,.25);border-radius:1rem;max-width:900px;width:100%;overflow:hidden;}
         .highlight-modal-video{position:relative;padding-top:56.25%;background:#000;}
-        .highlight-modal-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+        .highlight-modal-video video{position:relative;width:100%;display:block;max-height:70vh;background:#000;}
         .highlight-modal-preview{min-height:220px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#001a4d,#060f1f);padding:2rem;text-align:center;}
         .toggle-switch{position:relative;width:48px;height:26px;background:rgba(0,48,135,.4);border-radius:13px;cursor:pointer;transition:background .2s;flex-shrink:0;}
         .toggle-switch.active{background:#FA4616;}
@@ -2369,8 +2369,7 @@
             });
     }
     function gvOn3ProfileUrl(p){
-        if(p.on3Id)return 'https://www.on3.com/db/'+p.on3Id+'-';
-        return 'https://www.on3.com/college/florida-gators/recruiting/';
+        return gvOn3PortalUrl(p);
     }
     function gvCloseRecruitProfile(){
         var modal=document.getElementById('recruit-profile-modal');
@@ -3502,20 +3501,24 @@
     }
     function gvRenderHighlightCard(c){
         var pill=c.season==='2026'?'highlight-season-2026':'highlight-season-2025';
-        var thumb=gvLiveResolveUrl(c.thumbUrl);
-        var href='/highlight/'+encodeURIComponent(c.slug);
-        return '<a href="'+gvEscHtml(href)+'" class="highlight-card block no-underline text-inherit">'
-            +'<div class="highlight-thumb">'
+        var thumb=gvMediaResolveUrl(c.thumbUrl);
+        var ready=c.mediaReady!==false&&(c.streamUrl||c.videoUrl);
+        var cardInner='<div class="highlight-thumb">'
             +'<img src="'+gvEscHtml(thumb)+'" alt="" loading="lazy">'
             +'<div class="highlight-overlay"><div class="play-circle"><span class="text-white text-xl ml-0.5">▶</span></div></div>'
             +'<span class="absolute top-3 left-3 highlight-season-pill '+pill+'">'+gvEscHtml(c.category)+'</span>'
             +'<span class="absolute bottom-3 right-3 text-xs font-bold text-white bg-black/60 px-2 py-1 rounded">'+gvEscHtml(c.duration)+'</span>'
+            +(ready?'':'<span class="absolute top-3 right-3 text-[.6rem] font-bold text-amber-300 bg-black/60 px-2 py-1 rounded">Processing</span>')
             +'</div>'
             +'<div class="p-4">'
             +'<h3 class="font-display text-lg font-bold text-white leading-snug mb-1">'+gvEscHtml(c.title)+'</h3>'
             +'<p class="highlight-game-tag text-gator-orange text-sm font-semibold">'+gvEscHtml(c.gameLine)+'</p>'
             +'<p class="text-sm text-surface-200/70 mt-2 line-clamp-2">'+gvEscHtml(c.dek)+'</p>'
-            +'</div></a>';
+            +'</div>';
+        if(ready){
+            return '<button type="button" class="highlight-card block w-full text-left no-underline text-inherit" data-hl-slug="'+gvEscHtml(c.slug)+'">'+cardInner+'</button>';
+        }
+        return '<div class="highlight-card block opacity-80">'+cardInner+'</div>';
     }
     function renderHighlights(){
         var shell=document.getElementById('highlights-shell');
@@ -3528,14 +3531,70 @@
         shell.innerHTML='<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">'
             +clips.map(gvRenderHighlightCard).join('')
             +'</div>';
+        shell.querySelectorAll('[data-hl-slug]').forEach(function(btn){
+            btn.addEventListener('click',function(){
+                var slug=btn.getAttribute('data-hl-slug');
+                var clip=(window._gvHighlights||[]).find(function(c){return c.slug===slug;});
+                if(clip)window.openHighlightPlayer(clip);
+            });
+        });
     }
-    window.openHighlightPlayer=function(){};
+    window.openHighlightPlayer=function(clip){
+        if(!clip)return;
+        var ov=document.getElementById('highlight-modal-ov');
+        var videoWrap=document.getElementById('hl-modal-video-wrap');
+        var preview=document.getElementById('hl-modal-preview');
+        if(!ov||!videoWrap)return;
+        document.getElementById('hl-modal-title').textContent=clip.title||'Film Room';
+        document.getElementById('hl-modal-meta').textContent=[clip.category,clip.gameLine,clip.duration].filter(Boolean).join(' · ');
+        document.getElementById('hl-modal-foot').textContent=clip.dek||'';
+        var src=clip.streamUrl||gvMediaResolveUrl(clip.videoUrl);
+        videoWrap.innerHTML='';
+        videoWrap.classList.add('hidden');
+        if(preview)preview.classList.add('hidden');
+        if(src){
+            videoWrap.classList.remove('hidden');
+            videoWrap.style.paddingTop='0';
+            videoWrap.style.minHeight='0';
+            var vid=document.createElement('video');
+            vid.controls=true;
+            vid.playsInline=true;
+            vid.preload='metadata';
+            vid.style.width='100%';
+            vid.style.display='block';
+            vid.style.maxHeight='70vh';
+            vid.style.background='#000';
+            if(clip.thumbUrl)vid.poster=gvMediaResolveUrl(clip.thumbUrl);
+            vid.src=src;
+            vid.addEventListener('error',function(){
+                videoWrap.classList.add('hidden');
+                if(preview){
+                    preview.classList.remove('hidden');
+                    document.getElementById('hl-modal-preview-text').textContent='Video unavailable — check Film Room media on the API server.';
+                }
+            },{once:true});
+            videoWrap.appendChild(vid);
+            try{vid.play();}catch(e){}
+        }else if(preview){
+            preview.classList.remove('hidden');
+            document.getElementById('hl-modal-preview-text').textContent='Native clip is processing. No third-party embeds.';
+        }
+        ov.classList.remove('hidden');
+        ov.style.display='flex';
+        document.body.style.overflow='hidden';
+    };
     window.closeHighlightPlayer=function(){
         var ov=document.getElementById('highlight-modal-ov');if(!ov)return;
         ov.classList.add('hidden');ov.style.display='';
         var videoWrap=document.getElementById('hl-modal-video-wrap');if(videoWrap){videoWrap.innerHTML='';videoWrap.classList.add('hidden');}
         document.body.style.overflow='';
     };
+    (function(){
+        var closeBtn=document.getElementById('hl-modal-close');
+        var ov=document.getElementById('highlight-modal-ov');
+        if(closeBtn)closeBtn.addEventListener('click',window.closeHighlightPlayer);
+        if(ov)ov.addEventListener('click',function(e){if(e.target===ov)window.closeHighlightPlayer();});
+    })();
     function getVaultPoints(){
         try{return parseInt(localStorage.getItem('gv_vaultPoints')||'0',10)||0;}catch(e){return 0;}
     }
@@ -4092,7 +4151,7 @@
         var pane=document.getElementById('vpane-portal');
         var oldHead=pane?pane.querySelector('.portal-headliner-card'):null;
         if(oldHead)oldHead.remove();
-        var head=portalIncoming.find(function(p){return String(p.name||'').indexOf('Singleton')>=0;})||portalIncoming[0];
+        var head=portalIncoming.slice().sort(function(a,b){return(parseInt(b.stars,10)||0)-(parseInt(a.stars,10)||0);})[0];
         if(pane&&head){
             var ph='<div class="portal-headliner-card headliner-card mb-5">';
             ph+='<div class="flex items-center gap-2 mb-3"><span class="text-2xl">🔄</span><span class="font-display text-lg font-bold tracking-wide" style="color:#fbbf24;">PORTAL HEADLINER</span><span class="text-[.6rem] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 ml-auto">On3</span></div>';
@@ -4530,6 +4589,14 @@
     window._gvLive={feed:[],beat:{posts:[]},podcasts:{shows:[]},loading:false,pollTimer:null,lastUpdated:null};
 
     function gvLiveApiBase(){return window.GV_API_BASE||((window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1')?'http://localhost:3000':window.location.origin);}
+    function gvMediaResolveUrl(url){
+        if(url==null||url==='')return null;
+        var s=String(url).trim();
+        if(!s)return null;
+        if(/^https?:\/\//i.test(s))return s;
+        if(s.charAt(0)==='/')return gvLiveApiBase()+s;
+        return s;
+    }
 
     function gvLiveEsc(s){
         return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
