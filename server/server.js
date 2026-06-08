@@ -188,42 +188,42 @@ async function sendEmailEmailJS(to, templateParams) {
   const privateKey = process.env.EMAILJS_PRIVATE_KEY;
   if (!isEmailJsReady()) throw new Error('EmailJS not configured — set EMAILJS_PRIVATE_KEY in server/.env');
 
-  const payload = {
-    lib_version: '4.4.1',
-    user_id: publicKey,
-    service_id: serviceId,
-    template_id: templateId,
-    template_params: {
-      to_email: to,
-      user_email: to,
-      email: to,
-      to_name: templateParams.name || to.split('@')[0],
-      user_name: templateParams.name || to.split('@')[0],
-      tier_name: templateParams.tierName || 'Film Room',
-      trial_end: templateParams.trialEnd || '',
-      login_url: SITE_URL,
-      community_url: SITE_URL,
-      support_x: '@GatorVaultInsider',
-      from_name: 'GatorVault Team',
-      email_subject: templateParams.emailSubject || templateParams.subject || 'GatorVault Update',
-      message_html: templateParams.html || templateParams.messageHtml || '',
-      onboarding_day: String(onboardingDay),
-      onboarding_intro: templateParams.onboardingIntro || 'Your GatorVault account is live. Here is everything included in your membership and how to get started.',
-      reply_to: process.env.EMAILJS_REPLY_TO || process.env.SMTP_USER || 'support@gatorvaultinsider.com'
-    }
+  const params = {
+    to_email: to,
+    user_email: to,
+    email: to,
+    to_name: templateParams.name || to.split('@')[0],
+    user_name: templateParams.name || to.split('@')[0],
+    tier_name: templateParams.tierName || 'Film Room',
+    trial_end: templateParams.trialEnd || '',
+    login_url: SITE_URL,
+    community_url: SITE_URL,
+    support_x: '@GatorVaultInsider',
+    from_name: 'GatorVault Team',
+    email_subject: templateParams.emailSubject || templateParams.subject || 'GatorVault Update',
+    message_html: templateParams.html || templateParams.messageHtml || '',
+    onboarding_day: String(onboardingDay),
+    onboarding_intro: templateParams.onboardingIntro || 'Your GatorVault account is live. Here is everything included in your membership and how to get started.',
+    reply_to: process.env.EMAILJS_REPLY_TO || process.env.SMTP_USER || 'support@gatorvaultinsider.com'
   };
-  if (privateKey) payload.accessToken = privateKey;
 
-  const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`EmailJS failed (${res.status}): ${text}`);
+  try {
+    const emailjs = require('@emailjs/nodejs');
+    const result = await emailjs.send(serviceId, templateId, params, {
+      publicKey,
+      privateKey
+    });
+    return result;
+  } catch (err) {
+    const status = err && err.status;
+    const text = err && (err.text || err.message) || String(err);
+    if (String(text).toLowerCase().includes('public key is invalid')) {
+      throw new Error(
+        `EmailJS failed (${status || 400}): The Public Key is invalid. Update EMAILJS_PUBLIC_KEY in Render from EmailJS → Account → API Keys. Current key prefix: ${String(publicKey).slice(0, 6)}…`
+      );
+    }
+    throw new Error(`EmailJS failed (${status || 'error'}): ${text}`);
   }
-  return res.json();
 }
 
 async function deliverEmail(to, subject, html, templateParams = {}) {
@@ -673,8 +673,10 @@ app.get('/api/email-status', (req, res) => {
     provider: EMAIL_PROVIDER,
     emailjs: {
       publicKey: !!process.env.EMAILJS_PUBLIC_KEY,
+      publicKeyPrefix: process.env.EMAILJS_PUBLIC_KEY ? String(process.env.EMAILJS_PUBLIC_KEY).slice(0, 6) + '…' : null,
       serviceId: process.env.EMAILJS_SERVICE_ID || null,
       templateId: process.env.EMAILJS_TEMPLATE_ID || null,
+      onboardingTemplateId: process.env.EMAILJS_ONBOARDING_TEMPLATE_ID || null,
       privateKeySet,
       replyTo: process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com'
     },
@@ -703,6 +705,52 @@ app.post('/api/test/welcome', async (req, res) => {
   } catch (err) {
     pushEmailLog({ level: 'error', message: err.message, email, source: 'test-route' });
     return res.status(500).json({ ok: false, error: err.message, emailSent: false });
+  }
+});
+
+app.post('/api/test/onboarding-day', async (req, res) => {
+  const pin = String(req.body.pin || req.get('X-Test-Pin') || '');
+  if (!verifyTestPin(pin)) {
+    return res.status(401).json({ ok: false, error: 'Invalid test PIN' });
+  }
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const name = String(req.body.name || 'Test Member').trim();
+  const tier = normalizeTier(req.body.tier);
+  const day = Number(req.body.day);
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ ok: false, error: 'Enter a valid test email address.' });
+  }
+  const emailDef = ONBOARDING_SEQUENCE.find((e) => e.day === day);
+  if (!emailDef) {
+    return res.status(400).json({ ok: false, error: 'Invalid onboarding day. Use 0, 1, 2, 3, 5, 7, 10, or 14.' });
+  }
+  try {
+    const { onboardingEmailHtml } = require('./lib/onboarding-emails');
+    const tierLabel = tier === 'war' ? 'War Room' : tier === 'locker' ? 'Locker Room' : 'Film Room';
+    const html = onboardingEmailHtml(emailDef, { name });
+    const delivery = await deliverEmail(email, emailDef.subject, html, {
+      name,
+      tierName: tierLabel,
+      onboardingDay: emailDef.day,
+      emailSubject: emailDef.subject
+    });
+    pushEmailLog({
+      level: delivery.sent ? 'success' : 'error',
+      message: delivery.sent ? `Onboarding Day ${day} test sent` : `Onboarding Day ${day} test failed`,
+      detail: { email, day, provider: delivery.provider, error: delivery.error },
+      source: 'test-onboarding-day'
+    });
+    return res.json({
+      ok: delivery.sent,
+      emailSent: delivery.sent,
+      day,
+      subject: emailDef.subject,
+      provider: delivery.provider,
+      error: delivery.error || null
+    });
+  } catch (err) {
+    pushEmailLog({ level: 'error', message: err.message, email, source: 'test-onboarding-day' });
+    return res.status(500).json({ ok: false, error: err.message, emailSent: false, day });
   }
 });
 
