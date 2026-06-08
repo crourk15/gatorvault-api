@@ -8,7 +8,8 @@
     "dev": "nodemon server.js",
     "seed:recruiting": "node scripts/seed-recruiting.js",
     "ingest:on3": "node scripts/run-on3-ingest.js",
-    "ingest:on3:baseline": "node scripts/run-on3-ingest.js --baseline"
+    "ingest:on3:baseline": "node scripts/run-on3-ingest.js --baseline",
+    "verify:x": "node scripts/verify-x-autoposter.js"
   },
   "engines": {
     "node": ">=18"
