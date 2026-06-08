@@ -4,6 +4,8 @@ Post on behalf of **@gatorvault** using OAuth 1.0a user context only.
 
 > **Do not use Bearer tokens or OAuth 2.0 for posting.** The live beat reader (`live-beat.js`) may still use `X_BEARER_TOKEN` for read-only timelines — that is separate from AutoPoster.
 
+**Content directive:** [x-autoposter-content-directive.md](x-autoposter-content-directive.md) — 50% news · 30% engagement · 20% promo, sourced only, no AI fake news.
+
 ## Render environment variables
 
 Add to **gatorvault-api** on Render:
@@ -44,20 +46,31 @@ node scripts/verify-x-autoposter.js --post "GatorVault AutoPoster test — OAuth
 
 | Method | Path | Auth | Description |
 |--------|------|------|-------------|
+| `GET` | `/api/x/autoposter/policy` | — | Content directive + mix targets |
+| `GET` | `/api/x/autoposter/mix` | — | Rolling 50/30/20 mix stats |
 | `GET` | `/api/x/autoposter/status` | — | Config + optional `?probe=1` credential check |
+| `POST` | `/api/x/autoposter/validate` | PIN | Dry-run content validation |
 | `POST` | `/api/x/autoposter/verify` | PIN | Force OAuth verify |
-| `POST` | `/api/x/autoposter/post` | PIN | Immediate post (`dryRun: true` to verify only) |
-| `GET` | `/api/x/autoposter/queue` | PIN | List scheduled posts |
-| `POST` | `/api/x/autoposter/queue` | PIN | Schedule post `{ text, scheduledAt }` |
+| `POST` | `/api/x/autoposter/post` | PIN | Immediate post (`dryRun: true` to validate only) |
+| `GET` | `/api/x/autoposter/queue` | PIN | List scheduled posts (`?category=news`) |
+| `POST` | `/api/x/autoposter/queue` | PIN | Schedule post with `category`, `sources`, `action` |
 | `DELETE` | `/api/x/autoposter/queue/:id` | PIN | Cancel pending post |
 | `POST` | `/api/x/autoposter/run` | PIN or cron secret | Process due scheduled posts |
 
-### Example — schedule a post
+### Example — schedule sourced news post
 
 ```bash
 curl -X POST https://gatorvault-api.onrender.com/api/x/autoposter/queue \
   -H "Content-Type: application/json" \
-  -d '{"pin":"GV2026admin","text":"Portal update live on GatorVault 🐊 gatorvaultinsider.com","scheduledAt":"2026-06-09T14:00:00Z"}'
+  -d '{"pin":"GV2026admin","category":"news","action":"post","topic":"portal","text":"Eric Singleton Jr. now listed 5-11/165 on the On3 portal board — full profile on GatorVault 🐊","sources":[{"outlet":"On3","url":"https://www.on3.com/college/florida-gators/football/2026/commits/"}],"scheduledAt":"2026-06-09T14:00:00Z"}'
+```
+
+### Example — schedule promo post
+
+```bash
+curl -X POST https://gatorvault-api.onrender.com/api/x/autoposter/queue \
+  -H "Content-Type: application/json" \
+  -d '{"pin":"GV2026admin","category":"promo","action":"post","text":"Monday depth chart is live in the Vault — real projections, not placeholder BS. Free trial → gatorvaultinsider.com 🐊","scheduledAt":"2026-06-10T12:00:00Z"}'
 ```
 
 ### Example — immediate test post (dry run)

@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { loadOAuth1Credentials, isOAuth1Configured, oauth1Request } = require('./x-oauth1');
 const store = require('./x-autoposter-store');
+const policy = require('./x-autoposter-policy');
 
 const API_V11 = 'https://api.twitter.com/1.1';
 const UPLOAD_V11 = 'https://upload.twitter.com/1.1';
@@ -32,6 +33,7 @@ function getConfigStatus() {
     accessTokenHint: creds.accessToken ? `${creds.accessToken.slice(0, 8)}…` : null,
     schedulerEnabled: process.env.X_AUTOPOST_ENABLED === 'true',
     schedulerIntervalMs: parseInt(process.env.X_AUTOPOST_INTERVAL_MS || '60000', 10),
+    contentMix: policy.getContentPolicy().contentMixLabel,
     lastVerify: _statusCache.checkedAt ? { ..._statusCache } : null
   };
 }
@@ -108,9 +110,27 @@ async function uploadMedia({ filePath, base64, mimeType }) {
   return data.media_id_string;
 }
 
-async function postTweet({ text, mediaIds = [], mediaPath = null, mediaBase64 = null, mediaMime = null }) {
-  const status = String(text || '').trim();
+async function postTweet({
+  text,
+  mediaIds = [],
+  mediaPath = null,
+  mediaBase64 = null,
+  mediaMime = null,
+  inReplyToStatusId = null,
+  quoteTweetUrl = null,
+  quoteTweetId = null,
+  autoPopulateReplyMetadata = true
+}) {
+  let status = String(text || '').trim();
   if (!status) throw new Error('Tweet text required');
+
+  const quoteUrl =
+    quoteTweetUrl ||
+    (quoteTweetId ? `https://x.com/i/status/${quoteTweetId}` : null);
+  if (quoteUrl && !status.includes(quoteUrl)) {
+    status = `${status} ${quoteUrl}`.trim();
+  }
+
   if (status.length > 280) throw new Error('Tweet exceeds 280 characters');
 
   let ids = [...mediaIds];
@@ -125,6 +145,10 @@ async function postTweet({ text, mediaIds = [], mediaPath = null, mediaBase64 = 
 
   const form = { status };
   if (ids.length) form.media_ids = ids.join(',');
+  if (inReplyToStatusId) {
+    form.in_reply_to_status_id = String(inReplyToStatusId);
+    if (autoPopulateReplyMetadata) form.auto_populate_reply_metadata = 'true';
+  }
 
   const data = await oauth1Request({
     method: 'POST',
@@ -145,18 +169,33 @@ async function postTweet({ text, mediaIds = [], mediaPath = null, mediaBase64 = 
 }
 
 async function processQueueItem(item) {
+  const check = policy.validatePostContent(item);
+  if (!check.valid) {
+    store.updatePost(item.id, {
+      status: 'failed',
+      error: check.errors.map((e) => e.message).join(' '),
+      validationErrors: check.errors,
+      sentAt: store.nowIso()
+    });
+    return { ok: false, itemId: item.id, error: 'Validation failed', validation: check };
+  }
+
   try {
     const result = await postTweet({
       text: item.text,
       mediaBase64: item.mediaBase64 || null,
-      mediaMime: item.mediaMime || null
+      mediaMime: item.mediaMime || null,
+      inReplyToStatusId: item.action === 'reply' ? item.inReplyToStatusId : null,
+      quoteTweetUrl: item.action === 'quote' ? item.quoteTweetUrl : null,
+      quoteTweetId: item.action === 'quote' ? item.quoteTweetId : null
     });
     store.updatePost(item.id, {
       status: 'sent',
       sentAt: store.nowIso(),
       tweetId: result.tweetId,
       tweetUrl: result.tweetUrl,
-      error: null
+      error: null,
+      validationErrors: []
     });
     return { ok: true, item: store.loadQueue().items.find((i) => i.id === item.id), result };
   } catch (err) {
@@ -231,5 +270,7 @@ module.exports = {
   processQueueItem,
   processDuePosts,
   startXAutoposterScheduler,
-  stopXAutoposterScheduler
+  stopXAutoposterScheduler,
+  getContentPolicy: policy.getContentPolicy,
+  validatePostContent: policy.validatePostContent
 };
