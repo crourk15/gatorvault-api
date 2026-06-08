@@ -84,6 +84,7 @@ function normalizePlayer(raw) {
     on3ProfileUrl: raw.on3ProfileUrl || raw.on3_profile_url || null,
     on3Source: raw.on3Source || raw.on3_source || null,
     starsDisplay: raw.starsDisplay || raw.stars_display || null,
+    headliner: !!(raw.headliner ?? raw.is_headliner),
     updatedAt: raw.updatedAt || raw.updated_at || nowIso()
   };
 }
@@ -200,6 +201,7 @@ function preservePlayerFields(existing, incoming) {
     if (merged[field] == null && existing[field] != null) merged[field] = existing[field];
   });
   if (!merged.skinny && existing.skinny) merged.skinny = existing.skinny;
+  if (incoming.headliner == null && existing.headliner != null) merged.headliner = existing.headliner;
   merged.updatedAt = nowIso();
   return merged;
 }
@@ -384,7 +386,31 @@ async function getPortalBoard() {
       on3ProfileUrl: p.on3ProfileUrl || buildOn3ProfileUrl(p),
       starsDisplay: p.starsDisplay || '★'.repeat(Math.min(5, parseInt(p.stars, 10) || 0))
     }));
-  return { incoming, count: incoming.length };
+  const headliner = selectPortalHeadliner(incoming);
+  return {
+    incoming,
+    count: incoming.length,
+    headliner,
+    headlinerSlug: headliner?.slug || null,
+    headlinerSource: headliner?.headliner ? 'manual' : 'stars'
+  };
+}
+
+/** Manual `headliner: true` wins; otherwise highest star count (then rating, then natl rank). */
+function selectPortalHeadliner(incoming) {
+  if (!incoming?.length) return null;
+  const manual = incoming.find((p) => p.headliner);
+  if (manual) return manual;
+  return incoming.slice().sort((a, b) => {
+    const starDiff = (parseInt(b.stars, 10) || 0) - (parseInt(a.stars, 10) || 0);
+    if (starDiff) return starDiff;
+    const ratingDiff = (Number(b.rating) || 0) - (Number(a.rating) || 0);
+    if (ratingDiff) return ratingDiff;
+    const aNatl = parseInt(a.natlRank, 10);
+    const bNatl = parseInt(b.natlRank, 10);
+    if (Number.isFinite(aNatl) && Number.isFinite(bNatl)) return aNatl - bNatl;
+    return 0;
+  })[0];
 }
 
 async function fireRecruitingEvent({ eventType, player, skinny, detail, source }) {
@@ -449,6 +475,7 @@ module.exports = {
   clearEvents,
   getBoard,
   getPortalBoard,
+  selectPortalHeadliner,
   fireRecruitingEvent,
   storageMode,
   DATA_DIR,

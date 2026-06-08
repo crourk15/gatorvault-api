@@ -7,6 +7,8 @@ const { mountCommunityRoutes } = require('./lib/community-routes');
 const { mountRosterRoutes } = require('./lib/roster-routes');
 const { mountLiveRoutes } = require('./lib/live-routes');
 const { mountHighlightsRoutes } = require('./lib/highlights-routes');
+const { mountInterviewsRoutes } = require('./lib/interviews-routes');
+const { mountMediaIngestRoutes } = require('./lib/media-ingest-routes');
 const { mountWarRoomRoutes } = require('./lib/war-room-routes');
 const { mountXAutoposterRoutes } = require('./lib/x-autoposter-routes');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
@@ -35,7 +37,7 @@ app.use((req, res, next) => {
   } else {
     res.header('Access-Control-Allow-Origin', '*');
   }
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin, X-Live-Pin, X-Live-Cron, X-War-Room-Pin, X-X-Autopost-Pin, X-X-Cron');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin, X-Live-Pin, X-Live-Cron, X-War-Room-Pin, X-X-Autopost-Pin, X-X-Cron, X-Media-Ingest-Pin');
   res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
@@ -53,6 +55,8 @@ mountCommunityRoutes(app);
 mountRosterRoutes(app);
 mountLiveRoutes(app);
 mountHighlightsRoutes(app);
+mountInterviewsRoutes(app);
+mountMediaIngestRoutes(app);
 mountWarRoomRoutes(app);
 mountXAutoposterRoutes(app);
 
@@ -773,6 +777,35 @@ function startOn3IngestScheduler() {
   console.log('On3 ingest: enabled (every', Math.round(intervalMs / 1000), 's)');
 }
 
+let _gvMediaIngestStarted = false;
+function startMediaIngestScheduler() {
+  if (process.env.MEDIA_INGEST_ENABLED !== 'true') return;
+  if (_gvMediaIngestStarted) return;
+  _gvMediaIngestStarted = true;
+  const { runMediaIngest } = require('./lib/media-ingest');
+  const brand = require('./lib/media-brand');
+  const intervalMs = Math.max(300000, parseInt(process.env.MEDIA_INGEST_INTERVAL_MS || '900000', 10) || 900000);
+  const bootDelay = Math.max(10000, parseInt(process.env.MEDIA_INGEST_BOOT_DELAY_MS || '45000', 10) || 45000);
+
+  const tick = () => {
+    runMediaIngest()
+      .then((r) => {
+        const n = r.process?.processed?.length || 0;
+        const d = r.discover?.discovered?.length || 0;
+        if (n || d) console.log('[media-ingest] discovered', d, 'processed', n);
+        if (!r.ffmpeg) console.warn('[media-ingest] ffmpeg missing — clips queued but not processed');
+      })
+      .catch((err) => console.warn('[media-ingest]', err.message));
+  };
+
+  if (!brand.hasFfmpeg()) {
+    console.warn('Media ingest: enabled but ffmpeg not found — install ffmpeg for processing');
+  }
+  setTimeout(tick, bootDelay);
+  setInterval(tick, intervalMs);
+  console.log('Media ingest: enabled (every', Math.round(intervalMs / 1000), 's)');
+}
+
 app.use(express.static(__dirname));
 
 app.listen(PORT, () => {
@@ -845,6 +878,11 @@ app.listen(PORT, () => {
     }, bootDelay);
   } catch (e) {
     console.warn('Portal sync on boot failed to schedule', e.message);
+  }
+  try {
+    startMediaIngestScheduler();
+  } catch (e) {
+    console.warn('Media ingest scheduler failed to start', e.message);
   }
   if (providers.length) {
     console.log('Email delivery: configured (' + providers.join(', ') + ')');

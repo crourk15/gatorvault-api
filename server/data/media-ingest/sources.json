@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "notes": "Enable sources as credentials and licensing are confirmed. Inbox sources work immediately — drop MP4 + optional .meta.json sidecar.",
+  "sources": [
+    {
+      "id": "inbox-highlights",
+      "type": "inbox",
+      "kind": "highlight",
+      "enabled": true,
+      "inboxDir": "media/ingest/inbox/highlights",
+      "category": "Game Highlight",
+      "durationSec": { "min": 10, "max": 30 },
+      "skipIntroSec": 1.5,
+      "skipOutroSec": 1.5
+    },
+    {
+      "id": "inbox-interviews",
+      "type": "inbox",
+      "kind": "interview",
+      "enabled": true,
+      "inboxDir": "media/ingest/inbox/interviews",
+      "category": "Press Conference",
+      "durationSec": { "min": 20, "max": 60 },
+      "skipIntroSec": 2,
+      "skipOutroSec": 2
+    },
+    {
+      "id": "uf-football-rss",
+      "type": "rss",
+      "kind": "highlight",
+      "enabled": false,
+      "url": "https://floridagators.com/rss.aspx?path=football",
+      "category": "Official Highlight",
+      "durationSec": { "min": 10, "max": 30 },
+      "notes": "Enable after confirming Sidearm RSS exposes direct MP4 enclosures or landing pages you are licensed to repackage."
+    },
+    {
+      "id": "gatorsfb-x",
+      "type": "x_timeline",
+      "kind": "highlight",
+      "enabled": false,
+      "handle": "GatorsFB",
+      "category": "Social Clip",
+      "durationSec": { "min": 10, "max": 30 },
+      "notes": "Requires X_BEARER_TOKEN. Only ingests native video attachments — no YouTube links."
+    },
+    {
+      "id": "floridagators-x",
+      "type": "x_timeline",
+      "kind": "highlight",
+      "enabled": false,
+      "handle": "FloridaGators",
+      "category": "Social Clip",
+      "durationSec": { "min": 10, "max": 30 }
+    },
+    {
+      "id": "sec-pressers-manual",
+      "type": "url_list",
+      "kind": "interview",
+      "enabled": false,
+      "urls": [],
+      "category": "SEC Network",
+      "durationSec": { "min": 20, "max": 60 },
+      "notes": "Paste direct MP4 URLs from licensed SEC/ESPN feeds. No YouTube."
+    }
+  ]
+}

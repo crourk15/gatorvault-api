@@ -3885,6 +3885,13 @@
             }).map(function(p){
                 return gvNormalizePortalPlayer(p,true);
             });
+            if(feed.portal.headliner){
+                window._gvPortalHeadliner=gvNormalizePortalPlayer(feed.portal.headliner,true);
+            }else if(feed.portal.headlinerSlug){
+                window._gvPortalHeadliner=portalIncoming.find(function(p){return p.slug===feed.portal.headlinerSlug;})||null;
+            }else{
+                window._gvPortalHeadliner=gvSelectPortalHeadliner(portalIncoming);
+            }
             gvRefreshPortalSlugSet();
         }
         if(feed.rankings){feed.rankings.forEach(function(r){window._gvRankings[r.classYear]=r;});}
@@ -4124,21 +4131,40 @@
     }
     function gvNormalizePortalPlayer(p,incoming){
         var status=String(p.status||'').toLowerCase();
+        var starsNum=parseInt(p.stars,10)||0;
         return{
             name:p.name,pos:p.pos,
             from:p.fromSchool||p.from_school||p.from||p.school||'',
             htWt:p.htWt||p.ht_wt||'',
-            stars:p.starsDisplay||p.stars_display||('★'.repeat(Math.min(5,parseInt(p.stars,10)||0))),
+            starsNum:starsNum,
+            stars:p.starsDisplay||p.stars_display||('★'.repeat(Math.min(5,starsNum))),
+            rating:p.rating!=null?Number(p.rating):null,
+            natlRank:p.natlRank||p.natl_rank||null,
             note:p.skinny||p.note||p.profileNote||p.profile_note||'',
             profile:p.profileNote||p.profile||p.profile_note||'',
             slug:p.slug||gvSlugify(p.name),
             on3Id:p.on3Id||p.on3_id||null,
             on3Slug:p.on3Slug||p.on3_slug||null,
             on3ProfileUrl:p.on3ProfileUrl||p.on3_profile_url||null,
+            headliner:!!(p.headliner||p.isHeadliner),
             status:status||'enrolled',
             committed_to:p.committedTo||p.committed_to||(incoming?'Florida':null),
             enrolled_at:p.enrolledAt||p.enrolled_at||null
         };
+    }
+    function gvSelectPortalHeadliner(list){
+        if(!list||!list.length)return null;
+        var manual=list.find(function(p){return p.headliner;});
+        if(manual)return manual;
+        return list.slice().sort(function(a,b){
+            var sd=(b.starsNum||0)-(a.starsNum||0);
+            if(sd)return sd;
+            var rd=(b.rating||0)-(a.rating||0);
+            if(rd)return rd;
+            var an=parseInt(a.natlRank,10),bn=parseInt(b.natlRank,10);
+            if(Number.isFinite(an)&&Number.isFinite(bn))return an-bn;
+            return 0;
+        })[0];
     }
     function gvPortalStatusMeta(p){
         if(p.enrolled_at||p.status==='enrolled')return{label:'Enrolled',cls:'text-green-400 bg-green-400/10'};
@@ -4151,7 +4177,7 @@
         var pane=document.getElementById('vpane-portal');
         var oldHead=pane?pane.querySelector('.portal-headliner-card'):null;
         if(oldHead)oldHead.remove();
-        var head=portalIncoming.slice().sort(function(a,b){return(parseInt(b.stars,10)||0)-(parseInt(a.stars,10)||0);})[0];
+        var head=window._gvPortalHeadliner||gvSelectPortalHeadliner(portalIncoming);
         if(pane&&head){
             var ph='<div class="portal-headliner-card headliner-card mb-5">';
             ph+='<div class="flex items-center gap-2 mb-3"><span class="text-2xl">🔄</span><span class="font-display text-lg font-bold tracking-wide" style="color:#fbbf24;">PORTAL HEADLINER</span><span class="text-[.6rem] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 ml-auto">On3</span></div>';

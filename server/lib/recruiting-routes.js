@@ -2,6 +2,8 @@ const store = require('./recruiting-store');
 const { runOn3Ingest, syncPortalFromOn3, getIngestStatus } = require('./on3-ingest');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { buildHeatCheck } = require('./heat-check-store');
+const highlightsStore = require('./highlights-store');
+const interviewsStore = require('./interviews-store');
 
 const RECRUITING_ADMIN_PIN = process.env.RECRUITING_ADMIN_PIN || process.env.EMAIL_TEST_PIN || 'GV2026admin';
 const INGEST_CRON_SECRET = process.env.INGEST_CRON_SECRET || RECRUITING_ADMIN_PIN;
@@ -45,14 +47,17 @@ function mountRecruitingRoutes(app) {
       const incoming = portal.incoming.map((p) => ({
         ...p,
         on3ProfileUrl: p.on3ProfileUrl || buildOn3ProfileUrl(p),
-        starsDisplay: p.starsDisplay || '★'.repeat(Math.min(5, parseInt(p.stars, 10) || 0))
+        starsDisplay: p.starsDisplay || '★'.repeat(Math.min(5, parseInt(p.stars, 10) || 0)),
+        isHeadliner: portal.headlinerSlug === p.slug
       }));
       return res.json({
         ok: true,
         incoming,
         count: incoming.length,
+        headliner: portal.headliner,
+        headlinerSlug: portal.headlinerSlug,
         on3Source,
-        headlinerSource: 'on3_commits_transfer_rows'
+        headlinerSource: portal.headlinerSource || 'stars'
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -134,6 +139,26 @@ function mountRecruitingRoutes(app) {
       if (!player) return res.status(404).json({ ok: false, error: 'Player not found' });
       const events = (await store.getEvents({ limit: 20 })).filter((e) => e.playerSlug === player.slug);
       return res.json({ ok: true, player, events });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/players/:slug/media', (req, res) => {
+    try {
+      const host = req.get('x-forwarded-host') || req.get('host');
+      const proto = req.get('x-forwarded-proto') || req.protocol || 'https';
+      const base = (process.env.MEDIA_CDN_BASE || `${proto}://${host}`).replace(/\/$/, '');
+      const slug = req.params.slug;
+      const highlights = highlightsStore.loadClips({ baseUrl: base, playerSlug: slug });
+      const interviews = interviewsStore.loadClips({ baseUrl: base, playerSlug: slug });
+      return res.json({
+        ok: true,
+        playerSlug: slug,
+        highlights,
+        interviews,
+        total: highlights.length + interviews.length
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
