@@ -1,27 +1,37 @@
 /**
- * Server-side EmailJS send via REST API (no @emailjs/nodejs SDK).
- * Required REST fields per https://www.emailjs.com/docs/rest-api/send/ :
- *   service_id, template_id, user_id (account public key), accessToken (private key), template_params
+ * Server-side EmailJS send via raw REST POST (no SDK — no key-format validation).
+ * https://www.emailjs.com/docs/rest-api/send/
  */
+
+const { getEmailJsPublicKey, getEmailJsPrivateKey } = require('./emailjs-config');
 
 const EMAILJS_SEND_URL = 'https://api.emailjs.com/api/v1.0/email/send';
 
-function buildEmailJsPayload({ serviceId, templateId, userId, templateParams, privateKey }) {
+function buildEmailJsPayload({ serviceId, templateId, publicKey, templateParams, privateKey }) {
   return {
-    service_id: serviceId,
-    template_id: templateId,
-    user_id: userId,
-    accessToken: privateKey,
+    service_id: String(serviceId).trim(),
+    template_id: String(templateId).trim(),
+    user_id: String(publicKey).trim(),
+    accessToken: String(privateKey).trim(),
     template_params: templateParams
   };
 }
 
-async function sendEmailViaEmailJS({ serviceId, templateId, userId, templateParams, privateKey }) {
-  if (!serviceId || !templateId || !userId || !privateKey) {
-    throw new Error('EmailJS server send requires serviceId, templateId, userId, and privateKey');
+async function sendEmailViaEmailJS({ serviceId, templateId, publicKey, templateParams, privateKey }) {
+  const userId = publicKey != null ? String(publicKey).trim() : getEmailJsPublicKey();
+  const token = privateKey != null ? String(privateKey).trim() : getEmailJsPrivateKey();
+
+  if (!serviceId || !templateId || !userId || !token) {
+    throw new Error('EmailJS server send requires serviceId, templateId, publicKey (user_id), and privateKey (accessToken)');
   }
 
-  const payload = buildEmailJsPayload({ serviceId, templateId, userId, templateParams, privateKey });
+  const payload = buildEmailJsPayload({
+    serviceId,
+    templateId,
+    publicKey: userId,
+    templateParams,
+    privateKey: token
+  });
   const payloadKeys = Object.keys(payload).sort();
 
   const res = await fetch(EMAILJS_SEND_URL, {

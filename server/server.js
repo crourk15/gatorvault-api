@@ -157,22 +157,13 @@ async function sendEmailSendGrid(to, subject, html) {
 
 const EMAIL_PROVIDER = String(process.env.EMAIL_PROVIDER || 'emailjs').toLowerCase();
 
-function getEmailJsUserId() {
-  return process.env.EMAILJS_USER_ID || process.env.EMAILJS_PUBLIC_KEY || '';
-}
-
-function isEmailJsReady() {
-  const key = process.env.EMAILJS_PRIVATE_KEY || '';
-  const placeholder = !key || key === 'YOUR_PRIVATE_KEY_HERE' || key === 'your-emailjs-private-key-here';
-  const userId = getEmailJsUserId();
-  return !!(
-    process.env.EMAILJS_SERVICE_ID &&
-    process.env.EMAILJS_TEMPLATE_ID &&
-    userId &&
-    userId !== 'YOUR_PUBLIC_KEY_HERE' &&
-    !placeholder
-  );
-}
+const {
+  getEmailJsPublicKey,
+  getEmailJsPrivateKey,
+  getEmailJsConfig,
+  isEmailJsReady,
+  getEmailJsPublicKeyHint
+} = require('./lib/emailjs-config');
 
 function getEmailProviders() {
   if (EMAIL_PROVIDER === 'emailjs') return isEmailJsReady() ? ['emailjs'] : [];
@@ -185,16 +176,10 @@ function getEmailProviders() {
 
 async function sendEmailEmailJS(to, templateParams) {
   const { sendEmailViaEmailJS } = require('./lib/emailjs-server');
-  const serviceId = process.env.EMAILJS_SERVICE_ID;
   const onboardingDay = templateParams.onboardingDay != null ? Number(templateParams.onboardingDay) : 0;
-  const templateId =
-    onboardingDay > 0 && process.env.EMAILJS_ONBOARDING_TEMPLATE_ID
-      ? process.env.EMAILJS_ONBOARDING_TEMPLATE_ID
-      : process.env.EMAILJS_TEMPLATE_ID;
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
-  const userId = getEmailJsUserId();
-  if (!isEmailJsReady()) {
-    throw new Error('EmailJS not configured — set EMAILJS_PRIVATE_KEY and EMAILJS_USER_ID (or EMAILJS_PUBLIC_KEY) in server/.env');
+  const { serviceId, templateId, publicKey, privateKey } = getEmailJsConfig(onboardingDay);
+  if (!isEmailJsReady(onboardingDay)) {
+    throw new Error('EmailJS not configured — set EMAILJS_USER_ID (public key), EMAILJS_PRIVATE_KEY, service and template IDs');
   }
 
   const params = {
@@ -217,7 +202,7 @@ async function sendEmailEmailJS(to, templateParams) {
     reply_to: process.env.EMAILJS_REPLY_TO || process.env.SMTP_USER || 'support@gatorvaultinsider.com'
   };
 
-  return sendEmailViaEmailJS({ serviceId, templateId, userId, templateParams: params, privateKey });
+  return sendEmailViaEmailJS({ serviceId, templateId, publicKey, templateParams: params, privateKey });
 }
 
 async function deliverEmail(to, subject, html, templateParams = {}) {
@@ -311,8 +296,9 @@ async function runWelcomeEmailTest({ email, name, tier }) {
     ready: isEmailJsReady(),
     serviceId: process.env.EMAILJS_SERVICE_ID || null,
     templateId: process.env.EMAILJS_TEMPLATE_ID || null,
-    userIdSet: !!getEmailJsUserId(),
-    privateKeySet: !!(process.env.EMAILJS_PRIVATE_KEY && process.env.EMAILJS_PRIVATE_KEY !== 'YOUR_PRIVATE_KEY_HERE')
+    userIdSet: !!getEmailJsPublicKey(),
+    publicKeyHint: getEmailJsPublicKeyHint(),
+    privateKeySet: !!getEmailJsPrivateKey()
   });
 
   if (EMAIL_PROVIDER === 'emailjs' && !isEmailJsReady()) {
@@ -658,9 +644,7 @@ app.get('/api/ping', (req, res) => res.json({ ok: true, ts: Date.now() }));
 
 app.get('/api/email-status', (req, res) => {
   const providers = getEmailProviders();
-  const privateKeySet = !!(process.env.EMAILJS_PRIVATE_KEY &&
-    process.env.EMAILJS_PRIVATE_KEY !== 'YOUR_PRIVATE_KEY_HERE' &&
-    process.env.EMAILJS_PRIVATE_KEY !== 'your-emailjs-private-key-here');
+  const privateKeySet = !!getEmailJsPrivateKey();
   return res.json({
     ok: true,
     configured: providers.length > 0,
@@ -671,19 +655,20 @@ app.get('/api/email-status', (req, res) => {
       sender: 'lib/emailjs-server.js',
       build: process.env.RENDER_GIT_COMMIT ? String(process.env.RENDER_GIT_COMMIT).slice(0, 7) : null,
       restPayloadKeys: ['service_id', 'template_id', 'user_id', 'accessToken', 'template_params'],
-      serviceId: process.env.EMAILJS_SERVICE_ID || null,
-      templateId: process.env.EMAILJS_TEMPLATE_ID || null,
+      serviceId: getEmailJsConfig().serviceId || null,
+      templateId: getEmailJsConfig().templateId || null,
       onboardingTemplateId: process.env.EMAILJS_ONBOARDING_TEMPLATE_ID || null,
-      userIdSet: !!getEmailJsUserId(),
+      userIdSet: !!getEmailJsPublicKey(),
+      publicKeyHint: getEmailJsPublicKeyHint(),
       privateKeySet,
       replyTo: process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com'
     },
     hint: providers.length === 0
-      ? (!getEmailJsUserId()
-        ? 'Set EMAILJS_USER_ID (account public key) on Render — required by EmailJS REST API as user_id'
+      ? (!getEmailJsPublicKey()
+        ? 'Set EMAILJS_USER_ID to your EmailJS public key (any format) — sent as REST user_id'
         : privateKeySet
           ? 'EmailJS keys present but service/template may be invalid'
-          : 'Replace EMAILJS_PRIVATE_KEY=YOUR_PRIVATE_KEY_HERE in server/.env with your real EmailJS private key')
+          : 'Set EMAILJS_PRIVATE_KEY to your EmailJS private key')
       : `Sending via EmailJS (Gmail: ${process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com'})`
   });
 });
