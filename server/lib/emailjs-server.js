@@ -13,7 +13,7 @@ async function sendEmailViaEmailJS({ serviceId, templateId, templateParams, priv
   const payload = {
     service_id: serviceId,
     template_id: templateId,
-    accessToken: privateKey,
+    access_token: privateKey,
     template_params: templateParams
   };
 
