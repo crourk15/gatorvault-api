@@ -43,6 +43,10 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json({ limit: '1mb' }));
 
+app.get('/highlight/:slug', (req, res) => {
+  res.sendFile(path.join(__dirname, 'highlight.html'));
+});
+
 mountRecruitingRoutes(app);
 mountContentRoutes(app);
 mountCommunityRoutes(app);
@@ -830,6 +834,17 @@ app.listen(PORT, () => {
     startXAutoposterScheduler();
   } catch (e) {
     console.warn('X AutoPoster scheduler failed to start', e.message);
+  }
+  try {
+    const { syncPortalFromOn3 } = require('./lib/on3-ingest');
+    const bootDelay = Math.max(5000, parseInt(process.env.ON3_PORTAL_SYNC_BOOT_DELAY_MS || '12000', 10) || 12000);
+    setTimeout(() => {
+      syncPortalFromOn3()
+        .then((r) => console.log('[portal] On3 transfer sync:', r.count, 'players from', r.url))
+        .catch((err) => console.warn('[portal] On3 transfer sync failed:', err.message));
+    }, bootDelay);
+  } catch (e) {
+    console.warn('Portal sync on boot failed to schedule', e.message);
   }
   if (providers.length) {
     console.log('Email delivery: configured (' + providers.join(', ') + ')');

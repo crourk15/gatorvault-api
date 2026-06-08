@@ -193,7 +193,7 @@
         #op-pin-input,#admin-pin-modal-input{pointer-events:auto;position:relative;z-index:1;}
         .highlight-modal{background:#0a1628;border:1px solid rgba(250,70,22,.25);border-radius:1rem;max-width:900px;width:100%;overflow:hidden;}
         .highlight-modal-video{position:relative;padding-top:56.25%;background:#000;}
-        .highlight-modal-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+        .highlight-modal-video video{position:relative;width:100%;display:block;max-height:70vh;background:#000;}
         .highlight-modal-preview{min-height:220px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#001a4d,#060f1f);padding:2rem;text-align:center;}
         .toggle-switch{position:relative;width:48px;height:26px;background:rgba(0,48,135,.4);border-radius:13px;cursor:pointer;transition:background .2s;flex-shrink:0;}
         .toggle-switch.active{background:#FA4616;}
@@ -2369,8 +2369,7 @@
             });
     }
     function gvOn3ProfileUrl(p){
-        if(p.on3Id)return 'https://www.on3.com/db/'+p.on3Id+'-';
-        return 'https://www.on3.com/college/florida-gators/recruiting/';
+        return gvOn3PortalUrl(p);
     }
     function gvCloseRecruitProfile(){
         var modal=document.getElementById('recruit-profile-modal');
@@ -2546,32 +2545,7 @@
     var class2027=[
         {name:'Kennedee Jackson',pos:'OT',school:'Lithonia (Lithonia, GA)',htWt:'6-5.5 / 301',stars:4,rating:'91.77',natl:139,posRk:14,stRk:14,date:'06/02/26',inState:false},{name:'Ja\'Bios Smith',pos:'LB',school:'Swainsboro (Swainsboro, GA)',htWt:'6-2 / 205',stars:4,rating:'91.78',natl:138,posRk:11,stRk:13,date:'05/29/26',inState:false},{name:'Elias Pearl',pos:'WR',school:'Port Charlotte (Port Charlotte, FL)',htWt:'5-11 / 183',stars:4,rating:'92.47',natl:95,posRk:17,stRk:11,date:'05/19/26',inState:true},{name:'Peyton Miller',pos:'IOL',school:'Anna (Anna, TX)',htWt:'6-5 / 290',stars:4,rating:'91.85',natl:130,posRk:10,stRk:17,date:'04/27/26',inState:false},{name:'De\'Voun Kendrick',pos:'DL',school:'Carrollwood Day (Tampa, FL)',htWt:'6-4 / 300',stars:3,rating:'87.70',natl:555,posRk:59,stRk:45,date:'04/27/26',inState:true},{name:'Tommy Douglas',pos:'TE',school:'Hun School (Princeton, NJ)',htWt:'6-4.5 / 235',stars:4,rating:'89.33',natl:343,posRk:19,stRk:7,date:'04/16/26',inState:false},{name:'Aamaury Fountain',pos:'CB',school:'Northside (Warner Robins, GA)',htWt:'6-3 / 182',stars:4,rating:'91.80',natl:133,posRk:18,stRk:12,date:'04/11/26',inState:false},{name:'Davin Davidson',pos:'QB',school:'Cardinal Mooney (Sarasota, FL)',htWt:'6-6 / 215',stars:4,rating:'92.19',natl:113,posRk:9,stRk:13,date:'04/09/26',inState:true},{name:'Maxwell Hiller',pos:'IOL',school:'Coatesville (Coatesville, PA)',htWt:'6-5.5 / 305',stars:5,rating:'98.54',natl:3,posRk:1,stRk:1,date:'04/08/26',inState:false},{name:'Anthony Jennings',pos:'WR',school:'Dillard (Fort Lauderdale, FL)',htWt:'5-11 / 160',stars:4,rating:'89.99',natl:294,posRk:45,stRk:25,date:'04/25/26',inState:true},{name:'Andrew Beard',pos:'RB',school:'Prince Avenue Christian (Bogart, GA)',htWt:'5-9 / 195',stars:4,rating:'91.37',natl:166,posRk:9,stRk:18,date:'05/08/26',inState:false},{name:'Elijah Hutcheson',pos:'OT',school:'North Cross School (Roanoke, VA)',htWt:'6-6 / 255',stars:4,rating:'92.69',natl:91,posRk:7,stRk:2,date:'05/05/26',inState:false},{name:'Kailib Dillard',pos:'S',school:'Jenks (Tulsa, OK)',htWt:'6-2 / 170',stars:3,rating:'88.02',natl:497,posRk:44,stRk:12,date:'05/05/26',inState:false},{name:'Stive-Bentley Keumajou',pos:'DL',school:'Coral Gables Senior (Coral Gables, FL)',htWt:'6-2.5 / 295',stars:3,rating:'88.03',natl:496,posRk:52,stRk:40,date:'05/06/26',inState:true},{name:'Tramond Collins',pos:'WR',school:'Cottondale (Cottondale, FL)',htWt:'6-0 / 185',stars:4,rating:'92.07',natl:115,posRk:20,stRk:14,date:'03/11/26',inState:true},{name:'Jackson Ballinger',pos:'TE',school:'Centerburg (Centerburg, OH)',htWt:'6-5 / 230',stars:4,rating:'88.70',natl:409,posRk:25,stRk:16,date:'02/24/26',inState:false},{name:'Amare Nugent',pos:'CB',school:'American Heritage (Plantation, FL)',htWt:'5-11 / 180',stars:4,rating:'90.63',natl:233,posRk:26,stRk:21,date:'01/24/26',inState:true},{name:'Cain Van Norden',pos:'DL',school:'Bishop McNamara (District Heights, MD)',htWt:'6-7 / 299',stars:3,rating:'85.00',natl:879,posRk:88,stRk:22,date:'05/15/26',inState:false},{name:'Cahron Wheeler',pos:'EDGE',school:'St. Paul\'s School (Baltimore, MD)',htWt:'6-5 / 245',stars:4,rating:'91.89',natl:128,posRk:14,stRk:3,date:'06/05/26',inState:false},{name:'Zahmar Tookes',pos:'DL',school:'Brighton (Rochester, NY)',htWt:'6-3.5 / 260',stars:4,rating:'89.68',natl:318,posRk:33,stRk:2,date:'06/03/26',inState:false}
     ];
-    var portalIncoming=[
-        {name:'Eric Singleton Jr.',pos:'WR',from:'Auburn',htWt:'6-2 / 185',stars:'★★★★',slug:'eric-singleton-jr',on3Id:'155719',status:'enrolled',note:'On3: Auburn transfer and immediate WR1 — led the Tigers in receiving production before entering the portal.',profile:'Vertical threat who projects as Florida\'s top outside receiver and red-zone weapon in Year 1.'},
-        {name:'Aaron Philo',pos:'QB',from:'Georgia Tech',htWt:'6-3 / 210',stars:'★★★',slug:'aaron-philo',on3Id:'146069',status:'enrolled',note:'On3: Georgia Tech transfer with a 47% third-down conversion rate — pro-style distributor in the QB battle.',profile:'Rhythm passer with anticipatory throwing; fits Robby Faulkner\'s RPO-heavy offense if the OL protects.'},
-        {name:'Harrison Moore',pos:'C',from:'Georgia Tech',htWt:'6-3 / 300',stars:'★★★',slug:'harrison-moore',on3Id:'153739',status:'enrolled',note:'On3: Georgia Tech OL transfer slotted as Florida\'s starting center for 2026.',profile:'Anchors the rebuilt interior of a five-new-starter offensive line.'},
-        {name:'Eagan Boyer',pos:'LT',from:'Penn State',htWt:'6-5 / 305',stars:'★★★',slug:'eagan-boyer',on3Id:'155795',status:'enrolled',note:'On3: Penn State tackle transfer — 6-8 frame adds length and pass-pro upside on the blind side.',profile:'Projects as backup tackle with starting upside if the right side needs shuffling.'},
-        {name:'TJ Shanahan Jr.',pos:'RG',from:'Penn State',htWt:'6-4 / 315',stars:'★★★',slug:'tj-shanahan-jr',on3Id:'113148',status:'enrolled',note:'On3: Penn State IOL transfer in a dead heat with Bryce Lovett for the starting RG job.',profile:'Experienced Power 5 guard with starting reps at Penn State.'},
-        {name:'Evan Pryor',pos:'RB',from:'Cincinnati',htWt:'5-10 / 195',stars:'★★★',slug:'evan-pryor',on3Id:'43376',status:'enrolled',note:'On3: Cincinnati transfer adds pass-catching and change-of-pace behind Jadan Baugh.',profile:'Third-down and receiving back who complements the workhorse starter.'},
-        {name:'Luke Harpring',pos:'TE',from:'Georgia Tech',htWt:'6-5 / 245',stars:'★★★',slug:'luke-harpring',on3Id:'178849',status:'enrolled',note:'On3: Georgia Tech TE transfer — inline blocker with intermediate route ability.',profile:'Depth behind Lacota Dippre in the Y tight end room.'},
-        {name:'Cam Dooley',pos:'S',from:'Kentucky',htWt:'6-1 / 205',stars:'★★★',slug:'cam-dooley',on3Id:'178263',status:'enrolled',note:'On3: Kentucky safety transfer who adds range and tackling in Brad White\'s secondary.',profile:'Rotates at FS and fits the 3-3-5 hybrid package.'},
-        {name:'DJ Coleman',pos:'S',from:'Baylor',htWt:'6-2 / 210',stars:'★★★',slug:'dj-coleman',on3Id:'150237',status:'enrolled',note:'On3: Baylor DB transfer — veteran nickel who rotates at STAR behind Kanye Clark.',profile:'Press-man experience at a premium niche spot in the 3-3-5.'},
-        {name:'Patrick Durkin',pos:'K',from:'Tulane',htWt:'6-1 / 195',stars:'★★★',slug:'patrick-durkin',on3Id:'162609',status:'enrolled',note:'On3: Tulane kicker transfer won Florida\'s placekicking job in spring.',profile:'Special teams upgrade with Power 5 experience.'},
-        {name:'Lacota Dippre',pos:'TE',from:'James Madison',htWt:'6-4 / 240',stars:'★★★',slug:'lacota-dippre',on3Id:'162020',status:'enrolled',note:'On3: James Madison TE transfer — starting Y tight end with vertical threat upside.',profile:'Legitimate weapon when deployed vertically in Faulkner\'s offense.'},
-        {name:'Bailey Stockton',pos:'WR',from:'Georgia Tech',htWt:'5-9 / 175',stars:'★★★',slug:'bailey-stockton',on3Id:'154828',status:'enrolled',note:'On3: Georgia Tech slot receiver transfer — quick-twitch separator in the middle of the field.',profile:'Slot weapon who complements Singleton and Vernell Brown in 11 personnel.'},
-        {name:'DK Kalu',pos:'DL',from:'Baylor',htWt:'6-3 / 270',stars:'★★★',slug:'dk-kalu',on3Id:'145026',status:'enrolled',note:'On3: Baylor defensive lineman transfer slotted as nose backup in the 3-3-5.',profile:'Rotational nose who eats double teams in the three-down front.'},
-        {name:'Alec Clark',pos:'P',from:'Tulane',htWt:'6-1 / 184',stars:'★★★',slug:'alec-clark',on3Id:'283676',status:'enrolled',note:'On3: Tulane punter transfer — Australian-born leg who handles starting punts.',profile:'Field-position weapon with directional punting ability.'},
-        {name:'Emmanuel Oyebadejo',pos:'DL',from:'Jacksonville State',htWt:'6-7 / 315',stars:'★★★',slug:'emmanuel-oyebadejo',on3Id:'239636',status:'enrolled',note:'On3: Jacksonville State DL transfer — England native with a rare 6-7, 315-pound frame.',profile:'Developmental edge/nose with size the SEC front can develop.'},
-        {name:'London Montgomery',pos:'RB',from:'East Carolina',htWt:'5-10 / 185',stars:'★★★',slug:'london-montgomery',on3Id:'147775',status:'enrolled',note:'On3: East Carolina RB transfer — kick return specialist and depth back.',profile:'KR1 option with burst in space on special teams.'},
-        {name:'Carter Milliron',pos:'LS',from:'Louisiana',htWt:'6-0 / 257',stars:'★★★',slug:'carter-milliron',on3Id:'283756',status:'enrolled',note:'On3: Louisiana long snapper transfer — won the starting LS role.',profile:'Special teams reliability on punts and field goals.'},
-        {name:'Miller Fealy',pos:'P',from:'UT Martin',htWt:'6-2 / 210',stars:'★★★',slug:'miller-fealy',on3Id:'283795',status:'enrolled',note:'On3: UT Martin punter transfer — backup punter with Australian punting background.',profile:'Insurance at punter behind Alec Clark.'},
-        {name:'TJ Bullard',pos:'LB',from:'UCF',htWt:'6-1 / 200',stars:'★★★',slug:'tj-bullard',on3Id:'113075',status:'enrolled',note:'On3: UCF linebacker transfer — adds depth and speed in the second level.',profile:'Developmental LB in the 3-3-5\'s five-linebacker look.'},
-        {name:'Jaylen Lloyd',pos:'WR',from:'Oklahoma State',htWt:'5-11 / 180',stars:'★★★',slug:'jaylen-lloyd',on3Id:'154954',status:'enrolled',note:'On3: Oklahoma State WR transfer — speed element in the receiver room.',profile:'Depth receiver with home-run speed for vertical shots.'},
-        {name:'Mason Clinton',pos:'DL',from:'Mississippi State',htWt:'6-5 / 265',stars:'★★★',slug:'mason-clinton',on3Id:'175643',status:'enrolled',note:'On3: Mississippi State DL transfer — rotational tackle in the three-down front.',profile:'Adds interior depth behind Brendan Bett and the ends.'},
-        {name:'Evan Chieca',pos:'TE',from:'New Haven',htWt:'6-5 / 250',stars:'★★★',slug:'evan-chieca',on3Id:'283144',status:'enrolled',note:'On3: New Haven TE transfer — backup Y tight end with blocking-first profile.',profile:'Depth at TE behind Lacota Dippre.'},
-        {name:'Jordy Lowery',pos:'CB',from:'East Carolina',htWt:'5-11 / 167',stars:'★★★',slug:'jordy-lowery',on3Id:'66322',status:'enrolled',note:'On3: East Carolina CB transfer — slot corner depth behind McClain and Johnson.',profile:'Coverage depth in a secondary heavy on transfer additions.'},
-        {name:'Ace Ciongoli',pos:'WR',from:'Indiana',htWt:'5-11 / 190',stars:'★★★',slug:'ace-ciongoli',on3Id:'284197',status:'enrolled',note:'On3: Indiana WR transfer — reliable hands at the catch point in the slot.',profile:'Late-cycle add who gives the WR room another route-runner.'}
-    ];
+    var portalIncoming=[];
     var storylines=[
         {title:'💪 OL Cohesion — 5 new starters, can they gel?',status:'WATCH',statusClass:'text-red-400 bg-red-400/10',body:'Entirely rebuilt through the 2026 portal class. Building chemistry is the biggest question heading into fall camp.'},
         {title:'🛡️ Defensive 3-3-5 Install',status:'ON TRACK',statusClass:'text-green-400 bg-green-400/10',body:'Spring practice showed the scheme ahead of schedule. Woods at JACK is the best player on this defense.'},
@@ -3527,20 +3501,24 @@
     }
     function gvRenderHighlightCard(c){
         var pill=c.season==='2026'?'highlight-season-2026':'highlight-season-2025';
-        var thumb=gvLiveResolveUrl(c.thumbUrl);
-        var href='/highlight/'+encodeURIComponent(c.slug);
-        return '<a href="'+gvEscHtml(href)+'" class="highlight-card block no-underline text-inherit">'
-            +'<div class="highlight-thumb">'
+        var thumb=gvMediaResolveUrl(c.thumbUrl);
+        var ready=c.mediaReady!==false&&(c.streamUrl||c.videoUrl);
+        var cardInner='<div class="highlight-thumb">'
             +'<img src="'+gvEscHtml(thumb)+'" alt="" loading="lazy">'
             +'<div class="highlight-overlay"><div class="play-circle"><span class="text-white text-xl ml-0.5">▶</span></div></div>'
             +'<span class="absolute top-3 left-3 highlight-season-pill '+pill+'">'+gvEscHtml(c.category)+'</span>'
             +'<span class="absolute bottom-3 right-3 text-xs font-bold text-white bg-black/60 px-2 py-1 rounded">'+gvEscHtml(c.duration)+'</span>'
+            +(ready?'':'<span class="absolute top-3 right-3 text-[.6rem] font-bold text-amber-300 bg-black/60 px-2 py-1 rounded">Processing</span>')
             +'</div>'
             +'<div class="p-4">'
             +'<h3 class="font-display text-lg font-bold text-white leading-snug mb-1">'+gvEscHtml(c.title)+'</h3>'
             +'<p class="highlight-game-tag text-gator-orange text-sm font-semibold">'+gvEscHtml(c.gameLine)+'</p>'
             +'<p class="text-sm text-surface-200/70 mt-2 line-clamp-2">'+gvEscHtml(c.dek)+'</p>'
-            +'</div></a>';
+            +'</div>';
+        if(ready){
+            return '<button type="button" class="highlight-card block w-full text-left no-underline text-inherit" data-hl-slug="'+gvEscHtml(c.slug)+'">'+cardInner+'</button>';
+        }
+        return '<div class="highlight-card block opacity-80">'+cardInner+'</div>';
     }
     function renderHighlights(){
         var shell=document.getElementById('highlights-shell');
@@ -3553,14 +3531,70 @@
         shell.innerHTML='<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">'
             +clips.map(gvRenderHighlightCard).join('')
             +'</div>';
+        shell.querySelectorAll('[data-hl-slug]').forEach(function(btn){
+            btn.addEventListener('click',function(){
+                var slug=btn.getAttribute('data-hl-slug');
+                var clip=(window._gvHighlights||[]).find(function(c){return c.slug===slug;});
+                if(clip)window.openHighlightPlayer(clip);
+            });
+        });
     }
-    window.openHighlightPlayer=function(){};
+    window.openHighlightPlayer=function(clip){
+        if(!clip)return;
+        var ov=document.getElementById('highlight-modal-ov');
+        var videoWrap=document.getElementById('hl-modal-video-wrap');
+        var preview=document.getElementById('hl-modal-preview');
+        if(!ov||!videoWrap)return;
+        document.getElementById('hl-modal-title').textContent=clip.title||'Film Room';
+        document.getElementById('hl-modal-meta').textContent=[clip.category,clip.gameLine,clip.duration].filter(Boolean).join(' · ');
+        document.getElementById('hl-modal-foot').textContent=clip.dek||'';
+        var src=clip.streamUrl||gvMediaResolveUrl(clip.videoUrl);
+        videoWrap.innerHTML='';
+        videoWrap.classList.add('hidden');
+        if(preview)preview.classList.add('hidden');
+        if(src){
+            videoWrap.classList.remove('hidden');
+            videoWrap.style.paddingTop='0';
+            videoWrap.style.minHeight='0';
+            var vid=document.createElement('video');
+            vid.controls=true;
+            vid.playsInline=true;
+            vid.preload='metadata';
+            vid.style.width='100%';
+            vid.style.display='block';
+            vid.style.maxHeight='70vh';
+            vid.style.background='#000';
+            if(clip.thumbUrl)vid.poster=gvMediaResolveUrl(clip.thumbUrl);
+            vid.src=src;
+            vid.addEventListener('error',function(){
+                videoWrap.classList.add('hidden');
+                if(preview){
+                    preview.classList.remove('hidden');
+                    document.getElementById('hl-modal-preview-text').textContent='Video unavailable — check Film Room media on the API server.';
+                }
+            },{once:true});
+            videoWrap.appendChild(vid);
+            try{vid.play();}catch(e){}
+        }else if(preview){
+            preview.classList.remove('hidden');
+            document.getElementById('hl-modal-preview-text').textContent='Native clip is processing. No third-party embeds.';
+        }
+        ov.classList.remove('hidden');
+        ov.style.display='flex';
+        document.body.style.overflow='hidden';
+    };
     window.closeHighlightPlayer=function(){
         var ov=document.getElementById('highlight-modal-ov');if(!ov)return;
         ov.classList.add('hidden');ov.style.display='';
         var videoWrap=document.getElementById('hl-modal-video-wrap');if(videoWrap){videoWrap.innerHTML='';videoWrap.classList.add('hidden');}
         document.body.style.overflow='';
     };
+    (function(){
+        var closeBtn=document.getElementById('hl-modal-close');
+        var ov=document.getElementById('highlight-modal-ov');
+        if(closeBtn)closeBtn.addEventListener('click',window.closeHighlightPlayer);
+        if(ov)ov.addEventListener('click',function(e){if(e.target===ov)window.closeHighlightPlayer();});
+    })();
     function getVaultPoints(){
         try{return parseInt(localStorage.getItem('gv_vaultPoints')||'0',10)||0;}catch(e){return 0;}
     }
@@ -4078,8 +4112,15 @@
 
     // ---- Portal ----
     function gvOn3PortalUrl(p){
-        if(p.on3Id)return 'https://www.on3.com/db/'+p.on3Id+'-';
-        return 'https://www.on3.com/college/florida-gators/football/transfer-portal/';
+        if(p.on3ProfileUrl||p.on3_profile_url)return p.on3ProfileUrl||p.on3_profile_url;
+        var on3Slug=p.on3Slug||p.on3_slug;
+        if(on3Slug)return 'https://www.on3.com/rivals/'+String(on3Slug).replace(/^\//,'').replace(/\/$/,'')+'/';
+        var id=p.on3Id||p.on3_id;
+        if(id){
+            var base=(p.slug||gvSlugify(p.name||'')).replace(/-\d+$/,'');
+            return 'https://www.on3.com/rivals/'+base+'-'+id+'/';
+        }
+        return 'https://www.on3.com/college/florida-gators/football/2026/commits/';
     }
     function gvNormalizePortalPlayer(p,incoming){
         var status=String(p.status||'').toLowerCase();
@@ -4092,6 +4133,8 @@
             profile:p.profileNote||p.profile||p.profile_note||'',
             slug:p.slug||gvSlugify(p.name),
             on3Id:p.on3Id||p.on3_id||null,
+            on3Slug:p.on3Slug||p.on3_slug||null,
+            on3ProfileUrl:p.on3ProfileUrl||p.on3_profile_url||null,
             status:status||'enrolled',
             committed_to:p.committedTo||p.committed_to||(incoming?'Florida':null),
             enrolled_at:p.enrolledAt||p.enrolled_at||null
@@ -4108,7 +4151,7 @@
         var pane=document.getElementById('vpane-portal');
         var oldHead=pane?pane.querySelector('.portal-headliner-card'):null;
         if(oldHead)oldHead.remove();
-        var head=portalIncoming.find(function(p){return String(p.name||'').indexOf('Singleton')>=0;})||portalIncoming[0];
+        var head=portalIncoming.slice().sort(function(a,b){return(parseInt(b.stars,10)||0)-(parseInt(a.stars,10)||0);})[0];
         if(pane&&head){
             var ph='<div class="portal-headliner-card headliner-card mb-5">';
             ph+='<div class="flex items-center gap-2 mb-3"><span class="text-2xl">🔄</span><span class="font-display text-lg font-bold tracking-wide" style="color:#fbbf24;">PORTAL HEADLINER</span><span class="text-[.6rem] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 ml-auto">On3</span></div>';
@@ -4122,6 +4165,11 @@
             if(h1){var wrap=h1.closest('div');if(wrap)wrap.insertAdjacentHTML('afterend',ph);else h1.insertAdjacentHTML('afterend',ph);}
         }
         var el=document.getElementById('portal-incoming');if(!el)return;el.innerHTML='';
+        if(!portalIncoming.length){
+            el.innerHTML='<p class="text-surface-200/60 text-sm py-6 px-4">Loading portal transfers from On3…</p>';
+            var countEl0=document.getElementById('portal-count');if(countEl0)countEl0.textContent='—';
+            return;
+        }
         var countEl=document.getElementById('portal-count');if(countEl)countEl.textContent=portalIncoming.length;
         portalIncoming.forEach(function(p){
             var status=gvPortalStatusMeta(p);
@@ -4541,6 +4589,14 @@
     window._gvLive={feed:[],beat:{posts:[]},podcasts:{shows:[]},loading:false,pollTimer:null,lastUpdated:null};
 
     function gvLiveApiBase(){return window.GV_API_BASE||((window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1')?'http://localhost:3000':window.location.origin);}
+    function gvMediaResolveUrl(url){
+        if(url==null||url==='')return null;
+        var s=String(url).trim();
+        if(!s)return null;
+        if(/^https?:\/\//i.test(s))return s;
+        if(s.charAt(0)==='/')return gvLiveApiBase()+s;
+        return s;
+    }
 
     function gvLiveEsc(s){
         return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');

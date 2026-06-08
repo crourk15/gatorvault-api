@@ -1,5 +1,6 @@
 const store = require('./recruiting-store');
-const { runOn3Ingest, getIngestStatus } = require('./on3-ingest');
+const { runOn3Ingest, syncPortalFromOn3, getIngestStatus } = require('./on3-ingest');
+const { buildOn3ProfileUrl } = require('./on3-urls');
 const { buildHeatCheck } = require('./heat-check-store');
 
 const RECRUITING_ADMIN_PIN = process.env.RECRUITING_ADMIN_PIN || process.env.EMAIL_TEST_PIN || 'GV2026admin';
@@ -38,7 +39,21 @@ function mountRecruitingRoutes(app) {
   app.get('/api/recruiting/portal', async (req, res) => {
     try {
       const portal = await store.getPortalBoard();
-      return res.json({ ok: true, ...portal });
+      const on3Source =
+        portal.incoming.find((p) => p.on3Source)?.on3Source ||
+        'https://www.on3.com/college/florida-gators/football/2026/commits/';
+      const incoming = portal.incoming.map((p) => ({
+        ...p,
+        on3ProfileUrl: p.on3ProfileUrl || buildOn3ProfileUrl(p),
+        starsDisplay: p.starsDisplay || '★'.repeat(Math.min(5, parseInt(p.stars, 10) || 0))
+      }));
+      return res.json({
+        ok: true,
+        incoming,
+        count: incoming.length,
+        on3Source,
+        headlinerSource: 'on3_commits_transfer_rows'
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -251,6 +266,27 @@ function mountRecruitingRoutes(app) {
       return res.json({ ok: true, ...result });
     } catch (err) {
       console.error('on3 ingest error', err);
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/recruiting/portal/sync', async (req, res) => {
+    try {
+      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.get('X-Ingest-Secret') || '');
+      if (pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
+        return res.status(401).json({ ok: false, error: 'Invalid ingest secret' });
+      }
+      const year = req.body.year ? parseInt(req.body.year, 10) : 2026;
+      const result = await syncPortalFromOn3({ classYear: year, force: true });
+      const portal = await store.getPortalBoard();
+      return res.json({
+        ok: true,
+        synced: result.updated || result.count || portal.count,
+        portal,
+        on3Source: result.url || null
+      });
+    } catch (err) {
+      console.error('portal sync error', err);
       return res.status(500).json({ ok: false, error: err.message });
     }
   });

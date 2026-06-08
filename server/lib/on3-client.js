@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const { buildOn3ProfileUrl } = require('./on3-urls');
 
 const ORG = process.env.ON3_ORG_SLUG || 'florida-gators';
 const SPORT = process.env.ON3_SPORT || 'football';
@@ -185,12 +186,80 @@ async function fetchFloridaSnapshot(classYears) {
   return { boards, rankings, errors };
 }
 
+/** Portal transfer row on the UF commits board (has transferRating, not HS recruit rating). */
+function isPortalTransferRow(row) {
+  if (!row || !row.player) return false;
+  if (row.transferRating) return true;
+  const status = row.status || {};
+  return !!(status.transferredAsset || status.transferredAssetRes);
+}
+
+function normalizeOn3PortalRow(row, classYear) {
+  const player = row.player || {};
+  const transferRating = row.transferRating || {};
+  const status = row.status || {};
+  const org = row.organization || status.transferredAsset || {};
+  const name = pickString(
+    player.fullName,
+    [player.firstName, player.lastName].filter(Boolean).join(' ')
+  );
+  const on3Id = pickString(player.key, row.recKey) || null;
+  const on3Slug = pickString(player.slug) || null;
+  const fromSchool = pickString(org.name, org.fullName);
+  const pos = pickString(transferRating.positionAbbr, player.position?.abbr, player.position?.name, 'ATH');
+  const stars = pickNumber(transferRating.consensusStars, transferRating.stars) || 3;
+  const statusType = pickString(status.type).toLowerCase();
+  const enrolled = /enrolled/i.test(statusType);
+
+  const normalized = {
+    on3Id,
+    on3Slug,
+    name,
+    pos: pos.toUpperCase(),
+    classYear: pickNumber(transferRating.year, player.classYear, classYear) || classYear,
+    fromSchool,
+    school: fromSchool,
+    htWt: formatHtWt(player.height, player.weight),
+    stars,
+    rating: pickNumber(transferRating.consensusRating, transferRating.rating),
+    natlRank: pickNumber(transferRating.consensusNationalRank, transferRating.nationalRank),
+    posRank: pickNumber(transferRating.consensusPositionRank, transferRating.positionRank),
+    stateRank: pickNumber(transferRating.consensusStateRank, transferRating.stateRank),
+    inState: false,
+    status: enrolled ? 'enrolled' : statusType || 'committed',
+    commitDate: status.date ? String(status.date).slice(0, 10) : '',
+    committedTo: 'Florida',
+    sourceStatus: pickString(status.type),
+    on3Source: pageUrl(classYear)
+  };
+  normalized.on3ProfileUrl = buildOn3ProfileUrl(normalized);
+  return normalized;
+}
+
+async function fetchFloridaPortalTransfers(classYear) {
+  const year = parseInt(classYear, 10);
+  const url = pageUrl(year);
+  const html = await fetchHtml(url, year);
+  const next = extractNextData(html);
+  const list = next?.props?.pageProps?.playerList?.list || [];
+  const transfers = list
+    .filter(isPortalTransferRow)
+    .map((row) => normalizeOn3PortalRow(row, year))
+    .filter((p) => p.name);
+  return { classYear: year, url, transfers };
+}
+
 module.exports = {
   fetchFloridaSnapshot,
   fetchTeamCommits,
   fetchTeamRankings,
+  fetchFloridaPortalTransfers,
   normalizeOn3Player,
   normalizeOn3Row,
+  normalizeOn3PortalRow,
+  isPortalTransferRow,
+  pageUrl,
+  buildOn3ProfileUrl,
   playerKey(player) {
     if (player.on3Id) return `on3:${player.on3Id}`;
     if (player.name) return `name:${player.name.toLowerCase()}`;

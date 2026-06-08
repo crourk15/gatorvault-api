@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const store = require('./recruiting-store');
 const on3 = require('./on3-client');
+const { buildOn3ProfileUrl } = require('./on3-urls');
 const { clearHeatCheckCache } = require('./heat-check-store');
 
 const SNAPSHOT_PATH = path.join(store.DATA_DIR, 'on3-snapshot.json');
@@ -150,6 +151,55 @@ function parseClassYears(input) {
     .filter((y) => !Number.isNaN(y));
 }
 
+function starsDisplay(stars) {
+  const n = Math.min(5, Math.max(0, parseInt(stars, 10) || 0));
+  return '★'.repeat(n);
+}
+
+/** Sync portal ht/wt/stars from On3 UF commits board transfer rows — no manual overrides. */
+async function syncPortalFromOn3(options = {}) {
+  const classYear = parseInt(options.classYear || process.env.ON3_PORTAL_CLASS_YEAR || '2026', 10);
+  const { transfers, url } = await on3.fetchFloridaPortalTransfers(classYear);
+  const existing = await store.getAllPlayers();
+  const byOn3 = new Map(existing.filter((p) => p.on3Id).map((p) => [String(p.on3Id), p]));
+  const bySlug = new Map(existing.map((p) => [p.slug, p]));
+
+  let updated = 0;
+  for (const t of transfers) {
+    const slug = store.slugify(t.name);
+    const prev = (t.on3Id && byOn3.get(String(t.on3Id))) || bySlug.get(slug) || null;
+    const player = {
+      ...(prev || {}),
+      slug,
+      name: t.name,
+      pos: t.pos,
+      classYear: t.classYear,
+      school: t.fromSchool,
+      fromSchool: t.fromSchool,
+      htWt: t.htWt,
+      stars: t.stars,
+      rating: t.rating,
+      natlRank: t.natlRank,
+      posRank: t.posRank,
+      stateRank: t.stateRank,
+      category: 'portal',
+      status: t.status === 'enrolled' ? 'enrolled' : t.status || 'enrolled',
+      committedTo: 'Florida',
+      commitDate: t.commitDate || prev?.commitDate || null,
+      on3Id: t.on3Id,
+      on3Slug: t.on3Slug,
+      on3ProfileUrl: t.on3ProfileUrl || buildOn3ProfileUrl(t),
+      on3Source: t.on3Source || url,
+      starsDisplay: starsDisplay(t.stars),
+      updatedAt: new Date().toISOString()
+    };
+    await store.upsertPlayer(player);
+    updated += 1;
+  }
+
+  return { ok: true, classYear, url, updated, count: transfers.length };
+}
+
 async function runOn3Ingest(options = {}) {
   const classYears = options.classYears || parseClassYears();
   const forceBaseline = !!options.baselineOnly;
@@ -229,6 +279,14 @@ async function runOn3Ingest(options = {}) {
   snapshot.lastRun = result.lastRun;
   saveSnapshot(snapshot);
   clearHeatCheckCache();
+
+  try {
+    const portalSync = await syncPortalFromOn3(options);
+    result.portalSync = portalSync;
+  } catch (e) {
+    result.errors.push({ type: 'portal_sync', error: e.message });
+  }
+
   pushLog({
     level: 'info',
     baseline: result.baseline,
@@ -253,6 +311,7 @@ function getIngestStatus() {
 
 module.exports = {
   runOn3Ingest,
+  syncPortalFromOn3,
   getIngestStatus,
   loadSnapshot,
   SNAPSHOT_PATH

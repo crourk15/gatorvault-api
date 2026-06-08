@@ -9,7 +9,10 @@
     "seed:recruiting": "node scripts/seed-recruiting.js",
     "ingest:on3": "node scripts/run-on3-ingest.js",
     "ingest:on3:baseline": "node scripts/run-on3-ingest.js --baseline",
-    "verify:x": "node scripts/verify-x-autoposter.js"
+    "verify:x": "node scripts/verify-x-autoposter.js",
+    "sync:portal": "node scripts/sync-on3-portal.js",
+    "audit:portal": "node scripts/audit-portal-measurables.js",
+    "ensure:film-room": "node scripts/ensure-film-room-media.js"
   },
   "engines": {
     "node": ">=18"
