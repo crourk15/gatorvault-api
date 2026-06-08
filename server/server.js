@@ -161,7 +161,6 @@ function isEmailJsReady() {
   const key = process.env.EMAILJS_PRIVATE_KEY || '';
   const placeholder = !key || key === 'YOUR_PRIVATE_KEY_HERE' || key === 'your-emailjs-private-key-here';
   return !!(
-    process.env.EMAILJS_PUBLIC_KEY &&
     process.env.EMAILJS_SERVICE_ID &&
     process.env.EMAILJS_TEMPLATE_ID &&
     !placeholder
@@ -184,7 +183,6 @@ async function sendEmailEmailJS(to, templateParams) {
     onboardingDay > 0 && process.env.EMAILJS_ONBOARDING_TEMPLATE_ID
       ? process.env.EMAILJS_ONBOARDING_TEMPLATE_ID
       : process.env.EMAILJS_TEMPLATE_ID;
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
   const privateKey = process.env.EMAILJS_PRIVATE_KEY;
   if (!isEmailJsReady()) throw new Error('EmailJS not configured — set EMAILJS_PRIVATE_KEY in server/.env');
 
@@ -194,6 +192,7 @@ async function sendEmailEmailJS(to, templateParams) {
     email: to,
     to_name: templateParams.name || to.split('@')[0],
     user_name: templateParams.name || to.split('@')[0],
+    user_tier: templateParams.tierName || templateParams.tier || 'Film Room',
     tier_name: templateParams.tierName || 'Film Room',
     trial_end: templateParams.trialEnd || '',
     login_url: SITE_URL,
@@ -209,19 +208,10 @@ async function sendEmailEmailJS(to, templateParams) {
 
   try {
     const emailjs = require('@emailjs/nodejs');
-    const result = await emailjs.send(serviceId, templateId, params, {
-      publicKey,
-      privateKey
-    });
-    return result;
+    return await emailjs.send(serviceId, templateId, params, { privateKey });
   } catch (err) {
     const status = err && err.status;
     const text = err && (err.text || err.message) || String(err);
-    if (String(text).toLowerCase().includes('public key is invalid')) {
-      throw new Error(
-        `EmailJS failed (${status || 400}): The Public Key is invalid. Update EMAILJS_PUBLIC_KEY in Render from EmailJS → Account → API Keys. Current key prefix: ${String(publicKey).slice(0, 6)}…`
-      );
-    }
     throw new Error(`EmailJS failed (${status || 'error'}): ${text}`);
   }
 }
@@ -672,8 +662,8 @@ app.get('/api/email-status', (req, res) => {
     providers,
     provider: EMAIL_PROVIDER,
     emailjs: {
-      publicKey: !!process.env.EMAILJS_PUBLIC_KEY,
-      publicKeyPrefix: process.env.EMAILJS_PUBLIC_KEY ? String(process.env.EMAILJS_PUBLIC_KEY).slice(0, 6) + '…' : null,
+      mode: 'server',
+      publicKeyRequired: false,
       serviceId: process.env.EMAILJS_SERVICE_ID || null,
       templateId: process.env.EMAILJS_TEMPLATE_ID || null,
       onboardingTemplateId: process.env.EMAILJS_ONBOARDING_TEMPLATE_ID || null,
@@ -855,6 +845,14 @@ app.listen(PORT, () => {
     console.log('Community API: ready (' + communityStore.loadThreads().filter((t) => !t.deleted).length + ' threads)');
   } catch (e) {
     console.warn('Community API: failed to init', e.message);
+  }
+  try {
+    const rosterStore = require('./lib/roster-store');
+    const rosterCount = rosterStore.getAllRosterPlayers().length;
+    console.log('Roster API: ready (' + rosterCount + ' players)');
+    if (!rosterCount) console.warn('[roster] players.json empty or unreadable — check data/roster/players.json');
+  } catch (e) {
+    console.warn('Roster API: failed to init', e.message);
   }
   try {
     startOn3IngestScheduler();

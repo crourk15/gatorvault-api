@@ -9,8 +9,13 @@ const HEADSHOTS_DIR = path.join(__dirname, '..', 'headshots');
 
 function readJson(filePath, fallback) {
   try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    let text = fs.readFileSync(filePath, 'utf8');
+    if (text.charCodeAt(0) === 0xfeff) text = text.slice(1);
+    return JSON.parse(text);
   } catch (e) {
+    if (e.code !== 'ENOENT') {
+      console.warn('[roster-store] readJson failed:', filePath, e.message);
+    }
     return fallback;
   }
 }

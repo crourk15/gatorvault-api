@@ -24,7 +24,8 @@ function mountRosterRoutes(app) {
 
   app.get('/api/roster/players', (req, res) => {
     try {
-      return res.json({ ok: true, players: rosterStore.getAllRosterPlayers() });
+      const players = rosterStore.getAllRosterPlayers();
+      return res.json({ ok: true, count: players.length, players });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
