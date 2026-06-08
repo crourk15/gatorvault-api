@@ -40,9 +40,8 @@ async function beehiivRequest(path, { method = 'GET', body } = {}) {
 }
 
 /**
- * Enroll a new member in the Beehiiv publication + onboarding automation.
- * Automation must use "Added by API" trigger in Beehiiv.
- * Disable the default Beehiiv welcome email to avoid duplicates.
+ * Beehiiv subscriber add (optional). Multi-day onboarding automations are disabled —
+ * welcome email is sent via EmailJS on signup only.
  */
 async function enrollOnboarding({ email, name, tier }) {
   if (!isBeehiivConfigured()) {
@@ -50,7 +49,7 @@ async function enrollOnboarding({ email, name, tier }) {
   }
 
   const pubId = process.env.BEEHIIV_PUBLICATION_ID;
-  const automationId = getOnboardingAutomationId();
+  const automationId = null; // onboarding automations disabled — welcome email only via EmailJS
   const payload = {
     email,
     reactivate_existing: false,
@@ -64,7 +63,6 @@ async function enrollOnboarding({ email, name, tier }) {
       { name: 'tier', value: tier || 'film' }
     ]
   };
-
   if (automationId) payload.automation_ids = [automationId];
 
   try {

@@ -176,29 +176,26 @@ function getEmailProviders() {
 
 async function sendEmailEmailJS(to, templateParams) {
   const { sendEmailViaEmailJS } = require('./lib/emailjs-server');
-  const onboardingDay = templateParams.onboardingDay != null ? Number(templateParams.onboardingDay) : 0;
-  const { serviceId, templateId, publicKey, privateKey } = getEmailJsConfig(onboardingDay);
-  if (!isEmailJsReady(onboardingDay)) {
+  const { getTierLabel, getTierBenefitsHtml, VAULT_URL } = require('./lib/onboarding-emails');
+  const { serviceId, templateId, publicKey, privateKey } = getEmailJsConfig();
+  if (!isEmailJsReady()) {
     throw new Error('EmailJS not configured — set EMAILJS_USER_ID (public key), EMAILJS_PRIVATE_KEY, service and template IDs');
   }
 
+  const tierKey = templateParams.tier || templateParams.tierName || 'film';
+  const tierLabel = getTierLabel(tierKey);
+  const displayName = templateParams.name || to.split('@')[0];
+
   const params = {
     to_email: to,
-    user_email: to,
+    name: displayName,
     email: to,
-    to_name: templateParams.name || to.split('@')[0],
-    user_name: templateParams.name || to.split('@')[0],
-    user_tier: templateParams.tierName || templateParams.tier || 'Film Room',
-    tier_name: templateParams.tierName || 'Film Room',
-    trial_end: templateParams.trialEnd || '',
-    login_url: SITE_URL,
-    community_url: SITE_URL,
-    support_x: '@GatorVaultInsider',
-    from_name: 'GatorVault Team',
-    email_subject: templateParams.emailSubject || templateParams.subject || 'GatorVault Update',
+    tier: tierLabel,
+    tier_benefits: templateParams.tierBenefits || getTierBenefitsHtml(tierKey),
+    vault_url: VAULT_URL,
+    support_email: process.env.EMAILJS_REPLY_TO || 'gatorvaultinsider@gmail.com',
+    email_subject: templateParams.emailSubject || templateParams.subject || 'Welcome to GatorVault — Your Access Is Now Live 🐊🔥',
     message_html: templateParams.html || templateParams.messageHtml || '',
-    onboarding_day: String(onboardingDay),
-    onboarding_intro: templateParams.onboardingIntro || 'Your GatorVault account is live. Here is everything included in your membership and how to get started.',
     reply_to: process.env.EMAILJS_REPLY_TO || process.env.SMTP_USER || 'support@gatorvaultinsider.com'
   };
 
@@ -247,40 +244,25 @@ async function deliverEmail(to, subject, html, templateParams = {}) {
   return { sent: false, provider: null, error: msg };
 }
 
-const { getDay0Email, ONBOARDING_SEQUENCE } = require('./lib/onboarding-emails');
-const { enrollOnboarding, isBeehiivConfigured, validateBeehiivOnBoot } = require('./lib/beehiiv');
+const { getWelcomeEmail, ONBOARDING_SEQUENCE } = require('./lib/onboarding-emails');
 const { startOnboardingScheduler } = require('./lib/onboarding-scheduler');
 
-async function sendWelcomeEmail({ email, name, tier, skipIfBeehiiv = false }) {
+async function sendWelcomeEmail({ email, name, tier }) {
   const trialEnd = new Date();
   trialEnd.setDate(trialEnd.getDate() + 30);
   const trialEndStr = trialEnd.toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   });
-  const tierLabel = tier === 'war' ? 'War Room' : tier === 'locker' ? 'Locker Room' : 'Film Room';
-  if (skipIfBeehiiv) {
-    return { trialEndStr, emailSent: true, provider: 'beehiiv', onboardingHandled: true, error: null };
-  }
-  const day0 = getDay0Email({ name, email, tier });
-  const delivery = await deliverEmail(email, day0.subject, day0.html, {
-    name: name || email.split('@')[0],
-    tierName: tierLabel,
-    trialEnd: trialEndStr,
-    onboardingDay: 0
+  const welcome = getWelcomeEmail({ name, email, tier });
+  const delivery = await deliverEmail(email, welcome.subject, welcome.html, {
+    name: welcome.templateParams.name,
+    tier: tier,
+    tierName: welcome.tier,
+    tierBenefits: welcome.templateParams.tier_benefits,
+    emailSubject: welcome.subject,
+    html: welcome.html
   });
   return { trialEndStr, emailSent: delivery.sent, provider: delivery.provider, error: delivery.error || null };
-}
-
-async function enrollOnboardingSequence({ email, name, tier }) {
-  const beehiiv = await enrollOnboarding({ email, name, tier });
-  if (beehiiv.enrolled && beehiiv.automationId) {
-    return { ...beehiiv, sequenceStarted: true };
-  }
-  if (beehiiv.enrolled && !beehiiv.automationId) {
-    console.warn('[onboarding] Beehiiv subscriber added but automation ID missing — Day 0 fallback email will send');
-    return { ...beehiiv, sequenceStarted: false };
-  }
-  return { ...beehiiv, sequenceStarted: false };
 }
 
 async function runWelcomeEmailTest({ email, name, tier }) {
@@ -363,28 +345,16 @@ app.post('/api/register', async (req, res) => {
     });
     let emailSent = false;
     let emailProvider = null;
-    let onboardingEnrolled = false;
-    let onboardingProvider = null;
     try {
-      const onboarding = await enrollOnboardingSequence({ email, name, tier });
-      onboardingEnrolled = !!onboarding.enrolled;
-      onboardingProvider = onboarding.provider || null;
-      const welcome = await sendWelcomeEmail({
-        email,
-        name,
-        tier,
-        skipIfBeehiiv: onboarding.sequenceStarted
-      });
+      const welcome = await sendWelcomeEmail({ email, name, tier });
       trialEndStr = welcome.trialEndStr;
-      emailSent = welcome.emailSent || onboarding.sequenceStarted;
-      emailProvider = onboarding.sequenceStarted ? 'beehiiv' : welcome.provider;
+      emailSent = welcome.emailSent;
+      emailProvider = welcome.provider;
       if (!emailSent) {
-        console.warn('onboarding email not delivered for', email, '— configure Beehiiv or EmailJS in .env');
+        console.warn('welcome email not delivered for', email, '— check EmailJS in .env');
       }
-      if (onboarding.warning) console.warn('[onboarding]', onboarding.warning);
-      if (onboarding.error && !onboarding.enrolled) console.warn('[onboarding] Beehiiv enroll failed:', onboarding.error);
-      user.onboardingSent = onboarding.sequenceStarted ? ['beehiiv'] : welcome.emailSent ? [0] : [];
-      user.onboardingProvider = onboarding.sequenceStarted ? 'beehiiv' : 'server';
+      user.onboardingSent = welcome.emailSent ? [0] : [];
+      user.onboardingProvider = 'server';
       const usersUpdated = loadUsers();
       const uIdx = usersUpdated.findIndex((u) => u.email === email);
       if (uIdx >= 0) {
@@ -393,7 +363,7 @@ app.post('/api/register', async (req, res) => {
         saveUsers(usersUpdated);
       }
     } catch (e) {
-      console.warn('onboarding email failed:', e.message);
+      console.warn('welcome email failed:', e.message);
     }
 
     const token = signSession({ email, tier, name, exp: Date.now() + TOKEN_TTL_MS });
@@ -401,9 +371,10 @@ app.post('/api/register', async (req, res) => {
       ok: true,
       emailSent,
       emailProvider,
-      onboardingEnrolled,
-      onboardingProvider,
-      onboardingSequence: ONBOARDING_SEQUENCE.map((e) => ({ day: e.day, subject: e.subject, delayDays: e.delayDays })),
+      onboardingEnrolled: false,
+      onboardingProvider: null,
+      onboardingMode: 'welcome_only',
+      welcomeEmail: ONBOARDING_SEQUENCE[0],
       session: {
         token,
         email,
@@ -517,13 +488,13 @@ app.post('/api/auth/bridge-session', (req, res) => {
 app.get('/api/onboarding/sequence', (req, res) => {
   return res.json({
     ok: true,
-    provider: isBeehiivConfigured() ? 'beehiiv' : 'emailjs_fallback',
+    mode: 'welcome_only',
+    provider: 'emailjs',
     emails: ONBOARDING_SEQUENCE.map((e) => ({
       day: e.day,
       delayDays: e.delayDays,
       delayLabel: e.delayLabel,
-      subject: e.subject,
-      cta: e.cta
+      subject: e.subject
     }))
   });
 });
@@ -538,11 +509,12 @@ app.get('/api/version', (req, res) => {
     features: {
       globalTicker: true,
       bannerAlerts: true,
-      onboardingScheduler: true,
+      onboardingScheduler: false,
+      welcomeEmailOnly: true,
       articleSourceValidation: true,
       scoutingTeasers: true
     },
-    onboardingDays: ONBOARDING_SEQUENCE.map((e) => e.day)
+    onboardingDays: [0]
   });
 });
 
@@ -657,7 +629,7 @@ app.get('/api/email-status', (req, res) => {
       restPayloadKeys: ['service_id', 'template_id', 'user_id', 'accessToken', 'template_params'],
       serviceId: getEmailJsConfig().serviceId || null,
       templateId: getEmailJsConfig().templateId || null,
-      onboardingTemplateId: process.env.EMAILJS_ONBOARDING_TEMPLATE_ID || null,
+      onboardingTemplateId: null,
       userIdSet: !!getEmailJsPublicKey(),
       publicKeyHint: getEmailJsPublicKeyHint(),
       privateKeySet,
@@ -693,50 +665,11 @@ app.post('/api/test/welcome', async (req, res) => {
   }
 });
 
-app.post('/api/test/onboarding-day', async (req, res) => {
-  const pin = String(req.body.pin || req.get('X-Test-Pin') || '');
-  if (!verifyTestPin(pin)) {
-    return res.status(401).json({ ok: false, error: 'Invalid test PIN' });
-  }
-  const email = String(req.body.email || '').trim().toLowerCase();
-  const name = String(req.body.name || 'Test Member').trim();
-  const tier = normalizeTier(req.body.tier);
-  const day = Number(req.body.day);
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ ok: false, error: 'Enter a valid test email address.' });
-  }
-  const emailDef = ONBOARDING_SEQUENCE.find((e) => e.day === day);
-  if (!emailDef) {
-    return res.status(400).json({ ok: false, error: 'Invalid onboarding day. Use 0, 1, 2, 3, 5, 7, 10, or 14.' });
-  }
-  try {
-    const { onboardingEmailHtml } = require('./lib/onboarding-emails');
-    const tierLabel = tier === 'war' ? 'War Room' : tier === 'locker' ? 'Locker Room' : 'Film Room';
-    const html = onboardingEmailHtml(emailDef, { name });
-    const delivery = await deliverEmail(email, emailDef.subject, html, {
-      name,
-      tierName: tierLabel,
-      onboardingDay: emailDef.day,
-      emailSubject: emailDef.subject
-    });
-    pushEmailLog({
-      level: delivery.sent ? 'success' : 'error',
-      message: delivery.sent ? `Onboarding Day ${day} test sent` : `Onboarding Day ${day} test failed`,
-      detail: { email, day, provider: delivery.provider, error: delivery.error },
-      source: 'test-onboarding-day'
-    });
-    return res.json({
-      ok: delivery.sent,
-      emailSent: delivery.sent,
-      day,
-      subject: emailDef.subject,
-      provider: delivery.provider,
-      error: delivery.error || null
-    });
-  } catch (err) {
-    pushEmailLog({ level: 'error', message: err.message, email, source: 'test-onboarding-day' });
-    return res.status(500).json({ ok: false, error: err.message, emailSent: false, day });
-  }
+app.post('/api/test/onboarding-day', (req, res) => {
+  return res.status(410).json({
+    ok: false,
+    error: 'Follow-up onboarding emails are disabled. Use POST /api/test/welcome to send the single welcome email.'
+  });
 });
 
 app.get('/api/test/logs', (req, res) => {
@@ -867,14 +800,9 @@ app.listen(PORT, () => {
     console.warn('Live dashboard scheduler failed to start', e.message);
   }
   try {
-    validateBeehiivOnBoot();
-  } catch (e) {
-    console.warn('Beehiiv onboarding check failed', e.message);
-  }
-  try {
     startOnboardingScheduler({ loadUsers, saveUsers, deliverEmail, pushEmailLog });
   } catch (e) {
-    console.warn('Onboarding email scheduler failed to start', e.message);
+    console.warn('Onboarding scheduler init skipped', e.message);
   }
   if (providers.length) {
     console.log('Email delivery: configured (' + providers.join(', ') + ')');

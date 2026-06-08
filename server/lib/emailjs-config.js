@@ -32,26 +32,21 @@ function getEmailJsServiceId() {
   return trimEnv('EMAILJS_SERVICE_ID');
 }
 
-function getEmailJsTemplateId(onboardingDay = 0) {
-  const day = Number(onboardingDay) || 0;
-  if (day > 0) {
-    const onboarding = trimEnv('EMAILJS_ONBOARDING_TEMPLATE_ID');
-    if (onboarding) return onboarding;
-  }
+function getEmailJsTemplateId() {
   return trimEnv('EMAILJS_TEMPLATE_ID');
 }
 
-function getEmailJsConfig(onboardingDay = 0) {
+function getEmailJsConfig() {
   return {
     serviceId: getEmailJsServiceId(),
-    templateId: getEmailJsTemplateId(onboardingDay),
+    templateId: getEmailJsTemplateId(),
     publicKey: getEmailJsPublicKey(),
     privateKey: getEmailJsPrivateKey()
   };
 }
 
-function isEmailJsReady(onboardingDay = 0) {
-  const { serviceId, templateId, publicKey, privateKey } = getEmailJsConfig(onboardingDay);
+function isEmailJsReady() {
+  const { serviceId, templateId, publicKey, privateKey } = getEmailJsConfig();
   return !!(serviceId && templateId && publicKey && privateKey);
 }
 

@@ -509,13 +509,13 @@
                             <p data-id="74" class="text-surface-200 text-sm mt-1">
     Check your email at 
     <strong data-id="75" id="reg-success-email" class="text-gator-orange"></strong> 
-    for your onboarding email sequence (7 emails over 14 days).
+    for your welcome email with full access details (check spam).
 </p>
                         </div>
                         <div data-id="76" class="bg-surface-800 rounded-xl p-5 mb-6">
                             <h4 data-id="77" class="font-display text-sm font-bold text-gator-orange mb-3 uppercase tracking-wider">You're signed in and ready</h4>
                             <div data-id="78" class="space-y-3 text-sm leading-relaxed text-surface-200">
-                                <div data-id="79" class="flex items-start gap-3"><span data-id="80" class="w-6 h-6 rounded-full bg-gator-orange/20 text-gator-orange flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">✓</span><span data-id="81">Onboarding sequence started — Day 0 welcome email on its way (check spam).</span></div>
+                                <div data-id="79" class="flex items-start gap-3"><span data-id="80" class="w-6 h-6 rounded-full bg-gator-orange/20 text-gator-orange flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">✓</span><span data-id="81">Welcome email on its way with your vault access details (check spam).</span></div>
                                 <div data-id="82" class="flex items-start gap-3"><span data-id="83" class="w-6 h-6 rounded-full bg-gator-orange/20 text-gator-orange flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">✓</span><span data-id="84">Your vault access is active right now — no extra steps.</span></div>
                             </div>
                         </div>
@@ -1530,28 +1530,22 @@
         else if (tierKey.indexOf('locker') !== -1) tierKey = 'locker';
         else tierKey = 'film';
         var base = window.GV_API_BASE || ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? 'http://localhost:3000' : window.location.origin);
-        function welcomeTemplateParams(email, displayName, tierLabel, trialEnd) {
+        function welcomeTemplateParams(email, displayName, tierLabel) {
             return {
                 to_email: email,
-                user_email: email,
+                name: displayName,
                 email: email,
-                to_name: displayName,
-                user_name: displayName,
-                tier_name: tierLabel || 'Film Room',
-                trial_end: trialEnd,
-                login_url: 'https://gatorvaultinsider.com',
-                community_url: 'https://gatorvaultinsider.com',
-                support_x: '@GatorVaultInsider',
-                from_name: 'GatorVault Team',
-                reply_to: 'support@gatorvaultinsider.com',
-                onboarding_intro: 'Your GatorVault account is live. Here is everything included in your membership and how to get started.'
+                tier: tierLabel || 'Film Room',
+                vault_url: 'https://gatorvault.com/vault',
+                support_email: 'gatorvaultinsider@gmail.com',
+                reply_to: 'gatorvaultinsider@gmail.com'
             };
         }
         function tryEmailJS() {
             try {
                 if (typeof emailjs === 'undefined') { console.warn('EmailJS SDK not loaded'); return Promise.reject(new Error('EmailJS unavailable')); }
                 emailjs.init({ publicKey: GV_EJS_PUBLIC_KEY });
-                return emailjs.send(GV_EJS_SERVICE_ID, GV_EJS_TEMPLATE_ID, welcomeTemplateParams(toEmail, name, tierName, trialEndStr));
+                return emailjs.send(GV_EJS_SERVICE_ID, GV_EJS_TEMPLATE_ID, welcomeTemplateParams(toEmail, name, tierName));
             } catch (ex) { return Promise.reject(ex); }
         }
         return fetch(base + '/api/welcome', {
@@ -1891,28 +1885,28 @@
         try{fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:fd.toString()}).catch(function(){});}catch(x){}
         if(typeof trackEvent==='function') trackEvent('Conversion','registration_submitted',tier);
 
-        function finish(session,trialEnd,emailAlreadySent,onboardingEnrolled){
+        function finish(session,trialEnd,emailAlreadySent){
             setRegLoading(false);
             if(!session.trialEndISO&&trialEnd){try{var te=new Date(trialEnd);if(!isNaN(te.getTime()))session.trialEndISO=te.toISOString();}catch(e){}}
             if(!session.createdAt)session.createdAt=new Date().toISOString();
             showRegSuccess(email,trialEnd);
             applyAuthSession(session,{closeModal:false,enterVault:false,toast:false});
-            function doneToast(sent,beehiiv){
-                var sub=sent?(beehiiv?'Onboarding sequence started via Beehiiv.':'Welcome email sent.'):'You\'re signed in. (Email pending — check server/.env)';
+            function doneToast(sent){
+                var sub=sent?'Welcome email sent with your vault access details.':'You\'re signed in. (Email pending — check server/.env)';
                 showToast('Account created! 🐊',sub+' You\'re signed in.','',5000);
             }
-            if(emailAlreadySent){doneToast(true,!!onboardingEnrolled);}
+            if(emailAlreadySent){doneToast(true);}
             else{
                 sendWelcomeEmail(email,(TIERS[session.tier]||TIERS.film).name,trialEnd,name)
-                    .then(function(){doneToast(true,false);})
-                    .catch(function(){doneToast(false,false);});
+                    .then(function(){doneToast(true);})
+                    .catch(function(){doneToast(false);});
             }
         }
         function fail(msg){setRegLoading(false);showRegGeneralErr(msg||'Could not create account. Try again.');}
 
         authFetch('/api/register',{email:email,password:pass,name:name,tier:tier})
             .then(function(res){
-                if(res.ok&&res.data&&res.data.session) return finish(res.data.session,res.data.session.trialEnd,!!res.data.emailSent,!!res.data.onboardingEnrolled);
+                if(res.ok&&res.data&&res.data.session) return finish(res.data.session,res.data.session.trialEnd,!!res.data.emailSent);
                 if(res.status===409) throw new Error(res.data.error||'Account already exists.');
                 throw new Error((res.data&&res.data.error)||'Registration failed.');
             })
