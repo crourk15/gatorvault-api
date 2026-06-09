@@ -1,6 +1,6 @@
 /**
- * Auto-fill X autoposter queue from live GatorVault data (On3 events, intel, articles, portal).
- * Only NEW commits, visits, predictions, and trending intel are queued (dedupe by fingerprint).
+ * Auto-fill X autoposter queue from live GatorVault data (On3 events, intel, beat writers, articles, portal).
+ * Evaluates beat-writer posts, recruiting momentum, commits, visits, portal, and general UF intel.
  */
 const crypto = require('crypto');
 const store = require('./x-autoposter-store');
@@ -9,6 +9,8 @@ const recruitingStore = require('./recruiting-store');
 const intelStore = require('./recruiting-intel-store');
 const contentStore = require('./content-store');
 const { commitFingerprint, intelFingerprint } = require('./commit-fingerprint');
+const { getBeatPosts } = require('./live-beat');
+const beatFilters = require('./beat-writer-filters');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 const ON3_PORTAL =
@@ -17,6 +19,10 @@ const ON3_PORTAL =
 /** Only queue commit tweets for events created within this window (prevents replaying history). */
 const MAX_COMMIT_EVENT_AGE_MS = parseInt(
   process.env.X_AUTOPOST_MAX_COMMIT_AGE_MS || String(6 * 60 * 60 * 1000),
+  10
+);
+const MAX_BEAT_POST_AGE_MS = parseInt(
+  process.env.X_AUTOPOST_MAX_BEAT_AGE_MS || String(6 * 60 * 60 * 1000),
   10
 );
 const MAX_INTEL_AGE_MS = parseInt(
@@ -80,6 +86,8 @@ function buildNewsFromIntel(intel) {
     text = `${name} (${intel.pos || 'Recruit'}) — Official visit to Gainesville${visitRange ? ` · ${visitRange}` : ''}. Source: ${intel.source} 🐊`;
   } else if (intel.eventType === 'prediction') {
     text = `${name} — ${intel.detail || 'New prediction intel'} · ${intel.source} 🐊`;
+  } else if (intel.eventType === 'trending' || intel.eventType === 'recruiting_momentum') {
+    text = `Florida trending for ${name} per ${intel.source} 🐊`;
   } else {
     text = `${name} — ${intel.detail || intel.status || 'New recruiting intel'} · ${intel.source} 🐊`;
   }
@@ -149,6 +157,59 @@ function buildNewsFromArticle(article) {
   };
 }
 
+function buildMomentumFromBeat(post) {
+  const text = String(post.text || '');
+  if (!beatFilters.detectRecruitingMomentum(text)) return null;
+  const player = beatFilters.extractPlayerFromText(text) || 'a top target';
+  const source = post.writerName || post.outlet || post.handle || 'Insider';
+  const fp = intelFingerprint(post.id || post.url, 'recruiting_momentum', post.publishedAt);
+  const line = `Florida trending for ${player} per ${source}. 🐊`;
+  return {
+    text: `${line} ${SITE_URL}`.slice(0, 270),
+    category: 'news',
+    topic: 'recruiting',
+    sources: [{ label: source, url: post.url || SITE_URL }],
+    source: 'auto:beat-momentum',
+    intelType: 'recruiting_momentum',
+    intelFingerprint: fp,
+    playerName: player !== 'a top target' ? player : null
+  };
+}
+
+function buildNewsFromBeatPost(post) {
+  if (!beatFilters.shouldIncludeBeatPost(post) || !beatFilters.isTrustedBeatWriter(post)) return null;
+  const text = String(post.text || '').trim();
+  if (!text || beatFilters.detectRecruitingMomentum(text)) return null;
+  if (!beatFilters.matchesGatorFootballIntel(text)) return null;
+  const source = post.writerName || post.outlet || post.handle || 'Beat writer';
+  const fp = intelFingerprint(post.id || post.url, 'beat_intel', post.publishedAt);
+  const snippet = text.replace(/\s+/g, ' ').slice(0, 180);
+  return {
+    text: `${snippet} — via ${source} 🐊 ${SITE_URL}`.slice(0, 270),
+    category: 'news',
+    topic: 'recruiting',
+    sources: [{ label: source, url: post.url || SITE_URL }],
+    source: 'auto:beat-intel',
+    intelFingerprint: fp,
+    playerName: beatFilters.extractPlayerFromText(text)
+  };
+}
+
+function buildNewsFromPortalEvent(ev) {
+  const title = String(ev.title || '').trim();
+  if (!title) return null;
+  const fp = intelFingerprint(ev.playerSlug || ev.id, ev.eventType, ev.createdAt);
+  return {
+    text: `${title} 🐊 ${SITE_URL}`.slice(0, 270),
+    category: 'news',
+    topic: 'portal',
+    sources: [{ label: 'On3', url: ON3_PORTAL }],
+    source: 'auto:on3-portal',
+    intelFingerprint: fp,
+    sourceEventId: ev.id
+  };
+}
+
 async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
   const doc = store.loadQueue();
   const pending = doc.items.filter((i) => i.status === 'pending');
@@ -162,10 +223,27 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
 
   try {
     const unqueuedIntel = intelStore.getUnqueuedIntel({ maxAgeMs: MAX_INTEL_AGE_MS });
-    unqueuedIntel.slice(0, 3).forEach((intel) => {
+    unqueuedIntel.slice(0, 5).forEach((intel) => {
       const row = buildNewsFromIntel(intel);
       if (row) candidates.unshift(row);
     });
+  } catch {
+    /* optional */
+  }
+
+  try {
+    const beat = getBeatPosts(50);
+    const beatCutoff = Date.now() - MAX_BEAT_POST_AGE_MS;
+    for (const post of beat.posts || []) {
+      if (new Date(post.publishedAt).getTime() < beatCutoff) continue;
+      const momentum = buildMomentumFromBeat(post);
+      if (momentum) {
+        candidates.unshift(momentum);
+        continue;
+      }
+      const beatNews = buildNewsFromBeatPost(post);
+      if (beatNews) candidates.push(beatNews);
+    }
   } catch {
     /* optional */
   }
@@ -180,6 +258,14 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
       .slice(0, 5)
       .forEach((ev) => {
         const row = buildNewsFromEvent(ev);
+        if (row) candidates.push(row);
+      });
+    events
+      .filter((e) => e.source === 'on3' && ['portal_in', 'portal_out', 'decommit'].includes(e.eventType))
+      .filter((e) => new Date(e.createdAt).getTime() >= cutoff)
+      .slice(0, 3)
+      .forEach((ev) => {
+        const row = buildNewsFromPortalEvent(ev);
         if (row) candidates.push(row);
       });
   } catch {

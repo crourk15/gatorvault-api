@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const { parseRssItems } = require('./rss-parse');
 const store = require('./live-store');
+const { shouldIncludeBeatPost } = require('./beat-writer-filters');
 
 const NITTER_BASES = (process.env.NITTER_BASES || 'https://nitter.poast.org,https://nitter.privacydev.net')
   .split(',')
@@ -126,17 +127,21 @@ async function fetchXUserTimeline(handle) {
   if (!tweetsRes.ok) throw new Error(`X tweets ${tweetsRes.status}`);
   const tweetsJson = await tweetsRes.json();
   const writer = store.loadWriters().find((w) => w.handle.toLowerCase() === handle.toLowerCase());
-  return (tweetsJson.data || []).map((t) => ({
-    id: `x_${t.id}`,
-    writerId: writer?.id || handle,
-    writerName: writer?.name || handle,
-    handle,
-    outlet: writer?.outlet || '',
-    text: t.text,
-    url: `https://x.com/${handle}/status/${t.id}`,
-    publishedAt: t.created_at,
-    source: 'x'
-  }));
+  return (tweetsJson.data || []).map((t) => {
+    const attachmentUrls = (t.entities?.urls || []).map((u) => u.expanded_url || u.url).filter(Boolean);
+    return {
+      id: `x_${t.id}`,
+      writerId: writer?.id || handle,
+      writerName: writer?.name || handle,
+      handle,
+      outlet: writer?.outlet || '',
+      text: t.text,
+      url: `https://x.com/${handle}/status/${t.id}`,
+      publishedAt: t.created_at,
+      source: 'x',
+      attachmentUrls
+    };
+  });
 }
 
 async function fetchNitterRss(handle) {
@@ -199,7 +204,7 @@ async function refreshBeatStream() {
   for (const writer of writers) {
     const posts = await fetchWriterPosts(writer);
     if (!posts.length) errors += 1;
-    posts.forEach((p) => all.push(p));
+    posts.filter(shouldIncludeBeatPost).forEach((p) => all.push(p));
   }
 
   all.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));

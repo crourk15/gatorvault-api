@@ -3,6 +3,7 @@ const path = require('path');
 const store = require('./recruiting-store');
 const intelStore = require('./recruiting-intel-store');
 const { getBeatPosts } = require('./live-beat');
+const beatFilters = require('./beat-writer-filters');
 const on3 = require('./on3-recruit-client');
 
 const HISTORY_PATH = path.join(store.DATA_DIR, 'heat-check-history.json');
@@ -132,6 +133,7 @@ function pickManualVisitIntel(manualIntel) {
 }
 
 function isTrustedInsider(post) {
+  if (!beatFilters.shouldIncludeBeatPost(post)) return false;
   const handle = String(post.handle || '').toLowerCase();
   const writer = String(post.writerName || '');
   return INSIDER_HANDLES.has(handle) || TRUSTED_INSIDER_PATTERN.test(writer) || TRUSTED_INSIDER_PATTERN.test(handle);

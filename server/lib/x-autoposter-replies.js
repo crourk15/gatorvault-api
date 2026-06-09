@@ -4,22 +4,12 @@
 const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
 const { getBeatPosts } = require('./live-beat');
+const beatFilters = require('./beat-writer-filters');
 const { intelFingerprint } = require('./commit-fingerprint');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 const REPLY_ENABLED = process.env.X_AUTOPOST_REPLY_ENABLED === 'true';
 const MAX_BEAT_REPLIES = parseInt(process.env.X_AUTOPOST_MAX_BEAT_REPLIES || '2', 10);
-const TRUSTED_HANDLES = new Set([
-  'corey_bender',
-  'blake_alderman',
-  'keithniebuhr',
-  'chadsimmons_',
-  'ttjharden8',
-  'zachabolverdi',
-  'gatorsonline'
-]);
-
-const TRUSTED_PATTERN = /bender|alderman|niebuhr|simmons|harden|abolverdi|gatorsonline/i;
 
 function isReplyEnabled() {
   return REPLY_ENABLED;
@@ -35,15 +25,12 @@ function extractTweetIdFromPost(post) {
 }
 
 function extractPlayerFromText(text) {
-  const t = String(text || '');
-  const m = t.match(/\b([A-Z][a-z]+ [A-Z][a-z]+)\b/);
-  return m ? m[1] : null;
+  return beatFilters.extractPlayerFromText(text);
 }
 
 function isTrustedBeatPost(post) {
-  const handle = String(post.handle || '').toLowerCase();
-  const writer = String(post.writerName || '');
-  return TRUSTED_HANDLES.has(handle) || TRUSTED_PATTERN.test(writer) || TRUSTED_PATTERN.test(handle);
+  if (!beatFilters.shouldIncludeBeatPost(post)) return false;
+  return beatFilters.isTrustedBeatWriter(post);
 }
 
 function replyFingerprint(parentTweetId, kind) {
@@ -86,11 +73,7 @@ function buildBeatReply(post, context) {
 }
 
 function matchesGatorRecruiting(text) {
-  const lower = String(text || '').toLowerCase();
-  return (
-    /gators|florida|\buf\b/.test(lower) &&
-    /recruit|commit|visit|portal|flip|official|crystal ball|247|on3/.test(lower)
-  );
+  return beatFilters.matchesGatorFootballIntel(text);
 }
 
 function enqueueReply({ text, inReplyToStatusId, kind, item, scheduledDelayMin = 3 }) {
@@ -216,6 +199,7 @@ async function scanTrendingEngagementReplies() {
 
 module.exports = {
   isReplyEnabled,
+  isTrustedBeatPost,
   scheduleRepliesForSentPost,
   scanTrendingEngagementReplies,
   extractTweetIdFromPost,

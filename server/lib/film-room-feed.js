@@ -20,6 +20,26 @@ const GNFP_TITLE_RE =
 const PRESSER_TITLE_RE =
   /press conference|media availability|head coach jon sumrall|jon sumrall speaks/i;
 
+/** Canonical Film Room hub categories */
+const FILM_ROOM_CATEGORIES = [
+  'Film Breakdown',
+  'Film Guy Network',
+  'GNFP Film Review',
+  'Press Conferences',
+  'Highlights'
+];
+
+function normalizeCategory(raw, source) {
+  const c = String(raw || '').trim();
+  if (FILM_ROOM_CATEGORIES.includes(c)) return c;
+  if (/gnfp/i.test(c) || source === 'GNFP') return 'GNFP Film Review';
+  if (/film guy/i.test(c) || /film guy/i.test(source || '')) return 'Film Guy Network';
+  if (/press/i.test(c)) return 'Press Conferences';
+  if (/highlight|spring game/i.test(c)) return 'Highlights';
+  if (/breakdown|film review|film study/i.test(c)) return 'Film Breakdown';
+  return 'Film Breakdown';
+}
+
 function readJson(filePath, fallback) {
   try {
     return JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -72,7 +92,7 @@ function rowToClip(row, opts) {
     dek: row.summary || '',
     gameLine: opts.gameLine || '',
     season: '2026',
-    category: opts.category || 'Film Room',
+    category: normalizeCategory(opts.category, opts.source),
     duration: 'YouTube',
     thumbUrl: youtubeThumb(videoId),
     videoUrl: `https://www.youtube.com/watch?v=${videoId}`,
@@ -116,7 +136,7 @@ async function syncUfPressers() {
     .slice(0, 5)
     .map((r) =>
       rowToClip(r, {
-        category: 'Press Conference',
+        category: 'Press Conferences',
         gameLine: 'Florida Gators Football',
         source: 'Florida Gators YouTube',
         autoUpdate: true
@@ -143,15 +163,31 @@ async function resolveGatorsFbChannelId() {
   return 'UCq0YlZqYQZqYQZqYQZqYQZQ';
 }
 
-function loadManualClips() {
-  const doc = readJson(MANUAL_PATH, { items: [] });
-  return (doc.items || []).map((item) => ({
+function normalizeManualClip(item) {
+  const videoId = item.youtubeId || parseYoutubeVideoId(item.videoUrl);
+  const clip = {
     ...item,
     autoUpdate: false,
     mediaReady: true,
     source: item.source || 'Manual',
-    slug: item.slug || slugify(item.title)
-  }));
+    slug: item.slug || slugify(item.title),
+    category: normalizeCategory(item.category, item.source)
+  };
+  if (videoId) {
+    clip.youtubeId = videoId;
+    clip.videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    clip.embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    if (!clip.thumbUrl || !String(clip.thumbUrl).startsWith('http')) {
+      clip.thumbUrl = youtubeThumb(videoId);
+    }
+    clip.mediaReady = true;
+  }
+  return clip;
+}
+
+function loadManualClips() {
+  const doc = readJson(MANUAL_PATH, { items: [] });
+  return (doc.items || []).map(normalizeManualClip);
 }
 
 async function buildFilmRoomCatalog({ force = false } = {}) {
@@ -189,9 +225,16 @@ async function buildFilmRoomCatalog({ force = false } = {}) {
     (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
   );
 
+  const byCategory = {};
+  FILM_ROOM_CATEGORIES.forEach((cat) => {
+    byCategory[cat] = items.filter((i) => i.category === cat).length;
+  });
+
   return {
     ok: true,
     items,
+    categories: FILM_ROOM_CATEGORIES,
+    byCategory,
     counts: {
       total: items.length,
       manual: manual.length,
@@ -207,6 +250,8 @@ module.exports = {
   loadManualClips,
   syncGnfpReviews,
   syncUfPressers,
+  FILM_ROOM_CATEGORIES,
+  normalizeCategory,
   DATA_DIR,
   MANUAL_PATH
 };
