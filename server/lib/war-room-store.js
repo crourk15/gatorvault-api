@@ -133,6 +133,7 @@ function normalizeBreakdown(raw, slug) {
     insiderNotes: String(raw.insiderNotes || raw.insider_notes || '').trim() || null,
     recruitingStory: String(raw.recruitingStory || raw.recruiting_story || '').trim() || null,
     nflProjection: String(raw.nflProjection || raw.nfl_projection || '').trim() || null,
+    featured: !!(raw.featured ?? raw.isFeatured ?? raw.warRoomFeatured),
     updatedAt: raw.updatedAt || new Date().toISOString()
   };
 
@@ -153,11 +154,71 @@ function getAllBreakdowns() {
   return Object.values(doc.breakdowns);
 }
 
+function rosterToBreakdownSummary(player) {
+  return {
+    playerSlug: player.slug,
+    playerName: player.name,
+    playerType: 'roster',
+    featured: !!player.warRoomFeatured,
+    verified: true,
+    sources: [{ writer: 'GatorVault Roster Intel', writerId: 'roster', outlet: 'GatorVault' }],
+    updatedAt: player.updatedAt || new Date().toISOString()
+  };
+}
+
+function breakdownToSummary(entry) {
+  return {
+    playerSlug: entry.playerSlug,
+    playerName: entry.playerName,
+    playerType: entry.playerType,
+    featured: !!entry.featured,
+    verified: !!entry.verified,
+    sources: (entry.sources || []).map((s) => s.writer),
+    updatedAt: entry.updatedAt
+  };
+}
+
+/** Scouting DB = verified breakdowns + featured roster players with War Room intel */
+function getScoutingDatabaseList() {
+  const breakdowns = getAllBreakdowns().map(breakdownToSummary);
+  const slugSet = new Set(breakdowns.map((b) => b.playerSlug));
+
+  try {
+    const rosterStore = require('./roster-store');
+    const rosterFeatured = rosterStore
+      .getAllRosterPlayers()
+      .filter(
+        (p) =>
+          p.warRoomFeatured &&
+          !slugSet.has(p.slug) &&
+          (p.strengths?.length || p.projection || p.schemeFit)
+      )
+      .map(rosterToBreakdownSummary);
+    return [...breakdowns, ...rosterFeatured].sort((a, b) => {
+      if (a.featured !== b.featured) return a.featured ? -1 : 1;
+      return String(a.playerName || '').localeCompare(String(b.playerName || ''));
+    });
+  } catch {
+    return breakdowns;
+  }
+}
+
+function syncFeaturedRosterFlag(entry) {
+  if (!entry?.featured || entry.playerType !== 'roster') return;
+  try {
+    const rosterStore = require('./roster-store');
+    rosterStore.setWarRoomFeatured(entry.playerSlug, true);
+  } catch {
+    /* optional */
+  }
+}
+
 function upsertBreakdown(slug, raw) {
   const entry = normalizeBreakdown(raw, slug);
   const doc = loadDoc();
   doc.breakdowns[entry.playerSlug] = entry;
   saveDoc(doc);
+  syncFeaturedRosterFlag(entry);
   return entry;
 }
 
@@ -244,6 +305,8 @@ module.exports = {
   isTrustedWriter,
   getBreakdownBySlug,
   getAllBreakdowns,
+  getScoutingDatabaseList,
+  breakdownToSummary,
   upsertBreakdown,
   deleteBreakdown,
   buildBreakdownResponse,

@@ -20,6 +20,7 @@
     "stats": "Scheme centerpiece at JACK - sets the edge and rushes the passer.",
     "injury": "green",
     "depthChartTier": "starter",
+    "warRoomFeatured": true,
     "strengths": [
       "Explosive first step off the edge",
       "High motor and finish rate as a pass rusher",
@@ -426,7 +427,7 @@
     "jersey": null,
     "unit": "defense",
     "transferInfo": null,
-    "stars": 3,
+    "stars": 5,
     "rank": null,
     "rating": 80,
     "ratingOverride": null,

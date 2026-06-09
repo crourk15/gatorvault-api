@@ -94,6 +94,7 @@ function normalizeRosterPlayer(raw) {
     weaknesses: raw.weaknesses || null,
     projection: raw.projection || null,
     schemeFit: raw.schemeFit || null,
+    warRoomFeatured: !!(raw.warRoomFeatured ?? raw.war_room_featured),
     updatedAt: raw.updatedAt || nowIso()
   };
   if (!player.unit && player.pos) {
@@ -152,6 +153,15 @@ function updateHeadshotMapping(slug, url) {
   return map;
 }
 
+function setWarRoomFeatured(slug, featured = true) {
+  const players = loadPlayers();
+  const idx = players.findIndex((p) => p.slug === slug);
+  if (idx < 0) return null;
+  players[idx] = { ...players[idx], warRoomFeatured: !!featured, updatedAt: nowIso() };
+  savePlayers(players);
+  return normalizeRosterPlayer(players[idx]);
+}
+
 module.exports = {
   DATA_DIR,
   PLAYERS_PATH,
@@ -163,6 +173,7 @@ module.exports = {
   getAllRosterPlayers,
   getRosterPlayerBySlug,
   upsertRosterPlayer,
+  setWarRoomFeatured,
   loadPlayers,
   getHeadshotMap,
   updateHeadshotMapping

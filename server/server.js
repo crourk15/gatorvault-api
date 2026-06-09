@@ -10,6 +10,7 @@ const { mountHighlightsRoutes } = require('./lib/highlights-routes');
 const { mountInterviewsRoutes } = require('./lib/interviews-routes');
 const { mountMediaIngestRoutes } = require('./lib/media-ingest-routes');
 const { mountWarRoomRoutes } = require('./lib/war-room-routes');
+const { mountPlatformRoutes } = require('./lib/platform-routes');
 const { mountXAutoposterRoutes } = require('./lib/x-autoposter-routes');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
@@ -58,6 +59,7 @@ mountHighlightsRoutes(app);
 mountInterviewsRoutes(app);
 mountMediaIngestRoutes(app);
 mountWarRoomRoutes(app);
+mountPlatformRoutes(app);
 mountXAutoposterRoutes(app);
 
 const PORT = process.env.PORT || 3000;
@@ -883,6 +885,21 @@ app.listen(PORT, () => {
     startMediaIngestScheduler();
   } catch (e) {
     console.warn('Media ingest scheduler failed to start', e.message);
+  }
+  if (process.env.FILM_ROOM_SYNC_ENABLED === 'true') {
+    try {
+      const { buildFilmRoomCatalog } = require('./lib/film-room-feed');
+      const filmInterval = parseInt(process.env.FILM_ROOM_SYNC_INTERVAL_MS || '21600000', 10);
+      const runFilmSync = () => {
+        buildFilmRoomCatalog({ force: true })
+          .then((c) => console.log('[film-room] synced:', c.counts))
+          .catch((err) => console.warn('[film-room] sync failed:', err.message));
+      };
+      setTimeout(runFilmSync, 20000);
+      setInterval(runFilmSync, filmInterval);
+    } catch (e) {
+      console.warn('Film Room sync scheduler failed to start', e.message);
+    }
   }
   if (providers.length) {
     console.log('Email delivery: configured (' + providers.join(', ') + ')');

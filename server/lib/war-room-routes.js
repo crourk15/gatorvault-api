@@ -43,7 +43,7 @@ function mountWarRoomRoutes(app) {
   app.get('/api/war-room/breakdowns', (req, res) => {
     try {
       const session = getSessionFromReq(req);
-      const all = warRoom.getAllBreakdowns();
+      const all = warRoom.getScoutingDatabaseList();
       if (!sessionHasTier(session, 'war')) {
         return res.json({
           ok: true,
@@ -51,11 +51,8 @@ function mountWarRoomRoutes(app) {
           tier: 'war',
           count: all.length,
           breakdowns: all.map((b) => ({
-            playerSlug: b.playerSlug,
-            playerName: b.playerName,
-            playerType: b.playerType,
-            locked: true,
-            sources: (b.sources || []).map((s) => s.writer)
+            ...b,
+            locked: true
           }))
         });
       }
@@ -68,13 +65,7 @@ function mountWarRoomRoutes(app) {
         ok: true,
         locked: false,
         count: list.length,
-        breakdowns: list.map((b) => ({
-          playerSlug: b.playerSlug,
-          playerName: b.playerName,
-          playerType: b.playerType,
-          sources: b.sources.map((s) => s.writer),
-          updatedAt: b.updatedAt
-        }))
+        breakdowns: list
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

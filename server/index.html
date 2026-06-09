@@ -702,7 +702,8 @@
             <div data-id="299" class="max-w-7xl mx-auto px-4 md:px-6">
                 <div data-id="300" class="text-center mb-10">
                     <h2 data-id="301" class="font-display text-3xl md:text-5xl font-bold text-white mb-4">Choose Your <span data-id="302" class="text-gator-orange">Access Level</span></h2>
-                    <p data-id="303" class="text-surface-200 text-lg mb-6">Start with a 30-day free trial. No credit card required. Lock in charter pricing forever.</p>
+                    <p data-id="303" class="text-surface-200 text-lg mb-6">Start with a 30-day free trial. No credit card required. Charter members lock in intro pricing forever.</p>
+                    <p id="pricing-year-label" class="text-sm text-gator-orange font-semibold mb-4">Intro pricing (Year 1)</p>
                     <div data-id="304" class="inline-flex bg-surface-700 rounded-full p-1">
                         <button data-id="305" id="price-monthly" class="price-toggle px-5 py-2 rounded-full text-sm font-semibold bg-gator-orange text-white transition">Monthly</button>
                         <button data-id="306" id="price-annual" class="price-toggle px-5 py-2 rounded-full text-sm font-semibold text-surface-200 transition">Annual <span data-id="307" class="text-xs text-green-400 ml-1">Save 20%</span></button>
@@ -716,28 +717,28 @@
                 <div data-id="312" class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
                     <div data-id="313" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 md:p-8 card-h flex flex-col">
                         <h3 data-id="314" class="font-display text-2xl font-bold text-white mb-1">🏟️ Locker Room</h3>
-                        <div data-id="315" class="flex items-baseline gap-1 mb-1"><span data-id="316" class="font-display text-4xl font-bold text-white price-val" data-mo="9.99" data-yr="7.99">$9.99</span><span data-id="317" class="text-surface-200 text-sm price-per">/month</span></div>
-                        <p data-id="318" class="text-xs text-green-400 mb-5 h-4 price-save hidden">$95.88/year — save 20%</p>
-                        <ul data-id="319" class="space-y-3 mb-8 flex-1 text-sm text-surface-200"><li data-id="320" class="flex items-start gap-2"><i data-id="321" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Weekly depth chart access</li><li data-id="322" class="flex items-start gap-2"><i data-id="323" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Recruiting board</li><li data-id="324" class="flex items-start gap-2"><i data-id="325" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Portal tracker</li><li data-id="326" class="flex items-start gap-2"><i data-id="327" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Weekly briefing</li><li data-id="328" class="flex items-start gap-2"><i data-id="329" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Community access</li><li data-id="330" class="flex items-start gap-2"><i data-id="331" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>🏅 Founding Member badge</li></ul>
+                        <div data-id="315" class="flex items-baseline gap-1 mb-1"><span data-id="316" class="font-display text-4xl font-bold text-white price-val" data-tier="locker" data-mo="4.99" data-yr="3.99">$4.99</span><span data-id="317" class="text-surface-200 text-sm price-per">/month</span></div>
+                        <p data-id="318" class="text-xs text-green-400 mb-5 h-4 price-save hidden">$47.90/year — save 20%</p>
+                        <ul data-id="319" class="space-y-3 mb-8 flex-1 text-sm text-surface-200"><li data-id="320" class="flex items-start gap-2"><i data-id="321" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Live Dashboard &amp; beat writer stream</li><li data-id="322" class="flex items-start gap-2"><i data-id="323" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Recruiting board &amp; portal radar</li><li data-id="324" class="flex items-start gap-2"><i data-id="325" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Weekly depth chart &amp; roster profiles</li><li data-id="326" class="flex items-start gap-2"><i data-id="327" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Community &amp; breaking alerts</li><li data-id="328" class="flex items-start gap-2"><i data-id="329" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Podcast hub &amp; tickets/apparel</li><li data-id="330" class="flex items-start gap-2"><i data-id="331" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>🏅 Founding Member badge</li></ul>
                         <button data-id="332" class="join-btn w-full bg-gator-blue hover:bg-gator-lightblue text-white font-semibold py-3 rounded-xl transition min-h-[44px]" data-tier="locker" onclick="if(window.openRegModal)openRegModal(this.dataset.tier)">Start Free — No Card Required</button>
-                        <p data-id="333" style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;">30 days free · No card needed · Then $9.99/mo</p>
+                        <p data-id="333" style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;" class="price-footnote">30 days free · No card needed · Then $4.99/mo</p>
                     </div>
                     <div data-id="334" class="bg-surface-700 border-2 border-gator-orange rounded-2xl p-6 md:p-8 card-h flex flex-col relative">
                         <div data-id="335" class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gator-orange text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider">Most Popular</div>
                         <h3 data-id="336" class="font-display text-2xl font-bold text-white mb-1">🎬 Film Room</h3>
-                        <div data-id="337" class="flex items-baseline gap-1 mb-1"><span data-id="338" class="font-display text-4xl font-bold text-white price-val" data-mo="19.99" data-yr="15.99">$19.99</span><span data-id="339" class="text-surface-200 text-sm price-per">/month</span></div>
-                        <p data-id="340" class="text-xs text-green-400 mb-5 h-4 price-save hidden">$191.88/year — save 20%</p>
-                        <ul data-id="341" class="space-y-3 mb-8 flex-1 text-sm text-surface-200"><li data-id="342" class="flex items-start gap-2"><i data-id="343" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Everything in Locker Room</li><li data-id="346" class="flex items-start gap-2"><i data-id="347" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>5 target profiles + comps</li><li data-id="348" class="flex items-start gap-2"><i data-id="349" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Game-week cards</li><li data-id="350" class="flex items-start gap-2"><i data-id="351" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Storyline tracking</li><li data-id="352" class="flex items-start gap-2"><i data-id="353" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>🏅 Founding Member badge</li></ul>
+                        <div data-id="337" class="flex items-baseline gap-1 mb-1"><span data-id="338" class="font-display text-4xl font-bold text-white price-val" data-tier="film" data-mo="9.99" data-yr="7.99">$9.99</span><span data-id="339" class="text-surface-200 text-sm price-per">/month</span></div>
+                        <p data-id="340" class="text-xs text-green-400 mb-5 h-4 price-save hidden">$95.90/year — save 20%</p>
+                        <ul data-id="341" class="space-y-3 mb-8 flex-1 text-sm text-surface-200"><li data-id="342" class="flex items-start gap-2"><i data-id="343" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Everything in Locker Room</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>GNFP 2026 Buster Faulkner film reviews</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>UF head coach press conferences</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Spring game film studies (manual)</li><li data-id="352" class="flex items-start gap-2"><i data-id="353" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>🏅 Founding Member badge</li></ul>
                         <button data-id="354" class="join-btn w-full bg-gator-orange hover:bg-gator-orangedk text-white font-bold py-3 rounded-xl transition min-h-[44px]" data-tier="film" onclick="if(window.openRegModal)openRegModal(this.dataset.tier)">Start Free — No Card Required</button>
-                        <p data-id="355" style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;">30 days free · No card needed · Then $19.99/mo</p>
+                        <p data-id="355" style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;" class="price-footnote">30 days free · No card needed · Then $9.99/mo</p>
                     </div>
                     <div data-id="356" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 md:p-8 card-h flex flex-col">
                         <h3 data-id="357" class="font-display text-2xl font-bold text-white mb-1">⚔️ War Room</h3>
-                        <div data-id="358" class="flex items-baseline gap-1 mb-1"><span data-id="359" class="font-display text-4xl font-bold text-white price-val" data-mo="39.99" data-yr="31.99">$39.99</span><span data-id="360" class="text-surface-200 text-sm price-per">/month</span></div>
-                        <p data-id="361" class="text-xs text-green-400 mb-5 h-4 price-save hidden">$383.88/year — save 20%</p>
+                        <div data-id="358" class="flex items-baseline gap-1 mb-1"><span data-id="359" class="font-display text-4xl font-bold text-white price-val" data-tier="war" data-mo="19.99" data-yr="15.99">$19.99</span><span data-id="360" class="text-surface-200 text-sm price-per">/month</span></div>
+                        <p data-id="361" class="text-xs text-green-400 mb-5 h-4 price-save hidden">$191.90/year — save 20%</p>
                         <ul data-id="362" class="space-y-3 mb-8 flex-1 text-sm text-surface-200"><li data-id="363" class="flex items-start gap-2"><i data-id="364" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Everything in Film Room</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>⚔️ Insider Scouting Database</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>🔥 Heat Check — Crystal Ball &amp; insider momentum</li><li data-id="365" class="flex items-start gap-2"><i data-id="366" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Film Room exclusive articles</li><li data-id="367" class="flex items-start gap-2"><i data-id="368" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Coaching Intel</li><li data-id="369" class="flex items-start gap-2"><i data-id="370" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Game-day pack every game</li><li data-id="371" class="flex items-start gap-2"><i data-id="372" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Priority Q&amp;A + early access</li><li data-id="373" class="flex items-start gap-2"><i data-id="374" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>🏅 Founding Member badge</li></ul>
                         <button data-id="375" class="join-btn w-full bg-gator-blue hover:bg-gator-lightblue text-white font-semibold py-3 rounded-xl transition min-h-[44px]" data-tier="war" onclick="if(window.openRegModal)openRegModal(this.dataset.tier)">Start Free — No Card Required</button>
-                        <p data-id="376" style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;">30 days free · No card needed · Then $39.99/mo</p>
+                        <p data-id="376" style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;" class="price-footnote">30 days free · No card needed · Then $19.99/mo</p>
                     </div>
                 </div>
                 <p data-id="377" style="font-size:12px;color:#64748b;text-align:center;margin-top:24px;">💳 No credit card required to start. You'll be asked for payment only on Day 31 if you choose to continue.</p>
@@ -1155,7 +1156,8 @@
                     <div id="live-status-bar" class="live-status-bar"></div>
                     <div class="live-dash-grid">
                         <div class="live-panel">
-                            <h3>📡 Live Feed</h3>
+                            <h3>📰 Headlines</h3>
+                            <p class="text-[.65rem] text-surface-200/50 px-3 pb-2">Curated top stories — commits, portal, articles. Beat writers are in the panel to the right.</p>
                             <div id="live-feed-categories" class="flex flex-wrap gap-1.5 px-3 pt-2 pb-1 border-b border-gator-blue/10"></div>
                             <div class="live-panel-body">
                                 <div id="live-feed-list" class="live-feed-list"><p class="text-surface-200/50 text-sm">Loading live feed…</p></div>
@@ -1520,6 +1522,42 @@
                     <button type="button" class="gv-more-link" data-goto="tickets">🎟️ Tickets</button>
                     <button type="button" class="gv-more-link" data-goto="apparel">👕 Apparel</button>
                     <button type="button" class="gv-more-link" data-goto="gamezone">🏆 Game Zone</button>
+                    <button type="button" class="gv-more-link" id="gv-open-feedback">💬 Feedback</button>
+                </div>
+            </div>
+
+            <div id="feedback-modal-ov" class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/70 p-4" style="display:none;">
+                <div class="bg-surface-800 border border-gator-blue/30 rounded-2xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="font-display text-xl font-bold text-white">Member Feedback</h2>
+                        <button type="button" id="feedback-modal-close" class="text-surface-200 hover:text-white text-2xl leading-none">&times;</button>
+                    </div>
+                    <div class="flex gap-2 mb-4">
+                        <button type="button" class="feedback-tab active bg-gator-orange text-white text-xs font-bold px-4 py-2 rounded-lg" data-ftab="suggestion">Suggestion Box</button>
+                        <button type="button" class="feedback-tab bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-ftab="survey">Quick Survey</button>
+                    </div>
+                    <div id="feedback-pane-suggestion">
+                        <textarea id="feedback-suggestion-text" class="reg-input w-full min-h-[120px] text-sm mb-3" placeholder="Share an idea or report an issue…"></textarea>
+                        <input id="feedback-suggestion-email" class="reg-input w-full text-sm mb-3" type="email" placeholder="Email (optional)" />
+                        <button type="button" id="feedback-suggestion-submit" class="w-full bg-gator-orange hover:bg-gator-orangedk text-white font-bold py-3 rounded-xl">Submit Suggestion</button>
+                        <p id="feedback-suggestion-msg" class="text-xs text-green-400 mt-2 hidden"></p>
+                    </div>
+                    <div id="feedback-pane-survey" class="hidden space-y-3">
+                        <label class="block text-sm text-surface-200">How likely are you to recommend GatorVault? (1–10)</label>
+                        <input id="survey-nps" type="range" min="1" max="10" value="8" class="w-full" />
+                        <p class="text-xs text-surface-200/60 text-center"><span id="survey-nps-val">8</span>/10</p>
+                        <label class="block text-sm text-surface-200">Favorite feature?</label>
+                        <select id="survey-feature" class="reg-input w-full text-sm">
+                            <option value="recruiting">Recruiting Board</option>
+                            <option value="film">Film Room</option>
+                            <option value="war">War Room / Scouting</option>
+                            <option value="live">Live Dashboard</option>
+                            <option value="community">Community</option>
+                        </select>
+                        <textarea id="survey-comment" class="reg-input w-full min-h-[80px] text-sm" placeholder="Anything else we should know?"></textarea>
+                        <button type="button" id="feedback-survey-submit" class="w-full bg-gator-blue text-white font-bold py-3 rounded-xl">Submit Survey</button>
+                        <p id="feedback-survey-msg" class="text-xs text-green-400 hidden"></p>
+                    </div>
                 </div>
             </div>
 
@@ -1620,9 +1658,9 @@
 
     // ========== TIERS ==========
     var TIERS={
-        locker:{label:'LOCKER ROOM — $9.99/MO',name:'Locker Room',badgeClass:'tier-locker',badgeText:'🏟️ LOCKER ROOM',level:0},
-        film:{label:'FILM ROOM — $19.99/MO',name:'Film Room',badgeClass:'tier-film',badgeText:'🎬 FILM ROOM',level:1},
-        war:{label:'WAR ROOM — $39.99/MO',name:'War Room',badgeClass:'tier-war',badgeText:'⚔️ WAR ROOM',level:2}
+        locker:{label:'LOCKER ROOM — $4.99/MO',name:'Locker Room',badgeClass:'tier-locker',badgeText:'🏟️ LOCKER ROOM',level:0},
+        film:{label:'FILM ROOM — $9.99/MO',name:'Film Room',badgeClass:'tier-film',badgeText:'🎬 FILM ROOM',level:1},
+        war:{label:'WAR ROOM — $19.99/MO',name:'War Room',badgeClass:'tier-war',badgeText:'⚔️ WAR ROOM',level:2}
     };
     var curRegTier='film';
     var regChecked=false;
@@ -2069,6 +2107,38 @@
         document.querySelectorAll('.price-per').forEach(function(el){el.textContent='/month';});
         document.querySelectorAll('.price-save').forEach(function(el){el.classList.toggle('hidden',!ann);});
     }
+    function gvApplyPricingPayload(payload){
+        if(!payload||!payload.tiers)return;
+        window._gvPricing=payload;
+        var labelEl=document.getElementById('pricing-year-label');
+        if(labelEl&&payload.currentLabel)labelEl.textContent=payload.currentLabel+(payload.grandfatherNote?' · '+payload.grandfatherNote:'');
+        payload.tiers.forEach(function(t){
+            var el=document.querySelector('.price-val[data-tier="'+t.id+'"]');
+            if(el){
+                el.dataset.mo=String(t.monthly);
+                el.dataset.yr=String((Math.round(t.monthly*0.8*100)/100).toFixed(2));
+                el.textContent='$'+(isAnnual?el.dataset.yr:el.dataset.mo);
+            }
+            if(TIERS[t.id]){
+                TIERS[t.id].label=t.name.toUpperCase()+' — $'+t.monthly.toFixed(2)+'/MO';
+            }
+            var card=el&&el.closest('.card-h, .rounded-2xl');
+            var foot=document.querySelector('.price-footnote');
+            document.querySelectorAll('.price-footnote').forEach(function(fn){
+                var tierBtn=fn.previousElementSibling;
+                if(tierBtn&&tierBtn.dataset&&tierBtn.dataset.tier===t.id){
+                    fn.textContent='30 days free · No card needed · Then $'+t.monthly.toFixed(2)+'/mo';
+                }
+            });
+        });
+        setPricing(isAnnual);
+    }
+    function gvLoadPricing(){
+        return fetch(gvLiveApiBase()+'/api/pricing').then(function(r){return r.json();}).then(function(j){
+            if(j.ok)gvApplyPricingPayload(j);
+        }).catch(function(){});
+    }
+    gvLoadPricing();
 
     // ========== FAQ ==========
     document.querySelectorAll('.faq-btn').forEach(function(b){b.addEventListener('click',function(){var ans=this.nextElementSibling;var arr=this.querySelector('.faq-arr');if(ans)ans.classList.toggle('open');if(arr)arr.textContent=ans&&ans.classList.contains('open')?'−':'+';});});
@@ -2357,7 +2427,7 @@
                 return '<div class="bg-surface-800 border border-gator-blue/20 rounded-xl p-4 opacity-90">'
                     +'<div class="flex items-start justify-between gap-3"><div>'
                     +'<div class="font-display font-bold text-white">'+gvEscHtml(b.playerName||b.playerSlug)+'</div>'
-                    +'<div class="text-xs text-gator-orange font-semibold mt-1">'+gvEscHtml(gvScoutingTypeLabel(b.playerType))+'</div>'
+                    +'<div class="text-xs text-gator-orange font-semibold mt-1">'+gvEscHtml(gvScoutingTypeLabel(b.playerType))+(b.featured?' · ⭐ Featured':'')+'</div>'
                     +(writers?'<div class="text-[.65rem] text-surface-200/60 mt-2">'+gvEscHtml(writers)+'</div>':'')
                     +'</div><span class="text-xs font-bold text-surface-200/50 whitespace-nowrap">🔒 War Room</span></div></div>';
             }).join(''):'';
@@ -2380,7 +2450,7 @@
             return '<a href="/player/'+gvEscHtml(b.playerSlug)+'" class="block bg-surface-800 border border-gator-blue/20 rounded-xl p-4 hover:border-gator-orange/40 transition">'
                 +'<div class="flex items-start justify-between gap-3"><div>'
                 +'<div class="font-display font-bold text-white">'+gvEscHtml(b.playerName||b.playerSlug)+'</div>'
-                +'<div class="text-xs text-gator-orange font-semibold mt-1">'+gvEscHtml(gvScoutingTypeLabel(b.playerType))+'</div>'
+                +'<div class="text-xs text-gator-orange font-semibold mt-1">'+gvEscHtml(gvScoutingTypeLabel(b.playerType))+(b.featured?' · ⭐ Featured':'')+'</div>'
                 +'<div class="text-[.65rem] text-surface-200/60 mt-2">'+gvEscHtml(writers)+'</div>'
                 +'</div><span class="text-xs font-bold text-gator-orange whitespace-nowrap">View report →</span></div></a>';
         }).join('');
@@ -3553,13 +3623,18 @@
         return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
     function gvLoadHighlights(){
-        return fetch(gvLiveApiBase()+'/api/highlights/clips')
+        return fetch(gvLiveApiBase()+'/api/film-room/catalog?sync=1')
             .then(function(r){return r.json();})
             .then(function(j){
-                if(j.ok)window._gvHighlights=j.clips||[];
+                if(j.ok)window._gvHighlights=j.items||[];
                 renderHighlights();
             })
-            .catch(function(){renderHighlights();});
+            .catch(function(){
+                return fetch(gvLiveApiBase()+'/api/highlights/clips').then(function(r){return r.json();}).then(function(j){
+                    if(j.ok)window._gvHighlights=j.clips||[];
+                    renderHighlights();
+                }).catch(function(){renderHighlights();});
+            });
     }
     function gvRenderHighlightCard(c){
         var pill=c.season==='2026'?'highlight-season-2026':'highlight-season-2025';
@@ -3614,7 +3689,19 @@
         videoWrap.innerHTML='';
         videoWrap.classList.add('hidden');
         if(preview)preview.classList.add('hidden');
-        if(src){
+        if(clip.embedUrl||clip.youtubeId){
+            videoWrap.classList.remove('hidden');
+            videoWrap.style.paddingTop='56.25%';
+            videoWrap.style.position='relative';
+            videoWrap.style.minHeight='0';
+            var iframe=document.createElement('iframe');
+            iframe.src=clip.embedUrl||('https://www.youtube.com/embed/'+clip.youtubeId);
+            iframe.title=clip.title||'Film Room';
+            iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen=true;
+            iframe.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px;';
+            videoWrap.appendChild(iframe);
+        }else if(src){
             videoWrap.classList.remove('hidden');
             videoWrap.style.paddingTop='0';
             videoWrap.style.minHeight='0';
@@ -3726,7 +3813,11 @@
             +'<p class="text-xs text-surface-200 mt-2">📺 '+gvEscHtml(g.tv||'TBD')+' · 🕐 '+gvEscHtml(g.kickoff||'TBD')+'</p>'
             +'<p class="text-xs text-surface-200 mt-1">🌤 '+gvEscHtml(g.weather||'TBD')+'</p>'
             +'<p class="text-xs text-surface-200 mt-1">📍 '+gvEscHtml(g.venue)+'</p>'
-            +'<div class="flex gap-4 mt-3 text-sm"><span><strong class="text-white">Spread:</strong> '+gvEscHtml(g.spread||'—')+'</span><span><strong class="text-white">O/U:</strong> '+gvEscHtml(g.total||'—')+'</span></div>'
+            +'<div class="flex gap-4 mt-3 text-sm flex-wrap"><span><strong class="text-white">Spread:</strong> <span id="gz-live-spread">'+gvEscHtml(g.spread||'—')+'</span></span><span><strong class="text-white">O/U:</strong> <span id="gz-live-total">'+gvEscHtml(g.total||'—')+'</span></span><span id="gz-live-ml-wrap" class="hidden"><strong class="text-white">ML:</strong> <span id="gz-live-ml"></span></span></div>'
+            +'<div id="gz-sportsbook-links" class="flex flex-wrap gap-x-4 gap-y-1 mt-3">'
+            +'<a id="gz-sportsbook-fanduel" href="https://sportsbook.fanduel.com/navigation/ncaaf" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-gator-orange hover:text-white">View line on FanDuel →</a>'
+            +'<a id="gz-sportsbook-hardrock" href="https://www.hardrock.bet/sportsbook/football/ncaaf/" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-gator-orange hover:text-white">View line on Hard Rock Bet →</a>'
+            +'</div>'
             +'<p class="text-gator-orange font-bold mt-3">GatorVault pred: '+gvEscHtml(g.pred||'')+'</p></div>'
             +injHtml+matchHtml+'</div>'+schedHtml;
         var predLabel=pane.querySelector('.game-zone-card p strong');
@@ -3734,6 +3825,35 @@
         predCards.forEach(function(p){
             if(p.innerHTML.indexOf('Next Game')>=0)p.innerHTML='Next Game: <strong class="text-white">UF vs '+gvEscHtml(g.opp.replace(' Owls','').replace(' Bulldogs',''))+' — '+gvEscHtml(g.kickoff||'')+' · '+gvEscHtml(g.venue.split(',')[0])+'</strong>';
         });
+        fetch(gvLiveApiBase()+'/api/betting/lines').then(function(r){return r.json();}).then(function(lines){
+            if(!lines.ok||!lines.nextGame)return;
+            var ng=lines.nextGame;
+            var sp=document.getElementById('gz-live-spread');
+            var tot=document.getElementById('gz-live-total');
+            var ml=document.getElementById('gz-live-ml');
+            var mlWrap=document.getElementById('gz-live-ml-wrap');
+            var books=ng.sportsbookLinks||lines.sportsbooks||[];
+            if(sp&&ng.spread)sp.textContent=ng.spread.line||g.spread;
+            if(tot&&ng.total!=null)tot.textContent=String(ng.total);
+            if(ml&&ng.moneyline&&ng.moneyline.uf!=null){
+                mlWrap.classList.remove('hidden');
+                ml.textContent='UF '+ng.moneyline.uf+(ng.moneyline.opp!=null?' / Opp '+ng.moneyline.opp:'');
+            }
+            books.forEach(function(book){
+                var el=document.getElementById('gz-sportsbook-'+book.id);
+                if(el&&book.url)el.href=book.url;
+            });
+            if(!books.length){
+                if(lines.hardRockBetUrl){
+                    var hr=document.getElementById('gz-sportsbook-hardrock');
+                    if(hr)hr.href=lines.hardRockBetUrl;
+                }
+                if(lines.affiliateUrl){
+                    var fd=document.getElementById('gz-sportsbook-fanduel');
+                    if(fd)fd.href=lines.affiliateUrl;
+                }
+            }
+        }).catch(function(){});
     }
     function renderGameZone(){
         if(!document.getElementById('vpane-gamezone')) return;
@@ -4705,7 +4825,8 @@
         return new Date(iso).toLocaleDateString();
     }
 
-    function gvLiveTypeLabel(type){
+    function gvLiveTypeLabel(type,item){
+        if(type==='visit'&&item&&item.meta&&item.meta.status)return 'Visit — '+item.meta.status;
         var map={commit:'Commit',portal:'Portal',visit:'Visit',offer:'Offer',offers:'Offer',prediction:'Prediction',trending:'Trending',info:'Info',article:'Article',score:'Score',thread:'Thread',staff:'Staff',injury:'Injury',depth:'Depth',beat:'Beat',breaking:'Breaking',podcast:'Podcast'};
         return map[type]||ALERT_TYPE_LABELS[type]||type||'Info';
     }
@@ -4831,7 +4952,7 @@
             try{if(typeof gvResolveContentFields==='function')titleText=gvResolveContentFields({title:item.title}).title||item.title;}catch(ex){}
             html+='<div class="'+cardClass+'" data-feed-type="'+gvLiveEsc(item.type||'')+'"'+(recruitSlug?' data-recruit-slug="'+gvLiveEsc(recruitSlug)+'"':'')+(sourceUrl?' data-source-url="'+gvLiveEsc(sourceUrl)+'"':' title="No source link"')+'>';
             html+='<div class="flex items-start justify-between gap-2 mb-1">';
-            html+='<span class="live-type-pill '+pill+'">'+gvLiveEsc(gvLiveTypeLabel(item.type))+'</span>';
+            html+='<span class="live-type-pill '+pill+'">'+gvLiveEsc(gvLiveTypeLabel(item.type,item))+'</span>';
             html+='<span class="text-[.65rem] text-surface-200/50 shrink-0">'+gvLiveEsc(gvLiveTimeAgo(item.createdAt))+'</span>';
             html+='</div>';
             if(sourceUrl||recruitSlug){
@@ -5055,7 +5176,7 @@
         html+='<div class="flex items-center gap-2 flex-wrap min-w-0">';
         html+='<span class="live-dot shrink-0"></span>';
         html+='<span class="text-[.65rem] font-bold uppercase tracking-wider text-gator-orange">Latest</span>';
-        html+='<span class="live-type-pill '+pill+'">'+gvLiveEsc(gvLiveTypeLabel(latest.type))+'</span>';
+        html+='<span class="live-type-pill '+pill+'">'+gvLiveEsc(gvLiveTypeLabel(latest.type,latest))+'</span>';
         html+='</div>';
         html+='<span class="text-[.65rem] text-surface-200/50 shrink-0">'+gvLiveEsc(gvLiveTimeAgo(latest.createdAt))+'</span>';
         html+='</div>';
@@ -5228,8 +5349,18 @@
         return rank[type]!=null?rank[type]:50;
     }
 
+    function gvIsCuratedHeadline(item){
+        if(!item)return false;
+        if(item.type==='breaking')return true;
+        var src=String(item.source||'').toLowerCase();
+        if(src==='beat'||src==='podcast'||item.type==='beat'||item.type==='podcast'||item.type==='thread')return false;
+        var norm=gvNormalizeLiveFeedType(item);
+        if(!norm||norm==='info')return false;
+        return ['article','commit','portal','visit','offer','prediction','trending','score','breaking'].indexOf(norm)>=0;
+    }
+
     function gvRankHeadlines(feed){
-        return (feed||[]).slice().sort(function(a,b){
+        return (feed||[]).filter(gvIsCuratedHeadline).slice().sort(function(a,b){
             var pa=gvHeadlinePriority(a),pb=gvHeadlinePriority(b);
             if(pa!==pb)return pa-pb;
             return new Date(b.createdAt||0)-new Date(a.createdAt||0);
@@ -5239,7 +5370,7 @@
     function gvRenderHeadlineCard(item){
         var norm=gvNormalizeLiveFeedType(item);
         var typeKey=item.type==='breaking'?'breaking':(norm||item.type||'update');
-        var typeLabel=gvLiveTypeLabel(typeKey);
+        var typeLabel=gvLiveTypeLabel(typeKey,item);
         var isBreaking=item.type==='breaking';
         var href=gvLiveFeedSourceUrl(item)?gvLiveResolveUrl(gvLiveFeedSourceUrl(item)):null;
         var slug=item.meta&&item.meta.playerSlug?item.meta.playerSlug:(item.meta&&item.meta.player&&item.meta.player.slug)||'';
@@ -5440,6 +5571,51 @@
     try{gvHandleDeepLink();}catch(e){}
     gvInitMobileChrome();
     if(gvIsMobile()){try{renderTickets();renderApparel();gvRenderMobileHome();}catch(e){}}
+
+    (function gvInitFeedback(){
+        var ov=document.getElementById('feedback-modal-ov');
+        var openBtn=document.getElementById('gv-open-feedback');
+        var closeBtn=document.getElementById('feedback-modal-close');
+        function openFb(){if(ov){ov.classList.remove('hidden');ov.style.display='flex';}}
+        function closeFb(){if(ov){ov.classList.add('hidden');ov.style.display='none';}}
+        if(openBtn)openBtn.addEventListener('click',openFb);
+        if(closeBtn)closeBtn.addEventListener('click',closeFb);
+        if(ov)ov.addEventListener('click',function(e){if(e.target===ov)closeFb();});
+        document.querySelectorAll('.feedback-tab').forEach(function(btn){
+            btn.addEventListener('click',function(){
+                document.querySelectorAll('.feedback-tab').forEach(function(b){b.classList.remove('active','bg-gator-orange','text-white');b.classList.add('bg-surface-700','text-surface-200');});
+                btn.classList.add('active','bg-gator-orange','text-white');btn.classList.remove('bg-surface-700','text-surface-200');
+                var tab=btn.getAttribute('data-ftab');
+                document.getElementById('feedback-pane-suggestion').classList.toggle('hidden',tab!=='suggestion');
+                document.getElementById('feedback-pane-survey').classList.toggle('hidden',tab!=='survey');
+            });
+        });
+        var nps=document.getElementById('survey-nps');
+        var npsVal=document.getElementById('survey-nps-val');
+        if(nps&&npsVal)nps.addEventListener('input',function(){npsVal.textContent=nps.value;});
+        var sugBtn=document.getElementById('feedback-suggestion-submit');
+        if(sugBtn)sugBtn.addEventListener('click',function(){
+            var msg=document.getElementById('feedback-suggestion-text').value.trim();
+            var email=document.getElementById('feedback-suggestion-email').value.trim();
+            fetch(gvLiveApiBase()+'/api/feedback/suggestion',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,email:email,tier:window.GV_ROLE,page:location.pathname})})
+                .then(function(r){return r.json();}).then(function(j){
+                    var el=document.getElementById('feedback-suggestion-msg');
+                    if(el){el.textContent=j.ok?(j.message||'Sent!'):(j.error||'Failed');el.classList.remove('hidden');}
+                    if(j.ok)document.getElementById('feedback-suggestion-text').value='';
+                }).catch(function(){});
+        });
+        var surBtn=document.getElementById('feedback-survey-submit');
+        if(surBtn)surBtn.addEventListener('click',function(){
+            fetch(gvLiveApiBase()+'/api/feedback/survey',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+                email:window.GV_EMAIL||null,
+                tier:window.GV_ROLE,
+                answers:{nps:parseInt(document.getElementById('survey-nps').value,10),favorite:document.getElementById('survey-feature').value,comment:document.getElementById('survey-comment').value.trim()}
+            })}).then(function(r){return r.json();}).then(function(j){
+                var el=document.getElementById('feedback-survey-msg');
+                if(el){el.textContent=j.ok?(j.message||'Thanks!'):(j.error||'Failed');el.classList.remove('hidden');}
+            }).catch(function(){});
+        });
+    })();
 
     // ========== INITIAL RENDER (icons) ==========
     setTimeout(function(){if(typeof lucide!=="undefined"&&typeof lucide.createIcons==="function")lucide.createIcons();},200);
