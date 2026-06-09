@@ -64,6 +64,35 @@ function mountLiveRoutes(app) {
     }
   });
 
+  app.get('/api/live/pipeline/health', (req, res) => {
+    try {
+      const pipelineHealth = require('./pipeline-health');
+      const report = pipelineHealth.getHealthReport();
+      const staleMs = parseInt(process.env.PIPELINE_STALE_MS || String(15 * 60 * 1000), 10);
+      const now = Date.now();
+      function isStale(iso) {
+        if (!iso) return true;
+        return now - new Date(iso).getTime() > staleMs;
+      }
+      return res.json({
+        ok: true,
+        staleThresholdMs: staleMs,
+        health: report,
+        checks: {
+          liveRefreshStale: isStale(report.lastLiveRefresh),
+          articlePullStale: isStale(report.lastArticlePull),
+          beatPullStale: isStale(report.lastBeatPull || report.beatCache?.fetchedAt),
+          autoposterStale: isStale(report.autoposter?.lastRun),
+          autoposterEnabled: report.autoposter?.schedulerEnabled === true,
+          beatError: report.beatCache?.error || report.lastLiveRefreshError || null,
+          autoposterError: report.autoposter?.lastError || null
+        }
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/live/refresh', async (req, res) => {
     const pin = pinFromReq(req);
     const isCron = req.headers['x-live-cron'] === process.env.LIVE_CRON_SECRET;

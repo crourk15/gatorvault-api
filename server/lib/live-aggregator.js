@@ -194,6 +194,12 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
       results.podcasts = { error: e.message };
     }
   }
+  try {
+    const pipelineHealth = require('./pipeline-health');
+    pipelineHealth.recordLiveRefresh(results);
+  } catch (e) {
+    console.warn('[pipeline-health]', e.message);
+  }
   return results;
 }
 

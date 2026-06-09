@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "updatedAt": null,
+  "schedulerEnabled": false,
+  "schedulerStartedAt": null,
+  "lastRun": null,
+  "lastPostAttempt": null,
+  "lastPostSuccess": null,
+  "lastRefillAt": null,
+  "lastRefillCount": 0,
+  "lastProcessedCount": 0,
+  "lastError": null
+}

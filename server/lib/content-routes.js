@@ -37,6 +37,25 @@ function mountContentRoutes(app) {
     }
   });
 
+  app.get('/api/content/ingest/status', (req, res) => {
+    try {
+      const pipelineHealth = require('./pipeline-health');
+      const health = pipelineHealth.getHealthReport();
+      const audit = store.auditPublishedArticles();
+      return res.json({
+        ok: true,
+        lastArticlePull: health.lastArticlePull,
+        lastError: health.lastLiveRefreshError || health.lastError,
+        publishedCount: health.articles?.publishedCount || audit.publishedCount || 0,
+        lastPublishedAt: health.articles?.lastPublishedAt || null,
+        validationIssues: audit.missingSources || 0,
+        note: 'Articles sync into the live feed on each live dashboard refresh — not a separate RSS pull.'
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/content/policy', (req, res) => {
     try {
       const audit = store.auditPublishedArticles();

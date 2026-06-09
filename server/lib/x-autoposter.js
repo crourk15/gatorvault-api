@@ -20,7 +20,47 @@ const UPLOAD_V11 = 'https://upload.twitter.com/1.1';
 
 const X_ACCOUNT = process.env.X_AUTOPOST_ACCOUNT || 'gatorvault';
 const LOG_MAX = 100;
+const STATUS_PATH = path.join(__dirname, '..', 'data', 'x', 'autoposter-status.json');
 const _logs = [];
+
+function loadSchedulerStatus() {
+  try {
+    return JSON.parse(fs.readFileSync(STATUS_PATH, 'utf8'));
+  } catch {
+    return {
+      version: 1,
+      updatedAt: null,
+      schedulerEnabled: false,
+      schedulerStartedAt: null,
+      lastRun: null,
+      lastPostAttempt: null,
+      lastPostSuccess: null,
+      lastRefillAt: null,
+      lastRefillCount: 0,
+      lastProcessedCount: 0,
+      lastError: null
+    };
+  }
+}
+
+function saveSchedulerStatus(patch) {
+  const next = {
+    ...loadSchedulerStatus(),
+    ...patch,
+    schedulerEnabled: process.env.X_AUTOPOST_ENABLED === 'true',
+    updatedAt: store.nowIso()
+  };
+  fs.mkdirSync(path.dirname(STATUS_PATH), { recursive: true });
+  fs.writeFileSync(STATUS_PATH, JSON.stringify(next, null, 2));
+  return next;
+}
+
+function getSchedulerStatus() {
+  return {
+    ...loadSchedulerStatus(),
+    schedulerEnabled: process.env.X_AUTOPOST_ENABLED === 'true'
+  };
+}
 
 function autopostLog(level, message, detail) {
   const row = {
@@ -75,7 +115,8 @@ function getConfigStatus() {
     replyEnabled: process.env.X_AUTOPOST_REPLY_ENABLED === 'true',
     schedulerIntervalMs: parseInt(process.env.X_AUTOPOST_INTERVAL_MS || '60000', 10),
     contentMix: policy.getContentPolicy().contentMixLabel,
-    lastVerify: _statusCache.checkedAt ? { ..._statusCache } : null
+    lastVerify: _statusCache.checkedAt ? { ..._statusCache } : null,
+    scheduler: getSchedulerStatus()
   };
 }
 
@@ -214,7 +255,13 @@ async function postTweet({
   };
 }
 
+function isDuplicateTweetError(err) {
+  const msg = String(err?.message || err || '');
+  return /duplicate content/i.test(msg);
+}
+
 async function processQueueItem(item) {
+  saveSchedulerStatus({ lastPostAttempt: store.nowIso(), lastError: null });
   autopostLog('info', 'Posting…', { itemId: item.id, category: item.category, preview: String(item.text || '').slice(0, 80) });
   const check = policy.validatePostContent(item);
   if (!check.valid) {
@@ -226,6 +273,7 @@ async function processQueueItem(item) {
       validationErrors: check.errors,
       sentAt: store.nowIso()
     });
+    saveSchedulerStatus({ lastError: errMsg });
     return { ok: false, itemId: item.id, error: 'Validation failed', validation: check };
   }
 
@@ -246,6 +294,10 @@ async function processQueueItem(item) {
       error: null,
       validationErrors: []
     });
+    saveSchedulerStatus({
+      lastPostSuccess: store.nowIso(),
+      lastError: null
+    });
     if (isReplyEnabled() && item.action === 'post') {
       try {
         const replyOut = await scheduleRepliesForSentPost({ item, tweetId: result.tweetId });
@@ -258,12 +310,23 @@ async function processQueueItem(item) {
     }
     return { ok: true, item: store.loadQueue().items.find((i) => i.id === item.id), result };
   } catch (err) {
+    if (isDuplicateTweetError(err)) {
+      autopostLog('warn', 'Skipped duplicate tweet (already on timeline)', { itemId: item.id });
+      store.updatePost(item.id, {
+        status: 'skipped_duplicate',
+        error: err.message,
+        sentAt: store.nowIso()
+      });
+      saveSchedulerStatus({ lastPostSuccess: store.nowIso(), lastError: null });
+      return { ok: true, skipped: true, duplicate: true, itemId: item.id };
+    }
     autopostLog('error', `Error: ${err.message}`, { itemId: item.id });
     store.updatePost(item.id, {
       status: 'failed',
       error: err.message,
       sentAt: store.nowIso()
     });
+    saveSchedulerStatus({ lastError: err.message });
     return { ok: false, itemId: item.id, error: err.message };
   }
 }
@@ -284,6 +347,7 @@ let _processing = false;
 function startXAutoposterScheduler() {
   if (process.env.X_AUTOPOST_ENABLED !== 'true') {
     autopostLog('warn', 'Cron disabled — set X_AUTOPOST_ENABLED=true');
+    saveSchedulerStatus({ lastError: 'Scheduler disabled — X_AUTOPOST_ENABLED is not true' });
     return;
   }
 
@@ -291,24 +355,44 @@ function startXAutoposterScheduler() {
   const bootDelay = parseInt(process.env.X_AUTOPOST_BOOT_DELAY_MS || '20000', 10);
   const replyOn = isReplyEnabled();
 
+  saveSchedulerStatus({
+    schedulerStartedAt: store.nowIso(),
+    lastError: null
+  });
+
   verifyCredentials()
     .then((s) => {
       if (s.ok) autopostLog('info', `OAuth verified as @${s.screenName}`);
-      else autopostLog('error', `Error: OAuth verify failed — ${s.error}`);
+      else {
+        autopostLog('error', `Error: OAuth verify failed — ${s.error}`);
+        saveSchedulerStatus({ lastError: s.error });
+      }
     })
-    .catch((e) => autopostLog('error', `Error: OAuth verify — ${e.message}`));
+    .catch((e) => {
+      autopostLog('error', `Error: OAuth verify — ${e.message}`);
+      saveSchedulerStatus({ lastError: e.message });
+    });
 
   setTimeout(() => {
     autopostLog('info', 'Cron started', { intervalMs, bootDelay, replyEnabled: replyOn });
     const tick = async () => {
       if (_processing) return;
       _processing = true;
+      saveSchedulerStatus({ lastRun: store.nowIso() });
       try {
         const refill = await refillAutoposterQueue({ minPending: 2, maxEnqueue: 4 });
         if (refill.enqueuedCount > 0) {
           autopostLog('info', `Auto-filled queue with ${refill.enqueuedCount} post(s)`);
         }
+        saveSchedulerStatus({
+          lastRefillAt: store.nowIso(),
+          lastRefillCount: refill.enqueuedCount || 0
+        });
         const out = await processDuePosts();
+        saveSchedulerStatus({
+          lastProcessedCount: out.processed || 0,
+          lastError: null
+        });
         if (out.processed > 0) {
           autopostLog('info', `Cron tick processed ${out.processed} post(s)`);
         }
@@ -320,6 +404,7 @@ function startXAutoposterScheduler() {
         }
       } catch (e) {
         autopostLog('error', `Error: scheduler tick — ${e.message}`);
+        saveSchedulerStatus({ lastError: e.message });
       } finally {
         _processing = false;
       }
@@ -345,5 +430,7 @@ module.exports = {
   stopXAutoposterScheduler,
   getAutoposterLogs,
   getContentPolicy: policy.getContentPolicy,
-  validatePostContent: policy.validatePostContent
+  validatePostContent: policy.validatePostContent,
+  getSchedulerStatus,
+  saveSchedulerStatus
 };

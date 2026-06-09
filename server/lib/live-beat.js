@@ -173,9 +173,12 @@ async function fetchNitterRss(handle) {
 async function fetchWriterPosts(writer) {
   try {
     if (getXBearerToken()) {
-      const posts = await fetchXUserTimeline(writer.handle);
-      if (posts && posts.length) return posts;
-      return [];
+      try {
+        const posts = await fetchXUserTimeline(writer.handle);
+        if (posts && posts.length) return posts;
+      } catch (e) {
+        /* fall through to Nitter */
+      }
     }
     return await fetchNitterRss(writer.handle);
   } catch (e) {
@@ -262,29 +265,24 @@ async function purgeNonFloridaBeatContent({ refreshDashboard = true } = {}) {
 }
 
 async function refreshBeatStream() {
-  const tokenStatus = await validateXBearerToken({ force: true });
+  const tokenStatus = await validateXBearerToken({ force: false });
   const cache = store.loadBeatCache();
   const writers = store.loadWriters();
-
-  if (!tokenStatus.ok) {
-    const { kept } = filterBeatPosts(cache.posts || []);
-    const next = {
-      posts: kept,
-      fetchedAt: store.nowIso(),
-      source: 'x_token_error',
-      error: tokenStatus.error
-    };
-    store.saveBeatCache(next);
-    return next;
-  }
+  const hasBearer = !!getXBearerToken() && tokenStatus.ok;
 
   const all = [];
   let errors = 0;
   let blocked = 0;
+  let nitterHits = 0;
+  let xHits = 0;
 
   for (const writer of writers) {
     const posts = await fetchWriterPosts(writer);
     if (!posts.length) errors += 1;
+    posts.forEach((p) => {
+      if (p.source === 'nitter') nitterHits += 1;
+      else if (p.source === 'x') xHits += 1;
+    });
     const filtered = filterBeatPosts(posts, { alertBlocks: true });
     blocked += filtered.blocked;
     filtered.kept.forEach((p) => all.push(p));
@@ -295,12 +293,35 @@ async function refreshBeatStream() {
   const purgedExisting = filterBeatPosts(cache.posts || []);
   const merged = (all.length ? all : purgedExisting.kept).slice(0, 80);
 
+  let source = 'nitter';
+  if (xHits > 0) source = 'x';
+  else if (nitterHits > 0) source = 'nitter';
+  else if (hasBearer) source = 'x_empty';
+  else if (!getXBearerToken()) source = 'nitter';
+
+  let error = null;
+  if (!all.length) {
+    if (!getXBearerToken()) {
+      error =
+        errors === writers.length
+          ? 'X_BEARER_TOKEN not set and Nitter fallback returned no posts. Check NITTER_BASES or add Bearer token on Render.'
+          : 'X_BEARER_TOKEN not set — using Nitter fallback. No new beat posts this cycle.';
+    } else if (!tokenStatus.ok) {
+      error = `${tokenStatus.error} Nitter fallback also returned no posts.`;
+    } else {
+      error = 'Beat fetch returned no posts this cycle (X API + Nitter). Retrying on next poll.';
+    }
+  } else if (!hasBearer) {
+    error = null;
+  }
+
   const next = {
     posts: merged,
     fetchedAt: store.nowIso(),
-    source: all.length ? 'x' : errors === writers.length ? 'x_empty' : 'x',
+    source,
     blockedNational: blocked,
-    error: all.length ? null : 'X API token is valid but no beat writer posts were returned yet. Retrying on the next poll.'
+    error,
+    tokenStatus: { configured: tokenStatus.configured, ok: tokenStatus.ok }
   };
   store.saveBeatCache(next);
 

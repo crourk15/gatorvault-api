@@ -35,22 +35,26 @@ function dedupeKey(text) {
   return crypto.createHash('sha256').update(String(text || '').trim().toLowerCase()).digest('hex').slice(0, 16);
 }
 
+const QUEUED_STATUSES = new Set(['pending', 'sent', 'skipped_duplicate']);
+
 function fingerprintAlreadyQueued(fp, items) {
   if (!fp) return false;
   return items.some(
     (i) =>
-      (i.intelFingerprint === fp || i.commitFingerprint === fp) &&
-      (i.status === 'pending' || i.status === 'sent' || i.status === 'failed')
+      (i.intelFingerprint === fp || i.commitFingerprint === fp) && QUEUED_STATUSES.has(i.status)
   );
 }
 
 function alreadyQueued(text, items) {
   const key = dedupeKey(text);
-  return items.some(
-    (i) =>
-      i.status === 'pending' ||
-      (i.status === 'sent' && dedupeKey(i.text) === key && Date.now() - new Date(i.sentAt).getTime() < 7 * 86400000)
-  );
+  const weekAgo = Date.now() - 7 * 86400000;
+  return items.some((i) => {
+    if (dedupeKey(i.text) !== key) return false;
+    if (i.status === 'pending' || i.status === 'skipped_duplicate') return true;
+    if (i.status === 'sent' && i.sentAt && new Date(i.sentAt).getTime() >= weekAgo) return true;
+    if (i.status === 'failed' && /duplicate content/i.test(i.error || '')) return true;
+    return false;
+  });
 }
 
 function commitAlreadyQueued(fp, items) {
@@ -200,12 +204,13 @@ async function buildNewsFromPortalEvent(ev) {
 async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
   const doc = store.loadQueue();
   const pending = doc.items.filter((i) => i.status === 'pending');
-  if (pending.length >= minPending) {
+  const need = Math.max(minPending - pending.length, pending.length === 0 ? 1 : 0);
+  if (need <= 0 && pending.length >= minPending) {
     return { ok: true, skipped: true, reason: 'queue_full', pending: pending.length, enqueued: [] };
   }
 
   const candidates = [];
-  const slots = maxEnqueue - pending.length;
+  const slots = Math.max(maxEnqueue - pending.length, need);
 
   try {
     const unqueuedIntel = intelStore.getUnqueuedIntel({ maxAgeMs: MAX_INTEL_AGE_MS });

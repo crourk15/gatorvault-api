@@ -67,19 +67,30 @@ function mountXAutoposterRoutes(app) {
   app.get('/api/x/autoposter/status', async (req, res) => {
     try {
       const config = autoposter.getConfigStatus();
+      const scheduler = autoposter.getSchedulerStatus();
       const probe = req.query.probe === '1';
       let verify = null;
       if (probe) verify = await autoposter.verifyCredentials({ force: true });
       const queue = store.listQueue({ limit: 5 });
-      const pending = store.listQueue({ status: 'pending' }).length;
+      const pending = store.listQueue({ status: 'pending' });
+      const due = pending.filter((i) => new Date(i.scheduledAt).getTime() <= Date.now());
       const mix = store.getMixStats();
+      const pipelineHealth = require('./pipeline-health');
       return res.json({
         ok: true,
         ...config,
-        queuePending: pending,
+        schedulerEnabled: scheduler.schedulerEnabled,
+        lastRun: scheduler.lastRun,
+        lastPostAttempt: scheduler.lastPostAttempt,
+        lastPostSuccess: scheduler.lastPostSuccess,
+        lastRefillAt: scheduler.lastRefillAt,
+        lastError: scheduler.lastError || (verify && !verify.ok ? verify.error : null),
+        queuePending: pending.length,
+        queueDue: due.length,
         queueRecent: queue,
         mix,
         verify,
+        pipeline: pipelineHealth.getHealthReport(),
         logs: autoposter.getAutoposterLogs(parseInt(req.query.logLimit || '20', 10) || 20)
       });
     } catch (err) {
@@ -221,14 +232,36 @@ function mountXAutoposterRoutes(app) {
       return res.status(401).json({ ok: false, error: 'Invalid PIN or cron secret' });
     }
     try {
+      autoposter.saveSchedulerStatus({ lastRun: store.nowIso() });
       const refill = req.body.refill !== false
         ? await refillAutoposterQueue({ minPending: 2, maxEnqueue: 5 })
         : null;
+      if (refill) {
+        autoposter.saveSchedulerStatus({
+          lastRefillAt: store.nowIso(),
+          lastRefillCount: refill.enqueuedCount || 0
+        });
+      }
       const out = await autoposter.processDuePosts({
         limit: parseInt(req.body.limit || req.query.limit || '5', 10)
       });
-      return res.json({ ok: true, refill, mix: store.getMixStats(), logs: autoposter.getAutoposterLogs(20), ...out });
+      autoposter.saveSchedulerStatus({
+        lastProcessedCount: out.processed || 0
+      });
+      const scheduler = autoposter.getSchedulerStatus();
+      return res.json({
+        ok: true,
+        refill,
+        mix: store.getMixStats(),
+        logs: autoposter.getAutoposterLogs(20),
+        lastRun: scheduler.lastRun,
+        lastPostAttempt: scheduler.lastPostAttempt,
+        lastPostSuccess: scheduler.lastPostSuccess,
+        lastError: scheduler.lastError,
+        ...out
+      });
     } catch (err) {
+      autoposter.saveSchedulerStatus({ lastError: err.message });
       return res.status(500).json({ ok: false, error: err.message });
     }
   });
