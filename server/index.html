@@ -1121,7 +1121,7 @@
                 <div data-id="652" id="vpane-highlights" class="vpane fade-in space-y-6">
                     <div>
                         <h1 data-id="653" class="font-display text-2xl md:text-3xl font-bold text-white">📺 Film Room</h1>
-                        <p class="text-surface-200 text-sm mt-1 max-w-2xl">Film breakdowns, GNFP reviews, press conferences, highlights, and Film Guy Network — organized by category.</p>
+                        <p class="text-surface-200 text-sm mt-1 max-w-2xl">Film Breakdown, Press Conferences, and Highlights — three sections, always up to date.</p>
                     </div>
                     <div id="film-room-categories" class="flex flex-wrap gap-2"></div>
                     <div id="highlights-shell"></div>
@@ -3621,7 +3621,7 @@
     // ========== FILM ROOM (native ESPN-style highlights) ==========
     var GV_HIGHLIGHTS_LIVE=true;
     window._gvHighlights=[];
-    window._gvFilmRoomCategories=['Film Breakdown','Film Guy Network','GNFP Film Review','Press Conferences','Highlights'];
+    window._gvFilmRoomCategories=['Film Breakdown','Press Conferences','Highlights'];
     window._gvFilmRoomFilter='all';
     function gvEscHtml(s){
         return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -3648,19 +3648,23 @@
     function gvRenderFilmRoomCategories(){
         var nav=document.getElementById('film-room-categories');
         if(!nav)return;
-        var cats=window._gvFilmRoomCategories||[];
+        var cats=window._gvFilmRoomCategories||['Film Breakdown','Press Conferences','Highlights'];
         var counts={};
-        (window._gvHighlights||[]).forEach(function(c){counts[c.category]=(counts[c.category]||0)+1;});
-        var html='<button type="button" class="film-cat-btn px-3 py-1.5 rounded-full text-xs font-bold '+(window._gvFilmRoomFilter==='all'?'bg-gator-orange text-white':'bg-surface-700 text-surface-200')+'" data-fcat="all">All ('+(window._gvHighlights||[]).length+')</button>';
+        (window._gvHighlights||[]).forEach(function(c){
+            var cat=c.category||'Film Breakdown';
+            counts[cat]=(counts[cat]||0)+1;
+        });
+        var html='';
         cats.forEach(function(cat){
             var n=counts[cat]||0;
-            if(!n)return;
-            html+='<button type="button" class="film-cat-btn px-3 py-1.5 rounded-full text-xs font-bold '+(window._gvFilmRoomFilter===cat?'bg-gator-orange text-white':'bg-surface-700 text-surface-200')+'" data-fcat="'+gvEscHtml(cat)+'">'+gvEscHtml(cat)+' ('+n+')</button>';
+            var active=window._gvFilmRoomFilter===cat;
+            html+='<button type="button" class="film-cat-btn px-3 py-1.5 rounded-full text-xs font-bold '+(active?'bg-gator-orange text-white':'bg-surface-700 text-surface-200')+'" data-fcat="'+gvEscHtml(cat)+'">'+gvEscHtml(cat)+' ('+n+')</button>';
         });
         nav.innerHTML=html;
         nav.querySelectorAll('.film-cat-btn').forEach(function(btn){
             btn.addEventListener('click',function(){
-                window._gvFilmRoomFilter=btn.getAttribute('data-fcat')||'all';
+                var cat=btn.getAttribute('data-fcat')||'all';
+                window._gvFilmRoomFilter=(window._gvFilmRoomFilter===cat)?'all':cat;
                 gvRenderFilmRoomCategories();
                 renderHighlights();
             });

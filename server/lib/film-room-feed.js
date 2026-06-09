@@ -1,7 +1,6 @@
 /**
- * Film Room catalog — two auto-updating YouTube sources + manual-only entries.
- * Auto: GNFP 2026 Buster Faulkner film reviews · UF @gatorsfb press conferences (latest 5)
- * Manual: spring game highlights / Film Guy Network (admin-curated, never auto-pruned)
+ * Film Room catalog — three sections: Film Breakdown · Press Conferences · Highlights
+ * Auto: GNFP film reviews · Film Guy Network (manual) · UF @gatorsfb press conferences
  */
 const fs = require('fs');
 const path = require('path');
@@ -18,25 +17,40 @@ const UF_FB_CHANNEL_ID = process.env.UF_FB_YOUTUBE_CHANNEL_ID || 'UCq0YlZqYQZqYQ
 const GNFP_TITLE_RE =
   /2026.*(buster faulkner|faulkner offense|film review|gnfp film)/i;
 const PRESSER_TITLE_RE =
-  /press conference|media availability|head coach jon sumrall|jon sumrall speaks/i;
+  /press conference|media availability|postgame|post-game|speaks to the media|speaks with the media|head coach|coordinator|position coach|player press|presser|jon sumrall|buster faulkner|brad white|rob ashford|austin bailey|will black|media day/i;
 
-/** Canonical Film Room hub categories */
-const FILM_ROOM_CATEGORIES = [
-  'Film Breakdown',
-  'Film Guy Network',
-  'GNFP Film Review',
-  'Press Conferences',
-  'Highlights'
-];
+/** Canonical Film Room hub categories (3 sections only) */
+const FILM_ROOM_CATEGORIES = ['Film Breakdown', 'Press Conferences', 'Highlights'];
+
+const LEGACY_CATEGORY_MAP = {
+  'Film Guy Network': 'Film Breakdown',
+  'GNFP Film Review': 'Film Breakdown',
+  'GNFP': 'Film Breakdown',
+  'Press Conference': 'Press Conferences',
+  'Interview': 'Press Conferences',
+  'Spring Game Film Study': 'Film Breakdown'
+};
 
 function normalizeCategory(raw, source) {
   const c = String(raw || '').trim();
   if (FILM_ROOM_CATEGORIES.includes(c)) return c;
-  if (/gnfp/i.test(c) || source === 'GNFP') return 'GNFP Film Review';
-  if (/film guy/i.test(c) || /film guy/i.test(source || '')) return 'Film Guy Network';
-  if (/press/i.test(c)) return 'Press Conferences';
-  if (/highlight|spring game/i.test(c)) return 'Highlights';
-  if (/breakdown|film review|film study/i.test(c)) return 'Film Breakdown';
+  if (LEGACY_CATEGORY_MAP[c]) return LEGACY_CATEGORY_MAP[c];
+
+  const lower = c.toLowerCase();
+  const src = String(source || '').toLowerCase();
+
+  if (/gnfp|film guy/i.test(c) || /gnfp|film guy/i.test(src)) return 'Film Breakdown';
+  if (/press|media availability|interview|postgame|post-game/i.test(c)) return 'Press Conferences';
+  if (/highlight|spring game|practice|cut-up|cut up|best plays/i.test(c)) return 'Highlights';
+  if (/breakdown|film review|film study|scheme|formation/i.test(c)) return 'Film Breakdown';
+
+  if (/gnfp/i.test(src)) return 'Film Breakdown';
+  if (/film guy/i.test(src)) return 'Film Breakdown';
+  if (/gators online|highlight|spring/i.test(src) && /highlight|spring|cut/i.test(lower)) {
+    return 'Highlights';
+  }
+  if (/florida gators youtube|@gatorsfb/i.test(src)) return 'Press Conferences';
+
   return 'Film Breakdown';
 }
 
@@ -112,7 +126,7 @@ async function syncGnfpReviews() {
     .filter((r) => GNFP_TITLE_RE.test(r.title || '') || GNFP_TITLE_RE.test(r.summary || ''))
     .map((r) =>
       rowToClip(r, {
-        category: 'GNFP Film Review',
+        category: 'Film Breakdown',
         gameLine: '2026 · Buster Faulkner Offense',
         source: 'GNFP',
         autoUpdate: true
@@ -221,9 +235,9 @@ async function buildFilmRoomCatalog({ force = false } = {}) {
   manual.forEach((c) => byId.set(c.id || c.slug, c));
   auto.forEach((c) => byId.set(c.id || c.slug, c));
 
-  const items = [...byId.values()].sort(
-    (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
-  );
+  const items = [...byId.values()]
+    .map((c) => ({ ...c, category: normalizeCategory(c.category, c.source) }))
+    .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
 
   const byCategory = {};
   FILM_ROOM_CATEGORIES.forEach((cat) => {
