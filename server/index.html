@@ -2689,11 +2689,17 @@
         if(/ committed to Florida/i.test(t))return t.replace(/ committed to Florida/i,' transfers to Florida');
         return t||'Portal update';
     }
+    function gvIsFloridaCommitPlayer(player){
+        if(!player)return false;
+        var st=String(player.status||'').toLowerCase();
+        var to=String(player.committedTo||'').trim();
+        return st==='committed'&&/^florida$/i.test(to);
+    }
     function gvIsEligibleCommitPlayer(player){
         var cy=gvPlayerClassYear(player);
         if(cy==null||cy<GV_COMMIT_MIN_CLASS)return false;
         if(player&&player.category==='portal')return false;
-        return player.category==='recruit'||cy>=GV_COMMIT_MIN_CLASS;
+        return gvIsFloridaCommitPlayer(player);
     }
     function gvIsEligiblePortalPlayer(player){
         var cy=gvPlayerClassYear(player);

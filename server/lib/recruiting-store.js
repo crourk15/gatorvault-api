@@ -3,6 +3,7 @@ const path = require('path');
 const { slugify } = require('./slug');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { commitFingerprint, intelFingerprint } = require('./commit-fingerprint');
+const { isVisitEventType } = require('./gv-classification');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const PLAYERS_PATH = path.join(DATA_DIR, 'players.json');
@@ -57,8 +58,23 @@ function isTestPlayer(p) {
   return slug === 'test-recruit' || name === 'test recruit';
 }
 
+function isFloridaCommit(p) {
+  if (!p) return false;
+  const status = String(p.status || '').toLowerCase();
+  const committedTo = String(p.committedTo || p.committed_to || '').trim();
+  return status === 'committed' && /^florida$/i.test(committedTo);
+}
+
 function normalizePlayer(raw) {
   const slug = raw.slug || slugify(raw.name);
+  const committedTo = raw.committedTo ?? raw.committed_to ?? null;
+  const status = raw.status ?? (isFloridaCommit({ status: 'committed', committedTo }) ? 'committed' : null);
+  let category = raw.category ?? null;
+  if (!category) {
+    category = isFloridaCommit({ status: status || 'committed', committedTo: committedTo || 'Florida' })
+      ? 'recruit'
+      : 'target';
+  }
   return {
     id: raw.id || slug,
     slug,
@@ -73,9 +89,11 @@ function normalizePlayer(raw) {
     posRank: raw.posRank || raw.pos_rank || null,
     stateRank: raw.stateRank || raw.state_rank || raw.stRk || null,
     inState: !!(raw.inState ?? raw.in_state),
-    category: raw.category || 'recruit',
-    status: raw.status || 'committed',
-    committedTo: raw.committedTo || raw.committed_to || 'Florida',
+    category,
+    status: status || (isFloridaCommit({ status: 'committed', committedTo }) ? 'committed' : 'uncommitted'),
+    committedTo: isFloridaCommit({ status: status || 'uncommitted', committedTo })
+      ? committedTo || 'Florida'
+      : committedTo,
     fromSchool: raw.fromSchool || raw.from_school || null,
     commitDate: raw.commitDate || raw.commit_date || raw.date || null,
     skinny: raw.skinny || raw.note || '',
@@ -209,6 +227,10 @@ function preservePlayerFields(existing, incoming) {
 
 async function upsertPlayer(player) {
   const normalized = normalizePlayer(player);
+  if (!isFloridaCommit(normalized) && normalized.category === 'recruit') {
+    normalized.category = 'target';
+    if (normalized.status === 'committed') normalized.status = 'uncommitted';
+  }
   const sb = initSupabase();
   if (sb) {
     const { data, error } = await sb.from('players').upsert(playerToRow(normalized), { onConflict: 'slug' }).select().single();
@@ -442,8 +464,10 @@ async function createEvent(event) {
 async function getBoard(classYear) {
   const players = await getAllPlayers();
   const year = parseInt(classYear, 10);
-  const commits = players.filter((p) => p.category === 'recruit' && p.classYear === year);
-  const targets = players.filter((p) => p.category === 'target' && p.classYear === year);
+  const commits = players.filter((p) => p.classYear === year && isFloridaCommit(p));
+  const targets = players.filter(
+    (p) => p.classYear === year && p.category === 'target' && !isFloridaCommit(p)
+  );
   const rankings = (await getRankings()).find((r) => r.classYear === year) || null;
   return { classYear: year, commits, targets, rankings };
 }
@@ -485,6 +509,11 @@ function selectPortalHeadliner(incoming) {
 }
 
 async function fireRecruitingEvent({ eventType, player, skinny, detail, source }) {
+  const et = String(eventType || '').toLowerCase();
+  if (isVisitEventType(et)) {
+    throw new Error('Visit intel cannot use fireRecruitingEvent — use recordVisitIntel instead');
+  }
+
   let normalized = normalizePlayer(player);
   const existing = await getPlayerBySlug(normalized.slug);
   if (existing) normalized = preservePlayerFields(existing, normalized);
@@ -496,7 +525,12 @@ async function fireRecruitingEvent({ eventType, player, skinny, detail, source }
     portal_out: 'portal_out',
     target_update: 'target'
   };
-  normalized.status = statusMap[eventType] || normalized.status;
+  normalized.status = statusMap[et] || normalized.status;
+  if (['commit', 'flip'].includes(et)) {
+    normalized.committedTo = 'Florida';
+    normalized.category = 'recruit';
+    normalized.status = 'committed';
+  }
   normalized.skinny = skinny || normalized.skinny;
   normalized.updatedAt = nowIso();
   const saved = await upsertPlayer(normalized);
@@ -533,8 +567,31 @@ function storageMode() {
   return initSupabase() ? 'supabase' : 'local';
 }
 
+async function upsertTargetFromVisitIntel(intel) {
+  if (!intel?.playerSlug && !intel?.playerName) return null;
+  const slug = intel.playerSlug || slugify(intel.playerName);
+  const existing = await getPlayerBySlug(slug);
+  if (existing && isFloridaCommit(existing)) return existing;
+
+  const patch = {
+    slug,
+    name: intel.playerName || existing?.name,
+    pos: intel.pos || existing?.pos,
+    classYear: intel.classYear || existing?.classYear,
+    on3Id: intel.playerId || existing?.on3Id,
+    category: 'target',
+    status: 'uncommitted',
+    committedTo: existing?.committedTo ?? null,
+    skinny: intel.detail || existing?.skinny || '',
+    profileNote: intel.detail || existing?.profileNote || ''
+  };
+  if (existing) return upsertPlayer(preservePlayerFields(existing, patch));
+  return upsertPlayer(patch);
+}
+
 module.exports = {
   slugify,
+  isFloridaCommit,
   normalizePlayer,
   getAllPlayers,
   getPlayerBySlug,
@@ -548,6 +605,7 @@ module.exports = {
   getPortalBoard,
   selectPortalHeadliner,
   fireRecruitingEvent,
+  upsertTargetFromVisitIntel,
   storageMode,
   DATA_DIR,
   PLAYERS_PATH

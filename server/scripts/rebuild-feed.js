@@ -5,7 +5,7 @@
 const liveStore = require('../lib/live-store');
 const recruitingStore = require('../lib/recruiting-store');
 const { feedDedupeKeyForCommit } = require('../lib/commit-fingerprint');
-const { ingestRecruitingEvents, ingestPublishedContent } = require('../lib/live-aggregator');
+const { ingestRecruitingEvents, ingestRecruitingIntel, ingestPublishedContent } = require('../lib/live-aggregator');
 
 async function ingestBoardCommits() {
   const playerIndex = liveStore.loadPlayerIndex();
@@ -51,6 +51,10 @@ async function main() {
   console.log('Re-ingesting recruiting events…');
   const n = await ingestRecruitingEvents();
   console.log('  recruiting items:', n);
+
+  console.log('Re-ingesting recruiting intel…');
+  const intel = await ingestRecruitingIntel();
+  console.log('  intel items:', intel);
 
   console.log('Seeding 2027+ board commits…');
   const b = await ingestBoardCommits();

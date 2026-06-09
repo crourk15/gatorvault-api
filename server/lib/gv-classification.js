@@ -72,6 +72,13 @@ function isVisitEventType(eventType) {
  * Resolve canonical event badge type from event metadata.
  * Default: info — never commit unless event is an explicit commit/flip/decommit.
  */
+function isPlayerFloridaCommit(player) {
+  if (!player) return false;
+  const status = String(player.status || '').toLowerCase();
+  const committedTo = String(player.committedTo || player.committed_to || '').trim();
+  return status === 'committed' && /^florida$/i.test(committedTo);
+}
+
 function resolveEventType(eventType, player, rawType) {
   const et = String(eventType || rawType || '').toLowerCase().trim();
   const cy = getClassYear(player);
@@ -95,7 +102,9 @@ function resolveEventType(eventType, player, rawType) {
       if (cy != null && cy >= GV_PORTAL_MIN_CLASS) return 'portal';
       return 'info';
     }
-    if (cy != null && cy >= GV_COMMIT_MIN_CLASS && cat !== 'portal') return 'commit';
+    if (cy != null && cy >= GV_COMMIT_MIN_CLASS && cat !== 'portal' && isPlayerFloridaCommit(player)) {
+      return 'commit';
+    }
     return 'info';
   }
 
@@ -176,6 +185,7 @@ module.exports = {
   getClassYear,
   formatPortalTitle,
   isVisitEventType,
+  isPlayerFloridaCommit,
   resolveEventType,
   classifyRecruitPlayer,
   classifyFeedItemType,

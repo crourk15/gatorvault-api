@@ -1,4 +1,5 @@
 const store = require('./recruiting-store');
+const intelStore = require('./recruiting-intel-store');
 const { runOn3Ingest, syncPortalFromOn3, getIngestStatus } = require('./on3-ingest');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { buildHeatCheck } = require('./heat-check-store');
@@ -137,7 +138,35 @@ function mountRecruitingRoutes(app) {
     try {
       const player = await store.getPlayerBySlug(req.params.slug);
       if (!player) return res.status(404).json({ ok: false, error: 'Player not found' });
-      const events = (await store.getEvents({ limit: 20 })).filter((e) => e.playerSlug === player.slug);
+      const storeEvents = (await store.getEvents({ limit: 20 })).filter((e) => e.playerSlug === player.slug);
+      const intelItems = intelStore.getIntelForPlayer({
+        playerSlug: player.slug,
+        playerId: player.on3Id,
+        playerName: player.name
+      });
+      const intelEvents = intelItems.map((i) => ({
+        id: i.id,
+        playerSlug: player.slug,
+        eventType: i.eventType,
+        title:
+          i.eventType === 'official_visit'
+            ? `${i.playerName || player.name} — Official Visit Scheduled`
+            : i.eventType === 'unofficial_visit'
+              ? `${i.playerName || player.name} — Unofficial Visit`
+              : `${i.playerName || player.name} — ${i.status || i.eventType || 'Intel'}`,
+        skinny: i.detail || '',
+        detail: i.detail || '',
+        createdAt: i.reportedAt || i.createdAt,
+        source: i.source || 'intel',
+        payload: {
+          visitStart: i.visitStart,
+          visitEnd: i.visitEnd,
+          intelFingerprint: i.fingerprint
+        }
+      }));
+      const events = [...intelEvents, ...storeEvents]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 20);
       return res.json({ ok: true, player, events });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

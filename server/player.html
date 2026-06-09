@@ -284,6 +284,14 @@
       return st.charAt(0).toUpperCase() + st.slice(1);
     }
 
+    function recruitStatusLabel(p) {
+      var st = String(p.status || '').toLowerCase();
+      var to = String(p.committedTo || '').trim();
+      if (st === 'committed' && /^florida$/i.test(to)) return 'Committed to Florida';
+      if (to && !/^florida$/i.test(to)) return 'Uncommitted · ' + to + ' commit';
+      return 'Uncommitted';
+    }
+
     function renderPortal(p, events) {
       document.title = p.name + ' — Portal Transfer · GatorVault';
       document.getElementById('loading').classList.add('hidden');
@@ -403,7 +411,7 @@
         + '<div class="meas-card"><div class="meas-label">Natl Rank</div><div class="meas-value">' + (p.natlRank != null ? '#' + p.natlRank : '—') + '</div></div>'
         + '<div class="meas-card"><div class="meas-label">Pos Rank</div><div class="meas-value">' + (p.posRank != null ? '#' + p.posRank : '—') + '</div></div>'
         + '<div class="meas-card"><div class="meas-label">State Rank</div><div class="meas-value">' + (p.stateRank != null ? '#' + p.stateRank : '—') + '</div></div>'
-        + '<div class="meas-card"><div class="meas-label">Status</div><div class="meas-value">' + (p.status || '—') + '</div></div>';
+        + '<div class="meas-card"><div class="meas-label">Status</div><div class="meas-value">' + recruitStatusLabel(p) + '</div></div>';
       document.getElementById('p-bio').textContent = p.skinny || p.profileNote || 'GatorVault recruit profile.';
       document.getElementById('p-scheme').classList.add('hidden');
       if (p.commitDate) {

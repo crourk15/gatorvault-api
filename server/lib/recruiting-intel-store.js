@@ -5,6 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const { intelFingerprint, feedDedupeKeyForIntel } = require('./commit-fingerprint');
+const { isVisitEventType } = require('./gv-classification');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const INTEL_PATH = path.join(DATA_DIR, 'intel.json');
@@ -97,17 +98,31 @@ function addIntel(raw) {
   if (!row.fingerprint) {
     throw new Error('Could not compute intel fingerprint');
   }
+  if (isVisitEventType(row.eventType) && /commit/i.test(String(row.status || ''))) {
+    throw new Error('Visit intel cannot be labeled as a commit');
+  }
 
   const doc = loadIntelDoc();
   doc.items = doc.items || [];
   const existing = doc.items.find((i) => i.fingerprint === row.fingerprint);
   if (existing) {
-    return { item: existing, created: false, duplicate: true };
+    return Promise.resolve({ item: existing, created: false, duplicate: true, player: null });
   }
 
   doc.items.unshift(row);
   saveIntelDoc(doc);
-  return { item: row, created: true, duplicate: false };
+
+  if (isVisitEventType(row.eventType)) {
+    const store = require('./recruiting-store');
+    return store.upsertTargetFromVisitIntel(row).then((player) => ({
+      item: row,
+      created: true,
+      duplicate: false,
+      player
+    }));
+  }
+
+  return Promise.resolve({ item: row, created: true, duplicate: false, player: null });
 }
 
 function markIntelXPostQueued(idOrFingerprint) {
