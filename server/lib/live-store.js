@@ -190,6 +190,36 @@ function reclassifyFeedItems() {
   return { total: next.length, changed, removed: items.length - next.length };
 }
 
+function dedupeCommitFeedItems() {
+  const items = loadFeedItems();
+  const commitBySlug = new Map();
+  const other = [];
+
+  for (const raw of items) {
+    const item = normalizeFeedItem(raw);
+    if (item.type !== 'commit') {
+      other.push(item);
+      continue;
+    }
+    const slug = item.meta?.playerSlug || item.meta?.player?.slug;
+    if (!slug) {
+      other.push(item);
+      continue;
+    }
+    const key = `commit:${slug}`;
+    const row = { ...item, id: key, dedupeKey: key };
+    const prev = commitBySlug.get(slug);
+    if (!prev || new Date(row.createdAt) > new Date(prev.createdAt)) {
+      commitBySlug.set(slug, row);
+    }
+  }
+
+  const merged = [...commitBySlug.values(), ...other];
+  merged.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  saveFeedItems(merged);
+  return { commits: commitBySlug.size, total: merged.length, removed: items.length - merged.length };
+}
+
 function purgeTestFeedItems() {
   const playerIndex = loadPlayerIndex();
   const items = loadFeedItems()
@@ -230,6 +260,7 @@ module.exports = {
   addManualFeedItem,
   getFeedItems,
   purgeTestFeedItems,
+  dedupeCommitFeedItems,
   newId,
   nowIso
 };

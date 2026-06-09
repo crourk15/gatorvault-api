@@ -30,10 +30,16 @@ async function ingestRecruitingEvents() {
   events.forEach((ev) => {
     if (isTestRecruitingEvent(ev)) return;
     const player = playerIndex.bySlug.get(ev.playerSlug) || ev.payload?.player || null;
+    const stableCommitKey =
+      ev.eventType === 'commit' || ev.eventType === 'flip'
+        ? `commit:${ev.playerSlug}`
+        : ev.eventType === 'decommit'
+          ? `decommit:${ev.playerSlug}:${ev.id}`
+          : `rec_${ev.id}`;
     const classified = liveStore.classifyFeedItem(
       {
-        id: `rec_${ev.id}`,
-        dedupeKey: `rec_${ev.id}`,
+        id: stableCommitKey,
+        dedupeKey: stableCommitKey,
         type: EVENT_TYPE_MAP[ev.eventType] || 'breaking',
         title: ev.title,
         summary: ev.skinny || ev.detail || '',

@@ -1,727 +1,51 @@
 [
   {
-    "id": "rec_evt_1780793061530_zg56zg",
-    "dedupeKey": "rec_evt_1780793061530_zg56zg",
+    "id": "board_2027_jaydee-lane",
+    "dedupeKey": "commit:jaydee-lane",
     "type": "commit",
-    "title": "Jaylen Jordon commits to Florida",
-    "summary": "TE · 3★ · Hilliard, FL",
-    "url": "/player/jaylen-jordon",
+    "title": "Jaydee Lane commits to Florida",
+    "summary": "LS · 3★ · Mendenhall, MS · #1800 natl",
+    "source_url": "/player/jaydee-lane",
     "imageUrl": null,
     "source": "on3",
     "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.530Z",
+    "createdAt": "2026-06-08T00:00:00.000Z",
     "meta": {
       "eventType": "commit",
-      "playerSlug": "jaylen-jordon"
-    },
-    "updatedAt": "2026-06-07T05:06:12.229Z"
-  },
-  {
-    "id": "rec_evt_1780793061527_750l80",
-    "dedupeKey": "rec_evt_1780793061527_750l80",
-    "type": "commit",
-    "title": "Ace Ciongoli commits to Florida",
-    "summary": "WR · 3★ · Needham, MA",
-    "url": "/player/ace-ciongoli",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.527Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "ace-ciongoli"
-    },
-    "updatedAt": "2026-06-07T05:06:12.277Z"
-  },
-  {
-    "id": "rec_evt_1780793061523_rm6nv2",
-    "dedupeKey": "rec_evt_1780793061523_rm6nv2",
-    "type": "commit",
-    "title": "Miller Fealy commits to Florida",
-    "summary": "P · 3★ · Melbourne, VIC",
-    "url": "/player/miller-fealy",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.523Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "miller-fealy"
-    },
-    "updatedAt": "2026-06-07T05:06:12.281Z"
-  },
-  {
-    "id": "rec_evt_1780793061520_cotw7k",
-    "dedupeKey": "rec_evt_1780793061520_cotw7k",
-    "type": "commit",
-    "title": "Carter Milliron commits to Florida",
-    "summary": "LS · 3★ · Hoover, AL",
-    "url": "/player/carter-milliron",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.520Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "carter-milliron"
-    },
-    "updatedAt": "2026-06-07T05:06:12.287Z"
-  },
-  {
-    "id": "rec_evt_1780793061515_pj2b4f",
-    "dedupeKey": "rec_evt_1780793061515_pj2b4f",
-    "type": "commit",
-    "title": "Alec Clark commits to Florida",
-    "summary": "P · 3★ · Melbourne, VIC",
-    "url": "/player/alec-clark",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.515Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "alec-clark"
-    },
-    "updatedAt": "2026-06-07T05:06:12.291Z"
-  },
-  {
-    "id": "rec_evt_1780793061512_tkxi6y",
-    "dedupeKey": "rec_evt_1780793061512_tkxi6y",
-    "type": "commit",
-    "title": "Patrick Durkin commits to Florida",
-    "summary": "K · 3★ · Plainfield, IL",
-    "url": "/player/patrick-durkin",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.512Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "patrick-durkin"
-    },
-    "updatedAt": "2026-06-07T05:06:12.304Z"
-  },
-  {
-    "id": "rec_evt_1780793061509_wh2gb7",
-    "dedupeKey": "rec_evt_1780793061509_wh2gb7",
-    "type": "commit",
-    "title": "Emmanuel Oyebadejo commits to Florida",
-    "summary": "DL · 3★ · England",
-    "url": "/player/emmanuel-oyebadejo",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.509Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "emmanuel-oyebadejo"
-    },
-    "updatedAt": "2026-06-07T05:06:12.308Z"
-  },
-  {
-    "id": "rec_evt_1780793061506_xv22jk",
-    "dedupeKey": "rec_evt_1780793061506_xv22jk",
-    "type": "commit",
-    "title": "Lacota Dippre commits to Florida",
-    "summary": "TE · 3★ · Jermyn, PA",
-    "url": "/player/lacota-dippre",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.506Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "lacota-dippre"
-    },
-    "updatedAt": "2026-06-07T05:06:12.310Z"
-  },
-  {
-    "id": "rec_evt_1780793061502_ca80ko",
-    "dedupeKey": "rec_evt_1780793061502_ca80ko",
-    "type": "commit",
-    "title": "Kanye Clark commits to Florida",
-    "summary": "S · 3★ · Sacramento, CA",
-    "url": "/player/kanye-clark",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.502Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "kanye-clark"
-    },
-    "updatedAt": "2026-06-07T05:06:12.311Z"
-  },
-  {
-    "id": "rec_evt_1780793061499_pu9ich",
-    "dedupeKey": "rec_evt_1780793061499_pu9ich",
-    "type": "commit",
-    "title": "Evan Chieca commits to Florida",
-    "summary": "TE · 3★ · Lindenhurst, NY",
-    "url": "/player/evan-chieca",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.499Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "evan-chieca"
-    },
-    "updatedAt": "2026-06-07T05:06:12.314Z"
-  },
-  {
-    "id": "rec_evt_1780793061495_73gq4h",
-    "dedupeKey": "rec_evt_1780793061495_73gq4h",
-    "type": "commit",
-    "title": "Jordy Lowery commits to Florida",
-    "summary": "CB · 3★ · Bartow, FL",
-    "url": "/player/jordy-lowery",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.495Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "jordy-lowery"
-    },
-    "updatedAt": "2026-06-07T05:06:12.317Z"
-  },
-  {
-    "id": "rec_evt_1780793061491_97szix",
-    "dedupeKey": "rec_evt_1780793061491_97szix",
-    "type": "commit",
-    "title": "Bailey Stockton commits to Florida",
-    "summary": "WR · 3★ · Athens, GA",
-    "url": "/player/bailey-stockton",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.491Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "bailey-stockton"
-    },
-    "updatedAt": "2026-06-07T05:06:12.321Z"
-  },
-  {
-    "id": "rec_evt_1780793061488_yj6upy",
-    "dedupeKey": "rec_evt_1780793061488_yj6upy",
-    "type": "commit",
-    "title": "TJ Bullard commits to Florida",
-    "summary": "LB · 3★ · Tampa, FL",
-    "url": "/player/tj-bullard",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.488Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "tj-bullard"
-    },
-    "updatedAt": "2026-06-07T05:06:12.323Z"
-  },
-  {
-    "id": "rec_evt_1780793061485_4s02em",
-    "dedupeKey": "rec_evt_1780793061485_4s02em",
-    "type": "commit",
-    "title": "Harrison Moore commits to Florida",
-    "summary": "IOL · 3★ · Southlake, TX",
-    "url": "/player/harrison-moore",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.485Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "harrison-moore"
-    },
-    "updatedAt": "2026-06-07T05:06:12.326Z"
-  },
-  {
-    "id": "rec_evt_1780793061479_9vdvm3",
-    "dedupeKey": "rec_evt_1780793061479_9vdvm3",
-    "type": "commit",
-    "title": "Eric Singleton Jr. commits to Florida",
-    "summary": "WR · 3★ · Douglasville, GA",
-    "url": "/player/eric-singleton-jr",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.479Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "eric-singleton-jr"
-    },
-    "updatedAt": "2026-06-07T05:06:12.328Z"
-  },
-  {
-    "id": "rec_evt_1780793061475_jdr6yy",
-    "dedupeKey": "rec_evt_1780793061475_jdr6yy",
-    "type": "commit",
-    "title": "Jaylen Lloyd commits to Florida",
-    "summary": "WR · 3★ · Omaha, NE",
-    "url": "/player/jaylen-lloyd",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.475Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "jaylen-lloyd"
-    },
-    "updatedAt": "2026-06-07T05:06:12.330Z"
-  },
-  {
-    "id": "rec_evt_1780793061471_dopf6b",
-    "dedupeKey": "rec_evt_1780793061471_dopf6b",
-    "type": "commit",
-    "title": "Emeka Ugorji commits to Florida",
-    "summary": "OT · 3★ · Dallas, TX",
-    "url": "/player/emeka-ugorji",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.471Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "emeka-ugorji"
-    },
-    "updatedAt": "2026-06-07T05:06:12.333Z"
-  },
-  {
-    "id": "rec_evt_1780793061467_v4rma3",
-    "dedupeKey": "rec_evt_1780793061467_v4rma3",
-    "type": "commit",
-    "title": "DJ Coleman commits to Florida",
-    "summary": "S · 3★ · Mesquite, TX",
-    "url": "/player/dj-coleman",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.467Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "dj-coleman"
-    },
-    "updatedAt": "2026-06-07T05:06:12.336Z"
-  },
-  {
-    "id": "rec_evt_1780793061464_drp9tc",
-    "dedupeKey": "rec_evt_1780793061464_drp9tc",
-    "type": "commit",
-    "title": "Mason Clinton commits to Florida",
-    "summary": "DL · 3★ · Petal, MS",
-    "url": "/player/mason-clinton",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.464Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "mason-clinton"
-    },
-    "updatedAt": "2026-06-07T05:06:12.338Z"
-  },
-  {
-    "id": "rec_evt_1780793061461_mpl0hc",
-    "dedupeKey": "rec_evt_1780793061461_mpl0hc",
-    "type": "commit",
-    "title": "DK Kalu commits to Florida",
-    "summary": "DL · 3★ · Missouri City, TX",
-    "url": "/player/dk-kalu",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.461Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "dk-kalu"
-    },
-    "updatedAt": "2026-06-07T05:06:12.341Z"
-  },
-  {
-    "id": "rec_evt_1780793061457_x5eyo6",
-    "dedupeKey": "rec_evt_1780793061457_x5eyo6",
-    "type": "commit",
-    "title": "Aaron Philo commits to Florida",
-    "summary": "QB · 3★ · Bogart, GA",
-    "url": "/player/aaron-philo",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.457Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "aaron-philo"
-    },
-    "updatedAt": "2026-06-07T05:06:12.347Z"
-  },
-  {
-    "id": "rec_evt_1780793061454_p0m9jq",
-    "dedupeKey": "rec_evt_1780793061454_p0m9jq",
-    "type": "commit",
-    "title": "London Montgomery commits to Florida",
-    "summary": "RB · 3★ · Scranton, PA",
-    "url": "/player/london-montgomery",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.454Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "london-montgomery"
-    },
-    "updatedAt": "2026-06-07T05:06:12.349Z"
-  },
-  {
-    "id": "rec_evt_1780793061451_9ujhe6",
-    "dedupeKey": "rec_evt_1780793061451_9ujhe6",
-    "type": "commit",
-    "title": "Eagan Boyer commits to Florida",
-    "summary": "OT · 3★ · Cornelius, NC",
-    "url": "/player/eagan-boyer",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.451Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "eagan-boyer"
-    },
-    "updatedAt": "2026-06-07T05:06:12.355Z"
-  },
-  {
-    "id": "rec_evt_1780793061448_iwkq8l",
-    "dedupeKey": "rec_evt_1780793061448_iwkq8l",
-    "type": "commit",
-    "title": "Luke Harpring commits to Florida",
-    "summary": "TE · 3★ · Atlanta, GA",
-    "url": "/player/luke-harpring",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.448Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "luke-harpring"
-    },
-    "updatedAt": "2026-06-07T05:06:12.358Z"
-  },
-  {
-    "id": "rec_evt_1780793061444_056lhr",
-    "dedupeKey": "rec_evt_1780793061444_056lhr",
-    "type": "commit",
-    "title": "Micah Mays commits to Florida",
-    "summary": "WR · 3★ · North Palm Beach, FL",
-    "url": "/player/micah-mays",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.444Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "micah-mays"
-    },
-    "updatedAt": "2026-06-07T05:06:12.360Z"
-  },
-  {
-    "id": "rec_evt_1780793061441_m1idyi",
-    "dedupeKey": "rec_evt_1780793061441_m1idyi",
-    "type": "commit",
-    "title": "Cam Dooley commits to Florida",
-    "summary": "S · 3★ · Valley, AL",
-    "url": "/player/cam-dooley",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.441Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "cam-dooley"
-    },
-    "updatedAt": "2026-06-07T05:06:12.363Z"
-  },
-  {
-    "id": "rec_evt_1780793061437_161b43",
-    "dedupeKey": "rec_evt_1780793061437_161b43",
-    "type": "commit",
-    "title": "T.J. Shanahan commits to Florida",
-    "summary": "IOL · 3★ · Orlando, FL",
-    "url": "/player/t-j-shanahan",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.437Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "t-j-shanahan"
-    },
-    "updatedAt": "2026-06-07T05:06:12.365Z"
-  },
-  {
-    "id": "rec_evt_1780793061434_uoeo8m",
-    "dedupeKey": "rec_evt_1780793061434_uoeo8m",
-    "type": "commit",
-    "title": "Evan Pryor commits to Florida",
-    "summary": "RB · 3★ · Cornelius, NC",
-    "url": "/player/evan-pryor",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.434Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "evan-pryor"
-    },
-    "updatedAt": "2026-06-07T05:06:12.369Z"
-  },
-  {
-    "id": "rec_evt_1780793061430_inzctr",
-    "dedupeKey": "rec_evt_1780793061430_inzctr",
-    "type": "commit",
-    "title": "Javier Jones commits to Florida",
-    "summary": "CB · 3★ · Phoenix, AZ · #265 natl",
-    "url": "/player/javier-jones",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.430Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "javier-jones"
-    },
-    "updatedAt": "2026-06-07T05:06:12.372Z"
-  },
-  {
-    "id": "rec_evt_1780793061427_535l35",
-    "dedupeKey": "rec_evt_1780793061427_535l35",
-    "type": "commit",
-    "title": "Eric Parks commits to Florida",
-    "summary": "S · 3★ · Tampa, FL · #1750 natl",
-    "url": "/player/eric-parks",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.427Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "eric-parks"
-    },
-    "updatedAt": "2026-06-07T05:06:12.374Z"
-  },
-  {
-    "id": "rec_evt_1780793061424_hbs0cq",
-    "dedupeKey": "rec_evt_1780793061424_hbs0cq",
-    "type": "commit",
-    "title": "Javarii Luckas commits to Florida",
-    "summary": "OT · 3★ · Belle Glade, FL · #1147 natl",
-    "url": "/player/javarii-luckas",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.424Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "javarii-luckas"
-    },
-    "updatedAt": "2026-06-07T05:06:12.376Z"
-  },
-  {
-    "id": "rec_evt_1780793061421_jxh7dr",
-    "dedupeKey": "rec_evt_1780793061421_jxh7dr",
-    "type": "commit",
-    "title": "Desmond Green commits to Florida",
-    "summary": "IOL · 3★ · Saint Stephen, SC · #884 natl",
-    "url": "/player/desmond-green",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.421Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "desmond-green"
-    },
-    "updatedAt": "2026-06-07T05:06:12.378Z"
-  },
-  {
-    "id": "rec_evt_1780793061417_88crcy",
-    "dedupeKey": "rec_evt_1780793061417_88crcy",
-    "type": "commit",
-    "title": "Elijah Owens commits to Florida",
-    "summary": "S · 3★ · Mobile, AL · #63 natl",
-    "url": "/player/elijah-owens",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.417Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "elijah-owens"
-    },
-    "updatedAt": "2026-06-07T05:06:12.380Z"
-  },
-  {
-    "id": "rec_evt_1780793061414_nmtilw",
-    "dedupeKey": "rec_evt_1780793061414_nmtilw",
-    "type": "commit",
-    "title": "Chancellor Campbell commits to Florida",
-    "summary": "OT · 3★ · Saint Petersburg, FL · #627 natl",
-    "url": "/player/chancellor-campbell",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.414Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "chancellor-campbell"
-    },
-    "updatedAt": "2026-06-07T05:06:12.382Z"
-  },
-  {
-    "id": "rec_evt_1780793061410_a7sgld",
-    "dedupeKey": "rec_evt_1780793061410_a7sgld",
-    "type": "commit",
-    "title": "G'Nivre Carr commits to Florida",
-    "summary": "IOL · 3★ · Ocala, FL · #505 natl",
-    "url": "/player/gnivre-carr",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.410Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "gnivre-carr"
-    },
-    "updatedAt": "2026-06-07T05:06:12.385Z"
-  },
-  {
-    "id": "rec_evt_1780793061406_bxnics",
-    "dedupeKey": "rec_evt_1780793061406_bxnics",
-    "type": "commit",
-    "title": "CJ Hester commits to Florida",
-    "summary": "CB · 3★ · Cocoa, FL · #503 natl",
-    "url": "/player/cj-hester",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.406Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "cj-hester"
-    },
-    "updatedAt": "2026-06-07T05:06:12.387Z"
-  },
-  {
-    "id": "rec_evt_1780793061403_7vrq73",
-    "dedupeKey": "rec_evt_1780793061403_7vrq73",
-    "type": "commit",
-    "title": "Kaiden Hall commits to Florida",
-    "summary": "S · 4★ · Milton, FL · #386 natl",
-    "url": "/player/kaiden-hall",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.403Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "kaiden-hall"
-    },
-    "updatedAt": "2026-06-07T05:06:12.390Z"
-  },
-  {
-    "id": "rec_evt_1780793061398_688lxv",
-    "dedupeKey": "rec_evt_1780793061398_688lxv",
-    "type": "commit",
-    "title": "Marquez Daniel commits to Florida",
-    "summary": "WR · 4★ · Tuskegee, AL · #367 natl",
-    "url": "/player/marquez-daniel",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.398Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "marquez-daniel"
-    },
-    "updatedAt": "2026-06-07T05:06:12.392Z"
-  },
-  {
-    "id": "rec_evt_1780793061394_39tcez",
-    "dedupeKey": "rec_evt_1780793061394_39tcez",
-    "type": "commit",
-    "title": "Heze Kent commits to Florida",
-    "summary": "OT · 4★ · Brunswick, GA · #366 natl",
-    "url": "/player/heze-kent",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.394Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "heze-kent"
-    },
-    "updatedAt": "2026-06-07T05:06:12.394Z"
-  },
-  {
-    "id": "rec_evt_1780793061391_wtw2y6",
-    "dedupeKey": "rec_evt_1780793061391_wtw2y6",
-    "type": "commit",
-    "title": "Malik Morris commits to Florida",
-    "summary": "LB · 4★ · Lakeland, FL · #362 natl",
-    "url": "/player/malik-morris",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-07T00:44:21.391Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "malik-morris"
-    },
-    "updatedAt": "2026-06-07T05:06:12.397Z"
-  },
-  {
-    "id": "rec_evt_1780776747966_rn2d8o",
-    "dedupeKey": "rec_evt_1780776747966_rn2d8o",
-    "type": "commit",
-    "title": "Ellis McGaskin commits to Florida",
-    "summary": "LB · 4★ · Mobile, AL · #347 natl",
-    "source_url": "/player/ellis-mcgaskin",
-    "imageUrl": null,
-    "source": "on3",
-    "author": "GatorVault Recruiting",
-    "createdAt": "2026-06-06T20:12:27.967Z",
-    "meta": {
-      "eventType": "commit",
-      "playerSlug": "ellis-mcgaskin",
+      "playerSlug": "jaydee-lane",
       "player": {
-        "id": "ellis-mcgaskin",
-        "slug": "ellis-mcgaskin",
-        "name": "Ellis McGaskin",
-        "pos": "LB",
+        "id": "jaydee-lane",
+        "slug": "jaydee-lane",
+        "name": "Jaydee Lane",
+        "pos": "LS",
         "classYear": 2027,
-        "school": "Mobile, AL",
-        "htWt": "5-11.5 / 210",
-        "stars": 4,
-        "rating": 89.32608695652173,
-        "natlRank": 347,
-        "posRank": 30,
-        "stateRank": 17,
+        "school": "Mendenhall, MS",
+        "htWt": "6-1 / 220",
+        "stars": 3,
+        "rating": 80,
+        "natlRank": 1800,
+        "posRank": 2,
+        "stateRank": 35,
         "inState": false,
         "category": "recruit",
         "status": "committed",
         "committedTo": "Florida",
         "fromSchool": null,
-        "commitDate": "2026-06-06",
-        "skinny": "LB · 4★ · Mobile, AL · #347 natl",
+        "commitDate": "2026-06-08",
+        "skinny": "LS · 3★ · Mendenhall, MS · #1800 natl",
         "profileNote": "",
-        "on3Id": "180930",
+        "on3Id": "285808",
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
-        "updatedAt": "2026-06-06T20:12:27.955Z"
+        "headliner": false,
+        "updatedAt": "2026-06-09T03:13:20.572Z"
       },
       "on3": true
     },
-    "url": "/player/ellis-mcgaskin",
-    "updatedAt": "2026-06-07T05:04:39.094Z"
+    "url": "/player/jaydee-lane",
+    "updatedAt": "2026-06-09T03:33:42.162Z"
   },
   {
     "id": "art_art-portal-class-2026",
@@ -729,24 +53,26 @@
     "type": "article",
     "title": "2026 Portal Class Recap: 23 In, 29 Out",
     "summary": "UF's 2026 transfer cycle in one clean read — who arrived, who left, where exits landed, and which returning defenders anchor the new scheme.",
-    "url": "/#articles",
+    "url": "/article/art-portal-class-2026",
     "imageUrl": null,
     "source": "content",
     "author": "GatorVault Staff",
     "createdAt": "June 6, 2026",
     "meta": {
-      "tier": "locker"
+      "tier": "locker",
+      "articleId": "art-portal-class-2026"
     },
-    "updatedAt": "2026-06-07T05:06:12.405Z",
+    "updatedAt": "2026-06-09T03:33:42.165Z",
     "source_url": "/article/art-portal-class-2026"
   },
   {
     "id": "board_2027_ellis-mcgaskin",
-    "dedupeKey": "board_commit:2027:ellis-mcgaskin",
+    "dedupeKey": "commit:ellis-mcgaskin",
     "type": "commit",
     "title": "Ellis McGaskin commits to Florida",
     "summary": "LB · 4★ · Mobile, AL · #347 natl",
     "source_url": "/player/ellis-mcgaskin",
+    "imageUrl": null,
     "source": "on3",
     "author": "GatorVault Recruiting",
     "createdAt": "2026-06-06T00:00:00.000Z",
@@ -775,49 +101,21 @@
         "skinny": "LB · 4★ · Mobile, AL · #347 natl",
         "profileNote": "",
         "on3Id": "180930",
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-06T20:12:27.955Z"
       },
       "on3": true
     },
     "url": "/player/ellis-mcgaskin",
-    "updatedAt": "2026-06-07T05:04:39.134Z"
-  },
-  {
-    "id": "gators-breakdown_ecc49b4c-6108-11f1-ab67-f757a2cedece",
-    "dedupeKey": "gators-breakdown_ecc49b4c-6108-11f1-ab67-f757a2cedece",
-    "type": "podcast",
-    "title": "New episode: Gators Breakdown — Florida Stacks Two Defenders in a Day: Cahron Wheeler & Kamarion Johnson Commit for 2027",
-    "summary": "Florida just landed back-to-back commitments on the defensive side of the ball, and both stories are worth your time. Four-star edge Cahron Wheeler picks the Gators on his official visit, then athlete Kamarion Johnson follows right after over Florida State and Cincinnati. We dig into the recruitments, the evaluations, and what Jon Sumrall's staff is putting together for 2027. Sign up for PrizePicks with code: HMA and get $50 in lineups instantly when you play your first $5+ lineup! https://link.",
-    "url": null,
-    "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-    "source": "rss",
-    "author": "Gators Breakdown",
-    "createdAt": "2026-06-05T18:11:00.000Z",
-    "meta": {
-      "showId": "gators-breakdown"
-    },
-    "updatedAt": "2026-06-07T05:06:14.912Z"
-  },
-  {
-    "id": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
-    "dedupeKey": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
-    "type": "podcast",
-    "title": "New episode: Gators Online Podcast — Ep. 187: Official visits underway for Florida football, baseball | Gators Online Show",
-    "summary": "Welcome to the Gators Online Show! In the latest episode, we discuss official visits starting for the Florida football and baseball programs. Hosted by Simplecast, an AdsWizz company. See pcm.adswizz.com for information about our collection and use of personal data for advertising.",
-    "url": "https://www.on3.com/teams/florida-gators/",
-    "imageUrl": "https://image.simplecastcdn.com/images/3cc5de72-bc68-492d-a510-2d5236a0a9b6/f8486d0e-44e1-45e2-8e77-d82d9340cad3/untitled_design_2pdf_69.jpg",
-    "source": "rss",
-    "author": "Gators Online Podcast",
-    "createdAt": "2026-06-05T17:23:52.000Z",
-    "meta": {
-      "showId": "gators-online"
-    },
-    "updatedAt": "2026-06-07T05:06:15.116Z"
+    "updatedAt": "2026-06-09T03:33:42.157Z"
   },
   {
     "id": "board_2027_cahron-wheeler",
-    "dedupeKey": "board_commit:2027:cahron-wheeler",
+    "dedupeKey": "commit:cahron-wheeler",
     "type": "commit",
     "title": "Cahron Wheeler commits to Florida",
     "summary": "EDGE · 4★ · St. Paul's School (Baltimore, MD)",
@@ -850,13 +148,64 @@
         "skinny": "EDGE · 4★ · St. Paul's School (Baltimore, MD)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.485Z"
       },
       "on3": true
     },
     "url": "/player/cahron-wheeler",
-    "updatedAt": "2026-06-07T05:04:39.132Z"
+    "updatedAt": "2026-06-09T03:33:42.155Z"
+  },
+  {
+    "id": "board_2027_kamarion-johnson",
+    "dedupeKey": "commit:kamarion-johnson",
+    "type": "commit",
+    "title": "Kamarion Johnson commits to Florida",
+    "summary": "ATH · 3★ · Clinch County, GA · #813 natl",
+    "source_url": "/player/kamarion-johnson",
+    "source": "on3",
+    "author": "GatorVault Recruiting",
+    "createdAt": "2026-06-05T00:00:00.000Z",
+    "meta": {
+      "eventType": "commit",
+      "playerSlug": "kamarion-johnson",
+      "player": {
+        "id": "kamarion-johnson",
+        "slug": "kamarion-johnson",
+        "name": "Kamarion Johnson",
+        "pos": "ATH",
+        "classYear": 2027,
+        "school": "Clinch County, GA",
+        "htWt": "6-0 / 185",
+        "stars": 3,
+        "rating": 86,
+        "natlRank": 813,
+        "posRank": 26,
+        "stateRank": 94,
+        "inState": false,
+        "category": "recruit",
+        "status": "committed",
+        "committedTo": "Florida",
+        "fromSchool": null,
+        "commitDate": "2026-06-05",
+        "skinny": "ATH · 3★ · Clinch County, GA · #813 natl",
+        "profileNote": "",
+        "on3Id": "283680",
+        "on3Slug": "kamarion-johnson-283680",
+        "on3ProfileUrl": "https://www.on3.com/rivals/kamarion-johnson-283680/",
+        "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
+        "starsDisplay": "★★★",
+        "headliner": false,
+        "updatedAt": "2026-06-09T04:00:00.000Z"
+      },
+      "on3": true
+    },
+    "url": "/player/kamarion-johnson",
+    "updatedAt": "2026-06-09T03:33:42.159Z"
   },
   {
     "id": "art_art-summer-battles",
@@ -864,19 +213,21 @@
     "type": "article",
     "title": "Summer Camp Preview: 5 Position Battles to Watch",
     "summary": "Fall camp opens August 2nd. These five position battles will shape the starting lineup, the two-deep, and how {{ coach.HC }}'s first season unfolds.",
-    "url": "/#articles",
+    "source_url": "/article/art-summer-battles",
     "imageUrl": null,
     "source": "content",
     "author": "GatorVault Staff",
     "createdAt": "June 4, 2026",
     "meta": {
-      "tier": "locker"
+      "tier": "locker",
+      "articleId": "art-summer-battles"
     },
-    "updatedAt": "2026-06-07T05:06:12.420Z"
+    "updatedAt": "2026-06-09T03:33:42.172Z",
+    "url": "/article/art-summer-battles"
   },
   {
     "id": "board_2027_zahmar-tookes",
-    "dedupeKey": "board_commit:2027:zahmar-tookes",
+    "dedupeKey": "commit:zahmar-tookes",
     "type": "commit",
     "title": "Zahmar Tookes commits to Florida",
     "summary": "DL · 4★ · Brighton (Rochester, NY)",
@@ -909,13 +260,17 @@
         "skinny": "DL · 4★ · Brighton (Rochester, NY)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.504Z"
       },
       "on3": true
     },
     "url": "/player/zahmar-tookes",
-    "updatedAt": "2026-06-07T05:04:39.133Z"
+    "updatedAt": "2026-06-09T03:33:42.156Z"
   },
   {
     "id": "art_art-win-model",
@@ -923,20 +278,21 @@
     "type": "article",
     "title": "War Room: 2026 Schedule Win Probability Model",
     "summary": "Our proprietary model simulates every game 10,000 times using roster data, returning production, and opponent strength. Here's where UF wins, where it's vulnerable, and the two games that decide the season.",
-    "url": "/#articles",
+    "url": "/article/art-win-model",
     "imageUrl": null,
     "source": "content",
     "author": "GatorVault Analytics",
     "createdAt": "June 3, 2026",
     "meta": {
-      "tier": "war"
+      "tier": "war",
+      "articleId": "art-win-model"
     },
-    "updatedAt": "2026-06-07T05:06:12.418Z",
+    "updatedAt": "2026-06-09T03:33:42.171Z",
     "source_url": "/article/art-win-model"
   },
   {
     "id": "board_2027_kennedee-jackson",
-    "dedupeKey": "board_commit:2027:kennedee-jackson",
+    "dedupeKey": "commit:kennedee-jackson",
     "type": "commit",
     "title": "Kennedee Jackson commits to Florida",
     "summary": "OT · 4★ · Lithonia (Lithonia, GA)",
@@ -969,29 +325,17 @@
         "skinny": "OT · 4★ · Lithonia (Lithonia, GA)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.143Z"
       },
       "on3": true
     },
     "url": "/player/kennedee-jackson",
-    "updatedAt": "2026-06-07T05:04:39.110Z"
-  },
-  {
-    "id": "gnfp_b37211a8-96f7-46c7-93f2-447f4b88b214",
-    "dedupeKey": "gnfp_b37211a8-96f7-46c7-93f2-447f4b88b214",
-    "type": "podcast",
-    "title": "New episode: Gator Nation Football Podcast — 2026- June Mailbag",
-    "summary": "2026- June Mailbag If you enjoy the content, drop us a dono for as little as $7. Full GNFP Film Review Access starts at $15. https://www.patreon.com/1165790/join Merch https://gnfp.sellfy.store/ Join the GNFP SAMI WhatsApp Group: https://chat.whatsapp.com/CxPmbYiMwDyCTgh7nLcVQE?mode=ems_qr_t Join the GNFP JAVA Discord Group: https://discord.com/invite/j324a9FdZY From our sponsors! Cary and Nadine David https://www.floridaprobatelawgroup.com/ Hosted by Simplecast, an AdsWizz company. See pcm.adsw",
-    "url": "https://bleav.com/shows/the-gator-nation-football-podcast/episodes/2026-june-mailbag/",
-    "imageUrl": "https://image.simplecastcdn.com/images/6215cda8-011d-4ccd-9fe8-c389912a62af/e256885d-0642-4524-a606-6ff2bbf10eb3/3000x3000/gator-nation-football.jpg?aid=rss_feed",
-    "source": "rss",
-    "author": "Gator Nation Football Podcast",
-    "createdAt": "2026-06-01T20:46:00.000Z",
-    "meta": {
-      "showId": "gnfp"
-    },
-    "updatedAt": "2026-06-07T05:06:15.166Z"
+    "updatedAt": "2026-06-09T03:33:42.131Z"
   },
   {
     "id": "art_art-sumrall-6mo",
@@ -999,20 +343,21 @@
     "type": "article",
     "title": "{{ coach.HC }}'s First 6 Months: A Real Assessment",
     "summary": "Six months in, {{ coach.HC }} has rebuilt the roster through the portal, installed a new defensive identity, and kept the locker room bought in. We grade every major decision.",
-    "url": "/#articles",
+    "url": "/article/art-sumrall-6mo",
     "imageUrl": null,
     "source": "content",
     "author": "GatorVault Staff",
     "createdAt": "June 1, 2026",
     "meta": {
-      "tier": "locker"
+      "tier": "locker",
+      "articleId": "art-sumrall-6mo"
     },
-    "updatedAt": "2026-06-07T05:06:12.412Z",
+    "updatedAt": "2026-06-09T03:33:42.169Z",
     "source_url": "/article/art-sumrall-6mo"
   },
   {
     "id": "board_2027_jabios-smith",
-    "dedupeKey": "board_commit:2027:jabios-smith",
+    "dedupeKey": "commit:jabios-smith",
     "type": "commit",
     "title": "Ja'Bios Smith commits to Florida",
     "summary": "LB · 4★ · Swainsboro (Swainsboro, GA)",
@@ -1045,13 +390,17 @@
         "skinny": "LB · 4★ · Swainsboro (Swainsboro, GA)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.156Z"
       },
       "on3": true
     },
     "url": "/player/jabios-smith",
-    "updatedAt": "2026-06-07T05:04:39.112Z"
+    "updatedAt": "2026-06-09T03:33:42.132Z"
   },
   {
     "id": "art_art-335-revolution",
@@ -1059,32 +408,17 @@
     "type": "article",
     "title": "The 3-3-5 Revolution: Why {{ coach.DC }}'s Scheme Changes Everything",
     "summary": "{{ coach.DC }}'s 3-3-5 isn't a gimmick — it's a personnel-driven answer to modern spread offenses. Here's how it works, who benefits, and why Jayden Woods makes it dangerous.",
-    "url": "/#articles",
+    "url": "/article/art-335-revolution",
     "imageUrl": null,
     "source": "content",
     "author": "GatorVault Film Desk",
     "createdAt": "May 28, 2026",
     "meta": {
-      "tier": "locker"
+      "tier": "locker",
+      "articleId": "art-335-revolution"
     },
-    "updatedAt": "2026-06-07T05:06:12.409Z",
+    "updatedAt": "2026-06-09T03:33:42.167Z",
     "source_url": "/article/art-335-revolution"
-  },
-  {
-    "id": "gator-tales_tag:soundcloud,2010:tracks/2328301979",
-    "dedupeKey": "gator-tales_tag:soundcloud,2010:tracks/2328301979",
-    "type": "podcast",
-    "title": "New episode: Gator Tales — Gator Tales #60: Duke Werner - Executive Associate Athletics Director / Director of Sport",
-    "summary": "In the latest episode of Gator Tales, Presented by UF Health, Voice of the Gators Sean Kelley sits down for an exclusive conversation with Executive Associate Athletics Director/Director of Sport Dave Werner. During Episode 60, Kelley and Werner look back on the 2025-26 athletic year and discuss his new role with the Gators. They also dive into recent UF coaching changes along with a slew of other topics in a candid and informative visit for Gator Nation.",
-    "url": "https://soundcloud.com/gatortales/gator-tales-60-duke-werner",
-    "imageUrl": "https://i1.sndcdn.com/artworks-ktoVXbVH7C9XVMQo-yq0AWg-t3000x3000.png",
-    "source": "rss",
-    "author": "Gator Tales",
-    "createdAt": "2026-05-27T12:47:35.000Z",
-    "meta": {
-      "showId": "gator-tales"
-    },
-    "updatedAt": "2026-06-07T05:06:17.038Z"
   },
   {
     "id": "art_art-philo-film",
@@ -1092,20 +426,21 @@
     "type": "article",
     "title": "Aaron Philo Film Study: Who Is The New UF Quarterback?",
     "summary": "Georgia Tech transfer Aaron Philo brings pro-style mechanics and anticipatory throwing to Gainesville. We broke down 12 games of film to map his strengths, weaknesses, and fit in {{ coach.OC }}'s offense.",
-    "url": "/#articles",
+    "url": "/article/art-philo-film",
     "imageUrl": null,
     "source": "content",
     "author": "GatorVault Film Desk",
     "createdAt": "May 22, 2026",
     "meta": {
-      "tier": "film"
+      "tier": "film",
+      "articleId": "art-philo-film"
     },
-    "updatedAt": "2026-06-07T05:06:12.414Z",
+    "updatedAt": "2026-06-09T03:33:42.170Z",
     "source_url": "/article/art-philo-film"
   },
   {
     "id": "board_2027_elias-pearl",
-    "dedupeKey": "board_commit:2027:elias-pearl",
+    "dedupeKey": "commit:elias-pearl",
     "type": "commit",
     "title": "Elias Pearl commits to Florida",
     "summary": "WR · 4★ · Port Charlotte (Port Charlotte, FL)",
@@ -1138,17 +473,21 @@
         "skinny": "WR · 4★ · Port Charlotte (Port Charlotte, FL)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.179Z"
       },
       "on3": true
     },
     "url": "/player/elias-pearl",
-    "updatedAt": "2026-06-07T05:04:39.113Z"
+    "updatedAt": "2026-06-09T03:33:42.133Z"
   },
   {
     "id": "board_2027_cain-van-norden",
-    "dedupeKey": "board_commit:2027:cain-van-norden",
+    "dedupeKey": "commit:cain-van-norden",
     "type": "commit",
     "title": "Cain Van Norden commits to Florida",
     "summary": "DL · 3★ · Bishop McNamara (District Heights, MD)",
@@ -1181,17 +520,21 @@
         "skinny": "DL · 3★ · Bishop McNamara (District Heights, MD)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.465Z"
       },
       "on3": true
     },
     "url": "/player/cain-van-norden",
-    "updatedAt": "2026-06-07T05:04:39.130Z"
+    "updatedAt": "2026-06-09T03:33:42.153Z"
   },
   {
     "id": "board_2027_andrew-beard",
-    "dedupeKey": "board_commit:2027:andrew-beard",
+    "dedupeKey": "commit:andrew-beard",
     "type": "commit",
     "title": "Andrew Beard commits to Florida",
     "summary": "RB · 4★ · Prince Avenue Christian (Bogart, GA)",
@@ -1224,17 +567,21 @@
         "skinny": "RB · 4★ · Prince Avenue Christian (Bogart, GA)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.320Z"
       },
       "on3": true
     },
     "url": "/player/andrew-beard",
-    "updatedAt": "2026-06-07T05:04:39.123Z"
+    "updatedAt": "2026-06-09T03:33:42.144Z"
   },
   {
     "id": "board_2027_stive-bentley-keumajou",
-    "dedupeKey": "board_commit:2027:stive-bentley-keumajou",
+    "dedupeKey": "commit:stive-bentley-keumajou",
     "type": "commit",
     "title": "Stive-Bentley Keumajou commits to Florida",
     "summary": "DL · 3★ · Coral Gables Senior (Coral Gables, FL)",
@@ -1267,17 +614,21 @@
         "skinny": "DL · 3★ · Coral Gables Senior (Coral Gables, FL)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.378Z"
       },
       "on3": true
     },
     "url": "/player/stive-bentley-keumajou",
-    "updatedAt": "2026-06-07T05:04:39.126Z"
+    "updatedAt": "2026-06-09T03:33:42.149Z"
   },
   {
     "id": "board_2027_kailib-dillard",
-    "dedupeKey": "board_commit:2027:kailib-dillard",
+    "dedupeKey": "commit:kailib-dillard",
     "type": "commit",
     "title": "Kailib Dillard commits to Florida",
     "summary": "S · 3★ · Jenks (Tulsa, OK)",
@@ -1310,17 +661,21 @@
         "skinny": "S · 3★ · Jenks (Tulsa, OK)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.357Z"
       },
       "on3": true
     },
     "url": "/player/kailib-dillard",
-    "updatedAt": "2026-06-07T05:04:39.125Z"
+    "updatedAt": "2026-06-09T03:33:42.148Z"
   },
   {
     "id": "board_2027_elijah-hutcheson",
-    "dedupeKey": "board_commit:2027:elijah-hutcheson",
+    "dedupeKey": "commit:elijah-hutcheson",
     "type": "commit",
     "title": "Elijah Hutcheson commits to Florida",
     "summary": "OT · 4★ · North Cross School (Roanoke, VA)",
@@ -1353,17 +708,21 @@
         "skinny": "OT · 4★ · North Cross School (Roanoke, VA)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.339Z"
       },
       "on3": true
     },
     "url": "/player/elijah-hutcheson",
-    "updatedAt": "2026-06-07T05:04:39.124Z"
+    "updatedAt": "2026-06-09T03:33:42.146Z"
   },
   {
     "id": "board_2027_devoun-kendrick",
-    "dedupeKey": "board_commit:2027:devoun-kendrick",
+    "dedupeKey": "commit:devoun-kendrick",
     "type": "commit",
     "title": "De'Voun Kendrick commits to Florida",
     "summary": "DL · 3★ · Carrollwood Day (Tampa, FL)",
@@ -1396,17 +755,21 @@
         "skinny": "DL · 3★ · Carrollwood Day (Tampa, FL)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.214Z"
       },
       "on3": true
     },
     "url": "/player/devoun-kendrick",
-    "updatedAt": "2026-06-07T05:04:39.115Z"
+    "updatedAt": "2026-06-09T03:33:42.136Z"
   },
   {
     "id": "board_2027_peyton-miller",
-    "dedupeKey": "board_commit:2027:peyton-miller",
+    "dedupeKey": "commit:peyton-miller",
     "type": "commit",
     "title": "Peyton Miller commits to Florida",
     "summary": "IOL · 4★ · Anna (Anna, TX)",
@@ -1439,17 +802,21 @@
         "skinny": "IOL · 4★ · Anna (Anna, TX)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.198Z"
       },
       "on3": true
     },
     "url": "/player/peyton-miller",
-    "updatedAt": "2026-06-07T05:04:39.114Z"
+    "updatedAt": "2026-06-09T03:33:42.134Z"
   },
   {
     "id": "board_2027_anthony-jennings",
-    "dedupeKey": "board_commit:2027:anthony-jennings",
+    "dedupeKey": "commit:anthony-jennings",
     "type": "commit",
     "title": "Anthony Jennings commits to Florida",
     "summary": "WR · 4★ · Dillard (Fort Lauderdale, FL)",
@@ -1482,17 +849,21 @@
         "skinny": "WR · 4★ · Dillard (Fort Lauderdale, FL)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.300Z"
       },
       "on3": true
     },
     "url": "/player/anthony-jennings",
-    "updatedAt": "2026-06-07T05:04:39.122Z"
+    "updatedAt": "2026-06-09T03:33:42.142Z"
   },
   {
     "id": "board_2027_tommy-douglas",
-    "dedupeKey": "board_commit:2027:tommy-douglas",
+    "dedupeKey": "commit:tommy-douglas",
     "type": "commit",
     "title": "Tommy Douglas commits to Florida",
     "summary": "TE · 4★ · Hun School (Princeton, NJ)",
@@ -1525,17 +896,21 @@
         "skinny": "TE · 4★ · Hun School (Princeton, NJ)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.233Z"
       },
       "on3": true
     },
     "url": "/player/tommy-douglas",
-    "updatedAt": "2026-06-07T05:04:39.116Z"
+    "updatedAt": "2026-06-09T03:33:42.137Z"
   },
   {
     "id": "board_2027_aamaury-fountain",
-    "dedupeKey": "board_commit:2027:aamaury-fountain",
+    "dedupeKey": "commit:aamaury-fountain",
     "type": "commit",
     "title": "Aamaury Fountain commits to Florida",
     "summary": "CB · 4★ · Northside (Warner Robins, GA)",
@@ -1568,17 +943,21 @@
         "skinny": "CB · 4★ · Northside (Warner Robins, GA)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.253Z"
       },
       "on3": true
     },
     "url": "/player/aamaury-fountain",
-    "updatedAt": "2026-06-07T05:04:39.117Z"
+    "updatedAt": "2026-06-09T03:33:42.138Z"
   },
   {
     "id": "board_2027_davin-davidson",
-    "dedupeKey": "board_commit:2027:davin-davidson",
+    "dedupeKey": "commit:davin-davidson",
     "type": "commit",
     "title": "Davin Davidson commits to Florida",
     "summary": "QB · 4★ · Cardinal Mooney (Sarasota, FL)",
@@ -1611,17 +990,21 @@
         "skinny": "QB · 4★ · Cardinal Mooney (Sarasota, FL)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.268Z"
       },
       "on3": true
     },
     "url": "/player/davin-davidson",
-    "updatedAt": "2026-06-07T05:04:39.119Z"
+    "updatedAt": "2026-06-09T03:33:42.139Z"
   },
   {
     "id": "board_2027_maxwell-hiller",
-    "dedupeKey": "board_commit:2027:maxwell-hiller",
+    "dedupeKey": "commit:maxwell-hiller",
     "type": "commit",
     "title": "Maxwell Hiller commits to Florida",
     "summary": "IOL · 5★ · Coatesville, PA · #3 natl",
@@ -1654,17 +1037,21 @@
         "skinny": "IOL · 5★ · Coatesville, PA · #3 natl",
         "profileNote": "",
         "on3Id": "180637",
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T23:51:37.746Z"
       },
       "on3": true
     },
     "url": "/player/maxwell-hiller",
-    "updatedAt": "2026-06-07T05:04:39.120Z"
+    "updatedAt": "2026-06-09T03:33:42.140Z"
   },
   {
     "id": "board_2027_tramond-collins",
-    "dedupeKey": "board_commit:2027:tramond-collins",
+    "dedupeKey": "commit:tramond-collins",
     "type": "commit",
     "title": "Tramond Collins commits to Florida",
     "summary": "WR · 4★ · Cottondale (Cottondale, FL)",
@@ -1697,17 +1084,21 @@
         "skinny": "WR · 4★ · Cottondale (Cottondale, FL)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.411Z"
       },
       "on3": true
     },
     "url": "/player/tramond-collins",
-    "updatedAt": "2026-06-07T05:04:39.127Z"
+    "updatedAt": "2026-06-09T03:33:42.150Z"
   },
   {
     "id": "board_2027_jackson-ballinger",
-    "dedupeKey": "board_commit:2027:jackson-ballinger",
+    "dedupeKey": "commit:jackson-ballinger",
     "type": "commit",
     "title": "Jackson Ballinger commits to Florida",
     "summary": "TE · 4★ · Centerburg (Centerburg, OH)",
@@ -1740,17 +1131,21 @@
         "skinny": "TE · 4★ · Centerburg (Centerburg, OH)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.428Z"
       },
       "on3": true
     },
     "url": "/player/jackson-ballinger",
-    "updatedAt": "2026-06-07T05:04:39.129Z"
+    "updatedAt": "2026-06-09T03:33:42.151Z"
   },
   {
     "id": "board_2027_amare-nugent",
-    "dedupeKey": "board_commit:2027:amare-nugent",
+    "dedupeKey": "commit:amare-nugent",
     "type": "commit",
     "title": "Amare Nugent commits to Florida",
     "summary": "CB · 4★ · American Heritage (Plantation, FL)",
@@ -1783,12 +1178,16 @@
         "skinny": "CB · 4★ · American Heritage (Plantation, FL)",
         "profileNote": "",
         "on3Id": null,
+        "on3Slug": null,
+        "on3ProfileUrl": null,
+        "on3Source": null,
         "starsDisplay": null,
+        "headliner": false,
         "updatedAt": "2026-06-05T20:46:10.448Z"
       },
       "on3": true
     },
     "url": "/player/amare-nugent",
-    "updatedAt": "2026-06-07T05:04:39.130Z"
+    "updatedAt": "2026-06-09T03:33:42.152Z"
   }
 ]

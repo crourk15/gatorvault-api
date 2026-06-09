@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="GatorVault">
+  <defs>
+    <linearGradient id="gv-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0021A5"/>
+      <stop offset="100%" stop-color="#001845"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#gv-bg)"/>
+  <text x="32" y="44" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="700" fill="#FA4616">G</text>
+  <text x="32" y="44" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="700" fill="#FFFFFF" opacity="0.15">G</text>
+  <rect x="8" y="52" width="48" height="3" rx="1.5" fill="#FA4616"/>
+</svg>

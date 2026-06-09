@@ -65,23 +65,120 @@ async function findExistingPlayer(player) {
   return all.find((p) => p.slug === slug) || null;
 }
 
-async function recentlyFired(slug, eventType) {
-  const events = await store.getEvents({ limit: 30 });
-  const since = Date.now() - 2 * 60 * 60 * 1000;
-  return events.some(
-    (e) =>
-      e.playerSlug === slug &&
-      e.eventType === eventType &&
-      e.source === 'on3' &&
-      new Date(e.createdAt).getTime() > since
-  );
+function commitAlertKey(player) {
+  if (player.on3Id) return `on3:${player.on3Id}`;
+  return `slug:${store.slugify(player.name)}`;
 }
 
-async function firePlayerEvent(eventType, player, extra) {
+function loadFiredAlerts(snapshot) {
+  return snapshot.firedAlerts || {};
+}
+
+function saveFiredAlert(snapshot, player, eventType, eventId) {
+  snapshot.firedAlerts = snapshot.firedAlerts || {};
+  snapshot.firedAlerts[commitAlertKey(player)] = {
+    eventType,
+    commitDate: player.commitDate || null,
+    eventId: eventId || null,
+    firedAt: new Date().toISOString()
+  };
+}
+
+async function shouldSkipCommitAlert(eventType, player, snapshot) {
+  if (!['commit', 'flip'].includes(eventType)) return null;
+
+  const key = commitAlertKey(player);
+  const slug = store.slugify(player.name);
+  const commitDate = player.commitDate || null;
+  const fired = loadFiredAlerts(snapshot)[key];
+
+  if (fired) {
+    if (fired.eventType === 'decommit') return null;
+    if (fired.commitDate === commitDate) {
+      return {
+        reason: 'duplicate_commit_alert',
+        key,
+        slug,
+        commitDate,
+        priorEventId: fired.eventId,
+        priorFiredAt: fired.firedAt
+      };
+    }
+    if (commitDate && fired.commitDate && commitDate !== fired.commitDate) {
+      return null;
+    }
+  }
+
+  const events = await store.getEvents({ limit: 500 });
+  const prior = events.find(
+    (e) =>
+      e.source === 'on3' &&
+      ['commit', 'flip'].includes(e.eventType) &&
+      (e.playerSlug === slug ||
+        (player.on3Id && String(e.payload?.player?.on3Id) === String(player.on3Id)))
+  );
+  if (prior) {
+    const priorDate = prior.payload?.player?.commitDate || null;
+    if (priorDate === commitDate || (!commitDate && !priorDate)) {
+      saveFiredAlert(snapshot, player, prior.eventType, prior.id);
+      return {
+        reason: 'duplicate_commit_event',
+        key,
+        slug,
+        commitDate,
+        priorEventId: prior.id,
+        priorFiredAt: prior.createdAt
+      };
+    }
+  }
+
+  return null;
+}
+
+async function syncBoardCommitsToPlayers(commits) {
+  let synced = 0;
+  for (const p of commits || []) {
+    const existing = await findExistingPlayer(p);
+    const slug = existing?.slug || store.slugify(p.name);
+    await store.upsertPlayer({
+      ...(existing || {}),
+      slug,
+      name: p.name,
+      pos: p.pos,
+      classYear: p.classYear,
+      school: p.school,
+      htWt: p.htWt,
+      stars: p.stars,
+      rating: p.rating,
+      natlRank: p.natlRank,
+      posRank: p.posRank,
+      stateRank: p.stateRank,
+      inState: p.inState,
+      category: 'recruit',
+      status: 'committed',
+      committedTo: 'Florida',
+      commitDate: p.commitDate || existing?.commitDate || null,
+      on3Id: p.on3Id,
+      on3Slug: p.on3Slug || existing?.on3Slug || null,
+      on3ProfileUrl: buildOn3ProfileUrl({ ...p, slug }),
+      on3Source: p.on3Source || existing?.on3Source || null,
+      skinny: buildSkinny(p),
+      starsDisplay: starsDisplay(p.stars),
+      updatedAt: new Date().toISOString()
+    });
+    synced += 1;
+  }
+  return synced;
+}
+
+async function firePlayerEvent(eventType, player, extra, snapshot) {
   const existing = await findExistingPlayer(player);
   const slug = existing?.slug || store.slugify(player.name);
-  if (await recentlyFired(slug, eventType)) {
-    return { skipped: true, reason: 'recent_duplicate', slug, eventType };
+
+  const skip = await shouldSkipCommitAlert(eventType, player, snapshot);
+  if (skip) {
+    console.log('[on3-ingest] Skipped duplicate commit alert:', slug, skip.reason, skip.priorEventId || '');
+    return { skipped: true, slug, eventType, ...skip };
   }
 
   const isFlip =
@@ -118,6 +215,9 @@ async function firePlayerEvent(eventType, player, extra) {
   };
 
   const result = await store.fireRecruitingEvent(payload);
+  if (['commit', 'flip', 'decommit'].includes(resolvedType)) {
+    saveFiredAlert(snapshot, player, resolvedType, result.event?.id);
+  }
   return { fired: true, eventType: resolvedType, slug, eventId: result.event?.id };
 }
 
@@ -236,16 +336,20 @@ async function runOn3Ingest(options = {}) {
     const prevRank = snapshot.years[year] && snapshot.years[year].rankings;
     const liveRank = live.rankings[year] || null;
 
+    const synced = await syncBoardCommitsToPlayers(commits);
+    result.synced = result.synced || {};
+    result.synced[year] = synced;
+
     if (baseline) {
       snapshot.years[year] = { commits: currMap, rankings: liveRank };
-      result.skipped.push({ year, reason: 'baseline_saved', commitCount: commits.length });
+      result.skipped.push({ year, reason: 'baseline_saved', commitCount: commits.length, synced });
       continue;
     }
 
     for (const key of Object.keys(currMap)) {
       if (prevMap[key]) continue;
       try {
-        const out = await firePlayerEvent('commit', currMap[key]);
+        const out = await firePlayerEvent('commit', currMap[key], null, snapshot);
         if (out.fired) result.fired.push({ year, ...out });
         else result.skipped.push({ year, key, ...out });
       } catch (e) {
@@ -256,7 +360,7 @@ async function runOn3Ingest(options = {}) {
     for (const key of Object.keys(prevMap)) {
       if (currMap[key]) continue;
       try {
-        const out = await firePlayerEvent('decommit', prevMap[key]);
+        const out = await firePlayerEvent('decommit', prevMap[key], null, snapshot);
         if (out.fired) result.fired.push({ year, ...out });
         else result.skipped.push({ year, key, ...out });
       } catch (e) {

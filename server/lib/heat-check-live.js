@@ -32,10 +32,11 @@ const INSIDER_HANDLES = new Set([
   'gatorsonline',
   'keithniebuhr',
   'jamieivins',
-  'andrewpower'
+  'andrewpower',
+  'chadsimmons_'
 ]);
 
-const TRUSTED_INSIDER_PATTERN = /bender|alderman|wiltfong|ivins|power|abolverdi|niebuhr/i;
+const TRUSTED_INSIDER_PATTERN = /bender|alderman|wiltfong|ivins|power|abolverdi|niebuhr|chad\s*simmons|chadsimmons/i;
 
 /** UF within this many RPM points of the leader = "close/neutral" for visit intel */
 const RPM_CLOSE_GAP = parseFloat(process.env.HEAT_CHECK_RPM_CLOSE_GAP || '8', 10);
@@ -140,7 +141,7 @@ function parseBeatIntel(beatPosts) {
     } else if (/trending|momentum|flip|commit soon|decision|visiting|official/.test(lower) && /florida|gators|\buf\b/.test(lower)) {
       intel.push({ type: 'uf_leads', insider, text, url: post.url, publishedAt: post.publishedAt });
     }
-    if (/crystal ball|prediction|rpm|247|wiltfong|bender|alderman|ivins|power/.test(lower)) {
+    if (/crystal ball|prediction|rpm|247|wiltfong|bender|alderman|ivins|power|simmons/.test(lower)) {
       intel.push({ type: 'prediction', insider, text, url: post.url, publishedAt: post.publishedAt });
     }
   }

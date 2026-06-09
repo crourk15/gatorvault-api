@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="GatorVault  Florida Gators Football Hub">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#001845"/>
+      <stop offset="55%" stop-color="#0021A5"/>
+      <stop offset="100%" stop-color="#001030"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FA4616"/>
+      <stop offset="100%" stop-color="#FF7A45"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1200" height="8" fill="url(#accent)"/>
+  <circle cx="980" cy="120" r="180" fill="#FA4616" opacity="0.08"/>
+  <circle cx="1050" cy="520" r="240" fill="#FFFFFF" opacity="0.04"/>
+  <text x="80" y="210" font-family="Georgia, 'Times New Roman', serif" font-size="92" font-weight="700" fill="#FFFFFF">GatorVault</text>
+  <text x="80" y="280" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="600" fill="#FA4616" letter-spacing="6">FLORIDA GATORS FOOTBALL</text>
+  <text x="80" y="360" font-family="Arial, Helvetica, sans-serif" font-size="30" fill="#E2E8F0">Depth charts · Recruiting · Portal · Film Room · Live Beat</text>
+  <text x="80" y="410" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#94A3B8">Your insider hub for Gator Nation  gatorvaultinsider.com</text>
+  <rect x="80" y="470" width="320" height="56" rx="28" fill="url(#accent)"/>
+  <text x="240" y="507" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#FFFFFF">30-DAY FREE TRIAL</text>
+  <text x="80" y="585" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#64748B">Recruiting intel · Heat Check · X AutoPoster · On3 sync</text>
+</svg>

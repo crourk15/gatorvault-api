@@ -15,7 +15,7 @@ async function ingestBoardCommits() {
       const classified = liveStore.classifyFeedItem(
         {
           id: `board_${year}_${p.slug}`,
-          dedupeKey: `board_commit:${year}:${p.slug}`,
+          dedupeKey: `commit:${p.slug}`,
           type: 'commit',
           title: `${p.name} commits to Florida`,
           summary: p.skinny || `${p.pos} · ${p.stars}★ · ${p.school}`,
@@ -36,6 +36,10 @@ async function ingestBoardCommits() {
 }
 
 async function main() {
+  console.log('Deduping commit feed items…');
+  const d = liveStore.dedupeCommitFeedItems();
+  console.log('  commits unique:', d.commits, 'removed:', d.removed);
+
   console.log('Purging test items…');
   liveStore.purgeTestFeedItems();
 
