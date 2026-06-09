@@ -9,6 +9,7 @@
   { "id": "power", "name": "Charles Power", "handle": "CharlesPower", "outlet": "On3" },
   { "id": "ivins", "name": "Andrew Ivins", "handle": "JamieIvins", "outlet": "On3 / Gators Online" },
   { "id": "simmons", "name": "Chad Simmons", "handle": "ChadSimmons_", "outlet": "On3" },
+  { "id": "fawcett", "name": "Hayes Fawcett", "handle": "Hayesfawcett3", "outlet": "On3 / Rivals" },
   { "id": "harden", "name": "Tyler Harden", "handle": "ttjharden8", "outlet": "Swamp247 / 247Sports" },
   { "id": "hall", "name": "Graham Hall", "handle": "GrahamHall_", "outlet": "The Gainesville Sun" },
   { "id": "delatorre", "name": "Nick de la Torre", "handle": "NickdelatorreGC", "outlet": "The Gainesville Sun" },

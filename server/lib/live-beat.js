@@ -218,6 +218,13 @@ async function refreshBeatStream() {
   };
   store.saveBeatCache(next);
 
+  try {
+    const { runBeatVisitIntelIngest } = require('./beat-visit-intel-ingest');
+    runBeatVisitIntelIngest().catch((err) => console.warn('[visit-intel]', err.message));
+  } catch {
+    /* optional */
+  }
+
   merged.slice(0, 30).forEach((post) => {
     store.upsertFeedItem({
       id: post.id,

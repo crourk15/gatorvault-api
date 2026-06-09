@@ -12,6 +12,7 @@ const TRUSTED_REPORTERS = [
   'Blake Alderman',
   'Keith Niebuhr',
   'Chad Simmons',
+  'Hayes Fawcett',
   'Tyler Harden',
   'Zach Abolverdi',
   'Graham Hall',

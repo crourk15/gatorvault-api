@@ -67,6 +67,8 @@ function normalizeIntel(raw) {
     articleUrl: raw.articleUrl || raw.article_url || null,
     rivalsPickKey: raw.rivalsPickKey || raw.rivals_pick_key || null,
     predictionSchool: raw.predictionSchool || raw.prediction_school || null,
+    cancelledSchool: raw.cancelledSchool || raw.cancelled_school || null,
+    nextVisitSchool: raw.nextVisitSchool || raw.next_visit_school || null,
     createdAt: raw.createdAt || nowIso()
   };
 }

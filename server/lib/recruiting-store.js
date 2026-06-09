@@ -106,6 +106,11 @@ function normalizePlayer(raw) {
     rivalsAnalyst: raw.rivalsAnalyst || raw.rivals_analyst || null,
     rivalsConfidence: raw.rivalsConfidence != null ? Number(raw.rivalsConfidence) : raw.rivals_confidence != null ? Number(raw.rivals_confidence) : null,
     rivalsArticleUrl: raw.rivalsArticleUrl || raw.rivals_article_url || null,
+    ufOvStatus: raw.ufOvStatus || raw.uf_ov_status || null,
+    ufOvCancelledAt: raw.ufOvCancelledAt || raw.uf_ov_cancelled_at || null,
+    nextVisitSchool: raw.nextVisitSchool || raw.next_visit_school || null,
+    visitStart: raw.visitStart || raw.visit_start || null,
+    visitEnd: raw.visitEnd || raw.visit_end || null,
     starsDisplay: raw.starsDisplay || raw.stars_display || null,
     headliner: !!(raw.headliner ?? raw.is_headliner),
     updatedAt: raw.updatedAt || raw.updated_at || nowIso()
@@ -577,6 +582,8 @@ async function upsertTargetFromVisitIntel(intel) {
   const existing = await getPlayerBySlug(slug);
   if (existing && isFloridaCommit(existing)) return existing;
 
+  const isCancel = intel.eventType === 'visit_cancelled' || intel.eventType === 'ov_change';
+
   const patch = {
     slug,
     name: intel.playerName || existing?.name,
@@ -589,6 +596,22 @@ async function upsertTargetFromVisitIntel(intel) {
     skinny: intel.detail || existing?.skinny || '',
     profileNote: intel.detail || existing?.profileNote || ''
   };
+
+  if (isCancel) {
+    patch.ufOvStatus = 'cancelled';
+    patch.ufOvCancelledAt = intel.timestamp || intel.reportedAt || nowIso();
+    patch.nextVisitSchool = intel.nextVisitSchool || existing?.nextVisitSchool || null;
+    patch.visitStart = null;
+    patch.visitEnd = null;
+    patch.profileNote = intel.nextVisitSchool
+      ? `OV to Florida cancelled · now visiting ${intel.nextVisitSchool}`
+      : 'OV to Florida cancelled';
+  } else if (intel.eventType === 'official_visit' || intel.eventType === 'unofficial_visit') {
+    patch.visitStart = intel.visitStart || existing?.visitStart || null;
+    patch.visitEnd = intel.visitEnd || existing?.visitEnd || null;
+    patch.ufOvStatus = 'scheduled';
+  }
+
   if (existing) return upsertPlayer(preservePlayerFields(existing, patch));
   return upsertPlayer(patch);
 }

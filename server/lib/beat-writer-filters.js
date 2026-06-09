@@ -7,13 +7,17 @@ const FLORIDA_TEXT_RE =
 const FLORIDA_URL_RE =
   /florida|gators|gator|uf\.edu|on3\.com\/teams\/florida|gatorsonline|247sports\.com\/.*florida|floridagators\.com/i;
 
-const CHAD_SIMMONS_HANDLES = new Set(['chadsimmons_']);
+/** National reporters — only UF-related posts pass through. */
+const NATIONAL_UF_ONLY_HANDLES = new Set(['chadsimmons_', 'hayesfawcett3']);
+
+const CHAD_SIMMONS_HANDLES = NATIONAL_UF_ONLY_HANDLES;
 
 const TRUSTED_HANDLES = new Set([
   'corey_bender',
   'blake_alderman',
   'keithniebuhr',
   'chadsimmons_',
+  'hayesfawcett3',
   'ttjharden8',
   'zachabolverdi',
   'gatorsonline',
@@ -27,7 +31,8 @@ const TRUSTED_HANDLES = new Set([
   'alligatorarmy'
 ]);
 
-const TRUSTED_PATTERN = /bender|alderman|niebuhr|simmons|harden|abolverdi|gatorsonline|ivins|wiltfong|power|gators breakdown/i;
+const TRUSTED_PATTERN =
+  /bender|alderman|niebuhr|simmons|fawcett|harden|abolverdi|gatorsonline|ivins|wiltfong|power|gators breakdown/i;
 
 const MOMENTUM_KEYWORDS = [
   'trending up',
@@ -44,10 +49,23 @@ const MOMENTUM_KEYWORDS = [
 const RECRUITING_SIGNAL_RE =
   /\b(recruit|commit|visit|portal|offer|flip|decommit|depth|injury|scheme|coach|transfer|verb|crystal|rpm|247|on3|quarterback|qb|signing|class|target|official|unofficial|prediction|forecast)\b/i;
 
-function isChadSimmonsPost(post) {
+function isNationalUfOnlyReporter(post) {
   const handle = String(post.handle || post.writerId || '').toLowerCase();
   const writer = String(post.writerName || '');
-  return CHAD_SIMMONS_HANDLES.has(handle) || /chad\s*simmons|chadsimmons/i.test(writer);
+  if (NATIONAL_UF_ONLY_HANDLES.has(handle)) return true;
+  if (/chad\s*simmons|chadsimmons/i.test(writer)) return true;
+  if (/hayes\s*fawcett|hayesfawcett/i.test(writer)) return true;
+  return false;
+}
+
+function isChadSimmonsPost(post) {
+  return isNationalUfOnlyReporter(post) && /chad\s*simmons|chadsimmons/i.test(String(post.writerName || post.handle || ''));
+}
+
+function isHayesFawcettPost(post) {
+  const handle = String(post.handle || post.writerId || '').toLowerCase();
+  const writer = String(post.writerName || '');
+  return handle === 'hayesfawcett3' || /hayes\s*fawcett|hayesfawcett/i.test(writer);
 }
 
 function isFloridaRelatedText(text) {
@@ -74,9 +92,9 @@ function isFloridaRelatedPost(post) {
   return postUrls(post).some(isFloridaRelatedUrl);
 }
 
-/** Chad Simmons: national reporter — only UF-related posts pass through. */
+/** National reporters (Chad Simmons, Hayes Fawcett) — only UF-related posts pass through. */
 function shouldIncludeBeatPost(post) {
-  if (isChadSimmonsPost(post) && !isFloridaRelatedPost(post)) return false;
+  if (isNationalUfOnlyReporter(post) && !isFloridaRelatedPost(post)) return false;
   return true;
 }
 
@@ -112,7 +130,10 @@ function matchesGatorFootballIntel(text) {
 module.exports = {
   FLORIDA_TEXT_RE,
   MOMENTUM_KEYWORDS,
+  NATIONAL_UF_ONLY_HANDLES,
+  isNationalUfOnlyReporter,
   isChadSimmonsPost,
+  isHayesFawcettPost,
   isFloridaRelatedText,
   isFloridaRelatedPost,
   shouldIncludeBeatPost,

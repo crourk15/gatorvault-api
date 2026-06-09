@@ -2,6 +2,7 @@ const store = require('./recruiting-store');
 const intelStore = require('./recruiting-intel-store');
 const { runOn3Ingest, syncPortalFromOn3, getIngestStatus } = require('./on3-ingest');
 const { runRivalsPredictionIngest, getRivalsPmStatus } = require('./rivals-prediction-ingest');
+const { runBeatVisitIntelIngest, ingestManualVisitIntel } = require('./beat-visit-intel-ingest');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { buildHeatCheck } = require('./heat-check-store');
 const highlightsStore = require('./highlights-store');
@@ -154,7 +155,9 @@ function mountRecruitingRoutes(app) {
             ? `${i.playerName || player.name} — Official Visit Scheduled`
             : i.eventType === 'unofficial_visit'
               ? `${i.playerName || player.name} — Unofficial Visit`
-              : `${i.playerName || player.name} — ${i.status || i.eventType || 'Intel'}`,
+              : i.eventType === 'visit_cancelled' || i.eventType === 'ov_change'
+                ? `${i.playerName || player.name} — OV to Florida Cancelled`
+                : `${i.playerName || player.name} — ${i.status || i.eventType || 'Intel'}`,
         skinny: i.detail || '',
         detail: i.detail || '',
         createdAt: i.reportedAt || i.createdAt,
@@ -344,6 +347,25 @@ function mountRecruitingRoutes(app) {
       return res.json({ ok: true, ...result });
     } catch (err) {
       console.error('rivals-pm ingest error', err);
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/recruiting/beat-visit/ingest', async (req, res) => {
+    try {
+      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.get('X-Ingest-Secret') || '');
+      if (pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
+        return res.status(401).json({ ok: false, error: 'Invalid ingest secret' });
+      }
+      if (req.body.row && req.body.row.playerName) {
+        const result = await ingestManualVisitIntel(req.body.row);
+        return res.json({ ok: true, ...result });
+      }
+      const force = req.body.force === true || req.query.force === 'true';
+      const result = await runBeatVisitIntelIngest({ force });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      console.error('beat-visit ingest error', err);
       return res.status(500).json({ ok: false, error: err.message });
     }
   });

@@ -11,6 +11,7 @@ const TRUSTED_WRITERS = [
   { id: 'ivins', name: 'Andrew Ivins', aliases: ['andrew ivins', 'jamie ivins', 'jamieivins'] },
   { id: 'alderman', name: 'Blake Alderman', aliases: ['blake alderman', 'blake_alderman'] },
   { id: 'simmons', name: 'Chad Simmons', aliases: ['chad simmons', 'chadsimmons_'] },
+  { id: 'fawcett', name: 'Hayes Fawcett', aliases: ['hayes fawcett', 'hayesfawcett3'] },
   { id: 'harden', name: 'Tyler Harden', aliases: ['tyler harden', 'ttjharden8'] },
   { id: 'wiltfong', name: 'Steve Wiltfong', aliases: ['steve wiltfong', 'stevewiltfong'] }
 ];

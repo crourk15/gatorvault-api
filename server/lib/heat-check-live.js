@@ -36,10 +36,12 @@ const INSIDER_HANDLES = new Set([
   'jamieivins',
   'andrewpower',
   'chadsimmons_',
+  'hayesfawcett3',
   'ttjharden8'
 ]);
 
-const TRUSTED_INSIDER_PATTERN = /bender|alderman|wiltfong|ivins|power|abolverdi|niebuhr|chad\s*simmons|chadsimmons|tyler\s*harden|harden/i;
+const TRUSTED_INSIDER_PATTERN =
+  /bender|alderman|wiltfong|ivins|power|abolverdi|niebuhr|chad\s*simmons|chadsimmons|hayes\s*fawcett|hayesfawcett|tyler\s*harden|harden/i;
 
 /** UF within this many RPM points of the leader = "close/neutral" for visit intel */
 const RPM_CLOSE_GAP = parseFloat(process.env.HEAT_CHECK_RPM_CLOSE_GAP || '8', 10);
@@ -134,6 +136,10 @@ function pickManualVisitIntel(manualIntel) {
   );
 }
 
+function pickVisitCancelledIntel(manualIntel) {
+  return (manualIntel || []).find((i) => i.eventType === 'visit_cancelled' || i.eventType === 'ov_change');
+}
+
 function pickRivalsPredictionIntel(manualIntel) {
   return (manualIntel || []).find(
     (i) =>
@@ -165,8 +171,11 @@ function parseBeatIntel(beatPosts) {
     } else if (/trending|momentum|flip|commit soon|decision|visiting|official/.test(lower) && /florida|gators|\buf\b/.test(lower)) {
       intel.push({ type: 'uf_leads', insider, text, url: post.url, publishedAt: post.publishedAt });
     }
-    if (/futurecast|prediction machine|prediction logged|expert pick|forecast|crystal ball|prediction|rpm|247|wiltfong|bender|alderman|ivins|power|simmons|harden/.test(lower)) {
+    if (/futurecast|prediction machine|prediction logged|expert pick|forecast|crystal ball|prediction|rpm|247|wiltfong|bender|alderman|ivins|power|simmons|fawcett|harden/.test(lower)) {
       intel.push({ type: 'prediction', insider, text, url: post.url, publishedAt: post.publishedAt });
+    }
+    if (/cancel(?:led|s)?.*(?:ov|official\s+visit).*(?:florida|gators|\buf\b)|(?:ov|official\s+visit).*(?:florida|gators|\buf\b).*cancel/i.test(lower)) {
+      intel.push({ type: 'visit_cancel', insider, text, url: post.url, publishedAt: post.publishedAt });
     }
   }
   return intel;
@@ -229,6 +238,7 @@ function analyzeProfile(profile, beatMatches, manualIntel = []) {
   const classYear = profile.classYear || CLASS_YEAR;
   const playerSlug = profile.slug || on3.slugify(profile.name);
   const manualVisit = pickManualVisitIntel(manualIntel);
+  const visitCancelled = pickVisitCancelledIntel(manualIntel);
   const rivalsPm = pickRivalsPredictionIntel(manualIntel);
 
   // Priority 1 — commitment to Florida removes player entirely
@@ -245,7 +255,7 @@ function analyzeProfile(profile, beatMatches, manualIntel = []) {
   const committedElsewhere = commit && !on3.isFloridaTeam(commit);
 
   const uf = on3.getFloridaTeam(profile.topTeams, classYear);
-  if (!uf && !manualVisit && !rivalsPm) return { excluded: true, reason: 'no_uf_interest' };
+  if (!uf && !manualVisit && !rivalsPm && !visitCancelled) return { excluded: true, reason: 'no_uf_interest' };
 
   const rpm = buildRpmContext(profile, classYear);
   const visitTs = uf?.latestVisit?.dateOccurred;
@@ -273,6 +283,26 @@ function analyzeProfile(profile, beatMatches, manualIntel = []) {
         headline: `Official visit scheduled — ${profile.name}`,
         detail: `${manualVisit.status || 'Official visit'}${visitRange ? ` · ${visitRange}` : ''} · ${String(manualVisit.detail || '').slice(0, 160)}`,
         recordedAt: manualVisit.reportedAt || profile.fetchedAt,
+        priority: 3
+      }
+    };
+  }
+
+  if (visitCancelled) {
+    const nextSchool = visitCancelled.nextVisitSchool || 'another school';
+    return {
+      excluded: false,
+      signal: {
+        ...baseSignal(profile, classYear, playerSlug),
+        direction: 'cooling',
+        trigger: 'visit_shift_away',
+        predictionType: 'visit',
+        predictionSchool: nextSchool,
+        source: visitCancelled.source || 'Insider',
+        insider: visitCancelled.source || 'Insider',
+        headline: `OV to Florida cancelled — ${profile.name}`,
+        detail: String(visitCancelled.detail || visitCancelled.status || '').slice(0, 220),
+        recordedAt: visitCancelled.reportedAt || profile.fetchedAt,
         priority: 3
       }
     };

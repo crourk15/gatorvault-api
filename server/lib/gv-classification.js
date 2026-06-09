@@ -27,7 +27,9 @@ const VISIT_TYPES = new Set([
   'ov',
   'uv',
   'scheduled_visit',
-  'visit_scheduled'
+  'visit_scheduled',
+  'visit_cancelled',
+  'ov_change'
 ]);
 
 const PREDICTION_TYPES = new Set([

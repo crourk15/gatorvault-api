@@ -15,6 +15,8 @@ const EVENT_TYPE_MAP = {
   target_update: 'offer',
   official_visit: 'visit',
   unofficial_visit: 'visit',
+  visit_cancelled: 'visit',
+  ov_change: 'visit',
   visit: 'visit',
   prediction: 'prediction',
   ranking_change: 'prediction',
@@ -88,7 +90,9 @@ async function ingestRecruitingIntel() {
         ? `${intel.playerName || 'Recruit'} — Official Visit Scheduled`
         : intel.eventType === 'unofficial_visit'
           ? `${intel.playerName || 'Recruit'} — Unofficial Visit`
-          : `${intel.playerName || 'Recruit'} — ${intel.status || intel.eventType || 'Intel'}`;
+          : intel.eventType === 'visit_cancelled' || intel.eventType === 'ov_change'
+            ? `${intel.playerName || 'Recruit'} — OV to Florida Cancelled`
+            : `${intel.playerName || 'Recruit'} — ${intel.status || intel.eventType || 'Intel'}`;
 
     const classified = liveStore.classifyFeedItem(
       {
