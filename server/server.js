@@ -15,6 +15,7 @@ const pointsStore = require('./lib/points-store');
 const accessConfig = require('./lib/access-config');
 const { mountXAutoposterRoutes } = require('./lib/x-autoposter-routes');
 const { mountMonitoringRoutes } = require('./lib/monitoring-routes');
+const { mountAdminRoutes } = require('./lib/admin-routes');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 
@@ -65,6 +66,7 @@ mountWarRoomRoutes(app);
 mountPlatformRoutes(app);
 mountXAutoposterRoutes(app);
 mountMonitoringRoutes(app);
+mountAdminRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;

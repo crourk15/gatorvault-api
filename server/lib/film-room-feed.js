@@ -311,8 +311,38 @@ async function buildFilmRoomCatalog({ force = false } = {}) {
   };
 }
 
+/** Admin rebuild scopes: all (full sync), pressers (UF YouTube only), catalog (purge + reclassify cache). */
+async function rebuildFilmRoomCatalog({ scope = 'all' } = {}) {
+  const mode = String(scope || 'all').toLowerCase();
+  if (mode === 'catalog') {
+    return buildFilmRoomCatalog({ force: false });
+  }
+  if (mode === 'pressers') {
+    let cache = readJson(CACHE_PATH, { auto: {}, updatedAt: null });
+    cache = purgePressConferenceCache(cache);
+    try {
+      const pressers = await syncUfPressers().catch((e) => {
+        console.warn('[film-room] UF presser sync failed:', e.message);
+        return sanitizePresserClips(cache.auto?.pressers || []);
+      });
+      cache.auto = {
+        gnfp: cache.auto?.gnfp || [],
+        pressers: sanitizePresserClips(pressers)
+      };
+      cache.updatedAt = new Date().toISOString();
+      cache.purgedAt = cache.updatedAt;
+      writeJson(CACHE_PATH, cache);
+    } catch (e) {
+      console.warn('[film-room] presser rebuild error:', e.message);
+    }
+    return buildFilmRoomCatalog({ force: false });
+  }
+  return buildFilmRoomCatalog({ force: true });
+}
+
 module.exports = {
   buildFilmRoomCatalog,
+  rebuildFilmRoomCatalog,
   loadManualClips,
   syncGnfpReviews,
   syncUfPressers,

@@ -102,13 +102,15 @@ function mountPlatformRoutes(app) {
       if (!verifyAdminPin(pin)) {
         return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
       }
-      const catalog = await filmRoom.buildFilmRoomCatalog({ force: true });
+      const scope = String(req.body.scope || req.query.scope || 'all').toLowerCase();
+      const catalog = await filmRoom.rebuildFilmRoomCatalog({ scope });
       const press = (catalog.items || []).filter((i) => i.category === 'Press Conferences');
       const micdUp = (catalog.items || []).filter((i) =>
         /mic[\u2018\u2019'']?\s*d\s*up/i.test(String(i.title || ''))
       );
       return res.json({
         ok: true,
+        scope,
         catalog,
         pressConferences: press.map((i) => ({ title: i.title, youtubeId: i.youtubeId })),
         micdUpItems: micdUp.map((i) => ({ title: i.title, category: i.category, youtubeId: i.youtubeId })),
@@ -116,6 +118,65 @@ function mountPlatformRoutes(app) {
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/feedback/submit', (req, res) => {
+    try {
+      const row = feedback.addSubmission(req.body || {});
+      return res.json({ ok: true, id: row.id, message: 'Thanks — your feedback was received.' });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/feedback/categories', (req, res) => {
+    return res.json({ ok: true, categories: feedback.FEEDBACK_CATEGORIES });
+  });
+
+  app.get('/api/points/admin/lookup', (req, res) => {
+    try {
+      const pin = String(req.query.pin || req.get('X-Recruiting-Pin') || '');
+      if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid PIN' });
+      const email = String(req.query.email || '').trim();
+      if (!email) return res.status(400).json({ ok: false, error: 'Email required' });
+      const row = pointsStore.getUserPoints(email);
+      return res.json({ ok: true, email, ...row });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/points/admin/set', (req, res) => {
+    try {
+      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.query.pin || '');
+      if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid PIN' });
+      const email = String(req.body.email || '').trim();
+      const points = parseInt(req.body.points, 10);
+      if (!email) return res.status(400).json({ ok: false, error: 'Email required' });
+      if (Number.isNaN(points) || points < 0) return res.status(400).json({ ok: false, error: 'Invalid points' });
+      const out = pointsStore.setPoints(email, points);
+      return res.json({ ok: true, email, ...out });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/points/admin/award', (req, res) => {
+    try {
+      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.query.pin || '');
+      if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid PIN' });
+      const email = String(req.body.email || '').trim();
+      const amount = parseInt(req.body.amount, 10);
+      const reason = String(req.body.reason || 'admin award').slice(0, 80);
+      if (!email) return res.status(400).json({ ok: false, error: 'Email required' });
+      if (!amount || amount < 1 || amount > 5000) {
+        return res.status(400).json({ ok: false, error: 'Amount must be 1–5000' });
+      }
+      const out = pointsStore.awardPoints(email, amount, reason);
+      return res.json({ ok: true, email, ...out });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
     }
   });
 
@@ -153,7 +214,8 @@ function mountPlatformRoutes(app) {
       return res.json({
         ok: true,
         suggestions: feedback.listSuggestions(),
-        surveys: feedback.listSurveys()
+        surveys: feedback.listSurveys(),
+        submissions: feedback.listSubmissions()
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

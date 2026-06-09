@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>GatorVault — Feedback Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="/gv-feedback.css?v=1">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,sans-serif;background:#030712;color:#e2e8f0}
+    header{padding:16px;border-bottom:1px solid #1e293b;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+    h1{margin:0;font-size:1.1rem;font-family:Oswald,sans-serif;color:#FA4616;letter-spacing:1px}
+    main{padding:16px;max-width:960px;margin:0 auto}
+    input,button{font:inherit}
+    input[type=password]{background:#111827;border:1px solid #334155;color:#fff;padding:10px 12px;border-radius:8px;min-width:160px}
+    button{background:#FA4616;color:#fff;border:0;padding:10px 14px;border-radius:8px;font-weight:700;cursor:pointer;min-height:44px}
+    button.secondary{background:#334155}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+    .tab{padding:8px 14px;border-radius:999px;border:1px solid #334155;background:#111827;color:#94a3b8;font-size:12px;font-weight:700;cursor:pointer}
+    .tab.active{background:#FA4616;border-color:#FA4616;color:#fff}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:10px 8px;border-bottom:1px solid #1e293b;text-align:left;vertical-align:top}
+    th{color:#64748b;font-size:11px;text-transform:uppercase}
+    .stars{color:#FA4616;font-weight:700}
+    .empty{padding:32px;text-align:center;color:#64748b}
+    .msg{font-size:13px;color:#94a3b8;margin-bottom:12px}
+    a{color:#60a5fa}
+    .admin-pin-ov{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px}
+    .admin-pin-card{background:#0b1220;border:1px solid #1e3a5f;border-radius:16px;padding:24px;width:100%;max-width:360px}
+    .hidden{display:none!important}
+    @media(max-width:640px){table,thead,tbody,th,td,tr{display:block}thead{display:none}tr{margin-bottom:12px;border:1px solid #1e293b;border-radius:8px;padding:8px}td{display:block;padding:4px 8px}td::before{content:attr(data-label);font-size:10px;text-transform:uppercase;color:#64748b;display:block}}
+  </style>
+</head>
+<body>
+  <div id="admin-pin-gate" class="admin-pin-ov">
+    <div class="admin-pin-card">
+      <h3 style="margin:0 0 8px;font-family:Oswald,sans-serif;color:#fff">Feedback Admin</h3>
+      <p style="color:#94a3b8;font-size:13px;margin:0 0 12px">Enter admin PIN to view submissions.</p>
+      <input id="gate-pin" type="password" placeholder="Admin PIN" style="width:100%;margin-bottom:10px">
+      <button type="button" id="gate-submit" style="width:100%">Unlock</button>
+      <p id="gate-err" class="hidden" style="color:#f87171;font-size:12px;margin:8px 0 0">Invalid PIN</p>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <header>
+      <h1>💬 Feedback Dashboard</h1>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input id="pin" type="password" placeholder="PIN">
+        <button type="button" id="refresh">Refresh</button>
+        <a href="/admin" style="font-size:13px">← Admin</a>
+      </div>
+    </header>
+    <main>
+      <p class="msg" id="status">Loading…</p>
+      <div class="tabs">
+        <button type="button" class="tab active" data-tab="submissions">New Feedback</button>
+        <button type="button" class="tab" data-tab="suggestions">Suggestions</button>
+        <button type="button" class="tab" data-tab="surveys">Surveys</button>
+      </div>
+      <div id="panel-submissions"></div>
+      <div id="panel-suggestions" class="hidden"></div>
+      <div id="panel-surveys" class="hidden"></div>
+    </main>
+  </div>
+
+  <script>
+    var API = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000'
+      : 'https://gatorvault-api.onrender.com';
+    var SESSION_KEY = 'gv_admin_pin';
+    var data = { submissions: [], suggestions: [], surveys: [] };
+
+    function esc(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function pin() { return document.getElementById('pin').value.trim(); }
+
+    function renderTable(items, cols, emptyMsg) {
+      if (!items.length) return '<div class="empty">' + emptyMsg + '</div>';
+      var head = cols.map(function (c) { return '<th>' + c.label + '</th>'; }).join('');
+      var rows = items.map(function (row) {
+        return '<tr>' + cols.map(function (c) {
+          var val = typeof c.render === 'function' ? c.render(row) : esc(row[c.key]);
+          return '<td data-label="' + esc(c.label) + '">' + val + '</td>';
+        }).join('') + '</tr>';
+      }).join('');
+      return '<table><thead><tr>' + head + '</tr></thead><tbody>' + rows + '</tbody></table>';
+    }
+
+    function renderAll() {
+      document.getElementById('panel-submissions').innerHTML = renderTable(data.submissions, [
+        { label: 'Time', render: function (r) { return esc(new Date(r.createdAt).toLocaleString()); } },
+        { label: 'Rating', render: function (r) { return '<span class="stars">' + '★'.repeat(r.rating) + '</span>'; } },
+        { label: 'Category', key: 'category' },
+        { label: 'Message', key: 'message' },
+        { label: 'Email', key: 'email' },
+        { label: 'Page', key: 'page' }
+      ], 'No feedback submissions yet.');
+
+      document.getElementById('panel-suggestions').innerHTML = renderTable(data.suggestions, [
+        { label: 'Time', render: function (r) { return esc(new Date(r.createdAt).toLocaleString()); } },
+        { label: 'Message', key: 'message' },
+        { label: 'Email', key: 'email' },
+        { label: 'Page', key: 'page' }
+      ], 'No suggestions.');
+
+      document.getElementById('panel-surveys').innerHTML = renderTable(data.surveys, [
+        { label: 'Time', render: function (r) { return esc(new Date(r.createdAt).toLocaleString()); } },
+        { label: 'Email', key: 'email' },
+        { label: 'Answers', render: function (r) { return esc(JSON.stringify(r.answers || {})); } }
+      ], 'No surveys.');
+    }
+
+    function load() {
+      document.getElementById('status').textContent = 'Loading…';
+      fetch(API + '/api/feedback/admin/list?pin=' + encodeURIComponent(pin()), {
+        headers: { 'X-Recruiting-Pin': pin() }
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (!j.ok) throw new Error(j.error || 'Failed');
+          data.submissions = j.submissions || [];
+          data.suggestions = j.suggestions || [];
+          data.surveys = j.surveys || [];
+          document.getElementById('status').textContent =
+            data.submissions.length + ' feedback · ' + data.suggestions.length + ' suggestions · ' + data.surveys.length + ' surveys';
+          renderAll();
+        })
+        .catch(function (e) {
+          document.getElementById('status').textContent = 'Error: ' + e.message;
+        });
+    }
+
+    function unlock(p) {
+      sessionStorage.setItem(SESSION_KEY, p);
+      document.getElementById('pin').value = p;
+      document.getElementById('admin-pin-gate').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+      load();
+    }
+
+    document.getElementById('gate-submit').addEventListener('click', function () {
+      var p = document.getElementById('gate-pin').value.trim();
+      fetch(API + '/api/feedback/admin/list?pin=' + encodeURIComponent(p))
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (res) {
+          if (res.ok && res.j.ok) unlock(p);
+          else document.getElementById('gate-err').classList.remove('hidden');
+        });
+    });
+
+    document.getElementById('refresh').addEventListener('click', load);
+
+    document.querySelectorAll('.tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        var name = tab.getAttribute('data-tab');
+        ['submissions', 'suggestions', 'surveys'].forEach(function (id) {
+          document.getElementById('panel-' + id).classList.toggle('hidden', id !== name);
+        });
+      });
+    });
+
+    (function () {
+      var saved = sessionStorage.getItem(SESSION_KEY);
+      if (saved) {
+        document.getElementById('gate-pin').value = saved;
+        document.getElementById('gate-submit').click();
+      }
+    })();
+  </script>
+  <script src="/gv-feedback.js?v=1" defer></script>
+</body>
+</html>

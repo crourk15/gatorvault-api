@@ -1,4 +1,6 @@
 /player/*  /player.html  200
 /highlight/*  /highlight.html  200
 /article/*  /article.html  200
+/admin/feedback  /admin-feedback.html  200
+/admin  /admin.html  200
 /players  /?open=vault&tab=players  302
