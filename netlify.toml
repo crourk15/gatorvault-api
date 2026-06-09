@@ -1,3 +1,17 @@
 # Netlify publishes the static vault from server/ (index.html, _redirects, etc.)
 [build]
   publish = "server"
+
+[[headers]]
+  for = "/og-image.jpg"
+  [headers.values]
+    Content-Type = "image/jpeg"
+    Cache-Control = "public, max-age=86400"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/og-image.png"
+  [headers.values]
+    Content-Type = "image/png"
+    Cache-Control = "public, max-age=86400"
+    Access-Control-Allow-Origin = "*"

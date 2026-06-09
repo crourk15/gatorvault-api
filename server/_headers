@@ -1,6 +1,12 @@
 /og-image.png
   Content-Type: image/png
   Cache-Control: public, max-age=86400
+  Access-Control-Allow-Origin: *
+
+/og-image.jpg
+  Content-Type: image/jpeg
+  Cache-Control: public, max-age=86400
+  Access-Control-Allow-Origin: *
 
 /favicon-32.png
   Content-Type: image/png
@@ -17,3 +23,6 @@
 /favicon.svg
   Content-Type: image/svg+xml
   Cache-Control: public, max-age=604800
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
