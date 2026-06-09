@@ -4,6 +4,7 @@
  */
 const liveStore = require('../lib/live-store');
 const recruitingStore = require('../lib/recruiting-store');
+const { feedDedupeKeyForCommit } = require('../lib/commit-fingerprint');
 const { ingestRecruitingEvents, ingestPublishedContent } = require('../lib/live-aggregator');
 
 async function ingestBoardCommits() {
@@ -14,8 +15,8 @@ async function ingestBoardCommits() {
     for (const p of board.commits) {
       const classified = liveStore.classifyFeedItem(
         {
-          id: `board_${year}_${p.slug}`,
-          dedupeKey: `commit:${p.slug}`,
+          id: feedDedupeKeyForCommit(p.slug, p) || `commit:${p.slug}`,
+          dedupeKey: feedDedupeKeyForCommit(p.slug, p) || `commit:${p.slug}`,
           type: 'commit',
           title: `${p.name} commits to Florida`,
           summary: p.skinny || `${p.pos} · ${p.stars}★ · ${p.school}`,

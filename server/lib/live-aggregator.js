@@ -1,6 +1,7 @@
 const recruitingStore = require('./recruiting-store');
 const contentStore = require('./content-store');
 const liveStore = require('./live-store');
+const { feedDedupeKeyForCommit, commitFingerprint } = require('./commit-fingerprint');
 const { refreshBeatStream, getBeatPosts } = require('./live-beat');
 const { refreshPodcasts, getPodcastHub } = require('./live-podcasts');
 
@@ -32,7 +33,7 @@ async function ingestRecruitingEvents() {
     const player = playerIndex.bySlug.get(ev.playerSlug) || ev.payload?.player || null;
     const stableCommitKey =
       ev.eventType === 'commit' || ev.eventType === 'flip'
-        ? `commit:${ev.playerSlug}`
+        ? feedDedupeKeyForCommit(ev.playerSlug, player) || `commit:${ev.playerSlug}`
         : ev.eventType === 'decommit'
           ? `decommit:${ev.playerSlug}:${ev.id}`
           : `rec_${ev.id}`;
@@ -48,7 +49,13 @@ async function ingestRecruitingEvents() {
         source: ev.source || 'on3',
         author: 'GatorVault Recruiting',
         createdAt: ev.createdAt,
-        meta: { eventType: ev.eventType, playerSlug: ev.playerSlug, player, on3: true }
+        meta: {
+          eventType: ev.eventType,
+          playerSlug: ev.playerSlug,
+          player,
+          on3: true,
+          commitFingerprint: commitFingerprint(player)
+        }
       },
       playerIndex
     );

@@ -66,7 +66,9 @@ function normalizeItem(raw, { validate = true } = {}) {
     tweetUrl: raw.tweetUrl || null,
     error: raw.error || null,
     validationErrors: raw.validationErrors || [],
-    source: raw.source || 'manual'
+    source: raw.source || 'manual',
+    commitFingerprint: raw.commitFingerprint || null,
+    sourceEventId: raw.sourceEventId || null
   };
 
   if (validate) {

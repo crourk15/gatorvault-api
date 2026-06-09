@@ -7,11 +7,17 @@ const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
 const recruitingStore = require('./recruiting-store');
 const contentStore = require('./content-store');
+const { commitFingerprint } = require('./commit-fingerprint');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 const ON3_PORTAL =
   process.env.ON3_PORTAL_SOURCE ||
   'https://www.on3.com/college/florida-gators/football/2026/commits/';
+/** Only queue commit tweets for events created within this window (prevents replaying history). */
+const MAX_COMMIT_EVENT_AGE_MS = parseInt(
+  process.env.X_AUTOPOST_MAX_COMMIT_AGE_MS || String(6 * 60 * 60 * 1000),
+  10
+);
 
 function dedupeKey(text) {
   return crypto.createHash('sha256').update(String(text || '').trim().toLowerCase()).digest('hex').slice(0, 16);
@@ -26,9 +32,20 @@ function alreadyQueued(text, items) {
   );
 }
 
+function commitAlreadyQueued(fp, items) {
+  if (!fp) return false;
+  return items.some(
+    (i) =>
+      i.commitFingerprint === fp &&
+      (i.status === 'pending' || i.status === 'sent' || i.status === 'failed')
+  );
+}
+
 function buildNewsFromEvent(ev) {
   const title = String(ev.title || '').trim();
   if (!title) return null;
+  const player = ev.payload?.player || { slug: ev.playerSlug };
+  const fp = commitFingerprint(player);
   const skinny = String(ev.skinny || ev.detail || '').trim();
   const text = skinny ? `${title} — ${skinny}`.slice(0, 270) : `${title} 🐊`.slice(0, 270);
   return {
@@ -36,7 +53,10 @@ function buildNewsFromEvent(ev) {
     category: ev.eventType?.startsWith('portal') ? 'news' : 'news',
     topic: ev.eventType?.startsWith('portal') ? 'portal' : 'recruiting',
     sources: [{ label: 'On3', url: ON3_PORTAL }],
-    source: 'auto:on3-event'
+    source: 'auto:on3-event',
+    commitFingerprint: fp,
+    sourceEventId: ev.id,
+    sourceEventCreatedAt: ev.createdAt
   };
 }
 
@@ -101,9 +121,12 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
   const slots = maxEnqueue - pending.length;
 
   try {
-    const events = await recruitingStore.getEvents({ limit: 30 });
+    const events = await recruitingStore.getEvents({ limit: 50 });
+    const cutoff = Date.now() - MAX_COMMIT_EVENT_AGE_MS;
     events
-      .filter((e) => e.source === 'on3' && !String(e.title || '').includes('ranking'))
+      .filter((e) => e.source === 'on3' && ['commit', 'flip'].includes(e.eventType))
+      .filter((e) => !String(e.title || '').includes('ranking'))
+      .filter((e) => new Date(e.createdAt).getTime() >= cutoff)
       .slice(0, 5)
       .forEach((ev) => {
         const row = buildNewsFromEvent(ev);
@@ -138,6 +161,7 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
   let added = 0;
   for (const raw of candidates) {
     if (added >= slots) break;
+    if (raw.commitFingerprint && commitAlreadyQueued(raw.commitFingerprint, doc.items)) continue;
     if (alreadyQueued(raw.text, doc.items)) continue;
     const check = policy.validatePostContent(raw);
     if (!check.valid) continue;

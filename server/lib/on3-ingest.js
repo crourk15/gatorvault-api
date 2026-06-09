@@ -4,6 +4,7 @@ const store = require('./recruiting-store');
 const on3 = require('./on3-client');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { clearHeatCheckCache } = require('./heat-check-store');
+const { commitFingerprint } = require('./commit-fingerprint');
 
 const SNAPSHOT_PATH = path.join(store.DATA_DIR, 'on3-snapshot.json');
 const INGEST_LOG_PATH = path.join(store.DATA_DIR, 'on3-ingest-log.json');
@@ -65,9 +66,80 @@ async function findExistingPlayer(player) {
   return all.find((p) => p.slug === slug) || null;
 }
 
+function registerCommitFingerprint(snapshot, player, meta = {}) {
+  const fp = commitFingerprint(player);
+  if (!fp) return null;
+  snapshot.commitFingerprints = snapshot.commitFingerprints || {};
+  const date = player.commitDate || null;
+  const existing = snapshot.commitFingerprints[fp];
+  if (!existing) {
+    snapshot.commitFingerprints[fp] = {
+      commitDate: date,
+      registeredAt: new Date().toISOString(),
+      ...meta
+    };
+    return fp;
+  }
+  if (date && existing.commitDate !== date) {
+    snapshot.commitFingerprints[fp] = {
+      ...existing,
+      commitDate: date,
+      updatedAt: new Date().toISOString(),
+      ...meta
+    };
+  }
+  return fp;
+}
+
+async function backfillAllKnownCommits(snapshot) {
+  snapshot.commitFingerprints = snapshot.commitFingerprints || {};
+
+  for (const year of Object.keys(snapshot.years || {})) {
+    const commits = snapshot.years[year]?.commits || {};
+    for (const p of Object.values(commits)) {
+      registerCommitFingerprint(snapshot, p, { source: 'snapshot', classYear: year });
+    }
+  }
+
+  const players = await store.getAllPlayers();
+  for (const p of players) {
+    if (p.category !== 'recruit' || p.status !== 'committed' || p.committedTo !== 'Florida') continue;
+    registerCommitFingerprint(snapshot, p, { source: 'players' });
+  }
+
+  const events = await store.getEvents({ limit: 1000 });
+  for (const e of events) {
+    if (e.source !== 'on3' || !['commit', 'flip'].includes(e.eventType)) continue;
+    const pl = e.payload?.player;
+    if (pl) registerCommitFingerprint(snapshot, pl, { source: 'event', eventId: e.id });
+  }
+
+  return Object.keys(snapshot.commitFingerprints).length;
+}
+
+function shouldAlertNewCommit(player, snapshot) {
+  const fp = commitFingerprint(player);
+  if (!fp) return { alert: true, fingerprint: null, reason: 'missing_fingerprint' };
+
+  const prev = snapshot.commitFingerprints?.[fp];
+  if (!prev) return { alert: true, fingerprint: fp, reason: 'new_commit' };
+
+  const date = player.commitDate || null;
+  if (date && prev.commitDate && prev.commitDate !== date) {
+    return { alert: true, fingerprint: fp, reason: 'commit_date_updated', priorDate: prev.commitDate };
+  }
+
+  return {
+    alert: false,
+    fingerprint: fp,
+    reason: 'duplicate_fingerprint',
+    priorRegisteredAt: prev.registeredAt,
+    commitDate: prev.commitDate
+  };
+}
+
 function commitAlertKey(player) {
-  if (player.on3Id) return `on3:${player.on3Id}`;
-  return `slug:${store.slugify(player.name)}`;
+  return commitFingerprint(player) || `slug:${store.slugify(player.name)}`;
 }
 
 function loadFiredAlerts(snapshot) {
@@ -75,57 +147,55 @@ function loadFiredAlerts(snapshot) {
 }
 
 function saveFiredAlert(snapshot, player, eventType, eventId) {
+  const fp = commitFingerprint(player);
   snapshot.firedAlerts = snapshot.firedAlerts || {};
   snapshot.firedAlerts[commitAlertKey(player)] = {
     eventType,
     commitDate: player.commitDate || null,
+    fingerprint: fp,
     eventId: eventId || null,
     firedAt: new Date().toISOString()
   };
+  if (fp) registerCommitFingerprint(snapshot, player, { source: 'fired_alert', eventId });
 }
 
 async function shouldSkipCommitAlert(eventType, player, snapshot) {
   if (!['commit', 'flip'].includes(eventType)) return null;
 
-  const key = commitAlertKey(player);
   const slug = store.slugify(player.name);
-  const commitDate = player.commitDate || null;
-  const fired = loadFiredAlerts(snapshot)[key];
-
-  if (fired) {
-    if (fired.eventType === 'decommit') return null;
-    if (fired.commitDate === commitDate) {
-      return {
-        reason: 'duplicate_commit_alert',
-        key,
-        slug,
-        commitDate,
-        priorEventId: fired.eventId,
-        priorFiredAt: fired.firedAt
-      };
-    }
-    if (commitDate && fired.commitDate && commitDate !== fired.commitDate) {
-      return null;
-    }
+  const gate = shouldAlertNewCommit(player, snapshot);
+  if (!gate.alert) {
+    return {
+      reason: gate.reason,
+      fingerprint: gate.fingerprint,
+      slug,
+      commitDate: player.commitDate || null,
+      priorRegisteredAt: gate.priorRegisteredAt
+    };
   }
 
   const events = await store.getEvents({ limit: 500 });
-  const prior = events.find(
-    (e) =>
-      e.source === 'on3' &&
-      ['commit', 'flip'].includes(e.eventType) &&
-      (e.playerSlug === slug ||
-        (player.on3Id && String(e.payload?.player?.on3Id) === String(player.on3Id)))
-  );
+  const fp = gate.fingerprint;
+  const prior = events.find((e) => {
+    if (e.source !== 'on3' || !['commit', 'flip'].includes(e.eventType)) return false;
+    const efp = commitFingerprint(e.payload?.player || { slug: e.playerSlug, on3Id: e.payload?.player?.on3Id });
+    if (fp && efp === fp) return true;
+    return (
+      e.playerSlug === slug ||
+      (player.on3Id && String(e.payload?.player?.on3Id) === String(player.on3Id))
+    );
+  });
+
   if (prior) {
     const priorDate = prior.payload?.player?.commitDate || null;
-    if (priorDate === commitDate || (!commitDate && !priorDate)) {
-      saveFiredAlert(snapshot, player, prior.eventType, prior.id);
+    const date = player.commitDate || null;
+    if (priorDate === date || (!date && !priorDate)) {
+      registerCommitFingerprint(snapshot, player, { source: 'existing_event', eventId: prior.id });
       return {
         reason: 'duplicate_commit_event',
-        key,
+        fingerprint: fp,
         slug,
-        commitDate,
+        commitDate: date,
         priorEventId: prior.id,
         priorFiredAt: prior.createdAt
       };
@@ -177,7 +247,14 @@ async function firePlayerEvent(eventType, player, extra, snapshot) {
 
   const skip = await shouldSkipCommitAlert(eventType, player, snapshot);
   if (skip) {
-    console.log('[on3-ingest] Skipped duplicate commit alert:', slug, skip.reason, skip.priorEventId || '');
+    console.log(
+      '[on3-ingest] Skipped duplicate commit alert:',
+      slug,
+      skip.reason,
+      skip.fingerprint || '',
+      skip.priorEventId || skip.priorRegisteredAt || ''
+    );
+    registerCommitFingerprint(snapshot, player, { source: 'skipped_alert', reason: skip.reason });
     return { skipped: true, slug, eventType, ...skip };
   }
 
@@ -328,6 +405,8 @@ async function runOn3Ingest(options = {}) {
   }
 
   snapshot.years = snapshot.years || {};
+  const fingerprintCount = await backfillAllKnownCommits(snapshot);
+  result.knownCommitFingerprints = fingerprintCount;
 
   for (const year of classYears) {
     const commits = live.boards[year] || [];
@@ -341,19 +420,39 @@ async function runOn3Ingest(options = {}) {
     result.synced[year] = synced;
 
     if (baseline) {
+      for (const p of Object.values(currMap)) {
+        registerCommitFingerprint(snapshot, p, { source: 'baseline', classYear: year });
+      }
       snapshot.years[year] = { commits: currMap, rankings: liveRank };
       result.skipped.push({ year, reason: 'baseline_saved', commitCount: commits.length, synced });
       continue;
     }
 
     for (const key of Object.keys(currMap)) {
-      if (prevMap[key]) continue;
-      try {
-        const out = await firePlayerEvent('commit', currMap[key], null, snapshot);
-        if (out.fired) result.fired.push({ year, ...out });
-        else result.skipped.push({ year, key, ...out });
-      } catch (e) {
-        result.errors.push({ year, key, type: 'commit', error: e.message });
+      const player = currMap[key];
+      const inPrev = !!prevMap[key];
+      const gate = shouldAlertNewCommit(player, snapshot);
+
+      if (inPrev && gate.reason !== 'commit_date_updated') {
+        registerCommitFingerprint(snapshot, player, { source: 'unchanged_snapshot', classYear: year });
+        result.skipped.push({ year, key, reason: 'unchanged_in_snapshot', fingerprint: gate.fingerprint });
+        continue;
+      }
+
+      if (!inPrev && !gate.alert) {
+        registerCommitFingerprint(snapshot, player, { source: 'historical_known', classYear: year });
+        result.skipped.push({ year, key, reason: gate.reason, fingerprint: gate.fingerprint });
+        continue;
+      }
+
+      if (!inPrev || gate.reason === 'commit_date_updated') {
+        try {
+          const out = await firePlayerEvent('commit', player, null, snapshot);
+          if (out.fired) result.fired.push({ year, ...out });
+          else result.skipped.push({ year, key, ...out });
+        } catch (e) {
+          result.errors.push({ year, key, type: 'commit', error: e.message });
+        }
       }
     }
 

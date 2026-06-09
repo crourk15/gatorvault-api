@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { slugify } = require('./slug');
 const { buildOn3ProfileUrl } = require('./on3-urls');
+const { commitFingerprint } = require('./commit-fingerprint');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const PLAYERS_PATH = path.join(DATA_DIR, 'players.json');
@@ -325,10 +326,41 @@ async function isDuplicateEvent(row) {
   );
 }
 
+async function hasExistingCommitFingerprint(fp) {
+  if (!fp) return false;
+  const events = await loadEventsLocal();
+  return events.some((e) => {
+    if (e.source !== 'on3' || !['commit', 'flip'].includes(e.eventType)) return false;
+    return commitFingerprint(e.payload?.player || {}) === fp;
+  });
+}
+
 async function createEvent(event) {
+  const player = event.payload?.player;
+  const fp =
+    player && ['commit', 'flip'].includes(event.eventType)
+      ? commitFingerprint(player)
+      : null;
+
+  if (fp && (event.source || 'manual') === 'on3') {
+    const events = await loadEventsLocal();
+    const existing = events.find((e) => {
+      if (e.source !== 'on3' || !['commit', 'flip'].includes(e.eventType)) return false;
+      return commitFingerprint(e.payload?.player || {}) === fp;
+    });
+    if (existing) {
+      console.log('[recruiting-store] Skipped duplicate commit event:', fp, event.playerSlug);
+      return normalizeEvent(existing);
+    }
+  }
+
   const row = normalizeEvent({
     id: `evt_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     ...event,
+    payload: {
+      ...(event.payload || {}),
+      ...(fp ? { commitFingerprint: fp } : {})
+    },
     createdAt: nowIso()
   });
   if ((row.source || 'manual') === 'manual' && (await isDuplicateEvent(row))) {

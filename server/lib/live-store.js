@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const gvClass = require('./gv-classification');
+const { feedDedupeKeyForCommit, commitFingerprint } = require('./commit-fingerprint');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'live');
 const WRITERS_PATH = path.join(DATA_DIR, 'writers.json');
@@ -202,15 +203,16 @@ function dedupeCommitFeedItems() {
       continue;
     }
     const slug = item.meta?.playerSlug || item.meta?.player?.slug;
-    if (!slug) {
+    const fp = item.meta?.commitFingerprint || commitFingerprint(item.meta?.player || { slug });
+    const key = fp ? feedDedupeKeyForCommit(slug, item.meta?.player) : slug ? `commit:${slug}` : null;
+    if (!key) {
       other.push(item);
       continue;
     }
-    const key = `commit:${slug}`;
-    const row = { ...item, id: key, dedupeKey: key };
-    const prev = commitBySlug.get(slug);
+    const row = { ...item, id: key, dedupeKey: key, meta: { ...(item.meta || {}), commitFingerprint: fp } };
+    const prev = commitBySlug.get(key);
     if (!prev || new Date(row.createdAt) > new Date(prev.createdAt)) {
-      commitBySlug.set(slug, row);
+      commitBySlug.set(key, row);
     }
   }
 
