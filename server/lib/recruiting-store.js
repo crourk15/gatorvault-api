@@ -65,6 +65,14 @@ function isFloridaCommit(p) {
   return status === 'committed' && /^florida$/i.test(committedTo);
 }
 
+function isCommittedAnywhere(p) {
+  if (!p) return false;
+  const status = String(p.status || '').toLowerCase();
+  if (['committed', 'enrolled', 'signed'].includes(status)) return true;
+  const committedTo = String(p.committedTo || p.committed_to || '').trim();
+  return !!committedTo;
+}
+
 function normalizePlayer(raw) {
   const slug = raw.slug || slugify(raw.name);
   const committedTo = raw.committedTo ?? raw.committed_to ?? null;
@@ -619,6 +627,7 @@ async function upsertTargetFromVisitIntel(intel) {
 module.exports = {
   slugify,
   isFloridaCommit,
+  isCommittedAnywhere,
   normalizePlayer,
   getAllPlayers,
   getPlayerBySlug,

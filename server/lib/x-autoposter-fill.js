@@ -210,10 +210,13 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
 
   try {
     const unqueuedIntel = intelStore.getUnqueuedIntel({ maxAgeMs: MAX_INTEL_AGE_MS });
-    unqueuedIntel.slice(0, 5).forEach((intel) => {
+    for (const intel of unqueuedIntel.slice(0, 5)) {
+      const eligibility = require('./rivals-prediction-eligibility');
+      const gate = await eligibility.checkIntelForAutopost(intel);
+      if (!gate.allowed) continue;
       const row = buildNewsFromIntel(intel);
       if (row) candidates.unshift(row);
-    });
+    }
   } catch {
     /* optional */
   }

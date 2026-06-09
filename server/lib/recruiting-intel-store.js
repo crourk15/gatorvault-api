@@ -169,9 +169,18 @@ function getIntelForPlayer({ playerId, playerSlug, playerName } = {}) {
 
 function getUnqueuedIntel({ maxAgeMs = 7 * 86400000 } = {}) {
   const cutoff = Date.now() - maxAgeMs;
-  return listIntel({ limit: 50 }).filter(
-    (i) => !i.xPostQueued && new Date(i.reportedAt || i.createdAt).getTime() >= cutoff
-  );
+  return listIntel({ limit: 50 }).filter((i) => {
+    if (i.xPostQueued) return false;
+    if (new Date(i.reportedAt || i.createdAt).getTime() < cutoff) return false;
+    if (i.eventType === 'prediction') {
+      const ts = i.timestamp || i.reportedAt || i.createdAt;
+      const eligibility = require('./rivals-prediction-eligibility');
+      const isRivalsPm =
+        i.rivalsPickKey || /rivals|futurecast|prediction machine/i.test(String(i.source || i.status || ''));
+      if (isRivalsPm && !eligibility.isTodayOrNewer(ts)) return false;
+    }
+    return true;
+  });
 }
 
 module.exports = {

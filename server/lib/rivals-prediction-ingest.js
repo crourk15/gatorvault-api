@@ -12,6 +12,7 @@ const liveStore = require('./live-store');
 const { clearHeatCheckCache } = require('./heat-check-store');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { intelFingerprint } = require('./commit-fingerprint');
+const eligibility = require('./rivals-prediction-eligibility');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'rivals-pm-snapshot.json');
@@ -39,7 +40,7 @@ function writeJson(filePath, data) {
 }
 
 function loadSnapshot() {
-  return readJson(SNAPSHOT_PATH, { version: 1, fingerprints: {}, lastRun: null });
+  return readJson(SNAPSHOT_PATH, { version: 2, fingerprints: {}, pickKeys: {}, lastRun: null });
 }
 
 function saveSnapshot(doc) {
@@ -129,7 +130,8 @@ async function queueAutoposter(row, intelId) {
     const doc = xStore.loadQueue();
     const dup = doc.items.some(
       (i) =>
-        i.intelFingerprint === fp &&
+        (i.intelFingerprint === fp ||
+          (row.pickKey && i.intelFingerprint === `rivals_pick_${row.pickKey}`)) &&
         (i.status === 'pending' || i.status === 'sent')
     );
     if (dup) return { queued: false, reason: 'duplicate' };
@@ -158,12 +160,11 @@ async function queueAutoposter(row, intelId) {
 
 async function processPrediction(row, snapshot) {
   if (!row?.fingerprint || !row.playerName) return { skipped: true, reason: 'invalid' };
-  if (snapshot.fingerprints[row.fingerprint]) {
-    return { skipped: true, reason: 'duplicate', fingerprint: row.fingerprint };
-  }
-  if (intelStore.hasIntelFingerprint(row.fingerprint)) {
-    snapshot.fingerprints[row.fingerprint] = row.timestamp;
-    return { skipped: true, reason: 'intel_duplicate' };
+
+  const gate = await eligibility.evaluatePredictionGate(row, snapshot);
+  if (!gate.allowed) {
+    if (gate.markSeen) eligibility.markSeen(snapshot, row, gate.reason);
+    return { skipped: true, reason: gate.reason, fingerprint: row.fingerprint };
   }
 
   const detailParts = [
@@ -173,7 +174,12 @@ async function processPrediction(row, snapshot) {
   ].filter(Boolean);
   row.detail = detailParts.join(' · ');
 
-  const existing = await store.getPlayerBySlug(row.playerSlug);
+  const existing = gate.player || (await store.getPlayerBySlug(row.playerSlug));
+  if (eligibility.isCommittedAnywhere(existing, row) || !eligibility.isActiveUfTarget(existing, row)) {
+    eligibility.markSeen(snapshot, row, 'ineligible_at_process');
+    return { skipped: true, reason: 'ineligible_at_process', fingerprint: row.fingerprint };
+  }
+
   const playerPatch = {
     slug: row.playerSlug,
     name: row.playerName,
@@ -270,12 +276,11 @@ async function processPrediction(row, snapshot) {
 
 async function collectBeatPredictions() {
   const beat = getBeatPosts(60);
-  const cutoff = Date.now() - 7 * 86400000;
   const rows = [];
   for (const post of beat.posts || []) {
-    if (new Date(post.publishedAt).getTime() < cutoff) continue;
+    if (!eligibility.isTodayOrNewer(post.publishedAt)) continue;
     const parsed = beatParser.parseBeatPostForPrediction(post);
-    if (parsed) rows.push(parsed);
+    if (parsed && eligibility.isTodayOrNewer(parsed.timestamp)) rows.push(parsed);
   }
   return rows;
 }
@@ -303,23 +308,18 @@ async function runRivalsPredictionIngest({ force = false } = {}) {
     if (row?.fingerprint) byFp.set(row.fingerprint, row);
   });
 
-  const candidates = [...byFp.values()];
-  if (force) {
-    candidates.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  } else {
-    candidates.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  }
+  const candidates = [...byFp.values()].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
   for (const row of candidates) {
     try {
-      const isNew = !snapshot.fingerprints[row.fingerprint];
-      if (!force && !isNew) {
-        results.skipped.push({ fingerprint: row.fingerprint, reason: 'snapshot' });
-        continue;
-      }
-      const ageMs = Date.now() - new Date(row.timestamp).getTime();
-      if (!force && ageMs > 14 * 86400000) {
-        results.skipped.push({ fingerprint: row.fingerprint, reason: 'stale' });
+      const gate = await eligibility.evaluatePredictionGate(row, snapshot);
+      if (!gate.allowed) {
+        if (gate.markSeen) eligibility.markSeen(snapshot, row, gate.reason);
+        results.skipped.push({
+          fingerprint: row.fingerprint,
+          player: row.playerName,
+          reason: gate.reason
+        });
         continue;
       }
       const out = await processPrediction(row, snapshot);
@@ -337,14 +337,21 @@ async function runRivalsPredictionIngest({ force = false } = {}) {
     processed: results.processed.length,
     skipped: results.skipped.length,
     errors: results.errors.length,
-    candidates: candidates.length
+    candidates: candidates.length,
+    todayOnly: true,
+    tz: eligibility.TZ
   });
 
   return {
     ok: true,
     ...results,
     processedCount: results.processed.length,
-    lastRun: snapshot.lastRun
+    lastRun: snapshot.lastRun,
+    policy: {
+      todayOnly: true,
+      timezone: eligibility.TZ,
+      todayKey: eligibility.toDateKey(new Date().toISOString())
+    }
   };
 }
 
@@ -357,6 +364,14 @@ function getRivalsPmStatus() {
     classYears: CLASS_YEARS,
     lastRun: snapshot.lastRun,
     trackedPicks: Object.keys(snapshot.fingerprints || {}).length,
+    trackedPickKeys: Object.keys(snapshot.pickKeys || {}).length,
+    policy: {
+      todayOnly: true,
+      timezone: eligibility.TZ,
+      todayKey: eligibility.toDateKey(new Date().toISOString()),
+      skipCommitted: true,
+      activeTargetsOnly: true
+    },
     recentRuns: (log.runs || []).slice(0, 5)
   };
 }

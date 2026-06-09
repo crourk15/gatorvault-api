@@ -50,6 +50,19 @@ function normalizePredictionRow(row, classYear, sourceLabel) {
   const ufRpm = (player.predictions || []).find((p) =>
     /florida|\bgators\b/i.test(p.organization?.fullName || p.organization?.name || '')
   );
+  const committedOrg =
+    player.committedOrganization ||
+    player.status?.committedOrganization ||
+    player.recruitment?.committedOrganization ||
+    null;
+  const committedTo = committedOrg?.fullName || committedOrg?.name || null;
+  const recruitStatus = String(
+    player.status?.status || player.recruitmentStatus || player.status || ''
+  ).toLowerCase();
+  const isCommitted =
+    !!committedOrg?.slug ||
+    !!committedTo ||
+    /commit|enroll|signed/.test(recruitStatus);
 
   return {
     pickKey: pick.key,
@@ -70,6 +83,8 @@ function normalizePredictionRow(row, classYear, sourceLabel) {
     ufRpmPct: ufRpm?.percent != null ? Math.round(ufRpm.percent * 10) / 10 : null,
     stars: rating.stars || null,
     natlRank: rating.nationalRank || null,
+    isCommitted,
+    committedTo,
     source: sourceLabel,
     sourceType: 'rivals_pm',
     fingerprint: `rivals_pick_${pick.key}_${pick.dateAdded}`
