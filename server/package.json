@@ -14,7 +14,8 @@
     "sync:portal": "node scripts/sync-on3-portal.js",
     "audit:portal": "node scripts/audit-portal-measurables.js",
     "ensure:film-room": "node scripts/ensure-film-room-media.js",
-    "ingest:media": "node scripts/run-media-ingest.js"
+    "ingest:media": "node scripts/run-media-ingest.js",
+    "generate:og": "node scripts/generate-og-assets.js"
   },
   "engines": {
     "node": ">=18"
@@ -27,5 +28,8 @@
     "express": "^4.18.2",
     "node-fetch": "^2.6.7",
     "nodemailer": "^6.9.4"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
   }
 }

@@ -1,20 +1,19 @@
-/
-  Cache-Control: no-cache, no-store, must-revalidate
+/og-image.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=86400
 
-/index.html
-  Cache-Control: no-cache, no-store, must-revalidate
+/favicon-32.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=604800
 
-/player.html
-  Cache-Control: no-cache, no-store, must-revalidate
+/favicon-48.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=604800
 
-/article.html
-  Cache-Control: no-cache, no-store, must-revalidate
+/apple-touch-icon.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=604800
 
-/highlight.html
-  Cache-Control: no-cache, no-store, must-revalidate
-
-/gv-global.js
-  Cache-Control: public, max-age=300, must-revalidate
-
-/gv-global.css
-  Cache-Control: public, max-age=300, must-revalidate
+/favicon.svg
+  Content-Type: image/svg+xml
+  Cache-Control: public, max-age=604800
