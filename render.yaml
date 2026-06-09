@@ -52,7 +52,7 @@ services:
       - key: X_OAUTH1_ACCESS_TOKEN_SECRET
         sync: false
       - key: X_AUTOPOST_ENABLED
-        value: "false"
+        value: "true"
       - key: X_AUTOPOST_INTERVAL_MS
         value: "60000"
       - key: MEDIA_INGEST_ENABLED

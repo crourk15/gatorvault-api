@@ -1,0 +1,22 @@
+{
+  "name": "gatorvault-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GatorVault Insider — API, static site, On3 ingest, X AutoPoster",
+  "scripts": {
+    "postinstall": "npm install --prefix server",
+    "start": "npm start --prefix server",
+    "dev": "npm run dev --prefix server",
+    "ingest:on3": "npm run ingest:on3 --prefix server",
+    "ingest:on3:baseline": "npm run ingest:on3:baseline --prefix server",
+    "ingest:media": "npm run ingest:media --prefix server",
+    "verify:x": "npm run verify:x --prefix server",
+    "run:x-autoposter": "npm run run:x-autoposter --prefix server",
+    "sync:portal": "npm run sync:portal --prefix server",
+    "ensure:film-room": "npm run ensure:film-room --prefix server",
+    "seed:recruiting": "npm run seed:recruiting --prefix server"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

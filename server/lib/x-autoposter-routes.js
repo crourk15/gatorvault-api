@@ -1,6 +1,7 @@
 const autoposter = require('./x-autoposter');
 const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
+const { refillAutoposterQueue } = require('./x-autoposter-fill');
 
 const X_AUTOPOST_PIN =
   process.env.X_AUTOPOST_PIN ||
@@ -78,7 +79,24 @@ function mountXAutoposterRoutes(app) {
         queuePending: pending,
         queueRecent: queue,
         mix,
-        verify
+        verify,
+        logs: autoposter.getAutoposterLogs(parseInt(req.query.logLimit || '20', 10) || 20)
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/x/autoposter/logs', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const limit = Math.min(100, parseInt(req.query.limit || '20', 10) || 20);
+      return res.json({
+        ok: true,
+        logs: autoposter.getAutoposterLogs(limit),
+        schedulerEnabled: process.env.X_AUTOPOST_ENABLED === 'true'
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -203,10 +221,13 @@ function mountXAutoposterRoutes(app) {
       return res.status(401).json({ ok: false, error: 'Invalid PIN or cron secret' });
     }
     try {
+      const refill = req.body.refill !== false
+        ? await refillAutoposterQueue({ minPending: 2, maxEnqueue: 5 })
+        : null;
       const out = await autoposter.processDuePosts({
         limit: parseInt(req.body.limit || req.query.limit || '5', 10)
       });
-      return res.json({ ok: true, mix: store.getMixStats(), ...out });
+      return res.json({ ok: true, refill, mix: store.getMixStats(), logs: autoposter.getAutoposterLogs(20), ...out });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
