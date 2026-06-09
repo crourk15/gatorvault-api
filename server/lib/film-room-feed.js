@@ -22,7 +22,16 @@ const PRESSER_TITLE_RE =
   /press conference|media availability|postgame press|post-game press|speaks to the media|speaks with the media|player press conference|coaches press|head coach press|weekly press|pre-game press|pregame press|spring game press|media day/i;
 
 const PRESSER_EXCLUDE_RE =
-  /mic['']?d up|mic up|all.access|behind.the.scenes|player of the week|lift session|workout|highlight|recap|film study|breakdown|scheme|gnfp|film guy|cut-up|cut up|podcast|interview series/i;
+  /mic[\u2018\u2019'']?\s*d\s*up|mic\s+up|all[\s-]?access|behind[\s-]?the[\s-]?scenes|player of the week|lift session|workout recap|film study|breakdown|scheme|gnfp|film guy|cut-up|cut up|podcast|interview series|defensive coordinator.*mic|coordinator mic/i;
+
+/** Known non-presser YouTube IDs — Mic'd Up, features, etc. */
+const PRESSER_BLOCKLIST_IDS = new Set(['wTnL6sOpEGI']);
+
+function isBlockedPresserClip(clip) {
+  const id = String(clip?.youtubeId || clip?.id || '').replace(/^yt_/, '');
+  if (id && PRESSER_BLOCKLIST_IDS.has(id)) return true;
+  return !isTruePressConference(clip?.title, clip?.dek || clip?.summary);
+}
 
 function isTruePressConference(title, summary) {
   const text = `${title || ''} ${summary || ''}`;
@@ -30,9 +39,28 @@ function isTruePressConference(title, summary) {
   return PRESSER_TITLE_RE.test(text);
 }
 
+function sanitizePresserClips(clips) {
+  return (clips || []).filter((c) => !isBlockedPresserClip(c));
+}
+
+function classifyFilmRoomItem(c) {
+  let category = normalizeCategory(c.category, c.source);
+  if (category === 'Press Conferences' && isBlockedPresserClip(c)) {
+    category = fallbackCategoryForNonPresser(c.title, c.source);
+  }
+  return { ...c, category };
+}
+
+function purgePressConferenceCache(cache) {
+  const next = { ...cache, auto: { ...(cache.auto || {}) } };
+  next.auto.pressers = sanitizePresserClips(next.auto.pressers);
+  next.auto.gnfp = next.auto.gnfp || [];
+  return next;
+}
+
 function fallbackCategoryForNonPresser(title, source) {
   const text = `${title || ''} ${source || ''}`.toLowerCase();
-  if (/highlight|mic['']?d up|cut-up|cut up|best plays|spring game/i.test(text)) return 'Highlights';
+  if (/highlight|mic[\u2018\u2019'']?\s*d\s*up|cut-up|cut up|best plays|spring game/i.test(text)) return 'Highlights';
   if (/gnfp|film guy|breakdown|film study|scheme/i.test(text)) return 'Film Breakdown';
   return 'Highlights';
 }
@@ -176,7 +204,8 @@ async function syncUfPressers() {
         autoUpdate: true
       })
     )
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter((c) => !isBlockedPresserClip(c));
 }
 
 async function resolveGatorsFbChannelId() {
@@ -225,7 +254,9 @@ function loadManualClips() {
 }
 
 async function buildFilmRoomCatalog({ force = false } = {}) {
-  const cache = readJson(CACHE_PATH, { auto: {}, updatedAt: null });
+  let cache = readJson(CACHE_PATH, { auto: {}, updatedAt: null });
+  cache = purgePressConferenceCache(cache);
+
   const stale =
     !cache.updatedAt || Date.now() - new Date(cache.updatedAt).getTime() > 6 * 3600000;
 
@@ -234,19 +265,22 @@ async function buildFilmRoomCatalog({ force = false } = {}) {
       const [gnfp, pressers] = await Promise.all([
         syncGnfpReviews().catch((e) => {
           console.warn('[film-room] GNFP sync failed:', e.message);
-          return cache.auto?.gnfp || [];
+          return sanitizePresserClips(cache.auto?.gnfp || []);
         }),
         syncUfPressers().catch((e) => {
           console.warn('[film-room] UF presser sync failed:', e.message);
-          return cache.auto?.pressers || [];
+          return sanitizePresserClips(cache.auto?.pressers || []);
         })
       ]);
-      cache.auto = { gnfp, pressers };
+      cache.auto = { gnfp, pressers: sanitizePresserClips(pressers) };
       cache.updatedAt = new Date().toISOString();
+      cache.purgedAt = cache.updatedAt;
       writeJson(CACHE_PATH, cache);
     } catch (e) {
       console.warn('[film-room] sync error:', e.message);
     }
+  } else {
+    writeJson(CACHE_PATH, cache);
   }
 
   const manual = loadManualClips();
@@ -255,15 +289,7 @@ async function buildFilmRoomCatalog({ force = false } = {}) {
   manual.forEach((c) => byId.set(c.id || c.slug, c));
   auto.forEach((c) => byId.set(c.id || c.slug, c));
 
-  const items = [...byId.values()]
-    .map((c) => {
-      let category = normalizeCategory(c.category, c.source);
-      if (category === 'Press Conferences' && !isTruePressConference(c.title, c.dek)) {
-        category = fallbackCategoryForNonPresser(c.title, c.source);
-      }
-      return { ...c, category };
-    })
-    .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+  const items = [...byId.values()].map(classifyFilmRoomItem).sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
 
   const byCategory = {};
   FILM_ROOM_CATEGORIES.forEach((cat) => {
@@ -291,8 +317,13 @@ module.exports = {
   syncGnfpReviews,
   syncUfPressers,
   isTruePressConference,
+  isBlockedPresserClip,
+  sanitizePresserClips,
+  purgePressConferenceCache,
+  classifyFilmRoomItem,
   FILM_ROOM_CATEGORIES,
   normalizeCategory,
   DATA_DIR,
-  MANUAL_PATH
+  MANUAL_PATH,
+  CACHE_PATH
 };
