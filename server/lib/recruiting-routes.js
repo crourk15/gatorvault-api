@@ -259,7 +259,18 @@ function mountRecruitingRoutes(app) {
         player,
         skinny: req.body.skinny,
         detail: req.body.detail,
-        source: 'manual'
+        source: 'manual',
+        verification:
+          eventType === 'decommit'
+            ? {
+                sourceType: req.body.sourceType || 'manual_verified',
+                previousCommit: req.body.previousCommit || 'Florida',
+                currentCommit: req.body.currentCommit || 'Open',
+                explicitDecommit: true,
+                sourceUrl: req.body.sourceUrl || null,
+                detail: req.body.detail || ''
+              }
+            : null
       });
 
       return res.json({ ok: true, ...result });
@@ -289,6 +300,27 @@ function mountRecruitingRoutes(app) {
         classYears: status.classYears,
         years: yearSummary,
         recentLog: status.recentLog
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/recruiting/admin/purge-false-decommits', async (req, res) => {
+    try {
+      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || '');
+      if (!verifyAdminPin(pin)) {
+        return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+      }
+      const { runPurgeFalseDecommits } = require('./purge-false-decommits');
+      const result = await runPurgeFalseDecommits();
+      return res.json({
+        ok: true,
+        ...result,
+        feedClean: result.after.falseDecommitFeedItems === 0,
+        alertsClean: result.after.falseDecommitEvents === 0,
+        tickerClean: result.after.falseDecommitFeedItems === 0,
+        noRemainingFalseDecommits: result.clean
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

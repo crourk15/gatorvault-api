@@ -353,6 +353,14 @@ async function clearEvents() {
   return [];
 }
 
+async function deleteEventsMatching(predicate) {
+  const events = await loadEventsLocal();
+  const removed = events.filter(predicate);
+  const kept = events.filter((e) => !predicate(e));
+  await saveEventsLocal(kept);
+  return { removed: removed.length, kept: kept.length, removedEvents: removed };
+}
+
 async function isDuplicateEvent(row) {
   const events = await loadEventsLocal();
   const since = Date.now() - 24 * 60 * 60 * 1000;
@@ -525,7 +533,7 @@ function selectPortalHeadliner(incoming) {
   })[0];
 }
 
-async function fireRecruitingEvent({ eventType, player, skinny, detail, source }) {
+async function fireRecruitingEvent({ eventType, player, skinny, detail, source, verification = null }) {
   const et = String(eventType || '').toLowerCase();
   if (isVisitEventType(et)) {
     throw new Error('Visit intel cannot use fireRecruitingEvent — use recordVisitIntel instead');
@@ -533,6 +541,20 @@ async function fireRecruitingEvent({ eventType, player, skinny, detail, source }
 
   let normalized = normalizePlayer(player);
   const existing = await getPlayerBySlug(normalized.slug);
+
+  if (et === 'decommit') {
+    const decommitValidator = require('./decommit-validator');
+    const gate = await decommitValidator.validateDecommitEvent({
+      player: normalized,
+      existingPlayer: existing,
+      verification,
+      inferenceTrigger: verification ? null : 'unverified_on3_ingest'
+    });
+    if (!gate.allowed) {
+      throw new Error(`Decommit blocked: ${gate.reason}`);
+    }
+  }
+
   if (existing) normalized = preservePlayerFields(existing, normalized);
   const statusMap = {
     commit: 'committed',
@@ -547,6 +569,11 @@ async function fireRecruitingEvent({ eventType, player, skinny, detail, source }
     normalized.committedTo = 'Florida';
     normalized.category = 'recruit';
     normalized.status = 'committed';
+  }
+  if (et === 'decommit') {
+    normalized.status = 'decommitted';
+    normalized.committedTo = verification?.currentCommit || null;
+    normalized.category = normalized.category === 'portal' ? 'portal' : 'recruit';
   }
   normalized.skinny = skinny || normalized.skinny;
   normalized.updatedAt = nowIso();
@@ -573,7 +600,11 @@ async function fireRecruitingEvent({ eventType, player, skinny, detail, source }
     detail: detail || saved.profileNote || '',
     skinny: skinny || saved.skinny || `${saved.pos} · ${saved.stars}★ · ${saved.school}`,
     classYear: saved.classYear,
-    payload: { player: saved },
+    payload: {
+      player: saved,
+      verifiedDecommit: et === 'decommit',
+      verification: et === 'decommit' ? verification : undefined
+    },
     source: source || 'manual'
   });
 
@@ -637,6 +668,7 @@ module.exports = {
   getEvents,
   createEvent,
   clearEvents,
+  deleteEventsMatching,
   getBoard,
   getPortalBoard,
   selectPortalHeadliner,

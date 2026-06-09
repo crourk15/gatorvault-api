@@ -39,6 +39,10 @@ async function ingestRecruitingEvents() {
   let count = 0;
   events.forEach((ev) => {
     if (isTestRecruitingEvent(ev)) return;
+    if (ev.eventType === 'decommit') {
+      const decommitValidator = require('./decommit-validator');
+      if (decommitValidator.isFalseInferredDecommitEvent(ev)) return;
+    }
     const player = playerIndex.bySlug.get(ev.playerSlug) || ev.payload?.player || null;
     const stableCommitKey =
       ev.eventType === 'commit' || ev.eventType === 'flip'

@@ -175,6 +175,14 @@ function getFeedItems({ limit = 80, since, categoriesOnly = false } = {}) {
   return items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, limit);
 }
 
+function removeFeedItemsMatching(predicate) {
+  const items = loadFeedItems();
+  const removed = items.filter(predicate);
+  const kept = items.filter((i) => !predicate(i));
+  saveFeedItems(kept);
+  return { removed: removed.length, kept: kept.length };
+}
+
 function reclassifyFeedItems() {
   const playerIndex = loadPlayerIndex();
   const items = loadFeedItems();
@@ -258,6 +266,7 @@ module.exports = {
   classifyFeedItem,
   resolveLiveFeedType,
   reclassifyFeedItems,
+  removeFeedItemsMatching,
   upsertFeedItem,
   addManualFeedItem,
   getFeedItems,

@@ -458,12 +458,18 @@ async function runOn3Ingest(options = {}) {
 
     for (const key of Object.keys(prevMap)) {
       if (currMap[key]) continue;
+      const prevPlayer = prevMap[key];
       try {
-        const out = await firePlayerEvent('decommit', prevMap[key], null, snapshot);
-        if (out.fired) result.fired.push({ year, ...out });
-        else result.skipped.push({ year, key, ...out });
+        const decommitValidator = require('./decommit-validator');
+        const blocked = await decommitValidator.handleSnapshotAbsence({
+          player: prevPlayer,
+          classYear: year,
+          trigger: 'missing_from_board'
+        });
+        result.blocked = result.blocked || [];
+        result.blocked.push({ year, key, ...blocked });
       } catch (e) {
-        result.errors.push({ year, key, type: 'decommit', error: e.message });
+        result.errors.push({ year, key, type: 'decommit_blocked', error: e.message });
       }
     }
 

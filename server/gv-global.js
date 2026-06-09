@@ -48,9 +48,26 @@
     return Math.floor(ms / 86400000) + 'd ago';
   }
 
+  function isFalseDecommitFeedItem(item) {
+    if (!item) return false;
+    if (item.meta && item.meta.eventType === 'decommit') {
+      if (!item.meta.verifiedDecommit && !(item.meta.verification && item.meta.verification.explicitDecommit)) {
+        return true;
+      }
+    }
+    var title = String(item.title || '').toLowerCase();
+    if (title.indexOf('decommits from florida') >= 0 || title.indexOf('decommitted from florida') >= 0) {
+      if (!(item.meta && item.meta.verifiedDecommit)) return true;
+    }
+    var key = String(item.dedupeKey || item.id || '');
+    if (key.indexOf('decommit:') === 0 && !(item.meta && item.meta.verifiedDecommit)) return true;
+    return false;
+  }
+
   function filterFeed(items) {
     return (items || []).filter(function (item) {
       if (!item || !item.title) return false;
+      if (isFalseDecommitFeedItem(item)) return false;
       var t = String(item.type || '').toLowerCase();
       if (t === 'system' || t === 'ingest') return false;
       return true;

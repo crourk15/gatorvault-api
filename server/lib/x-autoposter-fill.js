@@ -57,15 +57,13 @@ function commitAlreadyQueued(fp, items) {
   return fingerprintAlreadyQueued(fp, items);
 }
 
-function buildNewsFromEvent(ev) {
-  const title = String(ev.title || '').trim();
-  if (!title) return null;
+async function buildNewsFromEvent(ev) {
+  const built = await copy.buildRecruitingEventCopyAsync(ev, { source: 'On3' });
+  if (!built?.text || copy.isBrokenCopy(built.text)) return null;
   const player = ev.payload?.player || { slug: ev.playerSlug };
   const fp = commitFingerprint(player);
-  const skinny = String(ev.skinny || ev.detail || '').trim();
-  const text = skinny ? `${title} — ${skinny}`.slice(0, 270) : `${title} 🐊`.slice(0, 270);
   return {
-    text: text.includes(SITE_URL.replace('https://', '')) ? text : `${text} ${SITE_URL}`,
+    text: built.text,
     category: 'news',
     topic: ev.eventType?.startsWith('portal') ? 'portal' : 'recruiting',
     sources: [{ label: 'On3', url: ON3_PORTAL }],
@@ -74,12 +72,12 @@ function buildNewsFromEvent(ev) {
     intelFingerprint: fp,
     sourceEventId: ev.id,
     sourceEventCreatedAt: ev.createdAt,
-    playerName: player.name || null
+    playerName: built.playerName || player.name || null
   };
 }
 
-function buildNewsFromIntel(intel) {
-  const built = copy.buildIntelCopy(intel);
+async function buildNewsFromIntel(intel) {
+  const built = await copy.buildIntelCopyAsync(intel);
   if (!built?.text || copy.isBrokenCopy(built.text)) return null;
   const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
   return {
@@ -95,17 +93,18 @@ function buildNewsFromIntel(intel) {
   };
 }
 
-function buildNewsFromPortal(headliner) {
-  if (!headliner?.name) return null;
+async function buildNewsFromPortal(headliner) {
+  const built = await copy.buildPortalHeadlinerCopyAsync(headliner);
+  if (!built?.text || copy.isBrokenCopy(built.text)) return null;
   const fp = intelFingerprint(headliner.on3Id || headliner.slug || headliner.name, 'portal_headliner', headliner.updatedAt || 'once');
-  const text = `Portal headliner: ${headliner.name} (${headliner.htWt || headliner.pos}) — ${headliner.skinny || headliner.profileNote || 'UF incoming transfer'}`.slice(0, 240);
   return {
-    text: `${text} ${SITE_URL}`,
+    text: built.text,
     category: 'news',
     topic: 'portal',
     sources: [{ label: 'On3', url: headliner.on3ProfileUrl || ON3_PORTAL }],
     source: 'auto:portal-headliner',
-    intelFingerprint: fp
+    intelFingerprint: fp,
+    playerName: built.playerName
   };
 }
 
@@ -147,8 +146,8 @@ function buildNewsFromArticle(article) {
   };
 }
 
-function buildMomentumFromBeat(post) {
-  const text = copy.buildMomentumCopy(post);
+async function buildMomentumFromBeat(post) {
+  const text = await copy.buildMomentumCopyAsync(post);
   if (!text || copy.isBrokenCopy(text)) return null;
   const player = copy.extractPlayerFromText(String(post.text || ''));
   const source = post.writerName || post.outlet || post.handle || 'Insider';
@@ -165,9 +164,9 @@ function buildMomentumFromBeat(post) {
   };
 }
 
-function buildNewsFromBeatPost(post) {
+async function buildNewsFromBeatPost(post) {
   if (!beatFilters.shouldIncludeBeatPost(post) || !beatFilters.isTrustedBeatWriter(post)) return null;
-  const text = copy.buildBeatIntelCopy(post);
+  const text = await copy.buildBeatIntelCopyAsync(post);
   if (!text || copy.isBrokenCopy(text)) return null;
   const source = post.writerName || post.outlet || post.handle || 'Beat writer';
   const fp = intelFingerprint(post.id || post.url, 'beat_intel', post.publishedAt);
@@ -182,18 +181,19 @@ function buildNewsFromBeatPost(post) {
   };
 }
 
-function buildNewsFromPortalEvent(ev) {
-  const title = String(ev.title || '').trim();
-  if (!title) return null;
+async function buildNewsFromPortalEvent(ev) {
+  const built = await copy.buildRecruitingEventCopyAsync(ev, { source: 'On3' });
+  if (!built?.text || copy.isBrokenCopy(built.text)) return null;
   const fp = intelFingerprint(ev.playerSlug || ev.id, ev.eventType, ev.createdAt);
   return {
-    text: `${title} 🐊 ${SITE_URL}`.slice(0, 270),
+    text: built.text,
     category: 'news',
     topic: 'portal',
     sources: [{ label: 'On3', url: ON3_PORTAL }],
     source: 'auto:on3-portal',
     intelFingerprint: fp,
-    sourceEventId: ev.id
+    sourceEventId: ev.id,
+    playerName: built.playerName
   };
 }
 
@@ -206,7 +206,6 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
 
   const candidates = [];
   const slots = maxEnqueue - pending.length;
-  const intelCutoff = Date.now() - MAX_INTEL_AGE_MS;
 
   try {
     const unqueuedIntel = intelStore.getUnqueuedIntel({ maxAgeMs: MAX_INTEL_AGE_MS });
@@ -214,7 +213,7 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
       const eligibility = require('./rivals-prediction-eligibility');
       const gate = await eligibility.checkIntelForAutopost(intel);
       if (!gate.allowed) continue;
-      const row = buildNewsFromIntel(intel);
+      const row = await buildNewsFromIntel(intel);
       if (row) candidates.unshift(row);
     }
   } catch {
@@ -226,12 +225,12 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
     const beatCutoff = Date.now() - MAX_BEAT_POST_AGE_MS;
     for (const post of beat.posts || []) {
       if (new Date(post.publishedAt).getTime() < beatCutoff) continue;
-      const momentum = buildMomentumFromBeat(post);
+      const momentum = await buildMomentumFromBeat(post);
       if (momentum) {
         candidates.unshift(momentum);
         continue;
       }
-      const beatNews = buildNewsFromBeatPost(post);
+      const beatNews = await buildNewsFromBeatPost(post);
       if (beatNews) candidates.push(beatNews);
     }
   } catch {
@@ -241,30 +240,28 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
   try {
     const events = await recruitingStore.getEvents({ limit: 50 });
     const cutoff = Date.now() - MAX_COMMIT_EVENT_AGE_MS;
-    events
+    for (const ev of events
       .filter((e) => e.source === 'on3' && ['commit', 'flip'].includes(e.eventType))
       .filter((e) => !String(e.title || '').includes('ranking'))
       .filter((e) => new Date(e.createdAt).getTime() >= cutoff)
-      .slice(0, 5)
-      .forEach((ev) => {
-        const row = buildNewsFromEvent(ev);
-        if (row) candidates.push(row);
-      });
-    events
-      .filter((e) => e.source === 'on3' && ['portal_in', 'portal_out', 'decommit'].includes(e.eventType))
+      .slice(0, 5)) {
+      const row = await buildNewsFromEvent(ev);
+      if (row) candidates.push(row);
+    }
+    for (const ev of events
+      .filter((e) => e.source === 'on3' && ['portal_in', 'portal_out'].includes(e.eventType))
       .filter((e) => new Date(e.createdAt).getTime() >= cutoff)
-      .slice(0, 3)
-      .forEach((ev) => {
-        const row = buildNewsFromPortalEvent(ev);
-        if (row) candidates.push(row);
-      });
+      .slice(0, 3)) {
+      const row = await buildNewsFromPortalEvent(ev);
+      if (row) candidates.push(row);
+    }
   } catch {
     /* optional */
   }
 
   try {
     const portal = await recruitingStore.getPortalBoard();
-    const row = buildNewsFromPortal(portal.headliner);
+    const row = await buildNewsFromPortal(portal.headliner);
     if (row && !fingerprintAlreadyQueued(row.intelFingerprint, doc.items)) {
       candidates.push(row);
     }
