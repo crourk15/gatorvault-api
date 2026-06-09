@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GatorVault — Recruiting Monitoring</title>
+  <style>
+    :root { --bg: #0b1220; --panel: #121a2b; --text: #e8edf5; --muted: #8b9bb4; --orange: #fa4616; --warn: #f59e0b; --ok: #22c55e; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); }
+    header { padding: 1rem 1.5rem; border-bottom: 1px solid #1e293b; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; }
+    h1 { margin: 0; font-size: 1.25rem; }
+    main { padding: 1rem 1.5rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .row { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+    input, button { font: inherit; }
+    input[type=password], input[type=text] { background: var(--panel); border: 1px solid #334155; color: var(--text); padding: .5rem .75rem; border-radius: .5rem; min-width: 220px; }
+    button { background: var(--orange); color: #fff; border: 0; padding: .5rem 1rem; border-radius: .5rem; cursor: pointer; }
+    button.secondary { background: #334155; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .75rem; margin: 1rem 0 1.5rem; }
+    .stat { background: var(--panel); border: 1px solid #1e293b; border-radius: .75rem; padding: .75rem 1rem; }
+    .stat .label { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; }
+    .stat .value { font-size: 1.5rem; font-weight: 700; margin-top: .25rem; }
+    table { width: 100%; border-collapse: collapse; background: var(--panel); border-radius: .75rem; overflow: hidden; }
+    th, td { padding: .65rem .85rem; text-align: left; border-bottom: 1px solid #1e293b; font-size: .875rem; vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; font-size: .75rem; text-transform: uppercase; }
+    .level-warning { color: var(--warn); }
+    .level-error { color: #f87171; }
+    .level-info { color: var(--muted); }
+    .empty { padding: 2rem; text-align: center; color: var(--muted); }
+    .status { font-size: .875rem; color: var(--muted); }
+    .status.ok { color: var(--ok); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Recruiting Pipeline Monitoring</h1>
+    <div class="row">
+      <input id="pin" type="password" placeholder="Admin PIN" autocomplete="off" />
+      <button id="refresh">Refresh</button>
+      <button id="health" class="secondary">Run Health Check</button>
+    </div>
+  </header>
+  <main>
+    <p class="status" id="status">Enter admin PIN and refresh.</p>
+    <div class="stats" id="stats"></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Level</th>
+          <th>Type</th>
+          <th>Event</th>
+          <th>Player</th>
+          <th>Reason / Detail</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="empty" id="empty" hidden>No alerts yet.</div>
+  </main>
+  <script>
+    var API = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000'
+      : 'https://gatorvault-api.onrender.com';
+
+    function esc(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function renderStats(counters) {
+      var el = document.getElementById('stats');
+      if (!counters) { el.innerHTML = ''; return; }
+      var keys = [
+        ['blockedEvents', 'Blocked'],
+        ['firedEvents', 'Fired'],
+        ['verificationFailures', 'Verify Fails'],
+        ['snapshotMismatches', 'Snapshot'],
+        ['ingestMismatches', 'Ingest'],
+        ['aggregatorSkips', 'Agg Skips']
+      ];
+      el.innerHTML = keys.map(function (k) {
+        return '<div class="stat"><div class="label">' + k[1] + '</div><div class="value">' + (counters[k[0]] || 0) + '</div></div>';
+      }).join('');
+    }
+
+    function renderAlerts(alerts) {
+      var tbody = document.getElementById('tbody');
+      var empty = document.getElementById('empty');
+      if (!alerts || !alerts.length) {
+        tbody.innerHTML = '';
+        empty.hidden = false;
+        return;
+      }
+      empty.hidden = true;
+      tbody.innerHTML = alerts.map(function (a) {
+        return '<tr>' +
+          '<td>' + esc(new Date(a.at || a.timestamp).toLocaleString()) + '</td>' +
+          '<td class="level-' + esc(a.level) + '">' + esc(a.level) + '</td>' +
+          '<td>' + esc(a.type) + '</td>' +
+          '<td>' + esc(a.eventType || '—') + '</td>' +
+          '<td>' + esc(a.player || a.playerSlug || '—') + '</td>' +
+          '<td>' + esc(a.reason || a.detail || '—') + '</td>' +
+          '<td>' + esc(a.source || '—') + '</td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    function loadAlerts() {
+      var pin = document.getElementById('pin').value.trim();
+      var status = document.getElementById('status');
+      if (!pin) { status.textContent = 'PIN required.'; return; }
+      status.textContent = 'Loading…';
+      fetch(API + '/api/internal/monitoring/alerts?pin=' + encodeURIComponent(pin))
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (!j.ok) throw new Error(j.error || 'Failed');
+          status.textContent = 'Updated ' + (j.updatedAt || 'now');
+          status.className = 'status ok';
+          renderStats(j.counters);
+          renderAlerts(j.alerts);
+        })
+        .catch(function (e) {
+          status.textContent = 'Error: ' + e.message;
+          status.className = 'status';
+        });
+    }
+
+    function runHealth() {
+      var pin = document.getElementById('pin').value.trim();
+      if (!pin) return;
+      fetch(API + '/api/internal/monitoring/healthcheck?pin=' + encodeURIComponent(pin))
+        .then(function (r) { return r.json(); })
+        .then(function () { loadAlerts(); })
+        .catch(function () { loadAlerts(); });
+    }
+
+    document.getElementById('refresh').addEventListener('click', loadAlerts);
+    document.getElementById('health').addEventListener('click', runHealth);
+    setInterval(loadAlerts, 60000);
+  </script>
+</body>
+</html>

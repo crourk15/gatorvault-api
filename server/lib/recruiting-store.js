@@ -541,6 +541,27 @@ async function fireRecruitingEvent({ eventType, player, skinny, detail, source, 
 
   let normalized = normalizePlayer(player);
   const existing = await getPlayerBySlug(normalized.slug);
+  const monitoring = require('./recruiting-monitoring');
+
+  if (['commit', 'flip'].includes(et)) {
+    const missing = [];
+    if (!normalized.name) missing.push('name');
+    if (!normalized.classYear) missing.push('classYear');
+    if (!normalized.on3Id && !existing?.on3Id) missing.push('on3Id');
+    if (missing.length) {
+      await monitoring.sendMonitoringAlert({
+        level: 'warning',
+        type: 'blocked_event',
+        eventType: et,
+        player: normalized.name || normalized.slug,
+        playerSlug: normalized.slug,
+        reason: `Commit blocked: missing required fields (${missing.join(', ')})`,
+        source: source || 'unknown',
+        meta: { missingFields: missing }
+      });
+      throw new Error(`Commit blocked: missing fields: ${missing.join(', ')}`);
+    }
+  }
 
   if (et === 'decommit') {
     const decommitValidator = require('./decommit-validator');
@@ -551,6 +572,26 @@ async function fireRecruitingEvent({ eventType, player, skinny, detail, source, 
       inferenceTrigger: verification ? null : 'unverified_on3_ingest'
     });
     if (!gate.allowed) {
+      const sourceType = String(verification?.sourceType || verification?.source || source || '').toLowerCase();
+      await monitoring.sendMonitoringAlert({
+        level: 'warning',
+        type: 'blocked_event',
+        eventType: 'decommit',
+        player: normalized.name || gate.playerName,
+        playerSlug: normalized.slug || gate.playerSlug,
+        reason: monitoring.mapDecommitBlockReason(gate, verification, source),
+        source: source || 'unknown',
+        meta: {
+          gateReason: gate.reason,
+          hasVerification: !!verification,
+          explicitDecommit: !!verification?.explicitDecommit,
+          sourceType: sourceType || null,
+          snapshotAbsenceDetected:
+            gate.reason === 'snapshot_absence' ||
+            gate.reason === 'missing_from_board' ||
+            !verification
+        }
+      });
       throw new Error(`Decommit blocked: ${gate.reason}`);
     }
   }
@@ -607,6 +648,8 @@ async function fireRecruitingEvent({ eventType, player, skinny, detail, source, 
     },
     source: source || 'manual'
   });
+
+  monitoring.recordFiredEvent({ eventType: et, playerSlug: saved.slug, source: source || 'manual' });
 
   return { player: saved, event };
 }

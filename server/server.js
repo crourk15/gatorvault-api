@@ -11,7 +11,10 @@ const { mountInterviewsRoutes } = require('./lib/interviews-routes');
 const { mountMediaIngestRoutes } = require('./lib/media-ingest-routes');
 const { mountWarRoomRoutes } = require('./lib/war-room-routes');
 const { mountPlatformRoutes } = require('./lib/platform-routes');
+const pointsStore = require('./lib/points-store');
+const accessConfig = require('./lib/access-config');
 const { mountXAutoposterRoutes } = require('./lib/x-autoposter-routes');
+const { mountMonitoringRoutes } = require('./lib/monitoring-routes');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 
@@ -38,7 +41,7 @@ app.use((req, res, next) => {
   } else {
     res.header('Access-Control-Allow-Origin', '*');
   }
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin, X-Live-Pin, X-Live-Cron, X-War-Room-Pin, X-X-Autopost-Pin, X-X-Cron, X-Media-Ingest-Pin');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin, X-Live-Pin, X-Live-Cron, X-War-Room-Pin, X-X-Autopost-Pin, X-X-Cron, X-Media-Ingest-Pin, X-Monitoring-Secret, X-Monitoring-Cron');
   res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
@@ -61,6 +64,7 @@ mountMediaIngestRoutes(app);
 mountWarRoomRoutes(app);
 mountPlatformRoutes(app);
 mountXAutoposterRoutes(app);
+mountMonitoringRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;
@@ -388,6 +392,7 @@ app.post('/api/register', async (req, res) => {
     }
 
     const token = signSession({ email, tier, name, exp: Date.now() + TOKEN_TTL_MS });
+    const pts = pointsStore.getUserPoints(email);
     return res.json({
       ok: true,
       emailSent,
@@ -403,7 +408,9 @@ app.post('/api/register', async (req, res) => {
         name,
         trialEnd: trialEndStr,
         trialEndISO: trialEnd.toISOString(),
-        createdAt: user.createdAt
+        createdAt: user.createdAt,
+        points: pts.points,
+        pointsTier: pts.tier
       }
     });
   } catch (err) {
@@ -441,6 +448,7 @@ app.post('/api/login', async (req, res) => {
     const trialEnd = trialEndDate
       ? trialEndDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
       : null;
+    const pts = pointsStore.getUserPoints(user.email);
 
     return res.json({
       ok: true,
@@ -452,7 +460,9 @@ app.post('/api/login', async (req, res) => {
         trialEnd,
         trialEndISO: user.trialEnd || null,
         createdAt: user.createdAt || null,
-        daysLeft: trialEndDate ? Math.max(0, Math.ceil((trialEndDate - Date.now()) / (24 * 60 * 60 * 1000))) : null
+        daysLeft: trialEndDate ? Math.max(0, Math.ceil((trialEndDate - Date.now()) / (24 * 60 * 60 * 1000))) : null,
+        points: pts.points,
+        pointsTier: pts.tier
       }
     });
   } catch (err) {
@@ -466,7 +476,17 @@ app.get('/api/session', (req, res) => {
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : req.query.token;
   const session = verifySession(token);
   if (!session) return res.status(401).json({ ok: false, error: 'Session expired. Sign in again.' });
-  return res.json({ ok: true, session: { email: session.email, tier: session.tier, name: session.name } });
+  const pts = pointsStore.getUserPoints(session.email);
+  return res.json({
+    ok: true,
+    session: {
+      email: session.email,
+      tier: session.tier,
+      name: session.name,
+      points: pts.points,
+      pointsTier: pts.tier
+    }
+  });
 });
 
 /** Mint a signed API token for Netlify Identity / legacy ni- sessions */

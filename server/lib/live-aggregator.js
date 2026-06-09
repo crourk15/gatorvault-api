@@ -2,6 +2,7 @@ const recruitingStore = require('./recruiting-store');
 const intelStore = require('./recruiting-intel-store');
 const contentStore = require('./content-store');
 const liveStore = require('./live-store');
+const monitoring = require('./recruiting-monitoring');
 const { feedDedupeKeyForCommit, commitFingerprint, feedDedupeKeyForIntel } = require('./commit-fingerprint');
 const { refreshBeatStream, getBeatPosts } = require('./live-beat');
 const { refreshPodcasts, getPodcastHub } = require('./live-podcasts');
@@ -41,7 +42,21 @@ async function ingestRecruitingEvents() {
     if (isTestRecruitingEvent(ev)) return;
     if (ev.eventType === 'decommit') {
       const decommitValidator = require('./decommit-validator');
-      if (decommitValidator.isFalseInferredDecommitEvent(ev)) return;
+      if (decommitValidator.isFalseInferredDecommitEvent(ev)) {
+        monitoring
+          .sendMonitoringAlert({
+            level: 'info',
+            type: 'aggregator_skip',
+            eventType: ev.eventType,
+            player: ev.payload?.player?.name || ev.playerSlug,
+            playerSlug: ev.playerSlug,
+            reason: 'Unverified event skipped',
+            source: ev.source || 'on3',
+            meta: { eventId: ev.id }
+          })
+          .catch((e) => console.warn('[monitoring]', e.message));
+        return;
+      }
     }
     const player = playerIndex.bySlug.get(ev.playerSlug) || ev.payload?.player || null;
     const stableCommitKey =

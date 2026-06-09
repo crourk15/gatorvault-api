@@ -5,6 +5,7 @@ const on3 = require('./on3-client');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { clearHeatCheckCache } = require('./heat-check-store');
 const { commitFingerprint } = require('./commit-fingerprint');
+const monitoring = require('./recruiting-monitoring');
 
 const SNAPSHOT_PATH = path.join(store.DATA_DIR, 'on3-snapshot.json');
 const INGEST_LOG_PATH = path.join(store.DATA_DIR, 'on3-ingest-log.json');
@@ -291,11 +292,28 @@ async function firePlayerEvent(eventType, player, extra, snapshot) {
     source: 'on3'
   };
 
-  const result = await store.fireRecruitingEvent(payload);
-  if (['commit', 'flip', 'decommit'].includes(resolvedType)) {
-    saveFiredAlert(snapshot, player, resolvedType, result.event?.id);
+  try {
+    const result = await store.fireRecruitingEvent(payload);
+    if (['commit', 'flip', 'decommit'].includes(resolvedType)) {
+      saveFiredAlert(snapshot, player, resolvedType, result.event?.id);
+    }
+    return { fired: true, eventType: resolvedType, slug, eventId: result.event?.id };
+  } catch (e) {
+    if (resolvedType === 'decommit' || /decommit blocked/i.test(e.message)) {
+      await monitoring.sendMonitoringAlert({
+        level: 'warning',
+        type: 'ingest_mismatch',
+        eventType: resolvedType,
+        player: player.name,
+        playerSlug: slug,
+        reason: e.message,
+        detail: 'Null or unverified decommit attempt blocked during On3 ingest',
+        source: 'on3',
+        meta: { snapshotAbsence: /snapshot|missing_from_board|unverified/i.test(e.message) }
+      });
+    }
+    throw e;
   }
-  return { fired: true, eventType: resolvedType, slug, eventId: result.event?.id };
 }
 
 async function fireRankingChange(classYear, rankings, prev) {
@@ -396,6 +414,20 @@ async function runOn3Ingest(options = {}) {
     lastRun: new Date().toISOString()
   };
 
+  if (live.errors.length) {
+    for (const errRow of live.errors) {
+      await monitoring.sendMonitoringAlert({
+        level: errRow.type === 'fetch' ? 'error' : 'warning',
+        type: 'ingest_mismatch',
+        eventType: errRow.type || 'on3_fetch',
+        player: errRow.year ? `Class ${errRow.year}` : 'On3',
+        detail: errRow.error || 'On3 ingest fetch error',
+        source: 'on3',
+        meta: { year: errRow.year, errorType: errRow.type, unexpectedBoardRefresh: errRow.type === 'board_refresh' }
+      });
+    }
+  }
+
   if (!result.ok && baseline) {
     const err = new Error(
       live.errors.map((e) => `${e.year}/${e.type}: ${e.error}`).join('; ') || 'On3 fetch failed'
@@ -446,12 +478,44 @@ async function runOn3Ingest(options = {}) {
       }
 
       if (!inPrev || gate.reason === 'commit_date_updated') {
+        if (!player?.name || !player?.on3Id) {
+          await monitoring.sendMonitoringAlert({
+            level: 'info',
+            type: 'ingest_mismatch',
+            eventType: 'commit',
+            player: player?.name || key,
+            detail: `Incomplete On3 payload (${!player?.name ? 'missing name' : 'missing on3Id'})`,
+            source: 'on3',
+            meta: { year, key, incompletePayload: true }
+          });
+        }
+        if (player && player.commitDate == null && gate.reason === 'commit_date_updated') {
+          await monitoring.sendMonitoringAlert({
+            level: 'info',
+            type: 'ingest_mismatch',
+            eventType: 'commit',
+            player: player.name || key,
+            detail: 'Null commit field on commit date update',
+            source: 'on3',
+            meta: { year, key, nullCommitField: true }
+          });
+        }
         try {
           const out = await firePlayerEvent('commit', player, null, snapshot);
           if (out.fired) result.fired.push({ year, ...out });
           else result.skipped.push({ year, key, ...out });
         } catch (e) {
           result.errors.push({ year, key, type: 'commit', error: e.message });
+          await monitoring.sendMonitoringAlert({
+            level: 'warning',
+            type: 'ingest_mismatch',
+            eventType: 'commit',
+            player: player?.name || key,
+            reason: e.message,
+            detail: 'Commit mismatch or validation failure during On3 ingest',
+            source: 'on3',
+            meta: { year, key, commitMismatch: true }
+          });
         }
       }
     }
@@ -465,6 +529,17 @@ async function runOn3Ingest(options = {}) {
           player: prevPlayer,
           classYear: year,
           trigger: 'missing_from_board'
+        });
+        await monitoring.sendMonitoringAlert({
+          level: 'info',
+          type: 'ingest_mismatch',
+          eventType: 'decommit',
+          player: prevPlayer.name || key,
+          playerSlug: prevPlayer.slug || store.slugify(prevPlayer.name || key),
+          detail: 'Player missing from snapshot — event blocked',
+          reason: blocked.reason || 'snapshot_absence',
+          source: 'on3',
+          meta: { year, key, snapshotAbsence: true, trigger: 'missing_from_board' }
         });
         result.blocked = result.blocked || [];
         result.blocked.push({ year, key, ...blocked });
