@@ -47,6 +47,8 @@ const RPM_CLOSE_GAP = parseFloat(process.env.HEAT_CHECK_RPM_CLOSE_GAP || '8', 10
 const TRIGGER_LABELS = {
   crystal_ball_uf: 'Crystal Ball → Florida',
   rpm_uf: 'On3 RPM → Florida',
+  rivals_rpm_uf: 'Rivals RPM → Florida',
+  rivals_futurecast_uf: 'Rivals FutureCast → Florida',
   insider_prediction_uf: 'Insider prediction → Florida',
   visit_uf_leads: 'Visit intel · UF leads',
   staff_momentum: 'Staff momentum',
@@ -132,6 +134,14 @@ function pickManualVisitIntel(manualIntel) {
   );
 }
 
+function pickRivalsPredictionIntel(manualIntel) {
+  return (manualIntel || []).find(
+    (i) =>
+      i.eventType === 'prediction' &&
+      (/rivals/i.test(String(i.source || '')) || i.rivalsPickKey || /futurecast/i.test(String(i.status || i.detail || '')))
+  );
+}
+
 function isTrustedInsider(post) {
   if (!beatFilters.shouldIncludeBeatPost(post)) return false;
   const handle = String(post.handle || '').toLowerCase();
@@ -155,7 +165,7 @@ function parseBeatIntel(beatPosts) {
     } else if (/trending|momentum|flip|commit soon|decision|visiting|official/.test(lower) && /florida|gators|\buf\b/.test(lower)) {
       intel.push({ type: 'uf_leads', insider, text, url: post.url, publishedAt: post.publishedAt });
     }
-    if (/crystal ball|prediction|rpm|247|wiltfong|bender|alderman|ivins|power|simmons|harden/.test(lower)) {
+    if (/futurecast|prediction machine|prediction logged|expert pick|forecast|crystal ball|prediction|rpm|247|wiltfong|bender|alderman|ivins|power|simmons|harden/.test(lower)) {
       intel.push({ type: 'prediction', insider, text, url: post.url, publishedAt: post.publishedAt });
     }
   }
@@ -219,6 +229,7 @@ function analyzeProfile(profile, beatMatches, manualIntel = []) {
   const classYear = profile.classYear || CLASS_YEAR;
   const playerSlug = profile.slug || on3.slugify(profile.name);
   const manualVisit = pickManualVisitIntel(manualIntel);
+  const rivalsPm = pickRivalsPredictionIntel(manualIntel);
 
   // Priority 1 — commitment to Florida removes player entirely
   const commit = on3.getCollegeCommit(profile.topTeams, classYear);
@@ -234,7 +245,7 @@ function analyzeProfile(profile, beatMatches, manualIntel = []) {
   const committedElsewhere = commit && !on3.isFloridaTeam(commit);
 
   const uf = on3.getFloridaTeam(profile.topTeams, classYear);
-  if (!uf && !manualVisit) return { excluded: true, reason: 'no_uf_interest' };
+  if (!uf && !manualVisit && !rivalsPm) return { excluded: true, reason: 'no_uf_interest' };
 
   const rpm = buildRpmContext(profile, classYear);
   const visitTs = uf?.latestVisit?.dateOccurred;
@@ -262,6 +273,25 @@ function analyzeProfile(profile, beatMatches, manualIntel = []) {
         headline: `Official visit scheduled — ${profile.name}`,
         detail: `${manualVisit.status || 'Official visit'}${visitRange ? ` · ${visitRange}` : ''} · ${String(manualVisit.detail || '').slice(0, 160)}`,
         recordedAt: manualVisit.reportedAt || profile.fetchedAt,
+        priority: 3
+      }
+    };
+  }
+
+  if (rivalsPm) {
+    return {
+      excluded: false,
+      signal: {
+        ...baseSignal(profile, classYear, playerSlug),
+        direction: 'rising',
+        trigger: 'rivals_futurecast_uf',
+        predictionType: 'rivals_pm',
+        predictionSchool: 'Florida',
+        source: 'rivals_pm',
+        insider: rivalsPm.analystName || rivalsPm.source || 'Rivals PM',
+        headline: `Rivals FutureCast: Florida — ${profile.name}`,
+        detail: String(rivalsPm.detail || rivalsPm.status || '').slice(0, 220),
+        recordedAt: rivalsPm.reportedAt || profile.fetchedAt,
         priority: 3
       }
     };

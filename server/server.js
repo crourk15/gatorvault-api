@@ -779,6 +779,30 @@ function startOn3IngestScheduler() {
   console.log('On3 ingest: enabled (every', Math.round(intervalMs / 1000), 's)');
 }
 
+let _gvRivalsPmSchedulerStarted = false;
+function startRivalsPmIngestScheduler() {
+  if (process.env.RIVALS_PM_INGEST_ENABLED !== 'true') return;
+  if (_gvRivalsPmSchedulerStarted) return;
+  _gvRivalsPmSchedulerStarted = true;
+  const { runRivalsPredictionIngest } = require('./lib/rivals-prediction-ingest');
+  const intervalMs = Math.max(120000, parseInt(process.env.RIVALS_PM_INTERVAL_MS || '300000', 10) || 300000);
+  const bootDelay = Math.max(10000, parseInt(process.env.RIVALS_PM_BOOT_DELAY_MS || '45000', 10) || 45000);
+
+  const tick = () => {
+    runRivalsPredictionIngest()
+      .then((r) => {
+        if (r.processedCount) {
+          console.log('[rivals-pm] processed', r.processedCount, 'new prediction(s)');
+        }
+      })
+      .catch((err) => console.warn('[rivals-pm]', err.message));
+  };
+
+  setTimeout(tick, bootDelay);
+  setInterval(tick, intervalMs);
+  console.log('Rivals PM ingest: enabled (every', Math.round(intervalMs / 1000), 's)');
+}
+
 let _gvMediaIngestStarted = false;
 function startMediaIngestScheduler() {
   if (process.env.MEDIA_INGEST_ENABLED !== 'true') return;
@@ -846,6 +870,11 @@ app.listen(PORT, () => {
     startOn3IngestScheduler();
   } catch (e) {
     console.warn('On3 ingest scheduler failed to start', e.message);
+  }
+  try {
+    startRivalsPmIngestScheduler();
+  } catch (e) {
+    console.warn('Rivals PM ingest scheduler failed to start', e.message);
   }
   try {
     const { validateXBearerToken } = require('./lib/live-beat');

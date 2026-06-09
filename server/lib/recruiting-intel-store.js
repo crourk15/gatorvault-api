@@ -62,6 +62,11 @@ function normalizeIntel(raw) {
     fingerprint,
     alertPosted: !!raw.alertPosted,
     xPostQueued: !!raw.xPostQueued,
+    analystName: raw.analystName || raw.analyst_name || null,
+    confidencePct: raw.confidencePct != null ? Number(raw.confidencePct) : raw.confidence_pct != null ? Number(raw.confidence_pct) : null,
+    articleUrl: raw.articleUrl || raw.article_url || null,
+    rivalsPickKey: raw.rivalsPickKey || raw.rivals_pick_key || null,
+    predictionSchool: raw.predictionSchool || raw.prediction_school || null,
     createdAt: raw.createdAt || nowIso()
   };
 }
@@ -113,6 +118,16 @@ function addIntel(raw) {
   saveIntelDoc(doc);
 
   if (isVisitEventType(row.eventType)) {
+    const store = require('./recruiting-store');
+    return store.upsertTargetFromVisitIntel(row).then((player) => ({
+      item: row,
+      created: true,
+      duplicate: false,
+      player
+    }));
+  }
+
+  if (row.eventType === 'prediction' || row.eventType === 'rivals_futurecast') {
     const store = require('./recruiting-store');
     return store.upsertTargetFromVisitIntel(row).then((player) => ({
       item: row,

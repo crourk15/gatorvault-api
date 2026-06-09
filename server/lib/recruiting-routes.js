@@ -1,6 +1,7 @@
 const store = require('./recruiting-store');
 const intelStore = require('./recruiting-intel-store');
 const { runOn3Ingest, syncPortalFromOn3, getIngestStatus } = require('./on3-ingest');
+const { runRivalsPredictionIngest, getRivalsPmStatus } = require('./rivals-prediction-ingest');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { buildHeatCheck } = require('./heat-check-store');
 const highlightsStore = require('./highlights-store');
@@ -320,6 +321,54 @@ function mountRecruitingRoutes(app) {
       return res.json({ ok: true, ...result });
     } catch (err) {
       console.error('on3 ingest error', err);
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/rivals-pm/status', async (req, res) => {
+    try {
+      return res.json(getRivalsPmStatus());
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/recruiting/rivals-pm/ingest', async (req, res) => {
+    try {
+      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.get('X-Ingest-Secret') || '');
+      if (pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
+        return res.status(401).json({ ok: false, error: 'Invalid ingest secret' });
+      }
+      const force = req.body.force === true || req.query.force === 'true';
+      const result = await runRivalsPredictionIngest({ force });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      console.error('rivals-pm ingest error', err);
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/internal-alerts', async (req, res) => {
+    try {
+      const pin = String(req.query.pin || req.get('X-Recruiting-Pin') || '');
+      if (pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
+        return res.status(401).json({ ok: false, error: 'Invalid admin pin' });
+      }
+      const fs = require('fs');
+      const path = require('path');
+      const alertsPath = path.join(__dirname, '..', 'data', 'recruiting', 'internal-alerts.json');
+      let doc = { version: 1, alerts: [] };
+      try {
+        doc = JSON.parse(fs.readFileSync(alertsPath, 'utf8'));
+      } catch {
+        /* empty */
+      }
+      const limit = Math.min(100, parseInt(req.query.limit || '50', 10) || 50);
+      const unreadOnly = req.query.unread === 'true';
+      let alerts = doc.alerts || [];
+      if (unreadOnly) alerts = alerts.filter((a) => !a.read);
+      return res.json({ ok: true, alerts: alerts.slice(0, limit), updatedAt: doc.updatedAt || null });
+    } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
   });

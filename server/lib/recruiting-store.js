@@ -102,6 +102,10 @@ function normalizePlayer(raw) {
     on3Slug: raw.on3Slug || raw.on3_slug || null,
     on3ProfileUrl: raw.on3ProfileUrl || raw.on3_profile_url || null,
     on3Source: raw.on3Source || raw.on3_source || null,
+    rivalsLastPrediction: raw.rivalsLastPrediction || raw.rivals_last_prediction || null,
+    rivalsAnalyst: raw.rivalsAnalyst || raw.rivals_analyst || null,
+    rivalsConfidence: raw.rivalsConfidence != null ? Number(raw.rivalsConfidence) : raw.rivals_confidence != null ? Number(raw.rivals_confidence) : null,
+    rivalsArticleUrl: raw.rivalsArticleUrl || raw.rivals_article_url || null,
     starsDisplay: raw.starsDisplay || raw.stars_display || null,
     headliner: !!(raw.headliner ?? raw.is_headliner),
     updatedAt: raw.updatedAt || raw.updated_at || nowIso()

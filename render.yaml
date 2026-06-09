@@ -31,6 +31,14 @@ services:
         value: "2026,2027"
       - key: ON3_INGEST_BOOT_DELAY_MS
         value: "15000"
+      - key: RIVALS_PM_INGEST_ENABLED
+        value: "true"
+      - key: RIVALS_PM_INTERVAL_MS
+        value: "300000"
+      - key: RIVALS_PM_CLASS_YEARS
+        value: "2027,2028,2029"
+      - key: RIVALS_PM_BOOT_DELAY_MS
+        value: "60000"
       - key: SESSION_SECRET
         generateValue: true
       - key: EMAILJS_USER_ID

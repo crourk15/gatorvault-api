@@ -84,6 +84,9 @@ function buildNewsFromIntel(intel) {
   let text;
   if (intel.eventType === 'official_visit') {
     text = `${name} (${intel.pos || 'Recruit'}) — Official visit to Gainesville${visitRange ? ` · ${visitRange}` : ''}. Source: ${intel.source} 🐊`;
+  } else if (intel.eventType === 'prediction' && intel.analystName) {
+    const conf = intel.confidencePct != null ? ` (${intel.confidencePct}% confidence)` : '';
+    text = `Rivals analyst ${intel.analystName} logs a Florida prediction for ${name}${conf}.`;
   } else if (intel.eventType === 'prediction') {
     text = `${name} — ${intel.detail || 'New prediction intel'} · ${intel.source} 🐊`;
   } else if (intel.eventType === 'trending' || intel.eventType === 'recruiting_momentum') {
