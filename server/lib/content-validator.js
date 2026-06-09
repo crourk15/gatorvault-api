@@ -11,6 +11,8 @@ const TRUSTED_REPORTERS = [
   'Corey Bender',
   'Blake Alderman',
   'Keith Niebuhr',
+  'Chad Simmons',
+  'Tyler Harden',
   'Zach Abolverdi',
   'Graham Hall',
   'Thomas Goldkamp',

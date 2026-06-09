@@ -55,6 +55,8 @@ services:
         value: "true"
       - key: X_AUTOPOST_INTERVAL_MS
         value: "60000"
+      - key: X_AUTOPOST_REPLY_ENABLED
+        value: "true"
       - key: MEDIA_INGEST_ENABLED
         value: "false"
       - key: MEDIA_INGEST_INTERVAL_MS

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const store = require('./recruiting-store');
+const intelStore = require('./recruiting-intel-store');
 const { getBeatPosts } = require('./live-beat');
 const on3 = require('./on3-recruit-client');
 
@@ -33,10 +34,11 @@ const INSIDER_HANDLES = new Set([
   'keithniebuhr',
   'jamieivins',
   'andrewpower',
-  'chadsimmons_'
+  'chadsimmons_',
+  'ttjharden8'
 ]);
 
-const TRUSTED_INSIDER_PATTERN = /bender|alderman|wiltfong|ivins|power|abolverdi|niebuhr|chad\s*simmons|chadsimmons/i;
+const TRUSTED_INSIDER_PATTERN = /bender|alderman|wiltfong|ivins|power|abolverdi|niebuhr|chad\s*simmons|chadsimmons|tyler\s*harden|harden/i;
 
 /** UF within this many RPM points of the leader = "close/neutral" for visit intel */
 const RPM_CLOSE_GAP = parseFloat(process.env.HEAT_CHECK_RPM_CLOSE_GAP || '8', 10);
@@ -114,9 +116,19 @@ async function discoverRecruitSlugs(classYear) {
     if (slug) slugs.push(slug);
   }
 
+  for (const intel of intelStore.listIntel({ limit: 50 })) {
+    if (intel.playerSlug) slugs.push(intel.playerSlug);
+  }
+
   const unique = [...new Set(slugs.filter(Boolean))];
   const prioritized = unique.slice(0, MAX_PROFILES);
   return { slugs: prioritized, visitCount: visits.length };
+}
+
+function pickManualVisitIntel(manualIntel) {
+  return (manualIntel || []).find(
+    (i) => i.eventType === 'official_visit' && /scheduled|official/i.test(String(i.status || ''))
+  );
 }
 
 function isTrustedInsider(post) {
@@ -141,7 +153,7 @@ function parseBeatIntel(beatPosts) {
     } else if (/trending|momentum|flip|commit soon|decision|visiting|official/.test(lower) && /florida|gators|\buf\b/.test(lower)) {
       intel.push({ type: 'uf_leads', insider, text, url: post.url, publishedAt: post.publishedAt });
     }
-    if (/crystal ball|prediction|rpm|247|wiltfong|bender|alderman|ivins|power|simmons/.test(lower)) {
+    if (/crystal ball|prediction|rpm|247|wiltfong|bender|alderman|ivins|power|simmons|harden/.test(lower)) {
       intel.push({ type: 'prediction', insider, text, url: post.url, publishedAt: post.publishedAt });
     }
   }
@@ -199,15 +211,16 @@ function baseSignal(profile, classYear, playerSlug) {
   };
 }
 
-function analyzeProfile(profile, beatMatches) {
+function analyzeProfile(profile, beatMatches, manualIntel = []) {
   if (!profile || profile.error) return { excluded: true, reason: 'fetch_error' };
 
   const classYear = profile.classYear || CLASS_YEAR;
   const playerSlug = profile.slug || on3.slugify(profile.name);
+  const manualVisit = pickManualVisitIntel(manualIntel);
 
-  // Priority 1 — commitment removes player entirely
+  // Priority 1 — commitment to Florida removes player entirely
   const commit = on3.getCollegeCommit(profile.topTeams, classYear);
-  if (commit) {
+  if (commit && on3.isFloridaTeam(commit)) {
     return {
       excluded: true,
       reason: 'committed',
@@ -216,15 +229,45 @@ function analyzeProfile(profile, beatMatches) {
     };
   }
 
+  const committedElsewhere = commit && !on3.isFloridaTeam(commit);
+
   const uf = on3.getFloridaTeam(profile.topTeams, classYear);
-  if (!uf) return { excluded: true, reason: 'no_uf_interest' };
+  if (!uf && !manualVisit) return { excluded: true, reason: 'no_uf_interest' };
 
   const rpm = buildRpmContext(profile, classYear);
-  const visitTs = uf.latestVisit?.dateOccurred;
+  const visitTs = uf?.latestVisit?.dateOccurred;
   const recentVisit = visitTs != null && Date.now() / 1000 - visitTs < 21 * 86400;
 
   const insiderUfLead = pickInsiderUfLead(beatMatches);
   const insiderSlipping = pickInsiderUfSlipping(beatMatches);
+
+  // Trusted insider / manual intel — scheduled official UF visit (flip targets included)
+  if (manualVisit) {
+    const visitRange =
+      manualVisit.visitStart && manualVisit.visitEnd
+        ? `${manualVisit.visitStart}–${manualVisit.visitEnd}`
+        : manualVisit.visitStart || '';
+    return {
+      excluded: false,
+      signal: {
+        ...baseSignal(profile, classYear, playerSlug),
+        direction: 'rising',
+        trigger: 'visit_uf_leads',
+        predictionType: 'visit',
+        predictionSchool: 'Florida',
+        source: 'gators_online',
+        insider: manualVisit.source || 'Insider',
+        headline: `Official visit scheduled — ${profile.name}`,
+        detail: `${manualVisit.status || 'Official visit'}${visitRange ? ` · ${visitRange}` : ''} · ${String(manualVisit.detail || '').slice(0, 160)}`,
+        recordedAt: manualVisit.reportedAt || profile.fetchedAt,
+        priority: 3
+      }
+    };
+  }
+
+  if (committedElsewhere) {
+    return { excluded: true, reason: 'committed', committedTo: commit.team?.name || commit.team?.fullName };
+  }
 
   // Priority 3 — trusted insider explicitly says UF leads (overrides RPM cooling)
   if (insiderUfLead) {
@@ -429,7 +472,12 @@ async function buildLiveHeatCheck() {
   for (const profile of profiles) {
     if (!profile) continue;
     const beatMatches = matchBeatForPlayer(profile.name, beatIntel);
-    const result = analyzeProfile(profile, beatMatches);
+    const manualIntel = intelStore.getIntelForPlayer({
+      playerSlug: profile.slug || on3.slugify(profile.name),
+      playerName: profile.name,
+      playerId: profile.on3Id
+    });
+    const result = analyzeProfile(profile, beatMatches, manualIntel);
     if (result.excluded) {
       if (result.reason === 'committed') excludedCommitted += 1;
       continue;

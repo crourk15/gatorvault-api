@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-09T03:51:35.551Z",
+  "items": [
+    {
+      "id": "intel_243862_official_visit_2026-06-11",
+      "playerId": "243862",
+      "playerSlug": "easton-royal",
+      "playerName": "Easton Royal",
+      "classYear": 2027,
+      "pos": "WR",
+      "eventType": "official_visit",
+      "status": "Official Visit — Scheduled",
+      "visitStart": "2026-06-11",
+      "visitEnd": "2026-06-13",
+      "timestamp": "2026-06-11",
+      "source": "Tyler Harden",
+      "sourceHandle": "ttjharden8",
+      "detail": "2026 WR Easton Royal will take an official visit to Gainesville from June 11–13.",
+      "reportedAt": "2026-06-09T12:00:00.000Z",
+      "fingerprint": "243862|official_visit|2026-06-11",
+      "alertPosted": true,
+      "xPostQueued": true,
+      "createdAt": "2026-06-09T12:00:00.000Z"
+    }
+  ]
+}

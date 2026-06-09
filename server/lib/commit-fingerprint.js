@@ -35,10 +35,37 @@ function feedDedupeKeyForCommit(playerOrSlug, player) {
   return null;
 }
 
+/** Normalize timestamp to day precision for intel dedupe keys. */
+function normalizeIntelTimestamp(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  if (!Number.isNaN(d.getTime())) return d.toISOString().slice(0, 10);
+  return String(ts).trim().slice(0, 10);
+}
+
+/** General intel dedupe: player_id + event_type + timestamp */
+function intelFingerprint(playerId, eventType, timestamp) {
+  const id = String(playerId || '').trim();
+  const et = String(eventType || '').trim().toLowerCase();
+  const ts = normalizeIntelTimestamp(timestamp);
+  if (!id || !et) return null;
+  return `${id}|${et}|${ts}`;
+}
+
+function feedDedupeKeyForIntel(intel) {
+  const fp = intelFingerprint(intel.playerId, intel.eventType, intel.timestamp || intel.reportedAt);
+  if (fp) return `intel:${fp}`;
+  if (intel.id) return `intel:${intel.id}`;
+  return null;
+}
+
 module.exports = {
   commitPlayerId,
   commitSchool,
   commitDateKey,
   commitFingerprint,
-  feedDedupeKeyForCommit
+  feedDedupeKeyForCommit,
+  normalizeIntelTimestamp,
+  intelFingerprint,
+  feedDedupeKeyForIntel
 };

@@ -1,13 +1,14 @@
 /**
- * Auto-fill X autoposter queue from live GatorVault data (On3 events, articles, portal).
- * Runs when queue is low so the cron worker always has content to post.
+ * Auto-fill X autoposter queue from live GatorVault data (On3 events, intel, articles, portal).
+ * Only NEW commits, visits, predictions, and trending intel are queued (dedupe by fingerprint).
  */
 const crypto = require('crypto');
 const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
 const recruitingStore = require('./recruiting-store');
+const intelStore = require('./recruiting-intel-store');
 const contentStore = require('./content-store');
-const { commitFingerprint } = require('./commit-fingerprint');
+const { commitFingerprint, intelFingerprint } = require('./commit-fingerprint');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 const ON3_PORTAL =
@@ -18,9 +19,22 @@ const MAX_COMMIT_EVENT_AGE_MS = parseInt(
   process.env.X_AUTOPOST_MAX_COMMIT_AGE_MS || String(6 * 60 * 60 * 1000),
   10
 );
+const MAX_INTEL_AGE_MS = parseInt(
+  process.env.X_AUTOPOST_MAX_INTEL_AGE_MS || String(7 * 86400000),
+  10
+);
 
 function dedupeKey(text) {
   return crypto.createHash('sha256').update(String(text || '').trim().toLowerCase()).digest('hex').slice(0, 16);
+}
+
+function fingerprintAlreadyQueued(fp, items) {
+  if (!fp) return false;
+  return items.some(
+    (i) =>
+      (i.intelFingerprint === fp || i.commitFingerprint === fp) &&
+      (i.status === 'pending' || i.status === 'sent' || i.status === 'failed')
+  );
 }
 
 function alreadyQueued(text, items) {
@@ -33,12 +47,7 @@ function alreadyQueued(text, items) {
 }
 
 function commitAlreadyQueued(fp, items) {
-  if (!fp) return false;
-  return items.some(
-    (i) =>
-      i.commitFingerprint === fp &&
-      (i.status === 'pending' || i.status === 'sent' || i.status === 'failed')
-  );
+  return fingerprintAlreadyQueued(fp, items);
 }
 
 function buildNewsFromEvent(ev) {
@@ -50,27 +59,55 @@ function buildNewsFromEvent(ev) {
   const text = skinny ? `${title} — ${skinny}`.slice(0, 270) : `${title} 🐊`.slice(0, 270);
   return {
     text: text.includes(SITE_URL.replace('https://', '')) ? text : `${text} ${SITE_URL}`,
-    category: ev.eventType?.startsWith('portal') ? 'news' : 'news',
+    category: 'news',
     topic: ev.eventType?.startsWith('portal') ? 'portal' : 'recruiting',
     sources: [{ label: 'On3', url: ON3_PORTAL }],
     source: 'auto:on3-event',
     commitFingerprint: fp,
+    intelFingerprint: fp,
     sourceEventId: ev.id,
-    sourceEventCreatedAt: ev.createdAt
+    sourceEventCreatedAt: ev.createdAt,
+    playerName: player.name || null
+  };
+}
+
+function buildNewsFromIntel(intel) {
+  const name = intel.playerName || 'Recruit';
+  const visitRange =
+    intel.visitStart && intel.visitEnd ? `${intel.visitStart}–${intel.visitEnd}` : intel.visitStart || '';
+  let text;
+  if (intel.eventType === 'official_visit') {
+    text = `${name} (${intel.pos || 'Recruit'}) — Official visit to Gainesville${visitRange ? ` · ${visitRange}` : ''}. Source: ${intel.source} 🐊`;
+  } else if (intel.eventType === 'prediction') {
+    text = `${name} — ${intel.detail || 'New prediction intel'} · ${intel.source} 🐊`;
+  } else {
+    text = `${name} — ${intel.detail || intel.status || 'New recruiting intel'} · ${intel.source} 🐊`;
+  }
+  const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
+  return {
+    text: `${text.slice(0, 240)} ${SITE_URL}`,
+    category: 'news',
+    topic: 'recruiting',
+    sources: [{ label: intel.source || 'Insider', url: intel.sourceHandle ? `https://x.com/${intel.sourceHandle}` : SITE_URL }],
+    source: 'auto:intel',
+    intelFingerprint: fp,
+    intelType: intel.eventType,
+    playerName: intel.playerName,
+    sourceIntelId: intel.id
   };
 }
 
 function buildNewsFromPortal(headliner) {
   if (!headliner?.name) return null;
+  const fp = intelFingerprint(headliner.on3Id || headliner.slug || headliner.name, 'portal_headliner', headliner.updatedAt || 'once');
   const text = `Portal headliner: ${headliner.name} (${headliner.htWt || headliner.pos}) — ${headliner.skinny || headliner.profileNote || 'UF incoming transfer'}`.slice(0, 240);
   return {
     text: `${text} ${SITE_URL}`,
     category: 'news',
     topic: 'portal',
-    sources: [
-      { label: 'On3', url: headliner.on3ProfileUrl || ON3_PORTAL }
-    ],
-    source: 'auto:portal-headliner'
+    sources: [{ label: 'On3', url: headliner.on3ProfileUrl || ON3_PORTAL }],
+    source: 'auto:portal-headliner',
+    intelFingerprint: fp
   };
 }
 
@@ -100,13 +137,15 @@ function buildPromoFromMix() {
 
 function buildNewsFromArticle(article) {
   if (!article?.title) return null;
+  const fp = intelFingerprint(article.id || article.title, 'article', article.publishedAt || article.date);
   const text = `${article.title} — read in the Vault`.slice(0, 240);
   return {
     text: `${text} ${SITE_URL}`,
     category: 'news',
     topic: 'general',
     sources: [{ label: article.author || 'GatorVault', url: SITE_URL }],
-    source: 'auto:article'
+    source: 'auto:article',
+    intelFingerprint: fp
   };
 }
 
@@ -119,6 +158,17 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
 
   const candidates = [];
   const slots = maxEnqueue - pending.length;
+  const intelCutoff = Date.now() - MAX_INTEL_AGE_MS;
+
+  try {
+    const unqueuedIntel = intelStore.getUnqueuedIntel({ maxAgeMs: MAX_INTEL_AGE_MS });
+    unqueuedIntel.slice(0, 3).forEach((intel) => {
+      const row = buildNewsFromIntel(intel);
+      if (row) candidates.unshift(row);
+    });
+  } catch {
+    /* optional */
+  }
 
   try {
     const events = await recruitingStore.getEvents({ limit: 50 });
@@ -139,7 +189,9 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
   try {
     const portal = await recruitingStore.getPortalBoard();
     const row = buildNewsFromPortal(portal.headliner);
-    if (row) candidates.unshift(row);
+    if (row && !fingerprintAlreadyQueued(row.intelFingerprint, doc.items)) {
+      candidates.push(row);
+    }
   } catch {
     /* optional */
   }
@@ -148,7 +200,9 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
     const articles = contentStore.loadPublishedArticles();
     if (articles[0]) {
       const row = buildNewsFromArticle(articles[0]);
-      if (row) candidates.push(row);
+      if (row && !fingerprintAlreadyQueued(row.intelFingerprint, doc.items)) {
+        candidates.push(row);
+      }
     }
   } catch {
     /* optional */
@@ -161,6 +215,8 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
   let added = 0;
   for (const raw of candidates) {
     if (added >= slots) break;
+    const fp = raw.intelFingerprint || raw.commitFingerprint;
+    if (fp && fingerprintAlreadyQueued(fp, doc.items)) continue;
     if (raw.commitFingerprint && commitAlreadyQueued(raw.commitFingerprint, doc.items)) continue;
     if (alreadyQueued(raw.text, doc.items)) continue;
     const check = policy.validatePostContent(raw);
@@ -173,6 +229,9 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
       });
       enqueued.push(out.item);
       doc.items.push(out.item);
+      if (raw.sourceIntelId) {
+        intelStore.markIntelXPostQueued(raw.sourceIntelId);
+      }
       added += 1;
     } catch {
       /* skip invalid */
@@ -184,5 +243,6 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
 
 module.exports = {
   refillAutoposterQueue,
-  dedupeKey
+  dedupeKey,
+  fingerprintAlreadyQueued
 };

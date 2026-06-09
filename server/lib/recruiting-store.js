@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { slugify } = require('./slug');
 const { buildOn3ProfileUrl } = require('./on3-urls');
-const { commitFingerprint } = require('./commit-fingerprint');
+const { commitFingerprint, intelFingerprint } = require('./commit-fingerprint');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const PLAYERS_PATH = path.join(DATA_DIR, 'players.json');
@@ -335,12 +335,50 @@ async function hasExistingCommitFingerprint(fp) {
   });
 }
 
+async function hasExistingIntelFingerprint(fp) {
+  if (!fp) return false;
+  const events = await loadEventsLocal();
+  return events.some((e) => {
+    const efp = e.payload?.intelFingerprint || intelFingerprint(
+      e.payload?.player?.on3Id || e.payload?.player?.id || e.playerId,
+      e.eventType,
+      e.payload?.timestamp || e.createdAt
+    );
+    return efp === fp;
+  });
+}
+
 async function createEvent(event) {
   const player = event.payload?.player;
   const fp =
     player && ['commit', 'flip'].includes(event.eventType)
       ? commitFingerprint(player)
       : null;
+
+  const intelFp =
+    !fp && event.eventType
+      ? intelFingerprint(
+          player?.on3Id || player?.id || event.playerId,
+          event.eventType,
+          event.payload?.timestamp || event.visitStart || event.createdAt
+        )
+      : null;
+
+  if (intelFp) {
+    const events = await loadEventsLocal();
+    const existingIntel = events.find((e) => {
+      const efp = e.payload?.intelFingerprint || intelFingerprint(
+        e.payload?.player?.on3Id || e.payload?.player?.id || e.playerId,
+        e.eventType,
+        e.payload?.timestamp || e.createdAt
+      );
+      return efp === intelFp;
+    });
+    if (existingIntel) {
+      console.log('[recruiting-store] Skipped duplicate intel event:', intelFp, event.playerSlug);
+      return normalizeEvent(existingIntel);
+    }
+  }
 
   if (fp && (event.source || 'manual') === 'on3') {
     const events = await loadEventsLocal();
@@ -359,7 +397,8 @@ async function createEvent(event) {
     ...event,
     payload: {
       ...(event.payload || {}),
-      ...(fp ? { commitFingerprint: fp } : {})
+      ...(fp ? { commitFingerprint: fp } : {}),
+      ...(intelFp ? { intelFingerprint: intelFp } : {})
     },
     createdAt: nowIso()
   });

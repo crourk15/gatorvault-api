@@ -68,7 +68,12 @@ function normalizeItem(raw, { validate = true } = {}) {
     validationErrors: raw.validationErrors || [],
     source: raw.source || 'manual',
     commitFingerprint: raw.commitFingerprint || null,
-    sourceEventId: raw.sourceEventId || null
+    intelFingerprint: raw.intelFingerprint || raw.commitFingerprint || null,
+    sourceEventId: raw.sourceEventId || null,
+    sourceIntelId: raw.sourceIntelId || null,
+    intelType: raw.intelType || null,
+    playerName: raw.playerName || null,
+    replyFingerprint: raw.replyFingerprint || null
   };
 
   if (validate) {

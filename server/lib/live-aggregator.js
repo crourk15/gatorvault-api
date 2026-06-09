@@ -1,7 +1,8 @@
 const recruitingStore = require('./recruiting-store');
+const intelStore = require('./recruiting-intel-store');
 const contentStore = require('./content-store');
 const liveStore = require('./live-store');
-const { feedDedupeKeyForCommit, commitFingerprint } = require('./commit-fingerprint');
+const { feedDedupeKeyForCommit, commitFingerprint, feedDedupeKeyForIntel } = require('./commit-fingerprint');
 const { refreshBeatStream, getBeatPosts } = require('./live-beat');
 const { refreshPodcasts, getPodcastHub } = require('./live-podcasts');
 
@@ -66,6 +67,48 @@ async function ingestRecruitingEvents() {
   return count;
 }
 
+async function ingestRecruitingIntel() {
+  const intelItems = intelStore.listIntel({ limit: 100 });
+  const playerIndex = liveStore.loadPlayerIndex();
+  let count = 0;
+
+  intelItems.forEach((intel) => {
+    const stableKey = feedDedupeKeyForIntel(intel) || `intel_${intel.id}`;
+    const player =
+      playerIndex.bySlug.get(intel.playerSlug) ||
+      (intel.playerSlug ? { slug: intel.playerSlug, name: intel.playerName } : null);
+    const title =
+      intel.eventType === 'official_visit'
+        ? `${intel.playerName || 'Recruit'} — ${intel.status || 'Official visit'}`
+        : `${intel.playerName || 'Recruit'} — ${intel.eventType || 'intel'}`;
+
+    liveStore.upsertFeedItem({
+      id: stableKey,
+      dedupeKey: stableKey,
+      type: intel.eventType === 'official_visit' ? 'offers' : 'breaking',
+      title,
+      summary: intel.detail || intel.status || '',
+      source_url: intel.playerSlug ? `/player/${intel.playerSlug}` : '/recruit',
+      imageUrl: null,
+      source: intel.source || 'intel',
+      author: intel.source || 'GatorVault Recruiting',
+      createdAt: intel.reportedAt || intel.createdAt,
+      meta: {
+        eventType: intel.eventType,
+        playerSlug: intel.playerSlug,
+        player,
+        intelFingerprint: intel.fingerprint,
+        visitStart: intel.visitStart,
+        visitEnd: intel.visitEnd,
+        status: intel.status
+      }
+    });
+    count += 1;
+  });
+
+  return count;
+}
+
 function ingestPublishedContent() {
   let count = 0;
   try {
@@ -96,7 +139,10 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
   const results = { recruiting: 0, content: 0, beat: null, podcasts: null, reclassified: null };
   liveStore.purgeTestFeedItems();
   results.reclassified = liveStore.reclassifyFeedItems();
-  if (recruiting) results.recruiting = await ingestRecruitingEvents();
+  if (recruiting) {
+    results.recruiting = await ingestRecruitingEvents();
+    results.intel = await ingestRecruitingIntel();
+  }
   results.content = ingestPublishedContent();
   if (beat) {
     try {
@@ -129,5 +175,6 @@ module.exports = {
   getDashboard,
   isTestRecruitingEvent,
   ingestRecruitingEvents,
+  ingestRecruitingIntel,
   ingestPublishedContent
 };

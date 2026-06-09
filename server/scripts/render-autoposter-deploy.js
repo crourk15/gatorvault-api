@@ -78,12 +78,16 @@ async function main() {
   await upsertEnvVar(svc.id, 'X_AUTOPOST_ENABLED', 'true');
   console.log('Set X_AUTOPOST_ENABLED=true on Render');
 
+  await upsertEnvVar(svc.id, 'X_AUTOPOST_REPLY_ENABLED', 'true');
+  console.log('Set X_AUTOPOST_REPLY_ENABLED=true on Render');
+
   const pullKeys = [
     'X_OAUTH1_API_KEY',
     'X_OAUTH1_API_SECRET',
     'X_OAUTH1_ACCESS_TOKEN',
     'X_OAUTH1_ACCESS_TOKEN_SECRET',
-    'X_AUTOPOST_ENABLED'
+    'X_AUTOPOST_ENABLED',
+    'X_AUTOPOST_REPLY_ENABLED'
   ];
   const local = {};
   for (const k of pullKeys) {
@@ -91,6 +95,7 @@ async function main() {
     if (val) local[k] = val;
   }
   local.X_AUTOPOST_ENABLED = 'true';
+  local.X_AUTOPOST_REPLY_ENABLED = 'true';
   upsertLocalEnv(local);
   console.log('Updated local server/.env with Render X OAuth keys');
 

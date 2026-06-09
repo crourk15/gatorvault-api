@@ -8,6 +8,11 @@ const { loadOAuth1Credentials, isOAuth1Configured, oauth1Request, oauth1RequestJ
 const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
 const { refillAutoposterQueue } = require('./x-autoposter-fill');
+const {
+  isReplyEnabled,
+  scheduleRepliesForSentPost,
+  scanTrendingEngagementReplies
+} = require('./x-autoposter-replies');
 
 const API_V11 = 'https://api.twitter.com/1.1';
 const API_V2 = 'https://api.twitter.com/2';
@@ -67,6 +72,7 @@ function getConfigStatus() {
     apiKeyHint: creds.apiKey ? `${creds.apiKey.slice(0, 4)}…` : null,
     accessTokenHint: creds.accessToken ? `${creds.accessToken.slice(0, 8)}…` : null,
     schedulerEnabled: process.env.X_AUTOPOST_ENABLED === 'true',
+    replyEnabled: process.env.X_AUTOPOST_REPLY_ENABLED === 'true',
     schedulerIntervalMs: parseInt(process.env.X_AUTOPOST_INTERVAL_MS || '60000', 10),
     contentMix: policy.getContentPolicy().contentMixLabel,
     lastVerify: _statusCache.checkedAt ? { ..._statusCache } : null
@@ -240,6 +246,16 @@ async function processQueueItem(item) {
       error: null,
       validationErrors: []
     });
+    if (isReplyEnabled() && item.action === 'post') {
+      try {
+        const replyOut = await scheduleRepliesForSentPost({ item, tweetId: result.tweetId });
+        if (replyOut.scheduled > 0) {
+          autopostLog('info', `Scheduled ${replyOut.scheduled} reply/replies`, { parentTweetId: result.tweetId });
+        }
+      } catch (replyErr) {
+        autopostLog('warn', `Reply scheduling failed: ${replyErr.message}`, { itemId: item.id });
+      }
+    }
     return { ok: true, item: store.loadQueue().items.find((i) => i.id === item.id), result };
   } catch (err) {
     autopostLog('error', `Error: ${err.message}`, { itemId: item.id });
@@ -273,6 +289,7 @@ function startXAutoposterScheduler() {
 
   const intervalMs = parseInt(process.env.X_AUTOPOST_INTERVAL_MS || '60000', 10);
   const bootDelay = parseInt(process.env.X_AUTOPOST_BOOT_DELAY_MS || '20000', 10);
+  const replyOn = isReplyEnabled();
 
   verifyCredentials()
     .then((s) => {
@@ -282,7 +299,7 @@ function startXAutoposterScheduler() {
     .catch((e) => autopostLog('error', `Error: OAuth verify — ${e.message}`));
 
   setTimeout(() => {
-    autopostLog('info', 'Cron started', { intervalMs, bootDelay });
+    autopostLog('info', 'Cron started', { intervalMs, bootDelay, replyEnabled: replyOn });
     const tick = async () => {
       if (_processing) return;
       _processing = true;
@@ -294,6 +311,12 @@ function startXAutoposterScheduler() {
         const out = await processDuePosts();
         if (out.processed > 0) {
           autopostLog('info', `Cron tick processed ${out.processed} post(s)`);
+        }
+        if (isReplyEnabled()) {
+          const trend = await scanTrendingEngagementReplies();
+          if (trend.queued > 0) {
+            autopostLog('info', `Queued ${trend.queued} trending engagement reply/replies`);
+          }
         }
       } catch (e) {
         autopostLog('error', `Error: scheduler tick — ${e.message}`);
