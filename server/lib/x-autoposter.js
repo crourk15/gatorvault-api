@@ -7,11 +7,34 @@ const path = require('path');
 const { loadOAuth1Credentials, isOAuth1Configured, oauth1Request } = require('./x-oauth1');
 const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
+const { refillAutoposterQueue } = require('./x-autoposter-fill');
 
 const API_V11 = 'https://api.twitter.com/1.1';
 const UPLOAD_V11 = 'https://upload.twitter.com/1.1';
 
 const X_ACCOUNT = process.env.X_AUTOPOST_ACCOUNT || 'gatorvault';
+const LOG_MAX = 100;
+const _logs = [];
+
+function autopostLog(level, message, detail) {
+  const row = {
+    ts: store.nowIso(),
+    level,
+    message,
+    detail: detail || null
+  };
+  _logs.unshift(row);
+  if (_logs.length > LOG_MAX) _logs.length = LOG_MAX;
+  const tag = `[x-autoposter] ${message}`;
+  if (level === 'error') console.error(tag, detail || '');
+  else if (level === 'warn') console.warn(tag, detail || '');
+  else console.log(tag, detail || '');
+  return row;
+}
+
+function getAutoposterLogs(limit = 20) {
+  return _logs.slice(0, Math.min(LOG_MAX, Math.max(1, limit)));
+}
 
 let _statusCache = {
   configured: false,
@@ -25,10 +48,21 @@ let _statusCache = {
 function getConfigStatus() {
   const creds = loadOAuth1Credentials();
   const configured = isOAuth1Configured(creds);
+  const envKeys = {
+    X_OAUTH1_API_KEY: !!process.env.X_OAUTH1_API_KEY,
+    X_OAUTH1_API_SECRET: !!process.env.X_OAUTH1_API_SECRET,
+    X_OAUTH1_ACCESS_TOKEN: !!process.env.X_OAUTH1_ACCESS_TOKEN,
+    X_OAUTH1_ACCESS_TOKEN_SECRET: !!process.env.X_OAUTH1_ACCESS_TOKEN_SECRET,
+    TWITTER_API_KEY: !!process.env.TWITTER_API_KEY,
+    TWITTER_API_SECRET: !!process.env.TWITTER_API_SECRET,
+    TWITTER_ACCESS_TOKEN: !!process.env.TWITTER_ACCESS_TOKEN,
+    TWITTER_ACCESS_SECRET: !!process.env.TWITTER_ACCESS_SECRET
+  };
   return {
     configured,
     authMode: 'oauth1_user_context',
     account: `@${X_ACCOUNT}`,
+    envKeysLoaded: envKeys,
     apiKeyHint: creds.apiKey ? `${creds.apiKey.slice(0, 4)}…` : null,
     accessTokenHint: creds.accessToken ? `${creds.accessToken.slice(0, 8)}…` : null,
     schedulerEnabled: process.env.X_AUTOPOST_ENABLED === 'true',
@@ -159,6 +193,8 @@ async function postTweet({
   const tweetId = data.id_str || String(data.id || '');
   const screenName = data.user?.screen_name || _statusCache.screenName || X_ACCOUNT;
 
+  autopostLog('success', 'Post successful', { tweetId, screenName });
+
   return {
     ok: true,
     tweetId,
@@ -169,8 +205,11 @@ async function postTweet({
 }
 
 async function processQueueItem(item) {
+  autopostLog('info', 'Posting…', { itemId: item.id, category: item.category, preview: String(item.text || '').slice(0, 80) });
   const check = policy.validatePostContent(item);
   if (!check.valid) {
+    const errMsg = check.errors.map((e) => e.message).join(' ');
+    autopostLog('error', `Error: validation failed`, { itemId: item.id, errMsg });
     store.updatePost(item.id, {
       status: 'failed',
       error: check.errors.map((e) => e.message).join(' '),
@@ -199,6 +238,7 @@ async function processQueueItem(item) {
     });
     return { ok: true, item: store.loadQueue().items.find((i) => i.id === item.id), result };
   } catch (err) {
+    autopostLog('error', `Error: ${err.message}`, { itemId: item.id });
     store.updatePost(item.id, {
       status: 'failed',
       error: err.message,
@@ -210,6 +250,7 @@ async function processQueueItem(item) {
 
 async function processDuePosts({ limit = 5 } = {}) {
   const due = store.getDuePosts(limit);
+  if (due.length) autopostLog('info', `Processing ${due.length} due post(s)…`);
   const results = [];
   for (const item of due) {
     results.push(await processQueueItem(item));
@@ -222,7 +263,7 @@ let _processing = false;
 
 function startXAutoposterScheduler() {
   if (process.env.X_AUTOPOST_ENABLED !== 'true') {
-    console.log('[x-autoposter] scheduler disabled (set X_AUTOPOST_ENABLED=true)');
+    autopostLog('warn', 'Cron disabled — set X_AUTOPOST_ENABLED=true');
     return;
   }
 
@@ -231,29 +272,33 @@ function startXAutoposterScheduler() {
 
   verifyCredentials()
     .then((s) => {
-      if (s.ok) console.log(`[x-autoposter] OAuth 1.0a verified as @${s.screenName}`);
-      else console.warn('[x-autoposter] OAuth verify failed:', s.error);
+      if (s.ok) autopostLog('info', `OAuth verified as @${s.screenName}`);
+      else autopostLog('error', `Error: OAuth verify failed — ${s.error}`);
     })
-    .catch((e) => console.warn('[x-autoposter] OAuth verify error', e.message));
+    .catch((e) => autopostLog('error', `Error: OAuth verify — ${e.message}`));
 
   setTimeout(() => {
+    autopostLog('info', 'Cron started', { intervalMs, bootDelay });
     const tick = async () => {
       if (_processing) return;
       _processing = true;
       try {
+        const refill = await refillAutoposterQueue({ minPending: 2, maxEnqueue: 4 });
+        if (refill.enqueuedCount > 0) {
+          autopostLog('info', `Auto-filled queue with ${refill.enqueuedCount} post(s)`);
+        }
         const out = await processDuePosts();
         if (out.processed > 0) {
-          console.log(`[x-autoposter] processed ${out.processed} scheduled post(s)`);
+          autopostLog('info', `Cron tick processed ${out.processed} post(s)`);
         }
       } catch (e) {
-        console.warn('[x-autoposter] scheduler tick failed', e.message);
+        autopostLog('error', `Error: scheduler tick — ${e.message}`);
       } finally {
         _processing = false;
       }
     };
     tick();
     _schedulerTimer = setInterval(tick, intervalMs);
-    console.log(`[x-autoposter] scheduler started (every ${intervalMs}ms)`);
   }, bootDelay);
 }
 
@@ -271,6 +316,7 @@ module.exports = {
   processDuePosts,
   startXAutoposterScheduler,
   stopXAutoposterScheduler,
+  getAutoposterLogs,
   getContentPolicy: policy.getContentPolicy,
   validatePostContent: policy.validatePostContent
 };

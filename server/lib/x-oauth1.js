@@ -17,16 +17,25 @@ function loadOAuth1Credentials() {
     process.env.X_OAUTH1_API_KEY ||
     process.env.X_API_KEY ||
     process.env.X_CONSUMER_KEY ||
+    process.env.TWITTER_API_KEY ||
     '';
   const apiSecret =
     process.env.X_OAUTH1_API_SECRET ||
     process.env.X_API_SECRET ||
     process.env.X_CONSUMER_SECRET ||
     process.env.X_CLIENT_SECRET ||
+    process.env.TWITTER_API_SECRET ||
     '';
-  const accessToken = process.env.X_OAUTH1_ACCESS_TOKEN || process.env.X_ACCESS_TOKEN || '';
+  const accessToken =
+    process.env.X_OAUTH1_ACCESS_TOKEN ||
+    process.env.X_ACCESS_TOKEN ||
+    process.env.TWITTER_ACCESS_TOKEN ||
+    '';
   const accessTokenSecret =
-    process.env.X_OAUTH1_ACCESS_TOKEN_SECRET || process.env.X_ACCESS_TOKEN_SECRET || '';
+    process.env.X_OAUTH1_ACCESS_TOKEN_SECRET ||
+    process.env.X_ACCESS_TOKEN_SECRET ||
+    process.env.TWITTER_ACCESS_SECRET ||
+    '';
 
   return {
     apiKey: apiKey.trim(),

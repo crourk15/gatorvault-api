@@ -19,10 +19,12 @@ async function main() {
   console.log('Configured:', config.configured);
   console.log('Auth mode:', config.authMode);
   console.log('Target account:', config.account);
+  console.log('Scheduler enabled:', config.schedulerEnabled);
 
   const verify = await autoposter.verifyCredentials({ force: true });
   if (!verify.ok) {
     console.error('\nVerify FAILED:', verify.error);
+    console.error('\nEnv vars checked: X_OAUTH1_* or TWITTER_* (API key, secret, access token, access secret)');
     process.exit(1);
   }
 
@@ -31,12 +33,17 @@ async function main() {
   console.log('  User ID:', verify.userId);
 
   if (postText) {
-    console.log('\nPosting test tweet…');
+    console.log('\nPosting…');
     const result = await autoposter.postTweet({ text: postText });
-    console.log('Posted:', result.tweetUrl);
+    console.log('Post successful:', result.tweetUrl);
   } else {
     console.log('\nDry run only — pass --post "message" to send a live tweet.');
   }
+
+  console.log('\nRecent autoposter logs:');
+  autoposter.getAutoposterLogs(20).forEach((row) => {
+    console.log(`  [${row.ts}] ${row.level.toUpperCase()} — ${row.message}`, row.detail ? JSON.stringify(row.detail) : '');
+  });
 }
 
 main().catch((e) => {
