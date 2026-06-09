@@ -4,12 +4,13 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { loadOAuth1Credentials, isOAuth1Configured, oauth1Request } = require('./x-oauth1');
+const { loadOAuth1Credentials, isOAuth1Configured, oauth1Request, oauth1RequestJson } = require('./x-oauth1');
 const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
 const { refillAutoposterQueue } = require('./x-autoposter-fill');
 
 const API_V11 = 'https://api.twitter.com/1.1';
+const API_V2 = 'https://api.twitter.com/2';
 const UPLOAD_V11 = 'https://upload.twitter.com/1.1';
 
 const X_ACCOUNT = process.env.X_AUTOPOST_ACCOUNT || 'gatorvault';
@@ -177,21 +178,24 @@ async function postTweet({
     ids = [mediaId];
   }
 
-  const form = { status };
-  if (ids.length) form.media_ids = ids.join(',');
+  const payload = { text: status };
+  if (ids.length) payload.media = { media_ids: ids };
   if (inReplyToStatusId) {
-    form.in_reply_to_status_id = String(inReplyToStatusId);
-    if (autoPopulateReplyMetadata) form.auto_populate_reply_metadata = 'true';
+    payload.reply = { in_reply_to_tweet_id: String(inReplyToStatusId) };
+  }
+  if (quoteTweetId && !quoteUrl) {
+    payload.quote_tweet_id = String(quoteTweetId);
   }
 
-  const data = await oauth1Request({
+  const data = await oauth1RequestJson({
     method: 'POST',
-    url: `${API_V11}/statuses/update.json`,
-    form
+    url: `${API_V2}/tweets`,
+    json: payload
   });
 
-  const tweetId = data.id_str || String(data.id || '');
-  const screenName = data.user?.screen_name || _statusCache.screenName || X_ACCOUNT;
+  const tweet = data.data || data;
+  const tweetId = tweet.id || tweet.id_str || String(tweet.id || '');
+  const screenName = _statusCache.screenName || X_ACCOUNT;
 
   autopostLog('success', 'Post successful', { tweetId, screenName });
 
@@ -199,8 +203,8 @@ async function postTweet({
     ok: true,
     tweetId,
     tweetUrl: tweetId ? `https://x.com/${screenName}/status/${tweetId}` : null,
-    text: data.text || status,
-    createdAt: data.created_at || store.nowIso()
+    text: tweet.text || status,
+    createdAt: tweet.created_at || store.nowIso()
   };
 }
 

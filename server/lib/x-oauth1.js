@@ -140,10 +140,54 @@ async function oauth1Request({ method = 'GET', url, form = {} }) {
   return data;
 }
 
+/**
+ * Signed OAuth 1.0a request with JSON body (X API v2).
+ * Signature uses oauth params only — JSON body is excluded per OAuth 1.0a spec.
+ */
+async function oauth1RequestJson({ method = 'POST', url, json = {} }) {
+  const creds = loadOAuth1Credentials();
+  if (!isOAuth1Configured(creds)) {
+    throw new Error(
+      'X OAuth 1.0a not configured. Set X_OAUTH1_API_KEY, X_OAUTH1_API_SECRET, X_OAUTH1_ACCESS_TOKEN, X_OAUTH1_ACCESS_TOKEN_SECRET.'
+    );
+  }
+
+  const m = method.toUpperCase();
+  const authHeader = buildOAuth1Authorization({
+    method: m,
+    url,
+    params: {},
+    ...creds
+  });
+
+  const res = await fetch(url, {
+    method: m,
+    headers: {
+      Authorization: authHeader,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(json),
+    timeout: 60000
+  });
+  const text = await res.text();
+  const data = parseJsonSafe(text);
+
+  if (!res.ok) {
+    const detail = typeof data === 'object' ? JSON.stringify(data) : String(data).slice(0, 400);
+    const err = new Error(`X API HTTP ${res.status}: ${detail}`);
+    err.status = res.status;
+    err.body = data;
+    throw err;
+  }
+
+  return data;
+}
+
 module.exports = {
   loadOAuth1Credentials,
   isOAuth1Configured,
   buildOAuth1Authorization,
   oauth1Request,
+  oauth1RequestJson,
   percentEncode
 };
