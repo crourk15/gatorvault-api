@@ -60,8 +60,14 @@ function appendWarRoomVisit(row) {
 }
 
 function buildAutoposterText(row) {
-  const next = row.nextVisitSchool ? ` and will visit ${row.nextVisitSchool} this weekend` : '';
-  return `${row.playerName} has cancelled his OV to Florida${next} — via ${row.source} 🐊 ${SITE_URL}`;
+  const copy = require('./x-autoposter-copy');
+  const built = copy.buildIntelCopy({
+    eventType: 'visit_cancelled',
+    playerName: row.playerName,
+    nextVisitSchool: row.nextVisitSchool,
+    source: row.source
+  });
+  return built?.text || copy.appendSite(`${row.playerName} has cancelled his OV to Florida — via ${row.source} 🐊`);
 }
 
 async function queueAutoposter(row, intelId) {
@@ -70,6 +76,10 @@ async function queueAutoposter(row, intelId) {
     const policy = require('./x-autoposter-policy');
     const text = buildAutoposterText(row);
     const fp = row.fingerprint;
+    const copy = require('./x-autoposter-copy');
+    if (!text || copy.isBrokenCopy(text) || !copy.isValidPlayerName(row.playerName)) {
+      return { queued: false, reason: 'invalid_copy' };
+    }
     const doc = xStore.loadQueue();
     const dup = doc.items.some(
       (i) => i.intelFingerprint === fp && (i.status === 'pending' || i.status === 'sent')

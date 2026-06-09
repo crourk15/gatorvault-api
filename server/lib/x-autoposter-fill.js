@@ -11,6 +11,7 @@ const contentStore = require('./content-store');
 const { commitFingerprint, intelFingerprint } = require('./commit-fingerprint');
 const { getBeatPosts } = require('./live-beat');
 const beatFilters = require('./beat-writer-filters');
+const copy = require('./x-autoposter-copy');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 const ON3_PORTAL =
@@ -78,35 +79,18 @@ function buildNewsFromEvent(ev) {
 }
 
 function buildNewsFromIntel(intel) {
-  const name = intel.playerName || 'Recruit';
-  const visitRange =
-    intel.visitStart && intel.visitEnd ? `${intel.visitStart}–${intel.visitEnd}` : intel.visitStart || '';
-  let text;
-  if (intel.eventType === 'official_visit') {
-    text = `${name} (${intel.pos || 'Recruit'}) — Official visit to Gainesville${visitRange ? ` · ${visitRange}` : ''}. Source: ${intel.source} 🐊`;
-  } else if (intel.eventType === 'visit_cancelled' || intel.eventType === 'ov_change') {
-    const next = intel.nextVisitSchool ? ` and will visit ${intel.nextVisitSchool} this weekend` : '';
-    text = `${name} has cancelled his OV to Florida${next} — via ${intel.source} 🐊`;
-  } else if (intel.eventType === 'prediction' && intel.analystName) {
-    const conf = intel.confidencePct != null ? ` (${intel.confidencePct}% confidence)` : '';
-    text = `Rivals analyst ${intel.analystName} logs a Florida prediction for ${name}${conf}.`;
-  } else if (intel.eventType === 'prediction') {
-    text = `${name} — ${intel.detail || 'New prediction intel'} · ${intel.source} 🐊`;
-  } else if (intel.eventType === 'trending' || intel.eventType === 'recruiting_momentum') {
-    text = `Florida trending for ${name} per ${intel.source} 🐊`;
-  } else {
-    text = `${name} — ${intel.detail || intel.status || 'New recruiting intel'} · ${intel.source} 🐊`;
-  }
+  const built = copy.buildIntelCopy(intel);
+  if (!built?.text || copy.isBrokenCopy(built.text)) return null;
   const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
   return {
-    text: `${text.slice(0, 240)} ${SITE_URL}`,
+    text: built.text,
     category: 'news',
     topic: 'recruiting',
     sources: [{ label: intel.source || 'Insider', url: intel.sourceHandle ? `https://x.com/${intel.sourceHandle}` : SITE_URL }],
     source: 'auto:intel',
     intelFingerprint: fp,
     intelType: intel.eventType,
-    playerName: intel.playerName,
+    playerName: built.playerName || intel.playerName,
     sourceIntelId: intel.id
   };
 }
@@ -164,40 +148,37 @@ function buildNewsFromArticle(article) {
 }
 
 function buildMomentumFromBeat(post) {
-  const text = String(post.text || '');
-  if (!beatFilters.detectRecruitingMomentum(text)) return null;
-  const player = beatFilters.extractPlayerFromText(text) || 'a top target';
+  const text = copy.buildMomentumCopy(post);
+  if (!text || copy.isBrokenCopy(text)) return null;
+  const player = copy.extractPlayerFromText(String(post.text || ''));
   const source = post.writerName || post.outlet || post.handle || 'Insider';
   const fp = intelFingerprint(post.id || post.url, 'recruiting_momentum', post.publishedAt);
-  const line = `Florida trending for ${player} per ${source}. 🐊`;
   return {
-    text: `${line} ${SITE_URL}`.slice(0, 270),
+    text,
     category: 'news',
     topic: 'recruiting',
     sources: [{ label: source, url: post.url || SITE_URL }],
     source: 'auto:beat-momentum',
     intelType: 'recruiting_momentum',
     intelFingerprint: fp,
-    playerName: player !== 'a top target' ? player : null
+    playerName: player
   };
 }
 
 function buildNewsFromBeatPost(post) {
   if (!beatFilters.shouldIncludeBeatPost(post) || !beatFilters.isTrustedBeatWriter(post)) return null;
-  const text = String(post.text || '').trim();
-  if (!text || beatFilters.detectRecruitingMomentum(text)) return null;
-  if (!beatFilters.matchesGatorFootballIntel(text)) return null;
+  const text = copy.buildBeatIntelCopy(post);
+  if (!text || copy.isBrokenCopy(text)) return null;
   const source = post.writerName || post.outlet || post.handle || 'Beat writer';
   const fp = intelFingerprint(post.id || post.url, 'beat_intel', post.publishedAt);
-  const snippet = text.replace(/\s+/g, ' ').slice(0, 180);
   return {
-    text: `${snippet} — via ${source} 🐊 ${SITE_URL}`.slice(0, 270),
+    text,
     category: 'news',
     topic: 'recruiting',
     sources: [{ label: source, url: post.url || SITE_URL }],
     source: 'auto:beat-intel',
     intelFingerprint: fp,
-    playerName: beatFilters.extractPlayerFromText(text)
+    playerName: copy.extractPlayerFromText(String(post.text || ''))
   };
 }
 
@@ -311,6 +292,7 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
     if (fp && fingerprintAlreadyQueued(fp, doc.items)) continue;
     if (raw.commitFingerprint && commitAlreadyQueued(raw.commitFingerprint, doc.items)) continue;
     if (alreadyQueued(raw.text, doc.items)) continue;
+    if (copy.isBrokenCopy(raw.text)) continue;
     const check = policy.validatePostContent(raw);
     if (!check.valid) continue;
     try {
@@ -336,5 +318,8 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
 module.exports = {
   refillAutoposterQueue,
   dedupeKey,
-  fingerprintAlreadyQueued
+  fingerprintAlreadyQueued,
+  buildNewsFromIntel,
+  buildNewsFromBeatPost,
+  buildMomentumFromBeat
 };

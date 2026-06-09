@@ -116,9 +116,15 @@ function detectRecruitingMomentum(text) {
 }
 
 function extractPlayerFromText(text) {
-  const t = String(text || '');
-  const m = t.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})(?:\s+(?:Jr\.|III|II|IV))?\b/);
-  return m ? m[1].trim() : null;
+  return require('./x-autoposter-copy').extractPlayerFromText(text);
+}
+
+function isGeneralBeatCommentary(text) {
+  return require('./x-autoposter-copy').isGeneralBeatCommentary(text);
+}
+
+function hasPlayerSpecificBeatIntel(text) {
+  return require('./x-autoposter-copy').hasPlayerSpecificIntel(text);
 }
 
 function matchesGatorFootballIntel(text) {
@@ -140,5 +146,7 @@ module.exports = {
   isTrustedBeatWriter,
   detectRecruitingMomentum,
   extractPlayerFromText,
+  isGeneralBeatCommentary,
+  hasPlayerSpecificBeatIntel,
   matchesGatorFootballIntel
 };

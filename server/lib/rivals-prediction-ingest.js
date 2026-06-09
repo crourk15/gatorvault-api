@@ -102,8 +102,18 @@ function appendInternalAlert(row) {
 }
 
 function buildAutoposterText(row) {
+  const copy = require('./x-autoposter-copy');
+  if (row.eventType === 'visit_cancelled' || row.eventType === 'ov_change') {
+    const built = copy.buildIntelCopy({
+      eventType: row.eventType,
+      playerName: row.playerName,
+      nextVisitSchool: row.nextVisitSchool,
+      source: row.source
+    });
+    if (built?.text) return built.text;
+  }
   const conf = row.confidence != null ? ` (${row.confidence}% confidence)` : '';
-  return `Rivals analyst ${row.analystName} logs a Florida prediction for ${row.playerName}${conf}. 🐊 ${SITE_URL}`;
+  return copy.appendSite(`Rivals analyst ${row.analystName} logs a Florida prediction for ${row.playerName}${conf}. 🐊`);
 }
 
 async function queueAutoposter(row, intelId) {
@@ -112,6 +122,10 @@ async function queueAutoposter(row, intelId) {
     const policy = require('./x-autoposter-policy');
     const text = buildAutoposterText(row);
     const fp = row.fingerprint || intelFingerprint(row.on3Id, 'rivals_prediction', row.timestamp);
+    const copy = require('./x-autoposter-copy');
+    if (!text || copy.isBrokenCopy(text) || !copy.isValidPlayerName(row.playerName)) {
+      return { queued: false, reason: 'invalid_copy' };
+    }
     const doc = xStore.loadQueue();
     const dup = doc.items.some(
       (i) =>
