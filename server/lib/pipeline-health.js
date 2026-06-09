@@ -65,11 +65,13 @@ function getHealthReport() {
   const beatCache = readJson(path.join(__dirname, '..', 'data', 'live', 'beat-cache.json'), {});
   const feedCache = readJson(path.join(__dirname, '..', 'data', 'live', 'feed-items.json'), { items: [] });
   const on3Snap = readJson(path.join(__dirname, '..', 'data', 'recruiting', 'on3-snapshot.json'), {});
-  const articles = readJson(path.join(__dirname, '..', 'data', 'content', 'articles.json'), { articles: [] });
+  const articlesRaw = readJson(path.join(__dirname, '..', 'data', 'content', 'articles.json'), []);
   const autoposterStatus = readJson(path.join(__dirname, '..', 'data', 'x', 'autoposter-status.json'), {});
   const autoposterQueue = readJson(path.join(__dirname, '..', 'data', 'x', 'autoposter-queue.json'), { items: [] });
 
-  const published = (articles.articles || articles.published || []).filter((a) => a.published !== false);
+  const published = (Array.isArray(articlesRaw) ? articlesRaw : articlesRaw.articles || []).filter(
+    (a) => a.published !== false
+  );
   const lastPublished = published
     .map((a) => a.publishedAt || a.date)
     .filter(Boolean)
