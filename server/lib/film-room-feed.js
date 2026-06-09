@@ -16,8 +16,26 @@ const UF_FB_CHANNEL_ID = process.env.UF_FB_YOUTUBE_CHANNEL_ID || 'UCq0YlZqYQZqYQ
 
 const GNFP_TITLE_RE =
   /2026.*(buster faulkner|faulkner offense|film review|gnfp film)/i;
+
+/** Must match real pressers — coach names alone are NOT enough (excludes Mic'd Up, etc.) */
 const PRESSER_TITLE_RE =
-  /press conference|media availability|postgame|post-game|speaks to the media|speaks with the media|head coach|coordinator|position coach|player press|presser|jon sumrall|buster faulkner|brad white|rob ashford|austin bailey|will black|media day/i;
+  /press conference|media availability|postgame press|post-game press|speaks to the media|speaks with the media|player press conference|coaches press|head coach press|weekly press|pre-game press|pregame press|spring game press|media day/i;
+
+const PRESSER_EXCLUDE_RE =
+  /mic['']?d up|mic up|all.access|behind.the.scenes|player of the week|lift session|workout|highlight|recap|film study|breakdown|scheme|gnfp|film guy|cut-up|cut up|podcast|interview series/i;
+
+function isTruePressConference(title, summary) {
+  const text = `${title || ''} ${summary || ''}`;
+  if (PRESSER_EXCLUDE_RE.test(text)) return false;
+  return PRESSER_TITLE_RE.test(text);
+}
+
+function fallbackCategoryForNonPresser(title, source) {
+  const text = `${title || ''} ${source || ''}`.toLowerCase();
+  if (/highlight|mic['']?d up|cut-up|cut up|best plays|spring game/i.test(text)) return 'Highlights';
+  if (/gnfp|film guy|breakdown|film study|scheme/i.test(text)) return 'Film Breakdown';
+  return 'Highlights';
+}
 
 /** Canonical Film Room hub categories (3 sections only) */
 const FILM_ROOM_CATEGORIES = ['Film Breakdown', 'Press Conferences', 'Highlights'];
@@ -40,8 +58,8 @@ function normalizeCategory(raw, source) {
   const src = String(source || '').toLowerCase();
 
   if (/gnfp|film guy/i.test(c) || /gnfp|film guy/i.test(src)) return 'Film Breakdown';
-  if (/press|media availability|interview|postgame|post-game/i.test(c)) return 'Press Conferences';
-  if (/highlight|spring game|practice|cut-up|cut up|best plays/i.test(c)) return 'Highlights';
+  if (/press conference|media availability|postgame press|post-game press/i.test(c)) return 'Press Conferences';
+  if (/highlight|spring game|practice|cut-up|cut up|best plays|mic['']?d up/i.test(c)) return 'Highlights';
   if (/breakdown|film review|film study|scheme|formation/i.test(c)) return 'Film Breakdown';
 
   if (/gnfp/i.test(src)) return 'Film Breakdown';
@@ -49,7 +67,9 @@ function normalizeCategory(raw, source) {
   if (/gators online|highlight|spring/i.test(src) && /highlight|spring|cut/i.test(lower)) {
     return 'Highlights';
   }
-  if (/florida gators youtube|@gatorsfb/i.test(src)) return 'Press Conferences';
+  if (/florida gators youtube|@gatorsfb/i.test(src)) {
+    return isTruePressConference(c, '') ? 'Press Conferences' : 'Highlights';
+  }
 
   return 'Film Breakdown';
 }
@@ -146,8 +166,8 @@ async function syncUfPressers() {
   }
   const rows = await fetchYoutubeRss(channelId);
   return rows
-    .filter((r) => PRESSER_TITLE_RE.test(r.title || ''))
-    .slice(0, 5)
+    .filter((r) => isTruePressConference(r.title, r.summary))
+    .slice(0, 8)
     .map((r) =>
       rowToClip(r, {
         category: 'Press Conferences',
@@ -236,7 +256,13 @@ async function buildFilmRoomCatalog({ force = false } = {}) {
   auto.forEach((c) => byId.set(c.id || c.slug, c));
 
   const items = [...byId.values()]
-    .map((c) => ({ ...c, category: normalizeCategory(c.category, c.source) }))
+    .map((c) => {
+      let category = normalizeCategory(c.category, c.source);
+      if (category === 'Press Conferences' && !isTruePressConference(c.title, c.dek)) {
+        category = fallbackCategoryForNonPresser(c.title, c.source);
+      }
+      return { ...c, category };
+    })
     .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
 
   const byCategory = {};
@@ -264,6 +290,7 @@ module.exports = {
   loadManualClips,
   syncGnfpReviews,
   syncUfPressers,
+  isTruePressConference,
   FILM_ROOM_CATEGORIES,
   normalizeCategory,
   DATA_DIR,

@@ -217,7 +217,11 @@
         .password-toggle-btn{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:.75rem;font-weight:600;cursor:pointer;}
         .password-toggle-btn:hover{color:#e2e8f0;}
         .highlight-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:1rem;}
-        .admin-pin-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:99998;display:flex;align-items:center;justify-content:center;padding:1rem;}
+        .admin-pin-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:99998;display:none;align-items:center;justify-content:center;padding:1rem;touch-action:manipulation;}
+        .admin-pin-modal-ov.is-open{display:flex!important;}
+        .admin-pin-modal-ov.hidden{display:none!important;}
+        body.gv-admin-pin-open{overflow:hidden;overscroll-behavior:none;touch-action:none;}
+        #admin-pin-modal-card{position:relative;z-index:1;max-height:90vh;overflow:auto;-webkit-overflow-scrolling:touch;}
         .trial-expired-ov{position:fixed;inset:0;background:rgba(6,15,31,.92);backdrop-filter:blur(8px);z-index:250;display:flex;align-items:center;justify-content:center;padding:1rem;}
         .op-access-form .op-pin-panel:not(.hidden){display:block;}
         #op-pin-input,#admin-pin-modal-input{pointer-events:auto;position:relative;z-index:1;}
@@ -448,18 +452,19 @@
     <div data-id="2" id="toast-c" class="toast-c"></div>
 
     <!-- Admin PIN Modal (in-vault) -->
-    <div id="admin-pin-modal" class="admin-pin-modal-ov hidden" role="dialog" aria-modal="true" aria-labelledby="admin-pin-title">
-        <div class="highlight-modal max-w-md">
+    <div id="admin-pin-modal" class="admin-pin-modal-ov hidden" role="dialog" aria-modal="true" aria-labelledby="admin-pin-title" aria-hidden="true">
+        <div id="admin-pin-modal-card" class="highlight-modal max-w-md">
             <div class="p-5 border-b border-gator-blue/20">
                 <h3 id="admin-pin-title" class="font-display text-lg font-bold text-white">⚙️ Operator Access</h3>
                 <p class="text-xs text-surface-200/60 mt-1">Enter your admin PIN to unlock Analytics and full operator tools.</p>
             </div>
             <div class="p-5 space-y-3">
-                <input id="admin-pin-modal-input" type="password" class="reg-input text-sm w-full" placeholder="Admin PIN" autocomplete="off"/>
-                <p id="admin-pin-modal-err" class="text-red-400 text-xs hidden">Invalid PIN. Try again.</p>
+                <input id="admin-pin-modal-input" type="password" inputmode="numeric" class="reg-input text-sm w-full" placeholder="Admin PIN" autocomplete="off" aria-describedby="admin-pin-modal-err admin-pin-modal-ok"/>
+                <p id="admin-pin-modal-err" class="text-red-400 text-xs hidden" role="alert" aria-live="polite">Invalid PIN. Try again.</p>
+                <p id="admin-pin-modal-ok" class="text-green-400 text-xs hidden" role="status" aria-live="polite">PIN accepted — unlocking operator mode…</p>
                 <div class="flex gap-2">
                     <button type="button" id="admin-pin-modal-submit" class="flex-1 bg-gator-blue hover:bg-gator-lightblue text-white font-bold text-sm py-2.5 rounded-lg min-h-[44px]">Unlock Admin</button>
-                    <button type="button" id="admin-pin-modal-cancel" class="px-4 text-surface-200 hover:text-white text-sm min-h-[44px]">Cancel</button>
+                    <button type="button" id="admin-pin-modal-cancel" class="px-4 text-surface-200 hover:text-white text-sm min-h-[44px] touch-manipulation">Cancel</button>
                 </div>
             </div>
         </div>
@@ -832,8 +837,9 @@
                     <button data-id="447" id="op-access-toggle" type="button" class="text-surface-200/30 hover:text-surface-200/60 text-[10px] transition cursor-pointer">Admin Access</button>
                     <div data-id="448" id="op-access-panel" class="op-pin-panel hidden mt-3">
                         <div data-id="449" class="flex gap-2">
-                            <input data-id="450" id="op-pin-input" type="password" class="reg-input text-sm" placeholder="Admin PIN" style="flex:1;padding:.625rem 1rem;" />
-                            <button data-id="451" id="op-pin-submit" type="button" class="bg-gator-blue hover:bg-gator-lightblue text-white font-bold text-xs px-4 py-2 rounded-lg transition min-h-[40px]">Enter</button>
+                            <input data-id="450" id="op-pin-input" type="password" class="reg-input text-sm" placeholder="Admin PIN" style="flex:1;padding:.625rem 1rem;" autocomplete="off"/>
+                            <button data-id="451" id="op-pin-submit" type="button" class="bg-gator-blue hover:bg-gator-lightblue text-white font-bold text-xs px-4 py-2 rounded-lg transition min-h-[40px] touch-manipulation">Enter</button>
+                            <button type="button" id="op-pin-cancel" class="text-surface-200/70 hover:text-white text-xs px-2 min-h-[40px] touch-manipulation">Cancel</button>
                         </div>
                         <p data-id="452" id="op-pin-err" class="text-red-400 text-[10px] mt-1 hidden">Invalid PIN.</p>
                     </div>
@@ -1672,7 +1678,8 @@
     window.openVault=function(){var o=document.getElementById('vault-overlay');if(o)o.classList.remove('hidden');var g=document.getElementById('vault-gate');if(g)g.classList.remove('hidden');};
     window.closeVault=function(){['vault-overlay','vault-gate','vault-interior'].forEach(function(id){var e=document.getElementById(id);if(e)e.classList.add('hidden');});};
     window.showVaultInterior=function(role){window.GV_ROLE=role||'locker';var gi=document.getElementById('vault-interior');if(gi)gi.classList.remove('hidden');var gg=document.getElementById('vault-gate');if(gg)gg.classList.add('hidden');if(typeof gvUpdateWarRoomNav==='function')gvUpdateWarRoomNav();};
-    window.activateAdmin=function(requirePin){var pinEl=document.getElementById('op-pin-input')||document.getElementById('admin-pin-modal-input');var pin=pinEl?pinEl.value:'';if(requirePin!==false&&pin!=='GV2026admin'){var err=document.getElementById('op-pin-err');if(err)err.classList.remove('hidden');var err2=document.getElementById('admin-pin-modal-err');if(err2)err2.classList.remove('hidden');return;}window.GV_OPERATOR=true;window.GV_ROLE='war';var vo=document.getElementById('vault-overlay');if(vo)vo.classList.remove('hidden');if(window.showVaultInterior)window.showVaultInterior('war');if(window.showVTab)window.showVTab('analytics');if(window.showToast)window.showToast('Admin access activated','Full War Room unlocked.','',4000);};
+    window.activateAdmin=function(){if(window._gvActivateAdmin)return window._gvActivateAdmin.apply(window,arguments);};
+    window.closeAdminPinModal=function(){if(window._gvCloseAdminPinModal)return window._gvCloseAdminPinModal.apply(window,arguments);};
     window.toggleAdminAccessPanel=function(){var panel=document.getElementById('op-access-panel');if(panel)panel.classList.toggle('hidden');};
     window.showToast=function(msg){var t=document.getElementById('toast');if(t){t.textContent=msg;t.classList.remove('opacity-0');setTimeout(function(){t.classList.add('opacity-0');},3000);}};
     window.showVTab=function(tab){document.querySelectorAll('.vpane').forEach(function(p){p.classList.remove('active');p.style.display='none';});document.querySelectorAll('.vtab').forEach(function(t){t.classList.remove('active');t.classList.remove('text-gator-orange');t.classList.add('text-surface-200');});var pane=document.getElementById('vpane-'+tab);if(pane){pane.classList.add('active');pane.style.display='block';}var tabEl=document.querySelector('[data-vtab="'+tab+'"]');if(tabEl){tabEl.classList.add('active');tabEl.classList.remove('text-surface-200');tabEl.classList.add('text-gator-orange');}};
@@ -1749,13 +1756,40 @@
         if(opKeyBuffer.length>20) opKeyBuffer=opKeyBuffer.slice(-20);
     });
 
-    function closeAdminPinModal(){
-        var m=document.getElementById('admin-pin-modal');if(m)m.classList.add('hidden');
+    function closeAdminPinModal(fromPopState){
+        var m=document.getElementById('admin-pin-modal');
+        if(m){
+            m.classList.remove('is-open');
+            m.classList.add('hidden');
+            m.style.display='';
+            m.setAttribute('aria-hidden','true');
+        }
+        document.body.classList.remove('gv-admin-pin-open');
+        document.body.style.overflow='';
+        document.body.style.touchAction='';
         var inp=document.getElementById('admin-pin-modal-input');if(inp)inp.value='';
         var err=document.getElementById('admin-pin-modal-err');if(err)err.classList.add('hidden');
+        var ok=document.getElementById('admin-pin-modal-ok');if(ok)ok.classList.add('hidden');
+        if(window._gvAdminPinHistory&&!fromPopState){
+            window._gvAdminPinHistory=false;
+            try{history.back();}catch(e){}
+        }else{
+            window._gvAdminPinHistory=false;
+        }
     }
     function showAdminPinModal(){
-        var m=document.getElementById('admin-pin-modal');if(m){m.classList.remove('hidden');m.style.display='flex';}
+        var m=document.getElementById('admin-pin-modal');
+        if(m){
+            m.classList.remove('hidden');
+            m.classList.add('is-open');
+            m.style.display='';
+            m.setAttribute('aria-hidden','false');
+        }
+        document.body.classList.add('gv-admin-pin-open');
+        document.body.style.overflow='hidden';
+        if(!window._gvAdminPinHistory){
+            try{history.pushState({gvAdminPin:1},'');window._gvAdminPinHistory=true;}catch(e){}
+        }
         setTimeout(function(){var inp=document.getElementById('admin-pin-modal-input');if(inp)inp.focus();},80);
     }
     function showAdminPinGate(){
@@ -1769,19 +1803,24 @@
         if(requirePin!==false){
             if(!pin){
                 var pinInput=document.getElementById('op-pin-input')||document.getElementById('admin-pin-modal-input');
-                pin=pinInput?pinInput.value:'';
+                pin=pinInput?String(pinInput.value||'').trim():'';
             }
             if(pin!=='GV2026admin'){
                 var pinErr=document.getElementById('op-pin-err');if(pinErr)pinErr.classList.remove('hidden');
                 var modalErr=document.getElementById('admin-pin-modal-err');if(modalErr)modalErr.classList.remove('hidden');
+                var modalOk=document.getElementById('admin-pin-modal-ok');if(modalOk)modalOk.classList.add('hidden');
+                showToast('Invalid PIN','That operator PIN was not recognized.','',3500);
+                var refocus=document.getElementById('admin-pin-modal-input')||document.getElementById('op-pin-input');
+                if(refocus){refocus.value='';setTimeout(function(){refocus.focus();},50);}
                 return false;
             }
             var pinErrOk=document.getElementById('op-pin-err');if(pinErrOk)pinErrOk.classList.add('hidden');
             var modalErrOk=document.getElementById('admin-pin-modal-err');if(modalErrOk)modalErrOk.classList.add('hidden');
+            var modalOkShow=document.getElementById('admin-pin-modal-ok');if(modalOkShow)modalOkShow.classList.remove('hidden');
             var pinInputClear=document.getElementById('op-pin-input');if(pinInputClear)pinInputClear.value='';
             var modalInputClear=document.getElementById('admin-pin-modal-input');if(modalInputClear)modalInputClear.value='';
         }
-        closeAdminPinModal();
+        closeAdminPinModal(true);
         var panel=document.getElementById('op-access-panel');if(panel)panel.classList.add('hidden');
         window.GV_ROLE='war';window.GV_EMAIL='operator@gatorvault';window.GV_OPERATOR=true;
         saveSession({email:'operator@gatorvault',tier:'war',name:'Operator',token:'ni-operator'});
@@ -1789,12 +1828,17 @@
         function finishOp(){
             showVaultInterior('war');
             showVTab('analytics');
-            showToast('Admin access activated','Full War Room + Analytics unlocked.','',4000);
+            showToast('Operator mode unlocked','Full War Room + Analytics access active.','',4000);
         }
         if(typeof gvEnsureSignedSession==='function')gvEnsureSignedSession().then(finishOp);
         else finishOp();
         return true;
     }
+    window._gvActivateAdmin=activateAdmin;
+    window.activateAdmin=activateAdmin;
+    window._gvCloseAdminPinModal=closeAdminPinModal;
+    window.closeAdminPinModal=closeAdminPinModal;
+    window.showAdminPinModal=showAdminPinModal;
 
     (function(){try{var params=new URLSearchParams(window.location.search);if(params.get('op')==='GV2026admin'){setTimeout(function(){activateAdmin(false);},300);}}catch(e){}})();
 
@@ -2235,11 +2279,27 @@
         var panel=document.getElementById('op-access-panel');if(panel)panel.classList.toggle('hidden');
         if(panel&&!panel.classList.contains('hidden'))setTimeout(function(){var pin=document.getElementById('op-pin-input');if(pin)pin.focus();},80);
     });
-    var opPinSubmit=document.getElementById('op-pin-submit');if(opPinSubmit)opPinSubmit.addEventListener('click',function(e){e.preventDefault();activateAdmin(true);});
+    var opPinCancel=document.getElementById('op-pin-cancel');if(opPinCancel)opPinCancel.addEventListener('click',function(e){
+        e.preventDefault();e.stopPropagation();
+        var panel=document.getElementById('op-access-panel');if(panel)panel.classList.add('hidden');
+        var pinErr=document.getElementById('op-pin-err');if(pinErr)pinErr.classList.add('hidden');
+        var pinIn=document.getElementById('op-pin-input');if(pinIn)pinIn.value='';
+    });
+    var opPinSubmit=document.getElementById('op-pin-submit');if(opPinSubmit)opPinSubmit.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();activateAdmin(true);});
     var opPinInput=document.getElementById('op-pin-input');if(opPinInput)opPinInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();activateAdmin(true);}});
-    var adminPinSubmit=document.getElementById('admin-pin-modal-submit');if(adminPinSubmit)adminPinSubmit.addEventListener('click',function(){activateAdmin(true);});
-    var adminPinCancel=document.getElementById('admin-pin-modal-cancel');if(adminPinCancel)adminPinCancel.addEventListener('click',closeAdminPinModal);
-    var adminPinInput=document.getElementById('admin-pin-modal-input');if(adminPinInput)adminPinInput.addEventListener('keydown',function(e){if(e.key==='Enter')activateAdmin(true);if(e.key==='Escape')closeAdminPinModal();});
+    var adminPinSubmit=document.getElementById('admin-pin-modal-submit');if(adminPinSubmit)adminPinSubmit.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();activateAdmin(true);});
+    var adminPinCancel=document.getElementById('admin-pin-modal-cancel');if(adminPinCancel)adminPinCancel.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();closeAdminPinModal();});
+    var adminPinInput=document.getElementById('admin-pin-modal-input');if(adminPinInput)adminPinInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();activateAdmin(true);}if(e.key==='Escape'){e.preventDefault();closeAdminPinModal();}});
+    var adminPinModal=document.getElementById('admin-pin-modal');
+    if(adminPinModal){
+        adminPinModal.addEventListener('click',function(e){if(e.target===adminPinModal)closeAdminPinModal();});
+        var adminPinCard=document.getElementById('admin-pin-modal-card');
+        if(adminPinCard)adminPinCard.addEventListener('click',function(e){e.stopPropagation();});
+    }
+    window.addEventListener('popstate',function(){
+        var m=document.getElementById('admin-pin-modal');
+        if(m&&m.classList.contains('is-open'))closeAdminPinModal(true);
+    });
     var trialPayBtn=document.getElementById('trial-add-payment');if(trialPayBtn)trialPayBtn.addEventListener('click',function(){window.open('https://dashboard.stripe.com','_blank');});
     var trialExpiredPay=document.getElementById('trial-expired-pay');if(trialExpiredPay)trialExpiredPay.addEventListener('click',function(){closeVault();var pricing=document.getElementById('pricing-sec');if(pricing)pricing.scrollIntoView({behavior:'smooth'});else window.open('https://dashboard.stripe.com','_blank');});
     var trialExpiredOut=document.getElementById('trial-expired-signout');if(trialExpiredOut)trialExpiredOut.addEventListener('click',function(){clearSession();window.GV_OPERATOR=false;showVaultGate();var gate=document.getElementById('trial-expired-gate');if(gate)gate.classList.add('hidden');});
