@@ -10,6 +10,7 @@ const fetcher = require('./scouting-fetcher');
 const DATA_DIR = path.join(__dirname, '..', 'data', 'war-room');
 const DB_PATH = path.join(DATA_DIR, 'scouting-database.json');
 const REBUILD_LOG_PATH = path.join(DATA_DIR, 'scouting-rebuild-log.json');
+const REBUILD_STATUS_PATH = path.join(DATA_DIR, 'scouting-rebuild-status.json');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '..', 'data', 'recruiting', 'players.json');
 
 function readJson(filePath, fallback) {
@@ -23,6 +24,29 @@ function readJson(filePath, fallback) {
 function writeJson(filePath, data) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+}
+
+function readRebuildStatus() {
+  return readJson(REBUILD_STATUS_PATH, {
+    running: false,
+    phase: 'idle',
+    startedAt: null,
+    finishedAt: null,
+    progress: null,
+    lastRun: null,
+    error: null
+  });
+}
+
+function writeRebuildStatus(patch) {
+  const prev = readRebuildStatus();
+  const next = {
+    ...prev,
+    ...patch,
+    updatedAt: new Date().toISOString()
+  };
+  writeJson(REBUILD_STATUS_PATH, next);
+  return next;
 }
 
 function loadDatabase() {
@@ -224,7 +248,20 @@ function importLegacyBreakdown(player) {
 }
 
 async function rebuildScoutingDatabase({ delayMs = 400, onProgress } = {}) {
-  const players = collectAllPlayers();
+  let players;
+  try {
+    players = collectAllPlayers();
+  } catch (e) {
+    writeRebuildStatus({
+      running: false,
+      phase: 'error',
+      finishedAt: new Date().toISOString(),
+      error: `Failed to collect players: ${e.message}`,
+      progress: null
+    });
+    throw e;
+  }
+
   const doc = { version: 1, updatedAt: null, entries: {} };
   const log = {
     startedAt: new Date().toISOString(),
@@ -236,9 +273,22 @@ async function rebuildScoutingDatabase({ delayMs = 400, onProgress } = {}) {
     byType: { recruit: 0, commit: 0, portal: 0, target: 0, roster: 0 }
   };
 
+  writeRebuildStatus({
+    running: true,
+    phase: 'fetching',
+    startedAt: log.startedAt,
+    finishedAt: null,
+    error: null,
+    progress: { index: 0, total: players.length, slug: null },
+    lastRun: null
+  });
+
   for (let i = 0; i < players.length; i++) {
     const player = players[i];
-    if (onProgress) onProgress({ index: i + 1, total: players.length, slug: player.slug });
+    const progress = { index: i + 1, total: players.length, slug: player.slug };
+    writeRebuildStatus({ running: true, phase: 'fetching', progress, lastRun: log });
+
+    if (onProgress) onProgress(progress);
 
     try {
       const raw = await fetcher.findVerifiedScouting(player);
@@ -262,11 +312,21 @@ async function rebuildScoutingDatabase({ delayMs = 400, onProgress } = {}) {
     }
   }
 
+  writeRebuildStatus({ running: true, phase: 'saving', progress: { index: players.length, total: players.length, slug: null } });
+
   saveDatabase(doc);
   purgeUnlistedBreakdowns(new Set(Object.values(doc.entries).map((e) => e.playerSlug)));
 
   log.finishedAt = new Date().toISOString();
   writeJson(REBUILD_LOG_PATH, log);
+  writeRebuildStatus({
+    running: false,
+    phase: 'done',
+    finishedAt: log.finishedAt,
+    error: null,
+    progress: { index: players.length, total: players.length, slug: null },
+    lastRun: log
+  });
 
   return {
     ok: true,
@@ -277,8 +337,12 @@ async function rebuildScoutingDatabase({ delayMs = 400, onProgress } = {}) {
 
 module.exports = {
   DB_PATH,
+  REBUILD_STATUS_PATH,
+  REBUILD_LOG_PATH,
   loadDatabase,
   saveDatabase,
+  readRebuildStatus,
+  writeRebuildStatus,
   collectAllPlayers,
   normalizeEntry,
   getEntryBySlug,

@@ -136,17 +136,33 @@
       return document.getElementById('pin').value.trim();
     }
 
+    function parseApiResponse(r) {
+      return r.text().then(function (text) {
+        var j = null;
+        try {
+          j = text ? JSON.parse(text) : {};
+        } catch (e) {
+          throw new Error(text ? text.slice(0, 200) : ('HTTP ' + r.status));
+        }
+        if (!r.ok) throw new Error((j && j.error) || ('HTTP ' + r.status));
+        return j;
+      });
+    }
+
     function apiPost(path, body) {
+      var p = pin();
+      if (!p) return Promise.reject(new Error('Admin PIN required — unlock admin first'));
       return fetch(API + path, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Recruiting-Pin': pin() },
-        body: JSON.stringify(Object.assign({ pin: pin() }, body || {}))
-      }).then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || r.status); return j; }); });
+        headers: { 'Content-Type': 'application/json', 'X-Recruiting-Pin': p },
+        body: JSON.stringify(Object.assign({ pin: p }, body || {}))
+      }).then(parseApiResponse);
     }
 
     function apiGet(path) {
-      return fetch(API + path, { headers: { 'X-Recruiting-Pin': pin() } })
-        .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || r.status); return j; }); });
+      var p = pin();
+      if (!p) return Promise.reject(new Error('Admin PIN required — unlock admin first'));
+      return fetch(API + path, { headers: { 'X-Recruiting-Pin': p } }).then(parseApiResponse);
     }
 
     function unlockAdmin(p) {
@@ -155,6 +171,7 @@
       document.getElementById('admin-pin-gate').classList.add('hidden');
       document.getElementById('admin-app').classList.remove('hidden');
       log('Admin session unlocked', 'ok');
+      wireScoutingAdmin();
     }
 
     function lockAdmin() {
@@ -263,34 +280,70 @@
         }).catch(function (e) { log('Award error: ' + e.message, 'err'); });
     });
 
-    document.getElementById('rebuild-scouting').addEventListener('click', function () {
-      var btn = document.getElementById('rebuild-scouting');
-      btn.disabled = true;
-      log('Starting scouting database rebuild (runs in background)…', 'info');
-      apiPost('/api/war-room/admin/rebuild-scouting', {})
-        .then(function (j) {
-          log(j.message || 'Scouting rebuild started', 'ok');
-        })
-        .catch(function (e) { log('Scouting rebuild error: ' + e.message, 'err'); })
-        .finally(function () { btn.disabled = false; });
-    });
+    function wireScoutingAdmin() {
+      var rebuildBtn = document.getElementById('rebuild-scouting');
+      var statusBtn = document.getElementById('scouting-status');
 
-    document.getElementById('scouting-status').addEventListener('click', function () {
-      apiGet('/api/war-room/admin/rebuild-scouting/status?pin=' + encodeURIComponent(pin()))
-        .then(function (j) {
-          if (j.running) {
-            log('Scouting rebuild still running…', 'info');
+      if (rebuildBtn && rebuildBtn.getAttribute('data-wired') !== '1') {
+        rebuildBtn.setAttribute('data-wired', '1');
+        rebuildBtn.addEventListener('click', function () {
+          if (!pin()) {
+            log('Enter admin PIN and unlock before rebuilding', 'err');
             return;
           }
-          if (!j.lastRun) {
-            log('No scouting rebuild log yet', 'info');
+          rebuildBtn.disabled = true;
+          log('POST ' + API + '/api/war-room/admin/rebuild-scouting …', 'info');
+          apiPost('/api/war-room/admin/rebuild-scouting', {})
+            .then(function (j) {
+              log(j.message || 'Scouting rebuild started', 'ok');
+              if (j.total != null) log('Processing ' + j.total + ' players in background', 'info');
+            })
+            .catch(function (e) {
+              log('Scouting rebuild error: ' + e.message, 'err');
+            })
+            .finally(function () {
+              rebuildBtn.disabled = false;
+            });
+        });
+      }
+
+      if (statusBtn && statusBtn.getAttribute('data-wired') !== '1') {
+        statusBtn.setAttribute('data-wired', '1');
+        statusBtn.addEventListener('click', function () {
+          if (!pin()) {
+            log('Enter admin PIN and unlock before checking status', 'err');
             return;
           }
-          var r = j.lastRun;
-          log('Last rebuild: stored ' + r.stored + ', blank ' + r.blank + ', errors ' + (r.errors?.length || 0), 'ok');
-        })
-        .catch(function (e) { log('Status error: ' + e.message, 'err'); });
-    });
+          apiGet('/api/war-room/admin/rebuild-scouting/status?pin=' + encodeURIComponent(pin()))
+            .then(function (j) {
+              if (j.running) {
+                var prog = j.status && j.status.progress;
+                if (prog && prog.total) {
+                  log('Scouting rebuild running — ' + prog.index + '/' + prog.total + (prog.slug ? ' (' + prog.slug + ')' : ''), 'info');
+                } else {
+                  log('Scouting rebuild still running…', 'info');
+                }
+                return;
+              }
+              if (j.status && j.status.error) {
+                log('Last rebuild error: ' + j.status.error, 'err');
+              }
+              if (!j.lastRun) {
+                log('No scouting rebuild log yet — run Rebuild Scouting Database first', 'info');
+                return;
+              }
+              var r = j.lastRun;
+              var errCount = (r.errors && r.errors.length) ? r.errors.length : 0;
+              log('Last rebuild: stored ' + r.stored + ', blank ' + r.blank + ', errors ' + errCount, 'ok');
+            })
+            .catch(function (e) {
+              log('Status error: ' + e.message, 'err');
+            });
+        });
+      }
+    }
+
+    wireScoutingAdmin();
 
     (function init() {
       var saved = sessionStorage.getItem(SESSION_KEY);

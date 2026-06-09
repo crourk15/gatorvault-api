@@ -9,6 +9,7 @@ const WAR_ROOM_ADMIN_PIN =
   process.env.WAR_ROOM_ADMIN_PIN || process.env.RECRUITING_ADMIN_PIN || process.env.EMAIL_TEST_PIN || 'GV2026admin';
 
 const REBUILD_LOG_PATH = path.join(__dirname, '..', 'data', 'war-room', 'scouting-rebuild-log.json');
+const REBUILD_STATUS_PATH = path.join(__dirname, '..', 'data', 'war-room', 'scouting-rebuild-status.json');
 let scoutingRebuildRunning = false;
 
 function verifyAdminPin(pin) {
@@ -17,6 +18,30 @@ function verifyAdminPin(pin) {
 
 function pinFromReq(req) {
   return req.headers['x-war-room-pin'] || req.headers['x-recruiting-pin'] || req.body?.pin || req.query?.pin;
+}
+
+function readJsonFile(filePath, fallback) {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch {
+    return fallback;
+  }
+}
+
+function readRebuildSnapshot() {
+  const status = readJsonFile(REBUILD_STATUS_PATH, null);
+  if (status) {
+    return {
+      running: scoutingRebuildRunning || !!status.running,
+      status,
+      lastRun: status.lastRun || readJsonFile(REBUILD_LOG_PATH, null)
+    };
+  }
+  return {
+    running: scoutingRebuildRunning,
+    status: scoutingDb.readRebuildStatus(),
+    lastRun: readJsonFile(REBUILD_LOG_PATH, null)
+  };
 }
 
 function mountWarRoomRoutes(app) {
@@ -52,16 +77,12 @@ function mountWarRoomRoutes(app) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
     try {
-      let log = null;
-      try {
-        log = JSON.parse(fs.readFileSync(REBUILD_LOG_PATH, 'utf8'));
-      } catch {
-        log = null;
-      }
+      const snap = readRebuildSnapshot();
       return res.json({
         ok: true,
-        running: scoutingRebuildRunning,
-        lastRun: log
+        running: snap.running,
+        status: snap.status,
+        lastRun: snap.lastRun
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -69,20 +90,75 @@ function mountWarRoomRoutes(app) {
   });
 
   app.post('/api/war-room/admin/rebuild-scouting', (req, res) => {
-    if (!verifyAdminPin(pinFromReq(req))) {
+    console.log('[scouting] POST /api/war-room/admin/rebuild-scouting received');
+
+    const pin = pinFromReq(req);
+    if (!verifyAdminPin(pin)) {
+      console.warn('[scouting] rebuild rejected — invalid admin PIN');
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
+
     if (scoutingRebuildRunning) {
+      console.log('[scouting] rebuild already in progress');
       return res.json({ ok: true, running: true, message: 'Scouting rebuild already in progress' });
     }
+
+    let playerCount = 0;
+    try {
+      playerCount = scoutingDb.collectAllPlayers().length;
+      scoutingDb.writeRebuildStatus({
+        running: true,
+        phase: 'starting',
+        startedAt: new Date().toISOString(),
+        finishedAt: null,
+        error: null,
+        progress: { index: 0, total: playerCount, slug: null },
+        lastRun: null
+      });
+    } catch (err) {
+      console.error('[scouting] rebuild failed before start:', err.message);
+      scoutingDb.writeRebuildStatus({
+        running: false,
+        phase: 'error',
+        finishedAt: new Date().toISOString(),
+        error: err.message,
+        progress: null
+      });
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+
     scoutingRebuildRunning = true;
-    res.json({ ok: true, started: true, message: 'Scouting database rebuild started' });
+    console.log('[scouting] rebuild started —', playerCount, 'players');
+
+    res.json({
+      ok: true,
+      started: true,
+      message: `Scouting database rebuild started (${playerCount} players)`,
+      total: playerCount
+    });
+
     scoutingDb
       .rebuildScoutingDatabase({
         delayMs: parseInt(process.env.SCOUTING_REBUILD_DELAY_MS || '400', 10)
       })
+      .then((result) => {
+        console.log(
+          '[scouting] rebuild finished — stored',
+          result.stored,
+          'blank',
+          result.blank,
+          'errors',
+          (result.errors || []).length
+        );
+      })
       .catch((err) => {
-        console.warn('[scouting] rebuild failed:', err.message);
+        console.error('[scouting] rebuild failed:', err.message);
+        scoutingDb.writeRebuildStatus({
+          running: false,
+          phase: 'error',
+          finishedAt: new Date().toISOString(),
+          error: err.message
+        });
       })
       .finally(() => {
         scoutingRebuildRunning = false;
