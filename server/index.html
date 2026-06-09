@@ -360,6 +360,8 @@
             #vault-interior.gv-mobile-active #vpane-live>.flex p.text-surface-200{display:none;}
             #vault-interior.gv-mobile-active #changelog-strip{display:none!important;}
 
+            #gv-feedback-fab,.gv-feedback-fab,.feedback-fab{display:none!important;visibility:hidden!important;pointer-events:none!important;}
+
             .gv-mob-header{position:fixed;top:var(--gv-ticker-h,44px);left:0;right:0;height:56px;background:rgba(0,18,58,.97);backdrop-filter:blur(8px);border-bottom:1px solid rgba(0,48,135,.35);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:120;}
             .gv-mob-logo{width:36px;height:36px;border-radius:8px;background:#003087;color:#fff;font-family:'Oswald',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
             .gv-mob-title{font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;color:#fff;letter-spacing:.5px;}
@@ -429,9 +431,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style id="gv-critical">:root{--gv-ticker-h:44px}#gv-site-ticker{z-index:500!important;position:fixed;top:0;left:0;right:0;height:44px}#gv-alert-banner{z-index:510!important;position:fixed;top:0;left:0;right:0}body.gv-has-site-ticker #nav-main,body.gv-has-site-ticker nav.fixed{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #gv-mobile-header,body.gv-has-site-ticker .gv-mob-header{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior:not(.gv-mobile-active){padding-top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior .gv-desk-only.sticky.top-14{top:calc(var(--gv-ticker-h) + 3.5rem)!important}body.gv-has-site-ticker #hero-sec{padding-top:calc(8rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker #install-banner{top:calc(4rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker .gv-alert-banner{top:var(--gv-ticker-h)}</style>
     <link rel="stylesheet" href="/gv-global.css?v=d8e2a41b">
-    <link rel="stylesheet" href="/gv-feedback.css?v=1">
+    <link rel="stylesheet" href="/gv-feedback.css?v=3">
     <script src="/gv-global.js?v=d8e2a41b" defer></script>
-    <script src="/gv-feedback.js?v=1" defer></script>
+    <script src="/gv-feedback.js?v=2" defer></script>
 </head>
 <body data-id="0" class="gv-has-site-ticker">
     <app-icon data-id="1" hidden data-icon="shield" data-palette="Blue"></app-icon>
@@ -1062,7 +1064,7 @@
                         <div class="flex items-center justify-between gap-4 flex-wrap">
                             <div>
                                 <h1 class="font-display text-2xl md:text-3xl font-bold text-white">⚔️ Scouting Database</h1>
-                                <p class="text-surface-200 text-sm mt-1 max-w-2xl">Verified insider evaluations from Power, Bender, Ivins, Alderman &amp; Wiltfong — roster, recruits, portal, and targets.</p>
+                                <p class="text-surface-200 text-sm mt-1 max-w-2xl">Verified scouting from approved On3, 247Sports, ESPN, The Athletic &amp; NFL Network analysts — roster, recruits, commits, portal &amp; targets. Blank when no verified report exists.</p>
                             </div>
                             <span class="game-pill">War Room</span>
                         </div>
@@ -1070,6 +1072,7 @@
                     <div class="flex flex-wrap gap-2" id="scouting-type-tabs">
                         <button type="button" class="scouting-type-tab active bg-gator-orange text-white text-xs font-bold px-4 py-2 rounded-lg" data-stype="all">All</button>
                         <button type="button" class="scouting-type-tab bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-stype="recruit">Recruits</button>
+                        <button type="button" class="scouting-type-tab bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-stype="commit">Commits</button>
                         <button type="button" class="scouting-type-tab bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-stype="portal">Portal</button>
                         <button type="button" class="scouting-type-tab bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-stype="target">Targets</button>
                         <button type="button" class="scouting-type-tab bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-stype="roster">Roster</button>
@@ -2484,7 +2487,7 @@
         if(data.locked){
             return '<div class="war-room-panel"><h4>War Room Scouting Report</h4><div class="war-room-lock">'
                 +'<div class="text-3xl mb-2">🔒</div>'
-                +'<p>Verified insider scouting from Power, Bender, Ivins, Alderman, and Wiltfong. Exclusive to War Room.</p>'
+                +'<p>Verified scouting from approved On3, 247Sports, ESPN, The Athletic &amp; NFL Network analysts. Exclusive to War Room.</p>'
                 +'<button type="button" class="bg-gator-orange hover:bg-gator-orangedk text-white font-bold text-xs px-5 py-2.5 rounded-xl" onclick="if(window.openRegModal)openRegModal(\'war\')">Upgrade to War Room →</button>'
                 +'</div></div>';
         }
@@ -2528,7 +2531,7 @@
     }
     window._gvScoutingType='all';
     function gvScoutingTypeLabel(t){
-        return {recruit:'Recruit',portal:'Portal',target:'Target',roster:'Roster'}[t]||t;
+        return {recruit:'Recruit',commit:'Commit',portal:'Portal',target:'Target',roster:'Roster'}[t]||t;
     }
     function gvRenderScoutingDatabase(list, apiLocked){
         var el=document.getElementById('scouting-database-content');
@@ -2546,7 +2549,7 @@
                     +'</div><span class="text-xs font-bold text-surface-200/50 whitespace-nowrap">🔒 War Room</span></div></div>';
             }).join(''):'';
             el.innerHTML='<div class="heat-lock-panel mb-4"><div class="text-4xl mb-3">⚔️</div><h3 class="font-display text-xl font-bold text-white mb-2">Insider Scouting Database</h3>'
-                +'<p class="text-sm text-surface-200/80 mb-4 max-w-md mx-auto">Verified evaluations from Power, Bender, Ivins, Alderman &amp; Wiltfong — '+rows.length+' profile'+(rows.length===1?'':'s')+' seeded from public Rivals/On3 reporting.</p>'
+                +'<p class="text-sm text-surface-200/80 mb-4 max-w-md mx-auto">Verified evaluations from Power, Ivins, Bender, Luginbill, Bellaire, Jeremiah, Kiper, Brugler, Yates &amp; Miller — blank when no public report exists.</p>'
                 +'<button type="button" class="bg-gator-orange hover:bg-gator-orangedk text-white font-bold px-6 py-3 rounded-xl" onclick="if(window.openRegModal)openRegModal(\'war\')">Upgrade to War Room →</button></div>'
                 +(teaserCards?'<div class="space-y-3">'+teaserCards+'</div>':'');
             return;
@@ -5840,7 +5843,11 @@
         var ov=document.getElementById('feedback-modal-ov');
         var openBtn=document.getElementById('gv-open-feedback');
         var closeBtn=document.getElementById('feedback-modal-close');
-        function openFb(){if(ov){ov.classList.remove('hidden');ov.style.display='flex';}}
+        function openFb(){
+            var sheet=document.getElementById('gv-more-sheet');
+            if(sheet){sheet.classList.remove('open');sheet.setAttribute('aria-hidden','true');}
+            if(ov){ov.classList.remove('hidden');ov.style.display='flex';}
+        }
         function closeFb(){if(ov){ov.classList.add('hidden');ov.style.display='none';}}
         if(openBtn)openBtn.addEventListener('click',openFb);
         if(closeBtn)closeBtn.addEventListener('click',closeFb);

@@ -1,25 +1,17 @@
 const fs = require('fs');
 const path = require('path');
+const { COLLEGE_ANALYSTS, NFL_ANALYSTS } = require('./scouting-analysts');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'war-room');
 const BREAKDOWNS_PATH = path.join(DATA_DIR, 'breakdowns.json');
 
-/** Verified insider sources for War Room scouting — no AI, no other writers */
-const TRUSTED_WRITERS = [
-  { id: 'power', name: 'Charles Power', aliases: ['charles power', 'chuck power', 'charlespower'] },
-  { id: 'bender', name: 'Corey Bender', aliases: ['corey bender', 'corey_bender'] },
-  { id: 'ivins', name: 'Andrew Ivins', aliases: ['andrew ivins', 'jamie ivins', 'jamieivins'] },
-  { id: 'alderman', name: 'Blake Alderman', aliases: ['blake alderman', 'blake_alderman'] },
-  { id: 'simmons', name: 'Chad Simmons', aliases: ['chad simmons', 'chadsimmons_'] },
-  { id: 'fawcett', name: 'Hayes Fawcett', aliases: ['hayes fawcett', 'hayesfawcett3'] },
-  { id: 'harden', name: 'Tyler Harden', aliases: ['tyler harden', 'ttjharden8'] },
-  { id: 'wiltfong', name: 'Steve Wiltfong', aliases: ['steve wiltfong', 'stevewiltfong'] }
-];
+/** Verified scouting analysts only — no beat writers */
+const TRUSTED_WRITERS = [...COLLEGE_ANALYSTS, ...NFL_ANALYSTS];
 
 const TRUSTED_WRITER_NAMES = new Set(TRUSTED_WRITERS.map((w) => w.name.toLowerCase()));
 const PLACEHOLDER_MESSAGE = 'No verified insider evaluation available.';
 
-const PLAYER_TYPES = new Set(['recruit', 'portal', 'target', 'roster']);
+const PLAYER_TYPES = new Set(['recruit', 'commit', 'portal', 'target', 'roster']);
 
 function readJson(filePath, fallback) {
   try {
@@ -174,13 +166,38 @@ function breakdownToSummary(entry) {
     playerType: entry.playerType,
     featured: !!entry.featured,
     verified: !!entry.verified,
+    analystName: entry.analystName || (entry.sources && entry.sources[0]?.writer) || null,
+    sourceType: entry.sourceType || null,
     sources: (entry.sources || []).map((s) => s.writer),
-    updatedAt: entry.updatedAt
+    updatedAt: entry.updatedAt || entry.timestamp
   };
 }
 
-/** Scouting DB = verified breakdowns + featured roster players with War Room intel */
+function scoutingEntryToSummary(entry) {
+  return {
+    playerSlug: entry.playerSlug,
+    playerName: entry.playerName,
+    playerType: entry.playerType,
+    featured: entry.playerType === 'recruit' || entry.playerType === 'portal',
+    verified: true,
+    analystName: entry.analystName,
+    sourceType: entry.sourceType,
+    sourceUrl: entry.sourceUrl,
+    sources: [entry.analystName],
+    updatedAt: entry.timestamp
+  };
+}
+
+/** Scouting DB = standardized verified entries only */
 function getScoutingDatabaseList() {
+  try {
+    const scoutingDb = require('./scouting-database');
+    const rows = scoutingDb.listForApi();
+    if (rows.length) return rows.map(scoutingEntryToSummary);
+  } catch {
+    /* fall through */
+  }
+
   const breakdowns = getAllBreakdowns().map(breakdownToSummary);
   const slugSet = new Set(breakdowns.map((b) => b.playerSlug));
 
@@ -231,7 +248,63 @@ function deleteBreakdown(slug) {
   return true;
 }
 
+function scoutingEntryToBreakdown(entry) {
+  const sents = String(entry.scoutingSummary || '')
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter((s) => s.length > 20);
+  const weaknessHints = sents.filter((s) =>
+    /\b(question|need to|will need|remains a|lack of|concern|limited)\b/i.test(s)
+  );
+  const strengthHints = sents.filter((s) => !weaknessHints.includes(s) && s.length > 25);
+
+  return {
+    playerSlug: entry.playerSlug,
+    playerName: entry.playerName,
+    playerType: entry.playerType,
+    verified: true,
+    analystName: entry.analystName,
+    sourceType: entry.sourceType,
+    sources: [
+      {
+        writer: entry.analystName,
+        writerId: entry.analystName.toLowerCase().replace(/\s+/g, '-'),
+        outlet: entry.outlet,
+        url: entry.sourceUrl,
+        publishedAt: entry.timestamp?.slice(0, 10) || null
+      }
+    ],
+    strengths: strengthHints.slice(0, 8),
+    weaknesses: weaknessHints.slice(0, 4),
+    comparison: null,
+    schemeFit: null,
+    staffNotes: null,
+    projection: sents.find((s) => /project|upside|impact|ceiling|floor/i.test(s)) || null,
+    insiderNotes: entry.scoutingSummary,
+    recruitingStory: null,
+    nflProjection: entry.sourceType === 'NFL' ? entry.scoutingSummary.slice(0, 600) : null,
+    updatedAt: entry.timestamp
+  };
+}
+
 function buildBreakdownResponse(slug) {
+  try {
+    const scoutingDb = require('./scouting-database');
+    const scoutingEntry = scoutingDb.getEntryBySlug(slug);
+    if (scoutingEntry) {
+      return {
+        ok: true,
+        tier: 'war',
+        locked: false,
+        available: true,
+        playerSlug: slug,
+        breakdown: scoutingEntryToBreakdown(scoutingEntry)
+      };
+    }
+  } catch {
+    /* optional */
+  }
+
   const entry = getBreakdownBySlug(slug);
   if (entry && entry.verified) {
     return {
@@ -258,8 +331,8 @@ function buildBreakdownResponse(slug) {
           playerSlug: slug,
           playerName: player.name,
           playerType: 'roster',
-          verified: true,
-          sources: [{ writer: 'GatorVault Roster Intel', outlet: 'GatorVault', url: null }],
+          verified: false,
+          sources: [],
           strengths: Array.isArray(player.strengths) ? player.strengths : [],
           weaknesses: Array.isArray(player.weaknesses) ? player.weaknesses : [],
           projection: player.projection || null,

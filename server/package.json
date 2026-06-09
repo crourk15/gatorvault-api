@@ -14,6 +14,7 @@
     "sync:portal": "node scripts/sync-on3-portal.js",
     "audit:portal": "node scripts/audit-portal-measurables.js",
     "ensure:film-room": "node scripts/ensure-film-room-media.js",
+    "rebuild:scouting": "node scripts/rebuild-scouting-database.js",
     "ingest:media": "node scripts/run-media-ingest.js",
     "generate:og": "node scripts/generate-og-assets.js"
   },

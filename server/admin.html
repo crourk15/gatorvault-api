@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>GatorVault — Admin</title>
   <meta name="robots" content="noindex, nofollow">
-  <link rel="stylesheet" href="/gv-feedback.css?v=1">
+  <link rel="stylesheet" href="/gv-feedback.css?v=2">
   <style>
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui,sans-serif;background:#030712;color:#e2e8f0;padding-bottom:env(safe-area-inset-bottom)}
@@ -69,6 +69,15 @@
             <input id="pin" type="password" autocomplete="off" placeholder="Stored for API calls">
           </div>
           <button type="button" class="btn secondary" id="lock-admin">Lock</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>War Room Scouting</h2>
+        <p style="font-size:12px;color:#64748b;margin:0 0 12px">Verified analysts only — On3, 247Sports, ESPN, The Athletic, NFL Network. Blank if no verified source.</p>
+        <div class="btn-grid">
+          <button type="button" class="btn" id="rebuild-scouting">Rebuild Scouting Database</button>
+          <button type="button" class="btn secondary" id="scouting-status">Check Rebuild Status</button>
         </div>
       </div>
 
@@ -252,6 +261,35 @@
           document.getElementById('pts-current').textContent = j.email + ': ' + j.points + ' pts (' + j.tier + ')';
           log('Awarded +' + amount + ' → ' + j.points + ' total', 'ok');
         }).catch(function (e) { log('Award error: ' + e.message, 'err'); });
+    });
+
+    document.getElementById('rebuild-scouting').addEventListener('click', function () {
+      var btn = document.getElementById('rebuild-scouting');
+      btn.disabled = true;
+      log('Starting scouting database rebuild (runs in background)…', 'info');
+      apiPost('/api/war-room/admin/rebuild-scouting', {})
+        .then(function (j) {
+          log(j.message || 'Scouting rebuild started', 'ok');
+        })
+        .catch(function (e) { log('Scouting rebuild error: ' + e.message, 'err'); })
+        .finally(function () { btn.disabled = false; });
+    });
+
+    document.getElementById('scouting-status').addEventListener('click', function () {
+      apiGet('/api/war-room/admin/rebuild-scouting/status?pin=' + encodeURIComponent(pin()))
+        .then(function (j) {
+          if (j.running) {
+            log('Scouting rebuild still running…', 'info');
+            return;
+          }
+          if (!j.lastRun) {
+            log('No scouting rebuild log yet', 'info');
+            return;
+          }
+          var r = j.lastRun;
+          log('Last rebuild: stored ' + r.stored + ', blank ' + r.blank + ', errors ' + (r.errors?.length || 0), 'ok');
+        })
+        .catch(function (e) { log('Status error: ' + e.message, 'err'); });
     });
 
     (function init() {
