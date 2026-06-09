@@ -37,11 +37,12 @@ const INSIDER_HANDLES = new Set([
   'andrewpower',
   'chadsimmons_',
   'hayesfawcett3',
+  'charlespower',
   'ttjharden8'
 ]);
 
 const TRUSTED_INSIDER_PATTERN =
-  /bender|alderman|wiltfong|ivins|power|abolverdi|niebuhr|chad\s*simmons|chadsimmons|hayes\s*fawcett|hayesfawcett|tyler\s*harden|harden/i;
+  /bender|alderman|wiltfong|ivins|charles\s*power|chuck\s*power|abolverdi|niebuhr|chad\s*simmons|chadsimmons|hayes\s*fawcett|hayesfawcett|tyler\s*harden|harden/i;
 
 /** UF within this many RPM points of the leader = "close/neutral" for visit intel */
 const RPM_CLOSE_GAP = parseFloat(process.env.HEAT_CHECK_RPM_CLOSE_GAP || '8', 10);

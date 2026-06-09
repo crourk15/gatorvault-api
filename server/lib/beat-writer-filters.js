@@ -1,5 +1,5 @@
 /**
- * Beat writer filtering — Chad Simmons Florida-only gate, momentum detection, trusted handles.
+ * Beat writer filtering — national UF-only gates, momentum detection, trusted handles.
  */
 const FLORIDA_TEXT_RE =
   /\b(florida|gators|gator nation|gainesville|\buf\b|#gators|#gatornation|@gatorsfb|florida gators)\b/i;
@@ -8,7 +8,7 @@ const FLORIDA_URL_RE =
   /florida|gators|gator|uf\.edu|on3\.com\/teams\/florida|gatorsonline|247sports\.com\/.*florida|floridagators\.com/i;
 
 /** National reporters — only UF-related posts pass through. */
-const NATIONAL_UF_ONLY_HANDLES = new Set(['chadsimmons_', 'hayesfawcett3']);
+const NATIONAL_UF_ONLY_HANDLES = new Set(['chadsimmons_', 'hayesfawcett3', 'charlespower']);
 
 const CHAD_SIMMONS_HANDLES = NATIONAL_UF_ONLY_HANDLES;
 
@@ -55,6 +55,7 @@ function isNationalUfOnlyReporter(post) {
   if (NATIONAL_UF_ONLY_HANDLES.has(handle)) return true;
   if (/chad\s*simmons|chadsimmons/i.test(writer)) return true;
   if (/hayes\s*fawcett|hayesfawcett/i.test(writer)) return true;
+  if (/charles\s*power|chuck\s*power|charlespower/i.test(writer)) return true;
   return false;
 }
 
@@ -66,6 +67,12 @@ function isHayesFawcettPost(post) {
   const handle = String(post.handle || post.writerId || '').toLowerCase();
   const writer = String(post.writerName || '');
   return handle === 'hayesfawcett3' || /hayes\s*fawcett|hayesfawcett/i.test(writer);
+}
+
+function isCharlesPowerPost(post) {
+  const handle = String(post.handle || post.writerId || '').toLowerCase();
+  const writer = String(post.writerName || '');
+  return handle === 'charlespower' || /charles\s*power|chuck\s*power|charlespower/i.test(writer);
 }
 
 function isFloridaRelatedText(text) {
@@ -92,7 +99,7 @@ function isFloridaRelatedPost(post) {
   return postUrls(post).some(isFloridaRelatedUrl);
 }
 
-/** National reporters (Chad Simmons, Hayes Fawcett) — only UF-related posts pass through. */
+/** National reporters (Chad Simmons, Hayes Fawcett, Charles Power) — only UF-related posts pass through. */
 function shouldIncludeBeatPost(post) {
   if (isNationalUfOnlyReporter(post) && !isFloridaRelatedPost(post)) return false;
   return true;
@@ -140,6 +147,7 @@ module.exports = {
   isNationalUfOnlyReporter,
   isChadSimmonsPost,
   isHayesFawcettPost,
+  isCharlesPowerPost,
   isFloridaRelatedText,
   isFloridaRelatedPost,
   shouldIncludeBeatPost,

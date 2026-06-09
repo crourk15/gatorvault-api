@@ -6,7 +6,7 @@ const BREAKDOWNS_PATH = path.join(DATA_DIR, 'breakdowns.json');
 
 /** Verified insider sources for War Room scouting — no AI, no other writers */
 const TRUSTED_WRITERS = [
-  { id: 'power', name: 'Charles Power', aliases: ['charles power', 'chuck power'] },
+  { id: 'power', name: 'Charles Power', aliases: ['charles power', 'chuck power', 'charlespower'] },
   { id: 'bender', name: 'Corey Bender', aliases: ['corey bender', 'corey_bender'] },
   { id: 'ivins', name: 'Andrew Ivins', aliases: ['andrew ivins', 'jamie ivins', 'jamieivins'] },
   { id: 'alderman', name: 'Blake Alderman', aliases: ['blake alderman', 'blake_alderman'] },
