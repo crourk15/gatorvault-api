@@ -1,7 +1,8 @@
 const fetch = require('node-fetch');
 const { parseRssItems } = require('./rss-parse');
 const store = require('./live-store');
-const { shouldIncludeBeatPost } = require('./beat-writer-filters');
+const beatFilters = require('./beat-writer-filters');
+const { shouldIncludeBeatPost } = beatFilters;
 
 const NITTER_BASES = (process.env.NITTER_BASES || 'https://nitter.poast.org,https://nitter.privacydev.net')
   .split(',')
@@ -182,14 +183,93 @@ async function fetchWriterPosts(writer) {
   }
 }
 
+function recordBlockedNationalPost(post, reason) {
+  if (!beatFilters.isNationalUfOnlyReporter(post)) return;
+  try {
+    const monitoring = require('./recruiting-monitoring');
+    monitoring
+      .sendMonitoringAlert({
+        level: 'info',
+        type: 'national_skip',
+        reason: reason === 'hard_block_non_uf' ? 'Non-Florida content (hard block)' : 'Non-Florida content',
+        source: post.writerName || post.handle || 'national_beat',
+        player: post.writerName || post.handle,
+        detail: String(post.text || '').slice(0, 280),
+        meta: { handle: post.handle, blockReason: reason, postId: post.id }
+      })
+      .catch((e) => console.warn('[live-beat] monitoring alert failed:', e.message));
+  } catch {
+    /* optional */
+  }
+}
+
+function filterBeatPosts(posts, { alertBlocks = false } = {}) {
+  const kept = [];
+  let blocked = 0;
+  for (const post of posts || []) {
+    const include = shouldIncludeBeatPost(post, {
+      onBlock: alertBlocks ? recordBlockedNationalPost : null
+    });
+    if (include) kept.push(post);
+    else blocked += 1;
+  }
+  return { kept, blocked };
+}
+
+function purgeNonFloridaBeatFromFeed() {
+  return store.removeFeedItemsMatching((item) => {
+    if (item.type !== 'beat') return false;
+    const post = {
+      text: item.summary || item.title || '',
+      title: item.title,
+      writerName: item.author || item.meta?.writerName,
+      handle: item.meta?.handle,
+      url: item.source_url
+    };
+    return !shouldIncludeBeatPost(post);
+  });
+}
+
+function purgeNonFloridaBeatCache() {
+  const cache = store.loadBeatCache();
+  const before = (cache.posts || []).length;
+  const { kept, blocked } = filterBeatPosts(cache.posts || [], { alertBlocks: false });
+  if (blocked > 0 || kept.length !== before) {
+    store.saveBeatCache({
+      ...cache,
+      posts: kept,
+      fetchedAt: store.nowIso(),
+      purgedAt: store.nowIso(),
+      purgedCount: blocked
+    });
+  }
+  return { before, after: kept.length, removed: blocked };
+}
+
+async function purgeNonFloridaBeatContent({ refreshDashboard = true } = {}) {
+  const cacheResult = purgeNonFloridaBeatCache();
+  const feedResult = purgeNonFloridaBeatFromFeed();
+  let refreshed = null;
+  if (refreshDashboard) {
+    try {
+      const { refreshLiveDashboard } = require('./live-aggregator');
+      refreshed = await refreshLiveDashboard({ beat: true, podcasts: false, recruiting: false });
+    } catch (e) {
+      refreshed = { error: e.message };
+    }
+  }
+  return { cacheResult, feedResult, refreshed };
+}
+
 async function refreshBeatStream() {
   const tokenStatus = await validateXBearerToken({ force: true });
   const cache = store.loadBeatCache();
   const writers = store.loadWriters();
 
   if (!tokenStatus.ok) {
+    const { kept } = filterBeatPosts(cache.posts || []);
     const next = {
-      posts: cache.posts || [],
+      posts: kept,
       fetchedAt: store.nowIso(),
       source: 'x_token_error',
       error: tokenStatus.error
@@ -200,23 +280,31 @@ async function refreshBeatStream() {
 
   const all = [];
   let errors = 0;
+  let blocked = 0;
 
   for (const writer of writers) {
     const posts = await fetchWriterPosts(writer);
     if (!posts.length) errors += 1;
-    posts.filter(shouldIncludeBeatPost).forEach((p) => all.push(p));
+    const filtered = filterBeatPosts(posts, { alertBlocks: true });
+    blocked += filtered.blocked;
+    filtered.kept.forEach((p) => all.push(p));
   }
 
   all.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
 
-  const merged = all.length ? all.slice(0, 80) : cache.posts || [];
+  const purgedExisting = filterBeatPosts(cache.posts || []);
+  const merged = (all.length ? all : purgedExisting.kept).slice(0, 80);
+
   const next = {
     posts: merged,
     fetchedAt: store.nowIso(),
     source: all.length ? 'x' : errors === writers.length ? 'x_empty' : 'x',
+    blockedNational: blocked,
     error: all.length ? null : 'X API token is valid but no beat writer posts were returned yet. Retrying on the next poll.'
   };
   store.saveBeatCache(next);
+
+  purgeNonFloridaBeatFromFeed();
 
   try {
     const { runBeatVisitIntelIngest } = require('./beat-visit-intel-ingest');
@@ -226,6 +314,7 @@ async function refreshBeatStream() {
   }
 
   merged.slice(0, 30).forEach((post) => {
+    if (!shouldIncludeBeatPost(post)) return;
     store.upsertFeedItem({
       id: post.id,
       dedupeKey: post.id,
@@ -247,8 +336,9 @@ async function refreshBeatStream() {
 function getBeatPosts(limit = 40) {
   const cache = store.loadBeatCache();
   const tokenStatus = getXTokenStatus();
+  const { kept } = filterBeatPosts(cache.posts || []);
   return {
-    posts: (cache.posts || []).slice(0, limit),
+    posts: kept.slice(0, limit),
     fetchedAt: cache.fetchedAt,
     source: cache.source,
     error: cache.error || (!tokenStatus.ok ? tokenStatus.error : null),
@@ -262,5 +352,9 @@ module.exports = {
   fetchWriterPosts,
   validateXBearerToken,
   getXTokenStatus,
-  getXBearerToken
+  getXBearerToken,
+  purgeNonFloridaBeatContent,
+  purgeNonFloridaBeatCache,
+  purgeNonFloridaBeatFromFeed,
+  filterBeatPosts
 };

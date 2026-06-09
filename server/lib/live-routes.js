@@ -97,6 +97,20 @@ function mountLiveRoutes(app) {
     const remaining = liveStore.purgeTestFeedItems();
     return res.json({ ok: true, remaining });
   });
+
+  app.post('/api/live/admin/purge-non-uf-beat', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const { purgeNonFloridaBeatContent, refreshBeatStream } = require('./live-beat');
+      const purged = await purgeNonFloridaBeatContent({ refreshDashboard: true });
+      const refreshed = await refreshBeatStream();
+      return res.json({ ok: true, purged, refreshed, beat: require('./live-beat').getBeatPosts(40) });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 }
 
 module.exports = { mountLiveRoutes };

@@ -77,7 +77,8 @@
         ['verificationFailures', 'Verify Fails'],
         ['snapshotMismatches', 'Snapshot'],
         ['ingestMismatches', 'Ingest'],
-        ['aggregatorSkips', 'Agg Skips']
+        ['aggregatorSkips', 'Agg Skips'],
+        ['nationalSkips', 'National Skips']
       ];
       el.innerHTML = keys.map(function (k) {
         return '<div class="stat"><div class="label">' + k[1] + '</div><div class="value">' + (counters[k[0]] || 0) + '</div></div>';

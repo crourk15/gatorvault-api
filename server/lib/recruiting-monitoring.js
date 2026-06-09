@@ -25,6 +25,7 @@ const counters = {
   aggregatorSkips: 0,
   ingestMismatches: 0,
   healthAlerts: 0,
+  nationalSkips: 0,
   startedAt: new Date().toISOString()
 };
 
@@ -60,6 +61,7 @@ function bumpCounter(alert) {
   if (type === 'snapshot_mismatch') counters.snapshotMismatches += 1;
   if (type === 'fired_event') counters.firedEvents += 1;
   if (type === 'health_alert') counters.healthAlerts += 1;
+  if (type === 'national_skip') counters.nationalSkips = (counters.nationalSkips || 0) + 1;
 }
 
 function mapDecommitBlockReason(gate, verification, source) {
