@@ -306,7 +306,11 @@
         .live-type-pill{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em;}
         .live-type-commit{background:rgba(250,70,22,.15);color:#fb923c;}
         .live-type-portal{background:rgba(59,130,246,.15);color:#93c5fd;}
-        .live-type-offers{background:rgba(96,165,250,.15);color:#93c5fd;}
+        .live-type-visit{background:rgba(34,197,94,.15);color:#86efac;}
+        .live-type-offer,.live-type-offers{background:rgba(96,165,250,.15);color:#93c5fd;}
+        .live-type-prediction{background:rgba(168,85,247,.15);color:#c4b5fd;}
+        .live-type-trending{background:rgba(250,70,22,.12);color:#fdba74;}
+        .live-type-info{background:rgba(148,163,184,.15);color:#cbd5e1;}
         .live-type-score{background:rgba(34,197,94,.15);color:#86efac;}
         .live-type-thread{background:rgba(168,85,247,.15);color:#c4b5fd;}
         .live-type-beat{background:rgba(168,85,247,.15);color:#d8b4fe;}
@@ -2613,14 +2617,19 @@
     ];
     var playerProfiles=[];
     var recentAlerts=[];
-    var GV_ALERTS_FEED_VERSION=7;
+    var GV_ALERTS_FEED_VERSION=8;
     var GV_COMMIT_MIN_CLASS=2027;
     var GV_PORTAL_MIN_CLASS=2027;
-    var GV_ALERT_CATEGORY_KEYS=['commit','portal','offers','article','score','thread','breaking','scouting'];
+    var GV_ALERT_CATEGORY_KEYS=['commit','portal','visit','offer','prediction','trending','info','article','score','thread','breaking','scouting'];
     var ALERT_TYPE_META={
         commit:{icon:'🎯',label:'Commit',pill:'bg-gator-orange/15 text-gator-orange'},
         portal:{icon:'🔄',label:'Portal',pill:'bg-gator-orange/15 text-gator-orange'},
-        offers:{icon:'📬',label:'Offers',pill:'bg-blue-500/15 text-blue-300'},
+        visit:{icon:'📍',label:'Visit',pill:'bg-green-500/15 text-green-400'},
+        offer:{icon:'📬',label:'Offer',pill:'bg-blue-500/15 text-blue-300'},
+        offers:{icon:'📬',label:'Offer',pill:'bg-blue-500/15 text-blue-300'},
+        prediction:{icon:'🔮',label:'Prediction',pill:'bg-purple-500/15 text-purple-300'},
+        trending:{icon:'🔥',label:'Trending',pill:'bg-orange-500/15 text-orange-300'},
+        info:{icon:'ℹ️',label:'Info',pill:'bg-surface-700 text-surface-200'},
         article:{icon:'📰',label:'Article',pill:'bg-amber-500/15 text-amber-400'},
         score:{icon:'🏟️',label:'Score',pill:'bg-green-500/15 text-green-400'},
         thread:{icon:'💬',label:'Thread',pill:'bg-purple-500/15 text-purple-300'},
@@ -2628,8 +2637,43 @@
         scouting:{icon:'⚔️',label:'Scouting',pill:'bg-yellow-500/15 text-yellow-300'}
     };
     var ALERT_TYPE_LABELS={
-        commit:'Commits',portal:'Portal',offers:'Offers',article:'Articles',score:'Scores',thread:'Threads',breaking:'Breaking',scouting:'Scouting'
+        commit:'Commits',portal:'Portal',visit:'Visits',offer:'Offers',offers:'Offers',prediction:'Predictions',trending:'Trending',info:'Info',article:'Articles',score:'Scores',thread:'Threads',breaking:'Breaking',scouting:'Scouting'
     };
+
+    function gvIsVisitEventType(eventType){
+        var et=String(eventType||'').toLowerCase();
+        if(!et)return false;
+        if(et==='official_visit'||et==='unofficial_visit'||et==='visit'||et==='ov'||et==='uv'||et==='scheduled_visit'||et==='visit_scheduled')return true;
+        return /official_visit|unofficial_visit|scheduled_visit|_visit|visit_/.test(et);
+    }
+    function gvResolveEventType(eventType,player,rawType){
+        var et=String(eventType||rawType||'').toLowerCase();
+        var cy=gvPlayerClassYear(player);
+        var cat=player&&player.category;
+        if(gvIsVisitEventType(et))return 'visit';
+        if(et==='target_update'||et==='offer'||et==='offers'||cat==='target')return 'offer';
+        if(et==='portal_in'||et==='portal_out'||et==='portal'){
+            if(cy!=null&&cy>=GV_PORTAL_MIN_CLASS)return 'portal';
+            return 'info';
+        }
+        if(et==='prediction'||et==='rpm'||et==='crystal_ball'||et==='ranking_change'||et==='forecast'||et==='insider_prediction')return 'prediction';
+        if(et==='trending'||et==='heat_check'||et==='heat-check'||et==='momentum')return 'trending';
+        if(et==='commit'||et==='flip'||et==='decommit'){
+            if(cat==='portal'){
+                if(cy!=null&&cy>=GV_PORTAL_MIN_CLASS)return 'portal';
+                return 'info';
+            }
+            if(cy!=null&&cy>=GV_COMMIT_MIN_CLASS&&cat!=='portal')return 'commit';
+            return 'info';
+        }
+        if(cat==='portal'&&cy!=null&&cy>=GV_PORTAL_MIN_CLASS)return 'portal';
+        if(et==='visit')return 'visit';
+        if(et==='offer'||et==='offers')return 'offer';
+        if(et==='prediction')return 'prediction';
+        if(et==='trending')return 'trending';
+        if(et==='commit'||et==='portal')return 'info';
+        return 'info';
+    }
 
     function gvPlayerClassYear(player){
         if(!player||player.classYear==null)return null;
@@ -2637,25 +2681,7 @@
         return isNaN(cy)?null:cy;
     }
     function gvClassifyRecruitPlayer(player,eventType){
-        var et=String(eventType||'').toLowerCase();
-        var cy=gvPlayerClassYear(player);
-        var cat=player&&player.category;
-        if(et==='target_update'||et==='offer'||cat==='target')return 'offers';
-        if(et==='portal_in'||et==='portal_out'){
-            if(cy!=null&&cy>=GV_PORTAL_MIN_CLASS)return 'portal';
-            return null;
-        }
-        if(et==='commit'||et==='flip'||et==='decommit'){
-            if(cat==='portal'){
-                if(cy!=null&&cy>=GV_PORTAL_MIN_CLASS)return 'portal';
-                return null;
-            }
-            if(cy!=null&&cy>=GV_COMMIT_MIN_CLASS&&cat!=='portal')return 'commit';
-            return null;
-        }
-        if(cat==='portal'&&cy!=null&&cy>=GV_PORTAL_MIN_CLASS)return 'portal';
-        if(cat==='recruit'&&cy!=null&&cy>=GV_COMMIT_MIN_CLASS)return 'commit';
-        return null;
+        return gvResolveEventType(eventType,player);
     }
     function gvFormatPortalAlertText(text){
         var t=String(text||'').trim();
@@ -2679,7 +2705,7 @@
         var player=a._player;
         var cy=gvPlayerClassYear(player);
         var type=gvNormalizeAlertType(a.type);
-        if(type==='offers'||type==='article'||type==='score'||type==='thread')return false;
+        if(type==='offers'||type==='offer'||type==='visit'||type==='prediction'||type==='trending'||type==='info'||type==='article'||type==='score'||type==='thread')return false;
         if(!player&&(type==='commit'||type==='portal')){
             var slug=a.playerSlug||'';
             if(slug&&(class2027||[]).some(function(p){return p.slug===slug;}))return false;
@@ -2693,19 +2719,15 @@
     function gvReclassifyAlert(a){
         if(!a)return a;
         var player=a._player;
-        var mapped=gvClassifyRecruitPlayer(player,a._eventType||(a.type==='offers'?'target_update':a.type));
+        var mapped=gvResolveEventType(a._eventType||(a.type==='offers'?'target_update':a.type),player,a.type);
         if(mapped==='portal'){
             a.type='portal';
             a.text=gvFormatPortalAlertText(a.text||a.title);
             a.title=a.text;
-        }else if(mapped==='commit'){
-            a.type='commit';
-        }else if(mapped==='offers'){
-            a.type='offers';
         }else if(mapped){
             a.type=mapped;
         }else{
-            a.type=gvNormalizeAlertType(a.type)||a.type;
+            a.type='info';
         }
         if(gvShouldSuppressRecruitAlert(a))return null;
         return a;
@@ -2715,14 +2737,19 @@
         (portalIncoming||[]).forEach(function(p){if(p.slug)window._gvPortalSlugs[p.slug]=true;});
     }
     function gvNormalizeAlertType(type){
-        if(!type)return '';
+        if(!type)return 'info';
         var t=String(type).toLowerCase();
         if(t==='flip'||t==='decommit')return 'commit';
-        if(t==='recruiting'||t==='target_update')return 'offers';
+        if(t==='official_visit'||t==='unofficial_visit'||t==='scheduled_visit'||t==='visit_scheduled')return 'visit';
+        if(t==='offers'||t==='target_update')return 'offer';
+        if(t==='recruiting')return 'offer';
+        if(t==='rpm'||t==='crystal_ball'||t==='ranking_change'||t==='forecast')return 'prediction';
+        if(t==='heat_check'||t==='heat-check'||t==='momentum')return 'trending';
         if(t==='scouting'||t==='war_room')return 'scouting';
         if(t==='breaking')return 'breaking';
         if(t==='staff'||t==='injury'||t==='depth'||t==='beat'||t==='podcast')return '';
-        return t;
+        if(t==='commit'||t==='portal'||t==='visit'||t==='offer'||t==='prediction'||t==='trending'||t==='info'||t==='article'||t==='score'||t==='thread')return t;
+        return 'info';
     }
     function gvIsSystemAlert(a){
         if(!a)return true;
@@ -2855,7 +2882,7 @@
     }
 
     // load/save prefs and recent alerts
-    var defaultAlertPrefs={method:'push',freq:'instant',types:{commit:true,portal:true,offers:true,article:true,score:true,thread:true,breaking:true,scouting:true},followPlayers:[],followThreads:[],snoozes:{globalUntil:null,types:{},threads:{},players:{}}};
+    var defaultAlertPrefs={method:'push',freq:'instant',types:{commit:true,portal:true,visit:true,offer:true,offers:true,prediction:true,trending:true,info:true,article:true,score:true,thread:true,breaking:true,scouting:true},followPlayers:[],followThreads:[],snoozes:{globalUntil:null,types:{},threads:{},players:{}}};
     function mergeAlertPrefs(stored){
         var base=JSON.parse(JSON.stringify(defaultAlertPrefs));
         if(!stored||typeof stored!=='object')return base;
@@ -3067,7 +3094,7 @@
         var prefs=window.alertPrefs||defaultAlertPrefs;
         var method=prefs.method||'push';
         if(method==='push'||method==='both'){
-            var alertTitle=payload.type?payload.type.toUpperCase():'Alert';
+            var alertTitle=((ALERT_TYPE_META[gvNormalizeAlertType(payload.type)]||{}).label||payload.type||'Info').toUpperCase();
             var alertBody=payload.text||payload.title||'';
             var alertDetail=payload.detail||'';
             if(window.GV_GLOBAL&&window.GV_GLOBAL.showAlertBanner){
@@ -3957,22 +3984,25 @@
         return false;
     }
     function gvMapEventToAlertType(ev){
-        if(!ev||!ev.eventType)return null;
+        if(!ev||!ev.eventType)return 'info';
         var player=ev.payload&&ev.payload.player;
-        return gvClassifyRecruitPlayer(player,ev.eventType);
+        return gvResolveEventType(ev.eventType,player);
     }
     function gvProcessRecruitEvent(ev){
         if(gvIsTestRecruitEvent(ev))return;
         var player=ev.payload&&ev.payload.player;
         var alertType=gvMapEventToAlertType(ev);
-        if(!alertType)return;
+        if(!alertType||alertType==='info'&&!ev.eventType)return;
         var evTs=ev.createdAt?new Date(ev.createdAt).getTime():Date.now();
         var title=ev.title||'';
         if(alertType==='portal')title=gvFormatPortalAlertText(title);
+        if(alertType==='visit'&&gvIsVisitEventType(ev.eventType)&&title.indexOf('Visit')<0){
+            title=(player&&player.name?player.name:'Recruit')+' — Official Visit Scheduled';
+        }
         var payload={text:title,detail:ev.skinny||ev.detail||'',title:title,skinny:ev.skinny,playerSlug:ev.playerSlug,name:player?player.name:'',eventId:ev.id,_ts:evTs,_player:player||null,_eventType:ev.eventType};
         if(alertType==='portal')window.onPortalMove(payload);
         else if(alertType==='commit')window.onNewCommit(payload);
-        else notifyEvent({text:title,detail:ev.skinny||ev.detail||'',type:'offers',eventId:ev.id,_ts:evTs,playerSlug:ev.playerSlug,_player:player||null});
+        else notifyEvent(Object.assign({},payload,{type:alertType}));
     }
 
     function gvPollRecruitingEvents(force,retry){
@@ -4670,12 +4700,12 @@
     }
 
     function gvLiveTypeLabel(type){
-        var map={commit:'Commit',portal:'Portal',offers:'Offers',article:'Article',score:'Score',thread:'Thread',staff:'Staff',injury:'Injury',depth:'Depth',beat:'Beat',breaking:'Breaking',podcast:'Podcast'};
-        return map[type]||ALERT_TYPE_LABELS[type]||type||'Update';
+        var map={commit:'Commit',portal:'Portal',visit:'Visit',offer:'Offer',offers:'Offer',prediction:'Prediction',trending:'Trending',info:'Info',article:'Article',score:'Score',thread:'Thread',staff:'Staff',injury:'Injury',depth:'Depth',beat:'Beat',breaking:'Breaking',podcast:'Podcast'};
+        return map[type]||ALERT_TYPE_LABELS[type]||type||'Info';
     }
 
     function gvNormalizeLiveFeedType(item){
-        if(!item)return '';
+        if(!item)return 'info';
         var raw=String(item.type||'').toLowerCase();
         if(raw==='article')return 'article';
         if(raw==='score')return 'score';
@@ -4683,10 +4713,14 @@
         if(raw==='beat'||raw==='podcast'||raw==='staff'||raw==='injury'||raw==='depth'||raw==='breaking')return '';
         var player=item.meta&&item.meta.player;
         var eventType=(item.meta&&item.meta.eventType)||raw;
-        var classified=gvClassifyRecruitPlayer(player,eventType);
+        if(item.meta&&item.meta.eventType){
+            return gvResolveEventType(item.meta.eventType,player,raw);
+        }
+        if(raw==='visit'||raw==='offer'||raw==='offers'||raw==='prediction'||raw==='trending'||raw==='info')return raw==='offers'?'offer':raw;
+        var classified=gvResolveEventType(eventType,player,raw);
         if(classified)return classified;
-        if(GV_ALERT_CATEGORY_KEYS.indexOf(raw)>=0)return raw;
-        return '';
+        if(GV_ALERT_CATEGORY_KEYS.indexOf(raw)>=0)return raw==='offers'?'offer':raw;
+        return 'info';
     }
 
     function gvFilterLiveFeedItems(items){

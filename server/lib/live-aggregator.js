@@ -12,8 +12,14 @@ const EVENT_TYPE_MAP = {
   decommit: 'commit',
   portal_in: 'portal',
   portal_out: 'portal',
-  target_update: 'offers',
-  ranking_change: null
+  target_update: 'offer',
+  official_visit: 'visit',
+  unofficial_visit: 'visit',
+  visit: 'visit',
+  prediction: 'prediction',
+  ranking_change: 'prediction',
+  trending: 'trending',
+  heat_check: 'trending'
 };
 
 function isTestRecruitingEvent(ev) {
@@ -42,7 +48,7 @@ async function ingestRecruitingEvents() {
       {
         id: stableCommitKey,
         dedupeKey: stableCommitKey,
-        type: EVENT_TYPE_MAP[ev.eventType] || 'breaking',
+        type: EVENT_TYPE_MAP[ev.eventType] || 'info',
         title: ev.title,
         summary: ev.skinny || ev.detail || '',
         source_url: ev.playerSlug ? `/player/${ev.playerSlug}` : '/recruit',
@@ -79,30 +85,37 @@ async function ingestRecruitingIntel() {
       (intel.playerSlug ? { slug: intel.playerSlug, name: intel.playerName } : null);
     const title =
       intel.eventType === 'official_visit'
-        ? `${intel.playerName || 'Recruit'} — ${intel.status || 'Official visit'}`
-        : `${intel.playerName || 'Recruit'} — ${intel.eventType || 'intel'}`;
+        ? `${intel.playerName || 'Recruit'} — Official Visit Scheduled`
+        : intel.eventType === 'unofficial_visit'
+          ? `${intel.playerName || 'Recruit'} — Unofficial Visit`
+          : `${intel.playerName || 'Recruit'} — ${intel.status || intel.eventType || 'Intel'}`;
 
-    liveStore.upsertFeedItem({
-      id: stableKey,
-      dedupeKey: stableKey,
-      type: intel.eventType === 'official_visit' ? 'offers' : 'breaking',
-      title,
-      summary: intel.detail || intel.status || '',
-      source_url: intel.playerSlug ? `/player/${intel.playerSlug}` : '/recruit',
-      imageUrl: null,
-      source: intel.source || 'intel',
-      author: intel.source || 'GatorVault Recruiting',
-      createdAt: intel.reportedAt || intel.createdAt,
-      meta: {
-        eventType: intel.eventType,
-        playerSlug: intel.playerSlug,
-        player,
-        intelFingerprint: intel.fingerprint,
-        visitStart: intel.visitStart,
-        visitEnd: intel.visitEnd,
-        status: intel.status
-      }
-    });
+    const classified = liveStore.classifyFeedItem(
+      {
+        id: stableKey,
+        dedupeKey: stableKey,
+        type: EVENT_TYPE_MAP[intel.eventType] || 'visit',
+        title,
+        summary: intel.detail || intel.status || '',
+        source_url: intel.playerSlug ? `/player/${intel.playerSlug}` : '/recruit',
+        imageUrl: null,
+        source: intel.source || 'intel',
+        author: intel.source || 'GatorVault Recruiting',
+        createdAt: intel.reportedAt || intel.createdAt,
+        meta: {
+          eventType: intel.eventType,
+          playerSlug: intel.playerSlug,
+          player,
+          intelFingerprint: intel.fingerprint,
+          visitStart: intel.visitStart,
+          visitEnd: intel.visitEnd,
+          status: intel.status || (intel.eventType === 'official_visit' ? 'Official Visit Scheduled' : null)
+        }
+      },
+      playerIndex
+    );
+    if (!classified) return;
+    liveStore.upsertFeedItem(classified);
     count += 1;
   });
 
