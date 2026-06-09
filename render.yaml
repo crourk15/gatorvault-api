@@ -1,6 +1,10 @@
 # GatorVault API — Render Blueprint
 # Dashboard: New → Blueprint → connect repo → Deploy Blueprint
 # Secrets (sync: false) are prompted in Render; paste values from server/.env
+#
+# DEPLOYMENT: gatorvault-api on Render auto-deploys from `main` only.
+# Use feature/release branches as needed; merge into `main` when ready for production.
+# `main` is the single source of truth — Render will redeploy automatically on push.
 
 services:
   - type: web
