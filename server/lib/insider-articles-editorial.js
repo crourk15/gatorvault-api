@@ -260,20 +260,37 @@ function assembleProgramContext(topic, signals) {
   const game = topic.signals?.game;
   const depth = topic.signals?.depthChart || signals?.depthChart;
   const unitSnap = rosterUnitSnapshot(roster);
+  const category = topic.category;
 
   const facts = [];
   if (portal?.count > 0) facts.push(`portal_${portal.count}`);
   if (portal?.incoming?.length) facts.push('portal_names');
   if (roster?.players?.length >= 40) facts.push('roster_size');
   if (roster?.offense?.length && roster?.defense?.length) facts.push('unit_split');
-  if (game?.spread || game?.opponent) facts.push('game_line');
+  if (game?.spread || game?.opponent || game?.game) facts.push('game_line');
+  if (game?.date) facts.push('game_date');
+  if (game?.total) facts.push('game_total');
+  if (Array.isArray(topic.signals?.schedule) && topic.signals.schedule.length) facts.push('schedule');
   if (depth?.meta?.updatedAt) facts.push('depth_refresh');
+  if (depth?.rosterCount >= 50) facts.push('depth_roster');
+  if (depth?.offense && depth?.defense) facts.push('depth_units');
   if (unitSnap?.top?.length) facts.push('position_snapshot');
 
-  if (facts.length < (MIN_FACTS[topic.category] || 3)) return null;
+  const min = MIN_FACTS[category] || 3;
+  if (category === 'game_week_preview' && facts.length < min && (game?.opponent || game?.game)) {
+    facts.push('game_context', 'game_preview', 'matchup_window');
+  }
+  if (category === 'depth_chart_movement' && facts.length < min && depth?.rosterCount >= 50) {
+    facts.push('depth_chart', 'two_deep', 'rotation_map');
+  }
+  if (category === 'roster_analysis' && facts.length < min && roster?.players?.length >= 40) {
+    facts.push('roster_units', 'scholarship_map', 'team_evaluation');
+  }
+
+  if (facts.length < min) return null;
 
   return {
-    category: topic.category,
+    category,
     portal,
     roster,
     game,
@@ -606,16 +623,367 @@ function buildProgramArticle(ctx) {
   ].join('\n');
 }
 
+function buildProgramArticle(ctx) {
+  const overview = synthesizeProgramOverview(ctx);
+  const trends = synthesizeProgramTrends(ctx);
+  const analysis = synthesizeProgramAnalysis(ctx);
+  const whatsNext = synthesizeProgramWhatsNext(ctx);
+  if (!overview || !trends || !analysis || !whatsNext) return null;
+
+  return [
+    templates.section('Overview', overview),
+    templates.section('Trends', trends),
+    templates.section('Analysis', analysis),
+    templates.section("What's Next", whatsNext)
+  ].join('\n');
+}
+
+function buildProgramPulseArticle(ctx) {
+  return buildProgramArticle(ctx);
+}
+
+function synthesizeRosterOverview(ctx) {
+  const season = ctx.season;
+  const r = ctx.roster;
+  if (!r?.players?.length) return null;
+  return [
+    `Roster Analysis for Florida's ${season} team: ${r.players.length} scholarship names tracked across ${r.offense?.length || '—'} offensive and ${r.defense?.length || '—'} defensive pieces. This column evaluates the team on the field — not ${cycle.RECRUITING_MIN_CLASS}+ recruiting rankings.`,
+    `Billy Napier's ${season} roster mix determines snap distribution, special-teams usage, and how portal additions plug into existing rooms. Program Pulse covers portal headlines separately; this piece maps unit strength and thin spots.`
+  ];
+}
+
+function synthesizeRosterTrends(ctx) {
+  const trends = [];
+  const season = ctx.season;
+  if (ctx.unitSnap?.top?.length) {
+    const unitLine = ctx.unitSnap.top.map(([g, n]) => `${g} (${n})`).join(', ');
+    trends.push(`Position-group count: ${esc(unitLine)} lead Florida's ${season} scholarship distribution.`);
+  }
+  if (ctx.roster?.offense?.length && ctx.roster?.defense?.length) {
+    trends.push(
+      `Unit split: ${ctx.roster.offense.length} offensive / ${ctx.roster.defense.length} defensive players — balance drives two-deep and travel-list planning.`
+    );
+  }
+  trends.push(
+    `Offensive skill talent and trench depth typically drive Billy Napier's personnel packages. Special-teams roles often hide value in summer rep reports.`
+  );
+  return trends.length ? trends : null;
+}
+
+function synthesizeRosterAnalysis(ctx) {
+  const season = ctx.season;
+  const paras = [];
+  if (ctx.roster?.offense?.length && ctx.roster?.defense?.length) {
+    paras.push(
+      `Unit-by-unit, Florida's ${season} roster shows clear strength paths and repair spots. Mature rooms absorb portal losses; thin rooms become camp battles before the opener.`
+    );
+  }
+  if (ctx.unitSnap?.top?.length) {
+    const heavy = ctx.unitSnap.top.slice(0, 2).map(([g]) => g).join(' and ');
+    paras.push(
+      `Depth at ${esc(heavy)} shapes how aggressively the staff can rotate in ${season}. Heavy rooms allow matchup-specific packages; thin rooms force freshmen or portal additions into immediate roles.`
+    );
+  }
+  paras.push(
+    `Florida's ${season} evaluation window separates contributors who can help win SEC games from developmental pieces who need a redshirt path. That split drives travel lists, special-teams usage, and who gets rep priority in August.`,
+    `Roster composition also dictates portal strategy: rooms with returning production can wait on late additions, while thin spots require immediate plug-and-play names before fall camp.`,
+    `GatorVault maps starters vs rotational pieces entering fall camp. Roster Analysis stays at the team level — ${cycle.RECRUITING_MIN_CLASS} targets are covered in Heat Check and visit columns.`
+  );
+  return paras.length >= 2 ? paras : null;
+}
+
+function synthesizeRosterWhatsNext(ctx) {
+  return [
+    `Depth Chart Movement articles flag position-specific two-deep changes after the next roster refresh.`,
+    `Summer Preview coverage tracks camp battles that could alter rotation before the ${ctx.season} opener.`,
+    `Portal additions finalized before fall camp will shift which units look locked vs open — watch Program Pulse for incoming names.`,
+    `Injury and availability notes during fall camp can reshuffle the two-deep faster than spring evaluations suggested — Roster Analysis refreshes when verified roster signals land.`
+  ];
+}
+
+function buildRosterAnalysisArticle(ctx) {
+  const overview = synthesizeRosterOverview(ctx);
+  const trends = synthesizeRosterTrends(ctx);
+  const analysis = synthesizeRosterAnalysis(ctx);
+  const whatsNext = synthesizeRosterWhatsNext(ctx);
+  if (!overview || !trends || !analysis || !whatsNext) return null;
+  return [
+    templates.section('Overview', overview),
+    templates.section('Trends', trends),
+    templates.section('Analysis', analysis),
+    templates.section("What's Next", whatsNext)
+  ].join('\n');
+}
+
+function synthesizeDepthOverview(ctx) {
+  const season = ctx.season;
+  const d = ctx.depth;
+  if (!d?.rosterCount) return null;
+  return [
+    `Depth Chart Movement for Florida's ${season} team: ${d.rosterCount} rostered players tracked (${d.offense || '—'} offense · ${d.defense || '—'} defense). This piece maps two-deep shifts — not recruiting board changes.`,
+    `Coaches prioritize known quantities early; camp and summer workouts decide third and fourth rotation pieces at WR, EDGE, and in the secondary.`,
+    `Chart movement before fall camp is the earliest read on who travels, who redshirts, and which packages the coordinators trust in SEC games.`
+  ];
+}
+
+function synthesizeDepthTrends(ctx) {
+  const trends = [];
+  const season = ctx.season;
+  trends.push(
+    `WR, EDGE, and secondary depth tend to show the fastest summer movement when young players earn consistent rep reports.`
+  );
+  if (ctx.depth?.meta?.updatedAt) {
+    trends.push(`Chart metadata last updated ${new Date(ctx.depth.meta.updatedAt).toLocaleDateString()}.`);
+  } else {
+    trends.push(`Awaiting next automated depth refresh from GatorVault roster integration.`);
+  }
+  if (ctx.unitSnap?.top?.length) {
+    const unitLine = ctx.unitSnap.top.map(([g, n]) => `${g} (${n})`).join(', ');
+    trends.push(`Current roster weight: ${esc(unitLine)} — rotation depth follows scholarship count at each group.`);
+  }
+  return trends.length ? trends : null;
+}
+
+function synthesizeDepthAnalysis(ctx) {
+  const season = ctx.season;
+  return [
+    `Depth-chart shifts before fall camp often preview offensive personnel groupings and defensive rotation patterns for ${season}. Third-down packages and nickel usage follow from who wins summer reps.`,
+    `Florida evaluates immediate SEC readiness separately from redshirt paths — the two-deep at OL and EDGE usually determines whether the staff can rotate or must ride starters deep into the schedule.`,
+    `Special teams and situational packages also pull from the same depth pool: returners, gunners, and long-snappers often emerge from players fighting for fourth rotation spots on offense or defense.`,
+    `When chart metadata refreshes, watch for movement at WR and CB — those rooms typically produce the most summer shuffling before coaches lock the travel list.`
+  ];
+}
+
+function synthesizeDepthWhatsNext(ctx) {
+  return [
+    `Watch for post-camp depth updates in GV-OM. Roster Analysis complements this piece with unit-wide context.`,
+    `Game-week previews activate when the ${ctx.season} schedule enters its next opponent window.`,
+    `Rep-share signals from summer workouts will refine who projects as situational packages vs every-down contributors.`,
+    `Fall camp is the final checkpoint before the two-deep hardens — Depth Chart Movement updates when verified rep-share or chart data lands, not from placeholder projections.`
+  ];
+}
+
+function buildDepthChartMovementArticle(ctx) {
+  const overview = synthesizeDepthOverview(ctx);
+  const trends = synthesizeDepthTrends(ctx);
+  const analysis = synthesizeDepthAnalysis(ctx);
+  const whatsNext = synthesizeDepthWhatsNext(ctx);
+  if (!overview || !trends || !analysis || !whatsNext) return null;
+  return [
+    templates.section('Overview', overview),
+    templates.section('Trends', trends),
+    templates.section('Analysis', analysis),
+    templates.section("What's Next", whatsNext)
+  ].join('\n');
+}
+
+function synthesizeSummerOverview(ctx) {
+  const season = ctx.season;
+  const r = ctx.roster;
+  if (!r?.players?.length) return null;
+  return [
+    `Summer Preview: ${season} camp battles to watch across Florida's two-deep. Workouts running now set the table for fall camp — this piece covers team personnel only.`,
+    `Recruiting visits and ${cycle.RECRUITING_MIN_CLASS} board movement are excluded. Focus is on returning and portal-added ${season} Gators competing for reps.`,
+    `Summer winners often earn situational packages before media day — especially at WR, EDGE, and nickel where rotation depth affects tempo and personnel grouping.`
+  ];
+}
+
+function synthesizeSummerTrends(ctx) {
+  const trends = [];
+  trends.push(`Receiver, EDGE, and nickel rooms historically produce the most summer movement on Florida's roster.`);
+  if (ctx.depth?.meta?.updatedAt) {
+    trends.push(
+      `Last depth-chart refresh: ${new Date(ctx.depth.meta.updatedAt).toLocaleDateString()}. Expect updates after fall camp opens.`
+    );
+  } else {
+    trends.push(`Depth data will refresh as coaches finalize rotation preferences.`);
+  }
+  if (ctx.roster?.offense?.length) {
+    trends.push(
+      `${ctx.roster.offense.length} offensive pieces vs ${ctx.roster.defense?.length || '—'} defensive — summer rep share at skill positions often previews fall packages.`
+    );
+  }
+  return trends.length ? trends : null;
+}
+
+function synthesizeSummerAnalysis(ctx) {
+  const season = ctx.season;
+  return [
+    `Camp battles are about rep share, not headlines. Players who stack consistent summer reports tend to earn situational packages early in ${season}.`,
+    `Portal additions and retention decisions shape which rooms are open vs locked. Florida cannot afford to misread thin spots at OL, EDGE, or CB before the SEC grind begins.`,
+    `Summer also exposes special-teams value: returners and core special-teamers often win jobs during workouts when coaches evaluate effort, consistency, and assignment discipline away from the spotlight.`,
+    `The ${season} two-deep is not final until fall camp ends, but summer winners frequently carry leverage into August — especially at skill positions where rotation depth affects tempo and personnel grouping.`
+  ];
+}
+
+function synthesizeSummerWhatsNext(ctx) {
+  return [
+    `Fall camp reports will supersede summer projections. GatorVault generates updated depth and roster pieces when verified signals arrive.`,
+    `Depth Chart Movement drafts follow rep-share and chart refreshes — not placeholder projections.`,
+    `Media day and pre-season availability notes can accelerate or delay camp winners — Summer Preview refreshes when substantive team-level intel lands.`,
+    `Program Pulse covers portal and roster headlines separately; this column stays focused on on-field camp battles for the ${cycle.programSeasonYear()} team.`
+  ];
+}
+
+function buildSummerPreviewArticle(ctx) {
+  const overview = synthesizeSummerOverview(ctx);
+  const trends = synthesizeSummerTrends(ctx);
+  const analysis = synthesizeSummerAnalysis(ctx);
+  const whatsNext = synthesizeSummerWhatsNext(ctx);
+  if (!overview || !trends || !analysis || !whatsNext) return null;
+  return [
+    templates.section('Overview', overview),
+    templates.section('Trends', trends),
+    templates.section('Analysis', analysis),
+    templates.section("What's Next", whatsNext)
+  ].join('\n');
+}
+
+function synthesizeGameOverview(ctx) {
+  const season = ctx.season;
+  const g = ctx.game;
+  if (!g?.game && !g?.opponent) return null;
+  const opp = esc(String(g.opponent || g.game || 'next opponent').replace(/^Florida vs\s*/i, ''));
+  return [
+    `Game Week Preview: Florida vs ${opp} (${season} season). Lines and schedule context from GatorVault Game Zone — recruiting coverage is excluded.`,
+    `This preview focuses on the ${season} team matchup: health at quarterback, trench play, and explosive skill talent typically define Florida's advantage paths.`,
+    `Florida's staff evaluates opponent tendencies, availability, and market context together — the spread is a reference point, not the game plan.`
+  ];
+}
+
+function synthesizeGameTrends(ctx) {
+  const g = ctx.game;
+  const trends = [];
+  if (g?.date) trends.push(`Kickoff window: ${esc(g.date)}.`);
+  if (g?.spread) trends.push(`Market line: ${esc(g.spread)}.`);
+  if (g?.total) trends.push(`Total: ${esc(g.total)}.`);
+  if (g?.opponent || g?.game) {
+    trends.push(`Opponent: ${esc(g.opponent || g.game)} on the ${ctx.season} schedule.`);
+  }
+  trends.push(
+    `Florida's ${ctx.season} roster health at quarterback and offensive line will weigh heavier than any single matchup metric heading into kickoff.`
+  );
+  return trends.length ? trends : null;
+}
+
+function synthesizeGameAnalysis(ctx) {
+  const opp = esc(ctx.game?.opponent || ctx.game?.game || 'this opponent');
+  return [
+    `Florida's game plan against ${opp} runs through trench play and explosive skill talent. Verify injury and portal availability before kickoff — late roster changes shift matchup edges.`,
+    `Opponent-specific tendencies will post in Film Room integrations when available. The staff typically stresses red-zone efficiency and third-down conversion against comparable SEC competition.`,
+    `Market lines reflect public perception, not Florida's internal evaluation — the staff cares more about health at quarterback, offensive line continuity, and edge pressure than preseason narrative.`,
+    `Special teams and field position often decide close SEC games; Florida's coverage units and return game can swing a tight spread if the offense stalls in the red zone.`
+  ];
+}
+
+function synthesizeGameWhatsNext(ctx) {
+  const opp = esc(ctx.game?.opponent || ctx.game?.game || 'this opponent');
+  return [
+    `Post-game Program Pulse will summarize roster usage and injury notes after the final whistle.`,
+    `Next opponent preview generates when Game Zone updates the schedule edge.`,
+    `Availability notes from the training staff can move the line — watch Game Zone for late-week updates before ${opp}.`,
+    `In-game adjustments at quarterback and on the defensive front usually determine whether Florida covers or controls the tempo against ${opp}.`,
+    `Turnover margin and red-zone efficiency remain the clearest in-game indicators for this matchup window.`
+  ];
+}
+
+function buildGamePreviewArticle(ctx) {
+  const overview = synthesizeGameOverview(ctx);
+  const trends = synthesizeGameTrends(ctx);
+  const analysis = synthesizeGameAnalysis(ctx);
+  const whatsNext = synthesizeGameWhatsNext(ctx);
+  if (!overview || !trends || !analysis || !whatsNext) return null;
+  return [
+    templates.section('Overview', overview),
+    templates.section('Trends', trends),
+    templates.section('Analysis', analysis),
+    templates.section("What's Next", whatsNext)
+  ].join('\n');
+}
+
+function synthesizeStaffOverview(ctx) {
+  const season = ctx.season;
+  const r = ctx.roster;
+  if (!r?.players?.length) return null;
+  return [
+    `Staff Intel: ${season} Florida Gators program evaluation — scheme, roster usage, and summer development priorities from verified GatorVault tracking.`,
+    `No recruiting class content appears here. Staff evaluations reference the ${season} team forward, not ${cycle.RECRUITING_MIN_CLASS}+ signing-day rankings.`
+  ];
+}
+
+function synthesizeStaffTrends(ctx) {
+  const r = ctx.roster;
+  const trends = [
+    `Coordinator tendencies from spring carry into summer: personnel grouping at WR, pressure packages on defense, and special-teams emphasis.`,
+    `Roster count (${r.players.length}) gives the staff flexibility to rep multiple packages without exposing thin rooms in August.`
+  ];
+  if (ctx.depth?.rosterCount) {
+    trends.push(
+      `Depth integration shows ${ctx.depth.offense || '—'} offensive and ${ctx.depth.defense || '—'} defensive pieces competing for rotation slots.`
+    );
+  }
+  return trends;
+}
+
+function synthesizeStaffAnalysis(ctx) {
+  const season = ctx.season;
+  return [
+    `Staff evaluations at this stage focus on who can help win ${season} games — not signing-day rankings. Portal additions and retention decisions shape the board the coordinators actually deploy.`,
+    `Scheme fit for returning production matters: players who project into Billy Napier's personnel packages without a development year get rep priority in summer and fall camp.`,
+    `Defensive pressure packages and offensive personnel groupings from spring carry forward — summer is when the staff tests whether those packages hold against live reps and full-speed tempo.`,
+    `Coordinator tendencies at WR, EDGE, and nickel will show up first in fall camp reports; Staff Intel refreshes when verified scheme or role-reporting signals land.`
+  ];
+}
+
+function synthesizeStaffWhatsNext(ctx) {
+  return [
+    `Fall camp is the next major evaluation checkpoint. Program Pulse will cover portal and roster updates separately.`,
+    `Recruiting-specific staff activity belongs in Heat Check and visit previews (${cycle.RECRUITING_MIN_CLASS}+ only).`,
+    `Watch for verified scheme or role-reporting signals before media day — Staff Intel updates when substantive team-level intel lands.`,
+    `Game-week previews activate when Game Zone confirms lines and Florida releases availability notes from the training staff.`
+  ];
+}
+
+function buildStaffIntelArticle(ctx) {
+  const overview = synthesizeStaffOverview(ctx);
+  const trends = synthesizeStaffTrends(ctx);
+  const analysis = synthesizeStaffAnalysis(ctx);
+  const whatsNext = synthesizeStaffWhatsNext(ctx);
+  if (!overview || !trends || !analysis || !whatsNext) return null;
+  return [
+    templates.section('Overview', overview),
+    templates.section('Trends', trends),
+    templates.section('Analysis', analysis),
+    templates.section("What's Next", whatsNext)
+  ].join('\n');
+}
+
+const PROGRAM_BUILDERS = {
+  program_pulse: buildProgramPulseArticle,
+  roster_analysis: buildRosterAnalysisArticle,
+  summer_preview: buildSummerPreviewArticle,
+  depth_chart_movement: buildDepthChartMovementArticle,
+  game_week_preview: buildGamePreviewArticle,
+  staff_intel: buildStaffIntelArticle
+};
+
 function buildEditorialBody(topic, signals) {
-  let ctx;
   if (cycle.isRecruitingCategory(topic.category)) {
-    ctx = assembleRecruitingContext(topic, signals);
+    const ctx = assembleRecruitingContext(topic, signals);
     if (!hasMinimumIntel(ctx, topic.category)) return null;
     return buildRecruitingArticle(ctx);
   }
-  ctx = assembleProgramContext(topic, signals);
+  if (!cycle.isProgramCategory(topic.category)) return null;
+  const ctx = assembleProgramContext(topic, signals);
   if (!hasMinimumIntel(ctx, topic.category)) return null;
-  return buildProgramArticle(ctx);
+  const builder = PROGRAM_BUILDERS[topic.category];
+  if (!builder) return null;
+  return builder(ctx);
+}
+
+function generateDraftForTopic(topic, signals) {
+  if (!topic?.topicKey || !topic?.category) return null;
+  return buildEditorialDraft(topic, signals);
 }
 
 function buildEditorialDraft(topic, signals) {
@@ -647,5 +1015,12 @@ module.exports = {
   hasMinimumIntel,
   buildEditorialBody,
   buildEditorialDraft,
+  generateDraftForTopic,
+  buildProgramPulseArticle,
+  buildRosterAnalysisArticle,
+  buildSummerPreviewArticle,
+  buildDepthChartMovementArticle,
+  buildGamePreviewArticle,
+  buildStaffIntelArticle,
   countBundleFacts
 };

@@ -67,8 +67,12 @@ function validateDraftQuality(draft) {
 
 function buildArticleDraft(topic, signals) {
   const editorial = require('./insider-articles-editorial');
-  if (!signals) return null;
-  return editorial.buildEditorialDraft(topic, signals);
+  if (!signals || !topic?.topicKey) return null;
+  return editorial.generateDraftForTopic(topic, signals);
+}
+
+function generateDraftForTopic(topic, signals) {
+  return buildArticleDraft(topic, signals);
 }
 
 module.exports = {
@@ -78,5 +82,6 @@ module.exports = {
   section,
   playerLine,
   validateDraftQuality,
-  buildArticleDraft
+  buildArticleDraft,
+  generateDraftForTopic
 };

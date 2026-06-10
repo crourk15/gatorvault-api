@@ -382,7 +382,11 @@ function buildCandidateTopics(signals) {
 }
 
 function writeDraftFromTopic(topic, signals) {
-  const draft = templates.buildArticleDraft(topic, signals);
+  if (!topic?.topicKey || !topic?.category) {
+    console.warn('[insider-articles] draft skipped — missing topicKey or category');
+    return null;
+  }
+  const draft = templates.generateDraftForTopic(topic, signals);
   if (!draft) return null;
 
   const meta = store.CATEGORIES[draft.category] || store.CATEGORIES.program_pulse;
