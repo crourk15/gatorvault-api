@@ -978,6 +978,14 @@ app.listen(PORT, () => {
         }
       })
       .catch((err) => console.warn('[recruiting-alerts] Brewster purge skipped:', err.message));
+    const { runPurgeInvalidHeadlines } = require('./lib/recruiting-public-alerts');
+    runPurgeInvalidHeadlines({ refresh: true })
+      .then((r) => {
+        if (r.before?.invalidHeadlines || r.feedResult?.removed) {
+          console.log('[headlines] purged invalid/stale headlines:', r.before, '→', r.after, 'removed', r.feedResult?.removed);
+        }
+      })
+      .catch((err) => console.warn('[headlines] purge skipped:', err.message));
   } catch (e) {
     console.warn('Recruiting API: failed to init', e.message);
   }

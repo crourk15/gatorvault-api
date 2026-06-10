@@ -26,7 +26,7 @@ function mountLiveRoutes(app) {
 
   app.get('/api/live/feed', (req, res) => {
     try {
-      const feed = gm2.filterPublicLiveFeed(
+      const feed = gm2.filterPublicHeadlines(
         liveStore.getFeedItems({
           limit: parseInt(req.query.limit || '50', 10),
           since: req.query.since,
@@ -121,6 +121,19 @@ function mountLiveRoutes(app) {
       return res.json({ ok: true, item });
     } catch (err) {
       return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/live/admin/purge-headlines', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const { runPurgeInvalidHeadlines } = require('./recruiting-public-alerts');
+      const result = await runPurgeInvalidHeadlines({ refresh: req.body?.refresh !== false });
+      return res.json({ ok: true, ...result, dashboard: getDashboard() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
     }
   });
 

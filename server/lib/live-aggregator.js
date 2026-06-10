@@ -11,6 +11,7 @@ const {
   isPublicIntelItem,
   isBrewsterFalseFeedItem,
   isMisclassifiedExternalCommitVisit,
+  isInvalidHeadlineFeedItem,
   filterPublicLiveFeed: legacyFilterPublicLiveFeed
 } = require('./recruiting-public-alerts');
 const gm2 = require('./gm2');
@@ -226,6 +227,7 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
       results.feedPurged = await purgeNonPlayerIntelFromLiveFeed();
       liveStore.removeFeedItemsMatching(
         (item) =>
+          isInvalidHeadlineFeedItem(item) ||
           isBrewsterFalseFeedItem(item) ||
           isMisclassifiedExternalCommitVisit({
             title: item.title,
@@ -266,7 +268,7 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
 
 function getDashboard({ feedLimit = 60 } = {}) {
   return {
-    feed: gm2.filterPublicLiveFeed(liveStore.getFeedItems({ limit: feedLimit, categoriesOnly: true })),
+    feed: gm2.filterPublicHeadlines(liveStore.getFeedItems({ limit: feedLimit, categoriesOnly: true })),
     beat: getBeatPosts(40),
     podcasts: getPodcastHub(),
     updatedAt: liveStore.nowIso()

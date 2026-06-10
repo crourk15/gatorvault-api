@@ -139,6 +139,11 @@ function filterPublicLiveFeed(items) {
   return rulesEngine.filterForFeature(GM2_FEATURES.LIVE_FEED, base);
 }
 
+function filterPublicHeadlines(items) {
+  const base = publicAlerts.filterPublicLiveFeed(items || []);
+  return rulesEngine.filterForFeature(GM2_FEATURES.HEADLINES, base);
+}
+
 function filterBoardPlayers(players) {
   return rulesEngine.filterForFeature(GM2_FEATURES.BOARD, players || []);
 }
@@ -209,6 +214,7 @@ module.exports = {
   filterPublicEvents,
   filterPublicIntel,
   filterPublicLiveFeed,
+  filterPublicHeadlines,
   filterBoardPlayers,
   filterPortalPlayers,
   filterHeatCheckRising,

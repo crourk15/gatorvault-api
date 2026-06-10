@@ -35,8 +35,13 @@ function rulesForIntel(record) {
 
 function rulesForLiveFeedItem(item) {
   if (isQuarantined({ playerSlug: item?.meta?.playerSlug })) return { allow: false, reason: 'player_quarantined' };
+  if (publicAlerts.isInvalidHeadlineFeedItem(item)) return { allow: false, reason: 'invalid_headline' };
   if (!publicAlerts.isPublicLiveFeedItem(item)) return { allow: false, reason: 'not_public_feed_item' };
   return { allow: true };
+}
+
+function rulesForHeadlines(item) {
+  return rulesForLiveFeedItem(item);
 }
 
 function rulesForHeatCheckPlayer(player, intelRows = []) {
@@ -111,6 +116,7 @@ const FEATURE_RULES = {
   [GM2_FEATURES.RECRUITING_ALERTS]: rulesForRecruitingAlerts,
   [GM2_FEATURES.MY_ALERTS]: rulesForRecruitingAlerts,
   [GM2_FEATURES.LIVE_FEED]: rulesForLiveFeedItem,
+  [GM2_FEATURES.HEADLINES]: rulesForHeadlines,
   [GM2_FEATURES.HEAT_CHECK]: rulesForHeatCheckPlayer,
   [GM2_FEATURES.AUTOPOSTER]: rulesForAutoposter,
   [GM2_FEATURES.PLAYER_PAGE]: rulesForPlayerPage,
@@ -154,7 +160,7 @@ function runRulesEngine(feature, record, context = {}) {
 
 function filterForFeature(feature, items, context = {}) {
   if (!Array.isArray(items)) return [];
-  if (feature === GM2_FEATURES.LIVE_FEED) {
+  if (feature === GM2_FEATURES.LIVE_FEED || feature === GM2_FEATURES.HEADLINES) {
     return items.filter((item) => runRulesEngine(feature, item).allow);
   }
   if (feature === GM2_FEATURES.RECRUITING_ALERTS || feature === GM2_FEATURES.MY_ALERTS) {

@@ -2974,7 +2974,7 @@
     ];
     var playerProfiles=[];
     var recentAlerts=[];
-    var GV_ALERTS_FEED_VERSION=10;
+    var GV_ALERTS_FEED_VERSION=11;
     var GV_COMMIT_MIN_CLASS=2027;
     var GV_PORTAL_MIN_CLASS=2027;
     var GV_ALERT_CATEGORY_KEYS=['commit','portal','visit','offer','prediction','trending','info','article','score','thread','breaking','scouting'];
@@ -4576,6 +4576,16 @@
         if(gvIsBrewsterFalseAlert({playerSlug:slug,title:title,detail:summary,type:item.type,_eventType:et}))return true;
         if((et==='commit'||et==='flip'||item.type==='commit')&&/\b(?:taking|take|takes)\s+(?:an?\s+)?official visit\b/i.test(text))return true;
         if((item.type==='commit'||et==='commit')&&slug==='jalen-brewster')return true;
+        if(slug==='davin-davidson'&&(et==='decommit'||/\bdecommit/.test(text)))return true;
+        if((item.type==='portal'||et==='portal_in'||et==='portal_out')&&(slug.indexOf('brewster')>=0||/\bjalen\s+brewster\b/.test(text)))return true;
+        if(item.type==='portal'||et==='portal_in'||et==='portal_out'){
+            var player=item.meta&&item.meta.player;
+            if(player){
+                var cat=String(player.category||'').toLowerCase();
+                if(cat==='recruit'||cat==='target'||cat==='commit')return true;
+            }
+            if(slug.indexOf('brewster')>=0)return true;
+        }
         return false;
     }
     function gvIsInternalRecruitEvent(ev){
@@ -5851,7 +5861,10 @@
     }
 
     function gvRankHeadlines(feed){
-        return (feed||[]).filter(gvIsCuratedHeadline).slice().sort(function(a,b){
+        return (feed||[]).filter(function(item){
+            if(gvIsFalseLiveFeedItem(item))return false;
+            return gvIsCuratedHeadline(item);
+        }).slice().sort(function(a,b){
             var pa=gvHeadlinePriority(a),pb=gvHeadlinePriority(b);
             if(pa!==pb)return pa-pb;
             return new Date(b.createdAt||0)-new Date(a.createdAt||0);

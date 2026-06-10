@@ -23,6 +23,7 @@ const INTERNAL_EVENT_SOURCES = new Set([
 ]);
 
 const BREWSTER_SLUGS = new Set(['jalen-brewster', 'brewster-jalen']);
+const DAVIN_DAVIDSON_SLUGS = new Set(['davin-davidson']);
 
 function normalizeSlug(slug) {
   return String(slug || '')
@@ -43,6 +44,58 @@ function isBrewsterIdentity({ playerSlug, playerName, title, detail, text } = {}
   if (nameKey.includes('jalenbrewster') || nameKey === 'brewster') return true;
   const blob = `${title || ''} ${detail || ''} ${text || ''}`.toLowerCase();
   return /\bjalen\s+brewster\b/.test(blob) || /\bbrewster\b/.test(blob);
+}
+
+function isDavinDavidsonIdentity({ playerSlug, playerName, title, detail, text, summary } = {}) {
+  const slug = normalizeSlug(playerSlug);
+  if (DAVIN_DAVIDSON_SLUGS.has(slug)) return true;
+  const nameKey = normalizeNameKey(playerName || title);
+  if (nameKey.includes('davindavidson')) return true;
+  const blob = `${title || ''} ${detail || ''} ${text || ''} ${summary || ''}`.toLowerCase();
+  return /\bdavin\s+davidson\b/.test(blob);
+}
+
+function isFalseDavidsonDecommit(record) {
+  if (!isDavinDavidsonIdentity(record)) return false;
+  const et = String(record.eventType || record.type || '').toLowerCase();
+  const blob = `${record.title || ''} ${record.detail || ''} ${record.summary || ''} ${record.text || ''}`.toLowerCase();
+  return et === 'decommit' || /\bdecommit/.test(blob);
+}
+
+function isInvalidHsRecruitPortalHeadline(item) {
+  const slug = normalizeSlug(item?.meta?.playerSlug);
+  const et = String(item?.meta?.eventType || item?.type || '').toLowerCase();
+  const isPortal =
+    et === 'portal_in' || et === 'portal_out' || String(item?.type || '').toLowerCase() === 'portal';
+  if (!isPortal) return false;
+
+  if (isBrewsterIdentity({ playerSlug: slug, title: item?.title, summary: item?.summary })) return true;
+
+  const player = item?.meta?.player;
+  if (!player) return slug.includes('brewster');
+  const cat = String(player.category || '').toLowerCase();
+  if (cat === 'portal') return false;
+  if (['recruit', 'target', 'commit'].includes(cat)) return true;
+  const classYear = parseInt(player.classYear, 10);
+  return Number.isFinite(classYear) && classYear >= 2026 && classYear <= 2032;
+}
+
+function isInvalidHeadlineFeedItem(item) {
+  if (!item) return true;
+  if (isBrewsterFalseFeedItem(item)) return true;
+  if (
+    isFalseDavidsonDecommit({
+      playerSlug: item.meta?.playerSlug,
+      title: item.title,
+      summary: item.summary,
+      eventType: item.meta?.eventType || item.type,
+      type: item.type
+    })
+  ) {
+    return true;
+  }
+  if (isInvalidHsRecruitPortalHeadline(item)) return true;
+  return false;
 }
 
 function isBrewsterFalseCommit(record) {
@@ -96,9 +149,12 @@ function eventIdentityConfirmed(event) {
 function isPublicRecruitingEvent(event) {
   if (!event || !event.eventType) return false;
   if (isBrewsterFalseCommit(event)) return false;
+  if (isFalseDavidsonDecommit(event)) return false;
 
   const source = String(event.source || '').toLowerCase();
   const et = String(event.eventType).toLowerCase();
+
+  if (isBrewsterIdentity(event) && (et === 'portal_in' || et === 'portal_out')) return false;
 
   if (isInternalEventSource(source)) return false;
 
@@ -185,6 +241,7 @@ function isBrewsterFalseFeedItem(item) {
 
 function isPublicLiveFeedItem(item) {
   if (!item) return false;
+  if (isInvalidHeadlineFeedItem(item)) return false;
   if (isBrewsterFalseFeedItem(item)) return false;
   const titleSummary = `${item.title || ''} ${item.summary || ''}`;
   if (
@@ -319,9 +376,67 @@ async function runPurgeFalseBrewsterIntel(options = {}) {
   };
 }
 
+function isStalePreGm2HeadlineEvent(event) {
+  if (!event) return false;
+  if (isBrewsterFalseCommit(event)) return true;
+  if (isFalseDavidsonDecommit(event)) return true;
+  if (isMisclassifiedExternalCommitVisit(event)) return true;
+  const et = String(event.eventType || '').toLowerCase();
+  const slug = normalizeSlug(event.playerSlug);
+  if (slug.includes('brewster') && (et === 'portal_in' || et === 'portal_out')) return true;
+  try {
+    const decommitValidator = require('./decommit-validator');
+    if (et === 'decommit' && decommitValidator.isFalseInferredDecommitEvent(event)) return true;
+  } catch {
+    /* optional */
+  }
+  return false;
+}
+
+async function runPurgeInvalidHeadlines(options = {}) {
+  const intelStore = require('./recruiting-intel-store');
+  const beforeFeed = liveStore.getFeedItems({ limit: 5000, categoriesOnly: false }).filter(isInvalidHeadlineFeedItem).length;
+
+  const feedResult = liveStore.removeFeedItemsMatching(isInvalidHeadlineFeedItem);
+  const eventResult = await store.deleteEventsMatching(isStalePreGm2HeadlineEvent);
+  const intelResult = intelStore.removeIntelMatching(
+    (i) =>
+      isBrewsterFalseCommit(i) ||
+      isFalseDavidsonDecommit(i) ||
+      isMisclassifiedExternalCommitVisit(i) ||
+      (normalizeSlug(i.playerSlug).includes('brewster') &&
+        /portal/.test(String(i.eventType || '').toLowerCase()))
+  );
+
+  let refreshed = null;
+  if (options.refresh !== false) {
+    try {
+      const { refreshLiveDashboard } = require('./live-aggregator');
+      refreshed = await refreshLiveDashboard({ beat: false, podcasts: false, recruiting: true });
+    } catch (e) {
+      refreshed = { error: e.message };
+    }
+  }
+
+  const afterFeed = liveStore.getFeedItems({ limit: 5000, categoriesOnly: false }).filter(isInvalidHeadlineFeedItem).length;
+
+  return {
+    before: { invalidHeadlines: beforeFeed },
+    feedResult,
+    eventResult,
+    intelResult,
+    refreshed,
+    after: { invalidHeadlines: afterFeed },
+    clean: afterFeed === 0
+  };
+}
+
 module.exports = {
   isBrewsterFalseCommit,
   isBrewsterFalseFeedItem,
+  isFalseDavidsonDecommit,
+  isInvalidHsRecruitPortalHeadline,
+  isInvalidHeadlineFeedItem,
   isMisclassifiedExternalCommitVisit,
   isPublicLiveFeedItem,
   filterPublicLiveFeed,
@@ -329,5 +444,7 @@ module.exports = {
   isPublicIntelItem,
   filterPublicEvents,
   runPurgeFalseBrewsterIntel,
+  runPurgeInvalidHeadlines,
+  isStalePreGm2HeadlineEvent,
   countBrewsterFalseIntel
 };

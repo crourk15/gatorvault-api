@@ -89,6 +89,45 @@ assert(
   })()
 );
 
+assert(
+  'blocks false Davin Davidson decommit headline',
+  publicAlerts.isInvalidHeadlineFeedItem({
+    type: 'commit',
+    title: 'Davin Davidson — Decommitted',
+    summary: 'QB Davin Davidson has decommitted from Florida.',
+    meta: { playerSlug: 'davin-davidson', eventType: 'decommit', source: 'on3' }
+  })
+);
+
+assert(
+  'blocks Brewster portal headline for HS recruit',
+  publicAlerts.isInvalidHeadlineFeedItem({
+    type: 'portal',
+    title: 'Jalen Brewster — Portal Entry',
+    summary: 'Five-star DL enters the transfer portal.',
+    meta: {
+      playerSlug: 'jalen-brewster',
+      eventType: 'portal_in',
+      player: { slug: 'jalen-brewster', name: 'Jalen Brewster', category: 'target', classYear: 2027 }
+    }
+  })
+);
+
+assert(
+  'allows Davin Davidson commit headline',
+  !publicAlerts.isInvalidHeadlineFeedItem({
+    type: 'commit',
+    title: 'Davin Davidson commits to Florida',
+    summary: '4-star QB Davin Davidson commits to Florida.',
+    meta: {
+      playerSlug: 'davin-davidson',
+      eventType: 'commit',
+      source: 'on3',
+      player: { slug: 'davin-davidson', category: 'recruit', classYear: 2027, committedTo: 'Florida' }
+    }
+  })
+);
+
 if (process.exitCode) {
   console.error('\nPublic recruiting alerts tests failed.');
 } else {

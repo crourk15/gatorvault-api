@@ -11,6 +11,7 @@ const GM2_FEATURES = Object.freeze({
   PLAYER_PAGE: 'player_page',
   BOARD: 'board',
   LIVE_FEED: 'live_feed',
+  HEADLINES: 'headlines',
   MY_ALERTS: 'my_alerts'
 });
 
