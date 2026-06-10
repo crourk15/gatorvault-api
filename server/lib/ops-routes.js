@@ -1,0 +1,142 @@
+const path = require('path');
+const opsMonitor = require('./ops-monitor');
+const opsJobs = require('./ops-jobs');
+const opsAlerts = require('./ops-alerts');
+const deployMonitor = require('./deploy-monitor');
+const { buildOpsStatusReport } = require('./ops-status');
+
+const ADMIN_PIN =
+  process.env.OPS_ADMIN_PIN ||
+  process.env.RECRUITING_ADMIN_PIN ||
+  process.env.EMAIL_TEST_PIN ||
+  'GV2026admin';
+const CRON_SECRET = process.env.INGEST_CRON_SECRET || ADMIN_PIN;
+
+function verifyAdminPin(pin) {
+  return !!pin && pin === ADMIN_PIN;
+}
+
+function pinFromReq(req) {
+  return (
+    req.headers['x-ops-pin'] ||
+    req.headers['x-monitoring-secret'] ||
+    req.headers['x-recruiting-pin'] ||
+    req.headers['x-ingest-secret'] ||
+    req.body?.pin ||
+    req.query?.pin
+  );
+}
+
+function requireOpsAuth(req, res) {
+  const secret = pinFromReq(req);
+  const isCron = req.headers['x-monitoring-cron'] === CRON_SECRET;
+  if (!isCron && !verifyAdminPin(secret)) {
+    res.status(401).json({ ok: false, error: 'Admin PIN required' });
+    return false;
+  }
+  return true;
+}
+
+function mountOpsRoutes(app) {
+  app.get('/admin/ops', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'admin-ops.html'));
+  });
+
+  app.get('/vault/ops', (req, res) => {
+    res.redirect(302, '/admin/ops');
+  });
+
+  app.get('/api/ops/status', async (req, res) => {
+    if (!requireOpsAuth(req, res)) return;
+    try {
+      const evaluateAlerts = req.query.evaluateAlerts === '1';
+      const report = await buildOpsStatusReport({ evaluateAlerts });
+      return res.json({ ok: true, ...report });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/ops/logs', (req, res) => {
+    if (!requireOpsAuth(req, res)) return;
+    try {
+      const data = opsMonitor.getLogs({
+        subsystem: req.query.subsystem || null,
+        limit: req.query.limit || 100,
+        since: req.query.since || null,
+        status: req.query.status || null
+      });
+      return res.json({ ok: true, ...data });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/ops/jobs', (req, res) => {
+    if (!requireOpsAuth(req, res)) return;
+    try {
+      const heartbeats = opsMonitor.getHeartbeats();
+      const jobs = opsJobs.listJobs().map((job) => ({
+        ...job,
+        heartbeat: heartbeats.subsystems[job.subsystem] || null
+      }));
+      return res.json({ ok: true, jobs });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/ops/run-job', async (req, res) => {
+    if (!requireOpsAuth(req, res)) return;
+    const jobId = req.body?.jobId;
+    if (!jobId) return res.status(400).json({ ok: false, error: 'jobId required' });
+    try {
+      const result = await opsJobs.runJob(jobId, req.body?.options || {});
+      return res.json({ ok: true, jobId, result });
+    } catch (err) {
+      if (err.code === 'UNKNOWN_JOB') {
+        return res.status(404).json({ ok: false, error: err.message });
+      }
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/ops/alerts', (req, res) => {
+    if (!requireOpsAuth(req, res)) return;
+    try {
+      const data = opsAlerts.listAlerts({ limit: req.query.limit || 50 });
+      return res.json({ ok: true, ...data });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/ops/deploy/record', (req, res) => {
+    if (!requireOpsAuth(req, res)) return;
+    try {
+      const component = req.body?.component || 'frontend';
+      let state;
+      if (component === 'api') state = deployMonitor.recordApiBoot();
+      else state = deployMonitor.recordFrontendDeploy(req.body || {});
+      return res.json({ ok: true, deploy: state });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/ops/log', (req, res) => {
+    const secret = pinFromReq(req);
+    const isCron = req.headers['x-monitoring-cron'] === CRON_SECRET;
+    if (!isCron && !verifyAdminPin(secret)) {
+      return res.status(401).json({ ok: false, error: 'Unauthorized' });
+    }
+    try {
+      const event = opsMonitor.logEvent(req.body || {});
+      return res.json({ ok: true, event });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+}
+
+module.exports = { mountOpsRoutes, verifyAdminPin, pinFromReq };

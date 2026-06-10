@@ -345,6 +345,21 @@ async function processBeatVisitIntelRow(row, snapshot) {
 
   if (!enrichment.confirmed) {
     snapshot.fingerprints[row.fingerprint] = row.timestamp;
+    try {
+      require('./ops-monitor').logEvent({
+        subsystem: 'autoposter:beat-writer',
+        status: 'skipped',
+        message: enrichment.reason || 'identity_not_confirmed',
+        details: {
+          playerName: player.name,
+          eventType: row.eventType,
+          stars: row.stars || player.stars,
+          source: row.source
+        }
+      });
+    } catch {
+      /* ops optional */
+    }
     return {
       skipped: true,
       reason: enrichment.reason || 'identity_not_confirmed',
@@ -395,6 +410,23 @@ async function processBeatVisitIntelRow(row, snapshot) {
     : { queued: false, reason: built.reason || 'copy_failed' };
 
   snapshot.fingerprints[row.fingerprint] = row.timestamp;
+
+  try {
+    require('./ops-monitor').logEvent({
+      subsystem: 'autoposter:beat-writer',
+      status: autopost.queued ? 'success' : 'skipped',
+      message: autopost.queued ? `Queued OV/visit post: ${player.name}` : autopost.reason || 'not_queued',
+      details: {
+        playerName: player.name,
+        eventType: row.eventType,
+        stars: row.stars || player.stars,
+        autopost,
+        identityConfirmed: true
+      }
+    });
+  } catch {
+    /* ops optional */
+  }
 
   return {
     processed: true,

@@ -163,7 +163,39 @@ function isBarePredictionLine(text) {
   return /^[A-Za-z .'-]{3,40} logged a florida (?:futurecast|prediction|rpm pick)(?:\s*\(\d{1,3}%\))?\.?$/i.test(t);
 }
 
-async function buildPredictionPost({
+async function buildPredictionPost(opts = {}) {
+  const result = await buildPredictionPostInner(opts);
+  try {
+    const ops = require('./ops-monitor');
+    const name = result.fields?.playerName || opts.playerName;
+    if (result.skipped) {
+      ops.logEvent({
+        subsystem: 'autoposter:predictions',
+        status: 'skipped',
+        message: result.reason || 'prediction_skipped',
+        details: {
+          playerName: name,
+          reason: result.reason,
+          stars: result.fields?.stars,
+          eventType: 'prediction',
+          missing: result.missing || result.missingAfter || null
+        }
+      });
+    } else if (result.ok) {
+      ops.logEvent({
+        subsystem: 'autoposter:predictions',
+        status: 'success',
+        message: `Prediction copy built: ${name}`,
+        details: { playerName: name, eventType: 'prediction' }
+      });
+    }
+  } catch {
+    /* ops optional */
+  }
+  return result;
+}
+
+async function buildPredictionPostInner({
   intel = null,
   row = null,
   playerSlug = null,

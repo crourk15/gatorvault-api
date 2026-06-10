@@ -18,6 +18,8 @@ const { mountMonitoringRoutes } = require('./lib/monitoring-routes');
 const { mountAdminRoutes } = require('./lib/admin-routes');
 const { mountFilmRoomKnowledgeRoutes } = require('./lib/film-room-knowledge-routes');
 const { mountNilRoutes } = require('./lib/nil-routes');
+const { mountOpsRoutes } = require('./lib/ops-routes');
+const { apiMonitorMiddleware } = require('./lib/api-monitor');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 
@@ -44,13 +46,14 @@ app.use((req, res, next) => {
   } else {
     res.header('Access-Control-Allow-Origin', '*');
   }
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin, X-Live-Pin, X-Live-Cron, X-War-Room-Pin, X-X-Autopost-Pin, X-X-Cron, X-Media-Ingest-Pin, X-Monitoring-Secret, X-Monitoring-Cron');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin, X-Live-Pin, X-Live-Cron, X-War-Room-Pin, X-X-Autopost-Pin, X-X-Cron, X-Media-Ingest-Pin, X-Monitoring-Secret, X-Monitoring-Cron, X-Ops-Pin');
   res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
 
 app.use(bodyParser.json({ limit: '1mb' }));
+app.use(apiMonitorMiddleware());
 
 app.get('/highlight/:slug', (req, res) => {
   res.sendFile(path.join(__dirname, 'highlight.html'));
@@ -71,6 +74,7 @@ mountMonitoringRoutes(app);
 mountAdminRoutes(app);
 mountFilmRoomKnowledgeRoutes(app);
 mountNilRoutes(app);
+mountOpsRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;
@@ -768,7 +772,9 @@ function startLiveDashboardScheduler() {
   const intervalMs = Math.max(60000, parseInt(process.env.LIVE_POLL_INTERVAL_MS || '180000', 10) || 180000); // default 3 min
   const bootDelay = Math.max(8000, parseInt(process.env.LIVE_POLL_BOOT_DELAY_MS || '20000', 10) || 20000);
   const tick = () => {
-    refreshLiveDashboard()
+    const opsMonitor = require('./lib/ops-monitor');
+    opsMonitor
+      .wrapJob('live-refresh', 'cron:live-refresh', () => refreshLiveDashboard())
       .then((result) => {
         const beatErr = result?.beat?.error;
         if (beatErr) console.warn('[live-dashboard] beat:', beatErr);
@@ -791,7 +797,9 @@ function startOn3IngestScheduler() {
   const bootDelay = Math.max(5000, parseInt(process.env.ON3_INGEST_BOOT_DELAY_MS || '15000', 10) || 15000);
 
   const tick = () => {
-    runOn3Ingest()
+    const opsMonitor = require('./lib/ops-monitor');
+    opsMonitor
+      .wrapJob('recruiting-ingest', 'cron:recruiting-ingest', () => runOn3Ingest())
       .then((r) => {
         if (r.fired && r.fired.length) {
           console.log('[on3-ingest] fired', r.fired.length, 'event(s)');
@@ -815,7 +823,9 @@ function startRivalsPmIngestScheduler() {
   const bootDelay = Math.max(10000, parseInt(process.env.RIVALS_PM_BOOT_DELAY_MS || '45000', 10) || 45000);
 
   const tick = () => {
-    runRivalsPredictionIngest()
+    const opsMonitor = require('./lib/ops-monitor');
+    opsMonitor
+      .wrapJob('rivals-pm-ingest', 'cron:rivals-pm-ingest', () => runRivalsPredictionIngest())
       .then((r) => {
         if (r.processedCount) {
           console.log('[rivals-pm] processed', r.processedCount, 'new prediction(s)');
@@ -840,7 +850,9 @@ function startMediaIngestScheduler() {
   const bootDelay = Math.max(10000, parseInt(process.env.MEDIA_INGEST_BOOT_DELAY_MS || '45000', 10) || 45000);
 
   const tick = () => {
-    runMediaIngest()
+    const opsMonitor = require('./lib/ops-monitor');
+    opsMonitor
+      .wrapJob('media-ingest', 'cron:media-ingest', () => runMediaIngest())
       .then((r) => {
         const n = r.process?.processed?.length || 0;
         const d = r.discover?.discovered?.length || 0;
@@ -929,7 +941,9 @@ app.listen(PORT, () => {
     const { syncPortalFromOn3 } = require('./lib/on3-ingest');
     const bootDelay = Math.max(5000, parseInt(process.env.ON3_PORTAL_SYNC_BOOT_DELAY_MS || '12000', 10) || 12000);
     setTimeout(() => {
-      syncPortalFromOn3()
+      const opsMonitor = require('./lib/ops-monitor');
+      opsMonitor
+        .wrapJob('portal-ingest', 'cron:portal-ingest', () => syncPortalFromOn3())
         .then((r) => console.log('[portal] On3 transfer sync:', r.count, 'players from', r.url))
         .catch((err) => console.warn('[portal] On3 transfer sync failed:', err.message));
     }, bootDelay);
@@ -946,12 +960,14 @@ app.listen(PORT, () => {
       const { rebuildFilmRoomCatalog } = require('./lib/film-room-feed');
       const filmInterval = parseInt(process.env.FILM_ROOM_SYNC_INTERVAL_MS || '21600000', 10);
       const runFilmSync = () => {
-        try {
-          const c = rebuildFilmRoomCatalog();
-          console.log('[film-room] knowledge engine refreshed:', c.counts);
-        } catch (err) {
-          console.warn('[film-room] knowledge refresh failed:', err.message);
-        }
+        const opsMonitor = require('./lib/ops-monitor');
+        opsMonitor
+          .wrapJob('film-room-weekly', 'cron:film-room-weekly', () => {
+            const c = rebuildFilmRoomCatalog();
+            return { ok: true, counts: c?.counts, processedCount: c?.counts?.total || null };
+          })
+          .then((c) => console.log('[film-room] knowledge engine refreshed:', c?.counts || c))
+          .catch((err) => console.warn('[film-room] knowledge refresh failed:', err.message));
       };
       setTimeout(runFilmSync, 20000);
       setInterval(runFilmSync, filmInterval);
@@ -964,5 +980,13 @@ app.listen(PORT, () => {
   } else {
     console.warn('Email delivery: NOT configured — welcome emails will not send from server.');
     console.warn('  Fix: copy server/.env.example to server/.env and set EmailJS or SMTP (see README).');
+  }
+  try {
+    const deployMonitor = require('./lib/deploy-monitor');
+    deployMonitor.recordApiBoot();
+    deployMonitor.recordFrontendDeploy();
+    console.log('[gv-om] Operations Manager initialized');
+  } catch (e) {
+    console.warn('[gv-om] init skipped', e.message);
   }
 });

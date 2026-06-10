@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-05T00:00:00.000Z",
+  "channels": {
+    "email": {
+      "enabled": true,
+      "envVar": "MONITORING_ALERT_EMAIL"
+    },
+    "discord": {
+      "enabled": true,
+      "envVar": "MONITORING_DISCORD_WEBHOOK"
+    }
+  },
+  "thresholds": {
+    "deployStaleDays": 7,
+    "jobFailureStreak": 3,
+    "recruitingBoardStaleHours": 24,
+    "portalTrackerStaleHours": 12,
+    "nilDashboardStaleDays": 7,
+    "depthChartStaleHours": 24,
+    "filmRoomStaleDays": 8,
+    "gameZoneStaleHours": 48,
+    "apiErrorRateWarning": 0.05,
+    "apiErrorRateCritical": 0.15,
+    "apiLatencyWarningMs": 800,
+    "apiLatencyCriticalMs": 2000,
+    "dbSlowQueryMs": 500
+  },
+  "severity": {
+    "subsystem_red": "error",
+    "deploy_mismatch": "warning",
+    "job_failure_streak": "error",
+    "data_stale": "warning",
+    "autoposter_missed_major": "error"
+  },
+  "majorEventTypes": ["commit", "official_visit", "decommit", "flip", "portal_entry"]
+}
