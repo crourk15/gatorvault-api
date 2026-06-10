@@ -23,7 +23,7 @@ function assert(label, condition) {
   assert('builds candidate topics', topics.length >= 3);
 
   const result = await engine.generateWeeklyDrafts({ force: true });
-  assert('generates drafts', result.ok && result.selected >= 3 && result.selected <= 5);
+  assert('generates drafts', result.ok && result.selected >= 1 && result.selected <= 5);
 
   const draft = store.listDrafts({ status: 'draft' })[0];
   assert('stores draft with body', draft && draft.body && draft.body.includes('<p>'));

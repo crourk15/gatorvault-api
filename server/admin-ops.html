@@ -467,7 +467,18 @@
     document.getElementById('mot-patterns-rebuild').addEventListener('click',rebuildPatterns);
 
     function insiderCategoryLabel(cat){
-      var map={summer_preview:'Summer Preview',depth_chart_movement:'Depth Chart',insider:'Insider',game_week_preview:'Game Preview',roster_analysis:'Roster Analysis'};
+      var map={
+        program_pulse:'Program Pulse',
+        heat_check:'Heat Check',
+        official_visit_preview:'OV Preview',
+        post_visit_reaction:'Post-Visit',
+        staff_intel:'Staff Intel',
+        summer_preview:'Summer Preview',
+        depth_chart_movement:'Depth Chart',
+        insider:'Insider',
+        game_week_preview:'Game Preview',
+        roster_analysis:'Roster Analysis'
+      };
       return map[cat]||cat||'—';
     }
     function insiderSourcesLabel(sources){

@@ -58,7 +58,7 @@ function mountInsiderArticlesRoutes(app) {
       if (!draft || draft.status !== 'draft') {
         return res.status(404).json({ ok: false, error: 'Draft not found' });
       }
-      const meta = store.CATEGORIES[draft.category] || store.CATEGORIES.insider;
+      const meta = store.CATEGORIES[draft.category] || store.CATEGORIES.program_pulse;
       return res.json({
         ok: true,
         draft: {
@@ -92,7 +92,7 @@ function mountInsiderArticlesRoutes(app) {
         readTimeMinutes: req.body.readTimeMinutes ?? req.body.readTime,
         byline: req.body.byline
       });
-      const meta = store.CATEGORIES[draft.category] || store.CATEGORIES.insider;
+      const meta = store.CATEGORIES[draft.category] || store.CATEGORIES.program_pulse;
       return res.json({
         ok: true,
         draft: {

@@ -10,6 +10,31 @@ const PUBLISHED_PATH = path.join(DATA_DIR, 'published.json');
 const LOGS_PATH = path.join(DATA_DIR, 'logs.json');
 
 const CATEGORIES = {
+  program_pulse: {
+    label: 'Program Pulse',
+    byline: 'GatorVault Staff',
+    badge: 'PROGRAM PULSE'
+  },
+  heat_check: {
+    label: 'Heat Check',
+    byline: 'Recruiting Desk',
+    badge: 'HEAT CHECK'
+  },
+  official_visit_preview: {
+    label: 'Official Visit Preview',
+    byline: 'Recruiting Desk',
+    badge: 'OV PREVIEW'
+  },
+  post_visit_reaction: {
+    label: 'Post-Visit Reaction',
+    byline: 'Recruiting Desk',
+    badge: 'POST-VISIT'
+  },
+  staff_intel: {
+    label: 'Staff Intel',
+    byline: 'GatorVault Staff',
+    badge: 'STAFF INTEL'
+  },
   summer_preview: {
     label: 'Summer Preview / Camp Battles',
     byline: 'GatorVault Staff',
@@ -62,7 +87,7 @@ function newId(prefix = 'insider') {
 
 function normalizeArticle(raw) {
   const category = raw.category || 'insider';
-  const meta = CATEGORIES[category] || CATEGORIES.insider;
+  const meta = CATEGORIES[category] || CATEGORIES.program_pulse;
   return {
     id: raw.id || newId(),
     title: raw.title || 'Untitled',
@@ -276,7 +301,7 @@ function retirePublished(id) {
 }
 
 function toPublicArticle(article) {
-  const meta = CATEGORIES[article.category] || CATEGORIES.insider;
+  const meta = CATEGORIES[article.category] || CATEGORIES.program_pulse;
   const date = article.publishedAt || article.createdAt;
   return {
     id: article.id,
