@@ -151,7 +151,7 @@ function isUsableExtractedName(name) {
 
 function extractVisitPlayerName(text) {
   const t = String(text || '');
-  const resolver = require('./contextual-identity-resolver');
+  const prefilter = require('./beat-intel-prefilter');
 
   const posNameRe = new RegExp(
     `\\b20\\d{2}\\s+(?:\\d+-[Ss]tar\\s+)?(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH|K|P)\\s+([A-Z][a-z'.-]+(?:\\s+[A-Z][a-z'.-]+){0,2})\\b`
@@ -166,35 +166,37 @@ function extractVisitPlayerName(text) {
     if (isUsableExtractedName(candidate)) return candidate;
   }
 
-  const clues = resolver.parseVagueClues(t);
-  return clues.firstName || clues.displayName || null;
-}
-
-function parseCollegeSchool(text) {
-  const resolver = require('./contextual-identity-resolver');
-  return resolver.parseVagueClues(text).school;
+  return prefilter.extractCleanFullName(t);
 }
 
 function parseBeatPostForVisitIntel(post) {
-  const resolver = require('./contextual-identity-resolver');
+  const prefilter = require('./beat-intel-prefilter');
   const text = String(post.text || '').trim();
   if (!text || !isVisitSchedulePost(text)) return null;
   if (!isVisitIngestWriter(post)) return null;
   if (!beatFilters.shouldIncludeBeatPost(post)) return null;
   if (!beatFilters.isFloridaRelevantPost(post)) return null;
+  if (prefilter.isGenericNonPlayerIntel(text)) {
+    prefilter.logNonPlayerIntel({ text, reason: 'generic_phrase', source: post.handle || post.writerName });
+    return null;
+  }
 
   const playerName = extractVisitPlayerName(text);
+  if (!playerName || !isUsableExtractedName(playerName)) {
+    prefilter.logNonPlayerIntel({ text, reason: 'no_identifiable_player', source: post.handle || post.writerName });
+    return null;
+  }
+
+  const resolver = require('./contextual-identity-resolver');
   const vagueClues = resolver.parseVagueClues(text, {
+    playerName,
     stars: parseStars(text),
     pos: parsePosition(text),
     classYear: parseClassYear(text),
     school: parseSchool(text) || parseCollegeSchool(text)
   });
-  if (!playerName && !vagueClues.hasSignal) return null;
 
-  const resolvedName = playerName || vagueClues.firstName || vagueClues.displayName || 'Unknown';
-  const isVagueName = !isUsableExtractedName(resolvedName);
-
+  const resolvedName = playerName;
   const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
   const classYear = parseClassYear(text) || vagueClues?.classYear || 2027;
   const pos = parsePosition(text) || vagueClues?.pos || '';
@@ -215,8 +217,6 @@ function parseBeatPostForVisitIntel(post) {
     school,
     highSchool: school,
     stars: parseStars(text) || vagueClues?.stars || null,
-    vaguePhrase: isVagueName ? vagueClues.rawPhrase : null,
-    vagueClues,
     eventType,
     status: eventType === 'official_visit' ? 'Official Visit · Florida' : 'Visit · Gainesville',
     visitStart: visitDate,
@@ -298,8 +298,32 @@ async function queueAutoposter(row, intelItem, built) {
   }
 }
 
+function parseCollegeSchool(text) {
+  const resolver = require('./contextual-identity-resolver');
+  return resolver.parseVagueClues(text).school;
+}
+
 async function processBeatVisitIntelRow(row, snapshot) {
-  if (!row?.fingerprint || !row.playerName) return { skipped: true, reason: 'invalid' };
+  if (!row?.fingerprint) return { skipped: true, reason: 'invalid' };
+
+  const prefilter = require('./beat-intel-prefilter');
+  const gate = await prefilter.evaluateBeatIntelEligibility(row.detail, {
+    playerName: row.playerName,
+    playerSlug: row.playerSlug
+  });
+  if (!gate.eligible) {
+    snapshot.fingerprints[row.fingerprint] = row.timestamp;
+    prefilter.logNonPlayerIntel({
+      text: row.detail,
+      reason: gate.reason,
+      source: row.sourceHandle || row.source
+    });
+    return { skipped: true, reason: gate.reason, category: 'non_player_intel' };
+  }
+  row.playerName = gate.playerName;
+  row.playerSlug = gate.playerSlug || row.playerSlug;
+
+  if (!row.playerName) return { skipped: true, reason: 'invalid' };
   if (snapshot.fingerprints[row.fingerprint]) {
     return { skipped: true, reason: 'duplicate', fingerprint: row.fingerprint };
   }
@@ -408,7 +432,6 @@ async function processBeatVisitIntelRow(row, snapshot) {
           eventType: row.eventType,
           stars: row.stars || player.stars,
           source: row.source,
-          vaguePhrase: row.vaguePhrase,
           contextual: enrichment.contextual || null
         }
       });

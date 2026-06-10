@@ -99,7 +99,14 @@ async function buildNewsFromEvent(ev) {
 
 async function buildNewsFromIntel(intel) {
   const built = await copy.buildIntelCopyAsync(intel);
-  if (built?.skipReason) return { skipReason: built.skipReason, _identitySkip: true };
+  if (built?._nonPlayerSkip || built?.skipReason === 'non_player_intel') return null;
+  if (built?.skipReason || built?._identitySkip) {
+    return {
+      ...built,
+      triggerPhrase: built.identityFailure?.triggerPhrase || intel.detail || null,
+      playerName: built.identityFailure?.playerName || intel.playerName || null
+    };
+  }
   if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
   const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
   const intelType = String(intel.eventType || '').toLowerCase();
@@ -247,7 +254,14 @@ async function buildMomentumFromBeat(post) {
 async function buildNewsFromBeatPost(post) {
   if (!beatFilters.shouldIncludeBeatPost(post) || !beatFilters.isTrustedBeatWriter(post)) return null;
   const built = await copy.buildBeatIntelCopyAsync(post);
-  if (built?.skipReason) return { skipReason: built.skipReason, _identitySkip: true };
+  if (built?._nonPlayerSkip || built?.skipReason === 'non_player_intel') return null;
+  if (built?.skipReason || built?._identitySkip) {
+    return {
+      ...built,
+      triggerPhrase: built.identityFailure?.triggerPhrase || post.text || null,
+      playerName: built.identityFailure?.playerName || null
+    };
+  }
   if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
   const source = post.writerName || post.outlet || post.handle || 'Beat writer';
   const fp = intelFingerprint(post.id || post.url, 'beat_intel', post.publishedAt);
@@ -379,6 +393,7 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
   const rawNewsCandidates = await collectFreshPostCandidates();
   const validatedNews = [];
   for (const raw of rawNewsCandidates) {
+    if (raw?._nonPlayerSkip || raw?.skipReason === 'non_player_intel') continue;
     if (raw?.skipReason || raw?._identitySkip) continue;
     const scored = await finalizeNewsCandidate(raw);
     if (scored) validatedNews.push(scored);

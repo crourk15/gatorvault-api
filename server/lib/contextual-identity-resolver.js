@@ -323,7 +323,38 @@ async function resolvePlayerFromSlug(slug, playerName) {
   return null;
 }
 
-async function resolveContextualIdentity({ text, sourceHandle, writerName, hints = {} } = {}) {
+async function resolveContextualIdentity(opts = {}) {
+  let result = await resolveContextualIdentityOnce(opts);
+  if (result.confirmed) return result;
+
+  const slug =
+    result.candidates?.[0]?.slug ||
+    (result.clues?.firstName
+      ? (await getBoardPlayers()).find((p) => {
+          const first = String(p.name || '').split(/\s+/)[0] || '';
+          return first.toLowerCase() === String(result.clues.firstName).toLowerCase();
+        })?.slug
+      : null);
+
+  if (!slug) return result;
+
+  try {
+    const patternStore = require('./identity-patterns-store');
+    const store = require('./recruiting-store');
+    const player = await store.getPlayerBySlug(slug);
+    if (player) {
+      await patternStore.syncPatternsForPlayer(player);
+      result = await resolveContextualIdentityOnce(opts);
+      if (result.confirmed) return { ...result, patternRebuildAttempted: true };
+    }
+  } catch {
+    /* optional rebuild */
+  }
+
+  return result;
+}
+
+async function resolveContextualIdentityOnce({ text, sourceHandle, writerName, hints = {} } = {}) {
   const clues = parseVagueClues(text, hints);
   if (!clues.hasSignal && !text) {
     return { confirmed: false, confidence: 0, reason: 'no_clues' };
@@ -360,7 +391,7 @@ async function resolveContextualIdentity({ text, sourceHandle, writerName, hints
   const patternEntries = await loadIdentityPatternEntries();
   const patternHit = lookupIdentityPattern(clues.rawPhrase || text, patternEntries);
   if (patternHit?.slug) {
-    const player = await resolvePlayerFromSlug(patternHit.slug, patternHit.name);
+    let player = await resolvePlayerFromSlug(patternHit.slug, patternHit.name);
     if (player) {
       return buildResolution({
         player,
@@ -371,6 +402,12 @@ async function resolveContextualIdentity({ text, sourceHandle, writerName, hints
         clues,
         sourceHandle
       });
+    }
+    try {
+      const patternStore = require('./identity-patterns-store');
+      await patternStore.deletePatternEntry(patternHit.slug);
+    } catch {
+      /* stale entry cleanup optional */
     }
   }
 

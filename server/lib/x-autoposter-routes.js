@@ -336,7 +336,15 @@ function mountXAutoposterRoutes(app) {
         ok: false,
         posted: false,
         error: out.error || 'x_api_error',
-        source: 'force-post'
+        source: 'force-post',
+        playerName: out.playerName || null,
+        playerSlug: out.playerSlug || null,
+        triggerPhrase: out.triggerPhrase || null,
+        missingPattern: out.missingPattern || null,
+        missingPatterns: out.missingPatterns || [],
+        missingFields: out.missingFields || [],
+        reason: out.reason || out.error || null,
+        patternRebuildAttempted: out.patternRebuildAttempted || false
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: 'x_api_error', message: err.message });

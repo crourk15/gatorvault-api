@@ -2,6 +2,7 @@
  * Autoposter copy — verified insider report templates only. No headline-only posts.
  */
 const playerContext = require('./x-autoposter-player-context');
+const autoposterIdentity = require('./autoposter-identity');
 const template = require('./x-autoposter-template');
 const validation = require('./x-autoposter-validation');
 const { isValidPlayerName } = playerContext;
@@ -121,7 +122,21 @@ function detectBeatNewsEvent(text) {
   return null;
 }
 
+function identitySkipFromEnrichment(enrichment, { playerName, playerSlug, triggerPhrase } = {}) {
+  return autoposterIdentity.buildIdentitySkipPayload({
+    reason: enrichment.reason || 'identity_not_confirmed',
+    playerName: playerName || enrichment.mergedSnapshot?.playerName || enrichment.contextual?.player?.name,
+    playerSlug: playerSlug || enrichment.mergedSnapshot?.playerSlug || enrichment.contextual?.player?.slug,
+    triggerPhrase: triggerPhrase || enrichment.contextual?.clues?.raw || null,
+    missingFields: autoposterIdentity.missingFieldsFromEnrichment(enrichment),
+    missingPatterns: enrichment.missingAfter || [],
+    contextual: enrichment.contextual,
+    confirmation: enrichment.confirmation
+  });
+}
+
 function newsPayloadFromBuilt(built, extra = {}) {
+  if (built?.skipReason || built?._identitySkip) return built;
   if (!built?.text) return null;
   const text = appendSite(built.text);
   const payload = {
@@ -156,7 +171,17 @@ async function buildPredictionMachineCopyAsync(post) {
     },
     sourceLabel: post.writerName || post.outlet || 'Rivals'
   });
-  if (!built?.ok) return null;
+  if (!built?.ok) {
+    if (built?.skipped && autoposterIdentity.isIdentitySkipReason(built.reason)) {
+      return autoposterIdentity.buildIdentitySkipPayload({
+        reason: built.reason,
+        playerName,
+        triggerPhrase: text,
+        missingFields: built.missingAfter || built.missing || []
+      });
+    }
+    return null;
+  }
   return newsPayloadFromBuilt(built);
 }
 
@@ -165,8 +190,14 @@ async function buildBeatIntelCopyAsync(post) {
   if (!text || isGeneralBeatCommentary(text)) return null;
   if (template.HEADLINE_ONLY_RE.test(text)) return null;
 
+  const prefilter = require('./beat-intel-prefilter');
+  const gate = await prefilter.evaluateBeatIntelEligibility(text);
+  if (!gate.eligible) {
+    return prefilter.buildNonPlayerSkipPayload(gate);
+  }
+
   const analyst = post.writerName || post.outlet || post.handle || 'Beat writer';
-  const playerName = extractPlayerFromText(text);
+  const playerName = gate.playerName || extractPlayerFromText(text);
 
   if (isPredictionMachinePost(text)) {
     return buildPredictionMachineCopyAsync(post);
@@ -190,8 +221,8 @@ async function buildBeatIntelCopyAsync(post) {
     return newsPayloadFromBuilt(built);
   }
 
-  if (!hasPlayerSpecificIntel(text)) return null;
-  if (!playerName) return null;
+  if (!hasPlayerSpecificIntel(text) && !playerName) return null;
+  if (!playerName || !isValidPlayerName(playerName)) return null;
 
   const newsEvent = detectBeatNewsEvent(text);
   const hasMomentum = beatFilters.detectRecruitingMomentum(text);
@@ -210,6 +241,19 @@ async function buildBeatIntelCopyAsync(post) {
 async function buildIntelCopyAsync(intel) {
   if (!intel?.eventType) return null;
 
+  const visitTypes = new Set(['official_visit', 'unofficial_visit']);
+  if (visitTypes.has(intel.eventType)) {
+    const prefilter = require('./beat-intel-prefilter');
+    const gate = await prefilter.evaluateBeatIntelEligibility(intel.detail || intel.playerName || '', {
+      playerName: intel.playerName,
+      playerSlug: intel.playerSlug
+    });
+    if (!gate.eligible) {
+      return prefilter.buildNonPlayerSkipPayload(gate);
+    }
+    intel = { ...intel, playerName: gate.playerName, playerSlug: gate.playerSlug || intel.playerSlug };
+  }
+
   if (intel.eventType === 'prediction' || intel.eventType === 'rivals_futurecast') {
     const prediction = require('./x-autoposter-prediction');
     const built = await prediction.buildPredictionPost({
@@ -220,7 +264,18 @@ async function buildIntelCopyAsync(intel) {
       sourceLabel: playerContext.sourceLabelForIntel(intel),
       intelId: intel.id
     });
-    if (!built?.ok) return null;
+    if (!built?.ok) {
+      if (built?.skipped && autoposterIdentity.isIdentitySkipReason(built.reason)) {
+        return autoposterIdentity.buildIdentitySkipPayload({
+          reason: built.reason,
+          playerName: intel.playerName,
+          playerSlug: intel.playerSlug,
+          triggerPhrase: intel.detail,
+          missingFields: built.missingAfter || built.missing || []
+        });
+      }
+      return null;
+    }
     return newsPayloadFromBuilt(built, {
       sources: built.sources?.filter((s) => s.url) || [{ label: intel.analystName || intel.source, url: intel.articleUrl }]
     });
@@ -229,28 +284,36 @@ async function buildIntelCopyAsync(intel) {
   if (intel.eventType === 'official_visit' || intel.eventType === 'unofficial_visit') {
     if (!intel.identityConfirmed) {
       const identityLookup = require('./player-identity-lookup');
-      const enrichment = await identityLookup.enrichAndConfirmIntelIdentity({
-        fields: {
-          playerName: intel.playerName,
-          pos: intel.pos,
-          classYear: intel.classYear,
-          highSchool: intel.highSchool,
-          hometownState: intel.hometownState,
-          school: intel.school,
-          stars: intel.stars,
-          natlRank: intel.natlRank
-        },
-        playerName: intel.playerName,
-        playerSlug: intel.playerSlug,
-        intel,
-        intelId: intel.id,
-        classYear: intel.classYear,
-        beatText: intel.detail,
-        sourceHandle: intel.sourceHandle,
-        allowContextual: true
-      });
+      const enrichment = await autoposterIdentity.retryWithPatternRebuild(
+        () =>
+          identityLookup.enrichAndConfirmIntelIdentity({
+            fields: {
+              playerName: intel.playerName,
+              pos: intel.pos,
+              classYear: intel.classYear,
+              highSchool: intel.highSchool,
+              hometownState: intel.hometownState,
+              school: intel.school,
+              stars: intel.stars,
+              natlRank: intel.natlRank
+            },
+            playerName: intel.playerName,
+            playerSlug: intel.playerSlug,
+            intel,
+            intelId: intel.id,
+            classYear: intel.classYear,
+            beatText: intel.detail,
+            sourceHandle: intel.sourceHandle,
+            allowContextual: true
+          }),
+        { playerSlug: intel.playerSlug, playerName: intel.playerName }
+      );
       if (!enrichment.confirmed) {
-        return { skipReason: enrichment.reason || 'identity_not_confirmed', confirmation: enrichment.confirmation, contextual: enrichment.contextual };
+        return identitySkipFromEnrichment(enrichment, {
+          playerName: intel.playerName,
+          playerSlug: intel.playerSlug,
+          triggerPhrase: intel.detail
+        });
       }
       intel = { ...intel, ...enrichment.intelPatch, identityConfirmed: true, ...enrichment.identityPatch };
     }

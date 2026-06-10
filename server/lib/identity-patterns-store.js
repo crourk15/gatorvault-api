@@ -3,7 +3,7 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { buildPatternRecord } = require('./identity-pattern-generator');
+const { buildPatternRecord, splitName, STAR_WORDS } = require('./identity-pattern-generator');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const PATTERNS_PATH = path.join(DATA_DIR, 'identity-patterns.json');
@@ -139,25 +139,104 @@ async function deletePatternEntry(slug) {
   return { deleted: slug };
 }
 
+function validatePatternEntry(entry, player = null) {
+  const missingPatterns = [];
+  if (!entry?.slug) missingPatterns.push('slug');
+  const name = entry?.name || player?.name || '';
+  const { firstName, lastName } = splitName(name);
+  if (!firstName || !lastName) missingPatterns.push('full_name');
+  const patterns = Array.isArray(entry?.patterns) ? entry.patterns : [];
+  if (patterns.length < 2) missingPatterns.push('pattern_count');
+
+  if (firstName && lastName) {
+    const full = `${firstName} ${lastName}`;
+    if (!patterns.includes(full)) missingPatterns.push('full_name_pattern');
+  }
+
+  const stars = entry?.stars ?? player?.stars;
+  const pos = entry?.position || player?.pos;
+  if (stars && pos) {
+    const posUp = String(pos).toUpperCase();
+    const starWord = STAR_WORDS[parseInt(stars, 10)];
+    const hasStarPos = patterns.some((p) => {
+      const t = String(p);
+      return (
+        new RegExp(`${stars}[- ]?star\\s+${posUp}`, 'i').test(t) ||
+        (starWord && new RegExp(`${starWord}[- ]star\\s+${posUp}`, 'i').test(t))
+      );
+    });
+    if (!hasStarPos) missingPatterns.push('star_pos_pattern');
+  }
+
+  return {
+    valid: missingPatterns.length === 0,
+    missingPatterns,
+    patternCount: patterns.length
+  };
+}
+
+async function pruneStalePatternEntries(validSlugs) {
+  const slugSet = new Set((validSlugs || []).filter(Boolean));
+  const sb = initSupabase();
+  if (sb) {
+    const all = await listAllPatterns();
+    let pruned = 0;
+    for (const entry of all) {
+      if (!slugSet.has(entry.slug)) {
+        await deletePatternEntry(entry.slug);
+        pruned += 1;
+      }
+    }
+    return { pruned };
+  }
+  const doc = loadLocalDoc();
+  let pruned = 0;
+  for (const slug of Object.keys(doc.entries || {})) {
+    if (!slugSet.has(slug)) {
+      delete doc.entries[slug];
+      pruned += 1;
+    }
+  }
+  if (pruned) saveLocalDoc(doc);
+  return { pruned };
+}
+
 async function syncPatternsForPlayer(player) {
   if (!player?.slug || !player?.name) return null;
   const entry = buildPatternRecord(player);
   entry.updatedAt = nowIso();
-  return upsertPatternEntry(entry);
+  const validation = validatePatternEntry(entry, player);
+  const toSave = { ...entry };
+  delete toSave.validation;
+  const saved = await upsertPatternEntry(toSave);
+  saved.validation = validation;
+  if (!validation.valid) {
+    console.warn(
+      '[identity-patterns] incomplete patterns for',
+      player.slug,
+      validation.missingPatterns.join(', ')
+    );
+  }
+  return saved;
 }
 
 async function rebuildAllPatterns({ players } = {}) {
   const started = Date.now();
   const store = require('./recruiting-store');
   const list = players || (await store.getAllPlayers());
+  const validSlugs = [];
   let count = 0;
+  let incomplete = 0;
   for (const player of list) {
     if (!player.slug || !player.name) continue;
-    await syncPatternsForPlayer(player);
+    const entry = await syncPatternsForPlayer(player);
+    validSlugs.push(player.slug);
     count += 1;
+    if (entry?.validation && !entry.validation.valid) incomplete += 1;
   }
+  const { pruned } = await pruneStalePatternEntries(validSlugs);
   const durationMs = Date.now() - started;
-  return { ok: true, count, durationMs, updatedAt: nowIso() };
+  return { ok: true, count, incomplete, pruned, durationMs, updatedAt: nowIso() };
 }
 
 function storageMode() {
@@ -170,6 +249,8 @@ module.exports = {
   listAllPatterns,
   upsertPatternEntry,
   deletePatternEntry,
+  validatePatternEntry,
+  pruneStalePatternEntries,
   syncPatternsForPlayer,
   rebuildAllPatterns,
   storageMode

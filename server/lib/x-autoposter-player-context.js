@@ -266,7 +266,17 @@ async function buildPlayerNewsPost({
     patch,
     preferPatch: !!patch
   });
-  if (!ctx.hasFullIdentity) return null;
+  if (!ctx.hasFullIdentity) {
+    const autoposterIdentity = require('./autoposter-identity');
+    const missingFields = autoposterIdentity.listMissingContextFields(ctx);
+    return autoposterIdentity.buildIdentitySkipPayload({
+      reason: 'identity_incomplete',
+      playerName: ctx.name || playerName || null,
+      playerSlug: playerSlug || null,
+      triggerPhrase: beatText || intel?.detail || null,
+      missingFields
+    });
+  }
 
   const kind = postKind || resolvePostKind(ctx, { newsEvent, intel, beatText });
   const sourceLabel = String(source || 'On3').trim();

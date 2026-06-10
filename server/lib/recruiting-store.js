@@ -269,9 +269,11 @@ async function upsertPlayer(player) {
 async function syncIdentityPatterns(player) {
   try {
     const patternStore = require('./identity-patterns-store');
-    await patternStore.syncPatternsForPlayer(player);
+    const entry = await patternStore.syncPatternsForPlayer(player);
+    return entry?.validation || { valid: true, missingPatterns: [] };
   } catch (err) {
     console.warn('[recruiting] identity pattern sync failed:', player?.slug, err.message);
+    return { valid: false, missingPatterns: ['sync_failed'], error: err.message };
   }
 }
 

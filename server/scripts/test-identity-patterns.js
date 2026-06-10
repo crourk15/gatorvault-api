@@ -78,6 +78,12 @@ const sample = {
   const rebuild = await patternStore.rebuildAllPatterns();
   assert('rebuild returns count and duration', rebuild.count > 0 && rebuild.durationMs >= 0);
 
+  const validation = patternStore.validatePatternEntry(await patternStore.getPatternBySlug('trey-morrison'), sample);
+  assert('validated entry has full name pattern', validation.valid || validation.missingPatterns.includes('full_name_pattern') === false);
+
+  const bad = patternStore.validatePatternEntry({ slug: 'x', name: 'Single', patterns: [] });
+  assert('invalid entry flagged', !bad.valid && bad.missingPatterns.includes('full_name'));
+
   if (process.exitCode) {
     console.error('\nIdentity pattern tests failed.');
   } else {

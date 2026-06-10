@@ -181,6 +181,7 @@
             '<div><strong>Status:</strong> '+statusDot(t.status)+esc((t.status||'unknown').toUpperCase())+'</div>'+
             '</div>';
           actions+='<button class="sm" data-force-post="1">Force Post Now</button>';
+          actions+='<button class="secondary sm" data-autoposter-rebuild-patterns="1">Rebuild All Patterns</button>';
           actions+='<button class="secondary sm" data-logs="autoposter">View logs</button>';
         } else {
           body='<div class="summary">'+esc(t.summary||'')+'</div>'+
@@ -223,6 +224,9 @@
       el.querySelectorAll('[data-force-post]').forEach(function(btn){
         btn.addEventListener('click',forcePostNow);
       });
+      el.querySelectorAll('[data-autoposter-rebuild-patterns]').forEach(function(btn){
+        btn.addEventListener('click',rebuildPatterns);
+      });
       el.querySelectorAll('[data-insider]').forEach(function(btn){
         btn.addEventListener('click',function(){
           document.getElementById('insider-articles-panel').scrollIntoView({behavior:'smooth'});
@@ -243,7 +247,17 @@
         .then(function(res){
           var j=res.body;
           if(res.status===401)throw new Error('Invalid PIN');
-          if(!j.ok)throw new Error(j.error||('Force post failed ('+res.status+')'));
+          if(!j.ok){
+            if(j.error==='identity_incomplete'){
+              var detail='Identity incomplete';
+              if(j.playerName)detail+='\nPlayer: '+j.playerName;
+              if(j.missingPattern)detail+='\nMissing: '+j.missingPattern;
+              if(j.triggerPhrase)detail+='\nPhrase: '+String(j.triggerPhrase).slice(0,160);
+              if(j.patternRebuildAttempted)detail+='\n(Pattern rebuild was attempted)';
+              throw new Error(detail);
+            }
+            throw new Error(j.error||('Force post failed ('+res.status+')'));
+          }
           alert('Posted to X at '+fmtTime(j.timestamp)+(j.tweetUrl?'\n'+j.tweetUrl:''));
           document.getElementById('log-subsystem').value='autoposter';
           loadLogs();
