@@ -2,5 +2,8 @@
 /highlight/*  /highlight.html  200
 /article/*  /article.html  200
 /admin/feedback  /admin-feedback.html  200
+/admin/monitoring  /admin-monitoring.html  200
+/admin/ops  /admin-ops.html  200
+/vault/ops  /admin-ops.html  200
 /admin  /admin.html  200
 /players  /?open=vault&tab=players  302
