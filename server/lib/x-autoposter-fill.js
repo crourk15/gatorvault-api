@@ -228,6 +228,8 @@ function buildNewsFromArticle(article) {
 
 async function buildMomentumFromBeat(post) {
   const built = await copy.buildMomentumCopyAsync(post);
+  if (built?._nonPlayerSkip || built?.skipReason === 'non_player_intel') return null;
+  if (built?.skipReason || built?._identitySkip) return null;
   if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
   const player = built.playerName || copy.extractPlayerFromText(String(post.text || ''));
   const source = post.writerName || post.outlet || post.handle || 'Insider';
@@ -324,8 +326,12 @@ async function collectFreshPostCandidates() {
   try {
     const beat = getBeatPosts(50);
     const beatCutoff = Date.now() - MAX_BEAT_POST_AGE_MS;
+    const prefilter = require('./beat-intel-prefilter');
     for (const post of beat.posts || []) {
       if (new Date(post.publishedAt).getTime() < beatCutoff) continue;
+      const guarded = await prefilter.guardBeatPost(post);
+      if (!guarded.eligible) continue;
+
       const momentum = await buildMomentumFromBeat(post);
       if (momentum) {
         candidates.unshift(momentum);

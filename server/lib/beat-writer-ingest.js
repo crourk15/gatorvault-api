@@ -254,7 +254,12 @@ async function buildAutoposterPayload(row, intelItem) {
     detail: row.detail,
     articleUrl: row.articleUrl
   });
-  if (!built?.text) return { ok: false, reason: built?.skipReason || 'invalid_copy' };
+  if (!built?.text) {
+    if (built?.skipReason === 'non_player_intel' || built?._nonPlayerSkip) {
+      return { ok: false, reason: 'non_player_intel' };
+    }
+    return { ok: false, reason: built?.skipReason || 'invalid_copy' };
+  }
   return { ok: true, ...built, text: copy.appendSite(built.text) };
 }
 

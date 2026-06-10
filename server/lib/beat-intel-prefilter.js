@@ -23,7 +23,17 @@ const GENERIC_INTEL_RES = [
   /big\s+weekend\s+(?:ahead|coming|for\s+florida)/i,
   /weekend\s+just\s+landed/i,
   /two\s+commits/i,
-  /landed\s+two\s+commits/i
+  /landed\s+two\s+commits/i,
+  /official\s+visitor\s+blog/i,
+  /visitor\s+blog/i,
+  /blog\s+is\s+loaded/i,
+  /loaded\s+with\s+intel/i,
+  /our\s+weekend\s+official/i,
+  /weekend\s+official\s+visitor/i,
+  /is\s+loaded\s+with\s+intel/i,
+  /\bintel\s+on\s+the\s+way\b/i,
+  /promo\s+for\s+the\s+blog/i,
+  /check\s+out\s+our\s+(?:blog|weekend)/i
 ];
 
 const PREVIEW_HEADER_RES = [
@@ -94,17 +104,6 @@ function extractCleanFullName(text) {
 
 async function evaluateBeatIntelEligibility(text, { playerName = null, playerSlug = null } = {}) {
   const phrase = normalizePhrase(text);
-  if (!phrase) {
-    return { eligible: false, reason: 'empty_text', category: 'non_player_intel' };
-  }
-  if (isGenericNonPlayerIntel(phrase)) {
-    return {
-      eligible: false,
-      reason: 'generic_phrase',
-      category: 'non_player_intel',
-      triggerPhrase: phrase.slice(0, 160)
-    };
-  }
 
   const invalidName =
     playerName &&
@@ -115,6 +114,28 @@ async function evaluateBeatIntelEligibility(text, { playerName = null, playerSlu
   let resolvedName =
     playerName && isValidPlayerName(playerName) && !isSingleTokenName(playerName) ? playerName.trim() : null;
   let resolvedSlug = playerSlug || null;
+
+  if (!phrase) {
+    if (resolvedName) {
+      return {
+        eligible: true,
+        playerName: resolvedName,
+        playerSlug: resolvedSlug,
+        matchMode: 'intel_record',
+        triggerPhrase: null
+      };
+    }
+    return { eligible: false, reason: 'empty_text', category: 'non_player_intel' };
+  }
+
+  if (isGenericNonPlayerIntel(phrase)) {
+    return {
+      eligible: false,
+      reason: 'generic_phrase',
+      category: 'non_player_intel',
+      triggerPhrase: phrase.slice(0, 160)
+    };
+  }
 
   if (!resolvedName || invalidName) resolvedName = extractCleanFullName(phrase);
 
@@ -225,6 +246,39 @@ function isNonPlayerIntelSkip(raw) {
   return Boolean(raw._nonPlayerSkip || raw.skipReason === 'non_player_intel');
 }
 
+/**
+ * If ineligible, logs and returns a skip payload — otherwise null (continue pipeline).
+ */
+async function bypassRecruitingPipeline(text, context = {}) {
+  const gate = await evaluateBeatIntelEligibility(text, context);
+  if (gate.eligible) return null;
+  logNonPlayerIntel({
+    text,
+    reason: gate.reason,
+    source: context.source || context.sourceHandle || null,
+    subsystem: context.subsystem || 'autoposter'
+  });
+  return buildNonPlayerSkipPayload(gate);
+}
+
+async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
+  const text = normalizePhrase(post?.text || '');
+  if (!text) {
+    return {
+      eligible: false,
+      skip: buildNonPlayerSkipPayload({ reason: 'empty_text', category: 'non_player_intel', triggerPhrase: '' })
+    };
+  }
+  const skip = await bypassRecruitingPipeline(text, {
+    source: post?.handle || post?.writerName || post?.outlet,
+    sourceHandle: post?.handle,
+    subsystem
+  });
+  if (skip) return { eligible: false, skip, text };
+  const gate = await evaluateBeatIntelEligibility(text);
+  return { eligible: true, gate, text, playerName: gate.playerName, playerSlug: gate.playerSlug };
+}
+
 module.exports = {
   normalizePhrase,
   isCorruptedOrHeadlinePhrase,
@@ -233,5 +287,7 @@ module.exports = {
   evaluateBeatIntelEligibility,
   buildNonPlayerSkipPayload,
   logNonPlayerIntel,
-  isNonPlayerIntelSkip
+  isNonPlayerIntelSkip,
+  bypassRecruitingPipeline,
+  guardBeatPost
 };

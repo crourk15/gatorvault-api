@@ -52,7 +52,8 @@ function extractPlayerFromText(text) {
   }
   const m = t.match(new RegExp(`\\b(${NAME_CHUNK})\\b`));
   const fallback = m?.[1]?.trim() || null;
-  return isValidPlayerName(fallback) ? fallback : null;
+  if (fallback && isValidPlayerName(fallback)) return fallback;
+  return null;
 }
 
 function hasPlayerSpecificIntel(text) {
@@ -152,9 +153,14 @@ function newsPayloadFromBuilt(built, extra = {}) {
 }
 
 async function buildPredictionMachineCopyAsync(post) {
+  const prefilter = require('./beat-intel-prefilter');
   const text = String(post.text || '').replace(/\s+/g, ' ').trim();
-  const playerName = extractPlayerFromText(text);
-  if (!playerName) return null;
+  const guarded = await prefilter.guardBeatPost(post);
+  if (!guarded.eligible) return guarded.skip;
+
+  const playerName = guarded.playerName || extractPlayerFromText(text);
+  if (!playerName || !isValidPlayerName(playerName)) return null;
+
   const prediction = require('./x-autoposter-prediction');
   const built = await prediction.buildPredictionPost({
     playerName,
@@ -171,33 +177,22 @@ async function buildPredictionMachineCopyAsync(post) {
     },
     sourceLabel: post.writerName || post.outlet || 'Rivals'
   });
-  if (!built?.ok) {
-    if (built?.skipped && autoposterIdentity.isIdentitySkipReason(built.reason)) {
-      return autoposterIdentity.buildIdentitySkipPayload({
-        reason: built.reason,
-        playerName,
-        triggerPhrase: text,
-        missingFields: built.missingAfter || built.missing || []
-      });
-    }
-    return null;
-  }
+  if (!built?.ok) return null;
   return newsPayloadFromBuilt(built);
 }
 
 async function buildBeatIntelCopyAsync(post) {
+  const prefilter = require('./beat-intel-prefilter');
   const text = String(post.text || '').replace(/\s+/g, ' ').trim();
-  if (!text || isGeneralBeatCommentary(text)) return null;
+  if (!text) return null;
+
+  const guarded = await prefilter.guardBeatPost(post);
+  if (!guarded.eligible) return guarded.skip;
+
   if (template.HEADLINE_ONLY_RE.test(text)) return null;
 
-  const prefilter = require('./beat-intel-prefilter');
-  const gate = await prefilter.evaluateBeatIntelEligibility(text);
-  if (!gate.eligible) {
-    return prefilter.buildNonPlayerSkipPayload(gate);
-  }
-
   const analyst = post.writerName || post.outlet || post.handle || 'Beat writer';
-  const playerName = gate.playerName || extractPlayerFromText(text);
+  const playerName = guarded.playerName || extractPlayerFromText(text);
 
   if (isPredictionMachinePost(text)) {
     return buildPredictionMachineCopyAsync(post);
@@ -241,16 +236,21 @@ async function buildBeatIntelCopyAsync(post) {
 async function buildIntelCopyAsync(intel) {
   if (!intel?.eventType) return null;
 
-  const visitTypes = new Set(['official_visit', 'unofficial_visit']);
-  if (visitTypes.has(intel.eventType)) {
-    const prefilter = require('./beat-intel-prefilter');
-    const gate = await prefilter.evaluateBeatIntelEligibility(intel.detail || intel.playerName || '', {
-      playerName: intel.playerName,
-      playerSlug: intel.playerSlug
-    });
-    if (!gate.eligible) {
-      return prefilter.buildNonPlayerSkipPayload(gate);
-    }
+  const prefilter = require('./beat-intel-prefilter');
+  const phrase = intel.detail || intel.playerName || '';
+  const skip = await prefilter.bypassRecruitingPipeline(phrase, {
+    playerName: intel.playerName,
+    playerSlug: intel.playerSlug,
+    source: intel.sourceHandle || intel.source,
+    subsystem: 'autoposter'
+  });
+  if (skip) return skip;
+
+  const gate = await prefilter.evaluateBeatIntelEligibility(phrase, {
+    playerName: intel.playerName,
+    playerSlug: intel.playerSlug
+  });
+  if (gate.eligible && gate.playerName) {
     intel = { ...intel, playerName: gate.playerName, playerSlug: gate.playerSlug || intel.playerSlug };
   }
 
@@ -337,12 +337,18 @@ async function buildIntelCopyAsync(intel) {
 }
 
 async function buildMomentumCopyAsync(post) {
+  const prefilter = require('./beat-intel-prefilter');
+  const guarded = await prefilter.guardBeatPost(post);
+  if (!guarded.eligible) return guarded.skip;
+
   const beatFilters = require('./beat-writer-filters');
-  const text = String(post.text || '');
+  const text = guarded.text || String(post.text || '');
   if (!beatFilters.detectRecruitingMomentum(text)) return null;
   if (!template.INSIDER_SIGNAL_RE.test(text)) return null;
-  const playerName = extractPlayerFromText(text);
-  if (!playerName) return null;
+
+  const playerName = guarded.playerName || extractPlayerFromText(text);
+  if (!playerName || !isValidPlayerName(playerName)) return null;
+
   const source = post.writerName || post.outlet || post.handle || 'Insider';
   const built = await playerContext.buildPlayerNewsPost({
     source,

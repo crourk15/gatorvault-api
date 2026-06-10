@@ -11,7 +11,8 @@ const INVALID_NAME_PARTS = new Set([
   'recruits', 'target', 'targets', 'nation', 'machine', 'prediction', 'rivals', 'online',
   'gators', 'weekend', 'this', 'that', 'with', 'from', 'they', 'will', 'now', 'has', 'have',
   'had', 'for', 'and', 'to', 'on', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
-  'saturday', 'sunday', 'today', 'tomorrow', 'analyst', 'analysts', 'logged', 'logs'
+  'saturday', 'sunday', 'today', 'tomorrow', 'analyst', 'analysts', 'logged', 'logs',
+  'way', 'https', 'http', 'intel', 'blog', 'loaded', 'visitor', 'promo', 'check', 'out'
 ]);
 
 function isValidPlayerName(name) {
@@ -21,6 +22,7 @@ function isValidPlayerName(name) {
   const parts = trimmed.split(/\s+/).filter(Boolean);
   if (parts.length < 2) return false;
   if (parts.some((p) => INVALID_NAME_PARTS.has(p.toLowerCase()))) return false;
+  if (parts.some((p) => /https?|www|\.com/i.test(p))) return false;
   if (!parts.every((p) => /^[A-Za-z][A-Za-z'-]{1,}$/.test(p))) return false;
   return true;
 }

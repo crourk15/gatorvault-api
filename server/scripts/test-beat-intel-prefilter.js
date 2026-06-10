@@ -2,6 +2,7 @@
  * Unit tests — beat intel pre-filter (vague phrase rejection).
  */
 const prefilter = require('../lib/beat-intel-prefilter');
+const copy = require('../lib/x-autoposter-copy');
 const { isValidPlayerName } = require('../lib/x-autoposter-player-context');
 
 function assert(label, condition) {
@@ -40,6 +41,17 @@ const VAGUE_EXAMPLES = [
 
   const skip = prefilter.buildNonPlayerSkipPayload({ reason: 'generic_phrase', category: 'non_player_intel', triggerPhrase: 'test' });
   assert('non-player skip payload', skip.skipReason === 'non_player_intel' && skip._nonPlayerSkip === true);
+
+  const blogPhrase = 'Our weekend official visitor blog is loaded with intel on the way https://example.com/preview';
+  const blogGate = await prefilter.evaluateBeatIntelEligibility(blogPhrase);
+  assert('rejects visitor blog promo', !blogGate.eligible);
+  assert('rejects way https as player name', !isValidPlayerName('way https'));
+
+  const momentum = await copy.buildMomentumCopyAsync({ text: blogPhrase, handle: 'corey_bender' });
+  assert('momentum returns non_player skip for blog promo', prefilter.isNonPlayerIntelSkip(momentum));
+
+  const beat = await copy.buildBeatIntelCopyAsync({ text: blogPhrase, handle: 'corey_bender' });
+  assert('beat intel returns non_player skip for blog promo', prefilter.isNonPlayerIntelSkip(beat));
 
   if (process.exitCode) {
     console.error('\nBeat intel prefilter tests failed.');
