@@ -872,6 +872,17 @@ function startMediaIngestScheduler() {
 
 app.use(express.static(__dirname));
 
+app.use('/api', (req, res) => {
+  res.status(404).type('json').json({ ok: false, error: 'Not found', method: req.method, path: req.originalUrl });
+});
+
+app.use((err, req, res, next) => {
+  if (req.originalUrl && req.originalUrl.startsWith('/api/')) {
+    return res.status(err.status || 500).type('json').json({ ok: false, error: err.message || 'Internal server error' });
+  }
+  next(err);
+});
+
 app.listen(PORT, () => {
   const providers = getEmailProviders();
   console.log('GatorVault server running on port', PORT);

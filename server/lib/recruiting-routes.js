@@ -9,7 +9,11 @@ const { buildHeatCheck } = require('./heat-check-store');
 const highlightsStore = require('./highlights-store');
 const interviewsStore = require('./interviews-store');
 
-const RECRUITING_ADMIN_PIN = process.env.RECRUITING_ADMIN_PIN || process.env.EMAIL_TEST_PIN || 'GV2026admin';
+const RECRUITING_ADMIN_PIN =
+  process.env.OPS_ADMIN_PIN ||
+  process.env.RECRUITING_ADMIN_PIN ||
+  process.env.EMAIL_TEST_PIN ||
+  'GV2026admin';
 const INGEST_CRON_SECRET = process.env.INGEST_CRON_SECRET || RECRUITING_ADMIN_PIN;
 
 function verifyAdminPin(pin) {
@@ -420,8 +424,6 @@ function mountRecruitingRoutes(app) {
       console.error('beat-writer ingest error', err);
       return res.status(500).json({ ok: false, error: err.message });
     }
-  });
-
   });
 
   app.get('/api/recruiting/identity/overrides', (req, res) => {

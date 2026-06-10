@@ -300,20 +300,34 @@
     function loadMot(){
       var p=pin(); if(!p)return;
       fetch(API+'/api/recruiting/identity/overrides?pin='+encodeURIComponent(p),{headers:headers()})
-        .then(function(r){return r.json();})
-        .then(function(j){
-          var lines=(j.items||[]).map(function(i){return i.phrase+' → '+i.playerName+' ('+i.playerSlug+')';});
+        .then(function(r){
+          return r.json().then(function(j){return{status:r.status,body:j};});
+        })
+        .then(function(res){
+          if(res.status===401)throw new Error('Invalid PIN');
+          if(!res.body.ok)throw new Error(res.body.error||('Request failed ('+res.status+')'));
+          var lines=(res.body.items||[]).map(function(i){return i.phrase+' → '+i.playerName+' ('+i.playerSlug+')';});
           document.getElementById('mot-panel').textContent=lines.join('\n')||'No overrides yet.';
-        });
+        })
+        .catch(function(e){document.getElementById('mot-panel').textContent='Error: '+e.message;});
     }
     function saveMot(){
       var p=pin(); if(!p)return alert('PIN required');
       var body={pin:p,phrase:document.getElementById('mot-phrase').value.trim(),playerSlug:document.getElementById('mot-slug').value.trim(),playerName:document.getElementById('mot-name').value.trim()};
       if(!body.phrase||!body.playerSlug)return alert('phrase and player slug required');
       fetch(API+'/api/recruiting/identity/overrides',{method:'POST',headers:headers(),body:JSON.stringify(body)})
-        .then(function(r){return r.json();})
-        .then(function(){loadMot();})
-        .catch(function(e){alert(e.message);});
+        .then(function(r){
+          return r.json().then(function(j){return{status:r.status,body:j};});
+        })
+        .then(function(res){
+          if(res.status===401)throw new Error('Invalid PIN');
+          if(!res.body.ok)throw new Error(res.body.error||('Save failed ('+res.status+')'));
+          document.getElementById('mot-phrase').value='';
+          document.getElementById('mot-slug').value='';
+          document.getElementById('mot-name').value='';
+          loadMot();
+        })
+        .catch(function(e){alert('Save error: '+e.message);});
     }
     document.getElementById('mot-load').addEventListener('click',loadMot);
     document.getElementById('mot-save').addEventListener('click',saveMot);
