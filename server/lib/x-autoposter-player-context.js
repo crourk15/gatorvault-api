@@ -1,6 +1,9 @@
 /**
  * Verified player context for autoposter — On3/Rivals/GatorVault records only. No inference.
+ * Every post: identity block · context block · insider angle block (verified sources only).
  */
+const template = require('./x-autoposter-template');
+
 const INVALID_NAME_PARTS = new Set([
   'her', 'his', 'the', 'new', 'four', 'five', 'star', 'class', 'florida', 'gators', 'gator',
   'other', 'top', 'per', 'via', 'our', 'own', 'breaking', 'official', 'unofficial', 'south',
@@ -35,45 +38,18 @@ const VERIFIED_PATCH_KEYS = new Set([
   'category',
   'inState',
   'committedTo',
-  'status'
+  'status',
+  'formerSchool',
+  'transferFrom'
 ]);
 
-function parseCityState(school) {
-  const s = String(school || '').trim();
-  const m = s.match(/^(.+?),\s*([A-Z]{2})$/);
-  if (!m) return null;
-  const city = m[1].trim();
-  const state = m[2].trim();
-  if (!city || city.length < 2) return null;
-  return `${city}, ${state}`;
-}
-
-function formatStarsLabel(stars) {
-  const n = parseInt(stars, 10);
-  if (!n || n < 1 || n > 5) return null;
-  return `${n}★`;
-}
-
-function deriveUfTargetStatus(player) {
-  if (!player) return null;
-  const category = String(player.category || '').toLowerCase();
-  if (player.headliner) {
-    return category === 'portal' ? 'top UF portal target' : 'top UF priority target';
-  }
-  if (category === 'portal') return 'UF portal target';
-  const natl = player.natlRank != null ? Number(player.natlRank) : null;
-  if (natl && natl > 0 && natl <= 100) return 'UF priority target';
-  if (category === 'target') return 'UF target';
-  return null;
-}
-
-function mergeVerifiedFields(player, patch) {
+function mergeVerifiedFields(player, patch, { preferPatch = false } = {}) {
   const out = { ...(player || {}) };
   if (!patch || typeof patch !== 'object') return out;
   for (const [key, val] of Object.entries(patch)) {
     if (!VERIFIED_PATCH_KEYS.has(key)) continue;
     if (val == null || val === '') continue;
-    if (out[key] == null || out[key] === '' || out[key] === 0) {
+    if (preferPatch || out[key] == null || out[key] === '' || out[key] === 0) {
       out[key] = val;
     }
   }
@@ -82,30 +58,44 @@ function mergeVerifiedFields(player, patch) {
 
 function formatPlayerContext(player) {
   const name = String(player?.name || '').trim();
-  const pos = String(player?.pos || '').trim() || null;
+  const pos = String(player?.pos || player?.position || '').trim() || null;
   const classYear = player?.classYear != null ? Number(player.classYear) : null;
-  const starsLabel = formatStarsLabel(player?.stars);
-  const location = parseCityState(player?.school);
-  const ufStatus = deriveUfTargetStatus(player);
+  const yearRaw = player?.year || player?.class;
+  const resolvedClass =
+    classYear && !Number.isNaN(classYear) ? classYear : yearRaw ? parseInt(String(yearRaw).replace(/\D/g, ''), 10) : null;
+  const starsLabel = template.formatStarsLabel(player?.stars);
+  const school = String(player?.school || player?.hometown || '').trim() || null;
   const htWt = String(player?.htWt || '').trim() || null;
+  const combinedHtWt =
+    htWt ||
+    (player?.height && player?.weight
+      ? `${String(player.height).replace(/['"]/g, "'")}, ${String(player.weight).replace(/\D/g, '')}`
+      : null);
+  const category = String(player?.category || '').toLowerCase();
+  const formerSchool =
+    player?.formerSchool ||
+    player?.transferFrom ||
+    (category === 'portal' ? player?.committedTo || player?.school : null);
 
   const hasMinimumContext =
-    isValidPlayerName(name) && !!(pos || (classYear && !Number.isNaN(classYear)) || starsLabel);
+    isValidPlayerName(name) && !!(pos || (resolvedClass && !Number.isNaN(resolvedClass)) || starsLabel);
 
   return {
     name,
     pos,
-    classYear: classYear && !Number.isNaN(classYear) ? classYear : null,
+    classYear: resolvedClass && !Number.isNaN(resolvedClass) ? resolvedClass : null,
     starsLabel,
-    location,
-    ufStatus,
-    htWt,
+    school,
+    formerSchool: formerSchool ? String(formerSchool).trim() : school,
+    htWt: combinedHtWt,
     natlRank: player?.natlRank != null ? Number(player.natlRank) : null,
+    category,
+    isPortal: category === 'portal' || player?.status === 'portal_in' || !!player?.transferInfo,
     hasMinimumContext
   };
 }
 
-async function resolvePlayerContext({ playerSlug, playerName, patch = null } = {}) {
+async function resolvePlayerContext({ playerSlug, playerName, patch = null, preferPatch = false } = {}) {
   const store = require('./recruiting-store');
   let player = null;
   if (playerSlug) {
@@ -116,46 +106,176 @@ async function resolvePlayerContext({ playerSlug, playerName, patch = null } = {
     const key = String(playerName).toLowerCase();
     player = all.find((p) => String(p.name || '').toLowerCase() === key) || null;
   }
-  const merged = mergeVerifiedFields(player, patch);
+  if (player && playerName && String(player.name || '').toLowerCase() !== String(playerName).toLowerCase()) {
+    player = null;
+  }
+  if (
+    player &&
+    patch?.classYear &&
+    String(player.category || '').toLowerCase() === 'portal' &&
+    (patch.category === 'recruit' || !patch.category)
+  ) {
+    player = null;
+  }
+  if (player && patch?.category === 'recruit' && String(player.category || '').toLowerCase() === 'portal') {
+    player = null;
+  }
+  if (!player && playerName) {
+    try {
+      const rosterStore = require('./roster-store');
+      const roster = rosterStore.getAllRosterPlayers();
+      const key = String(playerName).toLowerCase();
+      const rp = roster.find((p) => String(p.name || '').toLowerCase() === key);
+      if (rp) {
+        player = {
+          name: rp.name,
+          pos: rp.pos || rp.position,
+          classYear: parseInt(String(rp.year || rp.class || '').replace(/\D/g, ''), 10) || null,
+          school: rp.hometown || 'Florida',
+          htWt: rp.height && rp.weight ? `${rp.height} / ${rp.weight}` : null,
+          category: 'roster',
+          stars: rp.stars,
+          natlRank: rp.rank
+        };
+      }
+    } catch {
+      /* optional */
+    }
+  }
+  const merged = mergeVerifiedFields(player, patch, { preferPatch: preferPatch || !!patch });
   if (!merged.name && playerName) merged.name = playerName;
   return formatPlayerContext(merged);
 }
 
-function buildPlayerDescriptor(ctx) {
-  const lead = [];
-  if (ctx.starsLabel) lead.push(ctx.starsLabel);
-  if (ctx.pos) lead.push(ctx.pos);
-  lead.push(ctx.name);
-  let line = lead.join(' ');
-  if (ctx.location) line += ` (${ctx.location})`;
-
-  if (ctx.ufStatus && ctx.classYear) {
-    line += ` — a ${ctx.ufStatus} in the ${ctx.classYear} class`;
-  } else if (ctx.classYear) {
-    line += ` — ${ctx.classYear} class`;
-  } else if (ctx.ufStatus) {
-    line += ` — a ${ctx.ufStatus}`;
+function loadVerifiedScouting(slug) {
+  if (!slug) return null;
+  try {
+    const scoutingDb = require('./scouting-database');
+    return scoutingDb.getEntryBySlug(slug) || null;
+  } catch {
+    return null;
   }
-  return line;
 }
 
-function formatUniversalPlayerNews({ source, ctx, newsEvent }) {
-  const src = String(source || 'GatorVault').trim();
-  const event = String(newsEvent || '').trim().replace(/\.$/, '');
-  if (!src || !ctx?.name || !event) return null;
-  const descriptor = buildPlayerDescriptor(ctx);
-  return `${src} reports that ${descriptor} has ${event}. 🐊`;
+function loadVerifiedBreakdown(slug) {
+  if (!slug) return null;
+  try {
+    const warRoom = require('./war-room-store');
+    const b = warRoom.getBreakdownBySlug(slug);
+    return b?.verified ? b : null;
+  } catch {
+    return null;
+  }
 }
 
-async function buildPlayerNewsPost({ source, newsEvent, playerSlug, playerName, patch = null }) {
-  const ctx = await resolvePlayerContext({ playerSlug, playerName, patch });
+function resolvePostKind(ctx, { newsEvent, intel, beatText } = {}) {
+  if (ctx.category === 'roster') return 'team';
+  if (ctx.isPortal || /portal/i.test(String(newsEvent || ''))) return 'portal';
+  if (intel?.eventType?.startsWith('portal')) return 'portal';
+  if (/portal/i.test(String(beatText || ''))) return 'portal';
+  return 'recruiting';
+}
+
+function buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLine }) {
+  const beat = beatText ? template.classifyBeatSentences(beatText) : { context: [], insider: [] };
+  const contextNorm = template.stripEmojisHashtags(contextLine || '').toLowerCase();
+  const insiderPick = beat.insider.find(
+    (s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm
+  );
+  if (insiderPick) {
+    return insiderPick.length <= 140 ? insiderPick : `${insiderPick.slice(0, 137)}…`;
+  }
+
+  const fromIntel = template.insiderFromIntel(intel);
+  if (fromIntel) return fromIntel;
+
+  const scouting = loadVerifiedScouting(playerSlug);
+  const fromScouting = template.insiderFromScouting(scouting);
+  if (fromScouting) return fromScouting;
+
+  const breakdown = loadVerifiedBreakdown(playerSlug);
+  const fromBreakdown = template.insiderFromBreakdown(breakdown);
+  if (fromBreakdown) return fromBreakdown;
+
+  return template.verifiedRankInsider(ctx);
+}
+
+function buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel }) {
+  const beat = beatText ? template.classifyBeatSentences(beatText) : { context: [], insider: [] };
+  if (beat.context[0]) {
+    return beat.context[0].length <= 160 ? beat.context[0] : `${beat.context[0].slice(0, 157)}…`;
+  }
+  const intelDetail = template.stripEmojisHashtags(intel?.detail || '');
+  if (intelDetail.length >= 20 && !/trending|momentum/i.test(intelDetail)) {
+    return intelDetail.length <= 160 ? intelDetail : `${intelDetail.slice(0, 157)}…`;
+  }
+  const fromEvent = template.contextFromNewsEvent(newsEvent, sourceLabel);
+  if (fromEvent) return fromEvent;
+  if (beatText) {
+    const sentences = template.extractSentences(beatText);
+    const factual = sentences.find(
+      (s) => !template.HEADLINE_ONLY_RE.test(s) && (template.FACTUAL_SIGNAL_RE.test(s) || s.length >= 30)
+    );
+    if (factual) return factual.length <= 160 ? factual : `${factual.slice(0, 157)}…`;
+  }
+  return null;
+}
+
+async function buildPlayerNewsPost({
+  source,
+  newsEvent,
+  playerSlug,
+  playerName,
+  patch = null,
+  beatText = null,
+  intel = null,
+  postKind = null,
+  teamContext = null,
+  portalStatus = 'Portal'
+} = {}) {
+  const ctx = await resolvePlayerContext({
+    playerSlug,
+    playerName,
+    patch,
+    preferPatch: !!patch
+  });
   if (!ctx.hasMinimumContext) return null;
-  const line = formatUniversalPlayerNews({ source, ctx, newsEvent });
-  if (!line) return null;
+
+  const kind = postKind || resolvePostKind(ctx, { newsEvent, intel, beatText });
+  const sourceLabel = String(source || 'On3').trim();
+
+  const contextLine = buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel });
+  if (!contextLine) return null;
+
+  const insiderLine = buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLine });
+  if (!insiderLine) return null;
+
+  let identity;
+  if (kind === 'portal') {
+    identity = template.buildPortalIdentity(ctx, portalStatus);
+  } else if (kind === 'team') {
+    identity = template.buildTeamIdentity(ctx, teamContext || template.detectTeamContext(beatText));
+  } else {
+    identity = template.buildRecruitingIdentity(ctx);
+  }
+
+  const raw = template.composeInsiderReport({
+    identity,
+    context: contextLine,
+    insider: insiderLine
+  });
+  if (!raw || !template.hasTemplateStructure(raw)) return null;
+  if (template.isHeadlineOnlyPost(raw)) return null;
+
+  const text = template.enforceTweetLimit(raw, 280);
+  if (!text || !template.hasTemplateStructure(text)) return null;
+
   return {
-    text: line,
+    text,
     playerName: ctx.name,
-    context: ctx
+    context: ctx,
+    postKind: kind,
+    templateBlocks: { identity, context: contextLine, insider: insiderLine }
   };
 }
 
@@ -173,7 +293,8 @@ function newsEventForIntel(intel) {
       const next = intel.nextVisitSchool ? ` and will visit ${intel.nextVisitSchool} this weekend` : '';
       return `cancelled his OV to Florida${next}`;
     }
-    case 'prediction': {
+    case 'prediction':
+    case 'rivals_futurecast': {
       const conf = intel.confidencePct != null ? ` (${intel.confidencePct}% confidence)` : '';
       if (/rivals|futurecast|prediction machine/i.test(String(intel.source || intel.status || ''))) {
         return `picked up a Florida FutureCast prediction${conf}`;
@@ -185,7 +306,7 @@ function newsEventForIntel(intel) {
     }
     case 'trending':
     case 'recruiting_momentum':
-      return 'moved up on Florida\'s recruiting board';
+      return null;
     case 'offer':
     case 'target_update':
     case 'offers':
@@ -206,8 +327,12 @@ function newsEventForIntel(intel) {
     case 'portal':
       return 'entered the transfer portal';
     default:
-      if (intel.detail) return String(intel.detail).replace(/\.$/, '').slice(0, 120);
-      if (intel.status) return String(intel.status).replace(/\.$/, '').slice(0, 120);
+      if (intel.detail && !/trending|momentum/i.test(String(intel.detail))) {
+        return String(intel.detail).replace(/\.$/, '').slice(0, 120);
+      }
+      if (intel.status && !/trending/i.test(String(intel.status))) {
+        return String(intel.status).replace(/\.$/, '').slice(0, 120);
+      }
       return null;
   }
 }
@@ -239,8 +364,12 @@ function newsEventForRecruitingEvent(ev) {
     case 'unofficial_visit':
       return 'scheduled a visit to Gainesville';
     default:
-      if (ev.detail) return String(ev.detail).replace(/\.$/, '').slice(0, 120);
-      if (ev.title) return String(ev.title).replace(/^[^:]+:\s*/, '').replace(/\.$/, '').slice(0, 120);
+      if (ev.detail && !/trending|ranking/i.test(String(ev.detail))) {
+        return String(ev.detail).replace(/\.$/, '').slice(0, 120);
+      }
+      if (ev.title && !/ranking/i.test(String(ev.title))) {
+        return String(ev.title).replace(/^[^:]+:\s*/, '').replace(/\.$/, '').slice(0, 120);
+      }
       return null;
   }
 }
@@ -260,7 +389,8 @@ function verifiedPatchFromIntel(intel) {
     classYear: intel.classYear,
     school: intel.school,
     stars: intel.stars,
-    natlRank: intel.natlRank
+    natlRank: intel.natlRank,
+    htWt: intel.htWt
   };
 }
 
@@ -271,7 +401,8 @@ function verifiedPatchFromRow(row) {
     classYear: row.classYear,
     school: row.school,
     stars: row.stars,
-    natlRank: row.natlRank
+    natlRank: row.natlRank,
+    htWt: row.htWt
   };
 }
 
@@ -289,23 +420,22 @@ function verifiedPatchFromPlayer(player) {
     category: player.category,
     inState: player.inState,
     committedTo: player.committedTo,
-    status: player.status
+    status: player.status,
+    formerSchool: player.transferFrom || player.committedTo
   };
 }
 
 module.exports = {
   isValidPlayerName,
-  parseCityState,
-  formatStarsLabel,
-  deriveUfTargetStatus,
+  formatPlayerContext,
   resolvePlayerContext,
-  buildPlayerDescriptor,
-  formatUniversalPlayerNews,
   buildPlayerNewsPost,
   newsEventForIntel,
   newsEventForRecruitingEvent,
   sourceLabelForIntel,
   verifiedPatchFromIntel,
   verifiedPatchFromRow,
-  verifiedPatchFromPlayer
+  verifiedPatchFromPlayer,
+  resolvePostKind,
+  loadVerifiedScouting
 };

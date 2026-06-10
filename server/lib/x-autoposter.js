@@ -8,6 +8,7 @@ const { loadOAuth1Credentials, isOAuth1Configured, oauth1Request, oauth1RequestJ
 const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
 const { refillAutoposterQueue } = require('./x-autoposter-fill');
+const cadence = require('./x-autoposter-cadence');
 const {
   isReplyEnabled,
   scheduleRepliesForSentPost,
@@ -35,6 +36,7 @@ function loadSchedulerStatus() {
       lastRun: null,
       lastPostAttempt: null,
       lastPostSuccess: null,
+      lastPostAt: null,
       lastRefillAt: null,
       lastRefillCount: 0,
       lastProcessedCount: 0,
@@ -115,6 +117,7 @@ function getConfigStatus() {
     replyEnabled: process.env.X_AUTOPOST_REPLY_ENABLED === 'true',
     schedulerIntervalMs: parseInt(process.env.X_AUTOPOST_INTERVAL_MS || '60000', 10),
     contentMix: policy.getContentPolicy().contentMixLabel,
+    cadence: cadence.getCadenceConfig(),
     lastVerify: _statusCache.checkedAt ? { ..._statusCache } : null,
     scheduler: getSchedulerStatus()
   };
@@ -295,6 +298,7 @@ async function processQueueItem(item) {
       validationErrors: []
     });
     saveSchedulerStatus({
+      lastPostAt: store.nowIso(),
       lastPostSuccess: store.nowIso(),
       lastError: null
     });
@@ -317,7 +321,11 @@ async function processQueueItem(item) {
         error: err.message,
         sentAt: store.nowIso()
       });
-      saveSchedulerStatus({ lastPostSuccess: store.nowIso(), lastError: null });
+      saveSchedulerStatus({
+        lastPostAt: store.nowIso(),
+        lastPostSuccess: store.nowIso(),
+        lastError: null
+      });
       return { ok: true, skipped: true, duplicate: true, itemId: item.id };
     }
     autopostLog('error', `Error: ${err.message}`, { itemId: item.id });
@@ -331,14 +339,51 @@ async function processQueueItem(item) {
   }
 }
 
-async function processDuePosts({ limit = 5 } = {}) {
-  const due = store.getDuePosts(limit);
-  if (due.length) autopostLog('info', `Processing ${due.length} due post(s)…`);
+async function processDuePosts({ limit = 1, force = false } = {}) {
+  const pending = store.listQueue({ status: 'pending' });
+  const status = loadSchedulerStatus();
+  const lastPostAt = status.lastPostAt || status.lastPostSuccess || null;
+
+  if (!force) {
+    const window = cadence.evaluatePostWindow({ pendingItems: pending, lastPostAt });
+    if (!window.allowed) {
+      autopostLog('info', `Cadence hold (${window.reason})`, {
+        waitMs: window.waitMs,
+        tier: window.tier,
+        label: window.label,
+        nightMode: window.nightMode
+      });
+      saveSchedulerStatus({
+        lastCadenceCheck: store.nowIso(),
+        lastCadenceReason: window.reason,
+        cadenceWaitMs: window.waitMs || 0,
+        nightMode: window.nightMode
+      });
+      return { processed: 0, skipped: true, cadence: window, results: [] };
+    }
+
+    const item = window.item;
+    autopostLog('info', `Cadence post (${window.reason})`, {
+      tier: window.tier,
+      label: window.label,
+      itemId: item.id
+    });
+    const result = await processQueueItem(item);
+    return { processed: 1, skipped: false, cadence: window, results: [result] };
+  }
+
+  const due = pending
+    .filter((i) => new Date(i.scheduledAt).getTime() <= Date.now())
+    .slice(0, Math.max(1, limit));
+  if (!due.length) return { processed: 0, skipped: true, reason: 'no_due_posts', results: [] };
+
+  autopostLog('info', `Force processing ${due.length} due post(s)…`);
   const results = [];
   for (const item of due) {
     results.push(await processQueueItem(item));
+    if (results.length >= limit) break;
   }
-  return { processed: results.length, results };
+  return { processed: results.length, skipped: false, forced: true, results };
 }
 
 let _schedulerTimer = null;
@@ -388,13 +433,14 @@ function startXAutoposterScheduler() {
           lastRefillAt: store.nowIso(),
           lastRefillCount: refill.enqueuedCount || 0
         });
-        const out = await processDuePosts();
+        const out = await processDuePosts({ limit: 1 });
         saveSchedulerStatus({
           lastProcessedCount: out.processed || 0,
+          lastCadenceReason: out.cadence?.reason || out.reason || null,
           lastError: null
         });
         if (out.processed > 0) {
-          autopostLog('info', `Cron tick processed ${out.processed} post(s)`);
+          autopostLog('info', `Cron tick posted ${out.processed} item(s)`, { cadence: out.cadence?.reason });
         }
         if (isReplyEnabled()) {
           const trend = await scanTrendingEngagementReplies();
@@ -432,5 +478,7 @@ module.exports = {
   getContentPolicy: policy.getContentPolicy,
   validatePostContent: policy.validatePostContent,
   getSchedulerStatus,
-  saveSchedulerStatus
+  saveSchedulerStatus,
+  getCadenceConfig: cadence.getCadenceConfig,
+  evaluatePostWindow: cadence.evaluatePostWindow
 };

@@ -36,6 +36,7 @@ const TRUSTED_PATTERN =
 
 const MOMENTUM_KEYWORDS = [
   'trending up',
+  'trend up',
   'trending',
   'heating up',
   'momentum',

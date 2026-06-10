@@ -1,6 +1,7 @@
 const autoposter = require('./x-autoposter');
 const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
+const cadence = require('./x-autoposter-cadence');
 const { refillAutoposterQueue } = require('./x-autoposter-fill');
 
 const X_AUTOPOST_PIN =
@@ -76,6 +77,8 @@ function mountXAutoposterRoutes(app) {
       const due = pending.filter((i) => new Date(i.scheduledAt).getTime() <= Date.now());
       const mix = store.getMixStats();
       const pipelineHealth = require('./pipeline-health');
+      const lastPostAt = scheduler.lastPostAt || scheduler.lastPostSuccess || null;
+      const cadenceWindow = cadence.evaluatePostWindow({ pendingItems: pending, lastPostAt });
       return res.json({
         ok: true,
         ...config,
@@ -83,6 +86,19 @@ function mountXAutoposterRoutes(app) {
         lastRun: scheduler.lastRun,
         lastPostAttempt: scheduler.lastPostAttempt,
         lastPostSuccess: scheduler.lastPostSuccess,
+        lastPostAt,
+        lastCadenceReason: scheduler.lastCadenceReason || cadenceWindow.reason,
+        cadenceWaitMs: scheduler.cadenceWaitMs ?? cadenceWindow.waitMs ?? 0,
+        nightMode: scheduler.nightMode ?? cadenceWindow.nightMode ?? cadence.isNightModeEst(),
+        cadenceWindow: {
+          allowed: cadenceWindow.allowed,
+          reason: cadenceWindow.reason,
+          waitMs: cadenceWindow.waitMs || 0,
+          cooldownMs: cadenceWindow.cooldownMs || 0,
+          tier: cadenceWindow.tier || null,
+          label: cadenceWindow.label || null,
+          breakingCount: cadenceWindow.breakingCount || 0
+        },
         lastRefillAt: scheduler.lastRefillAt,
         lastError: scheduler.lastError || (verify && !verify.ok ? verify.error : null),
         queuePending: pending.length,
@@ -204,7 +220,8 @@ function mountXAutoposterRoutes(app) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
     try {
-      const out = store.enqueuePost(queuePayloadFromBody(req.body));
+      const tagged = cadence.tagCandidate(queuePayloadFromBody(req.body));
+      const out = store.enqueuePost(tagged);
       return res.json({ ok: true, item: out.item, mix: out.mix });
     } catch (err) {
       return res.status(400).json({
@@ -242,11 +259,14 @@ function mountXAutoposterRoutes(app) {
           lastRefillCount: refill.enqueuedCount || 0
         });
       }
+      const force = req.body.force === true || req.query.force === '1' || req.query.force === 'true';
       const out = await autoposter.processDuePosts({
-        limit: parseInt(req.body.limit || req.query.limit || '5', 10)
+        limit: parseInt(req.body.limit || req.query.limit || '1', 10),
+        force
       });
       autoposter.saveSchedulerStatus({
-        lastProcessedCount: out.processed || 0
+        lastProcessedCount: out.processed || 0,
+        lastCadenceReason: out.cadence?.reason || out.reason || null
       });
       const scheduler = autoposter.getSchedulerStatus();
       return res.json({
@@ -257,7 +277,12 @@ function mountXAutoposterRoutes(app) {
         lastRun: scheduler.lastRun,
         lastPostAttempt: scheduler.lastPostAttempt,
         lastPostSuccess: scheduler.lastPostSuccess,
+        lastPostAt: scheduler.lastPostAt || scheduler.lastPostSuccess || null,
+        lastCadenceReason: scheduler.lastCadenceReason,
+        cadenceWaitMs: scheduler.cadenceWaitMs,
+        nightMode: scheduler.nightMode,
         lastError: scheduler.lastError,
+        forced: force,
         ...out
       });
     } catch (err) {

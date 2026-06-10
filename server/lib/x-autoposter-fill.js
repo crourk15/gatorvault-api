@@ -12,6 +12,7 @@ const { commitFingerprint, intelFingerprint } = require('./commit-fingerprint');
 const { getBeatPosts } = require('./live-beat');
 const beatFilters = require('./beat-writer-filters');
 const copy = require('./x-autoposter-copy');
+const cadence = require('./x-autoposter-cadence');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 const ON3_PORTAL =
@@ -70,6 +71,8 @@ async function buildNewsFromEvent(ev) {
     text: built.text,
     category: 'news',
     topic: ev.eventType?.startsWith('portal') ? 'portal' : 'recruiting',
+    urgencyLabel: ev.eventType?.startsWith('portal') ? 'portal' : 'commitment',
+    sourceEventType: ev.eventType,
     sources: [{ label: 'On3', url: ON3_PORTAL }],
     source: 'auto:on3-event',
     commitFingerprint: fp,
@@ -84,10 +87,14 @@ async function buildNewsFromIntel(intel) {
   const built = await copy.buildIntelCopyAsync(intel);
   if (!built?.text || copy.isBrokenCopy(built.text)) return null;
   const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
+  const intelType = String(intel.eventType || '').toLowerCase();
+  const urgentIntel = /visit_cancel|visit_scheduled|rivals_prediction|injury/.test(intelType);
   return {
     text: built.text,
     category: 'news',
     topic: 'recruiting',
+    urgencyLabel: /injury/.test(intelType) ? 'injury' : urgentIntel ? 'major_beat' : null,
+    sourceEventType: intel.eventType,
     sources: [{ label: intel.source || 'Insider', url: intel.sourceHandle ? `https://x.com/${intel.sourceHandle}` : SITE_URL }],
     source: 'auto:intel',
     intelFingerprint: fp,
@@ -105,6 +112,8 @@ async function buildNewsFromPortal(headliner) {
     text: built.text,
     category: 'news',
     topic: 'portal',
+    urgencyLabel: 'portal',
+    sourceEventType: 'portal_headliner',
     sources: [{ label: 'On3', url: headliner.on3ProfileUrl || ON3_PORTAL }],
     source: 'auto:portal-headliner',
     intelFingerprint: fp,
@@ -138,15 +147,20 @@ function buildPromoFromMix() {
 
 function buildNewsFromArticle(article) {
   if (!article?.title) return null;
+  const playerName = copy.extractPlayerFromText(`${article.title} ${article.summary || ''}`);
+  if (!playerName) return null;
   const fp = intelFingerprint(article.id || article.title, 'article', article.publishedAt || article.date);
-  const text = `${article.title} — read in the Vault`.slice(0, 240);
   return {
-    text: `${text} ${SITE_URL}`,
+    text: null,
     category: 'news',
     topic: 'general',
+    urgencyLabel: 'analysis',
+    sourceEventType: 'article',
     sources: [{ label: article.author || 'GatorVault', url: SITE_URL }],
     source: 'auto:article',
-    intelFingerprint: fp
+    intelFingerprint: fp,
+    playerName,
+    _articleBuild: article
   };
 }
 
@@ -160,6 +174,8 @@ async function buildMomentumFromBeat(post) {
     text,
     category: 'news',
     topic: 'recruiting',
+    urgencyLabel: 'major_beat',
+    sourceEventType: 'recruiting_momentum',
     sources: [{ label: source, url: post.url || SITE_URL }],
     source: 'auto:beat-momentum',
     intelType: 'recruiting_momentum',
@@ -178,6 +194,8 @@ async function buildNewsFromBeatPost(post) {
     text,
     category: 'news',
     topic: 'recruiting',
+    urgencyLabel: 'major_beat',
+    sourceEventType: 'beat_intel',
     sources: [{ label: source, url: post.url || SITE_URL }],
     source: 'auto:beat-intel',
     intelFingerprint: fp,
@@ -193,6 +211,8 @@ async function buildNewsFromPortalEvent(ev) {
     text: built.text,
     category: 'news',
     topic: 'portal',
+    urgencyLabel: 'portal',
+    sourceEventType: ev.eventType,
     sources: [{ label: 'On3', url: ON3_PORTAL }],
     source: 'auto:on3-portal',
     intelFingerprint: fp,
@@ -286,24 +306,39 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
     /* optional */
   }
 
-  const promo = buildPromoFromMix();
-  if (promo) candidates.push(promo);
+  const allowPromo = process.env.X_AUTOPOST_ALLOW_PROMO === 'true';
+  if (allowPromo) {
+    const promo = buildPromoFromMix();
+    if (promo) candidates.push(promo);
+  }
 
   const enqueued = [];
   let added = 0;
-  for (const raw of candidates) {
+  for (const rawCandidate of candidates) {
     if (added >= slots) break;
+    let raw = rawCandidate;
+    if (raw._articleBuild) {
+      const articleBuilt = await copy.buildArticleCopyAsync(raw._articleBuild);
+      if (!articleBuilt?.text) continue;
+      raw = {
+        ...raw,
+        text: articleBuilt.text,
+        playerName: articleBuilt.playerName
+      };
+      delete raw._articleBuild;
+    }
+    if (!raw.text || copy.isBrokenCopy(raw.text)) continue;
     const fp = raw.intelFingerprint || raw.commitFingerprint;
     if (fp && fingerprintAlreadyQueued(fp, doc.items)) continue;
     if (raw.commitFingerprint && commitAlreadyQueued(raw.commitFingerprint, doc.items)) continue;
     if (alreadyQueued(raw.text, doc.items)) continue;
-    if (copy.isBrokenCopy(raw.text)) continue;
     const check = policy.validatePostContent(raw);
     if (!check.valid) continue;
     try {
+      const tagged = cadence.tagCandidate(raw);
       const out = store.enqueuePost({
-        ...raw,
-        scheduledAt: new Date(Date.now() + added * 45 * 60 * 1000).toISOString(),
+        ...tagged,
+        scheduledAt: store.nowIso(),
         status: 'pending'
       });
       enqueued.push(out.item);

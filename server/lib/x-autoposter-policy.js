@@ -29,6 +29,19 @@ const AI_INVENTED_PATTERNS = [
   /\bper my sources\b/i
 ];
 
+const HEADLINE_ONLY_PATTERNS = [
+  /\bUF trending\b/i,
+  /\bGators offered\b/i,
+  /\bFlorida offered\b/i,
+  /\btrending for florida\b/i,
+  /\btrending to florida\b/i
+];
+
+const FORBIDDEN_FORMAT_PATTERNS = [
+  /🐊/,
+  /#[A-Za-z0-9_]+/
+];
+
 const PROMO_MARKERS = [/gatorvault/i, /gatorvaultinsider\.com/i];
 
 function isPublicHttpUrl(url) {
@@ -72,6 +85,21 @@ function containsInventedClaims(text) {
   return AI_INVENTED_PATTERNS.some((re) => re.test(String(text || '')));
 }
 
+function hasInsiderTemplateStructure(text) {
+  const lines = String(text || '')
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean);
+  return lines.length >= 3;
+}
+
+function violatesFormatRules(text) {
+  const t = String(text || '');
+  if (FORBIDDEN_FORMAT_PATTERNS.some((re) => re.test(t))) return true;
+  if (HEADLINE_ONLY_PATTERNS.some((re) => re.test(t))) return true;
+  return false;
+}
+
 function looksLikeFactualNews(text) {
   const t = String(text || '');
   return /\b(commit|portal|transfer|signs|hired|fired|injury|depth chart|recruit|verb|offer|flip|decommit|score|final|vs\.|@\w)/i.test(t);
@@ -102,6 +130,22 @@ function validatePostContent(item) {
       field: 'text',
       type: 'ai_invented',
       message: 'Posts must not contain AI-invented or unsourced rumor language. Cite credible public reporting.'
+    });
+  }
+
+  if (violatesFormatRules(text)) {
+    errors.push({
+      field: 'text',
+      type: 'format',
+      message: 'Posts must use the insider template — no emojis, hashtags, or headline-only copy.'
+    });
+  }
+
+  if (category === 'news' && text && !hasInsiderTemplateStructure(text)) {
+    errors.push({
+      field: 'text',
+      type: 'template',
+      message: 'News posts require identity, context, and insider angle blocks (3 lines minimum).'
     });
   }
 
@@ -224,6 +268,8 @@ function getContentPolicy() {
     siteUrl: SITE_URL,
     rules: [
       'No AI-invented news or unsourced factual claims',
+      'News posts require identity · context · insider angle (verified sources only)',
+      'No emojis, hashtags, or headline-only posts',
       'News posts require credible sources',
       'Engagement: replies, quotes, hype — facts still need sources',
       'Promo: blend GatorVault into the news cycle; value → engagement → promotion',
