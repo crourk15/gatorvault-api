@@ -678,6 +678,29 @@ async function upsertTargetFromVisitIntel(intel) {
   if (existing && isFloridaCommit(existing)) return existing;
 
   const isCancel = intel.eventType === 'visit_cancelled' || intel.eventType === 'ov_change';
+  const eventType =
+    isCancel ? 'visit_cancelled' : intel.eventType === 'official_visit' || intel.eventType === 'unofficial_visit'
+      ? intel.eventType
+      : intel.eventType || 'target_update';
+
+  const mergedPlayer = {
+    ...(existing || {}),
+    slug,
+    name: intel.playerName || existing?.name,
+    pos: intel.pos || existing?.pos,
+    classYear: intel.classYear || existing?.classYear,
+    school: intel.school || existing?.school,
+    stars: intel.stars || existing?.stars,
+    natlRank: intel.natlRank || existing?.natlRank,
+    committedTo: existing?.committedTo ?? null,
+    nextVisitSchool: intel.nextVisitSchool || existing?.nextVisitSchool
+  };
+  const copy = require('./recruiting-alert-templates').buildRecruitingCopy({
+    player: mergedPlayer,
+    existing,
+    eventType,
+    row: intel
+  });
 
   const patch = {
     slug,
@@ -688,8 +711,8 @@ async function upsertTargetFromVisitIntel(intel) {
     category: 'target',
     status: 'uncommitted',
     committedTo: existing?.committedTo ?? null,
-    skinny: intel.detail || existing?.skinny || '',
-    profileNote: intel.detail || existing?.profileNote || ''
+    skinny: copy.skinny,
+    profileNote: copy.profileNote
   };
 
   if (isCancel) {
@@ -698,9 +721,6 @@ async function upsertTargetFromVisitIntel(intel) {
     patch.nextVisitSchool = intel.nextVisitSchool || existing?.nextVisitSchool || null;
     patch.visitStart = null;
     patch.visitEnd = null;
-    patch.profileNote = intel.nextVisitSchool
-      ? `OV to Florida cancelled · now visiting ${intel.nextVisitSchool}`
-      : 'OV to Florida cancelled';
   } else if (intel.eventType === 'official_visit' || intel.eventType === 'unofficial_visit') {
     patch.visitStart = intel.visitStart || existing?.visitStart || null;
     patch.visitEnd = intel.visitEnd || existing?.visitEnd || null;

@@ -309,6 +309,23 @@ async function processBeatVisitIntelRow(row, snapshot) {
   }
 
   const existing = await store.getPlayerBySlug(row.playerSlug);
+  const mergedPlayer = {
+    ...(existing || {}),
+    slug: row.playerSlug,
+    name: row.playerName,
+    pos: row.pos || existing?.pos,
+    classYear: row.classYear || existing?.classYear,
+    school: row.school || existing?.school,
+    stars: row.stars || existing?.stars,
+    natlRank: row.natlRank || existing?.natlRank,
+    committedTo: existing?.committedTo || null
+  };
+  const copy = require('./recruiting-alert-templates').buildRecruitingCopy({
+    player: mergedPlayer,
+    existing,
+    eventType: row.eventType,
+    row
+  });
   const playerPatch = {
     slug: row.playerSlug,
     name: row.playerName,
@@ -324,8 +341,8 @@ async function processBeatVisitIntelRow(row, snapshot) {
     ufOvStatus: row.eventType === 'official_visit' ? 'scheduled' : existing?.ufOvStatus || 'visit',
     visitStart: row.visitStart || existing?.visitStart,
     visitEnd: row.visitEnd || existing?.visitEnd,
-    skinny: row.detail,
-    profileNote: `${row.eventType === 'official_visit' ? 'OV' : 'Visit'} to Florida · via ${row.source}`
+    skinny: copy.skinny,
+    profileNote: copy.profileNote
   };
   const player = await store.upsertPlayer(playerPatch);
 
@@ -421,8 +438,8 @@ async function processBeatVisitIntelRow(row, snapshot) {
     playerSlug: player.slug,
     eventType: row.eventType,
     title: `${player.name} — ${row.eventType === 'official_visit' ? 'OV' : 'Visit'} to Florida`,
-    detail: row.detail,
-    skinny: `${player.pos || 'Recruit'} · ${player.classYear || ''} · via ${row.source}`,
+    detail: copy.profileNote,
+    skinny: copy.skinny,
     classYear: player.classYear,
     payload: { player, beatVisit: row },
     source: 'beat_writer_ingest'

@@ -265,6 +265,11 @@ async function firePlayerEvent(eventType, player, extra, snapshot) {
     (existing.category === 'target' || existing.status === 'target' || existing.committedTo !== 'Florida');
 
   const resolvedType = isFlip ? 'flip' : eventType;
+  const copy = require('./recruiting-alert-templates').buildRecruitingCopy({
+    player: { ...player, committedTo: 'Florida' },
+    eventType: resolvedType,
+    row: { detail: extra?.detail }
+  });
   const payload = {
     eventType: resolvedType,
     player: {
@@ -284,11 +289,11 @@ async function firePlayerEvent(eventType, player, extra, snapshot) {
       on3Id: player.on3Id,
       commitDate: player.commitDate || null,
       committedTo: 'Florida',
-      skinny: buildSkinny(player),
-      profileNote: extra?.detail || ''
+      skinny: copy.skinny || buildSkinny(player),
+      profileNote: copy.profileNote
     },
-    skinny: buildSkinny(player),
-    detail: extra?.detail || '',
+    skinny: copy.skinny || buildSkinny(player),
+    detail: copy.profileNote,
     source: 'on3'
   };
 

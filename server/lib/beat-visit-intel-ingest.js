@@ -123,6 +123,24 @@ async function processVisitIntelRow(row, snapshot) {
   }
 
   const existing = await store.getPlayerBySlug(row.playerSlug);
+  const mergedPlayer = {
+    ...(existing || {}),
+    slug: row.playerSlug,
+    name: row.playerName,
+    pos: row.pos || existing?.pos,
+    classYear: row.classYear || existing?.classYear,
+    school: row.school || existing?.school,
+    stars: row.stars || existing?.stars,
+    natlRank: row.natlRank || existing?.natlRank,
+    committedTo: existing?.committedTo || null,
+    nextVisitSchool: row.nextVisitSchool || existing?.nextVisitSchool
+  };
+  const copy = require('./recruiting-alert-templates').buildRecruitingCopy({
+    player: mergedPlayer,
+    existing,
+    eventType: row.eventType || 'visit_cancelled',
+    row
+  });
   const playerPatch = {
     slug: row.playerSlug,
     name: row.playerName,
@@ -138,10 +156,8 @@ async function processVisitIntelRow(row, snapshot) {
     nextVisitSchool: row.nextVisitSchool || existing?.nextVisitSchool,
     visitStart: null,
     visitEnd: null,
-    skinny: row.detail,
-    profileNote: row.nextVisitSchool
-      ? `OV to Florida cancelled · now visiting ${row.nextVisitSchool}`
-      : 'OV to Florida cancelled'
+    skinny: copy.skinny,
+    profileNote: copy.profileNote
   };
   const player = await store.upsertPlayer(playerPatch);
 
@@ -172,8 +188,8 @@ async function processVisitIntelRow(row, snapshot) {
     playerSlug: player.slug,
     eventType: 'visit_cancelled',
     title: `${player.name} — OV to Florida cancelled${row.nextVisitSchool ? ` · visiting ${row.nextVisitSchool}` : ''}`,
-    detail: row.detail,
-    skinny: `${player.pos || 'Recruit'} · ${player.classYear || ''} · via ${row.source}`,
+    detail: copy.profileNote,
+    skinny: copy.skinny,
     classYear: player.classYear,
     payload: { player, visitIntel: row },
     source: row.sourceType === 'manual' ? row.source : 'beat_visit_intel'

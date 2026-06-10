@@ -218,6 +218,23 @@ async function processPrediction(row, snapshot) {
     return { skipped: true, reason: 'ineligible_at_process', fingerprint: row.fingerprint };
   }
 
+  const mergedPlayer = {
+    ...(existing || {}),
+    slug: row.playerSlug,
+    name: row.playerName,
+    pos: row.pos || existing?.pos,
+    classYear: row.classYear || existing?.classYear,
+    school: row.school || existing?.school,
+    stars: row.stars || existing?.stars,
+    natlRank: row.natlRank || existing?.natlRank,
+    committedTo: existing?.committedTo || null
+  };
+  const copy = require('./recruiting-alert-templates').buildRecruitingCopy({
+    player: mergedPlayer,
+    existing,
+    eventType: 'prediction',
+    row
+  });
   const playerPatch = {
     slug: row.playerSlug,
     name: row.playerName,
@@ -235,8 +252,8 @@ async function processPrediction(row, snapshot) {
     rivalsAnalyst: row.analystName,
     rivalsConfidence: row.confidence,
     rivalsArticleUrl: row.articleUrl,
-    skinny: row.detail,
-    profileNote: `Rivals PM: ${row.analystName} → Florida${row.confidence != null ? ` (${row.confidence}%)` : ''}`
+    skinny: copy.skinny,
+    profileNote: copy.profileNote
   };
   const player = await store.upsertPlayer(playerPatch);
 
@@ -276,8 +293,8 @@ async function processPrediction(row, snapshot) {
     playerSlug: player.slug,
     eventType: 'prediction',
     title: `Rivals PM: ${row.analystName} picks Florida for ${player.name}`,
-    detail: row.detail,
-    skinny: `${player.pos || 'Recruit'} · ${player.classYear || ''} · ${row.confidence != null ? row.confidence + '%' : 'FutureCast'}`,
+    detail: copy.profileNote,
+    skinny: copy.skinny,
     classYear: player.classYear,
     payload: { player, rivals: row },
     source: 'rivals_pm'
