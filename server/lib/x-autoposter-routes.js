@@ -3,6 +3,8 @@ const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
 const cadence = require('./x-autoposter-cadence');
 const { refillAutoposterQueue } = require('./x-autoposter-fill');
+const freshness = require('./autoposter-freshness');
+const { forcePostNow } = require('./autoposter-force-post');
 
 const X_AUTOPOST_PIN =
   process.env.X_AUTOPOST_PIN ||
@@ -288,6 +290,56 @@ function mountXAutoposterRoutes(app) {
     } catch (err) {
       autoposter.saveSchedulerStatus({ lastError: err.message });
       return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/autoposter/status', async (req, res) => {
+    try {
+      const scheduler = autoposter.getSchedulerStatus();
+      const pending = store.listQueue({ status: 'pending' });
+      const status = freshness.getAutoposterStatus({
+        scheduler: { ...scheduler, queuePending: pending.length }
+      });
+      return res.json({
+        lastPostAt: status.lastPostAt,
+        lastPostAttempt: status.lastPostAttempt,
+        minutesSinceLastPost: status.minutesSinceLastPost,
+        lastPostLabel: status.lastPostLabel,
+        postsLast24h: status.postsLast24h,
+        status: status.status,
+        activityWindow: status.activityWindow,
+        errors24h: status.errors24h,
+        identityFailStreak: status.identityFailStreak
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/autoposter/force-post', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const out = await forcePostNow();
+      if (out.ok && out.posted) {
+        return res.json({
+          ok: true,
+          posted: true,
+          timestamp: out.timestamp,
+          source: out.source || 'force-post',
+          tweetId: out.tweetId,
+          tweetUrl: out.tweetUrl
+        });
+      }
+      return res.status(out.error === 'duplicate' ? 409 : 400).json({
+        ok: false,
+        posted: false,
+        error: out.error || 'x_api_error',
+        source: 'force-post'
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: 'x_api_error', message: err.message });
     }
   });
 }

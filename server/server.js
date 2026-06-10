@@ -901,6 +901,17 @@ app.listen(PORT, () => {
         }
         return patternStore.rebuildAllPatterns().then((r) => {
           console.log('[identity-patterns] boot rebuild:', r.count, 'players in', r.durationMs, 'ms');
+          try {
+            const opsMonitor = require('./lib/ops-monitor');
+            opsMonitor.logEvent({
+              subsystem: 'cron:identity-patterns',
+              status: 'success',
+              message: 'Identity patterns boot rebuild',
+              details: { count: r.count, durationMs: r.durationMs, boot: true }
+            });
+          } catch {
+            /* optional */
+          }
         });
       })
       .catch((err) => console.warn('[identity-patterns] boot sync skipped:', err.message));
@@ -960,6 +971,16 @@ app.listen(PORT, () => {
   try {
     const { startXAutoposterScheduler } = require('./lib/x-autoposter');
     startXAutoposterScheduler();
+    try {
+      const freshness = require('./lib/autoposter-freshness');
+      const scheduler = require('./lib/x-autoposter').getSchedulerStatus();
+      const synced = freshness.syncLastPostFromScheduler(scheduler);
+      if (synced.lastPostAt) {
+        console.log('[autoposter] last-post.json synced:', synced.lastPostAt);
+      }
+    } catch (syncErr) {
+      console.warn('[autoposter] last-post sync skipped:', syncErr.message);
+    }
   } catch (e) {
     console.warn('X AutoPoster scheduler failed to start', e.message);
   }

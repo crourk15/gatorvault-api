@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GatorVault — Identity Patterns (GV-OM)</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root { --bg:#030712; --panel:#0b1220; --border:#1e293b; --text:#e8edf5; --muted:#8b9bb4; --orange:#fa4616; --green:#22c55e; --yellow:#f59e0b; --red:#ef4444; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text)}
+    header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(3,7,18,.95);backdrop-filter:blur(8px);z-index:10}
+    h1{margin:0;font-family:Oswald,sans-serif;font-size:1.15rem;letter-spacing:.04em}
+    .sub{font-size:.75rem;color:var(--muted)}
+    main{padding:1rem 1.25rem 3rem;max-width:1400px;margin:0 auto}
+    input,button,select{font:inherit}
+    input[type=password],input[type=text]{background:var(--panel);border:1px solid #334155;color:var(--text);padding:.5rem .75rem;border-radius:.5rem}
+    button{background:var(--orange);color:#fff;border:0;padding:.5rem .9rem;border-radius:.5rem;cursor:pointer;font-weight:600}
+    button.secondary{background:#334155}
+    button.sm{padding:.35rem .6rem;font-size:.75rem}
+    button:disabled{opacity:.5;cursor:not-allowed}
+    .nav{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
+    .nav a{padding:.4rem .7rem;border-radius:.5rem;background:var(--panel);border:1px solid var(--border);font-size:.8rem;color:#60a5fa;text-decoration:none}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-bottom:1rem}
+    .stat{background:var(--panel);border:1px solid var(--border);border-radius:.75rem;padding:.75rem 1rem}
+    .stat .label{color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.05em}
+    .stat .value{font-size:1.25rem;font-weight:700;margin-top:.25rem}
+    .section{margin:1.25rem 0}
+    .section h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 .75rem}
+    .layout{display:grid;grid-template-columns:minmax(280px,1fr) minmax(320px,1.2fr);gap:1rem;align-items:start}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}}
+    .panel{background:var(--panel);border:1px solid var(--border);border-radius:.85rem;padding:.85rem 1rem}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.65rem}
+    .panel-head h3{margin:0;font-size:.9rem}
+    table{width:100%;border-collapse:collapse;font-size:.8rem}
+    th,td{padding:.5rem .55rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+    th{color:var(--muted);font-size:.7rem;text-transform:uppercase}
+    tr.player-row{cursor:pointer}
+    tr.player-row:hover{background:rgba(255,255,255,.03)}
+    tr.player-row.selected{background:rgba(250,70,22,.08)}
+    .pattern-list{max-height:340px;overflow:auto;font-family:ui-monospace,monospace;font-size:.72rem;line-height:1.55;background:#020617;border:1px solid var(--border);border-radius:.5rem;padding:.65rem .75rem}
+    .pattern-list div{padding:.15rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .priority-list{margin:0;padding-left:1.1rem;font-size:.8rem;color:#cbd5e1;line-height:1.7}
+    .priority-list li span{color:var(--muted);font-size:.75rem}
+    .log-panel{background:#020617;border:1px solid var(--border);border-radius:.75rem;padding:.75rem;max-height:220px;overflow:auto;font-family:ui-monospace,monospace;font-size:.72rem;white-space:pre-wrap}
+    .meta{font-size:.75rem;color:var(--muted)}
+    .detail-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem;margin:.65rem 0;font-size:.8rem}
+    .detail-meta div{background:#020617;border:1px solid var(--border);border-radius:.5rem;padding:.45rem .6rem}
+    .detail-meta strong{display:block;font-size:.65rem;text-transform:uppercase;color:var(--muted);margin-bottom:.15rem}
+    .actions{display:flex;flex-wrap:wrap;gap:.45rem;margin:.65rem 0}
+    .empty{padding:1.5rem;text-align:center;color:var(--muted);font-size:.85rem}
+    .pin-gate{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem}
+    .pin-card{background:var(--panel);border:1px solid var(--border);border-radius:1rem;padding:1.5rem;max-width:380px;width:100%}
+    .hidden{display:none!important}
+    .badge{display:inline-block;font-size:.65rem;padding:.15rem .45rem;border-radius:.35rem;background:#334155;color:#cbd5e1;margin-left:.35rem}
+    .badge.boot{background:rgba(34,197,94,.15);color:var(--green)}
+  </style>
+</head>
+<body>
+  <div id="pin-gate" class="pin-gate">
+    <div class="pin-card">
+      <h1>Identity Patterns</h1>
+      <p class="sub" style="margin:.5rem 0 1rem">GV-OM — admin PIN required.</p>
+      <input id="gate-pin" type="password" placeholder="Admin PIN" autocomplete="off" style="width:100%;margin-bottom:.75rem" />
+      <button id="gate-unlock" style="width:100%">Unlock</button>
+      <p id="gate-err" class="hidden" style="color:var(--red);font-size:.8rem;margin:.75rem 0 0">Invalid PIN</p>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <header>
+      <div>
+        <h1>Identity Patterns</h1>
+        <div class="sub">Auto-generated phrase index for beat-writer identity resolution</div>
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+        <input id="pin" type="password" placeholder="Session PIN" autocomplete="off" />
+        <button id="refresh">Refresh</button>
+        <button id="rebuild-all" class="secondary">Rebuild All Patterns</button>
+      </div>
+    </header>
+    <main>
+      <div class="nav">
+        <a href="/admin/ops">← GV-OM</a>
+        <a href="/admin">Admin Hub</a>
+        <a href="/admin/monitoring">Recruiting Monitoring</a>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="label">Total Players</div><div class="value" id="stat-players">—</div></div>
+        <div class="stat"><div class="label">Total Patterns</div><div class="value" id="stat-patterns">—</div></div>
+        <div class="stat"><div class="label">Last Rebuild</div><div class="value" id="stat-rebuild" style="font-size:.95rem">—</div></div>
+        <div class="stat"><div class="label">Rebuild Duration</div><div class="value" id="stat-duration">—</div></div>
+        <div class="stat"><div class="label">Storage</div><div class="value" id="stat-storage" style="font-size:.95rem">—</div></div>
+      </div>
+
+      <div class="section">
+        <h2>Resolver Priority</h2>
+        <div class="panel">
+          <ol class="priority-list">
+            <li><strong>MOT overrides</strong> <span>— manual identity-overrides.json (100% confidence)</span></li>
+            <li><strong>recruiting_identity_patterns</strong> <span>— auto templates from player fields (this store)</span></li>
+            <li><strong>Beat-writer memory</strong> <span>— per-handle learned phrase → player mappings</span></li>
+            <li><strong>Recruiting board cross-match</strong> <span>— stars, position, school, name scoring</span></li>
+            <li><strong>CNR fallback</strong> <span>— contextual name resolution when board match is ambiguous</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="layout">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Players</h3>
+            <input id="search" type="text" placeholder="Search name or slug…" style="max-width:180px;font-size:.8rem;padding:.35rem .55rem" />
+          </div>
+          <div style="max-height:520px;overflow:auto">
+            <table>
+              <thead><tr><th>Name</th><th>Slug</th><th>Patterns</th></tr></thead>
+              <tbody id="players-body"><tr><td colspan="3" class="meta">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel" id="detail-panel">
+          <div class="panel-head">
+            <h3 id="detail-title">Player Detail</h3>
+            <span class="meta" id="detail-updated">Select a player</span>
+          </div>
+          <div id="detail-empty" class="empty">Click a player to view patterns.</div>
+          <div id="detail-content" class="hidden">
+            <div class="detail-meta">
+              <div><strong>Name</strong><span id="d-name">—</span></div>
+              <div><strong>Slug</strong><span id="d-slug">—</span></div>
+              <div><strong>Stars</strong><span id="d-stars">—</span></div>
+              <div><strong>Position</strong><span id="d-pos">—</span></div>
+              <div><strong>School</strong><span id="d-school">—</span></div>
+              <div><strong>Pattern Count</strong><span id="d-count">—</span></div>
+            </div>
+            <div class="actions">
+              <button id="rebuild-player" class="sm">Rebuild Patterns for This Player</button>
+              <button id="copy-patterns" class="secondary sm">Copy Patterns to Clipboard</button>
+            </div>
+            <div class="pattern-list" id="pattern-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Rebuild Logs</h2>
+        <div class="log-panel" id="log-panel">Loading logs…</div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000'
+      : 'https://gatorvault-api.onrender.com';
+
+    var state = { items: [], selectedSlug: null, selectedEntry: null, lastRebuildLog: null };
+
+    function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function fmtTime(iso){if(!iso)return '—';try{return new Date(iso).toLocaleString();}catch(e){return iso;}}
+    function pin(){return document.getElementById('pin').value.trim();}
+    function headers(){return {'Content-Type':'application/json','X-Ops-Pin':pin(),'X-Recruiting-Pin':pin()};}
+
+    function patternCount(entry){return (entry && entry.patterns) ? entry.patterns.length : 0;}
+
+    function computeStats(items){
+      var totalPatterns = 0;
+      (items||[]).forEach(function(it){ totalPatterns += patternCount(it); });
+      return { totalPlayers: items.length, totalPatterns: totalPatterns };
+    }
+
+    function renderStats(items, storage){
+      var stats = computeStats(items);
+      document.getElementById('stat-players').textContent = stats.totalPlayers;
+      document.getElementById('stat-patterns').textContent = stats.totalPatterns;
+      document.getElementById('stat-storage').textContent = storage || '—';
+      var log = state.lastRebuildLog;
+      document.getElementById('stat-rebuild').textContent = log ? fmtTime(log.timestamp) : '—';
+      document.getElementById('stat-duration').textContent = log && log.details && log.details.durationMs != null
+        ? log.details.durationMs + ' ms' : '—';
+    }
+
+    function renderPlayerList(filter){
+      var q = String(filter||'').toLowerCase().trim();
+      var rows = state.items.filter(function(it){
+        if(!q) return true;
+        return String(it.name||'').toLowerCase().includes(q) || String(it.slug||'').toLowerCase().includes(q);
+      });
+      rows.sort(function(a,b){ return String(a.name||'').localeCompare(String(b.name||'')); });
+      var tbody = document.getElementById('players-body');
+      if(!rows.length){
+        tbody.innerHTML = '<tr><td colspan="3" class="meta">No players found.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(function(it){
+        var sel = it.slug === state.selectedSlug ? ' selected' : '';
+        return '<tr class="player-row'+sel+'" data-slug="'+esc(it.slug)+'">'+
+          '<td>'+esc(it.name)+'</td>'+
+          '<td class="meta">'+esc(it.slug)+'</td>'+
+          '<td>'+patternCount(it)+'</td></tr>';
+      }).join('');
+      tbody.querySelectorAll('.player-row').forEach(function(row){
+        row.addEventListener('click', function(){ selectPlayer(row.getAttribute('data-slug')); });
+      });
+    }
+
+    function renderDetail(entry){
+      var empty = document.getElementById('detail-empty');
+      var content = document.getElementById('detail-content');
+      if(!entry){
+        empty.classList.remove('hidden');
+        content.classList.add('hidden');
+        document.getElementById('detail-title').textContent = 'Player Detail';
+        document.getElementById('detail-updated').textContent = 'Select a player';
+        return;
+      }
+      empty.classList.add('hidden');
+      content.classList.remove('hidden');
+      document.getElementById('detail-title').textContent = entry.name || entry.slug;
+      document.getElementById('detail-updated').textContent = 'Updated ' + fmtTime(entry.updatedAt);
+      document.getElementById('d-name').textContent = entry.name || '—';
+      document.getElementById('d-slug').textContent = entry.slug || '—';
+      document.getElementById('d-stars').textContent = entry.stars != null ? entry.stars : '—';
+      document.getElementById('d-pos').textContent = entry.position || '—';
+      document.getElementById('d-school').textContent = entry.school || '—';
+      document.getElementById('d-count').textContent = patternCount(entry);
+      var list = document.getElementById('pattern-list');
+      var patterns = entry.patterns || [];
+      list.innerHTML = patterns.length
+        ? patterns.map(function(p){ return '<div>'+esc(p)+'</div>'; }).join('')
+        : '<div class="meta">No patterns generated.</div>';
+    }
+
+    function selectPlayer(slug){
+      state.selectedSlug = slug;
+      var cached = state.items.find(function(it){ return it.slug === slug; });
+      if(cached){
+        state.selectedEntry = cached;
+        renderPlayerList(document.getElementById('search').value);
+        renderDetail(cached);
+      }
+      loadPlayerDetail(slug);
+    }
+
+    function loadPlayerDetail(slug){
+      var p = pin(); if(!p || !slug) return;
+      fetch(API+'/api/recruiting/identity/patterns?pin='+encodeURIComponent(p)+'&slug='+encodeURIComponent(slug), { headers: headers() })
+        .then(function(r){ return r.json().then(function(j){ return { status: r.status, body: j }; }); })
+        .then(function(res){
+          if(res.status === 401) throw new Error('Invalid PIN');
+          if(!res.body.ok) throw new Error(res.body.error || 'Failed to load player');
+          var entry = res.body.entry;
+          state.selectedEntry = entry;
+          var idx = state.items.findIndex(function(it){ return it.slug === slug; });
+          if(idx >= 0 && entry) state.items[idx] = entry;
+          else if(entry) state.items.push(entry);
+          renderPlayerList(document.getElementById('search').value);
+          renderDetail(entry);
+        })
+        .catch(function(e){ alert('Load player error: ' + e.message); });
+    }
+
+    function loadPatterns(){
+      var p = pin(); if(!p){ alert('PIN required'); return; }
+      return fetch(API+'/api/recruiting/identity/patterns?pin='+encodeURIComponent(p), { headers: headers() })
+        .then(function(r){
+          if(r.status === 401) throw new Error('Invalid PIN');
+          return r.json();
+        })
+        .then(function(j){
+          if(!j.ok) throw new Error(j.error || 'Failed to load patterns');
+          state.items = (j.items || []).map(function(it){
+            return Object.assign({}, it, { patternCount: patternCount(it) });
+          });
+          renderStats(state.items, j.storage);
+          renderPlayerList(document.getElementById('search').value);
+          if(state.selectedSlug){
+            var hit = state.items.find(function(it){ return it.slug === state.selectedSlug; });
+            if(hit) renderDetail(hit);
+          }
+        });
+    }
+
+    function loadLogs(){
+      var p = pin(); if(!p) return;
+      fetch(API+'/api/ops/logs?limit=10&subsystem=cron:identity-patterns&pin='+encodeURIComponent(p), { headers: headers() })
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          var panel = document.getElementById('log-panel');
+          if(!j.ok){ panel.textContent = j.error || 'Failed to load logs'; return; }
+          var events = j.events || [];
+          state.lastRebuildLog = events[0] || null;
+          renderStats(state.items, document.getElementById('stat-storage').textContent);
+          panel.textContent = events.length ? events.map(function(e){
+            var boot = e.details && e.details.boot ? ' [BOOT]' : '';
+            var dur = e.details && e.details.durationMs != null ? ' · ' + e.details.durationMs + 'ms' : '';
+            var cnt = e.details && e.details.count != null ? ' · ' + e.details.count + ' players' : '';
+            var slug = e.details && e.details.slug ? ' · ' + e.details.slug : '';
+            return fmtTime(e.timestamp) + ' [' + e.status + ']' + boot + ' ' + e.message + dur + cnt + slug +
+              (e.details ? '\n  ' + JSON.stringify(e.details) : '');
+          }).join('\n\n') : 'No rebuild logs yet.';
+        })
+        .catch(function(e){ document.getElementById('log-panel').textContent = e.message; });
+    }
+
+    function rebuildAll(){
+      var p = pin(); if(!p) return alert('PIN required');
+      if(!confirm('Rebuild identity patterns for ALL board players?')) return;
+      var btn = document.getElementById('rebuild-all');
+      btn.disabled = true;
+      fetch(API+'/api/recruiting/identity/patterns/rebuild', { method:'POST', headers: headers(), body: JSON.stringify({ pin: p }) })
+        .then(function(r){ return r.json().then(function(j){ return { status: r.status, body: j }; }); })
+        .then(function(res){
+          if(res.status === 401) throw new Error('Invalid PIN');
+          if(!res.body.ok) throw new Error(res.body.error || 'Rebuild failed');
+          alert('Rebuilt ' + (res.body.count || 0) + ' players in ' + (res.body.durationMs || '?') + ' ms');
+          return loadPatterns().then(loadLogs);
+        })
+        .catch(function(e){ alert('Rebuild error: ' + e.message); })
+        .finally(function(){ btn.disabled = false; });
+    }
+
+    function rebuildPlayer(){
+      var p = pin(); if(!p) return alert('PIN required');
+      if(!state.selectedSlug) return alert('Select a player first');
+      if(!confirm('Rebuild patterns for ' + ((state.selectedEntry && state.selectedEntry.name) || state.selectedSlug) + '?')) return;
+      var btn = document.getElementById('rebuild-player');
+      btn.disabled = true;
+      fetch(API+'/api/recruiting/identity/patterns/rebuild', {
+        method:'POST', headers: headers(), body: JSON.stringify({ pin: p, slug: state.selectedSlug })
+      })
+        .then(function(r){ return r.json().then(function(j){ return { status: r.status, body: j }; }); })
+        .then(function(res){
+          if(res.status === 401) throw new Error('Invalid PIN');
+          if(!res.body.ok) throw new Error(res.body.error || 'Rebuild failed');
+          state.selectedEntry = res.body.entry;
+          var idx = state.items.findIndex(function(it){ return it.slug === state.selectedSlug; });
+          if(idx >= 0) state.items[idx] = res.body.entry;
+          renderPlayerList(document.getElementById('search').value);
+          renderDetail(res.body.entry);
+          renderStats(state.items, document.getElementById('stat-storage').textContent);
+          loadLogs();
+          alert('Rebuilt ' + (res.body.patternCount || 0) + ' patterns in ' + (res.body.durationMs || '?') + ' ms');
+        })
+        .catch(function(e){ alert('Rebuild error: ' + e.message); })
+        .finally(function(){ btn.disabled = false; });
+    }
+
+    function copyPatterns(){
+      if(!state.selectedEntry || !(state.selectedEntry.patterns || []).length){
+        return alert('No patterns to copy');
+      }
+      var text = state.selectedEntry.patterns.join('\n');
+      navigator.clipboard.writeText(text)
+        .then(function(){ alert('Copied ' + state.selectedEntry.patterns.length + ' patterns to clipboard'); })
+        .catch(function(){ prompt('Copy patterns:', text); });
+    }
+
+    function unlock(){
+      var p = document.getElementById('gate-pin').value.trim();
+      fetch(API+'/api/recruiting/identity/patterns?pin='+encodeURIComponent(p))
+        .then(function(r){
+          if(r.status === 401) throw new Error('Invalid PIN');
+          return r.json().then(function(j){ return { status: r.status, body: j }; });
+        })
+        .then(function(res){
+          if(!res.body.ok) throw new Error(res.body.error || 'Invalid PIN');
+          document.getElementById('pin').value = p;
+          sessionStorage.setItem('gv_ops_pin', p);
+          document.getElementById('pin-gate').classList.add('hidden');
+          document.getElementById('app').classList.remove('hidden');
+          state.items = res.body.items || [];
+          document.getElementById('stat-storage').textContent = res.body.storage || 'local';
+          renderStats(state.items, res.body.storage);
+          renderPlayerList('');
+          loadLogs();
+          var params = new URLSearchParams(location.search);
+          var slug = params.get('slug');
+          if(slug) selectPlayer(slug);
+        })
+        .catch(function(e){
+          document.getElementById('gate-err').textContent = e.message || 'Invalid PIN';
+          document.getElementById('gate-err').classList.remove('hidden');
+        });
+    }
+
+    document.getElementById('gate-unlock').addEventListener('click', unlock);
+    document.getElementById('gate-pin').addEventListener('keydown', function(e){ if(e.key === 'Enter') unlock(); });
+    document.getElementById('refresh').addEventListener('click', function(){ loadPatterns().then(loadLogs); });
+    document.getElementById('rebuild-all').addEventListener('click', rebuildAll);
+    document.getElementById('rebuild-player').addEventListener('click', rebuildPlayer);
+    document.getElementById('copy-patterns').addEventListener('click', copyPatterns);
+    document.getElementById('search').addEventListener('input', function(e){ renderPlayerList(e.target.value); });
+
+    (function initPin(){
+      var saved = sessionStorage.getItem('gv_ops_pin');
+      if(saved){
+        document.getElementById('gate-pin').value = saved;
+        unlock();
+      }
+    })();
+  </script>
+</body>
+</html>

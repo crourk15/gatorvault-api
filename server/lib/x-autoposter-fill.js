@@ -99,6 +99,7 @@ async function buildNewsFromEvent(ev) {
 
 async function buildNewsFromIntel(intel) {
   const built = await copy.buildIntelCopyAsync(intel);
+  if (built?.skipReason) return { skipReason: built.skipReason, _identitySkip: true };
   if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
   const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
   const intelType = String(intel.eventType || '').toLowerCase();
@@ -246,6 +247,7 @@ async function buildMomentumFromBeat(post) {
 async function buildNewsFromBeatPost(post) {
   if (!beatFilters.shouldIncludeBeatPost(post) || !beatFilters.isTrustedBeatWriter(post)) return null;
   const built = await copy.buildBeatIntelCopyAsync(post);
+  if (built?.skipReason) return { skipReason: built.skipReason, _identitySkip: true };
   if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
   const source = post.writerName || post.outlet || post.handle || 'Beat writer';
   const fp = intelFingerprint(post.id || post.url, 'beat_intel', post.publishedAt);
@@ -289,20 +291,12 @@ async function buildNewsFromPortalEvent(ev) {
   );
 }
 
-async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
-  const doc = store.loadQueue();
-  const pending = doc.items.filter((i) => i.status === 'pending');
-  const need = Math.max(minPending - pending.length, pending.length === 0 ? 1 : 0);
-  if (need <= 0 && pending.length >= minPending) {
-    return { ok: true, skipped: true, reason: 'queue_full', pending: pending.length, enqueued: [] };
-  }
-
+async function collectFreshPostCandidates() {
   const candidates = [];
-  const slots = Math.max(maxEnqueue - pending.length, need);
 
   try {
     const unqueuedIntel = intelStore.getUnqueuedIntel({ maxAgeMs: MAX_INTEL_AGE_MS });
-    for (const intel of unqueuedIntel.slice(0, 5)) {
+    for (const intel of unqueuedIntel.slice(0, 8)) {
       const eligibility = require('./rivals-prediction-eligibility');
       const gate = await eligibility.checkIntelForAutopost(intel);
       if (!gate.allowed) continue;
@@ -324,7 +318,7 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
         continue;
       }
       const beatNews = await buildNewsFromBeatPost(post);
-      if (beatNews) candidates.push(beatNews);
+      if (beatNews) candidates.unshift(beatNews);
     }
   } catch {
     /* optional */
@@ -355,9 +349,7 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
   try {
     const portal = await recruitingStore.getPortalBoard();
     const row = await buildNewsFromPortal(portal.headliner);
-    if (row && !fingerprintAlreadyQueued(row.intelFingerprint, doc.items)) {
-      candidates.push(row);
-    }
+    if (row) candidates.push(row);
   } catch {
     /* optional */
   }
@@ -366,17 +358,28 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
     const articles = contentStore.loadPublishedArticles();
     if (articles[0]) {
       const row = buildNewsFromArticle(articles[0]);
-      if (row && !fingerprintAlreadyQueued(row.intelFingerprint, doc.items)) {
-        candidates.push(row);
-      }
+      if (row) candidates.push(row);
     }
   } catch {
     /* optional */
   }
 
-  const rawNewsCandidates = candidates;
+  return candidates;
+}
+
+async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
+  const doc = store.loadQueue();
+  const pending = doc.items.filter((i) => i.status === 'pending');
+  const need = Math.max(minPending - pending.length, pending.length === 0 ? 1 : 0);
+  if (need <= 0 && pending.length >= minPending) {
+    return { ok: true, skipped: true, reason: 'queue_full', pending: pending.length, enqueued: [] };
+  }
+
+  const slots = Math.max(maxEnqueue - pending.length, need);
+  const rawNewsCandidates = await collectFreshPostCandidates();
   const validatedNews = [];
   for (const raw of rawNewsCandidates) {
+    if (raw?.skipReason || raw?._identitySkip) continue;
     const scored = await finalizeNewsCandidate(raw);
     if (scored) validatedNews.push(scored);
   }
@@ -436,6 +439,9 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
 
 module.exports = {
   refillAutoposterQueue,
+  collectFreshPostCandidates,
+  finalizeNewsCandidate,
+  alreadyQueued,
   dedupeKey,
   fingerprintAlreadyQueued,
   buildNewsFromIntel,

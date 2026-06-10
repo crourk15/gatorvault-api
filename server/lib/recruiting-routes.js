@@ -499,6 +499,32 @@ function mountRecruitingRoutes(app) {
     try {
       const patternStore = require('./identity-patterns-store');
       const opsMonitor = require('./ops-monitor');
+      const slug = String(req.body.slug || '').trim() || null;
+
+      if (slug) {
+        const recruitingStore = require('./recruiting-store');
+        const player = await recruitingStore.getPlayerBySlug(slug);
+        if (!player) return res.status(404).json({ ok: false, error: 'Player not found' });
+        const started = Date.now();
+        const entry = await patternStore.syncPatternsForPlayer(player);
+        const durationMs = Date.now() - started;
+        opsMonitor.logEvent({
+          subsystem: 'cron:identity-patterns',
+          status: 'success',
+          message: `Identity patterns rebuilt for ${player.name}`,
+          details: { slug, patternCount: entry?.patterns?.length || 0, durationMs, single: true }
+        });
+        return res.json({
+          ok: true,
+          slug,
+          entry,
+          patternCount: entry?.patterns?.length || 0,
+          durationMs,
+          updatedAt: entry?.updatedAt || null,
+          storage: patternStore.storageMode()
+        });
+      }
+
       const started = Date.now();
       const result = await patternStore.rebuildAllPatterns();
       opsMonitor.logEvent({

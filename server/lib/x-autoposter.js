@@ -9,6 +9,8 @@ const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
 const { refillAutoposterQueue } = require('./x-autoposter-fill');
 const cadence = require('./x-autoposter-cadence');
+const freshness = require('./autoposter-freshness');
+const opsMonitor = require('./ops-monitor');
 const {
   isReplyEnabled,
   scheduleRepliesForSentPost,
@@ -297,10 +299,18 @@ async function processQueueItem(item) {
       error: null,
       validationErrors: []
     });
+    const postedAt = store.nowIso();
+    freshness.recordLastPost(postedAt);
     saveSchedulerStatus({
-      lastPostAt: store.nowIso(),
-      lastPostSuccess: store.nowIso(),
+      lastPostAt: postedAt,
+      lastPostSuccess: postedAt,
       lastError: null
+    });
+    opsMonitor.logEvent({
+      subsystem: 'autoposter',
+      status: 'success',
+      message: 'Post successful',
+      details: { tweetId: result.tweetId, itemId: item.id, category: item.category }
     });
     if (isReplyEnabled() && item.action === 'post') {
       try {
@@ -335,6 +345,12 @@ async function processQueueItem(item) {
       sentAt: store.nowIso()
     });
     saveSchedulerStatus({ lastError: err.message });
+    opsMonitor.logEvent({
+      subsystem: 'autoposter',
+      status: 'error',
+      message: `Post failed: ${err.message}`,
+      details: { itemId: item.id, category: item.category }
+    });
     return { ok: false, itemId: item.id, error: err.message };
   }
 }

@@ -104,33 +104,97 @@ function buildInsiderArticlesTile(heartbeats) {
   });
 }
 
+function buildIdentityPatternsTile() {
+  let playerCount = 0;
+  let totalPatterns = 0;
+  let storeUpdatedAt = null;
+  try {
+    const doc = readJson('recruiting/identity-patterns.json', { entries: {} });
+    const entries = Object.values(doc.entries || {});
+    playerCount = entries.length;
+    totalPatterns = entries.reduce((sum, entry) => sum + (entry.patterns?.length || 0), 0);
+    storeUpdatedAt = doc.updatedAt || null;
+  } catch {
+    /* optional */
+  }
+
+  const hb = opsMonitor.getHeartbeat('cron:identity-patterns') || {};
+  const errors24h = opsMonitor.getErrorCount24h('cron:identity-patterns');
+  const recentLogs = opsMonitor.getLogs({ subsystem: 'cron:identity-patterns', limit: 1 });
+  const lastLog = recentLogs.events?.[0] || null;
+  const lastRebuildAt = lastLog?.timestamp || storeUpdatedAt || hb.lastRun || null;
+  const rebuildDurationMs = lastLog?.details?.durationMs ?? null;
+
+  let status = 'green';
+  if (errors24h > 0 || hb.lastStatus === 'error') status = 'red';
+  else if (!playerCount) status = 'yellow';
+
+  return tile('identity-patterns', 'Identity Patterns', status, {
+    lastRun: lastRebuildAt,
+    playerCount,
+    totalPatterns,
+    totalPlayers: playerCount,
+    lastRebuildAt,
+    rebuildDurationMs,
+    summary: `${playerCount} players · ${totalPatterns} patterns`,
+    href: '/admin/ops/identity-patterns',
+    errors24h
+  });
+}
+
 function buildAutoposterTile(config) {
   const pipeline = pipelineHealth.getHealthReport();
   const hb = opsMonitor.getHeartbeat('autoposter:predictions') || opsMonitor.getHeartbeat('autoposter:queue') || {};
   const posts24h = opsMonitor.countEventsSince('autoposter', 86400000, 'success');
   const skips24h = opsMonitor.countEventsSince('autoposter', 86400000, 'skipped');
   const errors24h = opsMonitor.getErrorCount24h('autoposter');
-
-  let status = 'green';
-  if (errors24h > 3 || hb.lastStatus === 'error') status = 'red';
-  else if (skips24h > posts24h || hb.lastStatus === 'warning') status = 'yellow';
-
   const recentLogs = opsMonitor.getLogs({ subsystem: 'autoposter', limit: 5 });
 
-  return tile('autoposter', 'Autoposter', status, {
+  let scheduler = {};
+  try {
+    scheduler = require('./x-autoposter').getSchedulerStatus();
+  } catch {
+    scheduler = {};
+  }
+
+  let freshness = { status: 'yellow', lastPostLabel: 'unknown', minutesSinceLastPost: null, postsLast24h: posts24h };
+  try {
+    const autoposterFreshness = require('./autoposter-freshness');
+    freshness = autoposterFreshness.getAutoposterStatus({
+      scheduler: {
+        ...scheduler,
+        queuePending: pipeline.autoposter?.queuePending || 0
+      }
+    });
+  } catch {
+    /* optional */
+  }
+
+  const staleTooltip =
+    freshness.status !== 'green' && freshness.minutesSinceLastPost != null
+      ? `No post in ${freshness.minutesSinceLastPost} minutes — click Force Post Now to trigger a manual post.`
+      : null;
+
+  return tile('autoposter', 'Autoposter', freshness.status || 'yellow', {
     lastRun: hb.lastRun || pipeline.autoposter?.lastSentAt || null,
     lastStatus: hb.lastStatus || null,
     errors24h,
-    posts24h,
+    posts24h: freshness.postsLast24h ?? posts24h,
     skips24h,
     posts7d: opsMonitor.countEventsSince('autoposter', 7 * 86400000, 'success'),
     skips7d: opsMonitor.countEventsSince('autoposter', 7 * 86400000, 'skipped'),
     queuePending: pipeline.autoposter?.queuePending || 0,
     schedulerEnabled: pipeline.autoposter?.schedulerEnabled,
-    lastSentAt: pipeline.autoposter?.lastSentAt,
+    lastPostAt: freshness.lastPostAt || scheduler.lastPostAt || null,
+    lastPostLabel: freshness.lastPostLabel || null,
+    lastPostAttempt: freshness.lastPostAttempt || scheduler.lastPostAttempt || null,
+    minutesSinceLastPost: freshness.minutesSinceLastPost,
+    activityWindow: freshness.activityWindow,
+    identityFailStreak: freshness.identityFailStreak || 0,
+    staleTooltip,
+    summary: `Last post: ${freshness.lastPostLabel || '—'} · ${freshness.postsLast24h ?? posts24h} posts (24h)`,
     lastError: recentLogs.events.find((e) => e.status === 'error') || null,
-    lastMajorEvent: recentLogs.events[0] || null,
-    summary: `${posts24h} posted / ${skips24h} skipped (24h)`
+    lastMajorEvent: recentLogs.events[0] || null
   });
 }
 
@@ -256,6 +320,7 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
       errors24h: opsMonitor.getErrorCount24h('cron:film-room-weekly')
     }),
     buildInsiderArticlesTile(heartbeats),
+    buildIdentityPatternsTile(),
     tile('api-health', 'API Health', api.status, {
       lastRun: new Date().toISOString(),
       summary: `${api.totalRequests} reqs · ${Math.round(api.errorRate * 100)}% err · ${api.avgResponseMs}ms avg`,
@@ -296,5 +361,6 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
 module.exports = {
   buildOpsStatusReport,
   buildCronTiles,
-  buildAutoposterTile
+  buildAutoposterTile,
+  buildIdentityPatternsTile
 };
