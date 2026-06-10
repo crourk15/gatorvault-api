@@ -376,6 +376,9 @@
           loadStatus(false);
           loadInsiderArticles();
           loadPatternStats();
+          if(location.hash==='#insider-articles'){
+            document.getElementById('insider-articles-panel').scrollIntoView({behavior:'smooth'});
+          }
         })
         .catch(function(e){
           document.getElementById('gate-err').textContent=e.message||'Invalid PIN';
@@ -460,7 +463,7 @@
       var tbody=document.getElementById('insider-drafts-body');
       if(!drafts||!drafts.length){tbody.innerHTML='<tr><td colspan="6" class="meta">No drafts pending approval.</td></tr>';return;}
       tbody.innerHTML=drafts.map(function(d){
-        return '<tr><td><strong>'+esc(d.title)+'</strong><div class="meta">'+esc(d.summary||'')+'</div></td>'+
+        return '<tr><td><strong><a href="/admin-ops/articles/'+esc(d.id)+'" style="color:#60a5fa;text-decoration:none">'+esc(d.title)+'</a></strong><div class="meta">'+esc(d.summary||'')+'</div></td>'+
           '<td>'+esc(insiderCategoryLabel(d.category))+'</td>'+
           '<td>'+fmtTime(d.createdAt)+'</td>'+
           '<td>'+esc(d.readTimeMinutes||'—')+' min</td>'+

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GatorVault — Draft Preview (GV-OM)</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root { --bg:#030712; --panel:#0b1220; --border:#1e293b; --text:#e8edf5; --muted:#8b9bb4; --orange:#fa4616; --green:#22c55e; --red:#ef4444; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(3,7,18,.95);backdrop-filter:blur(8px);z-index:10}
+    h1{margin:0;font-family:Oswald,sans-serif;font-size:1.35rem;letter-spacing:.02em;line-height:1.25}
+    .sub{font-size:.75rem;color:var(--muted)}
+    main{padding:1rem 1.25rem 3rem;max-width:820px;margin:0 auto}
+    input,button{font:inherit}
+    input[type=password]{background:var(--panel);border:1px solid #334155;color:var(--text);padding:.5rem .75rem;border-radius:.5rem}
+    button{background:var(--orange);color:#fff;border:0;padding:.5rem .9rem;border-radius:.5rem;cursor:pointer;font-weight:600}
+    button.secondary{background:#334155}
+    button.reject{background:var(--red)}
+    button:disabled{opacity:.5;cursor:not-allowed}
+    .nav{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center}
+    .nav a{padding:.4rem .7rem;border-radius:.5rem;background:var(--panel);border:1px solid var(--border);font-size:.8rem;color:#60a5fa;text-decoration:none}
+    .meta-row{display:flex;flex-wrap:wrap;gap:.75rem 1.25rem;font-size:.8rem;color:var(--muted);margin:.75rem 0 1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+    .meta-row strong{color:var(--text)}
+    .badge{display:inline-block;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .5rem;border-radius:.35rem;background:rgba(250,70,22,.15);color:var(--orange);margin-bottom:.5rem}
+    .subheadline{font-size:1.05rem;color:#cbd5e1;margin:.5rem 0 0;font-weight:400;line-height:1.5}
+    .article-body{background:var(--panel);border:1px solid var(--border);border-radius:.85rem;padding:1.25rem 1.35rem;margin:1.25rem 0}
+    .article-body p{margin:0 0 1rem}
+    .article-body p:last-child{margin-bottom:0}
+    .sources{margin:1.25rem 0}
+    .sources h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 .65rem}
+    .sources ul{margin:0;padding-left:1.1rem;font-size:.85rem;color:#cbd5e1}
+    .sources li{margin:.35rem 0}
+    .sources a{color:#60a5fa;text-decoration:none}
+    .actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)}
+    .pin-gate{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem}
+    .pin-card{background:var(--panel);border:1px solid var(--border);border-radius:1rem;padding:1.5rem;max-width:380px;width:100%}
+    .hidden{display:none!important}
+    .error{color:var(--red);padding:1rem;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:.75rem}
+  </style>
+</head>
+<body>
+  <div id="pin-gate" class="pin-gate">
+    <div class="pin-card">
+      <h1>Draft Preview</h1>
+      <p class="sub" style="margin:.5rem 0 1rem">GV-OM — admin PIN required.</p>
+      <input id="gate-pin" type="password" placeholder="Admin PIN" autocomplete="off" style="width:100%;margin-bottom:.75rem" />
+      <button id="gate-unlock" style="width:100%">Unlock</button>
+      <p id="gate-err" class="hidden" style="color:var(--red);font-size:.8rem;margin:.75rem 0 0">Invalid PIN</p>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <header>
+      <div style="flex:1;min-width:200px">
+        <div class="badge" id="hdr-category">DRAFT</div>
+        <h1 id="hdr-title">Loading draft…</h1>
+        <p class="subheadline" id="hdr-subheadline"></p>
+      </div>
+      <input id="pin" type="password" placeholder="Session PIN" autocomplete="off" style="max-width:160px" />
+    </header>
+    <main>
+      <div class="nav">
+        <a href="/admin-ops.html#insider-articles">← Back to drafts</a>
+        <a href="/admin/ops">GV-OM</a>
+      </div>
+
+      <div id="load-error" class="error hidden"></div>
+
+      <div id="article-content" class="hidden">
+        <div class="meta-row">
+          <span><strong>Category:</strong> <span id="meta-category">—</span></span>
+          <span><strong>Read time:</strong> <span id="meta-read">—</span></span>
+          <span><strong>Created:</strong> <span id="meta-created">—</span></span>
+          <span><strong>Draft ID:</strong> <span id="meta-id" class="sub">—</span></span>
+        </div>
+
+        <div class="sources" id="sources-block">
+          <h2>Verified Sources</h2>
+          <ul id="sources-list"></ul>
+        </div>
+
+        <div class="article-body" id="article-body"></div>
+
+        <div class="actions">
+          <button id="btn-approve">Approve</button>
+          <button id="btn-reject" class="reject">Reject</button>
+          <a href="/admin-ops.html#insider-articles" class="secondary" style="display:inline-block;padding:.5rem .9rem;border-radius:.5rem;text-decoration:none;background:#334155;color:#fff;font-weight:600">Back to drafts</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000'
+      : 'https://gatorvault-api.onrender.com';
+
+    var draftId = null;
+    var currentDraft = null;
+
+    function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function fmtTime(iso){if(!iso)return '—';try{return new Date(iso).toLocaleString();}catch(e){return iso;}}
+    function pin(){return document.getElementById('pin').value.trim();}
+    function headers(){return {'Content-Type':'application/json','X-Ops-Pin':pin(),'X-Recruiting-Pin':pin()};}
+
+    function parseDraftIdFromPath(){
+      var parts = location.pathname.replace(/\/+$/, '').split('/').filter(Boolean);
+      return parts[parts.length - 1] || null;
+    }
+
+    function categoryLabel(cat){
+      var map={summer_preview:'Summer Preview',depth_chart_movement:'Depth Chart',insider:'Insider',game_week_preview:'Game Preview',roster_analysis:'Roster Analysis'};
+      return map[cat]||cat||'—';
+    }
+
+    function renderDraft(d){
+      currentDraft = d;
+      document.getElementById('hdr-title').textContent = d.title || 'Untitled';
+      document.getElementById('hdr-subheadline').textContent = d.subheadline || '';
+      document.getElementById('hdr-category').textContent = (d.categoryLabel || categoryLabel(d.category)).toUpperCase();
+      document.getElementById('meta-category').textContent = d.categoryLabel || categoryLabel(d.category);
+      document.getElementById('meta-read').textContent = (d.readTime || '—') + ' min';
+      document.getElementById('meta-created').textContent = fmtTime(d.createdAt);
+      document.getElementById('meta-id').textContent = d.draftId || draftId;
+
+      var sources = d.sources || [];
+      var srcList = document.getElementById('sources-list');
+      if(!sources.length){
+        srcList.innerHTML = '<li class="sub">No sources attached.</li>';
+      } else {
+        srcList.innerHTML = sources.map(function(s){
+          var label = esc(s.name || s.reporter || 'Source') + ' · ' + esc(s.outlet || '—');
+          if(s.url) return '<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+label+'</a></li>';
+          return '<li>'+label+'</li>';
+        }).join('');
+      }
+
+      document.getElementById('article-body').innerHTML = d.body || '<p class="sub">No body content.</p>';
+      document.getElementById('article-content').classList.remove('hidden');
+      document.getElementById('load-error').classList.add('hidden');
+      document.title = 'Draft: ' + (d.title || 'Preview') + ' — GV-OM';
+    }
+
+    function showError(msg){
+      document.getElementById('load-error').textContent = msg;
+      document.getElementById('load-error').classList.remove('hidden');
+      document.getElementById('article-content').classList.add('hidden');
+    }
+
+    function loadDraft(){
+      var p = pin();
+      if(!p || !draftId){ showError('Missing PIN or draft ID'); return; }
+      fetch(API+'/api/articles/drafts/'+encodeURIComponent(draftId)+'?pin='+encodeURIComponent(p), { headers: headers() })
+        .then(function(r){ return r.json().then(function(j){ return { status: r.status, body: j }; }); })
+        .then(function(res){
+          if(res.status === 401) throw new Error('Invalid PIN');
+          if(!res.body.ok) throw new Error(res.body.error || 'Draft not found');
+          renderDraft(res.body.draft);
+        })
+        .catch(function(e){ showError(e.message); });
+    }
+
+    function draftAction(action){
+      var p = pin();
+      if(!p || !draftId) return alert('Missing PIN or draft ID');
+      var label = action === 'approve' ? 'Approve and publish this draft?' : 'Reject this draft?';
+      if(!confirm(label)) return;
+      var approveBtn = document.getElementById('btn-approve');
+      var rejectBtn = document.getElementById('btn-reject');
+      approveBtn.disabled = true;
+      rejectBtn.disabled = true;
+      fetch(API+'/api/articles/drafts/'+encodeURIComponent(draftId)+'/'+action, {
+        method:'POST', headers: headers(), body: JSON.stringify({ pin: p })
+      })
+        .then(function(r){ return r.json().then(function(j){ return { status: r.status, body: j }; }); })
+        .then(function(res){
+          if(!res.body.ok) throw new Error(res.body.error || 'Action failed');
+          location.href = '/admin-ops.html#insider-articles';
+        })
+        .catch(function(e){
+          alert(e.message);
+          approveBtn.disabled = false;
+          rejectBtn.disabled = false;
+        });
+    }
+
+    function unlock(){
+      draftId = parseDraftIdFromPath();
+      if(!draftId){
+        document.getElementById('gate-err').textContent = 'No draft ID in URL';
+        document.getElementById('gate-err').classList.remove('hidden');
+        return;
+      }
+      var p = document.getElementById('gate-pin').value.trim();
+      fetch(API+'/api/articles/drafts/'+encodeURIComponent(draftId)+'?pin='+encodeURIComponent(p))
+        .then(function(r){
+          if(r.status === 401) throw new Error('Invalid PIN');
+          return r.json().then(function(j){ return { status: r.status, body: j }; });
+        })
+        .then(function(res){
+          if(!res.body.ok) throw new Error(res.body.error || 'Invalid PIN');
+          document.getElementById('pin').value = p;
+          sessionStorage.setItem('gv_ops_pin', p);
+          document.getElementById('pin-gate').classList.add('hidden');
+          document.getElementById('app').classList.remove('hidden');
+          renderDraft(res.body.draft);
+        })
+        .catch(function(e){
+          document.getElementById('gate-err').textContent = e.message || 'Invalid PIN';
+          document.getElementById('gate-err').classList.remove('hidden');
+        });
+    }
+
+    document.getElementById('gate-unlock').addEventListener('click', unlock);
+    document.getElementById('gate-pin').addEventListener('keydown', function(e){ if(e.key === 'Enter') unlock(); });
+    document.getElementById('btn-approve').addEventListener('click', function(){ draftAction('approve'); });
+    document.getElementById('btn-reject').addEventListener('click', function(){ draftAction('reject'); });
+
+    draftId = parseDraftIdFromPath();
+    (function initPin(){
+      var saved = sessionStorage.getItem('gv_ops_pin');
+      if(saved && draftId){
+        document.getElementById('gate-pin').value = saved;
+        document.getElementById('pin').value = saved;
+        unlock();
+      }
+    })();
+  </script>
+</body>
+</html>

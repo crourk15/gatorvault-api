@@ -51,6 +51,34 @@ function mountInsiderArticlesRoutes(app) {
     }
   });
 
+  app.get('/api/articles/drafts/:id', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const draft = store.getArticleById(req.params.id);
+      if (!draft || draft.status !== 'draft') {
+        return res.status(404).json({ ok: false, error: 'Draft not found' });
+      }
+      const meta = store.CATEGORIES[draft.category] || store.CATEGORIES.insider;
+      return res.json({
+        ok: true,
+        draft: {
+          draftId: draft.id,
+          title: draft.title,
+          subheadline: draft.summary || '',
+          category: draft.category,
+          categoryLabel: draft.categoryLabel || meta.label,
+          sources: draft.sources || [],
+          readTime: draft.readTimeMinutes || 5,
+          body: draft.body || '',
+          createdAt: draft.createdAt,
+          byline: draft.byline || meta.byline
+        }
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/articles/drafts/generate', async (req, res) => {
     if (!requireAdmin(req, res)) return;
     try {

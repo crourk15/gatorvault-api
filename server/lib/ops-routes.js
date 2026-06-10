@@ -46,6 +46,14 @@ function mountOpsRoutes(app) {
     res.sendFile(path.join(__dirname, '..', 'admin-ops-identity-patterns.html'));
   });
 
+  app.get('/admin-ops/articles/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'admin-ops-article-view.html'));
+  });
+
+  app.get('/admin/ops/articles/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'admin-ops-article-view.html'));
+  });
+
   app.get('/vault/ops', (req, res) => {
     res.redirect(302, '/admin/ops');
   });
