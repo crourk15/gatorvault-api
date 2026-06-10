@@ -900,7 +900,7 @@ app.listen(PORT, () => {
           return null;
         }
         return patternStore.rebuildAllPatterns().then((r) => {
-          console.log('[identity-patterns] boot rebuild:', r.count, 'players');
+          console.log('[identity-patterns] boot rebuild:', r.count, 'players in', r.durationMs, 'ms');
         });
       })
       .catch((err) => console.warn('[identity-patterns] boot sync skipped:', err.message));

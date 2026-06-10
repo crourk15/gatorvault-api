@@ -147,6 +147,7 @@ async function syncPatternsForPlayer(player) {
 }
 
 async function rebuildAllPatterns({ players } = {}) {
+  const started = Date.now();
   const store = require('./recruiting-store');
   const list = players || (await store.getAllPlayers());
   let count = 0;
@@ -155,7 +156,8 @@ async function rebuildAllPatterns({ players } = {}) {
     await syncPatternsForPlayer(player);
     count += 1;
   }
-  return { ok: true, count, updatedAt: nowIso() };
+  const durationMs = Date.now() - started;
+  return { ok: true, count, durationMs, updatedAt: nowIso() };
 }
 
 function storageMode() {

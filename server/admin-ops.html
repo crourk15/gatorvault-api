@@ -115,7 +115,12 @@
 
       <div class="section">
         <h2>Manual Identity Overrides (MOT)</h2>
-        <p class="sub" style="margin:0 0 .75rem;font-size:.8rem;color:var(--muted)">Auto patterns generate on every player save. MOT is for rare edge cases only.</p>
+        <p class="sub" style="margin:0 0 .75rem;font-size:.8rem;color:var(--muted)">Auto patterns generate on every player save (On3, Rivals, beat writer, portal, manual edits). MOT is for rare edge cases only — nicknames, typos, and shorthand that templates miss.</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem;align-items:center">
+          <span id="mot-pattern-stats" class="meta" style="font-size:.75rem">Patterns: —</span>
+          <button id="mot-patterns-rebuild" class="secondary sm">Rebuild all patterns</button>
+          <button id="mot-patterns-load" class="secondary sm">Show pattern count</button>
+        </div>
         <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem">
           <input id="mot-phrase" type="text" placeholder="Phrase e.g. five-star dl jalen" style="flex:1;min-width:180px;background:var(--panel);border:1px solid #334155;color:var(--text);padding:.45rem .6rem;border-radius:.5rem" />
           <input id="mot-slug" type="text" placeholder="player slug" style="width:160px;background:var(--panel);border:1px solid #334155;color:var(--text);padding:.45rem .6rem;border-radius:.5rem" />
@@ -314,6 +319,7 @@
           document.getElementById('app').classList.remove('hidden');
           loadStatus(false);
           loadInsiderArticles();
+          loadPatternStats();
         })
         .catch(function(e){
           document.getElementById('gate-err').textContent=e.message||'Invalid PIN';
@@ -361,6 +367,30 @@
     }
     document.getElementById('mot-load').addEventListener('click',loadMot);
     document.getElementById('mot-save').addEventListener('click',saveMot);
+    function loadPatternStats(){
+      var p=pin(); if(!p)return;
+      fetch(API+'/api/recruiting/identity/patterns?pin='+encodeURIComponent(p),{headers:headers()})
+        .then(function(r){return r.json();})
+        .then(function(j){
+          if(!j.ok)throw new Error(j.error||'Failed');
+          document.getElementById('mot-pattern-stats').textContent='Patterns: '+(j.count||0)+' players · storage '+(j.storage||'local');
+        })
+        .catch(function(e){document.getElementById('mot-pattern-stats').textContent='Patterns: error — '+e.message;});
+    }
+    function rebuildPatterns(){
+      var p=pin(); if(!p)return alert('PIN required');
+      if(!confirm('Rebuild identity patterns for ALL board players?'))return;
+      fetch(API+'/api/recruiting/identity/patterns/rebuild',{method:'POST',headers:headers(),body:JSON.stringify({pin:p})})
+        .then(function(r){return r.json();})
+        .then(function(j){
+          if(!j.ok)throw new Error(j.error||'Rebuild failed');
+          alert('Rebuilt '+j.count+' players in '+(j.durationMs||'?')+'ms');
+          loadPatternStats();
+        })
+        .catch(function(e){alert(e.message);});
+    }
+    document.getElementById('mot-patterns-load').addEventListener('click',loadPatternStats);
+    document.getElementById('mot-patterns-rebuild').addEventListener('click',rebuildPatterns);
 
     function insiderCategoryLabel(cat){
       var map={summer_preview:'Summer Preview',depth_chart_movement:'Depth Chart',insider:'Insider',game_week_preview:'Game Preview',roster_analysis:'Roster Analysis'};

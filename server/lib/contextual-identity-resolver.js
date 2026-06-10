@@ -405,32 +405,66 @@ async function resolveContextualIdentity({ text, sourceHandle, writerName, hints
     .sort((a, b) => b.score - a.score);
 
   const top = scored[0];
+  if (top && !(scored.length > 1 && top.score - scored[1].score < 8)) {
+    return buildResolution({
+      player: top.player,
+      confidence: top.score,
+      mode: 'recruiting_board_cross_match',
+      inferred: top.score < 90,
+      reasons: top.reasons,
+      clues,
+      sourceHandle
+    });
+  }
+
+  const cnrHit = await resolveCnrFallback(clues, board, sourceHandle);
+  if (cnrHit) return cnrHit;
+
   if (!top) {
     return {
       confirmed: false,
-      confidence: scored.length ? scored[0]?.score : 0,
+      confidence: 0,
       reason: 'board_no_match',
       clues,
       candidates: scored.slice(0, 3).map((c) => ({ name: c.player.name, score: c.score }))
     };
   }
 
-  if (scored.length > 1 && top.score - scored[1].score < 8) {
-    return {
-      confirmed: false,
-      confidence: top.score,
-      reason: 'ambiguous_board_match',
-      clues,
-      candidates: scored.slice(0, 3).map((c) => ({ name: c.player.name, score: c.score, slug: c.player.slug }))
-    };
-  }
+  return {
+    confirmed: false,
+    confidence: top.score,
+    reason: 'ambiguous_board_match',
+    clues,
+    candidates: scored.slice(0, 3).map((c) => ({ name: c.player.name, score: c.score, slug: c.player.slug }))
+  };
+}
+
+const CNR_FALLBACK_MIN = parseInt(process.env.IDENTITY_CNR_FALLBACK_MIN || '55', 10);
+
+async function resolveCnrFallback(clues, board, sourceHandle) {
+  if (!clues.hasSignal) return null;
+
+  const scored = board
+    .map((player) => {
+      const { score, reasons } = scoreBoardCandidate(player, clues);
+      return { player, score, reasons };
+    })
+    .filter((row) => row.score >= CNR_FALLBACK_MIN && row.score < MIN_POST_CONFIDENCE)
+    .sort((a, b) => b.score - a.score);
+
+  const top = scored[0];
+  if (!top) return null;
+  if (scored.length > 1 && top.score - scored[1].score < 6) return null;
+
+  const signalCount = [clues.stars, clues.pos, clues.firstName, clues.school, clues.classYear].filter(Boolean).length;
+  if (signalCount < 2 && top.score < 65) return null;
 
   return buildResolution({
     player: top.player,
     confidence: top.score,
-    mode: 'recruiting_board_cross_match',
-    inferred: top.score < 90,
-    reasons: top.reasons,
+    mode: 'cnr_fallback',
+    inferred: true,
+    reasons: [...top.reasons, 'cnr_clue_parsing'],
     clues,
     sourceHandle
   });

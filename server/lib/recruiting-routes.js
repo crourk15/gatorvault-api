@@ -498,7 +498,15 @@ function mountRecruitingRoutes(app) {
     if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid admin pin' });
     try {
       const patternStore = require('./identity-patterns-store');
+      const opsMonitor = require('./ops-monitor');
+      const started = Date.now();
       const result = await patternStore.rebuildAllPatterns();
+      opsMonitor.logEvent({
+        subsystem: 'cron:identity-patterns',
+        status: 'success',
+        message: `Identity patterns rebuilt (${result.count} players)`,
+        details: { count: result.count, durationMs: result.durationMs || Date.now() - started }
+      });
       return res.json({ ok: true, ...result, storage: patternStore.storageMode() });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

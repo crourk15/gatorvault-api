@@ -134,6 +134,15 @@ const JOBS = {
       return generateWeeklyDrafts({ force: opts.force === true });
     }
   },
+  'identity-patterns-rebuild': {
+    label: 'Identity patterns full rebuild',
+    subsystem: 'cron:identity-patterns',
+    schedule: 'Manual / boot',
+    async run() {
+      const patternStore = require('./identity-patterns-store');
+      return patternStore.rebuildAllPatterns();
+    }
+  },
   'ops-healthcheck': {
     label: 'Full ops health evaluation',
     subsystem: 'ops:healthcheck',
