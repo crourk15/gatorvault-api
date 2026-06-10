@@ -182,6 +182,33 @@ function mountRecruitingRoutes(app) {
     }
   });
 
+  app.post('/api/recruiting/players/:slug', async (req, res) => {
+    const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || '');
+    if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid admin pin' });
+    try {
+      const slug = String(req.params.slug || '').trim();
+      if (!slug) return res.status(400).json({ ok: false, error: 'slug required' });
+      const existing = await store.getPlayerBySlug(slug);
+      const name = String(req.body.name || existing?.name || '').trim();
+      if (!name) return res.status(400).json({ ok: false, error: 'Player name required' });
+      const player = await store.upsertPlayer({
+        ...(existing || {}),
+        ...req.body,
+        slug,
+        name,
+        classYear: req.body.classYear != null ? parseInt(req.body.classYear, 10) : existing?.classYear ?? null,
+        stars: req.body.stars != null ? parseInt(req.body.stars, 10) : existing?.stars ?? 0,
+        natlRank: req.body.natlRank != null ? parseInt(req.body.natlRank, 10) : existing?.natlRank ?? null,
+        posRank: req.body.posRank != null ? parseInt(req.body.posRank, 10) : existing?.posRank ?? null,
+        stateRank: req.body.stateRank != null ? parseInt(req.body.stateRank, 10) : existing?.stateRank ?? null,
+        rating: req.body.rating != null ? Number(req.body.rating) : existing?.rating ?? null
+      });
+      return res.json({ ok: true, player });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/players/:slug/media', (req, res) => {
     try {
       const host = req.get('x-forwarded-host') || req.get('host');

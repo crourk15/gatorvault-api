@@ -290,6 +290,7 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
       lastRun: recruitingUpdated,
       lastUpdateHours: recruitingFresh.hours,
       summary: recruitingUpdated ? `Updated ${recruitingFresh.hours ?? '?'}h ago` : 'No timestamp',
+      href: '/recruiting-board',
       errors24h: opsMonitor.getErrorCount24h('cron:recruiting-ingest')
     }),
     tile('portal-tracker', 'Portal Tracker', portalFresh.status, {
