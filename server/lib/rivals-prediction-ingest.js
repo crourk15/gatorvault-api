@@ -102,29 +102,63 @@ function appendInternalAlert(row) {
   return alert;
 }
 
-function buildAutoposterText(row) {
+async function buildAutoposterText(row) {
   const copy = require('./x-autoposter-copy');
+  const playerContext = require('./x-autoposter-player-context');
+  const prediction = require('./x-autoposter-prediction');
+
   if (row.eventType === 'visit_cancelled' || row.eventType === 'ov_change') {
-    const built = copy.buildIntelCopy({
+    const built = await copy.buildIntelCopyAsync({
       eventType: row.eventType,
       playerName: row.playerName,
+      playerSlug: row.playerSlug,
       nextVisitSchool: row.nextVisitSchool,
-      source: row.source
+      source: row.source,
+      analystName: row.source
     });
-    if (built?.text) return built.text;
+    return built?.text || null;
   }
-  const conf = row.confidence != null ? ` (${row.confidence}% confidence)` : '';
-  return copy.appendSite(`Rivals analyst ${row.analystName} logs a Florida prediction for ${row.playerName}${conf}. 🐊`);
+
+  const built = await prediction.buildPredictionPost({
+    row,
+    playerSlug: row.playerSlug,
+    playerName: row.playerName,
+    patch: playerContext.verifiedPatchFromRow(row),
+    intel: {
+      id: row.intelId || null,
+      eventType: 'prediction',
+      playerName: row.playerName,
+      playerSlug: row.playerSlug,
+      analystName: row.analystName,
+      confidencePct: row.confidence,
+      ufRpmPct: row.ufRpmPct,
+      pos: row.pos,
+      classYear: row.classYear,
+      stars: row.stars,
+      natlRank: row.natlRank,
+      highSchool: row.highSchool,
+      hometownState: row.hometownState,
+      school: row.school,
+      articleUrl: row.articleUrl,
+      source: row.source,
+      detail: row.detail
+    },
+    intelId: row.intelId || null,
+    sourceLabel: `Rivals analyst ${row.analystName}`
+  });
+  return built?.ok ? { ...built, text: copy.appendSite(built.text) } : null;
 }
 
 async function queueAutoposter(row, intelId) {
   try {
     const xStore = require('./x-autoposter-store');
     const policy = require('./x-autoposter-policy');
-    const text = buildAutoposterText(row);
+    const textResult = await buildAutoposterText({ ...row, intelId });
+    const built = textResult && typeof textResult === 'object' ? textResult : null;
+    const text = built?.text || (typeof textResult === 'string' ? textResult : null);
     const fp = row.fingerprint || intelFingerprint(row.on3Id, 'rivals_prediction', row.timestamp);
     const copy = require('./x-autoposter-copy');
-    if (!text || copy.isBrokenCopy(text) || !copy.isValidPlayerName(row.playerName)) {
+    if (!text || copy.isBrokenCopy(text, built || {}) || !copy.isValidPlayerName(row.playerName)) {
       return { queued: false, reason: 'invalid_copy' };
     }
     const doc = xStore.loadQueue();
@@ -147,7 +181,11 @@ async function queueAutoposter(row, intelId) {
       playerName: row.playerName,
       sourceIntelId: intelId,
       scheduledAt: new Date(Date.now() + 2 * 60 * 1000).toISOString(),
-      status: 'pending'
+      status: 'pending',
+      templateBlocks: built?.templateBlocks,
+      validationMeta: built?.validationMeta,
+      playerContext: built?.context,
+      sourceEventCreatedAt: row.timestamp
     };
     const check = policy.validatePostContent(payload);
     if (!check.valid) return { queued: false, reason: 'policy', errors: check.errors };
@@ -217,6 +255,12 @@ async function processPrediction(row, snapshot) {
     fingerprint: row.fingerprint,
     analystName: row.analystName,
     confidencePct: row.confidence,
+    ufRpmPct: row.ufRpmPct,
+    stars: row.stars,
+    natlRank: row.natlRank,
+    school: row.school,
+    highSchool: row.highSchool,
+    hometownState: row.hometownState,
     articleUrl: row.articleUrl,
     rivalsPickKey: row.pickKey,
     predictionSchool: row.predictionSchool

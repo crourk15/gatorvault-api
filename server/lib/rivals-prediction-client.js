@@ -64,6 +64,16 @@ function normalizePredictionRow(row, classYear, sourceLabel) {
     !!committedTo ||
     /commit|enroll|signed/.test(recruitStatus);
 
+  const hometownState =
+    player.hometown?.abbr ||
+    (player.homeTown?.city && player.homeTown?.stateAbbr
+      ? `${player.homeTown.city}, ${player.homeTown.stateAbbr}`
+      : null) ||
+    (player.hometown?.city && player.hometown?.stateAbbr
+      ? `${player.hometown.city}, ${player.hometown.stateAbbr}`
+      : null);
+  const highSchool = player.highSchoolName || player.highSchool?.name || '';
+
   return {
     pickKey: pick.key,
     playerName: player.name,
@@ -72,7 +82,9 @@ function normalizePredictionRow(row, classYear, sourceLabel) {
     on3Slug: player.slug,
     classYear: player.classYear || classYear,
     pos: player.positionAbbreviation || rating.positionAbbr || '',
-    school: player.highSchoolName || player.highSchool?.name || '',
+    school: highSchool || player.highSchoolName || player.highSchool?.name || '',
+    highSchool,
+    hometownState,
     analystName: pick.expert?.name || 'Rivals analyst',
     analystHandle: pick.expert?.niceName || pick.expert?.twitterHandle || null,
     confidence: pick.confidence != null ? Number(pick.confidence) : null,

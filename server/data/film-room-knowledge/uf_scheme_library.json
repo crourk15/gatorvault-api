@@ -1,0 +1,82 @@
+{
+  "records": [
+    {
+      "id": "ufs00001-0000-4000-8000-000000000001",
+      "unit": "defense",
+      "concept_id": "fc000001-0000-4000-8000-000000000001",
+      "usage_description": "Primary defensive structure for UF in 2026 under DC Brad White. Three-down odd front with five hybrid defenders.",
+      "frequency": 95,
+      "notes": "Jayden Woods at JACK, Kanye Clark at STAR, Brendan Bett at nose.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Brad White — UF Spring Defensive Install Presser",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+      "source_confidence": 90
+    },
+    {
+      "id": "ufs00002-0000-4000-8000-000000000002",
+      "unit": "defense",
+      "concept_id": "fc000002-0000-4000-8000-000000000002",
+      "usage_description": "JACK is the scheme centerpiece — edge setting and pass rush both run through this hybrid spot.",
+      "frequency": 90,
+      "notes": "Primary blitzer and edge setter in the odd front.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "On3 Florida — Corey Bender 3-3-5 JACK Role Breakdown",
+      "source_type": "analyst",
+      "source_url": "https://www.on3.com/teams/florida-gators/news/corey-bender-uf-jack-linebacker-335-scheme/",
+      "source_confidence": 86
+    },
+    {
+      "id": "ufs00003-0000-4000-8000-000000000003",
+      "unit": "defense",
+      "concept_id": "fc000003-0000-4000-8000-000000000003",
+      "usage_description": "STAR handles slot coverage and run fits from depth in the 3-3-5 nickel package.",
+      "frequency": 85,
+      "notes": "Critical vs spread tempo and 11 personnel.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Brad White — UF Spring Defensive Install Presser",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+      "source_confidence": 88
+    },
+    {
+      "id": "ufs00004-0000-4000-8000-000000000004",
+      "unit": "defense",
+      "concept_id": "fc000009-0000-4000-8000-000000000009",
+      "usage_description": "Simulated and five-man pressures triggered from JACK and STAR in package downs.",
+      "frequency": 70,
+      "notes": "Coverage must match pressure look — no free shots.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Brad White — SEC Media Day Defensive Presser",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+      "source_confidence": 87
+    },
+    {
+      "id": "ufs00005-0000-4000-8000-000000000005",
+      "unit": "offense",
+      "concept_id": "fc000005-0000-4000-8000-000000000005",
+      "usage_description": "Rhythm RPO quick game under OC Robby Faulkner — conflict reads on packaged run/pass.",
+      "frequency": 75,
+      "notes": "Eric Singleton Jr. vertical threat complements quick game.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Robby Faulkner — UF OC Spring Media Availability",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2026/3/15/football-robby-faulkner-spring-practice",
+      "source_confidence": 89
+    },
+    {
+      "id": "ufs00006-0000-4000-8000-000000000006",
+      "unit": "offense",
+      "concept_id": "fc000007-0000-4000-8000-000000000007",
+      "usage_description": "Mesh and vertical concepts in spread passing menu.",
+      "frequency": 60,
+      "notes": "Rebuilt OL protection is swing factor for downfield shots.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "On3 Florida — Blake Alderman UF Passing Game Breakdown",
+      "source_type": "analyst",
+      "source_url": "https://www.on3.com/teams/florida-gators/news/blake-alderman-uf-passing-game-mesh-vertical/",
+      "source_confidence": 85
+    }
+  ]
+}

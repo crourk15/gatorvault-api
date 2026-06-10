@@ -3,6 +3,7 @@
  */
 const playerContext = require('./x-autoposter-player-context');
 const template = require('./x-autoposter-template');
+const validation = require('./x-autoposter-validation');
 const { isValidPlayerName } = playerContext;
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
@@ -120,20 +121,43 @@ function detectBeatNewsEvent(text) {
   return null;
 }
 
+function newsPayloadFromBuilt(built, extra = {}) {
+  if (!built?.text) return null;
+  const text = appendSite(built.text);
+  const payload = {
+    text,
+    playerName: built.playerName,
+    templateBlocks: built.templateBlocks,
+    validationMeta: built.validationMeta,
+    playerContext: built.context,
+    ...extra
+  };
+  if (isBrokenCopy(text, payload)) return null;
+  return payload;
+}
+
 async function buildPredictionMachineCopyAsync(post) {
   const text = String(post.text || '').replace(/\s+/g, ' ').trim();
-  const analyst = post.writerName || post.outlet || post.handle || 'Insider';
   const playerName = extractPlayerFromText(text);
   if (!playerName) return null;
-  const matching = /matching.*prediction machine|prediction machine.*matching|logged a matching/i.test(text);
-  const source = matching ? `Gators Online · ${analyst}` : `Rivals analyst ${analyst}`;
-  const built = await playerContext.buildPlayerNewsPost({
-    source,
-    newsEvent: 'picked up a Florida Prediction Machine pick',
+  const prediction = require('./x-autoposter-prediction');
+  const built = await prediction.buildPredictionPost({
     playerName,
-    beatText: text
+    patch: { name: playerName, ...extractVerifiedPatchFromBeatText(text) },
+    intel: {
+      eventType: 'prediction',
+      playerName,
+      analystName: post.writerName || post.outlet || post.handle || 'Insider',
+      detail: text
+    },
+    row: {
+      analystName: post.writerName || post.outlet || post.handle || 'Insider',
+      articleUrl: post.url || null
+    },
+    sourceLabel: post.writerName || post.outlet || 'Rivals'
   });
-  return built?.text ? appendSite(built.text) : null;
+  if (!built?.ok) return null;
+  return newsPayloadFromBuilt(built);
 }
 
 async function buildBeatIntelCopyAsync(post) {
@@ -163,7 +187,7 @@ async function buildBeatIntelCopyAsync(post) {
       postKind: 'team',
       teamContext: template.detectTeamContext(text)
     });
-    return built?.text ? appendSite(built.text) : null;
+    return newsPayloadFromBuilt(built);
   }
 
   if (!hasPlayerSpecificIntel(text)) return null;
@@ -180,11 +204,28 @@ async function buildBeatIntelCopyAsync(post) {
     beatText: text,
     patch: { name: playerName, ...extractVerifiedPatchFromBeatText(text) }
   });
-  return built?.text ? appendSite(built.text) : null;
+  return newsPayloadFromBuilt(built);
 }
 
 async function buildIntelCopyAsync(intel) {
   if (!intel?.eventType || !isValidPlayerName(intel.playerName)) return null;
+
+  if (intel.eventType === 'prediction' || intel.eventType === 'rivals_futurecast') {
+    const prediction = require('./x-autoposter-prediction');
+    const built = await prediction.buildPredictionPost({
+      intel,
+      playerSlug: intel.playerSlug,
+      playerName: intel.playerName,
+      patch: playerContext.verifiedPatchFromIntel(intel),
+      sourceLabel: playerContext.sourceLabelForIntel(intel),
+      intelId: intel.id
+    });
+    if (!built?.ok) return null;
+    return newsPayloadFromBuilt(built, {
+      sources: built.sources?.filter((s) => s.url) || [{ label: intel.analystName || intel.source, url: intel.articleUrl }]
+    });
+  }
+
   const newsEvent = playerContext.newsEventForIntel(intel);
   if (!newsEvent) return null;
   const source = playerContext.sourceLabelForIntel(intel);
@@ -197,8 +238,7 @@ async function buildIntelCopyAsync(intel) {
     intel,
     beatText: intel.detail || null
   });
-  if (!built?.text) return null;
-  return { text: appendSite(built.text), playerName: built.playerName };
+  return newsPayloadFromBuilt(built);
 }
 
 async function buildMomentumCopyAsync(post) {
@@ -215,7 +255,7 @@ async function buildMomentumCopyAsync(post) {
     playerName,
     beatText: text
   });
-  return built?.text ? appendSite(built.text) : null;
+  return newsPayloadFromBuilt(built);
 }
 
 async function buildRecruitingEventCopyAsync(ev, { source = 'On3' } = {}) {
@@ -234,8 +274,7 @@ async function buildRecruitingEventCopyAsync(ev, { source = 'On3' } = {}) {
     postKind: isPortal ? 'portal' : 'recruiting',
     portalStatus: isPortal ? 'Portal' : undefined
   });
-  if (!built?.text) return null;
-  return { text: appendSite(built.text), playerName: built.playerName };
+  return newsPayloadFromBuilt(built);
 }
 
 async function buildPortalHeadlinerCopyAsync(headliner) {
@@ -251,8 +290,7 @@ async function buildPortalHeadlinerCopyAsync(headliner) {
     postKind: headliner.category === 'portal' ? 'portal' : 'recruiting',
     portalStatus: 'Portal'
   });
-  if (!built?.text) return null;
-  return { text: appendSite(built.text), playerName: built.playerName };
+  return newsPayloadFromBuilt(built);
 }
 
 async function buildArticleCopyAsync(article) {
@@ -270,18 +308,23 @@ async function buildArticleCopyAsync(article) {
     beatText,
     postKind: 'recruiting'
   });
-  if (!built?.text) return null;
-  return { text: appendSite(built.text), playerName: built.playerName };
+  return newsPayloadFromBuilt(built);
 }
 
-function isBrokenCopy(text) {
+function isBrokenCopy(text, meta = {}) {
   const t = String(text || '');
   if (!t.trim()) return true;
   if (BROKEN_COPY_PATTERNS.some((re) => re.test(t))) return true;
   if (template.isHeadlineOnlyPost(t)) return true;
   if (!template.hasTemplateStructure(t)) return true;
   if (/^[A-Z][a-z]{1,3} — via /i.test(t)) return true;
-  if (/#[A-Za-z0-9_]+/.test(t)) return true;
+  if (/(^|\s)#[A-Za-z_]\w*/.test(t)) return true;
+  if (validation.hasDuplicateSentences(t, meta.templateBlocks)) return true;
+  const blocks = meta.templateBlocks || validation.parseTemplateBlocks({ text: t });
+  if (blocks.context && validation.isGenericSyntheticContext(blocks.context)) return true;
+  if (blocks.insider && validation.isRankOnlyInsider(blocks.insider)) return true;
+  if (blocks.insider && require('./x-autoposter-prediction').isBarePredictionLine(blocks.insider)) return true;
+  if (blocks.context && require('./x-autoposter-prediction').isBarePredictionLine(blocks.context)) return true;
   return false;
 }
 
@@ -293,6 +336,7 @@ module.exports = {
   isGeneralBeatCommentary,
   isPredictionMachinePost,
   appendSite,
+  newsPayloadFromBuilt,
   buildPredictionMachineCopyAsync,
   buildBeatIntelCopyAsync,
   buildIntelCopyAsync,

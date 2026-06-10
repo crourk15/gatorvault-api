@@ -16,6 +16,7 @@ const accessConfig = require('./lib/access-config');
 const { mountXAutoposterRoutes } = require('./lib/x-autoposter-routes');
 const { mountMonitoringRoutes } = require('./lib/monitoring-routes');
 const { mountAdminRoutes } = require('./lib/admin-routes');
+const { mountFilmRoomKnowledgeRoutes } = require('./lib/film-room-knowledge-routes');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 
@@ -67,6 +68,7 @@ mountPlatformRoutes(app);
 mountXAutoposterRoutes(app);
 mountMonitoringRoutes(app);
 mountAdminRoutes(app);
+mountFilmRoomKnowledgeRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;
@@ -939,17 +941,20 @@ app.listen(PORT, () => {
   }
   if (process.env.FILM_ROOM_SYNC_ENABLED === 'true') {
     try {
-      const { buildFilmRoomCatalog } = require('./lib/film-room-feed');
+      const { rebuildFilmRoomCatalog } = require('./lib/film-room-feed');
       const filmInterval = parseInt(process.env.FILM_ROOM_SYNC_INTERVAL_MS || '21600000', 10);
       const runFilmSync = () => {
-        buildFilmRoomCatalog({ force: true })
-          .then((c) => console.log('[film-room] synced:', c.counts))
-          .catch((err) => console.warn('[film-room] sync failed:', err.message));
+        try {
+          const c = rebuildFilmRoomCatalog();
+          console.log('[film-room] knowledge engine refreshed:', c.counts);
+        } catch (err) {
+          console.warn('[film-room] knowledge refresh failed:', err.message);
+        }
       };
       setTimeout(runFilmSync, 20000);
       setInterval(runFilmSync, filmInterval);
     } catch (e) {
-      console.warn('Film Room sync scheduler failed to start', e.message);
+      console.warn('Film Room knowledge refresh scheduler failed to start', e.message);
     }
   }
   if (providers.length) {

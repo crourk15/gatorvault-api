@@ -6,44 +6,12 @@
  */
 const LAUNCH_YEAR = parseInt(process.env.GV_PRICING_LAUNCH_YEAR || '2026', 10);
 
+const { PAYMENT_TIERS } = require('./access-config');
+
 const TIERS = {
-  locker: {
-    id: 'locker',
-    name: 'Locker Room',
-    icon: '🏟️',
-    features: [
-      'Live Dashboard & beat writer stream',
-      '2026/2027 recruiting board & portal radar',
-      'Weekly depth chart & roster profiles',
-      'Community threads & breaking alerts',
-      'Podcast hub & ticket/apparel links'
-    ]
-  },
-  film: {
-    id: 'film',
-    name: 'Film Room',
-    icon: '🎬',
-    features: [
-      'Everything in Locker Room',
-      'GNFP 2026 film breakdowns (auto-updated)',
-      'UF head coach press conferences (latest 5)',
-      'Manual spring game film studies',
-      'Game-week storyline cards'
-    ]
-  },
-  war: {
-    id: 'war',
-    name: 'War Room',
-    icon: '⚔️',
-    features: [
-      'Everything in Film Room',
-      'Insider Scouting Database (Power, Bender, Ivins, Alderman, Simmons, Harden, Wiltfong)',
-      'Heat Check — Crystal Ball & On3 RPM momentum',
-      'War Room featured player reports',
-      'Game Zone betting lines & win probability',
-      'Priority Q&A & early access drops'
-    ]
-  }
+  locker: { ...PAYMENT_TIERS.locker },
+  film: { ...PAYMENT_TIERS.film },
+  war: { ...PAYMENT_TIERS.war }
 };
 
 const PRICING_BY_YEAR = {

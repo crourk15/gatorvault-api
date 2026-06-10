@@ -1,5 +1,6 @@
 const pricing = require('./pricing-config');
 const filmRoom = require('./film-room-feed');
+const store = require('./film-room-knowledge-store');
 const betting = require('./betting-lines');
 const feedback = require('./feedback-store');
 const access = require('./access-config');
@@ -75,22 +76,31 @@ function mountPlatformRoutes(app) {
 
   app.get('/api/film-room/catalog', async (req, res) => {
     try {
-      const catalog = await filmRoom.buildFilmRoomCatalog({
-        force: req.query.force === '1' || req.query.sync === '1'
-      });
+      if (req.query.sync === '1' || req.query.force === '1') {
+        store.reloadKnowledge();
+      }
+      const catalog = filmRoom.buildFilmRoomCatalog();
       const session = getSessionFromReq(req);
       const paymentTier = session?.tier || null;
       const items = (catalog.items || []).map((item) => {
-        const cat = String(item.category || '').toLowerCase();
-        const isFreeCategory = cat.includes('press') || cat.includes('highlight');
-        const minPaymentTier = isFreeCategory ? null : 'film';
-        let locked = false;
-        if (minPaymentTier) {
-          locked = !access.hasPaymentTier(paymentTier, minPaymentTier);
-        }
-        return { ...item, minPaymentTier: minPaymentTier || 'free', locked };
+        const locked = !access.hasPaymentTier(paymentTier, 'film');
+        return { ...item, minPaymentTier: 'film', locked };
       });
       return res.json({ ...catalog, items });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/film-room/lesson/:id', (req, res) => {
+    try {
+      const session = getSessionFromReq(req);
+      if (!access.hasPaymentTier(session?.tier, 'film')) {
+        return res.status(403).json({ ok: false, error: 'Film tier required', locked: true });
+      }
+      const out = filmRoom.getLessonDetail(req.params.id);
+      if (!out.ok) return res.status(422).json(out);
+      return res.json(out);
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -102,19 +112,12 @@ function mountPlatformRoutes(app) {
       if (!verifyAdminPin(pin)) {
         return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
       }
-      const scope = String(req.body.scope || req.query.scope || 'all').toLowerCase();
-      const catalog = await filmRoom.rebuildFilmRoomCatalog({ scope });
-      const press = (catalog.items || []).filter((i) => i.category === 'Press Conferences');
-      const micdUp = (catalog.items || []).filter((i) =>
-        /mic[\u2018\u2019'']?\s*d\s*up/i.test(String(i.title || ''))
-      );
+      const catalog = filmRoom.rebuildFilmRoomCatalog();
       return res.json({
         ok: true,
-        scope,
-        catalog,
-        pressConferences: press.map((i) => ({ title: i.title, youtubeId: i.youtubeId })),
-        micdUpItems: micdUp.map((i) => ({ title: i.title, category: i.category, youtubeId: i.youtubeId })),
-        pressCount: press.length
+        scope: 'knowledge_engine',
+        message: 'Film Room rebuilt from verified knowledge database — no external video sync.',
+        catalog
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

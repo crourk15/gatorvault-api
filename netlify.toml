@@ -3,6 +3,18 @@
   publish = "server"
 
 [[headers]]
+  for = "/favicon.ico"
+  [headers.values]
+    Content-Type = "image/x-icon"
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type = "application/xml"
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
   for = "/og-image.jpg"
   [headers.values]
     Content-Type = "image/jpeg"

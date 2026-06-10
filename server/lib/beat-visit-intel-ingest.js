@@ -59,22 +59,26 @@ function appendWarRoomVisit(row) {
   writeJson(WAR_ROOM_VISITS_PATH, doc);
 }
 
-function buildAutoposterText(row) {
+async function buildAutoposterText(row) {
   const copy = require('./x-autoposter-copy');
-  const built = copy.buildIntelCopy({
+  const built = await copy.buildIntelCopyAsync({
     eventType: 'visit_cancelled',
     playerName: row.playerName,
+    playerSlug: row.playerSlug,
     nextVisitSchool: row.nextVisitSchool,
-    source: row.source
+    source: row.source,
+    analystName: row.source,
+    pos: row.pos,
+    classYear: row.classYear
   });
-  return built?.text || copy.appendSite(`${row.playerName} has cancelled his OV to Florida — via ${row.source} 🐊`);
+  return built?.text || null;
 }
 
 async function queueAutoposter(row, intelId) {
   try {
     const xStore = require('./x-autoposter-store');
     const policy = require('./x-autoposter-policy');
-    const text = buildAutoposterText(row);
+    const text = await buildAutoposterText(row);
     const fp = row.fingerprint;
     const copy = require('./x-autoposter-copy');
     if (!text || copy.isBrokenCopy(text) || !copy.isValidPlayerName(row.playerName)) {

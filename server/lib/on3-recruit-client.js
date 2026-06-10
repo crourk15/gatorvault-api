@@ -162,6 +162,7 @@ module.exports = {
   UF_MATCH,
   fetchTeamVisits,
   fetchRecruitProfile,
+  fetchNextPageProps,
   flattenVisits,
   getCollegeCommit,
   getFloridaTeam,

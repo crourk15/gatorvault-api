@@ -1,0 +1,107 @@
+{
+  "records": [
+    {
+      "id": "rf000001-0000-4000-8000-000000000001",
+      "position": "JACK",
+      "body_type": "6-2 to 6-4, 230–250 lbs, long arms preferred",
+      "athletic_profile": {
+        "required_traits": [
+          "pt000001-0000-4000-8000-000000000001",
+          "pt000002-0000-4000-8000-000000000002",
+          "pt000003-0000-4000-8000-000000000003"
+        ],
+        "preferred": [
+          "flexibility",
+          "length"
+        ]
+      },
+      "technical_requirements": [
+        "Edge setting",
+        "Block shed",
+        "Pass-rush plan"
+      ],
+      "scheme_fit_notes": "JACK in Brad White's 3-3-5 requires edge burst, block shedding, and speed-to-power.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "On3 Florida — Corey Bender JACK Recruiting Profile Framework",
+      "source_type": "analyst",
+      "source_url": "https://www.on3.com/teams/florida-gators/news/corey-bender-jack-recruiting-fit-335/",
+      "source_confidence": 85
+    },
+    {
+      "id": "rf000002-0000-4000-8000-000000000002",
+      "position": "STAR",
+      "body_type": "5-10 to 6-0, 185–205 lbs, twitchy slot build",
+      "athletic_profile": {
+        "required_traits": [
+          "pt000004-0000-4000-8000-000000000004",
+          "pt000005-0000-4000-8000-000000000005"
+        ],
+        "preferred": [
+          "tackle ability",
+          "football iq"
+        ]
+      },
+      "technical_requirements": [
+        "Slot coverage",
+        "Run fit from depth",
+        "Communication"
+      ],
+      "scheme_fit_notes": "STAR must cover slot receivers and fit the run from depth in the 3-3-5 nickel package.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "On3 Florida — Andrew Ivins STAR/Nickel Fit Notes",
+      "source_type": "analyst",
+      "source_url": "https://www.on3.com/teams/florida-gators/news/andrew-ivins-star-nickel-recruiting-fit/",
+      "source_confidence": 84
+    },
+    {
+      "id": "rf000003-0000-4000-8000-000000000003",
+      "position": "WR",
+      "body_type": "6-0 to 6-3, 185–210 lbs",
+      "athletic_profile": {
+        "required_traits": [
+          "pt000006-0000-4000-8000-000000000006",
+          "pt000007-0000-4000-8000-000000000007"
+        ],
+        "preferred": [
+          "ball tracking",
+          "burst"
+        ]
+      },
+      "technical_requirements": [
+        "Route tree proficiency",
+        "Separation at break point"
+      ],
+      "scheme_fit_notes": "Spread RPO offense needs receivers who win with route running and speed on vertical and mesh concepts.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Rivals — WR Fit in Spread RPO Offense",
+      "source_type": "analyst",
+      "source_url": "https://florida.rivals.com/news/wr-fit-spread-rpo-offense",
+      "source_confidence": 83
+    },
+    {
+      "id": "rf000004-0000-4000-8000-000000000004",
+      "position": "QB",
+      "body_type": "6-1 to 6-4, pro-style build",
+      "athletic_profile": {
+        "required_traits": [
+          "pt000008-0000-4000-8000-000000000008",
+          "pt000009-0000-4000-8000-000000000009"
+        ],
+        "preferred": [
+          "arm strength"
+        ]
+      },
+      "technical_requirements": [
+        "RPO conflict reads",
+        "Rhythm timing",
+        "Ball security"
+      ],
+      "scheme_fit_notes": "Rhythm RPO offense requires QB processing and anticipation on conflict reads.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Robby Faulkner — UF OC Spring Media Availability",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2026/3/15/football-robby-faulkner-spring-practice",
+      "source_confidence": 88
+    }
+  ]
+}

@@ -64,9 +64,20 @@ function normalizeIntel(raw) {
     xPostQueued: !!raw.xPostQueued,
     analystName: raw.analystName || raw.analyst_name || null,
     confidencePct: raw.confidencePct != null ? Number(raw.confidencePct) : raw.confidence_pct != null ? Number(raw.confidence_pct) : null,
+    stars: raw.stars != null ? Number(raw.stars) : null,
+    natlRank: raw.natlRank != null ? Number(raw.natlRank) : raw.natl_rank != null ? Number(raw.natl_rank) : null,
+    school: raw.school || null,
+    highSchool: raw.highSchool || raw.high_school || null,
+    hometownState: raw.hometownState || raw.hometown_state || null,
+    ufRpmPct: raw.ufRpmPct != null ? Number(raw.ufRpmPct) : raw.uf_rpm_pct != null ? Number(raw.uf_rpm_pct) : null,
+    htWt: raw.htWt || raw.ht_wt || null,
     articleUrl: raw.articleUrl || raw.article_url || null,
     rivalsPickKey: raw.rivalsPickKey || raw.rivals_pick_key || null,
     predictionSchool: raw.predictionSchool || raw.prediction_school || null,
+    identityConfirmed: !!raw.identityConfirmed,
+    identityConfirmationMode: raw.identityConfirmationMode || raw.identity_confirmation_mode || null,
+    identityConfirmedAt: raw.identityConfirmedAt || raw.identity_confirmed_at || null,
+    identitySources: raw.identitySources || raw.identity_sources || null,
     cancelledSchool: raw.cancelledSchool || raw.cancelled_school || null,
     nextVisitSchool: raw.nextVisitSchool || raw.next_visit_school || null,
     createdAt: raw.createdAt || nowIso()
@@ -151,6 +162,41 @@ function markIntelXPostQueued(idOrFingerprint) {
   return doc.items[idx];
 }
 
+function updateIntelIdentity(idOrFingerprint, patch) {
+  if (!idOrFingerprint || !patch || typeof patch !== 'object') return null;
+  const doc = loadIntelDoc();
+  const idx = doc.items.findIndex((i) => i.id === idOrFingerprint || i.fingerprint === idOrFingerprint);
+  if (idx < 0) return null;
+
+  const row = { ...doc.items[idx] };
+  const allowed = [
+    'playerName',
+    'playerSlug',
+    'playerId',
+    'stars',
+    'pos',
+    'classYear',
+    'highSchool',
+    'hometownState',
+    'school',
+    'natlRank',
+    'ufRpmPct',
+    'htWt',
+    'identityConfirmed',
+    'identityConfirmationMode',
+    'identityConfirmedAt',
+    'identitySources'
+  ];
+
+  for (const key of allowed) {
+    if (patch[key] != null && patch[key] !== '') row[key] = patch[key];
+  }
+
+  doc.items[idx] = row;
+  saveIntelDoc(doc);
+  return row;
+}
+
 function getIntelForPlayer({ playerId, playerSlug, playerName } = {}) {
   const doc = loadIntelDoc();
   const slug = String(playerSlug || '').toLowerCase();
@@ -191,6 +237,7 @@ module.exports = {
   addIntel,
   hasIntelFingerprint,
   markIntelXPostQueued,
+  updateIntelIdentity,
   getIntelForPlayer,
   getUnqueuedIntel,
   feedDedupeKeyForIntel,

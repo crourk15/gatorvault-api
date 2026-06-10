@@ -1,0 +1,180 @@
+{
+  "records": [
+    {
+      "id": "frl00001-0000-4000-8000-000000000001",
+      "lesson_type": "scheme_library",
+      "concept_id": "fc000001-0000-4000-8000-000000000001",
+      "uf_scheme_id": "ufs00001-0000-4000-8000-000000000001",
+      "opponent_id": null,
+      "player_trait_ids": [],
+      "recruiting_fit_id": null,
+      "summary": "How Brad White's 3-3-5 odd front works at Florida — personnel, JACK/STAR roles, and why it fits modern spread offenses.",
+      "created_at": "2026-06-01T10:00:00.000Z",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Brad White — UF Spring Defensive Install Presser",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+      "source_confidence": 90
+    },
+    {
+      "id": "frl00002-0000-4000-8000-000000000002",
+      "lesson_type": "concept_breakdown",
+      "concept_id": "fc000002-0000-4000-8000-000000000002",
+      "uf_scheme_id": "ufs00002-0000-4000-8000-000000000002",
+      "opponent_id": null,
+      "player_trait_ids": [
+        "pt000001-0000-4000-8000-000000000001",
+        "pt000002-0000-4000-8000-000000000002",
+        "pt000003-0000-4000-8000-000000000003"
+      ],
+      "recruiting_fit_id": "rf000001-0000-4000-8000-000000000001",
+      "summary": "JACK linebacker in the UF 3-3-5 — edge setting, pass rush, and the traits required to play the spot.",
+      "created_at": "2026-06-01T10:00:00.000Z",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "On3 Florida — Corey Bender 3-3-5 JACK Role Breakdown",
+      "source_type": "analyst",
+      "source_url": "https://www.on3.com/teams/florida-gators/news/corey-bender-uf-jack-linebacker-335-scheme/",
+      "source_confidence": 86
+    },
+    {
+      "id": "frl00003-0000-4000-8000-000000000003",
+      "lesson_type": "concept_breakdown",
+      "concept_id": "fc000003-0000-4000-8000-000000000003",
+      "uf_scheme_id": "ufs00003-0000-4000-8000-000000000003",
+      "opponent_id": null,
+      "player_trait_ids": [
+        "pt000004-0000-4000-8000-000000000004",
+        "pt000005-0000-4000-8000-000000000005"
+      ],
+      "recruiting_fit_id": "rf000002-0000-4000-8000-000000000002",
+      "summary": "STAR/nickel in the 3-3-5 — slot coverage, run fits, and why tempo offenses test this position first.",
+      "created_at": "2026-06-01T10:00:00.000Z",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "On3 Florida — Andrew Ivins STAR/Nickel Fit Notes",
+      "source_type": "analyst",
+      "source_url": "https://www.on3.com/teams/florida-gators/news/andrew-ivins-star-nickel-recruiting-fit/",
+      "source_confidence": 84
+    },
+    {
+      "id": "frl00004-0000-4000-8000-000000000004",
+      "lesson_type": "opponent_prep",
+      "concept_id": "fc000004-0000-4000-8000-000000000004",
+      "uf_scheme_id": "ufs00001-0000-4000-8000-000000000001",
+      "opponent_id": "ot000001-0000-4000-8000-000000000001",
+      "player_trait_ids": [],
+      "recruiting_fit_id": null,
+      "summary": "Week 1 vs FAU — edge setting and STAR fit vs spread-RPO tempo. What to watch on film.",
+      "created_at": "2026-06-02T10:00:00.000Z",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "On3 Florida — FAU Spread-RPO Film Study",
+      "source_type": "film_study",
+      "source_url": "https://www.on3.com/teams/florida-gators/news/fau-spread-rpo-film-study-week-1/",
+      "source_confidence": 82
+    },
+    {
+      "id": "frl00005-0000-4000-8000-000000000005",
+      "lesson_type": "opponent_prep",
+      "concept_id": "fc000008-0000-4000-8000-000000000008",
+      "uf_scheme_id": "ufs00001-0000-4000-8000-000000000001",
+      "opponent_id": "ot000003-0000-4000-8000-000000000003",
+      "player_trait_ids": [],
+      "recruiting_fit_id": null,
+      "summary": "At Auburn — gap-scheme downhill run game and how UF's front must control the line of scrimmage.",
+      "created_at": "2026-06-02T10:00:00.000Z",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "247Sports — Auburn Gap-Scheme Run Game Breakdown",
+      "source_type": "analyst",
+      "source_url": "https://247sports.com/college/auburn/Article/auburn-gap-scheme-run-game-2026",
+      "source_confidence": 84
+    },
+    {
+      "id": "frl00006-0000-4000-8000-000000000006",
+      "lesson_type": "scheme_library",
+      "concept_id": "fc000005-0000-4000-8000-000000000005",
+      "uf_scheme_id": "ufs00005-0000-4000-8000-000000000005",
+      "opponent_id": null,
+      "player_trait_ids": [
+        "pt000008-0000-4000-8000-000000000008",
+        "pt000009-0000-4000-8000-000000000009"
+      ],
+      "recruiting_fit_id": "rf000004-0000-4000-8000-000000000004",
+      "summary": "UF spread RPO quick game under Robby Faulkner — conflict reads, rhythm, and QB requirements.",
+      "created_at": "2026-06-03T10:00:00.000Z",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Robby Faulkner — UF OC Spring Media Availability",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2026/3/15/football-robby-faulkner-spring-practice",
+      "source_confidence": 89
+    },
+    {
+      "id": "frl00007-0000-4000-8000-000000000007",
+      "lesson_type": "concept_breakdown",
+      "concept_id": "fc000007-0000-4000-8000-000000000007",
+      "uf_scheme_id": "ufs00006-0000-4000-8000-000000000006",
+      "opponent_id": null,
+      "player_trait_ids": [
+        "pt000006-0000-4000-8000-000000000006",
+        "pt000007-0000-4000-8000-000000000007"
+      ],
+      "recruiting_fit_id": "rf000003-0000-4000-8000-000000000003",
+      "summary": "Mesh concept in UF's spread passing menu — route spacing, zone reads, and WR traits.",
+      "created_at": "2026-06-03T10:00:00.000Z",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "On3 Florida — Blake Alderman UF Passing Game Breakdown",
+      "source_type": "analyst",
+      "source_url": "https://www.on3.com/teams/florida-gators/news/blake-alderman-uf-passing-game-mesh-vertical/",
+      "source_confidence": 85
+    },
+    {
+      "id": "frl00008-0000-4000-8000-000000000008",
+      "lesson_type": "concept_breakdown",
+      "concept_id": "fc000009-0000-4000-8000-000000000009",
+      "uf_scheme_id": "ufs00004-0000-4000-8000-000000000004",
+      "opponent_id": null,
+      "player_trait_ids": [],
+      "recruiting_fit_id": null,
+      "summary": "Brad White pressure packages — simulated looks, JACK triggers, and coverage match rules.",
+      "created_at": "2026-06-04T10:00:00.000Z",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Brad White — SEC Media Day Defensive Presser",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+      "source_confidence": 87
+    },
+    {
+      "id": "frl00009-0000-4000-8000-000000000009",
+      "lesson_type": "position_traits",
+      "concept_id": null,
+      "uf_scheme_id": null,
+      "opponent_id": null,
+      "player_trait_ids": [
+        "pt00000a-0000-4000-8000-00000000000a",
+        "pt00000b-0000-4000-8000-00000000000b"
+      ],
+      "recruiting_fit_id": null,
+      "summary": "OL pass protection and NT anchor traits — how the rebuilt front wins at the point of attack.",
+      "created_at": "2026-06-04T10:00:00.000Z",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "NFL Combine — OL/DT Evaluation Rubrics",
+      "source_type": "scouting_framework",
+      "source_url": "https://www.nfl.com/combine/ol-dt-evaluation",
+      "source_confidence": 90
+    },
+    {
+      "id": "frl00010-0000-4000-8000-00000000000a",
+      "lesson_type": "opponent_prep",
+      "concept_id": "fc000005-0000-4000-8000-000000000005",
+      "uf_scheme_id": "ufs00001-0000-4000-8000-000000000001",
+      "opponent_id": "ot000005-0000-4000-8000-000000000005",
+      "player_trait_ids": [],
+      "recruiting_fit_id": null,
+      "summary": "At FSU — RPO quick game, TE red-zone usage, and rivalry-game field-position keys.",
+      "created_at": "2026-06-04T10:00:00.000Z",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "On3 Florida — FSU RPO Rivalry Film Study",
+      "source_type": "film_study",
+      "source_url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+      "source_confidence": 82
+    }
+  ]
+}

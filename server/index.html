@@ -228,7 +228,14 @@
         .highlight-modal{background:#0a1628;border:1px solid rgba(250,70,22,.25);border-radius:1rem;max-width:900px;width:100%;overflow:hidden;}
         .highlight-modal-video{position:relative;padding-top:56.25%;background:#000;}
         .highlight-modal-video video{position:relative;width:100%;display:block;max-height:70vh;background:#000;}
-        .highlight-modal-preview{min-height:220px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#001a4d,#060f1f);padding:2rem;text-align:center;}
+        .highlight-modal-preview{min-height:120px;display:flex;align-items:flex-start;justify-content:flex-start;background:linear-gradient(135deg,#001a4d,#060f1f);padding:1.25rem 1.5rem;text-align:left;}
+        .film-lesson-card{border:1px solid rgba(250,70,22,.15);background:#0a1628;border-radius:1rem;overflow:hidden;transition:border-color .2s;}
+        .film-lesson-card:hover{border-color:rgba(250,70,22,.45);}
+        .film-lesson-head{padding:1rem 1.25rem;background:linear-gradient(135deg,rgba(0,26,77,.6),rgba(6,15,31,.9));border-bottom:1px solid rgba(250,70,22,.12);}
+        .film-lesson-body{padding:1rem 1.25rem;}
+        .film-diagram{margin-top:1rem;padding:1rem;border:1px dashed rgba(250,70,22,.25);border-radius:.75rem;font-size:.75rem;color:#94a3b8;}
+        .film-diagram-node{display:inline-block;margin:.25rem .35rem .25rem 0;padding:.2rem .5rem;border-radius:.35rem;background:rgba(250,70,22,.12);color:#fdba74;font-weight:600;}
+        .film-verified-badge{font-size:.65rem;font-weight:700;color:#4ade80;background:rgba(74,222,128,.12);padding:.15rem .45rem;border-radius:.35rem;}
         .toggle-switch{position:relative;width:48px;height:26px;background:rgba(0,48,135,.4);border-radius:13px;cursor:pointer;transition:background .2s;flex-shrink:0;}
         .toggle-switch.active{background:#FA4616;}
         .toggle-switch::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:white;transition:transform .2s;}
@@ -485,10 +492,11 @@
                 <button id="hl-modal-close" type="button" class="text-surface-200 hover:text-white p-2 text-xl leading-none" aria-label="Close">✕</button>
             </div>
             <div id="hl-modal-video-wrap" class="highlight-modal-video hidden"></div>
-            <div id="hl-modal-preview" class="highlight-modal-preview hidden">
-                <div>
-                    <div class="w-16 h-16 rounded-full bg-gator-orange/90 flex items-center justify-center mx-auto mb-3 text-2xl text-white">▶</div>
-                    <p id="hl-modal-preview-text" class="text-surface-200 text-sm max-w-md mx-auto"></p>
+            <div id="hl-modal-preview" class="highlight-modal-preview">
+                <div class="w-full">
+                    <p id="hl-modal-preview-text" class="text-surface-200 text-sm leading-relaxed whitespace-pre-wrap"></p>
+                    <div id="hl-modal-diagram" class="film-diagram hidden"></div>
+                    <div id="hl-modal-sources" class="hidden mt-4 pt-4 border-t border-gator-blue/15"></div>
                 </div>
             </div>
             <div class="p-4 text-xs text-surface-200/60" id="hl-modal-foot"></div>
@@ -668,7 +676,7 @@
                     <div data-id="183" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="184" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">📋</div><h3 data-id="185" class="font-display text-xl font-bold text-white mb-2">Interactive Depth Chart</h3><p data-id="186" class="text-surface-200 text-sm leading-relaxed">Clickable position cards, 1-3 deep, Locked/Battle/Watch status, updated weekly.</p></div>
                     <div data-id="187" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="188" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🎯</div><h3 data-id="189" class="font-display text-xl font-bold text-white mb-2">Recruiting Board</h3><p data-id="190" class="text-surface-200 text-sm leading-relaxed">2026 class + 2027 targets, confidence ratings, player comps, Heat Check.</p></div>
                     <div data-id="191" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="192" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🔄</div><h3 data-id="193" class="font-display text-xl font-bold text-white mb-2">Portal Radar</h3><p data-id="194" class="text-surface-200 text-sm leading-relaxed">Every Gator portal addition tracked — On3-sourced skinny, scheme-fit profiles, and full player pages.</p></div>
-                    <div data-id="195" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="196" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🎬</div><h3 data-id="197" class="font-display text-xl font-bold text-white mb-2">Film Room</h3><p data-id="198" class="text-surface-200 text-sm leading-relaxed">Brad White's 3-3-5 breakdowns, scheme analysis, the analysis beat writers skip.</p></div>
+                    <div data-id="195" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="196" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🎬</div><h3 data-id="197" class="font-display text-xl font-bold text-white mb-2">Film Room</h3><p data-id="198" class="text-surface-200 text-sm leading-relaxed">Weekly Scheme School, Play of the Week, recruit fit, matchup spotlight, and the Verified Knowledge Engine — coaching-sourced lessons only. No external video.</p></div>
                     <div data-id="199" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="200" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🏈</div><h3 data-id="201" class="font-display text-xl font-bold text-white mb-2">Game Week Mode</h3><p data-id="202" class="text-surface-200 text-sm leading-relaxed">Win probability, 3 keys, swing players, film notes, GatorVault prediction.</p></div>
                     <div data-id="203" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="204" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">💬</div><h3 data-id="205" class="font-display text-xl font-bold text-white mb-2">Member Community</h3><p data-id="206" class="text-surface-200 text-sm leading-relaxed">Threads, tier badges, Founding Member status. Your home inside Gator Nation.</p></div>
                 </div>
@@ -684,7 +692,7 @@
                 </div>
                 <div data-id="213" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div data-id="214" class="persona-card"><div data-id="215" class="text-4xl mb-4">🏈</div><h3 data-id="216" class="font-display text-xl font-bold text-white mb-2">The Recruiting Obsessive</h3><p data-id="217" class="text-surface-200/60 text-sm mb-4">Tracks every commit, decommit, flip, and visit in real time.</p><ul data-id="218" class="space-y-2 text-sm text-surface-200"><li data-id="219" class="flex items-start gap-2"><i data-id="220" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Live 2026/2027 board with star ratings and flip risk</li><li data-id="221" class="flex items-start gap-2"><i data-id="222" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Beat writer stream + recruiting momentum alerts</li><li data-id="223" class="flex items-start gap-2"><i data-id="224" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>OV weekend intel and portal radar in one dashboard</li></ul></div>
-                    <div data-id="225" class="persona-card"><div data-id="226" class="text-4xl mb-4">📊</div><h3 data-id="227" class="font-display text-xl font-bold text-white mb-2">The Film Room Nerd</h3><p data-id="228" class="text-surface-200/60 text-sm mb-4">Wants scheme breakdowns, not surface-level hot takes.</p><ul data-id="229" class="space-y-2 text-sm text-surface-200"><li data-id="230" class="flex items-start gap-2"><i data-id="231" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>GNFP film reviews, Film Guy Network, and press conferences</li><li data-id="232" class="flex items-start gap-2"><i data-id="233" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Organized by category — breakdowns, highlights, and more</li><li data-id="234" class="flex items-start gap-2"><i data-id="235" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Formation analysis, personnel packages, and defensive evolution</li></ul></div>
+                    <div data-id="225" class="persona-card"><div data-id="226" class="text-4xl mb-4">📊</div><h3 data-id="227" class="font-display text-xl font-bold text-white mb-2">The Film Room Nerd</h3><p data-id="228" class="text-surface-200/60 text-sm mb-4">Wants verified scheme intel — not hot takes or third-party video.</p><ul data-id="229" class="space-y-2 text-sm text-surface-200"><li data-id="230" class="flex items-start gap-2"><i data-id="231" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Weekly Scheme School &amp; Play of the Week</li><li data-id="232" class="flex items-start gap-2"><i data-id="233" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Verified Knowledge Engine — scheme, concepts, fit, opponent prep</li><li data-id="234" class="flex items-start gap-2"><i data-id="235" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Coaching-sourced text lessons — no GNFP, no pressers, no embeds</li></ul></div>
                     <div data-id="236" class="persona-card"><div data-id="237" class="text-4xl mb-4">🗓️</div><h3 data-id="238" class="font-display text-xl font-bold text-white mb-2">The Game Week Planner</h3><p data-id="239" class="text-surface-200/60 text-sm mb-4">Needs depth charts, injuries, and predictions before kickoff.</p><ul data-id="240" class="space-y-2 text-sm text-surface-200"><li data-id="241" class="flex items-start gap-2"><i data-id="242" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Real starting-lineup intel beyond the official depth chart</li><li data-id="243" class="flex items-start gap-2"><i data-id="244" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Game Zone with spread, total, and sportsbook links</li><li data-id="245" class="flex items-start gap-2"><i data-id="246" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Confidence ratings and keys to the game every week</li></ul></div>
                     <div data-id="247" class="persona-card"><div data-id="248" class="text-4xl mb-4">🔄</div><h3 data-id="249" class="font-display text-xl font-bold text-white mb-2">The Transfer Portal Hawk</h3><p data-id="250" class="text-surface-200/60 text-sm mb-4">Follows every portal entry and exit obsessively.</p><ul data-id="251" class="space-y-2 text-sm text-surface-200"><li data-id="252" class="flex items-start gap-2"><i data-id="253" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Full portal tracker with position needs and likelihood to land</li><li data-id="254" class="flex items-start gap-2"><i data-id="255" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Scheme-fit analysis and comparison to outgoing players</li><li data-id="256" class="flex items-start gap-2"><i data-id="257" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Live portal alerts synced to the beat writer stream</li></ul></div>
                     <div data-id="258" class="persona-card"><div data-id="259" class="text-4xl mb-4">🏆</div><h3 data-id="260" class="font-display text-xl font-bold text-white mb-2">The Fantasy/Pick'em Competitor</h3><p data-id="261" class="text-surface-200/60 text-sm mb-4">Plays DFS, pick'em contests, or fantasy CFB.</p><ul data-id="262" class="space-y-2 text-sm text-surface-200"><li data-id="263" class="flex items-start gap-2"><i data-id="264" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Insider predictions, line movement context, and prop angles</li><li data-id="265" class="flex items-start gap-2"><i data-id="266" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Game-week intel before it hits mainstream media</li><li data-id="267" class="flex items-start gap-2"><i data-id="268" data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Vault Points pick'em and weekly prediction contests</li></ul></div>
@@ -739,7 +747,7 @@
                         <h3 data-id="336" class="font-display text-2xl font-bold text-white mb-1">🎬 Film Room</h3>
                         <div data-id="337" class="flex items-baseline gap-1 mb-1"><span data-id="338" class="font-display text-4xl font-bold text-white price-val" data-tier="film" data-mo="9.99" data-yr="7.99">$9.99</span><span data-id="339" class="text-surface-200 text-sm price-per">/month</span></div>
                         <p data-id="340" class="text-xs text-green-400 mb-5 h-4 price-save hidden">$95.90/year — save 20%</p>
-                        <ul data-id="341" id="pricing-features-film" class="space-y-3 mb-8 flex-1 text-sm text-surface-200"><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Everything in Locker Room</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Full Film Room access</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>GNFP Film Review</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Scheme breakdowns</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Player film analysis</li></ul>
+                        <ul data-id="341" id="pricing-features-film" class="space-y-3 mb-8 flex-1 text-sm text-surface-200"><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Everything in Locker Room</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Weekly Scheme School</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Play of the Week Breakdown</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Player Development Tracker</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Recruit Fit Evaluations</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Matchup Spotlight</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Film Room Q&amp;A</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>&quot;What the Coaches See&quot; positional insights</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>&quot;Why This Matters&quot; micro-lessons</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>Verified Knowledge Engine (scheme, concepts, fit, opponent prep, traits)</li><li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-gator-orange mt-0.5 flex-shrink-0"></i>No external video, GNFP, or press conferences</li></ul>
                         <button data-id="354" class="join-btn w-full bg-gator-orange hover:bg-gator-orangedk text-white font-bold py-3 rounded-xl transition min-h-[44px]" data-tier="film" onclick="if(window.openRegModal)openRegModal(this.dataset.tier)">Start Free — No Card Required</button>
                         <p data-id="355" style="font-size:11px;color:#64748b;text-align:center;margin-top:8px;" class="price-footnote">30 days free · No card needed · Then $9.99/mo</p>
                     </div>
@@ -768,7 +776,7 @@
                     <div class="bg-surface-700 border border-gator-blue/20 rounded-xl p-5">
                         <p class="text-2xl mb-2">🔍</p>
                         <h3 class="font-display text-lg font-bold text-white mb-1">Scout <span class="text-xs text-surface-200/60 font-normal">0–499 pts</span></h3>
-                        <ul class="text-xs text-surface-200 space-y-1.5 mt-3"><li>Highlights &amp; press conferences</li><li>Basic player profiles</li></ul>
+                        <ul class="text-xs text-surface-200 space-y-1.5 mt-3"><li>Basic free vault access</li><li>Basic player profiles</li></ul>
                     </div>
                     <div class="bg-surface-700 border border-gator-orange/30 rounded-xl p-5">
                         <p class="text-2xl mb-2">📰</p>
@@ -778,7 +786,7 @@
                     <div class="bg-surface-700 border border-yellow-500/30 rounded-xl p-5">
                         <p class="text-2xl mb-2">⚡</p>
                         <h3 class="font-display text-lg font-bold text-white mb-1">Vault Elite <span class="text-xs text-surface-200/60 font-normal">2,000+ pts</span></h3>
-                        <ul class="text-xs text-surface-200 space-y-1.5 mt-3"><li>Elite badge &amp; early alerts</li><li>Priority Q&amp;A &amp; giveaways</li><li>Elite-only film breakdowns</li></ul>
+                        <ul class="text-xs text-surface-200 space-y-1.5 mt-3"><li>Elite badge &amp; early alerts</li><li>Priority Q&amp;A &amp; giveaways</li><li>Elite-only Knowledge Engine alerts</li></ul>
                     </div>
                 </div>
             </div>
@@ -794,7 +802,7 @@
                     <div data-id="393" class="bg-surface-700 border border-gator-blue/20 rounded-xl overflow-hidden"><button data-id="394" class="faq-btn w-full flex items-center justify-between p-5 text-left min-h-[44px]"><span data-id="395" class="font-semibold text-white text-sm md:text-base">How often is content updated?</span><span data-id="396" class="faq-arr text-surface-200 text-xl font-bold">+</span></button><div data-id="397" class="faq-ans px-5 pb-5 text-surface-200 text-sm leading-relaxed">Monday depth chart, Wednesday article, 72 hours before kickoff game-week content drops, and a Monday newsletter every week during the season.</div></div>
                     <div data-id="398" class="bg-surface-700 border border-gator-blue/20 rounded-xl overflow-hidden"><button data-id="399" class="faq-btn w-full flex items-center justify-between p-5 text-left min-h-[44px]"><span data-id="400" class="font-semibold text-white text-sm md:text-base">What is the Founding Member badge?</span><span data-id="401" class="faq-arr text-surface-200 text-xl font-bold">+</span></button><div data-id="402" class="faq-ans px-5 pb-5 text-surface-200 text-sm leading-relaxed">The first 100 subscribers receive a permanent 🏅 Founding Member badge displayed in the community and across their profile. It never expires.</div></div>
                     <div data-id="403" class="bg-surface-700 border border-gator-blue/20 rounded-xl overflow-hidden"><button data-id="404" class="faq-btn w-full flex items-center justify-between p-5 text-left min-h-[44px]"><span data-id="405" class="font-semibold text-white text-sm md:text-base">Can I cancel anytime?</span><span data-id="406" class="faq-arr text-surface-200 text-xl font-bold">+</span></button><div data-id="407" class="faq-ans px-5 pb-5 text-surface-200 text-sm leading-relaxed">Yes. Cancel anytime through the Stripe billing portal. You'll retain access through the end of your current billing period. Cancel during the free trial and you owe nothing.</div></div>
-                    <div data-id="408" class="bg-surface-700 border border-gator-blue/20 rounded-xl overflow-hidden"><button data-id="409" class="faq-btn w-full flex items-center justify-between p-5 text-left min-h-[44px]"><span data-id="410" class="font-semibold text-white text-sm md:text-base">Film Room vs War Room — what's the difference?</span><span data-id="411" class="faq-arr text-surface-200 text-xl font-bold">+</span></button><div data-id="412" class="faq-ans px-5 pb-5 text-surface-200 text-sm leading-relaxed">Film Room gets recruiting intel, target profiles, and game-week cards. War Room adds 🔥 Heat Check (Crystal Ball &amp; insider momentum), exclusive film articles, coaching intel, game-day packs for every game, and priority Q&amp;A with the editorial team.</div></div>
+                    <div data-id="408" class="bg-surface-700 border border-gator-blue/20 rounded-xl overflow-hidden"><button data-id="409" class="faq-btn w-full flex items-center justify-between p-5 text-left min-h-[44px]"><span data-id="410" class="font-semibold text-white text-sm md:text-base">Film Room vs War Room — what's the difference?</span><span data-id="411" class="faq-arr text-surface-200 text-xl font-bold">+</span></button><div data-id="412" class="faq-ans px-5 pb-5 text-surface-200 text-sm leading-relaxed">Film Room ($9.99/mo) is the Verified Knowledge Engine — Weekly Scheme School, Play of the Week, recruit fit, matchup spotlight, positional insights, and coaching-sourced text lessons (scheme library, concept breakdowns, opponent prep, position traits). No external video, GNFP, or press conferences. War Room ($19.99/mo) adds 🔥 Heat Check, insider recruiting intel, portal intel, momentum shifts, and priority notifications on top of Film Room.</div></div>
                 </div>
             </div>
         </section>
@@ -955,7 +963,7 @@
                         <h2 class="gv-mob-module-hdr">Team / Depth Chart</h2>
                         <button type="button" class="gv-espn-card w-full text-left" data-goto="dc" style="cursor:pointer;border:none;">
                             <p class="gv-espn-card-title">2026 Depth Chart</p>
-                            <p class="gv-espn-card-body">Spring projections · 3-3-5 Defense · Tap to open</p>
+                            <p class="gv-espn-card-body" data-id="dc-header-embed">Spring Projections · Updated June 2026 · Tap to open</p>
                         </button>
                     </section>
                     <section class="gv-mob-module">
@@ -1002,7 +1010,7 @@
                 <!-- ====== DEPTH CHART ====== -->
                 <div data-id="533" id="vpane-dc" class="vpane fade-in space-y-6">
                     <div data-id="534" class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div data-id="535"><h1 data-id="536" class="font-display text-2xl md:text-3xl font-bold text-white">2026 Depth Chart</h1><p data-id="537" class="text-surface-200 text-sm">Spring projections · Updated June 2026 · 3-3-5 Defense · DC: Brad White</p></div>
+                        <div data-id="535"><h1 data-id="536" class="font-display text-2xl md:text-3xl font-bold text-white">2026 Depth Chart</h1><p data-id="537" class="text-surface-200 text-sm">Spring Projections · Updated June 2026</p></div>
                         <div data-id="538" class="flex items-center gap-2 flex-wrap">
                             <span data-id="539" class="text-xs font-semibold px-3 py-1 rounded-full status-locked">🟢 Locked</span>
                             <span data-id="540" class="text-xs font-semibold px-3 py-1 rounded-full status-battle">🟡 Battle</span>
@@ -1162,7 +1170,7 @@
                 <div data-id="652" id="vpane-highlights" class="vpane fade-in space-y-6">
                     <div>
                         <h1 data-id="653" class="font-display text-2xl md:text-3xl font-bold text-white">📺 Film Room</h1>
-                        <p class="text-surface-200 text-sm mt-1 max-w-2xl">Film Breakdown, Press Conferences, and Highlights — three sections, always up to date.</p>
+                        <p class="text-surface-200 text-sm mt-1 max-w-2xl">Verified coaching knowledge — scheme library, concept breakdowns, recruiting fit, and opponent prep. Sourced from clinics, OC/DC interviews, analyst breakdowns, and public film study. AI translates only; no invented content.</p>
                     </div>
                     <div id="film-room-categories" class="flex flex-wrap gap-2"></div>
                     <div id="highlights-shell"></div>
@@ -3799,16 +3807,16 @@
         }
     }
     
-    // ========== FILM ROOM (native ESPN-style highlights) ==========
+    // ========== FILM ROOM (Knowledge Engine — verified database only) ==========
     var GV_HIGHLIGHTS_LIVE=true;
     window._gvHighlights=[];
-    window._gvFilmRoomCategories=['Film Breakdown','Press Conferences','Highlights'];
+    window._gvFilmRoomCategories=['Scheme Library','Concept Breakdown','Recruiting Fit','Opponent Prep','Position Traits'];
     window._gvFilmRoomFilter='all';
     function gvEscHtml(s){
         return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
     function gvLoadHighlights(){
-        return fetch(gvLiveApiBase()+'/api/film-room/catalog?sync=1')
+        return fetch(gvLiveApiBase()+'/api/film-room/catalog')
             .then(function(r){return r.json();})
             .then(function(j){
                 if(j.ok){
@@ -3818,18 +3826,12 @@
                 gvRenderFilmRoomCategories();
                 renderHighlights();
             })
-            .catch(function(){
-                return fetch(gvLiveApiBase()+'/api/highlights/clips').then(function(r){return r.json();}).then(function(j){
-                    if(j.ok)window._gvHighlights=j.clips||[];
-                    gvRenderFilmRoomCategories();
-                    renderHighlights();
-                }).catch(function(){gvRenderFilmRoomCategories();renderHighlights();});
-            });
+            .catch(function(){gvRenderFilmRoomCategories();renderHighlights();});
     }
     function gvRenderFilmRoomCategories(){
         var nav=document.getElementById('film-room-categories');
         if(!nav)return;
-        var cats=window._gvFilmRoomCategories||['Film Breakdown','Press Conferences','Highlights'];
+        var cats=window._gvFilmRoomCategories||['Scheme Library','Concept Breakdown','Recruiting Fit','Opponent Prep','Position Traits'];
         var counts={};
         (window._gvHighlights||[]).forEach(function(c){
             var cat=c.category||'Film Breakdown';
@@ -3852,33 +3854,23 @@
         });
     }
     function gvRenderHighlightCard(c){
-        var pill=c.season==='2026'?'highlight-season-2026':'highlight-season-2025';
-        var thumb=gvMediaResolveUrl(c.thumbUrl);
-        var ready=c.mediaReady!==false&&(c.streamUrl||c.videoUrl||c.embedUrl||c.youtubeId);
-        var cat=String(c.category||'').toLowerCase();
-        var isFreeCat=cat.includes('press')||cat.includes('highlight');
-        var filmLocked=!isFreeCat&&!canRead('film')&&!window.GV_OPERATOR;
-        var cardInner='<div class="highlight-thumb">'
-            +'<img src="'+gvEscHtml(thumb)+'" alt="" loading="lazy">'
-            +'<div class="highlight-overlay"><div class="play-circle"><span class="text-white text-xl ml-0.5">'+(filmLocked?'🔒':'▶')+'</span></div></div>'
-            +'<span class="absolute top-3 left-3 highlight-season-pill '+pill+'">'+gvEscHtml(c.category)+'</span>'
-            +'<span class="absolute bottom-3 right-3 text-xs font-bold text-white bg-black/60 px-2 py-1 rounded">'+gvEscHtml(c.duration)+'</span>'
-            +(ready&&!filmLocked?'':'')
-            +(filmLocked?'<span class="absolute top-3 right-3 text-[.6rem] font-bold text-gator-orange bg-black/70 px-2 py-1 rounded">🎬 Film Room</span>':'')
-            +(ready&&!filmLocked?'':'<span class="absolute top-3 right-3 text-[.6rem] font-bold text-amber-300 bg-black/60 px-2 py-1 rounded">'+(filmLocked?'Locked':'Processing')+'</span>')
+        var filmLocked=!canRead('film')&&!window.GV_OPERATOR;
+        var cardInner='<div class="film-lesson-head">'
+            +'<div class="flex items-start justify-between gap-2 mb-2">'
+            +'<span class="highlight-season-pill highlight-season-2026">'+gvEscHtml(c.category)+'</span>'
+            +'<span class="film-verified-badge">✓ Verified</span>'
             +'</div>'
-            +'<div class="p-4">'
-            +'<h3 class="font-display text-lg font-bold text-white leading-snug mb-1">'+gvEscHtml(c.title)+'</h3>'
-            +'<p class="highlight-game-tag text-gator-orange text-sm font-semibold">'+gvEscHtml(c.gameLine)+'</p>'
-            +'<p class="text-sm text-surface-200/70 mt-2 line-clamp-2">'+gvEscHtml(c.dek)+'</p>'
+            +'<h3 class="font-display text-lg font-bold text-white leading-snug">'+gvEscHtml(c.title)+'</h3>'
+            +'<p class="text-xs text-surface-200/60 mt-1">'+gvEscHtml(c.source||'Verified coaching source')+' · '+gvEscHtml(c.duration||'Analysis')+'</p>'
+            +'</div>'
+            +'<div class="film-lesson-body">'
+            +'<p class="text-sm text-surface-200/80 line-clamp-4">'+gvEscHtml(c.dek||c.summary||'')+'</p>'
+            +(c.diagram?'<p class="text-xs text-gator-orange/80 mt-2">Includes concept diagram</p>':'')
             +'</div>';
-        if(ready&&!filmLocked){
-            return '<button type="button" class="highlight-card block w-full text-left no-underline text-inherit" data-hl-slug="'+gvEscHtml(c.slug)+'">'+cardInner+'</button>';
+        if(!filmLocked){
+            return '<button type="button" class="film-lesson-card block w-full text-left" data-hl-slug="'+gvEscHtml(c.slug||c.id)+'">'+cardInner+'</button>';
         }
-        if(filmLocked){
-            return '<button type="button" class="highlight-card block w-full text-left opacity-90" onclick="if(window.openRegModal)openRegModal(\'film\')">'+cardInner+'</button>';
-        }
-        return '<div class="highlight-card block opacity-80">'+cardInner+'</div>';
+        return '<button type="button" class="film-lesson-card block w-full text-left opacity-90" onclick="if(window.openRegModal)openRegModal(\'film\')">'+cardInner+'<div class="px-4 pb-3"><span class="text-[.65rem] font-bold text-gator-orange">🎬 Film Room tier required</span></div></button>';
     }
     function renderHighlights(){
         var shell=document.getElementById('highlights-shell');
@@ -3888,7 +3880,7 @@
             clips=clips.filter(function(c){return c.category===window._gvFilmRoomFilter;});
         }
         if(!clips.length){
-            shell.innerHTML='<p class="text-surface-200/60 text-sm py-4">'+(window._gvFilmRoomFilter!=='all'?'No videos in this category yet.':'Loading Film Room…')+'</p>';
+            shell.innerHTML='<p class="text-surface-200/60 text-sm py-4">'+(window._gvFilmRoomFilter!=='all'?'No lessons in this category yet.':'Loading verified Film Room lessons…')+'</p>';
             return;
         }
         shell.innerHTML='<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">'
@@ -3902,57 +3894,68 @@
             });
         });
     }
+    function gvFormatKnowledgeSources(sources){
+        if(!sources||!sources.length)return '';
+        var html='<p class="text-xs font-bold text-gator-orange uppercase tracking-wider mb-2">Verified Coaching Sources</p><ul class="space-y-1.5">';
+        sources.forEach(function(s){
+            var label=(s.source_name||'Source')+(s.source_type?' · '+String(s.source_type).replace(/_/g,' '):'');
+            if(s.source_confidence!=null)label+=' · '+s.source_confidence+'% confidence';
+            var url=s.source_url;
+            if(url){
+                html+='<li class="text-xs"><a href="'+gvEscHtml(url)+'" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline">'+gvEscHtml(label)+'</a></li>';
+            }else{
+                html+='<li class="text-xs text-surface-200/80">'+gvEscHtml(label)+'</li>';
+            }
+        });
+        html+='</ul>';
+        return html;
+    }
+    function gvRenderKnowledgeSources(sources,el){
+        if(!el)return;
+        if(!sources||!sources.length){el.classList.add('hidden');el.innerHTML='';return;}
+        el.classList.remove('hidden');
+        el.innerHTML=gvFormatKnowledgeSources(sources);
+    }
+    function gvRenderFilmDiagram(diagram,el){
+        if(!el||!diagram||!diagram.nodes||!diagram.nodes.length){if(el)el.classList.add('hidden');return;}
+        el.classList.remove('hidden');
+        el.innerHTML='<p class="text-xs uppercase tracking-wider text-surface-200/50 mb-2">Concept diagram</p>'
+            +diagram.nodes.map(function(n){return '<span class="film-diagram-node">'+gvEscHtml(n.label)+'</span>';}).join('');
+    }
     window.openHighlightPlayer=function(clip){
         if(!clip)return;
         var ov=document.getElementById('highlight-modal-ov');
         var videoWrap=document.getElementById('hl-modal-video-wrap');
         var preview=document.getElementById('hl-modal-preview');
-        if(!ov||!videoWrap)return;
+        var diagramEl=document.getElementById('hl-modal-diagram');
+        var sourcesEl=document.getElementById('hl-modal-sources');
+        if(!ov||!preview)return;
         document.getElementById('hl-modal-title').textContent=clip.title||'Film Room';
-        document.getElementById('hl-modal-meta').textContent=[clip.category,clip.gameLine,clip.duration].filter(Boolean).join(' · ');
-        document.getElementById('hl-modal-foot').textContent=clip.dek||'';
-        var src=clip.streamUrl||gvMediaResolveUrl(clip.videoUrl);
-        videoWrap.innerHTML='';
-        videoWrap.classList.add('hidden');
-        if(preview)preview.classList.add('hidden');
-        if(clip.embedUrl||clip.youtubeId){
-            videoWrap.classList.remove('hidden');
-            videoWrap.style.paddingTop='56.25%';
-            videoWrap.style.position='relative';
-            videoWrap.style.minHeight='0';
-            var iframe=document.createElement('iframe');
-            iframe.src=clip.embedUrl||('https://www.youtube.com/embed/'+clip.youtubeId);
-            iframe.title=clip.title||'Film Room';
-            iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-            iframe.allowFullscreen=true;
-            iframe.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px;';
-            videoWrap.appendChild(iframe);
-        }else if(src){
-            videoWrap.classList.remove('hidden');
-            videoWrap.style.paddingTop='0';
-            videoWrap.style.minHeight='0';
-            var vid=document.createElement('video');
-            vid.controls=true;
-            vid.playsInline=true;
-            vid.preload='metadata';
-            vid.style.width='100%';
-            vid.style.display='block';
-            vid.style.maxHeight='70vh';
-            vid.style.background='#000';
-            if(clip.thumbUrl)vid.poster=gvMediaResolveUrl(clip.thumbUrl);
-            vid.src=src;
-            vid.addEventListener('error',function(){
-                videoWrap.classList.add('hidden');
-                if(preview){
-                    preview.classList.remove('hidden');
-                    document.getElementById('hl-modal-preview-text').textContent='Video unavailable — check Film Room media on the API server.';
-                }
-            },{once:true});
-            videoWrap.appendChild(vid);
-            try{vid.play();}catch(e){}
-        }else if(preview){
-            preview.classList.remove('hidden');
-            document.getElementById('hl-modal-preview-text').textContent='Native clip is processing. No third-party embeds.';
+        document.getElementById('hl-modal-meta').textContent=[clip.category,clip.source,clip.duration].filter(Boolean).join(' · ');
+        document.getElementById('hl-modal-foot').textContent=clip.lastVerified?'Last verified '+new Date(clip.lastVerified).toLocaleDateString()+' · coaching-sourced database':'Verified coaching-sourced database';
+        if(sourcesEl){sourcesEl.classList.add('hidden');sourcesEl.innerHTML='';}
+        gvRenderKnowledgeSources(clip.sources,sourcesEl);
+        if(videoWrap){videoWrap.innerHTML='';videoWrap.classList.add('hidden');}
+        preview.classList.remove('hidden');
+        var bodyText=clip.body||clip.dek||clip.summary||'';
+        if(clip.slug||clip.id){
+            fetch(gvLiveApiBase()+'/api/film-room/lesson/'+(clip.slug||clip.id),{headers:gvAuthHeaders()})
+                .then(function(r){return r.json();})
+                .then(function(j){
+                    if(j.ok&&j.body)bodyText=j.body;
+                    if(j.ok&&j.diagram)gvRenderFilmDiagram(j.diagram,diagramEl);
+                    else if(clip.diagram)gvRenderFilmDiagram(clip.diagram,diagramEl);
+                    else if(diagramEl)diagramEl.classList.add('hidden');
+                    if(j.ok&&j.sources)gvRenderKnowledgeSources(j.sources,sourcesEl);
+                    document.getElementById('hl-modal-preview-text').textContent=bodyText;
+                })
+                .catch(function(){
+                    document.getElementById('hl-modal-preview-text').textContent=bodyText;
+                    gvRenderFilmDiagram(clip.diagram,diagramEl);
+                });
+        }else{
+            document.getElementById('hl-modal-preview-text').textContent=bodyText;
+            gvRenderFilmDiagram(clip.diagram,diagramEl);
         }
         ov.classList.remove('hidden');
         ov.style.display='flex';
@@ -4220,14 +4223,31 @@
             if(d.ok&&d.official){window._gvOfficialNames=d.official;try{gvBindOfficialCoachCards();}catch(e){}}
         }).catch(function(){});
     }
+    function gvApplyDepthChartHeader(official) {
+        var dc = (official && official.depthChart) || {};
+        var text = String(dc.resolvedHeader || dc.headerText || dc.subtitle || '').trim();
+        if (!text) text = 'Spring Projections · Updated June 2026';
+        if (!dc.resolvedHeader && (dc.autoAppendScheme === true || dc.autoAppendCoordinator === true)) {
+            text = String(dc.headerText || dc.subtitle || text).trim();
+            if (dc.autoAppendScheme === true && dc.schemeLabel) text += ' · ' + String(dc.schemeLabel).trim();
+            if (dc.autoAppendCoordinator === true && dc.coordinatorLabel) text += ' · ' + String(dc.coordinatorLabel).trim();
+        }
+        var title = String(dc.title || '').trim();
+        var dcTitle = document.querySelector('[data-id="536"]');
+        if (dcTitle && title) dcTitle.textContent = title;
+        var dcHdr = document.querySelector('[data-id="537"]');
+        if (dcHdr) dcHdr.textContent = text;
+        var embedSuffix = String(dc.mobileEmbedSuffix || 'Tap to open').trim();
+        var dcEmbed = document.querySelector('[data-id="dc-header-embed"]');
+        if (dcEmbed) dcEmbed.textContent = text + (embedSuffix ? ' · ' + embedSuffix : '');
+    }
     function gvBindOfficialCoachCards(){
         var o=window._gvOfficialNames;if(!o||!o.coaches)return;
         var hc=document.querySelector('[data-id="278"]');var oc=document.querySelector('[data-id="282"]');var dc=document.querySelector('[data-id="286"]');
         if(hc&&o.coaches.HC)hc.textContent=o.coaches.HC.name;
         if(oc&&o.coaches.OC)oc.textContent=o.coaches.OC.name;
         if(dc&&o.coaches.DC)dc.textContent=o.coaches.DC.name;
-        var dcHdr=document.querySelector('[data-id="537"]');
-        if(dcHdr&&o.coaches.DC)dcHdr.textContent='Spring projections · Updated June 2026 · 3-3-5 Defense · DC: '+o.coaches.DC.name;
+        try{gvApplyDepthChartHeader(o);}catch(e){}
     }
     function gvApplyPublishedContent(feed){
         if(!feed)return false;

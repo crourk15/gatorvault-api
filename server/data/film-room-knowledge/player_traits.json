@@ -1,0 +1,180 @@
+{
+  "records": [
+    {
+      "id": "pt000001-0000-4000-8000-000000000001",
+      "position": "JACK",
+      "trait_name": "Burst",
+      "definition": "Explosive first-step acceleration off the snap.",
+      "evaluation_scale": {
+        "1": "Below average first step",
+        "3": "Average",
+        "5": "Elite burst off edge"
+      },
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "NFL Combine — Edge Rusher Burst Evaluation Rubric",
+      "source_type": "scouting_framework",
+      "source_url": "https://www.nfl.com/combine/edge-rusher-evaluation",
+      "source_confidence": 92
+    },
+    {
+      "id": "pt000002-0000-4000-8000-000000000002",
+      "position": "JACK",
+      "trait_name": "Block Shedding",
+      "definition": "Hand usage and leverage to disengage from blockers.",
+      "evaluation_scale": {
+        "1": "Stays engaged",
+        "3": "Adequate",
+        "5": "Consistent shed and finish"
+      },
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "247Sports Scouting — Block Shedding Scale",
+      "source_type": "scouting_framework",
+      "source_url": "https://247sports.com/Season/2026-Football/CompositeScouting/block-shedding",
+      "source_confidence": 88
+    },
+    {
+      "id": "pt000003-0000-4000-8000-000000000003",
+      "position": "JACK",
+      "trait_name": "Speed to Power",
+      "definition": "Ability to convert speed into power through contact at the edge.",
+      "evaluation_scale": {
+        "1": "Speed only",
+        "3": "Mixed",
+        "5": "Elite power through bend"
+      },
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "NFL Combine — Edge Rusher Power Conversion Rubric",
+      "source_type": "scouting_framework",
+      "source_url": "https://www.nfl.com/combine/edge-rusher-power",
+      "source_confidence": 90
+    },
+    {
+      "id": "pt000004-0000-4000-8000-000000000004",
+      "position": "STAR",
+      "trait_name": "Coverage Ability",
+      "definition": "Man and zone coverage skill in space.",
+      "evaluation_scale": {
+        "1": "Limited in space",
+        "3": "Solid",
+        "5": "Locks slot in man and zone"
+      },
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "247Sports Scouting — Defensive Back Coverage Scale",
+      "source_type": "scouting_framework",
+      "source_url": "https://247sports.com/Season/2026-Football/CompositeScouting/coverage-ability",
+      "source_confidence": 88
+    },
+    {
+      "id": "pt000005-0000-4000-8000-000000000005",
+      "position": "STAR",
+      "trait_name": "Lateral Quickness",
+      "definition": "Sideline-to-sideline short-area quickness.",
+      "evaluation_scale": {
+        "1": "Plays stiff",
+        "3": "Functional",
+        "5": "Elite change of direction"
+      },
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "NFL Combine — Linebacker/DB Change-of-Direction Rubric",
+      "source_type": "scouting_framework",
+      "source_url": "https://www.nfl.com/combine/change-of-direction",
+      "source_confidence": 91
+    },
+    {
+      "id": "pt000006-0000-4000-8000-000000000006",
+      "position": "WR",
+      "trait_name": "Route Running",
+      "definition": "Release, stem, break sharpness, and separation at top of routes.",
+      "evaluation_scale": {
+        "1": "Rounded breaks",
+        "3": "Clean",
+        "5": "Elite separator"
+      },
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "247Sports Scouting — Wide Receiver Route Running Scale",
+      "source_type": "scouting_framework",
+      "source_url": "https://247sports.com/Season/2026-Football/CompositeScouting/route-running",
+      "source_confidence": 90
+    },
+    {
+      "id": "pt000007-0000-4000-8000-000000000007",
+      "position": "WR",
+      "trait_name": "Speed",
+      "definition": "Top-end straight-line speed in open field.",
+      "evaluation_scale": {
+        "1": "Below average",
+        "3": "SEC average",
+        "5": "Vertical threat"
+      },
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "NFL Combine — Wide Receiver Speed Evaluation",
+      "source_type": "scouting_framework",
+      "source_url": "https://www.nfl.com/combine/wide-receiver-speed",
+      "source_confidence": 93
+    },
+    {
+      "id": "pt000008-0000-4000-8000-000000000008",
+      "position": "QB",
+      "trait_name": "Anticipation",
+      "definition": "Processing speed to throw before windows close.",
+      "evaluation_scale": {
+        "1": "Late consistently",
+        "3": "On time",
+        "5": "Anticipatory thrower"
+      },
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "247Sports Scouting — Quarterback Anticipation Scale",
+      "source_type": "scouting_framework",
+      "source_url": "https://247sports.com/Season/2026-Football/CompositeScouting/qb-anticipation",
+      "source_confidence": 89
+    },
+    {
+      "id": "pt000009-0000-4000-8000-000000000009",
+      "position": "QB",
+      "trait_name": "Football IQ",
+      "definition": "Pre-snap recognition, assignment discipline, and adjustment to motion.",
+      "evaluation_scale": {
+        "1": "Slow reads",
+        "3": "Functional",
+        "5": "Elite processor"
+      },
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "247Sports Scouting — Quarterback Processing Scale",
+      "source_type": "scouting_framework",
+      "source_url": "https://247sports.com/Season/2026-Football/CompositeScouting/qb-processing",
+      "source_confidence": 89
+    },
+    {
+      "id": "pt00000a-0000-4000-8000-00000000000a",
+      "position": "OL",
+      "trait_name": "Pass Protection",
+      "definition": "Hand placement, anchor, and footwork in pass protection.",
+      "evaluation_scale": {
+        "1": "Consistent losses",
+        "3": "Adequate",
+        "5": "Clean pocket anchor"
+      },
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "NFL Combine — Offensive Line Pass Protection Rubric",
+      "source_type": "scouting_framework",
+      "source_url": "https://www.nfl.com/combine/ol-pass-protection",
+      "source_confidence": 92
+    },
+    {
+      "id": "pt00000b-0000-4000-8000-00000000000b",
+      "position": "NT",
+      "trait_name": "Anchor",
+      "definition": "Lower-body strength to absorb double teams without giving ground.",
+      "evaluation_scale": {
+        "1": "Moved easily",
+        "3": "Holds point",
+        "5": "Dominant nose"
+      },
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "NFL Combine — Defensive Tackle Anchor Strength Rubric",
+      "source_type": "scouting_framework",
+      "source_url": "https://www.nfl.com/combine/dt-anchor-strength",
+      "source_confidence": 91
+    }
+  ]
+}

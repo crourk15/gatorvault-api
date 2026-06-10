@@ -3,6 +3,7 @@
  * See docs/x-autoposter-content-directive.md
  */
 const { TRUSTED_REPORTERS } = require('./content-validator');
+const quality = require('./x-autoposter-validation');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 
@@ -38,8 +39,7 @@ const HEADLINE_ONLY_PATTERNS = [
 ];
 
 const FORBIDDEN_FORMAT_PATTERNS = [
-  /🐊/,
-  /#[A-Za-z0-9_]+/
+  /🐊/
 ];
 
 const PROMO_MARKERS = [/gatorvault/i, /gatorvaultinsider\.com/i];
@@ -93,9 +93,15 @@ function hasInsiderTemplateStructure(text) {
   return lines.length >= 3;
 }
 
+function hasSocialHashtag(text) {
+  const tags = String(text || '').match(/#[A-Za-z0-9_]+/g) || [];
+  return tags.some((tag) => /[A-Za-z_]/.test(tag));
+}
+
 function violatesFormatRules(text) {
   const t = String(text || '');
   if (FORBIDDEN_FORMAT_PATTERNS.some((re) => re.test(t))) return true;
+  if (hasSocialHashtag(t)) return true;
   if (HEADLINE_ONLY_PATTERNS.some((re) => re.test(t))) return true;
   return false;
 }
@@ -164,6 +170,10 @@ function validatePostContent(item) {
         message: 'News sources must be trusted public outlets or named beat writers — no paywalled reproduction.'
       });
     }
+    const qualityCheck = quality.validateNewsPostQuality(item);
+    if (!qualityCheck.valid) {
+      errors.push(...qualityCheck.errors.map((e) => ({ ...e, field: e.field || e.rule || 'quality' })));
+    }
     if (looksLikeFactualNews(text) && !sources.some((s) => s.url)) {
       errors.push({
         field: 'sources',
@@ -171,6 +181,15 @@ function validatePostContent(item) {
         message: 'Factual news posts should include a public source URL when available.'
       });
     }
+    return {
+      valid: errors.filter((e) => e.type !== 'url_recommended').length === 0,
+      errors,
+      warnings: errors.filter((e) => e.type === 'url_recommended'),
+      qualityScore: qualityCheck.score,
+      qualityBreakdown: qualityCheck.breakdown,
+      sourceConfidence: qualityCheck.sourceConfidence,
+      hardSkips: qualityCheck.hardSkips
+    };
   }
 
   if (category === 'engagement') {
@@ -208,7 +227,9 @@ function validatePostContent(item) {
   return {
     valid: errors.filter((e) => e.type !== 'url_recommended').length === 0,
     errors,
-    warnings: errors.filter((e) => e.type === 'url_recommended')
+    warnings: errors.filter((e) => e.type === 'url_recommended'),
+    qualityScore: null,
+    qualityBreakdown: null
   };
 }
 
@@ -266,9 +287,27 @@ function getContentPolicy() {
     newsTopics: NEWS_TOPICS,
     trustedSources: TRUSTED_REPORTERS,
     siteUrl: SITE_URL,
+    freshness: {
+      normalMaxAgeMs: quality.MAX_NEWS_AGE_MS,
+      normalMaxAgeHours: quality.MAX_NEWS_AGE_MS / (60 * 60 * 1000),
+      breakingMaxAgeMs: quality.MAX_BREAKING_AGE_MS,
+      breakingMaxAgeMinutes: quality.MAX_BREAKING_AGE_MS / (60 * 1000)
+    },
+    qualityScoring: {
+      weights: quality.SCORE_WEIGHTS,
+      postingThreshold: quality.POSTING_THRESHOLD,
+      sourceConfidenceRequired: quality.SOURCE_CONFIDENCE_REQUIRED,
+      hardSkipTypes: [...quality.HARD_SKIP_TYPES],
+      label: 'Identity 40% · Context 30% · Insider 30% · Source 100% · 85% min to publish'
+    },
     rules: [
       'No AI-invented news or unsourced factual claims',
       'News posts require identity · context · insider angle (verified sources only)',
+      'Identity block: class year, position, name, school, ranking (On3 preferred)',
+      'Context block: verified human reporting only — no headline-only or generic NEWS lines',
+      'Insider angle: verified analyst insight only — no rank-only fallback',
+      'No duplicate sentences; skip if any required block is missing',
+      'Freshness: 3h normal news · 30m breaking/urgent',
       'No emojis, hashtags, or headline-only posts',
       'News posts require credible sources',
       'Engagement: replies, quotes, hype — facts still need sources',

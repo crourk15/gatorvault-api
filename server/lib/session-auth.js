@@ -38,4 +38,10 @@ function sessionHasTier(session, minTier) {
   return tierLevel(session.tier) >= tierLevel(minTier);
 }
 
-module.exports = { verifySession, getSessionFromReq, tierLevel, sessionHasTier, TIER_LEVELS };
+module.exports = {
+  verifySession,
+  getSessionFromReq,
+  tierLevel,
+  sessionHasTier,
+  TIER_LEVELS
+};

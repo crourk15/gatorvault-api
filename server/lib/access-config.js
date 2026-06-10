@@ -25,10 +25,16 @@ const PAYMENT_TIERS = {
     level: 1,
     features: [
       'Everything in Locker Room',
-      'Full Film Room access',
-      'GNFP Film Review',
-      'Scheme breakdowns',
-      'Player film analysis'
+      'Weekly Scheme School',
+      'Play of the Week Breakdown',
+      'Player Development Tracker',
+      'Recruit Fit Evaluations',
+      'Matchup Spotlight',
+      'Film Room Q&A',
+      '"What the Coaches See" positional insights',
+      '"Why This Matters" micro-lessons',
+      'Verified Knowledge Engine — scheme library, concept breakdowns, recruiting fit, opponent prep, position traits',
+      'Text lessons & diagrams only — no external video, GNFP, or press conferences'
     ]
   },
   war: {
@@ -56,7 +62,7 @@ const POINTS_TIERS = {
     minPoints: 0,
     maxPoints: 499,
     level: 0,
-    perks: ['Basic free access', 'Highlights', 'Press conferences', 'Basic player profiles']
+    perks: ['Basic free access', 'Basic player profiles', 'Community & headlines']
   },
   insider: {
     id: 'insider',
@@ -90,7 +96,7 @@ const POINTS_TIERS = {
       'Priority Q&A',
       'Exclusive giveaways',
       'Elite-only alerts',
-      'Elite-only film breakdowns'
+      'Elite-only Knowledge Engine alerts'
     ]
   }
 };
@@ -102,9 +108,12 @@ const PAYMENT_GATED = {
   recruiting_basic: 'locker',
   portal_basic: 'locker',
   film_room_full: 'film',
-  gnfp_film_review: 'film',
-  scheme_breakdowns: 'film',
-  player_film_analysis: 'film',
+  knowledge_engine: 'film',
+  scheme_library: 'film',
+  concept_breakdowns: 'film',
+  recruiting_fit_lessons: 'film',
+  opponent_prep: 'film',
+  position_traits: 'film',
   war_room_intel: 'war',
   heat_check_full: 'war',
   momentum_shifts: 'war',

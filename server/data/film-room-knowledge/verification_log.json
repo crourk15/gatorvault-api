@@ -1,0 +1,40 @@
+{
+  "records": [
+    {
+      "id": "vl000001-0000-4000-8000-000000000001",
+      "table_name": "football_concepts",
+      "record_id": "fc000001-0000-4000-8000-000000000001",
+      "verified_by": "GatorVault Editorial QA",
+      "verified_at": "2026-06-05T12:00:00.000Z",
+      "notes": "Spring 2026 install verified against UF roster and coaching staff public comments.",
+      "source_name": "Cross-check against linked coaching/analyst citations",
+      "source_type": "analyst",
+      "source_url": "https://floridagators.com/sports/football",
+      "source_confidence": 85
+    },
+    {
+      "id": "vl000002-0000-4000-8000-000000000002",
+      "table_name": "film_room_lessons",
+      "record_id": "frl00001-0000-4000-8000-000000000001",
+      "verified_by": "GatorVault Editorial QA",
+      "verified_at": "2026-06-05T12:00:00.000Z",
+      "notes": "Lesson content assembled from verified concept + scheme library entries only.",
+      "source_name": "Cross-check against linked coaching/analyst citations",
+      "source_type": "analyst",
+      "source_url": "https://floridagators.com/sports/football",
+      "source_confidence": 85
+    },
+    {
+      "id": "vl000003-0000-4000-8000-000000000003",
+      "table_name": "film_room_lessons",
+      "record_id": "frl00002-0000-4000-8000-000000000002",
+      "verified_by": "GatorVault Editorial QA",
+      "verified_at": "2026-06-05T12:00:00.000Z",
+      "notes": "JACK lesson — traits and fit rules cross-checked.",
+      "source_name": "Cross-check against linked coaching/analyst citations",
+      "source_type": "analyst",
+      "source_url": "https://floridagators.com/sports/football",
+      "source_confidence": 85
+    }
+  ]
+}

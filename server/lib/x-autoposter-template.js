@@ -181,9 +181,7 @@ function insiderFromIntel(intel) {
   const detail = stripEmojisHashtags(intel.detail || intel.status || '');
   if (detail.length >= 20 && INSIDER_SIGNAL_RE.test(detail)) return shorten(detail, 140);
   if (intel.eventType === 'prediction' || intel.eventType === 'rivals_futurecast') {
-    const analyst = intel.analystName || intel.source;
-    const conf = intel.confidencePct != null ? ` (${intel.confidencePct}%)` : '';
-    if (analyst) return `${analyst} logged a Florida prediction${conf}.`;
+    return null;
   }
   if (intel.analystName && detail.length >= 15) {
     return shorten(`${intel.analystName}: ${detail}`, 140);

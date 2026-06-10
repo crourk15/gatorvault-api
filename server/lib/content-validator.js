@@ -51,7 +51,38 @@ function writeJson(filePath, data) {
 }
 
 function loadOfficialNames() {
-  return readJson(OFFICIAL_PATH, { coaches: {}, staff: {}, players: [], blockedNames: [], ignoreTerms: [] });
+  return normalizeOfficialNames(readJson(OFFICIAL_PATH, { coaches: {}, staff: {}, players: [], blockedNames: [], ignoreTerms: [] }));
+}
+
+/** Depth chart header — manual text only unless admin explicitly re-enables auto-append flags. */
+function normalizeDepthChartConfig(raw, coaches) {
+  const dc = raw && typeof raw === 'object' ? { ...raw } : {};
+  const headerText = String(dc.headerText || dc.subtitle || 'Spring Projections · Updated June 2026').trim();
+  const autoAppendScheme = dc.autoAppendScheme === true;
+  const autoAppendCoordinator = dc.autoAppendCoordinator === true;
+  let resolvedHeader = headerText;
+  if (autoAppendScheme && dc.schemeLabel) resolvedHeader += ` · ${String(dc.schemeLabel).trim()}`;
+  if (autoAppendCoordinator && dc.coordinatorLabel) {
+    resolvedHeader += ` · ${String(dc.coordinatorLabel).trim()}`;
+  } else if (autoAppendCoordinator && coaches?.DC?.name && !dc.coordinatorLabel) {
+    resolvedHeader += ` · DC: ${coaches.DC.name}`;
+  }
+  return {
+    title: String(dc.title || '2026 Depth Chart').trim(),
+    headerText,
+    resolvedHeader,
+    mobileEmbedSuffix: String(dc.mobileEmbedSuffix || 'Tap to open').trim(),
+    autoAppendScheme,
+    autoAppendCoordinator,
+    schemeLabel: dc.schemeLabel || null,
+    coordinatorLabel: dc.coordinatorLabel || null
+  };
+}
+
+function normalizeOfficialNames(official) {
+  const data = official && typeof official === 'object' ? { ...official } : {};
+  data.depthChart = normalizeDepthChartConfig(data.depthChart, data.coaches);
+  return data;
 }
 
 function fmtField(value, prefix) {
@@ -385,6 +416,8 @@ function logValidationFailure(entry) {
 
 module.exports = {
   loadOfficialNames,
+  normalizeOfficialNames,
+  normalizeDepthChartConfig,
   resolveTokens,
   resolveTokenPath,
   resolveContentItem,

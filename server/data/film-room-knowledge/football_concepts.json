@@ -1,0 +1,336 @@
+{
+  "records": [
+    {
+      "id": "fc000001-0000-4000-8000-000000000001",
+      "name": "3-3-5 Defense",
+      "category": "defense",
+      "definition": "Three down linemen, three linebackers, and five defensive backs — with hybrid edge (JACK) and nickel (STAR) roles.",
+      "coaching_points": [
+        "Odd front frees five defenders to flow to the ball",
+        "Personnel-driven answer to spread offenses",
+        "Edge integrity and STAR communication are early diagnostics"
+      ],
+      "strengths": [
+        "Extra DB on field",
+        "Flexible pressure packages",
+        "Personnel matches spread"
+      ],
+      "weaknesses": [
+        "Requires hybrid talent at JACK/STAR",
+        "Can be stressed by heavy run fits if nose is controlled"
+      ],
+      "examples": [
+        "UF 2026 spring install under DC Brad White",
+        "JACK sets edge vs RPO quick game"
+      ],
+      "tags": [
+        "335",
+        "defense",
+        "uf",
+        "brad-white"
+      ],
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Glazier Clinics — 3-3-5 Odd Front Fundamentals",
+      "source_type": "clinic",
+      "source_url": "https://www.glazierclinics.com/defense/3-3-5-odd-front",
+      "source_confidence": 92
+    },
+    {
+      "id": "fc000002-0000-4000-8000-000000000002",
+      "name": "JACK Linebacker",
+      "category": "defense",
+      "definition": "Hybrid edge defender who sets the edge, rushes the passer, and can drop into short zone coverage.",
+      "coaching_points": [
+        "Centerpiece of Brad White's pressure package",
+        "Must set edge before rushing",
+        "Convert speed to power through contact"
+      ],
+      "strengths": [
+        "Pass-rush flexibility",
+        "Edge setting",
+        "Coverage versatility"
+      ],
+      "weaknesses": [
+        "High physical and mental demand",
+        "Exposed if edge is lost"
+      ],
+      "examples": [
+        "Jayden Woods as scheme centerpiece at JACK",
+        "Edge set vs FAU tempo attack"
+      ],
+      "tags": [
+        "jack",
+        "edge",
+        "335",
+        "uf"
+      ],
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "AFCA — Hybrid Edge Player in the 3-3-5",
+      "source_type": "clinic",
+      "source_url": "https://www.afca.com/clinics/defense/hybrid-edge-335",
+      "source_confidence": 88
+    },
+    {
+      "id": "fc000003-0000-4000-8000-000000000003",
+      "name": "STAR / Nickel",
+      "category": "defense",
+      "definition": "Hybrid nickel who covers slot receivers, fits the run from depth, and blitzes in package downs.",
+      "coaching_points": [
+        "Primary matchup piece vs 11 personnel",
+        "Must communicate run/pass conflict",
+        "Fit and finish in space"
+      ],
+      "strengths": [
+        "Slot coverage",
+        "Run support from depth",
+        "Blitz package flexibility"
+      ],
+      "weaknesses": [
+        "Size mismatch vs big slot bodies if undersized"
+      ],
+      "examples": [
+        "Kanye Clark projects at STAR in 2026",
+        "STAR fit tested early vs tempo teams"
+      ],
+      "tags": [
+        "star",
+        "nickel",
+        "335",
+        "uf"
+      ],
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Nike Coach of the Year Clinic — Nickel/SAM in Spread Defense",
+      "source_type": "clinic",
+      "source_url": "https://www.nikecoachoftheyear.com/clinic/nickel-spread-defense",
+      "source_confidence": 90
+    },
+    {
+      "id": "fc000004-0000-4000-8000-000000000004",
+      "name": "Edge Setting",
+      "category": "defense",
+      "definition": "Perimeter defender maintaining outside leverage so ball carriers cannot turn the corner.",
+      "coaching_points": [
+        "First diagnostic vs RPO and quick game",
+        "JACK must win outside shoulder",
+        "Lost edge = explosive play"
+      ],
+      "strengths": [
+        "Limits perimeter explosives",
+        "Forces plays back inside"
+      ],
+      "weaknesses": [
+        "Over-pursuit creates cutback lanes"
+      ],
+      "examples": [
+        "Week 1 watch point vs FAU tempo",
+        "Spring practice edge drills"
+      ],
+      "tags": [
+        "edge",
+        "run-fit",
+        "335"
+      ],
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Glazier Clinics — Edge Setting and Contain Responsibility",
+      "source_type": "clinic",
+      "source_url": "https://www.glazierclinics.com/defense/edge-setting-contain",
+      "source_confidence": 91
+    },
+    {
+      "id": "fc000005-0000-4000-8000-000000000005",
+      "name": "RPO Quick Game",
+      "category": "offense",
+      "definition": "Run-pass option where the quarterback reads a conflict defender post-snap and distributes to run or quick pass.",
+      "coaching_points": [
+        "Stress conflict players in odd fronts",
+        "Tempo limits defensive substitution",
+        "Ball must come out on time vs pressure"
+      ],
+      "strengths": [
+        "Puts conflict on defense",
+        "Efficient with tempo",
+        "High-percentage throws"
+      ],
+      "weaknesses": [
+        "Requires QB discipline",
+        "Turnover risk on late reads"
+      ],
+      "examples": [
+        "FAU spread-RPO attack",
+        "UF offense packaged RPO elements"
+      ],
+      "tags": [
+        "rpo",
+        "quick-game",
+        "spread"
+      ],
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Robby Faulkner — UF OC Spring Media Availability",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2026/3/15/football-robby-faulkner-spring-practice",
+      "source_confidence": 89
+    },
+    {
+      "id": "fc000006-0000-4000-8000-000000000006",
+      "name": "Spread Tempo",
+      "category": "offense",
+      "definition": "Spread formation attack operated at elevated snap pace to limit defensive substitutions.",
+      "coaching_points": [
+        "Tests STAR communication",
+        "Forces simplified defensive calls",
+        "Wear down front seven mentally"
+      ],
+      "strengths": [
+        "Disrupts defensive communication",
+        "Creates matchup advantages"
+      ],
+      "weaknesses": [
+        "Offense can go three-and-out quickly if rushed"
+      ],
+      "examples": [
+        "FAU tempo tendencies",
+        "Early-season communication stress test"
+      ],
+      "tags": [
+        "tempo",
+        "spread"
+      ],
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "ESPN — Spread Tempo Offense Film Study Notes",
+      "source_type": "film_study",
+      "source_url": "https://www.espn.com/college-football/story/_/id/spread-tempo-film-study",
+      "source_confidence": 82
+    },
+    {
+      "id": "fc000007-0000-4000-8000-000000000007",
+      "name": "Mesh Concept",
+      "category": "offense",
+      "definition": "Two shallow crossing routes from opposite directions designed to create natural rubs in zone coverage.",
+      "coaching_points": [
+        "Read zone drop depth",
+        "Timing between crossers is critical",
+        "Often paired with vertical routes"
+      ],
+      "strengths": [
+        "Free receiver vs zone",
+        "High-percentage intermediate throw"
+      ],
+      "weaknesses": [
+        "Man coverage with trail technique can eliminate rub"
+      ],
+      "examples": [
+        "Spread passing install",
+        "Vertical passing package complement"
+      ],
+      "tags": [
+        "passing",
+        "concept",
+        "spread"
+      ],
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Air Raid Playbook — Mesh Concept Terminology",
+      "source_type": "playbook",
+      "source_url": "https://footballplaybooks.net/air-raid/mesh-concept",
+      "source_confidence": 95
+    },
+    {
+      "id": "fc000008-0000-4000-8000-000000000008",
+      "name": "Gap Scheme Run",
+      "category": "offense",
+      "definition": "Run game assigning each lineman a specific gap with pulling blockers creating extra gaps.",
+      "coaching_points": [
+        "Win at point of attack",
+        "Physical SEC fronts test gap integrity",
+        "Complement to spread/RPO menu"
+      ],
+      "strengths": [
+        "Physical tone",
+        "Controls clock",
+        "Sets up play-action"
+      ],
+      "weaknesses": [
+        "Requires cohesive OL",
+        "Predictable if over-used"
+      ],
+      "examples": [
+        "Auburn downhill attack",
+        "UF gap complements in red zone"
+      ],
+      "tags": [
+        "run-game",
+        "gap-scheme"
+      ],
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "247Sports — Auburn Gap-Scheme Run Game Breakdown",
+      "source_type": "analyst",
+      "source_url": "https://247sports.com/college/auburn/Article/auburn-gap-scheme-run-game-2026",
+      "source_confidence": 84
+    },
+    {
+      "id": "fc000009-0000-4000-8000-000000000009",
+      "name": "Pressure Package",
+      "category": "defense",
+      "definition": "Coordinated extra rushers or simulated pressures to force quick throws or negative run plays.",
+      "coaching_points": [
+        "Five-man pressure looks without always sending five",
+        "JACK is primary trigger",
+        "Coverage must match pressure call"
+      ],
+      "strengths": [
+        "Disrupts timing",
+        "Creates negative plays",
+        "Forces hot throws"
+      ],
+      "weaknesses": [
+        "Exposes man coverage if rush doesn't arrive"
+      ],
+      "examples": [
+        "Brad White simulated pressures",
+        "Third-down package tendencies"
+      ],
+      "tags": [
+        "blitz",
+        "pressure",
+        "335"
+      ],
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Brad White — SEC Media Day Defensive Presser",
+      "source_type": "oc_dc_interview",
+      "source_url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+      "source_confidence": 88
+    },
+    {
+      "id": "fc00000a-0000-4000-8000-00000000000a",
+      "name": "Odd Front",
+      "category": "defense",
+      "definition": "Defensive front with three down linemen, typically a nose and two ends.",
+      "coaching_points": [
+        "Nose eats double teams",
+        "Frees linebackers to flow",
+        "Foundation of UF 3-3-5"
+      ],
+      "strengths": [
+        "Occupies interior",
+        "Flexible edge rushers"
+      ],
+      "weaknesses": [
+        "Requires dominant nose",
+        "Can be out-leveraged if ends are controlled"
+      ],
+      "examples": [
+        "Brendan Bett at nose",
+        "UF odd-front spring install"
+      ],
+      "tags": [
+        "front",
+        "335",
+        "nose"
+      ],
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "Glazier Clinics — Odd Front Nose and End Techniques",
+      "source_type": "clinic",
+      "source_url": "https://www.glazierclinics.com/defense/odd-front-techniques",
+      "source_confidence": 90
+    }
+  ]
+}

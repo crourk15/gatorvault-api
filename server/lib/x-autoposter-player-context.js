@@ -66,6 +66,7 @@ function formatPlayerContext(player) {
   const starsLabel = template.formatStarsLabel(player?.stars);
   const school = String(player?.school || player?.hometown || '').trim() || null;
   const htWt = String(player?.htWt || '').trim() || null;
+  const natlRank = player?.natlRank != null ? Number(player.natlRank) : null;
   const combinedHtWt =
     htWt ||
     (player?.height && player?.weight
@@ -80,6 +81,13 @@ function formatPlayerContext(player) {
   const hasMinimumContext =
     isValidPlayerName(name) && !!(pos || (resolvedClass && !Number.isNaN(resolvedClass)) || starsLabel);
 
+  const hasFullIdentity =
+    isValidPlayerName(name) &&
+    !!pos &&
+    !!(school || formerSchool) &&
+    (category === 'portal' ||
+      (!!resolvedClass && !Number.isNaN(resolvedClass) && (natlRank > 0 || !!starsLabel)));
+
   return {
     name,
     pos,
@@ -88,10 +96,11 @@ function formatPlayerContext(player) {
     school,
     formerSchool: formerSchool ? String(formerSchool).trim() : school,
     htWt: combinedHtWt,
-    natlRank: player?.natlRank != null ? Number(player.natlRank) : null,
+    natlRank,
     category,
     isPortal: category === 'portal' || player?.status === 'portal_in' || !!player?.transferInfo,
-    hasMinimumContext
+    hasMinimumContext,
+    hasFullIdentity
   };
 }
 
@@ -183,42 +192,58 @@ function buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLi
     (s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm
   );
   if (insiderPick) {
-    return insiderPick.length <= 140 ? insiderPick : `${insiderPick.slice(0, 137)}…`;
+    const line = insiderPick.length <= 140 ? insiderPick : `${insiderPick.slice(0, 137)}…`;
+    return { line, meta: { insiderFromBeat: true } };
   }
 
   const fromIntel = template.insiderFromIntel(intel);
-  if (fromIntel) return fromIntel;
+  if (fromIntel) return { line: fromIntel, meta: { insiderFromIntel: true } };
 
   const scouting = loadVerifiedScouting(playerSlug);
   const fromScouting = template.insiderFromScouting(scouting);
-  if (fromScouting) return fromScouting;
+  if (fromScouting) return { line: fromScouting, meta: { insiderFromScouting: true } };
 
   const breakdown = loadVerifiedBreakdown(playerSlug);
   const fromBreakdown = template.insiderFromBreakdown(breakdown);
-  if (fromBreakdown) return fromBreakdown;
+  if (fromBreakdown) return { line: fromBreakdown, meta: { insiderFromBreakdown: true } };
 
-  return template.verifiedRankInsider(ctx);
+  return { line: null, meta: {} };
 }
 
 function buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel }) {
   const beat = beatText ? template.classifyBeatSentences(beatText) : { context: [], insider: [] };
   if (beat.context[0]) {
-    return beat.context[0].length <= 160 ? beat.context[0] : `${beat.context[0].slice(0, 157)}…`;
+    return {
+      line: beat.context[0].length <= 160 ? beat.context[0] : `${beat.context[0].slice(0, 157)}…`,
+      meta: { fromBeat: true }
+    };
   }
   const intelDetail = template.stripEmojisHashtags(intel?.detail || '');
-  if (intelDetail.length >= 20 && !/trending|momentum/i.test(intelDetail)) {
-    return intelDetail.length <= 160 ? intelDetail : `${intelDetail.slice(0, 157)}…`;
+  if (intelDetail.length >= 28 && !/trending|momentum/i.test(intelDetail)) {
+    return {
+      line: intelDetail.length <= 160 ? intelDetail : `${intelDetail.slice(0, 157)}…`,
+      meta: { fromIntel: true, intelDetail }
+    };
   }
-  const fromEvent = template.contextFromNewsEvent(newsEvent, sourceLabel);
-  if (fromEvent) return fromEvent;
   if (beatText) {
     const sentences = template.extractSentences(beatText);
     const factual = sentences.find(
-      (s) => !template.HEADLINE_ONLY_RE.test(s) && (template.FACTUAL_SIGNAL_RE.test(s) || s.length >= 30)
+      (s) => !template.HEADLINE_ONLY_RE.test(s) && (template.FACTUAL_SIGNAL_RE.test(s) || s.length >= 40)
     );
-    if (factual) return factual.length <= 160 ? factual : `${factual.slice(0, 157)}…`;
+    if (factual) {
+      return {
+        line: factual.length <= 160 ? factual : `${factual.slice(0, 157)}…`,
+        meta: { fromBeat: true, beatText }
+      };
+    }
   }
-  return null;
+  if ((beatText || intelDetail) && newsEvent) {
+    const fromEvent = template.contextFromNewsEvent(newsEvent, sourceLabel);
+    if (fromEvent && !require('./x-autoposter-validation').isGenericSyntheticContext(fromEvent)) {
+      return { line: fromEvent, meta: { fromEvent: true, beatText, intelDetail } };
+    }
+  }
+  return { line: null, meta: {} };
 }
 
 async function buildPlayerNewsPost({
@@ -239,15 +264,17 @@ async function buildPlayerNewsPost({
     patch,
     preferPatch: !!patch
   });
-  if (!ctx.hasMinimumContext) return null;
+  if (!ctx.hasFullIdentity) return null;
 
   const kind = postKind || resolvePostKind(ctx, { newsEvent, intel, beatText });
   const sourceLabel = String(source || 'On3').trim();
 
-  const contextLine = buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel });
+  const contextResult = buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel });
+  const contextLine = contextResult.line;
   if (!contextLine) return null;
 
-  const insiderLine = buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLine });
+  const insiderResult = buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLine });
+  const insiderLine = insiderResult.line;
   if (!insiderLine) return null;
 
   let identity;
@@ -266,6 +293,9 @@ async function buildPlayerNewsPost({
   });
   if (!raw || !template.hasTemplateStructure(raw)) return null;
   if (template.isHeadlineOnlyPost(raw)) return null;
+  if (require('./x-autoposter-validation').hasDuplicateSentences(raw, { identity, context: contextLine, insider: insiderLine })) {
+    return null;
+  }
 
   const text = template.enforceTweetLimit(raw, 280);
   if (!text || !template.hasTemplateStructure(text)) return null;
@@ -275,7 +305,18 @@ async function buildPlayerNewsPost({
     playerName: ctx.name,
     context: ctx,
     postKind: kind,
-    templateBlocks: { identity, context: contextLine, insider: insiderLine }
+    templateBlocks: { identity, context: contextLine, insider: insiderLine },
+    validationMeta: {
+      playerContext: ctx,
+      beatText: beatText || null,
+      intelDetail: intel?.detail || null,
+      insiderFromBeat: insiderResult.meta.insiderFromBeat === true,
+      insiderFromIntel: insiderResult.meta.insiderFromIntel === true,
+      insiderFromScouting: insiderResult.meta.insiderFromScouting === true,
+      insiderFromBreakdown: insiderResult.meta.insiderFromBreakdown === true,
+      contextFromBeat: contextResult.meta.fromBeat === true,
+      contextFromIntel: contextResult.meta.fromIntel === true
+    }
   };
 }
 
@@ -388,9 +429,12 @@ function verifiedPatchFromIntel(intel) {
     pos: intel.pos,
     classYear: intel.classYear,
     school: intel.school,
+    highSchool: intel.highSchool,
+    hometownState: intel.hometownState,
     stars: intel.stars,
     natlRank: intel.natlRank,
-    htWt: intel.htWt
+    htWt: intel.htWt,
+    ufRpmPct: intel.ufRpmPct
   };
 }
 
@@ -400,9 +444,12 @@ function verifiedPatchFromRow(row) {
     pos: row.pos,
     classYear: row.classYear,
     school: row.school,
+    highSchool: row.highSchool,
+    hometownState: row.hometownState,
     stars: row.stars,
     natlRank: row.natlRank,
-    htWt: row.htWt
+    htWt: row.htWt,
+    ufRpmPct: row.ufRpmPct
   };
 }
 

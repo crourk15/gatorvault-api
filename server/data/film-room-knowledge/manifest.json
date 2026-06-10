@@ -1,0 +1,76 @@
+{
+  "version": 3,
+  "updatedAt": "2026-06-05T18:00:00.000Z",
+  "label": "GatorVault Film Room Knowledge Engine",
+  "description": "Structured verified football database from coaching clinics, OC/DC interviews, analyst breakdowns, playbooks, and film study. AI translator-only — no invented concepts. Charles Power is not a knowledge source.",
+  "tables": [
+    "football_concepts",
+    "uf_scheme_library",
+    "player_traits",
+    "recruiting_fit_rules",
+    "opponent_tendencies",
+    "film_room_lessons",
+    "verification_log"
+  ],
+  "approvedSources": {
+    "types": [
+      "clinic",
+      "oc_dc_interview",
+      "analyst",
+      "playbook",
+      "film_study",
+      "scouting_framework"
+    ],
+    "examples": [
+      "Glazier Clinics",
+      "Nike Coach of the Year Clinic",
+      "AFCA",
+      "UF OC/DC public interviews and pressers",
+      "Public playbooks and terminology",
+      "On3, 247Sports, Rivals, ESPN analyst breakdowns",
+      "Public film study tendencies",
+      "Standard NFL/247 scouting trait frameworks"
+    ],
+    "blocked": [
+      "Charles Power",
+      "GatorVault Film Desk",
+      "AI-generated content",
+      "Unsourced or internal-only citations"
+    ]
+  },
+  "validationPolicy": {
+    "mode": "translator_only",
+    "skipOnMissingData": true,
+    "requireHumanVerified": true,
+    "requireVerifiedSource": true,
+    "requireSourceFields": [
+      "source_name",
+      "source_type",
+      "source_url",
+      "source_confidence",
+      "last_verified"
+    ],
+    "minSourceConfidence": 80,
+    "requireDefinition": true,
+    "requireCoachingPoints": true,
+    "requireUfUsageWhenSchemeLinked": true,
+    "noExternalVideo": true,
+    "noAiInventedKnowledge": true,
+    "noCharlesAsSource": true,
+    "aiAllowedActions": [
+      "summarize",
+      "simplify",
+      "translate",
+      "format",
+      "assemble_lessons_from_verified_records"
+    ],
+    "aiForbiddenActions": [
+      "invent_concepts",
+      "guess_tendencies",
+      "create_traits",
+      "create_scheme_usage",
+      "fill_gaps",
+      "hallucinate"
+    ]
+  }
+}

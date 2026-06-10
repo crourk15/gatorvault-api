@@ -76,7 +76,16 @@ function normalizeItem(raw, { validate = true } = {}) {
     replyFingerprint: raw.replyFingerprint || null,
     postUrgency: raw.postUrgency || null,
     urgencyLabel: raw.urgencyLabel || null,
-    sourceEventType: raw.sourceEventType || null
+    sourceEventType: raw.sourceEventType || null,
+    sourceEventCreatedAt: raw.sourceEventCreatedAt || null,
+    sourcePublishedAt: raw.sourcePublishedAt || null,
+    eventTimestamp: raw.eventTimestamp || null,
+    templateBlocks: raw.templateBlocks || null,
+    validationMeta: raw.validationMeta || null,
+    playerContext: raw.playerContext || null,
+    qualityScore: raw.qualityScore != null ? Number(raw.qualityScore) : null,
+    qualityBreakdown: raw.qualityBreakdown || null,
+    sourceConfidence: raw.sourceConfidence != null ? Number(raw.sourceConfidence) : null
   };
 
   if (validate) {

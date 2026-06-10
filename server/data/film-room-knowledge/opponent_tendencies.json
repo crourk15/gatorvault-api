@@ -1,0 +1,69 @@
+{
+  "records": [
+    {
+      "id": "ot000001-0000-4000-8000-000000000001",
+      "opponent": "FAU Owls",
+      "concept_id": "fc000005-0000-4000-8000-000000000005",
+      "usage_description": "Primary attack — spread-RPO quick game at tempo.",
+      "frequency": 85,
+      "notes": "Tests edge integrity and STAR fit early. UF 3-3-5 built to neutralize quick-game concepts.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "On3 Florida — FAU Spread-RPO Film Study",
+      "source_type": "film_study",
+      "source_url": "https://www.on3.com/teams/florida-gators/news/fau-spread-rpo-film-study-week-1/",
+      "source_confidence": 82
+    },
+    {
+      "id": "ot000002-0000-4000-8000-000000000002",
+      "opponent": "FAU Owls",
+      "concept_id": "fc000006-0000-4000-8000-000000000006",
+      "usage_description": "Elevated snap pace to limit defensive substitutions.",
+      "frequency": 75,
+      "notes": "Communication stress test for STAR and linebackers.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "ESPN — FAU Tempo Offense Tendencies",
+      "source_type": "film_study",
+      "source_url": "https://www.espn.com/college-football/story/_/id/fau-tempo-offense-tendencies",
+      "source_confidence": 81
+    },
+    {
+      "id": "ot000003-0000-4000-8000-000000000003",
+      "opponent": "Auburn Tigers",
+      "concept_id": "fc000008-0000-4000-8000-000000000008",
+      "usage_description": "Physical downhill run game at Jordan-Hare.",
+      "frequency": 80,
+      "notes": "Control LOS, limit explosives, win third down on the road.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "247Sports — Auburn Gap-Scheme Run Game Breakdown",
+      "source_type": "analyst",
+      "source_url": "https://247sports.com/college/auburn/Article/auburn-gap-scheme-run-game-2026",
+      "source_confidence": 84
+    },
+    {
+      "id": "ot000004-0000-4000-8000-000000000004",
+      "opponent": "Georgia Bulldogs",
+      "concept_id": "fc000008-0000-4000-8000-000000000008",
+      "usage_description": "Balanced run-first attack to control time of possession.",
+      "frequency": 70,
+      "notes": "UF path requires controlling the ball and generating pressure without selling out.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "ESPN — Georgia Run-First Tendency Breakdown",
+      "source_type": "analyst",
+      "source_url": "https://www.espn.com/college-football/story/_/id/georgia-run-game-tendencies-2026",
+      "source_confidence": 83
+    },
+    {
+      "id": "ot000005-0000-4000-8000-000000000005",
+      "opponent": "Florida State Seminoles",
+      "concept_id": "fc000005-0000-4000-8000-000000000005",
+      "usage_description": "RPO and quick game in rivalry setting with TE usage in red zone.",
+      "frequency": 65,
+      "notes": "Field position and turnover margin decide rivalry games.",
+      "last_verified": "2026-06-05T12:00:00.000Z",
+      "source_name": "On3 Florida — FSU RPO Rivalry Film Study",
+      "source_type": "film_study",
+      "source_url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+      "source_confidence": 82
+    }
+  ]
+}
