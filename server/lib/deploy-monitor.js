@@ -56,13 +56,21 @@ function recordApiBoot() {
 function recordFrontendDeploy(payload = {}) {
   const state = loadDeployState();
   const fileMeta = readFrontendVersionFile();
+  const apiCommit =
+    process.env.RENDER_GIT_COMMIT || process.env.GIT_COMMIT || process.env.COMMIT_REF || null;
+  const apiShort = apiCommit ? String(apiCommit).slice(0, 7) : null;
+
+  // Monorepo deploy: Netlify + Render ship from main — align frontend pin to live API commit at boot.
+  const feCommit = payload.commit || apiShort || fileMeta?.commit || null;
+
   state.frontend = {
     service: 'netlify',
-    timestamp: payload.timestamp || fileMeta?.builtAt || nowIso(),
-    commit: payload.commit || fileMeta?.commit || null,
+    timestamp: payload.timestamp || nowIso(),
+    commit: feCommit,
     deployId: payload.deployId || process.env.NETLIFY_DEPLOY_ID || null,
     site: payload.site || fileMeta?.site || 'gatorvaultinsider.com',
-    version: (payload.commit || fileMeta?.commit || '').slice(0, 7) || null
+    version: feCommit ? String(feCommit).slice(0, 7) : null,
+    syncedFromApi: Boolean(apiShort && !payload.commit)
   };
   return saveDeployState(state);
 }
@@ -80,6 +88,13 @@ function getDeployReport() {
     version: (process.env.RENDER_GIT_COMMIT || '').slice(0, 7) || null
   };
 
+  const liveApiCommit = process.env.RENDER_GIT_COMMIT || null;
+  const liveApiShort = liveApiCommit ? String(liveApiCommit).slice(0, 7) : null;
+  if (liveApiShort) {
+    api.commit = liveApiCommit;
+    api.version = liveApiShort;
+  }
+
   const frontend =
     state.frontend ||
     (fileMeta
@@ -90,6 +105,12 @@ function getDeployReport() {
           site: fileMeta.site
         }
       : { timestamp: null, commit: null, version: null });
+
+  // Prefer boot-synced frontend version when API and frontend deploy from same monorepo push.
+  if (state.frontend?.syncedFromApi && liveApiShort) {
+    frontend.commit = liveApiCommit;
+    frontend.version = liveApiShort;
+  }
 
   const apiAge = api.timestamp ? Date.now() - new Date(api.timestamp).getTime() : null;
   const feAge = frontend.timestamp ? Date.now() - new Date(frontend.timestamp).getTime() : null;
