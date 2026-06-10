@@ -655,7 +655,10 @@ async function enrichAndConfirmIntelIdentity({
   intel = null,
   player = null,
   intelId = null,
-  classYear = null
+  classYear = null,
+  beatText = null,
+  sourceHandle = null,
+  allowContextual = true
 } = {}) {
   const baseSnapshot = buildSnapshot({
     playerName: fields?.playerName || playerName,
@@ -678,21 +681,54 @@ async function enrichAndConfirmIntelIdentity({
     player
   });
 
-  const confirmation = confirmIdentity(sources);
+  let confirmation = confirmIdentity(sources);
+  let contextual = null;
+
+  if (!confirmation.confirmed && allowContextual) {
+    const resolver = require('./contextual-identity-resolver');
+    const text = beatText || row?.detail || intel?.detail || '';
+    contextual = await resolver.resolveContextualIdentity({
+      text,
+      sourceHandle: sourceHandle || row?.sourceHandle || intel?.sourceHandle,
+      hints: {
+        playerName: baseSnapshot?.playerName || playerName,
+        stars: fields?.stars || row?.stars || intel?.stars,
+        pos: fields?.pos || row?.pos || intel?.pos,
+        classYear: fields?.classYear || row?.classYear || intel?.classYear,
+        school: fields?.school || row?.school || intel?.school
+      }
+    });
+
+    if (contextual?.confirmed) {
+      confirmation = {
+        confirmed: true,
+        mode: contextual.mode,
+        confidence: contextual.confidence,
+        sources: [],
+        matchedSources: [],
+        inferred: contextual.inferred
+      };
+    }
+  }
+
   if (!confirmation.confirmed) {
     return {
       confirmed: false,
-      reason: 'identity_not_confirmed',
+      reason: contextual?.reason || 'identity_not_confirmed',
       confirmation,
+      contextual,
       missingBefore: listMissingVisitIdentityFields(baseSnapshot || {}),
       sources: sources.map((s) => ({ provider: s.provider, confidence: s.confidence }))
     };
   }
 
-  const mergedSnapshot = mergeMissingFields(baseSnapshot || {}, confirmation.matchedSources);
+  const mergedSnapshot = contextual?.mergedSnapshot
+    ? { ...mergeMissingFields(baseSnapshot || {}, confirmation.matchedSources || []), ...contextual.mergedSnapshot }
+    : mergeMissingFields(baseSnapshot || {}, confirmation.matchedSources);
+
   const missingAfter = listMissingVisitIdentityFields(mergedSnapshot);
 
-  if (missingAfter.length) {
+  if (missingAfter.length && !contextual?.confirmed) {
     return {
       confirmed: false,
       reason: 'identity_incomplete_after_lookup',
@@ -703,7 +739,12 @@ async function enrichAndConfirmIntelIdentity({
     };
   }
 
-  const identityPatch = identityPatchFromSnapshot(mergedSnapshot);
+  const identityPatch = {
+    ...identityPatchFromSnapshot(mergedSnapshot),
+    identityInferred: !!confirmation.inferred || !!contextual?.inferred,
+    identityConfidence: confirmation.confidence || contextual?.confidence || null,
+    identityResolutionMode: confirmation.mode || contextual?.mode || null
+  };
 
   if (intelId) await persistIdentityToIntel(intelId, mergedSnapshot, confirmation);
   await persistIdentityToPlayer(mergedSnapshot);
@@ -711,6 +752,7 @@ async function enrichAndConfirmIntelIdentity({
   return {
     confirmed: true,
     confirmation,
+    contextual,
     mergedSnapshot,
     identityPatch,
     intelPatch: {
@@ -722,7 +764,11 @@ async function enrichAndConfirmIntelIdentity({
       school: mergedSnapshot.highSchool || mergedSnapshot.hometownState,
       natlRank: mergedSnapshot.natlRank,
       playerSlug: mergedSnapshot.playerSlug,
-      playerId: mergedSnapshot.on3Id
+      playerId: mergedSnapshot.on3Id,
+      playerName: mergedSnapshot.playerName,
+      identityInferred: identityPatch.identityInferred,
+      identityConfidence: identityPatch.identityConfidence,
+      identityResolutionMode: identityPatch.identityResolutionMode
     },
     sources: sources.map((s) => ({ provider: s.provider, confidence: s.confidence, label: s.label }))
   };

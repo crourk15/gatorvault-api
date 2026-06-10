@@ -422,6 +422,58 @@ function mountRecruitingRoutes(app) {
     }
   });
 
+  });
+
+  app.get('/api/recruiting/identity/overrides', (req, res) => {
+    const pin = String(req.query.pin || req.get('X-Recruiting-Pin') || '');
+    if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid admin pin' });
+    try {
+      const resolver = require('./contextual-identity-resolver');
+      return res.json({ ok: true, ...resolver.listManualOverrides() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/recruiting/identity/overrides', (req, res) => {
+    const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || '');
+    if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid admin pin' });
+    try {
+      const resolver = require('./contextual-identity-resolver');
+      const item = resolver.upsertManualOverride(req.body || {});
+      return res.json({ ok: true, item });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.delete('/api/recruiting/identity/overrides/:id', (req, res) => {
+    const pin = String(req.query.pin || req.body?.pin || req.get('X-Recruiting-Pin') || '');
+    if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid admin pin' });
+    try {
+      const resolver = require('./contextual-identity-resolver');
+      return res.json({ ok: true, ...resolver.deleteManualOverride(req.params.id) });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/recruiting/identity/resolve', async (req, res) => {
+    const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || '');
+    if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid admin pin' });
+    try {
+      const resolver = require('./contextual-identity-resolver');
+      const result = await resolver.resolveContextualIdentity({
+        text: req.body.text || '',
+        sourceHandle: req.body.sourceHandle || null,
+        hints: req.body.hints || {}
+      });
+      return res.json({ ok: true, result });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/recruiting/internal-alerts', async (req, res) => {
     try {
       const pin = String(req.query.pin || req.get('X-Recruiting-Pin') || '');

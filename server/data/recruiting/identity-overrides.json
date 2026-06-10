@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-05T00:00:00.000Z",
+  "items": [
+    {
+      "id": "mot_001",
+      "phrase": "five-star dl jalen",
+      "playerSlug": "jalen-brewster",
+      "playerName": "Jalen Brewster",
+      "note": "Corey Bender / beat-writer shorthand",
+      "createdAt": "2026-06-05T00:00:00.000Z"
+    },
+    {
+      "id": "mot_002",
+      "phrase": "five-star dl jalen brewster",
+      "playerSlug": "jalen-brewster",
+      "playerName": "Jalen Brewster",
+      "note": "Full shorthand variant",
+      "createdAt": "2026-06-05T00:00:00.000Z"
+    }
+  ]
+}

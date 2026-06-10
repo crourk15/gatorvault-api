@@ -208,7 +208,7 @@ async function buildBeatIntelCopyAsync(post) {
 }
 
 async function buildIntelCopyAsync(intel) {
-  if (!intel?.eventType || !isValidPlayerName(intel.playerName)) return null;
+  if (!intel?.eventType) return null;
 
   if (intel.eventType === 'prediction' || intel.eventType === 'rivals_futurecast') {
     const prediction = require('./x-autoposter-prediction');
@@ -244,14 +244,19 @@ async function buildIntelCopyAsync(intel) {
         playerSlug: intel.playerSlug,
         intel,
         intelId: intel.id,
-        classYear: intel.classYear
+        classYear: intel.classYear,
+        beatText: intel.detail,
+        sourceHandle: intel.sourceHandle,
+        allowContextual: true
       });
       if (!enrichment.confirmed) {
-        return { skipReason: enrichment.reason || 'identity_not_confirmed', confirmation: enrichment.confirmation };
+        return { skipReason: enrichment.reason || 'identity_not_confirmed', confirmation: enrichment.confirmation, contextual: enrichment.contextual };
       }
-      intel = { ...intel, ...enrichment.intelPatch, identityConfirmed: true };
+      intel = { ...intel, ...enrichment.intelPatch, identityConfirmed: true, ...enrichment.identityPatch };
     }
   }
+
+  if (!isValidPlayerName(intel.playerName)) return null;
 
   const newsEvent = playerContext.newsEventForIntel(intel);
   if (!newsEvent) return null;

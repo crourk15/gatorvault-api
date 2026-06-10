@@ -141,20 +141,42 @@ function resolveEventType(text) {
 const POS_PREFIX_RE =
   /^(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH|K|P)\s+(.+)$/i;
 
+function isUsableExtractedName(name) {
+  const { isValidPlayerName } = require('./x-autoposter-player-context');
+  const n = String(name || '').trim();
+  if (!isValidPlayerName(n)) return false;
+  if (/\b(?:five|four|three|two|one|[1-5])[-\s]?star\b/i.test(n)) return false;
+  return true;
+}
+
 function extractVisitPlayerName(text) {
   const t = String(text || '');
+  const resolver = require('./contextual-identity-resolver');
+
   const posNameRe = new RegExp(
     `\\b20\\d{2}\\s+(?:\\d+-[Ss]tar\\s+)?(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH|K|P)\\s+([A-Z][a-z'.-]+(?:\\s+[A-Z][a-z'.-]+){0,2})\\b`
   );
   const m = t.match(posNameRe);
-  if (m?.[1]) return m[1].trim();
+  if (m?.[1] && isUsableExtractedName(m[1].trim())) return m[1].trim();
+
   const fromBeat = beatFilters.extractPlayerFromText(t);
-  if (!fromBeat) return null;
-  const stripped = fromBeat.match(POS_PREFIX_RE);
-  return (stripped ? stripped[1] : fromBeat).trim();
+  if (fromBeat) {
+    const stripped = fromBeat.match(POS_PREFIX_RE);
+    const candidate = (stripped ? stripped[1] : fromBeat).trim();
+    if (isUsableExtractedName(candidate)) return candidate;
+  }
+
+  const clues = resolver.parseVagueClues(t);
+  return clues.firstName || clues.displayName || null;
+}
+
+function parseCollegeSchool(text) {
+  const resolver = require('./contextual-identity-resolver');
+  return resolver.parseVagueClues(text).school;
 }
 
 function parseBeatPostForVisitIntel(post) {
+  const resolver = require('./contextual-identity-resolver');
   const text = String(post.text || '').trim();
   if (!text || !isVisitSchedulePost(text)) return null;
   if (!isVisitIngestWriter(post)) return null;
@@ -162,28 +184,39 @@ function parseBeatPostForVisitIntel(post) {
   if (!beatFilters.isFloridaRelevantPost(post)) return null;
 
   const playerName = extractVisitPlayerName(text);
-  if (!playerName) return null;
+  const vagueClues = resolver.parseVagueClues(text, {
+    stars: parseStars(text),
+    pos: parsePosition(text),
+    classYear: parseClassYear(text),
+    school: parseSchool(text) || parseCollegeSchool(text)
+  });
+  if (!playerName && !vagueClues.hasSignal) return null;
+
+  const resolvedName = playerName || vagueClues.firstName || vagueClues.displayName || 'Unknown';
+  const isVagueName = !isUsableExtractedName(resolvedName);
 
   const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
-  const classYear = parseClassYear(text) || 2027;
-  const pos = parsePosition(text) || '';
-  const school = parseSchool(text) || '';
+  const classYear = parseClassYear(text) || vagueClues?.classYear || 2027;
+  const pos = parsePosition(text) || vagueClues?.pos || '';
+  const school = parseSchool(text) || parseCollegeSchool(text) || vagueClues?.school || '';
   const visitDate = parseVisitDate(text);
   const eventType = resolveEventType(text);
   const timestamp = post.publishedAt || new Date().toISOString();
-  const slugBase = slugify(playerName);
+  const slugBase = slugify(resolvedName);
   const handle = String(post.handle || '').toLowerCase() || 'beat';
   const day = timestamp.slice(0, 10);
 
   return {
-    playerName,
+    playerName: resolvedName,
     playerSlug: slugBase,
     on3Id: null,
     classYear,
     pos,
     school,
     highSchool: school,
-    stars: parseStars(text),
+    stars: parseStars(text) || vagueClues?.stars || null,
+    vaguePhrase: isVagueName ? vagueClues.rawPhrase : null,
+    vagueClues,
     eventType,
     status: eventType === 'official_visit' ? 'Official Visit · Florida' : 'Visit · Gainesville',
     visitStart: visitDate,
@@ -340,7 +373,10 @@ async function processBeatVisitIntelRow(row, snapshot) {
     intel: intelResult.item,
     player,
     intelId: intelResult.item?.id,
-    classYear: player.classYear
+    classYear: player.classYear,
+    beatText: row.detail,
+    sourceHandle: row.sourceHandle,
+    allowContextual: true
   });
 
   if (!enrichment.confirmed) {
@@ -354,7 +390,9 @@ async function processBeatVisitIntelRow(row, snapshot) {
           playerName: player.name,
           eventType: row.eventType,
           stars: row.stars || player.stars,
-          source: row.source
+          source: row.source,
+          vaguePhrase: row.vaguePhrase,
+          contextual: enrichment.contextual || null
         }
       });
     } catch {
@@ -373,6 +411,10 @@ async function processBeatVisitIntelRow(row, snapshot) {
   }
 
   Object.assign(row, enrichment.identityPatch || {}, enrichment.intelPatch || {});
+  if (enrichment.identityPatch?.playerName) {
+    player.name = enrichment.identityPatch.playerName;
+    player.slug = enrichment.identityPatch.playerSlug || player.slug;
+  }
 
   await store.createEvent({
     playerId: player.id,

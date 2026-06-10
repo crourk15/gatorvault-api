@@ -256,7 +256,9 @@ async function buildPlayerNewsPost({
   intel = null,
   postKind = null,
   teamContext = null,
-  portalStatus = 'Portal'
+  portalStatus = 'Portal',
+  identityInferred = null,
+  identityConfidence = null
 } = {}) {
   const ctx = await resolvePlayerContext({
     playerSlug,
@@ -270,12 +272,23 @@ async function buildPlayerNewsPost({
   const sourceLabel = String(source || 'On3').trim();
 
   const contextResult = buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel });
-  const contextLine = contextResult.line;
+  let contextLine = contextResult.line;
   if (!contextLine) return null;
 
   const insiderResult = buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLine });
-  const insiderLine = insiderResult.line;
+  let insiderLine = insiderResult.line;
   if (!insiderLine) return null;
+
+  const inferred = identityInferred ?? intel?.identityInferred;
+  const conf = identityConfidence ?? intel?.identityConfidence ?? 0;
+  if (inferred && conf >= 70 && conf < 92) {
+    if (contextLine && !/Per beat report/i.test(contextLine)) {
+      contextLine = `Per beat report — ${contextLine.replace(/^Per beat report —\s*/i, '')}`;
+    }
+    if (insiderLine && !/^Board match/i.test(insiderLine)) {
+      insiderLine = `Board match · ${insiderLine}`;
+    }
+  }
 
   let identity;
   if (kind === 'portal') {
@@ -315,7 +328,9 @@ async function buildPlayerNewsPost({
       insiderFromScouting: insiderResult.meta.insiderFromScouting === true,
       insiderFromBreakdown: insiderResult.meta.insiderFromBreakdown === true,
       contextFromBeat: contextResult.meta.fromBeat === true,
-      contextFromIntel: contextResult.meta.fromIntel === true
+      contextFromIntel: contextResult.meta.fromIntel === true,
+      identityInferred: !!inferred,
+      identityConfidence: conf || null
     }
   };
 }

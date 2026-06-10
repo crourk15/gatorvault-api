@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-05T00:00:00.000Z",
+  "writers": {
+    "corey_bender": {
+      "patterns": [
+        { "phrase": "five-star dl jalen", "playerSlug": "jalen-brewster", "confidence": 92 },
+        { "phrase": "set to officially visit florida", "boost": 5 }
+      ]
+    },
+    "ttjharden8": {
+      "patterns": [
+        { "phrase": "on campus in gainesville", "boost": 8 }
+      ]
+    },
+    "gatorsonline": {
+      "patterns": [
+        { "phrase": "official visit", "boost": 5 }
+      ]
+    }
+  }
+}
