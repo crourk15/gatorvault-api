@@ -1,5 +1,6 @@
 const liveStore = require('./live-store');
 const { refreshLiveDashboard, getDashboard } = require('./live-aggregator');
+const { filterPublicLiveFeed } = require('./recruiting-public-alerts');
 
 const LIVE_ADMIN_PIN =
   process.env.LIVE_ADMIN_PIN || process.env.RECRUITING_ADMIN_PIN || process.env.CONTENT_ADMIN_PIN || 'GV2026admin';
@@ -16,6 +17,7 @@ function mountLiveRoutes(app) {
   app.get('/api/live/dashboard', async (req, res) => {
     try {
       const dash = getDashboard({ feedLimit: parseInt(req.query.limit || '60', 10) });
+      res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
       return res.json({ ok: true, ...dash });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -24,11 +26,14 @@ function mountLiveRoutes(app) {
 
   app.get('/api/live/feed', (req, res) => {
     try {
-      const feed = liveStore.getFeedItems({
-        limit: parseInt(req.query.limit || '50', 10),
-        since: req.query.since,
-        categoriesOnly: req.query.all !== '1'
-      });
+      const feed = filterPublicLiveFeed(
+        liveStore.getFeedItems({
+          limit: parseInt(req.query.limit || '50', 10),
+          since: req.query.since,
+          categoriesOnly: req.query.all !== '1'
+        })
+      );
+      res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
       return res.json({ ok: true, feed, updatedAt: liveStore.nowIso() });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

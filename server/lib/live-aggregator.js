@@ -6,6 +6,13 @@ const monitoring = require('./recruiting-monitoring');
 const { feedDedupeKeyForCommit, commitFingerprint, feedDedupeKeyForIntel } = require('./commit-fingerprint');
 const { refreshBeatStream, getBeatPosts } = require('./live-beat');
 const { refreshPodcasts, getPodcastHub } = require('./live-podcasts');
+const {
+  isPublicRecruitingEvent,
+  isPublicIntelItem,
+  isBrewsterFalseFeedItem,
+  isMisclassifiedExternalCommitVisit,
+  filterPublicLiveFeed
+} = require('./recruiting-public-alerts');
 
 const EVENT_TYPE_MAP = {
   commit: 'commit',
@@ -40,6 +47,7 @@ async function ingestRecruitingEvents() {
   let count = 0;
   events.forEach((ev) => {
     if (isTestRecruitingEvent(ev)) return;
+    if (!isPublicRecruitingEvent(ev)) return;
     if (ev.eventType === 'decommit') {
       const decommitValidator = require('./decommit-validator');
       if (decommitValidator.isFalseInferredDecommitEvent(ev)) {
@@ -133,6 +141,7 @@ async function ingestRecruitingIntel() {
   let count = 0;
 
   for (const intel of intelItems) {
+    if (!isPublicIntelItem(intel) || isMisclassifiedExternalCommitVisit(intel)) continue;
     if (!(await prefilter.shouldSurfaceRecruitingIntel(intel))) continue;
 
     const stableKey = feedDedupeKeyForIntel(intel) || `intel_${intel.id}`;
@@ -214,6 +223,16 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
     try {
       results.intelPurged = await intelStore.purgeIneligibleIntel();
       results.feedPurged = await purgeNonPlayerIntelFromLiveFeed();
+      liveStore.removeFeedItemsMatching(
+        (item) =>
+          isBrewsterFalseFeedItem(item) ||
+          isMisclassifiedExternalCommitVisit({
+            title: item.title,
+            summary: item.summary,
+            eventType: item.meta?.eventType || item.type,
+            type: item.type
+          })
+      );
     } catch {
       /* optional */
     }
@@ -246,7 +265,7 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
 
 function getDashboard({ feedLimit = 60 } = {}) {
   return {
-    feed: liveStore.getFeedItems({ limit: feedLimit, categoriesOnly: true }),
+    feed: filterPublicLiveFeed(liveStore.getFeedItems({ limit: feedLimit, categoriesOnly: true })),
     beat: getBeatPosts(40),
     podcasts: getPodcastHub(),
     updatedAt: liveStore.nowIso()

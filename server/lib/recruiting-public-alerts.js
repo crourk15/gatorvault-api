@@ -48,9 +48,26 @@ function isBrewsterIdentity({ playerSlug, playerName, title, detail, text } = {}
 function isBrewsterFalseCommit(record) {
   if (!isBrewsterIdentity(record)) return false;
   const et = String(record.eventType || record.type || '').toLowerCase();
-  const blob = `${record.title || ''} ${record.detail || ''} ${record.text || ''} ${record.skinny || ''}`.toLowerCase();
+  const blob = `${record.title || ''} ${record.detail || ''} ${record.text || ''} ${record.skinny || ''} ${record.summary || ''} ${record.status || ''}`.toLowerCase();
   if (et === 'commit' || et === 'flip') return true;
-  if (/\bcommit(?:ted|ment)?\b/.test(blob) && /\bflorida|\bgators\b|\buf\b/.test(blob)) return true;
+  if (/committed\s*[·•\-–—]\s*florida/i.test(blob)) return true;
+  if (/\bhas committed to florida\b/i.test(blob)) return true;
+  if (/\bcommits to florida\b/i.test(blob) && !/\btexas tech\b/i.test(blob)) return true;
+  if (/\b5\s*[★*]?\s*dl jalen brewster has committed to florida\b/i.test(blob)) return true;
+  return false;
+}
+
+function isMisclassifiedExternalCommitVisit(record) {
+  const blob = `${record.title || ''} ${record.detail || ''} ${record.summary || ''} ${record.text || ''}`.toLowerCase();
+  const et = String(record.eventType || record.type || '').toLowerCase();
+  if (et !== 'commit' && et !== 'flip') return false;
+  if (/\b(?:taking|take|takes|set for|scheduled for)\s+(?:an?\s+)?official visit\b/i.test(blob)) return true;
+  if (/\btexas tech\b.*\bcommit\b/i.test(blob) && /\b(?:florida|gators|\buf\b|gainesville)\b/i.test(blob)) {
+    return true;
+  }
+  if (/\bcommit\b/i.test(blob) && !/\b(?:committed|commits?)\s+to\s+(?:florida|the gators|\buf\b)/i.test(blob)) {
+    if (/\b(?:official visit|visit to florida|on campus|in gainesville)\b/i.test(blob)) return true;
+  }
   return false;
 }
 
@@ -125,6 +142,8 @@ function isPublicIntelItem(intel) {
   if (!intel) return false;
   if (intel.resolutionStatus === 'needs_resolution' || intel.surfaced === false) return false;
   if (isBrewsterFalseCommit(intel)) return false;
+  if (isMisclassifiedExternalCommitVisit(intel)) return false;
+  if (/^committed\s*[·•\-–—]\s*florida$/i.test(String(intel.status || '').trim())) return false;
 
   const source = String(intel.source || '').toLowerCase();
   const et = String(intel.eventType || '').toLowerCase();
@@ -151,16 +170,56 @@ function filterPublicEvents(events) {
 
 function isBrewsterFalseFeedItem(item) {
   if (!item) return false;
-  if (!isBrewsterIdentity({ playerSlug: item.meta?.playerSlug, title: item.title, detail: item.summary })) {
+  const record = {
+    playerSlug: item.meta?.playerSlug,
+    title: item.title,
+    summary: item.summary,
+    detail: item.summary,
+    eventType: item.meta?.eventType || item.type,
+    type: item.type
+  };
+  if (isBrewsterFalseCommit(record)) return true;
+  if (isMisclassifiedExternalCommitVisit(record)) return true;
+  return false;
+}
+
+function isPublicLiveFeedItem(item) {
+  if (!item) return false;
+  if (isBrewsterFalseFeedItem(item)) return false;
+  const titleSummary = `${item.title || ''} ${item.summary || ''}`;
+  if (
+    isBrewsterIdentity({ playerSlug: item.meta?.playerSlug, title: item.title, summary: item.summary }) &&
+    /committed\s*[·•\-–—]\s*florida/i.test(titleSummary)
+  ) {
+    return false;
+  }
+  if (isMisclassifiedExternalCommitVisit({
+    title: item.title,
+    summary: item.summary,
+    eventType: item.meta?.eventType || item.type,
+    type: item.type
+  })) {
     return false;
   }
   const et = String(item.meta?.eventType || item.type || '').toLowerCase();
-  const blob = `${item.title || ''} ${item.summary || ''}`.toLowerCase();
-  if (et === 'commit' || et === 'beat') {
-    if (/\bcommit/.test(blob)) return true;
+  const source = String(item.source || item.meta?.source || '').toLowerCase();
+  if (et === 'commit' || et === 'flip') {
+    if (source !== 'on3' && source !== 'manual' && !item.meta?.on3) return false;
+    const player = item.meta?.player;
+    if (player && player.committedTo && !/^florida$/i.test(String(player.committedTo).trim())) return false;
+    if (isBrewsterIdentity({ playerSlug: item.meta?.playerSlug, title: item.title, summary: item.summary })) {
+      return false;
+    }
   }
-  if (/\bcommit(?:ted|ment)?\b/.test(blob) && /\bflorida|\bgators\b/.test(blob)) return true;
-  return false;
+  if (/beat.?writer|auto:beat|needs_resolution|snapshot|internal/.test(source)) {
+    if (et === 'commit' || et === 'flip') return false;
+    if (!item.meta?.identityConfirmed && !item.meta?.alertPosted) return false;
+  }
+  return true;
+}
+
+function filterPublicLiveFeed(items) {
+  return (items || []).filter(isPublicLiveFeedItem);
 }
 
 function isBrewsterFalseQueueItem(item) {
@@ -190,9 +249,23 @@ async function runPurgeFalseBrewsterIntel(options = {}) {
   const before = await countBrewsterFalseIntel();
 
   const eventResult = await store.deleteEventsMatching((e) => isBrewsterFalseCommit(e));
-  const intelResult = intelStore.removeIntelMatching((i) => isBrewsterFalseCommit(i));
+  const intelResult = intelStore.removeIntelMatching(
+    (i) =>
+      isBrewsterFalseCommit(i) ||
+      isMisclassifiedExternalCommitVisit(i) ||
+      (isBrewsterIdentity(i) && /^committed\s*[·•\-–—]\s*florida$/i.test(String(i.status || '').trim()))
+  );
   const feedResult = liveStore.removeFeedItemsMatching(
-    (item) => isBrewsterFalseFeedItem(item) || isBrewsterFalseCommit({ title: item.title, detail: item.summary, eventType: item.meta?.eventType })
+    (item) =>
+      isBrewsterFalseFeedItem(item) ||
+      isMisclassifiedExternalCommitVisit({
+        title: item.title,
+        summary: item.summary,
+        eventType: item.meta?.eventType || item.type,
+        type: item.type
+      }) ||
+      (normalizeSlug(item.meta?.playerSlug) === 'jalen-brewster' &&
+        String(item.meta?.eventType || item.type || '').toLowerCase() === 'commit')
   );
 
   const queueDoc = autoposterStore.loadQueue();
@@ -249,6 +322,9 @@ async function runPurgeFalseBrewsterIntel(options = {}) {
 module.exports = {
   isBrewsterFalseCommit,
   isBrewsterFalseFeedItem,
+  isMisclassifiedExternalCommitVisit,
+  isPublicLiveFeedItem,
+  filterPublicLiveFeed,
   isPublicRecruitingEvent,
   isPublicIntelItem,
   filterPublicEvents,

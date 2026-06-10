@@ -2974,7 +2974,7 @@
     ];
     var playerProfiles=[];
     var recentAlerts=[];
-    var GV_ALERTS_FEED_VERSION=9;
+    var GV_ALERTS_FEED_VERSION=10;
     var GV_COMMIT_MIN_CLASS=2027;
     var GV_PORTAL_MIN_CLASS=2027;
     var GV_ALERT_CATEGORY_KEYS=['commit','portal','visit','offer','prediction','trending','info','article','score','thread','breaking','scouting'];
@@ -4558,10 +4558,24 @@
     function gvIsBrewsterFalseAlert(a){
         if(!a)return false;
         var slug=String(a.playerSlug||'').toLowerCase();
-        var text=String((a.title||a.text||'')+(a.detail||'')).toLowerCase();
+        var text=String((a.title||a.text||'')+(a.detail||a.summary||'')).toLowerCase();
         if(slug.indexOf('brewster')<0&&text.indexOf('brewster')<0)return false;
         if(a.type==='commit'||a._eventType==='commit'||a._eventType==='flip')return true;
+        if(/committed\s*[·•\-–—]\s*florida/i.test(text))return true;
+        if(/\bhas committed to florida\b/i.test(text))return true;
         if(/\bcommit(?:ted|ment)?\b/.test(text)&&/\bflorida|\bgators\b|\buf\b/.test(text))return true;
+        return false;
+    }
+    function gvIsFalseLiveFeedItem(item){
+        if(!item)return true;
+        var slug=String((item.meta&&item.meta.playerSlug)||'').toLowerCase();
+        var title=String(item.title||'');
+        var summary=String(item.summary||'');
+        var text=(title+summary).toLowerCase();
+        var et=String((item.meta&&item.meta.eventType)||item.type||'').toLowerCase();
+        if(gvIsBrewsterFalseAlert({playerSlug:slug,title:title,detail:summary,type:item.type,_eventType:et}))return true;
+        if((et==='commit'||et==='flip'||item.type==='commit')&&/\b(?:taking|take|takes)\s+(?:an?\s+)?official visit\b/i.test(text))return true;
+        if((item.type==='commit'||et==='commit')&&slug==='jalen-brewster')return true;
         return false;
     }
     function gvIsInternalRecruitEvent(ev){
@@ -5333,6 +5347,7 @@
             if(copy.type==='portal')copy.title=gvFormatPortalAlertText(copy.title);
             return copy;
         }).filter(function(item){
+            if(gvIsFalseLiveFeedItem(item))return false;
             return item&&GV_ALERT_CATEGORY_KEYS.indexOf(item.type)>=0;
         });
     }

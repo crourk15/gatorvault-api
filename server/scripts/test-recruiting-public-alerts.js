@@ -69,6 +69,26 @@ const filtered = publicAlerts.filterPublicEvents([
 ]);
 assert('filterPublicEvents keeps only validated rows', filtered.length === 1 && filtered[0].source === 'on3');
 
+assert(
+  'blocks misclassified Texas Tech commit visit as live feed item',
+  !publicAlerts.isPublicLiveFeedItem({
+    type: 'commit',
+    title: 'Jalen Brewster — Committed · Florida',
+    summary: 'Texas Tech Five-Star Plus+ DL commit Jalen Brewster is taking an official visit to Florida.',
+    meta: { playerSlug: 'jalen-brewster', eventType: 'commit', source: 'beat_writer_ingest' }
+  })
+);
+
+assert(
+  'resolveRecruitingEventType treats Texas Tech commit OV as visit',
+  (() => {
+    const { resolveRecruitingEventType } = require('../lib/beat-writer-ingest');
+    const t =
+      'Texas Tech Five-Star Plus+ DL commit Jalen Brewster is taking an official visit to Florida on June 10.';
+    return resolveRecruitingEventType(t) === 'official_visit';
+  })()
+);
+
 if (process.exitCode) {
   console.error('\nPublic recruiting alerts tests failed.');
 } else {

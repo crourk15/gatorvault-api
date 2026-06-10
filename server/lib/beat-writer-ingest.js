@@ -151,7 +151,15 @@ function isRecruitingIntelPost(text, post = null) {
 
 function resolveRecruitingEventType(text) {
   const t = String(text || '');
-  if (/\b(commit(?:ted|ment)?|flip(?:ped)?)\b.*\b(florida|gators|\buf\b)/i.test(t)) return 'commit';
+  // "Texas Tech commit … official visit to Florida" is a visit, not a UF commit.
+  if (
+    /\b(?:taking|take|takes|set for|scheduled for)\s+(?:an?\s+)?official visit\b/i.test(t) &&
+    /\b(?:florida|gators|\buf\b|gainesville)\b/i.test(t)
+  ) {
+    return isOfficialVisitText(t) ? 'official_visit' : 'unofficial_visit';
+  }
+  if (/\b(?:committed|commits?)\s+to\s+(?:florida|the gators|\buf\b)/i.test(t)) return 'commit';
+  if (/\bflip(?:ped)?\s+to\s+(?:florida|the gators|\buf\b)/i.test(t)) return 'commit';
   if (/\bdecommit/i.test(t)) return 'decommit';
   if (/\bportal\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) return 'portal_in';
   if (/\boffer(?:ed|s)?\b/i.test(t)) return 'offer';
@@ -859,6 +867,7 @@ module.exports = {
   ingestManualBeatVisitIntel,
   processBeatVisitIntelRow,
   parseBeatPostForVisitIntel,
+  resolveRecruitingEventType,
   isVisitIngestWriter,
   isVisitSchedulePost,
   isRecruitingIntelPost,

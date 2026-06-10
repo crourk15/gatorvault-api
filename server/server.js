@@ -945,7 +945,7 @@ app.listen(PORT, () => {
       })
       .catch((err) => console.warn('[identity-patterns] boot sync skipped:', err.message));
     const { runPurgeFalseBrewsterIntel } = require('./lib/recruiting-public-alerts');
-    runPurgeFalseBrewsterIntel({ refresh: false })
+    runPurgeFalseBrewsterIntel({ refresh: true })
       .then((r) => {
         if (r.before.falseCommitEvents || r.before.falseCommitIntel || r.before.falseCommitFeed) {
           console.log('[recruiting-alerts] purged false Brewster intel:', r.before, '→', r.after);
