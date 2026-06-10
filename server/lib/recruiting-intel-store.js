@@ -147,6 +147,22 @@ function listNeedsResolution({ limit = 50 } = {}) {
 }
 
 function addIntel(raw) {
+  const gm2 = require('./gm2');
+  const decision = gm2.ingestIntel(raw, { subsystem: 'intel-store' });
+  if (decision.action === 'reject' || decision.action === 'quarantine') {
+    return Promise.resolve({
+      item: null,
+      created: false,
+      skipped: true,
+      reason: decision.reason,
+      gm2: decision
+    });
+  }
+  if (decision.action === 'needs_resolution') {
+    return saveNeedsResolution({ ...raw, ...decision.normalized });
+  }
+  raw = { ...raw, ...decision.normalized };
+
   const row = normalizeIntel(raw);
   if (row.resolutionStatus === 'needs_resolution') {
     return saveNeedsResolution(raw);

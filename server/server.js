@@ -19,6 +19,7 @@ const { mountAdminRoutes } = require('./lib/admin-routes');
 const { mountFilmRoomKnowledgeRoutes } = require('./lib/film-room-knowledge-routes');
 const { mountNilRoutes } = require('./lib/nil-routes');
 const { mountOpsRoutes } = require('./lib/ops-routes');
+const { mountGm2Routes } = require('./lib/gm2/gm2-routes');
 const { mountInsiderArticlesRoutes } = require('./lib/insider-articles-routes');
 const { apiMonitorMiddleware } = require('./lib/api-monitor');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
@@ -76,6 +77,7 @@ mountAdminRoutes(app);
 mountFilmRoomKnowledgeRoutes(app);
 mountNilRoutes(app);
 mountOpsRoutes(app);
+mountGm2Routes(app);
 mountInsiderArticlesRoutes(app);
 
 const PORT = process.env.PORT || 3000;
@@ -952,13 +954,13 @@ app.listen(PORT, () => {
         }
       })
       .catch((err) => console.warn('[recruiting-alerts] Brewster purge skipped:', err.message));
-    const { rebuildPlayerIdentityFromOn3 } = require('./lib/identity-record-validator');
-    rebuildPlayerIdentityFromOn3('jalen-brewster')
+    const gm2 = require('./lib/gm2');
+    gm2.rebuildAndReleasePlayer('jalen-brewster')
       .then((r) => {
-        if (r.ok) console.log('[identity] rebuilt Brewster identity from On3:', r.validation);
-        else console.warn('[identity] Brewster rebuild skipped:', r.error, r.validation?.errors);
+        if (r.ok) console.log('[gm2] rebuilt Brewster identity from On3:', r.validation);
+        else console.warn('[gm2] Brewster rebuild skipped:', r.error, r.validation?.errors);
       })
-      .catch((err) => console.warn('[identity] Brewster rebuild failed:', err.message));
+      .catch((err) => console.warn('[gm2] Brewster rebuild failed:', err.message));
   } catch (e) {
     console.warn('Recruiting API: failed to init', e.message);
   }

@@ -4,6 +4,14 @@
 const store = require('./insider-articles-store');
 const engine = require('./insider-articles-engine');
 
+function filterPublicArticles(articles) {
+  const gm2 = require('./gm2');
+  return (articles || []).filter((article) => {
+    const slugs = article.triggerIdentityLog || [];
+    return !slugs.some((slug) => slug && gm2.isPlayerQuarantined(slug));
+  });
+}
+
 const ADMIN_PIN =
   process.env.OPS_ADMIN_PIN ||
   process.env.RECRUITING_ADMIN_PIN ||
@@ -34,7 +42,7 @@ function requireAdmin(req, res) {
 function mountInsiderArticlesRoutes(app) {
   app.get('/api/articles/published', (req, res) => {
     try {
-      const items = store.listPublished().map(store.toPublicArticle);
+      const items = filterPublicArticles(store.listPublished()).map(store.toPublicArticle);
       return res.json({ ok: true, articles: items, count: items.length });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -151,6 +159,9 @@ function mountInsiderArticlesRoutes(app) {
       const article = store.getArticleById(req.params.id);
       if (!article || article.status !== 'published') {
         return res.status(404).json({ ok: false, error: 'Article not found' });
+      }
+      if (!filterPublicArticles([article]).length) {
+        return res.status(404).json({ ok: false, error: 'Article not available' });
       }
       return res.json({ ok: true, article: store.toPublicArticle(article) });
     } catch (err) {

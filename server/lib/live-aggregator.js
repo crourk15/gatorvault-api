@@ -11,8 +11,9 @@ const {
   isPublicIntelItem,
   isBrewsterFalseFeedItem,
   isMisclassifiedExternalCommitVisit,
-  filterPublicLiveFeed
+  filterPublicLiveFeed: legacyFilterPublicLiveFeed
 } = require('./recruiting-public-alerts');
+const gm2 = require('./gm2');
 
 const EVENT_TYPE_MAP = {
   commit: 'commit',
@@ -265,7 +266,7 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
 
 function getDashboard({ feedLimit = 60 } = {}) {
   return {
-    feed: filterPublicLiveFeed(liveStore.getFeedItems({ limit: feedLimit, categoriesOnly: true })),
+    feed: gm2.filterPublicLiveFeed(liveStore.getFeedItems({ limit: feedLimit, categoriesOnly: true })),
     beat: getBeatPosts(40),
     podcasts: getPodcastHub(),
     updatedAt: liveStore.nowIso()

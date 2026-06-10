@@ -420,6 +420,8 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
     if (fp && fingerprintAlreadyQueued(fp, doc.items)) continue;
     if (raw.commitFingerprint && commitAlreadyQueued(raw.commitFingerprint, doc.items)) continue;
     if (alreadyQueued(raw.text, doc.items)) continue;
+    const gm2 = require('./gm2');
+    if (!gm2.filterAutoposterCandidate(raw)) continue;
     const check = policy.validatePostContent(raw);
     if (!check.valid) continue;
     try {

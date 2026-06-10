@@ -48,11 +48,12 @@ function mountRecruitingRoutes(app) {
 
   app.get('/api/recruiting/portal', async (req, res) => {
     try {
+      const gm2 = require('./gm2');
       const portal = await store.getPortalBoard();
       const on3Source =
         portal.incoming.find((p) => p.on3Source)?.on3Source ||
         'https://www.on3.com/college/florida-gators/football/2026/commits/';
-      const incoming = portal.incoming.map((p) => ({
+      const incoming = gm2.filterPortalPlayers(portal.incoming).map((p) => ({
         ...p,
         on3ProfileUrl: p.on3ProfileUrl || buildOn3ProfileUrl(p),
         starsDisplay: p.starsDisplay || '★'.repeat(Math.min(5, parseInt(p.stars, 10) || 0)),
@@ -92,7 +93,7 @@ function mountRecruitingRoutes(app) {
 
   app.get('/api/recruiting/feed', async (req, res) => {
     try {
-      const publicAlerts = require('./recruiting-public-alerts');
+      const gm2 = require('./gm2');
       const forceHeat = req.query.force === '1' || req.query.live === '1';
       const [board2027, board2026, portal, rankings, events, heatCheck] = await Promise.all([
         store.getBoard(2027),
@@ -104,11 +105,16 @@ function mountRecruitingRoutes(app) {
       ]);
       return res.json({
         ok: true,
-        boards: { 2027: board2027, 2026: board2026 },
-        portal,
+        boards: {
+          2027: { ...board2027, commits: gm2.filterBoardPlayers(board2027.commits), targets: gm2.filterBoardPlayers(board2027.targets) },
+          2026: { ...board2026, commits: gm2.filterBoardPlayers(board2026.commits), targets: gm2.filterBoardPlayers(board2026.targets) }
+        },
+        portal: { ...portal, incoming: gm2.filterPortalPlayers(portal.incoming) },
         rankings,
-        events: publicAlerts.filterPublicEvents(events),
-        heatCheck,
+        events: gm2.filterPublicEvents(events),
+        heatCheck: heatCheck
+          ? { ...heatCheck, rising: gm2.filterHeatCheckRising(heatCheck.rising, heatCheck.intelRows) }
+          : heatCheck,
         ts: Date.now()
       });
     } catch (err) {
@@ -118,12 +124,12 @@ function mountRecruitingRoutes(app) {
 
   app.get('/api/recruiting/events', async (req, res) => {
     try {
-      const publicAlerts = require('./recruiting-public-alerts');
+      const gm2 = require('./gm2');
       const events = await store.getEvents({
         since: req.query.since,
         limit: parseInt(req.query.limit || '50', 10)
       });
-      return res.json({ ok: true, events: publicAlerts.filterPublicEvents(events) });
+      return res.json({ ok: true, events: gm2.filterPublicEvents(events) });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -145,20 +151,22 @@ function mountRecruitingRoutes(app) {
 
   app.get('/api/players/:slug', async (req, res) => {
     try {
-      const publicAlerts = require('./recruiting-public-alerts');
+      const gm2 = require('./gm2');
       const player = await store.getPlayerBySlug(req.params.slug);
       if (!player) return res.status(404).json({ ok: false, error: 'Player not found' });
+      if (gm2.isPlayerQuarantined(player.slug)) {
+        return res.status(404).json({ ok: false, error: 'Player unavailable' });
+      }
       const storeEvents = (await store.getEvents({ limit: 20 }))
-        .filter((e) => e.playerSlug === player.slug)
-        .filter(publicAlerts.isPublicRecruitingEvent);
-      const intelItems = intelStore
-        .getIntelForPlayer({
-          playerSlug: player.slug,
-          playerId: player.on3Id,
-          playerName: player.name
-        })
-        .filter(publicAlerts.isPublicIntelItem);
-      const intelEvents = intelItems.map((i) => ({
+        .filter((e) => e.playerSlug === player.slug);
+      const intelItems = intelStore.getIntelForPlayer({
+        playerSlug: player.slug,
+        playerId: player.on3Id,
+        playerName: player.name
+      });
+      const filtered = gm2.filterPlayerPage(player, intelItems, storeEvents);
+      if (!filtered) return res.status(404).json({ ok: false, error: 'Player unavailable' });
+      const intelEvents = filtered.intel.map((i) => ({
         id: i.id,
         playerSlug: player.slug,
         eventType: i.eventType,
@@ -180,10 +188,10 @@ function mountRecruitingRoutes(app) {
           intelFingerprint: i.fingerprint
         }
       }));
-      const events = [...intelEvents, ...storeEvents]
+      const events = [...intelEvents, ...filtered.events]
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 20);
-      return res.json({ ok: true, player, events });
+      return res.json({ ok: true, player: filtered.player, events });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

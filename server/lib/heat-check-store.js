@@ -8,7 +8,16 @@ async function buildHeatCheck(options = {}) {
   if (!force && _cache.data && Date.now() - _cache.at < CACHE_MS) {
     return { ..._cache.data, cached: true };
   }
+  const gm2 = require('./gm2');
+  const { GM2_FEATURES } = require('./gm2/types');
   const data = await buildLiveHeatCheck();
+  const pgv = gm2.validateBeforeRender(GM2_FEATURES.HEAT_CHECK, data);
+  if (!pgv.pass) {
+    if (_cache.data) return { ..._cache.data, cached: true, gm2Blocked: pgv.reason };
+    data.rising = gm2.filterHeatCheckRising(data.rising || []);
+  } else {
+    data.rising = gm2.filterHeatCheckRising(data.rising || [], data.intelRows || []);
+  }
   _cache = { at: Date.now(), data };
   return data;
 }

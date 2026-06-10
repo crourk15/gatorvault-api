@@ -1,6 +1,6 @@
 const liveStore = require('./live-store');
 const { refreshLiveDashboard, getDashboard } = require('./live-aggregator');
-const { filterPublicLiveFeed } = require('./recruiting-public-alerts');
+const gm2 = require('./gm2');
 
 const LIVE_ADMIN_PIN =
   process.env.LIVE_ADMIN_PIN || process.env.RECRUITING_ADMIN_PIN || process.env.CONTENT_ADMIN_PIN || 'GV2026admin';
@@ -26,7 +26,7 @@ function mountLiveRoutes(app) {
 
   app.get('/api/live/feed', (req, res) => {
     try {
-      const feed = filterPublicLiveFeed(
+      const feed = gm2.filterPublicLiveFeed(
         liveStore.getFeedItems({
           limit: parseInt(req.query.limit || '50', 10),
           since: req.query.since,

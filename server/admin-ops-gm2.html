@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GatorVault — GM 2.0 Integrity Dashboard</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#030712;color:#e2e8f0}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 48px}h1{color:#FA4616;font-family:Oswald,Arial,sans-serif;letter-spacing:2px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:16px 0}
+    .card{background:#0b1220;border:1px solid #1e3a5f;border-radius:12px;padding:16px}
+    .card h3{margin:0 0 8px;font-size:14px;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em}
+    .card p{margin:0;font-size:28px;font-weight:700;color:#fff}
+    label{display:block;font-size:12px;color:#94a3b8;margin-bottom:6px;text-transform:uppercase}
+    input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#111827;color:#f8fafc;margin-bottom:12px}
+    button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;background:#FA4616;color:#fff;margin-right:8px}
+    button.secondary{background:#1e3a5f;color:#e2e8f0}
+    pre{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:14px;overflow:auto;font-size:12px;max-height:420px}
+    .ok{color:#4ade80}.err{color:#f87171}.warn{color:#fbbf24}
+    a{color:#60a5fa}
+    table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:8px;border-bottom:1px solid #1e293b;text-align:left}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🛡️ GM 2.0 Integrity Dashboard</h1>
+    <p style="color:#94a3b8;margin-bottom:20px">Signal Integrity Layer · Rules Engine · Pre-Render Validator · Quarantine</p>
+    <div class="card" style="margin-bottom:16px">
+      <label>Admin PIN</label>
+      <input id="pin" type="password" placeholder="GV2026admin" autocomplete="off">
+      <button id="refresh">Refresh status</button>
+      <button class="secondary" id="repair-brewster">Rebuild Brewster identity</button>
+    </div>
+    <div class="grid" id="stats"></div>
+    <div class="card" style="margin-top:16px">
+      <h3>Quarantined players</h3>
+      <div id="quarantine-players"></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Recent GM2 decisions (24h)</h3>
+      <pre id="decisions"></pre>
+    </div>
+    <p style="margin-top:20px;font-size:13px;color:#64748b">
+      <a href="/admin/ops">← Ops</a> ·
+      <a href="/api/gm2/status" target="_blank">API status</a>
+    </p>
+  </div>
+  <script>
+    var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? 'http://localhost:3000' : location.origin;
+    function pin(){ return document.getElementById('pin').value.trim(); }
+    function headers(){ return { 'Content-Type': 'application/json', 'X-Ops-Pin': pin() }; }
+    async function loadStatus(){
+      var r = await fetch(API + '/api/gm2/status');
+      var j = await r.json();
+      if(!j.ok) throw new Error(j.error || 'status failed');
+      var q = j.quarantine || {};
+      var c = j.decisions24h || {};
+      document.getElementById('stats').innerHTML =
+        '<div class="card"><h3>Quarantined players</h3><p class="warn">' + (q.quarantinedPlayers||0) + '</p></div>' +
+        '<div class="card"><h3>Quarantined signals</h3><p>' + (q.quarantinedSignals||0) + '</p></div>' +
+        '<div class="card"><h3>Allowed (24h)</h3><p class="ok">' + (c.allow||0) + '</p></div>' +
+        '<div class="card"><h3>Rejected (24h)</h3><p class="err">' + ((c.reject||0)+(c.block_render||0)) + '</p></div>' +
+        '<div class="card"><h3>Quarantined (24h)</h3><p class="warn">' + (c.quarantine||0) + '</p></div>';
+      var players = q.players || [];
+      if(!players.length){
+        document.getElementById('quarantine-players').innerHTML = '<p style="color:#64748b">No active quarantines.</p>';
+      } else {
+        var html = '<table><tr><th>Slug</th><th>Reason</th><th>Since</th></tr>';
+        players.forEach(function(p){
+          html += '<tr><td>' + p.slug + '</td><td>' + (p.reason||'') + '</td><td>' + (p.quarantinedAt||'') + '</td></tr>';
+        });
+        html += '</table>';
+        document.getElementById('quarantine-players').innerHTML = html;
+      }
+      var dr = await fetch(API + '/api/gm2/decisions?limit=40&pin=' + encodeURIComponent(pin()), { headers: headers() });
+      var dj = await dr.json();
+      document.getElementById('decisions').textContent = JSON.stringify(dj.decisions || j.recentDecisions || [], null, 2);
+    }
+    document.getElementById('refresh').addEventListener('click', function(){ loadStatus().catch(function(e){ alert(e.message); }); });
+    document.getElementById('repair-brewster').addEventListener('click', async function(){
+      if(!pin()) return alert('PIN required');
+      var r = await fetch(API + '/api/gm2/repair/player', { method: 'POST', headers: headers(), body: JSON.stringify({ slug: 'jalen-brewster' }) });
+      var j = await r.json();
+      alert(j.ok ? 'Brewster rebuilt and released from quarantine.' : (j.error || JSON.stringify(j)));
+      loadStatus();
+    });
+    loadStatus().catch(function(){});
+  </script>
+</body>
+</html>

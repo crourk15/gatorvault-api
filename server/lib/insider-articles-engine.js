@@ -465,7 +465,22 @@ async function generateWeeklyDrafts({ force = false, maxDrafts = MAX_WEEKLY } = 
 
   const drafts = [];
   const aborted = [];
+  const gm2 = require('./gm2');
+  const { GM2_FEATURES } = require('./gm2/types');
   for (const topic of selected) {
+    const feature =
+      topic.category === 'post_visit_reaction'
+        ? GM2_FEATURES.VISIT_RECAP
+        : topic.category === 'program_pulse'
+          ? GM2_FEATURES.PROGRAM_PULSE
+          : topic.category === 'heat_check'
+            ? GM2_FEATURES.HEAT_CHECK
+            : GM2_FEATURES.PROGRAM_PULSE;
+    const pgv = gm2.validateBeforeRender(feature, { ...topic, signalsAt: signals.collectedAt });
+    if (!pgv.pass) {
+      aborted.push({ topicKey: topic.topicKey, category: topic.category, reason: `pgv:${pgv.reason}`, errors: pgv.errors });
+      continue;
+    }
     const draft = writeDraftFromTopic(topic, signals);
     if (draft) {
       drafts.push(store.addDraft(draft));

@@ -250,14 +250,20 @@ function preservePlayerFields(existing, incoming) {
 }
 
 async function upsertPlayer(player) {
-  const identityValidator = require('./identity-record-validator');
-  const sanitized = identityValidator.sanitizePlayerFieldsForStore(player);
-  const normalized = normalizePlayer(sanitized);
-  if (normalized.school && !identityValidator.isValidSchoolField(normalized.school)) {
-    delete normalized.school;
+  const gm2 = require('./gm2');
+  const ingress = gm2.ingestPlayer(player, { subsystem: 'recruiting-store' });
+  const normalized = normalizePlayer(ingress.normalized || player);
+  if (normalized.school) {
+    const identityValidator = require('./identity-record-validator');
+    if (!identityValidator.isValidSchoolField(normalized.school)) {
+      delete normalized.school;
+    }
   }
-  if (normalized.fromSchool && !identityValidator.isValidSchoolField(normalized.fromSchool, { allowCollege: true })) {
-    delete normalized.fromSchool;
+  if (normalized.fromSchool) {
+    const identityValidator = require('./identity-record-validator');
+    if (!identityValidator.isValidSchoolField(normalized.fromSchool, { allowCollege: true })) {
+      delete normalized.fromSchool;
+    }
   }
   if (!isFloridaCommit(normalized) && normalized.category === 'recruit') {
     normalized.category = 'target';
@@ -426,6 +432,17 @@ async function hasExistingIntelFingerprint(fp) {
 }
 
 async function createEvent(event) {
+  const gm2 = require('./gm2');
+  const ingress = gm2.ingestEvent(event, { subsystem: 'recruiting-store' });
+  if (ingress.action === 'reject' || ingress.action === 'quarantine') {
+    console.log('[recruiting-store] GM2 blocked event:', ingress.reason, event.playerSlug, event.eventType);
+    return null;
+  }
+  if (ingress.action === 'needs_resolution') {
+    console.log('[recruiting-store] GM2 needs_resolution event:', event.playerSlug, event.eventType);
+    return null;
+  }
+
   const player = event.payload?.player;
   const fp =
     player && ['commit', 'flip'].includes(event.eventType)
