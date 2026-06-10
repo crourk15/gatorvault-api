@@ -464,7 +464,7 @@
       var tbody=document.getElementById('insider-drafts-body');
       if(!drafts||!drafts.length){tbody.innerHTML='<tr><td colspan="6" class="meta">No drafts pending approval.</td></tr>';return;}
       tbody.innerHTML=drafts.map(function(d){
-        return '<tr><td><strong><a href="/admin-ops/articles/'+esc(d.id)+'" style="color:#60a5fa;text-decoration:none">'+esc(d.title)+'</a></strong><div class="meta">'+esc(d.summary||'')+'</div></td>'+
+        return '<tr><td><strong><a href="/admin-ops/articles/'+esc(d.id)+'" style="color:#60a5fa;text-decoration:none">'+esc(d.title)+'</a></strong><div class="meta"><a href="/admin-ops/articles/edit/'+esc(d.id)+'" style="color:#94a3b8">Edit</a> · '+esc(d.summary||'')+'</div></td>'+
           '<td>'+esc(insiderCategoryLabel(d.category))+'</td>'+
           '<td>'+fmtTime(d.createdAt)+'</td>'+
           '<td>'+esc(d.readTimeMinutes||'—')+' min</td>'+

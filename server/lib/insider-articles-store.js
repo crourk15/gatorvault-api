@@ -199,6 +199,47 @@ function rejectDraft(id) {
   return item;
 }
 
+function calcReadTime(body) {
+  const words = String(body || '')
+    .replace(/<[^>]+>/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean).length;
+  return Math.max(3, Math.min(12, Math.ceil(words / 200)));
+}
+
+function updateDraft(id, patch = {}) {
+  const doc = loadDraftsDoc();
+  const idx = doc.items.findIndex((a) => a.id === id);
+  if (idx < 0) throw new Error('Draft not found');
+  const item = doc.items[idx];
+  if (item.status !== 'draft') throw new Error('Article is not a pending draft');
+
+  const body = patch.body != null ? patch.body : item.body;
+  const readTimeMinutes =
+    patch.readTimeMinutes != null
+      ? patch.readTimeMinutes
+      : patch.readTime != null
+        ? patch.readTime
+        : calcReadTime(body);
+
+  doc.items[idx] = normalizeArticle({
+    ...item,
+    ...patch,
+    id: item.id,
+    status: 'draft',
+    createdAt: item.createdAt,
+    publishedAt: null,
+    title: patch.title != null ? patch.title : item.title,
+    summary: patch.summary != null ? patch.summary : patch.subheadline != null ? patch.subheadline : item.summary,
+    body,
+    readTimeMinutes,
+    category: patch.category != null ? patch.category : item.category
+  });
+  saveDraftsDoc(doc);
+  logEvent('draft_updated', { articleId: id, title: doc.items[idx].title });
+  return doc.items[idx];
+}
+
 function refreshPublished(id, patch) {
   const pubDoc = loadPublishedDoc();
   const idx = pubDoc.items.findIndex((a) => a.id === id);
@@ -276,6 +317,7 @@ module.exports = {
   addDraft,
   approveDraft,
   rejectDraft,
+  updateDraft,
   refreshPublished,
   retirePublished,
   toPublicArticle,

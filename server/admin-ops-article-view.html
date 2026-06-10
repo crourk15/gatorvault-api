@@ -84,6 +84,7 @@
         <div class="article-body" id="article-body"></div>
 
         <div class="actions">
+          <a id="btn-edit" href="#" class="secondary" style="display:inline-block;padding:.5rem .9rem;border-radius:.5rem;text-decoration:none;background:#334155;color:#fff;font-weight:600">Edit</a>
           <button id="btn-approve">Approve</button>
           <button id="btn-reject" class="reject">Reject</button>
           <a href="/admin-ops.html#insider-articles" class="secondary" style="display:inline-block;padding:.5rem .9rem;border-radius:.5rem;text-decoration:none;background:#334155;color:#fff;font-weight:600">Back to drafts</a>
@@ -138,6 +139,7 @@
       }
 
       document.getElementById('article-body').innerHTML = d.body || '<p class="sub">No body content.</p>';
+      document.getElementById('btn-edit').href = '/admin-ops/articles/edit/' + encodeURIComponent(d.draftId || draftId);
       document.getElementById('article-content').classList.remove('hidden');
       document.getElementById('load-error').classList.add('hidden');
       document.title = 'Draft: ' + (d.title || 'Preview') + ' — GV-OM';

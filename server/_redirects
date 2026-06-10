@@ -5,6 +5,8 @@
 /admin/monitoring  /admin-monitoring.html  200
 /admin/ops  /admin-ops.html  200
 /admin/ops/identity-patterns  /admin-ops-identity-patterns.html  200
+/admin-ops/articles/edit/*  /admin-ops-article-edit.html  200
+/admin/ops/articles/edit/*  /admin-ops-article-edit.html  200
 /admin-ops/articles/*  /admin-ops-article-view.html  200
 /admin/ops/articles/*  /admin-ops-article-view.html  200
 /vault/ops  /admin-ops.html  200

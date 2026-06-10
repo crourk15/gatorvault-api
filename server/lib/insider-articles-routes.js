@@ -79,6 +79,40 @@ function mountInsiderArticlesRoutes(app) {
     }
   });
 
+  app.put('/api/articles/drafts/:id', (req, res) => {
+    if (!requireAdmin(req, res)) return;
+    try {
+      const draft = store.updateDraft(req.params.id, {
+        title: req.body.title,
+        subheadline: req.body.subheadline,
+        summary: req.body.summary ?? req.body.subheadline,
+        body: req.body.body,
+        category: req.body.category,
+        readTime: req.body.readTime,
+        readTimeMinutes: req.body.readTimeMinutes ?? req.body.readTime,
+        byline: req.body.byline
+      });
+      const meta = store.CATEGORIES[draft.category] || store.CATEGORIES.insider;
+      return res.json({
+        ok: true,
+        draft: {
+          draftId: draft.id,
+          title: draft.title,
+          subheadline: draft.summary || '',
+          category: draft.category,
+          categoryLabel: draft.categoryLabel || meta.label,
+          sources: draft.sources || [],
+          readTime: draft.readTimeMinutes || 5,
+          body: draft.body || '',
+          createdAt: draft.createdAt,
+          byline: draft.byline || meta.byline
+        }
+      });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/articles/drafts/generate', async (req, res) => {
     if (!requireAdmin(req, res)) return;
     try {
