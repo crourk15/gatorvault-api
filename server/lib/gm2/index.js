@@ -196,6 +196,166 @@ async function runAutoRepair(options) {
   return autoRepair.runAutoRepair(options);
 }
 
+function getPublicIntel(options = {}) {
+  const intelStore = require('../recruiting-intel-store');
+  const subsystem = options.subsystem || 'article-engine';
+  const limit = parseInt(options.limit || '200', 10);
+  const raw = intelStore.listIntel({ limit }) || [];
+  const accepted = [];
+  const rejected = [];
+
+  for (const row of raw) {
+    try {
+      if (!row) continue;
+      if (row.resolutionStatus === 'needs_resolution' || row.surfaced === false) {
+        rejected.push({
+          playerSlug: row.playerSlug,
+          fingerprint: row.fingerprint,
+          reason: 'needs_resolution'
+        });
+        continue;
+      }
+      if (quarantine.isPlayerQuarantined(row.playerSlug)) {
+        rejected.push({
+          playerSlug: row.playerSlug,
+          fingerprint: row.fingerprint,
+          reason: 'player_quarantined'
+        });
+        continue;
+      }
+      const rule = rulesEngine.rulesForIntel(row);
+      if (!rule.allow) {
+        rejected.push({
+          playerSlug: row.playerSlug,
+          fingerprint: row.fingerprint,
+          reason: rule.reason || 'not_public_intel'
+        });
+        decisionLog.logDecision({
+          layer: 're',
+          action: GM2_ACTIONS.REJECT,
+          feature: GM2_FEATURES.VISIT_RECAP,
+          subsystem,
+          reason: rule.reason,
+          playerSlug: row.playerSlug,
+          fingerprint: row.fingerprint
+        });
+        continue;
+      }
+      accepted.push(row);
+    } catch (err) {
+      rejected.push({
+        playerSlug: row?.playerSlug,
+        fingerprint: row?.fingerprint,
+        reason: 'filter_error',
+        error: err.message
+      });
+    }
+  }
+
+  const intel = identityValidator.dedupeIntelByFingerprint(
+    identityValidator.filterStaleVisitIntelChain(accepted, null)
+  );
+
+  if (rejected.length) {
+    console.log(`[gm2:article-engine] filtered ${rejected.length} intel row(s), kept ${intel.length}`);
+  }
+
+  return { intel, rejected, rawCount: raw.length, acceptedCount: intel.length };
+}
+
+async function getValidatedSignals(options = {}) {
+  const recruitingStore = require('../recruiting-store');
+  const rosterStore = require('../roster-store');
+  const depthJobs = require('../depth-chart-jobs');
+  const bettingLines = require('../betting-lines');
+  const cycle = require('../insider-articles-cycle');
+
+  const { intel, rejected: rejectedIntel } = getPublicIntel({
+    limit: options.intelLimit || 200,
+    subsystem: 'article-engine'
+  });
+
+  const [allPlayers, events, portal, roster, depthMeta, lines] = await Promise.all([
+    recruitingStore.getAllPlayers(),
+    recruitingStore.getEvents({ limit: 50 }),
+    recruitingStore.getPortalBoard(),
+    Promise.resolve(rosterStore.getAllRosterPlayers()),
+    Promise.resolve(depthJobs.getDepthChartMeta()),
+    bettingLines.getBettingLines().catch(() => null)
+  ]);
+
+  const gm2Players = filterBoardPlayers(allPlayers);
+  const recruitingPlayers = cycle.filterRecruitingPlayers(gm2Players);
+  const intel2027 = cycle.filterRecruitingIntel(intel);
+  const events2027 = cycle.filterRecruitingEvents(
+    filterPublicEvents(
+      events.filter((e) => Date.now() - new Date(e.createdAt).getTime() < 14 * 86400000)
+    )
+  );
+
+  const visits2027 = intel2027.filter((i) => /visit|ov|unofficial/i.test(i.eventType || ''));
+
+  let heatCheck = null;
+  try {
+    const heat = require('../heat-check-store');
+    heatCheck = await heat.buildHeatCheck();
+  } catch {
+    heatCheck = null;
+  }
+
+  const rising2027 = cycle.filterRecruitingHeat(
+    filterHeatCheckRising(heatCheck?.rising || [], intel2027)
+  );
+
+  const portalFiltered = {
+    incoming: filterPortalPlayers(portal.incoming || []),
+    headliner: portal.headliner,
+    count: filterPortalPlayers(portal.incoming || []).length
+  };
+
+  return {
+    collectedAt: new Date().toISOString(),
+    season: cycle.programSeasonYear(),
+    rejectedIntel,
+    recruiting: {
+      players: recruitingPlayers,
+      events: events2027,
+      targets: recruitingPlayers.filter((p) => p.category === 'target'),
+      commits: recruitingPlayers.filter(
+        (p) => p.status === 'committed' && /florida/i.test(p.committedTo || '')
+      ),
+      minClass: cycle.RECRUITING_MIN_CLASS
+    },
+    portal: portalFiltered,
+    depthChart: { meta: depthMeta, rosterCount: roster.length, offense: roster.filter((p) => p.unit === 'offense').length, defense: roster.filter((p) => p.unit === 'defense').length },
+    gameZone: { nextGame: lines?.nextGame || null, schedule: lines?.schedule || [] },
+    intel: {
+      visits: visits2027,
+      upcoming: visits2027.filter((i) => {
+        const t = String(i.eventType || '').toLowerCase();
+        if (!/official_visit|unofficial_visit|visit/.test(t)) return false;
+        if (/cancel|post_visit_reaction/.test(t)) return false;
+        const ts = new Date(i.timestamp || i.createdAt || 0).getTime();
+        return ts >= Date.now() - 3 * 86400000;
+      }),
+      recent: visits2027.filter((i) => {
+        const t = String(i.eventType || '').toLowerCase();
+        if (!/official_visit|unofficial_visit|visit/.test(t)) return false;
+        const ts = new Date(i.timestamp || i.createdAt || i.reportedAt || 0).getTime();
+        const age = Date.now() - ts;
+        return age >= 0 && age <= 10 * 86400000;
+      }),
+      all: intel2027.slice(0, 20)
+    },
+    heatCheck: heatCheck ? { ...heatCheck, rising: rising2027 } : { rising: rising2027 },
+    roster: {
+      players: roster,
+      offense: roster.filter((p) => p.unit === 'offense'),
+      defense: roster.filter((p) => p.unit === 'defense')
+    }
+  };
+}
+
 function getDashboard() {
   return {
     quarantine: quarantine.getStatus(),
@@ -217,6 +377,8 @@ module.exports = {
   filterPublicIntel,
   filterPublicLiveFeed,
   filterPublicHeadlines,
+  getPublicIntel,
+  getValidatedSignals,
   filterBoardPlayers,
   filterPortalPlayers,
   filterHeatCheckRising,

@@ -75,54 +75,85 @@ function visitIntelAlreadyCovered(visits, category = 'post_visit_reaction') {
 }
 
 function validateVisitIntelBatch(intelRows, storePlayers) {
+  const gm2 = require('./gm2');
   const seenFingerprints = new Set();
   const accepted = [];
   const rejected = [];
   const triggerLog = [];
 
-  for (const intel of intelRows) {
-    const intelValidation = identityValidator.validateIntelForArticle(intel, { seenFingerprints });
-    if (!intelValidation.valid) {
-      rejected.push({
-        slug: intel.playerSlug,
-        fingerprint: intel.fingerprint,
-        errors: intelValidation.errors
-      });
-      continue;
-    }
-    if (intel.fingerprint) seenFingerprints.add(intel.fingerprint);
+  for (const intel of intelRows || []) {
+    try {
+      if (gm2.isPlayerQuarantined(intel.playerSlug)) {
+        rejected.push({ slug: intel.playerSlug, fingerprint: intel.fingerprint, reason: 'player_quarantined' });
+        continue;
+      }
+      const re = gm2.filterPublicIntel([intel]);
+      if (!re.length) {
+        rejected.push({
+          slug: intel.playerSlug,
+          fingerprint: intel.fingerprint,
+          reason: 'gm2_intel_rejected'
+        });
+        continue;
+      }
 
-    const storePl = storePlayers.find((p) => p.slug === intel.playerSlug);
-    const playerRecord = {
-      slug: intel.playerSlug,
-      name: intel.playerName || storePl?.name,
-      pos: intel.pos || storePl?.pos,
-      classYear: intel.classYear || storePl?.classYear,
-      school: storePl?.school || intel.school || intel.highSchool,
-      skinny: storePl?.skinny,
-      profileNote: storePl?.profileNote
-    };
-    const playerValidation = identityValidator.validatePlayerIdentityRecord(playerRecord);
-    triggerLog.push({
-      slug: intel.playerSlug,
-      name: intel.playerName,
-      fingerprint: intel.fingerprint,
-      source: intel.source,
-      eventType: intel.eventType,
-      playerValid: playerValidation.valid,
-      playerErrors: playerValidation.errors,
-      intelValid: true
-    });
-    if (!playerValidation.valid) {
-      rejected.push({
+      const intelValidation = identityValidator.validateIntelForArticle(intel, { seenFingerprints });
+      if (!intelValidation.valid) {
+        rejected.push({
+          slug: intel.playerSlug,
+          fingerprint: intel.fingerprint,
+          errors: intelValidation.errors
+        });
+        console.log('[insider-articles] rejected intel:', intel.playerSlug, intelValidation.errors.join(','));
+        continue;
+      }
+      if (intel.fingerprint) seenFingerprints.add(intel.fingerprint);
+
+      const storePl = storePlayers.find((p) => p.slug === intel.playerSlug);
+      const playerRecord = identityValidator.healPlayerRecord(
+        {
+          slug: intel.playerSlug,
+          name: intel.playerName || storePl?.name,
+          pos: intel.pos || storePl?.pos,
+          classYear: intel.classYear || storePl?.classYear,
+          school: storePl?.school || intel.school || intel.highSchool,
+          category: storePl?.category,
+          skinny: storePl?.skinny,
+          profileNote: storePl?.profileNote
+        },
+        storePl
+      );
+      const playerValidation = identityValidator.validatePlayerIdentityRecord(playerRecord);
+      triggerLog.push({
         slug: intel.playerSlug,
+        name: intel.playerName,
         fingerprint: intel.fingerprint,
-        errors: playerValidation.errors,
-        stage: 'player_identity'
+        source: intel.source,
+        eventType: intel.eventType,
+        playerValid: playerValidation.valid,
+        playerErrors: playerValidation.errors,
+        intelValid: true
       });
-      continue;
+      if (!playerValidation.valid) {
+        rejected.push({
+          slug: intel.playerSlug,
+          fingerprint: intel.fingerprint,
+          errors: playerValidation.errors,
+          stage: 'player_identity'
+        });
+        console.log('[insider-articles] rejected player identity:', intel.playerSlug, playerValidation.errors.join(','));
+        continue;
+      }
+      accepted.push(intel);
+    } catch (err) {
+      rejected.push({
+        slug: intel?.playerSlug,
+        fingerprint: intel?.fingerprint,
+        reason: 'validation_error',
+        error: err.message
+      });
+      console.warn('[insider-articles] intel validation error:', intel?.playerSlug, err.message);
     }
-    accepted.push(intel);
   }
 
   return { accepted, rejected, triggerLog };
@@ -136,79 +167,8 @@ function mapVisitIntelToSignals(intelRows, storePlayers) {
 }
 
 async function collectSignals() {
-  const recruitingStore = require('./recruiting-store');
-  const intelStore = require('./recruiting-intel-store');
-  const rosterStore = require('./roster-store');
-  const depthJobs = require('./depth-chart-jobs');
-  const bettingLines = require('./betting-lines');
-
-  const [allPlayers, events, portal, roster, depthMeta, lines] = await Promise.all([
-    recruitingStore.getAllPlayers(),
-    recruitingStore.getEvents({ limit: 50 }),
-    recruitingStore.getPortalBoard(),
-    Promise.resolve(rosterStore.getAllRosterPlayers()),
-    Promise.resolve(depthJobs.getDepthChartMeta()),
-    bettingLines.getBettingLines().catch(() => null)
-  ]);
-
-  let intel = [];
-  try {
-    intel = identityValidator.dedupeIntelByFingerprint(
-      (intelStore.listIntel({ limit: 100 }) || []).filter((i) => i.resolutionStatus !== 'needs_resolution')
-    );
-  } catch {
-    intel = [];
-  }
-
-  let heatCheck = null;
-  try {
-    const heat = require('./heat-check-store');
-    heatCheck = await heat.buildHeatCheck();
-  } catch {
-    heatCheck = null;
-  }
-
-  const recruitingPlayers = cycle.filterRecruitingPlayers(allPlayers);
-  const intel2027 = cycle.filterRecruitingIntel(intel);
-  const events2027 = cycle.filterRecruitingEvents(
-    events.filter((e) => Date.now() - new Date(e.createdAt).getTime() < 14 * 86400000)
-  );
-  const visits2027 = identityValidator.filterStaleVisitIntelChain(
-    intel2027.filter((i) => /visit|ov|unofficial/i.test(i.eventType || '')),
-    null
-  );
-  const rising2027 = cycle.filterRecruitingHeat(heatCheck?.rising || []);
-
-  const targets2027 = recruitingPlayers.filter((p) => p.category === 'target');
-  const commits2027 = recruitingPlayers.filter(
-    (p) => p.status === 'committed' && /florida/i.test(p.committedTo || '')
-  );
-
-  const offense = roster.filter((p) => p.unit === 'offense');
-  const defense = roster.filter((p) => p.unit === 'defense');
-
-  return {
-    collectedAt: new Date().toISOString(),
-    season: cycle.programSeasonYear(),
-    recruiting: {
-      players: recruitingPlayers,
-      events: events2027,
-      targets: targets2027,
-      commits: commits2027,
-      minClass: cycle.RECRUITING_MIN_CLASS
-    },
-    portal: { incoming: portal.incoming || [], headliner: portal.headliner, count: portal.count },
-    depthChart: { meta: depthMeta, rosterCount: roster.length, offense: offense.length, defense: defense.length },
-    gameZone: { nextGame: lines?.nextGame || null, schedule: lines?.schedule || [] },
-    intel: {
-      visits: visits2027,
-      upcoming: visits2027.filter(isUpcomingVisit),
-      recent: visits2027.filter(isRecentCompletedVisit),
-      all: intel2027.slice(0, 20)
-    },
-    heatCheck: heatCheck ? { ...heatCheck, rising: rising2027 } : { rising: rising2027 },
-    roster: { players: roster, offense, defense }
-  };
+  const gm2 = require('./gm2');
+  return gm2.getValidatedSignals();
 }
 
 function scoreTopic(topic) {
@@ -224,6 +184,9 @@ function scoreTopic(topic) {
 
 function buildCandidateTopics(signals) {
   const topics = [];
+  const visits2027 = signals.intel?.visits || [];
+  const recruitingPlayers = signals.recruiting?.players || [];
+
   const push = (topic) => {
     if (!topic?.category || !topic.title) return;
     const cycleType = cycle.isRecruitingCategory(topic.category) ? 'recruiting' : 'program';
@@ -434,6 +397,27 @@ function writeDraftFromTopic(topic, signals) {
   });
 }
 
+function pgvFeatureForCategory(category) {
+  if (category === 'post_visit_reaction' || category === 'official_visit_preview') {
+    return require('./gm2/types').GM2_FEATURES.VISIT_RECAP;
+  }
+  if (category === 'heat_check') return require('./gm2/types').GM2_FEATURES.HEAT_CHECK;
+  return require('./gm2/types').GM2_FEATURES.PROGRAM_PULSE;
+}
+
+function buildPgvPayload(topic, signals) {
+  return {
+    ...topic,
+    signalsAt: signals.collectedAt,
+    visits: topic.signals?.visits,
+    rising: topic.signals?.rising,
+    roster: topic.signals?.roster || signals.roster,
+    portal: topic.signals?.portal || signals.portal,
+    depthChart: topic.signals?.depthChart || signals.depthChart,
+    intelRows: signals.intel?.all || []
+  };
+}
+
 async function generateWeeklyDrafts({ force = false, maxDrafts = MAX_WEEKLY } = {}) {
   const createdThisWeek = store.draftsCreatedSince(WEEK_MS).filter((a) => a.status === 'draft');
   const pending = store.countDraftsPending();
@@ -448,8 +432,29 @@ async function generateWeeklyDrafts({ force = false, maxDrafts = MAX_WEEKLY } = 
     };
   }
 
-  const signals = await collectSignals();
-  const candidates = buildCandidateTopics(signals);
+  let signals;
+  try {
+    signals = await collectSignals();
+    if (signals.rejectedIntel?.length) {
+      console.log(
+        '[insider-articles] GM2 rejected intel rows:',
+        signals.rejectedIntel.length,
+        signals.rejectedIntel.slice(0, 5)
+      );
+    }
+  } catch (err) {
+    console.error('[insider-articles] collectSignals failed:', err.message);
+    return { ok: false, error: err.message, drafts: [], selected: 0 };
+  }
+
+  let candidates = [];
+  try {
+    candidates = buildCandidateTopics(signals);
+  } catch (err) {
+    console.error('[insider-articles] buildCandidateTopics failed:', err.message);
+    return { ok: false, error: err.message, signalsAt: signals?.collectedAt, drafts: [], selected: 0 };
+  }
+
   const existingKeys = new Set(
     [...store.listDrafts({ status: 'draft' }), ...store.listPublished()].map((a) => a.topicKey).filter(Boolean)
   );
@@ -466,26 +471,35 @@ async function generateWeeklyDrafts({ force = false, maxDrafts = MAX_WEEKLY } = 
   const drafts = [];
   const aborted = [];
   const gm2 = require('./gm2');
-  const { GM2_FEATURES } = require('./gm2/types');
+
   for (const topic of selected) {
-    const feature =
-      topic.category === 'post_visit_reaction'
-        ? GM2_FEATURES.VISIT_RECAP
-        : topic.category === 'program_pulse'
-          ? GM2_FEATURES.PROGRAM_PULSE
-          : topic.category === 'heat_check'
-            ? GM2_FEATURES.HEAT_CHECK
-            : GM2_FEATURES.PROGRAM_PULSE;
-    const pgv = gm2.validateBeforeRender(feature, { ...topic, signalsAt: signals.collectedAt });
-    if (!pgv.pass) {
-      aborted.push({ topicKey: topic.topicKey, category: topic.category, reason: `pgv:${pgv.reason}`, errors: pgv.errors });
-      continue;
-    }
-    const draft = writeDraftFromTopic(topic, signals);
-    if (draft) {
-      drafts.push(store.addDraft(draft));
-    } else {
-      aborted.push({ topicKey: topic.topicKey, category: topic.category, reason: 'insufficient_intel_or_quality' });
+    try {
+      const feature = pgvFeatureForCategory(topic.category);
+      const pgv = gm2.validateBeforeRender(feature, buildPgvPayload(topic, signals));
+      if (!pgv.pass) {
+        aborted.push({
+          topicKey: topic.topicKey,
+          category: topic.category,
+          reason: `pgv:${pgv.reason}`,
+          errors: pgv.errors
+        });
+        console.log('[insider-articles] PGV blocked topic:', topic.topicKey, pgv.reason);
+        continue;
+      }
+      const draft = writeDraftFromTopic(topic, signals);
+      if (draft) {
+        drafts.push(store.addDraft(draft));
+      } else {
+        aborted.push({ topicKey: topic.topicKey, category: topic.category, reason: 'insufficient_intel_or_quality' });
+      }
+    } catch (err) {
+      aborted.push({
+        topicKey: topic.topicKey,
+        category: topic.category,
+        reason: 'topic_error',
+        error: err.message
+      });
+      console.warn('[insider-articles] topic failed:', topic.topicKey, err.message);
     }
   }
 
@@ -494,6 +508,7 @@ async function generateWeeklyDrafts({ force = false, maxDrafts = MAX_WEEKLY } = 
     selectedCount: selected.length,
     draftCount: drafts.length,
     aborted,
+    rejectedIntelCount: signals.rejectedIntel?.length || 0,
     draftIds: drafts.map((d) => d.id),
     visitRecapTriggers: selected
       .filter((t) => t.category === 'post_visit_reaction')

@@ -140,7 +140,7 @@ const JOBS = {
     schedule: 'Weekly (ARTICLE_ENGINE_ENABLED)',
     async run(opts = {}) {
       const { generateWeeklyDrafts } = require('./insider-articles-engine');
-      return generateWeeklyDrafts({ force: opts.force === true });
+      return generateWeeklyDrafts({ force: opts.force !== false });
     }
   },
   'identity-patterns-rebuild': {
