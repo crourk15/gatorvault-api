@@ -114,6 +114,18 @@ function mountGm2Routes(app) {
     }
   });
 
+  app.post('/api/gm2/quarantine/clear-stale', async (req, res) => {
+    const pin = pinFromReq(req);
+    if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Admin PIN required' });
+    try {
+      const autoRepair = require('./auto-repair');
+      const released = await autoRepair.clearStaleQuarantines();
+      return res.json({ ok: true, released, count: released.length, status: quarantine.getStatus() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/gm2/quarantine/release', (req, res) => {
     const pin = pinFromReq(req);
     if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Admin PIN required' });

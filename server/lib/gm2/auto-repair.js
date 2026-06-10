@@ -73,15 +73,30 @@ async function repairPlayer(slug, options = {}) {
   const targetSlug = String(slug || '').trim();
   if (!targetSlug) return { ok: false, error: 'missing_slug' };
 
-  const result = await identityValidator.rebuildPlayerIdentityFromOn3(targetSlug, options);
+  let result = await identityValidator.rebuildPlayerIdentityFromOn3(targetSlug, options);
+  if (!result.ok) {
+    const store = require('../recruiting-store');
+    const existing = await store.getPlayerBySlug(targetSlug);
+    if (existing) {
+      const healed = identityValidator.healPlayerRecord(existing, existing);
+      const validation = identityValidator.validatePlayerIdentityRecord(healed);
+      const classification = identityValidator.classifyIdentityErrors(validation.errors);
+      if (validation.valid || classification.canWrite) {
+        await store.upsertPlayer(healed, { repairMode: true, subsystem: 'auto-repair-heal' });
+        result = { ok: true, slug: targetSlug, fallback: 'heal', validation };
+      }
+    }
+  }
+
   if (result.ok) {
     quarantine.releasePlayer(targetSlug);
+    quarantine.clearPlayerQuarantine(targetSlug);
     dequeuePlayerRepair(targetSlug);
     decisionLog.logDecision({
       layer: 'auto-repair',
       action: GM2_ACTIONS.ALLOW,
       playerSlug: targetSlug,
-      reason: 'identity_rebuilt',
+      reason: result.fallback ? 'identity_healed' : 'identity_rebuilt',
       source: options.source || 'auto-repair'
     });
   } else {
@@ -95,6 +110,24 @@ async function repairPlayer(slug, options = {}) {
     });
   }
   return result;
+}
+
+async function clearStaleQuarantines() {
+  const released = [];
+  for (const row of quarantine.listQuarantinedPlayers()) {
+    const store = require('../recruiting-store');
+    const player = await store.getPlayerBySlug(row.slug);
+    if (!player) continue;
+    const healed = identityValidator.healPlayerRecord(player, player);
+    const validation = identityValidator.validatePlayerIdentityRecord(healed);
+    if (validation.valid) {
+      quarantine.releasePlayer(row.slug);
+      quarantine.clearPlayerQuarantine(row.slug);
+      dequeuePlayerRepair(row.slug);
+      released.push(row.slug);
+    }
+  }
+  return released;
 }
 
 async function repairAllQuarantined(options = {}) {
@@ -174,12 +207,14 @@ async function runAutoRepair(options = {}) {
 
   const sanitize = await sanitizeAllPlayersInStore({ source, limit: options.sanitizeLimit });
   const repair = await repairAllQuarantined({ source, limit: options.repairLimit });
+  const released = await clearStaleQuarantines();
 
   const out = {
     ok: true,
     source,
     sanitize,
     repair,
+    releasedStaleQuarantines: released,
     quarantineRemaining: quarantine.listQuarantinedPlayers().length,
     repairQueueRemaining: listRepairQueue().length
   };
@@ -216,6 +251,7 @@ module.exports = {
   listRepairQueue,
   repairPlayer,
   repairAllQuarantined,
+  clearStaleQuarantines,
   sanitizePlayerInStore,
   sanitizeAllPlayersInStore,
   runAutoRepair,

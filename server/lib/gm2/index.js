@@ -47,6 +47,7 @@ function ingestPlayer(player, options = {}) {
   if (pv.valid) {
     if (healed?.slug && quarantine.isPlayerQuarantined(healed.slug)) {
       quarantine.releasePlayer(healed.slug);
+      quarantine.clearPlayerQuarantine(healed.slug);
       autoRepair.dequeuePlayerRepair(healed.slug);
     }
     return { action: GM2_ACTIONS.ALLOW, reason: 'ok', normalized: healed };
@@ -55,6 +56,7 @@ function ingestPlayer(player, options = {}) {
   if (classification.canWrite || repairMode) {
     if (healed?.slug && quarantine.isPlayerQuarantined(healed.slug)) {
       quarantine.releasePlayer(healed.slug);
+      quarantine.clearPlayerQuarantine(healed.slug);
     }
     if (healed?.slug && classification.needsRepair && !repairMode) {
       autoRepair.schedulePlayerRepair(healed.slug, {
@@ -227,6 +229,7 @@ module.exports = {
   sanitizeAllPlayers,
   runAutoRepair,
   schedulePlayerRepair: autoRepair.schedulePlayerRepair,
+  clearStaleQuarantines: autoRepair.clearStaleQuarantines,
   getDashboard,
   isPlayerQuarantined: quarantine.isPlayerQuarantined,
   quarantinePlayer: quarantine.quarantinePlayer,

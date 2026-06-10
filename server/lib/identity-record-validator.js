@@ -102,17 +102,44 @@ function sanitizeSchoolField(school, { allowCollege = false } = {}) {
   return isValidSchoolField(s, { allowCollege }) ? s : null;
 }
 
+function isValidIdentityPlayerName(name) {
+  const trimmed = String(name || '').trim();
+  if (trimmed.length < 3 || trimmed.length > 48) return false;
+  const parts = trimmed.split(/\s+/).filter(Boolean);
+  if (parts.length < 2) return false;
+  const suffixes = new Set(['jr', 'sr', 'ii', 'iii', 'iv']);
+  const core = parts.filter((p) => !suffixes.has(p.toLowerCase().replace(/\./g, '')));
+  if (core.length < 2) return false;
+  if (core.some((p) => /https?|www|\.com/i.test(p))) return false;
+  return core.every((p) => {
+    const bare = p.replace(/\./g, '');
+    return bare.length >= 2 && /^[A-Za-z'-]+$/.test(bare);
+  });
+}
+
 function validatePlayerIdentityRecord(player) {
   const errors = [];
   if (!player?.slug) errors.push('missing_slug');
   const name = String(player?.name || '').trim();
-  if (!name || !isValidPlayerName(name)) errors.push('invalid_name');
+  if (!name || !isValidIdentityPlayerName(name)) errors.push('invalid_name');
   const pos = String(player?.pos || '').trim();
   if (!pos || pos.length > 6) errors.push('invalid_pos');
+  const isPortal = String(player?.category || '').toLowerCase() === 'portal';
   const classYear = parseInt(player?.classYear, 10);
-  if (!Number.isFinite(classYear) || classYear < 2026 || classYear > 2032) errors.push('invalid_class_year');
-  if (!isValidSchoolField(player?.school)) errors.push('invalid_school');
-  if (player?.fromSchool && !isValidSchoolField(player.fromSchool, { allowCollege: true })) {
+  const minClassYear = isPortal ? 2020 : 2026;
+  if (!Number.isFinite(classYear) || classYear < minClassYear || classYear > 2032) {
+    errors.push('invalid_class_year');
+  }
+  const schoolValid = isPortal
+    ? isValidSchoolField(player?.school, { allowCollege: true }) ||
+      isValidSchoolField(player?.fromSchool, { allowCollege: true }) ||
+      isValidSchoolField(player?.school)
+    : isValidSchoolField(player?.school);
+  if (!schoolValid) errors.push('invalid_school');
+  if (
+    player?.fromSchool &&
+    !isValidSchoolField(player.fromSchool, { allowCollege: true })
+  ) {
     errors.push('invalid_from_school');
   }
   for (const field of ['skinny', 'profileNote']) {
@@ -259,6 +286,17 @@ function healPlayerRecord(incoming, existing = null) {
   const posFinal = String(out.pos || '').trim();
   if (!posFinal || posFinal.length > 6) out.pos = 'ATH';
 
+  const cy = parseInt(out.classYear, 10);
+  if ((!Number.isFinite(cy) || cy < 2026) && out.committedTo && String(out.category || '').toLowerCase() !== 'portal') {
+    out.classYear = 2026;
+  }
+
+  if (String(out.category || '').toLowerCase() === 'portal') {
+    if (out.school && !isValidSchoolField(out.school) && isValidSchoolField(out.school, { allowCollege: true })) {
+      if (!out.fromSchool) out.fromSchool = out.school;
+    }
+  }
+
   return sanitizePlayerFieldsForStore(out);
 }
 
@@ -354,6 +392,7 @@ module.exports = {
   HARD_IDENTITY_ERRORS,
   classifyIdentityErrors,
   isValidSchoolField,
+  isValidIdentityPlayerName,
   sanitizeSchoolField,
   validatePlayerIdentityRecord,
   validateIntelForArticle,

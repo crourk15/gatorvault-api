@@ -103,6 +103,21 @@ assert('healPlayerRecord strips truncated skinny', !healed.skinny);
 const partial = validator.classifyIdentityErrors(['invalid_school']);
 assert('invalid_school is repairable not hard', partial.canWrite && partial.needsRepair);
 
+assert('accepts Will Griffin as identity name', validator.isValidIdentityPlayerName('Will Griffin'));
+assert('accepts T.J. Shanahan as identity name', validator.isValidIdentityPlayerName('T.J. Shanahan'));
+assert('accepts Eric Singleton Jr. as identity name', validator.isValidIdentityPlayerName('Eric Singleton Jr.'));
+
+const portalPlayer = validator.validatePlayerIdentityRecord({
+  slug: 'eric-singleton-jr',
+  name: 'Eric Singleton Jr.',
+  pos: 'WR',
+  classYear: 2026,
+  school: 'Auburn',
+  fromSchool: 'Auburn',
+  category: 'portal'
+});
+assert('accepts portal player with college school', portalPlayer.valid);
+
 if (process.exitCode) {
   console.error('\nIdentity record validator tests failed.');
 } else {

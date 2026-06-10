@@ -178,6 +178,41 @@ function runSignalIntegrityLayer(signal, { subsystem = 'unknown', skipFreshness 
   }
 
   if (errors.some((e) => e.startsWith('player_') || e.startsWith('intel_invalid'))) {
+    const playerErrorCodes = identityErrors
+      .filter((e) => e.startsWith('player_'))
+      .map((e) => e.replace(/^player_/, ''));
+    const classification = identityValidator.classifyIdentityErrors(playerErrorCodes);
+    const onlyRepairablePlayer =
+      playerErrorCodes.length > 0 && classification.hard.length === 0;
+
+    if (onlyRepairablePlayer && normalized.playerSlug) {
+      try {
+        const autoRepair = require('./auto-repair');
+        autoRepair.schedulePlayerRepair(normalized.playerSlug, {
+          reason: 'identity_needs_repair',
+          source: subsystem
+        });
+      } catch {
+        /* optional */
+      }
+      decisionLog.logDecision({
+        layer: 'sil',
+        action: GM2_ACTIONS.REJECT,
+        subsystem,
+        reason: 'identity_needs_repair',
+        errors: identityErrors,
+        playerSlug: normalized.playerSlug,
+        fingerprint: normalized.fingerprint
+      });
+      return {
+        action: GM2_ACTIONS.REJECT,
+        reason: 'identity_needs_repair',
+        errors,
+        fingerprint: normalized.fingerprint,
+        normalized
+      };
+    }
+
     if (normalized.playerSlug) {
       quarantine.quarantinePlayer(normalized.playerSlug, {
         reason: 'identity_validation_failed',
