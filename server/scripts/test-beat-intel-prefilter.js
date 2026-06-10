@@ -46,12 +46,36 @@ const VAGUE_EXAMPLES = [
   const blogGate = await prefilter.evaluateBeatIntelEligibility(blogPhrase);
   assert('rejects visitor blog promo', !blogGate.eligible);
   assert('rejects way https as player name', !isValidPlayerName('way https'));
+  assert('rejects schools I\'m garbage name', !isValidPlayerName("schools I'm"));
+
+  const autoResolver = require('../lib/recruiting-auto-resolution');
+  const garbage = await autoResolver.autoResolveIntel(
+    { playerName: "schools I'm", detail: 'schools I\'m visiting this weekend', eventType: 'official_visit' },
+    { subsystem: 'autoposter:test' }
+  );
+  assert('autoResolveIntel rejects garbage via prefilter', garbage.nonPlayerIntel || garbage.needs_resolution);
 
   const momentum = await copy.buildMomentumCopyAsync({ text: blogPhrase, handle: 'corey_bender' });
   assert('momentum returns non_player skip for blog promo', prefilter.isNonPlayerIntelSkip(momentum));
 
   const beat = await copy.buildBeatIntelCopyAsync({ text: blogPhrase, handle: 'corey_bender' });
   assert('beat intel returns non_player skip for blog promo', prefilter.isNonPlayerIntelSkip(beat));
+
+  assert(
+    'shouldSurface rejects blog promo intel record',
+    !prefilter.shouldSurfaceRecruitingIntelSync({
+      playerName: 'way https',
+      playerSlug: 'way-https',
+      detail: blogPhrase
+    })
+  );
+  assert(
+    'shouldSurface rejects vague detail even with valid-looking slug',
+    !prefilter.shouldSurfaceRecruitingIntelSync({
+      playerName: 'way https',
+      detail: 'Our weekend official visitor blog is loaded with intel on the way'
+    })
+  );
 
   if (process.exitCode) {
     console.error('\nBeat intel prefilter tests failed.');

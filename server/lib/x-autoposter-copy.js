@@ -123,21 +123,39 @@ function detectBeatNewsEvent(text) {
   return null;
 }
 
-function identitySkipFromEnrichment(enrichment, { playerName, playerSlug, triggerPhrase } = {}) {
-  return autoposterIdentity.buildIdentitySkipPayload({
-    reason: enrichment.reason || 'identity_not_confirmed',
-    playerName: playerName || enrichment.mergedSnapshot?.playerName || enrichment.contextual?.player?.name,
-    playerSlug: playerSlug || enrichment.mergedSnapshot?.playerSlug || enrichment.contextual?.player?.slug,
-    triggerPhrase: triggerPhrase || enrichment.contextual?.clues?.raw || null,
-    missingFields: autoposterIdentity.missingFieldsFromEnrichment(enrichment),
-    missingPatterns: enrichment.missingAfter || [],
-    contextual: enrichment.contextual,
-    confirmation: enrichment.confirmation
+function identitySkipFromEnrichment(enrichment, { playerName, playerSlug, triggerPhrase, fingerprint } = {}) {
+  return autoposterIdentity.buildNeedsResolutionPayload({
+    missingFields:
+      enrichment?.missingFields ||
+      autoposterIdentity.missingFieldsFromEnrichment(enrichment) ||
+      [],
+    playerName:
+      playerName ||
+      enrichment?.mergedSnapshot?.playerName ||
+      enrichment?.contextual?.player?.name ||
+      null,
+    playerSlug:
+      playerSlug ||
+      enrichment?.mergedSnapshot?.playerSlug ||
+      enrichment?.contextual?.player?.slug ||
+      null,
+    triggerPhrase: triggerPhrase || enrichment?.contextual?.clues?.raw || null,
+    fingerprint
   });
 }
 
+async function resolveIntelForCopy(intel, opts = {}) {
+  const resolution = await autoposterIdentity.resolveIntelForAutoposter(intel, {
+    subsystem: 'autoposter:copy',
+    ...opts
+  });
+  if (resolution.nonPlayerIntel) return { ok: false, payload: resolution.skip };
+  if (!resolution.ok) return { ok: false, payload: resolution.skip };
+  return { ok: true, intel: resolution.intel };
+}
+
 function newsPayloadFromBuilt(built, extra = {}) {
-  if (built?.skipReason || built?._identitySkip) return built;
+  if (built?.skipReason || built?._identitySkip || built?._needsResolution) return built;
   if (!built?.text) return null;
   const text = appendSite(built.text);
   const payload = {
@@ -236,23 +254,21 @@ async function buildBeatIntelCopyAsync(post) {
 async function buildIntelCopyAsync(intel) {
   if (!intel?.eventType) return null;
 
-  const prefilter = require('./beat-intel-prefilter');
-  const phrase = intel.detail || intel.playerName || '';
-  const skip = await prefilter.bypassRecruitingPipeline(phrase, {
-    playerName: intel.playerName,
-    playerSlug: intel.playerSlug,
-    source: intel.sourceHandle || intel.source,
-    subsystem: 'autoposter'
+  const resolved = await resolveIntelForCopy(intel, {
+    beatText: intel.detail,
+    fields: {
+      playerName: intel.playerName,
+      pos: intel.pos,
+      classYear: intel.classYear,
+      highSchool: intel.highSchool,
+      hometownState: intel.hometownState,
+      school: intel.school,
+      stars: intel.stars,
+      natlRank: intel.natlRank
+    }
   });
-  if (skip) return skip;
-
-  const gate = await prefilter.evaluateBeatIntelEligibility(phrase, {
-    playerName: intel.playerName,
-    playerSlug: intel.playerSlug
-  });
-  if (gate.eligible && gate.playerName) {
-    intel = { ...intel, playerName: gate.playerName, playerSlug: gate.playerSlug || intel.playerSlug };
-  }
+  if (!resolved.ok) return resolved.payload;
+  intel = resolved.intel;
 
   if (intel.eventType === 'prediction' || intel.eventType === 'rivals_futurecast') {
     const prediction = require('./x-autoposter-prediction');
@@ -262,16 +278,17 @@ async function buildIntelCopyAsync(intel) {
       playerName: intel.playerName,
       patch: playerContext.verifiedPatchFromIntel(intel),
       sourceLabel: playerContext.sourceLabelForIntel(intel),
-      intelId: intel.id
+      intelId: intel.id,
+      skipIdentityLookup: true
     });
     if (!built?.ok) {
-      if (built?.skipped && autoposterIdentity.isIdentitySkipReason(built.reason)) {
-        return autoposterIdentity.buildIdentitySkipPayload({
-          reason: built.reason,
+      if (built?.skipped) {
+        return autoposterIdentity.buildNeedsResolutionPayload({
+          missingFields: built.missingAfter || built.missing || [],
           playerName: intel.playerName,
           playerSlug: intel.playerSlug,
           triggerPhrase: intel.detail,
-          missingFields: built.missingAfter || built.missing || []
+          fingerprint: intel.fingerprint
         });
       }
       return null;
@@ -281,45 +298,15 @@ async function buildIntelCopyAsync(intel) {
     });
   }
 
-  if (intel.eventType === 'official_visit' || intel.eventType === 'unofficial_visit') {
-    if (!intel.identityConfirmed) {
-      const identityLookup = require('./player-identity-lookup');
-      const enrichment = await autoposterIdentity.retryWithPatternRebuild(
-        () =>
-          identityLookup.enrichAndConfirmIntelIdentity({
-            fields: {
-              playerName: intel.playerName,
-              pos: intel.pos,
-              classYear: intel.classYear,
-              highSchool: intel.highSchool,
-              hometownState: intel.hometownState,
-              school: intel.school,
-              stars: intel.stars,
-              natlRank: intel.natlRank
-            },
-            playerName: intel.playerName,
-            playerSlug: intel.playerSlug,
-            intel,
-            intelId: intel.id,
-            classYear: intel.classYear,
-            beatText: intel.detail,
-            sourceHandle: intel.sourceHandle,
-            allowContextual: true
-          }),
-        { playerSlug: intel.playerSlug, playerName: intel.playerName }
-      );
-      if (!enrichment.confirmed) {
-        return identitySkipFromEnrichment(enrichment, {
-          playerName: intel.playerName,
-          playerSlug: intel.playerSlug,
-          triggerPhrase: intel.detail
-        });
-      }
-      intel = { ...intel, ...enrichment.intelPatch, identityConfirmed: true, ...enrichment.identityPatch };
-    }
+  if (!isValidPlayerName(intel.playerName)) {
+    return autoposterIdentity.buildNeedsResolutionPayload({
+      missingFields: ['fullName'],
+      playerName: intel.playerName,
+      playerSlug: intel.playerSlug,
+      triggerPhrase: intel.detail,
+      fingerprint: intel.fingerprint
+    });
   }
-
-  if (!isValidPlayerName(intel.playerName)) return null;
 
   const newsEvent = playerContext.newsEventForIntel(intel);
   if (!newsEvent) return null;
@@ -331,7 +318,9 @@ async function buildIntelCopyAsync(intel) {
     playerName: intel.playerName,
     patch: playerContext.verifiedPatchFromIntel(intel),
     intel,
-    beatText: intel.detail || null
+    beatText: intel.detail || null,
+    identityInferred: intel.identityInferred,
+    identityConfidence: intel.identityConfidence
   });
   return newsPayloadFromBuilt(built);
 }

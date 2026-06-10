@@ -70,6 +70,29 @@ function isNameOnlyListBody(html) {
   return nameOnly >= 3;
 }
 
+/** Detect legacy template filler and meta-instructions masquerading as analysis. */
+function isGenericBoilerplateBody(html) {
+  const t = String(html || '').toLowerCase();
+  const fillerPatterns = [
+    'gatorvault recruiting coverage is locked',
+    'every data point below passed sanitization',
+    'drafts are never auto-published',
+    'approve in gv-om',
+    'heat check does not treat a single rpm tick',
+    'gatorvault will refresh heat check when',
+    'no 2026 class references',
+    'recruiting class chatter is intentionally excluded',
+    'not social posts or paywalled snippets',
+    'visit volume alone is not a ranking',
+    'film-room and depth integrations on gatorvault map starters'
+  ];
+  let hits = 0;
+  for (const p of fillerPatterns) {
+    if (t.includes(p)) hits += 1;
+  }
+  return hits >= 2;
+}
+
 module.exports = {
   sanitizeText,
   sanitizePlayerName,
@@ -77,5 +100,6 @@ module.exports = {
   hasEmptyParentheses,
   wordCount,
   hasRequiredSections,
-  isNameOnlyListBody
+  isNameOnlyListBody,
+  isGenericBoilerplateBody
 };

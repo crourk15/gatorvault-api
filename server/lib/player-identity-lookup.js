@@ -562,215 +562,102 @@ async function persistIdentityToPlayer(snapshot) {
  * Lookup + confirmation + merge for prediction posts.
  * Skips only after lookup and confirmation both fail.
  */
-async function enrichAndConfirmPredictionIdentity({
-  fields,
-  playerName,
-  playerSlug,
-  row = null,
-  intel = null,
-  player = null,
-  intelId = null,
-  classYear = null
-} = {}) {
-  const baseSnapshot = buildSnapshot({
-    playerName: fields?.playerName || playerName,
-    playerSlug,
-    stars: fields?.stars,
-    pos: fields?.pos,
-    classYear: fields?.classYear || classYear,
-    highSchool: fields?.highSchool,
-    hometownState: fields?.hometownState,
-    natlRank: fields?.natlRank,
-    ufRpmPct: fields?.ufRpmPct,
-    on3Id: row?.on3Id || intel?.playerId
+async function enrichAndConfirmPredictionIdentity(opts = {}) {
+  const autoResolver = require('./recruiting-auto-resolution');
+  const result = await autoResolver.autoResolveRecruitingIntel({
+    ...opts,
+    eventType: opts.row?.eventType || opts.intel?.eventType || 'prediction',
+    fingerprint: opts.row?.fingerprint || opts.intel?.fingerprint,
+    source: opts.row?.source || opts.intel?.source
   });
 
-  const sources = await collectIdentitySources({
-    playerName: baseSnapshot?.playerName || playerName,
-    playerSlug,
-    classYear: baseSnapshot?.classYear || classYear,
-    row,
-    intel,
-    player
-  });
-
-  const confirmation = confirmIdentity(sources);
-  if (!confirmation.confirmed) {
+  if (result.resolved) {
+    const identityPatch = {
+      ...identityPatchFromSnapshot(result.mergedSnapshot),
+      ...result.identityPatch
+    };
+    if (opts.intelId) {
+      await persistIdentityToIntel(opts.intelId, result.mergedSnapshot, result.confirmation);
+    }
+    await persistIdentityToPlayer(result.mergedSnapshot);
     return {
-      confirmed: false,
-      reason: 'identity_not_confirmed',
-      confirmation,
-      missingBefore: listMissingIdentityFields(baseSnapshot || {}),
-      sources: sources.map((s) => ({ provider: s.provider, confidence: s.confidence }))
+      confirmed: true,
+      confirmation: result.confirmation,
+      mergedSnapshot: result.mergedSnapshot,
+      identityPatch,
+      intelPatch: result.intelPatch,
+      resolutionLog: result.resolutionLog,
+      sources: (result.confirmation?.matchedSources || []).map((s) => ({
+        provider: s.provider,
+        confidence: s.confidence,
+        label: s.label
+      }))
     };
   }
-
-  const mergedSnapshot = mergeMissingFields(baseSnapshot || {}, confirmation.matchedSources);
-  const missingAfter = listMissingIdentityFields(mergedSnapshot);
-
-  if (missingAfter.length) {
-    return {
-      confirmed: false,
-      reason: 'identity_incomplete_after_lookup',
-      confirmation,
-      missingAfter,
-      mergedSnapshot,
-      sources: sources.map((s) => ({ provider: s.provider, confidence: s.confidence }))
-    };
-  }
-
-  const identityPatch = identityPatchFromSnapshot(mergedSnapshot);
-
-  if (intelId) await persistIdentityToIntel(intelId, mergedSnapshot, confirmation);
-  await persistIdentityToPlayer(mergedSnapshot);
 
   return {
-    confirmed: true,
-    confirmation,
-    mergedSnapshot,
-    identityPatch,
-    intelPatch: {
-      stars: mergedSnapshot.stars,
-      pos: mergedSnapshot.pos,
-      classYear: mergedSnapshot.classYear,
-      highSchool: mergedSnapshot.highSchool,
-      hometownState: mergedSnapshot.hometownState,
-      school: mergedSnapshot.highSchool || mergedSnapshot.hometownState,
-      natlRank: mergedSnapshot.natlRank,
-      ufRpmPct: mergedSnapshot.ufRpmPct,
-      playerSlug: mergedSnapshot.playerSlug
-    },
-    sources: sources.map((s) => ({ provider: s.provider, confidence: s.confidence, label: s.label }))
+    confirmed: false,
+    needs_resolution: true,
+    reason: 'needs_resolution',
+    missingFields: result.missingFields,
+    missingAfter: result.missingFields,
+    mergedSnapshot: result.mergedSnapshot,
+    confirmation: result.confirmation,
+    resolutionLog: result.resolutionLog,
+    sources: []
   };
 }
 
 /**
  * Lookup + confirmation + merge for visit/beat intel posts (no RPM required).
  */
-async function enrichAndConfirmIntelIdentity({
-  fields,
-  playerName,
-  playerSlug,
-  row = null,
-  intel = null,
-  player = null,
-  intelId = null,
-  classYear = null,
-  beatText = null,
-  sourceHandle = null,
-  allowContextual = true
-} = {}) {
-  const baseSnapshot = buildSnapshot({
-    playerName: fields?.playerName || playerName,
-    playerSlug,
-    stars: fields?.stars,
-    pos: fields?.pos,
-    classYear: fields?.classYear || classYear,
-    highSchool: fields?.highSchool || fields?.school,
-    hometownState: fields?.hometownState,
-    natlRank: fields?.natlRank,
-    on3Id: row?.on3Id || intel?.playerId
+async function enrichAndConfirmIntelIdentity(opts = {}) {
+  const autoResolver = require('./recruiting-auto-resolution');
+  const result = await autoResolver.autoResolveRecruitingIntel({
+    ...opts,
+    eventType: opts.row?.eventType || opts.intel?.eventType,
+    fingerprint: opts.row?.fingerprint || opts.intel?.fingerprint,
+    source: opts.row?.source || opts.intel?.source
   });
 
-  const sources = await collectIdentitySources({
-    playerName: baseSnapshot?.playerName || playerName,
-    playerSlug,
-    classYear: baseSnapshot?.classYear || classYear,
-    row,
-    intel,
-    player
-  });
-
-  let confirmation = confirmIdentity(sources);
-  let contextual = null;
-
-  if (!confirmation.confirmed && allowContextual) {
-    const resolver = require('./contextual-identity-resolver');
-    const text = beatText || row?.detail || intel?.detail || '';
-    contextual = await resolver.resolveContextualIdentity({
-      text,
-      sourceHandle: sourceHandle || row?.sourceHandle || intel?.sourceHandle,
-      hints: {
-        playerName: baseSnapshot?.playerName || playerName,
-        stars: fields?.stars || row?.stars || intel?.stars,
-        pos: fields?.pos || row?.pos || intel?.pos,
-        classYear: fields?.classYear || row?.classYear || intel?.classYear,
-        school: fields?.school || row?.school || intel?.school
-      }
-    });
-
-    if (contextual?.confirmed) {
-      confirmation = {
-        confirmed: true,
-        mode: contextual.mode,
-        confidence: contextual.confidence,
-        sources: [],
-        matchedSources: [],
-        inferred: contextual.inferred
-      };
+  if (result.resolved) {
+    const identityPatch = {
+      ...identityPatchFromSnapshot(result.mergedSnapshot),
+      ...result.identityPatch
+    };
+    if (opts.intelId) {
+      await persistIdentityToIntel(opts.intelId, result.mergedSnapshot, result.confirmation);
     }
-  }
-
-  if (!confirmation.confirmed) {
+    await persistIdentityToPlayer(result.mergedSnapshot);
     return {
-      confirmed: false,
-      reason: contextual?.reason || 'identity_not_confirmed',
-      confirmation,
-      contextual,
-      missingBefore: listMissingVisitIdentityFields(baseSnapshot || {}),
-      sources: sources.map((s) => ({ provider: s.provider, confidence: s.confidence }))
+      confirmed: true,
+      confirmation: result.confirmation,
+      contextual: result.contextual,
+      mergedSnapshot: result.mergedSnapshot,
+      identityPatch,
+      intelPatch: result.intelPatch,
+      eventType: result.eventType,
+      context: result.context,
+      resolutionLog: result.resolutionLog,
+      sources: (result.confirmation?.matchedSources || []).map((s) => ({
+        provider: s.provider,
+        confidence: s.confidence,
+        label: s.label
+      }))
     };
   }
-
-  const mergedSnapshot = contextual?.mergedSnapshot
-    ? { ...mergeMissingFields(baseSnapshot || {}, confirmation.matchedSources || []), ...contextual.mergedSnapshot }
-    : mergeMissingFields(baseSnapshot || {}, confirmation.matchedSources);
-
-  const missingAfter = listMissingVisitIdentityFields(mergedSnapshot);
-
-  if (missingAfter.length && !contextual?.confirmed) {
-    return {
-      confirmed: false,
-      reason: 'identity_incomplete_after_lookup',
-      confirmation,
-      missingAfter,
-      mergedSnapshot,
-      sources: sources.map((s) => ({ provider: s.provider, confidence: s.confidence }))
-    };
-  }
-
-  const identityPatch = {
-    ...identityPatchFromSnapshot(mergedSnapshot),
-    identityInferred: !!confirmation.inferred || !!contextual?.inferred,
-    identityConfidence: confirmation.confidence || contextual?.confidence || null,
-    identityResolutionMode: confirmation.mode || contextual?.mode || null
-  };
-
-  if (intelId) await persistIdentityToIntel(intelId, mergedSnapshot, confirmation);
-  await persistIdentityToPlayer(mergedSnapshot);
 
   return {
-    confirmed: true,
-    confirmation,
-    contextual,
-    mergedSnapshot,
-    identityPatch,
-    intelPatch: {
-      stars: mergedSnapshot.stars,
-      pos: mergedSnapshot.pos,
-      classYear: mergedSnapshot.classYear,
-      highSchool: mergedSnapshot.highSchool,
-      hometownState: mergedSnapshot.hometownState,
-      school: mergedSnapshot.highSchool || mergedSnapshot.hometownState,
-      natlRank: mergedSnapshot.natlRank,
-      playerSlug: mergedSnapshot.playerSlug,
-      playerId: mergedSnapshot.on3Id,
-      playerName: mergedSnapshot.playerName,
-      identityInferred: identityPatch.identityInferred,
-      identityConfidence: identityPatch.identityConfidence,
-      identityResolutionMode: identityPatch.identityResolutionMode
-    },
-    sources: sources.map((s) => ({ provider: s.provider, confidence: s.confidence, label: s.label }))
+    confirmed: false,
+    needs_resolution: true,
+    reason: 'needs_resolution',
+    missingFields: result.missingFields,
+    missingAfter: result.missingFields,
+    mergedSnapshot: result.mergedSnapshot,
+    confirmation: result.confirmation,
+    contextual: result.contextual,
+    resolutionLog: result.resolutionLog,
+    sources: []
   };
 }
 
@@ -784,6 +671,11 @@ module.exports = {
   mergeMissingFields,
   collectIdentitySources,
   sourceFrom247Profile,
+  sourceFromOn3Profile,
+  sourceFromGatorVault,
+  sourceFromIntel,
+  findStorePlayer,
+  resolveRecruitSlug,
   enrichAndConfirmPredictionIdentity,
   enrichAndConfirmIntelIdentity,
   persistIdentityToIntel,

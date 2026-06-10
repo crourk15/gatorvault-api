@@ -596,6 +596,9 @@ module.exports = {
   lookupBeatWriterPattern,
   scoreBoardCandidate,
   resolveContextualIdentity,
+  getBoardPlayers,
+  resolvePlayerFromSlug,
+  loadIdentityPatternEntries,
   listManualOverrides,
   upsertManualOverride,
   deleteManualOverride

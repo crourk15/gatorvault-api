@@ -261,6 +261,32 @@ async function bypassRecruitingPipeline(text, context = {}) {
   return buildNonPlayerSkipPayload(gate);
 }
 
+/**
+ * Whether recruiting intel should appear on the live feed or in stores.
+ * Sync check — use for feed filtering; async evaluateBeatIntelEligibility for ingest gates.
+ */
+function shouldSurfaceRecruitingIntelSync(intel) {
+  if (!intel || typeof intel !== 'object') return false;
+  if (intel.resolutionStatus === 'needs_resolution' || intel.surfaced === false) return false;
+  const playerName = String(intel.playerName || '').trim();
+  if (!playerName || playerName.toLowerCase() === 'unknown') return false;
+  if (isSingleTokenName(playerName) || !isValidPlayerName(playerName)) return false;
+  const phrase = normalizePhrase(intel.detail || intel.status || playerName);
+  if (!phrase) return false;
+  if (isGenericNonPlayerIntel(phrase)) return false;
+  if (isCorruptedOrHeadlinePhrase(phrase)) return false;
+  return true;
+}
+
+async function shouldSurfaceRecruitingIntel(intel) {
+  if (!shouldSurfaceRecruitingIntelSync(intel)) return false;
+  const gate = await evaluateBeatIntelEligibility(intel.detail || '', {
+    playerName: intel.playerName,
+    playerSlug: intel.playerSlug
+  });
+  return gate.eligible;
+}
+
 async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
   const text = normalizePhrase(post?.text || '');
   if (!text) {
@@ -289,5 +315,7 @@ module.exports = {
   logNonPlayerIntel,
   isNonPlayerIntelSkip,
   bypassRecruitingPipeline,
+  shouldSurfaceRecruitingIntelSync,
+  shouldSurfaceRecruitingIntel,
   guardBeatPost
 };

@@ -258,6 +258,9 @@ async function buildAutoposterPayload(row, intelItem) {
     if (built?.skipReason === 'non_player_intel' || built?._nonPlayerSkip) {
       return { ok: false, reason: 'non_player_intel' };
     }
+    if (built?.skipReason === 'needs_resolution' || built?._needsResolution) {
+      return { ok: false, reason: 'needs_resolution' };
+    }
     return { ok: false, reason: built?.skipReason || 'invalid_copy' };
   }
   return { ok: true, ...built, text: copy.appendSite(built.text) };
@@ -312,6 +315,21 @@ async function processBeatVisitIntelRow(row, snapshot) {
   if (!row?.fingerprint) return { skipped: true, reason: 'invalid' };
 
   const prefilter = require('./beat-intel-prefilter');
+  const skip = await prefilter.bypassRecruitingPipeline(row.detail, {
+    playerName: row.playerName,
+    playerSlug: row.playerSlug,
+    source: row.sourceHandle || row.source,
+    subsystem: 'autoposter:beat-writer'
+  });
+  if (skip) {
+    snapshot.fingerprints[row.fingerprint] = row.timestamp;
+    return {
+      skipped: true,
+      reason: skip.nonPlayerIntel?.reason || 'non_player_intel',
+      category: 'non_player_intel'
+    };
+  }
+
   const gate = await prefilter.evaluateBeatIntelEligibility(row.detail, {
     playerName: row.playerName,
     playerSlug: row.playerSlug
@@ -338,6 +356,110 @@ async function processBeatVisitIntelRow(row, snapshot) {
   }
 
   const existing = await store.getPlayerBySlug(row.playerSlug);
+
+  const identityLookup = require('./player-identity-lookup');
+  const enrichment = await identityLookup.enrichAndConfirmIntelIdentity({
+    fields: {
+      playerName: row.playerName,
+      pos: row.pos || existing?.pos,
+      classYear: row.classYear || existing?.classYear,
+      highSchool: row.highSchool,
+      hometownState: row.hometownState,
+      school: row.school,
+      stars: row.stars || existing?.stars,
+      natlRank: row.natlRank || existing?.natlRank
+    },
+    playerName: row.playerName,
+    playerSlug: row.playerSlug,
+    row,
+    intel: null,
+    player: existing,
+    intelId: null,
+    classYear: row.classYear || existing?.classYear,
+    beatText: row.detail,
+    sourceHandle: row.sourceHandle,
+    allowContextual: true
+  });
+
+  if (!enrichment.confirmed) {
+    snapshot.fingerprints[row.fingerprint] = row.timestamp;
+    if (enrichment.needs_resolution) {
+      const snap = enrichment.mergedSnapshot || {};
+      await intelStore.saveNeedsResolution({
+        playerId: String(snap.on3Id || row.on3Id || row.playerSlug || 'pending'),
+        playerSlug: snap.playerSlug || row.playerSlug,
+        playerName: snap.playerName || row.playerName,
+        classYear: snap.classYear || row.classYear,
+        pos: snap.pos || row.pos,
+        stars: snap.stars || row.stars,
+        school: snap.school || row.school,
+        highSchool: snap.highSchool || row.highSchool,
+        hometownState: snap.hometownState || row.hometownState,
+        eventType: enrichment.eventType || row.eventType,
+        status: row.status,
+        visitStart: row.visitStart,
+        visitEnd: row.visitEnd,
+        timestamp: row.timestamp,
+        source: row.source,
+        sourceHandle: row.sourceHandle,
+        detail: enrichment.context || row.detail,
+        fingerprint: row.fingerprint,
+        articleUrl: row.articleUrl,
+        missingFields: enrichment.missingFields || enrichment.missingAfter || [],
+        resolutionAttemptedAt: new Date().toISOString()
+      });
+    }
+    try {
+      require('./ops-monitor').logEvent({
+        subsystem: 'autoposter:beat-writer',
+        status: enrichment.needs_resolution ? 'needs_resolution' : 'skipped',
+        message: enrichment.reason || 'identity_not_confirmed',
+        details: {
+          playerName: row.playerName,
+          eventType: row.eventType,
+          stars: row.stars || existing?.stars,
+          source: row.source,
+          missingFields: enrichment.missingFields || enrichment.missingAfter || null,
+          contextual: enrichment.contextual || null
+        }
+      });
+    } catch {
+      /* ops optional */
+    }
+    return {
+      skipped: true,
+      needs_resolution: !!enrichment.needs_resolution,
+      reason: enrichment.reason || 'identity_not_confirmed',
+      player: row.playerSlug,
+      source: row.source,
+      confirmation: enrichment.confirmation || null,
+      missingFields: enrichment.missingFields || enrichment.missingAfter || null,
+      fingerprint: row.fingerprint
+    };
+  }
+
+  Object.assign(row, enrichment.identityPatch || {}, enrichment.intelPatch || {});
+  if (enrichment.eventType) row.eventType = enrichment.eventType;
+  if (enrichment.context) row.detail = enrichment.context;
+  const confirmedName = enrichment.mergedSnapshot?.playerName || row.playerName;
+  const confirmedSlug = enrichment.mergedSnapshot?.playerSlug || row.playerSlug;
+
+  const recheck = await prefilter.evaluateBeatIntelEligibility(row.detail, {
+    playerName: confirmedName,
+    playerSlug: confirmedSlug
+  });
+  if (!recheck.eligible) {
+    snapshot.fingerprints[row.fingerprint] = row.timestamp;
+    prefilter.logNonPlayerIntel({
+      text: row.detail,
+      reason: recheck.reason,
+      source: row.sourceHandle || row.source
+    });
+    return { skipped: true, reason: recheck.reason, category: 'non_player_intel' };
+  }
+  row.playerName = recheck.playerName || confirmedName;
+  row.playerSlug = recheck.playerSlug || confirmedSlug;
+
   const mergedPlayer = {
     ...(existing || {}),
     slug: row.playerSlug,
@@ -393,7 +515,9 @@ async function processBeatVisitIntelRow(row, snapshot) {
     sourceHandle: row.sourceHandle,
     detail: row.detail,
     fingerprint: row.fingerprint,
-    articleUrl: row.articleUrl
+    articleUrl: row.articleUrl,
+    identityConfirmed: true,
+    identityConfirmationMode: enrichment.confirmation?.mode || enrichment.identityPatch?.identityResolutionMode
   });
 
   if (!intelResult.created && intelResult.duplicate) {
@@ -401,64 +525,12 @@ async function processBeatVisitIntelRow(row, snapshot) {
     return { skipped: true, reason: 'intel_exists' };
   }
 
-  const identityLookup = require('./player-identity-lookup');
-  const enrichment = await identityLookup.enrichAndConfirmIntelIdentity({
-    fields: {
-      playerName: player.name,
-      pos: player.pos,
-      classYear: player.classYear,
-      highSchool: row.highSchool,
-      hometownState: row.hometownState,
-      school: row.school,
-      stars: row.stars || player.stars,
-      natlRank: row.natlRank || player.natlRank
-    },
-    playerName: player.name,
-    playerSlug: player.slug,
-    row,
-    intel: intelResult.item,
-    player,
-    intelId: intelResult.item?.id,
-    classYear: player.classYear,
-    beatText: row.detail,
-    sourceHandle: row.sourceHandle,
-    allowContextual: true
-  });
-
-  if (!enrichment.confirmed) {
-    snapshot.fingerprints[row.fingerprint] = row.timestamp;
-    try {
-      require('./ops-monitor').logEvent({
-        subsystem: 'autoposter:beat-writer',
-        status: 'skipped',
-        message: enrichment.reason || 'identity_not_confirmed',
-        details: {
-          playerName: player.name,
-          eventType: row.eventType,
-          stars: row.stars || player.stars,
-          source: row.source,
-          contextual: enrichment.contextual || null
-        }
-      });
-    } catch {
-      /* ops optional */
-    }
-    return {
-      skipped: true,
-      reason: enrichment.reason || 'identity_not_confirmed',
-      player: player.slug,
-      source: row.source,
-      confirmation: enrichment.confirmation || null,
-      missingAfter: enrichment.missingAfter || enrichment.missingBefore || null,
-      intelCreated: true,
-      fingerprint: row.fingerprint
-    };
-  }
-
-  Object.assign(row, enrichment.identityPatch || {}, enrichment.intelPatch || {});
-  if (enrichment.identityPatch?.playerName) {
-    player.name = enrichment.identityPatch.playerName;
-    player.slug = enrichment.identityPatch.playerSlug || player.slug;
+  if (intelResult.item?.id && enrichment.mergedSnapshot) {
+    await identityLookup.persistIdentityToIntel(
+      intelResult.item.id,
+      enrichment.mergedSnapshot,
+      enrichment.confirmation
+    );
   }
 
   await store.createEvent({
@@ -540,6 +612,16 @@ async function collectBeatVisitIntelRows() {
 async function runBeatWriterIngest({ force = false, manualRows = [] } = {}) {
   const snapshot = loadSnapshot();
   const results = { processed: [], skipped: [], errors: [] };
+
+  try {
+    const purge = await intelStore.purgeIneligibleIntel();
+    if (purge.removed) {
+      const liveAgg = require('./live-aggregator');
+      await liveAgg.purgeNonPlayerIntelFromLiveFeed();
+    }
+  } catch {
+    /* optional */
+  }
 
   let beatRows = [];
   try {

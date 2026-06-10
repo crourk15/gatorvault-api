@@ -24,6 +24,30 @@ function inferSlugForRebuild(context = {}) {
   );
 }
 
+function isNeedsResolutionSkip(raw) {
+  if (!raw) return false;
+  return Boolean(raw._needsResolution || raw.skipReason === 'needs_resolution' || raw.needs_resolution);
+}
+
+function buildNeedsResolutionPayload({
+  missingFields = [],
+  playerName = null,
+  playerSlug = null,
+  triggerPhrase = null,
+  fingerprint = null
+} = {}) {
+  return {
+    skipReason: 'needs_resolution',
+    _needsResolution: true,
+    needs_resolution: true,
+    missingFields,
+    playerName,
+    playerSlug,
+    triggerPhrase,
+    fingerprint
+  };
+}
+
 function buildIdentitySkipPayload({
   reason,
   playerName = null,
@@ -90,6 +114,7 @@ function identityFailureFromCandidate(raw) {
     return failure;
   }
   if (!raw.skipReason && !raw._identitySkip) return null;
+  if (isNeedsResolutionSkip(raw)) return null;
   if (!isIdentitySkipReason(raw.skipReason)) return null;
   if (
     !raw.playerName ||
@@ -106,20 +131,55 @@ function identityFailureFromCandidate(raw) {
   }).identityFailure;
 }
 
-function formatIdentityErrorResponse(failure) {
-  if (!failure) {
-    return { error: 'identity_incomplete' };
+function formatNeedsResolutionResponse(payload) {
+  return {
+    error: 'needs_resolution',
+    missingFields: payload?.missingFields || [],
+    playerName: payload?.playerName || null,
+    playerSlug: payload?.playerSlug || null,
+    triggerPhrase: payload?.triggerPhrase || null,
+    fingerprint: payload?.fingerprint || null
+  };
+}
+
+async function resolveIntelForAutoposter(intel, opts = {}) {
+  const autoResolver = require('./recruiting-auto-resolution');
+  const result = await autoResolver.autoResolveIntel(intel, opts);
+
+  if (result.nonPlayerIntel) {
+    return { ok: false, nonPlayerIntel: true, skip: result.skip };
+  }
+  if (result.resolved || result.confirmed) {
+    return { ok: true, intel: result.intel, resolution: result };
   }
   return {
-    error: 'identity_incomplete',
-    playerName: failure.playerName || null,
-    playerSlug: failure.playerSlug || null,
-    triggerPhrase: failure.triggerPhrase || null,
-    missingPattern: failure.missingPattern || null,
-    missingPatterns: failure.missingPatterns || [],
-    missingFields: failure.missingFields || [],
-    reason: failure.reason || 'identity_incomplete'
+    ok: false,
+    needs_resolution: true,
+    skip: buildNeedsResolutionPayload({
+      missingFields: result.missingFields || [],
+      playerName: result.mergedSnapshot?.playerName || intel?.playerName || null,
+      playerSlug: result.mergedSnapshot?.playerSlug || intel?.playerSlug || null,
+      triggerPhrase: intel?.detail || opts.beatText || null,
+      fingerprint: intel?.fingerprint || null
+    }),
+    resolution: result
   };
+}
+
+function formatIdentityErrorResponse(failure) {
+  if (!failure) {
+    return formatNeedsResolutionResponse({ missingFields: [] });
+  }
+  if (failure.reason === 'needs_resolution' || failure.needs_resolution) {
+    return formatNeedsResolutionResponse(failure);
+  }
+  return formatNeedsResolutionResponse({
+    missingFields: failure.missingFields || [],
+    playerName: failure.playerName,
+    playerSlug: failure.playerSlug,
+    triggerPhrase: failure.triggerPhrase,
+    fingerprint: failure.fingerprint
+  });
 }
 
 async function ensurePatternsForPlayer(slugOrPlayer) {
@@ -183,11 +243,15 @@ function listMissingContextFields(ctx) {
 module.exports = {
   isIdentitySkipReason,
   isNonPlayerIntelSkip,
+  isNeedsResolutionSkip,
   missingFieldsFromEnrichment,
   inferSlugForRebuild,
   buildIdentitySkipPayload,
+  buildNeedsResolutionPayload,
+  resolveIntelForAutoposter,
   identityFailureFromCandidate,
   formatIdentityErrorResponse,
+  formatNeedsResolutionResponse,
   ensurePatternsForPlayer,
   shouldRetryPatternRebuild,
   retryWithPatternRebuild,

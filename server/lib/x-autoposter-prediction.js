@@ -211,7 +211,6 @@ async function buildPredictionPostInner({
   let identityConfirmation = null;
 
   if (!skipIdentityLookup) {
-    const identityLookup = require('./player-identity-lookup');
     const preliminary = await resolvePredictionFields({
       intel: workingIntel,
       row: workingRow,
@@ -220,36 +219,46 @@ async function buildPredictionPostInner({
       patch: workingPatch
     });
 
-    const enrichment = await identityLookup.enrichAndConfirmPredictionIdentity({
-      fields: preliminary.fields,
-      playerName: playerName || preliminary.fields?.playerName,
-      playerSlug: playerSlug || workingIntel?.playerSlug || workingRow?.playerSlug,
-      row: workingRow,
-      intel: workingIntel,
-      player: preliminary.player,
-      intelId: intelId || workingIntel?.id,
-      classYear: preliminary.fields?.classYear
-    });
+    const autoResolver = require('./recruiting-auto-resolution');
+    const resolution = await autoResolver.autoResolveIntel(
+      workingIntel || {
+        playerName,
+        playerSlug,
+        eventType: 'prediction',
+        detail: workingIntel?.detail || workingRow?.detail
+      },
+      {
+        row: workingRow,
+        player: preliminary.player,
+        fields: preliminary.fields,
+        playerName: playerName || preliminary.fields?.playerName,
+        classYear: preliminary.fields?.classYear,
+        beatText: workingIntel?.detail || workingRow?.detail,
+        persistNeedsResolution: Boolean(workingIntel?.fingerprint)
+      }
+    );
 
-    if (!enrichment.confirmed) {
+    if (resolution.nonPlayerIntel) {
+      return { ok: false, skipped: true, reason: 'non_player_intel' };
+    }
+    if (!resolution.resolved) {
       return {
         ok: false,
         skipped: true,
-        reason: enrichment.reason || 'identity_not_confirmed',
-        confirmation: enrichment.confirmation || null,
-        missingAfter: enrichment.missingAfter || enrichment.missingBefore || null,
+        reason: 'needs_resolution',
+        needs_resolution: true,
+        missingAfter: resolution.missingFields || [],
         fields: preliminary.fields
       };
     }
 
-    identityConfirmation = enrichment.confirmation || null;
-
-    workingPatch = { ...(workingPatch || {}), ...enrichment.identityPatch };
-    if (workingIntel && enrichment.intelPatch) {
-      workingIntel = { ...workingIntel, ...enrichment.intelPatch };
+    identityConfirmation = resolution.confirmation || null;
+    workingPatch = { ...(workingPatch || {}), ...resolution.identityPatch };
+    if (workingIntel && resolution.intelPatch) {
+      workingIntel = { ...workingIntel, ...resolution.intelPatch, identityConfirmed: true };
     }
-    if (workingRow && enrichment.identityPatch) {
-      workingRow = { ...workingRow, ...enrichment.identityPatch };
+    if (workingRow && resolution.identityPatch) {
+      workingRow = { ...workingRow, ...resolution.identityPatch };
     }
   }
 
@@ -266,8 +275,9 @@ async function buildPredictionPostInner({
     return {
       ok: false,
       skipped: true,
-      reason: 'missing_prediction_fields_after_lookup',
-      missing: gate.missing,
+      reason: 'needs_resolution',
+      needs_resolution: true,
+      missingAfter: gate.missing,
       fields
     };
   }

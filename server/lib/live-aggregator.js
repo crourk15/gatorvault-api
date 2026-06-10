@@ -94,12 +94,47 @@ async function ingestRecruitingEvents() {
   return count;
 }
 
+async function purgeNonPlayerIntelFromLiveFeed() {
+  const prefilter = require('./beat-intel-prefilter');
+  const ineligibleKeys = new Set();
+  const intelItems = intelStore.listIntel({ limit: 500 });
+  for (const intel of intelItems) {
+    if (!(await prefilter.shouldSurfaceRecruitingIntel(intel))) {
+      if (intel.fingerprint) ineligibleKeys.add(intel.fingerprint);
+      const stableKey = feedDedupeKeyForIntel(intel) || `intel_${intel.id}`;
+      ineligibleKeys.add(stableKey);
+      if (intel.id) ineligibleKeys.add(`intel_${intel.id}`);
+    }
+  }
+
+  return liveStore.removeFeedItemsMatching((item) => {
+    const fp = item.meta?.intelFingerprint || item.dedupeKey || item.id;
+    if (fp && ineligibleKeys.has(fp)) return true;
+    const titleName = String(item.title || '').split(' — ')[0]?.trim();
+    const summary = item.summary || item.meta?.detail || '';
+    if (
+      item.type === 'visit' &&
+      !prefilter.shouldSurfaceRecruitingIntelSync({
+        playerName: titleName || item.meta?.player?.name,
+        playerSlug: item.meta?.playerSlug,
+        detail: summary
+      })
+    ) {
+      return true;
+    }
+    return false;
+  });
+}
+
 async function ingestRecruitingIntel() {
+  const prefilter = require('./beat-intel-prefilter');
   const intelItems = intelStore.listIntel({ limit: 100 });
   const playerIndex = liveStore.loadPlayerIndex();
   let count = 0;
 
-  intelItems.forEach((intel) => {
+  for (const intel of intelItems) {
+    if (!(await prefilter.shouldSurfaceRecruitingIntel(intel))) continue;
+
     const stableKey = feedDedupeKeyForIntel(intel) || `intel_${intel.id}`;
     const player =
       playerIndex.bySlug.get(intel.playerSlug) ||
@@ -137,10 +172,10 @@ async function ingestRecruitingIntel() {
       },
       playerIndex
     );
-    if (!classified) return;
+    if (!classified) continue;
     liveStore.upsertFeedItem(classified);
     count += 1;
-  });
+  }
 
   return count;
 }
@@ -176,6 +211,12 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
   liveStore.purgeTestFeedItems();
   results.reclassified = liveStore.reclassifyFeedItems();
   if (recruiting) {
+    try {
+      results.intelPurged = await intelStore.purgeIneligibleIntel();
+      results.feedPurged = await purgeNonPlayerIntelFromLiveFeed();
+    } catch {
+      /* optional */
+    }
     results.recruiting = await ingestRecruitingEvents();
     results.intel = await ingestRecruitingIntel();
   }
@@ -218,5 +259,6 @@ module.exports = {
   isTestRecruitingEvent,
   ingestRecruitingEvents,
   ingestRecruitingIntel,
-  ingestPublishedContent
+  ingestPublishedContent,
+  purgeNonPlayerIntelFromLiveFeed
 };

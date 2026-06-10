@@ -12,7 +12,8 @@ const INVALID_NAME_PARTS = new Set([
   'gators', 'weekend', 'this', 'that', 'with', 'from', 'they', 'will', 'now', 'has', 'have',
   'had', 'for', 'and', 'to', 'on', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday',
   'saturday', 'sunday', 'today', 'tomorrow', 'analyst', 'analysts', 'logged', 'logs',
-  'way', 'https', 'http', 'intel', 'blog', 'loaded', 'visitor', 'promo', 'check', 'out'
+  'way', 'https', 'http', 'intel', 'blog', 'loaded', 'visitor', 'promo', 'check', 'out',
+  'schools', "i'm", 'im', "we're", "they're", "you're", "he's", "she's", 'who', 'what', 'when', 'where'
 ]);
 
 function isValidPlayerName(name) {
@@ -262,23 +263,88 @@ async function buildPlayerNewsPost({
   identityInferred = null,
   identityConfidence = null
 } = {}) {
-  const ctx = await resolvePlayerContext({
-    playerSlug,
-    playerName,
-    patch,
-    preferPatch: !!patch
-  });
-  if (!ctx.hasFullIdentity) {
-    const autoposterIdentity = require('./autoposter-identity');
-    const missingFields = autoposterIdentity.listMissingContextFields(ctx);
-    return autoposterIdentity.buildIdentitySkipPayload({
-      reason: 'identity_incomplete',
-      playerName: ctx.name || playerName || null,
-      playerSlug: playerSlug || null,
-      triggerPhrase: beatText || intel?.detail || null,
-      missingFields
+  const autoposterIdentity = require('./autoposter-identity');
+
+  const intelStub = {
+    ...(intel || {}),
+    playerName: intel?.playerName || playerName,
+    playerSlug: intel?.playerSlug || playerSlug,
+    detail: beatText || intel?.detail,
+    eventType: intel?.eventType,
+    fingerprint: intel?.fingerprint,
+    source: intel?.source || source
+  };
+
+  let resolvedIntel = intelStub;
+  if (!intelStub.identityConfirmed) {
+    const resolution = await autoposterIdentity.resolveIntelForAutoposter(intelStub, {
+      beatText,
+      fields: patch,
+      eventType: intel?.eventType,
+      subsystem: 'autoposter:player-context'
+    });
+
+    if (resolution.nonPlayerIntel) return resolution.skip;
+    if (!resolution.ok) {
+      return (
+        resolution.skip ||
+        autoposterIdentity.buildNeedsResolutionPayload({
+          missingFields: resolution.resolution?.missingFields || [],
+          playerName: playerName || intel?.playerName,
+          playerSlug,
+          triggerPhrase: beatText || intel?.detail
+        })
+      );
+    }
+    resolvedIntel = resolution.intel || intelStub;
+  }
+
+  const resolvedName = resolvedIntel.playerName || playerName;
+  const resolvedSlug = resolvedIntel.playerSlug || playerSlug;
+  const resolvedPatch = {
+    ...(patch || {}),
+    name: resolvedName,
+    pos: resolvedIntel.pos || patch?.pos,
+    classYear: resolvedIntel.classYear || patch?.classYear,
+    school: resolvedIntel.school || resolvedIntel.highSchool || patch?.school,
+    stars: resolvedIntel.stars || patch?.stars,
+    natlRank: resolvedIntel.natlRank || patch?.natlRank
+  };
+
+  if (!resolvedName || !isValidPlayerName(resolvedName)) {
+    return autoposterIdentity.buildNeedsResolutionPayload({
+      missingFields: ['fullName'],
+      playerName: resolvedName || null,
+      playerSlug: resolvedSlug || null,
+      triggerPhrase: beatText || intel?.detail || null
     });
   }
+
+  const ctx = await resolvePlayerContext({
+    playerSlug: resolvedSlug,
+    playerName: resolvedName,
+    patch: resolvedPatch,
+    preferPatch: true
+  });
+
+  if (!ctx.hasFullIdentity) {
+    const autoResolver = require('./recruiting-auto-resolution');
+    autoResolver.logNeedsResolution({
+      missingFields: autoposterIdentity.listMissingContextFields(ctx),
+      playerName: ctx.name || resolvedName,
+      playerSlug: resolvedSlug,
+      detail: beatText || intel?.detail,
+      subsystem: 'autoposter:player-context'
+    });
+    return autoposterIdentity.buildNeedsResolutionPayload({
+      missingFields: autoposterIdentity.listMissingContextFields(ctx),
+      playerName: ctx.name || resolvedName || null,
+      playerSlug: resolvedSlug || null,
+      triggerPhrase: beatText || intel?.detail || null
+    });
+  }
+
+  intel = resolvedIntel;
 
   const kind = postKind || resolvePostKind(ctx, { newsEvent, intel, beatText });
   const sourceLabel = String(source || 'On3').trim();

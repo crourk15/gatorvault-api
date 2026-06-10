@@ -80,6 +80,10 @@ function normalizeIntel(raw) {
     identitySources: raw.identitySources || raw.identity_sources || null,
     cancelledSchool: raw.cancelledSchool || raw.cancelled_school || null,
     nextVisitSchool: raw.nextVisitSchool || raw.next_visit_school || null,
+    resolutionStatus: raw.resolutionStatus || raw.resolution_status || null,
+    missingFields: Array.isArray(raw.missingFields) ? raw.missingFields : raw.missing_fields || null,
+    resolutionAttemptedAt: raw.resolutionAttemptedAt || raw.resolution_attempted_at || null,
+    surfaced: raw.surfaced !== false && raw.resolutionStatus !== 'needs_resolution',
     createdAt: raw.createdAt || nowIso()
   };
 }
@@ -108,8 +112,45 @@ function hasIntelFingerprint(fp) {
   return (doc.items || []).some((i) => i.fingerprint === fp);
 }
 
+function saveNeedsResolution(raw) {
+  const row = normalizeIntel({
+    ...raw,
+    resolutionStatus: 'needs_resolution',
+    surfaced: false,
+    identityConfirmed: false
+  });
+  row.missingFields = Array.isArray(raw.missingFields) ? raw.missingFields : [];
+  row.resolutionAttemptedAt = raw.resolutionAttemptedAt || nowIso();
+  if (!row.fingerprint) {
+    throw new Error('Could not compute needs_resolution fingerprint');
+  }
+
+  const doc = loadIntelDoc();
+  doc.items = doc.items || [];
+  const idx = doc.items.findIndex((i) => i.fingerprint === row.fingerprint);
+  if (idx >= 0) {
+    doc.items[idx] = { ...doc.items[idx], ...row, updatedAt: nowIso() };
+    saveIntelDoc(doc);
+    return Promise.resolve({ item: doc.items[idx], created: false, duplicate: true, needs_resolution: true });
+  }
+
+  doc.items.unshift(row);
+  saveIntelDoc(doc);
+  return Promise.resolve({ item: row, created: true, duplicate: false, needs_resolution: true, player: null });
+}
+
+function listNeedsResolution({ limit = 50 } = {}) {
+  const doc = loadIntelDoc();
+  return (doc.items || [])
+    .filter((i) => i.resolutionStatus === 'needs_resolution')
+    .slice(0, limit);
+}
+
 function addIntel(raw) {
   const row = normalizeIntel(raw);
+  if (row.resolutionStatus === 'needs_resolution') {
+    return saveNeedsResolution(raw);
+  }
   if (!row.playerId || !row.eventType) {
     throw new Error('Intel requires playerId and eventType');
   }
@@ -213,9 +254,33 @@ function getIntelForPlayer({ playerId, playerSlug, playerName } = {}) {
   });
 }
 
+async function purgeIneligibleIntel() {
+  const prefilter = require('./beat-intel-prefilter');
+  const doc = loadIntelDoc();
+  const removed = [];
+  const kept = [];
+  for (const item of doc.items || []) {
+    if (await prefilter.shouldSurfaceRecruitingIntel(item)) {
+      kept.push(item);
+    } else {
+      removed.push(item);
+    }
+  }
+  if (removed.length) {
+    doc.items = kept;
+    saveIntelDoc(doc);
+  }
+  return {
+    removed: removed.length,
+    fingerprints: removed.map((i) => i.fingerprint).filter(Boolean),
+    ids: removed.map((i) => i.id).filter(Boolean)
+  };
+}
+
 function getUnqueuedIntel({ maxAgeMs = 7 * 86400000 } = {}) {
   const cutoff = Date.now() - maxAgeMs;
   return listIntel({ limit: 50 }).filter((i) => {
+    if (i.resolutionStatus === 'needs_resolution') return false;
     if (i.xPostQueued) return false;
     if (new Date(i.reportedAt || i.createdAt).getTime() < cutoff) return false;
     if (i.eventType === 'prediction') {
@@ -240,6 +305,9 @@ module.exports = {
   updateIntelIdentity,
   getIntelForPlayer,
   getUnqueuedIntel,
+  purgeIneligibleIntel,
+  saveNeedsResolution,
+  listNeedsResolution,
   feedDedupeKeyForIntel,
   intelFingerprint
 };

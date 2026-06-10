@@ -56,7 +56,7 @@ async function collectSignals() {
 
   let intel = [];
   try {
-    intel = intelStore.listIntel({ limit: 50 }) || [];
+    intel = (intelStore.listIntel({ limit: 50 }) || []).filter((i) => i.resolutionStatus !== 'needs_resolution');
   } catch {
     intel = [];
   }
@@ -149,7 +149,10 @@ function buildCandidateTopics(signals) {
   }
 
   if (signals.heatCheck.rising.length >= 2) {
-    const rising = signals.heatCheck.rising.slice(0, 4);
+    const rising = signals.heatCheck.rising.slice(0, 4).map((r) => {
+      const storePl = signals.recruiting.players.find((p) => p.slug === r.playerSlug);
+      return { ...storePl, ...r };
+    });
     const top = rising[0];
     push({
       topicKey: `heat_check_${cycle.RECRUITING_MIN_CLASS}_${top.playerSlug || top.playerName}`,
@@ -166,7 +169,10 @@ function buildCandidateTopics(signals) {
   }
 
   if (signals.intel.upcoming.length >= 1) {
-    const visits = signals.intel.upcoming.slice(0, 5);
+    const visits = signals.intel.upcoming.slice(0, 5).map((v) => {
+      const storePl = signals.recruiting.players.find((p) => p.slug === v.playerSlug);
+      return { ...storePl, ...v };
+    });
     const lead = visits[0];
     const name = sanitize.sanitizePlayerName(lead.playerName) || 'Official visitors';
     push({
@@ -186,7 +192,10 @@ function buildCandidateTopics(signals) {
   }
 
   if (signals.intel.recent.length >= 1) {
-    const visits = signals.intel.recent.slice(0, 4);
+    const visits = signals.intel.recent.slice(0, 4).map((v) => {
+      const storePl = signals.recruiting.players.find((p) => p.slug === v.playerSlug);
+      return { ...storePl, ...v };
+    });
     const lead = visits[0];
     const name = sanitize.sanitizePlayerName(lead.playerName) || 'Florida visitors';
     push({
@@ -271,8 +280,8 @@ function buildCandidateTopics(signals) {
   return topics.sort((a, b) => b.totalScore - a.totalScore).slice(0, MAX_CANDIDATES);
 }
 
-function writeDraftFromTopic(topic) {
-  const draft = templates.buildArticleDraft(topic);
+function writeDraftFromTopic(topic, signals) {
+  const draft = templates.buildArticleDraft(topic, signals);
   if (!draft) return null;
 
   const meta = store.CATEGORIES[draft.category] || store.CATEGORIES.program_pulse;
@@ -317,24 +326,11 @@ async function generateWeeklyDrafts({ force = false, maxDrafts = MAX_WEEKLY } = 
   const drafts = [];
   const aborted = [];
   for (const topic of selected) {
-    const draft = writeDraftFromTopic(topic);
+    const draft = writeDraftFromTopic(topic, signals);
     if (draft) {
       drafts.push(store.addDraft(draft));
     } else {
-      aborted.push({ topicKey: topic.topicKey, category: topic.category, reason: 'quality_or_insufficient_data' });
-    }
-  }
-
-  if (drafts.length < MIN_WEEKLY && !force) {
-    for (const topic of candidates) {
-      if (drafts.length >= MIN_WEEKLY) break;
-      if (selected.some((s) => s.topicKey === topic.topicKey)) continue;
-      if (existingKeys.has(topic.topicKey)) continue;
-      const draft = writeDraftFromTopic(topic);
-      if (draft) {
-        drafts.push(store.addDraft(draft));
-        existingKeys.add(topic.topicKey);
-      }
+      aborted.push({ topicKey: topic.topicKey, category: topic.category, reason: 'insufficient_intel_or_quality' });
     }
   }
 
@@ -373,7 +369,7 @@ async function refreshArticleContent(article) {
       sources: article.sources
     };
   }
-  const draft = templates.buildArticleDraft(topic);
+  const draft = templates.buildArticleDraft(topic, signals);
   if (!draft) {
     return {
       summary: article.summary,
