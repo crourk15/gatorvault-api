@@ -252,14 +252,27 @@ async function upsertPlayer(player) {
   if (sb) {
     const { data, error } = await sb.from('players').upsert(playerToRow(normalized), { onConflict: 'slug' }).select().single();
     if (error) throw error;
-    return rowToPlayer(data);
+    const saved = rowToPlayer(data);
+    await syncIdentityPatterns(saved);
+    return saved;
   }
   const players = await loadPlayersLocal();
   const idx = players.findIndex((p) => p.slug === normalized.slug);
   if (idx >= 0) players[idx] = preservePlayerFields(players[idx], normalized);
   else players.push({ ...normalized, updatedAt: nowIso() });
   await savePlayersLocal(players);
-  return idx >= 0 ? players[idx] : normalized;
+  const saved = idx >= 0 ? players[idx] : normalized;
+  await syncIdentityPatterns(saved);
+  return saved;
+}
+
+async function syncIdentityPatterns(player) {
+  try {
+    const patternStore = require('./identity-patterns-store');
+    await patternStore.syncPatternsForPlayer(player);
+  } catch (err) {
+    console.warn('[recruiting] identity pattern sync failed:', player?.slug, err.message);
+  }
 }
 
 async function getRankings() {

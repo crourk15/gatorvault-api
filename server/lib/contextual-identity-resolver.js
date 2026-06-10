@@ -154,6 +154,75 @@ function lookupManualOverride(phrase) {
   return best;
 }
 
+function patternSpecificity(patKey) {
+  const tokens = patKey.split(' ').filter(Boolean);
+  let score = tokens.length;
+  if (tokens.some((t) => t.length >= 4 && !/^\d+$/.test(t) && !['star', 'commit'].includes(t))) {
+    score += 2;
+  }
+  return score;
+}
+
+function lookupIdentityPattern(phrase, entries) {
+  const key = normalizePhrase(phrase);
+  if (!key || !entries?.length) return null;
+
+  const matches = [];
+  const seen = new Set();
+  for (const entry of entries) {
+    if (!entry?.slug) continue;
+    for (const pat of entry.patterns || []) {
+      const patKey = normalizePhrase(pat);
+      if (!patKey) continue;
+      const dedupeKey = `${entry.slug}:${patKey}`;
+      if (seen.has(dedupeKey)) continue;
+      if (key === patKey || key.includes(patKey) || patKey.includes(key)) {
+        seen.add(dedupeKey);
+        matches.push({
+          slug: entry.slug,
+          name: entry.name,
+          pattern: pat,
+          patKey,
+          specificity: patternSpecificity(patKey)
+        });
+      }
+    }
+  }
+
+  if (!matches.length) return null;
+  matches.sort((a, b) => b.specificity - a.specificity || b.patKey.length - a.patKey.length);
+
+  const top = matches[0];
+  const runner = matches.find((m) => m.slug !== top.slug || m.patKey !== top.patKey);
+  if (runner && top.specificity === runner.specificity && top.patKey.length === runner.patKey.length) {
+    return null;
+  }
+  if (
+    runner &&
+    top.specificity - runner.specificity <= 1 &&
+    top.patKey.length === runner.patKey.length &&
+    runner.slug !== top.slug
+  ) {
+    return null;
+  }
+
+  return {
+    slug: top.slug,
+    name: top.name,
+    matchedPattern: top.pattern,
+    confidence: Math.min(96, 72 + top.specificity * 4)
+  };
+}
+
+async function loadIdentityPatternEntries() {
+  try {
+    const store = require('./identity-patterns-store');
+    return await store.listAllPatterns();
+  } catch {
+    return [];
+  }
+}
+
 function lookupBeatWriterPattern(handle, phrase) {
   const writers = loadBeatWriterMemory().writers || {};
   const h = String(handle || '').toLowerCase();
@@ -282,6 +351,23 @@ async function resolveContextualIdentity({ text, sourceHandle, writerName, hints
         mode: 'manual_override',
         inferred: false,
         reasons: ['manual_override_table'],
+        clues,
+        sourceHandle
+      });
+    }
+  }
+
+  const patternEntries = await loadIdentityPatternEntries();
+  const patternHit = lookupIdentityPattern(clues.rawPhrase || text, patternEntries);
+  if (patternHit?.slug) {
+    const player = await resolvePlayerFromSlug(patternHit.slug, patternHit.name);
+    if (player) {
+      return buildResolution({
+        player,
+        confidence: patternHit.confidence || 92,
+        mode: 'identity_pattern',
+        inferred: false,
+        reasons: ['identity_patterns_auto', `pattern:${patternHit.matchedPattern}`],
         clues,
         sourceHandle
       });
@@ -435,6 +521,7 @@ module.exports = {
   parseVagueClues,
   normalizePhrase,
   lookupManualOverride,
+  lookupIdentityPattern,
   lookupBeatWriterPattern,
   scoreBoardCandidate,
   resolveContextualIdentity,

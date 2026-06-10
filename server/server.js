@@ -889,6 +889,19 @@ app.listen(PORT, () => {
   try {
     const store = require('./lib/recruiting-store');
     console.log('Recruiting API: ready (storage:', store.storageMode() + ')');
+    const patternStore = require('./lib/identity-patterns-store');
+    patternStore
+      .listAllPatterns()
+      .then((items) => {
+        if (items.length) {
+          console.log('[identity-patterns] ready (' + items.length + ' players, ' + patternStore.storageMode() + ')');
+          return null;
+        }
+        return patternStore.rebuildAllPatterns().then((r) => {
+          console.log('[identity-patterns] boot rebuild:', r.count, 'players');
+        });
+      })
+      .catch((err) => console.warn('[identity-patterns] boot sync skipped:', err.message));
   } catch (e) {
     console.warn('Recruiting API: failed to init', e.message);
   }

@@ -476,6 +476,35 @@ function mountRecruitingRoutes(app) {
     }
   });
 
+  app.get('/api/recruiting/identity/patterns', async (req, res) => {
+    const pin = String(req.query.pin || req.get('X-Recruiting-Pin') || '');
+    if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid admin pin' });
+    try {
+      const patternStore = require('./identity-patterns-store');
+      const slug = req.query.slug || null;
+      if (slug) {
+        const entry = await patternStore.getPatternBySlug(slug);
+        return res.json({ ok: true, entry, storage: patternStore.storageMode() });
+      }
+      const items = await patternStore.listAllPatterns();
+      return res.json({ ok: true, count: items.length, items, storage: patternStore.storageMode() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/recruiting/identity/patterns/rebuild', async (req, res) => {
+    const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || '');
+    if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid admin pin' });
+    try {
+      const patternStore = require('./identity-patterns-store');
+      const result = await patternStore.rebuildAllPatterns();
+      return res.json({ ok: true, ...result, storage: patternStore.storageMode() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/recruiting/internal-alerts', async (req, res) => {
     try {
       const pin = String(req.query.pin || req.get('X-Recruiting-Pin') || '');

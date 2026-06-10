@@ -65,6 +65,25 @@ create table if not exists recruiting_events (
 create index if not exists recruiting_events_created_idx on recruiting_events (created_at desc);
 create index if not exists recruiting_events_slug_idx on recruiting_events (player_slug);
 
+create table if not exists recruiting_identity_patterns (
+  slug text primary key references players(slug) on delete cascade,
+  name text not null,
+  stars smallint,
+  position text,
+  school text,
+  class_year smallint,
+  patterns jsonb not null default '[]'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists recruiting_identity_patterns_updated_idx
+  on recruiting_identity_patterns (updated_at desc);
+
+drop trigger if exists recruiting_identity_patterns_updated_at on recruiting_identity_patterns;
+create trigger recruiting_identity_patterns_updated_at
+  before update on recruiting_identity_patterns
+  for each row execute function set_updated_at();
+
 -- Auto-update players.updated_at
 create or replace function set_updated_at()
 returns trigger as $$
