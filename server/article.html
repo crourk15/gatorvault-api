@@ -91,17 +91,25 @@
       try {
         var r = await fetch(API + '/api/content/articles/' + encodeURIComponent(articleId));
         var data = await r.json();
-        if (!data.ok || !data.article) throw new Error(data.error || 'Article not found');
-        renderArticle(data.article);
-      } catch (e) {
+        if (data.ok && data.article) {
+          renderArticle(data.article);
+          return;
+        }
+      } catch (e) { /* fall through */ }
+      try {
+        var r2 = await fetch(API + '/api/articles/' + encodeURIComponent(articleId));
+        var data2 = await r2.json();
+        if (!data2.ok || !data2.article) throw new Error(data2.error || 'Article not found');
+        renderArticle(data2.article);
+      } catch (e2) {
         document.getElementById('loading').classList.add('hidden');
         document.getElementById('error').classList.remove('hidden');
-        document.getElementById('error').textContent = e.message || String(e);
+        document.getElementById('error').textContent = e2.message || String(e2);
       }
     }
     load();
   </script>
-  <link rel="stylesheet" href="/gv-feedback.css?v=1">
-  <script src="/gv-feedback.js?v=1" defer></script>
+  <link rel="stylesheet" href="/gv-feedback.css?v=3">
+  <script src="/gv-feedback.js?v=2" defer></script>
 </body>
 </html>

@@ -19,6 +19,7 @@ const { mountAdminRoutes } = require('./lib/admin-routes');
 const { mountFilmRoomKnowledgeRoutes } = require('./lib/film-room-knowledge-routes');
 const { mountNilRoutes } = require('./lib/nil-routes');
 const { mountOpsRoutes } = require('./lib/ops-routes');
+const { mountInsiderArticlesRoutes } = require('./lib/insider-articles-routes');
 const { apiMonitorMiddleware } = require('./lib/api-monitor');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
@@ -75,6 +76,7 @@ mountAdminRoutes(app);
 mountFilmRoomKnowledgeRoutes(app);
 mountNilRoutes(app);
 mountOpsRoutes(app);
+mountInsiderArticlesRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;
@@ -997,6 +999,24 @@ app.listen(PORT, () => {
       setInterval(runFilmSync, filmInterval);
     } catch (e) {
       console.warn('Film Room knowledge refresh scheduler failed to start', e.message);
+    }
+  }
+  if (process.env.ARTICLE_ENGINE_ENABLED !== 'false') {
+    try {
+      const articleInterval = parseInt(process.env.ARTICLE_ENGINE_INTERVAL_MS || '604800000', 10);
+      const runArticleEngine = () => {
+        const opsMonitor = require('./lib/ops-monitor');
+        const { generateWeeklyDrafts } = require('./lib/insider-articles-engine');
+        opsMonitor
+          .wrapJob('article-engine-weekly-draft', 'cron:article-engine', () => generateWeeklyDrafts())
+          .then((r) => console.log('[insider-articles] weekly draft run:', r?.selected ?? r?.reason ?? r))
+          .catch((err) => console.warn('[insider-articles] weekly draft failed:', err.message));
+      };
+      setTimeout(runArticleEngine, 90000);
+      setInterval(runArticleEngine, articleInterval);
+      console.log('[insider-articles] weekly scheduler enabled (every', Math.round(articleInterval / 3600000), 'h)');
+    } catch (e) {
+      console.warn('Insider Articles scheduler failed to start', e.message);
     }
   }
   if (providers.length) {

@@ -6,7 +6,8 @@ const opsMonitor = require('./ops-monitor');
 /** Alternate keys accepted by POST /api/ops/run-job */
 const JOB_ALIASES = {
   depth_chart_refresh: 'depth-chart-refresh',
-  game_zone_lines: 'game-zone-refresh'
+  game_zone_lines: 'game-zone-refresh',
+  'article-engine:weekly-draft': 'article-engine-weekly-draft'
 };
 
 const JOBS = {
@@ -122,6 +123,15 @@ const JOBS = {
     async run() {
       const { refreshLines } = require('./betting-lines');
       return refreshLines();
+    }
+  },
+  'article-engine-weekly-draft': {
+    label: 'Insider Articles weekly draft generator',
+    subsystem: 'cron:article-engine',
+    schedule: 'Weekly (ARTICLE_ENGINE_ENABLED)',
+    async run(opts = {}) {
+      const { generateWeeklyDrafts } = require('./insider-articles-engine');
+      return generateWeeklyDrafts({ force: opts.force === true });
     }
   },
   'ops-healthcheck': {

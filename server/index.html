@@ -4415,7 +4415,15 @@
         return true;
     }
     function gvLoadPublishedContent(force){
-        return fetch(gvRecruitApiBase()+'/api/content/published').then(function(r){if(!r.ok)throw new Error('content '+r.status);return r.json();}).then(function(feed){
+        return Promise.all([
+            fetch(gvRecruitApiBase()+'/api/content/published').then(function(r){if(!r.ok)throw new Error('content '+r.status);return r.json();}),
+            fetch(gvRecruitApiBase()+'/api/articles/published').then(function(r){return r.ok?r.json():{articles:[]};}).catch(function(){return{articles:[]};})
+        ]).then(function(results){
+            var feed=results[0]||{};
+            var insider=results[1]||{};
+            if(insider.articles&&insider.articles.length){
+                feed.articles=(feed.articles||[]).concat(insider.articles);
+            }
             if(gvApplyPublishedContent(feed)||force){
                 try{renderStorylines();}catch(e){}
                 try{renderArticles();}catch(e){}

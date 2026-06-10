@@ -77,6 +77,33 @@ function buildCronTiles(config, heartbeats) {
   });
 }
 
+function buildInsiderArticlesTile(heartbeats) {
+  let draftCount = 0;
+  let publishedCount = 0;
+  try {
+    const insiderStore = require('./insider-articles-store');
+    draftCount = insiderStore.countDraftsPending();
+    publishedCount = insiderStore.countPublished();
+  } catch {
+    /* optional module */
+  }
+
+  const hb = heartbeats.subsystems?.['cron:article-engine'] || {};
+  const errors24h = opsMonitor.getErrorCount24h('cron:article-engine');
+  let status = 'green';
+  if (errors24h > 2 || hb.lastStatus === 'error') status = 'red';
+  else if (draftCount === 0 && !hb.lastRun) status = 'yellow';
+  else if (draftCount > 0) status = 'yellow';
+
+  return tile('insider-articles', 'Insider Articles', status, {
+    lastRun: hb.lastRun || null,
+    draftCount,
+    publishedCount,
+    summary: `${draftCount} draft${draftCount === 1 ? '' : 's'} pending · ${publishedCount} published`,
+    errors24h
+  });
+}
+
 function buildAutoposterTile(config) {
   const pipeline = pipelineHealth.getHealthReport();
   const hb = opsMonitor.getHeartbeat('autoposter:predictions') || opsMonitor.getHeartbeat('autoposter:queue') || {};
@@ -228,6 +255,7 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
       summary: filmUpdated ? `Catalog ${filmFresh.hours ?? '?'}h ago` : 'No catalog timestamp',
       errors24h: opsMonitor.getErrorCount24h('cron:film-room-weekly')
     }),
+    buildInsiderArticlesTile(heartbeats),
     tile('api-health', 'API Health', api.status, {
       lastRun: new Date().toISOString(),
       summary: `${api.totalRequests} reqs · ${Math.round(api.errorRate * 100)}% err · ${api.avgResponseMs}ms avg`,

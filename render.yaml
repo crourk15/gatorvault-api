@@ -81,6 +81,10 @@ services:
         value: "true"
       - key: GAME_ZONE_ENABLED
         value: "true"
+      - key: ARTICLE_ENGINE_ENABLED
+        value: "true"
+      - key: ARTICLE_ENGINE_INTERVAL_MS
+        value: "604800000"
       - key: MEDIA_INGEST_ENABLED
         value: "false"
       - key: MEDIA_INGEST_INTERVAL_MS

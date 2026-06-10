@@ -94,6 +94,25 @@
         </table>
       </div>
 
+      <div class="section" id="insider-articles-panel">
+        <h2>Insider Articles Manager</h2>
+        <p class="sub" style="margin:0 0 .75rem;font-size:.8rem;color:var(--muted)">Auto-generated drafts require manual approval. Nothing auto-publishes.</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem">
+          <button id="insider-generate" class="sm">Generate weekly drafts</button>
+          <button id="insider-reload" class="secondary sm">Reload</button>
+        </div>
+        <h3 style="font-size:.75rem;text-transform:uppercase;color:var(--muted);margin:1rem 0 .5rem">A. Drafts (Needs Approval)</h3>
+        <table>
+          <thead><tr><th>Title</th><th>Category</th><th>Created</th><th>Read</th><th>Sources</th><th></th></tr></thead>
+          <tbody id="insider-drafts-body"><tr><td colspan="6" class="meta">Load drafts…</td></tr></tbody>
+        </table>
+        <h3 style="font-size:.75rem;text-transform:uppercase;color:var(--muted);margin:1.25rem 0 .5rem">B. Published Articles</h3>
+        <table>
+          <thead><tr><th>Title</th><th>Category</th><th>Published</th><th>Read</th><th>Sources</th><th></th></tr></thead>
+          <tbody id="insider-published-body"><tr><td colspan="6" class="meta">Load published…</td></tr></tbody>
+        </table>
+      </div>
+
       <div class="section">
         <h2>Manual Identity Overrides (MOT)</h2>
         <p class="sub" style="margin:0 0 .75rem;font-size:.8rem;color:var(--muted)">Auto patterns generate on every player save. MOT is for rare edge cases only.</p>
@@ -147,6 +166,10 @@
           actions+='<button class="secondary sm" data-job="depth-chart-refresh">Re-run depth</button>';
           actions+='<button class="secondary sm" data-job="game-zone-refresh">Re-run lines</button>';
         }
+        if(t.id==='insider-articles'){
+          actions+='<button class="secondary sm" data-job="article-engine-weekly-draft">Generate drafts</button>';
+          actions+='<button class="secondary sm" data-insider="load">Manage</button>';
+        }
         actions+='<button class="secondary sm" data-logs="'+esc(t.id)+'">Logs</button>';
         return '<div class="tile"><div class="tile-head"><h3>'+statusDot(t.status)+esc(t.label)+'</h3><span class="meta">'+esc(t.errors24h||0)+' err/24h</span></div>'+
           '<div class="summary">'+esc(t.summary||'')+'</div>'+
@@ -160,6 +183,12 @@
         btn.addEventListener('click',function(){
           document.getElementById('log-subsystem').value=btn.getAttribute('data-logs');
           loadLogs();
+        });
+      });
+      el.querySelectorAll('[data-insider]').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          document.getElementById('insider-articles-panel').scrollIntoView({behavior:'smooth'});
+          loadInsiderArticles();
         });
       });
     }
@@ -284,6 +313,7 @@
           document.getElementById('pin-gate').classList.add('hidden');
           document.getElementById('app').classList.remove('hidden');
           loadStatus(false);
+          loadInsiderArticles();
         })
         .catch(function(e){
           document.getElementById('gate-err').textContent=e.message||'Invalid PIN';
@@ -331,6 +361,97 @@
     }
     document.getElementById('mot-load').addEventListener('click',loadMot);
     document.getElementById('mot-save').addEventListener('click',saveMot);
+
+    function insiderCategoryLabel(cat){
+      var map={summer_preview:'Summer Preview',depth_chart_movement:'Depth Chart',insider:'Insider',game_week_preview:'Game Preview',roster_analysis:'Roster Analysis'};
+      return map[cat]||cat||'—';
+    }
+    function insiderSourcesLabel(sources){
+      if(!sources||!sources.length)return '0';
+      return sources.length+' ('+sources.slice(0,2).map(function(s){return s.outlet||s.name;}).join(', ')+')';
+    }
+    function renderInsiderDrafts(drafts){
+      var tbody=document.getElementById('insider-drafts-body');
+      if(!drafts||!drafts.length){tbody.innerHTML='<tr><td colspan="6" class="meta">No drafts pending approval.</td></tr>';return;}
+      tbody.innerHTML=drafts.map(function(d){
+        return '<tr><td><strong>'+esc(d.title)+'</strong><div class="meta">'+esc(d.summary||'')+'</div></td>'+
+          '<td>'+esc(insiderCategoryLabel(d.category))+'</td>'+
+          '<td>'+fmtTime(d.createdAt)+'</td>'+
+          '<td>'+esc(d.readTimeMinutes||'—')+' min</td>'+
+          '<td class="meta">'+esc(insiderSourcesLabel(d.sources))+'</td>'+
+          '<td><button class="sm" data-approve="'+esc(d.id)+'">Approve</button> '+
+          '<button class="secondary sm" data-reject="'+esc(d.id)+'">Reject</button></td></tr>';
+      }).join('');
+      tbody.querySelectorAll('[data-approve]').forEach(function(btn){
+        btn.addEventListener('click',function(){insiderAction('approve',btn.getAttribute('data-approve'));});
+      });
+      tbody.querySelectorAll('[data-reject]').forEach(function(btn){
+        btn.addEventListener('click',function(){insiderAction('reject',btn.getAttribute('data-reject'));});
+      });
+    }
+    function renderInsiderPublished(items){
+      var tbody=document.getElementById('insider-published-body');
+      if(!items||!items.length){tbody.innerHTML='<tr><td colspan="6" class="meta">No published insider articles yet.</td></tr>';return;}
+      tbody.innerHTML=items.map(function(a){
+        return '<tr><td><strong>'+esc(a.title)+'</strong><div class="meta">'+esc(a.summary||a.excerpt||'')+'</div></td>'+
+          '<td>'+esc(insiderCategoryLabel(a.category))+'</td>'+
+          '<td>'+fmtTime(a.publishedAt)+'</td>'+
+          '<td>'+esc(a.readTimeMinutes||a.readMin||'—')+' min</td>'+
+          '<td class="meta">'+esc(insiderSourcesLabel(a.sources))+'</td>'+
+          '<td><button class="sm" data-refresh="'+esc(a.id)+'">Refresh</button> '+
+          '<button class="secondary sm" data-retire="'+esc(a.id)+'">Retire</button></td></tr>';
+      }).join('');
+      tbody.querySelectorAll('[data-refresh]').forEach(function(btn){
+        btn.addEventListener('click',function(){insiderAction('refresh',btn.getAttribute('data-refresh'));});
+      });
+      tbody.querySelectorAll('[data-retire]').forEach(function(btn){
+        btn.addEventListener('click',function(){insiderAction('retire',btn.getAttribute('data-retire'));});
+      });
+    }
+    function loadInsiderArticles(){
+      var p=pin(); if(!p)return;
+      Promise.all([
+        fetch(API+'/api/articles/drafts?pin='+encodeURIComponent(p),{headers:headers()}).then(function(r){return r.json();}),
+        fetch(API+'/api/articles/published').then(function(r){return r.json();})
+      ]).then(function(res){
+        if(!res[0].ok)throw new Error(res[0].error||'Failed to load drafts');
+        renderInsiderDrafts(res[0].drafts||[]);
+        renderInsiderPublished((res[1].articles||[]).map(function(a){
+          return {id:a.id,title:a.title,category:a.category,summary:a.excerpt,publishedAt:a.publishedAt,readMin:a.readMin,sources:a.sources};
+        }));
+      }).catch(function(e){alert('Insider articles: '+e.message);});
+    }
+    function insiderAction(action,id){
+      var p=pin(); if(!p||!id)return;
+      var url=API+'/api/articles/';
+      if(action==='approve')url+='drafts/'+encodeURIComponent(id)+'/approve';
+      else if(action==='reject')url+='drafts/'+encodeURIComponent(id)+'/reject';
+      else if(action==='refresh')url+=encodeURIComponent(id)+'/refresh';
+      else if(action==='retire')url+=encodeURIComponent(id)+'/retire';
+      fetch(url,{method:'POST',headers:headers(),body:JSON.stringify({pin:p})})
+        .then(function(r){return r.json().then(function(j){return{status:r.status,body:j};});})
+        .then(function(res){
+          if(!res.body.ok)throw new Error(res.body.error||'Action failed');
+          loadInsiderArticles();
+          loadStatus(false);
+        })
+        .catch(function(e){alert(e.message);});
+    }
+    function generateInsiderDrafts(){
+      var p=pin(); if(!p)return alert('PIN required');
+      if(!confirm('Generate weekly insider article drafts (3–5 max)?'))return;
+      fetch(API+'/api/articles/drafts/generate',{method:'POST',headers:headers(),body:JSON.stringify({pin:p})})
+        .then(function(r){return r.json();})
+        .then(function(j){
+          if(!j.ok)throw new Error(j.error||'Generate failed');
+          alert('Generated '+((j.drafts&&j.drafts.length)||j.selected||0)+' draft(s)');
+          loadInsiderArticles();
+          loadStatus(false);
+        })
+        .catch(function(e){alert(e.message);});
+    }
+    document.getElementById('insider-generate').addEventListener('click',generateInsiderDrafts);
+    document.getElementById('insider-reload').addEventListener('click',loadInsiderArticles);
 
     setInterval(function(){if(!document.getElementById('app').classList.contains('hidden'))loadStatus(false);},90000);
 

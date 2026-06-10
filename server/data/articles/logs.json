@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-10T14:33:52.954Z",
+  "events": [
+    {
+      "id": "log_1781102032953_x1169y",
+      "action": "article_retired",
+      "at": "2026-06-10T14:33:52.953Z",
+      "articleId": "insider_1781102032895_6m1yx2",
+      "title": "Insider: Florida's 47 commits — class pulse check"
+    },
+    {
+      "id": "log_1781102032948_efubo9",
+      "action": "article_refreshed",
+      "at": "2026-06-10T14:33:52.948Z",
+      "articleId": "insider_1781102032895_6m1yx2",
+      "title": "Insider: Florida's 47 commits — class pulse check"
+    },
+    {
+      "id": "log_1781102032912_nfgar0",
+      "action": "draft_approved",
+      "at": "2026-06-10T14:33:52.912Z",
+      "articleId": "insider_1781102032895_6m1yx2",
+      "title": "Insider: Florida's 47 commits — class pulse check"
+    },
+    {
+      "id": "log_1781102032901_rz2sfl",
+      "action": "weekly_generation",
+      "at": "2026-06-10T14:33:52.901Z",
+      "candidateCount": 9,
+      "selectedCount": 5,
+      "draftIds": [
+        "insider_1781102032879_y3mikm",
+        "insider_1781102032886_6bajqz",
+        "insider_1781102032889_levofm",
+        "insider_1781102032892_wzo3j2",
+        "insider_1781102032895_6m1yx2"
+      ]
+    },
+    {
+      "id": "log_1781102032898_4u0s9i",
+      "action": "draft_created",
+      "at": "2026-06-10T14:33:52.898Z",
+      "articleId": "insider_1781102032895_6m1yx2",
+      "title": "Insider: Florida's 47 commits — class pulse check",
+      "category": "insider"
+    },
+    {
+      "id": "log_1781102032894_h445p3",
+      "action": "draft_created",
+      "at": "2026-06-10T14:33:52.894Z",
+      "articleId": "insider_1781102032892_wzo3j2",
+      "title": "Heat Check: Easton Royal momentum among Florida's rising targets",
+      "category": "insider"
+    },
+    {
+      "id": "log_1781102032891_3bspjp",
+      "action": "draft_created",
+      "at": "2026-06-10T14:33:52.891Z",
+      "articleId": "insider_1781102032889_levofm",
+      "title": "Game Week Preview: Florida vs FAU",
+      "category": "game_week_preview"
+    },
+    {
+      "id": "log_1781102032888_mpbagj",
+      "action": "draft_created",
+      "at": "2026-06-10T14:33:52.888Z",
+      "articleId": "insider_1781102032886_6bajqz",
+      "title": "Insider: Amare Patterson visit intel shapes Florida's board",
+      "category": "insider"
+    },
+    {
+      "id": "log_1781102032884_byt649",
+      "action": "draft_created",
+      "at": "2026-06-10T14:33:52.884Z",
+      "articleId": "insider_1781102032879_y3mikm",
+      "title": "Portal Radar: Eric Singleton Jr. leads Florida's 28-man incoming class",
+      "category": "insider"
+    },
+    {
+      "id": "log_1781101998633_mq9sw0",
+      "action": "weekly_generation",
+      "at": "2026-06-10T14:33:18.633Z",
+      "candidateCount": 9,
+      "selectedCount": 5,
+      "draftIds": [
+        "insider_1781101998618_ujnjtq",
+        "insider_1781101998623_j8jmxb",
+        "insider_1781101998625_2lz2zi",
+        "insider_1781101998628_wiiukx",
+        "insider_1781101998630_ybu1gd"
+      ]
+    },
+    {
+      "id": "log_1781101998632_nq90cd",
+      "action": "draft_created",
+      "at": "2026-06-10T14:33:18.632Z",
+      "articleId": "insider_1781101998630_ybu1gd",
+      "title": "Insider: Florida's 47 commits — class pulse check",
+      "category": "insider"
+    },
+    {
+      "id": "log_1781101998629_2rw6eu",
+      "action": "draft_created",
+      "at": "2026-06-10T14:33:18.629Z",
+      "articleId": "insider_1781101998628_wiiukx",
+      "title": "Heat Check: Easton Royal momentum among Florida's rising targets",
+      "category": "insider"
+    },
+    {
+      "id": "log_1781101998627_1wwbmu",
+      "action": "draft_created",
+      "at": "2026-06-10T14:33:18.627Z",
+      "articleId": "insider_1781101998625_2lz2zi",
+      "title": "Game Week Preview: Florida vs FAU",
+      "category": "game_week_preview"
+    },
+    {
+      "id": "log_1781101998624_i3059b",
+      "action": "draft_created",
+      "at": "2026-06-10T14:33:18.624Z",
+      "articleId": "insider_1781101998623_j8jmxb",
+      "title": "Insider: Amare Patterson visit intel shapes Florida's board",
+      "category": "insider"
+    },
+    {
+      "id": "log_1781101998621_dbp7ir",
+      "action": "draft_created",
+      "at": "2026-06-10T14:33:18.621Z",
+      "articleId": "insider_1781101998618_ujnjtq",
+      "title": "Portal Radar: Eric Singleton Jr. leads Florida's 28-man incoming class",
+      "category": "insider"
+    }
+  ]
+}
