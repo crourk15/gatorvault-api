@@ -1,5 +1,6 @@
 /**
- * Site-wide floating feedback widget — all public pages.
+ * Site-wide floating feedback widget — desktop only.
+ * Mobile app uses the More menu → Feedback (feedback-modal-ov on index).
  */
 (function (global) {
   'use strict';
@@ -31,6 +32,44 @@
       .replace(/>/g, '&gt;');
   }
 
+  /** True on phones, installed PWA, and mobile-app layout — no floating FAB. */
+  function isMobileUi() {
+    if (global.GV_FORCE_FEEDBACK_FAB) return false;
+    if (global.GV_SKIP_FEEDBACK_FAB) return true;
+    try {
+      if (global.GV_IS_MOBILE === true) return true;
+      if (window.matchMedia('(max-width: 767px)').matches) return true;
+      if (window.matchMedia('(pointer: coarse) and (hover: none)').matches) return true;
+      if (window.matchMedia('(display-mode: standalone)').matches) return true;
+      if (window.matchMedia('(display-mode: fullscreen)').matches) return true;
+      var interior = document.getElementById('vault-interior');
+      if (interior && interior.classList.contains('gv-mobile-active')) return true;
+    } catch (e) {
+      /* ignore */
+    }
+    return false;
+  }
+
+  function openNativeFeedbackModal() {
+    var ov = document.getElementById('feedback-modal-ov');
+    if (!ov) return false;
+    var sheet = document.getElementById('gv-more-sheet');
+    if (sheet) {
+      sheet.classList.remove('open');
+      sheet.setAttribute('aria-hidden', 'true');
+    }
+    ov.classList.remove('hidden');
+    ov.style.display = 'flex';
+    return true;
+  }
+
+  function closeNativeFeedbackModal() {
+    var ov = document.getElementById('feedback-modal-ov');
+    if (!ov) return;
+    ov.classList.add('hidden');
+    ov.style.display = 'none';
+  }
+
   function buildUi() {
     if (document.getElementById('gv-feedback-fab')) return;
 
@@ -57,7 +96,7 @@
       '<div class="gv-feedback-card">' +
       '<button type="button" class="gv-feedback-close" id="gv-feedback-close" aria-label="Close">&times;</button>' +
       '<h3>Send Feedback</h3>' +
-      '<p class="gv-feedback-sub">Help us improve GatorVault — especially on mobile.</p>' +
+      '<p class="gv-feedback-sub">Help us improve GatorVault.</p>' +
       '<span class="gv-feedback-label">Rating</span>' +
       '<div class="gv-feedback-stars" id="gv-feedback-stars">' +
       [1, 2, 3, 4, 5]
@@ -100,6 +139,8 @@
   }
 
   function openModal() {
+    if (isMobileUi() && openNativeFeedbackModal()) return;
+
     var ov = document.getElementById('gv-feedback-ov');
     if (!ov) return;
     ov.classList.add('is-open');
@@ -110,6 +151,10 @@
   }
 
   function closeModal() {
+    if (isMobileUi()) {
+      closeNativeFeedbackModal();
+      return;
+    }
     var ov = document.getElementById('gv-feedback-ov');
     if (!ov) return;
     ov.classList.remove('is-open');
@@ -168,9 +213,7 @@
       });
   }
 
-  function wire() {
-    if (wired) return;
-    wired = true;
+  function wireDesktop() {
     buildUi();
 
     document.getElementById('gv-feedback-fab').addEventListener('click', openModal);
@@ -191,8 +234,27 @@
     });
   }
 
+  function wire() {
+    if (wired) return;
+    wired = true;
+
+    if (isMobileUi()) {
+      var existingFab = document.getElementById('gv-feedback-fab');
+      if (existingFab) existingFab.remove();
+      var existingOv = document.getElementById('gv-feedback-ov');
+      if (existingOv) existingOv.remove();
+      global.GV_FEEDBACK = { open: openModal, close: closeModal };
+      return;
+    }
+
+    wireDesktop();
+    global.GV_FEEDBACK = { open: openModal, close: closeModal };
+  }
+
   function init() {
     wire();
+    if (isMobileUi()) return;
+
     fetch(API + '/api/feedback/categories')
       .then(function (r) { return r.json(); })
       .then(function (j) {
@@ -215,5 +277,5 @@
     init();
   }
 
-  global.GV_FEEDBACK = { open: openModal, close: closeModal };
+  global.GV_FEEDBACK = global.GV_FEEDBACK || { open: openModal, close: closeModal };
 })(window);
