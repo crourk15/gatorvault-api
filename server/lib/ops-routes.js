@@ -90,14 +90,22 @@ function mountOpsRoutes(app) {
     if (!requireOpsAuth(req, res)) return;
     const jobId = req.body?.jobId;
     if (!jobId) return res.status(400).json({ ok: false, error: 'jobId required' });
+
     try {
-      const result = await opsJobs.runJob(jobId, req.body?.options || {});
-      return res.json({ ok: true, jobId, result });
+      const { jobId: resolvedId, requestedId, result } = await opsJobs.runJob(jobId, req.body?.options || {});
+      const failed = result && result.ok === false && !result.skipped;
+      return res.status(failed ? 422 : 200).json({
+        ok: !failed,
+        jobId: resolvedId,
+        requestedId,
+        result,
+        completedAt: new Date().toISOString()
+      });
     } catch (err) {
       if (err.code === 'UNKNOWN_JOB') {
-        return res.status(404).json({ ok: false, error: err.message });
+        return res.status(404).json({ ok: false, error: err.message, jobId });
       }
-      return res.status(500).json({ ok: false, error: err.message });
+      return res.status(500).json({ ok: false, error: err.message, jobId });
     }
   });
 

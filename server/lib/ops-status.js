@@ -120,14 +120,32 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
   const nilManifest = readJson('nil/manifest.json', {});
   const filmCatalog = readJson('film-room-knowledge/catalog.json', readJson('film-room/catalog.json', {}));
   const rosterMtime = fileMtime('roster/players.json');
+  let depthMeta = null;
+  let linesMeta = null;
+  try {
+    depthMeta = require('./depth-chart-jobs').getDepthChartMeta();
+  } catch {
+    /* optional */
+  }
+  try {
+    linesMeta = require('./betting-lines').getLinesMeta();
+  } catch {
+    /* optional */
+  }
 
   const recruitingUpdated = on3Snap.lastRun || pipeline.lastRecruitingIngest || fileMtime('recruiting/players.json');
   const portalUpdated = fileMtime('recruiting/players.json');
   const nilUpdated = nilManifest.updatedAt || fileMtime('nil/manifest.json');
   const filmUpdated =
     filmCatalog.updatedAt || opsMonitor.getHeartbeat('cron:film-room-weekly')?.lastSuccess || null;
-  const depthUpdated = rosterMtime;
-  const gameZoneUpdated = fileMtime('betting/lines.json');
+  const depthUpdated =
+    depthMeta?.updatedAt ||
+    opsMonitor.getHeartbeat('cron:depth-chart')?.lastSuccess ||
+    rosterMtime;
+  const gameZoneUpdated =
+    linesMeta?.updatedAt ||
+    opsMonitor.getHeartbeat('cron:game-zone')?.lastSuccess ||
+    fileMtime('betting/lines.json');
 
   const recruitingFresh = freshnessStatus(
     recruitingUpdated,
@@ -196,9 +214,11 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
       errors24h: opsMonitor.getErrorCount24h('cron:nil-ingest')
     }),
     tile('depth-gamezone', 'Depth Chart / Game Zone', depthFresh.status === 'green' && gameZoneFresh.status !== 'red' ? depthFresh.status : gameZoneFresh.status === 'red' ? 'red' : 'yellow', {
-      lastRun: depthUpdated,
+      lastRun: depthUpdated > gameZoneUpdated ? depthUpdated : gameZoneUpdated,
       depthChartUpdated: depthUpdated,
       gameZoneUpdated: gameZoneUpdated,
+      depthChartEnabled: process.env.DEPTH_CHART_ENABLED !== 'false' && process.env.DEPTH_CHART_ENABLED !== '0',
+      gameZoneEnabled: process.env.GAME_ZONE_ENABLED !== 'false' && process.env.GAME_ZONE_ENABLED !== '0',
       summary: `Depth ${depthFresh.hours ?? '?'}h · Game Zone ${gameZoneFresh.hours ?? '?'}h`,
       errors24h: opsMonitor.getErrorCount24h('cron:depth-chart') + opsMonitor.getErrorCount24h('cron:game-zone')
     }),

@@ -3,6 +3,12 @@
  */
 const opsMonitor = require('./ops-monitor');
 
+/** Alternate keys accepted by POST /api/ops/run-job */
+const JOB_ALIASES = {
+  depth_chart_refresh: 'depth-chart-refresh',
+  game_zone_lines: 'game-zone-refresh'
+};
+
 const JOBS = {
   'film-room-weekly': {
     label: 'Film Room catalog refresh',
@@ -103,25 +109,19 @@ const JOBS = {
   'depth-chart-refresh': {
     label: 'Depth chart / roster refresh',
     subsystem: 'cron:depth-chart',
-    schedule: 'Manual',
+    schedule: 'Manual (DEPTH_CHART_ENABLED)',
     async run() {
-      const rosterStore = require('./roster-store');
-      const players = rosterStore.getAllRosterPlayers();
-      return { ok: true, processedCount: players.length };
+      const { refreshDepthChart } = require('./depth-chart-jobs');
+      return refreshDepthChart();
     }
   },
   'game-zone-refresh': {
     label: 'Game Zone lines refresh',
     subsystem: 'cron:game-zone',
-    schedule: 'Manual',
+    schedule: 'Manual (GAME_ZONE_ENABLED)',
     async run() {
-      try {
-        const betting = require('./betting-lines');
-        if (typeof betting.refreshLines === 'function') return betting.refreshLines();
-      } catch {
-        /* optional module */
-      }
-      return { ok: true, skipped: true, reason: 'no_refresh_handler' };
+      const { refreshLines } = require('./betting-lines');
+      return refreshLines();
     }
   },
   'ops-healthcheck': {
@@ -136,29 +136,85 @@ const JOBS = {
   }
 };
 
+function resolveJobId(jobId) {
+  if (!jobId) return jobId;
+  return JOB_ALIASES[jobId] || jobId;
+}
+
 function listJobs() {
   return Object.entries(JOBS).map(([id, job]) => ({
     id,
     label: job.label,
     subsystem: job.subsystem,
-    schedule: job.schedule
+    schedule: job.schedule,
+    aliases: Object.entries(JOB_ALIASES)
+      .filter(([, canonical]) => canonical === id)
+      .map(([alias]) => alias)
   }));
 }
 
 async function runJob(jobId, opts = {}) {
-  const job = JOBS[jobId];
+  const resolvedId = resolveJobId(jobId);
+  opsMonitor.logEvent({
+    subsystem: 'ops:run-job',
+    status: 'started',
+    message: `Job received: ${jobId}`,
+    details: { jobId, resolvedId: resolvedId !== jobId ? resolvedId : undefined }
+  });
+
+  const job = JOBS[resolvedId];
   if (!job) {
+    opsMonitor.logEvent({
+      subsystem: 'ops:run-job',
+      status: 'error',
+      message: `Job failed: ${jobId}`,
+      details: { jobId, resolvedId, reason: 'UNKNOWN_JOB' }
+    });
     const err = new Error(`Unknown job: ${jobId}`);
     err.code = 'UNKNOWN_JOB';
     throw err;
   }
-  return opsMonitor.wrapJob(jobId, job.subsystem, () => job.run(opts), {
-    message: `${job.label} manual run`
+
+  opsMonitor.logEvent({
+    subsystem: 'ops:run-job',
+    status: 'started',
+    message: `Job started: ${resolvedId}`,
+    details: { jobId, resolvedId, label: job.label }
   });
+
+  try {
+    const result = await opsMonitor.wrapJob(resolvedId, job.subsystem, () => job.run(opts), {
+      message: `${job.label} manual run`
+    });
+
+    const failed = result && result.ok === false && !result.skipped;
+    opsMonitor.logEvent({
+      subsystem: 'ops:run-job',
+      status: failed ? 'error' : 'success',
+      message: failed ? `Job failed: ${resolvedId}` : `Job completed: ${resolvedId}`,
+      details: {
+        jobId,
+        resolvedId,
+        result: result && typeof result === 'object' ? { ok: result.ok, skipped: result.skipped, reason: result.reason, updatedAt: result.updatedAt, processedCount: result.processedCount } : result
+      }
+    });
+
+    return { jobId: resolvedId, requestedId: jobId, result };
+  } catch (err) {
+    opsMonitor.logEvent({
+      subsystem: 'ops:run-job',
+      status: 'error',
+      message: `Job failed: ${resolvedId}`,
+      details: { jobId, resolvedId, error: err.message }
+    });
+    throw err;
+  }
 }
 
 module.exports = {
   JOBS,
+  JOB_ALIASES,
   listJobs,
+  resolveJobId,
   runJob
 };

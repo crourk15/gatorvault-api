@@ -1,7 +1,11 @@
 /**
  * Weekly betting lines — The Odds API when keyed, static schedule fallback.
  */
+const fs = require('fs');
+const path = require('path');
 const fetch = require('node-fetch');
+
+const LINES_PATH = path.join(__dirname, '..', 'data', 'betting', 'lines.json');
 
 const FANDUEL_AFFILIATE = process.env.FANDUEL_AFFILIATE_URL || 'https://sportsbook.fanduel.com/navigation/ncaaf';
 const HARD_ROCK_BET_URL =
@@ -125,10 +129,53 @@ async function getBettingLines() {
   };
 }
 
+function isGameZoneEnabled() {
+  const v = process.env.GAME_ZONE_ENABLED;
+  if (v == null || v === '') return true;
+  return v === 'true' || v === '1';
+}
+
+async function refreshLines() {
+  if (!isGameZoneEnabled()) {
+    return { ok: false, skipped: true, reason: 'GAME_ZONE_ENABLED=false' };
+  }
+
+  const payload = await getBettingLines();
+  const updatedAt = new Date().toISOString();
+  const doc = {
+    ...payload,
+    updatedAt,
+    refreshedAt: updatedAt
+  };
+
+  fs.mkdirSync(path.dirname(LINES_PATH), { recursive: true });
+  fs.writeFileSync(LINES_PATH, JSON.stringify(doc, null, 2));
+
+  return {
+    ok: true,
+    processedCount: (doc.schedule || []).length,
+    updatedAt,
+    nextGame: doc.nextGame?.game || null,
+    liveOddsEnabled: doc.liveOddsEnabled
+  };
+}
+
+function getLinesMeta() {
+  try {
+    return JSON.parse(fs.readFileSync(LINES_PATH, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
 module.exports = {
   getBettingLines,
+  refreshLines,
+  getLinesMeta,
+  LINES_PATH,
   STATIC_LINES,
   FANDUEL_AFFILIATE,
   HARD_ROCK_BET_URL,
-  SPORTSBOOKS
+  SPORTSBOOKS,
+  isGameZoneEnabled
 };

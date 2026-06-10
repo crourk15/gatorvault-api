@@ -143,6 +143,10 @@
         if(t.id==='recruiting-board') actions+='<button class="secondary sm" data-job="recruiting-ingest">Re-run ingest</button>';
         if(t.id==='portal-tracker') actions+='<button class="secondary sm" data-job="portal-ingest">Re-run portal</button>';
         if(t.id==='nil-tracker') actions+='<button class="secondary sm" data-job="nil-refresh">Re-run NIL</button>';
+        if(t.id==='depth-gamezone'){
+          actions+='<button class="secondary sm" data-job="depth-chart-refresh">Re-run depth</button>';
+          actions+='<button class="secondary sm" data-job="game-zone-refresh">Re-run lines</button>';
+        }
         actions+='<button class="secondary sm" data-logs="'+esc(t.id)+'">Logs</button>';
         return '<div class="tile"><div class="tile-head"><h3>'+statusDot(t.status)+esc(t.label)+'</h3><span class="meta">'+esc(t.errors24h||0)+' err/24h</span></div>'+
           '<div class="summary">'+esc(t.summary||'')+'</div>'+
@@ -163,13 +167,14 @@
     function renderJobs(jobs){
       var tbody=document.getElementById('jobs-body');
       tbody.innerHTML=(jobs||[]).map(function(j){
+        var id=j.id||j.jobId;
         var hb=j.heartbeat||{};
-        return '<tr><td>'+esc(j.label)+'<div class="meta">'+esc(j.id)+'</div></td>'+
+        return '<tr><td>'+esc(j.label)+'<div class="meta">'+esc(id)+'</div></td>'+
           '<td>'+esc(j.schedule)+'</td>'+
-          '<td>'+fmtTime(hb.lastRun)+'</td>'+
-          '<td>'+statusDot(hb.lastStatus==='error'?'red':hb.lastStatus==='warning'?'yellow':'green')+esc(hb.lastStatus||'—')+'</td>'+
+          '<td>'+fmtTime(hb.lastRun||j.lastRun)+'</td>'+
+          '<td>'+statusDot((hb.lastStatus||j.lastStatus)==='error'?'red':(hb.lastStatus||j.lastStatus)==='warning'?'yellow':'green')+esc(hb.lastStatus||j.lastStatus||'—')+'</td>'+
           '<td>'+esc(j.errors24h!=null?j.errors24h:'—')+'</td>'+
-          '<td><button class="sm" data-run="'+esc(j.id)+'">Re-run</button></td></tr>';
+          '<td><button class="sm" data-run="'+esc(id)+'">Re-run</button></td></tr>';
       }).join('');
       tbody.querySelectorAll('[data-run]').forEach(function(btn){
         btn.addEventListener('click',function(){runJob(btn.getAttribute('data-run'));});
@@ -187,7 +192,7 @@
 
     function populateLogFilter(tiles){
       var sel=document.getElementById('log-subsystem');
-      var opts=['','autoposter','cron:recruiting-ingest','cron:portal-ingest','autoposter:beat-writer','api:health','db:health','deployments'];
+      var opts=['','ops:run-job','autoposter','cron:recruiting-ingest','cron:portal-ingest','autoposter:beat-writer','api:health','db:health','deployments'];
       (tiles||[]).forEach(function(t){if(t.id&&!opts.includes(t.id))opts.push(t.id);});
       sel.innerHTML=opts.map(function(v){
         return '<option value="'+esc(v)+'">'+(v?esc(v):'All subsystems')+'</option>';
@@ -236,15 +241,31 @@
 
     function runJob(jobId){
       var p=pin();
-      if(!p||!jobId)return;
+      if(!p||!jobId){alert('Missing PIN or job id');return;}
       if(!confirm('Re-run job: '+jobId+'?'))return;
+      var btns=document.querySelectorAll('[data-run="'+jobId+'"],[data-job="'+jobId+'"]');
+      var labels=[];
+      btns.forEach(function(b,i){labels[i]=b.textContent;b.disabled=true;b.textContent='Running…';});
       fetch(API+'/api/ops/run-job',{method:'POST',headers:headers(),body:JSON.stringify({pin:p,jobId:jobId})})
-        .then(function(r){return r.json();})
-        .then(function(j){
-          alert(j.ok?'Job finished: '+jobId:(j.error||'Failed'));
+        .then(function(r){
+          return r.json().then(function(j){return{status:r.status,body:j};});
+        })
+        .then(function(res){
+          var j=res.body;
+          if(res.status===401)throw new Error('Invalid PIN');
+          if(!j.ok)throw new Error(j.error||('Job failed ('+res.status+')'));
+          var msg='Job completed: '+(j.jobId||jobId);
+          if(j.result&&j.result.updatedAt)msg+='\nUpdated: '+j.result.updatedAt;
+          if(j.result&&j.result.processedCount!=null)msg+='\nProcessed: '+j.result.processedCount;
+          alert(msg);
+          document.getElementById('log-subsystem').value='ops:run-job';
+          loadLogs();
           loadStatus(false);
         })
-        .catch(function(e){alert(e.message);});
+        .catch(function(e){alert('Run error: '+e.message);})
+        .finally(function(){
+          btns.forEach(function(b,i){b.disabled=false;b.textContent=labels[i]||'Re-run';});
+        });
     }
 
     function unlock(){
