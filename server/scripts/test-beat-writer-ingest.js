@@ -53,7 +53,20 @@ const randomPost = {
   text: '2027 QB Some Player set to visit Florida this weekend.',
   publishedAt: '2026-06-05T17:00:00.000Z'
 };
-assert('rejects untrusted writer', !ingest.parseBeatPostForVisitIntel(randomPost));
+assert('rejects untrusted writer', !ingest.parseBeatPostForVisitIntel(randomPost, { logSkips: false }));
+
+const offerPost = {
+  handle: 'Blake_Alderman',
+  writerName: 'Blake Alderman',
+  text: 'Florida has offered 2027 4-star EDGE Marcus Williams from IMG Academy, sources tell @GatorsOnline.',
+  publishedAt: '2026-06-05T18:00:00.000Z',
+  url: 'https://x.com/Blake_Alderman/status/3'
+};
+const offerParsed = ingest.parseBeatPostForVisitIntel(offerPost, { logSkips: false });
+assert('parses offer intel from Alderman', offerParsed && offerParsed.eventType === 'offer');
+assert('extracts offer player name', offerParsed && offerParsed.playerName === 'Marcus Williams');
+
+assert('recruiting intel detector catches offers', ingest.isRecruitingIntelPost(offerPost.text, offerPost));
 
 if (process.exitCode) {
   console.error('\nBeat writer ingest tests failed.');

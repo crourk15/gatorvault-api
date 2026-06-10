@@ -77,6 +77,14 @@ const VAGUE_EXAMPLES = [
     })
   );
 
+  const trustedOffer = await prefilter.evaluateBeatIntelEligibility(
+    'Florida has offered 2027 4-star EDGE Marcus Williams from IMG Academy per @GatorsOnline.',
+    { trustedWriter: true, post: { handle: 'Blake_Alderman' } }
+  );
+  assert('trusted writer passes offer intel with player name', trustedOffer.eligible && trustedOffer.playerName === 'Marcus Williams');
+
+  assert('strong recruiting signals detect class+position line', prefilter.hasStrongRecruitingSignals('2027 4-Star WR Jaylen Brown is set to visit Florida this weekend'));
+
   if (process.exitCode) {
     console.error('\nBeat intel prefilter tests failed.');
   } else {

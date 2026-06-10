@@ -841,7 +841,36 @@ function startRivalsPmIngestScheduler() {
   console.log('Rivals PM ingest: enabled (every', Math.round(intervalMs / 1000), 's)');
 }
 
-let _gvMediaIngestStarted = false;
+let _gvBeatLateIngestStarted = false;
+function startBeatLateIngestScheduler() {
+  if (_gvBeatLateIngestStarted) return;
+  _gvBeatLateIngestStarted = true;
+  const intervalMs = Math.max(
+    60000,
+    parseInt(process.env.BEAT_LATE_INGEST_INTERVAL_MS || '300000', 10) || 300000
+  );
+  const bootDelay = Math.max(30000, parseInt(process.env.BEAT_LATE_INGEST_BOOT_DELAY_MS || '60000', 10) || 60000);
+
+  const tick = () => {
+    const opsMonitor = require('./lib/ops-monitor');
+    opsMonitor
+      .wrapJob('beat-late-ingest', 'cron:beat-late-ingest', () => {
+        const { runBeatLateIngestSweep } = require('./lib/beat-writer-ingest');
+        return runBeatLateIngestSweep();
+      })
+      .then((r) => {
+        if (r.processedCount) {
+          console.log('[beat-late-ingest] recovered', r.processedCount, 'missed post(s)');
+        }
+      })
+      .catch((err) => console.warn('[beat-late-ingest]', err.message));
+  };
+
+  setTimeout(tick, bootDelay);
+  setInterval(tick, intervalMs);
+  console.log('Beat late ingest sweep: every', Math.round(intervalMs / 1000), 's');
+}
+
 function startMediaIngestScheduler() {
   if (process.env.MEDIA_INGEST_ENABLED !== 'true') return;
   if (_gvMediaIngestStarted) return;
@@ -960,6 +989,7 @@ app.listen(PORT, () => {
       })
       .catch((err) => console.warn('[live-dashboard] Beat token check failed', err.message));
     startLiveDashboardScheduler();
+    startBeatLateIngestScheduler();
   } catch (e) {
     console.warn('Live dashboard scheduler failed to start', e.message);
   }

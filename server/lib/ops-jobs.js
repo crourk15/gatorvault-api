@@ -67,6 +67,15 @@ const JOBS = {
       return runBeatWriterIngest(opts);
     }
   },
+  'beat-late-ingest': {
+    label: 'Beat writer late ingest sweep',
+    subsystem: 'cron:beat-late-ingest',
+    schedule: 'Every 5m',
+    async run(opts = {}) {
+      const { runBeatLateIngestSweep } = require('./beat-writer-ingest');
+      return runBeatLateIngestSweep(opts);
+    }
+  },
   'beat-visit-ingest': {
     label: 'Beat visit cancel ingest',
     subsystem: 'cron:beat-visit-ingest',

@@ -71,6 +71,71 @@ function isGenericNonPlayerIntel(text) {
   return false;
 }
 
+/** Recruiting signals that override generic-phrase rejection for trusted beat writers. */
+function hasStrongRecruitingSignals(text, post = null) {
+  const t = normalizePhrase(text);
+  if (!t) return false;
+
+  let copy;
+  try {
+    copy = require('./x-autoposter-copy');
+  } catch {
+    copy = null;
+  }
+  if (copy?.hasPlayerSpecificIntel?.(t)) return true;
+
+  const name =
+    extractCleanFullName(t) || (copy?.extractPlayerFromText ? copy.extractPlayerFromText(t) : null);
+  const hasName = name && isValidPlayerName(name);
+
+  if (hasName) {
+    if (/\b(202[6-9]|2030)\b/.test(t)) return true;
+    if (/\b(QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH|K|P)\b/.test(t)) return true;
+    if (
+      /\b(?:from|at)\s+[A-Z][A-Za-z0-9 .'-]+(?:High(?:\s+School)?|HS|Academy|Prep|Christian|School)\b/.test(
+        t
+      )
+    ) {
+      return true;
+    }
+    if (
+      /\b(?:official visit|\bov\b|\buv\b|visit|offer(?:ed|s)?|commit(?:ted|ment)?|decommit|flip(?:ped)?|portal|prediction|rpm|rivals|battle|forecast)\b/i.test(
+        t
+      )
+    ) {
+      return true;
+    }
+  }
+
+  if (
+    /\b(recruiting battle|flip race|pulling ahead|leaning toward|momentum|heating up|staff loves)\b/i.test(
+      t
+    ) &&
+    hasName
+  ) {
+    return true;
+  }
+
+  if (post) {
+    let beatFilters;
+    try {
+      beatFilters = require('./beat-writer-filters');
+    } catch {
+      beatFilters = null;
+    }
+    if (beatFilters?.isFloridaRelatedUrl) {
+      const urls = [];
+      if (Array.isArray(post.attachmentUrls)) urls.push(...post.attachmentUrls);
+      if (post.url) urls.push(post.url);
+      const fromText = t.match(/https?:\/\/[^\s]+/g) || [];
+      urls.push(...fromText);
+      if (urls.some((u) => beatFilters.isFloridaRelatedUrl(u))) return true;
+    }
+  }
+
+  return false;
+}
+
 function isSingleTokenName(name) {
   const parts = String(name || '')
     .trim()
@@ -102,8 +167,12 @@ function extractCleanFullName(text) {
   return null;
 }
 
-async function evaluateBeatIntelEligibility(text, { playerName = null, playerSlug = null } = {}) {
+async function evaluateBeatIntelEligibility(
+  text,
+  { playerName = null, playerSlug = null, trustedWriter = false, post = null } = {}
+) {
   const phrase = normalizePhrase(text);
+  const trustedOverride = trustedWriter && hasStrongRecruitingSignals(phrase, post);
 
   const invalidName =
     playerName &&
@@ -128,7 +197,7 @@ async function evaluateBeatIntelEligibility(text, { playerName = null, playerSlu
     return { eligible: false, reason: 'empty_text', category: 'non_player_intel' };
   }
 
-  if (isGenericNonPlayerIntel(phrase)) {
+  if (isGenericNonPlayerIntel(phrase) && !trustedOverride) {
     return {
       eligible: false,
       reason: 'generic_phrase',
@@ -206,6 +275,15 @@ async function evaluateBeatIntelEligibility(text, { playerName = null, playerSlu
   }
 
   const partial = playerName && !invalidName ? playerName : extractCleanFullName(phrase);
+  if (trustedOverride && partial && isValidPlayerName(partial)) {
+    return {
+      eligible: true,
+      playerName: partial.trim(),
+      playerSlug: resolvedSlug,
+      matchMode: isSingleTokenName(partial) ? 'trusted_partial_name' : 'trusted_strong_signal',
+      triggerPhrase: phrase.slice(0, 160)
+    };
+  }
   return {
     eligible: false,
     reason: partial && isSingleTokenName(partial) ? 'single_name_only' : 'no_identifiable_player',
@@ -250,7 +328,12 @@ function isNonPlayerIntelSkip(raw) {
  * If ineligible, logs and returns a skip payload — otherwise null (continue pipeline).
  */
 async function bypassRecruitingPipeline(text, context = {}) {
-  const gate = await evaluateBeatIntelEligibility(text, context);
+  const gate = await evaluateBeatIntelEligibility(text, {
+    playerName: context.playerName,
+    playerSlug: context.playerSlug,
+    trustedWriter: context.trustedWriter,
+    post: context.post
+  });
   if (gate.eligible) return null;
   logNonPlayerIntel({
     text,
@@ -309,6 +392,7 @@ module.exports = {
   normalizePhrase,
   isCorruptedOrHeadlinePhrase,
   isGenericNonPlayerIntel,
+  hasStrongRecruitingSignals,
   extractCleanFullName,
   evaluateBeatIntelEligibility,
   buildNonPlayerSkipPayload,

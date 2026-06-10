@@ -109,7 +109,7 @@ async function fetchText(url, timeoutMs = 12000) {
   }
 }
 
-async function fetchXUserTimeline(handle) {
+async function fetchXUserTimeline(handle, { maxPosts = 10 } = {}) {
   const headers = xAuthHeaders();
   if (!headers) return null;
   const userRes = await fetch(
@@ -121,8 +121,9 @@ async function fetchXUserTimeline(handle) {
   const userId = userJson.data?.id;
   if (!userId) return [];
 
+  const maxResults = Math.min(100, Math.max(5, maxPosts));
   const tweetsRes = await fetch(
-    `https://api.twitter.com/2/users/${userId}/tweets?max_results=10&tweet.fields=created_at,entities&exclude=retweets,replies`,
+    `https://api.twitter.com/2/users/${userId}/tweets?max_results=${maxResults}&tweet.fields=created_at,entities&exclude=retweets,replies`,
     { headers }
   );
   if (!tweetsRes.ok) throw new Error(`X tweets ${tweetsRes.status}`);
@@ -145,12 +146,12 @@ async function fetchXUserTimeline(handle) {
   });
 }
 
-async function fetchNitterRss(handle) {
+async function fetchNitterRss(handle, { maxPosts = 8 } = {}) {
   let lastErr = null;
   for (const base of NITTER_BASES) {
     try {
       const xml = await fetchText(`${base.replace(/\/$/, '')}/${handle}/rss`);
-      const items = parseRssItems(xml, 8);
+      const items = parseRssItems(xml, Math.min(25, Math.max(5, maxPosts)));
       const writer = store.loadWriters().find((w) => w.handle.toLowerCase() === handle.toLowerCase());
       return items.map((item) => ({
         id: `nitter_${handle}_${item.id}`,
@@ -170,20 +171,42 @@ async function fetchNitterRss(handle) {
   throw lastErr || new Error('Nitter unavailable');
 }
 
-async function fetchWriterPosts(writer) {
+async function fetchWriterPosts(writer, { maxPosts = 10 } = {}) {
   try {
     if (getXBearerToken()) {
       try {
-        const posts = await fetchXUserTimeline(writer.handle);
+        const posts = await fetchXUserTimeline(writer.handle, { maxPosts });
         if (posts && posts.length) return posts;
       } catch (e) {
         /* fall through to Nitter */
       }
     }
-    return await fetchNitterRss(writer.handle);
+    return await fetchNitterRss(writer.handle, { maxPosts });
   } catch (e) {
     return [];
   }
+}
+
+/** Fetch last N posts per writer directly (for late-ingest sweep). */
+async function fetchAllWriterPostsFresh({ maxPostsPerWriter = 20 } = {}) {
+  const tokenStatus = await validateXBearerToken({ force: false });
+  const writers = store.loadWriters();
+  const all = [];
+  let errors = 0;
+
+  for (const writer of writers) {
+    const posts = await fetchWriterPosts(writer, { maxPosts: maxPostsPerWriter });
+    if (!posts.length) errors += 1;
+    posts.forEach((p) => all.push(p));
+  }
+
+  all.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+  return {
+    posts: all,
+    writerCount: writers.length,
+    fetchErrors: errors,
+    tokenStatus: { configured: tokenStatus.configured, ok: tokenStatus.ok }
+  };
 }
 
 function recordBlockedNationalPost(post, reason) {
@@ -378,6 +401,7 @@ module.exports = {
   refreshBeatStream,
   getBeatPosts,
   fetchWriterPosts,
+  fetchAllWriterPostsFresh,
   validateXBearerToken,
   getXTokenStatus,
   getXBearerToken,

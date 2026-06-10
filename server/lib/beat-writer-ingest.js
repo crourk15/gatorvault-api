@@ -18,7 +18,7 @@ const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'beat-writer-ingest-snapshot.json');
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 
-/** Trusted handles for visit ingest — Harden/Swamp247, Bender, GatorsOnline, Gainesville beat. */
+/** Trusted handles for recruiting ingest — UF beat + national UF-only reporters. */
 const VISIT_INGEST_HANDLES = new Set([
   'ttjharden8',
   'corey_bender',
@@ -27,8 +27,32 @@ const VISIT_INGEST_HANDLES = new Set([
   'nickdelatorregc',
   'thomasgoldkamp',
   'blake_alderman',
-  'keithniebuhr'
+  'keithniebuhr',
+  'chadsimmons_',
+  'hayesfawcett3',
+  'zachabolverdi',
+  'andrew_ivins',
+  'jamieivins',
+  'charlespower',
+  'stevewiltfong',
+  'ejhollandon3',
+  'on3recruits',
+  'rivalsportal',
+  'gatorsterritory',
+  'insidethegators',
+  'onlygators',
+  'alligatorarmy',
+  'gatorsbreakdown'
 ]);
+
+const RECRUITING_INTEL_SIGNAL_RES = [
+  /\b(?:commit(?:ted|ment)?|decommit(?:ted)?|flip(?:ped)?|portal|offer(?:ed|s)?|verb(?:ed|al)?)\b/i,
+  /\b(?:official visit|\bov\b|\buv\b|unofficial visit|on campus|in gainesville|the swamp)\b/i,
+  /\b(?:prediction machine|futurecast|expert pick|crystal ball|rpm|rivals)\b/i,
+  /\b(?:recruiting battle|flip race|pulling ahead|leaning|momentum|heating up|staff loves)\b/i,
+  /\b20\d{2}\s+(?:\d+-[Ss]tar\s+)?(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH)\s+[A-Z]/,
+  /\b(?:Class of 20\d{2})\b/i
+];
 
 const VISIT_SIGNAL_RES = [
   /(?:official\s+visit|\bov\b).*?(?:florida|gators|gainesville|\buf\b|the\s+swamp)/i,
@@ -79,11 +103,74 @@ function saveSnapshot(doc) {
 function isVisitIngestWriter(post) {
   const handle = String(post.handle || post.writerId || '').toLowerCase();
   if (VISIT_INGEST_HANDLES.has(handle)) return true;
+  if (beatFilters.isTrustedBeatWriter(post)) return true;
   const writer = String(post.writerName || post.outlet || '').toLowerCase();
   return (
-    /harden|bender|gatorsonline|gators online|swamp247|graham hall|de la torre|goldkamp|goodall/i.test(writer) ||
-    /harden|bender|gatorsonline|swamp247|grahamhall|nickdelatorre|thomasgoldkamp/i.test(handle)
+    /harden|bender|gatorsonline|gators online|swamp247|graham hall|de la torre|goldkamp|goodall|alderman|holland|ivins|simmons|fawcett|gatorsterritory|insidethegators|on3recruits|rivalsportal/i.test(
+      writer
+    ) ||
+    /harden|bender|gatorsonline|swamp247|grahamhall|nickdelatorre|thomasgoldkamp|blake_alderman|ejholland|andrew_ivins|chadsimmons|on3recruits|rivalsportal|gatorsterritory|insidethegators/i.test(
+      handle
+    )
   );
+}
+
+function logBeatPostSkip(post, reason, category = 'filtered') {
+  try {
+    require('./ops-monitor').logEvent({
+      subsystem: 'autoposter:beat-writer',
+      status: 'skipped',
+      message: `beat post skipped: ${reason}`,
+      details: {
+        reason,
+        category,
+        handle: post?.handle || post?.writerId || null,
+        writer: post?.writerName || post?.outlet || null,
+        postId: post?.id || null,
+        url: post?.url || null,
+        textPreview: String(post?.text || '').replace(/\s+/g, ' ').slice(0, 220),
+        publishedAt: post?.publishedAt || null
+      }
+    });
+  } catch {
+    /* ops optional */
+  }
+}
+
+function isRecruitingIntelPost(text, post = null) {
+  const t = String(text || '');
+  if (!t.trim()) return false;
+  if (cancelParser.isVisitCancelPost(t)) return false;
+  if (isVisitSchedulePost(t)) return true;
+  if (beatFilters.hasPlayerSpecificBeatIntel(t)) return true;
+  if (RECRUITING_INTEL_SIGNAL_RES.some((re) => re.test(t))) return true;
+  const prefilter = require('./beat-intel-prefilter');
+  if (prefilter.hasStrongRecruitingSignals(t, post)) return true;
+  return false;
+}
+
+function resolveRecruitingEventType(text) {
+  const t = String(text || '');
+  if (/\b(commit(?:ted|ment)?|flip(?:ped)?)\b.*\b(florida|gators|\buf\b)/i.test(t)) return 'commit';
+  if (/\bdecommit/i.test(t)) return 'decommit';
+  if (/\bportal\b/i.test(t) && /\b(florida|gators|\buf\b)/i.test(t)) return 'portal_in';
+  if (/\boffer(?:ed|s)?\b/i.test(t)) return 'offer';
+  if (/\b(prediction machine|futurecast|expert pick|rpm)\b/i.test(t)) return 'prediction';
+  if (isOfficialVisitText(t)) return 'official_visit';
+  if (UNOFFICIAL_VISIT_RE.test(t)) return 'unofficial_visit';
+  if (isVisitSchedulePost(t)) return resolveEventType(t);
+  return 'target_update';
+}
+
+function buildRecruitingStatus(eventType, text) {
+  if (eventType === 'official_visit') return 'Official Visit · Florida';
+  if (eventType === 'unofficial_visit') return 'Visit · Gainesville';
+  if (eventType === 'commit') return 'Committed · Florida';
+  if (eventType === 'decommit') return 'Decommitted';
+  if (eventType === 'offer') return 'Offer · Florida';
+  if (eventType === 'portal_in') return 'Portal · UF target';
+  if (eventType === 'prediction') return 'Prediction · Florida';
+  return 'Recruiting intel';
 }
 
 function isVisitSchedulePost(text) {
@@ -169,44 +256,77 @@ function extractVisitPlayerName(text) {
   return prefilter.extractCleanFullName(t);
 }
 
-function parseBeatPostForVisitIntel(post) {
+function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
   const prefilter = require('./beat-intel-prefilter');
   const text = String(post.text || '').trim();
-  if (!text || !isVisitSchedulePost(text)) return null;
-  if (!isVisitIngestWriter(post)) return null;
-  if (!beatFilters.shouldIncludeBeatPost(post)) return null;
-  if (!beatFilters.isFloridaRelevantPost(post)) return null;
-  if (prefilter.isGenericNonPlayerIntel(text)) {
+  const trusted = isVisitIngestWriter(post);
+
+  if (!text) {
+    if (logSkips) logBeatPostSkip(post, 'empty_text', 'non_player_intel');
+    return null;
+  }
+  if (!isRecruitingIntelPost(text, post)) {
+    if (logSkips) logBeatPostSkip(post, 'no_recruiting_signal', 'filtered');
+    return null;
+  }
+  if (!trusted) {
+    if (logSkips) logBeatPostSkip(post, 'untrusted_writer', 'filtered');
+    return null;
+  }
+  if (!beatFilters.shouldIncludeBeatPost(post)) {
+    if (logSkips) logBeatPostSkip(post, 'beat_filter_blocked', 'filtered');
+    return null;
+  }
+  if (!beatFilters.isFloridaRelevantPost(post)) {
+    if (logSkips) logBeatPostSkip(post, 'non_florida', 'filtered');
+    return null;
+  }
+  if (prefilter.isGenericNonPlayerIntel(text) && !prefilter.hasStrongRecruitingSignals(text, post)) {
+    if (logSkips) logBeatPostSkip(post, 'generic_phrase', 'non_player_intel');
     prefilter.logNonPlayerIntel({ text, reason: 'generic_phrase', source: post.handle || post.writerName });
     return null;
   }
 
-  const playerName = extractVisitPlayerName(text);
+  let playerName = extractVisitPlayerName(text);
   if (!playerName || !isUsableExtractedName(playerName)) {
+    const copy = require('./x-autoposter-copy');
+    const fallback = copy.extractPlayerFromText(text);
+    if (fallback && isUsableExtractedName(fallback)) playerName = fallback;
+  }
+  if ((!playerName || !isUsableExtractedName(playerName)) && !prefilter.hasStrongRecruitingSignals(text, post)) {
+    if (logSkips) logBeatPostSkip(post, 'no_identifiable_player', 'non_player_intel');
     prefilter.logNonPlayerIntel({ text, reason: 'no_identifiable_player', source: post.handle || post.writerName });
     return null;
+  }
+  if (!playerName || !isUsableExtractedName(playerName)) {
+    playerName = prefilter.extractCleanFullName(text) || null;
   }
 
   const resolver = require('./contextual-identity-resolver');
   const vagueClues = resolver.parseVagueClues(text, {
-    playerName,
+    playerName: playerName || '',
     stars: parseStars(text),
     pos: parsePosition(text),
     classYear: parseClassYear(text),
     school: parseSchool(text) || parseCollegeSchool(text)
   });
 
-  const resolvedName = playerName;
+  const timestamp = post.publishedAt || new Date().toISOString();
+  const handle = String(post.handle || '').toLowerCase() || 'beat';
+  const day = timestamp.slice(0, 10);
+  const postKey = String(post.id || post.url || day).replace(/[^a-z0-9_-]/gi, '').slice(0, 32);
+  const resolvedName =
+    playerName && isUsableExtractedName(playerName) ? playerName : playerName || 'Unknown prospect';
+  const slugBase =
+    playerName && isUsableExtractedName(playerName)
+      ? slugify(resolvedName)
+      : `beat-pending-${handle}-${postKey}`;
   const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
   const classYear = parseClassYear(text) || vagueClues?.classYear || 2027;
   const pos = parsePosition(text) || vagueClues?.pos || '';
   const school = parseSchool(text) || parseCollegeSchool(text) || vagueClues?.school || '';
   const visitDate = parseVisitDate(text);
-  const eventType = resolveEventType(text);
-  const timestamp = post.publishedAt || new Date().toISOString();
-  const slugBase = slugify(resolvedName);
-  const handle = String(post.handle || '').toLowerCase() || 'beat';
-  const day = timestamp.slice(0, 10);
+  const eventType = resolveRecruitingEventType(text);
 
   return {
     playerName: resolvedName,
@@ -218,7 +338,7 @@ function parseBeatPostForVisitIntel(post) {
     highSchool: school,
     stars: parseStars(text) || vagueClues?.stars || null,
     eventType,
-    status: eventType === 'official_visit' ? 'Official Visit · Florida' : 'Visit · Gainesville',
+    status: buildRecruitingStatus(eventType, text),
     visitStart: visitDate,
     visitEnd: null,
     detail: text.replace(/\s+/g, ' ').slice(0, 280),
@@ -227,7 +347,7 @@ function parseBeatPostForVisitIntel(post) {
     source: analystName,
     sourceHandle: post.handle || null,
     sourceType: 'beat',
-    fingerprint: `beat_visit_${slugBase}_${day}_${handle}_${eventType}`
+    fingerprint: `beat_${eventType}_${slugBase}_${day}_${handle}`
   };
 }
 
@@ -315,14 +435,22 @@ async function processBeatVisitIntelRow(row, snapshot) {
   if (!row?.fingerprint) return { skipped: true, reason: 'invalid' };
 
   const prefilter = require('./beat-intel-prefilter');
+  const trustedWriter = row.sourceHandle ? isVisitIngestWriter({ handle: row.sourceHandle }) : false;
   const skip = await prefilter.bypassRecruitingPipeline(row.detail, {
     playerName: row.playerName,
     playerSlug: row.playerSlug,
     source: row.sourceHandle || row.source,
-    subsystem: 'autoposter:beat-writer'
+    subsystem: 'autoposter:beat-writer',
+    trustedWriter,
+    post: { handle: row.sourceHandle, text: row.detail, url: row.articleUrl }
   });
   if (skip) {
     snapshot.fingerprints[row.fingerprint] = row.timestamp;
+    logBeatPostSkip(
+      { handle: row.sourceHandle, text: row.detail, url: row.articleUrl, publishedAt: row.timestamp },
+      skip.nonPlayerIntel?.reason || 'non_player_intel',
+      'non_player_intel'
+    );
     return {
       skipped: true,
       reason: skip.nonPlayerIntel?.reason || 'non_player_intel',
@@ -332,7 +460,9 @@ async function processBeatVisitIntelRow(row, snapshot) {
 
   const gate = await prefilter.evaluateBeatIntelEligibility(row.detail, {
     playerName: row.playerName,
-    playerSlug: row.playerSlug
+    playerSlug: row.playerSlug,
+    trustedWriter,
+    post: { handle: row.sourceHandle, text: row.detail, url: row.articleUrl }
   });
   if (!gate.eligible) {
     snapshot.fingerprints[row.fingerprint] = row.timestamp;
@@ -341,6 +471,11 @@ async function processBeatVisitIntelRow(row, snapshot) {
       reason: gate.reason,
       source: row.sourceHandle || row.source
     });
+    logBeatPostSkip(
+      { handle: row.sourceHandle, text: row.detail, url: row.articleUrl, publishedAt: row.timestamp },
+      gate.reason,
+      gate.category || 'non_player_intel'
+    );
     return { skipped: true, reason: gate.reason, category: 'non_player_intel' };
   }
   row.playerName = gate.playerName;
@@ -446,7 +581,9 @@ async function processBeatVisitIntelRow(row, snapshot) {
 
   const recheck = await prefilter.evaluateBeatIntelEligibility(row.detail, {
     playerName: confirmedName,
-    playerSlug: confirmedSlug
+    playerSlug: confirmedSlug,
+    trustedWriter,
+    post: { handle: row.sourceHandle, text: row.detail, url: row.articleUrl }
   });
   if (!recheck.eligible) {
     snapshot.fingerprints[row.fingerprint] = row.timestamp;
@@ -455,6 +592,11 @@ async function processBeatVisitIntelRow(row, snapshot) {
       reason: recheck.reason,
       source: row.sourceHandle || row.source
     });
+    logBeatPostSkip(
+      { handle: row.sourceHandle, text: row.detail, url: row.articleUrl, publishedAt: row.timestamp },
+      recheck.reason,
+      recheck.category || 'non_player_intel'
+    );
     return { skipped: true, reason: recheck.reason, category: 'non_player_intel' };
   }
   row.playerName = recheck.playerName || confirmedName;
@@ -537,7 +679,7 @@ async function processBeatVisitIntelRow(row, snapshot) {
     playerId: player.id,
     playerSlug: player.slug,
     eventType: row.eventType,
-    title: `${player.name} — ${row.eventType === 'official_visit' ? 'OV' : 'Visit'} to Florida`,
+    title: `${player.name} — ${row.status || row.eventType}`,
     detail: copy.profileNote,
     skinny: copy.skinny,
     classYear: player.classYear,
@@ -546,10 +688,10 @@ async function processBeatVisitIntelRow(row, snapshot) {
   });
 
   liveStore.upsertFeedItem({
-    id: `beat_visit_${row.fingerprint}`,
+    id: `beat_intel_${row.fingerprint}`,
     dedupeKey: row.fingerprint,
-    type: 'visit',
-    title: `${player.name} — ${row.eventType === 'official_visit' ? 'Official visit' : 'Visit'} to Florida`,
+    type: row.eventType?.includes('visit') ? 'visit' : 'beat',
+    title: `${player.name} — ${row.status || row.eventType}`,
     summary: row.detail,
     source_url: row.articleUrl || `/player/${player.slug}`,
     source: row.source,
@@ -597,19 +739,45 @@ async function processBeatVisitIntelRow(row, snapshot) {
   };
 }
 
-async function collectBeatVisitIntelRows() {
-  const beat = getBeatPosts(80);
+async function collectBeatVisitIntelRows({ posts = null, logSkips = false } = {}) {
+  const beat = posts ? { posts } : getBeatPosts(80);
   const cutoff = Date.now() - 7 * 86400000;
   const rows = [];
   for (const post of beat.posts || []) {
     if (new Date(post.publishedAt).getTime() < cutoff) continue;
-    const parsed = parseBeatPostForVisitIntel(post);
+    const parsed = parseBeatPostForVisitIntel(post, { logSkips });
     if (parsed) rows.push(parsed);
   }
   return rows;
 }
 
-async function runBeatWriterIngest({ force = false, manualRows = [] } = {}) {
+/** Re-scan last 20 posts per beat writer and ingest anything missed. */
+async function runBeatLateIngestSweep() {
+  const { fetchAllWriterPostsFresh } = require('./live-beat');
+  const fresh = await fetchAllWriterPostsFresh({ maxPostsPerWriter: 20 });
+  const cutoff = Date.now() - 48 * 3600000;
+  const recentPosts = (fresh.posts || []).filter((p) => new Date(p.publishedAt).getTime() >= cutoff);
+
+  const result = await runBeatWriterIngest({
+    force: true,
+    manualRows: [],
+    posts: recentPosts,
+    logSkips: true
+  });
+
+  return {
+    ok: true,
+    sweep: true,
+    writersPolled: fresh.writerCount,
+    postsFetched: fresh.posts?.length || 0,
+    recentPosts: recentPosts.length,
+    fetchErrors: fresh.fetchErrors,
+    tokenStatus: fresh.tokenStatus,
+    ...result
+  };
+}
+
+async function runBeatWriterIngest({ force = false, manualRows = [], posts = null, logSkips = false } = {}) {
   const snapshot = loadSnapshot();
   const results = { processed: [], skipped: [], errors: [] };
 
@@ -625,7 +793,7 @@ async function runBeatWriterIngest({ force = false, manualRows = [] } = {}) {
 
   let beatRows = [];
   try {
-    beatRows = await collectBeatVisitIntelRows();
+    beatRows = await collectBeatVisitIntelRows({ posts, logSkips });
   } catch (e) {
     results.errors.push({ stage: 'beat', error: e.message });
   }
@@ -651,7 +819,16 @@ async function runBeatWriterIngest({ force = false, manualRows = [] } = {}) {
       }
       const out = await processBeatVisitIntelRow(row, snapshot);
       if (out.processed) results.processed.push(out);
-      else results.skipped.push(out);
+      else {
+        results.skipped.push(out);
+        if (out.reason && out.reason !== 'duplicate' && out.reason !== 'snapshot') {
+          logBeatPostSkip(
+            { handle: row.sourceHandle, text: row.detail, url: row.articleUrl, publishedAt: row.timestamp },
+            out.reason,
+            out.category || 'ingest'
+          );
+        }
+      }
     } catch (e) {
       results.errors.push({ player: row.playerName, error: e.message });
     }
@@ -678,11 +855,14 @@ async function ingestManualBeatVisitIntel(row) {
 
 module.exports = {
   runBeatWriterIngest,
+  runBeatLateIngestSweep,
   ingestManualBeatVisitIntel,
   processBeatVisitIntelRow,
   parseBeatPostForVisitIntel,
   isVisitIngestWriter,
   isVisitSchedulePost,
+  isRecruitingIntelPost,
+  logBeatPostSkip,
   VISIT_INGEST_HANDLES,
   SNAPSHOT_PATH
 };

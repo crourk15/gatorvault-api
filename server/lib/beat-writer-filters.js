@@ -22,17 +22,32 @@ const TRUSTED_HANDLES = new Set([
   'zachabolverdi',
   'gatorsonline',
   'gatorsbreakdown',
+  'andrew_ivins',
   'jamieivins',
   'charlespower',
   'stevewiltfong',
   'grahamhall_',
   'nickdelatorregc',
+  'thomasgoldkamp',
   'onlygators',
-  'alligatorarmy'
+  'alligatorarmy',
+  'ejhollandon3',
+  'on3recruits',
+  'rivalsportal',
+  'gatorsterritory',
+  'insidethegators'
+]);
+
+/** All beat writers polled for recruiting ingest (lowercase handles). */
+const BEAT_RECRUITING_INGEST_HANDLES = new Set([
+  ...TRUSTED_HANDLES,
+  'keithniebuhr',
+  'nickdelatorregc',
+  'thomasgoldkamp'
 ]);
 
 const TRUSTED_PATTERN =
-  /bender|alderman|niebuhr|simmons|fawcett|harden|abolverdi|gatorsonline|ivins|wiltfong|power|gators breakdown/i;
+  /bender|alderman|niebuhr|simmons|fawcett|harden|abolverdi|gatorsonline|ivins|wiltfong|power|gators breakdown|holland|gatorsterritory|insidethegators|on3recruits|rivalsportal/i;
 
 const MOMENTUM_KEYWORDS = [
   'trending up',
@@ -215,6 +230,8 @@ module.exports = {
   FLORIDA_URL_RE,
   MOMENTUM_KEYWORDS,
   NATIONAL_UF_ONLY_HANDLES,
+  TRUSTED_HANDLES,
+  BEAT_RECRUITING_INGEST_HANDLES,
   isNationalUfOnlyReporter,
   isChadSimmonsPost,
   isHayesFawcettPost,

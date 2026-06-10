@@ -7,7 +7,7 @@
   { "id": "alderman", "name": "Blake Alderman", "handle": "Blake_Alderman", "outlet": "Gators Online / On3" },
   { "id": "wiltfong", "name": "Steve Wiltfong", "handle": "SteveWiltfong", "outlet": "247Sports / On3" },
   { "id": "power", "name": "Charles Power", "handle": "CharlesPower", "outlet": "On3" },
-  { "id": "ivins", "name": "Andrew Ivins", "handle": "JamieIvins", "outlet": "On3 / Gators Online" },
+  { "id": "ivins", "name": "Andrew Ivins", "handle": "Andrew_Ivins", "outlet": "On3 / Gators Online" },
   { "id": "simmons", "name": "Chad Simmons", "handle": "ChadSimmons_", "outlet": "On3" },
   { "id": "fawcett", "name": "Hayes Fawcett", "handle": "Hayesfawcett3", "outlet": "On3 / Rivals" },
   { "id": "harden", "name": "Tyler Harden", "handle": "ttjharden8", "outlet": "Swamp247 / 247Sports" },
@@ -15,5 +15,10 @@
   { "id": "delatorre", "name": "Nick de la Torre", "handle": "NickdelatorreGC", "outlet": "The Gainesville Sun" },
   { "id": "goldkamp", "name": "Thomas Goldkamp", "handle": "ThomasGoldkamp", "outlet": "Gators Online" },
   { "id": "onlygators", "name": "OnlyGators", "handle": "OnlyGators", "outlet": "OnlyGators" },
-  { "id": "alligatorarmy", "name": "Alligator Army", "handle": "AlligatorArmy", "outlet": "SB Nation" }
+  { "id": "alligatorarmy", "name": "Alligator Army", "handle": "AlligatorArmy", "outlet": "SB Nation" },
+  { "id": "ejholland", "name": "EJ Holland", "handle": "EJHollandOn3", "outlet": "On3" },
+  { "id": "on3recruits", "name": "On3 Recruits", "handle": "On3Recruits", "outlet": "On3" },
+  { "id": "rivalsportal", "name": "Rivals Portal", "handle": "RivalsPortal", "outlet": "Rivals" },
+  { "id": "gatorsterritory", "name": "Gators Territory", "handle": "GatorsTerritory", "outlet": "Gators Territory" },
+  { "id": "insidethegators", "name": "Inside the Gators", "handle": "InsideTheGators", "outlet": "Inside the Gators" }
 ]
