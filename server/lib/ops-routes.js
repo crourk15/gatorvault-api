@@ -51,7 +51,7 @@ function mountOpsRoutes(app) {
     try {
       const evaluateAlerts = req.query.evaluateAlerts === '1';
       const report = await buildOpsStatusReport({ evaluateAlerts });
-      return res.json({ ok: true, ...report });
+      return res.status(200).json({ ok: true, authenticated: true, ...report });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

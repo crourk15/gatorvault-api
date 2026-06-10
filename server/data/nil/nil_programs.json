@@ -2,7 +2,7 @@
   "version": 1,
   "updatedAt": "2026-06-05T00:00:00.000Z",
   "items": [
-    { "id": "uf", "school": "Florida Gators", "slug": "florida-gators", "conference": "SEC", "collective": "Gator Guard", "city": "Gainesville", "state": "FL" },
+    { "id": "uf", "school": "Florida Gators", "slug": "florida-gators", "conference": "SEC", "collective": "Florida Victorious", "city": "Gainesville", "state": "FL" },
     { "id": "uga", "school": "Georgia Bulldogs", "slug": "georgia-bulldogs", "conference": "SEC", "collective": "Classic City Collective", "city": "Athens", "state": "GA" },
     { "id": "bama", "school": "Alabama Crimson Tide", "slug": "alabama-crimson-tide", "conference": "SEC", "collective": "Yellowhammer Fund", "city": "Tuscaloosa", "state": "AL" },
     { "id": "lsu", "school": "LSU Tigers", "slug": "lsu-tigers", "conference": "SEC", "collective": "Bayou Traditions", "city": "Baton Rouge", "state": "LA" },

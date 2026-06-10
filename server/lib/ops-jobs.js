@@ -131,7 +131,7 @@ const JOBS = {
     async run() {
       const { buildOpsStatusReport } = require('./ops-status');
       const report = await buildOpsStatusReport({ evaluateAlerts: true });
-      return { ok: report.overall !== 'red', report };
+      return { ok: report.healthy !== false, report };
     }
   }
 };

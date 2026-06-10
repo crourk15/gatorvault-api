@@ -228,7 +228,7 @@ async function buildOpsStatusReport({ evaluateAlerts = false } = {}) {
   else if (statuses.includes('yellow')) overall = 'yellow';
 
   const report = {
-    ok: overall !== 'red',
+    healthy: overall !== 'red',
     overall,
     updatedAt: new Date().toISOString(),
     deployments: deploy,

@@ -186,9 +186,13 @@
       if(!p){alert('PIN required');return;}
       var url=API+'/api/ops/status'+(evalAlerts?'?evaluateAlerts=1&pin='+encodeURIComponent(p):'?pin='+encodeURIComponent(p));
       fetch(url,{headers:headers()})
-        .then(function(r){return r.json();})
+        .then(function(r){
+          if(r.status===401)throw new Error('Invalid PIN — check Render RECRUITING_ADMIN_PIN / OPS_ADMIN_PIN');
+          return r.json();
+        })
         .then(function(j){
-          if(!j.ok)throw new Error(j.error||'Failed');
+          if(j.error)throw new Error(j.error);
+          if(!j.tiles)throw new Error('Unexpected response');
           var banner=document.getElementById('banner');
           banner.className='banner '+esc(j.overall||'yellow');
           document.getElementById('overall-label').textContent='Overall: '+(j.overall||'unknown').toUpperCase();
@@ -233,16 +237,22 @@
     function unlock(){
       var p=document.getElementById('gate-pin').value.trim();
       fetch(API+'/api/ops/status?pin='+encodeURIComponent(p))
-        .then(function(r){return r.json();})
-        .then(function(j){
-          if(!j.ok)throw new Error('bad pin');
+        .then(function(r){
+          if(r.status===401)throw new Error('Invalid PIN');
+          return r.json().then(function(j){return{status:r.status,body:j};});
+        })
+        .then(function(res){
+          var j=res.body;
+          if(j.error)throw new Error(j.error);
+          if(res.status!==200||!j.tiles)throw new Error('Invalid PIN');
           document.getElementById('pin').value=p;
           sessionStorage.setItem('gv_ops_pin',p);
           document.getElementById('pin-gate').classList.add('hidden');
           document.getElementById('app').classList.remove('hidden');
           loadStatus(false);
         })
-        .catch(function(){
+        .catch(function(e){
+          document.getElementById('gate-err').textContent=e.message||'Invalid PIN';
           document.getElementById('gate-err').classList.remove('hidden');
         });
     }
