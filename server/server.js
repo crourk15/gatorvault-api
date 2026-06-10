@@ -952,6 +952,13 @@ app.listen(PORT, () => {
         }
       })
       .catch((err) => console.warn('[recruiting-alerts] Brewster purge skipped:', err.message));
+    const { rebuildPlayerIdentityFromOn3 } = require('./lib/identity-record-validator');
+    rebuildPlayerIdentityFromOn3('jalen-brewster')
+      .then((r) => {
+        if (r.ok) console.log('[identity] rebuilt Brewster identity from On3:', r.validation);
+        else console.warn('[identity] Brewster rebuild skipped:', r.error, r.validation?.errors);
+      })
+      .catch((err) => console.warn('[identity] Brewster rebuild failed:', err.message));
   } catch (e) {
     console.warn('Recruiting API: failed to init', e.message);
   }

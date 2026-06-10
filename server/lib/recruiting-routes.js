@@ -380,6 +380,22 @@ function mountRecruitingRoutes(app) {
     }
   });
 
+  app.post('/api/recruiting/admin/rebuild-player-identity', async (req, res) => {
+    try {
+      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || '');
+      if (!verifyAdminPin(pin)) {
+        return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+      }
+      const slug = String(req.body.slug || 'jalen-brewster').trim();
+      const { rebuildPlayerIdentityFromOn3 } = require('./identity-record-validator');
+      const result = await rebuildPlayerIdentityFromOn3(slug, { classYear: req.body.classYear });
+      if (!result.ok) return res.status(400).json(result);
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/recruiting/admin/clear-events', async (req, res) => {
     try {
       const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || '');

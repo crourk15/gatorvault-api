@@ -232,18 +232,33 @@ async function getPlayerBySlug(slug) {
 }
 
 function preservePlayerFields(existing, incoming) {
+  const identityValidator = require('./identity-record-validator');
   const merged = { ...existing, ...incoming };
   ['natlRank', 'posRank', 'stateRank', 'rating', 'stars', 'htWt', 'school', 'on3Id', 'commitDate', 'classYear'].forEach((field) => {
     if (merged[field] == null && existing[field] != null) merged[field] = existing[field];
   });
+  if (merged.school && !identityValidator.isValidSchoolField(merged.school)) {
+    merged.school = identityValidator.sanitizeSchoolField(existing?.school) || null;
+  }
   if (!merged.skinny && existing.skinny) merged.skinny = existing.skinny;
+  if (merged.skinny && identityValidator.validatePlayerIdentityRecord({ slug: merged.slug, name: merged.name, pos: merged.pos, classYear: merged.classYear, school: merged.school, skinny: merged.skinny }).errors.includes('truncated_skinny')) {
+    merged.skinny = existing.skinny && !identityValidator.validatePlayerIdentityRecord({ slug: merged.slug, name: merged.name, pos: merged.pos, classYear: merged.classYear, school: merged.school, skinny: existing.skinny }).errors.includes('truncated_skinny') ? existing.skinny : null;
+  }
   if (incoming.headliner == null && existing.headliner != null) merged.headliner = existing.headliner;
   merged.updatedAt = nowIso();
   return merged;
 }
 
 async function upsertPlayer(player) {
-  const normalized = normalizePlayer(player);
+  const identityValidator = require('./identity-record-validator');
+  const sanitized = identityValidator.sanitizePlayerFieldsForStore(player);
+  const normalized = normalizePlayer(sanitized);
+  if (normalized.school && !identityValidator.isValidSchoolField(normalized.school)) {
+    delete normalized.school;
+  }
+  if (normalized.fromSchool && !identityValidator.isValidSchoolField(normalized.fromSchool, { allowCollege: true })) {
+    delete normalized.fromSchool;
+  }
   if (!isFloridaCommit(normalized) && normalized.category === 'recruit') {
     normalized.category = 'target';
     if (normalized.status === 'committed') normalized.status = 'uncommitted';

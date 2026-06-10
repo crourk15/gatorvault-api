@@ -21,7 +21,9 @@ function generateIdentityPatterns(player) {
   const pos = String(player.pos || '').toUpperCase().trim();
   const highSchool = String(player.school || player.highSchool || '').trim();
   const fromSchool = String(player.fromSchool || '').trim();
-  const school = highSchool || fromSchool;
+  const school =
+    (highSchool && !isFloridaSchool(highSchool) ? highSchool : '') ||
+    (fromSchool && !isFloridaSchool(fromSchool) ? fromSchool : '');
   const classYear = player.classYear ? parseInt(player.classYear, 10) : null;
   const natlRank = player.natlRank != null ? parseInt(player.natlRank, 10) : null;
   const committedTo = String(player.committedTo || player.committed_to || '').trim();
@@ -110,20 +112,27 @@ function generateIdentityPatterns(player) {
 }
 
 function buildPatternRecord(player) {
-  const highSchool = player.school || player.fromSchool || player.highSchool || null;
+  const identityValidator = require('./identity-record-validator');
+  const school =
+    identityValidator.sanitizeSchoolField(player.school || player.highSchool) ||
+    identityValidator.sanitizeSchoolField(player.fromSchool, { allowCollege: true }) ||
+    null;
   const committedTo = player.committedTo || player.committed_to || null;
-  const commitSchool = committedTo && !isFloridaSchool(committedTo) ? committedTo : null;
+  const commitSchool =
+    committedTo && !isFloridaSchool(committedTo)
+      ? identityValidator.sanitizeSchoolField(committedTo, { allowCollege: true })
+      : null;
 
   return {
     slug: player.slug,
     name: player.name,
     stars: parseInt(player.stars, 10) || null,
     position: player.pos ? String(player.pos).toUpperCase() : null,
-    school: highSchool,
+    school,
     commitSchool,
     class: player.classYear || null,
     natlRank: player.natlRank != null ? parseInt(player.natlRank, 10) : null,
-    patterns: generateIdentityPatterns(player)
+    patterns: generateIdentityPatterns({ ...player, school, fromSchool: commitSchool || player.fromSchool })
   };
 }
 

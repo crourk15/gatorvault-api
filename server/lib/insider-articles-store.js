@@ -100,6 +100,8 @@ function normalizeArticle(raw) {
     readTimeMinutes: raw.readTimeMinutes || raw.readMin || 5,
     sources: Array.isArray(raw.sources) ? raw.sources : [],
     topicKey: raw.topicKey || null,
+    triggerIntelFingerprints: Array.isArray(raw.triggerIntelFingerprints) ? raw.triggerIntelFingerprints : [],
+    triggerIdentityLog: Array.isArray(raw.triggerIdentityLog) ? raw.triggerIdentityLog : [],
     createdAt: raw.createdAt || nowIso(),
     publishedAt: raw.publishedAt || null,
     lastRefreshedAt: raw.lastRefreshedAt || null,

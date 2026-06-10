@@ -203,20 +203,31 @@ async function pruneStalePatternEntries(validSlugs) {
 
 async function syncPatternsForPlayer(player) {
   if (!player?.slug || !player?.name) return null;
+  const identityValidator = require('./identity-record-validator');
+  const playerValidation = identityValidator.validatePlayerIdentityRecord(player);
+  if (!playerValidation.valid) {
+    console.warn(
+      '[identity-patterns] REJECTED invalid player identity:',
+      player.slug,
+      playerValidation.errors.join(', ')
+    );
+    return { rejected: true, validation: playerValidation, slug: player.slug };
+  }
   const entry = buildPatternRecord(player);
   entry.updatedAt = nowIso();
   const validation = validatePatternEntry(entry, player);
-  const toSave = { ...entry };
-  delete toSave.validation;
-  const saved = await upsertPatternEntry(toSave);
-  saved.validation = validation;
   if (!validation.valid) {
     console.warn(
       '[identity-patterns] incomplete patterns for',
       player.slug,
       validation.missingPatterns.join(', ')
     );
+    return { rejected: true, validation: { ...validation, playerErrors: playerValidation.errors }, slug: player.slug };
   }
+  const toSave = { ...entry };
+  delete toSave.validation;
+  const saved = await upsertPatternEntry(toSave);
+  saved.validation = validation;
   return saved;
 }
 

@@ -6,6 +6,7 @@ const store = require('./insider-articles-store');
 const cycle = require('./insider-articles-cycle');
 const templates = require('./insider-articles-templates');
 const sanitize = require('./insider-articles-sanitize');
+const identityValidator = require('./identity-record-validator');
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 const MIN_WEEKLY = 3;
@@ -33,9 +34,105 @@ function isUpcomingVisit(intel) {
 function isRecentCompletedVisit(intel) {
   const t = String(intel.eventType || '').toLowerCase();
   if (!/official_visit|unofficial_visit|visit/.test(t)) return false;
-  const ts = new Date(intel.timestamp || intel.createdAt || 0).getTime();
+  const ts = new Date(intel.timestamp || intel.createdAt || intel.reportedAt || 0).getTime();
   const age = Date.now() - ts;
   return age >= 0 && age <= 10 * 86400000;
+}
+
+function lastArticleTimestamp(categories) {
+  const catSet = new Set(categories || []);
+  const items = [...store.listDrafts({ status: null }), ...store.listPublished()];
+  let maxTs = 0;
+  for (const article of items) {
+    if (!catSet.has(article.category)) continue;
+    const ts = new Date(article.createdAt || article.publishedAt || 0).getTime();
+    if (ts > maxTs) maxTs = ts;
+  }
+  return maxTs;
+}
+
+function buildVisitArticleTopicKey(category, visits) {
+  const slug = visits[0]?.playerSlug || 'multi';
+  const fps = visits
+    .map((v) => v.fingerprint)
+    .filter(Boolean)
+    .sort()
+    .join('|');
+  const fpKey = fps ? fps.slice(0, 64).replace(/[^a-z0-9|_-]/gi, '') : 'none';
+  const prefix = category === 'post_visit_reaction' ? 'post_visit' : 'ov_preview';
+  return `${prefix}_${cycle.RECRUITING_MIN_CLASS}_${slug}_${fpKey}`;
+}
+
+function visitIntelAlreadyCovered(visits, category = 'post_visit_reaction') {
+  const fps = new Set(visits.map((v) => v.fingerprint).filter(Boolean));
+  if (!fps.size) return false;
+  const articles = [...store.listDrafts({ status: null }), ...store.listPublished()];
+  return articles.some((article) => {
+    if (article.category !== category) return false;
+    const covered = article.triggerIntelFingerprints || [];
+    return covered.some((fp) => fps.has(fp));
+  });
+}
+
+function validateVisitIntelBatch(intelRows, storePlayers) {
+  const seenFingerprints = new Set();
+  const accepted = [];
+  const rejected = [];
+  const triggerLog = [];
+
+  for (const intel of intelRows) {
+    const intelValidation = identityValidator.validateIntelForArticle(intel, { seenFingerprints });
+    if (!intelValidation.valid) {
+      rejected.push({
+        slug: intel.playerSlug,
+        fingerprint: intel.fingerprint,
+        errors: intelValidation.errors
+      });
+      continue;
+    }
+    if (intel.fingerprint) seenFingerprints.add(intel.fingerprint);
+
+    const storePl = storePlayers.find((p) => p.slug === intel.playerSlug);
+    const playerRecord = {
+      slug: intel.playerSlug,
+      name: intel.playerName || storePl?.name,
+      pos: intel.pos || storePl?.pos,
+      classYear: intel.classYear || storePl?.classYear,
+      school: storePl?.school || intel.school || intel.highSchool,
+      skinny: storePl?.skinny,
+      profileNote: storePl?.profileNote
+    };
+    const playerValidation = identityValidator.validatePlayerIdentityRecord(playerRecord);
+    triggerLog.push({
+      slug: intel.playerSlug,
+      name: intel.playerName,
+      fingerprint: intel.fingerprint,
+      source: intel.source,
+      eventType: intel.eventType,
+      playerValid: playerValidation.valid,
+      playerErrors: playerValidation.errors,
+      intelValid: true
+    });
+    if (!playerValidation.valid) {
+      rejected.push({
+        slug: intel.playerSlug,
+        fingerprint: intel.fingerprint,
+        errors: playerValidation.errors,
+        stage: 'player_identity'
+      });
+      continue;
+    }
+    accepted.push(intel);
+  }
+
+  return { accepted, rejected, triggerLog };
+}
+
+function mapVisitIntelToSignals(intelRows, storePlayers) {
+  return intelRows.slice(0, 5).map((v) => {
+    const storePl = storePlayers.find((p) => p.slug === v.playerSlug);
+    return { ...storePl, ...v };
+  });
 }
 
 async function collectSignals() {
@@ -56,7 +153,9 @@ async function collectSignals() {
 
   let intel = [];
   try {
-    intel = (intelStore.listIntel({ limit: 50 }) || []).filter((i) => i.resolutionStatus !== 'needs_resolution');
+    intel = identityValidator.dedupeIntelByFingerprint(
+      (intelStore.listIntel({ limit: 100 }) || []).filter((i) => i.resolutionStatus !== 'needs_resolution')
+    );
   } catch {
     intel = [];
   }
@@ -74,7 +173,10 @@ async function collectSignals() {
   const events2027 = cycle.filterRecruitingEvents(
     events.filter((e) => Date.now() - new Date(e.createdAt).getTime() < 14 * 86400000)
   );
-  const visits2027 = intel2027.filter((i) => /visit|ov|unofficial/i.test(i.eventType || ''));
+  const visits2027 = identityValidator.filterStaleVisitIntelChain(
+    intel2027.filter((i) => /visit|ov|unofficial/i.test(i.eventType || '')),
+    null
+  );
   const rising2027 = cycle.filterRecruitingHeat(heatCheck?.rising || []);
 
   const targets2027 = recruitingPlayers.filter((p) => p.category === 'target');
@@ -168,51 +270,87 @@ function buildCandidateTopics(signals) {
     });
   }
 
-  if (signals.intel.upcoming.length >= 1) {
-    const visits = signals.intel.upcoming.slice(0, 5).map((v) => {
-      const storePl = signals.recruiting.players.find((p) => p.slug === v.playerSlug);
-      return { ...storePl, ...v };
-    });
+  const sinceOvPreview = lastArticleTimestamp(['official_visit_preview']);
+  const newUpcomingIntel = visits2027.filter(
+    (i) => isUpcomingVisit(i) && identityValidator.isVerifiedNewVisitIntel(i, sinceOvPreview)
+  );
+  const { accepted: validatedUpcoming, rejected: rejectedUpcoming, triggerLog: ovTriggerLog } =
+    validateVisitIntelBatch(newUpcomingIntel, recruitingPlayers);
+
+  if (validatedUpcoming.length >= 1) {
+    const visits = mapVisitIntelToSignals(validatedUpcoming, recruitingPlayers);
     const lead = visits[0];
     const name = sanitize.sanitizePlayerName(lead.playerName) || 'Official visitors';
-    push({
-      topicKey: `ov_preview_${cycle.RECRUITING_MIN_CLASS}_${lead.playerSlug || name}`,
-      category: 'official_visit_preview',
-      title: `Official Visit Preview: ${name} and ${cycle.RECRUITING_MIN_CLASS} OV intel`,
-      classYear: cycle.RECRUITING_MIN_CLASS,
-      scores: { relevance: 90, timeliness: 94, impact: 84, dataRichness: 80, freshness: 95 },
-      signals: { visits, type: 'official_visit_preview' },
-      sources: uniqueSources(
-        visits.map((v) => ({
-          name: v.sourceHandle || v.source || 'Beat Writer',
-          outlet: v.source === 'beat_writer' ? 'Beat Report' : 'Recruiting Intel'
-        }))
-      )
-    });
+    const topicKey = buildVisitArticleTopicKey('official_visit_preview', visits);
+    if (!visitIntelAlreadyCovered(visits, 'official_visit_preview')) {
+      push({
+        topicKey,
+        category: 'official_visit_preview',
+        title: `Official Visit Preview: ${name} and ${cycle.RECRUITING_MIN_CLASS} OV intel`,
+        classYear: cycle.RECRUITING_MIN_CLASS,
+        scores: { relevance: 90, timeliness: 94, impact: 84, dataRichness: 80, freshness: 95 },
+        signals: { visits, type: 'official_visit_preview' },
+        triggerIntelFingerprints: visits.map((v) => v.fingerprint).filter(Boolean),
+        triggerIdentityLog: ovTriggerLog,
+        sources: uniqueSources(
+          visits.map((v) => ({
+            name: v.sourceHandle || v.source || 'Beat Writer',
+            outlet: v.source === 'beat_writer' ? 'Beat Report' : 'Recruiting Intel'
+          }))
+        )
+      });
+    } else {
+      console.log('[insider-articles] skipped OV preview — intel already covered:', topicKey);
+    }
+  } else if (newUpcomingIntel.length) {
+    console.log('[insider-articles] skipped OV preview — no valid new visit intel:', rejectedUpcoming);
   }
 
-  if (signals.intel.recent.length >= 1) {
-    const visits = signals.intel.recent.slice(0, 4).map((v) => {
-      const storePl = signals.recruiting.players.find((p) => p.slug === v.playerSlug);
-      return { ...storePl, ...v };
-    });
+  const sincePostVisit = lastArticleTimestamp(['post_visit_reaction']);
+  const newRecentIntel = visits2027.filter(
+    (i) => isRecentCompletedVisit(i) && identityValidator.isVerifiedNewVisitIntel(i, sincePostVisit)
+  );
+  const { accepted: validatedRecent, rejected: rejectedRecent, triggerLog: recapTriggerLog } =
+    validateVisitIntelBatch(newRecentIntel, recruitingPlayers);
+
+  if (validatedRecent.length >= 1) {
+    const visits = mapVisitIntelToSignals(validatedRecent, recruitingPlayers);
     const lead = visits[0];
     const name = sanitize.sanitizePlayerName(lead.playerName) || 'Florida visitors';
-    push({
-      topicKey: `post_visit_${cycle.RECRUITING_MIN_CLASS}_${lead.playerSlug || name}`,
-      category: 'post_visit_reaction',
-      title: `Post-Visit Reaction: ${name} and ${cycle.RECRUITING_MIN_CLASS} OV read`,
-      classYear: cycle.RECRUITING_MIN_CLASS,
-      scores: { relevance: 86, timeliness: 88, impact: 80, dataRichness: 78, freshness: 90 },
-      signals: { visits, type: 'post_visit_reaction' },
-      sources: uniqueSources(
-        visits.map((v) => ({
-          name: v.sourceHandle || v.source || 'Beat Writer',
-          outlet: 'Beat Report'
-        }))
-      )
-    });
+    const topicKey = buildVisitArticleTopicKey('post_visit_reaction', visits);
+    if (!visitIntelAlreadyCovered(visits, 'post_visit_reaction')) {
+      console.log('[insider-articles] visit recap triggered by identity records:', JSON.stringify(recapTriggerLog));
+      push({
+        topicKey,
+        category: 'post_visit_reaction',
+        title: `Post-Visit Reaction: ${name} and ${cycle.RECRUITING_MIN_CLASS} OV read`,
+        classYear: cycle.RECRUITING_MIN_CLASS,
+        scores: { relevance: 86, timeliness: 88, impact: 80, dataRichness: 78, freshness: 90 },
+        signals: { visits, type: 'post_visit_reaction' },
+        triggerIntelFingerprints: visits.map((v) => v.fingerprint).filter(Boolean),
+        triggerIdentityLog: recapTriggerLog,
+        sources: uniqueSources(
+          visits.map((v) => ({
+            name: v.sourceHandle || v.source || 'Beat Writer',
+            outlet: 'Beat Report'
+          }))
+        )
+      });
+    } else {
+      console.log('[insider-articles] skipped visit recap — intel already covered:', topicKey);
+    }
+  } else {
+    const hadCandidates = visits2027.some((i) => isRecentCompletedVisit(i));
+    if (hadCandidates || rejectedRecent.length) {
+      console.log(
+        '[insider-articles] visit recap blocked — no new verified visit intel since',
+        new Date(sincePostVisit).toISOString(),
+        rejectedRecent.length ? { rejected: rejectedRecent } : ''
+      );
+    }
   }
+
+  // Legacy blocks removed — visit topics only when new verified intel passes validation above.
 
   if (signals.roster.players.length >= 40) {
     push({
@@ -289,6 +427,8 @@ function writeDraftFromTopic(topic, signals) {
     ...draft,
     byline: meta.byline,
     topicKey: topic.topicKey,
+    triggerIntelFingerprints: topic.triggerIntelFingerprints || [],
+    triggerIdentityLog: topic.triggerIdentityLog || [],
     status: 'draft',
     createdAt: new Date().toISOString()
   });
@@ -340,6 +480,20 @@ async function generateWeeklyDrafts({ force = false, maxDrafts = MAX_WEEKLY } = 
     draftCount: drafts.length,
     aborted,
     draftIds: drafts.map((d) => d.id),
+    visitRecapTriggers: selected
+      .filter((t) => t.category === 'post_visit_reaction')
+      .map((t) => ({
+        topicKey: t.topicKey,
+        triggerIdentityLog: t.triggerIdentityLog,
+        fingerprints: t.triggerIntelFingerprints
+      })),
+    ovPreviewTriggers: selected
+      .filter((t) => t.category === 'official_visit_preview')
+      .map((t) => ({
+        topicKey: t.topicKey,
+        triggerIdentityLog: t.triggerIdentityLog,
+        fingerprints: t.triggerIntelFingerprints
+      })),
     recruitingMinClass: cycle.RECRUITING_MIN_CLASS,
     programSeason: cycle.programSeasonYear()
   });

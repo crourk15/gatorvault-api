@@ -5,6 +5,7 @@
 const cycle = require('./insider-articles-cycle');
 const sanitize = require('./insider-articles-sanitize');
 const templates = require('./insider-articles-templates');
+const identityValidator = require('./identity-record-validator');
 
 const MIN_FACTS = {
   heat_check: 6,
@@ -130,7 +131,10 @@ function enrichPlayerBundle(raw, { storePlayers, intelList, heatList } = {}) {
     pos: raw.pos || store?.pos || intel?.pos,
     stars: raw.stars || store?.stars || intel?.stars,
     classYear: raw.classYear || store?.classYear || intel?.classYear || cycle.RECRUITING_MIN_CLASS,
-    school: raw.school || raw.highSchool || store?.school || store?.fromSchool || intel?.school,
+    school:
+      identityValidator.sanitizeSchoolField(raw.school || raw.highSchool || store?.school || store?.fromSchool) ||
+      identityValidator.sanitizeSchoolField(intel?.school || intel?.highSchool, { allowCollege: true }) ||
+      null,
     natlRank: raw.natlRank || store?.natlRank,
     ufRpmPct: store?.ufRpmPct || rpm.ufPct,
     rpmLeader: rpm.leaderName,
@@ -149,6 +153,14 @@ function enrichPlayerBundle(raw, { storePlayers, intelList, heatList } = {}) {
   };
 
   bundle.factCount = countBundleFacts(bundle);
+  const playerValidation = identityValidator.validatePlayerIdentityRecord({
+    slug: bundle.slug,
+    name: bundle.name,
+    pos: bundle.pos,
+    classYear: bundle.classYear,
+    school: bundle.school
+  });
+  if (!playerValidation.valid) return null;
   return bundle.factCount >= 2 ? bundle : null;
 }
 
@@ -204,15 +216,24 @@ function assembleRecruitingContext(topic, signals) {
 
   if (!bundles.length) return null;
 
-  const totalFacts = bundles.reduce((sum, b) => sum + b.factCount, 0);
-  const landscape = computePositionalLandscape(bundles, signals?.recruiting?.targets);
+  const deduped = [];
+  const seenSlugs = new Set();
+  for (const bundle of bundles) {
+    const key = bundle.slug || bundle.name;
+    if (seenSlugs.has(key)) continue;
+    seenSlugs.add(key);
+    deduped.push(bundle);
+  }
+
+  const totalFacts = deduped.reduce((sum, b) => sum + b.factCount, 0);
+  const landscape = computePositionalLandscape(deduped, signals?.recruiting?.targets);
   const upcoming = (signals?.intel?.upcoming || []).slice(0, 4);
   const commits = signals?.recruiting?.commits || [];
 
   return {
     category: topic.category,
     classYear: topic.classYear || cycle.RECRUITING_MIN_CLASS,
-    bundles: bundles.slice(0, 5),
+    bundles: deduped.slice(0, 5),
     totalFacts,
     landscape,
     upcoming,
