@@ -75,6 +75,45 @@ function mountGm2Routes(app) {
     }
   });
 
+  app.post('/api/gm2/repair/all', async (req, res) => {
+    const pin = pinFromReq(req);
+    if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Admin PIN required' });
+    try {
+      const result = await gm2.repairAllQuarantinedPlayers({
+        source: 'admin-bulk-repair',
+        limit: parseInt(req.body.limit || '0', 10) || undefined
+      });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/gm2/sanitize/all', async (req, res) => {
+    const pin = pinFromReq(req);
+    if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Admin PIN required' });
+    try {
+      const result = await gm2.sanitizeAllPlayers({
+        source: 'admin-sanitize',
+        limit: parseInt(req.body.limit || '0', 10) || undefined
+      });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/gm2/auto-repair/run', async (req, res) => {
+    const pin = pinFromReq(req);
+    if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Admin PIN required' });
+    try {
+      const result = await gm2.runAutoRepair({ source: 'admin-manual', ...req.body });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/gm2/quarantine/release', (req, res) => {
     const pin = pinFromReq(req);
     if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Admin PIN required' });

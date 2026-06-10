@@ -249,10 +249,16 @@ function preservePlayerFields(existing, incoming) {
   return merged;
 }
 
-async function upsertPlayer(player) {
+async function upsertPlayer(player, options = {}) {
+  const existing = player?.slug ? await getPlayerBySlug(player.slug) : null;
+  const merged = existing ? preservePlayerFields(existing, player) : player;
   const gm2 = require('./gm2');
-  const ingress = gm2.ingestPlayer(player, { subsystem: 'recruiting-store' });
-  const normalized = normalizePlayer(ingress.normalized || player);
+  const ingress = gm2.ingestPlayer(merged, {
+    subsystem: options.subsystem || 'recruiting-store',
+    existing,
+    repairMode: !!options.repairMode
+  });
+  const normalized = normalizePlayer(ingress.normalized || merged);
   if (normalized.school) {
     const identityValidator = require('./identity-record-validator');
     if (!identityValidator.isValidSchoolField(normalized.school)) {

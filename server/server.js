@@ -873,6 +873,30 @@ function startBeatLateIngestScheduler() {
   console.log('Beat late ingest sweep: every', Math.round(intervalMs / 1000), 's');
 }
 
+let _gvGm2AutoRepairStarted = false;
+function startGm2AutoRepairScheduler() {
+  if (process.env.GM2_AUTO_REPAIR_ENABLED === 'false') return;
+  if (_gvGm2AutoRepairStarted) return;
+  _gvGm2AutoRepairStarted = true;
+  const gm2 = require('./lib/gm2');
+  const intervalMs = Math.max(
+    3600000,
+    parseInt(process.env.GM2_AUTO_REPAIR_INTERVAL_MS || String(24 * 3600000), 10) || 24 * 3600000
+  );
+  const bootDelay = Math.max(60000, parseInt(process.env.GM2_AUTO_REPAIR_BOOT_DELAY_MS || '120000', 10) || 120000);
+
+  const tick = (source) => {
+    const opsMonitor = require('./lib/ops-monitor');
+    return opsMonitor
+      .wrapJob('gm2-auto-repair', 'cron:gm2-auto-repair', () => gm2.runAutoRepair({ source }))
+      .catch((err) => console.warn('[gm2:auto-repair]', err.message));
+  };
+
+  setTimeout(() => tick('boot'), bootDelay);
+  setInterval(() => tick('nightly'), intervalMs);
+  console.log('[gm2:auto-repair] enabled (every', Math.round(intervalMs / 3600000), 'h, boot delay', Math.round(bootDelay / 1000), 's)');
+}
+
 function startMediaIngestScheduler() {
   if (process.env.MEDIA_INGEST_ENABLED !== 'true') return;
   if (_gvMediaIngestStarted) return;
@@ -954,13 +978,6 @@ app.listen(PORT, () => {
         }
       })
       .catch((err) => console.warn('[recruiting-alerts] Brewster purge skipped:', err.message));
-    const gm2 = require('./lib/gm2');
-    gm2.rebuildAndReleasePlayer('jalen-brewster')
-      .then((r) => {
-        if (r.ok) console.log('[gm2] rebuilt Brewster identity from On3:', r.validation);
-        else console.warn('[gm2] Brewster rebuild skipped:', r.error, r.validation?.errors);
-      })
-      .catch((err) => console.warn('[gm2] Brewster rebuild failed:', err.message));
   } catch (e) {
     console.warn('Recruiting API: failed to init', e.message);
   }
@@ -1086,6 +1103,11 @@ app.listen(PORT, () => {
     } catch (e) {
       console.warn('Insider Articles scheduler failed to start', e.message);
     }
+  }
+  try {
+    startGm2AutoRepairScheduler();
+  } catch (e) {
+    console.warn('GM2 auto-repair scheduler failed to start', e.message);
   }
   if (providers.length) {
     console.log('Email delivery: configured (' + providers.join(', ') + ')');

@@ -9,6 +9,7 @@ const quarantine = require('./quarantine-store');
 const decisionLog = require('./decision-log');
 const identityValidator = require('../identity-record-validator');
 const publicAlerts = require('../recruiting-public-alerts');
+const autoRepair = require('./auto-repair');
 const { GM2_FEATURES, GM2_ACTIONS } = require('./types');
 
 function ingestSignal(signal, { subsystem = 'unknown', skipFreshness = false } = {}) {
@@ -37,30 +38,73 @@ function ingestIntel(raw, options = {}) {
 }
 
 function ingestPlayer(player, options = {}) {
-  const pv = identityValidator.validatePlayerIdentityRecord(player);
-  if (!pv.valid) {
-    if (player?.slug) {
-      quarantine.quarantinePlayer(player.slug, {
+  const existing = options.existing || null;
+  const healed = identityValidator.healPlayerRecord(player, existing);
+  const pv = identityValidator.validatePlayerIdentityRecord(healed);
+  const classification = identityValidator.classifyIdentityErrors(pv.errors);
+  const repairMode = !!options.repairMode;
+
+  if (pv.valid) {
+    if (healed?.slug && quarantine.isPlayerQuarantined(healed.slug)) {
+      quarantine.releasePlayer(healed.slug);
+      autoRepair.dequeuePlayerRepair(healed.slug);
+    }
+    return { action: GM2_ACTIONS.ALLOW, reason: 'ok', normalized: healed };
+  }
+
+  if (classification.canWrite || repairMode) {
+    if (healed?.slug && quarantine.isPlayerQuarantined(healed.slug)) {
+      quarantine.releasePlayer(healed.slug);
+    }
+    if (healed?.slug && classification.needsRepair && !repairMode) {
+      autoRepair.schedulePlayerRepair(healed.slug, {
         reason: 'invalid_player_on_write',
-        errors: pv.errors,
         source: options.subsystem || 'recruiting-store'
       });
     }
-    const sanitized = identityValidator.sanitizePlayerFieldsForStore(player);
     decisionLog.logDecision({
       layer: 'sil',
-      action: GM2_ACTIONS.QUARANTINE,
+      action: GM2_ACTIONS.ALLOW,
       subsystem: options.subsystem,
-      playerSlug: player?.slug,
-      reason: 'invalid_player_on_write',
+      playerSlug: healed?.slug,
+      reason: repairMode ? 'repair_mode_write' : 'healed_partial_identity',
       errors: pv.errors
     });
-    return { action: GM2_ACTIONS.QUARANTINE, reason: 'invalid_player_on_write', errors: pv.errors, normalized: sanitized };
+    return {
+      action: GM2_ACTIONS.ALLOW,
+      reason: repairMode ? 'repair_mode_write' : 'healed_partial_identity',
+      errors: pv.errors,
+      normalized: healed,
+      needsRepair: classification.needsRepair
+    };
   }
-  if (player?.slug && quarantine.isPlayerQuarantined(player.slug)) {
-    return { action: GM2_ACTIONS.REJECT, reason: 'player_quarantined', normalized: player };
+
+  if (healed?.slug) {
+    quarantine.quarantinePlayer(healed.slug, {
+      reason: 'invalid_player_on_write',
+      errors: pv.errors,
+      source: options.subsystem || 'recruiting-store'
+    });
+    autoRepair.schedulePlayerRepair(healed.slug, {
+      reason: 'hard_identity_failure',
+      source: options.subsystem || 'recruiting-store'
+    });
   }
-  return { action: GM2_ACTIONS.ALLOW, reason: 'ok', normalized: identityValidator.sanitizePlayerFieldsForStore(player) };
+  decisionLog.logDecision({
+    layer: 'sil',
+    action: GM2_ACTIONS.QUARANTINE,
+    subsystem: options.subsystem,
+    playerSlug: healed?.slug,
+    reason: 'invalid_player_on_write',
+    errors: pv.errors
+  });
+  return {
+    action: GM2_ACTIONS.QUARANTINE,
+    reason: 'invalid_player_on_write',
+    errors: pv.errors,
+    normalized: healed,
+    needsRepair: true
+  };
 }
 
 function ingestEvent(event, options = {}) {
@@ -130,9 +174,19 @@ function guardFeatureUpdate(feature, payload, previousPayload, options) {
 }
 
 async function rebuildAndReleasePlayer(slug) {
-  const result = await identityValidator.rebuildPlayerIdentityFromOn3(slug);
-  if (result.ok) quarantine.releasePlayer(slug);
-  return result;
+  return autoRepair.repairPlayer(slug, { source: 'admin-repair' });
+}
+
+async function repairAllQuarantinedPlayers(options) {
+  return autoRepair.repairAllQuarantined(options);
+}
+
+async function sanitizeAllPlayers(options) {
+  return autoRepair.sanitizeAllPlayersInStore(options);
+}
+
+async function runAutoRepair(options) {
+  return autoRepair.runAutoRepair(options);
 }
 
 function getDashboard() {
@@ -140,7 +194,8 @@ function getDashboard() {
     quarantine: quarantine.getStatus(),
     decisions24h: decisionLog.countByAction(86400000),
     recentDecisions: decisionLog.listDecisions({ limit: 30 }),
-    quarantinedSignals: quarantine.listQuarantinedSignals({ limit: 20 })
+    quarantinedSignals: quarantine.listQuarantinedSignals({ limit: 20 }),
+    autoRepair: autoRepair.getRepairStatus()
   };
 }
 
@@ -162,6 +217,10 @@ module.exports = {
   validateBeforeRender,
   guardFeatureUpdate,
   rebuildAndReleasePlayer,
+  repairAllQuarantinedPlayers,
+  sanitizeAllPlayers,
+  runAutoRepair,
+  schedulePlayerRepair: autoRepair.schedulePlayerRepair,
   getDashboard,
   isPlayerQuarantined: quarantine.isPlayerQuarantined,
   quarantinePlayer: quarantine.quarantinePlayer,

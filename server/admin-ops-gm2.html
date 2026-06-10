@@ -14,28 +14,38 @@
     .card p{margin:0;font-size:28px;font-weight:700;color:#fff}
     label{display:block;font-size:12px;color:#94a3b8;margin-bottom:6px;text-transform:uppercase}
     input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#111827;color:#f8fafc;margin-bottom:12px}
-    button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;background:#FA4616;color:#fff;margin-right:8px}
+    button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;background:#FA4616;color:#fff;margin-right:8px;margin-bottom:8px}
     button.secondary{background:#1e3a5f;color:#e2e8f0}
     pre{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:14px;overflow:auto;font-size:12px;max-height:420px}
     .ok{color:#4ade80}.err{color:#f87171}.warn{color:#fbbf24}
     a{color:#60a5fa}
     table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:8px;border-bottom:1px solid #1e293b;text-align:left}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>🛡️ GM 2.0 Integrity Dashboard</h1>
-    <p style="color:#94a3b8;margin-bottom:20px">Signal Integrity Layer · Rules Engine · Pre-Render Validator · Quarantine</p>
+    <p style="color:#94a3b8;margin-bottom:20px">Auto-repair · Quarantine · Signal Integrity · Rules Engine · PGV</p>
     <div class="card" style="margin-bottom:16px">
       <label>Admin PIN</label>
       <input id="pin" type="password" placeholder="GV2026admin" autocomplete="off">
-      <button id="refresh">Refresh status</button>
-      <button class="secondary" id="repair-brewster">Rebuild Brewster identity</button>
+      <div class="actions">
+        <button id="refresh">Refresh status</button>
+        <button class="secondary" id="repair-all">Rebuild all quarantined</button>
+        <button class="secondary" id="sanitize-all">Sanitize all players</button>
+        <button class="secondary" id="auto-repair">Run full auto-repair</button>
+      </div>
+      <p id="action-msg" style="font-size:13px;color:#94a3b8;margin:12px 0 0"></p>
     </div>
     <div class="grid" id="stats"></div>
     <div class="card" style="margin-top:16px">
       <h3>Quarantined players</h3>
       <div id="quarantine-players"></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Repair queue</h3>
+      <div id="repair-queue"></div>
     </div>
     <div class="card" style="margin-top:16px">
       <h3>Recent GM2 decisions (24h)</h3>
@@ -50,15 +60,17 @@
     var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1') ? 'http://localhost:3000' : location.origin;
     function pin(){ return document.getElementById('pin').value.trim(); }
     function headers(){ return { 'Content-Type': 'application/json', 'X-Ops-Pin': pin() }; }
+    function setMsg(text, cls){ var el=document.getElementById('action-msg'); el.textContent=text||''; el.className=cls||''; }
     async function loadStatus(){
       var r = await fetch(API + '/api/gm2/status');
       var j = await r.json();
       if(!j.ok) throw new Error(j.error || 'status failed');
       var q = j.quarantine || {};
       var c = j.decisions24h || {};
+      var ar = j.autoRepair || {};
       document.getElementById('stats').innerHTML =
         '<div class="card"><h3>Quarantined players</h3><p class="warn">' + (q.quarantinedPlayers||0) + '</p></div>' +
-        '<div class="card"><h3>Quarantined signals</h3><p>' + (q.quarantinedSignals||0) + '</p></div>' +
+        '<div class="card"><h3>Repair queue</h3><p>' + (ar.repairQueueCount||0) + '</p></div>' +
         '<div class="card"><h3>Allowed (24h)</h3><p class="ok">' + (c.allow||0) + '</p></div>' +
         '<div class="card"><h3>Rejected (24h)</h3><p class="err">' + ((c.reject||0)+(c.block_render||0)) + '</p></div>' +
         '<div class="card"><h3>Quarantined (24h)</h3><p class="warn">' + (c.quarantine||0) + '</p></div>';
@@ -73,18 +85,28 @@
         html += '</table>';
         document.getElementById('quarantine-players').innerHTML = html;
       }
+      var queue = ar.repairQueue || [];
+      document.getElementById('repair-queue').innerHTML = queue.length
+        ? '<p style="font-size:13px">' + queue.join(', ') + '</p>'
+        : '<p style="color:#64748b">Repair queue empty.</p>';
       var dr = await fetch(API + '/api/gm2/decisions?limit=40&pin=' + encodeURIComponent(pin()), { headers: headers() });
       var dj = await dr.json();
       document.getElementById('decisions').textContent = JSON.stringify(dj.decisions || j.recentDecisions || [], null, 2);
     }
-    document.getElementById('refresh').addEventListener('click', function(){ loadStatus().catch(function(e){ alert(e.message); }); });
-    document.getElementById('repair-brewster').addEventListener('click', async function(){
+    async function postAction(path, label){
       if(!pin()) return alert('PIN required');
-      var r = await fetch(API + '/api/gm2/repair/player', { method: 'POST', headers: headers(), body: JSON.stringify({ slug: 'jalen-brewster' }) });
+      setMsg('Running ' + label + '…');
+      var r = await fetch(API + path, { method: 'POST', headers: headers(), body: '{}' });
       var j = await r.json();
-      alert(j.ok ? 'Brewster rebuilt and released from quarantine.' : (j.error || JSON.stringify(j)));
+      if(!j.ok) { setMsg(j.error || JSON.stringify(j), 'err'); return; }
+      setMsg(label + ' complete.', 'ok');
       loadStatus();
-    });
+      return j;
+    }
+    document.getElementById('refresh').addEventListener('click', function(){ loadStatus().catch(function(e){ alert(e.message); }); });
+    document.getElementById('repair-all').addEventListener('click', function(){ postAction('/api/gm2/repair/all', 'Bulk rebuild').catch(function(e){ setMsg(e.message,'err'); }); });
+    document.getElementById('sanitize-all').addEventListener('click', function(){ postAction('/api/gm2/sanitize/all', 'Sanitize all players').catch(function(e){ setMsg(e.message,'err'); }); });
+    document.getElementById('auto-repair').addEventListener('click', function(){ postAction('/api/gm2/auto-repair/run', 'Full auto-repair').catch(function(e){ setMsg(e.message,'err'); }); });
     loadStatus().catch(function(){});
   </script>
 </body>

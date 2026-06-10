@@ -79,6 +79,29 @@ assert('dedupes intel fingerprints', validator.dedupeIntelByFingerprint([
   { fingerprint: 'b', playerSlug: 'p2' }
 ]).length === 2);
 
+const healed = validator.healPlayerRecord(
+  {
+    slug: 'heal-test',
+    name: 'Heal Test',
+    pos: 'WR',
+    classYear: 2027,
+    school: 'Florida twice this offseason',
+    skinny: 'SERIOUS push for No.'
+  },
+  {
+    slug: 'heal-test',
+    name: 'Heal Test',
+    pos: 'WR',
+    classYear: 2027,
+    school: 'Lake Dallas HS, TX',
+    skinny: 'Valid skinny text for recruiting board display.'
+  }
+);
+assert('healPlayerRecord preserves valid existing school', healed.school === 'Lake Dallas HS, TX');
+assert('healPlayerRecord strips truncated skinny', !healed.skinny);
+
+const partial = validator.classifyIdentityErrors(['invalid_school']);
+assert('invalid_school is repairable not hard', partial.canWrite && partial.needsRepair);
 
 if (process.exitCode) {
   console.error('\nIdentity record validator tests failed.');

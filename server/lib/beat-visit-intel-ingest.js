@@ -141,12 +141,21 @@ async function processVisitIntelRow(row, snapshot) {
     eventType: row.eventType || 'visit_cancelled',
     row
   });
+  const identityValidator = require('./identity-record-validator');
+  const safeSchool =
+    identityValidator.sanitizeSchoolField(row.school) ||
+    identityValidator.sanitizeSchoolField(existing?.school) ||
+    null;
   const playerPatch = {
     slug: row.playerSlug,
     name: row.playerName,
     pos: row.pos || existing?.pos,
     classYear: row.classYear || existing?.classYear,
-    school: row.school || existing?.school,
+    school: safeSchool,
+    fromSchool:
+      identityValidator.sanitizeSchoolField(row.highSchool, { allowCollege: true }) ||
+      identityValidator.sanitizeSchoolField(existing?.fromSchool, { allowCollege: true }) ||
+      null,
     on3Id: String(row.on3Id || existing?.on3Id || '').replace(/^beat_/, '') || existing?.on3Id,
     on3ProfileUrl: existing?.on3ProfileUrl || buildOn3ProfileUrl(existing || row),
     category: 'target',

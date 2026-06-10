@@ -39,6 +39,29 @@ const COLLEGE_ONLY_RES =
 
 const VERIFIED_INTEL_SOURCES = new Set(['on3', 'manual', 'rivals_pm']);
 
+/** Errors that should never quarantine on write — sanitize + auto-repair instead. */
+const REPAIRABLE_IDENTITY_ERRORS = new Set([
+  'invalid_school',
+  'invalid_from_school',
+  'truncated_skinny',
+  'truncated_profileNote',
+  'invalid_pos',
+  'invalid_class_year'
+]);
+
+const HARD_IDENTITY_ERRORS = new Set(['missing_slug', 'invalid_name']);
+
+function classifyIdentityErrors(errors = []) {
+  const hard = errors.filter((e) => HARD_IDENTITY_ERRORS.has(e));
+  const repairable = errors.filter((e) => REPAIRABLE_IDENTITY_ERRORS.has(e));
+  return {
+    hard,
+    repairable,
+    canWrite: hard.length === 0,
+    needsRepair: hard.length === 0 && errors.length > 0
+  };
+}
+
 /** Canonical rebuild data when live profile fetch is unavailable. */
 const CANONICAL_PLAYER_FIXUPS = {
   'jalen-brewster': {
@@ -202,7 +225,41 @@ function sanitizePlayerFieldsForStore(player) {
       delete out[field];
     }
   }
+
+  const pos = String(out.pos || '').trim();
+  if (pos.length > 6) delete out.pos;
+
   return out;
+}
+
+/**
+ * Merge incoming with existing, strip corruption, preserve valid identity fields.
+ */
+function healPlayerRecord(incoming, existing = null) {
+  const merged = existing ? { ...existing, ...incoming } : { ...(incoming || {}) };
+  let out = sanitizePlayerFieldsForStore(merged);
+
+  if (existing) {
+    if (!isValidSchoolField(out.school) && isValidSchoolField(existing.school)) {
+      out.school = existing.school;
+    }
+    const pos = String(out.pos || '').trim();
+    if (!pos || pos.length > 6) out.pos = existing.pos || out.pos;
+    const classYear = parseInt(out.classYear, 10);
+    if (!Number.isFinite(classYear) || classYear < 2026 || classYear > 2032) {
+      out.classYear = existing.classYear || out.classYear;
+    }
+    if (out.fromSchool && !isValidSchoolField(out.fromSchool, { allowCollege: true })) {
+      out.fromSchool = isValidSchoolField(existing.fromSchool, { allowCollege: true })
+        ? existing.fromSchool
+        : null;
+    }
+  }
+
+  const posFinal = String(out.pos || '').trim();
+  if (!posFinal || posFinal.length > 6) out.pos = 'ATH';
+
+  return sanitizePlayerFieldsForStore(out);
 }
 
 async function rebuildPlayerIdentityFromOn3(slug, options = {}) {
@@ -271,7 +328,7 @@ async function rebuildPlayerIdentityFromOn3(slug, options = {}) {
     return { ok: false, error: 'identity_still_invalid', validation, slug: targetSlug };
   }
 
-  const saved = await store.upsertPlayer(cleanPlayer);
+  const saved = await store.upsertPlayer(cleanPlayer, { repairMode: true, subsystem: 'identity-rebuild' });
 
   const intelRemoved = intelStore.removeIntelMatching((i) => {
     if (i.playerSlug !== targetSlug) return false;
@@ -293,6 +350,9 @@ async function rebuildPlayerIdentityFromOn3(slug, options = {}) {
 
 module.exports = {
   CORRUPTED_SCHOOL_RES,
+  REPAIRABLE_IDENTITY_ERRORS,
+  HARD_IDENTITY_ERRORS,
+  classifyIdentityErrors,
   isValidSchoolField,
   sanitizeSchoolField,
   validatePlayerIdentityRecord,
@@ -301,5 +361,6 @@ module.exports = {
   dedupeIntelByFingerprint,
   filterStaleVisitIntelChain,
   sanitizePlayerFieldsForStore,
+  healPlayerRecord,
   rebuildPlayerIdentityFromOn3
 };

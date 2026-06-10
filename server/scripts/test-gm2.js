@@ -28,6 +28,24 @@ const badIntel = {
 const sil = gm2.ingestIntel(badIntel, { subsystem: 'test' });
 assert('SIL rejects/quarantines bad beat commit intel', sil.action !== 'allow');
 
+const corruptPlayer = {
+  slug: 'test-corrupt-player',
+  name: 'Test Player',
+  pos: 'DL',
+  classYear: 2027,
+  school: 'Florida twice this offseason',
+  skinny: 'SERIOUS push for No.'
+};
+const ingress = gm2.ingestPlayer(corruptPlayer, { subsystem: 'test' });
+assert('Corrupt player write heals instead of quarantining', ingress.action === 'allow');
+assert('Corrupt player schedules repair', ingress.needsRepair === true);
+
+const healed = require('../lib/identity-record-validator').healPlayerRecord(
+  { slug: 'test-heal', name: 'Heal Test', pos: 'WR', classYear: 2027, school: 'Florida twice this offseason' },
+  { slug: 'test-heal', name: 'Heal Test', pos: 'WR', classYear: 2027, school: 'Lake Dallas HS, TX' }
+);
+assert('healPlayerRecord preserves valid existing school', healed.school === 'Lake Dallas HS, TX');
+
 const goodEvent = {
   playerSlug: 'maxwell-hiller',
   eventType: 'commit',
