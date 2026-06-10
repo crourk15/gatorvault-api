@@ -944,6 +944,14 @@ app.listen(PORT, () => {
         });
       })
       .catch((err) => console.warn('[identity-patterns] boot sync skipped:', err.message));
+    const { runPurgeFalseBrewsterIntel } = require('./lib/recruiting-public-alerts');
+    runPurgeFalseBrewsterIntel({ refresh: false })
+      .then((r) => {
+        if (r.before.falseCommitEvents || r.before.falseCommitIntel || r.before.falseCommitFeed) {
+          console.log('[recruiting-alerts] purged false Brewster intel:', r.before, '→', r.after);
+        }
+      })
+      .catch((err) => console.warn('[recruiting-alerts] Brewster purge skipped:', err.message));
   } catch (e) {
     console.warn('Recruiting API: failed to init', e.message);
   }

@@ -3126,6 +3126,7 @@
     function gvIsSystemAlert(a){
         if(!a)return true;
         if(a.system||a.preview)return true;
+        if(gvIsBrewsterFalseAlert(a))return true;
         if(gvIsFalseDecommitAlert(a))return true;
         var raw=String(a.type||'').toLowerCase();
         var type=gvNormalizeAlertType(a.type);
@@ -3135,6 +3136,7 @@
         if(text.indexOf('preview:')>=0||text.indexOf('test recruit')>=0)return true;
         if(text.indexOf('ingest')>=0||text.indexOf('class ranking')>=0)return true;
         if(text.indexOf('pending commit')>=0)return true;
+        if(a._internalIngest||a._unvalidatedIntel)return true;
         if(gvShouldSuppressRecruitAlert(a))return true;
         return false;
     }
@@ -4553,8 +4555,27 @@
         }).catch(function(){window._gvRecruitingLiveReady=false;});
     }
 
+    function gvIsBrewsterFalseAlert(a){
+        if(!a)return false;
+        var slug=String(a.playerSlug||'').toLowerCase();
+        var text=String((a.title||a.text||'')+(a.detail||'')).toLowerCase();
+        if(slug.indexOf('brewster')<0&&text.indexOf('brewster')<0)return false;
+        if(a.type==='commit'||a._eventType==='commit'||a._eventType==='flip')return true;
+        if(/\bcommit(?:ted|ment)?\b/.test(text)&&/\bflorida|\bgators\b|\buf\b/.test(text))return true;
+        return false;
+    }
+    function gvIsInternalRecruitEvent(ev){
+        if(!ev)return true;
+        if(gvIsBrewsterFalseAlert({playerSlug:ev.playerSlug,title:ev.title,detail:ev.detail||ev.skinny,_eventType:ev.eventType}))return true;
+        var src=String(ev.source||'').toLowerCase();
+        if(src==='beat_writer_ingest'||src==='beat_visit_intel')return true;
+        if(/beat.?writer|auto:beat|auto:intel|needs_resolution|snapshot|internal/.test(src))return true;
+        if((ev.eventType==='commit'||ev.eventType==='flip')&&src!=='on3'&&src!=='manual')return true;
+        return false;
+    }
     function gvIsTestRecruitEvent(ev){
         if(!ev)return true;
+        if(gvIsInternalRecruitEvent(ev))return true;
         var title=String(ev.title||'').toLowerCase();
         var slug=String(ev.playerSlug||'').toLowerCase();
         if(slug==='test-recruit'||(slug==='maxwell-hiller'&&ev.source==='manual'))return true;
@@ -4572,6 +4593,7 @@
         var player=ev.payload&&ev.payload.player;
         var alertType=gvMapEventToAlertType(ev);
         if(!alertType||alertType==='info'&&!ev.eventType)return;
+        if((alertType==='commit'||alertType==='portal')&&gvIsInternalRecruitEvent(ev))return;
         var evTs=ev.createdAt?new Date(ev.createdAt).getTime():Date.now();
         var title=ev.title||'';
         if(alertType==='portal')title=gvFormatPortalAlertText(title);

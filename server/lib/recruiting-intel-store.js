@@ -277,6 +277,21 @@ async function purgeIneligibleIntel() {
   };
 }
 
+function removeIntelMatching(predicate) {
+  const doc = loadIntelDoc();
+  const removed = [];
+  const kept = [];
+  for (const item of doc.items || []) {
+    if (predicate(item)) removed.push(item);
+    else kept.push(item);
+  }
+  if (removed.length) {
+    doc.items = kept;
+    saveIntelDoc(doc);
+  }
+  return { removed: removed.length, kept: kept.length, removedItems: removed };
+}
+
 function getUnqueuedIntel({ maxAgeMs = 7 * 86400000 } = {}) {
   const cutoff = Date.now() - maxAgeMs;
   return listIntel({ limit: 50 }).filter((i) => {
@@ -306,6 +321,7 @@ module.exports = {
   getIntelForPlayer,
   getUnqueuedIntel,
   purgeIneligibleIntel,
+  removeIntelMatching,
   saveNeedsResolution,
   listNeedsResolution,
   feedDedupeKeyForIntel,

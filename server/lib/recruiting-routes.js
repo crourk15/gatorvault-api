@@ -92,6 +92,7 @@ function mountRecruitingRoutes(app) {
 
   app.get('/api/recruiting/feed', async (req, res) => {
     try {
+      const publicAlerts = require('./recruiting-public-alerts');
       const forceHeat = req.query.force === '1' || req.query.live === '1';
       const [board2027, board2026, portal, rankings, events, heatCheck] = await Promise.all([
         store.getBoard(2027),
@@ -106,7 +107,7 @@ function mountRecruitingRoutes(app) {
         boards: { 2027: board2027, 2026: board2026 },
         portal,
         rankings,
-        events,
+        events: publicAlerts.filterPublicEvents(events),
         heatCheck,
         ts: Date.now()
       });
@@ -117,11 +118,12 @@ function mountRecruitingRoutes(app) {
 
   app.get('/api/recruiting/events', async (req, res) => {
     try {
+      const publicAlerts = require('./recruiting-public-alerts');
       const events = await store.getEvents({
         since: req.query.since,
         limit: parseInt(req.query.limit || '50', 10)
       });
-      return res.json({ ok: true, events });
+      return res.json({ ok: true, events: publicAlerts.filterPublicEvents(events) });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -143,14 +145,19 @@ function mountRecruitingRoutes(app) {
 
   app.get('/api/players/:slug', async (req, res) => {
     try {
+      const publicAlerts = require('./recruiting-public-alerts');
       const player = await store.getPlayerBySlug(req.params.slug);
       if (!player) return res.status(404).json({ ok: false, error: 'Player not found' });
-      const storeEvents = (await store.getEvents({ limit: 20 })).filter((e) => e.playerSlug === player.slug);
-      const intelItems = intelStore.getIntelForPlayer({
-        playerSlug: player.slug,
-        playerId: player.on3Id,
-        playerName: player.name
-      });
+      const storeEvents = (await store.getEvents({ limit: 20 }))
+        .filter((e) => e.playerSlug === player.slug)
+        .filter(publicAlerts.isPublicRecruitingEvent);
+      const intelItems = intelStore
+        .getIntelForPlayer({
+          playerSlug: player.slug,
+          playerId: player.on3Id,
+          playerName: player.name
+        })
+        .filter(publicAlerts.isPublicIntelItem);
       const intelEvents = intelItems.map((i) => ({
         id: i.id,
         playerSlug: player.slug,
@@ -354,6 +361,20 @@ function mountRecruitingRoutes(app) {
         tickerClean: result.after.falseDecommitFeedItems === 0,
         noRemainingFalseDecommits: result.clean
       });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/recruiting/admin/purge-false-brewster-intel', async (req, res) => {
+    try {
+      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || '');
+      if (!verifyAdminPin(pin)) {
+        return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+      }
+      const { runPurgeFalseBrewsterIntel } = require('./recruiting-public-alerts');
+      const result = await runPurgeFalseBrewsterIntel();
+      return res.json({ ok: true, ...result, clean: result.clean });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
