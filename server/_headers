@@ -8,6 +8,14 @@
   Cache-Control: public, max-age=86400
   Access-Control-Allow-Origin: *
 
+/favicon.ico
+  Content-Type: image/x-icon
+  Cache-Control: public, max-age=604800
+
+/sitemap.xml
+  Content-Type: application/xml
+  Cache-Control: public, max-age=86400
+
 /favicon-32.png
   Content-Type: image/png
   Cache-Control: public, max-age=604800

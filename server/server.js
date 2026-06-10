@@ -17,6 +17,7 @@ const { mountXAutoposterRoutes } = require('./lib/x-autoposter-routes');
 const { mountMonitoringRoutes } = require('./lib/monitoring-routes');
 const { mountAdminRoutes } = require('./lib/admin-routes');
 const { mountFilmRoomKnowledgeRoutes } = require('./lib/film-room-knowledge-routes');
+const { mountNilRoutes } = require('./lib/nil-routes');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 
@@ -69,6 +70,7 @@ mountXAutoposterRoutes(app);
 mountMonitoringRoutes(app);
 mountAdminRoutes(app);
 mountFilmRoomKnowledgeRoutes(app);
+mountNilRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;

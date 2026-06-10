@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-05T00:00:00.000Z",
+  "season": 2026,
+  "sourceNote": "Estimated annual pools from public reporting — updated quarterly",
+  "items": [
+    { "programId": "tamu", "estimatedAnnualPoolM": 22.5, "avgDealK": 48, "topDealM": 4.2, "sportBreakdown": { "football": 78, "basketball": 14, "other": 8 }, "trend": "up", "trendPct": 12 },
+    { "programId": "tex", "estimatedAnnualPoolM": 20.8, "avgDealK": 52, "topDealM": 3.8, "sportBreakdown": { "football": 75, "basketball": 16, "other": 9 }, "trend": "up", "trendPct": 18 },
+    { "programId": "bama", "estimatedAnnualPoolM": 19.2, "avgDealK": 45, "topDealM": 3.5, "sportBreakdown": { "football": 80, "basketball": 12, "other": 8 }, "trend": "stable", "trendPct": 2 },
+    { "programId": "uga", "estimatedAnnualPoolM": 17.5, "avgDealK": 42, "topDealM": 3.1, "sportBreakdown": { "football": 77, "basketball": 15, "other": 8 }, "trend": "up", "trendPct": 8 },
+    { "programId": "lsu", "estimatedAnnualPoolM": 14.8, "avgDealK": 38, "topDealM": 2.6, "sportBreakdown": { "football": 76, "basketball": 14, "other": 10 }, "trend": "up", "trendPct": 6 },
+    { "programId": "olemiss", "estimatedAnnualPoolM": 13.2, "avgDealK": 35, "topDealM": 2.2, "sportBreakdown": { "football": 74, "basketball": 16, "other": 10 }, "trend": "up", "trendPct": 15 },
+    { "programId": "tenn", "estimatedAnnualPoolM": 12.5, "avgDealK": 36, "topDealM": 2.4, "sportBreakdown": { "football": 75, "basketball": 15, "other": 10 }, "trend": "up", "trendPct": 9 },
+    { "programId": "uf", "estimatedAnnualPoolM": 11.8, "avgDealK": 34, "topDealM": 2.1, "sportBreakdown": { "football": 73, "basketball": 17, "other": 10 }, "trend": "up", "trendPct": 14 },
+    { "programId": "auburn", "estimatedAnnualPoolM": 10.5, "avgDealK": 32, "topDealM": 1.9, "sportBreakdown": { "football": 72, "basketball": 18, "other": 10 }, "trend": "up", "trendPct": 11 },
+    { "programId": "okla", "estimatedAnnualPoolM": 10.2, "avgDealK": 33, "topDealM": 2.0, "sportBreakdown": { "football": 74, "basketball": 16, "other": 10 }, "trend": "stable", "trendPct": 3 },
+    { "programId": "scar", "estimatedAnnualPoolM": 8.4, "avgDealK": 28, "topDealM": 1.5, "sportBreakdown": { "football": 70, "basketball": 20, "other": 10 }, "trend": "up", "trendPct": 7 },
+    { "programId": "mizz", "estimatedAnnualPoolM": 7.2, "avgDealK": 26, "topDealM": 1.3, "sportBreakdown": { "football": 68, "basketball": 22, "other": 10 }, "trend": "stable", "trendPct": 1 },
+    { "programId": "ark", "estimatedAnnualPoolM": 6.8, "avgDealK": 25, "topDealM": 1.2, "sportBreakdown": { "football": 69, "basketball": 21, "other": 10 }, "trend": "up", "trendPct": 5 },
+    { "programId": "uk", "estimatedAnnualPoolM": 6.2, "avgDealK": 24, "topDealM": 1.1, "sportBreakdown": { "football": 65, "basketball": 25, "other": 10 }, "trend": "stable", "trendPct": 0 },
+    { "programId": "msst", "estimatedAnnualPoolM": 5.5, "avgDealK": 22, "topDealM": 0.9, "sportBreakdown": { "football": 67, "basketball": 23, "other": 10 }, "trend": "up", "trendPct": 4 },
+    { "programId": "vandy", "estimatedAnnualPoolM": 4.1, "avgDealK": 20, "topDealM": 0.7, "sportBreakdown": { "football": 55, "basketball": 35, "other": 10 }, "trend": "up", "trendPct": 6 }
+  ]
+}

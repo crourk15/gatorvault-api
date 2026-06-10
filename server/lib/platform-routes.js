@@ -5,6 +5,7 @@ const betting = require('./betting-lines');
 const feedback = require('./feedback-store');
 const access = require('./access-config');
 const pointsStore = require('./points-store');
+const personas = require('./persona-config');
 const { getSessionFromReq } = require('./session-auth');
 
 const ADMIN_PIN = process.env.RECRUITING_ADMIN_PIN || process.env.EMAIL_TEST_PIN || 'GV2026admin';
@@ -25,6 +26,24 @@ function mountPlatformRoutes(app) {
   app.get('/api/tiers', (req, res) => {
     try {
       return res.json(access.buildTierSystemPayload());
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/personas', (req, res) => {
+    try {
+      return res.json(personas.buildPersonasPayload());
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/personas/:id', (req, res) => {
+    try {
+      const persona = personas.getPersona(String(req.params.id || '').trim());
+      if (!persona) return res.status(404).json({ ok: false, error: 'Persona not found' });
+      return res.json({ ok: true, persona });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

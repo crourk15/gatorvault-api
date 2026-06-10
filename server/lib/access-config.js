@@ -32,9 +32,7 @@ const PAYMENT_TIERS = {
       'Matchup Spotlight',
       'Film Room Q&A',
       '"What the Coaches See" positional insights',
-      '"Why This Matters" micro-lessons',
-      'Verified Knowledge Engine — scheme library, concept breakdowns, recruiting fit, opponent prep, position traits',
-      'Text lessons & diagrams only — no external video, GNFP, or press conferences'
+      '"Why This Matters" micro-lessons'
     ]
   },
   war: {

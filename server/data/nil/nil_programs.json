@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-05T00:00:00.000Z",
+  "items": [
+    { "id": "uf", "school": "Florida Gators", "slug": "florida-gators", "conference": "SEC", "collective": "Gator Guard", "city": "Gainesville", "state": "FL" },
+    { "id": "uga", "school": "Georgia Bulldogs", "slug": "georgia-bulldogs", "conference": "SEC", "collective": "Classic City Collective", "city": "Athens", "state": "GA" },
+    { "id": "bama", "school": "Alabama Crimson Tide", "slug": "alabama-crimson-tide", "conference": "SEC", "collective": "Yellowhammer Fund", "city": "Tuscaloosa", "state": "AL" },
+    { "id": "lsu", "school": "LSU Tigers", "slug": "lsu-tigers", "conference": "SEC", "collective": "Bayou Traditions", "city": "Baton Rouge", "state": "LA" },
+    { "id": "tamu", "school": "Texas A&M Aggies", "slug": "texas-am-aggies", "conference": "SEC", "collective": "Fund 12", "city": "College Station", "state": "TX" },
+    { "id": "tenn", "school": "Tennessee Volunteers", "slug": "tennessee-volunteers", "conference": "SEC", "collective": "Spire Collective", "city": "Knoxville", "state": "TN" },
+    { "id": "olemiss", "school": "Ole Miss Rebels", "slug": "ole-miss-rebels", "conference": "SEC", "collective": "Champion Circle", "city": "Oxford", "state": "MS" },
+    { "id": "auburn", "school": "Auburn Tigers", "slug": "auburn-tigers", "conference": "SEC", "collective": "Auburn NIL Club", "city": "Auburn", "state": "AL" },
+    { "id": "scar", "school": "South Carolina Gamecocks", "slug": "south-carolina-gamecocks", "conference": "SEC", "collective": "Garnet Trust", "city": "Columbia", "state": "SC" },
+    { "id": "mizz", "school": "Missouri Tigers", "slug": "missouri-tigers", "conference": "SEC", "collective": "Golden NIL", "city": "Columbia", "state": "MO" },
+    { "id": "uk", "school": "Kentucky Wildcats", "slug": "kentucky-wildcats", "conference": "SEC", "collective": "Wildcat NIL", "city": "Lexington", "state": "KY" },
+    { "id": "ark", "school": "Arkansas Razorbacks", "slug": "arkansas-razorbacks", "conference": "SEC", "collective": "Hogs NIL", "city": "Fayetteville", "state": "AR" },
+    { "id": "msst", "school": "Mississippi State Bulldogs", "slug": "mississippi-state-bulldogs", "conference": "SEC", "collective": "Bulldog NIL", "city": "Starkville", "state": "MS" },
+    { "id": "vandy", "school": "Vanderbilt Commodores", "slug": "vanderbilt-commodores", "conference": "SEC", "collective": "Anchor NIL", "city": "Nashville", "state": "TN" },
+    { "id": "okla", "school": "Oklahoma Sooners", "slug": "oklahoma-sooners", "conference": "SEC", "collective": "Crimson & Cream", "city": "Norman", "state": "OK" },
+    { "id": "tex", "school": "Texas Longhorns", "slug": "texas-longhorns", "conference": "SEC", "collective": "Horns With Heart", "city": "Austin", "state": "TX" }
+  ]
+}

@@ -334,6 +334,13 @@ async function refreshBeatStream() {
     /* optional */
   }
 
+  try {
+    const { runBeatWriterIngest } = require('./beat-writer-ingest');
+    runBeatWriterIngest().catch((err) => console.warn('[beat-writer-ingest]', err.message));
+  } catch {
+    /* optional */
+  }
+
   merged.slice(0, 30).forEach((post) => {
     if (!shouldIncludeBeatPost(post)) return;
     store.upsertFeedItem({

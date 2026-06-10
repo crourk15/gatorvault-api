@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-05T00:00:00.000Z",
+  "scope": "SEC football NIL tracking",
+  "primarySchool": "florida-gators",
+  "conference": "SEC",
+  "disclaimer": "Estimated figures from public reporting and collective disclosures. Not official financial data.",
+  "tables": ["nil_programs", "nil_metrics", "nil_rankings", "nil_events"]
+}

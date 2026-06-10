@@ -3,6 +3,7 @@ const intelStore = require('./recruiting-intel-store');
 const { runOn3Ingest, syncPortalFromOn3, getIngestStatus } = require('./on3-ingest');
 const { runRivalsPredictionIngest, getRivalsPmStatus } = require('./rivals-prediction-ingest');
 const { runBeatVisitIntelIngest, ingestManualVisitIntel } = require('./beat-visit-intel-ingest');
+const { runBeatWriterIngest, ingestManualBeatVisitIntel } = require('./beat-writer-ingest');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { buildHeatCheck } = require('./heat-check-store');
 const highlightsStore = require('./highlights-store');
@@ -398,6 +399,25 @@ function mountRecruitingRoutes(app) {
       return res.json({ ok: true, ...result });
     } catch (err) {
       console.error('beat-visit ingest error', err);
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/recruiting/beat-writer/ingest', async (req, res) => {
+    try {
+      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.get('X-Ingest-Secret') || '');
+      if (pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
+        return res.status(401).json({ ok: false, error: 'Invalid ingest secret' });
+      }
+      if (req.body.row && req.body.row.playerName) {
+        const result = await ingestManualBeatVisitIntel(req.body.row);
+        return res.json({ ok: true, ...result });
+      }
+      const force = req.body.force === true || req.query.force === 'true';
+      const result = await runBeatWriterIngest({ force });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      console.error('beat-writer ingest error', err);
       return res.status(500).json({ ok: false, error: err.message });
     }
   });

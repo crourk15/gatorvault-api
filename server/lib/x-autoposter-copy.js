@@ -226,6 +226,33 @@ async function buildIntelCopyAsync(intel) {
     });
   }
 
+  if (intel.eventType === 'official_visit' || intel.eventType === 'unofficial_visit') {
+    if (!intel.identityConfirmed) {
+      const identityLookup = require('./player-identity-lookup');
+      const enrichment = await identityLookup.enrichAndConfirmIntelIdentity({
+        fields: {
+          playerName: intel.playerName,
+          pos: intel.pos,
+          classYear: intel.classYear,
+          highSchool: intel.highSchool,
+          hometownState: intel.hometownState,
+          school: intel.school,
+          stars: intel.stars,
+          natlRank: intel.natlRank
+        },
+        playerName: intel.playerName,
+        playerSlug: intel.playerSlug,
+        intel,
+        intelId: intel.id,
+        classYear: intel.classYear
+      });
+      if (!enrichment.confirmed) {
+        return { skipReason: enrichment.reason || 'identity_not_confirmed', confirmation: enrichment.confirmation };
+      }
+      intel = { ...intel, ...enrichment.intelPatch, identityConfirmed: true };
+    }
+  }
+
   const newsEvent = playerContext.newsEventForIntel(intel);
   if (!newsEvent) return null;
   const source = playerContext.sourceLabelForIntel(intel);

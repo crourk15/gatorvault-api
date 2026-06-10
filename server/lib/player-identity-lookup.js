@@ -493,6 +493,17 @@ function listMissingIdentityFields(fields) {
   return missing;
 }
 
+/** Visit / intel autoposter — no RPM requirement; stars OR natlRank for rank signal. */
+function listMissingVisitIdentityFields(fields) {
+  const missing = [];
+  if (!parseStars(fields.stars) && !(fields.natlRank > 0)) missing.push('rating');
+  if (!String(fields.pos || '').trim()) missing.push('position');
+  if (!fields.classYear || Number.isNaN(Number(fields.classYear))) missing.push('classYear');
+  if (!String(fields.highSchool || fields.school || '').trim()) missing.push('school');
+  if (!String(fields.hometownState || '').trim()) missing.push('hometownState');
+  return missing;
+}
+
 async function persistIdentityToIntel(intelId, snapshot, confirmation) {
   if (!intelId || !snapshot) return null;
   try {
@@ -633,6 +644,90 @@ async function enrichAndConfirmPredictionIdentity({
   };
 }
 
+/**
+ * Lookup + confirmation + merge for visit/beat intel posts (no RPM required).
+ */
+async function enrichAndConfirmIntelIdentity({
+  fields,
+  playerName,
+  playerSlug,
+  row = null,
+  intel = null,
+  player = null,
+  intelId = null,
+  classYear = null
+} = {}) {
+  const baseSnapshot = buildSnapshot({
+    playerName: fields?.playerName || playerName,
+    playerSlug,
+    stars: fields?.stars,
+    pos: fields?.pos,
+    classYear: fields?.classYear || classYear,
+    highSchool: fields?.highSchool || fields?.school,
+    hometownState: fields?.hometownState,
+    natlRank: fields?.natlRank,
+    on3Id: row?.on3Id || intel?.playerId
+  });
+
+  const sources = await collectIdentitySources({
+    playerName: baseSnapshot?.playerName || playerName,
+    playerSlug,
+    classYear: baseSnapshot?.classYear || classYear,
+    row,
+    intel,
+    player
+  });
+
+  const confirmation = confirmIdentity(sources);
+  if (!confirmation.confirmed) {
+    return {
+      confirmed: false,
+      reason: 'identity_not_confirmed',
+      confirmation,
+      missingBefore: listMissingVisitIdentityFields(baseSnapshot || {}),
+      sources: sources.map((s) => ({ provider: s.provider, confidence: s.confidence }))
+    };
+  }
+
+  const mergedSnapshot = mergeMissingFields(baseSnapshot || {}, confirmation.matchedSources);
+  const missingAfter = listMissingVisitIdentityFields(mergedSnapshot);
+
+  if (missingAfter.length) {
+    return {
+      confirmed: false,
+      reason: 'identity_incomplete_after_lookup',
+      confirmation,
+      missingAfter,
+      mergedSnapshot,
+      sources: sources.map((s) => ({ provider: s.provider, confidence: s.confidence }))
+    };
+  }
+
+  const identityPatch = identityPatchFromSnapshot(mergedSnapshot);
+
+  if (intelId) await persistIdentityToIntel(intelId, mergedSnapshot, confirmation);
+  await persistIdentityToPlayer(mergedSnapshot);
+
+  return {
+    confirmed: true,
+    confirmation,
+    mergedSnapshot,
+    identityPatch,
+    intelPatch: {
+      stars: mergedSnapshot.stars,
+      pos: mergedSnapshot.pos,
+      classYear: mergedSnapshot.classYear,
+      highSchool: mergedSnapshot.highSchool,
+      hometownState: mergedSnapshot.hometownState,
+      school: mergedSnapshot.highSchool || mergedSnapshot.hometownState,
+      natlRank: mergedSnapshot.natlRank,
+      playerSlug: mergedSnapshot.playerSlug,
+      playerId: mergedSnapshot.on3Id
+    },
+    sources: sources.map((s) => ({ provider: s.provider, confidence: s.confidence, label: s.label }))
+  };
+}
+
 module.exports = {
   MIN_SINGLE_SOURCE_CONFIDENCE,
   normalizeNameKey,
@@ -644,7 +739,9 @@ module.exports = {
   collectIdentitySources,
   sourceFrom247Profile,
   enrichAndConfirmPredictionIdentity,
+  enrichAndConfirmIntelIdentity,
   persistIdentityToIntel,
   listMissingIdentityFields,
+  listMissingVisitIdentityFields,
   identityPatchFromSnapshot
 };

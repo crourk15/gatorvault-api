@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-05T00:00:00.000Z",
+  "items": [
+    {
+      "id": "nil_evt_001",
+      "programId": "uf",
+      "date": "2026-05-15",
+      "type": "collective_launch",
+      "headline": "Gator Guard expands roster-wide tier program",
+      "detail": "Gator Guard announced expanded tiered deals for skill-position starters ahead of the 2026 season.",
+      "source": "Public collective statement",
+      "impact": "WR, QB, EDGE",
+      "recruitingCorrelation": "positive"
+    },
+    {
+      "id": "nil_evt_002",
+      "programId": "uf",
+      "date": "2026-04-02",
+      "type": "reported_package",
+      "headline": "Reported seven-figure portal package secured OL commitment",
+      "detail": "Multiple outlets reported a coordinated package helped land a priority portal OL target.",
+      "source": "Beat writer reporting",
+      "impact": "OL",
+      "recruitingCorrelation": "positive"
+    },
+    {
+      "id": "nil_evt_003",
+      "programId": "tamu",
+      "date": "2026-05-20",
+      "type": "reported_package",
+      "headline": "SEC-leading pool cited in five-star recruitment",
+      "detail": "Analysts linked Texas A&M's NIL standing to momentum on a top-10 national recruit.",
+      "source": "On3 / 247 reporting",
+      "impact": "DL, WR",
+      "recruitingCorrelation": "positive"
+    },
+    {
+      "id": "nil_evt_004",
+      "programId": "uga",
+      "date": "2026-03-28",
+      "type": "public_quote",
+      "headline": "Georgia staff emphasizes NIL as roster retention tool",
+      "detail": "Staff comments in spring media emphasized collective support for returning starters.",
+      "source": "Spring press conference",
+      "impact": "RB, WR, DB",
+      "recruitingCorrelation": "neutral"
+    },
+    {
+      "id": "nil_evt_005",
+      "programId": "uf",
+      "date": "2026-02-10",
+      "type": "recruiting_win",
+      "headline": "In-state flip tied to Gator Guard visibility at OV",
+      "detail": "Family cited structured NIL education and collective roadmap during official visit weekend.",
+      "source": "GatorVault intel store",
+      "impact": "WR",
+      "recruitingCorrelation": "positive"
+    }
+  ]
+}
