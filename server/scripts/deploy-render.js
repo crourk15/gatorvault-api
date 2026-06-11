@@ -112,7 +112,7 @@ async function main() {
       runtime: 'node',
       plan: 'free',
       region: 'oregon',
-      healthCheckPath: '/api/recruiting/ingest/status',
+      healthCheckPath: '/api/health',
       envSpecificDetails: {
         buildCommand: 'npm install',
         startCommand: 'npm start'

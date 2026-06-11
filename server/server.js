@@ -58,6 +58,8 @@ app.use((req, res, next) => {
 app.use(bodyParser.json({ limit: '1mb' }));
 app.use(apiMonitorMiddleware());
 
+require('./lib/health')(app);
+
 app.get('/highlight/:slug', (req, res) => {
   res.sendFile(path.join(__dirname, 'highlight.html'));
 });
@@ -78,6 +80,8 @@ mountAdminRoutes(app);
 mountFilmRoomKnowledgeRoutes(app);
 mountNilRoutes(app);
 mountOpsRoutes(app);
+require('./lib/ops-restart')(app);
+require('./lib/redeploy')(app);
 mountQaRoutes(app);
 mountGm2Routes(app);
 mountInsiderArticlesRoutes(app);
@@ -944,6 +948,7 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   const providers = getEmailProviders();
+  console.log('🚀 API server started with commit:', process.env.RENDER_GIT_COMMIT || process.env.GV_BUILD || 'dev');
   console.log('GatorVault server running on port', PORT);
   try {
     const store = require('./lib/recruiting-store');

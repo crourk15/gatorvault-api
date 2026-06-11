@@ -15,7 +15,7 @@ services:
     rootDir: server
     buildCommand: npm install
     startCommand: npm start
-    healthCheckPath: /api/recruiting/ingest/status
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
@@ -98,4 +98,6 @@ services:
       - key: QA_ALERT_ON_FAIL
         value: "true"
       - key: SLACK_WEBHOOK_URL
+        sync: false
+      - key: RENDER_DEPLOY_HOOK_URL
         sync: false
