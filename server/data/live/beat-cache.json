@@ -1,5 +1,11 @@
 {
   "posts": [],
-  "fetchedAt": "2026-06-07T05:06:13.907Z",
-  "source": "unavailable"
+  "fetchedAt": "2026-06-11T17:53:04.131Z",
+  "source": "nitter",
+  "blockedNational": 0,
+  "error": "X_BEARER_TOKEN not set and Nitter fallback returned no posts. Check NITTER_BASES or add Bearer token on Render.",
+  "tokenStatus": {
+    "configured": false,
+    "ok": false
+  }
 }

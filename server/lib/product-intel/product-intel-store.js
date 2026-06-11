@@ -12,10 +12,18 @@ const MAX_SNAPSHOTS = 90;
 
 function emptyDoc() {
   return {
-    version: 1,
+    version: 2,
     updatedAt: null,
     lastRunId: null,
     lastComputedAt: null,
+    intelligenceLayers: {
+      data: null,
+      classification: null,
+      severity: null,
+      proposals: null,
+      approvalGate: 'self-runner'
+    },
+    signalHistory: {},
     scores: {
       modules: {},
       pages: {},
@@ -104,6 +112,29 @@ function getLatestWeekly(doc) {
   return (doc.weeklyReports || [])[0] || null;
 }
 
+function bumpSignalHistory(doc, signalKey) {
+  doc.signalHistory = doc.signalHistory || {};
+  const prev = doc.signalHistory[signalKey] || { count: 0, firstSeen: null, lastSeen: null, recentRuns: 0 };
+  const now = new Date().toISOString();
+  doc.signalHistory[signalKey] = {
+    count: prev.count + 1,
+    firstSeen: prev.firstSeen || now,
+    lastSeen: now,
+    recentRuns: Math.min(30, (prev.recentRuns || 0) + 1)
+  };
+  return doc.signalHistory[signalKey];
+}
+
+function decaySignalHistory(doc) {
+  doc.signalHistory = doc.signalHistory || {};
+  Object.keys(doc.signalHistory).forEach((k) => {
+    const entry = doc.signalHistory[k];
+    entry.recentRuns = Math.max(0, (entry.recentRuns || 1) - 1);
+    if (entry.recentRuns <= 0 && entry.count <= 1) delete doc.signalHistory[k];
+  });
+  return doc;
+}
+
 module.exports = {
   DATA_PATH,
   emptyDoc,
@@ -115,5 +146,7 @@ module.exports = {
   pushSnapshot,
   getLatestScores,
   getTodaySummary,
-  getLatestWeekly
+  getLatestWeekly,
+  bumpSignalHistory,
+  decaySignalHistory
 };

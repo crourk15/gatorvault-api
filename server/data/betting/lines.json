@@ -1,0 +1,146 @@
+{
+  "ok": true,
+  "liveOddsEnabled": false,
+  "affiliateUrl": "https://sportsbook.fanduel.com/navigation/ncaaf",
+  "hardRockBetUrl": "https://www.hardrock.bet/sportsbook/football/ncaaf/",
+  "sportsbooks": [
+    {
+      "id": "fanduel",
+      "name": "FanDuel",
+      "url": "https://sportsbook.fanduel.com/navigation/ncaaf"
+    },
+    {
+      "id": "hardrock",
+      "name": "Hard Rock Bet",
+      "url": "https://www.hardrock.bet/sportsbook/football/ncaaf/"
+    }
+  ],
+  "nextGame": {
+    "id": "uf-fau-2026-w1",
+    "week": 1,
+    "game": "Florida vs FAU",
+    "opponent": "FAU",
+    "date": "2026-09-05T23:45:00.000Z",
+    "venue": "Ben Hill Griffin Stadium",
+    "spread": {
+      "line": "UF -31.5",
+      "uf": -31.5
+    },
+    "total": 52.5,
+    "moneyline": {
+      "uf": -4500,
+      "opp": 1600
+    },
+    "sportsbookUrl": "https://sportsbook.fanduel.com/navigation/ncaaf",
+    "sportsbookLinks": [
+      {
+        "id": "fanduel",
+        "name": "FanDuel",
+        "url": "https://sportsbook.fanduel.com/navigation/ncaaf"
+      },
+      {
+        "id": "hardrock",
+        "name": "Hard Rock Bet",
+        "url": "https://www.hardrock.bet/sportsbook/football/ncaaf/"
+      }
+    ],
+    "source": "schedule"
+  },
+  "schedule": [
+    {
+      "id": "uf-fau-2026-w1",
+      "week": 1,
+      "game": "Florida vs FAU",
+      "opponent": "FAU",
+      "date": "2026-09-05T23:45:00.000Z",
+      "venue": "Ben Hill Griffin Stadium",
+      "spread": {
+        "line": "UF -31.5",
+        "uf": -31.5
+      },
+      "total": 52.5,
+      "moneyline": {
+        "uf": -4500,
+        "opp": 1600
+      },
+      "sportsbookUrl": "https://sportsbook.fanduel.com/navigation/ncaaf",
+      "sportsbookLinks": [
+        {
+          "id": "fanduel",
+          "name": "FanDuel",
+          "url": "https://sportsbook.fanduel.com/navigation/ncaaf"
+        },
+        {
+          "id": "hardrock",
+          "name": "Hard Rock Bet",
+          "url": "https://www.hardrock.bet/sportsbook/football/ncaaf/"
+        }
+      ],
+      "source": "schedule"
+    },
+    {
+      "id": "uf-lsu-2026",
+      "week": null,
+      "game": "Florida vs LSU",
+      "opponent": "LSU",
+      "date": "2026-10-10T23:30:00.000Z",
+      "venue": "Ben Hill Griffin Stadium",
+      "spread": {
+        "line": "UF -2.5",
+        "uf": -2.5
+      },
+      "total": 51.5,
+      "moneyline": {
+        "uf": -135,
+        "opp": 115
+      },
+      "sportsbookUrl": "https://sportsbook.fanduel.com/navigation/ncaaf",
+      "sportsbookLinks": [
+        {
+          "id": "fanduel",
+          "name": "FanDuel",
+          "url": "https://sportsbook.fanduel.com/navigation/ncaaf"
+        },
+        {
+          "id": "hardrock",
+          "name": "Hard Rock Bet",
+          "url": "https://www.hardrock.bet/sportsbook/football/ncaaf/"
+        }
+      ],
+      "source": "schedule"
+    },
+    {
+      "id": "uf-fsu-2026",
+      "week": null,
+      "game": "Florida vs Florida State",
+      "opponent": "Florida State",
+      "date": "2026-11-29T20:00:00.000Z",
+      "venue": "Doak Campbell Stadium",
+      "spread": {
+        "line": "UF +3.5",
+        "uf": 3.5
+      },
+      "total": 54.5,
+      "moneyline": {
+        "uf": 145,
+        "opp": -170
+      },
+      "sportsbookUrl": "https://sportsbook.fanduel.com/navigation/ncaaf",
+      "sportsbookLinks": [
+        {
+          "id": "fanduel",
+          "name": "FanDuel",
+          "url": "https://sportsbook.fanduel.com/navigation/ncaaf"
+        },
+        {
+          "id": "hardrock",
+          "name": "Hard Rock Bet",
+          "url": "https://www.hardrock.bet/sportsbook/football/ncaaf/"
+        }
+      ],
+      "source": "schedule"
+    }
+  ],
+  "updatedAt": "2026-06-10T13:52:10.362Z",
+  "refreshedAt": "2026-06-10T13:52:10.362Z"
+}

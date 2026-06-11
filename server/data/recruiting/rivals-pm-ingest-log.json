@@ -1,0 +1,20 @@
+{
+  "runs": [
+    {
+      "processed": 0,
+      "skipped": 53,
+      "errors": 0,
+      "candidates": 53,
+      "todayOnly": true,
+      "tz": "America/New_York",
+      "at": "2026-06-09T15:18:43.573Z"
+    },
+    {
+      "processed": 27,
+      "skipped": 26,
+      "errors": 0,
+      "candidates": 53,
+      "at": "2026-06-09T14:50:33.339Z"
+    }
+  ]
+}

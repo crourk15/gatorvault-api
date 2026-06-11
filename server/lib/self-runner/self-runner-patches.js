@@ -5,10 +5,19 @@ const path = require('path');
 
 const SERVER_ROOT = path.join(__dirname, '..', '..');
 
+function loadTemplates() {
+  return require('./self-runner-patch-templates');
+}
+
 const ELIGIBILITY = [
   {
     test: (issue) => issue.checkId === 'visual-integrity:component-variants',
     patchType: 'component-variant',
+    eligible: true
+  },
+  {
+    test: (issue) => /^visual-integrity:(panel-clipping|layout-overflow)/.test(issue.checkId || ''),
+    patchType: 'css-token',
     eligible: true
   },
   {
@@ -17,7 +26,27 @@ const ELIGIBILITY = [
     eligible: true
   },
   {
-    test: (issue) => issue.checkId === 'integrity:feed-dedup',
+    test: (issue) => /^integrity:(layout-overflow|panel-clipping|wrong-background)$/.test(issue.checkId || ''),
+    patchType: 'css-token',
+    eligible: true
+  },
+  {
+    test: (issue) => issue.checkId === 'integrity:missing-content',
+    patchType: 'html-hook',
+    eligible: true
+  },
+  {
+    test: (issue) => issue.checkId === 'integrity:team-history-structure',
+    patchType: 'team-content',
+    eligible: true
+  },
+  {
+    test: (issue) => issue.checkId === 'integrity:filmroom-structure',
+    patchType: 'html-hook',
+    eligible: true
+  },
+  {
+    test: (issue) => /^integrity:(feed-dedup|autoposter-dedup)$/.test(issue.checkId || ''),
     patchType: 'feed-dedup',
     eligible: true
   },
@@ -27,7 +56,17 @@ const ELIGIBILITY = [
     eligible: true
   },
   {
-    test: (issue) => /^pages:(film-room-hooks|team-hooks)$/.test(issue.checkId || ''),
+    test: (issue) => issue.checkId === 'integrity:depth-chart',
+    patchType: 'html-hook',
+    eligible: true
+  },
+  {
+    test: (issue) => issue.checkId === 'integrity:roster-images',
+    patchType: 'html-hook',
+    eligible: true
+  },
+  {
+    test: (issue) => /^pages:(film-room-hooks|team-hooks|home)/.test(issue.checkId || ''),
     patchType: 'html-hook',
     eligible: true
   },
@@ -37,7 +76,7 @@ const ELIGIBILITY = [
     eligible: true
   },
   {
-    test: (issue) => /^mobile-behavior:(stale-html|team-tab-theme)$/.test(issue.checkId || ''),
+    test: (issue) => /^mobile-behavior:/.test(issue.checkId || ''),
     patchType: 'background-theme',
     eligible: true
   },
@@ -47,13 +86,24 @@ const ELIGIBILITY = [
     eligible: true
   },
   {
+    test: (issue) => issue.checkId === 'content:team-module',
+    patchType: 'team-content',
+    eligible: true
+  },
+  {
     test: (issue) => /^ux:/.test(issue.checkId || ''),
     patchType: 'css-token',
+    eligible: true
+  },
+  {
+    test: (issue) => !!loadTemplates().resolveRuleId(issue),
+    patchType: null,
     eligible: true
   }
 ];
 
-const INELIGIBLE_MODULES = new Set(['api', 'browser', 'content']);
+/** Only raw API health and browser automation remain manual-only */
+const INELIGIBLE_MODULES = new Set(['api', 'browser']);
 
 const FILM_SOURCE_FALLBACKS = {
   default: 'https://247sports.com/college/florida/',
@@ -77,6 +127,18 @@ const HOOK_SNIPPETS = {
     insertBefore: '</body>',
     snippet:
       '\n<!-- self-runner: film room verified source hooks wired in gv-film-sources.js -->\n'
+  },
+  'integrity:filmroom-structure': {
+    file: 'index.html',
+    marker: 'film-room-hub-landing',
+    insertBefore: '</body>',
+    snippet: '\n<!-- self-runner: film room hub drill-down -->\n'
+  },
+  'integrity:missing-content': {
+    file: 'index.html',
+    marker: 'gv-team-overview-layout',
+    insertBefore: '</body>',
+    snippet: '\n<!-- self-runner: section markers verified -->\n'
   }
 };
 
@@ -110,16 +172,52 @@ const TEAM_OVERVIEW_FILES = {
   styles: 'css/gv-team.css'
 };
 
+const MODAL_OVERFLOW_CSS_SNIPPET = `
+/* self-runner: modal overflow guards */
+.gv-team-modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-wrap: break-word;
+}
+.gv-tm-lead, .gv-tm-body, .gv-tm-highlight-text, .gv-tm-timeline-item {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.gv-team-overview-main { min-width: 0; }
+`;
+
 function resolvePatchType(issue) {
   if (INELIGIBLE_MODULES.has(issue.module)) return null;
-  const rule = ELIGIBILITY.find((r) => r.test(issue));
+  const tmpl = loadTemplates().getTemplate(issue);
+  if (tmpl) return tmpl.patchType;
+  const rule = ELIGIBILITY.find((r) => r.test(issue) && r.patchType);
   return rule ? rule.patchType : null;
 }
 
 function isEligible(issue) {
   if (INELIGIBLE_MODULES.has(issue.module)) return false;
   if (issue.manualOnly) return false;
-  return ELIGIBILITY.some((r) => r.test(issue));
+  if (loadTemplates().resolveRuleId(issue)) return true;
+  return ELIGIBILITY.some((r) => r.test(issue) && r.eligible !== false);
+}
+
+function classifyIneligibility(issue) {
+  if (INELIGIBLE_MODULES.has(issue.module)) {
+    return { eligible: false, reason: 'ineligible_module', detail: issue.module };
+  }
+  if (issue.manualOnly) {
+    return { eligible: false, reason: 'manual_only', detail: issue.manualReviewReason || 'flagged' };
+  }
+  const patchType = resolvePatchType(issue);
+  if (!patchType) {
+    return { eligible: false, reason: 'no_eligibility_rule', detail: issue.checkId || issue.id };
+  }
+  return { eligible: true, reason: 'matched', patchType };
 }
 
 function fallbackForUrl(url) {
@@ -144,8 +242,11 @@ module.exports = {
   TEAM_REQUIRED,
   TEAM_LEGACY_CARD_SWAPS,
   TEAM_OVERVIEW_FILES,
+  MODAL_OVERFLOW_CSS_SNIPPET,
   resolvePatchType,
   isEligible,
+  classifyIneligibility,
   fallbackForUrl,
-  absPath
+  absPath,
+  getPatchTemplates: () => require('./self-runner-patch-templates')
 };

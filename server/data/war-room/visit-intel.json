@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "visits": [
+    {
+      "playerSlug": "amare-patterson",
+      "playerName": "Amare Patterson",
+      "classYear": 2027,
+      "pos": "WR",
+      "eventType": "visit_cancelled",
+      "cancelledSchool": "Florida",
+      "nextVisitSchool": "South Carolina",
+      "source": "Hayes Fawcett",
+      "detail": "Amare Patterson has cancelled his OV to Florida and will now visit South Carolina this weekend.",
+      "articleUrl": null,
+      "loggedAt": "2026-06-09T15:06:37.796Z"
+    }
+  ],
+  "updatedAt": "2026-06-09T15:06:37.859Z"
+}

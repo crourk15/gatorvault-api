@@ -953,32 +953,13 @@
           "school": "Coatesville, PA",
           "htWt": "6-5.5 / 305",
           "stars": 5,
-          "rating": 98.53548387096775,
+          "rating": 98.54623655913979,
           "natlRank": 3,
           "posRank": 1,
           "stateRank": 1,
           "inState": false,
           "status": "committed",
           "commitDate": "2026-04-08",
-          "committedTo": "Florida",
-          "skinny": "",
-          "sourceStatus": "Committed"
-        },
-        "on3:241889": {
-          "on3Id": "241889",
-          "name": "Elijah Hutcheson",
-          "pos": "OT",
-          "classYear": 2027,
-          "school": "Roanoke, VA",
-          "htWt": "6-6 / 255",
-          "stars": 4,
-          "rating": 92.69057971014493,
-          "natlRank": 91,
-          "posRank": 7,
-          "stateRank": 2,
-          "inState": false,
-          "status": "committed",
-          "commitDate": "2026-05-05",
           "committedTo": "Florida",
           "skinny": "",
           "sourceStatus": "Committed"
@@ -991,13 +972,51 @@
           "school": "Port Charlotte, FL",
           "htWt": "5-11 / 183",
           "stars": 4,
-          "rating": 92.47028985507247,
-          "natlRank": 95,
-          "posRank": 17,
+          "rating": 92.96666666666667,
+          "natlRank": 90,
+          "posRank": 16,
           "stateRank": 11,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-05-19",
+          "committedTo": "Florida",
+          "skinny": "",
+          "sourceStatus": "Committed"
+        },
+        "on3:284256": {
+          "on3Id": "284256",
+          "name": "Kennedee Jackson",
+          "pos": "OT",
+          "classYear": 2027,
+          "school": "Lithonia, GA",
+          "htWt": "6-5.5 / 301",
+          "stars": 4,
+          "rating": 92.85688405797102,
+          "natlRank": 98,
+          "posRank": 9,
+          "stateRank": 8,
+          "inState": false,
+          "status": "committed",
+          "commitDate": "2026-06-02",
+          "committedTo": "Florida",
+          "skinny": "",
+          "sourceStatus": "Committed"
+        },
+        "on3:241889": {
+          "on3Id": "241889",
+          "name": "Elijah Hutcheson",
+          "pos": "OT",
+          "classYear": 2027,
+          "school": "Roanoke, VA",
+          "htWt": "6-5.5 / 260",
+          "stars": 4,
+          "rating": 92.85,
+          "natlRank": 99,
+          "posRank": 10,
+          "stateRank": 2,
+          "inState": false,
+          "status": "committed",
+          "commitDate": "2026-05-05",
           "committedTo": "Florida",
           "skinny": "",
           "sourceStatus": "Committed"
@@ -1010,32 +1029,13 @@
           "school": "Sarasota, FL",
           "htWt": "6-6 / 215",
           "stars": 4,
-          "rating": 92.19057971014493,
-          "natlRank": 113,
-          "posRank": 9,
+          "rating": 92.26666666666667,
+          "natlRank": 115,
+          "posRank": 10,
           "stateRank": 13,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-04-09",
-          "committedTo": "Florida",
-          "skinny": "",
-          "sourceStatus": "Committed"
-        },
-        "on3:258942": {
-          "on3Id": "258942",
-          "name": "Tramond Collins",
-          "pos": "WR",
-          "classYear": 2027,
-          "school": "Cottondale, FL",
-          "htWt": "6-0 / 185",
-          "stars": 4,
-          "rating": 92.06811594202898,
-          "natlRank": 115,
-          "posRank": 20,
-          "stateRank": 14,
-          "inState": true,
-          "status": "committed",
-          "commitDate": "2026-03-11",
           "committedTo": "Florida",
           "skinny": "",
           "sourceStatus": "Committed"
@@ -1048,9 +1048,9 @@
           "school": "Baltimore, MD",
           "htWt": "6-5 / 245",
           "stars": 4,
-          "rating": 91.89311594202898,
-          "natlRank": 128,
-          "posRank": 14,
+          "rating": 92.1268115942029,
+          "natlRank": 123,
+          "posRank": 15,
           "stateRank": 3,
           "inState": false,
           "status": "committed",
@@ -1067,13 +1067,32 @@
           "school": "Anna, TX",
           "htWt": "6-5 / 290",
           "stars": 4,
-          "rating": 91.84384057971015,
-          "natlRank": 130,
-          "posRank": 10,
-          "stateRank": 17,
+          "rating": 92.08115942028986,
+          "natlRank": 127,
+          "posRank": 11,
+          "stateRank": 19,
           "inState": false,
           "status": "committed",
           "commitDate": "2026-04-27",
+          "committedTo": "Florida",
+          "skinny": "",
+          "sourceStatus": "Committed"
+        },
+        "on3:258942": {
+          "on3Id": "258942",
+          "name": "Tramond Collins",
+          "pos": "WR",
+          "classYear": 2027,
+          "school": "Cottondale, FL",
+          "htWt": "6-0 / 185",
+          "stars": 4,
+          "rating": 92.0663043478261,
+          "natlRank": 129,
+          "posRank": 20,
+          "stateRank": 14,
+          "inState": true,
+          "status": "committed",
+          "commitDate": "2026-03-11",
           "committedTo": "Florida",
           "skinny": "",
           "sourceStatus": "Committed"
@@ -1087,7 +1106,7 @@
           "htWt": "6-3 / 182",
           "stars": 4,
           "rating": 91.80212716222533,
-          "natlRank": 132,
+          "natlRank": 145,
           "posRank": 18,
           "stateRank": 12,
           "inState": false,
@@ -1105,32 +1124,13 @@
           "school": "Swainsboro, GA",
           "htWt": "6-2 / 205",
           "stars": 4,
-          "rating": 91.77862318840579,
-          "natlRank": 138,
-          "posRank": 11,
-          "stateRank": 13,
-          "inState": false,
-          "status": "committed",
-          "commitDate": "2026-05-29",
-          "committedTo": "Florida",
-          "skinny": "",
-          "sourceStatus": "Committed"
-        },
-        "on3:284256": {
-          "on3Id": "284256",
-          "name": "Kennedee Jackson",
-          "pos": "OT",
-          "classYear": 2027,
-          "school": "Lithonia, GA",
-          "htWt": "6-5.5 / 301",
-          "stars": 4,
-          "rating": 91.76811594202898,
-          "natlRank": 139,
+          "rating": 91.67898550724637,
+          "natlRank": 153,
           "posRank": 14,
           "stateRank": 14,
           "inState": false,
           "status": "committed",
-          "commitDate": "2026-06-02",
+          "commitDate": "2026-05-29",
           "committedTo": "Florida",
           "skinny": "",
           "sourceStatus": "Committed"
@@ -1143,10 +1143,10 @@
           "school": "Bogart, GA",
           "htWt": "5-9 / 195",
           "stars": 4,
-          "rating": 91.37065217391304,
-          "natlRank": 166,
-          "posRank": 9,
-          "stateRank": 18,
+          "rating": 91.3054347826087,
+          "natlRank": 181,
+          "posRank": 12,
+          "stateRank": 19,
           "inState": false,
           "status": "committed",
           "commitDate": "2026-05-08",
@@ -1162,9 +1162,9 @@
           "school": "Plantation, FL",
           "htWt": "5-11 / 180",
           "stars": 4,
-          "rating": 90.62391304347827,
-          "natlRank": 231,
-          "posRank": 26,
+          "rating": 90.48623188405797,
+          "natlRank": 246,
+          "posRank": 27,
           "stateRank": 21,
           "inState": true,
           "status": "committed",
@@ -1182,8 +1182,8 @@
           "htWt": "5-11 / 160",
           "stars": 4,
           "rating": 89.9927536231884,
-          "natlRank": 295,
-          "posRank": 45,
+          "natlRank": 294,
+          "posRank": 47,
           "stateRank": 25,
           "inState": true,
           "status": "committed",
@@ -1201,7 +1201,7 @@
           "htWt": "6-3.5 / 260",
           "stars": 4,
           "rating": 89.67826086956522,
-          "natlRank": 318,
+          "natlRank": 316,
           "posRank": 33,
           "stateRank": 2,
           "inState": false,
@@ -1220,12 +1220,31 @@
           "htWt": "6-4.5 / 235",
           "stars": 4,
           "rating": 89.33333333333333,
-          "natlRank": 344,
-          "posRank": 19,
+          "natlRank": 349,
+          "posRank": 20,
           "stateRank": 7,
           "inState": false,
           "status": "committed",
           "commitDate": "2026-04-16",
+          "committedTo": "Florida",
+          "skinny": "",
+          "sourceStatus": "Committed"
+        },
+        "on3:283680": {
+          "on3Id": "283680",
+          "name": "Kamarion Johnson",
+          "pos": "ATH",
+          "classYear": 2027,
+          "school": "Homerville, GA",
+          "htWt": "6-0 / 185",
+          "stars": 4,
+          "rating": 89.33333333333333,
+          "natlRank": 351,
+          "posRank": 12,
+          "stateRank": 40,
+          "inState": false,
+          "status": "committed",
+          "commitDate": "2026-06-05",
           "committedTo": "Florida",
           "skinny": "",
           "sourceStatus": "Committed"
@@ -1239,9 +1258,9 @@
           "htWt": "5-11.5 / 210",
           "stars": 4,
           "rating": 89.32608695652173,
-          "natlRank": 347,
-          "posRank": 30,
-          "stateRank": 17,
+          "natlRank": 354,
+          "posRank": 32,
+          "stateRank": 18,
           "inState": false,
           "status": "committed",
           "commitDate": "2026-06-06",
@@ -1258,9 +1277,9 @@
           "htWt": "6-5 / 230",
           "stars": 3,
           "rating": 88.7,
-          "natlRank": 412,
+          "natlRank": 418,
           "posRank": 25,
-          "stateRank": 16,
+          "stateRank": 18,
           "inState": false,
           "status": "committed",
           "commitDate": "2026-02-24",
@@ -1277,9 +1296,9 @@
           "htWt": "6-2.5 / 295",
           "stars": 3,
           "rating": 88.03333333333333,
-          "natlRank": 506,
-          "posRank": 54,
-          "stateRank": 42,
+          "natlRank": 517,
+          "posRank": 55,
+          "stateRank": 43,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-05-06",
@@ -1296,8 +1315,8 @@
           "htWt": "6-2 / 170",
           "stars": 3,
           "rating": 88.01594202898552,
-          "natlRank": 507,
-          "posRank": 44,
+          "natlRank": 519,
+          "posRank": 45,
           "stateRank": 12,
           "inState": false,
           "status": "committed",
@@ -1315,8 +1334,8 @@
           "htWt": "6-7 / 299",
           "stars": 3,
           "rating": 87.7,
-          "natlRank": 564,
-          "posRank": 61,
+          "natlRank": 578,
+          "posRank": 62,
           "stateRank": 13,
           "inState": false,
           "status": "committed",
@@ -1334,9 +1353,9 @@
           "htWt": "6-4 / 300",
           "stars": 3,
           "rating": 87.7,
-          "natlRank": 568,
-          "posRank": 63,
-          "stateRank": 47,
+          "natlRank": 582,
+          "posRank": 64,
+          "stateRank": 48,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-04-27",
@@ -1344,21 +1363,21 @@
           "skinny": "",
           "sourceStatus": "Committed"
         },
-        "on3:283680": {
-          "on3Id": "283680",
-          "name": "Kamarion Johnson",
-          "pos": "ATH",
+        "on3:285808": {
+          "on3Id": "285808",
+          "name": "Jaydee Lane",
+          "pos": "LS",
           "classYear": 2027,
-          "school": "Homerville, GA",
-          "htWt": "6-0 / 185",
+          "school": "Mendenhall, MS",
+          "htWt": "6-1 / 220",
           "stars": 3,
-          "rating": 86,
-          "natlRank": 813,
-          "posRank": 26,
-          "stateRank": 94,
+          "rating": 80,
+          "natlRank": 1808,
+          "posRank": 2,
+          "stateRank": 36,
           "inState": false,
           "status": "committed",
-          "commitDate": "2026-06-05",
+          "commitDate": "2026-06-08",
           "committedTo": "Florida",
           "skinny": "",
           "sourceStatus": "Committed"
@@ -1368,10 +1387,449 @@
         "classYear": 2027,
         "nationalRank": 5,
         "secRank": 3,
-        "classScore": 92.419619760012,
+        "classScore": 92.386635559392,
         "source": "on3"
       }
     }
   },
-  "lastRun": "2026-06-07T05:08:12.333Z"
+  "lastRun": "2026-06-11T17:53:02.301Z",
+  "commitFingerprints": {
+    "175389|florida|2025-08-11": {
+      "commitDate": "2025-08-11",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "241642|florida|2025-06-18": {
+      "commitDate": "2025-06-18",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "176369|florida|2025-07-11": {
+      "commitDate": "2025-07-11",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "240430|florida|2025-06-08": {
+      "commitDate": "2025-06-08",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "154268|florida|2025-06-14": {
+      "commitDate": "2025-06-14",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "239856|florida|2025-12-04": {
+      "commitDate": "2025-12-04",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "162624|florida|2024-06-01": {
+      "commitDate": "2024-06-01",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "236759|florida|2025-07-02": {
+      "commitDate": "2025-07-02",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "243492|florida|2025-06-16": {
+      "commitDate": "2025-06-16",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "177521|florida|2025-07-07": {
+      "commitDate": "2025-07-07",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "174275|florida|2025-07-12": {
+      "commitDate": "2025-07-12",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "177149|florida|2025-06-14": {
+      "commitDate": "2025-06-14",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "174822|florida|2025-06-03": {
+      "commitDate": "2025-06-03",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "155900|florida|2025-07-03": {
+      "commitDate": "2025-07-03",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "176416|florida|2025-06-01": {
+      "commitDate": "2025-06-01",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "179743|florida|2025-06-08": {
+      "commitDate": "2025-06-08",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "283712|florida|2026-01-07": {
+      "commitDate": "2026-01-07",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "236347|florida|2025-06-26": {
+      "commitDate": "2025-06-26",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "243619|florida|2025-06-16": {
+      "commitDate": "2025-06-16",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "260787|florida|2026-02-05": {
+      "commitDate": "2026-02-05",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "288527|florida|2026-05-12": {
+      "commitDate": "2026-05-12",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "43376|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "113148|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "178263|florida|2026-01-07": {
+      "commitDate": "2026-01-07",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "87184|florida|2026-01-07": {
+      "commitDate": "2026-01-07",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "178849|florida|2026-01-10": {
+      "commitDate": "2026-01-10",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "155795|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "147775|florida|2026-01-08": {
+      "commitDate": "2026-01-08",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "146069|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "145026|florida|2026-01-05": {
+      "commitDate": "2026-01-05",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "175643|florida|2026-01-18": {
+      "commitDate": "2026-01-18",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "150237|florida|2026-01-04": {
+      "commitDate": "2026-01-04",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "238104|florida|2026-01-09": {
+      "commitDate": "2026-01-09",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "154954|florida|2026-01-16": {
+      "commitDate": "2026-01-16",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "155719|florida|2026-01-10": {
+      "commitDate": "2026-01-10",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "153739|florida|2026-01-09": {
+      "commitDate": "2026-01-09",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "113075|florida|2026-01-12": {
+      "commitDate": "2026-01-12",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "154828|florida|2026-01-05": {
+      "commitDate": "2026-01-05",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "66322|florida|2026-01-21": {
+      "commitDate": "2026-01-21",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "283144|florida|2026-01-19": {
+      "commitDate": "2026-01-19",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "148026|florida|2026-01-12": {
+      "commitDate": "2026-01-12",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "162020|florida|2026-01-05": {
+      "commitDate": "2026-01-05",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "239636|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "162609|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "283676|florida|2026-01-06": {
+      "commitDate": "2026-01-06",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "283756|florida|2026-01-08": {
+      "commitDate": "2026-01-08",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "283795|florida|2026-01-10": {
+      "commitDate": "2026-01-10",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "284197|florida|2026-01-26": {
+      "commitDate": "2026-01-26",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "288165|florida|2026-05-01": {
+      "commitDate": "2026-05-01",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2026"
+    },
+    "180637|florida|2026-04-08": {
+      "commitDate": "2026-04-08",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "241889|florida|2026-05-05": {
+      "commitDate": "2026-05-05",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "281377|florida|2026-05-19": {
+      "commitDate": "2026-05-19",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "259412|florida|2026-04-09": {
+      "commitDate": "2026-04-09",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "258942|florida|2026-03-11": {
+      "commitDate": "2026-03-11",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "282819|florida|2026-06-05": {
+      "commitDate": "2026-06-05",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "238083|florida|2026-04-27": {
+      "commitDate": "2026-04-27",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "281368|florida|2026-04-11": {
+      "commitDate": "2026-04-11",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "245408|florida|2026-05-29": {
+      "commitDate": "2026-05-29",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "284256|florida|2026-06-02": {
+      "commitDate": "2026-06-02",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "236047|florida|2026-05-08": {
+      "commitDate": "2026-05-08",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "249286|florida|2026-01-24": {
+      "commitDate": "2026-01-24",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "239852|florida|2026-04-25": {
+      "commitDate": "2026-04-25",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "243606|florida|2026-06-03": {
+      "commitDate": "2026-06-03",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "280816|florida|2026-04-16": {
+      "commitDate": "2026-04-16",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "180930|florida|2026-06-06": {
+      "commitDate": "2026-06-06",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "244244|florida|2026-02-24": {
+      "commitDate": "2026-02-24",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "284617|florida|2026-05-06": {
+      "commitDate": "2026-05-06",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "243497|florida|2026-05-05": {
+      "commitDate": "2026-05-05",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "251040|florida|2026-05-15": {
+      "commitDate": "2026-05-15",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "283921|florida|2026-04-27": {
+      "commitDate": "2026-04-27",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "283680|florida|2026-06-05": {
+      "commitDate": "2026-06-05",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "285808|florida|2026-06-08": {
+      "commitDate": "2026-06-08",
+      "registeredAt": "2026-06-11T15:47:15.485Z",
+      "source": "snapshot",
+      "classYear": "2027"
+    },
+    "jaylen-jordan|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-11T15:47:15.486Z",
+      "source": "players"
+    }
+  }
 }

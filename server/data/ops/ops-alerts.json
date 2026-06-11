@@ -1,5 +1,935 @@
 {
   "version": 1,
-  "updatedAt": null,
-  "alerts": []
+  "updatedAt": "2026-06-11T21:12:43.358Z",
+  "alerts": [
+    {
+      "id": "alert_1781212363357_c37tj",
+      "at": "2026-06-11T21:12:43.357Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 2 check(s)",
+      "message": "Run qa_1781212351511 at 2026-06-11T21:12:42.540Z\nDuration: 11029ms\nModules: api=PASS, content=PASS, integrity=PASS, pages=PASS, ux=PASS, browser=PASS, visual-integrity=PASS, mobile-behavior=PASS, crawler=FAIL\n\n• *crawler/crawler:depth-chart*: Restore depth chart ordering and backup slots in gv-team-mobile.js\n  URL: /\n  Repro: Restore depth chart ordering and backup slots in gv-team-mobile.js\n• *crawler/crawler:depth-chart*: Restore depth chart ordering and backup slots in gv-team-mobile.js\n  URL: /\n  Repro: Restore depth chart ordering and backup slots in gv-team-mobile.js\n• *crawler/crawler:wrong-ordering*: Reorder Film Room hub categories to: Scheme → Breakdown → Press → Highlights\n  URL: /\n  Repro: Reorder Film Room hub categories to: Scheme → Breakdown → Press → Highlights\n• *crawler/crawler:wrong-ordering*: Reorder Film Room hub categories to: Scheme → Breakdown → Press → Highlights\n  URL: /\n  Repro: Reorder Film Room hub categories to: Scheme → Breakdown → Press → Highlights",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-2-crawler:depth-chart",
+      "meta": {
+        "runId": "qa_1781212351511",
+        "errors": [
+          {
+            "id": "crawler:depth-chart",
+            "module": "crawler",
+            "message": "Restore depth chart ordering and backup slots in gv-team-mobile.js",
+            "url": "/",
+            "repro": "Restore depth chart ordering and backup slots in gv-team-mobile.js",
+            "details": {
+              "classification": "depth-chart-mismatch",
+              "ruleId": "E2",
+              "severity": "medium",
+              "severityScore": 54,
+              "confidence": 75,
+              "selector": "#gv-team-dc-section",
+              "domPath": "depth-chart-data",
+              "screenshot": null,
+              "sectionId": "depth-chart"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:depth-chart",
+            "module": "crawler",
+            "message": "Restore depth chart ordering and backup slots in gv-team-mobile.js",
+            "url": "/",
+            "repro": "Restore depth chart ordering and backup slots in gv-team-mobile.js",
+            "details": {
+              "classification": "depth-chart-mismatch",
+              "ruleId": "E2",
+              "severity": "medium",
+              "severityScore": 54,
+              "confidence": 75,
+              "selector": "#gv-team-dc-section",
+              "domPath": "depth-chart-data",
+              "screenshot": null,
+              "sectionId": "depth-chart"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:wrong-ordering",
+            "module": "crawler",
+            "message": "Reorder Film Room hub categories to: Scheme → Breakdown → Press → Highlights",
+            "url": "/",
+            "repro": "Reorder Film Room hub categories to: Scheme → Breakdown → Press → Highlights",
+            "details": {
+              "classification": "wrong-ordering",
+              "ruleId": "B2",
+              "severity": "medium",
+              "severityScore": 50,
+              "confidence": 80,
+              "selector": "#vpane-highlights",
+              "domPath": "film-room-hub-order",
+              "screenshot": null,
+              "sectionId": "film-room"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:wrong-ordering",
+            "module": "crawler",
+            "message": "Reorder Film Room hub categories to: Scheme → Breakdown → Press → Highlights",
+            "url": "/",
+            "repro": "Reorder Film Room hub categories to: Scheme → Breakdown → Press → Highlights",
+            "details": {
+              "classification": "wrong-ordering",
+              "ruleId": "B2",
+              "severity": "medium",
+              "severityScore": 50,
+              "confidence": 80,
+              "selector": "#vpane-highlights",
+              "domPath": "film-room-hub-order",
+              "screenshot": null,
+              "sectionId": "film-room"
+            },
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781211759538_puasb",
+      "at": "2026-06-11T21:02:39.538Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 2 check(s)",
+      "message": "Run qa_1781211757305 at 2026-06-11T21:02:39.499Z\nDuration: 2194ms\nModules: api=PASS, content=PASS, integrity=FAIL, pages=PASS, ux=PASS, browser=PASS, visual-integrity=PASS, mobile-behavior=PASS\n\n• *integrity/integrity:missing-content*: 1 missing content marker(s) across site sections\n  Repro: Open Team, Film Room, Recruiting, Latest Updates — verify section hooks in index.html + data files\n• *integrity/integrity:wrong-background*: 5 wrong background / theme issue(s)\n  Repro: Team Identity should use era gradient classes — not og-image.jpg or trial/pricing backgrounds",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-2-integrity:missing-content",
+      "meta": {
+        "runId": "qa_1781211757305",
+        "errors": [
+          {
+            "id": "integrity:missing-content",
+            "module": "integrity",
+            "message": "1 missing content marker(s) across site sections",
+            "url": null,
+            "repro": "Open Team, Film Room, Recruiting, Latest Updates — verify section hooks in index.html + data files",
+            "details": [
+              {
+                "section": "teamIdentity",
+                "source": "local",
+                "missing": [
+                  "gv-team-identity-banner",
+                  "gv-team-identity-pillars",
+                  "gv-team-identity-card"
+                ]
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:wrong-background",
+            "module": "integrity",
+            "message": "5 wrong background / theme issue(s)",
+            "url": null,
+            "repro": "Team Identity should use era gradient classes — not og-image.jpg or trial/pricing backgrounds",
+            "details": [
+              {
+                "pattern": "/og-image.jpg",
+                "issue": "forbidden_in_team_identity",
+                "source": "local"
+              },
+              {
+                "pattern": "og-image.jpg",
+                "issue": "forbidden_in_team_identity",
+                "source": "local"
+              },
+              {
+                "pattern": "trial-expired-ov",
+                "issue": "forbidden_in_team_identity",
+                "source": "local"
+              },
+              {
+                "pattern": "pricing-sec",
+                "issue": "forbidden_in_team_identity",
+                "source": "local"
+              },
+              {
+                "pattern": "og-image.jpg",
+                "issue": "production_team_identity_wrong_bg",
+                "source": "production"
+              }
+            ],
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781194323617_zjime",
+      "at": "2026-06-11T16:12:03.617Z",
+      "severity": "info",
+      "type": "qa_recovery",
+      "title": "QA Crawler recovered — all checks passing",
+      "message": "Run qa_1781194320369 passed at 2026-06-11T16:12:03.612Z",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-recovery",
+      "meta": null
+    },
+    {
+      "id": "alert_1781194023569_asvfj",
+      "at": "2026-06-11T16:07:03.569Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 2 check(s)",
+      "message": "Run qa_1781194020363 at 2026-06-11T16:07:03.559Z\nDuration: 3196ms\nModules: api=PASS, content=PASS, integrity=FAIL, pages=PASS, ux=PASS, browser=PASS\n\n• *integrity/integrity:feed-dedup*: 1 duplicate feed item(s)\n  Repro: Open Latest Updates; check live-aggregator dedup rules\n• *integrity/integrity:film-sources*: 7 broken Film Room source URL(s)\n  Repro: QA check failed: Film Room source URLs",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-2-integrity:feed-dedup",
+      "meta": {
+        "runId": "qa_1781194020363",
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 33,
+                "duplicate": 34
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781193723205_dliy6",
+      "at": "2026-06-11T16:02:03.205Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 2 check(s)",
+      "message": "Run qa_1781193720359 at 2026-06-11T16:02:03.198Z\nDuration: 2839ms\nModules: api=PASS, content=PASS, integrity=FAIL, pages=PASS, ux=PASS, browser=PASS\n\n• *integrity/integrity:feed-dedup*: 1 duplicate feed item(s)\n  Repro: Open Latest Updates; check live-aggregator dedup rules\n• *integrity/integrity:film-sources*: 7 broken Film Room source URL(s)\n  Repro: QA check failed: Film Room source URLs",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-2-integrity:feed-dedup",
+      "meta": {
+        "runId": "qa_1781193720359",
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 33,
+                "duplicate": 34
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781193423847_tyukx",
+      "at": "2026-06-11T15:57:03.847Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 2 check(s)",
+      "message": "Run qa_1781193420000 at 2026-06-11T15:57:03.836Z\nDuration: 3836ms\nModules: api=PASS, content=PASS, integrity=FAIL, pages=PASS, ux=PASS, browser=PASS\n\n• *integrity/integrity:feed-dedup*: 1 duplicate feed item(s)\n  Repro: Open Latest Updates; check live-aggregator dedup rules\n• *integrity/integrity:film-sources*: 7 broken Film Room source URL(s)\n  Repro: QA check failed: Film Room source URLs",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-2-integrity:feed-dedup",
+      "meta": {
+        "runId": "qa_1781193420000",
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 33,
+                "duplicate": 34
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781193127302_yowdv",
+      "at": "2026-06-11T15:52:07.302Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 2 check(s)",
+      "message": "Run qa_1781193119997 at 2026-06-11T15:52:07.296Z\nDuration: 7299ms\nModules: api=PASS, content=PASS, integrity=FAIL, pages=PASS, ux=PASS, browser=PASS\n\n• *integrity/integrity:feed-dedup*: 1 duplicate feed item(s)\n  Repro: Open Latest Updates; check live-aggregator dedup rules\n• *integrity/integrity:film-sources*: 7 broken Film Room source URL(s)\n  Repro: QA check failed: Film Room source URLs",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-2-integrity:feed-dedup",
+      "meta": {
+        "runId": "qa_1781193119997",
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 31,
+                "duplicate": 32
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781192867745_hk8fs",
+      "at": "2026-06-11T15:47:47.745Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 2 check(s)",
+      "message": "Run qa_1781192864978 at 2026-06-11T15:47:47.739Z\nDuration: 2761ms\nModules: api=PASS, content=PASS, integrity=FAIL, pages=PASS, ux=PASS, browser=PASS\n\n• *integrity/integrity:feed-dedup*: 1 duplicate feed item(s)\n  Repro: Open Latest Updates; check live-aggregator dedup rules\n• *integrity/integrity:film-sources*: 7 broken Film Room source URL(s)\n  Repro: QA check failed: Film Room source URLs",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-2-integrity:feed-dedup",
+      "meta": {
+        "runId": "qa_1781192864978",
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 33,
+                "duplicate": 34
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781192867744_edc4t",
+      "at": "2026-06-11T15:47:47.744Z",
+      "severity": "error",
+      "type": "job_failure_streak",
+      "title": "qa:crawler failed 3x in a row",
+      "message": "QA crawl failed (2)",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "streak:qa:crawler",
+      "meta": {
+        "failureStreak": 3
+      }
+    },
+    {
+      "id": "alert_1781187873463_5evom",
+      "at": "2026-06-11T14:24:33.463Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 9 check(s)",
+      "message": "Run qa_1781187870655 at 2026-06-11T14:24:33.454Z\nDuration: 2799ms\nModules: api=PASS, content=PASS, integrity=FAIL, pages=FAIL, ux=FAIL, browser=PASS\n\n• *integrity/integrity:feed-dedup*: 1 duplicate feed item(s)\n  Repro: Open Latest Updates; check live-aggregator dedup rules\n• *integrity/integrity:film-sources*: 7 broken Film Room source URL(s)\n  Repro: QA check failed: Film Room source URLs\n• *pages/pages:home:desktop*: Missing markers on / (desktop): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal\n  URL: https://gatorvaultinsider.com/\n  Repro: Load https://gatorvaultinsider.com/ on desktop; verify deployed build includes required UI hooks\n• *pages/pages:home:mobile*: Missing markers on / (mobile): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal\n  URL: https://gatorvaultinsider.com/\n  Repro: Load https://gatorvaultinsider.com/ on mobile; verify deployed build includes required UI hooks\n• *pages/pages:admin-hub:desktop*: Missing markers on /admin (desktop): admin-hub-core\n  URL: https://gatorvaultinsider.com/admin\n  Repro: Load https://gatorvaultinsider.com/admin on desktop; verify deployed build includes required UI hooks\n• *pages/pages:admin-hub:mobile*: Missing markers on /admin (mobile): admin-hub-core\n  URL: https://gatorvaultinsider.com/admin\n  Repro: Load https://gatorvaultinsider.com/admin on mobile; verify deployed build includes required UI hooks\n• *pages/pages:film-room-hooks*: Film Room hooks missing: gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal, gvWireFilmSources\n  URL: https://gatorvaultinsider.com\n  Repro: Deploy latest index.html with verified source modal wiring\n• *pages/pages:team-hooks*: Team tab hooks missing: gvOpenTeamDetail\n  URL: https://gatorvaultinsider.com\n  Repro: QA check failed: Team tab modal hooks",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-9-integrity:feed-dedup",
+      "meta": {
+        "runId": "qa_1781187870655",
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 34,
+                "duplicate": 35
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 503,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 503,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 503,
+                "error": null
+              },
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "pages:home:desktop",
+            "module": "pages",
+            "message": "Missing markers on / (desktop): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal",
+            "url": "https://gatorvaultinsider.com/",
+            "repro": "Load https://gatorvaultinsider.com/ on desktop; verify deployed build includes required UI hooks",
+            "details": {
+              "viewport": "desktop",
+              "missing": [
+                "gvOpenVerifiedSource",
+                "gv-film-source",
+                "gv-verified-source-modal"
+              ]
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:home:mobile",
+            "module": "pages",
+            "message": "Missing markers on / (mobile): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal",
+            "url": "https://gatorvaultinsider.com/",
+            "repro": "Load https://gatorvaultinsider.com/ on mobile; verify deployed build includes required UI hooks",
+            "details": {
+              "viewport": "mobile",
+              "missing": [
+                "gvOpenVerifiedSource",
+                "gv-film-source",
+                "gv-verified-source-modal"
+              ]
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:admin-hub:desktop",
+            "module": "pages",
+            "message": "Missing markers on /admin (desktop): admin-hub-core",
+            "url": "https://gatorvaultinsider.com/admin",
+            "repro": "Load https://gatorvaultinsider.com/admin on desktop; verify deployed build includes required UI hooks",
+            "details": {
+              "viewport": "desktop",
+              "missing": [
+                "admin-hub-core"
+              ]
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:admin-hub:mobile",
+            "module": "pages",
+            "message": "Missing markers on /admin (mobile): admin-hub-core",
+            "url": "https://gatorvaultinsider.com/admin",
+            "repro": "Load https://gatorvaultinsider.com/admin on mobile; verify deployed build includes required UI hooks",
+            "details": {
+              "viewport": "mobile",
+              "missing": [
+                "admin-hub-core"
+              ]
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:film-room-hooks",
+            "module": "pages",
+            "message": "Film Room hooks missing: gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal, gvWireFilmSources",
+            "url": "https://gatorvaultinsider.com",
+            "repro": "Deploy latest index.html with verified source modal wiring",
+            "details": null,
+            "screenshot": null
+          },
+          {
+            "id": "pages:team-hooks",
+            "module": "pages",
+            "message": "Team tab hooks missing: gvOpenTeamDetail",
+            "url": "https://gatorvaultinsider.com",
+            "repro": "QA check failed: Team tab modal hooks",
+            "details": null,
+            "screenshot": null
+          },
+          {
+            "id": "ux:modal-zindex",
+            "module": "ux",
+            "message": "verified source modal z-index (100010) not found",
+            "url": null,
+            "repro": "QA check failed: Modal z-index stacking",
+            "details": null,
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781187807299_8jb12",
+      "at": "2026-06-11T14:23:27.299Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 13 check(s)",
+      "message": "Run qa_1781187804086 at 2026-06-11T14:23:27.285Z\nDuration: 3199ms\nModules: api=FAIL, content=FAIL, integrity=FAIL, pages=FAIL, ux=FAIL, browser=PASS\n\n• *api/api:film-room-lesson*: HTTP 403 https://gatorvault-api.onrender.com/api/film-room/lesson/frl00008-0000-4000-8000-000000000008\n  URL: https://gatorvault-api.onrender.com/api/film-room/lesson/frl00008-0000-4000-8000-000000000008\n  Repro: QA check failed: Film Room lesson detail\n• *content/content:team-module*: Team module missing: Billy Napier, depth chart, Coaching Staff\n  Repro: QA check failed: Team tab & coaching bios text\n• *integrity/integrity:feed-dedup*: 1 duplicate feed item(s)\n  Repro: Open Latest Updates; check live-aggregator dedup rules\n• *integrity/integrity:film-sources*: 7 broken Film Room source URL(s)\n  Repro: QA check failed: Film Room source URLs\n• *integrity/integrity:roster-images*: 100% roster missing headshots\n  Repro: QA check failed: Roster headshot coverage\n• *integrity/integrity:live-freshness*: (body.checks || body.issues || []).filter is not a function\n  Repro: QA check failed: Live dashboard freshness\n• *pages/pages:home:desktop*: Missing markers on / (desktop): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal\n  URL: https://gatorvaultinsider.com/\n  Repro: Load https://gatorvaultinsider.com/ on desktop; verify deployed build includes required UI hooks\n• *pages/pages:home:mobile*: Missing markers on / (mobile): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal\n  URL: https://gatorvaultinsider.com/\n  Repro: Load https://gatorvaultinsider.com/ on mobile; verify deployed build includes required UI hooks",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-13-api:film-room-lesson",
+      "meta": {
+        "runId": "qa_1781187804086",
+        "errors": [
+          {
+            "id": "api:film-room-lesson",
+            "module": "api",
+            "message": "HTTP 403 https://gatorvault-api.onrender.com/api/film-room/lesson/frl00008-0000-4000-8000-000000000008",
+            "url": "https://gatorvault-api.onrender.com/api/film-room/lesson/frl00008-0000-4000-8000-000000000008",
+            "repro": "QA check failed: Film Room lesson detail",
+            "details": {
+              "status": 403,
+              "body": {
+                "ok": false,
+                "error": "Film tier required",
+                "locked": true
+              }
+            },
+            "screenshot": null
+          },
+          {
+            "id": "content:team-module",
+            "module": "content",
+            "message": "Team module missing: Billy Napier, depth chart, Coaching Staff",
+            "url": null,
+            "repro": "QA check failed: Team tab & coaching bios text",
+            "details": null,
+            "screenshot": null
+          },
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 34,
+                "duplicate": 35
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 503,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 503,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 503,
+                "error": null
+              },
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:roster-images",
+            "module": "integrity",
+            "message": "100% roster missing headshots",
+            "url": null,
+            "repro": "QA check failed: Roster headshot coverage",
+            "details": {
+              "total": 111,
+              "missing": 111
+            },
+            "screenshot": null
+          },
+          {
+            "id": "integrity:live-freshness",
+            "module": "integrity",
+            "message": "(body.checks || body.issues || []).filter is not a function",
+            "url": null,
+            "repro": "QA check failed: Live dashboard freshness",
+            "details": null,
+            "screenshot": null
+          },
+          {
+            "id": "pages:home:desktop",
+            "module": "pages",
+            "message": "Missing markers on / (desktop): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal",
+            "url": "https://gatorvaultinsider.com/",
+            "repro": "Load https://gatorvaultinsider.com/ on desktop; verify deployed build includes required UI hooks",
+            "details": {
+              "viewport": "desktop",
+              "missing": [
+                "gvOpenVerifiedSource",
+                "gv-film-source",
+                "gv-verified-source-modal"
+              ]
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:home:mobile",
+            "module": "pages",
+            "message": "Missing markers on / (mobile): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal",
+            "url": "https://gatorvaultinsider.com/",
+            "repro": "Load https://gatorvaultinsider.com/ on mobile; verify deployed build includes required UI hooks",
+            "details": {
+              "viewport": "mobile",
+              "missing": [
+                "gvOpenVerifiedSource",
+                "gv-film-source",
+                "gv-verified-source-modal"
+              ]
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:admin-hub:desktop",
+            "module": "pages",
+            "message": "Missing markers on /admin (desktop): Admin Hub",
+            "url": "https://gatorvaultinsider.com/admin",
+            "repro": "Load https://gatorvaultinsider.com/admin on desktop; verify deployed build includes required UI hooks",
+            "details": {
+              "viewport": "desktop",
+              "missing": [
+                "Admin Hub"
+              ]
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:admin-hub:mobile",
+            "module": "pages",
+            "message": "Missing markers on /admin (mobile): Admin Hub",
+            "url": "https://gatorvaultinsider.com/admin",
+            "repro": "Load https://gatorvaultinsider.com/admin on mobile; verify deployed build includes required UI hooks",
+            "details": {
+              "viewport": "mobile",
+              "missing": [
+                "Admin Hub"
+              ]
+            },
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    }
+  ]
 }

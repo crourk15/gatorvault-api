@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "at": "2026-06-09T16:34:17.399Z",
+      "action": "blocked",
+      "reason": "unverified_on3_ingest",
+      "playerName": "Jaydee Lane",
+      "playerSlug": "jaydee-lane",
+      "classYear": 2027,
+      "trigger": "unverified_on3_ingest"
+    },
+    {
+      "at": "2026-06-09T16:34:17.380Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Test Player",
+      "playerSlug": "test-player",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    }
+  ],
+  "updatedAt": "2026-06-09T16:34:17.399Z"
+}

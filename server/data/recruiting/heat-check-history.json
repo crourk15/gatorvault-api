@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-07T14:19:51.492Z",
+  "updatedAt": "2026-06-10T23:36:10.044Z",
   "history": {
     "raheem-floyd-242853": [
       {
@@ -8,6 +8,13 @@
         "predictionSchool": "Indiana",
         "insider": "On3 RPM",
         "recordedAt": "2026-06-07T14:17:15.535Z"
+      },
+      {
+        "direction": "cooling",
+        "trigger": "prediction_other",
+        "predictionSchool": "Missouri",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-10T14:33:15.047Z"
       }
     ],
     "amare-patterson-243198": [
@@ -249,6 +256,22 @@
         "predictionSchool": "Ohio State",
         "insider": "On3 RPM",
         "recordedAt": "2026-06-07T14:17:16.637Z"
+      },
+      {
+        "direction": "cooling",
+        "trigger": "prediction_other",
+        "predictionSchool": "Maryland",
+        "insider": "On3 RPM",
+        "recordedAt": "2026-06-10T18:25:20.559Z"
+      }
+    ],
+    "easton-royal-243862": [
+      {
+        "direction": "rising",
+        "trigger": "visit_uf_leads",
+        "predictionSchool": "Florida",
+        "insider": "Tyler Harden",
+        "recordedAt": "2026-06-09T12:00:00.000Z"
       }
     ]
   }

@@ -142,6 +142,7 @@ function isIdentityLine(s) {
   if (/^Portal /.test(t)) return true;
   if (/^[\d★]/.test(t)) return true;
   if (/ — UF Update$/.test(t)) return true;
+  if (/^Florida .+\bcoach\b/i.test(t)) return true;
   return false;
 }
 

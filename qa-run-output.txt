@@ -1,0 +1,20 @@
+﻿[qa] finished: FAIL { total: 43, passed: 30, failed: 13 }
+node :  - api api:film-room-lesson HTTP 403 
+https://gatorvault-api.onrender.com/api/film-room/lesson/frl00008-0000-4000-8000-000000000008
+At C:\Users\crour\AppData\Local\Temp\ps-script-14298c15-1e4b-4f7a-a4f0-b1fa83a0da60.ps1:102 char:57
++ ... sktop\gatorvault\server"; node scripts/run-qa-crawler.js 2>&1 | Out-F ...
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( - api api:film...00-000000000008:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ - content content:team-module Team module missing: Billy Napier, depth chart, Coaching Staff
+ - integrity integrity:feed-dedup 1 duplicate feed item(s)
+ - integrity integrity:film-sources 7 broken Film Room source URL(s)
+ - integrity integrity:roster-images 100% roster missing headshots
+ - integrity integrity:live-freshness (body.checks || body.issues || []).filter is not a function
+ - pages pages:home:desktop Missing markers on / (desktop): gvOpenVerifiedSource, gv-film-source, 
+gv-verified-source-modal
+ - pages pages:home:mobile Missing markers on / (mobile): gvOpenVerifiedSource, gv-film-source, 
+gv-verified-source-modal
+ - pages pages:admin-hub:desktop Missing markers on /admin (desktop): Admin Hub
+ - pages pages:admin-hub:mobile Missing markers on /admin (mobile): Admin Hub

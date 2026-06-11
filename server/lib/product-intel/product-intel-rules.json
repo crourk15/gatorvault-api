@@ -1,0 +1,239 @@
+{
+  "version": 2,
+  "classifications": [
+    "layout-overflow",
+    "panel-clipping",
+    "missing-content",
+    "missing-image",
+    "wrong-background",
+    "wrong-ordering",
+    "filmroom-structure",
+    "team-history-structure",
+    "team-identity-layering",
+    "autoposter-duplication",
+    "autoposter-stale",
+    "recruiting-board-mismatch",
+    "depth-chart-mismatch",
+    "roster-mismatch",
+    "pressers-missing",
+    "highlights-missing",
+    "api-latency",
+    "cache-stale",
+    "broken-link",
+    "404-detected",
+    "ui-regression",
+    "mobile-desktop-divergence"
+  ],
+  "severityBands": {
+    "critical": { "min": 90, "max": 100, "label": "Critical — must fix" },
+    "high": { "min": 70, "max": 89, "label": "High — should fix" },
+    "medium": { "min": 40, "max": 69, "label": "Medium — optional" },
+    "low": { "min": 0, "max": 39, "label": "Low — cosmetic" }
+  },
+  "categories": {
+    "A": { "name": "Layout & Visual Integrity", "rules": ["A1", "A2", "A3", "A4"] },
+    "B": { "name": "Content Integrity", "rules": ["B1", "B2", "B3"] },
+    "C": { "name": "Autoposter Intelligence", "rules": ["C1", "C2", "C3", "C4"] },
+    "D": { "name": "Recruiting Intelligence", "rules": ["D1", "D2"] },
+    "E": { "name": "Team Data Integrity", "rules": ["E1", "E2"] },
+    "F": { "name": "System Health", "rules": ["F1", "F2", "F3"] }
+  },
+  "rules": {
+    "A1": {
+      "id": "A1",
+      "name": "Layout Overflow",
+      "classification": "layout-overflow",
+      "category": "A",
+      "triggers": ["text outside container", "right-side clipping", "bottom clipping", "hidden content"],
+      "checkPatterns": ["layout-overflow", "overflow", "scroll-containers", "ux:overflow"],
+      "defaultImpact": 85,
+      "defaultConfidence": 90
+    },
+    "A2": {
+      "id": "A2",
+      "name": "Panel Clipping",
+      "classification": "panel-clipping",
+      "category": "A",
+      "triggers": ["background overlaps text", "identity panel covers history", "film header overlaps categories"],
+      "checkPatterns": ["panel-clipping", "zindex", "modal-zindex", "team-identity"],
+      "defaultImpact": 80,
+      "defaultConfidence": 88
+    },
+    "A3": {
+      "id": "A3",
+      "name": "Wrong Background",
+      "classification": "wrong-background",
+      "category": "A",
+      "triggers": ["wrong gradient", "wrong theme", "wrong era background", "missing overlay"],
+      "checkPatterns": ["wrong-background", "team-overview-background", "cross-page-contamination", "team-tab-theme"],
+      "defaultImpact": 75,
+      "defaultConfidence": 85
+    },
+    "A4": {
+      "id": "A4",
+      "name": "Mobile/Desktop Divergence",
+      "classification": "mobile-desktop-divergence",
+      "category": "A",
+      "triggers": ["mobile scrolls desktop does not", "desktop clipped mobile fine", "layout inconsistent"],
+      "checkPatterns": ["mobile-behavior", "stale-html", "navigation-back", "browser:"],
+      "defaultImpact": 70,
+      "defaultConfidence": 75
+    },
+    "B1": {
+      "id": "B1",
+      "name": "Missing Content",
+      "classification": "missing-content",
+      "category": "B",
+      "triggers": ["program history incomplete", "team identity missing", "film categories missing", "recruiting missing"],
+      "checkPatterns": ["missing-content", "team-hooks", "filmroom-structure", "team-history"],
+      "defaultImpact": 80,
+      "defaultConfidence": 92
+    },
+    "B2": {
+      "id": "B2",
+      "name": "Wrong Ordering",
+      "classification": "wrong-ordering",
+      "category": "B",
+      "triggers": ["depth chart out of order", "film categories wrong", "eras wrong order"],
+      "checkPatterns": ["wrong-ordering", "depth-chart", "articlesSorted", "contentSorted"],
+      "defaultImpact": 65,
+      "defaultConfidence": 80
+    },
+    "B3": {
+      "id": "B3",
+      "name": "Stale Content",
+      "classification": "autoposter-stale",
+      "category": "B",
+      "triggers": ["no updates 24h", "recruiting not refreshed", "film room not updated"],
+      "checkPatterns": ["feed-freshness", "live-freshness", "stale"],
+      "defaultImpact": 60,
+      "defaultConfidence": 70
+    },
+    "C1": {
+      "id": "C1",
+      "name": "Duplicate Detection",
+      "classification": "autoposter-duplication",
+      "category": "C",
+      "triggers": ["same intel twice", "same player 6h", "beat edit repost", "retweet repost"],
+      "checkPatterns": ["feed-dedup", "autoposter-dedup", "duplicate"],
+      "defaultImpact": 90,
+      "defaultConfidence": 95
+    },
+    "C2": {
+      "id": "C2",
+      "name": "Similarity Detection",
+      "classification": "autoposter-duplication",
+      "category": "C",
+      "triggers": ["posts >85% similar", "same intel rephrased"],
+      "checkPatterns": ["similarity", "truncated_copy"],
+      "defaultImpact": 75,
+      "defaultConfidence": 70
+    },
+    "C3": {
+      "id": "C3",
+      "name": "UF-Only Filter",
+      "classification": "missing-content",
+      "category": "C",
+      "triggers": ["non-UF intel", "national noise"],
+      "checkPatterns": ["uf-filter", "wiltfong", "beat-writer"],
+      "defaultImpact": 55,
+      "defaultConfidence": 65
+    },
+    "C4": {
+      "id": "C4",
+      "name": "Stale Autoposter",
+      "classification": "autoposter-stale",
+      "category": "C",
+      "triggers": ["no posts 6h", "no posts 12h", "no posts 24h"],
+      "checkPatterns": ["autoposter-stale", "feed-freshness"],
+      "defaultImpact": 70,
+      "defaultConfidence": 85
+    },
+    "D1": {
+      "id": "D1",
+      "name": "Recruiting Board Mismatch",
+      "classification": "recruiting-board-mismatch",
+      "category": "D",
+      "triggers": ["player missing", "player duplicated", "wrong ranking", "wrong position", "wrong class"],
+      "checkPatterns": ["recruiting", "rankings", "recruiting-board"],
+      "defaultImpact": 75,
+      "defaultConfidence": 88
+    },
+    "D2": {
+      "id": "D2",
+      "name": "War Room Mismatch",
+      "classification": "recruiting-board-mismatch",
+      "category": "D",
+      "triggers": ["missing notes", "missing confidence", "missing heat meter"],
+      "checkPatterns": ["war-room", "breakdowns"],
+      "defaultImpact": 60,
+      "defaultConfidence": 75
+    },
+    "E1": {
+      "id": "E1",
+      "name": "Roster Mismatch",
+      "classification": "roster-mismatch",
+      "category": "E",
+      "triggers": ["missing players", "wrong numbers", "wrong positions", "wrong class year"],
+      "checkPatterns": ["roster", "roster-images", "roster-players"],
+      "defaultImpact": 70,
+      "defaultConfidence": 85
+    },
+    "E2": {
+      "id": "E2",
+      "name": "Depth Chart Mismatch",
+      "classification": "depth-chart-mismatch",
+      "category": "E",
+      "triggers": ["wrong ordering", "missing backups", "missing positions"],
+      "checkPatterns": ["depth-chart"],
+      "defaultImpact": 72,
+      "defaultConfidence": 82
+    },
+    "F1": {
+      "id": "F1",
+      "name": "API Latency",
+      "classification": "api-latency",
+      "category": "F",
+      "triggers": ["500ms response", "1s response", "2s response"],
+      "checkPatterns": ["api-latency", "api:ping", "live-dashboard"],
+      "defaultImpact": 65,
+      "defaultConfidence": 95
+    },
+    "F2": {
+      "id": "F2",
+      "name": "Cache Stale",
+      "classification": "cache-stale",
+      "category": "F",
+      "triggers": ["dashboard cache >45s", "recruiting cache >5min"],
+      "checkPatterns": ["cache-stale", "live-freshness", "live-pipeline", "pipeline/health"],
+      "defaultImpact": 70,
+      "defaultConfidence": 90
+    },
+    "F3": {
+      "id": "F3",
+      "name": "404 Detection",
+      "classification": "404-detected",
+      "category": "F",
+      "triggers": ["broken link", "missing asset"],
+      "checkPatterns": ["404", "broken", "article-links", "film-sources"],
+      "defaultImpact": 80,
+      "defaultConfidence": 92
+    }
+  },
+  "dataSources": [
+    "qa-crawler",
+    "live-dashboard",
+    "mobile-behavior",
+    "admin-hub",
+    "autoposter-logs",
+    "recruiting-board",
+    "film-room",
+    "team-overview",
+    "program-history",
+    "roster-depth-chart",
+    "press-conferences",
+    "highlights",
+    "api-health",
+    "cache-health"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "players": {},
+  "signals": [
+    {
+      "id": "qsig_1781192835997_zr8k",
+      "signal": {
+        "playerSlug": "class-2027",
+        "eventType": "ranking_change",
+        "source": "on3",
+        "title": "2027 class rankings updated (On3)",
+        "detail": "National #5 · SEC #3 · Score 92.386635559392",
+        "classYear": 2027,
+        "fingerprint": "sig_on3_class-2027_ranking_change_na"
+      },
+      "reason": "missing_timestamp",
+      "errors": [
+        "missing_timestamp",
+        "missing_timestamp"
+      ],
+      "layer": "sil",
+      "quarantinedAt": "2026-06-11T15:47:15.997Z"
+    },
+    {
+      "id": "qsig_1781124314633_03az",
+      "signal": {
+        "playerSlug": "jalen-brewster",
+        "playerName": "Jalen Brewster",
+        "playerId": "jalen-brewster",
+        "eventType": "commit",
+        "source": "beat_writer_ingest",
+        "detail": "5 star DL Jalen Brewster has committed to Florida.",
+        "timestamp": "2026-06-10T20:45:14.621Z",
+        "classYear": 2027,
+        "school": "Florida twice this offseason",
+        "fingerprint": "jalen-brewster|commit|2026-06-10"
+      },
+      "reason": "identity_validation_failed",
+      "errors": [
+        "player_invalid_pos",
+        "player_invalid_school"
+      ],
+      "layer": "sil",
+      "quarantinedAt": "2026-06-10T20:45:14.633Z"
+    }
+  ],
+  "updatedAt": "2026-06-11T15:49:00.411Z"
+}

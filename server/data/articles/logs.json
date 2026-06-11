@@ -1,7 +1,399 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-10T14:33:52.954Z",
+  "updatedAt": "2026-06-10T23:34:52.244Z",
   "events": [
+    {
+      "id": "log_1781134492244_rpr49s",
+      "action": "weekly_generation",
+      "at": "2026-06-10T23:34:52.244Z",
+      "candidateCount": 6,
+      "selectedCount": 0,
+      "draftCount": 0,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1781134491381_1x96lo",
+      "action": "weekly_generation",
+      "at": "2026-06-10T23:34:51.381Z",
+      "candidateCount": 6,
+      "selectedCount": 0,
+      "draftCount": 0,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1781134308291_tyemt9",
+      "action": "weekly_generation",
+      "at": "2026-06-10T23:31:48.291Z",
+      "candidateCount": 6,
+      "selectedCount": 0,
+      "draftCount": 0,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1781133139144_goz3bw",
+      "action": "weekly_generation",
+      "at": "2026-06-10T23:12:19.144Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 1,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [
+        "insider_1781133139142_hzwy6j"
+      ],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1781133139143_daog7l",
+      "action": "draft_created",
+      "at": "2026-06-10T23:12:19.143Z",
+      "articleId": "insider_1781133139142_hzwy6j",
+      "title": "Summer Preview: 2026 camp battles across Florida's two-deep",
+      "category": "summer_preview"
+    },
+    {
+      "id": "log_1781133138285_1jd9z7",
+      "action": "article_retired",
+      "at": "2026-06-10T23:12:18.285Z",
+      "articleId": "insider_1781133138253_7lg1n3",
+      "title": "Summer Preview: 2026 camp battles across Florida's two-deep"
+    },
+    {
+      "id": "log_1781133138283_sjc1g1",
+      "action": "article_refreshed",
+      "at": "2026-06-10T23:12:18.283Z",
+      "articleId": "insider_1781133138253_7lg1n3",
+      "title": "Summer Preview: 2026 camp battles across Florida's two-deep"
+    },
+    {
+      "id": "log_1781133138257_on4t20",
+      "action": "draft_approved",
+      "at": "2026-06-10T23:12:18.257Z",
+      "articleId": "insider_1781133138253_7lg1n3",
+      "title": "Summer Preview: 2026 camp battles across Florida's two-deep"
+    },
+    {
+      "id": "log_1781133138255_bdzfaq",
+      "action": "weekly_generation",
+      "at": "2026-06-10T23:12:18.255Z",
+      "candidateCount": 6,
+      "selectedCount": 1,
+      "draftCount": 1,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [
+        "insider_1781133138253_7lg1n3"
+      ],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1781133138254_glfp41",
+      "action": "draft_created",
+      "at": "2026-06-10T23:12:18.254Z",
+      "articleId": "insider_1781133138253_7lg1n3",
+      "title": "Summer Preview: 2026 camp battles across Florida's two-deep",
+      "category": "summer_preview"
+    },
+    {
+      "id": "log_1781133067586_wnptv3",
+      "action": "article_retired",
+      "at": "2026-06-10T23:11:07.586Z",
+      "articleId": "insider_1781133067553_way573",
+      "title": "Summer Preview: 2026 camp battles across Florida's two-deep"
+    },
+    {
+      "id": "log_1781133067584_a90lix",
+      "action": "article_refreshed",
+      "at": "2026-06-10T23:11:07.584Z",
+      "articleId": "insider_1781133067553_way573",
+      "title": "Summer Preview: 2026 camp battles across Florida's two-deep"
+    },
+    {
+      "id": "log_1781133067558_fswr78",
+      "action": "draft_approved",
+      "at": "2026-06-10T23:11:07.558Z",
+      "articleId": "insider_1781133067553_way573",
+      "title": "Summer Preview: 2026 camp battles across Florida's two-deep"
+    },
+    {
+      "id": "log_1781133067555_2puvyr",
+      "action": "weekly_generation",
+      "at": "2026-06-10T23:11:07.555Z",
+      "candidateCount": 6,
+      "selectedCount": 4,
+      "draftCount": 4,
+      "aborted": [],
+      "rejectedIntelCount": 2,
+      "draftIds": [
+        "insider_1781133067543_20p3kk",
+        "insider_1781133067547_nf5f3y",
+        "insider_1781133067550_tib3uu",
+        "insider_1781133067553_way573"
+      ],
+      "visitRecapTriggers": [],
+      "ovPreviewTriggers": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1781133067554_er3v5a",
+      "action": "draft_created",
+      "at": "2026-06-10T23:11:07.554Z",
+      "articleId": "insider_1781133067553_way573",
+      "title": "Summer Preview: 2026 camp battles across Florida's two-deep",
+      "category": "summer_preview"
+    },
+    {
+      "id": "log_1781133067551_cjq66a",
+      "action": "draft_created",
+      "at": "2026-06-10T23:11:07.551Z",
+      "articleId": "insider_1781133067550_tib3uu",
+      "title": "Roster Analysis: 2026 Florida team by unit",
+      "category": "roster_analysis"
+    },
+    {
+      "id": "log_1781133067548_1x28y0",
+      "action": "draft_created",
+      "at": "2026-06-10T23:11:07.548Z",
+      "articleId": "insider_1781133067547_nf5f3y",
+      "title": "Game Week Preview: Florida vs FAU",
+      "category": "game_week_preview"
+    },
+    {
+      "id": "log_1781133067544_m2toep",
+      "action": "draft_created",
+      "at": "2026-06-10T23:11:07.544Z",
+      "articleId": "insider_1781133067543_20p3kk",
+      "title": "Program Pulse: 2026 Florida roster and portal outlook",
+      "category": "program_pulse"
+    },
+    {
+      "id": "log_1781115922328_1xcfn9",
+      "action": "weekly_generation",
+      "at": "2026-06-10T18:25:22.328Z",
+      "candidateCount": 8,
+      "selectedCount": 4,
+      "draftCount": 0,
+      "aborted": [
+        {
+          "topicKey": "program_pulse_2026_28",
+          "category": "program_pulse",
+          "reason": "insufficient_intel_or_quality"
+        },
+        {
+          "topicKey": "post_visit_2027_amare-patterson",
+          "category": "post_visit_reaction",
+          "reason": "insufficient_intel_or_quality"
+        },
+        {
+          "topicKey": "game_preview_2026_fau",
+          "category": "game_week_preview",
+          "reason": "insufficient_intel_or_quality"
+        },
+        {
+          "topicKey": "roster_analysis_2026_111",
+          "category": "roster_analysis",
+          "reason": "insufficient_intel_or_quality"
+        }
+      ],
+      "draftIds": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1781108910224_2rvssy",
+      "action": "article_retired",
+      "at": "2026-06-10T16:28:30.224Z",
+      "articleId": "insider_1781108910202_wkuram",
+      "title": "Program Pulse: 2026 Florida roster and portal outlook"
+    },
+    {
+      "id": "log_1781108910221_z7cavv",
+      "action": "article_refreshed",
+      "at": "2026-06-10T16:28:30.221Z",
+      "articleId": "insider_1781108910202_wkuram",
+      "title": "Program Pulse: 2026 Florida roster and portal outlook"
+    },
+    {
+      "id": "log_1781108910208_x472sh",
+      "action": "draft_approved",
+      "at": "2026-06-10T16:28:30.208Z",
+      "articleId": "insider_1781108910202_wkuram",
+      "title": "Program Pulse: 2026 Florida roster and portal outlook"
+    },
+    {
+      "id": "log_1781108910205_xtxnlr",
+      "action": "weekly_generation",
+      "at": "2026-06-10T16:28:30.205Z",
+      "candidateCount": 8,
+      "selectedCount": 5,
+      "draftCount": 2,
+      "aborted": [
+        {
+          "topicKey": "post_visit_2027_amare-patterson",
+          "category": "post_visit_reaction",
+          "reason": "quality_or_insufficient_data"
+        },
+        {
+          "topicKey": "game_preview_2026_fau",
+          "category": "game_week_preview",
+          "reason": "quality_or_insufficient_data"
+        },
+        {
+          "topicKey": "roster_analysis_2026_111",
+          "category": "roster_analysis",
+          "reason": "quality_or_insufficient_data"
+        }
+      ],
+      "draftIds": [
+        "insider_1781108910197_5w8sgg",
+        "insider_1781108910202_wkuram"
+      ],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1781108910202_irdm95",
+      "action": "draft_created",
+      "at": "2026-06-10T16:28:30.202Z",
+      "articleId": "insider_1781108910202_wkuram",
+      "title": "Program Pulse: 2026 Florida roster and portal outlook",
+      "category": "program_pulse"
+    },
+    {
+      "id": "log_1781108910200_ayzpnu",
+      "action": "draft_created",
+      "at": "2026-06-10T16:28:30.200Z",
+      "articleId": "insider_1781108910197_5w8sgg",
+      "title": "Official Visit Preview: Easton Royal and 2027 OV intel",
+      "category": "official_visit_preview"
+    },
+    {
+      "id": "log_1781108854407_i9ph7e",
+      "action": "article_retired",
+      "at": "2026-06-10T16:27:34.407Z",
+      "articleId": "insider_1781108854374_n00jfk",
+      "title": "Official Visit Preview: Easton Royal and 2027 OV intel"
+    },
+    {
+      "id": "log_1781108854405_qfpp2m",
+      "action": "article_refreshed",
+      "at": "2026-06-10T16:27:34.405Z",
+      "articleId": "insider_1781108854374_n00jfk",
+      "title": "Official Visit Preview: Easton Royal and 2027 OV intel"
+    },
+    {
+      "id": "log_1781108854383_5w8rtk",
+      "action": "draft_approved",
+      "at": "2026-06-10T16:27:34.383Z",
+      "articleId": "insider_1781108854374_n00jfk",
+      "title": "Official Visit Preview: Easton Royal and 2027 OV intel"
+    },
+    {
+      "id": "log_1781108854379_78iaa0",
+      "action": "weekly_generation",
+      "at": "2026-06-10T16:27:34.379Z",
+      "candidateCount": 8,
+      "selectedCount": 5,
+      "draftCount": 1,
+      "aborted": [
+        {
+          "topicKey": "program_pulse_2026_28",
+          "category": "program_pulse",
+          "reason": "quality_or_insufficient_data"
+        },
+        {
+          "topicKey": "post_visit_2027_amare-patterson",
+          "category": "post_visit_reaction",
+          "reason": "quality_or_insufficient_data"
+        },
+        {
+          "topicKey": "game_preview_2026_fau",
+          "category": "game_week_preview",
+          "reason": "quality_or_insufficient_data"
+        },
+        {
+          "topicKey": "roster_analysis_2026_111",
+          "category": "roster_analysis",
+          "reason": "quality_or_insufficient_data"
+        }
+      ],
+      "draftIds": [
+        "insider_1781108854374_n00jfk"
+      ],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
+    {
+      "id": "log_1781108854377_ztqxsg",
+      "action": "draft_created",
+      "at": "2026-06-10T16:27:34.377Z",
+      "articleId": "insider_1781108854374_n00jfk",
+      "title": "Official Visit Preview: Easton Royal and 2027 OV intel",
+      "category": "official_visit_preview"
+    },
+    {
+      "id": "log_1781108746443_fx86po",
+      "action": "weekly_generation",
+      "at": "2026-06-10T16:25:46.443Z",
+      "candidateCount": 8,
+      "selectedCount": 5,
+      "draftCount": 0,
+      "aborted": [
+        {
+          "topicKey": "ov_preview_2027_easton-royal",
+          "category": "official_visit_preview",
+          "reason": "quality_or_insufficient_data"
+        },
+        {
+          "topicKey": "program_pulse_2026_28",
+          "category": "program_pulse",
+          "reason": "quality_or_insufficient_data"
+        },
+        {
+          "topicKey": "post_visit_2027_amare-patterson",
+          "category": "post_visit_reaction",
+          "reason": "quality_or_insufficient_data"
+        },
+        {
+          "topicKey": "game_preview_2026_fau",
+          "category": "game_week_preview",
+          "reason": "quality_or_insufficient_data"
+        },
+        {
+          "topicKey": "roster_analysis_2026_111",
+          "category": "roster_analysis",
+          "reason": "quality_or_insufficient_data"
+        }
+      ],
+      "draftIds": [],
+      "recruitingMinClass": 2027,
+      "programSeason": 2026
+    },
     {
       "id": "log_1781102032953_x1169y",
       "action": "article_retired",

@@ -189,6 +189,10 @@ function applyEdit(edit, state) {
     state.meta.filmSources = applyFilmSourceReplacements(edit.file, edit.replacements);
   } else if (type === 'ensure-css-tokens') {
     state.meta.cssTokens = applyCssTokens(file, edit.tokens);
+  } else if (type === 'append-if-missing') {
+    if (!html.includes(edit.marker)) {
+      state.files[file] = html + (edit.text || '');
+    }
   } else if (type === 'verify-hooks') {
     state.meta.hooks = { checkId: edit.checkId, note: 'verify-only' };
   }

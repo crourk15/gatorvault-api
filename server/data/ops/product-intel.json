@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-11T16:15:48.620Z",
-  "lastRunId": "qa_1781194320369",
-  "lastComputedAt": "2026-06-11T16:12:03.612Z",
+  "updatedAt": "2026-06-11T21:13:56.122Z",
+  "lastRunId": "qa_1781212423827",
+  "lastComputedAt": "2026-06-11T21:13:54.889Z",
   "scores": {
     "modules": {
       "api": 100,
@@ -11,6 +11,8 @@
       "pages": 100,
       "ux": 100,
       "browser": 100,
+      "visual-integrity": 100,
+      "mobile-behavior": 100,
       "overall": 100
     },
     "pages": {
@@ -36,12 +38,161 @@
       "team_modals": 100,
       "film_verified_source_modal": 100,
       "latest_updates_feed": 100,
+      "mobile_navigation": 100,
       "admin_hub": 100,
-      "qa_monitor": 14
+      "qa_monitor": 74
     },
     "overall": 100
   },
-  "fixQueue": [],
+  "fixQueue": [
+    {
+      "id": "fix_pi:roster:numbers",
+      "title": "111 players",
+      "module": "integrity",
+      "source": "roster-depth-chart",
+      "classification": "roster-mismatch",
+      "ruleId": "E1",
+      "category": "E",
+      "ruleName": "Roster Mismatch",
+      "severity": "high",
+      "severityScore": 81,
+      "severityLabel": "High — should fix",
+      "severityComponents": {
+        "impact": 70,
+        "frequency": 100,
+        "confidence": 85
+      },
+      "impact": "user-facing",
+      "repro": null,
+      "suggestedFix": "111 players",
+      "eta": "short",
+      "checkId": "pi:roster:numbers",
+      "url": null,
+      "details": null,
+      "proposal": {
+        "title": "111 players",
+        "description": "111 players",
+        "classification": "roster-mismatch",
+        "ruleId": "E1",
+        "category": "E",
+        "filesToModify": [
+          "index.html",
+          "css/gv-team.css",
+          "js/gv-team-mobile.js"
+        ],
+        "patchType": "css-token",
+        "codeDiffHint": "111 players",
+        "testPlan": [
+          "Run QA crawl: node server/scripts/run-qa-crawler.js",
+          "Verify Product Intelligence fix queue clears for this issue",
+          "Generate Self-Runner proposal and confirm patch preview"
+        ],
+        "qaSteps": [
+          "QA check: pi:roster:numbers",
+          "POST /api/product-intel/recompute — verify issue resolved",
+          "POST /api/self-runner/generate — confirm no new proposal for same checkId",
+          "Admin → Product Intelligence — severity score should drop"
+        ],
+        "rollbackPlan": {
+          "strategy": "git-revert",
+          "steps": [
+            "Revert modified files: index.html, css/gv-team.css, js/gv-team-mobile.js",
+            "Redeploy static site (Netlify) and API (Render) if needed",
+            "POST /api/product-intel/recompute to restore prior health score",
+            "Re-open fix queue item if rollback was intentional"
+          ],
+          "note": "Self-Runner validation runs QA after apply — failed validation auto-marks fix as failed"
+        },
+        "approvalGate": {
+          "steps": [
+            "Apply patch",
+            "Optional redeploy",
+            "QA crawl",
+            "Product Health recompute",
+            "Mark completed"
+          ]
+        }
+      },
+      "createdAt": "2026-06-11T21:13:54.889Z",
+      "runId": "qa_1781212423827",
+      "resolved": false
+    },
+    {
+      "id": "fix_pi:autoposter-stale:12h",
+      "title": "Last post 19h ago",
+      "module": "integrity",
+      "source": "autoposter-logs",
+      "classification": "autoposter-stale",
+      "ruleId": "B3",
+      "category": "B",
+      "ruleName": "Stale Content",
+      "severity": "high",
+      "severityScore": 76,
+      "severityLabel": "High — should fix",
+      "severityComponents": {
+        "impact": 65,
+        "frequency": 100,
+        "confidence": 70
+      },
+      "impact": "internal",
+      "repro": null,
+      "suggestedFix": "Last post 19h ago",
+      "eta": "short",
+      "checkId": "pi:autoposter-stale:12h",
+      "url": null,
+      "details": null,
+      "proposal": {
+        "title": "Last post 19h ago",
+        "description": "Last post 19h ago",
+        "classification": "autoposter-stale",
+        "ruleId": "B3",
+        "category": "B",
+        "filesToModify": [
+          "index.html",
+          "css/gv-team.css",
+          "js/gv-team-mobile.js"
+        ],
+        "patchType": "css-token",
+        "codeDiffHint": "Last post 19h ago",
+        "testPlan": [
+          "Latest Updates: confirm post within last 6 hours during active window",
+          "Check autoposter logs on Render",
+          "Force refresh via admin if needed",
+          "Run QA crawl: node server/scripts/run-qa-crawler.js",
+          "Verify Product Intelligence fix queue clears for this issue",
+          "Generate Self-Runner proposal and confirm patch preview"
+        ],
+        "qaSteps": [
+          "QA check: pi:autoposter-stale:12h",
+          "POST /api/product-intel/recompute — verify issue resolved",
+          "POST /api/self-runner/generate — confirm no new proposal for same checkId",
+          "Admin → Product Intelligence — severity score should drop"
+        ],
+        "rollbackPlan": {
+          "strategy": "git-revert",
+          "steps": [
+            "Revert modified files: index.html, css/gv-team.css, js/gv-team-mobile.js",
+            "Redeploy static site (Netlify) and API (Render) if needed",
+            "POST /api/product-intel/recompute to restore prior health score",
+            "Re-open fix queue item if rollback was intentional"
+          ],
+          "note": "Self-Runner validation runs QA after apply — failed validation auto-marks fix as failed"
+        },
+        "approvalGate": {
+          "steps": [
+            "Apply patch",
+            "Optional redeploy",
+            "QA crawl",
+            "Product Health recompute",
+            "Mark completed"
+          ]
+        }
+      },
+      "createdAt": "2026-06-11T21:13:54.889Z",
+      "runId": "qa_1781212423827",
+      "resolved": false
+    }
+  ],
   "dailySummaries": [
     {
       "date": "2026-06-11",
@@ -53,6 +204,8 @@
         "pages": 100,
         "ux": 100,
         "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
         "overall": 100
       },
       "pageScores": {
@@ -78,19 +231,263 @@
         "team_modals": 100,
         "film_verified_source_modal": 100,
         "latest_updates_feed": 100,
+        "mobile_navigation": 100,
         "admin_hub": 100,
-        "qa_monitor": 14
+        "qa_monitor": 74
       },
       "topIssues": [],
       "improvements": [],
       "regressions": [],
       "pass": true,
-      "runId": "qa_1781194320369",
-      "narrative": "Platform health is strong at 100/100 — all QA modules passed."
+      "runId": "qa_1781212423827",
+      "signalCounts": {
+        "total": 2,
+        "bySource": {
+          "qa": 0,
+          "apiHealth": 0,
+          "cacheHealth": 0,
+          "autoposter": 1,
+          "recruiting": 0,
+          "teamData": 1,
+          "filmRoom": 0
+        }
+      },
+      "narrative": "Platform health is strong at 100/100 — all checks passed. Data layer collected 2 signal(s) across 7 sources."
     }
   ],
   "weeklyReports": [],
   "snapshots": [
+    {
+      "at": "2026-06-11T21:13:54.889Z",
+      "runId": "qa_1781212423827",
+      "overall": 100,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 100
+      },
+      "pass": true,
+      "openFixes": 2,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 2,
+            "bySource": {
+              "qa": 0,
+              "apiHealth": 0,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 1,
+              "filmRoom": 0
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "roster-mismatch",
+            "autoposter-stale"
+          ],
+          "total": 2
+        },
+        "severity": {
+          "critical": 0,
+          "high": 2,
+          "medium": 0,
+          "low": 0
+        },
+        "proposals": 2,
+        "approvalGate": "self-runner"
+      }
+    },
+    {
+      "at": "2026-06-11T21:12:42.540Z",
+      "runId": "qa_1781212351511",
+      "overall": 100,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 100
+      },
+      "pass": false,
+      "openFixes": 4,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 4,
+            "bySource": {
+              "qa": 2,
+              "apiHealth": 0,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 1,
+              "filmRoom": 0
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "depth-chart-mismatch",
+            "roster-mismatch",
+            "wrong-ordering",
+            "autoposter-stale"
+          ],
+          "total": 4
+        },
+        "severity": {
+          "critical": 0,
+          "high": 4,
+          "medium": 0,
+          "low": 0
+        },
+        "proposals": 4,
+        "approvalGate": "self-runner"
+      }
+    },
+    {
+      "at": "2026-06-11T21:03:28.366Z",
+      "runId": "qa_1781211805977",
+      "overall": 100,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 100
+      },
+      "pass": true,
+      "openFixes": 2,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 2,
+            "bySource": {
+              "qa": 0,
+              "apiHealth": 0,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 1,
+              "filmRoom": 0
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "roster-mismatch",
+            "autoposter-stale"
+          ],
+          "total": 2
+        },
+        "severity": {
+          "critical": 0,
+          "high": 2,
+          "medium": 0,
+          "low": 0
+        },
+        "proposals": 2,
+        "approvalGate": "self-runner"
+      }
+    },
+    {
+      "at": "2026-06-11T21:03:28.366Z",
+      "runId": "qa_1781211805977",
+      "overall": 100,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 100
+      },
+      "pass": true
+    },
+    {
+      "at": "2026-06-11T21:02:39.499Z",
+      "runId": "qa_1781211757305",
+      "overall": 86,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 50,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 86
+      },
+      "pass": false
+    },
     {
       "at": "2026-06-11T16:12:03.612Z",
       "runId": "qa_1781194320369",
@@ -108,13 +505,7 @@
     }
   ],
   "recommendations": {
-    "remove": [
-      {
-        "feature": "qa_monitor",
-        "score": 14,
-        "reason": "Low score — consider deprecating or hiding until fixed"
-      }
-    ],
+    "remove": [],
     "keep": [
       {
         "feature": "team_modals",
@@ -128,6 +519,11 @@
       },
       {
         "feature": "latest_updates_feed",
+        "score": 100,
+        "reason": "High score — core quality signal"
+      },
+      {
+        "feature": "mobile_navigation",
         "score": 100,
         "reason": "High score — core quality signal"
       },
@@ -166,6 +562,73 @@
         "reason": "Integrity and pages modules healthy"
       }
     ],
-    "upgrade": []
+    "upgrade": [
+      {
+        "feature": "qa_monitor",
+        "score": 74,
+        "reason": "Important but not premium — prioritize UX polish"
+      }
+    ]
+  },
+  "signalHistory": {
+    "pi:autoposter-stale:12h": {
+      "count": 1,
+      "firstSeen": "2026-06-11T21:13:56.115Z",
+      "lastSeen": "2026-06-11T21:13:56.115Z",
+      "recentRuns": 1
+    },
+    "pi:roster:numbers": {
+      "count": 1,
+      "firstSeen": "2026-06-11T21:13:56.119Z",
+      "lastSeen": "2026-06-11T21:13:56.119Z",
+      "recentRuns": 1
+    }
+  },
+  "intelligenceLayers": {
+    "data": {
+      "counts": {
+        "total": 2,
+        "bySource": {
+          "qa": 0,
+          "apiHealth": 0,
+          "cacheHealth": 0,
+          "autoposter": 1,
+          "recruiting": 0,
+          "teamData": 1,
+          "filmRoom": 0
+        }
+      },
+      "sources": [
+        "qa-crawler",
+        "live-dashboard",
+        "mobile-behavior",
+        "admin-hub",
+        "autoposter-logs",
+        "recruiting-board",
+        "film-room",
+        "team-overview",
+        "program-history",
+        "roster-depth-chart",
+        "press-conferences",
+        "highlights",
+        "api-health",
+        "cache-health"
+      ]
+    },
+    "classification": {
+      "active": [
+        "roster-mismatch",
+        "autoposter-stale"
+      ],
+      "total": 2
+    },
+    "severity": {
+      "critical": 0,
+      "high": 2,
+      "medium": 0,
+      "low": 0
+    },
+    "proposals": 2,
+    "approvalGate": "self-runner"
   }
 }

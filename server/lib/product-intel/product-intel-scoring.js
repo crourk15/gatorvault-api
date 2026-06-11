@@ -31,6 +31,7 @@ const PAGE_CHECKS = {
     score: [
       'pages:film-room-hooks',
       'integrity:film-sources',
+      'integrity:filmroom-structure',
       'api:film-room-catalog',
       'visual-integrity:film-room-theme'
     ]
@@ -42,6 +43,13 @@ const PAGE_CHECKS = {
       'visual-integrity:team-overview-background',
       'visual-integrity:team-theme-tokens',
       'visual-integrity:component-variants',
+      'visual-integrity:panel-clipping',
+      'visual-integrity:layout-overflow',
+      'integrity:team-history-structure',
+      'integrity:missing-content',
+      'integrity:panel-clipping',
+      'integrity:layout-overflow',
+      'integrity:wrong-background',
       'mobile-behavior:team-tab-theme',
       'mobile-behavior:navigation-back'
     ]
@@ -51,7 +59,13 @@ const PAGE_CHECKS = {
     mobile: ['pages:admin-hub:mobile', 'visual-integrity:admin-theme']
   },
   '/latest': {
-    score: ['integrity:feed-dedup', 'api:live-feed', 'api:live-dashboard']
+    score: [
+      'integrity:feed-dedup',
+      'integrity:autoposter-dedup',
+      'integrity:missing-content',
+      'api:live-feed',
+      'api:live-dashboard'
+    ]
   }
 };
 
@@ -59,17 +73,29 @@ const FEATURE_CHECKS = {
   team_modals: [
     'pages:team-hooks',
     'ux:modal-zindex',
-    'ux:tap-targets',
+    'ux:scroll-containers',
     'visual-integrity:team-overview-background',
-    'visual-integrity:component-variants'
+    'visual-integrity:component-variants',
+    'visual-integrity:panel-clipping',
+    'visual-integrity:layout-overflow',
+    'integrity:panel-clipping',
+    'integrity:layout-overflow',
+    'integrity:team-history-structure'
   ],
   film_verified_source_modal: [
     'pages:film-room-hooks',
     'ux:modal-zindex',
     'integrity:film-sources',
+    'integrity:filmroom-structure',
     'visual-integrity:film-room-theme'
   ],
-  latest_updates_feed: ['integrity:feed-dedup', 'api:live-feed', 'api:live-dashboard', 'mobile-behavior:feed-freshness'],
+  latest_updates_feed: [
+    'integrity:feed-dedup',
+    'integrity:autoposter-dedup',
+    'api:live-feed',
+    'api:live-dashboard',
+    'mobile-behavior:feed-freshness'
+  ],
   mobile_navigation: ['mobile-behavior:navigation-back', 'ux:tap-targets'],
   admin_hub: ['pages:admin-hub:desktop', 'pages:admin-hub:mobile', 'visual-integrity:admin-theme'],
   qa_monitor: ['api:ping']
@@ -79,10 +105,14 @@ function inferSeverity(check) {
   const id = String(check.id || '');
   if (check.module === 'visual-integrity') {
     if (/cross-page|contamination/.test(id)) return 'critical';
+    if (/panel-clipping|layout-overflow/.test(id)) return 'high';
     if (/team-overview|theme-token|css-linked/.test(id)) return 'high';
+    return 'medium';
+  }
+  if (/feed-dedup|autoposter-dedup|film-sources|api:ping/.test(id)) return 'critical';
+  if (/layout-overflow|panel-clipping|missing-content|team-history|filmroom-structure|wrong-background/.test(id)) {
     return 'high';
   }
-  if (/feed-dedup|film-sources|api:ping/.test(id)) return 'critical';
   if (check.module === 'integrity') return 'high';
   if (check.module === 'api' && !check.pass) return 'high';
   if (check.module === 'pages') return 'high';
@@ -99,8 +129,11 @@ function inferSeverity(check) {
 function inferImpact(check) {
   const id = String(check.id || '');
   if (check.module === 'visual-integrity') return 'user-facing';
+  if (/layout-overflow|panel-clipping|missing-content|team-history|filmroom|wrong-background/.test(id)) {
+    return 'user-facing';
+  }
   if (/admin|qa|monitoring|ingest/.test(id)) return 'internal';
-  if (/ux:|tap-target|overflow|zindex/.test(id)) return 'cosmetic';
+  if (/ux:|tap-target|overflow|zindex/.test(id)) return 'user-facing';
   return 'user-facing';
 }
 

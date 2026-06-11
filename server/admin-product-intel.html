@@ -65,8 +65,11 @@
     .summary-box { background:var(--panel); border:1px solid #1e293b; border-radius:.75rem; padding:1rem; line-height:1.55; font-size:.875rem; margin-bottom:1rem; }
     .two-col { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:.75rem; margin-bottom:1rem; }
     .empty { color:var(--muted); font-size:.8125rem; padding:1rem; text-align:center; }
-    h3.section { margin:1.25rem 0 .5rem; font-size:.95rem; }
-  </style>
+    .layer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:.5rem; }
+    .layer-card { background:#0f172a; border:1px solid #243044; border-radius:.65rem; padding:.65rem; }
+    .layer-card .layer-name { font-size:.68rem; color:var(--muted); text-transform:uppercase; margin-bottom:.25rem; }
+    .layer-card .layer-val { font-size:.8125rem; font-weight:600; }
+    .class-tag { font-size:.65rem; color:var(--blue); font-family:ui-monospace,monospace; }
 </head>
 <body>
   <header>
@@ -97,6 +100,11 @@
       <div id="feature-scores" class="feature-grid"></div>
     </div>
 
+    <div class="card" style="margin-bottom:1rem">
+      <h2>Intelligence Layers</h2>
+      <div id="intel-layers" class="layer-grid"></div>
+    </div>
+
     <h3 class="section">Visual Issues</h3>
     <table><thead><tr><th>Severity</th><th>Check</th><th>Issue</th><th>Repro</th></tr></thead><tbody id="visual-issues-body"></tbody></table>
 
@@ -108,7 +116,7 @@
       <label for="sev-filter" style="font-size:.75rem;color:var(--muted)">Filter</label>
       <select id="sev-filter"><option value="">All severities</option><option>critical</option><option>high</option><option>medium</option><option>low</option></select>
     </div>
-    <table><thead><tr><th>Severity</th><th>Title</th><th>Impact</th><th>ETA</th><th>Suggested Fix</th></tr></thead><tbody id="fix-body"></tbody></table>
+    <table><thead><tr><th>Severity</th><th>Score</th><th>Classification</th><th>Title</th><th>Impact</th><th>Suggested Fix</th></tr></thead><tbody id="fix-body"></tbody></table>
 
     <div class="two-col">
       <div>
@@ -213,17 +221,47 @@
       }).join('');
     }
 
+    function renderLayers(layers, signalCounts) {
+      var el = document.getElementById('intel-layers');
+      var names = [
+        ['data', 'Data Layer'],
+        ['classification', 'Classification'],
+        ['severity', 'Severity'],
+        ['proposals', 'Proposals'],
+        ['approvalGate', 'Approval Gate']
+      ];
+      el.innerHTML = names.map(function (pair) {
+        var key = pair[0];
+        var label = pair[1];
+        var val = key === 'approvalGate'
+          ? (layers && layers.approvalGate ? layers.approvalGate : 'self-runner')
+          : (layers && layers[key] != null ? layers[key] : '—');
+        return '<div class="layer-card"><div class="layer-name">' + esc(label) + '</div>'
+          + '<div class="layer-val">' + esc(String(val)) + '</div></div>';
+      }).join('');
+      if (signalCounts) {
+        el.innerHTML += '<div class="layer-card"><div class="layer-name">Open signals</div>'
+          + '<div class="layer-val">' + esc(String(signalCounts.open || 0)) + ' / '
+          + esc(String(signalCounts.total || 0)) + '</div></div>';
+      }
+    }
+
     function renderFixQueue(items) {
       var filter = document.getElementById('sev-filter').value;
-      var rows = (items || []).filter(function (i) { return !filter || i.severity === filter; });
+      var rows = (items || []).filter(function (i) {
+        return !i.resolved && (!filter || i.severity === filter);
+      });
       var body = document.getElementById('fix-body');
       if (!rows.length) {
-        body.innerHTML = '<tr><td colspan="5" class="empty">Fix queue empty.</td></tr>';
+        body.innerHTML = '<tr><td colspan="6" class="empty">Fix queue empty.</td></tr>';
         return;
       }
+      rows.sort(function (a, b) { return (b.severityScore || 0) - (a.severityScore || 0); });
       body.innerHTML = rows.map(function (f) {
         return '<tr><td class="sev-' + esc(f.severity) + '">' + esc(f.severity) + '</td>'
-          + '<td>' + esc(f.title) + '</td><td>' + esc(f.impact) + '</td><td>' + esc(f.eta) + '</td>'
+          + '<td>' + esc(f.severityScore != null ? f.severityScore : '—') + '</td>'
+          + '<td><span class="class-tag">' + esc(f.classification || '—') + '</span></td>'
+          + '<td>' + esc(f.title) + '</td><td>' + esc(f.impact) + '</td>'
           + '<td>' + esc(f.suggestedFix) + '</td></tr>';
       }).join('');
     }
@@ -254,12 +292,14 @@
         fetch(API + '/api/product-intel/scores?pin=' + encodeURIComponent(p), { headers: headers() }).then(function (r) { return r.json(); }),
         fetch(API + '/api/product-intel/summary?pin=' + encodeURIComponent(p), { headers: headers() }).then(function (r) { return r.json(); }),
         fetch(API + '/api/product-intel/weekly?pin=' + encodeURIComponent(p), { headers: headers() }).then(function (r) { return r.json(); }),
-        fetch(API + '/api/product-intel/fix-queue?pin=' + encodeURIComponent(p), { headers: headers() }).then(function (r) { return r.json(); })
+        fetch(API + '/api/product-intel/fix-queue?pin=' + encodeURIComponent(p), { headers: headers() }).then(function (r) { return r.json(); }),
+        fetch(API + '/api/product-intel/layers?pin=' + encodeURIComponent(p), { headers: headers() }).then(function (r) { return r.json(); })
       ]).then(function (results) {
         var scores = results[0];
         var summary = results[1];
         var weekly = results[2];
         var fixes = results[3];
+        var layersPayload = results[4];
 
         if (!scores.ok) throw new Error(scores.error || 'Failed to load scores');
 
@@ -275,6 +315,10 @@
         renderPages(scores.pages);
         renderFeatures(scores.features);
         renderRecs(scores.recommendations || {});
+        renderLayers(
+          (layersPayload.ok && layersPayload.layers) ? layersPayload.layers : scores.intelligenceLayers,
+          fixes.signalCounts
+        );
 
         var sum = summary.summary;
         document.getElementById('narrative').textContent = sum && sum.narrative ? sum.narrative : '';

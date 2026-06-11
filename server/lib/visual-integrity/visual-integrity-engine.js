@@ -215,6 +215,47 @@ function checkCrossPageContamination(html, rules) {
   return violations;
 }
 
+/** Modal / panel CSS guards — prevents desktop text clipping */
+function checkPanelClippingCss(teamCss) {
+  const violations = [];
+  const required = [
+    { rule: '.gv-team-modal-body', tokens: ['min-height: 0', 'min-width: 0', 'overflow-y: auto'] },
+    { rule: '.gv-tm-lead', tokens: ['overflow-wrap'] },
+    { rule: '.gv-tm-highlight-text', tokens: ['min-width: 0', 'overflow-wrap'] },
+    { rule: '.gv-team-overview-main', tokens: ['min-width: 0'] }
+  ];
+  required.forEach(({ rule, tokens }) => {
+    if (!teamCss.includes(rule)) {
+      violations.push({ rule, issue: 'selector_missing' });
+      return;
+    }
+    const start = teamCss.indexOf(rule);
+    const block = teamCss.slice(start, start + 500);
+    tokens.forEach((tok) => {
+      const key = tok.split(':')[0].trim();
+      if (!block.includes(key)) {
+        violations.push({ rule, issue: `missing_${key}`, expected: tok });
+      }
+    });
+  });
+  return violations;
+}
+
+/** Layout overflow — flex scroll chain for modals */
+function checkLayoutOverflowCss(teamCss) {
+  const violations = [];
+  if (!teamCss.includes('.gv-team-modal-panel')) {
+    violations.push({ issue: 'modal_panel_rule_missing' });
+  }
+  if (teamCss.includes('.gv-team-modal-body') && !teamCss.includes('min-height: 0')) {
+    violations.push({ issue: 'modal_body_flex_scroll', expected: 'min-height: 0 on .gv-team-modal-body' });
+  }
+  if (teamCss.includes('width: 70vw') && !teamCss.includes('min(920px')) {
+    violations.push({ issue: 'desktop_modal_width', expected: 'min(920px, calc(100vw - 48px)) instead of fixed 70vw' });
+  }
+  return violations;
+}
+
 module.exports = {
   loadRules,
   extractRegionById,
@@ -224,5 +265,7 @@ module.exports = {
   checkCssTokens,
   checkCssLinked,
   checkCrossPageContamination,
+  checkPanelClippingCss,
+  checkLayoutOverflowCss,
   patternsForDetectors
 };

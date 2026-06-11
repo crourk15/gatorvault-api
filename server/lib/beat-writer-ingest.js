@@ -490,6 +490,8 @@ async function queueAutoposter(row, intelItem, built) {
     const xStore = require('./x-autoposter-store');
     const policy = require('./x-autoposter-policy');
     const copy = require('./x-autoposter-copy');
+    const postSpec = require('./x-autoposter-post-spec');
+    const dataLayer = require('./x-autoposter-data-layer');
     const fp = row.fingerprint;
     const isProgramNews = row.triggerType === 'program_news' || row.eventType === 'program_news';
     const isTeamEvent = row.triggerType === 'team_event' || row.eventType === 'team_event';
@@ -506,6 +508,18 @@ async function queueAutoposter(row, intelItem, built) {
       (i) => i.intelFingerprint === fp && (i.status === 'pending' || i.status === 'sent')
     );
     if (dup) return { queued: false, reason: 'duplicate' };
+
+    const eventMs = row.timestamp ? new Date(row.timestamp).getTime() : null;
+    const fresh = dataLayer.assertIntelFresh({ timestamp: row.timestamp, sourceEventCreatedAt: row.timestamp });
+    if (!fresh.ok) {
+      console.log(`[beat-writer-ingest] skip autoposter: ${fresh.logTag || fresh.skipReason} — ${fresh.reason}`);
+      return { queued: false, reason: fresh.skipReason || 'stale_intel' };
+    }
+
+    const similar = postSpec.findSimilarInQueue(built.text, doc.items);
+    if (similar.hit) {
+      return { queued: false, reason: 'similar_post', similarity: similar.similarity };
+    }
 
     const payload = {
       text: built.text,
@@ -524,6 +538,8 @@ async function queueAutoposter(row, intelItem, built) {
       urgencyLabel: isProgramNews ? 'breaking' : isTeamEvent ? 'major_beat' : null,
       sourceEventType: isProgramNews ? 'program_news' : isTeamEvent ? 'team_event' : row.eventType,
       sourceIntelId: intelItem?.id,
+      sourceEventCreatedAt: row.timestamp || intelItem?.timestamp || null,
+      situation: built.validationMeta?.situation || postSpec.detectSituation(built.text, row.eventType),
       scheduledAt: new Date(Date.now() + (isProgramNews ? 60 : 2) * 60 * 1000).toISOString(),
       status: 'pending',
       templateBlocks: built.templateBlocks,
@@ -547,6 +563,9 @@ const BEAT_SILENCE_ALLOWED = new Set([
   'non_player_intel',
   'snapshot',
   'stale',
+  'stale_intel',
+  'non_uf_intel',
+  'similar_post',
   'false_commit_intel',
   'false_commit_queue'
 ]);

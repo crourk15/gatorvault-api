@@ -1,18 +1,45 @@
 /**
- * Product Intelligence — recompute scores, fix queue, daily/weekly reports from QA runs.
+ * Product Intelligence Engine — 5-layer pipeline:
+ * 1 Data → 2 Classification → 3 Severity → 4 Proposals → 5 Approval Gate (Self-Runner)
  */
 const qaStore = require('../qa/qa-store');
 const store = require('./product-intel-store');
 const scoring = require('./product-intel-scoring');
+const dataLayer = require('./product-intel-data-layer');
+const classifier = require('./product-intel-classifier');
+const severity = require('./product-intel-severity');
+const proposals = require('./product-intel-proposals');
 
 function severityRank(sev) {
   return { critical: 5, high: 4, medium: 3, low: 2, info: 1 }[sev] || 0;
 }
 
+function signalKeyFor(item) {
+  return item.checkId || item.classification || item.id;
+}
+
 function suggestedFixForCheck(check) {
   const id = String(check.id || '');
-  if (id.includes('feed-dedup')) {
+  const meta = proposals.buildProposalMetadata({ checkId: id, module: check.module, title: check.error }, check);
+  if (meta.description) return meta.description;
+
+  if (id.includes('feed-dedup') || id.includes('autoposter-dedup')) {
     return 'Run live feed commit dedupe; remove legacy rec_evt rows for same player URL in feed-items.json';
+  }
+  if (id.includes('layout-overflow') || id.includes('panel-clipping')) {
+    return 'Add modal overflow guards to css/gv-team.css — min-height:0, min-width:0, overflow-wrap on text blocks';
+  }
+  if (id.includes('missing-content')) {
+    return 'Restore missing section hooks in index.html and data/coaching-staff.json for all site sections';
+  }
+  if (id.includes('wrong-background')) {
+    return 'Replace og-image.jpg / trial backgrounds with era gradient classes on Team Identity banner';
+  }
+  if (id.includes('team-history-structure')) {
+    return 'Fix ERAS in gv-team-mobile.js — 5 eras with full coaching/milestones; Spurrier only in era-90s';
+  }
+  if (id.includes('filmroom-structure')) {
+    return 'Wire Film Room drill-down hub: film-room-hub-landing, GV_FILM_HUB_DESC, gvOpenFilmRoomHub';
   }
   if (id.includes('film-sources')) {
     return 'Update Film Room knowledge source URLs via apply-film-room-sources.js with verified live links';
@@ -21,44 +48,59 @@ function suggestedFixForCheck(check) {
     const mapper = require('../visual-integrity/visual-integrity-mapper');
     return mapper.suggestedFix(id, check.details);
   }
-  if (id.includes('admin-hub')) {
-    return 'Deploy admin.html with admin-hub-core.js embedded on /admin';
-  }
-  if (id.includes('team-hooks')) {
-    return 'Ship gv-team-mobile.js hooks and gv-team-detail-modal in index.html';
-  }
-  if (id.includes('film-room-hooks')) {
-    return 'Wire gvOpenVerifiedSource, gv-film-source, and gv-verified-source-modal in index.html';
-  }
   if (check.module === 'api') {
     return 'Check Render API logs and restore failing endpoint; verify health check passes';
   }
-  if (check.module === 'ux') {
-    return 'Review CSS markers in index.html — modal z-index, tap targets, safe-area';
-  }
-  if (check.module === 'mobile-behavior' || id.startsWith('mobile-behavior:')) {
-    const issues = check.details?.issues || [];
-    if (issues.length) return issues[0].suggestedFix || issues[0].description;
-    if (id.includes('stale-html')) {
-      return 'Deploy latest server/index.html to Netlify; verify meta gv-build matches repo and trigger build hook';
-    }
-    if (id.includes('team-tab-theme')) {
-      return 'Ensure #vpane-mteam uses gv-team-page; hide trial-expired-gate when trial active; deploy static site';
-    }
-    if (id.includes('navigation')) {
-      return 'Wire history.pushState/popstate for profile and team modals (gvPushModalHistory helpers)';
-    }
-    if (id.includes('feed-freshness')) {
-      return 'Force gvLoadLiveDashboard(true) on Home tab focus; verify feed-items.json ingest freshness';
-    }
-    return check.repro || 'Fix mobile behavior QA failure — see Admin → QA → Mobile Behavior';
-  }
-  return check.repro || `Fix QA check: ${check.label || id}`;
+  return check.repro || check.error || `Fix QA check: ${check.label || id}`;
 }
 
-function fixItemsFromRun(run, existingQueue) {
-  const failed = scoring.flattenChecks(run).filter((c) => !c.pass);
-  const openCheckIds = new Set(failed.map((c) => c.id));
+function enrichFixItem(signal, run, historyDoc, runCount) {
+  const checkId = signal.id || signal.checkId;
+  const scored = severity.scoreIssue(signal, historyDoc[signalKeyFor({ checkId, classification: signal.classification })], runCount);
+  const proposal = proposals.buildProposalMetadata(
+    {
+      checkId,
+      module: signal.module,
+      title: signal.error || signal.label,
+      suggestedFix: suggestedFixForCheck(signal),
+      classification: scored.classification,
+      ruleId: scored.ruleId,
+      category: scored.category,
+      severity: scored.severity,
+      severityScore: scored.severityScore
+    },
+    signal
+  );
+
+  return {
+    id: `fix_${checkId}`,
+    title: signal.error || signal.label || checkId,
+    module: signal.module || 'integrity',
+    source: signal.source || signal.module || 'qa-crawler',
+    classification: scored.classification,
+    ruleId: scored.ruleId,
+    category: scored.category,
+    ruleName: scored.ruleName,
+    severity: scored.severity,
+    severityScore: scored.severityScore,
+    severityLabel: scored.severityLabel,
+    severityComponents: scored.components,
+    impact: scored.impact,
+    repro: signal.repro || null,
+    suggestedFix: proposal.description,
+    eta: scored.eta,
+    checkId,
+    url: signal.url || null,
+    details: signal.details || null,
+    proposal,
+    createdAt: run?.finishedAt || new Date().toISOString(),
+    runId: run?.id || null,
+    resolved: false
+  };
+}
+
+function buildFixQueue(signals, run, existingQueue, doc, runCount) {
+  const openCheckIds = new Set(signals.map((s) => s.id || s.checkId));
 
   const kept = (existingQueue || []).filter((item) => {
     if (item.checkId && openCheckIds.has(item.checkId)) return false;
@@ -66,21 +108,19 @@ function fixItemsFromRun(run, existingQueue) {
     return !item.resolved;
   });
 
-  const items = failed.map((check) => ({
-    id: `fix_${check.id}`,
-    title: check.error || check.label || check.id,
-    module: check.module || 'unknown',
-    severity: scoring.inferSeverity(check),
-    impact: scoring.inferImpact(check),
-    repro: check.repro || null,
-    suggestedFix: suggestedFixForCheck(check),
-    eta: scoring.inferEta(scoring.inferSeverity(check)),
-    checkId: check.id,
-    url: check.url || null,
-    createdAt: run.finishedAt || new Date().toISOString(),
-    runId: run.id,
-    resolved: false
-  }));
+  const seen = new Set();
+  const items = [];
+
+  signals.forEach((signal) => {
+    const checkId = signal.id || signal.checkId;
+    if (seen.has(checkId)) return;
+    seen.add(checkId);
+
+    const key = signalKeyFor({ checkId, classification: signal.classification });
+    store.bumpSignalHistory(doc, key);
+
+    items.push(enrichFixItem(signal, run, doc.signalHistory || {}, runCount));
+  });
 
   const byId = new Map(kept.map((i) => [i.id, i]));
   items.forEach((item) => {
@@ -88,31 +128,42 @@ function fixItemsFromRun(run, existingQueue) {
     byId.set(item.id, prev ? { ...prev, ...item, updatedAt: new Date().toISOString() } : item);
   });
 
-  return [...byId.values()];
+  return [...byId.values()].sort((a, b) => {
+    const scoreDiff = (b.severityScore || 0) - (a.severityScore || 0);
+    if (scoreDiff) return scoreDiff;
+    return severityRank(b.severity) - severityRank(a.severity);
+  });
 }
 
 function topIssuesFromRun(run, limit = 8) {
-  return scoring
-    .flattenChecks(run)
-    .filter((c) => !c.pass)
-    .map((c) => ({
-      id: c.id,
-      module: c.module,
-      message: c.error || c.label,
-      severity: scoring.inferSeverity(c),
-      url: c.url || null
-    }))
-    .sort((a, b) => scoring.SEVERITY_WEIGHTS[b.severity] - scoring.SEVERITY_WEIGHTS[a.severity])
+  const failed = scoring.flattenChecks(run).filter((c) => !c.pass);
+  return failed
+    .map((c) => {
+      const scored = severity.scoreIssue(c, null, 1);
+      return {
+        id: c.id,
+        module: c.module,
+        message: c.error || c.label,
+        severity: scored.severity,
+        severityScore: scored.severityScore,
+        classification: scored.classification,
+        url: c.url || null
+      };
+    })
+    .sort((a, b) => (b.severityScore || 0) - (a.severityScore || 0))
     .slice(0, limit);
 }
 
-function narrativeSummary({ overall, moduleScores, topIssues, pass }) {
+function narrativeSummary({ overall, moduleScores, topIssues, pass, signalCounts }) {
   const parts = [];
   parts.push(
     pass
-      ? `Platform health is strong at ${overall}/100 — all QA modules passed.`
+      ? `Platform health is strong at ${overall}/100 — all checks passed.`
       : `Platform health scored ${overall}/100 with ${topIssues.length} prioritized issue(s).`
   );
+  if (signalCounts?.total) {
+    parts.push(`Data layer collected ${signalCounts.total} signal(s) across ${Object.keys(signalCounts.bySource || {}).length} sources.`);
+  }
   const weak = Object.entries(moduleScores || {})
     .filter(([k, v]) => k !== 'overall' && typeof v === 'number' && v < 75)
     .sort((a, b) => a[1] - b[1]);
@@ -120,12 +171,14 @@ function narrativeSummary({ overall, moduleScores, topIssues, pass }) {
     parts.push(`Weakest modules: ${weak.map(([k, v]) => `${k} (${v})`).join(', ')}.`);
   }
   if (topIssues[0]) {
-    parts.push(`Top issue: ${topIssues[0].message} [${topIssues[0].severity}].`);
+    parts.push(
+      `Top: [${topIssues[0].severity}/${topIssues[0].severityScore}] ${topIssues[0].classification}: ${topIssues[0].message}`
+    );
   }
   return parts.join(' ');
 }
 
-function buildDailySummary(doc, run, scores) {
+function buildDailySummary(doc, run, scores, signalCounts) {
   const date = (run.finishedAt || new Date().toISOString()).slice(0, 10);
   const prev = (doc.dailySummaries || []).find((s) => s.date < date);
   const topIssues = topIssuesFromRun(run);
@@ -135,19 +188,8 @@ function buildDailySummary(doc, run, scores) {
   const regressions = [];
 
   if (prev) {
-    if (overall > prev.overallHealth) {
-      improvements.push(`Overall health up ${prev.overallHealth} → ${overall}`);
-    } else if (overall < prev.overallHealth) {
-      regressions.push(`Overall health down ${prev.overallHealth} → ${overall}`);
-    }
-    scoring.QA_MODULES.forEach((mod) => {
-      const now = scores.modules[mod];
-      const was = prev.moduleScores?.[mod];
-      if (typeof now === 'number' && typeof was === 'number') {
-        if (now > was + 5) improvements.push(`${mod} +${now - was}`);
-        if (now < was - 5) regressions.push(`${mod} ${now - was}`);
-      }
-    });
+    if (overall > prev.overallHealth) improvements.push(`Overall health up ${prev.overallHealth} → ${overall}`);
+    else if (overall < prev.overallHealth) regressions.push(`Overall health down ${prev.overallHealth} → ${overall}`);
   }
 
   return {
@@ -161,7 +203,8 @@ function buildDailySummary(doc, run, scores) {
     regressions,
     pass: run.pass,
     runId: run.id,
-    narrative: narrativeSummary({ overall, moduleScores: scores.modules, topIssues, pass: run.pass })
+    signalCounts,
+    narrative: narrativeSummary({ overall, moduleScores: scores.modules, topIssues, pass: run.pass, signalCounts })
   };
 }
 
@@ -175,37 +218,30 @@ function weekStartIso(dateStr) {
 
 function buildWeeklyReport(doc, run, scores) {
   const weekOf = weekStartIso((run.finishedAt || new Date().toISOString()).slice(0, 10));
-  const summaries = (doc.dailySummaries || []).filter((s) => s.date >= weekOf);
-  const first = summaries[summaries.length - 1] || doc.dailySummaries?.[1];
-  const latest = summaries[0] || buildDailySummary(doc, run, scores);
-
-  const trend = { overall: { from: first?.overallHealth ?? latest.overallHealth, to: latest.overallHealth } };
-  scoring.QA_MODULES.forEach((mod) => {
-    trend[mod] = {
-      from: first?.moduleScores?.[mod] ?? latest.moduleScores?.[mod],
-      to: latest.moduleScores?.[mod]
-    };
-  });
-
-  const biggestWins = (latest.improvements || []).slice(0, 5);
-  const biggestGaps = topIssuesFromRun(run, 5).map((i) => i.message);
-  const priorityFixes = (doc.fixQueue || [])
-    .filter((f) => !f.resolved)
-    .slice(0, 8)
-    .map((f) => ({ id: f.id, title: f.title, severity: f.severity, eta: f.eta }));
+  const latest = buildDailySummary(doc, run, scores, doc.intelligenceLayers?.data?.counts);
 
   return {
     weekOf,
-    trend,
-    biggestWins,
-    biggestGaps,
-    priorityFixes,
+    trend: { overall: { from: latest.overallHealth, to: latest.overallHealth } },
+    biggestWins: latest.improvements || [],
+    biggestGaps: topIssuesFromRun(run, 5).map((i) => i.message),
+    priorityFixes: (doc.fixQueue || [])
+      .filter((f) => !f.resolved)
+      .slice(0, 8)
+      .map((f) => ({
+        id: f.id,
+        title: f.title,
+        severity: f.severity,
+        severityScore: f.severityScore,
+        classification: f.classification,
+        eta: f.eta
+      })),
     overallHealth: latest.overallHealth,
-    narrative: `Week of ${weekOf}: health ${trend.overall.from} → ${trend.overall.to}. ${biggestGaps.length ? `${biggestGaps.length} open gap(s).` : 'No critical gaps this week.'}`
+    narrative: `Week of ${weekOf}: ${latest.overallHealth}/100 health. ${latest.topIssues.length} open issue(s).`
   };
 }
 
-function recomputeFromRun(run, opts = {}) {
+async function recomputeFromRun(run, opts = {}) {
   if (!run || !run.modules) {
     throw new Error('Invalid QA run — missing modules');
   }
@@ -216,32 +252,61 @@ function recomputeFromRun(run, opts = {}) {
       ? Math.round((qaDoc.uptime.successes / qaDoc.uptime.checks) * 1000) / 10
       : 100;
 
+  const runCount = (qaDoc.runs || []).length;
+
+  // Layer 1 — Data
+  const collected = await dataLayer.collectAllSignals(run);
+
+  // Dedupe: QA check ids take precedence over PI signals with overlapping classification
+  const qaIds = new Set(collected.layers.qa.map((c) => c.id));
+  const piOnly = [
+    ...collected.layers.apiHealth,
+    ...collected.layers.cacheHealth,
+    ...collected.layers.autoposter,
+    ...collected.layers.recruiting,
+    ...collected.layers.teamData,
+    ...collected.layers.filmRoom
+  ].filter((s) => !qaIds.has(s.id));
+
+  const allSignals = [...collected.layers.qa, ...piOnly];
+
   const modules = scoring.moduleScoresFromRun(run);
   const pages = scoring.pageScoresFromRun(run);
   const features = scoring.featureScoresFromRun(run, uptimePct);
   const recommendations = scoring.buildRecommendations({ moduleScores: modules, featureScores: features, pageScores: pages });
-
   const scores = { modules, pages, features, overall: modules.overall };
 
   let doc = store.readDoc();
+  doc = store.decaySignalHistory(doc);
+
+  const fixItems = buildFixQueue(allSignals, run, doc.fixQueue, doc, runCount);
+
+  // Layer metadata snapshot
+  const classifications = [...new Set(fixItems.map((f) => f.classification))];
+  doc.intelligenceLayers = {
+    data: { counts: collected.counts, sources: classifier.loadRules().dataSources },
+    classification: { active: classifications, total: fixItems.length },
+    severity: {
+      critical: fixItems.filter((f) => f.severity === 'critical').length,
+      high: fixItems.filter((f) => f.severity === 'high').length,
+      medium: fixItems.filter((f) => f.severity === 'medium').length,
+      low: fixItems.filter((f) => f.severity === 'low').length
+    },
+    proposals: fixItems.filter((f) => f.proposal).length,
+    approvalGate: 'self-runner'
+  };
+
   doc.lastRunId = run.id;
   doc.lastComputedAt = run.finishedAt || new Date().toISOString();
   doc.scores = scores;
   doc.recommendations = recommendations;
-
-  const fixItems = fixItemsFromRun(run, doc.fixQueue);
-  doc.fixQueue = fixItems
-    .sort((a, b) => severityRank(b.severity) - severityRank(a.severity))
-    .slice(0, 200);
+  doc.fixQueue = fixItems.slice(0, 200);
 
   if (opts.daily !== false) {
-    const daily = buildDailySummary(doc, run, scores);
-    doc = store.pushDailySummary(doc, daily);
+    doc = store.pushDailySummary(doc, buildDailySummary(doc, run, scores, collected.counts));
   }
-
   if (opts.weekly) {
-    const weekly = buildWeeklyReport(doc, run, scores);
-    doc = store.pushWeeklyReport(doc, weekly);
+    doc = store.pushWeeklyReport(doc, buildWeeklyReport(doc, run, scores));
   }
 
   doc = store.pushSnapshot(doc, {
@@ -249,7 +314,9 @@ function recomputeFromRun(run, opts = {}) {
     runId: run.id,
     overall: scores.overall,
     modules: scores.modules,
-    pass: run.pass
+    pass: run.pass,
+    openFixes: fixItems.filter((f) => !f.resolved).length,
+    layers: doc.intelligenceLayers
   });
 
   store.writeDoc(doc);
@@ -258,36 +325,49 @@ function recomputeFromRun(run, opts = {}) {
     const opsMonitor = require('../ops-monitor');
     opsMonitor.logEvent({
       subsystem: 'product-intel',
-      status: run.pass ? 'success' : 'warning',
-      message: `Product Intelligence scored ${scores.overall}/100`,
-      details: { runId: run.id, overall: scores.overall, fixQueue: doc.fixQueue.filter((f) => !f.resolved).length }
+      status: run.pass && !fixItems.length ? 'success' : 'warning',
+      message: `Product Intelligence scored ${scores.overall}/100 — ${fixItems.length} fix item(s)`,
+      details: {
+        runId: run.id,
+        overall: scores.overall,
+        fixQueue: fixItems.filter((f) => !f.resolved).length,
+        layers: doc.intelligenceLayers
+      }
     });
   } catch {
     /* optional */
   }
 
-  return { scores, fixQueue: doc.fixQueue, recommendations, daily: store.getTodaySummary(doc) };
+  return {
+    scores,
+    fixQueue: doc.fixQueue,
+    recommendations,
+    daily: store.getTodaySummary(doc),
+    intelligenceLayers: doc.intelligenceLayers,
+    signalCounts: collected.counts
+  };
 }
 
-function recomputeFromLatestRun(opts = {}) {
+async function recomputeFromLatestRun(opts = {}) {
   const qaDoc = qaStore.readDoc();
   const run = (qaDoc.runs || [])[0];
-  if (!run) {
-    return { ok: false, reason: 'no_qa_runs' };
-  }
-  return { ok: true, ...recomputeFromRun(run, opts) };
+  if (!run) return { ok: false, reason: 'no_qa_runs' };
+  const result = await recomputeFromRun(run, opts);
+  return { ok: true, ...result };
 }
 
 function runDailyJob() {
-  const result = recomputeFromLatestRun({ daily: true, weekly: false });
-  console.log('[product-intel] daily summary updated', result.scores?.overall ?? result.reason);
-  return result;
+  return recomputeFromLatestRun({ daily: true, weekly: false }).then((result) => {
+    console.log('[product-intel] daily summary updated', result.scores?.overall ?? result.reason);
+    return result;
+  });
 }
 
 function runWeeklyJob() {
-  const result = recomputeFromLatestRun({ daily: true, weekly: true });
-  console.log('[product-intel] weekly report generated', result.scores?.overall ?? result.reason);
-  return result;
+  return recomputeFromLatestRun({ daily: true, weekly: true }).then((result) => {
+    console.log('[product-intel] weekly report generated', result.scores?.overall ?? result.reason);
+    return result;
+  });
 }
 
 function getScoresPayload() {
@@ -300,7 +380,21 @@ function getScoresPayload() {
     color: scoring.healthColor(doc.scores?.overall ?? 0),
     lastComputedAt: doc.lastComputedAt,
     lastRunId: doc.lastRunId,
-    recommendations: doc.recommendations ?? { remove: [], keep: [], upgrade: [] }
+    recommendations: doc.recommendations ?? { remove: [], keep: [], upgrade: [] },
+    intelligenceLayers: doc.intelligenceLayers ?? null
+  };
+}
+
+function getLayersPayload() {
+  const doc = store.readDoc();
+  const rules = classifier.loadRules();
+  return {
+    layers: doc.intelligenceLayers,
+    classifications: rules.classifications,
+    categories: rules.categories,
+    severityBands: rules.severityBands,
+    signalHistory: doc.signalHistory,
+    dataSources: rules.dataSources
   };
 }
 
@@ -310,7 +404,10 @@ module.exports = {
   runDailyJob,
   runWeeklyJob,
   getScoresPayload,
+  getLayersPayload,
   buildDailySummary,
   buildWeeklyReport,
-  topIssuesFromRun
+  topIssuesFromRun,
+  buildFixQueue,
+  enrichFixItem
 };

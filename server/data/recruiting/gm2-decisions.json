@@ -1,0 +1,3629 @@
+{
+  "version": 1,
+  "events": [
+    {
+      "id": "gm2_1781200382327_smqlr",
+      "at": "2026-06-11T17:53:02.327Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781200382323_30axq",
+      "at": "2026-06-11T17:53:02.323Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781200261969_49f6g",
+      "at": "2026-06-11T17:51:01.969Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781200261967_2scdr",
+      "at": "2026-06-11T17:51:01.967Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781200142163_tjyle",
+      "at": "2026-06-11T17:49:02.163Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781200142156_ob09r",
+      "at": "2026-06-11T17:49:02.156Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781200022140_r43ek",
+      "at": "2026-06-11T17:47:02.140Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781200022136_fv8p6",
+      "at": "2026-06-11T17:47:02.136Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781199902516_3na8k",
+      "at": "2026-06-11T17:45:02.516Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781199902513_kzzyu",
+      "at": "2026-06-11T17:45:02.513Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781199781973_5s204",
+      "at": "2026-06-11T17:43:01.973Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781199781968_esz75",
+      "at": "2026-06-11T17:43:01.968Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781199662096_n9hsa",
+      "at": "2026-06-11T17:41:02.096Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781199662093_n6egl",
+      "at": "2026-06-11T17:41:02.093Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781199541965_itbo3",
+      "at": "2026-06-11T17:39:01.965Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781199541962_nj00u",
+      "at": "2026-06-11T17:39:01.962Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781199422061_xaij8",
+      "at": "2026-06-11T17:37:02.061Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781199422055_09boo",
+      "at": "2026-06-11T17:37:02.055Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781199301714_umjjm",
+      "at": "2026-06-11T17:35:01.714Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781199301712_e19v1",
+      "at": "2026-06-11T17:35:01.712Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781199182039_7qhob",
+      "at": "2026-06-11T17:33:02.039Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781199182035_onrqf",
+      "at": "2026-06-11T17:33:02.035Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781199062042_tgb9j",
+      "at": "2026-06-11T17:31:02.042Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781199062040_ga6yl",
+      "at": "2026-06-11T17:31:02.040Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781198941890_zpwzx",
+      "at": "2026-06-11T17:29:01.890Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781198941887_xbipf",
+      "at": "2026-06-11T17:29:01.887Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781198821841_5v1he",
+      "at": "2026-06-11T17:27:01.841Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781198821839_gyn91",
+      "at": "2026-06-11T17:27:01.839Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781198702761_fb060",
+      "at": "2026-06-11T17:25:02.761Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781198702752_srgv5",
+      "at": "2026-06-11T17:25:02.752Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781198581763_8zapl",
+      "at": "2026-06-11T17:23:01.763Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781198581760_ga6a3",
+      "at": "2026-06-11T17:23:01.760Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781198461794_ogob5",
+      "at": "2026-06-11T17:21:01.794Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781198461792_mfr5v",
+      "at": "2026-06-11T17:21:01.792Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781198341766_251vm",
+      "at": "2026-06-11T17:19:01.766Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781198341764_p2kwu",
+      "at": "2026-06-11T17:19:01.764Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781198221884_j1o4i",
+      "at": "2026-06-11T17:17:01.884Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781198221883_m2bje",
+      "at": "2026-06-11T17:17:01.883Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781198101939_i8m1d",
+      "at": "2026-06-11T17:15:01.939Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781198101938_o0atr",
+      "at": "2026-06-11T17:15:01.938Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781197981901_cktlb",
+      "at": "2026-06-11T17:13:01.901Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781197981899_1iqep",
+      "at": "2026-06-11T17:13:01.899Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781197861946_3cuko",
+      "at": "2026-06-11T17:11:01.946Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781197861944_vc6pd",
+      "at": "2026-06-11T17:11:01.944Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781197742064_mtm6s",
+      "at": "2026-06-11T17:09:02.064Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781197742058_uv9ms",
+      "at": "2026-06-11T17:09:02.058Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781197621863_nbu81",
+      "at": "2026-06-11T17:07:01.863Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781197621851_uq0h7",
+      "at": "2026-06-11T17:07:01.851Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781197501852_cca01",
+      "at": "2026-06-11T17:05:01.852Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781197501848_bdr1x",
+      "at": "2026-06-11T17:05:01.848Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781197382664_t0glf",
+      "at": "2026-06-11T17:03:02.664Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781197382649_fci0v",
+      "at": "2026-06-11T17:03:02.649Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781197261749_o8szo",
+      "at": "2026-06-11T17:01:01.749Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781197261748_06ms7",
+      "at": "2026-06-11T17:01:01.748Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781197141718_4dpbe",
+      "at": "2026-06-11T16:59:01.718Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781197141716_sto57",
+      "at": "2026-06-11T16:59:01.716Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781197022014_0tpkn",
+      "at": "2026-06-11T16:57:02.014Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781197022011_wdv5h",
+      "at": "2026-06-11T16:57:02.011Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781196901759_o2rjz",
+      "at": "2026-06-11T16:55:01.759Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781196901758_s53fo",
+      "at": "2026-06-11T16:55:01.758Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781196781793_qmzga",
+      "at": "2026-06-11T16:53:01.793Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781196781791_izqmm",
+      "at": "2026-06-11T16:53:01.791Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781196661785_35kzh",
+      "at": "2026-06-11T16:51:01.785Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781196661783_zkrbb",
+      "at": "2026-06-11T16:51:01.784Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781196541819_021rf",
+      "at": "2026-06-11T16:49:01.819Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781196541817_f7edc",
+      "at": "2026-06-11T16:49:01.817Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781196421865_iitd3",
+      "at": "2026-06-11T16:47:01.865Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781196421856_itzo3",
+      "at": "2026-06-11T16:47:01.856Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781196301862_y2af0",
+      "at": "2026-06-11T16:45:01.862Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781196301860_e21ml",
+      "at": "2026-06-11T16:45:01.860Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781196181687_1rdho",
+      "at": "2026-06-11T16:43:01.687Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781196181685_be0v6",
+      "at": "2026-06-11T16:43:01.685Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781196061685_yej96",
+      "at": "2026-06-11T16:41:01.685Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781196061677_uc1vs",
+      "at": "2026-06-11T16:41:01.677Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781195941255_qwp04",
+      "at": "2026-06-11T16:39:01.255Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781195941254_cr5s8",
+      "at": "2026-06-11T16:39:01.254Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781195822539_n6jj6",
+      "at": "2026-06-11T16:37:02.539Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781195822535_x60lj",
+      "at": "2026-06-11T16:37:02.535Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781195701515_s3zr5",
+      "at": "2026-06-11T16:35:01.515Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781195701513_xeivq",
+      "at": "2026-06-11T16:35:01.513Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781195581730_t0iqk",
+      "at": "2026-06-11T16:33:01.730Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781195581727_8w4nc",
+      "at": "2026-06-11T16:33:01.727Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781195461363_wo6ow",
+      "at": "2026-06-11T16:31:01.363Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781195461362_vbgcp",
+      "at": "2026-06-11T16:31:01.362Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781195341315_xbpeq",
+      "at": "2026-06-11T16:29:01.315Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781195341313_swghj",
+      "at": "2026-06-11T16:29:01.313Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781195221344_ka1iu",
+      "at": "2026-06-11T16:27:01.344Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781195221343_iuijd",
+      "at": "2026-06-11T16:27:01.343Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781195101525_tqj6a",
+      "at": "2026-06-11T16:25:01.526Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781195101522_5emop",
+      "at": "2026-06-11T16:25:01.522Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781194981334_9sfcc",
+      "at": "2026-06-11T16:23:01.334Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781194981332_rc55k",
+      "at": "2026-06-11T16:23:01.332Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781194861598_sol2k",
+      "at": "2026-06-11T16:21:01.598Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781194861597_b4i4i",
+      "at": "2026-06-11T16:21:01.597Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781194741291_4bucm",
+      "at": "2026-06-11T16:19:01.291Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781194741290_rg2no",
+      "at": "2026-06-11T16:19:01.290Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781194621795_im59z",
+      "at": "2026-06-11T16:17:01.795Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781194621793_czdwp",
+      "at": "2026-06-11T16:17:01.793Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781194501688_zrcxq",
+      "at": "2026-06-11T16:15:01.688Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781194501685_qle88",
+      "at": "2026-06-11T16:15:01.685Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781194381401_7ushr",
+      "at": "2026-06-11T16:13:01.401Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781194381400_q72yd",
+      "at": "2026-06-11T16:13:01.400Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781194261255_f3bq6",
+      "at": "2026-06-11T16:11:01.255Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781194261253_x9rro",
+      "at": "2026-06-11T16:11:01.253Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781194141265_o8tym",
+      "at": "2026-06-11T16:09:01.265Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781194141264_g30cq",
+      "at": "2026-06-11T16:09:01.264Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781194021302_rx7qf",
+      "at": "2026-06-11T16:07:01.302Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781194021300_7o4az",
+      "at": "2026-06-11T16:07:01.300Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781193901251_tymi5",
+      "at": "2026-06-11T16:05:01.251Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781193901250_kxu1t",
+      "at": "2026-06-11T16:05:01.250Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781193781230_lgjd6",
+      "at": "2026-06-11T16:03:01.230Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781193781229_nice0",
+      "at": "2026-06-11T16:03:01.229Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781193662918_1d0w3",
+      "at": "2026-06-11T16:01:02.918Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781193662914_uhauo",
+      "at": "2026-06-11T16:01:02.914Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781193541079_33mss",
+      "at": "2026-06-11T15:59:01.079Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781193541077_lq5ww",
+      "at": "2026-06-11T15:59:01.077Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781193420990_31h7m",
+      "at": "2026-06-11T15:57:00.990Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781193420987_flbfe",
+      "at": "2026-06-11T15:57:00.987Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781193301451_907xb",
+      "at": "2026-06-11T15:55:01.451Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781193301446_bkf81",
+      "at": "2026-06-11T15:55:01.446Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781193181315_3dml1",
+      "at": "2026-06-11T15:53:01.315Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781193181313_1nd1t",
+      "at": "2026-06-11T15:53:01.313Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781193060351_mq4of",
+      "at": "2026-06-11T15:51:00.351Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781193060349_s56hq",
+      "at": "2026-06-11T15:51:00.349Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781192942773_v08df",
+      "at": "2026-06-11T15:49:02.773Z",
+      "layer": "auto-repair",
+      "action": "allow",
+      "playerSlug": "trey-morrison",
+      "reason": "identity_healed",
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192942768_a43am",
+      "at": "2026-06-11T15:49:02.768Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "auto-repair-heal",
+      "playerSlug": "trey-morrison",
+      "reason": "repair_mode_write",
+      "errors": [
+        "invalid_class_year"
+      ]
+    },
+    {
+      "id": "gm2_1781192942341_lf2tx",
+      "at": "2026-06-11T15:49:02.341Z",
+      "layer": "auto-repair",
+      "action": "allow",
+      "playerSlug": "jaylen-brown",
+      "reason": "identity_healed",
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192942338_rny0z",
+      "at": "2026-06-11T15:49:02.338Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "auto-repair-heal",
+      "playerSlug": "jaylen-brown",
+      "reason": "repair_mode_write",
+      "errors": [
+        "invalid_class_year"
+      ]
+    },
+    {
+      "id": "gm2_1781192941895_a2yhj",
+      "at": "2026-06-11T15:49:01.895Z",
+      "layer": "auto-repair",
+      "action": "allow",
+      "playerSlug": "amare-patterson",
+      "reason": "identity_healed",
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192941891_eclmy",
+      "at": "2026-06-11T15:49:01.891Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "auto-repair-heal",
+      "playerSlug": "amare-patterson",
+      "reason": "repair_mode_write",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781192941692_i0pag",
+      "at": "2026-06-11T15:49:01.692Z",
+      "layer": "auto-repair",
+      "action": "allow",
+      "playerSlug": "devon-hall",
+      "reason": "identity_healed",
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192941689_ppu1o",
+      "at": "2026-06-11T15:49:01.689Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "auto-repair-heal",
+      "playerSlug": "devon-hall",
+      "reason": "repair_mode_write",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781192941435_3bcj7",
+      "at": "2026-06-11T15:49:01.435Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781192941434_gtvmw",
+      "at": "2026-06-11T15:49:01.435Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781192941260_u1fq0",
+      "at": "2026-06-11T15:49:01.260Z",
+      "layer": "auto-repair",
+      "action": "allow",
+      "playerSlug": "derrick-malone",
+      "reason": "identity_healed",
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192941257_shavy",
+      "at": "2026-06-11T15:49:01.257Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "auto-repair-heal",
+      "playerSlug": "derrick-malone",
+      "reason": "repair_mode_write",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781192941102_7798u",
+      "at": "2026-06-11T15:49:01.102Z",
+      "layer": "auto-repair",
+      "action": "allow",
+      "playerSlug": "justin-williams",
+      "reason": "identity_healed",
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192941098_sjhy1",
+      "at": "2026-06-11T15:49:01.098Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "auto-repair-heal",
+      "playerSlug": "justin-williams",
+      "reason": "repair_mode_write",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781192940623_nkxk7",
+      "at": "2026-06-11T15:49:00.623Z",
+      "layer": "auto-repair",
+      "action": "reject",
+      "playerSlug": "test-corrupt-player",
+      "reason": "identity_still_invalid",
+      "errors": [
+        "invalid_name",
+        "invalid_school"
+      ],
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192940409_y6ujk",
+      "at": "2026-06-11T15:49:00.409Z",
+      "layer": "quarantine",
+      "action": "allow",
+      "playerSlug": "jalen-brewster",
+      "reason": "player_released"
+    },
+    {
+      "id": "gm2_1781192940405_4tljd",
+      "at": "2026-06-11T15:49:00.405Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "trey-morrison",
+      "reason": "invalid_class_year",
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192940402_rklv5",
+      "at": "2026-06-11T15:49:00.402Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "gm2-sanitize",
+      "playerSlug": "trey-morrison",
+      "reason": "repair_mode_write",
+      "errors": [
+        "invalid_class_year"
+      ]
+    },
+    {
+      "id": "gm2_1781192940398_yp1j9",
+      "at": "2026-06-11T15:49:00.398Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "jaylen-brown",
+      "reason": "invalid_class_year",
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192940393_3wsxq",
+      "at": "2026-06-11T15:49:00.393Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "gm2-sanitize",
+      "playerSlug": "jaylen-brown",
+      "reason": "repair_mode_write",
+      "errors": [
+        "invalid_class_year"
+      ]
+    },
+    {
+      "id": "gm2_1781192940391_ewu9x",
+      "at": "2026-06-11T15:49:00.391Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "amare-patterson",
+      "reason": "invalid_school",
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192940388_tgpg8",
+      "at": "2026-06-11T15:49:00.388Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "gm2-sanitize",
+      "playerSlug": "amare-patterson",
+      "reason": "repair_mode_write",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781192940200_lufoh",
+      "at": "2026-06-11T15:49:00.200Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "devon-hall",
+      "reason": "invalid_school",
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192940197_ill76",
+      "at": "2026-06-11T15:49:00.197Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "gm2-sanitize",
+      "playerSlug": "devon-hall",
+      "reason": "repair_mode_write",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781192940193_ns695",
+      "at": "2026-06-11T15:49:00.193Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "derrick-malone",
+      "reason": "invalid_school",
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192940190_4z0jn",
+      "at": "2026-06-11T15:49:00.190Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "gm2-sanitize",
+      "playerSlug": "derrick-malone",
+      "reason": "repair_mode_write",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781192940004_t4v3l",
+      "at": "2026-06-11T15:49:00.004Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_school",
+      "source": "boot"
+    },
+    {
+      "id": "gm2_1781192940000_1nhsk",
+      "at": "2026-06-11T15:49:00.000Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "gm2-sanitize",
+      "playerSlug": "justin-williams",
+      "reason": "repair_mode_write",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781192836003_t549x",
+      "at": "2026-06-11T15:47:16.003Z",
+      "layer": "sil",
+      "action": "reject",
+      "subsystem": "recruiting-store",
+      "reason": "missing_timestamp",
+      "errors": [
+        "missing_timestamp",
+        "missing_timestamp"
+      ],
+      "playerSlug": "class-2027",
+      "fingerprint": "sig_on3_class-2027_ranking_change_na",
+      "source": "on3"
+    },
+    {
+      "id": "gm2_1781192836000_7h5u4",
+      "at": "2026-06-11T15:47:16.000Z",
+      "layer": "quarantine",
+      "action": "quarantine",
+      "reason": "missing_timestamp",
+      "errors": [
+        "missing_timestamp",
+        "missing_timestamp"
+      ],
+      "fingerprint": "sig_on3_class-2027_ranking_change_na",
+      "playerSlug": "class-2027",
+      "source": "on3"
+    },
+    {
+      "id": "gm2_1781192835516_ntc6n",
+      "at": "2026-06-11T15:47:15.516Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "recruiting-store",
+      "playerSlug": "justin-williams",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781192835514_oaa8x",
+      "at": "2026-06-11T15:47:15.514Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "justin-williams",
+      "reason": "invalid_player_on_write",
+      "source": "recruiting-store"
+    },
+    {
+      "id": "gm2_1781134570049_9rbvp",
+      "at": "2026-06-10T23:36:10.049Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134570047_09v4w",
+      "at": "2026-06-10T23:36:10.047Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134570046_k7seh",
+      "at": "2026-06-10T23:36:10.046Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134569269_yf56z",
+      "at": "2026-06-10T23:36:09.269Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134569264_9sjwf",
+      "at": "2026-06-10T23:36:09.264Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134569250_ufdgr",
+      "at": "2026-06-10T23:36:09.250Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134569246_vtq3e",
+      "at": "2026-06-10T23:36:09.246Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134547437_320a8",
+      "at": "2026-06-10T23:35:47.437Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134547436_p5ahb",
+      "at": "2026-06-10T23:35:47.436Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134547432_qda71",
+      "at": "2026-06-10T23:35:47.432Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134546732_38s6s",
+      "at": "2026-06-10T23:35:46.732Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134546725_lcr26",
+      "at": "2026-06-10T23:35:46.725Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134546711_vzzy1",
+      "at": "2026-06-10T23:35:46.711Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134546705_3wsjz",
+      "at": "2026-06-10T23:35:46.705Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134525393_2hgqr",
+      "at": "2026-06-10T23:35:25.393Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134525392_z123c",
+      "at": "2026-06-10T23:35:25.392Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134525388_wtq71",
+      "at": "2026-06-10T23:35:25.388Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134521853_1rksu",
+      "at": "2026-06-10T23:35:21.853Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134521847_k55ec",
+      "at": "2026-06-10T23:35:21.847Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134521834_4tdhm",
+      "at": "2026-06-10T23:35:21.834Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134521830_a71jy",
+      "at": "2026-06-10T23:35:21.830Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134492237_5fnjh",
+      "at": "2026-06-10T23:34:52.237Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134492236_r1woc",
+      "at": "2026-06-10T23:34:52.236Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134492235_flf7p",
+      "at": "2026-06-10T23:34:52.235Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134491501_dvwqm",
+      "at": "2026-06-10T23:34:51.501Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134491495_but09",
+      "at": "2026-06-10T23:34:51.495Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134491481_bbxfp",
+      "at": "2026-06-10T23:34:51.481Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134491477_wzqee",
+      "at": "2026-06-10T23:34:51.478Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134491373_vnvd7",
+      "at": "2026-06-10T23:34:51.373Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134491368_7i6e0",
+      "at": "2026-06-10T23:34:51.368Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134491358_slt20",
+      "at": "2026-06-10T23:34:51.358Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134491357_hx6xd",
+      "at": "2026-06-10T23:34:51.357Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134491350_55w08",
+      "at": "2026-06-10T23:34:51.350Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134491349_0vjyi",
+      "at": "2026-06-10T23:34:51.349Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134491348_pm1l0",
+      "at": "2026-06-10T23:34:51.348Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134490604_94an2",
+      "at": "2026-06-10T23:34:50.604Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134490598_smcfi",
+      "at": "2026-06-10T23:34:50.598Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134490584_gznhk",
+      "at": "2026-06-10T23:34:50.584Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134490581_nv8ap",
+      "at": "2026-06-10T23:34:50.581Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134490477_ykmua",
+      "at": "2026-06-10T23:34:50.477Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134490474_ye4m7",
+      "at": "2026-06-10T23:34:50.474Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134490473_uehfv",
+      "at": "2026-06-10T23:34:50.473Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134489782_u68qq",
+      "at": "2026-06-10T23:34:49.782Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134489775_2dhk4",
+      "at": "2026-06-10T23:34:49.775Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134489761_hlqhc",
+      "at": "2026-06-10T23:34:49.761Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134489758_o2gix",
+      "at": "2026-06-10T23:34:49.758Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134462091_j4tj0",
+      "at": "2026-06-10T23:34:22.091Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134462087_ec88j",
+      "at": "2026-06-10T23:34:22.087Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134462086_6fr47",
+      "at": "2026-06-10T23:34:22.086Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134458454_zmjd3",
+      "at": "2026-06-10T23:34:18.454Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134458448_lrs3v",
+      "at": "2026-06-10T23:34:18.448Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134458434_js3kk",
+      "at": "2026-06-10T23:34:18.434Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134458431_x83xk",
+      "at": "2026-06-10T23:34:18.431Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134441107_rlggr",
+      "at": "2026-06-10T23:34:01.107Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134441106_t14gs",
+      "at": "2026-06-10T23:34:01.106Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134441104_yf8mn",
+      "at": "2026-06-10T23:34:01.104Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134439458_92sce",
+      "at": "2026-06-10T23:33:59.458Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134439450_ld47j",
+      "at": "2026-06-10T23:33:59.450Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134439436_9681p",
+      "at": "2026-06-10T23:33:59.436Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134439433_d85cp",
+      "at": "2026-06-10T23:33:59.433Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134418976_c2raq",
+      "at": "2026-06-10T23:33:38.976Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134418975_iyz68",
+      "at": "2026-06-10T23:33:38.975Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134418974_xrizn",
+      "at": "2026-06-10T23:33:38.974Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134418141_ybqmx",
+      "at": "2026-06-10T23:33:38.141Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134418135_hk4bm",
+      "at": "2026-06-10T23:33:38.135Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134418121_ikvda",
+      "at": "2026-06-10T23:33:38.121Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134418118_u4x47",
+      "at": "2026-06-10T23:33:38.118Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134382769_sh4oq",
+      "at": "2026-06-10T23:33:02.769Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134382768_gil3n",
+      "at": "2026-06-10T23:33:02.768Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134382767_tie01",
+      "at": "2026-06-10T23:33:02.767Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134378762_2edma",
+      "at": "2026-06-10T23:32:58.762Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134378754_dvzlq",
+      "at": "2026-06-10T23:32:58.754Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134378740_9ebad",
+      "at": "2026-06-10T23:32:58.740Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134378736_980fb",
+      "at": "2026-06-10T23:32:58.736Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134330739_8un72",
+      "at": "2026-06-10T23:32:10.739Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134330738_ogxn3",
+      "at": "2026-06-10T23:32:10.738Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134330737_2pp0u",
+      "at": "2026-06-10T23:32:10.737Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134330026_qxpvw",
+      "at": "2026-06-10T23:32:10.026Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134330019_ku9cw",
+      "at": "2026-06-10T23:32:10.019Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134330004_26ej3",
+      "at": "2026-06-10T23:32:10.004Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134330001_iuexz",
+      "at": "2026-06-10T23:32:10.001Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134308283_wkrpp",
+      "at": "2026-06-10T23:31:48.283Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134308277_bjl4a",
+      "at": "2026-06-10T23:31:48.277Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134308266_kh470",
+      "at": "2026-06-10T23:31:48.266Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134308265_sm92u",
+      "at": "2026-06-10T23:31:48.265Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134308259_wxzrg",
+      "at": "2026-06-10T23:31:48.259Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134308258_o7l13",
+      "at": "2026-06-10T23:31:48.258Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134308257_3cszr",
+      "at": "2026-06-10T23:31:48.257Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134307510_xgr1a",
+      "at": "2026-06-10T23:31:47.510Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134307505_23rlm",
+      "at": "2026-06-10T23:31:47.505Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134307491_q1sle",
+      "at": "2026-06-10T23:31:47.491Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134307487_z1cg2",
+      "at": "2026-06-10T23:31:47.487Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781134307312_zvvwh",
+      "at": "2026-06-10T23:31:47.312Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134307310_bf9bj",
+      "at": "2026-06-10T23:31:47.310Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781134307309_4tv44",
+      "at": "2026-06-10T23:31:47.309Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781134302253_lonnf",
+      "at": "2026-06-10T23:31:42.253Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781134302246_cf2q1",
+      "at": "2026-06-10T23:31:42.246Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781134302229_bslf4",
+      "at": "2026-06-10T23:31:42.229Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781134302223_phw3v",
+      "at": "2026-06-10T23:31:42.223Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781133232156_sey1i",
+      "at": "2026-06-10T23:13:52.156Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781133232155_5c91v",
+      "at": "2026-06-10T23:13:52.155Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781133232154_n7amc",
+      "at": "2026-06-10T23:13:52.154Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781133228802_u0a94",
+      "at": "2026-06-10T23:13:48.802Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781133228796_mijpr",
+      "at": "2026-06-10T23:13:48.796Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781133228780_cnca9",
+      "at": "2026-06-10T23:13:48.780Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781133228774_59sr7",
+      "at": "2026-06-10T23:13:48.774Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781133139138_oi1h9",
+      "at": "2026-06-10T23:12:19.138Z",
+      "layer": "pgv",
+      "action": "allow",
+      "feature": "program_pulse",
+      "reason": "pgv_pass",
+      "errors": [],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781133139132_c8kbo",
+      "at": "2026-06-10T23:12:19.132Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781133139131_8ut9k",
+      "at": "2026-06-10T23:12:19.131Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781133139129_wxr70",
+      "at": "2026-06-10T23:12:19.130Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781133138395_2e8z6",
+      "at": "2026-06-10T23:12:18.395Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781133138389_4q4j6",
+      "at": "2026-06-10T23:12:18.389Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781133138376_pbe74",
+      "at": "2026-06-10T23:12:18.376Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781133138373_2tyme",
+      "at": "2026-06-10T23:12:18.373Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781133138275_yx1j7",
+      "at": "2026-06-10T23:12:18.275Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781133138269_zjwrm",
+      "at": "2026-06-10T23:12:18.269Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781133138260_siwmm",
+      "at": "2026-06-10T23:12:18.260Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781133138259_j0zqr",
+      "at": "2026-06-10T23:12:18.259Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781133138249_d5hbz",
+      "at": "2026-06-10T23:12:18.249Z",
+      "layer": "pgv",
+      "action": "allow",
+      "feature": "program_pulse",
+      "reason": "pgv_pass",
+      "errors": [],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781133138242_urikd",
+      "at": "2026-06-10T23:12:18.242Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781133138237_w3an9",
+      "at": "2026-06-10T23:12:18.237Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781133138228_9pi9y",
+      "at": "2026-06-10T23:12:18.228Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781133138227_3ry3w",
+      "at": "2026-06-10T23:12:18.227Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781133138220_85e0m",
+      "at": "2026-06-10T23:12:18.220Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781133138219_scfmq",
+      "at": "2026-06-10T23:12:18.219Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781133138218_3sjxp",
+      "at": "2026-06-10T23:12:18.218Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781133134594_hhk2r",
+      "at": "2026-06-10T23:12:14.594Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781133134589_yjt7o",
+      "at": "2026-06-10T23:12:14.589Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781133134575_35n4w",
+      "at": "2026-06-10T23:12:14.575Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "easton-royal",
+      "fingerprint": "243862|official_visit|2026-06-11"
+    },
+    {
+      "id": "gm2_1781133134571_6vg0m",
+      "at": "2026-06-10T23:12:14.571Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "article-engine",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
+      "id": "gm2_1781133067576_sspl4",
+      "at": "2026-06-10T23:11:07.576Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781133067569_3r53u",
+      "at": "2026-06-10T23:11:07.569Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781133067552_ic1s6",
+      "at": "2026-06-10T23:11:07.552Z",
+      "layer": "pgv",
+      "action": "allow",
+      "feature": "program_pulse",
+      "reason": "pgv_pass",
+      "errors": [],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781133067552_21xqd",
+      "at": "2026-06-10T23:11:07.552Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "program_pulse",
+      "reason": "no_program_signals"
+    },
+    {
+      "id": "gm2_1781133067549_tur0b",
+      "at": "2026-06-10T23:11:07.549Z",
+      "layer": "pgv",
+      "action": "allow",
+      "feature": "program_pulse",
+      "reason": "pgv_pass",
+      "errors": [],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781133067549_9suyr",
+      "at": "2026-06-10T23:11:07.549Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "program_pulse",
+      "reason": "no_program_signals"
+    },
+    {
+      "id": "gm2_1781133067546_bsz4h",
+      "at": "2026-06-10T23:11:07.546Z",
+      "layer": "pgv",
+      "action": "allow",
+      "feature": "program_pulse",
+      "reason": "pgv_pass",
+      "errors": [],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781133067545_po0eo",
+      "at": "2026-06-10T23:11:07.545Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "program_pulse",
+      "reason": "no_program_signals"
+    },
+    {
+      "id": "gm2_1781133067537_ek1av",
+      "at": "2026-06-10T23:11:07.537Z",
+      "layer": "pgv",
+      "action": "allow",
+      "feature": "program_pulse",
+      "reason": "pgv_pass",
+      "errors": [],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781133067537_vjloc",
+      "at": "2026-06-10T23:11:07.537Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "program_pulse",
+      "reason": "no_program_signals"
+    },
+    {
+      "id": "gm2_1781133067530_vuzy2",
+      "at": "2026-06-10T23:11:07.530Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781133067525_1dsqe",
+      "at": "2026-06-10T23:11:07.525Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781133067511_qy6wn",
+      "at": "2026-06-10T23:11:07.511Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781133067510_nx0q3",
+      "at": "2026-06-10T23:11:07.510Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781133067509_dsset",
+      "at": "2026-06-10T23:11:07.509Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781133063861_cumz1",
+      "at": "2026-06-10T23:11:03.861Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster"
+    },
+    {
+      "id": "gm2_1781133063855_hbmpr",
+      "at": "2026-06-10T23:11:03.855Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "board",
+      "reason": "invalid_school_on_board",
+      "playerSlug": "justin-williams"
+    },
+    {
+      "id": "gm2_1781132991406_bryqd",
+      "at": "2026-06-10T23:09:51.406Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781132991405_et797",
+      "at": "2026-06-10T23:09:51.405Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "heat_check",
+      "reason": "heat_check_blocked:easton-royal-243862:invalid_identity",
+      "errors": [
+        "heat_check_blocked:easton-royal-243862:invalid_identity"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781132991404_0jhpw",
+      "at": "2026-06-10T23:09:51.404Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "heat_check",
+      "reason": "invalid_identity",
+      "errors": [
+        "missing_slug",
+        "invalid_name",
+        "invalid_pos",
+        "invalid_school"
+      ],
+      "playerSlug": "easton-royal-243862"
+    },
+    {
+      "id": "gm2_1781131971492_c1gzn",
+      "at": "2026-06-10T22:52:51.492Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "visit_recap",
+      "reason": "duplicate_players:a",
+      "errors": [
+        "duplicate_players:a",
+        "no_visit_intel"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781131971491_8c81d",
+      "at": "2026-06-10T22:52:51.491Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "reason": "no_visit_intel"
+    },
+    {
+      "id": "gm2_1781131971488_cr7l0",
+      "at": "2026-06-10T22:52:51.488Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "test",
+      "playerSlug": "maxwell-hiller",
+      "fingerprint": "maxwell-hiller|commit|2026-06-10",
+      "source": "on3",
+      "eventType": "commit"
+    },
+    {
+      "id": "gm2_1781131971484_t7o8r",
+      "at": "2026-06-10T22:52:51.484Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "test",
+      "playerSlug": "test-corrupt-player",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781131971483_aqk7w",
+      "at": "2026-06-10T22:52:51.483Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "test-corrupt-player",
+      "reason": "invalid_player_on_write",
+      "source": "test"
+    },
+    {
+      "id": "gm2_1781131971477_26qvl",
+      "at": "2026-06-10T22:52:51.477Z",
+      "layer": "sil",
+      "action": "reject",
+      "subsystem": "test",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster",
+      "fingerprint": "jalen-brewster|commit|2026-06-10"
+    },
+    {
+      "id": "gm2_1781129873780_8m2pk",
+      "at": "2026-06-10T22:17:53.780Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "visit_recap",
+      "reason": "duplicate_players:a",
+      "errors": [
+        "duplicate_players:a",
+        "no_visit_intel"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781129873779_dfk6x",
+      "at": "2026-06-10T22:17:53.779Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "reason": "no_visit_intel"
+    },
+    {
+      "id": "gm2_1781129873777_r4ilq",
+      "at": "2026-06-10T22:17:53.777Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "test",
+      "playerSlug": "maxwell-hiller",
+      "fingerprint": "maxwell-hiller|commit|2026-06-10",
+      "source": "on3",
+      "eventType": "commit"
+    },
+    {
+      "id": "gm2_1781129873775_wz45l",
+      "at": "2026-06-10T22:17:53.775Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "test",
+      "playerSlug": "test-corrupt-player",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781129873775_kq95b",
+      "at": "2026-06-10T22:17:53.775Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "test-corrupt-player",
+      "reason": "invalid_player_on_write",
+      "source": "test"
+    },
+    {
+      "id": "gm2_1781129873769_qkxef",
+      "at": "2026-06-10T22:17:53.769Z",
+      "layer": "sil",
+      "action": "reject",
+      "subsystem": "test",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster",
+      "fingerprint": "jalen-brewster|commit|2026-06-10"
+    },
+    {
+      "id": "gm2_1781125345860_xevpi",
+      "at": "2026-06-10T21:02:25.860Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "visit_recap",
+      "reason": "duplicate_players:a",
+      "errors": [
+        "duplicate_players:a",
+        "no_visit_intel"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781125345858_fjpgp",
+      "at": "2026-06-10T21:02:25.858Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "reason": "no_visit_intel"
+    },
+    {
+      "id": "gm2_1781125345854_muavd",
+      "at": "2026-06-10T21:02:25.854Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "test",
+      "playerSlug": "maxwell-hiller",
+      "fingerprint": "maxwell-hiller|commit|2026-06-10",
+      "source": "on3",
+      "eventType": "commit"
+    },
+    {
+      "id": "gm2_1781125345848_1gni7",
+      "at": "2026-06-10T21:02:25.848Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "test",
+      "playerSlug": "test-corrupt-player",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1781125345847_d0f3x",
+      "at": "2026-06-10T21:02:25.847Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "test-corrupt-player",
+      "reason": "invalid_player_on_write",
+      "source": "test"
+    },
+    {
+      "id": "gm2_1781125345840_2w7ye",
+      "at": "2026-06-10T21:02:25.840Z",
+      "layer": "sil",
+      "action": "reject",
+      "subsystem": "test",
+      "reason": "player_quarantined",
+      "playerSlug": "jalen-brewster",
+      "fingerprint": "jalen-brewster|commit|2026-06-10"
+    },
+    {
+      "id": "gm2_1781124314644_pnlaz",
+      "at": "2026-06-10T20:45:14.644Z",
+      "layer": "pgv",
+      "action": "block_render",
+      "feature": "visit_recap",
+      "reason": "duplicate_players:a",
+      "errors": [
+        "duplicate_players:a",
+        "no_visit_intel"
+      ],
+      "blockedSlugs": [],
+      "itemCount": null
+    },
+    {
+      "id": "gm2_1781124314643_zoxa4",
+      "at": "2026-06-10T20:45:14.643Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "reason": "no_visit_intel"
+    },
+    {
+      "id": "gm2_1781124314639_vncz4",
+      "at": "2026-06-10T20:45:14.639Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "test",
+      "playerSlug": "maxwell-hiller",
+      "fingerprint": "maxwell-hiller|commit|2026-06-10",
+      "source": "on3",
+      "eventType": "commit"
+    },
+    {
+      "id": "gm2_1781124314635_l8j4v",
+      "at": "2026-06-10T20:45:14.635Z",
+      "layer": "quarantine",
+      "action": "quarantine",
+      "reason": "identity_validation_failed",
+      "errors": [
+        "player_invalid_pos",
+        "player_invalid_school"
+      ],
+      "fingerprint": "jalen-brewster|commit|2026-06-10",
+      "playerSlug": "jalen-brewster",
+      "source": "beat_writer_ingest"
+    },
+    {
+      "id": "gm2_1781124314629_5p7jg",
+      "at": "2026-06-10T20:45:14.629Z",
+      "layer": "quarantine",
+      "action": "quarantine",
+      "playerSlug": "jalen-brewster",
+      "reason": "identity_validation_failed",
+      "errors": [
+        "player_invalid_pos",
+        "player_invalid_school"
+      ]
+    }
+  ],
+  "updatedAt": "2026-06-11T17:53:02.327Z"
+}

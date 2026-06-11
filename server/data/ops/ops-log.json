@@ -1,5 +1,5312 @@
 {
   "version": 1,
-  "updatedAt": null,
-  "events": []
+  "updatedAt": "2026-06-11T21:13:56.151Z",
+  "events": [
+    {
+      "id": "ops_1781212436151_u7gwxi",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (81 checks)",
+      "details": {
+        "runId": "qa_1781212423827",
+        "summary": {
+          "total": 81,
+          "passed": 81,
+          "failed": 0,
+          "emitted": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T21:13:56.151Z"
+    },
+    {
+      "id": "ops_1781212436126_nm9znv",
+      "subsystem": "product-intel",
+      "status": "warning",
+      "message": "Product Intelligence scored 100/100 — 2 fix item(s)",
+      "details": {
+        "runId": "qa_1781212423827",
+        "overall": 100,
+        "fixQueue": 2,
+        "layers": {
+          "data": {
+            "counts": {
+              "total": 2,
+              "bySource": {
+                "qa": 0,
+                "apiHealth": 0,
+                "cacheHealth": 0,
+                "autoposter": 1,
+                "recruiting": 0,
+                "teamData": 1,
+                "filmRoom": 0
+              }
+            },
+            "sources": [
+              "qa-crawler",
+              "live-dashboard",
+              "mobile-behavior",
+              "admin-hub",
+              "autoposter-logs",
+              "recruiting-board",
+              "film-room",
+              "team-overview",
+              "program-history",
+              "roster-depth-chart",
+              "press-conferences",
+              "highlights",
+              "api-health",
+              "cache-health"
+            ]
+          },
+          "classification": {
+            "active": [
+              "roster-mismatch",
+              "autoposter-stale"
+            ],
+            "total": 2
+          },
+          "severity": {
+            "critical": 0,
+            "high": 2,
+            "medium": 0,
+            "low": 0
+          },
+          "proposals": 2,
+          "approvalGate": "self-runner"
+        }
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T21:13:56.126Z"
+    },
+    {
+      "id": "ops_1781212363351_7lmh64",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (2)",
+      "details": {
+        "runId": "qa_1781212351511",
+        "summary": {
+          "total": 81,
+          "passed": 79,
+          "failed": 2,
+          "emitted": 4
+        },
+        "errors": [
+          {
+            "id": "crawler:depth-chart",
+            "module": "crawler",
+            "message": "Restore depth chart ordering and backup slots in gv-team-mobile.js",
+            "url": "/",
+            "repro": "Restore depth chart ordering and backup slots in gv-team-mobile.js",
+            "details": {
+              "classification": "depth-chart-mismatch",
+              "ruleId": "E2",
+              "severity": "medium",
+              "severityScore": 54,
+              "confidence": 75,
+              "selector": "#gv-team-dc-section",
+              "domPath": "depth-chart-data",
+              "screenshot": null,
+              "sectionId": "depth-chart"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:depth-chart",
+            "module": "crawler",
+            "message": "Restore depth chart ordering and backup slots in gv-team-mobile.js",
+            "url": "/",
+            "repro": "Restore depth chart ordering and backup slots in gv-team-mobile.js",
+            "details": {
+              "classification": "depth-chart-mismatch",
+              "ruleId": "E2",
+              "severity": "medium",
+              "severityScore": 54,
+              "confidence": 75,
+              "selector": "#gv-team-dc-section",
+              "domPath": "depth-chart-data",
+              "screenshot": null,
+              "sectionId": "depth-chart"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:wrong-ordering",
+            "module": "crawler",
+            "message": "Reorder Film Room hub categories to: Scheme → Breakdown → Press → Highlights",
+            "url": "/",
+            "repro": "Reorder Film Room hub categories to: Scheme → Breakdown → Press → Highlights",
+            "details": {
+              "classification": "wrong-ordering",
+              "ruleId": "B2",
+              "severity": "medium",
+              "severityScore": 50,
+              "confidence": 80,
+              "selector": "#vpane-highlights",
+              "domPath": "film-room-hub-order",
+              "screenshot": null,
+              "sectionId": "film-room"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:wrong-ordering",
+            "module": "crawler",
+            "message": "Reorder Film Room hub categories to: Scheme → Breakdown → Press → Highlights",
+            "url": "/",
+            "repro": "Reorder Film Room hub categories to: Scheme → Breakdown → Press → Highlights",
+            "details": {
+              "classification": "wrong-ordering",
+              "ruleId": "B2",
+              "severity": "medium",
+              "severityScore": 50,
+              "confidence": 80,
+              "selector": "#vpane-highlights",
+              "domPath": "film-room-hub-order",
+              "screenshot": null,
+              "sectionId": "film-room"
+            },
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T21:12:43.351Z"
+    },
+    {
+      "id": "ops_1781212363340_j89adc",
+      "subsystem": "product-intel",
+      "status": "warning",
+      "message": "Product Intelligence scored 100/100 — 4 fix item(s)",
+      "details": {
+        "runId": "qa_1781212351511",
+        "overall": 100,
+        "fixQueue": 4,
+        "layers": {
+          "data": {
+            "counts": {
+              "total": 4,
+              "bySource": {
+                "qa": 2,
+                "apiHealth": 0,
+                "cacheHealth": 0,
+                "autoposter": 1,
+                "recruiting": 0,
+                "teamData": 1,
+                "filmRoom": 0
+              }
+            },
+            "sources": [
+              "qa-crawler",
+              "live-dashboard",
+              "mobile-behavior",
+              "admin-hub",
+              "autoposter-logs",
+              "recruiting-board",
+              "film-room",
+              "team-overview",
+              "program-history",
+              "roster-depth-chart",
+              "press-conferences",
+              "highlights",
+              "api-health",
+              "cache-health"
+            ]
+          },
+          "classification": {
+            "active": [
+              "depth-chart-mismatch",
+              "roster-mismatch",
+              "wrong-ordering",
+              "autoposter-stale"
+            ],
+            "total": 4
+          },
+          "severity": {
+            "critical": 0,
+            "high": 4,
+            "medium": 0,
+            "low": 0
+          },
+          "proposals": 4,
+          "approvalGate": "self-runner"
+        }
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T21:12:43.340Z"
+    },
+    {
+      "id": "ops_1781212079652_zr85r3",
+      "subsystem": "product-intel",
+      "status": "warning",
+      "message": "Product Intelligence scored 100/100 — 2 fix item(s)",
+      "details": {
+        "runId": "qa_1781211805977",
+        "overall": 100,
+        "fixQueue": 2,
+        "layers": {
+          "data": {
+            "counts": {
+              "total": 2,
+              "bySource": {
+                "qa": 0,
+                "apiHealth": 0,
+                "cacheHealth": 0,
+                "autoposter": 1,
+                "recruiting": 0,
+                "teamData": 1,
+                "filmRoom": 0
+              }
+            },
+            "sources": [
+              "qa-crawler",
+              "live-dashboard",
+              "mobile-behavior",
+              "admin-hub",
+              "autoposter-logs",
+              "recruiting-board",
+              "film-room",
+              "team-overview",
+              "program-history",
+              "roster-depth-chart",
+              "press-conferences",
+              "highlights",
+              "api-health",
+              "cache-health"
+            ]
+          },
+          "classification": {
+            "active": [
+              "roster-mismatch",
+              "autoposter-stale"
+            ],
+            "total": 2
+          },
+          "severity": {
+            "critical": 0,
+            "high": 2,
+            "medium": 0,
+            "low": 0
+          },
+          "proposals": 2,
+          "approvalGate": "self-runner"
+        }
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T21:07:59.652Z"
+    },
+    {
+      "id": "ops_1781211808389_5qxxxj",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (63 checks)",
+      "details": {
+        "runId": "qa_1781211805977",
+        "summary": {
+          "total": 63,
+          "passed": 63,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T21:03:28.389Z"
+    },
+    {
+      "id": "ops_1781211808379_xhadwg",
+      "subsystem": "product-intel",
+      "status": "success",
+      "message": "Product Intelligence scored 100/100",
+      "details": {
+        "runId": "qa_1781211805977",
+        "overall": 100,
+        "fixQueue": 0
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T21:03:28.379Z"
+    },
+    {
+      "id": "ops_1781211759535_6ldh4d",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (2)",
+      "details": {
+        "runId": "qa_1781211757305",
+        "summary": {
+          "total": 63,
+          "passed": 61,
+          "failed": 2
+        },
+        "errors": [
+          {
+            "id": "integrity:missing-content",
+            "module": "integrity",
+            "message": "1 missing content marker(s) across site sections",
+            "url": null,
+            "repro": "Open Team, Film Room, Recruiting, Latest Updates — verify section hooks in index.html + data files",
+            "details": [
+              {
+                "section": "teamIdentity",
+                "source": "local",
+                "missing": [
+                  "gv-team-identity-banner",
+                  "gv-team-identity-pillars",
+                  "gv-team-identity-card"
+                ]
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:wrong-background",
+            "module": "integrity",
+            "message": "5 wrong background / theme issue(s)",
+            "url": null,
+            "repro": "Team Identity should use era gradient classes — not og-image.jpg or trial/pricing backgrounds",
+            "details": [
+              {
+                "pattern": "/og-image.jpg",
+                "issue": "forbidden_in_team_identity",
+                "source": "local"
+              },
+              {
+                "pattern": "og-image.jpg",
+                "issue": "forbidden_in_team_identity",
+                "source": "local"
+              },
+              {
+                "pattern": "trial-expired-ov",
+                "issue": "forbidden_in_team_identity",
+                "source": "local"
+              },
+              {
+                "pattern": "pricing-sec",
+                "issue": "forbidden_in_team_identity",
+                "source": "local"
+              },
+              {
+                "pattern": "og-image.jpg",
+                "issue": "production_team_identity_wrong_bg",
+                "source": "production"
+              }
+            ],
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T21:02:39.535Z"
+    },
+    {
+      "id": "ops_1781211759518_zud0a3",
+      "subsystem": "product-intel",
+      "status": "warning",
+      "message": "Product Intelligence scored 86/100",
+      "details": {
+        "runId": "qa_1781211757305",
+        "overall": 86,
+        "fixQueue": 2
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T21:02:39.518Z"
+    },
+    {
+      "id": "ops_1781200386590_rpyb3z",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:53:06.590Z"
+    },
+    {
+      "id": "ops_1781200383364_tgzgom",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:53:02.301Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:53:03.364Z"
+    },
+    {
+      "id": "ops_1781200381404_atrjiw",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:53:01.404Z"
+    },
+    {
+      "id": "ops_1781200380412_gi8ei0",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:53:00.412Z"
+    },
+    {
+      "id": "ops_1781200330418_r3eeuw",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781200320954",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T17:52:10.418Z"
+    },
+    {
+      "id": "ops_1781200322628_rirnxd",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T17:52:02.624Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:52:02.628Z"
+    },
+    {
+      "id": "ops_1781200320190_g8g81h",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:52:00.186Z"
+    },
+    {
+      "id": "ops_1781200262585_s3ox6d",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:51:01.939Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:51:02.585Z"
+    },
+    {
+      "id": "ops_1781200261393_z309ah",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:51:01.393Z"
+    },
+    {
+      "id": "ops_1781200206537_m1jbp4",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:50:06.537Z"
+    },
+    {
+      "id": "ops_1781200200422_y3p7ny",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:50:00.422Z"
+    },
+    {
+      "id": "ops_1781200143540_mr3q2x",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:49:02.085Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:49:03.540Z"
+    },
+    {
+      "id": "ops_1781200141384_lon666",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:49:01.384Z"
+    },
+    {
+      "id": "ops_1781200026327_ynjaky",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:47:06.327Z"
+    },
+    {
+      "id": "ops_1781200023810_0pzlzs",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781200020948",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T17:47:03.810Z"
+    },
+    {
+      "id": "ops_1781200023137_xkk3c4",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T17:47:03.136Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:47:03.137Z"
+    },
+    {
+      "id": "ops_1781200022837_xfeyq5",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:47:02.103Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:47:02.837Z"
+    },
+    {
+      "id": "ops_1781200021370_hyafsm",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:47:01.370Z"
+    },
+    {
+      "id": "ops_1781200020398_yvnirg",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:47:00.398Z"
+    },
+    {
+      "id": "ops_1781200020109_zu8ygf",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:47:00.109Z"
+    },
+    {
+      "id": "ops_1781199903198_pmhjgz",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:45:02.468Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:45:03.198Z"
+    },
+    {
+      "id": "ops_1781199901373_sf168a",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:45:01.373Z"
+    },
+    {
+      "id": "ops_1781199845360_ouch1o",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:44:05.360Z"
+    },
+    {
+      "id": "ops_1781199840400_c4m1ol",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:44:00.400Z"
+    },
+    {
+      "id": "ops_1781199782865_4i8cew",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:43:01.902Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:43:02.865Z"
+    },
+    {
+      "id": "ops_1781199781379_akcqy7",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:43:01.373Z"
+    },
+    {
+      "id": "ops_1781199723565_9ll8ay",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781199720946",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T17:42:03.565Z"
+    },
+    {
+      "id": "ops_1781199722225_xpa21c",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T17:42:02.224Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:42:02.225Z"
+    },
+    {
+      "id": "ops_1781199720098_2fugl3",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:42:00.098Z"
+    },
+    {
+      "id": "ops_1781199666240_8gxqec",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:41:06.240Z"
+    },
+    {
+      "id": "ops_1781199662969_s5fzxr",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:41:02.034Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:41:02.969Z"
+    },
+    {
+      "id": "ops_1781199661355_h9iye3",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:41:01.355Z"
+    },
+    {
+      "id": "ops_1781199660388_a8xuef",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:41:00.388Z"
+    },
+    {
+      "id": "ops_1781199542772_9g3mes",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:39:01.926Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:39:02.772Z"
+    },
+    {
+      "id": "ops_1781199541352_2eiaab",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:39:01.352Z"
+    },
+    {
+      "id": "ops_1781199485093_f2adw1",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:38:05.093Z"
+    },
+    {
+      "id": "ops_1781199480380_ccfpv5",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:38:00.379Z"
+    },
+    {
+      "id": "ops_1781199424562_715dz8",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781199420943",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T17:37:04.562Z"
+    },
+    {
+      "id": "ops_1781199423064_hisrc6",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T17:37:03.063Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:37:03.064Z"
+    },
+    {
+      "id": "ops_1781199422843_ywwggr",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:37:02.016Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:37:02.843Z"
+    },
+    {
+      "id": "ops_1781199421345_ddd24u",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:37:01.345Z"
+    },
+    {
+      "id": "ops_1781199420093_2ekfgu",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:37:00.093Z"
+    },
+    {
+      "id": "ops_1781199305490_vavk2o",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:35:05.490Z"
+    },
+    {
+      "id": "ops_1781199302188_eu5ocw",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:35:01.688Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:35:02.188Z"
+    },
+    {
+      "id": "ops_1781199301343_olnd0p",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:35:01.343Z"
+    },
+    {
+      "id": "ops_1781199300372_ix9ykr",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:35:00.371Z"
+    },
+    {
+      "id": "ops_1781199182668_42qmzw",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:33:02.000Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:33:02.668Z"
+    },
+    {
+      "id": "ops_1781199181335_piafg3",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:33:01.335Z"
+    },
+    {
+      "id": "ops_1781199125381_twqkrm",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:32:05.381Z"
+    },
+    {
+      "id": "ops_1781199123288_nshy9y",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781199120934",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T17:32:03.288Z"
+    },
+    {
+      "id": "ops_1781199122461_60modv",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T17:32:02.460Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:32:02.461Z"
+    },
+    {
+      "id": "ops_1781199120361_1b66f4",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:32:00.360Z"
+    },
+    {
+      "id": "ops_1781199120069_jn42x3",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:32:00.069Z"
+    },
+    {
+      "id": "ops_1781199062490_u2zqc1",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:31:02.018Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:31:02.490Z"
+    },
+    {
+      "id": "ops_1781199061332_xc1ll0",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:31:01.332Z"
+    },
+    {
+      "id": "ops_1781198945532_7wzgsy",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:29:05.531Z"
+    },
+    {
+      "id": "ops_1781198942587_xanlb2",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:29:01.857Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:29:02.587Z"
+    },
+    {
+      "id": "ops_1781198941321_co4zpr",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:29:01.321Z"
+    },
+    {
+      "id": "ops_1781198940370_y9hpll",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:29:00.369Z"
+    },
+    {
+      "id": "ops_1781198824940_hcybsx",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781198820926",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T17:27:04.940Z"
+    },
+    {
+      "id": "ops_1781198822844_bgtb1w",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T17:27:02.843Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:27:02.844Z"
+    },
+    {
+      "id": "ops_1781198822468_d9wd51",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:27:01.792Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:27:02.468Z"
+    },
+    {
+      "id": "ops_1781198821320_uwmzpv",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:27:01.320Z"
+    },
+    {
+      "id": "ops_1781198820068_kf5bib",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:27:00.068Z"
+    },
+    {
+      "id": "ops_1781198765582_znnped",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:26:05.582Z"
+    },
+    {
+      "id": "ops_1781198760365_xuyai4",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:26:00.361Z"
+    },
+    {
+      "id": "ops_1781198703789_8j1mxt",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:25:02.633Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:25:03.789Z"
+    },
+    {
+      "id": "ops_1781198701380_bsdlic",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:25:01.368Z"
+    },
+    {
+      "id": "ops_1781198585515_9sqeat",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:23:05.515Z"
+    },
+    {
+      "id": "ops_1781198582414_zah517",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:23:01.737Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:23:02.414Z"
+    },
+    {
+      "id": "ops_1781198581252_cmgbqb",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:23:01.252Z"
+    },
+    {
+      "id": "ops_1781198580344_e0ke4x",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:23:00.344Z"
+    },
+    {
+      "id": "ops_1781198523637_1yoruw",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781198520915",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T17:22:03.637Z"
+    },
+    {
+      "id": "ops_1781198522033_kt54sd",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T17:22:02.032Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:22:02.033Z"
+    },
+    {
+      "id": "ops_1781198520063_7owag8",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:22:00.063Z"
+    },
+    {
+      "id": "ops_1781198462447_4e9vsf",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:21:01.763Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:21:02.447Z"
+    },
+    {
+      "id": "ops_1781198461251_1s74m8",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:21:01.251Z"
+    },
+    {
+      "id": "ops_1781198405086_5plh5i",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:20:05.086Z"
+    },
+    {
+      "id": "ops_1781198400334_ryrmmi",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:20:00.334Z"
+    },
+    {
+      "id": "ops_1781198342426_t7e3c6",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:19:01.734Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:19:02.426Z"
+    },
+    {
+      "id": "ops_1781198341241_bng2tc",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:19:01.241Z"
+    },
+    {
+      "id": "ops_1781198226078_fj8sxo",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:17:06.078Z"
+    },
+    {
+      "id": "ops_1781198223671_97fi11",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781198220908",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T17:17:03.671Z"
+    },
+    {
+      "id": "ops_1781198223295_g705em",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T17:17:03.294Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:17:03.295Z"
+    },
+    {
+      "id": "ops_1781198222384_w2egmd",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:17:01.858Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:17:02.384Z"
+    },
+    {
+      "id": "ops_1781198221241_bnvja4",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:17:01.241Z"
+    },
+    {
+      "id": "ops_1781198220308_bul3sy",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:17:00.308Z"
+    },
+    {
+      "id": "ops_1781198220042_notsbg",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:17:00.042Z"
+    },
+    {
+      "id": "ops_1781198102394_qlt3df",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:15:01.919Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:15:02.394Z"
+    },
+    {
+      "id": "ops_1781198101240_yptrjp",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:15:01.240Z"
+    },
+    {
+      "id": "ops_1781198045058_ppvgmd",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:14:05.058Z"
+    },
+    {
+      "id": "ops_1781198040301_g6bt67",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:14:00.301Z"
+    },
+    {
+      "id": "ops_1781197982365_zy7jbe",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:13:01.867Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:13:02.365Z"
+    },
+    {
+      "id": "ops_1781197981235_ayt3s0",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:13:01.235Z"
+    },
+    {
+      "id": "ops_1781197923211_sn0ww5",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781197920905",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T17:12:03.211Z"
+    },
+    {
+      "id": "ops_1781197922779_wgoc4u",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T17:12:02.777Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:12:02.779Z"
+    },
+    {
+      "id": "ops_1781197920043_8k9jpn",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:12:00.043Z"
+    },
+    {
+      "id": "ops_1781197865271_wfm09z",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:11:05.271Z"
+    },
+    {
+      "id": "ops_1781197862376_aenqr3",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:11:01.926Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:11:02.376Z"
+    },
+    {
+      "id": "ops_1781197861234_xsfro7",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:11:01.234Z"
+    },
+    {
+      "id": "ops_1781197860292_apvr5t",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:11:00.292Z"
+    },
+    {
+      "id": "ops_1781197742507_egsxap",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "error",
+      "message": "UNKNOWN: unknown error, open 'C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\recruiting\\players.json'",
+      "details": {
+        "stack": "Error: UNKNOWN: unknown error, open 'C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\recruiting\\players.json'\n    at Object.writeFileSync (node:fs:2422:20)\n    at writeJson (C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\lib\\recruiting-store.js:48:6)\n    at savePlayersLocal (C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\lib\\recruiting-store.js:190:3)\n    at Object.upsertPlayer (C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\lib\\recruiting-store.js:290:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async syncBoardCommitsToPlayers (C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\lib\\on3-ingest.js:214:5)\n    at async runOn3Ingest (C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\lib\\on3-ingest.js:455:20)\n    at async Object.wra"
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T17:09:02.506Z"
+    },
+    {
+      "id": "ops_1781197741233_fbn74s",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:09:01.232Z"
+    },
+    {
+      "id": "ops_1781197685925_mb5dsy",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:08:05.925Z"
+    },
+    {
+      "id": "ops_1781197680299_36kzol",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:08:00.299Z"
+    },
+    {
+      "id": "ops_1781197624696_madrs1",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781197620903",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T17:07:04.696Z"
+    },
+    {
+      "id": "ops_1781197623368_uangsw",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T17:07:03.366Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:07:03.368Z"
+    },
+    {
+      "id": "ops_1781197623003_nd5zbr",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:07:01.768Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:07:03.003Z"
+    },
+    {
+      "id": "ops_1781197621230_fct4p9",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:07:01.230Z"
+    },
+    {
+      "id": "ops_1781197620077_2n6w0a",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:07:00.072Z"
+    },
+    {
+      "id": "ops_1781197506143_9wqd9i",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:05:06.143Z"
+    },
+    {
+      "id": "ops_1781197502655_0ycztt",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:05:01.801Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:05:02.655Z"
+    },
+    {
+      "id": "ops_1781197501223_2veb1p",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:05:01.223Z"
+    },
+    {
+      "id": "ops_1781197500281_oamhq6",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:05:00.281Z"
+    },
+    {
+      "id": "ops_1781197383989_732958",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:03:02.546Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:03:03.989Z"
+    },
+    {
+      "id": "ops_1781197381244_621q45",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:03:01.238Z"
+    },
+    {
+      "id": "ops_1781197326298_4ge16n",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T17:02:06.298Z"
+    },
+    {
+      "id": "ops_1781197323627_rm2q8o",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781197320902",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T17:02:03.627Z"
+    },
+    {
+      "id": "ops_1781197322463_f1v0nf",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T17:02:02.462Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:02:02.463Z"
+    },
+    {
+      "id": "ops_1781197320269_g9nj8k",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:02:00.268Z"
+    },
+    {
+      "id": "ops_1781197320018_vtwj7b",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:02:00.018Z"
+    },
+    {
+      "id": "ops_1781197262185_ag7jhw",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:01:01.724Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T17:01:02.185Z"
+    },
+    {
+      "id": "ops_1781197261211_r55w2p",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T17:01:01.211Z"
+    },
+    {
+      "id": "ops_1781197145154_c2g555",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:59:05.154Z"
+    },
+    {
+      "id": "ops_1781197142145_7m7n7b",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:59:01.694Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:59:02.145Z"
+    },
+    {
+      "id": "ops_1781197141207_pjet4s",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:59:01.207Z"
+    },
+    {
+      "id": "ops_1781197140284_e66mfc",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:59:00.284Z"
+    },
+    {
+      "id": "ops_1781197024513_tz5h86",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781197020899",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:57:04.513Z"
+    },
+    {
+      "id": "ops_1781197022764_tcvqww",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:57:01.979Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:57:02.764Z"
+    },
+    {
+      "id": "ops_1781197021961_xgp2bm",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T16:57:01.959Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:57:01.961Z"
+    },
+    {
+      "id": "ops_1781197021207_g6rpc8",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:57:01.207Z"
+    },
+    {
+      "id": "ops_1781197020014_g4jbcf",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:57:00.014Z"
+    },
+    {
+      "id": "ops_1781196965518_fs7s3k",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:56:05.518Z"
+    },
+    {
+      "id": "ops_1781196960264_s56bmz",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:56:00.264Z"
+    },
+    {
+      "id": "ops_1781196902337_51avv5",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:55:01.701Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:55:02.337Z"
+    },
+    {
+      "id": "ops_1781196901202_gwmq4v",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:55:01.202Z"
+    },
+    {
+      "id": "ops_1781196785680_ok1qkn",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:53:05.680Z"
+    },
+    {
+      "id": "ops_1781196782312_qun8od",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:53:01.765Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:53:02.312Z"
+    },
+    {
+      "id": "ops_1781196781180_lqba4b",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:53:01.180Z"
+    },
+    {
+      "id": "ops_1781196780282_xsqhki",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:53:00.282Z"
+    },
+    {
+      "id": "ops_1781196723390_mc7e19",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781196720895",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:52:03.390Z"
+    },
+    {
+      "id": "ops_1781196722181_9n3te1",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T16:52:02.180Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:52:02.181Z"
+    },
+    {
+      "id": "ops_1781196720013_d4fkth",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:52:00.013Z"
+    },
+    {
+      "id": "ops_1781196662331_1f808y",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:51:01.761Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:51:02.331Z"
+    },
+    {
+      "id": "ops_1781196661178_td1rlv",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:51:01.177Z"
+    },
+    {
+      "id": "ops_1781196604873_617wxs",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:50:04.873Z"
+    },
+    {
+      "id": "ops_1781196600261_j6pxhk",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:50:00.261Z"
+    },
+    {
+      "id": "ops_1781196542392_qqgv8c",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:49:01.788Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:49:02.392Z"
+    },
+    {
+      "id": "ops_1781196541171_cvt50u",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:49:01.171Z"
+    },
+    {
+      "id": "ops_1781196425910_8v5vte",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:47:05.910Z"
+    },
+    {
+      "id": "ops_1781196424478_k15shv",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781196420889",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:47:04.478Z"
+    },
+    {
+      "id": "ops_1781196423447_z52jy5",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T16:47:03.446Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:47:03.447Z"
+    },
+    {
+      "id": "ops_1781196422675_owj3ml",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:47:01.794Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:47:02.675Z"
+    },
+    {
+      "id": "ops_1781196421154_0096ye",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:47:01.154Z"
+    },
+    {
+      "id": "ops_1781196420245_v03f6s",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:47:00.245Z"
+    },
+    {
+      "id": "ops_1781196420066_7imccn",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:47:00.063Z"
+    },
+    {
+      "id": "ops_1781196302433_5765c1",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:45:01.813Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:45:02.433Z"
+    },
+    {
+      "id": "ops_1781196301224_46alxb",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:45:01.220Z"
+    },
+    {
+      "id": "ops_1781196244670_1mejao",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:44:04.670Z"
+    },
+    {
+      "id": "ops_1781196240151_8f24bi",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:44:00.151Z"
+    },
+    {
+      "id": "ops_1781196182143_khpri0",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:43:01.665Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:43:02.143Z"
+    },
+    {
+      "id": "ops_1781196181130_fq2kxu",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:43:01.130Z"
+    },
+    {
+      "id": "ops_1781196126934_2s0zit",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781196120800",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:42:06.934Z"
+    },
+    {
+      "id": "ops_1781196122202_02g5qz",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T16:42:02.200Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:42:02.202Z"
+    },
+    {
+      "id": "ops_1781196120009_mdfdxe",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:42:00.009Z"
+    },
+    {
+      "id": "ops_1781196066737_9xnfo0",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:41:06.737Z"
+    },
+    {
+      "id": "ops_1781196062958_u6qcaq",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:41:01.596Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:41:02.958Z"
+    },
+    {
+      "id": "ops_1781196061115_u5zbfl",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:41:01.115Z"
+    },
+    {
+      "id": "ops_1781196060171_jlzxo4",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:41:00.164Z"
+    },
+    {
+      "id": "ops_1781195941808_9eyu0b",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:39:01.224Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:39:01.808Z"
+    },
+    {
+      "id": "ops_1781195940858_dajwqk",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:39:00.858Z"
+    },
+    {
+      "id": "ops_1781195886397_dtge61",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:38:06.397Z"
+    },
+    {
+      "id": "ops_1781195880213_4vf5xc",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:38:00.208Z"
+    },
+    {
+      "id": "ops_1781195823843_d44847",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781195820795",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:37:03.843Z"
+    },
+    {
+      "id": "ops_1781195823348_yhaszl",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:37:02.493Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:37:03.348Z"
+    },
+    {
+      "id": "ops_1781195821967_v7s17e",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T16:37:01.966Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:37:01.967Z"
+    },
+    {
+      "id": "ops_1781195820852_5t21xl",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:37:00.852Z"
+    },
+    {
+      "id": "ops_1781195820007_b8mrf5",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:37:00.004Z"
+    },
+    {
+      "id": "ops_1781195705807_uic9bs",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:35:05.807Z"
+    },
+    {
+      "id": "ops_1781195702016_d4xp73",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:35:01.486Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:35:02.016Z"
+    },
+    {
+      "id": "ops_1781195700851_cbeg5r",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:35:00.851Z"
+    },
+    {
+      "id": "ops_1781195700121_dbgx77",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:35:00.121Z"
+    },
+    {
+      "id": "ops_1781195582206_61oa5h",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:33:01.689Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:33:02.206Z"
+    },
+    {
+      "id": "ops_1781195580851_2gt1cf",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:33:00.851Z"
+    },
+    {
+      "id": "ops_1781195525941_5smx6z",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:32:05.941Z"
+    },
+    {
+      "id": "ops_1781195523754_kwhvjj",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781195520787",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:32:03.754Z"
+    },
+    {
+      "id": "ops_1781195523194_n1yxw0",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T16:32:03.193Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:32:03.194Z"
+    },
+    {
+      "id": "ops_1781195520116_skmfsf",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:32:00.116Z"
+    },
+    {
+      "id": "ops_1781195519976_323irz",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:31:59.976Z"
+    },
+    {
+      "id": "ops_1781195461959_rq38xd",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:31:01.339Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:31:01.959Z"
+    },
+    {
+      "id": "ops_1781195460833_25ttzu",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:31:00.833Z"
+    },
+    {
+      "id": "ops_1781195344885_oy33x1",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:29:04.885Z"
+    },
+    {
+      "id": "ops_1781195341730_l435zh",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:29:01.295Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:29:01.730Z"
+    },
+    {
+      "id": "ops_1781195340821_aewdg3",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:29:00.821Z"
+    },
+    {
+      "id": "ops_1781195340104_nvdwjl",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:29:00.104Z"
+    },
+    {
+      "id": "ops_1781195223560_2nyln4",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781195220445",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:27:03.560Z"
+    },
+    {
+      "id": "ops_1781195222436_hmqioq",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T16:27:02.435Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:27:02.436Z"
+    },
+    {
+      "id": "ops_1781195221820_p5fptx",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:27:01.322Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:27:01.820Z"
+    },
+    {
+      "id": "ops_1781195220819_j0cgai",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:27:00.819Z"
+    },
+    {
+      "id": "ops_1781195219976_vovs7l",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:26:59.976Z"
+    },
+    {
+      "id": "ops_1781195164750_pbe1lo",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:26:04.750Z"
+    },
+    {
+      "id": "ops_1781195160095_x0eefu",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:26:00.095Z"
+    },
+    {
+      "id": "ops_1781195102234_msuqxm",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:25:01.478Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:25:02.234Z"
+    },
+    {
+      "id": "ops_1781195100817_oan9pl",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:25:00.817Z"
+    },
+    {
+      "id": "ops_1781194984582_kyj0ww",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:23:04.582Z"
+    },
+    {
+      "id": "ops_1781194981774_6fomzq",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:23:01.309Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:23:01.774Z"
+    },
+    {
+      "id": "ops_1781194980808_hjscbr",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:23:00.808Z"
+    },
+    {
+      "id": "ops_1781194980089_md9d42",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:23:00.089Z"
+    },
+    {
+      "id": "ops_1781194922916_rh5y7a",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781194920431",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:22:02.916Z"
+    },
+    {
+      "id": "ops_1781194921822_er39un",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T16:22:01.821Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:22:01.822Z"
+    },
+    {
+      "id": "ops_1781194919980_55s6ks",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:21:59.980Z"
+    },
+    {
+      "id": "ops_1781194862156_zy10m4",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:21:01.568Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:21:02.156Z"
+    },
+    {
+      "id": "ops_1781194860809_l4dt90",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:21:00.809Z"
+    },
+    {
+      "id": "ops_1781194804927_qfuil3",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:20:04.927Z"
+    },
+    {
+      "id": "ops_1781194800080_skb9fh",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:20:00.080Z"
+    },
+    {
+      "id": "ops_1781194741711_99hpzw",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:19:01.264Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:19:01.711Z"
+    },
+    {
+      "id": "ops_1781194740798_znwdco",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:19:00.798Z"
+    },
+    {
+      "id": "ops_1781194626247_tej4xt",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:17:06.246Z"
+    },
+    {
+      "id": "ops_1781194623848_4g46nh",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781194620429",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:17:03.848Z"
+    },
+    {
+      "id": "ops_1781194623274_jftjgw",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T16:17:03.273Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:17:03.274Z"
+    },
+    {
+      "id": "ops_1781194622333_kjtsa8",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:17:01.769Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:17:02.333Z"
+    },
+    {
+      "id": "ops_1781194620785_u2edog",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:17:00.785Z"
+    },
+    {
+      "id": "ops_1781194620072_5xo9up",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:17:00.072Z"
+    },
+    {
+      "id": "ops_1781194619989_h16rrv",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:16:59.989Z"
+    },
+    {
+      "id": "ops_1781194548631_i6zyjd",
+      "subsystem": "product-intel",
+      "status": "success",
+      "message": "Product Intelligence scored 100/100",
+      "details": {
+        "runId": "qa_1781194320369",
+        "overall": 100,
+        "fixQueue": 0
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:15:48.631Z"
+    },
+    {
+      "id": "ops_1781194502553_soq69u",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:15:01.643Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:15:02.553Z"
+    },
+    {
+      "id": "ops_1781194500774_kdxhej",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:15:00.774Z"
+    },
+    {
+      "id": "ops_1781194444991_s36raq",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:14:04.991Z"
+    },
+    {
+      "id": "ops_1781194440010_o4md9m",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:14:00.010Z"
+    },
+    {
+      "id": "ops_1781194381817_h10iun",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:13:01.383Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:13:01.817Z"
+    },
+    {
+      "id": "ops_1781194380764_gicq5h",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:13:00.764Z"
+    },
+    {
+      "id": "ops_1781194323614_bhsgna",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (43 checks)",
+      "details": {
+        "runId": "qa_1781194320369",
+        "summary": {
+          "total": 43,
+          "passed": 43,
+          "failed": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:12:03.614Z"
+    },
+    {
+      "id": "ops_1781194323017_5qpfi0",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T16:12:03.017Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:12:03.017Z"
+    },
+    {
+      "id": "ops_1781194319967_imezy2",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:11:59.967Z"
+    },
+    {
+      "id": "ops_1781194264627_fl23q1",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:11:04.627Z"
+    },
+    {
+      "id": "ops_1781194261671_24hj3y",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:11:01.236Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:11:01.671Z"
+    },
+    {
+      "id": "ops_1781194260755_f2cd2g",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:11:00.755Z"
+    },
+    {
+      "id": "ops_1781194260006_usq9x5",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:11:00.006Z"
+    },
+    {
+      "id": "ops_1781194141751_8hayp2",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:09:01.245Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:09:01.751Z"
+    },
+    {
+      "id": "ops_1781194140745_2zfpxa",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:09:00.745Z"
+    },
+    {
+      "id": "ops_1781194084876_orjz1s",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:08:04.876Z"
+    },
+    {
+      "id": "ops_1781194079994_sudpin",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:07:59.994Z"
+    },
+    {
+      "id": "ops_1781194023563_y0yb8i",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (2)",
+      "details": {
+        "runId": "qa_1781194020363",
+        "summary": {
+          "total": 43,
+          "passed": 41,
+          "failed": 2
+        },
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 33,
+                "duplicate": 34
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:07:03.563Z"
+    },
+    {
+      "id": "ops_1781194022375_cd9sdk",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T16:07:02.374Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:07:02.375Z"
+    },
+    {
+      "id": "ops_1781194021804_3z4y7n",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:07:01.278Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:07:01.804Z"
+    },
+    {
+      "id": "ops_1781194020737_obcnk8",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:07:00.737Z"
+    },
+    {
+      "id": "ops_1781194019967_hre86l",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:06:59.967Z"
+    },
+    {
+      "id": "ops_1781193905928_zjifku",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:05:05.928Z"
+    },
+    {
+      "id": "ops_1781193901881_aq7eql",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:05:01.223Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:05:01.881Z"
+    },
+    {
+      "id": "ops_1781193900735_730skc",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:05:00.735Z"
+    },
+    {
+      "id": "ops_1781193899992_8zlrhv",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:04:59.992Z"
+    },
+    {
+      "id": "ops_1781193781828_yxjcj8",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:03:01.207Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:03:01.828Z"
+    },
+    {
+      "id": "ops_1781193780726_l1viye",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:03:00.726Z"
+    },
+    {
+      "id": "ops_1781193725828_acwm9d",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T16:02:05.828Z"
+    },
+    {
+      "id": "ops_1781193723201_yeukwr",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (2)",
+      "details": {
+        "runId": "qa_1781193720359",
+        "summary": {
+          "total": 43,
+          "passed": 41,
+          "failed": 2
+        },
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 33,
+                "duplicate": 34
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T16:02:03.201Z"
+    },
+    {
+      "id": "ops_1781193722391_mdkrrx",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T16:02:02.390Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:02:02.391Z"
+    },
+    {
+      "id": "ops_1781193719986_gs5a30",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:01:59.986Z"
+    },
+    {
+      "id": "ops_1781193719974_uyvbr1",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:01:59.974Z"
+    },
+    {
+      "id": "ops_1781193663400_a2j5fv",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T16:01:02.891Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T16:01:03.400Z"
+    },
+    {
+      "id": "ops_1781193660713_w40pec",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T16:01:00.713Z"
+    },
+    {
+      "id": "ops_1781193545337_oj3a1b",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T15:59:05.337Z"
+    },
+    {
+      "id": "ops_1781193541548_9rqf3h",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T15:59:01.045Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T15:59:01.548Z"
+    },
+    {
+      "id": "ops_1781193540712_kxbaa9",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:59:00.712Z"
+    },
+    {
+      "id": "ops_1781193540066_zenev7",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:59:00.057Z"
+    },
+    {
+      "id": "ops_1781193423842_fzw0sj",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (2)",
+      "details": {
+        "runId": "qa_1781193420000",
+        "summary": {
+          "total": 43,
+          "passed": 41,
+          "failed": 2
+        },
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 33,
+                "duplicate": 34
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T15:57:03.842Z"
+    },
+    {
+      "id": "ops_1781193422800_ck33h5",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T15:57:02.799Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T15:57:02.800Z"
+    },
+    {
+      "id": "ops_1781193422009_g8dnly",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T15:57:00.951Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T15:57:02.009Z"
+    },
+    {
+      "id": "ops_1781193420563_l52t1l",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:57:00.563Z"
+    },
+    {
+      "id": "ops_1781193419958_dlzin7",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:56:59.958Z"
+    },
+    {
+      "id": "ops_1781193364837_6rjsah",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T15:56:04.837Z"
+    },
+    {
+      "id": "ops_1781193359959_9qfe8a",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:55:59.959Z"
+    },
+    {
+      "id": "ops_1781193302683_0tu98j",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T15:55:01.363Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T15:55:02.683Z"
+    },
+    {
+      "id": "ops_1781193300569_4cb2jv",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:55:00.569Z"
+    },
+    {
+      "id": "ops_1781193185557_jdhvmc",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T15:53:05.557Z"
+    },
+    {
+      "id": "ops_1781193181952_solrct",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T15:53:01.283Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T15:53:01.952Z"
+    },
+    {
+      "id": "ops_1781193180547_bjc30q",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:53:00.547Z"
+    },
+    {
+      "id": "ops_1781193179952_gcbnqb",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:52:59.952Z"
+    },
+    {
+      "id": "ops_1781193127299_8t60jq",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (2)",
+      "details": {
+        "runId": "qa_1781193119997",
+        "summary": {
+          "total": 43,
+          "passed": 41,
+          "failed": 2
+        },
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 31,
+                "duplicate": 32
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T15:52:07.299Z"
+    },
+    {
+      "id": "ops_1781193122019_y3gd14",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T15:52:02.017Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T15:52:02.019Z"
+    },
+    {
+      "id": "ops_1781193119942_uh0yg0",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:51:59.942Z"
+    },
+    {
+      "id": "ops_1781193061009_1o7z3r",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T15:51:00.303Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T15:51:01.009Z"
+    },
+    {
+      "id": "ops_1781193059954_v8axnb",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:50:59.954Z"
+    },
+    {
+      "id": "ops_1781193004963_njuyg6",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T15:50:04.963Z"
+    },
+    {
+      "id": "ops_1781192999952_e1hdv6",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:49:59.952Z"
+    },
+    {
+      "id": "ops_1781192942777_b6mypn",
+      "subsystem": "cron:gm2-auto-repair",
+      "status": "success",
+      "message": "gm2-auto-repair completed",
+      "details": {
+        "summary": {
+          "ok": true
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T15:49:02.777Z"
+    },
+    {
+      "id": "ops_1781192941850_s6a6ls",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "success",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T15:49:01.419Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T15:49:01.850Z"
+    },
+    {
+      "id": "ops_1781192939975_i6avq9",
+      "subsystem": "cron:gm2-auto-repair",
+      "status": "started",
+      "message": "gm2-auto-repair started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:48:59.975Z"
+    },
+    {
+      "id": "ops_1781192939942_j3jqso",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:48:59.942Z"
+    },
+    {
+      "id": "ops_1781192909973_kdiloo",
+      "subsystem": "cron:article-engine",
+      "status": "success",
+      "message": "article-engine-weekly-draft completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "reason": "weekly_cap_reached"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T15:48:29.973Z"
+    },
+    {
+      "id": "ops_1781192909969_wjk0o8",
+      "subsystem": "cron:article-engine",
+      "status": "started",
+      "message": "article-engine-weekly-draft started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:48:29.969Z"
+    },
+    {
+      "id": "ops_1781192881922_43co30",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "success",
+      "message": "beat-late-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T15:48:01.921Z"
+        }
+      },
+      "counts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "timestamp": "2026-06-11T15:48:01.922Z"
+    },
+    {
+      "id": "ops_1781192879948_3wqu4r",
+      "subsystem": "cron:beat-late-ingest",
+      "status": "started",
+      "message": "beat-late-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:47:59.948Z"
+    },
+    {
+      "id": "ops_1781192867742_6tzutg",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (2)",
+      "details": {
+        "runId": "qa_1781192864978",
+        "summary": {
+          "total": 43,
+          "passed": 41,
+          "failed": 2
+        },
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 33,
+                "duplicate": 34
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T15:47:47.742Z"
+    },
+    {
+      "id": "ops_1781192845919_jul4jw",
+      "subsystem": "cron:live-refresh",
+      "status": "success",
+      "message": "live-refresh completed",
+      "details": {
+        "summary": null
+      },
+      "counts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T15:47:25.919Z"
+    },
+    {
+      "id": "ops_1781192839951_xo5dpa",
+      "subsystem": "cron:live-refresh",
+      "status": "started",
+      "message": "live-refresh started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:47:19.951Z"
+    },
+    {
+      "id": "ops_1781192836271_gwpsa2",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "warning",
+      "message": "recruiting-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T15:47:15.485Z"
+        }
+      },
+      "counts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 1
+      },
+      "timestamp": "2026-06-11T15:47:16.271Z"
+    },
+    {
+      "id": "ops_1781192834941_b5gy90",
+      "subsystem": "cron:recruiting-ingest",
+      "status": "started",
+      "message": "recruiting-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:47:14.941Z"
+    },
+    {
+      "id": "ops_1781192832844_7858i6",
+      "subsystem": "cron:portal-ingest",
+      "status": "success",
+      "message": "portal-ingest completed",
+      "details": {
+        "summary": {
+          "ok": true,
+          "count": 28
+        }
+      },
+      "counts": {
+        "processed": 28,
+        "skipped": null,
+        "errors": null
+      },
+      "timestamp": "2026-06-11T15:47:12.844Z"
+    },
+    {
+      "id": "ops_1781192831975_guuyvl",
+      "subsystem": "cron:portal-ingest",
+      "status": "started",
+      "message": "portal-ingest started",
+      "details": null,
+      "counts": null,
+      "timestamp": "2026-06-11T15:47:11.975Z"
+    },
+    {
+      "id": "ops_1781187873459_34kdhz",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (9)",
+      "details": {
+        "runId": "qa_1781187870655",
+        "summary": {
+          "total": 43,
+          "passed": 34,
+          "failed": 9
+        },
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 34,
+                "duplicate": 35
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 503,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 503,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 503,
+                "error": null
+              },
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "pages:home:desktop",
+            "module": "pages",
+            "message": "Missing markers on / (desktop): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal",
+            "url": "https://gatorvaultinsider.com/",
+            "repro": "Load https://gatorvaultinsider.com/ on desktop; verify deployed build includes required UI hooks",
+            "details": {
+              "viewport": "desktop",
+              "missing": [
+                "gvOpenVerifiedSource",
+                "gv-film-source",
+                "gv-verified-source-modal"
+              ]
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:home:mobile",
+            "module": "pages",
+            "message": "Missing markers on / (mobile): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal",
+            "url": "https://gatorvaultinsider.com/",
+            "repro": "Load https://gatorvaultinsider.com/ on mobile; verify deployed build includes required UI hooks",
+            "details": {
+              "viewport": "mobile",
+              "missing": [
+                "gvOpenVerifiedSource",
+                "gv-film-source",
+                "gv-verified-source-modal"
+              ]
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:admin-hub:desktop",
+            "module": "pages",
+            "message": "Missing markers on /admin (desktop): admin-hub-core",
+            "url": "https://gatorvaultinsider.com/admin",
+            "repro": "Load https://gatorvaultinsider.com/admin on desktop; verify deployed build includes required UI hooks",
+            "details": {
+              "viewport": "desktop",
+              "missing": [
+                "admin-hub-core"
+              ]
+            },
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T14:24:33.459Z"
+    },
+    {
+      "id": "ops_1781187807293_v8bx9g",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (13)",
+      "details": {
+        "runId": "qa_1781187804086",
+        "summary": {
+          "total": 43,
+          "passed": 30,
+          "failed": 13
+        },
+        "errors": [
+          {
+            "id": "api:film-room-lesson",
+            "module": "api",
+            "message": "HTTP 403 https://gatorvault-api.onrender.com/api/film-room/lesson/frl00008-0000-4000-8000-000000000008",
+            "url": "https://gatorvault-api.onrender.com/api/film-room/lesson/frl00008-0000-4000-8000-000000000008",
+            "repro": "QA check failed: Film Room lesson detail",
+            "details": {
+              "status": 403,
+              "body": {
+                "ok": false,
+                "error": "Film tier required",
+                "locked": true
+              }
+            },
+            "screenshot": null
+          },
+          {
+            "id": "content:team-module",
+            "module": "content",
+            "message": "Team module missing: Billy Napier, depth chart, Coaching Staff",
+            "url": null,
+            "repro": "QA check failed: Team tab & coaching bios text",
+            "details": null,
+            "screenshot": null
+          },
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "1 duplicate feed item(s)",
+            "url": null,
+            "repro": "Open Latest Updates; check live-aggregator dedup rules",
+            "details": [
+              {
+                "key": "/player/jaydee-lane",
+                "first": 34,
+                "duplicate": 35
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "7 broken Film Room source URL(s)",
+            "url": null,
+            "repro": "QA check failed: Film Room source URLs",
+            "details": [
+              {
+                "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                "status": 503,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                "status": 503,
+                "error": null
+              },
+              {
+                "url": "https://www.nfl.com/combine/ol-pass-protection",
+                "status": 503,
+                "error": null
+              },
+              {
+                "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                "status": 404,
+                "error": null
+              },
+              {
+                "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                "status": 404,
+                "error": null
+              }
+            ],
+            "screenshot": null
+          },
+          {
+            "id": "integrity:roster-images",
+            "module": "integrity",
+            "message": "100% roster missing headshots",
+            "url": null,
+            "repro": "QA check failed: Roster headshot coverage",
+            "details": {
+              "total": 111,
+              "missing": 111
+            },
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T14:23:27.293Z"
+    },
+    {
+      "id": "ops_1781136495773_gdj0ys",
+      "subsystem": "autoposter",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T00:08:15.773Z"
+    },
+    {
+      "id": "ops_1781136495770_uj7rie",
+      "subsystem": "autoposter",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T00:08:15.770Z"
+    },
+    {
+      "id": "ops_1781136495761_i46frw",
+      "subsystem": "autoposter:test",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "no_identifiable_player",
+        "triggerPhrase": "schools I'm visiting this weekend",
+        "source": null
+      },
+      "counts": null,
+      "timestamp": "2026-06-11T00:08:15.761Z"
+    },
+    {
+      "id": "ops_1781120254218_dbx426",
+      "subsystem": "autoposter",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T19:37:34.218Z"
+    },
+    {
+      "id": "ops_1781120254217_40qz7l",
+      "subsystem": "autoposter",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T19:37:34.217Z"
+    },
+    {
+      "id": "ops_1781120254214_zvpgsg",
+      "subsystem": "autoposter:test",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "no_identifiable_player",
+        "triggerPhrase": "schools I'm visiting this weekend",
+        "source": null
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T19:37:34.213Z"
+    },
+    {
+      "id": "ops_1781120205651_bd1k9u",
+      "subsystem": "autoposter:beat-writer",
+      "status": "skipped",
+      "message": "beat post skipped: no_recruiting_signal",
+      "details": {
+        "reason": "no_recruiting_signal",
+        "category": "filtered",
+        "handle": "Hayesfawcett3",
+        "writer": "Hayes Fawcett",
+        "postId": null,
+        "url": null,
+        "textPreview": "Amare Patterson has cancelled his OV to Florida and will visit South Carolina this weekend.",
+        "publishedAt": "2026-06-05T16:00:00.000Z"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T19:36:45.650Z"
+    },
+    {
+      "id": "ops_1781120011168_2ytvtq",
+      "subsystem": "autoposter:beat-writer",
+      "status": "skipped",
+      "message": "beat post skipped: no_recruiting_signal",
+      "details": {
+        "reason": "no_recruiting_signal",
+        "category": "filtered",
+        "handle": "Hayesfawcett3",
+        "writer": "Hayes Fawcett",
+        "postId": null,
+        "url": null,
+        "textPreview": "Amare Patterson has cancelled his OV to Florida and will visit South Carolina this weekend.",
+        "publishedAt": "2026-06-05T16:00:00.000Z"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T19:33:31.166Z"
+    },
+    {
+      "id": "ops_1781116332079_f3z9kb",
+      "subsystem": "recruiting:auto-resolution",
+      "status": "needs_resolution",
+      "message": "Auto-resolution incomplete — missing: position, rating, school, classYear",
+      "details": {
+        "missingFields": [
+          "position",
+          "rating",
+          "school",
+          "classYear"
+        ],
+        "playerName": "Xy Zq",
+        "playerSlug": "xy-zq",
+        "fingerprint": null,
+        "source": null,
+        "detail": "visiting soon"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T18:32:12.079Z"
+    },
+    {
+      "id": "ops_1781116330969_yr23ia",
+      "subsystem": "autoposter",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T18:32:10.969Z"
+    },
+    {
+      "id": "ops_1781116330967_de9loe",
+      "subsystem": "autoposter",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T18:32:10.967Z"
+    },
+    {
+      "id": "ops_1781116330964_nqeq63",
+      "subsystem": "autoposter:test",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "no_identifiable_player",
+        "triggerPhrase": "schools I'm visiting this weekend",
+        "source": null
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T18:32:10.963Z"
+    },
+    {
+      "id": "ops_1781115437577_tehiel",
+      "subsystem": "autoposter",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T18:17:17.577Z"
+    },
+    {
+      "id": "ops_1781115437569_amfh3l",
+      "subsystem": "autoposter",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T18:17:17.567Z"
+    },
+    {
+      "id": "ops_1781115437300_577crh",
+      "subsystem": "recruiting:auto-resolution",
+      "status": "needs_resolution",
+      "message": "Auto-resolution incomplete — missing: position, rating, school, classYear",
+      "details": {
+        "missingFields": [
+          "position",
+          "rating",
+          "school",
+          "classYear"
+        ],
+        "playerName": "Xy Zq",
+        "playerSlug": "xy-zq",
+        "fingerprint": null,
+        "source": null,
+        "detail": "visiting soon"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T18:17:17.300Z"
+    },
+    {
+      "id": "ops_1781110104262_y3tsy7",
+      "subsystem": "autoposter",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T16:48:24.262Z"
+    },
+    {
+      "id": "ops_1781110104254_gluwsv",
+      "subsystem": "autoposter",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T16:48:24.253Z"
+    },
+    {
+      "id": "ops_1781109865434_feyj1f",
+      "subsystem": "autoposter",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T16:44:25.434Z"
+    },
+    {
+      "id": "ops_1781109865421_5sbybj",
+      "subsystem": "autoposter",
+      "status": "skipped",
+      "message": "non-player intel",
+      "details": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "counts": null,
+      "timestamp": "2026-06-10T16:44:25.420Z"
+    }
+  ]
 }

@@ -3,6 +3,7 @@
  */
 const fs = require('fs');
 const patches = require('./self-runner-patches');
+const templates = require('./self-runner-patch-templates');
 const engine = require('../visual-integrity/visual-integrity-engine');
 
 function nextId(seq) {
@@ -185,16 +186,70 @@ function buildHtmlHookPatch(issue) {
 }
 
 function buildCssTokenPatch(issue) {
+  const checkId = issue.checkId || '';
   const tokens = ['--gv-team-card-bg', '--gv-team-radius', '--gv-team-space-4', '--gv-team-title', '--gv-team-body'];
+  const edits = [{ file: 'css/gv-team.css', type: 'ensure-css-tokens', tokens }];
+
+  if (/layout-overflow|panel-clipping|overflow/.test(checkId)) {
+    edits.push({
+      file: 'css/gv-team.css',
+      type: 'append-if-missing',
+      marker: 'self-runner: modal overflow guards',
+      text: patches.MODAL_OVERFLOW_CSS_SNIPPET
+    });
+  }
+
   return {
     patchType: 'css-token',
-    edits: [{ file: 'css/gv-team.css', type: 'ensure-css-tokens', tokens }],
+    edits,
     patchPreview: {
       file: 'css/gv-team.css',
-      before: 'missing team tokens',
-      after: tokens.join(', ')
+      before: 'missing team tokens / overflow guards',
+      after: tokens.join(', ') + ' + modal overflow guards'
     },
-    suggestedFix: issue.suggestedFix || 'Define --gv-team-* design tokens in css/gv-team.css'
+    suggestedFix:
+      issue.suggestedFix ||
+      'Define --gv-team-* tokens and modal overflow guards (min-height:0, overflow-wrap) in css/gv-team.css'
+  };
+}
+
+function buildTeamContentPatch(issue, checkDetails) {
+  const details = checkDetails?.details || issue.details || [];
+  const edits = [];
+  const preview = { file: patches.TEAM_OVERVIEW_FILES.cards, changes: [] };
+
+  if (issue.checkId === 'integrity:team-history-structure' || issue.checkId === 'content:team-module') {
+    edits.push({
+      file: patches.TEAM_OVERVIEW_FILES.cards,
+      type: 'verify-team-eras',
+      requiredEras: ['era-70s80s', 'era-90s', 'era-2000s', 'era-2010s', 'era-2020s']
+    });
+    preview.changes.push({ note: 'Verify 5 ERAS with coaching, milestones, schemes — Spurrier only in era-90s' });
+  }
+
+  (Array.isArray(details) ? details : []).forEach((d) => {
+    if (d.eraId && d.issue === 'spurrier_in_70s_era') {
+      edits.push({ file: patches.TEAM_OVERVIEW_FILES.cards, type: 'remove-spurrier-from-70s-era' });
+      preview.changes.push({ eraId: d.eraId, fix: 'remove Spurrier references from 70s–80s era' });
+    }
+    if (d.missing && d.section === 'coachingStaff') {
+      edits.push({ file: 'data/coaching-staff.json', type: 'verify-coach', name: d.missing });
+      preview.changes.push({ coach: d.missing });
+    }
+  });
+
+  if (!edits.length) {
+    edits.push({ file: patches.TEAM_OVERVIEW_FILES.cards, type: 'verify-team-eras' });
+    preview.changes.push({ note: 'Review gv-team-mobile.js ERAS + coaching-staff.json' });
+  }
+
+  return {
+    patchType: 'team-content',
+    edits,
+    patchPreview: preview,
+    suggestedFix:
+      issue.suggestedFix ||
+      'Update gv-team-mobile.js ERAS and data/coaching-staff.json — all sections populated'
   };
 }
 
@@ -285,29 +340,127 @@ function buildComponentVariantPatch(issue, checkDetails) {
   };
 }
 
+function enrichWithTemplate(built, issue, checkDetails) {
+  const tmpl = templates.applyTemplate(issue, checkDetails);
+  if (!tmpl) return built;
+
+  const diff0 = tmpl.diff[0] || {};
+  return {
+    ...built,
+    patchType: tmpl.patchType,
+    suggestedFix: built.suggestedFix || tmpl.description,
+    patchPreview: {
+      ...built.patchPreview,
+      file: built.patchPreview?.file || tmpl.files[0],
+      files: tmpl.files,
+      diff: tmpl.diff,
+      before: diff0.before || built.patchPreview?.before,
+      after: diff0.after || built.patchPreview?.after
+    },
+    template: {
+      ruleId: tmpl.ruleId,
+      category: tmpl.category,
+      classification: tmpl.classification,
+      safetyRules: tmpl.safetyRules,
+      diff: tmpl.diff
+    },
+    testPlan: tmpl.testPlan,
+    qaSteps: tmpl.qaSteps,
+    rollbackPlan: tmpl.rollbackPlan
+  };
+}
+
+function editsFromTemplate(tmpl, issue) {
+  const ctx = tmpl.context;
+  const file = ctx.file || tmpl.files[0];
+
+  switch (tmpl.patchType) {
+    case 'layout-overflow':
+    case 'panel-layering':
+      return [
+        {
+          file: 'css/gv-team.css',
+          type: 'append-if-missing',
+          marker: 'self-runner: modal overflow guards',
+          text: patches.MODAL_OVERFLOW_CSS_SNIPPET
+        }
+      ];
+    case 'background-theme':
+      return [{ file: 'index.html', type: 'ensure-team-shell', regionIds: ['vpane-team', 'vpane-mteam'] }];
+    case 'missing-content':
+    case 'ordering-fix':
+    case 'html-hook':
+      return [{ file: file.replace(/^\//, ''), type: 'verify-hooks', checkId: issue.checkId }];
+    case 'autoposter-dedup':
+    case 'similarity-filter':
+      return [{ file: 'data/live/feed-items.json', type: 'dedupe-feed' }];
+    case 'recruiting-board-sync':
+      return [{ file: 'data/recruiting/board.json', type: 'verify-json', checkId: issue.checkId }];
+    case 'roster-sync':
+      return [{ file: 'data/roster/players.json', type: 'verify-json', checkId: issue.checkId }];
+    case 'api-latency':
+      return [{ file: 'lib/live-routes.js', type: 'verify-api-cache', endpoint: ctx.endpoint }];
+    case 'film-source-url':
+      return [{ file: 'data/film-room-knowledge', type: 'replace-broken-source-urls', replacements: [] }];
+    default:
+      return [{ file, type: 'template-guided', ruleId: tmpl.ruleId }];
+  }
+}
+
+function buildFromTemplate(issue, checkDetails) {
+  const tmpl = templates.applyTemplate(issue, checkDetails);
+  if (!tmpl) return null;
+
+  const edits = editsFromTemplate(tmpl, issue);
+  const diff0 = tmpl.diff[0] || {};
+
+  return enrichWithTemplate(
+    {
+      patchType: tmpl.patchType,
+      edits,
+      patchPreview: {
+        file: tmpl.files[0],
+        files: tmpl.files,
+        diff: tmpl.diff,
+        before: diff0.before,
+        after: diff0.after
+      },
+      suggestedFix: issue.suggestedFix || tmpl.description
+    },
+    issue,
+    checkDetails
+  );
+}
+
 function preparePatch(issue, checkDetails) {
   const patchType = patches.resolvePatchType(issue);
-  if (!patchType) return null;
+  if (!patchType && !templates.resolveRuleId(issue)) return null;
 
   const checkId = issue.checkId || '';
   let built = null;
 
   if (checkId.includes('component-variants')) {
     built = buildComponentVariantPatch(issue, checkDetails);
+  } else if (patchType === 'team-content') {
+    built = buildTeamContentPatch(issue, checkDetails);
   } else if (patchType === 'background-theme') {
     built = buildBackgroundThemePatch(issue, checkDetails);
-  } else if (patchType === 'feed-dedup') {
+  } else if (patchType === 'feed-dedup' || patchType === 'autoposter-dedup' || patchType === 'similarity-filter') {
     built = buildFeedDedupPatch(issue, checkDetails);
   } else if (patchType === 'film-source-url') {
     built = buildFilmSourcePatch(issue, checkDetails);
-  } else if (patchType === 'html-hook') {
+  } else if (patchType === 'html-hook' || patchType === 'missing-content') {
     built = buildHtmlHookPatch(issue);
-  } else if (patchType === 'css-token') {
+  } else if (patchType === 'css-token' || patchType === 'layout-overflow' || patchType === 'panel-layering') {
     built = buildCssTokenPatch(issue);
+  } else if (patchType === 'ordering-fix' || patchType === 'recruiting-board-sync' || patchType === 'roster-sync' || patchType === 'api-latency') {
+    built = buildFromTemplate(issue, checkDetails);
   }
 
+  if (!built) built = buildFromTemplate(issue, checkDetails);
   if (!built || !built.edits?.length) return null;
-  return built;
+
+  return enrichWithTemplate(built, issue, checkDetails);
 }
 
 function prepareFixProposal(issue, { seq, checkDetails } = {}) {
@@ -317,19 +470,34 @@ function prepareFixProposal(issue, { seq, checkDetails } = {}) {
   if (!patch) return null;
 
   const id = nextId(seq);
+  const piProposal = issue.proposal || null;
+
   return {
     id,
     sourceIssueId: issue.id,
     checkId: issue.checkId,
     title: issue.title || issue.id,
     module: issue.module,
+    classification: issue.classification || patch.template?.classification || null,
+    ruleId: issue.ruleId || patch.template?.ruleId || null,
+    category: issue.category || patch.template?.category || null,
     severity: issue.severity || 'high',
+    severityScore: issue.severityScore ?? null,
     impact: issue.impact || 'user-facing',
     status: 'pending',
     patchType: patch.patchType,
     patchPreview: patch.patchPreview,
     patch: { edits: patch.edits },
+    template: patch.template || null,
+    safetyRules: patch.template?.safetyRules || [],
     suggestedFix: patch.suggestedFix,
+    description: piProposal?.description || patch.suggestedFix,
+    filesToModify: piProposal?.filesToModify || patch.patchPreview?.files || [patch.patchPreview?.file].filter(Boolean),
+    codeDiff: patch.patchPreview?.diff || patch.template?.diff || null,
+    codeDiffHint: piProposal?.codeDiffHint || patch.patchPreview?.after || null,
+    testPlan: patch.testPlan || piProposal?.testPlan || [],
+    qaSteps: patch.qaSteps || piProposal?.qaSteps || [],
+    rollbackPlan: patch.rollbackPlan || piProposal?.rollbackPlan || null,
     repro: issue.repro || null,
     createdAt: new Date().toISOString(),
     approvedAt: null,
@@ -405,6 +573,56 @@ const RULE_EXPECTATIONS = {
     rule: 'Mobile Team tab theme',
     expected: 'Mobile Team tab shows gv-team-page dark theme without trial-expired overlay or promo markup in #vpane-mteam',
     defaultFile: 'index.html'
+  },
+  'mobile-behavior:navigation-back': {
+    rule: 'Mobile modal back navigation',
+    expected: 'Recruit/team profile modals use gvPushModalHistory; back gesture closes modal and restores prior pane',
+    defaultFile: 'index.html'
+  },
+  'integrity:filmroom-structure': {
+    rule: 'Film Room hub structure',
+    expected: 'index.html has film-room-hub-landing, GV_FILM_HUB_DESC, gvOpenFilmRoomHub for all 5 categories',
+    defaultFile: 'index.html'
+  },
+  'integrity:team-history-structure': {
+    rule: 'Program History era structure',
+    expected: 'gv-team-mobile.js defines 5 ERAS with coaching, milestones, schemes — Spurrier only in era-90s',
+    defaultFile: 'js/gv-team-mobile.js'
+  },
+  'integrity:missing-content': {
+    rule: 'Section content markers',
+    expected: 'All site sections (Team, Film Room, Recruiting, Latest Updates, Depth Chart, Roster) have required hooks',
+    defaultFile: 'index.html'
+  },
+  'integrity:layout-overflow': {
+    rule: 'Modal layout overflow CSS',
+    expected: 'gv-team.css: .gv-team-modal-body has min-height:0, overflow-y:auto, overflow-wrap on text blocks',
+    defaultFile: 'css/gv-team.css'
+  },
+  'integrity:panel-clipping': {
+    rule: 'Panel clipping guards',
+    expected: 'gv-team.css: min-width:0 + overflow-wrap on .gv-tm-lead, .gv-tm-highlight-text, .gv-team-overview-main',
+    defaultFile: 'css/gv-team.css'
+  },
+  'integrity:wrong-background': {
+    rule: 'Team Identity backgrounds',
+    expected: 'Era gradient classes on identity banner — no og-image.jpg or trial/pricing backgrounds',
+    defaultFile: 'css/gv-team.css'
+  },
+  'integrity:autoposter-dedup': {
+    rule: 'Autoposter duplication',
+    expected: 'No duplicate URLs/titles or truncated copy (…) in feed-items.json',
+    defaultFile: 'data/live/feed-items.json'
+  },
+  'visual-integrity:panel-clipping': {
+    rule: 'Visual integrity — panel clipping',
+    expected: 'Modal CSS guards prevent desktop text clipping',
+    defaultFile: 'css/gv-team.css'
+  },
+  'visual-integrity:layout-overflow': {
+    rule: 'Visual integrity — layout overflow',
+    expected: 'Modal flex scroll chain allows full content on desktop',
+    defaultFile: 'css/gv-team.css'
   },
   'mobile-behavior:navigation-back': {
     rule: 'Mobile modal back navigation',
@@ -578,6 +796,8 @@ function buildFailureReport(ctx) {
 module.exports = {
   prepareFixProposal,
   preparePatch,
+  buildFromTemplate,
+  enrichWithTemplate,
   buildBackgroundThemePatch,
   buildFeedDedupPatch,
   buildFilmSourcePatch,

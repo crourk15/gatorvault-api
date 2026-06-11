@@ -771,7 +771,7 @@ body.gv-team-modal-open {
 .gv-team-modal-panel {
   position: relative;
   width: 100%;
-  min-height: 100%;
+  min-height: 0;
   max-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -780,6 +780,7 @@ body.gv-team-modal-open {
   border-radius: 0;
   overflow: hidden;
   transition: transform 0.22s ease;
+  box-sizing: border-box;
 }
 
 .gv-team-modal-panel.gv-team-modal-dragging {
@@ -885,16 +886,26 @@ body.gv-team-modal-open {
 }
 
 .gv-team-modal-body {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   padding: 0 var(--gv-team-space-4) var(--gv-team-space-6);
   padding-bottom: max(24px, env(safe-area-inset-bottom));
+  position: relative;
+  z-index: 3;
+  box-sizing: border-box;
 }
 
 /* Modal content blocks */
 .gv-tm-section {
   margin-top: var(--gv-team-space-5);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .gv-tm-section-hdr {
@@ -929,6 +940,10 @@ body.gv-team-modal-open {
   color: #cbd5e1;
   line-height: 1.6;
   margin: 0 0 4px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .gv-tm-body {
@@ -936,6 +951,10 @@ body.gv-team-modal-open {
   color: #94a3b8;
   line-height: 1.65;
   margin: 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .gv-tm-chip-list {
@@ -1010,6 +1029,9 @@ body.gv-team-modal-open {
   border-radius: 12px;
   padding: var(--gv-team-space-3) var(--gv-team-space-4);
   margin-bottom: var(--gv-team-space-2);
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .gv-tm-highlight-icon {
@@ -1018,16 +1040,24 @@ body.gv-team-modal-open {
 }
 
 .gv-tm-highlight-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
   font-size: var(--gv-team-small);
   color: #cbd5e1;
   line-height: 1.5;
   margin: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .gv-tm-timeline {
   border-left: 2px solid rgba(250, 70, 22, 0.35);
   margin-left: 8px;
   padding-left: var(--gv-team-space-4);
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .gv-tm-timeline-item {
@@ -1036,6 +1066,10 @@ body.gv-team-modal-open {
   font-size: var(--gv-team-small);
   color: #94a3b8;
   line-height: 1.5;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .gv-tm-timeline-item::before {
@@ -1060,6 +1094,8 @@ body.gv-team-modal-open {
   align-items: center;
   gap: var(--gv-team-space-3);
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   text-align: left;
   background: #0a1628;
   border: 1px solid rgba(0, 48, 135, 0.35);
@@ -1067,6 +1103,13 @@ body.gv-team-modal-open {
   padding: var(--gv-team-space-3) var(--gv-team-space-4);
   cursor: pointer;
   color: inherit;
+  box-sizing: border-box;
+}
+
+.gv-tm-related-card > span:last-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .gv-tm-related-icon {
@@ -1087,12 +1130,16 @@ body.gv-team-modal-open {
   color: #f8fafc;
   font-family: 'Oswald', sans-serif;
   margin: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .gv-tm-related-sub {
   font-size: 0.6875rem;
   color: #64748b;
   margin: 2px 0 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .gv-tm-cta-primary {
@@ -1113,6 +1160,14 @@ body.gv-team-modal-open {
   display: flex;
   gap: var(--gv-team-space-4);
   align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.gv-tm-coach-hero > div:not(.gv-tm-coach-photo) {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .gv-tm-coach-photo {
@@ -1195,16 +1250,19 @@ body.gv-team-modal-open {
 
 @media (min-width: 768px) {
   #gv-team-detail-modal.highlight-modal-ov {
-    padding: 24px 0 24px 24px;
-    align-items: flex-start;
-    justify-content: flex-start;
+    padding: 24px;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .gv-team-modal-panel {
-    width: 70vw;
+    width: min(920px, calc(100vw - 48px));
     max-width: 920px;
     min-height: 0;
     max-height: calc(100vh - 48px);
+    flex-shrink: 0;
     border-radius: 16px;
     border: 1px solid rgba(250, 70, 22, 0.22);
     box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
@@ -1252,9 +1310,14 @@ body.gv-team-modal-open {
 
   .gv-team-overview-layout {
     display: grid;
-    grid-template-columns: 1fr 320px;
+    grid-template-columns: minmax(0, 1fr) 320px;
     gap: var(--gv-team-space-6);
     align-items: start;
+  }
+
+  .gv-team-overview-main {
+    min-width: 0;
+    overflow: visible;
   }
 
   #vpane-team #gv-team-staff {

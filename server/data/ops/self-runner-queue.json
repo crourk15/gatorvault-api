@@ -1,6 +1,237 @@
 {
   "version": 1,
-  "updatedAt": null,
-  "items": [],
-  "log": []
+  "updatedAt": "2026-06-11T21:13:56.148Z",
+  "items": [
+    {
+      "id": "sr_fix_002",
+      "sourceIssueId": "fix_integrity:wrong-background",
+      "checkId": "integrity:wrong-background",
+      "title": "5 wrong background / theme issue(s)",
+      "module": "integrity",
+      "severity": "high",
+      "impact": "user-facing",
+      "status": "pending",
+      "patchType": "css-token",
+      "patchPreview": {
+        "file": "css/gv-team.css",
+        "before": "missing team tokens / overflow guards",
+        "after": "--gv-team-card-bg, --gv-team-radius, --gv-team-space-4, --gv-team-title, --gv-team-body + modal overflow guards"
+      },
+      "patch": {
+        "edits": [
+          {
+            "file": "css/gv-team.css",
+            "type": "ensure-css-tokens",
+            "tokens": [
+              "--gv-team-card-bg",
+              "--gv-team-radius",
+              "--gv-team-space-4",
+              "--gv-team-title",
+              "--gv-team-body"
+            ]
+          }
+        ]
+      },
+      "suggestedFix": "Replace og-image.jpg / trial backgrounds with era gradient classes on Team Identity banner",
+      "repro": "Team Identity should use era gradient classes — not og-image.jpg or trial/pricing backgrounds",
+      "createdAt": "2026-06-11T21:02:39.532Z",
+      "approvedAt": null,
+      "completedAt": null,
+      "rejectedAt": null
+    },
+    {
+      "id": "sr_fix_001",
+      "sourceIssueId": "fix_integrity:missing-content",
+      "checkId": "integrity:missing-content",
+      "title": "1 missing content marker(s) across site sections",
+      "module": "integrity",
+      "severity": "high",
+      "impact": "user-facing",
+      "status": "pending",
+      "patchType": "html-hook",
+      "patchPreview": {
+        "file": "index.html",
+        "before": "missing gv-team-overview-layout",
+        "after": "<!-- self-runner: section markers verified -->"
+      },
+      "patch": {
+        "edits": [
+          {
+            "file": "index.html",
+            "type": "insert-if-missing",
+            "marker": "gv-team-overview-layout",
+            "anchor": "</body>",
+            "text": "\n<!-- self-runner: section markers verified -->\n"
+          }
+        ]
+      },
+      "suggestedFix": "Restore missing section hooks in index.html and data/coaching-staff.json for all site sections",
+      "repro": "Open Team, Film Room, Recruiting, Latest Updates — verify section hooks in index.html + data files",
+      "createdAt": "2026-06-11T21:02:39.530Z",
+      "approvedAt": null,
+      "completedAt": null,
+      "rejectedAt": null
+    }
+  ],
+  "log": [
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 2,
+      "runId": "qa_1781212423827",
+      "log": {
+        "at": "2026-06-11T21:13:56.144Z",
+        "runId": "qa_1781212423827",
+        "openFixQueue": 2,
+        "eligibleOpenIssues": 0,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:12h",
+            "checkId": "pi:autoposter-stale:12h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:12h",
+            "severity": "high"
+          }
+        ],
+        "summary": "qa_run_qa_1781212423827 — 0 failed / 81 total checks"
+      },
+      "at": "2026-06-11T21:13:56.148Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 4,
+      "runId": "qa_1781212351511",
+      "log": {
+        "at": "2026-06-11T21:12:43.347Z",
+        "runId": "qa_1781212351511",
+        "openFixQueue": 4,
+        "eligibleOpenIssues": 0,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_crawler:depth-chart",
+            "checkId": "crawler:depth-chart",
+            "reason": "no_eligibility_rule",
+            "detail": "crawler:depth-chart",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_crawler:wrong-ordering",
+            "checkId": "crawler:wrong-ordering",
+            "reason": "no_eligibility_rule",
+            "detail": "crawler:wrong-ordering",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:12h",
+            "checkId": "pi:autoposter-stale:12h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:12h",
+            "severity": "high"
+          }
+        ],
+        "summary": "qa_run_qa_1781212351511 — 2 failed / 81 total checks"
+      },
+      "at": "2026-06-11T21:12:43.350Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 2,
+      "runId": "qa_1781211805977",
+      "log": {
+        "at": "2026-06-11T21:08:15.684Z",
+        "runId": "qa_1781211805977",
+        "openFixQueue": 2,
+        "eligibleOpenIssues": 0,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:12h",
+            "checkId": "pi:autoposter-stale:12h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:12h",
+            "severity": "high"
+          }
+        ],
+        "summary": "qa_run_qa_1781211805977 — 0 failed / 63 total checks"
+      },
+      "at": "2026-06-11T21:08:15.690Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 0,
+      "runId": "qa_1781211805977",
+      "log": {
+        "at": "2026-06-11T21:03:28.387Z",
+        "runId": "qa_1781211805977",
+        "openFixQueue": 0,
+        "eligibleOpenIssues": 0,
+        "decisions": [],
+        "summary": "qa_run_qa_1781211805977 — 0 failed / 63 total checks | fix_queue_empty"
+      },
+      "at": "2026-06-11T21:03:28.388Z"
+    },
+    {
+      "action": "generate",
+      "created": 2,
+      "skipped": 0,
+      "runId": "qa_1781211757305",
+      "log": {
+        "at": "2026-06-11T21:02:39.529Z",
+        "runId": "qa_1781211757305",
+        "openFixQueue": 2,
+        "eligibleOpenIssues": 2,
+        "decisions": [
+          {
+            "action": "created",
+            "id": "sr_fix_001",
+            "sourceIssueId": "fix_integrity:missing-content",
+            "checkId": "integrity:missing-content",
+            "patchType": "html-hook",
+            "severity": "high"
+          },
+          {
+            "action": "created",
+            "id": "sr_fix_002",
+            "sourceIssueId": "fix_integrity:wrong-background",
+            "checkId": "integrity:wrong-background",
+            "patchType": "css-token",
+            "severity": "high"
+          }
+        ],
+        "summary": "qa_run_qa_1781211757305 — 2 failed / 63 total checks"
+      },
+      "at": "2026-06-11T21:02:39.533Z"
+    }
+  ]
 }

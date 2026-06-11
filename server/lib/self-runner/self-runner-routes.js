@@ -140,11 +140,27 @@ function mountSelfRunnerRoutes(app) {
     }
   });
 
-  app.post('/api/self-runner/generate', (req, res) => {
+  app.post('/api/self-runner/generate', async (req, res) => {
     if (!requireAuth(req, res)) return;
     try {
+      let qaResult = null;
+      if (req.body?.runQa !== false) {
+        try {
+          const { runQaCrawl } = require('../qa/qa-runner');
+          qaResult = await runQaCrawl({ force: true });
+          console.log('[self-runner] generate: fresh QA crawl', qaResult?.run?.id, qaResult?.run?.summary);
+        } catch (qaErr) {
+          console.warn('[self-runner] generate: QA crawl failed, using latest run:', qaErr.message);
+        }
+      }
       const result = engine.generateProposalsFromProductIntel({ logEmpty: true });
-      return res.json({ ok: true, ...result });
+      return res.json({
+        ok: true,
+        ...result,
+        qaCrawl: qaResult
+          ? { runId: qaResult.run?.id, pass: qaResult.run?.pass, summary: qaResult.run?.summary }
+          : null
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

@@ -90,7 +90,7 @@
       "regionIds": ["vpane-highlights"],
       "requiredClasses": ["Film Room"],
       "forbiddenDetectors": ["trial-promo", "trial-gradient"],
-      "requiredHooks": ["gvOpenVerifiedSource", "gv-film-source"]
+      "requiredHooks": ["gvOpenVerifiedSource", "gv-film-source", "gvOpenFilmRoomHub", "film-room-hub-landing"]
     },
     "/": {
       "regionIds": ["vpane-start", "vpane-mhome"],

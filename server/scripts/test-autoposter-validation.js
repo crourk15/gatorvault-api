@@ -46,16 +46,17 @@ const goodPost = {
   category: 'news',
   text: [
     '2027 4★ WR Amare Patterson (6-1, 185 — Miami) · On3 #142',
-    'Staff hosted Patterson on campus Saturday per Corey Bender.',
-    'Bender: Florida is firmly in the mix after the OV.'
+    'Amare Patterson is on campus today for a Florida visit.',
+    'The staff has been pushing hard here, and this stop is viewed as an important checkpoint in the Gators\' pursuit.'
   ].join('\n'),
   sources: [{ label: 'Corey Bender / On3', url: 'https://www.on3.com/' }],
   source: 'auto:beat-intel',
   sourceEventCreatedAt: new Date().toISOString(),
   templateBlocks: {
     identity: '2027 4★ WR Amare Patterson (6-1, 185 — Miami) · On3 #142',
-    context: 'Staff hosted Patterson on campus Saturday per Corey Bender.',
-    insider: 'Bender: Florida is firmly in the mix after the OV.'
+    context: 'Amare Patterson is on campus today for a Florida visit.',
+    insider:
+      'The staff has been pushing hard here, and this stop is viewed as an important checkpoint in the Gators\' pursuit.'
   },
   playerContext: {
     name: 'Amare Patterson',
@@ -66,8 +67,9 @@ const goodPost = {
     starsLabel: '4★'
   },
   validationMeta: {
-    contextFromBeat: true,
-    insiderFromBeat: true,
+    situation: 'visit',
+    contextFromRewrite: true,
+    insiderFromRewrite: true,
     beatText:
       'Staff hosted Patterson on campus Saturday per Corey Bender. Bender: Florida is firmly in the mix after the OV.'
   }

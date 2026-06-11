@@ -1,5 +1,267 @@
 {
   "version": 1,
-  "updatedAt": null,
-  "subsystems": {}
+  "updatedAt": "2026-06-11T21:13:56.151Z",
+  "subsystems": {
+    "autoposter": {
+      "subsystem": "autoposter",
+      "lastRun": "2026-06-11T00:08:15.773Z",
+      "lastStatus": "skipped",
+      "lastMessage": "non-player intel",
+      "lastDetails": {
+        "reason": "generic_phrase",
+        "triggerPhrase": "Our weekend official visitor blog is loaded with intel on the way https://example.com/preview",
+        "source": "corey_bender"
+      },
+      "lastCounts": null,
+      "lastSuccess": null,
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "autoposter:test": {
+      "subsystem": "autoposter:test",
+      "lastRun": "2026-06-11T00:08:15.761Z",
+      "lastStatus": "skipped",
+      "lastMessage": "non-player intel",
+      "lastDetails": {
+        "reason": "no_identifiable_player",
+        "triggerPhrase": "schools I'm visiting this weekend",
+        "source": null
+      },
+      "lastCounts": null,
+      "lastSuccess": null,
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "autoposter:beat-writer": {
+      "subsystem": "autoposter:beat-writer",
+      "lastRun": "2026-06-10T19:36:45.650Z",
+      "lastStatus": "skipped",
+      "lastMessage": "beat post skipped: no_recruiting_signal",
+      "lastDetails": {
+        "reason": "no_recruiting_signal",
+        "category": "filtered",
+        "handle": "Hayesfawcett3",
+        "writer": "Hayes Fawcett",
+        "postId": null,
+        "url": null,
+        "textPreview": "Amare Patterson has cancelled his OV to Florida and will visit South Carolina this weekend.",
+        "publishedAt": "2026-06-05T16:00:00.000Z"
+      },
+      "lastCounts": null,
+      "lastSuccess": null,
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "qa:crawler": {
+      "subsystem": "qa:crawler",
+      "lastRun": "2026-06-11T21:13:56.151Z",
+      "lastStatus": "success",
+      "lastMessage": "QA crawl passed (81 checks)",
+      "lastDetails": {
+        "runId": "qa_1781212423827",
+        "summary": {
+          "total": 81,
+          "passed": 81,
+          "failed": 0,
+          "emitted": 0
+        },
+        "errors": []
+      },
+      "lastCounts": null,
+      "lastSuccess": "2026-06-11T21:13:56.151Z",
+      "lastFailure": "2026-06-11T21:12:43.351Z",
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "cron:portal-ingest": {
+      "subsystem": "cron:portal-ingest",
+      "lastRun": "2026-06-11T15:47:12.844Z",
+      "lastStatus": "success",
+      "lastMessage": "portal-ingest completed",
+      "lastDetails": {
+        "summary": {
+          "ok": true,
+          "count": 28
+        }
+      },
+      "lastCounts": {
+        "processed": 28,
+        "skipped": null,
+        "errors": null
+      },
+      "lastSuccess": "2026-06-11T15:47:12.844Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "cron:recruiting-ingest": {
+      "subsystem": "cron:recruiting-ingest",
+      "lastRun": "2026-06-11T17:53:03.364Z",
+      "lastStatus": "success",
+      "lastMessage": "recruiting-ingest completed",
+      "lastDetails": {
+        "summary": {
+          "ok": true,
+          "fired": 0,
+          "lastRun": "2026-06-11T17:53:02.301Z"
+        }
+      },
+      "lastCounts": {
+        "processed": null,
+        "skipped": 72,
+        "errors": 0
+      },
+      "lastSuccess": "2026-06-11T17:53:03.364Z",
+      "lastFailure": "2026-06-11T17:09:02.506Z",
+      "lastWarning": "2026-06-11T15:47:16.271Z",
+      "failureStreak": 0
+    },
+    "cron:live-refresh": {
+      "subsystem": "cron:live-refresh",
+      "lastRun": "2026-06-11T17:53:06.590Z",
+      "lastStatus": "success",
+      "lastMessage": "live-refresh completed",
+      "lastDetails": {
+        "summary": null
+      },
+      "lastCounts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "lastSuccess": "2026-06-11T17:53:06.590Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "cron:beat-late-ingest": {
+      "subsystem": "cron:beat-late-ingest",
+      "lastRun": "2026-06-11T17:52:02.628Z",
+      "lastStatus": "success",
+      "lastMessage": "beat-late-ingest completed",
+      "lastDetails": {
+        "summary": {
+          "ok": true,
+          "processedCount": 0,
+          "lastRun": "2026-06-11T17:52:02.624Z"
+        }
+      },
+      "lastCounts": {
+        "processed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "lastSuccess": "2026-06-11T17:52:02.628Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "cron:article-engine": {
+      "subsystem": "cron:article-engine",
+      "lastRun": "2026-06-11T15:48:29.973Z",
+      "lastStatus": "success",
+      "lastMessage": "article-engine-weekly-draft completed",
+      "lastDetails": {
+        "summary": {
+          "ok": true,
+          "reason": "weekly_cap_reached"
+        }
+      },
+      "lastCounts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "lastSuccess": "2026-06-11T15:48:29.973Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "cron:gm2-auto-repair": {
+      "subsystem": "cron:gm2-auto-repair",
+      "lastRun": "2026-06-11T15:49:02.777Z",
+      "lastStatus": "success",
+      "lastMessage": "gm2-auto-repair completed",
+      "lastDetails": {
+        "summary": {
+          "ok": true
+        }
+      },
+      "lastCounts": {
+        "processed": null,
+        "skipped": null,
+        "errors": null
+      },
+      "lastSuccess": "2026-06-11T15:49:02.777Z",
+      "lastFailure": null,
+      "lastWarning": null,
+      "failureStreak": 0
+    },
+    "product-intel": {
+      "subsystem": "product-intel",
+      "lastRun": "2026-06-11T21:13:56.126Z",
+      "lastStatus": "warning",
+      "lastMessage": "Product Intelligence scored 100/100 — 2 fix item(s)",
+      "lastDetails": {
+        "runId": "qa_1781212423827",
+        "overall": 100,
+        "fixQueue": 2,
+        "layers": {
+          "data": {
+            "counts": {
+              "total": 2,
+              "bySource": {
+                "qa": 0,
+                "apiHealth": 0,
+                "cacheHealth": 0,
+                "autoposter": 1,
+                "recruiting": 0,
+                "teamData": 1,
+                "filmRoom": 0
+              }
+            },
+            "sources": [
+              "qa-crawler",
+              "live-dashboard",
+              "mobile-behavior",
+              "admin-hub",
+              "autoposter-logs",
+              "recruiting-board",
+              "film-room",
+              "team-overview",
+              "program-history",
+              "roster-depth-chart",
+              "press-conferences",
+              "highlights",
+              "api-health",
+              "cache-health"
+            ]
+          },
+          "classification": {
+            "active": [
+              "roster-mismatch",
+              "autoposter-stale"
+            ],
+            "total": 2
+          },
+          "severity": {
+            "critical": 0,
+            "high": 2,
+            "medium": 0,
+            "low": 0
+          },
+          "proposals": 2,
+          "approvalGate": "self-runner"
+        }
+      },
+      "lastCounts": null,
+      "lastSuccess": "2026-06-11T21:03:28.379Z",
+      "lastFailure": null,
+      "lastWarning": "2026-06-11T21:13:56.126Z",
+      "failureStreak": 0
+    }
+  }
 }

@@ -98,18 +98,36 @@ function mountProductIntelRoutes(app) {
         ok: true,
         items: filtered,
         total: open.length,
-        bySeverity: countBySeverity(open)
+        bySeverity: countBySeverity(open),
+        signalCounts: {
+          open: open.length,
+          total: (doc.fixQueue || []).length,
+          byClassification: open.reduce((acc, f) => {
+            const c = f.classification || 'unknown';
+            acc[c] = (acc[c] || 0) + 1;
+            return acc;
+          }, {})
+        }
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
   });
 
-  app.post('/api/product-intel/recompute', (req, res) => {
+  app.get('/api/product-intel/layers', (req, res) => {
+    if (!requireIntelAuth(req, res)) return;
+    try {
+      return res.json({ ok: true, ...engine.getLayersPayload() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/product-intel/recompute', async (req, res) => {
     if (!requireIntelAuth(req, res)) return;
     try {
       const weekly = req.body?.weekly === true;
-      const result = engine.recomputeFromLatestRun({ daily: true, weekly });
+      const result = await engine.recomputeFromLatestRun({ daily: true, weekly });
       if (!result.ok) {
         return res.status(404).json({ ok: false, error: result.reason || 'No QA runs to analyze' });
       }
@@ -118,6 +136,8 @@ function mountProductIntelRoutes(app) {
         overall: result.scores?.overall,
         color: scoring.healthColor(result.scores?.overall ?? 0),
         fixQueue: (result.fixQueue || []).filter((f) => !f.resolved).length,
+        intelligenceLayers: result.intelligenceLayers,
+        signalCounts: result.signalCounts,
         weekly
       });
     } catch (err) {
@@ -127,17 +147,24 @@ function mountProductIntelRoutes(app) {
 
   app.get('/api/product-intel/health', (req, res) => {
     const doc = store.readDoc();
+    const open = (doc.fixQueue || []).filter((f) => !f.resolved);
     return res.json({
       ok: true,
       enabled: process.env.PRODUCT_INTEL_ENABLED !== 'false',
       overall: doc.scores?.overall ?? null,
       lastComputedAt: doc.lastComputedAt,
-      fixQueueOpen: (doc.fixQueue || []).filter((f) => !f.resolved).length
+      fixQueueOpen: open.length,
+      intelligenceLayers: doc.intelligenceLayers ?? null,
+      byClassification: open.reduce((acc, f) => {
+        const c = f.classification || 'unknown';
+        acc[c] = (acc[c] || 0) + 1;
+        return acc;
+      }, {})
     });
   });
 
   console.log(
-    '[product-intel] routes mounted: /api/product-intel/scores, /summary, /weekly, /fix-queue, POST /recompute'
+    '[product-intel] routes mounted: /api/product-intel/scores, /summary, /weekly, /fix-queue, /layers, POST /recompute'
   );
 }
 

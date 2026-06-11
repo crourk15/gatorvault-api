@@ -14,6 +14,7 @@ const beatFilters = require('./beat-writer-filters');
 const copy = require('./x-autoposter-copy');
 const cadence = require('./x-autoposter-cadence');
 const validation = require('./x-autoposter-validation');
+const postSpec = require('./x-autoposter-post-spec');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 const ON3_PORTAL =
@@ -28,8 +29,9 @@ const MAX_BEAT_POST_AGE_MS = parseInt(
   process.env.X_AUTOPOST_MAX_BEAT_AGE_MS || String(validation.MAX_NEWS_AGE_MS),
   10
 );
+/** Only queue intel ≤ 60 minutes old (elite spec rule 1). */
 const MAX_INTEL_AGE_MS = parseInt(
-  process.env.X_AUTOPOST_MAX_INTEL_AGE_MS || String(validation.MAX_NEWS_AGE_MS),
+  process.env.X_AUTOPOST_MAX_INTEL_AGE_MS || String(postSpec.MAX_INTEL_AGE_MS),
   10
 );
 
@@ -59,14 +61,20 @@ function fingerprintAlreadyQueued(fp, items) {
 
 function alreadyQueued(text, items) {
   const key = dedupeKey(text);
-  const weekAgo = Date.now() - 7 * 86400000;
+  const dedupeWindow = postSpec.DEDUPE_REPOST_WINDOW_MS;
+  const cutoff = Date.now() - dedupeWindow;
   return items.some((i) => {
     if (dedupeKey(i.text) !== key) return false;
     if (i.status === 'pending' || i.status === 'skipped_duplicate') return true;
-    if (i.status === 'sent' && i.sentAt && new Date(i.sentAt).getTime() >= weekAgo) return true;
+    if (i.status === 'sent' && i.sentAt && new Date(i.sentAt).getTime() >= cutoff) return true;
     if (i.status === 'failed' && /duplicate content/i.test(i.error || '')) return true;
     return false;
   });
+}
+
+function similarPostQueued(text, items) {
+  const hit = postSpec.findSimilarInQueue(text, items);
+  return hit.hit ? hit : null;
 }
 
 function commitAlreadyQueued(fp, items) {
@@ -150,13 +158,22 @@ async function buildNewsFromPortal(headliner) {
 
 function prepareNewsCandidate(raw) {
   if (!raw?.text || copy.isBrokenCopy(raw.text, raw)) return null;
+
+  const eventMs = validation.resolveEventTimestamp(raw);
+  const fresh = postSpec.validateIntelFreshness(eventMs);
+  if (!fresh.ok) {
+    console.log(`[x-autoposter] skip: ${fresh.logTag || fresh.skipReason} — ${fresh.reason}`);
+    return null;
+  }
+
   const gate = validation.passesNewsQualityGate(raw);
   if (!gate.pass) return null;
   return {
     ...raw,
     qualityScore: gate.scored?.score ?? null,
     qualityBreakdown: gate.scored?.breakdown ?? null,
-    sourceConfidence: gate.scored?.sourceConfidence ?? null
+    sourceConfidence: gate.scored?.sourceConfidence ?? null,
+    situation: raw.situation || postSpec.detectSituation(raw.text, raw.sourceEventType || raw.intelType)
   };
 }
 
@@ -490,6 +507,13 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
     if (fp && fingerprintAlreadyQueued(fp, doc.items)) continue;
     if (raw.commitFingerprint && commitAlreadyQueued(raw.commitFingerprint, doc.items)) continue;
     if (alreadyQueued(raw.text, doc.items)) continue;
+    const similar = similarPostQueued(raw.text, doc.items);
+    if (similar) {
+      console.log(
+        `[x-autoposter] skip: similar post (${Math.round((similar.similarity || 0) * 100)}% overlap, item ${similar.itemId})`
+      );
+      continue;
+    }
     const gm2 = require('./gm2');
     if (!gm2.filterAutoposterCandidate(raw)) continue;
     const check = policy.validatePostContent(raw);
@@ -533,6 +557,7 @@ module.exports = {
   collectFreshPostCandidates,
   finalizeNewsCandidate,
   alreadyQueued,
+  similarPostQueued,
   dedupeKey,
   fingerprintAlreadyQueued,
   buildNewsFromIntel,

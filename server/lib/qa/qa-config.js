@@ -28,6 +28,9 @@ const PUBLIC_PAGES = [
   { id: 'admin-hub', path: '/admin', markers: ['GatorVault', 'admin-hub-core'] }
 ];
 
+/** Full site coverage — see qa-coverage-map.js for section definitions */
+const { SITE_SECTIONS } = require('./qa-coverage-map');
+
 const QA_MODULES = [
   'api',
   'content',
@@ -36,7 +39,8 @@ const QA_MODULES = [
   'browser',
   'ux',
   'visual-integrity',
-  'mobile-behavior'
+  'mobile-behavior',
+  'crawler'
 ];
 
 module.exports = {
@@ -55,6 +59,11 @@ module.exports = {
   LIVE_DASHBOARD_RETRY_MS: parseInt(process.env.QA_LIVE_DASHBOARD_RETRY_MS || '3000', 10),
   PUBLIC_API_ENDPOINTS,
   PUBLIC_PAGES,
+  SITE_SECTIONS,
   QA_MODULES,
-  SLACK_WEBHOOK: process.env.SLACK_WEBHOOK_URL || process.env.QA_SLACK_WEBHOOK || null
+  SLACK_WEBHOOK: process.env.SLACK_WEBHOOK_URL || process.env.QA_SLACK_WEBHOOK || null,
+  /** Scan local repo files (index.html, gv-team.css, gv-team-mobile.js) — default on */
+  SCAN_LOCAL: process.env.QA_SCAN_LOCAL !== 'false',
+  /** Also fetch production HTML for drift detection — default on */
+  SCAN_PRODUCTION: process.env.QA_SCAN_PRODUCTION !== 'false'
 };

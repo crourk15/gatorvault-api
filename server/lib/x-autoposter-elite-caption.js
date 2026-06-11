@@ -216,37 +216,56 @@ function trimLine(text, max = 140) {
 }
 
 async function buildElitePlayerPost(input = {}) {
-  const research = await researchEngine.researchUpdate(input);
+  const dataLayer = require('./x-autoposter-data-layer');
+  const intelInput = {
+    playerName: input.playerName || input.intel?.playerName,
+    playerSlug: input.playerSlug || input.intel?.playerSlug,
+    beatText: input.beatText || input.intel?.detail || null,
+    detail: input.beatText || input.intel?.detail || null,
+    timestamp:
+      input.intel?.timestamp ||
+      input.intel?.sourceEventCreatedAt ||
+      input.intel?.publishedAt ||
+      input.intel?.createdAt ||
+      null,
+    eventType: input.intel?.eventType,
+    source: input.intel?.source || input.source,
+    sourceHandle: input.intel?.sourceHandle || null,
+    directlyInvolvesUF: input.intel?.directlyInvolvesUF
+  };
+
+  const playerData = await dataLayer.fetchAutoposterPlayerData(intelInput);
+  if (!playerData.ok) {
+    eliteLog.logEliteCaption({
+      skipped: true,
+      skipReason: playerData.skipReason,
+      playerName: intelInput.playerName,
+      eventType: intelInput.eventType,
+      reason: playerData.reason
+    });
+    return { ok: false, skipped: true, reason: playerData.skipReason, dataLayer: playerData };
+  }
+
+  const research = await researchEngine.researchUpdate({
+    ...input,
+    playerName: playerData.data.name,
+    playerSlug: playerData.data.playerSlug,
+    patch: null
+  });
 
   if (!research.hasUsableSignal) {
     eliteLog.logEliteCaption({
       skipped: true,
       skipReason: 'no_usable_signal',
-      playerName: research.playerName,
-      eventType: research.eventType,
+      playerName: playerData.data.name,
+      eventType: playerData.data.situation,
       sourcesUsed: research.sourcesUsed,
       context: research
     });
     return { ok: false, skipped: true, reason: 'no_usable_signal', research };
   }
 
-  const ctx = await playerContext.resolvePlayerContext({
-    playerSlug: research.playerSlug,
-    playerName: research.playerName,
-    patch: input.patch || (input.intel ? playerContext.verifiedPatchFromIntel(input.intel) : null),
-    preferPatch: true
-  });
-
-  if (!ctx.hasMinimumContext && !research.playerName) {
-    eliteLog.logEliteCaption({
-      skipped: true,
-      skipReason: 'missing_player_identity',
-      playerName: research.playerName,
-      eventType: research.eventType,
-      sourcesUsed: research.sourcesUsed
-    });
-    return { ok: false, skipped: true, reason: 'missing_player_identity', research };
-  }
+  const ctx = playerData.ctx;
 
   const kind = input.postKind || playerContext.resolvePostKind(ctx, {
     newsEvent: input.newsEvent,
@@ -376,9 +395,15 @@ async function buildElitePlayerPost(input = {}) {
     playerName: ctx.name || research.playerName,
     context: ctx,
     postKind: kind,
+    autoposterData: playerData.data,
     templateBlocks: { identity, context: contextLine, insider: insiderLine },
     validationMeta: {
       eliteMode: true,
+      situation: playerData.data.situation,
+      autoposterData: playerData.data,
+      identitySource: playerData.data.identitySource,
+      ufStatus: playerData.data.ufStatus,
+      contextHint: playerData.data.context,
       eventType: research.eventType,
       ufPosition: research.ufPosition,
       sourcesUsed: research.sourcesUsed.map((s) => s.label),

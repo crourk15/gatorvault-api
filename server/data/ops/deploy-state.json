@@ -1,6 +1,22 @@
 {
   "version": 1,
-  "updatedAt": null,
-  "api": null,
-  "frontend": null
+  "updatedAt": "2026-06-11T15:46:59.970Z",
+  "api": {
+    "service": "render",
+    "timestamp": "2026-06-11T15:46:59.968Z",
+    "commit": null,
+    "branch": null,
+    "deployId": null,
+    "nodeEnv": "development",
+    "version": null
+  },
+  "frontend": {
+    "service": "netlify",
+    "timestamp": "2026-06-11T15:46:59.970Z",
+    "commit": "7ef1db5",
+    "deployId": null,
+    "site": "gatorvaultinsider.com",
+    "version": "7ef1db5",
+    "syncedFromApi": false
+  }
 }

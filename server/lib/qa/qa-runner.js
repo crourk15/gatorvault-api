@@ -1,40 +1,13 @@
 /**
- * QA Crawler orchestrator — runs all modules every 5 minutes.
+ * QA Crawler orchestrator — 3-phase crawl: Fetch → Analyze → Emit.
  */
 const config = require('./qa-config');
 const qaStore = require('./qa-store');
 const qaAlerts = require('./qa-alerts');
-const { runApiChecks } = require('./qa-api-checks');
-const { runContentChecks } = require('./qa-content-checks');
-const { runIntegrityChecks } = require('./qa-integrity-checks');
-const { runPageChecks } = require('./qa-page-checks');
-const { runUxChecks } = require('./qa-ux-checks');
-const { runBrowserChecks } = require('./qa-browser-checks');
-const { runMobileBehaviorChecks } = require('./qa-mobile-behavior-checks');
-const { runVisualIntegrityChecks } = require('../visual-integrity/visual-integrity-checks');
+const { runCrawlerPhases } = require('./qa-crawler-phases');
 
 let running = false;
 let lastPass = true;
-
-function flattenErrors(modules) {
-  const errors = [];
-  Object.values(modules || {}).forEach((mod) => {
-    (mod.checks || []).forEach((c) => {
-      if (!c.pass) {
-        errors.push({
-          id: c.id,
-          module: c.module,
-          message: c.error || c.label,
-          url: c.url || null,
-          repro: c.repro || `QA check failed: ${c.label}`,
-          details: c.details || null,
-          screenshot: c.details?.screenshot || null
-        });
-      }
-    });
-  });
-  return errors;
-}
 
 async function runQaCrawl(opts = {}) {
   if (running && !opts.force) {
@@ -46,32 +19,8 @@ async function runQaCrawl(opts = {}) {
   const id = `qa_${Date.now()}`;
 
   try {
-    const [api, content, integrity, pages, ux, browser, visualIntegrity, mobileBehavior] = await Promise.all([
-      runApiChecks(),
-      runContentChecks(),
-      runIntegrityChecks(),
-      runPageChecks(),
-      runUxChecks(),
-      runBrowserChecks(),
-      runVisualIntegrityChecks(),
-      runMobileBehaviorChecks()
-    ]);
-
-    const modules = {
-      api,
-      content,
-      integrity,
-      pages,
-      ux,
-      browser,
-      'visual-integrity': visualIntegrity,
-      'mobile-behavior': mobileBehavior
-    };
-    const allChecks = Object.values(modules).flatMap((m) => m.checks || []);
-    const failed = allChecks.filter((c) => !c.pass);
-    const errors = flattenErrors(modules);
-    const screenshot =
-      browser.checks?.find((c) => c.details?.screenshot)?.details?.screenshot || null;
+    const crawl = await runCrawlerPhases(opts);
+    const { modules, errors, issues, screenshot, phases, allChecks, failed } = crawl;
 
     const run = {
       id,
@@ -81,11 +30,14 @@ async function runQaCrawl(opts = {}) {
       pass: failed.length === 0,
       modules,
       errors,
+      issues,
+      phases,
       screenshot,
       summary: {
         total: allChecks.length,
         passed: allChecks.length - failed.length,
-        failed: failed.length
+        failed: failed.length,
+        emitted: issues.length
       }
     };
 
@@ -93,7 +45,7 @@ async function runQaCrawl(opts = {}) {
 
     try {
       const productIntel = require('../product-intel/product-intel-engine');
-      productIntel.recomputeFromRun(run, { daily: true, weekly: false });
+      await productIntel.recomputeFromRun(run, { daily: true, weekly: false });
     } catch (piErr) {
       console.warn('[product-intel] recompute skipped:', piErr.message);
     }
@@ -155,7 +107,7 @@ function startQaScheduler() {
   console.log(
     '[qa] crawler enabled — every',
     Math.round(config.INTERVAL_MS / 60000),
-    'min | browser:',
+    'min | 3-phase: fetch→analyze→emit | browser:',
     config.BROWSER_ENABLED ? 'on' : 'off (set QA_BROWSER_ENABLED=true + install playwright)',
     '| mobile-behavior:',
     config.MOBILE_BEHAVIOR_ENABLED ? 'on' : 'off'
@@ -172,5 +124,6 @@ function startQaScheduler() {
 
 module.exports = {
   runQaCrawl,
-  startQaScheduler
+  startQaScheduler,
+  runCrawlerPhases: require('./qa-crawler-phases').runCrawlerPhases
 };

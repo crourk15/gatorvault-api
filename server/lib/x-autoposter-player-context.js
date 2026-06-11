@@ -4,6 +4,7 @@
  */
 const template = require('./x-autoposter-template');
 const quoteRewriter = require('./x-autoposter-recruiting-quote-rewriter');
+const postSpec = require('./x-autoposter-post-spec');
 
 const INVALID_NAME_PARTS = new Set([
   'her', 'his', 'the', 'new', 'four', 'five', 'star', 'class', 'florida', 'gators', 'gator',
@@ -568,6 +569,113 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
   };
 }
 
+function parseCoachFromText(text) {
+  const t = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!t) return null;
+
+  const roleMatch =
+    t.match(
+      /\b(?:Florida\s+)?((?:WR|DL|QB|RB|TE|OL|OT|OG|C|CB|S|LB|EDGE|ST|special teams)\s+coach|(?:defensive|offensive)\s+coordinator|recruiting coordinator|analyst|GA|graduate assistant)\b/i
+    ) || t.match(/\b(coach(?:es)?)\b/i);
+  const nameMatch =
+    t.match(/\bcoach\s+([A-Z][a-z]+(?:\s+[A-Z][a-z'-]+)+)/) ||
+    t.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z'-]+)+)\s+(?:continues|remains|leads|expected|is heavily)/);
+
+  if (!nameMatch) return null;
+  const name = nameMatch[1].trim();
+  if (!isValidPlayerName(name)) return null;
+
+  const coachRole = roleMatch ? roleMatch[1].trim() : 'Florida coach';
+  const posGroupMatch = coachRole.match(/\b(WR|DL|QB|RB|TE|OL|CB|S|LB|EDGE)\b/i);
+  return {
+    name,
+    coachRole,
+    pos: coachRole,
+    isCoach: true,
+    posGroup: posGroupMatch ? `${posGroupMatch[1].toUpperCase()}s` : 'position group'
+  };
+}
+
+function buildCoachNewsPost({ source, beatText = null, intel = null, coachCtx = null, postUrl = null } = {}) {
+  const dataLayer = require('./x-autoposter-data-layer');
+  const intelInput = {
+    ...(intel || {}),
+    beatText: beatText || intel?.detail || null,
+    timestamp: intel?.timestamp || intel?.sourceEventCreatedAt || intel?.publishedAt || null,
+    source: intel?.source || source,
+    sourceHandle: intel?.sourceHandle || null,
+    eventType: intel?.eventType || 'staff',
+    coachName: coachCtx?.name || null
+  };
+
+  const fetched = dataLayer.fetchAutoposterCoachData(intelInput);
+  if (!fetched.ok) {
+    return require('./autoposter-identity').buildIdentitySkipPayload({
+      reason: fetched.skipReason,
+      playerName: intelInput.coachName,
+      triggerPhrase: beatText || intel?.detail,
+      missingFields: fetched.missingFields || []
+    });
+  }
+
+  const coach = fetched.coach;
+  const situation = fetched.situation;
+  const classTag = intel?.classYear ? String(intel.classYear) : '2026';
+  const meta = {
+    coachName: coach.name,
+    coachTitle: coach.title,
+    posGroup: `${classTag} ${coach.positionGroup || 'pass-catchers'}`.replace(/\s+/g, ' ').trim(),
+    beatText
+  };
+
+  let contextLine = null;
+  let insiderLine = null;
+
+  if (quoteRewriter.isRewriterEnabled() && beatText) {
+    const rewritten = quoteRewriter.rewriteBeatUpdate({
+      beatText,
+      ctx: coach,
+      intel,
+      eventType: 'staff'
+    });
+    if (rewritten?.contextLine) {
+      contextLine = quoteRewriter.sanitizeRewrittenLine(rewritten.contextLine, beatText, 160);
+    }
+    if (rewritten?.insiderLine) {
+      insiderLine = quoteRewriter.sanitizeRewrittenLine(rewritten.insiderLine, beatText, 140);
+    }
+  }
+
+  const composed = postSpec.composeStructuredPost(coach, situation, {
+    ...meta,
+    contextLine: contextLine || undefined,
+    insiderLine: insiderLine || undefined
+  });
+
+  const text = template.enforceTweetLimit(composed.text, 280, { beatText, postKind: 'staff', eliteMode: true });
+  if (!text || !template.hasTemplateStructure(text)) return null;
+
+  return {
+    text,
+    playerName: coach.name,
+    context: coach,
+    postKind: 'staff',
+    autoposterData: fetched.data,
+    templateBlocks: composed.templateBlocks,
+    validationMeta: {
+      playerContext: coach,
+      situation,
+      isCoach: true,
+      beatText: beatText || null,
+      contextFromRewrite: !!contextLine,
+      insiderFromRewrite: !!insiderLine,
+      contextHint: fetched.data?.context || null,
+      identitySource: 'staff_db',
+      sourceUrl: postUrl || intel?.articleUrl || null
+    }
+  };
+}
+
 async function buildPlayerNewsPost({
   source,
   newsEvent,
@@ -612,85 +720,56 @@ async function buildPlayerNewsPost({
   }
 
   const autoposterIdentity = require('./autoposter-identity');
+  const dataLayer = require('./x-autoposter-data-layer');
 
-  const intelStub = {
-    ...(intel || {}),
+  const beatDetail = beatText || intel?.detail || '';
+  const intelInput = {
     playerName: intel?.playerName || playerName,
     playerSlug: intel?.playerSlug || playerSlug,
-    detail: beatText || intel?.detail,
+    beatText: beatDetail,
+    detail: beatDetail,
+    timestamp: intel?.timestamp || intel?.sourceEventCreatedAt || intel?.publishedAt || intel?.createdAt || null,
     eventType: intel?.eventType,
-    fingerprint: intel?.fingerprint,
-    source: intel?.source || source
+    sourceEventType: intel?.sourceEventType,
+    source: intel?.source || source,
+    sourceHandle: intel?.sourceHandle || null,
+    directlyInvolvesUF: intel?.directlyInvolvesUF
   };
 
-  let resolvedIntel = intelStub;
-  if (!intelStub.identityConfirmed) {
-    const resolution = await autoposterIdentity.resolveIntelForAutoposter(intelStub, {
-      beatText,
-      fields: patch,
-      eventType: intel?.eventType,
-      subsystem: 'autoposter:player-context'
-    });
+  if (postSpec.isCoachContext(null, beatDetail) && postSpec.detectSituation(beatDetail, intel?.eventType) === 'staff') {
+    return buildCoachNewsPost({ source, beatText: beatDetail, intel: intelInput, postUrl: intel?.articleUrl });
+  }
 
-    if (resolution.nonPlayerIntel) return resolution.skip;
-    if (!resolution.ok) {
-      return (
-        resolution.skip ||
-        autoposterIdentity.buildNeedsResolutionPayload({
-          missingFields: resolution.resolution?.missingFields || [],
-          playerName: playerName || intel?.playerName,
-          playerSlug,
-          triggerPhrase: beatText || intel?.detail
-        })
-      );
+  const playerData = await dataLayer.fetchAutoposterPlayerData(intelInput);
+  if (!playerData.ok) {
+    if (playerData.skipReason === 'needs_resolution' || playerData.skipReason === 'missing_identity_fields') {
+      return autoposterIdentity.buildNeedsResolutionPayload({
+        missingFields: playerData.missingFields || [],
+        playerName: playerData.playerName || intelInput.playerName,
+        playerSlug: intelInput.playerSlug,
+        triggerPhrase: beatDetail
+      });
     }
-    resolvedIntel = resolution.intel || intelStub;
-  }
-
-  const resolvedName = resolvedIntel.playerName || playerName;
-  const resolvedSlug = resolvedIntel.playerSlug || playerSlug;
-  const resolvedPatch = {
-    ...(patch || {}),
-    name: resolvedName,
-    pos: resolvedIntel.pos || patch?.pos,
-    classYear: resolvedIntel.classYear || patch?.classYear,
-    school: resolvedIntel.school || resolvedIntel.highSchool || patch?.school,
-    stars: resolvedIntel.stars || patch?.stars,
-    natlRank: resolvedIntel.natlRank || patch?.natlRank
-  };
-
-  if (!resolvedName || !isValidPlayerName(resolvedName)) {
-    return autoposterIdentity.buildNeedsResolutionPayload({
-      missingFields: ['fullName'],
-      playerName: resolvedName || null,
-      playerSlug: resolvedSlug || null,
-      triggerPhrase: beatText || intel?.detail || null
+    return autoposterIdentity.buildIdentitySkipPayload({
+      reason: playerData.skipReason,
+      playerName: intelInput.playerName,
+      playerSlug: intelInput.playerSlug,
+      triggerPhrase: beatDetail,
+      missingFields: playerData.missingFields || []
     });
   }
 
-  const ctx = await resolvePlayerContext({
+  const ctx = playerData.ctx;
+  const situation = playerData.situation;
+  const resolvedSlug = playerData.data.playerSlug || intelInput.playerSlug;
+  const resolvedIntel = {
+    ...(intel || {}),
+    playerName: ctx.name,
     playerSlug: resolvedSlug,
-    playerName: resolvedName,
-    patch: resolvedPatch,
-    preferPatch: true
-  });
-
-  if (!ctx.hasFullIdentity) {
-    const autoResolver = require('./recruiting-auto-resolution');
-    autoResolver.logNeedsResolution({
-      missingFields: autoposterIdentity.listMissingContextFields(ctx),
-      playerName: ctx.name || resolvedName,
-      playerSlug: resolvedSlug,
-      detail: beatText || intel?.detail,
-      subsystem: 'autoposter:player-context'
-    });
-    return autoposterIdentity.buildNeedsResolutionPayload({
-      missingFields: autoposterIdentity.listMissingContextFields(ctx),
-      playerName: ctx.name || resolvedName || null,
-      playerSlug: resolvedSlug || null,
-      triggerPhrase: beatText || intel?.detail || null
-    });
-  }
+    detail: beatDetail,
+    eventType: intel?.eventType,
+    identityConfirmed: true
+  };
 
   intel = resolvedIntel;
 
@@ -754,9 +833,15 @@ async function buildPlayerNewsPost({
     playerName: ctx.name,
     context: ctx,
     postKind: kind,
+    autoposterData: playerData.data,
     templateBlocks: { identity, context: contextLine, insider: insiderLine },
     validationMeta: {
       playerContext: ctx,
+      situation,
+      autoposterData: playerData.data,
+      identitySource: playerData.data?.identitySource || 'gatorvault_db',
+      contextHint: playerData.data?.context || null,
+      ufStatus: playerData.data?.ufStatus || null,
       beatText: beatText || null,
       intelDetail: intel?.detail || null,
       insiderFromBeat: insiderResult.meta.insiderFromBeat === true,
@@ -931,6 +1016,8 @@ module.exports = {
   isValidPlayerName,
   formatPlayerContext,
   resolvePlayerContext,
+  parseCoachFromText,
+  buildCoachNewsPost,
   buildPlayerNewsPost,
   buildTeamEventPost,
   buildProgramNewsPost,

@@ -30,6 +30,14 @@ const FIX_TEMPLATES = {
   'visual-integrity:admin-theme': {
     title: 'Fix Admin Hub theme',
     suggestedFix: 'Admin should use hub-neutral CSS only — no gv-team or trial classes'
+  },
+  'visual-integrity:panel-clipping': {
+    title: 'Fix modal panel clipping',
+    suggestedFix: 'Add min-width:0, overflow-wrap guards to gv-team.css modal text blocks'
+  },
+  'visual-integrity:layout-overflow': {
+    title: 'Fix modal layout overflow',
+    suggestedFix: 'Ensure .gv-team-modal-body has min-height:0 + overflow-y:auto for desktop scroll'
   }
 };
 

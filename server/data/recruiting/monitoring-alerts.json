@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "alerts": [
+    {
+      "id": "mon_1781025937058_tzr2x",
+      "timestamp": 1781025937058,
+      "at": "2026-06-09T17:25:37.058Z",
+      "level": "warning",
+      "type": "blocked_event",
+      "eventType": "decommit",
+      "player": "Test Player",
+      "playerSlug": null,
+      "reason": "Test alert",
+      "detail": null,
+      "source": null,
+      "meta": null
+    }
+  ],
+  "updatedAt": "2026-06-09T17:25:37.061Z"
+}

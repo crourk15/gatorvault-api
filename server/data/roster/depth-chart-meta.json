@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-10T13:52:10.357Z",
+  "playerCount": 111,
+  "source": "roster/players.json",
+  "units": {
+    "offense": 53,
+    "defense": 50,
+    "special": 8
+  }
+}

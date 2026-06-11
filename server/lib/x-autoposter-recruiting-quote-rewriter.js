@@ -3,6 +3,7 @@
  * Extracts quote meaning, rewrites in GatorVault voice, blocks >40% source overlap.
  */
 const template = require('./x-autoposter-template');
+const postSpec = require('./x-autoposter-post-spec');
 
 const OVERLAP_THRESHOLD = parseFloat(process.env.X_AUTOPOST_QUOTE_OVERLAP_MAX || '0.4', 10);
 const MAX_REGEN_ATTEMPTS = parseInt(process.env.X_AUTOPOST_QUOTE_REGEN_ATTEMPTS || '4', 10);
@@ -249,13 +250,12 @@ function summarizeQuote(quoteText) {
   return 'player-commentary on the recruitment trail';
 }
 
-function buildContextVariants(signal, ctx, research) {
+function buildContextVariants(signal, ctx, research, beatText) {
   const name = ctx?.name || research?.playerName || 'Target';
   const pos = ctx?.pos || research?.player?.pos || '';
   const yr = ctx?.classYear || research?.player?.classYear || '';
   const yrTag = yr ? `'${String(yr).slice(-2)}` : '';
-  const id = [name, pos, yrTag].filter(Boolean).join(' · ');
-
+  const situation = postSpec.detectSituation(beatText || '', signal.eventType);
   const comp =
     signal.competition.length > 0
       ? ` with ${signal.competition.slice(0, 2).join(' and ')} also involved`
@@ -263,6 +263,8 @@ function buildContextVariants(signal, ctx, research) {
   const visit = signal.visitSchedule ? ` — visit window: ${signal.visitSchedule}` : '';
 
   const variants = [];
+  const specLine = postSpec.buildSituationContextLine(ctx || { name, pos, classYear: yr }, situation);
+  if (specLine) variants.push(specLine);
 
   if (signal.quoteSummary) {
     variants.push(
@@ -316,10 +318,16 @@ function buildContextVariants(signal, ctx, research) {
   return variants.filter(Boolean).map((v) => template.sanitizeCopyLine(v, 160, { eliteMode: true }));
 }
 
-function buildInsiderVariants(signal, ctx, research, contextLine) {
+function buildInsiderVariants(signal, ctx, research, contextLine, beatText) {
   const name = ctx?.name || research?.playerName || 'Target';
   const contextNorm = template.stripEmojisHashtags(contextLine || '').toLowerCase();
+  const situation = postSpec.detectSituation(beatText || '', signal.eventType);
   const variants = [];
+
+  const specInsider = postSpec.buildUfInsiderLine(ctx || { name }, situation);
+  if (specInsider && template.stripEmojisHashtags(specInsider).toLowerCase() !== contextNorm) {
+    variants.push(specInsider);
+  }
 
   if (signal.returnVisitPotential && !contextNorm.includes('return visit')) {
     variants.push(`${name} — ${signal.returnVisitPotential}.`);
@@ -402,8 +410,9 @@ function rewriteBeatUpdate({
     eventType: eventType || research?.eventType || intel?.eventType,
     newsEvent
   });
+  signal.situation = postSpec.detectSituation(beatText, signal.eventType);
 
-  const contextVariants = buildContextVariants(signal, ctx, research);
+  const contextVariants = buildContextVariants(signal, ctx, research, beatText);
   const sourceText = template.stripEmojisHashtags(beatText);
 
   let contextLine = null;
@@ -418,7 +427,7 @@ function rewriteBeatUpdate({
     contextLine = pickNonOverlapping(contextVariants, sourceText) || contextVariants[contextVariants.length - 1];
   }
 
-  const insiderVariants = buildInsiderVariants(signal, ctx, research, contextLine);
+  const insiderVariants = buildInsiderVariants(signal, ctx, research, contextLine, beatText);
   let insiderLine = pickNonOverlapping(insiderVariants, sourceText);
   if (!insiderLine) {
     for (const v of insiderVariants) {
@@ -457,6 +466,7 @@ function rewriteBeatUpdate({
       playerIntent: signal.playerIntent,
       momentum: signal.momentum,
       returnVisitPotential: signal.returnVisitPotential,
+      situation: signal.situation,
       overlapRatio: sourceOverlapRatio(combined, sourceText),
       sport
     }

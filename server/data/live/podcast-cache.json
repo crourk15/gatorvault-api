@@ -6,7 +6,59 @@
       "feedUrl": "https://feeds.megaphone.fm/gatorsbreakdown",
       "siteUrl": "https://gatorsbreakdown.com",
       "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
+      "platforms": [
+        {
+          "id": "apple",
+          "label": "Apple Podcasts",
+          "url": "https://podcasts.apple.com/us/podcast/gators-breakdown/id1169061256"
+        },
+        {
+          "id": "spotify",
+          "label": "Spotify",
+          "url": "https://open.spotify.com/show/1nLRyUN4rWzgTy0Tu0HjGQ"
+        },
+        {
+          "id": "youtube",
+          "label": "YouTube",
+          "url": "https://www.youtube.com/gatorsbreakdown"
+        },
+        {
+          "id": "web",
+          "label": "Website",
+          "url": "https://gatorsbreakdown.com"
+        }
+      ],
       "episodes": [
+        {
+          "id": "gators-breakdown_8d3444c2-6539-11f1-ba26-df223621a9f3",
+          "showId": "gators-breakdown",
+          "showName": "Gators Breakdown",
+          "title": "INSTANT REACTION: Florida Gators Game Start Times for 2026 | Gators Breakdown Plus MEMBER CHAT",
+          "description": "David Waters chats with Gators Breakdown Plus members as the SEC drops the 2026 football start times. Get the READ & REACTION 2026 PREVIEW: https://a.co/d/0c13QdI9 #FloridaGators #GatorsFootball #SECFootball #CollegeFootball #GatorsBreakdown #GoGators #CFB #FloridaGatorsFootball JOIN Gators Breakdown Plus: https://gatorsbreakdownplus.com Gators Breakdown Merch: https://gatorsbreakdown.printful.me Get Florida Gators merch at Fanatics: https://fanatics.93n6tx.net/DVYxja Questions or comments? Send",
+          "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
+          "playUrl": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD7834067720.mp3",
+          "publishedAt": "2026-06-11T02:09:00.000Z"
+        },
+        {
+          "id": "gators-breakdown_e4437580-6539-11f1-9bd8-43a758466a84",
+          "showId": "gators-breakdown",
+          "showName": "Gators Breakdown",
+          "title": "SEC Reveals 2026 Kickoff Times + Can Florida FLIP TWO of the Nation's Top Recruits?",
+          "description": "The SEC just dropped kickoff times for the 2026 season, so we run through what stands out before taking a fresh snapshot of where Florida's 2027 class currently stands. Then we get into the headline of the week: official visits from the No. 1 overall player Jalen Brewster and the No. 1 receiver Easton Royal, both Texas-tied prospects the Gators are pushing hard to flip. We break down exactly where Florida stands in each battle and how realistic these swings really are. Get the READ & REACTION 20",
+          "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
+          "playUrl": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD5499826189.mp3",
+          "publishedAt": "2026-06-11T02:09:00.000Z"
+        },
+        {
+          "id": "gators-breakdown_5836aaae-6286-11f1-9676-173a211dd735",
+          "showId": "gators-breakdown",
+          "showName": "Gators Breakdown",
+          "title": "Gators Strike Again: Florida Lands 4-Star LB Ellis McGaskin Over LSU and FSU",
+          "description": "The Gators strike again, landing four-star linebacker Ellis McGaskin over LSU and Florida State in one of the biggest defensive wins of the cycle. We break down how Jon Sumrall's staff flipped this recruitment, what McGaskin brings to the field, and how he pairs with Ja'Bios Smith to reshape Florida's 2027 linebacker room. Plus the latest on the Gators' top-five class and the rest of a loaded recruiting weekend. Get the READ & REACTION 2026 PREVIEW: https://a.co/d/0c13QdI9 #FloridaGators #Gators",
+          "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
+          "playUrl": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD5489729338.mp3",
+          "publishedAt": "2026-06-07T15:36:00.000Z"
+        },
         {
           "id": "gators-breakdown_ecc49b4c-6108-11f1-ab67-f757a2cedece",
           "showId": "gators-breakdown",
@@ -14,7 +66,7 @@
           "title": "Florida Stacks Two Defenders in a Day: Cahron Wheeler & Kamarion Johnson Commit for 2027",
           "description": "Florida just landed back-to-back commitments on the defensive side of the ball, and both stories are worth your time. Four-star edge Cahron Wheeler picks the Gators on his official visit, then athlete Kamarion Johnson follows right after over Florida State and Cincinnati. We dig into the recruitments, the evaluations, and what Jon Sumrall's staff is putting together for 2027. Sign up for PrizePicks with code: HMA and get $50 in lineups instantly when you play your first $5+ lineup! https://link.",
           "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-          "playUrl": null,
+          "playUrl": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD8167389350.mp3",
           "publishedAt": "2026-06-05T18:11:00.000Z"
         },
         {
@@ -24,7 +76,7 @@
           "title": "ANOTHER COMMIT! Inside Florida's Late Surge to Land DL Zahmar Tookes | GATORS ROLLING!",
           "description": "Florida came late to the Zahmar Tookes recruitment, but the Gators closed fast and beat out Penn State and Nebraska for the versatile four-star defensive lineman. David Waters breaks down how Gerald Chatman and Brad White built the relationship, what the GatorMade pitch really looked like, and what Florida is getting on the field. Plus, where Tookes fits in the 2027 DL class and the latest on Wheeler, Guertin, and Jalen Brewster. Sign up for PrizePicks with code: HMA and get $50 in lineups insta",
           "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-          "playUrl": null,
+          "playUrl": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD8580037169.mp3",
           "publishedAt": "2026-06-03T22:49:00.000Z"
         },
         {
@@ -34,7 +86,7 @@
           "title": "Kennedee Jackson Picks FLORIDA OVER GEORGIA - The Florida Gators O-Line Class Is Getting RIDICULOUS",
           "description": "Four-star tackle Kennedee Jackson canceled his Georgia visit and committed to the Gators, and the way Florida closed says everything about where this program is headed. We break down how Jon Sumrall and Phil Trautwein got it done, what makes Jackson such a rare prospect, and why this might be the best O-line haul Florida has put together. Plus the latest on Trey Martin, Antonio Berry, and the rest of a loaded recruiting weekend. Sign up for PrizePicks with code: HMA and get $50 in lineups instan",
           "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-          "playUrl": null,
+          "playUrl": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD1133826788.mp3",
           "publishedAt": "2026-06-02T23:35:00.000Z"
         },
         {
@@ -44,7 +96,7 @@
           "title": "Ja'Bios Smith Becomes Florida's First 2027 Linebacker Commit — How the Gators Closed",
           "description": "Florida finally breaks the seal at linebacker, landing 4-star Ja'Bios Smith as the first LB commit of the class and No. 17 overall. We break down how Jon Sumrall and Greg Gasparato out-recruited Georgia, South Carolina, and Texas A&M for the Swainsboro standout. Then we get into his downhill, MIKE-style film, and why this first domino could shape the rest of Florida's linebacker board. Get the READ & REACTION 2026 PREVIEW: https://a.co/d/0c13QdI9 #FloridaGators #GatorsFootball #SECFootball #Coll",
           "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-          "playUrl": null,
+          "playUrl": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD7095013895.mp3",
           "publishedAt": "2026-05-29T22:27:00.000Z"
         },
         {
@@ -54,7 +106,7 @@
           "title": "OFFICIAL: Gators First Three Game Times + Best Swamp Wins, My Life Outside GB & Did I Ever Have Hair?",
           "description": "Florida's first three game times are officially set and we break down what they mean. Then we get personal — my favorite Gator win at the Swamp, what life looks like outside of Gators Breakdown, and yes… the hair question finally gets answered. Grab a seat, this one's fun. Sign up for PrizePicks with code: HMA and get $50 in lineups instantly when you play your first $5+ lineup! https://link.prizepicks.com/LME0/GATORS Get the READ & REACTION 2026 PREVIEW: https://a.co/d/0c13QdI9 #FloridaGators #",
           "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-          "playUrl": null,
+          "playUrl": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD7894490208.mp3",
           "publishedAt": "2026-05-27T23:58:00.000Z"
         },
         {
@@ -64,7 +116,7 @@
           "title": "Florida's Offense Has No Label + The Heisman Snub That STILL HURTS | MAILBAG MAY",
           "description": "You asked, we answered. From Buster Faulkner's shape-shifting offense to whether Florida can crack the SEC's top five in total yards, plus a Trask vs. Grossman Heisman debate that might get me in trouble with Gator Nation. Grab a seat, Gator Nation — welcome to Mailbag May. Sign up for PrizePicks with code: HMA and get $50 in lineups instantly when you play your first $5+ lineup! https://link.prizepicks.com/LME0/GATORS Get the READ & REACTION 2026 PREVIEW: https://a.co/d/0c13QdI9 #FloridaGators ",
           "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-          "playUrl": null,
+          "playUrl": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD2714707167.mp3",
           "publishedAt": "2026-05-27T02:16:00.000Z"
         },
         {
@@ -74,7 +126,7 @@
           "title": "Florida's 2027 Class Is Stacking + What Does a Good Year 1 Under Sumrall Look Like?",
           "description": "Florida's 16-commit class sits inside the top five nationally with elite offensive talent leading the way. Plus, a look at what real progress in Jon Sumrall's first year looks like beyond just the win-loss record. Get the READ & REACTION 2026 PREVIEW: https://a.co/d/0c13QdI9 #FloridaGators #GatorsFootball #SECFootball #CollegeFootball #GatorsBreakdown #GoGators #CFB #FloridaGatorsFootball JOIN Gators Breakdown Plus: https://gatorsbreakdownplus.com Gators Breakdown Merch: https://gatorsbreakdown.",
           "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-          "playUrl": null,
+          "playUrl": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD5953602477.mp3",
           "publishedAt": "2026-05-20T01:45:00.000Z"
         },
         {
@@ -84,7 +136,7 @@
           "title": "ELIAS PEARL TO THE GATORS — How Florida Locked Down a Top-100 WR Over Ole Miss",
           "description": "LIKE, SUBSCRIBE, COMMENT! Elias Pearl, a top-100 four-star wide receiver out of Port Charlotte, has committed to the Florida Gators over Ole Miss — and the story behind this one is worth knowing. We break down the recruitment timeline, the Marcus Davis connection, what Pearl brings on the field, and how Florida's receiver class is shaping up with Easton Royal and Amare Patterson still on the board. Get the READ & REACTION 2026 PREVIEW: https://a.co/d/0c13QdI9 #FloridaGators #GatorsFootball #SECF",
           "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-          "playUrl": null,
+          "playUrl": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD8949886991.mp3",
           "publishedAt": "2026-05-19T17:47:00.000Z"
         },
         {
@@ -94,38 +146,8 @@
           "title": "6'7\" DL, Cain Van Norden, Commits to Florida After Just 2 Years of Football | Big Week Ahead?",
           "description": "Three-star defensive lineman Cain Van Norden out of Bishop McNamara (MD) is the newest Gator, and at 6'7\" with just two years of football experience, his upside is off the charts. We break down how Florida flipped the recruitment in two months, what the coaching staff sees in him, and where he fits in the defense. Plus, a look at this week's potential commitments that could push the Gators' 2027 class even higher. Sign up for PrizePicks with code: HMA and get $50 in lineups instantly when you pl",
           "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-          "playUrl": null,
+          "playUrl": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD1359085620.mp3",
           "publishedAt": "2026-05-17T16:59:00.000Z"
-        },
-        {
-          "id": "gators-breakdown_5a88b0e4-4e6e-11f1-9518-272aefb526f9",
-          "showId": "gators-breakdown",
-          "showName": "Gators Breakdown",
-          "title": "Jon Sumrall GETS REAL About Florida Gators Recruiting, the QB Race & Fixing the O-Line | SPECIAL ANNOUNCEMENT",
-          "description": "In this Gators Breakdown exclusive, Florida head coach Jon Sumrall sits down with David Waters to discuss the red-hot 2027 recruiting class, what he really thinks about star ratings, and the plan to overhaul the offensive line. He also breaks down the quarterback competition, spring practice takeaways, and how the staff plans to get playmakers the ball this fall. Afterward, David Waters shares a special announcement with Will Miles and Nick Knudsen. Sign up for PrizePicks with code: HMA and get ",
-          "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-          "playUrl": null,
-          "publishedAt": "2026-05-13T02:08:00.000Z"
-        },
-        {
-          "id": "gators-breakdown_2a251a4e-4b0a-11f1-9a6a-eb612220fad8",
-          "showId": "gators-breakdown",
-          "showName": "Gators Breakdown",
-          "title": "Florida Lands Top-10 RB Andrew Beard | How Sumrall and the Gators Flipped This Recruitment",
-          "description": "Andrew Beard, a consensus top-10 running back in the 2027 class, has committed to Florida over Clemson. We break down how the Sumrall coaching change flipped this recruitment, what the film says about his game, and what it means for a Gators class now hovering in the top 5 nationally. Sign up for PrizePicks with code: HMA and get $50 in lineups instantly when you play your first $5+ lineup! https://link.prizepicks.com/LME0/GATORS #FloridaGators #GatorsFootball #SECFootball #CollegeFootball #Gato",
-          "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-          "playUrl": null,
-          "publishedAt": "2026-05-08T20:15:00.000Z"
-        },
-        {
-          "id": "gators-breakdown_99136fe0-49a8-11f1-ab2f-ff64a8f7a174",
-          "showId": "gators-breakdown",
-          "showName": "Gators Breakdown",
-          "title": "The 2026 Florida Gators Have REAL UPSIDE w/ Roc Boys | DL Stive-Bentley Keumajou Commits to Florida",
-          "description": "The Roc Boys join Gators Breakdown for a full breakdown of Florida's 2026 roster — the QB battle between Tramell Jones and Aaron Philo, the real concerns at offensive tackle, and why the defensive line depth might be the best storyline of the spring. Plus, three-star DL Stive-Bentley Keumajou makes it official with the Gators after an incredible journey from England to Coral Gables to Gainesville. Sign up for PrizePicks with code: HMA and get $50 in lineups instantly when you play your first $5+",
-          "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-          "playUrl": null,
-          "publishedAt": "2026-05-07T00:59:00.000Z"
         }
       ]
     },
@@ -135,6 +157,28 @@
       "feedUrl": "https://feeds.simplecast.com/xAayO76o",
       "siteUrl": "https://www.on3.com/teams/florida-gators/page/podcasts/",
       "imageUrl": "https://image.simplecastcdn.com/images/4e90f643-1af4-46f0-95d6-6183e0a87ef2/cca5b366-6eab-4f61-ba5c-8ae616f505c6/3000x3000/go-podcast-1.jpg?aid=rss_feed",
+      "platforms": [
+        {
+          "id": "apple",
+          "label": "Apple Podcasts",
+          "url": "https://podcasts.apple.com/us/podcast/gators-online-podcast/id1618949280"
+        },
+        {
+          "id": "spotify",
+          "label": "Spotify",
+          "url": "https://open.spotify.com/show/2TJLOsWkqpA7UoLmJuXi6W"
+        },
+        {
+          "id": "youtube",
+          "label": "YouTube",
+          "url": "https://www.youtube.com/channel/UCVGYXzMCXsvQZtHRLeCG8jA"
+        },
+        {
+          "id": "web",
+          "label": "Website",
+          "url": "https://www.on3.com/teams/florida-gators/page/podcasts/"
+        }
+      ],
       "episodes": [
         {
           "id": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
@@ -264,6 +308,23 @@
       "feedUrl": "https://feeds.simplecast.com/WN52YflC",
       "siteUrl": "https://gnfp.com",
       "imageUrl": "https://image.simplecastcdn.com/images/6215cda8-011d-4ccd-9fe8-c389912a62af/e256885d-0642-4524-a606-6ff2bbf10eb3/3000x3000/gator-nation-football.jpg?aid=rss_feed",
+      "platforms": [
+        {
+          "id": "apple",
+          "label": "Apple Podcasts",
+          "url": "https://podcasts.apple.com/us/podcast/the-gator-nation-football-podcast/id1035206093"
+        },
+        {
+          "id": "spotify",
+          "label": "Spotify",
+          "url": "https://open.spotify.com/show/5g6RBSb7vQCglyfXkm5Pce"
+        },
+        {
+          "id": "web",
+          "label": "Website",
+          "url": "https://gnfp.com"
+        }
+      ],
       "episodes": [
         {
           "id": "gnfp_b37211a8-96f7-46c7-93f2-447f4b88b214",
@@ -393,6 +454,28 @@
       "feedUrl": "https://floridagators.com/gatortales-rss",
       "siteUrl": "https://floridagators.com/gatortales",
       "imageUrl": "https://i1.sndcdn.com/avatars-k9ChyIOSQoCOg7z6-Yjv8OQ-original.jpg",
+      "platforms": [
+        {
+          "id": "apple",
+          "label": "Apple Podcasts",
+          "url": "https://podcasts.apple.com/us/podcast/gator-tales-with-sean-kelley/id1036270178"
+        },
+        {
+          "id": "spotify",
+          "label": "Spotify",
+          "url": "https://open.spotify.com/show/1Cd7mcwvB2IfsR2WzOWsQq"
+        },
+        {
+          "id": "youtube",
+          "label": "YouTube",
+          "url": "https://youtube.com/playlist?list=PLSvDmFCp0zGOPSLFuuOLtkmuLVIn_6ynh"
+        },
+        {
+          "id": "web",
+          "label": "Website",
+          "url": "https://floridagators.com/gatortales"
+        }
+      ],
       "episodes": [
         {
           "id": "gator-tales_tag:soundcloud,2010:tracks/2328301979",
@@ -517,6 +600,6 @@
       ]
     }
   ],
-  "fetchedAt": "2026-06-07T05:06:17.044Z",
+  "fetchedAt": "2026-06-11T17:53:06.587Z",
   "errors": []
 }

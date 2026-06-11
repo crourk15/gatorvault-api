@@ -2,11 +2,15 @@
  * X AutoPoster quality gates — all checks must pass before a news post is queued or sent.
  */
 const template = require('./x-autoposter-template');
+const postSpec = require('./x-autoposter-post-spec');
 const { TRUSTED_REPORTERS } = require('./content-validator');
 
-const MAX_NEWS_AGE_MS = parseInt(process.env.X_AUTOPOST_MAX_NEWS_AGE_MS || String(3 * 60 * 60 * 1000), 10);
+const MAX_NEWS_AGE_MS = parseInt(
+  process.env.X_AUTOPOST_MAX_NEWS_AGE_MS || String(postSpec.MAX_INTEL_AGE_MS),
+  10
+);
 const MAX_BREAKING_AGE_MS = parseInt(
-  process.env.X_AUTOPOST_MAX_BREAKING_AGE_MS || String(30 * 60 * 1000),
+  process.env.X_AUTOPOST_MAX_BREAKING_AGE_MS || String(postSpec.MAX_INTEL_AGE_MS),
   10
 );
 
@@ -100,6 +104,9 @@ const HARD_SKIP_TYPES = new Set([
   'missing_insider',
   'unverified_sourcing',
   'stale',
+  'stale_intel',
+  'missing_situation',
+  'similar_post',
   'verbatim_overlap',
   'non_football_sport'
 ]);
@@ -394,8 +401,8 @@ function validateFreshness(item, now = Date.now()) {
   if (ageMs > maxAge) {
     errors.push({
       rule: 'freshness',
-      type: 'stale',
-      message: `Source event is too old (${Math.round(ageMs / 60000)}m; max ${Math.round(maxAge / 60000)}m for ${urgency.tier}).`
+      type: 'stale_intel',
+      message: `Stale intel — source is ${Math.round(ageMs / 60000)}m old (max ${Math.round(maxAge / 60000)}m).`
     });
   }
   return errors;
@@ -587,8 +594,23 @@ function collectHardSkipReasons(item, blocks, meta) {
   const freshnessErrors = validateFreshness(item);
   if (freshnessErrors.length) {
     skips.push({
-      type: 'stale',
-      message: freshnessErrors[0].message || 'Stale content — automatic skip.'
+      type: freshnessErrors[0].type === 'stale_intel' ? 'stale_intel' : 'stale',
+      message: freshnessErrors[0].message || 'Stale intel — automatic skip.'
+    });
+  }
+
+  const situation = meta.situation || item.situation || postSpec.detectSituation(
+    [blocks.context, blocks.identity, item.text].filter(Boolean).join(' '),
+    item.sourceEventType || item.intelType
+  );
+  if (
+    !isNonPlayerNewsPost(item, blocks, item?.playerContext, meta) &&
+    situation === 'general' &&
+    !hasHumanReportedContext(blocks.context, meta)
+  ) {
+    skips.push({
+      type: 'missing_situation',
+      message: 'Missing situation context — post must explain what is happening (visit, offer, portal, etc.).'
     });
   }
 
