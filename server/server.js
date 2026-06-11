@@ -19,6 +19,7 @@ const { mountAdminRoutes } = require('./lib/admin-routes');
 const { mountFilmRoomKnowledgeRoutes } = require('./lib/film-room-knowledge-routes');
 const { mountNilRoutes } = require('./lib/nil-routes');
 const { mountOpsRoutes } = require('./lib/ops-routes');
+const { mountQaRoutes } = require('./lib/qa-routes');
 const { mountGm2Routes } = require('./lib/gm2/gm2-routes');
 const { mountInsiderArticlesRoutes } = require('./lib/insider-articles-routes');
 const { apiMonitorMiddleware } = require('./lib/api-monitor');
@@ -77,6 +78,7 @@ mountAdminRoutes(app);
 mountFilmRoomKnowledgeRoutes(app);
 mountNilRoutes(app);
 mountOpsRoutes(app);
+mountQaRoutes(app);
 mountGm2Routes(app);
 mountInsiderArticlesRoutes(app);
 
@@ -1130,5 +1132,11 @@ app.listen(PORT, () => {
     console.log('[gv-om] Operations Manager initialized');
   } catch (e) {
     console.warn('[gv-om] init skipped', e.message);
+  }
+  try {
+    const { startQaScheduler } = require('./lib/qa/qa-runner');
+    startQaScheduler();
+  } catch (e) {
+    console.warn('[qa] scheduler failed to start', e.message);
   }
 });

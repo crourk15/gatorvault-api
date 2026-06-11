@@ -1,0 +1,904 @@
+{
+  "version": 1,
+  "uptime": {
+    "since": null,
+    "checks": 1,
+    "successes": 0
+  },
+  "lastRun": {
+    "id": "qa_1781187870655",
+    "at": "2026-06-11T14:24:33.454Z",
+    "pass": false,
+    "durationMs": 2799,
+    "failed": 9
+  },
+  "runs": [
+    {
+      "id": "qa_1781187870655",
+      "startedAt": "2026-06-11T14:24:30.650Z",
+      "finishedAt": "2026-06-11T14:24:33.454Z",
+      "durationMs": 2799,
+      "pass": false,
+      "modules": {
+        "api": {
+          "module": "api",
+          "pass": true,
+          "total": 19,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "api:ping",
+              "module": "api",
+              "label": "/api/ping",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:recruiting-ingest-status",
+              "module": "api",
+              "label": "/api/recruiting/ingest/status",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-pipeline-health",
+              "module": "api",
+              "label": "/api/live/pipeline/health",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-dashboard",
+              "module": "api",
+              "label": "/api/live/dashboard",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-feed",
+              "module": "api",
+              "label": "/api/live/feed",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:film-room-catalog",
+              "module": "api",
+              "label": "/api/film-room/catalog",
+              "pass": true,
+              "details": {
+                "count": 18,
+                "lessons": 10
+              }
+            },
+            {
+              "id": "api:articles-published",
+              "module": "api",
+              "label": "/api/articles/published",
+              "pass": true,
+              "details": {
+                "count": 0
+              }
+            },
+            {
+              "id": "api:content-published",
+              "module": "api",
+              "label": "/api/content/published",
+              "pass": true,
+              "details": {
+                "count": 6
+              }
+            },
+            {
+              "id": "api:roster-players",
+              "module": "api",
+              "label": "/api/roster/players",
+              "pass": true,
+              "details": {
+                "count": 111
+              }
+            },
+            {
+              "id": "api:recruiting-board",
+              "module": "api",
+              "label": "/api/recruiting/board",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:recruiting-portal",
+              "module": "api",
+              "label": "/api/recruiting/portal",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:pricing",
+              "module": "api",
+              "label": "/api/pricing",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:personas",
+              "module": "api",
+              "label": "/api/personas",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:content-ingest-status",
+              "module": "api",
+              "label": "/api/content/ingest/status",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:war-room-breakdowns",
+              "module": "api",
+              "label": "/api/war-room/breakdowns",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:nil-dashboard",
+              "module": "api",
+              "label": "/api/nil/dashboard",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:film-room-lesson",
+              "module": "api",
+              "label": "Film Room lesson detail",
+              "pass": true,
+              "details": {
+                "slug": "frl00008-0000-4000-8000-000000000008",
+                "sources": 1
+              }
+            },
+            {
+              "id": "api:film-room-legacy-video",
+              "module": "api",
+              "label": "Legacy Film Room video",
+              "pass": true,
+              "details": {
+                "title": "Film Guy Network — Florida Spring Game Film Study",
+                "youtubeId": "yy4X6d2hAj0"
+              }
+            },
+            {
+              "id": "api:schedule",
+              "module": "api",
+              "label": "Schedule (live dashboard games)",
+              "pass": true,
+              "details": {
+                "games": 0
+              }
+            }
+          ]
+        },
+        "content": {
+          "module": "content",
+          "pass": true,
+          "total": 4,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "content:articles-spell",
+              "module": "content",
+              "label": "Articles spell/grammar",
+              "pass": true,
+              "details": {
+                "scanned": 0
+              }
+            },
+            {
+              "id": "content:content-accuracy-spell",
+              "module": "content",
+              "label": "Content accuracy spell/grammar",
+              "pass": true,
+              "details": {
+                "scanned": 6
+              }
+            },
+            {
+              "id": "content:film-room-spell",
+              "module": "content",
+              "label": "Film Room lesson text",
+              "pass": true,
+              "details": {
+                "scanned": 10
+              }
+            },
+            {
+              "id": "content:team-module",
+              "module": "content",
+              "label": "Team tab & coaching bios text",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "integrity": {
+          "module": "integrity",
+          "pass": false,
+          "total": 8,
+          "failed": 2,
+          "checks": [
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": false,
+              "error": "1 duplicate feed item(s)",
+              "details": [
+                {
+                  "key": "/player/jaydee-lane",
+                  "first": 34,
+                  "duplicate": 35
+                }
+              ],
+              "url": null,
+              "repro": "Open Latest Updates; check live-aggregator dedup rules"
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": true,
+              "details": {
+                "players": 0
+              }
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": true,
+              "details": {
+                "checked": 0
+              }
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": true,
+              "details": {
+                "probed": 0
+              }
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": false,
+              "error": "7 broken Film Room source URL(s)",
+              "details": [
+                {
+                  "url": "https://www.nfl.com/combine/ol-pass-protection",
+                  "status": 503,
+                  "error": null
+                },
+                {
+                  "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+                  "status": 503,
+                  "error": null
+                },
+                {
+                  "url": "https://www.nfl.com/combine/dt-anchor-strength",
+                  "status": 503,
+                  "error": null
+                },
+                {
+                  "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+                  "status": 404,
+                  "error": null
+                },
+                {
+                  "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+                  "status": 404,
+                  "error": null
+                },
+                {
+                  "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+                  "status": 404,
+                  "error": null
+                },
+                {
+                  "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+                  "status": 404,
+                  "error": null
+                }
+              ],
+              "url": null,
+              "repro": null
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": true,
+              "details": {
+                "total": 111,
+                "missingHeadshots": 0,
+                "pctMissing": 0
+              }
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": true,
+              "details": {
+                "stale": 0,
+                "beatError": null
+              }
+            }
+          ]
+        },
+        "pages": {
+          "module": "pages",
+          "pass": false,
+          "total": 6,
+          "failed": 6,
+          "checks": [
+            {
+              "id": "pages:home:desktop",
+              "module": "pages",
+              "label": "/ (desktop HTML)",
+              "pass": false,
+              "error": "Missing markers on / (desktop): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal",
+              "details": {
+                "viewport": "desktop",
+                "missing": [
+                  "gvOpenVerifiedSource",
+                  "gv-film-source",
+                  "gv-verified-source-modal"
+                ]
+              },
+              "url": "https://gatorvaultinsider.com/",
+              "repro": "Load https://gatorvaultinsider.com/ on desktop; verify deployed build includes required UI hooks"
+            },
+            {
+              "id": "pages:home:mobile",
+              "module": "pages",
+              "label": "/ (mobile HTML)",
+              "pass": false,
+              "error": "Missing markers on / (mobile): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal",
+              "details": {
+                "viewport": "mobile",
+                "missing": [
+                  "gvOpenVerifiedSource",
+                  "gv-film-source",
+                  "gv-verified-source-modal"
+                ]
+              },
+              "url": "https://gatorvaultinsider.com/",
+              "repro": "Load https://gatorvaultinsider.com/ on mobile; verify deployed build includes required UI hooks"
+            },
+            {
+              "id": "pages:admin-hub:desktop",
+              "module": "pages",
+              "label": "/admin (desktop HTML)",
+              "pass": false,
+              "error": "Missing markers on /admin (desktop): admin-hub-core",
+              "details": {
+                "viewport": "desktop",
+                "missing": [
+                  "admin-hub-core"
+                ]
+              },
+              "url": "https://gatorvaultinsider.com/admin",
+              "repro": "Load https://gatorvaultinsider.com/admin on desktop; verify deployed build includes required UI hooks"
+            },
+            {
+              "id": "pages:admin-hub:mobile",
+              "module": "pages",
+              "label": "/admin (mobile HTML)",
+              "pass": false,
+              "error": "Missing markers on /admin (mobile): admin-hub-core",
+              "details": {
+                "viewport": "mobile",
+                "missing": [
+                  "admin-hub-core"
+                ]
+              },
+              "url": "https://gatorvaultinsider.com/admin",
+              "repro": "Load https://gatorvaultinsider.com/admin on mobile; verify deployed build includes required UI hooks"
+            },
+            {
+              "id": "pages:film-room-hooks",
+              "module": "pages",
+              "label": "Film Room verified source hooks",
+              "pass": false,
+              "error": "Film Room hooks missing: gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal, gvWireFilmSources",
+              "details": null,
+              "url": "https://gatorvaultinsider.com",
+              "repro": "Deploy latest index.html with verified source modal wiring"
+            },
+            {
+              "id": "pages:team-hooks",
+              "module": "pages",
+              "label": "Team tab modal hooks",
+              "pass": false,
+              "error": "Team tab hooks missing: gvOpenTeamDetail",
+              "details": null,
+              "url": "https://gatorvaultinsider.com",
+              "repro": null
+            }
+          ]
+        },
+        "ux": {
+          "module": "ux",
+          "pass": false,
+          "total": 5,
+          "failed": 1,
+          "checks": [
+            {
+              "id": "ux:modal-zindex",
+              "module": "ux",
+              "label": "Modal z-index stacking",
+              "pass": false,
+              "error": "verified source modal z-index (100010) not found",
+              "details": null,
+              "url": null,
+              "repro": null
+            },
+            {
+              "id": "ux:tap-targets",
+              "module": "ux",
+              "label": "Mobile tap target CSS",
+              "pass": true,
+              "details": {
+                "patternsChecked": 4
+              }
+            },
+            {
+              "id": "ux:scroll-containers",
+              "module": "ux",
+              "label": "Horizontal scroll containers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "ux:overflow-visible",
+              "module": "ux",
+              "label": "Modal preview overflow",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "ux:mobile-safari",
+              "module": "ux",
+              "label": "Mobile Safari safe-area / viewport",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            }
+          ]
+        },
+        "browser": {
+          "module": "browser",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "browser:disabled",
+              "module": "browser",
+              "label": "Browser crawl",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "QA_BROWSER_ENABLED not set"
+              }
+            }
+          ]
+        }
+      },
+      "errors": [
+        {
+          "id": "integrity:feed-dedup",
+          "module": "integrity",
+          "message": "1 duplicate feed item(s)",
+          "url": null,
+          "repro": "Open Latest Updates; check live-aggregator dedup rules",
+          "details": [
+            {
+              "key": "/player/jaydee-lane",
+              "first": 34,
+              "duplicate": 35
+            }
+          ],
+          "screenshot": null
+        },
+        {
+          "id": "integrity:film-sources",
+          "module": "integrity",
+          "message": "7 broken Film Room source URL(s)",
+          "url": null,
+          "repro": "QA check failed: Film Room source URLs",
+          "details": [
+            {
+              "url": "https://www.nfl.com/combine/ol-pass-protection",
+              "status": 503,
+              "error": null
+            },
+            {
+              "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+              "status": 503,
+              "error": null
+            },
+            {
+              "url": "https://www.nfl.com/combine/dt-anchor-strength",
+              "status": 503,
+              "error": null
+            },
+            {
+              "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+              "status": 404,
+              "error": null
+            },
+            {
+              "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+              "status": 404,
+              "error": null
+            },
+            {
+              "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+              "status": 404,
+              "error": null
+            },
+            {
+              "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+              "status": 404,
+              "error": null
+            }
+          ],
+          "screenshot": null
+        },
+        {
+          "id": "pages:home:desktop",
+          "module": "pages",
+          "message": "Missing markers on / (desktop): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal",
+          "url": "https://gatorvaultinsider.com/",
+          "repro": "Load https://gatorvaultinsider.com/ on desktop; verify deployed build includes required UI hooks",
+          "details": {
+            "viewport": "desktop",
+            "missing": [
+              "gvOpenVerifiedSource",
+              "gv-film-source",
+              "gv-verified-source-modal"
+            ]
+          },
+          "screenshot": null
+        },
+        {
+          "id": "pages:home:mobile",
+          "module": "pages",
+          "message": "Missing markers on / (mobile): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal",
+          "url": "https://gatorvaultinsider.com/",
+          "repro": "Load https://gatorvaultinsider.com/ on mobile; verify deployed build includes required UI hooks",
+          "details": {
+            "viewport": "mobile",
+            "missing": [
+              "gvOpenVerifiedSource",
+              "gv-film-source",
+              "gv-verified-source-modal"
+            ]
+          },
+          "screenshot": null
+        },
+        {
+          "id": "pages:admin-hub:desktop",
+          "module": "pages",
+          "message": "Missing markers on /admin (desktop): admin-hub-core",
+          "url": "https://gatorvaultinsider.com/admin",
+          "repro": "Load https://gatorvaultinsider.com/admin on desktop; verify deployed build includes required UI hooks",
+          "details": {
+            "viewport": "desktop",
+            "missing": [
+              "admin-hub-core"
+            ]
+          },
+          "screenshot": null
+        },
+        {
+          "id": "pages:admin-hub:mobile",
+          "module": "pages",
+          "message": "Missing markers on /admin (mobile): admin-hub-core",
+          "url": "https://gatorvaultinsider.com/admin",
+          "repro": "Load https://gatorvaultinsider.com/admin on mobile; verify deployed build includes required UI hooks",
+          "details": {
+            "viewport": "mobile",
+            "missing": [
+              "admin-hub-core"
+            ]
+          },
+          "screenshot": null
+        },
+        {
+          "id": "pages:film-room-hooks",
+          "module": "pages",
+          "message": "Film Room hooks missing: gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal, gvWireFilmSources",
+          "url": "https://gatorvaultinsider.com",
+          "repro": "Deploy latest index.html with verified source modal wiring",
+          "details": null,
+          "screenshot": null
+        },
+        {
+          "id": "pages:team-hooks",
+          "module": "pages",
+          "message": "Team tab hooks missing: gvOpenTeamDetail",
+          "url": "https://gatorvaultinsider.com",
+          "repro": "QA check failed: Team tab modal hooks",
+          "details": null,
+          "screenshot": null
+        },
+        {
+          "id": "ux:modal-zindex",
+          "module": "ux",
+          "message": "verified source modal z-index (100010) not found",
+          "url": null,
+          "repro": "QA check failed: Modal z-index stacking",
+          "details": null,
+          "screenshot": null
+        }
+      ],
+      "screenshot": null,
+      "summary": {
+        "total": 43,
+        "passed": 34,
+        "failed": 9
+      }
+    }
+  ],
+  "errors": [
+    {
+      "id": "integrity:feed-dedup",
+      "at": "2026-06-11T14:24:33.454Z",
+      "runId": "qa_1781187870655",
+      "module": "integrity",
+      "message": "1 duplicate feed item(s)",
+      "url": null,
+      "repro": "Open Latest Updates; check live-aggregator dedup rules",
+      "details": [
+        {
+          "key": "/player/jaydee-lane",
+          "first": 34,
+          "duplicate": 35
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "id": "integrity:film-sources",
+      "at": "2026-06-11T14:24:33.454Z",
+      "runId": "qa_1781187870655",
+      "module": "integrity",
+      "message": "7 broken Film Room source URL(s)",
+      "url": null,
+      "repro": "QA check failed: Film Room source URLs",
+      "details": [
+        {
+          "url": "https://www.nfl.com/combine/ol-pass-protection",
+          "status": 503,
+          "error": null
+        },
+        {
+          "url": "https://www.nfl.com/combine/ol-dt-evaluation",
+          "status": 503,
+          "error": null
+        },
+        {
+          "url": "https://www.nfl.com/combine/dt-anchor-strength",
+          "status": 503,
+          "error": null
+        },
+        {
+          "url": "https://www.on3.com/teams/florida-gators/news/fsu-rpo-rivalry-film-study/",
+          "status": 404,
+          "error": null
+        },
+        {
+          "url": "https://floridagators.com/news/2026/3/20/football-brad-white-spring-defensive-install",
+          "status": 404,
+          "error": null
+        },
+        {
+          "url": "https://floridagators.com/news/2026/7/20/football-brad-white-sec-media-days",
+          "status": 404,
+          "error": null
+        },
+        {
+          "url": "https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice",
+          "status": 404,
+          "error": null
+        }
+      ],
+      "screenshot": null
+    },
+    {
+      "id": "pages:home:desktop",
+      "at": "2026-06-11T14:24:33.454Z",
+      "runId": "qa_1781187870655",
+      "module": "pages",
+      "message": "Missing markers on / (desktop): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal",
+      "url": "https://gatorvaultinsider.com/",
+      "repro": "Load https://gatorvaultinsider.com/ on desktop; verify deployed build includes required UI hooks",
+      "details": {
+        "viewport": "desktop",
+        "missing": [
+          "gvOpenVerifiedSource",
+          "gv-film-source",
+          "gv-verified-source-modal"
+        ]
+      },
+      "screenshot": null
+    },
+    {
+      "id": "pages:home:mobile",
+      "at": "2026-06-11T14:24:33.454Z",
+      "runId": "qa_1781187870655",
+      "module": "pages",
+      "message": "Missing markers on / (mobile): gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal",
+      "url": "https://gatorvaultinsider.com/",
+      "repro": "Load https://gatorvaultinsider.com/ on mobile; verify deployed build includes required UI hooks",
+      "details": {
+        "viewport": "mobile",
+        "missing": [
+          "gvOpenVerifiedSource",
+          "gv-film-source",
+          "gv-verified-source-modal"
+        ]
+      },
+      "screenshot": null
+    },
+    {
+      "id": "pages:admin-hub:desktop",
+      "at": "2026-06-11T14:24:33.454Z",
+      "runId": "qa_1781187870655",
+      "module": "pages",
+      "message": "Missing markers on /admin (desktop): admin-hub-core",
+      "url": "https://gatorvaultinsider.com/admin",
+      "repro": "Load https://gatorvaultinsider.com/admin on desktop; verify deployed build includes required UI hooks",
+      "details": {
+        "viewport": "desktop",
+        "missing": [
+          "admin-hub-core"
+        ]
+      },
+      "screenshot": null
+    },
+    {
+      "id": "pages:admin-hub:mobile",
+      "at": "2026-06-11T14:24:33.454Z",
+      "runId": "qa_1781187870655",
+      "module": "pages",
+      "message": "Missing markers on /admin (mobile): admin-hub-core",
+      "url": "https://gatorvaultinsider.com/admin",
+      "repro": "Load https://gatorvaultinsider.com/admin on mobile; verify deployed build includes required UI hooks",
+      "details": {
+        "viewport": "mobile",
+        "missing": [
+          "admin-hub-core"
+        ]
+      },
+      "screenshot": null
+    },
+    {
+      "id": "pages:film-room-hooks",
+      "at": "2026-06-11T14:24:33.454Z",
+      "runId": "qa_1781187870655",
+      "module": "pages",
+      "message": "Film Room hooks missing: gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal, gvWireFilmSources",
+      "url": "https://gatorvaultinsider.com",
+      "repro": "Deploy latest index.html with verified source modal wiring",
+      "details": null,
+      "screenshot": null
+    },
+    {
+      "id": "pages:team-hooks",
+      "at": "2026-06-11T14:24:33.454Z",
+      "runId": "qa_1781187870655",
+      "module": "pages",
+      "message": "Team tab hooks missing: gvOpenTeamDetail",
+      "url": "https://gatorvaultinsider.com",
+      "repro": "QA check failed: Team tab modal hooks",
+      "details": null,
+      "screenshot": null
+    },
+    {
+      "id": "ux:modal-zindex",
+      "at": "2026-06-11T14:24:33.454Z",
+      "runId": "qa_1781187870655",
+      "module": "ux",
+      "message": "verified source modal z-index (100010) not found",
+      "url": null,
+      "repro": "QA check failed: Modal z-index stacking",
+      "details": null,
+      "screenshot": null
+    }
+  ],
+  "moduleStatus": {
+    "api": {
+      "pass": true,
+      "total": 19,
+      "failed": 0,
+      "at": "2026-06-11T14:24:33.454Z"
+    },
+    "content": {
+      "pass": true,
+      "total": 4,
+      "failed": 0,
+      "at": "2026-06-11T14:24:33.454Z"
+    },
+    "integrity": {
+      "pass": false,
+      "total": 8,
+      "failed": 2,
+      "at": "2026-06-11T14:24:33.454Z"
+    },
+    "pages": {
+      "pass": false,
+      "total": 6,
+      "failed": 6,
+      "at": "2026-06-11T14:24:33.454Z"
+    },
+    "ux": {
+      "pass": false,
+      "total": 5,
+      "failed": 1,
+      "at": "2026-06-11T14:24:33.454Z"
+    },
+    "browser": {
+      "pass": true,
+      "total": 1,
+      "failed": 0,
+      "at": "2026-06-11T14:24:33.454Z"
+    }
+  },
+  "updatedAt": "2026-06-11T14:24:33.456Z"
+}

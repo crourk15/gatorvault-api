@@ -16,7 +16,8 @@
     "ensure:film-room": "node scripts/ensure-film-room-media.js",
     "rebuild:scouting": "node scripts/rebuild-scouting-database.js",
     "ingest:media": "node scripts/run-media-ingest.js",
-    "generate:og": "node scripts/generate-og-assets.js"
+    "generate:og": "node scripts/generate-og-assets.js",
+    "qa:crawl": "node scripts/run-qa-crawler.js"
   },
   "engines": {
     "node": ">=18"

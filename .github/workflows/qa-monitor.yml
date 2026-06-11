@@ -1,0 +1,39 @@
+# GatorVault QA Crawler — triggers full QA pass on Render API every 5 minutes.
+# Set repository secrets: QA_CRON_SECRET (same as INGEST_CRON_SECRET on Render)
+name: QA Monitor
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  qa-crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: server/package.json
+      - name: Install dependencies
+        working-directory: server
+        run: npm ci || npm install
+      - name: Run QA crawler (API + content + pages)
+        working-directory: server
+        env:
+          QA_API_URL: https://gatorvault-api.onrender.com
+          SITE_URL: https://gatorvaultinsider.com
+          QA_BROWSER_ENABLED: 'false'
+        run: node scripts/run-qa-crawler.js
+      - name: Trigger remote QA on Render (optional dual-run)
+        if: env.QA_CRON_SECRET != ''
+        env:
+          QA_CRON_SECRET: ${{ secrets.QA_CRON_SECRET }}
+        run: |
+          curl -sf -X POST "https://gatorvault-api.onrender.com/api/qa/run" \
+            -H "x-monitoring-cron: ${QA_CRON_SECRET}" \
+            -H "Content-Type: application/json" \
+            -d '{}' || echo "Remote trigger skipped"

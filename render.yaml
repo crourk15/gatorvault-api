@@ -89,3 +89,13 @@ services:
         value: "false"
       - key: MEDIA_INGEST_INTERVAL_MS
         value: "900000"
+      - key: QA_CRAWLER_ENABLED
+        value: "true"
+      - key: QA_CRAWLER_INTERVAL_MS
+        value: "300000"
+      - key: QA_CRAWLER_BOOT_DELAY_MS
+        value: "45000"
+      - key: QA_ALERT_ON_FAIL
+        value: "true"
+      - key: SLACK_WEBHOOK_URL
+        sync: false

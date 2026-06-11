@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GatorVault — QA Monitor</title>
+  <style>
+    :root { --bg:#0b1220; --panel:#121a2b; --text:#e8edf5; --muted:#8b9bb4; --orange:#fa4616; --ok:#22c55e; --fail:#f87171; --warn:#fbbf24; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); }
+    header { padding:1rem 1.5rem; border-bottom:1px solid #1e293b; display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between; }
+    h1 { margin:0; font-size:1.25rem; }
+    main { padding:1rem 1.5rem 2rem; max-width:1280px; margin:0 auto; }
+    .row { display:flex; flex-wrap:wrap; gap:.75rem; align-items:center; }
+    input, button { font:inherit; }
+    input[type=password] { background:var(--panel); border:1px solid #334155; color:var(--text); padding:.5rem .75rem; border-radius:.5rem; min-width:200px; }
+    button { background:var(--orange); color:#fff; border:0; padding:.5rem 1rem; border-radius:.5rem; cursor:pointer; min-height:44px; }
+    button.secondary { background:#334155; }
+    .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:.75rem; margin:1rem 0 1.5rem; }
+    .stat { background:var(--panel); border:1px solid #1e293b; border-radius:.75rem; padding:.75rem 1rem; }
+    .stat .label { color:var(--muted); font-size:.7rem; text-transform:uppercase; letter-spacing:.04em; }
+    .stat .value { font-size:1.4rem; font-weight:700; margin-top:.25rem; }
+    .stat.ok .value { color:var(--ok); }
+    .stat.fail .value { color:var(--fail); }
+    .modules { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:.75rem; margin-bottom:1.5rem; }
+    .mod { background:var(--panel); border:1px solid #1e293b; border-radius:.75rem; padding:.85rem 1rem; }
+    .mod.pass { border-color:rgba(34,197,94,.35); }
+    .mod.fail { border-color:rgba(248,113,113,.45); }
+    .mod h3 { margin:0 0 .35rem; font-size:.85rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+    .mod .badge { font-size:.75rem; font-weight:700; }
+    .badge.pass { color:var(--ok); }
+    .badge.fail { color:var(--fail); }
+    table { width:100%; border-collapse:collapse; background:var(--panel); border-radius:.75rem; overflow:hidden; margin-bottom:1.5rem; }
+    th, td { padding:.65rem .85rem; text-align:left; border-bottom:1px solid #1e293b; font-size:.8125rem; vertical-align:top; }
+    th { color:var(--muted); font-weight:600; font-size:.7rem; text-transform:uppercase; }
+    .status { font-size:.875rem; color:var(--muted); }
+    .status.ok { color:var(--ok); }
+    .status.fail { color:var(--fail); }
+    .err-msg { color:var(--fail); font-weight:600; }
+    .mono { font-family:ui-monospace,monospace; font-size:.75rem; color:var(--muted); }
+    .empty { padding:2rem; text-align:center; color:var(--muted); }
+    h2 { font-size:1rem; margin:1.5rem 0 .75rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🛡️ QA Monitor — 24/7 Crawler</h1>
+    <div class="row">
+      <input id="pin" type="password" placeholder="Admin PIN" autocomplete="off" />
+      <button id="refresh">Refresh</button>
+      <button id="run-now" class="secondary">Run Crawl Now</button>
+    </div>
+  </header>
+  <main>
+    <p class="status" id="status">Enter admin PIN and refresh.</p>
+    <div class="stats" id="stats"></div>
+    <div class="modules" id="modules"></div>
+
+    <h2>Last 50 Errors</h2>
+    <table>
+      <thead><tr><th>Time</th><th>Module</th><th>Check</th><th>Error</th><th>Repro</th></tr></thead>
+      <tbody id="errors-body"></tbody>
+    </table>
+
+    <h2>Recent Runs</h2>
+    <table>
+      <thead><tr><th>Time</th><th>Result</th><th>Duration</th><th>Passed</th><th>Failed</th><th>Run ID</th></tr></thead>
+      <tbody id="runs-body"></tbody>
+    </table>
+    <div class="empty" id="empty" hidden>No QA runs yet — crawler starts within ~45s of API boot.</div>
+  </main>
+  <script>
+    var API = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000'
+      : 'https://gatorvault-api.onrender.com';
+    var SESSION_KEY = 'gv_admin_pin';
+
+    function esc(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function pin() {
+      return document.getElementById('pin').value || sessionStorage.getItem(SESSION_KEY) || '';
+    }
+
+    function headers() {
+      return { 'x-ops-pin': pin(), Accept: 'application/json' };
+    }
+
+    function renderStats(data) {
+      var el = document.getElementById('stats');
+      var up = data.uptime || {};
+      var last = data.lastRun || {};
+      el.innerHTML = [
+        stat('Uptime', (up.percent != null ? up.percent + '%' : '—'), 'ok'),
+        stat('Checks', up.checks || 0, ''),
+        stat('Last Run', last.pass ? 'PASS' : (last.at ? 'FAIL' : '—'), last.pass ? 'ok' : (last.at ? 'fail' : '')),
+        stat('Failed Checks', last.failed || 0, last.failed ? 'fail' : 'ok'),
+        stat('Duration', last.at ? (data.recentRuns && data.recentRuns[0] ? data.recentRuns[0].durationMs + 'ms' : '—') : '—', '')
+      ].join('');
+    }
+
+    function stat(label, value, cls) {
+      return '<div class="stat ' + cls + '"><div class="label">' + esc(label) + '</div><div class="value">' + esc(String(value)) + '</div></div>';
+    }
+
+    function renderModules(moduleStatus) {
+      var el = document.getElementById('modules');
+      var mods = ['api','content','integrity','pages','browser','ux'];
+      el.innerHTML = mods.map(function(m) {
+        var s = moduleStatus[m] || {};
+        var pass = s.pass !== false && s.at;
+        var pending = !s.at;
+        return '<div class="mod ' + (pending ? '' : (pass ? 'pass' : 'fail')) + '">'
+          + '<h3>' + esc(m) + '</h3>'
+          + '<div class="badge ' + (pending ? '' : (pass ? 'pass' : 'fail')) + '">'
+          + (pending ? 'PENDING' : (pass ? 'PASS' : 'FAIL (' + (s.failed || 0) + ')'))
+          + '</div></div>';
+      }).join('');
+    }
+
+    function renderErrors(errors) {
+      var tbody = document.getElementById('errors-body');
+      if (!errors || !errors.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty">No errors recorded 🎉</td></tr>';
+        return;
+      }
+      tbody.innerHTML = errors.map(function(e) {
+        return '<tr>'
+          + '<td class="mono">' + esc((e.at || '').replace('T',' ').slice(0,19)) + '</td>'
+          + '<td>' + esc(e.module) + '</td>'
+          + '<td class="mono">' + esc(e.id) + '</td>'
+          + '<td class="err-msg">' + esc(e.message) + '</td>'
+          + '<td>' + esc(e.repro || '') + '</td></tr>';
+      }).join('');
+    }
+
+    function renderRuns(runs) {
+      var tbody = document.getElementById('runs-body');
+      var empty = document.getElementById('empty');
+      if (!runs || !runs.length) {
+        tbody.innerHTML = '';
+        empty.hidden = false;
+        return;
+      }
+      empty.hidden = true;
+      tbody.innerHTML = runs.map(function(r) {
+        return '<tr>'
+          + '<td class="mono">' + esc((r.finishedAt || '').replace('T',' ').slice(0,19)) + '</td>'
+          + '<td class="' + (r.pass ? 'status ok' : 'status fail') + '">' + (r.pass ? 'PASS' : 'FAIL') + '</td>'
+          + '<td>' + esc(r.durationMs) + 'ms</td>'
+          + '<td>' + esc(r.summary && r.summary.passed) + '</td>'
+          + '<td>' + esc(r.summary && r.summary.failed) + '</td>'
+          + '<td class="mono">' + esc(r.id) + '</td></tr>';
+      }).join('');
+    }
+
+    function load() {
+      var status = document.getElementById('status');
+      var p = pin();
+      if (!p) { status.textContent = 'Enter admin PIN.'; return; }
+      sessionStorage.setItem(SESSION_KEY, p);
+      status.textContent = 'Loading…';
+      fetch(API + '/api/qa/dashboard', { headers: headers() })
+        .then(function(r) { return r.json(); })
+        .then(function(j) {
+          if (!j.ok) throw new Error(j.error || 'Load failed');
+          status.textContent = 'Updated ' + new Date().toLocaleTimeString();
+          status.className = 'status ok';
+          renderStats(j);
+          renderModules(j.moduleStatus || {});
+          renderErrors(j.errors || []);
+          renderRuns(j.recentRuns || []);
+        })
+        .catch(function(e) {
+          status.textContent = e.message;
+          status.className = 'status fail';
+        });
+    }
+
+    document.getElementById('refresh').addEventListener('click', load);
+    document.getElementById('run-now').addEventListener('click', function() {
+      var status = document.getElementById('status');
+      status.textContent = 'Running crawl…';
+      fetch(API + '/api/qa/run', { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json' }, headers()), body: '{}' })
+        .then(function(r) { return r.json(); })
+        .then(function() { load(); })
+        .catch(function(e) { status.textContent = e.message; status.className = 'status fail'; });
+    });
+    if (sessionStorage.getItem(SESSION_KEY)) document.getElementById('pin').value = sessionStorage.getItem(SESSION_KEY);
+    load();
+    setInterval(load, 60000);
+  </script>
+</body>
+</html>

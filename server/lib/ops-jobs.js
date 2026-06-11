@@ -161,6 +161,15 @@ const JOBS = {
       const report = await buildOpsStatusReport({ evaluateAlerts: true });
       return { ok: report.healthy !== false, report };
     }
+  },
+  'qa-crawler': {
+    label: 'QA crawler (full site + API)',
+    subsystem: 'qa:crawler',
+    schedule: 'Every 5m (QA_CRAWLER_ENABLED)',
+    async run(opts = {}) {
+      const { runQaCrawl } = require('./qa/qa-runner');
+      return runQaCrawl({ force: opts.force !== false });
+    }
   }
 };
 

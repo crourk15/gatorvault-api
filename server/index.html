@@ -34,7 +34,7 @@
     <meta name="description" content="GatorVault is the Florida Gators football hub — depth charts, recruiting boards, transfer portal intel, Film Room breakdowns, and live beat writer coverage. Start your free 30-day trial." />
     <meta name="keywords" content="Florida Gators football, UF football, Gators recruiting, Florida Gators depth chart, Gators transfer portal, Jon Sumrall, SEC football, Gator Nation" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta name="gv-build" content="mhome-v3-20260612" />
+    <meta name="gv-build" content="mhome-v3-20260614" />
     <link rel="canonical" href="https://gatorvaultinsider.com/" />
     <link rel="image_src" href="https://gatorvaultinsider.com/og-image.jpg?v=20260605" />
     <meta name="google-site-verification" content="CfKonZGeVMZBFJ3JhqaFhPfs7kS6-LvCmskXElgekTs" />
@@ -243,6 +243,11 @@
         .film-diagram{margin-top:1rem;padding:1rem;border:1px dashed rgba(250,70,22,.25);border-radius:.75rem;font-size:.75rem;color:#94a3b8;}
         .film-diagram-node{display:inline-block;margin:.25rem .35rem .25rem 0;padding:.2rem .5rem;border-radius:.35rem;background:rgba(250,70,22,.12);color:#fdba74;font-weight:600;}
         .film-verified-badge{font-size:.65rem;font-weight:700;color:#4ade80;background:rgba(74,222,128,.12);padding:.15rem .45rem;border-radius:.35rem;}
+        .gv-film-source{display:block;width:100%;text-align:left;background:transparent;border:none;padding:.4rem 0;color:#60a5fa;font-size:.75rem;line-height:1.45;cursor:pointer;text-decoration:underline;-webkit-tap-highlight-color:transparent;touch-action:manipulation;pointer-events:auto;position:relative;z-index:2;min-height:44px;}
+        .gv-film-source:hover,.gv-film-source:focus-visible{color:#93c5fd;outline:2px solid rgba(96,165,250,.35);outline-offset:2px;}
+        #hl-modal-sources,#hl-modal-preview{pointer-events:auto;position:relative;z-index:2;}
+        .gv-verified-source-ov{z-index:100010!important;}
+        .gv-verified-source-panel{pointer-events:auto;}
         .toggle-switch{position:relative;width:48px;height:26px;background:rgba(0,48,135,.4);border-radius:13px;cursor:pointer;transition:background .2s;flex-shrink:0;}
         .toggle-switch.active{background:#FA4616;}
         .toggle-switch::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:white;transition:transform .2s;}
@@ -476,27 +481,76 @@
             .gv-mteam-pos-chip.active{background:rgba(250,70,22,.15);border-color:var(--gv-uf-orange);color:#fff;}
             .gv-mteam-roster-filters{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;margin-bottom:12px;}
             .gv-mteam-roster-card{display:flex;align-items:center;gap:12px;background:#121c2e;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
-            .gv-mteam-roster-av{flex:0 0 40px;width:40px;height:40px;border-radius:50%;background:#0a1628;border:2px solid var(--gv-uf-blue);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--gv-uf-orange);font-size:13px;}
+            .gv-mteam-roster-av{flex:0 0 40px;width:40px;height:40px;border-radius:50%;background:#0a1628;border:2px solid var(--gv-uf-blue);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--gv-uf-orange);font-size:13px;object-fit:cover;}
             .gv-mteam-roster-meta{flex:1;min-width:0;}
             .gv-mteam-roster-name{font-size:14px;font-weight:600;color:#f8fafc;display:block;}
             .gv-mteam-roster-sub{font-size:11px;color:#64748b;display:block;margin-top:2px;}
             .gv-mteam-dc-card{display:flex;align-items:center;justify-content:space-between;width:100%;background:#121c2e;border:1px solid rgba(0,48,135,.4);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;}
             .gv-mteam-dc-units{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
             .gv-mteam-dc-unit{font-size:10px;font-weight:700;text-transform:uppercase;padding:6px 10px;border-radius:8px;background:rgba(0,48,135,.25);color:#93c5fd;border:1px solid rgba(0,48,135,.35);}
-            #gv-team-detail-modal.highlight-modal-ov{z-index:100005!important;padding:0;align-items:stretch;}
+            #gv-team-detail-modal.highlight-modal-ov{z-index:100005!important;padding:0;align-items:stretch;justify-content:flex-start;}
             body.gv-team-modal-open{overflow:hidden;}
-            #gv-team-detail-modal .highlight-modal.gv-team-detail-panel{max-width:none;width:100%;min-height:100%;border-radius:0;margin:0;display:flex;flex-direction:column;border-left:0;border-right:0;}
-            #gv-team-detail-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:max(1rem,env(safe-area-inset-bottom));}
+            .gv-team-modal-panel{position:relative;width:100%;min-height:100%;max-height:100vh;display:flex;flex-direction:column;background:#060f1f;border:0;border-radius:0;overflow:hidden;transition:transform .22s ease;}
+            .gv-team-modal-panel.gv-team-modal-dragging{transition:none;}
+            .gv-team-modal-drag{display:flex;justify-content:center;padding:10px 0 4px;flex-shrink:0;background:#060f1f;}
+            .gv-team-modal-drag::after{content:'';width:40px;height:4px;border-radius:999px;background:rgba(148,163,184,.45);}
+            .gv-team-modal-hero{position:relative;flex-shrink:0;height:200px;overflow:hidden;background:#001a4d center/cover no-repeat;}
+            .gv-team-modal-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;}
+            .gv-team-modal-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,15,31,.15) 0%,rgba(6,15,31,.55) 45%,rgba(6,15,31,.95) 100%);}
+            .gv-team-modal-hero-text{position:absolute;left:0;right:0;bottom:0;padding:16px 18px 18px;z-index:2;}
+            .gv-team-modal-kicker{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#fdba74;background:rgba(250,70,22,.18);border:1px solid rgba(250,70,22,.35);padding:4px 10px;border-radius:999px;margin-bottom:8px;}
+            .gv-team-modal-title{font-family:'Oswald',sans-serif;font-size:1.75rem;font-weight:700;line-height:1.15;color:#fff;margin:0;text-shadow:0 2px 12px rgba(0,0,0,.45);}
+            .gv-team-modal-toolbar{position:absolute;top:max(8px,env(safe-area-inset-top));right:12px;z-index:5;display:flex;gap:8px;}
+            .gv-team-modal-btn{width:44px;height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(6,15,31,.55);backdrop-filter:blur(8px);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;}
+            .gv-team-modal-btn:active{transform:scale(.96);}
+            .gv-team-modal-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 24px;padding-bottom:max(24px,env(safe-area-inset-bottom));}
+            .gv-tm-section{margin-top:20px;padding-top:4px;}
+            .gv-tm-section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+            .gv-tm-section-icon{flex:0 0 36px;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(0,48,135,.45),rgba(250,70,22,.2));display:flex;align-items:center;justify-content:center;font-size:18px;}
+            .gv-tm-section-title{font-family:'Oswald',sans-serif;font-size:1.05rem;font-weight:700;color:#f8fafc;margin:0;letter-spacing:.02em;}
+            .gv-tm-lead{font-size:.9375rem;color:#cbd5e1;line-height:1.6;margin:0 0 4px;}
+            .gv-tm-body{font-size:.8125rem;color:#94a3b8;line-height:1.65;margin:0;}
+            .gv-tm-chip-list{display:flex;flex-wrap:wrap;gap:8px;}
+            .gv-tm-chip{font-size:.75rem;font-weight:600;color:#e2e8f0;background:rgba(0,48,135,.28);border:1px solid rgba(0,48,135,.4);padding:6px 12px;border-radius:999px;}
+            .gv-tm-photo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+            .gv-tm-photo-card{text-align:center;background:#0a1628;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:10px 8px;}
+            .gv-tm-photo-card img,.gv-tm-photo-av{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid rgba(250,70,22,.35);margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-weight:700;font-size:14px;color:#fff;background:linear-gradient(135deg,#003087,#FA4616);}
+            .gv-tm-photo-name{font-size:11px;font-weight:700;color:#f8fafc;line-height:1.25;display:block;}
+            .gv-tm-photo-sub{font-size:10px;color:#64748b;display:block;margin-top:2px;}
+            .gv-tm-highlight{display:flex;gap:12px;align-items:flex-start;background:#0a1628;border:1px solid rgba(0,48,135,.3);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
+            .gv-tm-highlight-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+            .gv-tm-highlight-text{font-size:.8125rem;color:#cbd5e1;line-height:1.5;margin:0;}
+            .gv-tm-timeline{border-left:2px solid rgba(250,70,22,.35);margin-left:8px;padding-left:16px;}
+            .gv-tm-timeline-item{position:relative;margin-bottom:12px;font-size:.8125rem;color:#94a3b8;line-height:1.5;}
+            .gv-tm-timeline-item::before{content:'';position:absolute;left:-23px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--gv-uf-orange);box-shadow:0 0 0 3px rgba(250,70,22,.2);}
+            .gv-tm-related{display:grid;grid-template-columns:1fr;gap:10px;}
+            .gv-tm-related-card{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#0a1628;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:12px 14px;cursor:pointer;color:inherit;-webkit-tap-highlight-color:transparent;}
+            .gv-tm-related-card:active{border-color:rgba(250,70,22,.45);}
+            .gv-tm-related-icon{flex:0 0 40px;width:40px;height:40px;border-radius:10px;background:rgba(0,48,135,.3);display:flex;align-items:center;justify-content:center;font-size:18px;}
+            .gv-tm-related-label{font-size:14px;font-weight:700;color:#f8fafc;font-family:'Oswald',sans-serif;margin:0;}
+            .gv-tm-related-sub{font-size:11px;color:#64748b;margin:2px 0 0;}
+            .gv-tm-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+            .gv-tm-cta-primary{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 18px;border-radius:12px;background:var(--gv-uf-orange);color:#fff;font-size:13px;font-weight:700;text-decoration:none;border:none;cursor:pointer;}
+            .gv-tm-cta-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 18px;border-radius:12px;border:1px solid rgba(0,48,135,.45);background:rgba(0,48,135,.2);color:#93c5fd;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;}
+            .gv-tm-coach-hero{display:flex;gap:16px;align-items:center;margin-top:4px;}
+            .gv-tm-coach-photo{flex:0 0 88px;width:88px;height:88px;border-radius:16px;object-fit:cover;border:2px solid rgba(250,70,22,.4);background:linear-gradient(135deg,#003087,#0a1628);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:1.75rem;font-weight:700;color:#fff;}
+            .gv-tm-status-pill{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:4px 10px;border-radius:999px;margin-top:8px;}
+            .gv-tm-status-locked{background:rgba(74,222,128,.15);color:#4ade80;border:1px solid rgba(74,222,128,.3);}
+            .gv-tm-status-battle{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3);}
+            .gv-tm-status-watch{background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.25);}
             @media(min-width:768px){
-                #gv-team-detail-modal.highlight-modal-ov{padding:1rem;align-items:flex-start;}
-                #gv-team-detail-modal .highlight-modal.gv-team-detail-panel{max-width:42rem;min-height:0;border-radius:1rem;margin:auto 0;border:1px solid rgba(250,70,22,.25);}
+                #gv-team-detail-modal.highlight-modal-ov{padding:24px 0 24px 24px;align-items:flex-start;justify-content:flex-start;}
+                .gv-team-modal-panel{width:70vw;max-width:920px;min-height:0;max-height:calc(100vh - 48px);border-radius:16px;border:1px solid rgba(250,70,22,.22);box-shadow:0 24px 80px rgba(0,0,0,.55);}
+                .gv-team-modal-drag{display:none;}
+                .gv-team-modal-hero{height:240px;border-radius:16px 16px 0 0;}
+                .gv-team-modal-title{font-size:2.25rem;}
+                .gv-team-modal-body{padding:0 28px 32px;}
+                .gv-tm-related{grid-template-columns:repeat(2,minmax(0,1fr));}
+                .gv-tm-photo-grid{grid-template-columns:repeat(4,minmax(0,1fr));}
             }
             .gv-team-era-card,.gv-team-ach-tile,.gv-coach-card,.gv-team-nav-card,.gv-mteam-pos-chip{touch-action:manipulation;pointer-events:auto;position:relative;z-index:1;}
             .gv-team-hscroll-wrap{overflow:visible;touch-action:auto;margin:0 -16px 4px;}
             #vpane-team .gv-mob-module-hdr,#vpane-team .gv-mteam-subhdr{font-family:'Oswald',sans-serif;}
-            .gv-team-detail-lead{font-size:15px;color:#e2e8f0;line-height:1.5;margin:0 0 14px;}
-            .gv-team-detail-h{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gv-uf-orange);margin:14px 0 8px;}
-            .gv-team-detail-list{margin:0;padding-left:18px;color:#94a3b8;font-size:14px;line-height:1.5;}
             .gv-schedule-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#121c2e;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
             .gv-schedule-opp{font-size:14px;font-weight:600;color:#f8fafc;margin:0;}
             .gv-schedule-meta{font-size:11px;color:#64748b;margin:2px 0 0;}
@@ -588,11 +642,11 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style id="gv-critical">:root{--gv-ticker-h:44px}#gv-site-ticker{z-index:500!important;position:fixed;top:0;left:0;right:0;height:44px}#gv-alert-banner{z-index:510!important;position:fixed;top:0;left:0;right:0}body.gv-has-site-ticker #nav-main,body.gv-has-site-ticker nav.fixed{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #gv-mobile-header,body.gv-has-site-ticker .gv-mob-header{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior:not(.gv-mobile-active){padding-top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior .gv-desk-only.sticky.top-14{top:calc(var(--gv-ticker-h) + 3.5rem)!important}body.gv-has-site-ticker #hero-sec{padding-top:calc(8rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker #install-banner{top:calc(4rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker .gv-alert-banner{top:var(--gv-ticker-h)}</style>
-    <link rel="stylesheet" href="/gv-global.css?v=mhome-v3-20260612">
-    <link rel="stylesheet" href="/gv-feedback.css?v=mhome-v3-20260612">
-    <script src="/gv-global.js?v=mhome-v3-20260612" defer></script>
-    <script src="/gv-feedback.js?v=mhome-v3-20260612" defer></script>
-    <script src="/js/gv-team-mobile.js?v=mhome-v3-20260612" defer></script>
+    <link rel="stylesheet" href="/gv-global.css?v=mhome-v3-20260614">
+    <link rel="stylesheet" href="/gv-feedback.css?v=mhome-v3-20260614">
+    <script src="/gv-global.js?v=mhome-v3-20260614" defer></script>
+    <script src="/gv-feedback.js?v=mhome-v3-20260614" defer></script>
+    <script src="/js/gv-team-mobile.js?v=mhome-v3-20260614" defer></script>
 </head>
 <body data-id="0" class="gv-has-site-ticker">
     <app-icon data-id="1" hidden data-icon="shield" data-palette="Blue"></app-icon>
@@ -655,14 +709,42 @@
         </div>
     </div>
 
-    <!-- Team detail modal (mobile Team tab) -->
-    <div id="gv-team-detail-modal" class="highlight-modal-ov hidden" role="dialog" aria-modal="true" aria-labelledby="gv-team-detail-title" aria-hidden="true">
-        <div class="highlight-modal gv-team-detail-panel max-w-lg">
-            <div class="flex items-center justify-between gap-3 p-4 border-b border-gator-blue/20">
-                <h3 id="gv-team-detail-title" class="font-display text-lg font-bold text-white leading-snug"></h3>
-                <button id="gv-team-detail-close" type="button" class="text-surface-200 hover:text-white p-2 text-xl leading-none" aria-label="Close">✕</button>
+    <!-- Team detail modal (History, Achievements, Identity, Staff, Roster, Depth Chart) -->
+    <div id="gv-team-detail-modal" class="highlight-modal-ov hidden" role="dialog" aria-modal="true" aria-labelledby="gv-team-modal-title" aria-hidden="true">
+        <div class="gv-team-modal-panel" id="gv-team-modal-panel">
+            <div class="gv-team-modal-drag" aria-hidden="true"></div>
+            <div class="gv-team-modal-toolbar">
+                <button type="button" id="gv-team-modal-share" class="gv-team-modal-btn" aria-label="Share">⎘</button>
+                <button type="button" id="gv-team-detail-close" class="gv-team-modal-btn" aria-label="Close">✕</button>
             </div>
-            <div id="gv-team-detail-body" class="p-4 text-surface-200 text-sm leading-relaxed"></div>
+            <div class="gv-team-modal-hero" id="gv-team-modal-hero">
+                <img id="gv-team-modal-hero-img" class="gv-team-modal-hero-img hidden" alt="" />
+                <div class="gv-team-modal-hero-overlay"></div>
+                <div class="gv-team-modal-hero-text">
+                    <span class="gv-team-modal-kicker" id="gv-team-modal-kicker">Program History</span>
+                    <h2 class="gv-team-modal-title" id="gv-team-modal-title">Florida Gators</h2>
+                </div>
+            </div>
+            <div id="gv-team-detail-body" class="gv-team-modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Verified coaching source detail modal (Film Room Knowledge Engine) -->
+    <div id="gv-verified-source-modal" class="highlight-modal-ov gv-verified-source-ov hidden" role="dialog" aria-modal="true" aria-labelledby="gv-vsrc-title" aria-hidden="true">
+        <div class="highlight-modal max-w-md gv-verified-source-panel">
+            <div class="flex items-center justify-between gap-3 p-4 border-b border-gator-blue/20">
+                <div class="min-w-0">
+                    <p class="text-[10px] font-bold text-gator-orange uppercase tracking-wider mb-0.5">Verified Coaching Source</p>
+                    <h3 id="gv-vsrc-title" class="font-display text-base font-bold text-white leading-snug"></h3>
+                    <p id="gv-vsrc-meta" class="text-xs text-surface-200/60 mt-0.5"></p>
+                </div>
+                <button id="gv-vsrc-close" type="button" class="text-surface-200 hover:text-white p-2 text-xl leading-none min-w-[44px] min-h-[44px]" aria-label="Close">✕</button>
+            </div>
+            <div id="gv-vsrc-body" class="p-4 text-surface-200 text-sm leading-relaxed"></div>
+            <div class="p-4 pt-0 flex flex-wrap gap-2">
+                <a id="gv-vsrc-open" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center min-h-[44px] px-4 py-2 rounded-lg bg-gator-orange text-white text-sm font-bold hover:bg-gator-orangedk transition-colors">Open primary source →</a>
+                <button type="button" id="gv-vsrc-dismiss" class="inline-flex items-center justify-center min-h-[44px] px-4 py-2 rounded-lg border border-gator-blue/30 text-surface-200 text-sm font-semibold hover:text-white">Close</button>
+            </div>
         </div>
     </div>
 
@@ -1879,8 +1961,8 @@
                 </div>
             </div>
 
-            <p class="text-[10px] text-surface-200/25 mt-1 gv-mob-only" id="gv-build-stamp-mobile">UI mhome-v3-20260612</p>
-            <footer data-id="914" class="gv-desk-only text-center text-xs text-surface-200/40 py-6 border-t border-gator-blue/10 mt-8"><p data-id="915">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p><p class="text-[10px] text-surface-200/25 mt-1" id="gv-build-stamp">UI mhome-v3-20260612</p></footer>
+            <p class="text-[10px] text-surface-200/25 mt-1 gv-mob-only" id="gv-build-stamp-mobile">UI mhome-v3-20260614</p>
+            <footer data-id="914" class="gv-desk-only text-center text-xs text-surface-200/40 py-6 border-t border-gator-blue/10 mt-8"><p data-id="915">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p><p class="text-[10px] text-surface-200/25 mt-1" id="gv-build-stamp">UI mhome-v3-20260614</p></footer>
         </div>
     </div>
 
@@ -3044,6 +3126,13 @@
         else if(hash==='portal'){if(typeof openVault==='function')openVault();showVTab('portal');}
         else if(hash==='team'||hash==='dc'||hash==='depth-chart'){if(typeof openVault==='function')openVault();showVTab('team');}
         else if(hash.indexOf('article=')===0)gvOpenArticle(hash.split('=')[1]);
+        if(params.get('team')&&typeof openVault==='function'){
+            openVault();
+            setTimeout(function(){
+                showVTab('team');
+                if(typeof gvApplyTeamDeepLink==='function')gvApplyTeamDeepLink();
+            },400);
+        }
     }
     window.addEventListener('hashchange',gvHandleDeepLink);
 
@@ -4324,27 +4413,93 @@
             });
         });
     }
+    function gvFilmSourceId(source,idx){
+        var base=String(source&&source.source_name||'source').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48);
+        return 'src-'+(idx!=null?idx:0)+'-'+base;
+    }
+    function gvRegisterFilmSources(sources){
+        var reg={};
+        (sources||[]).forEach(function(s,i){reg[gvFilmSourceId(s,i)]=s;});
+        window._gvFilmSourceRegistry=reg;
+        return sources;
+    }
+    function gvStripBodyVerifiedSources(text){
+        if(!text)return '';
+        var m=String(text).match(/\n\nVerified Sources\n|\nVerified Sources\n|^Verified Sources\n/);
+        if(!m)return text;
+        return String(text).slice(0,m.index).trim();
+    }
     function gvFormatKnowledgeSources(sources){
         if(!sources||!sources.length)return '';
+        gvRegisterFilmSources(sources);
         var html='<p class="text-xs font-bold text-gator-orange uppercase tracking-wider mb-2">Verified Coaching Sources</p><ul class="space-y-1.5">';
-        sources.forEach(function(s){
+        sources.forEach(function(s,i){
             var label=(s.source_name||'Source')+(s.source_type?' · '+String(s.source_type).replace(/_/g,' '):'');
             if(s.source_confidence!=null)label+=' · '+s.source_confidence+'% confidence';
-            var url=s.source_url;
-            if(url){
-                html+='<li class="text-xs"><a href="'+gvEscHtml(url)+'" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline">'+gvEscHtml(label)+'</a></li>';
-            }else{
-                html+='<li class="text-xs text-surface-200/80">'+gvEscHtml(label)+'</li>';
-            }
+            var sid=gvFilmSourceId(s,i);
+            html+='<li class="text-xs"><button type="button" class="gv-film-source" data-source-id="'+gvEscHtml(sid)+'">'+gvEscHtml(label)+'</button></li>';
         });
         html+='</ul>';
         return html;
     }
+    function gvWireFilmSources(root){
+        if(!root)root=document;
+        root.querySelectorAll('.gv-film-source:not([data-gv-wired])').forEach(function(btn){
+            btn.setAttribute('data-gv-wired','1');
+            var sid=btn.getAttribute('data-source-id');
+            function openSrc(e){
+                if(e){e.preventDefault();e.stopPropagation();}
+                if(sid&&typeof window.gvOpenVerifiedSource==='function')window.gvOpenVerifiedSource(sid);
+            }
+            btn.addEventListener('click',openSrc);
+            btn.addEventListener('touchend',openSrc,{passive:false});
+        });
+    }
+    window.gvOpenVerifiedSource=function(sourceId){
+        var src=(window._gvFilmSourceRegistry||{})[sourceId];
+        if(!src)return;
+        var ov=document.getElementById('gv-verified-source-modal');
+        if(!ov)return;
+        var titleEl=document.getElementById('gv-vsrc-title');
+        var metaEl=document.getElementById('gv-vsrc-meta');
+        var bodyEl=document.getElementById('gv-vsrc-body');
+        var linkEl=document.getElementById('gv-vsrc-open');
+        if(titleEl)titleEl.textContent=src.source_name||'Verified coaching source';
+        if(metaEl){
+            var meta=[];
+            if(src.source_type)meta.push(String(src.source_type).replace(/_/g,' '));
+            if(src.source_confidence!=null)meta.push(src.source_confidence+'% confidence');
+            metaEl.textContent=meta.join(' · ');
+        }
+        if(bodyEl){
+            bodyEl.innerHTML='<p>This citation is from GatorVault\'s verified coaching knowledge database — clinics, OC/DC interviews, analyst breakdowns, and public film study. Open the primary source to review the original material.</p>';
+        }
+        if(linkEl){
+            if(src.source_url){
+                linkEl.href=src.source_url;
+                linkEl.classList.remove('hidden');
+            }else{
+                linkEl.classList.add('hidden');
+                linkEl.removeAttribute('href');
+            }
+        }
+        ov.classList.remove('hidden');
+        ov.style.display='flex';
+        ov.setAttribute('aria-hidden','false');
+    };
+    window.gvCloseVerifiedSource=function(){
+        var ov=document.getElementById('gv-verified-source-modal');
+        if(!ov)return;
+        ov.classList.add('hidden');
+        ov.style.display='';
+        ov.setAttribute('aria-hidden','true');
+    };
     function gvRenderKnowledgeSources(sources,el){
         if(!el)return;
         if(!sources||!sources.length){el.classList.add('hidden');el.innerHTML='';return;}
         el.classList.remove('hidden');
         el.innerHTML=gvFormatKnowledgeSources(sources);
+        gvWireFilmSources(el);
     }
     function gvRenderFilmDiagram(diagram,el){
         if(!el||!diagram||!diagram.nodes||!diagram.nodes.length){if(el)el.classList.add('hidden');return;}
@@ -4393,31 +4548,59 @@
                     else if(clip.diagram)gvRenderFilmDiagram(clip.diagram,diagramEl);
                     else if(diagramEl)diagramEl.classList.add('hidden');
                     if(j.ok&&j.sources)gvRenderKnowledgeSources(j.sources,sourcesEl);
-                    document.getElementById('hl-modal-preview-text').textContent=bodyText;
+                    document.getElementById('hl-modal-preview-text').textContent=gvStripBodyVerifiedSources(bodyText);
+                    gvWireFilmSources(sourcesEl);
                 })
                 .catch(function(){
-                    document.getElementById('hl-modal-preview-text').textContent=bodyText;
+                    document.getElementById('hl-modal-preview-text').textContent=gvStripBodyVerifiedSources(bodyText);
                     gvRenderFilmDiagram(clip.diagram,diagramEl);
+                    gvWireFilmSources(sourcesEl);
                 });
         }else{
-            document.getElementById('hl-modal-preview-text').textContent=bodyText;
+            document.getElementById('hl-modal-preview-text').textContent=gvStripBodyVerifiedSources(bodyText);
             gvRenderFilmDiagram(clip.diagram,diagramEl);
+            gvWireFilmSources(sourcesEl);
         }
         ov.classList.remove('hidden');
         ov.style.display='flex';
         document.body.style.overflow='hidden';
+        gvWireFilmSources(sourcesEl);
     };
     window.closeHighlightPlayer=function(){
         var ov=document.getElementById('highlight-modal-ov');if(!ov)return;
         ov.classList.add('hidden');ov.style.display='';
         var videoWrap=document.getElementById('hl-modal-video-wrap');if(videoWrap){videoWrap.innerHTML='';videoWrap.classList.add('hidden');}
         document.body.style.overflow='';
+        if(typeof window.gvCloseVerifiedSource==='function')window.gvCloseVerifiedSource();
     };
     (function(){
         var closeBtn=document.getElementById('hl-modal-close');
         var ov=document.getElementById('highlight-modal-ov');
         if(closeBtn)closeBtn.addEventListener('click',window.closeHighlightPlayer);
         if(ov)ov.addEventListener('click',function(e){if(e.target===ov)window.closeHighlightPlayer();});
+    })();
+    (function gvInitVerifiedSourceModal(){
+        var ov=document.getElementById('gv-verified-source-modal');
+        var closeBtn=document.getElementById('gv-vsrc-close');
+        var dismissBtn=document.getElementById('gv-vsrc-dismiss');
+        if(closeBtn)closeBtn.addEventListener('click',window.gvCloseVerifiedSource);
+        if(dismissBtn)dismissBtn.addEventListener('click',window.gvCloseVerifiedSource);
+        if(ov)ov.addEventListener('click',function(e){if(e.target===ov)window.gvCloseVerifiedSource();});
+        document.addEventListener('keydown',function(e){
+            if(e.key!=='Escape')return;
+            var vov=document.getElementById('gv-verified-source-modal');
+            if(vov&&!vov.classList.contains('hidden')&&typeof window.gvCloseVerifiedSource==='function')window.gvCloseVerifiedSource();
+        });
+        function handleFilmSourceTap(e){
+            var btn=e.target&&e.target.closest?e.target.closest('.gv-film-source'):null;
+            if(!btn)return;
+            e.preventDefault();
+            e.stopPropagation();
+            var sid=btn.getAttribute('data-source-id');
+            if(sid&&typeof window.gvOpenVerifiedSource==='function')window.gvOpenVerifiedSource(sid);
+        }
+        document.addEventListener('click',handleFilmSourceTap,true);
+        document.addEventListener('touchend',handleFilmSourceTap,{passive:false,capture:true});
     })();
     function getVaultPoints(){
         return window.GV_POINTS||0;
@@ -6111,7 +6294,7 @@
         }
         if(tab==='recruit'){try{renderRecruits();}catch(e){}}
         if(tab==='mhome'){try{gvRenderMobileHome();}catch(e){}}
-        if(tab==='team'){try{if(typeof gvRenderTeam==='function')gvRenderTeam();if(typeof gvLoadRosterProfiles==='function')gvLoadRosterProfiles(true);}catch(e){}}
+        if(tab==='team'){try{if(typeof gvRenderTeam==='function')gvRenderTeam();if(typeof gvLoadRosterProfiles==='function')gvLoadRosterProfiles(true);if(typeof gvApplyTeamDeepLink==='function')gvApplyTeamDeepLink();}catch(e){}}
         if(tab==='gameweek'){try{if(typeof renderGames==='function')renderGames();}catch(e){}}
         if(tab==='beat'){try{gvRenderMobileBeat();}catch(e){}}
         if(tab==='podcast'){try{gvRenderMobilePodcasts();}catch(e){}}
