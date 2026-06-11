@@ -140,6 +140,8 @@ function logBeatPostSkip(post, reason, category = 'filtered') {
 function isRecruitingIntelPost(text, post = null) {
   const t = String(text || '');
   if (!t.trim()) return false;
+  const prefilter = require('./beat-intel-prefilter');
+  if (prefilter.isTeamEventIntel(t, post)) return true;
   if (cancelParser.isVisitCancelPost(t)) return false;
   if (isVisitSchedulePost(t)) return true;
   if (beatFilters.hasPlayerSpecificBeatIntel(t)) return true;
@@ -295,6 +297,31 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     return null;
   }
 
+  const teamGate = prefilter.evaluateTeamEventEligibility(text, { post });
+  if (teamGate.eligible) {
+    const timestamp = post.publishedAt || new Date().toISOString();
+    const handle = String(post.handle || '').toLowerCase() || 'beat';
+    const day = timestamp.slice(0, 10);
+    const postKey = String(post.id || post.url || day).replace(/[^a-z0-9_-]/gi, '').slice(0, 32);
+    const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
+    return {
+      triggerType: 'team_event',
+      teamEventType: teamGate.teamEventType,
+      playerName: null,
+      playerSlug: null,
+      on3Id: null,
+      eventType: 'team_event',
+      status: 'Team update',
+      detail: text.replace(/\s+/g, ' ').slice(0, 280),
+      timestamp,
+      articleUrl: post.url || null,
+      source: analystName,
+      sourceHandle: post.handle || null,
+      sourceType: 'beat',
+      fingerprint: `team_event_${teamGate.teamEventType}_${day}_${handle}_${postKey}`
+    };
+  }
+
   let playerName = extractVisitPlayerName(text);
   if (!playerName || !isUsableExtractedName(playerName)) {
     const copy = require('./x-autoposter-copy');
@@ -361,6 +388,21 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
 
 async function buildAutoposterPayload(row, intelItem) {
   const copy = require('./x-autoposter-copy');
+  if (row.triggerType === 'team_event' || row.eventType === 'team_event') {
+    const built = await copy.buildTeamEventCopyAsync(
+      {
+        text: row.detail,
+        writerName: row.source,
+        handle: row.sourceHandle,
+        url: row.articleUrl
+      },
+      { teamEventType: row.teamEventType }
+    );
+    if (!built?.text) {
+      return { ok: false, reason: built?.skipReason || 'invalid_copy' };
+    }
+    return { ok: true, ...built, text: copy.appendSite(built.text) };
+  }
   const built = await copy.buildIntelCopyAsync({
     id: intelItem?.id,
     eventType: row.eventType,
@@ -400,7 +442,12 @@ async function queueAutoposter(row, intelItem, built) {
     const policy = require('./x-autoposter-policy');
     const copy = require('./x-autoposter-copy');
     const fp = row.fingerprint;
-    if (!built?.text || copy.isBrokenCopy(built.text, built) || !copy.isValidPlayerName(row.playerName)) {
+    const isTeamEvent = row.triggerType === 'team_event' || row.eventType === 'team_event';
+    if (
+      !built?.text ||
+      copy.isBrokenCopy(built.text, built) ||
+      (!isTeamEvent && !copy.isValidPlayerName(row.playerName))
+    ) {
       return { queued: false, reason: 'invalid_copy' };
     }
     const doc = xStore.loadQueue();
@@ -412,12 +459,15 @@ async function queueAutoposter(row, intelItem, built) {
     const payload = {
       text: built.text,
       category: 'news',
-      topic: 'recruiting',
+      topic: isTeamEvent ? 'team' : 'recruiting',
+      triggerType: isTeamEvent ? 'team_event' : null,
+      teamEventType: row.teamEventType || null,
       sources: [{ label: row.source, url: row.articleUrl || SITE_URL }],
-      source: 'auto:beat-writer',
+      source: isTeamEvent ? 'auto:team-event' : 'auto:beat-writer',
       intelFingerprint: fp,
       intelType: row.eventType,
-      playerName: row.playerName,
+      playerName: row.playerName || null,
+      identityConfirmed: isTeamEvent ? true : undefined,
       sourceIntelId: intelItem?.id,
       scheduledAt: new Date(Date.now() + 2 * 60 * 1000).toISOString(),
       status: 'pending',
@@ -441,6 +491,26 @@ function parseCollegeSchool(text) {
 
 async function processBeatVisitIntelRow(row, snapshot) {
   if (!row?.fingerprint) return { skipped: true, reason: 'invalid' };
+
+  if (row.triggerType === 'team_event' || row.eventType === 'team_event') {
+    if (snapshot.fingerprints[row.fingerprint]) {
+      return { skipped: true, reason: 'duplicate', fingerprint: row.fingerprint };
+    }
+    const built = await buildAutoposterPayload(row, null);
+    const autopost = built.ok
+      ? await queueAutoposter(row, null, built)
+      : { queued: false, reason: built.reason || 'copy_failed' };
+    snapshot.fingerprints[row.fingerprint] = row.timestamp;
+    return {
+      processed: autopost.queued,
+      skipped: !autopost.queued,
+      teamEvent: true,
+      teamEventType: row.teamEventType,
+      autopost,
+      fingerprint: row.fingerprint,
+      reason: autopost.queued ? null : autopost.reason
+    };
+  }
 
   const prefilter = require('./beat-intel-prefilter');
   const trustedWriter = row.sourceHandle ? isVisitIngestWriter({ handle: row.sourceHandle }) : false;

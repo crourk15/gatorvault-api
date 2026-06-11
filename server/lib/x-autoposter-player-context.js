@@ -249,6 +249,87 @@ function buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel }) {
   return { line: null, meta: {} };
 }
 
+function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = null } = {}) {
+  const teamContext =
+    template.teamEventLabel(teamEventType) || template.detectTeamContext(beatText) || 'UF Update';
+  const identity = `Florida Gators — ${teamContext}`;
+  const sourceLabel = String(source || 'Beat writer').trim();
+
+  const contextResult = buildVerifiedContextLine({
+    newsEvent: null,
+    sourceLabel,
+    beatText,
+    intel: null
+  });
+  let contextLine = contextResult.line;
+  if (!contextLine) {
+    const sentences = template.extractSentences(beatText || '');
+    const factual = sentences.find(
+      (s) =>
+        !template.HEADLINE_ONLY_RE.test(s) &&
+        (template.FACTUAL_SIGNAL_RE.test(s) || s.length >= 35) &&
+        !template.INSIDER_SIGNAL_RE.test(s)
+    );
+    if (factual) {
+      contextLine = factual.length <= 160 ? factual : `${factual.slice(0, 157)}…`;
+    }
+  }
+  if (!contextLine) return null;
+
+  const beat = beatText ? template.classifyBeatSentences(beatText) : { context: [], insider: [] };
+  const contextNorm = template.stripEmojisHashtags(contextLine).toLowerCase();
+  let insiderLine = beat.insider.find(
+    (s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm
+  );
+  if (!insiderLine && beat.context.length > 1) {
+    insiderLine = beat.context.find((s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm);
+  }
+  if (!insiderLine) {
+    insiderLine = `Per ${sourceLabel} report.`;
+  } else if (insiderLine.length > 140) {
+    insiderLine = `${insiderLine.slice(0, 137)}…`;
+  }
+
+  const raw = template.composeInsiderReport({
+    identity,
+    context: contextLine,
+    insider: insiderLine
+  });
+  if (!raw || !template.hasTemplateStructure(raw)) return null;
+  if (template.isHeadlineOnlyPost(raw)) return null;
+  if (
+    require('./x-autoposter-validation').hasDuplicateSentences(raw, {
+      identity,
+      context: contextLine,
+      insider: insiderLine
+    })
+  ) {
+    return null;
+  }
+
+  const text = template.enforceTweetLimit(raw, 280);
+  if (!text || !template.hasTemplateStructure(text)) return null;
+
+  return {
+    text,
+    playerName: null,
+    postKind: 'team_event',
+    triggerType: 'team_event',
+    teamEventType: teamEventType || 'general',
+    context: { teamEvent: true, name: 'Florida Gators' },
+    templateBlocks: { identity, context: contextLine, insider: insiderLine },
+    validationMeta: {
+      teamEvent: true,
+      teamEventType: teamEventType || 'general',
+      beatText: beatText || null,
+      insiderFromBeat: beat.insider.includes(insiderLine),
+      contextFromBeat: contextResult.meta.fromBeat === true,
+      postUrl: postUrl || null
+    },
+    playerContext: { teamEvent: true, name: 'Florida Gators' }
+  };
+}
+
 async function buildPlayerNewsPost({
   source,
   newsEvent,
@@ -570,6 +651,7 @@ module.exports = {
   formatPlayerContext,
   resolvePlayerContext,
   buildPlayerNewsPost,
+  buildTeamEventPost,
   newsEventForIntel,
   newsEventForRecruitingEvent,
   sourceLabelForIntel,

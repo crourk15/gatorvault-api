@@ -433,6 +433,7 @@ async function runPurgeInvalidHeadlines(options = {}) {
 
 module.exports = {
   isBrewsterFalseCommit,
+  isBrewsterFalseQueueItem,
   isBrewsterFalseFeedItem,
   isFalseDavidsonDecommit,
   isInvalidHsRecruitPortalHeadline,

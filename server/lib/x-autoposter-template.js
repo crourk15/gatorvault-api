@@ -108,11 +108,36 @@ function buildTeamIdentity(ctx, teamContext) {
 
 function detectTeamContext(beatText) {
   const t = String(beatText || '').toLowerCase();
-  if (/fall camp|spring practice|practice report/.test(t)) return 'Fall Camp Update';
-  if (/injur|out for|miss(?:es)? \d+ week/.test(t)) return 'Injury Update';
+  if (/uniform|jersey|alternate|throwback|helmet combo/.test(t)) return 'Uniform Update';
+  if (/hired|promoted|resigned|fired|named (?:as )?(?:coordinator|coach)|staff (?:update|change|addition)/.test(t)) {
+    return 'Staff Update';
+  }
+  if (/schedule (?:update|change|release)|tv network|sec network|espn|abc|cbs|peacock/.test(t)) {
+    return 'Schedule Update';
+  }
+  if (/kickoff|kick-off|start time|game time|tip(?:s)? off/.test(t)) return 'Kickoff Update';
+  if (/fall camp|spring practice|practice report|spring game/.test(t)) return 'Fall Camp Update';
+  if (/injur(?:y)? report|ruled out|game-time decision/.test(t)) return 'Injury Update';
   if (/depth chart|starter|rotation|two-deep/.test(t)) return 'Depth Chart Update';
-  if (/game week|kickoff|vs\.|matchup/.test(t)) return 'Game Week Update';
+  if (/roster (?:update|move)|walk-on|scholarship/.test(t)) return 'Roster Update';
+  if (/game week|vs\.|matchup|pregame/.test(t)) return 'Game Week Update';
   return 'UF Update';
+}
+
+function teamEventLabel(teamEventType) {
+  const labels = {
+    kickoff: 'Kickoff Update',
+    schedule: 'Schedule Update',
+    uniform: 'Uniform Update',
+    staff: 'Staff Update',
+    depth_chart: 'Depth Chart Update',
+    roster: 'Roster Update',
+    game_week: 'Game Week Update',
+    camp: 'Camp Update',
+    injury: 'Injury Report',
+    general: 'UF Update'
+  };
+  return labels[String(teamEventType || '').toLowerCase()] || labels.general;
 }
 
 function classifyBeatSentences(beatText) {
@@ -264,6 +289,7 @@ module.exports = {
   buildPortalIdentity,
   buildTeamIdentity,
   detectTeamContext,
+  teamEventLabel,
   classifyBeatSentences,
   contextFromNewsEvent,
   insiderFromIntel,

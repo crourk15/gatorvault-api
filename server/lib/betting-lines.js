@@ -140,12 +140,38 @@ async function refreshLines() {
     return { ok: false, skipped: true, reason: 'GAME_ZONE_ENABLED=false' };
   }
 
+  let prev = null;
+  try {
+    prev = JSON.parse(fs.readFileSync(LINES_PATH, 'utf8'));
+  } catch {
+    /* first run */
+  }
+
   const payload = await getBettingLines();
   const updatedAt = new Date().toISOString();
+  const pendingTeamEvents = [];
+  const announcedKickoffs = { ...(prev?.announcedKickoffs || {}) };
+
+  for (const game of payload.schedule || []) {
+    if (!game?.id || !game?.date || !prev) continue;
+    const prevGame = (prev.schedule || []).find((g) => g.id === game.id);
+    if (!prevGame || prevGame.date === game.date) continue;
+    if (announcedKickoffs[game.id] === game.date) continue;
+    pendingTeamEvents.push({
+      teamEventType: 'kickoff',
+      game,
+      at: updatedAt,
+      previousDate: prevGame.date
+    });
+    announcedKickoffs[game.id] = game.date;
+  }
+
   const doc = {
     ...payload,
     updatedAt,
-    refreshedAt: updatedAt
+    refreshedAt: updatedAt,
+    pendingTeamEvents,
+    announcedKickoffs
   };
 
   fs.mkdirSync(path.dirname(LINES_PATH), { recursive: true });
@@ -156,8 +182,22 @@ async function refreshLines() {
     processedCount: (doc.schedule || []).length,
     updatedAt,
     nextGame: doc.nextGame?.game || null,
-    liveOddsEnabled: doc.liveOddsEnabled
+    liveOddsEnabled: doc.liveOddsEnabled,
+    pendingTeamEvents: pendingTeamEvents.length
   };
+}
+
+function consumePendingTeamEvents() {
+  try {
+    const doc = JSON.parse(fs.readFileSync(LINES_PATH, 'utf8'));
+    const pending = Array.isArray(doc.pendingTeamEvents) ? doc.pendingTeamEvents : [];
+    if (!pending.length) return [];
+    doc.pendingTeamEvents = [];
+    fs.writeFileSync(LINES_PATH, JSON.stringify(doc, null, 2));
+    return pending;
+  } catch {
+    return [];
+  }
 }
 
 function getLinesMeta() {
@@ -172,6 +212,7 @@ module.exports = {
   getBettingLines,
   refreshLines,
   getLinesMeta,
+  consumePendingTeamEvents,
   LINES_PATH,
   STATIC_LINES,
   FANDUEL_AFFILIATE,

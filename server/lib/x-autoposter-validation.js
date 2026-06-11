@@ -221,8 +221,23 @@ function hasVerifiedInsiderAngle(insiderLine, meta = {}) {
   return hasAnalystCue && (hasInsiderSignal || insider.length >= 35);
 }
 
-function validateIdentityFields(ctx, blocks) {
+function isTeamEventPost(item, blocks, ctx, meta = {}) {
+  const m = item?.validationMeta || meta || {};
+  if (item?.triggerType === 'team_event' || item?.teamEventType) return true;
+  if (m.teamEvent) return true;
+  if (ctx?.teamEvent) return true;
+  return /^Florida Gators — /i.test(blocks?.identity || '');
+}
+
+function validateIdentityFields(ctx, blocks, item = null) {
   const identity = blocks?.identity || '';
+  if (isTeamEventPost(item, blocks, ctx)) {
+    const errors = [];
+    if (!/^Florida Gators — /i.test(identity)) {
+      errors.push({ rule: 'identity', field: 'team', message: 'Team event identity block required.' });
+    }
+    return errors;
+  }
   const name = String(ctx?.name || '').trim();
   const pos = String(ctx?.pos || ctx?.position || '').trim();
   const classYear = ctx?.classYear != null ? Number(ctx.classYear) : null;
@@ -372,8 +387,15 @@ function validateFreshness(item, now = Date.now()) {
   return errors;
 }
 
-function scoreIdentityBlock(ctx, blocks) {
+function scoreIdentityBlock(ctx, blocks, item = null) {
   const identity = blocks?.identity || '';
+  const meta = item?.validationMeta || {};
+  if (isTeamEventPost(item, blocks, ctx, meta)) {
+    if (/^Florida Gators — /i.test(identity) && identity.length >= 20) {
+      return { score: 100, fields: ['team'], complete: true };
+    }
+    return { score: 50, fields: ['team'], complete: false };
+  }
   const name = String(ctx?.name || '').trim();
   const pos = String(ctx?.pos || ctx?.position || '').trim();
   const classYear = ctx?.classYear != null ? Number(ctx.classYear) : null;
@@ -413,9 +435,14 @@ function scoreIdentityBlock(ctx, blocks) {
   return { score: Math.min(100, score), fields, complete: score >= 100 };
 }
 
-function scoreContextBlock(blocks, meta = {}) {
+function scoreContextBlock(blocks, meta = {}, item = null) {
   const context = template.stripEmojisHashtags(blocks?.context || '').trim();
   if (!context) return { score: 0, complete: false };
+
+  if (isTeamEventPost(item, blocks, item?.playerContext, meta)) {
+    const score = context.length >= 28 ? 100 : 75;
+    return { score, complete: score >= 85 };
+  }
 
   let score = 30;
   if (!isGenericSyntheticContext(context)) score += 25;
@@ -426,9 +453,14 @@ function scoreContextBlock(blocks, meta = {}) {
   return { score: Math.min(100, score), complete: score >= 85 && hasHumanReportedContext(context, meta) };
 }
 
-function scoreInsiderBlock(blocks, meta = {}) {
+function scoreInsiderBlock(blocks, meta = {}, item = null) {
   const insider = template.stripEmojisHashtags(blocks?.insider || '').trim();
   if (!insider) return { score: 0, complete: false };
+
+  if (isTeamEventPost(item, blocks, item?.playerContext, meta)) {
+    const score = insider.length >= 20 ? 100 : 70;
+    return { score, complete: score >= 85 };
+  }
 
   let score = 25;
   if (!isRankOnlyInsider(insider)) score += 25;
@@ -524,9 +556,9 @@ function scoreNewsPost(item) {
   const ctx = item.playerContext || meta.playerContext || {};
   const { skips, sourceConfidence, sourcePass } = collectHardSkipReasons(item, blocks, meta);
 
-  const identity = scoreIdentityBlock(ctx, blocks);
-  const context = scoreContextBlock(blocks, meta);
-  const insider = scoreInsiderBlock(blocks, meta);
+  const identity = scoreIdentityBlock(ctx, blocks, item);
+  const context = scoreContextBlock(blocks, meta, item);
+  const insider = scoreInsiderBlock(blocks, meta, item);
 
   const compositeScore = Math.round(
     identity.score * SCORE_WEIGHTS.identity +

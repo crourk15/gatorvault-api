@@ -59,6 +59,10 @@ function rulesForAutoposter(candidate) {
   if (isQuarantined(candidate)) return { allow: false, reason: 'player_quarantined' };
   if (publicAlerts.isBrewsterFalseQueueItem(candidate)) return { allow: false, reason: 'false_commit_queue' };
   const et = String(candidate.intelType || candidate.eventType || candidate.sourceEventType || '').toLowerCase();
+  const trigger = String(candidate.triggerType || '').toLowerCase();
+  if (trigger === 'team_event' || et === 'team_event') {
+    return { allow: true };
+  }
   const src = String(candidate.source || '').toLowerCase();
   if (['commit', 'flip'].includes(et) && !VERIFIED_COMMIT_SOURCES.has(src)) {
     return { allow: false, reason: 'unverified_commit_autopost' };

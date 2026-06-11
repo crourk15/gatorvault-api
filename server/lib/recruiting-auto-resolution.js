@@ -474,6 +474,32 @@ async function autoResolveIntel(intel, opts = {}) {
   const phrase = opts.beatText || intel?.detail || intel?.playerName || '';
   const subsystem = opts.subsystem || 'autoposter';
 
+  if (intel?.eventType === 'team_event' || intel?.triggerType === 'team_event') {
+    return {
+      resolved: true,
+      confirmed: true,
+      teamEvent: true,
+      intelPatch: {},
+      mergedSnapshot: { teamEvent: true }
+    };
+  }
+
+  const teamGate = prefilter.evaluateTeamEventEligibility(phrase, { post: opts.post || null });
+  if (teamGate.eligible) {
+    return {
+      resolved: true,
+      confirmed: true,
+      teamEvent: true,
+      teamEventType: teamGate.teamEventType,
+      intelPatch: {
+        eventType: 'team_event',
+        triggerType: 'team_event',
+        teamEventType: teamGate.teamEventType
+      },
+      mergedSnapshot: { teamEvent: true }
+    };
+  }
+
   const skip = await prefilter.bypassRecruitingPipeline(phrase, {
     playerName: intel?.playerName,
     playerSlug: intel?.playerSlug,

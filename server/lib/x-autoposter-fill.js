@@ -251,6 +251,8 @@ async function buildMomentumFromBeat(post) {
 
 async function buildNewsFromBeatPost(post) {
   if (!beatFilters.shouldIncludeBeatPost(post) || !beatFilters.isTrustedBeatWriter(post)) return null;
+  const prefilter = require('./beat-intel-prefilter');
+  const guarded = await prefilter.guardBeatPost(post);
   const built = await copy.buildBeatIntelCopyAsync(post);
   if (built?._nonPlayerSkip || built?.skipReason === 'non_player_intel') return null;
   if (built?._needsResolution || built?.skipReason === 'needs_resolution') return null;
@@ -263,20 +265,52 @@ async function buildNewsFromBeatPost(post) {
   }
   if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
   const source = post.writerName || post.outlet || post.handle || 'Beat writer';
-  const fp = intelFingerprint(post.id || post.url, 'beat_intel', post.publishedAt);
+  const isTeamEvent = guarded.triggerType === 'team_event' || built.triggerType === 'team_event';
+  const fp = intelFingerprint(
+    post.id || post.url,
+    isTeamEvent ? 'team_event' : 'beat_intel',
+    post.publishedAt
+  );
   return attachNewsMeta(
     {
       text: built.text,
       category: 'news',
-      topic: 'recruiting',
-      urgencyLabel: 'major_beat',
-      sourceEventType: 'beat_intel',
+      topic: isTeamEvent ? 'team' : 'recruiting',
+      urgencyLabel: isTeamEvent ? 'major_beat' : 'major_beat',
+      triggerType: isTeamEvent ? 'team_event' : null,
+      teamEventType: guarded.teamEventType || built.teamEventType || null,
+      sourceEventType: isTeamEvent ? 'team_event' : 'beat_intel',
       sources: [{ label: source, url: post.url || SITE_URL }],
-      source: 'auto:beat-intel',
+      source: isTeamEvent ? 'auto:team-event' : 'auto:beat-intel',
       intelFingerprint: fp,
-      playerName: built.playerName || copy.extractPlayerFromText(String(post.text || '')),
+      playerName: built.playerName || null,
+      identityConfirmed: isTeamEvent ? true : undefined,
       sourceEventCreatedAt: post.publishedAt,
       sourcePublishedAt: post.publishedAt
+    },
+    built
+  );
+}
+
+async function buildNewsFromScheduleEvent(event) {
+  const built = copy.buildTeamEventCopyFromSchedule(event.game || event);
+  if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
+  const game = event.game || event;
+  const fp = intelFingerprint(game.id || game.game, 'team_event_schedule', game.date);
+  return attachNewsMeta(
+    {
+      text: built.text,
+      category: 'news',
+      topic: 'team',
+      urgencyLabel: 'major_beat',
+      triggerType: 'team_event',
+      teamEventType: event.teamEventType || 'schedule',
+      sourceEventType: 'team_event',
+      sources: [{ label: 'Schedule', url: SITE_URL }],
+      source: 'auto:schedule',
+      intelFingerprint: fp,
+      identityConfirmed: true,
+      sourceEventCreatedAt: event.at || game.date || null
     },
     built
   );
@@ -367,6 +401,17 @@ async function collectFreshPostCandidates() {
     const portal = await recruitingStore.getPortalBoard();
     const row = await buildNewsFromPortal(portal.headliner);
     if (row) candidates.push(row);
+  } catch {
+    /* optional */
+  }
+
+  try {
+    const bettingLines = require('./betting-lines');
+    const pending = bettingLines.consumePendingTeamEvents?.() || [];
+    for (const event of pending.slice(0, 2)) {
+      const row = await buildNewsFromScheduleEvent(event);
+      if (row) candidates.unshift(row);
+    }
   } catch {
     /* optional */
   }

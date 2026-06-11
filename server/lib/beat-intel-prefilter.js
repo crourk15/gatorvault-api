@@ -48,6 +48,25 @@ const POS_OR_NOISE_PREFIX_RE =
   /^(?:new|the|a|an|s|dl|de|lb|cb|wr|rb|qb|te|ol|dt|edge|ath|k|p|qb|rb|wr|te|ol|ot|og|c|s|ath)\s+/i;
 const POS_ONLY_PREFIX_RE = /^(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH|K|P)\s+/i;
 
+/** Non-player UF football intel — schedule, kickoff, uniforms, staff, roster, etc. */
+const TEAM_EVENT_SIGNALS = [
+  { type: 'kickoff', re: /\b(kickoff|kick-off|start time|game time|tip(?:s)? off)\b/i },
+  {
+    type: 'schedule',
+    re: /\b(schedule(?:d)?(?:\s+(?:update|change|release))?|week \d+|tv network|sec network|espn|abc|cbs|peacock|prime video)\b/i
+  },
+  { type: 'uniform', re: /\b(uniform|jersey|alternate|throwback|helmet combo|all[-\s]?orange)\b/i },
+  {
+    type: 'staff',
+    re: /\b(hired|promoted|resigned|fired|named\b.*(?:coordinator|coach)|staff (?:update|change|addition))\b/i
+  },
+  { type: 'depth_chart', re: /\b(depth chart|two-deep|starter|starting (?:qb|lineup)|rotation)\b/i },
+  { type: 'roster', re: /\b(roster (?:update|move)|walk-on|scholarship player|transfer(?:ring)? in)\b/i },
+  { type: 'game_week', re: /\b(game week|pregame|matchup|vs\.|@)\b/i },
+  { type: 'camp', re: /\b(spring (?:game|practice)|fall camp|practice report)\b/i },
+  { type: 'injury', re: /\b(injury report|ruled out|game-time decision|out for the season)\b/i }
+];
+
 function normalizePhrase(text) {
   return String(text || '')
     .replace(/\s+/g, ' ')
@@ -142,6 +161,64 @@ function isSingleTokenName(name) {
     .split(/\s+/)
     .filter(Boolean);
   return parts.length < 2;
+}
+
+function classifyTeamEventType(text) {
+  const t = normalizePhrase(text);
+  if (!t) return null;
+  for (const { type, re } of TEAM_EVENT_SIGNALS) {
+    if (re.test(t)) return type;
+  }
+  try {
+    const beatFilters = require('./beat-writer-filters');
+    if (beatFilters.matchesGatorFootballIntel(t)) return 'general';
+  } catch {
+    /* optional */
+  }
+  return null;
+}
+
+function isTeamEventIntel(text, post = null) {
+  const phrase = normalizePhrase(text);
+  if (!phrase || isGenericNonPlayerIntel(phrase)) return false;
+
+  let beatFilters;
+  try {
+    beatFilters = require('./beat-writer-filters');
+  } catch {
+    return false;
+  }
+  if (!beatFilters.isFloridaRelevant(phrase)) return false;
+  if (post && beatFilters.isNationalUfOnlyReporter(post) && !beatFilters.isFloridaRelevantPost(post)) {
+    return false;
+  }
+
+  let copy;
+  try {
+    copy = require('./x-autoposter-copy');
+  } catch {
+    copy = null;
+  }
+  if (copy?.hasPlayerSpecificIntel?.(phrase)) return false;
+
+  return Boolean(classifyTeamEventType(phrase));
+}
+
+function evaluateTeamEventEligibility(text, { post = null } = {}) {
+  const phrase = normalizePhrase(text);
+  if (!isTeamEventIntel(phrase, post)) {
+    return { eligible: false, reason: 'not_team_event', category: 'non_player_intel' };
+  }
+  const teamEventType = classifyTeamEventType(phrase) || 'general';
+  return {
+    eligible: true,
+    triggerType: 'team_event',
+    teamEventType,
+    playerName: null,
+    playerSlug: null,
+    matchMode: 'team_event',
+    triggerPhrase: phrase.slice(0, 160)
+  };
 }
 
 function extractCleanFullName(text) {
@@ -378,13 +455,32 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
       skip: buildNonPlayerSkipPayload({ reason: 'empty_text', category: 'non_player_intel', triggerPhrase: '' })
     };
   }
+
+  const teamGate = evaluateTeamEventEligibility(text, { post });
+  if (teamGate.eligible) {
+    return {
+      eligible: true,
+      triggerType: 'team_event',
+      teamEventType: teamGate.teamEventType,
+      text,
+      playerName: null,
+      playerSlug: null,
+      gate: teamGate
+    };
+  }
+
   const skip = await bypassRecruitingPipeline(text, {
     source: post?.handle || post?.writerName || post?.outlet,
     sourceHandle: post?.handle,
-    subsystem
+    subsystem,
+    trustedWriter: require('./beat-writer-filters').isTrustedBeatWriter?.(post),
+    post
   });
   if (skip) return { eligible: false, skip, text };
-  const gate = await evaluateBeatIntelEligibility(text);
+  const gate = await evaluateBeatIntelEligibility(text, {
+    trustedWriter: require('./beat-writer-filters').isTrustedBeatWriter?.(post),
+    post
+  });
   return { eligible: true, gate, text, playerName: gate.playerName, playerSlug: gate.playerSlug };
 }
 
@@ -394,6 +490,9 @@ module.exports = {
   isGenericNonPlayerIntel,
   hasStrongRecruitingSignals,
   extractCleanFullName,
+  classifyTeamEventType,
+  isTeamEventIntel,
+  evaluateTeamEventEligibility,
   evaluateBeatIntelEligibility,
   buildNonPlayerSkipPayload,
   logNonPlayerIntel,

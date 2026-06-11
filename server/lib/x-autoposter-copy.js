@@ -199,6 +199,49 @@ async function buildPredictionMachineCopyAsync(post) {
   return newsPayloadFromBuilt(built);
 }
 
+async function buildTeamEventCopyAsync(post, gate = {}) {
+  const text = String(post?.text || '').replace(/\s+/g, ' ').trim();
+  if (!text) return null;
+  if (template.HEADLINE_ONLY_RE.test(text)) return null;
+
+  const analyst = post.writerName || post.outlet || post.handle || 'Beat writer';
+  const built = playerContext.buildTeamEventPost({
+    beatText: text,
+    source: analyst,
+    teamEventType: gate.teamEventType || gate.gate?.teamEventType || null,
+    postUrl: post.url || null
+  });
+  return newsPayloadFromBuilt(built, { triggerType: 'team_event' });
+}
+
+function buildTeamEventCopyFromSchedule(game) {
+  if (!game?.game && !game?.opponent) return null;
+  const opponent = game.opponent || String(game.game || '').replace(/^Florida vs\s+/i, '').trim();
+  const when = game.date ? new Date(game.date) : null;
+  const whenLabel =
+    when && !Number.isNaN(when.getTime())
+      ? when.toLocaleString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          timeZone: 'America/New_York',
+          timeZoneName: 'short'
+        })
+      : null;
+  const beatText = whenLabel
+    ? `Florida vs ${opponent} kickoff set for ${whenLabel}${game.venue ? ` at ${game.venue}` : ''}.`
+    : `Florida vs ${opponent} schedule update${game.venue ? ` at ${game.venue}` : ''}.`;
+  const built = playerContext.buildTeamEventPost({
+    beatText,
+    source: 'Schedule',
+    teamEventType: 'schedule'
+  });
+  if (!built?.text) return null;
+  return newsPayloadFromBuilt(built, { triggerType: 'team_event' });
+}
+
 async function buildBeatIntelCopyAsync(post) {
   const prefilter = require('./beat-intel-prefilter');
   const text = String(post.text || '').replace(/\s+/g, ' ').trim();
@@ -206,6 +249,10 @@ async function buildBeatIntelCopyAsync(post) {
 
   const guarded = await prefilter.guardBeatPost(post);
   if (!guarded.eligible) return guarded.skip;
+
+  if (guarded.triggerType === 'team_event') {
+    return buildTeamEventCopyAsync(post, guarded);
+  }
 
   if (template.HEADLINE_ONLY_RE.test(text)) return null;
 
@@ -218,7 +265,10 @@ async function buildBeatIntelCopyAsync(post) {
 
   const beatFilters = require('./beat-writer-filters');
   const isTeam =
-    !hasPlayerSpecificIntel(text) && beatFilters.matchesGatorFootballIntel(text) && playerName;
+    !hasPlayerSpecificIntel(text) &&
+    beatFilters.matchesGatorFootballIntel(text) &&
+    playerName &&
+    isValidPlayerName(playerName);
 
   if (isTeam) {
     const newsEvent = detectBeatNewsEvent(text) || 'UF roster update';
@@ -253,6 +303,15 @@ async function buildBeatIntelCopyAsync(post) {
 
 async function buildIntelCopyAsync(intel) {
   if (!intel?.eventType) return null;
+
+  if (intel.eventType === 'team_event' || intel.triggerType === 'team_event') {
+    const built = playerContext.buildTeamEventPost({
+      beatText: intel.detail || intel.status || '',
+      source: intel.source || intel.analystName || 'Schedule',
+      teamEventType: intel.teamEventType || 'general'
+    });
+    return newsPayloadFromBuilt(built, { triggerType: 'team_event' });
+  }
 
   const resolved = await resolveIntelForCopy(intel, {
     beatText: intel.detail,
@@ -428,6 +487,8 @@ module.exports = {
   appendSite,
   newsPayloadFromBuilt,
   buildPredictionMachineCopyAsync,
+  buildTeamEventCopyAsync,
+  buildTeamEventCopyFromSchedule,
   buildBeatIntelCopyAsync,
   buildIntelCopyAsync,
   buildMomentumCopyAsync,
