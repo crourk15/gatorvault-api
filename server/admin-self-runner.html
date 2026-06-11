@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GatorVault — Self-Runner Pending Fixes</title>
+  <style>
+    :root {
+      --bg:#0b1220; --panel:#121a2b; --text:#e8edf5; --muted:#8b9bb4;
+      --orange:#fa4616; --ok:#22c55e; --warn:#fbbf24; --fail:#f87171;
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); }
+    header {
+      padding:1rem 1.25rem; border-bottom:1px solid #1e293b;
+      display:flex; flex-wrap:wrap; gap:.75rem; align-items:center; justify-content:space-between;
+    }
+    h1 { margin:0; font-size:1.15rem; }
+    main { padding:1rem 1.25rem 2rem; max-width:1100px; margin:0 auto; }
+    .row { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; }
+    input, button { font:inherit; }
+    input[type=password] {
+      background:var(--panel); border:1px solid #334155; color:var(--text);
+      padding:.45rem .65rem; border-radius:.5rem; min-width:160px;
+    }
+    button {
+      background:var(--orange); color:#fff; border:0; padding:.45rem .85rem;
+      border-radius:.5rem; cursor:pointer; min-height:40px;
+    }
+    button.secondary { background:#334155; }
+    button.danger { background:#7f1d1d; }
+    button.ok { background:#166534; }
+    .status { font-size:.8125rem; color:var(--muted); margin:0 0 1rem; }
+    .banner {
+      background:linear-gradient(135deg,#1a2740,#121a2b); border:1px solid #334155;
+      border-radius:.75rem; padding:1rem 1.25rem; margin-bottom:1rem; line-height:1.55; font-size:.875rem;
+    }
+    .banner strong { color:var(--warn); }
+    .fix-card {
+      background:var(--panel); border:1px solid #1e293b; border-radius:.75rem;
+      padding:1rem 1.15rem; margin-bottom:.75rem;
+    }
+    .fix-head { display:flex; flex-wrap:wrap; gap:.5rem; align-items:flex-start; justify-content:space-between; margin-bottom:.65rem; }
+    .fix-title { font-weight:700; font-size:.95rem; margin:0; }
+    .meta { display:flex; flex-wrap:wrap; gap:.35rem; font-size:.7rem; }
+    .pill {
+      display:inline-block; padding:.15rem .45rem; border-radius:999px;
+      font-size:.65rem; font-weight:700; text-transform:uppercase; background:#1e293b;
+    }
+    .pill.pending { color:var(--warn); }
+    .pill.completed { color:var(--ok); }
+    .pill.failed { color:var(--fail); }
+    .pill.rejected { color:var(--muted); }
+    .sev-high, .sev-critical { color:#fb923c; font-weight:700; }
+    .sev-medium { color:var(--warn); }
+    .preview {
+      background:#0f172a; border:1px solid #243044; border-radius:.5rem;
+      padding:.65rem .75rem; font-family:ui-monospace,monospace; font-size:.72rem;
+      margin:.5rem 0; overflow-x:auto;
+    }
+    .preview .before { color:var(--fail); }
+    .preview .after { color:var(--ok); }
+    .actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.75rem; }
+    .empty { color:var(--muted); text-align:center; padding:2rem; font-size:.875rem; }
+    .summary { font-size:.78rem; color:var(--muted); margin-bottom:1rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🤖 Self-Runner — Pending Fixes</h1>
+    <div class="row">
+      <input id="pin" type="password" placeholder="Admin PIN" autocomplete="off">
+      <button id="refresh" class="secondary">Refresh</button>
+      <button id="generate" class="secondary">Generate Proposals</button>
+    </div>
+  </header>
+  <main>
+    <p class="status" id="status">Enter admin PIN and refresh.</p>
+    <div class="banner">
+      <strong>Approval gate:</strong> Nothing is applied or deployed until you click <em>Approve</em>.
+      Approve runs: apply patch → optional redeploy hook → QA crawl → Product Health recompute.
+      Reject marks the fix for manual review with no changes.
+    </div>
+    <p class="summary" id="summary"></p>
+    <div id="fixes"></div>
+  </main>
+  <script src="/js/admin-embed.js"></script>
+  <script>
+    var API = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000'
+      : 'https://gatorvault-api.onrender.com';
+    var SESSION_KEY = 'gv_admin_pin';
+
+    function esc(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function pin() {
+      return document.getElementById('pin').value || sessionStorage.getItem(SESSION_KEY) || '';
+    }
+
+    function headers() {
+      return { 'x-ops-pin': pin(), Accept: 'application/json', 'Content-Type': 'application/json' };
+    }
+
+    function renderPreview(preview) {
+      if (!preview) return '';
+      if (preview.before != null && preview.after != null) {
+        return '<div class="preview"><div class="before">− ' + esc(preview.before) + '</div>'
+          + '<div class="after">+ ' + esc(preview.after) + '</div>'
+          + (preview.file ? '<div style="margin-top:.35rem;color:var(--muted)">' + esc(preview.file) + '</div>' : '')
+          + '</div>';
+      }
+      if (preview.changes && preview.changes.length) {
+        return '<div class="preview">' + preview.changes.map(function (c) {
+          return esc(JSON.stringify(c));
+        }).join('<br>') + '</div>';
+      }
+      return '<div class="preview">' + esc(JSON.stringify(preview)) + '</div>';
+    }
+
+    function renderFix(fix) {
+      var canAct = fix.status === 'pending';
+      return '<div class="fix-card" data-id="' + esc(fix.id) + '">'
+        + '<div class="fix-head"><div><h2 class="fix-title">' + esc(fix.title) + '</h2>'
+        + '<div class="meta"><span class="pill ' + esc(fix.status) + '">' + esc(fix.status) + '</span>'
+        + '<span class="pill">' + esc(fix.module) + '</span>'
+        + '<span class="sev-' + esc(fix.severity) + '">' + esc(fix.severity) + '</span>'
+        + '<span class="pill">' + esc(fix.impact) + '</span>'
+        + '<span class="pill">' + esc(fix.patchType) + '</span></div></div></div>'
+        + '<p style="font-size:.8125rem;margin:.35rem 0">' + esc(fix.suggestedFix) + '</p>'
+        + renderPreview(fix.patchPreview)
+        + (canAct ? '<div class="actions">'
+          + '<button class="ok" data-approve="' + esc(fix.id) + '">Approve</button>'
+          + '<button class="danger" data-reject="' + esc(fix.id) + '">Reject</button>'
+          + '</div>' : '')
+        + '</div>';
+    }
+
+    function loadPending() {
+      var p = pin();
+      if (!p) {
+        document.getElementById('status').textContent = 'Admin PIN required.';
+        return Promise.resolve();
+      }
+      sessionStorage.setItem(SESSION_KEY, p);
+      document.getElementById('status').textContent = 'Loading…';
+
+      return fetch(API + '/api/self-runner/pending?status=pending&pin=' + encodeURIComponent(p), {
+        headers: headers()
+      }).then(function (r) { return r.json(); }).then(function (data) {
+        if (!data.ok) throw new Error(data.error || 'Load failed');
+        var items = data.items || [];
+        var sum = data.summary || {};
+        document.getElementById('summary').textContent = (sum.counts?.pending || 0) + ' pending · '
+          + (sum.counts?.completed || 0) + ' completed · '
+          + (sum.counts?.failed || 0) + ' failed · '
+          + (sum.counts?.rejected || 0) + ' rejected';
+        document.getElementById('fixes').innerHTML = items.length
+          ? items.map(renderFix).join('')
+          : '<div class="empty">No pending fixes. Run QA crawl, then Generate Proposals from Product Intelligence issues.</div>';
+        document.getElementById('status').textContent = 'Updated ' + new Date().toLocaleTimeString();
+      }).catch(function (e) {
+        document.getElementById('status').textContent = e.message || 'Load failed';
+      });
+    }
+
+    function approve(id) {
+      if (!confirm('Apply patch, run QA validation, and update Product Health?')) return;
+      document.getElementById('status').textContent = 'Applying ' + id + '…';
+      fetch(API + '/api/self-runner/approve', {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({ id: id, pin: pin() })
+      }).then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (!data.ok) {
+            alert('Fix failed: ' + (data.error || data.phase || 'unknown') + (data.validation ? '\nQA: ' + JSON.stringify(data.validation) : ''));
+          } else {
+            alert('Fix completed — issue resolved. Overall: ' + (data.validation?.overall ?? '—'));
+          }
+          return loadPending();
+        })
+        .catch(function (e) { document.getElementById('status').textContent = e.message; });
+    }
+
+    function reject(id) {
+      var reason = prompt('Reject reason (optional):', 'Manual review required');
+      if (reason === null) return;
+      fetch(API + '/api/self-runner/reject', {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({ id: id, pin: pin(), reason: reason })
+      }).then(function () { return loadPending(); });
+    }
+
+    document.getElementById('fixes').addEventListener('click', function (e) {
+      var approveId = e.target.getAttribute('data-approve');
+      var rejectId = e.target.getAttribute('data-reject');
+      if (approveId) approve(approveId);
+      if (rejectId) reject(rejectId);
+    });
+
+    document.getElementById('refresh').addEventListener('click', loadPending);
+    document.getElementById('generate').addEventListener('click', function () {
+      document.getElementById('status').textContent = 'Generating proposals…';
+      fetch(API + '/api/self-runner/generate', {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({ pin: pin() })
+      }).then(function (r) { return r.json(); })
+        .then(function (data) {
+          document.getElementById('status').textContent = 'Created ' + (data.created?.length || 0) + ' proposal(s)';
+          return loadPending();
+        });
+    });
+
+    if (window.GVAdminEmbed) GVAdminEmbed.wirePin(document.getElementById('pin'), loadPending);
+    else loadPending();
+  </script>
+</body>
+</html>

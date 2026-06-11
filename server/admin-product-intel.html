@@ -97,6 +97,9 @@
       <div id="feature-scores" class="feature-grid"></div>
     </div>
 
+    <h3 class="section">Visual Issues</h3>
+    <table><thead><tr><th>Severity</th><th>Check</th><th>Issue</th><th>Repro</th></tr></thead><tbody id="visual-issues-body"></tbody></table>
+
     <h3 class="section">Top Issues</h3>
     <table><thead><tr><th>Severity</th><th>Module</th><th>Issue</th></tr></thead><tbody id="issues-body"></tbody></table>
 
@@ -179,6 +182,11 @@
       }).join('') || '<div class="empty">No feature scores</div>';
     }
 
+    function moduleLabel(key) {
+      if (key === 'visual-integrity') return 'Visual Integrity';
+      return key.replace(/-/g, ' ');
+    }
+
     function renderIssues(issues) {
       var body = document.getElementById('issues-body');
       if (!issues || !issues.length) {
@@ -188,6 +196,20 @@
       body.innerHTML = issues.map(function (i) {
         return '<tr><td class="sev-' + esc(i.severity) + '">' + esc(i.severity) + '</td>'
           + '<td>' + esc(i.module) + '</td><td>' + esc(i.message) + '</td></tr>';
+      }).join('');
+    }
+
+    function renderVisualIssuesFromFixQueue(items) {
+      var visual = (items || []).filter(function (i) { return i.module === 'visual-integrity' && !i.resolved; });
+      var body = document.getElementById('visual-issues-body');
+      if (!visual.length) {
+        body.innerHTML = '<tr><td colspan="4" class="empty">No visual theme/background issues detected.</td></tr>';
+        return;
+      }
+      body.innerHTML = visual.map(function (i) {
+        return '<tr><td class="sev-' + esc(i.severity) + '">' + esc(i.severity) + '</td>'
+          + '<td>' + esc(i.checkId || i.id) + '</td><td>' + esc(i.title) + '</td>'
+          + '<td>' + esc(i.repro || i.suggestedFix || '') + '</td></tr>';
       }).join('');
     }
 
@@ -249,7 +271,7 @@
         document.getElementById('overall-label').textContent = 'Overall platform health · last computed '
           + (scores.lastComputedAt ? new Date(scores.lastComputedAt).toLocaleString() : 'never');
 
-        renderBars(document.getElementById('module-bars'), scores.modules);
+        renderBars(document.getElementById('module-bars'), scores.modules, moduleLabel);
         renderPages(scores.pages);
         renderFeatures(scores.features);
         renderRecs(scores.recommendations || {});
@@ -265,11 +287,17 @@
         var rep = weekly.report;
         document.getElementById('weekly-report').innerHTML = rep
           ? '<p><strong>Week of ' + esc(rep.weekOf) + '</strong></p><p>' + esc(rep.narrative || '') + '</p>'
+            + (rep.trend && rep.trend['visual-integrity']
+              ? '<p style="font-size:.8125rem">Visual Integrity: '
+                + esc(rep.trend['visual-integrity'].from ?? '—') + ' → '
+                + esc(rep.trend['visual-integrity'].to ?? '—') + '</p>'
+              : '')
             + (rep.biggestWins && rep.biggestWins.length ? '<p style="color:var(--ok)">Wins: ' + esc(rep.biggestWins.join('; ')) + '</p>' : '')
             + (rep.biggestGaps && rep.biggestGaps.length ? '<p style="color:var(--warn)">Gaps: ' + esc(rep.biggestGaps.join('; ')) + '</p>' : '')
           : 'Weekly report generates Sunday 01:00 UTC or click Recompute with weekly flag.';
 
         renderIssues(sum && sum.topIssues ? sum.topIssues : []);
+        renderVisualIssuesFromFixQueue(fixes.items || []);
         renderFixQueue(fixes.items || []);
         document.getElementById('status').textContent = 'Updated ' + new Date().toLocaleTimeString();
       }).catch(function (e) {

@@ -17,6 +17,10 @@ function suggestedFixForCheck(check) {
   if (id.includes('film-sources')) {
     return 'Update Film Room knowledge source URLs via apply-film-room-sources.js with verified live links';
   }
+  if (check.module === 'visual-integrity' || id.startsWith('visual-integrity:')) {
+    const mapper = require('../visual-integrity/visual-integrity-mapper');
+    return mapper.suggestedFix(id, check.details);
+  }
   if (id.includes('admin-hub')) {
     return 'Deploy admin.html with admin-hub-core.js embedded on /admin';
   }

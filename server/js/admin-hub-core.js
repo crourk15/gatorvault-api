@@ -11,6 +11,7 @@
     ops: '/admin-ops.html?embed=1',
     qa: '/admin-qa.html?embed=1',
     'product-intel': '/admin-product-intel.html?embed=1',
+    'self-runner': '/admin-self-runner.html?embed=1',
     feedback: '/admin-feedback.html?embed=1',
     monitoring: '/admin-monitoring.html?embed=1',
     'recruiting-alerts': '/recruiting-admin.html?embed=1',
@@ -27,6 +28,8 @@
     '/admin-qa.html': { section: 'qa', panel: 'monitor' },
     '/admin/product-health': { section: 'product-intel', panel: 'health' },
     '/admin-product-intel.html': { section: 'product-intel', panel: 'health' },
+    '/admin/self-runner': { section: 'self-runner', panel: 'pending' },
+    '/admin-self-runner.html': { section: 'self-runner', panel: 'pending' },
     '/admin/ops': { section: 'dashboard', panel: 'ops' },
     '/admin/feedback': { section: 'feedback', panel: 'inbox' },
     '/admin/monitoring': { section: 'recruiting', panel: 'monitoring' },
@@ -56,6 +59,13 @@
       icon: '🧠',
       desc: 'Platform intelligence — scores, fix queue, daily & weekly reports',
       panels: [{ id: 'health', label: 'Product Intelligence', embed: 'product-intel' }]
+    },
+    {
+      id: 'self-runner',
+      label: 'Self-Runner',
+      icon: '🤖',
+      desc: 'Auto-fix proposals — approve before apply, deploy, and QA validation',
+      panels: [{ id: 'pending', label: 'Pending Fixes', embed: 'self-runner' }]
     },
     {
       id: 'qa',

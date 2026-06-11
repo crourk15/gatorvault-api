@@ -34,14 +34,15 @@ const QA_MODULES = [
   'integrity',
   'pages',
   'browser',
-  'ux'
+  'ux',
+  'visual-integrity'
 ];
 
 module.exports = {
   SITE_URL,
   API_URL,
   INTERVAL_MS: parseInt(process.env.QA_CRAWLER_INTERVAL_MS || '300000', 10),
-  BOOT_DELAY_MS: parseInt(process.env.QA_CRAWLER_BOOT_DELAY_MS || '45000', 10),
+  BOOT_DELAY_MS: parseInt(process.env.QA_CRAWLER_BOOT_DELAY_MS || '90000', 10),
   ENABLED: process.env.QA_CRAWLER_ENABLED !== 'false',
   BROWSER_ENABLED: process.env.QA_BROWSER_ENABLED === 'true',
   ALERT_ON_FAIL: process.env.QA_ALERT_ON_FAIL !== 'false',

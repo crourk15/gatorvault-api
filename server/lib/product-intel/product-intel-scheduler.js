@@ -23,6 +23,17 @@ function startProductIntelScheduler() {
     } catch (err) {
       console.warn('[product-intel] boot recompute skipped:', err.message);
     }
+    try {
+      if (process.env.SELF_RUNNER_ENABLED !== 'false') {
+        const selfRunner = require('../self-runner/self-runner-engine');
+        const gen = selfRunner.generateProposalsFromProductIntel();
+        if (gen.created?.length) {
+          console.log('[self-runner] boot — generated', gen.created.length, 'proposal(s)');
+        }
+      }
+    } catch (err) {
+      console.warn('[self-runner] boot generate skipped:', err.message);
+    }
   }, bootDelay);
 
   const tick = () => {

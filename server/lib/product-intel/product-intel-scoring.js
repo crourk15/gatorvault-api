@@ -12,13 +12,14 @@ const SEVERITY_WEIGHTS = {
 const MODULE_WEIGHTS = {
   integrity: 0.3,
   pages: 0.25,
-  ux: 0.2,
-  api: 0.1,
-  browser: 0.1,
-  content: 0.05
+  'visual-integrity': 0.2,
+  ux: 0.15,
+  api: 0.05,
+  browser: 0.03,
+  content: 0.02
 };
 
-const QA_MODULES = ['api', 'content', 'integrity', 'pages', 'ux', 'browser'];
+const QA_MODULES = ['api', 'content', 'integrity', 'pages', 'ux', 'browser', 'visual-integrity'];
 
 const PAGE_CHECKS = {
   '/': {
@@ -26,14 +27,25 @@ const PAGE_CHECKS = {
     mobile: ['pages:home:mobile']
   },
   '/film-room': {
-    score: ['pages:film-room-hooks', 'integrity:film-sources', 'api:film-room-catalog']
+    score: [
+      'pages:film-room-hooks',
+      'integrity:film-sources',
+      'api:film-room-catalog',
+      'visual-integrity:film-room-theme'
+    ]
   },
   '/team': {
-    score: ['pages:team-hooks', 'ux:modal-zindex']
+    score: [
+      'pages:team-hooks',
+      'ux:modal-zindex',
+      'visual-integrity:team-overview-background',
+      'visual-integrity:team-theme-tokens',
+      'visual-integrity:component-variants'
+    ]
   },
   '/admin': {
-    desktop: ['pages:admin-hub:desktop'],
-    mobile: ['pages:admin-hub:mobile']
+    desktop: ['pages:admin-hub:desktop', 'visual-integrity:admin-theme'],
+    mobile: ['pages:admin-hub:mobile', 'visual-integrity:admin-theme']
   },
   '/latest': {
     score: ['integrity:feed-dedup', 'api:live-feed', 'api:live-dashboard']
@@ -41,15 +53,31 @@ const PAGE_CHECKS = {
 };
 
 const FEATURE_CHECKS = {
-  team_modals: ['pages:team-hooks', 'ux:modal-zindex', 'ux:tap-targets'],
-  film_verified_source_modal: ['pages:film-room-hooks', 'ux:modal-zindex', 'integrity:film-sources'],
+  team_modals: [
+    'pages:team-hooks',
+    'ux:modal-zindex',
+    'ux:tap-targets',
+    'visual-integrity:team-overview-background',
+    'visual-integrity:component-variants'
+  ],
+  film_verified_source_modal: [
+    'pages:film-room-hooks',
+    'ux:modal-zindex',
+    'integrity:film-sources',
+    'visual-integrity:film-room-theme'
+  ],
   latest_updates_feed: ['integrity:feed-dedup', 'api:live-feed', 'api:live-dashboard'],
-  admin_hub: ['pages:admin-hub:desktop', 'pages:admin-hub:mobile'],
+  admin_hub: ['pages:admin-hub:desktop', 'pages:admin-hub:mobile', 'visual-integrity:admin-theme'],
   qa_monitor: ['api:ping']
 };
 
 function inferSeverity(check) {
   const id = String(check.id || '');
+  if (check.module === 'visual-integrity') {
+    if (/cross-page|contamination/.test(id)) return 'critical';
+    if (/team-overview|theme-token|css-linked/.test(id)) return 'high';
+    return 'high';
+  }
   if (/feed-dedup|film-sources|api:ping/.test(id)) return 'critical';
   if (check.module === 'integrity') return 'high';
   if (check.module === 'api' && !check.pass) return 'high';
@@ -62,6 +90,7 @@ function inferSeverity(check) {
 
 function inferImpact(check) {
   const id = String(check.id || '');
+  if (check.module === 'visual-integrity') return 'user-facing';
   if (/admin|qa|monitoring|ingest/.test(id)) return 'internal';
   if (/ux:|tap-target|overflow|zindex/.test(id)) return 'cosmetic';
   return 'user-facing';
@@ -172,6 +201,10 @@ function buildRecommendations({ moduleScores, featureScores, pageScores }) {
     if (avg >= 85) keep.push({ page: path, score: avg, reason: 'Page health strong' });
     else if (avg < 55) upgrade.push({ page: path, score: avg, reason: 'Page needs structural or mobile fixes' });
   });
+
+  if ((moduleScores?.['visual-integrity'] ?? 100) < 70) {
+    upgrade.push({ area: 'visual-design', score: moduleScores['visual-integrity'], reason: 'Repeated theme/background contamination — upgrade Team and Film Room styling' });
+  }
 
   if ((moduleScores?.integrity ?? 100) >= 90 && (moduleScores?.pages ?? 100) >= 85) {
     keep.push({ area: 'public-site', reason: 'Integrity and pages modules healthy' });

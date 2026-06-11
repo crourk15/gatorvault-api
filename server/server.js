@@ -85,6 +85,8 @@ require('./lib/ops-restart')(app);
 require('./lib/redeploy')(app);
 mountQaRoutes(app);
 mountProductIntelRoutes(app);
+const { mountSelfRunnerRoutes } = require('./lib/self-runner/self-runner-routes');
+mountSelfRunnerRoutes(app);
 mountGm2Routes(app);
 mountInsiderArticlesRoutes(app);
 

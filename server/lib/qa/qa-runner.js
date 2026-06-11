@@ -10,6 +10,7 @@ const { runIntegrityChecks } = require('./qa-integrity-checks');
 const { runPageChecks } = require('./qa-page-checks');
 const { runUxChecks } = require('./qa-ux-checks');
 const { runBrowserChecks } = require('./qa-browser-checks');
+const { runVisualIntegrityChecks } = require('../visual-integrity/visual-integrity-checks');
 
 let running = false;
 let lastPass = true;
@@ -44,16 +45,17 @@ async function runQaCrawl(opts = {}) {
   const id = `qa_${Date.now()}`;
 
   try {
-    const [api, content, integrity, pages, ux, browser] = await Promise.all([
+    const [api, content, integrity, pages, ux, browser, visualIntegrity] = await Promise.all([
       runApiChecks(),
       runContentChecks(),
       runIntegrityChecks(),
       runPageChecks(),
       runUxChecks(),
-      runBrowserChecks()
+      runBrowserChecks(),
+      runVisualIntegrityChecks()
     ]);
 
-    const modules = { api, content, integrity, pages, ux, browser };
+    const modules = { api, content, integrity, pages, ux, browser, 'visual-integrity': visualIntegrity };
     const allChecks = Object.values(modules).flatMap((m) => m.checks || []);
     const failed = allChecks.filter((c) => !c.pass);
     const errors = flattenErrors(modules);
@@ -83,6 +85,18 @@ async function runQaCrawl(opts = {}) {
       productIntel.recomputeFromRun(run, { daily: true, weekly: false });
     } catch (piErr) {
       console.warn('[product-intel] recompute skipped:', piErr.message);
+    }
+
+    try {
+      if (process.env.SELF_RUNNER_ENABLED !== 'false') {
+        const selfRunner = require('../self-runner/self-runner-engine');
+        const gen = selfRunner.generateProposalsFromProductIntel();
+        if (gen.created?.length) {
+          console.log('[self-runner] generated', gen.created.length, 'pending fix proposal(s)');
+        }
+      }
+    } catch (srErr) {
+      console.warn('[self-runner] proposal generation skipped:', srErr.message);
     }
 
     const opsMonitor = require('../ops-monitor');
