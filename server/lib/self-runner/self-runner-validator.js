@@ -91,7 +91,7 @@ async function validateFix(fix, opts = {}) {
     intel = { ok: false, error: err.message };
   }
 
-  engine.generateProposalsFromProductIntel();
+  await engine.generateProposalsFromProductIntel();
 
   const qaPass = run.pass;
   const checkPass = remoteCheck?.pass ?? null;

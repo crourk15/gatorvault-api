@@ -49,14 +49,12 @@ async function runIntegrityChecks() {
         timeout: config.FETCH_TIMEOUT_MS
       });
       const items = body.feed || body.items || [];
-      const dups = findDuplicateKeys(items, (i) => {
-        const u = (i.url || i.link || '').trim();
-        return u || null;
-      });
-      if (dups.length) {
-        const err = new Error(`${dups.length} duplicate feed item(s)`);
-        err.details = dups.slice(0, 5);
-        err.repro = 'Open Latest Updates; check live-aggregator dedup rules';
+      const feedDedup = require('../live-feed-dedup');
+      const validation = feedDedup.validateFeedIntegrity(items);
+      if (!validation.ok) {
+        const err = new Error(`${validation.issues.length} feed integrity issue(s)`);
+        err.details = validation.issues.slice(0, 8);
+        err.repro = 'Open Latest Updates; run feed dedupe repair on feed-items.json';
         throw err;
       }
       return { count: items.length };

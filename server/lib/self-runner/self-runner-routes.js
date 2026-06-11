@@ -8,6 +8,11 @@ const apply = require('./self-runner-apply');
 const deploy = require('./self-runner-deploy');
 const validator = require('./self-runner-validator');
 const failuresStore = require('./self-runner-failures/self-runner-failures-store');
+const learning = require('./learning-loop');
+const logger = require('./self-runner-logger');
+const blueprint = require('./blueprint/canonical-blueprint');
+const v2 = require('./self-runner-v2-engine');
+const autoposterGuard = require('./autoposter-guard');
 const { pinFromReq, verifyAdminPin } = require('../ops-routes');
 
 function requireAuth(req, res) {
@@ -24,7 +29,15 @@ async function runApproveFlow(fixId, pin) {
   if (!fix) return { ok: false, error: 'fix_not_found' };
   if (fix.status !== 'pending') return { ok: false, error: `invalid_status_${fix.status}` };
 
+  const safety = autoposterGuard.validatePatchSafety(fix);
+  if (!safety.ok && fix.blocked !== false) {
+    logger.log.guard({ fixId, blocked: safety.blocked });
+    return { ok: false, error: 'patch_blocked_by_guard', blocked: safety.blocked };
+  }
+
   queue.markStatus(fixId, 'applying', { approvedAt: new Date().toISOString(), approvedBy: 'admin' });
+  learning.recordDecision({ action: 'approved', fix });
+  logger.log.approve({ fixId, patchType: fix.patchType, files: fix.filesToModify });
 
   let applyResult;
   try {
@@ -57,6 +70,7 @@ async function runApproveFlow(fixId, pin) {
       validation,
       completedAt: new Date().toISOString()
     });
+    learning.recordDecision({ action: 'completed', fix });
     if (fix.sourceIssueId) engine.resolveSourceIssue(fix.sourceIssueId);
   } else {
     queue.markStatus(fixId, 'failed', {
@@ -91,6 +105,47 @@ function mountSelfRunnerRoutes(app) {
 
   app.get('/admin-self-runner.html', (req, res) => {
     res.sendFile(page);
+  });
+
+  app.get('/api/self-runner/blueprint', (req, res) => {
+    if (!requireAuth(req, res)) return;
+    try {
+      return res.json({ ok: true, blueprint: blueprint.platformMap() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/self-runner/logs', (req, res) => {
+    if (!requireAuth(req, res)) return;
+    try {
+      const limit = Math.min(100, parseInt(req.query.limit || '50', 10) || 50);
+      return res.json({ ok: true, logs: logger.listRecent(limit) });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/self-runner/scan', async (req, res) => {
+    if (!requireAuth(req, res)) return;
+    try {
+      const enqueue = req.body?.enqueue !== false;
+      const scan = enqueue
+        ? await engine.runPlatformScanAndEnqueue({ includeBlueprint: !!req.body?.includeBlueprint, enqueue })
+        : v2.runPlatformScan({ includeBlueprint: !!req.body?.includeBlueprint });
+      return res.json({ ok: true, ...scan });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/self-runner/feedback', (req, res) => {
+    if (!requireAuth(req, res)) return;
+    try {
+      return res.json({ ok: true, feedback: learning.readFeedback() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
   });
 
   app.get('/api/self-runner/health', (req, res) => {
@@ -153,7 +208,7 @@ function mountSelfRunnerRoutes(app) {
           console.warn('[self-runner] generate: QA crawl failed, using latest run:', qaErr.message);
         }
       }
-      const result = engine.generateProposalsFromProductIntel({ logEmpty: true });
+      const result = await engine.generateProposalsFromProductIntel({ logEmpty: true });
       return res.json({
         ok: true,
         ...result,
@@ -191,6 +246,8 @@ function mountSelfRunnerRoutes(app) {
         return res.status(400).json({ ok: false, error: `Cannot reject fix in status ${fix.status}` });
       }
       queue.markStatus(id, 'rejected', { rejectedReason: req.body?.reason || 'admin_rejected' });
+      learning.recordDecision({ action: 'rejected', fix, reason: req.body?.reason });
+      logger.log.reject({ fixId: id, reason: req.body?.reason, patchType: fix.patchType });
       if (fix.sourceIssueId) {
         engine.markIssueManualReview(fix.sourceIssueId, req.body?.reason || 'Rejected — manual review required');
       }
@@ -201,7 +258,7 @@ function mountSelfRunnerRoutes(app) {
   });
 
   console.log(
-    '[self-runner] routes mounted: /api/self-runner/pending, /fix/:id, /failures, POST /approve, /reject, /generate'
+    '[self-runner] routes mounted: /api/self-runner/pending, /fix/:id, /failures, /scan, /blueprint, /logs, /feedback, POST /approve, /reject, /generate'
   );
 }
 

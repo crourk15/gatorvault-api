@@ -113,34 +113,47 @@ const FILM_SOURCE_FALLBACKS = {
   espn: 'https://www.espn.com/college-football/'
 };
 
-const HOOK_SNIPPETS = {
-  'pages:team-hooks': {
-    file: 'index.html',
-    marker: 'gvOpenTeamDetail',
-    insertBefore: '</body>',
-    snippet:
-      '\n<!-- self-runner: team hooks -->\n<script src="/js/gv-team-mobile.js?v=team-v3" defer></script>\n'
-  },
-  'pages:film-room-hooks': {
-    file: 'index.html',
-    marker: 'gvOpenVerifiedSource',
-    insertBefore: '</body>',
-    snippet:
-      '\n<!-- self-runner: film room verified source hooks wired in gv-film-sources.js -->\n'
-  },
-  'integrity:filmroom-structure': {
-    file: 'index.html',
-    marker: 'film-room-hub-landing',
-    insertBefore: '</body>',
-    snippet: '\n<!-- self-runner: film room hub drill-down -->\n'
-  },
-  'integrity:missing-content': {
-    file: 'index.html',
-    marker: 'gv-team-overview-layout',
-    insertBefore: '</body>',
-    snippet: '\n<!-- self-runner: section markers verified -->\n'
+const HOOK_SNIPPETS = (() => {
+  try {
+    const bp = require('./blueprint/html-blueprint');
+    const out = {};
+    Object.entries(bp.HTML_HOOKS).forEach(([key, hook]) => {
+      out[`pages:${key}`] = {
+        file: hook.file || 'index.html',
+        marker: hook.marker || hook.id || key,
+        insertBefore: hook.anchor || '</body>',
+        snippet: hook.snippet
+      };
+    });
+    out['pages:team-hooks'] = {
+      file: 'index.html',
+      marker: 'gvOpenTeamDetail',
+      insertBefore: '</body>',
+      snippet: bp.HTML_HOOKS['gvOpenTeamDetail']?.snippet || '<script src="/js/gv-team-mobile.js?v=team-v3" defer></script>\n'
+    };
+    out['pages:film-room-hooks'] = {
+      file: 'index.html',
+      marker: 'gvOpenVerifiedSource',
+      insertBefore: '</body>',
+      snippet: bp.HTML_HOOKS['gvOpenVerifiedSource']?.snippet || '<script src="/js/gv-film-sources.js?v=film-v2" defer></script>\n'
+    };
+    out['integrity:filmroom-structure'] = {
+      file: 'index.html',
+      marker: 'film-room-hub-landing',
+      insertBefore: 'id="vpane-highlights"',
+      snippet: bp.HTML_HOOKS['film-room-hub-landing']?.snippet || '<div id="film-room-hub-landing" class="film-room-hub-landing"></div>\n'
+    };
+    out['integrity:missing-content'] = {
+      file: 'index.html',
+      marker: 'gv-team-overview-layout',
+      insertBefore: 'id="vpane-team"',
+      snippet: bp.HTML_HOOKS['gv-team-overview-layout']?.snippet || '<div class="gv-team-overview-layout"></div>\n'
+    };
+    return out;
+  } catch {
+    return {};
   }
-};
+})();
 
 const TEAM_LEGACY_CARD_SWAPS = {
   'card-h': 'gv-team-era-card',
@@ -173,7 +186,7 @@ const TEAM_OVERVIEW_FILES = {
 };
 
 const MODAL_OVERFLOW_CSS_SNIPPET = `
-/* self-runner: modal overflow guards */
+/* Self-Runner 2.0: modal overflow guards */
 .gv-team-modal-body {
   flex: 1 1 auto;
   min-height: 0;

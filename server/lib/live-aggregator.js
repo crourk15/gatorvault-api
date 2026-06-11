@@ -291,7 +291,7 @@ function getDashboard({ feedLimit = 60 } = {}) {
     liveStore.getFeedItems({ limit: feedLimit * 2, categoriesOnly: true })
   );
   return {
-    feed: feedDedup.dedupeFeedItems(rawFeed).slice(0, feedLimit),
+    feed: feedDedup.dedupeFeedItems(rawFeed, { log: false }).items.slice(0, feedLimit),
     beat: getBeatPosts(40),
     podcasts: getPodcastHub(),
     updatedAt: liveStore.nowIso()

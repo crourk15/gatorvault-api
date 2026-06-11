@@ -74,25 +74,30 @@
     .tabs { display:flex; gap:.35rem; margin-bottom:.75rem; flex-wrap:wrap; }
     .tabs button { background:#1e293b; color:var(--text); border:1px solid #334155; }
     .tabs button.active { background:var(--orange); border-color:var(--orange); }
+    .pill.v2 { color:#38bdf8; border:1px solid #0ea5e9; }
+    .pill.blocked { color:var(--fail); border:1px solid #7f1d1d; }
     .hidden { display:none !important; }
   </style>
 </head>
 <body>
   <header>
-    <h1>🤖 Self-Runner — Pending Fixes</h1>
+    <h1>🤖 Self-Runner 2.0</h1>
     <div class="row">
       <input id="pin" type="password" placeholder="Admin PIN" autocomplete="off">
       <button id="refresh" class="secondary">Refresh</button>
+      <button id="scan" class="secondary">Platform Scan</button>
       <button id="generate" class="secondary">Generate Proposals</button>
     </div>
   </header>
   <main>
     <p class="status" id="status">Enter admin PIN and refresh.</p>
     <div class="banner">
-      <strong>Approval gate:</strong> Nothing is applied or deployed until you click <em>Approve</em>.
+      <strong>Self-Runner 2.0 — Assisted mode:</strong> Nothing is applied until you click <em>Approve</em>.
+      Platform Scan validates blueprint HTML/JSON/CSS, War Room data, and Autoposter guards.
       Approve runs: apply patch → optional redeploy hook → QA crawl → Product Health recompute.
-      Reject marks the fix for manual review with no changes.
+      Reject feeds the learning loop (<code>selfRunnerFeedback.json</code>).
     </div>
+    <p class="summary" id="health-summary"></p>
     <p class="summary" id="summary"></p>
     <div class="tabs" id="tabs">
       <button type="button" class="active" data-status="pending">Pending</button>
@@ -175,7 +180,10 @@
         + '<span class="pill">' + esc(fix.module) + '</span>'
         + '<span class="sev-' + esc(fix.severity) + '">' + esc(fix.severity) + '</span>'
         + '<span class="pill">' + esc(fix.impact) + '</span>'
-        + '<span class="pill">' + esc(fix.patchType) + '</span></div></div></div>'
+        + '<span class="pill">' + esc(fix.patchType) + '</span>'
+        + (fix.v2 ? '<span class="pill v2">v2</span>' : '')
+        + (fix.blocked ? '<span class="pill blocked">blocked</span>' : '')
+        + '</div></div></div>'
         + '<p style="font-size:.8125rem;margin:.35rem 0">' + esc(fix.suggestedFix) + '</p>'
         + renderPreview(fix.patchPreview)
         + (failureHtml ? '<div style="margin-top:.75rem">' + failureHtml + '</div>' : '')
@@ -187,6 +195,20 @@
     }
 
     var currentStatus = 'pending';
+
+    function loadHealth() {
+      return fetch(API + '/api/self-runner/health', { headers: { Accept: 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (!data.ok) return;
+          document.getElementById('health-summary').textContent =
+            'Mode: ' + (data.mode || 'assisted')
+            + ' · v2 scan: ' + (data.v2Enabled !== false ? 'on' : 'off')
+            + ' · ' + (data.eligibleOpenIssues || 0) + ' eligible PI issues'
+            + ' · overall health ' + (data.productIntelOverall ?? '—');
+        })
+        .catch(function () {});
+    }
 
     function loadPending() {
       var p = pin();
@@ -273,7 +295,23 @@
       loadPending();
     });
 
-    document.getElementById('refresh').addEventListener('click', loadPending);
+    document.getElementById('refresh').addEventListener('click', function () { loadHealth(); loadPending(); });
+    document.getElementById('scan').addEventListener('click', function () {
+      document.getElementById('status').textContent = 'Running platform scan…';
+      fetch(API + '/api/self-runner/scan', {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({ pin: pin(), enqueue: true })
+      }).then(function (r) { return r.json(); })
+        .then(function (data) {
+          document.getElementById('status').textContent = 'Scan ' + (data.scanId || '')
+            + ' — ' + (data.issueCount || 0) + ' issue(s), '
+            + (data.patchCount || 0) + ' patch(es), '
+            + ((data.enqueue && data.enqueue.created) ? data.enqueue.created.length : 0) + ' enqueued';
+          return loadPending();
+        })
+        .catch(function (e) { document.getElementById('status').textContent = e.message; });
+    });
     document.getElementById('generate').addEventListener('click', function () {
       document.getElementById('status').textContent = 'Generating proposals…';
       fetch(API + '/api/self-runner/generate', {
@@ -282,13 +320,14 @@
         body: JSON.stringify({ pin: pin() })
       }).then(function (r) { return r.json(); })
         .then(function (data) {
-          document.getElementById('status').textContent = 'Created ' + (data.created?.length || 0) + ' proposal(s)';
+          var v2 = data.v2Scan ? (' · v2: ' + (data.v2Scan.enqueued || 0) + ' enqueued') : '';
+          document.getElementById('status').textContent = 'Created ' + (data.created?.length || 0) + ' proposal(s)' + v2;
           return loadPending();
         });
     });
 
-    if (window.GVAdminEmbed) GVAdminEmbed.wirePin(document.getElementById('pin'), loadPending);
-    else loadPending();
+    if (window.GVAdminEmbed) GVAdminEmbed.wirePin(document.getElementById('pin'), function () { loadHealth(); loadPending(); });
+    else { loadHealth(); loadPending(); }
   </script>
 </body>
 </html>

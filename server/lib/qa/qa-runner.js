@@ -53,7 +53,7 @@ async function runQaCrawl(opts = {}) {
     try {
       if (process.env.SELF_RUNNER_ENABLED !== 'false') {
         const selfRunner = require('../self-runner/self-runner-engine');
-        const gen = selfRunner.generateProposalsFromProductIntel();
+        const gen = await selfRunner.generateProposalsFromProductIntel();
         if (gen.created?.length) {
           console.log('[self-runner] generated', gen.created.length, 'pending fix proposal(s)');
         }

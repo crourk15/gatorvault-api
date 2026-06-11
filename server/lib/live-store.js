@@ -100,7 +100,8 @@ function loadFeedItems() {
 }
 
 function saveFeedItems(items) {
-  writeJson(FEED_PATH, items.slice(0, 500));
+  const repaired = feedDedup.repairFeedItems(items, { log: false });
+  writeJson(FEED_PATH, repaired.items.slice(0, 500));
 }
 
 function loadBeatCache() {
@@ -134,13 +135,27 @@ function normalizeFeedItem(item) {
 
 function upsertFeedItem(item) {
   const items = loadFeedItems();
-  const key = item.dedupeKey || item.id;
+  const rejection = feedDedup.shouldRejectFeedUpsert(item, items);
+  if (rejection.reject) {
+    feedDedup.appendDedupeLog({
+      action: 'upsert_rejected',
+      reason: rejection.reason,
+      id: item?.id,
+      duplicateOf: rejection.duplicateOf,
+      hash: rejection.hash,
+      title: item?.title
+    });
+    return { rejected: true, reason: rejection.reason, duplicateOf: rejection.duplicateOf };
+  }
+
+  const row = normalizeFeedItem(feedDedup.enrichFeedItem(rejection.enriched || item));
+  const key = row.dedupeKey || row.id;
   const idx = items.findIndex((i) => (i.dedupeKey || i.id) === key);
-  const row = normalizeFeedItem({ ...item, updatedAt: nowIso() });
   if (idx >= 0) items[idx] = normalizeFeedItem({ ...items[idx], ...row });
   else items.unshift(row);
   items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  saveFeedItems(items);
+  const repaired = feedDedup.repairFeedItems(items, { log: false });
+  saveFeedItems(repaired.items);
   return row;
 }
 
@@ -173,7 +188,10 @@ function getFeedItems({ limit = 80, since, categoriesOnly = false } = {}) {
       .map((i) => classifyFeedItem(i, playerIndex))
       .filter(Boolean);
   }
-  return items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, limit);
+  return items
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, limit)
+    .map((i) => (feedDedup.isPlaceholderHash(i.hash) ? feedDedup.enrichFeedItem(i) : i));
 }
 
 function removeFeedItemsMatching(predicate) {
@@ -273,6 +291,11 @@ module.exports = {
   getFeedItems,
   purgeTestFeedItems,
   dedupeCommitFeedItems,
+  repairFeedItems: () => {
+    const repaired = feedDedup.repairFeedItems(loadFeedItems());
+    saveFeedItems(repaired.items);
+    return repaired;
+  },
   newId,
   nowIso
 };

@@ -26,7 +26,7 @@ async function startProductIntelScheduler() {
     try {
       if (process.env.SELF_RUNNER_ENABLED !== 'false') {
         const selfRunner = require('../self-runner/self-runner-engine');
-        const gen = selfRunner.generateProposalsFromProductIntel();
+        const gen = await selfRunner.generateProposalsFromProductIntel();
         if (gen.created?.length) {
           console.log('[self-runner] boot — generated', gen.created.length, 'proposal(s)');
         }

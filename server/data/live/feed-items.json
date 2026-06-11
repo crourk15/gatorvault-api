@@ -13,8 +13,12 @@
     "meta": {
       "showId": "gators-breakdown"
     },
-    "updatedAt": "2026-06-11T17:53:04.397Z",
-    "url": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD7834067720.mp3"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "url": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD7834067720.mp3",
+    "hash": "401cdda108c92f79f3cd61790afc739e20e89b9161c80396fa37abd2b38a646c",
+    "hashNormalizedPreview": "new episode: gators breakdown — instant reaction: florida gators game start times for 2026 | gators breakdown plus membe",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.236Z"
   },
   {
     "id": "rec_evt_1781017597848_ej9v28",
@@ -71,7 +75,11 @@
       "on3": true
     },
     "url": "/player/amare-patterson",
-    "updatedAt": "2026-06-09T22:42:39.456Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "48048f4ce82d251b69f0952cd35e55aed362c0dc14d6e7989418a21c2643dc1f",
+    "hashNormalizedPreview": "amare patterson — ov to florida cancelled · visiting south carolina wr · 2027 · via hayes fawcett amare-patterson amare ",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.236Z"
   },
   {
     "id": "commit:285808|florida|2026-06-08",
@@ -129,7 +137,11 @@
       "commitFingerprint": "285808|florida|2026-06-08"
     },
     "url": "/player/jaydee-lane",
-    "updatedAt": "2026-06-11T17:53:01.053Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "f31a3c59b14f99f11946b30edb441e51efff76589049321a40d9b35086fefd7c",
+    "hashNormalizedPreview": "jaydee lane commits to florida ls · 3 · mendenhall, ms · #1801 natl jaydee-lane jaydee lane ls commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.236Z"
   },
   {
     "id": "intel:243862|official_visit|2026-06-11",
@@ -180,7 +192,11 @@
       "status": "Official Visit Scheduled"
     },
     "url": "/player/easton-royal",
-    "updatedAt": "2026-06-09T16:45:27.861Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "18f18ff277be8a40d5d6f76626065be5421558548b2fd6d9c04ff2802cbadd8e",
+    "hashNormalizedPreview": "easton royal — official visit scheduled 2026 wr easton royal will take an official visit to gainesville from june 11–13.",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.236Z"
   },
   {
     "id": "commit:288165|florida|2026-05-01",
@@ -238,7 +254,11 @@
       "commitFingerprint": "288165|florida|2026-05-01"
     },
     "url": "/player/jaylen-jordon",
-    "updatedAt": "2026-06-11T17:53:01.056Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "4bcb8b9295cc10801d3993316e71efeec9ca036d8143e6406a0c05009ddebf02",
+    "hashNormalizedPreview": "jaylen jordon commits to florida te · 3 · hilliard, fl jaylen-jordon jaylen jordon te info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.237Z"
   },
   {
     "id": "commit:284197|florida|2026-01-26",
@@ -296,7 +316,11 @@
       "commitFingerprint": "284197|florida|2026-01-26"
     },
     "url": "/player/ace-ciongoli",
-    "updatedAt": "2026-06-11T17:53:01.059Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "faaef2da00237f1b77bfb23340bf2d93414d620b2b690e24f62f1a3b9bb14932",
+    "hashNormalizedPreview": "ace ciongoli commits to florida wr · 3 · needham, ma ace-ciongoli ace ciongoli wr info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.237Z"
   },
   {
     "id": "commit:283795|florida|2026-01-10",
@@ -354,7 +378,11 @@
       "commitFingerprint": "283795|florida|2026-01-10"
     },
     "url": "/player/miller-fealy",
-    "updatedAt": "2026-06-11T17:53:01.062Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "854d9255ffa2ddb13a167b18892833b7627f71f3d4c6e46e1b13c194bd49486d",
+    "hashNormalizedPreview": "miller fealy commits to florida p · 3 · melbourne, vic miller-fealy miller fealy p info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.237Z"
   },
   {
     "id": "commit:283756|florida|2026-01-08",
@@ -412,7 +440,11 @@
       "commitFingerprint": "283756|florida|2026-01-08"
     },
     "url": "/player/carter-milliron",
-    "updatedAt": "2026-06-11T17:53:01.065Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "40f6e5703568f5864aa6cec9dc6f22cebdceecc9f4688e8fc1db42398847d19e",
+    "hashNormalizedPreview": "carter milliron commits to florida ls · 3 · hoover, al carter-milliron carter milliron ls info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.237Z"
   },
   {
     "id": "commit:283676|florida|2026-01-06",
@@ -470,7 +502,11 @@
       "commitFingerprint": "283676|florida|2026-01-06"
     },
     "url": "/player/alec-clark",
-    "updatedAt": "2026-06-11T17:53:01.068Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "b8bbcc1bf8a69a4f038ad986c277a787827d2da60abe47de392165292c0b3d39",
+    "hashNormalizedPreview": "alec clark commits to florida p · 3 · melbourne, vic alec-clark alec clark p info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.238Z"
   },
   {
     "id": "commit:162609|florida|2026-01-06",
@@ -528,7 +564,11 @@
       "commitFingerprint": "162609|florida|2026-01-06"
     },
     "url": "/player/patrick-durkin",
-    "updatedAt": "2026-06-11T17:53:01.072Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "735bfdce68539a9938b17258a7a8f1de80484312f07dce82990bcee7f9bd52b6",
+    "hashNormalizedPreview": "patrick durkin commits to florida k · 3 · plainfield, il patrick-durkin patrick durkin k info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.238Z"
   },
   {
     "id": "commit:239636|florida|2026-01-06",
@@ -586,7 +626,11 @@
       "commitFingerprint": "239636|florida|2026-01-06"
     },
     "url": "/player/emmanuel-oyebadejo",
-    "updatedAt": "2026-06-11T17:53:01.075Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "a169b69520641274e49f19976a2753706d4e944ebd9d1b6ca9f49a6211d7e3e4",
+    "hashNormalizedPreview": "emmanuel oyebadejo commits to florida dl · 3 · england emmanuel-oyebadejo emmanuel oyebadejo dl info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.238Z"
   },
   {
     "id": "commit:162020|florida|2026-01-05",
@@ -644,7 +688,11 @@
       "commitFingerprint": "162020|florida|2026-01-05"
     },
     "url": "/player/lacota-dippre",
-    "updatedAt": "2026-06-11T17:53:01.079Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "f20222f72c7889e5ec9b348259b54fdb871ee9bba38c231ee8a261afa0ceeee2",
+    "hashNormalizedPreview": "lacota dippre commits to florida te · 3 · jermyn, pa lacota-dippre lacota dippre te info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.238Z"
   },
   {
     "id": "commit:148026|florida|2026-01-12",
@@ -702,7 +750,11 @@
       "commitFingerprint": "148026|florida|2026-01-12"
     },
     "url": "/player/kanye-clark",
-    "updatedAt": "2026-06-11T17:53:01.084Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "0c90637480e22f9b1db46b81a4eaeaa03e32ce7743a2128b0e362eb75f4705db",
+    "hashNormalizedPreview": "kanye clark commits to florida s · 3 · sacramento, ca kanye-clark kanye clark s info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.238Z"
   },
   {
     "id": "commit:283144|florida|2026-01-19",
@@ -760,7 +812,11 @@
       "commitFingerprint": "283144|florida|2026-01-19"
     },
     "url": "/player/evan-chieca",
-    "updatedAt": "2026-06-11T17:53:01.087Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "ba4a3587a7a7e17c4f9313ccc0a114c1feaba7f09b62693edc4c182ddffd7f1a",
+    "hashNormalizedPreview": "evan chieca commits to florida te · 3 · lindenhurst, ny evan-chieca evan chieca te info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.238Z"
   },
   {
     "id": "commit:66322|florida|2026-01-21",
@@ -818,7 +874,11 @@
       "commitFingerprint": "66322|florida|2026-01-21"
     },
     "url": "/player/jordy-lowery",
-    "updatedAt": "2026-06-11T17:53:01.090Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "6286d2772a7332bbd4e81213a62d84cc70d7e066f64d752307116d3552605c2f",
+    "hashNormalizedPreview": "jordy lowery commits to florida cb · 3 · bartow, fl jordy-lowery jordy lowery cb info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.239Z"
   },
   {
     "id": "commit:154828|florida|2026-01-05",
@@ -876,7 +936,11 @@
       "commitFingerprint": "154828|florida|2026-01-05"
     },
     "url": "/player/bailey-stockton",
-    "updatedAt": "2026-06-11T17:53:01.093Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "5c84cbb51b6f5d1790077e47e3c9d8f0b71bb29dec07d6d3c051e701244a49ea",
+    "hashNormalizedPreview": "bailey stockton commits to florida wr · 3 · athens, ga bailey-stockton bailey stockton wr info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.239Z"
   },
   {
     "id": "commit:113075|florida|2026-01-12",
@@ -934,7 +998,11 @@
       "commitFingerprint": "113075|florida|2026-01-12"
     },
     "url": "/player/tj-bullard",
-    "updatedAt": "2026-06-11T17:53:01.098Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "46212ae741bc442147b0dd4aba053f9ea0ba16e34ff12701748bc2ee733f83ba",
+    "hashNormalizedPreview": "tj bullard commits to florida lb · 3 · tampa, fl tj-bullard tj bullard lb info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.239Z"
   },
   {
     "id": "commit:153739|florida|2026-01-09",
@@ -992,7 +1060,11 @@
       "commitFingerprint": "153739|florida|2026-01-09"
     },
     "url": "/player/harrison-moore",
-    "updatedAt": "2026-06-11T17:53:01.101Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "f8d84f75447ff1c55eaaae9340319a520a517f62583be6ff270fa5edf16bdee3",
+    "hashNormalizedPreview": "harrison moore commits to florida iol · 3 · southlake, tx harrison-moore harrison moore iol info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.239Z"
   },
   {
     "id": "commit:155719|florida|2026-01-10",
@@ -1050,7 +1122,11 @@
       "commitFingerprint": "155719|florida|2026-01-10"
     },
     "url": "/player/eric-singleton-jr",
-    "updatedAt": "2026-06-11T17:53:01.105Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "2f0a24ef3d7ee9884ea262e98d4a4b51fad6f5cf68afd0ec2f57f9427cebd732",
+    "hashNormalizedPreview": "eric singleton jr. commits to florida wr · 3 · douglasville, ga eric-singleton-jr eric singleton wr info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.239Z"
   },
   {
     "id": "commit:154954|florida|2026-01-16",
@@ -1108,7 +1184,11 @@
       "commitFingerprint": "154954|florida|2026-01-16"
     },
     "url": "/player/jaylen-lloyd",
-    "updatedAt": "2026-06-11T17:53:01.108Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "952937555a393ebced9106eedd88eb169800dbda98e4526b1eb9345062a08e69",
+    "hashNormalizedPreview": "jaylen lloyd commits to florida wr · 3 · omaha, ne jaylen-lloyd jaylen lloyd wr info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.240Z"
   },
   {
     "id": "commit:238104|florida|2026-01-09",
@@ -1166,7 +1246,11 @@
       "commitFingerprint": "238104|florida|2026-01-09"
     },
     "url": "/player/emeka-ugorji",
-    "updatedAt": "2026-06-11T17:53:01.112Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "d9fe20d09c25ed7a8e35095de6c7379d6ed92dac9a831a71d49f439a5f129eea",
+    "hashNormalizedPreview": "emeka ugorji commits to florida ot · 3 · dallas, tx emeka-ugorji emeka ugorji ot info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.240Z"
   },
   {
     "id": "commit:150237|florida|2026-01-04",
@@ -1224,7 +1308,11 @@
       "commitFingerprint": "150237|florida|2026-01-04"
     },
     "url": "/player/dj-coleman",
-    "updatedAt": "2026-06-11T17:53:01.115Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "b24efd01d9700ca1b89ca56c161068de4e441f87d756ab2127a1ca59c78953d1",
+    "hashNormalizedPreview": "dj coleman commits to florida s · 3 · mesquite, tx dj-coleman dj coleman s info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.240Z"
   },
   {
     "id": "commit:175643|florida|2026-01-18",
@@ -1282,7 +1370,11 @@
       "commitFingerprint": "175643|florida|2026-01-18"
     },
     "url": "/player/mason-clinton",
-    "updatedAt": "2026-06-11T17:53:01.119Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "e0a00cf190e70608b72638392135150e30c2d4202e5dcce75da42a4e94088b56",
+    "hashNormalizedPreview": "mason clinton commits to florida dl · 3 · petal, ms mason-clinton mason clinton dl info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.240Z"
   },
   {
     "id": "commit:145026|florida|2026-01-05",
@@ -1340,7 +1432,11 @@
       "commitFingerprint": "145026|florida|2026-01-05"
     },
     "url": "/player/dk-kalu",
-    "updatedAt": "2026-06-11T17:53:01.124Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "6cd342a3cb9dc737a98046083ec946c77cac2fd29274df87a28fd8877ca02f3c",
+    "hashNormalizedPreview": "dk kalu commits to florida dl · 3 · missouri city, tx dk-kalu dk kalu dl info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.241Z"
   },
   {
     "id": "commit:146069|florida|2026-01-06",
@@ -1398,7 +1494,11 @@
       "commitFingerprint": "146069|florida|2026-01-06"
     },
     "url": "/player/aaron-philo",
-    "updatedAt": "2026-06-11T17:53:01.128Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "3e427236485f6f0d5b6d177d61f4c64077a109250c8f7567248260fdcbc728d9",
+    "hashNormalizedPreview": "aaron philo commits to florida qb · 3 · bogart, ga aaron-philo aaron philo qb info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.241Z"
   },
   {
     "id": "commit:147775|florida|2026-01-08",
@@ -1456,7 +1556,11 @@
       "commitFingerprint": "147775|florida|2026-01-08"
     },
     "url": "/player/london-montgomery",
-    "updatedAt": "2026-06-11T17:53:01.131Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "25f938c35ecccf5fa1ae9bebc65589fe27aa4355f0270cf3ce34911f2ae3d39d",
+    "hashNormalizedPreview": "london montgomery commits to florida rb · 3 · scranton, pa london-montgomery london montgomery rb info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.241Z"
   },
   {
     "id": "commit:155795|florida|2026-01-06",
@@ -1514,7 +1618,11 @@
       "commitFingerprint": "155795|florida|2026-01-06"
     },
     "url": "/player/eagan-boyer",
-    "updatedAt": "2026-06-11T17:53:01.134Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "8fe781f31bfa024fb0b237aa512ac166fa8c91b99dbf0be47f428c0db62aea70",
+    "hashNormalizedPreview": "eagan boyer commits to florida ot · 3 · cornelius, nc eagan-boyer eagan boyer ot info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.242Z"
   },
   {
     "id": "commit:178849|florida|2026-01-10",
@@ -1572,7 +1680,11 @@
       "commitFingerprint": "178849|florida|2026-01-10"
     },
     "url": "/player/luke-harpring",
-    "updatedAt": "2026-06-11T17:53:01.137Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "aea4a4f6d8a97049c6fc37d3e46fec737d6220e3b53748c93328e04ab441cb48",
+    "hashNormalizedPreview": "luke harpring commits to florida te · 3 · atlanta, ga luke-harpring luke harpring te info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.242Z"
   },
   {
     "id": "commit:87184|florida|2026-01-07",
@@ -1630,7 +1742,11 @@
       "commitFingerprint": "87184|florida|2026-01-07"
     },
     "url": "/player/micah-mays",
-    "updatedAt": "2026-06-11T17:53:01.141Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "ef6884a81ffca8b75adb600b88e0feeebc8f27bd59e1b14ed9c1050d175b8e8c",
+    "hashNormalizedPreview": "micah mays commits to florida wr · 3 · north palm beach, fl micah-mays micah mays wr info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.242Z"
   },
   {
     "id": "commit:178263|florida|2026-01-07",
@@ -1688,7 +1804,11 @@
       "commitFingerprint": "178263|florida|2026-01-07"
     },
     "url": "/player/cam-dooley",
-    "updatedAt": "2026-06-11T17:53:01.144Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "eda56c7713fe2dc48a963dde07f74bbf1c184ef50894112714160868da84741a",
+    "hashNormalizedPreview": "cam dooley commits to florida s · 3 · valley, al cam-dooley cam dooley s info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.243Z"
   },
   {
     "id": "commit:113148|florida|2026-01-06",
@@ -1746,7 +1866,11 @@
       "commitFingerprint": "113148|florida|2026-01-06"
     },
     "url": "/player/t-j-shanahan",
-    "updatedAt": "2026-06-11T17:53:01.147Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "caa3a34df0137756626c37fea02f43f3ec54ea92ae9d41fc91999fc2e95e387d",
+    "hashNormalizedPreview": "t.j. shanahan commits to florida iol · 3 · orlando, fl t-j-shanahan t j shanahan iol info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.243Z"
   },
   {
     "id": "commit:43376|florida|2026-01-06",
@@ -1804,7 +1928,11 @@
       "commitFingerprint": "43376|florida|2026-01-06"
     },
     "url": "/player/evan-pryor",
-    "updatedAt": "2026-06-11T17:53:01.151Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "d0f1bfd16376c8bbc7c93f1434b0458031d487299ae77f1253392a2b879ef512",
+    "hashNormalizedPreview": "evan pryor commits to florida rb · 3 · cornelius, nc evan-pryor evan pryor rb info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.243Z"
   },
   {
     "id": "commit:288527|florida|2026-05-12",
@@ -1862,7 +1990,11 @@
       "commitFingerprint": "288527|florida|2026-05-12"
     },
     "url": "/player/javier-jones",
-    "updatedAt": "2026-06-11T17:53:01.156Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "bf684659fc6fc8f5818d6106d583b79b5638d2bed9241d2c77c8ed0edefe2eef",
+    "hashNormalizedPreview": "javier jones commits to florida cb · 3 · phoenix, az · #265 natl javier-jones javier jones cb info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.244Z"
   },
   {
     "id": "commit:260787|florida|2026-02-05",
@@ -1920,7 +2052,11 @@
       "commitFingerprint": "260787|florida|2026-02-05"
     },
     "url": "/player/eric-parks",
-    "updatedAt": "2026-06-11T17:53:01.159Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "6ed9c2d7792d098571254964c688950a4ae776ffd4b3f326507389d9845d4bf7",
+    "hashNormalizedPreview": "eric parks commits to florida s · 3 · tampa, fl · #1750 natl eric-parks eric parks s info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.245Z"
   },
   {
     "id": "commit:243619|florida|2025-06-16",
@@ -1978,7 +2114,11 @@
       "commitFingerprint": "243619|florida|2025-06-16"
     },
     "url": "/player/javarii-luckas",
-    "updatedAt": "2026-06-11T17:53:01.162Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "3c5b7ac6457d1961ad5e15ce0c1b843aeccc68e6dee7499aebce54db3f612d5f",
+    "hashNormalizedPreview": "javarii luckas commits to florida ot · 3 · belle glade, fl · #1147 natl javarii-luckas javarii luckas ot info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.245Z"
   },
   {
     "id": "commit:236347|florida|2025-06-26",
@@ -2036,7 +2176,11 @@
       "commitFingerprint": "236347|florida|2025-06-26"
     },
     "url": "/player/desmond-green",
-    "updatedAt": "2026-06-11T17:53:01.167Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "e9c212ed7d1f4306e40063015ed06fab811fa8affaeb94c610c1945e5f31d586",
+    "hashNormalizedPreview": "desmond green commits to florida iol · 3 · saint stephen, sc · #884 natl desmond-green desmond green iol info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.246Z"
   },
   {
     "id": "commit:283712|florida|2026-01-07",
@@ -2094,7 +2238,11 @@
       "commitFingerprint": "283712|florida|2026-01-07"
     },
     "url": "/player/elijah-owens",
-    "updatedAt": "2026-06-11T17:53:01.173Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "0256b205b4926a94f0a58ff26efe56e3e6c11e19f88777d9c22ae0438428ff7c",
+    "hashNormalizedPreview": "elijah owens commits to florida s · 3 · mobile, al · #63 natl elijah-owens elijah owens s info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.246Z"
   },
   {
     "id": "commit:179743|florida|2025-06-08",
@@ -2152,7 +2300,11 @@
       "commitFingerprint": "179743|florida|2025-06-08"
     },
     "url": "/player/chancellor-campbell",
-    "updatedAt": "2026-06-11T17:53:01.178Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "db24ab0fed1fa77553322e0eced92169e60f019fd01ced15865b1e26835d1bd9",
+    "hashNormalizedPreview": "chancellor campbell commits to florida ot · 3 · saint petersburg, fl · #627 natl chancellor-campbell chancellor campbell",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.247Z"
   },
   {
     "id": "commit:176416|florida|2025-06-01",
@@ -2210,7 +2362,11 @@
       "commitFingerprint": "176416|florida|2025-06-01"
     },
     "url": "/player/gnivre-carr",
-    "updatedAt": "2026-06-11T17:53:01.184Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "84b1c2205d6bcc9437a8fe38c750ef5dc468354ee4f759f9809ae4f630183d52",
+    "hashNormalizedPreview": "g'nivre carr commits to florida iol · 3 · ocala, fl · #505 natl gnivre-carr g nivre carr iol info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.247Z"
   },
   {
     "id": "commit:155900|florida|2025-07-03",
@@ -2268,7 +2424,11 @@
       "commitFingerprint": "155900|florida|2025-07-03"
     },
     "url": "/player/cj-hester",
-    "updatedAt": "2026-06-11T17:53:01.191Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "4631b821b10f4fc5c88f906c5184383d78fdff7c11f57d279beef824177ba0b4",
+    "hashNormalizedPreview": "cj hester commits to florida cb · 3 · cocoa, fl · #503 natl cj-hester cj hester cb info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.248Z"
   },
   {
     "id": "commit:174822|florida|2025-06-03",
@@ -2326,7 +2486,11 @@
       "commitFingerprint": "174822|florida|2025-06-03"
     },
     "url": "/player/kaiden-hall",
-    "updatedAt": "2026-06-11T17:53:01.195Z"
+    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "hash": "cfd5dea4a764076799ab5cf5c398560c1b9947a9811ae2b8e9663e2a8522a15a",
+    "hashNormalizedPreview": "kaiden hall commits to florida s · 4 · milton, fl · #386 natl kaiden-hall kaiden hall s info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.248Z"
   },
   {
     "id": "commit:177149|florida|2025-06-14",
@@ -2384,7 +2548,11 @@
       "commitFingerprint": "177149|florida|2025-06-14"
     },
     "url": "/player/marquez-daniel",
-    "updatedAt": "2026-06-11T17:53:01.199Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "e5d2f501ae347b09abd80615014767e4a4e65a49508c77c41f46f7bae82b31e9",
+    "hashNormalizedPreview": "marquez daniel commits to florida wr · 4 · tuskegee, al · #367 natl marquez-daniel marquez daniel wr info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.248Z"
   },
   {
     "id": "commit:174275|florida|2025-07-12",
@@ -2442,7 +2610,11 @@
       "commitFingerprint": "174275|florida|2025-07-12"
     },
     "url": "/player/heze-kent",
-    "updatedAt": "2026-06-11T17:53:01.203Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "e109c97d8a0b42d28684f7ebe29f3224449f6c9179b616e1c13e7601efff4f67",
+    "hashNormalizedPreview": "heze kent commits to florida ot · 4 · brunswick, ga · #366 natl heze-kent heze kent ot info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.249Z"
   },
   {
     "id": "commit:177521|florida|2025-07-07",
@@ -2500,7 +2672,11 @@
       "commitFingerprint": "177521|florida|2025-07-07"
     },
     "url": "/player/malik-morris",
-    "updatedAt": "2026-06-11T17:53:01.206Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "a95558cb95ee67ea4a0e91ff72c82225a85769cc79957cceb952682819f179ed",
+    "hashNormalizedPreview": "malik morris commits to florida lb · 4 · lakeland, fl · #362 natl malik-morris malik morris lb info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.249Z"
   },
   {
     "id": "commit:243492|florida|2025-06-16",
@@ -2558,7 +2734,11 @@
       "commitFingerprint": "243492|florida|2025-06-16"
     },
     "url": "/player/tyler-chukuyem",
-    "updatedAt": "2026-06-11T17:53:01.210Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "426187f71610001c8e6ce682be3b8467f1496187c7048a29d93a6853c6337283",
+    "hashNormalizedPreview": "tyler chukuyem commits to florida ot · 4 · douglasville, ga · #281 natl tyler-chukuyem tyler chukuyem ot info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.250Z"
   },
   {
     "id": "commit:236759|florida|2025-07-02",
@@ -2616,7 +2796,11 @@
       "commitFingerprint": "236759|florida|2025-07-02"
     },
     "url": "/player/kendall-guervil",
-    "updatedAt": "2026-06-11T17:53:01.215Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "cb43ac7eca601fcb756c63d549910700a5f8169920675548ec1cebca1bbed356",
+    "hashNormalizedPreview": "kendall guervil commits to florida dl · 4 · fort myers, fl · #276 natl kendall-guervil kendall guervil dl info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.250Z"
   },
   {
     "id": "commit:162624|florida|2024-06-01",
@@ -2674,7 +2858,11 @@
       "commitFingerprint": "162624|florida|2024-06-01"
     },
     "url": "/player/will-griffin",
-    "updatedAt": "2026-06-11T17:53:01.221Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "f5c41106add5f040f3a51625e2a1e6e2b38f08b92958a8f16a0adf740b6aadf9",
+    "hashNormalizedPreview": "will griffin commits to florida qb · 4 · tampa, fl · #259 natl will-griffin will griffin qb info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.251Z"
   },
   {
     "id": "commit:239856|florida|2025-12-04",
@@ -2732,7 +2920,11 @@
       "commitFingerprint": "239856|florida|2025-12-04"
     },
     "url": "/player/dylan-purter",
-    "updatedAt": "2026-06-11T17:53:01.224Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "9bb170296394ff5ad9fb7b31880f2a648e9b599df0f45c612f80b13703c66a0e",
+    "hashNormalizedPreview": "dylan purter commits to florida s · 4 · tuskegee, al · #204 natl dylan-purter dylan purter s info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.251Z"
   },
   {
     "id": "commit:154268|florida|2025-06-14",
@@ -2790,7 +2982,11 @@
       "commitFingerprint": "154268|florida|2025-06-14"
     },
     "url": "/player/jareylan-mccoy",
-    "updatedAt": "2026-06-11T17:53:01.228Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "14556abaee6336f96ca2ec0ed07c2afeed806459ac1a85c79f12826d05de5f09",
+    "hashNormalizedPreview": "jareylan mccoy commits to florida dl · 4 · tupelo, ms · #173 natl jareylan-mccoy jareylan mccoy dl info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.251Z"
   },
   {
     "id": "commit:240430|florida|2025-06-08",
@@ -2848,7 +3044,11 @@
       "commitFingerprint": "240430|florida|2025-06-08"
     },
     "url": "/player/justin-williams",
-    "updatedAt": "2026-06-11T17:53:01.232Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "15e9198cd5f4527db7fb711b470b290393ddcbb794afea60fefb324f908015f7",
+    "hashNormalizedPreview": "justin williams commits to florida wr · 4 · gainesville, fl · #158 natl justin-williams justin williams wr info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.252Z"
   },
   {
     "id": "commit:176369|florida|2025-07-11",
@@ -2906,7 +3106,11 @@
       "commitFingerprint": "176369|florida|2025-07-11"
     },
     "url": "/player/kevin-ford",
-    "updatedAt": "2026-06-11T17:53:01.236Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "0bf478b7e377b8388e3fb3b5bf8d5ffddb69ff91776c02f3e7bb77005f13844a",
+    "hashNormalizedPreview": "kevin ford commits to florida edge · 4 · duncanville, tx · #149 natl kevin-ford kevin ford edge info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.253Z"
   },
   {
     "id": "commit:241642|florida|2025-06-18",
@@ -2964,7 +3168,11 @@
       "commitFingerprint": "241642|florida|2025-06-18"
     },
     "url": "/player/cj-bronaugh",
-    "updatedAt": "2026-06-11T17:53:01.239Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "e913ada28c509df0c27a3f59d1a0553912ded26923efb05dc1b34f9b01f5a66e",
+    "hashNormalizedPreview": "cj bronaugh commits to florida cb · 4 · winter garden, fl · #84 natl cj-bronaugh cj bronaugh cb info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.253Z"
   },
   {
     "id": "commit:175389|florida|2025-08-11",
@@ -3022,7 +3230,11 @@
       "commitFingerprint": "175389|florida|2025-08-11"
     },
     "url": "/player/davian-groce",
-    "updatedAt": "2026-06-11T17:53:01.242Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "7a760bed431cefb44a0f7b711adb912457c1add391f95f51480edca4195bc765",
+    "hashNormalizedPreview": "davian groce commits to florida wr · 4 · frisco, tx · #60 natl davian-groce davian groce wr info commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.254Z"
   },
   {
     "id": "commit:180930|florida|2026-06-06",
@@ -3080,7 +3292,11 @@
       "commitFingerprint": "180930|florida|2026-06-06"
     },
     "url": "/player/ellis-mcgaskin",
-    "updatedAt": "2026-06-11T17:53:01.245Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "e95aca3ccc86f70ac7cd277aa25ea90476eb6b0802c7db7eb25eba544850acf4",
+    "hashNormalizedPreview": "ellis mcgaskin commits to florida lb · 4 · mobile, al · #347 natl ellis-mcgaskin ellis mcgaskin lb commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.254Z"
   },
   {
     "id": "art_art-portal-class-2026",
@@ -3097,8 +3313,12 @@
       "tier": "locker",
       "articleId": "art-portal-class-2026"
     },
-    "updatedAt": "2026-06-11T17:53:01.260Z",
-    "source_url": "/article/art-portal-class-2026"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "source_url": "/article/art-portal-class-2026",
+    "hash": "3e7acec9b57815b4f2735a0af03b23abcfaf331af6658cb023dfc887d8aa36ae",
+    "hashNormalizedPreview": "2026 portal class recap: 23 in, 29 out uf's 2026 transfer cycle in one clean read — who arrived, who left, where exits l",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.255Z"
   },
   {
     "id": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
@@ -3114,8 +3334,12 @@
     "meta": {
       "showId": "gators-online"
     },
-    "updatedAt": "2026-06-11T17:53:04.683Z",
-    "url": "https://www.on3.com/teams/florida-gators/"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "url": "https://www.on3.com/teams/florida-gators/",
+    "hash": "1b4bf5c905b0cbdcdd2f7e5f798ebf046782407a19e28f2afe5413e24e636412",
+    "hashNormalizedPreview": "new episode: gators online podcast — ep. 187: official visits underway for florida football, baseball | gators online sh",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.255Z"
   },
   {
     "id": "commit:cahron-wheeler|florida|2026-06-05",
@@ -3163,7 +3387,11 @@
       "commitFingerprint": "cahron-wheeler|florida|2026-06-05"
     },
     "url": "/player/cahron-wheeler",
-    "updatedAt": "2026-06-09T03:33:42.155Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "239fce53435fa1307ce8ca61ba04b64dcb19abef1cd8380fd9b6214b5d9d42e1",
+    "hashNormalizedPreview": "cahron wheeler commits to florida edge · 4 · st. paul's school (baltimore, md) cahron-wheeler cahron wheeler edge commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.256Z"
   },
   {
     "id": "commit:283680|florida|2026-06-05",
@@ -3211,7 +3439,11 @@
       "commitFingerprint": "283680|florida|2026-06-05"
     },
     "url": "/player/kamarion-johnson",
-    "updatedAt": "2026-06-09T04:19:37.539Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "ecd7f0fac7cb84f3829a9f002a44a4a7e9b6cd8c2deff094800f9a71b073655a",
+    "hashNormalizedPreview": "kamarion johnson commits to florida ath · 3 · homerville, ga · #813 natl kamarion-johnson kamarion johnson ath commit co",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.257Z"
   },
   {
     "id": "art_art-summer-battles",
@@ -3228,8 +3460,12 @@
       "tier": "locker",
       "articleId": "art-summer-battles"
     },
-    "updatedAt": "2026-06-11T17:53:01.265Z",
-    "url": "/article/art-summer-battles"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "url": "/article/art-summer-battles",
+    "hash": "2e77ce973d530d0d1fc45600ae2ff4f502960d45f4d8be522439ca07cc3e60b1",
+    "hashNormalizedPreview": "summer camp preview: 5 position battles to watch fall camp opens august 2nd. these five position battles will shape the ",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.258Z"
   },
   {
     "id": "commit:zahmar-tookes|florida|2026-06-03",
@@ -3277,7 +3513,11 @@
       "commitFingerprint": "zahmar-tookes|florida|2026-06-03"
     },
     "url": "/player/zahmar-tookes",
-    "updatedAt": "2026-06-09T03:33:42.156Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "e2ed1ca15eb62181031ee6258baeda04b480a06ad6ddcfd5765859940371b6d1",
+    "hashNormalizedPreview": "zahmar tookes commits to florida dl · 4 · brighton (rochester, ny) zahmar-tookes zahmar tookes dl commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.258Z"
   },
   {
     "id": "art_art-win-model",
@@ -3294,8 +3534,12 @@
       "tier": "war",
       "articleId": "art-win-model"
     },
-    "updatedAt": "2026-06-11T17:53:01.268Z",
-    "source_url": "/article/art-win-model"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "source_url": "/article/art-win-model",
+    "hash": "18869b12409f4520a0b742d75628958c51894835873b656b3ee45c6740ba58a6",
+    "hashNormalizedPreview": "war room: 2026 schedule win probability model our proprietary model simulates every game 10,000 times using roster data,",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.259Z"
   },
   {
     "id": "commit:kennedee-jackson|florida|2026-06-02",
@@ -3343,7 +3587,11 @@
       "commitFingerprint": "kennedee-jackson|florida|2026-06-02"
     },
     "url": "/player/kennedee-jackson",
-    "updatedAt": "2026-06-09T03:33:42.131Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "14ec5aa8b4a87fdad0d0e3c3051c85eefb3743c3f4260163dee32f4d419fc3fc",
+    "hashNormalizedPreview": "kennedee jackson commits to florida ot · 4 · lithonia (lithonia, ga) kennedee-jackson kennedee jackson ot commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.260Z"
   },
   {
     "id": "gnfp_b37211a8-96f7-46c7-93f2-447f4b88b214",
@@ -3359,8 +3607,12 @@
     "meta": {
       "showId": "gnfp"
     },
-    "updatedAt": "2026-06-11T17:53:04.734Z",
-    "url": "https://bleav.com/shows/the-gator-nation-football-podcast/episodes/2026-june-mailbag/"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "url": "https://bleav.com/shows/the-gator-nation-football-podcast/episodes/2026-june-mailbag/",
+    "hash": "a2300fae78e9ca7d7456926a1fccac123c01246b792308e231f5b3dbf6a5006f",
+    "hashNormalizedPreview": "new episode: gator nation football podcast — 2026- june mailbag 2026- june mailbag if you enjoy the content, drop us a d",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.261Z"
   },
   {
     "id": "art_art-sumrall-6mo",
@@ -3377,8 +3629,12 @@
       "tier": "locker",
       "articleId": "art-sumrall-6mo"
     },
-    "updatedAt": "2026-06-11T17:53:01.271Z",
-    "source_url": "/article/art-sumrall-6mo"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "source_url": "/article/art-sumrall-6mo",
+    "hash": "ad0330600a4d15d78b51372a6968ae9ef7adb3819f36d3976c2e07569f81d4cf",
+    "hashNormalizedPreview": "{{ coach.hc }}'s first 6 months: a real assessment six months in, {{ coach.hc }} has rebuilt the roster through the port",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.261Z"
   },
   {
     "id": "commit:jabios-smith|florida|2026-05-29",
@@ -3426,7 +3682,11 @@
       "commitFingerprint": "jabios-smith|florida|2026-05-29"
     },
     "url": "/player/jabios-smith",
-    "updatedAt": "2026-06-09T03:33:42.132Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "a6970ac9d1b81da022a9d7829de91d854f61cdfb4176b14214b247541bfb3566",
+    "hashNormalizedPreview": "ja'bios smith commits to florida lb · 4 · swainsboro (swainsboro, ga) jabios-smith ja bios smith lb commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.262Z"
   },
   {
     "id": "art_art-335-revolution",
@@ -3443,8 +3703,12 @@
       "tier": "locker",
       "articleId": "art-335-revolution"
     },
-    "updatedAt": "2026-06-11T17:53:01.274Z",
-    "source_url": "/article/art-335-revolution"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "source_url": "/article/art-335-revolution",
+    "hash": "15c70e8658ac54f5aecfd816a5989f7314d5957e7c937c71fe3c3768daa976b4",
+    "hashNormalizedPreview": "the 3-3-5 revolution: why {{ coach.dc }}'s scheme changes everything {{ coach.dc }}'s 3-3-5 isn't a gimmick — it's a per",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.263Z"
   },
   {
     "id": "gator-tales_tag:soundcloud,2010:tracks/2328301979",
@@ -3460,8 +3724,12 @@
     "meta": {
       "showId": "gator-tales"
     },
-    "updatedAt": "2026-06-11T17:53:06.586Z",
-    "url": "https://soundcloud.com/gatortales/gator-tales-60-duke-werner"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "url": "https://soundcloud.com/gatortales/gator-tales-60-duke-werner",
+    "hash": "487c133bed020f4227c1d0a80e89e8f0f66005219a66066d9dd0d364b422a139",
+    "hashNormalizedPreview": "new episode: gator tales — gator tales #60: duke werner - executive associate athletics director / director of sport in ",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.263Z"
   },
   {
     "id": "art_art-philo-film",
@@ -3478,8 +3746,12 @@
       "tier": "film",
       "articleId": "art-philo-film"
     },
-    "updatedAt": "2026-06-11T17:53:01.278Z",
-    "source_url": "/article/art-philo-film"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "source_url": "/article/art-philo-film",
+    "hash": "d37189e2bf91816a4ba63c7fdc14738baf8ebd17c1574d97d658c143f0e69ba7",
+    "hashNormalizedPreview": "aaron philo film study: who is the new uf quarterback? georgia tech transfer aaron philo brings pro-style mechanics and ",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.264Z"
   },
   {
     "id": "commit:elias-pearl|florida|2026-05-19",
@@ -3527,7 +3799,11 @@
       "commitFingerprint": "elias-pearl|florida|2026-05-19"
     },
     "url": "/player/elias-pearl",
-    "updatedAt": "2026-06-09T03:33:42.133Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "45f3f16a0f0b08326b239b4655e98b55f307b8b660b477460eb6650b98a5cc6c",
+    "hashNormalizedPreview": "elias pearl commits to florida wr · 4 · port charlotte (port charlotte, fl) elias-pearl elias pearl wr commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.265Z"
   },
   {
     "id": "commit:cain-van-norden|florida|2026-05-15",
@@ -3575,7 +3851,11 @@
       "commitFingerprint": "cain-van-norden|florida|2026-05-15"
     },
     "url": "/player/cain-van-norden",
-    "updatedAt": "2026-06-09T03:33:42.153Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "fef865f23aed95c5eee2d7674d7f6c2c3d37cc31079cc230ec3ef5fc182eb19d",
+    "hashNormalizedPreview": "cain van norden commits to florida dl · 3 · bishop mcnamara (district heights, md) cain-van-norden cain van norden dl co",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.266Z"
   },
   {
     "id": "commit:andrew-beard|florida|2026-05-08",
@@ -3623,7 +3903,11 @@
       "commitFingerprint": "andrew-beard|florida|2026-05-08"
     },
     "url": "/player/andrew-beard",
-    "updatedAt": "2026-06-09T03:33:42.144Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "60969d8d557f8ad15481d01f656a630af549c4fa061f89512a3fd2e7e897fe98",
+    "hashNormalizedPreview": "andrew beard commits to florida rb · 4 · prince avenue christian (bogart, ga) andrew-beard andrew beard rb commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.267Z"
   },
   {
     "id": "commit:stive-bentley-keumajou|florida|2026-05-06",
@@ -3671,7 +3955,11 @@
       "commitFingerprint": "stive-bentley-keumajou|florida|2026-05-06"
     },
     "url": "/player/stive-bentley-keumajou",
-    "updatedAt": "2026-06-09T03:33:42.149Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "d1a9a0fdd1de1b172196fd9bf057139c7d30e4d02d63696399d6de39b52e1afd",
+    "hashNormalizedPreview": "stive-bentley keumajou commits to florida dl · 3 · coral gables senior (coral gables, fl) stive-bentley-keumajou stive b",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.267Z"
   },
   {
     "id": "commit:kailib-dillard|florida|2026-05-05",
@@ -3719,7 +4007,11 @@
       "commitFingerprint": "kailib-dillard|florida|2026-05-05"
     },
     "url": "/player/kailib-dillard",
-    "updatedAt": "2026-06-09T03:33:42.148Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "027cfc3e0a6124712c7240b1804da51b2e15084ed743e5f595c29a19ad14c6a1",
+    "hashNormalizedPreview": "kailib dillard commits to florida s · 3 · jenks (tulsa, ok) kailib-dillard kailib dillard s commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.268Z"
   },
   {
     "id": "commit:elijah-hutcheson|florida|2026-05-05",
@@ -3767,7 +4059,11 @@
       "commitFingerprint": "elijah-hutcheson|florida|2026-05-05"
     },
     "url": "/player/elijah-hutcheson",
-    "updatedAt": "2026-06-09T03:33:42.146Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "db490665811aee33fd3f3412773ed126f01c9327bb73a5536a7b0cc5fbc23728",
+    "hashNormalizedPreview": "elijah hutcheson commits to florida ot · 4 · north cross school (roanoke, va) elijah-hutcheson elijah hutcheson ot commi",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.269Z"
   },
   {
     "id": "commit:devoun-kendrick|florida|2026-04-27",
@@ -3815,7 +4111,11 @@
       "commitFingerprint": "devoun-kendrick|florida|2026-04-27"
     },
     "url": "/player/devoun-kendrick",
-    "updatedAt": "2026-06-09T03:33:42.136Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "5d01736fb9102b170694bde8a15b56076a2988653e27457a8603bbebf9c02052",
+    "hashNormalizedPreview": "de'voun kendrick commits to florida dl · 3 · carrollwood day (tampa, fl) devoun-kendrick de voun kendrick dl commit comm",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.270Z"
   },
   {
     "id": "commit:peyton-miller|florida|2026-04-27",
@@ -3863,7 +4163,11 @@
       "commitFingerprint": "peyton-miller|florida|2026-04-27"
     },
     "url": "/player/peyton-miller",
-    "updatedAt": "2026-06-09T03:33:42.134Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "f77b8032766069bf012eb66caf8bc85b90a5af6fde9390477f2a4d1248e6ab16",
+    "hashNormalizedPreview": "peyton miller commits to florida iol · 4 · anna (anna, tx) peyton-miller peyton miller iol commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.271Z"
   },
   {
     "id": "commit:anthony-jennings|florida|2026-04-25",
@@ -3911,7 +4215,11 @@
       "commitFingerprint": "anthony-jennings|florida|2026-04-25"
     },
     "url": "/player/anthony-jennings",
-    "updatedAt": "2026-06-09T03:33:42.142Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "d2f7df7fa110257793def5051197e55d2596adb130a1e8f0288a224f3e1dbf12",
+    "hashNormalizedPreview": "anthony jennings commits to florida wr · 4 · dillard (fort lauderdale, fl) anthony-jennings anthony jennings wr commit c",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.272Z"
   },
   {
     "id": "commit:tommy-douglas|florida|2026-04-16",
@@ -3959,7 +4267,11 @@
       "commitFingerprint": "tommy-douglas|florida|2026-04-16"
     },
     "url": "/player/tommy-douglas",
-    "updatedAt": "2026-06-09T03:33:42.137Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "e135380a9b6c79932b7fac040e4fa10f6cd05af41a3c549f8cb2baa24d2b164d",
+    "hashNormalizedPreview": "tommy douglas commits to florida te · 4 · hun school (princeton, nj) tommy-douglas tommy douglas te commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.273Z"
   },
   {
     "id": "commit:aamaury-fountain|florida|2026-04-11",
@@ -4007,7 +4319,11 @@
       "commitFingerprint": "aamaury-fountain|florida|2026-04-11"
     },
     "url": "/player/aamaury-fountain",
-    "updatedAt": "2026-06-09T03:33:42.138Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "89d6e013412aba40a13b9481d0aa1d0618ea27a150112b5499495631563762ea",
+    "hashNormalizedPreview": "aamaury fountain commits to florida cb · 4 · northside (warner robins, ga) aamaury-fountain aamaury fountain cb commit c",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.274Z"
   },
   {
     "id": "commit:davin-davidson|florida|2026-04-09",
@@ -4055,7 +4371,11 @@
       "commitFingerprint": "davin-davidson|florida|2026-04-09"
     },
     "url": "/player/davin-davidson",
-    "updatedAt": "2026-06-09T03:33:42.139Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "916fa11033862fbc6a67a16dba099fbcbeeaefc94f7207358d3a4e4c15cfc746",
+    "hashNormalizedPreview": "davin davidson commits to florida qb · 4 · cardinal mooney (sarasota, fl) davin-davidson davin davidson qb commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.275Z"
   },
   {
     "id": "commit:180637|florida|2026-04-08",
@@ -4103,7 +4423,11 @@
       "commitFingerprint": "180637|florida|2026-04-08"
     },
     "url": "/player/maxwell-hiller",
-    "updatedAt": "2026-06-09T04:19:37.493Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "c406094347138109f878c7254ef5f4e4f1cec3b9c211ddffcf2a9d50206a2663",
+    "hashNormalizedPreview": "maxwell hiller commits to florida iol · 5 · coatesville, pa · #3 natl maxwell-hiller maxwell hiller iol commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.276Z"
   },
   {
     "id": "commit:tramond-collins|florida|2026-03-11",
@@ -4151,7 +4475,11 @@
       "commitFingerprint": "tramond-collins|florida|2026-03-11"
     },
     "url": "/player/tramond-collins",
-    "updatedAt": "2026-06-09T03:33:42.150Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "f60f97b6a7cb42889d02ca205855f170059b1224e2339a7b1485e4593710c3ea",
+    "hashNormalizedPreview": "tramond collins commits to florida wr · 4 · cottondale (cottondale, fl) tramond-collins tramond collins wr commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.277Z"
   },
   {
     "id": "commit:jackson-ballinger|florida|2026-02-24",
@@ -4199,7 +4527,11 @@
       "commitFingerprint": "jackson-ballinger|florida|2026-02-24"
     },
     "url": "/player/jackson-ballinger",
-    "updatedAt": "2026-06-09T03:33:42.151Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "18a4e3550667b38a46cb4054758b67f71e02cd38688308c2737e155da7be32b7",
+    "hashNormalizedPreview": "jackson ballinger commits to florida te · 4 · centerburg (centerburg, oh) jackson-ballinger jackson ballinger te commit ",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.277Z"
   },
   {
     "id": "commit:amare-nugent|florida|2026-01-24",
@@ -4247,6 +4579,10 @@
       "commitFingerprint": "amare-nugent|florida|2026-01-24"
     },
     "url": "/player/amare-nugent",
-    "updatedAt": "2026-06-09T03:33:42.152Z"
+    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "hash": "9b960beb0601769a77ca95fa48f4514863cac213476388cd17ad6498e3b951fe",
+    "hashNormalizedPreview": "amare nugent commits to florida cb · 4 · american heritage (plantation, fl) amare-nugent amare nugent cb commit commit",
+    "hashWindowSec": 172800,
+    "hashCreatedAt": "2026-06-11T22:51:07.278Z"
   }
 ]

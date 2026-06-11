@@ -5,6 +5,8 @@ const fs = require('fs');
 const patches = require('./self-runner-patches');
 const templates = require('./self-runner-patch-templates');
 const engine = require('../visual-integrity/visual-integrity-engine');
+const contextPatch = require('./context-patch-generator');
+const autoposterGuard = require('./autoposter-guard');
 
 function nextId(seq) {
   return `sr_fix_${String(seq).padStart(3, '0')}`;
@@ -107,16 +109,19 @@ function buildBackgroundThemePatch(issue, checkDetails) {
 }
 
 function buildFeedDedupPatch(issue, checkDetails) {
+  const v2 = contextPatch.buildFeedDedupPatchV2(issue);
+  if (v2) return v2;
   const dups = checkDetails?.details || issue.details || [];
   return {
     patchType: 'feed-dedup',
-    edits: [{ file: 'data/live/feed-items.json', type: 'dedupe-feed' }],
+    riskLevel: 'low',
+    edits: [{ file: 'data/live/feed-items.json', type: 'dedupe-feed-smart' }],
     patchPreview: {
       file: 'data/live/feed-items.json',
       before: `${Array.isArray(dups) ? dups.length : '?'} duplicate feed item(s)`,
-      after: 'Deduped by URL + player/event key (keep newest)'
+      after: 'Deduped by SHA-256 normalized hash within window'
     },
-    suggestedFix: issue.suggestedFix || 'Run feed dedupe — collapse duplicate URLs and player/event keys'
+    suggestedFix: issue.suggestedFix || 'Run smart feed dedupe with SHA-256 hashes'
   };
 }
 
@@ -156,17 +161,18 @@ function buildFilmSourcePatch(issue, checkDetails) {
 
 function buildHtmlHookPatch(issue) {
   const checkId = issue.checkId || '';
+  const missing = contextPatch.scanHtmlHooks();
+  if (missing.length) {
+    const v2 = contextPatch.buildHtmlHookPatch(missing);
+    if (v2) return v2;
+  }
   const tpl = patches.HOOK_SNIPPETS[checkId];
   if (!tpl) {
-    return {
-      patchType: 'html-hook',
-      edits: [{ file: 'index.html', type: 'verify-hooks', checkId }],
-      patchPreview: { file: 'index.html', before: 'missing hooks', after: checkId },
-      suggestedFix: issue.suggestedFix || `Wire required hooks for ${checkId}`
-    };
+    return null;
   }
   return {
     patchType: 'html-hook',
+    riskLevel: 'medium',
     edits: [
       {
         file: tpl.file,
@@ -179,7 +185,7 @@ function buildHtmlHookPatch(issue) {
     patchPreview: {
       file: tpl.file,
       before: `missing ${tpl.marker}`,
-      after: tpl.snippet.trim().slice(0, 80)
+      after: tpl.snippet.trim().slice(0, 120)
     },
     suggestedFix: issue.suggestedFix || `Add ${tpl.marker} hook to index.html`
   };
@@ -381,7 +387,7 @@ function editsFromTemplate(tmpl, issue) {
         {
           file: 'css/gv-team.css',
           type: 'append-if-missing',
-          marker: 'self-runner: modal overflow guards',
+          marker: 'Self-Runner 2.0: modal overflow guards',
           text: patches.MODAL_OVERFLOW_CSS_SNIPPET
         }
       ];
@@ -389,13 +395,18 @@ function editsFromTemplate(tmpl, issue) {
       return [{ file: 'index.html', type: 'ensure-team-shell', regionIds: ['vpane-team', 'vpane-mteam'] }];
     case 'missing-content':
     case 'ordering-fix':
-    case 'html-hook':
-      return [{ file: file.replace(/^\//, ''), type: 'verify-hooks', checkId: issue.checkId }];
+    case 'html-hook': {
+      const v2 = contextPatch.generateContextPatch(issue, {});
+      if (v2?.edits?.length) return v2.edits;
+      const missing = contextPatch.scanHtmlHooks();
+      const hookPatch = contextPatch.buildHtmlHookPatch(missing);
+      return hookPatch?.edits || [];
+    }
     case 'autoposter-dedup':
     case 'similarity-filter':
-      return [{ file: 'data/live/feed-items.json', type: 'dedupe-feed' }];
+      return [{ file: 'data/live/feed-items.json', type: 'dedupe-feed-smart' }];
     case 'recruiting-board-sync':
-      return [{ file: 'data/recruiting/board.json', type: 'verify-json', checkId: issue.checkId }];
+      return [{ file: 'data/recruiting/players.json', type: 'verify-json', checkId: issue.checkId }];
     case 'roster-sync':
       return [{ file: 'data/roster/players.json', type: 'verify-json', checkId: issue.checkId }];
     case 'api-latency':
@@ -458,7 +469,18 @@ function preparePatch(issue, checkDetails) {
   }
 
   if (!built) built = buildFromTemplate(issue, checkDetails);
+  if (!built || !built.edits?.length) {
+    built = contextPatch.generateContextPatch(issue, checkDetails);
+  }
   if (!built || !built.edits?.length) return null;
+
+  built = contextPatch.enrichLegacyPatch(built, issue);
+  const safety = autoposterGuard.validatePatchSafety({ patch: built });
+  if (!safety.ok) {
+    built.blocked = true;
+    built.blockReason = safety.blocked;
+    built.requiresManualApproval = true;
+  }
 
   return enrichWithTemplate(built, issue, checkDetails);
 }
@@ -499,6 +521,11 @@ function prepareFixProposal(issue, { seq, checkDetails } = {}) {
     qaSteps: patch.qaSteps || piProposal?.qaSteps || [],
     rollbackPlan: patch.rollbackPlan || piProposal?.rollbackPlan || null,
     repro: issue.repro || null,
+    riskLevel: patch.riskLevel || 'medium',
+    blocked: patch.blocked || false,
+    blockReason: patch.blockReason || null,
+    requiresManualApproval: patch.requiresManualApproval || false,
+    v2: patch.patchType?.includes('v2') || patch.supersededPlaceholder || false,
     createdAt: new Date().toISOString(),
     approvedAt: null,
     completedAt: null,

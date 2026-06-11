@@ -183,6 +183,18 @@ const JOBS = {
         playerSlug: opts.playerSlug || null
       });
     }
+  },
+  'self-runner-scan': {
+    label: 'Self-Runner 2.0 platform blueprint scan',
+    subsystem: 'self-runner:v2',
+    schedule: 'On demand / after QA generate',
+    async run(opts = {}) {
+      const { runPlatformScanAndEnqueue } = require('./self-runner/self-runner-v2-engine');
+      return runPlatformScanAndEnqueue({
+        includeBlueprint: !!opts.includeBlueprint,
+        enqueue: opts.enqueue !== false
+      });
+    }
   }
 };
 

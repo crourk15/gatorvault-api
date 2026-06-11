@@ -6,6 +6,9 @@ const qaStore = require('../qa/qa-store');
 const queue = require('./self-runner-queue');
 const prepare = require('./self-runner-prepare');
 const patches = require('./self-runner-patches');
+const v2 = require('./self-runner-v2-engine');
+const modes = require('./self-runner-modes');
+const logger = require('./self-runner-logger');
 
 function findCheckInRun(run, checkId) {
   if (!run?.modules) return null;
@@ -22,7 +25,7 @@ function existingPendingForIssue(sourceIssueId) {
   );
 }
 
-function generateProposalsFromProductIntel(opts = {}) {
+async function generateProposalsFromProductIntel(opts = {}) {
   const piDoc = productStore.readDoc();
   const openFixes = (piDoc.fixQueue || []).filter((f) => !f.resolved);
   const qaDoc = qaStore.readDoc();
@@ -136,6 +139,31 @@ function generateProposalsFromProductIntel(opts = {}) {
     `[self-runner] generate complete: ${created.length} created, ${skipped.length} skipped, ${result.pending} pending total`
   );
 
+  if (modes.shouldPropose() && process.env.SELF_RUNNER_V2_SCAN !== 'false') {
+    try {
+      const scan = await v2.runPlatformScanAndEnqueue({ enqueue: true });
+      created.push(...(scan.enqueue?.created || []));
+      result.v2Scan = {
+        scanId: scan.scanId,
+        issues: scan.issueCount,
+        patches: scan.patchCount,
+        blocked: scan.blockedPatchCount,
+        enqueued: scan.enqueue?.created?.length || 0,
+        autoApplied: scan.autoRepair?.applied?.length || 0
+      };
+      result.pending = queue.listByStatus('pending').length;
+
+      let doc = queue.readDoc();
+      doc = queue.appendLog(doc, {
+        action: 'v2_generate',
+        v2Scan: result.v2Scan
+      });
+      queue.writeDoc(doc);
+    } catch (err) {
+      logger.log.error('v2_scan_failed', { detail: err.message });
+    }
+  }
+
   return result;
 }
 
@@ -169,6 +197,8 @@ function healthSummary() {
 
   return {
     enabled: process.env.SELF_RUNNER_ENABLED !== 'false',
+    mode: modes.currentMode(),
+    v2Enabled: process.env.SELF_RUNNER_V2_SCAN !== 'false',
     queue: q,
     eligibleOpenIssues: eligible,
     ineligibleOpenIssues: ineligible.length,
@@ -189,5 +219,7 @@ module.exports = {
   markIssueManualReview,
   resolveSourceIssue,
   findCheckInRun,
-  healthSummary
+  healthSummary,
+  runPlatformScan: v2.runPlatformScan,
+  runPlatformScanAndEnqueue: v2.runPlatformScanAndEnqueue
 };

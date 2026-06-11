@@ -343,50 +343,27 @@ async function runSectionChecks() {
     })
   );
 
-  // ---- integrity:autoposter-dedup (extends feed dedup with text patterns) ----
+  // ---- integrity:autoposter-dedup (canonical feed dedupe validation) ----
   checks.push(
     await check('integrity:autoposter-dedup', 'integrity', 'Autoposter duplication patterns', async () => {
       const feedPath = path.join(SERVER_ROOT, 'data', 'live', 'feed-items.json');
       let items = [];
       try {
         const raw = JSON.parse(fs.readFileSync(feedPath, 'utf8'));
-        items = raw.items || raw.feed || (Array.isArray(raw) ? raw : []);
+        items = Array.isArray(raw) ? raw : raw.items || raw.feed || [];
       } catch {
         return { skipped: true, reason: 'no_local_feed_file' };
       }
 
-      const issues = [];
-      const seenUrl = new Map();
-      const seenTitle = new Map();
-
-      items.forEach((item, idx) => {
-        const url = String(item.url || item.link || '').trim();
-        const title = String(item.title || item.headline || item.text || '')
-          .trim()
-          .slice(0, 80)
-          .toLowerCase();
-        if (url) {
-          if (seenUrl.has(url)) {
-            issues.push({ type: 'duplicate_url', url, indices: [seenUrl.get(url), idx] });
-          } else seenUrl.set(url, idx);
-        }
-        if (title.length > 12) {
-          if (seenTitle.has(title)) {
-            issues.push({ type: 'duplicate_title', title, indices: [seenTitle.get(title), idx] });
-          } else seenTitle.set(title, idx);
-        }
-        if (/…$|\.\.\.$/.test(String(item.text || item.title || ''))) {
-          issues.push({ type: 'truncated_copy', index: idx, sample: String(item.text || item.title).slice(0, 60) });
-        }
-      });
-
-      if (issues.length) {
-        const err = new Error(`${issues.length} autoposter duplication / truncation issue(s)`);
-        err.details = issues.slice(0, 8);
-        err.repro = 'Latest Updates feed has duplicate URLs, titles, or truncated autoposter copy';
+      const feedDedup = require('../live-feed-dedup');
+      const validation = feedDedup.validateFeedIntegrity(items);
+      if (!validation.ok) {
+        const err = new Error(`${validation.issues.length} autoposter duplication / integrity issue(s)`);
+        err.details = validation.issues.slice(0, 12);
+        err.repro = 'Latest Updates feed has duplicate URLs, titles, placeholder hashes, or truncated autoposter copy';
         throw err;
       }
-      return { feedItems: items.length };
+      return { feedItems: items.length, hashesValid: true };
     })
   );
 

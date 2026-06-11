@@ -5,6 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const patches = require('./self-runner-patches');
 const { dedupeFeedItems } = require('../live-feed-dedup');
+const dedupeEngine = require('./dedupe-engine');
+const schemaValidator = require('./schema-validator');
 
 const DEFAULT_TOKENS = {
   '--gv-team-card-bg': '#121c2e',
@@ -77,6 +79,71 @@ function applyInsertBefore(html, anchor, text) {
   const idx = html.indexOf(anchor);
   if (idx < 0) return html;
   return html.slice(0, idx) + text + html.slice(idx);
+}
+
+function applyInsertAfterRegionOpen(html, regionId, text) {
+  const marker = `id="${regionId}"`;
+  const start = html.indexOf(marker);
+  if (start < 0) return html;
+  const openEnd = html.indexOf('>', start);
+  if (openEnd < 0) return html;
+  const insertAt = openEnd + 1;
+  if (html.slice(insertAt, insertAt + text.length).includes(text.trim().slice(0, 40))) return html;
+  return html.slice(0, insertAt) + text + html.slice(insertAt);
+}
+
+function applyInsertAfterAnchor(html, anchor, text) {
+  const idx = html.indexOf(anchor);
+  if (idx < 0) return html;
+  const insertAt = idx + anchor.length;
+  if (html.includes(text.trim().slice(0, 40))) return html;
+  return html.slice(0, insertAt) + text + html.slice(insertAt);
+}
+
+function applyFeedDedupSmart(relPath, windowSec) {
+  const p = patches.absPath(relPath);
+  const raw = JSON.parse(fs.readFileSync(p, 'utf8'));
+  const items = raw.items || raw.feed || raw;
+  const list = Array.isArray(items) ? items : [];
+  const result = dedupeEngine.dedupeFeedItemsSmart(list, { windowSec });
+  const out = Array.isArray(raw) ? result.items : { ...raw, items: result.items };
+  fs.writeFileSync(p, JSON.stringify(out, null, 2));
+  return { before: list.length, after: result.items.length, removed: result.removed.length, failures: result.failures.length };
+}
+
+function applyRestoreJsonSnapshot(edit) {
+  const rel =
+    edit.file ||
+    Object.entries(require('./blueprint/json-schemas').SCHEMAS).find(([, s]) => s.snapshotKey === edit.snapshotKey)?.[0];
+  if (!rel) return { ok: false, error: 'no_path' };
+  return schemaValidator.restoreFromSnapshot(rel);
+}
+
+function applyJsonAddField(relPath, edit) {
+  const loaded = schemaValidator.readJsonRel(relPath);
+  if (!loaded.ok || !loaded.data) return { ok: false };
+  const data = loaded.data;
+  if (Array.isArray(data) && edit.itemPath) {
+    const match = edit.itemPath.match(/\[(\d+)\]/);
+    if (match) {
+      const idx = parseInt(match[1], 10);
+      if (data[idx]) data[idx][edit.field] = edit.value;
+    }
+  } else if (typeof data === 'object') {
+    data[edit.field] = edit.value;
+  }
+  writeFileRel(relPath, JSON.stringify(data, null, 2));
+  return { ok: true, field: edit.field };
+}
+
+function applyQueueScoutingRefresh(edit) {
+  try {
+    const { queuePlayerScoutingRefresh } = require('../scouting-update-engine');
+    queuePlayerScoutingRefresh(edit.playerSlug, { reason: edit.reason || 'self_runner_patch' });
+    return { queued: edit.playerSlug };
+  } catch (e) {
+    return { queued: false, error: e.message };
+  }
 }
 
 function applyInsertIfMissing(html, edit) {
@@ -193,8 +260,20 @@ function applyEdit(edit, state) {
     if (!html.includes(edit.marker)) {
       state.files[file] = html + (edit.text || '');
     }
+  } else if (type === 'insert-after-region-open') {
+    state.files[file] = applyInsertAfterRegionOpen(html, edit.regionId, edit.text);
+  } else if (type === 'insert-after-anchor') {
+    state.files[file] = applyInsertAfterAnchor(html, edit.anchor, edit.text);
+  } else if (type === 'dedupe-feed-smart') {
+    state.meta.feedDedup = applyFeedDedupSmart(file, edit.windowSec);
+  } else if (type === 'restore-json-snapshot') {
+    state.meta.snapshotRestore = applyRestoreJsonSnapshot(edit);
+  } else if (type === 'json-add-field') {
+    state.meta.jsonField = applyJsonAddField(file, edit);
+  } else if (type === 'queue-scouting-refresh') {
+    state.meta.scoutingQueue = applyQueueScoutingRefresh(edit);
   } else if (type === 'verify-hooks') {
-    state.meta.hooks = { checkId: edit.checkId, note: 'verify-only' };
+    state.meta.hooks = { checkId: edit.checkId, note: 'verify-only — use v2 html-hook patch instead' };
   }
 
   return state;
@@ -204,6 +283,12 @@ function applyPatch(fix) {
   const edits = fix.patch?.edits || [];
   if (!edits.length) {
     throw new Error('Fix has no patch edits');
+  }
+
+  const autoposterGuard = require('./autoposter-guard');
+  const safety = autoposterGuard.validatePatchSafety(fix);
+  if (!safety.ok && fix.blocked !== false) {
+    throw new Error(`Patch blocked by guard: ${safety.blocked.map((b) => b.code).join(', ')}`);
   }
 
   const state = { files: {}, meta: {}, appliedPaths: [] };
