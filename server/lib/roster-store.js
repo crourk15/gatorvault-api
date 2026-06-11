@@ -86,6 +86,8 @@ function normalizeRosterPlayer(raw) {
     rank: raw.rank != null ? raw.rank : null,
     rating: raw.rating != null ? Number(raw.rating) : null,
     ratingOverride: raw.ratingOverride != null ? Number(raw.ratingOverride) : null,
+    vaultGradeExplanation: raw.vaultGradeExplanation || raw.gradeExplanation || '',
+    vaultGradeUpdatedAt: raw.vaultGradeUpdatedAt || raw.gradeUpdatedAt || null,
     headshotUrl: raw.headshotUrl || null,
     bio: raw.bio || '',
     stats: raw.stats || '',

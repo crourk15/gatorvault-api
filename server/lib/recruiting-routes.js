@@ -9,16 +9,9 @@ const { buildHeatCheck } = require('./heat-check-store');
 const highlightsStore = require('./highlights-store');
 const interviewsStore = require('./interviews-store');
 
-const RECRUITING_ADMIN_PIN =
-  process.env.OPS_ADMIN_PIN ||
-  process.env.RECRUITING_ADMIN_PIN ||
-  process.env.EMAIL_TEST_PIN ||
-  'GV2026admin';
+const { verifyAdminPin, primaryAdminPin, pinFromReq: adminPinFromReq } = require('./admin-pin');
+const RECRUITING_ADMIN_PIN = primaryAdminPin();
 const INGEST_CRON_SECRET = process.env.INGEST_CRON_SECRET || RECRUITING_ADMIN_PIN;
-
-function verifyAdminPin(pin) {
-  return !!pin && pin === RECRUITING_ADMIN_PIN;
-}
 
 function mountRecruitingRoutes(app) {
   app.get('/api/recruiting/status', async (req, res) => {

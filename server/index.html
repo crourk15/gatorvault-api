@@ -510,6 +510,9 @@
 
             .gv-intel-card{background:#121c2e;border:1px solid rgba(0,48,135,.35);border-left:3px solid #FA4616;border-radius:12px;padding:14px 16px;margin-bottom:12px;cursor:pointer;animation:gvCardIn .3s ease both;-webkit-tap-highlight-color:transparent;}
             .gv-intel-card:active{transform:scale(.99);}
+            .gv-mhome-new-banner{display:block;width:100%;margin-bottom:10px;padding:10px 14px;background:rgba(250,70,22,.12);border:1px solid rgba(250,70,22,.35);border-radius:10px;color:#FA4616;font-size:12px;font-weight:700;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:gvCardIn .25s ease both;}
+            .gv-mhome-new-banner.hidden{display:none!important;}
+            .gv-intel-card.gv-intel-card--new{animation:gvCardIn .35s ease both;}
             .gv-intel-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gv-uf-orange);margin-bottom:4px;}
             .gv-intel-title{font-size:15px;font-weight:600;color:#f8fafc;line-height:1.35;margin:0 0 4px;}
             .gv-intel-detail{font-size:13px;color:#94a3b8;line-height:1.4;margin:0;}
@@ -554,7 +557,7 @@
     <style id="gv-critical">:root{--gv-ticker-h:44px}#gv-site-ticker{z-index:500!important;position:fixed;top:0;left:0;right:0;height:44px}#gv-alert-banner{z-index:510!important;position:fixed;top:0;left:0;right:0}body.gv-has-site-ticker #nav-main,body.gv-has-site-ticker nav.fixed{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #gv-mobile-header,body.gv-has-site-ticker .gv-mob-header{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior:not(.gv-mobile-active){padding-top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior .gv-desk-only.sticky.top-14{top:calc(var(--gv-ticker-h) + 3.5rem)!important}body.gv-has-site-ticker #hero-sec{padding-top:calc(8rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker #install-banner{top:calc(4rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker .gv-alert-banner{top:var(--gv-ticker-h)}</style>
     <link rel="stylesheet" href="/gv-global.css?v=team-v2-20260605">
     <link rel="stylesheet" href="/gv-feedback.css?v=team-v2-20260605">
-    <link rel="stylesheet" href="/css/gv-team.css?v=team-v3-20260605">
+    <link rel="stylesheet" href="/css/gv-team.css?v=team-v4-20260605">
     <script src="/gv-global.js?v=mhome-v3-20260614" defer></script>
     <script src="/gv-feedback.js?v=mhome-v3-20260614" defer></script>
     <script src="/js/gv-team-mobile.js?v=team-v4-20260605" defer></script>
@@ -1095,6 +1098,7 @@
                 <div id="vpane-mhome" class="vpane gv-mob-only fade-in">
                     <section class="gv-mob-section gv-mob-module">
                         <h2 class="gv-mob-module-hdr gv-mob-module-hdr--accent">Latest Updates</h2>
+                        <button type="button" id="gv-mhome-new-banner" class="gv-mhome-new-banner hidden" aria-live="polite">New updates available — tap to refresh.</button>
                         <div id="gv-mhome-updates"></div>
                     </section>
 
@@ -1431,9 +1435,16 @@
                         <h1 data-id="653" class="font-display text-2xl md:text-3xl font-bold text-white">📺 Film Room</h1>
                         <p class="text-surface-200 text-sm mt-1 max-w-2xl">Scheme hubs, film breakdowns, press conferences, and highlights — organized so you can drill into offense, defense, or video without clutter.</p>
                     </div>
-                    <div id="film-room-categories" class="flex flex-wrap gap-2"></div>
-                    <div id="film-room-hub-desc" class="text-xs text-surface-200/60"></div>
-                    <div id="highlights-shell"></div>
+                    <div id="film-room-hub-shell" class="space-y-4">
+                        <div id="film-room-hub-landing" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+                        <div id="film-room-hub-detail" class="hidden space-y-3">
+                            <button type="button" id="film-room-hub-back" class="text-xs font-bold text-gator-orange hover:text-white transition flex items-center gap-1 min-h-[36px]">← All Categories</button>
+                            <h2 id="film-room-hub-title" class="font-display text-xl font-bold text-white"></h2>
+                            <div id="film-room-subnav" class="flex flex-wrap gap-2 hidden"></div>
+                            <p id="film-room-hub-desc" class="text-xs text-surface-200/60"></p>
+                            <div id="highlights-shell"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- ====== LIVE SCORES ====== -->
@@ -4368,15 +4379,24 @@
     var GV_HIGHLIGHTS_LIVE=true;
     window._gvHighlights=[];
     window._gvFilmRoomHubs=['Offensive Scheme','Defensive Scheme','Film Breakdown','UF Press Conferences','Highlights'];
-    window._gvFilmRoomFilter='all';
+    window._gvFilmRoomView='landing';
+    window._gvFilmRoomActiveHub=null;
+    window._gvFilmRoomSubFilter=null;
     var GV_FILM_HUB_DESC={
-        'all':'Browse all Film Room content by hub.',
         'Offensive Scheme':'Scheme library, concepts, and recruiting fit for UF offense.',
         'Defensive Scheme':'3-3-5 install, coverage rules, and defensive concepts.',
         'Film Breakdown':'GNFP Film Review and Film Guy Network breakdowns.',
         'UF Press Conferences':'Five most recent Gators press conferences.',
         'Highlights':'Game highlights including Spring Game 2026 cut-ups.'
     };
+    var GV_FILM_HUB_ICONS={
+        'Offensive Scheme':'⚔️',
+        'Defensive Scheme':'🛡️',
+        'Film Breakdown':'🎬',
+        'UF Press Conferences':'🎤',
+        'Highlights':'⭐'
+    };
+    var GV_FILM_BREAKDOWN_SUBS=['GNFP Film Review','Film Guy Network'];
     function gvEscHtml(s){
         return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
@@ -4389,36 +4409,95 @@
                     if(j.hubs&&j.hubs.length)window._gvFilmRoomHubs=j.hubs;
                     else if(j.categories&&j.categories.length)window._gvFilmRoomHubs=j.categories;
                 }
-                gvRenderFilmRoomCategories();
+                gvRenderFilmRoomHubLanding();
                 renderHighlights();
             })
-            .catch(function(){gvRenderFilmRoomCategories();renderHighlights();});
+            .catch(function(){gvRenderFilmRoomHubLanding();renderHighlights();});
     }
-    function gvRenderFilmRoomCategories(){
-        var nav=document.getElementById('film-room-categories');
-        var descEl=document.getElementById('film-room-hub-desc');
-        if(!nav)return;
-        var hubs=window._gvFilmRoomHubs||['Offensive Scheme','Defensive Scheme','Film Breakdown','UF Press Conferences','Highlights'];
-        var counts={all:(window._gvHighlights||[]).length};
+    function gvFilmHubCounts(){
+        var counts={};
         (window._gvHighlights||[]).forEach(function(c){
             var hub=c.filmHub||c.category||'Offensive Scheme';
             counts[hub]=(counts[hub]||0)+1;
         });
-        var html='<button type="button" class="film-cat-btn px-3 py-1.5 rounded-full text-xs font-bold '+(window._gvFilmRoomFilter==='all'?'bg-gator-orange text-white':'bg-surface-700 text-surface-200')+'" data-fhub="all">All ('+(counts.all||0)+')</button>';
-        hubs.forEach(function(hub){
+        return counts;
+    }
+    function gvRenderFilmRoomHubLanding(){
+        var landing=document.getElementById('film-room-hub-landing');
+        var detail=document.getElementById('film-room-hub-detail');
+        if(!landing)return;
+        window._gvFilmRoomView='landing';
+        window._gvFilmRoomActiveHub=null;
+        window._gvFilmRoomSubFilter=null;
+        if(detail)detail.classList.add('hidden');
+        landing.classList.remove('hidden');
+        var hubs=window._gvFilmRoomHubs||[];
+        var counts=gvFilmHubCounts();
+        landing.innerHTML=hubs.map(function(hub){
             var n=counts[hub]||0;
-            var active=window._gvFilmRoomFilter===hub;
-            html+='<button type="button" class="film-cat-btn px-3 py-1.5 rounded-full text-xs font-bold '+(active?'bg-gator-orange text-white':'bg-surface-700 text-surface-200')+'" data-fhub="'+gvEscHtml(hub)+'">'+gvEscHtml(hub)+' ('+n+')</button>';
-        });
-        nav.innerHTML=html;
-        if(descEl)descEl.textContent=GV_FILM_HUB_DESC[window._gvFilmRoomFilter]||GV_FILM_HUB_DESC.all;
-        nav.querySelectorAll('.film-cat-btn').forEach(function(btn){
+            var icon=GV_FILM_HUB_ICONS[hub]||'📺';
+            return '<button type="button" class="film-hub-card bg-surface-700 border border-gator-blue/20 rounded-2xl p-5 text-left hover:border-gator-orange/40 transition min-h-[88px]" data-fhub="'+gvEscHtml(hub)+'">'
+                +'<div class="flex items-start justify-between gap-2">'
+                +'<span class="text-2xl">'+icon+'</span>'
+                +'<span class="text-[.65rem] font-bold text-surface-200/50 bg-surface-800 px-2 py-0.5 rounded-full">'+n+'</span>'
+                +'</div>'
+                +'<h3 class="font-display text-base font-bold text-white mt-2">'+gvEscHtml(hub)+'</h3>'
+                +'<p class="text-xs text-surface-200/60 mt-1 line-clamp-2">'+(GV_FILM_HUB_DESC[hub]||'')+'</p>'
+                +'</button>';
+        }).join('');
+        landing.querySelectorAll('[data-fhub]').forEach(function(btn){
             btn.addEventListener('click',function(){
-                var hub=btn.getAttribute('data-fhub')||'all';
-                window._gvFilmRoomFilter=(window._gvFilmRoomFilter===hub&&hub!=='all')?'all':hub;
-                gvRenderFilmRoomCategories();
-                renderHighlights();
+                gvOpenFilmRoomHub(btn.getAttribute('data-fhub'));
             });
+        });
+    }
+    function gvOpenFilmRoomHub(hub){
+        window._gvFilmRoomView='hub';
+        window._gvFilmRoomActiveHub=hub;
+        window._gvFilmRoomSubFilter=(hub==='Film Breakdown')?null:null;
+        var landing=document.getElementById('film-room-hub-landing');
+        var detail=document.getElementById('film-room-hub-detail');
+        var titleEl=document.getElementById('film-room-hub-title');
+        var descEl=document.getElementById('film-room-hub-desc');
+        var subnav=document.getElementById('film-room-subnav');
+        if(landing)landing.classList.add('hidden');
+        if(detail)detail.classList.remove('hidden');
+        if(titleEl)titleEl.textContent=hub;
+        if(descEl)descEl.textContent=GV_FILM_HUB_DESC[hub]||'';
+        if(subnav){
+            if(hub==='Film Breakdown'){
+                subnav.classList.remove('hidden');
+                subnav.innerHTML='<button type="button" class="film-sub-btn px-3 py-1.5 rounded-full text-xs font-bold bg-gator-orange text-white" data-fsub="all">All</button>'
+                    +GV_FILM_BREAKDOWN_SUBS.map(function(sub){
+                        return '<button type="button" class="film-sub-btn px-3 py-1.5 rounded-full text-xs font-bold bg-surface-700 text-surface-200" data-fsub="'+gvEscHtml(sub)+'">'+gvEscHtml(sub)+'</button>';
+                    }).join('');
+                subnav.querySelectorAll('.film-sub-btn').forEach(function(btn){
+                    btn.addEventListener('click',function(){
+                        var sub=btn.getAttribute('data-fsub');
+                        window._gvFilmRoomSubFilter=(sub==='all')?null:sub;
+                        subnav.querySelectorAll('.film-sub-btn').forEach(function(b){
+                            var active=(b.getAttribute('data-fsub')===(window._gvFilmRoomSubFilter||'all'));
+                            b.className='film-sub-btn px-3 py-1.5 rounded-full text-xs font-bold '+(active?'bg-gator-orange text-white':'bg-surface-700 text-surface-200');
+                        });
+                        renderHighlights();
+                    });
+                });
+            }else{
+                subnav.classList.add('hidden');
+                subnav.innerHTML='';
+            }
+        }
+        renderHighlights();
+    }
+    function gvRenderFilmRoomCategories(){
+        gvRenderFilmRoomHubLanding();
+    }
+    if(!window._gvFilmRoomBackWired){
+        window._gvFilmRoomBackWired=true;
+        document.addEventListener('click',function(e){
+            if(e.target&&e.target.id==='film-room-hub-back'){
+                gvRenderFilmRoomHubLanding();
+            }
         });
     }
     function gvRenderHighlightCard(c){
@@ -4464,14 +4543,21 @@
         var shell=document.getElementById('highlights-shell');
         if(!shell||!document.getElementById('vpane-highlights'))return;
         var clips=window._gvHighlights||[];
-        if(window._gvFilmRoomFilter&&window._gvFilmRoomFilter!=='all'){
+        if(window._gvFilmRoomView==='hub'&&window._gvFilmRoomActiveHub){
             clips=clips.filter(function(c){
                 var hub=c.filmHub||c.category;
-                return hub===window._gvFilmRoomFilter;
+                if(hub!==window._gvFilmRoomActiveHub)return false;
+                if(window._gvFilmRoomActiveHub==='Film Breakdown'&&window._gvFilmRoomSubFilter){
+                    return c.category===window._gvFilmRoomSubFilter;
+                }
+                return true;
             });
+        }else if(window._gvFilmRoomView==='landing'){
+            shell.innerHTML='';
+            return;
         }
         if(!clips.length){
-            shell.innerHTML='<p class="text-surface-200/60 text-sm py-4">'+(window._gvFilmRoomFilter!=='all'?'No lessons in this category yet.':'Loading verified Film Room lessons…')+'</p>';
+            shell.innerHTML='<p class="text-surface-200/60 text-sm py-4">'+(window._gvFilmRoomActiveHub?'No content in this category yet.':'Select a category above.')+'</p>';
             return;
         }
         shell.innerHTML='<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">'
@@ -5879,7 +5965,7 @@
     },600);
 
     // ---- Live Dashboard ----
-    window._gvLive={feed:[],beat:{posts:[]},podcasts:{shows:[]},loading:false,pollTimer:null,lastUpdated:null};
+    window._gvLive={feed:[],beat:{posts:[]},podcasts:{shows:[]},loading:false,pollTimer:null,lastUpdated:null,mobileLatest:null};
 
     function gvLiveApiBase(){return window.GV_API_BASE||((window.location.hostname==='localhost'||window.location.hostname==='127.0.0.1')?'http://localhost:3000':window.location.origin);}
     function gvMediaResolveUrl(url){
@@ -6325,10 +6411,8 @@
         if(st.pollTimer)clearInterval(st.pollTimer);
         st.pollTimer=setInterval(function(){
             var paneLive=document.getElementById('vpane-live');
-            var paneHome=document.getElementById('vpane-mhome');
-            var activeHome=paneHome&&paneHome.classList.contains('active');
             var activeLive=paneLive&&paneLive.classList.contains('active');
-            if(activeLive||activeHome)gvLoadLiveDashboard(false,true);
+            if(activeLive)gvLoadLiveDashboard(false,true);
         },45000);
     }
 
@@ -6590,6 +6674,199 @@
         }).slice(0,limit||3);
     }
 
+    function gvMobileLatestState(){
+        if(!window._gvLive.mobileLatest){
+            window._gvLive.mobileLatest={
+                displayed:[],
+                newestTs:0,
+                pending:[],
+                scrollActive:false,
+                scrollTimer:null,
+                autoTimer:null,
+                signalTimer:null,
+                lastSignal:0,
+                polling:false
+            };
+        }
+        return window._gvLive.mobileLatest;
+    }
+
+    function gvNewestUpdateTs(updates){
+        if(!updates||!updates.length)return 0;
+        var ts=0;
+        updates.forEach(function(u){
+            var t=new Date(u.createdAt||0).getTime();
+            if(!isNaN(t)&&t>ts)ts=t;
+        });
+        return ts;
+    }
+
+    function gvIsMobileHomeActive(){
+        if(!gvIsMobile()||document.visibilityState==='hidden')return false;
+        var home=document.getElementById('vpane-mhome');
+        return !!(home&&home.classList.contains('active'));
+    }
+
+    function gvIsUserScrollingMobile(){
+        var ml=gvMobileLatestState();
+        if(ml.scrollActive)return true;
+        var root=document.getElementById('vault-overlay');
+        if(root&&root.scrollTop>80)return true;
+        return false;
+    }
+
+    function gvFindNewLatestUpdates(displayed,freshFeed){
+        var fresh=gvFilterLatestUpdates(freshFeed);
+        if(!displayed||!displayed.length)return fresh;
+        var newestDisplayed=gvNewestUpdateTs(displayed);
+        var newItems=[];
+        fresh.forEach(function(item){
+            var ts=new Date(item.createdAt||0).getTime();
+            if(isNaN(ts)||ts<=newestDisplayed)return;
+            var dup=displayed.some(function(e){
+                if(e.id&&item.id&&e.id===item.id)return true;
+                return gvFeedDedupeKey(e)===gvFeedDedupeKey(item);
+            });
+            if(!dup)newItems.push(item);
+        });
+        return newItems.sort(function(a,b){return new Date(b.createdAt||0)-new Date(a.createdAt||0);});
+    }
+
+    function gvShowMobileLatestBanner(count){
+        var banner=document.getElementById('gv-mhome-new-banner');
+        if(!banner)return;
+        banner.textContent='New updates available — tap to refresh'+(count>1?' ('+count+')':'');
+        banner.classList.remove('hidden');
+    }
+
+    function gvHideMobileLatestBanner(){
+        var banner=document.getElementById('gv-mhome-new-banner');
+        if(banner)banner.classList.add('hidden');
+    }
+
+    function gvPrependMobileLatestCards(newItems){
+        if(!newItems||!newItems.length)return;
+        var container=document.getElementById('gv-mhome-updates');
+        if(!container)return;
+        var ml=gvMobileLatestState();
+        var wrap=document.createElement('div');
+        newItems.slice().reverse().forEach(function(item,idx){
+            wrap.innerHTML=gvRenderLatestUpdateCard(item,idx);
+            var card=wrap.firstChild;
+            if(card){
+                card.classList.add('gv-intel-card--new');
+                container.insertBefore(card,container.firstChild);
+            }
+        });
+        var merged=gvDedupeFeedItems(newItems.concat(ml.displayed||[])).slice(0,6);
+        var cards=container.querySelectorAll('.gv-intel-card');
+        while(cards.length>6){
+            cards[cards.length-1].remove();
+            cards=container.querySelectorAll('.gv-intel-card');
+        }
+        ml.displayed=merged;
+        ml.newestTs=gvNewestUpdateTs(merged);
+        var feed=window._gvLive.feed||[];
+        newItems.forEach(function(item){
+            var exists=feed.some(function(f){
+                if(f.id&&item.id)return f.id===item.id;
+                return gvFeedDedupeKey(f)===gvFeedDedupeKey(item);
+            });
+            if(!exists)feed.unshift(item);
+        });
+        window._gvLive.feed=feed;
+        gvWireLatestUpdateCards(container,merged);
+    }
+
+    function gvApplyPendingMobileLatest(){
+        var ml=gvMobileLatestState();
+        if(!ml.pending.length)return;
+        var newItems=gvDedupeFeedItems(ml.pending.slice());
+        ml.pending=[];
+        gvHideMobileLatestBanner();
+        gvPrependMobileLatestCards(newItems);
+    }
+
+    function gvMobilePollLatestUpdates(options){
+        options=options||{};
+        if(!gvIsMobile())return Promise.resolve();
+        if(!options.force&&!gvIsMobileHomeActive())return Promise.resolve();
+        var ml=gvMobileLatestState();
+        if(ml.polling)return Promise.resolve();
+        ml.polling=true;
+        return fetch(gvLiveApiBase()+'/api/live/dashboard?limit=60')
+            .then(function(r){return r.json();})
+            .then(function(j){
+                ml.polling=false;
+                if(!j.ok)return;
+                if(j.mobileRefreshSignal&&j.mobileRefreshSignal>ml.lastSignal){
+                    ml.lastSignal=j.mobileRefreshSignal;
+                }
+                var filtered=gvFilterLiveFeedItems(j.feed||[]);
+                window._gvLive.lastUpdated=j.updatedAt||window._gvLive.lastUpdated;
+                if(!ml.displayed.length){
+                    ml.displayed=gvFilterLatestUpdates(window._gvLive.feed||[]);
+                    ml.newestTs=gvNewestUpdateTs(ml.displayed);
+                }
+                var newItems=gvFindNewLatestUpdates(ml.displayed,filtered);
+                if(!newItems.length){
+                    window._gvLive.feed=filtered.length?filtered:window._gvLive.feed;
+                    return;
+                }
+                window._gvLive.feed=gvDedupeFeedItems(newItems.concat(filtered));
+                if(gvIsUserScrollingMobile()&&!options.forceScrollApply){
+                    ml.pending=gvDedupeFeedItems(newItems.concat(ml.pending));
+                    gvShowMobileLatestBanner(ml.pending.length);
+                    return;
+                }
+                gvPrependMobileLatestCards(newItems);
+            })
+            .catch(function(){ml.polling=false;});
+    }
+
+    function gvCheckMobileRefreshSignal(){
+        if(!gvIsMobile()||!gvIsMobileHomeActive())return;
+        fetch(gvLiveApiBase()+'/api/live/dashboard/health')
+            .then(function(r){return r.json();})
+            .then(function(j){
+                if(!j.ok)return;
+                var ml=gvMobileLatestState();
+                if(j.mobileRefreshSignal&&j.mobileRefreshSignal>ml.lastSignal){
+                    ml.lastSignal=j.mobileRefreshSignal;
+                    gvMobilePollLatestUpdates({force:true,forceScrollApply:true});
+                }
+            })
+            .catch(function(){});
+    }
+
+    function gvStartMobileLatestAutoRefresh(){
+        if(!gvIsMobile())return;
+        var ml=gvMobileLatestState();
+        if(ml.autoTimer)clearInterval(ml.autoTimer);
+        if(ml.signalTimer)clearInterval(ml.signalTimer);
+        ml.autoTimer=setInterval(function(){
+            if(gvIsMobileHomeActive())gvMobilePollLatestUpdates({silent:true});
+        },300000);
+        ml.signalTimer=setInterval(gvCheckMobileRefreshSignal,30000);
+        var root=document.getElementById('vault-overlay');
+        if(root&&!root._gvMobileScrollWired){
+            root._gvMobileScrollWired=true;
+            root.addEventListener('scroll',function(){
+                if(!gvIsMobile())return;
+                ml.scrollActive=true;
+                clearTimeout(ml.scrollTimer);
+                ml.scrollTimer=setTimeout(function(){ml.scrollActive=false;},1500);
+            },{passive:true});
+        }
+        var banner=document.getElementById('gv-mhome-new-banner');
+        if(banner&&!banner._gvWired){
+            banner._gvWired=true;
+            banner.addEventListener('click',function(){
+                gvApplyPendingMobileLatest();
+            });
+        }
+    }
+
     function gvRenderLatestUpdateCard(item,idx){
         return gvRenderIntelCard(item,idx);
     }
@@ -6814,7 +7091,13 @@
         var podcastEl=document.getElementById('gv-mhome-podcast');
         if(!updatesEl)return;
 
+        var ml=gvMobileLatestState();
         var updates=gvFilterLatestUpdates(feed);
+        ml.displayed=updates;
+        ml.newestTs=gvNewestUpdateTs(updates);
+        ml.pending=[];
+        gvHideMobileLatestBanner();
+
         updatesEl.innerHTML=updates.length?updates.map(gvRenderLatestUpdateCard).join('')
             :'<p class="gv-espn-card-body text-surface-200/60">Latest updates loading…</p>';
         gvWireLatestUpdateCards(updatesEl,updates);
@@ -6966,11 +7249,13 @@
             var home=document.getElementById('vpane-mhome');
             if(home&&home.classList.contains('active'))gvLoadLiveDashboard(true,true);
         });
+
+        gvStartMobileLatestAutoRefresh();
     }
 
     var _gvLoadLiveOrig=gvLoadLiveDashboard;
-    gvLoadLiveDashboard=function(showLoading){
-        var result=_gvLoadLiveOrig(showLoading);
+    gvLoadLiveDashboard=function(showLoading,forceRefresh){
+        var result=_gvLoadLiveOrig(showLoading,forceRefresh);
         function gvAfterLiveLoad(){
             gvRenderBreakingBanner(window._gvLive.feed);
             gvRenderMobileHome();

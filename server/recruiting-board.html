@@ -309,20 +309,24 @@
 
     function unlock(){
       var p = document.getElementById('gate-pin').value.trim();
-      fetch(API+'/api/recruiting/identity/overrides?pin='+encodeURIComponent(p))
+      if (!p) return;
+      document.getElementById('gate-err').classList.add('hidden');
+      fetch(API + '/api/ops/verify-pin?pin=' + encodeURIComponent(p), {
+        headers: { 'X-Ops-Pin': p, 'X-Recruiting-Pin': p, 'X-Roster-Pin': p }
+      })
         .then(function(r){
-          if(r.status === 401) throw new Error('Invalid PIN');
-          return r.json();
+          if (r.status === 401) throw new Error('Invalid PIN');
+          return r.json().then(function(j){ if (!j.ok) throw new Error(j.error || 'Invalid PIN'); return j; });
         })
-        .then(function(j){
-          if(!j.ok) throw new Error(j.error || 'Invalid PIN');
+        .then(function(){
           document.getElementById('pin').value = p;
           sessionStorage.setItem('gv_ops_pin', p);
+          sessionStorage.setItem('gv_admin_pin', p);
           document.getElementById('pin-gate').classList.add('hidden');
           document.getElementById('app').classList.remove('hidden');
           var params = new URLSearchParams(location.search);
           var slug = params.get('slug');
-          if(slug) state.selectedSlug = slug;
+          if (slug) state.selectedSlug = slug;
           return loadPlayers();
         })
         .catch(function(e){
@@ -330,6 +334,21 @@
           document.getElementById('gate-err').classList.remove('hidden');
         });
     }
+
+    window.__gvAdminEmbedUnlock = function(p) {
+      if (!p) return;
+      document.getElementById('pin').value = p;
+      document.getElementById('gate-pin').value = p;
+      sessionStorage.setItem('gv_ops_pin', p);
+      sessionStorage.setItem('gv_admin_pin', p);
+      document.getElementById('pin-gate').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+      loadPlayers();
+    };
+
+    document.addEventListener('gv-admin-embed-unlock', function(e) {
+      if (e.detail && e.detail.pin) window.__gvAdminEmbedUnlock(e.detail.pin);
+    });
 
     document.getElementById('gate-unlock').addEventListener('click', unlock);
     document.getElementById('gate-pin').addEventListener('keydown', function(e){ if(e.key==='Enter') unlock(); });

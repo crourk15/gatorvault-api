@@ -6,21 +6,11 @@ const { refillAutoposterQueue } = require('./x-autoposter-fill');
 const freshness = require('./autoposter-freshness');
 const { forcePostNow } = require('./autoposter-force-post');
 
-const X_AUTOPOST_PIN =
-  process.env.X_AUTOPOST_PIN ||
-  process.env.RECRUITING_ADMIN_PIN ||
-  process.env.CONTENT_ADMIN_PIN ||
-  process.env.EMAIL_TEST_PIN ||
-  'GV2026admin';
-
+const { verifyAdminPin, pinFromReq: adminPinFromReq } = require('./admin-pin');
 const X_CRON_SECRET = process.env.X_AUTOPOST_CRON_SECRET || process.env.LIVE_CRON_SECRET || '';
 
-function verifyAdminPin(pin) {
-  return !!pin && pin === X_AUTOPOST_PIN;
-}
-
 function pinFromReq(req) {
-  return req.headers['x-x-autopost-pin'] || req.headers['x-recruiting-pin'] || req.body?.pin || req.query?.pin;
+  return adminPinFromReq(req) || req.headers['x-x-autopost-pin'];
 }
 
 function verifyCron(req) {

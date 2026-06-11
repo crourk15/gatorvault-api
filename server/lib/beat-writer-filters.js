@@ -108,6 +108,28 @@ function isSteveWiltfongPost(post) {
   return handle === 'stevewiltfong' || /steve\s*wiltfong|stevewiltfong/i.test(writer);
 }
 
+/** Explicit UF keyword gate — required for Steve Wiltfong national posts. */
+const EXPLICIT_UF_KEYWORD_RES = [
+  /\bflorida\b/i,
+  /\bgators\b/i,
+  /\buf\b/i,
+  /\bgainesville\b/i,
+  /\bbilly napier\b/i,
+  /\buf staff\b/i,
+  /\bflorida visit\b/i,
+  /\bflorida commit\b/i,
+  /\bflorida target\b/i
+];
+
+function matchesExplicitUfKeywords(text) {
+  const t = String(text || '');
+  if (!t.trim()) return false;
+  if (/\bflorida state\b/i.test(t) && !/\bflorida gators\b/i.test(t) && !/\bflorida football\b/i.test(t)) {
+    if (!/\bgators\b/i.test(t) && !/\buf\b/i.test(t)) return false;
+  }
+  return EXPLICIT_UF_KEYWORD_RES.some((re) => re.test(t));
+}
+
 /**
  * Hard UF relevance gate — national beat items must match Florida Gators context.
  */
@@ -181,7 +203,13 @@ function shouldIncludeBeatPost(post, options = {}) {
     return false;
   }
 
-  if (isNationalUfOnlyReporter(post)) {
+  if (isSteveWiltfongPost(post)) {
+    const explicit = matchesExplicitUfKeywords(text) || postUrls(post).some(isFloridaRelatedUrl);
+    if (!explicit) {
+      if (onBlock) onBlock(post, 'wiltfong_non_uf_keywords');
+      return false;
+    }
+  } else if (isNationalUfOnlyReporter(post)) {
     if (!isFloridaRelevantPost(post)) {
       if (onBlock) onBlock(post, 'non_florida');
       return false;
@@ -237,6 +265,8 @@ module.exports = {
   isHayesFawcettPost,
   isCharlesPowerPost,
   isSteveWiltfongPost,
+  matchesExplicitUfKeywords,
+  EXPLICIT_UF_KEYWORD_RES,
   isFloridaRelevant,
   isFloridaRelevantPost,
   isFloridaRelatedText,

@@ -309,12 +309,42 @@
 .gv-team-identity-banner {
   height: 100px;
   background: linear-gradient(135deg, #001a4d, #003087 60%, rgba(250, 70, 22, 0.25));
-  background-size: cover;
+  background-size: auto;
   background-position: center;
   position: relative;
   padding: var(--gv-team-space-4);
   display: flex;
   align-items: flex-end;
+}
+
+.gv-team-identity-banner.era-70s,
+.gv-team-modal-hero.era-70s,
+.gv-team-modal-hero.gv-team-era-media.era-70s {
+  background: linear-gradient(145deg, #0a1628 0%, #1a2744 45%, rgba(0, 48, 135, 0.85) 100%);
+}
+
+.gv-team-identity-banner.era-90s,
+.gv-team-modal-hero.era-90s,
+.gv-team-modal-hero.gv-team-era-media.era-90s {
+  background: linear-gradient(145deg, #0d1f3c 0%, #003087 50%, rgba(250, 70, 22, 0.28) 100%);
+}
+
+.gv-team-identity-banner.era-2000s,
+.gv-team-modal-hero.era-2000s,
+.gv-team-modal-hero.gv-team-era-media.era-2000s {
+  background: linear-gradient(145deg, #061018 0%, #0f2847 55%, rgba(250, 70, 22, 0.35) 100%);
+}
+
+.gv-team-identity-banner.era-2010s,
+.gv-team-modal-hero.era-2010s,
+.gv-team-modal-hero.gv-team-era-media.era-2010s {
+  background: linear-gradient(145deg, #0a1420 0%, #122a4a 50%, rgba(96, 165, 250, 0.18) 100%);
+}
+
+.gv-team-identity-banner.era-2020s,
+.gv-team-modal-hero.era-2020s,
+.gv-team-modal-hero.gv-team-era-media.era-2020s {
+  background: linear-gradient(145deg, #060f1f 0%, #003087 40%, rgba(250, 70, 22, 0.4) 100%);
 }
 
 .gv-team-identity-banner::after {

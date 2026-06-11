@@ -2,16 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const rosterStore = require('./roster-store');
 
-const ROSTER_ADMIN_PIN =
-  process.env.ROSTER_ADMIN_PIN || process.env.RECRUITING_ADMIN_PIN || process.env.EMAIL_TEST_PIN || 'GV2026admin';
-
-function verifyAdminPin(pin) {
-  return !!pin && pin === ROSTER_ADMIN_PIN;
-}
-
-function pinFromReq(req) {
-  return req.headers['x-recruiting-pin'] || req.body?.pin || req.query?.pin;
-}
+const { verifyAdminPin, pinFromReq } = require('./admin-pin');
 
 function mountRosterRoutes(app) {
   app.get('/api/roster/headshots', (req, res) => {
@@ -95,6 +86,35 @@ function mountRosterRoutes(app) {
         const refreshed = rosterStore.getRosterPlayerBySlug(slug);
         return res.json({ ok: true, player: refreshed || player });
       }
+      return res.json({ ok: true, player });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+  app.post('/api/roster/players/:slug/vault-grade', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const slug = req.params.slug;
+      const existing = rosterStore.getRosterPlayerBySlug(slug);
+      if (!existing) return res.status(404).json({ ok: false, error: 'Player not found' });
+      const grade = req.body?.grade != null ? req.body.grade : req.body?.ratingOverride;
+      const clear = req.body?.clear === true || grade === null;
+      const explanation = req.body?.gradeExplanation != null
+        ? String(req.body.gradeExplanation)
+        : (req.body?.vaultGradeExplanation != null ? String(req.body.vaultGradeExplanation) : existing.vaultGradeExplanation);
+      const ts = req.body?.timestamp || req.body?.vaultGradeUpdatedAt || new Date().toISOString();
+      const patch = {
+        ...existing,
+        slug,
+        name: existing.name,
+        vaultGradeExplanation: clear ? '' : explanation,
+        vaultGradeUpdatedAt: ts
+      };
+      if (clear) patch.ratingOverride = null;
+      else if (grade != null && grade !== '') patch.ratingOverride = Number(grade);
+      const player = rosterStore.upsertRosterPlayer(patch);
       return res.json({ ok: true, player });
     } catch (err) {
       return res.status(400).json({ ok: false, error: err.message });

@@ -36,7 +36,7 @@
     '/admin/ops': { section: 'dashboard', panel: 'ops' },
     '/admin/feedback': { section: 'feedback', panel: 'inbox' },
     '/admin/monitoring': { section: 'recruiting', panel: 'monitoring' },
-    '/admin/ops/gm2': { section: 'gm2', panel: 'integrity' },
+    '/admin/ops/gm2': { section: 'gm2', panel: 'rerun' },
     '/admin/ops/identity-patterns': { section: 'gm2', panel: 'identity' },
     '/vault/ops': { section: 'dashboard', panel: 'ops' },
     '/recruiting-admin.html': { section: 'recruiting', panel: 'alerts' },
@@ -108,6 +108,7 @@
       desc: 'Depth chart, roster, coaching staff, team history, film room',
       panels: [
         { id: 'board', label: 'Roster & Board', embed: 'board' },
+        { id: 'vault-grades', label: 'Vault Grades', inline: true },
         { id: 'war-room', label: 'War Room Breakdowns', embed: 'war-room' }
       ]
     },
@@ -167,7 +168,8 @@
       headers: {
         'Content-Type': 'application/json',
         'X-Recruiting-Pin': p,
-        'X-Ops-Pin': p
+        'X-Ops-Pin': p,
+        'X-Roster-Pin': p
       },
       body: JSON.stringify(Object.assign({ pin: p }, body || {}))
     }).then(parseApiResponse);
@@ -177,7 +179,7 @@
     var p = pin();
     if (!p) return Promise.reject(new Error('Admin PIN required'));
     return fetch(API + path, {
-      headers: { 'X-Recruiting-Pin': p, 'X-Ops-Pin': p }
+      headers: { 'X-Recruiting-Pin': p, 'X-Ops-Pin': p, 'X-Roster-Pin': p }
     }).then(parseApiResponse);
   }
 
@@ -263,17 +265,144 @@
     postPinToIframe(iframe);
   }
 
+  function renderVaultGradesPanel(container) {
+    container.innerHTML = ''
+      + '<div class="hub-settings-grid">'
+      + '<div class="hub-card hub-card-wide"><h3>Vault Grade Editor</h3>'
+      + '<p class="hub-meta">Override Vault Grades for roster players. Changes apply instantly across Top Gators, Roster, and War Room.</p>'
+      + '<label>Search player</label>'
+      + '<input id="hub-vg-search" type="search" placeholder="Name or slug">'
+      + '<div id="hub-vg-list" class="hub-log" style="max-height:280px;margin-top:8px"></div>'
+      + '</div>'
+      + '<div class="hub-card hub-card-wide"><h3>Edit Grade</h3>'
+      + '<p id="hub-vg-player-label" class="hub-meta">Select a player from the list</p>'
+      + '<input type="hidden" id="hub-vg-slug">'
+      + '<label>Vault Grade (0–99)</label>'
+      + '<input id="hub-vg-grade" type="number" min="0" max="99" step="0.1" placeholder="88.5">'
+      + '<label>Grade Explanation</label>'
+      + '<textarea id="hub-vg-explanation" rows="4" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#111827;color:#f8fafc;font:inherit" placeholder="Why this grade…"></textarea>'
+      + '<label>Timestamp</label>'
+      + '<input id="hub-vg-ts" type="datetime-local">'
+      + '<div class="hub-btn-row" style="margin-top:10px">'
+      + '<button type="button" class="hub-btn" id="hub-vg-save">Save Vault Grade</button>'
+      + '<button type="button" class="hub-btn secondary" id="hub-vg-clear">Clear Override</button>'
+      + '</div>'
+      + '<p id="hub-vg-status" class="hub-meta"></p>'
+      + '</div>'
+      + '</div>';
+
+    var rosterCache = [];
+
+    function vgLog(msg, cls) {
+      var el = document.getElementById('hub-vg-status');
+      if (el) { el.textContent = msg; el.className = 'hub-meta ' + (cls || ''); }
+    }
+
+    function renderVgList(q) {
+      var listEl = document.getElementById('hub-vg-list');
+      if (!listEl) return;
+      var query = String(q || '').toLowerCase().trim();
+      var rows = rosterCache.filter(function (p) {
+        if (!query) return true;
+        return String(p.name || '').toLowerCase().indexOf(query) >= 0 || String(p.slug || '').toLowerCase().indexOf(query) >= 0;
+      }).slice(0, 80);
+      if (!rows.length) {
+        listEl.innerHTML = '<div class="info">No players found.</div>';
+        return;
+      }
+      listEl.innerHTML = rows.map(function (p) {
+        var grade = p.ratingOverride != null ? p.ratingOverride : (p.displayRating != null ? p.displayRating : p.rating);
+        return '<button type="button" data-vg-slug="' + p.slug + '" style="display:block;width:100%;text-align:left;background:transparent;border:none;color:#cbd5e1;padding:6px 4px;cursor:pointer;font:inherit">'
+          + (p.name || p.slug) + ' · ' + (grade != null ? grade : '—') + (p.vaultGradeExplanation ? ' · ✎' : '')
+          + '</button>';
+      }).join('');
+      listEl.querySelectorAll('[data-vg-slug]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var slug = btn.getAttribute('data-vg-slug');
+          var p = rosterCache.find(function (x) { return x.slug === slug; });
+          if (!p) return;
+          document.getElementById('hub-vg-slug').value = slug;
+          document.getElementById('hub-vg-player-label').textContent = (p.name || slug) + ' (' + slug + ')';
+          document.getElementById('hub-vg-grade').value = p.ratingOverride != null ? p.ratingOverride : (p.displayRating != null ? p.displayRating : '');
+          document.getElementById('hub-vg-explanation').value = p.vaultGradeExplanation || '';
+          var ts = p.vaultGradeUpdatedAt ? new Date(p.vaultGradeUpdatedAt) : new Date();
+          document.getElementById('hub-vg-ts').value = ts.toISOString().slice(0, 16);
+        });
+      });
+    }
+
+    function loadRoster() {
+      apiGet('/api/roster/players')
+        .then(function (j) {
+          rosterCache = (j.players || []).sort(function (a, b) {
+            return (b.displayRating || 0) - (a.displayRating || 0);
+          });
+          renderVgList(document.getElementById('hub-vg-search').value);
+        })
+        .catch(function (e) { vgLog(e.message, 'err'); });
+    }
+
+    document.getElementById('hub-vg-search').addEventListener('input', function (e) {
+      renderVgList(e.target.value);
+    });
+
+    document.getElementById('hub-vg-save').addEventListener('click', function () {
+      var slug = document.getElementById('hub-vg-slug').value.trim();
+      if (!slug) return vgLog('Select a player first', 'err');
+      var grade = document.getElementById('hub-vg-grade').value;
+      var explanation = document.getElementById('hub-vg-explanation').value.trim();
+      var tsLocal = document.getElementById('hub-vg-ts').value;
+      var ts = tsLocal ? new Date(tsLocal).toISOString() : new Date().toISOString();
+      apiPost('/api/roster/players/' + encodeURIComponent(slug) + '/vault-grade', {
+        grade: grade,
+        gradeExplanation: explanation,
+        timestamp: ts
+      }).then(function (j) {
+        var idx = rosterCache.findIndex(function (x) { return x.slug === slug; });
+        if (idx >= 0) rosterCache[idx] = j.player;
+        try { localStorage.setItem('gv_roster_updated', String(Date.now())); } catch (e) {}
+        vgLog('Saved — grade live on site', 'ok');
+        renderVgList(document.getElementById('hub-vg-search').value);
+      }).catch(function (e) { vgLog(e.message, 'err'); });
+    });
+
+    document.getElementById('hub-vg-clear').addEventListener('click', function () {
+      var slug = document.getElementById('hub-vg-slug').value.trim();
+      if (!slug) return vgLog('Select a player first', 'err');
+      apiPost('/api/roster/players/' + encodeURIComponent(slug) + '/vault-grade', {
+        clear: true,
+        grade: null,
+        gradeExplanation: '',
+        timestamp: new Date().toISOString()
+      }).then(function (j) {
+        var idx = rosterCache.findIndex(function (x) { return x.slug === slug; });
+        if (idx >= 0) rosterCache[idx] = j.player;
+        try { localStorage.setItem('gv_roster_updated', String(Date.now())); } catch (e) {}
+        document.getElementById('hub-vg-grade').value = '';
+        document.getElementById('hub-vg-explanation').value = '';
+        vgLog('Override cleared', 'ok');
+        renderVgList(document.getElementById('hub-vg-search').value);
+      }).catch(function (e) { vgLog(e.message, 'err'); });
+    });
+
+    loadRoster();
+  }
+
   function renderGmRerunPanel(container) {
     container.innerHTML = ''
       + '<div class="hub-settings-grid">'
       + '<div class="hub-card hub-card-wide"><h3>GM — Re-run Modules</h3>'
       + '<p class="hub-meta">Trigger rebuilds and QA without leaving Admin Hub. Requires valid admin PIN.</p>'
       + '<div class="hub-btn-row">'
+      + '<button type="button" class="hub-btn" data-gm-action="force-autoposter">Force Autoposter</button>'
+      + '<button type="button" class="hub-btn secondary" data-gm-action="live-refresh">Re-run Latest Updates</button>'
+      + '<button type="button" class="hub-btn secondary" data-gm-action="team-rebuild">Re-run Team Tab</button>'
       + '<button type="button" class="hub-btn" data-gm-action="qa-run">Run QA Crawl</button>'
       + '<button type="button" class="hub-btn secondary" data-gm-action="film-rebuild">Rebuild Film Room</button>'
       + '<button type="button" class="hub-btn secondary" data-gm-action="scouting-rebuild">Rebuild Scouting DB</button>'
       + '<button type="button" class="hub-btn secondary" data-gm-action="heat-refresh">Refresh Heat Check</button>'
       + '<button type="button" class="hub-btn secondary" data-gm-action="gm2-repair">GM Auto-Repair</button>'
+      + '<button type="button" class="hub-btn secondary" data-gm-action="mobile-latest-refresh">Force Mobile Auto-Refresh Now</button>'
       + '<button type="button" class="hub-btn secondary" data-gm-action="purge-beat">Purge Non-UF Beat</button>'
       + '</div></div>'
       + '<div class="hub-card hub-card-wide"><h3>GM Log</h3><div id="hub-gm-log" class="hub-log"></div></div>'
@@ -293,11 +422,19 @@
         var action = btn.getAttribute('data-gm-action');
         btn.disabled = true;
         var p;
-        if (action === 'qa-run') p = apiPost('/api/qa/run', { scope: 'full' });
+        if (action === 'force-autoposter') p = apiPost('/api/autoposter/force-post', {});
+        else if (action === 'live-refresh') p = apiPost('/api/live/refresh', {});
+        else if (action === 'team-rebuild') p = apiPost('/api/ops/run-job', { jobId: 'depth-chart-refresh' });
+        else if (action === 'qa-run') p = apiPost('/api/qa/run', { scope: 'full' });
         else if (action === 'film-rebuild') p = apiPost('/api/film-room/admin/rebuild', { scope: 'all' });
         else if (action === 'scouting-rebuild') p = apiPost('/api/war-room/admin/rebuild-scouting', {});
         else if (action === 'heat-refresh') p = apiGet('/api/recruiting/heat-check?force=1&pin=' + encodeURIComponent(pin()));
         else if (action === 'gm2-repair') p = apiPost('/api/gm2/auto-repair/run', {});
+        else if (action === 'mobile-latest-refresh') {
+          p = apiPost('/api/live/refresh', {}).then(function () {
+            return apiPost('/api/live/admin/mobile-refresh-signal', {});
+          });
+        }
         else if (action === 'purge-beat') p = apiPost('/api/live/admin/purge-non-uf-beat', {});
         else p = Promise.resolve();
         p.then(function (j) { gmLog('Done: ' + JSON.stringify(j).slice(0, 200), 'ok'); })
@@ -495,6 +632,7 @@
         if (!panelEl.getAttribute('data-rendered')) {
           panelEl.setAttribute('data-rendered', '1');
           if (panelId === 'rerun') renderGmRerunPanel(panelEl);
+          else if (panelId === 'vault-grades') renderVaultGradesPanel(panelEl);
           else renderSettingsPanel(panelEl);
         }
         return;

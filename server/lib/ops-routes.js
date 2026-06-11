@@ -5,27 +5,8 @@ const opsAlerts = require('./ops-alerts');
 const deployMonitor = require('./deploy-monitor');
 const { buildOpsStatusReport } = require('./ops-status');
 
-const ADMIN_PIN =
-  process.env.OPS_ADMIN_PIN ||
-  process.env.RECRUITING_ADMIN_PIN ||
-  process.env.EMAIL_TEST_PIN ||
-  'GV2026admin';
-const CRON_SECRET = process.env.INGEST_CRON_SECRET || ADMIN_PIN;
-
-function verifyAdminPin(pin) {
-  return !!pin && pin === ADMIN_PIN;
-}
-
-function pinFromReq(req) {
-  return (
-    req.headers['x-ops-pin'] ||
-    req.headers['x-monitoring-secret'] ||
-    req.headers['x-recruiting-pin'] ||
-    req.headers['x-ingest-secret'] ||
-    req.body?.pin ||
-    req.query?.pin
-  );
-}
+const { verifyAdminPin, primaryAdminPin, pinFromReq } = require('./admin-pin');
+const CRON_SECRET = process.env.INGEST_CRON_SECRET || primaryAdminPin();
 
 function requireOpsAuth(req, res) {
   const secret = pinFromReq(req);

@@ -2,15 +2,10 @@ const liveStore = require('./live-store');
 const { refreshLiveDashboard, getDashboard } = require('./live-aggregator');
 const gm2 = require('./gm2');
 
-const LIVE_ADMIN_PIN =
-  process.env.LIVE_ADMIN_PIN || process.env.RECRUITING_ADMIN_PIN || process.env.CONTENT_ADMIN_PIN || 'GV2026admin';
-
-function verifyAdminPin(pin) {
-  return !!pin && pin === LIVE_ADMIN_PIN;
-}
+const { verifyAdminPin, pinFromReq: adminPinFromReq } = require('./admin-pin');
 
 function pinFromReq(req) {
-  return req.headers['x-live-pin'] || req.headers['x-recruiting-pin'] || req.body?.pin || req.query?.pin;
+  return adminPinFromReq(req) || req.headers['x-live-pin'];
 }
 
 function mountLiveRoutes(app) {
@@ -172,14 +167,27 @@ function mountLiveRoutes(app) {
     return res.json({ ok: true, remaining });
   });
 
+  app.post('/api/live/admin/mobile-refresh-signal', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const dashCache = require('./live-dashboard-cache');
+      const signal = dashCache.bumpMobileRefreshSignal();
+      return res.json({ ok: true, mobileRefreshSignal: signal });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/live/admin/purge-non-uf-beat', async (req, res) => {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
     try {
-      const { purgeNonFloridaBeatContent, refreshBeatStream } = require('./live-beat');
+      const { purgeNonFloridaBeatContent } = require('./live-beat');
       const purged = await purgeNonFloridaBeatContent({ refreshDashboard: true });
-      const refreshed = await refreshBeatStream();
+      const refreshed = await require('./live-beat').refreshBeatStream();
       return res.json({ ok: true, purged, refreshed, beat: require('./live-beat').getBeatPosts(40) });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

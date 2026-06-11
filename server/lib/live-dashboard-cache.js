@@ -12,6 +12,16 @@ let snapshot = null;
 let snapshotAt = 0;
 let warming = false;
 let serverReady = false;
+let mobileRefreshSignal = 0;
+
+function bumpMobileRefreshSignal() {
+  mobileRefreshSignal = Date.now();
+  return mobileRefreshSignal;
+}
+
+function getMobileRefreshSignal() {
+  return mobileRefreshSignal;
+}
 
 function minimalFallback(reason) {
   return {
@@ -21,7 +31,8 @@ function minimalFallback(reason) {
     updatedAt: new Date().toISOString(),
     stale: true,
     degraded: true,
-    cacheReason: reason || 'empty'
+    cacheReason: reason || 'empty',
+    mobileRefreshSignal: getMobileRefreshSignal()
   };
 }
 
@@ -109,7 +120,8 @@ function getCachedDashboard({ feedLimit = DEFAULT_FEED_LIMIT, allowStale = true 
     feed: (snapshot.feed || []).slice(0, limit),
     stale: stale || snapshot.stale === true,
     degraded: snapshot.degraded === true,
-    cacheAgeMs: snapshotAt ? now - snapshotAt : null
+    cacheAgeMs: snapshotAt ? now - snapshotAt : null,
+    mobileRefreshSignal: getMobileRefreshSignal()
   };
 
   if (!allowStale && out.stale && !warming) {
@@ -130,7 +142,8 @@ function getCacheMeta() {
     cacheAgeMs: snapshotAt ? Date.now() - snapshotAt : null,
     feedCount: snapshot?.feed?.length || 0,
     beatCount: snapshot?.beat?.posts?.length || 0,
-    stale: snapshot?.stale === true
+    stale: snapshot?.stale === true,
+    mobileRefreshSignal: getMobileRefreshSignal()
   };
 }
 
@@ -151,5 +164,7 @@ module.exports = {
   getCacheMeta,
   scheduleBackgroundRefresh,
   minimalFallback,
+  bumpMobileRefreshSignal,
+  getMobileRefreshSignal,
   REFRESH_MS
 };
