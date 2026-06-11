@@ -484,6 +484,93 @@ async function queueAutoposter(row, intelItem, built) {
   }
 }
 
+/** Autoposter must not go silent on trusted beat-writer recruiting intel. */
+const BEAT_SILENCE_ALLOWED = new Set([
+  'duplicate',
+  'intel_duplicate',
+  'intel_exists',
+  'non_player_intel',
+  'snapshot',
+  'stale',
+  'false_commit_intel',
+  'false_commit_queue'
+]);
+
+function hasRecruitingIntelSignal(text) {
+  return RECRUITING_INTEL_SIGNAL_RES.some((re) => re.test(String(text || '')));
+}
+
+function inferBeatEventLabel(row) {
+  const d = String(row.detail || row.status || row.eventType || '').toLowerCase();
+  if (/official visit|\bov\b/.test(d)) return 'take an official visit to Gainesville';
+  if (/unofficial|\buv\b/.test(d)) return 'visit campus';
+  if (/commit|pledge/.test(d)) return 'commit to Florida';
+  if (/decommit|flip/.test(d)) return 're-open his recruitment';
+  if (/offer|verb/.test(d)) return 'receive an offer';
+  if (/portal/.test(d)) return 'enter the transfer portal';
+  if (/visit/.test(d)) return 'schedule a visit';
+  return 'make a move in his recruitment';
+}
+
+async function queueBeatMonitoringFallback(row, skipReason) {
+  if (!row?.fingerprint || BEAT_SILENCE_ALLOWED.has(skipReason)) {
+    return { queued: false, reason: 'silence_allowed' };
+  }
+  const player = row.playerName || 'a Florida target';
+  const event = inferBeatEventLabel(row);
+  const text = `Per multiple reports, ${player} is expected to ${event}. Monitoring.`;
+  try {
+    const xStore = require('./x-autoposter-store');
+    const policy = require('./x-autoposter-policy');
+    const copy = require('./x-autoposter-copy');
+    const fp = `monitor_${row.fingerprint}`;
+    const doc = xStore.loadQueue();
+    const dup = doc.items.some(
+      (i) => i.intelFingerprint === fp && (i.status === 'pending' || i.status === 'sent')
+    );
+    if (dup) return { queued: false, reason: 'duplicate' };
+    const payload = {
+      text: copy.appendSite ? copy.appendSite(text) : `${text} ${SITE_URL}`,
+      category: 'news',
+      topic: 'recruiting',
+      triggerType: 'beat_monitoring',
+      sources: [{ label: row.source || row.sourceHandle || 'Beat writer', url: row.articleUrl || SITE_URL }],
+      source: 'auto:beat-writer',
+      intelFingerprint: fp,
+      intelType: row.eventType || 'monitoring',
+      playerName: row.playerName || null,
+      identityConfirmed: false,
+      monitoringFallback: true,
+      skipReason,
+      scheduledAt: new Date(Date.now() + 3 * 60 * 1000).toISOString(),
+      status: 'pending'
+    };
+    const check = policy.validatePostContent(payload);
+    if (!check.valid) {
+      payload.text = copy.appendSite ? copy.appendSite(text) : text;
+    }
+    const out = xStore.enqueuePost(payload);
+    try {
+      require('./ops-monitor').logEvent({
+        subsystem: 'autoposter:beat-writer',
+        status: 'monitoring_fallback',
+        message: `Queued monitoring post (${skipReason})`,
+        details: { playerName: row.playerName, fingerprint: row.fingerprint }
+      });
+    } catch {
+      /* optional */
+    }
+    return { queued: true, item: out.item };
+  } catch (e) {
+    return { queued: false, reason: e.message };
+  }
+}
+
+async function maybeQueueBeatMonitoring(row, skipReason, { trustedWriter = false } = {}) {
+  if (!trustedWriter || !hasRecruitingIntelSignal(row.detail)) return null;
+  return queueBeatMonitoringFallback(row, skipReason);
+}
+
 function parseCollegeSchool(text) {
   const resolver = require('./contextual-identity-resolver');
   return resolver.parseVagueClues(text).school;
@@ -554,7 +641,8 @@ async function processBeatVisitIntelRow(row, snapshot) {
       gate.reason,
       gate.category || 'non_player_intel'
     );
-    return { skipped: true, reason: gate.reason, category: 'non_player_intel' };
+    const monitoringAutopost = await maybeQueueBeatMonitoring(row, gate.reason, { trustedWriter });
+    return { skipped: true, reason: gate.reason, category: 'non_player_intel', monitoringAutopost };
   }
   row.playerName = gate.playerName;
   row.playerSlug = gate.playerSlug || row.playerSlug;
@@ -639,6 +727,11 @@ async function processBeatVisitIntelRow(row, snapshot) {
     } catch {
       /* ops optional */
     }
+    const monitoringAutopost = await maybeQueueBeatMonitoring(
+      row,
+      enrichment.reason || 'identity_not_confirmed',
+      { trustedWriter }
+    );
     return {
       skipped: true,
       needs_resolution: !!enrichment.needs_resolution,
@@ -647,7 +740,8 @@ async function processBeatVisitIntelRow(row, snapshot) {
       source: row.source,
       confirmation: enrichment.confirmation || null,
       missingFields: enrichment.missingFields || enrichment.missingAfter || null,
-      fingerprint: row.fingerprint
+      fingerprint: row.fingerprint,
+      monitoringAutopost
     };
   }
 
@@ -675,7 +769,8 @@ async function processBeatVisitIntelRow(row, snapshot) {
       recheck.reason,
       recheck.category || 'non_player_intel'
     );
-    return { skipped: true, reason: recheck.reason, category: 'non_player_intel' };
+    const monitoringAutopost = await maybeQueueBeatMonitoring(row, recheck.reason, { trustedWriter });
+    return { skipped: true, reason: recheck.reason, category: 'non_player_intel', monitoringAutopost };
   }
   row.playerName = recheck.playerName || confirmedName;
   row.playerSlug = recheck.playerSlug || confirmedSlug;

@@ -34,7 +34,7 @@
     <meta name="description" content="GatorVault is the Florida Gators football hub — depth charts, recruiting boards, transfer portal intel, Film Room breakdowns, and live beat writer coverage. Start your free 30-day trial." />
     <meta name="keywords" content="Florida Gators football, UF football, Gators recruiting, Florida Gators depth chart, Gators transfer portal, Jon Sumrall, SEC football, Gator Nation" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta name="gv-build" content="mhome-v2-20260605" />
+    <meta name="gv-build" content="mhome-v3-20260611" />
     <link rel="canonical" href="https://gatorvaultinsider.com/" />
     <link rel="image_src" href="https://gatorvaultinsider.com/og-image.jpg?v=20260605" />
     <meta name="google-site-verification" content="CfKonZGeVMZBFJ3JhqaFhPfs7kS6-LvCmskXElgekTs" />
@@ -428,7 +428,8 @@
             #vault-interior.gv-mobile-active .live-feed-list{max-height:none;}
 
             .gv-hscroll-wrap{overflow:hidden;margin:0 -16px;touch-action:pan-y pinch-zoom;}
-            .gv-hscroll-track{display:flex;flex-wrap:nowrap;gap:12px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-y pinch-zoom;scroll-snap-type:x proximity;padding-bottom:4px;padding-left:16px;padding-right:16px;scrollbar-width:none;-ms-overflow-style:none;}
+            .gv-topgators-wrap{overflow:visible;touch-action:auto;margin-bottom:4px;}
+            .gv-hscroll-track{display:flex;flex-wrap:nowrap;gap:12px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y;scroll-snap-type:x proximity;padding-bottom:4px;padding-left:16px;padding-right:16px;scrollbar-width:none;-ms-overflow-style:none;}
             .gv-hscroll-track::-webkit-scrollbar{display:none;}
             .gv-hscroll-track>*{flex:0 0 auto;scroll-snap-align:start;}
 
@@ -453,7 +454,43 @@
             .gv-trending-name{font-size:12px;font-weight:700;color:#f8fafc;line-height:1.2;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
             .gv-trending-meta{font-size:10px;color:#64748b;line-height:1.2;}
 
-            .gv-top-gator-card{flex:0 0 112px;max-width:112px;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;padding-top:4px;}
+            .gv-top-gator-card{flex:0 0 130px;max-width:130px;min-width:130px;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;padding-top:4px;scroll-snap-align:start;}
+            #gv-mhome-topgators{padding-right:48px;-webkit-overflow-scrolling:touch;overflow-x:auto;overflow-y:hidden;touch-action:pan-x pan-y;scroll-snap-type:x mandatory;}
+            .gv-mteam-subhdr{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;margin:16px 0 10px;}
+            .gv-team-era-card{flex:0 0 120px;min-width:120px;background:#121c2e;border:1px solid rgba(0,48,135,.4);border-radius:12px;padding:14px 12px;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+            .gv-team-era-hero{font-size:28px;display:block;margin-bottom:6px;}
+            .gv-team-era-label{font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;color:#f8fafc;display:block;}
+            .gv-team-era-sub{font-size:10px;color:#64748b;display:block;margin-top:4px;line-height:1.3;}
+            .gv-team-ach-tile{background:#121c2e;border:1px solid rgba(0,48,135,.4);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;min-height:88px;-webkit-tap-highlight-color:transparent;}
+            .gv-team-ach-icon{font-size:22px;display:block;margin-bottom:6px;}
+            .gv-team-ach-label{font-size:11px;font-weight:700;color:#f8fafc;line-height:1.25;display:block;}
+            .gv-mteam-tile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+            .gv-coach-card{display:flex;align-items:center;gap:12px;width:100%;background:#121c2e;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;}
+            .gv-coach-headshot{flex:0 0 44px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,rgba(0,48,135,.5),rgba(250,70,22,.2));display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-weight:700;font-size:14px;color:#fff;}
+            .gv-coach-info{flex:1;min-width:0;}
+            .gv-coach-name{font-size:14px;font-weight:600;color:#f8fafc;margin:0;display:block;}
+            .gv-coach-title{font-size:10px;font-weight:700;color:var(--gv-uf-orange);text-transform:uppercase;letter-spacing:.04em;margin-top:2px;display:block;}
+            .gv-coach-chevron{color:#64748b;font-size:18px;}
+            .gv-team-support-link{width:100%;background:transparent;border:1px dashed rgba(0,48,135,.45);border-radius:12px;padding:12px;color:#93c5fd;font-size:13px;font-weight:700;margin-top:4px;cursor:pointer;}
+            .gv-mteam-pos-chip{flex:0 0 auto;font-size:11px;font-weight:700;padding:8px 12px;border-radius:999px;border:1px solid rgba(0,48,135,.4);background:#0a1628;color:#94a3b8;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+            .gv-mteam-pos-chip.active{background:rgba(250,70,22,.15);border-color:var(--gv-uf-orange);color:#fff;}
+            .gv-mteam-roster-filters{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;margin-bottom:12px;}
+            .gv-mteam-roster-card{display:flex;align-items:center;gap:12px;background:#121c2e;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+            .gv-mteam-roster-av{flex:0 0 40px;width:40px;height:40px;border-radius:50%;background:#0a1628;border:2px solid var(--gv-uf-blue);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--gv-uf-orange);font-size:13px;}
+            .gv-mteam-roster-meta{flex:1;min-width:0;}
+            .gv-mteam-roster-name{font-size:14px;font-weight:600;color:#f8fafc;display:block;}
+            .gv-mteam-roster-sub{font-size:11px;color:#64748b;display:block;margin-top:2px;}
+            .gv-mteam-dc-card{display:flex;align-items:center;justify-content:space-between;width:100%;background:#121c2e;border:1px solid rgba(0,48,135,.4);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;}
+            .gv-mteam-dc-units{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+            .gv-mteam-dc-unit{font-size:10px;font-weight:700;text-transform:uppercase;padding:6px 10px;border-radius:8px;background:rgba(0,48,135,.25);color:#93c5fd;border:1px solid rgba(0,48,135,.35);}
+            #gv-team-detail-modal.highlight-modal-ov{z-index:200;}
+            .gv-team-detail-lead{font-size:15px;color:#e2e8f0;line-height:1.5;margin:0 0 14px;}
+            .gv-team-detail-h{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gv-uf-orange);margin:14px 0 8px;}
+            .gv-team-detail-list{margin:0;padding-left:18px;color:#94a3b8;font-size:14px;line-height:1.5;}
+            .gv-schedule-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#121c2e;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+            .gv-schedule-opp{font-size:14px;font-weight:600;color:#f8fafc;margin:0;}
+            .gv-schedule-meta{font-size:11px;color:#64748b;margin:2px 0 0;}
+            .gv-schedule-tv{font-size:10px;font-weight:700;color:var(--gv-uf-orange);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;}
             .gv-top-gator-rank{position:absolute;top:0;left:50%;transform:translateX(-50%);font-size:9px;font-weight:800;color:var(--gv-uf-orange);letter-spacing:.04em;text-transform:uppercase;}
             .gv-top-gator-grade{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:22px;padding:0 6px;border-radius:999px;font-family:'Oswald',sans-serif;font-weight:700;font-size:11px;margin:4px auto 6px;border:1px solid;}
             .gv-top-gator-grade.rating-elite{border-color:#fbbf24;color:#fbbf24;background:rgba(251,191,36,.12);}
@@ -541,10 +578,11 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style id="gv-critical">:root{--gv-ticker-h:44px}#gv-site-ticker{z-index:500!important;position:fixed;top:0;left:0;right:0;height:44px}#gv-alert-banner{z-index:510!important;position:fixed;top:0;left:0;right:0}body.gv-has-site-ticker #nav-main,body.gv-has-site-ticker nav.fixed{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #gv-mobile-header,body.gv-has-site-ticker .gv-mob-header{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior:not(.gv-mobile-active){padding-top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior .gv-desk-only.sticky.top-14{top:calc(var(--gv-ticker-h) + 3.5rem)!important}body.gv-has-site-ticker #hero-sec{padding-top:calc(8rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker #install-banner{top:calc(4rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker .gv-alert-banner{top:var(--gv-ticker-h)}</style>
-    <link rel="stylesheet" href="/gv-global.css?v=mhome-v2-20260605">
-    <link rel="stylesheet" href="/gv-feedback.css?v=mhome-v2-20260605">
-    <script src="/gv-global.js?v=mhome-v2-20260605" defer></script>
-    <script src="/gv-feedback.js?v=mhome-v2-20260605" defer></script>
+    <link rel="stylesheet" href="/gv-global.css?v=mhome-v3-20260611">
+    <link rel="stylesheet" href="/gv-feedback.css?v=mhome-v3-20260611">
+    <script src="/gv-global.js?v=mhome-v3-20260611" defer></script>
+    <script src="/gv-feedback.js?v=mhome-v3-20260611" defer></script>
+    <script src="/js/gv-team-mobile.js?v=mhome-v3-20260611" defer></script>
 </head>
 <body data-id="0" class="gv-has-site-ticker">
     <app-icon data-id="1" hidden data-icon="shield" data-palette="Blue"></app-icon>
@@ -604,6 +642,17 @@
                 </div>
             </div>
             <div class="p-4 text-xs text-surface-200/60" id="hl-modal-foot"></div>
+        </div>
+    </div>
+
+    <!-- Team detail modal (mobile Team tab) -->
+    <div id="gv-team-detail-modal" class="highlight-modal-ov hidden" role="dialog" aria-modal="true" aria-labelledby="gv-team-detail-title">
+        <div class="highlight-modal max-w-lg">
+            <div class="flex items-center justify-between gap-3 p-4 border-b border-gator-blue/20">
+                <h3 id="gv-team-detail-title" class="font-display text-lg font-bold text-white leading-snug"></h3>
+                <button id="gv-team-detail-close" type="button" class="text-surface-200 hover:text-white p-2 text-xl leading-none" aria-label="Close">✕</button>
+            </div>
+            <div id="gv-team-detail-body" class="p-4 text-surface-200 text-sm leading-relaxed"></div>
         </div>
     </div>
 
@@ -1050,7 +1099,7 @@
                         <div class="gv-mob-link-row">
                             <h2 class="gv-mob-module-hdr" style="margin:0;padding:0;border:0;">Top Gators — Vault Rating</h2>
                         </div>
-                        <div class="gv-hscroll-wrap">
+                        <div class="gv-hscroll-wrap gv-topgators-wrap">
                             <div id="gv-mhome-topgators" class="gv-hscroll-track" data-gv-hscroll="1"></div>
                         </div>
                     </section>
@@ -1067,16 +1116,37 @@
                 <!-- ====== MOBILE TEAM (bottom nav) ====== -->
                 <div id="vpane-mteam" class="vpane gv-mob-only fade-in">
                     <section class="gv-mob-section gv-mob-module">
-                        <h2 class="gv-mob-module-hdr gv-mob-module-hdr--accent">Team</h2>
-                        <div id="gv-mteam-hub"></div>
+                        <h2 class="gv-mob-module-hdr gv-mob-module-hdr--accent">Team Overview</h2>
+                        <h3 class="gv-mteam-subhdr">Program History</h3>
+                        <div class="gv-hscroll-wrap"><div id="gv-mteam-eras-track" class="gv-hscroll-track" data-gv-hscroll="1"></div></div>
+                        <h3 class="gv-mteam-subhdr">Program Achievements</h3>
+                        <div id="gv-mteam-achievements" class="gv-mteam-tile-grid"></div>
+                        <h3 class="gv-mteam-subhdr">Team Identity</h3>
+                        <button type="button" class="gv-team-nav-card" id="gv-mteam-identity-btn">
+                            <span class="gv-team-nav-icon">🐊</span>
+                            <span><p class="gv-team-nav-label">Culture &amp; Traditions</p><p class="gv-team-nav-sub">The Swamp · Orange &amp; Blue · Gator Nation</p></span>
+                        </button>
                     </section>
                     <section class="gv-mob-section gv-mob-module">
                         <h2 class="gv-mob-module-hdr">Coaching Staff</h2>
                         <div id="gv-mteam-staff"></div>
                     </section>
                     <section class="gv-mob-section gv-mob-module">
-                        <h2 class="gv-mob-module-hdr">Team History</h2>
-                        <div id="gv-mteam-history"></div>
+                        <h2 class="gv-mob-module-hdr">Roster</h2>
+                        <div id="gv-mteam-roster-filters" class="gv-mteam-roster-filters"></div>
+                        <div id="gv-mteam-roster-list"></div>
+                    </section>
+                    <section class="gv-mob-section gv-mob-module">
+                        <h2 class="gv-mob-module-hdr">Depth Chart</h2>
+                        <button type="button" class="gv-mteam-dc-card" id="gv-mteam-dc-open">
+                            <span><p class="gv-team-nav-label" style="margin:0">2026 Spring Depth Chart</p><p class="gv-team-nav-sub">Offense · Defense · Special Teams — two-deep</p></span>
+                            <span class="gv-coach-chevron">›</span>
+                        </button>
+                        <div class="gv-mteam-dc-units">
+                            <span class="gv-mteam-dc-unit">Offense</span>
+                            <span class="gv-mteam-dc-unit">Defense 3-3-5</span>
+                            <span class="gv-mteam-dc-unit">Special Teams</span>
+                        </div>
                     </section>
                 </div>
 
@@ -1278,7 +1348,7 @@
                 <div data-id="652" id="vpane-highlights" class="vpane fade-in space-y-6">
                     <div>
                         <h1 data-id="653" class="font-display text-2xl md:text-3xl font-bold text-white">📺 Film Room</h1>
-                        <p class="text-surface-200 text-sm mt-1 max-w-2xl">Verified coaching knowledge — scheme library, concept breakdowns, recruiting fit, and opponent prep. Sourced from clinics, OC/DC interviews, analyst breakdowns, and public film study. AI translates only; no invented content.</p>
+                        <p class="text-surface-200 text-sm mt-1 max-w-2xl">Verified coaching knowledge — scheme library, concept breakdowns, recruiting fit, and opponent prep. Sourced from clinics, OC/DC interviews, analyst breakdowns, and public film study.</p>
                     </div>
                     <div id="film-room-categories" class="flex flex-wrap gap-2"></div>
                     <div id="highlights-shell"></div>
@@ -1752,8 +1822,8 @@
                 </div>
             </div>
 
-            <p class="text-[10px] text-surface-200/25 mt-1 gv-mob-only" id="gv-build-stamp-mobile">UI mhome-v2-20260605</p>
-            <footer data-id="914" class="gv-desk-only text-center text-xs text-surface-200/40 py-6 border-t border-gator-blue/10 mt-8"><p data-id="915">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p><p class="text-[10px] text-surface-200/25 mt-1" id="gv-build-stamp">UI mhome-v2-20260605</p></footer>
+            <p class="text-[10px] text-surface-200/25 mt-1 gv-mob-only" id="gv-build-stamp-mobile">UI mhome-v3-20260611</p>
+            <footer data-id="914" class="gv-desk-only text-center text-xs text-surface-200/40 py-6 border-t border-gator-blue/10 mt-8"><p data-id="915">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p><p class="text-[10px] text-surface-200/25 mt-1" id="gv-build-stamp">UI mhome-v3-20260611</p></footer>
         </div>
     </div>
 
@@ -3049,17 +3119,33 @@
     ];
     var games=[
         {id:'fau',label:'Sep 5 vs FAU',opp:'FAU Owls',date:'September 5, 2026 · 7:45 PM ET',venue:'Ben Hill Griffin Stadium',ufPct:94,tv:'SEC Network',kickoff:'7:45 PM ET',weather:'84°F · Partly cloudy · 8 mph SW',spread:'UF -31.5',total:'52.5',injuries:[{team:'UF',player:'Patrick Durkin',status:'Probable',note:'New kicker role'},{team:'UF',player:'Myles Graham',status:'Healthy',note:'Full go'},{team:'OPP',player:'FAU RB1',status:'Questionable',note:'Lower-body'}],matchups:[{uf:'Jayden Woods (JACK)',opp:'FAU LT',edge:'UF'},{uf:'Eric Singleton Jr.',opp:'CB1',edge:'UF'},{uf:'Rebuilt OL',opp:'FAU front',edge:'Even'}],opponentPreview:'FAU runs a spread-RPO attack with tempo. UF\'s 3-3-5 is built to neutralize quick-game concepts — watch edge setting and STAR fit early.',keys:['Establish run with Baugh early','QB1: no turnovers in debut','Defense sets physical tone'],swing:[{name:'Jones Jr. / Philo',role:'Efficiency matters in debut'},{name:'Jayden Woods',role:'JACK sets the edge'},{name:'Patrick Durkin',role:'FG in new role'}],film:'FAU runs spread RPO. The 3-3-5 is built to neutralize this.',pred:'UF 38 · FAU 10'},
-        {id:'samford',label:'Sep 13 vs Samford',opp:'Samford Bulldogs',date:'September 13, 2026 · TBD',venue:'Ben Hill Griffin Stadium',ufPct:97,keys:['Rotate depth','Evaluate OL under live action','Sophomore WRs get extended looks'],swing:[{name:'Tramell Jones Jr.',role:'Showcase dual-threat'},{name:'Vernell Brown III',role:'Catch targets'},{name:'Freshman LBs',role:'Depth evaluation'}],film:'Wing-T misdirection. Treat as dress rehearsal.',pred:'UF 52 · Samford 3'},
-        {id:'auburn',label:'Sep 19 @ Auburn',opp:'Auburn Tigers',date:'September 19, 2026 · 7:00 PM ET',venue:'Jordan-Hare Stadium',ufPct:52,keys:['Control LOS','Limit explosive plays','Win 3rd down'],swing:[{name:'Singleton Jr.',role:'First road SEC test'},{name:'Jaden Robinson',role:'Communication in noise'},{name:'Cormani McClain',role:'Neutralize their #1 WR'}],film:'Auburn runs physical downhill ball. Jordan-Hare in September is one of the toughest environments.',pred:'UF 24 · Auburn 21'},
-        {id:'uga',label:'Oct 31 vs Georgia',opp:'Georgia Bulldogs',date:'October 31, 2026 · TBD',venue:'EverBank Stadium (Jacksonville)',ufPct:41,keys:['Control time of possession','Get pressure on their QB','Establish run before going downfield'],swing:[{name:'Jadan Baugh',role:'Must go 100+ yards'},{name:'Jayden Woods',role:'Must generate pressure'},{name:'Cormani McClain',role:'Must neutralize Georgia WR1'}],film:'Georgia has owned this series. UF\'s only path is controlling ball.',pred:'UF 27 · Georgia 24'},
-        {id:'fsu',label:'Nov 27 @ FSU',opp:'Florida State Seminoles',date:'November 27, 2026 · Noon ET',venue:'Doak Campbell Stadium',ufPct:48,keys:['Win field position battle','Avoid penalties','Win turnover margin'],swing:[{name:'QB1',role:'Composure in hostile environment'},{name:'Jaden Robinson',role:'Field general in noise'},{name:'Myles Graham',role:'Contain their TE weapon'}],film:'Everything on the line. Preparation wins this type of game.',pred:'UF 31 · FSU 28'}
+        {id:'charlotte',label:'Sep 12 vs Charlotte',opp:'Charlotte 49ers',date:'September 12, 2026 · 5:30 PM ET',venue:'Ben Hill Griffin Stadium',ufPct:93,tv:'SEC Network',kickoff:'5:30 PM ET',keys:['Control tempo and field position','Evaluate depth in second half','Clean special teams'],swing:[{name:'Eric Singleton Jr.',role:'Vertical threat'},{name:'Jaden Baugh',role:'Run-game rhythm'},{name:'STAR',role:'Coverage vs slot'}],film:'Charlotte runs spread concepts. UF should win line of scrimmage and limit explosives.',pred:'UF 42 · Charlotte 10'},
+        {id:'auburn',label:'Sep 19 @ Auburn',opp:'Auburn Tigers',date:'September 19, 2026 · 7:00 PM ET',venue:'Jordan-Hare Stadium',ufPct:52,tv:'ESPN',kickoff:'7:00 PM ET',keys:['Control LOS','Limit explosive plays','Win 3rd down'],swing:[{name:'Singleton Jr.',role:'First road SEC test'},{name:'Jaden Robinson',role:'Communication in noise'},{name:'Cormani McClain',role:'Neutralize their #1 WR'}],film:'Auburn runs physical downhill ball. Jordan-Hare in September is one of the toughest environments.',pred:'UF 24 · Auburn 21'},
+        {id:'olemiss',label:'Oct 3 vs Ole Miss',opp:'Ole Miss Rebels',date:'October 3, 2026 · FLEX',venue:'Ben Hill Griffin Stadium',ufPct:48,tv:'FLEX',keys:['Match their tempo without self-inflicted mistakes','Pressure their QB','Win early downs'],swing:[{name:'Jayden Woods',role:'Edge pressure'},{name:'QB1',role:'Avoid negative plays'},{name:'OL',role:'Pass pro vs stunts'}],film:'Ole Miss tempo offense stresses communication. STAR and JACK must fit run and pass.',pred:'UF 31 · Ole Miss 28'},
+        {id:'missouri',label:'Oct 10 @ Missouri',opp:'Missouri Tigers',date:'October 10, 2026 · FLEX',venue:'Memorial Stadium, Columbia MO',ufPct:55,tv:'FLEX',keys:['Establish run on road','Win turnover battle','Execute red zone'],swing:[{name:'Jaden Baugh',role:'Physical run game'},{name:'Secondary',role:'Limit deep shots'},{name:'K/P',role:'Field position'}],film:'Missouri uses RPO and play-action. Discipline in run fits is critical.',pred:'UF 27 · Missouri 24'},
+        {id:'lsu',label:'Oct 17 vs LSU',opp:'LSU Tigers',date:'October 17, 2026 · EARLY',venue:'Ben Hill Griffin Stadium',ufPct:46,tv:'EARLY',keys:['Set edge vs their run game','Win one-on-ones outside','Finish drives'],swing:[{name:'DL',role:'Interior push'},{name:'Singleton Jr.',role:'Separation vs press'},{name:'LB corps',role:'Fit gaps vs power run'}],film:'LSU physical in the trenches. Night atmosphere possible — execution under pressure.',pred:'UF 28 · LSU 27'},
+        {id:'texas',label:'Oct 24 @ Texas',opp:'Texas Longhorns',date:'October 24, 2026 · EARLY',venue:'DKR-Texas Memorial Stadium',ufPct:44,tv:'EARLY',keys:['Protect the football','Win early downs','Limit explosives'],swing:[{name:'QB1',role:'Decision-making vs pressure'},{name:'Secondary',role:'Deep ball discipline'},{name:'OL',role:'Road pass protection'}],film:'Texas balanced attack with elite skill. Must win situational football.',pred:'UF 24 · Texas 27'},
+        {id:'uga',label:'Oct 31 vs Georgia',opp:'Georgia Bulldogs',date:'October 31, 2026 · 3:30 PM ET',venue:'EverBank Stadium (Jacksonville)',ufPct:41,tv:'ABC',kickoff:'3:30 PM ET',keys:['Control time of possession','Get pressure on their QB','Establish run before going downfield'],swing:[{name:'Jadan Baugh',role:'Must go 100+ yards'},{name:'Jayden Woods',role:'Must generate pressure'},{name:'Cormani McClain',role:'Must neutralize Georgia WR1'}],film:'Georgia has owned this series. UF\'s only path is controlling ball.',pred:'UF 27 · Georgia 24'},
+        {id:'oklahoma',label:'Nov 7 @ Oklahoma',opp:'Oklahoma Sooners',date:'November 7, 2026 · FLEX',venue:'Gaylord Family Oklahoma Memorial Stadium',ufPct:47,tv:'FLEX',keys:['Match their tempo','Tackle in space','Win third down'],swing:[{name:'STAR',role:'Slot coverage'},{name:'QB1',role:'Rhythm vs blitz'},{name:'Run game',role:'Stay balanced'}],film:'Oklahoma spread offense — assignment soundness in secondary is key.',pred:'UF 30 · Oklahoma 28'},
+        {id:'kentucky',label:'Nov 14 vs Kentucky',opp:'Kentucky Wildcats',date:'November 14, 2026 · NIGHT',venue:'Ben Hill Griffin Stadium',ufPct:62,tv:'NIGHT',keys:['Physical run fits','Win the trenches','Finish in red zone'],swing:[{name:'Jaden Baugh',role:'Wear down front'},{name:'Defense',role:'Get off field on third down'},{name:'WR room',role:'Explosive plays'}],film:'Kentucky power run and play-action. Set the edge and force them to throw.',pred:'UF 31 · Kentucky 20'},
+        {id:'vandy',label:'Nov 21 @ Vanderbilt',opp:'Vanderbilt Commodores',date:'November 21, 2026 · EARLY',venue:'FirstBank Stadium, Nashville TN',ufPct:78,tv:'EARLY',keys:['Execute early','Avoid complacency','Develop depth'],swing:[{name:'Backup units',role:'Rep evaluation'},{name:'Special teams',role:'Hidden yardage'},{name:'QB1',role:'Efficient scoring drives'}],film:'Vanderbilt improving — treat as SEC road test, not layup.',pred:'UF 35 · Vanderbilt 17'},
+        {id:'scar',label:'Nov 28 vs South Carolina',opp:'South Carolina Gamecocks',date:'November 28, 2026 · 3:30 PM ET',venue:'Ben Hill Griffin Stadium',ufPct:58,tv:'ABC',kickoff:'3:30 PM ET',keys:['Win rivalry week','Control clock','Limit their QB run game'],swing:[{name:'Edge defenders',role:'Contain QB run'},{name:'Singleton Jr.',role:'Win one-on-ones'},{name:'LBs',role:'Run fits vs RPO'}],film:'South Carolina RPO-heavy. Eye discipline and gap integrity decide it.',pred:'UF 30 · South Carolina 23'},
+        {id:'fsu',label:'Dec 5 @ FSU',opp:'Florida State Seminoles',date:'December 5, 2026 · TBD',venue:'Doak Campbell Stadium',ufPct:48,keys:['Win field position battle','Avoid penalties','Win turnover margin'],swing:[{name:'QB1',role:'Composure in hostile environment'},{name:'Jaden Robinson',role:'Field general in noise'},{name:'Myles Graham',role:'Contain their TE weapon'}],film:'Everything on the line. Preparation wins this type of game.',pred:'UF 31 · FSU 28'}
     ];
     var ticketGames=[
-        {game:'🐊 UF vs FAU',date:'September 5, 2026 · 7:45 PM ET',venue:'Ben Hill Griffin Stadium, Gainesville FL',type:'HOME',note:''},
-        {game:'🐊 UF vs Samford',date:'September 13, 2026 · TBD',venue:'Ben Hill Griffin Stadium, Gainesville FL',type:'HOME',note:''},
-        {game:'🐊 UF @ Auburn',date:'September 19, 2026 · TBD',venue:'Jordan-Hare Stadium, Auburn AL',type:'AWAY',note:'Away game — limited Gator ticket allotment'},
-        {game:'🐊 UF vs Georgia',date:'October 31, 2026 · TBD',venue:'EverBank Stadium, Jacksonville FL',type:'NEUTRAL',note:'World\'s Largest Outdoor Cocktail Party — get tickets early'},
-        {game:'🐊 UF @ FSU',date:'November 27, 2026 · Noon ET',venue:'Doak Campbell Stadium, Tallahassee FL',type:'AWAY',note:'Black Friday Rivalry Game'}
+        {game:'🐊 UF vs FAU',date:'September 5, 2026 · 7:45 PM ET',venue:'Ben Hill Griffin Stadium, Gainesville FL',type:'HOME',note:'SEC Network'},
+        {game:'🐊 UF vs Charlotte',date:'September 12, 2026 · 5:30 PM ET',venue:'Ben Hill Griffin Stadium, Gainesville FL',type:'HOME',note:'SEC Network'},
+        {game:'🐊 UF @ Auburn',date:'September 19, 2026 · 7:00 PM ET',venue:'Jordan-Hare Stadium, Auburn AL',type:'AWAY',note:'ESPN · Away game — limited Gator ticket allotment'},
+        {game:'🐊 UF vs Ole Miss',date:'October 3, 2026 · FLEX',venue:'Ben Hill Griffin Stadium, Gainesville FL',type:'HOME',note:'Kickoff window TBD'},
+        {game:'🐊 UF @ Missouri',date:'October 10, 2026 · FLEX',venue:'Memorial Stadium, Columbia MO',type:'AWAY',note:'Kickoff window TBD'},
+        {game:'🐊 UF vs LSU',date:'October 17, 2026 · EARLY',venue:'Ben Hill Griffin Stadium, Gainesville FL',type:'HOME',note:'Early kickoff window'},
+        {game:'🐊 UF @ Texas',date:'October 24, 2026 · EARLY',venue:'DKR-Texas Memorial Stadium, Austin TX',type:'AWAY',note:'Early kickoff window'},
+        {game:'🐊 UF vs Georgia',date:'October 31, 2026 · 3:30 PM ET',venue:'EverBank Stadium, Jacksonville FL',type:'NEUTRAL',note:'ABC · World\'s Largest Outdoor Cocktail Party'},
+        {game:'🐊 UF @ Oklahoma',date:'November 7, 2026 · FLEX',venue:'Gaylord Family Oklahoma Memorial Stadium, Norman OK',type:'AWAY',note:'Kickoff window TBD'},
+        {game:'🐊 UF vs Kentucky',date:'November 14, 2026 · NIGHT',venue:'Ben Hill Griffin Stadium, Gainesville FL',type:'HOME',note:'Night game window'},
+        {game:'🐊 UF @ Vanderbilt',date:'November 21, 2026 · EARLY',venue:'FirstBank Stadium, Nashville TN',type:'AWAY',note:'Early kickoff window'},
+        {game:'🐊 UF vs South Carolina',date:'November 28, 2026 · 3:30 PM ET',venue:'Ben Hill Griffin Stadium, Gainesville FL',type:'HOME',note:'ABC'},
+        {game:'🐊 UF @ FSU',date:'December 5, 2026 · TBD',venue:'Doak Campbell Stadium, Tallahassee FL',type:'AWAY',note:'Rivalry finale'}
     ];
     var playerProfiles=[];
     var recentAlerts=[];
@@ -5115,7 +5201,7 @@
         var g=games.find(function(x){return x.id===gid;});if(!g)return;
         var card=document.getElementById('game-card');
         var oppPct=100-g.ufPct;
-        var html='<div class="mb-4"><h2 class="font-display text-xl md:text-2xl font-bold text-white mb-1">🐊 Florida Gators vs '+g.opp+'</h2><p class="text-surface-200 text-sm">'+g.date+' · '+g.venue+'</p></div>';
+        var html='<div class="mb-4"><h2 class="font-display text-xl md:text-2xl font-bold text-white mb-1">🐊 Florida Gators vs '+g.opp+'</h2><p class="text-surface-200 text-sm">'+g.date+' · '+g.venue+'</p>'+(g.tv?'<p class="text-gator-orange text-xs font-bold mt-1 uppercase tracking-wide">📺 '+g.tv+'</p>':'')+'</div>';
         html+='<div class="mb-6"><p class="text-xs text-surface-200 uppercase mb-2 font-semibold">Win Probability</p><div class="wp-bar"><div class="wp-fill-uf" style="width:'+g.ufPct+'%">UF '+g.ufPct+'%</div><div class="wp-fill-opp" style="width:'+oppPct+'%">'+oppPct+'%</div></div></div>';
         html+='<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"><div class="bg-surface-800 rounded-xl p-4"><h4 class="font-display text-sm font-bold text-gator-orange mb-2">3 Keys to the Game</h4><ol class="space-y-2 text-sm text-surface-200">';
         g.keys.forEach(function(k,i){html+='<li class="flex gap-2"><span class="text-gator-orange font-bold">'+(i+1)+'.</span>'+k+'</li>';});
@@ -6052,8 +6138,35 @@
         });
     }
 
+    function gvFeedDedupeKey(item){
+        var meta=item.meta||{};
+        var playerId=meta.playerSlug||meta.playerId||item.playerSlug||meta.on3Id||'';
+        var eventType=String(item.type||meta.eventType||meta.type||'').toLowerCase();
+        var raw=item.createdAt||meta.eventDate||meta.createdAt||'';
+        var eventDate='';
+        if(raw){try{eventDate=new Date(raw).toISOString().slice(0,10);}catch(e){}}
+        if(!playerId||!eventType)return null;
+        return playerId+'|'+eventType+'|'+eventDate;
+    }
+    function gvDedupeFeedItems(items){
+        var windowMs=48*60*60*1000;
+        var sorted=(items||[]).slice().sort(function(a,b){return new Date(b.createdAt||0)-new Date(a.createdAt||0);});
+        var kept=[];
+        sorted.forEach(function(item){
+            var key=gvFeedDedupeKey(item);
+            if(!key){kept.push(item);return;}
+            var ts=new Date(item.createdAt||0).getTime();
+            var dup=kept.some(function(k){
+                if(gvFeedDedupeKey(k)!==key)return false;
+                return Math.abs(new Date(k.createdAt||0).getTime()-ts)<windowMs;
+            });
+            if(!dup)kept.push(item);
+        });
+        return kept.sort(function(a,b){return new Date(b.createdAt||0)-new Date(a.createdAt||0);});
+    }
+
     function gvFilterLatestUpdates(feed){
-        return (feed||[]).filter(function(item){
+        var filtered=(feed||[]).filter(function(item){
             if(gvIsFalseLiveFeedItem(item))return false;
             var src=String(item.source||'').toLowerCase();
             if(/beat.?writer|auto:beat|needs_resolution|snapshot|internal|unverified/.test(src))return false;
@@ -6061,7 +6174,8 @@
             var norm=gvNormalizeLiveFeedType(item);
             if(!norm||norm==='info')return false;
             return true;
-        }).slice().sort(function(a,b){return new Date(b.createdAt||0)-new Date(a.createdAt||0);}).slice(0,6);
+        });
+        return gvDedupeFeedItems(filtered).slice(0,6);
     }
 
     function gvGetTopGatorsByRating(limit){
@@ -6120,66 +6234,6 @@
             +'<p class="gv-film-ep-title">'+gvLiveEsc(ep.title||'Latest episode')+'</p>'
             +'<p class="gv-film-ep-time">'+gvLiveEsc(gvLiveTimeAgo(ep.publishedAt))+(href?' · Tap to play':'')+'</p>'
             +'</div></div>';
-    }
-
-    var _gvMobileCoachingStaff=[
-        {name:'Jon Sumrall',title:'Head Coach'},
-        {name:'Buster Faulkner',title:'Offensive Coordinator'},
-        {name:'Brad White',title:'Defensive Coordinator'},
-        {name:'Anthony Harris',title:'Defensive Backs'},
-        {name:'Rusty Whitt',title:'Strength & Conditioning'}
-    ];
-
-    var _gvTeamHistoryItems=[
-        {id:'art-sumrall-6mo',title:'Sumrall\'s First 6 Months',sub:'Program assessment · June 2026'},
-        {id:'art-portal-class-2026',title:'2026 Portal Class Recap',sub:'23 in · 29 out'},
-        {id:'art-win-model',title:'2026 Win Probability Model',sub:'Schedule analytics'}
-    ];
-
-    function gvRenderMobileTeam(){
-        if(!gvIsMobile())return;
-        var hubEl=document.getElementById('gv-mteam-hub');
-        var staffEl=document.getElementById('gv-mteam-staff');
-        var histEl=document.getElementById('gv-mteam-history');
-        if(!hubEl)return;
-        hubEl.innerHTML=[
-            {icon:'📋',label:'Depth Chart',sub:'Spring projections · position battles',goto:'dc'},
-            {icon:'👔',label:'Coaching Staff',sub:'Coordinators & position coaches',goto:'staff'},
-            {icon:'📜',label:'Team History',sub:'Program milestones & season archives',goto:'history'}
-        ].map(function(item,idx){
-            return '<button type="button" class="gv-team-nav-card" data-team-section="'+item.goto+'" style="animation-delay:'+(idx*0.05)+'s">'
-                +'<span class="gv-team-nav-icon">'+item.icon+'</span>'
-                +'<span><p class="gv-team-nav-label">'+gvLiveEsc(item.label)+'</p><p class="gv-team-nav-sub">'+gvLiveEsc(item.sub)+'</p></span>'
-                +'</button>';
-        }).join('');
-        hubEl.querySelectorAll('.gv-team-nav-card').forEach(function(btn){
-            btn.addEventListener('click',function(){
-                var sec=btn.getAttribute('data-team-section');
-                if(sec==='dc'){if(typeof window.showVTab==='function')window.showVTab('dc');return;}
-                if(sec==='staff'){var t=document.getElementById('gv-mteam-staff');if(t)t.scrollIntoView({behavior:'smooth',block:'start'});return;}
-                if(sec==='history'){var h=document.getElementById('gv-mteam-history');if(h)h.scrollIntoView({behavior:'smooth',block:'start'});}
-            });
-        });
-        if(staffEl){
-            staffEl.innerHTML=_gvMobileCoachingStaff.map(function(c){
-                return '<div class="gv-staff-row"><div><p class="gv-staff-name">'+gvLiveEsc(c.name)+'</p><p class="gv-staff-title">'+gvLiveEsc(c.title)+'</p></div></div>';
-            }).join('');
-        }
-        if(histEl){
-            histEl.innerHTML=_gvTeamHistoryItems.map(function(item,idx){
-                return '<div class="gv-intel-card" data-article-id="'+gvLiveEsc(item.id)+'" style="animation-delay:'+(idx*0.04)+'s">'
-                    +'<p class="gv-intel-type">Team History</p>'
-                    +'<p class="gv-intel-title">'+gvLiveEsc(item.title)+'</p>'
-                    +'<p class="gv-intel-detail">'+gvLiveEsc(item.sub)+'</p>'
-                    +'</div>';
-            }).join('');
-            histEl.querySelectorAll('[data-article-id]').forEach(function(el){
-                el.addEventListener('click',function(){
-                    var id=el.getAttribute('data-article-id');
-                    if(id&&typeof gvOpenArticle==='function')gvOpenArticle(id);
-                });
-            });
-        }
     }
 
     function gvWireLatestUpdateCards(root,items){

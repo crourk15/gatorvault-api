@@ -15,6 +15,7 @@ const {
   filterPublicLiveFeed: legacyFilterPublicLiveFeed
 } = require('./recruiting-public-alerts');
 const gm2 = require('./gm2');
+const feedDedup = require('./live-feed-dedup');
 
 const EVENT_TYPE_MAP = {
   commit: 'commit',
@@ -267,8 +268,11 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
 }
 
 function getDashboard({ feedLimit = 60 } = {}) {
+  const rawFeed = gm2.filterPublicHeadlines(
+    liveStore.getFeedItems({ limit: feedLimit * 2, categoriesOnly: true })
+  );
   return {
-    feed: gm2.filterPublicHeadlines(liveStore.getFeedItems({ limit: feedLimit, categoriesOnly: true })),
+    feed: feedDedup.dedupeFeedItems(rawFeed).slice(0, feedLimit),
     beat: getBeatPosts(40),
     podcasts: getPodcastHub(),
     updatedAt: liveStore.nowIso()

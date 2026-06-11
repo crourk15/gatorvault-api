@@ -8,6 +8,7 @@ const decommitValidator = require('../decommit-validator');
 const quarantine = require('./quarantine-store');
 const coachIdentity = require('../official-coach-identity');
 const decisionLog = require('./decision-log');
+const feedDedup = require('../live-feed-dedup');
 const { GM2_FEATURES, GM2_ACTIONS, VERIFIED_COMMIT_SOURCES } = require('./types');
 
 function isQuarantined(record) {
@@ -34,18 +35,27 @@ function rulesForIntel(record) {
   return { allow: true };
 }
 
-function rulesForLiveFeedItem(item) {
+function rulesForLiveFeedItem(item, { recentFeed = [] } = {}) {
   if (isQuarantined({ playerSlug: item?.meta?.playerSlug })) return { allow: false, reason: 'player_quarantined' };
   const coachText = [item?.title, item?.summary, item?.text, item?.headline].filter(Boolean).join(' ');
   const coachCheck = coachIdentity.validateCoachIdentityText(coachText);
   if (!coachCheck.ok) return { allow: false, reason: 'coach_identity_blocked', blocked: coachCheck.blocked };
   if (publicAlerts.isInvalidHeadlineFeedItem(item)) return { allow: false, reason: 'invalid_headline' };
   if (!publicAlerts.isPublicLiveFeedItem(item)) return { allow: false, reason: 'not_public_feed_item' };
+  const key = feedDedup.feedDedupeKey(item);
+  if (key && (recentFeed || []).some((other) => {
+    if (other === item || feedDedup.feedDedupeKey(other) !== key) return false;
+    const a = new Date(item.createdAt || 0).getTime();
+    const b = new Date(other.createdAt || 0).getTime();
+    return Math.abs(a - b) < feedDedup.DEDUP_WINDOW_MS && b > a;
+  })) {
+    return { allow: false, reason: 'duplicate_intel_48h' };
+  }
   return { allow: true };
 }
 
-function rulesForHeadlines(item) {
-  return rulesForLiveFeedItem(item);
+function rulesForHeadlines(item, context = {}) {
+  return rulesForLiveFeedItem(item, context);
 }
 
 function rulesForHeatCheckPlayer(player, intelRows = []) {
@@ -148,6 +158,8 @@ function runRulesEngine(feature, record, context = {}) {
     result = fn(record, context.intel, context.events);
   } else if (feature === GM2_FEATURES.VISIT_RECAP || feature === GM2_FEATURES.PROGRAM_PULSE) {
     result = fn(record);
+  } else if (feature === GM2_FEATURES.LIVE_FEED || feature === GM2_FEATURES.HEADLINES) {
+    result = fn(record, context);
   } else {
     result = fn(record);
   }
@@ -169,7 +181,11 @@ function runRulesEngine(feature, record, context = {}) {
 function filterForFeature(feature, items, context = {}) {
   if (!Array.isArray(items)) return [];
   if (feature === GM2_FEATURES.LIVE_FEED || feature === GM2_FEATURES.HEADLINES) {
-    return items.filter((item) => runRulesEngine(feature, item).allow);
+    const kept = [];
+    for (const item of items) {
+      if (runRulesEngine(feature, item, { recentFeed: kept }).allow) kept.push(item);
+    }
+    return kept;
   }
   if (feature === GM2_FEATURES.RECRUITING_ALERTS || feature === GM2_FEATURES.MY_ALERTS) {
     return items.filter((item) => {
