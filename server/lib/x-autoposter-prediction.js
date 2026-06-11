@@ -296,7 +296,7 @@ async function buildPredictionPostInner({
     return { ok: false, skipped: true, reason: 'invalid_template', fields };
   }
 
-  const text = template.enforceTweetLimit(raw, 280);
+  const text = template.enforceTweetLimit(raw, 280, { postKind: 'prediction', beatText: fields?.detail || null });
   if (!text || isBarePredictionLine(text)) {
     return { ok: false, skipped: true, reason: 'bare_prediction_line', fields };
   }

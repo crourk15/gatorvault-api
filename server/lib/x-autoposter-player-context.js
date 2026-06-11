@@ -188,43 +188,44 @@ function resolvePostKind(ctx, { newsEvent, intel, beatText } = {}) {
   return 'recruiting';
 }
 
-function buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLine }) {
+function buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLine, copyMeta = {} }) {
   const beat = beatText ? template.classifyBeatSentences(beatText) : { context: [], insider: [] };
   const contextNorm = template.stripEmojisHashtags(contextLine || '').toLowerCase();
+  const lineMeta = { ...copyMeta, beatText, text: beatText };
   const insiderPick = beat.insider.find(
     (s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm
   );
   if (insiderPick) {
-    const line = insiderPick.length <= 140 ? insiderPick : `${insiderPick.slice(0, 137)}…`;
-    return { line, meta: { insiderFromBeat: true } };
+    return { line: template.sanitizeCopyLine(insiderPick, 140, lineMeta), meta: { insiderFromBeat: true } };
   }
 
-  const fromIntel = template.insiderFromIntel(intel);
+  const fromIntel = template.insiderFromIntel(intel, lineMeta);
   if (fromIntel) return { line: fromIntel, meta: { insiderFromIntel: true } };
 
   const scouting = loadVerifiedScouting(playerSlug);
-  const fromScouting = template.insiderFromScouting(scouting);
+  const fromScouting = template.insiderFromScouting(scouting, lineMeta);
   if (fromScouting) return { line: fromScouting, meta: { insiderFromScouting: true } };
 
   const breakdown = loadVerifiedBreakdown(playerSlug);
-  const fromBreakdown = template.insiderFromBreakdown(breakdown);
+  const fromBreakdown = template.insiderFromBreakdown(breakdown, lineMeta);
   if (fromBreakdown) return { line: fromBreakdown, meta: { insiderFromBreakdown: true } };
 
   return { line: null, meta: {} };
 }
 
-function buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel }) {
+function buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel, copyMeta = {} }) {
+  const lineMeta = { ...copyMeta, beatText, text: beatText };
   const beat = beatText ? template.classifyBeatSentences(beatText) : { context: [], insider: [] };
   if (beat.context[0]) {
     return {
-      line: beat.context[0].length <= 160 ? beat.context[0] : `${beat.context[0].slice(0, 157)}…`,
+      line: template.sanitizeCopyLine(beat.context[0], 160, lineMeta),
       meta: { fromBeat: true }
     };
   }
   const intelDetail = template.stripEmojisHashtags(intel?.detail || '');
   if (intelDetail.length >= 28 && !/trending|momentum/i.test(intelDetail)) {
     return {
-      line: intelDetail.length <= 160 ? intelDetail : `${intelDetail.slice(0, 157)}…`,
+      line: template.sanitizeCopyLine(intelDetail, 160, { ...lineMeta, text: intelDetail }),
       meta: { fromIntel: true, intelDetail }
     };
   }
@@ -235,7 +236,7 @@ function buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel }) {
     );
     if (factual) {
       return {
-        line: factual.length <= 160 ? factual : `${factual.slice(0, 157)}…`,
+        line: template.sanitizeCopyLine(factual, 160, lineMeta),
         meta: { fromBeat: true, beatText }
       };
     }
@@ -254,12 +255,19 @@ function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = 
     template.teamEventLabel(teamEventType) || template.detectTeamContext(beatText) || 'UF Update';
   const identity = `Florida Gators — ${teamContext}`;
   const sourceLabel = String(source || 'Beat writer').trim();
+  const copyMeta = {
+    triggerType: 'team_event',
+    postKind: 'team_event',
+    teamEventType: teamEventType || 'general',
+    beatText
+  };
 
   const contextResult = buildVerifiedContextLine({
     newsEvent: null,
     sourceLabel,
     beatText,
-    intel: null
+    intel: null,
+    copyMeta
   });
   let contextLine = contextResult.line;
   if (!contextLine) {
@@ -271,7 +279,7 @@ function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = 
         !template.INSIDER_SIGNAL_RE.test(s)
     );
     if (factual) {
-      contextLine = factual.length <= 160 ? factual : `${factual.slice(0, 157)}…`;
+      contextLine = template.sanitizeCopyLine(factual, 160, copyMeta);
     }
   }
   if (!contextLine) return null;
@@ -286,8 +294,14 @@ function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = 
   }
   if (!insiderLine) {
     insiderLine = `Per ${sourceLabel} report.`;
-  } else if (insiderLine.length > 140) {
-    insiderLine = `${insiderLine.slice(0, 137)}…`;
+  } else {
+    insiderLine = template.sanitizeCopyLine(insiderLine, 140, copyMeta);
+  }
+  if (
+    template.stripEmojisHashtags(contextLine).toLowerCase() ===
+    template.stripEmojisHashtags(insiderLine).toLowerCase()
+  ) {
+    insiderLine = `Per ${sourceLabel} report.`;
   }
 
   const raw = template.composeInsiderReport({
@@ -307,7 +321,7 @@ function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = 
     return null;
   }
 
-  const text = template.enforceTweetLimit(raw, 280);
+  const text = template.enforceTweetLimit(raw, 280, copyMeta);
   if (!text || !template.hasTemplateStructure(text)) return null;
 
   return {
@@ -335,12 +349,19 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
     template.programNewsLabel(programNewsType) || template.detectProgramNewsContext(beatText) || 'Program News';
   const identity = `Florida Gators — ${newsContext}`;
   const sourceLabel = String(source || 'Beat writer').trim();
+  const copyMeta = {
+    triggerType: 'program_news',
+    postKind: 'program_news',
+    programNewsType: programNewsType || 'general',
+    beatText
+  };
 
   const contextResult = buildVerifiedContextLine({
     newsEvent: null,
     sourceLabel,
     beatText,
-    intel: null
+    intel: null,
+    copyMeta
   });
   let contextLine = contextResult.line;
   if (!contextLine) {
@@ -352,7 +373,7 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
         !template.INSIDER_SIGNAL_RE.test(s)
     );
     if (factual) {
-      contextLine = factual.length <= 160 ? factual : `${factual.slice(0, 157)}…`;
+      contextLine = template.sanitizeCopyLine(factual, 160, copyMeta);
     }
   }
   const usedFallback = !contextLine;
@@ -371,8 +392,14 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
   }
   if (!insiderLine) {
     insiderLine = usedFallback ? `Per ${sourceLabel} and multiple reports.` : `Per ${sourceLabel} report.`;
-  } else if (insiderLine.length > 140) {
-    insiderLine = `${insiderLine.slice(0, 137)}…`;
+  } else {
+    insiderLine = template.sanitizeCopyLine(insiderLine, 140, copyMeta);
+  }
+  if (
+    template.stripEmojisHashtags(contextLine).toLowerCase() ===
+    template.stripEmojisHashtags(insiderLine).toLowerCase()
+  ) {
+    insiderLine = usedFallback ? `Per ${sourceLabel} and multiple reports.` : `Per ${sourceLabel} report.`;
   }
 
   const raw = template.composeInsiderReport({
@@ -384,7 +411,8 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
     const eventSummary = template.inferProgramNewsEvent(beatText, programNewsType);
     const fallbackText = template.enforceTweetLimit(
       `Per multiple reports, Florida has announced ${eventSummary}. Monitoring.`,
-      280
+      280,
+      copyMeta
     );
     return {
       text: fallbackText,
@@ -412,7 +440,7 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
   const finalRaw = usedFallback
     ? contextLine
     : template.composeInsiderReport({ identity, context: contextLine, insider: insiderLine });
-  const text = template.enforceTweetLimit(finalRaw, 280);
+  const text = template.enforceTweetLimit(finalRaw, 280, copyMeta);
   if (!text) return null;
 
   return {
@@ -535,12 +563,22 @@ async function buildPlayerNewsPost({
 
   const kind = postKind || resolvePostKind(ctx, { newsEvent, intel, beatText });
   const sourceLabel = String(source || 'On3').trim();
+  const copyMod = require('./x-autoposter-copy');
+  const copyMeta = {
+    postKind: kind,
+    triggerType: intel?.triggerType || intel?.eventType || null,
+    beatText,
+    teamEventType: null
+  };
+  if (beatText && copyMod.isGeneralBeatCommentary(beatText)) {
+    copyMeta.postKind = 'recruiting_discussion';
+  }
 
-  const contextResult = buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel });
+  const contextResult = buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel, copyMeta });
   let contextLine = contextResult.line;
   if (!contextLine) return null;
 
-  const insiderResult = buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLine });
+  const insiderResult = buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLine, copyMeta });
   let insiderLine = insiderResult.line;
   if (!insiderLine) return null;
 
@@ -575,7 +613,7 @@ async function buildPlayerNewsPost({
     return null;
   }
 
-  const text = template.enforceTweetLimit(raw, 280);
+  const text = template.enforceTweetLimit(raw, 280, copyMeta);
   if (!text || !template.hasTemplateStructure(text)) return null;
 
   return {

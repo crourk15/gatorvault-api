@@ -510,6 +510,13 @@ function collectHardSkipReasons(item, blocks, meta) {
     skips.push({ type: 'duplicate_sentences', message: 'Duplicate sentences detected — automatic skip.' });
   }
 
+  if (template.isTruncatedCopy(item.text)) {
+    skips.push({
+      type: 'truncated_copy',
+      message: 'Copy ends with a broken fragment or ellipsis — automatic skip.'
+    });
+  }
+
   const combined = [blocks.identity, blocks.context, blocks.insider].filter(Boolean).join('\n');
   if (combined && (isHeadlineOnlyLine(combined) || template.isHeadlineOnlyPost(combined))) {
     skips.push({ type: 'headline_only', message: 'Headline-only content — automatic skip.' });

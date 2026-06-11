@@ -92,13 +92,13 @@ function extractVerifiedPatchFromBeatText(text) {
   };
 }
 
-function appendSite(text) {
-  const body = template.stripEmojisHashtags(text);
+function appendSite(text, meta = {}) {
+  const body = template.finalizeAutoposterCopy(template.stripEmojisHashtags(text), meta);
   if (!body) return '';
   const urlBit = SITE_URL.replace('https://', '');
-  if (body.includes(urlBit)) return body.slice(0, 280);
+  if (body.includes(urlBit)) return template.enforceTweetLimit(body, 280, meta);
   const withUrl = `${body}\n${SITE_URL}`;
-  return withUrl.length <= 280 ? withUrl : template.enforceTweetLimit(body, 280);
+  return withUrl.length <= 280 ? withUrl : template.enforceTweetLimit(body, 280, meta);
 }
 
 function detectBeatNewsEvent(text) {
@@ -157,7 +157,14 @@ async function resolveIntelForCopy(intel, opts = {}) {
 function newsPayloadFromBuilt(built, extra = {}) {
   if (built?.skipReason || built?._identitySkip || built?._needsResolution) return built;
   if (!built?.text) return null;
-  const text = appendSite(built.text);
+  const copyMeta = {
+    triggerType: extra.triggerType || built.triggerType || built.postKind || null,
+    postKind: built.postKind || extra.triggerType || null,
+    teamEventType: built.teamEventType || extra.teamEventType || built.validationMeta?.teamEventType || null,
+    programNewsType: built.programNewsType || extra.programNewsType || built.validationMeta?.programNewsType || null,
+    beatText: built.validationMeta?.beatText || extra.beatText || null
+  };
+  const text = appendSite(built.text, copyMeta);
   const payload = {
     text,
     playerName: built.playerName,
@@ -491,6 +498,7 @@ async function buildArticleCopyAsync(article) {
 function isBrokenCopy(text, meta = {}) {
   const t = String(text || '');
   if (!t.trim()) return true;
+  if (template.isTruncatedCopy(t)) return true;
   if (BROKEN_COPY_PATTERNS.some((re) => re.test(t))) return true;
   if (template.isHeadlineOnlyPost(t)) return true;
   if (!template.hasTemplateStructure(t)) return true;

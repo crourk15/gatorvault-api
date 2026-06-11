@@ -14,6 +14,10 @@ const FACTUAL_SIGNAL_RE =
 const HEADLINE_ONLY_RE =
   /\b(UF trending|Gators offered|Florida offered|trending for florida|trending to florida)\b/i;
 
+const URL_RE = /https?:\/\/[^\s<>"')\]]+/gi;
+const THREAD_REF_RE = /\bthread\b/i;
+const COPY_FALLBACK_CLOSURE = 'Full details via the original report.';
+
 function stripEmojisHashtags(text) {
   return String(text || '')
     .split('\n')
@@ -57,11 +61,237 @@ function extractSentences(text) {
     .filter((s) => s.length >= 12);
 }
 
-function shorten(s, max) {
-  const t = stripEmojisHashtags(s);
-  if (t.length <= max) return t;
-  const cut = t.slice(0, max - 1).replace(/\s+\S*$/, '');
-  return `${cut}…`;
+function hasUrlOrThreadRef(text) {
+  const t = String(text || '');
+  URL_RE.lastIndex = 0;
+  return URL_RE.test(t) || THREAD_REF_RE.test(t);
+}
+
+function extractUrls(text) {
+  URL_RE.lastIndex = 0;
+  return [
+    ...new Set(
+      (String(text || '').match(URL_RE) || []).map((u) => u.replace(/[.,;:!?)]+$/, ''))
+    )
+  ];
+}
+
+function normalizeUrl(url) {
+  try {
+    const u = new URL(String(url || '').trim());
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 's'].forEach((p) =>
+      u.searchParams.delete(p)
+    );
+    u.hash = '';
+    return u.toString();
+  } catch {
+    return null;
+  }
+}
+
+function shortenUrlForDisplay(url) {
+  const norm = normalizeUrl(url);
+  if (!norm) return null;
+  try {
+    const u = new URL(norm);
+    const host = u.hostname.replace(/^www\./i, '');
+    if (host === 'x.com' || host === 'twitter.com') return 'x.com';
+    if (host === 't.co') return norm;
+    let path = u.pathname.replace(/\/$/, '');
+    if (path.length > 24) {
+      path = path.slice(0, 24).replace(/\/[^/]*$/, '') || path.slice(0, 24);
+    }
+    return path ? `${host}${path}` : host;
+  } catch {
+    return null;
+  }
+}
+
+function sanitizeUrlsInText(text, { removeOnFailure = true } = {}) {
+  const urls = extractUrls(text);
+  if (!urls.length) {
+    return { text: String(text || '').trim(), urls: [], urlLabels: [] };
+  }
+  let working = String(text || '');
+  const urlLabels = [];
+  for (const raw of urls) {
+    const label = shortenUrlForDisplay(raw);
+    if (label) {
+      urlLabels.push(label);
+      working = working.split(raw).join(label);
+    } else if (removeOnFailure) {
+      working = working.split(raw).join(' ');
+    }
+  }
+  working = working
+    .replace(/^INTEL:\s*/i, '')
+    .replace(/\b(https?|htt|http)\b/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return { text: working, urls, urlLabels };
+}
+
+function endsCompleteSentence(s) {
+  return /[.!?]["')\]]*\s*$/.test(String(s || '').trim());
+}
+
+function isIdentityLine(s) {
+  const t = String(s || '').trim();
+  if (!t) return false;
+  if (/^Florida Gators —/.test(t)) return true;
+  if (/^Portal /.test(t)) return true;
+  if (/^[\d★]/.test(t)) return true;
+  if (/ — UF Update$/.test(t)) return true;
+  return false;
+}
+
+function isUrlLine(s) {
+  const t = String(s || '').trim();
+  return /^https?:\/\//i.test(t) || /gatorvaultinsider\.com/i.test(t);
+}
+
+function isStatsContextLine(s) {
+  const t = String(s || '').trim();
+  return /\b(FutureCast|RPM|confidence)\b/i.test(t) || / · \d+%/.test(t);
+}
+
+function hasBrokenEnding(s) {
+  const t = String(s || '').trim();
+  if (!t) return true;
+  if (isIdentityLine(t) || isUrlLine(t)) return false;
+  if (isStatsContextLine(t)) return false;
+  if (/%["')\]]*$/.test(t)) return false;
+  if (/…|\.\.\.$/.test(t)) return true;
+  if (/\b(https?|htt|http)$/i.test(t)) return true;
+  if (/\d[\u2013\u2014-]\d*$/.test(t)) return true;
+  if (!endsCompleteSentence(t)) return true;
+  return false;
+}
+
+function isRecruitingDiscussionText(text) {
+  const lower = String(text || '').toLowerCase();
+  if (THREAD_REF_RE.test(text)) return true;
+  return /still working|still chasing|weekend ahead|several targets|recruiting well|busy weekend|in the hunt|on the trail/i.test(
+    lower
+  );
+}
+
+function disableEllipsisForCopy(meta = {}) {
+  const { triggerType, postKind, teamEventType, beatText, text } = meta;
+  if (triggerType === 'program_news' || postKind === 'program_news') return true;
+  if (triggerType === 'team_event' || postKind === 'team_event') return true;
+  if (teamEventType === 'general') return true;
+  if (postKind === 'recruiting_discussion') return true;
+  if (beatText && isRecruitingDiscussionText(beatText)) return true;
+  const combined = [text, beatText].filter(Boolean).join(' ');
+  return hasUrlOrThreadRef(combined);
+}
+
+function ensureCompleteSentence(text, fallback = COPY_FALLBACK_CLOSURE) {
+  let t = sanitizeUrlsInText(text, { removeOnFailure: true }).text;
+  t = stripEmojisHashtags(t).replace(/…+/g, '').replace(/\.{3,}/g, '').trim();
+  if (!t) return fallback;
+  if (isIdentityLine(t)) return t;
+  if (isUrlLine(t)) return t;
+
+  const completeOnly = extractSentences(t).filter((s) => endsCompleteSentence(s) && !hasBrokenEnding(s));
+  if (completeOnly.length) {
+    const rebuilt = completeOnly.join(' ');
+    if (endsCompleteSentence(rebuilt) && !hasBrokenEnding(rebuilt)) return rebuilt;
+  }
+
+  while (t.length > 0 && (hasBrokenEnding(t) || !endsCompleteSentence(t))) {
+    const prev = t;
+    t = t.replace(/\s+\S*$/, '').trim();
+    t = t.replace(/[\u2013\u2014-]+$/, '').trim();
+    if (t === prev) break;
+  }
+
+  if (!t || t.length < 12) return fallback;
+  if (endsCompleteSentence(t) && !hasBrokenEnding(t)) return t;
+
+  t = t.replace(/[,;:\u2013\u2014-]+$/, '').trim();
+  if (!t) return fallback;
+  return `${t}. ${fallback}`;
+}
+
+function sanitizeCopyLine(text, maxLen, meta = {}) {
+  const fallback = COPY_FALLBACK_CLOSURE;
+  const noEllipsis = disableEllipsisForCopy({ ...meta, text });
+  let working = sanitizeUrlsInText(text, { removeOnFailure: true }).text;
+  working = stripEmojisHashtags(working);
+  if (!working) return fallback;
+
+  if (working.length <= maxLen) {
+    return ensureCompleteSentence(working, fallback);
+  }
+
+  if (noEllipsis || hasUrlOrThreadRef(text)) {
+    const sentences = extractSentences(working);
+    let out = '';
+    for (const sent of sentences) {
+      const candidate = out ? `${out} ${sent}` : sent;
+      if (candidate.length <= maxLen) out = candidate;
+      else break;
+    }
+    if (out && out.length >= Math.min(40, Math.floor(maxLen * 0.25))) {
+      return ensureCompleteSentence(out, fallback);
+    }
+    const trimmed = working.slice(0, maxLen).replace(/\s+\S*$/, '').trim();
+    return ensureCompleteSentence(trimmed, fallback);
+  }
+
+  const trimmed = working.slice(0, maxLen).replace(/\s+\S*$/, '').trim();
+  return ensureCompleteSentence(trimmed, fallback);
+}
+
+function finalizeAutoposterCopy(text, meta = {}) {
+  const fallback = COPY_FALLBACK_CLOSURE;
+  let t = sanitizeUrlsInText(text, { removeOnFailure: true }).text;
+  t = stripEmojisHashtags(t);
+  if (!t) return fallback;
+  const lines = t
+    .split('\n')
+    .map((line, idx) => {
+      const trimmed = line.trim();
+      if (!trimmed) return '';
+      if (idx === 0 && isIdentityLine(trimmed)) return trimmed;
+      if (isUrlLine(trimmed)) return trimmed;
+      return ensureCompleteSentence(trimmed, fallback);
+    })
+    .filter(Boolean);
+  t = lines.join('\n');
+  if (isTruncatedCopy(t)) {
+    t = lines
+      .map((line, idx) =>
+        idx === 0 && isIdentityLine(line)
+          ? line
+          : isUrlLine(line)
+            ? line
+            : isTruncatedCopy(line)
+              ? ensureCompleteSentence(line, fallback)
+              : line
+      )
+      .join('\n');
+  }
+  return t;
+}
+
+function isTruncatedCopy(text) {
+  const t = String(text || '');
+  if (!t.trim()) return true;
+  if (/…|\.\.\./.test(t)) return true;
+  return t.split('\n').some((line, idx) => {
+    const trimmed = line.trim();
+    if (!trimmed) return false;
+    if (idx === 0 && isIdentityLine(trimmed)) return false;
+    if (isUrlLine(trimmed)) return false;
+    return hasBrokenEnding(trimmed);
+  });
+}
+
+function shorten(s, max, meta = {}) {
+  return sanitizeCopyLine(s, max, meta);
 }
 
 function buildRecruitingIdentity(ctx) {
@@ -181,7 +411,7 @@ function inferProgramNewsEvent(beatText, programNewsType) {
   const sentences = extractSentences(t);
   const factual = sentences.find((s) => s.length >= 30 && !HEADLINE_ONLY_RE.test(s));
   if (factual) {
-    const trimmed = factual.length <= 90 ? factual : `${factual.slice(0, 87)}…`;
+    const trimmed = sanitizeCopyLine(factual, 90, { triggerType: 'program_news', postKind: 'program_news' });
     return trimmed.replace(/^Florida (?:has |is )?/i, '').replace(/\.$/, '') || 'a program-level update';
   }
   return programNewsLabel(type).toLowerCase();
@@ -199,9 +429,10 @@ function detectProgramNewsContext(beatText) {
 }
 
 function classifyBeatSentences(beatText) {
+  const cleaned = sanitizeUrlsInText(beatText, { removeOnFailure: true }).text.replace(/^INTEL:\s*/i, '');
   const context = [];
   const insider = [];
-  for (const sentence of extractSentences(beatText)) {
+  for (const sentence of extractSentences(cleaned)) {
     if (HEADLINE_ONLY_RE.test(sentence)) continue;
     if (INSIDER_SIGNAL_RE.test(sentence)) {
       insider.push(sentence);
@@ -259,28 +490,29 @@ function contextFromNewsEvent(newsEvent, sourceLabel) {
   return `${event.charAt(0).toUpperCase()}${event.slice(1)}.`;
 }
 
-function insiderFromIntel(intel) {
+function insiderFromIntel(intel, meta = {}) {
   if (!intel) return null;
   const detail = stripEmojisHashtags(intel.detail || intel.status || '');
-  if (detail.length >= 20 && INSIDER_SIGNAL_RE.test(detail)) return shorten(detail, 140);
+  const lineMeta = { ...meta, beatText: detail, text: detail };
+  if (detail.length >= 20 && INSIDER_SIGNAL_RE.test(detail)) return shorten(detail, 140, lineMeta);
   if (intel.eventType === 'prediction' || intel.eventType === 'rivals_futurecast') {
     return null;
   }
   if (intel.analystName && detail.length >= 15) {
-    return shorten(`${intel.analystName}: ${detail}`, 140);
+    return shorten(`${intel.analystName}: ${detail}`, 140, lineMeta);
   }
   return null;
 }
 
-function insiderFromScouting(entry) {
+function insiderFromScouting(entry, meta = {}) {
   if (!entry?.scoutingSummary) return null;
   const analyst = entry.analystName || 'Verified analyst';
   const first = extractSentences(entry.scoutingSummary)[0];
   if (!first || first.length < 20) return null;
-  return shorten(`${analyst}: ${first}`, 140);
+  return shorten(`${analyst}: ${first}`, 140, { ...meta, beatText: first, text: first });
 }
 
-function insiderFromBreakdown(breakdown) {
+function insiderFromBreakdown(breakdown, meta = {}) {
   if (!breakdown) return null;
   const note =
     breakdown.staffNotes ||
@@ -292,7 +524,9 @@ function insiderFromBreakdown(breakdown) {
   const writer = breakdown.sources?.[0]?.writer;
   const text = stripEmojisHashtags(note);
   if (text.length < 20) return null;
-  return writer ? shorten(`${writer}: ${text}`, 140) : shorten(text, 140);
+  return writer
+    ? shorten(`${writer}: ${text}`, 140, { ...meta, beatText: text, text })
+    : shorten(text, 140, { ...meta, beatText: text, text });
 }
 
 function verifiedRankInsider(ctx) {
@@ -306,21 +540,22 @@ function composeInsiderReport({ identity, context, insider }) {
   return blocks.join('\n');
 }
 
-function enforceTweetLimit(text, max = 280) {
+function enforceTweetLimit(text, max = 280, meta = {}) {
   let t = stripEmojisHashtags(text);
-  if (t.length <= max) return t;
+  if (t.length <= max) return finalizeAutoposterCopy(t, meta);
   const lines = t.split('\n');
-  if (lines.length <= 1) return shorten(t, max);
+  if (lines.length <= 1) return finalizeAutoposterCopy(shorten(t, max, { ...meta, text: t }), meta);
   const identity = lines[0];
   let context = lines[1] || '';
   let insider = lines.slice(2).join(' ') || '';
   const overhead = identity.length + 2;
   const budget = max - overhead;
+  const lineMeta = { ...meta, text: t };
   if (context.length + insider.length + 1 > budget) {
-    if (insider) insider = shorten(insider, Math.max(40, Math.floor(budget * 0.45)));
-    context = shorten(context, Math.max(40, budget - insider.length - 1));
+    if (insider) insider = shorten(insider, Math.max(40, Math.floor(budget * 0.45)), lineMeta);
+    context = shorten(context, Math.max(40, budget - insider.length - 1), lineMeta);
   }
-  return composeInsiderReport({ identity, context, insider });
+  return finalizeAutoposterCopy(composeInsiderReport({ identity, context, insider }), meta);
 }
 
 function hasTemplateStructure(text) {
@@ -359,6 +594,20 @@ module.exports = {
   verifiedRankInsider,
   composeInsiderReport,
   enforceTweetLimit,
+  finalizeAutoposterCopy,
+  sanitizeCopyLine,
+  ensureCompleteSentence,
+  sanitizeUrlsInText,
+  extractUrls,
+  normalizeUrl,
+  shortenUrlForDisplay,
+  hasUrlOrThreadRef,
+  hasBrokenEnding,
+  isTruncatedCopy,
+  disableEllipsisForCopy,
+  isIdentityLine,
+  endsCompleteSentence,
+  COPY_FALLBACK_CLOSURE,
   hasTemplateStructure,
   isHeadlineOnlyPost,
   INSIDER_SIGNAL_RE,
