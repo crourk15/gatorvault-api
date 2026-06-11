@@ -10,16 +10,17 @@ const SEVERITY_WEIGHTS = {
 };
 
 const MODULE_WEIGHTS = {
-  integrity: 0.3,
-  pages: 0.25,
-  'visual-integrity': 0.2,
-  ux: 0.15,
+  integrity: 0.28,
+  pages: 0.22,
+  'visual-integrity': 0.18,
+  ux: 0.12,
+  'mobile-behavior': 0.1,
   api: 0.05,
   browser: 0.03,
   content: 0.02
 };
 
-const QA_MODULES = ['api', 'content', 'integrity', 'pages', 'ux', 'browser', 'visual-integrity'];
+const QA_MODULES = ['api', 'content', 'integrity', 'pages', 'ux', 'browser', 'visual-integrity', 'mobile-behavior'];
 
 const PAGE_CHECKS = {
   '/': {
@@ -40,7 +41,9 @@ const PAGE_CHECKS = {
       'ux:modal-zindex',
       'visual-integrity:team-overview-background',
       'visual-integrity:team-theme-tokens',
-      'visual-integrity:component-variants'
+      'visual-integrity:component-variants',
+      'mobile-behavior:team-tab-theme',
+      'mobile-behavior:navigation-back'
     ]
   },
   '/admin': {
@@ -66,7 +69,8 @@ const FEATURE_CHECKS = {
     'integrity:film-sources',
     'visual-integrity:film-room-theme'
   ],
-  latest_updates_feed: ['integrity:feed-dedup', 'api:live-feed', 'api:live-dashboard'],
+  latest_updates_feed: ['integrity:feed-dedup', 'api:live-feed', 'api:live-dashboard', 'mobile-behavior:feed-freshness'],
+  mobile_navigation: ['mobile-behavior:navigation-back', 'ux:tap-targets'],
   admin_hub: ['pages:admin-hub:desktop', 'pages:admin-hub:mobile', 'visual-integrity:admin-theme'],
   qa_monitor: ['api:ping']
 };
@@ -82,6 +86,10 @@ function inferSeverity(check) {
   if (check.module === 'integrity') return 'high';
   if (check.module === 'api' && !check.pass) return 'high';
   if (check.module === 'pages') return 'high';
+  if (check.module === 'mobile-behavior') {
+    if (/stale-html|team-tab-theme|navigation-back/.test(id)) return 'high';
+    return 'medium';
+  }
   if (check.module === 'ux') return 'medium';
   if (check.module === 'browser') return 'medium';
   if (check.module === 'content') return 'low';

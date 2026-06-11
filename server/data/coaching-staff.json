@@ -1,0 +1,145 @@
+{
+  "version": "2026-06-05",
+  "updatedAt": "2026-06-05T00:00:00.000Z",
+  "coaches": [
+    {
+      "id": "sumrall",
+      "name": "Jon Sumrall",
+      "title": "Head Coach",
+      "unit": "hc",
+      "bio": "First-year head coach after leading Tulane to back-to-back AAC titles. Culture-driven leader installing a competitive standard across roster and staff. Emphasizes physicality, roster development through the portal, and defensive identity in partnership with Brad White.",
+      "highlights": ["Culture-first program builder", "Portal-era roster architect", "Defensive identity partner with Brad White"]
+    },
+    {
+      "id": "faulkner",
+      "name": "Buster Faulkner",
+      "title": "Offensive Coordinator",
+      "unit": "oc",
+      "bio": "Spread RPO architect from Georgia Tech. Builds rhythm passing, conflict reads, and vertical shots around Eric Singleton Jr. and a rebuilt offensive line. Installs pro-style structure with spread tempo elements.",
+      "highlights": ["Rhythm RPO quick game", "Conflict-read QB development", "Vertical shot menu with Singleton"]
+    },
+    {
+      "id": "white",
+      "name": "Brad White",
+      "title": "Defensive Coordinator",
+      "unit": "dc",
+      "bio": "3-3-5 odd-front specialist returning from Kentucky. JACK and STAR roles define the defense — Jayden Woods and Kanye Clark are scheme centerpieces. Uses simulated pressures and hybrid personnel to match spread offenses.",
+      "highlights": ["3-3-5 odd front install", "JACK/STAR hybrid roles", "Simulated pressure packages"]
+    },
+    {
+      "id": "chatman",
+      "name": "Gerald Chatman",
+      "title": "Assistant Head Coach / Defensive Line",
+      "unit": "dl",
+      "bio": "Promoted to assistant head coach while coaching the defensive line. Anchors the three-man front with Brendan Bett at nose and versatile edge pieces. Critical to run-fit integrity in the 3-3-5.",
+      "highlights": ["Three-man front development", "Run-fit mastery", "Promoted program leader"]
+    },
+    {
+      "id": "craddock",
+      "name": "Joe Craddock",
+      "title": "Quarterbacks Coach",
+      "unit": "qb",
+      "bio": "Tulane transfer who coached QBs under Sumrall. Develops Tramell Jones Jr. and Aaron Philo in the RPO rhythm offense. Focuses on pre-snap reads, conflict decisions, and protecting the football.",
+      "highlights": ["QB room competition management", "RPO read progression", "Tulane system continuity"]
+    },
+    {
+      "id": "foster",
+      "name": "Chris Foster",
+      "title": "Running Backs Coach",
+      "unit": "rb",
+      "bio": "Duke transfer coaching the running back room. Develops Jadan Baugh and the depth behind him in gap and zone schemes. Emphasizes pass protection and receiving skills for backs in spread sets.",
+      "highlights": ["Gap and zone run schemes", "Pass-pro development", "Backfield receiving"]
+    },
+    {
+      "id": "mcknight",
+      "name": "Trent McKnight",
+      "title": "Passing Game Coordinator / Inside Wide Receivers",
+      "unit": "wr",
+      "bio": "Passing game coordinator overseeing inside receivers and route concepts. Works with Buster Faulkner on route menu and spacing rules. Key to mesh, snag, and intermediate concepts in the offense.",
+      "highlights": ["Passing game coordination", "Inside receiver development", "Route concept menu"]
+    },
+    {
+      "id": "davis",
+      "name": "Marcus Davis",
+      "title": "Outside Wide Receivers Coach",
+      "unit": "wr",
+      "bio": "Auburn transfer coaching outside receivers including Eric Singleton Jr. Develops route running, separation, and vertical threat usage. Critical for boundary and slot-outside flexibility.",
+      "highlights": ["Route-running detail", "Vertical threat development", "Singleton WR1 usage"]
+    },
+    {
+      "id": "mckissack",
+      "name": "Evan McKissack",
+      "title": "Tight Ends Coach",
+      "unit": "te",
+      "bio": "Tulane transfer developing the tight end room in 12 and 11 personnel. Focuses on inline blocking, seam routes, and conflict leverage in the passing game.",
+      "highlights": ["Inline blocking", "Seam route development", "12-personnel usage"]
+    },
+    {
+      "id": "trautwein",
+      "name": "Phil Trautwein",
+      "title": "Offensive Line Coach",
+      "unit": "ol",
+      "bio": "Penn State transfer rebuilding the five-man front. Pass protection and run-game cohesion are swing factors for the 2026 offense. Integrates portal additions along the interior.",
+      "highlights": ["Pass-pro rebuild", "Run-game cohesion", "Portal OL integration"]
+    },
+    {
+      "id": "gasparato",
+      "name": "Greg Gasparato",
+      "title": "Linebackers Coach",
+      "unit": "lb",
+      "bio": "Tulane transfer coaching inside linebackers in the 3-3-5. Run fits, blitz packages, and communication in nickel personnel are core responsibilities.",
+      "highlights": ["Run-fit mastery", "Blitz timing", "Nickel communication"]
+    },
+    {
+      "id": "hardmon",
+      "name": "Bam Hardmon",
+      "title": "Outside Linebackers Coach",
+      "unit": "lb",
+      "bio": "Tulane transfer coaching outside linebackers and edge roles in the odd front. Develops pass-rush plans and edge contain against spread run games.",
+      "highlights": ["Edge contain", "Pass-rush development", "Odd-front edge play"]
+    },
+    {
+      "id": "harris",
+      "name": "Brandon Harris",
+      "title": "Cornerbacks Coach",
+      "unit": "db",
+      "bio": "UCF transfer coaching corners in a hybrid-heavy secondary. Critical for man and zone match rules against tempo offenses. Develops boundary corners and slot matchups.",
+      "highlights": ["Man and zone match rules", "Boundary corner development", "Tempo offense answers"]
+    },
+    {
+      "id": "collins",
+      "name": "Chris Collins",
+      "title": "Safeties Coach",
+      "unit": "db",
+      "bio": "Kentucky transfer coaching safeties and STAR/nickel roles. Develops deep-half players and hybrid defenders who fit the 3-3-5 structure.",
+      "highlights": ["STAR/nickel development", "Deep-half discipline", "Hybrid safety play"]
+    },
+    {
+      "id": "galante",
+      "name": "Johnathan Galante",
+      "title": "Special Teams Coordinator",
+      "unit": "st",
+      "bio": "Tulane transfer leading special teams. Coverage units, return game, and field position are critical in close SEC games and rivalry week.",
+      "highlights": ["Coverage units", "Return game explosiveness", "Field-position wins"]
+    },
+    {
+      "id": "whitt",
+      "name": "Rusty Whitt",
+      "title": "Head Strength & Conditioning",
+      "unit": "sc",
+      "bio": "Tulane S&C coordinator setting the physical floor for Sumrall's culture. Fourth-quarter football and availability are program pillars.",
+      "highlights": ["Availability culture", "Fourth-quarter edge", "Summer development"]
+    }
+  ],
+  "analysts": [
+    { "id": "analyst-off", "name": "John Donovan", "title": "Senior Offensive Analyst", "unit": "analyst" },
+    { "id": "analyst-def", "name": "Jared Moorer", "title": "Defensive Analyst", "unit": "analyst" },
+    { "id": "analyst-st", "name": "Gunner Hudspeth", "title": "Special Teams Analyst", "unit": "analyst" }
+  ],
+  "supportStaff": [
+    { "role": "Director of Football Operations", "name": "Joshua Thompson" },
+    { "role": "Video & Quality Control", "name": "Reuel Joaquin" },
+    { "role": "Equipment & Logistics", "name": "Jeff McGrew" },
+    { "role": "Player Development & Nutrition", "name": "Jake Sankal" }
+  ]
+}

@@ -37,6 +37,16 @@ const ELIGIBILITY = [
     eligible: true
   },
   {
+    test: (issue) => /^mobile-behavior:(stale-html|team-tab-theme)$/.test(issue.checkId || ''),
+    patchType: 'background-theme',
+    eligible: true
+  },
+  {
+    test: (issue) => issue.checkId === 'mobile-behavior:team-tab-theme',
+    patchType: 'component-variant',
+    eligible: true
+  },
+  {
     test: (issue) => /^ux:/.test(issue.checkId || ''),
     patchType: 'css-token',
     eligible: true

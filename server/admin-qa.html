@@ -106,7 +106,7 @@
 
     function renderModules(moduleStatus) {
       var el = document.getElementById('modules');
-      var mods = ['api','content','integrity','pages','browser','ux'];
+      var mods = ['api','content','integrity','pages','browser','ux','visual-integrity','mobile-behavior'];
       el.innerHTML = mods.map(function(m) {
         var s = moduleStatus[m] || {};
         var pass = s.pass !== false && s.at;

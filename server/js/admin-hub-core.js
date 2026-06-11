@@ -10,6 +10,7 @@
   var EMBED_SRC = {
     ops: '/admin-ops.html?embed=1',
     qa: '/admin-qa.html?embed=1',
+    'qa-mobile': '/admin-qa-mobile.html?embed=1',
     'product-intel': '/admin-product-intel.html?embed=1',
     'self-runner': '/admin-self-runner.html?embed=1',
     feedback: '/admin-feedback.html?embed=1',
@@ -26,6 +27,8 @@
   var LEGACY_PATHS = {
     '/admin/qa': { section: 'qa', panel: 'monitor' },
     '/admin-qa.html': { section: 'qa', panel: 'monitor' },
+    '/admin/qa/mobile-behavior': { section: 'qa', panel: 'mobile-behavior' },
+    '/admin-qa-mobile.html': { section: 'qa', panel: 'mobile-behavior' },
     '/admin/product-health': { section: 'product-intel', panel: 'health' },
     '/admin-product-intel.html': { section: 'product-intel', panel: 'health' },
     '/admin/self-runner': { section: 'self-runner', panel: 'pending' },
@@ -48,9 +51,20 @@
       id: 'dashboard',
       label: 'Dashboard',
       icon: '📊',
-      desc: 'System health, autoposter, GM2 alerts, repair queue',
+      desc: 'System health, autoposter, GM alerts, repair queue',
       panels: [
         { id: 'ops', label: 'Operations', embed: 'ops' }
+      ]
+    },
+    {
+      id: 'gm2',
+      label: 'GM',
+      icon: '🛡️',
+      desc: 'Re-run modules, rules engine, identity resolution, ingest integrity',
+      panels: [
+        { id: 'rerun', label: 'Re-run Modules', inline: true },
+        { id: 'integrity', label: 'GM Integrity', embed: 'gm2' },
+        { id: 'identity', label: 'Identity Patterns', embed: 'identity' }
       ]
     },
     {
@@ -72,7 +86,10 @@
       label: 'QA Monitor',
       icon: '🛡️',
       desc: '24/7 crawler — pages, API, content, UX integrity',
-      panels: [{ id: 'monitor', label: 'QA Dashboard', embed: 'qa' }]
+      panels: [
+        { id: 'monitor', label: 'QA Dashboard', embed: 'qa' },
+        { id: 'mobile-behavior', label: 'Mobile Behavior', embed: 'qa-mobile' }
+      ]
     },
     {
       id: 'recruiting',
@@ -117,16 +134,6 @@
       icon: '📬',
       desc: 'Feedback inbox, bug reports, feature requests',
       panels: [{ id: 'inbox', label: 'Feedback Inbox', embed: 'feedback' }]
-    },
-    {
-      id: 'gm2',
-      label: 'GM2 Control Center',
-      icon: '🛡️',
-      desc: 'Rules engine, identity resolution, ingest logs, autoposter',
-      panels: [
-        { id: 'integrity', label: 'GM2 Integrity', embed: 'gm2' },
-        { id: 'identity', label: 'Identity Patterns', embed: 'identity' }
-      ]
     },
     {
       id: 'settings',
@@ -175,11 +182,25 @@
   }
 
   function verifyPin(p, cb) {
-    fetch(API + '/api/ops/status?pin=' + encodeURIComponent(p), {
-      headers: { 'X-Ops-Pin': p, 'X-Recruiting-Pin': p }
+    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = ctrl ? setTimeout(function () { try { ctrl.abort(); } catch (e) {} }, 15000) : null;
+    fetch(API + '/api/ops/verify-pin?pin=' + encodeURIComponent(p), {
+      headers: { 'X-Ops-Pin': p, 'X-Recruiting-Pin': p },
+      signal: ctrl ? ctrl.signal : undefined
     })
-      .then(function (r) { cb(r.ok); })
-      .catch(function () { cb(false); });
+      .then(function (r) {
+        return r.json().catch(function () { return { ok: false }; }).then(function (j) {
+          cb(!!(r.ok && j && j.ok));
+        });
+      })
+      .catch(function () {
+        fetch(API + '/api/ops/status?pin=' + encodeURIComponent(p), {
+          headers: { 'X-Ops-Pin': p, 'X-Recruiting-Pin': p }
+        })
+          .then(function (r) { cb(r.ok); })
+          .catch(function () { cb(false); });
+      })
+      .finally(function () { if (timer) clearTimeout(timer); });
   }
 
   function panelSrc(panel) {
@@ -240,6 +261,50 @@
     }
     iframe.onload = function () { postPinToIframe(iframe); };
     postPinToIframe(iframe);
+  }
+
+  function renderGmRerunPanel(container) {
+    container.innerHTML = ''
+      + '<div class="hub-settings-grid">'
+      + '<div class="hub-card hub-card-wide"><h3>GM — Re-run Modules</h3>'
+      + '<p class="hub-meta">Trigger rebuilds and QA without leaving Admin Hub. Requires valid admin PIN.</p>'
+      + '<div class="hub-btn-row">'
+      + '<button type="button" class="hub-btn" data-gm-action="qa-run">Run QA Crawl</button>'
+      + '<button type="button" class="hub-btn secondary" data-gm-action="film-rebuild">Rebuild Film Room</button>'
+      + '<button type="button" class="hub-btn secondary" data-gm-action="scouting-rebuild">Rebuild Scouting DB</button>'
+      + '<button type="button" class="hub-btn secondary" data-gm-action="heat-refresh">Refresh Heat Check</button>'
+      + '<button type="button" class="hub-btn secondary" data-gm-action="gm2-repair">GM Auto-Repair</button>'
+      + '<button type="button" class="hub-btn secondary" data-gm-action="purge-beat">Purge Non-UF Beat</button>'
+      + '</div></div>'
+      + '<div class="hub-card hub-card-wide"><h3>GM Log</h3><div id="hub-gm-log" class="hub-log"></div></div>'
+      + '</div>';
+
+    function gmLog(msg, cls) {
+      var el = document.getElementById('hub-gm-log');
+      if (!el) return;
+      var line = document.createElement('div');
+      line.className = cls || 'info';
+      line.textContent = new Date().toLocaleTimeString() + ' — ' + msg;
+      el.prepend(line);
+    }
+
+    container.querySelectorAll('[data-gm-action]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var action = btn.getAttribute('data-gm-action');
+        btn.disabled = true;
+        var p;
+        if (action === 'qa-run') p = apiPost('/api/qa/run', { scope: 'full' });
+        else if (action === 'film-rebuild') p = apiPost('/api/film-room/admin/rebuild', { scope: 'all' });
+        else if (action === 'scouting-rebuild') p = apiPost('/api/war-room/admin/rebuild-scouting', {});
+        else if (action === 'heat-refresh') p = apiGet('/api/recruiting/heat-check?force=1&pin=' + encodeURIComponent(pin()));
+        else if (action === 'gm2-repair') p = apiPost('/api/gm2/auto-repair/run', {});
+        else if (action === 'purge-beat') p = apiPost('/api/live/admin/purge-non-uf-beat', {});
+        else p = Promise.resolve();
+        p.then(function (j) { gmLog('Done: ' + JSON.stringify(j).slice(0, 200), 'ok'); })
+          .catch(function (e) { gmLog(e.message, 'err'); })
+          .finally(function () { btn.disabled = false; });
+      });
+    });
   }
 
   function renderSettingsPanel(container) {
@@ -429,7 +494,8 @@
       if (panelEl.getAttribute('data-inline') === '1') {
         if (!panelEl.getAttribute('data-rendered')) {
           panelEl.setAttribute('data-rendered', '1');
-          renderSettingsPanel(panelEl);
+          if (panelId === 'rerun') renderGmRerunPanel(panelEl);
+          else renderSettingsPanel(panelEl);
         }
         return;
       }

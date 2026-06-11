@@ -266,8 +266,13 @@ function buildTeamEventCopyFromSchedule(game) {
 
 async function buildBeatIntelCopyAsync(post) {
   const prefilter = require('./beat-intel-prefilter');
+  const sportClassifier = require('./x-autoposter-sport-classifier');
   const text = String(post.text || '').replace(/\s+/g, ' ').trim();
   if (!text) return null;
+
+  if (!sportClassifier.isFootballAutoposterEligible(text, post)) {
+    return sportClassifier.buildNonFootballSkipPayload(sportClassifier.classifySport(text, post), text);
+  }
 
   const guarded = await prefilter.guardBeatPost(post);
   if (!guarded.eligible) return guarded.skip;
@@ -413,6 +418,8 @@ async function buildIntelCopyAsync(intel) {
     patch: playerContext.verifiedPatchFromIntel(intel),
     intel,
     beatText: intel.detail || null,
+    headline: intel.status || intel.detail?.slice(0, 120) || null,
+    body: intel.detail || null,
     identityInferred: intel.identityInferred,
     identityConfidence: intel.identityConfidence
   });
@@ -420,6 +427,12 @@ async function buildIntelCopyAsync(intel) {
 }
 
 async function buildMomentumCopyAsync(post) {
+  const sportClassifier = require('./x-autoposter-sport-classifier');
+  const textRaw = String(post?.text || '');
+  if (!sportClassifier.isFootballAutoposterEligible(textRaw, post)) {
+    return sportClassifier.buildNonFootballSkipPayload(sportClassifier.classifySport(textRaw, post), textRaw);
+  }
+
   const prefilter = require('./beat-intel-prefilter');
   const guarded = await prefilter.guardBeatPost(post);
   if (!guarded.eligible) return guarded.skip;
@@ -456,7 +469,10 @@ async function buildRecruitingEventCopyAsync(ev, { source = 'On3' } = {}) {
     playerName,
     patch: playerContext.verifiedPatchFromPlayer(player),
     postKind: isPortal ? 'portal' : 'recruiting',
-    portalStatus: isPortal ? 'Portal' : undefined
+    portalStatus: isPortal ? 'Portal' : undefined,
+    beatText: [ev.title, ev.skinny, ev.detail, ev.payload?.summary].filter(Boolean).join('. '),
+    headline: ev.title || null,
+    body: ev.skinny || ev.detail || null
   });
   return newsPayloadFromBuilt(built);
 }
@@ -482,14 +498,17 @@ async function buildArticleCopyAsync(article) {
   const playerName = extractPlayerFromText(`${article.title} ${article.summary || article.excerpt || ''}`);
   if (!playerName) return null;
   const beatText = template.stripEmojisHashtags(
-    `${article.title}. ${article.summary || article.excerpt || ''}`.trim()
+    `${article.title}. ${article.summary || article.excerpt || article.body || ''}`.trim()
   );
-  if (!beatText || beatText.length < 40) return null;
+  if (!beatText || beatText.length < 20) return null;
   const built = await playerContext.buildPlayerNewsPost({
-    source: article.author || 'GatorVault',
+    source: article.author || article.sources?.[0]?.label || 'GatorVault',
     newsEvent: null,
     playerName,
     beatText,
+    article,
+    headline: article.title,
+    body: article.summary || article.excerpt || article.body,
     postKind: 'recruiting'
   });
   return newsPayloadFromBuilt(built);
@@ -498,6 +517,8 @@ async function buildArticleCopyAsync(article) {
 function isBrokenCopy(text, meta = {}) {
   const t = String(text || '');
   if (!t.trim()) return true;
+  if (/full details via the original report/i.test(t)) return true;
+  if (/^per .+ report\.?\s*$/im.test(t) && t.split('\n').filter(Boolean).length <= 2) return true;
   if (template.isTruncatedCopy(t)) return true;
   if (BROKEN_COPY_PATTERNS.some((re) => re.test(t))) return true;
   if (template.isHeadlineOnlyPost(t)) return true;
@@ -510,6 +531,8 @@ function isBrokenCopy(text, meta = {}) {
   if (blocks.insider && validation.isRankOnlyInsider(blocks.insider)) return true;
   if (blocks.insider && require('./x-autoposter-prediction').isBarePredictionLine(blocks.insider)) return true;
   if (blocks.context && require('./x-autoposter-prediction').isBarePredictionLine(blocks.context)) return true;
+  const beatText = meta.validationMeta?.beatText || meta.beatText || null;
+  if (beatText && validation.hasExcessiveSourceOverlap(t, beatText)) return true;
   return false;
 }
 

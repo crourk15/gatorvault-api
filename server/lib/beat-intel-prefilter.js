@@ -558,6 +558,18 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
     };
   }
 
+  const sportClassifier = require('./x-autoposter-sport-classifier');
+  const sportSkip = sportClassifier.guardFootballOnly(text, post);
+  if (sportSkip) {
+    sportClassifier.logNonFootballSkip({
+      text,
+      classification: sportSkip.sportClassification,
+      post,
+      subsystem: `${subsystem}:sport-filter`
+    });
+    return { eligible: false, skip: sportSkip, text, sport: sportSkip.sport };
+  }
+
   const programGate = evaluateProgramNewsEligibility(text, { post });
   if (programGate.eligible) {
     return {
@@ -567,7 +579,8 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
       text,
       playerName: null,
       playerSlug: null,
-      gate: programGate
+      gate: programGate,
+      sport: 'football'
     };
   }
 
@@ -580,7 +593,8 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
       text,
       playerName: null,
       playerSlug: null,
-      gate: teamGate
+      gate: teamGate,
+      sport: 'football'
     };
   }
 
@@ -596,7 +610,7 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
     trustedWriter: require('./beat-writer-filters').isTrustedBeatWriter?.(post),
     post
   });
-  return { eligible: true, gate, text, playerName: gate.playerName, playerSlug: gate.playerSlug };
+  return { eligible: true, gate, text, playerName: gate.playerName, playerSlug: gate.playerSlug, sport: 'football' };
 }
 
 module.exports = {

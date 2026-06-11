@@ -10,6 +10,7 @@ const { runIntegrityChecks } = require('./qa-integrity-checks');
 const { runPageChecks } = require('./qa-page-checks');
 const { runUxChecks } = require('./qa-ux-checks');
 const { runBrowserChecks } = require('./qa-browser-checks');
+const { runMobileBehaviorChecks } = require('./qa-mobile-behavior-checks');
 const { runVisualIntegrityChecks } = require('../visual-integrity/visual-integrity-checks');
 
 let running = false;
@@ -45,17 +46,27 @@ async function runQaCrawl(opts = {}) {
   const id = `qa_${Date.now()}`;
 
   try {
-    const [api, content, integrity, pages, ux, browser, visualIntegrity] = await Promise.all([
+    const [api, content, integrity, pages, ux, browser, visualIntegrity, mobileBehavior] = await Promise.all([
       runApiChecks(),
       runContentChecks(),
       runIntegrityChecks(),
       runPageChecks(),
       runUxChecks(),
       runBrowserChecks(),
-      runVisualIntegrityChecks()
+      runVisualIntegrityChecks(),
+      runMobileBehaviorChecks()
     ]);
 
-    const modules = { api, content, integrity, pages, ux, browser, 'visual-integrity': visualIntegrity };
+    const modules = {
+      api,
+      content,
+      integrity,
+      pages,
+      ux,
+      browser,
+      'visual-integrity': visualIntegrity,
+      'mobile-behavior': mobileBehavior
+    };
     const allChecks = Object.values(modules).flatMap((m) => m.checks || []);
     const failed = allChecks.filter((c) => !c.pass);
     const errors = flattenErrors(modules);
@@ -145,7 +156,9 @@ function startQaScheduler() {
     '[qa] crawler enabled — every',
     Math.round(config.INTERVAL_MS / 60000),
     'min | browser:',
-    config.BROWSER_ENABLED ? 'on' : 'off (set QA_BROWSER_ENABLED=true + install playwright)'
+    config.BROWSER_ENABLED ? 'on' : 'off (set QA_BROWSER_ENABLED=true + install playwright)',
+    '| mobile-behavior:',
+    config.MOBILE_BEHAVIOR_ENABLED ? 'on' : 'off'
   );
 
   const tick = () => {

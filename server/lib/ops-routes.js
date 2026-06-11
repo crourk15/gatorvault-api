@@ -38,12 +38,18 @@ function requireOpsAuth(req, res) {
 }
 
 function mountOpsRoutes(app) {
+  const opsPage = path.join(__dirname, '..', 'admin-ops.html');
+
   app.get('/admin/ops', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'admin-ops.html'));
+    if (req.query.embed === '1') return res.sendFile(opsPage);
+    return res.redirect(302, '/admin#dashboard');
   });
 
   app.get('/admin/ops/identity-patterns', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'admin-ops-identity-patterns.html'));
+    if (req.query.embed === '1') {
+      return res.sendFile(path.join(__dirname, '..', 'admin-ops-identity-patterns.html'));
+    }
+    return res.redirect(302, '/admin#gm2/identity');
   });
 
   app.get('/admin-ops/articles/edit/:id', (req, res) => {
@@ -63,7 +69,15 @@ function mountOpsRoutes(app) {
   });
 
   app.get('/vault/ops', (req, res) => {
-    res.redirect(302, '/admin/ops');
+    res.redirect(302, '/admin#dashboard');
+  });
+
+  app.get('/api/ops/verify-pin', (req, res) => {
+    const pin = pinFromReq(req);
+    if (!verifyAdminPin(pin)) {
+      return res.status(401).json({ ok: false, authenticated: false, error: 'Invalid PIN' });
+    }
+    return res.status(200).json({ ok: true, authenticated: true });
   });
 
   app.get('/api/ops/status', async (req, res) => {

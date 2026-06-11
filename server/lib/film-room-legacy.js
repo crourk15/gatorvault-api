@@ -11,7 +11,9 @@ const MANUAL_PATH = path.join(__dirname, '..', 'data', 'film-room', 'manual.json
 const LEGACY_CATEGORIES = {
   GNFP: 'GNFP Film Review',
   FILM_GUY: 'Film Guy Network',
-  PRESS: 'UF Press Conferences'
+  PRESS: 'UF Press Conferences',
+  HIGHLIGHTS: 'Highlights',
+  BREAKDOWN: 'Film Breakdown'
 };
 
 const PRESS_CONFERENCE_LIMIT = 5;
@@ -68,9 +70,14 @@ function loadLegacyVideoCatalog() {
   });
 
   (manual.items || []).forEach((row) => {
+    const cat = String(row.category || '').trim();
     const src = String(row.source || row.title || '');
-    if (/film guy/i.test(src)) {
+    if (cat === 'Highlights' || /highlights/i.test(row.title || '')) {
+      items.push(legacyItemToCatalog(row, LEGACY_CATEGORIES.HIGHLIGHTS));
+    } else if (cat === 'Film Breakdown' || /film guy/i.test(src)) {
       items.push(legacyItemToCatalog(row, LEGACY_CATEGORIES.FILM_GUY));
+    } else if (/gators online/i.test(src) && /spring game/i.test(row.title || '')) {
+      items.push(legacyItemToCatalog(row, LEGACY_CATEGORIES.HIGHLIGHTS));
     }
   });
 

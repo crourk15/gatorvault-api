@@ -3,7 +3,9 @@
  */
 const path = require('path');
 const qaStore = require('./qa/qa-store');
+const mobileBehaviorStore = require('./qa/qa-mobile-behavior-store');
 const { runQaCrawl } = require('./qa/qa-runner');
+const { runMobileBehaviorChecks } = require('./qa/qa-mobile-behavior-checks');
 
 const ADMIN_PIN =
   process.env.OPS_ADMIN_PIN ||
@@ -40,10 +42,16 @@ function requireQaAuth(req, res) {
 
 function mountQaRoutes(app) {
   const qaPage = path.join(__dirname, '..', 'admin-qa.html');
+  const qaMobilePage = path.join(__dirname, '..', 'admin-qa-mobile.html');
 
   app.get('/admin/qa', (req, res) => {
     if (req.query.embed === '1') return res.sendFile(qaPage);
     return res.redirect(302, '/admin#qa/monitor');
+  });
+
+  app.get('/admin/qa/mobile-behavior', (req, res) => {
+    if (req.query.embed === '1') return res.sendFile(qaMobilePage);
+    return res.redirect(302, '/admin#qa/mobile-behavior');
   });
 
   app.get('/api/qa/dashboard', (req, res) => {
@@ -98,16 +106,40 @@ function mountQaRoutes(app) {
   app.get('/api/qa/health', (req, res) => {
     const doc = qaStore.readDoc();
     const last = doc.lastRun;
+    const mobile = mobileBehaviorStore.readDoc().lastRun;
     return res.json({
       ok: true,
       enabled: process.env.QA_CRAWLER_ENABLED !== 'false',
       lastRun: last,
+      mobileBehavior: mobile,
       healthy: last ? last.pass : null,
       uptime: doc.uptime
     });
   });
 
-  console.log('[qa] routes mounted: /api/qa/dashboard, /api/qa/errors, /api/qa/runs, POST /api/qa/run, /api/qa/health');
+  app.get('/api/qa/mobile-behavior/dashboard', (req, res) => {
+    if (!requireQaAuth(req, res)) return;
+    try {
+      const dashboard = mobileBehaviorStore.getDashboard();
+      return res.json({ ok: true, ...dashboard });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/qa/mobile-behavior/run', async (req, res) => {
+    if (!requireQaAuth(req, res)) return;
+    try {
+      const result = await runMobileBehaviorChecks({ standalone: true });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  console.log(
+    '[qa] routes mounted: /api/qa/dashboard, /api/qa/errors, /api/qa/runs, POST /api/qa/run, /api/qa/health, /api/qa/mobile-behavior/*'
+  );
 }
 
 module.exports = { mountQaRoutes };

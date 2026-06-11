@@ -140,7 +140,9 @@ function mountGm2Routes(app) {
   });
 
   app.get('/admin/ops/gm2', (req, res) => {
-    res.sendFile(require('path').join(__dirname, '..', '..', 'admin-ops-gm2.html'));
+    const page = require('path').join(__dirname, '..', '..', 'admin-ops-gm2.html');
+    if (req.query.embed === '1') return res.sendFile(page);
+    return res.redirect(302, '/admin#gm2/integrity');
   });
 }
 

@@ -71,6 +71,10 @@ services:
         value: "60000"
       - key: X_AUTOPOST_REPLY_ENABLED
         value: "true"
+      - key: X_AUTOPOST_QUOTE_REWRITER
+        value: "true"
+      - key: X_AUTOPOST_SPORT_CLASSIFIER
+        value: "true"
       - key: GNFP_YOUTUBE_CHANNEL_ID
         value: "UC4uzOAHPLPqEnNpNmDUP1VA"
       - key: GV_PRICING_LAUNCH_YEAR

@@ -99,7 +99,9 @@ const HARD_SKIP_TYPES = new Set([
   'missing_context',
   'missing_insider',
   'unverified_sourcing',
-  'stale'
+  'stale',
+  'verbatim_overlap',
+  'non_football_sport'
 ]);
 
 function normalizeSentence(s) {
@@ -493,6 +495,17 @@ function computeSourceConfidence(sources, item) {
   return { score: SOURCE_CONFIDENCE_REQUIRED, pass: true };
 }
 
+function hasExcessiveSourceOverlap(text, sourceText, threshold) {
+  if (!text || !sourceText) return false;
+  try {
+    const quoteRewriter = require('./x-autoposter-recruiting-quote-rewriter');
+    if (!quoteRewriter.isRewriterEnabled()) return false;
+    return quoteRewriter.sourceOverlapRatio(text, sourceText) > (threshold || quoteRewriter.OVERLAP_THRESHOLD);
+  } catch {
+    return false;
+  }
+}
+
 function collectHardSkipReasons(item, blocks, meta) {
   const skips = [];
 
@@ -515,6 +528,36 @@ function collectHardSkipReasons(item, blocks, meta) {
       type: 'truncated_copy',
       message: 'Copy ends with a broken fragment or ellipsis — automatic skip.'
     });
+  }
+
+  const fullText = String(item.text || '');
+  if (/full details via the original report/i.test(fullText)) {
+    skips.push({ type: 'generic_closure', message: 'Generic fallback closure — automatic skip.' });
+  }
+  if (/^per .+ report\.?\s*$/im.test(blocks.insider || '') && !meta.eliteMode) {
+    skips.push({ type: 'generic_attribution', message: 'Bare attribution-only insider line — automatic skip.' });
+  }
+
+  const beatSource = meta.beatText || item.validationMeta?.beatText || null;
+  if (beatSource) {
+    const combined = [blocks.context, blocks.insider].filter(Boolean).join(' ');
+    if (hasExcessiveSourceOverlap(combined, beatSource)) {
+      skips.push({
+        type: 'verbatim_overlap',
+        message: 'Caption overlaps source tweet >40% — automatic skip (verbatim beat copy blocked).'
+      });
+    }
+    try {
+      const sportClassifier = require('./x-autoposter-sport-classifier');
+      if (!sportClassifier.isFootballAutoposterEligible(beatSource, item.sourcePost || null)) {
+        skips.push({
+          type: 'non_football_sport',
+          message: 'Non-football sport content — football autoposter only.'
+        });
+      }
+    } catch {
+      /* optional */
+    }
   }
 
   const combined = [blocks.identity, blocks.context, blocks.insider].filter(Boolean).join('\n');
@@ -675,6 +718,7 @@ module.exports = {
   normalizeSentence,
   parseTemplateBlocks,
   hasDuplicateSentences,
+  hasExcessiveSourceOverlap,
   isGenericSyntheticContext,
   isHeadlineOnlyLine,
   isRankOnlyInsider,

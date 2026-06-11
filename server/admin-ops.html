@@ -138,6 +138,24 @@
       </div>
 
       <div class="section">
+        <h2>Event Cluster Log</h2>
+        <p class="sub" style="margin:0 0 .5rem">One event = one quote RT — cluster size, chosen source, ignored duplicates.</p>
+        <div style="display:flex;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap">
+          <button id="load-cluster-logs" class="secondary sm">Load cluster log</button>
+        </div>
+        <div class="log-panel" id="cluster-log-panel" style="max-height:280px">Load with admin PIN.</div>
+      </div>
+
+      <div class="section">
+        <h2>Elite Autoposter Captions</h2>
+        <p class="sub" style="margin:0 0 .5rem">Multi-source research log — event type, sources used, final caption.</p>
+        <div style="display:flex;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap">
+          <button id="load-elite-logs" class="secondary sm">Load elite caption log</button>
+        </div>
+        <div class="log-panel" id="elite-log-panel" style="max-height:280px">Load with admin PIN.</div>
+      </div>
+
+      <div class="section">
         <h2>Subsystem Logs</h2>
         <div style="display:flex;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap">
           <select id="log-subsystem"><option value="">All subsystems</option></select>
@@ -184,6 +202,8 @@
           actions+='<button class="sm" data-force-post="1">Force Post Now</button>';
           actions+='<button class="secondary sm" data-autoposter-rebuild-patterns="1">Rebuild All Patterns</button>';
           actions+='<button class="secondary sm" data-logs="autoposter">View logs</button>';
+          actions+='<button class="secondary sm" data-elite-logs="1">Elite captions</button>';
+          actions+='<button class="secondary sm" data-cluster-logs="1">Event clusters</button>';
         } else {
           body='<div class="summary">'+esc(t.summary||'')+'</div>'+
             '<div class="meta">Last: '+fmtTime(t.lastRun)+'</div>';
@@ -228,10 +248,10 @@
       el.querySelectorAll('[data-autoposter-rebuild-patterns]').forEach(function(btn){
         btn.addEventListener('click',rebuildPatterns);
       });
-      el.querySelectorAll('[data-insider]').forEach(function(btn){
+      el.querySelectorAll('[data-cluster-logs]').forEach(function(btn){
         btn.addEventListener('click',function(){
-          document.getElementById('insider-articles-panel').scrollIntoView({behavior:'smooth'});
-          loadInsiderArticles();
+          document.getElementById('cluster-log-panel').scrollIntoView({behavior:'smooth'});
+          loadClusterLogs();
         });
       });
     }
@@ -298,7 +318,7 @@
 
     function populateLogFilter(tiles){
       var sel=document.getElementById('log-subsystem');
-      var opts=['','ops:run-job','autoposter','autoposter:program-news','cron:recruiting-ingest','cron:portal-ingest','autoposter:beat-writer','cron:identity-patterns','api:health','db:health','deployments'];
+      var opts=['','ops:run-job','autoposter','autoposter:elite','autoposter:cluster','autoposter:program-news','cron:recruiting-ingest','cron:portal-ingest','autoposter:beat-writer','cron:identity-patterns','api:health','db:health','deployments'];
       (tiles||[]).forEach(function(t){if(t.id&&!opts.includes(t.id))opts.push(t.id);});
       sel.innerHTML=opts.map(function(v){
         return '<option value="'+esc(v)+'">'+(v?esc(v):'All subsystems')+'</option>';
@@ -327,6 +347,59 @@
           renderAlerts(j.alerts);
         })
         .catch(function(e){alert('Status error: '+e.message);});
+    }
+
+    function loadEliteLogs(){
+      var p=pin();
+      if(!p){document.getElementById('elite-log-panel').textContent='Enter admin PIN first.';return;}
+      fetch(API+'/api/x/autoposter/elite/logs?limit=40&pin='+encodeURIComponent(p),{headers:headers()})
+        .then(function(r){return r.json();})
+        .then(function(j){
+          var panel=document.getElementById('elite-log-panel');
+          if(!j.ok){panel.textContent=j.error||'Failed';return;}
+          var entries=j.entries||[];
+          if(!entries.length){panel.textContent='No elite caption entries yet.';return;}
+          panel.innerHTML=entries.map(function(e){
+            var src=(e.sourcesUsed||[]).map(function(s){return typeof s==='string'?s:(s.label||s.id||'');}).filter(Boolean).join(', ')||'—';
+            var ctx=e.context?JSON.stringify(e.context):'';
+            return '<div style="margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid #334155">'+
+              '<strong>'+esc(fmtTime(e.timestamp||e.at))+'</strong> · '+esc(e.eventType||'unknown')+'<br>'+
+              '<span class="meta">Sources: '+esc(src)+'</span><br>'+
+              (ctx?'<span class="meta">Context: '+esc(ctx)+'</span><br>':'')+
+              '<span style="color:#93c5fd">'+esc(e.caption||e.finalCaption||'—')+'</span>'+
+              '</div>';
+          }).join('');
+        })
+        .catch(function(e){document.getElementById('elite-log-panel').textContent=e.message;});
+    }
+
+    function loadClusterLogs(){
+      var p=pin();
+      if(!p){document.getElementById('cluster-log-panel').textContent='Enter admin PIN first.';return;}
+      fetch(API+'/api/x/autoposter/cluster/logs?limit=40&pin='+encodeURIComponent(p),{headers:headers()})
+        .then(function(r){return r.json();})
+        .then(function(j){
+          var panel=document.getElementById('cluster-log-panel');
+          if(!j.ok){panel.textContent=j.error||'Failed';return;}
+          var entries=j.entries||[];
+          if(!entries.length){panel.textContent='No event cluster entries yet.';return;}
+          panel.innerHTML=entries.map(function(e){
+            var chosen=e.chosenSource||{};
+            var ignored=(e.ignoredSources||[]).map(function(s){return s.writer||s.handle||'';}).filter(Boolean).join(', ');
+            var src=(e.sourcesUsed||[]).map(function(s){return typeof s==='string'?s:(s.label||'');}).filter(Boolean).join(', ')||'—';
+            return '<div style="margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid #334155">'+
+              '<strong>'+esc(fmtTime(e.timestamp||e.at))+'</strong> · '+esc(e.eventType||'unknown')+
+              ' · '+esc(e.clusterSize||1)+' tweets ('+esc(e.duplicateCount||0)+' dupes)<br>'+
+              '<span class="meta">Chosen: '+esc(chosen.writer||chosen.handle||'—')+
+              (chosen.tierLabel?' · '+esc(chosen.tierLabel):'')+'</span><br>'+
+              (ignored?'<span class="meta">Ignored: '+esc(ignored)+'</span><br>':'')+
+              '<span class="meta">Research: '+esc(src)+'</span><br>'+
+              '<span style="color:#93c5fd">'+esc(e.finalCaption||'—')+'</span>'+
+              (e.programImpact?'<br><span class="meta">Impact: '+esc(e.programImpact)+'</span>':'')+
+              '</div>';
+          }).join('');
+        })
+        .catch(function(e){document.getElementById('cluster-log-panel').textContent=e.message;});
     }
 
     function loadLogs(){
@@ -407,6 +480,8 @@
     document.getElementById('refresh').addEventListener('click',function(){loadStatus(false);});
     document.getElementById('eval-alerts').addEventListener('click',function(){loadStatus(true);});
     document.getElementById('load-logs').addEventListener('click',loadLogs);
+    document.getElementById('load-elite-logs').addEventListener('click',loadEliteLogs);
+    document.getElementById('load-cluster-logs').addEventListener('click',loadClusterLogs);
 
     function loadMot(){
       var p=pin(); if(!p)return;

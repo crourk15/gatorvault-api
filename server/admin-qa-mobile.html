@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GatorVault — Mobile Behavior QA</title>
+  <style>
+    :root { --bg:#0b1220; --panel:#121a2b; --text:#e8edf5; --muted:#8b9bb4; --orange:#fa4616; --ok:#22c55e; --fail:#f87171; --warn:#fbbf24; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); }
+    header { padding:1rem 1.5rem; border-bottom:1px solid #1e293b; display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between; }
+    h1 { margin:0; font-size:1.2rem; }
+    .sub { color:var(--muted); font-size:.8rem; margin:.35rem 0 0; max-width:640px; }
+    main { padding:1rem 1.5rem 2rem; max-width:1280px; margin:0 auto; }
+    .row { display:flex; flex-wrap:wrap; gap:.75rem; align-items:center; }
+    input, button { font:inherit; }
+    input[type=password] { background:var(--panel); border:1px solid #334155; color:var(--text); padding:.5rem .75rem; border-radius:.5rem; min-width:200px; }
+    button { background:var(--orange); color:#fff; border:0; padding:.5rem 1rem; border-radius:.5rem; cursor:pointer; min-height:44px; }
+    button.secondary { background:#334155; }
+    .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:.75rem; margin:1rem 0 1.5rem; }
+    .stat { background:var(--panel); border:1px solid #1e293b; border-radius:.75rem; padding:.75rem 1rem; }
+    .stat .label { color:var(--muted); font-size:.7rem; text-transform:uppercase; letter-spacing:.04em; }
+    .stat .value { font-size:1.25rem; font-weight:700; margin-top:.25rem; }
+    .stat.ok .value { color:var(--ok); }
+    .stat.fail .value { color:var(--fail); }
+    table { width:100%; border-collapse:collapse; background:var(--panel); border-radius:.75rem; overflow:hidden; margin-bottom:1.5rem; }
+    th, td { padding:.65rem .85rem; text-align:left; border-bottom:1px solid #1e293b; font-size:.8125rem; vertical-align:top; }
+    th { color:var(--muted); font-weight:600; font-size:.7rem; text-transform:uppercase; }
+    .type { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--warn); }
+    .type.feed-freshness { color:#60a5fa; }
+    .type.navigation { color:#c084fc; }
+    .type.tab-theme { color:var(--fail); }
+    .type.stale-html { color:var(--orange); }
+    .sev-critical { color:var(--fail); font-weight:700; }
+    .sev-high { color:var(--warn); }
+    .sev-medium { color:var(--muted); }
+    .fix { color:#93c5fd; font-size:.78rem; line-height:1.45; }
+    .mono { font-family:ui-monospace,monospace; font-size:.75rem; color:var(--muted); }
+    .empty { padding:2rem; text-align:center; color:var(--muted); }
+    h2 { font-size:1rem; margin:1.5rem 0 .75rem; }
+    .status { font-size:.875rem; color:var(--muted); }
+    .status.ok { color:var(--ok); }
+    .status.fail { color:var(--fail); }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>📱 Mobile Behavior QA</h1>
+      <p class="sub">Headless iPhone/Android viewport flows — feed freshness, back navigation, Team tab theme, stale HTML. Admin-only; nothing shown to mobile users.</p>
+    </div>
+    <div class="row">
+      <input id="pin" type="password" placeholder="Admin PIN" autocomplete="off" />
+      <button id="refresh">Refresh</button>
+      <button id="run-now" class="secondary">Run Mobile QA</button>
+    </div>
+  </header>
+  <main>
+    <p class="status" id="status">Enter admin PIN and refresh.</p>
+    <div class="stats" id="stats"></div>
+
+    <h2>Issues (type · screen · description · suggested fix)</h2>
+    <table>
+      <thead>
+        <tr><th>Time</th><th>Type</th><th>Screen</th><th>Description</th><th>Suggested Fix</th><th>Viewport</th></tr>
+      </thead>
+      <tbody id="issues-body"></tbody>
+    </table>
+
+    <h2>Recent Mobile QA Runs</h2>
+    <table>
+      <thead><tr><th>Time</th><th>Result</th><th>Viewport</th><th>Issues</th><th>Duration</th><th>Run ID</th></tr></thead>
+      <tbody id="runs-body"></tbody>
+    </table>
+    <div class="empty" id="empty" hidden>No mobile behavior runs yet — runs with each QA crawl when Playwright is installed.</div>
+  </main>
+  <script>
+    var API = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'http://localhost:3000'
+      : 'https://gatorvault-api.onrender.com';
+    var SESSION_KEY = 'gv_admin_pin';
+
+    function esc(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function pin() {
+      return document.getElementById('pin').value || sessionStorage.getItem(SESSION_KEY) || '';
+    }
+
+    function headers() {
+      return { 'x-ops-pin': pin(), Accept: 'application/json', 'Content-Type': 'application/json' };
+    }
+
+    function stat(label, value, cls) {
+      return '<div class="stat ' + cls + '"><div class="label">' + esc(label) + '</div><div class="value">' + esc(String(value)) + '</div></div>';
+    }
+
+    function renderStats(data) {
+      var last = data.lastRun || {};
+      document.getElementById('stats').innerHTML = [
+        stat('Last Run', last.pass ? 'PASS' : (last.at ? 'FAIL' : '—'), last.pass ? 'ok' : (last.at ? 'fail' : '')),
+        stat('Issues', last.issueCount != null ? last.issueCount : (data.issues ? data.issues.length : 0), last.issueCount ? 'fail' : 'ok'),
+        stat('Viewport', last.viewport || '—', ''),
+        stat('Duration', last.durationMs ? last.durationMs + 'ms' : '—', ''),
+        stat('Updated', (data.updatedAt || '').replace('T',' ').slice(0,19) || '—', '')
+      ].join('');
+    }
+
+    function renderIssues(issues) {
+      var tbody = document.getElementById('issues-body');
+      if (!issues || !issues.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty">No mobile behavior issues recorded 🎉</td></tr>';
+        return;
+      }
+      tbody.innerHTML = issues.map(function(i) {
+        return '<tr>'
+          + '<td class="mono">' + esc((i.at || '').replace('T',' ').slice(0,19)) + '</td>'
+          + '<td><span class="type ' + esc(i.type) + '">' + esc(i.type) + '</span></td>'
+          + '<td>' + esc(i.screen) + '</td>'
+          + '<td>' + esc(i.description) + '</td>'
+          + '<td class="fix">' + esc(i.suggestedFix) + '</td>'
+          + '<td class="mono">' + esc(i.viewport || '—') + '</td></tr>';
+      }).join('');
+    }
+
+    function renderRuns(runs) {
+      var tbody = document.getElementById('runs-body');
+      var empty = document.getElementById('empty');
+      if (!runs || !runs.length) {
+        tbody.innerHTML = '';
+        empty.hidden = false;
+        return;
+      }
+      empty.hidden = true;
+      tbody.innerHTML = runs.map(function(r) {
+        var issueN = (r.issues || []).length;
+        return '<tr>'
+          + '<td class="mono">' + esc((r.finishedAt || '').replace('T',' ').slice(0,19)) + '</td>'
+          + '<td class="' + (r.pass ? 'status ok' : 'status fail') + '">' + (r.pass ? 'PASS' : 'FAIL') + '</td>'
+          + '<td>' + esc(r.viewport || '—') + '</td>'
+          + '<td>' + issueN + '</td>'
+          + '<td>' + esc(String(r.durationMs || '—')) + 'ms</td>'
+          + '<td class="mono">' + esc(r.id) + '</td></tr>';
+      }).join('');
+    }
+
+    function load() {
+      var p = pin();
+      if (!p) {
+        document.getElementById('status').textContent = 'Enter admin PIN.';
+        return;
+      }
+      sessionStorage.setItem(SESSION_KEY, p);
+      document.getElementById('status').textContent = 'Loading…';
+      fetch(API + '/api/qa/mobile-behavior/dashboard', { headers: headers() })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (!data.ok) throw new Error(data.error || 'Failed');
+          renderStats(data);
+          renderIssues(data.issues);
+          renderRuns(data.recentRuns);
+          var last = data.lastRun || {};
+          document.getElementById('status').textContent = last.at
+            ? ('Last mobile QA: ' + (last.pass ? 'PASS' : 'FAIL') + ' at ' + last.at.replace('T',' ').slice(0,19))
+            : 'No mobile behavior runs yet.';
+          document.getElementById('status').className = 'status ' + (last.pass ? 'ok' : (last.at ? 'fail' : ''));
+        })
+        .catch(function(err) {
+          document.getElementById('status').textContent = 'Error: ' + err.message;
+          document.getElementById('status').className = 'status fail';
+        });
+    }
+
+    document.getElementById('refresh').addEventListener('click', load);
+    document.getElementById('run-now').addEventListener('click', function() {
+      var p = pin();
+      if (!p) { alert('Enter admin PIN'); return; }
+      sessionStorage.setItem(SESSION_KEY, p);
+      document.getElementById('status').textContent = 'Running mobile behavior QA (Playwright)…';
+      fetch(API + '/api/qa/mobile-behavior/run', { method: 'POST', headers: headers(), body: '{}' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (!data.ok && !data.report) throw new Error(data.error || 'Run failed');
+          load();
+        })
+        .catch(function(err) {
+          document.getElementById('status').textContent = 'Run error: ' + err.message;
+        });
+    });
+
+    window.addEventListener('gv-admin-embed-unlock', function() {
+      var hubPin = sessionStorage.getItem(SESSION_KEY);
+      if (hubPin) document.getElementById('pin').value = hubPin;
+      load();
+    });
+
+    if (sessionStorage.getItem(SESSION_KEY)) {
+      document.getElementById('pin').value = sessionStorage.getItem(SESSION_KEY);
+      load();
+    }
+
+    setInterval(load, 90000);
+  </script>
+</body>
+</html>

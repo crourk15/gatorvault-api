@@ -187,10 +187,11 @@ function disableEllipsisForCopy(meta = {}) {
   return hasUrlOrThreadRef(combined);
 }
 
-function ensureCompleteSentence(text, fallback = COPY_FALLBACK_CLOSURE) {
+function ensureCompleteSentence(text, fallback = COPY_FALLBACK_CLOSURE, meta = {}) {
+  const fb = meta.eliteMode ? '' : fallback;
   let t = sanitizeUrlsInText(text, { removeOnFailure: true }).text;
   t = stripEmojisHashtags(t).replace(/…+/g, '').replace(/\.{3,}/g, '').trim();
-  if (!t) return fallback;
+  if (!t) return fb || null;
   if (isIdentityLine(t)) return t;
   if (isUrlLine(t)) return t;
 
@@ -207,23 +208,24 @@ function ensureCompleteSentence(text, fallback = COPY_FALLBACK_CLOSURE) {
     if (t === prev) break;
   }
 
-  if (!t || t.length < 12) return fallback;
+  if (!t || t.length < 12) return fb || (meta.eliteMode ? null : fallback);
   if (endsCompleteSentence(t) && !hasBrokenEnding(t)) return t;
 
   t = t.replace(/[,;:\u2013\u2014-]+$/, '').trim();
-  if (!t) return fallback;
+  if (!t) return fb || (meta.eliteMode ? null : fallback);
+  if (meta.eliteMode) return `${t}.`;
   return `${t}. ${fallback}`;
 }
 
 function sanitizeCopyLine(text, maxLen, meta = {}) {
-  const fallback = COPY_FALLBACK_CLOSURE;
+  const fallback = meta.eliteMode ? '' : COPY_FALLBACK_CLOSURE;
   const noEllipsis = disableEllipsisForCopy({ ...meta, text });
   let working = sanitizeUrlsInText(text, { removeOnFailure: true }).text;
   working = stripEmojisHashtags(working);
-  if (!working) return fallback;
+  if (!working) return fallback || (meta.eliteMode ? '' : COPY_FALLBACK_CLOSURE);
 
   if (working.length <= maxLen) {
-    return ensureCompleteSentence(working, fallback);
+    return ensureCompleteSentence(working, fallback, meta);
   }
 
   if (noEllipsis || hasUrlOrThreadRef(text)) {
@@ -235,21 +237,21 @@ function sanitizeCopyLine(text, maxLen, meta = {}) {
       else break;
     }
     if (out && out.length >= Math.min(40, Math.floor(maxLen * 0.25))) {
-      return ensureCompleteSentence(out, fallback);
+      return ensureCompleteSentence(out, fallback, meta);
     }
     const trimmed = working.slice(0, maxLen).replace(/\s+\S*$/, '').trim();
-    return ensureCompleteSentence(trimmed, fallback);
+    return ensureCompleteSentence(trimmed, fallback, meta);
   }
 
   const trimmed = working.slice(0, maxLen).replace(/\s+\S*$/, '').trim();
-  return ensureCompleteSentence(trimmed, fallback);
+  return ensureCompleteSentence(trimmed, fallback, meta);
 }
 
 function finalizeAutoposterCopy(text, meta = {}) {
-  const fallback = COPY_FALLBACK_CLOSURE;
+  const fallback = meta.eliteMode ? '' : COPY_FALLBACK_CLOSURE;
   let t = sanitizeUrlsInText(text, { removeOnFailure: true }).text;
   t = stripEmojisHashtags(t);
-  if (!t) return fallback;
+  if (!t) return fallback || '';
   const lines = t
     .split('\n')
     .map((line, idx) => {
@@ -257,7 +259,7 @@ function finalizeAutoposterCopy(text, meta = {}) {
       if (!trimmed) return '';
       if (idx === 0 && isIdentityLine(trimmed)) return trimmed;
       if (isUrlLine(trimmed)) return trimmed;
-      return ensureCompleteSentence(trimmed, fallback);
+      return ensureCompleteSentence(trimmed, fallback, meta);
     })
     .filter(Boolean);
   t = lines.join('\n');
@@ -269,7 +271,7 @@ function finalizeAutoposterCopy(text, meta = {}) {
           : isUrlLine(line)
             ? line
             : isTruncatedCopy(line)
-              ? ensureCompleteSentence(line, fallback)
+              ? ensureCompleteSentence(line, fallback, meta)
               : line
       )
       .join('\n');

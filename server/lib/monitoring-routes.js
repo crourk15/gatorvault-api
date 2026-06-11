@@ -21,7 +21,9 @@ function pinFromReq(req) {
 
 function mountMonitoringRoutes(app) {
   app.get('/admin/monitoring', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'admin-monitoring.html'));
+    const page = path.join(__dirname, '..', 'admin-monitoring.html');
+    if (req.query.embed === '1') return res.sendFile(page);
+    return res.redirect(302, '/admin#recruiting/monitoring');
   });
 
   app.post('/api/internal/monitoring/alert', async (req, res) => {

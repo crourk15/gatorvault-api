@@ -41,13 +41,17 @@ async function main() {
     .resize(48, 48)
     .png()
     .toFile(path.join(ROOT, 'favicon-48.png'));
+  await sharp(favSvg, { density: 144 })
+    .resize(32, 32)
+    .png()
+    .toFile(path.join(ROOT, 'favicon.ico'));
 
   const ogStat = fs.statSync(path.join(ROOT, 'og-image.png'));
   const jpgStat = fs.statSync(path.join(ROOT, 'og-image.jpg'));
   const meta = await sharp(path.join(ROOT, 'og-image.png')).metadata();
   console.log(`og-image.png: ${meta.width}x${meta.height}, ${Math.round(ogStat.size / 1024)} KB`);
   console.log(`og-image.jpg: ${meta.width}x${meta.height}, ${Math.round(jpgStat.size / 1024)} KB`);
-  console.log('favicon-32.png, favicon-48.png, apple-touch-icon.png written');
+  console.log('favicon-32.png, favicon-48.png, favicon.ico, apple-touch-icon.png written');
 }
 
 main().catch((err) => {

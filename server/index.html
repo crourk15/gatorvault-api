@@ -462,7 +462,13 @@
             .gv-trending-name{font-size:12px;font-weight:700;color:#f8fafc;line-height:1.2;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
             .gv-trending-meta{font-size:10px;color:#64748b;line-height:1.2;}
 
-            .gv-top-gator-card{flex:0 0 130px;max-width:130px;min-width:130px;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;padding-top:4px;scroll-snap-align:start;}
+            .gv-top-gator-card{flex:0 0 148px;max-width:148px;min-width:148px;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;padding:8px 6px 10px;scroll-snap-align:start;background:#121c2e;border:1px solid rgba(0,48,135,.35);border-radius:14px;}
+            .gv-top-gator-card--spotlight{border-color:rgba(250,70,22,.25);}
+            .gv-top-gator-photo-wrap{width:88px;height:88px;margin:8px auto 8px;border-radius:12px;overflow:hidden;background:linear-gradient(145deg,#0a1628,#003087);border:2px solid rgba(250,70,22,.35);position:relative;display:flex;align-items:center;justify-content:center;}
+            .gv-top-gator-photo{width:100%;height:100%;object-fit:cover;display:block;}
+            .gv-top-gator-photo-fallback{font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;color:var(--gv-uf-orange);}
+            .gv-top-gator-accolade{font-size:10px;line-height:1.35;color:#94a3b8;margin:0 4px 6px;min-height:28px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+            .war-scout-card .war-room-panel{margin-top:0;border:0;border-radius:0;background:transparent;}
             #gv-mhome-topgators{padding-right:48px;-webkit-overflow-scrolling:touch;overflow-x:auto;overflow-y:hidden;touch-action:pan-x pan-y;scroll-snap-type:x mandatory;}
             /* Team module styles → /css/gv-team.css */
             .gv-schedule-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#121c2e;border:1px solid rgba(0,48,135,.35);border-radius:12px;padding:12px 14px;margin-bottom:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
@@ -1136,13 +1142,6 @@
                         </div>
                         <div id="gv-mteam-staff"></div>
                     </section>
-                    <section class="gv-team-section gv-mob-module">
-                        <div class="gv-team-section-head">
-                            <h2 class="gv-team-section-title">Roster</h2>
-                        </div>
-                        <div id="gv-mteam-roster-filters" class="gv-mteam-roster-filters"></div>
-                        <div id="gv-mteam-roster-list" class="gv-mteam-roster-list"></div>
-                    </section>
                     <section class="gv-team-section gv-mob-module gv-team-dc-wrap" id="gv-mteam-dc-section">
                         <div class="gv-team-section-head">
                             <div>
@@ -1158,6 +1157,13 @@
                         <div id="gv-mteam-dc-off" class="active dc-phase grid grid-cols-1 gap-3"></div>
                         <div id="gv-mteam-dc-def" class="dc-phase grid grid-cols-1 gap-3" style="display:none;"></div>
                         <div id="gv-mteam-dc-st" class="dc-phase grid grid-cols-1 gap-3" style="display:none;"></div>
+                    </section>
+                    <section class="gv-team-section gv-mob-module">
+                        <div class="gv-team-section-head">
+                            <h2 class="gv-team-section-title">Roster</h2>
+                        </div>
+                        <div id="gv-mteam-roster-filters" class="gv-mteam-roster-filters"></div>
+                        <div id="gv-mteam-roster-list" class="gv-mteam-roster-list"></div>
                     </section>
                 </div>
 
@@ -1194,14 +1200,6 @@
                         </div>
                         <div id="gv-team-staff"></div>
                     </section>
-                    <section class="gv-team-section">
-                        <div class="gv-team-section-head">
-                            <h2 class="gv-team-section-title">Roster</h2>
-                            <p class="gv-team-section-desc">Vault-rated 2026 roster · filter by position</p>
-                        </div>
-                        <div id="gv-team-roster-filters" class="gv-mteam-roster-filters"></div>
-                        <div id="gv-team-roster-list" class="gv-team-roster-grid"></div>
-                    </section>
                     <section class="gv-team-section gv-team-dc-wrap" id="gv-team-dc-section">
                         <div class="gv-team-section-head">
                             <div>
@@ -1222,6 +1220,14 @@
                         <div id="gv-team-dc-off" class="active dc-phase grid grid-cols-1 md:grid-cols-2 gap-3"></div>
                         <div id="gv-team-dc-def" class="dc-phase grid grid-cols-1 md:grid-cols-2 gap-3" style="display:none;"></div>
                         <div id="gv-team-dc-st" class="dc-phase grid grid-cols-1 md:grid-cols-2 gap-3" style="display:none;"></div>
+                    </section>
+                    <section class="gv-team-section">
+                        <div class="gv-team-section-head">
+                            <h2 class="gv-team-section-title">Roster</h2>
+                            <p class="gv-team-section-desc">Vault-rated 2026 roster · filter by position</p>
+                        </div>
+                        <div id="gv-team-roster-filters" class="gv-mteam-roster-filters"></div>
+                        <div id="gv-team-roster-list" class="gv-team-roster-grid"></div>
                     </section>
                 </div>
 
@@ -1423,9 +1429,10 @@
                 <div data-id="652" id="vpane-highlights" class="vpane fade-in space-y-6">
                     <div>
                         <h1 data-id="653" class="font-display text-2xl md:text-3xl font-bold text-white">📺 Film Room</h1>
-                        <p class="text-surface-200 text-sm mt-1 max-w-2xl">Verified coaching knowledge — scheme library, concept breakdowns, recruiting fit, and opponent prep. Sourced from clinics, OC/DC interviews, analyst breakdowns, and public film study.</p>
+                        <p class="text-surface-200 text-sm mt-1 max-w-2xl">Scheme hubs, film breakdowns, press conferences, and highlights — organized so you can drill into offense, defense, or video without clutter.</p>
                     </div>
                     <div id="film-room-categories" class="flex flex-wrap gap-2"></div>
+                    <div id="film-room-hub-desc" class="text-xs text-surface-200/60"></div>
                     <div id="highlights-shell"></div>
                 </div>
 
@@ -2945,11 +2952,9 @@
             +gvWarRoomSection('Weaknesses',b.weaknesses,true)
             +gvWarRoomSection('Player comparison',b.comparison)
             +gvWarRoomSection('Scheme fit',b.schemeFit)
-            +gvWarRoomSection('Staff evaluation',b.staffNotes)
             +gvWarRoomSection('Projection (2–3 years)',b.projection)
             +gvWarRoomSection('Insider notes',b.insiderNotes)
-            +gvWarRoomSection('Recruiting story',b.recruitingStory)
-            +gvWarRoomSection('NFL projection',b.nflProjection);
+            +gvWarRoomSection('Recruiting story',b.recruitingStory);
         if(b.sources&&b.sources.length){
             html+='<div class="war-sources">Sources: '+b.sources.map(function(s){
                 var label=gvEscHtml(s.writer)+(s.outlet?' · '+gvEscHtml(s.outlet):'');
@@ -2976,6 +2981,60 @@
     window._gvScoutingType='all';
     function gvScoutingTypeLabel(t){
         return {recruit:'Recruit',commit:'Commit',portal:'Portal',target:'Target',roster:'Roster'}[t]||t;
+    }
+    function gvFindRecruitPlayer(slug){
+        if(!slug)return null;
+        var lists=[].concat(class2027||[],class2026||[],portalIncoming||[],window.playerProfiles||[]);
+        return lists.find(function(p){return p.slug===slug;})||null;
+    }
+    function gvFmtPlayerLocation(p){
+        if(!p)return '';
+        if(p.hometown)return p.hometown;
+        if(p.city&&p.state)return p.city+', '+p.state;
+        if(p.school)return p.school;
+        return '';
+    }
+    function gvRenderWarRoomScoutingCard(b,expanded){
+        var p=gvFindRecruitPlayer(b.playerSlug)||{};
+        var loc=gvFmtPlayerLocation(p);
+        var stars=p.stars?('★'.repeat(Math.min(5,p.stars))):'';
+        var natlLine=(p.natl||p.natlRank)!=null?'#'+(p.natl||p.natlRank)+' natl':'';
+        var posLine=[p.pos||'',stars,loc,natlLine].filter(Boolean).join(' · ');
+        var commit=p.commitDate||p.date;
+        var committedTo=p.committedTo||p.status||'Florida';
+        var cardId='war-scout-'+gvEscHtml(b.playerSlug||'');
+        var html='<div class="war-scout-card bg-surface-800 border border-gator-blue/20 rounded-xl overflow-hidden" id="'+cardId+'">';
+        html+='<div class="p-4 border-b border-gator-blue/10">';
+        html+='<div class="flex items-start justify-between gap-3 flex-wrap">';
+        html+='<div><h3 class="font-display text-lg font-bold text-white">'+gvEscHtml(b.playerName||p.name||b.playerSlug)+'</h3>';
+        html+='<p class="text-xs text-gator-orange font-semibold mt-1">'+gvEscHtml(gvScoutingTypeLabel(b.playerType))+(b.featured?' · ⭐ Featured':'')+'</p>';
+        if(posLine)html+='<p class="text-sm text-surface-200/80 mt-2">'+gvEscHtml(posLine)+'</p>';
+        html+='</div>';
+        html+='<a href="/player/'+gvEscHtml(b.playerSlug)+'" class="text-xs font-bold text-gator-orange whitespace-nowrap">Full profile →</a>';
+        html+='</div>';
+        html+='<div class="grid grid-cols-2 md:grid-cols-3 gap-2 mt-3 text-xs">';
+        if(loc)html+='<div class="bg-surface-900 rounded-lg p-2"><span class="text-surface-200/50 block">Location</span><span class="text-white font-semibold">'+gvEscHtml(loc)+'</span></div>';
+        if(p.htWt)html+='<div class="bg-surface-900 rounded-lg p-2"><span class="text-surface-200/50 block">Ht / Wt</span><span class="text-white font-semibold">'+gvEscHtml(p.htWt)+'</span></div>';
+        if((p.natl||p.natlRank)!=null)html+='<div class="bg-surface-900 rounded-lg p-2"><span class="text-surface-200/50 block">Natl Rank</span><span class="text-white font-semibold">#'+(p.natl||p.natlRank)+'</span></div>';
+        if((p.posRk||p.posRank)!=null)html+='<div class="bg-surface-900 rounded-lg p-2"><span class="text-surface-200/50 block">Pos Rank</span><span class="text-white font-semibold">#'+(p.posRk||p.posRank)+'</span></div>';
+        if((p.stRk||p.stateRank)!=null)html+='<div class="bg-surface-900 rounded-lg p-2"><span class="text-surface-200/50 block">State Rank</span><span class="text-white font-semibold">#'+(p.stRk||p.stateRank)+'</span></div>';
+        html+='<div class="bg-surface-900 rounded-lg p-2"><span class="text-surface-200/50 block">Status</span><span class="text-white font-semibold">'+gvEscHtml(committedTo)+'</span></div>';
+        html+='</div>';
+        if(commit)html+='<p class="text-xs text-surface-200/60 mt-3">Committed: '+gvEscHtml(commit)+' to '+gvEscHtml(committedTo)+'</p>';
+        html+='<div class="flex flex-wrap gap-2 mt-3">';
+        html+='<a href="'+gvOn3PortalUrl(p||{slug:b.playerSlug})+'" target="_blank" rel="noopener noreferrer" class="text-[.65rem] font-bold px-3 py-1.5 rounded-lg bg-surface-900 text-surface-200 border border-gator-blue/20">On3 Profile →</a>';
+        html+='<button type="button" class="text-[.65rem] font-bold px-3 py-1.5 rounded-lg bg-surface-900 text-gator-orange border border-gator-orange/30" data-goto="recruit">Recruiting Board →</button>';
+        html+='</div></div>';
+        if(expanded&&b.strengths){
+            html+='<div class="p-4 space-y-3">';
+            html+=gvRenderWarRoomHtml({locked:false,available:true,breakdown:b}).replace('war-room-panel','war-room-panel border-0 p-0 m-0');
+            html+='</div>';
+        }else if(expanded){
+            html+='<div class="p-4"><p class="war-room-empty text-sm">Loading scouting sections…</p></div>';
+        }else{
+            html+='<div class="px-4 pb-4"><button type="button" class="war-scout-expand text-xs font-bold text-gator-orange" data-slug="'+gvEscHtml(b.playerSlug)+'">View War Room Scouting Report →</button></div>';
+        }
+        return html+'</div>';
     }
     function gvRenderScoutingDatabase(list, apiLocked){
         var el=document.getElementById('scouting-database-content');
@@ -3007,14 +3066,24 @@
             return;
         }
         el.innerHTML=filtered.map(function(b){
-            var writers=(b.sources||[]).join(' · ');
-            return '<a href="/player/'+gvEscHtml(b.playerSlug)+'" class="block bg-surface-800 border border-gator-blue/20 rounded-xl p-4 hover:border-gator-orange/40 transition">'
-                +'<div class="flex items-start justify-between gap-3"><div>'
-                +'<div class="font-display font-bold text-white">'+gvEscHtml(b.playerName||b.playerSlug)+'</div>'
-                +'<div class="text-xs text-gator-orange font-semibold mt-1">'+gvEscHtml(gvScoutingTypeLabel(b.playerType))+(b.featured?' · ⭐ Featured':'')+'</div>'
-                +'<div class="text-[.65rem] text-surface-200/60 mt-2">'+gvEscHtml(writers)+'</div>'
-                +'</div><span class="text-xs font-bold text-gator-orange whitespace-nowrap">View report →</span></div></a>';
+            return gvRenderWarRoomScoutingCard(b,false);
         }).join('');
+        el.querySelectorAll('.war-scout-expand').forEach(function(btn){
+            btn.addEventListener('click',function(){
+                var slug=btn.getAttribute('data-slug');
+                var card=btn.closest('.war-scout-card');
+                var b=filtered.find(function(x){return x.playerSlug===slug;});
+                if(!card||!b)return;
+                btn.textContent='Loading report…';
+                gvFetchWarRoomBreakdown(slug).then(function(war){
+                    var full=b;
+                    if(war&&war.breakdown)full=Object.assign({},b,war.breakdown);
+                    card.outerHTML=gvRenderWarRoomScoutingCard(full,true);
+                }).catch(function(){
+                    card.outerHTML=gvRenderWarRoomScoutingCard(b,true);
+                });
+            });
+        });
     }
     function gvLoadScoutingDatabase(){
         var el=document.getElementById('scouting-database-content');
@@ -3188,7 +3257,10 @@
         this.classList.add('active','bg-gator-orange','text-white');this.classList.remove('bg-surface-700','text-surface-200');
         document.querySelectorAll('.rpane').forEach(function(p){p.style.display='none';});
         var target=document.getElementById('rpane-'+this.dataset.rtab);if(target)target.style.display='block';
-        if(this.dataset.rtab==='heat')try{renderHeatCheck();}catch(e){}
+        if(this.dataset.rtab==='heat'){
+            try{gvLoadRecruitingLive(true);}catch(e){}
+            try{renderHeatCheck();}catch(e2){}
+        }
     });});
 
     // ========== DATA ==========
@@ -4295,8 +4367,16 @@
     // ========== FILM ROOM (Knowledge Engine — verified database only) ==========
     var GV_HIGHLIGHTS_LIVE=true;
     window._gvHighlights=[];
-    window._gvFilmRoomCategories=['Scheme Library','Concept Breakdown','Recruiting Fit','Opponent Prep','Position Traits','GNFP Film Review','Film Guy Network','UF Press Conferences'];
+    window._gvFilmRoomHubs=['Offensive Scheme','Defensive Scheme','Film Breakdown','UF Press Conferences','Highlights'];
     window._gvFilmRoomFilter='all';
+    var GV_FILM_HUB_DESC={
+        'all':'Browse all Film Room content by hub.',
+        'Offensive Scheme':'Scheme library, concepts, and recruiting fit for UF offense.',
+        'Defensive Scheme':'3-3-5 install, coverage rules, and defensive concepts.',
+        'Film Breakdown':'GNFP Film Review and Film Guy Network breakdowns.',
+        'UF Press Conferences':'Five most recent Gators press conferences.',
+        'Highlights':'Game highlights including Spring Game 2026 cut-ups.'
+    };
     function gvEscHtml(s){
         return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
@@ -4306,7 +4386,8 @@
             .then(function(j){
                 if(j.ok){
                     window._gvHighlights=j.items||[];
-                    if(j.categories&&j.categories.length)window._gvFilmRoomCategories=j.categories;
+                    if(j.hubs&&j.hubs.length)window._gvFilmRoomHubs=j.hubs;
+                    else if(j.categories&&j.categories.length)window._gvFilmRoomHubs=j.categories;
                 }
                 gvRenderFilmRoomCategories();
                 renderHighlights();
@@ -4315,24 +4396,26 @@
     }
     function gvRenderFilmRoomCategories(){
         var nav=document.getElementById('film-room-categories');
+        var descEl=document.getElementById('film-room-hub-desc');
         if(!nav)return;
-        var cats=window._gvFilmRoomCategories||['Scheme Library','Concept Breakdown','Recruiting Fit','Opponent Prep','Position Traits'];
-        var counts={};
+        var hubs=window._gvFilmRoomHubs||['Offensive Scheme','Defensive Scheme','Film Breakdown','UF Press Conferences','Highlights'];
+        var counts={all:(window._gvHighlights||[]).length};
         (window._gvHighlights||[]).forEach(function(c){
-            var cat=c.category||'Film Breakdown';
-            counts[cat]=(counts[cat]||0)+1;
+            var hub=c.filmHub||c.category||'Offensive Scheme';
+            counts[hub]=(counts[hub]||0)+1;
         });
-        var html='';
-        cats.forEach(function(cat){
-            var n=counts[cat]||0;
-            var active=window._gvFilmRoomFilter===cat;
-            html+='<button type="button" class="film-cat-btn px-3 py-1.5 rounded-full text-xs font-bold '+(active?'bg-gator-orange text-white':'bg-surface-700 text-surface-200')+'" data-fcat="'+gvEscHtml(cat)+'">'+gvEscHtml(cat)+' ('+n+')</button>';
+        var html='<button type="button" class="film-cat-btn px-3 py-1.5 rounded-full text-xs font-bold '+(window._gvFilmRoomFilter==='all'?'bg-gator-orange text-white':'bg-surface-700 text-surface-200')+'" data-fhub="all">All ('+(counts.all||0)+')</button>';
+        hubs.forEach(function(hub){
+            var n=counts[hub]||0;
+            var active=window._gvFilmRoomFilter===hub;
+            html+='<button type="button" class="film-cat-btn px-3 py-1.5 rounded-full text-xs font-bold '+(active?'bg-gator-orange text-white':'bg-surface-700 text-surface-200')+'" data-fhub="'+gvEscHtml(hub)+'">'+gvEscHtml(hub)+' ('+n+')</button>';
         });
         nav.innerHTML=html;
+        if(descEl)descEl.textContent=GV_FILM_HUB_DESC[window._gvFilmRoomFilter]||GV_FILM_HUB_DESC.all;
         nav.querySelectorAll('.film-cat-btn').forEach(function(btn){
             btn.addEventListener('click',function(){
-                var cat=btn.getAttribute('data-fcat')||'all';
-                window._gvFilmRoomFilter=(window._gvFilmRoomFilter===cat)?'all':cat;
+                var hub=btn.getAttribute('data-fhub')||'all';
+                window._gvFilmRoomFilter=(window._gvFilmRoomFilter===hub&&hub!=='all')?'all':hub;
                 gvRenderFilmRoomCategories();
                 renderHighlights();
             });
@@ -4382,7 +4465,10 @@
         if(!shell||!document.getElementById('vpane-highlights'))return;
         var clips=window._gvHighlights||[];
         if(window._gvFilmRoomFilter&&window._gvFilmRoomFilter!=='all'){
-            clips=clips.filter(function(c){return c.category===window._gvFilmRoomFilter;});
+            clips=clips.filter(function(c){
+                var hub=c.filmHub||c.category;
+                return hub===window._gvFilmRoomFilter;
+            });
         }
         if(!clips.length){
             shell.innerHTML='<p class="text-surface-200/60 text-sm py-4">'+(window._gvFilmRoomFilter!=='all'?'No lessons in this category yet.':'Loading verified Film Room lessons…')+'</p>';
@@ -6463,12 +6549,21 @@
         return kept.sort(function(a,b){return new Date(b.createdAt||0)-new Date(a.createdAt||0);});
     }
 
+    function gvIsWithin24Hours(iso){
+        if(!iso)return false;
+        var ts=new Date(iso).getTime();
+        if(isNaN(ts))return false;
+        var age=Date.now()-ts;
+        return age>=0&&age<=86400000;
+    }
+
     function gvFilterLatestUpdates(feed){
         var filtered=(feed||[]).filter(function(item){
             if(gvIsFalseLiveFeedItem(item))return false;
+            if(!gvIsWithin24Hours(item.createdAt))return false;
             var src=String(item.source||'').toLowerCase();
-            if(/beat.?writer|auto:beat|needs_resolution|snapshot|internal|unverified/.test(src))return false;
-            if(item.type==='beat'||item.type==='podcast'||item.type==='thread')return false;
+            if(/needs_resolution|snapshot|internal|unverified/.test(src))return false;
+            if(item.type==='podcast'||item.type==='thread')return false;
             var norm=gvNormalizeLiveFeedType(item);
             if(!norm||norm==='info')return false;
             return true;
@@ -6499,23 +6594,36 @@
         return gvRenderIntelCard(item,idx);
     }
 
+    function gvTopGatorAccolade(player){
+        if(!player)return '';
+        if(player.depthChartTier)return player.depthChartTier;
+        if(player.accolade)return player.accolade;
+        if(player.bio)return String(player.bio).slice(0,72);
+        var r=playerDisplayRating(player);
+        if(r!=null&&r>=90)return 'Vault elite · '+Number(r).toFixed(1);
+        if(r!=null)return 'Vault '+Number(r).toFixed(1);
+        return '';
+    }
+
     function gvRenderTopGatorCard(player,rank,idx){
         var slug=player.slug||'';
         var name=player.name||'';
         var pos=player.pos||'';
+        var yr=player.classYear||player.year||'2026';
         var rating=playerDisplayRating(player);
         var tier=ratingTier(rating||0);
-        var initials=gvPlayerInitials(name);
+        var accolade=gvTopGatorAccolade(player);
         var delay=' style="animation-delay:'+(idx*0.05)+'s"';
-        return '<div class="gv-top-gator-card" data-slug="'+gvLiveEsc(slug)+'"'+delay+'>'
+        return '<div class="gv-top-gator-card gv-top-gator-card--spotlight" data-slug="'+gvLiveEsc(slug)+'"'+delay+'>'
             +'<span class="gv-top-gator-rank">#'+rank+'</span>'
-            +'<div class="gv-trending-avatar">'
-            +'<span class="gv-trending-initials">'+gvLiveEsc(initials)+'</span>'
-            +(slug?'<img src="/headshots/'+gvLiveEsc(slug)+'.svg" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'')
+            +'<div class="gv-top-gator-photo-wrap">'
+            +(slug?'<img class="gv-top-gator-photo" src="/headshots/'+gvLiveEsc(slug)+'.svg" alt="" loading="lazy" onerror="this.classList.add(\'hidden\');this.nextElementSibling.classList.remove(\'hidden\')">':'')
+            +'<span class="gv-top-gator-photo-fallback'+(slug?' hidden':'')+'">'+(name?name.charAt(0):'?')+'</span>'
             +'</div>'
-            +'<span class="gv-top-gator-grade '+tier+'">'+(rating!=null?Number(rating).toFixed(1):'—')+'</span>'
             +'<p class="gv-trending-name">'+gvLiveEsc(name)+'</p>'
-            +'<p class="gv-trending-meta">'+gvLiveEsc(pos)+'</p>'
+            +'<p class="gv-trending-meta">'+gvLiveEsc(pos)+' · Class of '+gvLiveEsc(String(yr))+'</p>'
+            +(accolade?'<p class="gv-top-gator-accolade">'+gvLiveEsc(accolade)+'</p>':'')
+            +'<span class="gv-top-gator-grade '+tier+'">'+(rating!=null?Number(rating).toFixed(1):'—')+'</span>'
             +'</div>';
     }
 

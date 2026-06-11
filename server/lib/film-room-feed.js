@@ -13,17 +13,45 @@ const KNOWLEDGE_CATEGORIES = [
   'Position Traits'
 ];
 
+const FILM_HUBS = [
+  'Offensive Scheme',
+  'Defensive Scheme',
+  'Film Breakdown',
+  'UF Press Conferences',
+  'Highlights'
+];
+
 const LEGACY_VIDEO_CATEGORIES = [
   legacy.LEGACY_CATEGORIES.GNFP,
   legacy.LEGACY_CATEGORIES.FILM_GUY,
-  legacy.LEGACY_CATEGORIES.PRESS
+  legacy.LEGACY_CATEGORIES.PRESS,
+  legacy.LEGACY_CATEGORIES.HIGHLIGHTS
 ];
 
-const FILM_ROOM_CATEGORIES = [...KNOWLEDGE_CATEGORIES, ...LEGACY_VIDEO_CATEGORIES];
+const FILM_ROOM_CATEGORIES = [...FILM_HUBS];
 
-function lessonToCatalogItem(lesson) {
+function inferSchemeSide(lesson, conceptCategory) {
+  const cat = String(conceptCategory || '').toLowerCase();
+  if (cat === 'offense' || cat === 'defense') return cat;
+  const text = `${lesson?.title || ''} ${lesson?.summary || ''} ${lesson?.category || ''}`.toLowerCase();
+  if (/defense|3-3-5|jack|star|linebacker|coverage|blitz|defensive|opponent prep/.test(text)) return 'defense';
+  return 'offense';
+}
+
+function inferFilmHub(item) {
+  const cat = item.category || '';
+  if (cat === legacy.LEGACY_CATEGORIES.GNFP || cat === legacy.LEGACY_CATEGORIES.FILM_GUY) return 'Film Breakdown';
+  if (cat === legacy.LEGACY_CATEGORIES.PRESS) return 'UF Press Conferences';
+  if (cat === legacy.LEGACY_CATEGORIES.HIGHLIGHTS) return 'Highlights';
+  if (item.schemeSide === 'defense') return 'Defensive Scheme';
+  if (item.schemeSide === 'offense') return 'Offensive Scheme';
+  return 'Offensive Scheme';
+}
+
+function lessonToCatalogItem(lesson, conceptCategory) {
   const primarySource = lesson.sources?.[0];
-  return {
+  const schemeSide = inferSchemeSide(lesson, conceptCategory);
+  const base = {
     id: lesson.id,
     slug: lesson.id,
     title: lesson.title,
@@ -49,21 +77,40 @@ function lessonToCatalogItem(lesson) {
     thumbUrl: null,
     videoUrl: null,
     embedUrl: null,
-    youtubeId: null
+    youtubeId: null,
+    schemeSide: schemeSide
   };
+  base.filmHub = inferFilmHub(base);
+  return base;
 }
 
 function buildFilmRoomCatalog() {
   const lessons = engine.listValidatedLessons();
-  const lessonItems = lessons.map(lessonToCatalogItem);
-  const legacyItems = legacy.loadLegacyVideoCatalog();
+  const lessonItems = lessons.map((lesson) => {
+    let conceptCategory = null;
+    try {
+      const ref = lesson.references?.conceptId;
+      if (ref) {
+        const concept = store.getConcept(ref);
+        conceptCategory = concept?.category || null;
+      }
+    } catch (e) {
+      conceptCategory = null;
+    }
+    return lessonToCatalogItem(lesson, conceptCategory);
+  });
+  const legacyItems = legacy.loadLegacyVideoCatalog().map((item) => {
+    item.schemeSide = item.category === legacy.LEGACY_CATEGORIES.PRESS ? null : item.schemeSide;
+    item.filmHub = inferFilmHub(item);
+    return item;
+  });
   const items = [...lessonItems, ...legacyItems].sort(
     (a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0)
   );
 
   const byCategory = {};
-  FILM_ROOM_CATEGORIES.forEach((cat) => {
-    byCategory[cat] = items.filter((i) => i.category === cat).length;
+  FILM_HUBS.forEach((hub) => {
+    byCategory[hub] = items.filter((i) => i.filmHub === hub).length;
   });
 
   return {
@@ -71,6 +118,7 @@ function buildFilmRoomCatalog() {
     mode: 'merged',
     items,
     categories: FILM_ROOM_CATEGORIES,
+    hubs: FILM_HUBS,
     byCategory,
     counts: {
       total: items.length,
@@ -107,6 +155,8 @@ module.exports = {
   rebuildFilmRoomCatalog,
   getLessonDetail,
   FILM_ROOM_CATEGORIES,
+  FILM_HUBS,
   KNOWLEDGE_CATEGORIES,
-  LEGACY_VIDEO_CATEGORIES
+  LEGACY_VIDEO_CATEGORIES,
+  inferFilmHub
 };

@@ -36,6 +36,23 @@ function suggestedFixForCheck(check) {
   if (check.module === 'ux') {
     return 'Review CSS markers in index.html — modal z-index, tap targets, safe-area';
   }
+  if (check.module === 'mobile-behavior' || id.startsWith('mobile-behavior:')) {
+    const issues = check.details?.issues || [];
+    if (issues.length) return issues[0].suggestedFix || issues[0].description;
+    if (id.includes('stale-html')) {
+      return 'Deploy latest server/index.html to Netlify; verify meta gv-build matches repo and trigger build hook';
+    }
+    if (id.includes('team-tab-theme')) {
+      return 'Ensure #vpane-mteam uses gv-team-page; hide trial-expired-gate when trial active; deploy static site';
+    }
+    if (id.includes('navigation')) {
+      return 'Wire history.pushState/popstate for profile and team modals (gvPushModalHistory helpers)';
+    }
+    if (id.includes('feed-freshness')) {
+      return 'Force gvLoadLiveDashboard(true) on Home tab focus; verify feed-items.json ingest freshness';
+    }
+    return check.repro || 'Fix mobile behavior QA failure — see Admin → QA → Mobile Behavior';
+  }
   return check.repro || `Fix QA check: ${check.label || id}`;
 }
 

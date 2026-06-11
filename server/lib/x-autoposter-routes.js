@@ -132,6 +132,32 @@ function mountXAutoposterRoutes(app) {
     }
   });
 
+  app.get('/api/x/autoposter/elite/logs', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const eliteLog = require('./x-autoposter-elite-log');
+      const limit = Math.min(100, parseInt(req.query.limit || '40', 10) || 40);
+      return res.json({ ok: true, ...eliteLog.getDashboard({ limit }) });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/x/autoposter/cluster/logs', (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req))) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const clusterLog = require('./x-autoposter-cluster-log');
+      const limit = Math.min(100, parseInt(req.query.limit || '40', 10) || 40);
+      return res.json({ ok: true, ...clusterLog.getDashboard({ limit }) });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/x/autoposter/validate', (req, res) => {
     if (!verifyAdminPin(pinFromReq(req))) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });

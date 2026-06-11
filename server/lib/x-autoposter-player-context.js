@@ -3,6 +3,7 @@
  * Every post: identity block · context block · insider angle block (verified sources only).
  */
 const template = require('./x-autoposter-template');
+const quoteRewriter = require('./x-autoposter-recruiting-quote-rewriter');
 
 const INVALID_NAME_PARTS = new Set([
   'her', 'his', 'the', 'new', 'four', 'five', 'star', 'class', 'florida', 'gators', 'gator',
@@ -188,19 +189,38 @@ function resolvePostKind(ctx, { newsEvent, intel, beatText } = {}) {
   return 'recruiting';
 }
 
-function buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLine, copyMeta = {} }) {
-  const beat = beatText ? template.classifyBeatSentences(beatText) : { context: [], insider: [] };
-  const contextNorm = template.stripEmojisHashtags(contextLine || '').toLowerCase();
-  const lineMeta = { ...copyMeta, beatText, text: beatText };
-  const insiderPick = beat.insider.find(
-    (s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm
-  );
-  if (insiderPick) {
-    return { line: template.sanitizeCopyLine(insiderPick, 140, lineMeta), meta: { insiderFromBeat: true } };
+function buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLine, copyMeta = {}, research = null } = {}) {
+  const sport = copyMeta.sport || 'football';
+  if (sport !== 'football') {
+    return { line: null, meta: { nonFootballSport: true, sport } };
+  }
+  if (quoteRewriter.isRewriterEnabled() && beatText && ctx?.hasMinimumContext) {
+    const rewritten = quoteRewriter.rewriteBeatUpdate({
+      beatText,
+      ctx,
+      intel,
+      research,
+      eventType: intel?.eventType || copyMeta.triggerType,
+      postKind: copyMeta.postKind || 'recruiting',
+      sport: copyMeta.sport || 'football'
+    });
+    if (rewritten.ok && rewritten.insiderLine) {
+      const insider = quoteRewriter.sanitizeRewrittenLine(rewritten.insiderLine, beatText, 140);
+      if (insider) {
+        return {
+          line: insider,
+          meta: { insiderFromRewrite: true, ...rewritten.meta }
+        };
+      }
+    }
   }
 
+  const lineMeta = { ...copyMeta, beatText, text: beatText };
   const fromIntel = template.insiderFromIntel(intel, lineMeta);
-  if (fromIntel) return { line: fromIntel, meta: { insiderFromIntel: true } };
+  if (fromIntel) {
+    const line = quoteRewriter.sanitizeRewrittenLine(fromIntel, beatText || fromIntel, 140) || fromIntel;
+    return { line, meta: { insiderFromIntel: true } };
+  }
 
   const scouting = loadVerifiedScouting(playerSlug);
   const fromScouting = template.insiderFromScouting(scouting, lineMeta);
@@ -213,28 +233,49 @@ function buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLi
   return { line: null, meta: {} };
 }
 
-function buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel, copyMeta = {} }) {
-  const lineMeta = { ...copyMeta, beatText, text: beatText };
-  const beat = beatText ? template.classifyBeatSentences(beatText) : { context: [], insider: [] };
-  if (beat.context[0]) {
-    return {
-      line: template.sanitizeCopyLine(beat.context[0], 160, lineMeta),
-      meta: { fromBeat: true }
-    };
+function buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel, copyMeta = {}, ctx = null, research = null } = {}) {
+  const sport = copyMeta.sport || 'football';
+  if (sport !== 'football') {
+    return { line: null, meta: { nonFootballSport: true, sport } };
   }
+  if (quoteRewriter.isRewriterEnabled() && beatText && (ctx?.hasMinimumContext || intel?.playerName)) {
+    const rewritten = quoteRewriter.rewriteBeatUpdate({
+      beatText,
+      ctx,
+      intel,
+      research,
+      newsEvent,
+      eventType: intel?.eventType || copyMeta.triggerType,
+      sourceLabel,
+      postKind: copyMeta.postKind || 'recruiting',
+      sport: copyMeta.sport || 'football'
+    });
+    if (rewritten.ok && rewritten.contextLine) {
+      const line = quoteRewriter.sanitizeRewrittenLine(rewritten.contextLine, beatText, 160);
+      if (line) {
+        return { line, meta: { fromRewrite: true, ...rewritten.meta } };
+      }
+    }
+  }
+
+  const lineMeta = { ...copyMeta, beatText, text: beatText };
   const intelDetail = template.stripEmojisHashtags(intel?.detail || '');
   if (intelDetail.length >= 28 && !/trending|momentum/i.test(intelDetail)) {
-    return {
-      line: template.sanitizeCopyLine(intelDetail, 160, { ...lineMeta, text: intelDetail }),
-      meta: { fromIntel: true, intelDetail }
-    };
+    const line = quoteRewriter.sanitizeRewrittenLine(
+      template.sanitizeCopyLine(intelDetail, 160, { ...lineMeta, text: intelDetail }),
+      beatText || intelDetail,
+      160
+    );
+    if (line) {
+      return { line, meta: { fromIntel: true, intelDetail } };
+    }
   }
   if (beatText) {
     const sentences = template.extractSentences(beatText);
     const factual = sentences.find(
       (s) => !template.HEADLINE_ONLY_RE.test(s) && (template.FACTUAL_SIGNAL_RE.test(s) || s.length >= 40)
     );
-    if (factual) {
+    if (factual && !quoteRewriter.isRewriterEnabled()) {
       return {
         line: template.sanitizeCopyLine(factual, 160, lineMeta),
         meta: { fromBeat: true, beatText }
@@ -267,9 +308,18 @@ function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = 
     sourceLabel,
     beatText,
     intel: null,
-    copyMeta
+    copyMeta: { ...copyMeta, sport: 'football' }
   });
   let contextLine = contextResult.line;
+  if (!contextLine && beatText && quoteRewriter.isRewriterEnabled()) {
+    const rewritten = quoteRewriter.rewriteBeatUpdate({
+      beatText,
+      sourceLabel,
+      postKind: 'team_event',
+      sport: 'football'
+    });
+    if (rewritten.ok) contextLine = rewritten.contextLine;
+  }
   if (!contextLine) {
     const sentences = template.extractSentences(beatText || '');
     const factual = sentences.find(
@@ -278,7 +328,7 @@ function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = 
         (template.FACTUAL_SIGNAL_RE.test(s) || s.length >= 35) &&
         !template.INSIDER_SIGNAL_RE.test(s)
     );
-    if (factual) {
+    if (factual && !quoteRewriter.isRewriterEnabled()) {
       contextLine = template.sanitizeCopyLine(factual, 160, copyMeta);
     }
   }
@@ -286,22 +336,43 @@ function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = 
 
   const beat = beatText ? template.classifyBeatSentences(beatText) : { context: [], insider: [] };
   const contextNorm = template.stripEmojisHashtags(contextLine).toLowerCase();
-  let insiderLine = beat.insider.find(
-    (s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm
-  );
-  if (!insiderLine && beat.context.length > 1) {
-    insiderLine = beat.context.find((s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm);
+  let insiderLine = null;
+  if (quoteRewriter.isRewriterEnabled() && beatText) {
+    const rewritten = quoteRewriter.rewriteBeatUpdate({
+      beatText,
+      sourceLabel,
+      postKind: 'team_event',
+      sport: 'football'
+    });
+    if (rewritten.ok) insiderLine = rewritten.insiderLine;
   }
   if (!insiderLine) {
-    insiderLine = `Per ${sourceLabel} report.`;
+    insiderLine = beat.insider.find(
+      (s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm
+    );
+  }
+  if (!insiderLine) {
+    insiderLine = quoteRewriter.resolveInsiderFallback({
+      sourceLabel,
+      sport: 'football',
+      contextBuilderFailed: !contextLine
+    });
   } else {
-    insiderLine = template.sanitizeCopyLine(insiderLine, 140, copyMeta);
+    insiderLine = quoteRewriter.sanitizeRewrittenLine(
+      template.sanitizeCopyLine(insiderLine, 140, copyMeta),
+      beatText || '',
+      140
+    ) || quoteRewriter.resolveInsiderFallback({ sourceLabel, sport: 'football', contextBuilderFailed: false });
   }
   if (
     template.stripEmojisHashtags(contextLine).toLowerCase() ===
     template.stripEmojisHashtags(insiderLine).toLowerCase()
   ) {
-    insiderLine = `Per ${sourceLabel} report.`;
+    insiderLine = quoteRewriter.resolveInsiderFallback({
+      sourceLabel,
+      sport: 'football',
+      contextBuilderFailed: !contextLine
+    });
   }
 
   const raw = template.composeInsiderReport({
@@ -361,9 +432,18 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
     sourceLabel,
     beatText,
     intel: null,
-    copyMeta
+    copyMeta: { ...copyMeta, sport: 'football' }
   });
   let contextLine = contextResult.line;
+  if (!contextLine && beatText && quoteRewriter.isRewriterEnabled()) {
+    const rewritten = quoteRewriter.rewriteBeatUpdate({
+      beatText,
+      sourceLabel,
+      postKind: 'program_news',
+      sport: 'football'
+    });
+    if (rewritten.ok) contextLine = rewritten.contextLine;
+  }
   if (!contextLine) {
     const sentences = template.extractSentences(beatText || '');
     const factual = sentences.find(
@@ -372,34 +452,58 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
         (template.FACTUAL_SIGNAL_RE.test(s) || s.length >= 35) &&
         !template.INSIDER_SIGNAL_RE.test(s)
     );
-    if (factual) {
+    if (factual && !quoteRewriter.isRewriterEnabled()) {
       contextLine = template.sanitizeCopyLine(factual, 160, copyMeta);
     }
   }
   const usedFallback = !contextLine;
   if (!contextLine) {
     const eventSummary = template.inferProgramNewsEvent(beatText, programNewsType);
-    contextLine = `Per multiple reports, Florida has announced ${eventSummary}. Monitoring.`;
+    contextLine = `Florida program update: ${eventSummary}. Monitoring staff/roster impact.`;
   }
 
   const beat = beatText ? template.classifyBeatSentences(beatText) : { context: [], insider: [] };
   const contextNorm = template.stripEmojisHashtags(contextLine).toLowerCase();
-  let insiderLine = beat.insider.find(
-    (s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm
-  );
+  let insiderLine = null;
+  if (quoteRewriter.isRewriterEnabled() && beatText) {
+    const rewritten = quoteRewriter.rewriteBeatUpdate({
+      beatText,
+      sourceLabel,
+      postKind: 'program_news',
+      sport: 'football'
+    });
+    if (rewritten.ok) insiderLine = rewritten.insiderLine;
+  }
+  if (!insiderLine) {
+    insiderLine = beat.insider.find(
+      (s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm
+    );
+  }
   if (!insiderLine && beat.context.length > 1) {
     insiderLine = beat.context.find((s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm);
   }
   if (!insiderLine) {
-    insiderLine = usedFallback ? `Per ${sourceLabel} and multiple reports.` : `Per ${sourceLabel} report.`;
+    insiderLine = quoteRewriter.resolveInsiderFallback({
+      sourceLabel,
+      sport: 'football',
+      contextBuilderFailed: usedFallback
+    });
   } else {
-    insiderLine = template.sanitizeCopyLine(insiderLine, 140, copyMeta);
+    insiderLine = quoteRewriter.sanitizeRewrittenLine(
+      template.sanitizeCopyLine(insiderLine, 140, copyMeta),
+      beatText || '',
+      140
+    ) || quoteRewriter.resolveInsiderFallback({ sourceLabel, sport: 'football', contextBuilderFailed: usedFallback });
   }
   if (
     template.stripEmojisHashtags(contextLine).toLowerCase() ===
     template.stripEmojisHashtags(insiderLine).toLowerCase()
   ) {
-    insiderLine = usedFallback ? `Per ${sourceLabel} and multiple reports.` : `Per ${sourceLabel} report.`;
+    insiderLine = quoteRewriter.resolveInsiderFallback({
+      sourceLabel,
+      sport: 'football',
+      contextBuilderFailed: usedFallback
+    });
   }
 
   const raw = template.composeInsiderReport({
@@ -410,7 +514,7 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
   if (!raw || !template.hasTemplateStructure(raw)) {
     const eventSummary = template.inferProgramNewsEvent(beatText, programNewsType);
     const fallbackText = template.enforceTweetLimit(
-      `Per multiple reports, Florida has announced ${eventSummary}. Monitoring.`,
+      `Florida program update: ${eventSummary}. Monitoring staff/roster impact.`,
       280,
       copyMeta
     );
@@ -434,7 +538,7 @@ function buildProgramNewsPost({ beatText, source, programNewsType = null, postUr
   }
   if (template.isHeadlineOnlyPost(raw) && !usedFallback) {
     const eventSummary = template.inferProgramNewsEvent(beatText, programNewsType);
-    contextLine = `Per multiple reports, Florida has announced ${eventSummary}. Monitoring.`;
+    contextLine = `Florida program update: ${eventSummary}. Monitoring staff/roster impact.`;
   }
 
   const finalRaw = usedFallback
@@ -476,8 +580,37 @@ async function buildPlayerNewsPost({
   teamContext = null,
   portalStatus = 'Portal',
   identityInferred = null,
-  identityConfidence = null
+  identityConfidence = null,
+  article = null,
+  headline = null,
+  body = null
 } = {}) {
+  const eliteCaption = require('./x-autoposter-elite-caption');
+  if (eliteCaption.isEliteModeEnabled()) {
+    const elite = await eliteCaption.buildElitePlayerPost({
+      source,
+      newsEvent,
+      playerSlug,
+      playerName,
+      patch,
+      beatText,
+      intel,
+      postKind,
+      teamContext,
+      portalStatus,
+      article,
+      headline,
+      body
+    });
+    if (elite?.ok && elite.text) return elite;
+    if (elite?.skipped && elite.reason === 'no_usable_signal') {
+      /* fall through to legacy only if we have full identity path */
+    } else if (elite?.ok === false && elite.reason !== 'missing_player_identity') {
+      /* elite attempted but failed — do not emit generic legacy copy */
+      return null;
+    }
+  }
+
   const autoposterIdentity = require('./autoposter-identity');
 
   const intelStub = {
@@ -574,7 +707,7 @@ async function buildPlayerNewsPost({
     copyMeta.postKind = 'recruiting_discussion';
   }
 
-  const contextResult = buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel, copyMeta });
+  const contextResult = buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel, copyMeta, ctx });
   let contextLine = contextResult.line;
   if (!contextLine) return null;
 
@@ -632,6 +765,10 @@ async function buildPlayerNewsPost({
       insiderFromBreakdown: insiderResult.meta.insiderFromBreakdown === true,
       contextFromBeat: contextResult.meta.fromBeat === true,
       contextFromIntel: contextResult.meta.fromIntel === true,
+      contextFromRewrite: contextResult.meta.fromRewrite === true,
+      insiderFromRewrite: insiderResult.meta.insiderFromRewrite === true,
+      rewrittenFromQuote: contextResult.meta.rewrittenFromQuote || insiderResult.meta.rewrittenFromQuote || false,
+      quoteOverlapRatio: contextResult.meta.overlapRatio || insiderResult.meta.overlapRatio || null,
       identityInferred: !!inferred,
       identityConfidence: conf || null
     }

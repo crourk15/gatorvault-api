@@ -132,9 +132,16 @@
 
 /* ---- Era cards ---- */
 .gv-team-hscroll-wrap {
-  overflow: visible;
-  touch-action: pan-x pinch-zoom;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
   margin: 0 -16px 4px;
+  scrollbar-width: none;
+}
+
+.gv-team-hscroll-wrap::-webkit-scrollbar {
+  display: none;
 }
 
 .gv-team-era-card {
@@ -162,12 +169,32 @@
 .gv-team-era-media {
   position: relative;
   height: 76px;
-  background: linear-gradient(135deg, #001a4d 0%, #003087 50%, rgba(250, 70, 22, 0.35) 100%);
+  background: linear-gradient(135deg, #001a4d 0%, #003087 55%, rgba(250, 70, 22, 0.22) 100%);
   background-size: cover;
   background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.gv-team-era-media.era-70s {
+  background: linear-gradient(145deg, #0a1628 0%, #1a2744 45%, rgba(0, 48, 135, 0.85) 100%);
+}
+
+.gv-team-era-media.era-90s {
+  background: linear-gradient(145deg, #0d1f3c 0%, #003087 50%, rgba(250, 70, 22, 0.28) 100%);
+}
+
+.gv-team-era-media.era-2000s {
+  background: linear-gradient(145deg, #061018 0%, #0f2847 55%, rgba(250, 70, 22, 0.35) 100%);
+}
+
+.gv-team-era-media.era-2010s {
+  background: linear-gradient(145deg, #0a1420 0%, #122a4a 50%, rgba(96, 165, 250, 0.18) 100%);
+}
+
+.gv-team-era-media.era-2020s {
+  background: linear-gradient(145deg, #060f1f 0%, #003087 40%, rgba(250, 70, 22, 0.4) 100%);
 }
 
 .gv-team-era-media::after {
@@ -411,6 +438,51 @@
   font-weight: 700;
   margin-top: var(--gv-team-space-1);
   cursor: pointer;
+}
+
+.gv-team-support-block {
+  margin-top: var(--gv-team-space-4);
+  padding-top: var(--gv-team-space-3);
+  border-top: 1px solid rgba(0, 48, 135, 0.25);
+}
+
+.gv-team-support-hdr {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0 0 var(--gv-team-space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.gv-support-staff-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-team-space-3);
+  padding: var(--gv-team-space-2) 0;
+  border-bottom: 1px solid rgba(0, 48, 135, 0.15);
+  font-size: 0.8125rem;
+}
+
+.gv-support-staff-role {
+  color: #94a3b8;
+  flex: 1;
+}
+
+.gv-support-staff-name {
+  color: #f8fafc;
+  font-weight: 600;
+  text-align: right;
+}
+
+.gv-coach-card--name-only {
+  cursor: default;
+}
+
+.gv-coach-card--name-only .gv-coach-chevron {
+  display: none;
 }
 
 /* ---- Roster ---- */
@@ -1066,8 +1138,13 @@ body.gv-team-modal-open {
 .gv-team-identity-card,
 .gv-mteam-roster-card,
 .gv-dc-premium {
-  touch-action: pan-y;
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+}
+
+.gv-team-hscroll-wrap .gv-team-era-card,
+.gv-team-hscroll-wrap .gv-hscroll-track {
+  touch-action: pan-x pan-y;
 }
 
 /* ---- Desktop layouts ---- */

@@ -100,6 +100,7 @@ async function buildNewsFromEvent(ev) {
 async function buildNewsFromIntel(intel) {
   const built = await copy.buildIntelCopyAsync(intel);
   if (built?._nonPlayerSkip || built?.skipReason === 'non_player_intel') return null;
+  if (built?._nonFootballSkip || built?.skipReason === 'non_football_sport') return null;
   if (built?._needsResolution || built?.skipReason === 'needs_resolution') return null;
   if (built?.skipReason || built?._identitySkip) return null;
   if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
@@ -222,8 +223,11 @@ function buildNewsFromArticle(article) {
 }
 
 async function buildMomentumFromBeat(post) {
+  const sportClassifier = require('./x-autoposter-sport-classifier');
+  if (!sportClassifier.isFootballAutoposterEligible(post?.text, post)) return null;
   const built = await copy.buildMomentumCopyAsync(post);
   if (built?._nonPlayerSkip || built?.skipReason === 'non_player_intel') return null;
+  if (built?._nonFootballSkip || built?.skipReason === 'non_football_sport') return null;
   if (built?._needsResolution || built?.skipReason === 'needs_resolution') return null;
   if (built?.skipReason || built?._identitySkip) return null;
   if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
@@ -251,10 +255,13 @@ async function buildMomentumFromBeat(post) {
 
 async function buildNewsFromBeatPost(post) {
   if (!beatFilters.shouldIncludeBeatPost(post) || !beatFilters.isTrustedBeatWriter(post)) return null;
+  const sportClassifier = require('./x-autoposter-sport-classifier');
+  if (!sportClassifier.isFootballAutoposterEligible(post.text, post)) return null;
   const prefilter = require('./beat-intel-prefilter');
   const guarded = await prefilter.guardBeatPost(post);
   const built = await copy.buildBeatIntelCopyAsync(post);
   if (built?._nonPlayerSkip || built?.skipReason === 'non_player_intel') return null;
+  if (built?._nonFootballSkip || built?.skipReason === 'non_football_sport') return null;
   if (built?._needsResolution || built?.skipReason === 'needs_resolution') return null;
   if (built?.skipReason || built?._identitySkip) {
     return {
@@ -358,21 +365,36 @@ async function collectFreshPostCandidates() {
   }
 
   try {
-    const beat = getBeatPosts(50);
+    const eventCluster = require('./x-autoposter-event-cluster');
+    const beat = getBeatPosts(80);
     const beatCutoff = Date.now() - MAX_BEAT_POST_AGE_MS;
-    const prefilter = require('./beat-intel-prefilter');
-    for (const post of beat.posts || []) {
-      if (new Date(post.publishedAt).getTime() < beatCutoff) continue;
-      const guarded = await prefilter.guardBeatPost(post);
-      if (!guarded.eligible) continue;
+    const sportClassifier = require('./x-autoposter-sport-classifier');
+    const freshPosts = sportClassifier.filterFootballBeatPosts(
+      (beat.posts || []).filter((p) => new Date(p.publishedAt).getTime() >= beatCutoff)
+    );
 
-      const momentum = await buildMomentumFromBeat(post);
-      if (momentum) {
-        candidates.unshift(momentum);
-        continue;
+    if (eventCluster.isClusteringEnabled()) {
+      const clusters = await eventCluster.buildClustersFromBeatPosts(freshPosts);
+      for (const cluster of clusters) {
+        const out = await eventCluster.buildEliteClusterPost(cluster);
+        if (out?.ok && out.queueItem) {
+          candidates.unshift(out.queueItem);
+        }
       }
-      const beatNews = await buildNewsFromBeatPost(post);
-      if (beatNews) candidates.unshift(beatNews);
+    } else {
+      const prefilter = require('./beat-intel-prefilter');
+      for (const post of freshPosts) {
+        const guarded = await prefilter.guardBeatPost(post);
+        if (!guarded.eligible) continue;
+
+        const momentum = await buildMomentumFromBeat(post);
+        if (momentum) {
+          candidates.unshift(momentum);
+          continue;
+        }
+        const beatNews = await buildNewsFromBeatPost(post);
+        if (beatNews) candidates.unshift(beatNews);
+      }
     }
   } catch {
     /* optional */

@@ -6,7 +6,8 @@
   'use strict';
 
   var BUILD = 'team-v3-20260605';
-  var DEFAULT_HERO = '/og-image.jpg';
+  var DEFAULT_HERO = null;
+  var ERA_BG_CLASS = 'gv-team-era-bg';
   var _interactionsWired = false;
   var _modalWired = false;
   var _currentModal = null;
@@ -22,35 +23,35 @@
   };
 
   var ERAS = [
-    { id: 'era-70s80s', label: '70s–80s', title: 'Spurrier Era Foundations', hero: '🏟️', kicker: 'Program History', headerImage: '/og-image.jpg',
+    { id: 'era-70s80s', label: '70s–80s', title: 'Spurrier Era Foundations', hero: '🏟️', kicker: 'Program History', eraClass: 'era-70s',
       summary: 'Florida established national relevance under Doug Dickey and Charley Pell before the program\'s breakthrough under Steve Spurrier.',
       winners: ['Emmitt Smith — all-time rushing legend', 'Wilber Marshall — defensive tone-setter'],
       players: [{ name: 'Emmitt Smith', role: 'RB · Heisman momentum' }, { name: 'Wilber Marshall', role: 'LB · SEC Defensive POY' }, { name: 'Kerwin Bell', role: 'QB · Air Raid pioneer' }],
       games: ['1980 vs LSU — first SEC title path', '1987 vs FSU — rivalry intensity'],
       highlights: ['First SEC Championship (1991)', 'Heisman: Emmitt Smith era momentum', 'The Swamp became a national destination'],
       achievements: ['SEC relevance established', 'Foundation for 90s title run'] },
-    { id: 'era-90s', label: '90s', title: 'National Championship Decade', hero: '🏆', kicker: 'Program History', headerImage: '/og-image.jpg',
+    { id: 'era-90s', label: '90s', title: 'National Championship Decade', hero: '🏆', kicker: 'Program History', eraClass: 'era-90s',
       summary: 'The Spurrier offense revolutionized college football. Florida won its first national title in 1996.',
       winners: ['Danny Wuerffel — 1996 Heisman', 'Fred Taylor — explosive run game'],
       players: [{ name: 'Danny Wuerffel', role: 'QB · 1996 Heisman' }, { name: 'Fred Taylor', role: 'RB · Breakaway speed' }, { name: 'Jevon Kearse', role: 'DE · Freak athlete' }],
       games: ['1996 vs FSU — national title run', '1997 vs FSU — Wuerffel Heisman season'],
       highlights: ['1996 National Championship', 'Fun & Gun offense legacy', 'Three SEC titles in six years'],
       achievements: ['1996 National Championship', 'Heisman: Danny Wuerffel (1996)'] },
-    { id: 'era-2000s', label: '2000s', title: 'Urban Meyer Dynasty', hero: '🐊', kicker: 'Program History', headerImage: '/og-image.jpg',
+    { id: 'era-2000s', label: '2000s', title: 'Urban Meyer Dynasty', hero: '🐊', kicker: 'Program History', eraClass: 'era-2000s',
       summary: 'Two national championships (2006, 2008) and the Tebow era cemented Florida among elite programs.',
       winners: ['Tim Tebow — 2007 Heisman', 'Percy Harvin — mismatch weapon'],
       players: [{ name: 'Tim Tebow', role: 'QB · 2007 Heisman' }, { name: 'Percy Harvin', role: 'WR · Jet sweep star' }, { name: 'Brandon Spikes', role: 'LB · Defensive leader' }],
       games: ['2006 vs Ohio State — BCS title', '2008 vs Oklahoma — Tebow\'s second ring'],
       highlights: ['2006 & 2008 National Championships', 'Spread-option evolution', 'Reloaded roster pipeline'],
       achievements: ['2006 & 2008 National Championships', 'Heisman: Tim Tebow (2007)'] },
-    { id: 'era-2010s', label: '2010s', title: 'SEC East Dominance', hero: '⚡', kicker: 'Program History', headerImage: '/og-image.jpg',
+    { id: 'era-2010s', label: '2010s', title: 'SEC East Dominance', hero: '⚡', kicker: 'Program History', eraClass: 'era-2010s',
       summary: 'Continued SEC contention with elite defenses and spread evolution under multiple coordinators.',
       winners: ['Kyle Pitts — generational TE', 'Vernon Hargreaves III — lockdown CB'],
       players: [{ name: 'Kyle Pitts', role: 'TE · TE1 legacy' }, { name: 'Vernon Hargreaves III', role: 'CB · First-round talent' }, { name: 'Feleipe Franks', role: 'QB · Dual-threat bridge' }],
       games: ['2012 vs LSU — Driskel era peak', '2019 vs Auburn — Trask emergence'],
       highlights: ['Multiple SEC East titles', 'Elite defensive recruiting', 'TE usage revolution with Pitts'],
       achievements: ['Multiple SEC East titles', 'Kyle Pitts TE1 legacy'] },
-    { id: 'era-2020s', label: '2020s', title: 'Sumrall Era — New Chapter', hero: '🎯', kicker: 'Program History', headerImage: '/og-image.jpg',
+    { id: 'era-2020s', label: '2020s', title: 'Sumrall Era — New Chapter', hero: '🎯', kicker: 'Program History', eraClass: 'era-2020s',
       summary: 'Jon Sumrall arrives in 2026 with a rebuilt roster, 3-3-5 defensive identity, and a portal-powered roster reset.',
       winners: ['Jayden Woods — JACK centerpiece', 'Eric Singleton Jr. — WR1 vertical threat'],
       players: [{ name: 'Jayden Woods', role: 'JACK · 3-3-5 edge' }, { name: 'Eric Singleton Jr.', role: 'WR · Auburn transfer' }, { name: 'Aaron Philo', role: 'QB · Pro-style fit' }],
@@ -100,39 +101,48 @@
     pillars: ['Speed and physicality in the SEC', 'Recruiting dominance in Florida, Georgia, and the Southeast', 'Culture-first leadership under Jon Sumrall', 'Conflict players on offense — RPO rhythm and vertical shots']
   };
 
-  var COACHING_STAFF = [
-    { id: 'sumrall', name: 'Jon Sumrall', title: 'Head Coach', unit: 'hc', headerImage: '/og-image.jpg',
-      bio: 'First-year head coach after leading Tulane. Culture-driven leader installing a competitive standard across roster and staff.',
-      highlights: ['Culture-first program builder', 'Portal-era roster architect', 'Defensive identity partner with Brad White'] },
-    { id: 'faulkner', name: 'Buster Faulkner', title: 'Offensive Coordinator', unit: 'oc', headerImage: '/og-image.jpg',
-      bio: 'Spread RPO architect. Builds rhythm passing, conflict reads, and vertical shots around Eric Singleton Jr. and the rebuilt offensive line.',
-      highlights: ['Rhythm RPO quick game', 'Conflict-read QB development', 'Vertical shot menu with Singleton'] },
-    { id: 'white', name: 'Brad White', title: 'Defensive Coordinator', unit: 'dc', headerImage: '/og-image.jpg',
-      bio: '3-3-5 odd-front specialist. JACK and STAR roles define the defense — Jayden Woods and Kanye Clark are scheme centerpieces.',
-      highlights: ['3-3-5 odd front install', 'JACK/STAR hybrid roles', 'Simulated pressure packages'] },
-    { id: 'harris', name: 'Anthony Harris', title: 'Defensive Backs Coach', unit: 'db', headerImage: '/og-image.jpg',
-      bio: 'Develops corners and safeties in a hybrid-heavy secondary. Critical for STAR/nickel fit in tempo offenses.', highlights: ['STAR/nickel development', 'Coverage match rules', 'Tempo offense answers'] },
-    { id: 'gasparato', name: 'Greg Gasparato', title: 'Linebackers Coach', unit: 'lb', headerImage: '/og-image.jpg',
-      bio: 'Linebacker development in the 3-3-5 — run fits, blitz packages, and communication in nickel personnel.', highlights: ['Run-fit mastery', 'Blitz timing', 'Nickel communication'] },
-    { id: 'davis', name: 'Marcus Davis', title: 'Wide Receivers Coach', unit: 'wr', headerImage: '/og-image.jpg',
-      bio: 'WR room coach — route running, separation, and vertical threat development for Singleton and the receiving corps.', highlights: ['Route-running detail', 'Vertical threat development', 'Singleton WR1 usage'] },
-    { id: 'mcknight', name: 'Trent McKnight', title: 'Offensive Line Coach', unit: 'ol', headerImage: '/og-image.jpg',
-      bio: 'Rebuilds the five-man front. Pass protection and run-game cohesion are the swing factors for the 2026 offense.', highlights: ['Pass-pro rebuild', 'Run-game cohesion', 'Portal OL integration'] },
-    { id: 'st', name: 'Special Teams Coordinator', title: 'Special Teams Coordinator', unit: 'st', headerImage: '/og-image.jpg',
-      bio: 'Coverage units, return game, and field position — critical in close SEC games and rivalry week.', highlights: ['Coverage units', 'Return game explosiveness', 'Field-position wins'] },
-    { id: 'whitt', name: 'Rusty Whitt', title: 'Head Strength & Conditioning', unit: 'sc', headerImage: '/og-image.jpg',
-      bio: 'Fourth-quarter football and availability. S&C sets the physical floor for Sumrall\'s culture.', highlights: ['Availability culture', 'Fourth-quarter edge', 'Summer development'] },
-    { id: 'analyst-off', name: 'Offensive Analyst', title: 'Offensive Analyst', unit: 'analyst', headerImage: '/og-image.jpg',
-      bio: 'Film breakdown, self-scout, and opponent tendency reports for the offensive staff.', highlights: ['Self-scout cut-ups', 'Opponent tendency reports', 'Weekly game-plan support'] },
-    { id: 'analyst-def', name: 'Defensive Analyst', title: 'Defensive Analyst', unit: 'analyst', headerImage: '/og-image.jpg',
-      bio: 'Defensive quality control — pressure tendencies, coverage rules, and weekly cut-ups.', highlights: ['Pressure tendency reports', 'Coverage rule QC', 'Weekly defensive cut-ups'] }
-  ];
-
+  var COACHING_STAFF = [];
+  var ANALYST_STAFF = [];
   var SUPPORT_STAFF = {
-    id: 'support', title: 'Support Staff', kicker: 'Coaching Staff', headerImage: '/og-image.jpg',
+    id: 'support', title: 'Support Staff', kicker: 'Coaching Staff',
     summary: 'Operations, video, equipment, and administrative staff supporting the 2026 program.',
-    units: ['Director of Football Operations', 'Video & Quality Control', 'Equipment & Logistics', 'Player Development & Nutrition']
+    units: []
   };
+  var _staffLoaded = false;
+
+  function applyStaffData(data) {
+    if (!data) return;
+    COACHING_STAFF = (data.coaches || []).map(function (c) {
+      return Object.assign({ headerImage: null, noBio: false }, c);
+    });
+    ANALYST_STAFF = (data.analysts || []).map(function (a) {
+      return Object.assign({ headerImage: null, noBio: true }, a);
+    });
+    SUPPORT_STAFF.units = (data.supportStaff || []).map(function (u) {
+      return u.role + (u.name ? ' — ' + u.name : '');
+    });
+    SUPPORT_STAFF.supportRows = data.supportStaff || [];
+    _staffLoaded = true;
+    TEAM_PREFIXES.forEach(function (pfx) {
+      var staffEl = document.getElementById('gv-' + pfx + '-staff');
+      if (staffEl) renderStaffBlock(staffEl, pfx);
+    });
+  }
+
+  function loadStaffData() {
+    if (_staffLoaded) return Promise.resolve();
+    var apiBase = typeof global.gvLiveApiBase === 'function' ? global.gvLiveApiBase() : '';
+    var url = apiBase ? (apiBase + '/api/team/coaching-staff') : '/data/coaching-staff.json';
+    return fetch(url)
+      .then(function (r) { return r.json(); })
+      .then(function (j) { applyStaffData(j); })
+      .catch(function () {
+        return fetch('/data/coaching-staff.json')
+          .then(function (r) { return r.json(); })
+          .then(function (j) { applyStaffData(j); })
+          .catch(function () {});
+      });
+  }
 
   var ROSTER_FILTERS = ['All', 'QB', 'RB', 'WR', 'OL', 'DL', 'LB', 'DB', 'ST'];
   var POS_GROUPS = {
@@ -352,8 +362,9 @@
   }
 
   function openCoachDetail(coachId) {
-    var c = COACHING_STAFF.find(function (x) { return x.id === coachId; });
+    var c = COACHING_STAFF.concat(ANALYST_STAFF).find(function (x) { return x.id === coachId; });
     if (!c) return;
+    if (c.noBio) return;
     var initials = (c.name || '?').split(' ').map(function (w) { return w.charAt(0); }).join('').slice(0, 2);
     var sections = [
       '<div class="gv-tm-section"><div class="gv-tm-coach-hero">'
@@ -389,9 +400,12 @@
 
   function openSupportStaffDetail() {
     var s = SUPPORT_STAFF;
+    var rows = (s.supportRows || []).map(function (u) {
+      return u.role + (u.name ? ' — ' + u.name : '');
+    });
     var sections = [
       '<div class="gv-tm-section"><p class="gv-tm-lead">' + esc(s.summary) + '</p></div>',
-      '<div class="gv-tm-section">' + sectionHdr('staff', 'Support Units') + renderTimeline(s.units) + '</div>'
+      '<div class="gv-tm-section">' + sectionHdr('staff', 'Support Staff') + renderTimeline(rows.length ? rows : s.units) + '</div>'
     ];
     openRichModal({
       type: 'support', id: 'support', kicker: s.kicker, title: s.title,
@@ -619,7 +633,7 @@
     if (achBtn) { openAchievementDetail(achBtn.getAttribute('data-ach-id')); return true; }
 
     var coachBtn = target.closest('.gv-coach-card[data-coach-id]');
-    if (coachBtn) { openCoachDetail(coachBtn.getAttribute('data-coach-id')); return true; }
+    if (coachBtn && !coachBtn.getAttribute('data-no-bio')) { openCoachDetail(coachBtn.getAttribute('data-coach-id')); return true; }
 
     if (target.closest('#gv-mteam-identity-btn, #gv-team-identity-btn, .gv-team-identity-card[data-identity]')) {
       openIdentityDetail();
@@ -709,9 +723,9 @@
   }
 
   function renderEraCard(era, idx) {
-    var img = era.headerImage || DEFAULT_HERO;
+    var eraCls = era.eraClass || 'era-default';
     return '<button type="button" class="gv-team-era-card" data-era-id="' + esc(era.id) + '" style="animation-delay:' + (idx * 0.04) + 's">'
-      + '<div class="gv-team-era-media" style="background-image:url(' + esc(img) + ')">'
+      + '<div class="gv-team-era-media ' + esc(eraCls) + '">'
       + '<span class="gv-team-era-hero">' + era.hero + '</span></div>'
       + '<div class="gv-team-era-body">'
       + '<span class="gv-team-era-label">' + esc(era.label) + '</span>'
@@ -740,11 +754,32 @@
 
   function renderCoachCard(c) {
     var initials = (c.name || '?').split(' ').map(function (w) { return w.charAt(0); }).join('').slice(0, 2);
-    return '<button type="button" class="gv-coach-card" data-coach-id="' + esc(c.id) + '">'
+    var noBio = !!c.noBio;
+    return '<button type="button" class="gv-coach-card' + (noBio ? ' gv-coach-card--name-only' : '') + '" data-coach-id="' + esc(c.id) + '"' + (noBio ? ' data-no-bio="1"' : '') + '>'
       + '<span class="gv-coach-headshot">' + esc(initials) + '</span>'
       + '<span class="gv-coach-info"><span class="gv-coach-name">' + esc(c.name) + '</span>'
       + '<span class="gv-coach-title">' + esc(c.title) + '</span></span>'
-      + '<span class="gv-coach-chevron">›</span></button>';
+      + (noBio ? '' : '<span class="gv-coach-chevron">›</span>') + '</button>';
+  }
+
+  function renderSupportStaffRows(rows) {
+    return (rows || []).map(function (u) {
+      return '<div class="gv-support-staff-row"><span class="gv-support-staff-role">' + esc(u.role) + '</span>'
+        + '<span class="gv-support-staff-name">' + esc(u.name || '—') + '</span></div>';
+    }).join('');
+  }
+
+  function renderStaffBlock(staffEl, prefix) {
+    if (!staffEl) return;
+    var coaches = COACHING_STAFF.length ? COACHING_STAFF : [];
+    var analysts = ANALYST_STAFF.length ? ANALYST_STAFF : [];
+    var supportRows = SUPPORT_STAFF.supportRows || [];
+    staffEl.innerHTML = coaches.map(renderCoachCard).join('')
+      + (analysts.length ? '<div class="gv-team-analyst-block">' + analysts.map(renderCoachCard).join('') + '</div>' : '')
+      + (supportRows.length
+        ? '<div class="gv-team-support-block"><h4 class="gv-team-support-hdr">Support Staff</h4>' + renderSupportStaffRows(supportRows) + '</div>'
+        : '')
+      + '<button type="button" class="gv-team-support-link" id="gv-' + prefix + '-support-btn">Full Support Staff →</button>';
   }
 
   function renderRosterCard(p) {
@@ -819,10 +854,7 @@
       achEl.innerHTML = ACHIEVEMENTS.map(renderAchievementTile).join('');
     }
     if (identityEl) identityEl.innerHTML = renderIdentityCard(prefix);
-    if (staffEl) {
-      staffEl.innerHTML = COACHING_STAFF.map(renderCoachCard).join('')
-        + '<button type="button" class="gv-team-support-link" id="gv-' + prefix + '-support-btn">Support Staff →</button>';
-    }
+    if (staffEl) renderStaffBlock(staffEl, prefix);
     if (filtersEl) wireRosterFilters(filtersEl);
     if (rosterEl) renderRosterList(rosterEl, global._gvTeamRosterFilter || 'All');
   }
@@ -831,6 +863,7 @@
     wireTeamInteractions();
     wireTeamDetailModal();
     TEAM_PREFIXES.forEach(renderTeamPane);
+    loadStaffData();
     if (typeof global.renderDC === 'function') {
       try { global.renderDC(); } catch (e) { /* optional */ }
     }

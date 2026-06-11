@@ -174,6 +174,12 @@ function validatePostContent(item) {
     if (!qualityCheck.valid) {
       errors.push(...qualityCheck.errors.map((e) => ({ ...e, field: e.field || e.rule || 'quality' })));
     }
+    if (action === 'quote' && !item.quoteTweetUrl && !item.quoteTweetId) {
+      errors.push({
+        field: 'quoteTweetId',
+        message: 'Quote retweets require quoteTweetId or quoteTweetUrl.'
+      });
+    }
     if (looksLikeFactualNews(text) && !sources.some((s) => s.url)) {
       errors.push({
         field: 'sources',

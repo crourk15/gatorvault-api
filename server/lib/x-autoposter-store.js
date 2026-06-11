@@ -90,7 +90,9 @@ function normalizeItem(raw, { validate = true } = {}) {
     teamEventType: raw.teamEventType || null,
     programNewsType: raw.programNewsType || null,
     identityConfirmed: raw.identityConfirmed === true ? true : raw.identityConfirmed === false ? false : undefined,
-    monitoringFallback: raw.monitoringFallback === true
+    monitoringFallback: raw.monitoringFallback === true,
+    clusterFingerprint: raw.clusterFingerprint || null,
+    clusterMeta: raw.clusterMeta || null
   };
 
   if (validate) {

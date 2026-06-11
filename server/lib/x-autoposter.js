@@ -214,11 +214,6 @@ async function postTweet({
   const quoteUrl =
     quoteTweetUrl ||
     (quoteTweetId ? `https://x.com/i/status/${quoteTweetId}` : null);
-  if (quoteUrl && !status.includes(quoteUrl)) {
-    status = `${status} ${quoteUrl}`.trim();
-  }
-
-  if (status.length > 280) throw new Error('Tweet exceeds 280 characters');
 
   let ids = [...mediaIds];
   if (!ids.length && (mediaPath || mediaBase64)) {
@@ -235,9 +230,14 @@ async function postTweet({
   if (inReplyToStatusId) {
     payload.reply = { in_reply_to_tweet_id: String(inReplyToStatusId) };
   }
-  if (quoteTweetId && !quoteUrl) {
+  if (quoteTweetId) {
     payload.quote_tweet_id = String(quoteTweetId);
+  } else if (quoteUrl) {
+    const m = quoteUrl.match(/status\/(\d+)/i);
+    if (m) payload.quote_tweet_id = m[1];
   }
+
+  if (status.length > 280) throw new Error('Tweet exceeds 280 characters');
 
   const data = await oauth1RequestJson({
     method: 'POST',

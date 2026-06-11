@@ -32,6 +32,7 @@ const ADMIN_EMBED_PAGES = {
   gm2: 'admin-ops-gm2.html',
   identity: 'admin-ops-identity-patterns.html',
   qa: 'admin-qa.html',
+  'qa-mobile': 'admin-qa-mobile.html',
   'product-intel': 'admin-product-intel.html',
   'self-runner': 'admin-self-runner.html'
 };
@@ -53,6 +54,10 @@ function mountAdminRoutes(app) {
 
   app.get('/admin-qa.html', (req, res) => {
     res.sendFile(path.join(root, 'admin-qa.html'));
+  });
+
+  app.get('/admin-qa-mobile.html', (req, res) => {
+    res.sendFile(path.join(root, 'admin-qa-mobile.html'));
   });
 
   app.get('/admin-self-runner.html', (req, res) => {

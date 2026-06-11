@@ -395,6 +395,26 @@ const RULE_EXPECTATIONS = {
     rule: 'Film Room verified source hooks',
     expected: 'index.html includes gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal',
     defaultFile: 'index.html'
+  },
+  'mobile-behavior:stale-html': {
+    rule: 'Production HTML build stamp',
+    expected: 'Netlify production meta gv-build matches repo server/index.html; #vpane-mteam includes gv-team-page',
+    defaultFile: 'index.html'
+  },
+  'mobile-behavior:team-tab-theme': {
+    rule: 'Mobile Team tab theme',
+    expected: 'Mobile Team tab shows gv-team-page dark theme without trial-expired overlay or promo markup in #vpane-mteam',
+    defaultFile: 'index.html'
+  },
+  'mobile-behavior:navigation-back': {
+    rule: 'Mobile modal back navigation',
+    expected: 'Recruit/team profile modals use gvPushModalHistory; back gesture closes modal and restores prior pane',
+    defaultFile: 'index.html'
+  },
+  'mobile-behavior:feed-freshness': {
+    rule: 'Mobile Latest Updates freshness',
+    expected: 'Home tab feed items within QA_MOBILE_FEED_MAX_AGE_HOURS; gvLoadLiveDashboard force refresh on tab focus',
+    defaultFile: 'index.html'
   }
 };
 
