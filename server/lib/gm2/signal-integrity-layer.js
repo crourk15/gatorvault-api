@@ -49,10 +49,8 @@ function validateSchema(signal) {
   }
   if (!signalTimestamp(signal) && !signal.reportedAt && !signal.createdAt) errors.push('missing_timestamp');
   const classYear = parseInt(signal.classYear, 10);
-  const et = String(signal.eventType || signal.type || '').toLowerCase();
-  const src = normalizeSource(signal.source);
   if (et && /visit|commit|flip|offer|prediction|target/.test(et) && !Number.isFinite(classYear)) {
-    if (src === 'on3' || src === 'manual' || src === 'rivals_pm') errors.push('missing_class_year');
+    if (source === 'on3' || source === 'manual' || source === 'rivals_pm') errors.push('missing_class_year');
   }
   return errors;
 }

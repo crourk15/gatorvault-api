@@ -106,6 +106,8 @@ function mountQaRoutes(app) {
       uptime: doc.uptime
     });
   });
+
+  console.log('[qa] routes mounted: /api/qa/dashboard, /api/qa/errors, /api/qa/runs, POST /api/qa/run, /api/qa/health');
 }
 
 module.exports = { mountQaRoutes };
