@@ -12,7 +12,7 @@ const portalIncoming = [
     profileNote: 'Vertical threat who projects as Florida\'s top outside receiver and red-zone weapon in Year 1.' },
   { name: 'Aaron Philo', pos: 'QB', from: 'Georgia Tech', htWt: '6-3 / 210', stars: 3, on3Id: '146069', status: 'enrolled',
     skinny: 'On3: Georgia Tech transfer with a 47% third-down conversion rate — pro-style distributor in the QB battle.',
-    profileNote: 'Rhythm passer with anticipatory throwing; fits Robby Faulkner\'s RPO-heavy offense if the OL protects.' },
+    profileNote: 'Rhythm passer with anticipatory throwing; fits Buster Faulkner\'s RPO-heavy offense if the OL protects.' },
   { name: 'Harrison Moore', pos: 'C', from: 'Georgia Tech', htWt: '6-3 / 300', stars: 3, on3Id: '153739', status: 'enrolled',
     skinny: 'On3: Georgia Tech OL transfer slotted as Florida\'s starting center for 2026.',
     profileNote: 'Anchors the rebuilt interior of a five-new-starter offensive line.' },

@@ -34,9 +34,9 @@ const SOURCES = {
     source_confidence: 91
   },
   'fc000005-0000-4000-8000-000000000005': {
-    source_name: 'Robby Faulkner — UF OC Spring Media Availability',
+    source_name: 'Buster Faulkner — UF OC Spring Media Availability',
     source_type: 'oc_dc_interview',
-    source_url: 'https://floridagators.com/news/2026/3/15/football-robby-faulkner-spring-practice',
+    source_url: 'https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice',
     source_confidence: 89
   },
   'fc000006-0000-4000-8000-000000000006': {
@@ -95,9 +95,9 @@ const SOURCES = {
     source_confidence: 87
   },
   'ufs00005-0000-4000-8000-000000000005': {
-    source_name: 'Robby Faulkner — UF OC Spring Media Availability',
+    source_name: 'Buster Faulkner — UF OC Spring Media Availability',
     source_type: 'oc_dc_interview',
-    source_url: 'https://floridagators.com/news/2026/3/15/football-robby-faulkner-spring-practice',
+    source_url: 'https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice',
     source_confidence: 89
   },
   'ufs00006-0000-4000-8000-000000000006': {
@@ -193,9 +193,9 @@ const SOURCES = {
     source_confidence: 83
   },
   'rf000004-0000-4000-8000-000000000004': {
-    source_name: 'Robby Faulkner — UF OC Spring Media Availability',
+    source_name: 'Buster Faulkner — UF OC Spring Media Availability',
     source_type: 'oc_dc_interview',
-    source_url: 'https://floridagators.com/news/2026/3/15/football-robby-faulkner-spring-practice',
+    source_url: 'https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice',
     source_confidence: 88
   },
   // opponent_tendencies
@@ -261,9 +261,9 @@ const SOURCES = {
     source_confidence: 84
   },
   'frl00006-0000-4000-8000-000000000006': {
-    source_name: 'Robby Faulkner — UF OC Spring Media Availability',
+    source_name: 'Buster Faulkner — UF OC Spring Media Availability',
     source_type: 'oc_dc_interview',
-    source_url: 'https://floridagators.com/news/2026/3/15/football-robby-faulkner-spring-practice',
+    source_url: 'https://floridagators.com/news/2026/3/15/football-buster-faulkner-spring-practice',
     source_confidence: 89
   },
   'frl00007-0000-4000-8000-000000000007': {

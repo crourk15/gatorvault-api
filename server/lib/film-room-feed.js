@@ -1,17 +1,25 @@
 /**
- * Film Room catalog — verified Knowledge Engine lessons only.
- * No external videos, press conferences, or third-party embeds.
+ * Film Room catalog — Knowledge Engine lessons + verified legacy video sources.
  */
 const engine = require('./film-room-knowledge-engine');
 const store = require('./film-room-knowledge-store');
+const legacy = require('./film-room-legacy');
 
-const FILM_ROOM_CATEGORIES = [
+const KNOWLEDGE_CATEGORIES = [
   'Scheme Library',
   'Concept Breakdown',
   'Recruiting Fit',
   'Opponent Prep',
   'Position Traits'
 ];
+
+const LEGACY_VIDEO_CATEGORIES = [
+  legacy.LEGACY_CATEGORIES.GNFP,
+  legacy.LEGACY_CATEGORIES.FILM_GUY,
+  legacy.LEGACY_CATEGORIES.PRESS
+];
+
+const FILM_ROOM_CATEGORIES = [...KNOWLEDGE_CATEGORIES, ...LEGACY_VIDEO_CATEGORIES];
 
 function lessonToCatalogItem(lesson) {
   const primarySource = lesson.sources?.[0];
@@ -37,7 +45,7 @@ function lessonToCatalogItem(lesson) {
     body: lesson.body,
     diagram: lesson.diagram,
     lastVerified: lesson.lastVerified,
-    publishedAt: lesson.lastVerified || new Date().toISOString(),
+    publishedAt: lesson.lastVerified || new Date().toISOISOString(),
     thumbUrl: null,
     videoUrl: null,
     embedUrl: null,
@@ -47,8 +55,10 @@ function lessonToCatalogItem(lesson) {
 
 function buildFilmRoomCatalog() {
   const lessons = engine.listValidatedLessons();
-  const items = lessons.map(lessonToCatalogItem).sort(
-    (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
+  const lessonItems = lessons.map(lessonToCatalogItem);
+  const legacyItems = legacy.loadLegacyVideoCatalog();
+  const items = [...lessonItems, ...legacyItems].sort(
+    (a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0)
   );
 
   const byCategory = {};
@@ -58,23 +68,27 @@ function buildFilmRoomCatalog() {
 
   return {
     ok: true,
-    mode: 'knowledge_engine',
+    mode: 'merged',
     items,
     categories: FILM_ROOM_CATEGORIES,
     byCategory,
     counts: {
       total: items.length,
-      validated: items.length,
-      skipped: store.listLessons().length - items.length
+      knowledgeLessons: lessonItems.length,
+      legacyVideos: legacyItems.length,
+      validated: lessonItems.length,
+      skipped: store.listLessons().length - lessonItems.length
     },
     updatedAt: store.loadKnowledge().manifest.updatedAt,
     policy: {
       translatorOnly: true,
-      noExternalVideo: true,
+      mergedLegacyVideo: true,
+      legacyPressConferenceLimit: legacy.PRESS_CONFERENCE_LIMIT,
       skipOnMissingData: true,
       minSourceConfidence: 80,
       noCharlesAsSource: true,
-      noAiInventedKnowledge: true
+      noAiInventedKnowledge: true,
+      verifiedCoachIdentity: true
     }
   };
 }
@@ -92,5 +106,7 @@ module.exports = {
   buildFilmRoomCatalog,
   rebuildFilmRoomCatalog,
   getLessonDetail,
-  FILM_ROOM_CATEGORIES
+  FILM_ROOM_CATEGORIES,
+  KNOWLEDGE_CATEGORIES,
+  LEGACY_VIDEO_CATEGORIES
 };

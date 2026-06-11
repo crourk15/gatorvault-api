@@ -6,6 +6,7 @@ const identityValidator = require('../identity-record-validator');
 const beatPrefilter = require('../beat-intel-prefilter');
 const decommitValidator = require('../decommit-validator');
 const quarantine = require('./quarantine-store');
+const coachIdentity = require('../official-coach-identity');
 const decisionLog = require('./decision-log');
 const { GM2_FEATURES, GM2_ACTIONS, VERIFIED_COMMIT_SOURCES } = require('./types');
 
@@ -35,6 +36,9 @@ function rulesForIntel(record) {
 
 function rulesForLiveFeedItem(item) {
   if (isQuarantined({ playerSlug: item?.meta?.playerSlug })) return { allow: false, reason: 'player_quarantined' };
+  const coachText = [item?.title, item?.summary, item?.text, item?.headline].filter(Boolean).join(' ');
+  const coachCheck = coachIdentity.validateCoachIdentityText(coachText);
+  if (!coachCheck.ok) return { allow: false, reason: 'coach_identity_blocked', blocked: coachCheck.blocked };
   if (publicAlerts.isInvalidHeadlineFeedItem(item)) return { allow: false, reason: 'invalid_headline' };
   if (!publicAlerts.isPublicLiveFeedItem(item)) return { allow: false, reason: 'not_public_feed_item' };
   return { allow: true };

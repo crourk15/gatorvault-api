@@ -4,6 +4,8 @@
  */
 const MIN_SOURCE_CONFIDENCE = 80;
 
+const coachIdentity = require('./official-coach-identity');
+
 const APPROVED_SOURCE_TYPES = new Set([
   'clinic',
   'oc_dc_interview',
@@ -78,6 +80,18 @@ function validateSourceMetadata(row, { table = 'record' } = {}) {
     };
   }
 
+  const coachCheck = coachIdentity.validateCoachIdentityText(sourceName, { field: 'source_name' });
+  if (!coachCheck.ok) {
+    return {
+      ok: false,
+      reason: 'coach_identity_blocked',
+      detail: row?.id,
+      field: 'source_name',
+      table,
+      blocked: coachCheck.blocked
+    };
+  }
+
   if (!APPROVED_SOURCE_TYPES.has(sourceType)) {
     return {
       ok: false,
@@ -124,9 +138,10 @@ function validateSourceMetadata(row, { table = 'record' } = {}) {
 
 function formatSourceCitation(row) {
   if (!row?.source_name) return null;
+  const name = coachIdentity.applyCoachCorrections(row.source_name);
   const typeLabel = String(row.source_type || '').replace(/_/g, ' ');
   const conf = row.source_confidence != null ? ` (${row.source_confidence}% confidence)` : '';
-  return `${row.source_name} [${typeLabel}]${conf} — ${row.source_url}`;
+  return `${name} [${typeLabel}]${conf} — ${row.source_url}`;
 }
 
 function collectSourcesFromResolved(resolved) {

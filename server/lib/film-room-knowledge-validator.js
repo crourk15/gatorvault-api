@@ -5,6 +5,7 @@
  */
 const store = require('./film-room-knowledge-store');
 const sourcePolicy = require('./film-room-knowledge-source');
+const coachIdentity = require('./official-coach-identity');
 
 const SKIP = {
   CONCEPT_NOT_FOUND: 'concept_not_in_database',
@@ -23,6 +24,7 @@ const SKIP = {
   SOURCE_INCOMPLETE: 'source_missing_required_fields',
   SOURCE_LOW_CONFIDENCE: 'source_confidence_below_threshold',
   SOURCE_BLOCKED: 'source_blocked_not_coaching_verified',
+  COACH_IDENTITY_BLOCKED: 'coach_identity_not_verified',
   SOURCE_TYPE_INVALID: 'source_type_not_approved',
   EMPTY: 'empty_request'
 };
@@ -47,6 +49,7 @@ function validateSourceRow(row, table) {
     source_incomplete: SKIP.SOURCE_INCOMPLETE,
     source_low_confidence: SKIP.SOURCE_LOW_CONFIDENCE,
     source_blocked: SKIP.SOURCE_BLOCKED,
+    coach_identity_blocked: SKIP.COACH_IDENTITY_BLOCKED,
     source_type_invalid: SKIP.SOURCE_TYPE_INVALID
   };
 

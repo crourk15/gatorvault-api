@@ -5,6 +5,7 @@
 const store = require('./film-room-knowledge-store');
 const validator = require('./film-room-knowledge-validator');
 const sourcePolicy = require('./film-room-knowledge-source');
+const coachIdentity = require('./official-coach-identity');
 
 function bullets(items) {
   return (items || []).filter(Boolean).map((s) => `• ${String(s).trim()}`);
@@ -94,6 +95,10 @@ function composeLessonContent(resolved) {
   return parts.filter(Boolean).join('\n\n');
 }
 
+function sanitizeLessonText(text) {
+  return coachIdentity.applyCoachCorrections(String(text || ''));
+}
+
 function buildDiagramSpec(resolved) {
   const { concept, scheme, opponent } = resolved;
   const nodes = [];
@@ -117,7 +122,7 @@ function renderLesson(lessonId) {
   const check = validator.validateLessonId(lessonId);
   if (!check.ok) return check;
 
-  const body = composeLessonContent(check);
+  const body = sanitizeLessonText(composeLessonContent(check));
   const diagram = buildDiagramSpec(check);
 
   const sources = sourcePolicy.collectSourcesFromResolved(check);
@@ -129,8 +134,8 @@ function renderLesson(lessonId) {
     id: check.lesson.id,
     lessonType: check.lesson.lesson_type,
     category: store.lessonTypeLabel(check.lesson.lesson_type),
-    title: check.concept?.name || check.lesson.summary.slice(0, 80),
-    summary: check.lesson.summary,
+    title: sanitizeLessonText(check.concept?.name || check.lesson.summary.slice(0, 80)),
+    summary: sanitizeLessonText(check.lesson.summary),
     body,
     diagram,
     lastVerified: check.lesson.last_verified,

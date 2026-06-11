@@ -44,6 +44,13 @@
     ],
     "brands": ["GatorVault", "GatorCountry", "Prep Prospect Report", "On3"]
   },
+  "depthChart": {
+    "title": "2026 Depth Chart",
+    "headerText": "Spring Projections · Updated June 2026",
+    "mobileEmbedSuffix": "Tap to open",
+    "autoAppendScheme": false,
+    "autoAppendCoordinator": false
+  },
   "positions": {
     "QB": "Quarterback",
     "RB": "Running Back",
@@ -79,8 +86,20 @@
     "KR": "Kick Returner"
   },
   "blockedNames": [
-    "Taylor Faulkner"
+    "Taylor Faulkner",
+    "Robby Faulkner"
   ],
+  "coachCorrections": {
+    "Robby Faulkner": "Buster Faulkner"
+  },
+  "verifiedCoachSources": {
+    "OC": {
+      "canonicalName": "Buster Faulkner",
+      "title": "Offensive Coordinator",
+      "verifiedSourceLabel": "Buster Faulkner — UF OC Spring Media Availability",
+      "rejectedAliases": ["Robby Faulkner", "Taylor Faulkner"]
+    }
+  },
   "blockedScNames": [
     "Anthony Harris",
     "Coach Harris"
