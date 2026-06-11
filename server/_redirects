@@ -4,6 +4,8 @@
 /admin  /admin.html  200
 /admin/qa  /admin-qa.html  200
 /admin/embed/qa  /admin-qa.html  200
+/admin/product-health  /admin-product-intel.html  200
+/admin/embed/product-intel  /admin-product-intel.html  200
 /admin/ops  /admin.html  200
 /admin/feedback  /admin.html  200
 /admin/monitoring  /admin.html  200

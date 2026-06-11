@@ -10,6 +10,7 @@
   var EMBED_SRC = {
     ops: '/admin-ops.html?embed=1',
     qa: '/admin-qa.html?embed=1',
+    'product-intel': '/admin-product-intel.html?embed=1',
     feedback: '/admin-feedback.html?embed=1',
     monitoring: '/admin-monitoring.html?embed=1',
     'recruiting-alerts': '/recruiting-admin.html?embed=1',
@@ -24,6 +25,8 @@
   var LEGACY_PATHS = {
     '/admin/qa': { section: 'qa', panel: 'monitor' },
     '/admin-qa.html': { section: 'qa', panel: 'monitor' },
+    '/admin/product-health': { section: 'product-intel', panel: 'health' },
+    '/admin-product-intel.html': { section: 'product-intel', panel: 'health' },
     '/admin/ops': { section: 'dashboard', panel: 'ops' },
     '/admin/feedback': { section: 'feedback', panel: 'inbox' },
     '/admin/monitoring': { section: 'recruiting', panel: 'monitoring' },
@@ -46,6 +49,13 @@
       panels: [
         { id: 'ops', label: 'Operations', embed: 'ops' }
       ]
+    },
+    {
+      id: 'product-intel',
+      label: 'Product Health',
+      icon: '🧠',
+      desc: 'Platform intelligence — scores, fix queue, daily & weekly reports',
+      panels: [{ id: 'health', label: 'Product Intelligence', embed: 'product-intel' }]
     },
     {
       id: 'qa',
@@ -186,6 +196,9 @@
     var hash = (location.hash || '#dashboard').replace(/^#/, '');
     if (hash === 'qa' || hash === 'dashboard/qa') {
       return { section: 'qa', panel: 'monitor' };
+    }
+    if (hash === 'product-health' || hash === 'dashboard/product-health') {
+      return { section: 'product-intel', panel: 'health' };
     }
     var parts = hash.split('/');
     return { section: parts[0] || 'dashboard', panel: parts[1] || null };

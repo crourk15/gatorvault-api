@@ -78,6 +78,13 @@ async function runQaCrawl(opts = {}) {
 
     qaStore.recordRun(run);
 
+    try {
+      const productIntel = require('../product-intel/product-intel-engine');
+      productIntel.recomputeFromRun(run, { daily: true, weekly: false });
+    } catch (piErr) {
+      console.warn('[product-intel] recompute skipped:', piErr.message);
+    }
+
     const opsMonitor = require('../ops-monitor');
     opsMonitor.heartbeat('qa:crawler', run.pass ? 'success' : 'error', {
       message: run.pass ? 'QA crawl passed' : `${failed.length} QA failure(s)`,

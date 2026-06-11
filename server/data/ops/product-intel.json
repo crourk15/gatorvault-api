@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-11T16:15:48.620Z",
+  "lastRunId": "qa_1781194320369",
+  "lastComputedAt": "2026-06-11T16:12:03.612Z",
+  "scores": {
+    "modules": {
+      "api": 100,
+      "content": 100,
+      "integrity": 100,
+      "pages": 100,
+      "ux": 100,
+      "browser": 100,
+      "overall": 100
+    },
+    "pages": {
+      "/": {
+        "desktop": 100,
+        "mobile": 100
+      },
+      "/film-room": {
+        "score": 100
+      },
+      "/team": {
+        "score": 100
+      },
+      "/admin": {
+        "desktop": 100,
+        "mobile": 100
+      },
+      "/latest": {
+        "score": 100
+      }
+    },
+    "features": {
+      "team_modals": 100,
+      "film_verified_source_modal": 100,
+      "latest_updates_feed": 100,
+      "admin_hub": 100,
+      "qa_monitor": 14
+    },
+    "overall": 100
+  },
+  "fixQueue": [],
+  "dailySummaries": [
+    {
+      "date": "2026-06-11",
+      "overallHealth": 100,
+      "moduleScores": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "overall": 100
+      },
+      "pageScores": {
+        "/": {
+          "desktop": 100,
+          "mobile": 100
+        },
+        "/film-room": {
+          "score": 100
+        },
+        "/team": {
+          "score": 100
+        },
+        "/admin": {
+          "desktop": 100,
+          "mobile": 100
+        },
+        "/latest": {
+          "score": 100
+        }
+      },
+      "featureScores": {
+        "team_modals": 100,
+        "film_verified_source_modal": 100,
+        "latest_updates_feed": 100,
+        "admin_hub": 100,
+        "qa_monitor": 14
+      },
+      "topIssues": [],
+      "improvements": [],
+      "regressions": [],
+      "pass": true,
+      "runId": "qa_1781194320369",
+      "narrative": "Platform health is strong at 100/100 — all QA modules passed."
+    }
+  ],
+  "weeklyReports": [],
+  "snapshots": [
+    {
+      "at": "2026-06-11T16:12:03.612Z",
+      "runId": "qa_1781194320369",
+      "overall": 100,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "overall": 100
+      },
+      "pass": true
+    }
+  ],
+  "recommendations": {
+    "remove": [
+      {
+        "feature": "qa_monitor",
+        "score": 14,
+        "reason": "Low score — consider deprecating or hiding until fixed"
+      }
+    ],
+    "keep": [
+      {
+        "feature": "team_modals",
+        "score": 100,
+        "reason": "High score — core quality signal"
+      },
+      {
+        "feature": "film_verified_source_modal",
+        "score": 100,
+        "reason": "High score — core quality signal"
+      },
+      {
+        "feature": "latest_updates_feed",
+        "score": 100,
+        "reason": "High score — core quality signal"
+      },
+      {
+        "feature": "admin_hub",
+        "score": 100,
+        "reason": "High score — core quality signal"
+      },
+      {
+        "page": "/",
+        "score": 100,
+        "reason": "Page health strong"
+      },
+      {
+        "page": "/film-room",
+        "score": 100,
+        "reason": "Page health strong"
+      },
+      {
+        "page": "/team",
+        "score": 100,
+        "reason": "Page health strong"
+      },
+      {
+        "page": "/admin",
+        "score": 100,
+        "reason": "Page health strong"
+      },
+      {
+        "page": "/latest",
+        "score": 100,
+        "reason": "Page health strong"
+      },
+      {
+        "area": "public-site",
+        "reason": "Integrity and pages modules healthy"
+      }
+    ],
+    "upgrade": []
+  }
+}

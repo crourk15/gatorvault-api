@@ -20,6 +20,7 @@ const { mountFilmRoomKnowledgeRoutes } = require('./lib/film-room-knowledge-rout
 const { mountNilRoutes } = require('./lib/nil-routes');
 const { mountOpsRoutes } = require('./lib/ops-routes');
 const { mountQaRoutes } = require('./lib/qa-routes');
+const { mountProductIntelRoutes } = require('./lib/product-intel/product-intel-routes');
 const { mountGm2Routes } = require('./lib/gm2/gm2-routes');
 const { mountInsiderArticlesRoutes } = require('./lib/insider-articles-routes');
 const { apiMonitorMiddleware } = require('./lib/api-monitor');
@@ -83,6 +84,7 @@ mountOpsRoutes(app);
 require('./lib/ops-restart')(app);
 require('./lib/redeploy')(app);
 mountQaRoutes(app);
+mountProductIntelRoutes(app);
 mountGm2Routes(app);
 mountInsiderArticlesRoutes(app);
 
@@ -1143,5 +1145,11 @@ app.listen(PORT, () => {
     startQaScheduler();
   } catch (e) {
     console.warn('[qa] scheduler failed to start', e.message);
+  }
+  try {
+    const { startProductIntelScheduler } = require('./lib/product-intel/product-intel-scheduler');
+    startProductIntelScheduler();
+  } catch (e) {
+    console.warn('[product-intel] scheduler failed to start', e.message);
   }
 });

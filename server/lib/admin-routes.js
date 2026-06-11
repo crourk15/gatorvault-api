@@ -31,7 +31,8 @@ const ADMIN_EMBED_PAGES = {
   'war-room': 'war-room-admin.html',
   gm2: 'admin-ops-gm2.html',
   identity: 'admin-ops-identity-patterns.html',
-  qa: 'admin-qa.html'
+  qa: 'admin-qa.html',
+  'product-intel': 'admin-product-intel.html'
 };
 
 function mountAdminRoutes(app) {
@@ -51,6 +52,10 @@ function mountAdminRoutes(app) {
 
   app.get('/admin-qa.html', (req, res) => {
     res.sendFile(path.join(root, 'admin-qa.html'));
+  });
+
+  app.get('/admin-product-intel.html', (req, res) => {
+    res.sendFile(path.join(root, 'admin-product-intel.html'));
   });
 
   ADMIN_HUB_REDIRECTS.forEach(([from, to]) => {
