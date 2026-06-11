@@ -28,32 +28,95 @@ function check(id, module, label, fn) {
 
 async function fetchJson(url, opts = {}) {
   const timeout = opts.timeout || config.FETCH_TIMEOUT_MS;
-  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-  const timer = controller ? setTimeout(() => controller.abort(), timeout) : null;
-  try {
-    const r = await fetch(url, {
-      method: opts.method || 'GET',
-      headers: { Accept: 'application/json', ...(opts.headers || {}) },
-      signal: controller ? controller.signal : undefined
-    });
-    const text = await r.text();
-    let body = null;
+  const retries = opts.retries ?? 0;
+  const retryDelayMs = opts.retryDelayMs ?? 2500;
+  const retryStatuses = new Set(opts.retryOn || [502, 503, 504, 429, 0]);
+  let lastErr;
+
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = controller ? setTimeout(() => controller.abort(), timeout) : null;
     try {
-      body = text ? JSON.parse(text) : null;
-    } catch {
-      body = text;
-    }
-    if (!r.ok) {
-      const err = new Error(`HTTP ${r.status} ${url}`);
-      err.details = { status: r.status, body: typeof body === 'string' ? body.slice(0, 200) : body };
-      err.url = url;
-      if (opts.allowNotOk) return { status: r.status, body, url };
+      const r = await fetch(url, {
+        method: opts.method || 'GET',
+        headers: { Accept: 'application/json', ...(opts.headers || {}) },
+        signal: controller ? controller.signal : undefined
+      });
+      const text = await r.text();
+      let body = null;
+      try {
+        body = text ? JSON.parse(text) : null;
+      } catch {
+        body = text;
+      }
+      if (!r.ok) {
+        const err = new Error(`HTTP ${r.status} ${url}`);
+        err.details = { status: r.status, body: typeof body === 'string' ? body.slice(0, 200) : body };
+        err.url = url;
+        if (opts.allowNotOk) return { status: r.status, body, url };
+        if (attempt < retries && retryStatuses.has(r.status)) {
+          lastErr = err;
+          await new Promise((resolve) => setTimeout(resolve, retryDelayMs * (attempt + 1)));
+          continue;
+        }
+        throw err;
+      }
+      return { status: r.status, body, url };
+    } catch (err) {
+      lastErr = err;
+      const status = err.details?.status || 0;
+      const retryable =
+        attempt < retries &&
+        (retryStatuses.has(status) ||
+          /abort|timeout|ECONNRESET|ECONNREFUSED|fetch failed|network/i.test(String(err.message || '')));
+      if (retryable) {
+        await new Promise((resolve) => setTimeout(resolve, retryDelayMs * (attempt + 1)));
+        continue;
+      }
       throw err;
+    } finally {
+      if (timer) clearTimeout(timer);
     }
-    return { status: r.status, body, url };
-  } finally {
-    if (timer) clearTimeout(timer);
   }
+  throw lastErr;
+}
+
+async function fetchJsonWithRetry(url, opts = {}) {
+  return fetchJson(url, {
+    retries: opts.retries ?? 3,
+    retryDelayMs: opts.retryDelayMs ?? config.LIVE_DASHBOARD_RETRY_MS,
+    retryOn: opts.retryOn || [502, 503, 504, 429, 0],
+    ...opts
+  });
+}
+
+async function waitForApiWarmup() {
+  const pingUrl = `${config.API_URL}/api/ping`;
+  const healthUrl = `${config.API_URL}/api/health`;
+  const dashHealthUrl = `${config.API_URL}/api/live/dashboard/health`;
+  for (let i = 0; i < 6; i += 1) {
+    try {
+      await fetchJson(pingUrl, { timeout: 12000, retries: 0 });
+      const health = await fetchJson(healthUrl, { timeout: 12000, retries: 0, allowNotOk: true });
+      const ready = health.body?.ready === true || health.body?.dashboard?.ready === true;
+      if (ready) return true;
+      try {
+        const dash = await fetchJson(dashHealthUrl, { timeout: 12000, retries: 0, allowNotOk: true });
+        if (dash.body?.ready === true) return true;
+      } catch {
+        /* dashboard health route may not exist on older deploys */
+      }
+      await fetchJson(`${config.API_URL}/api/live/dashboard?limit=5`, {
+        timeout: 20000,
+        retries: 1,
+        retryDelayMs: 2000
+      });
+      return true;
+    } catch {
+      await new Promise((resolve) => setTimeout(resolve, 2500 * (i + 1)));
+    }
+  }
+  return false;
 }
 
 async function fetchText(url, opts = {}) {
@@ -149,6 +212,8 @@ async function fetchSiteBundleText(siteUrl, pagePath) {
 module.exports = {
   check,
   fetchJson,
+  fetchJsonWithRetry,
+  waitForApiWarmup,
   fetchText,
   headUrl,
   extractUrls,

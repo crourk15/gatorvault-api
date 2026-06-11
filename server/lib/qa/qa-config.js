@@ -35,7 +35,8 @@ const QA_MODULES = [
   'pages',
   'browser',
   'ux',
-  'visual-integrity'
+  'visual-integrity',
+  'mobile-behavior'
 ];
 
 module.exports = {
@@ -45,8 +46,13 @@ module.exports = {
   BOOT_DELAY_MS: parseInt(process.env.QA_CRAWLER_BOOT_DELAY_MS || '90000', 10),
   ENABLED: process.env.QA_CRAWLER_ENABLED !== 'false',
   BROWSER_ENABLED: process.env.QA_BROWSER_ENABLED === 'true',
+  MOBILE_BEHAVIOR_ENABLED: process.env.QA_MOBILE_BEHAVIOR_ENABLED !== 'false',
+  MOBILE_BEHAVIOR_ANDROID: process.env.QA_MOBILE_BEHAVIOR_ANDROID === 'true',
+  MOBILE_FEED_MAX_AGE_HOURS: parseInt(process.env.QA_MOBILE_FEED_MAX_AGE_HOURS || '48', 10),
   ALERT_ON_FAIL: process.env.QA_ALERT_ON_FAIL !== 'false',
-  FETCH_TIMEOUT_MS: parseInt(process.env.QA_FETCH_TIMEOUT_MS || '15000', 10),
+  FETCH_TIMEOUT_MS: parseInt(process.env.QA_FETCH_TIMEOUT_MS || '25000', 10),
+  LIVE_DASHBOARD_RETRIES: parseInt(process.env.QA_LIVE_DASHBOARD_RETRIES || '4', 10),
+  LIVE_DASHBOARD_RETRY_MS: parseInt(process.env.QA_LIVE_DASHBOARD_RETRY_MS || '3000', 10),
   PUBLIC_API_ENDPOINTS,
   PUBLIC_PAGES,
   QA_MODULES,

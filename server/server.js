@@ -955,6 +955,14 @@ app.listen(PORT, () => {
   console.log('🚀 API server started with commit:', process.env.RENDER_GIT_COMMIT || process.env.GV_BUILD || 'dev');
   console.log('GatorVault server running on port', PORT);
   try {
+    const dashCache = require('./lib/live-dashboard-cache');
+    dashCache.warmDashboardCache();
+    dashCache.scheduleBackgroundRefresh();
+    console.log('[live-dashboard] cache warmed (' + (dashCache.getCacheMeta().feedCount || 0) + ' feed items)');
+  } catch (e) {
+    console.warn('[live-dashboard] cache warm skipped:', e.message);
+  }
+  try {
     const store = require('./lib/recruiting-store');
     console.log('Recruiting API: ready (storage:', store.storageMode() + ')');
     const patternStore = require('./lib/identity-patterns-store');

@@ -278,6 +278,11 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
   } catch (e) {
     console.warn('[pipeline-health]', e.message);
   }
+  try {
+    require('./live-dashboard-cache').warmDashboardCache();
+  } catch (e) {
+    console.warn('[live-dashboard-cache]', e.message);
+  }
   return results;
 }
 

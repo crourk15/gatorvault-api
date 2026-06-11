@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const config = require('./qa-config');
-const { check, fetchJson, headUrl, extractUrls, moduleResult } = require('./qa-utils');
+const { check, fetchJson, fetchJsonWithRetry, headUrl, extractUrls, moduleResult } = require('./qa-utils');
 
 function loadJson(relPath) {
   try {
@@ -44,7 +44,10 @@ async function runIntegrityChecks() {
   // Duplicate intel in live feed
   checks.push(
     await check('integrity:feed-dedup', 'integrity', 'Latest Updates dedup', async () => {
-      const { body } = await fetchJson(`${config.API_URL}/api/live/feed`);
+      const { body } = await fetchJsonWithRetry(`${config.API_URL}/api/live/feed`, {
+        retries: 3,
+        timeout: config.FETCH_TIMEOUT_MS
+      });
       const items = body.feed || body.items || [];
       const dups = findDuplicateKeys(items, (i) => {
         const u = (i.url || i.link || '').trim();

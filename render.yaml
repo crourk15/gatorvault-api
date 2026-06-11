@@ -95,6 +95,14 @@ services:
         value: "300000"
       - key: QA_CRAWLER_BOOT_DELAY_MS
         value: "45000"
+      - key: QA_FETCH_TIMEOUT_MS
+        value: "25000"
+      - key: QA_LIVE_DASHBOARD_RETRIES
+        value: "4"
+      - key: QA_LIVE_DASHBOARD_RETRY_MS
+        value: "3000"
+      - key: LIVE_DASHBOARD_CACHE_MS
+        value: "45000"
       - key: QA_ALERT_ON_FAIL
         value: "true"
       - key: SLACK_WEBHOOK_URL

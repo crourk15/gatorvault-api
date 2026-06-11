@@ -2,7 +2,7 @@
  * API endpoint smoke + contract checks.
  */
 const config = require('./qa-config');
-const { check, fetchJson, moduleResult } = require('./qa-utils');
+const { check, fetchJson, fetchJsonWithRetry, waitForApiWarmup, moduleResult } = require('./qa-utils');
 const { sortArticlesByPublishedAtDesc } = require('../article-sort');
 
 function assertSortedArticles(items, label) {
@@ -62,11 +62,27 @@ function validateEndpointBody(ep, body) {
 }
 
 async function runApiChecks() {
+  await waitForApiWarmup();
+
+  const fetchForEndpoint = (ep) => {
+    const url = `${config.API_URL}${ep.path}`;
+    if (ep.id === 'live-dashboard') {
+      return fetchJsonWithRetry(url, {
+        retries: config.LIVE_DASHBOARD_RETRIES,
+        retryDelayMs: config.LIVE_DASHBOARD_RETRY_MS,
+        timeout: Math.max(config.FETCH_TIMEOUT_MS, 30000)
+      });
+    }
+    if (ep.id === 'live-feed' || ep.id === 'live-pipeline-health') {
+      return fetchJsonWithRetry(url, { retries: 2, timeout: config.FETCH_TIMEOUT_MS });
+    }
+    return fetchJson(url, { retries: 1, timeout: config.FETCH_TIMEOUT_MS });
+  };
+
   const checks = await Promise.all(
     config.PUBLIC_API_ENDPOINTS.map((ep) =>
       check(`api:${ep.id}`, 'api', ep.path, async () => {
-        const url = `${config.API_URL}${ep.path}`;
-        const { body } = await fetchJson(url);
+        const { body } = await fetchForEndpoint(ep);
         const details = validateEndpointBody(ep, body);
         return details || { ok: true };
       })
@@ -115,7 +131,11 @@ async function runApiChecks() {
   // Schedule / games — via live dashboard
   checks.push(
     await check('api:schedule', 'api', 'Schedule (live dashboard games)', async () => {
-      const { body } = await fetchJson(`${config.API_URL}/api/live/dashboard`);
+      const { body } = await fetchJsonWithRetry(`${config.API_URL}/api/live/dashboard`, {
+        retries: config.LIVE_DASHBOARD_RETRIES,
+        retryDelayMs: config.LIVE_DASHBOARD_RETRY_MS,
+        timeout: Math.max(config.FETCH_TIMEOUT_MS, 30000)
+      });
       const games = body?.games || body?.schedule || [];
       if (!Array.isArray(games)) return { skipped: true };
       return { games: games.length };
