@@ -1,0 +1,1189 @@
+/**
+ * GatorVault Team module — premium UI (mobile + desktop)
+ * Typography scale · card system · modals · grid layouts
+ */
+@keyframes gvCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:root {
+  --gv-team-space-1: 4px;
+  --gv-team-space-2: 8px;
+  --gv-team-space-3: 12px;
+  --gv-team-space-4: 16px;
+  --gv-team-space-5: 20px;
+  --gv-team-space-6: 24px;
+  --gv-team-space-8: 32px;
+  --gv-team-title: clamp(1.75rem, 4vw, 2.5rem);
+  --gv-team-h2: clamp(1.125rem, 2.5vw, 1.375rem);
+  --gv-team-h3: 0.6875rem;
+  --gv-team-body: 0.875rem;
+  --gv-team-small: 0.8125rem;
+  --gv-team-card-bg: #121c2e;
+  --gv-team-card-border: rgba(0, 48, 135, 0.4);
+  --gv-team-radius: 14px;
+}
+
+/* ---- Page shell ---- */
+.gv-team-page {
+  max-width: 1180px;
+  padding-bottom: var(--gv-team-space-8);
+}
+
+.gv-team-page-hdr {
+  margin-bottom: var(--gv-team-space-6);
+  padding-bottom: var(--gv-team-space-4);
+  border-bottom: 1px solid rgba(0, 48, 135, 0.35);
+}
+
+.gv-team-page-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--gv-team-title);
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 var(--gv-team-space-2);
+  letter-spacing: 0.02em;
+}
+
+.gv-team-page-sub {
+  font-size: var(--gv-team-body);
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.5;
+  max-width: 52ch;
+}
+
+.gv-team-section {
+  margin-bottom: var(--gv-team-space-8);
+}
+
+.gv-team-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gv-team-space-4);
+  margin-bottom: var(--gv-team-space-4);
+}
+
+.gv-team-section-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--gv-team-h2);
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.gv-team-section-title--accent {
+  color: var(--gv-uf-orange, #fa4616);
+}
+
+.gv-team-section-desc {
+  font-size: var(--gv-team-small);
+  color: #64748b;
+  margin: var(--gv-team-space-1) 0 0;
+}
+
+.gv-mteam-subhdr,
+.gv-team-subhdr {
+  font-size: var(--gv-team-h3);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  margin: var(--gv-team-space-5) 0 var(--gv-team-space-3);
+  font-family: 'Inter', sans-serif;
+}
+
+.gv-team-subhdr:first-child,
+.gv-mteam-subhdr:first-child {
+  margin-top: 0;
+}
+
+/* ---- Horizontal scroll (era track) ---- */
+.gv-team-hscroll-wrap .gv-hscroll-track,
+.gv-hscroll-wrap.gv-team-hscroll-wrap .gv-hscroll-track {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--gv-team-space-3);
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  padding-bottom: var(--gv-team-space-1);
+  scrollbar-width: none;
+  touch-action: pan-x pinch-zoom;
+}
+
+.gv-team-hscroll-wrap .gv-hscroll-track::-webkit-scrollbar {
+  display: none;
+}
+
+.gv-team-hscroll-wrap .gv-hscroll-track > * {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+/* ---- Era cards ---- */
+.gv-team-hscroll-wrap {
+  overflow: visible;
+  touch-action: pan-x pinch-zoom;
+  margin: 0 -16px 4px;
+}
+
+.gv-team-era-card {
+  flex: 0 0 148px;
+  min-width: 148px;
+  background: var(--gv-team-card-bg);
+  border: 1px solid var(--gv-team-card-border);
+  border-radius: var(--gv-team-radius);
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  animation: gvCardIn 0.3s ease both;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.gv-team-era-card:hover,
+.gv-team-era-card:focus-visible {
+  border-color: rgba(250, 70, 22, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.gv-team-era-media {
+  position: relative;
+  height: 76px;
+  background: linear-gradient(135deg, #001a4d 0%, #003087 50%, rgba(250, 70, 22, 0.35) 100%);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gv-team-era-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 30%, rgba(6, 15, 31, 0.85) 100%);
+}
+
+.gv-team-era-hero {
+  position: relative;
+  z-index: 1;
+  font-size: 32px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+.gv-team-era-body {
+  padding: var(--gv-team-space-3) var(--gv-team-space-3) var(--gv-team-space-4);
+}
+
+.gv-team-era-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f8fafc;
+  display: block;
+}
+
+.gv-team-era-sub {
+  font-size: 0.6875rem;
+  color: #64748b;
+  display: block;
+  margin-top: var(--gv-team-space-1);
+  line-height: 1.35;
+}
+
+/* ---- Achievement tiles ---- */
+.gv-mteam-tile-grid,
+.gv-team-ach-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gv-team-space-3);
+}
+
+.gv-team-ach-tile {
+  background: var(--gv-team-card-bg);
+  border: 1px solid var(--gv-team-card-border);
+  border-radius: var(--gv-team-radius);
+  padding: var(--gv-team-space-4) var(--gv-team-space-3);
+  text-align: center;
+  cursor: pointer;
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gv-team-space-1);
+  animation: gvCardIn 0.3s ease both;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.gv-team-ach-tile:hover {
+  border-color: rgba(250, 70, 22, 0.4);
+  transform: translateY(-2px);
+}
+
+.gv-team-ach-stat {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--gv-uf-orange, #fa4616);
+  line-height: 1;
+  display: block;
+}
+
+.gv-team-ach-icon {
+  font-size: 1.375rem;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.gv-team-ach-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #f8fafc;
+  line-height: 1.25;
+  display: block;
+}
+
+/* ---- Identity preview card ---- */
+.gv-team-identity-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: linear-gradient(145deg, #121c2e 0%, #0a1628 100%);
+  border: 1px solid var(--gv-team-card-border);
+  border-radius: var(--gv-team-radius);
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.gv-team-identity-card:hover {
+  border-color: rgba(250, 70, 22, 0.45);
+  transform: translateY(-2px);
+}
+
+.gv-team-identity-banner {
+  height: 100px;
+  background: linear-gradient(135deg, #001a4d, #003087 60%, rgba(250, 70, 22, 0.25));
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: var(--gv-team-space-4);
+  display: flex;
+  align-items: flex-end;
+}
+
+.gv-team-identity-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(6, 15, 31, 0.9) 100%);
+}
+
+.gv-team-identity-banner-title {
+  position: relative;
+  z-index: 1;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.gv-team-identity-pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(0, 48, 135, 0.25);
+}
+
+.gv-team-identity-pillar {
+  background: #0a1628;
+  padding: var(--gv-team-space-3) var(--gv-team-space-2);
+  text-align: center;
+}
+
+.gv-team-identity-pillar-icon {
+  font-size: 1.25rem;
+  display: block;
+  margin-bottom: var(--gv-team-space-1);
+}
+
+.gv-team-identity-pillar-label {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+}
+
+/* ---- Coach cards ---- */
+.gv-coach-card {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-team-space-3);
+  width: 100%;
+  background: var(--gv-team-card-bg);
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  border-radius: var(--gv-team-radius);
+  padding: var(--gv-team-space-3) var(--gv-team-space-4);
+  margin-bottom: var(--gv-team-space-3);
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.gv-coach-card:hover {
+  border-color: rgba(250, 70, 22, 0.35);
+  transform: translateY(-1px);
+}
+
+.gv-coach-headshot {
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(0, 48, 135, 0.55), rgba(250, 70, 22, 0.25));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+  border: 2px solid rgba(250, 70, 22, 0.25);
+}
+
+.gv-coach-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.gv-coach-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #f8fafc;
+  margin: 0;
+  display: block;
+}
+
+.gv-coach-title {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--gv-uf-orange, #fa4616);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 3px;
+  display: block;
+}
+
+.gv-coach-chevron {
+  color: #64748b;
+  font-size: 1.25rem;
+}
+
+.gv-team-support-link {
+  width: 100%;
+  background: transparent;
+  border: 1px dashed rgba(0, 48, 135, 0.45);
+  border-radius: var(--gv-team-radius);
+  padding: var(--gv-team-space-3);
+  color: #93c5fd;
+  font-size: var(--gv-team-small);
+  font-weight: 700;
+  margin-top: var(--gv-team-space-1);
+  cursor: pointer;
+}
+
+/* ---- Roster ---- */
+.gv-mteam-roster-filters,
+.gv-team-roster-filters {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--gv-team-space-2);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: var(--gv-team-space-2);
+  margin-bottom: var(--gv-team-space-3);
+}
+
+.gv-mteam-pos-chip {
+  flex: 0 0 auto;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: var(--gv-team-space-2) var(--gv-team-space-3);
+  border-radius: 999px;
+  border: 1px solid rgba(0, 48, 135, 0.4);
+  background: #0a1628;
+  color: #94a3b8;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gv-mteam-pos-chip.active {
+  background: rgba(250, 70, 22, 0.15);
+  border-color: var(--gv-uf-orange, #fa4616);
+  color: #fff;
+}
+
+.gv-mteam-roster-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-team-space-2);
+}
+
+.gv-team-roster-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gv-team-space-3);
+}
+
+.gv-mteam-roster-card {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-team-space-3);
+  background: var(--gv-team-card-bg);
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  border-radius: var(--gv-team-radius);
+  padding: var(--gv-team-space-3) var(--gv-team-space-4);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.gv-mteam-roster-card:hover {
+  border-color: rgba(250, 70, 22, 0.35);
+}
+
+.gv-mteam-roster-av {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #0a1628;
+  border: 2px solid var(--gv-uf-blue, #003087);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--gv-uf-orange, #fa4616);
+  font-size: 13px;
+  object-fit: cover;
+}
+
+.gv-mteam-roster-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.gv-mteam-roster-name {
+  font-size: var(--gv-team-body);
+  font-weight: 600;
+  color: #f8fafc;
+  display: block;
+}
+
+.gv-mteam-roster-sub {
+  font-size: 0.6875rem;
+  color: #64748b;
+  display: block;
+  margin-top: 2px;
+}
+
+/* ---- Depth chart premium ---- */
+.gv-dc-premium {
+  background: var(--gv-team-card-bg) !important;
+  border: 1px solid rgba(0, 48, 135, 0.35) !important;
+  border-radius: var(--gv-team-radius) !important;
+  padding: var(--gv-team-space-4) !important;
+  cursor: pointer;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.gv-dc-premium:hover {
+  border-color: rgba(250, 70, 22, 0.4) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.gv-dc-premium-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--gv-team-space-3);
+  padding-bottom: var(--gv-team-space-2);
+  border-bottom: 1px solid rgba(0, 48, 135, 0.25);
+}
+
+.gv-dc-pos {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gv-uf-orange, #fa4616);
+}
+
+.gv-dc-status {
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.gv-dc-status--locked {
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.25);
+}
+
+.gv-dc-status--battle {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.25);
+}
+
+.gv-dc-status--watch {
+  background: rgba(248, 113, 113, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.gv-dc-depth-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: var(--gv-team-space-2);
+  align-items: center;
+  padding: var(--gv-team-space-2) 0;
+  font-size: var(--gv-team-small);
+}
+
+.gv-dc-depth-row + .gv-dc-depth-row {
+  border-top: 1px solid rgba(0, 48, 135, 0.15);
+}
+
+.gv-dc-depth-rank {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  color: #64748b;
+  font-size: 0.75rem;
+}
+
+.gv-dc-depth-name {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+.gv-dc-depth-meta {
+  color: #64748b;
+  font-size: 0.6875rem;
+}
+
+.gv-dc-premium .dc-detail {
+  margin-top: var(--gv-team-space-3);
+  padding-top: var(--gv-team-space-3);
+  border-top: 1px solid rgba(0, 48, 135, 0.2);
+  font-size: var(--gv-team-small);
+  color: #94a3b8;
+  line-height: 1.55;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.gv-dc-premium.expanded .dc-detail {
+  max-height: 320px;
+}
+
+/* ---- Nav card (legacy) ---- */
+.gv-team-nav-card {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-team-space-4);
+  width: 100%;
+  min-height: 56px;
+  background: var(--gv-team-card-bg);
+  border: 1px solid var(--gv-team-card-border);
+  border-radius: var(--gv-team-radius);
+  padding: var(--gv-team-space-4);
+  margin-bottom: var(--gv-team-space-3);
+  cursor: pointer;
+  text-align: left;
+}
+
+.gv-team-nav-icon {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(0, 48, 135, 0.35), rgba(250, 70, 22, 0.15));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.gv-team-nav-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f8fafc;
+  font-family: 'Oswald', sans-serif;
+  margin: 0 0 2px;
+}
+
+.gv-team-nav-sub {
+  font-size: var(--gv-team-small);
+  color: #64748b;
+  margin: 0;
+}
+
+/* ---- Modal system (all breakpoints) ---- */
+#gv-team-detail-modal.highlight-modal-ov {
+  z-index: 100005 !important;
+  padding: 0;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+body.gv-team-modal-open {
+  overflow: hidden;
+}
+
+.gv-team-modal-panel {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #060f1f;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  transition: transform 0.22s ease;
+}
+
+.gv-team-modal-panel.gv-team-modal-dragging {
+  transition: none;
+}
+
+.gv-team-modal-drag {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 4px;
+  flex-shrink: 0;
+  background: #060f1f;
+}
+
+.gv-team-modal-drag::after {
+  content: '';
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.45);
+}
+
+.gv-team-modal-hero {
+  position: relative;
+  flex-shrink: 0;
+  height: 200px;
+  overflow: hidden;
+  background: #001a4d center/cover no-repeat;
+}
+
+.gv-team-modal-hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.gv-team-modal-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6, 15, 31, 0.15) 0%, rgba(6, 15, 31, 0.55) 45%, rgba(6, 15, 31, 0.95) 100%);
+}
+
+.gv-team-modal-hero-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: var(--gv-team-space-4) var(--gv-team-space-5);
+  z-index: 2;
+}
+
+.gv-team-modal-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #fdba74;
+  background: rgba(250, 70, 22, 0.18);
+  border: 1px solid rgba(250, 70, 22, 0.35);
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: var(--gv-team-space-2);
+}
+
+.gv-team-modal-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #fff;
+  margin: 0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+.gv-team-modal-toolbar {
+  position: absolute;
+  top: max(8px, env(safe-area-inset-top));
+  right: 12px;
+  z-index: 5;
+  display: flex;
+  gap: var(--gv-team-space-2);
+}
+
+.gv-team-modal-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(6, 15, 31, 0.55);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gv-team-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 var(--gv-team-space-4) var(--gv-team-space-6);
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+}
+
+/* Modal content blocks */
+.gv-tm-section {
+  margin-top: var(--gv-team-space-5);
+}
+
+.gv-tm-section-hdr {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-team-space-3);
+  margin-bottom: var(--gv-team-space-3);
+}
+
+.gv-tm-section-icon {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(0, 48, 135, 0.45), rgba(250, 70, 22, 0.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.gv-tm-section-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.gv-tm-lead {
+  font-size: 0.9375rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin: 0 0 4px;
+}
+
+.gv-tm-body {
+  font-size: var(--gv-team-small);
+  color: #94a3b8;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.gv-tm-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-team-space-2);
+}
+
+.gv-tm-chip {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  background: rgba(0, 48, 135, 0.28);
+  border: 1px solid rgba(0, 48, 135, 0.4);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+.gv-tm-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gv-team-space-3);
+}
+
+.gv-tm-photo-card {
+  text-align: center;
+  background: #0a1628;
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  border-radius: 12px;
+  padding: 10px 8px;
+}
+
+.gv-tm-photo-card img,
+.gv-tm-photo-av {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(250, 70, 22, 0.35);
+  margin: 0 auto 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  background: linear-gradient(135deg, #003087, #fa4616);
+}
+
+.gv-tm-photo-name {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #f8fafc;
+  line-height: 1.25;
+  display: block;
+}
+
+.gv-tm-photo-sub {
+  font-size: 0.625rem;
+  color: #64748b;
+  display: block;
+  margin-top: 2px;
+}
+
+.gv-tm-highlight {
+  display: flex;
+  gap: var(--gv-team-space-3);
+  align-items: flex-start;
+  background: #0a1628;
+  border: 1px solid rgba(0, 48, 135, 0.3);
+  border-radius: 12px;
+  padding: var(--gv-team-space-3) var(--gv-team-space-4);
+  margin-bottom: var(--gv-team-space-2);
+}
+
+.gv-tm-highlight-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.gv-tm-highlight-text {
+  font-size: var(--gv-team-small);
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.gv-tm-timeline {
+  border-left: 2px solid rgba(250, 70, 22, 0.35);
+  margin-left: 8px;
+  padding-left: var(--gv-team-space-4);
+}
+
+.gv-tm-timeline-item {
+  position: relative;
+  margin-bottom: var(--gv-team-space-3);
+  font-size: var(--gv-team-small);
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.gv-tm-timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -23px;
+  top: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gv-uf-orange, #fa4616);
+}
+
+.gv-tm-related {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gv-team-space-3);
+}
+
+.gv-tm-related-card {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-team-space-3);
+  width: 100%;
+  text-align: left;
+  background: #0a1628;
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  border-radius: 12px;
+  padding: var(--gv-team-space-3) var(--gv-team-space-4);
+  cursor: pointer;
+  color: inherit;
+}
+
+.gv-tm-related-icon {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(0, 48, 135, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.gv-tm-related-label {
+  font-size: var(--gv-team-body);
+  font-weight: 700;
+  color: #f8fafc;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+
+.gv-tm-related-sub {
+  font-size: 0.6875rem;
+  color: #64748b;
+  margin: 2px 0 0;
+}
+
+.gv-tm-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: var(--gv-uf-orange, #fa4616);
+  color: #fff;
+  font-size: var(--gv-team-small);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.gv-tm-coach-hero {
+  display: flex;
+  gap: var(--gv-team-space-4);
+  align-items: center;
+}
+
+.gv-tm-coach-photo {
+  flex: 0 0 88px;
+  width: 88px;
+  height: 88px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #003087, #0a1628);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.gv-tm-status-pill {
+  display: inline-block;
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.gv-tm-status-locked {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.gv-tm-status-battle {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.gv-tm-status-watch {
+  background: rgba(248, 113, 113, 0.12);
+  color: #f87171;
+}
+
+#vpane-mteam.gv-team-page,
+#vpane-team.gv-team-page {
+  touch-action: pan-y;
+}
+
+/* Touch targets — allow vertical scroll; taps validated in JS */
+.gv-team-era-card,
+.gv-team-ach-tile,
+.gv-coach-card,
+.gv-team-nav-card,
+.gv-mteam-pos-chip,
+.gv-team-identity-card,
+.gv-mteam-roster-card,
+.gv-dc-premium {
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- Desktop layouts ---- */
+@media (max-width: 767px) {
+  #vpane-mteam.gv-team-page {
+    padding: 0 16px 20px;
+  }
+
+  .gv-team-hscroll-wrap {
+    margin: 0 -16px 4px;
+  }
+
+  .gv-team-hscroll-wrap .gv-hscroll-track {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  #gv-team-detail-modal.highlight-modal-ov {
+    padding: 24px 0 24px 24px;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .gv-team-modal-panel {
+    width: 70vw;
+    max-width: 920px;
+    min-height: 0;
+    max-height: calc(100vh - 48px);
+    border-radius: 16px;
+    border: 1px solid rgba(250, 70, 22, 0.22);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  }
+
+  .gv-team-modal-drag {
+    display: none;
+  }
+
+  .gv-team-modal-hero {
+    height: 240px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .gv-team-modal-title {
+    font-size: 2.25rem;
+  }
+
+  .gv-team-modal-body {
+    padding: 0 28px 32px;
+  }
+
+  .gv-tm-related {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gv-tm-photo-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .gv-team-hscroll-wrap {
+    margin: 0;
+  }
+
+  .gv-team-era-card {
+    flex: 0 0 168px;
+    min-width: 168px;
+  }
+
+  .gv-mteam-tile-grid,
+  .gv-team-ach-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gv-team-space-4);
+  }
+
+  .gv-team-overview-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: var(--gv-team-space-6);
+    align-items: start;
+  }
+
+  #vpane-team #gv-team-staff {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gv-team-space-3);
+  }
+
+  #vpane-team #gv-team-staff .gv-coach-card {
+    margin-bottom: 0;
+  }
+
+  #vpane-team #gv-team-staff .gv-team-support-link {
+    grid-column: 1 / -1;
+  }
+
+  .gv-team-roster-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #vpane-team .gv-team-dc-wrap .dc-phase {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gv-team-space-4);
+  }
+}
+
+@media (min-width: 1024px) {
+  #vpane-team #gv-team-staff {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .gv-team-roster-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  #vpane-team .gv-team-dc-wrap .dc-phase {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

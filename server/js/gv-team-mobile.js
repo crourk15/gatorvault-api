@@ -5,12 +5,15 @@
 (function (global) {
   'use strict';
 
-  var BUILD = 'mhome-v3-20260614';
+  var BUILD = 'team-v3-20260605';
   var DEFAULT_HERO = '/og-image.jpg';
   var _interactionsWired = false;
   var _modalWired = false;
   var _currentModal = null;
   var _swipe = { startY: 0, active: false };
+  var _touch = { x: 0, y: 0, moved: false, t: 0, suppressClick: false };
+  var TAP_MOVE_THRESHOLD = 14;
+  var TAP_MAX_MS = 450;
 
   var ICON = {
     winners: '🏆', players: '🏈', highlights: '⭐', games: '🏟️', timeline: '📅',
@@ -57,32 +60,32 @@
   ];
 
   var ACHIEVEMENTS = [
-    { id: 'ach-nc', icon: '🏆', label: 'National Championships', kicker: 'Achievements', headerImage: '/og-image.jpg',
+    { id: 'ach-nc', icon: '🏆', stat: '3', label: 'National Championships', kicker: 'Achievements', headerImage: '/og-image.jpg',
       years: ['1996 — Danny Wuerffel & Steve Spurrier', '2006 — Urban Meyer & Chris Leak', '2008 — Tim Tebow & Percy Harvin'],
       note: 'Three consensus national titles — the standard Gator Nation expects every decade.',
       highlights: ['1996: First national title in program history', '2006–08: Back-to-back title window', 'CFP-era contention remains the goal'],
       winners: ['Steve Spurrier', 'Urban Meyer', 'Tim Tebow'] },
-    { id: 'ach-sec', icon: '🥇', label: 'SEC Championships', kicker: 'Achievements', headerImage: '/og-image.jpg',
+    { id: 'ach-sec', icon: '🥇', stat: '8', label: 'SEC Championships', kicker: 'Achievements', headerImage: '/og-image.jpg',
       years: ['1991', '1993', '1994', '1995', '1996', '2000', '2006', '2008'],
       note: 'Eight SEC titles — sustained dominance in the nation\'s toughest conference.',
       highlights: ['1990s: Spurrier SEC dynasty', '2000s: Meyer reload titles', 'SEC East crowns across eras'],
       winners: ['Spurrier era — 4 SEC titles', 'Meyer era — 2 SEC titles'] },
-    { id: 'ach-heisman', icon: '⭐', label: 'Heisman Winners', kicker: 'Achievements', headerImage: '/og-image.jpg',
+    { id: 'ach-heisman', icon: '⭐', stat: '3', label: 'Heisman Winners', kicker: 'Achievements', headerImage: '/og-image.jpg',
       years: ['1966 Steve Spurrier', '1996 Danny Wuerffel', '2007 Tim Tebow'],
       note: 'Three Heisman Trophy winners — quarterbacks who defined their eras in The Swamp.',
       highlights: ['Spurrier — first UF Heisman (1966)', 'Wuerffel — title + Heisman (1996)', 'Tebow — two-time national champion (2007)'],
       winners: ['Steve Spurrier', 'Danny Wuerffel', 'Tim Tebow'] },
-    { id: 'ach-aam', icon: '🛡️', label: 'All-Americans', kicker: 'Achievements', headerImage: '/og-image.jpg',
+    { id: 'ach-aam', icon: '🛡️', stat: '100+', label: 'All-Americans', kicker: 'Achievements', headerImage: '/og-image.jpg',
       years: ['100+ consensus selections program-wide'],
       note: 'Elite talent pipeline across every era — from Marshall to Pitts to Woods.',
       highlights: ['Defensive All-Americans in 3-3-5 era', 'WR/TE production in spread eras', 'NFL-caliber depth every cycle'],
       winners: ['Wilber Marshall', 'Kyle Pitts', 'Jayden Woods (2026 track)'] },
-    { id: 'ach-nfl', icon: '🏈', label: 'NFL Draft Picks', kicker: 'Achievements', headerImage: '/og-image.jpg',
+    { id: 'ach-nfl', icon: '🏈', stat: '500+', label: 'NFL Draft Picks', kicker: 'Achievements', headerImage: '/og-image.jpg',
       years: ['500+ all-time', '2020s: Pitts, Henderson, Richardson'],
       note: 'Consistent NFL production — Florida develops Sunday players at every position.',
       highlights: ['First-round pipeline at EDGE and CB', 'TE1 development track record', 'QB factory under multiple systems'],
       winners: ['Kyle Pitts — TE1', 'Anthony Richardson — dual-threat QB'] },
-    { id: 'ach-bowl', icon: '🎖️', label: 'Major Bowl Wins', kicker: 'Achievements', headerImage: '/og-image.jpg',
+    { id: 'ach-bowl', icon: '🎖️', stat: '50+', label: 'Major Bowl Wins', kicker: 'Achievements', headerImage: '/og-image.jpg',
       years: ['Sugar Bowl', 'Orange Bowl', 'BCS/CFP appearances'],
       note: 'Postseason success across decades — Florida shows up on the biggest stages.',
       highlights: ['BCS National Championship Game wins', 'New Year\'s Six appearances', 'Bowl streaks in winning eras'],
@@ -454,8 +457,30 @@
   }
 
   function parseDepthCard(card) {
-    var posEl = card.querySelector('.text-gator-orange, [class*="gator-orange"]');
+    var posEl = card.querySelector('.gv-dc-pos') || card.querySelector('.text-gator-orange, [class*="gator-orange"]');
     var pos = posEl ? posEl.textContent.trim() : 'Position';
+    var rows = card.querySelectorAll('.gv-dc-depth-row');
+    if (rows.length) {
+      var starter = rows[0].querySelector('.gv-dc-depth-name');
+      var starterMeta = rows[0].querySelector('.gv-dc-depth-meta');
+      var backup = rows[1] ? rows[1].querySelector('.gv-dc-depth-name') : null;
+      var backupMeta = rows[1] ? rows[1].querySelector('.gv-dc-depth-meta') : null;
+      var third = rows[2] ? rows[2].querySelector('.gv-dc-depth-name') : null;
+      var status = 'watch';
+      if (card.querySelector('.gv-dc-status--locked')) status = 'locked';
+      else if (card.querySelector('.gv-dc-status--battle')) status = 'battle';
+      var detail = card.querySelector('.dc-detail');
+      return {
+        pos: pos,
+        starter: starter ? starter.textContent.trim() : '',
+        starterInfo: starterMeta ? starterMeta.textContent.trim() : '',
+        backup: backup ? backup.textContent.trim() : '—',
+        backupInfo: backupMeta ? backupMeta.textContent.trim() : '',
+        third: third ? third.textContent.trim() : '',
+        status: status,
+        analysis: detail ? detail.textContent.trim() : ''
+      };
+    }
     var lines = card.querySelectorAll('.text-white, .text-sm');
     var starter = '';
     card.querySelectorAll('span').forEach(function (s) {
@@ -518,7 +543,48 @@
   }
 
   function isTeamPaneTarget(node) {
-    return !!(node && node.closest && node.closest('#vpane-mteam, #vpane-team'));
+    if (!node || !node.closest) return false;
+    var m = node.closest('#vpane-mteam');
+    if (m && m.style.display !== 'none' && m.offsetParent !== null) return true;
+    var t = node.closest('#vpane-team');
+    if (t && t.style.display !== 'none' && t.offsetParent !== null) return true;
+    return false;
+  }
+
+  function resetTeamTouch() {
+    _touch.moved = false;
+    _touch.t = 0;
+  }
+
+  function onTeamTouchStart(e) {
+    if (!e.target || !isTeamPaneTarget(e.target) || !e.touches || !e.touches.length) return;
+    _touch.x = e.touches[0].clientX;
+    _touch.y = e.touches[0].clientY;
+    _touch.moved = false;
+    _touch.t = Date.now();
+  }
+
+  function onTeamTouchMove(e) {
+    if (!_touch.t || !e.touches || !e.touches.length) return;
+    if (!isTeamPaneTarget(e.target)) return;
+    var dx = e.touches[0].clientX - _touch.x;
+    var dy = e.touches[0].clientY - _touch.y;
+    if (Math.abs(dx) > TAP_MOVE_THRESHOLD || Math.abs(dy) > TAP_MOVE_THRESHOLD) {
+      _touch.moved = true;
+    }
+  }
+
+  function onTeamTouchEnd(e) {
+    if (!e.target || !isTeamPaneTarget(e.target) || !_touch.t) return;
+    var elapsed = Date.now() - _touch.t;
+    var wasScroll = _touch.moved;
+    resetTeamTouch();
+    if (wasScroll || elapsed > TAP_MAX_MS) return;
+    if (handleTeamTap(e.target)) {
+      e.preventDefault();
+      _touch.suppressClick = true;
+      setTimeout(function () { _touch.suppressClick = false; }, 400);
+    }
   }
 
   function handleTeamTap(target) {
@@ -530,7 +596,7 @@
       return true;
     }
 
-    var dcCard = target.closest('#vpane-mteam .dc-card, #vpane-team .dc-card');
+    var dcCard = target.closest('#vpane-mteam .dc-card, #vpane-team .dc-card, #vpane-mteam .gv-dc-premium, #vpane-team .gv-dc-premium');
     if (dcCard) {
       openDepthChartModal(parseDepthCard(dcCard));
       return true;
@@ -545,7 +611,10 @@
     var coachBtn = target.closest('.gv-coach-card[data-coach-id]');
     if (coachBtn) { openCoachDetail(coachBtn.getAttribute('data-coach-id')); return true; }
 
-    if (target.closest('#gv-mteam-identity-btn, #gv-team-identity-btn')) { openIdentityDetail(); return true; }
+    if (target.closest('#gv-mteam-identity-btn, #gv-team-identity-btn, .gv-team-identity-card[data-identity]')) {
+      openIdentityDetail();
+      return true;
+    }
     if (target.closest('#gv-mteam-support-btn, #gv-team-support-btn')) { openSupportStaffDetail(); return true; }
 
     var rosterCard = target.closest('.gv-mteam-roster-card[data-slug]');
@@ -590,7 +659,15 @@
   function wireTeamInteractions() {
     if (_interactionsWired) return;
     _interactionsWired = true;
+    document.addEventListener('touchstart', onTeamTouchStart, { capture: true, passive: true });
+    document.addEventListener('touchmove', onTeamTouchMove, { capture: true, passive: true });
+    document.addEventListener('touchend', onTeamTouchEnd, { capture: true, passive: false });
     document.addEventListener('click', function (e) {
+      if (_touch.suppressClick) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
       if (e.target.closest('#gv-team-detail-modal') && e.target.closest('.gv-tm-related-card')) {
         e.preventDefault();
         e.stopPropagation();
@@ -604,10 +681,6 @@
       }
       if (handleTeamTap(e.target)) { e.preventDefault(); e.stopPropagation(); }
     }, true);
-    document.addEventListener('touchend', function (e) {
-      if (!e.target || !isTeamPaneTarget(e.target)) return;
-      if (handleTeamTap(e.target)) e.preventDefault();
-    }, { capture: true, passive: false });
   }
 
   function wireTeamDetailModal() {
@@ -626,16 +699,33 @@
   }
 
   function renderEraCard(era, idx) {
+    var img = era.headerImage || DEFAULT_HERO;
     return '<button type="button" class="gv-team-era-card" data-era-id="' + esc(era.id) + '" style="animation-delay:' + (idx * 0.04) + 's">'
-      + '<span class="gv-team-era-hero">' + era.hero + '</span>'
+      + '<div class="gv-team-era-media" style="background-image:url(' + esc(img) + ')">'
+      + '<span class="gv-team-era-hero">' + era.hero + '</span></div>'
+      + '<div class="gv-team-era-body">'
       + '<span class="gv-team-era-label">' + esc(era.label) + '</span>'
-      + '<span class="gv-team-era-sub">' + esc(era.title) + '</span></button>';
+      + '<span class="gv-team-era-sub">' + esc(era.title) + '</span></div></button>';
   }
 
   function renderAchievementTile(a, idx) {
     return '<button type="button" class="gv-team-ach-tile" data-ach-id="' + esc(a.id) + '" style="animation-delay:' + (idx * 0.03) + 's">'
+      + (a.stat ? '<span class="gv-team-ach-stat">' + esc(a.stat) + '</span>' : '')
       + '<span class="gv-team-ach-icon">' + a.icon + '</span>'
       + '<span class="gv-team-ach-label">' + esc(a.label) + '</span></button>';
+  }
+
+  function renderIdentityCard(prefix) {
+    var t = TEAM_IDENTITY;
+    var img = t.headerImage || DEFAULT_HERO;
+    return '<button type="button" class="gv-team-identity-card" id="gv-' + prefix + '-identity-btn" data-identity="1">'
+      + '<div class="gv-team-identity-banner" style="background-image:url(' + esc(img) + ')">'
+      + '<h3 class="gv-team-identity-banner-title">' + esc(t.title) + '</h3></div>'
+      + '<div class="gv-team-identity-pillars">'
+      + '<div class="gv-team-identity-pillar"><span class="gv-team-identity-pillar-icon">🏟️</span><span class="gv-team-identity-pillar-label">The Swamp</span></div>'
+      + '<div class="gv-team-identity-pillar"><span class="gv-team-identity-pillar-icon">🐊</span><span class="gv-team-identity-pillar-label">Culture</span></div>'
+      + '<div class="gv-team-identity-pillar"><span class="gv-team-identity-pillar-icon">🧡</span><span class="gv-team-identity-pillar-label">Traditions</span></div>'
+      + '</div></button>';
   }
 
   function renderCoachCard(c) {
@@ -675,14 +765,16 @@
     if (!listEl) return;
     var profiles = global.playerProfiles || [];
     var f = filter || global._gvTeamRosterFilter || 'All';
+    var isDesktopGrid = listEl.id === 'gv-team-roster-list';
     var list = profiles.filter(function (p) { return playerMatchesRosterFilter(p, f); });
     list.sort(function (a, b) {
       var ra = typeof playerDisplayRating === 'function' ? (playerDisplayRating(b) || 0) : 0;
       var rb = typeof playerDisplayRating === 'function' ? (playerDisplayRating(a) || 0) : 0;
       return ra - rb;
     });
+    listEl.className = isDesktopGrid ? 'gv-team-roster-grid' : 'gv-mteam-roster-list';
     listEl.innerHTML = list.length
-      ? list.slice(0, 48).map(renderRosterCard).join('')
+      ? list.slice(0, isDesktopGrid ? 64 : 48).map(renderRosterCard).join('')
       : '<p class="gv-espn-card-body text-surface-200/60">Roster loading…</p>';
   }
 
@@ -707,11 +799,16 @@
   function renderTeamPane(prefix) {
     var erasEl = document.getElementById('gv-' + prefix + '-eras-track');
     var achEl = document.getElementById('gv-' + prefix + '-achievements');
+    var identityEl = document.getElementById('gv-' + prefix + '-identity-slot');
     var staffEl = document.getElementById('gv-' + prefix + '-staff');
     var filtersEl = document.getElementById('gv-' + prefix + '-roster-filters');
     var rosterEl = document.getElementById('gv-' + prefix + '-roster-list');
     if (erasEl) erasEl.innerHTML = ERAS.map(renderEraCard).join('');
-    if (achEl) achEl.innerHTML = ACHIEVEMENTS.map(renderAchievementTile).join('');
+    if (achEl) {
+      achEl.className = prefix === 'team' ? 'gv-team-ach-grid' : 'gv-mteam-tile-grid';
+      achEl.innerHTML = ACHIEVEMENTS.map(renderAchievementTile).join('');
+    }
+    if (identityEl) identityEl.innerHTML = renderIdentityCard(prefix);
     if (staffEl) {
       staffEl.innerHTML = COACHING_STAFF.map(renderCoachCard).join('')
         + '<button type="button" class="gv-team-support-link" id="gv-' + prefix + '-support-btn">Support Staff →</button>';
