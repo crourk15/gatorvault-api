@@ -7,6 +7,7 @@ const engine = require('./self-runner-engine');
 const apply = require('./self-runner-apply');
 const deploy = require('./self-runner-deploy');
 const validator = require('./self-runner-validator');
+const failuresStore = require('./self-runner-failures/self-runner-failures-store');
 const { pinFromReq, verifyAdminPin } = require('../ops-routes');
 
 function requireAuth(req, res) {
@@ -41,13 +42,15 @@ async function runApproveFlow(fixId, pin) {
 
   let validation;
   try {
-    validation = await validator.validateFix(fix);
+    validation = await validator.validateFix(fix, {
+      appliedFiles: applyResult?.appliedFiles || []
+    });
   } catch (err) {
     queue.markStatus(fixId, 'failed', { error: err.message, phase: 'validate', applyResult, deployResult });
     return { ok: false, phase: 'validate', error: err.message, applyResult, deployResult };
   }
 
-  if (validation.issueResolved) {
+  if (validation.issueResolved && validation.ok !== false) {
     queue.markStatus(fixId, 'completed', {
       applyResult,
       deployResult,
@@ -61,6 +64,7 @@ async function runApproveFlow(fixId, pin) {
       applyResult,
       deployResult,
       validation,
+      failureReport: validation.failureReport || null,
       phase: 'validate'
     });
     return {
@@ -69,6 +73,7 @@ async function runApproveFlow(fixId, pin) {
       applyResult,
       deployResult,
       validation,
+      failureReport: validation.failureReport || null,
       escalated: true
     };
   }
@@ -125,6 +130,16 @@ function mountSelfRunnerRoutes(app) {
     }
   });
 
+  app.get('/api/self-runner/failures', (req, res) => {
+    if (!requireAuth(req, res)) return;
+    try {
+      const limit = Math.min(50, parseInt(req.query.limit || '20', 10) || 20);
+      return res.json({ ok: true, failures: failuresStore.listFailures(limit) });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.post('/api/self-runner/generate', (req, res) => {
     if (!requireAuth(req, res)) return;
     try {
@@ -170,7 +185,7 @@ function mountSelfRunnerRoutes(app) {
   });
 
   console.log(
-    '[self-runner] routes mounted: /api/self-runner/pending, /fix/:id, POST /approve, /reject, /generate'
+    '[self-runner] routes mounted: /api/self-runner/pending, /fix/:id, /failures, POST /approve, /reject, /generate'
   );
 }
 

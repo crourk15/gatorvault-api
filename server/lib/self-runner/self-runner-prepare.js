@@ -338,10 +338,233 @@ function prepareFixProposal(issue, { seq, checkDetails } = {}) {
   };
 }
 
+/** Rule metadata for failure reports */
+const RULE_EXPECTATIONS = {
+  'visual-integrity:component-variants': {
+    rule: 'Team Overview component variants',
+    expected:
+      'index.html #vpane-team / #vpane-mteam use gv-team-page, gv-team-overview-layout, gv-team-section, gv-team-era-card — no card-h, trial, or pricing classes',
+    defaultFile: 'index.html'
+  },
+  'visual-integrity:team-overview-background': {
+    rule: 'Team Overview background / theme',
+    expected: 'Team panes use gv-team-page shell with gv-team.css — no trial-promo or pricing backgrounds',
+    defaultFile: 'index.html'
+  },
+  'visual-integrity:team-css-linked': {
+    rule: 'Team module CSS linked',
+    expected: 'index.html includes <link href="/css/gv-team.css">',
+    defaultFile: 'index.html'
+  },
+  'visual-integrity:team-theme-tokens': {
+    rule: 'Team CSS design tokens',
+    expected: 'css/gv-team.css defines --gv-team-card-bg, --gv-team-radius, --gv-team-space-4, --gv-team-title, --gv-team-body',
+    defaultFile: 'css/gv-team.css'
+  },
+  'visual-integrity:cross-page-contamination': {
+    rule: 'Cross-page theme isolation',
+    expected: 'Trial/promo classes only in pricing/reg modal — not in Team, Film Room, Latest, or Admin panes',
+    defaultFile: 'index.html'
+  },
+  'visual-integrity:film-room-theme': {
+    rule: 'Film Room theme isolation',
+    expected: 'Film Room pane uses film hooks only — no trial or team contamination',
+    defaultFile: 'index.html'
+  },
+  'visual-integrity:admin-theme': {
+    rule: 'Admin Hub neutral theme',
+    expected: 'admin.html uses hub-neutral CSS — no gv-team or trial classes',
+    defaultFile: 'admin.html'
+  },
+  'integrity:feed-dedup': {
+    rule: 'Latest Updates feed dedup',
+    expected: 'No duplicate feed items by URL or player/event key in data/live/feed-items.json',
+    defaultFile: 'data/live/feed-items.json'
+  },
+  'integrity:film-sources': {
+    rule: 'Film Room source URLs',
+    expected: 'All Film Room knowledge source_url values return HTTP 200',
+    defaultFile: 'data/film-room-knowledge/*.json'
+  },
+  'pages:team-hooks': {
+    rule: 'Team tab modal hooks',
+    expected: 'index.html includes gvOpenTeamDetail, gv-team-detail-modal, gv-team-mobile.js',
+    defaultFile: 'index.html'
+  },
+  'pages:film-room-hooks': {
+    rule: 'Film Room verified source hooks',
+    expected: 'index.html includes gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal',
+    defaultFile: 'index.html'
+  }
+};
+
+function describeRuleExpectation(checkId) {
+  const meta = RULE_EXPECTATIONS[checkId];
+  if (meta) return meta;
+  return {
+    rule: checkId || 'unknown rule',
+    expected: 'QA check must pass after patch apply',
+    defaultFile: patches.TEAM_OVERVIEW_FILES?.shell || 'index.html'
+  };
+}
+
+function formatActualFromCheck(check, { localValidation, remoteCheck, qaPass } = {}) {
+  if (check?.details?.length) {
+    const formatted = check.details
+      .slice(0, 5)
+      .map((d) => {
+        if (d.leakedClass) return `${d.leakedClass} in ${d.regionId || d.where || 'region'}`;
+        if (d.pattern) return `forbidden pattern "${d.pattern}" in ${d.regionId || 'region'}`;
+        if (d.class) return `class "${d.class}" in ${d.regionId || 'region'}`;
+        if (d.url) return `broken URL ${d.url}`;
+        if (d.token) return `token ${d.token}: ${d.issue || 'violation'}`;
+        if (d.missing) return `missing ${d.missing}`;
+        if (d.issue) return d.issue;
+        return JSON.stringify(d);
+      })
+      .join('; ');
+    if (formatted) return formatted;
+  }
+  if (check?.error) return check.error;
+  if (localValidation && !localValidation.pass) {
+    const failed = (localValidation.checks || []).filter((c) => !c.pass);
+    if (failed.length) return failed.map((c) => `${c.id}: ${c.error || 'failed'}`).join('; ');
+  }
+  if (remoteCheck && !remoteCheck.pass) return remoteCheck.error || `${remoteCheck.id} still failing on production`;
+  if (qaPass === false) return 'Full QA crawl failed — one or more checks still open';
+  return 'Validation failed — issue not resolved';
+}
+
+function generateCorrectivePatchSuggestion(ctx) {
+  const { checkId, check, fix, appliedFiles } = ctx;
+  const meta = describeRuleExpectation(checkId);
+  const details = check?.details || [];
+  const patchedFile =
+    appliedFiles?.[0] ||
+    fix?.patch?.edits?.[0]?.file ||
+    fix?.patchPreview?.file ||
+    meta.defaultFile;
+
+  let before = null;
+  let after = null;
+  let edits = [];
+
+  if (checkId.includes('component-variants') || checkId.includes('team-overview')) {
+    const v = details[0] || {};
+    const leaked = v.leakedClass || v.class || v.pattern;
+    const regionId = v.regionId || 'vpane-team';
+    if (leaked && patches.TEAM_LEGACY_CARD_SWAPS[leaked]) {
+      before = leaked;
+      after = patches.TEAM_LEGACY_CARD_SWAPS[leaked];
+      edits = [{ file: patchedFile, type: 'class-swap-in-region', regionId, from: before, to: after }];
+    } else if (leaked && patches.TEAM_FORBIDDEN_IN_REGION.includes(leaked)) {
+      before = leaked;
+      after = '(remove from #' + regionId + ')';
+      edits = [{ file: patchedFile, type: 'remove-class-from-region', regionId, className: leaked }];
+    } else if (v.issue === 'missing_overview_layout_markers') {
+      before = 'missing gv-team-overview-layout';
+      after = 'gv-team-overview-layout on #vpane-team';
+      edits = [{ file: patchedFile, type: 'add-class-to-region', regionId: 'vpane-team', className: 'gv-team-overview-layout' }];
+    } else {
+      before = leaked || 'legacy promo/trial classes (card-h, text-amber-300)';
+      after = 'gv-team-page gv-team-overview-layout gv-team-era-card';
+      edits = [
+        { file: patchedFile, type: 'add-class-to-region', regionId: 'vpane-team', className: 'gv-team-page' },
+        { file: patchedFile, type: 'add-class-to-region', regionId: 'vpane-team', className: 'gv-team-overview-layout' }
+      ];
+    }
+  } else if (checkId.includes('team-css-linked')) {
+    before = 'missing /css/gv-team.css link';
+    after = '<link rel="stylesheet" href="/css/gv-team.css">';
+    edits = [{ file: 'index.html', type: 'insert-before', anchor: '</head>', text: '    <link rel="stylesheet" href="/css/gv-team.css">\n' }];
+  } else if (checkId.includes('theme-token')) {
+    before = details.map((d) => d.token).filter(Boolean).join(', ') || 'missing --gv-team-* tokens';
+    after = '--gv-team-card-bg, --gv-team-radius, --gv-team-space-4, --gv-team-title, --gv-team-body';
+    edits = [{ file: 'css/gv-team.css', type: 'ensure-css-tokens', tokens: after.split(', ') }];
+  } else if (checkId === 'integrity:feed-dedup') {
+    before = `${details.length || '?'} duplicate feed item(s)`;
+    after = 'deduped feed-items.json';
+    edits = [{ file: 'data/live/feed-items.json', type: 'dedupe-feed' }];
+  } else if (checkId === 'integrity:film-sources') {
+    const broken = details[0];
+    before = broken?.url || 'broken source_url';
+    after = patches.fallbackForUrl(broken?.url);
+    edits = [{ file: 'data/film-room-knowledge', type: 'replace-broken-source-urls', replacements: [{ url: before, fallback: after }] }];
+  } else if (checkId.includes('hooks')) {
+    const hook = details[0]?.missing || check?.error || 'required hook';
+    before = `missing ${hook}`;
+    after = `wire ${hook} in ${patchedFile}`;
+    edits = [{ file: patchedFile, type: 'verify-hooks', checkId }];
+  } else if (details.length) {
+    const d = details[0];
+    before = d.pattern || d.class || d.leakedClass || d.url || JSON.stringify(d);
+    after = meta.expected.split('—')[0].trim();
+    edits = fix?.patch?.edits || [];
+  } else {
+    const rebuilt = preparePatch(
+      { checkId, module: fix?.module, details: check?.details },
+      check
+    );
+    if (rebuilt?.patchPreview) {
+      before = rebuilt.patchPreview.before;
+      after = rebuilt.patchPreview.after;
+      edits = rebuilt.edits || [];
+    }
+  }
+
+  return {
+    file: patchedFile,
+    before: before || fix?.patchPreview?.before || 'incorrect markup',
+    after: after || fix?.patchPreview?.after || meta.expected,
+    edits,
+    suggestedFix:
+      fix?.suggestedFix ||
+      `Update ${patchedFile}: replace "${before}" with "${after}" per ${meta.rule}`
+  };
+}
+
+function buildFailureReport(ctx) {
+  const { checkId, check, fix, run, localValidation, remoteCheck, qaPass } = ctx;
+  const meta = describeRuleExpectation(checkId);
+  const primaryCheck = check || remoteCheck || (localValidation?.checks || []).find((c) => c.id === checkId && !c.pass);
+  const actual = formatActualFromCheck(primaryCheck, { localValidation, remoteCheck, qaPass });
+  const correctivePatch = generateCorrectivePatchSuggestion({
+    checkId,
+    check: primaryCheck,
+    fix,
+    appliedFiles: ctx.appliedFiles,
+    run
+  });
+
+  const reason = primaryCheck?.error
+    ? `${checkId} — ${primaryCheck.error}`
+    : `${checkId} — ${meta.rule} validation failed`;
+
+  return {
+    reason,
+    expected: meta.expected,
+    actual,
+    correctivePatch,
+    checkId,
+    runId: run?.id || null,
+    fixId: fix?.id || null,
+    violations: primaryCheck?.details?.slice(0, 8) || null,
+    localPass: localValidation?.pass ?? null,
+    remotePass: remoteCheck?.pass ?? null,
+    qaPass: qaPass ?? null
+  };
+}
+
 module.exports = {
   prepareFixProposal,
   preparePatch,
   buildBackgroundThemePatch,
   buildFeedDedupPatch,
-  buildFilmSourcePatch
+  buildFilmSourcePatch,
+  generateCorrectivePatchSuggestion,
+  describeRuleExpectation,
+  formatActualFromCheck,
+  buildFailureReport,
+  RULE_EXPECTATIONS
 };
+
