@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { validateContentItem, resolveContentItem, logValidationFailure } = require('./content-validator');
+const { sortArticlesByPublishedAtDesc } = require('./article-sort');
 
 const CONTENT_DIR = path.join(__dirname, '..', 'data', 'content');
 const ARTICLES_PATH = path.join(CONTENT_DIR, 'articles.json');
@@ -113,13 +114,17 @@ function getArticleById(id) {
 }
 
 function getPublishedFeed() {
-  const articles = loadPublishedArticles().map((a) => ({
-    ...resolveContentItem(a),
-    id: a.id,
-    source: 'published',
-    sources: a.sources || [],
-    sourcePolicy: 'gatorvault_original'
-  }));
+  const articles = sortArticlesByPublishedAtDesc(
+    loadPublishedArticles().map((a) => ({
+      ...resolveContentItem(a),
+      id: a.id,
+      source: 'published',
+      sources: a.sources || [],
+      sourcePolicy: 'gatorvault_original',
+      publishedAt: a.publishedAt || null,
+      createdAt: a.createdAt || null
+    }))
+  );
   const storylines = loadPublishedStorylines().map((s) => ({
     ...resolveContentItem(s),
     id: s.id,
@@ -224,7 +229,8 @@ function publishItem(id) {
     return { ok: false, blocked: true, errors: result.errors, message: 'Publish blocked — validation failed.' };
   }
 
-  const published = { ...item, publishedAt: nowIso(), updatedAt: nowIso() };
+  const pubAt = nowIso();
+  const published = { ...item, publishedAt: pubAt, updatedAt: pubAt };
   delete published.validationErrors;
   delete published.reviewNotes;
   delete published.submittedAt;
@@ -257,10 +263,14 @@ function publishItem(id) {
       excerpt: item.excerpt,
       body: item.body,
       takeaways: item.takeaways || [],
-      sources: item.sources || item.sourceUrls || item.citations || []
+      sources: item.sources || item.sourceUrls || item.citations || [],
+      publishedAt: pubAt,
+      createdAt: item.createdAt || pubAt
     };
-    if (idx >= 0) articles[idx] = row;
-    else articles.unshift(row);
+    if (idx >= 0) {
+      row.createdAt = articles[idx].createdAt || row.createdAt;
+      articles[idx] = row;
+    } else articles.unshift(row);
     savePublishedArticles(articles);
   }
 
@@ -283,8 +293,12 @@ function rejectItem(id, notes) {
 
 function getQueue(filterStatus) {
   const queue = loadQueue();
-  if (!filterStatus) return queue;
-  return queue.filter((q) => q.status === filterStatus);
+  const filtered = filterStatus ? queue.filter((q) => q.status === filterStatus) : queue;
+  return filtered.sort(
+    (a, b) =>
+      new Date(b.updatedAt || b.publishedAt || b.createdAt || 0) -
+      new Date(a.updatedAt || a.publishedAt || a.createdAt || 0)
+  );
 }
 
 module.exports = {

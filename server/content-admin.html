@@ -168,7 +168,16 @@
       var el = document.getElementById('queue');
       if (!d.ok) { el.innerHTML = '<span class="err">' + (d.error || 'Failed') + '</span>'; return; }
       if (!d.queue.length) { el.innerHTML = '<p class="help">Queue empty.</p>'; return; }
-      el.innerHTML = d.queue.map(function(item) {
+      var queue = d.queue.slice().sort(function(a, b) {
+        function ms(x) {
+          if (x.publishedAt) { var t = new Date(x.publishedAt).getTime(); if (!isNaN(t)) return t; }
+          if (x.createdAt) { var c = new Date(x.createdAt).getTime(); if (!isNaN(c)) return c; }
+          if (x.updatedAt) { var u = new Date(x.updatedAt).getTime(); if (!isNaN(u)) return u; }
+          return 0;
+        }
+        return ms(b) - ms(a);
+      });
+      el.innerHTML = queue.map(function(item) {
         var pill = 'pill-' + (item.status === 'published' ? 'published' : item.status === 'review' ? 'review' : 'draft');
         var btns = '';
         if (item.status === 'draft') {
@@ -222,5 +231,6 @@
     refreshQueue();
     refreshLog();
   </script>
+  <script src="/js/admin-embed.js"></script>
 </body>
 </html>

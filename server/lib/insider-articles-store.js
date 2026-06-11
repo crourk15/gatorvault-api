@@ -3,6 +3,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { sortArticlesByPublishedAtDesc } = require('./article-sort');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'articles');
 const DRAFTS_PATH = path.join(DATA_DIR, 'drafts.json');
@@ -146,9 +147,9 @@ function listDrafts({ status = 'draft' } = {}) {
 
 function listPublished() {
   const doc = loadPublishedDoc();
-  return (doc.items || [])
-    .filter((a) => a.status === 'published')
-    .sort((a, b) => new Date(b.publishedAt || b.createdAt) - new Date(a.publishedAt || a.createdAt));
+  return sortArticlesByPublishedAtDesc(
+    (doc.items || []).filter((a) => a.status === 'published')
+  );
 }
 
 function countDraftsPending() {
@@ -325,6 +326,7 @@ function toPublicArticle(article) {
     category: article.category,
     categoryLabel: meta.label,
     publishedAt: article.publishedAt,
+    createdAt: article.createdAt,
     insiderEngine: true
   };
 }

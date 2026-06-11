@@ -75,10 +75,10 @@
     </header>
     <main>
       <div class="nav">
-        <a href="/admin">← Admin Hub</a>
-        <a href="/admin/monitoring">Recruiting Monitoring</a>
-        <a href="/admin/ops/identity-patterns">Identity Patterns</a>
-        <a href="/admin/ops/gm2">GM 2.0 Integrity</a>
+        <a href="/admin#dashboard">← Admin Hub</a>
+        <a href="/admin#recruiting/monitoring">Recruiting Monitoring</a>
+        <a href="/admin#gm2/identity">Identity Patterns</a>
+        <a href="/admin#gm2/integrity">GM 2.0 Integrity</a>
         <a href="/">Site</a>
       </div>
       <div id="banner" class="banner green"><span><span class="dot green"></span><strong id="overall-label">Loading…</strong></span><span class="sub" id="updated-at"></span></div>
@@ -507,7 +507,15 @@
     }
     function renderInsiderPublished(items){
       var tbody=document.getElementById('insider-published-body');
-      if(!items||!items.length){tbody.innerHTML='<tr><td colspan="6" class="meta">No published insider articles yet.</td></tr>';return;}
+      items=(items||[]).slice().sort(function(a,b){
+        function ms(x){
+          if(x.publishedAt){var t=new Date(x.publishedAt).getTime();if(!isNaN(t))return t;}
+          if(x.createdAt){var c=new Date(x.createdAt).getTime();if(!isNaN(c))return c;}
+          return 0;
+        }
+        return ms(b)-ms(a);
+      });
+      if(!items.length){tbody.innerHTML='<tr><td colspan="6" class="meta">No published insider articles yet.</td></tr>';return;}
       tbody.innerHTML=items.map(function(a){
         return '<tr><td><strong>'+esc(a.title)+'</strong><div class="meta">'+esc(a.summary||a.excerpt||'')+'</div></td>'+
           '<td>'+esc(insiderCategoryLabel(a.category))+'</td>'+
@@ -580,5 +588,6 @@
       }
     })();
   </script>
+  <script src="/js/admin-embed.js"></script>
 </body>
 </html>

@@ -195,7 +195,8 @@ async function ingestRecruitingIntel() {
 function ingestPublishedContent() {
   let count = 0;
   try {
-    const articles = contentStore.loadPublishedArticles();
+    const { sortArticlesByPublishedAtDesc } = require('./article-sort');
+    const articles = sortArticlesByPublishedAtDesc(contentStore.loadPublishedArticles());
     articles.slice(0, 8).forEach((a) => {
       liveStore.upsertFeedItem({
         id: `art_${a.id || a.title}`,
