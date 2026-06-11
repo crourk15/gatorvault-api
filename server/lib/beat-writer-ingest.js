@@ -146,7 +146,6 @@ function isRecruitingIntelPost(text, post = null) {
   if (isVisitSchedulePost(t)) return true;
   if (beatFilters.hasPlayerSpecificBeatIntel(t)) return true;
   if (RECRUITING_INTEL_SIGNAL_RES.some((re) => re.test(t))) return true;
-  const prefilter = require('./beat-intel-prefilter');
   if (prefilter.hasStrongRecruitingSignals(t, post)) return true;
   return false;
 }
