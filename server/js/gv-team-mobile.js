@@ -1,62 +1,19 @@
 /**
- * GatorVault — mobile Team tab (Overview, Staff, Roster, Depth Chart).
+ * GatorVault — Team module (mobile + desktop): Overview, Staff, Roster, Depth Chart.
  */
 (function (global) {
   'use strict';
 
-  var BUILD = 'mhome-v3-20260611';
+  var BUILD = 'mhome-v3-20260612';
+  var _interactionsWired = false;
+  var _modalWired = false;
 
   var ERAS = [
-    {
-      id: 'era-70s80s',
-      label: '70s–80s',
-      title: 'Spurrier Era Foundations',
-      hero: '🏟️',
-      summary: 'Florida established national relevance under Doug Dickey and Charley Pell before the program\'s breakthrough under Steve Spurrier.',
-      players: ['Emmitt Smith', 'Wilber Marshall', 'Kerwin Bell'],
-      games: ['1980 vs LSU — first SEC title path', '1987 vs FSU — rivalry intensity'],
-      achievements: ['First SEC Championship (1991)', 'Heisman: Emmitt Smith era momentum']
-    },
-    {
-      id: 'era-90s',
-      label: '90s',
-      title: 'National Championship Decade',
-      hero: '🏆',
-      summary: 'The Spurrier offense revolutionized college football. Florida won its first national title in 1996.',
-      players: ['Danny Wuerffel', 'Fred Taylor', 'Jevon Kearse'],
-      games: ['1996 vs FSU — national title run', '1997 vs FSU — Wuerffel Heisman season'],
-      achievements: ['1996 National Championship', 'Heisman: Danny Wuerffel (1996)']
-    },
-    {
-      id: 'era-2000s',
-      label: '2000s',
-      title: 'Urban Meyer Dynasty',
-      hero: '🐊',
-      summary: 'Two national championships (2006, 2008) and the Tebow era cemented Florida among elite programs.',
-      players: ['Tim Tebow', 'Percy Harvin', 'Brandon Spikes'],
-      games: ['2006 vs Ohio State — BCS title', '2008 vs Oklahoma — Tebow\'s second ring'],
-      achievements: ['2006 & 2008 National Championships', 'Heisman: Tim Tebow (2007)']
-    },
-    {
-      id: 'era-2010s',
-      label: '2010s',
-      title: 'SEC East Dominance',
-      hero: '⚡',
-      summary: 'Continued SEC contention with elite defenses and spread evolution under multiple coordinators.',
-      players: ['Kyle Pitts', 'Vernon Hargreaves III', 'Feleipe Franks'],
-      games: ['2012 vs LSU — Driskel era peak', '2019 vs Auburn — Trask emergence'],
-      achievements: ['Multiple SEC East titles', 'Kyle Pitts TE1 legacy']
-    },
-    {
-      id: 'era-2020s',
-      label: '2020s',
-      title: 'Sumrall Era — New Chapter',
-      hero: '🎯',
-      summary: 'Jon Sumrall arrives in 2026 with a rebuilt roster, 3-3-5 defensive identity, and a portal-powered roster reset.',
-      players: ['Jayden Woods', 'Eric Singleton Jr.', 'Aaron Philo'],
-      games: ['2026 vs FAU — Sumrall debut', '2026 vs Georgia — Cocktail Party'],
-      achievements: ['2026 portal class rebuild', 'Brad White 3-3-5 install']
-    }
+    { id: 'era-70s80s', label: '70s–80s', title: 'Spurrier Era Foundations', hero: '🏟️', summary: 'Florida established national relevance under Doug Dickey and Charley Pell before the program\'s breakthrough under Steve Spurrier.', players: ['Emmitt Smith', 'Wilber Marshall', 'Kerwin Bell'], games: ['1980 vs LSU — first SEC title path', '1987 vs FSU — rivalry intensity'], achievements: ['First SEC Championship (1991)', 'Heisman: Emmitt Smith era momentum'] },
+    { id: 'era-90s', label: '90s', title: 'National Championship Decade', hero: '🏆', summary: 'The Spurrier offense revolutionized college football. Florida won its first national title in 1996.', players: ['Danny Wuerffel', 'Fred Taylor', 'Jevon Kearse'], games: ['1996 vs FSU — national title run', '1997 vs FSU — Wuerffel Heisman season'], achievements: ['1996 National Championship', 'Heisman: Danny Wuerffel (1996)'] },
+    { id: 'era-2000s', label: '2000s', title: 'Urban Meyer Dynasty', hero: '🐊', summary: 'Two national championships (2006, 2008) and the Tebow era cemented Florida among elite programs.', players: ['Tim Tebow', 'Percy Harvin', 'Brandon Spikes'], games: ['2006 vs Ohio State — BCS title', '2008 vs Oklahoma — Tebow\'s second ring'], achievements: ['2006 & 2008 National Championships', 'Heisman: Tim Tebow (2007)'] },
+    { id: 'era-2010s', label: '2010s', title: 'SEC East Dominance', hero: '⚡', summary: 'Continued SEC contention with elite defenses and spread evolution under multiple coordinators.', players: ['Kyle Pitts', 'Vernon Hargreaves III', 'Feleipe Franks'], games: ['2012 vs LSU — Driskel era peak', '2019 vs Auburn — Trask emergence'], achievements: ['Multiple SEC East titles', 'Kyle Pitts TE1 legacy'] },
+    { id: 'era-2020s', label: '2020s', title: 'Sumrall Era — New Chapter', hero: '🎯', summary: 'Jon Sumrall arrives in 2026 with a rebuilt roster, 3-3-5 defensive identity, and a portal-powered roster reset.', players: ['Jayden Woods', 'Eric Singleton Jr.', 'Aaron Philo'], games: ['2026 vs FAU — Sumrall debut', '2026 vs Georgia — Cocktail Party'], achievements: ['2026 portal class rebuild', 'Brad White 3-3-5 install'] }
   ];
 
   var ACHIEVEMENTS = [
@@ -91,15 +48,15 @@
   var ROSTER_FILTERS = ['All', 'QB', 'RB', 'WR', 'OL', 'DL', 'LB', 'DB', 'ST'];
 
   var POS_GROUPS = {
-    QB: ['QB'],
-    RB: ['RB', 'FB'],
-    WR: ['WR', 'TE'],
+    QB: ['QB'], RB: ['RB', 'FB'], WR: ['WR', 'TE'],
     OL: ['OL', 'OT', 'OG', 'C', 'IOL', 'LT', 'LG', 'RG', 'RT'],
     DL: ['DL', 'DT', 'DE', 'EDGE', 'NT', 'END', 'NOSE'],
     LB: ['LB', 'MIKE', 'WILL', 'SAM', 'JACK', 'OLB', 'ILB'],
     DB: ['DB', 'CB', 'S', 'SS', 'FS', 'NB', 'STAR'],
     ST: ['K', 'P', 'LS', 'KR', 'PR']
   };
+
+  var TEAM_PREFIXES = ['mteam', 'team'];
 
   function esc(s) {
     if (typeof gvLiveEsc === 'function') return gvLiveEsc(s);
@@ -115,6 +72,8 @@
     if (b) b.innerHTML = bodyHtml || '';
     ov.classList.remove('hidden');
     ov.style.display = 'flex';
+    ov.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('gv-team-modal-open');
     document.body.style.overflow = 'hidden';
   }
 
@@ -123,7 +82,133 @@
     if (!ov) return;
     ov.classList.add('hidden');
     ov.style.display = '';
+    ov.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('gv-team-modal-open');
     document.body.style.overflow = '';
+  }
+
+  function openEraDetail(eraId) {
+    var era = ERAS.find(function (e) { return e.id === eraId; });
+    if (!era) return;
+    var html = '<p class="gv-team-detail-lead">' + esc(era.summary) + '</p>'
+      + '<h4 class="gv-team-detail-h">Key Players</h4><ul class="gv-team-detail-list">' + era.players.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>'
+      + '<h4 class="gv-team-detail-h">Key Games</h4><ul class="gv-team-detail-list">' + era.games.map(function (g) { return '<li>' + esc(g) + '</li>'; }).join('') + '</ul>'
+      + '<h4 class="gv-team-detail-h">Achievements</h4><ul class="gv-team-detail-list">' + era.achievements.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') + '</ul>';
+    openTeamDetail(era.title, html);
+  }
+
+  function openAchievementDetail(achId) {
+    var ach = ACHIEVEMENTS.find(function (a) { return a.id === achId; });
+    if (!ach) return;
+    var html = '<p class="gv-team-detail-lead">' + esc(ach.note) + '</p>'
+      + '<ul class="gv-team-detail-list">' + ach.years.map(function (y) { return '<li>' + esc(y) + '</li>'; }).join('') + '</ul>';
+    openTeamDetail(ach.label, html);
+  }
+
+  function openCoachDetail(coachId) {
+    var c = COACHING_STAFF.find(function (x) { return x.id === coachId; });
+    if (!c) return;
+    openTeamDetail(c.name, '<p class="gv-team-detail-lead"><strong>' + esc(c.title) + '</strong></p><p>' + esc(c.bio) + '</p>');
+  }
+
+  function openIdentityDetail() {
+    openTeamDetail(TEAM_IDENTITY.title, '<p class="gv-team-detail-lead">' + esc(TEAM_IDENTITY.summary) + '</p><p>' + esc(TEAM_IDENTITY.body).replace(/\n/g, '<br>') + '</p>');
+  }
+
+  function openSupportStaffDetail() {
+    openTeamDetail('Support Staff', '<p class="gv-team-detail-lead">Operations, video, equipment, and administrative staff supporting the 2026 program.</p><ul class="gv-team-detail-list"><li>Director of Football Operations</li><li>Video & Quality Control</li><li>Equipment & Logistics</li><li>Player Development & Nutrition</li></ul>');
+  }
+
+  function isTeamPaneTarget(node) {
+    return !!(node && node.closest && node.closest('#vpane-mteam, #vpane-team'));
+  }
+
+  function handleTeamTap(target) {
+    if (!target || !isTeamPaneTarget(target)) return false;
+
+    var eraBtn = target.closest('.gv-team-era-card[data-era-id]');
+    if (eraBtn) {
+      openEraDetail(eraBtn.getAttribute('data-era-id'));
+      return true;
+    }
+
+    var achBtn = target.closest('.gv-team-ach-tile[data-ach-id]');
+    if (achBtn) {
+      openAchievementDetail(achBtn.getAttribute('data-ach-id'));
+      return true;
+    }
+
+    var coachBtn = target.closest('.gv-coach-card[data-coach-id]');
+    if (coachBtn) {
+      openCoachDetail(coachBtn.getAttribute('data-coach-id'));
+      return true;
+    }
+
+    if (target.closest('#gv-mteam-identity-btn, #gv-team-identity-btn')) {
+      openIdentityDetail();
+      return true;
+    }
+
+    if (target.closest('#gv-mteam-support-btn, #gv-team-support-btn')) {
+      openSupportStaffDetail();
+      return true;
+    }
+
+    var rosterCard = target.closest('.gv-mteam-roster-card[data-slug]');
+    if (rosterCard) {
+      var slug = rosterCard.getAttribute('data-slug');
+      if (slug) global.location.href = '/player/' + slug;
+      return true;
+    }
+
+    return false;
+  }
+
+  function wireTeamInteractions() {
+    if (_interactionsWired) return;
+    _interactionsWired = true;
+
+    document.addEventListener('click', function (e) {
+      if (handleTeamTap(e.target)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+
+    document.addEventListener('touchend', function (e) {
+      if (!e.target || !isTeamPaneTarget(e.target)) return;
+      var moved = e.target.closest('[data-gv-hscroll="1"]');
+      if (moved && e.changedTouches && e.changedTouches[0]) {
+        var el = e.target.closest('.gv-team-era-card');
+        if (el && el._gvTouchStartX != null) {
+          if (Math.abs(e.changedTouches[0].clientX - el._gvTouchStartX) > 14) return;
+        }
+      }
+      if (handleTeamTap(e.target)) {
+        e.preventDefault();
+      }
+    }, { capture: true, passive: false });
+
+    document.addEventListener('touchstart', function (e) {
+      var era = e.target && e.target.closest && e.target.closest('.gv-team-era-card');
+      if (era && e.touches && e.touches[0]) era._gvTouchStartX = e.touches[0].clientX;
+    }, { capture: true, passive: true });
+  }
+
+  function wireTeamDetailModal() {
+    if (_modalWired) return;
+    _modalWired = true;
+    var closeBtn = document.getElementById('gv-team-detail-close');
+    var ov = document.getElementById('gv-team-detail-modal');
+    if (closeBtn) closeBtn.addEventListener('click', function (e) { e.preventDefault(); closeTeamDetail(); });
+    if (ov) {
+      ov.addEventListener('click', function (e) {
+        if (e.target === ov) closeTeamDetail();
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeTeamDetail();
+    });
   }
 
   function renderEraCard(era, idx) {
@@ -175,147 +260,98 @@
     return group.some(function (g) { return pos === g || pos.indexOf(g) === 0; });
   }
 
-  function wireTeamDetailModal() {
-    var closeBtn = document.getElementById('gv-team-detail-close');
-    var ov = document.getElementById('gv-team-detail-modal');
-    if (closeBtn) closeBtn.addEventListener('click', closeTeamDetail);
-    if (ov) {
-      ov.addEventListener('click', function (e) {
-        if (e.target === ov) closeTeamDetail();
-      });
-    }
-  }
-
-  function wireEraCards(root) {
-    if (!root) return;
-    root.querySelectorAll('.gv-team-era-card').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var id = btn.getAttribute('data-era-id');
-        var era = ERAS.find(function (e) { return e.id === id; });
-        if (!era) return;
-        var html = '<p class="gv-team-detail-lead">' + esc(era.summary) + '</p>'
-          + '<h4 class="gv-team-detail-h">Key Players</h4><ul class="gv-team-detail-list">' + era.players.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>'
-          + '<h4 class="gv-team-detail-h">Key Games</h4><ul class="gv-team-detail-list">' + era.games.map(function (g) { return '<li>' + esc(g) + '</li>'; }).join('') + '</ul>'
-          + '<h4 class="gv-team-detail-h">Achievements</h4><ul class="gv-team-detail-list">' + era.achievements.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') + '</ul>';
-        openTeamDetail(era.title, html);
-      });
-    });
-  }
-
-  function wireAchievementTiles(root) {
-    if (!root) return;
-    root.querySelectorAll('.gv-team-ach-tile').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var id = btn.getAttribute('data-ach-id');
-        var ach = ACHIEVEMENTS.find(function (a) { return a.id === id; });
-        if (!ach) return;
-        var html = '<p class="gv-team-detail-lead">' + esc(ach.note) + '</p>'
-          + '<ul class="gv-team-detail-list">' + ach.years.map(function (y) { return '<li>' + esc(y) + '</li>'; }).join('') + '</ul>';
-        openTeamDetail(ach.label, html);
-      });
-    });
-  }
-
-  function wireCoachCards(root) {
-    if (!root) return;
-    root.querySelectorAll('.gv-coach-card').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var id = btn.getAttribute('data-coach-id');
-        var c = COACHING_STAFF.find(function (x) { return x.id === id; });
-        if (!c) return;
-        openTeamDetail(c.name, '<p class="gv-team-detail-lead"><strong>' + esc(c.title) + '</strong></p><p>' + esc(c.bio) + '</p>');
-      });
-    });
-  }
-
-  function renderMobileRoster(filter) {
-    var el = document.getElementById('gv-mteam-roster-list');
-    if (!el) return;
+  function renderRosterList(listEl, filter) {
+    if (!listEl) return;
     var profiles = global.playerProfiles || [];
-    var f = filter || global._gvMteamRosterFilter || 'All';
+    var f = filter || global._gvTeamRosterFilter || 'All';
     var list = profiles.filter(function (p) { return playerMatchesRosterFilter(p, f); });
     list.sort(function (a, b) {
       var ra = typeof playerDisplayRating === 'function' ? (playerDisplayRating(b) || 0) : 0;
       var rb = typeof playerDisplayRating === 'function' ? (playerDisplayRating(a) || 0) : 0;
       return ra - rb;
     });
-    el.innerHTML = list.length
+    listEl.innerHTML = list.length
       ? list.slice(0, 48).map(renderRosterCard).join('')
       : '<p class="gv-espn-card-body text-surface-200/60">Roster loading…</p>';
-    el.querySelectorAll('.gv-mteam-roster-card').forEach(function (card) {
-      card.addEventListener('click', function () {
-        var slug = card.getAttribute('data-slug');
-        if (slug) global.location.href = '/player/' + slug;
+  }
+
+  function wireRosterFilters(filtersEl) {
+    if (!filtersEl || filtersEl._wired) return;
+    filtersEl._wired = true;
+    filtersEl.innerHTML = ROSTER_FILTERS.map(function (f) {
+      return '<button type="button" class="gv-mteam-pos-chip' + (f === 'All' ? ' active' : '') + '" data-pos="' + f + '">' + f + '</button>';
+    }).join('');
+    filtersEl.querySelectorAll('.gv-mteam-pos-chip').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        document.querySelectorAll('#' + filtersEl.id + ' .gv-mteam-pos-chip').forEach(function (c) { c.classList.remove('active'); });
+        chip.classList.add('active');
+        global._gvTeamRosterFilter = chip.getAttribute('data-pos');
+        TEAM_PREFIXES.forEach(function (pfx) {
+          renderRosterList(document.getElementById('gv-' + pfx + '-roster-list'), global._gvTeamRosterFilter);
+        });
       });
     });
   }
 
-  function renderMobileTeam() {
-    if (typeof gvIsMobile === 'function' && !gvIsMobile()) return;
+  function renderTeamPane(prefix) {
+    var erasEl = document.getElementById('gv-' + prefix + '-eras-track');
+    var achEl = document.getElementById('gv-' + prefix + '-achievements');
+    var staffEl = document.getElementById('gv-' + prefix + '-staff');
+    var filtersEl = document.getElementById('gv-' + prefix + '-roster-filters');
+    var rosterEl = document.getElementById('gv-' + prefix + '-roster-list');
 
-    var erasEl = document.getElementById('gv-mteam-eras-track');
-    var achEl = document.getElementById('gv-mteam-achievements');
-    var staffEl = document.getElementById('gv-mteam-staff');
-    var filtersEl = document.getElementById('gv-mteam-roster-filters');
-
-    if (erasEl) {
-      erasEl.innerHTML = ERAS.map(renderEraCard).join('');
-      wireEraCards(erasEl);
-    }
-    if (achEl) {
-      achEl.innerHTML = ACHIEVEMENTS.map(renderAchievementTile).join('');
-      wireAchievementTiles(achEl);
-    }
-
-    var identityBtn = document.getElementById('gv-mteam-identity-btn');
-    if (identityBtn && !identityBtn._wired) {
-      identityBtn._wired = true;
-      identityBtn.addEventListener('click', function () {
-        openTeamDetail(TEAM_IDENTITY.title, '<p class="gv-team-detail-lead">' + esc(TEAM_IDENTITY.summary) + '</p><p>' + esc(TEAM_IDENTITY.body).replace(/\n/g, '<br>') + '</p>');
-      });
-    }
-
+    if (erasEl) erasEl.innerHTML = ERAS.map(renderEraCard).join('');
+    if (achEl) achEl.innerHTML = ACHIEVEMENTS.map(renderAchievementTile).join('');
     if (staffEl) {
       staffEl.innerHTML = COACHING_STAFF.map(renderCoachCard).join('')
-        + '<button type="button" class="gv-team-support-link" id="gv-mteam-support-btn">Support Staff →</button>';
-      wireCoachCards(staffEl);
-      var supportBtn = document.getElementById('gv-mteam-support-btn');
-      if (supportBtn && !supportBtn._wired) {
-        supportBtn._wired = true;
-        supportBtn.addEventListener('click', function () {
-          openTeamDetail('Support Staff', '<p class="gv-team-detail-lead">Operations, video, equipment, and administrative staff supporting the 2026 program.</p><ul class="gv-team-detail-list"><li>Director of Football Operations</li><li>Video & Quality Control</li><li>Equipment & Logistics</li><li>Player Development & Nutrition</li></ul>');
-        });
-      }
+        + '<button type="button" class="gv-team-support-link" id="gv-' + prefix + '-support-btn">Support Staff →</button>';
     }
-
-    if (filtersEl && !filtersEl._wired) {
-      filtersEl._wired = true;
-      filtersEl.innerHTML = ROSTER_FILTERS.map(function (f) {
-        return '<button type="button" class="gv-mteam-pos-chip' + (f === 'All' ? ' active' : '') + '" data-pos="' + f + '">' + f + '</button>';
-      }).join('');
-      filtersEl.querySelectorAll('.gv-mteam-pos-chip').forEach(function (chip) {
-        chip.addEventListener('click', function () {
-          filtersEl.querySelectorAll('.gv-mteam-pos-chip').forEach(function (c) { c.classList.remove('active'); });
-          chip.classList.add('active');
-          global._gvMteamRosterFilter = chip.getAttribute('data-pos');
-          renderMobileRoster(global._gvMteamRosterFilter);
-        });
-      });
-    }
-
-    var dcBtn = document.getElementById('gv-mteam-dc-open');
-    if (dcBtn && !dcBtn._wired) {
-      dcBtn._wired = true;
-      dcBtn.addEventListener('click', function () {
-        if (typeof global.showVTab === 'function') global.showVTab('dc');
-      });
-    }
-
-    renderMobileRoster(global._gvMteamRosterFilter || 'All');
-    wireTeamDetailModal();
+    if (filtersEl) wireRosterFilters(filtersEl);
+    if (rosterEl) renderRosterList(rosterEl, global._gvTeamRosterFilter || 'All');
   }
 
-  global.gvRenderMobileTeam = renderMobileTeam;
+  function renderTeam() {
+    wireTeamInteractions();
+    wireTeamDetailModal();
+    TEAM_PREFIXES.forEach(renderTeamPane);
+    if (typeof global.renderDC === 'function') {
+      try { global.renderDC(); } catch (e) { /* optional */ }
+    }
+  }
+
+  function scrollToTeamSection(sectionId) {
+    var el = document.getElementById(sectionId);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function applyTeamDeepLink() {
+    var hash = (global.location.hash || '').replace(/^#/, '');
+    var params = new URLSearchParams(global.location.search || '');
+    var era = params.get('era') || (hash.indexOf('era-') === 0 ? hash : null);
+    var ach = params.get('achievement') || (hash.indexOf('ach-') === 0 ? hash : null);
+    var coach = params.get('coach');
+    if (era) openEraDetail(era);
+    else if (ach) openAchievementDetail(ach);
+    else if (coach) openCoachDetail(coach);
+    else if (hash === 'identity') openIdentityDetail();
+    else if (hash === 'dc' || hash === 'depth-chart') scrollToTeamSection('gv-team-dc-section');
+  }
+
+  global.gvRenderTeam = renderTeam;
+  global.gvRenderMobileTeam = renderTeam;
+  global.gvOpenTeamDetail = openTeamDetail;
   global.gvCloseTeamDetail = closeTeamDetail;
+  global.gvOpenTeamEra = openEraDetail;
+  global.gvOpenTeamAchievement = openAchievementDetail;
+  global.gvApplyTeamDeepLink = applyTeamDeepLink;
+  global.gvScrollTeamSection = scrollToTeamSection;
+  global.GV_TEAM_DATA = { ERAS: ERAS, ACHIEVEMENTS: ACHIEVEMENTS, TEAM_IDENTITY: TEAM_IDENTITY, COACHING_STAFF: COACHING_STAFF, BUILD: BUILD };
   global.GV_TEAM_MOBILE_BUILD = BUILD;
+
+  wireTeamInteractions();
+  wireTeamDetailModal();
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { wireTeamInteractions(); wireTeamDetailModal(); });
+  }
 })(typeof window !== 'undefined' ? window : global);

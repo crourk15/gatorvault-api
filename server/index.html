@@ -34,7 +34,7 @@
     <meta name="description" content="GatorVault is the Florida Gators football hub — depth charts, recruiting boards, transfer portal intel, Film Room breakdowns, and live beat writer coverage. Start your free 30-day trial." />
     <meta name="keywords" content="Florida Gators football, UF football, Gators recruiting, Florida Gators depth chart, Gators transfer portal, Jon Sumrall, SEC football, Gator Nation" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta name="gv-build" content="mhome-v3-20260611" />
+    <meta name="gv-build" content="mhome-v3-20260612" />
     <link rel="canonical" href="https://gatorvaultinsider.com/" />
     <link rel="image_src" href="https://gatorvaultinsider.com/og-image.jpg?v=20260605" />
     <meta name="google-site-verification" content="CfKonZGeVMZBFJ3JhqaFhPfs7kS6-LvCmskXElgekTs" />
@@ -483,7 +483,17 @@
             .gv-mteam-dc-card{display:flex;align-items:center;justify-content:space-between;width:100%;background:#121c2e;border:1px solid rgba(0,48,135,.4);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;}
             .gv-mteam-dc-units{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
             .gv-mteam-dc-unit{font-size:10px;font-weight:700;text-transform:uppercase;padding:6px 10px;border-radius:8px;background:rgba(0,48,135,.25);color:#93c5fd;border:1px solid rgba(0,48,135,.35);}
-            #gv-team-detail-modal.highlight-modal-ov{z-index:200;}
+            #gv-team-detail-modal.highlight-modal-ov{z-index:100005!important;padding:0;align-items:stretch;}
+            body.gv-team-modal-open{overflow:hidden;}
+            #gv-team-detail-modal .highlight-modal.gv-team-detail-panel{max-width:none;width:100%;min-height:100%;border-radius:0;margin:0;display:flex;flex-direction:column;border-left:0;border-right:0;}
+            #gv-team-detail-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:max(1rem,env(safe-area-inset-bottom));}
+            @media(min-width:768px){
+                #gv-team-detail-modal.highlight-modal-ov{padding:1rem;align-items:flex-start;}
+                #gv-team-detail-modal .highlight-modal.gv-team-detail-panel{max-width:42rem;min-height:0;border-radius:1rem;margin:auto 0;border:1px solid rgba(250,70,22,.25);}
+            }
+            .gv-team-era-card,.gv-team-ach-tile,.gv-coach-card,.gv-team-nav-card,.gv-mteam-pos-chip{touch-action:manipulation;pointer-events:auto;position:relative;z-index:1;}
+            .gv-team-hscroll-wrap{overflow:visible;touch-action:auto;margin:0 -16px 4px;}
+            #vpane-team .gv-mob-module-hdr,#vpane-team .gv-mteam-subhdr{font-family:'Oswald',sans-serif;}
             .gv-team-detail-lead{font-size:15px;color:#e2e8f0;line-height:1.5;margin:0 0 14px;}
             .gv-team-detail-h{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gv-uf-orange);margin:14px 0 8px;}
             .gv-team-detail-list{margin:0;padding-left:18px;color:#94a3b8;font-size:14px;line-height:1.5;}
@@ -578,11 +588,11 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style id="gv-critical">:root{--gv-ticker-h:44px}#gv-site-ticker{z-index:500!important;position:fixed;top:0;left:0;right:0;height:44px}#gv-alert-banner{z-index:510!important;position:fixed;top:0;left:0;right:0}body.gv-has-site-ticker #nav-main,body.gv-has-site-ticker nav.fixed{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #gv-mobile-header,body.gv-has-site-ticker .gv-mob-header{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior:not(.gv-mobile-active){padding-top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior .gv-desk-only.sticky.top-14{top:calc(var(--gv-ticker-h) + 3.5rem)!important}body.gv-has-site-ticker #hero-sec{padding-top:calc(8rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker #install-banner{top:calc(4rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker .gv-alert-banner{top:var(--gv-ticker-h)}</style>
-    <link rel="stylesheet" href="/gv-global.css?v=mhome-v3-20260611">
-    <link rel="stylesheet" href="/gv-feedback.css?v=mhome-v3-20260611">
-    <script src="/gv-global.js?v=mhome-v3-20260611" defer></script>
-    <script src="/gv-feedback.js?v=mhome-v3-20260611" defer></script>
-    <script src="/js/gv-team-mobile.js?v=mhome-v3-20260611" defer></script>
+    <link rel="stylesheet" href="/gv-global.css?v=mhome-v3-20260612">
+    <link rel="stylesheet" href="/gv-feedback.css?v=mhome-v3-20260612">
+    <script src="/gv-global.js?v=mhome-v3-20260612" defer></script>
+    <script src="/gv-feedback.js?v=mhome-v3-20260612" defer></script>
+    <script src="/js/gv-team-mobile.js?v=mhome-v3-20260612" defer></script>
 </head>
 <body data-id="0" class="gv-has-site-ticker">
     <app-icon data-id="1" hidden data-icon="shield" data-palette="Blue"></app-icon>
@@ -646,8 +656,8 @@
     </div>
 
     <!-- Team detail modal (mobile Team tab) -->
-    <div id="gv-team-detail-modal" class="highlight-modal-ov hidden" role="dialog" aria-modal="true" aria-labelledby="gv-team-detail-title">
-        <div class="highlight-modal max-w-lg">
+    <div id="gv-team-detail-modal" class="highlight-modal-ov hidden" role="dialog" aria-modal="true" aria-labelledby="gv-team-detail-title" aria-hidden="true">
+        <div class="highlight-modal gv-team-detail-panel max-w-lg">
             <div class="flex items-center justify-between gap-3 p-4 border-b border-gator-blue/20">
                 <h3 id="gv-team-detail-title" class="font-display text-lg font-bold text-white leading-snug"></h3>
                 <button id="gv-team-detail-close" type="button" class="text-surface-200 hover:text-white p-2 text-xl leading-none" aria-label="Close">✕</button>
@@ -1037,7 +1047,7 @@
             <div data-id="468" class="gv-desk-only sticky top-14 z-40 bg-surface-800 border-b border-gator-blue/20 overflow-x-auto">
                 <div data-id="469" class="max-w-7xl mx-auto px-4 flex gap-1 min-w-max">
                     <button data-id="470" class="vtab active px-3 py-3 text-xs md:text-sm font-semibold text-gator-orange whitespace-nowrap" data-vtab="start">🏠 Start Here</button>
-                    <button data-id="471" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="dc">📋 Depth Chart</button>
+                    <button data-id="471" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="team">🐊 Team</button>
                     <button data-id="472" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="recruit">🎯 Recruiting</button>
                     <button data-id="473" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="portal">🔄 Portal</button>
                     <button data-id="474" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="articles">📰 Articles</button>
@@ -1118,7 +1128,7 @@
                     <section class="gv-mob-section gv-mob-module">
                         <h2 class="gv-mob-module-hdr gv-mob-module-hdr--accent">Team Overview</h2>
                         <h3 class="gv-mteam-subhdr">Program History</h3>
-                        <div class="gv-hscroll-wrap"><div id="gv-mteam-eras-track" class="gv-hscroll-track" data-gv-hscroll="1"></div></div>
+                        <div class="gv-hscroll-wrap gv-team-hscroll-wrap"><div id="gv-mteam-eras-track" class="gv-hscroll-track" data-gv-hscroll="1"></div></div>
                         <h3 class="gv-mteam-subhdr">Program Achievements</h3>
                         <div id="gv-mteam-achievements" class="gv-mteam-tile-grid"></div>
                         <h3 class="gv-mteam-subhdr">Team Identity</h3>
@@ -1136,17 +1146,64 @@
                         <div id="gv-mteam-roster-filters" class="gv-mteam-roster-filters"></div>
                         <div id="gv-mteam-roster-list"></div>
                     </section>
-                    <section class="gv-mob-section gv-mob-module">
+                    <section class="gv-mob-section gv-mob-module" id="gv-mteam-dc-section">
                         <h2 class="gv-mob-module-hdr">Depth Chart</h2>
-                        <button type="button" class="gv-mteam-dc-card" id="gv-mteam-dc-open">
-                            <span><p class="gv-team-nav-label" style="margin:0">2026 Spring Depth Chart</p><p class="gv-team-nav-sub">Offense · Defense · Special Teams — two-deep</p></span>
-                            <span class="gv-coach-chevron">›</span>
-                        </button>
-                        <div class="gv-mteam-dc-units">
-                            <span class="gv-mteam-dc-unit">Offense</span>
-                            <span class="gv-mteam-dc-unit">Defense 3-3-5</span>
-                            <span class="gv-mteam-dc-unit">Special Teams</span>
+                        <p class="text-surface-200/60 text-sm mb-3">2026 Spring projections · Offense · Defense 3-3-5 · Special Teams</p>
+                        <div class="flex gap-2 flex-wrap mb-3">
+                            <button type="button" class="dctbtn active bg-gator-orange text-white text-xs font-bold px-4 py-2 rounded-lg" data-phase="off" data-dc-root="mteam">⚔️ Offense</button>
+                            <button type="button" class="dctbtn bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-phase="def" data-dc-root="mteam">🛡️ Defense</button>
+                            <button type="button" class="dctbtn bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-phase="st" data-dc-root="mteam">⚡ Special Teams</button>
                         </div>
+                        <div id="gv-mteam-dc-off" class="active dc-phase grid grid-cols-1 gap-3"></div>
+                        <div id="gv-mteam-dc-def" class="dc-phase grid grid-cols-1 gap-3" style="display:none;"></div>
+                        <div id="gv-mteam-dc-st" class="dc-phase grid grid-cols-1 gap-3" style="display:none;"></div>
+                    </section>
+                </div>
+
+                <!-- ====== DESKTOP TEAM (merged Overview + Staff + Roster + Depth Chart) ====== -->
+                <div id="vpane-team" class="vpane gv-desk-only fade-in space-y-8">
+                    <div>
+                        <h1 class="font-display text-2xl md:text-3xl font-bold text-white">🐊 Team</h1>
+                        <p class="text-surface-200 text-sm mt-1">Program history, coaching staff, roster, and depth chart — one hub for Gator Nation.</p>
+                    </div>
+                    <section>
+                        <h2 class="font-display text-xl font-bold text-gator-orange mb-3">Team Overview</h2>
+                        <h3 class="gv-mteam-subhdr">Program History</h3>
+                        <div class="gv-hscroll-wrap gv-team-hscroll-wrap"><div id="gv-team-eras-track" class="gv-hscroll-track" data-gv-hscroll="1"></div></div>
+                        <h3 class="gv-mteam-subhdr">Program Achievements</h3>
+                        <div id="gv-team-achievements" class="gv-mteam-tile-grid"></div>
+                        <h3 class="gv-mteam-subhdr">Team Identity</h3>
+                        <button type="button" class="gv-team-nav-card" id="gv-team-identity-btn">
+                            <span class="gv-team-nav-icon">🐊</span>
+                            <span><p class="gv-team-nav-label">Culture &amp; Traditions</p><p class="gv-team-nav-sub">The Swamp · Orange &amp; Blue · Gator Nation</p></span>
+                        </button>
+                    </section>
+                    <section>
+                        <h2 class="font-display text-xl font-bold text-white mb-3">Coaching Staff</h2>
+                        <div id="gv-team-staff"></div>
+                    </section>
+                    <section>
+                        <h2 class="font-display text-xl font-bold text-white mb-3">Roster</h2>
+                        <div id="gv-team-roster-filters" class="gv-mteam-roster-filters"></div>
+                        <div id="gv-team-roster-list"></div>
+                    </section>
+                    <section id="gv-team-dc-section">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                            <div><h2 class="font-display text-xl font-bold text-white">2026 Depth Chart</h2><p class="text-surface-200 text-sm">Spring Projections · Updated June 2026</p></div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="text-xs font-semibold px-3 py-1 rounded-full status-locked">🟢 Locked</span>
+                                <span class="text-xs font-semibold px-3 py-1 rounded-full status-battle">🟡 Battle</span>
+                                <span class="text-xs font-semibold px-3 py-1 rounded-full status-watch">🔴 Watch</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 flex-wrap mb-4">
+                            <button type="button" class="dctbtn active bg-gator-orange text-white text-xs font-bold px-4 py-2 rounded-lg" data-phase="off" data-dc-root="team">⚔️ Offense</button>
+                            <button type="button" class="dctbtn bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-phase="def" data-dc-root="team">🛡️ Defense 3-3-5</button>
+                            <button type="button" class="dctbtn bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-phase="st" data-dc-root="team">⚡ Special Teams</button>
+                        </div>
+                        <div id="gv-team-dc-off" class="active dc-phase grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                        <div id="gv-team-dc-def" class="dc-phase grid grid-cols-1 md:grid-cols-2 gap-3" style="display:none;"></div>
+                        <div id="gv-team-dc-st" class="dc-phase grid grid-cols-1 md:grid-cols-2 gap-3" style="display:none;"></div>
                     </section>
                 </div>
 
@@ -1174,7 +1231,7 @@
                     <h1 data-id="501" id="vault-welcome-title" class="font-display text-2xl md:text-3xl font-bold text-white">Welcome to GatorVault 🐊</h1>
                     <div data-id="502" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <button data-id="503" class="start-nav bg-surface-700 border border-gator-blue/20 rounded-2xl p-5 text-left card-h" data-goto="articles"><div data-id="504" class="text-2xl mb-2">📖</div><h3 data-id="505" class="font-display text-lg font-bold text-white mb-1">Read Season Bible</h3><p data-id="506" class="text-surface-200 text-xs">Start with the full Season Bible inside Articles.</p></button>
-                        <button data-id="507" class="start-nav bg-surface-700 border border-gator-blue/20 rounded-2xl p-5 text-left card-h" data-goto="dc"><div data-id="508" class="text-2xl mb-2">📋</div><h3 data-id="509" class="font-display text-lg font-bold text-white mb-1">Check Depth Chart</h3><p data-id="510" class="text-surface-200 text-xs">Interactive position cards with analysis.</p></button>
+                        <button data-id="507" class="start-nav bg-surface-700 border border-gator-blue/20 rounded-2xl p-5 text-left card-h" data-goto="team"><div data-id="508" class="text-2xl mb-2">🐊</div><h3 data-id="509" class="font-display text-lg font-bold text-white mb-1">Team Hub</h3><p data-id="510" class="text-surface-200 text-xs">History, staff, roster, and depth chart.</p></button>
                         <button data-id="511" class="start-nav bg-surface-700 border border-gator-blue/20 rounded-2xl p-5 text-left card-h" data-goto="recruit"><div data-id="512" class="text-2xl mb-2">🎯</div><h3 data-id="513" class="font-display text-lg font-bold text-white mb-1">View Heat Check</h3><p data-id="514" class="text-surface-200 text-xs">Who's rising, who's cooling in recruiting.</p></button>
                         <button data-id="515" class="start-nav bg-surface-700 border border-gator-blue/20 rounded-2xl p-5 text-left card-h" data-goto="community"><div data-id="516" class="text-2xl mb-2">💬</div><h3 data-id="517" class="font-display text-lg font-bold text-white mb-1">Join Community</h3><p data-id="518" class="text-surface-200 text-xs">Threads, badges, and Gator conversation.</p></button>
                     </div>
@@ -1185,8 +1242,8 @@
                     </div>
                 </div>
 
-                <!-- ====== DEPTH CHART ====== -->
-                <div data-id="533" id="vpane-dc" class="vpane fade-in space-y-6">
+                <!-- ====== DEPTH CHART (legacy — merged into Team tab) ====== -->
+                <div data-id="533" id="vpane-dc" class="vpane fade-in space-y-6 hidden" style="display:none!important" aria-hidden="true">
                     <div data-id="534" class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div data-id="535"><h1 data-id="536" class="font-display text-2xl md:text-3xl font-bold text-white">2026 Depth Chart</h1><p data-id="537" class="text-surface-200 text-sm">Spring Projections · Updated June 2026</p></div>
                         <div data-id="538" class="flex items-center gap-2 flex-wrap">
@@ -1769,7 +1826,7 @@
             <div id="gv-more-sheet" class="gv-mob-only gv-more-sheet" aria-hidden="true">
                 <div class="gv-more-panel">
                     <button type="button" class="gv-more-link" data-goto="start">🏠 Start Here</button>
-                    <button type="button" class="gv-more-link" data-goto="dc">📋 Depth Chart</button>
+                    <button type="button" class="gv-more-link" data-goto="team">🐊 Team &amp; Depth Chart</button>
                     <button type="button" class="gv-more-link" data-goto="portal">🔄 Portal</button>
                     <button type="button" class="gv-more-link" data-goto="articles">📰 Articles</button>
                     <button type="button" class="gv-more-link" data-goto="community">💬 Community</button>
@@ -1822,8 +1879,8 @@
                 </div>
             </div>
 
-            <p class="text-[10px] text-surface-200/25 mt-1 gv-mob-only" id="gv-build-stamp-mobile">UI mhome-v3-20260611</p>
-            <footer data-id="914" class="gv-desk-only text-center text-xs text-surface-200/40 py-6 border-t border-gator-blue/10 mt-8"><p data-id="915">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p><p class="text-[10px] text-surface-200/25 mt-1" id="gv-build-stamp">UI mhome-v3-20260611</p></footer>
+            <p class="text-[10px] text-surface-200/25 mt-1 gv-mob-only" id="gv-build-stamp-mobile">UI mhome-v3-20260612</p>
+            <footer data-id="914" class="gv-desk-only text-center text-xs text-surface-200/40 py-6 border-t border-gator-blue/10 mt-8"><p data-id="915">GatorVault © 2026 — Members-only content. Not affiliated with the University of Florida. | Built for Gator Nation 🐊</p><p class="text-[10px] text-surface-200/25 mt-1" id="gv-build-stamp">UI mhome-v3-20260612</p></footer>
         </div>
     </div>
 
@@ -2702,6 +2759,8 @@
     // ========== VAULT TABS ==========
     function showVTab(tab){
         try{
+        var scrollTeamDc=false;
+        if(tab==='dc'){tab='team';scrollTeamDc=true;}
         if(tab==='analytics' && !window.GV_OPERATOR){
             showToast('Operator PIN required','Enter the admin PIN to unlock Analytics.','',4000);
             showAdminPinModal();
@@ -2716,6 +2775,7 @@
         if(tab==='live'){try{gvLoadLiveDashboard(true);}catch(e){}}
         if(tab==='gamezone'){try{gvRenderGameZoneLive();}catch(e){}}
         if(tab==='nil'){try{gvLoadNilDashboard();}catch(e){}}
+        if(tab==='team'){try{if(typeof gvRenderTeam==='function')gvRenderTeam();if(typeof gvLoadRosterProfiles==='function')gvLoadRosterProfiles(true);if(typeof gvApplyTeamDeepLink==='function')gvApplyTeamDeepLink();}catch(e){}}
         if(tab==='alerts'){try{applyPrefUI();renderAlerts();if(typeof gvSyncAlertSubscription==='function')gvSyncAlertSubscription();}catch(e){}}
         document.querySelectorAll('.vpane').forEach(function(p){p.classList.remove('active');p.style.display='none';});
         document.querySelectorAll('.vtab').forEach(function(t){t.classList.remove('active');t.classList.remove('text-gator-orange');t.classList.add('text-surface-200');});
@@ -2723,6 +2783,7 @@
         var tabEl=document.querySelector('[data-vtab="'+tab+'"]');if(tabEl){tabEl.classList.add('active');tabEl.classList.remove('text-surface-200');tabEl.classList.add('text-gator-orange');}
         if(typeof trackEvent==='function') trackEvent('Vault','tab_viewed',tab);
         if(tab==='analytics') refreshAnalytics();
+        if(scrollTeamDc&&typeof gvScrollTeamSection==='function')setTimeout(function(){gvScrollTeamSection('gv-team-dc-section');},150);
         }catch(e){console.error('showVTab error:',e);}
     }
     window.showVTab=showVTab;
@@ -2981,6 +3042,7 @@
         if(hash==='articles'){if(typeof openVault==='function')openVault();showVTab('articles');}
         else if(hash==='recruit'){if(typeof openVault==='function')openVault();showVTab('recruit');}
         else if(hash==='portal'){if(typeof openVault==='function')openVault();showVTab('portal');}
+        else if(hash==='team'||hash==='dc'||hash==='depth-chart'){if(typeof openVault==='function')openVault();showVTab('team');}
         else if(hash.indexOf('article=')===0)gvOpenArticle(hash.split('=')[1]);
     }
     window.addEventListener('hashchange',gvHandleDeepLink);
@@ -3031,10 +3093,16 @@
 
     // ========== DEPTH CHART TOGGLE ==========
     document.querySelectorAll('.dctbtn').forEach(function(b){b.addEventListener('click',function(){
-        document.querySelectorAll('.dctbtn').forEach(function(x){x.classList.remove('active','bg-gator-orange','text-white');x.classList.add('bg-surface-700','text-surface-200');});
-        this.classList.add('active','bg-gator-orange','text-white');this.classList.remove('bg-surface-700','text-surface-200');
-        document.querySelectorAll('.dc-phase').forEach(function(p){p.style.display='none';});
-        var target=document.getElementById('dc-'+this.dataset.phase);if(target)target.style.display='grid';
+        var root=b.getAttribute('data-dc-root')||'legacy';
+        var ph=b.getAttribute('data-phase');
+        var pane=root==='mteam'?document.getElementById('vpane-mteam'):root==='team'?document.getElementById('vpane-team'):document.getElementById('vpane-dc');
+        if(!pane||!ph)return;
+        pane.querySelectorAll('.dctbtn').forEach(function(x){x.classList.remove('active','bg-gator-orange','text-white');x.classList.add('bg-surface-700','text-surface-200');});
+        b.classList.add('active','bg-gator-orange','text-white');b.classList.remove('bg-surface-700','text-surface-200');
+        pane.querySelectorAll('.dc-phase').forEach(function(p){p.style.display='none';p.classList.remove('active');});
+        var targetId=root==='legacy'?'dc-'+ph:'gv-'+root+'-dc-'+ph;
+        var target=document.getElementById(targetId);
+        if(target){target.style.display='grid';target.classList.add('active');}
     });});
 
     // ========== RECRUITING TABS ==========
@@ -4565,7 +4633,12 @@
             document.querySelectorAll('.follow-thread-btn').forEach(function(b){b.addEventListener('click',function(){var tid=this.dataset.thread;window.alertPrefs.followThreads=window.alertPrefs.followThreads||[];if(window.alertPrefs.followThreads.indexOf(tid)===-1){window.alertPrefs.followThreads.push(tid);this.classList.remove('bg-surface-800');this.classList.add('bg-gator-orange');this.innerText='Following';}else{window.alertPrefs.followThreads=window.alertPrefs.followThreads.filter(function(x){return x!==tid});this.classList.remove('bg-gator-orange');this.classList.add('bg-surface-800');this.innerText='Follow';}saveAlertPrefs();});});
         },100);
     }
-    function renderDC(){renderDCCards(dcOff,'dc-off');renderDCCards(dcDef,'dc-def');renderDCCards(dcST,'dc-st');}
+    function renderDC(){
+        renderDCCards(dcOff,'dc-off');renderDCCards(dcDef,'dc-def');renderDCCards(dcST,'dc-st');
+        renderDCCards(dcOff,'gv-mteam-dc-off');renderDCCards(dcDef,'gv-mteam-dc-def');renderDCCards(dcST,'gv-mteam-dc-st');
+        renderDCCards(dcOff,'gv-team-dc-off');renderDCCards(dcDef,'gv-team-dc-def');renderDCCards(dcST,'gv-team-dc-st');
+    }
+    window.renderDC=renderDC;
 
     window._gvRankings=window._gvRankings||{};
     window._gvRecruitingLive={lastEventTs:parseInt(localStorage.getItem('gv_lastRecruitEvent')||'0',10)||0,pollTimer:null};
@@ -6038,7 +6111,7 @@
         }
         if(tab==='recruit'){try{renderRecruits();}catch(e){}}
         if(tab==='mhome'){try{gvRenderMobileHome();}catch(e){}}
-        if(tab==='team'){try{gvRenderMobileTeam();}catch(e){}}
+        if(tab==='team'){try{if(typeof gvRenderTeam==='function')gvRenderTeam();if(typeof gvLoadRosterProfiles==='function')gvLoadRosterProfiles(true);}catch(e){}}
         if(tab==='gameweek'){try{if(typeof renderGames==='function')renderGames();}catch(e){}}
         if(tab==='beat'){try{gvRenderMobileBeat();}catch(e){}}
         if(tab==='podcast'){try{gvRenderMobilePodcasts();}catch(e){}}
@@ -6053,9 +6126,11 @@
     window.showVTab=function(tab){
         if(gvIsMobile()){
             if(tab==='start')tab='mhome';
+            if(tab==='dc'){gvMobileShowTab('team');setTimeout(function(){if(typeof gvScrollTeamSection==='function')gvScrollTeamSection('gv-mteam-dc-section');},150);return;}
             gvMobileShowTab(tab);
             return;
         }
+        if(tab==='dc')tab='team';
         _gvShowVTabCore(tab);
     };
 
@@ -6507,7 +6582,7 @@
         function gvPtrRefresh(tab){
             if(tab==='mhome'||tab==='beat'||tab==='podcast'||tab==='gameweek')gvLoadLiveDashboard(true);
             if(tab==='recruit'){try{renderRecruits();}catch(e){}}
-            if(tab==='team'){try{gvRenderMobileTeam();gvLoadRosterProfiles(true);}catch(e){}}
+            if(tab==='team'){try{if(typeof gvRenderTeam==='function')gvRenderTeam();if(typeof gvLoadRosterProfiles==='function')gvLoadRosterProfiles(true);}catch(e){}}
             if(tab==='scouting'){try{gvLoadScoutingDatabase();}catch(e){}}
             if(tab==='mhome')gvRenderMobileHome();
             if(tab==='beat')gvRenderMobileBeat();
