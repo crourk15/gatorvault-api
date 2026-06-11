@@ -109,20 +109,7 @@ function buildBackgroundThemePatch(issue, checkDetails) {
 }
 
 function buildFeedDedupPatch(issue, checkDetails) {
-  const v2 = contextPatch.buildFeedDedupPatchV2(issue);
-  if (v2) return v2;
-  const dups = checkDetails?.details || issue.details || [];
-  return {
-    patchType: 'feed-dedup',
-    riskLevel: 'low',
-    edits: [{ file: 'data/live/feed-items.json', type: 'dedupe-feed-smart' }],
-    patchPreview: {
-      file: 'data/live/feed-items.json',
-      before: `${Array.isArray(dups) ? dups.length : '?'} duplicate feed item(s)`,
-      after: 'Deduped by SHA-256 normalized hash within window'
-    },
-    suggestedFix: issue.suggestedFix || 'Run smart feed dedupe with SHA-256 hashes'
-  };
+  return contextPatch.buildFeedDedupPatchV2(issue, checkDetails);
 }
 
 function buildFilmSourcePatch(issue, checkDetails) {
@@ -350,7 +337,39 @@ function enrichWithTemplate(built, issue, checkDetails) {
   const tmpl = templates.applyTemplate(issue, checkDetails);
   if (!tmpl) return built;
 
+  const feedDedupIssue = /feed-dedup|autoposter-dedup|feed-dedup-v2/.test(
+    `${built.patchType || ''} ${issue.checkId || ''} ${tmpl.patchType || ''}`
+  );
+
   const diff0 = tmpl.diff[0] || {};
+  const templateMeta = {
+    ruleId: tmpl.ruleId,
+    category: tmpl.category,
+    classification: tmpl.classification,
+    safetyRules: tmpl.safetyRules,
+    diff: feedDedupIssue ? built.patchPreview?.diff || tmpl.diff : tmpl.diff
+  };
+
+  if (feedDedupIssue) {
+    return {
+      ...built,
+      patchType: built.patchType || 'feed-dedup-v2',
+      suggestedFix: built.suggestedFix || tmpl.description,
+      patchPreview: {
+        ...built.patchPreview,
+        file: built.patchPreview?.file || tmpl.files[0],
+        files: built.patchPreview?.files || tmpl.files,
+        diff: built.patchPreview?.diff || tmpl.diff,
+        before: built.patchPreview?.before || diff0.before,
+        after: built.patchPreview?.after || diff0.after
+      },
+      template: templateMeta,
+      testPlan: tmpl.testPlan,
+      qaSteps: tmpl.qaSteps,
+      rollbackPlan: tmpl.rollbackPlan
+    };
+  }
+
   return {
     ...built,
     patchType: tmpl.patchType,
@@ -363,13 +382,7 @@ function enrichWithTemplate(built, issue, checkDetails) {
       before: diff0.before || built.patchPreview?.before,
       after: diff0.after || built.patchPreview?.after
     },
-    template: {
-      ruleId: tmpl.ruleId,
-      category: tmpl.category,
-      classification: tmpl.classification,
-      safetyRules: tmpl.safetyRules,
-      diff: tmpl.diff
-    },
+    template: templateMeta,
     testPlan: tmpl.testPlan,
     qaSteps: tmpl.qaSteps,
     rollbackPlan: tmpl.rollbackPlan
@@ -403,8 +416,9 @@ function editsFromTemplate(tmpl, issue) {
       return hookPatch?.edits || [];
     }
     case 'autoposter-dedup':
+    case 'feed-dedup-v2':
     case 'similarity-filter':
-      return [{ file: 'data/live/feed-items.json', type: 'dedupe-feed-smart' }];
+      return [{ file: 'data/live/feed-items.json', type: 'repair-feed-integrity' }];
     case 'recruiting-board-sync':
       return [{ file: 'data/recruiting/players.json', type: 'verify-json', checkId: issue.checkId }];
     case 'roster-sync':
@@ -456,7 +470,7 @@ function preparePatch(issue, checkDetails) {
     built = buildTeamContentPatch(issue, checkDetails);
   } else if (patchType === 'background-theme') {
     built = buildBackgroundThemePatch(issue, checkDetails);
-  } else if (patchType === 'feed-dedup' || patchType === 'autoposter-dedup' || patchType === 'similarity-filter') {
+  } else if (patchType === 'feed-dedup' || patchType === 'autoposter-dedup' || patchType === 'feed-dedup-v2' || patchType === 'similarity-filter') {
     built = buildFeedDedupPatch(issue, checkDetails);
   } else if (patchType === 'film-source-url') {
     built = buildFilmSourcePatch(issue, checkDetails);
@@ -515,8 +529,12 @@ function prepareFixProposal(issue, { seq, checkDetails } = {}) {
     suggestedFix: patch.suggestedFix,
     description: piProposal?.description || patch.suggestedFix,
     filesToModify: piProposal?.filesToModify || patch.patchPreview?.files || [patch.patchPreview?.file].filter(Boolean),
-    codeDiff: patch.patchPreview?.diff || patch.template?.diff || null,
-    codeDiffHint: piProposal?.codeDiffHint || patch.patchPreview?.after || null,
+    codeDiff: patch.patchPreview?.diff || (patch.patchType?.includes('feed-dedup') ? null : patch.template?.diff) || null,
+    codeDiffHint:
+      piProposal?.codeDiffHint ||
+      (patch.patchType?.includes('feed-dedup') ? patch.patchPreview?.after : null) ||
+      patch.patchPreview?.after ||
+      null,
     testPlan: patch.testPlan || piProposal?.testPlan || [],
     qaSteps: patch.qaSteps || piProposal?.qaSteps || [],
     rollbackPlan: patch.rollbackPlan || piProposal?.rollbackPlan || null,
@@ -746,10 +764,10 @@ function generateCorrectivePatchSuggestion(ctx) {
     before = details.map((d) => d.token).filter(Boolean).join(', ') || 'missing --gv-team-* tokens';
     after = '--gv-team-card-bg, --gv-team-radius, --gv-team-space-4, --gv-team-title, --gv-team-body';
     edits = [{ file: 'css/gv-team.css', type: 'ensure-css-tokens', tokens: after.split(', ') }];
-  } else if (checkId === 'integrity:feed-dedup') {
-    before = `${details.length || '?'} duplicate feed item(s)`;
-    after = 'deduped feed-items.json';
-    edits = [{ file: 'data/live/feed-items.json', type: 'dedupe-feed' }];
+  } else if (checkId === 'integrity:feed-dedup' || checkId === 'integrity:autoposter-dedup') {
+    before = `${details.length || '?'} feed integrity issue(s): ${details.map((d) => d.type).filter(Boolean).slice(0, 4).join(', ') || 'duplicates / placeholder hashes'}`;
+    after = 'validateFeedIntegrity() → repairFeedItems() with SHA-256 hashes';
+    edits = [{ file: 'data/live/feed-items.json', type: 'repair-feed-integrity' }];
   } else if (checkId === 'integrity:film-sources') {
     const broken = details[0];
     before = broken?.url || 'broken source_url';

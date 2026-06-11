@@ -12,6 +12,7 @@ const learning = require('./learning-loop');
 const modes = require('./self-runner-modes');
 const logger = require('./self-runner-logger');
 const queue = require('./self-runner-queue');
+const dedupeEngine = require('./dedupe-engine');
 
 function scanId() {
   return `sr2_scan_${crypto.randomBytes(4).toString('hex')}`;
@@ -31,6 +32,30 @@ function issueFromViolation(v, source) {
   };
 }
 
+function scanFeedIntegrity() {
+  const items = contextPatch.loadFeedItemsForPatch?.() || [];
+  if (!items.length) return { issues: [], validation: { ok: true, issues: [], count: 0 } };
+  const validation = dedupeEngine.validateFeedIntegrity(items);
+  if (validation.ok) return { issues: [], validation };
+  return {
+    issues: [
+      issueFromViolation(
+        {
+          severity: 'critical',
+          issue: 'feed_integrity',
+          detail: `${validation.issues.length} feed integrity issue(s): ${validation.issues
+            .slice(0, 4)
+            .map((i) => i.type)
+            .join(', ')}`,
+          checkId: 'integrity:autoposter-dedup',
+          violations: validation.issues.slice(0, 12)
+        },
+        'feed-dedup'
+      )
+    ],
+    validation
+  };
+}
 function scanHtmlBlueprint() {
   const missing = contextPatch.scanHtmlHooks();
   if (!missing.length) return [];
@@ -69,11 +94,13 @@ function runPlatformScan(opts = {}) {
   logger.log.scan({ scanId: id, mode: modes.currentMode() });
 
   const schema = schemaValidator.validateAllDataFiles();
+  const feedIntegrity = scanFeedIntegrity();
   const htmlIssues = scanHtmlBlueprint();
   const cssIssues = scanCssBlueprint();
   const warRoomIntel = warRoom.runWarRoomIntelligence();
 
   const allIssues = [
+    ...feedIntegrity.issues,
     ...htmlIssues,
     ...cssIssues,
     ...schema.violations.map((v) => issueFromViolation(v, 'schema')),
@@ -83,6 +110,14 @@ function runPlatformScan(opts = {}) {
   allIssues.forEach((issue) => logger.log.issue({ scanId: id, checkId: issue.checkId, severity: issue.severity }));
 
   const rawPatches = [];
+
+  if (feedIntegrity.issues.length) {
+    const feedPatch = contextPatch.buildFeedDedupPatchV2(
+      { checkId: 'integrity:autoposter-dedup', details: feedIntegrity.validation.issues },
+      { details: feedIntegrity.validation.issues }
+    );
+    if (feedPatch) rawPatches.push({ issue: feedIntegrity.issues[0], patch: feedPatch });
+  }
 
   if (htmlIssues.length) {
     const missing = contextPatch.scanHtmlHooks();

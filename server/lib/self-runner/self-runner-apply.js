@@ -108,7 +108,31 @@ function applyFeedDedupSmart(relPath, windowSec) {
   const result = dedupeEngine.dedupeFeedItemsSmart(list, { windowSec });
   const out = Array.isArray(raw) ? result.items : { ...raw, items: result.items };
   fs.writeFileSync(p, JSON.stringify(out, null, 2));
-  return { before: list.length, after: result.items.length, removed: result.removed.length, failures: result.failures.length };
+  return {
+    before: list.length,
+    after: result.items.length,
+    removed: result.removed.length,
+    rejected: result.rejected.length
+  };
+}
+
+function applyRepairFeedIntegrity(relPath, windowSec) {
+  const p = patches.absPath(relPath);
+  const raw = JSON.parse(fs.readFileSync(p, 'utf8'));
+  const list = Array.isArray(raw) ? raw : raw.items || raw.feed || [];
+  const items = Array.isArray(list) ? list : [];
+  const pre = dedupeEngine.validateFeedIntegrity(items);
+  const result = dedupeEngine.repairFeedItems(items, { windowSec, log: true });
+  const out = Array.isArray(raw) ? result.items : { ...raw, items: result.items };
+  fs.writeFileSync(p, JSON.stringify(out, null, 2));
+  return {
+    before: result.before,
+    after: result.after,
+    removed: result.removedCount,
+    rejected: result.rejectedCount,
+    validationBefore: { ok: pre.ok, issues: pre.issues.length },
+    validationAfter: result.validation
+  };
 }
 
 function applyRestoreJsonSnapshot(edit) {
@@ -266,6 +290,8 @@ function applyEdit(edit, state) {
     state.files[file] = applyInsertAfterAnchor(html, edit.anchor, edit.text);
   } else if (type === 'dedupe-feed-smart') {
     state.meta.feedDedup = applyFeedDedupSmart(file, edit.windowSec);
+  } else if (type === 'repair-feed-integrity') {
+    state.meta.feedRepair = applyRepairFeedIntegrity(file, edit.windowSec);
   } else if (type === 'restore-json-snapshot') {
     state.meta.snapshotRestore = applyRestoreJsonSnapshot(edit);
   } else if (type === 'json-add-field') {

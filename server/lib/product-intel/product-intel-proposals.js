@@ -16,7 +16,7 @@ const FILE_MAP = {
   'filmroom-structure': ['index.html'],
   'team-history-structure': ['js/gv-team-mobile.js'],
   'team-identity-layering': ['css/gv-team.css', 'index.html'],
-  'autoposter-duplication': ['data/live/feed-items.json', 'lib/live-aggregator.js'],
+  'autoposter-duplication': ['data/live/feed-items.json'],
   'autoposter-stale': ['lib/x-autoposter.js', 'data/live/feed-items.json'],
   'recruiting-board-mismatch': ['data/recruiting/', 'lib/recruiting-store.js'],
   'depth-chart-mismatch': ['data/roster/depth-chart-meta.json', 'index.html'],
@@ -64,9 +64,9 @@ function buildTestPlan(classification, checkId) {
       'Verify verified source modal opens from knowledge engine'
     ],
     'autoposter-duplication': [
-      'Latest Updates: scan for duplicate URLs or player intel',
-      'Confirm no truncated copy ending with …',
-      'Verify dedupe rules in feed-items.json'
+      'Run validateFeedIntegrity() on data/live/feed-items.json',
+      'Apply repairFeedItems() — SHA-256 normalized hashes',
+      'Verify integrity:autoposter-dedup QA check passes'
     ],
     'autoposter-stale': [
       'Latest Updates: confirm post within last 6 hours during active window',
@@ -135,13 +135,16 @@ function buildProposalMetadata(issue, checkDetails) {
   const rollbackPlan = tmpl?.rollbackPlan || buildRollbackPlan(classification, files);
 
   const codeDiffHint =
+    (classification === 'autoposter-duplication'
+      ? 'validateFeedIntegrity() → repairFeedItems() — real SHA-256 hashes on feed-items.json'
+      : null) ||
     tmpl?.diff?.[0]?.after ||
     {
       'layout-overflow': 'Add min-height:0, overflow-y:auto, overflow-wrap:break-word to .gv-team-modal-body and text blocks in gv-team.css',
       'panel-clipping': 'Add min-width:0, z-index:3 on modal body; minmax(0,1fr) on overview grid',
       'team-history-structure': 'Update ERAS array in gv-team-mobile.js — ensure 5 complete eras',
       'filmroom-structure': 'Wire film-room-hub-landing + GV_FILM_HUB_DESC + gvOpenFilmRoomHub in index.html',
-      'autoposter-duplication': 'Dedupe feed-items.json by URL and player key; keep newest',
+      'autoposter-duplication': 'repairFeedItems() via validateFeedIntegrity() — SHA-256 hashes, keep newest',
       'wrong-background': 'Replace og-image.jpg with era gradient classes on Team Identity banner'
     }[classification] ||
     description;

@@ -177,28 +177,28 @@ const PATCH_TEMPLATES = {
     ruleId: 'C1',
     category: 'C',
     classification: 'autoposter-duplication',
-    patchType: 'autoposter-dedup',
-    description: 'Add dedupe rule for {{intel}}.',
-    files: ['data/live/feed-items.json', 'lib/live-aggregator.js'],
+    patchType: 'feed-dedup-v2',
+    description: 'Repair feed integrity for {{intel}} via canonical SHA-256 dedupe.',
+    files: ['data/live/feed-items.json'],
     diff: [
       {
-        file: 'lib/live-aggregator.js',
-        before: '// existing dedupe rules',
-        after: "addDedupeRule({ hash: '{{hash}}', window: 21600 });"
+        file: 'data/live/feed-items.json',
+        before: '{{integrityIssues}} feed integrity issue(s)',
+        after: 'repairFeedItems() after validateFeedIntegrity() — real SHA-256 normalized hashes'
       }
     ],
     safetyRules: [
-      'Dedupe window minimum 1 hour — never block all posts',
-      'Keep newest item when duplicates detected',
-      'Hash normalized text — ignore punctuation differences',
-      'Unique intel must still post after dedupe apply'
+      'Never emit addDedupeRule() or placeholder hashes (text-hash, normalized-text-hash)',
+      'Use live-feed-dedup.js repairFeedItems() — keep newest item when duplicates detected',
+      'Dedupe window from SELF_RUNNER_DEDUPE_WINDOW_SEC — minimum 1 hour',
+      'Unique intel must still post after repair apply'
     ],
     qa: [
-      'Simulate ingest of duplicate intel',
-      'Verify autoposter skips duplicates',
-      'Verify unique intel still posts'
+      'Run validateFeedIntegrity() on feed-items.json — must pass',
+      'Verify integrity:autoposter-dedup QA check passes',
+      'Verify unique intel still posts after repair'
     ],
-    rollback: 'Remove dedupe rule if false positives occur.'
+    rollback: 'Restore feed-items.json from snapshot if repair removes valid items.'
   },
   C2: {
     ruleId: 'C2',
@@ -500,6 +500,7 @@ const DEFAULT_CONTEXT = {
   oldOrder: '/* incorrect order */',
   newOrder: '/* corrected order */',
   intel: 'duplicate feed item',
+  integrityIssues: '0',
   hash: null,
   player: 'Unknown Player',
   oldEntry: '{}',
@@ -590,7 +591,17 @@ function buildContext(issue, checkDetails) {
     oldOrder: first.oldOrder || JSON.stringify(first.indices || 'incorrect order'),
     newOrder: first.newOrder || 'corrected sequence',
     intel: first.title || first.message || issue.title || 'duplicate intel',
-    hash: first.hash && String(first.hash).length >= 32 ? first.hash : null,
+    integrityIssues: String(
+      (Array.isArray(checkDetails?.details) ? checkDetails.details.length : 0) ||
+        (Array.isArray(issue.details) ? issue.details.length : 0) ||
+        detailArr.length ||
+        issue.issueCount ||
+        0
+    ),
+    hash:
+      first.hash && /^[a-f0-9]{64}$/i.test(String(first.hash))
+        ? String(first.hash).toLowerCase()
+        : null,
     player: first.name || first.player || issue.title || 'player',
     oldEntry: JSON.stringify(first.old || first.duplicate || '{}'),
     correctEntry: JSON.stringify(first.correct || first.expected || '{}'),

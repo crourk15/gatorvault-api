@@ -19,5 +19,6 @@ module.exports = {
   dedupeFeedItemsSmart: (items, opts) => feedDedup.dedupeFeedItems(items, opts),
   validateFeedIntegrity: feedDedup.validateFeedIntegrity,
   repairFeedItems: feedDedup.repairFeedItems,
-  appendDedupeLog: feedDedup.appendDedupeLog
+  appendDedupeLog: feedDedup.appendDedupeLog,
+  isValidSha256Hash: (hash) => /^[a-f0-9]{64}$/i.test(String(hash || ''))
 };

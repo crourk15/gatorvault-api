@@ -9,6 +9,28 @@ const learning = require('./learning-loop');
 const autoposterGuard = require('./autoposter-guard');
 const patches = require('./self-runner-patches');
 
+function loadFeedItemsForPatch() {
+  try {
+    const raw = JSON.parse(fs.readFileSync(patches.absPath('data/live/feed-items.json'), 'utf8'));
+    return Array.isArray(raw) ? raw : raw.items || raw.feed || [];
+  } catch {
+    return [];
+  }
+}
+
+function summarizeIntegrityIssues(issues) {
+  const list = Array.isArray(issues) ? issues : [];
+  if (!list.length) return 'none';
+  const counts = {};
+  list.forEach((i) => {
+    const t = i.type || 'unknown';
+    counts[t] = (counts[t] || 0) + 1;
+  });
+  return Object.entries(counts)
+    .map(([type, n]) => `${n}× ${type}`)
+    .join(', ');
+}
+
 function htmlHasHook(html, hookId) {
   const hook = blueprint.html.hookByMarker(hookId);
   if (!hook) return html.includes(hookId);
@@ -116,23 +138,34 @@ function buildCssTokenPatchV2(missingTokens) {
   };
 }
 
-function buildFeedDedupPatchV2(issue) {
+function buildFeedDedupPatchV2(issue, checkDetails) {
+  const items = loadFeedItemsForPatch();
+  const validation = dedupeEngine.validateFeedIntegrity(items);
+  const issueList = checkDetails?.details || issue.details || validation.issues || [];
+  const issueCount = Array.isArray(issueList) ? issueList.length : validation.issues.length;
+
   return {
     patchType: 'feed-dedup-v2',
     riskLevel: 'low',
     edits: [
       {
         file: 'data/live/feed-items.json',
-        type: 'dedupe-feed-smart',
+        type: 'repair-feed-integrity',
         windowSec: dedupeEngine.DEFAULT_WINDOW_SEC
       }
     ],
     patchPreview: {
       file: 'data/live/feed-items.json',
-      before: issue?.details?.length ? `${issue.details.length} duplicate(s)` : 'duplicate feed items',
-      after: `SHA-256 dedupe within ${dedupeEngine.DEFAULT_WINDOW_SEC}s window`
+      files: ['data/live/feed-items.json'],
+      before: `${issueCount || validation.issues.length} integrity issue(s): ${summarizeIntegrityIssues(issueList.length ? issueList : validation.issues)}`,
+      after: `validateFeedIntegrity() → repairFeedItems() — SHA-256 within ${dedupeEngine.DEFAULT_WINDOW_SEC}s`
     },
-    suggestedFix: 'Dedupe feed items using normalized SHA-256 hashes — no placeholder hashes'
+    integrity: {
+      ok: validation.ok,
+      count: validation.count,
+      issues: (issueList.length ? issueList : validation.issues).slice(0, 8)
+    },
+    suggestedFix: 'Run validateFeedIntegrity() and repairFeedItems() with canonical SHA-256 hashes'
   };
 }
 
@@ -187,7 +220,7 @@ function generateContextPatch(issue, checkDetails) {
   const checkId = issue?.checkId || '';
 
   if (/feed-dedup|autoposter-dedup/.test(checkId)) {
-    return buildFeedDedupPatchV2(issue);
+    return buildFeedDedupPatchV2(issue, checkDetails);
   }
 
   if (/missing-content|pages:.*hooks|integrity:filmroom/.test(checkId)) {
@@ -212,13 +245,14 @@ function enrichLegacyPatch(built, issue) {
   if (!built?.edits) return built;
   if (!learning.blocksPlaceholderPatches()) return built;
 
-  const hasPlaceholder = built.edits.some(
-    (e) =>
-      e.type === 'verify-hooks' ||
-      e.type === 'verify-json' ||
-      e.type === 'template-guided' ||
-      /<!--\s*self-runner:/.test(e.text || '')
-  );
+  const hasPlaceholder =
+    built.edits.some(
+      (e) =>
+        e.type === 'verify-hooks' ||
+        e.type === 'verify-json' ||
+        e.type === 'template-guided' ||
+        /<!--\s*self-runner:/.test(e.text || '')
+    ) || autoposterGuard.patchContainsLegacyDedupeRule(autoposterGuard.collectPatchText(built));
 
   if (!hasPlaceholder) return built;
 
@@ -230,6 +264,8 @@ function enrichLegacyPatch(built, issue) {
 
 module.exports = {
   htmlHasHook,
+  loadFeedItemsForPatch,
+  summarizeIntegrityIssues,
   buildHtmlHookPatch,
   buildCssTokenPatchV2,
   buildFeedDedupPatchV2,
