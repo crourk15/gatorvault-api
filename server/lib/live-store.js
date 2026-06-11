@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const gvClass = require('./gv-classification');
 const { feedDedupeKeyForCommit, commitFingerprint } = require('./commit-fingerprint');
+const feedDedup = require('./live-feed-dedup');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'live');
 const WRITERS_PATH = path.join(DATA_DIR, 'writers.json');
@@ -224,7 +225,7 @@ function dedupeCommitFeedItems() {
     }
   }
 
-  const merged = [...commitBySlug.values(), ...other];
+  const merged = feedDedup.collapseByFeedUrl([...commitBySlug.values(), ...other]);
   merged.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   saveFeedItems(merged);
   return { commits: commitBySlug.size, total: merged.length, removed: items.length - merged.length };

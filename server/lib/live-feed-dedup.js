@@ -33,6 +33,27 @@ function feedDedupeKey(item) {
   return `${playerId}|${eventType}|${eventDate}`;
 }
 
+function feedItemUrl(item) {
+  return String(item?.url || item?.source_url || item?.link || '').trim() || null;
+}
+
+function collapseByFeedUrl(items) {
+  const sorted = [...(items || [])].sort(
+    (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+  );
+  const kept = [];
+  const seenUrls = new Set();
+  for (const item of sorted) {
+    const url = feedItemUrl(item);
+    if (url) {
+      if (seenUrls.has(url)) continue;
+      seenUrls.add(url);
+    }
+    kept.push(item);
+  }
+  return kept.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+}
+
 function dedupeFeedItems(items, { windowMs = DEDUP_WINDOW_MS } = {}) {
   const sorted = [...(items || [])].sort(
     (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
@@ -53,7 +74,7 @@ function dedupeFeedItems(items, { windowMs = DEDUP_WINDOW_MS } = {}) {
     if (dupIdx >= 0) continue;
     kept.push(item);
   }
-  return kept.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  return collapseByFeedUrl(kept);
 }
 
 module.exports = {
@@ -61,5 +82,7 @@ module.exports = {
   feedDedupeKey,
   feedItemPlayerId,
   feedItemEventType,
+  feedItemUrl,
+  collapseByFeedUrl,
   dedupeFeedItems
 };

@@ -99,6 +99,14 @@ async function ingestRecruitingEvents() {
       playerIndex
     );
     if (!classified) return;
+    if (ev.eventType === 'commit' || ev.eventType === 'flip') {
+      liveStore.removeFeedItemsMatching((item) => {
+        if (item.meta?.playerSlug !== ev.playerSlug) return false;
+        const et = String(item.meta?.eventType || item.type || '').toLowerCase();
+        if (et !== 'commit' && et !== 'flip' && item.type !== 'commit') return false;
+        return (item.dedupeKey || item.id) !== stableCommitKey;
+      });
+    }
     liveStore.upsertFeedItem(classified);
     count += 1;
   });
@@ -245,6 +253,11 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
     results.intel = await ingestRecruitingIntel();
   }
   results.content = ingestPublishedContent();
+  try {
+    results.commitDedupe = liveStore.dedupeCommitFeedItems();
+  } catch (e) {
+    results.commitDedupe = { error: e.message };
+  }
   if (beat) {
     try {
       results.beat = await refreshBeatStream();
