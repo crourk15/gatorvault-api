@@ -194,27 +194,43 @@
     }).then(parseApiResponse);
   }
 
+  function adminPinHeaders(p) {
+    return { 'X-Ops-Pin': p, 'X-Recruiting-Pin': p };
+  }
+
+  function verifyPinViaStatus(p) {
+    return fetch(API + '/api/ops/status?pin=' + encodeURIComponent(p), {
+      method: 'GET',
+      headers: adminPinHeaders(p),
+      credentials: 'omit'
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        return !!(r.ok && j && j.ok);
+      });
+    });
+  }
+
   function verifyPin(p, cb) {
     p = String(p || '').trim();
     if (!p) {
       cb(false);
       return;
     }
-    var headers = {
-      'X-Ops-Pin': p,
-      'X-Recruiting-Pin': p,
-      'X-Roster-Pin': p
-    };
     fetch(API + '/api/ops/verify-pin?pin=' + encodeURIComponent(p), {
       method: 'GET',
-      headers: headers,
+      headers: adminPinHeaders(p),
       credentials: 'omit'
     })
       .then(function (r) {
-        return r.json().catch(function () { return { ok: false }; }).then(function (j) {
-          cb(!!(r.ok && j && j.ok));
+        if (r.status === 404) return verifyPinViaStatus(p);
+        return r.json().catch(function () { return {}; }).then(function (j) {
+          if (r.ok && j && j.ok) return true;
+          if (r.status === 401) return false;
+          return verifyPinViaStatus(p);
         });
       })
+      .catch(function () { return verifyPinViaStatus(p); })
+      .then(function (ok) { cb(!!ok); })
       .catch(function () { cb(false); });
   }
 
@@ -698,7 +714,7 @@
         if (ok) {
           unlockAdmin(p);
         } else {
-          gateErr.textContent = 'Invalid PIN — check Render env (OPS_ADMIN_PIN / RECRUITING_ADMIN_PIN) and try again.';
+          gateErr.textContent = 'Invalid PIN. Use your OPS_ADMIN_PIN or RECRUITING_ADMIN_PIN value from Render.';
           gateErr.classList.remove('hidden');
         }
       });

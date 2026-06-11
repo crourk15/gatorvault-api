@@ -307,17 +307,35 @@
         .catch(function(e){ alert(e.message); });
     }
 
+    function verifyAdminAccess(p) {
+      var headers = { 'X-Ops-Pin': p, 'X-Recruiting-Pin': p };
+      return fetch(API + '/api/ops/verify-pin?pin=' + encodeURIComponent(p), {
+        headers: headers
+      })
+        .then(function (r) {
+          if (r.status === 404) {
+            return fetch(API + '/api/ops/status?pin=' + encodeURIComponent(p), { headers: headers })
+              .then(function (sr) {
+                if (sr.status === 401) throw new Error('Invalid PIN');
+                return sr.json().then(function (j) {
+                  if (!j.ok) throw new Error(j.error || 'Invalid PIN');
+                  return j;
+                });
+              });
+          }
+          if (r.status === 401) throw new Error('Invalid PIN');
+          return r.json().then(function (j) {
+            if (!j.ok) throw new Error(j.error || 'Invalid PIN');
+            return j;
+          });
+        });
+    }
+
     function unlock(){
       var p = document.getElementById('gate-pin').value.trim();
       if (!p) return;
       document.getElementById('gate-err').classList.add('hidden');
-      fetch(API + '/api/ops/verify-pin?pin=' + encodeURIComponent(p), {
-        headers: { 'X-Ops-Pin': p, 'X-Recruiting-Pin': p, 'X-Roster-Pin': p }
-      })
-        .then(function(r){
-          if (r.status === 401) throw new Error('Invalid PIN');
-          return r.json().then(function(j){ if (!j.ok) throw new Error(j.error || 'Invalid PIN'); return j; });
-        })
+      verifyAdminAccess(p)
         .then(function(){
           document.getElementById('pin').value = p;
           sessionStorage.setItem('gv_ops_pin', p);
