@@ -7,6 +7,11 @@ const SERVER_ROOT = path.join(__dirname, '..', '..');
 
 const ELIGIBILITY = [
   {
+    test: (issue) => issue.checkId === 'visual-integrity:component-variants',
+    patchType: 'component-variant',
+    eligible: true
+  },
+  {
     test: (issue) => /^visual-integrity:/.test(issue.checkId || ''),
     patchType: 'background-theme',
     eligible: true
@@ -65,18 +70,34 @@ const HOOK_SNIPPETS = {
   }
 };
 
+const TEAM_LEGACY_CARD_SWAPS = {
+  'card-h': 'gv-team-era-card',
+  'bg-surface-700': 'gv-team-section',
+  'rounded-2xl': 'gv-team-era-card'
+};
+
 const TEAM_FORBIDDEN_IN_REGION = [
   'trial-expired-ov',
+  'trial-payment-banner',
   'pricing-sec',
   'text-amber-300',
   'from-amber',
   'bg-amber',
-  'reg-modal'
+  'reg-modal',
+  'faq-btn',
+  'card-h'
 ];
 
 const TEAM_REQUIRED = {
   'vpane-team': ['gv-team-page', 'gv-team-overview-layout'],
   'vpane-mteam': ['gv-team-page', 'gv-team-section']
+};
+
+/** Team Overview lives in index.html (#vpane-team / #vpane-mteam) + gv-team-mobile.js card renders */
+const TEAM_OVERVIEW_FILES = {
+  shell: 'index.html',
+  cards: 'js/gv-team-mobile.js',
+  styles: 'css/gv-team.css'
 };
 
 function resolvePatchType(issue) {
@@ -111,6 +132,8 @@ module.exports = {
   HOOK_SNIPPETS,
   TEAM_FORBIDDEN_IN_REGION,
   TEAM_REQUIRED,
+  TEAM_LEGACY_CARD_SWAPS,
+  TEAM_OVERVIEW_FILES,
   resolvePatchType,
   isEligible,
   fallbackForUrl,

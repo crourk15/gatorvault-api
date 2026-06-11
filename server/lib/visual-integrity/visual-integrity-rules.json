@@ -149,7 +149,17 @@
     "trial-page": {
       "regionMarkers": ["pricing-sec", "reg-modal", "trial-payment-banner"],
       "allowedVariantClasses": ["pricing-card", "faq-btn", "reg-modal", "trial-expired-ov"],
-      "forbiddenOutsideTrial": ["gv-team-overview-layout", "gv-team-page"]
+      "trialClassesForbiddenInTeamRegions": [
+        "trial-expired-ov",
+        "pricing-sec",
+        "reg-modal",
+        "faq-btn",
+        "card-h",
+        "text-amber-300",
+        "from-amber",
+        "bg-amber"
+      ],
+      "teamClassesForbiddenInTrialRegions": ["gv-team-overview-layout", "gv-team-page"]
     }
   },
   "cssTokenRules": {

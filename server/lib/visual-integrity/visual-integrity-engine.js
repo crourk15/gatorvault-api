@@ -120,15 +120,37 @@ function checkComponentVariants(html, rules) {
 
   const trialCfg = rules.componentVariants?.['trial-page'];
   if (trialCfg) {
-    const trialHtml = (trialCfg.regionMarkers || [])
-      .map((m) => (html.includes(m) ? extractRegionAround(html, m) : ''))
+    const trialClasses = trialCfg.trialClassesForbiddenInTeamRegions || [
+      'trial-expired-ov',
+      'pricing-sec',
+      'reg-modal',
+      'faq-btn',
+      'card-h',
+      'text-amber-300',
+      'from-amber',
+      'bg-amber'
+    ];
+    const teamRegionIds = ['vpane-team', 'vpane-mteam', 'vpane-highlights', 'vpane-beat'];
+    teamRegionIds.forEach((regionId) => {
+      const region = extractRegionById(html, regionId);
+      if (!region) return;
+      trialClasses.forEach((cls) => {
+        if (region.includes(cls)) {
+          violations.push({ component: 'trial-page', leakedClass: cls, regionId, type: 'trial_class_in_team_region' });
+        }
+      });
+    });
+
+    const teamClassesInTrial = trialCfg.teamClassesForbiddenInTrialRegions || [
+      'gv-team-overview-layout',
+      'gv-team-page'
+    ];
+    const trialRegionHtml = (trialCfg.regionMarkers || [])
+      .map((m) => extractRegionAround(html, m))
       .join('');
-    (trialCfg.forbiddenOutsideTrial || []).forEach((cls) => {
-      const teamRegions = ['vpane-team', 'vpane-mteam', 'vpane-highlights']
-        .map((id) => extractRegionById(html, id))
-        .join('');
-      if (teamRegions.includes(cls)) {
-        violations.push({ component: 'trial-page', leakedClass: cls, where: 'non-trial-region' });
+    teamClassesInTrial.forEach((cls) => {
+      if (trialRegionHtml.includes(cls)) {
+        violations.push({ component: 'trial-page', leakedClass: cls, where: 'trial-region', type: 'team_class_in_trial_region' });
       }
     });
   }

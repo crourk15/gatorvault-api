@@ -1,10 +1,14 @@
 /**
  * Visual integrity QA checks — theme, background, and component variant validation.
  */
+const fs = require('fs');
+const path = require('path');
 const config = require('../qa/qa-config');
 const { check, fetchText, moduleResult } = require('../qa/qa-utils');
 const engine = require('./visual-integrity-engine');
 const mapper = require('./visual-integrity-mapper');
+
+const SERVER_ROOT = path.join(__dirname, '..', '..');
 
 async function fetchPageBundle(pagePath) {
   const base = config.SITE_URL.replace(/\/$/, '');
@@ -19,9 +23,20 @@ async function fetchPageBundle(pagePath) {
   return { html, teamCss, url: `${base}${pathNorm}` };
 }
 
-async function runVisualIntegrityChecks() {
+function loadLocalPageBundle() {
+  const html = fs.readFileSync(path.join(SERVER_ROOT, 'index.html'), 'utf8');
+  let teamCss = '';
+  try {
+    teamCss = fs.readFileSync(path.join(SERVER_ROOT, 'css', 'gv-team.css'), 'utf8');
+  } catch {
+    /* optional */
+  }
+  return { html, teamCss, url: 'local:server/index.html' };
+}
+
+async function runVisualIntegrityChecks(opts = {}) {
   const rules = engine.loadRules();
-  const { html, teamCss, url } = await fetchPageBundle('/');
+  const { html, teamCss, url } = opts.local ? loadLocalPageBundle() : await fetchPageBundle('/');
   const checks = [];
 
   checks.push(
@@ -104,7 +119,7 @@ async function runVisualIntegrityChecks() {
         if (violations.length) {
           const err = new Error(`${violations.length} component variant mismatch(es)`);
           err.details = violations.slice(0, 8);
-          err.repro = 'Team overview should use gv-team-* cards; Film Room uses verified source hooks';
+          err.repro = 'Team overview in index.html (#vpane-team, #vpane-mteam): gv-team-page shell, gv-team-overview-layout, gv-team-era-card — no card-h / trial / pricing classes';
           err.severity = 'medium';
           throw err;
         }
@@ -192,4 +207,4 @@ async function runVisualIntegrityChecks() {
   return moduleResult('visual-integrity', checks);
 }
 
-module.exports = { runVisualIntegrityChecks };
+module.exports = { runVisualIntegrityChecks, loadLocalPageBundle, fetchPageBundle };

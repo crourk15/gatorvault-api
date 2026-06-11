@@ -200,30 +200,88 @@ function buildCssTokenPatch(issue) {
 
 function buildComponentVariantPatch(issue, checkDetails) {
   const violations = checkDetails?.details || issue.details || [];
-  const swaps = [];
+  const edits = [];
+  const preview = { file: patches.TEAM_OVERVIEW_FILES.shell, changes: [] };
+
   (Array.isArray(violations) ? violations : []).forEach((v) => {
-    if (v.class === 'pricing-sec' || v.class === 'trial-expired-ov') {
-      swaps.push({ from: v.class, to: 'gv-team-section', regionId: v.regionId || 'vpane-team' });
+    const regionId = v.regionId || 'vpane-team';
+    const leaked = v.leakedClass || v.class;
+
+    if (v.issue === 'missing_overview_layout_markers') {
+      edits.push({
+        file: patches.TEAM_OVERVIEW_FILES.shell,
+        type: 'add-class-to-region',
+        regionId: 'vpane-team',
+        className: 'gv-team-overview-layout'
+      });
+      preview.changes.push({ regionId: 'vpane-team', add: 'gv-team-overview-layout' });
+      return;
+    }
+
+    if (leaked && patches.TEAM_LEGACY_CARD_SWAPS[leaked]) {
+      const to = patches.TEAM_LEGACY_CARD_SWAPS[leaked];
+      edits.push({
+        file: patches.TEAM_OVERVIEW_FILES.shell,
+        type: 'class-swap-in-region',
+        regionId,
+        from: leaked,
+        to
+      });
+      preview.changes.push({ regionId, swap: `${leaked} → ${to}` });
+      return;
+    }
+
+    if (leaked && patches.TEAM_FORBIDDEN_IN_REGION.includes(leaked)) {
+      edits.push({
+        file: patches.TEAM_OVERVIEW_FILES.shell,
+        type: 'remove-class-from-region',
+        regionId,
+        className: leaked
+      });
+      preview.changes.push({ regionId, remove: leaked });
     }
   });
-  if (!swaps.length) {
-    swaps.push({ from: 'trial-card', to: 'gv-team-era-card', regionId: 'vpane-team' });
+
+  if (!edits.length) {
+    ['vpane-team', 'vpane-mteam'].forEach((regionId) => {
+      patches.TEAM_FORBIDDEN_IN_REGION.forEach((cls) => {
+        edits.push({
+          file: patches.TEAM_OVERVIEW_FILES.shell,
+          type: 'remove-class-from-region',
+          regionId,
+          className: cls
+        });
+      });
+      (patches.TEAM_REQUIRED[regionId] || []).forEach((cls) => {
+        edits.push({
+          file: patches.TEAM_OVERVIEW_FILES.shell,
+          type: 'add-class-to-region',
+          regionId,
+          className: cls
+        });
+      });
+    });
+    preview.changes.push({
+      note: 'Ensure Team Overview shell: gv-team-page on #vpane-team / #vpane-mteam, gv-team-overview-layout on desktop overview'
+    });
   }
+
+  const firstChange = preview.changes[0];
   return {
     patchType: 'component-variant',
-    edits: swaps.map((s) => ({
-      file: 'index.html',
-      type: 'class-swap-in-region',
-      regionId: s.regionId,
-      from: s.from,
-      to: s.to
-    })),
+    edits,
     patchPreview: {
-      file: 'index.html',
-      before: swaps[0]?.from || 'wrong variant',
-      after: swaps[0]?.to || 'gv-team-era-card'
+      file: patches.TEAM_OVERVIEW_FILES.shell,
+      before: firstChange?.remove || firstChange?.swap?.split(' → ')[0] || 'legacy promo/trial classes',
+      after:
+        firstChange?.add ||
+        firstChange?.swap?.split(' → ')[1] ||
+        'gv-team-page gv-team-overview-layout gv-team-section',
+      changes: preview.changes
     },
-    suggestedFix: issue.suggestedFix || 'Swap trial/promo card classes to gv-team-* variants'
+    suggestedFix:
+      issue.suggestedFix ||
+      'Team Overview (#vpane-team / #vpane-mteam in index.html): use gv-team-page shell, gv-team-overview-layout grid, gv-team-era-card tiles — remove card-h / trial / pricing classes'
   };
 }
 
@@ -234,7 +292,9 @@ function preparePatch(issue, checkDetails) {
   const checkId = issue.checkId || '';
   let built = null;
 
-  if (patchType === 'background-theme') {
+  if (checkId.includes('component-variants')) {
+    built = buildComponentVariantPatch(issue, checkDetails);
+  } else if (patchType === 'background-theme') {
     built = buildBackgroundThemePatch(issue, checkDetails);
   } else if (patchType === 'feed-dedup') {
     built = buildFeedDedupPatch(issue, checkDetails);
@@ -244,10 +304,6 @@ function preparePatch(issue, checkDetails) {
     built = buildHtmlHookPatch(issue);
   } else if (patchType === 'css-token') {
     built = buildCssTokenPatch(issue);
-  }
-
-  if (checkId.includes('component-variants')) {
-    built = buildComponentVariantPatch(issue, checkDetails);
   }
 
   if (!built || !built.edits?.length) return null;

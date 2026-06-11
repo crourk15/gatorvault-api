@@ -15,8 +15,9 @@ const FIX_TEMPLATES = {
     suggestedFix: 'Define --gv-team-* spacing, radius, and card tokens in css/gv-team.css'
   },
   'visual-integrity:component-variants': {
-    title: 'Fix component variant mismatches',
-    suggestedFix: 'Use gv-team-era-card / gv-team-section on Team; gv-verified-source-* on Film Room'
+    title: 'Fix Team Overview component variants',
+    suggestedFix:
+      'In index.html (#vpane-team / #vpane-mteam): use gv-team-page, gv-team-overview-layout, gv-team-section, gv-team-era-card — remove card-h and trial/pricing classes from Team panes'
   },
   'visual-integrity:cross-page-contamination': {
     title: 'Remove cross-page theme leaks',
