@@ -22,6 +22,8 @@
   };
 
   var LEGACY_PATHS = {
+    '/admin/qa': { section: 'qa', panel: 'monitor' },
+    '/admin-qa.html': { section: 'qa', panel: 'monitor' },
     '/admin/ops': { section: 'dashboard', panel: 'ops' },
     '/admin/feedback': { section: 'feedback', panel: 'inbox' },
     '/admin/monitoring': { section: 'recruiting', panel: 'monitoring' },
@@ -42,9 +44,15 @@
       icon: '📊',
       desc: 'System health, autoposter, GM2 alerts, repair queue',
       panels: [
-        { id: 'ops', label: 'Operations', embed: 'ops' },
-        { id: 'qa', label: 'QA Monitor', embed: 'qa' }
+        { id: 'ops', label: 'Operations', embed: 'ops' }
       ]
+    },
+    {
+      id: 'qa',
+      label: 'QA Monitor',
+      icon: '🛡️',
+      desc: '24/7 crawler — pages, API, content, UX integrity',
+      panels: [{ id: 'monitor', label: 'QA Dashboard', embed: 'qa' }]
     },
     {
       id: 'recruiting',
@@ -176,6 +184,9 @@
 
   function parseRoute() {
     var hash = (location.hash || '#dashboard').replace(/^#/, '');
+    if (hash === 'qa' || hash === 'dashboard/qa') {
+      return { section: 'qa', panel: 'monitor' };
+    }
     var parts = hash.split('/');
     return { section: parts[0] || 'dashboard', panel: parts[1] || null };
   }

@@ -3,358 +3,134 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>GatorVault — Admin</title>
+  <title>GatorVault — Admin Hub</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="/gv-feedback.css?v=2">
   <style>
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,sans-serif;background:#030712;color:#e2e8f0;padding-bottom:env(safe-area-inset-bottom)}
-    .wrap{max-width:720px;margin:0 auto;padding:20px 16px 48px}
-    h1{color:#FA4616;font-family:Oswald,sans-serif;letter-spacing:2px;font-size:1.5rem;margin:0 0 4px}
-    .sub{color:#94a3b8;font-size:14px;margin:0 0 20px}
-    .card{background:#0b1220;border:1px solid #1e3a5f;border-radius:12px;padding:16px;margin-bottom:14px}
-    .card h2{margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8}
-    label{display:block;font-size:11px;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
-    input,select,textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#111827;color:#f8fafc;margin-bottom:10px;font:inherit}
-    textarea{min-height:72px;resize:vertical}
-    .btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media(max-width:480px){.btn-grid{grid-template-columns:1fr}}
-    button.btn{border:0;border-radius:10px;padding:14px 12px;font-weight:700;cursor:pointer;background:#FA4616;color:#fff;font-size:13px;min-height:48px;touch-action:manipulation}
-    button.btn.secondary{background:#1e3a5f;color:#e2e8f0}
-    button.btn:disabled{opacity:.55;cursor:not-allowed}
-    #log{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:12px;min-height:120px;font-family:ui-monospace,monospace;font-size:11px;white-space:pre-wrap;max-height:240px;overflow:auto}
-    .ok{color:#4ade80}.err{color:#f87171}.info{color:#93c5fd}
-    a{color:#60a5fa;text-decoration:none}
-    .nav{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
-    .nav a{font-size:13px;padding:8px 12px;border-radius:8px;background:#111827;border:1px solid #334155}
-    .pin-bar{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
-    .pin-bar input{flex:1;min-width:140px;margin:0}
-    .pin-bar button{margin:0;width:auto;padding:10px 16px;min-height:44px}
+    :root{
+      --hub-bg:#030712;--hub-panel:#0b1220;--hub-border:#1e3a5f;--hub-text:#e2e8f0;
+      --hub-muted:#94a3b8;--hub-orange:#FA4616;--hub-sidebar:240px;
+    }
+    body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--hub-bg);color:var(--hub-text);min-height:100vh}
     .hidden{display:none!important}
-    .admin-pin-ov{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px}
-    .admin-pin-card{background:#0b1220;border:1px solid #1e3a5f;border-radius:16px;padding:24px;width:100%;max-width:360px}
-    .admin-pin-card h3{margin:0 0 8px;font-family:Oswald,sans-serif;color:#fff}
-    .tier-list{font-size:12px;color:#cbd5e1;line-height:1.5}
-    .tier-list li{margin-bottom:6px}
+    .admin-pin-ov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px}
+    .admin-pin-card{background:var(--hub-panel);border:1px solid var(--hub-border);border-radius:16px;padding:28px;width:100%;max-width:400px}
+    .admin-pin-card h1{margin:0 0 6px;font-family:Oswald,sans-serif;color:#fff;font-size:1.35rem;letter-spacing:.04em}
+    .admin-pin-card p{color:var(--hub-muted);font-size:14px;margin:0 0 18px;line-height:1.45}
+    .admin-pin-card label{display:block;font-size:11px;color:var(--hub-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+    .admin-pin-card input{width:100%;padding:12px;border-radius:10px;border:1px solid #334155;background:#111827;color:#f8fafc;font:inherit;margin-bottom:8px}
+    .hub-btn{border:0;border-radius:10px;padding:12px 16px;font-weight:700;cursor:pointer;background:var(--hub-orange);color:#fff;font-size:13px;min-height:44px;touch-action:manipulation}
+    .hub-btn.secondary{background:#1e3a5f;color:var(--hub-text)}
+    .hub-btn:disabled{opacity:.55;cursor:not-allowed}
+    .err{color:#f87171;font-size:12px}
+
+    #hub-shell{display:flex;min-height:100vh}
+    .hub-sidebar{
+      width:var(--hub-sidebar);flex-shrink:0;background:linear-gradient(180deg,#0a1628,#060f1a);
+      border-right:2px solid #003087;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
+    }
+    .hub-brand{padding:18px 16px 14px;border-bottom:1px solid var(--hub-border)}
+    .hub-brand h1{margin:0;font-family:Oswald,sans-serif;font-size:1.1rem;color:var(--hub-orange);letter-spacing:.06em}
+    .hub-brand p{margin:4px 0 0;font-size:11px;color:var(--hub-muted);line-height:1.35}
+    .hub-nav{flex:1;overflow-y:auto;padding:10px 8px;display:flex;flex-direction:column;gap:4px}
+    .hub-nav-btn{
+      display:flex;align-items:center;gap:10px;width:100%;border:none;background:transparent;color:var(--hub-muted);
+      padding:10px 12px;border-radius:10px;text-align:left;cursor:pointer;font:inherit;font-size:13px;font-weight:600;
+      min-height:44px;-webkit-tap-highlight-color:transparent;
+    }
+    .hub-nav-btn:hover{background:rgba(0,48,135,.25);color:#e2e8f0}
+    .hub-nav-btn.active{background:rgba(250,70,22,.15);color:#fff;border:1px solid rgba(250,70,22,.35)}
+    .hub-nav-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+    .hub-sidebar-foot{padding:12px;border-top:1px solid var(--hub-border);display:flex;flex-direction:column;gap:8px}
+    .hub-sidebar-foot a,.hub-sidebar-foot button{font-size:12px;color:var(--hub-muted);text-decoration:none;background:transparent;border:none;text-align:left;padding:8px 12px;cursor:pointer;font:inherit}
+    .hub-sidebar-foot a:hover,.hub-sidebar-foot button:hover{color:#fff}
+
+    .hub-main{flex:1;min-width:0;display:flex;flex-direction:column;max-height:100vh}
+    .hub-topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;
+      border-bottom:1px solid var(--hub-border);background:rgba(3,7,18,.95);backdrop-filter:blur(8px);flex-shrink:0;
+    }
+    .hub-topbar h2{margin:0;font-family:Oswald,sans-serif;font-size:1.15rem;color:#fff}
+    .hub-topbar-actions{display:flex;gap:8px;align-items:center}
+    .hub-content{flex:1;overflow:auto;padding:16px 20px 32px;-webkit-overflow-scrolling:touch}
+    .hub-section-head{margin-bottom:14px}
+    .hub-section-head h2{margin:0 0 4px;font-family:Oswald,sans-serif;font-size:1.25rem;color:#fff}
+    .hub-section-head p{margin:0;font-size:13px;color:var(--hub-muted)}
+
+    .hub-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .hub-tab{border:1px solid var(--hub-border);background:var(--hub-panel);color:var(--hub-muted);padding:8px 14px;border-radius:999px;font-size:12px;font-weight:700;cursor:pointer;font:inherit;min-height:36px}
+    .hub-tab.active{background:var(--hub-orange);border-color:var(--hub-orange);color:#fff}
+
+    .hub-panel{min-height:480px}
+    .hub-iframe{width:100%;min-height:calc(100vh - 180px);border:1px solid var(--hub-border);border-radius:12px;background:#020617}
+
+    .hub-settings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+    .hub-card{background:var(--hub-panel);border:1px solid var(--hub-border);border-radius:12px;padding:16px}
+    .hub-card-wide{grid-column:1/-1}
+    .hub-card h3{margin:0 0 12px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--hub-muted)}
+    .hub-card label{display:block;font-size:11px;color:var(--hub-muted);margin:10px 0 6px;text-transform:uppercase}
+    .hub-card input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#111827;color:#f8fafc;font:inherit;margin-bottom:8px}
+    .hub-btn-row{display:flex;flex-wrap:wrap;gap:8px}
+    .hub-meta{font-size:12px;color:var(--hub-muted);line-height:1.5;margin:8px 0}
+    .hub-meta code{font-size:11px;color:#93c5fd}
+    .hub-tier-list{font-size:12px;color:#cbd5e1;padding-left:18px;margin:8px 0 0}
+    .hub-log{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:12px;min-height:100px;max-height:220px;overflow:auto;font-family:ui-monospace,monospace;font-size:11px}
+    .hub-log .ok{color:#4ade80}.hub-log .err{color:#f87171}.hub-log .info{color:#93c5fd}
+
+    @media(max-width:900px){
+      #hub-shell{flex-direction:column}
+      .hub-sidebar{width:100%;height:auto;position:relative;border-right:0;border-bottom:2px solid #003087}
+      .hub-nav{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;padding:8px}
+      .hub-nav-btn{flex:0 0 auto;white-space:nowrap;padding:8px 12px}
+      .hub-nav-label{font-size:12px}
+      .hub-sidebar-foot{display:none}
+      .hub-main{max-height:none}
+      .hub-iframe{min-height:70vh}
+    }
   </style>
 </head>
 <body>
   <div id="admin-pin-gate" class="admin-pin-ov" role="dialog" aria-modal="true">
     <div class="admin-pin-card">
-      <h3>⚙️ Admin Access</h3>
-      <p style="color:#94a3b8;font-size:13px;margin:0 0 16px">Enter your operator PIN to open the admin panel.</p>
+      <h1>🐊 GatorVault Admin Hub</h1>
+      <p>One login. One control panel. Enter your operator PIN to manage recruiting, team, content, community, GM2, and platform settings.</p>
       <label for="gate-pin">Admin PIN</label>
       <input id="gate-pin" type="password" inputmode="numeric" autocomplete="off" placeholder="Admin PIN">
-      <p id="gate-err" class="err hidden" style="font-size:12px;margin:8px 0 0">Invalid PIN</p>
-      <button type="button" class="btn" id="gate-submit" style="width:100%;margin-top:12px">Unlock Admin</button>
+      <p id="gate-err" class="err hidden">Invalid PIN</p>
+      <button type="button" class="hub-btn" id="gate-submit" style="width:100%;margin-top:12px">Unlock Control Panel</button>
     </div>
   </div>
 
-  <div id="admin-app" class="hidden">
-    <div class="wrap">
-      <h1>🐊 GatorVault Admin</h1>
-      <p class="sub">Operations panel — mobile-friendly admin tools.</p>
-
-      <div class="nav">
-        <a href="/admin/feedback">Feedback Dashboard →</a>
-        <a href="/admin/monitoring">Monitoring →</a>
-        <a href="/admin/ops">GV-OM Ops →</a>
-        <a href="/recruiting-board">Recruiting Board →</a>
-        <a href="/recruiting-admin.html">Recruiting Alerts →</a>
-        <a href="/">← Site</a>
+  <div id="hub-shell" class="hidden">
+    <aside class="hub-sidebar">
+      <div class="hub-brand">
+        <h1>GatorVault Admin</h1>
+        <p>Unified operations hub</p>
       </div>
-
-      <div class="card">
-        <div class="pin-bar">
-          <div style="flex:1">
-            <label for="pin">Session PIN</label>
-            <input id="pin" type="password" autocomplete="off" placeholder="Stored for API calls">
-          </div>
-          <button type="button" class="btn secondary" id="lock-admin">Lock</button>
+      <nav id="hub-nav" class="hub-nav" aria-label="Admin sections"></nav>
+      <div class="hub-sidebar-foot">
+        <a href="/admin-qa.html" target="_blank" rel="noopener">🛡️ QA Monitor</a>
+        <a href="/" target="_blank" rel="noopener">↗ Open public site</a>
+        <button type="button" id="hub-lock">🔒 Lock &amp; sign out</button>
+      </div>
+    </aside>
+    <div class="hub-main">
+      <header class="hub-topbar">
+        <h2 id="hub-page-title">Dashboard</h2>
+        <div class="hub-topbar-actions">
+          <button type="button" class="hub-btn secondary" id="hub-lock-top">Lock</button>
         </div>
-      </div>
-
-      <div class="card">
-        <h2>War Room Scouting</h2>
-        <p style="font-size:12px;color:#64748b;margin:0 0 12px">Verified analysts only — On3, 247Sports, ESPN, The Athletic, NFL Network. Blank if no verified source.</p>
-        <div class="btn-grid">
-          <button type="button" class="btn" id="rebuild-scouting">Rebuild Scouting Database</button>
-          <button type="button" class="btn secondary" id="scouting-status">Check Rebuild Status</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Film Room &amp; Catalog</h2>
-        <div class="btn-grid">
-          <button type="button" class="btn" data-action="film-all">Rebuild Film Room</button>
-          <button type="button" class="btn" data-action="film-pressers">Rebuild Press Conferences</button>
-          <button type="button" class="btn secondary" data-action="film-catalog">Rebuild Catalog</button>
-          <button type="button" class="btn secondary" data-action="purge-beat">Purge Non‑UF Beat</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Manage Tiers</h2>
-        <button type="button" class="btn secondary" id="load-tiers" style="width:100%;margin-bottom:10px">Load Tier Definitions</button>
-        <ul id="tier-list" class="tier-list"></ul>
-      </div>
-
-      <div class="card">
-        <h2>Manage Points</h2>
-        <label for="pts-email">Member email</label>
-        <input id="pts-email" type="email" inputmode="email" placeholder="member@example.com">
-        <button type="button" class="btn secondary" id="pts-lookup" style="width:100%;margin-bottom:12px">Look Up Points</button>
-        <p id="pts-current" style="font-size:13px;color:#94a3b8;margin:0 0 12px"></p>
-        <label for="pts-set">Set total points</label>
-        <input id="pts-set" type="number" min="0" placeholder="500">
-        <button type="button" class="btn" id="pts-save" style="width:100%;margin-bottom:10px">Set Points</button>
-        <label for="pts-award">Award bonus points</label>
-        <input id="pts-award" type="number" min="1" max="5000" placeholder="50">
-        <button type="button" class="btn secondary" id="pts-award-btn" style="width:100%">Award Points</button>
-      </div>
-
-      <div class="card">
-        <h2>Log</h2>
-        <div id="log"></div>
-      </div>
+      </header>
+      <div id="hub-main" class="hub-content"></div>
     </div>
   </div>
 
+  <script src="/js/admin-hub-core.js"></script>
   <script>
-    var API = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
-      ? 'http://localhost:3000'
-      : 'https://gatorvault-api.onrender.com';
-    var SESSION_KEY = 'gv_admin_pin';
-
-    function log(msg, cls) {
-      var el = document.getElementById('log');
-      var line = document.createElement('div');
-      line.className = cls || 'info';
-      line.textContent = new Date().toLocaleTimeString() + ' — ' + msg;
-      el.prepend(line);
-    }
-
-    function pin() {
-      return document.getElementById('pin').value.trim();
-    }
-
-    function parseApiResponse(r) {
-      return r.text().then(function (text) {
-        var j = null;
-        try {
-          j = text ? JSON.parse(text) : {};
-        } catch (e) {
-          throw new Error(text ? text.slice(0, 200) : ('HTTP ' + r.status));
-        }
-        if (!r.ok) throw new Error((j && j.error) || ('HTTP ' + r.status));
-        return j;
-      });
-    }
-
-    function apiPost(path, body) {
-      var p = pin();
-      if (!p) return Promise.reject(new Error('Admin PIN required — unlock admin first'));
-      return fetch(API + path, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Recruiting-Pin': p },
-        body: JSON.stringify(Object.assign({ pin: p }, body || {}))
-      }).then(parseApiResponse);
-    }
-
-    function apiGet(path) {
-      var p = pin();
-      if (!p) return Promise.reject(new Error('Admin PIN required — unlock admin first'));
-      return fetch(API + path, { headers: { 'X-Recruiting-Pin': p } }).then(parseApiResponse);
-    }
-
-    function unlockAdmin(p) {
-      sessionStorage.setItem(SESSION_KEY, p);
-      document.getElementById('pin').value = p;
-      document.getElementById('admin-pin-gate').classList.add('hidden');
-      document.getElementById('admin-app').classList.remove('hidden');
-      log('Admin session unlocked', 'ok');
-      wireScoutingAdmin();
-    }
-
-    function lockAdmin() {
-      sessionStorage.removeItem(SESSION_KEY);
-      document.getElementById('pin').value = '';
-      document.getElementById('admin-app').classList.add('hidden');
-      document.getElementById('admin-pin-gate').classList.remove('hidden');
-      document.getElementById('gate-pin').value = '';
-    }
-
-    function verifyPin(p, cb) {
-      fetch(API + '/api/feedback/admin/list?pin=' + encodeURIComponent(p), {
-        headers: { 'X-Recruiting-Pin': p }
-      })
-        .then(function (r) { cb(r.ok); })
-        .catch(function () { cb(false); });
-    }
-
-    document.getElementById('gate-submit').addEventListener('click', function () {
-      var p = document.getElementById('gate-pin').value.trim();
-      if (!p) return;
-      document.getElementById('gate-err').classList.add('hidden');
-      verifyPin(p, function (ok) {
-        if (ok) unlockAdmin(p);
-        else document.getElementById('gate-err').classList.remove('hidden');
-      });
+    document.getElementById('hub-lock-top').addEventListener('click', function () {
+      document.getElementById('hub-lock').click();
     });
-    document.getElementById('gate-pin').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') document.getElementById('gate-submit').click();
-    });
-    document.getElementById('lock-admin').addEventListener('click', lockAdmin);
-
-    document.querySelectorAll('[data-action]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var action = btn.getAttribute('data-action');
-        btn.disabled = true;
-        log('Running: ' + action + '…', 'info');
-        var p = Promise.resolve();
-        if (action === 'film-all') {
-          p = apiPost('/api/film-room/admin/rebuild', { scope: 'all' });
-        } else if (action === 'film-pressers') {
-          p = apiPost('/api/film-room/admin/rebuild', { scope: 'pressers' });
-        } else if (action === 'film-catalog') {
-          p = apiPost('/api/film-room/admin/rebuild', { scope: 'catalog' });
-        } else if (action === 'purge-beat') {
-          p = apiPost('/api/live/admin/purge-non-uf-beat', {});
-        }
-        p.then(function (j) {
-          if (j.pressCount != null) log('Film room OK — ' + j.pressCount + ' press conferences', 'ok');
-          else if (j.purged != null) log('Beat purge OK — removed ' + (j.purged.removed || j.purged.count || 0) + ' items', 'ok');
-          else log('Done: ' + JSON.stringify(j).slice(0, 200), 'ok');
-        }).catch(function (e) {
-          log('Error: ' + e.message, 'err');
-        }).finally(function () { btn.disabled = false; });
-      });
-    });
-
-    document.getElementById('load-tiers').addEventListener('click', function () {
-      fetch(API + '/api/tiers').then(function (r) { return r.json(); }).then(function (j) {
-        var ul = document.getElementById('tier-list');
-        ul.innerHTML = '';
-        (j.paymentTiers || []).forEach(function (t) {
-          var li = document.createElement('li');
-          li.innerHTML = '<strong>' + t.icon + ' ' + t.name + '</strong> — ' + (t.features || []).slice(0, 2).join(', ');
-          ul.appendChild(li);
-        });
-        (j.pointsTiers || []).forEach(function (t) {
-          var li = document.createElement('li');
-          li.innerHTML = '<strong>' + t.icon + ' ' + t.name + '</strong> (' + t.minPoints + '+ pts)';
-          ul.appendChild(li);
-        });
-        log('Tiers loaded', 'ok');
-      }).catch(function (e) { log('Tiers error: ' + e.message, 'err'); });
-    });
-
-    document.getElementById('pts-lookup').addEventListener('click', function () {
-      var email = document.getElementById('pts-email').value.trim();
-      if (!email) return;
-      apiGet('/api/points/admin/lookup?email=' + encodeURIComponent(email) + '&pin=' + encodeURIComponent(pin()))
-        .then(function (j) {
-          document.getElementById('pts-current').textContent = j.email + ': ' + j.points + ' pts (' + j.tier + ')';
-          document.getElementById('pts-set').value = j.points;
-          log('Lookup OK — ' + j.points + ' pts', 'ok');
-        }).catch(function (e) { log('Lookup error: ' + e.message, 'err'); });
-    });
-
-    document.getElementById('pts-save').addEventListener('click', function () {
-      var email = document.getElementById('pts-email').value.trim();
-      var points = parseInt(document.getElementById('pts-set').value, 10);
-      if (!email || isNaN(points)) return;
-      apiPost('/api/points/admin/set', { email: email, points: points })
-        .then(function (j) {
-          document.getElementById('pts-current').textContent = j.email + ': ' + j.points + ' pts (' + j.tier + ')';
-          log('Points set to ' + j.points, 'ok');
-        }).catch(function (e) { log('Set error: ' + e.message, 'err'); });
-    });
-
-    document.getElementById('pts-award-btn').addEventListener('click', function () {
-      var email = document.getElementById('pts-email').value.trim();
-      var amount = parseInt(document.getElementById('pts-award').value, 10);
-      if (!email || !amount) return;
-      apiPost('/api/points/admin/award', { email: email, amount: amount, reason: 'admin award' })
-        .then(function (j) {
-          document.getElementById('pts-current').textContent = j.email + ': ' + j.points + ' pts (' + j.tier + ')';
-          log('Awarded +' + amount + ' → ' + j.points + ' total', 'ok');
-        }).catch(function (e) { log('Award error: ' + e.message, 'err'); });
-    });
-
-    function wireScoutingAdmin() {
-      var rebuildBtn = document.getElementById('rebuild-scouting');
-      var statusBtn = document.getElementById('scouting-status');
-
-      if (rebuildBtn && rebuildBtn.getAttribute('data-wired') !== '1') {
-        rebuildBtn.setAttribute('data-wired', '1');
-        rebuildBtn.addEventListener('click', function () {
-          if (!pin()) {
-            log('Enter admin PIN and unlock before rebuilding', 'err');
-            return;
-          }
-          rebuildBtn.disabled = true;
-          log('POST ' + API + '/api/war-room/admin/rebuild-scouting …', 'info');
-          apiPost('/api/war-room/admin/rebuild-scouting', {})
-            .then(function (j) {
-              log(j.message || 'Scouting rebuild started', 'ok');
-              if (j.total != null) log('Processing ' + j.total + ' players in background', 'info');
-            })
-            .catch(function (e) {
-              log('Scouting rebuild error: ' + e.message, 'err');
-            })
-            .finally(function () {
-              rebuildBtn.disabled = false;
-            });
-        });
-      }
-
-      if (statusBtn && statusBtn.getAttribute('data-wired') !== '1') {
-        statusBtn.setAttribute('data-wired', '1');
-        statusBtn.addEventListener('click', function () {
-          if (!pin()) {
-            log('Enter admin PIN and unlock before checking status', 'err');
-            return;
-          }
-          apiGet('/api/war-room/admin/rebuild-scouting/status?pin=' + encodeURIComponent(pin()))
-            .then(function (j) {
-              if (j.running) {
-                var prog = j.status && j.status.progress;
-                if (prog && prog.total) {
-                  log('Scouting rebuild running — ' + prog.index + '/' + prog.total + (prog.slug ? ' (' + prog.slug + ')' : ''), 'info');
-                } else {
-                  log('Scouting rebuild still running…', 'info');
-                }
-                return;
-              }
-              if (j.status && j.status.error) {
-                log('Last rebuild error: ' + j.status.error, 'err');
-              }
-              if (!j.lastRun) {
-                log('No scouting rebuild log yet — run Rebuild Scouting Database first', 'info');
-                return;
-              }
-              var r = j.lastRun;
-              var errCount = (r.errors && r.errors.length) ? r.errors.length : 0;
-              log('Last rebuild: stored ' + r.stored + ', blank ' + r.blank + ', errors ' + errCount, 'ok');
-            })
-            .catch(function (e) {
-              log('Status error: ' + e.message, 'err');
-            });
-        });
-      }
-    }
-
-    wireScoutingAdmin();
-
-    (function init() {
-      var saved = sessionStorage.getItem(SESSION_KEY);
-      if (saved) {
-        verifyPin(saved, function (ok) {
-          if (ok) unlockAdmin(saved);
-        });
-      }
-    })();
   </script>
   <script src="/gv-feedback.js?v=1" defer></script>
 </body>

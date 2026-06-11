@@ -15,7 +15,6 @@ const ADMIN_HUB_REDIRECTS = [
   ['/admin-feedback.html', '/admin#feedback/inbox'],
   ['/admin-monitoring.html', '/admin#recruiting/monitoring'],
   ['/admin-ops.html', '/admin#dashboard'],
-  ['/admin-qa.html', '/admin#dashboard/qa'],
   ['/admin-ops-gm2.html', '/admin#gm2/integrity'],
   ['/admin-ops-identity-patterns.html', '/admin#gm2/identity']
 ];
@@ -48,6 +47,10 @@ function mountAdminRoutes(app) {
     const file = ADMIN_EMBED_PAGES[req.params.page];
     if (!file) return res.status(404).send('Admin embed page not found');
     return res.sendFile(path.join(root, file));
+  });
+
+  app.get('/admin-qa.html', (req, res) => {
+    res.sendFile(path.join(root, 'admin-qa.html'));
   });
 
   ADMIN_HUB_REDIRECTS.forEach(([from, to]) => {

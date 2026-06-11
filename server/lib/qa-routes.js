@@ -43,7 +43,7 @@ function mountQaRoutes(app) {
 
   app.get('/admin/qa', (req, res) => {
     if (req.query.embed === '1') return res.sendFile(qaPage);
-    return res.redirect(302, '/admin#dashboard/qa');
+    return res.redirect(302, '/admin#qa/monitor');
   });
 
   app.get('/api/qa/dashboard', (req, res) => {

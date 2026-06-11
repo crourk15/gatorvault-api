@@ -190,6 +190,15 @@
     if (sessionStorage.getItem(SESSION_KEY)) document.getElementById('pin').value = sessionStorage.getItem(SESSION_KEY);
     load();
     setInterval(load, 60000);
+
+    window.__gvAdminEmbedUnlock = function (p) {
+      if (p) document.getElementById('pin').value = p;
+      load();
+    };
+    document.addEventListener('gv-admin-embed-unlock', function (e) {
+      if (e.detail && e.detail.pin) window.__gvAdminEmbedUnlock(e.detail.pin);
+    });
   </script>
+  <script src="/js/admin-embed.js"></script>
 </body>
 </html>
