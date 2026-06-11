@@ -265,26 +265,29 @@ async function buildNewsFromBeatPost(post) {
   }
   if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
   const source = post.writerName || post.outlet || post.handle || 'Beat writer';
+  const isProgramNews =
+    guarded.triggerType === 'program_news' ||
+    built.triggerType === 'program_news' ||
+    built?.validationMeta?.programNews;
   const isTeamEvent = guarded.triggerType === 'team_event' || built.triggerType === 'team_event';
-  const fp = intelFingerprint(
-    post.id || post.url,
-    isTeamEvent ? 'team_event' : 'beat_intel',
-    post.publishedAt
-  );
+  const fpType = isProgramNews ? 'program_news' : isTeamEvent ? 'team_event' : 'beat_intel';
+  const fp = intelFingerprint(post.id || post.url, fpType, post.publishedAt);
   return attachNewsMeta(
     {
       text: built.text,
       category: 'news',
-      topic: isTeamEvent ? 'team' : 'recruiting',
-      urgencyLabel: isTeamEvent ? 'major_beat' : 'major_beat',
-      triggerType: isTeamEvent ? 'team_event' : null,
+      topic: isProgramNews ? 'program' : isTeamEvent ? 'team' : 'recruiting',
+      urgencyLabel: isProgramNews ? 'breaking' : 'major_beat',
+      postUrgency: isProgramNews ? 'breaking' : null,
+      triggerType: isProgramNews ? 'program_news' : isTeamEvent ? 'team_event' : null,
       teamEventType: guarded.teamEventType || built.teamEventType || null,
-      sourceEventType: isTeamEvent ? 'team_event' : 'beat_intel',
+      programNewsType: guarded.programNewsType || built.programNewsType || null,
+      sourceEventType: fpType,
       sources: [{ label: source, url: post.url || SITE_URL }],
-      source: isTeamEvent ? 'auto:team-event' : 'auto:beat-intel',
+      source: isProgramNews ? 'auto:program-news' : isTeamEvent ? 'auto:team-event' : 'auto:beat-intel',
       intelFingerprint: fp,
       playerName: built.playerName || null,
-      identityConfirmed: isTeamEvent ? true : undefined,
+      identityConfirmed: isProgramNews || isTeamEvent ? true : undefined,
       sourceEventCreatedAt: post.publishedAt,
       sourcePublishedAt: post.publishedAt
     },

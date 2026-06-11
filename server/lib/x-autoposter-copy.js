@@ -214,6 +214,21 @@ async function buildTeamEventCopyAsync(post, gate = {}) {
   return newsPayloadFromBuilt(built, { triggerType: 'team_event' });
 }
 
+async function buildProgramNewsCopyAsync(post, gate = {}) {
+  const text = String(post?.text || '').replace(/\s+/g, ' ').trim();
+  if (!text) return null;
+
+  const analyst = post.writerName || post.outlet || post.handle || 'Beat writer';
+  const built = playerContext.buildProgramNewsPost({
+    beatText: text,
+    source: analyst,
+    programNewsType: gate.programNewsType || gate.gate?.programNewsType || null,
+    postUrl: post.url || null
+  });
+  if (!built?.text) return null;
+  return newsPayloadFromBuilt(built, { triggerType: 'program_news' });
+}
+
 function buildTeamEventCopyFromSchedule(game) {
   if (!game?.game && !game?.opponent) return null;
   const opponent = game.opponent || String(game.game || '').replace(/^Florida vs\s+/i, '').trim();
@@ -249,6 +264,10 @@ async function buildBeatIntelCopyAsync(post) {
 
   const guarded = await prefilter.guardBeatPost(post);
   if (!guarded.eligible) return guarded.skip;
+
+  if (guarded.triggerType === 'program_news') {
+    return buildProgramNewsCopyAsync(post, guarded);
+  }
 
   if (guarded.triggerType === 'team_event') {
     return buildTeamEventCopyAsync(post, guarded);
@@ -303,6 +322,15 @@ async function buildBeatIntelCopyAsync(post) {
 
 async function buildIntelCopyAsync(intel) {
   if (!intel?.eventType) return null;
+
+  if (intel.eventType === 'program_news' || intel.triggerType === 'program_news') {
+    const built = playerContext.buildProgramNewsPost({
+      beatText: intel.detail || intel.status || '',
+      source: intel.source || intel.analystName || 'Beat writer',
+      programNewsType: intel.programNewsType || 'general'
+    });
+    return newsPayloadFromBuilt(built, { triggerType: 'program_news' });
+  }
 
   if (intel.eventType === 'team_event' || intel.triggerType === 'team_event') {
     const built = playerContext.buildTeamEventPost({
@@ -488,6 +516,7 @@ module.exports = {
   newsPayloadFromBuilt,
   buildPredictionMachineCopyAsync,
   buildTeamEventCopyAsync,
+  buildProgramNewsCopyAsync,
   buildTeamEventCopyFromSchedule,
   buildBeatIntelCopyAsync,
   buildIntelCopyAsync,

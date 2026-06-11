@@ -140,6 +140,64 @@ function teamEventLabel(teamEventType) {
   return labels[String(teamEventType || '').toLowerCase()] || labels.general;
 }
 
+function programNewsLabel(programNewsType) {
+  const labels = {
+    stadium_facility: 'Stadium & Facility News',
+    athletic_release: 'Athletic Department Release',
+    nil_infrastructure: 'NIL Infrastructure Update',
+    program_update: 'Program Update',
+    sec_tv: 'SEC / TV Announcement',
+    realignment: 'Conference Realignment',
+    branding: 'Uniform & Branding',
+    general: 'Program News'
+  };
+  return labels[String(programNewsType || '').toLowerCase()] || labels.general;
+}
+
+function inferProgramNewsEvent(beatText, programNewsType) {
+  const t = String(beatText || '').replace(/\s+/g, ' ').trim();
+  const type = String(programNewsType || '').toLowerCase();
+
+  if (type === 'stadium_facility') {
+    if (/\$[\d,.]+\s*(?:b(?:illion)?|m(?:illion)?)/i.test(t)) {
+      const amt = t.match(/\$[\d,.]+\s*(?:b(?:illion)?|m(?:illion)?)/i)?.[0];
+      if (/ben hill griffin|the swamp/i.test(t)) {
+        return `${amt} Ben Hill Griffin Stadium renovation plans`;
+      }
+      if (/renovation/i.test(t)) return `${amt} stadium renovation plans`;
+      return `${amt} facility capital project`;
+    }
+    if (/ben hill griffin|the swamp/i.test(t)) return 'Ben Hill Griffin Stadium renovation plans';
+    if (/renovation/i.test(t)) return 'major stadium renovation plans';
+    return 'major facility upgrades';
+  }
+  if (type === 'athletic_release') return 'an athletic department announcement';
+  if (type === 'nil_infrastructure') return 'NIL infrastructure updates';
+  if (type === 'program_update') return 'a major football program update';
+  if (type === 'sec_tv') return 'SEC scheduling and TV updates';
+  if (type === 'realignment') return 'conference realignment news';
+  if (type === 'branding') return 'a uniform and branding reveal';
+
+  const sentences = extractSentences(t);
+  const factual = sentences.find((s) => s.length >= 30 && !HEADLINE_ONLY_RE.test(s));
+  if (factual) {
+    const trimmed = factual.length <= 90 ? factual : `${factual.slice(0, 87)}…`;
+    return trimmed.replace(/^Florida (?:has |is )?/i, '').replace(/\.$/, '') || 'a program-level update';
+  }
+  return programNewsLabel(type).toLowerCase();
+}
+
+function detectProgramNewsContext(beatText) {
+  const t = String(beatText || '').toLowerCase();
+  if (/ben hill griffin|the swamp|stadium|renovation|facilit/.test(t)) return 'Stadium & Facility News';
+  if (/nil|collective|name,? image and likeness/.test(t)) return 'NIL Infrastructure Update';
+  if (/realignment|sec expansion/.test(t)) return 'Conference Realignment';
+  if (/uniform|jersey|branding|helmet reveal/.test(t)) return 'Uniform & Branding';
+  if (/sec network|tv announcement|broadcast|flex schedule/.test(t)) return 'SEC / TV Announcement';
+  if (/athletic department|florida athletics|uaa/.test(t)) return 'Athletic Department Release';
+  return 'Program News';
+}
+
 function classifyBeatSentences(beatText) {
   const context = [];
   const insider = [];
@@ -290,6 +348,9 @@ module.exports = {
   buildTeamIdentity,
   detectTeamContext,
   teamEventLabel,
+  programNewsLabel,
+  inferProgramNewsEvent,
+  detectProgramNewsContext,
   classifyBeatSentences,
   contextFromNewsEvent,
   insiderFromIntel,

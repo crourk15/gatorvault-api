@@ -330,6 +330,112 @@ function buildTeamEventPost({ beatText, source, teamEventType = null, postUrl = 
   };
 }
 
+function buildProgramNewsPost({ beatText, source, programNewsType = null, postUrl = null } = {}) {
+  const newsContext =
+    template.programNewsLabel(programNewsType) || template.detectProgramNewsContext(beatText) || 'Program News';
+  const identity = `Florida Gators — ${newsContext}`;
+  const sourceLabel = String(source || 'Beat writer').trim();
+
+  const contextResult = buildVerifiedContextLine({
+    newsEvent: null,
+    sourceLabel,
+    beatText,
+    intel: null
+  });
+  let contextLine = contextResult.line;
+  if (!contextLine) {
+    const sentences = template.extractSentences(beatText || '');
+    const factual = sentences.find(
+      (s) =>
+        !template.HEADLINE_ONLY_RE.test(s) &&
+        (template.FACTUAL_SIGNAL_RE.test(s) || s.length >= 35) &&
+        !template.INSIDER_SIGNAL_RE.test(s)
+    );
+    if (factual) {
+      contextLine = factual.length <= 160 ? factual : `${factual.slice(0, 157)}…`;
+    }
+  }
+  const usedFallback = !contextLine;
+  if (!contextLine) {
+    const eventSummary = template.inferProgramNewsEvent(beatText, programNewsType);
+    contextLine = `Per multiple reports, Florida has announced ${eventSummary}. Monitoring.`;
+  }
+
+  const beat = beatText ? template.classifyBeatSentences(beatText) : { context: [], insider: [] };
+  const contextNorm = template.stripEmojisHashtags(contextLine).toLowerCase();
+  let insiderLine = beat.insider.find(
+    (s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm
+  );
+  if (!insiderLine && beat.context.length > 1) {
+    insiderLine = beat.context.find((s) => template.stripEmojisHashtags(s).toLowerCase() !== contextNorm);
+  }
+  if (!insiderLine) {
+    insiderLine = usedFallback ? `Per ${sourceLabel} and multiple reports.` : `Per ${sourceLabel} report.`;
+  } else if (insiderLine.length > 140) {
+    insiderLine = `${insiderLine.slice(0, 137)}…`;
+  }
+
+  const raw = template.composeInsiderReport({
+    identity,
+    context: contextLine,
+    insider: insiderLine
+  });
+  if (!raw || !template.hasTemplateStructure(raw)) {
+    const eventSummary = template.inferProgramNewsEvent(beatText, programNewsType);
+    const fallbackText = template.enforceTweetLimit(
+      `Per multiple reports, Florida has announced ${eventSummary}. Monitoring.`,
+      280
+    );
+    return {
+      text: fallbackText,
+      playerName: null,
+      postKind: 'program_news',
+      triggerType: 'program_news',
+      programNewsType: programNewsType || 'general',
+      context: { programNews: true, name: 'Florida Gators' },
+      templateBlocks: { identity, context: fallbackText, insider: '' },
+      validationMeta: {
+        programNews: true,
+        programNewsType: programNewsType || 'general',
+        monitoringFallback: true,
+        beatText: beatText || null,
+        postUrl: postUrl || null
+      },
+      playerContext: { programNews: true, name: 'Florida Gators' }
+    };
+  }
+  if (template.isHeadlineOnlyPost(raw) && !usedFallback) {
+    const eventSummary = template.inferProgramNewsEvent(beatText, programNewsType);
+    contextLine = `Per multiple reports, Florida has announced ${eventSummary}. Monitoring.`;
+  }
+
+  const finalRaw = usedFallback
+    ? contextLine
+    : template.composeInsiderReport({ identity, context: contextLine, insider: insiderLine });
+  const text = template.enforceTweetLimit(finalRaw, 280);
+  if (!text) return null;
+
+  return {
+    text,
+    playerName: null,
+    postKind: 'program_news',
+    triggerType: 'program_news',
+    programNewsType: programNewsType || 'general',
+    context: { programNews: true, name: 'Florida Gators' },
+    templateBlocks: { identity, context: contextLine, insider: insiderLine },
+    validationMeta: {
+      programNews: true,
+      programNewsType: programNewsType || 'general',
+      monitoringFallback: usedFallback,
+      beatText: beatText || null,
+      insiderFromBeat: beat.insider.includes(insiderLine),
+      contextFromBeat: contextResult.meta.fromBeat === true,
+      postUrl: postUrl || null
+    },
+    playerContext: { programNews: true, name: 'Florida Gators' }
+  };
+}
+
 async function buildPlayerNewsPost({
   source,
   newsEvent,
@@ -652,6 +758,7 @@ module.exports = {
   resolvePlayerContext,
   buildPlayerNewsPost,
   buildTeamEventPost,
+  buildProgramNewsPost,
   newsEventForIntel,
   newsEventForRecruitingEvent,
   sourceLabelForIntel,

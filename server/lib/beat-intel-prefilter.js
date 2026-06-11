@@ -67,6 +67,50 @@ const TEAM_EVENT_SIGNALS = [
   { type: 'injury', re: /\b(injury report|ruled out|game-time decision|out for the season)\b/i }
 ];
 
+/** Program-level UF football news — stadium, NIL, SEC/TV, realignment, branding, etc. */
+const PROGRAM_NEWS_SIGNALS = [
+  {
+    type: 'stadium_facility',
+    re: /\b(ben hill griffin|the swamp|stadium|renovation|renovate|facilit(?:y|ies)|facility upgrade|training center|locker room|weight room|capital project|\$[\d,.]+\s*(?:b(?:illion)?|m(?:illion)?))\b/i
+  },
+  {
+    type: 'nil_infrastructure',
+    re: /\b(nil (?:collective|infrastructure|deal|program)|gator (?:nil|collective)|name,? image and likeness)\b/i
+  },
+  {
+    type: 'athletic_release',
+    re: /\b(florida athletics|athletic department|uaa|gator athletics|uf athletics)\b/i
+  },
+  {
+    type: 'program_update',
+    re: /\b(football program|gator football program|uf football|program announcement|program update|major (?:program|football) (?:update|news|announcement))\b/i
+  },
+  {
+    type: 'sec_tv',
+    re: /\b(sec network|tv announcement|telecast|broadcast rights|flex schedule|national tv|media rights)\b/i
+  },
+  {
+    type: 'realignment',
+    re: /\b(conference realignment|realignment|sec expansion|expansion (?:team|school)|super conference)\b/i
+  },
+  {
+    type: 'branding',
+    re: /\b(uniform reveal|jersey reveal|branding|helmet reveal|alternate uniform|new (?:logo|wordmark|brand))\b/i
+  }
+];
+
+/** Team-event types that should stay on team_event, not PROGRAM_NEWS. */
+const TEAM_EVENT_OVERRIDES_PROGRAM = new Set([
+  'kickoff',
+  'schedule',
+  'game_week',
+  'depth_chart',
+  'roster',
+  'camp',
+  'injury',
+  'staff'
+]);
+
 function normalizePhrase(text) {
   return String(text || '')
     .replace(/\s+/g, ' ')
@@ -176,6 +220,64 @@ function classifyTeamEventType(text) {
     /* optional */
   }
   return null;
+}
+
+function classifyProgramNewsType(text) {
+  const t = normalizePhrase(text);
+  if (!t) return null;
+  for (const { type, re } of PROGRAM_NEWS_SIGNALS) {
+    if (re.test(t)) return type;
+  }
+  return null;
+}
+
+function isProgramNewsIntel(text, post = null) {
+  const phrase = normalizePhrase(text);
+  if (!phrase || isGenericNonPlayerIntel(phrase)) return false;
+
+  let beatFilters;
+  try {
+    beatFilters = require('./beat-writer-filters');
+  } catch {
+    return false;
+  }
+  if (!beatFilters.isFloridaRelevant(phrase)) return false;
+  if (post && beatFilters.isNationalUfOnlyReporter(post) && !beatFilters.isFloridaRelevantPost(post)) {
+    return false;
+  }
+
+  let copy;
+  try {
+    copy = require('./x-autoposter-copy');
+  } catch {
+    copy = null;
+  }
+  if (copy?.hasPlayerSpecificIntel?.(phrase)) return false;
+
+  const programType = classifyProgramNewsType(phrase);
+  if (!programType) return false;
+
+  const teamType = classifyTeamEventType(phrase);
+  if (teamType && TEAM_EVENT_OVERRIDES_PROGRAM.has(teamType)) return false;
+
+  return true;
+}
+
+function evaluateProgramNewsEligibility(text, { post = null } = {}) {
+  const phrase = normalizePhrase(text);
+  if (!isProgramNewsIntel(phrase, post)) {
+    return { eligible: false, reason: 'not_program_news', category: 'non_player_intel' };
+  }
+  const programNewsType = classifyProgramNewsType(phrase) || 'general';
+  return {
+    eligible: true,
+    triggerType: 'program_news',
+    programNewsType,
+    playerName: null,
+    playerSlug: null,
+    matchMode: 'program_news',
+    triggerPhrase: phrase.slice(0, 160)
+  };
 }
 
 function isTeamEventIntel(text, post = null) {
@@ -456,6 +558,19 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
     };
   }
 
+  const programGate = evaluateProgramNewsEligibility(text, { post });
+  if (programGate.eligible) {
+    return {
+      eligible: true,
+      triggerType: 'program_news',
+      programNewsType: programGate.programNewsType,
+      text,
+      playerName: null,
+      playerSlug: null,
+      gate: programGate
+    };
+  }
+
   const teamGate = evaluateTeamEventEligibility(text, { post });
   if (teamGate.eligible) {
     return {
@@ -491,8 +606,11 @@ module.exports = {
   hasStrongRecruitingSignals,
   extractCleanFullName,
   classifyTeamEventType,
+  classifyProgramNewsType,
   isTeamEventIntel,
+  isProgramNewsIntel,
   evaluateTeamEventEligibility,
+  evaluateProgramNewsEligibility,
   evaluateBeatIntelEligibility,
   buildNonPlayerSkipPayload,
   logNonPlayerIntel,

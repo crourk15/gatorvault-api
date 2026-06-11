@@ -41,9 +41,12 @@ function validateSchema(signal) {
   const errors = [];
   const type = signal.eventType || signal.type;
   const source = normalizeSource(signal.source);
+  const et = String(type || '').toLowerCase();
   if (!type) errors.push('missing_type');
   if (!source) errors.push('missing_source');
-  if (!signal.playerSlug && !signal.playerName && !signal.playerId) errors.push('missing_player');
+  if (!signal.playerSlug && !signal.playerName && !signal.playerId && et !== 'program_news' && et !== 'team_event') {
+    errors.push('missing_player');
+  }
   if (!signalTimestamp(signal) && !signal.reportedAt && !signal.createdAt) errors.push('missing_timestamp');
   const classYear = parseInt(signal.classYear, 10);
   const et = String(signal.eventType || signal.type || '').toLowerCase();

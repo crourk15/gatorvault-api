@@ -201,9 +201,11 @@ function mountXAutoposterRoutes(app) {
     try {
       const status = req.query.status || null;
       const category = req.query.category || null;
+      const triggerType = req.query.triggerType || req.query.eventType || null;
       const items = store.listQueue({
         status,
         category,
+        triggerType,
         limit: parseInt(req.query.limit || '50', 10)
       });
       return res.json({

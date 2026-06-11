@@ -6,6 +6,7 @@ const GM2_FEATURES = Object.freeze({
   HEAT_CHECK: 'heat_check',
   VISIT_RECAP: 'visit_recap',
   PROGRAM_PULSE: 'program_pulse',
+  PROGRAM_NEWS: 'program_news',
   PORTAL_TRACKER: 'portal_tracker',
   AUTOPOSTER: 'autoposter',
   PLAYER_PAGE: 'player_page',
@@ -53,6 +54,7 @@ const INTERNAL_SOURCES = new Set([
   'auto:beat-intel',
   'auto:beat-momentum',
   'auto:beat-writer',
+  'auto:program-news',
   'needs_resolution',
   'snapshot',
   'internal'

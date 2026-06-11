@@ -49,6 +49,9 @@ function classifyItemUrgency(item) {
   const source = String(item.source || '').toLowerCase();
   const eventType = String(item.sourceEventType || item.eventType || intelType || '').toLowerCase();
 
+  if (eventType === 'program_news' || topic === 'program' || source.includes('program-news')) {
+    return { tier: 'breaking', label: 'breaking' };
+  }
   if (/\bbreaking\b/i.test(text)) {
     return { tier: 'breaking', label: 'breaking' };
   }

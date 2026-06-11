@@ -474,6 +474,16 @@ async function autoResolveIntel(intel, opts = {}) {
   const phrase = opts.beatText || intel?.detail || intel?.playerName || '';
   const subsystem = opts.subsystem || 'autoposter';
 
+  if (intel?.eventType === 'program_news' || intel?.triggerType === 'program_news') {
+    return {
+      resolved: true,
+      confirmed: true,
+      programNews: true,
+      intelPatch: {},
+      mergedSnapshot: { programNews: true }
+    };
+  }
+
   if (intel?.eventType === 'team_event' || intel?.triggerType === 'team_event') {
     return {
       resolved: true,
@@ -481,6 +491,22 @@ async function autoResolveIntel(intel, opts = {}) {
       teamEvent: true,
       intelPatch: {},
       mergedSnapshot: { teamEvent: true }
+    };
+  }
+
+  const programGate = prefilter.evaluateProgramNewsEligibility(phrase, { post: opts.post || null });
+  if (programGate.eligible) {
+    return {
+      resolved: true,
+      confirmed: true,
+      programNews: true,
+      programNewsType: programGate.programNewsType,
+      intelPatch: {
+        eventType: 'program_news',
+        triggerType: 'program_news',
+        programNewsType: programGate.programNewsType
+      },
+      mergedSnapshot: { programNews: true }
     };
   }
 

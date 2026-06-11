@@ -17,7 +17,7 @@ const CONTENT_MIX = {
 const CATEGORIES = Object.keys(CONTENT_MIX);
 const ACTIONS = ['post', 'reply', 'quote'];
 
-const NEWS_TOPICS = ['recruiting', 'portal', 'staff', 'game_week', 'roster', 'general'];
+const NEWS_TOPICS = ['recruiting', 'portal', 'staff', 'game_week', 'roster', 'program', 'general'];
 
 const AI_INVENTED_PATTERNS = [
   /\bas an ai\b/i,

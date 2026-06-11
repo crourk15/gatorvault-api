@@ -141,6 +141,7 @@ function isRecruitingIntelPost(text, post = null) {
   const t = String(text || '');
   if (!t.trim()) return false;
   const prefilter = require('./beat-intel-prefilter');
+  if (prefilter.isProgramNewsIntel(t, post)) return true;
   if (prefilter.isTeamEventIntel(t, post)) return true;
   if (cancelParser.isVisitCancelPost(t)) return false;
   if (isVisitSchedulePost(t)) return true;
@@ -296,6 +297,31 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     return null;
   }
 
+  const programGate = prefilter.evaluateProgramNewsEligibility(text, { post });
+  if (programGate.eligible) {
+    const timestamp = post.publishedAt || new Date().toISOString();
+    const handle = String(post.handle || '').toLowerCase() || 'beat';
+    const day = timestamp.slice(0, 10);
+    const postKey = String(post.id || post.url || day).replace(/[^a-z0-9_-]/gi, '').slice(0, 32);
+    const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
+    return {
+      triggerType: 'program_news',
+      programNewsType: programGate.programNewsType,
+      playerName: null,
+      playerSlug: null,
+      on3Id: null,
+      eventType: 'program_news',
+      status: 'Program news',
+      detail: text.replace(/\s+/g, ' ').slice(0, 280),
+      timestamp,
+      articleUrl: post.url || null,
+      source: analystName,
+      sourceHandle: post.handle || null,
+      sourceType: 'beat',
+      fingerprint: `program_news_${programGate.programNewsType}_${day}_${handle}_${postKey}`
+    };
+  }
+
   const teamGate = prefilter.evaluateTeamEventEligibility(text, { post });
   if (teamGate.eligible) {
     const timestamp = post.publishedAt || new Date().toISOString();
@@ -387,6 +413,21 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
 
 async function buildAutoposterPayload(row, intelItem) {
   const copy = require('./x-autoposter-copy');
+  if (row.triggerType === 'program_news' || row.eventType === 'program_news') {
+    const built = await copy.buildProgramNewsCopyAsync(
+      {
+        text: row.detail,
+        writerName: row.source,
+        handle: row.sourceHandle,
+        url: row.articleUrl
+      },
+      { programNewsType: row.programNewsType }
+    );
+    if (!built?.text) {
+      return { ok: false, reason: built?.skipReason || 'invalid_copy' };
+    }
+    return { ok: true, ...built, text: copy.appendSite(built.text) };
+  }
   if (row.triggerType === 'team_event' || row.eventType === 'team_event') {
     const built = await copy.buildTeamEventCopyAsync(
       {
@@ -435,17 +476,28 @@ async function buildAutoposterPayload(row, intelItem) {
   return { ok: true, ...built, text: copy.appendSite(built.text) };
 }
 
+function isNonPlayerBeatRow(row) {
+  return (
+    row?.triggerType === 'team_event' ||
+    row?.eventType === 'team_event' ||
+    row?.triggerType === 'program_news' ||
+    row?.eventType === 'program_news'
+  );
+}
+
 async function queueAutoposter(row, intelItem, built) {
   try {
     const xStore = require('./x-autoposter-store');
     const policy = require('./x-autoposter-policy');
     const copy = require('./x-autoposter-copy');
     const fp = row.fingerprint;
+    const isProgramNews = row.triggerType === 'program_news' || row.eventType === 'program_news';
     const isTeamEvent = row.triggerType === 'team_event' || row.eventType === 'team_event';
+    const isNonPlayerBeat = isProgramNews || isTeamEvent;
     if (
       !built?.text ||
       copy.isBrokenCopy(built.text, built) ||
-      (!isTeamEvent && !copy.isValidPlayerName(row.playerName))
+      (!isNonPlayerBeat && !copy.isValidPlayerName(row.playerName))
     ) {
       return { queued: false, reason: 'invalid_copy' };
     }
@@ -458,17 +510,21 @@ async function queueAutoposter(row, intelItem, built) {
     const payload = {
       text: built.text,
       category: 'news',
-      topic: isTeamEvent ? 'team' : 'recruiting',
-      triggerType: isTeamEvent ? 'team_event' : null,
+      topic: isProgramNews ? 'program' : isTeamEvent ? 'team' : 'recruiting',
+      triggerType: isProgramNews ? 'program_news' : isTeamEvent ? 'team_event' : null,
       teamEventType: row.teamEventType || null,
+      programNewsType: row.programNewsType || null,
       sources: [{ label: row.source, url: row.articleUrl || SITE_URL }],
-      source: isTeamEvent ? 'auto:team-event' : 'auto:beat-writer',
+      source: isProgramNews ? 'auto:program-news' : isTeamEvent ? 'auto:team-event' : 'auto:beat-writer',
       intelFingerprint: fp,
       intelType: row.eventType,
       playerName: row.playerName || null,
-      identityConfirmed: isTeamEvent ? true : undefined,
+      identityConfirmed: isNonPlayerBeat ? true : undefined,
+      postUrgency: isProgramNews ? 'breaking' : null,
+      urgencyLabel: isProgramNews ? 'breaking' : isTeamEvent ? 'major_beat' : null,
+      sourceEventType: isProgramNews ? 'program_news' : isTeamEvent ? 'team_event' : row.eventType,
       sourceIntelId: intelItem?.id,
-      scheduledAt: new Date(Date.now() + 2 * 60 * 1000).toISOString(),
+      scheduledAt: new Date(Date.now() + (isProgramNews ? 60 : 2) * 60 * 1000).toISOString(),
       status: 'pending',
       templateBlocks: built.templateBlocks,
       validationMeta: built.validationMeta,
@@ -509,6 +565,65 @@ function inferBeatEventLabel(row) {
   if (/portal/.test(d)) return 'enter the transfer portal';
   if (/visit/.test(d)) return 'schedule a visit';
   return 'make a move in his recruitment';
+}
+
+async function queueProgramNewsMonitoringFallback(row) {
+  if (!row?.fingerprint) return { queued: false, reason: 'invalid' };
+  const template = require('./x-autoposter-template');
+  const eventSummary = template.inferProgramNewsEvent(row.detail, row.programNewsType);
+  const text = `Per multiple reports, Florida has announced ${eventSummary}. Monitoring.`;
+  try {
+    const xStore = require('./x-autoposter-store');
+    const policy = require('./x-autoposter-policy');
+    const copy = require('./x-autoposter-copy');
+    const fp = `program_monitor_${row.fingerprint}`;
+    const doc = xStore.loadQueue();
+    const dup = doc.items.some(
+      (i) => i.intelFingerprint === fp && (i.status === 'pending' || i.status === 'sent')
+    );
+    if (dup) return { queued: false, reason: 'duplicate' };
+    const payload = {
+      text: copy.appendSite ? copy.appendSite(text) : `${text} ${SITE_URL}`,
+      category: 'news',
+      topic: 'program',
+      triggerType: 'program_news',
+      programNewsType: row.programNewsType || 'general',
+      sources: [{ label: row.source || row.sourceHandle || 'Beat writer', url: row.articleUrl || SITE_URL }],
+      source: 'auto:program-news',
+      intelFingerprint: fp,
+      intelType: 'program_news',
+      sourceEventType: 'program_news',
+      playerName: null,
+      identityConfirmed: true,
+      monitoringFallback: true,
+      postUrgency: 'breaking',
+      urgencyLabel: 'breaking',
+      scheduledAt: new Date(Date.now() + 60 * 1000).toISOString(),
+      status: 'pending'
+    };
+    const check = policy.validatePostContent(payload);
+    if (!check.valid) {
+      payload.text = copy.appendSite ? copy.appendSite(text) : text;
+    }
+    const out = xStore.enqueuePost(payload);
+    try {
+      require('./ops-monitor').logEvent({
+        subsystem: 'autoposter:program-news',
+        status: 'monitoring_fallback',
+        message: 'Queued program news monitoring post',
+        details: {
+          programNewsType: row.programNewsType,
+          fingerprint: row.fingerprint,
+          sourceHandle: row.sourceHandle
+        }
+      });
+    } catch {
+      /* optional */
+    }
+    return { queued: true, item: out.item };
+  } catch (e) {
+    return { queued: false, reason: e.message };
+  }
 }
 
 async function queueBeatMonitoringFallback(row, skipReason) {
@@ -577,6 +692,30 @@ function parseCollegeSchool(text) {
 
 async function processBeatVisitIntelRow(row, snapshot) {
   if (!row?.fingerprint) return { skipped: true, reason: 'invalid' };
+
+  if (row.triggerType === 'program_news' || row.eventType === 'program_news') {
+    if (snapshot.fingerprints[row.fingerprint]) {
+      return { skipped: true, reason: 'duplicate', fingerprint: row.fingerprint };
+    }
+    const built = await buildAutoposterPayload(row, null);
+    let autopost = built.ok
+      ? await queueAutoposter(row, null, built)
+      : { queued: false, reason: built.reason || 'copy_failed' };
+    if (!autopost.queued) {
+      const fallback = await queueProgramNewsMonitoringFallback(row);
+      if (fallback.queued) autopost = fallback;
+    }
+    snapshot.fingerprints[row.fingerprint] = row.timestamp;
+    return {
+      processed: autopost.queued,
+      skipped: !autopost.queued,
+      programNews: true,
+      programNewsType: row.programNewsType,
+      autopost,
+      fingerprint: row.fingerprint,
+      reason: autopost.queued ? null : autopost.reason
+    };
+  }
 
   if (row.triggerType === 'team_event' || row.eventType === 'team_event') {
     if (snapshot.fingerprints[row.fingerprint]) {

@@ -74,6 +74,9 @@ function rulesForAutoposter(candidate) {
   if (publicAlerts.isBrewsterFalseQueueItem(candidate)) return { allow: false, reason: 'false_commit_queue' };
   const et = String(candidate.intelType || candidate.eventType || candidate.sourceEventType || '').toLowerCase();
   const trigger = String(candidate.triggerType || '').toLowerCase();
+  if (trigger === 'program_news' || et === 'program_news') {
+    return { allow: true };
+  }
   if (trigger === 'team_event' || et === 'team_event') {
     return { allow: true };
   }

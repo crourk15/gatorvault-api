@@ -298,7 +298,7 @@
 
     function populateLogFilter(tiles){
       var sel=document.getElementById('log-subsystem');
-      var opts=['','ops:run-job','autoposter','cron:recruiting-ingest','cron:portal-ingest','autoposter:beat-writer','cron:identity-patterns','api:health','db:health','deployments'];
+      var opts=['','ops:run-job','autoposter','autoposter:program-news','cron:recruiting-ingest','cron:portal-ingest','autoposter:beat-writer','cron:identity-patterns','api:health','db:health','deployments'];
       (tiles||[]).forEach(function(t){if(t.id&&!opts.includes(t.id))opts.push(t.id);});
       sel.innerHTML=opts.map(function(v){
         return '<option value="'+esc(v)+'">'+(v?esc(v):'All subsystems')+'</option>';
@@ -470,6 +470,7 @@
     function insiderCategoryLabel(cat){
       var map={
         program_pulse:'Program Pulse',
+        program_news:'Program News',
         heat_check:'Heat Check',
         official_visit_preview:'OV Preview',
         post_visit_reaction:'Post-Visit',

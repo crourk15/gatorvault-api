@@ -85,7 +85,12 @@ function normalizeItem(raw, { validate = true } = {}) {
     playerContext: raw.playerContext || null,
     qualityScore: raw.qualityScore != null ? Number(raw.qualityScore) : null,
     qualityBreakdown: raw.qualityBreakdown || null,
-    sourceConfidence: raw.sourceConfidence != null ? Number(raw.sourceConfidence) : null
+    sourceConfidence: raw.sourceConfidence != null ? Number(raw.sourceConfidence) : null,
+    triggerType: raw.triggerType || null,
+    teamEventType: raw.teamEventType || null,
+    programNewsType: raw.programNewsType || null,
+    identityConfirmed: raw.identityConfirmed === true ? true : raw.identityConfirmed === false ? false : undefined,
+    monitoringFallback: raw.monitoringFallback === true
   };
 
   if (validate) {
@@ -100,11 +105,20 @@ function normalizeItem(raw, { validate = true } = {}) {
   return item;
 }
 
-function listQueue({ status = null, category = null, limit = 100 } = {}) {
+function listQueue({ status = null, category = null, triggerType = null, limit = 100 } = {}) {
   const doc = loadQueue();
   let items = [...doc.items];
   if (status) items = items.filter((i) => i.status === status);
   if (category) items = items.filter((i) => i.category === category);
+  if (triggerType) {
+    const tt = String(triggerType).toLowerCase();
+    items = items.filter(
+      (i) =>
+        String(i.triggerType || '').toLowerCase() === tt ||
+        String(i.sourceEventType || '').toLowerCase() === tt ||
+        String(i.intelType || '').toLowerCase() === tt
+    );
+  }
   items.sort((a, b) => new Date(a.scheduledAt) - new Date(b.scheduledAt));
   return items.slice(0, limit);
 }

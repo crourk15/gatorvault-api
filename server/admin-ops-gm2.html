@@ -26,7 +26,7 @@
 <body>
   <div class="wrap">
     <h1>🛡️ GM 2.0 Integrity Dashboard</h1>
-    <p style="color:#94a3b8;margin-bottom:20px">Auto-repair · Quarantine · Signal Integrity · Rules Engine · PGV</p>
+    <p style="color:#94a3b8;margin-bottom:20px">Auto-repair · Quarantine · Signal Integrity · Rules Engine · PGV · PROGRAM_NEWS</p>
     <div class="card" style="margin-bottom:16px">
       <label>Admin PIN</label>
       <input id="pin" type="password" placeholder="GV2026admin" autocomplete="off">
@@ -52,7 +52,7 @@
       <pre id="decisions"></pre>
     </div>
     <p style="margin-top:20px;font-size:13px;color:#64748b">
-      <a href="/admin/ops">← Ops</a> ·
+      <a href="/admin#gm2/integrity">← Admin Hub</a> ·
       <a href="/api/gm2/status" target="_blank">API status</a>
     </p>
   </div>
@@ -109,5 +109,6 @@
     document.getElementById('auto-repair').addEventListener('click', function(){ postAction('/api/gm2/auto-repair/run', 'Full auto-repair').catch(function(e){ setMsg(e.message,'err'); }); });
     loadStatus().catch(function(){});
   </script>
+  <script src="/js/admin-embed.js"></script>
 </body>
 </html>

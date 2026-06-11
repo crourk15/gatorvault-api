@@ -229,12 +229,24 @@ function isTeamEventPost(item, blocks, ctx, meta = {}) {
   return /^Florida Gators — /i.test(blocks?.identity || '');
 }
 
+function isProgramNewsPost(item, blocks, ctx, meta = {}) {
+  const m = item?.validationMeta || meta || {};
+  if (item?.triggerType === 'program_news' || item?.programNewsType) return true;
+  if (m.programNews) return true;
+  if (ctx?.programNews) return true;
+  return false;
+}
+
+function isNonPlayerNewsPost(item, blocks, ctx, meta = {}) {
+  return isTeamEventPost(item, blocks, ctx, meta) || isProgramNewsPost(item, blocks, ctx, meta);
+}
+
 function validateIdentityFields(ctx, blocks, item = null) {
   const identity = blocks?.identity || '';
-  if (isTeamEventPost(item, blocks, ctx)) {
+  if (isNonPlayerNewsPost(item, blocks, ctx)) {
     const errors = [];
     if (!/^Florida Gators — /i.test(identity)) {
-      errors.push({ rule: 'identity', field: 'team', message: 'Team event identity block required.' });
+      errors.push({ rule: 'identity', field: 'team', message: 'Non-player news identity block required.' });
     }
     return errors;
   }
@@ -390,7 +402,7 @@ function validateFreshness(item, now = Date.now()) {
 function scoreIdentityBlock(ctx, blocks, item = null) {
   const identity = blocks?.identity || '';
   const meta = item?.validationMeta || {};
-  if (isTeamEventPost(item, blocks, ctx, meta)) {
+  if (isNonPlayerNewsPost(item, blocks, ctx, meta)) {
     if (/^Florida Gators — /i.test(identity) && identity.length >= 20) {
       return { score: 100, fields: ['team'], complete: true };
     }
@@ -439,7 +451,7 @@ function scoreContextBlock(blocks, meta = {}, item = null) {
   const context = template.stripEmojisHashtags(blocks?.context || '').trim();
   if (!context) return { score: 0, complete: false };
 
-  if (isTeamEventPost(item, blocks, item?.playerContext, meta)) {
+  if (isNonPlayerNewsPost(item, blocks, item?.playerContext, meta)) {
     const score = context.length >= 28 ? 100 : 75;
     return { score, complete: score >= 85 };
   }
@@ -457,7 +469,7 @@ function scoreInsiderBlock(blocks, meta = {}, item = null) {
   const insider = template.stripEmojisHashtags(blocks?.insider || '').trim();
   if (!insider) return { score: 0, complete: false };
 
-  if (isTeamEventPost(item, blocks, item?.playerContext, meta)) {
+  if (isNonPlayerNewsPost(item, blocks, item?.playerContext, meta)) {
     const score = insider.length >= 20 ? 100 : 70;
     return { score, complete: score >= 85 };
   }
