@@ -3,9 +3,20 @@
  */
 (function (global) {
   var SESSION_KEY = 'gv_admin_pin';
-  var API = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
-    ? 'http://localhost:3000'
-    : (location.origin.indexOf('gatorvault') >= 0 ? 'https://gatorvault-api.onrender.com' : location.origin);
+  var OPS_SESSION_KEY = 'gv_ops_pin';
+
+  function resolveAdminApiBase() {
+    var host = (location.hostname || '').toLowerCase();
+    if (host === 'localhost' || host === '127.0.0.1') return 'http://localhost:3000';
+    if (host === 'gatorvault-api.onrender.com') return location.origin;
+    if (host.indexOf('gatorvault') >= 0 || host.indexOf('gatorvaultinsider') >= 0 || host.endsWith('.netlify.app')) {
+      return 'https://gatorvault-api.onrender.com';
+    }
+    return location.origin;
+  }
+
+  var API = resolveAdminApiBase();
+  var _hubInitialized = false;
 
   var EMBED_SRC = {
     ops: '/admin-ops.html?embed=1',
@@ -184,25 +195,27 @@
   }
 
   function verifyPin(p, cb) {
-    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    var timer = ctrl ? setTimeout(function () { try { ctrl.abort(); } catch (e) {} }, 15000) : null;
+    p = String(p || '').trim();
+    if (!p) {
+      cb(false);
+      return;
+    }
+    var headers = {
+      'X-Ops-Pin': p,
+      'X-Recruiting-Pin': p,
+      'X-Roster-Pin': p
+    };
     fetch(API + '/api/ops/verify-pin?pin=' + encodeURIComponent(p), {
-      headers: { 'X-Ops-Pin': p, 'X-Recruiting-Pin': p },
-      signal: ctrl ? ctrl.signal : undefined
+      method: 'GET',
+      headers: headers,
+      credentials: 'omit'
     })
       .then(function (r) {
         return r.json().catch(function () { return { ok: false }; }).then(function (j) {
           cb(!!(r.ok && j && j.ok));
         });
       })
-      .catch(function () {
-        fetch(API + '/api/ops/status?pin=' + encodeURIComponent(p), {
-          headers: { 'X-Ops-Pin': p, 'X-Recruiting-Pin': p }
-        })
-          .then(function (r) { cb(r.ok); })
-          .catch(function () { cb(false); });
-      })
-      .finally(function () { if (timer) clearTimeout(timer); });
+      .catch(function () { cb(false); });
   }
 
   function panelSrc(panel) {
@@ -545,6 +558,11 @@
   }
 
   function initHub() {
+    if (_hubInitialized) {
+      renderRoute();
+      return;
+    }
+    _hubInitialized = true;
     var navEl = document.getElementById('hub-nav');
     var mainEl = document.getElementById('hub-main');
     if (!navEl || !mainEl) return;
@@ -647,7 +665,9 @@
   }
 
   function unlockAdmin(p) {
+    p = String(p || '').trim();
     sessionStorage.setItem(SESSION_KEY, p);
+    sessionStorage.setItem(OPS_SESSION_KEY, p);
     document.getElementById('admin-pin-gate').classList.add('hidden');
     document.getElementById('hub-shell').classList.remove('hidden');
     initHub();
@@ -655,6 +675,8 @@
 
   function lockAdmin() {
     sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(OPS_SESSION_KEY);
+    _hubInitialized = false;
     location.reload();
   }
 
@@ -670,9 +692,15 @@
       var p = gateInput.value.trim();
       if (!p) return;
       gateErr.classList.add('hidden');
+      gateBtn.disabled = true;
       verifyPin(p, function (ok) {
-        if (ok) unlockAdmin(p);
-        else gateErr.classList.remove('hidden');
+        gateBtn.disabled = false;
+        if (ok) {
+          unlockAdmin(p);
+        } else {
+          gateErr.textContent = 'Invalid PIN — check Render env (OPS_ADMIN_PIN / RECRUITING_ADMIN_PIN) and try again.';
+          gateErr.classList.remove('hidden');
+        }
       });
     });
     gateInput.addEventListener('keydown', function (e) {
@@ -682,10 +710,15 @@
     var lockBtn = document.getElementById('hub-lock');
     if (lockBtn) lockBtn.addEventListener('click', lockAdmin);
 
-    var saved = sessionStorage.getItem(SESSION_KEY);
+    var saved = sessionStorage.getItem(SESSION_KEY) || sessionStorage.getItem(OPS_SESSION_KEY);
     if (saved) {
       verifyPin(saved, function (ok) {
-        if (ok) unlockAdmin(saved);
+        if (ok) {
+          unlockAdmin(saved);
+        } else {
+          sessionStorage.removeItem(SESSION_KEY);
+          sessionStorage.removeItem(OPS_SESSION_KEY);
+        }
       });
     }
   }

@@ -5,7 +5,7 @@ const opsAlerts = require('./ops-alerts');
 const deployMonitor = require('./deploy-monitor');
 const { buildOpsStatusReport } = require('./ops-status');
 
-const { verifyAdminPin, primaryAdminPin, pinFromReq } = require('./admin-pin');
+const { verifyAdminPin, primaryAdminPin, pinFromReq, normalizePin } = require('./admin-pin');
 const CRON_SECRET = process.env.INGEST_CRON_SECRET || primaryAdminPin();
 
 function requireOpsAuth(req, res) {
@@ -54,7 +54,15 @@ function mountOpsRoutes(app) {
   });
 
   app.get('/api/ops/verify-pin', (req, res) => {
-    const pin = pinFromReq(req);
+    const pin = normalizePin(pinFromReq(req));
+    if (!verifyAdminPin(pin)) {
+      return res.status(401).json({ ok: false, authenticated: false, error: 'Invalid PIN' });
+    }
+    return res.status(200).json({ ok: true, authenticated: true });
+  });
+
+  app.post('/api/ops/verify-pin', (req, res) => {
+    const pin = normalizePin(pinFromReq(req));
     if (!verifyAdminPin(pin)) {
       return res.status(401).json({ ok: false, authenticated: false, error: 'Invalid PIN' });
     }
