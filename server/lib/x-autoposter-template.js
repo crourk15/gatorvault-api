@@ -537,28 +537,93 @@ function verifiedRankInsider(ctx) {
   return `On3 ranks him No. ${ctx.natlRank} nationally.`;
 }
 
-function composeInsiderReport({ identity, context, insider }) {
+function composeInsiderReport({ identity, context, insider, heat = null, confidence = null }) {
   const blocks = [identity, context, insider].map((b) => stripEmojisHashtags(b)).filter(Boolean);
+  if (heat?.header) blocks.push(String(heat.header).trim());
+  if (heat?.explanation) blocks.push(stripEmojisHashtags(heat.explanation));
+  if (confidence?.header) blocks.push(stripEmojisHashtags(confidence.header));
+  if (confidence?.explanation) blocks.push(stripEmojisHashtags(confidence.explanation));
   if (blocks.length < 2) return null;
   return blocks.join('\n');
 }
 
-function enforceTweetLimit(text, max = 280, meta = {}) {
-  let t = stripEmojisHashtags(text);
-  if (t.length <= max) return finalizeAutoposterCopy(t, meta);
-  const lines = t.split('\n');
-  if (lines.length <= 1) return finalizeAutoposterCopy(shorten(t, max, { ...meta, text: t }), meta);
-  const identity = lines[0];
-  let context = lines[1] || '';
-  let insider = lines.slice(2).join(' ') || '';
-  const overhead = identity.length + 2;
-  const budget = max - overhead;
-  const lineMeta = { ...meta, text: t };
-  if (context.length + insider.length + 1 > budget) {
-    if (insider) insider = shorten(insider, Math.max(40, Math.floor(budget * 0.45)), lineMeta);
-    context = shorten(context, Math.max(40, budget - insider.length - 1), lineMeta);
+function composeInsiderReportWithMeters({ identity, context, insider, heatMeter = null, confidenceMeter = null }) {
+  const heat = heatMeter ? { header: heatMeter.header, explanation: heatMeter.explanation } : null;
+  const confidence = confidenceMeter
+    ? { header: confidenceMeter.header, explanation: confidenceMeter.explanation }
+    : null;
+  return composeInsiderReport({ identity, context, insider, heat, confidence });
+}
+
+/** @deprecated use composeInsiderReportWithMeters */
+function composeInsiderReportWithConfidence({ identity, context, insider, confidenceMeter }) {
+  return composeInsiderReportWithMeters({ identity, context, insider, confidenceMeter });
+}
+
+function preserveMeterEmojis(original, composed) {
+  let out = String(composed || '');
+  const src = String(original || '');
+  if (/Heat Meter:\s*RISING/i.test(src)) {
+    out = out.replace(/Heat Meter:\s*RISING/i, 'Heat Meter: RISING \uD83D\uDD25');
   }
-  return finalizeAutoposterCopy(composeInsiderReport({ identity, context, insider }), meta);
+  if (/Heat Meter:\s*HOLDING/i.test(src)) {
+    out = out.replace(/Heat Meter:\s*HOLDING/i, 'Heat Meter: HOLDING \u26AA');
+  }
+  if (/Heat Meter:\s*COOLING/i.test(src)) {
+    out = out.replace(/Heat Meter:\s*COOLING/i, 'Heat Meter: COOLING \u2744\uFE0F');
+  }
+  return out;
+}
+
+function enforceTweetLimit(text, max = 280, meta = {}) {
+  const original = String(text || '');
+  let t = stripEmojisHashtags(original);
+  if (t.length <= max) return preserveMeterEmojis(original, finalizeAutoposterCopy(t, meta));
+  const lines = String(text || '')
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean);
+  if (lines.length <= 1) return finalizeAutoposterCopy(shorten(t, max, { ...meta, text: t }), meta);
+
+  const heatIdx = lines.findIndex((l) => /^Heat Meter:/i.test(l));
+  const confidenceIdx = lines.findIndex((l) => /^Confidence Meter:/i.test(l));
+  const meterStart = [heatIdx, confidenceIdx].filter((i) => i >= 0).sort((a, b) => a - b)[0] ?? lines.length;
+
+  const identity = stripEmojisHashtags(lines[0]);
+  const meterLines = lines.slice(meterStart);
+  const middle = lines.slice(1, meterStart).map((l) => stripEmojisHashtags(l));
+  let context = middle[0] || '';
+  let insider = middle.slice(1).join(' ') || '';
+
+  let heat = null;
+  let confidence = null;
+  for (let i = 0; i < meterLines.length; i += 1) {
+    const line = meterLines[i];
+    if (/^Heat Meter:/i.test(line)) {
+      heat = { header: line, explanation: stripEmojisHashtags(meterLines[i + 1] || '') };
+      i += 1;
+    } else if (/^Confidence Meter:/i.test(line)) {
+      confidence = { header: stripEmojisHashtags(line), explanation: stripEmojisHashtags(meterLines[i + 1] || '') };
+      i += 1;
+    }
+  }
+
+  const reserved =
+    identity.length +
+    2 +
+    (heat ? heat.header.length + 2 + (heat.explanation?.length || 0) + 2 : 0) +
+    (confidence ? confidence.header.length + 2 + (confidence.explanation?.length || 0) + 2 : 0);
+  const budget = max - reserved;
+  const lineMeta = { ...meta, text: t, eliteMode: true };
+  if (context.length + insider.length + 1 > budget) {
+    if (insider) insider = shorten(insider, Math.max(32, Math.floor(budget * 0.45)), lineMeta);
+    context = shorten(context, Math.max(32, budget - insider.length - 1), lineMeta);
+  }
+
+  return preserveMeterEmojis(
+    original,
+    finalizeAutoposterCopy(composeInsiderReport({ identity, context, insider, heat, confidence }), meta)
+  );
 }
 
 function hasTemplateStructure(text) {
@@ -596,6 +661,8 @@ module.exports = {
   insiderFromBreakdown,
   verifiedRankInsider,
   composeInsiderReport,
+  composeInsiderReportWithMeters,
+  composeInsiderReportWithConfidence,
   enforceTweetLimit,
   finalizeAutoposterCopy,
   sanitizeCopyLine,

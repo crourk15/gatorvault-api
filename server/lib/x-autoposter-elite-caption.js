@@ -346,7 +346,31 @@ async function buildElitePlayerPost(input = {}) {
     eliteMode: true
   };
 
-  const raw = template.composeInsiderReport({ identity, context: contextLine, insider: insiderLine });
+  const confidenceMeterMod = require('./x-autoposter-confidence-meter');
+  const heatMeterMod = require('./x-autoposter-heat-meter');
+  const meterInput = {
+    identity: playerData.identity,
+    ctx,
+    situation: playerData.data.situation,
+    beatText: input.beatText,
+    intel: input.intel,
+    autoposterData: playerData.data,
+    research,
+    newsEvent: input.newsEvent,
+    playerSlug: playerData.data.playerSlug
+  };
+  const heatMeter = heatMeterMod.isEnabled() ? heatMeterMod.computeHeatMeter(meterInput) : null;
+  const confidenceMeter = confidenceMeterMod.isEnabled()
+    ? confidenceMeterMod.computeConfidenceMeter(meterInput)
+    : null;
+
+  const raw = template.composeInsiderReportWithMeters({
+    identity,
+    context: contextLine,
+    insider: insiderLine,
+    heatMeter,
+    confidenceMeter
+  });
   if (!raw) {
     eliteLog.logEliteCaption({
       pass: false,
@@ -385,7 +409,15 @@ async function buildElitePlayerPost(input = {}) {
       timing: research.timing,
       eventTypeSource: research.eventTypeSource
     },
-    templateBlocks: { identity, context: contextLine, insider: insiderLine },
+    templateBlocks: {
+      identity,
+      context: contextLine,
+      insider: insiderLine,
+      heatHeader: heatMeter?.header || null,
+      heatExplanation: heatMeter?.explanation || null,
+      confidenceHeader: confidenceMeter?.header || null,
+      confidenceExplanation: confidenceMeter?.explanation || null
+    },
     finalCaption: text
   });
 
@@ -395,12 +427,28 @@ async function buildElitePlayerPost(input = {}) {
     playerName: ctx.name || research.playerName,
     context: ctx,
     postKind: kind,
-    autoposterData: playerData.data,
-    templateBlocks: { identity, context: contextLine, insider: insiderLine },
+    autoposterData: {
+      ...playerData.data,
+      heatState: heatMeter?.state ?? null,
+      heatTotal: heatMeter?.total ?? null,
+      confidenceScore: confidenceMeter?.score ?? null,
+      confidenceLabel: confidenceMeter?.label ?? null
+    },
+    templateBlocks: {
+      identity,
+      context: contextLine,
+      insider: insiderLine,
+      heatHeader: heatMeter?.header || null,
+      heatExplanation: heatMeter?.explanation || null,
+      confidenceHeader: confidenceMeter?.header || null,
+      confidenceExplanation: confidenceMeter?.explanation || null
+    },
     validationMeta: {
       eliteMode: true,
       situation: playerData.data.situation,
       autoposterData: playerData.data,
+      heatMeter,
+      confidenceMeter,
       identitySource: playerData.data.identitySource,
       ufStatus: playerData.data.ufStatus,
       contextHint: playerData.data.context,

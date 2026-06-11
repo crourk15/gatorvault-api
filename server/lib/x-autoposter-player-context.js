@@ -814,10 +814,35 @@ async function buildPlayerNewsPost({
     identity = template.buildRecruitingIdentity(ctx);
   }
 
-  const raw = template.composeInsiderReport({
+  const confidenceMeterMod = require('./x-autoposter-confidence-meter');
+  const heatMeterMod = require('./x-autoposter-heat-meter');
+  let heatMeter = null;
+  let confidenceMeter = null;
+  if (kind !== 'team' && postKind !== 'staff') {
+    const meterInput = {
+      identity: playerData.identity,
+      ctx,
+      situation,
+      beatText: beatDetail,
+      intel: resolvedIntel,
+      autoposterData: playerData.data,
+      newsEvent,
+      playerSlug: resolvedSlug
+    };
+    if (heatMeterMod.isEnabled()) {
+      heatMeter = heatMeterMod.computeHeatMeter(meterInput);
+    }
+    if (confidenceMeterMod.isEnabled()) {
+      confidenceMeter = confidenceMeterMod.computeConfidenceMeter(meterInput);
+    }
+  }
+
+  const raw = template.composeInsiderReportWithMeters({
     identity,
     context: contextLine,
-    insider: insiderLine
+    insider: insiderLine,
+    heatMeter,
+    confidenceMeter
   });
   if (!raw || !template.hasTemplateStructure(raw)) return null;
   if (template.isHeadlineOnlyPost(raw)) return null;
@@ -833,12 +858,28 @@ async function buildPlayerNewsPost({
     playerName: ctx.name,
     context: ctx,
     postKind: kind,
-    autoposterData: playerData.data,
-    templateBlocks: { identity, context: contextLine, insider: insiderLine },
+    autoposterData: {
+      ...playerData.data,
+      heatState: heatMeter?.state ?? null,
+      heatTotal: heatMeter?.total ?? null,
+      confidenceScore: confidenceMeter?.score ?? null,
+      confidenceLabel: confidenceMeter?.label ?? null
+    },
+    templateBlocks: {
+      identity,
+      context: contextLine,
+      insider: insiderLine,
+      heatHeader: heatMeter?.header || null,
+      heatExplanation: heatMeter?.explanation || null,
+      confidenceHeader: confidenceMeter?.header || null,
+      confidenceExplanation: confidenceMeter?.explanation || null
+    },
     validationMeta: {
       playerContext: ctx,
       situation,
       autoposterData: playerData.data,
+      heatMeter,
+      confidenceMeter,
       identitySource: playerData.data?.identitySource || 'gatorvault_db',
       contextHint: playerData.data?.context || null,
       ufStatus: playerData.data?.ufStatus || null,
