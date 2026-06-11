@@ -282,9 +282,12 @@
     document.body.classList.add('gv-team-modal-open');
     document.body.style.overflow = 'hidden';
     if (bodyEl) bodyEl.scrollTop = 0;
+    if (typeof global.gvPushModalHistory === 'function') {
+      global.gvPushModalHistory('team-detail', { type: cfg.type || '', id: cfg.id || '' });
+    }
   }
 
-  function closeTeamDetail() {
+  function closeTeamDetail(fromPopState) {
     var ov = document.getElementById('gv-team-detail-modal');
     var panel = document.getElementById('gv-team-modal-panel');
     if (!ov) return;
@@ -293,8 +296,15 @@
     ov.style.display = '';
     ov.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('gv-team-modal-open');
-    document.body.style.overflow = '';
+    if (typeof global.gvModalIsOpen === 'function' && !global.gvModalIsOpen()) {
+      document.body.style.overflow = '';
+    } else if (typeof global.gvModalIsOpen !== 'function') {
+      document.body.style.overflow = '';
+    }
     _currentModal = null;
+    if (typeof global.gvPopModalHistory === 'function') {
+      global.gvPopModalHistory('team-detail', !!fromPopState);
+    }
   }
 
   function openEraDetail(eraId) {

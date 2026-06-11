@@ -34,7 +34,7 @@
     <meta name="description" content="GatorVault is the Florida Gators football hub — depth charts, recruiting boards, transfer portal intel, Film Room breakdowns, and live beat writer coverage. Start your free 30-day trial." />
     <meta name="keywords" content="Florida Gators football, UF football, Gators recruiting, Florida Gators depth chart, Gators transfer portal, Jon Sumrall, SEC football, Gator Nation" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
-    <meta name="gv-build" content="mhome-v3-20260614" />
+    <meta name="gv-build" content="mobile-fix-20260605" />
     <link rel="canonical" href="https://gatorvaultinsider.com/" />
     <link rel="image_src" href="https://gatorvaultinsider.com/og-image.jpg?v=20260605" />
     <meta name="google-site-verification" content="CfKonZGeVMZBFJ3JhqaFhPfs7kS6-LvCmskXElgekTs" />
@@ -230,6 +230,8 @@
         body.gv-admin-pin-open{overflow:hidden;overscroll-behavior:none;touch-action:none;}
         #admin-pin-modal-card{position:relative;z-index:1;max-height:90vh;overflow:auto;-webkit-overflow-scrolling:touch;}
         .trial-expired-ov{position:fixed;inset:0;background:rgba(6,15,31,.92);backdrop-filter:blur(8px);z-index:250;display:flex;align-items:center;justify-content:center;padding:1rem;}
+        #trial-expired-gate.hidden{display:none!important;visibility:hidden!important;pointer-events:none!important;}
+        body.gv-profile-modal-open,#vault-interior.gv-mobile-active #vpane-mteam{background:#050b14;}
         .op-access-form .op-pin-panel:not(.hidden){display:block;}
         #op-pin-input,#admin-pin-modal-input{pointer-events:auto;position:relative;z-index:1;}
         .highlight-modal{background:#0a1628;border:1px solid rgba(250,70,22,.25);border-radius:1rem;max-width:900px;width:100%;overflow:visible;margin:auto 0;}
@@ -279,8 +281,9 @@
         .player-meas-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.45rem .75rem;font-size:.7rem;color:#94a3b8;}
         .player-meas-grid span{color:#e2e8f0;font-weight:600;}
         .player-stars-row{color:#fbbf24;font-size:.8rem;letter-spacing:.08em;}
-        .player-profile-modal{position:fixed;inset:0;z-index:200;display:none;align-items:flex-start;justify-content:center;padding:1rem;padding-top:max(1rem,env(safe-area-inset-top,0));background:rgba(3,7,18,.85);overflow-y:auto;-webkit-overflow-scrolling:touch;}
+        .player-profile-modal{position:fixed;inset:0;z-index:200;display:none;align-items:flex-start;justify-content:center;padding:1rem;padding-top:max(1rem,env(safe-area-inset-top,0));background:rgba(3,7,18,.85);overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;}
         .player-profile-modal.open{display:flex;}
+        .player-profile-modal.open .player-profile-sheet{touch-action:pan-y;}
         .player-profile-sheet{background:#0b1220;border:1px solid rgba(0,48,135,.45);border-radius:1.25rem;max-width:42rem;width:100%;max-height:min(90vh,calc(100vh - 2rem));overflow-y:auto;padding:1rem 1.25rem 1.5rem;margin-top:max(8px,env(safe-area-inset-top,0));}
         .player-profile-hero{margin-bottom:1rem;}
         .war-room-panel{background:#111827;border:1px solid rgba(250,70,22,.35);border-radius:1rem;padding:1.25rem;margin-top:1.25rem;}
@@ -548,7 +551,7 @@
     <link rel="stylesheet" href="/css/gv-team.css?v=team-v3-20260605">
     <script src="/gv-global.js?v=mhome-v3-20260614" defer></script>
     <script src="/gv-feedback.js?v=mhome-v3-20260614" defer></script>
-    <script src="/js/gv-team-mobile.js?v=team-v3-20260605" defer></script>
+    <script src="/js/gv-team-mobile.js?v=team-v4-20260605" defer></script>
 </head>
 <body data-id="0" class="gv-has-site-ticker">
     <app-icon data-id="1" hidden data-icon="shield" data-palette="Blue"></app-icon>
@@ -2052,6 +2055,37 @@
         if(opKeyBuffer.length>20) opKeyBuffer=opKeyBuffer.slice(-20);
     });
 
+    window._gvModalStack=window._gvModalStack||[];
+    function gvPushModalHistory(id,meta){
+        if(!id||window._gvModalStack.indexOf(id)>=0)return;
+        try{
+            history.pushState(Object.assign({gvModal:id},meta||{}),'');
+            window._gvModalStack.push(id);
+        }catch(e){}
+    }
+    function gvPopModalHistory(id,fromPopState){
+        var idx=window._gvModalStack.lastIndexOf(id);
+        if(idx<0)return;
+        window._gvModalStack.splice(idx,1);
+        if(!fromPopState){
+            try{history.back();}catch(e){}
+        }
+    }
+    function gvModalIsOpen(){
+        var player=document.getElementById('player-profile-modal');
+        var recruit=document.getElementById('recruit-profile-modal');
+        var team=document.getElementById('gv-team-detail-modal');
+        var hl=document.getElementById('highlight-modal-ov');
+        if(player&&player.classList.contains('open'))return true;
+        if(recruit&&recruit.classList.contains('open'))return true;
+        if(team&&!team.classList.contains('hidden'))return true;
+        if(hl&&!hl.classList.contains('hidden'))return true;
+        return false;
+    }
+    window.gvPushModalHistory=gvPushModalHistory;
+    window.gvPopModalHistory=gvPopModalHistory;
+    window.gvModalIsOpen=gvModalIsOpen;
+
     function closeAdminPinModal(fromPopState){
         var m=document.getElementById('admin-pin-modal');
         if(m){
@@ -2699,7 +2733,14 @@
     }
     window.addEventListener('popstate',function(){
         var m=document.getElementById('admin-pin-modal');
-        if(m&&m.classList.contains('is-open'))closeAdminPinModal(true);
+        if(m&&m.classList.contains('is-open')){closeAdminPinModal(true);return;}
+        if(window._gvModalStack&&window._gvModalStack.length){
+            var top=window._gvModalStack[window._gvModalStack.length-1];
+            if(top==='player-profile')closePlayerProfile(true);
+            else if(top==='recruit-profile')gvCloseRecruitProfile(true);
+            else if(top==='team-detail'&&typeof window.gvCloseTeamDetail==='function')window.gvCloseTeamDetail(true);
+            else if(top==='highlight'&&typeof window.closeHighlightPlayer==='function')window.closeHighlightPlayer(true);
+        }
     });
     var trialPayBtn=document.getElementById('trial-add-payment');if(trialPayBtn)trialPayBtn.addEventListener('click',function(){window.open('https://dashboard.stripe.com','_blank');});
     var trialExpiredPay=document.getElementById('trial-expired-pay');if(trialExpiredPay)trialExpiredPay.addEventListener('click',function(){closeVault();var pricing=document.getElementById('pricing-sec');if(pricing)pricing.scrollIntoView({behavior:'smooth'});else window.open('https://dashboard.stripe.com','_blank');});
@@ -2994,9 +3035,12 @@
     function gvOn3ProfileUrl(p){
         return gvOn3PortalUrl(p);
     }
-    function gvCloseRecruitProfile(){
+    function gvCloseRecruitProfile(fromPopState){
         var modal=document.getElementById('recruit-profile-modal');
         if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}
+        document.body.classList.remove('gv-profile-modal-open');
+        if(!gvModalIsOpen())document.body.style.overflow='';
+        gvPopModalHistory('recruit-profile',fromPopState);
     }
     function gvOpenRecruitProfile(slug){
         if(!slug)return;
@@ -3007,6 +3051,9 @@
         body.innerHTML='<p class="text-surface-200 text-sm">Loading profile…</p>';
         modal.classList.add('open');
         modal.setAttribute('aria-hidden','false');
+        document.body.classList.add('gv-profile-modal-open');
+        document.body.style.overflow='hidden';
+        gvPushModalHistory('recruit-profile',{slug:slug});
         var base=gvRecruitApiBase();
         fetch(base+'/api/players/'+encodeURIComponent(slug)).then(function(r){return r.json();}).then(function(data){
             if(!data.ok||!data.player)throw new Error(data.error||'Not found');
@@ -3966,11 +4013,17 @@
         if(fullBtn)fullBtn.addEventListener('click',function(){var s=this.dataset.slug;if(s)location.href='/player/'+s;});
         modal.classList.add('open');
         modal.setAttribute('aria-hidden','false');
+        document.body.classList.add('gv-profile-modal-open');
+        document.body.style.overflow='hidden';
+        gvPushModalHistory('player-profile',{slug:p.slug||''});
     }
 
-    function closePlayerProfile(){
+    function closePlayerProfile(fromPopState){
         var modal=document.getElementById('player-profile-modal');
         if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');}
+        document.body.classList.remove('gv-profile-modal-open');
+        if(!gvModalIsOpen())document.body.style.overflow='';
+        gvPopModalHistory('player-profile',fromPopState);
     }
 
     function gvLoadRosterProfiles(force){
@@ -4466,6 +4519,7 @@
             ov.classList.remove('hidden');
             ov.style.display='flex';
             document.body.style.overflow='hidden';
+            gvPushModalHistory('highlight',{title:clip.title||''});
             return;
         }
 
@@ -4497,14 +4551,16 @@
         ov.classList.remove('hidden');
         ov.style.display='flex';
         document.body.style.overflow='hidden';
+        gvPushModalHistory('highlight',{title:clip.title||''});
         gvWireFilmSources(sourcesEl);
     };
-    window.closeHighlightPlayer=function(){
+    window.closeHighlightPlayer=function(fromPopState){
         var ov=document.getElementById('highlight-modal-ov');if(!ov)return;
         ov.classList.add('hidden');ov.style.display='';
         var videoWrap=document.getElementById('hl-modal-video-wrap');if(videoWrap){videoWrap.innerHTML='';videoWrap.classList.add('hidden');}
-        document.body.style.overflow='';
+        if(!gvModalIsOpen())document.body.style.overflow='';
         if(typeof window.gvCloseVerifiedSource==='function')window.gvCloseVerifiedSource();
+        gvPopModalHistory('highlight',fromPopState);
     };
     (function(){
         var closeBtn=document.getElementById('hl-modal-close');
@@ -6142,15 +6198,20 @@
         el.innerHTML='<span>📡 '+feedN+' feed items</span><span>✍️ Beat: '+gvLiveEsc(beatSrc)+' · '+gvLiveEsc(beatAt)+beatNote+'</span><span>🎙️ Podcasts · '+gvLiveEsc(podAt)+'</span><span>🔄 Updated '+gvLiveEsc(gvLiveTimeAgo(dash.updatedAt))+'</span>';
     }
 
-    function gvLoadLiveDashboard(showLoading){
+    function gvLoadLiveDashboard(showLoading,forceRefresh){
         var st=window._gvLive;
         if(showLoading&&st.loading)return Promise.resolve();
         st.loading=true;
         if(showLoading){
             var fl=document.getElementById('live-feed-list');
             if(fl&&!st.feed.length)fl.innerHTML='<p class="text-surface-200/50 text-sm">Loading live feed…</p>';
+            var mhomeUpdates=document.getElementById('gv-mhome-updates');
+            if(mhomeUpdates&&gvIsMobile())mhomeUpdates.innerHTML='<p class="gv-espn-card-body text-surface-200/60">Refreshing latest updates…</p>';
         }
-        return fetch(gvLiveApiBase()+'/api/live/dashboard?limit=60')
+        var url=gvLiveApiBase()+'/api/live/dashboard?limit=60';
+        if(forceRefresh)url+='&_='+Date.now();
+        var fetchOpts=forceRefresh?{cache:'no-store'}:undefined;
+        return fetch(url,fetchOpts)
             .then(function(r){return r.json();})
             .then(function(j){
                 st.loading=false;
@@ -6177,8 +6238,11 @@
         var st=window._gvLive;
         if(st.pollTimer)clearInterval(st.pollTimer);
         st.pollTimer=setInterval(function(){
-            var pane=document.getElementById('vpane-live');
-            if(pane&&pane.classList.contains('active'))gvLoadLiveDashboard(false);
+            var paneLive=document.getElementById('vpane-live');
+            var paneHome=document.getElementById('vpane-mhome');
+            var activeHome=paneHome&&paneHome.classList.contains('active');
+            var activeLive=paneLive&&paneLive.classList.contains('active');
+            if(activeLive||activeHome)gvLoadLiveDashboard(false,true);
         },45000);
     }
 
@@ -6239,12 +6303,20 @@
         document.querySelectorAll('.vpane').forEach(function(p){p.classList.remove('active');p.style.display='none';});
         var pane=document.getElementById('vpane-'+paneTab);
         if(pane){pane.classList.add('active');pane.style.display='block';}
-        if(tab==='mhome'||tab==='team'||tab==='gameweek'){
+        if(tab==='mhome'){
+            try{gvLoadLiveDashboard(true,true);}catch(e){}
+        }else if(tab==='team'||tab==='gameweek'){
             try{gvLoadLiveDashboard(false);}catch(e){}
         }
         if(tab==='recruit'){try{renderRecruits();}catch(e){}}
-        if(tab==='mhome'){try{gvRenderMobileHome();}catch(e){}}
-        if(tab==='team'){try{if(typeof gvRenderTeam==='function')gvRenderTeam();if(typeof gvLoadRosterProfiles==='function')gvLoadRosterProfiles(true);if(typeof gvApplyTeamDeepLink==='function')gvApplyTeamDeepLink();}catch(e){}}
+        if(tab==='team'){
+            try{
+                updateTrialUI(getTrialStatus(loadSession()));
+                if(typeof gvRenderTeam==='function')gvRenderTeam();
+                if(typeof gvLoadRosterProfiles==='function')gvLoadRosterProfiles(true);
+                if(typeof gvApplyTeamDeepLink==='function')gvApplyTeamDeepLink();
+            }catch(e){}
+        }
         if(tab==='gameweek'){try{if(typeof renderGames==='function')renderGames();}catch(e){}}
         if(tab==='beat'){try{gvRenderMobileBeat();}catch(e){}}
         if(tab==='podcast'){try{gvRenderMobilePodcasts();}catch(e){}}
@@ -6713,7 +6785,7 @@
         var scrollRoot=document.getElementById('vault-overlay');
         var ptrStartY=0,ptrPull=0,ptrActive=false;
         function gvPtrRefresh(tab){
-            if(tab==='mhome'||tab==='beat'||tab==='podcast'||tab==='gameweek')gvLoadLiveDashboard(true);
+            if(tab==='mhome'||tab==='beat'||tab==='podcast'||tab==='gameweek')gvLoadLiveDashboard(true,tab==='mhome');
             if(tab==='recruit'){try{renderRecruits();}catch(e){}}
             if(tab==='team'){try{if(typeof gvRenderTeam==='function')gvRenderTeam();if(typeof gvLoadRosterProfiles==='function')gvLoadRosterProfiles(true);}catch(e){}}
             if(tab==='scouting'){try{gvLoadScoutingDatabase();}catch(e){}}
@@ -6760,6 +6832,7 @@
             },{passive:true});
             scrollRoot.addEventListener('touchend',function(e){
                 if(!gvIsMobile())return;
+                if(typeof gvModalIsOpen==='function'&&gvModalIsOpen())return;
                 if(swipeFromHScroll||swipeLockH)return;
                 var dx=e.changedTouches[0].clientX-swipeStartX;
                 var dy=e.changedTouches[0].clientY-swipeStartY;
@@ -6778,6 +6851,12 @@
         window.addEventListener('resize',function(){
             if(gvIsMobile())interior.classList.add('gv-mobile-active');
             else interior.classList.remove('gv-mobile-active','gv-has-breaking');
+        });
+
+        document.addEventListener('visibilitychange',function(){
+            if(document.visibilityState!=='visible'||!gvIsMobile())return;
+            var home=document.getElementById('vpane-mhome');
+            if(home&&home.classList.contains('active'))gvLoadLiveDashboard(true,true);
         });
     }
 
