@@ -45,7 +45,7 @@ function lessonToCatalogItem(lesson) {
     body: lesson.body,
     diagram: lesson.diagram,
     lastVerified: lesson.lastVerified,
-    publishedAt: lesson.lastVerified || new Date().toISOISOString(),
+    publishedAt: lesson.lastVerified || new Date().toISOString(),
     thumbUrl: null,
     videoUrl: null,
     embedUrl: null,
