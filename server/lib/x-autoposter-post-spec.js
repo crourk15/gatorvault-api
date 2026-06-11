@@ -191,11 +191,17 @@ function detectSituation(text, eventType) {
   const hay = `${eventType || ''} ${text || ''}`.trim();
   if (!hay) return 'general';
 
+  const et = String(eventType || '').toLowerCase();
+  const recruitVisitIntel =
+    /official_visit|unofficial_visit/.test(et) ||
+    (/\b(?:5|4|3|2|1)-star\b/i.test(hay) &&
+      /\b(?:in gainesville|gainesville airport|on campus|the swamp|official visit|\bov\b|hotel|land(?:s|ed|ing)? at)\b/i.test(hay));
+
   for (const det of SITUATION_DETECTORS) {
+    if (recruitVisitIntel && det.type === 'staff') continue;
     if (det.patterns.some((re) => re.test(hay))) return det.type;
   }
 
-  const et = String(eventType || '').toLowerCase();
   if (/visit/.test(et)) return 'visit';
   if (/offer/.test(et)) return 'offer';
   if (/portal/.test(et)) return 'portal';
@@ -212,6 +218,9 @@ function detectSituation(text, eventType) {
 function isCoachContext(ctx, text) {
   if (ctx?.isCoach) return true;
   const t = String(text || '').toLowerCase();
+  if (/\b(?:hs|high school)\s+coach(?:es)?\b/.test(t)) return false;
+  if (/\bhis\s+hs\s+coach\b/.test(t)) return false;
+  if (/\b(?:5|4|3|2|1)-star\b/.test(t) && /\b(?:wr|qb|dl|ol|ot|cb|edge|te|rb|lb|db|s)\b/.test(t)) return false;
   return /\b(?:coach|coordinator|analyst|GA\b|graduate assistant)\b/i.test(t) && !ctx?.classYear;
 }
 

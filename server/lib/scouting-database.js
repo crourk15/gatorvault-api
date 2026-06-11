@@ -155,15 +155,27 @@ function sentencesFromSummary(summary) {
     .filter((s) => s.length > 20);
 }
 
-/** Sync verified entry into legacy breakdowns.json for War Room UI */
 function syncEntryToBreakdown(entry) {
   if (!entry) return null;
   const warRoom = require('./war-room-store');
+  const typedUpdates = Array.isArray(entry.updates) ? entry.updates : [];
   const sents = sentencesFromSummary(entry.scoutingSummary);
-  const weaknessHints = sents.filter((s) =>
-    /\b(question|need to|will need|remains a|lack of|concern|limited|raw)\b/i.test(s)
-  );
-  const strengthHints = sents.filter((s) => !weaknessHints.includes(s) && s.length > 25);
+  const fromUpdates = {
+    strengths: typedUpdates.filter((u) => u.type === 'Strengths').map((u) => u.content),
+    weaknesses: typedUpdates.filter((u) => u.type === 'Weaknesses').map((u) => u.content),
+    comparison: typedUpdates.find((u) => u.type === 'Comparison')?.content || null,
+    schemeFit: typedUpdates.find((u) => u.type === 'Scheme Fit')?.content || null,
+    projection: typedUpdates.find((u) => u.type === 'Projection')?.content || null
+  };
+
+  const weaknessHints = fromUpdates.weaknesses.length
+    ? fromUpdates.weaknesses
+    : sents.filter((s) =>
+        /\b(question|need to|will need|remains a|lack of|concern|limited|raw)\b/i.test(s)
+      );
+  const strengthHints = fromUpdates.strengths.length
+    ? fromUpdates.strengths
+    : sents.filter((s) => !weaknessHints.includes(s) && s.length > 25);
 
   return warRoom.upsertBreakdown(entry.playerSlug, {
     playerSlug: entry.playerSlug,
@@ -181,10 +193,13 @@ function syncEntryToBreakdown(entry) {
     ],
     strengths: strengthHints.slice(0, 8),
     weaknesses: weaknessHints.slice(0, 4),
-    comparison: null,
-    schemeFit: null,
-    staffNotes: null,
-    projection: sents.find((s) => /project|upside|impact|ceiling|floor/i.test(s)) || null,
+    comparison: fromUpdates.comparison,
+    schemeFit: fromUpdates.schemeFit,
+    staffNotes: typedUpdates.find((u) => u.type === 'Insider Notes')?.content || null,
+    projection:
+      fromUpdates.projection ||
+      sents.find((s) => /project|upside|impact|ceiling|floor/i.test(s)) ||
+      null,
     insiderNotes: entry.scoutingSummary,
     recruitingStory: null,
     nflProjection: entry.sourceType === 'NFL' ? entry.scoutingSummary.slice(0, 500) : null,
@@ -227,15 +242,19 @@ function importLegacyBreakdown(player) {
 
     const nflHit = analysts.resolveNflAnalyst(writer);
     const collegeHit = analysts.resolveCollegeAnalyst(writer);
-    if (!nflHit && !collegeHit) return null;
-
     const rules = analysts.analystsForPlayerType(player.playerType, player);
-    let sourceType = nflHit ? 'NFL' : 'College';
-    if (!rules.useNflFirst && sourceType === 'NFL') return null;
-    if (sourceType === 'NFL' && !nflHit) sourceType = 'College';
+
+    if (rules.useNflFirst) {
+      if (!nflHit) return null;
+    } else if (!collegeHit) {
+      return null;
+    }
+
+    const sourceType = rules.useNflFirst ? 'NFL' : 'College';
+    const analyst = sourceType === 'NFL' ? nflHit : collegeHit;
 
     return normalizeEntry(player, {
-      analystName: (sourceType === 'NFL' ? nflHit : collegeHit).name,
+      analystName: analyst.name,
       sourceUrl: url,
       scoutingSummary: legacy.insiderNotes,
       sourceType,
@@ -247,92 +266,14 @@ function importLegacyBreakdown(player) {
   }
 }
 
-async function rebuildScoutingDatabase({ delayMs = 400, onProgress } = {}) {
-  let players;
-  try {
-    players = collectAllPlayers();
-  } catch (e) {
-    writeRebuildStatus({
-      running: false,
-      phase: 'error',
-      finishedAt: new Date().toISOString(),
-      error: `Failed to collect players: ${e.message}`,
-      progress: null
-    });
-    throw e;
-  }
-
-  const doc = { version: 1, updatedAt: null, entries: {} };
-  const log = {
-    startedAt: new Date().toISOString(),
-    finishedAt: null,
-    total: players.length,
-    stored: 0,
-    blank: 0,
-    errors: [],
-    byType: { recruit: 0, commit: 0, portal: 0, target: 0, roster: 0 }
-  };
-
-  writeRebuildStatus({
-    running: true,
-    phase: 'fetching',
-    startedAt: log.startedAt,
-    finishedAt: null,
-    error: null,
-    progress: { index: 0, total: players.length, slug: null },
-    lastRun: null
+async function rebuildScoutingDatabase(options = {}) {
+  const engine = require('./scouting-update-engine');
+  return engine.runContinuousScoutingUpdate({
+    delayMs: options.delayMs,
+    playerSlug: options.playerSlug || null,
+    reason: options.reason || 'manual_rebuild',
+    onProgress: options.onProgress
   });
-
-  for (let i = 0; i < players.length; i++) {
-    const player = players[i];
-    const progress = { index: i + 1, total: players.length, slug: player.slug };
-    writeRebuildStatus({ running: true, phase: 'fetching', progress, lastRun: log });
-
-    if (onProgress) onProgress(progress);
-
-    try {
-      const raw = await fetcher.findVerifiedScouting(player);
-      let entry = raw ? normalizeEntry(player, raw) : null;
-      if (!entry) entry = importLegacyBreakdown(player);
-      if (entry) {
-        doc.entries[entry.playerId] = entry;
-        log.stored += 1;
-        log.byType[entry.playerType] = (log.byType[entry.playerType] || 0) + 1;
-        syncEntryToBreakdown(entry);
-      } else {
-        log.blank += 1;
-      }
-    } catch (e) {
-      log.errors.push({ slug: player.slug, error: e.message });
-      log.blank += 1;
-    }
-
-    if (delayMs > 0 && i < players.length - 1) {
-      await new Promise((r) => setTimeout(r, delayMs));
-    }
-  }
-
-  writeRebuildStatus({ running: true, phase: 'saving', progress: { index: players.length, total: players.length, slug: null } });
-
-  saveDatabase(doc);
-  purgeUnlistedBreakdowns(new Set(Object.values(doc.entries).map((e) => e.playerSlug)));
-
-  log.finishedAt = new Date().toISOString();
-  writeJson(REBUILD_LOG_PATH, log);
-  writeRebuildStatus({
-    running: false,
-    phase: 'done',
-    finishedAt: log.finishedAt,
-    error: null,
-    progress: { index: players.length, total: players.length, slug: null },
-    lastRun: log
-  });
-
-  return {
-    ok: true,
-    ...log,
-    entriesInDatabase: Object.keys(doc.entries).length
-  };
 }
 
 module.exports = {

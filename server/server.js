@@ -23,7 +23,7 @@ const { mountTeamStaffRoutes } = require('./lib/team-staff-routes');
 const { mountQaRoutes } = require('./lib/qa-routes');
 const { mountProductIntelRoutes } = require('./lib/product-intel/product-intel-routes');
 const { mountGm2Routes } = require('./lib/gm2/gm2-routes');
-const { mountInsiderArticlesRoutes } = require('./lib/insider-articles-routes');
+const { mountVaultGradeAdminRoutes } = require('./lib/vault-grade-admin-routes');
 const { apiMonitorMiddleware } = require('./lib/api-monitor');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
@@ -91,6 +91,7 @@ const { mountSelfRunnerRoutes } = require('./lib/self-runner/self-runner-routes'
 mountSelfRunnerRoutes(app);
 mountGm2Routes(app);
 mountInsiderArticlesRoutes(app);
+mountVaultGradeAdminRoutes(app);
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;
@@ -1113,6 +1114,39 @@ app.listen(PORT, () => {
       setInterval(runFilmSync, filmInterval);
     } catch (e) {
       console.warn('Film Room knowledge refresh scheduler failed to start', e.message);
+    }
+  }
+  if (process.env.SCOUTING_UPDATE_ENABLED === 'true') {
+    try {
+      const scoutingInterval = parseInt(process.env.SCOUTING_UPDATE_INTERVAL_MS || '21600000', 10);
+      const runScoutingUpdate = () => {
+        const opsMonitor = require('./lib/ops-monitor');
+        const { runContinuousScoutingUpdate, isCycleRunning } = require('./lib/scouting-update-engine');
+        if (isCycleRunning()) {
+          console.log('[scouting-update] skip — cycle already running');
+          return Promise.resolve({ ok: true, skipped: true });
+        }
+        return opsMonitor.wrapJob('scouting-update', 'cron:scouting-update', () =>
+          runContinuousScoutingUpdate({ reason: 'scheduled_cron' })
+        );
+      };
+      setTimeout(() => {
+        runScoutingUpdate()
+          .then((r) => console.log('[scouting-update] initial run:', r?.updated ?? 0, 'updated of', r?.total ?? 0))
+          .catch((err) => console.warn('[scouting-update] initial run failed:', err.message));
+      }, 45000);
+      setInterval(() => {
+        runScoutingUpdate()
+          .then((r) => {
+            if (!r?.skipped) {
+              console.log('[scouting-update] scheduled run:', r?.updated ?? 0, 'updated of', r?.total ?? 0);
+            }
+          })
+          .catch((err) => console.warn('[scouting-update] scheduled run failed:', err.message));
+      }, scoutingInterval);
+      console.log('[scouting-update] continuous engine enabled (every', Math.round(scoutingInterval / 3600000), 'h)');
+    } catch (e) {
+      console.warn('Scouting update scheduler failed to start', e.message);
     }
   }
   if (process.env.ARTICLE_ENGINE_ENABLED !== 'false') {

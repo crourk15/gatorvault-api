@@ -249,14 +249,26 @@ function deleteBreakdown(slug) {
 }
 
 function scoutingEntryToBreakdown(entry) {
+  const typedUpdates = Array.isArray(entry.updates) ? entry.updates : [];
   const sents = String(entry.scoutingSummary || '')
     .split(/(?<=[.!?])\s+/)
     .map((s) => s.trim())
     .filter((s) => s.length > 20);
-  const weaknessHints = sents.filter((s) =>
-    /\b(question|need to|will need|remains a|lack of|concern|limited)\b/i.test(s)
-  );
-  const strengthHints = sents.filter((s) => !weaknessHints.includes(s) && s.length > 25);
+  const fromUpdates = {
+    strengths: typedUpdates.filter((u) => u.type === 'Strengths').map((u) => u.content),
+    weaknesses: typedUpdates.filter((u) => u.type === 'Weaknesses').map((u) => u.content),
+    comparison: typedUpdates.find((u) => u.type === 'Comparison')?.content || null,
+    schemeFit: typedUpdates.find((u) => u.type === 'Scheme Fit')?.content || null,
+    projection: typedUpdates.find((u) => u.type === 'Projection')?.content || null
+  };
+  const weaknessHints = fromUpdates.weaknesses.length
+    ? fromUpdates.weaknesses
+    : sents.filter((s) =>
+        /\b(question|need to|will need|remains a|lack of|concern|limited)\b/i.test(s)
+      );
+  const strengthHints = fromUpdates.strengths.length
+    ? fromUpdates.strengths
+    : sents.filter((s) => !weaknessHints.includes(s) && s.length > 25);
 
   return {
     playerSlug: entry.playerSlug,
@@ -276,14 +288,18 @@ function scoutingEntryToBreakdown(entry) {
     ],
     strengths: strengthHints.slice(0, 8),
     weaknesses: weaknessHints.slice(0, 4),
-    comparison: null,
-    schemeFit: null,
-    staffNotes: null,
-    projection: sents.find((s) => /project|upside|impact|ceiling|floor/i.test(s)) || null,
+    comparison: fromUpdates.comparison,
+    schemeFit: fromUpdates.schemeFit,
+    staffNotes: typedUpdates.find((u) => u.type === 'Insider Notes')?.content || null,
+    projection:
+      fromUpdates.projection ||
+      sents.find((s) => /project|upside|impact|ceiling|floor/i.test(s)) ||
+      null,
     insiderNotes: entry.scoutingSummary,
     recruitingStory: null,
     nflProjection: entry.sourceType === 'NFL' ? entry.scoutingSummary.slice(0, 600) : null,
-    updatedAt: entry.timestamp
+    updatedAt: entry.timestamp,
+    scoutingUpdates: typedUpdates.slice(0, 20)
   };
 }
 

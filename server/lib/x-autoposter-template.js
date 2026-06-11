@@ -248,23 +248,27 @@ function sanitizeCopyLine(text, maxLen, meta = {}) {
   return ensureCompleteSentence(trimmed, fallback, meta);
 }
 
+function isMeterLine(line) {
+  return /^(Heat Meter:|Confidence Meter:)/i.test(String(line || '').trim());
+}
+
 function finalizeAutoposterCopy(text, meta = {}) {
   const fallback = meta.eliteMode ? '' : COPY_FALLBACK_CLOSURE;
   let t = sanitizeUrlsInText(text, { removeOnFailure: true }).text;
   t = stripEmojisHashtags(t);
   if (!t) return fallback || '';
-  const lines = t
-    .split('\n')
-    .map((line, idx) => {
-      const trimmed = line.trim();
-      if (!trimmed) return '';
-      if (idx === 0 && isIdentityLine(trimmed)) return trimmed;
-      if (isUrlLine(trimmed)) return trimmed;
-      return ensureCompleteSentence(trimmed, fallback, meta);
-    })
-    .filter(Boolean);
+  const rawLines = t.split('\n').map((line) => line.trim()).filter(Boolean);
+  const lines = rawLines.map((trimmed, idx) => {
+    if (!trimmed) return '';
+    if (idx === 0 && isIdentityLine(trimmed)) return trimmed;
+    if (isUrlLine(trimmed)) return trimmed;
+    if (isMeterLine(trimmed)) return trimmed;
+    const prev = rawLines[idx - 1];
+    if (prev && isMeterLine(prev)) return trimmed;
+    return ensureCompleteSentence(trimmed, fallback, meta);
+  }).filter(Boolean);
   t = lines.join('\n');
-  if (isTruncatedCopy(t)) {
+  if (!meta.fromTweetLimit && isTruncatedCopy(t)) {
     t = lines
       .map((line, idx) =>
         idx === 0 && isIdentityLine(line)
@@ -567,12 +571,31 @@ function preserveMeterEmojis(original, composed) {
     out = out.replace(/Heat Meter:\s*RISING/i, 'Heat Meter: RISING \uD83D\uDD25');
   }
   if (/Heat Meter:\s*HOLDING/i.test(src)) {
-    out = out.replace(/Heat Meter:\s*HOLDING/i, 'Heat Meter: HOLDING \u26AA');
+    out = out.replace(/Heat Meter:\s*HOLDING(?:\s*\u26AA)*/gi, 'Heat Meter: HOLDING \u26AA');
   }
   if (/Heat Meter:\s*COOLING/i.test(src)) {
     out = out.replace(/Heat Meter:\s*COOLING/i, 'Heat Meter: COOLING \u2744\uFE0F');
   }
   return out;
+}
+
+function hardTrimLine(s, maxLen) {
+  const t = stripEmojisHashtags(String(s || '')).trim();
+  if (!t) return '';
+  if (t.length <= maxLen) return t;
+  const sentences = extractSentences(t);
+  let out = '';
+  for (const sent of sentences) {
+    const candidate = out ? `${out} ${sent}` : sent;
+    if (candidate.length <= maxLen) out = candidate;
+    else break;
+  }
+  if (out && out.length >= Math.min(24, Math.floor(maxLen * 0.4))) return out;
+  let trimmed = t.slice(0, maxLen).replace(/\s+\S*$/, '').trim();
+  trimmed = trimmed.replace(/[,;:\u2013\u2014-]+$/, '').trim();
+  if (!trimmed) return t.slice(0, maxLen).trim();
+  if (!/[.!?]$/.test(trimmed)) trimmed = `${trimmed}.`;
+  return trimmed;
 }
 
 function enforceTweetLimit(text, max = 280, meta = {}) {
@@ -608,22 +631,42 @@ function enforceTweetLimit(text, max = 280, meta = {}) {
     }
   }
 
-  const reserved =
-    identity.length +
-    2 +
-    (heat ? heat.header.length + 2 + (heat.explanation?.length || 0) + 2 : 0) +
-    (confidence ? confidence.header.length + 2 + (confidence.explanation?.length || 0) + 2 : 0);
-  const budget = max - reserved;
-  const lineMeta = { ...meta, text: t, eliteMode: true };
-  if (context.length + insider.length + 1 > budget) {
-    if (insider) insider = shorten(insider, Math.max(32, Math.floor(budget * 0.45)), lineMeta);
-    context = shorten(context, Math.max(32, budget - insider.length - 1), lineMeta);
+  const compose = () =>
+    composeInsiderReport({ identity, context, insider, heat, confidence });
+
+  const len = () => stripEmojisHashtags(compose()).length;
+
+  if (len() <= max) {
+    return preserveMeterEmojis(original, finalizeAutoposterCopy(compose(), { ...meta, fromTweetLimit: true }));
   }
 
-  return preserveMeterEmojis(
-    original,
-    finalizeAutoposterCopy(composeInsiderReport({ identity, context, insider, heat, confidence }), meta)
-  );
+  // Trim meter explanations first — preserve identity + situation + insider voice.
+  if (heat?.explanation && len() > max) {
+    heat.explanation = hardTrimLine(heat.explanation, Math.max(48, heat.explanation.length - (len() - max) - 4));
+  }
+  if (confidence?.explanation && len() > max) {
+    confidence.explanation = hardTrimLine(
+      confidence.explanation,
+      Math.max(48, confidence.explanation.length - (len() - max) - 4)
+    );
+  }
+  if (len() > max && insider) {
+    insider = hardTrimLine(insider, Math.max(56, insider.length - (len() - max) - 4));
+  }
+  if (len() > max && context) {
+    context = hardTrimLine(context, Math.max(56, context.length - (len() - max) - 4));
+  }
+  if (len() > max && confidence) {
+    confidence.explanation = '';
+  }
+  if (len() > max && heat?.explanation) {
+    heat.explanation = hardTrimLine(heat.explanation, 56);
+  }
+  if (len() > max && confidence?.header) {
+    confidence = { header: confidence.header, explanation: '' };
+  }
+
+  return preserveMeterEmojis(original, finalizeAutoposterCopy(compose(), { ...meta, fromTweetLimit: true }));
 }
 
 function hasTemplateStructure(text) {

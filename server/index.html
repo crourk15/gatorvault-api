@@ -3096,9 +3096,10 @@
             });
         });
     }
-    function gvLoadScoutingDatabase(){
+    function gvLoadScoutingDatabase(force){
         var el=document.getElementById('scouting-database-content');
-        if(el)el.innerHTML='<p class="text-surface-200 text-sm">Loading scouting database…</p>';
+        if(el&&force!==true)el.innerHTML='<p class="text-surface-200 text-sm">Loading scouting database…</p>';
+        if(el&&force===true)el.innerHTML='<p class="text-surface-200 text-sm">Refreshing scouting database…</p>';
         return gvEnsureSignedSession().then(function(){
             return fetch(gvWarRoomApiBase()+'/api/war-room/breakdowns',{headers:gvWarRoomHeaders()});
         }).then(function(r){return r.json();})
@@ -4261,8 +4262,56 @@
         if(!window._gvRosterSyncWired){
             window._gvRosterSyncWired=true;
             window.addEventListener('storage',function(e){
-                if(e.key==='gv_roster_updated')gvLoadRosterProfiles(true);
+                if(e.key==='gv_roster_updated'||e.key==='gv_vault_grade_updated'){
+                    try{gvLoadRosterProfiles(true);}catch(err){}
+                    try{gvRenderTopGatorsHome();}catch(err){}
+                }
+                if(e.key==='gv_recruiting_updated'||e.key==='gv_vault_grade_updated'){
+                    try{gvLoadRecruitingLive(true);}catch(err){}
+                    try{renderRecruits();}catch(err){}
+                }
+                if(e.key==='gv_vault_grade_updated'){
+                    try{gvLoadLiveDashboard(true,true);}catch(err){}
+                }
+                if(e.key==='gv_scouting_updated'||e.key==='gv_war_room_updated'){
+                    try{gvLoadScoutingDatabase(true);}catch(err){}
+                    try{gvLoadLiveDashboard(true,true);}catch(err){}
+                }
             });
+        }
+        if(!window._gvScoutingSyncWired){
+            window._gvScoutingSyncWired=true;
+            window._gvScoutingRefresh={lastSignal:0};
+            function gvApplyScoutingRefresh(){
+                var ts=String(Date.now());
+                try{
+                    localStorage.setItem('gv_scouting_updated',ts);
+                    localStorage.setItem('gv_war_room_updated',ts);
+                    localStorage.setItem('gv_recruiting_updated',ts);
+                    localStorage.setItem('gv_roster_updated',ts);
+                }catch(err){}
+                try{gvLoadScoutingDatabase(true);}catch(err){}
+                try{gvLoadRecruitingLive(true);}catch(err){}
+                try{renderRecruits();}catch(err){}
+                try{gvLoadRosterProfiles(true);}catch(err){}
+                try{gvRenderTopGatorsHome();}catch(err){}
+                try{gvLoadLiveDashboard(true,true);}catch(err){}
+            }
+            function gvCheckScoutingRefreshSignal(){
+                fetch(gvWarRoomApiBase()+'/api/war-room/refresh-signal')
+                    .then(function(r){return r.json();})
+                    .then(function(j){
+                        if(!j||!j.ok)return;
+                        var st=window._gvScoutingRefresh||{lastSignal:0};
+                        if(j.scoutingRefreshSignal&&j.scoutingRefreshSignal>st.lastSignal){
+                            st.lastSignal=j.scoutingRefreshSignal;
+                            gvApplyScoutingRefresh();
+                        }
+                    })
+                    .catch(function(){});
+            }
+            setInterval(gvCheckScoutingRefreshSignal,60000);
+            setTimeout(gvCheckScoutingRefreshSignal,8000);
         }
     }
 

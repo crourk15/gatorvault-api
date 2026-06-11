@@ -170,6 +170,19 @@ const JOBS = {
       const { runQaCrawl } = require('./qa/qa-runner');
       return runQaCrawl({ force: opts.force !== false });
     }
+  },
+  'scouting-update': {
+    label: 'War Room continuous scouting update (all players)',
+    subsystem: 'cron:scouting-update',
+    schedule: 'Every 6h (SCOUTING_UPDATE_ENABLED)',
+    async run(opts = {}) {
+      const { runContinuousScoutingUpdate } = require('./scouting-update-engine');
+      return runContinuousScoutingUpdate({
+        reason: opts.reason || 'ops_job',
+        delayMs: parseInt(process.env.SCOUTING_UPDATE_DELAY_MS || '400', 10),
+        playerSlug: opts.playerSlug || null
+      });
+    }
   }
 };
 

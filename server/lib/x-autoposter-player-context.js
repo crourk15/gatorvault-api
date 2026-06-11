@@ -18,6 +18,15 @@ const INVALID_NAME_PARTS = new Set([
   'schools', "i'm", 'im', "we're", "they're", "you're", "he's", "she's", 'who', 'what', 'when', 'where'
 ]);
 
+function isUsableBeatLine(line) {
+  if (!line) return false;
+  const t = String(line).trim();
+  if (t.length < 12) return false;
+  if (/^Full details via the original report\.?$/i.test(t)) return false;
+  if (quoteRewriter.isPerReportLine(t)) return false;
+  return true;
+}
+
 function isValidPlayerName(name) {
   if (!name || typeof name !== 'string') return false;
   const trimmed = name.trim();
@@ -736,7 +745,11 @@ async function buildPlayerNewsPost({
     directlyInvolvesUF: intel?.directlyInvolvesUF
   };
 
-  if (postSpec.isCoachContext(null, beatDetail) && postSpec.detectSituation(beatDetail, intel?.eventType) === 'staff') {
+  if (
+    !(intelInput.playerName || playerName) &&
+    postSpec.isCoachContext(null, beatDetail) &&
+    postSpec.detectSituation(beatDetail, intel?.eventType) === 'staff'
+  ) {
     return buildCoachNewsPost({ source, beatText: beatDetail, intel: intelInput, postUrl: intel?.articleUrl });
   }
 
@@ -786,13 +799,40 @@ async function buildPlayerNewsPost({
     copyMeta.postKind = 'recruiting_discussion';
   }
 
-  const contextResult = buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel, copyMeta, ctx });
-  let contextLine = contextResult.line;
-  if (!contextLine) return null;
+  let beatContextLine = null;
+  let beatInsiderLine = null;
+  if (quoteRewriter.isRewriterEnabled() && beatText) {
+    const rewritten = quoteRewriter.rewriteBeatUpdate({
+      beatText,
+      ctx,
+      intel,
+      newsEvent,
+      eventType: intel?.eventType || copyMeta.triggerType,
+      sourceLabel,
+      postKind: copyMeta.postKind || kind,
+      sport: copyMeta.sport || 'football'
+    });
+    if (rewritten.ok) {
+      const ctxLine = quoteRewriter.sanitizeRewrittenLine(rewritten.contextLine, beatText, 160);
+      const insLine = quoteRewriter.sanitizeRewrittenLine(rewritten.insiderLine, beatText, 140);
+      if (isUsableBeatLine(ctxLine)) beatContextLine = ctxLine;
+      if (isUsableBeatLine(insLine)) beatInsiderLine = insLine;
+    }
+  }
 
-  const insiderResult = buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLine, copyMeta });
-  let insiderLine = insiderResult.line;
-  if (!insiderLine) return null;
+  const specMeta = {
+    beatText,
+    situationHint: playerData.data?.context || null,
+    contextLine: beatContextLine || undefined,
+    insiderLine: beatInsiderLine || undefined
+  };
+  const composed = postSpec.composeStructuredPost(ctx, situation, specMeta);
+  let contextLine = composed.templateBlocks.context;
+  let insiderLine = composed.templateBlocks.insider;
+  if (!contextLine || !insiderLine) return null;
+
+  const contextResult = { line: contextLine, meta: { fromPostSpec: true, fromRewrite: !!beatContextLine } };
+  const insiderResult = { line: insiderLine, meta: { fromPostSpec: true, fromRewrite: !!beatInsiderLine } };
 
   const inferred = identityInferred ?? intel?.identityInferred;
   const conf = identityConfidence ?? intel?.identityConfidence ?? 0;
@@ -811,7 +851,7 @@ async function buildPlayerNewsPost({
   } else if (kind === 'team') {
     identity = template.buildTeamIdentity(ctx, teamContext || template.detectTeamContext(beatText));
   } else {
-    identity = template.buildRecruitingIdentity(ctx);
+    identity = composed.templateBlocks.identity || template.buildRecruitingIdentity(ctx);
   }
 
   const confidenceMeterMod = require('./x-autoposter-confidence-meter');

@@ -101,21 +101,32 @@ function mountRosterRoutes(app) {
       if (!existing) return res.status(404).json({ ok: false, error: 'Player not found' });
       const grade = req.body?.grade != null ? req.body.grade : req.body?.ratingOverride;
       const clear = req.body?.clear === true || grade === null;
+      const vaultGradeService = require('./vault-grade-service');
+      if (clear) {
+        return vaultGradeService
+          .updateVaultGrade({ playerId: slug, vaultGrade: null, clear: true })
+          .then((result) => res.json({ ok: true, player: result.player, refresh: result.refresh }))
+          .catch((err) => res.status(400).json({ ok: false, error: err.message }));
+      }
       const explanation = req.body?.gradeExplanation != null
         ? String(req.body.gradeExplanation)
         : (req.body?.vaultGradeExplanation != null ? String(req.body.vaultGradeExplanation) : existing.vaultGradeExplanation);
       const ts = req.body?.timestamp || req.body?.vaultGradeUpdatedAt || new Date().toISOString();
-      const patch = {
-        ...existing,
-        slug,
-        name: existing.name,
-        vaultGradeExplanation: clear ? '' : explanation,
-        vaultGradeUpdatedAt: ts
-      };
-      if (clear) patch.ratingOverride = null;
-      else if (grade != null && grade !== '') patch.ratingOverride = Number(grade);
-      const player = rosterStore.upsertRosterPlayer(patch);
-      return res.json({ ok: true, player });
+      return vaultGradeService
+        .updateVaultGrade({ playerId: slug, vaultGrade: grade })
+        .then((result) => {
+          const patch = {
+            ...result.player,
+            vaultGradeExplanation: explanation,
+            vaultGradeUpdatedAt: ts
+          };
+          const player = rosterStore.upsertRosterPlayer(patch);
+          return res.json({ ok: true, player, refresh: result.refresh });
+        })
+        .catch((err) => {
+          if (err.code === 'not_found') return res.status(404).json({ ok: false, error: err.message });
+          return res.status(400).json({ ok: false, error: err.message });
+        });
     } catch (err) {
       return res.status(400).json({ ok: false, error: err.message });
     }

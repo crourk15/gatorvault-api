@@ -2,6 +2,8 @@ const { getSessionFromReq, sessionHasTier } = require('./session-auth');
 const warRoom = require('./war-room-store');
 const scoutingDb = require('./scouting-database');
 const { buildWhitelistPayload } = require('./scouting-analysts');
+const { getScoutingRefreshSignal } = require('./scouting-refresh');
+const { isCycleRunning } = require('./scouting-update-engine');
 const fs = require('fs');
 const path = require('path');
 
@@ -30,15 +32,16 @@ function readJsonFile(filePath, fallback) {
 
 function readRebuildSnapshot() {
   const status = readJsonFile(REBUILD_STATUS_PATH, null);
+  const engineRunning = isCycleRunning();
   if (status) {
     return {
-      running: scoutingRebuildRunning || !!status.running,
+      running: scoutingRebuildRunning || engineRunning || !!status.running,
       status,
       lastRun: status.lastRun || readJsonFile(REBUILD_LOG_PATH, null)
     };
   }
   return {
-    running: scoutingRebuildRunning,
+    running: scoutingRebuildRunning || engineRunning,
     status: scoutingDb.readRebuildStatus(),
     lastRun: readJsonFile(REBUILD_LOG_PATH, null)
   };
@@ -52,6 +55,18 @@ function mountWarRoomRoutes(app) {
         ok: true,
         ...whitelist,
         writers: warRoom.TRUSTED_WRITERS.map((w) => ({ id: w.id, name: w.name }))
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/war-room/refresh-signal', (req, res) => {
+    try {
+      return res.json({
+        ok: true,
+        scoutingRefreshSignal: getScoutingRefreshSignal(),
+        rebuildStatus: scoutingDb.readRebuildStatus()
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -98,7 +113,7 @@ function mountWarRoomRoutes(app) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }
 
-    if (scoutingRebuildRunning) {
+    if (scoutingRebuildRunning || isCycleRunning()) {
       console.log('[scouting] rebuild already in progress');
       return res.json({ ok: true, running: true, message: 'Scouting rebuild already in progress' });
     }
@@ -139,12 +154,15 @@ function mountWarRoomRoutes(app) {
 
     scoutingDb
       .rebuildScoutingDatabase({
-        delayMs: parseInt(process.env.SCOUTING_REBUILD_DELAY_MS || '400', 10)
+        delayMs: parseInt(process.env.SCOUTING_REBUILD_DELAY_MS || '400', 10),
+        reason: 'manual_admin_refresh'
       })
       .then((result) => {
         console.log(
-          '[scouting] rebuild finished — stored',
-          result.stored,
+          '[scouting] rebuild finished — updated',
+          result.updated,
+          'unchanged',
+          result.unchanged,
           'blank',
           result.blank,
           'errors',

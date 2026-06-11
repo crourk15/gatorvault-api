@@ -109,7 +109,8 @@
       desc: 'Players, vault grades, targets, visits, commitments, intel',
       panels: [
         { id: 'alerts', label: 'Alerts & Live', embed: 'recruiting-alerts' },
-        { id: 'monitoring', label: 'Monitoring', embed: 'monitoring' }
+        { id: 'monitoring', label: 'Monitoring', embed: 'monitoring' },
+        { id: 'vault-grades', label: 'Vault Grades Manager', inline: true }
       ]
     },
     {
@@ -119,7 +120,7 @@
       desc: 'Depth chart, roster, coaching staff, team history, film room',
       panels: [
         { id: 'board', label: 'Roster & Board', embed: 'board' },
-        { id: 'vault-grades', label: 'Vault Grades', inline: true },
+        { id: 'vault-grades', label: 'Vault Grades Manager', inline: true },
         { id: 'war-room', label: 'War Room Breakdowns', embed: 'war-room' }
       ]
     },
@@ -296,125 +297,24 @@
 
   function renderVaultGradesPanel(container) {
     container.innerHTML = ''
-      + '<div class="hub-settings-grid">'
-      + '<div class="hub-card hub-card-wide"><h3>Vault Grade Editor</h3>'
-      + '<p class="hub-meta">Override Vault Grades for roster players. Changes apply instantly across Top Gators, Roster, and War Room.</p>'
-      + '<label>Search player</label>'
-      + '<input id="hub-vg-search" type="search" placeholder="Name or slug">'
-      + '<div id="hub-vg-list" class="hub-log" style="max-height:280px;margin-top:8px"></div>'
+      + '<div class="hub-section-head">'
+      + '<h2>Vault Grades Manager</h2>'
+      + '<p>Override Vault Grades for roster and recruiting players. Changes apply instantly across Top Gators, Recruiting Board, War Room, and Player Profiles.</p>'
       + '</div>'
-      + '<div class="hub-card hub-card-wide"><h3>Edit Grade</h3>'
-      + '<p id="hub-vg-player-label" class="hub-meta">Select a player from the list</p>'
-      + '<input type="hidden" id="hub-vg-slug">'
-      + '<label>Vault Grade (0–99)</label>'
-      + '<input id="hub-vg-grade" type="number" min="0" max="99" step="0.1" placeholder="88.5">'
-      + '<label>Grade Explanation</label>'
-      + '<textarea id="hub-vg-explanation" rows="4" style="width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#111827;color:#f8fafc;font:inherit" placeholder="Why this grade…"></textarea>'
-      + '<label>Timestamp</label>'
-      + '<input id="hub-vg-ts" type="datetime-local">'
-      + '<div class="hub-btn-row" style="margin-top:10px">'
-      + '<button type="button" class="hub-btn" id="hub-vg-save">Save Vault Grade</button>'
-      + '<button type="button" class="hub-btn secondary" id="hub-vg-clear">Clear Override</button>'
-      + '</div>'
-      + '<p id="hub-vg-status" class="hub-meta"></p>'
-      + '</div>'
-      + '</div>';
+      + '<div id="vault-grade-editor-root"></div>';
 
-    var rosterCache = [];
-
-    function vgLog(msg, cls) {
-      var el = document.getElementById('hub-vg-status');
-      if (el) { el.textContent = msg; el.className = 'hub-meta ' + (cls || ''); }
-    }
-
-    function renderVgList(q) {
-      var listEl = document.getElementById('hub-vg-list');
-      if (!listEl) return;
-      var query = String(q || '').toLowerCase().trim();
-      var rows = rosterCache.filter(function (p) {
-        if (!query) return true;
-        return String(p.name || '').toLowerCase().indexOf(query) >= 0 || String(p.slug || '').toLowerCase().indexOf(query) >= 0;
-      }).slice(0, 80);
-      if (!rows.length) {
-        listEl.innerHTML = '<div class="info">No players found.</div>';
-        return;
+    var root = document.getElementById('vault-grade-editor-root');
+    if (!root || !global.VaultGradeEditor) {
+      if (root) {
+        root.innerHTML = '<p class="hub-meta err">VaultGradeEditor failed to load. Refresh the page.</p>';
       }
-      listEl.innerHTML = rows.map(function (p) {
-        var grade = p.ratingOverride != null ? p.ratingOverride : (p.displayRating != null ? p.displayRating : p.rating);
-        return '<button type="button" data-vg-slug="' + p.slug + '" style="display:block;width:100%;text-align:left;background:transparent;border:none;color:#cbd5e1;padding:6px 4px;cursor:pointer;font:inherit">'
-          + (p.name || p.slug) + ' · ' + (grade != null ? grade : '—') + (p.vaultGradeExplanation ? ' · ✎' : '')
-          + '</button>';
-      }).join('');
-      listEl.querySelectorAll('[data-vg-slug]').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var slug = btn.getAttribute('data-vg-slug');
-          var p = rosterCache.find(function (x) { return x.slug === slug; });
-          if (!p) return;
-          document.getElementById('hub-vg-slug').value = slug;
-          document.getElementById('hub-vg-player-label').textContent = (p.name || slug) + ' (' + slug + ')';
-          document.getElementById('hub-vg-grade').value = p.ratingOverride != null ? p.ratingOverride : (p.displayRating != null ? p.displayRating : '');
-          document.getElementById('hub-vg-explanation').value = p.vaultGradeExplanation || '';
-          var ts = p.vaultGradeUpdatedAt ? new Date(p.vaultGradeUpdatedAt) : new Date();
-          document.getElementById('hub-vg-ts').value = ts.toISOString().slice(0, 16);
-        });
-      });
+      return;
     }
-
-    function loadRoster() {
-      apiGet('/api/roster/players')
-        .then(function (j) {
-          rosterCache = (j.players || []).sort(function (a, b) {
-            return (b.displayRating || 0) - (a.displayRating || 0);
-          });
-          renderVgList(document.getElementById('hub-vg-search').value);
-        })
-        .catch(function (e) { vgLog(e.message, 'err'); });
-    }
-
-    document.getElementById('hub-vg-search').addEventListener('input', function (e) {
-      renderVgList(e.target.value);
+    VaultGradeEditor.mount(root, {
+      apiGet: apiGet,
+      apiPost: apiPost,
+      pin: pin
     });
-
-    document.getElementById('hub-vg-save').addEventListener('click', function () {
-      var slug = document.getElementById('hub-vg-slug').value.trim();
-      if (!slug) return vgLog('Select a player first', 'err');
-      var grade = document.getElementById('hub-vg-grade').value;
-      var explanation = document.getElementById('hub-vg-explanation').value.trim();
-      var tsLocal = document.getElementById('hub-vg-ts').value;
-      var ts = tsLocal ? new Date(tsLocal).toISOString() : new Date().toISOString();
-      apiPost('/api/roster/players/' + encodeURIComponent(slug) + '/vault-grade', {
-        grade: grade,
-        gradeExplanation: explanation,
-        timestamp: ts
-      }).then(function (j) {
-        var idx = rosterCache.findIndex(function (x) { return x.slug === slug; });
-        if (idx >= 0) rosterCache[idx] = j.player;
-        try { localStorage.setItem('gv_roster_updated', String(Date.now())); } catch (e) {}
-        vgLog('Saved — grade live on site', 'ok');
-        renderVgList(document.getElementById('hub-vg-search').value);
-      }).catch(function (e) { vgLog(e.message, 'err'); });
-    });
-
-    document.getElementById('hub-vg-clear').addEventListener('click', function () {
-      var slug = document.getElementById('hub-vg-slug').value.trim();
-      if (!slug) return vgLog('Select a player first', 'err');
-      apiPost('/api/roster/players/' + encodeURIComponent(slug) + '/vault-grade', {
-        clear: true,
-        grade: null,
-        gradeExplanation: '',
-        timestamp: new Date().toISOString()
-      }).then(function (j) {
-        var idx = rosterCache.findIndex(function (x) { return x.slug === slug; });
-        if (idx >= 0) rosterCache[idx] = j.player;
-        try { localStorage.setItem('gv_roster_updated', String(Date.now())); } catch (e) {}
-        document.getElementById('hub-vg-grade').value = '';
-        document.getElementById('hub-vg-explanation').value = '';
-        vgLog('Override cleared', 'ok');
-        renderVgList(document.getElementById('hub-vg-search').value);
-      }).catch(function (e) { vgLog(e.message, 'err'); });
-    });
-
-    loadRoster();
   }
 
   function renderGmRerunPanel(container) {

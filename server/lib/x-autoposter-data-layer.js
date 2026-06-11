@@ -38,6 +38,13 @@ function resolveIntelTimestamp(intel = {}) {
 
 /** Rule 2 — reject before ANY fetch */
 function assertIntelFresh(intel = {}) {
+  if (process.env.X_AUTOPOST_BYPASS_FRESHNESS === 'true') {
+    const ts = resolveIntelTimestamp(intel);
+    if (!ts) {
+      return { ok: false, skipReason: 'missing_timestamp', reason: 'Intel timestamp required.' };
+    }
+    return { ok: true, ageSec: 0, logTag: null, bypass: true };
+  }
   const ts = resolveIntelTimestamp(intel);
   return postSpec.validateIntelFreshness(ts);
 }

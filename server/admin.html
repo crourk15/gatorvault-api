@@ -78,6 +78,29 @@
     .hub-log{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:12px;min-height:100px;max-height:220px;overflow:auto;font-family:ui-monospace,monospace;font-size:11px}
     .hub-log .ok{color:#4ade80}.hub-log .err{color:#f87171}.hub-log .info{color:#93c5fd}
 
+    /* Vault Grades Manager */
+    .vge-grid{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:960px){.vge-grid{grid-template-columns:1fr 1fr}}
+    .vge-search-wrap{position:relative}
+    .vge-suggest{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:20;background:#0b1220;border:1px solid #334155;border-radius:10px;max-height:280px;overflow:auto;box-shadow:0 12px 32px rgba(0,0,0,.45)}
+    .vge-suggest-item{display:block;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid #1e293b;color:#e2e8f0;padding:10px 12px;cursor:pointer;font:inherit}
+    .vge-suggest-item:hover,.vge-suggest-item:focus{background:rgba(250,70,22,.12);outline:none}
+    .vge-suggest-name{display:block;font-weight:700;font-size:13px}
+    .vge-suggest-meta{display:block;font-size:11px;color:#94a3b8;margin-top:2px}
+    .vge-suggest-empty{padding:12px;font-size:12px;color:#94a3b8}
+    .vge-identity{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:14px;margin-bottom:12px}
+    .vge-identity.vge-empty{color:#94a3b8;font-size:13px}
+    .vge-id-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+    .vge-id-label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#64748b;margin-bottom:4px}
+    .vge-current-grade{color:#fbbf24!important}
+    .vge-grade-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+    .vge-grade-row input[type=number]{width:120px;margin:0}
+    .vge-range{font-weight:400;text-transform:none;letter-spacing:0;color:#64748b}
+    .vge-toast{position:fixed;bottom:24px;right:24px;z-index:10001;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.35);max-width:min(360px,calc(100vw - 32px))}
+    .vge-toast-ok{background:#14532d;color:#bbf7d0;border:1px solid #22c55e}
+    .vge-toast-err{background:#450a0a;color:#fecaca;border:1px solid #ef4444}
+    .vge-toast-info{background:#1e3a5f;color:#bfdbfe;border:1px solid #3b82f6}
+
     @media(max-width:900px){
       #hub-shell{flex-direction:column}
       .hub-sidebar{width:100%;height:auto;position:relative;border-right:0;border-bottom:2px solid #003087}
@@ -127,7 +150,8 @@
     </div>
   </div>
 
-  <script src="/js/admin-hub-core.js?v=hub-v7-20260611"></script>
+  <script src="/js/vault-grade-editor.js?v=vge-20260611"></script>
+  <script src="/js/admin-hub-core.js?v=hub-v8-20260611"></script>
   <script>
     document.getElementById('hub-lock-top').addEventListener('click', function () {
       document.getElementById('hub-lock').click();

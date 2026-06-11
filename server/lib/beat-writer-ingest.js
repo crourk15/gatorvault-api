@@ -1175,6 +1175,18 @@ async function runBeatWriterIngest({ force = false, manualRows = [], posts = nul
   saveSnapshot(snapshot);
   if (results.processed.length) clearHeatCheckCache();
 
+  try {
+    const { queuePlayerScoutingRefresh } = require('./scouting-update-engine');
+    const slugs = new Set(
+      results.processed.map((p) => p.playerSlug || p.player || p.slug).filter(Boolean)
+    );
+    slugs.forEach((slug) => {
+      queuePlayerScoutingRefresh(slug, { reason: 'article_ingestion', delayMs: 12000 });
+    });
+  } catch {
+    /* optional */
+  }
+
   return {
     ok: true,
     ...results,

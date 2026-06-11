@@ -1,7 +1,7 @@
 /**
  * Official War Room scouting analyst whitelist.
- * College: recruits, commits, HS evals, portal/transfers.
- * NFL: roster, upperclassmen, draft-eligible (portal uses college only).
+ * College: recruits, commits, targets, portal/transfers.
+ * NFL: current UF roster ONLY (no college evaluators on roster).
  */
 
 const COLLEGE_ANALYSTS = [
@@ -44,26 +44,34 @@ const COLLEGE_ANALYSTS = [
     primaryOutlet: 'On3',
     outlets: ['on3'],
     aliases: ['cody bellaire']
+  },
+  {
+    id: 'simmons',
+    name: 'Chad Simmons',
+    title: 'On3 National Analyst',
+    primaryOutlet: 'On3',
+    outlets: ['on3'],
+    aliases: ['chad simmons']
+  },
+  {
+    id: 'spiegelman',
+    name: 'Sam Spiegelman',
+    title: 'On3 National Analyst',
+    primaryOutlet: 'On3',
+    outlets: ['on3'],
+    aliases: ['sam spiegelman']
+  },
+  {
+    id: 'trieu',
+    name: 'Allen Trieu',
+    title: '247Sports National Analyst',
+    primaryOutlet: '247Sports',
+    outlets: ['247sports'],
+    aliases: ['allen trieu']
   }
 ];
 
 const NFL_ANALYSTS = [
-  {
-    id: 'jeremiah',
-    name: 'Daniel Jeremiah',
-    title: 'NFL Network',
-    primaryOutlet: 'NFL Network',
-    outlets: ['nfl network', 'nfl.com'],
-    aliases: ['daniel jeremiah', 'dj jeremiah']
-  },
-  {
-    id: 'kiper',
-    name: 'Mel Kiper Jr.',
-    title: 'ESPN',
-    primaryOutlet: 'ESPN',
-    outlets: ['espn'],
-    aliases: ['mel kiper', 'mel kiper jr', 'mel kiper jr.']
-  },
   {
     id: 'brugler',
     name: 'Dane Brugler',
@@ -73,12 +81,20 @@ const NFL_ANALYSTS = [
     aliases: ['dane brugler', 'the beast']
   },
   {
-    id: 'yates',
-    name: 'Field Yates',
-    title: 'ESPN',
-    primaryOutlet: 'ESPN',
-    outlets: ['espn'],
-    aliases: ['field yates']
+    id: 'jeremiah',
+    name: 'Daniel Jeremiah',
+    title: 'NFL Network',
+    primaryOutlet: 'NFL Network',
+    outlets: ['nfl network', 'nfl.com'],
+    aliases: ['daniel jeremiah', 'dj jeremiah']
+  },
+  {
+    id: 'zierlein',
+    name: 'Lance Zierlein',
+    title: 'NFL.com',
+    primaryOutlet: 'NFL.com',
+    outlets: ['nfl.com', 'nfl network'],
+    aliases: ['lance zierlein']
   },
   {
     id: 'miller',
@@ -87,12 +103,35 @@ const NFL_ANALYSTS = [
     primaryOutlet: 'ESPN',
     outlets: ['espn'],
     aliases: ['matt miller']
+  },
+  {
+    id: 'reid',
+    name: 'Jordan Reid',
+    title: 'ESPN Draft Analyst',
+    primaryOutlet: 'ESPN',
+    outlets: ['espn'],
+    aliases: ['jordan reid']
+  },
+  {
+    id: 'pff-draft',
+    name: 'PFF Draft',
+    title: 'Pro Football Focus',
+    primaryOutlet: 'PFF',
+    outlets: ['pff', 'profootballfocus'],
+    aliases: ['pff draft', 'pro football focus', 'pff.com', 'pff college']
+  },
+  {
+    id: 'br-draft',
+    name: 'Bleacher Report Draft Staff',
+    title: 'Bleacher Report',
+    primaryOutlet: 'Bleacher Report',
+    outlets: ['bleacher report', 'bleacherreport'],
+    aliases: ['bleacher report draft', 'bleacher report', 'br draft', 'draft staff']
   }
 ];
 
-/** Beat writers / fan sites — never accept */
+/** Beat writers / fan sites — never accept for scouting */
 const BLOCKED_AUTHOR_PATTERNS = [
-  /\bchad simmons\b/i,
   /\bhayes fawcett\b/i,
   /\bsteve wiltfong\b/i,
   /\bblake alderman\b/i,
@@ -111,14 +150,28 @@ const BLOCKED_AUTHOR_PATTERNS = [
   /\bblogspot\b/i
 ];
 
-const ALLOWED_OUTLETS = new Set(['on3', '247sports', 'espn', 'the athletic', 'nfl network', 'nfl.com']);
+const ALLOWED_OUTLETS = new Set([
+  'on3',
+  '247sports',
+  'espn',
+  'the athletic',
+  'nfl network',
+  'nfl.com',
+  'pff',
+  'profootballfocus',
+  'bleacher report',
+  'bleacherreport'
+]);
 
 const OUTLET_FROM_HOST = {
   'on3.com': 'On3',
   '247sports.com': '247Sports',
   'espn.com': 'ESPN',
   'theathletic.com': 'The Athletic',
-  'nfl.com': 'NFL Network'
+  'nfl.com': 'NFL.com',
+  'pff.com': 'PFF',
+  'profootballfocus.com': 'PFF',
+  'bleacherreport.com': 'Bleacher Report'
 };
 
 const AI_SCOUTING_PATTERNS = [
@@ -202,11 +255,20 @@ function isDraftEligible(player) {
 }
 
 /**
- * College-only: recruits, commits, targets, portal additions, transfers.
- * NFL-first (+ college fallback): roster, draft-eligible upperclassmen on roster.
+ * Roster → NFL evaluators ONLY.
+ * Recruits/commits/targets/portal → college recruiting analysts ONLY.
  */
 function analystsForPlayerType(playerType, player = {}) {
   const type = String(playerType || 'recruit').toLowerCase();
+
+  if (type === 'roster') {
+    return {
+      useNflFirst: true,
+      useCollege: false,
+      primaryType: 'NFL',
+      fallbackType: null
+    };
+  }
 
   if (COLLEGE_PLAYER_TYPES.has(type)) {
     return {
@@ -214,15 +276,6 @@ function analystsForPlayerType(playerType, player = {}) {
       useCollege: true,
       primaryType: 'College',
       fallbackType: null
-    };
-  }
-
-  if (type === 'roster' || isDraftEligible(player)) {
-    return {
-      useNflFirst: true,
-      useCollege: true,
-      primaryType: 'NFL',
-      fallbackType: 'College'
     };
   }
 
@@ -278,8 +331,10 @@ function buildWhitelistPayload() {
       title,
       primaryOutlet
     })),
-    allowedOutlets: ['On3', '247Sports', 'ESPN', 'The Athletic', 'NFL Network'],
+    allowedOutlets: ['On3', '247Sports', 'ESPN', 'The Athletic', 'NFL Network', 'NFL.com', 'PFF', 'Bleacher Report'],
     rules: [
+      'Roster players: NFL draft evaluators only',
+      'Recruits/commits/targets: college recruiting analysts only',
       'Publicly available human-written scouting only',
       'No AI-generated text',
       'No beat writers or fan sites',

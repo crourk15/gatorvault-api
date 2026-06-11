@@ -107,7 +107,7 @@ function walkNextForScouting(node, pool, hits = [], depth = 0) {
 
 function extractLinkedUrls(html) {
   const urls = [];
-  const re = /https?:\/\/(?:www\.)?(?:on3\.com|247sports\.com|espn\.com|theathletic\.com|nfl\.com)[^\s"'<>]*/gi;
+  const re = /https?:\/\/(?:www\.)?(?:on3\.com|247sports\.com|espn\.com|theathletic\.com|nfl\.com|pff\.com|profootballfocus\.com|bleacherreport\.com)[^\s"'<>]*/gi;
   let m;
   while ((m = re.exec(html)) && urls.length < 12) {
     urls.push(m[0].replace(/\\u002F/g, '/').replace(/\\/g, ''));
@@ -155,10 +155,14 @@ function buildNflUrls(player) {
   const slug = player.slug;
   return [
     `https://www.espn.com/nfl/draft/story/_/id/0/search/${nameEnc}`,
-    `https://www.espn.com/search/results?q=${nameEnc}+mel+kiper`,
     `https://www.espn.com/search/results?q=${nameEnc}+daniel+jeremiah`,
+    `https://www.espn.com/search/results?q=${nameEnc}+jordan+reid`,
+    `https://www.espn.com/search/results?q=${nameEnc}+matt+miller`,
     `https://www.nfl.com/search?query=${nameEnc}`,
+    `https://theathletic.com/search/?q=${nameEnc}+dane+brugler`,
     `https://theathletic.com/search/?q=${nameEnc}+draft`,
+    `https://www.pff.com/search?q=${nameEnc}`,
+    `https://bleacherreport.com/search?q=${nameEnc}+draft`,
     `https://www.espn.com/college-football/player/_/id/0/${slug}`
   ].filter(Boolean);
 }
@@ -235,8 +239,8 @@ async function crawlLinkedSources(seedUrl, pool, sourceType, seen = new Set()) {
 
 /**
  * Find one verified scouting row for a player.
- * Portal/transfers/recruits/commits → college analysts only.
- * Roster/draft-eligible → NFL first, college fallback.
+ * Roster → NFL evaluators ONLY.
+ * Recruits/commits/targets/portal → college recruiting analysts ONLY.
  */
 async function findVerifiedScouting(player) {
   const rules = analysts.analystsForPlayerType(player.playerType, player);
@@ -247,6 +251,7 @@ async function findVerifiedScouting(player) {
       const hit = await crawlLinkedSources(url, analysts.NFL_ANALYSTS, 'NFL', seen);
       if (hit) return hit;
     }
+    return null;
   }
 
   if (rules.useCollege) {

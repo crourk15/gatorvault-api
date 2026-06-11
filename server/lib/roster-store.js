@@ -140,6 +140,13 @@ function upsertRosterPlayer(patch) {
   if (idx >= 0) players[idx] = merged;
   else players.push(merged);
   savePlayers(players);
+  try {
+    require('./scouting-update-engine').queuePlayerScoutingRefresh(merged.slug, {
+      reason: 'roster_player_update'
+    });
+  } catch {
+    /* optional */
+  }
   return merged;
 }
 

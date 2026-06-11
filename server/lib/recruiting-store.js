@@ -83,7 +83,7 @@ function normalizePlayer(raw) {
       ? 'recruit'
       : 'target';
   }
-  return {
+  const player = {
     id: raw.id || slug,
     slug,
     name: raw.name,
@@ -93,6 +93,9 @@ function normalizePlayer(raw) {
     htWt: raw.htWt || raw.ht_wt || '',
     stars: raw.stars || 0,
     rating: raw.rating != null ? Number(raw.rating) : null,
+    ratingOverride: raw.ratingOverride != null ? Number(raw.ratingOverride) : null,
+    vaultGrade: raw.vaultGrade != null ? Number(raw.vaultGrade) : raw.ratingOverride != null ? Number(raw.ratingOverride) : null,
+    vaultGradeUpdatedAt: raw.vaultGradeUpdatedAt || raw.vault_grade_updated_at || null,
     natlRank: raw.natlRank || raw.natl_rank || raw.natl || null,
     posRank: raw.posRank || raw.pos_rank || null,
     stateRank: raw.stateRank || raw.state_rank || raw.stRk || null,
@@ -123,6 +126,17 @@ function normalizePlayer(raw) {
     headliner: !!(raw.headliner ?? raw.is_headliner),
     updatedAt: raw.updatedAt || raw.updated_at || nowIso()
   };
+  if (player.ratingOverride != null && player.ratingOverride !== '') {
+    player.displayRating = Number(player.ratingOverride);
+    player.ratingIsOverride = true;
+  } else if (player.vaultGrade != null && player.vaultGrade !== '') {
+    player.displayRating = Number(player.vaultGrade);
+    player.ratingIsOverride = true;
+  } else {
+    player.displayRating = player.rating != null ? Number(player.rating) : null;
+    player.ratingIsOverride = false;
+  }
+  return player;
 }
 
 function playerToRow(p) {
@@ -234,7 +248,7 @@ async function getPlayerBySlug(slug) {
 function preservePlayerFields(existing, incoming) {
   const identityValidator = require('./identity-record-validator');
   const merged = { ...existing, ...incoming };
-  ['natlRank', 'posRank', 'stateRank', 'rating', 'stars', 'htWt', 'school', 'on3Id', 'commitDate', 'classYear'].forEach((field) => {
+  ['natlRank', 'posRank', 'stateRank', 'rating', 'ratingOverride', 'vaultGrade', 'vaultGradeUpdatedAt', 'stars', 'htWt', 'school', 'on3Id', 'commitDate', 'classYear'].forEach((field) => {
     if (merged[field] == null && existing[field] != null) merged[field] = existing[field];
   });
   if (merged.school && !identityValidator.isValidSchoolField(merged.school)) {
@@ -281,6 +295,13 @@ async function upsertPlayer(player, options = {}) {
     if (error) throw error;
     const saved = rowToPlayer(data);
     await syncIdentityPatterns(saved);
+    try {
+      require('./scouting-update-engine').queuePlayerScoutingRefresh(saved.slug, {
+        reason: 'recruiting_player_update'
+      });
+    } catch {
+      /* optional */
+    }
     return saved;
   }
   const players = await loadPlayersLocal();
@@ -290,6 +311,13 @@ async function upsertPlayer(player, options = {}) {
   await savePlayersLocal(players);
   const saved = idx >= 0 ? players[idx] : normalized;
   await syncIdentityPatterns(saved);
+  try {
+    require('./scouting-update-engine').queuePlayerScoutingRefresh(saved.slug, {
+      reason: 'recruiting_player_update'
+    });
+  } catch {
+    /* optional */
+  }
   return saved;
 }
 
