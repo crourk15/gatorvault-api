@@ -5,15 +5,22 @@
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
+const { primaryAdminPin } = require('../lib/admin-pin');
+
 const API = (process.env.QA_API_URL || process.env.API_BASE_URL || 'https://gatorvault-api.onrender.com').replace(
   /\/$/,
   ''
 );
-const PIN = process.env.OPS_ADMIN_PIN || process.env.RECRUITING_ADMIN_PIN || process.env.EMAIL_TEST_PIN;
+const PIN =
+  process.env.ADMIN_PIN ||
+  process.env.OPS_ADMIN_PIN ||
+  process.env.RECRUITING_ADMIN_PIN ||
+  process.env.EMAIL_TEST_PIN ||
+  primaryAdminPin();
 
 async function main() {
   if (!PIN) {
-    console.error('Set OPS_ADMIN_PIN or RECRUITING_ADMIN_PIN in server/.env');
+    console.error('Set OPS_ADMIN_PIN or pass ADMIN_PIN env for production cleanup');
     process.exit(1);
   }
 
@@ -24,7 +31,7 @@ async function main() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-admin-pin': PIN
+      'x-ops-pin': PIN
     },
     body: JSON.stringify({ jobId, options: {} })
   });
