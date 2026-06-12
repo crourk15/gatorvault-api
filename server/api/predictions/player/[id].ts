@@ -2,12 +2,12 @@
  * GET /api/predictions/player/:id — per-player predictions.
  */
 import type { Request, Response } from 'express';
-import { getPlayerById } from '../../models/player';
+import { getPlayerById } from '../../../models/player';
 import {
   listPredictionCandidates,
   listPredictionsByPlayerId,
   upsertActiveModelPrediction,
-} from '../../models/predictions';
+} from '../../../models/predictions';
 import { syncModelPredictionsForCandidates } from '../engine';
 import {
   asyncHandler,
