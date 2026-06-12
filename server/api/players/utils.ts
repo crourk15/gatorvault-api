@@ -165,6 +165,11 @@ export function serializeSignal(row: Record<string, unknown>) {
 
 export function handleApiError(res: Response, err: unknown): void {
   const message = err instanceof Error ? err.message : String(err);
+  if (message === 'Invalid URL' || /invalid database_url/i.test(message)) {
+    console.error('[futurecast-players-api] database config:', err);
+    sendError(res, 503, 'Database connection misconfigured — check DATABASE_URL');
+    return;
+  }
   if (/must be|required|invalid/i.test(message)) {
     sendError(res, 400, message);
     return;
