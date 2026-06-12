@@ -195,6 +195,67 @@ const JOBS = {
         enqueue: opts.enqueue !== false
       });
     }
+  },
+  'feed-repair': {
+    label: 'Repair feed-items.json (SHA-256 dedupe integrity)',
+    subsystem: 'live:feed-repair',
+    schedule: 'On demand after deploy',
+    async run() {
+      const liveStore = require('./live-store');
+      const result = liveStore.repairFeedItems();
+      return {
+        ok: result.validation?.ok !== false,
+        before: result.before,
+        after: result.after,
+        removedCount: result.removedCount,
+        rejectedCount: result.rejectedCount,
+        validation: result.validation
+      };
+    }
+  },
+  'self-runner-purge-legacy-dedupe': {
+    label: 'Reject legacy addDedupeRule Self-Runner proposals',
+    subsystem: 'self-runner:cleanup',
+    schedule: 'On demand after dedupe engine deploy',
+    async run() {
+      const { purgeLegacyDedupeProposals } = require('./self-runner/self-runner-queue-cleanup');
+      return purgeLegacyDedupeProposals({ reject: true });
+    }
+  },
+  'post-deploy-feed-cleanup': {
+    label: 'Feed repair + purge legacy dedupe proposals + Self-Runner scan',
+    subsystem: 'live:post-deploy-cleanup',
+    schedule: 'On demand after Self-Runner 2.0 deploy',
+    async run(opts = {}) {
+      const liveStore = require('./live-store');
+      const { purgeLegacyDedupeProposals } = require('./self-runner/self-runner-queue-cleanup');
+      const repair = liveStore.repairFeedItems();
+      const purge = purgeLegacyDedupeProposals({ reject: true });
+      let scan = null;
+      if (opts.skipScan !== true) {
+        const { runPlatformScanAndEnqueue } = require('./self-runner/self-runner-v2-engine');
+        scan = await runPlatformScanAndEnqueue({ includeBlueprint: false, enqueue: true });
+      }
+      return {
+        ok: repair.validation?.ok !== false,
+        repair: {
+          before: repair.before,
+          after: repair.after,
+          removedCount: repair.removedCount,
+          rejectedCount: repair.rejectedCount,
+          validation: repair.validation
+        },
+        purge,
+        scan: scan
+          ? {
+              scanId: scan.scanId,
+              issueCount: scan.issueCount,
+              patchCount: scan.patchCount,
+              enqueued: scan.enqueued?.length ?? 0
+            }
+          : null
+      };
+    }
   }
 };
 

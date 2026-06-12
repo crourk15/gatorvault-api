@@ -257,8 +257,20 @@ function mountSelfRunnerRoutes(app) {
     }
   });
 
+  app.post('/api/self-runner/purge-legacy', (req, res) => {
+    if (!requireAuth(req, res)) return;
+    try {
+      const { purgeLegacyDedupeProposals } = require('./self-runner-queue-cleanup');
+      const result = purgeLegacyDedupeProposals({ reject: req.body?.reject !== false });
+      logger.log.info({ action: 'purge_legacy_dedupe', ...result });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   console.log(
-    '[self-runner] routes mounted: /api/self-runner/pending, /fix/:id, /failures, /scan, /blueprint, /logs, /feedback, POST /approve, /reject, /generate'
+    '[self-runner] routes mounted: /api/self-runner/pending, /fix/:id, /failures, /scan, /blueprint, /logs, /feedback, /purge-legacy, POST /approve, /reject, /generate'
   );
 }
 
