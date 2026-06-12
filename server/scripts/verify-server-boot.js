@@ -29,4 +29,11 @@ if (typeof mod.mountInsiderArticlesRoutes !== 'function') {
   process.exit(1);
 }
 
+const serverPath = path.join(__dirname, '..', 'server.js');
+const serverSrc = fs.readFileSync(serverPath, 'utf8');
+if (!/require\s*\(\s*['"]\.\/lib\/insider-articles-routes['"]\s*\)/.test(serverSrc)) {
+  console.error('[boot-verify] server.js must require ./lib/insider-articles-routes before boot');
+  process.exit(1);
+}
+
 console.log('[boot-verify] OK —', ROUTES_REL, 'exports mountInsiderArticlesRoutes');

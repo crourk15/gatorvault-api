@@ -52,7 +52,11 @@ async function triggerDeploy(serviceId, { clearCache = false } = {}) {
     method: 'POST',
     body: JSON.stringify(body)
   });
-  const row = deploy.deploy || deploy;
+  const row = deploy?.deploy || deploy;
+  if (!row?.id) {
+    console.log('Deploy triggered (empty response body — check Render dashboard)');
+    return deploy;
+  }
   console.log('Deploy triggered:', row.id, row.status || 'started', clearCache ? '(build cache cleared)' : '');
   return row;
 }
