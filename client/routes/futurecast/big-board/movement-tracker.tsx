@@ -1,7 +1,19 @@
-/** Movement Tracker tab — recent score/status changes. Spec §4.1 */
+/** Movement Tracker tab — players with most signals (proxy for activity) */
 import React from 'react';
+import { BigBoardGrid } from '../../../components/futurecast/BigBoardGrid';
 
-export default function MovementTrackerTab(): React.ReactElement {
-  // TODO(Phase 4): GET /api/futurecast/big-board?tab=movement_tracker
-  return <div data-testid="tab-movement-tracker">TODO: Movement Tracker — spec §4.1</div>;
+export interface MovementTrackerTabProps {
+  classYear?: number;
+}
+
+export default function MovementTrackerTab({
+  classYear = 2026,
+}: MovementTrackerTabProps): React.ReactElement {
+  return (
+    <div data-testid="tab-movement-tracker">
+      <BigBoardGrid
+        query={{ class_year: classYear, sort: 'signals', order: 'desc', limit: 200 }}
+      />
+    </div>
+  );
 }

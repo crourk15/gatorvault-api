@@ -1,7 +1,24 @@
-/** Portal Watchlist tab. Spec §4.1, §4.3, §5 */
+/** Portal Watchlist tab — uses Portal Intelligence API */
 import React from 'react';
+import { PortalWatchlistGrid } from '../../../components/futurecast/PortalWatchlistGrid';
 
-export default function PortalWatchlistTab(): React.ReactElement {
-  // TODO(Phase 4): GET /api/portal/watchlist
-  return <div data-testid="tab-portal-watchlist">TODO: Portal Watchlist — spec §4.3</div>;
+export interface PortalWatchlistTabProps {
+  classYear?: number;
+}
+
+export default function PortalWatchlistTab({
+  classYear = 2026,
+}: PortalWatchlistTabProps): React.ReactElement {
+  return (
+    <div data-testid="tab-portal-watchlist">
+      <PortalWatchlistGrid
+        query={{
+          class_year: classYear,
+          sort: 'likelihood',
+          likelihood_min: 0.25,
+          limit: 100,
+        }}
+      />
+    </div>
+  );
 }

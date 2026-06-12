@@ -1,0 +1,4040 @@
+[
+  {
+    "id": null,
+    "full_name": "Davian Groce",
+    "slug": "davian-groce",
+    "class_year": 2026,
+    "position": "WR",
+    "status": "HS",
+    "height": 73,
+    "weight": 190,
+    "hometown": "Frisco",
+    "state": "TX",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.954,
+    "ranking_national": 60,
+    "ranking_position": 10,
+    "ranking_state": 7,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-08-11"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 95.41666666666667,
+        "natl_rank": 60,
+        "pos_rank": 10,
+        "state_rank": 7,
+        "on3_id": "175389"
+      },
+      "recruiting_notes": "WR · 4★ · Frisco, TX · #60 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-08-11T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "CJ Bronaugh",
+    "slug": "cj-bronaugh",
+    "class_year": 2026,
+    "position": "CB",
+    "status": "HS",
+    "height": 73,
+    "weight": 175,
+    "hometown": "Winter Garden",
+    "state": "FL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.947,
+    "ranking_national": 84,
+    "ranking_position": 10,
+    "ranking_state": 13,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-06-18"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 94.66702898550724,
+        "natl_rank": 84,
+        "pos_rank": 10,
+        "state_rank": 13,
+        "on3_id": "241642"
+      },
+      "recruiting_notes": "CB · 4★ · Winter Garden, FL · #84 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-06-18T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Kevin Ford",
+    "slug": "kevin-ford",
+    "class_year": 2026,
+    "position": "EDGE",
+    "status": "HS",
+    "height": 75,
+    "weight": 245,
+    "hometown": "Duncanville",
+    "state": "TX",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.931,
+    "ranking_national": 149,
+    "ranking_position": 21,
+    "ranking_state": 21,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-07-11"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 93.09094202898552,
+        "natl_rank": 149,
+        "pos_rank": 21,
+        "state_rank": 21,
+        "on3_id": "176369"
+      },
+      "recruiting_notes": "EDGE · 4★ · Duncanville, TX · #149 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-07-11T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Justin Williams",
+    "slug": "justin-williams",
+    "class_year": 2026,
+    "position": "WR",
+    "status": "HS",
+    "height": 71,
+    "weight": 190,
+    "hometown": null,
+    "state": null,
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.928,
+    "ranking_national": 158,
+    "ranking_position": 22,
+    "ranking_state": 21,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-06-08"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 92.82717391304348,
+        "natl_rank": 158,
+        "pos_rank": 22,
+        "state_rank": 21,
+        "on3_id": "240430"
+      },
+      "recruiting_notes": "WR · 4★ · Gainesville, FL · #158 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-06-08T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "JaReylan McCoy",
+    "slug": "jareylan-mccoy",
+    "class_year": 2026,
+    "position": "DL",
+    "status": "HS",
+    "height": 79,
+    "weight": 265,
+    "hometown": "Tupelo",
+    "state": "MS",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.924,
+    "ranking_national": 173,
+    "ranking_position": 18,
+    "ranking_state": 8,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-06-14"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 92.40322580645162,
+        "natl_rank": 173,
+        "pos_rank": 18,
+        "state_rank": 8,
+        "on3_id": "154268"
+      },
+      "recruiting_notes": "DL · 4★ · Tupelo, MS · #173 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-06-14T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Dylan Purter",
+    "slug": "dylan-purter",
+    "class_year": 2026,
+    "position": "S",
+    "status": "HS",
+    "height": 72,
+    "weight": 165,
+    "hometown": "Tuskegee",
+    "state": "AL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.918,
+    "ranking_national": 204,
+    "ranking_position": 19,
+    "ranking_state": 8,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-12-04"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 91.76195652173915,
+        "natl_rank": 204,
+        "pos_rank": 19,
+        "state_rank": 8,
+        "on3_id": "239856"
+      },
+      "recruiting_notes": "S · 4★ · Tuskegee, AL · #204 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-12-04T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Will Griffin",
+    "slug": "will-griffin",
+    "class_year": 2026,
+    "position": "QB",
+    "status": "HS",
+    "height": 75,
+    "weight": 225,
+    "hometown": "Tampa",
+    "state": "FL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.908,
+    "ranking_national": 259,
+    "ranking_position": 19,
+    "ranking_state": 36,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2024-06-01"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 90.83007246376812,
+        "natl_rank": 259,
+        "pos_rank": 19,
+        "state_rank": 36,
+        "on3_id": "162624"
+      },
+      "recruiting_notes": "QB · 4★ · Tampa, FL · #259 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2024-06-01T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Kendall Guervil",
+    "slug": "kendall-guervil",
+    "class_year": 2026,
+    "position": "DL",
+    "status": "HS",
+    "height": 77,
+    "weight": 315,
+    "hometown": "Fort Myers",
+    "state": "FL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.907,
+    "ranking_national": 276,
+    "ranking_position": 28,
+    "ranking_state": 38,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-07-02"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 90.66666666666667,
+        "natl_rank": 276,
+        "pos_rank": 28,
+        "state_rank": 38,
+        "on3_id": "236759"
+      },
+      "recruiting_notes": "DL · 4★ · Fort Myers, FL · #276 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-07-02T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Tyler Chukuyem",
+    "slug": "tyler-chukuyem",
+    "class_year": 2026,
+    "position": "OL",
+    "status": "HS",
+    "height": 78,
+    "weight": 290,
+    "hometown": "Douglasville",
+    "state": "GA",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.906,
+    "ranking_national": 281,
+    "ranking_position": 23,
+    "ranking_state": 34,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-06-16"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 90.55760869565219,
+        "natl_rank": 281,
+        "pos_rank": 23,
+        "state_rank": 34,
+        "on3_id": "243492"
+      },
+      "recruiting_notes": "OT · 4★ · Douglasville, GA · #281 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-06-16T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Malik Morris",
+    "slug": "malik-morris",
+    "class_year": 2026,
+    "position": "LB",
+    "status": "HS",
+    "height": 73,
+    "weight": 260,
+    "hometown": "Lakeland",
+    "state": "FL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.897,
+    "ranking_national": 362,
+    "ranking_position": 27,
+    "ranking_state": 47,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-07-07"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 89.7304347826087,
+        "natl_rank": 362,
+        "pos_rank": 27,
+        "state_rank": 47,
+        "on3_id": "177521"
+      },
+      "recruiting_notes": "LB · 4★ · Lakeland, FL · #362 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-07-07T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Heze Kent",
+    "slug": "heze-kent",
+    "class_year": 2026,
+    "position": "OL",
+    "status": "HS",
+    "height": 78,
+    "weight": 320,
+    "hometown": "Brunswick",
+    "state": "GA",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.897,
+    "ranking_national": 366,
+    "ranking_position": 29,
+    "ranking_state": 43,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-07-12"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 89.66666666666667,
+        "natl_rank": 366,
+        "pos_rank": 29,
+        "state_rank": 43,
+        "on3_id": "174275"
+      },
+      "recruiting_notes": "OT · 4★ · Brunswick, GA · #366 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-07-12T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Marquez Daniel",
+    "slug": "marquez-daniel",
+    "class_year": 2026,
+    "position": "WR",
+    "status": "HS",
+    "height": 77,
+    "weight": 187,
+    "hometown": "Tuskegee",
+    "state": "AL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.897,
+    "ranking_national": 367,
+    "ranking_position": 58,
+    "ranking_state": 15,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-06-14"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 89.66666666666667,
+        "natl_rank": 367,
+        "pos_rank": 58,
+        "state_rank": 15,
+        "on3_id": "177149"
+      },
+      "recruiting_notes": "WR · 4★ · Tuskegee, AL · #367 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-06-14T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Kaiden Hall",
+    "slug": "kaiden-hall",
+    "class_year": 2026,
+    "position": "S",
+    "status": "HS",
+    "height": 75,
+    "weight": 200,
+    "hometown": "Milton",
+    "state": "FL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.895,
+    "ranking_national": 386,
+    "ranking_position": 30,
+    "ranking_state": 50,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-06-03"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 89.50833333333334,
+        "natl_rank": 386,
+        "pos_rank": 30,
+        "state_rank": 50,
+        "on3_id": "174822"
+      },
+      "recruiting_notes": "S · 4★ · Milton, FL · #386 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-06-03T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Duke Clark",
+    "slug": "duke-clark",
+    "class_year": 2026,
+    "position": "RB",
+    "status": "HS",
+    "height": 71,
+    "weight": 200,
+    "hometown": "Armwood HS",
+    "state": "Seffner FL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": null
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": "RB · 4★ · Armwood HS, Seffner FL",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-11T15:49:00.055Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "G'Nivre Carr",
+    "slug": "gnivre-carr",
+    "class_year": 2026,
+    "position": "OL",
+    "status": "HS",
+    "height": 76,
+    "weight": 325,
+    "hometown": "Ocala",
+    "state": "FL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.887,
+    "ranking_national": 505,
+    "ranking_position": 45,
+    "ranking_state": 64,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-06-01"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 88.66666666666667,
+        "natl_rank": 505,
+        "pos_rank": 45,
+        "state_rank": 64,
+        "on3_id": "176416"
+      },
+      "recruiting_notes": "IOL · 3★ · Ocala, FL · #505 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-06-01T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Corey Brown",
+    "slug": "corey-brown",
+    "class_year": 2026,
+    "position": "OL",
+    "status": "HS",
+    "height": 76,
+    "weight": 305,
+    "hometown": "Dillard HS",
+    "state": "Fort Lauderdale FL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": null
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": "OL · 3★ · Dillard HS, Fort Lauderdale FL",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-11T15:49:00.068Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Desmond Green",
+    "slug": "desmond-green",
+    "class_year": 2026,
+    "position": "OL",
+    "status": "HS",
+    "height": 77,
+    "weight": 350,
+    "hometown": "Saint Stephen",
+    "state": "SC",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.871,
+    "ranking_national": 884,
+    "ranking_position": 82,
+    "ranking_state": 16,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-06-26"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 87.06666666666666,
+        "natl_rank": 884,
+        "pos_rank": 82,
+        "state_rank": 16,
+        "on3_id": "236347"
+      },
+      "recruiting_notes": "IOL · 3★ · Saint Stephen, SC · #884 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-06-26T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Javarii Luckas",
+    "slug": "javarii-luckas",
+    "class_year": 2026,
+    "position": "OL",
+    "status": "HS",
+    "height": 77,
+    "weight": 270,
+    "hometown": "Belle Glade",
+    "state": "FL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.864,
+    "ranking_national": 1147,
+    "ranking_position": 82,
+    "ranking_state": 121,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-06-16"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 86.4,
+        "natl_rank": 1147,
+        "pos_rank": 82,
+        "state_rank": 121,
+        "on3_id": "243619"
+      },
+      "recruiting_notes": "OT · 3★ · Belle Glade, FL · #1147 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-06-16T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Micah Jones",
+    "slug": "micah-jones",
+    "class_year": 2026,
+    "position": "TE",
+    "status": "HS",
+    "height": 76,
+    "weight": 230,
+    "hometown": "Sandalwood HS",
+    "state": "Jacksonville FL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": null
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": "TE · 3★ · Sandalwood HS, Jacksonville FL",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-11T15:49:00.084Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Byron Louis",
+    "slug": "byron-louis",
+    "class_year": 2026,
+    "position": "RB",
+    "status": "HS",
+    "height": 70,
+    "weight": 195,
+    "hometown": "Dr. Phillips HS",
+    "state": "Orlando FL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": null
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": "RB · 3★ · Dr. Phillips HS, Orlando FL",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-11T15:49:00.089Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Jalen Wiggins",
+    "slug": "jalen-wiggins",
+    "class_year": 2026,
+    "position": "EDGE",
+    "status": "HS",
+    "height": 75,
+    "weight": 220,
+    "hometown": "Mainland HS",
+    "state": "Daytona Beach FL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": null
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": "EDGE · 3★ · Mainland HS, Daytona Beach FL",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-11T15:49:00.094Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Jaylen Jordan",
+    "slug": "jaylen-jordan",
+    "class_year": 2026,
+    "position": "TE",
+    "status": "HS",
+    "height": 78,
+    "weight": 240,
+    "hometown": null,
+    "state": null,
+    "high_school": "Hilliard FL",
+    "stars": 3,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": null
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": "TE · 3★ · Hilliard FL",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-11T15:49:00.099Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Ace Ciongoli",
+    "slug": "ace-ciongoli",
+    "class_year": 2026,
+    "position": "WR",
+    "status": "PORTAL",
+    "height": 71,
+    "weight": 190,
+    "hometown": null,
+    "state": null,
+    "high_school": "Indiana",
+    "stars": 3,
+    "composite_rating": 0.81,
+    "ranking_national": 3144,
+    "ranking_position": 451,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Indiana",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Indiana",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-26T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Kennedee Jackson",
+    "slug": "kennedee-jackson",
+    "class_year": 2027,
+    "position": "OL",
+    "status": "HS",
+    "height": 78,
+    "weight": 301,
+    "hometown": "Lithonia",
+    "state": "GA",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.929,
+    "ranking_national": 98,
+    "ranking_position": 9,
+    "ranking_state": 8,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-06-02"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 92.85688405797102,
+        "natl_rank": 98,
+        "pos_rank": 9,
+        "state_rank": 8,
+        "on3_id": "284256"
+      },
+      "recruiting_notes": "OT · 4★ · Lithonia, GA · #98 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-02T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Ja'Bios Smith",
+    "slug": "jabios-smith",
+    "class_year": 2027,
+    "position": "LB",
+    "status": "HS",
+    "height": 74,
+    "weight": 205,
+    "hometown": "Swainsboro",
+    "state": "GA",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.917,
+    "ranking_national": 153,
+    "ranking_position": 14,
+    "ranking_state": 14,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-05-29"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 91.67898550724637,
+        "natl_rank": 153,
+        "pos_rank": 14,
+        "state_rank": 14,
+        "on3_id": "245408"
+      },
+      "recruiting_notes": "LB · 4★ · Swainsboro, GA · #153 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-05-29T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Elias Pearl",
+    "slug": "elias-pearl",
+    "class_year": 2027,
+    "position": "WR",
+    "status": "HS",
+    "height": 71,
+    "weight": 183,
+    "hometown": "Port Charlotte",
+    "state": "FL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.93,
+    "ranking_national": 90,
+    "ranking_position": 16,
+    "ranking_state": 11,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-05-19"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 92.96666666666667,
+        "natl_rank": 90,
+        "pos_rank": 16,
+        "state_rank": 11,
+        "on3_id": "281377"
+      },
+      "recruiting_notes": "WR · 4★ · Port Charlotte, FL · #90 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-05-19T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Peyton Miller",
+    "slug": "peyton-miller",
+    "class_year": 2027,
+    "position": "OL",
+    "status": "HS",
+    "height": 77,
+    "weight": 290,
+    "hometown": "Anna",
+    "state": "TX",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.921,
+    "ranking_national": 127,
+    "ranking_position": 11,
+    "ranking_state": 19,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-04-27"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 92.08115942028986,
+        "natl_rank": 127,
+        "pos_rank": 11,
+        "state_rank": 19,
+        "on3_id": "238083"
+      },
+      "recruiting_notes": "IOL · 4★ · Anna, TX · #127 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-04-27T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "De'Voun Kendrick",
+    "slug": "devoun-kendrick",
+    "class_year": 2027,
+    "position": "DL",
+    "status": "HS",
+    "height": 76,
+    "weight": 300,
+    "hometown": "Tampa",
+    "state": "FL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.877,
+    "ranking_national": 582,
+    "ranking_position": 64,
+    "ranking_state": 48,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-04-27"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 87.7,
+        "natl_rank": 582,
+        "pos_rank": 64,
+        "state_rank": 48,
+        "on3_id": "283921"
+      },
+      "recruiting_notes": "DL · 3★ · Tampa, FL · #582 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-04-27T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Tommy Douglas",
+    "slug": "tommy-douglas",
+    "class_year": 2027,
+    "position": "TE",
+    "status": "HS",
+    "height": 77,
+    "weight": 235,
+    "hometown": "Princeton",
+    "state": "NJ",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.893,
+    "ranking_national": 349,
+    "ranking_position": 20,
+    "ranking_state": 7,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-04-16"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 89.33333333333333,
+        "natl_rank": 349,
+        "pos_rank": 20,
+        "state_rank": 7,
+        "on3_id": "280816"
+      },
+      "recruiting_notes": "TE · 4★ · Princeton, NJ · #349 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-04-16T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Aamaury Fountain",
+    "slug": "aamaury-fountain",
+    "class_year": 2027,
+    "position": "CB",
+    "status": "HS",
+    "height": 75,
+    "weight": 182,
+    "hometown": "Warner Robins",
+    "state": "GA",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.918,
+    "ranking_national": 145,
+    "ranking_position": 18,
+    "ranking_state": 12,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-04-11"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 91.80212716222533,
+        "natl_rank": 145,
+        "pos_rank": 18,
+        "state_rank": 12,
+        "on3_id": "281368"
+      },
+      "recruiting_notes": "CB · 4★ · Warner Robins, GA · #145 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-04-11T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Davin Davidson",
+    "slug": "davin-davidson",
+    "class_year": 2027,
+    "position": "QB",
+    "status": "HS",
+    "height": 78,
+    "weight": 215,
+    "hometown": "Sarasota",
+    "state": "FL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.923,
+    "ranking_national": 115,
+    "ranking_position": 10,
+    "ranking_state": 13,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-04-09"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 92.26666666666667,
+        "natl_rank": 115,
+        "pos_rank": 10,
+        "state_rank": 13,
+        "on3_id": "259412"
+      },
+      "recruiting_notes": "QB · 4★ · Sarasota, FL · #115 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-04-09T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Maxwell Hiller",
+    "slug": "maxwell-hiller",
+    "class_year": 2027,
+    "position": "OL",
+    "status": "HS",
+    "height": 78,
+    "weight": 305,
+    "hometown": "Coatesville",
+    "state": "PA",
+    "high_school": null,
+    "stars": 5,
+    "composite_rating": 0.985,
+    "ranking_national": 3,
+    "ranking_position": 1,
+    "ranking_state": 1,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-04-08"
+        }
+      ],
+      "stats": {
+        "stars": 5,
+        "rating": 98.54623655913979,
+        "natl_rank": 3,
+        "pos_rank": 1,
+        "state_rank": 1,
+        "on3_id": "180637"
+      },
+      "recruiting_notes": "IOL · 5★ · Coatesville, PA · #3 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-04-08T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Anthony Jennings",
+    "slug": "anthony-jennings",
+    "class_year": 2027,
+    "position": "WR",
+    "status": "HS",
+    "height": 71,
+    "weight": 160,
+    "hometown": "Fort Lauderdale",
+    "state": "FL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.9,
+    "ranking_national": 294,
+    "ranking_position": 47,
+    "ranking_state": 25,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-04-25"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 89.9927536231884,
+        "natl_rank": 294,
+        "pos_rank": 47,
+        "state_rank": 25,
+        "on3_id": "239852"
+      },
+      "recruiting_notes": "WR · 4★ · Fort Lauderdale, FL · #294 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-04-25T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Andrew Beard",
+    "slug": "andrew-beard",
+    "class_year": 2027,
+    "position": "RB",
+    "status": "HS",
+    "height": 69,
+    "weight": 195,
+    "hometown": "Bogart",
+    "state": "GA",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.913,
+    "ranking_national": 181,
+    "ranking_position": 12,
+    "ranking_state": 19,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-05-08"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 91.3054347826087,
+        "natl_rank": 181,
+        "pos_rank": 12,
+        "state_rank": 19,
+        "on3_id": "236047"
+      },
+      "recruiting_notes": "RB · 4★ · Bogart, GA · #181 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-05-08T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Elijah Hutcheson",
+    "slug": "elijah-hutcheson",
+    "class_year": 2027,
+    "position": "OL",
+    "status": "HS",
+    "height": 78,
+    "weight": 260,
+    "hometown": "Roanoke",
+    "state": "VA",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.929,
+    "ranking_national": 99,
+    "ranking_position": 10,
+    "ranking_state": 2,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-05-05"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 92.85,
+        "natl_rank": 99,
+        "pos_rank": 10,
+        "state_rank": 2,
+        "on3_id": "241889"
+      },
+      "recruiting_notes": "OT · 4★ · Roanoke, VA · #99 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-05-05T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Kailib Dillard",
+    "slug": "kailib-dillard",
+    "class_year": 2027,
+    "position": "S",
+    "status": "HS",
+    "height": 74,
+    "weight": 170,
+    "hometown": "Tulsa",
+    "state": "OK",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.88,
+    "ranking_national": 519,
+    "ranking_position": 45,
+    "ranking_state": 12,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-05-05"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 88.01594202898552,
+        "natl_rank": 519,
+        "pos_rank": 45,
+        "state_rank": 12,
+        "on3_id": "243497"
+      },
+      "recruiting_notes": "S · 3★ · Tulsa, OK · #519 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-05-05T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Stive-Bentley Keumajou",
+    "slug": "stive-bentley-keumajou",
+    "class_year": 2027,
+    "position": "DL",
+    "status": "HS",
+    "height": 75,
+    "weight": 295,
+    "hometown": "Coral Gables",
+    "state": "FL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.88,
+    "ranking_national": 517,
+    "ranking_position": 55,
+    "ranking_state": 43,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-05-06"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 88.03333333333333,
+        "natl_rank": 517,
+        "pos_rank": 55,
+        "state_rank": 43,
+        "on3_id": "284617"
+      },
+      "recruiting_notes": "DL · 3★ · Coral Gables, FL · #517 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-05-06T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Tra'Von Hall",
+    "slug": "travon-hall",
+    "class_year": 2027,
+    "position": "WR",
+    "status": "HS",
+    "height": null,
+    "weight": null,
+    "hometown": null,
+    "state": null,
+    "high_school": "Oklahoma commit",
+    "stars": 4,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": null
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": "Oklahoma commit visited Gainesville May 30-31. Top flip candidate.",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-11T15:49:00.163Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Tramond Collins",
+    "slug": "tramond-collins",
+    "class_year": 2027,
+    "position": "WR",
+    "status": "HS",
+    "height": 72,
+    "weight": 185,
+    "hometown": "Cottondale",
+    "state": "FL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.921,
+    "ranking_national": 129,
+    "ranking_position": 20,
+    "ranking_state": 14,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-03-11"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 92.0663043478261,
+        "natl_rank": 129,
+        "pos_rank": 20,
+        "state_rank": 14,
+        "on3_id": "258942"
+      },
+      "recruiting_notes": "WR · 4★ · Cottondale, FL · #129 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-03-11T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Jackson Ballinger",
+    "slug": "jackson-ballinger",
+    "class_year": 2027,
+    "position": "TE",
+    "status": "HS",
+    "height": 77,
+    "weight": 230,
+    "hometown": "Centerburg",
+    "state": "OH",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.887,
+    "ranking_national": 418,
+    "ranking_position": 25,
+    "ranking_state": 18,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-02-24"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 88.7,
+        "natl_rank": 418,
+        "pos_rank": 25,
+        "state_rank": 18,
+        "on3_id": "244244"
+      },
+      "recruiting_notes": "TE · 3★ · Centerburg, OH · #418 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-02-24T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Amare Nugent",
+    "slug": "amare-nugent",
+    "class_year": 2027,
+    "position": "CB",
+    "status": "HS",
+    "height": 71,
+    "weight": 180,
+    "hometown": "Plantation",
+    "state": "FL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.905,
+    "ranking_national": 246,
+    "ranking_position": 27,
+    "ranking_state": 21,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-01-24"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 90.48623188405797,
+        "natl_rank": 246,
+        "pos_rank": 27,
+        "state_rank": 21,
+        "on3_id": "249286"
+      },
+      "recruiting_notes": "CB · 4★ · Plantation, FL · #246 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-24T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Cain Van Norden",
+    "slug": "cain-van-norden",
+    "class_year": 2027,
+    "position": "DL",
+    "status": "HS",
+    "height": 79,
+    "weight": 299,
+    "hometown": "District Heights",
+    "state": "MD",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.877,
+    "ranking_national": 578,
+    "ranking_position": 62,
+    "ranking_state": 13,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-05-15"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 87.7,
+        "natl_rank": 578,
+        "pos_rank": 62,
+        "state_rank": 13,
+        "on3_id": "251040"
+      },
+      "recruiting_notes": "DL · 3★ · District Heights, MD · #578 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-05-15T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Cahron Wheeler",
+    "slug": "cahron-wheeler",
+    "class_year": 2027,
+    "position": "EDGE",
+    "status": "HS",
+    "height": 77,
+    "weight": 245,
+    "hometown": "Baltimore",
+    "state": "MD",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.921,
+    "ranking_national": 123,
+    "ranking_position": 15,
+    "ranking_state": 3,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-06-05"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 92.1268115942029,
+        "natl_rank": 123,
+        "pos_rank": 15,
+        "state_rank": 3,
+        "on3_id": "282819"
+      },
+      "recruiting_notes": "EDGE · 4★ · Baltimore, MD · #123 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-05T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Zahmar Tookes",
+    "slug": "zahmar-tookes",
+    "class_year": 2027,
+    "position": "DL",
+    "status": "HS",
+    "height": 76,
+    "weight": 260,
+    "hometown": "Rochester",
+    "state": "NY",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.897,
+    "ranking_national": 316,
+    "ranking_position": 33,
+    "ranking_state": 2,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-06-03"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 89.67826086956522,
+        "natl_rank": 316,
+        "pos_rank": 33,
+        "state_rank": 2,
+        "on3_id": "243606"
+      },
+      "recruiting_notes": "DL · 4★ · Rochester, NY · #316 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-03T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Derrick Malone",
+    "slug": "derrick-malone",
+    "class_year": 2027,
+    "position": "EDGE",
+    "status": "HS",
+    "height": null,
+    "weight": null,
+    "hometown": null,
+    "state": null,
+    "high_school": null,
+    "stars": 0,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": null
+        }
+      ],
+      "stats": {
+        "stars": 0,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": "on3 recruiting sources say Florida is trending, decision is close, and the in-home visit gave UF momentum.",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-11T15:49:01.258Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Devon Hall",
+    "slug": "devon-hall",
+    "class_year": 2027,
+    "position": "S",
+    "status": "HS",
+    "height": null,
+    "weight": null,
+    "hometown": null,
+    "state": null,
+    "high_school": null,
+    "stars": 0,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": null
+        }
+      ],
+      "stats": {
+        "stars": 0,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": "on3 intel: Ocala native with a visit scheduled, strong UF ties, and Florida viewed as a leading option.",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-11T15:49:01.690Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Eric Singleton Jr.",
+    "slug": "eric-singleton-jr",
+    "class_year": 2026,
+    "position": "WR",
+    "status": "PORTAL",
+    "height": 71,
+    "weight": 165,
+    "hometown": "Douglasville",
+    "state": "GA",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.938,
+    "ranking_national": 38,
+    "ranking_position": 9,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Auburn",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Auburn",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-10T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Harrison Moore",
+    "slug": "harrison-moore",
+    "class_year": 2026,
+    "position": "OL",
+    "status": "PORTAL",
+    "height": 77,
+    "weight": 230,
+    "hometown": "Southlake",
+    "state": "TX",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.887,
+    "ranking_national": 319,
+    "ranking_position": 20,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Georgia Tech",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Georgia Tech",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-09T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Eagan Boyer",
+    "slug": "eagan-boyer",
+    "class_year": 2026,
+    "position": "OL",
+    "status": "PORTAL",
+    "height": 80,
+    "weight": 302,
+    "hometown": null,
+    "state": null,
+    "high_school": "Penn State",
+    "stars": 3,
+    "composite_rating": 0.865,
+    "ranking_national": 944,
+    "ranking_position": 76,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Penn State",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Penn State",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-06T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "T.J. Shanahan",
+    "slug": "tj-shanahan-jr",
+    "class_year": 2026,
+    "position": "OL",
+    "status": "HS",
+    "height": 76,
+    "weight": 316,
+    "hometown": "Orlando",
+    "state": "FL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-01-06"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": "113148"
+      },
+      "recruiting_notes": "IOL · 3★ · Orlando, FL",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-06T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Evan Pryor",
+    "slug": "evan-pryor",
+    "class_year": 2026,
+    "position": "RB",
+    "status": "PORTAL",
+    "height": 70,
+    "weight": 190,
+    "hometown": null,
+    "state": null,
+    "high_school": "Cincinnati",
+    "stars": 3,
+    "composite_rating": 0.893,
+    "ranking_national": 250,
+    "ranking_position": 17,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Cincinnati",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Cincinnati",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-06T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Luke Harpring",
+    "slug": "luke-harpring",
+    "class_year": 2026,
+    "position": "TE",
+    "status": "PORTAL",
+    "height": 75,
+    "weight": 215,
+    "hometown": "Atlanta",
+    "state": "GA",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.887,
+    "ranking_national": 322,
+    "ranking_position": 23,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Georgia Tech",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Georgia Tech",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-10T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Cam Dooley",
+    "slug": "cam-dooley",
+    "class_year": 2026,
+    "position": "S",
+    "status": "PORTAL",
+    "height": 74,
+    "weight": 195,
+    "hometown": null,
+    "state": null,
+    "high_school": "Kentucky",
+    "stars": 3,
+    "composite_rating": 0.888,
+    "ranking_national": 299,
+    "ranking_position": 26,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Kentucky",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Kentucky",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-07T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "DJ Coleman",
+    "slug": "dj-coleman",
+    "class_year": 2026,
+    "position": "S",
+    "status": "PORTAL",
+    "height": 72,
+    "weight": 180,
+    "hometown": null,
+    "state": null,
+    "high_school": "Baylor",
+    "stars": 3,
+    "composite_rating": 0.888,
+    "ranking_national": 300,
+    "ranking_position": 27,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Baylor",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Baylor",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-04T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Patrick Durkin",
+    "slug": "patrick-durkin",
+    "class_year": 2026,
+    "position": "K",
+    "status": "PORTAL",
+    "height": 70,
+    "weight": 170,
+    "hometown": null,
+    "state": null,
+    "high_school": "Tulane",
+    "stars": 3,
+    "composite_rating": 0.825,
+    "ranking_national": 2913,
+    "ranking_position": 1,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Tulane",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Tulane",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-06T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Lacota Dippre",
+    "slug": "lacota-dippre",
+    "class_year": 2026,
+    "position": "TE",
+    "status": "PORTAL",
+    "height": 76,
+    "weight": 240,
+    "hometown": null,
+    "state": null,
+    "high_school": "James Madison",
+    "stars": 3,
+    "composite_rating": 0.87,
+    "ranking_national": 680,
+    "ranking_position": 39,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "James Madison",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "James Madison",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-05T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Bailey Stockton",
+    "slug": "bailey-stockton",
+    "class_year": 2026,
+    "position": "WR",
+    "status": "PORTAL",
+    "height": 69,
+    "weight": 175,
+    "hometown": "Athens",
+    "state": "GA",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.865,
+    "ranking_national": 934,
+    "ranking_position": 139,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Georgia Tech",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Georgia Tech",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-05T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "DK Kalu",
+    "slug": "dk-kalu",
+    "class_year": 2026,
+    "position": "DL",
+    "status": "PORTAL",
+    "height": 75,
+    "weight": 270,
+    "hometown": null,
+    "state": null,
+    "high_school": "Baylor",
+    "stars": 3,
+    "composite_rating": 0.86,
+    "ranking_national": 1172,
+    "ranking_position": 122,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Baylor",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Baylor",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-05T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Alec Clark",
+    "slug": "alec-clark",
+    "class_year": 2026,
+    "position": "P",
+    "status": "PORTAL",
+    "height": 73,
+    "weight": 184,
+    "hometown": null,
+    "state": null,
+    "high_school": "Tulane",
+    "stars": 3,
+    "composite_rating": 0.8,
+    "ranking_national": 3197,
+    "ranking_position": 34,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Tulane",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Tulane",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-06T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Emmanuel Oyebadejo",
+    "slug": "emmanuel-oyebadejo",
+    "class_year": 2026,
+    "position": "DL",
+    "status": "PORTAL",
+    "height": 79,
+    "weight": 315,
+    "hometown": null,
+    "state": null,
+    "high_school": "Jacksonville State",
+    "stars": 3,
+    "composite_rating": 0.9,
+    "ranking_national": 197,
+    "ranking_position": 22,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Jacksonville State",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Jacksonville State",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-06T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "London Montgomery",
+    "slug": "london-montgomery",
+    "class_year": 2026,
+    "position": "RB",
+    "status": "PORTAL",
+    "height": 70,
+    "weight": 185,
+    "hometown": null,
+    "state": null,
+    "high_school": "East Carolina",
+    "stars": 3,
+    "composite_rating": 0.887,
+    "ranking_national": 303,
+    "ranking_position": 26,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "East Carolina",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "East Carolina",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-08T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Carter Milliron",
+    "slug": "carter-milliron",
+    "class_year": 2026,
+    "position": "ATH",
+    "status": "PORTAL",
+    "height": 72,
+    "weight": 257,
+    "hometown": null,
+    "state": null,
+    "high_school": "Louisiana",
+    "stars": 3,
+    "composite_rating": 0.8,
+    "ranking_national": 3207,
+    "ranking_position": 29,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Louisiana",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Louisiana",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-08T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Miller Fealy",
+    "slug": "miller-fealy",
+    "class_year": 2026,
+    "position": "P",
+    "status": "PORTAL",
+    "height": 74,
+    "weight": 210,
+    "hometown": null,
+    "state": null,
+    "high_school": "UT Martin",
+    "stars": 3,
+    "composite_rating": 0.8,
+    "ranking_national": 3215,
+    "ranking_position": 40,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "UT Martin",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "UT Martin",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-10T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "TJ Bullard",
+    "slug": "tj-bullard",
+    "class_year": 2026,
+    "position": "LB",
+    "status": "PORTAL",
+    "height": 73,
+    "weight": 200,
+    "hometown": null,
+    "state": null,
+    "high_school": "UCF",
+    "stars": 3,
+    "composite_rating": 0.84,
+    "ranking_national": 2517,
+    "ranking_position": 228,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "UCF",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "UCF",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-12T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Jaylen Lloyd",
+    "slug": "jaylen-lloyd",
+    "class_year": 2026,
+    "position": "WR",
+    "status": "PORTAL",
+    "height": 71,
+    "weight": 180,
+    "hometown": null,
+    "state": null,
+    "high_school": "Oklahoma State",
+    "stars": 3,
+    "composite_rating": 0.86,
+    "ranking_national": 1076,
+    "ranking_position": 159,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Oklahoma State",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Oklahoma State",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-16T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Mason Clinton",
+    "slug": "mason-clinton",
+    "class_year": 2026,
+    "position": "DL",
+    "status": "PORTAL",
+    "height": 77,
+    "weight": 265,
+    "hometown": null,
+    "state": null,
+    "high_school": "Southern Miss",
+    "stars": 3,
+    "composite_rating": 0.855,
+    "ranking_national": 1921,
+    "ranking_position": 214,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Southern Miss",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Southern Miss",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-18T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Evan Chieca",
+    "slug": "evan-chieca",
+    "class_year": 2026,
+    "position": "TE",
+    "status": "PORTAL",
+    "height": 77,
+    "weight": 250,
+    "hometown": null,
+    "state": null,
+    "high_school": "New Haven",
+    "stars": 3,
+    "composite_rating": 0.85,
+    "ranking_national": 2019,
+    "ranking_position": 109,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "New Haven",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "New Haven",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-19T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Jordy Lowery",
+    "slug": "jordy-lowery",
+    "class_year": 2026,
+    "position": "CB",
+    "status": "PORTAL",
+    "height": 71,
+    "weight": 167,
+    "hometown": null,
+    "state": null,
+    "high_school": "East Carolina",
+    "stars": 3,
+    "composite_rating": 0.865,
+    "ranking_national": 1062,
+    "ranking_position": 124,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "East Carolina",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "East Carolina",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-21T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Ellis McGaskin",
+    "slug": "ellis-mcgaskin",
+    "class_year": 2027,
+    "position": "LB",
+    "status": "HS",
+    "height": 72,
+    "weight": 210,
+    "hometown": "Mobile",
+    "state": "AL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.893,
+    "ranking_national": 354,
+    "ranking_position": 32,
+    "ranking_state": 18,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-06-06"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 89.32608695652173,
+        "natl_rank": 354,
+        "pos_rank": 32,
+        "state_rank": 18,
+        "on3_id": "180930"
+      },
+      "recruiting_notes": "LB · 4★ · Mobile, AL · #354 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-06T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "CJ Hester",
+    "slug": "cj-hester",
+    "class_year": 2026,
+    "position": "CB",
+    "status": "HS",
+    "height": 73,
+    "weight": 175,
+    "hometown": "Cocoa",
+    "state": "FL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.887,
+    "ranking_national": 503,
+    "ranking_position": 51,
+    "ranking_state": 63,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-07-03"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 88.66666666666667,
+        "natl_rank": 503,
+        "pos_rank": 51,
+        "state_rank": 63,
+        "on3_id": "155900"
+      },
+      "recruiting_notes": "CB · 3★ · Cocoa, FL · #503 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-07-03T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Chancellor Campbell",
+    "slug": "chancellor-campbell",
+    "class_year": 2026,
+    "position": "OL",
+    "status": "HS",
+    "height": 80,
+    "weight": 310,
+    "hometown": "Saint Petersburg",
+    "state": "FL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.88,
+    "ranking_national": 627,
+    "ranking_position": 48,
+    "ranking_state": 75,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2025-06-08"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 88.03333333333333,
+        "natl_rank": 627,
+        "pos_rank": 48,
+        "state_rank": 75,
+        "on3_id": "179743"
+      },
+      "recruiting_notes": "OT · 3★ · Saint Petersburg, FL · #627 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2025-06-08T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Elijah Owens",
+    "slug": "elijah-owens",
+    "class_year": 2026,
+    "position": "S",
+    "status": "HS",
+    "height": 75,
+    "weight": 210,
+    "hometown": "Mobile",
+    "state": "AL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.874,
+    "ranking_national": 63,
+    "ranking_position": 7,
+    "ranking_state": 20,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-01-07"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 87.395301542777,
+        "natl_rank": 63,
+        "pos_rank": 7,
+        "state_rank": 20,
+        "on3_id": "283712"
+      },
+      "recruiting_notes": "S · 3★ · Mobile, AL · #63 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-07T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Eric Parks",
+    "slug": "eric-parks",
+    "class_year": 2026,
+    "position": "S",
+    "status": "HS",
+    "height": 72,
+    "weight": 190,
+    "hometown": "Tampa",
+    "state": "FL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.848,
+    "ranking_national": 1750,
+    "ranking_position": 165,
+    "ranking_state": 196,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-02-05"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 84.8,
+        "natl_rank": 1750,
+        "pos_rank": 165,
+        "state_rank": 196,
+        "on3_id": "260787"
+      },
+      "recruiting_notes": "S · 3★ · Tampa, FL · #1750 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-02-05T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Javier Jones",
+    "slug": "javier-jones",
+    "class_year": 2026,
+    "position": "CB",
+    "status": "HS",
+    "height": 73,
+    "weight": 185,
+    "hometown": "Phoenix",
+    "state": "AZ",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.829,
+    "ranking_national": 265,
+    "ranking_position": 34,
+    "ranking_state": 61,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-05-12"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 82.92210144927536,
+        "natl_rank": 265,
+        "pos_rank": 34,
+        "state_rank": 61,
+        "on3_id": "288527"
+      },
+      "recruiting_notes": "CB · 3★ · Phoenix, AZ · #265 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-05-12T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "T.J. Shanahan",
+    "slug": "t-j-shanahan",
+    "class_year": 2026,
+    "position": "OL",
+    "status": "PORTAL",
+    "height": 76,
+    "weight": 316,
+    "hometown": null,
+    "state": null,
+    "high_school": "Penn State",
+    "stars": 3,
+    "composite_rating": 0.892,
+    "ranking_national": 260,
+    "ranking_position": 16,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Penn State",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Penn State",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-06T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Micah Mays",
+    "slug": "micah-mays",
+    "class_year": 2026,
+    "position": "WR",
+    "status": "PORTAL",
+    "height": 74,
+    "weight": 174,
+    "hometown": null,
+    "state": null,
+    "high_school": "Wake Forest",
+    "stars": 3,
+    "composite_rating": 0.877,
+    "ranking_national": 421,
+    "ranking_position": 67,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Wake Forest",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Wake Forest",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-07T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Aaron Philo",
+    "slug": "aaron-philo",
+    "class_year": 2026,
+    "position": "QB",
+    "status": "PORTAL",
+    "height": 73,
+    "weight": 205,
+    "hometown": "Bogart",
+    "state": "GA",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.906,
+    "ranking_national": 165,
+    "ranking_position": 22,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Georgia Tech",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Georgia Tech",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-06T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Emeka Ugorji",
+    "slug": "emeka-ugorji",
+    "class_year": 2026,
+    "position": "OL",
+    "status": "PORTAL",
+    "height": 77,
+    "weight": 270,
+    "hometown": null,
+    "state": null,
+    "high_school": "Stanford",
+    "stars": 3,
+    "composite_rating": 0.865,
+    "ranking_national": 954,
+    "ranking_position": 78,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Stanford",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Stanford",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-09T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Kanye Clark",
+    "slug": "kanye-clark",
+    "class_year": 2026,
+    "position": "S",
+    "status": "PORTAL",
+    "height": 71,
+    "weight": 190,
+    "hometown": null,
+    "state": null,
+    "high_school": "UCLA",
+    "stars": 3,
+    "composite_rating": 0.86,
+    "ranking_national": 1285,
+    "ranking_position": 125,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "UCLA",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "UCLA",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-01-12T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Jaylen Jordon",
+    "slug": "jaylen-jordon",
+    "class_year": 2026,
+    "position": "TE",
+    "status": "PORTAL",
+    "height": 78,
+    "weight": 240,
+    "hometown": null,
+    "state": null,
+    "high_school": "Jacksonville",
+    "stars": 3,
+    "composite_rating": 0.86,
+    "ranking_national": 1686,
+    "ranking_position": 90,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "college_profile": {
+      "college": "Jacksonville",
+      "years_played": null,
+      "games_played": null,
+      "snaps": {},
+      "stats": {},
+      "depth_history": []
+    },
+    "portal_profile": {
+      "previous_school": "Jacksonville",
+      "entered_portal_at": null,
+      "exited_portal_at": null,
+      "portal_status": "COMMITTED",
+      "destination_school": "Florida",
+      "eligibility_remaining": null,
+      "reason_tags": [],
+      "portal_likelihood": null,
+      "likelihood_reason": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-05-01T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Kamarion Johnson",
+    "slug": "kamarion-johnson",
+    "class_year": 2027,
+    "position": "ATH",
+    "status": "HS",
+    "height": 72,
+    "weight": 185,
+    "hometown": "Homerville",
+    "state": "GA",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.893,
+    "ranking_national": 351,
+    "ranking_position": 12,
+    "ranking_state": 40,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-06-05"
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 89.33333333333333,
+        "natl_rank": 351,
+        "pos_rank": 12,
+        "state_rank": 40,
+        "on3_id": "283680"
+      },
+      "recruiting_notes": "ATH · 4★ · Homerville, GA · #351 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-05T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Jaydee Lane",
+    "slug": "jaydee-lane",
+    "class_year": 2027,
+    "position": "ATH",
+    "status": "HS",
+    "height": 73,
+    "weight": 220,
+    "hometown": "Mendenhall",
+    "state": "MS",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": 0.8,
+    "ranking_national": 1808,
+    "ranking_position": 2,
+    "ranking_state": 36,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-06-08"
+        }
+      ],
+      "stats": {
+        "stars": 3,
+        "rating": 80,
+        "natl_rank": 1808,
+        "pos_rank": 2,
+        "state_rank": 36,
+        "on3_id": "285808"
+      },
+      "recruiting_notes": "LS · 3★ · Mendenhall, MS · #1808 natl",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Florida"
+        },
+        "created_at": "2026-06-08T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Easton Royal",
+    "slug": "easton-royal",
+    "class_year": 2027,
+    "position": "WR",
+    "status": "HS",
+    "height": 72,
+    "weight": 175,
+    "hometown": "Brother Martin HS",
+    "state": "New Orleans LA",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.9,
+    "ranking_national": 120,
+    "ranking_position": 18,
+    "ranking_state": 8,
+    "committed_to": "Texas",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Texas",
+          "date": null
+        }
+      ],
+      "stats": {
+        "stars": 4,
+        "rating": 90,
+        "natl_rank": 120,
+        "pos_rank": 18,
+        "state_rank": 8,
+        "on3_id": "243862"
+      },
+      "recruiting_notes": "Tyler Harden: official visit to Gainesville scheduled June 11–13.",
+      "discovery_score": null
+    },
+    "signals": [
+      {
+        "signal_type": "OFFER",
+        "signal_value": {
+          "school": "Texas"
+        },
+        "created_at": "2026-06-11T15:49:00.384Z"
+      }
+    ]
+  },
+  {
+    "id": null,
+    "full_name": "Amare Patterson",
+    "slug": "amare-patterson",
+    "class_year": 2027,
+    "position": "WR",
+    "status": "HS",
+    "height": null,
+    "weight": null,
+    "hometown": null,
+    "state": null,
+    "high_school": null,
+    "stars": 0,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": null,
+    "high_school_profile": {
+      "offers": [],
+      "stats": {
+        "stars": 0,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": "243198"
+      },
+      "recruiting_notes": "OV to Florida cancelled · now visiting South Carolina",
+      "discovery_score": null
+    }
+  },
+  {
+    "id": null,
+    "full_name": "Jaylen Brown",
+    "slug": "jaylen-brown",
+    "class_year": 2025,
+    "position": "WR",
+    "status": "HS",
+    "height": null,
+    "weight": null,
+    "hometown": null,
+    "state": null,
+    "high_school": "IMG Academy",
+    "stars": 5,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": null,
+    "high_school_profile": {
+      "offers": [],
+      "stats": {
+        "stars": 5,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": null,
+      "discovery_score": null
+    }
+  },
+  {
+    "id": null,
+    "full_name": "Trey Morrison",
+    "slug": "trey-morrison",
+    "class_year": 2025,
+    "position": "WR",
+    "status": "HS",
+    "height": null,
+    "weight": null,
+    "hometown": null,
+    "state": null,
+    "high_school": "IMG Academy",
+    "stars": 5,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": null,
+    "high_school_profile": {
+      "offers": [],
+      "stats": {
+        "stars": 5,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": null,
+      "discovery_score": null
+    }
+  },
+  {
+    "id": null,
+    "full_name": "Jalen Brewster",
+    "slug": "jalen-brewster",
+    "class_year": 2027,
+    "position": "DL",
+    "status": "HS",
+    "height": null,
+    "weight": null,
+    "hometown": "Lake Dallas HS",
+    "state": "TX",
+    "high_school": null,
+    "stars": 5,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": null,
+    "high_school_profile": {
+      "offers": [],
+      "stats": {
+        "stars": 5,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": "jalen-brewster"
+      },
+      "recruiting_notes": null,
+      "discovery_score": null
+    }
+  },
+  {
+    "id": null,
+    "full_name": "Raheem Floyd",
+    "slug": "raheem-floyd",
+    "class_year": 2027,
+    "position": "CB",
+    "status": "HS",
+    "height": null,
+    "weight": null,
+    "hometown": "East St. Louis",
+    "state": "IL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": null,
+    "high_school_profile": {
+      "offers": [],
+      "stats": {
+        "stars": 4,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": "CB · 4★ · East St. Louis, IL · official visit June 11–13",
+      "discovery_score": null
+    }
+  },
+  {
+    "id": null,
+    "full_name": "Marquis Evans",
+    "slug": "marquis-evans",
+    "class_year": 2027,
+    "position": "EDGE",
+    "status": "HS",
+    "height": null,
+    "weight": null,
+    "hometown": "Spain Park",
+    "state": "AL",
+    "high_school": null,
+    "stars": 3,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": null,
+    "high_school_profile": {
+      "offers": [],
+      "stats": {
+        "stars": 3,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": null
+      },
+      "recruiting_notes": "EDGE · 3★ · Spain Park, AL · official visit June 11–13",
+      "discovery_score": null
+    }
+  }
+]

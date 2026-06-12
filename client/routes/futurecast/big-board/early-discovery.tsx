@@ -1,7 +1,25 @@
-/** Early Discovery tab — 2028–2030, discovery_score. Spec §4.1, §5 */
+/** Early Discovery tab — HS players sorted by signals via /api/big-board */
 import React from 'react';
+import { BigBoardGrid } from '../../../components/futurecast/BigBoardGrid';
 
-export default function EarlyDiscoveryTab(): React.ReactElement {
-  // TODO(Phase 4): GET /api/futurecast/early-discovery
-  return <div data-testid="tab-early-discovery">TODO: FutureCast Early Discovery — spec §4.1</div>;
+export interface EarlyDiscoveryTabProps {
+  classYear?: number;
+}
+
+export default function EarlyDiscoveryTab({
+  classYear = 2028,
+}: EarlyDiscoveryTabProps): React.ReactElement {
+  return (
+    <div data-testid="tab-early-discovery">
+      <BigBoardGrid
+        query={{
+          class_year: classYear,
+          lifecycle: 'HS',
+          sort: 'signals',
+          order: 'desc',
+          limit: 200,
+        }}
+      />
+    </div>
+  );
 }

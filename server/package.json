@@ -19,7 +19,9 @@
     "rebuild:scouting": "node scripts/rebuild-scouting-database.js",
     "ingest:media": "node scripts/run-media-ingest.js",
     "generate:og": "node scripts/generate-og-assets.js",
-    "qa:crawl": "node scripts/run-qa-crawler.js"
+    "qa:crawl": "node scripts/run-qa-crawler.js",
+    "migrate:players": "npx tsx migrators/migrate-players.ts",
+    "transform:players": "npx tsx scripts/transform-recruiting-data.ts"
   },
   "engines": {
     "node": ">=18"
@@ -31,9 +33,12 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "node-fetch": "^2.6.7",
-    "nodemailer": "^6.9.4"
+    "nodemailer": "^6.9.4",
+    "pg": "^8.16.0",
+    "tsx": "^4.20.3"
   },
   "devDependencies": {
+    "@types/pg": "^8.15.4",
     "sharp": "^0.34.5"
   }
 }

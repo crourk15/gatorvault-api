@@ -1,0 +1,111 @@
+/* FutureCast Player Profile 2.0 — production styles */
+*, *::before, *::after { box-sizing: border-box; }
+.fc-body {
+  margin: 0;
+  min-height: 100vh;
+  background: #060f1f;
+  color: #e2e8f0;
+  font-family: Inter, Arial, sans-serif;
+}
+.fc-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(0, 18, 58, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(0, 48, 135, 0.35);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.fc-topbar a { color: #fa4616; font-weight: 600; text-decoration: none; font-size: 0.875rem; }
+.fc-topbar a:hover { color: #fff; }
+.fc-topbar__title {
+  font-family: Oswald, sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #fff;
+}
+.fc-topbar__spacer { width: 4rem; }
+
+.fc-profile-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem 1rem 3rem;
+  color: #e2e8f0;
+}
+.fc-profile-header { margin: 1rem 0 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid rgba(0, 48, 135, 0.35); }
+.fc-profile-header__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.fc-profile-header__position { font-size: 0.8125rem; color: #64748b; margin: 0 0 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.fc-profile-header__name { font-family: Oswald, sans-serif; font-size: clamp(1.75rem, 5vw, 2.25rem); font-weight: 700; color: #fff; margin: 0; line-height: 1.1; }
+.fc-profile-header__location, .fc-profile-header__measurables { margin: 0.35rem 0 0; font-size: 0.875rem; color: #94a3b8; }
+.fc-profile-share { background: linear-gradient(135deg, #003087, #00205b); border: 1px solid #fa4616; color: #fff; border-radius: 8px; padding: 0.5rem 1rem; font-weight: 700; font-size: 0.8125rem; cursor: pointer; }
+.fc-profile-header__badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+.fc-profile-lifecycle { border: 1px solid; border-radius: 9999px; padding: 0.2rem 0.65rem; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; }
+.fc-profile-portal-status, .fc-profile-stars, .fc-profile-commit { background: rgba(0, 48, 135, 0.25); color: #7dd3fc; border-radius: 9999px; padding: 0.2rem 0.65rem; font-size: 0.6875rem; font-weight: 700; }
+.fc-profile-header__scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; }
+.fc-score-card { background: #0a1628; border: 1px solid rgba(0, 48, 135, 0.45); border-radius: 10px; padding: 0.75rem; text-align: center; }
+.fc-score-card__label { display: block; font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; margin-bottom: 0.25rem; }
+.fc-score-card__value { display: block; font-family: Oswald, sans-serif; font-size: 1.5rem; font-weight: 700; color: #fff; }
+.fc-score-card__tier { font-size: 0.75rem; color: #fb923c; }
+.fc-score-card--elite { border-color: rgba(250, 70, 22, 0.5); }
+.fc-score-card--strong { border-color: rgba(59, 130, 246, 0.45); }
+.fc-score-card--moderate { border-color: rgba(148, 163, 184, 0.35); }
+.fc-score-card--low { border-color: rgba(100, 116, 139, 0.35); }
+.fc-score-card--portal-high { border-color: rgba(168, 85, 247, 0.55); }
+.fc-score-card--portal-medium { border-color: rgba(168, 85, 247, 0.35); }
+.fc-profile-tabs { position: sticky; top: 48px; z-index: 40; display: flex; gap: 0.35rem; overflow-x: auto; padding: 0.75rem 0; margin-bottom: 0.5rem; background: #060f1f; border-bottom: 1px solid rgba(0, 48, 135, 0.35); }
+.fc-profile-tab { flex-shrink: 0; background: transparent; border: 1px solid transparent; color: #94a3b8; border-radius: 9999px; padding: 0.4rem 0.85rem; font-size: 0.8125rem; font-weight: 700; cursor: pointer; }
+.fc-profile-tab.is-active { background: rgba(250, 70, 22, 0.15); border-color: #fa4616; color: #fa4616; }
+.fc-profile-tab.is-disabled { opacity: 0.35; cursor: not-allowed; }
+.fc-profile-panel { padding: 0.5rem 0 1.5rem; }
+.fc-profile-section { margin-bottom: 1.5rem; padding: 1rem; background: linear-gradient(145deg, #0a1628, #0d1524); border: 1px solid rgba(0, 48, 135, 0.3); border-radius: 12px; }
+.fc-profile-section h2 { font-family: Oswald, sans-serif; font-size: 1rem; color: #fa4616; margin: 0 0 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.fc-profile-dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; margin: 0; }
+.fc-profile-dl dt { font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 0.15rem; }
+.fc-profile-dl dd { margin: 0; font-size: 0.9375rem; color: #e2e8f0; }
+.fc-profile-muted { color: #64748b; font-size: 0.875rem; margin: 0.5rem 0 0; }
+.fc-profile-empty, .fc-profile-error { padding: 2rem; text-align: center; color: #94a3b8; }
+.fc-profile-error { color: #f87171; }
+.fc-profile-metrics-row { display: flex; flex-wrap: wrap; gap: 1.5rem; font-size: 0.9375rem; }
+.fc-related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; }
+.fc-related-card { display: block; padding: 0.75rem; background: #060f1f; border: 1px solid rgba(0, 48, 135, 0.4); border-radius: 10px; text-decoration: none; color: inherit; }
+.fc-related-card:hover { border-color: #fa4616; }
+.fc-related-card__rank { font-size: 0.6875rem; color: #fa4616; font-weight: 700; }
+.fc-related-card__name { display: block; font-weight: 700; color: #fff; margin: 0.25rem 0; }
+.fc-related-card__meta { font-size: 0.75rem; color: #64748b; }
+.fc-signal-feed { list-style: none; margin: 0; padding: 0; }
+.fc-signal-feed__item, .fc-signal-feed--compact li { padding: 0.75rem 0; border-bottom: 1px solid rgba(0, 48, 135, 0.25); }
+.fc-signal-feed__head { display: flex; justify-content: space-between; gap: 0.5rem; }
+.fc-signal-feed__type { font-weight: 700; font-size: 0.8125rem; color: #fb923c; text-transform: uppercase; }
+.fc-signal-feed__weight, .fc-signal-feed__meta { font-size: 0.75rem; color: #64748b; }
+.fc-signal-feed__value { margin: 0.25rem 0; font-size: 0.9375rem; }
+.fc-offer-list { margin: 0; padding-left: 1.25rem; }
+.fc-film-links a { color: #fa4616; font-weight: 600; }
+.fc-reason-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; margin: 0; padding: 0; }
+.fc-reason-tag, .fc-tag { background: rgba(0, 48, 135, 0.3); color: #93c5fd; border-radius: 9999px; padding: 0.2rem 0.6rem; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; }
+.fc-portal-likelihood-big { font-family: Oswald, sans-serif; font-size: 2rem; color: #c4b5fd; margin: 0; }
+.fc-uf-total { text-align: center; padding: 1rem; border-radius: 12px; border: 1px solid rgba(0, 48, 135, 0.4); }
+.fc-uf-total__score { display: block; font-family: Oswald, sans-serif; font-size: 2.5rem; font-weight: 700; color: #fff; }
+.fc-uf-total__tier { color: #fb923c; font-weight: 700; }
+.fc-uf-total--elite { border-color: rgba(250, 70, 22, 0.5); }
+.fc-uf-bar { margin-bottom: 0.75rem; }
+.fc-uf-bar__header { display: flex; justify-content: space-between; font-size: 0.8125rem; margin-bottom: 0.25rem; }
+.fc-uf-bar__track { height: 8px; background: rgba(0, 48, 135, 0.3); border-radius: 9999px; overflow: hidden; }
+.fc-uf-bar__fill { height: 100%; background: linear-gradient(90deg, #003087, #fa4616); border-radius: 9999px; }
+.fc-fit-badge { display: inline-flex; padding: 0.15rem 0.55rem; border-radius: 9999px; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; }
+.fc-fit-badge--elite { background: rgba(250, 70, 22, 0.2); color: #fb923c; }
+.fc-fit-badge--strong { background: rgba(0, 48, 135, 0.35); color: #93c5fd; }
+.fc-fit-badge--moderate { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; }
+.fc-fit-badge--low { background: rgba(100, 116, 139, 0.15); color: #64748b; }
+.fc-tag-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.fc-profile-skeleton { padding: 1rem; }
+.fc-skeleton { background: linear-gradient(90deg, #0a1628 25%, #121c2e 50%, #0a1628 75%); background-size: 200% 100%; animation: fc-shimmer 1.2s infinite; border-radius: 8px; margin-bottom: 0.75rem; }
+.fc-skeleton--title { height: 2.5rem; width: 70%; }
+.fc-skeleton--line { height: 1rem; width: 50%; }
+.fc-skeleton--scores { height: 5rem; }
+.fc-skeleton--tabs { height: 2.5rem; }
+.fc-skeleton--panel { height: 12rem; }
+@keyframes fc-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }

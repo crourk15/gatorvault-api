@@ -9,9 +9,10 @@ export interface PortalLikelihoodBadgeProps {
 }
 
 export function PortalLikelihoodBadge({ score }: PortalLikelihoodBadgeProps): React.ReactElement {
+  const pct = score <= 1 ? Math.round(score * 100) : Math.round(score);
   return (
     <span className="fc-portal-likelihood" data-testid="portal-likelihood-badge">
-      Portal: {score}%
+      Portal: {pct}%
     </span>
   );
 }

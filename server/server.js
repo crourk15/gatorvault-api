@@ -66,6 +66,36 @@ app.get('/highlight/:slug', (req, res) => {
   res.sendFile(path.join(__dirname, 'highlight.html'));
 });
 
+app.get('/futurecast/big-board', (req, res) => {
+  res.sendFile(path.join(__dirname, 'futurecast-big-board.html'));
+});
+app.get('/futurecast-big-board.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'futurecast-big-board.html'));
+});
+
+app.get('/futurecast/player/:slug', (req, res) => {
+  res.sendFile(path.join(__dirname, 'futurecast-player.html'));
+});
+app.get('/futurecast-player.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'futurecast-player.html'));
+});
+
+app.get('/futurecast/portal-watchlist', (req, res) => {
+  res.sendFile(path.join(__dirname, 'futurecast-portal-watchlist.html'));
+});
+
+app.get('/futurecast/uf-fit-watchlist', (req, res) => {
+  res.sendFile(path.join(__dirname, 'futurecast-uf-fit-watchlist.html'));
+});
+
+app.get('/futurecast/predictions', (req, res) => {
+  res.sendFile(path.join(__dirname, 'futurecast-predictions.html'));
+});
+
+app.get('/futurecast/predictors', (req, res) => {
+  res.sendFile(path.join(__dirname, 'futurecast-predictors.html'));
+});
+
 mountRecruitingRoutes(app);
 mountContentRoutes(app);
 mountCommunityRoutes(app);
@@ -92,6 +122,11 @@ mountSelfRunnerRoutes(app);
 mountGm2Routes(app);
 require('./lib/insider-articles-routes').mountInsiderArticlesRoutes(app);
 mountVaultGradeAdminRoutes(app);
+try {
+  require('./lib/futurecast-players-routes').mountFutureCastPlayersRoutes(app);
+} catch (err) {
+  console.warn('[futurecast] Players API not mounted:', err.message);
+}
 
 const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;

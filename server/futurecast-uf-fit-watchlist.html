@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UF Fit Watchlist — FutureCast</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/futurecast-profile.css">
+  <style>
+    .fc-uf-fit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .fc-uf-fit-card { display: block; background: linear-gradient(145deg, #0a1628, #121c2e); border: 1px solid rgba(0, 48, 135, 0.45); border-radius: 12px; padding: 1rem; text-decoration: none; color: inherit; }
+    .fc-uf-fit-card:hover { border-color: #fa4616; }
+    .fc-uf-fit-card__name { font-family: Oswald, sans-serif; color: #fff; margin: 0.35rem 0; }
+    .fc-fit-badge { display: inline-flex; padding: 0.15rem 0.55rem; border-radius: 9999px; font-size: 0.6875rem; font-weight: 700; }
+    .fc-fit-badge--elite { background: rgba(250, 70, 22, 0.2); color: #fb923c; }
+    .fc-fit-badge--strong { background: rgba(0, 48, 135, 0.35); color: #93c5fd; }
+    .fc-fit-badge--moderate { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; }
+    .fc-fit-badge--low { background: rgba(100, 116, 139, 0.15); color: #64748b; }
+    .fc-uf-fit-delta--up { color: #4ade80; font-size: 0.6875rem; font-weight: 700; }
+    .fc-uf-fit-delta--down { color: #f87171; font-size: 0.6875rem; font-weight: 700; }
+    .fc-toolbar { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1rem 0; }
+    .fc-toolbar label { display: flex; flex-direction: column; font-size: 0.6875rem; color: #64748b; text-transform: uppercase; }
+    .fc-toolbar select { background: #0a1628; border: 1px solid rgba(0, 48, 135, 0.5); color: #e2e8f0; border-radius: 8px; padding: 0.45rem; }
+    main { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+    h1 { font-family: Oswald, sans-serif; color: #fff; }
+  </style>
+</head>
+<body class="fc-body">
+  <header class="fc-topbar">
+    <a href="/futurecast/big-board">← Big Board</a>
+    <span class="fc-topbar__title">UF Fit Watchlist</span>
+    <span class="fc-topbar__spacer"></span>
+  </header>
+  <main>
+    <h1>UF Fit Intelligence</h1>
+    <p style="color:#64748b;font-size:0.875rem">High and rising UF Fit Score™ candidates</p>
+    <div class="fc-toolbar" id="toolbar"></div>
+    <div id="status" class="fc-profile-empty">Loading…</div>
+    <div id="grid" class="fc-uf-fit-grid"></div>
+  </main>
+  <script src="/futurecast-uf-fit-watchlist.js"></script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>FutureCast Big Board — GatorVault</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #060f1f;
+      color: #e2e8f0;
+      font-family: Inter, Arial, sans-serif;
+    }
+    .fc-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(0, 18, 58, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(0, 48, 135, 0.35);
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .fc-header a { color: #fa4616; font-weight: 600; text-decoration: none; font-size: 0.875rem; }
+    .fc-header a:hover { color: #fff; }
+    .fc-header__title {
+      font-family: Oswald, sans-serif;
+      font-size: 0.9375rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #fff;
+    }
+    main { max-width: 1200px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+    .fc-hero h1 {
+      font-family: Oswald, sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      margin: 0;
+      color: #fff;
+    }
+    .fc-hero p { margin: 0.35rem 0 0; color: #64748b; font-size: 0.875rem; }
+    .fc-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.25rem 0 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(0, 48, 135, 0.35);
+    }
+    .fc-tab {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #94a3b8;
+      border-radius: 9999px;
+      padding: 0.35rem 0.85rem;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .fc-tab.is-active {
+      background: rgba(250, 70, 22, 0.15);
+      border-color: #fa4616;
+      color: #fa4616;
+    }
+    .fc-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: flex-end;
+      margin-bottom: 1.25rem;
+    }
+    .fc-toolbar label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+    }
+    .fc-toolbar select {
+      background: #0a1628;
+      border: 1px solid rgba(0, 48, 135, 0.5);
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 0.45rem 0.65rem;
+      font-size: 0.875rem;
+      min-width: 7rem;
+    }
+    .fc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .fc-card {
+      background: linear-gradient(145deg, #0a1628, #121c2e);
+      border: 1px solid rgba(0, 48, 135, 0.45);
+      border-radius: 12px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .fc-card:hover {
+      border-color: rgba(250, 70, 22, 0.55);
+      transform: translateY(-2px);
+    }
+    .fc-card__rank {
+      font-family: Oswald, sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fa4616;
+      letter-spacing: 0.06em;
+    }
+    .fc-card__name {
+      font-family: Oswald, sans-serif;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0.35rem 0 0.15rem;
+    }
+    .fc-card__meta { font-size: 0.8125rem; color: #94a3b8; margin: 0 0 0.75rem; }
+    .fc-card__badges { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .fc-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.15rem 0.55rem;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .fc-badge--elite { background: rgba(250, 70, 22, 0.2); color: #fb923c; }
+    .fc-badge--strong { background: rgba(0, 48, 135, 0.35); color: #93c5fd; }
+    .fc-badge--watch { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; }
+    .fc-badge--low { background: rgba(100, 116, 139, 0.15); color: #64748b; }
+    .fc-badge--portal { background: rgba(168, 85, 247, 0.15); color: #c4b5fd; }
+    .fc-badge--status { background: rgba(0, 48, 135, 0.25); color: #7dd3fc; }
+    .fc-signals { font-size: 0.6875rem; color: #64748b; }
+    .fc-state { padding: 2rem; text-align: center; color: #94a3b8; }
+    .fc-state--error { color: #f87171; }
+    .hidden { display: none !important; }
+    .fc-drawer {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+    }
+    .fc-drawer.is-open { display: block; }
+    .fc-drawer__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+    }
+    .fc-drawer__panel {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: min(420px, 100%);
+      background: #0a1628;
+      border-left: 1px solid rgba(0, 48, 135, 0.5);
+      padding: 1.25rem;
+      overflow-y: auto;
+    }
+    .fc-drawer__close {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.5rem;
+      cursor: pointer;
+      float: right;
+    }
+    .fc-drawer h2 {
+      font-family: Oswald, sans-serif;
+      color: #fff;
+      margin: 0 0 0.5rem;
+      clear: both;
+    }
+    .fc-drawer dl { margin: 1rem 0 0; }
+    .fc-drawer dt { font-size: 0.6875rem; text-transform: uppercase; color: #64748b; margin-top: 0.75rem; }
+    .fc-drawer dd { margin: 0.15rem 0 0; font-size: 0.9375rem; }
+  </style>
+</head>
+<body>
+  <header class="fc-header">
+    <a href="/">← GatorVault</a>
+    <span class="fc-header__title">FutureCast Big Board</span>
+    <span style="width:4rem"></span>
+  </header>
+  <main>
+    <div class="fc-hero">
+      <h1>Intelligence Rankings</h1>
+      <p>Signals · Portal likelihood · UF Fit Score™</p>
+    </div>
+    <nav class="fc-tabs" id="tabs"></nav>
+    <div class="fc-toolbar" id="toolbar">
+      <label>Class
+        <select id="filter-class"></select>
+      </label>
+      <label>Position
+        <select id="filter-position"></select>
+      </label>
+      <label>Lifecycle
+        <select id="filter-lifecycle">
+          <option value="">All</option>
+          <option value="HS">HS</option>
+          <option value="COLLEGE">College</option>
+          <option value="PORTAL">Portal</option>
+        </select>
+      </label>
+      <label>Sort
+        <select id="filter-sort"></select>
+      </label>
+    </div>
+    <div id="status" class="fc-state">Loading Big Board…</div>
+    <div id="grid" class="fc-grid hidden"></div>
+  </main>
+  <div class="fc-drawer" id="drawer">
+    <div class="fc-drawer__backdrop" id="drawer-backdrop"></div>
+    <div class="fc-drawer__panel" id="drawer-panel"></div>
+  </div>
+  <script>
+    var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000' : '';
+
+    var TABS = [
+      { id: 'rank', label: 'Rankings', sort: 'rank' },
+      { id: 'top-targets', label: 'Top Targets', sort: 'ufFit' },
+      { id: 'early-discovery', label: 'Early Discovery', sort: 'signals', lifecycle: 'HS' },
+      { id: 'portal-watchlist', label: 'Portal Watchlist', sort: 'portalLikelihood', lifecycle: 'PORTAL' },
+      { id: 'predictions', label: 'Predictions', sort: 'ufFit' },
+      { id: 'movement-tracker', label: 'Movement', sort: 'signals' }
+    ];
+    var SORTS = [
+      { value: 'rank', label: 'Rank (intelligence)' },
+      { value: 'ufFit', label: 'UF Fit Score' },
+      { value: 'portalLikelihood', label: 'Portal likelihood' },
+      { value: 'signals', label: 'Signals' },
+      { value: 'name', label: 'Name' },
+      { value: 'position', label: 'Position' }
+    ];
+    var POSITIONS = ['', 'QB', 'RB', 'WR', 'TE', 'OL', 'DL', 'EDGE', 'LB', 'CB', 'S', 'ATH', 'K', 'P'];
+    var CLASS_YEARS = [2025, 2026, 2027, 2028, 2029];
+
+    var state = {
+      classYear: 2026,
+      position: '',
+      lifecycle: '',
+      sort: 'rank',
+      activeTab: 'rank',
+      players: []
+    };
+
+    function fitBand(score) {
+      if (score >= 90) return 'elite';
+      if (score >= 75) return 'strong';
+      if (score >= 60) return 'watch';
+      return 'low';
+    }
+
+    function portalPct(v) {
+      return v <= 1 ? Math.round(v * 100) : Math.round(v);
+    }
+
+    function buildUrl() {
+      var params = new URLSearchParams();
+      params.set('class_year', String(state.classYear));
+      if (state.position) params.set('position', state.position);
+      if (state.lifecycle) params.set('lifecycle', state.lifecycle);
+      params.set('sort', state.sort);
+      params.set('order', (state.sort === 'name' || state.sort === 'position') ? 'asc' : 'desc');
+      params.set('limit', '200');
+      return API + '/api/big-board?' + params.toString();
+    }
+
+    function renderTabs() {
+      var el = document.getElementById('tabs');
+      el.innerHTML = TABS.map(function (tab) {
+        var cls = tab.id === state.activeTab ? 'fc-tab is-active' : 'fc-tab';
+        return '<button type="button" class="' + cls + '" data-tab="' + tab.id + '">' + tab.label + '</button>';
+      }).join('');
+      el.querySelectorAll('[data-tab]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var tab = TABS.find(function (t) { return t.id === btn.getAttribute('data-tab'); });
+          if (!tab) return;
+          if (tab.id === 'portal-watchlist') {
+            location.href = '/futurecast/portal-watchlist';
+            return;
+          }
+          if (tab.id === 'top-targets') {
+            location.href = '/futurecast/uf-fit-watchlist';
+            return;
+          }
+          if (tab.id === 'predictions') {
+            location.href = '/futurecast/predictions';
+            return;
+          }
+          state.activeTab = tab.id;
+          state.sort = tab.sort;
+          state.lifecycle = tab.lifecycle || '';
+          document.getElementById('filter-sort').value = state.sort;
+          document.getElementById('filter-lifecycle').value = state.lifecycle;
+          renderTabs();
+          loadBoard();
+        });
+      });
+    }
+
+    function fillSelects() {
+      var classEl = document.getElementById('filter-class');
+      classEl.innerHTML = CLASS_YEARS.map(function (y) {
+        return '<option value="' + y + '">' + y + '</option>';
+      }).join('');
+      classEl.value = String(state.classYear);
+
+      var posEl = document.getElementById('filter-position');
+      posEl.innerHTML = POSITIONS.map(function (p) {
+        return '<option value="' + p + '">' + (p || 'All') + '</option>';
+      }).join('');
+
+      var sortEl = document.getElementById('filter-sort');
+      sortEl.innerHTML = SORTS.map(function (s) {
+        return '<option value="' + s.value + '">' + s.label + '</option>';
+      }).join('');
+    }
+
+    function renderCard(p) {
+      var showPortal = p.lifecycle === 'COLLEGE' || p.lifecycle === 'PORTAL' || p.portalLikelihood > 0;
+      var html = '<article class="fc-card" data-slug="' + p.slug + '">';
+      html += '<div class="fc-card__rank">#' + p.rank + '</div>';
+      html += '<h3 class="fc-card__name">' + escapeHtml(p.fullName) + '</h3>';
+      html += '<p class="fc-card__meta">' + escapeHtml(p.position) + ' · ' + p.classYear + ' · ' + p.lifecycle + '</p>';
+      html += '<div class="fc-card__badges">';
+      html += '<span class="fc-badge fc-badge--' + fitBand(p.ufFitScore) + '">UF Fit: ' + p.ufFitScore + '</span>';
+      if (showPortal) html += '<span class="fc-badge fc-badge--portal">Portal: ' + portalPct(p.portalLikelihood) + '%</span>';
+      html += '<span class="fc-signals">' + p.signalCount + ' signals</span>';
+      if (p.portalStatus) html += '<span class="fc-badge fc-badge--status">' + escapeHtml(p.portalStatus) + '</span>';
+      html += '</div></article>';
+      return html;
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function renderGrid(players) {
+      var status = document.getElementById('status');
+      var grid = document.getElementById('grid');
+      state.players = players;
+      if (!players.length) {
+        status.textContent = 'No players match these filters.';
+        status.className = 'fc-state';
+        grid.className = 'fc-grid hidden';
+        grid.innerHTML = '';
+        return;
+      }
+      status.className = 'fc-state hidden';
+      grid.className = 'fc-grid';
+      grid.innerHTML = players.map(renderCard).join('');
+      grid.querySelectorAll('.fc-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+          var slug = card.getAttribute('data-slug');
+          if (slug) location.href = '/futurecast/player/' + encodeURIComponent(slug);
+        });
+      });
+    }
+
+    function openDrawer(slug) {
+      var player = state.players.find(function (p) { return p.slug === slug; });
+      if (!player) return;
+      var panel = document.getElementById('drawer-panel');
+      panel.innerHTML =
+        '<button type="button" class="fc-drawer__close" id="drawer-close" aria-label="Close">&times;</button>' +
+        '<h2>' + escapeHtml(player.fullName) + '</h2>' +
+        '<p style="color:#94a3b8;margin:0">' + escapeHtml(player.position) + ' · Class of ' + player.classYear + '</p>' +
+        '<dl>' +
+        '<dt>Rank</dt><dd>#' + player.rank + '</dd>' +
+        '<dt>Lifecycle</dt><dd>' + player.lifecycle + '</dd>' +
+        '<dt>UF Fit Score</dt><dd>' + player.ufFitScore + '</dd>' +
+        '<dt>Portal likelihood</dt><dd>' + portalPct(player.portalLikelihood) + '%</dd>' +
+        '<dt>Signals</dt><dd>' + player.signalCount + '</dd>' +
+        (player.portalStatus ? '<dt>Portal status</dt><dd>' + escapeHtml(player.portalStatus) + '</dd>' : '') +
+        '</dl>';
+      document.getElementById('drawer').classList.add('is-open');
+      document.getElementById('drawer-close').onclick = closeDrawer;
+      history.replaceState(null, '', '?slug=' + encodeURIComponent(slug) + '#player');
+    }
+
+    function closeDrawer() {
+      document.getElementById('drawer').classList.remove('is-open');
+    }
+
+    function loadBoard() {
+      var status = document.getElementById('status');
+      status.textContent = 'Loading Big Board…';
+      status.className = 'fc-state';
+      document.getElementById('grid').className = 'fc-grid hidden';
+      fetch(buildUrl())
+        .then(function (res) {
+          if (!res.ok) return res.json().then(function (b) { throw new Error(b.error || 'Request failed'); });
+          return res.json();
+        })
+        .then(function (data) { renderGrid(data.players || []); })
+        .catch(function (err) {
+          status.textContent = err.message || 'Failed to load Big Board';
+          status.className = 'fc-state fc-state--error';
+        });
+    }
+
+    document.getElementById('filter-class').addEventListener('change', function (e) {
+      state.classYear = Number(e.target.value);
+      loadBoard();
+    });
+    document.getElementById('filter-position').addEventListener('change', function (e) {
+      state.position = e.target.value;
+      loadBoard();
+    });
+    document.getElementById('filter-lifecycle').addEventListener('change', function (e) {
+      state.lifecycle = e.target.value;
+      loadBoard();
+    });
+    document.getElementById('filter-sort').addEventListener('change', function (e) {
+      state.sort = e.target.value;
+      loadBoard();
+    });
+    document.getElementById('drawer-backdrop').addEventListener('click', closeDrawer);
+
+    fillSelects();
+    renderTabs();
+    loadBoard();
+
+    var deepSlug = new URLSearchParams(location.search).get('slug');
+    if (deepSlug) {
+      fetch(API + '/api/players/slug/' + encodeURIComponent(deepSlug))
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (p) {
+          if (p) openDrawer(deepSlug);
+        });
+    }
+  </script>
+</body>
+</html>

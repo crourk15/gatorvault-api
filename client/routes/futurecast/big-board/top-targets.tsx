@@ -1,7 +1,22 @@
-/** Top Targets tab — sort by UF Fit Score. Spec §4.1 */
+/** Top Targets tab — links to UF Fit Watchlist API-backed page */
 import React from 'react';
+import { UfFitWatchlistGrid } from '../../../components/futurecast/UfFitWatchlistGrid';
 
-export default function TopTargetsTab(): React.ReactElement {
-  // TODO(Phase 4): GET /api/futurecast/big-board?tab=top_targets
-  return <div data-testid="tab-top-targets">TODO: Top Targets — spec §4.1</div>;
+export interface TopTargetsTabProps {
+  classYear?: number;
+}
+
+export default function TopTargetsTab({ classYear = 2026 }: TopTargetsTabProps): React.ReactElement {
+  return (
+    <div data-testid="tab-top-targets">
+      <p style={{ marginBottom: '0.75rem' }}>
+        <a href="/futurecast/uf-fit-watchlist" style={{ color: '#fa4616', fontWeight: 600 }}>
+          Open full UF Fit Watchlist →
+        </a>
+      </p>
+      <UfFitWatchlistGrid
+        query={{ class_year: classYear, sort: 'ufFitScore', minScore: 70, limit: 100 }}
+      />
+    </div>
+  );
 }

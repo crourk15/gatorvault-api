@@ -9,10 +9,10 @@ export interface FitScoreBadgeProps {
   label?: string;
 }
 
-function band(score: number): 'elite' | 'strong' | 'watch' | 'low' {
-  if (score >= 90) return 'elite';
-  if (score >= 75) return 'strong';
-  if (score >= 60) return 'watch';
+function band(score: number): 'elite' | 'strong' | 'moderate' | 'low' {
+  if (score >= 85) return 'elite';
+  if (score >= 70) return 'strong';
+  if (score >= 50) return 'moderate';
   return 'low';
 }
 

@@ -1,29 +1,78 @@
 /**
- * PortalProfile — portal status, likelihood, reason tags.
+ * PortalProfile repository — CRUD against futurecast.portal_profiles.
  * @see server/docs/futurecast-platform-spec.md §1.4
+ * @see server/migrations/004_create_portal_profiles_table.sql
  */
+import { db } from './db';
+import {
+  FUTURECAST_PORTAL_PROFILES_TABLE,
+  type PortalProfile,
+  type PortalProfileInsert,
+  type PortalProfileRow,
+  type PortalProfileUpdate,
+  portalProfileFromRow,
+  portalProfileToRow,
+} from './portal-profile-types';
 
-export type PortalStatus = 'none' | 'watchlist' | 'in_portal' | 'committed';
-export type UfInterestLevel = 'none' | 'light' | 'moderate' | 'strong';
+export * from './portal-profile-types';
 
-export interface PortalProfile {
-  id: string;
-  player_id: string;
-  portal_status: PortalStatus;
-  entry_date: string | null;
-  exit_date: string | null;
-  destination_school: string | null;
-  reason_tags: string[];
-  portal_likelihood_score: number;
-  uf_interest_level: UfInterestLevel;
+const TABLE = FUTURECAST_PORTAL_PROFILES_TABLE;
+
+export async function getPortalProfileByPlayerId(
+  playerId: string
+): Promise<PortalProfile | null> {
+  const { rows } = await db.query<PortalProfileRow>(
+    `SELECT * FROM ${TABLE} WHERE player_id = $1 LIMIT 1`,
+    [playerId]
+  );
+  if (rows.length === 0) return null;
+  return portalProfileFromRow(rows[0]);
 }
 
-export async function getPortalProfileByPlayerId(_playerId: string): Promise<PortalProfile | null> {
-  throw new Error('TODO: implement getPortalProfileByPlayerId — spec §1.4');
-}
+export async function upsertPortalProfile(
+  data: PortalProfileInsert | PortalProfileUpdate
+): Promise<PortalProfile> {
+  const row = portalProfileToRow(data);
+  if (!row.player_id) {
+    throw new Error('upsertPortalProfile requires player_id for ON CONFLICT (player_id)');
+  }
 
-export async function upsertPortalProfile(_profile: Partial<PortalProfile> & Pick<PortalProfile, 'player_id'>): Promise<PortalProfile> {
-  throw new Error('TODO: implement upsertPortalProfile — spec §2.2');
+  const columns = Object.keys(row);
+  if (columns.length === 0) {
+    throw new Error('upsertPortalProfile requires at least one field');
+  }
+
+  const values = columns.map((col) => row[col]);
+  const placeholders = columns.map((_, i) => `$${i + 1}`).join(', ');
+  const updates = columns
+    .filter((col) => col !== 'player_id')
+    .map((col) => `${col} = EXCLUDED.${col}`)
+    .join(', ');
+
+  const conflictClause = updates
+    ? `DO UPDATE SET ${updates}`
+    : 'DO NOTHING';
+
+  const { rows } = await db.query<PortalProfileRow>(
+    `
+    INSERT INTO ${TABLE} (${columns.join(', ')})
+    VALUES (${placeholders})
+    ON CONFLICT (player_id)
+    ${conflictClause}
+    RETURNING *
+    `,
+    values
+  );
+
+  if (rows.length === 0) {
+    const existing = await getPortalProfileByPlayerId(String(row.player_id));
+    if (!existing) {
+      throw new Error(`upsertPortalProfile failed for player_id: ${row.player_id}`);
+    }
+    return existing;
+  }
+
+  return portalProfileFromRow(rows[0]);
 }
 
 export async function listPortalWatchlist(_filters: Record<string, unknown>): Promise<PortalProfile[]> {

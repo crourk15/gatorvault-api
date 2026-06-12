@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Portal Watchlist — FutureCast</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/futurecast-profile.css">
+  <style>
+    .fc-portal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .fc-portal-card { display: block; background: linear-gradient(145deg, #0a1628, #121c2e); border: 1px solid rgba(168, 85, 247, 0.35); border-radius: 12px; padding: 1rem; text-decoration: none; color: inherit; }
+    .fc-portal-card:hover { border-color: rgba(250, 70, 22, 0.55); }
+    .fc-portal-card__name { font-family: Oswald, sans-serif; font-size: 1.125rem; color: #fff; margin: 0.35rem 0; }
+    .fc-portal-badge { display: inline-flex; padding: 0.15rem 0.55rem; border-radius: 9999px; font-size: 0.6875rem; font-weight: 700; }
+    .fc-portal-badge--high { background: rgba(168, 85, 247, 0.25); color: #e9d5ff; }
+    .fc-portal-badge--medium { background: rgba(168, 85, 247, 0.15); color: #c4b5fd; }
+    .fc-portal-badge--low { background: rgba(100, 116, 139, 0.2); color: #94a3b8; }
+    .fc-portal-metric { font-size: 0.6875rem; color: #64748b; margin-left: 0.35rem; }
+    .fc-toolbar { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
+    .fc-toolbar label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.6875rem; color: #64748b; text-transform: uppercase; }
+    .fc-toolbar select { background: #0a1628; border: 1px solid rgba(0, 48, 135, 0.5); color: #e2e8f0; border-radius: 8px; padding: 0.45rem 0.65rem; }
+    main { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+    h1 { font-family: Oswald, sans-serif; color: #fff; margin: 0; }
+  </style>
+</head>
+<body class="fc-body">
+  <header class="fc-topbar">
+    <a href="/futurecast/big-board">← Big Board</a>
+    <span class="fc-topbar__title">Portal Watchlist</span>
+    <span class="fc-topbar__spacer"></span>
+  </header>
+  <main>
+    <h1>Portal Intelligence</h1>
+    <p style="color:#64748b;font-size:0.875rem">Elevated portal likelihood · depth chart risk · volatility</p>
+    <div class="fc-toolbar" id="toolbar"></div>
+    <div id="status" class="fc-profile-empty">Loading…</div>
+    <div id="grid" class="fc-portal-grid"></div>
+  </main>
+  <script src="/futurecast-portal-watchlist.js"></script>
+</body>
+</html>
