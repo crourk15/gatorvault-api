@@ -1,0 +1,47 @@
+{
+  "version": "3.0.0",
+  "description": "Canonical CSS design tokens — Self-Runner 3.0 source of truth.",
+  "files": ["css/gv-team.css"],
+  "requiredTokens": {
+    "--gv-team-card-bg": {
+      "value": "#121c2e",
+      "usedBy": ["gv-team-era-card", "gv-team-ach-tile", "gv-team-identity-card"]
+    },
+    "--gv-team-card-border": {
+      "value": "rgba(0, 48, 135, 0.4)",
+      "usedBy": ["gv-team-era-card", "gv-team-section"]
+    },
+    "--gv-team-radius": {
+      "value": "14px",
+      "usedBy": ["gv-team-era-card", "gv-team-modal-panel", "gv-team-coach-grid"]
+    },
+    "--gv-team-space-4": {
+      "value": "16px",
+      "usedBy": ["gv-team-section", "gv-team-overview-layout", "gv-hscroll-wrap"]
+    },
+    "--gv-team-title": {
+      "value": "clamp(1.75rem, 4vw, 2.5rem)",
+      "usedBy": ["gv-team-page-title", "gv-team-modal-title"]
+    },
+    "--gv-team-body": {
+      "value": "0.875rem",
+      "usedBy": ["gv-team-page-sub", "gv-tm-body"]
+    },
+    "--gv-team-h2": {
+      "value": "clamp(1.125rem, 2.5vw, 1.375rem)",
+      "usedBy": ["gv-team-section-title", "gv-team-subhdr"]
+    },
+    "--gv-team-h3": {
+      "value": "0.6875rem",
+      "usedBy": ["gv-team-h3", "gv-team-subhdr"]
+    }
+  },
+  "eraGradientClasses": [
+    "gv-team-era-70s80s",
+    "gv-team-era-90s",
+    "gv-team-era-2000s",
+    "gv-team-era-2010s",
+    "gv-team-era-2020s"
+  ],
+  "modalOverflowRules": ".gv-team-modal-body {\n  flex: 1 1 auto;\n  min-height: 0;\n  min-width: 0;\n  overflow-x: hidden;\n  overflow-y: auto;\n  overflow-wrap: break-word;\n}\n.gv-tm-lead, .gv-tm-body, .gv-tm-highlight-text, .gv-tm-timeline-item {\n  min-width: 0;\n  max-width: 100%;\n  overflow-wrap: break-word;\n  word-break: break-word;\n}\n.gv-team-overview-main { min-width: 0; }"
+}

@@ -953,6 +953,25 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
+try {
+  require('./lib/guardian/boot-guardian').verifyBoot({
+    alert: process.env.NODE_ENV === 'production'
+  });
+  console.log('[guardian] boot verified, starting server...');
+} catch (err) {
+  console.error(err.message || err);
+  require('./lib/guardian/guardian-alerts')
+    .alertGuardian({
+      type: 'boot_failed',
+      severity: 'critical',
+      title: 'API boot failed',
+      message: String(err.message || err).slice(0, 500),
+      notifySms: true
+    })
+    .catch(() => {});
+  process.exit(1);
+}
+
 app.listen(PORT, () => {
   const providers = getEmailProviders();
   console.log('🚀 API server started with commit:', process.env.RENDER_GIT_COMMIT || process.env.GV_BUILD || 'dev');
@@ -1197,5 +1216,10 @@ app.listen(PORT, () => {
     startProductIntelScheduler();
   } catch (e) {
     console.warn('[product-intel] scheduler failed to start', e.message);
+  }
+  try {
+    require('./lib/guardian/runtime-watchdog').startRuntimeWatchdog();
+  } catch (e) {
+    console.warn('[guardian] runtime watchdog failed to start', e.message);
   }
 });

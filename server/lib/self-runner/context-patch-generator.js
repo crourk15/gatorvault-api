@@ -32,15 +32,10 @@ function summarizeIntegrityIssues(issues) {
 }
 
 function htmlHasHook(html, hookId) {
-  const hook = blueprint.html.hookByMarker(hookId);
-  if (!hook) return html.includes(hookId);
-  if (hook.id && html.includes(`id="${hook.id}"`)) return true;
-  if (hook.marker && html.includes(hook.marker)) return true;
-  if (hook.className && html.includes(hook.className)) return true;
-  if (hookId === 'gvOpenTeamDetail' && html.includes('gv-team-mobile.js')) return true;
-  if (hookId === 'gvOpenVerifiedSource' && html.includes('gv-film-sources.js')) return true;
-  if (hookId === 'war-room-panel' && (html.includes('gv-war-room-root') || html.includes('scouting-database-content'))) return true;
-  return false;
+  const { hookPresent } = require('../guardian/blueprint-validator');
+  const section = blueprint.html.hookByMarker(hookId) || blueprint.html.HTML_HOOKS[hookId];
+  if (section) return hookPresent(html, hookId, section);
+  return html.includes(hookId);
 }
 
 function buildHtmlHookPatch(missingHooks) {
@@ -223,14 +218,14 @@ function generateContextPatch(issue, checkDetails) {
     return buildFeedDedupPatchV2(issue, checkDetails);
   }
 
-  if (/missing-content|pages:.*hooks|integrity:filmroom/.test(checkId)) {
-    const missing = scanHtmlHooks();
-    if (missing.length) return buildHtmlHookPatch(missing);
+  if (/missing-content|pages:.*hooks|integrity:filmroom|blueprint:html/.test(checkId)) {
+    const missing = v3Repair.scanBlueprintDrift().missingHooks;
+    if (missing.length) return v3Repair.proposeHtmlRepairs(missing) || contextPatch.buildHtmlHookPatch(missing);
   }
 
-  if (/theme-token|css-token|layout-overflow|panel-clipping/.test(checkId)) {
-    const missing = scanCssTokens();
-    if (missing.length) return buildCssTokenPatchV2(missing);
+  if (/theme-token|css-token|layout-overflow|panel-clipping|blueprint:css/.test(checkId)) {
+    const missing = v3Repair.scanBlueprintDrift().missingTokens;
+    if (missing.length) return v3Repair.proposeCssRepairs(missing) || contextPatch.buildCssTokenPatchV2(missing);
   }
 
   if (/schema|integrity:roster|integrity:rankings/.test(checkId) && checkDetails?.violations) {

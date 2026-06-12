@@ -1,0 +1,232 @@
+{
+  "version": "3.0.0",
+  "description": "Canonical HTML hook map for GatorVault platform — Self-Runner 3.0 source of truth.",
+  "required": [
+    "gv-team-overview-layout",
+    "gv-coaching-staff",
+    "gv-section-identity",
+    "gv-section-recruiting",
+    "gv-section-portal",
+    "gv-section-news",
+    "gv-section-film",
+    "war-room-panel",
+    "gvOpenTeamDetail",
+    "film-room-hub-landing"
+  ],
+  "protected": [
+    "gv-team-overview-layout",
+    "gv-coaching-staff",
+    "gv-section-identity",
+    "gv-section-recruiting",
+    "gv-section-portal",
+    "gv-section-news",
+    "gv-section-film",
+    "war-room-panel",
+    "gvOpenTeamDetail",
+    "gvOpenVerifiedSource",
+    "film-room-hub-landing",
+    "gv-gm-rerun-controls",
+    "gv-war-room-root"
+  ],
+  "autoposterZones": [
+    "gv-section-recruiting",
+    "gv-section-portal",
+    "gv-section-news",
+    "gv-war-room-root",
+    "gv-section-identity"
+  ],
+  "sections": {
+    "gv-team-overview-layout": {
+      "id": "gv-team-overview-layout",
+      "className": "gv-team-overview-layout",
+      "description": "Team overview grid layout shell",
+      "requiredHooks": ["gv-team-overview-layout"],
+      "expectedLocation": {
+        "regionId": "vpane-team",
+        "inside": "#vpane-team",
+        "description": "Inside desktop Team tab (#vpane-team), under Team Overview heading"
+      },
+      "acceptPatterns": [
+        "class=\"gv-team-overview-layout\"",
+        "gv-team-overview-layout",
+        "id=\"gv-team-overview-layout\""
+      ],
+      "snippet": "<div class=\"gv-team-overview-layout\" data-gv-hook=\"team-overview\">\n  <!-- Team overview content rendered by gv-team-mobile.js -->\n</div>"
+    },
+    "gv-coaching-staff": {
+      "id": "gv-coaching-staff",
+      "marker": "gv-coaching-staff",
+      "description": "Coaching staff section container",
+      "requiredHooks": ["gv-coaching-staff", "gv-team-staff"],
+      "expectedLocation": {
+        "regionId": "vpane-team",
+        "inside": "#vpane-team",
+        "description": "Inside #vpane-team, Coaching Staff section"
+      },
+      "acceptPatterns": [
+        "id=\"gv-coaching-staff\"",
+        "id=\"gv-team-staff\"",
+        "gv-coaching-staff",
+        "Coaching Staff</h2>"
+      ],
+      "snippet": "<section id=\"gv-coaching-staff\" class=\"gv-team-section\" data-gv-section=\"coaching-staff\" aria-label=\"Coaching Staff\">\n  <h3 class=\"gv-team-h3\">Coaching Staff</h3>\n  <div id=\"gv-coaching-staff-grid\" class=\"gv-team-coach-grid\"></div>\n</section>"
+    },
+    "gv-section-identity": {
+      "id": "gv-section-identity",
+      "marker": "gv-section-identity",
+      "description": "Team Identity banner section",
+      "requiredHooks": ["gv-section-identity", "gv-team-identity"],
+      "expectedLocation": {
+        "regionId": "vpane-team",
+        "inside": "#vpane-team",
+        "description": "Inside team overview layout, Team Identity column"
+      },
+      "acceptPatterns": [
+        "id=\"gv-section-identity\"",
+        "id=\"gv-team-identity-slot\"",
+        "id=\"gv-team-identity-banner\"",
+        "Team Identity</h3>"
+      ],
+      "snippet": "<section id=\"gv-section-identity\" class=\"gv-team-section gv-team-identity-banner\" data-gv-section=\"identity\" aria-label=\"Team Identity\">\n  <div id=\"gv-team-identity-banner\" class=\"gv-team-identity-inner\"></div>\n</section>"
+    },
+    "gv-section-recruiting": {
+      "id": "gv-section-recruiting",
+      "marker": "gv-section-recruiting",
+      "description": "Recruiting board section hooks",
+      "requiredHooks": ["gv-section-recruiting", "vpane-recruit"],
+      "expectedLocation": {
+        "regionId": "vpane-recruit",
+        "inside": "#vpane-recruit",
+        "description": "Recruiting tab pane"
+      },
+      "acceptPatterns": [
+        "id=\"gv-section-recruiting\"",
+        "id=\"vpane-recruit\"",
+        "data-gv-section=\"recruiting\""
+      ],
+      "snippet": "<div id=\"gv-section-recruiting\" class=\"gv-section-recruiting\" data-gv-section=\"recruiting\" data-gv-autoposter-zone=\"recruiting\"></div>"
+    },
+    "gv-section-portal": {
+      "id": "gv-section-portal",
+      "marker": "gv-section-portal",
+      "description": "Transfer portal section hooks",
+      "requiredHooks": ["gv-section-portal", "vpane-portal"],
+      "expectedLocation": {
+        "regionId": "vpane-portal",
+        "inside": "#vpane-portal",
+        "description": "Portal tab pane"
+      },
+      "acceptPatterns": [
+        "id=\"gv-section-portal\"",
+        "id=\"vpane-portal\"",
+        "data-gv-section=\"portal\""
+      ],
+      "snippet": "<div id=\"gv-section-portal\" class=\"gv-section-portal\" data-gv-section=\"portal\" data-gv-autoposter-zone=\"portal\"></div>"
+    },
+    "gv-section-news": {
+      "id": "gv-section-news",
+      "marker": "gv-section-news",
+      "description": "Latest Updates / news feed section",
+      "requiredHooks": ["gv-section-news", "vpane-live"],
+      "expectedLocation": {
+        "regionId": "vpane-live",
+        "inside": "#vpane-live",
+        "description": "Live feed tab pane"
+      },
+      "acceptPatterns": [
+        "id=\"gv-section-news\"",
+        "id=\"vpane-live\"",
+        "data-gv-section=\"news\"",
+        "data-gv-autoposter-zone=\"news\""
+      ],
+      "snippet": "<div id=\"gv-section-news\" class=\"gv-section-news\" data-gv-section=\"news\" data-gv-autoposter-zone=\"news\"></div>"
+    },
+    "gv-section-film": {
+      "id": "gv-section-film",
+      "marker": "gv-section-film",
+      "description": "Film Room hub section",
+      "requiredHooks": ["gv-section-film", "film-room-hub"],
+      "expectedLocation": {
+        "regionId": "vpane-highlights",
+        "inside": "#vpane-highlights",
+        "description": "Highlights / Film Room tab"
+      },
+      "acceptPatterns": [
+        "id=\"gv-section-film\"",
+        "id=\"film-room-hub-landing\"",
+        "id=\"film-room-hub-shell\"",
+        "film-room-hub-landing"
+      ],
+      "snippet": "<section id=\"gv-section-film\" class=\"gv-section-film\" data-gv-section=\"film\" aria-label=\"Film Room\"></section>"
+    },
+    "war-room-panel": {
+      "id": "gv-war-room-root",
+      "marker": "war-room-panel",
+      "description": "War Room scouting tab container",
+      "requiredHooks": ["war-room-panel", "scouting-database-content"],
+      "expectedLocation": {
+        "regionId": "vpane-scouting",
+        "inside": "#vpane-scouting",
+        "description": "Scouting / War Room tab"
+      },
+      "acceptPatterns": [
+        "id=\"gv-war-room-root\"",
+        "id=\"scouting-database-content\"",
+        "war-room-panel",
+        "class=\"war-room-panel\""
+      ],
+      "snippet": "<div id=\"gv-war-room-root\" class=\"war-room-panel\" data-gv-section=\"war-room\" data-gv-autoposter-zone=\"war-room\">\n  <div id=\"scouting-database-content\"></div>\n</div>"
+    },
+    "gvOpenTeamDetail": {
+      "marker": "gvOpenTeamDetail",
+      "description": "Team detail modal script hook",
+      "requiredHooks": ["gv-team-mobile.js"],
+      "expectedLocation": {
+        "file": "index.html",
+        "before": "</body>",
+        "description": "Deferred script before </body>"
+      },
+      "acceptPatterns": ["gv-team-mobile.js", "gvOpenTeamDetail"],
+      "snippet": "<script src=\"/js/gv-team-mobile.js?v=team-v3\" defer></script>"
+    },
+    "gvOpenVerifiedSource": {
+      "marker": "gvOpenVerifiedSource",
+      "description": "Film Room verified source modal script",
+      "requiredHooks": ["gv-film-sources.js"],
+      "expectedLocation": {
+        "file": "index.html",
+        "before": "</body>"
+      },
+      "acceptPatterns": ["gv-film-sources.js", "gvOpenVerifiedSource"],
+      "snippet": "<script src=\"/js/gv-film-sources.js?v=film-v2\" defer></script>"
+    },
+    "film-room-hub-landing": {
+      "id": "film-room-hub-landing",
+      "marker": "film-room-hub-landing",
+      "description": "Film Room hub landing drill-down",
+      "requiredHooks": ["film-room-hub-landing"],
+      "expectedLocation": {
+        "regionId": "vpane-highlights",
+        "inside": "#film-room-hub-shell"
+      },
+      "acceptPatterns": [
+        "id=\"film-room-hub-landing\"",
+        "film-room-hub-landing"
+      ],
+      "snippet": "<div id=\"film-room-hub-landing\" class=\"film-room-hub-landing\" data-gv-section=\"film-hub\"></div>"
+    },
+    "gv-gm-rerun-controls": {
+      "id": "gv-gm-rerun-controls",
+      "marker": "gv-gm-rerun-controls",
+      "description": "GM rerun controls for recruiting pipeline",
+      "requiredHooks": ["gv-gm-rerun-controls"],
+      "expectedLocation": {
+        "regionId": "vpane-recruit",
+        "inside": "#vpane-recruit"
+      },
+      "acceptPatterns": ["id=\"gv-gm-rerun-controls\"", "gv-gm-rerun-controls"],
+      "required": false,
+      "snippet": "<div id=\"gv-gm-rerun-controls\" class=\"gv-gm-rerun-controls hidden\" data-gv-admin-only=\"true\" aria-hidden=\"true\"></div>"
+    }
+  }
+}

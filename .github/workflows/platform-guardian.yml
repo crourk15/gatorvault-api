@@ -1,0 +1,32 @@
+# Platform Guardian — block bad wiring and blueprint drift before deploy.
+name: Platform Guardian
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  platform-guardian-predeploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: server/package.json
+      - name: Install dependencies
+        run: npm ci || npm install
+      - name: Platform guardian pre-deploy (wiring + blueprints + schemas)
+        run: node scripts/platform-guardian-predeploy.js --json
+      - name: Block deploy if guardian fails
+        if: failure()
+        run: |
+          echo "::error::Platform guardian blocked this change — fix wiring/blueprints before merge/deploy."
+          exit 1

@@ -4,8 +4,10 @@
   "description": "Digest endpoint for GatorVault - accepts client digest and delivers via webhook/email",
   "main": "server.js",
   "scripts": {
-    "start": "node scripts/verify-server-boot.js && node server.js",
+    "start": "node scripts/platform-guardian-predeploy.js && node server.js",
     "dev": "nodemon server.js",
+    "verify:wiring": "node scripts/platform-guardian-predeploy.js",
+    "guardian:predeploy": "node scripts/platform-guardian-predeploy.js",
     "seed:recruiting": "node scripts/seed-recruiting.js",
     "ingest:on3": "node scripts/run-on3-ingest.js",
     "ingest:on3:baseline": "node scripts/run-on3-ingest.js --baseline",

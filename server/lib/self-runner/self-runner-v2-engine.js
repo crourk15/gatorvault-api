@@ -13,6 +13,7 @@ const modes = require('./self-runner-modes');
 const logger = require('./self-runner-logger');
 const queue = require('./self-runner-queue');
 const dedupeEngine = require('./dedupe-engine');
+const v3Repair = require('./self-runner-v3-repair');
 
 function scanId() {
   return `sr2_scan_${crypto.randomBytes(4).toString('hex')}`;
@@ -57,7 +58,8 @@ function scanFeedIntegrity() {
   };
 }
 function scanHtmlBlueprint() {
-  const missing = contextPatch.scanHtmlHooks();
+  const drift = v3Repair.scanBlueprintDrift();
+  const missing = drift.missingHooks || [];
   if (!missing.length) return [];
   return [
     issueFromViolation(
@@ -65,7 +67,8 @@ function scanHtmlBlueprint() {
         severity: 'high',
         issue: 'missing_html_hooks',
         detail: `Missing required hooks: ${missing.join(', ')}`,
-        hooks: missing
+        hooks: missing,
+        repairEngine: 'self-runner-v3'
       },
       'html'
     )
@@ -73,7 +76,8 @@ function scanHtmlBlueprint() {
 }
 
 function scanCssBlueprint() {
-  const missing = contextPatch.scanCssTokens();
+  const drift = v3Repair.scanBlueprintDrift();
+  const missing = drift.missingTokens || [];
   if (!missing.length) return [];
   return [
     issueFromViolation(
@@ -81,7 +85,8 @@ function scanCssBlueprint() {
         severity: 'medium',
         issue: 'missing_css_tokens',
         detail: `Missing CSS tokens: ${missing.join(', ')}`,
-        tokens: missing
+        tokens: missing,
+        repairEngine: 'self-runner-v3'
       },
       'css'
     )

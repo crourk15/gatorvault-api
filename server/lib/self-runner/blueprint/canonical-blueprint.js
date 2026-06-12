@@ -5,7 +5,7 @@ const html = require('./html-blueprint');
 const css = require('./css-blueprint');
 const json = require('./json-schemas');
 
-const VERSION = '2.0.0';
+const VERSION = '3.0.0';
 
 function platformMap() {
   return {
