@@ -193,6 +193,10 @@ function mountInsiderArticlesRoutes(app) {
       return res.status(400).json({ ok: false, error: err.message });
     }
   });
+
+  console.log(
+    '[insider-articles] routes mounted: /api/articles/published, /api/articles/drafts, /api/articles/drafts/:id, /api/articles/:id'
+  );
 }
 
 module.exports = { mountInsiderArticlesRoutes, verifyAdminPin };
