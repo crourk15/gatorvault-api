@@ -1,0 +1,20 @@
+{
+  "priority_positions_2027": ["QB", "WR", "CB", "EDGE"],
+  "discovery_thresholds": {
+    "watchlist_min": 60,
+    "target_min": 75
+  },
+  "portal_likelihood_thresholds": {
+    "watchlist_min": 50,
+    "strong_interest_min": 70
+  },
+  "uf_fit_weights": {
+    "scheme_fit": 0.25,
+    "positional_need": 0.2,
+    "athletic_profile": 0.15,
+    "geographic_ties": 0.1,
+    "timeline_fit": 0.1,
+    "culture_fit": 0.1,
+    "recruiting_momentum": 0.1
+  }
+}

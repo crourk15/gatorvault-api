@@ -11,6 +11,6 @@
       "@server/*": ["server/*"]
     }
   },
-  "include": ["server/**/*.js"],
+  "include": ["server/**/*.js", "server/**/*.ts", "client/**/*.tsx"],
   "exclude": ["node_modules", "server/node_modules"]
 }

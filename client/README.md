@@ -1,22 +1,19 @@
-# GatorVault client (frontend)
+# FutureCast frontend (scaffolding)
 
-The GatorVault **frontend is not a separate npm package** in this repo. Static pages and client-side JavaScript live alongside the API in `server/`:
+React/TypeScript SPA skeleton for FutureCast Big Board and Player Profiles 2.0.
 
-| File | Role |
-|------|------|
-| `server/index.html` | Main Insider site |
-| `server/article.html` | Article pages |
-| `server/player.html` | Player profiles |
-| `server/gv-global.js` | Shared client utilities |
-| `server/gv-global.css` | Shared styles |
+**Spec:** `server/docs/futurecast-platform-spec.md` §4, §5
 
-Netlify publishes `server/` directly (`netlify.toml` → `publish = "server"`).
+> Today production UI lives in `server/index.html`. This `client/` tree is the target architecture for a Vite/React split.
 
-To work on the UI locally, start the API from the repo root:
+## Routes
 
-```bash
-npm start
-# open http://localhost:3000
-```
+| Path | Component |
+|------|-----------|
+| `/futurecast` | Big Board hub |
+| `/futurecast/big-board/*` | Tab views |
+| `/players/:playerId` | Player Profiles 2.0 |
 
-A future split into a dedicated `client/` build (Vite/React/TS) would live here; until then, edit files under `server/`.
+## Components
+
+See `client/components/futurecast/README.md`.
