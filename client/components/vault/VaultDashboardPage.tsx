@@ -8,6 +8,12 @@ import { SCHEDULE_GAMES } from '@/lib/schedule-data';
 
 const QUICK_LINKS = [
   {
+    href: '/vault/recruiting/board',
+    icon: '📊',
+    title: 'Recruiting Board',
+    desc: 'Classic board — composite ratings, commits, targets, and class summary.',
+  },
+  {
     href: '/vault/recruiting',
     icon: '🎯',
     title: 'Recruiting Hub',

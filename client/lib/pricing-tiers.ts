@@ -73,7 +73,7 @@ export const LANDING_FEATURES = [
     icon: '🎯',
     title: 'Recruiting Board',
     desc: '2026 class + 2027 targets, priority tiers, staff notes, and eval status.',
-    href: '/vault/recruiting-board',
+    href: '/vault/recruiting/board',
   },
   {
     icon: '🔄',

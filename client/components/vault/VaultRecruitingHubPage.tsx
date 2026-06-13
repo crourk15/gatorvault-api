@@ -344,6 +344,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
         <h1 className="gv-page-title">Recruiting Hub</h1>
         <p className="gv-page-subtitle">
           Elite UF recruiting intel — commits, targets, movement, and scouting.{' '}
+          <a href="/vault/recruiting/board">Recruiting Board →</a> ·{' '}
           <a href="/vault/futurecast">FutureCast →</a> · <a href="/vault/team">Team →</a>
         </p>
       </div>

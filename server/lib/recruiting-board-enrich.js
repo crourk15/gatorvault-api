@@ -84,6 +84,10 @@ function enrichPlayer(player, isCommit, staffMode) {
     headliner: !!(player.headliner ?? player.isUFtarget),
     isTarget: !isCommit,
     isCommittedToUF: isCommit,
+    skinny: player.skinny || player.profileNote || null,
+    profileNote: player.profileNote || null,
+    commitDate: player.commitDate || player.commit_date || null,
+    inState: player.inState ?? player.in_state ?? (String(player.state || player.st || '').toUpperCase() === 'FL'),
   };
 }
 

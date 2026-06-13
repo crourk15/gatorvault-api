@@ -44,8 +44,8 @@
 /vault/scouting  /vault/recruiting/scouting  301
 /vault/scouting/  /vault/recruiting/scouting  301
 /vault/scouting/*  /vault/recruiting/scouting  301
-/vault/recruiting-board  /vault/recruiting  301
-/vault/recruiting-board/*  /vault/recruiting  301
+/vault/recruiting-board  /vault/recruiting/board  301
+/vault/recruiting-board/*  /vault/recruiting/board  301
 /vault/portal/player/*  /vault/recruiting/player/:splat  301
 /vault/depth-chart  /vault/team  301
 /vault/depth-chart/  /vault/team  301
@@ -72,6 +72,9 @@
 /staff  /staff/index.html  200
 /staff/dashboard  /staff/dashboard/index.html  200
 /staff/dashboard/*  /staff/dashboard/index.html  200
+/vault/recruiting/board  /vault/recruiting/board/index.html  200
+/vault/recruiting/board/  /vault/recruiting/board/index.html  200
+/vault/recruiting/board/*  /vault/recruiting/board/index.html  200
 /vault/recruiting  /vault/recruiting/index.html  200
 /vault/recruiting/  /vault/recruiting/index.html  200
 /vault/recruiting/*  /vault/recruiting/index.html  200

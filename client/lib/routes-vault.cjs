@@ -26,6 +26,7 @@ const PILLAR_QA = {
 };
 
 const RECRUITING_SUB_ROUTES = [
+  '/vault/recruiting/board',
   '/vault/recruiting/priority',
   '/vault/recruiting/2027/commits',
   '/vault/recruiting/2027/targets',
@@ -83,8 +84,8 @@ const LEGACY_ROUTE_REDIRECTS = [
   { from: '/vault/scouting', to: '/vault/recruiting/scouting' },
   { from: '/vault/scouting/', to: '/vault/recruiting/scouting' },
   { from: '/vault/scouting/*', to: '/vault/recruiting/scouting' },
-  { from: '/vault/recruiting-board', to: '/vault/recruiting' },
-  { from: '/vault/recruiting-board/*', to: '/vault/recruiting' },
+  { from: '/vault/recruiting-board', to: '/vault/recruiting/board' },
+  { from: '/vault/recruiting-board/*', to: '/vault/recruiting/board' },
   { from: '/vault/portal/player/*', to: '/vault/recruiting/player/:splat' },
   { from: '/vault/depth-chart', to: '/vault/team' },
   { from: '/vault/depth-chart/', to: '/vault/team' },
@@ -100,6 +101,7 @@ function subRouteRewrites(prefix, exportPath) {
 }
 
 const VAULT_REACT_REWRITES = [
+  ...subRouteRewrites('/vault/recruiting/board', '/vault/recruiting/board/index.html'),
   ...subRouteRewrites('/vault/recruiting', '/vault/recruiting/index.html'),
   ...subRouteRewrites('/vault/futurecast', '/vault/futurecast/index.html'),
   { from: '/vault/futurecast/player/*', to: '/vault/futurecast/player/index.html', status: 200 },
@@ -118,6 +120,7 @@ const REQUIRED_VAULT_EXPORTS = [
   'index.html',
   'vault/index.html',
   'vault/recruiting/index.html',
+  'vault/recruiting/board/index.html',
   'vault/recruiting/player/index.html',
   'vault/futurecast/index.html',
   'vault/futurecast/player/index.html',

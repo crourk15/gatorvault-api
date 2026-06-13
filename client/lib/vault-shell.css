@@ -3281,3 +3281,367 @@ a.gv-live-feed__row-title:hover {
     text-align: center;
   }
 }
+
+/* ── Classic Recruiting Board (rating hero, no headshots) ── */
+
+.gv-rb-page__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.gv-rb-page__links a {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.gv-rb-toolbar {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.gv-rb-priority-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.gv-rb-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.gv-rb-summary__stat {
+  flex: 1 1 120px;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  background: rgba(6, 15, 31, 0.75);
+}
+
+.gv-rb-summary__stat--accent {
+  border-color: rgba(250, 70, 22, 0.4);
+}
+
+.gv-rb-summary__label {
+  display: block;
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.gv-rb-summary__value {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.gv-rb-summary__stat--accent .gv-rb-summary__value {
+  color: #fa4616;
+}
+
+.gv-rb-summary__value small {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #94a3b8;
+}
+
+.gv-rb-summary__value--coach {
+  font-size: 1.125rem;
+}
+
+.gv-rb-headliner {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 1rem;
+  border: 2px solid rgba(251, 191, 36, 0.5);
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.08), rgba(251, 191, 36, 0.02));
+  position: relative;
+  overflow: hidden;
+}
+
+.gv-rb-headliner__label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fbbf24;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gv-rb-headliner__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .gv-rb-headliner__body {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.gv-rb-headliner__rating-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 1rem;
+  border: 3px solid rgba(250, 70, 22, 0.55);
+  background: linear-gradient(145deg, rgba(0, 48, 135, 0.9), rgba(6, 14, 28, 0.95));
+  box-shadow: 0 8px 32px rgba(250, 70, 22, 0.15);
+}
+
+.gv-rb-headliner__rating-value {
+  font-family: 'Oswald', sans-serif;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #fa4616;
+  line-height: 1;
+}
+
+.gv-rb-headliner__rating-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-top: 0.25rem;
+  text-align: center;
+}
+
+.gv-rb-headliner__stars {
+  display: block;
+  margin-top: 0.5rem;
+  color: #fbbf24;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.gv-rb-headliner__name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gv-rb-headliner__name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.gv-rb-headliner__pos-pill,
+.gv-rb-card__pos-pill {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(0, 48, 135, 0.6);
+  color: #93c5fd;
+}
+
+.gv-rb-headliner__natl {
+  font-size: 1rem;
+  color: #fbbf24;
+}
+
+.gv-rb-headliner__skinny {
+  margin: 0.75rem 0 0;
+  padding-left: 0.75rem;
+  border-left: 3px solid #fbbf24;
+  font-style: italic;
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.gv-rb-section {
+  margin-bottom: 2rem;
+}
+
+.gv-rb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.gv-rb-card {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  border-left: 4px solid #fa4616;
+  background: #0a1628;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.gv-rb-card--commit {
+  border-left-color: #22c55e;
+}
+
+.gv-rb-card:hover {
+  border-color: rgba(250, 70, 22, 0.45);
+}
+
+.gv-rb-card__link {
+  display: block;
+  padding: 1rem 1.125rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.gv-rb-card__hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.gv-rb-card__rating-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 72px;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.65rem;
+  border: 2px solid rgba(250, 70, 22, 0.5);
+  background: linear-gradient(145deg, rgba(0, 48, 135, 0.85), rgba(6, 14, 28, 0.9));
+}
+
+.gv-rb-card__rating-value {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #fa4616;
+  line-height: 1;
+}
+
+.gv-rb-card__rating-label {
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-top: 0.15rem;
+}
+
+.gv-rb-card__stars {
+  color: #fbbf24;
+  font-size: 0.8125rem;
+}
+
+.gv-rb-card__name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.gv-rb-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.gv-rb-card__instate {
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.gv-rb-card__school,
+.gv-rb-card__htwt,
+.gv-rb-card__ranks {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  margin: 0.2rem 0;
+}
+
+.gv-rb-card__skinny {
+  margin: 0;
+  padding: 0.65rem 1.125rem 0.85rem;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  font-style: italic;
+  border-top: 1px solid rgba(0, 48, 135, 0.25);
+  border-left: 3px solid rgba(250, 70, 22, 0.4);
+  background: rgba(6, 14, 28, 0.5);
+}
+
+.gv-rb-card__move--up { color: #4ade80; }
+.gv-rb-card__move--down { color: #f87171; }
+.gv-rb-card__move--flat { color: #94a3b8; }
+
+.gv-rb-card__heat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.gv-rb-card__heat-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(0, 48, 135, 0.4);
+  overflow: hidden;
+}
+
+.gv-rb-card__heat-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #003087, #fa4616);
+  border-radius: 999px;
+}
+
+.gv-rb-card__heat-pct {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fa4616;
+}
+
+.gv-rb-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.gv-rb-card__badge {
+  font-size: 0.6875rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(0, 48, 135, 0.45);
+  color: #93c5fd;
+}
+
+.gv-rb-card__status--commit {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #4ade80;
+}
+
+.gv-rb-card__status--target {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #fa4616;
+}

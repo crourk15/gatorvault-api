@@ -2,10 +2,10 @@
 
 import { useEffect } from 'react';
 
-/** Recruiting Board merged into Recruiting Hub. */
-export default function VaultRecruitingBoardPage(): null {
+/** Legacy path → canonical recruiting board. */
+export default function VaultRecruitingBoardRedirect(): null {
   useEffect(() => {
-    window.location.replace('/vault/recruiting');
+    window.location.replace('/vault/recruiting/board');
   }, []);
   return null;
 }

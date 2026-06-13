@@ -42,6 +42,10 @@ export interface RecruitingBoardPlayer {
   nextVisitSchool?: string | null;
   committedTo?: string | null;
   headliner?: boolean;
+  commitDate?: string | null;
+  inState?: boolean;
+  movementDirection?: 'up' | 'down' | 'flat';
+  predictionSchools?: { school: string; pct: number }[];
 }
 
 export interface RecruitingBoardTierSection {
