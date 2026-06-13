@@ -1,0 +1,1129 @@
+{
+  "entries": [
+    {
+      "at": "2026-06-12T01:46:05.871Z",
+      "level": "info",
+      "event": "patch_proposed",
+      "scanId": "sr2_scan_c73e8ce6",
+      "action": "enqueued",
+      "fixId": "sr_fix_003",
+      "patchType": "multi-file-v2"
+    },
+    {
+      "at": "2026-06-12T01:46:05.868Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_c73e8ce6",
+      "finished": true,
+      "issueCount": 1,
+      "patchCount": 1
+    },
+    {
+      "at": "2026-06-12T01:46:05.866Z",
+      "level": "info",
+      "event": "patch_proposed",
+      "scanId": "sr2_scan_c73e8ce6",
+      "patchType": "multi-file-v2",
+      "files": [
+        "index.html",
+        null
+      ]
+    },
+    {
+      "at": "2026-06-12T01:46:05.864Z",
+      "level": "info",
+      "event": "multi_file_patch",
+      "bundleKey": "blueprint",
+      "files": [
+        "index.html",
+        null
+      ],
+      "edits": 7,
+      "blocked": false
+    },
+    {
+      "at": "2026-06-12T01:46:05.854Z",
+      "level": "info",
+      "event": "issue_detected",
+      "scanId": "sr2_scan_c73e8ce6",
+      "checkId": "blueprint:html:missing_html_hooks",
+      "severity": "high"
+    },
+    {
+      "at": "2026-06-12T01:46:05.841Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/scouting-database.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\scouting-database.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-12T01:46:05.839Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/breakdowns.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\war-room-breakdowns.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-12T01:46:05.835Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/recruiting/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\recruiting-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-12T01:46:05.831Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/live/feed-items.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\feed-items.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-12T01:46:05.825Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/coaching-staff.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\coaching-staff.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-12T01:46:05.822Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/roster/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\roster-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-12T01:46:05.814Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_c73e8ce6",
+      "mode": "assisted"
+    },
+    {
+      "at": "2026-06-11T23:34:43.565Z",
+      "level": "error",
+      "event": "guard_blocked",
+      "fixId": "sr_fix_001",
+      "blocked": 1,
+      "codes": [
+        "legacy_dedupe_rule"
+      ]
+    },
+    {
+      "at": "2026-06-11T22:50:16.575Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:amare-nugent|florida|2026-01-24",
+      "title": "Amare Nugent commits to Florida",
+      "rawText": "CB · 4★ · American Heritage (Plantation, FL)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.574Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:jackson-ballinger|florida|2026-02-24",
+      "title": "Jackson Ballinger commits to Florida",
+      "rawText": "TE · 4★ · Centerburg (Centerburg, OH)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.572Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:tramond-collins|florida|2026-03-11",
+      "title": "Tramond Collins commits to Florida",
+      "rawText": "WR · 4★ · Cottondale (Cottondale, FL)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.570Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:180637|florida|2026-04-08",
+      "title": "Maxwell Hiller commits to Florida",
+      "rawText": "IOL · 5★ · Coatesville, PA · #3 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.568Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:davin-davidson|florida|2026-04-09",
+      "title": "Davin Davidson commits to Florida",
+      "rawText": "QB · 4★ · Cardinal Mooney (Sarasota, FL)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.567Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:aamaury-fountain|florida|2026-04-11",
+      "title": "Aamaury Fountain commits to Florida",
+      "rawText": "CB · 4★ · Northside (Warner Robins, GA)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.565Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:tommy-douglas|florida|2026-04-16",
+      "title": "Tommy Douglas commits to Florida",
+      "rawText": "TE · 4★ · Hun School (Princeton, NJ)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.563Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:anthony-jennings|florida|2026-04-25",
+      "title": "Anthony Jennings commits to Florida",
+      "rawText": "WR · 4★ · Dillard (Fort Lauderdale, FL)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.561Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:peyton-miller|florida|2026-04-27",
+      "title": "Peyton Miller commits to Florida",
+      "rawText": "IOL · 4★ · Anna (Anna, TX)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.560Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:devoun-kendrick|florida|2026-04-27",
+      "title": "De'Voun Kendrick commits to Florida",
+      "rawText": "DL · 3★ · Carrollwood Day (Tampa, FL)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.558Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:elijah-hutcheson|florida|2026-05-05",
+      "title": "Elijah Hutcheson commits to Florida",
+      "rawText": "OT · 4★ · North Cross School (Roanoke, VA)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.557Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:kailib-dillard|florida|2026-05-05",
+      "title": "Kailib Dillard commits to Florida",
+      "rawText": "S · 3★ · Jenks (Tulsa, OK)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.555Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:stive-bentley-keumajou|florida|2026-05-06",
+      "title": "Stive-Bentley Keumajou commits to Florida",
+      "rawText": "DL · 3★ · Coral Gables Senior (Coral Gables, FL)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.553Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:andrew-beard|florida|2026-05-08",
+      "title": "Andrew Beard commits to Florida",
+      "rawText": "RB · 4★ · Prince Avenue Christian (Bogart, GA)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.551Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:cain-van-norden|florida|2026-05-15",
+      "title": "Cain Van Norden commits to Florida",
+      "rawText": "DL · 3★ · Bishop McNamara (District Heights, MD)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.549Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:elias-pearl|florida|2026-05-19",
+      "title": "Elias Pearl commits to Florida",
+      "rawText": "WR · 4★ · Port Charlotte (Port Charlotte, FL)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.547Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "gator-tales_tag:soundcloud,2010:tracks/2328301979",
+      "title": "New episode: Gator Tales — Gator Tales #60: Duke Werner - Executive Associate Athletics Director / Director of Sport",
+      "rawText": "In the latest episode of Gator Tales, Presented by UF Health, Voice of the Gators Sean Kelley sits down for an exclusive conversation with Executive Associate Athletics Director/Director of Sport Dave"
+    },
+    {
+      "at": "2026-06-11T22:50:16.545Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "art_art-335-revolution",
+      "title": "The 3-3-5 Revolution: Why {{ coach.DC }}'s Scheme Changes Everything",
+      "rawText": "{{ coach.DC }}'s 3-3-5 isn't a gimmick — it's a personnel-driven answer to modern spread offenses. Here's how it works, who benefits, and why Jayden Woods makes it dangerous."
+    },
+    {
+      "at": "2026-06-11T22:50:16.543Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:jabios-smith|florida|2026-05-29",
+      "title": "Ja'Bios Smith commits to Florida",
+      "rawText": "LB · 4★ · Swainsboro (Swainsboro, GA)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.542Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "art_art-sumrall-6mo",
+      "title": "{{ coach.HC }}'s First 6 Months: A Real Assessment",
+      "rawText": "Six months in, {{ coach.HC }} has rebuilt the roster through the portal, installed a new defensive identity, and kept the locker room bought in. We grade every major decision."
+    },
+    {
+      "at": "2026-06-11T22:50:16.540Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "gnfp_b37211a8-96f7-46c7-93f2-447f4b88b214",
+      "title": "New episode: Gator Nation Football Podcast — 2026- June Mailbag",
+      "rawText": "2026- June Mailbag If you enjoy the content, drop us a dono for as little as $7. Full GNFP Film Review Access starts at $15. https://www.patreon.com/1165790/join Merch https://gnfp.sellfy.store/ Join "
+    },
+    {
+      "at": "2026-06-11T22:50:16.538Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:kennedee-jackson|florida|2026-06-02",
+      "title": "Kennedee Jackson commits to Florida",
+      "rawText": "OT · 4★ · Lithonia (Lithonia, GA)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.536Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "art_art-win-model",
+      "title": "War Room: 2026 Schedule Win Probability Model",
+      "rawText": "Our proprietary model simulates every game 10,000 times using roster data, returning production, and opponent strength. Here's where UF wins, where it's vulnerable, and the two games that decide the s"
+    },
+    {
+      "at": "2026-06-11T22:50:16.534Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:zahmar-tookes|florida|2026-06-03",
+      "title": "Zahmar Tookes commits to Florida",
+      "rawText": "DL · 4★ · Brighton (Rochester, NY)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.533Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "art_art-summer-battles",
+      "title": "Summer Camp Preview: 5 Position Battles to Watch",
+      "rawText": "Fall camp opens August 2nd. These five position battles will shape the starting lineup, the two-deep, and how {{ coach.HC }}'s first season unfolds."
+    },
+    {
+      "at": "2026-06-11T22:50:16.531Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:283680|florida|2026-06-05",
+      "title": "Kamarion Johnson commits to Florida",
+      "rawText": "ATH · 3★ · Homerville, GA · #813 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.529Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:cahron-wheeler|florida|2026-06-05",
+      "title": "Cahron Wheeler commits to Florida",
+      "rawText": "EDGE · 4★ · St. Paul's School (Baltimore, MD)"
+    },
+    {
+      "at": "2026-06-11T22:50:16.527Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
+      "title": "New episode: Gators Online Podcast — Ep. 187: Official visits underway for Florida football, baseball | Gators Online Show",
+      "rawText": "Welcome to the Gators Online Show! In the latest episode, we discuss official visits starting for the Florida football and baseball programs. Hosted by Simplecast, an AdsWizz company. See pcm.adswizz."
+    },
+    {
+      "at": "2026-06-11T22:50:16.525Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:180930|florida|2026-06-06",
+      "title": "Ellis McGaskin commits to Florida",
+      "rawText": "LB · 4★ · Mobile, AL · #347 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.523Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:175389|florida|2025-08-11",
+      "title": "Davian Groce commits to Florida",
+      "rawText": "WR · 4★ · Frisco, TX · #60 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.521Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:241642|florida|2025-06-18",
+      "title": "CJ Bronaugh commits to Florida",
+      "rawText": "CB · 4★ · Winter Garden, FL · #84 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.520Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:176369|florida|2025-07-11",
+      "title": "Kevin Ford commits to Florida",
+      "rawText": "EDGE · 4★ · Duncanville, TX · #149 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.518Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:240430|florida|2025-06-08",
+      "title": "Justin Williams commits to Florida",
+      "rawText": "WR · 4★ · Gainesville, FL · #158 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.517Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:154268|florida|2025-06-14",
+      "title": "JaReylan McCoy commits to Florida",
+      "rawText": "DL · 4★ · Tupelo, MS · #173 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.515Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:239856|florida|2025-12-04",
+      "title": "Dylan Purter commits to Florida",
+      "rawText": "S · 4★ · Tuskegee, AL · #204 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.513Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:162624|florida|2024-06-01",
+      "title": "Will Griffin commits to Florida",
+      "rawText": "QB · 4★ · Tampa, FL · #259 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.511Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:236759|florida|2025-07-02",
+      "title": "Kendall Guervil commits to Florida",
+      "rawText": "DL · 4★ · Fort Myers, FL · #276 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.509Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:243492|florida|2025-06-16",
+      "title": "Tyler Chukuyem commits to Florida",
+      "rawText": "OT · 4★ · Douglasville, GA · #281 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.507Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:177521|florida|2025-07-07",
+      "title": "Malik Morris commits to Florida",
+      "rawText": "LB · 4★ · Lakeland, FL · #362 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.505Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:174275|florida|2025-07-12",
+      "title": "Heze Kent commits to Florida",
+      "rawText": "OT · 4★ · Brunswick, GA · #366 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.503Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:177149|florida|2025-06-14",
+      "title": "Marquez Daniel commits to Florida",
+      "rawText": "WR · 4★ · Tuskegee, AL · #367 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.502Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:174822|florida|2025-06-03",
+      "title": "Kaiden Hall commits to Florida",
+      "rawText": "S · 4★ · Milton, FL · #386 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.500Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:155900|florida|2025-07-03",
+      "title": "CJ Hester commits to Florida",
+      "rawText": "CB · 3★ · Cocoa, FL · #503 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.490Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:176416|florida|2025-06-01",
+      "title": "G'Nivre Carr commits to Florida",
+      "rawText": "IOL · 3★ · Ocala, FL · #505 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.488Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:179743|florida|2025-06-08",
+      "title": "Chancellor Campbell commits to Florida",
+      "rawText": "OT · 3★ · Saint Petersburg, FL · #627 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.487Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:283712|florida|2026-01-07",
+      "title": "Elijah Owens commits to Florida",
+      "rawText": "S · 3★ · Mobile, AL · #63 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.485Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:236347|florida|2025-06-26",
+      "title": "Desmond Green commits to Florida",
+      "rawText": "IOL · 3★ · Saint Stephen, SC · #884 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.483Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:243619|florida|2025-06-16",
+      "title": "Javarii Luckas commits to Florida",
+      "rawText": "OT · 3★ · Belle Glade, FL · #1147 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.481Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:260787|florida|2026-02-05",
+      "title": "Eric Parks commits to Florida",
+      "rawText": "S · 3★ · Tampa, FL · #1750 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.480Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:288527|florida|2026-05-12",
+      "title": "Javier Jones commits to Florida",
+      "rawText": "CB · 3★ · Phoenix, AZ · #265 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.478Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:43376|florida|2026-01-06",
+      "title": "Evan Pryor commits to Florida",
+      "rawText": "RB · 3★ · Cornelius, NC"
+    },
+    {
+      "at": "2026-06-11T22:50:16.476Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:113148|florida|2026-01-06",
+      "title": "T.J. Shanahan commits to Florida",
+      "rawText": "IOL · 3★ · Orlando, FL"
+    },
+    {
+      "at": "2026-06-11T22:50:16.474Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:178263|florida|2026-01-07",
+      "title": "Cam Dooley commits to Florida",
+      "rawText": "S · 3★ · Valley, AL"
+    },
+    {
+      "at": "2026-06-11T22:50:16.472Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:87184|florida|2026-01-07",
+      "title": "Micah Mays commits to Florida",
+      "rawText": "WR · 3★ · North Palm Beach, FL"
+    },
+    {
+      "at": "2026-06-11T22:50:16.471Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:178849|florida|2026-01-10",
+      "title": "Luke Harpring commits to Florida",
+      "rawText": "TE · 3★ · Atlanta, GA"
+    },
+    {
+      "at": "2026-06-11T22:50:16.469Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:155795|florida|2026-01-06",
+      "title": "Eagan Boyer commits to Florida",
+      "rawText": "OT · 3★ · Cornelius, NC"
+    },
+    {
+      "at": "2026-06-11T22:50:16.468Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:147775|florida|2026-01-08",
+      "title": "London Montgomery commits to Florida",
+      "rawText": "RB · 3★ · Scranton, PA"
+    },
+    {
+      "at": "2026-06-11T22:50:16.466Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:146069|florida|2026-01-06",
+      "title": "Aaron Philo commits to Florida",
+      "rawText": "QB · 3★ · Bogart, GA"
+    },
+    {
+      "at": "2026-06-11T22:50:16.465Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:145026|florida|2026-01-05",
+      "title": "DK Kalu commits to Florida",
+      "rawText": "DL · 3★ · Missouri City, TX"
+    },
+    {
+      "at": "2026-06-11T22:50:16.463Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:175643|florida|2026-01-18",
+      "title": "Mason Clinton commits to Florida",
+      "rawText": "DL · 3★ · Petal, MS"
+    },
+    {
+      "at": "2026-06-11T22:50:16.462Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:150237|florida|2026-01-04",
+      "title": "DJ Coleman commits to Florida",
+      "rawText": "S · 3★ · Mesquite, TX"
+    },
+    {
+      "at": "2026-06-11T22:50:16.460Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:238104|florida|2026-01-09",
+      "title": "Emeka Ugorji commits to Florida",
+      "rawText": "OT · 3★ · Dallas, TX"
+    },
+    {
+      "at": "2026-06-11T22:50:16.458Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:154954|florida|2026-01-16",
+      "title": "Jaylen Lloyd commits to Florida",
+      "rawText": "WR · 3★ · Omaha, NE"
+    },
+    {
+      "at": "2026-06-11T22:50:16.457Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:155719|florida|2026-01-10",
+      "title": "Eric Singleton Jr. commits to Florida",
+      "rawText": "WR · 3★ · Douglasville, GA"
+    },
+    {
+      "at": "2026-06-11T22:50:16.455Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:153739|florida|2026-01-09",
+      "title": "Harrison Moore commits to Florida",
+      "rawText": "IOL · 3★ · Southlake, TX"
+    },
+    {
+      "at": "2026-06-11T22:50:16.454Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:113075|florida|2026-01-12",
+      "title": "TJ Bullard commits to Florida",
+      "rawText": "LB · 3★ · Tampa, FL"
+    },
+    {
+      "at": "2026-06-11T22:50:16.453Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:154828|florida|2026-01-05",
+      "title": "Bailey Stockton commits to Florida",
+      "rawText": "WR · 3★ · Athens, GA"
+    },
+    {
+      "at": "2026-06-11T22:50:16.451Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:66322|florida|2026-01-21",
+      "title": "Jordy Lowery commits to Florida",
+      "rawText": "CB · 3★ · Bartow, FL"
+    },
+    {
+      "at": "2026-06-11T22:50:16.450Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:283144|florida|2026-01-19",
+      "title": "Evan Chieca commits to Florida",
+      "rawText": "TE · 3★ · Lindenhurst, NY"
+    },
+    {
+      "at": "2026-06-11T22:50:16.448Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:148026|florida|2026-01-12",
+      "title": "Kanye Clark commits to Florida",
+      "rawText": "S · 3★ · Sacramento, CA"
+    },
+    {
+      "at": "2026-06-11T22:50:16.447Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:162020|florida|2026-01-05",
+      "title": "Lacota Dippre commits to Florida",
+      "rawText": "TE · 3★ · Jermyn, PA"
+    },
+    {
+      "at": "2026-06-11T22:50:16.445Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:239636|florida|2026-01-06",
+      "title": "Emmanuel Oyebadejo commits to Florida",
+      "rawText": "DL · 3★ · England"
+    },
+    {
+      "at": "2026-06-11T22:50:16.444Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:162609|florida|2026-01-06",
+      "title": "Patrick Durkin commits to Florida",
+      "rawText": "K · 3★ · Plainfield, IL"
+    },
+    {
+      "at": "2026-06-11T22:50:16.442Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:283676|florida|2026-01-06",
+      "title": "Alec Clark commits to Florida",
+      "rawText": "P · 3★ · Melbourne, VIC"
+    },
+    {
+      "at": "2026-06-11T22:50:16.440Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:283756|florida|2026-01-08",
+      "title": "Carter Milliron commits to Florida",
+      "rawText": "LS · 3★ · Hoover, AL"
+    },
+    {
+      "at": "2026-06-11T22:50:16.438Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:283795|florida|2026-01-10",
+      "title": "Miller Fealy commits to Florida",
+      "rawText": "P · 3★ · Melbourne, VIC"
+    },
+    {
+      "at": "2026-06-11T22:50:16.437Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:284197|florida|2026-01-26",
+      "title": "Ace Ciongoli commits to Florida",
+      "rawText": "WR · 3★ · Needham, MA"
+    },
+    {
+      "at": "2026-06-11T22:50:16.435Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:288165|florida|2026-05-01",
+      "title": "Jaylen Jordon commits to Florida",
+      "rawText": "TE · 3★ · Hilliard, FL"
+    },
+    {
+      "at": "2026-06-11T22:50:16.434Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "intel:243862|official_visit|2026-06-11",
+      "title": "Easton Royal — Official Visit Scheduled",
+      "rawText": "2026 WR Easton Royal will take an official visit to Gainesville from June 11–13."
+    },
+    {
+      "at": "2026-06-11T22:50:16.432Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "commit:285808|florida|2026-06-08",
+      "title": "Jaydee Lane commits to Florida",
+      "rawText": "LS · 3★ · Mendenhall, MS · #1801 natl"
+    },
+    {
+      "at": "2026-06-11T22:50:16.430Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "rec_evt_1781017597848_ej9v28",
+      "title": "Amare Patterson — OV to Florida cancelled · visiting South Carolina",
+      "rawText": "WR · 2027 · via Hayes Fawcett"
+    },
+    {
+      "at": "2026-06-11T22:50:16.427Z",
+      "level": "info",
+      "event": "dedupe_rule",
+      "action": "rejected",
+      "reason": "truncated_copy",
+      "id": "gators-breakdown_8d3444c2-6539-11f1-ba26-df223621a9f3",
+      "title": "New episode: Gators Breakdown — INSTANT REACTION: Florida Gators Game Start Times for 2026 | Gators Breakdown Plus MEMBER CHAT",
+      "rawText": "David Waters chats with Gators Breakdown Plus members as the SEC drops the 2026 football start times. Get the READ & REACTION 2026 PREVIEW: https://a.co/d/0c13QdI9 #FloridaGators #GatorsFootball #SECF"
+    },
+    {
+      "at": "2026-06-11T22:46:05.377Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_6dbe8845",
+      "finished": true,
+      "issueCount": 1,
+      "patchCount": 1
+    },
+    {
+      "at": "2026-06-11T22:46:05.375Z",
+      "level": "info",
+      "event": "patch_proposed",
+      "scanId": "sr2_scan_6dbe8845",
+      "patchType": "multi-file-v2",
+      "files": [
+        "index.html",
+        null
+      ]
+    },
+    {
+      "at": "2026-06-11T22:46:05.372Z",
+      "level": "info",
+      "event": "multi_file_patch",
+      "bundleKey": "blueprint",
+      "files": [
+        "index.html",
+        null
+      ],
+      "edits": 7,
+      "blocked": false
+    },
+    {
+      "at": "2026-06-11T22:46:05.354Z",
+      "level": "info",
+      "event": "issue_detected",
+      "scanId": "sr2_scan_6dbe8845",
+      "checkId": "blueprint:html:missing_html_hooks",
+      "severity": "high"
+    },
+    {
+      "at": "2026-06-11T22:46:05.324Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/scouting-database.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\scouting-database.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-11T22:46:05.313Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/breakdowns.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\war-room-breakdowns.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-11T22:46:05.305Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/recruiting/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\recruiting-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-11T22:46:05.296Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/live/feed-items.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\feed-items.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-11T22:46:05.286Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/coaching-staff.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\coaching-staff.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-11T22:46:05.280Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/roster/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\roster-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-11T22:46:05.257Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_6dbe8845",
+      "mode": "assisted"
+    },
+    {
+      "at": "2026-06-11T22:41:03.829Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_fbda7a0a",
+      "finished": true,
+      "issueCount": 1,
+      "patchCount": 1
+    },
+    {
+      "at": "2026-06-11T22:41:03.828Z",
+      "level": "info",
+      "event": "patch_proposed",
+      "scanId": "sr2_scan_fbda7a0a",
+      "patchType": "multi-file-v2",
+      "files": [
+        "index.html",
+        null
+      ]
+    },
+    {
+      "at": "2026-06-11T22:41:03.826Z",
+      "level": "info",
+      "event": "multi_file_patch",
+      "bundleKey": "blueprint",
+      "files": [
+        "index.html",
+        null
+      ],
+      "edits": 8,
+      "blocked": false
+    },
+    {
+      "at": "2026-06-11T22:41:03.816Z",
+      "level": "info",
+      "event": "issue_detected",
+      "scanId": "sr2_scan_fbda7a0a",
+      "checkId": "blueprint:html:missing_html_hooks",
+      "severity": "high"
+    },
+    {
+      "at": "2026-06-11T22:41:03.803Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/scouting-database.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\scouting-database.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-11T22:41:03.801Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/breakdowns.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\war-room-breakdowns.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-11T22:41:03.798Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/recruiting/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\recruiting-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-11T22:41:03.794Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/live/feed-items.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\feed-items.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-11T22:41:03.786Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/coaching-staff.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\coaching-staff.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-11T22:41:03.783Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/roster/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\roster-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-11T22:41:03.770Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_fbda7a0a",
+      "mode": "assisted"
+    }
+  ],
+  "updatedAt": "2026-06-12T01:46:05.871Z"
+}

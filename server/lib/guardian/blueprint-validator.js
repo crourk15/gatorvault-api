@@ -5,6 +5,11 @@ const fs = require('fs');
 const path = require('path');
 const loader = require('../self-runner/blueprint/blueprint-loader');
 const schemaValidator = require('../self-runner/schema-validator');
+const {
+  MONOLITH_ARCHIVE_HTML,
+  isReactMarketingIndex,
+  REACT_LANDING_MARKERS,
+} = require('./monolith-archive');
 
 const SERVER_ROOT = path.join(__dirname, '..', '..');
 
@@ -41,6 +46,23 @@ function hookPresent(html, hookId, section) {
   return patterns.some((p) => scope.includes(p) || html.includes(p));
 }
 
+function verifyMonolithHooks(html, bp, errors, warnings, missing, fileLabel) {
+  for (const hookId of bp.required || []) {
+    const section = bp.sections?.[hookId];
+    if (!section) {
+      warnings.push(`Blueprint section undefined for required hook: ${hookId}`);
+      if (!html.includes(hookId)) missing.push(hookId);
+      continue;
+    }
+    if (!hookPresent(html, hookId, section)) {
+      missing.push(hookId);
+      errors.push(
+        `Missing HTML hook ${hookId} in ${fileLabel} (expected ${section.expectedLocation?.description || 'see blueprints/html.json'})`
+      );
+    }
+  }
+}
+
 function verifyHtmlBlueprint() {
   const errors = [];
   const warnings = [];
@@ -52,20 +74,26 @@ function verifyHtmlBlueprint() {
   }
   const html = index.content;
   const missing = [];
-  for (const hookId of bp.required || []) {
-    const section = bp.sections?.[hookId];
-    if (!section) {
-      warnings.push(`Blueprint section undefined for required hook: ${hookId}`);
-      if (!html.includes(hookId)) missing.push(hookId);
-      continue;
+
+  if (isReactMarketingIndex(html)) {
+    for (const marker of REACT_LANDING_MARKERS) {
+      if (!html.includes(marker)) {
+        errors.push(`Missing React landing marker ${marker} in index.html`);
+      }
     }
-    if (!hookPresent(html, hookId, section)) {
-      missing.push(hookId);
-      errors.push(
-        `Missing HTML hook ${hookId} in index.html (expected ${section.expectedLocation?.description || 'see blueprints/html.json'})`
+
+    const legacy = readFileRel(MONOLITH_ARCHIVE_HTML);
+    if (legacy.ok) {
+      verifyMonolithHooks(legacy.content, bp, errors, warnings, missing, MONOLITH_ARCHIVE_HTML);
+    } else {
+      warnings.push(
+        `${MONOLITH_ARCHIVE_HTML} missing — monolith vpane hooks not verified (Phase 5 archive)`
       );
     }
+    return { ok: errors.length === 0, errors, warnings, missing };
   }
+
+  verifyMonolithHooks(html, bp, errors, warnings, missing, 'index.html');
   return { ok: errors.length === 0, errors, warnings, missing };
 }
 

@@ -1,6 +1,7 @@
 /**
  * Recruiting board tier enrichment for /api/recruiting/board
  */
+const { slugify } = require('./slug');
 const TIER_LABELS = {
   TOP: 'Top Priorities',
   HIGH: 'High Interest',
@@ -45,8 +46,9 @@ function staffGrade(player) {
 
 function enrichPlayer(player, isCommit, staffMode) {
   const tier = assignTier(player);
+  const slug = player.slug || slugify(player.name);
   return {
-    slug: player.slug,
+    slug,
     name: player.name,
     position: player.pos || player.position || null,
     classYear: player.classYear,

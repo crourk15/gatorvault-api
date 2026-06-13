@@ -8,7 +8,7 @@ import {
   type RecruitingBoardPlayer,
   type RecruitingBoardTier,
 } from '@/lib/recruiting-board-api';
-import { playerProfilePath } from '@/lib/player-routes';
+import { playerProfilePath, recruitingProfileLifecycle } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 type SortMode = 'ufProbability' | 'fitScore' | 'staffGrade' | 'name';
@@ -37,7 +37,11 @@ function BoardCard({
   player: RecruitingBoardPlayer;
   inVault?: boolean;
 }): React.ReactElement {
-  const href = playerProfilePath(player.slug, 'HIGH_SCHOOL', inVault);
+  const href = playerProfilePath(
+    player.slug,
+    recruitingProfileLifecycle(player),
+    inVault
+  );
   const note = player.notes || player.notePreview || player.skinny || player.profileNote;
 
   return (

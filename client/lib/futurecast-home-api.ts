@@ -27,6 +27,7 @@ export interface FutureCastHomeResponse {
     windowDays: number;
   };
   commits: FeedPrediction[];
+  commitTotal?: number;
   topTargets: FeedPrediction[];
   trendingUp: FeedPrediction[];
   trendingDown: FeedPrediction[];

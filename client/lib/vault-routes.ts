@@ -11,20 +11,18 @@ export type VaultSectionId =
   | 'film-room'
   | 'game-week'
   | 'live-feed'
+  | 'live-scores'
+  | 'players'
   | 'recruiting-board'
+  | 'scouting'
+  | 'articles'
+  | 'community'
+  | 'game-zone'
+  | 'nil'
+  | 'alerts'
+  | 'tickets'
+  | 'apparel'
   | 'staff';
-
-/** Monolith vault overlay tabs (index.html). */
-export const VAULT_MONOLITH_PATHS: Record<string, string> = {
-  '/vault': 'start',
-  '/vault/depth-chart': 'team',
-  '/vault/recruiting': 'recruit',
-  '/vault/portal': 'portal',
-  '/vault/film-room': 'highlights',
-  '/vault/game-week': 'gameweek',
-  '/vault/live-feed': 'live',
-  '/vault/staff': 'analytics',
-};
 
 export const VAULT_SIDEBAR: { id: VaultSectionId; label: string; href: string; icon: string }[] = [
   { id: 'dashboard', label: 'Dashboard', href: '/vault', icon: '🏠' },
@@ -35,12 +33,28 @@ export const VAULT_SIDEBAR: { id: VaultSectionId; label: string; href: string; i
   { id: 'film-room', label: 'Film Room', href: '/vault/film-room', icon: '📺' },
   { id: 'game-week', label: 'Game Week', href: '/vault/game-week', icon: '🏈' },
   { id: 'live-feed', label: 'Live Feed', href: '/vault/live-feed', icon: '⚡' },
+  { id: 'live-scores', label: 'Live Scores', href: '/vault/live-scores', icon: '📊' },
+  { id: 'articles', label: 'Articles', href: '/vault/articles', icon: '📰' },
+  { id: 'community', label: 'Community', href: '/vault/community', icon: '💬' },
+  { id: 'game-zone', label: 'Game Zone', href: '/vault/game-zone', icon: '🏆' },
+  { id: 'nil', label: 'NIL Tracker', href: '/vault/nil', icon: '💰' },
+  { id: 'players', label: 'Players', href: '/vault/players', icon: '👤' },
+  { id: 'scouting', label: 'War Room', href: '/vault/scouting', icon: '🔭' },
   { id: 'recruiting-board', label: 'Recruiting Board', href: '/vault/recruiting-board', icon: '📊' },
-  { id: 'staff', label: 'Staff', href: '/vault/staff', icon: '⚙️' },
+  { id: 'alerts', label: 'My Alerts', href: '/vault/alerts', icon: '🔔' },
+  { id: 'tickets', label: 'Tickets', href: '/vault/tickets', icon: '🎟️' },
+  { id: 'apparel', label: 'Apparel', href: '/vault/apparel', icon: '👕' },
+  { id: 'staff', label: 'Movement Intel', href: '/vault/futurecast/staff', icon: '📡' },
 ];
 
-export function isVaultPath(pathname: string): boolean {
-  return pathname.replace(/\/$/, '').startsWith('/vault');
+export function isVaultPath(pathname?: string): boolean {
+  const p =
+    pathname && pathname.length > 0
+      ? pathname
+      : typeof window !== 'undefined'
+        ? window.location.pathname
+        : '';
+  return p.replace(/\/$/, '').startsWith('/vault');
 }
 
 export function vaultPortalBackHref(pathname: string): string {

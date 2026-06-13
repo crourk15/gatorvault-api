@@ -47,7 +47,7 @@
     document.getElementById('back-link').addEventListener('click', function (e) {
       e.preventDefault();
       if (document.referrer && document.referrer.indexOf(location.host) >= 0) history.back();
-      else location.href = '/?open=vault&tab=articles';
+      else location.href = '/vault/articles';
     });
 
     function renderArticle(a) {

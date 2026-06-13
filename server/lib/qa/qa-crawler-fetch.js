@@ -29,12 +29,28 @@ function readLocalAsset(rel) {
   }
 }
 
+function readMonolithArchive() {
+  return readLocalAsset('legacy-index.html') || readLocalAsset('index.html');
+}
+
+function staticHtmlForSection(section) {
+  if (section.legacy) return readMonolithArchive();
+  if (section.page === '/vault') return readLocalAsset('vault/index.html') || readLocalAsset('index.html');
+  if (section.page && section.page.startsWith('/vault/')) {
+    const rel = `${section.page.replace(/^\//, '')}/index.html`;
+    return readLocalAsset(rel) || readLocalAsset('index.html');
+  }
+  return readLocalAsset('index.html');
+}
+
 function buildStaticSnapshot(section, viewport) {
-  const indexHtml = readLocalAsset('index.html');
+  const html =
+    section.page === '/admin'
+      ? readLocalAsset('admin.html') || readLocalAsset('index.html')
+      : staticHtmlForSection(section);
   const teamCss = readLocalAsset('css/gv-team.css');
   const teamJs = readLocalAsset('js/gv-team-mobile.js');
   const css = { 'css/gv-team.css': teamCss };
-  const html = section.page === '/admin' ? readLocalAsset('admin.html') || indexHtml : indexHtml;
 
   const elements = (section.selectors || []).map((sel) => {
     const needle = sel.startsWith('#') ? `id="${sel.slice(1)}"` : sel;
@@ -61,25 +77,11 @@ function buildStaticSnapshot(section, viewport) {
 }
 
 async function bootstrapVault(page, viewport) {
-  const isMobile = viewport === 'mobile';
-  await page.goto(`${config.SITE_URL}/?open=vault`, { waitUntil: 'domcontentloaded', timeout: 45000 });
-  await page.waitForFunction(() => typeof window.showVaultInterior === 'function', { timeout: 25000 });
-  await page.evaluate(
-    ({ isMobile }) => {
-      const vo = document.getElementById('vault-overlay');
-      if (vo) vo.classList.remove('hidden');
-      window.GV_ROLE = 'locker';
-      window.GV_OPERATOR = false;
-      if (typeof showVaultInterior === 'function') showVaultInterior('locker');
-      const gate = document.getElementById('trial-expired-gate');
-      if (gate) gate.classList.add('hidden');
-      const banner = document.getElementById('trial-payment-banner');
-      if (banner) banner.style.display = 'none';
-      const interior = document.getElementById('vault-interior');
-      if (interior && isMobile) interior.classList.add('gv-mobile-active');
-    },
-    { isMobile }
-  );
+  await page.goto(`${config.SITE_URL}/vault`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+  await page.waitForSelector('.gv-vault-shell, [data-testid="vault-dashboard"]', { timeout: 25000 });
+  if (viewport === 'mobile') {
+    await page.setViewportSize(MOBILE_VIEWPORT);
+  }
   await page.waitForTimeout(2000);
 }
 
@@ -191,6 +193,13 @@ async function fetchSectionPlaywright(page, section, viewport) {
 
   if (section.isAdmin) {
     await page.goto(`${config.SITE_URL}/admin`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    await page.waitForTimeout(1500);
+  } else if (section.legacy) {
+    await page.goto(`${config.SITE_URL}/vault`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    await page.waitForTimeout(1500);
+  } else if (section.page && section.page !== '/') {
+    await page.goto(`${config.SITE_URL}${section.page}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    await page.waitForSelector('[data-testid], .gv-vault-shell, .gv-landing', { timeout: 25000 }).catch(() => {});
     await page.waitForTimeout(1500);
   } else {
     await bootstrapVault(page, viewport);

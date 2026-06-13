@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname } from '@/lib/use-pathname';
+import { loadSession } from '@/lib/auth-api';
 
 const LINKS = [
   { id: 'home', href: '/', label: 'Home' },
@@ -12,6 +13,7 @@ const LINKS = [
 function activeId(pathname: string): string | null {
   const p = pathname.replace(/\/$/, '') || '/';
   if (p === '/') return 'home';
+  if (p === '/join') return 'join';
   if (p.startsWith('/vault')) return 'vault';
   if (
     p.startsWith('/futurecast') ||
@@ -25,12 +27,17 @@ function activeId(pathname: string): string | null {
   return null;
 }
 
-export function GatorVaultSiteNav(): React.ReactElement {
+export function GatorVaultSiteNav({ marketing = false }: { marketing?: boolean }): React.ReactElement {
   const pathname = usePathname();
   const current = activeId(pathname);
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => {
+    setSignedIn(!!loadSession()?.email);
+  }, [pathname]);
 
   return (
-    <header className="gv-site-header">
+    <header className={`gv-site-header${marketing ? ' gv-site-header--marketing' : ''}`}>
       <div className="gv-site-header__inner">
         <a href="/" className="gv-site-header__brand">
           <span className="gv-site-header__brand-mark">🐊</span>
@@ -46,6 +53,20 @@ export function GatorVaultSiteNav(): React.ReactElement {
               {link.label}
             </a>
           ))}
+          {signedIn ? (
+            <a href="/vault" className="gv-site-nav__cta gv-site-nav__cta--vault">
+              Enter Vault
+            </a>
+          ) : (
+            <>
+              <a href="/join" className="gv-site-nav__link gv-site-nav__link--join">
+                Join
+              </a>
+              <a href="/join?mode=signin" className="gv-site-nav__cta">
+                Sign in
+              </a>
+            </>
+          )}
         </nav>
       </div>
     </header>

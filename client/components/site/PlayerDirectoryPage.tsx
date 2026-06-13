@@ -13,7 +13,7 @@ const LIFECYCLE_TABS: { id: BigBoardLifecycle; label: string }[] = [
 
 const POSITIONS = ['ALL', 'QB', 'RB', 'WR', 'TE', 'OL', 'DL', 'EDGE', 'LB', 'DB', 'ATH', 'K', 'P'];
 
-export function PlayerDirectoryPage(): React.ReactElement {
+export function PlayerDirectoryPage({ inVault = false }: { inVault?: boolean } = {}): React.ReactElement {
   const [players, setPlayers] = useState<BigBoardPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -128,7 +128,7 @@ export function PlayerDirectoryPage(): React.ReactElement {
               {filtered.map((p) => (
                 <a
                   key={p.id}
-                  href={playerProfilePath(p.slug, p.lifecycle)}
+                  href={playerProfilePath(p.slug, p.lifecycle, inVault)}
                   className="gv-board-card gv-board-card--directory"
                 >
                   <span className="gv-board-card__rank">#{p.rank}</span>

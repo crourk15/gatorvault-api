@@ -1,7 +1,95 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-11T21:13:56.148Z",
+  "updatedAt": "2026-06-12T01:46:05.873Z",
   "items": [
+    {
+      "id": "sr_fix_003",
+      "sourceIssueId": "sr2_html_03b0894149",
+      "checkId": "blueprint:html:missing_html_hooks",
+      "title": "Missing required hooks: gv-coaching-staff, gv-section-identity, gv-section-recruiting, gv-section-portal, gv-section-news, gv-section-film",
+      "module": "self-runner-v2",
+      "classification": "html",
+      "severity": "high",
+      "impact": "platform-integrity",
+      "status": "pending",
+      "patchType": "multi-file-v2",
+      "patchPreview": {
+        "files": [
+          "index.html",
+          null
+        ],
+        "before": "blueprint:html:missing_html_hooks, blueprint:war-room:war_room_maintenance",
+        "after": "7 edit(s) across 2 file(s)"
+      },
+      "patch": {
+        "edits": [
+          {
+            "file": "index.html",
+            "type": "insert-after-region-open",
+            "regionId": "vpane-team",
+            "text": "\n<section id=\"gv-coaching-staff\" class=\"gv-team-section\" data-gv-section=\"coaching-staff\" aria-label=\"Coaching Staff\">\n  <h3 class=\"gv-team-h3\">Coaching Staff</h3>\n  <div id=\"gv-coaching-staff-grid\" class=\"gv-team-coach-grid\"></div>\n</section>\n",
+            "hookId": "gv-coaching-staff"
+          },
+          {
+            "file": "index.html",
+            "type": "insert-after-region-open",
+            "regionId": "vpane-team",
+            "text": "\n<section id=\"gv-section-identity\" class=\"gv-team-section gv-team-identity-banner\" data-gv-section=\"identity\" aria-label=\"Team Identity\">\n  <div id=\"gv-team-identity-banner\" class=\"gv-team-identity-inner\"></div>\n</section>\n",
+            "hookId": "gv-section-identity"
+          },
+          {
+            "file": "index.html",
+            "type": "insert-after-region-open",
+            "regionId": "vpane-recruit",
+            "text": "\n<div id=\"gv-section-recruiting\" class=\"gv-section-recruiting\" data-gv-section=\"recruiting\" data-gv-autoposter-zone=\"recruiting\"></div>\n",
+            "hookId": "gv-section-recruiting"
+          },
+          {
+            "file": "index.html",
+            "type": "insert-after-region-open",
+            "regionId": "vpane-portal",
+            "text": "\n<div id=\"gv-section-portal\" class=\"gv-section-portal\" data-gv-section=\"portal\" data-gv-autoposter-zone=\"portal\"></div>\n",
+            "hookId": "gv-section-portal"
+          },
+          {
+            "file": "index.html",
+            "type": "insert-after-region-open",
+            "regionId": "vpane-live",
+            "text": "\n<div id=\"gv-section-news\" class=\"gv-section-news\" data-gv-section=\"news\" data-gv-autoposter-zone=\"news\"></div>\n",
+            "hookId": "gv-section-news"
+          },
+          {
+            "file": "index.html",
+            "type": "insert-after-anchor",
+            "anchor": "film-room-hub-landing",
+            "text": "\n<section id=\"gv-section-film\" class=\"gv-section-film\" data-gv-section=\"film\" aria-label=\"Film Room\"></section>\n\n",
+            "hookId": "gv-section-film"
+          },
+          {
+            "type": "queue-scouting-refresh",
+            "playerSlug": "jayden-woods",
+            "reason": "self_runner_missing_war_room_card"
+          }
+        ]
+      },
+      "filesToModify": [
+        "index.html",
+        null
+      ],
+      "suggestedFix": "Linked fix across index.html, ",
+      "description": "Linked fix across index.html, ",
+      "riskLevel": "low",
+      "blocked": false,
+      "blockReason": [],
+      "requiresManualApproval": false,
+      "bundleKey": "blueprint",
+      "linkedIssues": [
+        "sr2_html_03b0894149",
+        "sr2_war-room_b4870b629f"
+      ],
+      "createdAt": "2026-06-12T01:46:05.870Z",
+      "v2": true
+    },
     {
       "id": "sr_fix_002",
       "sourceIssueId": "fix_integrity:wrong-background",
@@ -74,6 +162,12 @@
     }
   ],
   "log": [
+    {
+      "action": "v2_enqueue",
+      "scanId": "sr2_scan_c73e8ce6",
+      "created": 1,
+      "at": "2026-06-12T01:46:05.873Z"
+    },
     {
       "action": "generate",
       "created": 0,

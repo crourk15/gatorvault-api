@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-11T17:53:06.589Z",
-  "lastLiveRefresh": "2026-06-11T17:53:06.588Z",
-  "lastArticlePull": "2026-06-11T17:53:06.588Z",
+  "updatedAt": "2026-06-12T03:22:46.687Z",
+  "lastLiveRefresh": "2026-06-12T03:22:46.686Z",
+  "lastArticlePull": "2026-06-12T03:22:46.686Z",
   "lastBeatPull": null,
   "lastPodcastPull": "2026-06-11T17:53:06.587Z",
-  "lastRecruitingIngest": "2026-06-11T17:53:06.589Z",
+  "lastRecruitingIngest": "2026-06-12T03:22:46.686Z",
   "lastError": null,
-  "lastLiveRefreshError": "X_BEARER_TOKEN not set and Nitter fallback returned no posts. Check NITTER_BASES or add Bearer token on Render."
+  "lastLiveRefreshError": null
 }

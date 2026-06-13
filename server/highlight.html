@@ -20,7 +20,7 @@
 </head>
 <body class="min-h-screen">
   <header class="sticky top-0 z-50 bg-[#00123a]/95 backdrop-blur border-b border-gator-blue/30 px-4 py-3 flex items-center justify-between gap-3">
-    <a href="/?open=vault&tab=highlights" id="back-link" class="text-sm text-gator-orange font-semibold hover:text-white">← Film Room</a>
+    <a href="/vault/film-room" id="back-link" class="text-sm text-gator-orange font-semibold hover:text-white">← Film Room</a>
     <span class="font-display text-sm font-bold text-white tracking-wide">GatorVault Highlights</span>
   </header>
   <main class="max-w-4xl mx-auto">
@@ -56,7 +56,7 @@
     document.getElementById('back-link').addEventListener('click', function (e) {
       e.preventDefault();
       if (document.referrer && document.referrer.indexOf('highlights') >= 0) history.back();
-      else location.href = '/?open=vault&tab=highlights';
+      else location.href = '/vault/film-room';
     });
 
     function esc(s) {

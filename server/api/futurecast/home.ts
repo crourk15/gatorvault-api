@@ -30,6 +30,8 @@ import { listRecruitingStoreCommits, mergeLiveCommits } from './live-commits';
 const MOVEMENT_WINDOW_DAYS = 7;
 const SECTION_LIMIT = 12;
 const PORTAL_LIMIT = 8;
+/** UF commits are shown in full — must match recruiting board counts. */
+const COMMITS_LIMIT = 200;
 
 function normalizeSlug(value: string | null | undefined): string {
   if (!value) return '';
@@ -187,6 +189,7 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
         rank: index + 1,
       }));
 
+    const sortedCommits = sortCommits(commits, commitSort);
     res.json({
       classYear: FUTURECAST_CLASS_YEAR,
       commitSort,
@@ -194,7 +197,8 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
         buckets: buildHeatmapBuckets(enrichedMovement),
         windowDays: MOVEMENT_WINDOW_DAYS,
       },
-      commits: sortCommits(commits, commitSort).slice(0, SECTION_LIMIT),
+      commits: sortedCommits.slice(0, COMMITS_LIMIT),
+      commitTotal: sortedCommits.length,
       topTargets: sortTargets(topTargets).slice(0, SECTION_LIMIT),
       trendingUp: hsTrendingUp,
       trendingDown: hsTrendingDown,

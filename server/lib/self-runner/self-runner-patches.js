@@ -178,9 +178,9 @@ const TEAM_REQUIRED = {
   'vpane-mteam': ['gv-team-page', 'gv-team-section']
 };
 
-/** Team Overview lives in index.html (#vpane-team / #vpane-mteam) + gv-team-mobile.js card renders */
+/** Team Overview lives in legacy-index.html (#vpane-team / #vpane-mteam) + gv-team-mobile.js card renders */
 const TEAM_OVERVIEW_FILES = {
-  shell: 'index.html',
+  shell: 'legacy-index.html',
   cards: 'js/gv-team-mobile.js',
   styles: 'css/gv-team.css'
 };

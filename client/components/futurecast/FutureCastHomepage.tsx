@@ -169,17 +169,28 @@ export function FutureCastHomepage(): React.ReactElement {
 
       <Section
         title={`UF Commits — ${data.classYear} Class`}
-        subtitle="Signed prospects sorted by Fit Score or Stability"
+        subtitle={
+          data.commitTotal != null && data.commitTotal > data.commits.length
+            ? `Showing ${data.commits.length} of ${data.commitTotal} commits — full list on Recruiting Board`
+            : 'Signed prospects sorted by Fit Score or Stability'
+        }
         testId="home-commits"
-        count={data.commits.length}
+        count={data.commitTotal ?? data.commits.length}
         actions={sortActions}
       >
         {data.commits.length > 0 ? (
-          <CardGrid>
-            {data.commits.map((p) => (
-              <FutureCastHomeCard key={p.playerId} prediction={p} variant="commit" />
-            ))}
-          </CardGrid>
+          <>
+            <CardGrid>
+              {data.commits.map((p) => (
+                <FutureCastHomeCard key={p.playerId} prediction={p} variant="commit" />
+              ))}
+            </CardGrid>
+            {isVaultPath(pathname) && (
+              <p className="fc-home-section__footer-link">
+                <a href="/vault/recruiting-board">View full recruiting board →</a>
+              </p>
+            )}
+          </>
         ) : (
           <EmptySection message={`No ${data.classYear} commits in FutureCast yet.`} />
         )}

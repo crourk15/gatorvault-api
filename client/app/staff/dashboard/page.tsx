@@ -113,8 +113,11 @@ export default function StaffDashboardPage(): React.ReactElement {
       <div className="fc-staff-dashboard-wrap">
         <FutureCastSubNav active="staff" />
         <UiError
-          title="Staff dashboard unavailable"
-          message={error ?? 'Failed to load dashboard.'}
+          title="Movement Intel unavailable"
+          message={
+            error ??
+            'FutureCast database may be offline. This page is not the admin console — use /admin/product-health with your ops PIN for platform analytics.'
+          }
           retry={() => void load(true)}
           backHref={backHref}
           backLabel="← FutureCast"
@@ -126,8 +129,11 @@ export default function StaffDashboardPage(): React.ReactElement {
   return (
     <div className="fc-staff-dashboard-wrap" data-testid="staff-dashboard-page">
       <FutureCastSubNav active="staff" />
-      <h1 className="fc-staff-dashboard__title">Staff Dashboard</h1>
-      <p className="fc-staff-dashboard__subtitle">FutureCast internal analytics hub</p>
+      <h1 className="fc-staff-dashboard__title">Movement Intel</h1>
+      <p className="fc-staff-dashboard__subtitle">
+        FutureCast risers, fallers, and fit scores. Admin analytics and Autoposter live at{' '}
+        <a href="/admin/product-health">/admin/product-health</a> (ops PIN required).
+      </p>
 
       <div className="fc-staff-dashboard__heatmap">
         <MovementHeatmap buckets={data.heatmap.buckets} windowDays={data.heatmap.windowDays} />

@@ -15,6 +15,7 @@ import {
   asyncHandler,
   handlePredictionsApiError,
 } from '../predictions/utils-api';
+import { isDatabaseUnavailableError, respondDatabaseUnavailable } from '../futurecast/db-fallback';
 
 const LIST_LIMIT = 10;
 const MOVEMENT_WINDOW_DAYS = 7;
@@ -161,6 +162,21 @@ export const handleGetStaffDashboard = asyncHandler(async (_req: Request, res: R
       volatilityWindowDays: VOLATILITY_WINDOW_DAYS,
     });
   } catch (err) {
+    if (isDatabaseUnavailableError(err)) {
+      respondDatabaseUnavailable(res, {
+        topRisers: [],
+        topFallers: [],
+        highVolatility: [],
+        lowVolatility: [],
+        fitLeaders: [],
+        fitRisks: [],
+        heatmap: { buckets: [], windowDays: MOVEMENT_WINDOW_DAYS },
+        alerts: [],
+        movementWindowDays: MOVEMENT_WINDOW_DAYS,
+        volatilityWindowDays: VOLATILITY_WINDOW_DAYS,
+      });
+      return;
+    }
     handlePredictionsApiError(res, err);
   }
 });

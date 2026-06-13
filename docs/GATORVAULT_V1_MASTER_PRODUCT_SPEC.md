@@ -515,8 +515,8 @@ Auto-retry with backoff on feed pages (60s refresh interval on alerts/staff).
 
 Includes:
 
-- Homepage (`index.html`)
-- Vault shell / monolith
+- Homepage (`index.html`) — React marketing landing + join
+- Vault (`/vault/*`) — React VaultShell (Next.js export)
 - FutureCast UI (`/futurecast/*`, `/vault/futurecast/*`)
 - Recruiting Board UI
 - Scouting Hub UI

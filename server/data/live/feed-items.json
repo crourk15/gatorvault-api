@@ -1,26 +1,5 @@
 [
   {
-    "id": "gators-breakdown_8d3444c2-6539-11f1-ba26-df223621a9f3",
-    "dedupeKey": "gators-breakdown_8d3444c2-6539-11f1-ba26-df223621a9f3",
-    "type": "podcast",
-    "title": "New episode: Gators Breakdown — INSTANT REACTION: Florida Gators Game Start Times for 2026 | Gators Breakdown Plus MEMBER CHAT",
-    "summary": "David Waters chats with Gators Breakdown Plus members as the SEC drops the 2026 football start times. Get the READ & REACTION 2026 PREVIEW: https://a.co/d/0c13QdI9 #FloridaGators #GatorsFootball #SECFootball #CollegeFootball #GatorsBreakdown #GoGators #CFB #FloridaGatorsFootball JOIN Gators Breakdown Plus: https://gatorsbreakdownplus.com Gators Breakdown Merch: https://gatorsbreakdown.printful.me Get Florida Gators merch at Fanatics: https://fanatics.93n6tx.net/DVYxja Questions or comments? Send",
-    "source_url": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD7834067720.mp3",
-    "imageUrl": "https://megaphone.imgix.net/podcasts/0379778e-f724-11e7-bf50-3b92dd76cbb3/image/gb.png?ixlib=rails-4.3.1&amp;max-w=3000&amp;max-h=3000&amp;fit=crop&amp;auto=format,compress",
-    "source": "rss",
-    "author": "Gators Breakdown",
-    "createdAt": "2026-06-11T02:09:00.000Z",
-    "meta": {
-      "showId": "gators-breakdown"
-    },
-    "updatedAt": "2026-06-11T22:51:07.279Z",
-    "url": "https://pscrb.fm/rss/p/traffic.megaphone.fm/ONESD7834067720.mp3",
-    "hash": "401cdda108c92f79f3cd61790afc739e20e89b9161c80396fa37abd2b38a646c",
-    "hashNormalizedPreview": "new episode: gators breakdown — instant reaction: florida gators game start times for 2026 | gators breakdown plus membe",
-    "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.236Z"
-  },
-  {
     "id": "rec_evt_1781017597848_ej9v28",
     "dedupeKey": "rec_evt_1781017597848_ej9v28",
     "type": "visit",
@@ -75,7 +54,7 @@
       "on3": true
     },
     "url": "/player/amare-patterson",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "48048f4ce82d251b69f0952cd35e55aed362c0dc14d6e7989418a21c2643dc1f",
     "hashNormalizedPreview": "amare patterson — ov to florida cancelled · visiting south carolina wr · 2027 · via hayes fawcett amare-patterson amare ",
     "hashWindowSec": 172800,
@@ -122,7 +101,7 @@
         "on3Source": null,
         "starsDisplay": "★★★",
         "headliner": false,
-        "updatedAt": "2026-06-11T17:51:02.312Z",
+        "updatedAt": "2026-06-11T17:53:03.053Z",
         "rivalsLastPrediction": null,
         "rivalsAnalyst": null,
         "rivalsConfidence": null,
@@ -137,11 +116,11 @@
       "commitFingerprint": "285808|florida|2026-06-08"
     },
     "url": "/player/jaydee-lane",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "f31a3c59b14f99f11946b30edb441e51efff76589049321a40d9b35086fefd7c",
     "hashNormalizedPreview": "jaydee lane commits to florida ls · 3 · mendenhall, ms · #1801 natl jaydee-lane jaydee lane ls commit commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.236Z"
+    "hashCreatedAt": "2026-06-12T03:22:58.518Z"
   },
   {
     "id": "intel:243862|official_visit|2026-06-11",
@@ -192,7 +171,7 @@
       "status": "Official Visit Scheduled"
     },
     "url": "/player/easton-royal",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "18f18ff277be8a40d5d6f76626065be5421558548b2fd6d9c04ff2802cbadd8e",
     "hashNormalizedPreview": "easton royal — official visit scheduled 2026 wr easton royal will take an official visit to gainesville from june 11–13.",
     "hashWindowSec": 172800,
@@ -235,7 +214,7 @@
         "profileNote": "",
         "on3Id": "288165",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.578Z",
+        "updatedAt": "2026-06-11T17:53:03.353Z",
         "on3Slug": "jaylen-jordon-288165",
         "on3ProfileUrl": "https://www.on3.com/rivals/jaylen-jordon-288165/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -254,11 +233,11 @@
       "commitFingerprint": "288165|florida|2026-05-01"
     },
     "url": "/player/jaylen-jordon",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "4bcb8b9295cc10801d3993316e71efeec9ca036d8143e6406a0c05009ddebf02",
     "hashNormalizedPreview": "jaylen jordon commits to florida te · 3 · hilliard, fl jaylen-jordon jaylen jordon te info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.237Z"
+    "hashCreatedAt": "2026-06-12T03:22:58.630Z"
   },
   {
     "id": "commit:284197|florida|2026-01-26",
@@ -297,7 +276,7 @@
         "profileNote": "",
         "on3Id": "284197",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.571Z",
+        "updatedAt": "2026-06-11T17:53:03.342Z",
         "on3Slug": "ace-ciongoli-284197",
         "on3ProfileUrl": "https://www.on3.com/rivals/ace-ciongoli-284197/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -316,11 +295,11 @@
       "commitFingerprint": "284197|florida|2026-01-26"
     },
     "url": "/player/ace-ciongoli",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "faaef2da00237f1b77bfb23340bf2d93414d620b2b690e24f62f1a3b9bb14932",
     "hashNormalizedPreview": "ace ciongoli commits to florida wr · 3 · needham, ma ace-ciongoli ace ciongoli wr info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.237Z"
+    "hashCreatedAt": "2026-06-12T03:22:58.744Z"
   },
   {
     "id": "commit:283795|florida|2026-01-10",
@@ -359,7 +338,7 @@
         "profileNote": "",
         "on3Id": "283795",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.564Z",
+        "updatedAt": "2026-06-11T17:53:03.332Z",
         "on3Slug": "miller-fealy-283795",
         "on3ProfileUrl": "https://www.on3.com/rivals/miller-fealy-283795/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -378,11 +357,11 @@
       "commitFingerprint": "283795|florida|2026-01-10"
     },
     "url": "/player/miller-fealy",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "854d9255ffa2ddb13a167b18892833b7627f71f3d4c6e46e1b13c194bd49486d",
     "hashNormalizedPreview": "miller fealy commits to florida p · 3 · melbourne, vic miller-fealy miller fealy p info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.237Z"
+    "hashCreatedAt": "2026-06-12T03:22:58.857Z"
   },
   {
     "id": "commit:283756|florida|2026-01-08",
@@ -421,7 +400,7 @@
         "profileNote": "",
         "on3Id": "283756",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.558Z",
+        "updatedAt": "2026-06-11T17:53:03.323Z",
         "on3Slug": "carter-milliron-283756",
         "on3ProfileUrl": "https://www.on3.com/rivals/carter-milliron-283756/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -440,11 +419,11 @@
       "commitFingerprint": "283756|florida|2026-01-08"
     },
     "url": "/player/carter-milliron",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "40f6e5703568f5864aa6cec9dc6f22cebdceecc9f4688e8fc1db42398847d19e",
     "hashNormalizedPreview": "carter milliron commits to florida ls · 3 · hoover, al carter-milliron carter milliron ls info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.237Z"
+    "hashCreatedAt": "2026-06-12T03:22:58.968Z"
   },
   {
     "id": "commit:283676|florida|2026-01-06",
@@ -483,7 +462,7 @@
         "profileNote": "",
         "on3Id": "283676",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.548Z",
+        "updatedAt": "2026-06-11T17:53:03.314Z",
         "on3Slug": "alec-clark-283676",
         "on3ProfileUrl": "https://www.on3.com/rivals/alec-clark-283676/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -502,11 +481,11 @@
       "commitFingerprint": "283676|florida|2026-01-06"
     },
     "url": "/player/alec-clark",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "b8bbcc1bf8a69a4f038ad986c277a787827d2da60abe47de392165292c0b3d39",
     "hashNormalizedPreview": "alec clark commits to florida p · 3 · melbourne, vic alec-clark alec clark p info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.238Z"
+    "hashCreatedAt": "2026-06-12T03:22:59.086Z"
   },
   {
     "id": "commit:162609|florida|2026-01-06",
@@ -545,7 +524,7 @@
         "profileNote": "",
         "on3Id": "162609",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.542Z",
+        "updatedAt": "2026-06-11T17:53:03.305Z",
         "on3Slug": "patrick-durkin-162609",
         "on3ProfileUrl": "https://www.on3.com/rivals/patrick-durkin-162609/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -564,11 +543,11 @@
       "commitFingerprint": "162609|florida|2026-01-06"
     },
     "url": "/player/patrick-durkin",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "735bfdce68539a9938b17258a7a8f1de80484312f07dce82990bcee7f9bd52b6",
     "hashNormalizedPreview": "patrick durkin commits to florida k · 3 · plainfield, il patrick-durkin patrick durkin k info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.238Z"
+    "hashCreatedAt": "2026-06-12T03:22:59.220Z"
   },
   {
     "id": "commit:239636|florida|2026-01-06",
@@ -607,7 +586,7 @@
         "profileNote": "",
         "on3Id": "239636",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.536Z",
+        "updatedAt": "2026-06-11T17:53:03.294Z",
         "on3Slug": "emmanuel-oyebadejo-239636",
         "on3ProfileUrl": "https://www.on3.com/rivals/emmanuel-oyebadejo-239636/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -626,11 +605,11 @@
       "commitFingerprint": "239636|florida|2026-01-06"
     },
     "url": "/player/emmanuel-oyebadejo",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "a169b69520641274e49f19976a2753706d4e944ebd9d1b6ca9f49a6211d7e3e4",
     "hashNormalizedPreview": "emmanuel oyebadejo commits to florida dl · 3 · england emmanuel-oyebadejo emmanuel oyebadejo dl info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.238Z"
+    "hashCreatedAt": "2026-06-12T03:22:59.387Z"
   },
   {
     "id": "commit:162020|florida|2026-01-05",
@@ -669,7 +648,7 @@
         "profileNote": "",
         "on3Id": "162020",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.530Z",
+        "updatedAt": "2026-06-11T17:53:03.286Z",
         "on3Slug": "lacota-dippre-162020",
         "on3ProfileUrl": "https://www.on3.com/rivals/lacota-dippre-162020/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -688,11 +667,11 @@
       "commitFingerprint": "162020|florida|2026-01-05"
     },
     "url": "/player/lacota-dippre",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "f20222f72c7889e5ec9b348259b54fdb871ee9bba38c231ee8a261afa0ceeee2",
     "hashNormalizedPreview": "lacota dippre commits to florida te · 3 · jermyn, pa lacota-dippre lacota dippre te info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.238Z"
+    "hashCreatedAt": "2026-06-12T03:22:59.527Z"
   },
   {
     "id": "commit:148026|florida|2026-01-12",
@@ -731,7 +710,7 @@
         "profileNote": "",
         "on3Id": "148026",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.522Z",
+        "updatedAt": "2026-06-11T17:53:03.277Z",
         "on3Slug": "kanye-clark-148026",
         "on3ProfileUrl": "https://www.on3.com/rivals/kanye-clark-148026/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -750,11 +729,11 @@
       "commitFingerprint": "148026|florida|2026-01-12"
     },
     "url": "/player/kanye-clark",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "0c90637480e22f9b1db46b81a4eaeaa03e32ce7743a2128b0e362eb75f4705db",
     "hashNormalizedPreview": "kanye clark commits to florida s · 3 · sacramento, ca kanye-clark kanye clark s info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.238Z"
+    "hashCreatedAt": "2026-06-12T03:22:59.641Z"
   },
   {
     "id": "commit:283144|florida|2026-01-19",
@@ -793,7 +772,7 @@
         "profileNote": "",
         "on3Id": "283144",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.514Z",
+        "updatedAt": "2026-06-11T17:53:03.268Z",
         "on3Slug": "evan-chieca-283144",
         "on3ProfileUrl": "https://www.on3.com/rivals/evan-chieca-283144/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -812,11 +791,11 @@
       "commitFingerprint": "283144|florida|2026-01-19"
     },
     "url": "/player/evan-chieca",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "ba4a3587a7a7e17c4f9313ccc0a114c1feaba7f09b62693edc4c182ddffd7f1a",
     "hashNormalizedPreview": "evan chieca commits to florida te · 3 · lindenhurst, ny evan-chieca evan chieca te info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.238Z"
+    "hashCreatedAt": "2026-06-12T03:22:59.757Z"
   },
   {
     "id": "commit:66322|florida|2026-01-21",
@@ -855,7 +834,7 @@
         "profileNote": "",
         "on3Id": "66322",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.505Z",
+        "updatedAt": "2026-06-11T17:53:03.257Z",
         "on3Slug": "jordy-lowery-66322",
         "on3ProfileUrl": "https://www.on3.com/rivals/jordy-lowery-66322/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -874,11 +853,11 @@
       "commitFingerprint": "66322|florida|2026-01-21"
     },
     "url": "/player/jordy-lowery",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "6286d2772a7332bbd4e81213a62d84cc70d7e066f64d752307116d3552605c2f",
     "hashNormalizedPreview": "jordy lowery commits to florida cb · 3 · bartow, fl jordy-lowery jordy lowery cb info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.239Z"
+    "hashCreatedAt": "2026-06-12T03:22:59.878Z"
   },
   {
     "id": "commit:154828|florida|2026-01-05",
@@ -917,7 +896,7 @@
         "profileNote": "",
         "on3Id": "154828",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.496Z",
+        "updatedAt": "2026-06-11T17:53:03.246Z",
         "on3Slug": "bailey-stockton-154828",
         "on3ProfileUrl": "https://www.on3.com/rivals/bailey-stockton-154828/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -936,11 +915,11 @@
       "commitFingerprint": "154828|florida|2026-01-05"
     },
     "url": "/player/bailey-stockton",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "5c84cbb51b6f5d1790077e47e3c9d8f0b71bb29dec07d6d3c051e701244a49ea",
     "hashNormalizedPreview": "bailey stockton commits to florida wr · 3 · athens, ga bailey-stockton bailey stockton wr info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.239Z"
+    "hashCreatedAt": "2026-06-12T03:23:00.002Z"
   },
   {
     "id": "commit:113075|florida|2026-01-12",
@@ -979,7 +958,7 @@
         "profileNote": "",
         "on3Id": "113075",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.489Z",
+        "updatedAt": "2026-06-11T17:53:03.237Z",
         "on3Slug": "tj-bullard-113075",
         "on3ProfileUrl": "https://www.on3.com/rivals/tj-bullard-113075/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -998,11 +977,11 @@
       "commitFingerprint": "113075|florida|2026-01-12"
     },
     "url": "/player/tj-bullard",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "46212ae741bc442147b0dd4aba053f9ea0ba16e34ff12701748bc2ee733f83ba",
     "hashNormalizedPreview": "tj bullard commits to florida lb · 3 · tampa, fl tj-bullard tj bullard lb info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.239Z"
+    "hashCreatedAt": "2026-06-12T03:23:00.150Z"
   },
   {
     "id": "commit:153739|florida|2026-01-09",
@@ -1041,7 +1020,7 @@
         "profileNote": "",
         "on3Id": "153739",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.483Z",
+        "updatedAt": "2026-06-11T17:53:03.228Z",
         "on3Slug": "harrison-moore-153739",
         "on3ProfileUrl": "https://www.on3.com/rivals/harrison-moore-153739/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1060,11 +1039,11 @@
       "commitFingerprint": "153739|florida|2026-01-09"
     },
     "url": "/player/harrison-moore",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "f8d84f75447ff1c55eaaae9340319a520a517f62583be6ff270fa5edf16bdee3",
     "hashNormalizedPreview": "harrison moore commits to florida iol · 3 · southlake, tx harrison-moore harrison moore iol info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.239Z"
+    "hashCreatedAt": "2026-06-12T03:23:00.293Z"
   },
   {
     "id": "commit:155719|florida|2026-01-10",
@@ -1103,7 +1082,7 @@
         "profileNote": "",
         "on3Id": "155719",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:02.477Z",
+        "updatedAt": "2026-06-11T17:53:03.218Z",
         "on3Slug": "eric-singleton-jr-155719",
         "on3ProfileUrl": "https://www.on3.com/rivals/eric-singleton-jr-155719/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1122,11 +1101,11 @@
       "commitFingerprint": "155719|florida|2026-01-10"
     },
     "url": "/player/eric-singleton-jr",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "2f0a24ef3d7ee9884ea262e98d4a4b51fad6f5cf68afd0ec2f57f9427cebd732",
     "hashNormalizedPreview": "eric singleton jr. commits to florida wr · 3 · douglasville, ga eric-singleton-jr eric singleton wr info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.239Z"
+    "hashCreatedAt": "2026-06-12T03:23:00.419Z"
   },
   {
     "id": "commit:154954|florida|2026-01-16",
@@ -1165,7 +1144,7 @@
         "profileNote": "",
         "on3Id": "154954",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.473Z",
+        "updatedAt": "2026-06-11T17:53:03.210Z",
         "on3Slug": "jaylen-lloyd-154954",
         "on3ProfileUrl": "https://www.on3.com/rivals/jaylen-lloyd-154954/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1184,11 +1163,11 @@
       "commitFingerprint": "154954|florida|2026-01-16"
     },
     "url": "/player/jaylen-lloyd",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "952937555a393ebced9106eedd88eb169800dbda98e4526b1eb9345062a08e69",
     "hashNormalizedPreview": "jaylen lloyd commits to florida wr · 3 · omaha, ne jaylen-lloyd jaylen lloyd wr info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.240Z"
+    "hashCreatedAt": "2026-06-12T03:23:00.542Z"
   },
   {
     "id": "commit:238104|florida|2026-01-09",
@@ -1227,7 +1206,7 @@
         "profileNote": "",
         "on3Id": "238104",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.465Z",
+        "updatedAt": "2026-06-11T17:53:03.203Z",
         "on3Slug": "emeka-ugorji-238104",
         "on3ProfileUrl": "https://www.on3.com/rivals/emeka-ugorji-238104/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1246,11 +1225,11 @@
       "commitFingerprint": "238104|florida|2026-01-09"
     },
     "url": "/player/emeka-ugorji",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "d9fe20d09c25ed7a8e35095de6c7379d6ed92dac9a831a71d49f439a5f129eea",
     "hashNormalizedPreview": "emeka ugorji commits to florida ot · 3 · dallas, tx emeka-ugorji emeka ugorji ot info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.240Z"
+    "hashCreatedAt": "2026-06-12T03:23:00.657Z"
   },
   {
     "id": "commit:150237|florida|2026-01-04",
@@ -1289,7 +1268,7 @@
         "profileNote": "",
         "on3Id": "150237",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.456Z",
+        "updatedAt": "2026-06-11T17:53:03.194Z",
         "on3Slug": "dj-coleman-150237",
         "on3ProfileUrl": "https://www.on3.com/rivals/dj-coleman-150237/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1308,11 +1287,11 @@
       "commitFingerprint": "150237|florida|2026-01-04"
     },
     "url": "/player/dj-coleman",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "b24efd01d9700ca1b89ca56c161068de4e441f87d756ab2127a1ca59c78953d1",
     "hashNormalizedPreview": "dj coleman commits to florida s · 3 · mesquite, tx dj-coleman dj coleman s info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.240Z"
+    "hashCreatedAt": "2026-06-12T03:23:00.775Z"
   },
   {
     "id": "commit:175643|florida|2026-01-18",
@@ -1351,7 +1330,7 @@
         "profileNote": "",
         "on3Id": "175643",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.448Z",
+        "updatedAt": "2026-06-11T17:53:03.184Z",
         "on3Slug": "mason-clinton-175643",
         "on3ProfileUrl": "https://www.on3.com/rivals/mason-clinton-175643/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1370,11 +1349,11 @@
       "commitFingerprint": "175643|florida|2026-01-18"
     },
     "url": "/player/mason-clinton",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "e0a00cf190e70608b72638392135150e30c2d4202e5dcce75da42a4e94088b56",
     "hashNormalizedPreview": "mason clinton commits to florida dl · 3 · petal, ms mason-clinton mason clinton dl info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.240Z"
+    "hashCreatedAt": "2026-06-12T03:23:00.891Z"
   },
   {
     "id": "commit:145026|florida|2026-01-05",
@@ -1413,7 +1392,7 @@
         "profileNote": "",
         "on3Id": "145026",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.433Z",
+        "updatedAt": "2026-06-11T17:53:03.177Z",
         "on3Slug": "dk-kalu-145026",
         "on3ProfileUrl": "https://www.on3.com/rivals/dk-kalu-145026/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1432,11 +1411,11 @@
       "commitFingerprint": "145026|florida|2026-01-05"
     },
     "url": "/player/dk-kalu",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "6cd342a3cb9dc737a98046083ec946c77cac2fd29274df87a28fd8877ca02f3c",
     "hashNormalizedPreview": "dk kalu commits to florida dl · 3 · missouri city, tx dk-kalu dk kalu dl info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.241Z"
+    "hashCreatedAt": "2026-06-12T03:23:01.010Z"
   },
   {
     "id": "commit:146069|florida|2026-01-06",
@@ -1475,7 +1454,7 @@
         "profileNote": "",
         "on3Id": "146069",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.428Z",
+        "updatedAt": "2026-06-11T17:53:03.174Z",
         "on3Slug": "aaron-philo-146069",
         "on3ProfileUrl": "https://www.on3.com/rivals/aaron-philo-146069/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1494,11 +1473,11 @@
       "commitFingerprint": "146069|florida|2026-01-06"
     },
     "url": "/player/aaron-philo",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "3e427236485f6f0d5b6d177d61f4c64077a109250c8f7567248260fdcbc728d9",
     "hashNormalizedPreview": "aaron philo commits to florida qb · 3 · bogart, ga aaron-philo aaron philo qb info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.241Z"
+    "hashCreatedAt": "2026-06-12T03:23:01.131Z"
   },
   {
     "id": "commit:147775|florida|2026-01-08",
@@ -1537,7 +1516,7 @@
         "profileNote": "",
         "on3Id": "147775",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.424Z",
+        "updatedAt": "2026-06-11T17:53:03.171Z",
         "on3Slug": "london-montgomery-147775",
         "on3ProfileUrl": "https://www.on3.com/rivals/london-montgomery-147775/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1556,11 +1535,11 @@
       "commitFingerprint": "147775|florida|2026-01-08"
     },
     "url": "/player/london-montgomery",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "25f938c35ecccf5fa1ae9bebc65589fe27aa4355f0270cf3ce34911f2ae3d39d",
     "hashNormalizedPreview": "london montgomery commits to florida rb · 3 · scranton, pa london-montgomery london montgomery rb info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.241Z"
+    "hashCreatedAt": "2026-06-12T03:23:01.246Z"
   },
   {
     "id": "commit:155795|florida|2026-01-06",
@@ -1599,7 +1578,7 @@
         "profileNote": "",
         "on3Id": "155795",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.419Z",
+        "updatedAt": "2026-06-11T17:53:03.168Z",
         "on3Slug": "eagan-boyer-155795",
         "on3ProfileUrl": "https://www.on3.com/rivals/eagan-boyer-155795/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1618,11 +1597,11 @@
       "commitFingerprint": "155795|florida|2026-01-06"
     },
     "url": "/player/eagan-boyer",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "8fe781f31bfa024fb0b237aa512ac166fa8c91b99dbf0be47f428c0db62aea70",
     "hashNormalizedPreview": "eagan boyer commits to florida ot · 3 · cornelius, nc eagan-boyer eagan boyer ot info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.242Z"
+    "hashCreatedAt": "2026-06-12T03:23:01.363Z"
   },
   {
     "id": "commit:178849|florida|2026-01-10",
@@ -1661,7 +1640,7 @@
         "profileNote": "",
         "on3Id": "178849",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.411Z",
+        "updatedAt": "2026-06-11T17:53:03.166Z",
         "on3Slug": "luke-harpring-178849",
         "on3ProfileUrl": "https://www.on3.com/rivals/luke-harpring-178849/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1680,11 +1659,11 @@
       "commitFingerprint": "178849|florida|2026-01-10"
     },
     "url": "/player/luke-harpring",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "aea4a4f6d8a97049c6fc37d3e46fec737d6220e3b53748c93328e04ab441cb48",
     "hashNormalizedPreview": "luke harpring commits to florida te · 3 · atlanta, ga luke-harpring luke harpring te info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.242Z"
+    "hashCreatedAt": "2026-06-12T03:23:01.488Z"
   },
   {
     "id": "commit:87184|florida|2026-01-07",
@@ -1723,7 +1702,7 @@
         "profileNote": "",
         "on3Id": "87184",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.407Z",
+        "updatedAt": "2026-06-11T17:53:03.163Z",
         "on3Slug": "micah-mays-87184",
         "on3ProfileUrl": "https://www.on3.com/rivals/micah-mays-87184/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1742,11 +1721,11 @@
       "commitFingerprint": "87184|florida|2026-01-07"
     },
     "url": "/player/micah-mays",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "ef6884a81ffca8b75adb600b88e0feeebc8f27bd59e1b14ed9c1050d175b8e8c",
     "hashNormalizedPreview": "micah mays commits to florida wr · 3 · north palm beach, fl micah-mays micah mays wr info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.242Z"
+    "hashCreatedAt": "2026-06-12T03:23:01.607Z"
   },
   {
     "id": "commit:178263|florida|2026-01-07",
@@ -1785,7 +1764,7 @@
         "profileNote": "",
         "on3Id": "178263",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.403Z",
+        "updatedAt": "2026-06-11T17:53:03.160Z",
         "on3Slug": "cam-dooley-178263",
         "on3ProfileUrl": "https://www.on3.com/rivals/cam-dooley-178263/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1804,11 +1783,11 @@
       "commitFingerprint": "178263|florida|2026-01-07"
     },
     "url": "/player/cam-dooley",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "eda56c7713fe2dc48a963dde07f74bbf1c184ef50894112714160868da84741a",
     "hashNormalizedPreview": "cam dooley commits to florida s · 3 · valley, al cam-dooley cam dooley s info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.243Z"
+    "hashCreatedAt": "2026-06-12T03:23:01.722Z"
   },
   {
     "id": "commit:113148|florida|2026-01-06",
@@ -1847,7 +1826,7 @@
         "profileNote": "",
         "on3Id": "113148",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.398Z",
+        "updatedAt": "2026-06-11T17:53:03.157Z",
         "on3Slug": "tj-shanahan-113148",
         "on3ProfileUrl": "https://www.on3.com/rivals/tj-shanahan-113148/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1866,11 +1845,11 @@
       "commitFingerprint": "113148|florida|2026-01-06"
     },
     "url": "/player/t-j-shanahan",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "caa3a34df0137756626c37fea02f43f3ec54ea92ae9d41fc91999fc2e95e387d",
     "hashNormalizedPreview": "t.j. shanahan commits to florida iol · 3 · orlando, fl t-j-shanahan t j shanahan iol info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.243Z"
+    "hashCreatedAt": "2026-06-12T03:23:01.838Z"
   },
   {
     "id": "commit:43376|florida|2026-01-06",
@@ -1909,7 +1888,7 @@
         "profileNote": "",
         "on3Id": "43376",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.393Z",
+        "updatedAt": "2026-06-11T17:53:03.154Z",
         "on3Slug": "evan-pryor-43376",
         "on3ProfileUrl": "https://www.on3.com/rivals/evan-pryor-43376/",
         "on3Source": "https://www.on3.com/college/florida-gators/football/2026/commits/",
@@ -1928,11 +1907,11 @@
       "commitFingerprint": "43376|florida|2026-01-06"
     },
     "url": "/player/evan-pryor",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "d0f1bfd16376c8bbc7c93f1434b0458031d487299ae77f1253392a2b879ef512",
     "hashNormalizedPreview": "evan pryor commits to florida rb · 3 · cornelius, nc evan-pryor evan pryor rb info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.243Z"
+    "hashCreatedAt": "2026-06-12T03:23:01.947Z"
   },
   {
     "id": "commit:288527|florida|2026-05-12",
@@ -1971,7 +1950,7 @@
         "profileNote": "",
         "on3Id": "288527",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.048Z",
+        "updatedAt": "2026-06-11T17:53:02.516Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/javier-jones-288527/",
         "on3Source": null,
@@ -1990,11 +1969,11 @@
       "commitFingerprint": "288527|florida|2026-05-12"
     },
     "url": "/player/javier-jones",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "bf684659fc6fc8f5818d6106d583b79b5638d2bed9241d2c77c8ed0edefe2eef",
     "hashNormalizedPreview": "javier jones commits to florida cb · 3 · phoenix, az · #265 natl javier-jones javier jones cb info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.244Z"
+    "hashCreatedAt": "2026-06-12T03:23:02.059Z"
   },
   {
     "id": "commit:260787|florida|2026-02-05",
@@ -2033,7 +2012,7 @@
         "profileNote": "",
         "on3Id": "260787",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.043Z",
+        "updatedAt": "2026-06-11T17:53:02.506Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/eric-parks-260787/",
         "on3Source": null,
@@ -2052,11 +2031,11 @@
       "commitFingerprint": "260787|florida|2026-02-05"
     },
     "url": "/player/eric-parks",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "6ed9c2d7792d098571254964c688950a4ae776ffd4b3f326507389d9845d4bf7",
     "hashNormalizedPreview": "eric parks commits to florida s · 3 · tampa, fl · #1750 natl eric-parks eric parks s info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.245Z"
+    "hashCreatedAt": "2026-06-12T03:23:02.179Z"
   },
   {
     "id": "commit:243619|florida|2025-06-16",
@@ -2095,7 +2074,7 @@
         "profileNote": "",
         "on3Id": "243619",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.040Z",
+        "updatedAt": "2026-06-11T17:53:02.495Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/javarii-luckas-243619/",
         "on3Source": null,
@@ -2114,11 +2093,11 @@
       "commitFingerprint": "243619|florida|2025-06-16"
     },
     "url": "/player/javarii-luckas",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "3c5b7ac6457d1961ad5e15ce0c1b843aeccc68e6dee7499aebce54db3f612d5f",
     "hashNormalizedPreview": "javarii luckas commits to florida ot · 3 · belle glade, fl · #1147 natl javarii-luckas javarii luckas ot info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.245Z"
+    "hashCreatedAt": "2026-06-12T03:23:02.294Z"
   },
   {
     "id": "commit:236347|florida|2025-06-26",
@@ -2157,7 +2136,7 @@
         "profileNote": "",
         "on3Id": "236347",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.035Z",
+        "updatedAt": "2026-06-11T17:53:02.482Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/desmond-green-236347/",
         "on3Source": null,
@@ -2176,11 +2155,11 @@
       "commitFingerprint": "236347|florida|2025-06-26"
     },
     "url": "/player/desmond-green",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "e9c212ed7d1f4306e40063015ed06fab811fa8affaeb94c610c1945e5f31d586",
     "hashNormalizedPreview": "desmond green commits to florida iol · 3 · saint stephen, sc · #884 natl desmond-green desmond green iol info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.246Z"
+    "hashCreatedAt": "2026-06-12T03:23:02.409Z"
   },
   {
     "id": "commit:283712|florida|2026-01-07",
@@ -2219,7 +2198,7 @@
         "profileNote": "",
         "on3Id": "283712",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.031Z",
+        "updatedAt": "2026-06-11T17:53:02.472Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/elijah-owens-283712/",
         "on3Source": null,
@@ -2238,11 +2217,11 @@
       "commitFingerprint": "283712|florida|2026-01-07"
     },
     "url": "/player/elijah-owens",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "0256b205b4926a94f0a58ff26efe56e3e6c11e19f88777d9c22ae0438428ff7c",
     "hashNormalizedPreview": "elijah owens commits to florida s · 3 · mobile, al · #63 natl elijah-owens elijah owens s info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.246Z"
+    "hashCreatedAt": "2026-06-12T03:23:02.521Z"
   },
   {
     "id": "commit:179743|florida|2025-06-08",
@@ -2281,7 +2260,7 @@
         "profileNote": "",
         "on3Id": "179743",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.028Z",
+        "updatedAt": "2026-06-11T17:53:02.460Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/chancellor-campbell-179743/",
         "on3Source": null,
@@ -2300,11 +2279,11 @@
       "commitFingerprint": "179743|florida|2025-06-08"
     },
     "url": "/player/chancellor-campbell",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "db24ab0fed1fa77553322e0eced92169e60f019fd01ced15865b1e26835d1bd9",
     "hashNormalizedPreview": "chancellor campbell commits to florida ot · 3 · saint petersburg, fl · #627 natl chancellor-campbell chancellor campbell",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.247Z"
+    "hashCreatedAt": "2026-06-12T03:23:02.632Z"
   },
   {
     "id": "commit:176416|florida|2025-06-01",
@@ -2343,7 +2322,7 @@
         "profileNote": "",
         "on3Id": "176416",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.024Z",
+        "updatedAt": "2026-06-11T17:53:02.451Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/gnivre-carr-176416/",
         "on3Source": null,
@@ -2362,11 +2341,11 @@
       "commitFingerprint": "176416|florida|2025-06-01"
     },
     "url": "/player/gnivre-carr",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "84b1c2205d6bcc9437a8fe38c750ef5dc468354ee4f759f9809ae4f630183d52",
     "hashNormalizedPreview": "g'nivre carr commits to florida iol · 3 · ocala, fl · #505 natl gnivre-carr g nivre carr iol info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.247Z"
+    "hashCreatedAt": "2026-06-12T03:23:02.743Z"
   },
   {
     "id": "commit:155900|florida|2025-07-03",
@@ -2405,7 +2384,7 @@
         "profileNote": "",
         "on3Id": "155900",
         "starsDisplay": "★★★",
-        "updatedAt": "2026-06-11T17:51:02.020Z",
+        "updatedAt": "2026-06-11T17:53:02.439Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/cj-hester-155900/",
         "on3Source": null,
@@ -2424,11 +2403,11 @@
       "commitFingerprint": "155900|florida|2025-07-03"
     },
     "url": "/player/cj-hester",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "4631b821b10f4fc5c88f906c5184383d78fdff7c11f57d279beef824177ba0b4",
     "hashNormalizedPreview": "cj hester commits to florida cb · 3 · cocoa, fl · #503 natl cj-hester cj hester cb info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.248Z"
+    "hashCreatedAt": "2026-06-12T03:23:02.860Z"
   },
   {
     "id": "commit:174822|florida|2025-06-03",
@@ -2467,7 +2446,7 @@
         "profileNote": "",
         "on3Id": "174822",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:02.016Z",
+        "updatedAt": "2026-06-11T17:53:02.427Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/kaiden-hall-174822/",
         "on3Source": null,
@@ -2486,11 +2465,11 @@
       "commitFingerprint": "174822|florida|2025-06-03"
     },
     "url": "/player/kaiden-hall",
-    "updatedAt": "2026-06-11T22:51:07.279Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "cfd5dea4a764076799ab5cf5c398560c1b9947a9811ae2b8e9663e2a8522a15a",
     "hashNormalizedPreview": "kaiden hall commits to florida s · 4 · milton, fl · #386 natl kaiden-hall kaiden hall s info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.248Z"
+    "hashCreatedAt": "2026-06-12T03:23:02.971Z"
   },
   {
     "id": "commit:177149|florida|2025-06-14",
@@ -2529,7 +2508,7 @@
         "profileNote": "",
         "on3Id": "177149",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:02.012Z",
+        "updatedAt": "2026-06-11T17:53:02.403Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/marquez-daniel-177149/",
         "on3Source": null,
@@ -2548,11 +2527,11 @@
       "commitFingerprint": "177149|florida|2025-06-14"
     },
     "url": "/player/marquez-daniel",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "e5d2f501ae347b09abd80615014767e4a4e65a49508c77c41f46f7bae82b31e9",
     "hashNormalizedPreview": "marquez daniel commits to florida wr · 4 · tuskegee, al · #367 natl marquez-daniel marquez daniel wr info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.248Z"
+    "hashCreatedAt": "2026-06-12T03:23:03.092Z"
   },
   {
     "id": "commit:174275|florida|2025-07-12",
@@ -2591,7 +2570,7 @@
         "profileNote": "",
         "on3Id": "174275",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:02.008Z",
+        "updatedAt": "2026-06-11T17:53:02.391Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/heze-kent-174275/",
         "on3Source": null,
@@ -2610,11 +2589,11 @@
       "commitFingerprint": "174275|florida|2025-07-12"
     },
     "url": "/player/heze-kent",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "e109c97d8a0b42d28684f7ebe29f3224449f6c9179b616e1c13e7601efff4f67",
     "hashNormalizedPreview": "heze kent commits to florida ot · 4 · brunswick, ga · #366 natl heze-kent heze kent ot info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.249Z"
+    "hashCreatedAt": "2026-06-12T03:23:03.225Z"
   },
   {
     "id": "commit:177521|florida|2025-07-07",
@@ -2653,7 +2632,7 @@
         "profileNote": "",
         "on3Id": "177521",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:02.005Z",
+        "updatedAt": "2026-06-11T17:53:02.380Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/malik-morris-177521/",
         "on3Source": null,
@@ -2672,11 +2651,11 @@
       "commitFingerprint": "177521|florida|2025-07-07"
     },
     "url": "/player/malik-morris",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "a95558cb95ee67ea4a0e91ff72c82225a85769cc79957cceb952682819f179ed",
     "hashNormalizedPreview": "malik morris commits to florida lb · 4 · lakeland, fl · #362 natl malik-morris malik morris lb info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.249Z"
+    "hashCreatedAt": "2026-06-12T03:23:03.352Z"
   },
   {
     "id": "commit:243492|florida|2025-06-16",
@@ -2715,7 +2694,7 @@
         "profileNote": "",
         "on3Id": "243492",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:02.000Z",
+        "updatedAt": "2026-06-11T17:53:02.372Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/tyler-chukuyem-243492/",
         "on3Source": null,
@@ -2734,11 +2713,11 @@
       "commitFingerprint": "243492|florida|2025-06-16"
     },
     "url": "/player/tyler-chukuyem",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "426187f71610001c8e6ce682be3b8467f1496187c7048a29d93a6853c6337283",
     "hashNormalizedPreview": "tyler chukuyem commits to florida ot · 4 · douglasville, ga · #281 natl tyler-chukuyem tyler chukuyem ot info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.250Z"
+    "hashCreatedAt": "2026-06-12T03:23:03.486Z"
   },
   {
     "id": "commit:236759|florida|2025-07-02",
@@ -2777,7 +2756,7 @@
         "profileNote": "",
         "on3Id": "236759",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:01.987Z",
+        "updatedAt": "2026-06-11T17:53:02.363Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/kendall-guervil-236759/",
         "on3Source": null,
@@ -2796,11 +2775,11 @@
       "commitFingerprint": "236759|florida|2025-07-02"
     },
     "url": "/player/kendall-guervil",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "cb43ac7eca601fcb756c63d549910700a5f8169920675548ec1cebca1bbed356",
     "hashNormalizedPreview": "kendall guervil commits to florida dl · 4 · fort myers, fl · #276 natl kendall-guervil kendall guervil dl info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.250Z"
+    "hashCreatedAt": "2026-06-12T03:23:03.644Z"
   },
   {
     "id": "commit:162624|florida|2024-06-01",
@@ -2839,7 +2818,7 @@
         "profileNote": "",
         "on3Id": "162624",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:01.983Z",
+        "updatedAt": "2026-06-11T17:53:02.349Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/will-griffin-162624/",
         "on3Source": null,
@@ -2858,11 +2837,11 @@
       "commitFingerprint": "162624|florida|2024-06-01"
     },
     "url": "/player/will-griffin",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "f5c41106add5f040f3a51625e2a1e6e2b38f08b92958a8f16a0adf740b6aadf9",
     "hashNormalizedPreview": "will griffin commits to florida qb · 4 · tampa, fl · #259 natl will-griffin will griffin qb info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.251Z"
+    "hashCreatedAt": "2026-06-12T03:23:03.795Z"
   },
   {
     "id": "commit:239856|florida|2025-12-04",
@@ -2901,7 +2880,7 @@
         "profileNote": "",
         "on3Id": "239856",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:01.978Z",
+        "updatedAt": "2026-06-11T17:53:02.338Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/dylan-purter-239856/",
         "on3Source": null,
@@ -2920,11 +2899,11 @@
       "commitFingerprint": "239856|florida|2025-12-04"
     },
     "url": "/player/dylan-purter",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "9bb170296394ff5ad9fb7b31880f2a648e9b599df0f45c612f80b13703c66a0e",
     "hashNormalizedPreview": "dylan purter commits to florida s · 4 · tuskegee, al · #204 natl dylan-purter dylan purter s info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.251Z"
+    "hashCreatedAt": "2026-06-12T03:23:03.956Z"
   },
   {
     "id": "commit:154268|florida|2025-06-14",
@@ -2963,7 +2942,7 @@
         "profileNote": "",
         "on3Id": "154268",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:01.975Z",
+        "updatedAt": "2026-06-11T17:53:02.331Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/jareylan-mccoy-154268/",
         "on3Source": null,
@@ -2982,11 +2961,11 @@
       "commitFingerprint": "154268|florida|2025-06-14"
     },
     "url": "/player/jareylan-mccoy",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "14556abaee6336f96ca2ec0ed07c2afeed806459ac1a85c79f12826d05de5f09",
     "hashNormalizedPreview": "jareylan mccoy commits to florida dl · 4 · tupelo, ms · #173 natl jareylan-mccoy jareylan mccoy dl info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.251Z"
+    "hashCreatedAt": "2026-06-12T03:23:04.100Z"
   },
   {
     "id": "commit:240430|florida|2025-06-08",
@@ -3025,7 +3004,7 @@
         "profileNote": "",
         "on3Id": "240430",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:01.970Z",
+        "updatedAt": "2026-06-11T17:53:02.328Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/justin-williams-240430/",
         "on3Source": null,
@@ -3044,11 +3023,11 @@
       "commitFingerprint": "240430|florida|2025-06-08"
     },
     "url": "/player/justin-williams",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "15e9198cd5f4527db7fb711b470b290393ddcbb794afea60fefb324f908015f7",
     "hashNormalizedPreview": "justin williams commits to florida wr · 4 · gainesville, fl · #158 natl justin-williams justin williams wr info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.252Z"
+    "hashCreatedAt": "2026-06-12T03:23:04.272Z"
   },
   {
     "id": "commit:176369|florida|2025-07-11",
@@ -3087,7 +3066,7 @@
         "profileNote": "",
         "on3Id": "176369",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:01.959Z",
+        "updatedAt": "2026-06-11T17:53:02.319Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/kevin-ford-176369/",
         "on3Source": null,
@@ -3106,11 +3085,11 @@
       "commitFingerprint": "176369|florida|2025-07-11"
     },
     "url": "/player/kevin-ford",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "0bf478b7e377b8388e3fb3b5bf8d5ffddb69ff91776c02f3e7bb77005f13844a",
     "hashNormalizedPreview": "kevin ford commits to florida edge · 4 · duncanville, tx · #149 natl kevin-ford kevin ford edge info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.253Z"
+    "hashCreatedAt": "2026-06-12T03:23:04.429Z"
   },
   {
     "id": "commit:241642|florida|2025-06-18",
@@ -3149,7 +3128,7 @@
         "profileNote": "",
         "on3Id": "241642",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:01.953Z",
+        "updatedAt": "2026-06-11T17:53:02.315Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/cj-bronaugh-241642/",
         "on3Source": null,
@@ -3168,11 +3147,11 @@
       "commitFingerprint": "241642|florida|2025-06-18"
     },
     "url": "/player/cj-bronaugh",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "e913ada28c509df0c27a3f59d1a0553912ded26923efb05dc1b34f9b01f5a66e",
     "hashNormalizedPreview": "cj bronaugh commits to florida cb · 4 · winter garden, fl · #84 natl cj-bronaugh cj bronaugh cb info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.253Z"
+    "hashCreatedAt": "2026-06-12T03:23:04.571Z"
   },
   {
     "id": "commit:175389|florida|2025-08-11",
@@ -3211,7 +3190,7 @@
         "profileNote": "",
         "on3Id": "175389",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:01.946Z",
+        "updatedAt": "2026-06-11T17:53:02.308Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/davian-groce-175389/",
         "on3Source": null,
@@ -3230,11 +3209,11 @@
       "commitFingerprint": "175389|florida|2025-08-11"
     },
     "url": "/player/davian-groce",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "7a760bed431cefb44a0f7b711adb912457c1add391f95f51480edca4195bc765",
     "hashNormalizedPreview": "davian groce commits to florida wr · 4 · frisco, tx · #60 natl davian-groce davian groce wr info commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.254Z"
+    "hashCreatedAt": "2026-06-12T03:23:04.721Z"
   },
   {
     "id": "commit:180930|florida|2026-06-06",
@@ -3273,7 +3252,7 @@
         "profileNote": "",
         "on3Id": "180930",
         "starsDisplay": "★★★★",
-        "updatedAt": "2026-06-11T17:51:02.275Z",
+        "updatedAt": "2026-06-11T17:53:02.996Z",
         "on3Slug": null,
         "on3ProfileUrl": "https://www.on3.com/rivals/ellis-mcgaskin-180930/",
         "on3Source": null,
@@ -3292,11 +3271,11 @@
       "commitFingerprint": "180930|florida|2026-06-06"
     },
     "url": "/player/ellis-mcgaskin",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "e95aca3ccc86f70ac7cd277aa25ea90476eb6b0802c7db7eb25eba544850acf4",
     "hashNormalizedPreview": "ellis mcgaskin commits to florida lb · 4 · mobile, al · #347 natl ellis-mcgaskin ellis mcgaskin lb commit commit",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.254Z"
+    "hashCreatedAt": "2026-06-12T03:23:04.876Z"
   },
   {
     "id": "art_art-portal-class-2026",
@@ -3313,17 +3292,17 @@
       "tier": "locker",
       "articleId": "art-portal-class-2026"
     },
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "source_url": "/article/art-portal-class-2026",
     "hash": "3e7acec9b57815b4f2735a0af03b23abcfaf331af6658cb023dfc887d8aa36ae",
     "hashNormalizedPreview": "2026 portal class recap: 23 in, 29 out uf's 2026 transfer cycle in one clean read — who arrived, who left, where exits l",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.255Z"
+    "hashCreatedAt": "2026-06-12T03:23:04.968Z"
   },
   {
     "id": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
     "dedupeKey": "gators-online_ecde34a6-2304-4467-ace8-837a4899448b",
-    "type": "podcast",
+    "type": "info",
     "title": "New episode: Gators Online Podcast — Ep. 187: Official visits underway for Florida football, baseball | Gators Online Show",
     "summary": "Welcome to the Gators Online Show! In the latest episode, we discuss official visits starting for the Florida football and baseball programs. Hosted by Simplecast, an AdsWizz company. See pcm.adswizz.com for information about our collection and use of personal data for advertising.",
     "source_url": "https://www.on3.com/teams/florida-gators/",
@@ -3334,9 +3313,9 @@
     "meta": {
       "showId": "gators-online"
     },
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "url": "https://www.on3.com/teams/florida-gators/",
-    "hash": "1b4bf5c905b0cbdcdd2f7e5f798ebf046782407a19e28f2afe5413e24e636412",
+    "hash": "94dc107f19c14999c42f05cf83ce10a4c99531a5fffa7478eeb1e7a2bba19e77",
     "hashNormalizedPreview": "new episode: gators online podcast — ep. 187: official visits underway for florida football, baseball | gators online sh",
     "hashWindowSec": 172800,
     "hashCreatedAt": "2026-06-11T22:51:07.255Z"
@@ -3387,7 +3366,7 @@
       "commitFingerprint": "cahron-wheeler|florida|2026-06-05"
     },
     "url": "/player/cahron-wheeler",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "239fce53435fa1307ce8ca61ba04b64dcb19abef1cd8380fd9b6214b5d9d42e1",
     "hashNormalizedPreview": "cahron wheeler commits to florida edge · 4 · st. paul's school (baltimore, md) cahron-wheeler cahron wheeler edge commit",
     "hashWindowSec": 172800,
@@ -3439,7 +3418,7 @@
       "commitFingerprint": "283680|florida|2026-06-05"
     },
     "url": "/player/kamarion-johnson",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "ecd7f0fac7cb84f3829a9f002a44a4a7e9b6cd8c2deff094800f9a71b073655a",
     "hashNormalizedPreview": "kamarion johnson commits to florida ath · 3 · homerville, ga · #813 natl kamarion-johnson kamarion johnson ath commit co",
     "hashWindowSec": 172800,
@@ -3460,12 +3439,12 @@
       "tier": "locker",
       "articleId": "art-summer-battles"
     },
-    "updatedAt": "2026-06-11T22:51:07.280Z",
-    "url": "/article/art-summer-battles",
     "hash": "2e77ce973d530d0d1fc45600ae2ff4f502960d45f4d8be522439ca07cc3e60b1",
     "hashNormalizedPreview": "summer camp preview: 5 position battles to watch fall camp opens august 2nd. these five position battles will shape the ",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.258Z"
+    "hashCreatedAt": "2026-06-12T03:23:05.059Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
+    "url": "/article/art-summer-battles"
   },
   {
     "id": "commit:zahmar-tookes|florida|2026-06-03",
@@ -3513,7 +3492,7 @@
       "commitFingerprint": "zahmar-tookes|florida|2026-06-03"
     },
     "url": "/player/zahmar-tookes",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "e2ed1ca15eb62181031ee6258baeda04b480a06ad6ddcfd5765859940371b6d1",
     "hashNormalizedPreview": "zahmar tookes commits to florida dl · 4 · brighton (rochester, ny) zahmar-tookes zahmar tookes dl commit commit",
     "hashWindowSec": 172800,
@@ -3534,12 +3513,12 @@
       "tier": "war",
       "articleId": "art-win-model"
     },
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "source_url": "/article/art-win-model",
     "hash": "18869b12409f4520a0b742d75628958c51894835873b656b3ee45c6740ba58a6",
     "hashNormalizedPreview": "war room: 2026 schedule win probability model our proprietary model simulates every game 10,000 times using roster data,",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.259Z"
+    "hashCreatedAt": "2026-06-12T03:23:05.171Z"
   },
   {
     "id": "commit:kennedee-jackson|florida|2026-06-02",
@@ -3587,7 +3566,7 @@
       "commitFingerprint": "kennedee-jackson|florida|2026-06-02"
     },
     "url": "/player/kennedee-jackson",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "14ec5aa8b4a87fdad0d0e3c3051c85eefb3743c3f4260163dee32f4d419fc3fc",
     "hashNormalizedPreview": "kennedee jackson commits to florida ot · 4 · lithonia (lithonia, ga) kennedee-jackson kennedee jackson ot commit commit",
     "hashWindowSec": 172800,
@@ -3596,7 +3575,7 @@
   {
     "id": "gnfp_b37211a8-96f7-46c7-93f2-447f4b88b214",
     "dedupeKey": "gnfp_b37211a8-96f7-46c7-93f2-447f4b88b214",
-    "type": "podcast",
+    "type": "info",
     "title": "New episode: Gator Nation Football Podcast — 2026- June Mailbag",
     "summary": "2026- June Mailbag If you enjoy the content, drop us a dono for as little as $7. Full GNFP Film Review Access starts at $15. https://www.patreon.com/1165790/join Merch https://gnfp.sellfy.store/ Join the GNFP SAMI WhatsApp Group: https://chat.whatsapp.com/CxPmbYiMwDyCTgh7nLcVQE?mode=ems_qr_t Join the GNFP JAVA Discord Group: https://discord.com/invite/j324a9FdZY From our sponsors! Cary and Nadine David https://www.floridaprobatelawgroup.com/ Hosted by Simplecast, an AdsWizz company. See pcm.adsw",
     "source_url": "https://bleav.com/shows/the-gator-nation-football-podcast/episodes/2026-june-mailbag/",
@@ -3607,9 +3586,9 @@
     "meta": {
       "showId": "gnfp"
     },
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "url": "https://bleav.com/shows/the-gator-nation-football-podcast/episodes/2026-june-mailbag/",
-    "hash": "a2300fae78e9ca7d7456926a1fccac123c01246b792308e231f5b3dbf6a5006f",
+    "hash": "f03032243d6e4ae2c0231177c9296f006d82bd099b413dfb1979514c1bb8b68c",
     "hashNormalizedPreview": "new episode: gator nation football podcast — 2026- june mailbag 2026- june mailbag if you enjoy the content, drop us a d",
     "hashWindowSec": 172800,
     "hashCreatedAt": "2026-06-11T22:51:07.261Z"
@@ -3629,12 +3608,12 @@
       "tier": "locker",
       "articleId": "art-sumrall-6mo"
     },
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "source_url": "/article/art-sumrall-6mo",
     "hash": "ad0330600a4d15d78b51372a6968ae9ef7adb3819f36d3976c2e07569f81d4cf",
     "hashNormalizedPreview": "{{ coach.hc }}'s first 6 months: a real assessment six months in, {{ coach.hc }} has rebuilt the roster through the port",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.261Z"
+    "hashCreatedAt": "2026-06-12T03:23:05.286Z"
   },
   {
     "id": "commit:jabios-smith|florida|2026-05-29",
@@ -3682,7 +3661,7 @@
       "commitFingerprint": "jabios-smith|florida|2026-05-29"
     },
     "url": "/player/jabios-smith",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "a6970ac9d1b81da022a9d7829de91d854f61cdfb4176b14214b247541bfb3566",
     "hashNormalizedPreview": "ja'bios smith commits to florida lb · 4 · swainsboro (swainsboro, ga) jabios-smith ja bios smith lb commit commit",
     "hashWindowSec": 172800,
@@ -3703,17 +3682,17 @@
       "tier": "locker",
       "articleId": "art-335-revolution"
     },
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "source_url": "/article/art-335-revolution",
     "hash": "15c70e8658ac54f5aecfd816a5989f7314d5957e7c937c71fe3c3768daa976b4",
     "hashNormalizedPreview": "the 3-3-5 revolution: why {{ coach.dc }}'s scheme changes everything {{ coach.dc }}'s 3-3-5 isn't a gimmick — it's a per",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.263Z"
+    "hashCreatedAt": "2026-06-12T03:23:05.394Z"
   },
   {
     "id": "gator-tales_tag:soundcloud,2010:tracks/2328301979",
     "dedupeKey": "gator-tales_tag:soundcloud,2010:tracks/2328301979",
-    "type": "podcast",
+    "type": "info",
     "title": "New episode: Gator Tales — Gator Tales #60: Duke Werner - Executive Associate Athletics Director / Director of Sport",
     "summary": "In the latest episode of Gator Tales, Presented by UF Health, Voice of the Gators Sean Kelley sits down for an exclusive conversation with Executive Associate Athletics Director/Director of Sport Dave Werner. During Episode 60, Kelley and Werner look back on the 2025-26 athletic year and discuss his new role with the Gators. They also dive into recent UF coaching changes along with a slew of other topics in a candid and informative visit for Gator Nation.",
     "source_url": "https://soundcloud.com/gatortales/gator-tales-60-duke-werner",
@@ -3724,9 +3703,9 @@
     "meta": {
       "showId": "gator-tales"
     },
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "url": "https://soundcloud.com/gatortales/gator-tales-60-duke-werner",
-    "hash": "487c133bed020f4227c1d0a80e89e8f0f66005219a66066d9dd0d364b422a139",
+    "hash": "9030edc0354696caa7cdd5d268fd9cca617e67f07661e969c64ca4a9db0b5144",
     "hashNormalizedPreview": "new episode: gator tales — gator tales #60: duke werner - executive associate athletics director / director of sport in ",
     "hashWindowSec": 172800,
     "hashCreatedAt": "2026-06-11T22:51:07.263Z"
@@ -3746,12 +3725,12 @@
       "tier": "film",
       "articleId": "art-philo-film"
     },
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "source_url": "/article/art-philo-film",
     "hash": "d37189e2bf91816a4ba63c7fdc14738baf8ebd17c1574d97d658c143f0e69ba7",
     "hashNormalizedPreview": "aaron philo film study: who is the new uf quarterback? georgia tech transfer aaron philo brings pro-style mechanics and ",
     "hashWindowSec": 172800,
-    "hashCreatedAt": "2026-06-11T22:51:07.264Z"
+    "hashCreatedAt": "2026-06-12T03:23:05.490Z"
   },
   {
     "id": "commit:elias-pearl|florida|2026-05-19",
@@ -3799,7 +3778,7 @@
       "commitFingerprint": "elias-pearl|florida|2026-05-19"
     },
     "url": "/player/elias-pearl",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "45f3f16a0f0b08326b239b4655e98b55f307b8b660b477460eb6650b98a5cc6c",
     "hashNormalizedPreview": "elias pearl commits to florida wr · 4 · port charlotte (port charlotte, fl) elias-pearl elias pearl wr commit commit",
     "hashWindowSec": 172800,
@@ -3851,7 +3830,7 @@
       "commitFingerprint": "cain-van-norden|florida|2026-05-15"
     },
     "url": "/player/cain-van-norden",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "fef865f23aed95c5eee2d7674d7f6c2c3d37cc31079cc230ec3ef5fc182eb19d",
     "hashNormalizedPreview": "cain van norden commits to florida dl · 3 · bishop mcnamara (district heights, md) cain-van-norden cain van norden dl co",
     "hashWindowSec": 172800,
@@ -3903,7 +3882,7 @@
       "commitFingerprint": "andrew-beard|florida|2026-05-08"
     },
     "url": "/player/andrew-beard",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "60969d8d557f8ad15481d01f656a630af549c4fa061f89512a3fd2e7e897fe98",
     "hashNormalizedPreview": "andrew beard commits to florida rb · 4 · prince avenue christian (bogart, ga) andrew-beard andrew beard rb commit commit",
     "hashWindowSec": 172800,
@@ -3955,7 +3934,7 @@
       "commitFingerprint": "stive-bentley-keumajou|florida|2026-05-06"
     },
     "url": "/player/stive-bentley-keumajou",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "d1a9a0fdd1de1b172196fd9bf057139c7d30e4d02d63696399d6de39b52e1afd",
     "hashNormalizedPreview": "stive-bentley keumajou commits to florida dl · 3 · coral gables senior (coral gables, fl) stive-bentley-keumajou stive b",
     "hashWindowSec": 172800,
@@ -4007,7 +3986,7 @@
       "commitFingerprint": "kailib-dillard|florida|2026-05-05"
     },
     "url": "/player/kailib-dillard",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "027cfc3e0a6124712c7240b1804da51b2e15084ed743e5f595c29a19ad14c6a1",
     "hashNormalizedPreview": "kailib dillard commits to florida s · 3 · jenks (tulsa, ok) kailib-dillard kailib dillard s commit commit",
     "hashWindowSec": 172800,
@@ -4059,7 +4038,7 @@
       "commitFingerprint": "elijah-hutcheson|florida|2026-05-05"
     },
     "url": "/player/elijah-hutcheson",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "db490665811aee33fd3f3412773ed126f01c9327bb73a5536a7b0cc5fbc23728",
     "hashNormalizedPreview": "elijah hutcheson commits to florida ot · 4 · north cross school (roanoke, va) elijah-hutcheson elijah hutcheson ot commi",
     "hashWindowSec": 172800,
@@ -4111,7 +4090,7 @@
       "commitFingerprint": "devoun-kendrick|florida|2026-04-27"
     },
     "url": "/player/devoun-kendrick",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "5d01736fb9102b170694bde8a15b56076a2988653e27457a8603bbebf9c02052",
     "hashNormalizedPreview": "de'voun kendrick commits to florida dl · 3 · carrollwood day (tampa, fl) devoun-kendrick de voun kendrick dl commit comm",
     "hashWindowSec": 172800,
@@ -4163,7 +4142,7 @@
       "commitFingerprint": "peyton-miller|florida|2026-04-27"
     },
     "url": "/player/peyton-miller",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "f77b8032766069bf012eb66caf8bc85b90a5af6fde9390477f2a4d1248e6ab16",
     "hashNormalizedPreview": "peyton miller commits to florida iol · 4 · anna (anna, tx) peyton-miller peyton miller iol commit commit",
     "hashWindowSec": 172800,
@@ -4215,7 +4194,7 @@
       "commitFingerprint": "anthony-jennings|florida|2026-04-25"
     },
     "url": "/player/anthony-jennings",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "d2f7df7fa110257793def5051197e55d2596adb130a1e8f0288a224f3e1dbf12",
     "hashNormalizedPreview": "anthony jennings commits to florida wr · 4 · dillard (fort lauderdale, fl) anthony-jennings anthony jennings wr commit c",
     "hashWindowSec": 172800,
@@ -4267,7 +4246,7 @@
       "commitFingerprint": "tommy-douglas|florida|2026-04-16"
     },
     "url": "/player/tommy-douglas",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "e135380a9b6c79932b7fac040e4fa10f6cd05af41a3c549f8cb2baa24d2b164d",
     "hashNormalizedPreview": "tommy douglas commits to florida te · 4 · hun school (princeton, nj) tommy-douglas tommy douglas te commit commit",
     "hashWindowSec": 172800,
@@ -4319,7 +4298,7 @@
       "commitFingerprint": "aamaury-fountain|florida|2026-04-11"
     },
     "url": "/player/aamaury-fountain",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "89d6e013412aba40a13b9481d0aa1d0618ea27a150112b5499495631563762ea",
     "hashNormalizedPreview": "aamaury fountain commits to florida cb · 4 · northside (warner robins, ga) aamaury-fountain aamaury fountain cb commit c",
     "hashWindowSec": 172800,
@@ -4371,7 +4350,7 @@
       "commitFingerprint": "davin-davidson|florida|2026-04-09"
     },
     "url": "/player/davin-davidson",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "916fa11033862fbc6a67a16dba099fbcbeeaefc94f7207358d3a4e4c15cfc746",
     "hashNormalizedPreview": "davin davidson commits to florida qb · 4 · cardinal mooney (sarasota, fl) davin-davidson davin davidson qb commit commit",
     "hashWindowSec": 172800,
@@ -4423,7 +4402,7 @@
       "commitFingerprint": "180637|florida|2026-04-08"
     },
     "url": "/player/maxwell-hiller",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "c406094347138109f878c7254ef5f4e4f1cec3b9c211ddffcf2a9d50206a2663",
     "hashNormalizedPreview": "maxwell hiller commits to florida iol · 5 · coatesville, pa · #3 natl maxwell-hiller maxwell hiller iol commit commit",
     "hashWindowSec": 172800,
@@ -4475,7 +4454,7 @@
       "commitFingerprint": "tramond-collins|florida|2026-03-11"
     },
     "url": "/player/tramond-collins",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "f60f97b6a7cb42889d02ca205855f170059b1224e2339a7b1485e4593710c3ea",
     "hashNormalizedPreview": "tramond collins commits to florida wr · 4 · cottondale (cottondale, fl) tramond-collins tramond collins wr commit commit",
     "hashWindowSec": 172800,
@@ -4527,7 +4506,7 @@
       "commitFingerprint": "jackson-ballinger|florida|2026-02-24"
     },
     "url": "/player/jackson-ballinger",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "18a4e3550667b38a46cb4054758b67f71e02cd38688308c2737e155da7be32b7",
     "hashNormalizedPreview": "jackson ballinger commits to florida te · 4 · centerburg (centerburg, oh) jackson-ballinger jackson ballinger te commit ",
     "hashWindowSec": 172800,
@@ -4579,7 +4558,7 @@
       "commitFingerprint": "amare-nugent|florida|2026-01-24"
     },
     "url": "/player/amare-nugent",
-    "updatedAt": "2026-06-11T22:51:07.280Z",
+    "updatedAt": "2026-06-12T03:23:05.677Z",
     "hash": "9b960beb0601769a77ca95fa48f4514863cac213476388cd17ad6498e3b951fe",
     "hashNormalizedPreview": "amare nugent commits to florida cb · 4 · american heritage (plantation, fl) amare-nugent amare nugent cb commit commit",
     "hashWindowSec": 172800,

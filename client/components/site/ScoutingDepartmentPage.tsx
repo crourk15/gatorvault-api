@@ -18,10 +18,16 @@ const TYPE_TABS = [
   { id: 'roster', label: 'Roster' },
 ];
 
-function ScoutingProfileCard({ breakdown }: { breakdown: ScoutingBreakdown }): React.ReactElement {
+function ScoutingProfileCard({
+  breakdown,
+  inVault = false,
+}: {
+  breakdown: ScoutingBreakdown;
+  inVault?: boolean;
+}): React.ReactElement {
   const slug = breakdown.playerSlug;
   const locked = breakdown.locked;
-  const profileHref = scoutingProfilePath(slug, breakdown.playerType);
+  const profileHref = scoutingProfilePath(slug, breakdown.playerType, inVault);
 
   return (
     <article className="gv-scout-card">
@@ -71,7 +77,7 @@ function ScoutingProfileCard({ breakdown }: { breakdown: ScoutingBreakdown }): R
   );
 }
 
-export function ScoutingDepartmentPage(): React.ReactElement {
+export function ScoutingDepartmentPage({ inVault = false }: { inVault?: boolean } = {}): React.ReactElement {
   const [list, setList] = useState<ScoutingBreakdown[]>([]);
   const [locked, setLocked] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -215,7 +221,7 @@ export function ScoutingDepartmentPage(): React.ReactElement {
           {featuredReports.length > 0 ? (
             <div className="gv-scout-list">
               {featuredReports.map((b) => (
-                <ScoutingProfileCard key={b.playerSlug} breakdown={b} />
+                <ScoutingProfileCard key={b.playerSlug} breakdown={b} inVault={inVault} />
               ))}
             </div>
           ) : (
@@ -233,7 +239,7 @@ export function ScoutingDepartmentPage(): React.ReactElement {
           {evalQueue.length > 0 ? (
             <div className="gv-scout-list">
               {evalQueue.map((b) => (
-                <ScoutingProfileCard key={b.playerSlug} breakdown={b} />
+                <ScoutingProfileCard key={b.playerSlug} breakdown={b} inVault={inVault} />
               ))}
             </div>
           ) : (
@@ -265,7 +271,7 @@ export function ScoutingDepartmentPage(): React.ReactElement {
           {filtered.length > 0 ? (
             <div className="gv-scout-list">
               {filtered.map((b) => (
-                <ScoutingProfileCard key={b.playerSlug} breakdown={b} />
+                <ScoutingProfileCard key={b.playerSlug} breakdown={b} inVault={inVault} />
               ))}
             </div>
           ) : (

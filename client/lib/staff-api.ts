@@ -1,7 +1,6 @@
 /**
  * Staff dashboard API client.
  */
-import { getApiBase } from './big-board-api';
 import type { FutureCastAlert } from './alerts-api';
 
 export interface MovementHeatmapBucket {
@@ -36,10 +35,6 @@ export interface StaffDashboardResponse {
 }
 
 export async function fetchStaffDashboard(): Promise<StaffDashboardResponse> {
-  const res = await fetch(`${getApiBase()}/api/staff/dashboard`);
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error((body as { error?: string }).error || `API ${res.status}`);
-  }
-  return res.json() as Promise<StaffDashboardResponse>;
+  const { apiFetch } = await import('./api-fetch');
+  return apiFetch<StaffDashboardResponse>('/api/staff/dashboard');
 }

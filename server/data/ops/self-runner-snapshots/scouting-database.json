@@ -1,0 +1,10 @@
+{
+  "savedAt": "2026-06-12T01:46:05.840Z",
+  "reason": "known_good",
+  "path": "data/war-room/scouting-database.json",
+  "data": {
+    "version": 1,
+    "updatedAt": null,
+    "entries": {}
+  }
+}

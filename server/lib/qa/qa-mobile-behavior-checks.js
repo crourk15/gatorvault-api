@@ -42,7 +42,9 @@ function issue(type, screen, description, suggestedFix, extra) {
 function readLocalBuildStamp() {
   try {
     const html = fs.readFileSync(LOCAL_INDEX, 'utf8');
-    const m = html.match(/<meta\s+name="gv-build"\s+content="([^"]+)"/i);
+    const m =
+      html.match(/<meta\s+name="gatorvault-build"\s+content="([^"]+)"/i) ||
+      html.match(/<meta\s+name="gv-build"\s+content="([^"]+)"/i);
     return m ? m[1].trim() : null;
   } catch {
     return null;
@@ -51,28 +53,20 @@ function readLocalBuildStamp() {
 
 async function readProductionBuildStamp() {
   const { text } = await fetchText(config.SITE_URL, { timeout: 20000 });
-  const m = text.match(/<meta\s+name="gv-build"\s+content="([^"]+)"/i);
+  const m =
+    text.match(/<meta\s+name="gatorvault-build"\s+content="([^"]+)"/i) ||
+    text.match(/<meta\s+name="gv-build"\s+content="([^"]+)"/i);
   return m ? m[1].trim() : null;
 }
 
 async function bootstrapMobileVault(page) {
-  await page.goto(`${config.SITE_URL}/?open=vault`, { waitUntil: 'domcontentloaded', timeout: 45000 });
-  await page.waitForFunction(() => typeof window.showVaultInterior === 'function', { timeout: 20000 });
-  await page.evaluate(() => {
-    var vo = document.getElementById('vault-overlay');
-    if (vo) vo.classList.remove('hidden');
-    window.GV_ROLE = 'locker';
-    window.GV_OPERATOR = false;
-    if (typeof showVaultInterior === 'function') showVaultInterior('locker');
-    var gate = document.getElementById('trial-expired-gate');
-    if (gate) gate.classList.add('hidden');
-    var banner = document.getElementById('trial-payment-banner');
-    if (banner) banner.style.display = 'none';
-    var interior = document.getElementById('vault-interior');
-    if (interior) interior.classList.add('gv-mobile-active');
-    if (typeof gvMobileShowTab === 'function') gvMobileShowTab('mhome');
-  });
+  await page.goto(`${config.SITE_URL}/vault`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+  await page.waitForSelector('.gv-vault-shell, [data-testid="vault-dashboard"]', { timeout: 20000 });
   await page.waitForTimeout(2500);
+}
+
+async function usesReactVaultShell(page) {
+  return page.evaluate(() => !!document.querySelector('.gv-vault-shell'));
 }
 
 async function tapNav(page, tab) {
@@ -474,8 +468,8 @@ async function checkStaleHtml() {
       issue(
         'stale-html',
         'Global',
-        'Production index.html missing meta gv-build stamp',
-        'Add <meta name="gv-build" content="..."> to index.html and deploy to Netlify',
+        'Production index.html missing build stamp (gatorvault-build or gv-build)',
+        'Ensure stamp-build-meta.js runs during Netlify build',
         { flowId, severity: 'high', details: { local } }
       )
     );
@@ -487,22 +481,6 @@ async function checkStaleHtml() {
         `Production HTML build stamp "${production}" does not match repo "${local}"`,
         'Trigger Netlify deploy from latest main commit; verify publish directory is server/',
         { flowId, severity: 'critical', details: { local, production } }
-      )
-    );
-  }
-
-  const localTeam = fs.readFileSync(LOCAL_INDEX, 'utf8').includes('id="vpane-mteam" class="vpane gv-mob-only fade-in gv-team-page"');
-  const prodHtml = await fetchText(config.SITE_URL).then((r) => r.text);
-  const prodTeam = /id="vpane-mteam"[^>]*gv-team-page/.test(prodHtml);
-
-  if (localTeam && !prodTeam) {
-    issues.push(
-      issue(
-        'stale-html',
-        'Team',
-        'Production HTML missing gv-team-page on #vpane-mteam (Team Overview redesign not deployed)',
-        'Deploy commit with Team mobile markup (f80ac61+) to Netlify; bump gv-build cache buster',
-        { flowId, severity: 'critical', details: { localTeam, prodTeam } }
       )
     );
   }
@@ -524,6 +502,25 @@ async function runViewportFlows(playwright, viewportDef) {
 
   try {
     await bootstrapMobileVault(page);
+
+    const reactVault = await usesReactVaultShell(page);
+    if (reactVault) {
+      return {
+        viewport: viewportDef.label,
+        flows: [
+          {
+            flowId: 'monolith-mobile-retired',
+            pass: true,
+            skipped: true,
+            issues: [],
+            details: { reason: 'React VaultShell active — monolith #gv-bottom-nav flows retired (Phase 5)' }
+          }
+        ],
+        issues: [],
+        screenshot: null,
+        pass: true
+      };
+    }
 
     flows.push(await runFeedFreshnessFlow(page, config.API_URL, config.MOBILE_FEED_MAX_AGE_HOURS));
     flows.push(await runHomeTabReselectFlow(page));

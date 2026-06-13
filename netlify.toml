@@ -137,44 +137,253 @@
   status = 200
 
 [[redirects]]
+  from = "/vault/players/*"
+  to = "/vault/players/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/scouting"
+  to = "/vault/scouting/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/scouting/*"
+  to = "/vault/scouting/index.html"
+  status = 200
+
+[[redirects]]
   from = "/vault/depth-chart"
-  to = "/index.html"
+  to = "/vault/depth-chart/index.html"
   status = 200
 
 [[redirects]]
   from = "/vault/recruiting"
-  to = "/index.html"
+  to = "/vault/recruiting/index.html"
   status = 200
 
 [[redirects]]
   from = "/vault/portal"
-  to = "/index.html"
+  to = "/vault/portal/index.html"
   status = 200
 
 [[redirects]]
   from = "/vault/film-room"
-  to = "/index.html"
+  to = "/vault/film-room/index.html"
   status = 200
 
 [[redirects]]
   from = "/vault/game-week"
-  to = "/index.html"
+  to = "/vault/game-week/index.html"
   status = 200
 
 [[redirects]]
   from = "/vault/live-feed"
-  to = "/index.html"
+  to = "/vault/live-feed/index.html"
   status = 200
 
 [[redirects]]
   from = "/vault/staff"
-  to = "/index.html"
+  to = "/vault/staff/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/alerts"
+  to = "/vault/alerts/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/alerts/*"
+  to = "/vault/alerts/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/tickets"
+  to = "/vault/tickets/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/apparel"
+  to = "/vault/apparel/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/live-scores"
+  to = "/vault/live-scores/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/live-scores/*"
+  to = "/vault/live-scores/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/articles"
+  to = "/vault/articles/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/articles/*"
+  to = "/vault/articles/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/community"
+  to = "/vault/community/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/community/*"
+  to = "/vault/community/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/game-zone"
+  to = "/vault/game-zone/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/game-zone/*"
+  to = "/vault/game-zone/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/nil"
+  to = "/vault/nil/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/nil/*"
+  to = "/vault/nil/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/join"
+  to = "/join/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/join/*"
+  to = "/join/index.html"
   status = 200
 
 [[redirects]]
   from = "/vault"
-  to = "/index.html"
+  to = "/vault/index.html"
   status = 200
+
+[[redirects]]
+  from = "/vault/"
+  to = "/vault/index.html"
+  status = 200
+
+# Legacy monolith vault query params → canonical React vault routes
+[[redirects]]
+  from = "/"
+  to = "/vault"
+  status = 301
+  query = {open = "vault", tab = "start"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/depth-chart"
+  status = 301
+  query = {open = "vault", tab = "team"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/recruiting"
+  status = 301
+  query = {open = "vault", tab = "recruit"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/futurecast"
+  status = 301
+  query = {open = "vault", tab = "futurecast"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/portal"
+  status = 301
+  query = {open = "vault", tab = "portal"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/film-room"
+  status = 301
+  query = {open = "vault", tab = "highlights"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/game-week"
+  status = 301
+  query = {open = "vault", tab = "gameweek"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/live-feed"
+  status = 301
+  query = {open = "vault", tab = "live"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/futurecast/staff"
+  status = 301
+  query = {open = "vault", tab = "analytics"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/scouting"
+  status = 301
+  query = {open = "vault", tab = "scouting"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/alerts"
+  status = 301
+  query = {open = "vault", tab = "alerts"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/tickets"
+  status = 301
+  query = {open = "vault", tab = "tickets"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/apparel"
+  status = 301
+  query = {open = "vault", tab = "apparel"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/articles"
+  status = 301
+  query = {open = "vault", tab = "articles"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/community"
+  status = 301
+  query = {open = "vault", tab = "community"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/game-zone"
+  status = 301
+  query = {open = "vault", tab = "gamezone"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/nil"
+  status = 301
+  query = {open = "vault", tab = "nil"}
+
+[[redirects]]
+  from = "/"
+  to = "/vault/live-scores"
+  status = 301
+  query = {open = "vault", tab = "livescores"}
 
 [[redirects]]
   from = "/recruiting-board"

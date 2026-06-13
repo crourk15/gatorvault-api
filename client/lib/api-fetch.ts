@@ -9,15 +9,20 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
   const res = await fetch(url, init);
   if (!res.ok) {
     let message = 'Something went wrong loading data. Please try again.';
+    let unavailable = false;
     try {
-      const body = (await res.json()) as { error?: string };
+      const body = (await res.json()) as { error?: string; unavailable?: boolean };
+      if (body.unavailable) unavailable = true;
       if (body.error && !/https?:\/\//i.test(body.error)) {
         message = body.error;
       }
     } catch {
       /* ignore */
     }
-    throw new Error(message);
+    const err = new Error(message) as Error & { status?: number; unavailable?: boolean };
+    err.status = res.status;
+    err.unavailable = unavailable;
+    throw err;
   }
   return res.json() as Promise<T>;
 }

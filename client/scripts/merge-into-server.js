@@ -1,6 +1,6 @@
 /**
  * Merge Next.js static export (client/out) into server/ for Netlify publish.
- * Keeps existing vault pages (index.html, admin, etc.) and overlays FutureCast routes.
+ * Overlays React routes (landing, join, vault, FutureCast) onto server/.
  */
 const fs = require('fs');
 const path = require('path');
@@ -10,10 +10,29 @@ const serverDir = path.join(__dirname, '..', '..', 'server');
 
 /** Required export paths for FutureCast on Netlify (relative to server/). */
 const REQUIRED_EXPORTS = [
+  'index.html',
+  'join/index.html',
   'futurecast/index.html',
   'futurecast/alerts/index.html',
   'futurecast/staff/index.html',
   'vault/index.html',
+  'vault/scouting/index.html',
+  'vault/players/index.html',
+  'vault/depth-chart/index.html',
+  'vault/recruiting/index.html',
+  'vault/portal/index.html',
+  'vault/film-room/index.html',
+  'vault/game-week/index.html',
+  'vault/live-feed/index.html',
+  'vault/live-scores/index.html',
+  'vault/articles/index.html',
+  'vault/community/index.html',
+  'vault/game-zone/index.html',
+  'vault/nil/index.html',
+  'vault/staff/index.html',
+  'vault/alerts/index.html',
+  'vault/tickets/index.html',
+  'vault/apparel/index.html',
   'vault/futurecast/index.html',
   'vault/futurecast/player/index.html',
   'vault/futurecast/stock/index.html',
@@ -60,6 +79,8 @@ if (!fs.existsSync(outDir)) {
   console.error('[netlify] client/out missing — run: npm run build --prefix client');
   process.exit(1);
 }
+
+require('./generate-redirects.js');
 
 copyRecursive(outDir, serverDir);
 verifyExports();

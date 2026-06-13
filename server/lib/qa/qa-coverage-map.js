@@ -5,23 +5,23 @@
 const SITE_SECTIONS = [
   {
     id: 'homepage',
-    label: 'Homepage',
+    label: 'Marketing Landing',
     page: '/',
-    areas: ['live-feed', 'latest-updates', 'recruiting-pulse', 'film-room-preview', 'team-identity-preview'],
-    desktop: { nav: { fn: 'showVTab', arg: 'start' } },
-    mobile: { nav: { fn: 'gvMobileShowTab', arg: 'mhome' } },
-    selectors: [
-      '#live-feed-list',
-      '.gv-mhome-new-banner',
-      '#vpane-start',
-      '#highlight-modal-ov'
-    ],
-    minTextLength: { '#live-feed-list': 0 }
+    areas: ['hero', 'futurecast-preview', 'pricing'],
+    selectors: ['data-testid="landing-page"', 'gv-landing-hero', 'gv-landing-pricing']
+  },
+  {
+    id: 'vault-dashboard',
+    label: 'Vault Dashboard',
+    page: '/vault',
+    areas: ['quick-links', 'sidebar'],
+    selectors: ['data-testid="vault-dashboard"', '.gv-vault-shell', '.gv-vault-shell__sidebar']
   },
   {
     id: 'team-overview',
-    label: 'Team Overview',
+    label: 'Team Overview (archive)',
     page: '/',
+    legacy: true,
     areas: ['program-history', 'team-identity', 'traditions', 'culture', 'the-swamp'],
     desktop: { nav: { fn: 'showVTab', arg: 'team' } },
     mobile: { nav: { fn: 'gvMobileShowTab', arg: 'team' } },
@@ -49,8 +49,9 @@ const SITE_SECTIONS = [
   },
   {
     id: 'film-room',
-    label: 'Film Room',
+    label: 'Film Room (archive)',
     page: '/',
+    legacy: true,
     areas: ['categories', 'clips', 'layout', 'headers'],
     desktop: { nav: { fn: 'showVTab', arg: 'highlights' } },
     mobile: { nav: { fn: 'gvMobileShowTab', arg: 'mhome' }, extra: 'film-room-hub' },
@@ -70,8 +71,9 @@ const SITE_SECTIONS = [
   },
   {
     id: 'recruiting',
-    label: 'Recruiting',
+    label: 'Recruiting (archive)',
     page: '/',
+    legacy: true,
     areas: ['recruiting-board', 'war-room', 'heat-meter', 'staff-confidence', 'player-cards'],
     desktop: { nav: { fn: 'showVTab', arg: 'recruit' } },
     mobile: { nav: { fn: 'gvMobileShowTab', arg: 'recruit' } },
@@ -160,6 +162,8 @@ const RULE_CATALOG = {
 
 const LOCAL_ASSETS = [
   'index.html',
+  'legacy-index.html',
+  'vault/index.html',
   'css/gv-team.css',
   'js/gv-team-mobile.js',
   'js/admin-hub-core.js',

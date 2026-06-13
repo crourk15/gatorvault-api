@@ -24,14 +24,16 @@ async function fetchPageBundle(pagePath) {
 }
 
 function loadLocalPageBundle() {
-  const html = fs.readFileSync(path.join(SERVER_ROOT, 'index.html'), 'utf8');
+  const archive = path.join(SERVER_ROOT, 'legacy-index.html');
+  const htmlPath = fs.existsSync(archive) ? archive : path.join(SERVER_ROOT, 'index.html');
+  const html = fs.readFileSync(htmlPath, 'utf8');
   let teamCss = '';
   try {
     teamCss = fs.readFileSync(path.join(SERVER_ROOT, 'css', 'gv-team.css'), 'utf8');
   } catch {
     /* optional */
   }
-  return { html, teamCss, url: 'local:server/index.html' };
+  return { html, teamCss, url: `local:server/${path.basename(htmlPath)}` };
 }
 
 async function runVisualIntegrityChecks(opts = {}) {

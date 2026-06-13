@@ -182,7 +182,7 @@
       "description": "Team detail modal script hook",
       "requiredHooks": ["gv-team-mobile.js"],
       "expectedLocation": {
-        "file": "index.html",
+        "file": "legacy-index.html",
         "before": "</body>",
         "description": "Deferred script before </body>"
       },
@@ -194,7 +194,7 @@
       "description": "Film Room verified source modal script",
       "requiredHooks": ["gv-film-sources.js"],
       "expectedLocation": {
-        "file": "index.html",
+        "file": "legacy-index.html",
         "before": "</body>"
       },
       "acceptPatterns": ["gv-film-sources.js", "gvOpenVerifiedSource"],

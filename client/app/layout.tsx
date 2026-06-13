@@ -1,8 +1,4 @@
-'use client';
-
 import React from 'react';
-import { GatorVaultShell } from '@/components/site/GatorVaultShell';
-import { usePathname } from '@/lib/use-pathname';
 import '@/lib/site.css';
 
 export default function RootLayout({
@@ -10,9 +6,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }): React.ReactElement {
-  const pathname = usePathname();
-  const inVaultShell = pathname.replace(/\/$/, '').startsWith('/vault');
-
   return (
     <html lang="en">
       <head>
@@ -21,9 +14,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="fc-body gv-body">
-        {inVaultShell ? children : <GatorVaultShell>{children}</GatorVaultShell>}
-      </body>
+      <body className="fc-body gv-body">{children}</body>
     </html>
   );
 }

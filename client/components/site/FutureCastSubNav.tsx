@@ -9,7 +9,7 @@ const SUB_LINKS: { id: FutureCastSubId; label: string }[] = [
   { id: 'stock', label: 'Stock Up / Down' },
   { id: 'snapshots', label: 'Snapshots' },
   { id: 'alerts', label: 'Alerts' },
-  { id: 'staff', label: 'Staff' },
+  { id: 'staff', label: 'Movement Intel' },
 ];
 
 export type { FutureCastSubId };
