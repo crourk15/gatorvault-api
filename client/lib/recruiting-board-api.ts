@@ -23,6 +23,11 @@ export interface RecruitingBoardPlayer {
   committedTo?: string;
   category?: string;
   inState?: boolean;
+  skinny?: string;
+  profileNote?: string;
+  vaultGrade?: number;
+  displayRating?: number;
+  ufOvStatus?: string;
 }
 
 export interface RecruitingBoardResponse {

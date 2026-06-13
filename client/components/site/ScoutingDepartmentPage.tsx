@@ -6,6 +6,8 @@ import {
   scoutingTypeLabel,
   type ScoutingBreakdown,
 } from '@/lib/scouting-api';
+import { scoutingProfilePath } from '@/lib/player-routes';
+import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 const TYPE_TABS = [
   { id: 'all', label: 'All' },
@@ -19,6 +21,8 @@ const TYPE_TABS = [
 function ScoutingProfileCard({ breakdown }: { breakdown: ScoutingBreakdown }): React.ReactElement {
   const slug = breakdown.playerSlug;
   const locked = breakdown.locked;
+  const profileHref = scoutingProfilePath(slug, breakdown.playerType);
+
   return (
     <article className="gv-scout-card">
       <div className="gv-scout-card__header">
@@ -32,7 +36,7 @@ function ScoutingProfileCard({ breakdown }: { breakdown: ScoutingBreakdown }): R
         {locked ? (
           <span className="gv-scout-card__lock">War Room</span>
         ) : (
-          <a href={`/player/${encodeURIComponent(slug)}`} className="gv-scout-card__link">
+          <a href={profileHref} className="gv-scout-card__link">
             Profile →
           </a>
         )}
@@ -74,6 +78,7 @@ export function ScoutingDepartmentPage(): React.ReactElement {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [type, setType] = useState('all');
+  const [view, setView] = useState<'hub' | 'reports' | 'queue' | 'directory'>('hub');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -103,6 +108,22 @@ export function ScoutingDepartmentPage(): React.ReactElement {
     });
   }, [list, search]);
 
+  const featuredReports = useMemo(
+    () => filtered.filter((b) => b.featured && !b.locked && b.strengths),
+    [filtered]
+  );
+
+  const evalQueue = useMemo(
+    () =>
+      filtered.filter(
+        (b) =>
+          !b.locked &&
+          (b.playerType === 'target' || b.playerType === 'recruit') &&
+          !b.strengths
+      ),
+    [filtered]
+  );
+
   return (
     <div className="gv-page" data-testid="scouting-page">
       <div className="gv-page-hero">
@@ -112,28 +133,67 @@ export function ScoutingDepartmentPage(): React.ReactElement {
         </p>
       </div>
 
-      <div className="gv-page-tabs">
-        {TYPE_TABS.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            className={`gv-page-tab${type === tab.id ? ' is-active' : ''}`}
-            onClick={() => setType(tab.id)}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className="gv-scout-hub">
+        <a href="/players" className="gv-scout-hub__card">
+          <span className="gv-scout-hub__icon">📋</span>
+          <h2>Player Directory</h2>
+          <p>Search HS recruits, portal, and college players with filters and profile links.</p>
+        </a>
+        <button
+          type="button"
+          className={`gv-scout-hub__card${view === 'reports' ? ' is-active' : ''}`}
+          onClick={() => setView('reports')}
+        >
+          <span className="gv-scout-hub__icon">📊</span>
+          <h2>Scouting Reports</h2>
+          <p>Featured evaluations with strengths, weaknesses, and projections.</p>
+        </button>
+        <button
+          type="button"
+          className={`gv-scout-hub__card${view === 'queue' ? ' is-active' : ''}`}
+          onClick={() => setView('queue')}
+        >
+          <span className="gv-scout-hub__icon">⏳</span>
+          <h2>Evaluation Queue</h2>
+          <p>Targets and recruits awaiting full War Room write-ups.</p>
+        </button>
+        <button
+          type="button"
+          className={`gv-scout-hub__card${view === 'directory' ? ' is-active' : ''}`}
+          onClick={() => setView('directory')}
+        >
+          <span className="gv-scout-hub__icon">🔍</span>
+          <h2>Full Database</h2>
+          <p>Browse all scouting profiles by type with search.</p>
+        </button>
       </div>
 
-      <div className="gv-page-toolbar">
-        <input
-          type="search"
-          className="gv-page-search"
-          placeholder="Search scouting database…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+      {(view === 'directory' || view === 'hub') && (
+        <>
+          <div className="gv-page-tabs">
+            {TYPE_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                className={`gv-page-tab${type === tab.id ? ' is-active' : ''}`}
+                onClick={() => setType(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="gv-page-toolbar">
+            <input
+              type="search"
+              className="gv-page-search"
+              placeholder="Search scouting database…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </>
+      )}
 
       {locked && (
         <div className="gv-page-notice">
@@ -142,9 +202,47 @@ export function ScoutingDepartmentPage(): React.ReactElement {
       )}
 
       {loading && <p className="gv-page-status">Loading scouting database…</p>}
-      {error && !loading && <p className="gv-page-error">{error}</p>}
+      {error && !loading && (
+        <UiError message={error} retry={() => void load()} backHref="/" backLabel="← GatorVault Home" />
+      )}
 
-      {!loading && !error && (
+      {!loading && !error && view === 'reports' && (
+        <section className="gv-page-section">
+          <div className="gv-page-section__header">
+            <h2 className="gv-page-section__title">Featured Scouting Reports</h2>
+            <p className="gv-page-section__subtitle">{featuredReports.length} reports</p>
+          </div>
+          {featuredReports.length > 0 ? (
+            <div className="gv-scout-list">
+              {featuredReports.map((b) => (
+                <ScoutingProfileCard key={b.playerSlug} breakdown={b} />
+              ))}
+            </div>
+          ) : (
+            <UiEmpty message="No featured reports in this view yet." />
+          )}
+        </section>
+      )}
+
+      {!loading && !error && view === 'queue' && (
+        <section className="gv-page-section">
+          <div className="gv-page-section__header">
+            <h2 className="gv-page-section__title">Evaluation Queue</h2>
+            <p className="gv-page-section__subtitle">{evalQueue.length} pending</p>
+          </div>
+          {evalQueue.length > 0 ? (
+            <div className="gv-scout-list">
+              {evalQueue.map((b) => (
+                <ScoutingProfileCard key={b.playerSlug} breakdown={b} />
+              ))}
+            </div>
+          ) : (
+            <UiEmpty message="Evaluation queue is clear — all targets have reports." />
+          )}
+        </section>
+      )}
+
+      {!loading && !error && (view === 'directory' || view === 'hub') && (
         <section className="gv-page-section">
           <div className="gv-page-section__header">
             <h2 className="gv-page-section__title">Scouting Profiles</h2>
@@ -157,7 +255,7 @@ export function ScoutingDepartmentPage(): React.ReactElement {
               ))}
             </div>
           ) : (
-            <p className="gv-page-empty">No scouting profiles in this category yet.</p>
+            <UiEmpty message="No scouting profiles in this category yet." />
           )}
         </section>
       )}

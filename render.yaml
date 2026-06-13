@@ -59,6 +59,10 @@ services:
         sync: false
       - key: EMAIL_TEST_PIN
         sync: false
+      - key: X_BEARER_TOKEN
+        sync: false
+      - key: LIVE_POLL_INTERVAL_MS
+        value: "180000"
       - key: X_OAUTH1_API_KEY
         sync: false
       - key: X_OAUTH1_API_SECRET

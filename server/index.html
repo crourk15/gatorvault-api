@@ -102,6 +102,38 @@
         .pulse-glow{animation:pulseGlow 2s ease-in-out infinite;}
         .hero-grid{background-image:linear-gradient(rgba(0,48,135,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(0,48,135,.12) 1px,transparent 1px);background-size:40px 40px;}
         .card-h{transition:transform .2s,box-shadow .2s;}.card-h:hover{transform:translateY(-3px);box-shadow:0 10px 36px rgba(0,48,135,.25);}
+        /* FutureCast homepage flagship block */
+        .gv-fc-feature{background:linear-gradient(165deg,#030915 0%,#001433 42%,#0a1628 100%);border-top:1px solid rgba(250,70,22,.28);border-bottom:1px solid rgba(0,48,135,.5);position:relative;overflow:hidden;}
+        .gv-fc-feature__glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 70% 50% at 20% 40%,rgba(250,70,22,.12),transparent 55%),radial-gradient(ellipse 60% 45% at 85% 60%,rgba(0,48,135,.35),transparent 50%);}
+        .gv-fc-feature__badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(250,70,22,.12);border:1px solid rgba(250,70,22,.4);color:#fb923c;font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.4rem 1rem;border-radius:9999px;margin-bottom:1.25rem;}
+        .gv-fc-feature__title{font-family:'Oswald',sans-serif;font-size:clamp(2rem,5vw,3.25rem);font-weight:700;color:#fff;line-height:1.15;margin:0 0 1rem;letter-spacing:.02em;}
+        .gv-fc-feature__title em{font-style:normal;color:#FA4616;}
+        .gv-fc-feature__desc{font-size:1.0625rem;line-height:1.65;color:#94a3b8;max-width:36rem;margin:0 0 1.75rem;}
+        .gv-fc-feature__cta{display:inline-flex;align-items:center;justify-content:center;background:#FA4616;color:#fff;font-weight:700;font-size:1.0625rem;padding:1rem 2rem;border-radius:.75rem;text-decoration:none;transition:background .2s,transform .2s,box-shadow .2s;min-height:48px;box-shadow:0 4px 24px rgba(250,70,22,.35);}
+        .gv-fc-feature__cta:hover{background:#d63a12;transform:translateY(-2px);box-shadow:0 8px 32px rgba(250,70,22,.45);}
+        .gv-fc-preview-card{display:block;text-decoration:none;color:inherit;background:rgba(10,22,40,.92);border:2px solid rgba(250,70,22,.38);border-radius:1rem;padding:1.25rem 1.35rem;transition:transform .2s,border-color .2s,box-shadow .2s;cursor:pointer;}
+        .gv-fc-preview-card:hover{transform:translateY(-4px);border-color:rgba(250,70,22,.7);box-shadow:0 18px 52px rgba(250,70,22,.18);}
+        .gv-fc-preview-card__head{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap;}
+        .gv-fc-preview-card__head h3{font-family:'Oswald',sans-serif;font-size:1.125rem;font-weight:700;color:#fff;margin:0;}
+        .gv-fc-preview-card__hint{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;}
+        .gv-fc-preview-card__foot{margin-top:1rem;padding-top:.85rem;border-top:1px solid rgba(0,48,135,.35);font-size:.75rem;font-weight:600;color:#FA4616;text-align:center;}
+        .gv-fc-heat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-bottom:1rem;}
+        .gv-fc-heat-cell{text-align:center;padding:.75rem .5rem;border-radius:.75rem;background:rgba(6,15,31,.85);border:1px solid rgba(0,48,135,.25);}
+        .gv-fc-heat-cell p{margin:0;font-size:.625rem;text-transform:uppercase;letter-spacing:.06em;color:#64748b;}
+        .gv-fc-heat-cell span{font-family:'Oswald',sans-serif;font-size:1.5rem;font-weight:700;display:block;margin-top:.25rem;}
+        .gv-fc-heat-cell--up span{color:#4ade80;}.gv-fc-heat-cell--down span{color:#f87171;}.gv-fc-heat-cell--flat span{color:#94a3b8;}
+        .gv-fc-preview-grid{display:grid;grid-template-columns:1fr;gap:.85rem;}
+        @media(min-width:640px){.gv-fc-preview-grid{grid-template-columns:repeat(3,1fr);}}
+        .gv-fc-preview-panel{background:rgba(6,15,31,.75);border:1px solid rgba(0,48,135,.28);border-radius:.75rem;padding:.85rem;min-height:7.5rem;}
+        .gv-fc-preview-panel h4{margin:0 0 .65rem;font-size:.625rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#64748b;}
+        .gv-fc-preview-item{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.45rem 0;border-bottom:1px solid rgba(0,48,135,.15);}
+        .gv-fc-preview-item:last-child{border-bottom:none;padding-bottom:0;}
+        .gv-fc-preview-item__name{font-size:.8125rem;font-weight:600;color:#fff;line-height:1.3;}
+        .gv-fc-preview-item__meta{font-size:.6875rem;color:#64748b;margin-top:.15rem;}
+        .gv-fc-preview-item__val{font-size:.8125rem;font-weight:700;color:#FA4616;white-space:nowrap;}
+        .gv-fc-preview-empty{font-size:.8125rem;color:#64748b;margin:0;}
+        .nav-fc-link{color:#FA4616 !important;font-weight:700 !important;}
+        .nav-fc-link:hover{color:#fff !important;}
         .vpane{display:none;}.vpane.active{display:block;}
         .vtab{transition:all .15s;border-bottom:3px solid transparent;padding-bottom:6px;}
         .vtab.active{color:#FA4616;border-bottom-color:#FA4616;}
@@ -746,7 +778,8 @@
             <div data-id="96" class="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between h-16">
                 <div data-id="97" class="flex items-center gap-2"><span data-id="98" class="text-2xl">🐊</span><span data-id="99" class="font-display text-xl font-bold text-gator-orange tracking-wide">GATORVAULT</span></div>
                 <div data-id="100" class="hidden md:flex items-center gap-6">
-                    <a data-id="101" href="#feat-sec" class="text-sm text-surface-200 hover:text-gator-orange transition nav-scroll">Features</a>
+                    <a data-id="101" href="#futurecast-sec" class="text-sm text-surface-200 hover:text-gator-orange transition nav-scroll nav-fc-link">FutureCast</a>
+                    <a data-id="101b" href="#feat-sec" class="text-sm text-surface-200 hover:text-gator-orange transition nav-scroll">Features</a>
                     <a data-id="102" href="#persona-sec" class="text-sm text-surface-200 hover:text-gator-orange transition nav-scroll">Who It's For</a>
                     <a data-id="103" href="#bible-sec" class="text-sm text-surface-200 hover:text-gator-orange transition nav-scroll">Season Bible</a>
                     <a data-id="104" href="#price-sec" class="text-sm text-surface-200 hover:text-gator-orange transition nav-scroll">Pricing</a>
@@ -765,7 +798,8 @@
                 <button data-id="117" id="mob-menu-close" class="p-2 text-white" onclick="document.getElementById('mob-menu').classList.add('hidden')"><i data-id="118" data-lucide="x" class="w-6 h-6"></i></button>
             </div>
             <div data-id="119" class="flex flex-col gap-4">
-                <a data-id="120" href="#feat-sec" class="text-lg text-surface-200 hover:text-gator-orange nav-scroll mob-close-link">Features</a>
+                <a data-id="120" href="#futurecast-sec" class="text-lg text-gator-orange font-bold nav-scroll mob-close-link">FutureCast</a>
+                <a data-id="120b" href="#feat-sec" class="text-lg text-surface-200 hover:text-gator-orange nav-scroll mob-close-link">Features</a>
                 <a data-id="121" href="#persona-sec" class="text-lg text-surface-200 hover:text-gator-orange nav-scroll mob-close-link">Who It's For</a>
                 <a data-id="122" href="#bible-sec" class="text-lg text-surface-200 hover:text-gator-orange nav-scroll mob-close-link">Season Bible</a>
                 <a data-id="123" href="#price-sec" class="text-lg text-surface-200 hover:text-gator-orange nav-scroll mob-close-link">Pricing</a>
@@ -821,9 +855,54 @@
                 <div data-id="171" style="display:inline-block;background:#064e3b;border:1px solid #22c55e;border-radius:20px;padding:6px 18px;font-size:13px;color:#34d399;font-weight:700;margin-bottom:24px;">🎟️ Try FREE for 30 days · No credit card required</div>
                 <div data-id="172" class="flex flex-col sm:flex-row gap-4 justify-center">
                     <button data-id="173" id="hero-join" class="bg-gator-orange hover:bg-gator-orangedk text-white font-bold text-lg px-8 py-4 rounded-xl transition pulse-glow min-h-[44px] inline-flex items-center justify-center gap-2" onclick="if(window.openRegModal)openRegModal('film')">>🔐 Start Free — No Card Required</button>
+                    <a href="/futurecast" class="bg-gator-blue hover:bg-gator-lightblue text-white font-bold text-lg px-8 py-4 rounded-xl transition min-h-[44px] inline-flex items-center justify-center gap-2 border border-gator-blue/40">📈 Open FutureCast</a>
                     <button data-id="174" id="hero-see" class="border-2 border-surface-200/30 hover:border-gator-orange text-white font-semibold text-lg px-8 py-4 rounded-xl transition min-h-[44px] flex items-center justify-center" onclick="if(window.openVault)openVault()">See What's Inside</button>
                 </div>
                 <p data-id="175" class="text-xs text-surface-200/50 mt-6">🏅 Founding Member badge for all charter subscribers · First 100 only</p>
+            </div>
+        </section>
+
+        <!-- FutureCast — flagship homepage feature -->
+        <section id="futurecast-sec" class="gv-fc-feature py-16 md:py-24" aria-labelledby="futurecast-sec-title">
+            <div class="gv-fc-feature__glow" aria-hidden="true"></div>
+            <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+                    <div>
+                        <div class="gv-fc-feature__badge">
+                            <span class="w-2 h-2 bg-gator-orange rounded-full animate-pulse"></span>
+                            Flagship Feature · 2027 Cycle
+                        </div>
+                        <h2 id="futurecast-sec-title" class="gv-fc-feature__title">FutureCast — <em>Florida Recruiting Intelligence</em></h2>
+                        <p class="gv-fc-feature__desc">Live recruiting predictions, movement tracking, portal intel, and class analytics for the Florida Gators.</p>
+                        <a href="/futurecast" class="gv-fc-feature__cta">Open FutureCast →</a>
+                    </div>
+                    <a href="/futurecast" id="futurecast-preview-card" class="gv-fc-preview-card" aria-label="Open FutureCast — live recruiting preview">
+                        <div class="gv-fc-preview-card__head">
+                            <h3>Live Preview</h3>
+                            <span class="gv-fc-preview-card__hint">Movement · Targets · Portal</span>
+                        </div>
+                        <div id="futurecast-preview-heatmap" class="gv-fc-heat-grid" aria-label="Movement heatmap">
+                            <div class="gv-fc-heat-cell gv-fc-heat-cell--up"><p>Up</p><span data-fc-heat="up">—</span></div>
+                            <div class="gv-fc-heat-cell gv-fc-heat-cell--down"><p>Down</p><span data-fc-heat="down">—</span></div>
+                            <div class="gv-fc-heat-cell gv-fc-heat-cell--flat"><p>Flat</p><span data-fc-heat="flat">—</span></div>
+                        </div>
+                        <div class="gv-fc-preview-grid">
+                            <div class="gv-fc-preview-panel">
+                                <h4>Top Targets</h4>
+                                <div id="futurecast-preview-targets"><p class="gv-fc-preview-empty">Loading…</p></div>
+                            </div>
+                            <div class="gv-fc-preview-panel">
+                                <h4>Latest Commit</h4>
+                                <div id="futurecast-preview-commit"><p class="gv-fc-preview-empty">Loading…</p></div>
+                            </div>
+                            <div class="gv-fc-preview-panel">
+                                <h4>Portal Watchlist</h4>
+                                <div id="futurecast-preview-portal"><p class="gv-fc-preview-empty">Loading…</p></div>
+                            </div>
+                        </div>
+                        <p class="gv-fc-preview-card__foot">Tap anywhere to open FutureCast →</p>
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -832,12 +911,13 @@
             <div data-id="177" class="max-w-7xl mx-auto px-4 md:px-6">
                 <div data-id="178" class="text-center mb-14"><h2 data-id="179" class="font-display text-3xl md:text-5xl font-bold text-white mb-4">Everything Gator Nation <span data-id="180" class="text-gator-orange">Needs</span></h2><p data-id="181" class="text-surface-200 text-lg max-w-2xl mx-auto">One platform. Every angle. Total Gator football coverage.</p></div>
                 <div data-id="182" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div data-id="183" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="184" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">📋</div><h3 data-id="185" class="font-display text-xl font-bold text-white mb-2">Interactive Depth Chart</h3><p data-id="186" class="text-surface-200 text-sm leading-relaxed">Clickable position cards, 1-3 deep, Locked/Battle/Watch status, updated weekly.</p></div>
-                    <div data-id="187" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="188" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🎯</div><h3 data-id="189" class="font-display text-xl font-bold text-white mb-2">Recruiting Board</h3><p data-id="190" class="text-surface-200 text-sm leading-relaxed">2026 class + 2027 targets, confidence ratings, player comps, Heat Check.</p></div>
-                    <div data-id="191" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="192" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🔄</div><h3 data-id="193" class="font-display text-xl font-bold text-white mb-2">Portal Radar</h3><p data-id="194" class="text-surface-200 text-sm leading-relaxed">Every Gator portal addition tracked — On3-sourced skinny, scheme-fit profiles, and full player pages.</p></div>
-                    <div data-id="195" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="196" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🎬</div><h3 data-id="197" class="font-display text-xl font-bold text-white mb-2">Film Room</h3><p data-id="198" class="text-surface-200 text-sm leading-relaxed">Weekly Scheme School, Play of the Week, recruit fit, matchup spotlight, and positional insights — built for real football IQ.</p></div>
-                    <div data-id="199" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="200" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🏈</div><h3 data-id="201" class="font-display text-xl font-bold text-white mb-2">Game Week Mode</h3><p data-id="202" class="text-surface-200 text-sm leading-relaxed">Win probability, 3 keys, swing players, film notes, GatorVault prediction.</p></div>
-                    <div data-id="203" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="204" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">💬</div><h3 data-id="205" class="font-display text-xl font-bold text-white mb-2">Member Community</h3><p data-id="206" class="text-surface-200 text-sm leading-relaxed">Threads, tier badges, Founding Member status. Your home inside Gator Nation.</p></div>
+                    <div data-id="183" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="184" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">📈</div><h3 data-id="185" class="font-display text-xl font-bold text-white mb-2">FutureCast</h3><p data-id="186" class="text-surface-200 text-sm leading-relaxed">2027 recruiting intelligence — UF probability, Fit Score, movement heatmaps, and portal watchlist.</p><a href="/futurecast" class="inline-block mt-3 text-gator-orange text-sm font-bold hover:text-white transition">Open FutureCast →</a></div>
+                    <div data-id="187" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="188" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">📋</div><h3 data-id="189" class="font-display text-xl font-bold text-white mb-2">Interactive Depth Chart</h3><p data-id="190" class="text-surface-200 text-sm leading-relaxed">Clickable position cards, 1-3 deep, Locked/Battle/Watch status, updated weekly.</p></div>
+                    <div data-id="191" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="192" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🎯</div><h3 data-id="193" class="font-display text-xl font-bold text-white mb-2">Recruiting Board</h3><p data-id="194" class="text-surface-200 text-sm leading-relaxed">2026 class + 2027 targets, priority tiers, staff notes, and eval status.</p><a href="/recruiting-board" class="inline-block mt-3 text-gator-orange text-sm font-bold hover:text-white transition">View Board →</a></div>
+                    <div data-id="195" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="196" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🔄</div><h3 data-id="197" class="font-display text-xl font-bold text-white mb-2">Portal Radar</h3><p data-id="198" class="text-surface-200 text-sm leading-relaxed">Every Gator portal addition tracked — On3-sourced skinny, scheme-fit profiles, and full player pages.</p></div>
+                    <div data-id="199" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="200" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🎬</div><h3 data-id="201" class="font-display text-xl font-bold text-white mb-2">Film Room</h3><p data-id="202" class="text-surface-200 text-sm leading-relaxed">Weekly Scheme School, Play of the Week, recruit fit, matchup spotlight, and positional insights — built for real football IQ.</p></div>
+                    <div data-id="203" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="204" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">🏈</div><h3 data-id="205" class="font-display text-xl font-bold text-white mb-2">Game Week Mode</h3><p data-id="206" class="text-surface-200 text-sm leading-relaxed">Win probability, 3 keys, swing players, film notes, GatorVault prediction.</p></div>
+                    <div data-id="207" class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-6 card-h"><div data-id="208" class="w-12 h-12 rounded-xl bg-gator-orange/10 flex items-center justify-center mb-4 text-2xl">💬</div><h3 data-id="209" class="font-display text-xl font-bold text-white mb-2">Member Community</h3><p data-id="210" class="text-surface-200 text-sm leading-relaxed">Threads, tier badges, Founding Member status. Your home inside Gator Nation.</p></div>
                 </div>
             </div>
         </section>
@@ -2627,6 +2707,63 @@
         }).catch(function(){});
     }
     gvLoadPersonas();
+
+    function gvFcPreviewItem(name, meta, val){
+        return '<div class="gv-fc-preview-item"><div><p class="gv-fc-preview-item__name">'+gvEscHtml(name)+'</p>'
+            +(meta?'<p class="gv-fc-preview-item__meta">'+gvEscHtml(meta)+'</p>':'')
+            +'</div><span class="gv-fc-preview-item__val">'+gvEscHtml(val)+'</span></div>';
+    }
+    function gvLoadFutureCastPreview(){
+        var targetsEl=document.getElementById('futurecast-preview-targets');
+        var commitEl=document.getElementById('futurecast-preview-commit');
+        var portalEl=document.getElementById('futurecast-preview-portal');
+        if(!targetsEl&&!commitEl&&!portalEl)return;
+        fetch(gvLiveApiBase()+'/api/futurecast/home').then(function(r){return r.ok?r.json():null;}).then(function(j){
+            if(!j){
+                if(targetsEl)targetsEl.innerHTML='<p class="gv-fc-preview-empty">Preview unavailable</p>';
+                if(commitEl)commitEl.innerHTML='<p class="gv-fc-preview-empty">Preview unavailable</p>';
+                if(portalEl)portalEl.innerHTML='<p class="gv-fc-preview-empty">Preview unavailable</p>';
+                return;
+            }
+            var heat=document.getElementById('futurecast-preview-heatmap');
+            if(heat&&j.heatmap&&j.heatmap.buckets){
+                j.heatmap.buckets.forEach(function(b){
+                    var el=heat.querySelector('[data-fc-heat="'+String(b.label||'').toLowerCase()+'"]');
+                    if(el)el.textContent=String(b.count!=null?b.count:'—');
+                });
+            }
+            var targets=(j.topTargets||[]).slice(0,3);
+            if(targetsEl){
+                if(!targets.length)targetsEl.innerHTML='<p class="gv-fc-preview-empty">No targets yet</p>';
+                else targetsEl.innerHTML=targets.map(function(p){
+                    var prob=p.ufProbability!=null?p.ufProbability:p.confidence;
+                    return gvFcPreviewItem(p.fullName||'Target',(p.position||'')+' · '+(p.classYear||''),prob!=null?prob+'% UF':'—');
+                }).join('');
+            }
+            var commits=j.commits||[];
+            if(commitEl){
+                if(!commits.length)commitEl.innerHTML='<p class="gv-fc-preview-empty">No commits yet</p>';
+                else{
+                    var c=commits[0];
+                    var fit=c.ufFitScore!=null?('Fit '+c.ufFitScore):'Committed';
+                    commitEl.innerHTML=gvFcPreviewItem(c.fullName||'Commit',(c.position||'')+' · Class of '+(c.classYear||j.classYear||''),fit);
+                }
+            }
+            var portal=(j.portalWatchlist||[]).slice(0,2);
+            if(portalEl){
+                if(!portal.length)portalEl.innerHTML='<p class="gv-fc-preview-empty">No portal candidates</p>';
+                else portalEl.innerHTML=portal.map(function(p){
+                    return gvFcPreviewItem(p.fullName||'Portal',(p.position||'')+' · '+(p.classYear||''),(p.portalLikelihood!=null?p.portalLikelihood:'—')+'%');
+                }).join('');
+            }
+        }).catch(function(){
+            var msg='<p class="gv-fc-preview-empty">Preview unavailable — open FutureCast for live data.</p>';
+            if(targetsEl)targetsEl.innerHTML=msg;
+            if(commitEl)commitEl.innerHTML=msg;
+            if(portalEl)portalEl.innerHTML=msg;
+        });
+    }
+    gvLoadFutureCastPreview();
 
     // ========== NIL TRACKER ==========
     function gvNilTrendLabel(trend,pct){
@@ -5643,7 +5780,7 @@
             ph+='<p class="text-surface-200 text-sm mb-2">From '+head.from+' · '+head.htWt+' · '+head.stars+'</p>';
             ph+='<p class="text-sm text-surface-200 leading-relaxed mb-2" style="border-left:3px solid #fbbf24;padding-left:12px;">'+head.note+'</p>';
             if(head.profile)ph+='<p class="text-xs text-surface-200/70 mb-3">'+head.profile+'</p>';
-            ph+='<div class="flex flex-wrap gap-2"><a href="/player/'+gvEscHtml(head.slug)+'" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-gator-orange text-white">Full Profile →</a>';
+            ph+='<div class="flex flex-wrap gap-2"><a href="/portal/'+gvEscHtml(head.slug)+'" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-gator-orange text-white">Full Profile →</a>';
             ph+='<a href="'+gvOn3PortalUrl(head)+'" target="_blank" rel="noopener noreferrer" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">On3 Profile →</a></div></div>';
             var h1=pane.querySelector('h1');
             if(h1){var wrap=h1.closest('div');if(wrap)wrap.insertAdjacentHTML('afterend',ph);else h1.insertAdjacentHTML('afterend',ph);}
@@ -5663,7 +5800,7 @@
             card+='<div class="flex items-center gap-2 flex-wrap mt-1.5"><span class="text-[.6rem] font-bold px-2 py-0.5 rounded-full status-transfer">From: '+p.from+'</span><span class="text-[.6rem] font-bold px-2 py-0.5 rounded-full '+status.cls+'">'+status.label+'</span><span class="text-xs text-surface-200/50">'+p.htWt+'</span></div></div></div>';
             if(p.note)card+='<p class="text-sm text-surface-200 leading-relaxed border-l-2 border-amber-500/50 pl-3">'+p.note+'</p>';
             if(p.profile)card+='<p class="text-xs text-surface-200/70"><span class="text-gator-orange font-semibold">Vault fit:</span> '+p.profile+'</p>';
-            card+='<div class="flex flex-wrap gap-2 pt-1"><a href="/player/'+gvEscHtml(p.slug)+'" class="text-[.65rem] font-bold px-2.5 py-1 rounded-lg bg-gator-orange/15 text-gator-orange hover:bg-gator-orange hover:text-white transition-colors">Full Profile →</a>';
+            card+='<div class="flex flex-wrap gap-2 pt-1"><a href="/portal/'+gvEscHtml(p.slug)+'" class="text-[.65rem] font-bold px-2.5 py-1 rounded-lg bg-gator-orange/15 text-gator-orange hover:bg-gator-orange hover:text-white transition-colors">Full Profile →</a>';
             card+='<a href="'+gvOn3PortalUrl(p)+'" target="_blank" rel="noopener noreferrer" class="text-[.65rem] font-bold px-2.5 py-1 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20 hover:border-gator-orange/40">On3 →</a></div></div>';
             el.innerHTML+=card;
         });
@@ -6180,7 +6317,7 @@
                 var feedType=card.getAttribute('data-feed-type');
                 var slug=card.getAttribute('data-recruit-slug');
                 if(feedType==='commit'&&slug){e.preventDefault();gvOpenRecruitProfile(slug);return;}
-                if(feedType==='portal'&&slug){e.preventDefault();location.href='/player/'+slug;return;}
+                if(feedType==='portal'&&slug){e.preventDefault();location.href='/portal/'+slug;return;}
                 var sourceUrl=card.getAttribute('data-source-url');
                 if(!sourceUrl)return;
                 gvNavigate(sourceUrl,{type:feedType,recruitModal:feedType==='commit'});
@@ -6193,7 +6330,7 @@
                 var feedType=card?card.getAttribute('data-feed-type'):'';
                 var slug=card?card.getAttribute('data-recruit-slug'):'';
                 if(feedType==='commit'&&slug)gvOpenRecruitProfile(slug);
-                else if(feedType==='portal'&&slug)location.href='/player/'+slug;
+                else if(feedType==='portal'&&slug)location.href='/portal/'+slug;
                 else gvNavigate(a.getAttribute('href')||'',{type:feedType,recruitModal:feedType==='commit'});
             });
         });
@@ -6221,7 +6358,8 @@
             var href=sourceUrl?gvLiveResolveUrl(sourceUrl):null;
             var pill='live-type-'+(item.type||'breaking');
             var recruitSlug=(item.meta&&item.meta.playerSlug)||'';
-            if((item.type==='commit'||item.type==='portal')&&recruitSlug)sourceUrl='/player/'+recruitSlug;
+            if(item.type==='commit'&&recruitSlug)sourceUrl='/player/'+recruitSlug;
+            else if(item.type==='portal'&&recruitSlug)sourceUrl='/portal/'+recruitSlug;
             var cardClass='live-feed-item '+(sourceUrl||recruitSlug?'live-feed-item--linked':'live-feed-item--static');
             var titleText=item.title;
             try{if(typeof gvResolveContentFields==='function')titleText=gvResolveContentFields({title:item.title}).title||item.title;}catch(ex){}
@@ -6231,7 +6369,7 @@
             html+='<span class="text-[.65rem] text-surface-200/50 shrink-0">'+gvLiveEsc(gvLiveTimeAgo(item.createdAt))+'</span>';
             html+='</div>';
             if(sourceUrl||recruitSlug){
-                html+='<a href="'+gvLiveEsc(href||('/player/'+recruitSlug))+'" class="live-feed-link text-sm font-semibold text-white hover:text-gator-orange leading-snug block">'+gvLiveEsc(titleText)+'</a>';
+                html+='<a href="'+gvLiveEsc(href||(item.type==='portal'?'/portal/':'/player/')+recruitSlug)+'" class="live-feed-link text-sm font-semibold text-white hover:text-gator-orange leading-snug block">'+gvLiveEsc(titleText)+'</a>';
             }else{
                 html+='<p class="text-sm font-semibold text-white leading-snug">'+gvLiveEsc(titleText)+'</p>';
                 html+='<p class="live-feed-no-link">No source link</p>';
@@ -6703,7 +6841,8 @@
                 var feedType=card.getAttribute('data-feed-type');
                 var slug=card.getAttribute('data-slug');
                 if(feedType==='commit'&&slug){gvOpenRecruitProfile(slug);return;}
-                if((feedType==='portal'||feedType==='visit'||feedType==='offer')&&slug){location.href='/player/'+slug;return;}
+                if(feedType==='portal'&&slug){location.href='/portal/'+slug;return;}
+                if((feedType==='visit'||feedType==='offer')&&slug){location.href='/player/'+slug;return;}
                 if(feedType==='article'){if(typeof window.showVTab==='function')window.showVTab('articles');return;}
                 var href=card.getAttribute('data-href');
                 if(href){gvNavigate(href);return;}

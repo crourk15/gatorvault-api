@@ -47,6 +47,41 @@
   status = 200
 
 [[redirects]]
+  from = "/portal"
+  to = "/portal/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/portal/*"
+  to = "/portal/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/player/*"
+  to = "/player/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/alerts"
+  to = "/alerts/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/alerts/*"
+  to = "/alerts/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/staff/dashboard"
+  to = "/staff/dashboard/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/staff/dashboard/*"
+  to = "/staff/dashboard/index.html"
+  status = 200
+
+[[redirects]]
   from = "/recruiting-board"
   to = "/recruiting-board/index.html"
   status = 200

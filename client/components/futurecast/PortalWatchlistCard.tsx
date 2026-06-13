@@ -4,6 +4,7 @@
 import React, { useMemo, useState } from 'react';
 import type { PortalWatchlistHomePlayer } from '@/lib/futurecast-home-api';
 import { portalLikelihoodBand } from '@/lib/portal-api';
+import { playerProfilePath } from '@/lib/player-routes';
 
 function playerInitials(name: string): string {
   return name
@@ -34,7 +35,7 @@ export function PortalWatchlistCard({
 
   return (
     <a
-      href={`/player/${encodeURIComponent(player.slug)}?tab=portal`}
+      href={playerProfilePath(player.slug, 'PORTAL')}
       className="fc-portal-card fc-home-portal-card"
     >
       <div className="fc-portal-card__inner">

@@ -13,6 +13,7 @@ import {
   type FutureCastHomeResponse,
 } from '@/lib/futurecast-home-api';
 import type { FeedPrediction } from '@/lib/predictions-api';
+import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 const REFRESH_MS = 60_000;
 
@@ -117,11 +118,19 @@ export function FutureCastHomepage(): React.ReactElement {
   }
 
   if (error && !data) {
-    return <p className="fc-profile-error">{error}</p>;
+    return (
+      <UiError
+        title="FutureCast unavailable"
+        message={error}
+        retry={() => void load(true)}
+        backHref="/"
+        backLabel="← GatorVault Home"
+      />
+    );
   }
 
   if (!data) {
-    return <p className="fc-profile-empty">No FutureCast data available.</p>;
+    return <UiEmpty message="No FutureCast data available right now." hint="Check back after the next model refresh." />;
   }
 
   const sortActions = (

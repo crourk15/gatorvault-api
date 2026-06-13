@@ -18,6 +18,8 @@ import { CollegeTab } from './CollegeTab';
 import { PortalTab } from './PortalTab';
 import { UFFitTab } from './UFFitTab';
 import { SignalsTab } from './SignalsTab';
+import { UiError } from '@/components/site/UiMessage';
+import { playerLifecycleKind } from '@/lib/player-routes';
 
 export interface PlayerProfilePageProps {
   slug: string;
@@ -58,7 +60,13 @@ export function PlayerProfilePage({ slug }: PlayerProfilePageProps): React.React
     setUfFitIntel(null);
     fetchPlayerProfile(slug)
       .then((bundle) => {
-        if (!cancelled) setData(bundle);
+        if (cancelled) return bundle;
+        const kind = playerLifecycleKind(bundle.player.status);
+        if (kind === 'portal') {
+          window.location.replace(`/portal/${encodeURIComponent(slug)}`);
+          return;
+        }
+        setData(bundle);
         const tasks: Promise<void>[] = [];
         const lifecycle = bundle.player.status;
         if (lifecycle === 'COLLEGE' || lifecycle === 'PORTAL' || bundle.portalProfile) {
@@ -152,10 +160,15 @@ export function PlayerProfilePage({ slug }: PlayerProfilePageProps): React.React
   if (loading) return <ProfileSkeleton />;
   if (error || !data || !metrics) {
     return (
-      <div className="fc-profile-error" data-testid="player-profile-error">
-        <p>{error || 'Player not found'}</p>
-        <a href="/futurecast">← FutureCast</a>
-      </div>
+      <UiError
+        title="Player not found"
+        message={
+          error ||
+          'This profile is not available in FutureCast. Portal and college players are listed in the Player Directory.'
+        }
+        backHref="/futurecast"
+        backLabel="← FutureCast"
+      />
     );
   }
 

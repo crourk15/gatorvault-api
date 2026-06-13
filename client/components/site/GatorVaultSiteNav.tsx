@@ -24,7 +24,7 @@ function activeId(pathname: string): SiteNavId | null {
   if (p.startsWith('/recruiting-board') || p.startsWith('/recruiting')) return 'recruiting-board';
   if (p.startsWith('/players')) return 'players';
   if (p.startsWith('/scouting')) return 'scouting';
-  if (p.startsWith('/futurecast') || p.startsWith('/player') || p.startsWith('/alerts')) {
+  if (p.startsWith('/futurecast') || p.startsWith('/player') || p.startsWith('/portal') || p.startsWith('/alerts')) {
     return 'futurecast';
   }
   return null;

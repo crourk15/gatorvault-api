@@ -12,6 +12,9 @@
 /futurecast/  /futurecast/index.html  200
 /futurecast/*  /futurecast/index.html  200
 /player/*  /player/index.html  200
+/portal  /portal/index.html  200
+/portal/  /portal/index.html  200
+/portal/*  /portal/index.html  200
 /alerts  /alerts/index.html  200
 /alerts/  /alerts/index.html  200
 /alerts/*  /alerts/index.html  200

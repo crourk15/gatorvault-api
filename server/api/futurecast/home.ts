@@ -23,6 +23,7 @@ import {
   FUTURECAST_CLASS_YEAR,
   partitionHomepagePredictions,
 } from './feed-filters';
+import { isHsLifecycle } from './eligibility';
 
 const MOVEMENT_WINDOW_DAYS = 7;
 const SECTION_LIMIT = 12;
@@ -96,6 +97,9 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
       serializeStockRowsWithVolatility(downRows),
     ]);
 
+    const hsTrendingUp = trendingUp.filter((row) => isHsLifecycle(row));
+    const hsTrendingDown = trendingDown.filter((row) => isHsLifecycle(row));
+
     const portalWatchlist = portalRows
       .filter((row) => row.lifecycle === 'PORTAL' || row.lifecycle === 'COLLEGE')
       .filter((row) =>
@@ -136,8 +140,8 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
       },
       commits: sortCommits(commits, commitSort).slice(0, SECTION_LIMIT),
       topTargets: sortTargets(topTargets).slice(0, SECTION_LIMIT),
-      trendingUp,
-      trendingDown,
+      trendingUp: hsTrendingUp,
+      trendingDown: hsTrendingDown,
       portalWatchlist,
     });
   } catch (err) {

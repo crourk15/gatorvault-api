@@ -412,6 +412,157 @@
   color: #64748b;
 }
 
+/* UI messages */
+.gv-ui-message {
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  margin: 1rem 0;
+}
+
+.gv-ui-message--error {
+  background: rgba(127, 29, 29, 0.25);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+.gv-ui-message--empty {
+  background: rgba(10, 22, 40, 0.8);
+  border: 1px solid rgba(0, 48, 135, 0.35);
+}
+
+.gv-ui-message__title {
+  margin: 0 0 0.35rem;
+  font-family: Oswald, sans-serif;
+  font-size: 1.125rem;
+  color: #fff;
+}
+
+.gv-ui-message__text {
+  margin: 0;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.gv-ui-message__hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.gv-ui-message__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.gv-ui-message__btn {
+  background: #fa4616;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.gv-ui-message__link {
+  color: #fa4616;
+  font-weight: 600;
+  text-decoration: none;
+  align-self: center;
+}
+
+/* Recruiting board tiers */
+.gv-board-tier {
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.gv-board-tier--1 { background: rgba(250, 70, 22, 0.2); color: #fb923c; }
+.gv-board-tier--2 { background: rgba(0, 48, 135, 0.35); color: #93c5fd; }
+.gv-board-tier--3 { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; }
+.gv-board-tier--4 { background: rgba(100, 116, 139, 0.15); color: #94a3b8; }
+
+.gv-board-eval {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.gv-board-card__note {
+  margin: 0.65rem 0 0;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(0, 48, 135, 0.2);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #94a3b8;
+}
+
+.gv-board-card__link-block {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Scouting hub */
+.gv-scout-hub {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.gv-scout-hub__card {
+  background: #0a1628;
+  border: 1px solid rgba(0, 48, 135, 0.45);
+  border-radius: 0.75rem;
+  padding: 1rem 1.15rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.gv-scout-hub__card:hover,
+.gv-scout-hub__card.is-active {
+  border-color: rgba(250, 70, 22, 0.55);
+  transform: translateY(-2px);
+}
+
+.gv-scout-hub__card h2 {
+  margin: 0.35rem 0;
+  font-family: Oswald, sans-serif;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.gv-scout-hub__card p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  line-height: 1.45;
+}
+
+.gv-scout-hub__icon {
+  font-size: 1.5rem;
+}
+
+.gv-portal-metric-lg {
+  font-family: Oswald, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fb923c;
+  margin: 0;
+}
+
 .fc-futurecast-page {
   max-width: none;
   padding: 0;

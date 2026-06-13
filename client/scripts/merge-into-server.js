@@ -17,6 +17,7 @@ const REQUIRED_EXPORTS = [
   'futurecast/stock/index.html',
   'futurecast/snapshots/index.html',
   'player/index.html',
+  'portal/index.html',
   'alerts/index.html',
   'staff/dashboard/index.html',
   '_next/static',

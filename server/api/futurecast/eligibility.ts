@@ -43,8 +43,14 @@ export function isTopTargetRow(row: {
   uf_status?: string | null;
   school?: string | null;
 }): boolean {
+  if (String(row.lifecycle ?? '').toUpperCase() !== 'HS') return false;
   if (isUfCommitRow(row)) return false;
   return isFloridaSchool(row.school);
+}
+
+/** HS-only rows for FutureCast homepage sections (no portal/college leak). */
+export function isHsLifecycle(row: { lifecycle?: string | null }): boolean {
+  return String(row.lifecycle ?? 'HS').toUpperCase() === 'HS';
 }
 
 export function dedupeByPlayerId<T extends { playerId: string; confidence?: number }>(

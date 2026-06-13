@@ -6,6 +6,7 @@ import {
   dedupeByPlayerId,
   FUTURECAST_CLASS_YEAR,
   isFutureCastEligible,
+  isHsLifecycle,
   isTopTargetRow,
   isUfCommitRow,
 } from './eligibility';
@@ -58,7 +59,7 @@ export function partitionHomepagePredictions(rows: SerializedFeedPrediction[]): 
       class_year: row.classYear,
       lifecycle: row.lifecycle,
       committed_to: row.committedTo,
-    })
+    }) && isHsLifecycle(row)
   );
 
   const commits = eligible.filter((row) =>
