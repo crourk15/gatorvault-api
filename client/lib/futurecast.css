@@ -1088,3 +1088,15 @@
 
 .fc-uf-total--moderate { border-color: rgba(148, 163, 184, 0.35); }
 .fc-uf-total--low { border-color: rgba(100, 116, 139, 0.35); }
+
+.fc-loading-sentinel {
+  opacity: 0.6;
+  font-size: 0.85rem;
+  padding: 1rem 0;
+  color: #8b949e;
+  text-align: center;
+}
+
+.fc-predictions-grid__sentinel {
+  grid-column: 1 / -1;
+}
