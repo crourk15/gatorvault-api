@@ -635,6 +635,82 @@
   gap: 1rem;
 }
 
+.fc-prediction-card-v2 {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: #161b22;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.fc-prediction-card-v2:hover {
+  background: #1e242c;
+}
+
+.fc-prediction-card-v2__photo {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.fc-prediction-card-v2__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+}
+
+.fc-prediction-card-v2__name {
+  margin: 0;
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 600;
+  font-family: Oswald, sans-serif;
+}
+
+.fc-prediction-card-v2__meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.875rem;
+  color: #8b949e;
+}
+
+.fc-prediction-card-v2__pick {
+  margin-top: 0.5rem;
+}
+
+.fc-prediction-card-v2__label {
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fa4616;
+}
+
+.fc-prediction-card-v2__bar-track {
+  width: 100%;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: #0d1117;
+  overflow: hidden;
+}
+
+.fc-prediction-card-v2__bar-fill {
+  height: 100%;
+  background: #0021a5;
+}
+
+.fc-prediction-card-v2__date {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  color: #8b949e;
+}
+
 .fc-prediction-card {
   display: block;
   background: linear-gradient(145deg, #0a1628, #121c2e);

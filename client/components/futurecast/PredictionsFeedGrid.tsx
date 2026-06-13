@@ -4,12 +4,10 @@
 import React, { useEffect, useState } from 'react';
 import {
   fetchPredictionsFeed,
-  sourceTypeLabel,
-  statusLabel,
   type FeedPrediction,
   type PredictionsFeedQuery,
-  type PredictionStatus,
 } from '../../lib/predictions-api';
+import { PredictionCard, feedPredictionToCard } from '../PredictionCard';
 
 export interface PredictionsFeedGridProps {
   query: PredictionsFeedQuery;
@@ -48,36 +46,8 @@ export function PredictionsFeedGrid({ query }: PredictionsFeedGridProps): React.
   return (
     <div className="fc-predictions-grid" data-testid="predictions-feed-grid">
       {predictions.map((p) => (
-        <PredictionCard key={p.id} prediction={p} />
+        <PredictionCard key={p.id} prediction={feedPredictionToCard(p)} />
       ))}
     </div>
-  );
-}
-
-function PredictionCard({ prediction: p }: { prediction: FeedPrediction }): React.ReactElement {
-  return (
-    <a
-      className="fc-prediction-card"
-      href={`/futurecast/player/${encodeURIComponent(p.playerSlug)}`}
-      data-testid="prediction-card"
-    >
-      <div className="fc-prediction-card__head">
-        <span className="fc-prediction-card__confidence">{p.confidence}%</span>
-        <span className={`fc-pred-source fc-pred-source--${p.sourceType.toLowerCase()}`}>
-          {sourceTypeLabel(p.sourceType)}
-        </span>
-      </div>
-      <h3 className="fc-prediction-card__name">{p.fullName}</h3>
-      <p className="fc-prediction-card__meta">
-        {p.position} · {p.classYear}
-      </p>
-      <p className="fc-prediction-card__school">{p.school}</p>
-      <div className="fc-prediction-item__bar-wrap">
-        <div className="fc-prediction-item__bar" style={{ width: `${p.confidence}%` }} />
-      </div>
-      <span className={`fc-pred-status fc-pred-status--${p.status.toLowerCase()}`}>
-        {statusLabel(p.status as PredictionStatus)}
-      </span>
-    </a>
   );
 }
