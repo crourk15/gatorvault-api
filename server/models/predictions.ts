@@ -123,14 +123,15 @@ export async function upsertActiveModelPrediction(
     if (current.school === data.school && current.confidence === data.confidence) {
       return predictionFromRow(current);
     }
+    const delta = data.confidence - current.confidence;
     const { rows } = await db.query<PredictionRow>(
       `
       UPDATE ${FUTURECAST_PREDICTIONS_TABLE}
-      SET school = $3, confidence = $4, updated_at = now()
+      SET school = $3, confidence = $4, delta = $5, updated_at = now()
       WHERE id = $1 AND player_id = $2
       RETURNING *
       `,
-      [current.id, data.player_id, data.school, data.confidence]
+      [current.id, data.player_id, data.school, data.confidence, delta]
     );
     return predictionFromRow(rows[0]);
   }
@@ -138,8 +139,8 @@ export async function upsertActiveModelPrediction(
   const { rows } = await db.query<PredictionRow>(
     `
     INSERT INTO ${FUTURECAST_PREDICTIONS_TABLE}
-      (player_id, school, confidence, source_type, predictor_id, status)
-    VALUES ($1, $2, $3, 'MODEL', $4, 'ACTIVE')
+      (player_id, school, confidence, delta, source_type, predictor_id, status)
+    VALUES ($1, $2, $3, 0, 'MODEL', $4, 'ACTIVE')
     RETURNING *
     `,
     [data.player_id, data.school, data.confidence, predictorId]

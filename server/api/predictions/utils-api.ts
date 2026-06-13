@@ -37,6 +37,7 @@ export function serializeFeedPrediction(row: {
   position: string;
   school: string;
   confidence: number;
+  delta?: number;
   source_type: string;
   predictor_id: string;
   status: string;
@@ -52,6 +53,7 @@ export function serializeFeedPrediction(row: {
     position: row.position,
     school: row.school,
     confidence: row.confidence,
+    ...(row.delta != null ? { delta: row.delta } : {}),
     sourceType: row.source_type,
     predictorId: row.predictor_id,
     status: row.status,
@@ -64,6 +66,7 @@ export function serializePlayerPrediction(p: {
   id: string;
   school: string;
   confidence: number;
+  delta?: number;
   source_type: string;
   predictor_id: string;
   status: string;
@@ -74,6 +77,7 @@ export function serializePlayerPrediction(p: {
     id: p.id,
     school: p.school,
     confidence: p.confidence,
+    ...(p.delta != null ? { delta: p.delta } : {}),
     sourceType: p.source_type,
     predictorId: p.predictor_id,
     status: p.status,

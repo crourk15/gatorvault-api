@@ -798,6 +798,23 @@
   color: #8b949e;
 }
 
+.fc-trending-up {
+  color: #22c55e;
+}
+
+.fc-trending-down {
+  color: #ef4444;
+}
+
+.fc-trending-flat {
+  color: #8b949e;
+}
+
+.fc-prediction-card-v2__delta {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
 .fc-prediction-card-v2 {
   display: flex;
   gap: 1rem;

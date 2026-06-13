@@ -5,6 +5,7 @@ import React from 'react';
 import { sourceTypeLabel, type FeedPrediction } from '../lib/predictions-api';
 import { PredictionBadge } from './futurecast/PredictionBadge';
 import { ConfidenceBar } from './futurecast/ConfidenceBar';
+import { TrendingIndicator } from './futurecast/TrendingIndicator';
 
 export interface PredictionCardData {
   playerId: string;
@@ -16,6 +17,7 @@ export interface PredictionCardData {
   team: string;
   type: string;
   confidence: number;
+  delta?: number;
   createdAt: string;
 }
 
@@ -40,6 +42,7 @@ export function feedPredictionToCard(p: FeedPrediction): PredictionCardData {
     team: p.school,
     type: `${sourceTypeLabel(p.sourceType).toLowerCase()} pick`,
     confidence: p.confidence,
+    delta: p.delta,
     createdAt: p.createdAt,
   };
 }
@@ -65,6 +68,11 @@ export function PredictionCard({ prediction }: PredictionCardProps): React.React
         </div>
         <div className="fc-prediction-card-v2__pick">
           <PredictionBadge type={prediction.type} team={prediction.team} />
+          {prediction.delta !== undefined && (
+            <div className="fc-prediction-card-v2__delta">
+              <TrendingIndicator delta={prediction.delta} />
+            </div>
+          )}
           <ConfidenceBar value={prediction.confidence} />
           <p className="fc-prediction-card-v2__date">
             {new Date(prediction.createdAt).toLocaleString()}

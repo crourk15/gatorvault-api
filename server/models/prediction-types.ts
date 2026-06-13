@@ -14,6 +14,7 @@ export interface Prediction {
   player_id: string;
   school: string;
   confidence: number;
+  delta?: number;
   source_type: PredictionSourceType;
   predictor_id: string;
   status: PredictionStatus;
@@ -25,6 +26,7 @@ export interface PredictionInsert {
   player_id: string;
   school: string;
   confidence: number;
+  delta?: number;
   source_type: PredictionSourceType;
   predictor_id?: string;
   status?: PredictionStatus;
@@ -35,6 +37,7 @@ export interface PredictionRow {
   player_id: string;
   school: string;
   confidence: number;
+  delta: number;
   source_type: string;
   predictor_id: string;
   status: string;
@@ -76,6 +79,7 @@ export function predictionFromRow(row: PredictionRow): Prediction {
     player_id: row.player_id,
     school: row.school,
     confidence: row.confidence,
+    delta: row.delta ?? 0,
     source_type: assertSourceType(row.source_type),
     predictor_id: row.predictor_id,
     status: assertStatus(row.status),

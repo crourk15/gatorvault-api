@@ -15,6 +15,7 @@ export interface FeedPrediction {
   position: string;
   school: string;
   confidence: number;
+  delta?: number;
   sourceType: PredictionSourceType;
   predictorId: string;
   status: PredictionStatus;
@@ -26,6 +27,7 @@ export interface PlayerPrediction {
   id: string;
   school: string;
   confidence: number;
+  delta?: number;
   sourceType: PredictionSourceType;
   predictorId: string;
   status: PredictionStatus;
