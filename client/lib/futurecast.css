@@ -635,6 +635,10 @@
   gap: 1rem;
 }
 
+.futurecast-grid {
+  gap: 1rem;
+}
+
 .fc-prediction-card-v2 {
   display: flex;
   gap: 1rem;
