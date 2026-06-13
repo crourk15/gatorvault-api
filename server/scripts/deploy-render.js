@@ -97,6 +97,7 @@ async function main() {
     rootDir: 'server',
     envVars: [
       envVar('NODE_ENV', 'production'),
+      envVar('SELF_RUNNER_MODE', 'scan-only'),
       envVar('SITE_URL', process.env.SITE_URL || 'https://gatorvaultinsider.com'),
       envVar('EMAIL_PROVIDER', 'emailjs'),
       envVar('ON3_INGEST_ENABLED', 'true'),

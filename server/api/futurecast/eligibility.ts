@@ -57,6 +57,16 @@ export function isHsLifecycle(row: { lifecycle?: string | null }): boolean {
   return String(row.lifecycle ?? '').toUpperCase() === 'HS';
 }
 
+/** Trending Up/Down — uncommitted HS prospects only (commits live in UF Commits section). */
+export function isTrendingEligibleRow(row: {
+  lifecycle?: string | null;
+  committed_to?: string | null;
+  uf_status?: string | null;
+}): boolean {
+  if (!isHsLifecycle(row)) return false;
+  return !isUfCommitRow(row);
+}
+
 export function dedupeByPlayerId<T extends { playerId: string; confidence?: number }>(
   rows: T[]
 ): T[] {

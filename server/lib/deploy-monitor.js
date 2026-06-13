@@ -121,7 +121,14 @@ function getDeployReport() {
 
   let status = 'green';
   if (mismatch) status = 'red';
+  else if (state.lastGuardianCheck && state.lastGuardianCheck.ok === false) status = 'red';
+  else if (state.lastSmokeTest && state.lastSmokeTest.ok === false) status = 'red';
   else if (
+    state.lastHealthRecompute?.overall != null &&
+    state.lastHealthRecompute.overall < 70
+  ) {
+    status = 'red';
+  } else if (
     (apiAge != null && apiAge > staleMs) ||
     (feAge != null && feAge > staleMs) ||
     !api.timestamp ||
@@ -144,8 +151,59 @@ function getDeployReport() {
       ageMs: feAge,
       stale: feAge != null && feAge > staleMs
     },
+    guardian: state.lastGuardianCheck || null,
+    smokeTest: state.lastSmokeTest || null,
+    healthRecompute: state.lastHealthRecompute || null,
+    lastFailedCheck: state.lastFailedCheck || null,
     updatedAt: state.updatedAt
   };
+}
+
+function recordSmokeTest(result) {
+  const state = loadDeployState();
+  state.lastSmokeTest = {
+    ok: result.ok,
+    checkedAt: result.checkedAt || nowIso(),
+    failed: result.failed || [],
+    site: result.site || null
+  };
+  if (!result.ok) {
+    state.lastFailedCheck = {
+      type: 'smoke-test',
+      at: state.lastSmokeTest.checkedAt,
+      errors: result.failed
+    };
+  }
+  return saveDeployState(state);
+}
+
+function recordGuardianCheck(result) {
+  const state = loadDeployState();
+  state.lastGuardianCheck = {
+    ok: result.ok,
+    phase: result.phase || 'pre',
+    checkedAt: result.checkedAt || nowIso(),
+    errors: result.errors || []
+  };
+  if (!result.ok) {
+    state.lastFailedCheck = {
+      type: 'guardian-pre',
+      at: state.lastGuardianCheck.checkedAt,
+      errors: result.errors
+    };
+  }
+  return saveDeployState(state);
+}
+
+function recordHealthRecompute(payload = {}) {
+  const state = loadDeployState();
+  state.lastHealthRecompute = {
+    at: payload.at || nowIso(),
+    overall: payload.overall ?? null,
+    deployId: payload.deployId || process.env.RENDER_GIT_COMMIT?.slice(0, 12) || null,
+    source: payload.source || 'deploy-boot'
+  };
+  return saveDeployState(state);
 }
 
 module.exports = {
@@ -153,5 +211,8 @@ module.exports = {
   recordFrontendDeploy,
   getDeployReport,
   loadDeployState,
-  readFrontendVersionFile
+  readFrontendVersionFile,
+  recordSmokeTest,
+  recordGuardianCheck,
+  recordHealthRecompute
 };

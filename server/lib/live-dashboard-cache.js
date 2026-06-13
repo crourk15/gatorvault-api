@@ -157,6 +157,13 @@ function scheduleBackgroundRefresh() {
   }, REFRESH_MS).unref?.();
 }
 
+function clearDashboardCache() {
+  snapshot = null;
+  snapshotAt = 0;
+  warming = false;
+  serverReady = false;
+}
+
 module.exports = {
   warmDashboardCache,
   getCachedDashboard,
@@ -166,5 +173,6 @@ module.exports = {
   minimalFallback,
   bumpMobileRefreshSignal,
   getMobileRefreshSignal,
+  clearDashboardCache,
   REFRESH_MS
 };

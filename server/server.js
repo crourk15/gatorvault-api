@@ -62,6 +62,7 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json({ limit: '1mb' }));
+app.use(require('./lib/api-cache-policy').apiCacheMiddleware());
 app.use(apiMonitorMiddleware());
 
 require('./lib/health')(app);
@@ -1016,6 +1017,13 @@ app.listen(PORT, () => {
   console.log('🚀 API server started with commit:', process.env.RENDER_GIT_COMMIT || process.env.GV_BUILD || 'dev');
   console.log('GatorVault server running on port', PORT);
   try {
+    const deployCache = require('./lib/deploy-cache');
+    const inv = deployCache.invalidateAllOnDeploy();
+    console.log('[deploy-cache] boot invalidation at', inv.at);
+  } catch (e) {
+    console.warn('[deploy-cache] invalidate skipped:', e.message);
+  }
+  try {
     const dashCache = require('./lib/live-dashboard-cache');
     dashCache.warmDashboardCache();
     dashCache.scheduleBackgroundRefresh();
@@ -1244,6 +1252,15 @@ app.listen(PORT, () => {
   } catch (e) {
     console.warn('[gv-om] init skipped', e.message);
   }
+  setTimeout(() => {
+    process.env.QA_API_URL = `http://127.0.0.1:${PORT}`;
+    require('./lib/product-intel/product-intel-engine')
+      .recomputeFromDeployProbes({ source: 'deploy-boot' })
+      .then((r) => {
+        console.log('[product-intel] deploy-boot health score:', r.scores?.overall ?? 'n/a');
+      })
+      .catch((e) => console.warn('[product-intel] deploy-boot recompute skipped:', e.message));
+  }, 5000);
   try {
     const { startQaScheduler } = require('./lib/qa/qa-runner');
     startQaScheduler();

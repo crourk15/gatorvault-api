@@ -271,10 +271,18 @@ async function recomputeFromRun(run, opts = {}) {
 
   const modules = scoring.moduleScoresFromRun(run);
   const apiHealthFails = collected.layers.apiHealth.length;
+  const serverErrors = collected.layers.apiHealth.filter(
+    (s) => (s.details?.[0]?.status >= 500) || /502|503|504/.test(String(s.error || ''))
+  );
   if (apiHealthFails > 0) {
-    const penalty = Math.min(45, apiHealthFails * 12);
+    const penalty = Math.min(55, apiHealthFails * 14);
     modules.api = Math.max(0, (modules.api ?? 100) - penalty);
-    modules.overall = scoring.overallScore(modules);
+  }
+  modules.overall = scoring.overallScore(modules);
+  if (serverErrors.length > 0) {
+    const cap = Math.max(35, 100 - serverErrors.length * 22);
+    modules.api = Math.min(modules.api ?? 100, cap);
+    modules.overall = Math.min(modules.overall, cap);
   }
   const pages = scoring.pageScoresFromRun(run);
   const features = scoring.featureScoresFromRun(run, uptimePct);
@@ -421,9 +429,54 @@ function getLayersPayload() {
   };
 }
 
+/**
+ * Deploy-boot health recompute from live API probes (no QA crawl required).
+ */
+async function recomputeFromDeployProbes(opts = {}) {
+  const collected = await dataLayer.collectAllSignals(null);
+  const apiFails = [
+    ...collected.layers.apiHealth,
+    ...collected.layers.recruiting.filter((s) => s.module === 'api'),
+    ...collected.layers.teamData.filter((s) => s.module === 'api')
+  ];
+
+  const checks = apiFails.map((s) => ({
+    id: s.id || s.checkId || 'deploy-probe',
+    module: s.module || 'api',
+    pass: false,
+    label: s.label || s.error,
+    error: s.error || s.label
+  }));
+
+  const run = {
+    id: opts.runId || `deploy_${Date.now()}`,
+    finishedAt: new Date().toISOString(),
+    pass: checks.length === 0,
+    modules: {
+      api: { checks }
+    }
+  };
+
+  const result = await recomputeFromRun(run, { daily: true, weekly: false });
+
+  try {
+    const deployMonitor = require('../deploy-monitor');
+    deployMonitor.recordHealthRecompute({
+      overall: result.scores?.overall,
+      deployId: process.env.RENDER_GIT_COMMIT?.slice(0, 12) || null,
+      source: opts.source || 'deploy-boot'
+    });
+  } catch {
+    /* optional */
+  }
+
+  return result;
+}
+
 module.exports = {
   recomputeFromRun,
   recomputeFromLatestRun,
+  recomputeFromDeployProbes,
   runDailyJob,
   runWeeklyJob,
   getScoresPayload,

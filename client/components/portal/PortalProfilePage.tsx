@@ -9,7 +9,7 @@ import { fetchPortalPredictions, type PortalIntelPayload, type TransferPredictio
 import { computePlayerMetrics } from '@/lib/player-derived';
 import { playerLifecycleKind, playerProfilePath } from '@/lib/player-routes';
 import { usePathname } from '@/lib/use-pathname';
-import { isVaultPath, vaultPortalBackHref } from '@/lib/vault-routes';
+import { isVaultPath, vaultPortalBackHref, vaultPortalBackLabel } from '@/lib/vault-routes';
 import { UiError } from '@/components/site/UiMessage';
 import { PlayerHeader } from '@/components/futurecast/player/PlayerHeader';
 import { PortalTab } from '@/components/futurecast/player/PortalTab';
@@ -75,9 +75,8 @@ function BioSection({ data }: { data: PlayerProfileBundle }): React.ReactElement
 
 export function PortalProfilePage({ slug }: { slug: string }): React.ReactElement {
   const pathname = usePathname();
-  const inVault = isVaultPath(pathname);
   const backHref = vaultPortalBackHref(pathname);
-  const backLabel = inVault ? '← Portal (Vault)' : '← Player Directory';
+  const backLabel = vaultPortalBackLabel(pathname);
   const [data, setData] = useState<PlayerProfileBundle | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -95,7 +94,9 @@ export function PortalProfilePage({ slug }: { slug: string }): React.ReactElemen
       const bundle = await fetchPlayerProfile(slug);
       const kind = playerLifecycleKind(bundle.player.status);
       if (kind === 'hs' && !bundle.portalProfile && bundle.player.status === 'HS') {
-        window.location.replace(playerProfilePath(slug, bundle.player.status, inVault));
+        window.location.replace(
+          playerProfilePath(slug, bundle.player.status, isVaultPath(pathname))
+        );
         return;
       }
       setData(bundle);

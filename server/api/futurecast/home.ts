@@ -18,12 +18,12 @@ import {
 import { isFutureCastEligible } from './eligibility';
 import {
   dedupeFeedRows,
-  filterFutureCastStockRows,
   filterModelPredictionsOnly,
+  filterTrendingStockRows,
   FUTURECAST_CLASS_YEAR,
   partitionHomepagePredictions,
 } from './feed-filters';
-import { isHsLifecycle } from './eligibility';
+import { isHsLifecycle, isTrendingEligibleRow } from './eligibility';
 import { applyMomentumBoosts, loadSignalMomentumBoosts } from './momentum';
 import { listRecruitingStoreCommits, mergeLiveCommits } from './live-commits';
 
@@ -90,10 +90,15 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
     const liveCommits = await listRecruitingStoreCommits(FUTURECAST_CLASS_YEAR);
     const commits = mergeLiveCommits(modelCommits, liveCommits);
 
-    const filteredMovement = filterFutureCastStockRows(movementRows);
-    const playerIds = filteredMovement.map((row) => row.player_id);
+    const commitSlugs = new Set(
+      commits.map((row) => row.playerSlug).filter(Boolean) as string[]
+    );
+    const trendingMovement = filterTrendingStockRows(movementRows).filter(
+      (row) => !commitSlugs.has(row.slug)
+    );
+    const playerIds = trendingMovement.map((row) => row.player_id);
     const signalBoosts = await loadSignalMomentumBoosts(MOVEMENT_WINDOW_DAYS, playerIds);
-    const enrichedMovement = applyMomentumBoosts(filteredMovement, signalBoosts);
+    const enrichedMovement = applyMomentumBoosts(trendingMovement, signalBoosts);
 
     const upRows = enrichedMovement
       .filter((row) => row.window_delta > 0)
@@ -109,8 +114,26 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
       serializeStockRowsWithVolatility(downRows),
     ]);
 
-    const hsTrendingUp = trendingUp.filter((row) => isHsLifecycle(row));
-    const hsTrendingDown = trendingDown.filter((row) => isHsLifecycle(row));
+    const hsTrendingUp = trendingUp.filter(
+      (row) =>
+        isHsLifecycle(row) &&
+        isTrendingEligibleRow({
+          lifecycle: row.lifecycle,
+          committed_to: row.committedTo,
+          uf_status: row.ufStatus,
+        }) &&
+        !commitSlugs.has(row.playerSlug)
+    );
+    const hsTrendingDown = trendingDown.filter(
+      (row) =>
+        isHsLifecycle(row) &&
+        isTrendingEligibleRow({
+          lifecycle: row.lifecycle,
+          committed_to: row.committedTo,
+          uf_status: row.ufStatus,
+        }) &&
+        !commitSlugs.has(row.playerSlug)
+    );
 
     const portalWatchlist = portalRows
       .filter((row) => row.lifecycle === 'PORTAL' || row.lifecycle === 'COLLEGE')

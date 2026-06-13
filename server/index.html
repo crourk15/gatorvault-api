@@ -155,6 +155,10 @@
             #vault-interior.gv-mobile-active .gv-vault-main > .vpane:not(.gv-mob-only){display:none!important;}
             #vault-interior:not(.gv-mobile-active) .gv-vault-main > .vpane.gv-mob-only{display:none!important;}
         }
+        /* Vault route mode — sidebar nav only, hide legacy horizontal vtab bar */
+        body.gv-on-vault-route #gv-vault-public-tabs,
+        #vault-interior.gv-vault-route-mode #gv-vault-public-tabs{display:none!important;}
+        body.gv-on-vault-route #gv-vault-sidebar{display:flex!important;}
         .gv-vault-crosslink-inline{display:inline-flex;align-items:center;gap:.35rem;margin-top:.75rem;font-size:.8125rem;font-weight:700;color:#FA4616;text-decoration:none;}
         .gv-vault-crosslink-inline:hover{color:#fff;}
         .vtab{transition:all .15s;border-bottom:3px solid transparent;padding-bottom:6px;}
@@ -1145,8 +1149,8 @@
                 </div>
             </header>
 
-            <!-- Vault Tabs -->
-            <div data-id="468" class="gv-desk-only sticky top-14 z-40 bg-surface-800 border-b border-gator-blue/20 overflow-x-auto">
+            <!-- Vault Tabs (legacy — hidden on /vault/* routes; use sidebar instead) -->
+            <div data-id="468" id="gv-vault-public-tabs" class="gv-desk-only sticky top-14 z-40 bg-surface-800 border-b border-gator-blue/20 overflow-x-auto">
                 <div data-id="469" class="max-w-7xl mx-auto px-4 flex gap-1 min-w-max">
                     <button data-id="470" class="vtab active px-3 py-3 text-xs md:text-sm font-semibold text-gator-orange whitespace-nowrap" data-vtab="start">🏠 Start Here</button>
                     <button data-id="471" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="team">🐊 Team</button>
@@ -3446,13 +3450,24 @@
     }
     window.gvOpenRecruitProfile=gvOpenRecruitProfile;
 
+    function gvApplyVaultRouteMode(){
+        var path=(location.pathname||'').replace(/\/$/,'');
+        var onVault=path==='/vault'||path.indexOf('/vault/')===0;
+        var interior=document.getElementById('vault-interior');
+        if(interior)interior.classList.toggle('gv-vault-route-mode',onVault);
+        document.body.classList.toggle('gv-on-vault-route',onVault);
+    }
+    window.gvApplyVaultRouteMode=gvApplyVaultRouteMode;
+
     function gvHandleDeepLink(){
+        gvApplyVaultRouteMode();
         var params=new URLSearchParams(location.search);
         if(params.get('open')==='vault'&&typeof openVault==='function')openVault();
         var path=location.pathname.replace(/\/$/,'')||'/';
         var vaultTab=gvVaultPathToTab(path);
         if(vaultTab){
             if(typeof openVault==='function')openVault();
+            gvApplyVaultRouteMode();
             setTimeout(function(){showVTab(vaultTab);},300);
             return;
         }

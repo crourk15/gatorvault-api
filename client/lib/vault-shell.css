@@ -49,10 +49,8 @@
   text-decoration: none;
 }
 
-.gv-vault-shell__topnav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem 1.25rem;
+.gv-vault-shell__topnav--desktop {
+  display: none;
 }
 
 .gv-vault-shell__topnav a {
@@ -143,14 +141,10 @@
   color: #fff;
 }
 
-/* Desktop: full-width content column */
+/* Desktop: full-width content column — vault sidebar only, no site top nav */
 @media (min-width: 769px) {
   .gv-vault-shell__menu-btn--mobile {
     display: none !important;
-  }
-
-  .gv-vault-shell__topnav--desktop {
-    display: flex;
   }
 
   .gv-vault-shell__main {

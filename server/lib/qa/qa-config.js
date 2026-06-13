@@ -1,8 +1,16 @@
 /**
  * GatorVault QA Crawler — configuration.
  */
-const SITE_URL = (process.env.SITE_URL || 'https://gatorvaultinsider.com').replace(/\/$/, '');
-const API_URL = (process.env.QA_API_URL || process.env.API_BASE_URL || 'https://gatorvault-api.onrender.com').replace(/\/$/, '');
+function siteUrl() {
+  return (process.env.SITE_URL || 'https://gatorvaultinsider.com').replace(/\/$/, '');
+}
+
+function apiUrl() {
+  return (process.env.QA_API_URL || process.env.API_BASE_URL || 'https://gatorvault-api.onrender.com').replace(
+    /\/$/,
+    ''
+  );
+}
 
 const PUBLIC_API_ENDPOINTS = [
   { id: 'ping', path: '/api/ping', json: true },
@@ -44,8 +52,12 @@ const QA_MODULES = [
 ];
 
 module.exports = {
-  SITE_URL,
-  API_URL,
+  get SITE_URL() {
+    return siteUrl();
+  },
+  get API_URL() {
+    return apiUrl();
+  },
   INTERVAL_MS: parseInt(process.env.QA_CRAWLER_INTERVAL_MS || '300000', 10),
   BOOT_DELAY_MS: parseInt(process.env.QA_CRAWLER_BOOT_DELAY_MS || '90000', 10),
   ENABLED: process.env.QA_CRAWLER_ENABLED !== 'false',

@@ -41,7 +41,7 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
             <span>GatorVault</span>
           </a>
         </div>
-        <nav className="gv-vault-shell__topnav gv-vault-shell__topnav--desktop" aria-label="Site">
+        <nav className="gv-vault-shell__topnav gv-vault-shell__topnav--desktop" aria-label="Site" hidden>
           <a href="/">Home</a>
           <a href="/vault" className="is-active">Inside the Vault</a>
           <a href={inVault ? '/vault/futurecast' : '/futurecast'}>FutureCast</a>

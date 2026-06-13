@@ -44,7 +44,13 @@ export function isVaultPath(pathname: string): boolean {
 }
 
 export function vaultPortalBackHref(pathname: string): string {
-  return isVaultPath(pathname) ? '/vault/portal' : '/players';
+  if (isVaultPath(pathname)) return '/vault/portal';
+  if (pathname.replace(/\/$/, '').startsWith('/portal')) return '/vault/portal';
+  return '/vault/portal';
+}
+
+export function vaultPortalBackLabel(pathname: string): string {
+  return '← Portal Directory';
 }
 
 export function vaultFutureCastBackHref(pathname: string): string {

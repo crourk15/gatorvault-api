@@ -102,7 +102,11 @@ async function collectPlatformRouteSignals() {
       path: '/api/players/slug/test-slug',
       label: 'Player slug API',
       allow404: true
-    }
+    },
+    { id: 'pi:api:film-room-catalog', path: '/api/film-room/catalog', label: 'Film Room catalog API' },
+    { id: 'pi:api:articles-published', path: '/api/articles/published', label: 'Articles published API' },
+    { id: 'pi:api:recruiting-board', path: '/api/recruiting/board', label: 'Recruiting board API' },
+    { id: 'pi:api:roster-players', path: '/api/roster/players', label: 'Roster players API' }
   ];
 
   for (const probe of probes) {
@@ -244,9 +248,31 @@ async function collectAutoposterSignals() {
 async function collectRecruitingSignals() {
   const signals = [];
   const board = await timedFetch(`${config.API_URL}/api/recruiting/board`);
-  if (!board.ok) return signals;
+  if (!board.ok) {
+    signals.push(
+      signal('pi:api:recruiting-board-fail', 'recruiting-board', 'Recruiting board API failed', board.error || `HTTP ${board.status}`, {
+        module: 'api',
+        classification: 'api-endpoint',
+        impact: board.status >= 500 ? 94 : 80,
+        confidence: 96,
+        repro: 'GET /api/recruiting/board'
+      })
+    );
+    return signals;
+  }
 
   const players = board.body?.players || board.body?.items || [];
+  if (!players.length) {
+    signals.push(
+      signal('pi:recruiting:empty-board', 'recruiting-board', 'Recruiting board empty', 'No players returned from /api/recruiting/board', {
+        module: 'api',
+        classification: 'missing-content',
+        impact: 88,
+        confidence: 90,
+        repro: 'GET /api/recruiting/board'
+      })
+    );
+  }
   const ids = new Set();
   const dups = [];
   players.forEach((p, idx) => {
@@ -290,8 +316,29 @@ async function collectRecruitingSignals() {
 async function collectTeamDataSignals() {
   const signals = [];
   const roster = await timedFetch(`${config.API_URL}/api/roster/players`);
-  if (roster.ok) {
+  if (!roster.ok) {
+    signals.push(
+      signal('pi:api:roster-players-fail', 'roster-depth-chart', 'Roster players API failed', roster.error || `HTTP ${roster.status}`, {
+        module: 'api',
+        classification: 'api-endpoint',
+        impact: roster.status >= 502 ? 92 : 78,
+        confidence: 96,
+        repro: 'GET /api/roster/players'
+      })
+    );
+  } else if (roster.ok) {
     const players = roster.body?.players || roster.body?.items || [];
+    if (!players.length) {
+      signals.push(
+        signal('pi:roster:empty', 'roster-depth-chart', 'Roster API empty', 'No players returned from /api/roster/players', {
+          module: 'api',
+          classification: 'missing-content',
+          impact: 86,
+          confidence: 90,
+          repro: 'GET /api/roster/players'
+        })
+      );
+    }
     const missingHeadshots = players.filter((p) => !p.headshot && !p.photo && !p.headshotUrl);
     const pct = players.length ? Math.round((missingHeadshots.length / players.length) * 100) : 0;
     if (players.length > 10 && pct > 80) {

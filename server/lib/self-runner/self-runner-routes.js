@@ -34,11 +34,16 @@ function isNoopOrGenericPatch(fix) {
     filesToModify: fix?.filesToModify
   });
   if (/"\{\}"\s*(→|to)\s*"\{\}"/i.test(blob)) return true;
-  if (/recruiting-board-sync|roster-sync/.test(blob) && /"\{\}"/.test(blob)) return true;
-  if (/layout-overflow|overflow-y:\s*auto/.test(blob) && /gv-team-modal-body/.test(blob)) {
+  if (/recruiting-board-sync|roster-sync|feed-dedup/.test(blob) && /"\{\}"/.test(blob)) return true;
+  if (/data\/roster\/players\.json|data\/recruiting\/board\.json/.test(blob) && /"\{\}"/.test(blob)) {
     return true;
   }
-  if (/api-latency/.test(blob) && /\/api\/ping/.test(blob) && !/502|portal|futurecast/.test(blob)) {
+  if (/layout-overflow|overflow-y:\s*auto|max-height:\s*none/.test(blob) && /gv-team-modal-body/.test(blob)) {
+    return true;
+  }
+  if (/css-token|--gv-team-card-bg|--gv-team-radius|--gv-team-space/.test(blob)) return true;
+  if (/self-runner.*section markers verified|section markers verified/i.test(blob)) return true;
+  if (/api-latency/.test(blob) && /\/api\/ping/.test(blob) && !/502|portal|futurecast|film-room|articles/.test(blob)) {
     return true;
   }
   return false;
@@ -189,10 +194,24 @@ function mountSelfRunnerRoutes(app) {
     if (!requireAuth(req, res)) return;
     try {
       const status = req.query.status || 'pending';
-      const items =
+      let items =
         status === 'all'
           ? queue.readDoc().items || []
           : queue.listByStatus(status === 'pending' ? 'pending' : status);
+      if (status === 'pending' || status === 'all') {
+        items.forEach((fix) => {
+          if (fix.status === 'pending' && isNoopOrGenericPatch(fix)) {
+            queue.markStatus(fix.id, 'rejected', {
+              rejectedAt: new Date().toISOString(),
+              rejectedReason: 'noop_or_generic_patch'
+            });
+            logger.log.reject({ fixId: fix.id, reason: 'noop_or_generic_patch_auto' });
+          }
+        });
+        if (status === 'pending') {
+          items = queue.listByStatus('pending');
+        }
+      }
       return res.json({
         ok: true,
         items,

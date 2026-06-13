@@ -44,6 +44,16 @@ async function main() {
 
   if (!ok) {
     const headline = errors[0] || 'platform guardian failed';
+    try {
+      require('../lib/deploy-monitor').recordGuardianCheck({
+        ok: false,
+        phase: 'pre',
+        errors,
+        checkedAt: result.checkedAt
+      });
+    } catch {
+      /* optional */
+    }
     if (process.env.GUARDIAN_ALERT_ON_CI === 'true') {
       await alertGuardian({
         type: 'predeploy_blocked',
@@ -54,6 +64,16 @@ async function main() {
       });
     }
     process.exit(1);
+  }
+  try {
+    require('../lib/deploy-monitor').recordGuardianCheck({
+      ok: true,
+      phase: 'pre',
+      errors: [],
+      checkedAt: result.checkedAt
+    });
+  } catch {
+    /* optional */
   }
   process.exit(0);
 }

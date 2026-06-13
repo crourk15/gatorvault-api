@@ -27,6 +27,7 @@ const REQUIRED_EXPORTS = [
   'futurecast/snapshots/index.html',
   'player/index.html',
   'portal/index.html',
+  'vault/portal/player/index.html',
   'alerts/index.html',
   'staff/index.html',
   'staff/dashboard/index.html',
@@ -61,4 +62,18 @@ if (!fs.existsSync(outDir)) {
 
 copyRecursive(outDir, serverDir);
 verifyExports();
+
+require('./stamp-build-meta.js');
+
+const { spawnSync } = require('child_process');
+const guardian = spawnSync(
+  process.execPath,
+  [path.join(__dirname, '..', '..', 'server', 'scripts', 'deploy-guardian.js'), '--phase=pre', '--static', '--skip-api'],
+  { stdio: 'inherit', cwd: path.join(__dirname, '..', '..', 'server') }
+);
+if (guardian.status !== 0) {
+  console.error('[netlify] deploy-guardian static check failed — blocking publish');
+  process.exit(guardian.status || 1);
+}
+
 console.log('[netlify] Merged FutureCast UI from client/out into server/');

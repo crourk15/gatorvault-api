@@ -901,6 +901,33 @@ body.gv-team-modal-open {
   box-sizing: border-box;
 }
 
+/* Program History / Team Overview modal — prevent right-edge clipping on long era titles */
+#gv-team-detail-modal .gv-team-modal-panel {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+#gv-team-detail-modal .gv-team-modal-body {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 12rem);
+  padding-right: max(var(--gv-team-space-4), env(safe-area-inset-right));
+}
+
+#gv-team-detail-modal .gv-team-modal-title,
+#gv-team-detail-modal .gv-team-modal-kicker,
+#gv-team-detail-modal .gv-tm-section,
+#gv-team-detail-modal .gv-tm-section p,
+#gv-team-detail-modal .gv-tm-section li {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+#gv-team-detail-modal .gv-team-hscroll-wrap .gv-hscroll-track {
+  padding-right: var(--gv-team-space-4);
+}
+
 /* Modal content blocks */
 .gv-tm-section {
   margin-top: var(--gv-team-space-5);

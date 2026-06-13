@@ -8,6 +8,7 @@ import {
   isFutureCastEligible,
   isHsLifecycle,
   isTopTargetRow,
+  isTrendingEligibleRow,
   isUfCommitRow,
 } from './eligibility';
 import type { SerializedFeedPrediction } from '../predictions/utils-api';
@@ -36,6 +37,16 @@ export function dedupeStockRows(rows: StockBoardRow[]): StockBoardRow[] {
 
 export function filterFutureCastStockRows(rows: StockBoardRow[]): StockBoardRow[] {
   return dedupeStockRows(filterFutureCastFeedRows(rows));
+}
+
+export function filterTrendingStockRows(rows: StockBoardRow[]): StockBoardRow[] {
+  return filterFutureCastStockRows(rows).filter((row) =>
+    isTrendingEligibleRow({
+      lifecycle: row.lifecycle,
+      committed_to: row.committed_to,
+      uf_status: row.uf_status,
+    })
+  );
 }
 
 export function filterModelPredictionsOnly<T extends PredictionFeedRow>(rows: T[]): T[] {
