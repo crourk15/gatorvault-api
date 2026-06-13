@@ -2,7 +2,9 @@
  * FutureCast prediction card — MODEL pick with confidence bar.
  */
 import React from 'react';
-import type { FeedPrediction } from '../lib/predictions-api';
+import { sourceTypeLabel, type FeedPrediction } from '../lib/predictions-api';
+import { PredictionBadge } from './futurecast/PredictionBadge';
+import { ConfidenceBar } from './futurecast/ConfidenceBar';
 
 export interface PredictionCardData {
   playerId: string;
@@ -12,6 +14,7 @@ export interface PredictionCardData {
   position: string;
   class: number | string;
   team: string;
+  type: string;
   confidence: number;
   createdAt: string;
 }
@@ -35,6 +38,7 @@ export function feedPredictionToCard(p: FeedPrediction): PredictionCardData {
     position: p.position,
     class: p.classYear,
     team: p.school,
+    type: `${sourceTypeLabel(p.sourceType).toLowerCase()} pick`,
     confidence: p.confidence,
     createdAt: p.createdAt,
   };
@@ -60,13 +64,8 @@ export function PredictionCard({ prediction }: PredictionCardProps): React.React
           </p>
         </div>
         <div className="fc-prediction-card-v2__pick">
-          <div className="fc-prediction-card-v2__label">MODEL PICK → {prediction.team}</div>
-          <div className="fc-prediction-card-v2__bar-track">
-            <div
-              className="fc-prediction-card-v2__bar-fill"
-              style={{ width: `${Math.min(100, Math.max(0, prediction.confidence))}%` }}
-            />
-          </div>
+          <PredictionBadge type={prediction.type} team={prediction.team} />
+          <ConfidenceBar value={prediction.confidence} />
           <p className="fc-prediction-card-v2__date">
             {new Date(prediction.createdAt).toLocaleString()}
           </p>
