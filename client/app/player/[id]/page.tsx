@@ -3,6 +3,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { ConfidenceBar } from '@/components/futurecast/ConfidenceBar';
+import { FitScoreBreakdown } from '@/components/player/FitScoreBreakdown';
 import {
   fetchPlayerById,
   fetchPlayerProfiles,
@@ -68,6 +69,21 @@ function PlayerPageContent({
         ) : (
           <p className="fc-player-page__muted">No active MODEL pick on file.</p>
         )}
+      </section>
+      <section className="fc-player-page__section">
+        <h2 className="fc-player-page__section-title">UF Fit Score</h2>
+        {player.ufFitScore != null ? (
+          <>
+            <p className="fc-player-page__fit-score">{player.ufFitScore}%</p>
+            <ConfidenceBar value={player.ufFitScore} />
+          </>
+        ) : (
+          <p className="fc-player-page__muted">No UF Fit Score on file.</p>
+        )}
+      </section>
+      <section className="fc-player-page__section fc-player-page__section--breakdown">
+        <h2 className="fc-player-page__section-title">Fit Score Breakdown</h2>
+        <FitScoreBreakdown fit={player.fitScoreBreakdown} />
       </section>
       <section className="fc-player-page__section">
         <h2 className="fc-player-page__section-title">Offers</h2>

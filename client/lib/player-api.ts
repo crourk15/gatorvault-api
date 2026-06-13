@@ -6,6 +6,14 @@ import { getApiBase, type BigBoardPlayer } from './big-board-api';
 
 export type PlayerLifecycle = 'HS' | 'COLLEGE' | 'PORTAL';
 
+export interface FitScoreBreakdown {
+  scheme: number;
+  culture: number;
+  staff: number;
+  need: number;
+  geo: number;
+}
+
 export interface PlayerCore {
   id: string;
   fullName: string;
@@ -24,6 +32,8 @@ export interface PlayerCore {
   rankingPosition: number | null;
   rankingState: number | null;
   committedTo: string | null;
+  ufFitScore?: number | null;
+  fitScoreBreakdown?: FitScoreBreakdown | null;
 }
 
 export interface HighSchoolProfile {

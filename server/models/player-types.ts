@@ -37,6 +37,11 @@ export interface Player {
   committed_to: string | null;
   created_at: string;
   updated_at: string;
+  fit_scheme?: number | null;
+  fit_culture?: number | null;
+  fit_staff?: number | null;
+  fit_need?: number | null;
+  fit_geo?: number | null;
 }
 
 /** Fields required to insert a new player row. */
@@ -88,6 +93,11 @@ export type PlayerRow = {
   committed_to: string | null;
   created_at: string;
   updated_at: string;
+  fit_scheme?: number | null;
+  fit_culture?: number | null;
+  fit_staff?: number | null;
+  fit_need?: number | null;
+  fit_geo?: number | null;
 };
 
 function toNumberOrNull(value: number | string | null | undefined): number | null {
@@ -125,6 +135,11 @@ export function playerFromRow(row: PlayerRow): Player {
     committed_to: row.committed_to,
     created_at: row.created_at,
     updated_at: row.updated_at,
+    fit_scheme: row.fit_scheme ?? null,
+    fit_culture: row.fit_culture ?? null,
+    fit_staff: row.fit_staff ?? null,
+    fit_need: row.fit_need ?? null,
+    fit_geo: row.fit_geo ?? null,
   };
 }
 
