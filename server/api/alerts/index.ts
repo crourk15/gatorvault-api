@@ -17,7 +17,7 @@ export const handleListAlerts = asyncHandler(async (req: Request, res: Response)
     res.json({ alerts });
   } catch (err) {
     if (isFutureCastDataError(err)) {
-      respondDatabaseUnavailable(res, { alerts: [] });
+      respondDatabaseUnavailable(res, { alerts: [] }, err);
       return;
     }
     handlePredictionsApiError(res, err);

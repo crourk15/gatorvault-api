@@ -24,11 +24,16 @@ export function isFutureCastDataError(err: unknown): boolean {
 
 export function respondDatabaseUnavailable(
   res: Response,
-  payload: Record<string, unknown>
+  payload: Record<string, unknown>,
+  err?: unknown
 ): void {
-  res.status(503).json({
+  const schema = err != null && isFutureCastSchemaError(err);
+  res.status(schema ? 200 : 503).json({
     ...payload,
-    unavailable: true,
-    error: 'FutureCast database is not configured or unreachable. Check DATABASE_URL on the API server.',
+    unavailable: !schema,
+    schemaPending: schema || undefined,
+    error: schema
+      ? 'FutureCast alerts table is not migrated yet. Run migrations/015_create_alerts.sql on the database.'
+      : 'FutureCast database is not configured or unreachable. Check DATABASE_URL on the API server.',
   });
 }

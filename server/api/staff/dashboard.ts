@@ -136,15 +136,20 @@ function buildHeatmapBuckets(rows: Awaited<ReturnType<typeof listStockBoardRows>
 
 export const handleGetStaffDashboard = asyncHandler(async (_req: Request, res: Response) => {
   try {
-    const [movementRows, fitLeaders, fitRisks, alerts, volatilityHigh, volatilityLow] =
-      await Promise.all([
-        listStockBoardRows(MOVEMENT_WINDOW_DAYS, { lifecycle: 'HS' }),
-        listFitScorePlayers('desc', LIST_LIMIT),
-        listFitScorePlayers('asc', LIST_LIMIT),
-        listAlerts(LIST_LIMIT),
-        volatilityPlayers('high', LIST_LIMIT),
-        volatilityPlayers('low', LIST_LIMIT),
-      ]);
+    const [movementRows, fitLeaders, fitRisks, volatilityHigh, volatilityLow] = await Promise.all([
+      listStockBoardRows(MOVEMENT_WINDOW_DAYS, { lifecycle: 'HS' }),
+      listFitScorePlayers('desc', LIST_LIMIT),
+      listFitScorePlayers('asc', LIST_LIMIT),
+      volatilityPlayers('high', LIST_LIMIT),
+      volatilityPlayers('low', LIST_LIMIT),
+    ]);
+
+    let alerts: Awaited<ReturnType<typeof listAlerts>> = [];
+    try {
+      alerts = await listAlerts(LIST_LIMIT);
+    } catch (alertErr) {
+      if (!isFutureCastDataError(alertErr)) throw alertErr;
+    }
 
     res.json({
       topRisers: movementPlayers(movementRows, 'up', LIST_LIMIT),
@@ -174,7 +179,7 @@ export const handleGetStaffDashboard = asyncHandler(async (_req: Request, res: R
         alerts: [],
         movementWindowDays: MOVEMENT_WINDOW_DAYS,
         volatilityWindowDays: VOLATILITY_WINDOW_DAYS,
-      });
+      }, err);
       return;
     }
     handlePredictionsApiError(res, err);
