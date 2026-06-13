@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const vaultMap = require('../lib/routes-vault.cjs');
 const { verifyChunkAssets } = require('./verify-chunk-assets');
+const { rewriteNextChunkPathsForNetlify } = require('./rewrite-next-chunk-paths');
 
 const outDir = path.join(__dirname, '..', 'out');
 const serverDir = path.join(__dirname, '..', '..', 'server');
@@ -89,8 +90,8 @@ function verifyChunks() {
     if (missing.length > 20) console.error(`  ... and ${missing.length - 20} more`);
     process.exit(1);
   }
-  const appChunks = assets.filter((a) => a.includes('_next/static/chunks/app/'));
-  console.log(`[netlify] Verified ${assets.length} _next assets (${appChunks.length} app route chunks)`);
+  const routeChunks = assets.filter((a) => a.includes('_next/static/chunks/routes/'));
+  console.log(`[netlify] Verified ${assets.length} _next assets (${routeChunks.length} route chunks)`);
 }
 
 if (!fs.existsSync(outDir)) {
@@ -103,6 +104,8 @@ require('./generate-redirects.js');
 /* Replace stale _next tree so HTML + chunks always match (fixes Netlify CDN 404s). */
 rmRecursive(nextDir);
 copyRecursive(outDir, serverDir);
+const netlifyPaths = rewriteNextChunkPathsForNetlify(serverDir);
+console.log(`[netlify] Rewrote Next chunk paths for Netlify CDN (routes/ + main-entry-, ${netlifyPaths.filesUpdated} files)`);
 verifyExports();
 verifyChunks();
 
