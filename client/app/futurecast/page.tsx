@@ -8,7 +8,7 @@ import '@/lib/futurecast.css';
 export default function FutureCastPage(): React.ReactElement {
   return (
     <div className="fc-futurecast-page" data-testid="futurecast-page">
-      <FutureCastSubNav active="home" />
+      <FutureCastSubNav active="master" />
       <div className="gv-page-hero">
         <h1 className="gv-page-title">FutureCast</h1>
         <p className="gv-page-subtitle">

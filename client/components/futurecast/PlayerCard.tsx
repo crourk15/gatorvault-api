@@ -1,8 +1,11 @@
 /**
- * Big Board player card — consumes /api/big-board rows.
+ * Big Board player card — links to vault FutureCast player profile.
  */
 import React from 'react';
 import type { BigBoardPlayer } from '../../lib/big-board-api';
+import { playerProfilePath } from '@/lib/player-routes';
+import { usePathname } from '@/lib/use-pathname';
+import { isVaultPath } from '@/lib/vault-routes';
 import { FitScoreBadge } from './FitScoreBadge';
 import { PortalLikelihoodBadge } from './PortalLikelihoodBadge';
 
@@ -12,13 +15,28 @@ export interface PlayerCardProps {
 }
 
 export function PlayerCard({ player, onClick }: PlayerCardProps): React.ReactElement {
+  const pathname = usePathname();
+  const inVault = isVaultPath(pathname);
+  const href = playerProfilePath(
+    player.slug,
+    player.lifecycle ?? 'HIGH_SCHOOL',
+    inVault,
+    player.fullName,
+    inVault ? 'futurecast' : undefined
+  );
   const showPortal =
     player.lifecycle === 'COLLEGE' || player.lifecycle === 'PORTAL' || player.portalLikelihood > 0;
 
   return (
-    <article
+    <a
+      href={href}
       className="fc-player-card"
-      onClick={() => onClick?.(player)}
+      onClick={(e) => {
+        if (onClick) {
+          e.preventDefault();
+          onClick(player);
+        }
+      }}
       data-testid="player-card"
       data-slug={player.slug}
     >
@@ -33,6 +51,6 @@ export function PlayerCard({ player, onClick }: PlayerCardProps): React.ReactEle
         <span className="fc-signal-pill">{player.signalCount} signals</span>
         {player.portalStatus && <span className="fc-status">{player.portalStatus}</span>}
       </div>
-    </article>
+    </a>
   );
 }

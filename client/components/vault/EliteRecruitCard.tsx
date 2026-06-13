@@ -7,11 +7,10 @@ import { playerProfilePath, recruitingProfileLifecycle } from '@/lib/player-rout
 
 export type EliteCardVariant = 'commit' | 'target' | 'ranking' | 'heat' | 'priority';
 
-export interface EliteRecruitCardPlayer extends RecruitingBoardPlayer {
+export interface EliteRecruitCardPlayer extends Omit<RecruitingBoardPlayer, 'htWt' | 'posRank' | 'stateRank' | 'ufOvStatus'> {
   posRank?: number | null;
   stateRank?: number | null;
   htWt?: string | null;
-  committedTo?: string | null;
   ufOvStatus?: string | null;
   visitStart?: string | null;
   visitEnd?: string | null;

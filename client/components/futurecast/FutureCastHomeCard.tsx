@@ -49,7 +49,13 @@ export function FutureCastHomeCard({
   const pathname = usePathname();
   const inVault = isVaultPath(pathname);
   const slug = prediction.playerSlug || prediction.playerId;
-  const href = playerProfilePath(slug, prediction.lifecycle ?? 'HIGH_SCHOOL', inVault);
+  const href = playerProfilePath(
+    slug,
+    prediction.lifecycle ?? 'HIGH_SCHOOL',
+    inVault,
+    prediction.fullName,
+    inVault ? 'futurecast' : undefined
+  );
   const [photoIndex, setPhotoIndex] = useState(0);
   const photos = useMemo(() => headshotCandidates(slug), [slug]);
   const showPhoto = photoIndex < photos.length;
@@ -95,6 +101,14 @@ export function FutureCastHomeCard({
             )}
             {variant === 'target' && (
               <span className="fc-home-card__badge fc-home-card__badge--target">Target</span>
+            )}
+            {prediction.visitIndicator && (
+              <span className="fc-home-card__badge fc-home-card__badge--visit">{prediction.visitIndicator}</span>
+            )}
+            {prediction.staffConfidence != null && (
+              <span className="fc-home-card__badge fc-home-card__badge--staff">
+                Staff {prediction.staffConfidence}%
+              </span>
             )}
             {showMovement && (
               <div className="fc-home-card__movement">

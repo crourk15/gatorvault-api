@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { fetchLiveDashboard, type BeatPost, type LiveFeedItem, type PodcastShow } from '@/lib/live-api';
+import { fetchLiveDashboard, buildSocialLanes, type BeatPost, type LiveFeedItem, type PodcastShow } from '@/lib/live-api';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 import {
@@ -159,6 +159,8 @@ export function VaultLiveFeedPage(): React.ReactElement {
     [feed, category]
   );
 
+  const socialLanes = useMemo(() => buildSocialLanes(beat), [beat]);
+
   return (
     <div className="gv-live-feed gv-live-feed--espn" data-testid="vault-live-feed">
       <LiveTicker items={feed} />
@@ -166,9 +168,35 @@ export function VaultLiveFeedPage(): React.ReactElement {
       <div className="gv-live-feed__hero">
         <div>
           <h1 className="gv-page-title">GatorNation Live</h1>
-          <p className="gv-page-subtitle">Headlines, beat writers, and podcasts — auto-refreshes every minute.</p>
+          <p className="gv-page-subtitle">
+            Real-time media center — headlines, X feed, beat writers, UF official, and podcasts.
+          </p>
         </div>
         <span className="gv-live-feed__refresh-badge">↻ 60s</span>
+      </div>
+
+      <div className="gv-live-feed__social-lanes">
+        {socialLanes.map((lane) => (
+          <section key={lane.id} className="gv-live-feed__social-lane">
+            <h2 className="gv-live-feed__social-lane-title">
+              <span aria-hidden="true">{lane.icon}</span> {lane.label}
+            </h2>
+            <ul className="gv-live-feed__list">
+              {lane.posts.slice(0, 4).map((p, i) => (
+                <li key={`${lane.id}-${i}`} className="gv-live-feed__row gv-live-feed__row--social">
+                  <span className="gv-live-feed__row-icon" aria-hidden="true">{lane.icon}</span>
+                  <div className="gv-live-feed__row-body">
+                    {p.handle && <p className="gv-live-feed__beat-handle">@{p.handle.replace(/^@/, '')}</p>}
+                    <p className="gv-live-feed__beat-text">{p.text?.slice(0, 160)}</p>
+                  </div>
+                </li>
+              ))}
+              {lane.posts.length === 0 && (
+                <li className="gv-live-feed__row gv-live-feed__row--empty">No posts in this lane yet.</li>
+              )}
+            </ul>
+          </section>
+        ))}
       </div>
 
       <div className="gv-live-feed__tabs">
@@ -218,7 +246,7 @@ export function VaultLiveFeedPage(): React.ReactElement {
       {!loading && !error && tab === 'feed' && (
         <ul className="gv-live-feed__list">
           {filteredFeed.map((item, i) => (
-            <li key={item.id ?? i} className="gv-live-feed__row">
+            <li key={item.id ?? i} className="gv-live-feed__row gv-live-feed__row--headline">
               <span className="gv-live-feed__row-icon" aria-hidden="true">
                 {feedIcon(item)}
               </span>

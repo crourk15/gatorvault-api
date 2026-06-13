@@ -110,7 +110,7 @@ export default function MovementSnapshotsPage(): React.ReactElement {
 
   return (
     <div className="fc-snapshots-wrap" data-testid="movement-snapshots-page">
-      <FutureCastSubNav active="snapshots" />
+      <FutureCastSubNav />
       <h1 className="fc-snapshots__title">Daily &amp; Weekly Movement Snapshots</h1>
       <p className="fc-snapshots__subtitle">
         MODEL confidence risers and fallers over 1-day and 7-day windows

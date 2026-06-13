@@ -64,7 +64,7 @@ function movementDirection(p: FeedPrediction): 'up' | 'down' | 'flat' {
   return 'flat';
 }
 
-export function FutureCastHomepage(): React.ReactElement {
+export function FutureCastHomepage({ mode = 'full' }: { mode?: 'full' | 'master' | 'trending' }): React.ReactElement {
   const pathname = usePathname();
   const backHref = vaultFutureCastBackHref(pathname);
   const backLabel = isVaultPath(pathname) ? '← Vault Dashboard' : '← GatorVault Home';
@@ -159,14 +159,29 @@ export function FutureCastHomepage(): React.ReactElement {
 
   return (
     <div className="fc-home" data-testid="futurecast-home">
-      <Section
-        title="Movement Heatmap"
-        subtitle={`${data.heatmap.windowDays}-day MODEL confidence shifts`}
-        testId="home-heatmap"
-      >
-        <MovementHeatmap buckets={data.heatmap.buckets} windowDays={data.heatmap.windowDays} />
-      </Section>
+      {(mode === 'full' || mode === 'master') && (
+        <Section
+          title="Movement Heatmap"
+          subtitle={`${data.heatmap.windowDays}-day MODEL confidence shifts`}
+          testId="home-heatmap"
+        >
+          <MovementHeatmap buckets={data.heatmap.buckets} windowDays={data.heatmap.windowDays} />
+        </Section>
+      )}
 
+      {(mode === 'full' || mode === 'master') && (
+        <Section
+          title="High Priority Targets"
+          subtitle="Top UF intel board — full list in Recruiting Hub"
+          testId="home-priority"
+        >
+          <p className="fc-home-section__footer-link">
+            <a href="/vault/recruiting/priority">Open High Priority Targets in Recruiting Hub →</a>
+          </p>
+        </Section>
+      )}
+
+      {(mode === 'full' || mode === 'master') && (
       <Section
         title={`UF Commits — ${data.classYear} Class`}
         subtitle={
@@ -195,7 +210,9 @@ export function FutureCastHomepage(): React.ReactElement {
           <EmptySection message={`No ${data.classYear} commits in FutureCast yet.`} />
         )}
       </Section>
+      )}
 
+      {(mode === 'full' || mode === 'master') && (
       <Section
         title="Top Targets"
         subtitle="Uncommitted prospects sorted by UF Probability"
@@ -212,7 +229,9 @@ export function FutureCastHomepage(): React.ReactElement {
           <EmptySection message="No top targets match current filters." />
         )}
       </Section>
+      )}
 
+      {(mode === 'full' || mode === 'trending') && (
       <Section
         title="Trending Up"
         subtitle="Rising prospects — MODEL delta + recent signals (visits, buzz, staff flags)"
@@ -233,7 +252,9 @@ export function FutureCastHomepage(): React.ReactElement {
           <EmptySection message="No risers in the current window." />
         )}
       </Section>
+      )}
 
+      {(mode === 'full' || mode === 'trending') && (
       <Section
         title="Trending Down"
         subtitle="Cooling prospects — negative MODEL delta and fading signals"
@@ -254,7 +275,9 @@ export function FutureCastHomepage(): React.ReactElement {
           <EmptySection message="No fallers in the current window." />
         )}
       </Section>
+      )}
 
+      {(mode === 'full' || mode === 'master') && (
       <Section
         title="Portal Watchlist"
         subtitle={`${data.classYear} portal candidates — college & transfer targets only`}
@@ -271,6 +294,7 @@ export function FutureCastHomepage(): React.ReactElement {
           <EmptySection message="No portal candidates on the watchlist." />
         )}
       </Section>
+      )}
     </div>
   );
 }

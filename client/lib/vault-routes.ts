@@ -85,18 +85,11 @@ export function futureCastPath(pathname: string, sub = ''): string {
   return `${base}/${clean}`;
 }
 
-export type FutureCastSubId =
-  | 'home'
-  | 'board'
-  | 'movement'
-  | 'staff'
-  | 'stock'
-  | 'snapshots'
-  | 'alerts';
+export type FutureCastSubId = 'master' | 'trending' | 'movement' | 'staff' | 'stock' | 'snapshots' | 'alerts';
 
 export const FUTURECAST_SUB_PATHS: Record<FutureCastSubId, string> = {
-  home: '',
-  board: 'board',
+  master: '',
+  trending: 'trending',
   movement: 'movement',
   staff: 'staff',
   stock: 'stock',
@@ -105,11 +98,10 @@ export const FUTURECAST_SUB_PATHS: Record<FutureCastSubId, string> = {
 };
 
 export function futureCastSubHref(pathname: string, id: FutureCastSubId): string {
-  if (id === 'home') return futureCastBase(pathname);
-  if (id === 'board' || id === 'movement' || id === 'staff') {
+  if (id === 'master') return futureCastBase(pathname);
+  if (id === 'trending' || id === 'movement' || id === 'staff') {
     return FUTURECAST_SEGMENT_PATHS[id];
   }
-  /* Legacy standalone /futurecast/* pages (redirect to vault in production) */
   return futureCastPath(pathname, FUTURECAST_SUB_PATHS[id]);
 }
 

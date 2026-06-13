@@ -56,7 +56,7 @@ export function AlertsFeed(): React.ReactElement {
   if (loading) {
     return (
       <div className="fc-alerts-wrap">
-        <FutureCastSubNav active="alerts" />
+        <FutureCastSubNav />
         <p className="fc-alerts__status">Loading alerts…</p>
       </div>
     );
@@ -65,7 +65,7 @@ export function AlertsFeed(): React.ReactElement {
   if (error) {
     return (
       <div className="fc-alerts-wrap">
-        <FutureCastSubNav active="alerts" />
+        <FutureCastSubNav />
         <UiError
           title="Alerts unavailable"
           message={error}
@@ -79,7 +79,7 @@ export function AlertsFeed(): React.ReactElement {
 
   return (
     <div className="fc-alerts-wrap" data-testid="alerts-page">
-      <FutureCastSubNav active="alerts" />
+      <FutureCastSubNav />
       <h1 className="fc-alerts__title">Alerts</h1>
       <div className="fc-alerts__list">
         {alerts.map((alert) => (

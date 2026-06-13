@@ -2,27 +2,36 @@
 
 import React from 'react';
 import { usePathname } from '@/lib/use-pathname';
-import { futureCastSubHref, type FutureCastSubId } from '@/lib/vault-routes';
+import {
+  FUTURECAST_SEGMENT_PATHS,
+  parseFutureCastSegmentFromPath,
+  type FutureCastSegment,
+} from '@/lib/vault-route-map';
 
-const SUB_LINKS: { id: FutureCastSubId; label: string }[] = [
-  { id: 'home', label: 'Big Board' },
-  { id: 'board', label: 'Board' },
+const SUB_LINKS: { id: FutureCastSegment; label: string }[] = [
+  { id: 'master', label: 'Master Board' },
+  { id: 'trending', label: 'Trending Board' },
   { id: 'movement', label: 'Movement Intel' },
   { id: 'staff', label: 'Staff Notes' },
 ];
 
-export type { FutureCastSubId };
+export type FutureCastSubId = FutureCastSegment;
 
-export function FutureCastSubNav({ active }: { active: FutureCastSubId }): React.ReactElement {
+export function FutureCastSubNav({
+  active,
+}: {
+  active?: FutureCastSegment;
+}): React.ReactElement {
   const pathname = usePathname();
+  const current = active ?? parseFutureCastSegmentFromPath(pathname);
 
   return (
     <nav className="fc-futurecast-nav" aria-label="FutureCast">
       {SUB_LINKS.map((link) => (
         <a
           key={link.id}
-          href={futureCastSubHref(pathname, link.id)}
-          className={`fc-futurecast-nav__link${active === link.id ? ' is-active' : ''}`}
+          href={FUTURECAST_SEGMENT_PATHS[link.id]}
+          className={`fc-futurecast-nav__link${current === link.id ? ' is-active' : ''}`}
         >
           {link.label}
         </a>

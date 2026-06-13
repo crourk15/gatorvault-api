@@ -70,7 +70,7 @@ export default function StockBoardPage(): React.ReactElement {
 
   return (
     <div className="fc-stock-board-wrap" data-testid="stock-board-page">
-      <FutureCastSubNav active="stock" />
+      <FutureCastSubNav />
       <h1 className="fc-stock-board__title">Stock Up / Stock Down</h1>
       <p className="fc-stock-board__subtitle">7-day MODEL confidence movers</p>
       <div className="fc-stock-board">

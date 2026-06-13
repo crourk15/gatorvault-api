@@ -28,6 +28,8 @@ export interface FeedPrediction {
   ufProbability?: number | null;
   stabilityScore?: number;
   volatilityScore?: number;
+  visitIndicator?: string | null;
+  staffConfidence?: number | null;
 }
 
 export interface PlayerPrediction {

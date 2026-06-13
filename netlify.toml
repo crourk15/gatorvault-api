@@ -87,6 +87,26 @@
   status = 200
 
 [[redirects]]
+  from = "/vault/futurecast/trending/*"
+  to = "/vault/futurecast/trending/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/futurecast/trending"
+  to = "/vault/futurecast/trending/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/futurecast/movement/*"
+  to = "/vault/futurecast/movement/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/futurecast/movement"
+  to = "/vault/futurecast/movement/index.html"
+  status = 200
+
+[[redirects]]
   from = "/vault/futurecast/stock/*"
   to = "/vault/futurecast/stock/index.html"
   status = 200

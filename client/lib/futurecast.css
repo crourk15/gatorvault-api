@@ -2000,3 +2000,63 @@
   color: #8b949e;
   font-size: 0.75rem;
 }
+
+/* Staff Notes (FutureCast) */
+.fc-staff-notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.fc-staff-note-card {
+  display: block;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  background: rgba(10, 22, 40, 0.9);
+  text-decoration: none;
+  color: inherit;
+}
+
+.fc-staff-note-card:hover {
+  border-color: rgba(250, 70, 22, 0.45);
+}
+
+.fc-staff-note-card__name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.35rem;
+}
+
+.fc-staff-note-card__projection {
+  font-size: 0.75rem;
+  color: #fa4616;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+}
+
+.fc-staff-note-card__note {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.fc-staff-note-card__comp {
+  font-size: 0.6875rem;
+  color: #64748b;
+  margin: 0.35rem 0 0;
+  font-style: italic;
+}
+
+.fc-home-card__badge--visit {
+  background: rgba(250, 70, 22, 0.2);
+  color: #fb923c;
+}
+
+.fc-home-card__badge--staff {
+  background: rgba(0, 48, 135, 0.35);
+  color: #cbd5e1;
+}

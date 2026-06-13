@@ -20,7 +20,7 @@ export type LiveFeedTab = 'headlines' | 'beat' | 'podcasts';
 
 export type FilmRoomSegment = 'scheme' | 'breakdowns' | 'press' | 'highlights';
 
-export type FutureCastSegment = 'board' | 'movement' | 'staff';
+export type FutureCastSegment = 'master' | 'trending' | 'movement' | 'staff';
 
 export type ScheduleSport = 'football' | 'basketball' | 'baseball';
 
@@ -82,10 +82,28 @@ export const FILM_ROOM_SEGMENT_PATHS: Record<FilmRoomSegment, string> = {
 
 /** FutureCast sub-routes */
 export const FUTURECAST_SEGMENT_PATHS: Record<FutureCastSegment, string> = {
-  board: '/vault/futurecast/board',
+  master: '/vault/futurecast',
+  trending: '/vault/futurecast/trending',
   movement: '/vault/futurecast/movement',
   staff: '/vault/futurecast/staff',
 };
+
+/** Legacy board path → trending */
+export const FUTURECAST_LEGACY_PATH_ALIASES: Record<string, FutureCastSegment> = {
+  '/vault/futurecast/board': 'master',
+  '/vault/futurecast/heat-check': 'movement',
+};
+
+export function parseFutureCastSegmentFromPath(pathname?: string): FutureCastSegment {
+  const p = normPath(pathname ?? (typeof window !== 'undefined' ? window.location.pathname : ''));
+  if (p in FUTURECAST_LEGACY_PATH_ALIASES) {
+    return FUTURECAST_LEGACY_PATH_ALIASES[p];
+  }
+  if (p.includes('/futurecast/trending')) return 'trending';
+  if (p.includes('/futurecast/movement')) return 'movement';
+  if (p.includes('/futurecast/staff')) return 'staff';
+  return 'master';
+}
 
 /** Schedule & tickets */
 export const SCHEDULE_SPORT_PATHS: Record<ScheduleSport, string> = {

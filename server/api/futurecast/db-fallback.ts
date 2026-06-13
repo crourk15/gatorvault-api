@@ -28,7 +28,7 @@ export function respondDatabaseUnavailable(
   err?: unknown
 ): void {
   const schema = err != null && isFutureCastSchemaError(err);
-  res.status(schema ? 200 : 503).json({
+  res.status(200).json({
     ...payload,
     unavailable: !schema,
     schemaPending: schema || undefined,

@@ -41,7 +41,7 @@ function PlayerLinks({
         {players.map((player) => (
           <li key={player.id}>
             <a
-              href={playerProfilePath(player.slug, player.lifecycle ?? 'HIGH_SCHOOL', inVault)}
+              href={playerProfilePath(player.slug, player.lifecycle ?? 'HIGH_SCHOOL', inVault, player.name, inVault ? 'futurecast' : undefined)}
               className="fc-staff-dashboard__link"
             >
               {player.name} — {valueLabel(player)}
@@ -102,7 +102,7 @@ export default function StaffDashboardPage(): React.ReactElement {
   if (loading) {
     return (
       <div className="fc-staff-dashboard-wrap">
-        <FutureCastSubNav active="staff" />
+        <FutureCastSubNav />
         <p className="fc-staff-dashboard__status">Loading dashboard…</p>
       </div>
     );
@@ -111,7 +111,7 @@ export default function StaffDashboardPage(): React.ReactElement {
   if (error || !data) {
     return (
       <div className="fc-staff-dashboard-wrap">
-        <FutureCastSubNav active="staff" />
+        <FutureCastSubNav />
         <UiError
           title="Movement Intel unavailable"
           message={
@@ -126,12 +126,16 @@ export default function StaffDashboardPage(): React.ReactElement {
     );
   }
 
+  const degraded = data.unavailable;
+
   return (
     <div className="fc-staff-dashboard-wrap" data-testid="staff-dashboard-page">
-      <FutureCastSubNav active="staff" />
+      <FutureCastSubNav />
       <h1 className="fc-staff-dashboard__title">Movement Intel</h1>
       <p className="fc-staff-dashboard__subtitle">
-        FutureCast risers, fallers, and fit scores. Admin analytics and Autoposter live at{' '}
+        FutureCast risers, fallers, and fit scores.
+        {degraded && ' Database offline — showing empty window until API reconnects.'}
+        {' '}Admin analytics live at{' '}
         <a href="/admin/product-health">/admin/product-health</a> (ops PIN required).
       </p>
 

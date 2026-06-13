@@ -32,6 +32,7 @@ export interface StaffDashboardResponse {
   alerts: FutureCastAlert[];
   movementWindowDays: number;
   volatilityWindowDays: number;
+  unavailable?: boolean;
 }
 
 export async function fetchStaffDashboard(): Promise<StaffDashboardResponse> {
