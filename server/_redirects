@@ -1,7 +1,22 @@
-# FutureCast React UI (Next.js static export from client/ — merged at Netlify build)
-/futurecast/predictions  /futurecast/  301
+# FutureCast React UI (Next.js static export — merged from client/out at Netlify build)
+/futurecast/predictions  /futurecast/index.html  301
 /futurecast/player/*  /player/:splat  301
+/futurecast/stock  /futurecast/stock/index.html  200
+/futurecast/stock/  /futurecast/stock/index.html  200
+/futurecast/stock/*  /futurecast/stock/index.html  200
+/futurecast/snapshots  /futurecast/snapshots/index.html  200
+/futurecast/snapshots/  /futurecast/snapshots/index.html  200
+/futurecast/snapshots/*  /futurecast/snapshots/index.html  200
+/futurecast  /futurecast/index.html  200
+/futurecast/  /futurecast/index.html  200
+/futurecast/*  /futurecast/index.html  200
 /player/*  /player/index.html  200
+/alerts  /alerts/index.html  200
+/alerts/  /alerts/index.html  200
+/alerts/*  /alerts/index.html  200
+/staff/dashboard  /staff/dashboard/index.html  200
+/staff/dashboard/  /staff/dashboard/index.html  200
+/staff/dashboard/*  /staff/dashboard/index.html  200
 /highlight/*  /highlight.html  200
 /article/*  /article.html  200
 /admin  /admin.html  200

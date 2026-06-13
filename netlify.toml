@@ -9,6 +9,37 @@
   NODE_VERSION = "20"
   NEXT_PUBLIC_API_BASE = "https://gatorvault-api.onrender.com"
 
+# FutureCast React routes — rewrite to static export (200 = serve file, not redirect)
+[[redirects]]
+  from = "/futurecast/predictions"
+  to = "/futurecast/index.html"
+  status = 301
+
+[[redirects]]
+  from = "/futurecast/player/*"
+  to = "/player/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/futurecast/stock/*"
+  to = "/futurecast/stock/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/futurecast/snapshots/*"
+  to = "/futurecast/snapshots/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/futurecast"
+  to = "/futurecast/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/futurecast/*"
+  to = "/futurecast/index.html"
+  status = 200
+
 [[headers]]
   for = "/favicon.ico"
   [headers.values]

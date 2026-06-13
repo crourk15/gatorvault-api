@@ -80,9 +80,6 @@ app.get('/futurecast-big-board.html', (req, res) => {
 app.get('/futurecast/player/:slug', (req, res) => {
   res.redirect(301, `/player/${encodeURIComponent(req.params.slug)}`);
 });
-app.get('/futurecast-player.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'futurecast-player.html'));
-});
 
 app.get('/futurecast/portal-watchlist', (req, res) => {
   res.sendFile(path.join(__dirname, 'futurecast-portal-watchlist.html'));
@@ -97,7 +94,7 @@ app.get('/futurecast/predictions', (req, res) => {
 });
 
 app.get('/futurecast/predictors', (req, res) => {
-  res.sendFile(path.join(__dirname, 'futurecast-predictors.html'));
+  res.redirect(301, '/futurecast');
 });
 
 const { mountFutureCastUiRoutes } = require('./lib/futurecast-ui-routes');
