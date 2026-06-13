@@ -23,6 +23,7 @@
     "migrate:players": "npx tsx migrators/migrate-players.ts",
     "migrate:predictions": "npx tsx migrators/run-migration.ts migrations/011_create_predictions_table.sql",
     "migrate:predictions-delta": "npx tsx migrators/run-migration.ts migrations/012_add_predictions_delta.sql",
+    "migrate:predictions-delta:psql": "psql \"$env:DATABASE_URL\" -f migrations/012_add_predictions_delta.sql",
     "sync:predictions": "npx tsx scripts/sync-predictions.js",
     "sync:database-url": "node scripts/sync-database-url.js --deploy",
     "transform:players": "npx tsx scripts/transform-recruiting-data.ts"
