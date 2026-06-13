@@ -1,76 +1,44 @@
 {
-  "version": 1,
+  "version": 2,
+  "architecture": "react-vault",
   "allowedBackgroundsByPage": {
-    "/team": ["team-gradient", "team-dark", "team-surface"],
-    "/film-room": ["film-slate", "film-dark"],
-    "/": ["home-dark", "home-gradient"],
-    "/latest": ["feed-dark", "feed-surface"],
-    "/admin": ["admin-neutral"],
-    "trial": ["trial-promo", "trial-gradient"]
+    "/vault/team": ["vault-dark", "vault-surface"],
+    "/vault/film-room": ["vault-dark", "vault-surface"],
+    "/vault/live-feed": ["vault-dark", "vault-surface"],
+    "/": ["landing-dark", "landing-gradient"],
+    "/admin": ["admin-neutral"]
   },
   "forbiddenBackgroundsCrossPage": {
-    "trial-promo": ["/team", "/film-room", "/latest", "/admin"],
-    "team-gradient": ["trial"],
-    "film-slate": ["trial", "/team"]
+    "trial-promo": ["/vault/team", "/vault/film-room", "/vault/live-feed", "/admin"],
+    "monolith-vpane": ["/", "/vault"]
   },
   "backgroundDetectors": {
     "trial-promo": [
       "trial-expired-ov",
       "trial-payment-banner",
       "id=\"pricing-sec\"",
-      "pricing-features-film",
-      "text-amber-300",
-      "from-amber",
-      "bg-amber"
+      "pricing-features-film"
     ],
-    "trial-gradient": [
-      "trial-expired",
-      "gradient-to-r from-amber",
-      "bg-gradient-to-br from-amber"
-    ],
-    "team-gradient": [
-      "gv-team-page",
-      "gv-team-era-card",
-      "gv-team-overview",
-      "gv-team-identity-card"
-    ],
-    "team-dark": [
-      "gv-team-card-bg",
-      "--gv-team-card-bg",
-      "#121c2e"
-    ],
-    "team-surface": [
-      "gv-team-section",
-      "gv-mteam-tile-grid",
-      "gv-team-ach-grid"
-    ],
-    "film-slate": [
-      "vpane-highlights",
-      "film-room-categories",
-      "highlight-modal-ov"
-    ],
-    "film-dark": [
-      "highlight-modal",
-      "gv-film-source",
-      "gv-verified-source"
-    ],
-    "home-dark": [
+    "monolith-vpane": [
       "vpane-start",
-      "vault-overlay",
-      "gv-site-ticker"
+      "vpane-mteam",
+      "vpane-highlights",
+      "gvOpenTeamDetail",
+      "openHighlightPlayer"
     ],
-    "home-gradient": [
-      "bg-surface-700",
-      "border-gator-blue"
+    "vault-dark": [
+      "gv-vault-shell",
+      "gv-vault-shell__main",
+      "#060f1f"
     ],
-    "feed-dark": [
-      "vpane-beat",
-      "live-feed",
-      "gv-live"
+    "vault-surface": [
+      "gv-page-hero",
+      "gv-hub-tabs",
+      "gv-rh-grid"
     ],
-    "feed-surface": [
-      "feed-item",
-      "latest-updates"
+    "landing-dark": [
+      "data-testid=\"landing-page\"",
+      "gv-landing-hero"
     ],
     "admin-neutral": [
       "hub-bg",
@@ -79,111 +47,79 @@
     ]
   },
   "pageRegions": {
-    "/team": {
-      "regionIds": ["vpane-team", "vpane-mteam"],
-      "requiredClasses": ["gv-team-page", "gv-team-section"],
-      "desktopOnlyClasses": ["gv-team-overview-layout"],
-      "forbiddenDetectors": ["trial-promo", "trial-gradient"],
-      "cssFile": "/css/gv-team.css"
+    "/vault/team": {
+      "regionIds": ["vault-team"],
+      "requiredClasses": ["gv-team-page", "gv-hub-tabs"],
+      "requiredTestIds": ["vault-team"],
+      "forbiddenDetectors": ["trial-promo", "monolith-vpane"],
+      "cssFile": "/lib/vault-shell.css"
     },
-    "/film-room": {
-      "regionIds": ["vpane-highlights"],
-      "requiredClasses": ["Film Room"],
-      "forbiddenDetectors": ["trial-promo", "trial-gradient"],
-      "requiredHooks": ["gvOpenVerifiedSource", "gv-film-source", "gvOpenFilmRoomHub", "film-room-hub-landing"]
+    "/vault/film-room": {
+      "regionIds": ["vault-film-room"],
+      "requiredClasses": ["gv-film-room", "gv-film-hub-grid"],
+      "requiredTestIds": ["vault-film-room"],
+      "forbiddenDetectors": ["trial-promo", "monolith-vpane"]
+    },
+    "/vault/recruiting": {
+      "regionIds": ["vault-recruiting"],
+      "requiredClasses": ["gv-recruiting-hub", "gv-hub-tabs"],
+      "requiredTestIds": ["vault-recruiting-hub"],
+      "forbiddenDetectors": ["trial-promo", "monolith-vpane"]
+    },
+    "/vault/live-feed": {
+      "regionIds": ["vault-live-feed"],
+      "requiredClasses": ["gv-live-feed", "gv-live-ticker"],
+      "requiredTestIds": ["vault-live-feed"],
+      "forbiddenDetectors": ["trial-promo", "monolith-vpane"]
     },
     "/": {
-      "regionIds": ["vpane-start", "vpane-mhome"],
-      "forbiddenDetectors": ["trial-promo"],
-      "allowDetectors": ["home-dark", "home-gradient"]
-    },
-    "/latest": {
-      "regionIds": ["vpane-beat"],
-      "forbiddenDetectors": ["trial-promo", "team-gradient"],
-      "allowDetectors": ["feed-dark", "feed-surface"]
+      "regionIds": ["landing"],
+      "requiredTestIds": ["landing-page"],
+      "forbiddenDetectors": ["monolith-vpane"],
+      "allowDetectors": ["landing-dark"]
     },
     "/admin": {
       "fetchPath": "/admin",
       "requiredClasses": ["admin-hub-core", "hub-sidebar"],
-      "forbiddenDetectors": ["trial-promo", "team-gradient", "film-slate"],
+      "forbiddenDetectors": ["trial-promo", "monolith-vpane"],
       "allowDetectors": ["admin-neutral"]
     }
   },
   "componentVariants": {
-    "team-overview": {
-      "regionIds": ["vpane-team", "vpane-mteam"],
-      "requiredMarkers": ["gv-team-overview-layout", "gv-team-overview-main"],
-      "mobileMarkers": ["gv-mteam-tile-grid", "gv-team-section-title--accent"],
+    "vault-shell": {
+      "requiredMarkers": ["gv-vault-shell", "gv-vault-shell__sidebar"],
+      "mobileMarkers": ["gv-vault-bottom-nav"],
       "allowedVariantClasses": [
-        "gv-team-era-card",
-        "gv-team-ach-tile",
-        "gv-team-identity-card",
-        "gv-coach-card",
-        "gv-team-section",
-        "gv-team-overview-layout",
-        "gv-team-page-hdr",
-        "gv-hscroll-wrap",
-        "gv-team-hscroll-wrap"
+        "gv-vault-shell__nav-link",
+        "gv-vault-bottom-nav__item",
+        "gv-page-hero"
       ],
       "forbiddenClasses": [
-        "pricing-sec",
-        "trial-expired-ov",
-        "reg-modal",
-        "faq-btn",
-        "card-h"
+        "vpane",
+        "gv-bottom-nav",
+        "highlight-card",
+        "film-room-hub-landing"
       ]
     },
-    "film-source": {
-      "globalHooks": [
-        "gv-verified-source-modal",
-        "gv-film-source",
-        "gvOpenVerifiedSource"
-      ],
+    "live-feed": {
+      "requiredMarkers": ["gv-live-ticker", "gv-live-feed__tabs", "gv-live-feed__list"],
       "allowedVariantClasses": [
-        "highlight-modal-ov",
-        "gv-verified-source-ov",
-        "film-room"
+        "gv-live-feed__row",
+        "gv-live-feed__chip",
+        "gv-live-feed__podcast-card"
       ],
-      "forbiddenClasses": ["trial-expired-ov", "pricing-sec"]
-    },
-    "trial-page": {
-      "regionMarkers": ["pricing-sec", "reg-modal", "trial-payment-banner"],
-      "allowedVariantClasses": ["pricing-card", "faq-btn", "reg-modal", "trial-expired-ov"],
-      "trialClassesForbiddenInTeamRegions": [
-        "trial-expired-ov",
-        "pricing-sec",
-        "reg-modal",
-        "faq-btn",
-        "card-h",
-        "text-amber-300",
-        "from-amber",
-        "bg-amber"
-      ],
-      "teamClassesForbiddenInTrialRegions": ["gv-team-overview-layout", "gv-team-page"]
+      "forbiddenClasses": ["vpane-beat", "live-feed-list"]
     }
   },
   "cssTokenRules": {
-    "team": {
-      "file": "/css/gv-team.css",
-      "requiredTokens": [
-        "--gv-team-card-bg",
-        "--gv-team-radius",
-        "--gv-team-space-4",
-        "--gv-team-title",
-        "--gv-team-body"
-      ],
-      "forbiddenInTeamHtml": ["--hub-bg", "--hub-orange", "--hub-panel"]
-    },
-    "designSystemAliases": {
-      "--bg-primary": "--gv-team-card-bg",
-      "--bg-secondary": "--gv-team-card-border",
-      "--brand-accent": "#fa4616",
-      "--surface-card": "--gv-team-card-bg",
-      "--surface-section": "--gv-team-space-6"
+    "vault": {
+      "file": "/lib/vault-shell.css",
+      "requiredTokens": ["gv-vault-shell", "gv-page-title", "gv-hub-tab"],
+      "forbiddenInVaultHtml": ["--hub-bg", "gv-team-modal-body"]
     }
   },
   "severityDefaults": {
-    "team-overview-background": "high",
+    "monolith-contamination": "critical",
     "theme-token": "high",
     "component-variant": "medium",
     "css-link": "high",

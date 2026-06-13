@@ -158,11 +158,11 @@ function analyzeMissingContent(snapshots) {
           severity: 'high',
           confidence: 95,
           message: `Missing required element ${el.selector} in ${section.label}`,
-          recommendedFix: `Restore ${el.selector} in index.html or team module for ${section.label}`,
+          recommendedFix: `Ensure ${el.selector} exists on React route ${section.page || '/vault'} — rebuild client export`,
           screenshotCrop: snap.screenshot
         });
       } else if (el.textLength === 0 && section.minTextLength?.[el.selector] !== 0) {
-        const needsText = ['#gv-team-eras-track', '#gv-team-roster-list', '#live-feed-list'];
+        const needsText = ['.gv-team-roster', '.gv-live-feed__list', '.gv-rh-grid'];
         if (needsText.includes(el.selector)) {
           issues.push({
             ruleId: 'B1',
@@ -185,58 +185,47 @@ function analyzeMissingContent(snapshots) {
   return issues;
 }
 
-/** B2 — wrong ordering */
+/** B2 — wrong ordering (React film hub + depth chart data) */
 function analyzeWrongOrdering() {
   const issues = [];
-  const teamJs = readLocal('js/gv-team-mobile.js');
-  const indexHtml = readLocal('index.html');
-
-  const filmSection = SITE_SECTIONS.find((s) => s.id === 'film-room');
+  const filmSection = SITE_SECTIONS.find((s) => s.id === 'vault-film-room');
   if (filmSection?.expectedOrder) {
-    const hubMatch = indexHtml.match(/_gvFilmRoomHubs\s*=\s*\[([^\]]+)\]/);
-    if (hubMatch) {
-      const order = hubMatch[1]
-        .split(',')
-        .map((s) => s.replace(/['"]/g, '').trim())
-        .filter(Boolean);
-      filmSection.expectedOrder.forEach((hub, i) => {
-        if (order[i] && order[i] !== hub) {
-          issues.push({
-            ruleId: 'B2',
-            checkId: 'crawler:wrong-ordering',
-            sectionId: 'film-room',
-            page: '/',
-            selector: '#vpane-highlights',
-            domPath: 'film-room-hub-order',
-            severity: 'medium',
-            confidence: 90,
-            message: `Film Room hub position ${i + 1} expected "${hub}" but found "${order[i]}"`,
-            recommendedFix: 'Reorder _gvFilmRoomHubs array: Scheme → Breakdown → Press → Highlights'
-          });
-        }
-      });
-    }
-  }
-
-  const historySection = SITE_SECTIONS.find((s) => s.id === 'program-history');
-  if (historySection?.expectedOrder) {
-    const positions = historySection.expectedOrder.map((era) => teamJs.indexOf(era));
-    for (let i = 1; i < positions.length; i += 1) {
-      if (positions[i] >= 0 && positions[i - 1] >= 0 && positions[i] < positions[i - 1]) {
+    const clientFilm = readLocal('../client/lib/film-room-api.ts') || readLocal('vault/film-room/index.html');
+    filmSection.expectedOrder.forEach((hub, i) => {
+      if (clientFilm && !clientFilm.includes(hub)) {
         issues.push({
           ruleId: 'B2',
           checkId: 'crawler:wrong-ordering',
-          sectionId: 'program-history',
-          page: '/',
-          selector: '#gv-team-eras-track',
-          domPath: 'program-history-era-order',
+          sectionId: 'vault-film-room',
+          page: '/vault/film-room',
+          selector: '.gv-film-hub-grid',
+          domPath: 'film-hub-order',
           severity: 'medium',
           confidence: 85,
-          message: `Program History era ${historySection.expectedOrder[i]} out of order`,
-          recommendedFix: 'Reorder ERAS array in gv-team-mobile.js chronologically'
+          message: `Film Room category "${hub}" missing from React hub order`,
+          recommendedFix: 'Verify FILM_HUB_ORDER in client/lib/film-room-api.ts matches expected categories'
         });
       }
-    }
+    });
+  }
+
+  const depthSrc =
+    readLocal('../client/lib/depth-chart-data.ts') ||
+    readLocal('data/roster/depth-chart.json') ||
+    readLocal('vault/team/index.html');
+  if (depthSrc && !depthSrc.includes('QB') && !depthSrc.includes('DEPTH_BY_PHASE')) {
+    issues.push({
+      ruleId: 'B2',
+      checkId: 'crawler:wrong-ordering',
+      sectionId: 'vault-team',
+      page: '/vault/team',
+      selector: '.gv-dc-grid',
+      domPath: 'depth-chart-data',
+      severity: 'medium',
+      confidence: 80,
+      message: 'Depth chart position data missing from React team module',
+      recommendedFix: 'Verify DEPTH_BY_PHASE in client/lib/depth-chart-data.ts'
+    });
   }
 
   return issues;
@@ -256,7 +245,7 @@ async function analyzeStaleContent() {
         checkId: 'crawler:stale-content',
         sectionId: 'homepage',
         page: '/',
-        selector: '#live-feed-list',
+        selector: '.gv-live-feed__list',
         domPath: 'live-dashboard',
         severity: 'high',
         confidence: 90,
@@ -283,7 +272,7 @@ async function analyzeStaleContent() {
         checkId: 'crawler:autoposter-stale',
         sectionId: 'homepage',
         page: '/',
-        selector: '#live-feed-list',
+        selector: '.gv-live-feed__list',
         domPath: 'autoposter-feed',
         severity: ageHours > 24 ? 'critical' : ageHours > 12 ? 'high' : 'medium',
         confidence: 88,
@@ -313,7 +302,7 @@ function analyzeAutoposter(items) {
         checkId: 'crawler:autoposter-dup',
         sectionId: 'homepage',
         page: '/',
-        selector: '#live-feed-list',
+        selector: '.gv-live-feed__list',
         domPath: `feed-item-${idx}`,
         severity: 'high',
         confidence: 95,
@@ -329,7 +318,7 @@ function analyzeAutoposter(items) {
             checkId: 'crawler:autoposter-similarity',
             sectionId: 'homepage',
             page: '/',
-            selector: '#live-feed-list',
+            selector: '.gv-live-feed__list',
             domPath: `feed-item-${idx}`,
             severity: 'medium',
             confidence: Math.round(sim * 100),
@@ -359,7 +348,7 @@ function analyzeUfOnly(items) {
         checkId: 'crawler:uf-only',
         sectionId: 'homepage',
         page: '/',
-        selector: '#live-feed-list',
+        selector: '.gv-live-feed__list',
         domPath: `feed-item-${idx}`,
         severity: 'low',
         confidence: 70,
@@ -372,10 +361,9 @@ function analyzeUfOnly(items) {
   return issues.slice(0, 5);
 }
 
-/** D1/D2 — recruiting & war room */
+/** D1/D2 — recruiting & war room (API data only) */
 async function analyzeRecruiting() {
   const issues = [];
-  const indexHtml = readLocal('index.html');
 
   try {
     const { body } = await fetchJson(`${config.API_URL}/api/recruiting/board`);
@@ -388,9 +376,9 @@ async function analyzeRecruiting() {
         issues.push({
           ruleId: 'D1',
           checkId: 'crawler:recruiting-mismatch',
-          sectionId: 'recruiting',
-          page: '/',
-          selector: '#vpane-recruit',
+          sectionId: 'vault-recruiting',
+          page: '/vault/recruiting',
+          selector: '.gv-rh-grid',
           domPath: `player-${idx}`,
           severity: 'high',
           confidence: 92,
@@ -404,9 +392,9 @@ async function analyzeRecruiting() {
         issues.push({
           ruleId: 'D1',
           checkId: 'crawler:recruiting-mismatch',
-          sectionId: 'recruiting',
-          page: '/',
-          selector: '#vpane-recruit',
+          sectionId: 'vault-recruiting',
+          page: '/vault/recruiting',
+          selector: '.gv-rh-grid',
           domPath: `player-${p.name}`,
           severity: 'medium',
           confidence: 90,
@@ -419,30 +407,33 @@ async function analyzeRecruiting() {
     /* api module */
   }
 
-  const warRoomMarkers = ['war-room', 'confidence', 'heat', 'gv-war-room'];
-  const missingWar = warRoomMarkers.filter((m) => !indexHtml.includes(m));
-  if (missingWar.length >= 2) {
-    issues.push({
-      ruleId: 'D2',
-      checkId: 'crawler:war-room',
-      sectionId: 'recruiting',
-      page: '/',
-      selector: '#vpane-scouting',
-      domPath: 'war-room-panel',
-      severity: 'medium',
-      confidence: 65,
-      message: `War Room UI markers missing: ${missingWar.join(', ')}`,
-      recommendedFix: 'Restore War Room notes, confidence meter, and heat meter hooks'
-    });
+  try {
+    const { body } = await fetchJson(`${config.API_URL}/api/war-room/breakdowns`);
+    const breakdowns = body.breakdowns || body.items || [];
+    if (Array.isArray(breakdowns) && breakdowns.length === 0) {
+      issues.push({
+        ruleId: 'D2',
+        checkId: 'crawler:war-room',
+        sectionId: 'vault-recruiting',
+        page: '/vault/recruiting',
+        selector: '.gv-rh-scouting',
+        domPath: 'scouting-tab',
+        severity: 'low',
+        confidence: 60,
+        message: 'War Room / scouting breakdowns API returned zero items',
+        recommendedFix: 'Populate war-room breakdowns for Recruiting Hub scouting tab'
+      });
+    }
+  } catch {
+    /* optional */
   }
 
   return issues;
 }
 
-/** E1/E2 — roster & depth chart */
+/** E1/E2 — roster & depth chart (API + React data) */
 async function analyzeTeamData() {
   const issues = [];
-  const teamJs = readLocal('js/gv-team-mobile.js');
 
   try {
     const { body } = await fetchJson(`${config.API_URL}/api/roster/players`);
@@ -451,9 +442,9 @@ async function analyzeTeamData() {
       issues.push({
         ruleId: 'E1',
         checkId: 'crawler:roster-mismatch',
-        sectionId: 'roster',
-        page: '/',
-        selector: '#gv-team-roster-list',
+        sectionId: 'vault-team',
+        page: '/vault/team',
+        selector: '.gv-team-roster',
         domPath: 'roster-api',
         severity: 'high',
         confidence: 95,
@@ -466,9 +457,9 @@ async function analyzeTeamData() {
         issues.push({
           ruleId: 'E1',
           checkId: 'crawler:roster-mismatch',
-          sectionId: 'roster',
-          page: '/',
-          selector: '#gv-team-roster-list',
+          sectionId: 'vault-team',
+          page: '/vault/team',
+          selector: '.gv-team-roster-row',
           domPath: `player-${p.name}`,
           severity: 'medium',
           confidence: 88,
@@ -481,19 +472,19 @@ async function analyzeTeamData() {
     /* api module */
   }
 
-  const indexHtml = readLocal('index.html');
-  if (!indexHtml.includes('renderDCCards') && !indexHtml.includes('gv-team-dc-off')) {
+  const depthSrc = readLocal('../client/lib/depth-chart-data.ts') || readLocal('vault/team/index.html');
+  if (!depthSrc.includes('DEPTH_BY_PHASE') && !depthSrc.includes('gv-dc-grid')) {
     issues.push({
       ruleId: 'E2',
       checkId: 'crawler:depth-chart',
-      sectionId: 'depth-chart',
-      page: '/',
-      selector: '#gv-team-dc-section',
+      sectionId: 'vault-team',
+      page: '/vault/team',
+      selector: '.gv-dc-grid',
       domPath: 'depth-chart-data',
       severity: 'medium',
       confidence: 75,
-      message: 'Depth chart data hooks missing from team module',
-      recommendedFix: 'Restore depth chart ordering and backup slots in gv-team-mobile.js'
+      message: 'React depth chart module markers missing',
+      recommendedFix: 'Verify VaultTeamPage depth chart tab and DEPTH_BY_PHASE data'
     });
   }
 
@@ -589,91 +580,46 @@ async function analyzeApiHealth() {
   return issues;
 }
 
-/** F3 — 404 asset detection */
+/** F3 — 404 asset detection (React exports only — no monolith CSS paths) */
 async function analyze404Assets() {
-  const issues = [];
-  const indexHtml = readLocal('index.html');
-  const assetRe = /(?:src|href)=["']([^"']+\.(?:css|js|png|jpg|jpeg|webp|svg|woff2?))["']/gi;
-  const assets = new Set();
-  let m;
-  while ((m = assetRe.exec(indexHtml))) {
-    const href = m[1];
-    if (!href.startsWith('http') && !href.startsWith('//')) assets.add(href.replace(/^\//, ''));
-  }
-
-  const sample = [...assets].slice(0, 15);
-  await Promise.all(
-    sample.map(async (rel) => {
-      const localPath = path.join(SERVER_ROOT, rel);
-      if (!fs.existsSync(localPath)) {
-        issues.push({
-          ruleId: 'F3',
-          checkId: 'crawler:404',
-          sectionId: 'homepage',
-          page: '/',
-          selector: rel,
-          domPath: rel,
-          severity: 'high',
-          confidence: 99,
-          message: `Missing local asset: ${rel}`,
-          recommendedFix: `Restore or fix path for ${rel} in index.html`
-        });
-        return;
-      }
-      const url = `${config.SITE_URL}/${rel}`;
-      const r = await headUrl(url);
-      if (!r.ok && r.status === 404) {
-        issues.push({
-          ruleId: 'F3',
-          checkId: 'crawler:404',
-          sectionId: 'homepage',
-          page: '/',
-          selector: rel,
-          domPath: rel,
-          severity: 'high',
-          confidence: 95,
-          message: `Production 404: ${rel}`,
-          recommendedFix: `Deploy missing asset ${rel} to Netlify`
-        });
-      }
-    })
-  );
-
-  return issues.slice(0, 10);
+  return require('../crawler/checks/crawler-404').analyze404Assets();
 }
 
-/** Pressers & highlights static checks */
+/** Pressers & highlights — React Film Room categories */
 function analyzePressersHighlights() {
   const issues = [];
-  const indexHtml = readLocal('index.html');
+  const filmHtml =
+    readLocal('vault/film-room/index.html') ||
+    readLocal('../client/lib/film-room-api.ts') ||
+    readLocal('index.html');
 
-  if (!indexHtml.includes('UF Press Conferences') && !indexHtml.includes('Press Conferences')) {
+  if (!filmHtml.includes('UF Press Conferences') && !filmHtml.includes('Press Conferences')) {
     issues.push({
       ruleId: 'B1',
       checkId: 'crawler:pressers-missing',
-      sectionId: 'press-conferences',
-      page: '/',
-      selector: '#vpane-highlights',
+      sectionId: 'vault-film-room',
+      page: '/vault/film-room',
+      selector: '.gv-film-hub-card',
       domPath: 'film-room-press-category',
       severity: 'high',
       confidence: 90,
-      message: 'Press Conferences category missing from Film Room hub',
-      recommendedFix: 'Add UF Press Conferences to Film Room hub categories'
+      message: 'Press Conferences category missing from React Film Room hub',
+      recommendedFix: 'Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage'
     });
   }
 
-  if (!indexHtml.includes('highlight-card') && !indexHtml.includes('openHighlightPlayer')) {
+  if (!filmHtml.includes('Highlights') && !filmHtml.includes('gv-film-lesson')) {
     issues.push({
       ruleId: 'B1',
       checkId: 'crawler:highlights-missing',
-      sectionId: 'highlights',
-      page: '/',
-      selector: '#highlight-modal-ov',
-      domPath: 'highlights-player',
-      severity: 'high',
-      confidence: 90,
-      message: 'Highlights player hooks missing',
-      recommendedFix: 'Restore highlight-card and openHighlightPlayer in index.html'
+      sectionId: 'vault-film-room',
+      page: '/vault/film-room',
+      selector: '.gv-film-lessons',
+      domPath: 'film-room-highlights',
+      severity: 'medium',
+      confidence: 85,
+      message: 'Highlights category missing from React Film Room',
+      recommendedFix: 'Verify Film Room catalog includes Highlights hub category'
     });
   }
 

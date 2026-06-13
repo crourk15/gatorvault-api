@@ -69,9 +69,105 @@ async function usesReactVaultShell(page) {
   return page.evaluate(() => !!document.querySelector('.gv-vault-shell'));
 }
 
-async function tapNav(page, tab) {
+async function legacyTapNav(page, tab) {
   await page.click(`#gv-bottom-nav .gv-bnav-btn[data-mnav="${tab}"]`, { timeout: 8000 });
   await page.waitForTimeout(1200);
+}
+
+async function tapReactBottomNav(page, hrefPart) {
+  const selector = `.gv-vault-bottom-nav__item[href*="${hrefPart}"]`;
+  await page.click(selector, { timeout: 8000 });
+  await page.waitForTimeout(1200);
+}
+
+async function runReactVaultNavFlow(page) {
+  const flowId = 'react-vault-nav';
+  const issues = [];
+  const routes = [
+    { href: '/vault/recruiting', testid: 'vault-recruiting-hub' },
+    { href: '/vault/team', testid: 'vault-team' },
+    { href: '/vault/live-feed', testid: 'vault-live-feed' }
+  ];
+
+  for (const route of routes) {
+    await tapReactBottomNav(page, route.href);
+    const ok = await page.evaluate((testid) => {
+      return !!document.querySelector(`[data-testid="${testid}"]`);
+    }, route.testid);
+    if (!ok) {
+      issues.push(
+        issue(
+          'navigation',
+          route.href,
+          `Bottom nav did not load React page (missing ${route.testid})`,
+          'Verify VaultShell bottom nav links and SSG exports',
+          { flowId, severity: 'high' }
+        )
+      );
+    }
+  }
+
+  return { flowId, pass: issues.length === 0, issues };
+}
+
+async function runReactLiveFeedFlow(page, apiUrl, maxAgeHours) {
+  const flowId = 'react-live-feed';
+  const issues = [];
+
+  await page.goto(`${config.SITE_URL}/vault/live-feed`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+  await page.waitForSelector('[data-testid="vault-live-feed"]', { timeout: 20000 }).catch(() => {});
+  await page.waitForTimeout(2000);
+
+  const uiState = await page.evaluate(() => ({
+    ticker: !!document.querySelector('.gv-live-ticker'),
+    tabs: !!document.querySelector('.gv-live-feed__tabs'),
+    rows: document.querySelectorAll('.gv-live-feed__row, .gv-live-feed__podcast-card').length
+  }));
+
+  if (!uiState.ticker || !uiState.tabs) {
+    issues.push(
+      issue(
+        'layout',
+        'Live Feed',
+        'React Live Feed missing ticker or tab bar on mobile',
+        'Verify VaultLiveFeedPage ESPN layout CSS deployed',
+        { flowId, severity: 'high', details: uiState }
+      )
+    );
+  }
+
+  const dash = await page.evaluate(async (base) => {
+    try {
+      const r = await fetch(`${base}/api/live/dashboard?limit=10&_=${Date.now()}`, { cache: 'no-store' });
+      const j = await r.json();
+      return { ok: r.ok, feed: j.feed || [], updatedAt: j.updatedAt };
+    } catch (e) {
+      return { ok: false, error: e.message };
+    }
+  }, apiUrl);
+
+  if (dash.ok && dash.feed?.length) {
+    const newest = dash.feed
+      .map((i) => new Date(i.createdAt || 0).getTime())
+      .filter((t) => t > 0)
+      .sort((a, b) => b - a)[0];
+    if (newest) {
+      const ageHours = (Date.now() - newest) / (3600 * 1000);
+      if (ageHours > maxAgeHours) {
+        issues.push(
+          issue(
+            'feed-freshness',
+            'Live Feed',
+            `Latest feed item is ${Math.round(ageHours)}h old (max ${maxAgeHours}h)`,
+            'Trigger live refresh pipeline',
+            { flowId, severity: 'medium' }
+          )
+        );
+      }
+    }
+  }
+
+  return { flowId, pass: issues.length === 0, issues, details: uiState };
 }
 
 async function runFeedFreshnessFlow(page, apiUrl, maxAgeHours) {
@@ -142,7 +238,7 @@ async function runFeedFreshnessFlow(page, apiUrl, maxAgeHours) {
     );
   }
 
-  await tapNav(page, 'mhome');
+  await legacyTapNav(page, 'mhome');
   const uiState = await page.evaluate(() => {
     var el = document.getElementById('gv-mhome-updates');
     var cards = el ? el.querySelectorAll('.gv-headline-card, .gv-espn-card').length : 0;
@@ -170,7 +266,7 @@ async function runRecruitPlayerBackFlow(page, apiUrl) {
   const flowId = 'recruit-player-back';
   const issues = [];
 
-  await tapNav(page, 'recruit');
+  await legacyTapNav(page, 'recruit');
 
   const slug = await page.evaluate(async (base) => {
     try {
@@ -257,7 +353,7 @@ async function runTeamTabThemeFlow(page) {
   const flowId = 'team-tab-theme';
   const issues = [];
 
-  await tapNav(page, 'team');
+  await legacyTapNav(page, 'team');
 
   const state = await page.evaluate(() => {
     var gate = document.getElementById('trial-expired-gate');
@@ -332,7 +428,7 @@ async function runTeamDetailBackFlow(page) {
   const flowId = 'team-detail-back';
   const issues = [];
 
-  await tapNav(page, 'team');
+  await legacyTapNav(page, 'team');
   await page.waitForTimeout(800);
 
   await page.evaluate(() => {
@@ -410,12 +506,12 @@ async function runHomeTabReselectFlow(page) {
   const flowId = 'home-tab-reselect';
   const issues = [];
 
-  await tapNav(page, 'team');
+  await legacyTapNav(page, 'team');
   await page.waitForTimeout(800);
 
   const stampBefore = await page.evaluate(() => (window._gvLive && window._gvLive.lastUpdated) || null);
 
-  await tapNav(page, 'mhome');
+  await legacyTapNav(page, 'mhome');
   await page.waitForTimeout(2500);
 
   const stampAfter = await page.evaluate(() => ({
@@ -505,44 +601,35 @@ async function runViewportFlows(playwright, viewportDef) {
 
     const reactVault = await usesReactVaultShell(page);
     if (reactVault) {
+      flows.push(await runReactVaultNavFlow(page));
+      flows.push(await runReactLiveFeedFlow(page, config.API_URL, config.MOBILE_FEED_MAX_AGE_HOURS));
+
+      flows.forEach((f) => {
+        (f.issues || []).forEach((i) => {
+          allIssues.push({ ...i, viewport: viewportDef.label });
+        });
+      });
+
+      const buf = await page.screenshot({ fullPage: false });
+      const saved = qaStore.saveScreenshot(`qa-mobile-react-${viewportDef.label}-${Date.now()}.png`, buf);
+
       return {
         viewport: viewportDef.label,
-        flows: [
-          {
-            flowId: 'monolith-mobile-retired',
-            pass: true,
-            skipped: true,
-            issues: [],
-            details: { reason: 'React VaultShell active — monolith #gv-bottom-nav flows retired (Phase 5)' }
-          }
-        ],
-        issues: [],
-        screenshot: null,
-        pass: true
+        flows,
+        issues: allIssues,
+        screenshot: saved.filename,
+        pass: allIssues.length === 0,
+        architecture: 'react'
       };
     }
 
-    flows.push(await runFeedFreshnessFlow(page, config.API_URL, config.MOBILE_FEED_MAX_AGE_HOURS));
-    flows.push(await runHomeTabReselectFlow(page));
-    flows.push(await runRecruitPlayerBackFlow(page, config.API_URL));
-    flows.push(await runTeamTabThemeFlow(page));
-    flows.push(await runTeamDetailBackFlow(page));
-
-    flows.forEach((f) => {
-      (f.issues || []).forEach((i) => {
-        allIssues.push({ ...i, viewport: viewportDef.label });
-      });
-    });
-
-    const buf = await page.screenshot({ fullPage: false });
-    const saved = qaStore.saveScreenshot(`qa-mobile-${viewportDef.label}-${Date.now()}.png`, buf);
-
+    /* Monolith flows retired — skip when React shell not detected (legacy deploy only) */
     return {
       viewport: viewportDef.label,
-      flows,
-      issues: allIssues,
-      screenshot: saved.filename,
-      pass: allIssues.length === 0
+      flows: [{ flowId: 'legacy-skipped', pass: true, skipped: true, issues: [], details: { reason: 'React vault shell not detected — monolith checks retired' } }],
+      issues: [],
+      pass: true,
+      architecture: 'legacy-skipped'
     };
   } finally {
     await context.close();
@@ -620,24 +707,37 @@ async function runMobileBehaviorChecks(opts = {}) {
   );
 
   checks.push(
-    await check('mobile-behavior:navigation-back', 'mobile-behavior', 'Modal back / history navigation', async () => {
-      const navIssues = allIssues.filter((i) => i.type === 'navigation');
-      if (!navIssues.length) return { flows: ['recruit-player-back', 'team-detail-back'] };
+    await check('mobile-behavior:react-vault-nav', 'mobile-behavior', 'React vault bottom nav', async () => {
+      const navIssues = allIssues.filter((i) => i.flowId === 'react-vault-nav' || (i.type === 'navigation' && /vault\//.test(i.screen || '')));
+      if (!navIssues.length) return { flows: ['react-vault-nav'] };
       const err = new Error(navIssues.map((i) => i.description).join('; '));
       err.details = { issues: navIssues };
-      err.repro = 'Open recruit/team player modal on mobile; back gesture must close modal and restore prior pane';
+      err.repro = 'Mobile: tap bottom nav items — each must load the correct React vault page';
       throw err;
     })
   );
 
   checks.push(
-    await check('mobile-behavior:team-tab-theme', 'mobile-behavior', 'Team tab theme (no trial/promo bleed)', async () => {
-      const themeIssues = allIssues.filter((i) => i.type === 'tab-theme');
-      if (!themeIssues.length) return { ok: true };
-      const err = new Error(themeIssues.map((i) => i.description).join('; '));
-      err.details = { issues: themeIssues };
-      err.repro = 'Mobile Team tab must show gv-team-page dark theme without trial-expired overlay';
+    await check('mobile-behavior:navigation-back', 'mobile-behavior', 'Modal back / history navigation', async () => {
+      const usedReact = viewportResults.some((v) => v.architecture === 'react');
+      if (usedReact) {
+        const navIssues = allIssues.filter((i) => i.type === 'navigation' && i.flowId !== 'react-vault-nav');
+        if (!navIssues.length) return { flows: ['react-vault-nav'], architecture: 'react' };
+      }
+      const navIssues = allIssues.filter((i) => i.type === 'navigation');
+      if (!navIssues.length) return { flows: usedReact ? ['react-vault-nav'] : [] };
+      const err = new Error(navIssues.map((i) => i.description).join('; '));
+      err.details = { issues: navIssues };
+      err.repro = 'Open player profile on mobile; back gesture must close modal and restore vault shell';
       throw err;
+    })
+  );
+
+  checks.push(
+    await check('mobile-behavior:team-tab-theme', 'mobile-behavior', 'Team tab theme (RETIRED — use react-vault-nav)', async () => {
+      const usedReact = viewportResults.some((v) => v.architecture === 'react');
+      if (usedReact) return { skipped: true, reason: 'React vault — monolith #vpane-mteam check retired' };
+      return { skipped: true, reason: 'Monolith team tab theme check retired in Phase 8' };
     })
   );
 

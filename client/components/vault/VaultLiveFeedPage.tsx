@@ -4,7 +4,12 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchLiveDashboard, type BeatPost, type LiveFeedItem, type PodcastShow } from '@/lib/live-api';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
-type LiveTab = 'feed' | 'beat' | 'podcast';
+import {
+  liveFeedTabPath,
+  parseLiveFeedTabFromPath,
+  type LiveFeedTab,
+} from '@/lib/vault-route-map';
+
 type FeedCategory = 'all' | 'news' | 'recruiting' | 'portal' | 'game' | 'podcast';
 
 const REFRESH_MS = 60_000;
@@ -83,8 +88,16 @@ function LiveTicker({ items }: { items: LiveFeedItem[] }): React.ReactElement | 
   );
 }
 
+function liveTabToInternal(tab: LiveFeedTab): 'feed' | 'beat' | 'podcast' {
+  if (tab === 'beat') return 'beat';
+  if (tab === 'podcasts') return 'podcast';
+  return 'feed';
+}
+
 export function VaultLiveFeedPage(): React.ReactElement {
-  const [tab, setTab] = useState<LiveTab>('feed');
+  const [tab, setTab] = useState<'feed' | 'beat' | 'podcast'>(() =>
+    liveTabToInternal(parseLiveFeedTabFromPath() ?? 'headlines')
+  );
   const [category, setCategory] = useState<FeedCategory>('all');
   const [feed, setFeed] = useState<LiveFeedItem[]>([]);
   const [beat, setBeat] = useState<BeatPost[]>([]);
@@ -108,6 +121,20 @@ export function VaultLiveFeedPage(): React.ReactElement {
       if (isInitial) setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    const sync = () => setTab(liveTabToInternal(parseLiveFeedTabFromPath() ?? 'headlines'));
+    sync();
+    window.addEventListener('popstate', sync);
+    return () => window.removeEventListener('popstate', sync);
+  }, []);
+
+  const selectTab = (next: LiveFeedTab) => {
+    setTab(liveTabToInternal(next));
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', liveFeedTabPath(next));
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -148,21 +175,21 @@ export function VaultLiveFeedPage(): React.ReactElement {
         <button
           type="button"
           className={`gv-live-feed__tab${tab === 'feed' ? ' is-active' : ''}`}
-          onClick={() => setTab('feed')}
+          onClick={() => selectTab('headlines')}
         >
           📰 Headlines
         </button>
         <button
           type="button"
           className={`gv-live-feed__tab${tab === 'beat' ? ' is-active' : ''}`}
-          onClick={() => setTab('beat')}
+          onClick={() => selectTab('beat')}
         >
           ✍️ Beat Writers
         </button>
         <button
           type="button"
           className={`gv-live-feed__tab${tab === 'podcast' ? ' is-active' : ''}`}
-          onClick={() => setTab('podcast')}
+          onClick={() => selectTab('podcasts')}
         >
           🎙️ Podcasts
         </button>

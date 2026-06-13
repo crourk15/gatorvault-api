@@ -25,79 +25,93 @@ const QA_MODULES = ['api', 'content', 'integrity', 'pages', 'ux', 'browser', 'vi
 const PAGE_CHECKS = {
   '/': {
     desktop: ['pages:home:desktop'],
-    mobile: ['pages:home:mobile']
+    mobile: ['pages:home:mobile'],
+    score: ['visual-integrity:landing-page']
   },
-  '/film-room': {
+  '/vault': {
+    desktop: ['pages:vault-dashboard:desktop'],
+    mobile: ['pages:vault-dashboard:mobile']
+  },
+  '/vault/film-room': {
     score: [
-      'pages:film-room-hooks',
-      'integrity:film-sources',
-      'integrity:filmroom-structure',
+      'pages:react-film-room',
+      'pages:vault-film-room:desktop',
       'api:film-room-catalog',
-      'visual-integrity:film-room-theme'
+      'visual-integrity:vault-film-room:markers'
     ]
   },
-  '/team': {
+  '/vault/team': {
     score: [
-      'pages:team-hooks',
+      'pages:react-team',
+      'pages:vault-team:desktop',
       'ux:modal-zindex',
-      'visual-integrity:team-overview-background',
-      'visual-integrity:team-theme-tokens',
-      'visual-integrity:component-variants',
-      'visual-integrity:panel-clipping',
-      'visual-integrity:layout-overflow',
-      'integrity:team-history-structure',
-      'integrity:missing-content',
-      'integrity:panel-clipping',
-      'integrity:layout-overflow',
-      'integrity:wrong-background',
-      'mobile-behavior:team-tab-theme',
-      'mobile-behavior:navigation-back'
+      'ux:scroll-containers',
+      'visual-integrity:vault-team:markers',
+      'integrity:roster-data',
+      'integrity:depth-chart-data',
+      'api:roster-players'
     ]
   },
-  '/admin': {
-    desktop: ['pages:admin-hub:desktop', 'visual-integrity:admin-theme'],
-    mobile: ['pages:admin-hub:mobile', 'visual-integrity:admin-theme']
-  },
-  '/latest': {
+  '/vault/recruiting': {
     score: [
-      'integrity:feed-dedup',
+      'pages:react-recruiting-hub',
+      'pages:vault-recruiting:desktop',
+      'visual-integrity:vault-recruiting-hub:markers',
+      'api:recruiting-board'
+    ]
+  },
+  '/vault/live-feed': {
+    score: [
+      'pages:react-live-feed',
+      'pages:vault-live-feed:desktop',
+      'ux:live-feed-layout',
+      'visual-integrity:live-feed-layout',
       'integrity:autoposter-dedup',
-      'integrity:missing-content',
-      'api:live-feed',
       'api:live-dashboard'
     ]
+  },
+  '/vault/futurecast': {
+    score: ['pages:vault-futurecast:desktop', 'api:recruiting-board']
+  },
+  '/admin': {
+    desktop: ['pages:admin-hub:desktop'],
+    mobile: ['pages:admin-hub:mobile']
   }
 };
 
 const FEATURE_CHECKS = {
-  team_modals: [
-    'pages:team-hooks',
-    'ux:modal-zindex',
-    'ux:scroll-containers',
-    'visual-integrity:team-overview-background',
-    'visual-integrity:component-variants',
-    'visual-integrity:panel-clipping',
-    'visual-integrity:layout-overflow',
-    'integrity:panel-clipping',
-    'integrity:layout-overflow',
-    'integrity:team-history-structure'
+  react_vault_shell: [
+    'integrity:production-vault-shell',
+    'visual-integrity:vault-shell-theme',
+    'ux:bottom-nav',
+    'ux:tap-targets'
   ],
-  film_verified_source_modal: [
-    'pages:film-room-hooks',
-    'ux:modal-zindex',
-    'integrity:film-sources',
-    'integrity:filmroom-structure',
-    'visual-integrity:film-room-theme'
+  team_roster_depth: [
+    'pages:react-team',
+    'integrity:roster-data',
+    'integrity:depth-chart-data',
+    'ux:scroll-containers'
   ],
-  latest_updates_feed: [
-    'integrity:feed-dedup',
+  film_room_hub: [
+    'pages:react-film-room',
+    'api:film-room-catalog',
+    'crawler:pressers-missing'
+  ],
+  recruiting_hub: [
+    'pages:react-recruiting-hub',
+    'api:recruiting-board',
+    'api:war-room-breakdowns'
+  ],
+  live_feed: [
+    'pages:react-live-feed',
+    'ux:live-feed-layout',
     'integrity:autoposter-dedup',
     'api:live-feed',
     'api:live-dashboard',
-    'mobile-behavior:feed-freshness'
+    'mobile-behavior:react-vault-nav'
   ],
-  mobile_navigation: ['mobile-behavior:navigation-back', 'ux:tap-targets'],
-  admin_hub: ['pages:admin-hub:desktop', 'pages:admin-hub:mobile', 'visual-integrity:admin-theme'],
+  mobile_navigation: ['ux:bottom-nav', 'ux:tap-targets', 'ux:mobile-safari'],
+  admin_hub: ['pages:admin-hub:desktop', 'pages:admin-hub:mobile'],
   qa_monitor: ['api:ping']
 };
 

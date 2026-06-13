@@ -1,0 +1,117 @@
+{
+  "version": "4.1.0",
+  "architecture": "react",
+  "retiredRoutes": [
+    "/futurecast",
+    "/futurecast/*",
+    "/team.html",
+    "/recruiting.html",
+    "/film-room.html",
+    "/latest-updates.html",
+    "/portal.html",
+    "/vault/tickets",
+    "/vault/portal",
+    "/vault/scouting",
+    "/vault/recruiting-board"
+  ],
+  "routes": [
+    {
+      "path": "/vault",
+      "label": "Vault Home",
+      "component": "client/components/vault/VaultDashboardPage.tsx",
+      "testid": "vault-dashboard",
+      "export": "vault/index.html"
+    },
+    {
+      "path": "/vault/recruiting",
+      "label": "Recruiting Hub",
+      "component": "client/components/vault/VaultRecruitingHubPage.tsx",
+      "testid": "vault-recruiting-hub",
+      "export": "vault/recruiting/index.html",
+      "subRoutes": [
+        "/vault/recruiting/2026/commits",
+        "/vault/recruiting/2027/commits",
+        "/vault/recruiting/2026/targets",
+        "/vault/recruiting/2027/targets",
+        "/vault/recruiting/heat-check",
+        "/vault/recruiting/scouting",
+        "/vault/recruiting/portal",
+        "/vault/recruiting/movement",
+        "/vault/recruiting/player/[slug]"
+      ]
+    },
+    {
+      "path": "/vault/futurecast",
+      "label": "FutureCast",
+      "component": "client/app/vault/futurecast/page.tsx",
+      "testid": "vault-futurecast-page",
+      "export": "vault/futurecast/index.html",
+      "subRoutes": [
+        "/vault/futurecast/board",
+        "/vault/futurecast/movement",
+        "/vault/futurecast/staff",
+        "/vault/futurecast/player/[slug]"
+      ]
+    },
+    {
+      "path": "/vault/team",
+      "label": "Team / Roster",
+      "component": "client/components/vault/VaultTeamPage.tsx",
+      "testid": "vault-team",
+      "export": "vault/team/index.html"
+    },
+    {
+      "path": "/vault/depth-chart",
+      "label": "Depth Chart",
+      "redirect": "/vault/team"
+    },
+    {
+      "path": "/vault/players/[slug]",
+      "label": "Roster Player Profile",
+      "component": "client/components/vault/RosterProfilePage.tsx",
+      "export": "vault/players/index.html"
+    },
+    {
+      "path": "/vault/live-feed",
+      "label": "Live Feed",
+      "component": "client/components/vault/VaultLiveFeedPage.tsx",
+      "testid": "vault-live-feed",
+      "export": "vault/live-feed/index.html",
+      "subRoutes": [
+        "/vault/live-feed/headlines",
+        "/vault/live-feed/beat",
+        "/vault/live-feed/podcasts"
+      ]
+    },
+    {
+      "path": "/vault/film-room",
+      "label": "Film Room",
+      "component": "client/components/vault/VaultFilmRoomPage.tsx",
+      "testid": "vault-film-room",
+      "export": "vault/film-room/index.html",
+      "subRoutes": [
+        "/vault/film-room/scheme",
+        "/vault/film-room/breakdowns",
+        "/vault/film-room/press",
+        "/vault/film-room/highlights"
+      ]
+    },
+    {
+      "path": "/vault/schedule",
+      "label": "Schedule & Tickets",
+      "component": "client/components/vault/VaultTicketsPage.tsx",
+      "testid": "vault-schedule",
+      "export": "vault/schedule/index.html",
+      "subRoutes": [
+        "/vault/schedule/football",
+        "/vault/schedule/basketball",
+        "/vault/schedule/baseball"
+      ]
+    }
+  ],
+  "playerProfileRoutes": {
+    "roster": "/vault/players/[slug]",
+    "futurecast": "/vault/futurecast/player/[slug]",
+    "recruiting": "/vault/recruiting/player/[slug]"
+  }
+}

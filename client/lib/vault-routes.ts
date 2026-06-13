@@ -1,14 +1,15 @@
 /**
- * Vault vs standalone route helpers.
- * Inside Vault → /vault/* ; public FutureCast → /futurecast/*
+ * Vault vs standalone route helpers — final /vault/* pillar map.
  */
+import { VAULT_PILLAR_ROUTES, FUTURECAST_SEGMENT_PATHS, type FutureCastSegment } from './vault-route-map';
+
 export type VaultSectionId =
   | 'dashboard'
   | 'recruiting'
   | 'futurecast'
   | 'team'
   | 'live-feed'
-  | 'tickets'
+  | 'schedule'
   | 'film-room'
   | 'game-week'
   | 'live-scores'
@@ -19,20 +20,16 @@ export type VaultSectionId =
   | 'alerts'
   | 'apparel'
   | 'depth-chart'
-  | 'portal'
-  | 'players'
-  | 'recruiting-board'
-  | 'scouting'
-  | 'staff';
+  | 'players';
 
 /** Core vault pillars — sidebar primary + mobile bottom nav. */
 export const VAULT_PILLARS: { id: VaultSectionId; label: string; href: string; icon: string }[] = [
-  { id: 'dashboard', label: 'Dashboard', href: '/vault', icon: '🏠' },
-  { id: 'recruiting', label: 'Recruiting Hub', href: '/vault/recruiting', icon: '🎯' },
-  { id: 'futurecast', label: 'FutureCast', href: '/vault/futurecast', icon: '📈' },
-  { id: 'team', label: 'Team', href: '/vault/team', icon: '👥' },
-  { id: 'live-feed', label: 'Live Feed', href: '/vault/live-feed', icon: '⚡' },
-  { id: 'tickets', label: 'Schedule & Tickets', href: '/vault/tickets', icon: '🎟️' },
+  { id: 'dashboard', label: 'Dashboard', href: VAULT_PILLAR_ROUTES.dashboard, icon: '🏠' },
+  { id: 'recruiting', label: 'Recruiting Hub', href: VAULT_PILLAR_ROUTES.recruiting, icon: '🎯' },
+  { id: 'futurecast', label: 'FutureCast', href: VAULT_PILLAR_ROUTES.futurecast, icon: '📈' },
+  { id: 'team', label: 'Team', href: VAULT_PILLAR_ROUTES.team, icon: '👥' },
+  { id: 'live-feed', label: 'Live Feed', href: VAULT_PILLAR_ROUTES.liveFeed, icon: '⚡' },
+  { id: 'schedule', label: 'Schedule & Tickets', href: VAULT_PILLAR_ROUTES.schedule, icon: '🎟️' },
 ];
 
 /** Secondary vault links — drawer/sidebar only. */
@@ -65,8 +62,8 @@ export function isVaultPath(pathname?: string): boolean {
 }
 
 export function vaultPortalBackHref(pathname: string): string {
-  if (isVaultPath(pathname)) return '/vault/recruiting?tab=portal';
-  return '/portal';
+  if (isVaultPath(pathname)) return '/vault/recruiting/portal';
+  return '/vault/recruiting/portal';
 }
 
 export function vaultPortalBackLabel(pathname: string): string {
@@ -74,11 +71,11 @@ export function vaultPortalBackLabel(pathname: string): string {
 }
 
 export function vaultFutureCastBackHref(pathname: string): string {
-  return isVaultPath(pathname) ? '/vault/futurecast' : '/futurecast';
+  return isVaultPath(pathname) ? '/vault/futurecast' : '/vault/futurecast';
 }
 
-export function futureCastBase(pathname: string): '/futurecast' | '/vault/futurecast' {
-  return isVaultPath(pathname) ? '/vault/futurecast' : '/futurecast';
+export function futureCastBase(pathname: string): '/vault/futurecast' {
+  return '/vault/futurecast';
 }
 
 export function futureCastPath(pathname: string, sub = ''): string {
@@ -88,19 +85,32 @@ export function futureCastPath(pathname: string, sub = ''): string {
   return `${base}/${clean}`;
 }
 
-export type FutureCastSubId = 'home' | 'stock' | 'snapshots' | 'alerts' | 'staff';
+export type FutureCastSubId =
+  | 'home'
+  | 'board'
+  | 'movement'
+  | 'staff'
+  | 'stock'
+  | 'snapshots'
+  | 'alerts';
 
 export const FUTURECAST_SUB_PATHS: Record<FutureCastSubId, string> = {
   home: '',
+  board: 'board',
+  movement: 'movement',
+  staff: 'staff',
   stock: 'stock',
   snapshots: 'snapshots',
   alerts: 'alerts',
-  staff: 'staff',
 };
 
 export function futureCastSubHref(pathname: string, id: FutureCastSubId): string {
-  const sub = FUTURECAST_SUB_PATHS[id];
-  return sub ? futureCastPath(pathname, sub) : futureCastBase(pathname);
+  if (id === 'home') return futureCastBase(pathname);
+  if (id === 'board' || id === 'movement' || id === 'staff') {
+    return FUTURECAST_SEGMENT_PATHS[id];
+  }
+  /* Legacy standalone /futurecast/* pages (redirect to vault in production) */
+  return futureCastPath(pathname, FUTURECAST_SUB_PATHS[id]);
 }
 
 export type PlayerLifecycleApi = 'HIGH_SCHOOL' | 'PORTAL' | 'ROSTER';

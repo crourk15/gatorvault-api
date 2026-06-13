@@ -4,8 +4,9 @@
 const fs = require('fs');
 const patches = require('./self-runner-patches');
 const templates = require('./self-runner-patch-templates');
-const engine = require('../visual-integrity/visual-integrity-engine');
 const contextPatch = require('./context-patch-generator');
+const reactPatch = require('./react-patch-generator');
+const reactBp = require('./blueprint/react-blueprint');
 const autoposterGuard = require('./autoposter-guard');
 
 function nextId(seq) {
@@ -24,88 +25,7 @@ function extractRegionById(html, regionId) {
 }
 
 function buildBackgroundThemePatch(issue, checkDetails) {
-  const edits = [];
-  const preview = { file: 'index.html', changes: [] };
-  const htmlPath = patches.absPath('index.html');
-  let html = '';
-  try {
-    html = fs.readFileSync(htmlPath, 'utf8');
-  } catch {
-    return null;
-  }
-
-  const violations = checkDetails?.details || issue.details || [];
-  const forbiddenHits = Array.isArray(violations)
-    ? violations.filter((v) => v.pattern || v.class || v.leakedClass)
-    : [];
-
-  ['vpane-team', 'vpane-mteam'].forEach((regionId) => {
-    const region = extractRegionById(html, regionId);
-    if (!region) return;
-    patches.TEAM_FORBIDDEN_IN_REGION.forEach((cls) => {
-      if (region.includes(cls)) {
-        edits.push({
-          file: 'index.html',
-          type: 'remove-class-from-region',
-          regionId,
-          className: cls
-        });
-        preview.changes.push({ regionId, remove: cls });
-      }
-    });
-    (patches.TEAM_REQUIRED[regionId] || []).forEach((cls) => {
-      if (region.includes(regionId) && !region.includes(cls)) {
-        edits.push({
-          file: 'index.html',
-          type: 'add-class-to-region',
-          regionId,
-          className: cls
-        });
-        preview.changes.push({ regionId, add: cls });
-      }
-    });
-  });
-
-  forbiddenHits.forEach((v) => {
-    const pat = v.pattern || v.class || v.leakedClass;
-    if (pat && !edits.some((e) => e.className === pat)) {
-      edits.push({
-        file: 'index.html',
-        type: 'remove-class-from-region',
-        regionId: v.regionId || 'vpane-team',
-        className: pat
-      });
-      preview.changes.push({ regionId: v.regionId, remove: pat });
-    }
-  });
-
-  if (!html.includes('/css/gv-team.css')) {
-    edits.push({
-      file: 'index.html',
-      type: 'insert-before',
-      anchor: '</head>',
-      text: '    <link rel="stylesheet" href="/css/gv-team.css?v=team-self-runner">\n'
-    });
-    preview.changes.push({ addCssLink: '/css/gv-team.css' });
-  }
-
-  if (!edits.length) {
-    edits.push({
-      file: 'index.html',
-      type: 'ensure-team-shell',
-      regionIds: ['vpane-team', 'vpane-mteam']
-    });
-    preview.changes.push({ note: 'Ensure gv-team-page shell on Team panes' });
-  }
-
-  return {
-    patchType: 'background-theme',
-    edits,
-    patchPreview: preview,
-    suggestedFix:
-      issue.suggestedFix ||
-      'Replace trial/promo classes with gv-team-page + gv-team-overview-layout; use gv-team.css tokens only'
-  };
+  return reactPatch.generateReactPatch(issue, checkDetails);
 }
 
 function buildFeedDedupPatch(issue, checkDetails) {
@@ -370,9 +290,12 @@ function enrichWithTemplate(built, issue, checkDetails) {
     };
   }
 
+  const reactPatchTypes = /^(react-|feed-dedup|film-source|schema-field)/;
+  const preserveBuiltType = reactPatchTypes.test(built.patchType || '');
+
   return {
     ...built,
-    patchType: tmpl.patchType,
+    patchType: preserveBuiltType ? built.patchType : tmpl.patchType,
     suggestedFix: built.suggestedFix || tmpl.description,
     patchPreview: {
       ...built.patchPreview,
@@ -396,24 +319,21 @@ function editsFromTemplate(tmpl, issue) {
   switch (tmpl.patchType) {
     case 'layout-overflow':
     case 'panel-layering':
+    case 'react-css':
       return [
         {
-          file: 'css/gv-team.css',
-          type: 'append-if-missing',
-          marker: 'Self-Runner 2.0: modal overflow guards',
+          file: 'client/lib/vault-shell.css',
+          type: 'react-css-append',
+          marker: `/* Self-Runner: ${issue.checkId || tmpl.ruleId} */`,
           text: patches.MODAL_OVERFLOW_CSS_SNIPPET
         }
       ];
     case 'background-theme':
-      return [{ file: 'index.html', type: 'ensure-team-shell', regionIds: ['vpane-team', 'vpane-mteam'] }];
     case 'missing-content':
     case 'ordering-fix':
     case 'html-hook': {
-      const v2 = contextPatch.generateContextPatch(issue, {});
-      if (v2?.edits?.length) return v2.edits;
-      const missing = contextPatch.scanHtmlHooks();
-      const hookPatch = contextPatch.buildHtmlHookPatch(missing);
-      return hookPatch?.edits || [];
+      const react = reactPatch.generateReactPatch(issue, {});
+      return react?.edits || [];
     }
     case 'autoposter-dedup':
     case 'feed-dedup-v2':
@@ -423,12 +343,13 @@ function editsFromTemplate(tmpl, issue) {
       return [{ file: 'data/recruiting/players.json', type: 'verify-json', checkId: issue.checkId }];
     case 'roster-sync':
       return [{ file: 'data/roster/players.json', type: 'verify-json', checkId: issue.checkId }];
-    case 'api-latency':
-      return [{ file: 'lib/live-routes.js', type: 'verify-api-cache', endpoint: ctx.endpoint }];
     case 'film-source-url':
       return [{ file: 'data/film-room-knowledge', type: 'replace-broken-source-urls', replacements: [] }];
+    case 'react-component':
+    case 'react-rebuild':
+      return reactPatch.generateReactPatch(issue, {})?.edits || [];
     default:
-      return [{ file, type: 'template-guided', ruleId: tmpl.ruleId }];
+      return [{ file, type: 'react-component-review', ruleId: tmpl.ruleId, checkId: issue.checkId }];
   }
 }
 
@@ -458,28 +379,23 @@ function buildFromTemplate(issue, checkDetails) {
 }
 
 function preparePatch(issue, checkDetails) {
-  const patchType = patches.resolvePatchType(issue);
-  if (!patchType && !templates.resolveRuleId(issue)) return null;
-
   const checkId = issue.checkId || '';
-  let built = null;
+  if (/retired-monolith|^pages:(team-hooks|film-room-hooks)$/.test(checkId)) return null;
 
-  if (checkId.includes('component-variants')) {
-    built = buildComponentVariantPatch(issue, checkDetails);
-  } else if (patchType === 'team-content') {
-    built = buildTeamContentPatch(issue, checkDetails);
-  } else if (patchType === 'background-theme') {
-    built = buildBackgroundThemePatch(issue, checkDetails);
-  } else if (patchType === 'feed-dedup' || patchType === 'autoposter-dedup' || patchType === 'feed-dedup-v2' || patchType === 'similarity-filter') {
+  const patchType = patches.resolvePatchType(issue);
+  if (!patchType && !templates.resolveRuleId(issue)) {
+    const reactOnly = reactPatch.generateReactPatch(issue, checkDetails);
+    if (!reactOnly?.edits?.length) return null;
+  }
+
+  let built = reactPatch.generateReactPatch(issue, checkDetails);
+
+  if (!built && (patchType === 'feed-dedup-v2' || /feed-dedup|autoposter-dedup/.test(checkId))) {
     built = buildFeedDedupPatch(issue, checkDetails);
-  } else if (patchType === 'film-source-url') {
+  } else if (!built && patchType === 'film-source-url') {
     built = buildFilmSourcePatch(issue, checkDetails);
-  } else if (patchType === 'html-hook' || patchType === 'missing-content') {
-    built = buildHtmlHookPatch(issue);
-  } else if (patchType === 'css-token' || patchType === 'layout-overflow' || patchType === 'panel-layering') {
-    built = buildCssTokenPatch(issue);
-  } else if (patchType === 'ordering-fix' || patchType === 'recruiting-board-sync' || patchType === 'roster-sync' || patchType === 'api-latency') {
-    built = buildFromTemplate(issue, checkDetails);
+  } else if (!built && patchType === 'schema-field-v2') {
+    built = contextPatch.generateContextPatch(issue, checkDetails);
   }
 
   if (!built) built = buildFromTemplate(issue, checkDetails);
@@ -487,6 +403,9 @@ function preparePatch(issue, checkDetails) {
     built = contextPatch.generateContextPatch(issue, checkDetails);
   }
   if (!built || !built.edits?.length) return null;
+
+  built.edits = (built.edits || []).filter((e) => !reactBp.isForbiddenEdit(e));
+  if (!built.edits.length) return null;
 
   built = contextPatch.enrichLegacyPatch(built, issue);
   const safety = autoposterGuard.validatePatchSafety({ patch: built });
@@ -551,38 +470,37 @@ function prepareFixProposal(issue, { seq, checkDetails } = {}) {
   };
 }
 
-/** Rule metadata for failure reports */
+/** Rule metadata for failure reports — React vault architecture. */
 const RULE_EXPECTATIONS = {
   'visual-integrity:component-variants': {
-    rule: 'Team Overview component variants',
-    expected:
-      'index.html #vpane-team / #vpane-mteam use gv-team-page, gv-team-overview-layout, gv-team-section, gv-team-era-card — no card-h, trial, or pricing classes',
-    defaultFile: 'index.html'
+    rule: 'React Team page layout',
+    expected: 'VaultTeamPage uses gv-team-page shell with roster + depth chart tabs — no trial/promo classes',
+    defaultFile: 'client/components/vault/VaultTeamPage.tsx'
   },
   'visual-integrity:team-overview-background': {
-    rule: 'Team Overview background / theme',
-    expected: 'Team panes use gv-team-page shell with gv-team.css — no trial-promo or pricing backgrounds',
-    defaultFile: 'index.html'
+    rule: 'React Team theme',
+    expected: 'VaultTeamPage uses vault-shell.css tokens — no trial-promo bleed',
+    defaultFile: 'client/components/vault/VaultTeamPage.tsx'
   },
   'visual-integrity:team-css-linked': {
-    rule: 'Team module CSS linked',
-    expected: 'index.html includes <link href="/css/gv-team.css">',
-    defaultFile: 'index.html'
+    rule: 'Vault shell CSS',
+    expected: 'VaultShell imports client/lib/vault-shell.css',
+    defaultFile: 'client/lib/vault-shell.css'
   },
   'visual-integrity:team-theme-tokens': {
-    rule: 'Team CSS design tokens',
-    expected: 'css/gv-team.css defines --gv-team-card-bg, --gv-team-radius, --gv-team-space-4, --gv-team-title, --gv-team-body',
-    defaultFile: 'css/gv-team.css'
+    rule: 'Vault CSS design tokens',
+    expected: 'vault-shell.css defines scroll, safe-area, and modal z-index rules',
+    defaultFile: 'client/lib/vault-shell.css'
   },
   'visual-integrity:cross-page-contamination': {
     rule: 'Cross-page theme isolation',
-    expected: 'Trial/promo classes only in pricing/reg modal — not in Team, Film Room, Latest, or Admin panes',
-    defaultFile: 'index.html'
+    expected: 'Trial/promo classes only on marketing landing — not in vault pillars',
+    defaultFile: 'client/components/vault/VaultShell.tsx'
   },
   'visual-integrity:film-room-theme': {
-    rule: 'Film Room theme isolation',
-    expected: 'Film Room pane uses film hooks only — no trial or team contamination',
-    defaultFile: 'index.html'
+    rule: 'React Film Room theme',
+    expected: 'VaultFilmRoomPage hub grid with 5 categories — no monolith hooks',
+    defaultFile: 'client/components/vault/VaultFilmRoomPage.tsx'
   },
   'visual-integrity:admin-theme': {
     rule: 'Admin Hub neutral theme',
@@ -590,94 +508,199 @@ const RULE_EXPECTATIONS = {
     defaultFile: 'admin.html'
   },
   'integrity:feed-dedup': {
-    rule: 'Latest Updates feed dedup',
-    expected: 'No duplicate feed items by URL or player/event key in data/live/feed-items.json',
+    rule: 'Live Feed dedup',
+    expected: 'No duplicate feed items in data/live/feed-items.json',
     defaultFile: 'data/live/feed-items.json'
   },
   'integrity:film-sources': {
     rule: 'Film Room source URLs',
-    expected: 'All Film Room knowledge source_url values return HTTP 200',
+    expected: 'Film knowledge source_url values return HTTP 200',
     defaultFile: 'data/film-room-knowledge/*.json'
   },
+  'pages:home:desktop': {
+    rule: 'React landing page (desktop)',
+    expected: 'Landing export includes data-testid="landing-page" — no vpane hooks',
+    defaultFile: 'client/app/page.tsx'
+  },
+  'pages:home:mobile': {
+    rule: 'React landing page (mobile)',
+    expected: 'Mobile landing renders React marketing page at /',
+    defaultFile: 'client/app/page.tsx'
+  },
+  'pages:vault-dashboard': {
+    rule: 'React vault dashboard',
+    expected: '/vault export includes data-testid="vault-dashboard"',
+    defaultFile: 'vault/index.html'
+  },
+  'pages:vault-team': {
+    rule: 'React Team page',
+    expected: '/vault/team with roster + depth chart',
+    defaultFile: 'vault/team/index.html'
+  },
+  'pages:vault-recruiting': {
+    rule: 'React Recruiting Hub',
+    expected: '/vault/recruiting with all hub tabs',
+    defaultFile: 'vault/recruiting/index.html'
+  },
+  'pages:vault-film-room': {
+    rule: 'React Film Room',
+    expected: '/vault/film-room with 5 category cards',
+    defaultFile: 'vault/film-room/index.html'
+  },
+  'pages:vault-live-feed': {
+    rule: 'React Live Feed',
+    expected: '/vault/live-feed with ticker + category chips',
+    defaultFile: 'vault/live-feed/index.html'
+  },
+  'pages:vault-futurecast': {
+    rule: 'React FutureCast',
+    expected: '/vault/futurecast with big board',
+    defaultFile: 'vault/futurecast/index.html'
+  },
+  'pages:react-team': {
+    rule: 'React Team page',
+    expected: '/vault/team export includes data-testid="vault-team", roster + depth chart',
+    defaultFile: 'vault/team/index.html'
+  },
+  'pages:react-film-room': {
+    rule: 'React Film Room',
+    expected: 'VaultFilmRoomPage hub grid with 5 categories and verified source links',
+    defaultFile: 'vault/film-room/index.html'
+  },
+  'pages:react-recruiting-hub': {
+    rule: 'React Recruiting Hub',
+    expected: 'VaultRecruitingHubPage with commits, targets, heat, scouting, portal tabs',
+    defaultFile: 'vault/recruiting/index.html'
+  },
+  'pages:react-live-feed': {
+    rule: 'React Live Feed',
+    expected: 'VaultLiveFeedPage with ticker, tabs, ESPN-style row layout',
+    defaultFile: 'vault/live-feed/index.html'
+  },
+  'pages:react-futurecast': {
+    rule: 'React FutureCast',
+    expected: '/vault/futurecast export with big board and movement intel',
+    defaultFile: 'vault/futurecast/index.html'
+  },
+  'integrity:react-markers': {
+    rule: 'React static export markers',
+    expected: 'All vault pillar pages have data-testid hooks in SSG HTML',
+    defaultFile: 'vault/index.html'
+  },
+  'integrity:react-exports': {
+    rule: 'React vault static exports',
+    expected: 'server/vault/{team,recruiting,futurecast,live-feed,film-room,tickets}/index.html exist',
+    defaultFile: 'vault/team/index.html'
+  },
   'pages:team-hooks': {
-    rule: 'Team tab modal hooks',
-    expected: 'index.html includes gvOpenTeamDetail, gv-team-detail-modal, gv-team-mobile.js',
-    defaultFile: 'index.html'
+    rule: 'RETIRED — monolith team hooks',
+    expected: 'Use pages:react-team instead',
+    defaultFile: 'vault/team/index.html'
   },
   'pages:film-room-hooks': {
-    rule: 'Film Room verified source hooks',
-    expected: 'index.html includes gvOpenVerifiedSource, gv-film-source, gv-verified-source-modal',
-    defaultFile: 'index.html'
+    rule: 'RETIRED — monolith film room hooks',
+    expected: 'Use pages:react-film-room instead',
+    defaultFile: 'vault/film-room/index.html'
   },
   'mobile-behavior:stale-html': {
     rule: 'Production HTML build stamp',
-    expected: 'Netlify production meta gv-build matches repo server/index.html; #vpane-mteam includes gv-team-page',
+    expected: 'Netlify production meta gv-build matches repo server/index.html React landing',
     defaultFile: 'index.html'
+  },
+  'mobile-behavior:react-vault-nav': {
+    rule: 'React mobile bottom nav',
+    expected: 'gv-vault-bottom-nav links load Recruiting, Team, Live Feed React pages',
+    defaultFile: 'client/components/vault/VaultShell.tsx'
   },
   'mobile-behavior:team-tab-theme': {
-    rule: 'Mobile Team tab theme',
-    expected: 'Mobile Team tab shows gv-team-page dark theme without trial-expired overlay or promo markup in #vpane-mteam',
-    defaultFile: 'index.html'
+    rule: 'RETIRED — monolith mobile team pane',
+    expected: 'Use mobile-behavior:react-vault-nav and pages:react-team',
+    defaultFile: 'client/components/vault/VaultTeamPage.tsx'
   },
   'mobile-behavior:navigation-back': {
-    rule: 'Mobile modal back navigation',
-    expected: 'Recruit/team profile modals use gvPushModalHistory; back gesture closes modal and restores prior pane',
-    defaultFile: 'index.html'
+    rule: 'React modal back navigation',
+    expected: 'Profile modals close on back gesture without breaking vault shell',
+    defaultFile: 'client/components/vault/VaultShell.tsx'
   },
   'integrity:filmroom-structure': {
-    rule: 'Film Room hub structure',
-    expected: 'index.html has film-room-hub-landing, GV_FILM_HUB_DESC, gvOpenFilmRoomHub for all 5 categories',
-    defaultFile: 'index.html'
+    rule: 'RETIRED — monolith film room hooks',
+    expected: 'Use pages:react-film-room and VaultFilmRoomPage.tsx',
+    defaultFile: 'client/components/vault/VaultFilmRoomPage.tsx'
   },
   'integrity:team-history-structure': {
-    rule: 'Program History era structure',
-    expected: 'gv-team-mobile.js defines 5 ERAS with coaching, milestones, schemes — Spurrier only in era-90s',
-    defaultFile: 'js/gv-team-mobile.js'
+    rule: 'React Team data',
+    expected: 'Roster + depth chart data in data/roster/ and VaultTeamPage.tsx',
+    defaultFile: 'client/components/vault/VaultTeamPage.tsx'
   },
   'integrity:missing-content': {
-    rule: 'Section content markers',
-    expected: 'All site sections (Team, Film Room, Recruiting, Latest Updates, Depth Chart, Roster) have required hooks',
-    defaultFile: 'index.html'
+    rule: 'RETIRED — monolith section hooks',
+    expected: 'Use integrity:react-exports and pages:react-* checks',
+    defaultFile: 'vault/index.html'
   },
   'integrity:layout-overflow': {
-    rule: 'Modal layout overflow CSS',
-    expected: 'gv-team.css: .gv-team-modal-body has min-height:0, overflow-y:auto, overflow-wrap on text blocks',
-    defaultFile: 'css/gv-team.css'
+    rule: 'React scroll containers',
+    expected: 'vault-shell.css: hub tabs scroll horizontally; main pane min-width:0',
+    defaultFile: 'client/lib/vault-shell.css'
   },
   'integrity:panel-clipping': {
-    rule: 'Panel clipping guards',
-    expected: 'gv-team.css: min-width:0 + overflow-wrap on .gv-tm-lead, .gv-tm-highlight-text, .gv-team-overview-main',
-    defaultFile: 'css/gv-team.css'
+    rule: 'React modal layering',
+    expected: 'vault-shell.css: modal z-index above header; no text clipping',
+    defaultFile: 'client/lib/vault-shell.css'
   },
   'integrity:wrong-background': {
-    rule: 'Team Identity backgrounds',
-    expected: 'Era gradient classes on identity banner — no og-image.jpg or trial/pricing backgrounds',
-    defaultFile: 'css/gv-team.css'
+    rule: 'RETIRED — monolith team identity backgrounds',
+    expected: 'Fix theme in VaultTeamPage.tsx + vault-shell.css',
+    defaultFile: 'client/components/vault/VaultTeamPage.tsx'
   },
   'integrity:autoposter-dedup': {
     rule: 'Autoposter duplication',
-    expected: 'No duplicate URLs/titles or truncated copy (…) in feed-items.json',
+    expected: 'No duplicate URLs/titles in feed-items.json',
     defaultFile: 'data/live/feed-items.json'
+  },
+  'ux:scroll-containers': {
+    rule: 'Scroll containers',
+    expected: 'Hub tabs and horizontal lists use overflow-x:auto with touch scrolling',
+    defaultFile: 'client/lib/vault-shell.css'
+  },
+  'ux:modal-zindex': {
+    rule: 'Modal z-index',
+    expected: 'Header z-index:40; bottom nav z-index:55; modals above content',
+    defaultFile: 'client/lib/vault-shell.css'
+  },
+  'ux:tap-targets': {
+    rule: 'Mobile tap targets',
+    expected: 'Bottom nav and hub tabs min-height 44px with touch-action:manipulation',
+    defaultFile: 'client/lib/vault-shell.css'
+  },
+  'ux:mobile-safari': {
+    rule: 'Mobile Safari safe-area',
+    expected: 'Main content padding-bottom accounts for safe-area-inset-bottom + bottom nav',
+    defaultFile: 'client/lib/vault-shell.css'
+  },
+  'ux:live-feed-layout': {
+    rule: 'Live Feed layout',
+    expected: 'Ticker, category chips, and row time columns render in VaultLiveFeedPage',
+    defaultFile: 'client/components/vault/VaultLiveFeedPage.tsx'
+  },
+  'ux:bottom-nav': {
+    rule: 'Mobile bottom nav',
+    expected: 'gv-vault-bottom-nav fixed with safe-area padding',
+    defaultFile: 'client/components/vault/VaultShell.tsx'
   },
   'visual-integrity:panel-clipping': {
     rule: 'Visual integrity — panel clipping',
-    expected: 'Modal CSS guards prevent desktop text clipping',
-    defaultFile: 'css/gv-team.css'
+    expected: 'React modal CSS prevents desktop text clipping',
+    defaultFile: 'client/lib/vault-shell.css'
   },
   'visual-integrity:layout-overflow': {
     rule: 'Visual integrity — layout overflow',
-    expected: 'Modal flex scroll chain allows full content on desktop',
-    defaultFile: 'css/gv-team.css'
-  },
-  'mobile-behavior:navigation-back': {
-    rule: 'Mobile modal back navigation',
-    expected: 'Recruit/team profile modals use gvPushModalHistory; back gesture closes modal and restores prior pane',
-    defaultFile: 'index.html'
+    expected: 'React scroll chain allows full content on desktop and mobile',
+    defaultFile: 'client/lib/vault-shell.css'
   },
   'mobile-behavior:feed-freshness': {
-    rule: 'Mobile Latest Updates freshness',
-    expected: 'Home tab feed items within QA_MOBILE_FEED_MAX_AGE_HOURS; gvLoadLiveDashboard force refresh on tab focus',
-    defaultFile: 'index.html'
+    rule: 'React Live Feed freshness',
+    expected: 'Live Feed items within QA_MOBILE_FEED_MAX_AGE_HOURS via /api/live/dashboard',
+    defaultFile: 'client/components/vault/VaultLiveFeedPage.tsx'
   }
 };
 
@@ -722,87 +745,53 @@ function generateCorrectivePatchSuggestion(ctx) {
   const { checkId, check, fix, appliedFiles } = ctx;
   const meta = describeRuleExpectation(checkId);
   const details = check?.details || [];
+
+  const rebuilt = preparePatch({ checkId, module: fix?.module, details: check?.details }, check);
+  if (rebuilt?.patchPreview) {
+    return {
+      file: rebuilt.patchPreview.file || meta.defaultFile,
+      before: rebuilt.patchPreview.before || fix?.patchPreview?.before || 'check failed',
+      after: rebuilt.patchPreview.after || meta.expected,
+      edits: (rebuilt.edits || []).filter((e) => !reactBp.isForbiddenEdit(e)),
+      suggestedFix: fix?.suggestedFix || rebuilt.suggestedFix || meta.expected
+    };
+  }
+
   const patchedFile =
     appliedFiles?.[0] ||
     fix?.patch?.edits?.[0]?.file ||
     fix?.patchPreview?.file ||
     meta.defaultFile;
 
-  let before = null;
-  let after = null;
-  let edits = [];
+  if (checkId === 'integrity:feed-dedup' || checkId === 'integrity:autoposter-dedup') {
+    return {
+      file: 'data/live/feed-items.json',
+      before: `${details.length || '?'} feed integrity issue(s)`,
+      after: 'validateFeedIntegrity() → repairFeedItems() with SHA-256 hashes',
+      edits: [{ file: 'data/live/feed-items.json', type: 'repair-feed-integrity' }],
+      suggestedFix: 'Repair data/live/feed-items.json for VaultLiveFeedPage'
+    };
+  }
 
-  if (checkId.includes('component-variants') || checkId.includes('team-overview')) {
-    const v = details[0] || {};
-    const leaked = v.leakedClass || v.class || v.pattern;
-    const regionId = v.regionId || 'vpane-team';
-    if (leaked && patches.TEAM_LEGACY_CARD_SWAPS[leaked]) {
-      before = leaked;
-      after = patches.TEAM_LEGACY_CARD_SWAPS[leaked];
-      edits = [{ file: patchedFile, type: 'class-swap-in-region', regionId, from: before, to: after }];
-    } else if (leaked && patches.TEAM_FORBIDDEN_IN_REGION.includes(leaked)) {
-      before = leaked;
-      after = '(remove from #' + regionId + ')';
-      edits = [{ file: patchedFile, type: 'remove-class-from-region', regionId, className: leaked }];
-    } else if (v.issue === 'missing_overview_layout_markers') {
-      before = 'missing gv-team-overview-layout';
-      after = 'gv-team-overview-layout on #vpane-team';
-      edits = [{ file: patchedFile, type: 'add-class-to-region', regionId: 'vpane-team', className: 'gv-team-overview-layout' }];
-    } else {
-      before = leaked || 'legacy promo/trial classes (card-h, text-amber-300)';
-      after = 'gv-team-page gv-team-overview-layout gv-team-era-card';
-      edits = [
-        { file: patchedFile, type: 'add-class-to-region', regionId: 'vpane-team', className: 'gv-team-page' },
-        { file: patchedFile, type: 'add-class-to-region', regionId: 'vpane-team', className: 'gv-team-overview-layout' }
-      ];
-    }
-  } else if (checkId.includes('team-css-linked')) {
-    before = 'missing /css/gv-team.css link';
-    after = '<link rel="stylesheet" href="/css/gv-team.css">';
-    edits = [{ file: 'index.html', type: 'insert-before', anchor: '</head>', text: '    <link rel="stylesheet" href="/css/gv-team.css">\n' }];
-  } else if (checkId.includes('theme-token')) {
-    before = details.map((d) => d.token).filter(Boolean).join(', ') || 'missing --gv-team-* tokens';
-    after = '--gv-team-card-bg, --gv-team-radius, --gv-team-space-4, --gv-team-title, --gv-team-body';
-    edits = [{ file: 'css/gv-team.css', type: 'ensure-css-tokens', tokens: after.split(', ') }];
-  } else if (checkId === 'integrity:feed-dedup' || checkId === 'integrity:autoposter-dedup') {
-    before = `${details.length || '?'} feed integrity issue(s): ${details.map((d) => d.type).filter(Boolean).slice(0, 4).join(', ') || 'duplicates / placeholder hashes'}`;
-    after = 'validateFeedIntegrity() → repairFeedItems() with SHA-256 hashes';
-    edits = [{ file: 'data/live/feed-items.json', type: 'repair-feed-integrity' }];
-  } else if (checkId === 'integrity:film-sources') {
+  if (checkId === 'integrity:film-sources') {
     const broken = details[0];
-    before = broken?.url || 'broken source_url';
-    after = patches.fallbackForUrl(broken?.url);
-    edits = [{ file: 'data/film-room-knowledge', type: 'replace-broken-source-urls', replacements: [{ url: before, fallback: after }] }];
-  } else if (checkId.includes('hooks')) {
-    const hook = details[0]?.missing || check?.error || 'required hook';
-    before = `missing ${hook}`;
-    after = `wire ${hook} in ${patchedFile}`;
-    edits = [{ file: patchedFile, type: 'verify-hooks', checkId }];
-  } else if (details.length) {
-    const d = details[0];
-    before = d.pattern || d.class || d.leakedClass || d.url || JSON.stringify(d);
-    after = meta.expected.split('—')[0].trim();
-    edits = fix?.patch?.edits || [];
-  } else {
-    const rebuilt = preparePatch(
-      { checkId, module: fix?.module, details: check?.details },
-      check
-    );
-    if (rebuilt?.patchPreview) {
-      before = rebuilt.patchPreview.before;
-      after = rebuilt.patchPreview.after;
-      edits = rebuilt.edits || [];
-    }
+    const before = broken?.url || 'broken source_url';
+    const after = patches.fallbackForUrl(broken?.url);
+    return {
+      file: 'data/film-room-knowledge',
+      before,
+      after,
+      edits: [{ file: 'data/film-room-knowledge', type: 'replace-broken-source-urls', replacements: [{ url: before, fallback: after }] }],
+      suggestedFix: 'Fix Film Room source URLs for VaultFilmRoomPage verified links'
+    };
   }
 
   return {
     file: patchedFile,
-    before: before || fix?.patchPreview?.before || 'incorrect markup',
-    after: after || fix?.patchPreview?.after || meta.expected,
-    edits,
-    suggestedFix:
-      fix?.suggestedFix ||
-      `Update ${patchedFile}: replace "${before}" with "${after}" per ${meta.rule}`
+    before: fix?.patchPreview?.before || check?.error || 'validation failed',
+    after: meta.expected,
+    edits: (fix?.patch?.edits || []).filter((e) => !reactBp.isForbiddenEdit(e)),
+    suggestedFix: fix?.suggestedFix || reactBp.reactExplanation(checkId, check)
   };
 }
 

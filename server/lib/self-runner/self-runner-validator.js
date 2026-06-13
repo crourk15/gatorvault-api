@@ -7,10 +7,25 @@ const scoring = require('../product-intel/product-intel-scoring');
 const engine = require('./self-runner-engine');
 const { runVisualIntegrityChecks } = require('../visual-integrity/visual-integrity-checks');
 const { buildFailureReport } = require('./self-runner-prepare');
+const reactValidator = require('./validators/react-validator');
 const failuresStore = require('./self-runner-failures/self-runner-failures-store');
 
 async function validateFix(fix, opts = {}) {
   const checkId = fix.checkId;
+  const retired = reactValidator.validateCheckId(checkId);
+  if (retired.retired) {
+    return {
+      ok: false,
+      phase: 'retired',
+      error: 'retired_monolith_check',
+      failureReport: {
+        reason: `${checkId} is a retired monolith check`,
+        expected: 'Use React pages:react-* or integrity:react-* checks',
+        actual: retired.reason
+      }
+    };
+  }
+
   let issueResolved = false;
   let localValidation = null;
   let localFailedCheck = null;

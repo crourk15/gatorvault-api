@@ -1,10 +1,11 @@
 /**
- * Self-Runner 3.0 — HTML blueprint loaded from blueprints/html.json
+ * Self-Runner 3.0 — HTML blueprint (RETIRED — React architecture uses react-vault-routes.json).
  */
 const loader = require('./blueprint-loader');
 
 function buildHooksMap() {
   const bp = loader.htmlBlueprint();
+  if (bp.legacy || bp.architecture === 'react') return {};
   const hooks = {};
   Object.entries(bp.sections || {}).forEach(([key, section]) => {
     hooks[key] = {
@@ -25,9 +26,9 @@ function buildHooksMap() {
 }
 
 const HTML_HOOKS = buildHooksMap();
-const REQUIRED_HOOKS = loader.requiredHtmlHooks();
-const AUTOPOSTER_INJECTION_ZONES = loader.htmlBlueprint().autoposterZones || [];
-const PROTECTED_HOOKS = new Set(loader.htmlBlueprint().protected || REQUIRED_HOOKS);
+const REQUIRED_HOOKS = loader.htmlBlueprint().legacy ? [] : loader.requiredHtmlHooks();
+const AUTOPOSTER_INJECTION_ZONES = loader.htmlBlueprint().legacy ? [] : loader.htmlBlueprint().autoposterZones || [];
+const PROTECTED_HOOKS = new Set(loader.htmlBlueprint().protected || []);
 
 function hookByMarker(marker) {
   return (

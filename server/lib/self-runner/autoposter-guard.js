@@ -1,7 +1,7 @@
 /**
- * Self-Runner 2.0 — Autoposter / War Room / Team Identity protection guard.
+ * Self-Runner 3.0 — Autoposter guard + React architecture safety rules.
  */
-const blueprint = require('./blueprint/canonical-blueprint');
+const reactBp = require('./blueprint/react-blueprint');
 const logger = require('./self-runner-logger');
 const dedupeEngine = require('./dedupe-engine');
 
@@ -71,7 +71,8 @@ function patchRemovesHook(edits) {
       removed.push(edit.marker || edit.hookId);
     }
     if (edit.type === 'replace-all' && edit.search) {
-      blueprint.html.PROTECTED_HOOKS.forEach((hook) => {
+      const protectedHooks = ['data-testid="vault-', 'data-testid="landing-page"'];
+      protectedHooks.forEach((hook) => {
         if (String(edit.search).includes(hook) && !(String(edit.replacement || '').includes(hook))) {
           removed.push(hook);
         }
@@ -114,18 +115,35 @@ function validatePatchSafety(proposal) {
     });
   });
 
-  blueprint.html.AUTOPOSTER_INJECTION_ZONES.forEach((zone) => {
-    edits.forEach((edit) => {
-      if (edit.type === 'remove-element' && edit.marker === zone) {
-        blocked.push({
-          severity: 'critical',
-          code: 'autoposter_zone_removal',
-          zone,
-          detail: `Patch would remove Autoposter injection zone: ${zone}`
-        });
-      }
-    });
+  edits.forEach((edit) => {
+    if (reactBp.isForbiddenEdit(edit)) {
+      blocked.push({
+        severity: 'critical',
+        code: 'forbidden_monolith_edit',
+        file: edit.file,
+        type: edit.type,
+        detail: `Monolith edit type "${edit.type}" blocked — use React component/CSS patches`
+      });
+    }
+    if (edit.file && reactBp.isForbiddenFile(edit.file)) {
+      blocked.push({
+        severity: 'critical',
+        code: 'forbidden_monolith_file',
+        file: edit.file,
+        detail: `Patch targets forbidden monolith file: ${edit.file}`
+      });
+    }
+    if (edit.regionId && /^vpane-/.test(edit.regionId)) {
+      blocked.push({
+        severity: 'critical',
+        code: 'forbidden_vpane_region',
+        regionId: edit.regionId,
+        detail: 'vpane region edits are retired — fix React vault components instead'
+      });
+    }
   });
+
+  /* Retired monolith autoposter injection zones — no longer applicable */
 
   const dataIssues = patchCorruptsAutoposterData(edits);
   dataIssues.forEach((issue) => {

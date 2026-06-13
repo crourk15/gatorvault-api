@@ -1,109 +1,10 @@
 /**
- * Self-Runner — patch templates and eligibility rules.
+ * Self-Runner — patch eligibility & React-native routing (no monolith HTML patches).
  */
 const path = require('path');
+const reactBp = require('./blueprint/react-blueprint');
 
 const SERVER_ROOT = path.join(__dirname, '..', '..');
-
-function loadTemplates() {
-  return require('./self-runner-patch-templates');
-}
-
-const ELIGIBILITY = [
-  {
-    test: (issue) => issue.checkId === 'visual-integrity:component-variants',
-    patchType: 'component-variant',
-    eligible: true
-  },
-  {
-    test: (issue) => /^visual-integrity:(panel-clipping|layout-overflow)/.test(issue.checkId || ''),
-    patchType: 'css-token',
-    eligible: true
-  },
-  {
-    test: (issue) => /^visual-integrity:/.test(issue.checkId || ''),
-    patchType: 'background-theme',
-    eligible: true
-  },
-  {
-    test: (issue) => /^integrity:(layout-overflow|panel-clipping|wrong-background)$/.test(issue.checkId || ''),
-    patchType: 'css-token',
-    eligible: true
-  },
-  {
-    test: (issue) => issue.checkId === 'integrity:missing-content',
-    patchType: 'html-hook',
-    eligible: true
-  },
-  {
-    test: (issue) => issue.checkId === 'integrity:team-history-structure',
-    patchType: 'team-content',
-    eligible: true
-  },
-  {
-    test: (issue) => issue.checkId === 'integrity:filmroom-structure',
-    patchType: 'html-hook',
-    eligible: true
-  },
-  {
-    test: (issue) => /^integrity:(feed-dedup|autoposter-dedup)$/.test(issue.checkId || ''),
-    patchType: 'feed-dedup',
-    eligible: true
-  },
-  {
-    test: (issue) => issue.checkId === 'integrity:film-sources',
-    patchType: 'film-source-url',
-    eligible: true
-  },
-  {
-    test: (issue) => issue.checkId === 'integrity:depth-chart',
-    patchType: 'html-hook',
-    eligible: true
-  },
-  {
-    test: (issue) => issue.checkId === 'integrity:roster-images',
-    patchType: 'html-hook',
-    eligible: true
-  },
-  {
-    test: (issue) => /^pages:(film-room-hooks|team-hooks|home)/.test(issue.checkId || ''),
-    patchType: 'html-hook',
-    eligible: true
-  },
-  {
-    test: (issue) => /^pages:admin-hub/.test(issue.checkId || ''),
-    patchType: 'html-hook',
-    eligible: true
-  },
-  {
-    test: (issue) => /^mobile-behavior:/.test(issue.checkId || ''),
-    patchType: 'background-theme',
-    eligible: true
-  },
-  {
-    test: (issue) => issue.checkId === 'mobile-behavior:team-tab-theme',
-    patchType: 'component-variant',
-    eligible: true
-  },
-  {
-    test: (issue) => issue.checkId === 'content:team-module',
-    patchType: 'team-content',
-    eligible: true
-  },
-  {
-    test: (issue) => /^ux:/.test(issue.checkId || ''),
-    patchType: 'css-token',
-    eligible: true
-  },
-  {
-    test: (issue) => !!loadTemplates().resolveRuleId(issue),
-    patchType: null,
-    eligible: true
-  }
-];
-
-/** Only raw API health and browser automation remain manual-only */
-const INELIGIBLE_MODULES = new Set(['api', 'browser']);
 
 const FILM_SOURCE_FALLBACKS = {
   default: 'https://247sports.com/college/florida/',
@@ -113,115 +14,72 @@ const FILM_SOURCE_FALLBACKS = {
   espn: 'https://www.espn.com/college-football/'
 };
 
-const HOOK_SNIPPETS = (() => {
-  try {
-    const bp = require('./blueprint/html-blueprint');
-    const out = {};
-    Object.entries(bp.HTML_HOOKS).forEach(([key, hook]) => {
-      out[`pages:${key}`] = {
-        file: hook.file || 'index.html',
-        marker: hook.marker || hook.id || key,
-        insertBefore: hook.anchor || '</body>',
-        snippet: hook.snippet
-      };
-    });
-    out['pages:team-hooks'] = {
-      file: 'index.html',
-      marker: 'gvOpenTeamDetail',
-      insertBefore: '</body>',
-      snippet: bp.HTML_HOOKS['gvOpenTeamDetail']?.snippet || '<script src="/js/gv-team-mobile.js?v=team-v3" defer></script>\n'
-    };
-    out['pages:film-room-hooks'] = {
-      file: 'index.html',
-      marker: 'gvOpenVerifiedSource',
-      insertBefore: '</body>',
-      snippet: bp.HTML_HOOKS['gvOpenVerifiedSource']?.snippet || '<script src="/js/gv-film-sources.js?v=film-v2" defer></script>\n'
-    };
-    out['integrity:filmroom-structure'] = {
-      file: 'index.html',
-      marker: 'film-room-hub-landing',
-      insertBefore: 'id="vpane-highlights"',
-      snippet: bp.HTML_HOOKS['film-room-hub-landing']?.snippet || '<div id="film-room-hub-landing" class="film-room-hub-landing"></div>\n'
-    };
-    out['integrity:missing-content'] = {
-      file: 'index.html',
-      marker: 'gv-team-overview-layout',
-      insertBefore: 'id="vpane-team"',
-      snippet: bp.HTML_HOOKS['gv-team-overview-layout']?.snippet || '<div class="gv-team-overview-layout"></div>\n'
-    };
-    return out;
-  } catch {
-    return {};
-  }
-})();
-
-const TEAM_LEGACY_CARD_SWAPS = {
-  'card-h': 'gv-team-era-card',
-  'bg-surface-700': 'gv-team-section',
-  'rounded-2xl': 'gv-team-era-card'
-};
-
-const TEAM_FORBIDDEN_IN_REGION = [
-  'trial-expired-ov',
-  'trial-payment-banner',
-  'pricing-sec',
-  'text-amber-300',
-  'from-amber',
-  'bg-amber',
-  'reg-modal',
-  'faq-btn',
-  'card-h'
+/** React-native eligible fix types */
+const ELIGIBILITY = [
+  { test: (i) => /^pages:react-/.test(i.checkId || ''), patchType: 'react-component', eligible: true },
+  { test: (i) => /^pages:vault-/.test(i.checkId || ''), patchType: 'react-component', eligible: true },
+  { test: (i) => /^pages:home:/.test(i.checkId || ''), patchType: 'react-rebuild', eligible: true },
+  { test: (i) => /integrity:react-/.test(i.checkId || ''), patchType: 'react-rebuild', eligible: true },
+  { test: (i) => /^ux:/.test(i.checkId || ''), patchType: 'react-css', eligible: true },
+  { test: (i) => /^visual-integrity:/.test(i.checkId || ''), patchType: 'react-component', eligible: true },
+  { test: (i) => /mobile-behavior:react-vault-nav/.test(i.checkId || ''), patchType: 'react-css', eligible: true },
+  { test: (i) => /^integrity:(feed-dedup|autoposter-dedup)$/.test(i.checkId || ''), patchType: 'feed-dedup-v2', eligible: true },
+  { test: (i) => /^integrity:film-sources$/.test(i.checkId || ''), patchType: 'film-source-url', eligible: true },
+  { test: (i) => /^integrity:(roster-data|depth-chart-data)$/.test(i.checkId || ''), patchType: 'react-component', eligible: true },
+  { test: (i) => /^crawler:(recruiting|roster|depth-chart|pressers|highlights)/.test(i.checkId || ''), patchType: 'react-component', eligible: true },
+  { test: (i) => /^content:film-room/.test(i.checkId || ''), patchType: 'react-component', eligible: true },
+  { test: (i) => /^content:team-module$/.test(i.checkId || ''), patchType: 'react-component', eligible: true },
+  /* Retired monolith — never auto-patch */
+  { test: (i) => /^pages:(team-hooks|film-room-hooks)$/.test(i.checkId || ''), patchType: null, eligible: false, reason: 'retired-monolith' },
+  { test: (i) => /^integrity:(missing-content|filmroom-structure|team-history-structure|wrong-background|layout-overflow|panel-clipping)$/.test(i.checkId || ''), patchType: null, eligible: false, reason: 'retired-monolith' },
+  { test: (i) => /mobile-behavior:team-tab-theme/.test(i.checkId || ''), patchType: null, eligible: false, reason: 'retired-monolith' },
+  { test: (i) => /^mobile-behavior:navigation-back$/.test(i.checkId || ''), patchType: 'react-css', eligible: true },
+  { test: (i) => /^mobile-behavior:feed-freshness$/.test(i.checkId || ''), patchType: 'feed-dedup-v2', eligible: true },
+  { test: (i) => /^pages:admin-hub/.test(i.checkId || ''), patchType: 'react-component', eligible: true },
+  { test: (i) => /^content:articles/.test(i.checkId || ''), patchType: 'schema-field-v2', eligible: true },
+  { test: (i) => /^api:/.test(i.checkId || ''), patchType: null, eligible: false, reason: 'manual-api' }
 ];
 
-const TEAM_REQUIRED = {
-  'vpane-team': ['gv-team-page', 'gv-team-overview-layout'],
-  'vpane-mteam': ['gv-team-page', 'gv-team-section']
-};
+const INELIGIBLE_MODULES = new Set(['api', 'browser']);
 
-/** Team Overview lives in legacy-index.html (#vpane-team / #vpane-mteam) + gv-team-mobile.js card renders */
+/** @deprecated — monolith HTML snippets removed in React architecture */
+const HOOK_SNIPPETS = {};
+
+/** @deprecated — use react-blueprint VAULT_ROUTES */
 const TEAM_OVERVIEW_FILES = {
-  shell: 'legacy-index.html',
-  cards: 'js/gv-team-mobile.js',
-  styles: 'css/gv-team.css'
+  shell: '../client/components/vault/VaultShell.tsx',
+  pages: '../client/components/vault/VaultTeamPage.tsx',
+  styles: '../client/lib/vault-shell.css'
 };
 
 const MODAL_OVERFLOW_CSS_SNIPPET = `
-/* Self-Runner 2.0: modal overflow guards */
-.gv-team-modal-body {
-  flex: 1 1 auto;
-  min-height: 0;
-  min-width: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overflow-wrap: break-word;
-}
-.gv-tm-lead, .gv-tm-body, .gv-tm-highlight-text, .gv-tm-timeline-item {
-  min-width: 0;
-  max-width: 100%;
-  overflow-wrap: break-word;
-  word-break: break-word;
-}
-.gv-team-overview-main { min-width: 0; }
+/* Self-Runner 3.0: React vault scroll + modal guards */
+.gv-vault-shell__main { min-width: 0; }
+.gv-hub-tabs--scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.gv-vault-bottom-nav { z-index: 55; }
 `;
 
 function resolvePatchType(issue) {
   if (INELIGIBLE_MODULES.has(issue.module)) return null;
-  const tmpl = loadTemplates().getTemplate(issue);
-  if (tmpl) return tmpl.patchType;
-  const rule = ELIGIBILITY.find((r) => r.test(issue) && r.patchType);
+  const rule = ELIGIBILITY.find((r) => r.test(issue) && r.eligible !== false && r.patchType);
   return rule ? rule.patchType : null;
 }
 
 function isEligible(issue) {
   if (INELIGIBLE_MODULES.has(issue.module)) return false;
   if (issue.manualOnly) return false;
-  if (loadTemplates().resolveRuleId(issue)) return true;
+  const retired = ELIGIBILITY.find((r) => r.test(issue) && r.eligible === false);
+  if (retired) return false;
   return ELIGIBILITY.some((r) => r.test(issue) && r.eligible !== false);
 }
 
 function classifyIneligibility(issue) {
   if (INELIGIBLE_MODULES.has(issue.module)) {
     return { eligible: false, reason: 'ineligible_module', detail: issue.module };
+  }
+  const retired = ELIGIBILITY.find((r) => r.test(issue) && r.eligible === false);
+  if (retired) {
+    return { eligible: false, reason: retired.reason || 'retired_monolith', detail: issue.checkId };
   }
   if (issue.manualOnly) {
     return { eligible: false, reason: 'manual_only', detail: issue.manualReviewReason || 'flagged' };
@@ -246,20 +104,34 @@ function absPath(rel) {
   return path.join(SERVER_ROOT, rel.replace(/^\//, ''));
 }
 
+function clientAbsPath(rel) {
+  const clean = rel.replace(/^\.\.\/client\//, '').replace(/^client\//, '');
+  return path.join(SERVER_ROOT, '..', 'client', clean);
+}
+
+/** @deprecated — monolith region classes removed in React architecture */
+const TEAM_FORBIDDEN_IN_REGION = [];
+const TEAM_REQUIRED = {};
+const TEAM_LEGACY_CARD_SWAPS = {};
+
 module.exports = {
   SERVER_ROOT,
   ELIGIBILITY,
+  INELIGIBLE_MODULES,
   FILM_SOURCE_FALLBACKS,
   HOOK_SNIPPETS,
+  TEAM_OVERVIEW_FILES,
   TEAM_FORBIDDEN_IN_REGION,
   TEAM_REQUIRED,
   TEAM_LEGACY_CARD_SWAPS,
-  TEAM_OVERVIEW_FILES,
   MODAL_OVERFLOW_CSS_SNIPPET,
+  FORBIDDEN_EDIT_TYPES: reactBp.FORBIDDEN_EDIT_TYPES,
+  FORBIDDEN_PATCH_FILES: reactBp.FORBIDDEN_PATCH_FILES,
   resolvePatchType,
   isEligible,
   classifyIneligibility,
   fallbackForUrl,
   absPath,
+  clientAbsPath,
   getPatchTemplates: () => require('./self-runner-patch-templates')
 };

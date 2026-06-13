@@ -4,9 +4,9 @@
  */
 
 const TEAM_OVERVIEW_FILES = {
-  shell: 'index.html',
-  cards: 'js/gv-team-mobile.js',
-  styles: 'css/gv-team.css'
+  shell: 'client/components/vault/VaultShell.tsx',
+  cards: 'client/components/vault/VaultTeamPage.tsx',
+  styles: 'client/lib/vault-shell.css'
 };
 
 /** Source-of-truth templates keyed by rule ID */
@@ -99,17 +99,17 @@ const PATCH_TEMPLATES = {
     classification: 'mobile-desktop-divergence',
     patchType: 'layout-overflow',
     description: 'Align mobile and desktop layout for {{section}}.',
-    files: ['css/gv-team.css', 'index.html'],
+    files: ['client/lib/vault-shell.css', 'client/components/vault/VaultShell.tsx'],
     diff: [
       {
-        file: 'css/gv-team.css',
+        file: 'client/lib/vault-shell.css',
         before: '/* viewport-specific overflow mismatch */',
         after: '/* unified overflow + scroll rules for desktop and mobile */'
       }
     ],
     safetyRules: [
-      'Apply symmetric rules to #vpane-team and #vpane-mteam where applicable',
-      'Do not break mobile-only bottom nav spacing',
+      'Apply scroll rules to .gv-hub-tabs--scroll and .gv-vault-shell__main',
+      'Do not break mobile bottom nav safe-area padding',
       'Test both 1280px and 390px viewports'
     ],
     qa: [
@@ -469,10 +469,10 @@ const CLASSIFICATION_TO_RULE = {
 /** Map checkId patterns → rule ID */
 const CHECK_ID_RULES = [
   { re: /^crawler:overflow|integrity:layout-overflow|visual-integrity:layout-overflow|ux:(scroll-containers|overflow-visible)/, ruleId: 'A1' },
-  { re: /^crawler:layering|integrity:panel-clipping|visual-integrity:panel-clipping|ux:modal-zindex|mobile-behavior:team-tab-theme/, ruleId: 'A2' },
+  { re: /^crawler:layering|integrity:panel-clipping|visual-integrity:panel-clipping|ux:modal-zindex/, ruleId: 'A2' },
   { re: /^crawler:background|integrity:wrong-background|visual-integrity:(team-overview-background|cross-page-contamination|film-room-theme)/, ruleId: 'A3' },
-  { re: /^crawler:viewport-divergence|mobile-behavior:stale-html/, ruleId: 'A4' },
-  { re: /^crawler:(missing-content|pressers-missing|highlights-missing)|integrity:(missing-content|filmroom-structure|team-history-structure)|pages:(team-hooks|film-room-hooks)/, ruleId: 'B1' },
+  { re: /^crawler:viewport-divergence|mobile-behavior:stale-html|pages:react-|pages:vault-|pages:home:/, ruleId: 'A4' },
+  { re: /^crawler:(pressers-missing|highlights-missing)|integrity:(roster-data|depth-chart-data)|pages:react-(team|film-room|recruiting|live-feed)/, ruleId: 'B1' },
   { re: /^crawler:wrong-ordering|integrity:depth-chart/, ruleId: 'B2' },
   { re: /^crawler:autoposter-dup|integrity:(feed-dedup|autoposter-dedup)/, ruleId: 'C1' },
   { re: /^crawler:autoposter-similarity/, ruleId: 'C2' },
@@ -483,20 +483,21 @@ const CHECK_ID_RULES = [
   { re: /^crawler:depth-chart/, ruleId: 'E2' },
   { re: /^crawler:api-latency|api:ping/, ruleId: 'F1' },
   { re: /^crawler:cache-stale|api:(live-dashboard|live-pipeline-health)/, ruleId: 'F2' },
-  { re: /^crawler:404|integrity:(article-links|film-sources)/, ruleId: 'F3' }
+  { re: /^crawler:404|integrity:(article-links|film-sources|react-exports|react-markers)/, ruleId: 'F3' },
+  { re: /^ux:(tap-targets|mobile-safari|live-feed-layout|bottom-nav)|mobile-behavior:react-vault-nav/, ruleId: 'A1' }
 ];
 
 const DEFAULT_CONTEXT = {
-  section: 'Team Overview',
-  panel: 'Program History modal',
-  page: '/',
-  file: 'css/gv-team.css',
-  selector: '.gv-team-modal-body',
+  section: 'Vault Team',
+  panel: 'VaultTeamPage modal',
+  page: '/vault/team',
+  file: 'client/lib/vault-shell.css',
+  selector: '.gv-vault-shell__main',
   oldZIndex: '1',
-  newZIndex: '3',
-  oldTheme: 'og-image.jpg',
-  correctTheme: 'var(--gv-team-era-gradient)',
-  insertContent: '/* restored section content */',
+  newZIndex: '55',
+  oldTheme: 'trial-promo bleed',
+  correctTheme: 'vault-shell.css tokens',
+  insertContent: '/* restored React section content */',
   oldOrder: '/* incorrect order */',
   newOrder: '/* corrected order */',
   intel: 'duplicate feed item',
@@ -511,7 +512,7 @@ const DEFAULT_CONTEXT = {
   slowCode: '/* unoptimized handler */',
   optimizedCode: '/* cached response */',
   brokenPath: '/missing/asset.css',
-  fixedPath: '/css/gv-team.css'
+  fixedPath: 'client/lib/vault-shell.css'
 };
 
 function fillString(str, ctx) {
@@ -561,19 +562,30 @@ function buildContext(issue, checkDetails) {
   const sectionId = first.sectionId || first.section || issue.sectionId || 'team-overview';
   const selector = first.selector || first.domPath || first.missing || '.gv-team-modal-body';
 
-  let file = 'css/gv-team.css';
-  if (/film-room|highlights|pressers|missing-content|filmroom|hooks|404|ordering/.test(issue.checkId || '')) {
-    file = 'index.html';
-  } else if (/team-history|team-content|ordering|era/.test(issue.checkId || '')) {
-    file = TEAM_OVERVIEW_FILES.cards;
-  } else if (/feed-dedup|autoposter|stale-content/.test(issue.checkId || '')) {
+  let file = 'client/lib/vault-shell.css';
+  const checkId = issue.checkId || '';
+  if (/film-room|pressers|highlights|pages:react-film/.test(checkId)) {
+    file = 'client/components/vault/VaultFilmRoomPage.tsx';
+  } else if (/recruit|war-room|portal|pages:react-recruit/.test(checkId)) {
+    file = 'client/components/vault/VaultRecruitingHubPage.tsx';
+  } else if (/live-feed|ticker|beat|pages:react-live/.test(checkId)) {
+    file = 'client/components/vault/VaultLiveFeedPage.tsx';
+  } else if (/team|roster|depth|pages:react-team/.test(checkId)) {
+    file = 'client/components/vault/VaultTeamPage.tsx';
+  } else if (/futurecast|movement|staff/.test(checkId)) {
+    file = 'client/app/vault/futurecast/page.tsx';
+  } else if (/pages:home|landing/.test(checkId)) {
+    file = 'client/app/page.tsx';
+  } else if (/feed-dedup|autoposter|stale-content/.test(checkId)) {
     file = 'data/live/feed-items.json';
-  } else if (/recruiting|war-room/.test(issue.checkId || '')) {
-    file = 'data/recruiting/board.json';
-  } else if (/roster/.test(issue.checkId || '')) {
+  } else if (/recruiting|war-room/.test(checkId)) {
+    file = 'data/recruiting/players.json';
+  } else if (/roster/.test(checkId)) {
     file = 'data/roster/players.json';
-  } else if (/api-latency|cache/.test(issue.checkId || '')) {
-    file = 'live-routes.js';
+  } else if (/api-latency|cache/.test(checkId)) {
+    file = 'lib/live-routes.js';
+  } else if (/integrity:react-exports|pages:vault-/.test(checkId)) {
+    file = 'vault/team/index.html';
   }
 
   return {

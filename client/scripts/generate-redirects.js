@@ -7,6 +7,7 @@ const {
   REACT_REWRITES,
   ADMIN_AND_LEGACY_HTML,
   LEGACY_VAULT_TAB_REDIRECTS,
+  LEGACY_RETIREMENT_REDIRECTS,
 } = require('../lib/routes');
 
 const serverDir = path.join(__dirname, '..', '..', 'server');
@@ -43,6 +44,9 @@ const lines = [
   '# Legacy monolith vault query params → React vault routes',
   ...LEGACY_QUERY_RULES.map(formatRule),
   '',
+  '# Retired standalone / monolith HTML → vault pillars (301)',
+  ...LEGACY_RETIREMENT_REDIRECTS.map(formatRule),
+  '',
   '# React UI (Next.js static export)',
   ...REACT_REWRITES.map(formatRule),
   '',
@@ -55,5 +59,5 @@ fs.writeFileSync(outPath, lines.join('\n'), 'utf8');
 console.log(
   '[generate-redirects] Wrote',
   outPath,
-  `(${LEGACY_QUERY_RULES.length + REACT_REWRITES.length + ADMIN_AND_LEGACY_HTML.length + 1} rules)`
+  `(${LEGACY_QUERY_RULES.length + LEGACY_RETIREMENT_REDIRECTS.length + REACT_REWRITES.length + ADMIN_AND_LEGACY_HTML.length + 1} rules)`
 );

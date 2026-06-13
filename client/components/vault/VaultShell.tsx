@@ -12,14 +12,14 @@ function sidebarActive(pathname: string, href: string): boolean {
     return (
       p === h ||
       p.startsWith(`${h}/`) ||
-      p === '/vault/portal' ||
-      p.startsWith('/vault/portal/') ||
-      p === '/vault/scouting' ||
-      p === '/vault/recruiting-board'
+      p.startsWith('/vault/recruiting/player/')
     );
   }
   if (h === '/vault/team') {
-    return p === h || p === '/vault/depth-chart' || p.startsWith('/vault/players/');
+    return p === h || p.startsWith('/vault/players/');
+  }
+  if (h === '/vault/schedule') {
+    return p === h || p.startsWith(`${h}/`) || p === '/vault/tickets' || p.startsWith('/vault/tickets/');
   }
   if (h === '/vault/futurecast') {
     return p === h || p.startsWith(`${h}/`);

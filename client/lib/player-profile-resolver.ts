@@ -56,8 +56,8 @@ export async function resolvePlayerProfile(
       const bundle = await fetchPlayerProfile(slug);
       const kind = playerLifecycleKind(bundle.player.status);
       if (kind === 'portal') {
-        const href = playerProfilePath(slug, 'PORTAL', inVault);
-        if (!inVault || !window.location.pathname.includes('/portal/')) {
+        const href = playerProfilePath(slug, 'PORTAL', inVault, undefined, 'recruiting');
+        if (!inVault || !window.location.pathname.includes('/recruiting/player/')) {
           return { kind: 'redirect', slug, href };
         }
       }

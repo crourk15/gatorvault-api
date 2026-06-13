@@ -5,11 +5,10 @@ import { usePathname } from '@/lib/use-pathname';
 import { futureCastSubHref, type FutureCastSubId } from '@/lib/vault-routes';
 
 const SUB_LINKS: { id: FutureCastSubId; label: string }[] = [
-  { id: 'home', label: 'Home' },
-  { id: 'stock', label: 'Stock Up / Down' },
-  { id: 'snapshots', label: 'Snapshots' },
-  { id: 'alerts', label: 'Alerts' },
-  { id: 'staff', label: 'Movement Intel' },
+  { id: 'home', label: 'Big Board' },
+  { id: 'board', label: 'Board' },
+  { id: 'movement', label: 'Movement Intel' },
+  { id: 'staff', label: 'Staff Notes' },
 ];
 
 export type { FutureCastSubId };

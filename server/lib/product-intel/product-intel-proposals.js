@@ -7,28 +7,29 @@ const patches = require('../self-runner/self-runner-patches');
 const patchTemplates = require('../self-runner/self-runner-patch-templates');
 
 const FILE_MAP = {
-  'layout-overflow': ['css/gv-team.css'],
-  'panel-clipping': ['css/gv-team.css', 'index.html'],
-  'missing-content': ['index.html', 'js/gv-team-mobile.js', 'data/coaching-staff.json'],
+  'layout-overflow': ['client/lib/vault-shell.css'],
+  'panel-clipping': ['client/lib/vault-shell.css', 'client/components/vault/VaultShell.tsx'],
+  'missing-content': ['client/components/vault/', 'data/coaching-staff.json'],
   'missing-image': ['data/roster/', 'api/roster/players'],
-  'wrong-background': ['css/gv-team.css', 'js/gv-team-mobile.js'],
-  'wrong-ordering': ['index.html', 'js/gv-team-mobile.js', 'data/roster/depth-chart-meta.json'],
-  'filmroom-structure': ['index.html'],
-  'team-history-structure': ['js/gv-team-mobile.js'],
-  'team-identity-layering': ['css/gv-team.css', 'index.html'],
+  'wrong-background': ['client/lib/vault-shell.css', 'client/components/vault/VaultTeamPage.tsx'],
+  'wrong-ordering': ['client/components/vault/VaultTeamPage.tsx', 'data/roster/depth-chart-meta.json'],
+  'filmroom-structure': ['client/components/vault/VaultFilmRoomPage.tsx'],
+  'team-history-structure': ['client/components/vault/VaultTeamPage.tsx'],
+  'team-identity-layering': ['client/lib/vault-shell.css', 'client/components/vault/VaultTeamPage.tsx'],
   'autoposter-duplication': ['data/live/feed-items.json'],
   'autoposter-stale': ['lib/x-autoposter.js', 'data/live/feed-items.json'],
   'recruiting-board-mismatch': ['data/recruiting/', 'lib/recruiting-store.js'],
-  'depth-chart-mismatch': ['data/roster/depth-chart-meta.json', 'index.html'],
+  'depth-chart-mismatch': ['data/roster/depth-chart-meta.json', 'client/components/vault/VaultTeamPage.tsx'],
   'roster-mismatch': ['data/roster/', 'lib/roster-store.js'],
-  'pressers-missing': ['index.html'],
-  'highlights-missing': ['index.html'],
+  'pressers-missing': ['client/components/vault/VaultFilmRoomPage.tsx'],
+  'highlights-missing': ['client/components/vault/VaultFilmRoomPage.tsx'],
   'api-latency': ['server.js', 'Render dashboard'],
   'cache-stale': ['lib/live-dashboard-cache.js', 'lib/live-routes.js'],
   'broken-link': ['data/film-room-knowledge/', 'data/articles/'],
-  '404-detected': ['index.html', 'static assets'],
-  'ui-regression': ['index.html', 'css/gv-team.css'],
-  'mobile-desktop-divergence': ['css/gv-team.css', 'index.html', 'js/gv-team-mobile.js']
+  '404-detected': ['client/lib/routes.js', 'vault/'],
+  'ui-regression': ['client/components/vault/', 'client/lib/vault-shell.css'],
+  'mobile-desktop-divergence': ['client/lib/vault-shell.css', 'client/components/vault/VaultShell.tsx'],
+  'retired-monolith': ['client/components/vault/']
 };
 
 function buildTestPlan(classification, checkId) {

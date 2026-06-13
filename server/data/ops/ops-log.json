@@ -1,7 +1,549 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-11T21:13:56.151Z",
+  "updatedAt": "2026-06-13T17:10:46.715Z",
   "events": [
+    {
+      "id": "ops_1781370646715_79auxc",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (9)",
+      "details": {
+        "runId": "qa_1781370627642",
+        "summary": {
+          "total": 111,
+          "passed": 102,
+          "failed": 9,
+          "emitted": 9
+        },
+        "errors": [
+          {
+            "id": "ux:scroll-containers",
+            "module": "ux",
+            "message": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "url": "/",
+            "repro": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "details": {
+              "classification": "layout-overflow",
+              "ruleId": "A1",
+              "severity": "medium",
+              "severityScore": 63,
+              "confidence": 90,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:modal-zindex",
+            "module": "ux",
+            "message": "Vault header z-index stacking not found — modals may render behind shell",
+            "url": "/",
+            "repro": "Vault header z-index stacking not found — modals may render behind shell",
+            "details": {
+              "classification": "panel-clipping",
+              "ruleId": "A2",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:pressers-missing",
+            "module": "crawler",
+            "message": "Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage",
+            "url": "/vault/film-room",
+            "repro": "Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage",
+            "details": {
+              "classification": "pressers-missing",
+              "ruleId": "B1",
+              "severity": "high",
+              "severityScore": 60,
+              "confidence": 90,
+              "selector": ".gv-film-hub-card",
+              "domPath": "film-room-press-category",
+              "screenshot": null,
+              "sectionId": "vault-film-room"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:highlights-missing",
+            "module": "crawler",
+            "message": "Verify Film Room catalog includes Highlights hub category",
+            "url": "/vault/film-room",
+            "repro": "Verify Film Room catalog includes Highlights hub category",
+            "details": {
+              "classification": "highlights-missing",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 85,
+              "selector": ".gv-film-lessons",
+              "domPath": "film-room-highlights",
+              "screenshot": null,
+              "sectionId": "vault-film-room"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:vault-schedule:desktop",
+            "module": "pages",
+            "message": "HTTP 404 https://gatorvaultinsider.com/vault/schedule",
+            "url": "/vault/schedule",
+            "repro": "HTTP 404 https://gatorvaultinsider.com/vault/schedule",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-13T17:10:46.715Z"
+    },
+    {
+      "id": "ops_1781370645982_71orrq",
+      "subsystem": "product-intel",
+      "status": "warning",
+      "message": "Product Intelligence scored 82/100 — 12 fix item(s)",
+      "details": {
+        "runId": "qa_1781370627642",
+        "overall": 82,
+        "fixQueue": 12,
+        "layers": {
+          "data": {
+            "counts": {
+              "total": 12,
+              "bySource": {
+                "qa": 9,
+                "apiHealth": 0,
+                "cacheHealth": 0,
+                "autoposter": 1,
+                "recruiting": 0,
+                "teamData": 1,
+                "filmRoom": 1
+              }
+            },
+            "sources": [
+              "qa-crawler",
+              "live-dashboard",
+              "mobile-behavior",
+              "admin-hub",
+              "autoposter-logs",
+              "recruiting-board",
+              "film-room",
+              "team-overview",
+              "program-history",
+              "roster-depth-chart",
+              "press-conferences",
+              "highlights",
+              "api-health",
+              "cache-health"
+            ]
+          },
+          "classification": {
+            "active": [
+              "layout-overflow",
+              "panel-clipping",
+              "pressers-missing",
+              "highlights-missing",
+              "roster-mismatch",
+              "autoposter-stale",
+              "ui-regression"
+            ],
+            "total": 12
+          },
+          "severity": {
+            "critical": 1,
+            "high": 5,
+            "medium": 6,
+            "low": 0
+          },
+          "proposals": 12,
+          "approvalGate": "self-runner"
+        }
+      },
+      "counts": null,
+      "timestamp": "2026-06-13T17:10:45.982Z"
+    },
+    {
+      "id": "ops_1781369064396_8e2env",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (11)",
+      "details": {
+        "runId": "qa_1781369048155",
+        "summary": {
+          "total": 108,
+          "passed": 97,
+          "failed": 11,
+          "emitted": 11
+        },
+        "errors": [
+          {
+            "id": "ux:scroll-containers",
+            "module": "ux",
+            "message": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "url": "/",
+            "repro": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "details": {
+              "classification": "layout-overflow",
+              "ruleId": "A1",
+              "severity": "medium",
+              "severityScore": 63,
+              "confidence": 90,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "integrity:react-exports",
+            "module": "integrity",
+            "message": "Run npm run build --prefix client && node client/scripts/merge-into-server.js",
+            "url": "/",
+            "repro": "Run npm run build --prefix client && node client/scripts/merge-into-server.js",
+            "details": {
+              "classification": "missing-content",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "integrity:react-markers",
+            "module": "integrity",
+            "message": "8 React marker(s) missing from local static exports",
+            "url": "/",
+            "repro": "8 React marker(s) missing from local static exports",
+            "details": {
+              "classification": "missing-content",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:modal-zindex",
+            "module": "ux",
+            "message": "Vault header z-index stacking not found — modals may render behind shell",
+            "url": "/",
+            "repro": "Vault header z-index stacking not found — modals may render behind shell",
+            "details": {
+              "classification": "panel-clipping",
+              "ruleId": "A2",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:pressers-missing",
+            "module": "crawler",
+            "message": "Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage",
+            "url": "/vault/film-room",
+            "repro": "Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage",
+            "details": {
+              "classification": "pressers-missing",
+              "ruleId": "B1",
+              "severity": "high",
+              "severityScore": 60,
+              "confidence": 90,
+              "selector": ".gv-film-hub-card",
+              "domPath": "film-room-press-category",
+              "screenshot": null,
+              "sectionId": "vault-film-room"
+            },
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-13T16:44:24.396Z"
+    },
+    {
+      "id": "ops_1781369064317_11l7y5",
+      "subsystem": "product-intel",
+      "status": "warning",
+      "message": "Product Intelligence scored 71/100 — 14 fix item(s)",
+      "details": {
+        "runId": "qa_1781369048155",
+        "overall": 71,
+        "fixQueue": 14,
+        "layers": {
+          "data": {
+            "counts": {
+              "total": 14,
+              "bySource": {
+                "qa": 11,
+                "apiHealth": 0,
+                "cacheHealth": 0,
+                "autoposter": 1,
+                "recruiting": 0,
+                "teamData": 1,
+                "filmRoom": 1
+              }
+            },
+            "sources": [
+              "qa-crawler",
+              "live-dashboard",
+              "mobile-behavior",
+              "admin-hub",
+              "autoposter-logs",
+              "recruiting-board",
+              "film-room",
+              "team-overview",
+              "program-history",
+              "roster-depth-chart",
+              "press-conferences",
+              "highlights",
+              "api-health",
+              "cache-health"
+            ]
+          },
+          "classification": {
+            "active": [
+              "layout-overflow",
+              "missing-content",
+              "panel-clipping",
+              "pressers-missing",
+              "highlights-missing",
+              "roster-mismatch",
+              "autoposter-stale",
+              "ui-regression"
+            ],
+            "total": 14
+          },
+          "severity": {
+            "critical": 1,
+            "high": 7,
+            "medium": 6,
+            "low": 0
+          },
+          "proposals": 14,
+          "approvalGate": "self-runner"
+        }
+      },
+      "counts": null,
+      "timestamp": "2026-06-13T16:44:24.317Z"
+    },
+    {
+      "id": "ops_1781368754462_nyub9m",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (13)",
+      "details": {
+        "runId": "qa_1781368712378",
+        "summary": {
+          "total": 100,
+          "passed": 87,
+          "failed": 13,
+          "emitted": 12
+        },
+        "errors": [
+          {
+            "id": "ux:scroll-containers",
+            "module": "ux",
+            "message": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "url": "/",
+            "repro": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "details": {
+              "classification": "layout-overflow",
+              "ruleId": "A1",
+              "severity": "medium",
+              "severityScore": 63,
+              "confidence": 90,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "integrity:react-exports",
+            "module": "integrity",
+            "message": "Run client build + merge-into-server.js to export vault routes",
+            "url": "/",
+            "repro": "Run client build + merge-into-server.js to export vault routes",
+            "details": {
+              "classification": "missing-content",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "integrity:react-markers",
+            "module": "integrity",
+            "message": "3 React marker(s) missing from local static exports",
+            "url": "/",
+            "repro": "3 React marker(s) missing from local static exports",
+            "details": {
+              "classification": "missing-content",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:modal-zindex",
+            "module": "ux",
+            "message": "Vault header z-index stacking not found — modals may render behind shell",
+            "url": "/",
+            "repro": "Vault header z-index stacking not found — modals may render behind shell",
+            "details": {
+              "classification": "panel-clipping",
+              "ruleId": "A2",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:404",
+            "module": "crawler",
+            "message": "Deploy missing asset _next/static/chunks/main-app-d31b18b0e93be254.js to Netlify",
+            "url": "/",
+            "repro": "Deploy missing asset _next/static/chunks/main-app-d31b18b0e93be254.js to Netlify",
+            "details": {
+              "classification": "404-detected",
+              "ruleId": "F3",
+              "severity": "high",
+              "severityScore": 60,
+              "confidence": 95,
+              "selector": "_next/static/chunks/main-app-d31b18b0e93be254.js",
+              "domPath": "_next/static/chunks/main-app-d31b18b0e93be254.js",
+              "screenshot": null,
+              "sectionId": "homepage"
+            },
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-13T16:39:14.462Z"
+    },
+    {
+      "id": "ops_1781368752115_agezvs",
+      "subsystem": "product-intel",
+      "status": "warning",
+      "message": "Product Intelligence scored 78/100 — 16 fix item(s)",
+      "details": {
+        "runId": "qa_1781368712378",
+        "overall": 78,
+        "fixQueue": 16,
+        "layers": {
+          "data": {
+            "counts": {
+              "total": 17,
+              "bySource": {
+                "qa": 13,
+                "apiHealth": 0,
+                "cacheHealth": 0,
+                "autoposter": 1,
+                "recruiting": 1,
+                "teamData": 1,
+                "filmRoom": 1
+              }
+            },
+            "sources": [
+              "qa-crawler",
+              "live-dashboard",
+              "mobile-behavior",
+              "admin-hub",
+              "autoposter-logs",
+              "recruiting-board",
+              "film-room",
+              "team-overview",
+              "program-history",
+              "roster-depth-chart",
+              "press-conferences",
+              "highlights",
+              "api-health",
+              "cache-health"
+            ]
+          },
+          "classification": {
+            "active": [
+              "layout-overflow",
+              "missing-content",
+              "panel-clipping",
+              "404-detected",
+              "pressers-missing",
+              "highlights-missing",
+              "recruiting-board-mismatch",
+              "roster-mismatch",
+              "api-latency",
+              "autoposter-stale",
+              "ui-regression"
+            ],
+            "total": 16
+          },
+          "severity": {
+            "critical": 1,
+            "high": 10,
+            "medium": 5,
+            "low": 0
+          },
+          "proposals": 16,
+          "approvalGate": "self-runner"
+        }
+      },
+      "counts": null,
+      "timestamp": "2026-06-13T16:39:12.115Z"
+    },
     {
       "id": "ops_1781212436151_u7gwxi",
       "subsystem": "qa:crawler",

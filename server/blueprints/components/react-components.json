@@ -1,0 +1,98 @@
+{
+  "version": "4.0.0",
+  "architecture": "react",
+  "shell": {
+    "layout": "client/components/vault/VaultShell.tsx",
+    "css": "client/lib/vault-shell.css",
+    "routes": "client/lib/vault-routes.ts",
+    "netlifyRewrites": "client/lib/routes.js"
+  },
+  "components": [
+    {
+      "id": "RecruitingHub",
+      "file": "client/components/vault/VaultRecruitingHubPage.tsx",
+      "testid": "vault-recruiting-hub",
+      "route": "/vault/recruiting",
+      "expectations": {
+        "tabs": ["2026 Commits", "Targets", "Heat Check", "Scouting", "Portal", "Movement Intel"],
+        "classes": ["gv-recruiting-hub", "gv-hub-tabs", "gv-rh-grid"]
+      }
+    },
+    {
+      "id": "FutureCastBoard",
+      "file": "client/app/vault/futurecast/page.tsx",
+      "testid": "vault-futurecast-page",
+      "route": "/vault/futurecast",
+      "expectations": {
+        "sections": ["big-board", "movement-intel", "staff-notes"]
+      }
+    },
+    {
+      "id": "MovementIntel",
+      "file": "client/components/vault/VaultRecruitingHubPage.tsx",
+      "route": "/vault/recruiting",
+      "tab": "intel"
+    },
+    {
+      "id": "TeamRoster",
+      "file": "client/components/vault/VaultTeamPage.tsx",
+      "testid": "vault-team",
+      "route": "/vault/team",
+      "expectations": {
+        "tabs": ["Full Roster", "Depth Chart"],
+        "classes": ["gv-team-page", "gv-team-roster"]
+      }
+    },
+    {
+      "id": "DepthChart",
+      "file": "client/components/vault/VaultTeamPage.tsx",
+      "data": "client/lib/depth-chart-data.ts",
+      "route": "/vault/team",
+      "expectations": {
+        "classes": ["gv-dc-grid"],
+        "dataExport": "DEPTH_BY_PHASE"
+      }
+    },
+    {
+      "id": "FilmRoom",
+      "file": "client/components/vault/VaultFilmRoomPage.tsx",
+      "testid": "vault-film-room",
+      "route": "/vault/film-room",
+      "expectations": {
+        "categories": [
+          "Offensive Scheme",
+          "Defensive Scheme",
+          "Film Breakdown",
+          "UF Press Conferences",
+          "Highlights"
+        ],
+        "classes": ["gv-film-hub-grid", "gv-film-hub-card"]
+      }
+    },
+    {
+      "id": "LiveFeed",
+      "file": "client/components/vault/VaultLiveFeedPage.tsx",
+      "testid": "vault-live-feed",
+      "route": "/vault/live-feed",
+      "expectations": {
+        "tabs": ["Headlines", "Beat Writers", "Podcasts"],
+        "classes": ["gv-live-feed", "gv-live-feed__list"]
+      }
+    },
+    {
+      "id": "Ticker",
+      "file": "client/components/vault/VaultLiveFeedPage.tsx",
+      "route": "/vault/live-feed",
+      "expectations": {
+        "classes": ["gv-live-ticker"]
+      }
+    }
+  ],
+  "retiredComponents": [
+    "vpane-team",
+    "vpane-mteam",
+    "highlight-card",
+    "gv-team-detail-modal",
+    "film-room-hub-landing"
+  ]
+}

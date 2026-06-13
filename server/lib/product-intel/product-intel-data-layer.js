@@ -399,7 +399,18 @@ async function collectTeamDataSignals() {
 
 async function collectFilmRoomSignals() {
   const signals = [];
-  const html = fs.readFileSync(path.join(SERVER_ROOT, 'index.html'), 'utf8');
+  const filmRoomPath = path.join(SERVER_ROOT, 'vault', 'film-room', 'index.html');
+  let html = '';
+  try {
+    html = fs.readFileSync(filmRoomPath, 'utf8');
+  } catch {
+    try {
+      html = fs.readFileSync(path.join(SERVER_ROOT, '..', 'client', 'components', 'vault', 'VaultFilmRoomPage.tsx'), 'utf8');
+    } catch {
+      return signals;
+    }
+  }
+
   const hubs = ['Offensive Scheme', 'Defensive Scheme', 'Film Breakdown', 'UF Press Conferences', 'Highlights'];
   const missing = hubs.filter((h) => !html.includes(h));
   if (missing.length) {
@@ -411,21 +422,12 @@ async function collectFilmRoomSignals() {
       })
     );
   }
-  if (!html.includes('film-room-hub-landing')) {
+  if (!html.includes('vault-film-room') && !html.includes('VaultFilmRoomPage')) {
     signals.push(
-      signal('pi:filmroom:hub', 'film-room', 'Film Room hub landing missing', 'film-room-hub-landing not in index.html', {
+      signal('pi:filmroom:export', 'film-room', 'React Film Room export missing', 'vault-film-room testid not found', {
         classification: 'filmroom-structure',
         impact: 72,
         confidence: 92
-      })
-    );
-  }
-  if (!html.includes('gvOpenFilmRoomHub')) {
-    signals.push(
-      signal('pi:filmroom:hook', 'film-room', 'Film Room hub hook missing', 'gvOpenFilmRoomHub not wired', {
-        classification: 'filmroom-structure',
-        impact: 70,
-        confidence: 88
       })
     );
   }

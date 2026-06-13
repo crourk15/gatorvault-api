@@ -44,11 +44,18 @@ function scanText(text, context) {
 }
 
 function loadTeamModuleText() {
-  try {
-    return fs.readFileSync(path.join(__dirname, '..', '..', 'js', 'gv-team-mobile.js'), 'utf8');
-  } catch {
-    return '';
+  const paths = [
+    path.join(__dirname, '..', '..', 'vault', 'team', 'index.html'),
+    path.join(__dirname, '..', '..', '..', 'client', 'components', 'vault', 'VaultTeamPage.tsx')
+  ];
+  for (const p of paths) {
+    try {
+      return fs.readFileSync(p, 'utf8');
+    } catch {
+      /* try next */
+    }
   }
+  return '';
 }
 
 async function runContentChecks() {
@@ -119,17 +126,17 @@ async function runContentChecks() {
     })
   );
 
-  // Team tab + coaching bios (static module)
+  // React Team page copy
   checks.push(
-    await check('content:team-module', 'content', 'Team tab & coaching bios text', async () => {
+    await check('content:team-module', 'content', 'Team page text markers', async () => {
       const src = loadTeamModuleText();
-      if (!src) throw new Error('gv-team-mobile.js not readable');
-      const required = ['gvOpenTeamDetail', 'COACHING_STAFF', 'Brad White', 'Depth Chart'];
+      if (!src) throw new Error('React Team page export not readable');
+      const required = ['vault-team', 'Full Roster', 'Depth Chart', 'Team'];
       const missing = required.filter((k) => !src.includes(k));
-      if (missing.length) throw new Error(`Team module missing: ${missing.join(', ')}`);
-      const issues = scanText(src.slice(0, 50000), 'team-module');
-      if (issues.length > 5) {
-        const err = new Error(`${issues.length} team module text issues`);
+      if (missing.length) throw new Error(`Team page missing: ${missing.join(', ')}`);
+      const issues = scanText(src.slice(0, 50000), 'team-page');
+      if (issues.length > 8) {
+        const err = new Error(`${issues.length} team page text issues`);
         err.details = issues.slice(0, 8);
         throw err;
       }

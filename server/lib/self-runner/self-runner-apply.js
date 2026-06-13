@@ -4,6 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const patches = require('./self-runner-patches');
+const reactBp = require('./blueprint/react-blueprint');
 const { dedupeFeedItems } = require('../live-feed-dedup');
 const dedupeEngine = require('./dedupe-engine');
 const schemaValidator = require('./schema-validator');
@@ -17,12 +18,12 @@ const DEFAULT_TOKENS = {
 };
 
 function readFileRel(rel) {
-  const p = patches.absPath(rel);
+  const p = rel.startsWith('client/') ? patches.clientAbsPath(rel) : patches.absPath(rel);
   return fs.readFileSync(p, 'utf8');
 }
 
 function writeFileRel(rel, content) {
-  const p = patches.absPath(rel);
+  const p = rel.startsWith('client/') ? patches.clientAbsPath(rel) : patches.absPath(rel);
   fs.mkdirSync(path.dirname(p), { recursive: true });
   fs.writeFileSync(p, content);
   return p;
@@ -233,6 +234,17 @@ function applyFilmSourceReplacements(dirRel, replacements) {
   return { replacements: count };
 }
 
+function applyReactCssAppend(relPath, edit) {
+  let css = readFileRel(relPath);
+  const marker = edit.marker || `/* Self-Runner: ${edit.checkId || 'react-css'} */`;
+  if (css.includes(marker)) return { skipped: true, marker };
+  const text = edit.text || '';
+  if (!text.trim()) return { skipped: true, reason: 'empty_snippet' };
+  css = css.trimEnd() + '\n' + (text.startsWith('\n') ? text : `\n${text}`) + '\n';
+  writeFileRel(relPath, css);
+  return { appended: marker };
+}
+
 function applyCssTokens(relPath, tokens) {
   let css = readFileRel(relPath);
   const missing = (tokens || []).filter((t) => !css.includes(t));
@@ -250,6 +262,19 @@ function applyCssTokens(relPath, tokens) {
 }
 
 function applyEdit(edit, state) {
+  if (reactBp.isForbiddenEdit(edit)) {
+    state.meta.blockedEdits = state.meta.blockedEdits || [];
+    state.meta.blockedEdits.push({ file: edit.file, type: edit.type, reason: 'forbidden_monolith_edit' });
+    return state;
+  }
+
+  const manualOnly = ['react-component-review', 'react-rebuild-export', 'react-route-verify', 'verify-json'];
+  if (manualOnly.includes(edit.type)) {
+    state.meta.manualReview = state.meta.manualReview || [];
+    state.meta.manualReview.push({ file: edit.file, type: edit.type, note: edit.note || edit.checkId });
+    return state;
+  }
+
   const file = edit.file;
   if (!state.files[file]) {
     try {
@@ -278,6 +303,8 @@ function applyEdit(edit, state) {
     state.meta.feedDedup = applyFeedDedup(file);
   } else if (type === 'replace-broken-source-urls') {
     state.meta.filmSources = applyFilmSourceReplacements(edit.file, edit.replacements);
+  } else if (type === 'react-css-append') {
+    state.meta.reactCss = applyReactCssAppend(file, edit);
   } else if (type === 'ensure-css-tokens') {
     state.meta.cssTokens = applyCssTokens(file, edit.tokens);
   } else if (type === 'append-if-missing') {
@@ -329,6 +356,16 @@ function applyPatch(fix) {
       state.appliedPaths.push(abs);
     }
   });
+
+  if (state.meta.manualReview?.length && !state.appliedPaths.length) {
+    return {
+      ok: true,
+      manualOnly: true,
+      appliedFiles: [],
+      meta: state.meta,
+      appliedAt: new Date().toISOString()
+    };
+  }
 
   return {
     ok: true,

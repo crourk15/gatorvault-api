@@ -29,32 +29,24 @@ function readLocalAsset(rel) {
   }
 }
 
-function readMonolithArchive() {
-  return readLocalAsset('legacy-index.html') || readLocalAsset('index.html');
-}
-
 function staticHtmlForSection(section) {
-  if (section.legacy) return readMonolithArchive();
-  if (section.page === '/vault') return readLocalAsset('vault/index.html') || readLocalAsset('index.html');
-  if (section.page && section.page.startsWith('/vault/')) {
+  if (section.page === '/admin') return readLocalAsset('admin.html') || readLocalAsset('index.html');
+  if (section.page && section.page.startsWith('/vault')) {
     const rel = `${section.page.replace(/^\//, '')}/index.html`;
-    return readLocalAsset(rel) || readLocalAsset('index.html');
+    return readLocalAsset(rel) || readLocalAsset('vault/index.html') || readLocalAsset('index.html');
   }
+  if (section.page === '/vault') return readLocalAsset('vault/index.html') || readLocalAsset('index.html');
   return readLocalAsset('index.html');
 }
 
 function buildStaticSnapshot(section, viewport) {
-  const html =
-    section.page === '/admin'
-      ? readLocalAsset('admin.html') || readLocalAsset('index.html')
-      : staticHtmlForSection(section);
-  const teamCss = readLocalAsset('css/gv-team.css');
-  const teamJs = readLocalAsset('js/gv-team-mobile.js');
-  const css = { 'css/gv-team.css': teamCss };
+  const html = staticHtmlForSection(section);
+  const css = {};
 
   const elements = (section.selectors || []).map((sel) => {
-    const needle = sel.startsWith('#') ? `id="${sel.slice(1)}"` : sel;
-    const exists = html.includes(needle) || teamJs.includes(needle) || teamCss.includes(needle);
+    const needle =
+      sel.startsWith('#') ? `id="${sel.slice(1)}"` : sel.startsWith('[') ? sel.replace(/^\[|\]$/g, '') : sel;
+    const exists = html.includes(needle) || html.includes(sel);
     return { selector: sel, domPath: sel, exists, source: 'static' };
   });
 
@@ -86,18 +78,10 @@ async function bootstrapVault(page, viewport) {
 }
 
 async function navigateSection(page, section, viewport) {
-  const nav = viewport === 'mobile' ? section.mobile?.nav : section.desktop?.nav;
-  if (!nav) return;
-
-  if (nav.fn === 'gvMobileShowTab') {
-    await page.evaluate((tab) => {
-      if (typeof gvMobileShowTab === 'function') gvMobileShowTab(tab);
-    }, nav.arg);
-    await page.waitForTimeout(1500);
-  } else if (nav.fn === 'showVTab') {
-    await page.evaluate((tab) => {
-      if (typeof showVTab === 'function') showVTab(tab);
-    }, nav.arg);
+  /* React routes — no monolith showVTab / gvMobileShowTab navigation */
+  if (section.page && section.page !== '/') {
+    await page.goto(`${config.SITE_URL}${section.page}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    await page.waitForSelector('[data-testid], .gv-vault-shell', { timeout: 20000 }).catch(() => {});
     await page.waitForTimeout(1500);
   }
 }
@@ -194,9 +178,6 @@ async function fetchSectionPlaywright(page, section, viewport) {
   if (section.isAdmin) {
     await page.goto(`${config.SITE_URL}/admin`, { waitUntil: 'domcontentloaded', timeout: 45000 });
     await page.waitForTimeout(1500);
-  } else if (section.legacy) {
-    await page.goto(`${config.SITE_URL}/vault`, { waitUntil: 'domcontentloaded', timeout: 45000 });
-    await page.waitForTimeout(1500);
   } else if (section.page && section.page !== '/') {
     await page.goto(`${config.SITE_URL}${section.page}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
     await page.waitForSelector('[data-testid], .gv-vault-shell, .gv-landing', { timeout: 25000 }).catch(() => {});
@@ -234,7 +215,7 @@ async function fetchSectionPlaywright(page, section, viewport) {
     label: section.label,
     page: section.page || '/',
     viewport,
-    url: section.isAdmin ? `${config.SITE_URL}/admin` : `${config.SITE_URL}/`,
+    url: section.isAdmin ? `${config.SITE_URL}/admin` : `${config.SITE_URL}${section.page || '/vault'}`,
     fetchedAt: new Date().toISOString(),
     hydrated: true,
     source: 'playwright',

@@ -6,6 +6,12 @@ import {
   fetchFilmRoomCatalog,
   type FilmRoomCatalogItem,
 } from '@/lib/film-room-api';
+import {
+  filmRoomHubFromSegment,
+  parseFilmRoomSegmentFromPath,
+  FILM_ROOM_SEGMENT_PATHS,
+  type FilmRoomSegment,
+} from '@/lib/vault-route-map';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 const HUB_ICONS: Record<string, string> = {
@@ -20,7 +26,15 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const [items, setItems] = useState<FilmRoomCatalogItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [hub, setHub] = useState<string | null>(null);
+  const [hub, setHub] = useState<string | null>(() => {
+    const seg = parseFilmRoomSegmentFromPath();
+    return seg ? filmRoomHubFromSegment(seg) : null;
+  });
+
+  useEffect(() => {
+    const seg = parseFilmRoomSegmentFromPath();
+    if (seg) setHub(filmRoomHubFromSegment(seg));
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);

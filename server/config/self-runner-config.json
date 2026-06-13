@@ -1,0 +1,83 @@
+{
+  "version": "4.0.0",
+  "architecture": "react",
+  "retiredPatchTypes": [
+    "html-hook",
+    "html-hook-v2",
+    "ensure-team-shell",
+    "background-theme",
+    "missing-content",
+    "team-content",
+    "component-variant"
+  ],
+  "forbiddenFiles": [
+    "legacy-index.html",
+    "js/gv-team-mobile.js",
+    "css/gv-team.css"
+  ],
+  "forbiddenEditTypes": [
+    "ensure-team-shell",
+    "add-class-to-region",
+    "remove-class-from-region",
+    "class-swap-in-region",
+    "insert-after-region-open",
+    "insert-after-anchor",
+    "html-hook",
+    "html-hook-v2",
+    "verify-hooks"
+  ],
+  "reactPatchTypes": {
+    "react-route": {
+      "risk": "medium",
+      "files": ["client/lib/routes.js", "netlify.toml"]
+    },
+    "react-component": {
+      "risk": "medium",
+      "files": ["client/components/vault/"]
+    },
+    "react-css": {
+      "risk": "low",
+      "files": ["client/lib/vault-shell.css"]
+    },
+    "react-slug": {
+      "risk": "medium",
+      "files": ["client/lib/slug.ts", "client/lib/player-routes.ts"]
+    },
+    "react-api-path": {
+      "risk": "low",
+      "files": ["client/lib/*-api.ts"]
+    },
+    "react-rebuild": {
+      "risk": "low",
+      "files": ["server/vault/"]
+    },
+    "feed-dedup-v2": {
+      "risk": "low",
+      "files": ["data/live/feed-items.json"]
+    },
+    "film-source-url": {
+      "risk": "low",
+      "files": ["data/film-room-knowledge/"]
+    },
+    "schema-field-v2": {
+      "risk": "low",
+      "files": ["data/"]
+    }
+  },
+  "validatorRules": {
+    "component": ["testid", "export", "hydration"],
+    "route": ["rewrite", "staticExport", "redirect"],
+    "slug": ["ensurePlayerSlug", "playerProfilePath"],
+    "layout": ["scrollContainer", "safeArea", "modalZIndex"]
+  },
+  "explainerTemplates": {
+    "missing-component": "React component {component} missing or not exported at {route}",
+    "broken-route": "Route {route} missing from client/lib/routes.js or static export",
+    "invalid-slug": "Player slug mismatch — fix client/lib/slug.ts and player-routes.ts",
+    "missing-prop": "Required prop missing in {component}",
+    "hydration-mismatch": "Hydration boundary mismatch on {route} — check SSG vs client state",
+    "missing-scroll": "Add scroll container classes to client/lib/vault-shell.css",
+    "missing-safe-area": "Add safe-area-inset padding for mobile Safari in vault-shell.css",
+    "modal-layering": "Fix modal z-index stacking in VaultShell + vault-shell.css"
+  }
+}

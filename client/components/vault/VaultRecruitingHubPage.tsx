@@ -11,21 +11,16 @@ import {
   playerProfilePath,
   recruitingProfileLifecycle,
 } from '@/lib/player-routes';
+import {
+  type RecruitingHubTab,
+  recruitingTabPath,
+  resolveRecruitingTab,
+} from '@/lib/vault-route-map';
+
 import { ensurePlayerSlug } from '@/lib/slug';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 const ACE_PORTAL_SLUG = 'eric-singleton-jr';
-
-export type RecruitingHubTab =
-  | 'commits-2026'
-  | 'commits-2027'
-  | 'targets-2026'
-  | 'targets-2027'
-  | 'heat'
-  | 'scouting'
-  | 'portal'
-  | 'intel'
-  | 'rankings';
 
 const TAB_LABELS: { id: RecruitingHubTab; label: string }[] = [
   { id: 'commits-2026', label: '2026 Commits' },
@@ -38,13 +33,6 @@ const TAB_LABELS: { id: RecruitingHubTab; label: string }[] = [
   { id: 'intel', label: 'Movement Intel' },
   { id: 'rankings', label: 'Rankings' },
 ];
-
-function parseHubTab(): RecruitingHubTab {
-  if (typeof window === 'undefined') return 'commits-2026';
-  const t = new URLSearchParams(window.location.search).get('tab') as RecruitingHubTab | null;
-  if (t && TAB_LABELS.some((x) => x.id === t)) return t;
-  return 'commits-2026';
-}
 
 function rankCommits(list: RecruitingBoardPlayer[]): RecruitingBoardPlayer[] {
   return [...list].sort((a, b) => {
@@ -72,7 +60,7 @@ function CommitCard({
 }): React.ReactElement {
   const slug = ensurePlayerSlug(player.slug, player.name);
   const lifecycle = recruitingProfileLifecycle(player);
-  const href = playerProfilePath(slug, lifecycle, true, player.name);
+  const href = playerProfilePath(slug, lifecycle, true, player.name, 'recruiting');
 
   return (
     <a href={href} className="gv-rh-card gv-rh-card--commit">
@@ -106,7 +94,7 @@ function TargetCard({
   rank: number;
 }): React.ReactElement {
   const slug = ensurePlayerSlug(player.slug, player.name);
-  const href = playerProfilePath(slug, 'HIGH_SCHOOL', true, player.name);
+  const href = playerProfilePath(slug, 'HIGH_SCHOOL', true, player.name, 'recruiting');
 
   return (
     <a href={href} className="gv-rh-card gv-rh-card--target">
@@ -141,7 +129,7 @@ function HeatCard({ item, direction }: { item: HeatCheckItem; direction: 'up' | 
   );
   if (slug) {
     return (
-      <a href={playerProfilePath(slug, 'HIGH_SCHOOL', true, item.playerName)} className={`gv-heat-card gv-heat-card--${direction === 'up' ? 'rising' : 'cooling'}`}>
+      <a href={playerProfilePath(slug, 'HIGH_SCHOOL', true, item.playerName, 'recruiting')} className={`gv-heat-card gv-heat-card--${direction === 'up' ? 'rising' : 'cooling'}`}>
         {inner}
       </a>
     );
@@ -161,7 +149,7 @@ function IntelSummary({
   return (
     <div className="gv-rh-intel">
       <p className="gv-rh-intel__link">
-        <a href="/vault/futurecast/staff">Open full Movement Intel dashboard →</a>
+        <a href="/vault/futurecast/movement">Open full Movement Intel dashboard →</a>
       </p>
       <div className="gv-rh-intel__cols">
         <div>
@@ -169,7 +157,7 @@ function IntelSummary({
           <ul className="gv-rh-intel__list">
             {risers.slice(0, 5).map((p) => (
               <li key={p.id}>
-                <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name)}>
+                <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'recruiting')}>
                   {p.name} {p.delta != null ? `(+${p.delta}%)` : ''}
                 </a>
               </li>
@@ -182,7 +170,7 @@ function IntelSummary({
           <ul className="gv-rh-intel__list">
             {fallers.slice(0, 5).map((p) => (
               <li key={p.id}>
-                <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name)}>
+                <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'recruiting')}>
                   {p.name} {p.delta != null ? `(${p.delta}%)` : ''}
                 </a>
               </li>
@@ -194,7 +182,7 @@ function IntelSummary({
           <ul className="gv-rh-intel__list">
             {volatile.slice(0, 5).map((p) => (
               <li key={p.id}>
-                <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name)}>
+                <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'recruiting')}>
                   {p.name} · {p.volatilityScore ?? '—'}
                 </a>
               </li>
@@ -207,7 +195,7 @@ function IntelSummary({
 }
 
 export function VaultRecruitingHubPage(): React.ReactElement {
-  const [tab, setTab] = useState<RecruitingHubTab>(parseHubTab);
+  const [tab, setTab] = useState<RecruitingHubTab>(() => resolveRecruitingTab());
   const [b26, setB26] = useState<{ commits: RecruitingBoardPlayer[]; targets: RecruitingBoardPlayer[] }>({
     commits: [],
     targets: [],
@@ -230,10 +218,16 @@ export function VaultRecruitingHubPage(): React.ReactElement {
   const setTabAndUrl = useCallback((next: RecruitingHubTab) => {
     setTab(next);
     if (typeof window !== 'undefined') {
-      const url = new URL(window.location.href);
-      url.searchParams.set('tab', next);
-      window.history.replaceState(null, '', url.toString());
+      const path = recruitingTabPath(next);
+      window.history.replaceState(null, '', path);
     }
+  }, []);
+
+  useEffect(() => {
+    setTab(resolveRecruitingTab());
+    const onNav = () => setTab(resolveRecruitingTab());
+    window.addEventListener('popstate', onNav);
+    return () => window.removeEventListener('popstate', onNav);
   }, []);
 
   const load = useCallback(async () => {
@@ -382,7 +376,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
       {!loading && !error && tab === 'portal' && (
         <div className="gv-rh-portal">
           <a
-            href={playerProfilePath(ACE_PORTAL_SLUG, 'ROSTER', true)}
+            href={playerProfilePath(ACE_PORTAL_SLUG, 'ROSTER', true, undefined, 'roster')}
             className="gv-rh-portal-ace"
           >
             <span className="gv-rh-portal-ace__badge">ACE Portal Get</span>
@@ -393,7 +387,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
           <ul className="gv-portal-incoming__list">
             {portal.map((p) => (
               <li key={p.id}>
-                <a href={playerProfilePath(p.slug, 'PORTAL', true, p.fullName)} className="gv-portal-incoming__row">
+                <a href={playerProfilePath(p.slug, 'PORTAL', true, p.fullName, 'recruiting')} className="gv-portal-incoming__row">
                   <span className="gv-portal-incoming__name">{p.fullName}</span>
                   <span className="gv-portal-incoming__meta">
                     {p.position} · {p.classYear}

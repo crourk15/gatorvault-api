@@ -26,20 +26,20 @@ function suggestedFixForCheck(check) {
   if (id.includes('feed-dedup') || id.includes('autoposter-dedup')) {
     return 'Run live feed commit dedupe; remove legacy rec_evt rows for same player URL in feed-items.json';
   }
-  if (id.includes('layout-overflow') || id.includes('panel-clipping')) {
-    return 'Add modal overflow guards to css/gv-team.css — min-height:0, min-width:0, overflow-wrap on text blocks';
+  if (id.includes('layout-overflow') || id.includes('panel-clipping') || id.startsWith('ux:')) {
+    return 'Add scroll/modal/safe-area rules to client/lib/vault-shell.css for React vault pages';
   }
-  if (id.includes('missing-content')) {
-    return 'Restore missing section hooks in index.html and data/coaching-staff.json for all site sections';
+  if (id.includes('missing-content') || id.includes('react-exports') || id.startsWith('pages:react-')) {
+    return 'Rebuild React static export: npm run build --prefix client && merge into server/vault/';
   }
   if (id.includes('wrong-background')) {
-    return 'Replace og-image.jpg / trial backgrounds with era gradient classes on Team Identity banner';
+    return 'Fix theme bleed in VaultTeamPage.tsx and vault-shell.css — no trial/promo classes in vault';
   }
-  if (id.includes('team-history-structure')) {
-    return 'Fix ERAS in gv-team-mobile.js — 5 eras with full coaching/milestones; Spurrier only in era-90s';
+  if (id.includes('team-history-structure') || id.includes('roster-data') || id.includes('depth-chart')) {
+    return 'Fix roster/depth data in data/roster/ and VaultTeamPage.tsx depth chart module';
   }
-  if (id.includes('filmroom-structure')) {
-    return 'Wire Film Room drill-down hub: film-room-hub-landing, GV_FILM_HUB_DESC, gvOpenFilmRoomHub';
+  if (id.includes('filmroom-structure') || id.includes('pages:react-film')) {
+    return 'Verify VaultFilmRoomPage.tsx hub grid with 5 categories and verified source links';
   }
   if (id.includes('film-sources')) {
     return 'Update Film Room knowledge source URLs via apply-film-room-sources.js with verified live links';

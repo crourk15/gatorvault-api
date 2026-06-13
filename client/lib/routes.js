@@ -1,112 +1,61 @@
 /**
  * Canonical route registry — single source for redirects and deploy-guardian.
- * Used by client/scripts/generate-redirects.js and server/scripts/deploy-guardian.js
  */
+const vaultRoutes = require('./routes-vault.cjs');
 
 /** @typedef {{ from: string, to: string, status?: number, force?: boolean }} RedirectRule */
 
-/** Netlify rewrite rules (status 200 = serve static export). */
+/** Legacy standalone + monolith HTML → vault (301). */
+/** @type {RedirectRule[]} */
+const LEGACY_RETIREMENT_REDIRECTS = vaultRoutes.LEGACY_ROUTE_REDIRECTS.map((r) => ({
+  ...r,
+  status: 301,
+}));
+
 /** @type {RedirectRule[]} */
 const REACT_REWRITES = [
-  // FutureCast (public)
-  { from: '/futurecast/predictions', to: '/futurecast/index.html', status: 301 },
-  { from: '/futurecast/player/*', to: '/player/:splat', status: 301 },
-  { from: '/futurecast/stock', to: '/futurecast/stock/index.html', status: 200 },
-  { from: '/futurecast/stock/', to: '/futurecast/stock/index.html', status: 200 },
-  { from: '/futurecast/stock/*', to: '/futurecast/stock/index.html', status: 200 },
-  { from: '/futurecast/snapshots', to: '/futurecast/snapshots/index.html', status: 200 },
-  { from: '/futurecast/snapshots/', to: '/futurecast/snapshots/index.html', status: 200 },
-  { from: '/futurecast/snapshots/*', to: '/futurecast/snapshots/index.html', status: 200 },
-  { from: '/futurecast/alerts', to: '/futurecast/alerts/index.html', status: 200 },
-  { from: '/futurecast/alerts/', to: '/futurecast/alerts/index.html', status: 200 },
-  { from: '/futurecast/alerts/*', to: '/futurecast/alerts/index.html', status: 200 },
-  { from: '/futurecast/staff', to: '/futurecast/staff/index.html', status: 200 },
-  { from: '/futurecast/staff/', to: '/futurecast/staff/index.html', status: 200 },
-  { from: '/futurecast/staff/*', to: '/futurecast/staff/index.html', status: 200 },
-  { from: '/futurecast', to: '/futurecast/index.html', status: 200 },
-  { from: '/futurecast/', to: '/futurecast/index.html', status: 200 },
-  { from: '/futurecast/*', to: '/futurecast/index.html', status: 200 },
-  // Marketing + auth (Phase 4)
+  // Marketing + auth
   { from: '/join', to: '/join/index.html', status: 200 },
   { from: '/join/', to: '/join/index.html', status: 200 },
   { from: '/join/*', to: '/join/index.html', status: 200 },
-  // Public product pages
+  // Public standalone (non-vault) pages
   { from: '/player/*', to: '/player/index.html', status: 200 },
-  { from: '/portal', to: '/portal/index.html', status: 200 },
-  { from: '/portal/', to: '/portal/index.html', status: 200 },
-  { from: '/portal/*', to: '/portal/index.html', status: 200 },
+  { from: '/portal', to: '/vault/recruiting/portal', status: 301 },
+  { from: '/portal/', to: '/vault/recruiting/portal', status: 301 },
+  { from: '/portal/*', to: '/vault/recruiting/portal', status: 301 },
+  { from: '/recruiting-board', to: '/vault/recruiting', status: 301 },
+  { from: '/recruiting-board/*', to: '/vault/recruiting', status: 301 },
+  { from: '/recruiting', to: '/vault/recruiting', status: 301 },
+  { from: '/recruits', to: '/vault/recruiting', status: 301 },
+  { from: '/scouting', to: '/vault/recruiting/scouting', status: 301 },
+  { from: '/scouting/*', to: '/vault/recruiting/scouting', status: 301 },
+  { from: '/players', to: '/vault/players', status: 301 },
+  { from: '/players/*', to: '/vault/players/index.html', status: 200 },
   { from: '/alerts', to: '/alerts/index.html', status: 200 },
-  { from: '/alerts/', to: '/alerts/index.html', status: 200 },
   { from: '/alerts/*', to: '/alerts/index.html', status: 200 },
   { from: '/staff', to: '/staff/index.html', status: 200 },
-  { from: '/staff/', to: '/staff/index.html', status: 200 },
   { from: '/staff/dashboard', to: '/staff/dashboard/index.html', status: 200 },
-  { from: '/staff/dashboard/', to: '/staff/dashboard/index.html', status: 200 },
   { from: '/staff/dashboard/*', to: '/staff/dashboard/index.html', status: 200 },
-  { from: '/recruiting-board', to: '/recruiting-board/index.html', status: 200 },
-  { from: '/recruiting-board/', to: '/recruiting-board/index.html', status: 200 },
-  { from: '/recruiting-board/*', to: '/recruiting-board/index.html', status: 200 },
-  { from: '/recruiting', to: '/recruiting-board/index.html', status: 200 },
-  { from: '/recruits', to: '/recruiting-board/index.html', status: 200 },
-  { from: '/players', to: '/players/index.html', status: 200 },
-  { from: '/players/', to: '/players/index.html', status: 200 },
-  { from: '/players/*', to: '/players/index.html', status: 200 },
-  { from: '/scouting', to: '/scouting/index.html', status: 200 },
-  { from: '/scouting/', to: '/scouting/index.html', status: 200 },
-  { from: '/scouting/*', to: '/scouting/index.html', status: 200 },
-  // Vault — all React (Phase 0: no index.html vault overlay)
-  { from: '/vault/futurecast/stock', to: '/vault/futurecast/stock/index.html', status: 200 },
-  { from: '/vault/futurecast/stock/*', to: '/vault/futurecast/stock/index.html', status: 200 },
-  { from: '/vault/futurecast/snapshots', to: '/vault/futurecast/snapshots/index.html', status: 200 },
-  { from: '/vault/futurecast/snapshots/*', to: '/vault/futurecast/snapshots/index.html', status: 200 },
-  { from: '/vault/futurecast/alerts', to: '/vault/futurecast/alerts/index.html', status: 200 },
-  { from: '/vault/futurecast/alerts/*', to: '/vault/futurecast/alerts/index.html', status: 200 },
-  { from: '/vault/futurecast/staff', to: '/vault/futurecast/staff/index.html', status: 200 },
-  { from: '/vault/futurecast/staff/*', to: '/vault/futurecast/staff/index.html', status: 200 },
-  { from: '/vault/futurecast/player/*', to: '/vault/futurecast/player/index.html', status: 200 },
-  { from: '/vault/futurecast', to: '/vault/futurecast/index.html', status: 200 },
-  { from: '/vault/futurecast/', to: '/vault/futurecast/index.html', status: 200 },
-  { from: '/vault/futurecast/*', to: '/vault/futurecast/index.html', status: 200 },
-  { from: '/vault/recruiting-board', to: '/vault/recruiting-board/index.html', status: 200 },
-  { from: '/vault/recruiting-board/*', to: '/vault/recruiting-board/index.html', status: 200 },
-  { from: '/vault/team', to: '/vault/team/index.html', status: 200 },
-  { from: '/vault/team/', to: '/vault/team/index.html', status: 200 },
-  { from: '/vault/team/*', to: '/vault/team/index.html', status: 200 },
-  { from: '/vault/portal/player/*', to: '/vault/portal/player/index.html', status: 200 },
-  { from: '/vault/players', to: '/vault/players/index.html', status: 200 },
-  { from: '/vault/players/*', to: '/vault/players/index.html', status: 200 },
-  { from: '/vault/scouting', to: '/vault/scouting/index.html', status: 200 },
-  { from: '/vault/scouting/', to: '/vault/scouting/index.html', status: 200 },
-  { from: '/vault/scouting/*', to: '/vault/scouting/index.html', status: 200 },
-  { from: '/vault/depth-chart', to: '/vault/depth-chart/index.html', status: 200 },
-  { from: '/vault/recruiting', to: '/vault/recruiting/index.html', status: 200 },
-  { from: '/vault/portal', to: '/vault/portal/index.html', status: 200 },
-  { from: '/vault/film-room', to: '/vault/film-room/index.html', status: 200 },
+  // Vault — React-native route map (Phase 8 final)
+  ...vaultRoutes.VAULT_REACT_REWRITES,
+  // Secondary vault (drawer only — still exported if present)
   { from: '/vault/game-week', to: '/vault/game-week/index.html', status: 200 },
-  { from: '/vault/live-feed', to: '/vault/live-feed/index.html', status: 200 },
+  { from: '/vault/game-week/*', to: '/vault/game-week/index.html', status: 200 },
   { from: '/vault/live-scores', to: '/vault/live-scores/index.html', status: 200 },
-  { from: '/vault/live-scores/', to: '/vault/live-scores/index.html', status: 200 },
   { from: '/vault/live-scores/*', to: '/vault/live-scores/index.html', status: 200 },
   { from: '/vault/articles', to: '/vault/articles/index.html', status: 200 },
-  { from: '/vault/articles/', to: '/vault/articles/index.html', status: 200 },
   { from: '/vault/articles/*', to: '/vault/articles/index.html', status: 200 },
   { from: '/vault/community', to: '/vault/community/index.html', status: 200 },
-  { from: '/vault/community/', to: '/vault/community/index.html', status: 200 },
   { from: '/vault/community/*', to: '/vault/community/index.html', status: 200 },
   { from: '/vault/game-zone', to: '/vault/game-zone/index.html', status: 200 },
-  { from: '/vault/game-zone/', to: '/vault/game-zone/index.html', status: 200 },
   { from: '/vault/game-zone/*', to: '/vault/game-zone/index.html', status: 200 },
   { from: '/vault/nil', to: '/vault/nil/index.html', status: 200 },
-  { from: '/vault/nil/', to: '/vault/nil/index.html', status: 200 },
   { from: '/vault/nil/*', to: '/vault/nil/index.html', status: 200 },
   { from: '/vault/staff', to: '/vault/staff/index.html', status: 200 },
   { from: '/vault/alerts', to: '/vault/alerts/index.html', status: 200 },
-  { from: '/vault/alerts/', to: '/vault/alerts/index.html', status: 200 },
   { from: '/vault/alerts/*', to: '/vault/alerts/index.html', status: 200 },
-  { from: '/vault/tickets', to: '/vault/tickets/index.html', status: 200 },
   { from: '/vault/apparel', to: '/vault/apparel/index.html', status: 200 },
-  { from: '/vault', to: '/vault/index.html', status: 200 },
-  { from: '/vault/', to: '/vault/index.html', status: 200 },
+  { from: '/vault/apparel/*', to: '/vault/apparel/index.html', status: 200 },
 ];
 
 /** Legacy monolith query → canonical vault path (301). */
@@ -115,24 +64,23 @@ const LEGACY_VAULT_TAB_REDIRECTS = {
   team: '/vault/team',
   recruit: '/vault/recruiting',
   futurecast: '/vault/futurecast',
-  portal: '/vault/recruiting?tab=portal',
-  highlights: '/vault/film-room',
+  portal: '/vault/recruiting/portal',
+  highlights: '/vault/film-room/highlights',
   gameweek: '/vault/game-week',
   live: '/vault/live-feed',
-  analytics: '/vault/futurecast/staff',
-  scouting: '/vault/recruiting?tab=scouting',
+  analytics: '/vault/futurecast/movement',
+  scouting: '/vault/recruiting/scouting',
   articles: '/vault/articles',
   community: '/vault/community',
   gamezone: '/vault/game-zone',
   nil: '/vault/nil',
   livescores: '/vault/live-scores',
-  players: '/players',
+  players: '/vault/players',
   alerts: '/vault/alerts',
-  tickets: '/vault/tickets',
+  tickets: '/vault/schedule',
   apparel: '/vault/apparel',
 };
 
-/** Static HTML admin + content (unchanged). */
 /** @type {RedirectRule[]} */
 const ADMIN_AND_LEGACY_HTML = [
   { from: '/highlight/*', to: '/highlight.html', status: 200 },
@@ -156,36 +104,11 @@ const ADMIN_AND_LEGACY_HTML = [
   { from: '/admin/recruiting', to: '/admin.html', status: 200 },
 ];
 
-/** Required static exports after Next.js merge (relative to server/). */
-const REQUIRED_VAULT_EXPORTS = [
-  'join/index.html',
-  'vault/index.html',
-  'vault/team/index.html',
-  'vault/scouting/index.html',
-  'vault/players/index.html',
-  'vault/depth-chart/index.html',
-  'vault/recruiting/index.html',
-  'vault/portal/index.html',
-  'vault/film-room/index.html',
-  'vault/game-week/index.html',
-  'vault/live-feed/index.html',
-  'vault/live-scores/index.html',
-  'vault/articles/index.html',
-  'vault/community/index.html',
-  'vault/game-zone/index.html',
-  'vault/nil/index.html',
-  'vault/staff/index.html',
-  'vault/alerts/index.html',
-  'vault/tickets/index.html',
-  'vault/apparel/index.html',
-  'vault/futurecast/index.html',
-  'vault/futurecast/player/index.html',
-  'vault/recruiting-board/index.html',
-  'vault/portal/player/index.html',
-];
+const REQUIRED_VAULT_EXPORTS = vaultRoutes.REQUIRED_VAULT_EXPORTS;
 
 module.exports = {
   REACT_REWRITES,
+  LEGACY_RETIREMENT_REDIRECTS,
   LEGACY_VAULT_TAB_REDIRECTS,
   ADMIN_AND_LEGACY_HTML,
   REQUIRED_VAULT_EXPORTS,

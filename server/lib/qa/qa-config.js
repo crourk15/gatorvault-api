@@ -1,5 +1,5 @@
 /**
- * GatorVault QA Crawler — configuration.
+ * GatorVault QA Crawler — configuration (React architecture).
  */
 function siteUrl() {
   return (process.env.SITE_URL || 'https://gatorvaultinsider.com').replace(/\/$/, '');
@@ -31,10 +31,43 @@ const PUBLIC_API_ENDPOINTS = [
   { id: 'nil-dashboard', path: '/api/nil/dashboard', json: true }
 ];
 
+/** React marketing landing — no monolith hooks. */
 const PUBLIC_PAGES = [
-  { id: 'home', path: '/', markers: ['GATORVAULT', 'highlight-modal-ov', 'openHighlightPlayer'] },
+  {
+    id: 'home',
+    path: '/',
+    markers: ['data-testid="landing-page"', 'GatorVault', 'gv-landing']
+  },
   { id: 'admin-hub', path: '/admin', markers: ['GatorVault', 'admin-hub-core'] }
 ];
+
+/** React vault pages — derived from vault-route-map (routes-vault.cjs). */
+const { routeMap } = require('../crawler/load-config');
+
+function reactVaultPagesFromRouteMap() {
+  const idByKey = {
+    dashboard: 'vault-dashboard',
+    recruiting: 'vault-recruiting',
+    futurecast: 'vault-futurecast',
+    team: 'vault-team',
+    liveFeed: 'vault-live-feed',
+    filmRoom: 'vault-film-room',
+    schedule: 'vault-schedule'
+  };
+  const routes = routeMap();
+  return Object.entries(routes)
+    .filter(([path]) => path.startsWith('/vault'))
+    .map(([path, meta]) => ({
+      id: idByKey[meta.key] || `vault-${meta.key}`,
+      path,
+      markers: [
+        meta.testid ? `data-testid="${meta.testid}"` : null,
+        ...(meta.markers || [])
+      ].filter(Boolean)
+    }));
+}
+
+const REACT_VAULT_PAGES = reactVaultPagesFromRouteMap();
 
 /** Full site coverage — see qa-coverage-map.js for section definitions */
 const { SITE_SECTIONS } = require('./qa-coverage-map');
@@ -71,11 +104,12 @@ module.exports = {
   LIVE_DASHBOARD_RETRY_MS: parseInt(process.env.QA_LIVE_DASHBOARD_RETRY_MS || '3000', 10),
   PUBLIC_API_ENDPOINTS,
   PUBLIC_PAGES,
+  REACT_VAULT_PAGES,
   SITE_SECTIONS,
   QA_MODULES,
   SLACK_WEBHOOK: process.env.SLACK_WEBHOOK_URL || process.env.QA_SLACK_WEBHOOK || null,
-  /** Scan local repo files (index.html, gv-team.css, gv-team-mobile.js) — default on */
+  /** Scan local React static exports under server/ */
   SCAN_LOCAL: process.env.QA_SCAN_LOCAL !== 'false',
-  /** Also fetch production HTML for drift detection — default on */
+  /** Also fetch production HTML for drift detection */
   SCAN_PRODUCTION: process.env.QA_SCAN_PRODUCTION !== 'false'
 };

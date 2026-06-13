@@ -1,13 +1,13 @@
 /**
- * Self-Runner 2.0 — context-aware patch generator (real fixes, no placeholder comments).
+ * Self-Runner 3.0 — React-native context patch generator.
  */
 const fs = require('fs');
-const blueprint = require('./blueprint/canonical-blueprint');
-const schemaValidator = require('./schema-validator');
+const reactPatch = require('./react-patch-generator');
+const patches = require('./self-runner-patches');
 const dedupeEngine = require('./dedupe-engine');
+const schemaValidator = require('./schema-validator');
 const learning = require('./learning-loop');
 const autoposterGuard = require('./autoposter-guard');
-const patches = require('./self-runner-patches');
 
 function loadFeedItemsForPatch() {
   try {
@@ -29,108 +29,6 @@ function summarizeIntegrityIssues(issues) {
   return Object.entries(counts)
     .map(([type, n]) => `${n}× ${type}`)
     .join(', ');
-}
-
-function htmlHasHook(html, hookId) {
-  const { hookPresent } = require('../guardian/blueprint-validator');
-  const section = blueprint.html.hookByMarker(hookId) || blueprint.html.HTML_HOOKS[hookId];
-  if (section) return hookPresent(html, hookId, section);
-  return html.includes(hookId);
-}
-
-function buildHtmlHookPatch(missingHooks) {
-  const edits = [];
-  const file = 'index.html';
-  let html = '';
-  try {
-    html = fs.readFileSync(patches.absPath(file), 'utf8');
-  } catch {
-    return null;
-  }
-
-  missingHooks.forEach((hookId) => {
-    const hook = blueprint.html.hookByMarker(hookId);
-    if (!hook || htmlHasHook(html, hookId)) return;
-
-    if (hook.anchorType === 'insert-before') {
-      edits.push({
-        file,
-        type: 'insert-before',
-        anchor: hook.anchor,
-        text: hook.snippet + '\n',
-        hookId
-      });
-      return;
-    }
-
-    if (hook.anchorType === 'inside-region' && hook.regionId) {
-      edits.push({
-        file,
-        type: 'insert-after-region-open',
-        regionId: hook.regionId,
-        text: '\n' + hook.snippet + '\n',
-        hookId
-      });
-      return;
-    }
-
-    if (hook.anchorType === 'after-opening-tag' && hook.regionId) {
-      edits.push({
-        file,
-        type: 'insert-after-region-open',
-        regionId: hook.regionId,
-        text: '\n' + hook.snippet + '\n',
-        hookId
-      });
-      return;
-    }
-
-    if (hook.anchor && html.includes(hook.anchor)) {
-      edits.push({
-        file,
-        type: 'insert-after-anchor',
-        anchor: hook.anchor,
-        text: '\n' + hook.snippet + '\n',
-        hookId
-      });
-    }
-  });
-
-  if (!edits.length) return null;
-
-  return {
-    patchType: 'html-hook-v2',
-    riskLevel: 'medium',
-    edits,
-    patchPreview: {
-      file,
-      files: [file],
-      before: `missing hooks: ${missingHooks.join(', ')}`,
-      after: edits.map((e) => e.hookId).join(', ')
-    },
-    suggestedFix: `Insert real HTML section hooks: ${edits.map((e) => e.hookId).join(', ')}`
-  };
-}
-
-function buildCssTokenPatchV2(missingTokens) {
-  if (!missingTokens?.length) return null;
-  return {
-    patchType: 'css-token-v2',
-    riskLevel: 'low',
-    edits: [
-      {
-        file: 'css/gv-team.css',
-        type: 'ensure-css-tokens',
-        tokens: missingTokens
-      }
-    ],
-    patchPreview: {
-      file: 'css/gv-team.css',
-      before: `missing tokens: ${missingTokens.join(', ')}`,
-      after: missingTokens.map((t) => `${t}: ${blueprint.css.REQUIRED_TOKENS[t]}`).join('; ')
-    },
-    suggestedFix: 'Add missing --gv-team-* design tokens to css/gv-team.css'
-  };
 }
 
 function buildFeedDedupPatchV2(issue, checkDetails) {
@@ -160,7 +58,7 @@ function buildFeedDedupPatchV2(issue, checkDetails) {
       count: validation.count,
       issues: (issueList.length ? issueList : validation.issues).slice(0, 8)
     },
-    suggestedFix: 'Run validateFeedIntegrity() and repairFeedItems() with canonical SHA-256 hashes'
+    suggestedFix: 'Repair data/live/feed-items.json — VaultLiveFeedPage reads via /api/live/dashboard'
   };
 }
 
@@ -187,26 +85,19 @@ function buildJsonFieldPatches(violations) {
   return bundles;
 }
 
+/** @deprecated Monolith HTML hook scanning removed — React uses static exports. */
 function scanHtmlHooks() {
-  const file = 'index.html';
-  let html = '';
-  try {
-    html = fs.readFileSync(patches.absPath(file), 'utf8');
-  } catch {
-    return blueprint.html.REQUIRED_HOOKS;
-  }
-  return blueprint.html.REQUIRED_HOOKS.filter((hookId) => !htmlHasHook(html, hookId));
+  return [];
 }
 
-function scanCssTokens() {
-  const file = 'css/gv-team.css';
-  let css = '';
-  try {
-    css = fs.readFileSync(patches.absPath(file), 'utf8');
-  } catch {
-    return Object.keys(blueprint.css.REQUIRED_TOKENS);
-  }
-  return Object.keys(blueprint.css.REQUIRED_TOKENS).filter((t) => !css.includes(t));
+/** @deprecated Monolith HTML hook patches removed. */
+function buildHtmlHookPatch() {
+  return null;
+}
+
+/** @deprecated Use react-css-append via generateReactPatch. */
+function buildCssTokenPatchV2() {
+  return null;
 }
 
 function generateContextPatch(issue, checkDetails) {
@@ -214,18 +105,11 @@ function generateContextPatch(issue, checkDetails) {
 
   const checkId = issue?.checkId || '';
 
+  const react = reactPatch.generateReactPatch(issue, checkDetails);
+  if (react) return react;
+
   if (/feed-dedup|autoposter-dedup/.test(checkId)) {
     return buildFeedDedupPatchV2(issue, checkDetails);
-  }
-
-  if (/missing-content|pages:.*hooks|integrity:filmroom|blueprint:html/.test(checkId)) {
-    const missing = v3Repair.scanBlueprintDrift().missingHooks;
-    if (missing.length) return v3Repair.proposeHtmlRepairs(missing) || contextPatch.buildHtmlHookPatch(missing);
-  }
-
-  if (/theme-token|css-token|layout-overflow|panel-clipping|blueprint:css/.test(checkId)) {
-    const missing = v3Repair.scanBlueprintDrift().missingTokens;
-    if (missing.length) return v3Repair.proposeCssRepairs(missing) || contextPatch.buildCssTokenPatchV2(missing);
   }
 
   if (/schema|integrity:roster|integrity:rankings/.test(checkId) && checkDetails?.violations) {
@@ -244,7 +128,6 @@ function enrichLegacyPatch(built, issue) {
     built.edits.some(
       (e) =>
         e.type === 'verify-hooks' ||
-        e.type === 'verify-json' ||
         e.type === 'template-guided' ||
         /<!--\s*self-runner:/.test(e.text || '')
     ) || autoposterGuard.patchContainsLegacyDedupeRule(autoposterGuard.collectPatchText(built));
@@ -258,7 +141,6 @@ function enrichLegacyPatch(built, issue) {
 }
 
 module.exports = {
-  htmlHasHook,
   loadFeedItemsForPatch,
   summarizeIntegrityIssues,
   buildHtmlHookPatch,
@@ -266,7 +148,6 @@ module.exports = {
   buildFeedDedupPatchV2,
   buildJsonFieldPatches,
   scanHtmlHooks,
-  scanCssTokens,
   generateContextPatch,
   enrichLegacyPatch
 };

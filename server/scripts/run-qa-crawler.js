@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Manual / CI entry point for the GatorVault QA crawler.
+ * Manual / CI entry — React-native QA crawler (server/lib/crawler).
  * Usage: node scripts/run-qa-crawler.js [--browser] [--api-only]
  */
 require('dotenv').config();

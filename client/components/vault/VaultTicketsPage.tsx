@@ -18,7 +18,7 @@ function gameTypeFromLabel(label: string): 'HOME' | 'AWAY' | 'NEUTRAL' {
 
 export function VaultTicketsPage(): React.ReactElement {
   return (
-    <div className="gv-vault-tickets" data-testid="vault-tickets">
+    <div className="gv-vault-tickets gv-vault-schedule" data-testid="vault-schedule">
       <div className="gv-page-hero">
         <h1 className="gv-page-title">Schedule & Tickets</h1>
         <p className="gv-page-subtitle">

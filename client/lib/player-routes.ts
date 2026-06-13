@@ -2,6 +2,7 @@
  * Player profile routing — HS recruits vs portal/college vs roster.
  */
 import { ensurePlayerSlug, isValidSlug } from './slug';
+import { playerProfileRoute, type PlayerProfileContext } from './vault-route-map';
 
 export type PlayerRouteKind = 'hs' | 'portal' | 'roster';
 
@@ -43,26 +44,36 @@ export function recruitingProfileLifecycle(player: {
   return player.lifecycle || 'HIGH_SCHOOL';
 }
 
-/** Profile path for a player slug based on lifecycle. */
+/** Profile path for a player slug based on lifecycle + optional context. */
 export function playerProfilePath(
   slug: string | null | undefined,
   lifecycle?: string | null,
   inVault = false,
-  name?: string | null
+  name?: string | null,
+  context?: PlayerProfileContext
 ): string {
   const resolved = ensurePlayerSlug(slug, name);
   if (!isValidSlug(resolved)) {
-    return inVault ? '/vault/recruiting' : '/recruiting-board';
+    return inVault ? '/vault/recruiting' : '/vault/recruiting';
   }
-  const safe = encodeURIComponent(resolved);
   const kind = playerLifecycleKind(lifecycle);
-  if (kind === 'portal') {
-    return inVault ? `/vault/portal/player/${safe}` : `/portal/${safe}`;
+
+  if (inVault) {
+    if (context === 'recruiting' || kind === 'portal') {
+      return playerProfileRoute(resolved, 'recruiting');
+    }
+    if (context === 'roster' || kind === 'roster') {
+      return playerProfileRoute(resolved, 'roster');
+    }
+    if (context === 'futurecast' || kind === 'hs') {
+      return playerProfileRoute(resolved, 'futurecast');
+    }
+    return playerProfileRoute(resolved, kind === 'roster' ? 'roster' : 'futurecast');
   }
-  if (kind === 'roster') {
-    return inVault ? `/vault/players/${safe}` : `/players/${safe}`;
-  }
-  return inVault ? `/vault/futurecast/player/${safe}` : `/player/${safe}`;
+
+  if (kind === 'portal') return `/vault/recruiting/player/${encodeURIComponent(resolved)}`;
+  if (kind === 'roster') return `/vault/players/${encodeURIComponent(resolved)}`;
+  return `/vault/futurecast/player/${encodeURIComponent(resolved)}`;
 }
 
 function scoutingTypeToKind(playerType?: string | null): PlayerRouteKind {

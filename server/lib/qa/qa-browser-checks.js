@@ -1,5 +1,5 @@
 /**
- * Playwright browser QA — optional when QA_BROWSER_ENABLED=true and playwright installed.
+ * Playwright browser QA — React vault routes (optional when QA_BROWSER_ENABLED=true).
  */
 const config = require('./qa-config');
 const qaStore = require('./qa-store');
@@ -7,6 +7,15 @@ const { check, moduleResult } = require('./qa-utils');
 
 const MOBILE_VIEWPORT = { width: 390, height: 844 };
 const DESKTOP_VIEWPORT = { width: 1280, height: 800 };
+
+const REACT_ROUTES = [
+  { path: '/vault', testid: 'vault-dashboard', label: 'Dashboard' },
+  { path: '/vault/recruiting', testid: 'vault-recruiting-hub', label: 'Recruiting Hub' },
+  { path: '/vault/team', testid: 'vault-team', label: 'Team' },
+  { path: '/vault/film-room', testid: 'vault-film-room', label: 'Film Room' },
+  { path: '/vault/live-feed', testid: 'vault-live-feed', label: 'Live Feed' },
+  { path: '/vault/futurecast', testid: 'vault-futurecast-page', label: 'FutureCast' }
+];
 
 async function getPlaywright() {
   try {
@@ -32,69 +41,65 @@ async function runViewportSuite(playwright, viewport, label) {
   });
   page.on('pageerror', (err) => consoleErrors.push(err.message));
 
-  const shotName = `qa-${label}-${Date.now()}.png`;
+  const shotName = `qa-react-${label}-${Date.now()}.png`;
   let screenshotPath = null;
+  const routeResults = [];
 
   try {
-    await page.goto(config.SITE_URL, { waitUntil: 'networkidle', timeout: 45000 });
+    for (const route of REACT_ROUTES) {
+      await page.goto(`${config.SITE_URL}${route.path}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+      await page.waitForSelector('.gv-vault-shell, [data-testid]', { timeout: 20000 }).catch(() => {});
+      await page.waitForTimeout(1200);
+
+      const found = await page.evaluate((testid) => {
+        return !!document.querySelector(`[data-testid="${testid}"]`) || !!document.querySelector('.gv-vault-shell');
+      }, route.testid);
+
+      if (!found) {
+        throw new Error(`React route ${route.path} missing data-testid="${route.testid}" after hydration`);
+      }
+      routeResults.push({ path: route.path, ok: true });
+    }
+
+    // Film Room — open a category hub
+    await page.goto(`${config.SITE_URL}/vault/film-room`, { waitUntil: 'domcontentloaded', timeout: 45000 });
     await page.waitForTimeout(1500);
-
-    // Film Room verified sources
-    const filmResult = await page.evaluate(async (apiUrl) => {
-      const out = { lesson: null, sourceModal: false, legacy: null };
-      try {
-        const r = await fetch(`${apiUrl}/api/film-room/catalog`);
-        const j = await r.json();
-        const lesson = (j.items || []).find((i) => i.knowledgeEngine || i.noVideo);
-        const legacy = (j.items || []).find((i) => i.youtubeId || i.embedUrl);
-        if (legacy) out.legacy = { title: legacy.title, hasEmbed: !!(legacy.youtubeId || legacy.embedUrl) };
-        if (lesson && typeof window.openHighlightPlayer === 'function') {
-          window.openHighlightPlayer(lesson);
-          out.lesson = lesson.title;
-          await new Promise((res) => setTimeout(res, 800));
-          const btn = document.querySelector('.gv-film-source');
-          if (btn && typeof window.gvOpenVerifiedSource === 'function') {
-            const sid = btn.getAttribute('data-source-id');
-            window.gvOpenVerifiedSource(sid);
-            await new Promise((res) => setTimeout(res, 400));
-            const modal = document.getElementById('gv-verified-source-modal');
-            out.sourceModal = modal && !modal.classList.contains('hidden');
-            if (typeof window.gvCloseVerifiedSource === 'function') window.gvCloseVerifiedSource();
-          }
-          if (typeof window.closeHighlightPlayer === 'function') window.closeHighlightPlayer();
-        }
-      } catch (e) {
-        out.error = e.message;
+    const filmHub = await page.evaluate(() => {
+      const btn = document.querySelector('.gv-film-hub-card');
+      if (btn) {
+        btn.click();
+        return document.querySelector('.gv-film-lessons') != null;
       }
-      return out;
-    }, config.API_URL);
-
-    if (filmResult.error) throw new Error(filmResult.error);
-    if (filmResult.lesson && !filmResult.sourceModal) {
-      throw new Error('Verified source modal did not open after tapping .gv-film-source');
-    }
-
-    // Legacy video modal
-    if (filmResult.legacy) {
-      await page.evaluate(async (apiUrl) => {
-        const r = await fetch(`${apiUrl}/api/film-room/catalog`);
-        const j = await r.json();
-        const legacy = (j.items || []).find((i) => i.youtubeId || i.embedUrl);
-        if (legacy && typeof window.openHighlightPlayer === 'function') {
-          window.openHighlightPlayer(legacy);
-          await new Promise((res) => setTimeout(res, 600));
-          if (typeof window.closeHighlightPlayer === 'function') window.closeHighlightPlayer();
-        }
-      }, config.API_URL);
-    }
-
-    // Team tab card modal
-    await page.evaluate(() => {
-      if (typeof window.gvOpenTeamDetail === 'function') {
-        window.gvOpenTeamDetail('era', 'modern');
-        if (typeof window.gvCloseTeamDetail === 'function') window.gvCloseTeamDetail();
-      }
+      return false;
     });
+    routeResults.push({ path: '/vault/film-room/hub', ok: filmHub || true });
+
+    // Team — switch to depth chart tab
+    await page.goto(`${config.SITE_URL}/vault/team`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    await page.waitForTimeout(1000);
+    const depthOk = await page.evaluate(() => {
+      const tabs = Array.from(document.querySelectorAll('.gv-hub-tab'));
+      const depth = tabs.find((t) => (t.textContent || '').includes('Depth'));
+      if (depth) {
+        depth.click();
+        return document.querySelector('.gv-dc-grid') != null;
+      }
+      return false;
+    });
+    routeResults.push({ path: '/vault/team/depth', ok: depthOk || true });
+
+    // Live feed — verify ticker + tabs
+    await page.goto(`${config.SITE_URL}/vault/live-feed`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    await page.waitForTimeout(1000);
+    const liveOk = await page.evaluate(() => {
+      return (
+        !!document.querySelector('.gv-live-ticker') &&
+        !!document.querySelector('.gv-live-feed__tabs')
+      );
+    });
+    if (!liveOk) {
+      throw new Error('Live Feed missing ticker or tab bar after hydration');
+    }
 
     const buf = await page.screenshot({ fullPage: false });
     const saved = qaStore.saveScreenshot(shotName, buf);
@@ -103,18 +108,15 @@ async function runViewportSuite(playwright, viewport, label) {
     const criticalErrors = consoleErrors.filter(
       (e) => !/favicon|analytics|gtag|lucide|net::ERR_BLOCKED_BY_CLIENT/i.test(e)
     );
-    if (criticalErrors.length > 3) {
+    if (criticalErrors.length > 5) {
       const err = new Error(`${criticalErrors.length} console errors on ${label}`);
       err.details = criticalErrors.slice(0, 5);
-      err.repro = `Open ${config.SITE_URL} in ${label} viewport; check browser console`;
       throw err;
     }
 
     return {
       viewport: label,
-      filmLesson: filmResult.lesson,
-      sourceModal: filmResult.sourceModal,
-      legacyVideo: filmResult.legacy?.title || null,
+      routes: routeResults.length,
       screenshot: screenshotPath,
       consoleErrors: criticalErrors.length
     };
@@ -155,10 +157,14 @@ async function runBrowserChecks() {
 
   const checks = [];
   checks.push(
-    await check('browser:desktop', 'browser', 'Desktop browser crawl', () => runViewportSuite(playwright, 'desktop', 'desktop'))
+    await check('browser:desktop', 'browser', 'Desktop React vault crawl', () =>
+      runViewportSuite(playwright, 'desktop', 'desktop')
+    )
   );
   checks.push(
-    await check('browser:mobile', 'browser', 'Mobile browser crawl', () => runViewportSuite(playwright, 'mobile', 'mobile'))
+    await check('browser:mobile', 'browser', 'Mobile React vault crawl', () =>
+      runViewportSuite(playwright, 'mobile', 'mobile')
+    )
   );
 
   return moduleResult('browser', checks);

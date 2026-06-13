@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-13T15:09:21.027Z",
+  "updatedAt": "2026-06-13T17:10:09.127Z",
   "api": {
     "service": "render",
     "timestamp": "2026-06-12T03:22:29.088Z",
@@ -20,20 +20,23 @@
     "syncedFromApi": false
   },
   "lastGuardianCheck": {
-    "ok": false,
+    "ok": true,
     "phase": "pre",
-    "checkedAt": "2026-06-13T15:09:21.024Z",
-    "errors": [
-      "[api] articles-published failed: This operation was aborted (https://gatorvault-api.onrender.com/api/articles/published)",
-      "[api] health failed: HTTP 502 (https://gatorvault-api.onrender.com/api/health)"
-    ]
+    "checkedAt": "2026-06-13T17:10:09.126Z",
+    "errors": []
   },
   "lastFailedCheck": {
     "type": "guardian-pre",
-    "at": "2026-06-13T15:09:21.024Z",
+    "at": "2026-06-13T17:09:12.061Z",
     "errors": [
-      "[api] articles-published failed: This operation was aborted (https://gatorvault-api.onrender.com/api/articles/published)",
-      "[api] health failed: HTTP 502 (https://gatorvault-api.onrender.com/api/health)"
+      "[qa] require(lib/qa-routes) failed: Identifier 'runReactRouteValidationChecks' has already been declared",
+      "[self-runner] require(lib/self-runner/self-runner-routes) failed: Identifier 'runReactRouteValidationChecks' has already been declared"
     ]
+  },
+  "lastSmokeTest": {
+    "ok": true,
+    "checkedAt": "2026-06-13T15:28:11.659Z",
+    "failed": [],
+    "site": "https://gatorvaultinsider.com"
   }
 }

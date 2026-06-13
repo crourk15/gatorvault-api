@@ -1,65 +1,48 @@
 /**
- * QA Crawler — full site coverage map (Section 2 blueprint).
- * Each section defines how to reach it, what to inspect, and expected structure.
+ * QA Crawler — React vault coverage map (Phase 8 modernization).
+ * Each section defines route, selectors, and expected structure for SSG/React pages.
  */
 const SITE_SECTIONS = [
   {
     id: 'homepage',
-    label: 'Marketing Landing',
+    label: 'React Landing Page',
     page: '/',
     areas: ['hero', 'futurecast-preview', 'pricing'],
-    selectors: ['data-testid="landing-page"', 'gv-landing-hero', 'gv-landing-pricing']
+    selectors: ['[data-testid="landing-page"]', '.gv-landing-hero', '.gv-landing-pricing']
   },
   {
     id: 'vault-dashboard',
     label: 'Vault Dashboard',
     page: '/vault',
     areas: ['quick-links', 'sidebar'],
-    selectors: ['data-testid="vault-dashboard"', '.gv-vault-shell', '.gv-vault-shell__sidebar']
+    selectors: ['[data-testid="vault-dashboard"]', '.gv-vault-shell', '.gv-vault-shell__sidebar']
   },
   {
-    id: 'team-overview',
-    label: 'Team Overview (archive)',
-    page: '/',
-    legacy: true,
-    areas: ['program-history', 'team-identity', 'traditions', 'culture', 'the-swamp'],
-    desktop: { nav: { fn: 'showVTab', arg: 'team' } },
-    mobile: { nav: { fn: 'gvMobileShowTab', arg: 'team' } },
+    id: 'vault-team',
+    label: 'React Team / Roster / Depth Chart',
+    page: '/vault/team',
+    areas: ['roster', 'depth-chart', 'portal-tags'],
     selectors: [
-      '#vpane-team',
-      '#vpane-mteam',
-      '#gv-team-eras-track',
-      '#gv-team-identity-slot',
-      '#gv-team-achievements',
-      '.gv-team-overview-layout'
-    ]
-  },
-  {
-    id: 'program-history',
-    label: 'Program History',
-    page: '/',
-    parent: 'team-overview',
-    selectors: [
-      '#gv-team-eras-track',
-      '#gv-team-detail-modal',
-      '.gv-team-modal-body',
-      '.gv-team-modal-panel'
+      '[data-testid="vault-team"]',
+      '.gv-team-page',
+      '.gv-hub-tabs',
+      '.gv-team-roster',
+      '.gv-dc-grid'
     ],
-    expectedOrder: ['era-70s80s', 'era-90s', 'era-2000s', 'era-2010s', 'era-2020s']
+    dataFiles: ['data/roster/players.json'],
+    apiEndpoints: ['/api/roster/players']
   },
   {
-    id: 'film-room',
-    label: 'Film Room (archive)',
-    page: '/',
-    legacy: true,
-    areas: ['categories', 'clips', 'layout', 'headers'],
-    desktop: { nav: { fn: 'showVTab', arg: 'highlights' } },
-    mobile: { nav: { fn: 'gvMobileShowTab', arg: 'mhome' }, extra: 'film-room-hub' },
+    id: 'vault-film-room',
+    label: 'React Film Room',
+    page: '/vault/film-room',
+    areas: ['categories', 'lessons', 'verified-sources'],
     selectors: [
-      '#vpane-highlights',
-      '.film-room-hub-shell',
-      '.film-room-hub-landing',
-      '#gv-verified-source-modal'
+      '[data-testid="vault-film-room"]',
+      '.gv-film-room',
+      '.gv-film-hub-grid',
+      '.gv-film-hub-card',
+      '.gv-film-lessons'
     ],
     expectedOrder: [
       'Offensive Scheme',
@@ -67,55 +50,51 @@ const SITE_SECTIONS = [
       'Film Breakdown',
       'UF Press Conferences',
       'Highlights'
-    ]
+    ],
+    apiEndpoints: ['/api/film-room/catalog']
   },
   {
-    id: 'recruiting',
-    label: 'Recruiting (archive)',
-    page: '/',
-    legacy: true,
-    areas: ['recruiting-board', 'war-room', 'heat-meter', 'staff-confidence', 'player-cards'],
-    desktop: { nav: { fn: 'showVTab', arg: 'recruit' } },
-    mobile: { nav: { fn: 'gvMobileShowTab', arg: 'recruit' } },
+    id: 'vault-recruiting',
+    label: 'React Recruiting Hub',
+    page: '/vault/recruiting',
+    areas: ['commits', 'targets', 'heat-check', 'scouting', 'portal', 'intel'],
     selectors: [
-      '#vpane-recruit',
-      '#vpane-scouting',
-      '.recruit-board',
-      '.war-room'
+      '[data-testid="vault-recruiting-hub"]',
+      '.gv-recruiting-hub',
+      '.gv-hub-tabs',
+      '.gv-rh-grid',
+      '.gv-heat-columns'
     ],
     apiEndpoints: ['/api/recruiting/board', '/api/war-room/breakdowns']
   },
   {
-    id: 'roster',
-    label: 'Roster',
-    page: '/',
-    parent: 'team-overview',
-    selectors: ['#gv-team-roster-list', '#gv-team-roster-filters'],
-    dataFiles: ['data/roster/players.json']
+    id: 'vault-futurecast',
+    label: 'React FutureCast',
+    page: '/vault/futurecast',
+    areas: ['big-board', 'commits', 'movement-intel'],
+    selectors: ['[data-testid="vault-futurecast-page"]', '.fc-futurecast-page'],
+    apiEndpoints: ['/api/recruiting/board']
   },
   {
-    id: 'depth-chart',
-    label: 'Depth Chart',
-    page: '/',
-    parent: 'team-overview',
-    selectors: ['#gv-team-dc-section', '#gv-team-dc-off', '#gv-team-dc-def'],
-    expectedPositions: ['QB', 'RB', 'WR', 'TE', 'OL', 'DL', 'LB', 'DB']
+    id: 'vault-live-feed',
+    label: 'React Live Feed',
+    page: '/vault/live-feed',
+    areas: ['headlines', 'beat-writers', 'podcasts', 'ticker'],
+    selectors: [
+      '[data-testid="vault-live-feed"]',
+      '.gv-live-feed',
+      '.gv-live-ticker',
+      '.gv-live-feed__tabs',
+      '.gv-live-feed__list'
+    ],
+    apiEndpoints: ['/api/live/dashboard']
   },
   {
-    id: 'press-conferences',
-    label: 'Press Conferences',
-    page: '/',
-    parent: 'film-room',
-    selectors: ['#vpane-highlights'],
-    markers: ['UF Press Conferences', 'gvOpenFilmRoomHub', 'press']
-  },
-  {
-    id: 'highlights',
-    label: 'Highlights',
-    page: '/',
-    parent: 'film-room',
-    selectors: ['#highlight-modal-ov', '.highlight-card', 'openHighlightPlayer'],
-    markers: ['Highlights', 'highlight-card']
+    id: 'vault-tickets',
+    label: 'Schedule & Tickets',
+    page: '/vault/schedule',
+    areas: ['schedule', 'ticket-links'],
+    selectors: ['[data-testid="vault-schedule"]', '.gv-schedule-list', '.gv-ticket-card']
   },
   {
     id: 'admin-hub',
@@ -160,12 +139,16 @@ const RULE_CATALOG = {
   F3: { id: 'crawler:404', classification: '404-detected', name: '404 Detection' }
 };
 
+/** Local React static exports + admin — no monolith gv-team-mobile.js */
 const LOCAL_ASSETS = [
   'index.html',
-  'legacy-index.html',
   'vault/index.html',
-  'css/gv-team.css',
-  'js/gv-team-mobile.js',
+  'vault/team/index.html',
+  'vault/recruiting/index.html',
+  'vault/futurecast/index.html',
+  'vault/live-feed/index.html',
+  'vault/film-room/index.html',
+  'vault/schedule/index.html',
   'js/admin-hub-core.js',
   'admin-product-intel.html',
   'admin-qa.html'
