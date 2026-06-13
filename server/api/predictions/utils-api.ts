@@ -77,6 +77,15 @@ export function serializeFeedPrediction(row: {
 
 export type SerializedFeedPrediction = ReturnType<typeof serializeFeedPrediction>;
 
+export function serializeStockPrediction(
+  row: Parameters<typeof serializeFeedPrediction>[0] & { window_delta: number }
+): SerializedFeedPrediction {
+  return serializeFeedPrediction({
+    ...row,
+    delta: row.window_delta,
+  });
+}
+
 export function applyFeedFilters(
   predictions: SerializedFeedPrediction[],
   filters: {

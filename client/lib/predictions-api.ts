@@ -57,6 +57,12 @@ export interface PredictionsFeedQuery {
   trendingUp?: boolean;
 }
 
+export interface StockBoardResponse {
+  stockUp: FeedPrediction[];
+  stockDown: FeedPrediction[];
+  windowDays: number;
+}
+
 async function apiFetch<T>(path: string): Promise<T> {
   const res = await fetch(`${getApiBase()}${path}`);
   if (!res.ok) {
@@ -92,6 +98,10 @@ export async function fetchPredictionsFeed(
     })}`
   );
   return data.predictions;
+}
+
+export async function fetchStockBoard(): Promise<StockBoardResponse> {
+  return apiFetch<StockBoardResponse>('/api/futurecast/stock');
 }
 
 export async function fetchPlayerPredictions(playerId: string): Promise<PlayerPrediction[]> {

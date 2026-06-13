@@ -85,6 +85,51 @@ export async function insertPredictionHistory(
   );
 }
 
+export interface StockBoardRow extends PredictionFeedRow {
+  prev_confidence: number;
+  window_delta: number;
+}
+
+export async function listStockBoardRows(windowDays = 7): Promise<StockBoardRow[]> {
+  const days = Math.max(1, Math.floor(windowDays));
+  const { rows } = await db.query<StockBoardRow>(
+    `
+    SELECT
+      pr.*,
+      p.slug,
+      p.full_name,
+      p.class_year,
+      p.position,
+      p.status AS lifecycle,
+      p.state,
+      p.fit_scheme,
+      p.fit_culture,
+      p.fit_staff,
+      p.fit_need,
+      p.fit_geo,
+      h.confidence AS prev_confidence,
+      (pr.confidence - h.confidence) AS window_delta
+    FROM ${FUTURECAST_PREDICTIONS_TABLE} pr
+    JOIN ${FUTURECAST_PLAYERS_TABLE} p ON p.id = pr.player_id
+    JOIN LATERAL (
+      SELECT confidence
+      FROM futurecast.prediction_history ph
+      WHERE ph.player_id = pr.player_id
+        AND ph.date < CURRENT_DATE
+      ORDER BY
+        CASE WHEN ph.date <= CURRENT_DATE - $1::int THEN 0 ELSE 1 END,
+        ph.date DESC
+      LIMIT 1
+    ) h ON TRUE
+    WHERE pr.status = 'ACTIVE'
+      AND pr.source_type = 'MODEL'
+    ORDER BY window_delta DESC
+    `,
+    [days]
+  );
+  return rows;
+}
+
 export interface ListPredictionsFilters {
   class_year?: number;
   position?: string;
