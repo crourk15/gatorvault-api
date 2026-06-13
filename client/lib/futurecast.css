@@ -773,6 +773,31 @@
   font-weight: 600;
 }
 
+.fc-trending {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.fc-trending__icon {
+  display: inline-block;
+  line-height: 1;
+}
+
+.fc-trending--up {
+  color: #4ade80;
+}
+
+.fc-trending--down {
+  color: #f87171;
+}
+
+.fc-trending--flat {
+  color: #8b949e;
+}
+
 .fc-prediction-card-v2 {
   display: flex;
   gap: 1rem;
