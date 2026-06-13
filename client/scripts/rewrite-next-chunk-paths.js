@@ -1,16 +1,9 @@
 /**
- * Netlify blocks /_next/static/chunks/app/* and main-app-*.js from CDN deploy.
- * Rewrite to routes/ + main-entry- after export merge.
+ * Netlify CDN omits nested chunks/app/* and main-app-*.js from deploy.
+ * Flatten route chunks to chunks/ root with r- prefix; rename main-app -> mentry-.
  */
 const fs = require('fs');
 const path = require('path');
-
-const REPLACEMENTS = [
-  ['/_next/static/chunks/app/', '/_next/static/chunks/routes/'],
-  ['/_next/static/chunks/main-app-', '/_next/static/chunks/main-entry-'],
-  ['/static/chunks/app/', '/static/chunks/routes/'],
-  ['/static/chunks/main-app-', '/static/chunks/main-entry-'],
-];
 
 function walkFiles(dir, onFile) {
   if (!fs.existsSync(dir)) return;
@@ -21,37 +14,82 @@ function walkFiles(dir, onFile) {
   }
 }
 
-function applyTextReplacements(content) {
+function flatChunkName(relFromApp) {
+  const norm = relFromApp.replace(/\\/g, '/');
+  return `r-${norm.replace(/\//g, '-')}`;
+}
+
+function buildReplacementMap(serverDir) {
+  const chunksDir = path.join(serverDir, '_next', 'static', 'chunks');
+  const appDir = path.join(chunksDir, 'app');
+  const map = new Map();
+
+  if (fs.existsSync(appDir)) {
+    walkFiles(appDir, (file) => {
+      if (!file.endsWith('.js')) return;
+      const rel = path.relative(appDir, file).replace(/\\/g, '/');
+      const flat = flatChunkName(rel);
+      const dest = path.join(chunksDir, flat);
+      map.set(`/_next/static/chunks/app/${rel}`, `/_next/static/chunks/${flat}`);
+      map.set(`/static/chunks/app/${rel}`, `/static/chunks/${flat}`);
+      fs.copyFileSync(file, dest);
+    });
+    fs.rmSync(appDir, { recursive: true, force: true });
+  }
+
+  const routesDir = path.join(chunksDir, 'routes');
+  if (fs.existsSync(routesDir)) {
+    walkFiles(routesDir, (file) => {
+      if (!file.endsWith('.js')) return;
+      const rel = path.relative(routesDir, file).replace(/\\/g, '/');
+      const flat = flatChunkName(rel);
+      const dest = path.join(chunksDir, flat);
+      map.set(`/_next/static/chunks/routes/${rel}`, `/_next/static/chunks/${flat}`);
+      map.set(`/static/chunks/routes/${rel}`, `/static/chunks/${flat}`);
+      if (!fs.existsSync(dest)) fs.copyFileSync(file, dest);
+    });
+    fs.rmSync(routesDir, { recursive: true, force: true });
+  }
+
+  if (fs.existsSync(chunksDir)) {
+    for (const name of fs.readdirSync(chunksDir)) {
+      if (name.startsWith('main-app-') && name.endsWith('.js')) {
+        const next = name.replace('main-app-', 'mentry-');
+        const from = path.join(chunksDir, name);
+        const to = path.join(chunksDir, next);
+        fs.renameSync(from, to);
+        map.set(`/_next/static/chunks/${name}`, `/_next/static/chunks/${next}`);
+      }
+      if (name.startsWith('main-entry-') && name.endsWith('.js')) {
+        const next = name.replace('main-entry-', 'mentry-');
+        const from = path.join(chunksDir, name);
+        const to = path.join(chunksDir, next);
+        fs.renameSync(from, to);
+        map.set(`/_next/static/chunks/${name}`, `/_next/static/chunks/${next}`);
+      }
+    }
+  }
+
+  return map;
+}
+
+function applyReplacements(content, map) {
   let next = content;
-  for (const [from, to] of REPLACEMENTS) {
+  const entries = [...map.entries()].sort((a, b) => b[0].length - a[0].length);
+  for (const [from, to] of entries) {
     if (next.includes(from)) next = next.split(from).join(to);
   }
   return next;
 }
 
 function rewriteNextChunkPathsForNetlify(serverDir) {
-  const chunksDir = path.join(serverDir, '_next', 'static', 'chunks');
-  const appDir = path.join(chunksDir, 'app');
-  const routesDir = path.join(chunksDir, 'routes');
-
-  if (fs.existsSync(appDir)) {
-    if (fs.existsSync(routesDir)) fs.rmSync(routesDir, { recursive: true, force: true });
-    fs.renameSync(appDir, routesDir);
-  }
-
-  if (fs.existsSync(chunksDir)) {
-    for (const name of fs.readdirSync(chunksDir)) {
-      if (name.startsWith('main-app-') && name.endsWith('.js')) {
-        fs.renameSync(path.join(chunksDir, name), path.join(chunksDir, name.replace('main-app-', 'main-entry-')));
-      }
-    }
-  }
-
+  const map = buildReplacementMap(serverDir);
   let filesUpdated = 0;
+
   walkFiles(path.join(serverDir, '_next'), (file) => {
     if (!/\.(js|json|css|map|html|txt)$/.test(file)) return;
     const raw = fs.readFileSync(file, 'utf8');
-    const updated = applyTextReplacements(raw);
+    const updated = applyReplacements(raw, map);
     if (updated !== raw) {
       fs.writeFileSync(file, updated);
       filesUpdated++;
@@ -62,7 +100,7 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
     const file = path.join(serverDir, rel);
     if (!fs.existsSync(file)) continue;
     const raw = fs.readFileSync(file, 'utf8');
-    const updated = applyTextReplacements(raw);
+    const updated = applyReplacements(raw, map);
     if (updated !== raw) {
       fs.writeFileSync(file, updated);
       filesUpdated++;
@@ -76,7 +114,7 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
     walkFiles(target, (file) => {
       if (!/\.(html|txt)$/.test(file)) return;
       const raw = fs.readFileSync(file, 'utf8');
-      const updated = applyTextReplacements(raw);
+      const updated = applyReplacements(raw, map);
       if (updated !== raw) {
         fs.writeFileSync(file, updated);
         filesUpdated++;
@@ -84,7 +122,7 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
     });
   }
 
-  return { filesUpdated, routesDir: fs.existsSync(routesDir) };
+  return { filesUpdated, flatChunks: map.size };
 }
 
-module.exports = { rewriteNextChunkPathsForNetlify, applyTextReplacements, REPLACEMENTS };
+module.exports = { rewriteNextChunkPathsForNetlify, flatChunkName, buildReplacementMap };

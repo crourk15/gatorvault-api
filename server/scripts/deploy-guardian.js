@@ -140,11 +140,9 @@ function checkReactChunkAssets() {
     errors.push(`[assets] ${missing.length} _next chunk(s) missing for React HTML exports`);
     missing.slice(0, 8).forEach((rel) => errors.push(`[assets] missing: ${rel}`));
   }
-  const appChunks = assets.filter(
-    (a) => a.includes('_next/static/chunks/routes/') || a.includes('_next/static/chunks/app/')
-  );
-  if (appChunks.length === 0) {
-    errors.push('[assets] no route chunks found — run merge-into-server.js after client build');
+  const routeChunks = assets.filter((a) => /_next\/static\/chunks\/r-/.test(a));
+  if (routeChunks.length === 0) {
+    errors.push('[assets] no flattened route chunks (r-*) found — run merge-into-server.js after client build');
   }
   return errors;
 }

@@ -90,8 +90,8 @@ function verifyChunks() {
     if (missing.length > 20) console.error(`  ... and ${missing.length - 20} more`);
     process.exit(1);
   }
-  const routeChunks = assets.filter((a) => a.includes('_next/static/chunks/routes/'));
-  console.log(`[netlify] Verified ${assets.length} _next assets (${routeChunks.length} route chunks)`);
+  const routeChunks = assets.filter((a) => a.includes('_next/static/chunks/r-'));
+  console.log(`[netlify] Verified ${assets.length} _next assets (${routeChunks.length} flat route chunks)`);
 }
 
 if (!fs.existsSync(outDir)) {
@@ -105,7 +105,7 @@ require('./generate-redirects.js');
 rmRecursive(nextDir);
 copyRecursive(outDir, serverDir);
 const netlifyPaths = rewriteNextChunkPathsForNetlify(serverDir);
-console.log(`[netlify] Rewrote Next chunk paths for Netlify CDN (routes/ + main-entry-, ${netlifyPaths.filesUpdated} files)`);
+console.log(`[netlify] Flattened Next route chunks for Netlify CDN (${netlifyPaths.flatChunks} files, ${netlifyPaths.filesUpdated} refs updated)`);
 verifyExports();
 verifyChunks();
 
