@@ -53,6 +53,12 @@ export default function FutureCastPage(): React.ReactElement {
         <a href="/futurecast/snapshots" className="fc-futurecast-nav__link">
           Snapshots
         </a>
+        <a href="/alerts" className="fc-futurecast-nav__link">
+          Alerts
+        </a>
+        <a href="/staff/dashboard" className="fc-futurecast-nav__link">
+          Staff Dashboard
+        </a>
       </nav>
       <h1 className="fc-futurecast-page__title">FutureCast Predictions</h1>
       <p className="fc-futurecast-page__subtitle">

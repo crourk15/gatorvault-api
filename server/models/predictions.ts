@@ -13,6 +13,7 @@ import {
 } from './prediction-types';
 import type { SignalType } from '../shared/enums';
 import { FUTURECAST_PLAYERS_TABLE } from './player-types';
+import { checkAndCreateMovementAlerts } from './alerts';
 
 export interface FitScoreBreakdown {
   scheme: number;
@@ -296,6 +297,11 @@ export async function upsertActiveModelPrediction(
     if (current.school === data.school && current.confidence === data.confidence) {
       return predictionFromRow(current);
     }
+
+    const historyBefore = await listMovementHistoryByPlayerId(data.player_id);
+    const oldVolatility = calculateVolatility(recentMovementHistory(historyBefore));
+    const oldConfidence = current.confidence;
+
     const delta = data.confidence - current.confidence;
     const { rows } = await db.query<PredictionRow>(
       `
@@ -307,6 +313,17 @@ export async function upsertActiveModelPrediction(
       [current.id, data.player_id, data.school, data.confidence, delta]
     );
     await insertPredictionHistory(data.player_id, data.confidence);
+
+    const historyAfter = await listMovementHistoryByPlayerId(data.player_id);
+    const newVolatility = calculateVolatility(recentMovementHistory(historyAfter));
+    await checkAndCreateMovementAlerts({
+      playerId: data.player_id,
+      oldConfidence,
+      newConfidence: data.confidence,
+      oldVolatility,
+      newVolatility,
+    });
+
     return predictionFromRow(rows[0]);
   }
 
