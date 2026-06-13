@@ -105,6 +105,12 @@ services:
         value: "300000"
       - key: QA_CRAWLER_BOOT_DELAY_MS
         value: "45000"
+      - key: PRODUCT_INTEL_ENABLED
+        value: "true"
+      - key: PRODUCT_INTEL_BOOT_DELAY_MS
+        value: "120000"
+      - key: PRODUCT_INTEL_RECOMPUTE_INTERVAL_MS
+        value: "300000"
       - key: QA_FETCH_TIMEOUT_MS
         value: "25000"
       - key: QA_LIVE_DASHBOARD_RETRIES

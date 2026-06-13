@@ -78,6 +78,7 @@
       <input id="pin" type="password" placeholder="Admin PIN" autocomplete="off">
       <button id="refresh">Refresh</button>
       <button id="recompute" class="secondary">Recompute</button>
+      <button id="recompute-qa" class="secondary">QA + Recompute</button>
     </div>
   </header>
   <main>
@@ -136,7 +137,7 @@
   <script>
     var API = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
       ? 'http://localhost:3000'
-      : 'https://gatorvault-api.onrender.com';
+      : (location.origin || '').replace(/\/$/, '');
     var SESSION_KEY = 'gv_admin_pin';
 
     function esc(s) {
@@ -309,7 +310,8 @@
         scoreEl.textContent = overall;
         scoreEl.className = 'hero-score ' + (scores.color || 'yellow');
         document.getElementById('overall-label').textContent = 'Overall platform health · last computed '
-          + (scores.lastComputedAt ? new Date(scores.lastComputedAt).toLocaleString() : 'never');
+          + (scores.lastComputedAt ? new Date(scores.lastComputedAt).toLocaleString() : 'never')
+          + (summary.stale ? ' · ⚠ stale — run Recompute' : '');
 
         renderBars(document.getElementById('module-bars'), scores.modules, moduleLabel);
         renderPages(scores.pages);
@@ -350,18 +352,23 @@
     }
 
     document.getElementById('refresh').addEventListener('click', loadAll);
-    document.getElementById('recompute').addEventListener('click', function () {
+    function runRecompute(runQaFirst) {
       var p = pin();
       if (!p) return;
-      document.getElementById('status').textContent = 'Recomputing…';
+      document.getElementById('status').textContent = runQaFirst ? 'Running QA crawl + recompute…' : 'Recomputing…';
       fetch(API + '/api/product-intel/recompute', {
         method: 'POST',
         headers: Object.assign({ 'Content-Type': 'application/json' }, headers()),
-        body: JSON.stringify({ pin: p })
+        body: JSON.stringify({ pin: p, force: true, runQaFirst: !!runQaFirst })
       }).then(function (r) { return r.json(); })
-        .then(function () { return loadAll(); })
+        .then(function (j) {
+          if (!j.ok) throw new Error(j.error || 'Recompute failed');
+          return loadAll();
+        })
         .catch(function (e) { document.getElementById('status').textContent = e.message; });
-    });
+    }
+    document.getElementById('recompute').addEventListener('click', function () { runRecompute(false); });
+    document.getElementById('recompute-qa').addEventListener('click', function () { runRecompute(true); });
     document.getElementById('sev-filter').addEventListener('change', loadAll);
 
     if (window.GVAdminEmbed) GVAdminEmbed.wirePin(document.getElementById('pin'), loadAll);

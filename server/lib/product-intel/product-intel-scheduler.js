@@ -1,10 +1,48 @@
 /**
- * Product Intelligence — daily (midnight UTC) and weekly (Sunday 01:00 UTC) jobs.
+ * Product Intelligence — boot recompute, QA-sync interval, daily/weekly jobs.
  */
+const qaStore = require('../qa/qa-store');
+const store = require('./product-intel-store');
 const engine = require('./product-intel-engine');
 
 let lastDailyKey = '';
 let lastWeeklyKey = '';
+let syncInFlight = false;
+
+function recomputeIntervalMs() {
+  return Math.max(60000, parseInt(process.env.PRODUCT_INTEL_RECOMPUTE_INTERVAL_MS || '300000', 10) || 300000);
+}
+
+/**
+ * Recompute when the latest QA run is newer than the last product-intel snapshot.
+ */
+async function syncIfStale(opts = {}) {
+  if (syncInFlight) return { skipped: true, reason: 'sync_in_progress' };
+  syncInFlight = true;
+  try {
+    const qaDoc = qaStore.readDoc();
+    const lastRun = (qaDoc.runs || [])[0];
+    if (!lastRun?.finishedAt) {
+      return { skipped: true, reason: 'no_qa_runs' };
+    }
+
+    const doc = store.readDoc();
+    const computedAt = doc.lastComputedAt ? new Date(doc.lastComputedAt).getTime() : 0;
+    const runAt = new Date(lastRun.finishedAt).getTime();
+    if (!opts.force && runAt <= computedAt) {
+      return { skipped: true, reason: 'already_fresh', lastComputedAt: doc.lastComputedAt };
+    }
+
+    console.log('[product-intel] recomputing from QA run', lastRun.id, '(pass:', lastRun.pass + ')');
+    const result = await engine.recomputeFromRun(lastRun, {
+      daily: opts.daily !== false,
+      weekly: opts.weekly === true
+    });
+    return { ok: true, runId: lastRun.id, overall: result.scores?.overall };
+  } finally {
+    syncInFlight = false;
+  }
+}
 
 async function startProductIntelScheduler() {
   if (process.env.PRODUCT_INTEL_ENABLED === 'false') {
@@ -13,12 +51,18 @@ async function startProductIntelScheduler() {
   }
 
   const bootDelay = Math.max(30000, parseInt(process.env.PRODUCT_INTEL_BOOT_DELAY_MS || '90000', 10) || 90000);
+  const syncMs = recomputeIntervalMs();
 
   setTimeout(async () => {
     try {
-      const result = await engine.recomputeFromLatestRun({ daily: true, weekly: false });
+      const result = await syncIfStale({ force: true, daily: true, weekly: false });
       if (result.ok) {
-        console.log('[product-intel] boot recompute — overall', result.scores?.overall);
+        console.log('[product-intel] boot recompute — overall', result.overall);
+      } else if (result.reason === 'no_qa_runs') {
+        const fallback = await engine.recomputeFromLatestRun({ daily: true, weekly: false });
+        if (fallback.ok) {
+          console.log('[product-intel] boot recompute (fallback) — overall', fallback.scores?.overall);
+        }
       }
     } catch (err) {
       console.warn('[product-intel] boot recompute skipped:', err.message);
@@ -35,6 +79,12 @@ async function startProductIntelScheduler() {
       console.warn('[self-runner] boot generate skipped:', err.message);
     }
   }, bootDelay);
+
+  setInterval(() => {
+    syncIfStale({ daily: true, weekly: false }).catch((err) => {
+      console.warn('[product-intel] sync tick failed:', err.message);
+    });
+  }, syncMs);
 
   const tick = async () => {
     const now = new Date();
@@ -63,7 +113,12 @@ async function startProductIntelScheduler() {
   setInterval(() => {
     tick().catch((err) => console.warn('[product-intel] scheduler tick failed:', err.message));
   }, 15 * 60 * 1000);
-  console.log('[product-intel] scheduler enabled — daily 00:00 UTC, weekly Sun 01:00 UTC');
+
+  console.log(
+    '[product-intel] scheduler enabled — QA sync every',
+    Math.round(syncMs / 60000),
+    'min, daily 00:00 UTC, weekly Sun 01:00 UTC'
+  );
 }
 
-module.exports = { startProductIntelScheduler };
+module.exports = { startProductIntelScheduler, syncIfStale };

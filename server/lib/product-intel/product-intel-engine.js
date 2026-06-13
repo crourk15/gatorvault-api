@@ -100,12 +100,11 @@ function enrichFixItem(signal, run, historyDoc, runCount) {
 }
 
 function buildFixQueue(signals, run, existingQueue, doc, runCount) {
-  const openCheckIds = new Set(signals.map((s) => s.id || s.checkId));
-
+  // Drop resolved / cleared checks; keep only unresolved items without a checkId (manual entries).
   const kept = (existingQueue || []).filter((item) => {
-    if (item.checkId && openCheckIds.has(item.checkId)) return false;
-    if (item.checkId && !openCheckIds.has(item.checkId)) return false;
-    return !item.resolved;
+    if (item.resolved) return false;
+    if (item.checkId) return false;
+    return true;
   });
 
   const seen = new Set();
@@ -321,8 +320,26 @@ async function recomputeFromRun(run, opts = {}) {
 
   store.writeDoc(doc);
 
+  if (run.pass) {
+    try {
+      qaStore.clearErrorsOnPass(run);
+    } catch {
+      /* optional */
+    }
+  }
+
   try {
     const opsMonitor = require('../ops-monitor');
+    opsMonitor.heartbeat({
+      subsystem: 'product-intel',
+      status: run.pass && !fixItems.length ? 'success' : 'warning',
+      message: `Product Intelligence ${scores.overall}/100`,
+      details: {
+        lastComputedAt: doc.lastComputedAt,
+        runId: run.id,
+        openFixes: fixItems.filter((f) => !f.resolved).length
+      }
+    });
     opsMonitor.logEvent({
       subsystem: 'product-intel',
       status: run.pass && !fixItems.length ? 'success' : 'warning',

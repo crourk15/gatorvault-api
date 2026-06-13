@@ -63,7 +63,21 @@ function recordRun(run) {
     runId: run.id,
     ...e
   }));
-  doc.errors = [...newErrors, ...(doc.errors || [])].slice(0, MAX_ERRORS);
+  // Clear stale error feed after a passing crawl — do not accumulate historic failures.
+  if (run.pass) {
+    doc.errors = newErrors.length ? newErrors.slice(0, MAX_ERRORS) : [];
+  } else {
+    doc.errors = [...newErrors, ...(doc.errors || [])].slice(0, MAX_ERRORS);
+  }
+  writeDoc(doc);
+  return doc;
+}
+
+/** Clear error feed when product health recomputes from a passing QA run. */
+function clearErrorsOnPass(run) {
+  if (!run?.pass) return readDoc();
+  const doc = readDoc();
+  doc.errors = [];
   writeDoc(doc);
   return doc;
 }
@@ -99,6 +113,7 @@ function getScreenshotPath(filename) {
 module.exports = {
   readDoc,
   recordRun,
+  clearErrorsOnPass,
   getDashboard,
   saveScreenshot,
   getScreenshotPath,

@@ -45,7 +45,22 @@ async function runQaCrawl(opts = {}) {
 
     try {
       const productIntel = require('../product-intel/product-intel-engine');
-      await productIntel.recomputeFromRun(run, { daily: true, weekly: false });
+      let piErr = null;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          await productIntel.recomputeFromRun(run, { daily: true, weekly: false });
+          piErr = null;
+          break;
+        } catch (err) {
+          piErr = err;
+          if (attempt === 0) {
+            console.warn('[product-intel] recompute failed — retrying:', err.message);
+          }
+        }
+      }
+      if (piErr) {
+        console.warn('[product-intel] recompute skipped after retry:', piErr.message);
+      }
     } catch (piErr) {
       console.warn('[product-intel] recompute skipped:', piErr.message);
     }

@@ -59,13 +59,25 @@ function mountProductIntelRoutes(app) {
   app.get('/api/product-intel/summary', (req, res) => {
     if (!requireIntelAuth(req, res)) return;
     try {
+      const qaStore = require('../qa/qa-store');
       const doc = store.readDoc();
+      const qaDoc = qaStore.readDoc();
+      const lastRun = (qaDoc.runs || [])[0] || null;
       const summary = store.getTodaySummary(doc) || (doc.dailySummaries || [])[0] || null;
+      const computedAt = doc.lastComputedAt ? new Date(doc.lastComputedAt).getTime() : 0;
+      const runAt = lastRun?.finishedAt ? new Date(lastRun.finishedAt).getTime() : 0;
+      const stale = !!(lastRun && runAt > computedAt);
       return res.json({
         ok: true,
         summary,
         recent: (doc.dailySummaries || []).slice(0, 7),
-        lastComputedAt: doc.lastComputedAt
+        lastComputedAt: doc.lastComputedAt,
+        lastRunId: doc.lastRunId,
+        latestQaRunId: lastRun?.id || null,
+        latestQaFinishedAt: lastRun?.finishedAt || null,
+        stale,
+        scores: doc.scores || null,
+        snapshots: (doc.snapshots || []).slice(0, 5)
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
@@ -127,17 +139,47 @@ function mountProductIntelRoutes(app) {
     if (!requireIntelAuth(req, res)) return;
     try {
       const weekly = req.body?.weekly === true;
-      const result = await engine.recomputeFromLatestRun({ daily: true, weekly });
+      const force = req.body?.force !== false;
+
+      if (req.body?.runQaFirst === true) {
+        const { runQaCrawl } = require('../qa/qa-runner');
+        await runQaCrawl({ force: true });
+      }
+
+      const scheduler = require('./product-intel-scheduler');
+      let result = await scheduler.syncIfStale({ force, daily: true, weekly });
+
+      if (result.skipped && result.reason === 'already_fresh') {
+        const doc = store.readDoc();
+        return res.json({
+          ok: true,
+          alreadyFresh: true,
+          overall: doc.scores?.overall ?? null,
+          color: scoring.healthColor(doc.scores?.overall ?? 0),
+          lastComputedAt: doc.lastComputedAt,
+          fixQueue: (doc.fixQueue || []).filter((f) => !f.resolved).length,
+          weekly
+        });
+      }
+
+      if (result.skipped && result.reason === 'no_qa_runs') {
+        result = await engine.recomputeFromLatestRun({ daily: true, weekly });
+      }
+
       if (!result.ok) {
         return res.status(404).json({ ok: false, error: result.reason || 'No QA runs to analyze' });
       }
+
+      const doc = store.readDoc();
       return res.json({
         ok: true,
-        overall: result.scores?.overall,
-        color: scoring.healthColor(result.scores?.overall ?? 0),
-        fixQueue: (result.fixQueue || []).filter((f) => !f.resolved).length,
-        intelligenceLayers: result.intelligenceLayers,
+        overall: result.overall ?? result.scores?.overall ?? doc.scores?.overall,
+        color: scoring.healthColor(result.overall ?? result.scores?.overall ?? doc.scores?.overall ?? 0),
+        fixQueue: (doc.fixQueue || []).filter((f) => !f.resolved).length,
+        intelligenceLayers: result.intelligenceLayers ?? doc.intelligenceLayers,
         signalCounts: result.signalCounts,
+        lastComputedAt: doc.lastComputedAt,
+        runId: result.runId ?? doc.lastRunId,
         weekly
       });
     } catch (err) {
