@@ -8,6 +8,7 @@ import {
   handlePredictionsApiError,
   serializeStockRowsWithVolatility,
 } from '../predictions/utils-api';
+import { filterFutureCastStockRows } from './feed-filters';
 
 const DAILY_WINDOW_DAYS = 1;
 const WEEKLY_WINDOW_DAYS = 7;
@@ -35,8 +36,8 @@ async function splitSnapshotRows(rows: StockBoardRow[], limit: number) {
 export const handleGetMovementSnapshots = asyncHandler(async (_req: Request, res: Response) => {
   try {
     const [dailyRows, weeklyRows] = await Promise.all([
-      listStockBoardRows(DAILY_WINDOW_DAYS),
-      listStockBoardRows(WEEKLY_WINDOW_DAYS),
+      filterFutureCastStockRows(await listStockBoardRows(DAILY_WINDOW_DAYS)),
+      filterFutureCastStockRows(await listStockBoardRows(WEEKLY_WINDOW_DAYS)),
     ]);
 
     const daily = await splitSnapshotRows(dailyRows, MAX_PER_BUCKET);

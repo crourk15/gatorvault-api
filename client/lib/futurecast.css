@@ -641,7 +641,7 @@
 
 .fc-futurecast-page {
   padding: 1rem;
-  max-width: 48rem;
+  max-width: 72rem;
   margin: 0 auto;
 }
 
@@ -662,6 +662,94 @@
 
 .fc-futurecast-page__heatmap {
   margin-bottom: 1.5rem;
+}
+
+/* FutureCast homepage sections */
+.fc-home {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.fc-home-section {
+  padding: 1.25rem 0 0;
+  border-top: 1px solid rgba(48, 54, 61, 0.85);
+}
+
+.fc-home-section:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.fc-home-section__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.fc-home-section__title {
+  margin: 0;
+  color: #fff;
+  font-family: Oswald, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.fc-home-section__subtitle {
+  margin: 0.35rem 0 0;
+  color: #8b949e;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.fc-home-section__empty {
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px dashed rgba(48, 54, 61, 0.9);
+  border-radius: 0.75rem;
+  color: #8b949e;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.fc-home-grid {
+  gap: 1rem;
+}
+
+.fc-home-portal-grid {
+  gap: 1rem;
+}
+
+.fc-home-sort {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.fc-home-sort__btn {
+  background: #0a1628;
+  border: 1px solid rgba(0, 48, 135, 0.45);
+  border-radius: 9999px;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fc-home-sort__btn.is-active {
+  background: rgba(250, 70, 22, 0.15);
+  border-color: #fa4616;
+  color: #fb923c;
+}
+
+.fc-home-portal-card {
+  text-decoration: none;
 }
 
 .fc-movement-heatmap {
@@ -1099,10 +1187,11 @@
   color: #8b949e;
 }
 
-.fc-prediction-card-v2__volatility {
+.fc-prediction-card-v2__volatility,
+.fc-prediction-card-v2__metric {
   margin: 0.35rem 0 0;
-  font-size: 0.75rem;
   color: #8b949e;
+  font-size: 0.75rem;
 }
 
 .fc-prediction-card {

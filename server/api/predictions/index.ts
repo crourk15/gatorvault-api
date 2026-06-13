@@ -19,10 +19,18 @@ import {
   parseQueryFlag,
   serializeFeedRowsWithVolatility,
 } from './utils-api';
+import {
+  dedupeFeedRows,
+  filterFutureCastFeedRows,
+  filterModelPredictionsOnly,
+  FUTURECAST_CLASS_YEAR,
+} from '../futurecast/feed-filters';
+import { dedupeByPlayerId } from '../futurecast/eligibility';
 
 export const handleListPredictions = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const class_year = parseOptionalInt(req.query.class_year, 'class_year');
+    const class_year =
+      parseOptionalInt(req.query.class_year, 'class_year') ?? FUTURECAST_CLASS_YEAR;
     const position = parsePosition(req.query.position);
     const status = parsePredictionStatus(req.query.status) ?? 'ACTIVE';
     const limit = parseLimit(req.query.limit, 100, 500);
@@ -41,7 +49,13 @@ export const handleListPredictions = asyncHandler(async (req: Request, res: Resp
       rows = await listPredictions({ class_year, position, status, limit: 500 });
     }
 
+    rows = filterFutureCastFeedRows(filterModelPredictionsOnly(rows));
+    rows = dedupeFeedRows(rows);
+
     let predictions = await serializeFeedRowsWithVolatility(rows);
+    predictions = dedupeByPlayerId(
+      predictions.map((p) => ({ ...p, playerId: p.playerId, confidence: p.confidence }))
+    );
     predictions = applyFeedFilters(predictions, { hsOnly, portalOnly, floridaOnly, trendingUp });
     predictions = predictions.slice(0, limit);
 

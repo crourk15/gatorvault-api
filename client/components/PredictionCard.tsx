@@ -18,6 +18,9 @@ export interface PredictionCardData {
   type: string;
   confidence: number;
   delta?: number;
+  ufFitScore?: number | null;
+  ufProbability?: number | null;
+  stabilityScore?: number;
   volatilityScore?: number;
   createdAt: string;
 }
@@ -44,6 +47,9 @@ export function feedPredictionToCard(p: FeedPrediction): PredictionCardData {
     type: `${sourceTypeLabel(p.sourceType).toLowerCase()} pick`,
     confidence: p.confidence,
     delta: p.delta,
+    ufFitScore: p.ufFitScore,
+    ufProbability: p.ufProbability,
+    stabilityScore: p.stabilityScore,
     volatilityScore: p.volatilityScore,
     createdAt: p.createdAt,
   };
@@ -76,6 +82,19 @@ export function PredictionCard({ prediction }: PredictionCardProps): React.React
             </div>
           )}
           <ConfidenceBar value={prediction.confidence} />
+          {prediction.ufProbability != null && (
+            <p className="fc-prediction-card-v2__metric">
+              UF Probability: {prediction.ufProbability}%
+            </p>
+          )}
+          {prediction.ufFitScore != null && (
+            <p className="fc-prediction-card-v2__metric">
+              Fit Score: {prediction.ufFitScore}
+              {prediction.stabilityScore != null && (
+                <span> · Stability: {prediction.stabilityScore}</span>
+              )}
+            </p>
+          )}
           {prediction.volatilityScore !== undefined && (
             <p className="fc-prediction-card-v2__volatility">
               Volatility: {prediction.volatilityScore}

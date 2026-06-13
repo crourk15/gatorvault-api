@@ -52,6 +52,9 @@ export interface PredictionFeedRow extends PredictionRow {
   position: string;
   lifecycle: string;
   state?: string | null;
+  committed_to?: string | null;
+  uf_status?: string | null;
+  uf_fit_score?: number | null;
   fit_scheme?: number | null;
   fit_culture?: number | null;
   fit_staff?: number | null;

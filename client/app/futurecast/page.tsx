@@ -1,48 +1,13 @@
 'use client';
 
 /**
- * FutureCast predictions page — /futurecast
+ * FutureCast predictions page — /futurecast (2027 cycle homepage)
  */
-import React, { useEffect, useState } from 'react';
-import { FutureCastFeed } from '@/components/futurecast/FutureCastFeed';
-import {
-  MovementHeatmap,
-  type MovementHeatmapBucket,
-} from '@/components/futurecast/MovementHeatmap';
-import { fetchMovementHeatmap } from '@/lib/predictions-api';
+import React from 'react';
+import { FutureCastHomepage } from '@/components/futurecast/FutureCastHomepage';
 import '@/lib/futurecast.css';
 
-const HEATMAP_REFRESH_MS = 60_000;
-
 export default function FutureCastPage(): React.ReactElement {
-  const [heatmapBuckets, setHeatmapBuckets] = useState<MovementHeatmapBucket[] | null>(null);
-  const [heatmapWindowDays, setHeatmapWindowDays] = useState(7);
-
-  useEffect(() => {
-    let cancelled = false;
-    let timer: ReturnType<typeof setInterval> | undefined;
-
-    async function loadHeatmap() {
-      try {
-        const data = await fetchMovementHeatmap();
-        if (!cancelled) {
-          setHeatmapBuckets(data.buckets);
-          setHeatmapWindowDays(data.windowDays);
-        }
-      } catch {
-        if (!cancelled) setHeatmapBuckets(null);
-      }
-    }
-
-    void loadHeatmap();
-    timer = setInterval(() => void loadHeatmap(), HEATMAP_REFRESH_MS);
-
-    return () => {
-      cancelled = true;
-      if (timer) clearInterval(timer);
-    };
-  }, []);
-
   return (
     <div className="fc-futurecast-page" data-testid="futurecast-page">
       <nav className="fc-futurecast-nav">
@@ -62,16 +27,11 @@ export default function FutureCastPage(): React.ReactElement {
           Staff Dashboard
         </a>
       </nav>
-      <h1 className="fc-futurecast-page__title">FutureCast Predictions</h1>
+      <h1 className="fc-futurecast-page__title">FutureCast</h1>
       <p className="fc-futurecast-page__subtitle">
-        Live MODEL picks, confidence scores, and trending Florida targets.
+        2027 recruiting cycle — commits, targets, movement, and portal intel.
       </p>
-      {heatmapBuckets && (
-        <div className="fc-futurecast-page__heatmap">
-          <MovementHeatmap buckets={heatmapBuckets} windowDays={heatmapWindowDays} />
-        </div>
-      )}
-      <FutureCastFeed />
+      <FutureCastHomepage />
     </div>
   );
 }

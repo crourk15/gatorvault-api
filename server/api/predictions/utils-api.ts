@@ -49,6 +49,9 @@ export function serializeFeedPrediction(row: {
   status: string;
   created_at: string;
   updated_at: string;
+  committed_to?: string | null;
+  uf_status?: string | null;
+  uf_fit_score?: number | null;
   fit_scheme?: number | null;
   fit_culture?: number | null;
   fit_staff?: number | null;
@@ -56,6 +59,7 @@ export function serializeFeedPrediction(row: {
   fit_geo?: number | null;
   volatilityScore?: number;
 }) {
+  const volatilityScore = row.volatilityScore ?? 0;
   return {
     id: row.id,
     playerId: row.player_id,
@@ -72,8 +76,13 @@ export function serializeFeedPrediction(row: {
     status: row.status,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    committedTo: row.committed_to ?? null,
+    ufStatus: row.uf_status ?? null,
+    ufFitScore: row.uf_fit_score ?? null,
+    ufProbability: row.school.toLowerCase().includes('florida') ? row.confidence : null,
     fitScoreBreakdown: fitScoreBreakdownFromRow(row),
-    volatilityScore: row.volatilityScore ?? 0,
+    volatilityScore,
+    stabilityScore: Math.max(0, Math.min(100, 100 - volatilityScore)),
   };
 }
 

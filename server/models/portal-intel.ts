@@ -19,6 +19,7 @@ export interface PortalIntelRow {
   class_year: number;
   position: string;
   lifecycle: PlayerLifecycleStatus;
+  committed_to: string | null;
   stars: number | null;
   composite_rating: number | null;
   hometown: string | null;
@@ -78,6 +79,7 @@ function mapPortalIntelRow(row: PortalIntelDbRow): PortalIntelRow {
     class_year: player.class_year,
     position: player.position,
     lifecycle: player.status,
+    committed_to: player.committed_to,
     stars: player.stars,
     composite_rating: player.composite_rating,
     hometown: player.hometown,

@@ -139,6 +139,9 @@ export async function insertPredictionHistory(
 export interface StockBoardRow extends PredictionFeedRow {
   prev_confidence: number;
   window_delta: number;
+  committed_to?: string | null;
+  uf_status?: string | null;
+  uf_fit_score?: number | null;
 }
 
 export async function listStockBoardRows(windowDays = 7): Promise<StockBoardRow[]> {
@@ -158,10 +161,14 @@ export async function listStockBoardRows(windowDays = 7): Promise<StockBoardRow[
       p.fit_staff,
       p.fit_need,
       p.fit_geo,
+      p.committed_to,
+      uf.uf_status,
+      uf.uf_fit_score,
       h.confidence AS prev_confidence,
       (pr.confidence - h.confidence) AS window_delta
     FROM ${FUTURECAST_PREDICTIONS_TABLE} pr
     JOIN ${FUTURECAST_PLAYERS_TABLE} p ON p.id = pr.player_id
+    LEFT JOIN futurecast.uf_specific_profiles uf ON uf.player_id = p.id
     JOIN LATERAL (
       SELECT confidence
       FROM futurecast.prediction_history ph
@@ -247,6 +254,9 @@ export async function listPredictions(
       p.position,
       p.status AS lifecycle,
       p.state,
+      p.committed_to,
+      uf.uf_status,
+      uf.uf_fit_score,
       p.fit_scheme,
       p.fit_culture,
       p.fit_staff,
@@ -254,6 +264,7 @@ export async function listPredictions(
       p.fit_geo
     FROM ${FUTURECAST_PREDICTIONS_TABLE} pr
     JOIN ${FUTURECAST_PLAYERS_TABLE} p ON p.id = pr.player_id
+    LEFT JOIN futurecast.uf_specific_profiles uf ON uf.player_id = p.id
     ${where}
     ORDER BY pr.confidence DESC, pr.updated_at DESC
     LIMIT $${idx}

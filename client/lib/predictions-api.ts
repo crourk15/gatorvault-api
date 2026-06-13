@@ -22,6 +22,11 @@ export interface FeedPrediction {
   status: PredictionStatus;
   createdAt: string;
   updatedAt: string;
+  committedTo?: string | null;
+  ufStatus?: string | null;
+  ufFitScore?: number | null;
+  ufProbability?: number | null;
+  stabilityScore?: number;
   volatilityScore?: number;
 }
 
