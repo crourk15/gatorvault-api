@@ -38,6 +38,53 @@ export function fitScoreBreakdownFromRow(row: {
   };
 }
 
+export interface MovementHistoryRow {
+  date: string;
+  confidence: number;
+}
+
+export interface MovementHistoryPoint {
+  date: string;
+  confidence: number;
+}
+
+export function movementHistoryFromRows(rows: MovementHistoryRow[]): MovementHistoryPoint[] {
+  return rows.map((row) => ({
+    date: row.date,
+    confidence: row.confidence,
+  }));
+}
+
+export async function listMovementHistoryByPlayerId(
+  playerId: string
+): Promise<MovementHistoryRow[]> {
+  const { rows } = await db.query<{ date: string; confidence: number }>(
+    `
+    SELECT date::text AS date, confidence
+    FROM futurecast.prediction_history
+    WHERE player_id = $1
+    ORDER BY date ASC
+    `,
+    [playerId]
+  );
+  return rows;
+}
+
+export async function insertPredictionHistory(
+  playerId: string,
+  confidence: number
+): Promise<void> {
+  await db.query(
+    `
+    INSERT INTO futurecast.prediction_history (player_id, date, confidence)
+    VALUES ($1, CURRENT_DATE, $2)
+    ON CONFLICT (player_id, date) DO UPDATE
+      SET confidence = EXCLUDED.confidence
+    `,
+    [playerId, confidence]
+  );
+}
+
 export interface ListPredictionsFilters {
   class_year?: number;
   position?: string;
@@ -164,6 +211,7 @@ export async function upsertActiveModelPrediction(
       `,
       [current.id, data.player_id, data.school, data.confidence, delta]
     );
+    await insertPredictionHistory(data.player_id, data.confidence);
     return predictionFromRow(rows[0]);
   }
 
@@ -176,6 +224,7 @@ export async function upsertActiveModelPrediction(
     `,
     [data.player_id, data.school, data.confidence, predictorId]
   );
+  await insertPredictionHistory(data.player_id, data.confidence);
   return predictionFromRow(rows[0]);
 }
 

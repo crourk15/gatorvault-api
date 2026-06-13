@@ -4,6 +4,10 @@
 import type { Request, Response } from 'express';
 import { getPlayerBySlug } from '../../../models/player';
 import { getUFSpecificProfileByPlayerId } from '../../../models/uf-specific-profile';
+import {
+  listMovementHistoryByPlayerId,
+  movementHistoryFromRows,
+} from '../../../models/predictions';
 import { buildFitScoreBreakdown } from '../fit-breakdown';
 import {
   asyncHandler,
@@ -29,12 +33,14 @@ export const handleGetPlayerBySlug = asyncHandler(async (req: Request, res: Resp
 
     const ufProfile = await getUFSpecificProfileByPlayerId(player.id);
     const fitScoreBreakdown = buildFitScoreBreakdown(player, ufProfile);
+    const movementRows = await listMovementHistoryByPlayerId(player.id);
 
     res.json({
       player: {
         ...serializeFullPlayer(player),
         ufFitScore: ufProfile?.uf_fit_score ?? null,
         fitScoreBreakdown,
+        movementHistory: movementHistoryFromRows(movementRows),
       },
     });
   } catch (err) {

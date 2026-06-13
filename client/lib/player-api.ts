@@ -14,6 +14,11 @@ export interface FitScoreBreakdown {
   geo: number;
 }
 
+export interface MovementHistoryPoint {
+  date: string;
+  confidence: number;
+}
+
 export interface PlayerCore {
   id: string;
   fullName: string;
@@ -34,6 +39,7 @@ export interface PlayerCore {
   committedTo: string | null;
   ufFitScore?: number | null;
   fitScoreBreakdown?: FitScoreBreakdown | null;
+  movementHistory?: MovementHistoryPoint[];
 }
 
 export interface HighSchoolProfile {

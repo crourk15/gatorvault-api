@@ -26,6 +26,8 @@
     "migrate:predictions-delta:psql": "psql \"$env:DATABASE_URL\" -f migrations/012_add_predictions_delta.sql",
     "migrate:fit-breakdown": "psql \"$env:DATABASE_URL\" -f migrations/013_add_fit_breakdown.sql",
     "migrate:fit-breakdown:tsx": "npx tsx migrators/run-migration.ts migrations/013_add_fit_breakdown.sql",
+    "migrate:prediction-history": "psql \"$env:DATABASE_URL\" -f migrations/014_add_prediction_history.sql",
+    "migrate:prediction-history:tsx": "npx tsx migrators/run-migration.ts migrations/014_add_prediction_history.sql",
     "sync:predictions": "npx tsx scripts/sync-predictions.js",
     "sync:database-url": "node scripts/sync-database-url.js --deploy",
     "transform:players": "npx tsx scripts/transform-recruiting-data.ts"

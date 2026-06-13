@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { ConfidenceBar } from '@/components/futurecast/ConfidenceBar';
 import { FitScoreBreakdown } from '@/components/player/FitScoreBreakdown';
+import { MovementHistoryGraph } from '@/components/player/MovementHistoryGraph';
 import {
   fetchPlayerById,
   fetchPlayerProfiles,
@@ -84,6 +85,10 @@ function PlayerPageContent({
       <section className="fc-player-page__section fc-player-page__section--breakdown">
         <h2 className="fc-player-page__section-title">Fit Score Breakdown</h2>
         <FitScoreBreakdown fit={player.fitScoreBreakdown} />
+      </section>
+      <section className="fc-player-page__section fc-player-page__section--movement">
+        <h2 className="fc-player-page__section-title">Movement History</h2>
+        <MovementHistoryGraph history={player.movementHistory} />
       </section>
       <section className="fc-player-page__section">
         <h2 className="fc-player-page__section-title">Offers</h2>

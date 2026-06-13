@@ -1182,3 +1182,59 @@
 .fc-player-page__section--breakdown {
   margin-top: 2rem;
 }
+
+.fc-player-page__section--movement {
+  margin-top: 2.5rem;
+}
+
+.fc-movement-history {
+  padding: 1rem;
+  border: 1px solid #30363d;
+  border-radius: 0.75rem;
+  background: #1f242c;
+}
+
+.fc-movement-history__empty {
+  margin: 0;
+  color: #8b949e;
+  font-size: 0.875rem;
+}
+
+.fc-movement-history__chart {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.fc-movement-history__grid {
+  stroke: #2d333b;
+  stroke-width: 1;
+}
+
+.fc-movement-history__tick {
+  fill: #8b949e;
+  font-size: 11px;
+  text-anchor: end;
+}
+
+.fc-movement-history__tick--x {
+  text-anchor: middle;
+}
+
+.fc-movement-history__area {
+  fill: rgba(250, 70, 22, 0.3);
+}
+
+.fc-movement-history__line {
+  fill: none;
+  stroke: #fa4616;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.fc-movement-history__point {
+  fill: #fa4616;
+  stroke: #1f242c;
+  stroke-width: 1;
+}

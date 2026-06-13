@@ -12,7 +12,7 @@ import {
   sendError,
 } from '../players/utils';
 import { PREDICTION_STATUSES } from '../../models/prediction-types';
-import { fitScoreBreakdownFromRow } from '../../models/predictions';
+import { fitScoreBreakdownFromRow, insertPredictionHistory } from '../../models/predictions';
 
 export { asyncHandler, handleApiError, isUuid, parseLimit, parseOptionalInt, parsePosition, sendError };
 
@@ -131,3 +131,11 @@ export function serializePlayerPrediction(p: {
 export const PREDICTOR_NAMES: Record<string, string> = {
   system: 'FutureCast Model',
 };
+
+/** Log daily MODEL confidence for movement history graph (one row per player per day). */
+export async function recordMovementHistory(
+  playerId: string,
+  confidence: number
+): Promise<void> {
+  await insertPredictionHistory(playerId, confidence);
+}
