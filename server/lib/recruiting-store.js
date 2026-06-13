@@ -123,7 +123,9 @@ function normalizePlayer(raw) {
     visitStart: raw.visitStart || raw.visit_start || null,
     visitEnd: raw.visitEnd || raw.visit_end || null,
     starsDisplay: raw.starsDisplay || raw.stars_display || null,
-    headliner: !!(raw.headliner ?? raw.is_headliner),
+    headliner: !!(raw.headliner ?? raw.is_headliner ?? raw.isUFtarget),
+    ufProbability: raw.ufProbability != null ? Number(raw.ufProbability) : raw.uf_probability != null ? Number(raw.uf_probability) : null,
+    fitScore: raw.fitScore != null ? Number(raw.fitScore) : raw.fit_score != null ? Number(raw.fit_score) : null,
     updatedAt: raw.updatedAt || raw.updated_at || nowIso()
   };
   if (player.ratingOverride != null && player.ratingOverride !== '') {

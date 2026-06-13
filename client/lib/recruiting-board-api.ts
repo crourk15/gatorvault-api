@@ -26,15 +26,22 @@ export interface RecruitingBoardPlayer {
   lifecycle?: string;
   isTarget?: boolean;
   isCommittedToUF?: boolean;
-  /** Legacy fields */
+  /** Legacy / enriched fields */
   htWt?: string;
   natl?: number;
   natlRank?: number;
+  posRank?: number;
+  stateRank?: number;
   skinny?: string;
   profileNote?: string;
   vaultGrade?: number;
   displayRating?: number;
   ufOvStatus?: string;
+  visitStart?: string | null;
+  visitEnd?: string | null;
+  nextVisitSchool?: string | null;
+  committedTo?: string | null;
+  headliner?: boolean;
 }
 
 export interface RecruitingBoardTierSection {

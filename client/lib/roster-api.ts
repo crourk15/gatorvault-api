@@ -38,8 +38,18 @@ export async function fetchRosterPlayerBySlug(slug: string): Promise<RosterPlaye
   return data.player ?? null;
 }
 
+/** Roster players who arrived before portal era or are mis-tagged — hide portal badge */
+const PORTAL_TAG_EXCLUDED_SLUGS = new Set([
+  'cormani-mcclain',
+  'brendan-bett',
+  'kofi-asare',
+  'alfonzo-allen-jr',
+  'alfonzon-allen',
+]);
+
 /** True when player arrived via transfer portal. */
 export function isPortalRosterPlayer(player: RosterPlayer): boolean {
+  if (PORTAL_TAG_EXCLUDED_SLUGS.has(player.slug)) return false;
   const info = String(player.transferInfo ?? player.lifecycle ?? '').toLowerCase();
   return info.includes('portal') || info.includes('transfer');
 }

@@ -26,14 +26,15 @@ const PILLAR_QA = {
 };
 
 const RECRUITING_SUB_ROUTES = [
-  '/vault/recruiting/2026/commits',
+  '/vault/recruiting/priority',
   '/vault/recruiting/2027/commits',
-  '/vault/recruiting/2026/targets',
   '/vault/recruiting/2027/targets',
-  '/vault/recruiting/heat-check',
+  '/vault/recruiting/2028/targets',
+  '/vault/recruiting/movement',
   '/vault/recruiting/scouting',
   '/vault/recruiting/portal',
-  '/vault/recruiting/movement',
+  '/vault/recruiting/rankings',
+  '/vault/recruiting/heat-check',
 ];
 
 const PLAYER_PROFILE_ROUTES = {

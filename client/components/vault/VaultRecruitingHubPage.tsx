@@ -2,35 +2,35 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchRecruitingBoard, type RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
-import { fetchRecruitingHeatCheck, fetchPortalIncoming, type HeatCheckItem } from '@/lib/recruiting-api';
+import { fetchRecruitingHeatCheck, type HeatCheckItem } from '@/lib/recruiting-api';
 import { fetchStaffDashboard, type StaffDashboardPlayer } from '@/lib/staff-api';
 import { ScoutingDepartmentPage } from '@/components/site/ScoutingDepartmentPage';
-import { PortalWatchlistGrid } from '@/components/futurecast/PortalWatchlistGrid';
 import {
-  filterRecruitingHsOnly,
-  playerProfilePath,
-  recruitingProfileLifecycle,
-} from '@/lib/player-routes';
+  EliteRecruitCard,
+  type EliteRecruitCardPlayer,
+} from '@/components/vault/EliteRecruitCard';
+import { filterRecruitingHsOnly, playerProfilePath } from '@/lib/player-routes';
 import {
   type RecruitingHubTab,
   recruitingTabPath,
   resolveRecruitingTab,
 } from '@/lib/vault-route-map';
-
 import { ensurePlayerSlug } from '@/lib/slug';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
-const ACE_PORTAL_SLUG = 'eric-singleton-jr';
+/** Portal window closed until Dec transfer portal opens */
+const PORTAL_SEASON_OPEN = false;
+
+type IntelSubView = 'heat' | 'movement' | 'confidence';
 
 const TAB_LABELS: { id: RecruitingHubTab; label: string }[] = [
-  { id: 'commits-2026', label: '2026 Commits' },
+  { id: 'priority', label: 'High Priority' },
   { id: 'commits-2027', label: '2027 Commits' },
-  { id: 'targets-2026', label: '2026 Targets' },
   { id: 'targets-2027', label: '2027 Targets' },
-  { id: 'heat', label: 'Heat Check' },
+  { id: 'targets-2028', label: '2028 Targets' },
+  { id: 'intel', label: 'Movement Intel' },
   { id: 'scouting', label: 'Scouting' },
   { id: 'portal', label: 'Portal' },
-  { id: 'intel', label: 'Movement Intel' },
   { id: 'rankings', label: 'Rankings' },
 ];
 
@@ -47,166 +47,200 @@ function rankTargets(list: RecruitingBoardPlayer[]): RecruitingBoardPlayer[] {
   return [...list].sort((a, b) => {
     const uf = (Number(b.ufProbability) || 0) - (Number(a.ufProbability) || 0);
     if (uf !== 0) return uf;
+    const na = a.natlRank ?? a.natl ?? 9999;
+    const nb = b.natlRank ?? b.natl ?? 9999;
+    if (na !== nb) return na - nb;
     return (Number(b.fitScore) || 0) - (Number(a.fitScore) || 0);
   });
 }
 
-function CommitCard({
-  player,
-  rank,
-}: {
-  player: RecruitingBoardPlayer;
-  rank: number;
-}): React.ReactElement {
-  const slug = ensurePlayerSlug(player.slug, player.name);
-  const lifecycle = recruitingProfileLifecycle(player);
-  const href = playerProfilePath(slug, lifecycle, true, player.name, 'recruiting');
-
-  return (
-    <a href={href} className="gv-rh-card gv-rh-card--commit">
-      <div className="gv-rh-card__rank">#{rank}</div>
-      <div className="gv-rh-card__body">
-        <h3 className="gv-rh-card__name">{player.name}</h3>
-        <p className="gv-rh-card__meta">
-          {player.position || player.pos} · {player.school || '—'} · {player.classYear}
-          {player.stars ? ` · ${player.stars}★` : ''}
-        </p>
-        <div className="gv-rh-card__tags">
-          <span className="gv-rh-card__status">{player.status || 'Committed'}</span>
-          {player.staffGrade && <span className="gv-rh-card__grade">Grade {player.staffGrade}</span>}
-          {player.ufProbability != null && (
-            <span className="gv-rh-card__prob">UF {Math.round(Number(player.ufProbability) * 100)}%</span>
-          )}
-        </div>
-        {(player.notes || player.notePreview) && (
-          <p className="gv-rh-card__note">{player.notes || player.notePreview}</p>
-        )}
-      </div>
-    </a>
-  );
+function isVisitToday(visitStart?: string | null): boolean {
+  if (!visitStart) return false;
+  const today = new Date().toISOString().slice(0, 10);
+  return visitStart.slice(0, 10) <= today;
 }
 
-function TargetCard({
-  player,
-  rank,
-}: {
-  player: RecruitingBoardPlayer;
-  rank: number;
-}): React.ReactElement {
-  const slug = ensurePlayerSlug(player.slug, player.name);
-  const href = playerProfilePath(slug, 'HIGH_SCHOOL', true, player.name, 'recruiting');
-
-  return (
-    <a href={href} className="gv-rh-card gv-rh-card--target">
-      <div className="gv-rh-card__rank">{rank}</div>
-      <div className="gv-rh-card__body">
-        <h3 className="gv-rh-card__name">{player.name}</h3>
-        <p className="gv-rh-card__meta">
-          {player.position || player.pos} · {player.state || '—'} · {player.tierLabel || player.tier}
-        </p>
-        <div className="gv-rh-card__tags">
-          {player.ufProbability != null && (
-            <span className="gv-rh-card__prob">UF {Math.round(Number(player.ufProbability) * 100)}%</span>
-          )}
-          {player.fitScore != null && (
-            <span className="gv-rh-card__grade">Fit {Number(player.fitScore).toFixed(2)}</span>
-          )}
-        </div>
-      </div>
-    </a>
-  );
+function toElitePlayer(
+  player: RecruitingBoardPlayer,
+  extras?: Partial<EliteRecruitCardPlayer>
+): EliteRecruitCardPlayer {
+  return {
+    ...player,
+    isUFVisitToday: isVisitToday(player.visitStart),
+    ...extras,
+  };
 }
 
-function HeatCard({ item, direction }: { item: HeatCheckItem; direction: 'up' | 'down' }): React.ReactElement {
-  const slug = item.playerSlug ? ensurePlayerSlug(item.playerSlug, item.playerName) : '';
-  const inner = (
-    <>
-      <h3 className="gv-heat-card__name">{item.playerName}</h3>
-      <p className="gv-heat-card__label">{item.triggerLabel || direction}</p>
-      {item.headline && <p className="gv-heat-card__why">{item.headline}</p>}
-      {item.predictionSchool && <p className="gv-heat-card__school">{item.predictionSchool}</p>}
-    </>
-  );
-  if (slug) {
-    return (
-      <a href={playerProfilePath(slug, 'HIGH_SCHOOL', true, item.playerName, 'recruiting')} className={`gv-heat-card gv-heat-card--${direction === 'up' ? 'rising' : 'cooling'}`}>
-        {inner}
-      </a>
-    );
-  }
-  return <article className={`gv-heat-card gv-heat-card--${direction === 'up' ? 'rising' : 'cooling'}`}>{inner}</article>;
+function heatLabelForItem(item: HeatCheckItem): string {
+  if (item.direction === 'rising') return '🟩 UF Trending Up';
+  return '🟥 UF Trending Down';
 }
 
-function IntelSummary({
+function MovementIntelPanel({
+  intelSub,
+  setIntelSub,
+  rising,
+  cooling,
   risers,
   fallers,
   volatile,
 }: {
+  intelSub: IntelSubView;
+  setIntelSub: (v: IntelSubView) => void;
+  rising: HeatCheckItem[];
+  cooling: HeatCheckItem[];
   risers: StaffDashboardPlayer[];
   fallers: StaffDashboardPlayer[];
   volatile: StaffDashboardPlayer[];
 }): React.ReactElement {
   return (
-    <div className="gv-rh-intel">
-      <p className="gv-rh-intel__link">
-        <a href="/vault/futurecast/movement">Open full Movement Intel dashboard →</a>
-      </p>
-      <div className="gv-rh-intel__cols">
-        <div>
-          <h3 className="gv-vault-alerts__section-title">Top Risers</h3>
-          <ul className="gv-rh-intel__list">
-            {risers.slice(0, 5).map((p) => (
-              <li key={p.id}>
-                <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'recruiting')}>
-                  {p.name} {p.delta != null ? `(+${p.delta}%)` : ''}
-                </a>
-              </li>
-            ))}
-            {risers.length === 0 && <li className="gv-rh-intel__empty">No risers this window.</li>}
-          </ul>
-        </div>
-        <div>
-          <h3 className="gv-vault-alerts__section-title">Top Fallers</h3>
-          <ul className="gv-rh-intel__list">
-            {fallers.slice(0, 5).map((p) => (
-              <li key={p.id}>
-                <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'recruiting')}>
-                  {p.name} {p.delta != null ? `(${p.delta}%)` : ''}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h3 className="gv-vault-alerts__section-title">High Volatility</h3>
-          <ul className="gv-rh-intel__list">
-            {volatile.slice(0, 5).map((p) => (
-              <li key={p.id}>
-                <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'recruiting')}>
-                  {p.name} · {p.volatilityScore ?? '—'}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <div className="gv-rh-intel-unified">
+      <div className="gv-hub-tabs gv-hub-tabs--sub">
+        <button
+          type="button"
+          className={`gv-hub-tab${intelSub === 'heat' ? ' is-active' : ''}`}
+          onClick={() => setIntelSub('heat')}
+        >
+          Heat Check
+        </button>
+        <button
+          type="button"
+          className={`gv-hub-tab${intelSub === 'movement' ? ' is-active' : ''}`}
+          onClick={() => setIntelSub('movement')}
+        >
+          Movement Tracker
+        </button>
+        <button
+          type="button"
+          className={`gv-hub-tab${intelSub === 'confidence' ? ' is-active' : ''}`}
+          onClick={() => setIntelSub('confidence')}
+        >
+          Staff Confidence
+        </button>
       </div>
+
+      {intelSub === 'heat' && (
+        <div className="gv-heat-columns">
+          <div>
+            <h2 className="gv-vault-alerts__section-title">🔥 Trending Up</h2>
+            <div className="gv-elite-grid gv-elite-grid--heat">
+              {rising.map((item, i) => (
+                <EliteRecruitCard
+                  key={`${item.playerSlug ?? item.playerName}-${i}`}
+                  variant="heat"
+                  player={{
+                    slug: item.playerSlug ?? ensurePlayerSlug('', item.playerName),
+                    name: item.playerName,
+                    tier: 'HIGH',
+                    movementDirection: 'up',
+                    heatLabel: heatLabelForItem(item),
+                    insiderNote: item.headline ?? undefined,
+                    predictionSchools: item.predictionSchool
+                      ? [{ school: item.predictionSchool, pct: 75 }]
+                      : undefined,
+                  }}
+                />
+              ))}
+            </div>
+            {rising.length === 0 && <UiEmpty message="No risers right now." />}
+          </div>
+          <div>
+            <h2 className="gv-vault-alerts__section-title">🟥 Trending Down</h2>
+            <div className="gv-elite-grid gv-elite-grid--heat">
+              {cooling.map((item, i) => (
+                <EliteRecruitCard
+                  key={`${item.playerSlug ?? item.playerName}-${i}`}
+                  variant="heat"
+                  player={{
+                    slug: item.playerSlug ?? ensurePlayerSlug('', item.playerName),
+                    name: item.playerName,
+                    tier: 'HIGH',
+                    movementDirection: 'down',
+                    heatLabel: '🟥 UF Trending Down',
+                    insiderNote: item.headline ?? undefined,
+                  }}
+                />
+              ))}
+            </div>
+            {cooling.length === 0 && <UiEmpty message="No cooling signals." />}
+          </div>
+        </div>
+      )}
+
+      {intelSub === 'movement' && (
+        <div className="gv-rh-intel__cols">
+          <div>
+            <h3 className="gv-vault-alerts__section-title">▲ Top Risers</h3>
+            <ul className="gv-rh-intel__list">
+              {risers.slice(0, 10).map((p) => (
+                <li key={p.id}>
+                  <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'recruiting')}>
+                    {p.name} {p.delta != null ? `(+${p.delta}%)` : ''}
+                  </a>
+                </li>
+              ))}
+              {risers.length === 0 && <li className="gv-rh-intel__empty">No risers this window.</li>}
+            </ul>
+          </div>
+          <div>
+            <h3 className="gv-vault-alerts__section-title">▼ Top Fallers</h3>
+            <ul className="gv-rh-intel__list">
+              {fallers.slice(0, 10).map((p) => (
+                <li key={p.id}>
+                  <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'recruiting')}>
+                    {p.name} {p.delta != null ? `(${p.delta}%)` : ''}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className="gv-vault-alerts__section-title">🟨 High Volatility</h3>
+            <ul className="gv-rh-intel__list">
+              {volatile.slice(0, 10).map((p) => (
+                <li key={p.id}>
+                  <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'recruiting')}>
+                    {p.name} · {p.volatilityScore ?? '—'}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+
+      {intelSub === 'confidence' && (
+        <div className="gv-rh-staff-meter">
+          <p className="gv-page-subtitle">
+            Staff confidence meter — high-tier targets with grades appear in Scouting. Movement
+            signals feed FutureCast.
+          </p>
+          <p className="gv-rh-intel__link">
+            <a href="/vault/futurecast/movement">Open full Movement Intel dashboard →</a>
+          </p>
+        </div>
+      )}
     </div>
   );
 }
 
 export function VaultRecruitingHubPage(): React.ReactElement {
   const [tab, setTab] = useState<RecruitingHubTab>(() => resolveRecruitingTab());
-  const [b26, setB26] = useState<{ commits: RecruitingBoardPlayer[]; targets: RecruitingBoardPlayer[] }>({
+  const [intelSub, setIntelSub] = useState<IntelSubView>(() => {
+    if (typeof window === 'undefined') return 'heat';
+    return window.location.pathname.includes('heat-check') ? 'heat' : 'heat';
+  });
+  const [rankYear, setRankYear] = useState<2027 | 2028>(2027);
+  const [b27, setB27] = useState<{ commits: RecruitingBoardPlayer[]; targets: RecruitingBoardPlayer[] }>({
     commits: [],
     targets: [],
   });
-  const [b27, setB27] = useState<{ commits: RecruitingBoardPlayer[]; targets: RecruitingBoardPlayer[] }>({
+  const [b28, setB28] = useState<{ commits: RecruitingBoardPlayer[]; targets: RecruitingBoardPlayer[] }>({
     commits: [],
     targets: [],
   });
   const [rising, setRising] = useState<HeatCheckItem[]>([]);
   const [cooling, setCooling] = useState<HeatCheckItem[]>([]);
-  const [portal, setPortal] = useState<Awaited<ReturnType<typeof fetchPortalIncoming>>>([]);
   const [intel, setIntel] = useState<{
     risers: StaffDashboardPlayer[];
     fallers: StaffDashboardPlayer[];
@@ -218,8 +252,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
   const setTabAndUrl = useCallback((next: RecruitingHubTab) => {
     setTab(next);
     if (typeof window !== 'undefined') {
-      const path = recruitingTabPath(next);
-      window.history.replaceState(null, '', path);
+      window.history.replaceState(null, '', recruitingTabPath(next));
     }
   }, []);
 
@@ -234,24 +267,22 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     setLoading(true);
     setError(null);
     try {
-      const [d26, d27, heat, incoming, staff] = await Promise.all([
-        fetchRecruitingBoard(2026),
+      const [d27, d28, heat, staff] = await Promise.all([
         fetchRecruitingBoard(2027),
+        fetchRecruitingBoard(2028),
         fetchRecruitingHeatCheck(),
-        fetchPortalIncoming(48),
         fetchStaffDashboard().catch(() => null),
       ]);
-      setB26({
-        commits: rankCommits(filterRecruitingHsOnly(d26.commits ?? [])),
-        targets: rankTargets(filterRecruitingHsOnly(d26.targets ?? [])),
-      });
       setB27({
         commits: rankCommits(filterRecruitingHsOnly(d27.commits ?? [])),
         targets: rankTargets(filterRecruitingHsOnly(d27.targets ?? [])),
       });
+      setB28({
+        commits: rankCommits(filterRecruitingHsOnly(d28.commits ?? [])),
+        targets: rankTargets(filterRecruitingHsOnly(d28.targets ?? [])),
+      });
       setRising(heat.rising ?? []);
       setCooling(heat.cooling ?? []);
-      setPortal(incoming);
       if (staff) {
         setIntel({
           risers: staff.topRisers ?? [],
@@ -270,18 +301,49 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     void load();
   }, [load]);
 
+  const highPriority = useMemo(() => {
+    const headliners = b27.targets.filter((p) => p.headliner);
+    const rest = b27.targets.filter((p) => !p.headliner);
+    return rankTargets([...headliners, ...rest]).slice(0, 10);
+  }, [b27.targets]);
+
   const rankings = useMemo(() => {
-    return [...b27.targets, ...b26.targets].sort(
-      (a, b) => (Number(b.ufProbability) || 0) - (Number(a.ufProbability) || 0)
-    );
-  }, [b26.targets, b27.targets]);
+    const pool = rankYear === 2027 ? b27.targets : b28.targets;
+    return rankTargets(pool);
+  }, [b27.targets, b28.targets, rankYear]);
+
+  const renderGrid = (
+    players: RecruitingBoardPlayer[],
+    variant: 'commit' | 'target' | 'ranking' | 'priority',
+    emptyMsg: string
+  ) => (
+    <>
+      <div className="gv-elite-grid">
+        {players.map((p, i) => (
+          <EliteRecruitCard
+            key={ensurePlayerSlug(p.slug, p.name)}
+            player={toElitePlayer(p, {
+              movementDirection:
+                p.ufOvStatus === 'cancelled' ? 'down' : p.ufOvStatus === 'scheduled' ? 'up' : undefined,
+              predictionSchools: p.ufProbability
+                ? [{ school: 'Florida', pct: Math.round(Number(p.ufProbability) * 100) }]
+                : undefined,
+            })}
+            rank={i + 1}
+            variant={variant}
+          />
+        ))}
+      </div>
+      {players.length === 0 && <UiEmpty message={emptyMsg} />}
+    </>
+  );
 
   return (
-    <div className="gv-recruiting-hub gv-rh" data-testid="vault-recruiting-hub">
+    <div className="gv-recruiting-hub gv-rh gv-rh--elite" data-testid="vault-recruiting-hub">
       <div className="gv-page-hero">
         <h1 className="gv-page-title">Recruiting Hub</h1>
         <p className="gv-page-subtitle">
-          Commits, targets, portal, scouting, and movement intel in one place.{' '}
+          Elite UF recruiting intel — commits, targets, movement, and scouting.{' '}
           <a href="/vault/futurecast">FutureCast →</a> · <a href="/vault/team">Team →</a>
         </p>
       </div>
@@ -304,67 +366,36 @@ export function VaultRecruitingHubPage(): React.ReactElement {
         <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Dashboard" />
       )}
 
-      {!loading && !error && tab === 'commits-2026' && (
-        <div className="gv-rh-grid">
-          {b26.commits.map((p, i) => (
-            <CommitCard key={ensurePlayerSlug(p.slug, p.name)} player={p} rank={i + 1} />
-          ))}
-          {b26.commits.length === 0 && <UiEmpty message="No 2026 commits yet." />}
-        </div>
+      {!loading && !error && tab === 'priority' && (
+        <section className="gv-rh-priority">
+          <h2 className="gv-vault-alerts__section-title">Top 10 UF Priority Targets</h2>
+          <p className="gv-page-subtitle">
+            Insider intel, visit schedule, staff confidence, and prediction schools — the advantage
+            board.
+          </p>
+          {renderGrid(highPriority, 'priority', 'No priority targets loaded.')}
+        </section>
       )}
 
-      {!loading && !error && tab === 'commits-2027' && (
-        <div className="gv-rh-grid">
-          {b27.commits.map((p, i) => (
-            <CommitCard key={ensurePlayerSlug(p.slug, p.name)} player={p} rank={i + 1} />
-          ))}
-          {b27.commits.length === 0 && <UiEmpty message="No 2027 commits yet." />}
-        </div>
-      )}
+      {!loading && !error && tab === 'commits-2027' &&
+        renderGrid(b27.commits, 'commit', 'No 2027 commits yet.')}
 
-      {!loading && !error && tab === 'targets-2026' && (
-        <div className="gv-rh-grid">
-          {b26.targets.map((p, i) => (
-            <TargetCard key={ensurePlayerSlug(p.slug, p.name)} player={p} rank={i + 1} />
-          ))}
-          {b26.targets.length === 0 && <UiEmpty message="No 2026 targets." />}
-        </div>
-      )}
+      {!loading && !error && tab === 'targets-2027' &&
+        renderGrid(b27.targets, 'target', 'No 2027 targets.')}
 
-      {!loading && !error && tab === 'targets-2027' && (
-        <div className="gv-rh-grid">
-          {b27.targets.map((p, i) => (
-            <TargetCard key={ensurePlayerSlug(p.slug, p.name)} player={p} rank={i + 1} />
-          ))}
-          {b27.targets.length === 0 && <UiEmpty message="No 2027 targets." />}
-        </div>
-      )}
+      {!loading && !error && tab === 'targets-2028' &&
+        renderGrid(b28.targets, 'target', 'No 2028 targets yet — early discovery board coming soon.')}
 
-      {!loading && !error && tab === 'heat' && (
-        <div className="gv-rh-heat">
-          <div className="gv-heat-columns">
-            <div>
-              <h2 className="gv-vault-alerts__section-title">Trending Up</h2>
-              {rising.map((item, i) => (
-                <HeatCard key={`${item.playerName}-${i}`} item={item} direction="up" />
-              ))}
-              {rising.length === 0 && <UiEmpty message="No risers right now." />}
-            </div>
-            <div>
-              <h2 className="gv-vault-alerts__section-title">Trending Down</h2>
-              {cooling.map((item, i) => (
-                <HeatCard key={`${item.playerName}-${i}`} item={item} direction="down" />
-              ))}
-            </div>
-          </div>
-          <section className="gv-rh-staff-meter">
-            <h2 className="gv-vault-alerts__section-title">Staff Confidence Meter</h2>
-            <p className="gv-page-subtitle">
-              High-tier targets with staff grades appear in Scouting. Movement signals feed FutureCast.
-            </p>
-            <IntelSummary risers={intel.risers} fallers={intel.fallers} volatile={intel.volatile} />
-          </section>
-        </div>
+      {!loading && !error && tab === 'intel' && (
+        <MovementIntelPanel
+          intelSub={intelSub}
+          setIntelSub={setIntelSub}
+          rising={rising}
+          cooling={cooling}
+          risers={intel.risers}
+          fallers={intel.fallers}
+          volatile={intel.volatile}
+        />
       )}
 
       {!loading && !error && tab === 'scouting' && (
@@ -375,46 +406,40 @@ export function VaultRecruitingHubPage(): React.ReactElement {
 
       {!loading && !error && tab === 'portal' && (
         <div className="gv-rh-portal">
-          <a
-            href={playerProfilePath(ACE_PORTAL_SLUG, 'ROSTER', true, undefined, 'roster')}
-            className="gv-rh-portal-ace"
-          >
-            <span className="gv-rh-portal-ace__badge">ACE Portal Get</span>
-            <strong>Eric Singleton Jr.</strong>
-            <span>WR · Georgia Tech / Auburn transfer · WR1</span>
-          </a>
-          <h2 className="gv-vault-alerts__section-title">Incoming Transfers ({portal.length})</h2>
-          <ul className="gv-portal-incoming__list">
-            {portal.map((p) => (
-              <li key={p.id}>
-                <a href={playerProfilePath(p.slug, 'PORTAL', true, p.fullName, 'recruiting')} className="gv-portal-incoming__row">
-                  <span className="gv-portal-incoming__name">{p.fullName}</span>
-                  <span className="gv-portal-incoming__meta">
-                    {p.position} · {p.classYear}
-                    {p.previousSchool ? ` · from ${p.previousSchool}` : ''}
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-          <h2 className="gv-vault-alerts__section-title">Portal Watchlist</h2>
-          <PortalWatchlistGrid query={{ limit: 12, sort: 'likelihood' }} />
+          {!PORTAL_SEASON_OPEN ? (
+            <div className="gv-rh-portal-closed">
+              <span className="gv-rh-portal-closed__icon">🔒</span>
+              <h2 className="gv-vault-alerts__section-title">Portal Closed</h2>
+              <p className="gv-page-subtitle">
+                No active portal entries. When the transfer portal opens, this tab will show
+                incoming targets, portal commits, fit scores, eligibility remaining, and staff
+                confidence.
+              </p>
+            </div>
+          ) : null}
         </div>
-      )}
-
-      {!loading && !error && tab === 'intel' && (
-        <IntelSummary risers={intel.risers} fallers={intel.fallers} volatile={intel.volatile} />
       )}
 
       {!loading && !error && tab === 'rankings' && (
         <div className="gv-rh-rankings">
-          <h2 className="gv-vault-alerts__section-title">Priority Rankings (All Targets)</h2>
-          <div className="gv-rh-grid">
-            {rankings.slice(0, 40).map((p, i) => (
-              <TargetCard key={ensurePlayerSlug(p.slug, p.name)} player={p} rank={i + 1} />
-            ))}
+          <div className="gv-hub-tabs gv-hub-tabs--sub">
+            <button
+              type="button"
+              className={`gv-hub-tab${rankYear === 2027 ? ' is-active' : ''}`}
+              onClick={() => setRankYear(2027)}
+            >
+              2027
+            </button>
+            <button
+              type="button"
+              className={`gv-hub-tab${rankYear === 2028 ? ' is-active' : ''}`}
+              onClick={() => setRankYear(2028)}
+            >
+              2028
+            </button>
           </div>
-          {rankings.length === 0 && <UiEmpty message="No ranked targets." />}
+          <h2 className="gv-vault-alerts__section-title">Priority Rankings — {rankYear} Targets</h2>
+          {renderGrid(rankings.slice(0, 50), 'ranking', `No ${rankYear} ranked targets.`)}
         </div>
       )}
     </div>

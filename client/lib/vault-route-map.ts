@@ -4,15 +4,17 @@
  */
 
 export type RecruitingHubTab =
-  | 'commits-2026'
+  | 'priority'
   | 'commits-2027'
-  | 'targets-2026'
   | 'targets-2027'
-  | 'heat'
+  | 'targets-2028'
+  | 'intel'
   | 'scouting'
   | 'portal'
-  | 'intel'
   | 'rankings';
+
+/** @deprecated — 2026 cycle removed from hub; redirects to 2027 */
+export type LegacyRecruitingTab = 'commits-2026' | 'targets-2026' | 'heat';
 
 export type LiveFeedTab = 'headlines' | 'beat' | 'podcasts';
 
@@ -38,15 +40,22 @@ export const VAULT_PILLAR_ROUTES = {
 
 /** Recruiting Hub — path ↔ tab */
 export const RECRUITING_TAB_PATHS: Record<RecruitingHubTab, string> = {
-  'commits-2026': '/vault/recruiting/2026/commits',
+  priority: '/vault/recruiting/priority',
   'commits-2027': '/vault/recruiting/2027/commits',
-  'targets-2026': '/vault/recruiting/2026/targets',
   'targets-2027': '/vault/recruiting/2027/targets',
-  heat: '/vault/recruiting/heat-check',
+  'targets-2028': '/vault/recruiting/2028/targets',
+  intel: '/vault/recruiting/movement',
   scouting: '/vault/recruiting/scouting',
   portal: '/vault/recruiting/portal',
-  intel: '/vault/recruiting/movement',
-  rankings: '/vault/recruiting',
+  rankings: '/vault/recruiting/rankings',
+};
+
+/** Legacy paths → current tab (2026 removed, heat merged into movement intel) */
+export const RECRUITING_LEGACY_PATH_ALIASES: Record<string, RecruitingHubTab> = {
+  '/vault/recruiting': 'commits-2027',
+  '/vault/recruiting/2026/commits': 'commits-2027',
+  '/vault/recruiting/2026/targets': 'targets-2027',
+  '/vault/recruiting/heat-check': 'intel',
 };
 
 /** Live Feed tabs */
@@ -132,11 +141,14 @@ function normPath(pathname: string): string {
 
 export function parseRecruitingTabFromPath(pathname?: string): RecruitingHubTab | null {
   const p = normPath(pathname ?? (typeof window !== 'undefined' ? window.location.pathname : ''));
+  if (p in RECRUITING_LEGACY_PATH_ALIASES) {
+    return RECRUITING_LEGACY_PATH_ALIASES[p];
+  }
   for (const [tab, path] of Object.entries(RECRUITING_TAB_PATHS) as [RecruitingHubTab, string][]) {
     if (p === path || p.startsWith(`${path}/`)) return tab;
   }
-  if (p === '/vault/recruiting' || p.startsWith('/vault/recruiting/player/')) {
-    return 'commits-2026';
+  if (p.startsWith('/vault/recruiting/player/')) {
+    return 'commits-2027';
   }
   return null;
 }
@@ -149,7 +161,7 @@ export function parseRecruitingTabFromSearch(): RecruitingHubTab | null {
 }
 
 export function resolveRecruitingTab(pathname?: string): RecruitingHubTab {
-  return parseRecruitingTabFromPath(pathname) ?? parseRecruitingTabFromSearch() ?? 'commits-2026';
+  return parseRecruitingTabFromPath(pathname) ?? parseRecruitingTabFromSearch() ?? 'commits-2027';
 }
 
 export function recruitingTabPath(tab: RecruitingHubTab): string {
