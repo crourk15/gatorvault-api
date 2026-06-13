@@ -51,6 +51,12 @@ export interface PredictionFeedRow extends PredictionRow {
   class_year: number;
   position: string;
   lifecycle: string;
+  state?: string | null;
+  fit_scheme?: number | null;
+  fit_culture?: number | null;
+  fit_staff?: number | null;
+  fit_need?: number | null;
+  fit_geo?: number | null;
 }
 
 export interface PredictorStatsRow {

@@ -14,6 +14,30 @@ import {
 import type { SignalType } from '../shared/enums';
 import { FUTURECAST_PLAYERS_TABLE } from './player-types';
 
+export interface FitScoreBreakdown {
+  scheme: number;
+  culture: number;
+  staff: number;
+  need: number;
+  geo: number;
+}
+
+export function fitScoreBreakdownFromRow(row: {
+  fit_scheme?: number | null;
+  fit_culture?: number | null;
+  fit_staff?: number | null;
+  fit_need?: number | null;
+  fit_geo?: number | null;
+}): FitScoreBreakdown {
+  return {
+    scheme: row.fit_scheme ?? 0,
+    culture: row.fit_culture ?? 0,
+    staff: row.fit_staff ?? 0,
+    need: row.fit_need ?? 0,
+    geo: row.fit_geo ?? 0,
+  };
+}
+
 export interface ListPredictionsFilters {
   class_year?: number;
   position?: string;
@@ -78,7 +102,13 @@ export async function listPredictions(
       p.full_name,
       p.class_year,
       p.position,
-      p.status AS lifecycle
+      p.status AS lifecycle,
+      p.state,
+      p.fit_scheme,
+      p.fit_culture,
+      p.fit_staff,
+      p.fit_need,
+      p.fit_geo
     FROM ${FUTURECAST_PREDICTIONS_TABLE} pr
     JOIN ${FUTURECAST_PLAYERS_TABLE} p ON p.id = pr.player_id
     ${where}

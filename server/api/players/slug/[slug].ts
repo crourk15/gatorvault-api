@@ -3,6 +3,8 @@
  */
 import type { Request, Response } from 'express';
 import { getPlayerBySlug } from '../../../models/player';
+import { getUFSpecificProfileByPlayerId } from '../../../models/uf-specific-profile';
+import { buildFitScoreBreakdown } from '../fit-breakdown';
 import {
   asyncHandler,
   handleApiError,
@@ -25,8 +27,15 @@ export const handleGetPlayerBySlug = asyncHandler(async (req: Request, res: Resp
       return;
     }
 
+    const ufProfile = await getUFSpecificProfileByPlayerId(player.id);
+    const fitScoreBreakdown = buildFitScoreBreakdown(player, ufProfile);
+
     res.json({
-      player: serializeFullPlayer(player),
+      player: {
+        ...serializeFullPlayer(player),
+        ufFitScore: ufProfile?.uf_fit_score ?? null,
+        fitScoreBreakdown,
+      },
     });
   } catch (err) {
     handleApiError(res, err);

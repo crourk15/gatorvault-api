@@ -12,6 +12,7 @@ import {
   sendError,
 } from '../players/utils';
 import { PREDICTION_STATUSES } from '../../models/prediction-types';
+import { fitScoreBreakdownFromRow } from '../../models/predictions';
 
 export { asyncHandler, handleApiError, isUuid, parseLimit, parseOptionalInt, parsePosition, sendError };
 
@@ -48,6 +49,11 @@ export function serializeFeedPrediction(row: {
   status: string;
   created_at: string;
   updated_at: string;
+  fit_scheme?: number | null;
+  fit_culture?: number | null;
+  fit_staff?: number | null;
+  fit_need?: number | null;
+  fit_geo?: number | null;
 }) {
   return {
     id: row.id,
@@ -65,6 +71,7 @@ export function serializeFeedPrediction(row: {
     status: row.status,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    fitScoreBreakdown: fitScoreBreakdownFromRow(row),
   };
 }
 
