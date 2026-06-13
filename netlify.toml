@@ -40,6 +40,26 @@
   to = "/futurecast/index.html"
   status = 200
 
+[[redirects]]
+  from = "/recruiting-board"
+  to = "/recruiting-board/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/recruiting-board/*"
+  to = "/recruiting-board/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/recruiting"
+  to = "/recruiting-board/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/recruits"
+  to = "/recruiting-board/index.html"
+  status = 200
+
 [[headers]]
   for = "/favicon.ico"
   [headers.values]

@@ -39,7 +39,8 @@ const ADMIN_EMBED_PAGES = {
 
 function mountAdminRoutes(app) {
   const root = path.join(__dirname, '..');
-  const boardPage = path.join(root, 'recruiting-board.html');
+  const boardPage = path.join(root, 'recruiting-board', 'index.html');
+  const boardLegacy = path.join(root, 'recruiting-board.html');
   const hubPage = path.join(root, 'admin.html');
 
   app.get('/admin', (req, res) => {
@@ -74,24 +75,25 @@ function mountAdminRoutes(app) {
     });
   });
 
-  // Recruiting board — redirect to team section in hub (embed still served for iframes)
+  // Recruiting board admin — standalone page at /recruiting-board (embed for admin hub iframes)
   app.get('/recruiting-board', (req, res) => {
-    if (req.query.embed === '1') return res.sendFile(boardPage);
-    return res.redirect(302, '/admin#team/board');
+    return res.sendFile(boardPage);
+  });
+
+  app.get('/recruiting-board.html', (req, res) => {
+    return res.sendFile(boardLegacy);
   });
 
   app.get('/recruiting', (req, res) => {
-    if (req.query.embed === '1') return res.sendFile(boardPage);
-    return res.redirect(302, '/admin#team/board');
+    return res.redirect(302, '/recruiting-board');
   });
 
   app.get('/recruits', (req, res) => {
-    if (req.query.embed === '1') return res.sendFile(boardPage);
-    return res.redirect(302, '/admin#team/board');
+    return res.redirect(302, '/recruiting-board');
   });
 
   app.get('/admin/recruiting', (req, res) => {
-    if (req.query.embed === '1') return res.sendFile(boardPage);
+    if (req.query.embed === '1') return res.sendFile(path.join(root, 'recruiting-admin.html'));
     return res.redirect(302, '/admin#recruiting/alerts');
   });
 

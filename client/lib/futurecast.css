@@ -720,6 +720,155 @@
   gap: 1rem;
 }
 
+.fc-home-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.fc-home-card-grid--compact {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.fc-home-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-radius: 0.875rem;
+  background: linear-gradient(160deg, #0a1628 0%, #121c2e 100%);
+  border: 1px solid rgba(0, 48, 135, 0.4);
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fc-home-card:hover {
+  border-color: rgba(250, 70, 22, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.fc-home-card--commit {
+  border-top: 3px solid #22c55e;
+}
+
+.fc-home-card--target {
+  border-top: 3px solid #fa4616;
+}
+
+.fc-home-card--trending {
+  border-top: 3px solid #3b82f6;
+}
+
+.fc-home-card__media {
+  position: relative;
+  padding: 1rem 1rem 0;
+}
+
+.fc-home-card__photo {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 0.625rem;
+  object-fit: cover;
+  background: #0a1628;
+  border: 1px solid rgba(0, 48, 135, 0.35);
+}
+
+.fc-home-card__badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.fc-home-card__badge--commit {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.fc-home-card__badge--target {
+  background: rgba(250, 70, 22, 0.15);
+  color: #fb923c;
+  border: 1px solid rgba(250, 70, 22, 0.35);
+}
+
+.fc-home-card__body {
+  padding: 0.85rem 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.fc-home-card__name {
+  margin: 0;
+  font-family: Oswald, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.fc-home-card__meta {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.fc-home-card__school {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.fc-home-card__metrics {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.fc-home-card__metric {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.fc-home-card__metric--primary .fc-home-card__metric-value {
+  color: #fa4616;
+  font-family: Oswald, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.fc-home-card__metric-label {
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  font-size: 0.625rem;
+}
+
+.fc-home-card__metric-value {
+  color: #e2e8f0;
+  font-weight: 700;
+}
+
+.fc-home-card__trend {
+  margin-bottom: 0.15rem;
+}
+
 .fc-home-portal-grid {
   gap: 1rem;
 }

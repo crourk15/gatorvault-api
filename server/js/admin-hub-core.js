@@ -27,7 +27,7 @@
     feedback: '/admin-feedback.html?embed=1',
     monitoring: '/admin-monitoring.html?embed=1',
     'recruiting-alerts': '/recruiting-admin.html?embed=1',
-    board: '/recruiting-board.html?embed=1',
+    board: '/recruiting-board?embed=1',
     content: '/content-admin.html?embed=1',
     community: '/community-admin.html?embed=1',
     'war-room': '/war-room-admin.html?embed=1',

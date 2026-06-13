@@ -1348,6 +1348,12 @@
                         <button type="button" class="scouting-type-tab bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-stype="target">Targets</button>
                         <button type="button" class="scouting-type-tab bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-stype="roster">Roster</button>
                     </div>
+                    <div class="bg-surface-700 border border-gator-blue/20 rounded-2xl p-4">
+                        <h3 class="font-display text-lg font-bold text-white mb-1">Player Directory</h3>
+                        <p class="text-xs text-surface-200/60 mb-3">Search verified scouting profiles — opens in Vault, not FutureCast.</p>
+                        <input id="scouting-dir-search" type="text" class="reg-input text-sm mb-3" placeholder="Search by name, position, or category…" />
+                        <div id="scouting-player-directory" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+                    </div>
                     <div id="scouting-database-content" class="space-y-3"></div>
                 </div>
 
@@ -3021,7 +3027,7 @@
         html+='<p class="text-xs text-gator-orange font-semibold mt-1">'+gvEscHtml(gvScoutingTypeLabel(b.playerType))+(b.featured?' · ⭐ Featured':'')+'</p>';
         if(posLine)html+='<p class="text-sm text-surface-200/80 mt-2">'+gvEscHtml(posLine)+'</p>';
         html+='</div>';
-        html+='<a href="/player/'+gvEscHtml(b.playerSlug)+'" class="text-xs font-bold text-gator-orange whitespace-nowrap">Full profile →</a>';
+        html+='<button type="button" class="text-[.65rem] font-bold px-3 py-1.5 rounded-lg bg-surface-900 text-gator-orange border border-gator-orange/30 scouting-open-profile" data-slug="'+gvEscHtml(b.playerSlug)+'">Scouting Profile →</button>';
         html+='</div>';
         html+='<div class="grid grid-cols-2 md:grid-cols-3 gap-2 mt-3 text-xs">';
         if(loc)html+='<div class="bg-surface-900 rounded-lg p-2"><span class="text-surface-200/50 block">Location</span><span class="text-white font-semibold">'+gvEscHtml(loc)+'</span></div>';
@@ -3034,7 +3040,7 @@
         if(commit)html+='<p class="text-xs text-surface-200/60 mt-3">Committed: '+gvEscHtml(commit)+' to '+gvEscHtml(committedTo)+'</p>';
         html+='<div class="flex flex-wrap gap-2 mt-3">';
         html+='<a href="'+gvOn3PortalUrl(p||{slug:b.playerSlug})+'" target="_blank" rel="noopener noreferrer" class="text-[.65rem] font-bold px-3 py-1.5 rounded-lg bg-surface-900 text-surface-200 border border-gator-blue/20">On3 Profile →</a>';
-        html+='<button type="button" class="text-[.65rem] font-bold px-3 py-1.5 rounded-lg bg-surface-900 text-gator-orange border border-gator-orange/30" data-goto="recruit">Recruiting Board →</button>';
+        html+='<a href="/recruiting-board" class="text-[.65rem] font-bold px-3 py-1.5 rounded-lg bg-surface-900 text-gator-orange border border-gator-orange/30">Recruiting Board →</a>';
         html+='</div></div>';
         if(expanded&&b.strengths){
             html+='<div class="p-4 space-y-3">';
@@ -3079,7 +3085,12 @@
         el.innerHTML=filtered.map(function(b){
             return gvRenderWarRoomScoutingCard(b,false);
         }).join('');
-        el.querySelectorAll('.war-scout-expand').forEach(function(btn){
+        gvWireScoutingCards(el,filtered);
+        gvRenderScoutingDirectory(rows);
+    }
+    function gvWireScoutingCards(root,filtered){
+        if(!root)return;
+        root.querySelectorAll('.war-scout-expand').forEach(function(btn){
             btn.addEventListener('click',function(){
                 var slug=btn.getAttribute('data-slug');
                 var card=btn.closest('.war-scout-card');
@@ -3090,11 +3101,57 @@
                     var full=b;
                     if(war&&war.breakdown)full=Object.assign({},b,war.breakdown);
                     card.outerHTML=gvRenderWarRoomScoutingCard(full,true);
+                    gvWireScoutingCards(document.getElementById('scouting-database-content'),filtered);
                 }).catch(function(){
                     card.outerHTML=gvRenderWarRoomScoutingCard(b,true);
+                    gvWireScoutingCards(document.getElementById('scouting-database-content'),filtered);
                 });
             });
         });
+        root.querySelectorAll('.scouting-open-profile').forEach(function(btn){
+            btn.addEventListener('click',function(e){
+                e.preventDefault();e.stopPropagation();
+                var slug=btn.getAttribute('data-slug');
+                if(slug&&window.gvOpenRecruitProfile)gvOpenRecruitProfile(slug);
+            });
+        });
+    }
+    function gvRenderScoutingDirectory(list){
+        var grid=document.getElementById('scouting-player-directory');
+        var searchEl=document.getElementById('scouting-dir-search');
+        if(!grid)return;
+        var rows=(list||[]).filter(Boolean);
+        var q=searchEl?searchEl.value.trim().toLowerCase():'';
+        var type=window._gvScoutingType||'all';
+        var filtered=rows.filter(function(b){
+            if(type!=='all'&&b.playerType!==type)return false;
+            if(!q)return true;
+            var p=gvFindRecruitPlayer(b.playerSlug)||{};
+            var hay=[b.playerName,b.playerSlug,b.playerType,p.pos,p.school].filter(Boolean).join(' ').toLowerCase();
+            return hay.indexOf(q)>=0;
+        });
+        if(!filtered.length){
+            grid.innerHTML='<p class="text-surface-200/60 text-sm col-span-full py-4 text-center">No players match this search.</p>';
+            return;
+        }
+        grid.innerHTML=filtered.map(function(b){
+            return '<button type="button" class="scouting-dir-card text-left bg-surface-800 border border-gator-blue/20 rounded-xl p-3 hover:border-gator-orange/40 transition-colors w-full" data-slug="'+gvEscHtml(b.playerSlug)+'">'
+                +'<div class="font-display font-bold text-white text-sm">'+gvEscHtml(b.playerName||b.playerSlug)+'</div>'
+                +'<div class="text-xs text-gator-orange font-semibold mt-1">'+gvEscHtml(gvScoutingTypeLabel(b.playerType))+'</div>'
+                +'</button>';
+        }).join('');
+        grid.querySelectorAll('.scouting-dir-card').forEach(function(btn){
+            btn.addEventListener('click',function(){
+                var slug=btn.getAttribute('data-slug');
+                if(slug&&window.gvOpenRecruitProfile)gvOpenRecruitProfile(slug);
+            });
+        });
+        if(searchEl&&!window._gvScoutingDirSearchWired){
+            window._gvScoutingDirSearchWired=true;
+            searchEl.addEventListener('input',function(){
+                gvRenderScoutingDirectory(window._gvScoutingList||[]);
+            });
+        }
     }
     function gvLoadScoutingDatabase(force){
         var el=document.getElementById('scouting-database-content');
@@ -3158,8 +3215,8 @@
             var commit=p.commitDate?'<p class="text-xs text-surface-200/60 mb-3">Committed: '+gvEscHtml(p.commitDate)+(p.committedTo?' to '+gvEscHtml(p.committedTo):'')+'</p>':'';
             var warPlaceholder='<div id="recruit-war-room-'+gvEscHtml(p.slug)+'" class="war-room-panel"><h4>⚔️ War Room Scouting Report</h4><p class="war-room-empty">Loading…</p></div>';
             var links='<div class="flex flex-wrap gap-2 mt-2">'
-                +'<a href="/player/'+gvEscHtml(p.slug)+'" class="text-xs font-bold px-3 py-2 rounded-lg bg-gator-orange text-white">Full Profile →</a>'
                 +'<a href="'+gvOn3ProfileUrl(p)+'" target="_blank" rel="noopener noreferrer" class="text-xs font-bold px-3 py-2 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">On3 →</a>'
+                +'<a href="/recruiting-board" class="text-xs font-bold px-3 py-2 rounded-lg bg-surface-800 text-gator-orange border border-gator-orange/30">Recruiting Board →</a>'
                 +'</div>';
             body.innerHTML=head+meas+skinny+commit+warPlaceholder+links;
             gvFetchWarRoomBreakdown(p.slug).then(function(war){
@@ -3168,7 +3225,7 @@
             });
         }).catch(function(err){
             body.innerHTML='<p class="text-red-400 text-sm">'+gvEscHtml(err.message||'Could not load profile')+'</p>'
-                +'<a href="/player/'+gvEscHtml(slug)+'" class="text-xs font-bold text-gator-orange mt-2 inline-block">Try full profile page →</a>';
+                +'<a href="/recruiting-board" class="text-xs font-bold text-gator-orange mt-2 inline-block">Open Recruiting Board →</a>';
         });
     }
     window.gvOpenRecruitProfile=gvOpenRecruitProfile;
@@ -3221,6 +3278,7 @@
             this.classList.add('active','bg-gator-orange','text-white');this.classList.remove('bg-surface-700','text-surface-200');
             window._gvScoutingType=this.dataset.stype||'all';
             gvRenderScoutingDatabase(window._gvScoutingList,window._gvScoutingLocked);
+            gvRenderScoutingDirectory(window._gvScoutingList||[]);
         });
     });
     if(typeof gvUpdateWarRoomNav==='function')gvUpdateWarRoomNav();
@@ -4070,7 +4128,6 @@
             +'<p class="text-sm text-white leading-relaxed mt-4 border-l-4 border-gator-orange pl-4">'+gvEscHtml(p.stats||p.bio||'')+'</p>'
             +(p.bio&&p.stats&&p.bio!==p.stats?'<p class="text-xs text-surface-200/60 mt-3">'+gvEscHtml(p.bio)+'</p>':'')
             +'<div class="flex flex-wrap gap-2 mt-5">'
-            +'<button type="button" class="gv-full-profile-btn text-xs font-bold px-4 py-2 rounded-lg bg-gator-orange text-white" data-slug="'+gvEscHtml(p.slug||'')+'">Full Profile →</button>'
             +'<button type="button" class="player-modal-follow text-xs font-bold px-4 py-2 rounded-lg bg-surface-800 text-surface-200 border border-gator-blue/20">Follow</button>'
             +'</div>'
             +'<div id="roster-war-room-'+gvEscHtml(p.slug||'')+'" class="war-room-panel mt-5"><h4>War Room Scouting Report</h4><p class="war-room-empty">Loading…</p></div>';
@@ -4093,8 +4150,6 @@
                 renderPlayers();
             });
         }
-        var fullBtn=body.querySelector('.gv-full-profile-btn');
-        if(fullBtn)fullBtn.addEventListener('click',function(){var s=this.dataset.slug;if(s)location.href='/player/'+s;});
         modal.classList.add('open');
         modal.setAttribute('aria-hidden','false');
         document.body.classList.add('gv-profile-modal-open');
@@ -4207,11 +4262,10 @@
                 +'<div class="flex items-center justify-between gap-2 mt-2 flex-wrap">'
                 +'<div class="flex items-center gap-1.5 text-xs font-semibold '+inj.cls+'"><span>'+inj.dot+'</span><span>'+inj.label+'</span></div>'
                 +'<div class="flex items-center gap-1.5">'
-                +'<a href="/player/'+(p.slug||'')+'" class="text-[.65rem] font-bold text-gator-orange hover:underline gv-card-full-profile" onclick="event.stopPropagation()">Full Profile →</a>'
                 +'<button class="follow-player-btn text-xs px-2 py-1 rounded-lg flex-shrink-0 '+followClass+'" data-player="'+(p.name||'')+'">'+(followed?'Following':'Follow')+'</button>'
                 +'</div></div>';
             card.addEventListener('click',function(e){
-                if(e.target.closest('.follow-player-btn')||e.target.closest('.gv-card-full-profile'))return;
+                if(e.target.closest('.follow-player-btn'))return;
                 openPlayerProfile(p);
             });
             grid.appendChild(card);
@@ -5057,7 +5111,10 @@
 
     function gvSlugify(n){return String(n||'').toLowerCase().replace(/['']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');}
 
-    function gvPlayerLink(name,slug){var s=slug||gvSlugify(name);return '<a href="/player/'+s+'" class="text-gator-orange hover:text-white font-semibold">'+name+'</a>';}
+    function gvPlayerLink(name,slug){
+        var s=slug||gvSlugify(name);
+        return '<button type="button" class="text-gator-orange hover:text-white font-semibold bg-transparent border-0 p-0 cursor-pointer text-left font-display" data-recruit-slug="'+gvEscHtml(s)+'" onclick="event.preventDefault();event.stopPropagation();if(window.gvOpenRecruitProfile)gvOpenRecruitProfile(this.getAttribute(\'data-recruit-slug\'))">'+gvEscHtml(name)+'</button>';
+    }
     function gvFmtRank(v,prefix){if(v==null||v===''||v==='null'||Number.isNaN(Number(v)))return '—';return (prefix||'')+v;}
     function gvFmtRating(v){if(v==null||v===''||v==='null'||Number.isNaN(Number(v)))return '—';return Number(v).toFixed(2);}
     window._gvOfficialNames=null;

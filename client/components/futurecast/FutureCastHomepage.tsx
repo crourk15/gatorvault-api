@@ -4,8 +4,8 @@
  * FutureCast homepage — grouped 2027 cycle sections.
  */
 import React, { useCallback, useEffect, useState } from 'react';
+import { FutureCastHomeCard } from '@/components/futurecast/FutureCastHomeCard';
 import { MovementHeatmap } from '@/components/futurecast/MovementHeatmap';
-import { PredictionCard, feedPredictionToCard } from '@/components/PredictionCard';
 import {
   fetchFutureCastHome,
   type CommitSort,
@@ -151,14 +151,14 @@ export function FutureCastHomepage(): React.ReactElement {
 
       <Section
         title={`UF Commits (${data.classYear})`}
-        subtitle="Signed Gators — sorted by Fit Score or Stability"
+        subtitle="Sorted by Fit Score or Stability"
         testId="home-commits"
         actions={sortActions}
       >
         {data.commits.length > 0 ? (
-          <div className="fc-predictions-grid fc-home-grid">
+          <div className="fc-home-card-grid">
             {data.commits.map((p) => (
-              <PredictionCard key={p.playerId} prediction={feedPredictionToCard(p)} />
+              <FutureCastHomeCard key={p.playerId} prediction={p} variant="commit" />
             ))}
           </div>
         ) : (
@@ -172,9 +172,9 @@ export function FutureCastHomepage(): React.ReactElement {
         testId="home-targets"
       >
         {data.topTargets.length > 0 ? (
-          <div className="fc-predictions-grid fc-home-grid">
+          <div className="fc-home-card-grid">
             {data.topTargets.map((p) => (
-              <PredictionCard key={p.playerId} prediction={feedPredictionToCard(p)} />
+              <FutureCastHomeCard key={p.playerId} prediction={p} variant="target" />
             ))}
           </div>
         ) : (
@@ -188,9 +188,9 @@ export function FutureCastHomepage(): React.ReactElement {
         testId="home-trending-up"
       >
         {data.trendingUp.length > 0 ? (
-          <div className="fc-predictions-grid fc-home-grid">
+          <div className="fc-home-card-grid fc-home-card-grid--compact">
             {data.trendingUp.map((p) => (
-              <PredictionCard key={p.playerId} prediction={feedPredictionToCard(p)} />
+              <FutureCastHomeCard key={p.playerId} prediction={p} variant="trending" />
             ))}
           </div>
         ) : (
@@ -204,9 +204,9 @@ export function FutureCastHomepage(): React.ReactElement {
         testId="home-trending-down"
       >
         {data.trendingDown.length > 0 ? (
-          <div className="fc-predictions-grid fc-home-grid">
+          <div className="fc-home-card-grid fc-home-card-grid--compact">
             {data.trendingDown.map((p) => (
-              <PredictionCard key={p.playerId} prediction={feedPredictionToCard(p)} />
+              <FutureCastHomeCard key={p.playerId} prediction={p} variant="trending" />
             ))}
           </div>
         ) : (

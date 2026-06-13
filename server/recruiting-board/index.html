@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GatorVault — Recruiting Board Admin</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root { --bg:#030712; --panel:#0b1220; --border:#1e293b; --text:#e8edf5; --muted:#8b9bb4; --orange:#fa4616; --green:#22c55e; --red:#ef4444; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text)}
+    header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(3,7,18,.95);backdrop-filter:blur(8px);z-index:10}
+    h1{margin:0;font-family:Oswald,sans-serif;font-size:1.15rem;letter-spacing:.04em}
+    .sub{font-size:.75rem;color:var(--muted)}
+    main{padding:1rem 1.25rem 3rem;max-width:1400px;margin:0 auto}
+    input,button,select,textarea{font:inherit}
+    input[type=password],input[type=text],input[type=number],select,textarea{background:var(--panel);border:1px solid #334155;color:var(--text);padding:.5rem .75rem;border-radius:.5rem;width:100%}
+    button{background:var(--orange);color:#fff;border:0;padding:.5rem .9rem;border-radius:.5rem;cursor:pointer;font-weight:600}
+    button.secondary{background:#334155}
+    button.sm{padding:.35rem .6rem;font-size:.75rem}
+    button:disabled{opacity:.5;cursor:not-allowed}
+    .nav{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
+    .nav a{padding:.4rem .7rem;border-radius:.5rem;background:var(--panel);border:1px solid var(--border);font-size:.8rem;color:#60a5fa;text-decoration:none}
+    .layout{display:grid;grid-template-columns:minmax(300px,1fr) minmax(340px,1.1fr);gap:1rem;align-items:start}
+    @media(max-width:960px){.layout{grid-template-columns:1fr}}
+    .panel{background:var(--panel);border:1px solid var(--border);border-radius:.85rem;padding:.85rem 1rem}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.65rem;flex-wrap:wrap}
+    .panel-head h2{margin:0;font-size:.9rem}
+    table{width:100%;border-collapse:collapse;font-size:.8rem}
+    th,td{padding:.5rem .55rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+    th{color:var(--muted);font-size:.7rem;text-transform:uppercase}
+    tr.player-row{cursor:pointer}
+    tr.player-row:hover{background:rgba(255,255,255,.03)}
+    tr.player-row.selected{background:rgba(250,70,22,.08)}
+    .filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.65rem}
+    .filters input,.filters select{width:auto;min-width:120px;font-size:.8rem;padding:.35rem .55rem}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem}
+    @media(max-width:640px){.form-grid{grid-template-columns:1fr}}
+    label{display:block;font-size:.7rem;color:var(--muted);text-transform:uppercase;margin-bottom:.25rem;letter-spacing:.04em}
+    .field{margin-bottom:.65rem}
+    .actions{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border)}
+    .meta{font-size:.75rem;color:var(--muted)}
+    .pin-gate{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem}
+    .pin-card{background:var(--panel);border:1px solid var(--border);border-radius:1rem;padding:1.5rem;max-width:380px;width:100%}
+    .hidden{display:none!important}
+    .warn{color:var(--red);font-size:.8rem;margin:.5rem 0}
+    a{color:#60a5fa}
+    .badge{display:inline-block;font-size:.65rem;padding:.12rem .4rem;border-radius:.3rem;background:#334155;margin-left:.25rem}
+  </style>
+</head>
+<body>
+  <div id="pin-gate" class="pin-gate">
+    <div class="pin-card">
+      <h1>Recruiting Board</h1>
+      <p class="sub" style="margin:.5rem 0 1rem">Admin PIN required to view and edit players.</p>
+      <input id="gate-pin" type="password" placeholder="Admin PIN" autocomplete="off" style="margin-bottom:.75rem" />
+      <button id="gate-unlock" style="width:100%">Unlock</button>
+      <p id="gate-err" class="hidden warn">Invalid PIN</p>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <header>
+      <div>
+        <h1>Recruiting Board Admin</h1>
+        <div class="sub">Edit player records · fixes identity patterns + Autoposter resolution</div>
+      </div>
+      <div style="display:flex;gap:.5rem;align-items:center">
+        <input id="pin" type="password" placeholder="Session PIN" autocomplete="off" style="width:160px" />
+        <button id="refresh">Refresh</button>
+      </div>
+    </header>
+    <main>
+      <div class="nav">
+        <a href="/admin/ops">GV-OM</a>
+        <a href="/admin">Admin Hub</a>
+        <a href="/recruiting-admin.html">Recruiting Alerts</a>
+        <a href="/admin/ops/identity-patterns">Identity Patterns</a>
+      </div>
+
+      <div class="layout">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Players <span class="meta" id="player-count">—</span></h2>
+          </div>
+          <div class="filters">
+            <input id="search" type="text" placeholder="Search name or slug…" />
+            <select id="filter-class">
+              <option value="">All classes</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+            </select>
+            <select id="filter-category">
+              <option value="">All categories</option>
+              <option value="recruit">Recruit</option>
+              <option value="target">Target</option>
+              <option value="portal">Portal</option>
+            </select>
+          </div>
+          <div style="max-height:620px;overflow:auto">
+            <table>
+              <thead><tr><th>Name</th><th>Pos</th><th>Cls</th><th>★</th></tr></thead>
+              <tbody id="players-body"><tr><td colspan="4" class="meta">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2 id="edit-title">Player Editor</h2>
+            <span class="meta" id="edit-slug-label">Select a player</span>
+          </div>
+          <div id="edit-empty" class="meta" style="padding:1rem 0">Select a player from the list to edit. Saving regenerates identity patterns automatically.</div>
+          <form id="edit-form" class="hidden">
+            <div id="name-warn" class="warn hidden">Warning: name may be incomplete (missing last name) — fix before saving.</div>
+            <div class="form-grid">
+              <div class="field"><label>Full name *</label><input id="f-name" type="text" required /></div>
+              <div class="field"><label>Slug</label><input id="f-slug" type="text" readonly class="meta" /></div>
+              <div class="field"><label>Position</label><input id="f-pos" type="text" placeholder="WR" /></div>
+              <div class="field"><label>Class year</label><input id="f-class" type="number" placeholder="2027" /></div>
+              <div class="field"><label>Stars</label><input id="f-stars" type="number" min="0" max="5" /></div>
+              <div class="field"><label>National rank</label><input id="f-natl" type="number" /></div>
+              <div class="field"><label>Category</label>
+                <select id="f-category">
+                  <option value="recruit">recruit</option>
+                  <option value="target">target</option>
+                  <option value="portal">portal</option>
+                </select>
+              </div>
+              <div class="field"><label>Status</label>
+                <select id="f-status">
+                  <option value="committed">committed</option>
+                  <option value="uncommitted">uncommitted</option>
+                  <option value="decommitted">decommitted</option>
+                  <option value="portal_in">portal_in</option>
+                  <option value="enrolled">enrolled</option>
+                </select>
+              </div>
+              <div class="field"><label>School / Hometown</label><input id="f-school" type="text" /></div>
+              <div class="field"><label>Committed to</label><input id="f-committed" type="text" placeholder="Florida" /></div>
+              <div class="field"><label>Height / Weight</label><input id="f-htwt" type="text" placeholder="6-2 / 195" /></div>
+              <div class="field"><label>Rating</label><input id="f-rating" type="number" step="0.01" /></div>
+            </div>
+            <div class="field"><label>Skinny (alert line)</label><textarea id="f-skinny" rows="2"></textarea></div>
+            <div class="field"><label>Profile note</label><textarea id="f-note" rows="3"></textarea></div>
+            <div class="actions">
+              <button type="submit" id="btn-save">Save player</button>
+              <button type="button" id="btn-patterns" class="secondary sm">Rebuild patterns</button>
+              <a id="btn-profile" href="#" target="_blank" class="secondary sm" style="display:inline-block;padding:.35rem .6rem;border-radius:.5rem;text-decoration:none;background:#334155;color:#fff;font-weight:600">Open profile →</a>
+            </div>
+            <p class="meta" id="save-status"></p>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    var API = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000'
+      : 'https://gatorvault-api.onrender.com';
+
+    var state = { players: [], selectedSlug: null };
+
+    function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function pin(){return document.getElementById('pin').value.trim();}
+    function headers(){return {'Content-Type':'application/json','X-Ops-Pin':pin(),'X-Recruiting-Pin':pin()};}
+
+    function nameIncomplete(name){
+      var parts = String(name||'').trim().split(/\s+/).filter(Boolean);
+      return parts.length < 2;
+    }
+
+    function filteredPlayers(){
+      var q = document.getElementById('search').value.toLowerCase().trim();
+      var cls = document.getElementById('filter-class').value;
+      var cat = document.getElementById('filter-category').value;
+      return state.players.filter(function(p){
+        if(cls && String(p.classYear)!==cls) return false;
+        if(cat && p.category!==cat) return false;
+        if(q && !String(p.name||'').toLowerCase().includes(q) && !String(p.slug||'').toLowerCase().includes(q)) return false;
+        return true;
+      }).sort(function(a,b){ return String(a.name||'').localeCompare(String(b.name||'')); });
+    }
+
+    function renderList(){
+      var rows = filteredPlayers();
+      document.getElementById('player-count').textContent = '('+rows.length+'/'+state.players.length+')';
+      var tbody = document.getElementById('players-body');
+      if(!rows.length){
+        tbody.innerHTML = '<tr><td colspan="4" class="meta">No players match filters.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(function(p){
+        var sel = p.slug === state.selectedSlug ? ' selected' : '';
+        var warn = nameIncomplete(p.name) ? ' <span class="badge" style="background:rgba(239,68,68,.2);color:#f87171">!</span>' : '';
+        return '<tr class="player-row'+sel+'" data-slug="'+esc(p.slug)+'">'+
+          '<td><a href="/player/'+esc(p.slug)+'" target="_blank" style="color:#60a5fa;text-decoration:none" onclick="event.stopPropagation()">'+esc(p.name)+'</a>'+warn+'</td>'+
+          '<td>'+esc(p.pos||'—')+'</td><td>'+esc(p.classYear||'—')+'</td><td>'+esc(p.stars||'—')+'</td></tr>';
+      }).join('');
+      tbody.querySelectorAll('.player-row').forEach(function(row){
+        row.addEventListener('click', function(){ selectPlayer(row.getAttribute('data-slug')); });
+      });
+    }
+
+    function fillForm(p){
+      document.getElementById('edit-form').classList.remove('hidden');
+      document.getElementById('edit-empty').classList.add('hidden');
+      document.getElementById('edit-title').textContent = p.name || 'Player Editor';
+      document.getElementById('edit-slug-label').textContent = p.slug;
+      document.getElementById('f-name').value = p.name || '';
+      document.getElementById('f-slug').value = p.slug || '';
+      document.getElementById('f-pos').value = p.pos || '';
+      document.getElementById('f-class').value = p.classYear || '';
+      document.getElementById('f-stars').value = p.stars != null ? p.stars : '';
+      document.getElementById('f-natl').value = p.natlRank != null ? p.natlRank : '';
+      document.getElementById('f-category').value = p.category || 'target';
+      document.getElementById('f-status').value = p.status || 'uncommitted';
+      document.getElementById('f-school').value = p.school || '';
+      document.getElementById('f-committed').value = p.committedTo || '';
+      document.getElementById('f-htwt').value = p.htWt || '';
+      document.getElementById('f-rating').value = p.rating != null ? p.rating : '';
+      document.getElementById('f-skinny').value = p.skinny || '';
+      document.getElementById('f-note').value = p.profileNote || '';
+      document.getElementById('btn-profile').href = '/player/' + encodeURIComponent(p.slug);
+      document.getElementById('name-warn').classList.toggle('hidden', !nameIncomplete(p.name));
+      document.getElementById('save-status').textContent = p.updatedAt ? 'Last updated: ' + new Date(p.updatedAt).toLocaleString() : '';
+    }
+
+    function selectPlayer(slug){
+      state.selectedSlug = slug;
+      var p = state.players.find(function(x){ return x.slug === slug; });
+      if(p) fillForm(p);
+      renderList();
+      if(location.search.indexOf('slug=') < 0){
+        history.replaceState(null, '', location.pathname + '?slug=' + encodeURIComponent(slug));
+      }
+    }
+
+    function loadPlayers(){
+      var p = pin(); if(!p) return alert('PIN required');
+      return fetch(API+'/api/players?pin='+encodeURIComponent(p), { headers: headers() })
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          if(!j.ok) throw new Error(j.error || 'Failed to load players');
+          state.players = j.players || [];
+          renderList();
+          if(state.selectedSlug){
+            var hit = state.players.find(function(x){ return x.slug === state.selectedSlug; });
+            if(hit) fillForm(hit);
+          }
+        });
+    }
+
+    function savePlayer(e){
+      e.preventDefault();
+      var p = pin(); if(!p) return alert('PIN required');
+      var slug = document.getElementById('f-slug').value.trim();
+      var name = document.getElementById('f-name').value.trim();
+      if(!slug || !name) return alert('Name and slug required');
+      if(nameIncomplete(name) && !confirm('Name looks incomplete (single word). Save anyway?')) return;
+      var body = {
+        pin: p,
+        name: name,
+        pos: document.getElementById('f-pos').value.trim(),
+        classYear: document.getElementById('f-class').value ? parseInt(document.getElementById('f-class').value, 10) : null,
+        stars: document.getElementById('f-stars').value ? parseInt(document.getElementById('f-stars').value, 10) : 0,
+        natlRank: document.getElementById('f-natl').value ? parseInt(document.getElementById('f-natl').value, 10) : null,
+        category: document.getElementById('f-category').value,
+        status: document.getElementById('f-status').value,
+        school: document.getElementById('f-school').value.trim(),
+        committedTo: document.getElementById('f-committed').value.trim() || null,
+        htWt: document.getElementById('f-htwt').value.trim(),
+        rating: document.getElementById('f-rating').value ? Number(document.getElementById('f-rating').value) : null,
+        skinny: document.getElementById('f-skinny').value.trim(),
+        profileNote: document.getElementById('f-note').value.trim()
+      };
+      var btn = document.getElementById('btn-save');
+      btn.disabled = true;
+      fetch(API+'/api/recruiting/players/'+encodeURIComponent(slug), { method:'POST', headers: headers(), body: JSON.stringify(body) })
+        .then(function(r){ return r.json().then(function(j){ return { status: r.status, body: j }; }); })
+        .then(function(res){
+          if(res.status === 401) throw new Error('Invalid PIN');
+          if(!res.body.ok) throw new Error(res.body.error || 'Save failed');
+          var idx = state.players.findIndex(function(x){ return x.slug === slug; });
+          if(idx >= 0) state.players[idx] = res.body.player;
+          else state.players.push(res.body.player);
+          fillForm(res.body.player);
+          renderList();
+          document.getElementById('save-status').textContent = 'Saved · identity patterns regenerated · ' + new Date().toLocaleString();
+        })
+        .catch(function(err){ alert('Save error: ' + err.message); })
+        .finally(function(){ btn.disabled = false; });
+    }
+
+    function rebuildPatterns(){
+      var p = pin(); if(!p) return alert('PIN required');
+      var slug = document.getElementById('f-slug').value.trim();
+      if(!slug) return alert('Select a player first');
+      fetch(API+'/api/recruiting/identity/patterns/rebuild', { method:'POST', headers: headers(), body: JSON.stringify({ pin: p, slug: slug }) })
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          if(!j.ok) throw new Error(j.error || 'Rebuild failed');
+          alert('Rebuilt ' + (j.patternCount || 0) + ' patterns for ' + slug);
+        })
+        .catch(function(e){ alert(e.message); });
+    }
+
+    function verifyAdminAccess(p) {
+      var headers = { 'X-Ops-Pin': p, 'X-Recruiting-Pin': p };
+      return fetch(API + '/api/ops/verify-pin?pin=' + encodeURIComponent(p), {
+        headers: headers
+      })
+        .then(function (r) {
+          if (r.status === 404) {
+            return fetch(API + '/api/ops/status?pin=' + encodeURIComponent(p), { headers: headers })
+              .then(function (sr) {
+                if (sr.status === 401) throw new Error('Invalid PIN');
+                return sr.json().then(function (j) {
+                  if (!j.ok) throw new Error(j.error || 'Invalid PIN');
+                  return j;
+                });
+              });
+          }
+          if (r.status === 401) throw new Error('Invalid PIN');
+          return r.json().then(function (j) {
+            if (!j.ok) throw new Error(j.error || 'Invalid PIN');
+            return j;
+          });
+        });
+    }
+
+    function unlock(){
+      var p = document.getElementById('gate-pin').value.trim();
+      if (!p) return;
+      document.getElementById('gate-err').classList.add('hidden');
+      verifyAdminAccess(p)
+        .then(function(){
+          document.getElementById('pin').value = p;
+          sessionStorage.setItem('gv_ops_pin', p);
+          sessionStorage.setItem('gv_admin_pin', p);
+          document.getElementById('pin-gate').classList.add('hidden');
+          document.getElementById('app').classList.remove('hidden');
+          var params = new URLSearchParams(location.search);
+          var slug = params.get('slug');
+          if (slug) state.selectedSlug = slug;
+          return loadPlayers();
+        })
+        .catch(function(e){
+          document.getElementById('gate-err').textContent = e.message || 'Invalid PIN';
+          document.getElementById('gate-err').classList.remove('hidden');
+        });
+    }
+
+    window.__gvAdminEmbedUnlock = function(p) {
+      if (!p) return;
+      document.getElementById('pin').value = p;
+      document.getElementById('gate-pin').value = p;
+      sessionStorage.setItem('gv_ops_pin', p);
+      sessionStorage.setItem('gv_admin_pin', p);
+      document.getElementById('pin-gate').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+      loadPlayers();
+    };
+
+    document.addEventListener('gv-admin-embed-unlock', function(e) {
+      if (e.detail && e.detail.pin) window.__gvAdminEmbedUnlock(e.detail.pin);
+    });
+
+    document.getElementById('gate-unlock').addEventListener('click', unlock);
+    document.getElementById('gate-pin').addEventListener('keydown', function(e){ if(e.key==='Enter') unlock(); });
+    document.getElementById('refresh').addEventListener('click', loadPlayers);
+    document.getElementById('search').addEventListener('input', renderList);
+    document.getElementById('filter-class').addEventListener('change', renderList);
+    document.getElementById('filter-category').addEventListener('change', renderList);
+    document.getElementById('edit-form').addEventListener('submit', savePlayer);
+    document.getElementById('btn-patterns').addEventListener('click', rebuildPatterns);
+    document.getElementById('f-name').addEventListener('input', function(e){
+      document.getElementById('name-warn').classList.toggle('hidden', !nameIncomplete(e.target.value));
+    });
+
+    (function init(){
+      var saved = sessionStorage.getItem('gv_ops_pin');
+      var params = new URLSearchParams(location.search);
+      if(params.get('slug')) state.selectedSlug = params.get('slug');
+      if(saved){
+        document.getElementById('gate-pin').value = saved;
+        unlock();
+      }
+    })();
+  </script>
+  <script src="/js/admin-embed.js"></script>
+</body>
+</html>

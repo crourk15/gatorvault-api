@@ -19,7 +19,7 @@ export const handleGetBigBoard = asyncHandler(async (req: Request, res: Response
   try {
     const class_year = parseOptionalInt(req.query.class_year, 'class_year');
     const position = parsePosition(req.query.position);
-    const lifecycle = parseLifecycle(req.query.lifecycle);
+    const lifecycle = parseLifecycle(req.query.lifecycle) ?? 'HS';
     const sort = parseSort(req.query.sort);
     const order = parseOrder(req.query.order);
     const limit = parseLimit(req.query.limit, 200, 500);

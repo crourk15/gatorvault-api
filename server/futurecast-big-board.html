@@ -213,10 +213,7 @@
       </label>
       <label>Lifecycle
         <select id="filter-lifecycle">
-          <option value="">All</option>
-          <option value="HS">HS</option>
-          <option value="COLLEGE">College</option>
-          <option value="PORTAL">Portal</option>
+          <option value="HS">High School (Recruits)</option>
         </select>
       </label>
       <label>Sort
@@ -235,7 +232,7 @@
       ? 'http://localhost:3000' : '';
 
     var TABS = [
-      { id: 'rank', label: 'Rankings', sort: 'rank' },
+      { id: 'rank', label: 'Rankings', sort: 'rank', lifecycle: 'HS' },
       { id: 'top-targets', label: 'Top Targets', sort: 'ufFit' },
       { id: 'early-discovery', label: 'Early Discovery', sort: 'signals', lifecycle: 'HS' },
       { id: 'portal-watchlist', label: 'Portal Watchlist', sort: 'portalLikelihood', lifecycle: 'PORTAL' },
@@ -254,9 +251,9 @@
     var CLASS_YEARS = [2025, 2026, 2027, 2028, 2029];
 
     var state = {
-      classYear: 2026,
+      classYear: 2027,
       position: '',
-      lifecycle: '',
+      lifecycle: 'HS',
       sort: 'rank',
       activeTab: 'rank',
       players: []
@@ -371,7 +368,7 @@
       grid.querySelectorAll('.fc-card').forEach(function (card) {
         card.addEventListener('click', function () {
           var slug = card.getAttribute('data-slug');
-          if (slug) location.href = '/futurecast/player/' + encodeURIComponent(slug);
+          if (slug) location.href = '/player/' + encodeURIComponent(slug);
         });
       });
     }

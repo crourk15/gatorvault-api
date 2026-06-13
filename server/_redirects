@@ -34,9 +34,11 @@
 /admin-ops/articles/*  /admin-ops-article-view.html  200
 /admin/ops/articles/*  /admin-ops-article-view.html  200
 /vault/ops  /admin.html  200
-/recruiting-board  /admin.html  200
-/recruiting  /admin.html  200
-/recruits  /admin.html  200
-/admin/recruiting  /admin.html  200
+/recruiting-board  /recruiting-board/index.html  200
+/recruiting-board/  /recruiting-board/index.html  200
+/recruiting-board/*  /recruiting-board/index.html  200
+/recruiting  /recruiting-board/index.html  200
+/recruits  /recruiting-board/index.html  200
 /admin/recruiting-board  /admin.html  200
+/admin/recruiting  /admin.html  200
 /players  /?open=vault&tab=players  302

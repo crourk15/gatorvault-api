@@ -100,9 +100,6 @@ export function PredictionCard({ prediction }: PredictionCardProps): React.React
               Volatility: {prediction.volatilityScore}
             </p>
           )}
-          <p className="fc-prediction-card-v2__date">
-            {new Date(prediction.createdAt).toLocaleString()}
-          </p>
         </div>
       </div>
     </a>
