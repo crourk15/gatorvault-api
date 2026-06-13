@@ -8,15 +8,13 @@ import {
   type RecruitingBoardPlayer,
   type RecruitingBoardTier,
 } from '@/lib/recruiting-board-api';
-import { playerProfilePath, recruitingProfileLifecycle } from '@/lib/player-routes';
+import { playerPos } from '@/lib/recruiting-board-utils';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
+import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
+import { resolveCardVariant } from '@/lib/recruiting-card-adapters';
 
 type SortMode = 'ufProbability' | 'fitScore' | 'staffGrade' | 'name';
 type TierFilter = 'all' | RecruitingBoardTier;
-
-function playerPos(p: RecruitingBoardPlayer): string {
-  return p.position || p.pos || '—';
-}
 
 function sortPlayers(list: RecruitingBoardPlayer[], sort: SortMode): RecruitingBoardPlayer[] {
   const copy = [...list];
@@ -28,56 +26,6 @@ function sortPlayers(list: RecruitingBoardPlayer[], sort: SortMode): RecruitingB
     return copy.sort((a, b) => (Number(b.fitScore) || 0) - (Number(a.fitScore) || 0));
   }
   return copy.sort((a, b) => (Number(b.ufProbability) || 0) - (Number(a.ufProbability) || 0));
-}
-
-function BoardCard({
-  player,
-  inVault,
-}: {
-  player: RecruitingBoardPlayer;
-  inVault?: boolean;
-}): React.ReactElement {
-  const href = playerProfilePath(
-    player.slug,
-    recruitingProfileLifecycle(player),
-    inVault
-  );
-  const note = player.notes || player.notePreview || player.skinny || player.profileNote;
-
-  return (
-    <article className="gv-board-card gv-board-card--target">
-      <div className="gv-board-card__top">
-        <span className={`gv-board-tier gv-board-tier--${player.tier}`}>
-          {player.tierLabel || TIER_LABELS[player.tier]}
-        </span>
-        <span className="gv-board-eval">{player.status || '—'}</span>
-      </div>
-      <a href={href} className="gv-board-card__link-block">
-        <div className="gv-board-card__top">
-          <h3 className="gv-board-card__name">{player.name}</h3>
-          <span className="gv-board-card__pos">{playerPos(player)}</span>
-        </div>
-        <p className="gv-board-card__school">
-          {player.school || '—'} · {player.state || '—'} · {player.classYear || '—'}
-        </p>
-        <div className="gv-board-card__meta">
-          {player.ufProbability != null && (
-            <span className="gv-board-card__rating">UF {Math.round(player.ufProbability * 100)}%</span>
-          )}
-          {player.fitScore != null && (
-            <span className="gv-board-card__rating">Fit {Number(player.fitScore).toFixed(2)}</span>
-          )}
-          {player.staffGrade && (
-            <span className="gv-board-card__rating">Grade {player.staffGrade}</span>
-          )}
-        </div>
-      </a>
-      {note && <p className="gv-board-card__note">{note}</p>}
-      <a href={href} className="gv-board-card__profile-link">
-        Full Profile →
-      </a>
-    </article>
-  );
 }
 
 export function RecruitingBoardPage({ inVault = false }: { inVault?: boolean }): React.ReactElement {
@@ -225,9 +173,13 @@ export function RecruitingBoardPage({ inVault = false }: { inVault?: boolean }):
             <h2 className="gv-page-section__title">{section.label}</h2>
             <span className="gv-page-section__badge">{section.players.length}</span>
           </div>
-          <div className="gv-board-grid">
+          <div className="gv-rb-grid">
             {section.players.map((p) => (
-              <BoardCard key={p.slug} player={p} inVault={inVault} />
+              <ClassicRecruitCard
+                key={p.slug}
+                player={p}
+                variant={resolveCardVariant(p, p.isCommittedToUF ? 'commit' : 'target')}
+              />
             ))}
           </div>
         </section>

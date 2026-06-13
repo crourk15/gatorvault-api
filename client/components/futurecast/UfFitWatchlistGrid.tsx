@@ -2,13 +2,10 @@
  * UF Fit Watchlist grid — GET /api/uf-fit/watchlist
  */
 import React, { useCallback, useEffect, useState } from 'react';
-import { playerProfilePath } from '@/lib/player-routes';
-import { usePathname } from '@/lib/use-pathname';
-import { isVaultPath } from '@/lib/vault-routes';
+import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
+import { fromUfFitWatchlist } from '@/lib/recruiting-card-adapters';
 import {
   fetchUfFitWatchlist,
-  fitTierLabel,
-  formatFitDelta,
   type UfFitWatchlistPlayer,
   type UfFitWatchlistQuery,
 } from '../../lib/uf-fit-api';
@@ -18,8 +15,6 @@ export interface UfFitWatchlistGridProps {
 }
 
 export function UfFitWatchlistGrid({ query }: UfFitWatchlistGridProps): React.ReactElement {
-  const pathname = usePathname();
-  const inVault = isVaultPath(pathname);
   const [players, setPlayers] = useState<UfFitWatchlistPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,26 +42,14 @@ export function UfFitWatchlistGrid({ query }: UfFitWatchlistGridProps): React.Re
   if (!players.length) return <div className="fc-big-board-empty">No players match these filters.</div>;
 
   return (
-    <div className="fc-uf-fit-grid" data-testid="uf-fit-watchlist-grid">
+    <div className="gv-rb-grid" data-testid="uf-fit-watchlist-grid">
       {players.map((p) => (
-        <a
+        <ClassicRecruitCard
           key={p.id}
-          href={`${playerProfilePath(p.slug, p.lifecycle ?? 'HIGH_SCHOOL', inVault)}?tab=uf-fit`}
-          className="fc-uf-fit-card"
-        >
-          <span className="fc-uf-fit-card__rank">#{p.rank}</span>
-          <h3 className="fc-uf-fit-card__name">{p.fullName}</h3>
-          <p className="fc-uf-fit-card__meta">{p.position} · {p.classYear}</p>
-          <div className="fc-uf-fit-card__scores">
-            <span className={`fc-fit-badge fc-fit-badge--${p.fitTier}`}>
-              {fitTierLabel(p.fitTier)} · {p.ufFitScore}
-            </span>
-            <span className={`fc-uf-fit-delta${p.fitDelta >= 0 ? ' fc-uf-fit-delta--up' : ' fc-uf-fit-delta--down'}`}>
-              Δ {formatFitDelta(p.fitDelta)}
-            </span>
-            <span className="fc-portal-metric">Vol {p.fitVolatility}</span>
-          </div>
-        </a>
+          player={fromUfFitWatchlist(p)}
+          variant="target"
+          rank={p.rank}
+        />
       ))}
     </div>
   );

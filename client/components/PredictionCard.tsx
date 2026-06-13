@@ -1,21 +1,20 @@
 /**
- * FutureCast prediction card — MODEL pick with confidence bar.
+ * FutureCast prediction card — ClassicRecruitCard only.
  */
+'use client';
+
 import React from 'react';
-import { sourceTypeLabel, type FeedPrediction } from '../lib/predictions-api';
-import { PredictionBadge } from './futurecast/PredictionBadge';
-import { ConfidenceBar } from './futurecast/ConfidenceBar';
-import { TrendingIndicator } from './futurecast/TrendingIndicator';
+import { type FeedPrediction } from '../lib/predictions-api';
+import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
+import { fromFeedPrediction } from '@/lib/recruiting-card-adapters';
 
 export interface PredictionCardData {
   playerId: string;
   playerSlug?: string;
   playerName: string;
-  photoUrl?: string | null;
   position: string;
   class: number | string;
   team: string;
-  type: string;
   confidence: number;
   delta?: number;
   ufFitScore?: number | null;
@@ -29,22 +28,14 @@ export interface PredictionCardProps {
   prediction: PredictionCardData;
 }
 
-const PLACEHOLDER_PHOTO =
-  'data:image/svg+xml,' +
-  encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect fill="#0D1117" width="64" height="64" rx="8"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#8B949E" font-size="22" font-family="sans-serif">?</text></svg>'
-  );
-
 export function feedPredictionToCard(p: FeedPrediction): PredictionCardData {
   return {
     playerId: p.playerId,
     playerSlug: p.playerSlug,
     playerName: p.fullName,
-    photoUrl: null,
     position: p.position,
     class: p.classYear,
     team: p.school,
-    type: `${sourceTypeLabel(p.sourceType).toLowerCase()} pick`,
     confidence: p.confidence,
     delta: p.delta,
     ufFitScore: p.ufFitScore,
@@ -55,53 +46,37 @@ export function feedPredictionToCard(p: FeedPrediction): PredictionCardData {
   };
 }
 
-export function PredictionCard({ prediction }: PredictionCardProps): React.ReactElement {
-  const href = prediction.playerSlug
-    ? `/player/${encodeURIComponent(prediction.playerSlug)}`
-    : `/player/${encodeURIComponent(prediction.playerId)}`;
+function cardDataToFeed(data: PredictionCardData): FeedPrediction {
+  return {
+    id: data.playerId,
+    playerId: data.playerId,
+    playerSlug: data.playerSlug ?? data.playerId,
+    fullName: data.playerName,
+    classYear: Number(data.class) || 2027,
+    position: data.position,
+    lifecycle: 'HIGH_SCHOOL',
+    school: data.team,
+    confidence: data.confidence,
+    delta: data.delta,
+    sourceType: 'MODEL',
+    predictorId: 'model',
+    status: 'ACTIVE',
+    createdAt: data.createdAt,
+    updatedAt: data.createdAt,
+    ufFitScore: data.ufFitScore,
+    ufProbability: data.ufProbability,
+    stabilityScore: data.stabilityScore,
+    volatilityScore: data.volatilityScore,
+  };
+}
 
+export function PredictionCard({ prediction }: PredictionCardProps): React.ReactElement {
   return (
-    <a className="fc-prediction-card-v2" href={href} data-testid="prediction-card">
-      <img
-        src={prediction.photoUrl || PLACEHOLDER_PHOTO}
-        alt={prediction.playerName}
-        className="fc-prediction-card-v2__photo"
+    <div data-testid="prediction-card">
+      <ClassicRecruitCard
+        player={fromFeedPrediction(cardDataToFeed(prediction), 'target')}
+        variant="target"
       />
-      <div className="fc-prediction-card-v2__body">
-        <div>
-          <h3 className="fc-prediction-card-v2__name">{prediction.playerName}</h3>
-          <p className="fc-prediction-card-v2__meta">
-            {prediction.position} • {prediction.class}
-          </p>
-        </div>
-        <div className="fc-prediction-card-v2__pick">
-          <PredictionBadge type={prediction.type} team={prediction.team} />
-          {prediction.delta !== undefined && (
-            <div className="fc-prediction-card-v2__delta">
-              <TrendingIndicator delta={prediction.delta} />
-            </div>
-          )}
-          <ConfidenceBar value={prediction.confidence} />
-          {prediction.ufProbability != null && (
-            <p className="fc-prediction-card-v2__metric">
-              UF Probability: {prediction.ufProbability}%
-            </p>
-          )}
-          {prediction.ufFitScore != null && (
-            <p className="fc-prediction-card-v2__metric">
-              Fit Score: {prediction.ufFitScore}
-              {prediction.stabilityScore != null && (
-                <span> · Stability: {prediction.stabilityScore}</span>
-              )}
-            </p>
-          )}
-          {prediction.volatilityScore !== undefined && (
-            <p className="fc-prediction-card-v2__volatility">
-              Volatility: {prediction.volatilityScore}
-            </p>
-          )}
-        </div>
-      </div>
-    </a>
+    </div>
   );
 }

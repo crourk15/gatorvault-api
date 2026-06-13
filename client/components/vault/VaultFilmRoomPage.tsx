@@ -83,58 +83,60 @@ export function VaultFilmRoomPage(): React.ReactElement {
         <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
       )}
 
-      {!loading && !error && (
+      {!hub && (
+        <div className="gv-film-hub-grid" data-testid="film-room-hub">
+          {FILM_HUB_ORDER.map((name) => (
+            <button
+              key={name}
+              type="button"
+              className="gv-film-hub-card"
+              onClick={() => setHub(name)}
+              disabled={loading}
+            >
+              <span className="gv-film-hub-card__icon">{HUB_ICONS[name] ?? '📺'}</span>
+              <h2 className="gv-film-hub-card__title">{name}</h2>
+              <p className="gv-film-hub-card__count">
+                {loading ? '…' : `${hubCounts[name] ?? 0} lessons`}
+              </p>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {!loading && !error && hub && (
         <>
-          {!hub ? (
-            <div className="gv-film-hub-grid">
-              {FILM_HUB_ORDER.map((name) => (
-                <button
-                  key={name}
-                  type="button"
-                  className="gv-film-hub-card"
-                  onClick={() => setHub(name)}
-                >
-                  <span className="gv-film-hub-card__icon">{HUB_ICONS[name] ?? '📺'}</span>
-                  <h2 className="gv-film-hub-card__title">{name}</h2>
-                  <p className="gv-film-hub-card__count">{hubCounts[name] ?? 0} lessons</p>
-                </button>
-              ))}
-            </div>
-          ) : (
-            <>
-              <button type="button" className="gv-film-back" onClick={() => setHub(null)}>
-                ← All categories
-              </button>
-              <h2 className="gv-vault-alerts__section-title">{hub}</h2>
-              <div className="gv-film-lessons">
-                {filtered.map((item) => (
-                  <article key={item.id} className="gv-film-lesson">
-                    <h3 className="gv-film-lesson__title">{item.title}</h3>
-                    {item.dek ? <p className="gv-film-lesson__dek">{item.dek}</p> : null}
-                    <p className="gv-film-lesson__meta">
-                      {item.source || 'Verified source'}
-                      {item.locked ? ' · 🔒 Film tier' : ''}
-                    </p>
-                    {item.sourceUrl && !item.locked ? (
-                      <a
-                        href={item.sourceUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="gv-film-lesson__link"
-                      >
-                        Open source →
-                      </a>
-                    ) : null}
-                  </article>
-                ))}
-                {filtered.length === 0 && <UiEmpty message="No lessons in this category yet." />}
-              </div>
-            </>
-          )}
-          {items.length === 0 && !hub && (
-            <UiEmpty message="Film Room catalog is empty." hint="Run ensure:film-room on the API." />
-          )}
+          <button type="button" className="gv-film-back" onClick={() => setHub(null)}>
+            ← All categories
+          </button>
+          <h2 className="gv-vault-alerts__section-title">{hub}</h2>
+          <div className="gv-film-lessons">
+            {filtered.map((item) => (
+              <article key={item.id} className="gv-film-lesson">
+                <h3 className="gv-film-lesson__title">{item.title}</h3>
+                {item.dek ? <p className="gv-film-lesson__dek">{item.dek}</p> : null}
+                <p className="gv-film-lesson__meta">
+                  {item.source || 'Verified source'}
+                  {item.locked ? ' · 🔒 Film tier' : ''}
+                </p>
+                {item.sourceUrl && !item.locked ? (
+                  <a
+                    href={item.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="gv-film-lesson__link"
+                  >
+                    Open source →
+                  </a>
+                ) : null}
+              </article>
+            ))}
+            {filtered.length === 0 && <UiEmpty message="No lessons in this category yet." />}
+          </div>
         </>
+      )}
+
+      {!loading && !error && !hub && items.length === 0 && (
+        <UiEmpty message="Film Room catalog is empty." hint="Run ensure:film-room on the API." />
       )}
     </div>
   );

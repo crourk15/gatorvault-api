@@ -24,19 +24,19 @@ export interface PodcastShow {
   platforms?: { name: string; url: string }[];
 }
 
+export interface LiveDashboard {
+  feed: LiveFeedItem[];
+  beat: { posts?: BeatPost[]; error?: string };
+  podcasts: { shows?: PodcastShow[] };
+  updatedAt?: string;
+}
+
 export interface SocialFeedLane {
   id: string;
   label: string;
   icon: string;
   handle?: string;
   posts: BeatPost[];
-}
-
-export interface LiveDashboard {
-  feed: LiveFeedItem[];
-  beat: { posts?: BeatPost[]; error?: string };
-  podcasts: { shows?: PodcastShow[] };
-  updatedAt?: string;
 }
 
 function normalizePodcastShow(raw: Record<string, unknown>): PodcastShow {
@@ -82,7 +82,6 @@ export function buildSocialLanes(beat: BeatPost[]): SocialFeedLane[] {
     (p) => !ufOfficial.includes(p) && (p.outlet || p.writerName)
   );
   const xPosts = beat.filter((p) => p.url?.includes('twitter.com') || p.url?.includes('x.com'));
-
   const instagram = beat.filter((p) =>
     /instagram\.com/i.test(p.url ?? '') || /instagram/i.test(`${p.handle} ${p.outlet}`)
   );

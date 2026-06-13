@@ -14,6 +14,11 @@ import { playerProfilePath, recruitingProfileLifecycle } from '@/lib/player-rout
 
 export type ClassicCardVariant = 'commit' | 'target';
 
+export type ClassicRecruitCardPlayer = Partial<RecruitingBoardPlayer> & {
+  slug: string;
+  name: string;
+};
+
 function movementArrow(dir?: 'up' | 'down' | 'flat'): React.ReactNode {
   if (dir === 'up') return <span className="gv-rb-card__move gv-rb-card__move--up" aria-label="Trending up">▲</span>;
   if (dir === 'down') return <span className="gv-rb-card__move gv-rb-card__move--down" aria-label="Trending down">▼</span>;
@@ -21,7 +26,7 @@ function movementArrow(dir?: 'up' | 'down' | 'flat'): React.ReactNode {
   return null;
 }
 
-function visitBadge(player: RecruitingBoardPlayer): string | null {
+function visitBadge(player: ClassicRecruitCardPlayer): string | null {
   const ov = String(player.ufOvStatus || '').toLowerCase();
   if (ov.includes('scheduled') || player.visitStart) return '🔥 Visit Scheduled';
   if (ov.includes('cancelled')) return '🟥 Visit Cancelled';
@@ -40,23 +45,33 @@ function heatMeter(pct: number): React.ReactElement {
   );
 }
 
-/** Classic rating-hero card — no headshots, no initials. Used on Recruiting Board + Hub. */
+function schoolLine(player: ClassicRecruitCardPlayer): string {
+  const school = player.school?.trim();
+  const city = (player as { city?: string }).city?.trim();
+  const state = player.state?.trim();
+  const parts: string[] = [];
+  if (school) parts.push(school);
+  if (city) parts.push(city);
+  if (state) parts.push(state);
+  return parts.length ? parts.join(' · ') : '—';
+}
+
+/** Classic rating-hero card — no headshots, no initials. Vault-wide default. */
 export function ClassicRecruitCard({
   player,
-  variant,
+  variant = 'target',
+  rank,
 }: {
-  player: RecruitingBoardPlayer;
-  variant: ClassicCardVariant;
+  player: ClassicRecruitCardPlayer;
+  variant?: ClassicCardVariant;
+  rank?: number;
 }): React.ReactElement {
-  const href = playerProfilePath(
-    player.slug,
-    recruitingProfileLifecycle(player),
-    true,
-    player.name,
-    'recruiting'
+  const lifecycle = recruitingProfileLifecycle(player);
+  const href = playerProfilePath(player.slug, lifecycle, true, player.name, 'recruiting');
+  const ratingStr = formatCompositeRating(
+    player.displayRating ?? player.rating ?? (playerRating(player as RecruitingBoardPlayer) || 0) / 100
   );
-  const ratingStr = formatCompositeRating(player.displayRating ?? player.rating ?? playerRating(player) / 100);
-  const pos = playerPos(player);
+  const pos = playerPos(player as RecruitingBoardPlayer);
   const visit = visitBadge(player);
   const skinny = player.skinny || player.profileNote || player.notePreview || player.notes;
   const heatPct =
@@ -66,10 +81,21 @@ export function ClassicRecruitCard({
         ? Math.round(Number(player.fitScore) * 100)
         : null;
   const predictions = player.predictionSchools?.slice(0, 2) ?? [];
+  const isCommit = variant === 'commit' || Boolean(player.isCommittedToUF);
+  const resolvedVariant: ClassicCardVariant = isCommit ? 'commit' : 'target';
+  const natl = rank ?? player.natlRank ?? player.natl;
 
   return (
-    <article className={`gv-rb-card gv-rb-card--classic gv-rb-card--${variant}`} data-testid="classic-recruit-card">
+    <article
+      className={`gv-rb-card gv-rb-card--classic gv-rb-card--${resolvedVariant}${player.headliner ? ' gv-rb-card--headliner' : ''}`}
+      data-testid="classic-recruit-card"
+    >
       <a href={href} className="gv-rb-card__link">
+        {player.headliner && (
+          <span className="gv-rb-card__headliner-badge" aria-label="Class headliner">
+            🏆 Headliner
+          </span>
+        )}
         <div className="gv-rb-card__hero">
           <div className="gv-rb-card__rating-badge" aria-label={`Composite rating ${ratingStr}`}>
             <span className="gv-rb-card__rating-value">{ratingStr ?? '—'}</span>
@@ -91,20 +117,16 @@ export function ClassicRecruitCard({
           {player.inState && <span className="gv-rb-card__instate">IN-STATE</span>}
         </div>
 
-        <p className="gv-rb-card__school">
-          {player.school || '—'}
-          {player.state ? ` · ${player.state}` : ''}
-        </p>
+        <p className="gv-rb-card__school">{schoolLine(player)}</p>
 
-        {player.htWt && <p className="gv-rb-card__htwt">{player.htWt}</p>}
+        {player.htWt ? <p className="gv-rb-card__htwt">{player.htWt}</p> : null}
 
         <p className="gv-rb-card__ranks">
-          NATL {formatRank(player.natlRank ?? player.natl)} · POS {formatRank(player.posRank)} · ST{' '}
-          {formatRank(player.stateRank)}
+          NATL {formatRank(natl)} · POS {formatRank(player.posRank)} · ST {formatRank(player.stateRank)}
         </p>
 
         <div className="gv-rb-card__status-row">
-          {variant === 'commit' || player.isCommittedToUF ? (
+          {resolvedVariant === 'commit' ? (
             <span className="gv-rb-card__status gv-rb-card__status--commit">🟢 Committed</span>
           ) : (
             <span className="gv-rb-card__status gv-rb-card__status--target">🎯 Target</span>
@@ -124,20 +146,18 @@ export function ClassicRecruitCard({
           </div>
         )}
 
-        {variant === 'target' && heatPct != null && heatMeter(heatPct)}
+        {resolvedVariant === 'target' && heatPct != null && heatMeter(heatPct)}
 
         <div className="gv-rb-card__badges">
           {visit && <span className="gv-rb-card__badge gv-rb-card__badge--visit">{visit}</span>}
           {player.fitScore != null && (
             <span className="gv-rb-card__badge">Fit {Number(player.fitScore).toFixed(1)}</span>
           )}
-          {player.staffGrade && (
-            <span className="gv-rb-card__badge">Staff {player.staffGrade}</span>
-          )}
+          {player.staffGrade && <span className="gv-rb-card__badge">Staff {player.staffGrade}</span>}
         </div>
       </a>
 
-      {skinny && <p className="gv-rb-card__skinny">{skinny}</p>}
+      {skinny ? <p className="gv-rb-card__skinny">{skinny}</p> : null}
     </article>
   );
 }

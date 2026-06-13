@@ -5,6 +5,8 @@
 
 export type RecruitingHubTab =
   | 'priority'
+  | 'commits-2026'
+  | 'heat-check'
   | 'commits-2027'
   | 'targets-2027'
   | 'targets-2028'
@@ -41,6 +43,8 @@ export const VAULT_PILLAR_ROUTES = {
 /** Recruiting Hub — path ↔ tab */
 export const RECRUITING_TAB_PATHS: Record<RecruitingHubTab, string> = {
   priority: '/vault/recruiting/priority',
+  'commits-2026': '/vault/recruiting/2026/commits',
+  'heat-check': '/vault/recruiting/heat-check',
   'commits-2027': '/vault/recruiting/2027/commits',
   'targets-2027': '/vault/recruiting/2027/targets',
   'targets-2028': '/vault/recruiting/2028/targets',
@@ -52,10 +56,10 @@ export const RECRUITING_TAB_PATHS: Record<RecruitingHubTab, string> = {
 
 /** Legacy paths → current tab (2026 removed, heat merged into movement intel) */
 export const RECRUITING_LEGACY_PATH_ALIASES: Record<string, RecruitingHubTab> = {
-  '/vault/recruiting': 'commits-2027',
-  '/vault/recruiting/2026/commits': 'commits-2027',
+  '/vault/recruiting': 'commits-2026',
+  '/vault/recruiting/2026/commits': 'commits-2026',
   '/vault/recruiting/2026/targets': 'targets-2027',
-  '/vault/recruiting/heat-check': 'intel',
+  '/vault/recruiting/heat-check': 'heat-check',
 };
 
 /** Live Feed tabs */
@@ -182,7 +186,7 @@ export function parseRecruitingTabFromSearch(): RecruitingHubTab | null {
 }
 
 export function resolveRecruitingTab(pathname?: string): RecruitingHubTab {
-  return parseRecruitingTabFromPath(pathname) ?? parseRecruitingTabFromSearch() ?? 'commits-2027';
+  return parseRecruitingTabFromPath(pathname) ?? parseRecruitingTabFromSearch() ?? 'commits-2026';
 }
 
 export function recruitingTabPath(tab: RecruitingHubTab): string {

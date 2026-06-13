@@ -8,11 +8,8 @@ import { ScoutingDepartmentPage } from '@/components/site/ScoutingDepartmentPage
 import {
   ClassicRecruitCard,
 } from '@/components/vault/ClassicRecruitCard';
-import {
-  EliteRecruitCard,
-  type EliteRecruitCardPlayer,
-} from '@/components/vault/EliteRecruitCard';
-import { filterRecruitingHsOnly, playerProfilePath } from '@/lib/player-routes';
+import { filterRecruitingHsOnly } from '@/lib/player-routes';
+import { fromHeatCheck, fromStaffDashboard, resolveCardVariant } from '@/lib/recruiting-card-adapters';
 import {
   type RecruitingHubTab,
   recruitingTabPath,
@@ -29,6 +26,8 @@ type IntelSubView = 'heat' | 'movement' | 'confidence';
 
 const TAB_LABELS: { id: RecruitingHubTab; label: string }[] = [
   { id: 'priority', label: 'High Priority' },
+  { id: 'commits-2026', label: '2026 Commits' },
+  { id: 'heat-check', label: 'Heat Check' },
   { id: 'commits-2027', label: '2027 Commits' },
   { id: 'targets-2027', label: '2027 Targets' },
   { id: 'targets-2028', label: '2028 Targets' },
@@ -58,9 +57,45 @@ function rankTargets(list: RecruitingBoardPlayer[]): RecruitingBoardPlayer[] {
   });
 }
 
-function heatLabelForItem(item: HeatCheckItem): string {
-  if (item.direction === 'rising') return '🟩 UF Trending Up';
-  return '🟥 UF Trending Down';
+function HeatCheckPanel({
+  rising,
+  cooling,
+}: {
+  rising: HeatCheckItem[];
+  cooling: HeatCheckItem[];
+}): React.ReactElement {
+  return (
+    <div className="gv-rh-intel-unified">
+      <div className="gv-heat-columns">
+        <div>
+          <h2 className="gv-vault-alerts__section-title">🔥 Trending Up</h2>
+          <div className="gv-rb-grid">
+            {rising.map((item, i) => (
+              <ClassicRecruitCard
+                key={`${item.playerSlug ?? item.playerName}-${i}`}
+                player={fromHeatCheck(item)}
+                variant="target"
+              />
+            ))}
+          </div>
+          {rising.length === 0 && <UiEmpty message="No risers right now." />}
+        </div>
+        <div>
+          <h2 className="gv-vault-alerts__section-title">🟥 Trending Down</h2>
+          <div className="gv-rb-grid">
+            {cooling.map((item, i) => (
+              <ClassicRecruitCard
+                key={`${item.playerSlug ?? item.playerName}-${i}`}
+                player={fromHeatCheck(item)}
+                variant="target"
+              />
+            ))}
+          </div>
+          {cooling.length === 0 && <UiEmpty message="No cooling signals." />}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function MovementIntelPanel({
@@ -106,92 +141,34 @@ function MovementIntelPanel({
         </button>
       </div>
 
-      {intelSub === 'heat' && (
-        <div className="gv-heat-columns">
-          <div>
-            <h2 className="gv-vault-alerts__section-title">🔥 Trending Up</h2>
-            <div className="gv-elite-grid gv-elite-grid--heat">
-              {rising.map((item, i) => (
-                <EliteRecruitCard
-                  key={`${item.playerSlug ?? item.playerName}-${i}`}
-                  variant="heat"
-                  player={{
-                    slug: item.playerSlug ?? ensurePlayerSlug('', item.playerName),
-                    name: item.playerName,
-                    tier: 'HIGH',
-                    movementDirection: 'up',
-                    heatLabel: heatLabelForItem(item),
-                    insiderNote: item.headline ?? undefined,
-                    predictionSchools: item.predictionSchool
-                      ? [{ school: item.predictionSchool, pct: 75 }]
-                      : undefined,
-                  }}
-                />
-              ))}
-            </div>
-            {rising.length === 0 && <UiEmpty message="No risers right now." />}
-          </div>
-          <div>
-            <h2 className="gv-vault-alerts__section-title">🟥 Trending Down</h2>
-            <div className="gv-elite-grid gv-elite-grid--heat">
-              {cooling.map((item, i) => (
-                <EliteRecruitCard
-                  key={`${item.playerSlug ?? item.playerName}-${i}`}
-                  variant="heat"
-                  player={{
-                    slug: item.playerSlug ?? ensurePlayerSlug('', item.playerName),
-                    name: item.playerName,
-                    tier: 'HIGH',
-                    movementDirection: 'down',
-                    heatLabel: '🟥 UF Trending Down',
-                    insiderNote: item.headline ?? undefined,
-                  }}
-                />
-              ))}
-            </div>
-            {cooling.length === 0 && <UiEmpty message="No cooling signals." />}
-          </div>
-        </div>
-      )}
+      {intelSub === 'heat' && <HeatCheckPanel rising={rising} cooling={cooling} />}
 
       {intelSub === 'movement' && (
-        <div className="gv-rh-intel__cols">
+        <div className="gv-heat-columns">
           <div>
             <h3 className="gv-vault-alerts__section-title">▲ Top Risers</h3>
-            <ul className="gv-rh-intel__list">
+            <div className="gv-rb-grid">
               {risers.slice(0, 10).map((p) => (
-                <li key={p.id}>
-                  <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'recruiting')}>
-                    {p.name} {p.delta != null ? `(+${p.delta}%)` : ''}
-                  </a>
-                </li>
+                <ClassicRecruitCard key={p.id} player={fromStaffDashboard(p)} variant="target" />
               ))}
-              {risers.length === 0 && <li className="gv-rh-intel__empty">No risers this window.</li>}
-            </ul>
+            </div>
+            {risers.length === 0 && <p className="gv-rh-intel__empty">No risers this window.</p>}
           </div>
           <div>
             <h3 className="gv-vault-alerts__section-title">▼ Top Fallers</h3>
-            <ul className="gv-rh-intel__list">
+            <div className="gv-rb-grid">
               {fallers.slice(0, 10).map((p) => (
-                <li key={p.id}>
-                  <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'recruiting')}>
-                    {p.name} {p.delta != null ? `(${p.delta}%)` : ''}
-                  </a>
-                </li>
+                <ClassicRecruitCard key={p.id} player={fromStaffDashboard(p)} variant="target" />
               ))}
-            </ul>
+            </div>
           </div>
           <div>
             <h3 className="gv-vault-alerts__section-title">🟨 High Volatility</h3>
-            <ul className="gv-rh-intel__list">
+            <div className="gv-rb-grid">
               {volatile.slice(0, 10).map((p) => (
-                <li key={p.id}>
-                  <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'recruiting')}>
-                    {p.name} · {p.volatilityScore ?? '—'}
-                  </a>
-                </li>
+                <ClassicRecruitCard key={p.id} player={fromStaffDashboard(p)} variant="target" />
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       )}
@@ -218,6 +195,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     return window.location.pathname.includes('heat-check') ? 'heat' : 'heat';
   });
   const [rankYear, setRankYear] = useState<2027 | 2028>(2027);
+  const [b26, setB26] = useState<{ commits: RecruitingBoardPlayer[] }>({ commits: [] });
   const [b27, setB27] = useState<{ commits: RecruitingBoardPlayer[]; targets: RecruitingBoardPlayer[] }>({
     commits: [],
     targets: [],
@@ -268,12 +246,16 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     setLoading(true);
     setError(null);
     try {
-      const [d27, d28, heat, staff] = await Promise.all([
+      const [d26, d27, d28, heat, staff] = await Promise.all([
+        fetchRecruitingBoard(2026),
         fetchRecruitingBoard(2027),
         fetchRecruitingBoard(2028),
         fetchRecruitingHeatCheck(),
         fetchStaffDashboard().catch(() => null),
       ]);
+      setB26({
+        commits: rankCommits(filterRecruitingHsOnly(d26.commits ?? [])),
+      });
       setB27({
         commits: rankCommits(filterRecruitingHsOnly(d27.commits ?? [])),
         targets: rankTargets(filterRecruitingHsOnly(d27.targets ?? [])),
@@ -342,7 +324,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
                   ? [{ school: 'Florida', pct: Math.round(Number(p.ufProbability) * 100) }]
                   : undefined),
             }}
-            variant={variant === 'commit' ? 'commit' : 'target'}
+            variant={resolveCardVariant(p, variant)}
           />
         ))}
       </div>
@@ -351,7 +333,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
   );
 
   return (
-    <div className="gv-recruiting-hub gv-rh gv-rh--elite" data-testid="vault-recruiting-hub">
+    <div className="gv-recruiting-hub gv-rh" data-testid="vault-recruiting-hub">
       <div className="gv-page-hero">
         <h1 className="gv-page-title">Recruiting Hub</h1>
         <p className="gv-page-subtitle">
@@ -388,6 +370,13 @@ export function VaultRecruitingHubPage(): React.ReactElement {
           </p>
           {renderGrid(highPriority, 'priority', 'No priority targets loaded.')}
         </section>
+      )}
+
+      {!loading && !error && tab === 'commits-2026' &&
+        renderGrid(b26.commits, 'commit', 'No 2026 commits yet.')}
+
+      {!loading && !error && tab === 'heat-check' && (
+        <HeatCheckPanel rising={rising} cooling={cooling} />
       )}
 
       {!loading && !error && tab === 'commits-2027' &&

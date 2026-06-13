@@ -107,8 +107,8 @@
 }
 
 /* ---- Horizontal scroll (era track) ---- */
-.gv-team-hscroll-wrap .gv-hscroll-track,
-.gv-hscroll-wrap.gv-team-hscroll-wrap .gv-hscroll-track {
+.gv-team-hscroll-wrap .gv-team-eras-track,
+.gv-hscroll-wrap.gv-team-hscroll-wrap .gv-team-eras-track {
   display: flex;
   flex-wrap: nowrap;
   gap: var(--gv-team-space-3);
@@ -121,11 +121,11 @@
   touch-action: pan-x pinch-zoom;
 }
 
-.gv-team-hscroll-wrap .gv-hscroll-track::-webkit-scrollbar {
+.gv-team-hscroll-wrap .gv-team-eras-track::-webkit-scrollbar {
   display: none;
 }
 
-.gv-team-hscroll-wrap .gv-hscroll-track > * {
+.gv-team-hscroll-wrap .gv-team-eras-track > * {
   flex: 0 0 auto;
   scroll-snap-align: start;
 }
@@ -942,7 +942,7 @@ body.gv-team-modal-open {
   max-width: 100%;
 }
 
-#gv-team-detail-modal .gv-team-hscroll-wrap .gv-hscroll-track {
+#gv-team-detail-modal .gv-team-hscroll-wrap .gv-team-eras-track {
   padding-right: var(--gv-team-space-4);
 }
 
@@ -1371,7 +1371,7 @@ body.gv-team-modal-open {
 }
 
 .gv-team-hscroll-wrap .gv-team-era-card,
-.gv-team-hscroll-wrap .gv-hscroll-track {
+.gv-team-hscroll-wrap .gv-team-eras-track {
   touch-action: pan-x pan-y;
 }
 
@@ -1385,7 +1385,7 @@ body.gv-team-modal-open {
     margin: 0 -16px 4px;
   }
 
-  .gv-team-hscroll-wrap .gv-hscroll-track {
+  .gv-team-hscroll-wrap .gv-team-eras-track {
     padding-left: 16px;
     padding-right: 16px;
   }

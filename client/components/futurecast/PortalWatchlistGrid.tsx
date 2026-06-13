@@ -2,13 +2,10 @@
  * Portal Watchlist grid — GET /api/portal/watchlist
  */
 import React, { useCallback, useEffect, useState } from 'react';
-import { playerProfilePath } from '@/lib/player-routes';
-import { usePathname } from '@/lib/use-pathname';
-import { isVaultPath } from '@/lib/vault-routes';
+import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
+import { fromPortalWatchlist } from '@/lib/recruiting-card-adapters';
 import {
   fetchPortalWatchlist,
-  portalLikelihoodBand,
-  portalLikelihoodPct,
   type PortalWatchlistPlayer,
   type PortalWatchlistQuery,
 } from '../../lib/portal-api';
@@ -18,8 +15,6 @@ export interface PortalWatchlistGridProps {
 }
 
 export function PortalWatchlistGrid({ query }: PortalWatchlistGridProps): React.ReactElement {
-  const pathname = usePathname();
-  const inVault = isVaultPath(pathname);
   const [players, setPlayers] = useState<PortalWatchlistPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,34 +42,15 @@ export function PortalWatchlistGrid({ query }: PortalWatchlistGridProps): React.
   if (!players.length) return <div className="fc-big-board-empty">No portal candidates match these filters.</div>;
 
   return (
-    <div className="fc-portal-grid" data-testid="portal-watchlist-grid">
-      {players.map((p) => {
-        const pct = portalLikelihoodPct(p.portalLikelihood);
-        const band = portalLikelihoodBand(pct);
-        return (
-          <a
-            key={p.id}
-            href={`${playerProfilePath(p.slug, 'PORTAL', inVault)}?tab=portal`}
-            className="fc-portal-card"
-          >
-            <span className="fc-portal-card__rank">#{p.rank}</span>
-            <h3 className="fc-portal-card__name">{p.fullName}</h3>
-            <p className="fc-portal-card__meta">
-              {p.position} · {p.classYear}
-            </p>
-            <div className="fc-portal-card__scores">
-              <span className={`fc-portal-badge fc-portal-badge--${band}`}>
-                Portal {pct}%
-              </span>
-              <span className="fc-portal-metric">Risk {p.depthChartRisk}</span>
-              <span className="fc-portal-metric">Vol {p.volatility}</span>
-              {p.snapShare != null && (
-                <span className="fc-portal-metric">Snaps {(p.snapShare * 100).toFixed(0)}%</span>
-              )}
-            </div>
-          </a>
-        );
-      })}
+    <div className="gv-rb-grid" data-testid="portal-watchlist-grid">
+      {players.map((p) => (
+        <ClassicRecruitCard
+          key={p.id}
+          player={fromPortalWatchlist(p)}
+          variant="target"
+          rank={p.rank}
+        />
+      ))}
     </div>
   );
 }

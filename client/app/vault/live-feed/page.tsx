@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { VaultLiveFeedPage } from '@/components/vault/VaultLiveFeedPage';
+import { GatorNationLivePage } from '@/components/vault/live/GatorNationLivePage';
 
 export default function VaultLiveFeedRoute(): React.ReactElement {
-  return <VaultLiveFeedPage />;
+  return <GatorNationLivePage />;
 }

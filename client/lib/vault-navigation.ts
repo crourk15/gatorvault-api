@@ -66,7 +66,12 @@ export function notifyVaultNavigation(): void {
 }
 
 export function vaultTeamBackHref(): string {
-  return '/vault/team';
+  const state = peekVaultPageState('team');
+  const params = new URLSearchParams();
+  if (state?.tab && state.tab !== 'roster') params.set('tab', state.tab);
+  if (state?.search) params.set('q', state.search);
+  const qs = params.toString();
+  return qs ? `/vault/team?${qs}` : '/vault/team';
 }
 
 export function useVaultPageRestore(
@@ -76,7 +81,7 @@ export function useVaultPageRestore(
   const restore = useCallback(onRestore, [onRestore]);
 
   useEffect(() => {
-    const saved = consumeVaultPageState(pageKey);
+    const saved = peekVaultPageState(pageKey);
     if (saved) restore(saved);
     if (saved?.scrollY != null) {
       requestAnimationFrame(() => window.scrollTo(0, saved.scrollY ?? 0));

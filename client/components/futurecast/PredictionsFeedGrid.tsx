@@ -44,7 +44,7 @@ export function PredictionsFeedGrid({ query }: PredictionsFeedGridProps): React.
   }
 
   return (
-    <div className="fc-predictions-grid" data-testid="predictions-feed-grid">
+    <div className="gv-rb-grid" data-testid="predictions-feed-grid">
       {predictions.map((p) => (
         <PredictionCard key={p.id} prediction={feedPredictionToCard(p)} />
       ))}

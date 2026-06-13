@@ -1,12 +1,12 @@
 /**
- * Related players grid — same position + class year from /api/players/:id/related.
+ * Related players grid — ClassicRecruitCard only.
  */
+'use client';
+
 import React from 'react';
 import type { BigBoardPlayer } from '../../../lib/big-board-api';
-import { fitTier } from '../../../lib/player-derived';
-import { playerProfilePath } from '@/lib/player-routes';
-import { usePathname } from '@/lib/use-pathname';
-import { isVaultPath } from '@/lib/vault-routes';
+import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
+import { fromBigBoard } from '@/lib/recruiting-card-adapters';
 
 export interface RelatedPlayersProps {
   players: BigBoardPlayer[];
@@ -14,30 +14,15 @@ export interface RelatedPlayersProps {
 }
 
 export function RelatedPlayers({ players, currentSlug }: RelatedPlayersProps): React.ReactElement {
-  const pathname = usePathname();
-  const inVault = isVaultPath(pathname);
   const list = players.filter((p) => p.slug !== currentSlug);
   if (!list.length) {
     return <p className="fc-profile-empty">No related players in this class and position.</p>;
   }
 
   return (
-    <div className="fc-related-grid" data-testid="related-players">
+    <div className="gv-rb-grid" data-testid="related-players">
       {list.map((p) => (
-        <a
-          key={p.id}
-          href={playerProfilePath(p.slug, p.lifecycle, inVault)}
-          className="fc-related-card"
-        >
-          <span className="fc-related-card__rank">#{p.rank}</span>
-          <span className="fc-related-card__name">{p.fullName}</span>
-          <span className="fc-related-card__meta">
-            {p.position} · UF Fit {p.ufFitScore}
-          </span>
-          <span className={`fc-fit-badge fc-fit-badge--${fitTier(p.ufFitScore)}`}>
-            {fitTier(p.ufFitScore)}
-          </span>
-        </a>
+        <ClassicRecruitCard key={p.id} player={fromBigBoard(p)} variant="target" rank={p.rank} />
       ))}
     </div>
   );

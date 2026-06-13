@@ -2,7 +2,8 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchBigBoard, type BigBoardLifecycle, type BigBoardPlayer, type BigBoardSort } from '@/lib/big-board-api';
-import { playerProfilePath } from '@/lib/player-routes';
+import { fromBigBoard } from '@/lib/recruiting-card-adapters';
+import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 const LIFECYCLE_TABS: { id: BigBoardLifecycle; label: string }[] = [
@@ -124,30 +125,14 @@ export function PlayerDirectoryPage({ inVault = false }: { inVault?: boolean } =
             <p className="gv-page-section__subtitle">{filtered.length} players</p>
           </div>
           {filtered.length > 0 ? (
-            <div className="gv-board-grid">
+            <div className="gv-rb-grid">
               {filtered.map((p) => (
-                <a
+                <ClassicRecruitCard
                   key={p.id}
-                  href={playerProfilePath(p.slug, p.lifecycle, inVault)}
-                  className="gv-board-card gv-board-card--directory"
-                >
-                  <span className="gv-board-card__rank">#{p.rank}</span>
-                  <h3 className="gv-board-card__name">{p.fullName}</h3>
-                  <p className="gv-board-card__school">
-                    {p.position} · Class of {p.classYear} · {p.lifecycle}
-                  </p>
-                  <div className="gv-board-card__meta">
-                    {p.lifecycle === 'HS' && (
-                      <span className="gv-board-card__rating">Fit {p.ufFitScore}</span>
-                    )}
-                    {(p.lifecycle === 'PORTAL' || p.lifecycle === 'COLLEGE') && p.portalLikelihood > 0 && (
-                      <span className="gv-board-card__rating">Portal {p.portalLikelihood}%</span>
-                    )}
-                    {p.signalCount > 0 && (
-                      <span className="gv-board-card__signals">{p.signalCount} signals</span>
-                    )}
-                  </div>
-                </a>
+                  player={fromBigBoard(p)}
+                  variant="target"
+                  rank={p.rank}
+                />
               ))}
             </div>
           ) : (
