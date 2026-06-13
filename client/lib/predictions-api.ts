@@ -13,6 +13,7 @@ export interface FeedPrediction {
   fullName: string;
   classYear: number;
   position: string;
+  lifecycle: string | null;
   school: string;
   confidence: number;
   delta?: number;
@@ -50,6 +51,10 @@ export interface PredictionsFeedQuery {
   status?: PredictionStatus;
   limit?: number;
   refresh?: boolean;
+  hsOnly?: boolean;
+  portalOnly?: boolean;
+  floridaOnly?: boolean;
+  trendingUp?: boolean;
 }
 
 async function apiFetch<T>(path: string): Promise<T> {
@@ -80,6 +85,10 @@ export async function fetchPredictionsFeed(
       status: query.status,
       limit: query.limit,
       refresh: query.refresh ? 'true' : undefined,
+      hsOnly: query.hsOnly ? 'true' : undefined,
+      portalOnly: query.portalOnly ? 'true' : undefined,
+      floridaOnly: query.floridaOnly ? 'true' : undefined,
+      trendingUp: query.trendingUp ? 'true' : undefined,
     })}`
   );
   return data.predictions;

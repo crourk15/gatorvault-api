@@ -9,12 +9,14 @@ import {
 } from '../../models/predictions';
 import { syncModelPredictionsForCandidates } from './engine';
 import {
+  applyFeedFilters,
   asyncHandler,
   handlePredictionsApiError,
   parseLimit,
   parseOptionalInt,
   parsePosition,
   parsePredictionStatus,
+  parseQueryFlag,
   serializeFeedPrediction,
 } from './utils-api';
 
@@ -26,17 +28,24 @@ export const handleListPredictions = asyncHandler(async (req: Request, res: Resp
     const limit = parseLimit(req.query.limit, 100, 500);
     const refresh = req.query.refresh === 'true' || req.query.refresh === '1';
 
-    let rows = await listPredictions({ class_year, position, status, limit });
+    const hsOnly = parseQueryFlag(req.query.hsOnly);
+    const portalOnly = parseQueryFlag(req.query.portalOnly);
+    const floridaOnly = parseQueryFlag(req.query.floridaOnly);
+    const trendingUp = parseQueryFlag(req.query.trendingUp);
+
+    let rows = await listPredictions({ class_year, position, status, limit: 500 });
 
     if (refresh || rows.length === 0) {
       const candidates = await listPredictionCandidates({ class_year, position });
       await syncModelPredictionsForCandidates(candidates, upsertActiveModelPrediction);
-      rows = await listPredictions({ class_year, position, status, limit });
+      rows = await listPredictions({ class_year, position, status, limit: 500 });
     }
 
-    res.json({
-      predictions: rows.map(serializeFeedPrediction),
-    });
+    let predictions = rows.map(serializeFeedPrediction);
+    predictions = applyFeedFilters(predictions, { hsOnly, portalOnly, floridaOnly, trendingUp });
+    predictions = predictions.slice(0, limit);
+
+    res.json({ predictions });
   } catch (err) {
     handlePredictionsApiError(res, err);
   }

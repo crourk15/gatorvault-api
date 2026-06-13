@@ -1,10 +1,15 @@
 /**
- * FutureCast predictions feed — infinite scroll + 60s refresh.
+ * FutureCast predictions feed — filters, infinite scroll, 60s refresh.
  */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { fetchPredictionsFeed, type FeedPrediction } from '../../lib/predictions-api';
 import { PredictionCard, feedPredictionToCard } from '../PredictionCard';
+import {
+  DEFAULT_FUTURECAST_FILTERS,
+  FutureCastFilters,
+  type FutureCastFiltersState,
+} from './FutureCastFilters';
 
 const PAGE_SIZE = 20;
 const MAX_LIMIT = 500;
@@ -18,10 +23,16 @@ export function FutureCastFeed({
   refreshIntervalMs = 60_000,
 }: FutureCastFeedProps): React.ReactElement {
   const [limit, setLimit] = useState(PAGE_SIZE);
+  const [filters, setFilters] = useState<FutureCastFiltersState>(DEFAULT_FUTURECAST_FILTERS);
   const [predictions, setPredictions] = useState<FeedPrediction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
+
+  const onFiltersChange = useCallback((next: FutureCastFiltersState) => {
+    setFilters(next);
+    setLimit(PAGE_SIZE);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -34,7 +45,7 @@ export function FutureCastFeed({
       }
 
       try {
-        const rows = await fetchPredictionsFeed({ limit });
+        const rows = await fetchPredictionsFeed({ limit, ...filters });
         if (!cancelled) {
           setPredictions(rows);
           setHasMore(rows.length >= limit && limit < MAX_LIMIT);
@@ -59,7 +70,7 @@ export function FutureCastFeed({
       cancelled = true;
       if (timer) clearInterval(timer);
     };
-  }, [limit, refreshIntervalMs]);
+  }, [limit, refreshIntervalMs, filters]);
 
   const loadMore = useCallback(() => {
     if (!hasMore || loading) return;
@@ -68,26 +79,32 @@ export function FutureCastFeed({
 
   const sentinelRef = useInfiniteScroll(loadMore);
 
-  if (loading && predictions.length === 0) {
-    return <p className="fc-profile-empty">Loading FutureCast predictions…</p>;
-  }
-
-  if (error && predictions.length === 0) {
-    return <p className="fc-profile-error">{error}</p>;
-  }
-
-  if (!predictions.length) {
-    return <p className="fc-profile-empty">No predictions yet.</p>;
-  }
-
   return (
-    <div className="fc-predictions-grid futurecast-grid" data-testid="futurecast-feed">
-      {predictions.map((p) => (
-        <PredictionCard key={p.id} prediction={feedPredictionToCard(p)} />
-      ))}
-      {hasMore && (
-        <div ref={sentinelRef} className="fc-loading-sentinel fc-predictions-grid__sentinel">
-          Loading more…
+    <div data-testid="futurecast-feed">
+      <FutureCastFilters onChange={onFiltersChange} />
+
+      {loading && predictions.length === 0 && (
+        <p className="fc-profile-empty">Loading FutureCast predictions…</p>
+      )}
+
+      {error && predictions.length === 0 && (
+        <p className="fc-profile-error">{error}</p>
+      )}
+
+      {!loading && !error && predictions.length === 0 && (
+        <p className="fc-profile-empty">No predictions match these filters.</p>
+      )}
+
+      {predictions.length > 0 && (
+        <div className="fc-predictions-grid futurecast-grid">
+          {predictions.map((p) => (
+            <PredictionCard key={p.id} prediction={feedPredictionToCard(p)} />
+          ))}
+          {hasMore && (
+            <div ref={sentinelRef} className="fc-loading-sentinel fc-predictions-grid__sentinel">
+              Loading more…
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -50,6 +50,7 @@ export interface PredictionFeedRow extends PredictionRow {
   full_name: string;
   class_year: number;
   position: string;
+  lifecycle: string;
 }
 
 export interface PredictorStatsRow {

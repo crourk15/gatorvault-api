@@ -1100,3 +1100,30 @@
 .fc-predictions-grid__sentinel {
   grid-column: 1 / -1;
 }
+
+.fc-futurecast-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.fc-futurecast-filters__btn {
+  padding: 0.25rem 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: #1f242c;
+  color: #8b949e;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.fc-futurecast-filters__btn:hover {
+  color: #e2e8f0;
+}
+
+.fc-futurecast-filters__btn.is-active {
+  background: #238636;
+  color: #fff;
+}

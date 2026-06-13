@@ -77,7 +77,8 @@ export async function listPredictions(
       p.slug,
       p.full_name,
       p.class_year,
-      p.position
+      p.position,
+      p.status AS lifecycle
     FROM ${FUTURECAST_PREDICTIONS_TABLE} pr
     JOIN ${FUTURECAST_PLAYERS_TABLE} p ON p.id = pr.player_id
     ${where}

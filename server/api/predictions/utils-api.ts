@@ -24,6 +24,10 @@ export function parsePredictionStatus(raw: unknown): string | undefined {
   return value;
 }
 
+export function parseQueryFlag(raw: unknown): boolean {
+  return raw === 'true' || raw === '1';
+}
+
 export function handlePredictionsApiError(res: Response, err: unknown): void {
   handleApiError(res, err);
 }
@@ -35,6 +39,7 @@ export function serializeFeedPrediction(row: {
   full_name: string;
   class_year: number;
   position: string;
+  lifecycle?: string;
   school: string;
   confidence: number;
   delta?: number;
@@ -51,6 +56,7 @@ export function serializeFeedPrediction(row: {
     fullName: row.full_name,
     classYear: row.class_year,
     position: row.position,
+    lifecycle: row.lifecycle ?? null,
     school: row.school,
     confidence: row.confidence,
     ...(row.delta != null ? { delta: row.delta } : {}),
@@ -60,6 +66,35 @@ export function serializeFeedPrediction(row: {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
+}
+
+export type SerializedFeedPrediction = ReturnType<typeof serializeFeedPrediction>;
+
+export function applyFeedFilters(
+  predictions: SerializedFeedPrediction[],
+  filters: {
+    hsOnly: boolean;
+    portalOnly: boolean;
+    floridaOnly: boolean;
+    trendingUp: boolean;
+  }
+): SerializedFeedPrediction[] {
+  let out = predictions;
+
+  if (filters.hsOnly) {
+    out = out.filter((p) => p.lifecycle === 'HS');
+  }
+  if (filters.portalOnly) {
+    out = out.filter((p) => p.lifecycle === 'PORTAL');
+  }
+  if (filters.floridaOnly) {
+    out = out.filter((p) => p.school.toLowerCase().includes('florida'));
+  }
+  if (filters.trendingUp) {
+    out = out.filter((p) => (p.delta ?? 0) > 0);
+  }
+
+  return out;
 }
 
 export function serializePlayerPrediction(p: {
