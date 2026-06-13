@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="gatorvault-build" content="b545a5ff7998">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
@@ -155,9 +156,13 @@
             #vault-interior.gv-mobile-active .gv-vault-main > .vpane:not(.gv-mob-only){display:none!important;}
             #vault-interior:not(.gv-mobile-active) .gv-vault-main > .vpane.gv-mob-only{display:none!important;}
         }
-        /* Vault route mode — sidebar nav only, hide legacy horizontal vtab bar */
+        /* Vault route mode — sidebar nav only, hide legacy horizontal vtab bar + public site nav */
+        body.gv-on-vault-route #nav-main,
+        body.gv-on-vault-route #mob-menu,
+        body.gv-on-vault-route #install-banner{display:none!important;}
         body.gv-on-vault-route #gv-vault-public-tabs,
         #vault-interior.gv-vault-route-mode #gv-vault-public-tabs{display:none!important;}
+        #gv-vault-sidebar{display:none;}
         body.gv-on-vault-route #gv-vault-sidebar{display:flex!important;}
         .gv-vault-crosslink-inline{display:inline-flex;align-items:center;gap:.35rem;margin-top:.75rem;font-size:.8125rem;font-weight:700;color:#FA4616;text-decoration:none;}
         .gv-vault-crosslink-inline:hover{color:#fff;}
@@ -441,9 +446,11 @@
             #vault-interior.gv-mobile-active .vpane{padding:0 16px 20px;}
             #vault-interior.gv-mobile-active #vpane-mhome,
             #vault-interior.gv-mobile-active #vpane-mteam,
-            #vault-interior.gv-mobile-active #vpane-gameweek,
             #vault-interior.gv-mobile-active #vpane-beat,
             #vault-interior.gv-mobile-active #vpane-podcast{padding:0 0 20px;}
+            #vault-interior.gv-mobile-active #vpane-gameweek{padding:0 16px 20px;}
+            #vault-interior.gv-mobile-active #vpane-recruit{padding:0 16px 20px;}
+            #vault-interior.gv-mobile-active #game-pills{padding-left:0;padding-right:0;}
             #vault-interior.gv-mobile-active #vpane-live>.flex p.text-surface-200{display:none;}
             #vault-interior.gv-mobile-active #changelog-strip{display:none!important;}
 
@@ -613,12 +620,12 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style id="gv-critical">:root{--gv-ticker-h:44px}#gv-site-ticker{z-index:500!important;position:fixed;top:0;left:0;right:0;height:44px}#gv-alert-banner{z-index:510!important;position:fixed;top:0;left:0;right:0}body.gv-has-site-ticker #nav-main,body.gv-has-site-ticker nav.fixed{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #gv-mobile-header,body.gv-has-site-ticker .gv-mob-header{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior:not(.gv-mobile-active){padding-top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior .gv-desk-only.sticky.top-14{top:calc(var(--gv-ticker-h) + 3.5rem)!important}body.gv-has-site-ticker #hero-sec{padding-top:calc(8rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker #install-banner{top:calc(4rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker .gv-alert-banner{top:var(--gv-ticker-h)}</style>
-    <link rel="stylesheet" href="/gv-global.css?v=team-v2-20260605">
-    <link rel="stylesheet" href="/gv-feedback.css?v=team-v2-20260605">
-    <link rel="stylesheet" href="/css/gv-team.css?v=team-v5-20260605">
+    <link rel="stylesheet" href="/gv-global.css?v=b545a5ff7998">
+    <link rel="stylesheet" href="/gv-feedback.css?v=b545a5ff7998">
+    <link rel="stylesheet" href="/css/gv-team.css?v=b545a5ff7998">
     <script src="/gv-global.js?v=mhome-v3-20260614" defer></script>
     <script src="/gv-feedback.js?v=mhome-v3-20260614" defer></script>
-    <script src="/js/gv-team-mobile.js?v=team-v4-20260605" defer></script>
+    <script src="/js/gv-team-mobile.js?v=b545a5ff7998" defer></script>
 </head>
 <body data-id="0" class="gv-has-site-ticker">
     <app-icon data-id="1" hidden data-icon="shield" data-palette="Blue"></app-icon>
@@ -1433,7 +1440,7 @@
                             <div data-id="564" class="bg-surface-700 border border-gator-blue/20 rounded-xl px-4 py-3"><p data-id="565" class="text-xs text-surface-200 uppercase">Enrolled</p><p id="class-enrolled" data-id="566" class="font-display text-2xl font-bold text-white">21</p></div>
                             <div data-id="567" class="bg-surface-700 border border-gator-blue/20 rounded-xl px-4 py-3"><p data-id="568" class="text-xs text-surface-200 uppercase">Committed</p><p id="class-committed" data-id="569" class="font-display text-2xl font-bold text-white">1</p></div>
                         </div>
-                        <div data-id="570" id="class-2026-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 gv-hscroll-track"></div>
+                        <div data-id="570" id="class-2026-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
                     </div>
                     <div data-id="571" id="rpane-b2027" class="rpane" style="display:none;"><div data-id="572" id="board-2027-grid" class="space-y-4"></div></div>
                     <div data-id="573" id="rpane-heat" class="rpane" style="display:none;">
@@ -2903,6 +2910,7 @@
         try{
         var vo=document.getElementById('vault-overlay');if(vo)vo.classList.remove('hidden');
         var mm=document.getElementById('mob-menu');if(mm)mm.classList.add('hidden');
+        try{gvApplyVaultRouteMode();}catch(e){}
         if(typeof trackEvent==='function') trackEvent('Vault','vault_opened','button_click');
         if(typeof netlifyIdentity!=='undefined'){try{var u=netlifyIdentity.currentUser();if(u){handleLoggedIn(u);return;}}catch(e){}}
         var sess=loadSession();
@@ -3021,6 +3029,7 @@
         if(typeof lucide!=="undefined"&&typeof lucide.createIcons==="function")lucide.createIcons();
         window.GV_ROLE=role||window.GV_ROLE||'locker';
         if(typeof gvUpdateWarRoomNav==='function')gvUpdateWarRoomNav();
+        try{gvApplyVaultRouteMode();}catch(e){}
         }catch(e){console.error('showVaultInterior error:',e);}
     }
 
@@ -3453,9 +3462,13 @@
     function gvApplyVaultRouteMode(){
         var path=(location.pathname||'').replace(/\/$/,'');
         var onVault=path==='/vault'||path.indexOf('/vault/')===0;
-        var interior=document.getElementById('vault-interior');
-        if(interior)interior.classList.toggle('gv-vault-route-mode',onVault);
-        document.body.classList.toggle('gv-on-vault-route',onVault);
+        var vaultOverlay=document.getElementById('vault-overlay');
+        var vaultInterior=document.getElementById('vault-interior');
+        var vaultOpen=vaultOverlay&&!vaultOverlay.classList.contains('hidden');
+        var interiorVisible=vaultInterior&&!vaultInterior.classList.contains('hidden');
+        var inVaultMode=onVault||(vaultOpen&&interiorVisible);
+        if(vaultInterior)vaultInterior.classList.toggle('gv-vault-route-mode',inVaultMode);
+        document.body.classList.toggle('gv-on-vault-route',inVaultMode);
     }
     window.gvApplyVaultRouteMode=gvApplyVaultRouteMode;
 
@@ -3494,6 +3507,7 @@
         }
     }
     window.addEventListener('hashchange',gvHandleDeepLink);
+    window.addEventListener('popstate',function(){try{gvHandleDeepLink();}catch(e){}});
 
     // Bind tab click handlers with better error handling
     var bindTabListeners=function(){
@@ -3515,6 +3529,7 @@
                     if(tab==='futurecast'){location.href='/vault/futurecast';return;}
                     showVTab(tab);
                     try{history.pushState(null,'',href);}catch(err){}
+                    try{gvApplyVaultRouteMode();}catch(err){}
                 }
             };
             a.addEventListener('click',a._gvSideHandler);

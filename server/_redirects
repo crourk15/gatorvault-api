@@ -53,6 +53,7 @@
 /vault/futurecast/alerts/*  /vault/futurecast/alerts/index.html  200
 /vault/futurecast/staff  /vault/futurecast/staff/index.html  200
 /vault/futurecast/staff/*  /vault/futurecast/staff/index.html  200
+/vault/futurecast/player/*  /vault/futurecast/player/index.html  200
 /vault/futurecast  /vault/futurecast/index.html  200
 /vault/futurecast/  /vault/futurecast/index.html  200
 /vault/futurecast/*  /vault/futurecast/index.html  200

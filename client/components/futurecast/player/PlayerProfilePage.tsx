@@ -20,6 +20,8 @@ import { UFFitTab } from './UFFitTab';
 import { SignalsTab } from './SignalsTab';
 import { UiError } from '@/components/site/UiMessage';
 import { playerLifecycleKind } from '@/lib/player-routes';
+import { usePathname } from '@/lib/use-pathname';
+import { futureCastBase, isVaultPath } from '@/lib/vault-routes';
 
 export interface PlayerProfilePageProps {
   slug: string;
@@ -38,6 +40,10 @@ function ProfileSkeleton(): React.ReactElement {
 }
 
 export function PlayerProfilePage({ slug }: PlayerProfilePageProps): React.ReactElement {
+  const pathname = usePathname();
+  const inVault = isVaultPath(pathname);
+  const backHref = futureCastBase(pathname);
+  const backLabel = inVault ? '← FutureCast' : '← FutureCast';
   const [data, setData] = useState<PlayerProfileBundle | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -63,7 +69,10 @@ export function PlayerProfilePage({ slug }: PlayerProfilePageProps): React.React
         if (cancelled) return bundle;
         const kind = playerLifecycleKind(bundle.player.status);
         if (kind === 'portal') {
-          window.location.replace(`/portal/${encodeURIComponent(slug)}`);
+          const dest = inVault
+            ? `/vault/portal/player/${encodeURIComponent(slug)}`
+            : `/portal/${encodeURIComponent(slug)}`;
+          window.location.replace(dest);
           return;
         }
         setData(bundle);
@@ -109,7 +118,7 @@ export function PlayerProfilePage({ slug }: PlayerProfilePageProps): React.React
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [slug, inVault]);
 
   const onTabChange = useCallback((tab: ProfileTabId) => {
     setActiveTab(tab);
@@ -166,8 +175,8 @@ export function PlayerProfilePage({ slug }: PlayerProfilePageProps): React.React
           error ||
           'This profile is not available in FutureCast. Portal and college players are listed in the Player Directory.'
         }
-        backHref="/futurecast"
-        backLabel="← FutureCast"
+        backHref={backHref}
+        backLabel={backLabel}
       />
     );
   }
@@ -175,7 +184,7 @@ export function PlayerProfilePage({ slug }: PlayerProfilePageProps): React.React
   return (
     <div className="fc-profile-page" data-testid="player-profile-page">
       <nav className="fc-profile-back">
-        <a href="/futurecast">← FutureCast</a>
+        <a href={backHref}>{backLabel}</a>
       </nav>
       <PlayerHeader player={data.player} metrics={metrics} portalProfile={data.portalProfile} />
       <PlayerTabs activeTab={activeTab} onTabChange={onTabChange} availableTabs={availableTabs} />

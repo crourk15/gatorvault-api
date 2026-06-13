@@ -2,6 +2,9 @@
  * Portal Watchlist grid — GET /api/portal/watchlist
  */
 import React, { useCallback, useEffect, useState } from 'react';
+import { playerProfilePath } from '@/lib/player-routes';
+import { usePathname } from '@/lib/use-pathname';
+import { isVaultPath } from '@/lib/vault-routes';
 import {
   fetchPortalWatchlist,
   portalLikelihoodBand,
@@ -15,6 +18,8 @@ export interface PortalWatchlistGridProps {
 }
 
 export function PortalWatchlistGrid({ query }: PortalWatchlistGridProps): React.ReactElement {
+  const pathname = usePathname();
+  const inVault = isVaultPath(pathname);
   const [players, setPlayers] = useState<PortalWatchlistPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +54,7 @@ export function PortalWatchlistGrid({ query }: PortalWatchlistGridProps): React.
         return (
           <a
             key={p.id}
-            href={`/player/${p.slug}?tab=portal`}
+            href={`${playerProfilePath(p.slug, 'PORTAL', inVault)}?tab=portal`}
             className="fc-portal-card"
           >
             <span className="fc-portal-card__rank">#{p.rank}</span>

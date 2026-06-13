@@ -151,8 +151,9 @@ function scoreFromChecks(checks, ids) {
   const relevant = ids.length
     ? checks.filter((c) => ids.some((id) => String(c.id || '').startsWith(id) || c.id === id))
     : checks;
-  if (!relevant.length) return 100;
+  if (!relevant.length) return null;
   const failed = relevant.filter((c) => !c.pass);
+  if (!failed.length) return 100;
   const penalty = failed.reduce((sum, c) => sum + penaltyForCheck(c), 0);
   return Math.max(0, Math.min(100, 100 - penalty));
 }
@@ -171,12 +172,13 @@ function overallScore(moduleScores) {
   let weighted = 0;
   let totalWeight = 0;
   Object.entries(MODULE_WEIGHTS).forEach(([mod, weight]) => {
-    if (typeof moduleScores[mod] === 'number') {
-      weighted += moduleScores[mod] * weight;
+    const value = moduleScores[mod];
+    if (typeof value === 'number') {
+      weighted += value * weight;
       totalWeight += weight;
     }
   });
-  if (!totalWeight) return 0;
+  if (!totalWeight) return moduleScores.api ?? 100;
   return Math.round(weighted / totalWeight);
 }
 

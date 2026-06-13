@@ -3,6 +3,9 @@
  */
 import React, { useMemo, useState } from 'react';
 import type { FeedPrediction } from '@/lib/predictions-api';
+import { playerProfilePath } from '@/lib/player-routes';
+import { usePathname } from '@/lib/use-pathname';
+import { isVaultPath } from '@/lib/vault-routes';
 import { TrendingIndicator } from './TrendingIndicator';
 
 export type FutureCastHomeCardVariant =
@@ -43,8 +46,10 @@ export function FutureCastHomeCard({
   prediction,
   variant,
 }: FutureCastHomeCardProps): React.ReactElement {
+  const pathname = usePathname();
+  const inVault = isVaultPath(pathname);
   const slug = prediction.playerSlug || prediction.playerId;
-  const href = `/player/${encodeURIComponent(slug)}`;
+  const href = playerProfilePath(slug, 'HIGH_SCHOOL', inVault);
   const [photoIndex, setPhotoIndex] = useState(0);
   const photos = useMemo(() => headshotCandidates(slug), [slug]);
   const showPhoto = photoIndex < photos.length;

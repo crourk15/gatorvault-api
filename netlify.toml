@@ -127,6 +127,11 @@
   status = 200
 
 [[redirects]]
+  from = "/vault/futurecast/player/*"
+  to = "/vault/futurecast/player/index.html"
+  status = 200
+
+[[redirects]]
   from = "/vault/portal/player/*"
   to = "/vault/portal/player/index.html"
   status = 200

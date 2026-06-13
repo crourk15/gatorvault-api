@@ -434,19 +434,34 @@ function getLayersPayload() {
  */
 async function recomputeFromDeployProbes(opts = {}) {
   const collected = await dataLayer.collectAllSignals(null);
-  const apiFails = [
+  const probeSignals = [
     ...collected.layers.apiHealth,
     ...collected.layers.recruiting.filter((s) => s.module === 'api'),
-    ...collected.layers.teamData.filter((s) => s.module === 'api')
+    ...collected.layers.teamData.filter((s) => s.module === 'api'),
+    ...collected.layers.filmRoom,
+    ...collected.layers.cacheHealth
   ];
 
-  const checks = apiFails.map((s) => ({
+  const checks = probeSignals.map((s) => ({
     id: s.id || s.checkId || 'deploy-probe',
     module: s.module || 'api',
     pass: false,
     label: s.label || s.error,
-    error: s.error || s.label
+    error: s.error || s.label,
+    details: s.details
   }));
+
+  const serverErrors = probeSignals.filter(
+    (s) => s.details?.[0]?.status >= 500 || /502|503|504/.test(String(s.error || s.label || ''))
+  );
+
+  let apiScore = 100;
+  if (checks.length > 0) {
+    apiScore = Math.max(0, 100 - Math.min(75, checks.length * 12));
+  }
+  if (serverErrors.length > 0) {
+    apiScore = Math.min(apiScore, Math.max(20, 100 - serverErrors.length * 28));
+  }
 
   const run = {
     id: opts.runId || `deploy_${Date.now()}`,
@@ -457,12 +472,27 @@ async function recomputeFromDeployProbes(opts = {}) {
     }
   };
 
-  const result = await recomputeFromRun(run, { daily: true, weekly: false });
+  let doc = store.readDoc();
+  doc = store.decaySignalHistory(doc);
+  doc.lastRunId = run.id;
+  doc.lastComputedAt = run.finishedAt;
+  doc.scores = {
+    overall: apiScore,
+    modules: { api: apiScore },
+    pages: doc.scores?.pages || {},
+    features: doc.scores?.features || {}
+  };
+  doc.intelligenceLayers = {
+    ...(doc.intelligenceLayers || {}),
+    data: { counts: collected.counts, sources: ['deploy-probe'] },
+    deployProbe: { checkedAt: run.finishedAt, failures: checks.length, serverErrors: serverErrors.length }
+  };
+  store.writeDoc(doc);
 
   try {
     const deployMonitor = require('../deploy-monitor');
     deployMonitor.recordHealthRecompute({
-      overall: result.scores?.overall,
+      overall: apiScore,
       deployId: process.env.RENDER_GIT_COMMIT?.slice(0, 12) || null,
       source: opts.source || 'deploy-boot'
     });
@@ -470,7 +500,7 @@ async function recomputeFromDeployProbes(opts = {}) {
     /* optional */
   }
 
-  return result;
+  return { ok: true, scores: doc.scores, run };
 }
 
 module.exports = {

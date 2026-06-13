@@ -86,6 +86,19 @@ async function startProductIntelScheduler() {
     });
   }, syncMs);
 
+  setInterval(() => {
+    engine
+      .recomputeFromDeployProbes({ source: 'live-probe' })
+      .then((r) => {
+        if (r.scores?.overall != null && r.scores.overall < 100) {
+          console.log('[product-intel] live probe — overall', r.scores.overall);
+        }
+      })
+      .catch((err) => {
+        console.warn('[product-intel] live probe failed:', err.message);
+      });
+  }, syncMs);
+
   const tick = async () => {
     const now = new Date();
     const dayKey = now.toISOString().slice(0, 10);

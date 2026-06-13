@@ -45,12 +45,11 @@ export function isVaultPath(pathname: string): boolean {
 
 export function vaultPortalBackHref(pathname: string): string {
   if (isVaultPath(pathname)) return '/vault/portal';
-  if (pathname.replace(/\/$/, '').startsWith('/portal')) return '/vault/portal';
-  return '/vault/portal';
+  return '/portal';
 }
 
 export function vaultPortalBackLabel(pathname: string): string {
-  return '← Portal Directory';
+  return isVaultPath(pathname) ? '← Portal Directory' : '← Portal';
 }
 
 export function vaultFutureCastBackHref(pathname: string): string {

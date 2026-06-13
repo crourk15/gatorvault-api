@@ -31,12 +31,15 @@ export function isFutureCastEligible(row: {
 export function isUfCommitRow(row: {
   lifecycle?: string | null;
   committed_to?: string | null;
+  committedTo?: string | null;
   uf_status?: string | null;
+  ufStatus?: string | null;
 }): boolean {
   if (String(row.lifecycle ?? '').toUpperCase() !== 'HS') return false;
-  if (row.uf_status === 'COMMITTED') return true;
-  if (!isFloridaSchool(row.committed_to)) return false;
-  const status = String(row.uf_status ?? '').toUpperCase();
+  const status = String(row.uf_status ?? row.ufStatus ?? '').toUpperCase();
+  const committed = row.committed_to ?? row.committedTo ?? null;
+  if (status === 'COMMITTED') return true;
+  if (!isFloridaSchool(committed)) return false;
   if (status === 'TARGET' || status === 'OFFERED' || status === 'WATCH') return false;
   return true;
 }

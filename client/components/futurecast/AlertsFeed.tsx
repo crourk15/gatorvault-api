@@ -4,11 +4,16 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FutureCastSubNav } from '@/components/site/FutureCastSubNav';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
+import { playerProfilePath } from '@/lib/player-routes';
+import { usePathname } from '@/lib/use-pathname';
+import { isVaultPath } from '@/lib/vault-routes';
 import '@/lib/futurecast.css';
 
 const REFRESH_MS = 60_000;
 
 export function AlertsFeed(): React.ReactElement {
+  const pathname = usePathname();
+  const inVault = isVaultPath(pathname);
   const [alerts, setAlerts] = useState<FutureCastAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -79,7 +84,7 @@ export function AlertsFeed(): React.ReactElement {
       <div className="fc-alerts__list">
         {alerts.map((alert) => (
           <article key={alert.id} className="fc-alerts__item">
-            <a href={`/player/${encodeURIComponent(alert.playerSlug)}`} className="fc-alerts__message">
+            <a href={playerProfilePath(alert.playerSlug, 'HIGH_SCHOOL', inVault)} className="fc-alerts__message">
               {alert.message}
             </a>
             <p className="fc-alerts__meta">

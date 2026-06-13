@@ -2,6 +2,9 @@
  * UF Fit Watchlist grid — GET /api/uf-fit/watchlist
  */
 import React, { useCallback, useEffect, useState } from 'react';
+import { playerProfilePath } from '@/lib/player-routes';
+import { usePathname } from '@/lib/use-pathname';
+import { isVaultPath } from '@/lib/vault-routes';
 import {
   fetchUfFitWatchlist,
   fitTierLabel,
@@ -15,6 +18,8 @@ export interface UfFitWatchlistGridProps {
 }
 
 export function UfFitWatchlistGrid({ query }: UfFitWatchlistGridProps): React.ReactElement {
+  const pathname = usePathname();
+  const inVault = isVaultPath(pathname);
   const [players, setPlayers] = useState<UfFitWatchlistPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +51,7 @@ export function UfFitWatchlistGrid({ query }: UfFitWatchlistGridProps): React.Re
       {players.map((p) => (
         <a
           key={p.id}
-          href={`/player/${p.slug}?tab=uf-fit`}
+          href={`${playerProfilePath(p.slug, 'HIGH_SCHOOL', inVault)}?tab=uf-fit`}
           className="fc-uf-fit-card"
         >
           <span className="fc-uf-fit-card__rank">#{p.rank}</span>

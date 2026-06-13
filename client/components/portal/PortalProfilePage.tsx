@@ -116,7 +116,7 @@ export function PortalProfilePage({ slug }: { slug: string }): React.ReactElemen
     } finally {
       setLoading(false);
     }
-  }, [slug]);
+  }, [slug, pathname]);
 
   useEffect(() => {
     void load();

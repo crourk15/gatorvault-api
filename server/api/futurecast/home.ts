@@ -15,7 +15,7 @@ import {
   serializeFeedRowsWithVolatility,
   serializeStockRowsWithVolatility,
 } from '../predictions/utils-api';
-import { isFutureCastEligible } from './eligibility';
+import { isFutureCastEligible, isUfCommitRow } from './eligibility';
 import {
   dedupeFeedRows,
   filterModelPredictionsOnly,
@@ -30,6 +30,15 @@ import { listRecruitingStoreCommits, mergeLiveCommits } from './live-commits';
 const MOVEMENT_WINDOW_DAYS = 7;
 const SECTION_LIMIT = 12;
 const PORTAL_LIMIT = 8;
+
+function normalizeSlug(value: string | null | undefined): string {
+  if (!value) return '';
+  try {
+    return decodeURIComponent(String(value)).toLowerCase().trim();
+  } catch {
+    return String(value).toLowerCase().trim();
+  }
+}
 
 function buildHeatmapBuckets(rows: Awaited<ReturnType<typeof listStockBoardRows>>) {
   let upCount = 0;
@@ -90,11 +99,13 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
     const liveCommits = await listRecruitingStoreCommits(FUTURECAST_CLASS_YEAR);
     const commits = mergeLiveCommits(modelCommits, liveCommits);
 
-    const commitSlugs = new Set(
-      commits.map((row) => row.playerSlug).filter(Boolean) as string[]
-    );
+    const commitSlugs = new Set<string>();
+    for (const row of commits) {
+      if (row.playerSlug) commitSlugs.add(normalizeSlug(row.playerSlug));
+      if (row.playerId) commitSlugs.add(normalizeSlug(row.playerId));
+    }
     const trendingMovement = filterTrendingStockRows(movementRows).filter(
-      (row) => !commitSlugs.has(row.slug)
+      (row) => !commitSlugs.has(normalizeSlug(row.slug))
     );
     const playerIds = trendingMovement.map((row) => row.player_id);
     const signalBoosts = await loadSignalMomentumBoosts(MOVEMENT_WINDOW_DAYS, playerIds);
@@ -122,7 +133,12 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
           committed_to: row.committedTo,
           uf_status: row.ufStatus,
         }) &&
-        !commitSlugs.has(row.playerSlug)
+        !commitSlugs.has(normalizeSlug(row.playerSlug)) &&
+        !isUfCommitRow({
+          lifecycle: row.lifecycle,
+          committedTo: row.committedTo,
+          ufStatus: row.ufStatus,
+        })
     );
     const hsTrendingDown = trendingDown.filter(
       (row) =>
@@ -132,7 +148,12 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
           committed_to: row.committedTo,
           uf_status: row.ufStatus,
         }) &&
-        !commitSlugs.has(row.playerSlug)
+        !commitSlugs.has(normalizeSlug(row.playerSlug)) &&
+        !isUfCommitRow({
+          lifecycle: row.lifecycle,
+          committedTo: row.committedTo,
+          ufStatus: row.ufStatus,
+        })
     );
 
     const portalWatchlist = portalRows

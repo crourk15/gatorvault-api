@@ -21,6 +21,7 @@ const PROBE_API = process.argv.includes('--api') || (!STATIC_ONLY && process.env
 const REQUIRED_HTML_ROUTES = [
   'index.html',
   'vault/futurecast/index.html',
+  'vault/futurecast/player/index.html',
   'vault/recruiting-board/index.html',
   'vault/portal/player/index.html',
   'players/index.html',

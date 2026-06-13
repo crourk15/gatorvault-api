@@ -908,9 +908,8 @@ body.gv-team-modal-open {
 }
 
 #gv-team-detail-modal .gv-team-modal-body {
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: auto;
-  max-height: calc(100vh - 12rem);
   padding-right: max(var(--gv-team-space-4), env(safe-area-inset-right));
 }
 

@@ -5,6 +5,8 @@ import React, { useMemo, useState } from 'react';
 import type { PortalWatchlistHomePlayer } from '@/lib/futurecast-home-api';
 import { portalLikelihoodBand } from '@/lib/portal-api';
 import { playerProfilePath } from '@/lib/player-routes';
+import { usePathname } from '@/lib/use-pathname';
+import { isVaultPath } from '@/lib/vault-routes';
 
 function playerInitials(name: string): string {
   return name
@@ -28,6 +30,8 @@ export function PortalWatchlistCard({
 }: {
   player: PortalWatchlistHomePlayer;
 }): React.ReactElement {
+  const pathname = usePathname();
+  const inVault = isVaultPath(pathname);
   const band = portalLikelihoodBand(player.portalLikelihood);
   const [photoIndex, setPhotoIndex] = useState(0);
   const photos = useMemo(() => headshotCandidates(player.slug), [player.slug]);
@@ -35,7 +39,7 @@ export function PortalWatchlistCard({
 
   return (
     <a
-      href={playerProfilePath(player.slug, 'PORTAL')}
+      href={playerProfilePath(player.slug, 'PORTAL', inVault)}
       className="fc-portal-card fc-home-portal-card"
     >
       <div className="fc-portal-card__inner">
