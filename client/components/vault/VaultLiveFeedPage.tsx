@@ -1,39 +1,51 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { fetchLiveDashboard, buildSocialLanes, type BeatPost, type LiveFeedItem, type PodcastShow } from '@/lib/live-api';
+import { fetchLiveDashboard, type BeatPost, type LiveFeedItem, type PodcastShow } from '@/lib/live-api';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
-
 import {
   liveFeedTabPath,
   parseLiveFeedTabFromPath,
   type LiveFeedTab,
 } from '@/lib/vault-route-map';
-
-type FeedCategory = 'all' | 'news' | 'recruiting' | 'portal' | 'game' | 'podcast';
+import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
 
 const REFRESH_MS = 60_000;
+const LIVE_STATE_KEY = 'live';
 
-const CATEGORY_CHIPS: { id: FeedCategory; label: string; icon: string }[] = [
-  { id: 'all', label: 'All', icon: '⚡' },
-  { id: 'news', label: 'Headlines', icon: '📰' },
-  { id: 'recruiting', label: 'Recruiting', icon: '🎯' },
-  { id: 'portal', label: 'Portal', icon: '🔄' },
-  { id: 'game', label: 'Game Week', icon: '🏈' },
-  { id: 'podcast', label: 'Audio', icon: '🎙️' },
+type FeedCategory =
+  | 'all'
+  | 'commit'
+  | 'portal'
+  | 'visit'
+  | 'offer'
+  | 'prediction'
+  | 'article'
+  | 'score'
+  | 'thread';
+
+const CATEGORY_KEYS: FeedCategory[] = [
+  'all',
+  'commit',
+  'portal',
+  'visit',
+  'offer',
+  'prediction',
+  'article',
+  'score',
+  'thread',
 ];
 
-const TYPE_ICONS: Record<string, string> = {
-  news: '📰',
-  headline: '📰',
-  recruiting: '🎯',
-  portal: '🔄',
-  transfer: '🔄',
-  game: '🏈',
-  score: '📊',
-  podcast: '🎙️',
-  beat: '✍️',
-  x: '𝕏',
+const CATEGORY_LABELS: Record<FeedCategory, string> = {
+  all: 'All',
+  commit: 'Commits',
+  portal: 'Portal',
+  visit: 'Visits',
+  offer: 'Offers',
+  prediction: 'Predictions',
+  article: 'Articles',
+  score: 'Scores',
+  thread: 'Threads',
 };
 
 function timeAgo(iso?: string): string {
@@ -41,40 +53,58 @@ function timeAgo(iso?: string): string {
   const ms = Date.now() - new Date(iso).getTime();
   if (ms < 60_000) return 'Just now';
   const m = Math.floor(ms / 60_000);
-  if (m < 60) return `${m}m`;
+  if (m < 60) return `${m}m ago`;
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h`;
-  return `${Math.floor(h / 24)}d`;
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  if (d < 7) return `${d}d ago`;
+  return new Date(iso).toLocaleDateString();
 }
 
-function feedIcon(item: LiveFeedItem): string {
-  const t = String(item.type ?? item.source ?? 'news').toLowerCase();
-  for (const [key, icon] of Object.entries(TYPE_ICONS)) {
-    if (t.includes(key)) return icon;
-  }
-  return '📌';
+function normalizeFeedType(item: LiveFeedItem): FeedCategory | null {
+  const raw = String(item.type ?? '').toLowerCase();
+  if (raw === 'offers') return 'offer';
+  if (CATEGORY_KEYS.includes(raw as FeedCategory)) return raw as FeedCategory;
+  const blob = `${item.title ?? ''} ${item.source ?? ''}`.toLowerCase();
+  if (blob.includes('commit')) return 'commit';
+  if (blob.includes('portal') || blob.includes('transfer')) return 'portal';
+  if (blob.includes('visit')) return 'visit';
+  if (blob.includes('offer')) return 'offer';
+  if (blob.includes('predict')) return 'prediction';
+  if (blob.includes('score')) return 'score';
+  if (raw === 'news' || raw === 'headline' || blob.includes('article')) return 'article';
+  if (raw === 'thread' || raw === 'beat') return 'thread';
+  return 'article';
 }
 
-function matchesCategory(item: LiveFeedItem, cat: FeedCategory): boolean {
-  if (cat === 'all') return true;
-  const blob = `${item.type ?? ''} ${item.source ?? ''} ${item.title ?? ''}`.toLowerCase();
-  if (cat === 'news') return blob.includes('news') || blob.includes('headline') || !blob.includes('recruit');
-  if (cat === 'recruiting') return blob.includes('recruit') || blob.includes('commit') || blob.includes('target');
-  if (cat === 'portal') return blob.includes('portal') || blob.includes('transfer');
-  if (cat === 'game') return blob.includes('game') || blob.includes('score') || blob.includes('gator');
-  if (cat === 'podcast') return blob.includes('podcast') || blob.includes('audio');
-  return true;
+function typeLabel(type: FeedCategory): string {
+  const map: Record<FeedCategory, string> = {
+    all: 'All',
+    commit: 'Commit',
+    portal: 'Portal',
+    visit: 'Visit',
+    offer: 'Offer',
+    prediction: 'Prediction',
+    article: 'Article',
+    score: 'Score',
+    thread: 'Thread',
+  };
+  return map[type] ?? 'Info';
+}
+
+function liveTabToInternal(tab: LiveFeedTab): 'feed' | 'beat' | 'podcast' {
+  if (tab === 'beat') return 'beat';
+  if (tab === 'podcasts') return 'podcast';
+  return 'feed';
 }
 
 function LiveTicker({ items }: { items: LiveFeedItem[] }): React.ReactElement | null {
   const headlines = items.slice(0, 12);
   if (headlines.length === 0) return null;
-
   const tickerText = headlines
     .map((h) => h.title?.trim())
     .filter(Boolean)
     .join(' · ');
-
   return (
     <div className="gv-live-ticker" aria-label="Breaking headlines ticker">
       <span className="gv-live-ticker__badge">LIVE</span>
@@ -88,12 +118,6 @@ function LiveTicker({ items }: { items: LiveFeedItem[] }): React.ReactElement | 
   );
 }
 
-function liveTabToInternal(tab: LiveFeedTab): 'feed' | 'beat' | 'podcast' {
-  if (tab === 'beat') return 'beat';
-  if (tab === 'podcasts') return 'podcast';
-  return 'feed';
-}
-
 export function VaultLiveFeedPage(): React.ReactElement {
   const [tab, setTab] = useState<'feed' | 'beat' | 'podcast'>(() =>
     liveTabToInternal(parseLiveFeedTabFromPath() ?? 'headlines')
@@ -104,6 +128,24 @@ export function VaultLiveFeedPage(): React.ReactElement {
   const [podcasts, setPodcasts] = useState<PodcastShow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
+
+  useVaultPageRestore(LIVE_STATE_KEY, (saved) => {
+    if (saved.tab === 'beat' || saved.tab === 'podcast' || saved.tab === 'feed') {
+      setTab(saved.tab);
+    }
+    if (saved.filters?.category && CATEGORY_KEYS.includes(saved.filters.category as FeedCategory)) {
+      setCategory(saved.filters.category as FeedCategory);
+    }
+  });
+
+  const persistState = useCallback(() => {
+    saveVaultPageState(LIVE_STATE_KEY, {
+      tab,
+      scrollY: window.scrollY,
+      filters: { category },
+    });
+  }, [tab, category]);
 
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) {
@@ -111,16 +153,19 @@ export function VaultLiveFeedPage(): React.ReactElement {
       setError(null);
     }
     try {
-      const dash = await fetchLiveDashboard(40);
+      const dash = await fetchLiveDashboard(60);
       setFeed(dash.feed);
       setBeat(dash.beat.posts ?? []);
       setPodcasts(dash.podcasts.shows ?? []);
+      setUpdatedAt(dash.updatedAt ?? new Date().toISOString());
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load live feed.');
     } finally {
       if (isInitial) setLoading(false);
     }
   }, []);
+
+  useVaultDataReload(() => void load(false));
 
   useEffect(() => {
     const sync = () => setTab(liveTabToInternal(parseLiveFeedTabFromPath() ?? 'headlines'));
@@ -130,9 +175,11 @@ export function VaultLiveFeedPage(): React.ReactElement {
   }, []);
 
   const selectTab = (next: LiveFeedTab) => {
-    setTab(liveTabToInternal(next));
+    const internal = liveTabToInternal(next);
+    setTab(internal);
     if (typeof window !== 'undefined') {
       window.history.replaceState(null, '', liveFeedTabPath(next));
+      saveVaultPageState(LIVE_STATE_KEY, { tab: internal, scrollY: window.scrollY, filters: { category } });
     }
   };
 
@@ -154,49 +201,66 @@ export function VaultLiveFeedPage(): React.ReactElement {
     };
   }, [load]);
 
-  const filteredFeed = useMemo(
-    () => feed.filter((item) => matchesCategory(item, category)),
-    [feed, category]
+  useEffect(() => {
+    const onLeave = () => persistState();
+    window.addEventListener('pagehide', onLeave);
+    return () => window.removeEventListener('pagehide', onLeave);
+  }, [persistState]);
+
+  const normalizedFeed = useMemo(
+    () =>
+      feed
+        .map((item) => ({ item, type: normalizeFeedType(item) }))
+        .filter((row): row is { item: LiveFeedItem; type: FeedCategory } => row.type != null),
+    [feed]
   );
 
-  const socialLanes = useMemo(() => buildSocialLanes(beat), [beat]);
+  const categoryCounts = useMemo(() => {
+    const counts: Record<FeedCategory, number> = {
+      all: normalizedFeed.length,
+      commit: 0,
+      portal: 0,
+      visit: 0,
+      offer: 0,
+      prediction: 0,
+      article: 0,
+      score: 0,
+      thread: 0,
+    };
+    for (const { type } of normalizedFeed) counts[type] += 1;
+    return counts;
+  }, [normalizedFeed]);
+
+  const filteredFeed = useMemo(() => {
+    if (category === 'all') return normalizedFeed;
+    return normalizedFeed.filter((row) => row.type === category);
+  }, [normalizedFeed, category]);
+
+  const groupedFeed = useMemo(() => {
+    const groups = new Map<string, typeof filteredFeed>();
+    for (const row of filteredFeed) {
+      const key = row.type;
+      const list = groups.get(key) ?? [];
+      list.push(row);
+      groups.set(key, list);
+    }
+    return groups;
+  }, [filteredFeed]);
 
   return (
-    <div className="gv-live-feed gv-live-feed--espn" data-testid="vault-live-feed">
+    <div className="gv-live-feed gv-live-feed--classic" data-testid="vault-live-feed">
       <LiveTicker items={feed} />
 
       <div className="gv-live-feed__hero">
         <div>
-          <h1 className="gv-page-title">GatorNation Live</h1>
+          <h1 className="gv-page-title">
+            ⚡ GatorNation Live <span className="gv-live-dot" aria-hidden="true" />
+          </h1>
           <p className="gv-page-subtitle">
-            Real-time media center — headlines, X feed, beat writers, UF official, and podcasts.
+            Real-time commits, portal, visits, beat writers, and podcasts — auto-refreshes every 60s.
           </p>
         </div>
-        <span className="gv-live-feed__refresh-badge">↻ 60s</span>
-      </div>
-
-      <div className="gv-live-feed__social-lanes">
-        {socialLanes.map((lane) => (
-          <section key={lane.id} className="gv-live-feed__social-lane">
-            <h2 className="gv-live-feed__social-lane-title">
-              <span aria-hidden="true">{lane.icon}</span> {lane.label}
-            </h2>
-            <ul className="gv-live-feed__list">
-              {lane.posts.slice(0, 4).map((p, i) => (
-                <li key={`${lane.id}-${i}`} className="gv-live-feed__row gv-live-feed__row--social">
-                  <span className="gv-live-feed__row-icon" aria-hidden="true">{lane.icon}</span>
-                  <div className="gv-live-feed__row-body">
-                    {p.handle && <p className="gv-live-feed__beat-handle">@{p.handle.replace(/^@/, '')}</p>}
-                    <p className="gv-live-feed__beat-text">{p.text?.slice(0, 160)}</p>
-                  </div>
-                </li>
-              ))}
-              {lane.posts.length === 0 && (
-                <li className="gv-live-feed__row gv-live-feed__row--empty">No posts in this lane yet.</li>
-              )}
-            </ul>
-          </section>
-        ))}
+        <span className="gv-live-feed__refresh-badge">↻ 60s{updatedAt ? ` · ${timeAgo(updatedAt)}` : ''}</span>
       </div>
 
       <div className="gv-live-feed__tabs">
@@ -205,14 +269,14 @@ export function VaultLiveFeedPage(): React.ReactElement {
           className={`gv-live-feed__tab${tab === 'feed' ? ' is-active' : ''}`}
           onClick={() => selectTab('headlines')}
         >
-          📰 Headlines
+          📰 Live Feed
         </button>
         <button
           type="button"
           className={`gv-live-feed__tab${tab === 'beat' ? ' is-active' : ''}`}
           onClick={() => selectTab('beat')}
         >
-          ✍️ Beat Writers
+          𝕏 Beat Writers
         </button>
         <button
           type="button"
@@ -223,108 +287,133 @@ export function VaultLiveFeedPage(): React.ReactElement {
         </button>
       </div>
 
-      {tab === 'feed' && (
-        <div className="gv-live-feed__chips">
-          {CATEGORY_CHIPS.map((chip) => (
-            <button
-              key={chip.id}
-              type="button"
-              className={`gv-live-feed__chip${category === chip.id ? ' is-active' : ''}`}
-              onClick={() => setCategory(chip.id)}
-            >
-              <span aria-hidden="true">{chip.icon}</span> {chip.label}
-            </button>
-          ))}
-        </div>
-      )}
-
       {loading && <p className="gv-page-status">Loading live feed…</p>}
       {error && !loading && (
         <UiError message={error} retry={() => void load(true)} backHref="/vault" backLabel="← Dashboard" />
       )}
 
       {!loading && !error && tab === 'feed' && (
-        <ul className="gv-live-feed__list">
-          {filteredFeed.map((item, i) => (
-            <li key={item.id ?? i} className="gv-live-feed__row gv-live-feed__row--headline">
-              <span className="gv-live-feed__row-icon" aria-hidden="true">
-                {feedIcon(item)}
-              </span>
-              <div className="gv-live-feed__row-body">
-                {item.url ? (
-                  <a href={item.url} target="_blank" rel="noopener noreferrer" className="gv-live-feed__row-title">
-                    {item.title}
-                  </a>
-                ) : (
-                  <p className="gv-live-feed__row-title">{item.title}</p>
-                )}
-                <p className="gv-live-feed__row-meta">
-                  <span className="gv-live-feed__row-source">{item.source || item.type || 'Update'}</span>
-                  <span className="gv-live-feed__row-time">{timeAgo(item.createdAt)}</span>
-                </p>
-              </div>
-            </li>
-          ))}
-          {filteredFeed.length === 0 && <UiEmpty message="No headlines in this category." />}
-        </ul>
+        <>
+          <div className="gv-live-categories">
+            {CATEGORY_KEYS.map((key) => (
+              <button
+                key={key}
+                type="button"
+                className={`gv-live-categories__pill${category === key ? ' is-active' : ''}`}
+                onClick={() => {
+                  setCategory(key);
+                  saveVaultPageState(LIVE_STATE_KEY, { tab, scrollY: window.scrollY, filters: { category: key } });
+                }}
+              >
+                {CATEGORY_LABELS[key]} <span>{categoryCounts[key]}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="live-feed-list">
+            {filteredFeed.length === 0 && <UiEmpty message="No live items in this category yet." />}
+            {category === 'all'
+              ? filteredFeed.map(({ item, type }, i) => (
+                  <article key={item.id ?? i} className="live-feed-item live-feed-item--linked">
+                    <div className="live-feed-item__head">
+                      <span className={`live-type-pill live-type-${type}`}>{typeLabel(type)}</span>
+                      <span className="live-feed-item__time">{timeAgo(item.createdAt)}</span>
+                    </div>
+                    {item.url ? (
+                      <a href={item.url} target="_blank" rel="noopener noreferrer" className="live-feed-link">
+                        {item.title}
+                      </a>
+                    ) : (
+                      <p className="live-feed-item__title">{item.title}</p>
+                    )}
+                    {item.source ? <p className="live-feed-item__source">{item.source}</p> : null}
+                  </article>
+                ))
+              : Array.from(groupedFeed.entries()).map(([type, rows]) => (
+                  <section key={type} className="gv-live-group">
+                    <h2 className="gv-live-group__title">{CATEGORY_LABELS[type as FeedCategory]}</h2>
+                    {rows.map(({ item }, i) => (
+                      <article key={item.id ?? i} className="live-feed-item live-feed-item--linked">
+                        <div className="live-feed-item__head">
+                          <span className={`live-type-pill live-type-${type}`}>{typeLabel(type as FeedCategory)}</span>
+                          <span className="live-feed-item__time">{timeAgo(item.createdAt)}</span>
+                        </div>
+                        {item.url ? (
+                          <a href={item.url} target="_blank" rel="noopener noreferrer" className="live-feed-link">
+                            {item.title}
+                          </a>
+                        ) : (
+                          <p className="live-feed-item__title">{item.title}</p>
+                        )}
+                        {item.source ? <p className="live-feed-item__source">{item.source}</p> : null}
+                      </article>
+                    ))}
+                  </section>
+                ))}
+          </div>
+        </>
       )}
 
       {!loading && !error && tab === 'beat' && (
-        <ul className="gv-live-feed__list">
+        <div className="live-feed-list">
           {beat.map((p, i) => (
-            <li key={i} className="gv-live-feed__row gv-live-feed__row--beat">
-              <span className="gv-live-feed__row-icon" aria-hidden="true">
-                ✍️
-              </span>
-              <div className="gv-live-feed__row-body">
-                <p className="gv-live-feed__beat-handle">@{p.handle}</p>
-                <p className="gv-live-feed__beat-text">{p.text}</p>
-                <p className="gv-live-feed__row-meta">
-                  <span className="gv-live-feed__row-source">
-                    {p.outlet ? `${p.writerName} · ${p.outlet}` : p.writerName || 'Beat'}
-                  </span>
-                  <span className="gv-live-feed__row-time">{timeAgo(p.publishedAt)}</span>
-                </p>
-                {p.url ? (
-                  <a href={p.url} target="_blank" rel="noopener noreferrer" className="gv-live-feed__beat-link">
-                    View on X →
-                  </a>
-                ) : null}
+            <article
+              key={i}
+              className="gv-beat-card"
+              role={p.url ? 'link' : undefined}
+              tabIndex={p.url ? 0 : undefined}
+              onClick={() => p.url && window.open(p.url, '_blank', 'noopener,noreferrer')}
+              onKeyDown={(e) => {
+                if (p.url && (e.key === 'Enter' || e.key === ' ')) {
+                  e.preventDefault();
+                  window.open(p.url, '_blank', 'noopener,noreferrer');
+                }
+              }}
+            >
+              <div className="gv-beat-card__head">
+                <span className="gv-beat-card__handle">@{String(p.handle ?? '').replace(/^@/, '')}</span>
+                <span className="gv-beat-card__time">{timeAgo(p.publishedAt)}</span>
               </div>
-            </li>
+              <p className="gv-beat-text">{p.text}</p>
+              {p.outlet ? (
+                <p className="gv-beat-card__meta">
+                  {p.writerName} · {p.outlet}
+                </p>
+              ) : null}
+            </article>
           ))}
-          {beat.length === 0 && <UiEmpty message="Beat stream loading or awaiting X token." />}
-        </ul>
+          {beat.length === 0 && <UiEmpty message="Beat stream loading or awaiting posts." />}
+        </div>
       )}
 
       {!loading && !error && tab === 'podcast' && (
-        <ul className="gv-live-feed__list gv-live-feed__list--podcasts">
+        <div className="live-feed-list">
           {podcasts.map((show, i) => (
-            <li key={i} className="gv-live-feed__podcast-card">
-              <span className="gv-live-feed__podcast-icon" aria-hidden="true">
+            <article key={i} className="live-pod-card">
+              <span className="live-pod-card__icon" aria-hidden="true">
                 🎙️
               </span>
               <div>
-                <p className="gv-live-feed__podcast-title">{show.title}</p>
-                {show.description ? <p className="gv-live-feed__podcast-desc">{show.description}</p> : null}
-                <div className="gv-live-feed__podcast-links">
+                <p className="live-pod-card__title">{show.title}</p>
+                {show.description ? <p className="live-pod-card__desc">{show.description}</p> : null}
+                <div className="live-pod-platforms">
                   {show.platforms?.map((pl) => (
                     <a
                       key={pl.url}
                       href={pl.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="gv-live-feed__podcast-link"
+                      className="live-pod-platform-pill"
                     >
-                      {pl.name} →
+                      {pl.name}
                     </a>
                   ))}
                 </div>
               </div>
-            </li>
+            </article>
           ))}
           {podcasts.length === 0 && <UiEmpty message="No podcast shows listed yet." />}
-        </ul>
+        </div>
       )}
     </div>
   );

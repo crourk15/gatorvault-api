@@ -33,7 +33,7 @@ export const VAULT_PILLAR_ROUTES = {
   futurecast: '/vault/futurecast',
   team: '/vault/team',
   depthChart: '/vault/depth-chart',
-  liveFeed: '/vault/live-feed',
+  liveFeed: '/vault/live',
   filmRoom: '/vault/film-room',
   schedule: '/vault/schedule',
 } as const;
@@ -60,9 +60,9 @@ export const RECRUITING_LEGACY_PATH_ALIASES: Record<string, RecruitingHubTab> = 
 
 /** Live Feed tabs */
 export const LIVE_FEED_TAB_PATHS: Record<LiveFeedTab, string> = {
-  headlines: '/vault/live-feed/headlines',
-  beat: '/vault/live-feed/beat',
-  podcasts: '/vault/live-feed/podcasts',
+  headlines: '/vault/live/headlines',
+  beat: '/vault/live/beat',
+  podcasts: '/vault/live/podcasts',
 };
 
 /** Film Room segments → hub category label */
@@ -134,7 +134,7 @@ export const LEGACY_ROUTE_REDIRECTS: { from: string; to: string }[] = [
   { from: '/team.html', to: '/vault/team' },
   { from: '/recruiting.html', to: '/vault/recruiting' },
   { from: '/film-room.html', to: '/vault/film-room' },
-  { from: '/latest-updates.html', to: '/vault/live-feed' },
+  { from: '/latest-updates.html', to: '/vault/live' },
   { from: '/portal.html', to: '/vault/recruiting/portal' },
   { from: '/vault/tickets', to: '/vault/schedule' },
   { from: '/vault/tickets/', to: '/vault/schedule' },
@@ -148,6 +148,9 @@ export const LEGACY_ROUTE_REDIRECTS: { from: string; to: string }[] = [
   { from: '/vault/recruiting-board', to: '/vault/recruiting/board' },
   { from: '/vault/recruiting-board/*', to: '/vault/recruiting/board' },
   { from: '/vault/portal/player/*', to: '/vault/recruiting/player/:splat' },
+  { from: '/vault/live-feed', to: '/vault/live' },
+  { from: '/vault/live-feed/', to: '/vault/live' },
+  { from: '/vault/live-feed/*', to: '/vault/live' },
   { from: '/vault/depth-chart', to: '/vault/team' },
   { from: '/vault/depth-chart/', to: '/vault/team' },
   { from: '/vault/depth-chart/*', to: '/vault/team' },
@@ -188,9 +191,16 @@ export function recruitingTabPath(tab: RecruitingHubTab): string {
 
 export function parseLiveFeedTabFromPath(pathname?: string): LiveFeedTab | null {
   const p = normPath(pathname ?? (typeof window !== 'undefined' ? window.location.pathname : ''));
-  if (p.includes('/live-feed/beat')) return 'beat';
-  if (p.includes('/live-feed/podcasts')) return 'podcasts';
-  if (p.includes('/live-feed/headlines') || p === '/vault/live-feed') return 'headlines';
+  if (p.includes('/live/beat') || p.includes('/live-feed/beat')) return 'beat';
+  if (p.includes('/live/podcasts') || p.includes('/live-feed/podcasts')) return 'podcasts';
+  if (
+    p.includes('/live/headlines') ||
+    p === '/vault/live' ||
+    p.includes('/live-feed/headlines') ||
+    p === '/vault/live-feed'
+  ) {
+    return 'headlines';
+  }
   return null;
 }
 
@@ -221,6 +231,7 @@ export const REQUIRED_VAULT_EXPORTS = [
   'vault/recruiting/player/index.html',
   'vault/team/index.html',
   'vault/players/index.html',
+  'vault/live/index.html',
   'vault/live-feed/index.html',
   'vault/film-room/index.html',
   'vault/schedule/index.html',

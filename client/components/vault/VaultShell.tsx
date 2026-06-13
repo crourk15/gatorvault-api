@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { usePathname } from '@/lib/use-pathname';
 import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath } from '@/lib/vault-routes';
+import { prefetchVaultHref } from '@/lib/vault-navigation';
 
 function sidebarActive(pathname: string, href: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
@@ -17,6 +18,9 @@ function sidebarActive(pathname: string, href: string): boolean {
   }
   if (h === '/vault/team') {
     return p === h || p.startsWith('/vault/players/');
+  }
+  if (h === '/vault/live' || h === '/vault/live-feed') {
+    return p === '/vault/live' || p.startsWith('/vault/live/') || p === '/vault/live-feed' || p.startsWith('/vault/live-feed/');
   }
   if (h === '/vault/schedule') {
     return p === h || p.startsWith(`${h}/`) || p === '/vault/tickets' || p.startsWith('/vault/tickets/');
@@ -43,6 +47,8 @@ function NavLink({
       href={item.href}
       className={`${className}${sidebarActive(pathname, item.href) ? ' is-active' : ''}`}
       onClick={onClick}
+      onMouseEnter={() => prefetchVaultHref(item.href)}
+      onFocus={() => prefetchVaultHref(item.href)}
     >
       <span className="gv-vault-shell__nav-icon" aria-hidden="true">
         {item.icon}
@@ -62,7 +68,16 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
 
   useEffect(() => {
     setNavOpen(false);
+    prefetchVaultHref(pathname);
   }, [pathname]);
+
+  useEffect(() => {
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) window.dispatchEvent(new Event('vault:pageshow-restore'));
+    };
+    window.addEventListener('pageshow', onPageShow);
+    return () => window.removeEventListener('pageshow', onPageShow);
+  }, []);
 
   return (
     <div className="gv-vault-shell">
@@ -134,6 +149,8 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
             className={`gv-vault-bottom-nav__item${
               sidebarActive(pathname, item.href) ? ' is-active' : ''
             }`}
+            onMouseEnter={() => prefetchVaultHref(item.href)}
+            onFocus={() => prefetchVaultHref(item.href)}
           >
             <span className="gv-vault-bottom-nav__icon" aria-hidden="true">
               {item.icon}

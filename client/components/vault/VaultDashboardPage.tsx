@@ -32,10 +32,10 @@ const QUICK_LINKS = [
     desc: 'Full roster, depth chart, and portal tags.',
   },
   {
-    href: '/vault/live-feed',
+    href: '/vault/live',
     icon: '⚡',
-    title: 'Live Feed',
-    desc: 'Headlines, beat writers, podcasts, and ticker.',
+    title: 'GatorNation Live',
+    desc: 'X-style live feed — commits, portal, beat writers, and podcasts.',
   },
   {
     href: '/vault/schedule',

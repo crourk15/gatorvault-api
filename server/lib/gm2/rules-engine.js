@@ -105,6 +105,12 @@ function rulesForPlayerPage(player, intel = [], events = []) {
 
 function rulesForBoardPlayer(player) {
   if (isQuarantined(player)) return { allow: false, reason: 'player_quarantined' };
+  if (player?.category === 'target') {
+    const { isAllowlistedTarget } = require('../recruiting-target-allowlist');
+    if (!isAllowlistedTarget(player)) {
+      return { allow: false, reason: 'not_on_charles_allowlist' };
+    }
+  }
   if (player?.school && !identityValidator.isValidSchoolField(player.school, { allowCollege: player.category === 'portal' })) {
     return { allow: false, reason: 'invalid_school_on_board' };
   }

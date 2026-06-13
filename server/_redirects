@@ -13,7 +13,7 @@
 /?open=vault&tab=portal  /vault/recruiting/portal  301
 /?open=vault&tab=highlights  /vault/film-room/highlights  301
 /?open=vault&tab=gameweek  /vault/game-week  301
-/?open=vault&tab=live  /vault/live-feed  301
+/?open=vault&tab=live  /vault/live  301
 /?open=vault&tab=analytics  /vault/futurecast/movement  301
 /?open=vault&tab=scouting  /vault/recruiting/scouting  301
 /?open=vault&tab=articles  /vault/articles  301
@@ -33,7 +33,7 @@
 /team.html  /vault/team  301
 /recruiting.html  /vault/recruiting  301
 /film-room.html  /vault/film-room  301
-/latest-updates.html  /vault/live-feed  301
+/latest-updates.html  /vault/live  301
 /portal.html  /vault/recruiting/portal  301
 /vault/tickets  /vault/schedule  301
 /vault/tickets/  /vault/schedule  301
@@ -87,9 +87,12 @@
 /vault/team/  /vault/team/index.html  200
 /vault/team/*  /vault/team/index.html  200
 /vault/players/*  /vault/players/index.html  200
-/vault/live-feed  /vault/live-feed/index.html  200
-/vault/live-feed/  /vault/live-feed/index.html  200
-/vault/live-feed/*  /vault/live-feed/index.html  200
+/vault/live  /vault/live/index.html  200
+/vault/live/  /vault/live/index.html  200
+/vault/live/*  /vault/live/index.html  200
+/vault/live-feed  /vault/live/index.html  200
+/vault/live-feed/  /vault/live/index.html  200
+/vault/live-feed/*  /vault/live/index.html  200
 /vault/film-room  /vault/film-room/index.html  200
 /vault/film-room/  /vault/film-room/index.html  200
 /vault/film-room/*  /vault/film-room/index.html  200

@@ -570,12 +570,14 @@ async function createEvent(event) {
 }
 
 async function getBoard(classYear) {
+  const { filterAllowlistedTargets } = require('./recruiting-target-allowlist');
   const players = await getAllPlayers();
   const year = parseInt(classYear, 10);
   const commits = players.filter((p) => p.classYear === year && isFloridaCommit(p));
-  const targets = players.filter(
+  const rawTargets = players.filter(
     (p) => p.classYear === year && p.category === 'target' && !isFloridaCommit(p)
   );
+  const targets = filterAllowlistedTargets(rawTargets, year);
   const rankings = (await getRankings()).find((r) => r.classYear === year) || null;
   return { classYear: year, commits, targets, rankings };
 }

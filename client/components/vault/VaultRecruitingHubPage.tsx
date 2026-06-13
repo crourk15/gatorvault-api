@@ -17,6 +17,7 @@ import {
 } from '@/lib/vault-route-map';
 import { ensurePlayerSlug } from '@/lib/slug';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
+import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
 
 /** Portal window closed until Dec transfer portal opens */
 const PORTAL_SEASON_OPEN = false;
@@ -249,12 +250,26 @@ export function VaultRecruitingHubPage(): React.ReactElement {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  useVaultPageRestore('recruiting-hub', (saved) => {
+    if (saved.tab && TAB_LABELS.some((t) => t.id === saved.tab)) setTab(saved.tab as RecruitingHubTab);
+    if (saved.rankYear === 2027 || saved.rankYear === 2028) setRankYear(saved.rankYear);
+  });
+
+  const persistHubState = useCallback(() => {
+    saveVaultPageState('recruiting-hub', {
+      tab,
+      rankYear,
+      scrollY: window.scrollY,
+    });
+  }, [tab, rankYear]);
+
   const setTabAndUrl = useCallback((next: RecruitingHubTab) => {
     setTab(next);
     if (typeof window !== 'undefined') {
       window.history.replaceState(null, '', recruitingTabPath(next));
+      saveVaultPageState('recruiting-hub', { tab: next, rankYear, scrollY: window.scrollY });
     }
-  }, []);
+  }, [rankYear]);
 
   useEffect(() => {
     setTab(resolveRecruitingTab());
@@ -300,6 +315,14 @@ export function VaultRecruitingHubPage(): React.ReactElement {
   useEffect(() => {
     void load();
   }, [load]);
+
+  useVaultDataReload(load);
+
+  useEffect(() => {
+    const onLeave = () => persistHubState();
+    window.addEventListener('pagehide', onLeave);
+    return () => window.removeEventListener('pagehide', onLeave);
+  }, [persistHubState]);
 
   const highPriority = useMemo(() => {
     const headliners = b27.targets.filter((p) => p.headliner);

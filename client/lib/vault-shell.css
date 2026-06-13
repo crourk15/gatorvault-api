@@ -3645,3 +3645,216 @@ a.gv-live-feed__row-title:hover {
   font-weight: 700;
   color: #fa4616;
 }
+
+/* Classic GatorNation Live (X-style) */
+.gv-live-feed--classic .gv-live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-left: 0.35rem;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: gv-live-pulse 1.5s ease-in-out infinite;
+  vertical-align: middle;
+}
+
+.live-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 640px;
+  overflow-y: auto;
+}
+
+.live-feed-item {
+  padding: 0.75rem;
+  border-radius: 0.65rem;
+  background: #060f1f;
+  border: 1px solid rgba(0, 48, 135, 0.25);
+}
+
+.live-feed-item--linked:hover {
+  border-color: rgba(250, 70, 22, 0.35);
+}
+
+.live-feed-item__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.live-feed-item__time {
+  font-size: 0.65rem;
+  color: rgba(226, 232, 240, 0.5);
+  flex-shrink: 0;
+}
+
+.live-feed-link,
+.live-feed-item__title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+a.live-feed-link:hover {
+  color: #fa4616;
+}
+
+.live-feed-item__source {
+  font-size: 0.65rem;
+  color: rgba(226, 232, 240, 0.4);
+  margin-top: 0.35rem;
+}
+
+.live-type-pill {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.live-type-commit { background: rgba(250, 70, 22, 0.15); color: #fb923c; }
+.live-type-portal { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
+.live-type-visit { background: rgba(34, 197, 94, 0.15); color: #86efac; }
+.live-type-offer { background: rgba(96, 165, 250, 0.15); color: #93c5fd; }
+.live-type-prediction { background: rgba(168, 85, 247, 0.15); color: #c4b5fd; }
+.live-type-article { background: rgba(251, 191, 36, 0.12); color: #fde047; }
+.live-type-score { background: rgba(34, 197, 94, 0.15); color: #86efac; }
+.live-type-thread { background: rgba(168, 85, 247, 0.15); color: #c4b5fd; }
+
+.gv-live-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(0, 48, 135, 0.2);
+}
+
+.gv-live-categories__pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  background: rgba(0, 48, 135, 0.15);
+  color: #cbd5e1;
+  cursor: pointer;
+}
+
+.gv-live-categories__pill.is-active {
+  border-color: rgba(250, 70, 22, 0.45);
+  background: rgba(250, 70, 22, 0.12);
+  color: #fb923c;
+}
+
+.gv-live-categories__pill span {
+  opacity: 0.65;
+  margin-left: 0.2rem;
+}
+
+.gv-live-group__title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #93c5fd;
+  margin: 0.75rem 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.gv-beat-card {
+  padding: 0.7rem;
+  border-radius: 0.65rem;
+  background: #060f1f;
+  border-left: 3px solid #a855f7;
+  cursor: pointer;
+}
+
+.gv-beat-card__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.gv-beat-card__handle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #d8b4fe;
+  text-transform: uppercase;
+}
+
+.gv-beat-card__time {
+  font-size: 0.65rem;
+  color: rgba(226, 232, 240, 0.5);
+}
+
+.gv-beat-text {
+  font-size: 0.875rem;
+  color: #e2e8f0;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.gv-beat-card__meta {
+  font-size: 0.75rem;
+  color: rgba(226, 232, 240, 0.45);
+  margin-top: 0.5rem;
+}
+
+.live-pod-card {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border-radius: 0.65rem;
+  background: #060f1f;
+  border: 1px solid rgba(0, 48, 135, 0.2);
+}
+
+.live-pod-card__icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.live-pod-card__title {
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.25rem;
+}
+
+.live-pod-card__desc {
+  font-size: 0.8rem;
+  color: rgba(226, 232, 240, 0.65);
+  margin: 0;
+}
+
+.live-pod-platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+.live-pod-platform-pill {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(0, 48, 135, 0.35);
+  color: #93c5fd;
+  text-decoration: none;
+  border: 1px solid rgba(0, 48, 135, 0.5);
+}
+
+.live-pod-platform-pill:hover {
+  background: rgba(250, 70, 22, 0.2);
+  color: #fb923c;
+  border-color: rgba(250, 70, 22, 0.4);
+}

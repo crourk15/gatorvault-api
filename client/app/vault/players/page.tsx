@@ -5,6 +5,7 @@ import { PlayerDirectoryPage } from '@/components/site/PlayerDirectoryPage';
 import { PlayerProfilePage } from '@/components/futurecast/player/PlayerProfilePage';
 import { RosterProfilePage } from '@/components/vault/RosterProfilePage';
 import type { RosterPlayer } from '@/lib/roster-api';
+import { vaultTeamBackHref } from '@/lib/vault-navigation';
 
 function slugFromPathname(): string {
   if (typeof window === 'undefined') return '';
@@ -72,8 +73,14 @@ export default function VaultPlayersPage(): React.ReactElement {
   }
 
   if (rosterPlayer && !useFcProfile) {
-    return <RosterProfilePage player={rosterPlayer} />;
+    return (
+      <RosterProfilePage
+        player={rosterPlayer}
+        backHref={vaultTeamBackHref()}
+        backLabel="← Team"
+      />
+    );
   }
 
-  return <PlayerProfilePage slug={slug} backHref="/vault/team" backLabel="← Team" />;
+  return <PlayerProfilePage slug={slug} backHref={vaultTeamBackHref()} backLabel="← Team" />;
 }

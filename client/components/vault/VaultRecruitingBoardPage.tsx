@@ -21,6 +21,7 @@ import {
 import { ClassHeadlinerHero, ClassSummaryBar } from '@/components/vault/RecruitingBoardClassic';
 import { RatingRecruitCard } from '@/components/vault/RatingRecruitCard';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
+import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
 
 type TierFilter = 'all' | RecruitingBoardTier;
 
@@ -65,6 +66,31 @@ export function VaultRecruitingBoardPage(): React.ReactElement {
   const [starsFilter, setStarsFilter] = useState('all');
   const [priorityOnly, setPriorityOnly] = useState(false);
 
+  useVaultPageRestore('recruiting-board', (saved) => {
+    if (saved.classYear === 2027 || saved.classYear === 2028) setClassYear(saved.classYear);
+    if (saved.viewMode === 'all' || saved.viewMode === 'commits' || saved.viewMode === 'targets') {
+      setViewMode(saved.viewMode);
+    }
+    if (saved.search) setSearch(saved.search);
+    if (saved.sortMode) setSort(saved.sortMode as BoardSortMode);
+    if (saved.tierFilter) setTierFilter(saved.tierFilter as TierFilter);
+    if (saved.filters?.position) setPositionFilter(saved.filters.position);
+    if (saved.filters?.state) setStateFilter(saved.filters.state);
+    if (saved.filters?.stars) setStarsFilter(saved.filters.stars);
+  });
+
+  const persistBoardState = useCallback(() => {
+    saveVaultPageState('recruiting-board', {
+      classYear,
+      viewMode,
+      search,
+      sortMode: sort,
+      tierFilter,
+      scrollY: window.scrollY,
+      filters: { position: positionFilter, state: stateFilter, stars: starsFilter },
+    });
+  }, [classYear, viewMode, search, sort, tierFilter, positionFilter, stateFilter, starsFilter]);
+
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -106,6 +132,14 @@ export function VaultRecruitingBoardPage(): React.ReactElement {
   useEffect(() => {
     void load();
   }, [load]);
+
+  useVaultDataReload(load);
+
+  useEffect(() => {
+    const onLeave = () => persistBoardState();
+    window.addEventListener('pagehide', onLeave);
+    return () => window.removeEventListener('pagehide', onLeave);
+  }, [persistBoardState]);
 
   const positions = useMemo(() => {
     const all = [...commits, ...targets];

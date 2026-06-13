@@ -28,7 +28,7 @@ export const VAULT_PILLARS: { id: VaultSectionId; label: string; href: string; i
   { id: 'recruiting', label: 'Recruiting Hub', href: VAULT_PILLAR_ROUTES.recruiting, icon: '🎯' },
   { id: 'futurecast', label: 'FutureCast', href: VAULT_PILLAR_ROUTES.futurecast, icon: '📈' },
   { id: 'team', label: 'Team', href: VAULT_PILLAR_ROUTES.team, icon: '👥' },
-  { id: 'live-feed', label: 'Live Feed', href: VAULT_PILLAR_ROUTES.liveFeed, icon: '⚡' },
+  { id: 'live-feed', label: 'GatorNation Live', href: VAULT_PILLAR_ROUTES.liveFeed, icon: '⚡' },
   { id: 'schedule', label: 'Schedule & Tickets', href: VAULT_PILLAR_ROUTES.schedule, icon: '🎟️' },
 ];
 

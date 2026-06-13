@@ -67,7 +67,7 @@ const LEGACY_VAULT_TAB_REDIRECTS = {
   portal: '/vault/recruiting/portal',
   highlights: '/vault/film-room/highlights',
   gameweek: '/vault/game-week',
-  live: '/vault/live-feed',
+  live: '/vault/live',
   analytics: '/vault/futurecast/movement',
   scouting: '/vault/recruiting/scouting',
   articles: '/vault/articles',

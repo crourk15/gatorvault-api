@@ -1,7 +1,11 @@
 /**
- * Phase 9 — expand 2027 UF target board to 30+ players.
+ * DISABLED — seed expansion blocked. Targets must come from On3, Rivals, 247,
+ * verified UF offer lists, or staff dashboard entries only.
  * Run: node server/scripts/expand-2027-targets.js
  */
+console.error('expand-2027-targets: DISABLED — no synthetic/seed target expansion allowed.');
+process.exit(1);
+
 const fs = require('fs');
 const path = require('path');
 const { slugify } = require('../lib/slug');

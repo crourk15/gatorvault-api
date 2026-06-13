@@ -9,10 +9,20 @@ export function usePathname(): string {
   );
 
   useEffect(() => {
-    setPathname(window.location.pathname);
-    const onNav = () => setPathname(window.location.pathname);
-    window.addEventListener('popstate', onNav);
-    return () => window.removeEventListener('popstate', onNav);
+    const sync = () => setPathname(window.location.pathname);
+    sync();
+    window.addEventListener('popstate', sync);
+    window.addEventListener('vault:navigation', sync);
+    const onPageShow = (e: PageTransitionEvent) => {
+      sync();
+      if (e.persisted) window.dispatchEvent(new Event('vault:pageshow-restore'));
+    };
+    window.addEventListener('pageshow', onPageShow);
+    return () => {
+      window.removeEventListener('popstate', sync);
+      window.removeEventListener('vault:navigation', sync);
+      window.removeEventListener('pageshow', onPageShow);
+    };
   }, []);
 
   return pathname;

@@ -15,6 +15,11 @@ import {
 } from '@/lib/roster-api';
 import { playerProfilePath } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
+import {
+  saveVaultPageState,
+  useVaultDataReload,
+  useVaultPageRestore,
+} from '@/lib/vault-navigation';
 
 const ACE_PORTAL_SLUG = 'eric-singleton-jr';
 
@@ -64,7 +69,13 @@ function groupByUnit(players: RosterPlayer[]): Record<string, RosterPlayer[]> {
   return groups;
 }
 
-function RosterRow({ player }: { player: RosterPlayer }): React.ReactElement {
+function RosterRow({
+  player,
+  onNavigate,
+}: {
+  player: RosterPlayer;
+  onNavigate: () => void;
+}): React.ReactElement {
   const portalTag = portalRosterLabel(player);
   const isAce = player.slug === ACE_PORTAL_SLUG;
   const href = playerProfilePath(player.slug, 'ROSTER', true, player.name);
@@ -73,6 +84,7 @@ function RosterRow({ player }: { player: RosterPlayer }): React.ReactElement {
     <a
       href={href}
       className={`gv-team-roster-row${isAce ? ' gv-team-roster-row--ace' : ''}${isPortalRosterPlayer(player) ? ' gv-team-roster-row--portal' : ''}`}
+      onClick={onNavigate}
     >
       <span className="gv-team-roster-row__pos">{player.pos || player.position}</span>
       <span className="gv-team-roster-row__name">
@@ -97,7 +109,25 @@ export function VaultTeamPage(): React.ReactElement {
   const [roster, setRoster] = useState<RosterPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    return new URLSearchParams(window.location.search).get('q') ?? '';
+  });
+
+  useVaultPageRestore('team', (saved) => {
+    if (saved.tab === 'depth' || saved.tab === 'roster') setTab(saved.tab);
+    if (saved.phase === 'off' || saved.phase === 'def' || saved.phase === 'st') setPhase(saved.phase);
+    if (saved.search) setSearch(saved.search);
+  });
+
+  const captureTeamState = useCallback(() => {
+    saveVaultPageState('team', {
+      tab,
+      phase,
+      search,
+      scrollY: window.scrollY,
+    });
+  }, [tab, phase, search]);
 
   const selectTab = (next: TeamTab) => {
     setTab(next);
@@ -105,6 +135,7 @@ export function VaultTeamPage(): React.ReactElement {
       const url = new URL(window.location.href);
       url.searchParams.set('tab', next);
       window.history.replaceState(null, '', `${url.pathname}${url.search}`);
+      saveVaultPageState('team', { tab: next, phase, search, scrollY: window.scrollY });
     }
   };
 
@@ -124,6 +155,14 @@ export function VaultTeamPage(): React.ReactElement {
   useEffect(() => {
     void load();
   }, [load]);
+
+  useVaultDataReload(load);
+
+  useEffect(() => {
+    const onLeave = () => captureTeamState();
+    window.addEventListener('pagehide', onLeave);
+    return () => window.removeEventListener('pagehide', onLeave);
+  }, [captureTeamState]);
 
   const grouped = useMemo(() => groupByUnit(roster), [roster]);
   const rows = DEPTH_BY_PHASE[phase];
@@ -145,7 +184,8 @@ export function VaultTeamPage(): React.ReactElement {
         <p className="gv-page-subtitle">
           2026 roster, depth chart, and portal arrivals.{' '}
           <a href="/vault/recruiting">Recruiting Hub →</a> ·{' '}
-          <a href="/vault/futurecast">FutureCast →</a>
+          <a href="/vault/futurecast">FutureCast →</a> ·{' '}
+          <a href="/vault/live">GatorNation Live →</a>
         </p>
       </div>
 
@@ -205,7 +245,7 @@ export function VaultTeamPage(): React.ReactElement {
                 </h2>
                 <div className="gv-team-roster__list">
                   {list.map((p) => (
-                    <RosterRow key={p.slug || p.id} player={p} />
+                    <RosterRow key={p.slug || p.id} player={p} onNavigate={captureTeamState} />
                   ))}
                 </div>
               </section>

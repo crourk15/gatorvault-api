@@ -150,7 +150,20 @@ export function RosterProfilePage({
   return (
     <div className="gv-roster-profile gv-roster-profile--v2" data-testid="roster-profile-page">
       <nav className="fc-profile-back">
-        <a href={backHref}>{backLabel}</a>
+        <a
+          href={backHref}
+          onClick={(e) => {
+            if (typeof window !== 'undefined' && window.history.length > 1) {
+              const ref = document.referrer;
+              if (ref.includes('/vault/team')) {
+                e.preventDefault();
+                window.history.back();
+              }
+            }
+          }}
+        >
+          {backLabel}
+        </a>
       </nav>
 
       <header className={`gv-roster-profile__header${isAce ? ' gv-roster-profile__header--ace' : ''}`}>
