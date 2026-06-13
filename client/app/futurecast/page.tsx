@@ -15,6 +15,9 @@ export default function FutureCastPage(): React.ReactElement {
         <a href="/futurecast/stock" className="fc-futurecast-nav__link">
           Stock Up / Stock Down
         </a>
+        <a href="/futurecast/snapshots" className="fc-futurecast-nav__link">
+          Snapshots
+        </a>
       </nav>
       <h1 className="fc-futurecast-page__title">FutureCast Predictions</h1>
       <p className="fc-futurecast-page__subtitle">

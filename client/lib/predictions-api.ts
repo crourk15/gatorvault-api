@@ -104,6 +104,19 @@ export async function fetchStockBoard(): Promise<StockBoardResponse> {
   return apiFetch<StockBoardResponse>('/api/futurecast/stock');
 }
 
+export interface MovementSnapshotsResponse {
+  dailyUp: FeedPrediction[];
+  dailyDown: FeedPrediction[];
+  weeklyUp: FeedPrediction[];
+  weeklyDown: FeedPrediction[];
+  dailyWindowDays: number;
+  weeklyWindowDays: number;
+}
+
+export async function fetchMovementSnapshots(): Promise<MovementSnapshotsResponse> {
+  return apiFetch<MovementSnapshotsResponse>('/api/futurecast/snapshots');
+}
+
 export async function fetchPlayerPredictions(playerId: string): Promise<PlayerPrediction[]> {
   const data = await apiFetch<{ playerId: string; predictions: PlayerPrediction[] }>(
     `/api/predictions/player/${encodeURIComponent(playerId)}`

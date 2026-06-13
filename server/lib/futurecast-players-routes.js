@@ -17,7 +17,7 @@ function mountFutureCastApiRoutes(app) {
   mountFutureCastUfFitRoutes(app);
   mountFutureCastPredictionsRoutes(app);
   mountFutureCastFeatureRoutes(app);
-  console.log('[futurecast] API mounted: /api/players, /api/big-board, /api/portal, /api/uf-fit, /api/predictions, /api/predictors, /api/futurecast/stock');
+  console.log('[futurecast] API mounted: /api/players, /api/big-board, /api/portal, /api/uf-fit, /api/predictions, /api/predictors, /api/futurecast/stock, /api/futurecast/snapshots');
 }
 
 module.exports = {
