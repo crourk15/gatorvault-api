@@ -30,6 +30,13 @@ export async function fetchScoutingDatabase(
   return apiFetch<ScoutingDatabaseResponse>(`/api/war-room/breakdowns${qs}`);
 }
 
+export async function fetchScoutingBreakdownBySlug(
+  slug: string
+): Promise<ScoutingBreakdown | null> {
+  const db = await fetchScoutingDatabase();
+  return db.breakdowns.find((b) => b.playerSlug === slug) ?? null;
+}
+
 export function scoutingTypeLabel(type?: string): string {
   const map: Record<string, string> = {
     recruit: 'Recruit',

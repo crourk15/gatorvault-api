@@ -140,7 +140,7 @@ export function ScoutingDepartmentPage({ inVault = false }: { inVault?: boolean 
       </div>
 
       <div className="gv-scout-hub">
-        <a href="/players" className="gv-scout-hub__card">
+        <a href={inVault ? '/vault/players' : '/players'} className="gv-scout-hub__card">
           <span className="gv-scout-hub__icon">📋</span>
           <h2>Player Directory</h2>
           <p>Search HS recruits, portal, and college players with filters and profile links.</p>

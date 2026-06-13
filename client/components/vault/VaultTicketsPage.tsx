@@ -47,6 +47,12 @@ export function VaultTicketsPage(): React.ReactElement {
                   ) : (
                     <p className="gv-schedule-row__tv">📺 {g.tv || 'TBD'}</p>
                   )}
+                  <p className="gv-schedule-row__intel">
+                    Win prob: <strong>{g.ufPct}%</strong> · {g.pred}
+                  </p>
+                  <a href="/vault/game-week" className="gv-schedule-row__link">
+                    Game Week intel →
+                  </a>
                 </div>
                 <span className={`gv-ticket-type ${TYPE_CLASS[type] ?? ''}`}>{type}</span>
               </li>

@@ -1,6 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { fetchFutureCastHome } from '@/lib/futurecast-home-api';
+import { fetchRecruitingBoard } from '@/lib/recruiting-board-api';
+import { fetchNilDashboard } from '@/lib/nil-api';
+import { SCHEDULE_GAMES } from '@/lib/schedule-data';
 
 const QUICK_LINKS = [
   {
@@ -13,7 +17,7 @@ const QUICK_LINKS = [
     href: '/vault/futurecast',
     icon: '📈',
     title: 'FutureCast',
-    desc: 'Big board, movement intel, staff notes, and trending.',
+    desc: 'Master board, trending, movement intel, and staff notes.',
   },
   {
     href: '/vault/team',
@@ -28,7 +32,7 @@ const QUICK_LINKS = [
     desc: 'Headlines, beat writers, podcasts, and ticker.',
   },
   {
-    href: '/vault/tickets',
+    href: '/vault/schedule',
     icon: '🎟️',
     title: 'Schedule & Tickets',
     desc: 'Full 2026 schedule with TV info and ticket links.',
@@ -76,7 +80,7 @@ const QUICK_LINKS = [
     desc: 'SEC rankings, UF KPIs, and recent NIL events.',
   },
   {
-    href: '/vault/futurecast/staff',
+    href: '/vault/futurecast/movement',
     icon: '📡',
     title: 'Movement Intel',
     desc: 'Full movement dashboard — risers, fallers, volatility.',
@@ -95,7 +99,54 @@ const QUICK_LINKS = [
   },
 ];
 
+interface DashboardPulse {
+  commits: number;
+  targets: number;
+  trending: number;
+  nilSecRank: number | null;
+  nextGame: string;
+  nextGamePct: number;
+}
+
 export function VaultDashboardPage(): React.ReactElement {
+  const nextGame = SCHEDULE_GAMES[0];
+  const [pulse, setPulse] = useState<DashboardPulse>({
+    commits: 0,
+    targets: 0,
+    trending: 0,
+    nilSecRank: null,
+    nextGame: nextGame?.label ?? 'Season opener',
+    nextGamePct: nextGame?.ufPct ?? 0,
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadPulse() {
+      try {
+        const [board, fc, nil] = await Promise.all([
+          fetchRecruitingBoard(2027).catch(() => null),
+          fetchFutureCastHome().catch(() => null),
+          fetchNilDashboard().catch(() => null),
+        ]);
+        if (cancelled) return;
+        setPulse({
+          commits: board?.commits?.length ?? fc?.commits?.length ?? 0,
+          targets: board?.targets?.length ?? fc?.topTargets?.length ?? 0,
+          trending: (fc?.trendingUp?.length ?? 0) + (fc?.trendingDown?.length ?? 0),
+          nilSecRank: nil?.ufStanding?.secRank ?? null,
+          nextGame: nextGame?.label ?? 'Season opener',
+          nextGamePct: nextGame?.ufPct ?? 0,
+        });
+      } catch {
+        /* keep defaults */
+      }
+    }
+    void loadPulse();
+    return () => {
+      cancelled = true;
+    };
+  }, [nextGame?.label, nextGame?.ufPct]);
+
   return (
     <div className="gv-vault-dashboard" data-testid="vault-dashboard">
       <div className="gv-page-hero">
@@ -104,6 +155,31 @@ export function VaultDashboardPage(): React.ReactElement {
           Recruiting Hub, FutureCast, Team, Live Feed, and Schedule — your five core pillars.
         </p>
       </div>
+
+      <section className="gv-vault-dashboard__pulse" aria-label="Live pillar pulse">
+        <a href="/vault/recruiting" className="gv-vault-dashboard__pulse-card">
+          <span className="gv-vault-dashboard__pulse-value">{pulse.commits}</span>
+          <span className="gv-vault-dashboard__pulse-label">2027 Commits</span>
+        </a>
+        <a href="/vault/futurecast" className="gv-vault-dashboard__pulse-card">
+          <span className="gv-vault-dashboard__pulse-value">{pulse.trending}</span>
+          <span className="gv-vault-dashboard__pulse-label">Trending Moves</span>
+        </a>
+        <a href="/vault/recruiting?tab=targets-2027" className="gv-vault-dashboard__pulse-card">
+          <span className="gv-vault-dashboard__pulse-value">{pulse.targets}</span>
+          <span className="gv-vault-dashboard__pulse-label">Top Targets</span>
+        </a>
+        <a href="/vault/nil" className="gv-vault-dashboard__pulse-card">
+          <span className="gv-vault-dashboard__pulse-value">
+            {pulse.nilSecRank != null ? `#${pulse.nilSecRank}` : '—'}
+          </span>
+          <span className="gv-vault-dashboard__pulse-label">NIL SEC Rank</span>
+        </a>
+        <a href="/vault/game-week" className="gv-vault-dashboard__pulse-card">
+          <span className="gv-vault-dashboard__pulse-value">{pulse.nextGamePct}%</span>
+          <span className="gv-vault-dashboard__pulse-label">{pulse.nextGame}</span>
+        </a>
+      </section>
 
       <div className="gv-vault-dashboard__grid">
         {QUICK_LINKS.map((item) => (

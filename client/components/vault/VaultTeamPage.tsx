@@ -97,6 +97,16 @@ export function VaultTeamPage(): React.ReactElement {
   const [roster, setRoster] = useState<RosterPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+
+  const selectTab = (next: TeamTab) => {
+    setTab(next);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', next);
+      window.history.replaceState(null, '', `${url.pathname}${url.search}`);
+    }
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -117,6 +127,16 @@ export function VaultTeamPage(): React.ReactElement {
 
   const grouped = useMemo(() => groupByUnit(roster), [roster]);
   const rows = DEPTH_BY_PHASE[phase];
+  const portalCount = useMemo(() => roster.filter(isPortalRosterPlayer).length, [roster]);
+  const filteredRoster = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return roster;
+    return roster.filter((p) => {
+      const blob = `${p.name} ${p.pos ?? ''} ${p.position ?? ''} ${p.hometown ?? ''}`.toLowerCase();
+      return blob.includes(q);
+    });
+  }, [roster, search]);
+  const filteredGrouped = useMemo(() => groupByUnit(filteredRoster), [filteredRoster]);
 
   return (
     <div className="gv-team-page" data-testid="vault-team">
@@ -129,14 +149,44 @@ export function VaultTeamPage(): React.ReactElement {
         </p>
       </div>
 
+      {!loading && !error && (
+        <div className="gv-team-kpi-row">
+          <span className="gv-team-kpi">
+            <strong>{roster.length}</strong> roster
+          </span>
+          <span className="gv-team-kpi">
+            <strong>{portalCount}</strong> portal
+          </span>
+          <span className="gv-team-kpi">
+            <strong>{grouped.offense.length}</strong> offense
+          </span>
+          <span className="gv-team-kpi">
+            <strong>{grouped.defense.length}</strong> defense
+          </span>
+        </div>
+      )}
+
       <div className="gv-hub-tabs">
-        <button type="button" className={`gv-hub-tab${tab === 'roster' ? ' is-active' : ''}`} onClick={() => setTab('roster')}>
+        <button type="button" className={`gv-hub-tab${tab === 'roster' ? ' is-active' : ''}`} onClick={() => selectTab('roster')}>
           Full Roster
         </button>
-        <button type="button" className={`gv-hub-tab${tab === 'depth' ? ' is-active' : ''}`} onClick={() => setTab('depth')}>
+        <button type="button" className={`gv-hub-tab${tab === 'depth' ? ' is-active' : ''}`} onClick={() => selectTab('depth')}>
           Depth Chart
         </button>
       </div>
+
+      {tab === 'roster' && (
+        <div className="gv-team-search">
+          <input
+            type="search"
+            className="gv-team-search__input"
+            placeholder="Search roster by name, position, hometown…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            aria-label="Search roster"
+          />
+        </div>
+      )}
 
       {loading && <p className="gv-page-status">Loading team…</p>}
       {error && !loading && (
@@ -146,7 +196,7 @@ export function VaultTeamPage(): React.ReactElement {
       {!loading && !error && tab === 'roster' && (
         <div className="gv-team-roster">
           {(['offense', 'defense', 'special', 'other'] as const).map((unit) => {
-            const list = grouped[unit];
+            const list = filteredGrouped[unit];
             if (!list.length) return null;
             return (
               <section key={unit} className="gv-team-roster__group">
@@ -161,6 +211,9 @@ export function VaultTeamPage(): React.ReactElement {
               </section>
             );
           })}
+          {filteredRoster.length === 0 && roster.length > 0 && (
+            <UiEmpty message="No players match your search." />
+          )}
           {roster.length === 0 && <UiEmpty message="No roster data yet." />}
         </div>
       )}
