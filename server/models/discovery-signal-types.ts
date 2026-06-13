@@ -5,6 +5,7 @@
  */
 
 import { SIGNAL_TYPE, type SignalType } from '../shared/enums';
+import { jsonbParam } from './jsonb';
 
 export type { SignalType };
 export const SIGNAL_TYPES = SIGNAL_TYPE;
@@ -53,6 +54,6 @@ export function discoverySignalToRow(signal: DiscoverySignalInsert): Record<stri
   return {
     player_id: signal.player_id,
     signal_type: signal.signal_type,
-    signal_value: signal.signal_value ?? {},
+    signal_value: jsonbParam(signal.signal_value ?? {}),
   };
 }

@@ -4,6 +4,8 @@
  * @see server/migrations/003_create_college_profiles_table.sql
  */
 
+import { jsonbParam } from './jsonb';
+
 export const FUTURECAST_COLLEGE_PROFILES_TABLE = 'futurecast.college_profiles';
 
 export interface CollegeProfile {
@@ -59,8 +61,8 @@ export function collegeProfileToRow(
   if ('college' in profile && profile.college !== undefined) out.college = profile.college;
   if ('years_played' in profile) out.years_played = profile.years_played ?? null;
   if ('games_played' in profile) out.games_played = profile.games_played ?? null;
-  if ('snaps' in profile) out.snaps = profile.snaps ?? {};
-  if ('stats' in profile) out.stats = profile.stats ?? {};
-  if ('depth_history' in profile) out.depth_history = profile.depth_history ?? [];
+  if ('snaps' in profile) out.snaps = jsonbParam(profile.snaps ?? {});
+  if ('stats' in profile) out.stats = jsonbParam(profile.stats ?? {});
+  if ('depth_history' in profile) out.depth_history = jsonbParam(profile.depth_history ?? []);
   return out;
 }

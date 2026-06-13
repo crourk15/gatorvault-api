@@ -22,6 +22,7 @@
     "qa:crawl": "node scripts/run-qa-crawler.js",
     "migrate:players": "npx tsx migrators/migrate-players.ts",
     "migrate:predictions": "npx tsx migrators/run-migration.ts migrations/011_create_predictions_table.sql",
+    "sync:database-url": "node scripts/sync-database-url.js --deploy",
     "transform:players": "npx tsx scripts/transform-recruiting-data.ts"
   },
   "engines": {

@@ -4,6 +4,8 @@
  * @see server/migrations/002_create_high_school_profiles_table.sql
  */
 
+import { jsonbParam } from './jsonb';
+
 export const FUTURECAST_HS_PROFILES_TABLE = 'futurecast.high_school_profiles';
 
 export interface HighSchoolProfile {
@@ -50,8 +52,8 @@ export function hsProfileToRow(
 ): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   if ('player_id' in profile && profile.player_id !== undefined) out.player_id = profile.player_id;
-  if ('offers' in profile) out.offers = profile.offers ?? [];
-  if ('stats' in profile) out.stats = profile.stats ?? {};
+  if ('offers' in profile) out.offers = jsonbParam(profile.offers ?? []);
+  if ('stats' in profile) out.stats = jsonbParam(profile.stats ?? {});
   if ('recruiting_notes' in profile) out.recruiting_notes = profile.recruiting_notes ?? null;
   if ('discovery_score' in profile) out.discovery_score = profile.discovery_score ?? null;
   return out;

@@ -197,9 +197,21 @@ export function computePortalIntelScores(input: PortalIntelInput): PortalIntelSc
   };
 }
 
-function schoolsFromOffers(offers: unknown[]): string[] {
+function schoolsFromOffers(offers: unknown): string[] {
+  const list = Array.isArray(offers)
+    ? offers
+    : typeof offers === 'string'
+      ? (() => {
+          try {
+            const parsed = JSON.parse(offers);
+            return Array.isArray(parsed) ? parsed : [];
+          } catch {
+            return [];
+          }
+        })()
+      : [];
   const out: string[] = [];
-  for (const offer of offers) {
+  for (const offer of list) {
     if (offer && typeof offer === 'object' && 'school' in offer) {
       const school = String((offer as { school?: string }).school || '').trim();
       if (school) out.push(school);

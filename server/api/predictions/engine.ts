@@ -22,9 +22,22 @@ export interface PredictionEngineInput {
   ufFitScore: number;
 }
 
-function schoolsFromOffers(offers: unknown[]): string[] {
+function normalizeOffers(offers: unknown): unknown[] {
+  if (Array.isArray(offers)) return offers;
+  if (typeof offers === 'string') {
+    try {
+      const parsed = JSON.parse(offers);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
+function schoolsFromOffers(offers: unknown): string[] {
   const out: string[] = [];
-  for (const offer of offers) {
+  for (const offer of normalizeOffers(offers)) {
     if (offer && typeof offer === 'object' && 'school' in offer) {
       const school = String((offer as { school?: string }).school || '').trim();
       if (school) out.push(school);
@@ -72,7 +85,7 @@ export function candidateToEngineInput(row: PredictionCandidateRow): PredictionE
     uf_fit_score: ufFitScore,
     scheme_score: row.scheme_score,
     uf_status: row.uf_status,
-    hs_offers: row.hs_offers ?? [],
+    hs_offers: normalizeOffers(row.hs_offers),
   };
 
   return {
@@ -89,7 +102,8 @@ export function computeModelPrediction(input: PredictionEngineInput): ModelPredi
   const { portalInput, ufFitScore, committedTo, lifecycle } = input;
 
   if (committedTo) {
-    const conf = committedTo.toLowerCase().includes('florida') ? clamp100(ufFitScore + 10) : 75;
+    const isFlorida = committedTo.toLowerCase().includes('florida');
+    const conf = isFlorida ? clamp100(Math.max(85, ufFitScore + 10)) : 75;
     return { school: committedTo, confidence: Math.min(100, conf) };
   }
 
