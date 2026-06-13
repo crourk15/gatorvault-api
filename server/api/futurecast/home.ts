@@ -97,6 +97,7 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
     ]);
 
     const portalWatchlist = portalRows
+      .filter((row) => row.lifecycle === 'PORTAL' || row.lifecycle === 'COLLEGE')
       .filter((row) =>
         isFutureCastEligible({
           class_year: row.class_year,

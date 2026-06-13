@@ -1,11 +1,8 @@
-import type { Metadata } from 'next';
-import React from 'react';
-import '@/lib/futurecast.css';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'FutureCast — GatorVault',
-  description: 'MODEL picks, movement tracking, and UF recruiting intelligence.',
-};
+import React from 'react';
+import { GatorVaultShell } from '@/components/site/GatorVaultShell';
+import '@/lib/site.css';
 
 export default function RootLayout({
   children,
@@ -20,7 +17,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="fc-body">{children}</body>
+      <body className="fc-body gv-body">
+        <GatorVaultShell>{children}</GatorVaultShell>
+      </body>
     </html>
   );
 }

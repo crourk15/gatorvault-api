@@ -7,7 +7,13 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NEXT_PUBLIC_API_BASE = "https://gatorvault-api.onrender.com"
+
+# Proxy API through same origin — no external API URLs in the browser
+[[redirects]]
+  from = "/api/*"
+  to = "https://gatorvault-api.onrender.com/api/:splat"
+  status = 200
+  force = true
 
 # FutureCast React routes — rewrite to static export (200 = serve file, not redirect)
 [[redirects]]
@@ -58,6 +64,26 @@
 [[redirects]]
   from = "/recruits"
   to = "/recruiting-board/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/players"
+  to = "/players/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/players/*"
+  to = "/players/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/scouting"
+  to = "/scouting/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/scouting/*"
+  to = "/scouting/index.html"
   status = 200
 
 [[headers]]

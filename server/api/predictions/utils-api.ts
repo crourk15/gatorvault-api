@@ -79,7 +79,7 @@ export function serializeFeedPrediction(row: {
     committedTo: row.committed_to ?? null,
     ufStatus: row.uf_status ?? null,
     ufFitScore: row.uf_fit_score ?? null,
-    ufProbability: row.school.toLowerCase().includes('florida') ? row.confidence : null,
+    ufProbability: row.confidence,
     fitScoreBreakdown: fitScoreBreakdownFromRow(row),
     volatilityScore,
     stabilityScore: Math.max(0, Math.min(100, 100 - volatilityScore)),

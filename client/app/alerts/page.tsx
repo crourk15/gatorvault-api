@@ -4,6 +4,7 @@
  * Global FutureCast alerts feed — /alerts
  */
 import React, { useEffect, useState } from 'react';
+import { FutureCastSubNav } from '@/components/site/FutureCastSubNav';
 import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
 import '@/lib/futurecast.css';
 
@@ -66,17 +67,7 @@ export default function AlertsPage(): React.ReactElement {
 
   return (
     <div className="fc-alerts-wrap" data-testid="alerts-page">
-      <nav className="fc-futurecast-nav">
-        <a href="/futurecast" className="fc-futurecast-nav__link">
-          Predictions
-        </a>
-        <a href="/alerts" className="fc-futurecast-nav__link is-active">
-          Alerts
-        </a>
-        <a href="/staff/dashboard" className="fc-futurecast-nav__link">
-          Staff Dashboard
-        </a>
-      </nav>
+      <FutureCastSubNav active="alerts" />
       <h1 className="fc-alerts__title">Alerts</h1>
       <div className="fc-alerts__list">
         {alerts.map((alert) => (
@@ -88,8 +79,7 @@ export default function AlertsPage(): React.ReactElement {
               {alert.message}
             </a>
             <p className="fc-alerts__meta">
-              {alert.type} • {alert.playerName} •{' '}
-              {new Date(alert.createdAt).toLocaleString()}
+              {alert.type} · {alert.playerName}
             </p>
           </article>
         ))}

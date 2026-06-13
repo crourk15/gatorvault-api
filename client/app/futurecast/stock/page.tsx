@@ -4,7 +4,8 @@
  * Stock Up / Stock Down board — /futurecast/stock
  */
 import React, { useEffect, useState } from 'react';
-import { PredictionCard, feedPredictionToCard } from '@/components/PredictionCard';
+import { FutureCastSubNav } from '@/components/site/FutureCastSubNav';
+import { FutureCastHomeCard } from '@/components/futurecast/FutureCastHomeCard';
 import { fetchStockBoard, type FeedPrediction } from '@/lib/predictions-api';
 import '@/lib/futurecast.css';
 
@@ -69,27 +70,18 @@ export default function StockBoardPage(): React.ReactElement {
 
   return (
     <div className="fc-stock-board-wrap" data-testid="stock-board-page">
-      <nav className="fc-futurecast-nav">
-        <a href="/futurecast" className="fc-futurecast-nav__link">
-          Predictions
-        </a>
-        <a href="/futurecast/stock" className="fc-futurecast-nav__link is-active">
-          Stock Up / Stock Down
-        </a>
-        <a href="/futurecast/snapshots" className="fc-futurecast-nav__link">
-          Snapshots
-        </a>
-      </nav>
+      <FutureCastSubNav active="stock" />
       <h1 className="fc-stock-board__title">Stock Up / Stock Down</h1>
       <p className="fc-stock-board__subtitle">7-day MODEL confidence movers</p>
       <div className="fc-stock-board">
         <section className="fc-stock-board__column">
           <h2 className="fc-stock-board__heading fc-stock-board__heading--up">Stock Up</h2>
-          <div className="fc-stock-board__list">
+          <div className="fc-home-card-grid">
             {stockUp.map((prediction) => (
-              <PredictionCard
+              <FutureCastHomeCard
                 key={prediction.id}
-                prediction={feedPredictionToCard(prediction)}
+                prediction={prediction}
+                variant="trending-up"
               />
             ))}
             {stockUp.length === 0 && (
@@ -99,11 +91,12 @@ export default function StockBoardPage(): React.ReactElement {
         </section>
         <section className="fc-stock-board__column">
           <h2 className="fc-stock-board__heading fc-stock-board__heading--down">Stock Down</h2>
-          <div className="fc-stock-board__list">
+          <div className="fc-home-card-grid">
             {stockDown.map((prediction) => (
-              <PredictionCard
+              <FutureCastHomeCard
                 key={prediction.id}
-                prediction={feedPredictionToCard(prediction)}
+                prediction={prediction}
+                variant="trending-down"
               />
             ))}
             {stockDown.length === 0 && (

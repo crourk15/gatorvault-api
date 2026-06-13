@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 
 /** Legacy admin URLs → unified hub hash routes */
 const ADMIN_HUB_REDIRECTS = [
@@ -39,8 +40,8 @@ const ADMIN_EMBED_PAGES = {
 
 function mountAdminRoutes(app) {
   const root = path.join(__dirname, '..');
-  const boardPage = path.join(root, 'recruiting-board', 'index.html');
-  const boardLegacy = path.join(root, 'recruiting-board.html');
+  const boardPage = path.join(root, 'recruiting-board.html');
+  const boardPublic = path.join(root, 'recruiting-board', 'index.html');
   const hubPage = path.join(root, 'admin.html');
 
   app.get('/admin', (req, res) => {
@@ -77,11 +78,13 @@ function mountAdminRoutes(app) {
 
   // Recruiting board admin — standalone page at /recruiting-board (embed for admin hub iframes)
   app.get('/recruiting-board', (req, res) => {
+    if (req.query.embed === '1') return res.sendFile(boardPage);
+    if (fs.existsSync(boardPublic)) return res.sendFile(boardPublic);
     return res.sendFile(boardPage);
   });
 
   app.get('/recruiting-board.html', (req, res) => {
-    return res.sendFile(boardLegacy);
+    return res.sendFile(boardPage);
   });
 
   app.get('/recruiting', (req, res) => {

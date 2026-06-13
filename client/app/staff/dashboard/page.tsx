@@ -4,6 +4,7 @@
  * Staff dashboard — internal FutureCast control room.
  */
 import React, { useEffect, useState } from 'react';
+import { FutureCastSubNav } from '@/components/site/FutureCastSubNav';
 import { MovementHeatmap } from '@/components/futurecast/MovementHeatmap';
 import {
   fetchStaffDashboard,
@@ -106,17 +107,7 @@ export default function StaffDashboardPage(): React.ReactElement {
 
   return (
     <div className="fc-staff-dashboard-wrap" data-testid="staff-dashboard-page">
-      <nav className="fc-futurecast-nav">
-        <a href="/futurecast" className="fc-futurecast-nav__link">
-          Predictions
-        </a>
-        <a href="/alerts" className="fc-futurecast-nav__link">
-          Alerts
-        </a>
-        <a href="/staff/dashboard" className="fc-futurecast-nav__link is-active">
-          Staff Dashboard
-        </a>
-      </nav>
+      <FutureCastSubNav active="staff" />
       <h1 className="fc-staff-dashboard__title">Staff Dashboard</h1>
       <p className="fc-staff-dashboard__subtitle">FutureCast internal analytics hub</p>
 

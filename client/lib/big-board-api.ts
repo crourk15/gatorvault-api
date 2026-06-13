@@ -42,8 +42,12 @@ export interface BigBoardResponse {
 
 export function getApiBase(): string {
   if (typeof window !== 'undefined') {
-    const gv = (window as Window & { GV_API_BASE?: string }).GV_API_BASE;
-    if (gv) return gv.replace(/\/$/, '');
+    const host = window.location.hostname;
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return 'http://localhost:3000';
+    }
+    // Same-origin — Netlify proxies /api/* to the backend
+    return '';
   }
   const fromEnv = process.env.NEXT_PUBLIC_API_BASE;
   if (fromEnv) return fromEnv.replace(/\/$/, '');

@@ -154,7 +154,7 @@ export function PlayerProfilePage({ slug }: PlayerProfilePageProps): React.React
     return (
       <div className="fc-profile-error" data-testid="player-profile-error">
         <p>{error || 'Player not found'}</p>
-        <a href="/futurecast/big-board">← Back to Big Board</a>
+        <a href="/futurecast">← FutureCast</a>
       </div>
     );
   }
@@ -162,7 +162,7 @@ export function PlayerProfilePage({ slug }: PlayerProfilePageProps): React.React
   return (
     <div className="fc-profile-page" data-testid="player-profile-page">
       <nav className="fc-profile-back">
-        <a href="/futurecast/big-board">← Big Board</a>
+        <a href="/futurecast">← FutureCast</a>
       </nav>
       <PlayerHeader player={data.player} metrics={metrics} portalProfile={data.portalProfile} />
       <PlayerTabs activeTab={activeTab} onTabChange={onTabChange} availableTabs={availableTabs} />

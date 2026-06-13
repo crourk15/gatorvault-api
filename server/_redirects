@@ -1,4 +1,5 @@
 # FutureCast React UI (Next.js static export — merged from client/out at Netlify build)
+/api/*  https://gatorvault-api.onrender.com/api/:splat  200
 /futurecast/predictions  /futurecast/index.html  301
 /futurecast/player/*  /player/:splat  301
 /futurecast/stock  /futurecast/stock/index.html  200
@@ -41,4 +42,9 @@
 /recruits  /recruiting-board/index.html  200
 /admin/recruiting-board  /admin.html  200
 /admin/recruiting  /admin.html  200
-/players  /?open=vault&tab=players  302
+/players  /players/index.html  200
+/players/  /players/index.html  200
+/players/*  /players/index.html  200
+/scouting  /scouting/index.html  200
+/scouting/  /scouting/index.html  200
+/scouting/*  /scouting/index.html  200

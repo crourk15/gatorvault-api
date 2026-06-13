@@ -3,16 +3,16 @@
 /**
  * FutureCast homepage — grouped 2027 cycle sections.
  */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FutureCastHomeCard } from '@/components/futurecast/FutureCastHomeCard';
 import { MovementHeatmap } from '@/components/futurecast/MovementHeatmap';
+import { PortalWatchlistCard } from '@/components/futurecast/PortalWatchlistCard';
 import {
   fetchFutureCastHome,
   type CommitSort,
   type FutureCastHomeResponse,
-  type PortalWatchlistHomePlayer,
 } from '@/lib/futurecast-home-api';
-import { portalLikelihoodBand } from '@/lib/portal-api';
+import type { FeedPrediction } from '@/lib/predictions-api';
 
 const REFRESH_MS = 60_000;
 
@@ -22,23 +22,26 @@ function Section({
   children,
   testId,
   actions,
+  count,
 }: {
   title: string;
   subtitle?: string;
   children: React.ReactNode;
   testId?: string;
   actions?: React.ReactNode;
+  count?: number;
 }): React.ReactElement {
   return (
     <section className="fc-home-section" data-testid={testId}>
       <div className="fc-home-section__header">
-        <div>
+        <div className="fc-home-section__heading">
           <h2 className="fc-home-section__title">{title}</h2>
+          {count != null && <span className="fc-home-section__count">{count}</span>}
           {subtitle && <p className="fc-home-section__subtitle">{subtitle}</p>}
         </div>
         {actions}
       </div>
-      {children}
+      <div className="fc-home-section__body">{children}</div>
     </section>
   );
 }
@@ -47,23 +50,15 @@ function EmptySection({ message }: { message: string }): React.ReactElement {
   return <p className="fc-home-section__empty">{message}</p>;
 }
 
-function PortalCard({ player }: { player: PortalWatchlistHomePlayer }): React.ReactElement {
-  const band = portalLikelihoodBand(player.portalLikelihood);
-  return (
-    <a href={`/player/${player.slug}?tab=portal`} className="fc-portal-card fc-home-portal-card">
-      <span className="fc-portal-card__rank">#{player.rank}</span>
-      <h3 className="fc-portal-card__name">{player.fullName}</h3>
-      <p className="fc-portal-card__meta">
-        {player.position} · {player.classYear}
-      </p>
-      <div className="fc-portal-card__scores">
-        <span className={`fc-portal-badge fc-portal-badge--${band}`}>
-          Portal {player.portalLikelihood}%
-        </span>
-        <span className="fc-portal-metric">Risk {player.depthChartRisk}</span>
-      </div>
-    </a>
-  );
+function CardGrid({ children }: { children: React.ReactNode }): React.ReactElement {
+  return <div className="fc-home-card-grid">{children}</div>;
+}
+
+function movementDirection(p: FeedPrediction): 'up' | 'down' | 'flat' {
+  const d = p.delta ?? 0;
+  if (d > 0) return 'up';
+  if (d < 0) return 'down';
+  return 'flat';
 }
 
 export function FutureCastHomepage(): React.ReactElement {
@@ -108,6 +103,15 @@ export function FutureCastHomepage(): React.ReactElement {
     };
   }, [load]);
 
+  const trendingUp = useMemo(
+    () => (data?.trendingUp ?? []).filter((p) => (p.delta ?? 0) > 0),
+    [data?.trendingUp]
+  );
+  const trendingDown = useMemo(
+    () => (data?.trendingDown ?? []).filter((p) => (p.delta ?? 0) < 0),
+    [data?.trendingDown]
+  );
+
   if (loading && !data) {
     return <p className="fc-profile-empty">Loading FutureCast…</p>;
   }
@@ -143,40 +147,42 @@ export function FutureCastHomepage(): React.ReactElement {
     <div className="fc-home" data-testid="futurecast-home">
       <Section
         title="Movement Heatmap"
-        subtitle={`${data.heatmap.windowDays}-day MODEL confidence shifts · ${data.classYear} class only`}
+        subtitle={`${data.heatmap.windowDays}-day MODEL confidence shifts`}
         testId="home-heatmap"
       >
         <MovementHeatmap buckets={data.heatmap.buckets} windowDays={data.heatmap.windowDays} />
       </Section>
 
       <Section
-        title={`UF Commits (${data.classYear})`}
-        subtitle="Sorted by Fit Score or Stability"
+        title={`UF Commits — ${data.classYear} Class`}
+        subtitle="Signed prospects sorted by Fit Score or Stability"
         testId="home-commits"
+        count={data.commits.length}
         actions={sortActions}
       >
         {data.commits.length > 0 ? (
-          <div className="fc-home-card-grid">
+          <CardGrid>
             {data.commits.map((p) => (
               <FutureCastHomeCard key={p.playerId} prediction={p} variant="commit" />
             ))}
-          </div>
+          </CardGrid>
         ) : (
-          <EmptySection message="No 2027 commits in FutureCast yet." />
+          <EmptySection message={`No ${data.classYear} commits in FutureCast yet.`} />
         )}
       </Section>
 
       <Section
-        title={`Top Targets (${data.classYear})`}
-        subtitle="Uncommitted prospects — sorted by UF Probability"
+        title="Top Targets"
+        subtitle="Uncommitted prospects sorted by UF Probability"
         testId="home-targets"
+        count={data.topTargets.length}
       >
         {data.topTargets.length > 0 ? (
-          <div className="fc-home-card-grid">
+          <CardGrid>
             {data.topTargets.map((p) => (
               <FutureCastHomeCard key={p.playerId} prediction={p} variant="target" />
             ))}
-          </div>
+          </CardGrid>
         ) : (
           <EmptySection message="No top targets match current filters." />
         )}
@@ -184,15 +190,20 @@ export function FutureCastHomepage(): React.ReactElement {
 
       <Section
         title="Trending Up"
-        subtitle="Biggest confidence gainers this week"
+        subtitle="Players with positive MODEL movement this week"
         testId="home-trending-up"
+        count={trendingUp.length}
       >
-        {data.trendingUp.length > 0 ? (
-          <div className="fc-home-card-grid fc-home-card-grid--compact">
-            {data.trendingUp.map((p) => (
-              <FutureCastHomeCard key={p.playerId} prediction={p} variant="trending" />
+        {trendingUp.length > 0 ? (
+          <CardGrid>
+            {trendingUp.map((p) => (
+              <FutureCastHomeCard
+                key={p.playerId}
+                prediction={p}
+                variant={movementDirection(p) === 'down' ? 'trending-down' : 'trending-up'}
+              />
             ))}
-          </div>
+          </CardGrid>
         ) : (
           <EmptySection message="No risers in the current window." />
         )}
@@ -200,15 +211,20 @@ export function FutureCastHomepage(): React.ReactElement {
 
       <Section
         title="Trending Down"
-        subtitle="Biggest confidence fallers this week"
+        subtitle="Players with negative MODEL movement this week"
         testId="home-trending-down"
+        count={trendingDown.length}
       >
-        {data.trendingDown.length > 0 ? (
-          <div className="fc-home-card-grid fc-home-card-grid--compact">
-            {data.trendingDown.map((p) => (
-              <FutureCastHomeCard key={p.playerId} prediction={p} variant="trending" />
+        {trendingDown.length > 0 ? (
+          <CardGrid>
+            {trendingDown.map((p) => (
+              <FutureCastHomeCard
+                key={p.playerId}
+                prediction={p}
+                variant="trending-down"
+              />
             ))}
-          </div>
+          </CardGrid>
         ) : (
           <EmptySection message="No fallers in the current window." />
         )}
@@ -216,13 +232,14 @@ export function FutureCastHomepage(): React.ReactElement {
 
       <Section
         title="Portal Watchlist"
-        subtitle={`${data.classYear} college players with elevated portal likelihood`}
+        subtitle={`${data.classYear} portal candidates — college & transfer targets only`}
         testId="home-portal"
+        count={data.portalWatchlist.length}
       >
         {data.portalWatchlist.length > 0 ? (
           <div className="fc-portal-grid fc-home-portal-grid">
             {data.portalWatchlist.map((p) => (
-              <PortalCard key={p.id} player={p} />
+              <PortalWatchlistCard key={p.id} player={p} />
             ))}
           </div>
         ) : (

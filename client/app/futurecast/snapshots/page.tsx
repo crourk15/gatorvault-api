@@ -4,7 +4,8 @@
  * Daily & weekly movement snapshots — /futurecast/snapshots
  */
 import React, { useEffect, useState } from 'react';
-import { PredictionCard, feedPredictionToCard } from '@/components/PredictionCard';
+import { FutureCastSubNav } from '@/components/site/FutureCastSubNav';
+import { FutureCastHomeCard } from '@/components/futurecast/FutureCastHomeCard';
 import {
   fetchMovementSnapshots,
   type FeedPrediction,
@@ -30,11 +31,12 @@ function SnapshotSection({
   return (
     <section className="fc-snapshots__section">
       <h2 className={`fc-snapshots__heading ${headingClass}`}>{title}</h2>
-      <div className="fc-snapshots__list">
+      <div className="fc-home-card-grid">
         {predictions.map((prediction) => (
-          <PredictionCard
+          <FutureCastHomeCard
             key={prediction.id}
-            prediction={feedPredictionToCard(prediction)}
+            prediction={prediction}
+            variant={tone === 'up' ? 'trending-up' : 'trending-down'}
           />
         ))}
         {predictions.length === 0 && (
@@ -108,17 +110,7 @@ export default function MovementSnapshotsPage(): React.ReactElement {
 
   return (
     <div className="fc-snapshots-wrap" data-testid="movement-snapshots-page">
-      <nav className="fc-futurecast-nav">
-        <a href="/futurecast" className="fc-futurecast-nav__link">
-          Predictions
-        </a>
-        <a href="/futurecast/stock" className="fc-futurecast-nav__link">
-          Stock Up / Stock Down
-        </a>
-        <a href="/futurecast/snapshots" className="fc-futurecast-nav__link is-active">
-          Snapshots
-        </a>
-      </nav>
+      <FutureCastSubNav active="snapshots" />
       <h1 className="fc-snapshots__title">Daily &amp; Weekly Movement Snapshots</h1>
       <p className="fc-snapshots__subtitle">
         MODEL confidence risers and fallers over 1-day and 7-day windows

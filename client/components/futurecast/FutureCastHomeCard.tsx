@@ -1,26 +1,42 @@
 /**
  * FutureCast homepage player card — commits, targets, and trending variants.
  */
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import type { FeedPrediction } from '@/lib/predictions-api';
-import { ConfidenceBar } from './ConfidenceBar';
 import { TrendingIndicator } from './TrendingIndicator';
 
-export type FutureCastHomeCardVariant = 'commit' | 'target' | 'trending';
+export type FutureCastHomeCardVariant =
+  | 'commit'
+  | 'target'
+  | 'trending-up'
+  | 'trending-down';
 
 export interface FutureCastHomeCardProps {
   prediction: FeedPrediction;
   variant: FutureCastHomeCardVariant;
 }
 
-const PLACEHOLDER_PHOTO =
-  'data:image/svg+xml,' +
-  encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72"><rect fill="#0a1628" width="72" height="72" rx="10"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#64748b" font-size="24" font-family="sans-serif">?</text></svg>'
-  );
+function playerInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('');
+}
 
-function headshotUrl(slug: string): string {
-  return `/headshots/${encodeURIComponent(slug)}.svg`;
+function headshotCandidates(slug: string): string[] {
+  return [
+    `/headshots/${encodeURIComponent(slug)}.jpg`,
+    `/headshots/${encodeURIComponent(slug)}.png`,
+    `/headshots/${encodeURIComponent(slug)}.svg`,
+  ];
+}
+
+function ufProbabilityDisplay(p: FeedPrediction): number | null {
+  if (p.ufProbability != null) return p.ufProbability;
+  if (p.committedTo?.toLowerCase().includes('florida')) return p.confidence;
+  return p.confidence;
 }
 
 export function FutureCastHomeCard({
@@ -29,7 +45,12 @@ export function FutureCastHomeCard({
 }: FutureCastHomeCardProps): React.ReactElement {
   const slug = prediction.playerSlug || prediction.playerId;
   const href = `/player/${encodeURIComponent(slug)}`;
-  const photoSrc = headshotUrl(slug);
+  const [photoIndex, setPhotoIndex] = useState(0);
+  const photos = useMemo(() => headshotCandidates(slug), [slug]);
+  const showPhoto = photoIndex < photos.length;
+  const ufProb = ufProbabilityDisplay(prediction);
+  const movement = prediction.delta;
+  const showMovement = movement !== undefined && movement !== 0;
 
   return (
     <a
@@ -37,52 +58,84 @@ export function FutureCastHomeCard({
       href={href}
       data-testid={`home-card-${variant}`}
     >
-      <div className="fc-home-card__media">
-        <img
-          src={photoSrc}
-          alt=""
-          className="fc-home-card__photo"
-          onError={(e) => {
-            e.currentTarget.onerror = null;
-            e.currentTarget.src = PLACEHOLDER_PHOTO;
-          }}
-        />
-        {variant === 'commit' && <span className="fc-home-card__badge fc-home-card__badge--commit">Committed</span>}
-        {variant === 'target' && <span className="fc-home-card__badge fc-home-card__badge--target">Target</span>}
-      </div>
-      <div className="fc-home-card__body">
-        <h3 className="fc-home-card__name">{prediction.fullName}</h3>
-        <p className="fc-home-card__meta">
-          {prediction.position} · Class of {prediction.classYear}
-        </p>
-        {prediction.school && (
-          <p className="fc-home-card__school">{prediction.school}</p>
-        )}
-        <div className="fc-home-card__metrics">
-          {variant === 'target' && prediction.ufProbability != null && (
-            <div className="fc-home-card__metric fc-home-card__metric--primary">
-              <span className="fc-home-card__metric-label">UF Probability</span>
-              <span className="fc-home-card__metric-value">{prediction.ufProbability}%</span>
+      <div className="fc-home-card__inner">
+        <div className="fc-home-card__photo-wrap">
+          {showPhoto ? (
+            <img
+              src={photos[photoIndex]}
+              alt=""
+              className="fc-home-card__photo"
+              onError={() => setPhotoIndex((i) => i + 1)}
+            />
+          ) : (
+            <div className="fc-home-card__photo fc-home-card__photo--placeholder" aria-hidden>
+              {playerInitials(prediction.fullName) || '?'}
             </div>
           )}
-          {variant === 'commit' && prediction.ufFitScore != null && (
-            <div className="fc-home-card__metric fc-home-card__metric--primary">
-              <span className="fc-home-card__metric-label">Fit Score</span>
-              <span className="fc-home-card__metric-value">{prediction.ufFitScore}</span>
+        </div>
+
+        <div className="fc-home-card__content">
+          <div className="fc-home-card__head">
+            <div className="fc-home-card__title-block">
+              <h3 className="fc-home-card__name">{prediction.fullName}</h3>
+              <p className="fc-home-card__meta">
+                {prediction.position} · {prediction.classYear}
+              </p>
+              {prediction.school && (
+                <p className="fc-home-card__school">{prediction.school}</p>
+              )}
             </div>
-          )}
-          {variant === 'commit' && prediction.stabilityScore != null && (
-            <div className="fc-home-card__metric">
-              <span className="fc-home-card__metric-label">Stability</span>
-              <span className="fc-home-card__metric-value">{prediction.stabilityScore}</span>
-            </div>
-          )}
-          {variant === 'trending' && prediction.delta !== undefined && (
-            <div className="fc-home-card__trend">
-              <TrendingIndicator delta={prediction.delta} />
-            </div>
-          )}
-          <ConfidenceBar value={prediction.confidence} />
+            {variant === 'commit' && (
+              <span className="fc-home-card__badge fc-home-card__badge--commit">Committed</span>
+            )}
+            {variant === 'target' && (
+              <span className="fc-home-card__badge fc-home-card__badge--target">Target</span>
+            )}
+            {showMovement && (
+              <div className="fc-home-card__movement">
+                <TrendingIndicator delta={movement} />
+              </div>
+            )}
+          </div>
+
+          <div className="fc-home-card__metrics-row">
+            {ufProb != null && variant !== 'commit' && (
+              <div className="fc-home-card__stat">
+                <span className="fc-home-card__stat-label">UF Probability</span>
+                <span className="fc-home-card__stat-value fc-home-card__stat-value--orange">
+                  {ufProb}%
+                </span>
+              </div>
+            )}
+            {prediction.ufFitScore != null && (
+              <div className="fc-home-card__stat">
+                <span className="fc-home-card__stat-label">Fit Score</span>
+                <span className="fc-home-card__stat-value">{prediction.ufFitScore}</span>
+              </div>
+            )}
+            {variant === 'commit' && ufProb != null && (
+              <div className="fc-home-card__stat">
+                <span className="fc-home-card__stat-label">UF Probability</span>
+                <span className="fc-home-card__stat-value fc-home-card__stat-value--orange">
+                  {ufProb}%
+                </span>
+              </div>
+            )}
+            {variant === 'commit' && prediction.stabilityScore != null && (
+              <div className="fc-home-card__stat">
+                <span className="fc-home-card__stat-label">Stability</span>
+                <span className="fc-home-card__stat-value">{prediction.stabilityScore}</span>
+              </div>
+            )}
+            {showMovement && (variant === 'trending-up' || variant === 'trending-down') && (
+              <div className="fc-home-card__stat">
+                <span className="fc-home-card__stat-label">Movement</span>
+                <span className="fc-home-card__stat-value">
+                  <TrendingIndicator delta={movement} />
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </a>
