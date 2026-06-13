@@ -37,7 +37,7 @@ export function HighSchoolTab({ player, profile }: HighSchoolTabProps): React.Re
       <section className="fc-profile-section">
         <h2>School & Location</h2>
         <dl className="fc-profile-dl">
-          <div><dt>High School</dt><dd>{player.highSchool || stats.school || '—'}</dd></div>
+          <div><dt>High School</dt><dd>{player.highSchool || (typeof stats.school === 'string' ? stats.school : '') || '—'}</dd></div>
           <div><dt>Location</dt><dd>{[player.hometown, player.state].filter(Boolean).join(', ') || '—'}</dd></div>
           <div><dt>Height / Weight</dt><dd>{formatHeight(player.height)} · {formatWeight(player.weight)}</dd></div>
         </dl>

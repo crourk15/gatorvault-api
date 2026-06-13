@@ -3,6 +3,22 @@ temp_*.js
 *.zip
 node_modules/
 server/node_modules/
+client/node_modules/
+client/.next/
+client/out/
+server/futurecast-ui/
+# Next.js FutureCast export merged into server/ at Netlify build (generated — do not commit)
+server/_next/
+server/404.html
+server/404/
+server/alerts/
+server/futurecast/index.html
+server/futurecast/index.txt
+server/futurecast/stock/
+server/futurecast/snapshots/
+server/player/index.html
+server/player/index.txt
+server/staff/
 gatorvault-api/
 server/.env
 server/data/users.json

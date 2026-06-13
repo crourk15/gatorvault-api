@@ -49,7 +49,7 @@ export function PortalWatchlistGrid({ query }: PortalWatchlistGridProps): React.
         return (
           <a
             key={p.id}
-            href={`/futurecast/player/${p.slug}?tab=portal`}
+            href={`/player/${p.slug}?tab=portal`}
             className="fc-portal-card"
           >
             <span className="fc-portal-card__rank">#{p.rank}</span>

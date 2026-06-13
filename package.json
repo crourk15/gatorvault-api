@@ -5,6 +5,8 @@
   "description": "GatorVault Insider — API, static site, On3 ingest, X AutoPoster",
   "scripts": {
     "postinstall": "npm install --prefix server",
+    "build:futurecast": "npm run build:render --prefix client",
+    "build:netlify": "npm ci --prefix client && npm run build --prefix client && node client/scripts/merge-into-server.js",
     "start": "npm start --prefix server",
     "dev": "npm run dev --prefix server",
     "ingest:on3": "npm run ingest:on3 --prefix server",

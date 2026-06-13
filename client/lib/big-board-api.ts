@@ -45,6 +45,8 @@ export function getApiBase(): string {
     const gv = (window as Window & { GV_API_BASE?: string }).GV_API_BASE;
     if (gv) return gv.replace(/\/$/, '');
   }
+  const fromEnv = process.env.NEXT_PUBLIC_API_BASE;
+  if (fromEnv) return fromEnv.replace(/\/$/, '');
   return '';
 }
 

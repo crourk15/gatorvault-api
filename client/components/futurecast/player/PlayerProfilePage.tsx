@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Player Profile 2.0 — full page shell.
  * Route: /futurecast/player/:slug

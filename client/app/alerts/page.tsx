@@ -1,5 +1,7 @@
+'use client';
+
 /**
- * Global FutureCast alerts feed — /alerts (App Router target).
+ * Global FutureCast alerts feed — /alerts
  */
 import React, { useEffect, useState } from 'react';
 import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
@@ -80,7 +82,7 @@ export default function AlertsPage(): React.ReactElement {
         {alerts.map((alert) => (
           <article key={alert.id} className="fc-alerts__item">
             <a
-              href={`/futurecast/player/${encodeURIComponent(alert.playerSlug)}`}
+              href={`/player/${encodeURIComponent(alert.playerSlug)}`}
               className="fc-alerts__message"
             >
               {alert.message}

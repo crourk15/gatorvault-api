@@ -1,4 +1,7 @@
-/player/*  /player.html  200
+# FutureCast React UI (Next.js static export from client/ — merged at Netlify build)
+/futurecast/predictions  /futurecast/  301
+/futurecast/player/*  /player/:splat  301
+/player/*  /player/index.html  200
 /highlight/*  /highlight.html  200
 /article/*  /article.html  200
 /admin  /admin.html  200

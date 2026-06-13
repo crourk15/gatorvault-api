@@ -3,9 +3,9 @@
  */
 import React, { useEffect, useRef } from 'react';
 
-export function useInfiniteScroll(callback: () => void): React.RefObject<HTMLDivElement | null> {
+export function useInfiniteScroll(callback: () => void): React.RefObject<HTMLDivElement> {
   const callbackRef = useRef(callback);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     callbackRef.current = callback;

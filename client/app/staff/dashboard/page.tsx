@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Staff dashboard — internal FutureCast control room.
  */
@@ -32,7 +34,7 @@ function PlayerLinks({
         {players.map((player) => (
           <li key={player.id}>
             <a
-              href={`/futurecast/player/${encodeURIComponent(player.slug)}`}
+              href={`/player/${encodeURIComponent(player.slug)}`}
               className="fc-staff-dashboard__link"
             >
               {player.name} — {valueLabel(player)}

@@ -2,8 +2,8 @@
  * Related players grid — same position + class year from /api/players/:id/related.
  */
 import React from 'react';
-import type { BigBoardPlayer } from '../../lib/big-board-api';
-import { fitTier } from '../../lib/player-derived';
+import type { BigBoardPlayer } from '../../../lib/big-board-api';
+import { fitTier } from '../../../lib/player-derived';
 
 export interface RelatedPlayersProps {
   players: BigBoardPlayer[];
@@ -21,7 +21,7 @@ export function RelatedPlayers({ players, currentSlug }: RelatedPlayersProps): R
       {list.map((p) => (
         <a
           key={p.id}
-          href={`/futurecast/player/${p.slug}`}
+          href={`/player/${p.slug}`}
           className="fc-related-card"
         >
           <span className="fc-related-card__rank">#{p.rank}</span>

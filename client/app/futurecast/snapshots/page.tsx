@@ -1,5 +1,7 @@
+'use client';
+
 /**
- * Daily & weekly movement snapshots — /futurecast/snapshots (App Router target).
+ * Daily & weekly movement snapshots — /futurecast/snapshots
  */
 import React, { useEffect, useState } from 'react';
 import { PredictionCard, feedPredictionToCard } from '@/components/PredictionCard';

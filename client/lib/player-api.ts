@@ -172,10 +172,10 @@ export async function fetchPlayerProfile(slug: string): Promise<PlayerProfileBun
 
 export function buildPlayerShareUrl(slug: string, tab?: string): string {
   if (typeof window === 'undefined') {
-    return `/futurecast/player/${slug}${tab ? `?tab=${tab}` : ''}`;
+    return `/player/${slug}${tab ? `?tab=${tab}` : ''}`;
   }
   const url = new URL(window.location.href);
-  url.pathname = `/futurecast/player/${slug}`;
+  url.pathname = `/player/${slug}`;
   url.search = '';
   if (tab) url.searchParams.set('tab', tab);
   return url.toString();

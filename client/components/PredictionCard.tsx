@@ -51,8 +51,8 @@ export function feedPredictionToCard(p: FeedPrediction): PredictionCardData {
 
 export function PredictionCard({ prediction }: PredictionCardProps): React.ReactElement {
   const href = prediction.playerSlug
-    ? `/futurecast/player/${encodeURIComponent(prediction.playerSlug)}`
-    : `/futurecast/player/${encodeURIComponent(prediction.playerId)}`;
+    ? `/player/${encodeURIComponent(prediction.playerSlug)}`
+    : `/player/${encodeURIComponent(prediction.playerId)}`;
 
   return (
     <a className="fc-prediction-card-v2" href={href} data-testid="prediction-card">

@@ -1,5 +1,7 @@
+'use client';
+
 /**
- * FutureCast predictions page — /futurecast (App Router target).
+ * FutureCast predictions page — /futurecast
  */
 import React, { useEffect, useState } from 'react';
 import { FutureCastFeed } from '@/components/futurecast/FutureCastFeed';

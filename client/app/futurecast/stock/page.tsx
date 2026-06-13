@@ -1,5 +1,7 @@
+'use client';
+
 /**
- * Stock Up / Stock Down board — /futurecast/stock (App Router target).
+ * Stock Up / Stock Down board — /futurecast/stock
  */
 import React, { useEffect, useState } from 'react';
 import { PredictionCard, feedPredictionToCard } from '@/components/PredictionCard';

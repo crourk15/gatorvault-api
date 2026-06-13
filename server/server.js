@@ -42,10 +42,14 @@ app.use((req, res, next) => {
   const allowed = [
     'https://gatorvaultinsider.com',
     'https://www.gatorvaultinsider.com',
+    'https://gatorvault.com',
+    'https://www.gatorvault.com',
+    'https://futurecast.gatorvault.com',
     'http://localhost:3000',
     'http://127.0.0.1:3000'
   ];
-  if (origin && allowed.includes(origin)) {
+  const isNetlifyPreview = origin && /\.netlify\.app$/i.test(origin);
+  if (origin && (allowed.includes(origin) || isNetlifyPreview)) {
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Vary', 'Origin');
   } else {
@@ -74,7 +78,7 @@ app.get('/futurecast-big-board.html', (req, res) => {
 });
 
 app.get('/futurecast/player/:slug', (req, res) => {
-  res.sendFile(path.join(__dirname, 'futurecast-player.html'));
+  res.redirect(301, `/player/${encodeURIComponent(req.params.slug)}`);
 });
 app.get('/futurecast-player.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'futurecast-player.html'));
@@ -89,12 +93,15 @@ app.get('/futurecast/uf-fit-watchlist', (req, res) => {
 });
 
 app.get('/futurecast/predictions', (req, res) => {
-  res.sendFile(path.join(__dirname, 'futurecast-predictions.html'));
+  res.redirect(301, '/futurecast');
 });
 
 app.get('/futurecast/predictors', (req, res) => {
   res.sendFile(path.join(__dirname, 'futurecast-predictors.html'));
 });
+
+const { mountFutureCastUiRoutes } = require('./lib/futurecast-ui-routes');
+mountFutureCastUiRoutes(app);
 
 mountRecruitingRoutes(app);
 mountContentRoutes(app);
