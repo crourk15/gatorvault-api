@@ -2223,3 +2223,647 @@ a.gv-live-item__title:hover {
   margin: 0.25rem 0 0;
 }
 
+/* ── Phase 7: Hub tabs, recruiting hub, team, live feed ESPN, bottom nav ── */
+
+.gv-hub-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.gv-hub-tabs--scroll {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.35rem;
+  scrollbar-width: none;
+}
+
+.gv-hub-tabs--scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.gv-hub-tab {
+  flex-shrink: 0;
+  padding: 0.5rem 0.875rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  background: rgba(6, 15, 31, 0.85);
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.gv-hub-tab.is-active {
+  background: #fa4616;
+  color: #fff;
+  border-color: #fa4616;
+}
+
+.gv-rh-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.75rem;
+}
+
+.gv-rh-card {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  background: rgba(10, 22, 40, 0.85);
+  text-decoration: none;
+  color: inherit;
+}
+
+.gv-rh-card:hover {
+  border-color: rgba(250, 70, 22, 0.45);
+}
+
+.gv-rh-card__rank {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fa4616;
+  min-width: 2rem;
+}
+
+.gv-rh-card__name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.25rem;
+}
+
+.gv-rh-card__meta {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin: 0 0 0.35rem;
+}
+
+.gv-rh-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.gv-rh-card__status,
+.gv-rh-card__grade,
+.gv-rh-card__prob {
+  font-size: 0.625rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(0, 48, 135, 0.35);
+  color: #cbd5e1;
+}
+
+.gv-rh-card__note {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0.35rem 0 0;
+  line-height: 1.4;
+}
+
+.gv-rh-intel__link {
+  margin-bottom: 1rem;
+  font-size: 0.8125rem;
+}
+
+.gv-rh-intel__link a {
+  color: #fa4616;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.gv-rh-intel__cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+}
+
+.gv-rh-intel__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8125rem;
+}
+
+.gv-rh-intel__list a {
+  color: #e2e8f0;
+  text-decoration: none;
+}
+
+.gv-rh-intel__list a:hover {
+  color: #fa4616;
+}
+
+.gv-rh-intel__list li {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(0, 48, 135, 0.12);
+}
+
+.gv-rh-portal-ace {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+  border-radius: 1rem;
+  border: 2px solid rgba(250, 70, 22, 0.55);
+  background: linear-gradient(135deg, rgba(250, 70, 22, 0.12), rgba(0, 48, 135, 0.2));
+  text-decoration: none;
+  color: inherit;
+}
+
+.gv-rh-portal-ace__badge {
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fa4616;
+}
+
+.gv-rh-portal-ace strong {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.25rem;
+  color: #fff;
+}
+
+.gv-rh-portal-ace span:last-child {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+}
+
+.gv-heat-card__why {
+  font-size: 0.75rem;
+  color: #cbd5e1;
+  margin: 0.25rem 0 0;
+  line-height: 1.4;
+}
+
+.gv-heat-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Team roster */
+.gv-team-roster__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+}
+
+.gv-team-roster-row {
+  display: grid;
+  grid-template-columns: 3rem 1fr auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.65rem 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 48, 135, 0.25);
+  background: rgba(10, 22, 40, 0.85);
+  text-decoration: none;
+  color: inherit;
+}
+
+.gv-team-roster-row:hover {
+  border-color: rgba(250, 70, 22, 0.4);
+}
+
+.gv-team-roster-row--ace {
+  border-color: rgba(250, 70, 22, 0.55);
+  background: rgba(250, 70, 22, 0.06);
+}
+
+.gv-team-roster-row--portal .gv-team-roster-row__portal {
+  color: #fbbf24;
+}
+
+.gv-team-roster-row__pos {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  color: #fa4616;
+  font-size: 0.8125rem;
+}
+
+.gv-team-roster-row__name {
+  font-weight: 700;
+  color: #fff;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gv-team-roster-row__ace {
+  font-size: 0.5625rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+  background: #fa4616;
+  color: #000;
+}
+
+.gv-team-roster-row__portal {
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.gv-team-roster-row__meta {
+  font-size: 0.6875rem;
+  color: #64748b;
+  text-align: right;
+}
+
+.gv-vault-shell__sidebar-label--secondary {
+  margin-top: 1rem;
+}
+
+.gv-vault-shell__nav-label {
+  flex: 1;
+}
+
+/* Mobile bottom nav */
+.gv-vault-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .gv-vault-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 55;
+    background: rgba(6, 15, 31, 0.98);
+    border-top: 1px solid rgba(0, 48, 135, 0.4);
+    padding: 0.35rem 0 calc(0.35rem + env(safe-area-inset-bottom, 0));
+    justify-content: space-around;
+  }
+
+  .gv-vault-shell__main {
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0));
+  }
+
+  .gv-vault-bottom-nav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.35rem 0.25rem;
+    min-width: 0;
+    flex: 1;
+    text-decoration: none;
+    color: #64748b;
+    font-size: 0.5625rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .gv-vault-bottom-nav__item.is-active {
+    color: #fa4616;
+  }
+
+  .gv-vault-bottom-nav__icon {
+    font-size: 1.125rem;
+    line-height: 1;
+  }
+
+  .gv-vault-bottom-nav__label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* ESPN-style live feed */
+.gv-live-ticker {
+  display: flex;
+  align-items: stretch;
+  margin: -1.25rem -1.5rem 1.25rem;
+  background: #fa4616;
+  overflow: hidden;
+  min-height: 36px;
+}
+
+@media (max-width: 767px) {
+  .gv-live-ticker {
+    margin: -1rem -1rem 1rem;
+  }
+}
+
+.gv-live-ticker__badge {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
+  background: #003087;
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.gv-live-ticker__track {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+}
+
+.gv-live-ticker__text {
+  white-space: nowrap;
+  padding: 0 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  animation: gv-ticker-scroll 40s linear infinite;
+}
+
+@keyframes gv-ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.gv-live-feed__hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.gv-live-feed__refresh-badge {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #64748b;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 48, 135, 0.3);
+  white-space: nowrap;
+}
+
+.gv-live-feed__tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 48, 135, 0.25);
+  padding-bottom: 0.5rem;
+}
+
+.gv-live-feed__tab {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.gv-live-feed__tab.is-active {
+  color: #fff;
+  background: rgba(250, 70, 22, 0.12);
+  box-shadow: inset 0 -2px 0 #fa4616;
+}
+
+.gv-live-feed__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.gv-live-feed__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  background: rgba(6, 15, 31, 0.85);
+  color: #94a3b8;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gv-live-feed__chip.is-active {
+  background: #003087;
+  color: #fff;
+  border-color: #003087;
+}
+
+.gv-live-feed__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gv-live-feed__row {
+  display: flex;
+  gap: 0.875rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0, 48, 135, 0.15);
+  align-items: flex-start;
+}
+
+.gv-live-feed__row-icon {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background: rgba(0, 48, 135, 0.25);
+  font-size: 1rem;
+}
+
+.gv-live-feed__row-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.gv-live-feed__row-title {
+  display: block;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  margin: 0 0 0.35rem;
+  line-height: 1.35;
+}
+
+a.gv-live-feed__row-title:hover {
+  color: #fa4616;
+}
+
+.gv-live-feed__row-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  font-size: 0.6875rem;
+}
+
+.gv-live-feed__row-source {
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.gv-live-feed__row-time {
+  color: #94a3b8;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.gv-live-feed__beat-handle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fa4616;
+  margin: 0 0 0.25rem;
+}
+
+.gv-live-feed__beat-text {
+  font-size: 0.875rem;
+  color: #e2e8f0;
+  margin: 0 0 0.35rem;
+  line-height: 1.45;
+}
+
+.gv-live-feed__beat-link {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fa4616;
+  text-decoration: none;
+}
+
+.gv-live-feed__podcast-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem;
+  margin-bottom: 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 48, 135, 0.25);
+  background: rgba(10, 22, 40, 0.85);
+}
+
+.gv-live-feed__podcast-icon {
+  font-size: 1.75rem;
+}
+
+.gv-live-feed__podcast-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.35rem;
+}
+
+.gv-live-feed__podcast-desc {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  margin: 0 0 0.5rem;
+  line-height: 1.45;
+}
+
+.gv-live-feed__podcast-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.gv-live-feed__podcast-link {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fa4616;
+  text-decoration: none;
+}
+
+/* Schedule section */
+.gv-schedule-section {
+  margin-bottom: 2rem;
+}
+
+.gv-schedule-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gv-schedule-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0, 48, 135, 0.15);
+}
+
+.gv-schedule-row__logo {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background: rgba(0, 48, 135, 0.25);
+  font-size: 1.25rem;
+}
+
+.gv-schedule-row__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.gv-schedule-row__matchup {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.15rem;
+}
+
+.gv-schedule-row__opp {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  margin: 0 0 0.25rem;
+}
+
+.gv-schedule-row__meta {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0 0 0.15rem;
+}
+
+.gv-schedule-row__tv {
+  font-size: 0.75rem;
+  color: #fa4616;
+  font-weight: 600;
+  margin: 0;
+}
+

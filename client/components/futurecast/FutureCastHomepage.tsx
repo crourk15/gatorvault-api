@@ -171,7 +171,7 @@ export function FutureCastHomepage(): React.ReactElement {
         title={`UF Commits — ${data.classYear} Class`}
         subtitle={
           data.commitTotal != null && data.commitTotal > data.commits.length
-            ? `Showing ${data.commits.length} of ${data.commitTotal} commits — full list on Recruiting Board`
+            ? `Showing ${data.commits.length} of ${data.commitTotal} commits — full list in Recruiting Hub`
             : 'Signed prospects sorted by Fit Score or Stability'
         }
         testId="home-commits"
@@ -187,7 +187,7 @@ export function FutureCastHomepage(): React.ReactElement {
             </CardGrid>
             {isVaultPath(pathname) && (
               <p className="fc-home-section__footer-link">
-                <a href="/vault/recruiting-board">View full recruiting board →</a>
+                <a href="/vault/recruiting">View Recruiting Hub →</a>
               </p>
             )}
           </>

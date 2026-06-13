@@ -1,8 +1,11 @@
 'use client';
 
-import React from 'react';
-import { VaultPortalDirectoryPage } from '@/components/vault/VaultPortalDirectoryPage';
+import { useEffect } from 'react';
 
-export default function VaultPortalRoute(): React.ReactElement {
-  return <VaultPortalDirectoryPage />;
+/** Portal moved into Recruiting Hub — redirect legacy route. */
+export default function VaultPortalRoute(): null {
+  useEffect(() => {
+    window.location.replace('/vault/recruiting?tab=portal');
+  }, []);
+  return null;
 }

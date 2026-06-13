@@ -4,34 +4,34 @@ import React from 'react';
 
 const QUICK_LINKS = [
   {
-    href: '/vault/depth-chart',
-    icon: '🐊',
-    title: 'Team Hub',
-    desc: 'History, staff, roster, and depth chart.',
-  },
-  {
     href: '/vault/recruiting',
     icon: '🎯',
-    title: 'Recruiting',
-    desc: "Heat check, class boards, and FutureCast intel.",
+    title: 'Recruiting Hub',
+    desc: 'Commits, targets, portal, heat check, and scouting.',
   },
   {
     href: '/vault/futurecast',
     icon: '📈',
     title: 'FutureCast',
-    desc: '2027 cycle predictions, stock board, and movement.',
+    desc: 'Big board, movement intel, staff notes, and trending.',
   },
   {
-    href: '/vault/scouting',
-    icon: '🔭',
-    title: 'War Room',
-    desc: 'Scouting database and player breakdowns.',
+    href: '/vault/team',
+    icon: '👥',
+    title: 'Team',
+    desc: 'Full roster, depth chart, and portal tags.',
   },
   {
-    href: '/vault/portal',
-    icon: '🔄',
-    title: 'Portal Radar',
-    desc: 'Incoming transfers and portal watchlist.',
+    href: '/vault/live-feed',
+    icon: '⚡',
+    title: 'Live Feed',
+    desc: 'Headlines, beat writers, podcasts, and ticker.',
+  },
+  {
+    href: '/vault/tickets',
+    icon: '🎟️',
+    title: 'Schedule & Tickets',
+    desc: 'Full 2026 schedule with TV info and ticket links.',
   },
   {
     href: '/vault/film-room',
@@ -44,12 +44,6 @@ const QUICK_LINKS = [
     icon: '🏈',
     title: 'Game Week',
     desc: 'Matchups, win probability, and film notes.',
-  },
-  {
-    href: '/vault/live-feed',
-    icon: '⚡',
-    title: 'Live Feed',
-    desc: 'Headlines, beat writers, and podcasts.',
   },
   {
     href: '/vault/live-scores',
@@ -82,28 +76,16 @@ const QUICK_LINKS = [
     desc: 'SEC rankings, UF KPIs, and recent NIL events.',
   },
   {
-    href: '/vault/recruiting-board',
-    icon: '📊',
-    title: 'Recruiting Board',
-    desc: 'Full interactive recruiting board.',
-  },
-  {
     href: '/vault/futurecast/staff',
-    icon: '⚙️',
-    title: 'Staff Dashboard',
-    desc: 'Movement heatmap and staff intel tools.',
+    icon: '📡',
+    title: 'Movement Intel',
+    desc: 'Full movement dashboard — risers, fallers, volatility.',
   },
   {
     href: '/vault/alerts',
     icon: '🔔',
     title: 'My Alerts',
     desc: 'Notification preferences and your personalized feed.',
-  },
-  {
-    href: '/vault/tickets',
-    icon: '🎟️',
-    title: 'Tickets',
-    desc: '2026 schedule with official and resale links.',
   },
   {
     href: '/vault/apparel',
@@ -119,7 +101,7 @@ export function VaultDashboardPage(): React.ReactElement {
       <div className="gv-page-hero">
         <h1 className="gv-page-title">Welcome to GatorVault 🐊</h1>
         <p className="gv-page-subtitle">
-          Your insider hub for depth charts, recruiting, portal intel, and film breakdowns.
+          Recruiting Hub, FutureCast, Team, Live Feed, and Schedule — your five core pillars.
         </p>
       </div>
 

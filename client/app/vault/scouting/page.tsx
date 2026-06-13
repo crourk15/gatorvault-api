@@ -1,8 +1,11 @@
 'use client';
 
-import React from 'react';
-import { ScoutingDepartmentPage } from '@/components/site/ScoutingDepartmentPage';
+import { useEffect } from 'react';
 
-export default function VaultScoutingPage(): React.ReactElement {
-  return <ScoutingDepartmentPage inVault />;
+/** Scouting Department moved into Recruiting Hub. */
+export default function VaultScoutingPage(): null {
+  useEffect(() => {
+    window.location.replace('/vault/recruiting?tab=scouting');
+  }, []);
+  return null;
 }

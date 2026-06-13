@@ -5,7 +5,8 @@
  * Route: /futurecast/player/:slug
  */
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { fetchPlayerProfile, type PlayerProfileBundle } from '../../../lib/player-api';
+import { type PlayerProfileBundle } from '../../../lib/player-api';
+import { resolvePlayerProfile } from '../../../lib/player-profile-resolver';
 import { fetchPortalPredictions, type PortalIntelPayload, type TransferPrediction } from '../../../lib/portal-api';
 import { fetchUfFitIntel, type UfFitIntelResponse } from '../../../lib/uf-fit-api';
 import { computePlayerMetrics } from '../../../lib/player-derived';
@@ -19,13 +20,8 @@ import { PortalTab } from './PortalTab';
 import { UFFitTab } from './UFFitTab';
 import { SignalsTab } from './SignalsTab';
 import { UiError } from '@/components/site/UiMessage';
-import { playerLifecycleKind } from '@/lib/player-routes';
 import { usePathname } from '@/lib/use-pathname';
 import { futureCastBase, isVaultPath } from '@/lib/vault-routes';
-
-export interface PlayerProfilePageProps {
-  slug: string;
-}
 
 function ProfileSkeleton(): React.ReactElement {
   return (
@@ -39,11 +35,21 @@ function ProfileSkeleton(): React.ReactElement {
   );
 }
 
-export function PlayerProfilePage({ slug }: PlayerProfilePageProps): React.ReactElement {
+export interface PlayerProfilePageProps {
+  slug: string;
+  backHref?: string;
+  backLabel?: string;
+}
+
+export function PlayerProfilePage({
+  slug,
+  backHref: backHrefProp,
+  backLabel: backLabelProp,
+}: PlayerProfilePageProps): React.ReactElement {
   const pathname = usePathname();
   const inVault = isVaultPath(pathname);
-  const backHref = futureCastBase(pathname);
-  const backLabel = inVault ? '← FutureCast' : '← FutureCast';
+  const backHref = backHrefProp ?? futureCastBase(pathname);
+  const backLabel = backLabelProp ?? (inVault ? '← FutureCast' : '← FutureCast');
   const [data, setData] = useState<PlayerProfileBundle | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -64,17 +70,21 @@ export function PlayerProfilePage({ slug }: PlayerProfilePageProps): React.React
     setPortalIntel(null);
     setPortalPredictions([]);
     setUfFitIntel(null);
-    fetchPlayerProfile(slug)
-      .then((bundle) => {
-        if (cancelled) return bundle;
-        const kind = playerLifecycleKind(bundle.player.status);
-        if (kind === 'portal') {
+    resolvePlayerProfile(slug, inVault)
+      .then((result) => {
+        if (cancelled) return;
+        if (result.kind === 'redirect') {
+          window.location.replace(result.href);
+          return;
+        }
+        if (result.kind === 'roster') {
           const dest = inVault
-            ? `/vault/portal/player/${encodeURIComponent(slug)}`
-            : `/portal/${encodeURIComponent(slug)}`;
+            ? `/vault/players/${encodeURIComponent(result.slug)}`
+            : `/players/${encodeURIComponent(result.slug)}`;
           window.location.replace(dest);
           return;
         }
+        const bundle = result.bundle;
         setData(bundle);
         const tasks: Promise<void>[] = [];
         const lifecycle = bundle.player.status;

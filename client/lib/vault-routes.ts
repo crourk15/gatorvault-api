@@ -4,48 +4,55 @@
  */
 export type VaultSectionId =
   | 'dashboard'
-  | 'depth-chart'
   | 'recruiting'
   | 'futurecast'
-  | 'portal'
+  | 'team'
+  | 'live-feed'
+  | 'tickets'
   | 'film-room'
   | 'game-week'
-  | 'live-feed'
   | 'live-scores'
-  | 'players'
-  | 'recruiting-board'
-  | 'scouting'
   | 'articles'
   | 'community'
   | 'game-zone'
   | 'nil'
   | 'alerts'
-  | 'tickets'
   | 'apparel'
+  | 'depth-chart'
+  | 'portal'
+  | 'players'
+  | 'recruiting-board'
+  | 'scouting'
   | 'staff';
 
-export const VAULT_SIDEBAR: { id: VaultSectionId; label: string; href: string; icon: string }[] = [
+/** Core vault pillars — sidebar primary + mobile bottom nav. */
+export const VAULT_PILLARS: { id: VaultSectionId; label: string; href: string; icon: string }[] = [
   { id: 'dashboard', label: 'Dashboard', href: '/vault', icon: '🏠' },
-  { id: 'depth-chart', label: 'Depth Chart', href: '/vault/depth-chart', icon: '📋' },
-  { id: 'recruiting', label: 'Recruiting', href: '/vault/recruiting', icon: '🎯' },
+  { id: 'recruiting', label: 'Recruiting Hub', href: '/vault/recruiting', icon: '🎯' },
   { id: 'futurecast', label: 'FutureCast', href: '/vault/futurecast', icon: '📈' },
-  { id: 'portal', label: 'Portal', href: '/vault/portal', icon: '🔄' },
+  { id: 'team', label: 'Team', href: '/vault/team', icon: '👥' },
+  { id: 'live-feed', label: 'Live Feed', href: '/vault/live-feed', icon: '⚡' },
+  { id: 'tickets', label: 'Schedule & Tickets', href: '/vault/tickets', icon: '🎟️' },
+];
+
+/** Secondary vault links — drawer/sidebar only. */
+export const VAULT_SECONDARY: { id: VaultSectionId; label: string; href: string; icon: string }[] = [
   { id: 'film-room', label: 'Film Room', href: '/vault/film-room', icon: '📺' },
   { id: 'game-week', label: 'Game Week', href: '/vault/game-week', icon: '🏈' },
-  { id: 'live-feed', label: 'Live Feed', href: '/vault/live-feed', icon: '⚡' },
   { id: 'live-scores', label: 'Live Scores', href: '/vault/live-scores', icon: '📊' },
   { id: 'articles', label: 'Articles', href: '/vault/articles', icon: '📰' },
   { id: 'community', label: 'Community', href: '/vault/community', icon: '💬' },
   { id: 'game-zone', label: 'Game Zone', href: '/vault/game-zone', icon: '🏆' },
   { id: 'nil', label: 'NIL Tracker', href: '/vault/nil', icon: '💰' },
-  { id: 'players', label: 'Players', href: '/vault/players', icon: '👤' },
-  { id: 'scouting', label: 'War Room', href: '/vault/scouting', icon: '🔭' },
-  { id: 'recruiting-board', label: 'Recruiting Board', href: '/vault/recruiting-board', icon: '📊' },
   { id: 'alerts', label: 'My Alerts', href: '/vault/alerts', icon: '🔔' },
-  { id: 'tickets', label: 'Tickets', href: '/vault/tickets', icon: '🎟️' },
   { id: 'apparel', label: 'Apparel', href: '/vault/apparel', icon: '👕' },
-  { id: 'staff', label: 'Movement Intel', href: '/vault/futurecast/staff', icon: '📡' },
 ];
+
+/** Full sidebar = pillars + secondary (legacy export name). */
+export const VAULT_SIDEBAR = [...VAULT_PILLARS, ...VAULT_SECONDARY];
+
+/** Mobile bottom nav — core pillars only (no dashboard to keep 5 slots). */
+export const VAULT_BOTTOM_NAV = VAULT_PILLARS.filter((item) => item.id !== 'dashboard');
 
 export function isVaultPath(pathname?: string): boolean {
   const p =
@@ -58,12 +65,12 @@ export function isVaultPath(pathname?: string): boolean {
 }
 
 export function vaultPortalBackHref(pathname: string): string {
-  if (isVaultPath(pathname)) return '/vault/portal';
+  if (isVaultPath(pathname)) return '/vault/recruiting?tab=portal';
   return '/portal';
 }
 
 export function vaultPortalBackLabel(pathname: string): string {
-  return isVaultPath(pathname) ? '← Portal Directory' : '← Portal';
+  return isVaultPath(pathname) ? '← Recruiting Hub · Portal' : '← Portal';
 }
 
 export function vaultFutureCastBackHref(pathname: string): string {

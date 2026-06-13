@@ -2,13 +2,54 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { usePathname } from '@/lib/use-pathname';
-import { VAULT_SIDEBAR, isVaultPath } from '@/lib/vault-routes';
+import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath } from '@/lib/vault-routes';
 
 function sidebarActive(pathname: string, href: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
   const h = href.replace(/\/$/, '') || '/';
   if (h === '/vault') return p === '/vault';
+  if (h === '/vault/recruiting') {
+    return (
+      p === h ||
+      p.startsWith(`${h}/`) ||
+      p === '/vault/portal' ||
+      p.startsWith('/vault/portal/') ||
+      p === '/vault/scouting' ||
+      p === '/vault/recruiting-board'
+    );
+  }
+  if (h === '/vault/team') {
+    return p === h || p === '/vault/depth-chart' || p.startsWith('/vault/players/');
+  }
+  if (h === '/vault/futurecast') {
+    return p === h || p.startsWith(`${h}/`);
+  }
   return p === h || p.startsWith(`${h}/`);
+}
+
+function NavLink({
+  item,
+  pathname,
+  onClick,
+  className,
+}: {
+  item: { id: string; label: string; href: string; icon: string };
+  pathname: string;
+  onClick?: () => void;
+  className: string;
+}): React.ReactElement {
+  return (
+    <a
+      href={item.href}
+      className={`${className}${sidebarActive(pathname, item.href) ? ' is-active' : ''}`}
+      onClick={onClick}
+    >
+      <span className="gv-vault-shell__nav-icon" aria-hidden="true">
+        {item.icon}
+      </span>
+      <span className="gv-vault-shell__nav-label">{item.label}</span>
+    </a>
+  );
 }
 
 export function VaultShell({ children }: { children: React.ReactNode }): React.ReactElement {
@@ -56,28 +97,51 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
           className={`gv-vault-shell__sidebar${navOpen ? ' is-open' : ''}`}
           aria-label="Vault navigation"
         >
-          <p className="gv-vault-shell__sidebar-label">The Vault</p>
+          <p className="gv-vault-shell__sidebar-label">Core</p>
           <ul className="gv-vault-shell__nav">
-            {VAULT_SIDEBAR.map((item) => (
+            {VAULT_PILLARS.map((item) => (
               <li key={item.id}>
-                <a
-                  href={item.href}
-                  className={`gv-vault-shell__nav-link${
-                    sidebarActive(pathname, item.href) ? ' is-active' : ''
-                  }`}
+                <NavLink
+                  item={item}
+                  pathname={pathname}
                   onClick={closeNav}
-                >
-                  <span className="gv-vault-shell__nav-icon" aria-hidden="true">
-                    {item.icon}
-                  </span>
-                  {item.label}
-                </a>
+                  className="gv-vault-shell__nav-link"
+                />
+              </li>
+            ))}
+          </ul>
+          <p className="gv-vault-shell__sidebar-label gv-vault-shell__sidebar-label--secondary">More</p>
+          <ul className="gv-vault-shell__nav">
+            {VAULT_SECONDARY.map((item) => (
+              <li key={item.id}>
+                <NavLink
+                  item={item}
+                  pathname={pathname}
+                  onClick={closeNav}
+                  className="gv-vault-shell__nav-link"
+                />
               </li>
             ))}
           </ul>
         </aside>
         <main className="gv-vault-shell__main">{children}</main>
       </div>
+      <nav className="gv-vault-bottom-nav" aria-label="Vault quick navigation">
+        {VAULT_BOTTOM_NAV.map((item) => (
+          <a
+            key={item.id}
+            href={item.href}
+            className={`gv-vault-bottom-nav__item${
+              sidebarActive(pathname, item.href) ? ' is-active' : ''
+            }`}
+          >
+            <span className="gv-vault-bottom-nav__icon" aria-hidden="true">
+              {item.icon}
+            </span>
+            <span className="gv-vault-bottom-nav__label">{item.label.replace(' Hub', '').replace('Schedule & ', '')}</span>
+          </a>
+        ))}
+      </nav>
     </div>
   );
 }

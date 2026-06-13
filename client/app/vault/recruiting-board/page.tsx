@@ -1,8 +1,11 @@
 'use client';
 
-import React from 'react';
-import { RecruitingBoardPage } from '@/components/site/RecruitingBoardPage';
+import { useEffect } from 'react';
 
-export default function VaultRecruitingBoardPage(): React.ReactElement {
-  return <RecruitingBoardPage inVault />;
+/** Recruiting Board merged into Recruiting Hub. */
+export default function VaultRecruitingBoardPage(): null {
+  useEffect(() => {
+    window.location.replace('/vault/recruiting');
+  }, []);
+  return null;
 }

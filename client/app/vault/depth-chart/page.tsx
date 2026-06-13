@@ -1,8 +1,11 @@
 'use client';
 
-import React from 'react';
-import { VaultDepthChartPage } from '@/components/vault/VaultDepthChartPage';
+import { useEffect } from 'react';
 
-export default function VaultDepthChartRoute(): React.ReactElement {
-  return <VaultDepthChartPage />;
+/** Depth chart lives inside Team — redirect legacy route. */
+export default function VaultDepthChartRoute(): null {
+  useEffect(() => {
+    window.location.replace('/vault/team');
+  }, []);
+  return null;
 }
