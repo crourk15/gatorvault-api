@@ -12,6 +12,16 @@ export function isDatabaseUnavailableError(err: unknown): boolean {
   );
 }
 
+/** Missing FutureCast tables (migration not applied yet). */
+export function isFutureCastSchemaError(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err ?? '');
+  return /relation .* does not exist|42P01|undefined_table/i.test(msg);
+}
+
+export function isFutureCastDataError(err: unknown): boolean {
+  return isDatabaseUnavailableError(err) || isFutureCastSchemaError(err);
+}
+
 export function respondDatabaseUnavailable(
   res: Response,
   payload: Record<string, unknown>

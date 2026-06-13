@@ -8,7 +8,7 @@ import {
   handlePredictionsApiError,
   parseLimit,
 } from '../predictions/utils-api';
-import { isDatabaseUnavailableError, respondDatabaseUnavailable } from '../futurecast/db-fallback';
+import { isFutureCastDataError, respondDatabaseUnavailable } from '../futurecast/db-fallback';
 
 export const handleListAlerts = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -16,7 +16,7 @@ export const handleListAlerts = asyncHandler(async (req: Request, res: Response)
     const alerts = await listAlerts(limit);
     res.json({ alerts });
   } catch (err) {
-    if (isDatabaseUnavailableError(err)) {
+    if (isFutureCastDataError(err)) {
       respondDatabaseUnavailable(res, { alerts: [] });
       return;
     }
