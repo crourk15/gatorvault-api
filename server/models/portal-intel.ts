@@ -4,6 +4,7 @@
 import { db } from './db';
 import type { PlayerLifecycleStatus, PortalStatus, SignalType, UFStatus } from '../shared/enums';
 import type { PortalSignalDetail } from '../../models/portal-intel-types';
+import { portalDbStatuses } from '../shared/lifecycle';
 import { FUTURECAST_PLAYERS_TABLE, playerFromRow, type PlayerRow } from './player-types';
 
 export interface PortalCandidateFilters {
@@ -144,9 +145,10 @@ const PORTAL_INTEL_SELECT = `
 export async function listPortalCandidates(
   filters: PortalCandidateFilters = {}
 ): Promise<PortalIntelRow[]> {
-  const conditions: string[] = [`p.status = 'PORTAL'`];
-  const params: unknown[] = [];
-  let idx = 1;
+  const portalStatuses = [...portalDbStatuses()];
+  const conditions: string[] = [`(p.status = ANY($1::text[]) OR pp.portal_status IS NOT NULL)`];
+  const params: unknown[] = [portalStatuses];
+  let idx = 2;
 
   if (filters.class_year != null) {
     conditions.push(`p.class_year = $${idx++}`);

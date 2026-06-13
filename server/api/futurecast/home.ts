@@ -24,6 +24,8 @@ import {
   partitionHomepagePredictions,
 } from './feed-filters';
 import { isHsLifecycle } from './eligibility';
+import { applyMomentumBoosts, loadSignalMomentumBoosts } from './momentum';
+import { listRecruitingStoreCommits, mergeLiveCommits } from './live-commits';
 
 const MOVEMENT_WINDOW_DAYS = 7;
 const SECTION_LIMIT = 12;
@@ -84,14 +86,20 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
 
     const modelRows = dedupeFeedRows(filterModelPredictionsOnly(predictionRows));
     const serialized = await serializeFeedRowsWithVolatility(modelRows);
-    const { commits, topTargets } = partitionHomepagePredictions(serialized);
+    const { commits: modelCommits, topTargets } = partitionHomepagePredictions(serialized);
+    const liveCommits = await listRecruitingStoreCommits(FUTURECAST_CLASS_YEAR);
+    const commits = mergeLiveCommits(modelCommits, liveCommits);
 
     const filteredMovement = filterFutureCastStockRows(movementRows);
-    const upRows = filteredMovement
+    const playerIds = filteredMovement.map((row) => row.player_id);
+    const signalBoosts = await loadSignalMomentumBoosts(MOVEMENT_WINDOW_DAYS, playerIds);
+    const enrichedMovement = applyMomentumBoosts(filteredMovement, signalBoosts);
+
+    const upRows = enrichedMovement
       .filter((row) => row.window_delta > 0)
       .sort((a, b) => b.window_delta - a.window_delta)
       .slice(0, SECTION_LIMIT);
-    const downRows = filteredMovement
+    const downRows = enrichedMovement
       .filter((row) => row.window_delta < 0)
       .sort((a, b) => a.window_delta - b.window_delta)
       .slice(0, SECTION_LIMIT);
@@ -139,7 +147,7 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
       classYear: FUTURECAST_CLASS_YEAR,
       commitSort,
       heatmap: {
-        buckets: buildHeatmapBuckets(filteredMovement),
+        buckets: buildHeatmapBuckets(enrichedMovement),
         windowDays: MOVEMENT_WINDOW_DAYS,
       },
       commits: sortCommits(commits, commitSort).slice(0, SECTION_LIMIT),

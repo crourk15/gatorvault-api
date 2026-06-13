@@ -267,11 +267,23 @@ function isDuplicateTweetError(err) {
 
 async function processQueueItem(item) {
   saveSchedulerStatus({ lastPostAttempt: store.nowIso(), lastError: null });
-  autopostLog('info', 'Posting…', { itemId: item.id, category: item.category, preview: String(item.text || '').slice(0, 80) });
+  autopostLog('info', 'Posting…', {
+    itemId: item.id,
+    category: item.category,
+    source: item.source,
+    topic: item.topic,
+    text: String(item.text || ''),
+    preview: String(item.text || '').slice(0, 120)
+  });
   const check = policy.validatePostContent(item);
   if (!check.valid) {
     const errMsg = check.errors.map((e) => e.message).join(' ');
-    autopostLog('error', `Error: validation failed`, { itemId: item.id, errMsg });
+    autopostLog('error', `Error: validation failed`, {
+      itemId: item.id,
+      errMsg,
+      text: String(item.text || '').slice(0, 200),
+      validation: check.errors
+    });
     store.updatePost(item.id, {
       status: 'failed',
       error: check.errors.map((e) => e.message).join(' '),
@@ -456,7 +468,22 @@ function startXAutoposterScheduler() {
           lastError: null
         });
         if (out.processed > 0) {
-          autopostLog('info', `Cron tick posted ${out.processed} item(s)`, { cadence: out.cadence?.reason });
+          autopostLog('info', `Cron tick posted ${out.processed} item(s)`, {
+            cadence: out.cadence?.reason,
+            results: (out.results || []).map((r) => ({
+              ok: r.ok,
+              itemId: r.itemId,
+              tweetId: r.tweetId,
+              error: r.error
+            }))
+          });
+        } else {
+          autopostLog('info', 'Cron tick — no post', {
+            skipped: out.skipped,
+            reason: out.cadence?.reason || out.reason || 'cadence_hold',
+            waitMs: out.cadence?.waitMs,
+            pendingCount: store.listQueue({ status: 'pending' }).length
+          });
         }
         if (isReplyEnabled()) {
           const trend = await scanTrendingEngagementReplies();

@@ -31,8 +31,8 @@ const MODES = {
 };
 
 function currentMode() {
-  const raw = String(process.env.SELF_RUNNER_MODE || 'assisted').toLowerCase();
-  return MODES[raw] ? raw : 'assisted';
+  const raw = String(process.env.SELF_RUNNER_MODE || 'scan-only').toLowerCase();
+  return MODES[raw] ? raw : 'scan-only';
 }
 
 function getModeConfig(modeId) {

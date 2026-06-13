@@ -270,6 +270,12 @@ async function recomputeFromRun(run, opts = {}) {
   const allSignals = [...collected.layers.qa, ...piOnly];
 
   const modules = scoring.moduleScoresFromRun(run);
+  const apiHealthFails = collected.layers.apiHealth.length;
+  if (apiHealthFails > 0) {
+    const penalty = Math.min(45, apiHealthFails * 12);
+    modules.api = Math.max(0, (modules.api ?? 100) - penalty);
+    modules.overall = scoring.overallScore(modules);
+  }
   const pages = scoring.pageScoresFromRun(run);
   const features = scoring.featureScoresFromRun(run, uptimePct);
   const recommendations = scoring.buildRecommendations({ moduleScores: modules, featureScores: features, pageScores: pages });

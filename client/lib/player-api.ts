@@ -117,6 +117,10 @@ async function apiFetch<T>(path: string): Promise<T> {
   const res = await fetch(`${getApiBase()}${path}`);
   if (!res.ok) {
     let message = `Request failed (${res.status})`;
+    if (res.status === 502 || res.status === 503) {
+      message =
+        'This profile is temporarily unavailable. The API may be waking up — try again in a moment.';
+    }
     try {
       const body = (await res.json()) as { error?: string };
       if (body.error) message = body.error;
@@ -156,7 +160,37 @@ export async function fetchRelatedPlayers(
 
 /** Load full profile bundle in parallel (slug → id → profiles, signals, related). */
 export async function fetchPlayerProfile(slug: string): Promise<PlayerProfileBundle> {
-  const { player } = await fetchPlayerBySlug(slug);
+  const slugPath = `/api/players/slug/${encodeURIComponent(slug)}`;
+  const res = await fetch(`${getApiBase()}${slugPath}`);
+  if (!res.ok) {
+    let message = `Request failed (${res.status})`;
+    if (res.status === 502 || res.status === 503) {
+      message =
+        'This portal player profile is temporarily unavailable. Try again later.';
+    }
+    try {
+      const body = (await res.json()) as { error?: string };
+      if (body.error) message = body.error;
+    } catch {
+      /* ignore */
+    }
+    throw new Error(message);
+  }
+
+  const slugBody = (await res.json()) as PlayerProfileBundle & { source?: string };
+  if (slugBody.source === 'recruiting-store') {
+    return {
+      player: slugBody.player,
+      highSchoolProfile: slugBody.highSchoolProfile ?? null,
+      collegeProfile: slugBody.collegeProfile ?? null,
+      portalProfile: slugBody.portalProfile ?? null,
+      ufSpecificProfile: slugBody.ufSpecificProfile ?? null,
+      signals: slugBody.signals ?? [],
+      related: slugBody.related ?? [],
+    };
+  }
+
+  const { player } = slugBody;
   const [profiles, signalsRes, relatedRes] = await Promise.all([
     fetchPlayerProfiles(player.id),
     fetchPlayerSignals(player.id),

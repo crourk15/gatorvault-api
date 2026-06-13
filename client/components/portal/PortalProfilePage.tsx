@@ -7,7 +7,9 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchPlayerProfile, type PlayerProfileBundle } from '@/lib/player-api';
 import { fetchPortalPredictions, type PortalIntelPayload, type TransferPrediction } from '@/lib/portal-api';
 import { computePlayerMetrics } from '@/lib/player-derived';
-import { playerLifecycleKind } from '@/lib/player-routes';
+import { playerLifecycleKind, playerProfilePath } from '@/lib/player-routes';
+import { usePathname } from '@/lib/use-pathname';
+import { isVaultPath, vaultPortalBackHref } from '@/lib/vault-routes';
 import { UiError } from '@/components/site/UiMessage';
 import { PlayerHeader } from '@/components/futurecast/player/PlayerHeader';
 import { PortalTab } from '@/components/futurecast/player/PortalTab';
@@ -72,6 +74,10 @@ function BioSection({ data }: { data: PlayerProfileBundle }): React.ReactElement
 }
 
 export function PortalProfilePage({ slug }: { slug: string }): React.ReactElement {
+  const pathname = usePathname();
+  const inVault = isVaultPath(pathname);
+  const backHref = vaultPortalBackHref(pathname);
+  const backLabel = inVault ? '← Portal (Vault)' : '← Player Directory';
   const [data, setData] = useState<PlayerProfileBundle | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -89,7 +95,7 @@ export function PortalProfilePage({ slug }: { slug: string }): React.ReactElemen
       const bundle = await fetchPlayerProfile(slug);
       const kind = playerLifecycleKind(bundle.player.status);
       if (kind === 'hs' && !bundle.portalProfile && bundle.player.status === 'HS') {
-        window.location.replace(`/player/${encodeURIComponent(slug)}`);
+        window.location.replace(playerProfilePath(slug, bundle.player.status, inVault));
         return;
       }
       setData(bundle);
@@ -142,16 +148,20 @@ export function PortalProfilePage({ slug }: { slug: string }): React.ReactElemen
   if (loading) return <ProfileSkeleton />;
 
   if (error || !data || !metrics) {
+    const isTransient =
+      !!error &&
+      (/temporarily unavailable|502|503|504/i.test(error) ||
+        /try again/i.test(error));
     return (
       <UiError
-        title="Profile not found"
+        title={isTransient ? 'Profile temporarily unavailable' : 'Profile not found'}
         message={
           error ||
           'We could not find a portal profile for this player. They may be listed as a high school recruit instead.'
         }
         retry={() => void load()}
-        backHref="/players"
-        backLabel="← Player Directory"
+        backHref={backHref}
+        backLabel={backLabel}
       />
     );
   }
@@ -166,7 +176,7 @@ export function PortalProfilePage({ slug }: { slug: string }): React.ReactElemen
   return (
     <div className="fc-profile-page gv-portal-profile" data-testid="portal-profile-page">
       <nav className="fc-profile-back">
-        <a href="/players">← Player Directory</a>
+        <a href={backHref}>{backLabel}</a>
       </nav>
       <PlayerHeader player={data.player} metrics={metrics} portalProfile={data.portalProfile} />
 

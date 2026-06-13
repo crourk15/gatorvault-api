@@ -92,6 +92,39 @@ async function collectApiHealthSignals() {
   return signals;
 }
 
+async function collectPlatformRouteSignals() {
+  const signals = [];
+  const probes = [
+    { id: 'pi:api:futurecast-home', path: '/api/futurecast/home', label: 'FutureCast home API' },
+    { id: 'pi:api:portal-players', path: '/api/portal/players?limit=5', label: 'Portal players API' },
+    {
+      id: 'pi:api:player-slug',
+      path: '/api/players/slug/test-slug',
+      label: 'Player slug API',
+      allow404: true
+    }
+  ];
+
+  for (const probe of probes) {
+    const r = await timedFetch(`${config.API_URL}${probe.path}`);
+    const failed = !r.ok && !(probe.allow404 && r.status === 404);
+    if (failed) {
+      signals.push(
+        signal(probe.id, 'api-health', `${probe.label} failed`, r.error || `HTTP ${r.status}`, {
+          module: 'api',
+          classification: 'api-endpoint',
+          impact: r.status >= 500 ? 92 : 78,
+          confidence: 96,
+          repro: `GET ${probe.path}`,
+          details: [{ status: r.status, ms: r.ms }]
+        })
+      );
+    }
+  }
+
+  return signals;
+}
+
 async function collectCacheHealthSignals() {
   const signals = [];
   const health = await timedFetch(`${config.API_URL}/api/live/pipeline/health`);
@@ -388,9 +421,11 @@ function collectQaSignals(run) {
  * Aggregate all data-layer signals. QA failures are included when run is provided.
  */
 async function collectAllSignals(run = null) {
+  const apiHealth = await collectApiHealthSignals();
+  const platformRoutes = await collectPlatformRouteSignals();
   const layers = {
     qa: run ? collectQaSignals(run) : [],
-    apiHealth: await collectApiHealthSignals(),
+    apiHealth: [...apiHealth, ...platformRoutes],
     cacheHealth: await collectCacheHealthSignals(),
     autoposter: await collectAutoposterSignals(),
     recruiting: await collectRecruitingSignals(),
@@ -423,6 +458,7 @@ async function collectAllSignals(run = null) {
 module.exports = {
   collectAllSignals,
   collectApiHealthSignals,
+  collectPlatformRouteSignals,
   collectCacheHealthSignals,
   collectAutoposterSignals,
   collectRecruitingSignals,

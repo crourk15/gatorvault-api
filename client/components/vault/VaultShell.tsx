@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { usePathname } from '@/lib/use-pathname';
-import { VAULT_SIDEBAR } from '@/lib/vault-routes';
+import { VAULT_SIDEBAR, isVaultPath } from '@/lib/vault-routes';
 
 function sidebarActive(pathname: string, href: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
@@ -13,22 +13,54 @@ function sidebarActive(pathname: string, href: string): boolean {
 
 export function VaultShell({ children }: { children: React.ReactNode }): React.ReactElement {
   const pathname = usePathname();
+  const [navOpen, setNavOpen] = useState(false);
+  const inVault = isVaultPath(pathname);
+
+  const toggleNav = useCallback(() => setNavOpen((v) => !v), []);
+  const closeNav = useCallback(() => setNavOpen(false), []);
+
+  useEffect(() => {
+    setNavOpen(false);
+  }, [pathname]);
 
   return (
     <div className="gv-vault-shell">
       <header className="gv-vault-shell__header">
-        <a href="/" className="gv-vault-shell__brand">
-          <span>🐊</span>
-          <span>GatorVault</span>
-        </a>
-        <nav className="gv-vault-shell__topnav" aria-label="Site">
+        <div className="gv-vault-shell__header-start">
+          <button
+            type="button"
+            className="gv-vault-shell__menu-btn gv-vault-shell__menu-btn--mobile"
+            aria-expanded={navOpen}
+            aria-controls="gv-vault-shell-sidebar"
+            onClick={toggleNav}
+          >
+            ☰
+          </button>
+          <a href={inVault ? '/vault' : '/'} className="gv-vault-shell__brand">
+            <span>🐊</span>
+            <span>GatorVault</span>
+          </a>
+        </div>
+        <nav className="gv-vault-shell__topnav gv-vault-shell__topnav--desktop" aria-label="Site">
           <a href="/">Home</a>
           <a href="/vault" className="is-active">Inside the Vault</a>
-          <a href="/futurecast">FutureCast</a>
+          <a href={inVault ? '/vault/futurecast' : '/futurecast'}>FutureCast</a>
         </nav>
       </header>
+      {navOpen && (
+        <button
+          type="button"
+          className="gv-vault-shell__backdrop"
+          aria-label="Close navigation"
+          onClick={closeNav}
+        />
+      )}
       <div className="gv-vault-shell__body">
-        <aside className="gv-vault-shell__sidebar" aria-label="Vault navigation">
+        <aside
+          id="gv-vault-shell-sidebar"
+          className={`gv-vault-shell__sidebar${navOpen ? ' is-open' : ''}`}
+          aria-label="Vault navigation"
+        >
           <p className="gv-vault-shell__sidebar-label">The Vault</p>
           <ul className="gv-vault-shell__nav">
             {VAULT_SIDEBAR.map((item) => (
@@ -38,6 +70,7 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
                   className={`gv-vault-shell__nav-link${
                     sidebarActive(pathname, item.href) ? ' is-active' : ''
                   }`}
+                  onClick={closeNav}
                 >
                   <span className="gv-vault-shell__nav-icon" aria-hidden="true">
                     {item.icon}

@@ -60,6 +60,7 @@
 /vault/recruiting-board/*  /vault/recruiting-board/index.html  200
 /vault/depth-chart  /index.html  200
 /vault/recruiting  /index.html  200
+/vault/portal/player/*  /vault/portal/player/index.html  200
 /vault/portal  /index.html  200
 /vault/film-room  /index.html  200
 /vault/game-week  /index.html  200

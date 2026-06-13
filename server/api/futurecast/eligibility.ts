@@ -34,7 +34,11 @@ export function isUfCommitRow(row: {
   uf_status?: string | null;
 }): boolean {
   if (String(row.lifecycle ?? '').toUpperCase() !== 'HS') return false;
-  return row.uf_status === 'COMMITTED' || isFloridaSchool(row.committed_to);
+  if (row.uf_status === 'COMMITTED') return true;
+  if (!isFloridaSchool(row.committed_to)) return false;
+  const status = String(row.uf_status ?? '').toUpperCase();
+  if (status === 'TARGET' || status === 'OFFERED' || status === 'WATCH') return false;
+  return true;
 }
 
 export function isTopTargetRow(row: {

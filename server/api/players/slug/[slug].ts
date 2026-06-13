@@ -12,12 +12,32 @@ import {
 } from '../../../models/predictions';
 import { buildFitScoreBreakdown } from '../fit-breakdown';
 import {
+  getRecruitingPlayerBySlug,
+  mapRecruitingProfiles,
+  mapRecruitingToPlayerCore,
+} from '../recruiting-fallback';
+import {
   asyncHandler,
   handleApiError,
   isSlug,
   sendError,
   serializeFullPlayer,
 } from '../utils';
+
+async function tryRecruitingFallback(slug: string, res: Response): Promise<boolean> {
+  const recruiting = await getRecruitingPlayerBySlug(slug);
+  if (!recruiting) return false;
+
+  const player = mapRecruitingToPlayerCore(recruiting);
+  const profiles = mapRecruitingProfiles(recruiting);
+
+  res.json({
+    player,
+    ...profiles,
+    source: 'recruiting-store',
+  });
+  return true;
+}
 
 export const handleGetPlayerBySlug = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -29,6 +49,7 @@ export const handleGetPlayerBySlug = asyncHandler(async (req: Request, res: Resp
 
     const player = await getPlayerBySlug(slug);
     if (!player) {
+      if (await tryRecruitingFallback(slug, res)) return;
       sendError(res, 404, 'Player not found');
       return;
     }
@@ -48,6 +69,14 @@ export const handleGetPlayerBySlug = asyncHandler(async (req: Request, res: Resp
       },
     });
   } catch (err) {
+    const slug = String(req.params.slug || '').toLowerCase();
+    if (slug && isSlug(slug)) {
+      try {
+        if (await tryRecruitingFallback(slug, res)) return;
+      } catch {
+        /* fall through */
+      }
+    }
     handleApiError(res, err);
   }
 });

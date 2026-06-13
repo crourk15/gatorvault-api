@@ -43,6 +43,14 @@ export function isVaultPath(pathname: string): boolean {
   return pathname.replace(/\/$/, '').startsWith('/vault');
 }
 
+export function vaultPortalBackHref(pathname: string): string {
+  return isVaultPath(pathname) ? '/vault/portal' : '/players';
+}
+
+export function vaultFutureCastBackHref(pathname: string): string {
+  return isVaultPath(pathname) ? '/vault/futurecast' : '/futurecast';
+}
+
 export function futureCastBase(pathname: string): '/futurecast' | '/vault/futurecast' {
   return isVaultPath(pathname) ? '/vault/futurecast' : '/futurecast';
 }

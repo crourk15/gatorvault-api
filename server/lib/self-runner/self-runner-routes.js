@@ -24,6 +24,26 @@ function requireAuth(req, res) {
   return true;
 }
 
+/** Reject no-op patches (e.g. JSON "{}" → "{}") and generic overflow-only CSS tweaks. */
+function isNoopOrGenericPatch(fix) {
+  const blob = JSON.stringify({
+    patchType: fix?.patchType,
+    description: fix?.description,
+    patchPreview: fix?.patchPreview,
+    edits: fix?.edits,
+    filesToModify: fix?.filesToModify
+  });
+  if (/"\{\}"\s*(→|to)\s*"\{\}"/i.test(blob)) return true;
+  if (/recruiting-board-sync|roster-sync/.test(blob) && /"\{\}"/.test(blob)) return true;
+  if (/layout-overflow|overflow-y:\s*auto/.test(blob) && /gv-team-modal-body/.test(blob)) {
+    return true;
+  }
+  if (/api-latency/.test(blob) && /\/api\/ping/.test(blob) && !/502|portal|futurecast/.test(blob)) {
+    return true;
+  }
+  return false;
+}
+
 async function runApproveFlow(fixId, pin) {
   const fix = queue.getById(fixId);
   if (!fix) return { ok: false, error: 'fix_not_found' };
@@ -33,6 +53,15 @@ async function runApproveFlow(fixId, pin) {
   if (!safety.ok && fix.blocked !== false) {
     logger.log.guard({ fixId, blocked: safety.blocked });
     return { ok: false, error: 'patch_blocked_by_guard', blocked: safety.blocked };
+  }
+
+  if (isNoopOrGenericPatch(fix)) {
+    queue.markStatus(fixId, 'rejected', {
+      rejectedAt: new Date().toISOString(),
+      reason: 'noop_or_generic_patch'
+    });
+    logger.log.reject({ fixId, reason: 'noop_or_generic_patch' });
+    return { ok: false, error: 'noop_patch_ignored', message: 'Patch is a no-op or generic Self-Runner template — ignored.' };
   }
 
   queue.markStatus(fixId, 'applying', { approvedAt: new Date().toISOString(), approvedBy: 'admin' });

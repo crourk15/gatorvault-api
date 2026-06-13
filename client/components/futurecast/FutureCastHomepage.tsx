@@ -14,6 +14,8 @@ import {
 } from '@/lib/futurecast-home-api';
 import type { FeedPrediction } from '@/lib/predictions-api';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
+import { usePathname } from '@/lib/use-pathname';
+import { isVaultPath, vaultFutureCastBackHref } from '@/lib/vault-routes';
 
 const REFRESH_MS = 60_000;
 
@@ -63,6 +65,9 @@ function movementDirection(p: FeedPrediction): 'up' | 'down' | 'flat' {
 }
 
 export function FutureCastHomepage(): React.ReactElement {
+  const pathname = usePathname();
+  const backHref = vaultFutureCastBackHref(pathname);
+  const backLabel = isVaultPath(pathname) ? '← Vault Dashboard' : '← GatorVault Home';
   const [data, setData] = useState<FutureCastHomeResponse | null>(null);
   const [commitSort, setCommitSort] = useState<CommitSort>('fit');
   const [loading, setLoading] = useState(true);
@@ -123,8 +128,8 @@ export function FutureCastHomepage(): React.ReactElement {
         title="FutureCast unavailable"
         message={error}
         retry={() => void load(true)}
-        backHref="/"
-        backLabel="← GatorVault Home"
+        backHref={backHref}
+        backLabel={backLabel}
       />
     );
   }
@@ -199,7 +204,7 @@ export function FutureCastHomepage(): React.ReactElement {
 
       <Section
         title="Trending Up"
-        subtitle="Players with positive MODEL movement this week"
+        subtitle="Rising prospects — MODEL delta + recent signals (visits, buzz, staff flags)"
         testId="home-trending-up"
         count={trendingUp.length}
       >
@@ -220,7 +225,7 @@ export function FutureCastHomepage(): React.ReactElement {
 
       <Section
         title="Trending Down"
-        subtitle="Players with negative MODEL movement this week"
+        subtitle="Cooling prospects — negative MODEL delta and fading signals"
         testId="home-trending-down"
         count={trendingDown.length}
       >

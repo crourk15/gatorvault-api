@@ -145,7 +145,16 @@
         .gv-vault-sidebar__link{display:flex;align-items:center;gap:.5rem;padding:.5rem .65rem;border-radius:.5rem;color:#94a3b8;text-decoration:none;font-size:.8125rem;font-weight:600;margin-bottom:.15rem;}
         .gv-vault-sidebar__link:hover{background:rgba(0,48,135,.2);color:#fff;}
         .gv-vault-sidebar__link.is-active{background:rgba(250,70,22,.12);color:#FA4616;}
-        .gv-vault-main{flex:1;min-width:0;}
+        .gv-vault-main{flex:1;min-width:0;width:100%;}
+        @media(min-width:768px){
+            #gv-vault-content.gv-vault-layout-wrap{max-width:none;width:100%;}
+            .gv-vault-main > .vpane.gv-mob-only{display:none!important;}
+        }
+        @media(max-width:767px){
+            #gv-vault-content.gv-vault-layout-wrap{flex-direction:column;padding-left:0;padding-right:0;max-width:none;}
+            #vault-interior.gv-mobile-active .gv-vault-main > .vpane:not(.gv-mob-only){display:none!important;}
+            #vault-interior:not(.gv-mobile-active) .gv-vault-main > .vpane.gv-mob-only{display:none!important;}
+        }
         .gv-vault-crosslink-inline{display:inline-flex;align-items:center;gap:.35rem;margin-top:.75rem;font-size:.8125rem;font-weight:700;color:#FA4616;text-decoration:none;}
         .gv-vault-crosslink-inline:hover{color:#fff;}
         .vtab{transition:all .15s;border-bottom:3px solid transparent;padding-bottom:6px;}
@@ -3091,6 +3100,13 @@
     function gvIsVaultMember(){try{var s=JSON.parse(localStorage.getItem('gv_session')||'null');return !!(s&&s.email);}catch(e){return false;}}
     function gvOpenFutureCast(e){if(e&&e.preventDefault)e.preventDefault();if(gvIsVaultMember()){location.href='/vault/futurecast';return false;}location.href='/futurecast';return false;}
     window.gvOpenFutureCast=gvOpenFutureCast;
+    function gvPortalProfileUrl(slug){
+        var s=String(slug||'').trim();
+        if(!s)return '/portal';
+        var inVault=(location.pathname.replace(/\/$/,'').indexOf('/vault')===0)||!!document.getElementById('vault-interior');
+        return inVault?'/vault/portal/player/'+encodeURIComponent(s):'/portal/'+encodeURIComponent(s);
+    }
+    window.gvPortalProfileUrl=gvPortalProfileUrl;
     function gvSyncVaultSidebar(tab){var path=GV_VAULT_PATH_MAP[tab]||'/vault';document.querySelectorAll('.gv-vault-sidebar__link').forEach(function(a){a.classList.toggle('is-active',a.getAttribute('data-vault-href')===path);});}
     window.gvSyncVaultSidebar=gvSyncVaultSidebar;
     window.gvVaultPathToTab=gvVaultPathToTab;
@@ -6405,7 +6421,7 @@
                 var feedType=card.getAttribute('data-feed-type');
                 var slug=card.getAttribute('data-recruit-slug');
                 if(feedType==='commit'&&slug){e.preventDefault();gvOpenRecruitProfile(slug);return;}
-                if(feedType==='portal'&&slug){e.preventDefault();location.href='/portal/'+slug;return;}
+                if(feedType==='portal'&&slug){e.preventDefault();location.href=gvPortalProfileUrl(slug);return;}
                 var sourceUrl=card.getAttribute('data-source-url');
                 if(!sourceUrl)return;
                 gvNavigate(sourceUrl,{type:feedType,recruitModal:feedType==='commit'});
@@ -6418,7 +6434,7 @@
                 var feedType=card?card.getAttribute('data-feed-type'):'';
                 var slug=card?card.getAttribute('data-recruit-slug'):'';
                 if(feedType==='commit'&&slug)gvOpenRecruitProfile(slug);
-                else if(feedType==='portal'&&slug)location.href='/portal/'+slug;
+                else if(feedType==='portal'&&slug)location.href=gvPortalProfileUrl(slug);
                 else gvNavigate(a.getAttribute('href')||'',{type:feedType,recruitModal:feedType==='commit'});
             });
         });
@@ -6447,7 +6463,7 @@
             var pill='live-type-'+(item.type||'breaking');
             var recruitSlug=(item.meta&&item.meta.playerSlug)||'';
             if(item.type==='commit'&&recruitSlug)sourceUrl='/player/'+recruitSlug;
-            else if(item.type==='portal'&&recruitSlug)sourceUrl='/portal/'+recruitSlug;
+            else if(item.type==='portal'&&recruitSlug)sourceUrl=gvPortalProfileUrl(recruitSlug);
             var cardClass='live-feed-item '+(sourceUrl||recruitSlug?'live-feed-item--linked':'live-feed-item--static');
             var titleText=item.title;
             try{if(typeof gvResolveContentFields==='function')titleText=gvResolveContentFields({title:item.title}).title||item.title;}catch(ex){}
@@ -6929,7 +6945,7 @@
                 var feedType=card.getAttribute('data-feed-type');
                 var slug=card.getAttribute('data-slug');
                 if(feedType==='commit'&&slug){gvOpenRecruitProfile(slug);return;}
-                if(feedType==='portal'&&slug){location.href='/portal/'+slug;return;}
+                if(feedType==='portal'&&slug){location.href=gvPortalProfileUrl(slug);return;}
                 if((feedType==='visit'||feedType==='offer')&&slug){location.href='/player/'+slug;return;}
                 if(feedType==='article'){if(typeof window.showVTab==='function')window.showVTab('articles');return;}
                 var href=card.getAttribute('data-href');

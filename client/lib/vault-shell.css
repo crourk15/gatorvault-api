@@ -17,6 +17,28 @@
   z-index: 40;
 }
 
+.gv-vault-shell__header-start {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.gv-vault-shell__menu-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(0, 48, 135, 0.45);
+  border-radius: 0.5rem;
+  background: rgba(10, 22, 40, 0.85);
+  color: #e2e8f0;
+  font-size: 1.125rem;
+  cursor: pointer;
+}
+
+.gv-vault-shell__menu-btn--mobile {
+  flex-shrink: 0;
+}
+
 .gv-vault-shell__brand {
   display: inline-flex;
   align-items: center;
@@ -47,23 +69,8 @@
 
 .gv-vault-shell__body {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 220px minmax(0, 1fr);
   min-height: calc(100vh - 56px);
-}
-
-@media (max-width: 768px) {
-  .gv-vault-shell__body {
-    grid-template-columns: 1fr;
-  }
-  .gv-vault-shell__sidebar {
-    border-right: none;
-    border-bottom: 1px solid rgba(0, 48, 135, 0.25);
-  }
-  .gv-vault-shell__nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
 }
 
 .gv-vault-shell__sidebar {
@@ -112,7 +119,13 @@
 
 .gv-vault-shell__main {
   padding: 1.25rem 1.5rem 2rem;
-  max-width: 1200px;
+  max-width: none;
+  width: 100%;
+  min-width: 0;
+}
+
+.gv-vault-shell__backdrop {
+  display: none;
 }
 
 .gv-vault-crosslink {
@@ -128,4 +141,67 @@
 
 .gv-vault-crosslink:hover {
   color: #fff;
+}
+
+/* Desktop: full-width content column */
+@media (min-width: 769px) {
+  .gv-vault-shell__menu-btn--mobile {
+    display: none !important;
+  }
+
+  .gv-vault-shell__topnav--desktop {
+    display: flex;
+  }
+
+  .gv-vault-shell__main {
+    padding: 1.5rem 2rem 2.5rem;
+  }
+}
+
+/* Mobile: collapsible drawer nav, single-column body */
+@media (max-width: 768px) {
+  .gv-vault-shell__menu-btn--mobile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gv-vault-shell__topnav--desktop {
+    display: none;
+  }
+
+  .gv-vault-shell__body {
+    grid-template-columns: 1fr;
+  }
+
+  .gv-vault-shell__sidebar {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    bottom: 0;
+    width: min(280px, 86vw);
+    z-index: 50;
+    transform: translateX(-105%);
+    transition: transform 0.2s ease;
+    border-right: 1px solid rgba(0, 48, 135, 0.35);
+    box-shadow: 8px 0 24px rgba(0, 0, 0, 0.35);
+  }
+
+  .gv-vault-shell__sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .gv-vault-shell__backdrop {
+    display: block;
+    position: fixed;
+    inset: 56px 0 0;
+    z-index: 45;
+    border: none;
+    background: rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+  }
+
+  .gv-vault-shell__main {
+    padding: 1rem 1rem 2rem;
+  }
 }

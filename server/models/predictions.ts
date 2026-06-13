@@ -205,11 +205,11 @@ export async function listStockBoardRows(
       uf.uf_status,
       uf.uf_fit_score,
       h.confidence AS prev_confidence,
-      (pr.confidence - h.confidence) AS window_delta
+      (pr.confidence - COALESCE(h.confidence, pr.confidence)) AS window_delta
     FROM ${FUTURECAST_PREDICTIONS_TABLE} pr
     JOIN ${FUTURECAST_PLAYERS_TABLE} p ON p.id = pr.player_id
     LEFT JOIN futurecast.uf_specific_profiles uf ON uf.player_id = p.id
-    JOIN LATERAL (
+    LEFT JOIN LATERAL (
       SELECT confidence
       FROM futurecast.prediction_history ph
       WHERE ph.player_id = pr.player_id
@@ -220,7 +220,7 @@ export async function listStockBoardRows(
       LIMIT 1
     ) h ON TRUE
     ${where}
-    ORDER BY window_delta DESC
+    ORDER BY (pr.confidence - COALESCE(h.confidence, pr.confidence)) DESC
     `,
     params
   );

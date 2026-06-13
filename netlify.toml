@@ -87,7 +87,87 @@
   status = 200
 
 [[redirects]]
+  from = "/vault/futurecast/stock/*"
+  to = "/vault/futurecast/stock/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/futurecast/snapshots/*"
+  to = "/vault/futurecast/snapshots/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/futurecast/alerts/*"
+  to = "/vault/futurecast/alerts/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/futurecast/staff/*"
+  to = "/vault/futurecast/staff/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/futurecast/*"
+  to = "/vault/futurecast/index.html"
+  status = 200
+
+[[redirects]]
   from = "/vault/futurecast"
+  to = "/vault/futurecast/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/recruiting-board/*"
+  to = "/vault/recruiting-board/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/recruiting-board"
+  to = "/vault/recruiting-board/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/portal/player/*"
+  to = "/vault/portal/player/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/depth-chart"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/recruiting"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/portal"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/film-room"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/game-week"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/live-feed"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/staff"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault"
   to = "/index.html"
   status = 200
 
