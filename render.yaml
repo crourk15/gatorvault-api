@@ -13,7 +13,7 @@ services:
     plan: free
     region: oregon
     rootDir: server
-    buildCommand: npm install --prefix ../client && NEXT_PUBLIC_API_BASE=https://gatorvault-api.onrender.com npm run build:render --prefix ../client && npm install
+    buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
