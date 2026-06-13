@@ -1,6 +1,7 @@
 import React from 'react';
 import { VaultShell } from '@/components/vault/VaultShell';
 import '@/lib/vault-shell.css';
+import '@/lib/gv-team.css';
 
 export default function VaultLayout({
   children,

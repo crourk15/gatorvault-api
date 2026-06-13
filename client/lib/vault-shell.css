@@ -122,6 +122,18 @@
   min-width: 0;
 }
 
+/* Team page inside vault shell — preserve document scroll + modal layering */
+.gv-vault-shell__main .gv-team-page {
+  min-width: 0;
+}
+
+body.gv-team-modal-open .gv-vault-shell__header,
+body.gv-team-modal-open .gv-vault-shell__sidebar,
+body.gv-team-modal-open .gv-vault-bottom-nav {
+  z-index: 1;
+}
+
+
 .gv-vault-shell__backdrop {
   display: none;
 }
@@ -2413,78 +2425,6 @@ a.gv-live-item__title:hover {
   color: inherit;
 }
 
-/* Team roster */
-.gv-team-roster__list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  margin-bottom: 1.5rem;
-}
-
-.gv-team-roster-row {
-  display: grid;
-  grid-template-columns: 3rem 1fr auto auto;
-  gap: 0.75rem;
-  align-items: center;
-  padding: 0.65rem 0.875rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(0, 48, 135, 0.25);
-  background: rgba(10, 22, 40, 0.85);
-  text-decoration: none;
-  color: inherit;
-}
-
-.gv-team-roster-row:hover {
-  border-color: rgba(250, 70, 22, 0.4);
-}
-
-.gv-team-roster-row--ace {
-  border-color: rgba(250, 70, 22, 0.55);
-  background: rgba(250, 70, 22, 0.06);
-}
-
-.gv-team-roster-row--portal .gv-team-roster-row__portal {
-  color: #fbbf24;
-}
-
-.gv-team-roster-row__pos {
-  font-family: 'Oswald', sans-serif;
-  font-weight: 700;
-  color: #fa4616;
-  font-size: 0.8125rem;
-}
-
-.gv-team-roster-row__name {
-  font-weight: 700;
-  color: #fff;
-  font-size: 0.875rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.gv-team-roster-row__ace {
-  font-size: 0.5625rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  padding: 0.1rem 0.35rem;
-  border-radius: 999px;
-  background: #fa4616;
-  color: #000;
-}
-
-.gv-team-roster-row__portal {
-  font-size: 0.625rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-}
-
-.gv-team-roster-row__meta {
-  font-size: 0.6875rem;
-  color: #64748b;
-  text-align: right;
-}
-
 .gv-vault-shell__sidebar-label--secondary {
   margin-top: 1rem;
 }
@@ -3174,43 +3114,6 @@ a.gv-live-feed__row-title:hover {
   font-size: 0.75rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
-}
-
-.gv-team-kpi-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.gv-team-kpi {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(0, 48, 135, 0.35);
-  background: rgba(6, 15, 31, 0.65);
-  font-size: 0.8125rem;
-  color: #94a3b8;
-}
-
-.gv-team-kpi strong {
-  color: #fa4616;
-  font-family: 'Oswald', sans-serif;
-  margin-right: 0.25rem;
-}
-
-.gv-team-search {
-  margin-bottom: 1rem;
-}
-
-.gv-team-search__input {
-  width: 100%;
-  max-width: 420px;
-  padding: 0.55rem 0.85rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(0, 48, 135, 0.4);
-  background: rgba(6, 15, 31, 0.8);
-  color: #e2e8f0;
-  font-size: 0.875rem;
 }
 
 .gv-vault-dashboard__pulse {

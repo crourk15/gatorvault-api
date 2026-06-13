@@ -9,6 +9,7 @@ export type VaultPageState = {
   tab?: string;
   search?: string;
   phase?: string;
+  rosterFilter?: string;
   classYear?: number;
   viewMode?: string;
   tierFilter?: string;
@@ -65,12 +66,7 @@ export function notifyVaultNavigation(): void {
 }
 
 export function vaultTeamBackHref(): string {
-  const state = peekVaultPageState('team');
-  const params = new URLSearchParams();
-  if (state?.tab && state.tab !== 'roster') params.set('tab', state.tab);
-  if (state?.search) params.set('q', state.search);
-  const qs = params.toString();
-  return qs ? `/vault/team?${qs}` : '/vault/team';
+  return '/vault/team';
 }
 
 export function useVaultPageRestore(
