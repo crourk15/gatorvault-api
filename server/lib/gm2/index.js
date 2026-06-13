@@ -366,6 +366,12 @@ function getDashboard() {
   };
 }
 
+function getPublicDashboard() {
+  const dash = getDashboard();
+  delete dash.recentDecisions;
+  return dash;
+}
+
 module.exports = {
   GM2_FEATURES,
   GM2_ACTIONS,
@@ -393,6 +399,7 @@ module.exports = {
   schedulePlayerRepair: autoRepair.schedulePlayerRepair,
   clearStaleQuarantines: autoRepair.clearStaleQuarantines,
   getDashboard,
+  getPublicDashboard,
   isPlayerQuarantined: quarantine.isPlayerQuarantined,
   quarantinePlayer: quarantine.quarantinePlayer,
   releasePlayer: quarantine.releasePlayer,

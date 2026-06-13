@@ -12,6 +12,9 @@ import {
   type StaffDashboardPlayer,
   type StaffDashboardResponse,
 } from '@/lib/staff-api';
+import { playerProfilePath } from '@/lib/player-routes';
+import { usePathname } from '@/lib/use-pathname';
+import { isVaultPath } from '@/lib/vault-routes';
 import '@/lib/futurecast.css';
 
 const REFRESH_MS = 60_000;
@@ -21,11 +24,13 @@ function PlayerLinks({
   tone,
   players,
   valueLabel,
+  inVault,
 }: {
   title: string;
   tone: 'up' | 'down' | 'warn' | 'stable' | 'fit' | 'risk';
   players: StaffDashboardPlayer[];
   valueLabel: (player: StaffDashboardPlayer) => string;
+  inVault: boolean;
 }): React.ReactElement {
   return (
     <section className="fc-staff-dashboard__section">
@@ -36,7 +41,7 @@ function PlayerLinks({
         {players.map((player) => (
           <li key={player.id}>
             <a
-              href={`/player/${encodeURIComponent(player.slug)}`}
+              href={playerProfilePath(player.slug, player.lifecycle ?? 'HIGH_SCHOOL', inVault)}
               className="fc-staff-dashboard__link"
             >
               {player.name} — {valueLabel(player)}
@@ -52,6 +57,9 @@ function PlayerLinks({
 }
 
 export default function StaffDashboardPage(): React.ReactElement {
+  const pathname = usePathname();
+  const inVault = isVaultPath(pathname);
+  const backHref = inVault ? '/vault/futurecast' : '/futurecast';
   const [data, setData] = useState<StaffDashboardResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -108,8 +116,8 @@ export default function StaffDashboardPage(): React.ReactElement {
           title="Staff dashboard unavailable"
           message={error ?? 'Failed to load dashboard.'}
           retry={() => void load(true)}
-          backHref="/"
-          backLabel="← Back to GatorVault"
+          backHref={backHref}
+          backLabel="← FutureCast"
         />
       </div>
     );
@@ -131,36 +139,42 @@ export default function StaffDashboardPage(): React.ReactElement {
           tone="up"
           players={data.topRisers}
           valueLabel={(player) => `+${player.delta ?? 0}%`}
+          inVault={inVault}
         />
         <PlayerLinks
           title={`Top Fallers (${data.movementWindowDays} Days)`}
           tone="down"
           players={data.topFallers}
           valueLabel={(player) => `${player.delta ?? 0}%`}
+          inVault={inVault}
         />
         <PlayerLinks
           title="High Volatility"
           tone="warn"
           players={data.highVolatility}
           valueLabel={(player) => String(player.volatilityScore ?? 0)}
+          inVault={inVault}
         />
         <PlayerLinks
           title="Stable Targets"
           tone="stable"
           players={data.lowVolatility}
           valueLabel={(player) => String(player.volatilityScore ?? 0)}
+          inVault={inVault}
         />
         <PlayerLinks
           title="Fit Score Leaders"
           tone="fit"
           players={data.fitLeaders}
           valueLabel={(player) => String(player.ufFitScore ?? '—')}
+          inVault={inVault}
         />
         <PlayerLinks
           title="Fit Score Risks"
           tone="risk"
           players={data.fitRisks}
           valueLabel={(player) => String(player.ufFitScore ?? '—')}
+          inVault={inVault}
         />
         <section className="fc-staff-dashboard__section fc-staff-dashboard__section--wide">
           <h2 className="fc-staff-dashboard__heading">Recent Alerts</h2>

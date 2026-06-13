@@ -16,6 +16,7 @@ export interface StaffDashboardPlayer {
   delta?: number;
   volatilityScore?: number;
   ufFitScore?: number | null;
+  lifecycle?: string | null;
 }
 
 export interface StaffDashboardResponse {

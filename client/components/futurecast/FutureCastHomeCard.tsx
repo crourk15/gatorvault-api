@@ -49,7 +49,7 @@ export function FutureCastHomeCard({
   const pathname = usePathname();
   const inVault = isVaultPath(pathname);
   const slug = prediction.playerSlug || prediction.playerId;
-  const href = playerProfilePath(slug, 'HIGH_SCHOOL', inVault);
+  const href = playerProfilePath(slug, prediction.lifecycle ?? 'HIGH_SCHOOL', inVault);
   const [photoIndex, setPhotoIndex] = useState(0);
   const photos = useMemo(() => headshotCandidates(slug), [slug]);
   const showPhoto = photoIndex < photos.length;

@@ -51,7 +51,7 @@ export function UfFitWatchlistGrid({ query }: UfFitWatchlistGridProps): React.Re
       {players.map((p) => (
         <a
           key={p.id}
-          href={`${playerProfilePath(p.slug, 'HIGH_SCHOOL', inVault)}?tab=uf-fit`}
+          href={`${playerProfilePath(p.slug, p.lifecycle ?? 'HIGH_SCHOOL', inVault)}?tab=uf-fit`}
           className="fc-uf-fit-card"
         >
           <span className="fc-uf-fit-card__rank">#{p.rank}</span>

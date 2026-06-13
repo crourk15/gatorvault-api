@@ -142,7 +142,7 @@
 }
 
 /* Desktop: full-width content column — vault sidebar only, no site top nav */
-@media (min-width: 769px) {
+@media (min-width: 768px) {
   .gv-vault-shell__menu-btn--mobile {
     display: none !important;
   }
@@ -153,7 +153,7 @@
 }
 
 /* Mobile: collapsible drawer nav, single-column body */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .gv-vault-shell__menu-btn--mobile {
     display: inline-flex;
     align-items: center;

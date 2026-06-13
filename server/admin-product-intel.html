@@ -37,7 +37,7 @@
     .hero-score { font-size:3rem; font-weight:800; line-height:1; }
     .hero-score.green { color:var(--ok); }
     .hero-score.yellow { color:var(--warn); }
-    .hero-score.red { color:var(--fail); }
+    .hero-score.neutral { color:var(--muted); }
     .hero-meta { color:var(--muted); font-size:.8125rem; max-width:420px; line-height:1.5; }
     .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:.75rem; margin-bottom:1rem; }
     .card { background:var(--panel); border:1px solid #1e293b; border-radius:.75rem; padding:.85rem 1rem; }
@@ -308,7 +308,7 @@
         document.getElementById('hero').classList.remove('hidden');
         var scoreEl = document.getElementById('overall-score');
         scoreEl.textContent = overall;
-        scoreEl.className = 'hero-score ' + (scores.color || 'yellow');
+        scoreEl.className = 'hero-score ' + (scores.overall != null ? (scores.color || 'yellow') : 'neutral');
         document.getElementById('overall-label').textContent = 'Overall platform health · last computed '
           + (scores.lastComputedAt ? new Date(scores.lastComputedAt).toLocaleString() : 'never')
           + (summary.stale ? ' · ⚠ stale — run Recompute' : '');

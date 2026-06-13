@@ -93,7 +93,7 @@ export function PortalProfilePage({ slug }: { slug: string }): React.ReactElemen
     try {
       const bundle = await fetchPlayerProfile(slug);
       const kind = playerLifecycleKind(bundle.player.status);
-      if (kind === 'hs' && !bundle.portalProfile && bundle.player.status === 'HS') {
+      if (kind !== 'portal' && !bundle.portalProfile) {
         window.location.replace(
           playerProfilePath(slug, bundle.player.status, isVaultPath(pathname))
         );

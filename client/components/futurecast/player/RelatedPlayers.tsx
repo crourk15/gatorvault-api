@@ -26,7 +26,7 @@ export function RelatedPlayers({ players, currentSlug }: RelatedPlayersProps): R
       {list.map((p) => (
         <a
           key={p.id}
-          href={playerProfilePath(p.slug, 'HIGH_SCHOOL', inVault)}
+          href={playerProfilePath(p.slug, p.lifecycle, inVault)}
           className="fc-related-card"
         >
           <span className="fc-related-card__rank">#{p.rank}</span>

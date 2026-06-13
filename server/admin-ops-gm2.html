@@ -89,9 +89,17 @@
       document.getElementById('repair-queue').innerHTML = queue.length
         ? '<p style="font-size:13px">' + queue.join(', ') + '</p>'
         : '<p style="color:#64748b">Repair queue empty.</p>';
+      if(!pin()){
+        document.getElementById('decisions').textContent = 'Enter PIN and click Refresh to load decision log.';
+        return;
+      }
       var dr = await fetch(API + '/api/gm2/decisions?limit=40&pin=' + encodeURIComponent(pin()), { headers: headers() });
       var dj = await dr.json();
-      document.getElementById('decisions').textContent = JSON.stringify(dj.decisions || j.recentDecisions || [], null, 2);
+      if(!dj.ok){
+        document.getElementById('decisions').textContent = dj.error || 'Could not load decisions.';
+        return;
+      }
+      document.getElementById('decisions').textContent = JSON.stringify(dj.decisions || [], null, 2);
     }
     async function postAction(path, label){
       if(!pin()) return alert('PIN required');

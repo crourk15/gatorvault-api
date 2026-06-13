@@ -17,6 +17,7 @@ export interface UfFitWatchlistPlayer {
   fitDelta: number;
   fitVolatility: number;
   rank: number;
+  lifecycle?: string | null;
 }
 
 export interface UfFitHistoryPoint {

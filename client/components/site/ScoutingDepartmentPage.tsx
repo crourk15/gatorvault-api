@@ -168,7 +168,7 @@ export function ScoutingDepartmentPage(): React.ReactElement {
         </button>
       </div>
 
-      {(view === 'directory' || view === 'hub') && (
+      {(view === 'directory') && (
         <>
           <div className="gv-page-tabs">
             {TYPE_TABS.map((tab) => (
@@ -242,7 +242,21 @@ export function ScoutingDepartmentPage(): React.ReactElement {
         </section>
       )}
 
-      {!loading && !error && (view === 'directory' || view === 'hub') && (
+      {!loading && !error && view === 'hub' && (
+        <section className="gv-page-section">
+          <div className="gv-page-section__header">
+            <h2 className="gv-page-section__title">Scouting Overview</h2>
+            <p className="gv-page-section__subtitle">
+              {list.length} profiles · {featuredReports.length} featured reports · {evalQueue.length} in queue
+            </p>
+          </div>
+          <p className="gv-page-status">
+            Choose a section above — Reports, Evaluation Queue, or Full Database — to browse scouting data.
+          </p>
+        </section>
+      )}
+
+      {!loading && !error && view === 'directory' && (
         <section className="gv-page-section">
           <div className="gv-page-section__header">
             <h2 className="gv-page-section__title">Scouting Profiles</h2>

@@ -10,7 +10,7 @@ function slugFromPathname(): string {
 }
 
 export default function VaultFutureCastPlayerPage(): React.ReactElement {
-  const [slug, setSlug] = useState('');
+  const [slug, setSlug] = useState(() => slugFromPathname());
 
   useEffect(() => {
     setSlug(slugFromPathname());

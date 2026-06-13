@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="gatorvault-build" content="b545a5ff7998">
+    <meta name="gatorvault-build" content="6ce8df179a52">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
@@ -153,7 +153,7 @@
         }
         @media(max-width:767px){
             #gv-vault-content.gv-vault-layout-wrap{flex-direction:column;padding-left:0;padding-right:0;max-width:none;}
-            #vault-interior.gv-mobile-active .gv-vault-main > .vpane:not(.gv-mob-only){display:none!important;}
+            #vault-interior.gv-mobile-active .gv-vault-main > .vpane:not(.gv-mob-only):not(.active){display:none!important;}
             #vault-interior:not(.gv-mobile-active) .gv-vault-main > .vpane.gv-mob-only{display:none!important;}
         }
         /* Vault route mode — sidebar nav only, hide legacy horizontal vtab bar + public site nav */
@@ -163,7 +163,12 @@
         body.gv-on-vault-route #gv-vault-public-tabs,
         #vault-interior.gv-vault-route-mode #gv-vault-public-tabs{display:none!important;}
         #gv-vault-sidebar{display:none;}
-        body.gv-on-vault-route #gv-vault-sidebar{display:flex!important;}
+        @media(min-width:768px){
+            body.gv-on-vault-route #gv-vault-sidebar{display:flex!important;}
+        }
+        @media(max-width:767px){
+            body.gv-on-vault-route #gv-bottom-nav{display:none!important;}
+        }
         .gv-vault-crosslink-inline{display:inline-flex;align-items:center;gap:.35rem;margin-top:.75rem;font-size:.8125rem;font-weight:700;color:#FA4616;text-decoration:none;}
         .gv-vault-crosslink-inline:hover{color:#fff;}
         .vtab{transition:all .15s;border-bottom:3px solid transparent;padding-bottom:6px;}
@@ -620,12 +625,12 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style id="gv-critical">:root{--gv-ticker-h:44px}#gv-site-ticker{z-index:500!important;position:fixed;top:0;left:0;right:0;height:44px}#gv-alert-banner{z-index:510!important;position:fixed;top:0;left:0;right:0}body.gv-has-site-ticker #nav-main,body.gv-has-site-ticker nav.fixed{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #gv-mobile-header,body.gv-has-site-ticker .gv-mob-header{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior:not(.gv-mobile-active){padding-top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior header.gv-desk-only.sticky{top:var(--gv-ticker-h)!important}body.gv-has-site-ticker #vault-interior .gv-desk-only.sticky.top-14{top:calc(var(--gv-ticker-h) + 3.5rem)!important}body.gv-has-site-ticker #hero-sec{padding-top:calc(8rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker #install-banner{top:calc(4rem + var(--gv-ticker-h))!important}body.gv-has-site-ticker .gv-alert-banner{top:var(--gv-ticker-h)}</style>
-    <link rel="stylesheet" href="/gv-global.css?v=b545a5ff7998">
-    <link rel="stylesheet" href="/gv-feedback.css?v=b545a5ff7998">
-    <link rel="stylesheet" href="/css/gv-team.css?v=b545a5ff7998">
+    <link rel="stylesheet" href="/gv-global.css?v=6ce8df179a52">
+    <link rel="stylesheet" href="/gv-feedback.css?v=6ce8df179a52">
+    <link rel="stylesheet" href="/css/gv-team.css?v=6ce8df179a52">
     <script src="/gv-global.js?v=mhome-v3-20260614" defer></script>
     <script src="/gv-feedback.js?v=mhome-v3-20260614" defer></script>
-    <script src="/js/gv-team-mobile.js?v=b545a5ff7998" defer></script>
+    <script src="/js/gv-team-mobile.js?v=6ce8df179a52" defer></script>
 </head>
 <body data-id="0" class="gv-has-site-ticker">
     <app-icon data-id="1" hidden data-icon="shield" data-palette="Blue"></app-icon>
@@ -3315,7 +3320,7 @@
             return gvRenderWarRoomScoutingCard(b,false);
         }).join('');
         gvWireScoutingCards(el,filtered);
-        gvRenderScoutingDirectory(rows);
+        gvRenderScoutingDirectory(filtered);
     }
     function gvWireScoutingCards(root,filtered){
         if(!root)return;
@@ -7506,7 +7511,9 @@
         if(!interior)return;
         if(gvIsMobile()){
             interior.classList.add('gv-mobile-active');
-            gvMobileShowTab('mhome',{noScroll:true});
+            var _dlPath=(location.pathname||'').replace(/\/$/,'');
+            var _dlTab=typeof gvVaultPathToTab==='function'&&gvVaultPathToTab(_dlPath);
+            if(!_dlTab){gvMobileShowTab('mhome',{noScroll:true});}
         }else{
             interior.classList.remove('gv-mobile-active','gv-has-breaking');
         }

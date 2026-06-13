@@ -10,10 +10,13 @@ function slugFromPathname(): string {
 }
 
 export default function PortalPlayerPage(): React.ReactElement {
-  const [slug, setSlug] = useState('');
+  const [slug, setSlug] = useState(() => slugFromPathname());
 
   useEffect(() => {
     setSlug(slugFromPathname());
+    const onNav = () => setSlug(slugFromPathname());
+    window.addEventListener('popstate', onNav);
+    return () => window.removeEventListener('popstate', onNav);
   }, []);
 
   if (!slug) {

@@ -22,7 +22,7 @@ function pinFromReq(req) {
 function mountGm2Routes(app) {
   app.get('/api/gm2/status', (req, res) => {
     try {
-      return res.json({ ok: true, ...gm2.getDashboard() });
+      return res.json({ ok: true, ...gm2.getPublicDashboard() });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

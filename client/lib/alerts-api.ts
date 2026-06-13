@@ -10,6 +10,7 @@ export interface FutureCastAlert {
   playerSlug: string;
   type: string;
   message: string;
+  lifecycle?: string | null;
   createdAt: string;
   seen: boolean;
 }

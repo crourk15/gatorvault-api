@@ -90,9 +90,8 @@ async function startProductIntelScheduler() {
     engine
       .recomputeFromDeployProbes({ source: 'live-probe' })
       .then((r) => {
-        if (r.scores?.overall != null && r.scores.overall < 100) {
-          console.log('[product-intel] live probe — overall', r.scores.overall);
-        }
+        if (r.skipped) return;
+        console.log('[product-intel] live probe — overall', r.scores?.overall ?? 'n/a');
       })
       .catch((err) => {
         console.warn('[product-intel] live probe failed:', err.message);

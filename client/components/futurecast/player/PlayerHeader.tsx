@@ -11,6 +11,8 @@ import {
   lifecycleColor,
 } from '../../../lib/player-derived';
 import { buildPlayerShareUrl } from '../../../lib/player-api';
+import { usePathname } from '@/lib/use-pathname';
+import { isVaultPath } from '@/lib/vault-routes';
 
 export interface PlayerHeaderProps {
   player: PlayerCore;
@@ -23,12 +25,14 @@ export function PlayerHeader({
   metrics,
   portalProfile,
 }: PlayerHeaderProps): React.ReactElement {
+  const pathname = usePathname();
+  const inVault = isVaultPath(pathname);
   const [copied, setCopied] = useState(false);
   const lifecycle = player.status;
   const location = [player.hometown, player.state].filter(Boolean).join(', ');
 
   const onShare = useCallback(async () => {
-    const url = buildPlayerShareUrl(player.slug);
+    const url = buildPlayerShareUrl(player.slug, player.status, inVault);
     try {
       if (navigator.share) {
         await navigator.share({ title: player.fullName, url });
@@ -40,7 +44,7 @@ export function PlayerHeader({
     } catch {
       /* user cancelled share */
     }
-  }, [player.fullName, player.slug]);
+  }, [player.fullName, player.slug, player.status, inVault]);
 
   return (
     <header className="fc-profile-header" data-testid="player-header">

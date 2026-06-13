@@ -408,7 +408,7 @@ function getScoresPayload() {
     modules: doc.scores?.modules ?? {},
     pages: doc.scores?.pages ?? {},
     features: doc.scores?.features ?? {},
-    color: scoring.healthColor(doc.scores?.overall ?? 0),
+    color: doc.scores?.overall != null ? scoring.healthColor(doc.scores.overall) : 'neutral',
     lastComputedAt: doc.lastComputedAt,
     lastRunId: doc.lastRunId,
     recommendations: doc.recommendations ?? { remove: [], keep: [], upgrade: [] },
@@ -461,6 +461,10 @@ async function recomputeFromDeployProbes(opts = {}) {
   }
   if (serverErrors.length > 0) {
     apiScore = Math.min(apiScore, Math.max(20, 100 - serverErrors.length * 28));
+  }
+
+  if (checks.length === 0) {
+    return { ok: true, skipped: true, reason: 'all_probes_pass', scores: null };
   }
 
   const run = {

@@ -3,6 +3,7 @@
  * @see server/api/players/
  */
 import { getApiBase, type BigBoardPlayer } from './big-board-api';
+import { playerProfilePath } from './player-routes';
 
 export type PlayerLifecycle = 'HS' | 'COLLEGE' | 'PORTAL';
 
@@ -204,12 +205,18 @@ export async function fetchPlayerProfile(slug: string): Promise<PlayerProfileBun
   };
 }
 
-export function buildPlayerShareUrl(slug: string, tab?: string): string {
+export function buildPlayerShareUrl(
+  slug: string,
+  lifecycle?: string | null,
+  inVault = false,
+  tab?: string
+): string {
+  const path = playerProfilePath(slug, lifecycle, inVault);
   if (typeof window === 'undefined') {
-    return `/player/${slug}${tab ? `?tab=${tab}` : ''}`;
+    return `${path}${tab ? `?tab=${tab}` : ''}`;
   }
   const url = new URL(window.location.href);
-  url.pathname = `/player/${slug}`;
+  url.pathname = path;
   url.search = '';
   if (tab) url.searchParams.set('tab', tab);
   return url.toString();

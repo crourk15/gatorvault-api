@@ -178,7 +178,7 @@ function overallScore(moduleScores) {
       totalWeight += weight;
     }
   });
-  if (!totalWeight) return moduleScores.api ?? 100;
+  if (!totalWeight) return moduleScores.api ?? null;
   return Math.round(weighted / totalWeight);
 }
 

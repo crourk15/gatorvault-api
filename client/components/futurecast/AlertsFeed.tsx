@@ -70,8 +70,8 @@ export function AlertsFeed(): React.ReactElement {
           title="Alerts unavailable"
           message={error}
           retry={() => void load(true)}
-          backHref="/"
-          backLabel="← Back to GatorVault"
+          backHref={inVault ? '/vault/futurecast' : '/futurecast'}
+          backLabel="← FutureCast"
         />
       </div>
     );
@@ -84,7 +84,7 @@ export function AlertsFeed(): React.ReactElement {
       <div className="fc-alerts__list">
         {alerts.map((alert) => (
           <article key={alert.id} className="fc-alerts__item">
-            <a href={playerProfilePath(alert.playerSlug, 'HIGH_SCHOOL', inVault)} className="fc-alerts__message">
+            <a href={playerProfilePath(alert.playerSlug, alert.lifecycle, inVault)} className="fc-alerts__message">
               {alert.message}
             </a>
             <p className="fc-alerts__meta">
