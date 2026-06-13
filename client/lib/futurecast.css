@@ -660,6 +660,65 @@
   line-height: 1.5;
 }
 
+.fc-player-page-wrap {
+  padding: 1rem;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.fc-player-page {
+  padding: 1rem;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.fc-player-page__title {
+  margin: 0 0 0.5rem;
+  color: #fff;
+  font-family: Oswald, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.fc-player-page__meta {
+  margin: 0 0 1rem;
+  color: #8b949e;
+  font-size: 0.9375rem;
+}
+
+.fc-player-page__photo {
+  width: 8rem;
+  height: 8rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0.5rem;
+  object-fit: cover;
+}
+
+.fc-player-page__section {
+  margin-bottom: 1.5rem;
+}
+
+.fc-player-page__section-title {
+  margin: 0 0 0.5rem;
+  color: #fff;
+  font-family: Oswald, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.fc-player-page__muted {
+  margin: 0 0 0.75rem;
+  color: #8b949e;
+  font-size: 0.9375rem;
+}
+
+.fc-player-page__offers {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: #8b949e;
+  font-size: 0.9375rem;
+}
+
 .fc-prediction-card-v2 {
   display: flex;
   gap: 1rem;

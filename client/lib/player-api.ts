@@ -115,6 +115,10 @@ export async function fetchPlayerBySlug(slug: string): Promise<{ player: PlayerC
   return apiFetch(`/api/players/slug/${encodeURIComponent(slug)}`);
 }
 
+export async function fetchPlayerById(id: string): Promise<{ player: PlayerCore }> {
+  return apiFetch(`/api/players/${encodeURIComponent(id)}`);
+}
+
 export async function fetchPlayerProfiles(id: string): Promise<PlayerProfilesResponse> {
   return apiFetch(`/api/players/${id}/profiles`);
 }
