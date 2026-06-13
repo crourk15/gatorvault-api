@@ -52,7 +52,7 @@ function enrichPlayer(player, isCommit, staffMode) {
     classYear: player.classYear,
     state: player.state || player.st || null,
     ufProbability: player.ufProbability ?? null,
-    fitScore: player.fitScore ?? playerRating(player) || null,
+    fitScore: player.fitScore ?? (playerRating(player) || null),
     staffGrade: staffGrade(player),
     status: evalStatus(player, isCommit),
     notes: staffMode ? player.skinny || player.profileNote || null : null,
