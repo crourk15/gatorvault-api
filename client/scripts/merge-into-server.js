@@ -4,26 +4,25 @@
  */
 const fs = require('fs');
 const path = require('path');
+const vaultMap = require('../lib/routes-vault.cjs');
+const { verifyChunkAssets } = require('./verify-chunk-assets');
 
 const outDir = path.join(__dirname, '..', 'out');
 const serverDir = path.join(__dirname, '..', '..', 'server');
+const nextDir = path.join(serverDir, '_next');
 
-/** Required export paths for FutureCast on Netlify (relative to server/). */
+/** Required export paths for Netlify (canonical vault map + legacy standalone). */
 const REQUIRED_EXPORTS = [
-  'index.html',
-  'join/index.html',
+  ...vaultMap.REQUIRED_VAULT_EXPORTS,
   'futurecast/index.html',
   'futurecast/alerts/index.html',
   'futurecast/staff/index.html',
-  'vault/index.html',
+  'futurecast/stock/index.html',
+  'futurecast/snapshots/index.html',
   'vault/scouting/index.html',
-  'vault/players/index.html',
   'vault/depth-chart/index.html',
-  'vault/recruiting/index.html',
   'vault/portal/index.html',
-  'vault/film-room/index.html',
   'vault/game-week/index.html',
-  'vault/live-feed/index.html',
   'vault/live-scores/index.html',
   'vault/articles/index.html',
   'vault/community/index.html',
@@ -33,26 +32,32 @@ const REQUIRED_EXPORTS = [
   'vault/alerts/index.html',
   'vault/tickets/index.html',
   'vault/apparel/index.html',
-  'vault/futurecast/index.html',
-  'vault/futurecast/player/index.html',
   'vault/futurecast/stock/index.html',
   'vault/futurecast/snapshots/index.html',
   'vault/futurecast/alerts/index.html',
   'vault/futurecast/staff/index.html',
   'vault/recruiting-board/index.html',
+  'vault/portal/player/index.html',
   'recruiting-board/index.html',
   'players/index.html',
   'scouting/index.html',
-  'futurecast/stock/index.html',
-  'futurecast/snapshots/index.html',
   'player/index.html',
   'portal/index.html',
-  'vault/portal/player/index.html',
   'alerts/index.html',
   'staff/index.html',
   'staff/dashboard/index.html',
   '_next/static',
 ];
+
+const CHUNK_VERIFY_HTML = [
+  'index.html',
+  ...vaultMap.REQUIRED_VAULT_EXPORTS.filter((p) => p.endsWith('.html')),
+];
+
+function rmRecursive(target) {
+  if (!fs.existsSync(target)) return;
+  fs.rmSync(target, { recursive: true, force: true });
+}
 
 function copyRecursive(src, dest) {
   if (!fs.existsSync(src)) return;
@@ -66,13 +71,26 @@ function copyRecursive(src, dest) {
 }
 
 function verifyExports() {
-  const missing = REQUIRED_EXPORTS.filter((rel) => !fs.existsSync(path.join(serverDir, rel)));
+  const unique = [...new Set(REQUIRED_EXPORTS)];
+  const missing = unique.filter((rel) => !fs.existsSync(path.join(serverDir, rel)));
   if (missing.length) {
-    console.error('[netlify] FutureCast export verification failed. Missing in server/:');
+    console.error('[netlify] Export verification failed. Missing in server/:');
     for (const rel of missing) console.error('  -', rel);
     process.exit(1);
   }
-  console.log('[netlify] Verified FutureCast export:', REQUIRED_EXPORTS.join(', '));
+  console.log('[netlify] Verified exports:', unique.length, 'paths including _next/static');
+}
+
+function verifyChunks() {
+  const { assets, missing } = verifyChunkAssets(serverDir, CHUNK_VERIFY_HTML);
+  if (missing.length) {
+    console.error('[netlify] Chunk asset verification failed — HTML references missing _next files:');
+    for (const rel of missing.slice(0, 20)) console.error('  -', rel);
+    if (missing.length > 20) console.error(`  ... and ${missing.length - 20} more`);
+    process.exit(1);
+  }
+  const appChunks = assets.filter((a) => a.includes('_next/static/chunks/app/'));
+  console.log(`[netlify] Verified ${assets.length} _next assets (${appChunks.length} app route chunks)`);
 }
 
 if (!fs.existsSync(outDir)) {
@@ -82,8 +100,11 @@ if (!fs.existsSync(outDir)) {
 
 require('./generate-redirects.js');
 
+/* Replace stale _next tree so HTML + chunks always match (fixes Netlify CDN 404s). */
+rmRecursive(nextDir);
 copyRecursive(outDir, serverDir);
 verifyExports();
+verifyChunks();
 
 require('./stamp-build-meta.js');
 

@@ -7,8 +7,9 @@ client/node_modules/
 client/.next/
 client/out/
 server/futurecast-ui/
-# Next.js FutureCast export merged into server/ at Netlify build (generated — do not commit)
-server/_next/
+# Next.js static assets — committed with HTML exports so Netlify serves matching chunks
+# (regenerated on every npm run build:netlify)
+# server/_next/ — tracked intentionally; do not ignore
 server/404.html
 server/404/
 server/alerts/

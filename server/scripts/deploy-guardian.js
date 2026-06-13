@@ -19,6 +19,7 @@ const {
   FORBIDDEN_IN_ROOT_INDEX,
   isReactMarketingIndex,
 } = require('../lib/guardian/monolith-archive');
+const { verifyChunkAssets } = require('../../client/scripts/verify-chunk-assets');
 
 const SERVER_ROOT = path.join(__dirname, '..');
 const STATIC_ONLY = process.argv.includes('--static');
@@ -128,6 +129,24 @@ function checkStaticRoutes() {
   return errors;
 }
 
+function checkReactChunkAssets() {
+  const errors = [];
+  const htmlFiles = [
+    'index.html',
+    ...REQUIRED_VAULT_EXPORTS.filter((p) => p.endsWith('.html')),
+  ];
+  const { missing, assets } = verifyChunkAssets(SERVER_ROOT, htmlFiles);
+  if (missing.length) {
+    errors.push(`[assets] ${missing.length} _next chunk(s) missing for React HTML exports`);
+    missing.slice(0, 8).forEach((rel) => errors.push(`[assets] missing: ${rel}`));
+  }
+  const appChunks = assets.filter((a) => a.includes('_next/static/chunks/app/'));
+  if (appChunks.length === 0) {
+    errors.push('[assets] no app route chunks found — run merge-into-server.js after client build');
+  }
+  return errors;
+}
+
 async function checkApiProbes() {
   const errors = [];
   const base = (process.env.DEPLOY_GUARDIAN_API_URL || process.env.API_URL || 'https://gatorvault-api.onrender.com').replace(
@@ -153,6 +172,7 @@ async function main() {
   if (!wiring.ok) errors.push(...wiring.errors);
   if (!blueprints.ok) errors.push(...blueprints.errors);
   errors.push(...checkStaticRoutes());
+  errors.push(...checkReactChunkAssets());
 
   if (PROBE_API && !process.argv.includes('--skip-api')) {
     const apiErrors = await checkApiProbes();
