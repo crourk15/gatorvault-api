@@ -1,11 +1,46 @@
 /**
  * FutureCast predictions page — /futurecast (App Router target).
  */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FutureCastFeed } from '@/components/futurecast/FutureCastFeed';
+import {
+  MovementHeatmap,
+  type MovementHeatmapBucket,
+} from '@/components/futurecast/MovementHeatmap';
+import { fetchMovementHeatmap } from '@/lib/predictions-api';
 import '@/lib/futurecast.css';
 
+const HEATMAP_REFRESH_MS = 60_000;
+
 export default function FutureCastPage(): React.ReactElement {
+  const [heatmapBuckets, setHeatmapBuckets] = useState<MovementHeatmapBucket[] | null>(null);
+  const [heatmapWindowDays, setHeatmapWindowDays] = useState(7);
+
+  useEffect(() => {
+    let cancelled = false;
+    let timer: ReturnType<typeof setInterval> | undefined;
+
+    async function loadHeatmap() {
+      try {
+        const data = await fetchMovementHeatmap();
+        if (!cancelled) {
+          setHeatmapBuckets(data.buckets);
+          setHeatmapWindowDays(data.windowDays);
+        }
+      } catch {
+        if (!cancelled) setHeatmapBuckets(null);
+      }
+    }
+
+    void loadHeatmap();
+    timer = setInterval(() => void loadHeatmap(), HEATMAP_REFRESH_MS);
+
+    return () => {
+      cancelled = true;
+      if (timer) clearInterval(timer);
+    };
+  }, []);
+
   return (
     <div className="fc-futurecast-page" data-testid="futurecast-page">
       <nav className="fc-futurecast-nav">
@@ -23,6 +58,11 @@ export default function FutureCastPage(): React.ReactElement {
       <p className="fc-futurecast-page__subtitle">
         Live MODEL picks, confidence scores, and trending Florida targets.
       </p>
+      {heatmapBuckets && (
+        <div className="fc-futurecast-page__heatmap">
+          <MovementHeatmap buckets={heatmapBuckets} windowDays={heatmapWindowDays} />
+        </div>
+      )}
       <FutureCastFeed />
     </div>
   );

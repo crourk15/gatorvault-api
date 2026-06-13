@@ -117,6 +117,20 @@ export async function fetchMovementSnapshots(): Promise<MovementSnapshotsRespons
   return apiFetch<MovementSnapshotsResponse>('/api/futurecast/snapshots');
 }
 
+export interface MovementHeatmapBucket {
+  label: string;
+  count: number;
+}
+
+export interface MovementHeatmapResponse {
+  buckets: MovementHeatmapBucket[];
+  windowDays: number;
+}
+
+export async function fetchMovementHeatmap(): Promise<MovementHeatmapResponse> {
+  return apiFetch<MovementHeatmapResponse>('/api/futurecast/heatmap');
+}
+
 export async function fetchPlayerPredictions(playerId: string): Promise<PlayerPrediction[]> {
   const data = await apiFetch<{ playerId: string; predictions: PlayerPrediction[] }>(
     `/api/predictions/player/${encodeURIComponent(playerId)}`

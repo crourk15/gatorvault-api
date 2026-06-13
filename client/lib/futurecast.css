@@ -660,6 +660,57 @@
   line-height: 1.5;
 }
 
+.fc-futurecast-page__heatmap {
+  margin-bottom: 1.5rem;
+}
+
+.fc-movement-heatmap {
+  padding: 1rem;
+  border: 1px solid #30363d;
+  border-radius: 0.75rem;
+  background: #1f242c;
+}
+
+.fc-movement-heatmap__empty {
+  margin: 0;
+  color: #8b949e;
+  font-size: 0.875rem;
+}
+
+.fc-movement-heatmap__title {
+  margin: 0 0 0.75rem;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.fc-movement-heatmap__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.fc-movement-heatmap__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.fc-movement-heatmap__label {
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.fc-movement-heatmap__count {
+  margin-top: 0.25rem;
+  color: #c9d1d9;
+  font-size: 0.75rem;
+}
+
 .fc-futurecast-nav {
   display: flex;
   flex-wrap: wrap;
