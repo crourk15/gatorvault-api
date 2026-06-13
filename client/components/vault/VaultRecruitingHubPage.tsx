@@ -6,6 +6,9 @@ import { fetchRecruitingHeatCheck, type HeatCheckItem } from '@/lib/recruiting-a
 import { fetchStaffDashboard, type StaffDashboardPlayer } from '@/lib/staff-api';
 import { ScoutingDepartmentPage } from '@/components/site/ScoutingDepartmentPage';
 import {
+  ClassicRecruitCard,
+} from '@/components/vault/ClassicRecruitCard';
+import {
   EliteRecruitCard,
   type EliteRecruitCardPlayer,
 } from '@/components/vault/EliteRecruitCard';
@@ -53,23 +56,6 @@ function rankTargets(list: RecruitingBoardPlayer[]): RecruitingBoardPlayer[] {
     if (na !== nb) return na - nb;
     return (Number(b.fitScore) || 0) - (Number(a.fitScore) || 0);
   });
-}
-
-function isVisitToday(visitStart?: string | null): boolean {
-  if (!visitStart) return false;
-  const today = new Date().toISOString().slice(0, 10);
-  return visitStart.slice(0, 10) <= today;
-}
-
-function toElitePlayer(
-  player: RecruitingBoardPlayer,
-  extras?: Partial<EliteRecruitCardPlayer>
-): EliteRecruitCardPlayer {
-  return {
-    ...player,
-    isUFVisitToday: isVisitToday(player.visitStart),
-    ...extras,
-  };
 }
 
 function heatLabelForItem(item: HeatCheckItem): string {
@@ -341,19 +327,22 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     emptyMsg: string
   ) => (
     <>
-      <div className="gv-elite-grid">
-        {players.map((p, i) => (
-          <EliteRecruitCard
+      <div className="gv-rb-grid">
+        {players.map((p) => (
+          <ClassicRecruitCard
             key={ensurePlayerSlug(p.slug, p.name)}
-            player={toElitePlayer(p, {
+            player={{
+              ...p,
               movementDirection:
-                p.ufOvStatus === 'cancelled' ? 'down' : p.ufOvStatus === 'scheduled' ? 'up' : undefined,
-              predictionSchools: p.ufProbability
-                ? [{ school: 'Florida', pct: Math.round(Number(p.ufProbability) * 100) }]
-                : undefined,
-            })}
-            rank={i + 1}
-            variant={variant}
+                p.movementDirection ??
+                (p.ufOvStatus === 'cancelled' ? 'down' : p.ufOvStatus === 'scheduled' ? 'up' : undefined),
+              predictionSchools:
+                p.predictionSchools ??
+                (p.ufProbability
+                  ? [{ school: 'Florida', pct: Math.round(Number(p.ufProbability) * 100) }]
+                  : undefined),
+            }}
+            variant={variant === 'commit' ? 'commit' : 'target'}
           />
         ))}
       </div>

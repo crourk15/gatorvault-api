@@ -4,12 +4,6 @@
  */
 const { slugify } = require('./slug');
 
-/** Display name → canonical slug (handles typos / aliases) */
-const SLUG_ALIASES = {
-  'kamaui-whifield': 'kamauri-whitfield',
-  'kamauri-whitfield': 'kamauri-whitfield',
-};
-
 /** Locked 2027 target slugs */
 const ALLOWLIST_2027 = [
   'easton-royal',
@@ -58,6 +52,58 @@ const ALLOWLIST_2028 = [
   'pj-evans',
   'anthony-howard-jr',
 ];
+
+/** Charles' display names — used for On3/Rivals/247 identity lookup (never synthetic cards). */
+const CANONICAL_TARGET_NAMES = {
+  'easton-royal': 'Easton Royal',
+  'jalen-brewster': 'Jalen Brewster',
+  'raheem-floyd': 'Raheem Floyd',
+  'marquis-evans': 'Marquis Evans',
+  'tre-geathers': 'Tre Geathers',
+  'adryan-cole': 'Adryan Cole',
+  'tranard-roberts': 'Tranard Roberts',
+  'jordan-christie': 'Jordan Christie',
+  'andre-hyppolite': 'Andre Hyppolite',
+  'kyren-caldwell': 'Kyren Caldwell',
+  'tk-cunningham': 'T.K. Cunningham',
+  'kamauri-whitfield': 'Kamauri Whitfield',
+  'jameer-cantrell': 'Jameer Cantrell',
+  'kaleb-exume': 'Kaleb Exume',
+  'elijah-guertin': 'Elijah Guertin',
+  'james-bethea': 'James Bethea',
+  'kaleb-ballard': 'Kaleb Ballard',
+  'brysen-wright': 'Brysen Wright',
+  'asher-ghioto': 'Asher Ghioto',
+  'cassell-cruickshank': 'Cassell Cruickshank',
+  'prince-che': 'Prince Che',
+  'gabriel-player': 'Gabriel Player',
+  'andre-alexander': 'Andre Alexander',
+  'bubba-brown': 'Bubba Brown',
+  'xander-edwards': 'Xander Edwards',
+  'izayah-vickers': 'Izayah Vickers',
+  'malakhi-dudley': 'Malakhi Dudley',
+  'braxton-rein': 'Braxton Rein',
+  'taihj-moore': 'Taihj Moore',
+  'armani-strong': 'Armani Strong',
+  'tristin-gaines': 'Tristin Gaines',
+  'tristian-henderson': 'Tristian Henderson',
+  'dominick-harris-payne': 'Dominick Harris-Payne',
+  'brady-quinn': 'Brady Quinn',
+  'john-matthews': 'John Matthews',
+  'bryce-willingham': 'Bryce Willingham',
+  'quinton-rolle-jr': 'Quinton Rolle Jr.',
+  'jordon-gorham': 'Jordon Gorham',
+  'kahmaree-crumity': 'Kahmaree Crumity',
+  'pj-evans': 'PJ Evans',
+  'anthony-howard-jr': 'Anthony Howard Jr.',
+};
+
+/** Display name → canonical slug (handles typos / aliases) */
+const SLUG_ALIASES = {
+  'kamaui-whifield': 'kamauri-whitfield',
+  'kamauri-whitfield': 'kamauri-whitfield',
+  't-k-cunningham': 'tk-cunningham',
+};
 
 const BY_YEAR = {
   2027: new Set(ALLOWLIST_2027),
@@ -113,6 +159,7 @@ function validateStoreTargets(players) {
 module.exports = {
   ALLOWLIST_2027,
   ALLOWLIST_2028,
+  CANONICAL_TARGET_NAMES,
   ALL_ALLOWED,
   canonicalTargetSlug,
   isAllowlistedTarget,

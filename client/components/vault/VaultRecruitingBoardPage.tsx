@@ -19,7 +19,7 @@ import {
   sortBoardPlayers,
 } from '@/lib/recruiting-board-utils';
 import { ClassHeadlinerHero, ClassSummaryBar } from '@/components/vault/RecruitingBoardClassic';
-import { RatingRecruitCard } from '@/components/vault/RatingRecruitCard';
+import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
 
@@ -316,7 +316,7 @@ export function VaultRecruitingBoardPage(): React.ReactElement {
               {filteredCommits.length > 0 ? (
                 <div className="gv-rb-grid">
                   {filteredCommits.map((p) => (
-                    <RatingRecruitCard key={p.slug} player={p} variant="commit" />
+                    <ClassicRecruitCard key={p.slug} player={p} variant="commit" />
                   ))}
                 </div>
               ) : (
@@ -334,7 +334,7 @@ export function VaultRecruitingBoardPage(): React.ReactElement {
               {filteredTargets.length > 0 ? (
                 <div className="gv-rb-grid">
                   {filteredTargets.map((p) => (
-                    <RatingRecruitCard key={p.slug} player={p} variant="target" />
+                    <ClassicRecruitCard key={p.slug} player={p} variant="target" />
                   ))}
                 </div>
               ) : (
