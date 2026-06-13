@@ -34,6 +34,7 @@ const REQUIRED_HTML_ROUTES = [
   'scouting/index.html',
   '_next/static',
   'build-manifest.json',
+  'js/vault-chunks',
   MONOLITH_ARCHIVE_HTML,
 ];
 
@@ -131,18 +132,28 @@ function checkStaticRoutes() {
 
 function checkReactChunkAssets() {
   const errors = [];
+  const vaultDir = path.join(SERVER_ROOT, 'js', 'vault-chunks');
+  if (!fs.existsSync(vaultDir)) {
+    errors.push('[assets] js/vault-chunks/ missing — run merge-into-server.js after client build');
+    return errors;
+  }
+  const vaultChunks = fs.readdirSync(vaultDir).filter((f) => f.endsWith('.js'));
+  if (vaultChunks.length < 10) {
+    errors.push(`[assets] js/vault-chunks/ has only ${vaultChunks.length} bundles — expected route chunks from merge`);
+  }
+
   const htmlFiles = [
     'index.html',
     ...REQUIRED_VAULT_EXPORTS.filter((p) => p.endsWith('.html')),
   ];
   const { missing, assets } = verifyChunkAssets(SERVER_ROOT, htmlFiles);
   if (missing.length) {
-    errors.push(`[assets] ${missing.length} _next chunk(s) missing for React HTML exports`);
+    errors.push(`[assets] ${missing.length} referenced asset(s) missing for React HTML exports`);
     missing.slice(0, 8).forEach((rel) => errors.push(`[assets] missing: ${rel}`));
   }
-  const routeChunks = assets.filter((a) => /_next\/static\/chunks\/r-/.test(a));
-  if (routeChunks.length === 0) {
-    errors.push('[assets] no flattened route chunks (r-*) found — run merge-into-server.js after client build');
+  const vaultRefs = assets.filter((a) => a.includes('js/vault-chunks/'));
+  if (vaultRefs.length === 0) {
+    errors.push('[assets] HTML exports missing js/vault-chunks/ script references');
   }
   return errors;
 }

@@ -47,6 +47,7 @@ const REQUIRED_EXPORTS = [
   'alerts/index.html',
   'staff/index.html',
   'staff/dashboard/index.html',
+  'js/vault-chunks',
   '_next/static',
 ];
 
@@ -90,8 +91,8 @@ function verifyChunks() {
     if (missing.length > 20) console.error(`  ... and ${missing.length - 20} more`);
     process.exit(1);
   }
-  const routeChunks = assets.filter((a) => a.includes('_next/static/chunks/r-'));
-  console.log(`[netlify] Verified ${assets.length} _next assets (${routeChunks.length} flat route chunks)`);
+  const routeChunks = assets.filter((a) => a.includes('js/vault-chunks/'));
+  console.log(`[netlify] Verified ${assets.length} _next assets (${routeChunks.length} vault route chunks in js/vault-chunks/)`);
 }
 
 if (!fs.existsSync(outDir)) {
@@ -105,7 +106,7 @@ require('./generate-redirects.js');
 rmRecursive(nextDir);
 copyRecursive(outDir, serverDir);
 const netlifyPaths = rewriteNextChunkPathsForNetlify(serverDir);
-console.log(`[netlify] Flattened Next route chunks for Netlify CDN (${netlifyPaths.flatChunks} files, ${netlifyPaths.filesUpdated} refs updated)`);
+console.log(`[netlify] Published vault route chunks to js/vault-chunks/ (${netlifyPaths.flatChunks} bundles, ${netlifyPaths.filesUpdated} refs updated)`);
 verifyExports();
 verifyChunks();
 
