@@ -63,6 +63,7 @@ async function listFitScorePlayers(order: 'asc' | 'desc', limit: number): Promis
     FROM futurecast.players p
     JOIN futurecast.uf_specific_profiles uf ON uf.player_id = p.id
     WHERE uf.uf_fit_score IS NOT NULL
+      AND p.status = 'HS'
     ORDER BY uf.uf_fit_score ${order === 'desc' ? 'DESC' : 'ASC'}
     LIMIT $1
     `,
@@ -81,7 +82,7 @@ async function volatilityPlayers(
   direction: 'high' | 'low',
   limit: number
 ): Promise<StaffDashboardPlayer[]> {
-  const rows = await listPredictions({ status: 'ACTIVE', limit: 500 });
+  const rows = await listPredictions({ status: 'ACTIVE', lifecycle: 'HS', limit: 500 });
   const playerIds = [...new Set(rows.map((row) => row.player_id))];
   const historyMap = await listMovementHistoryByPlayerIds(playerIds, VOLATILITY_WINDOW_DAYS);
 
@@ -136,7 +137,7 @@ export const handleGetStaffDashboard = asyncHandler(async (_req: Request, res: R
   try {
     const [movementRows, fitLeaders, fitRisks, alerts, volatilityHigh, volatilityLow] =
       await Promise.all([
-        listStockBoardRows(MOVEMENT_WINDOW_DAYS),
+        listStockBoardRows(MOVEMENT_WINDOW_DAYS, { lifecycle: 'HS' }),
         listFitScorePlayers('desc', LIST_LIMIT),
         listFitScorePlayers('asc', LIST_LIMIT),
         listAlerts(LIST_LIMIT),

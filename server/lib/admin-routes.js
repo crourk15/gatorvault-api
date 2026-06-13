@@ -76,11 +76,12 @@ function mountAdminRoutes(app) {
     });
   });
 
-  // Recruiting board admin — standalone page at /recruiting-board (embed for admin hub iframes)
+  // Recruiting board — public React UI on Netlify; admin embed only with ?embed=1
   app.get('/recruiting-board', (req, res) => {
     if (req.query.embed === '1') return res.sendFile(boardPage);
     if (fs.existsSync(boardPublic)) return res.sendFile(boardPublic);
-    return res.sendFile(boardPage);
+    const site = process.env.SITE_URL || 'https://gatorvaultinsider.com';
+    return res.redirect(302, `${site.replace(/\/$/, '')}/recruiting-board`);
   });
 
   app.get('/recruiting-board.html', (req, res) => {

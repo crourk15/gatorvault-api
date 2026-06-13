@@ -11,8 +11,28 @@ import {
   type PredictorStatsRow,
   predictionFromRow,
 } from './prediction-types';
-import type { SignalType } from '../shared/enums';
+import type { SignalType, PlayerLifecycleStatus } from '../shared/enums';
+import { portalDbStatuses } from '../shared/lifecycle';
 import { FUTURECAST_PLAYERS_TABLE } from './player-types';
+
+/** Append lifecycle filter on futurecast.players.status (HS or portal pool). */
+function appendLifecycleFilter(
+  conditions: string[],
+  params: unknown[],
+  idx: number,
+  lifecycle?: PlayerLifecycleStatus
+): number {
+  if (!lifecycle) return idx;
+  if (lifecycle === 'PORTAL') {
+    const statuses = portalDbStatuses();
+    conditions.push(`p.status IN (${statuses.map((_, i) => `$${idx + i}`).join(', ')})`);
+    for (const status of statuses) params.push(status);
+    return idx + statuses.length;
+  }
+  conditions.push(`p.status = $${idx++}`);
+  params.push(lifecycle);
+  return idx;
+}
 import { checkAndCreateMovementAlerts } from './alerts';
 
 export interface FitScoreBreakdown {
@@ -144,8 +164,28 @@ export interface StockBoardRow extends PredictionFeedRow {
   uf_fit_score?: number | null;
 }
 
-export async function listStockBoardRows(windowDays = 7): Promise<StockBoardRow[]> {
+export interface StockBoardFilters {
+  lifecycle?: PlayerLifecycleStatus;
+  class_year?: number;
+}
+
+export async function listStockBoardRows(
+  windowDays = 7,
+  filters: StockBoardFilters = {}
+): Promise<StockBoardRow[]> {
   const days = Math.max(1, Math.floor(windowDays));
+  const conditions: string[] = [`pr.status = 'ACTIVE'`, `pr.source_type = 'MODEL'`];
+  const params: unknown[] = [days];
+  let idx = 2;
+
+  if (filters.class_year != null) {
+    conditions.push(`p.class_year = $${idx++}`);
+    params.push(filters.class_year);
+  }
+  idx = appendLifecycleFilter(conditions, params, idx, filters.lifecycle);
+
+  const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+
   const { rows } = await db.query<StockBoardRow>(
     `
     SELECT
@@ -179,11 +219,10 @@ export async function listStockBoardRows(windowDays = 7): Promise<StockBoardRow[
         ph.date DESC
       LIMIT 1
     ) h ON TRUE
-    WHERE pr.status = 'ACTIVE'
-      AND pr.source_type = 'MODEL'
+    ${where}
     ORDER BY window_delta DESC
     `,
-    [days]
+    params
   );
   return rows;
 }
@@ -192,6 +231,7 @@ export interface ListPredictionsFilters {
   class_year?: number;
   position?: string;
   status?: string;
+  lifecycle?: PlayerLifecycleStatus;
   limit?: number;
 }
 
@@ -239,6 +279,7 @@ export async function listPredictions(
     conditions.push(`p.position = $${idx++}`);
     params.push(filters.position);
   }
+  idx = appendLifecycleFilter(conditions, params, idx, filters.lifecycle);
 
   const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
   const limit = Math.min(Math.max(filters.limit ?? 100, 1), 500);

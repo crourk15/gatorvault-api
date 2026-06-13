@@ -11,6 +11,15 @@ const serverDir = path.join(__dirname, '..', '..', 'server');
 /** Required export paths for FutureCast on Netlify (relative to server/). */
 const REQUIRED_EXPORTS = [
   'futurecast/index.html',
+  'futurecast/alerts/index.html',
+  'futurecast/staff/index.html',
+  'vault/index.html',
+  'vault/futurecast/index.html',
+  'vault/futurecast/stock/index.html',
+  'vault/futurecast/snapshots/index.html',
+  'vault/futurecast/alerts/index.html',
+  'vault/futurecast/staff/index.html',
+  'vault/recruiting-board/index.html',
   'recruiting-board/index.html',
   'players/index.html',
   'scouting/index.html',
@@ -19,6 +28,7 @@ const REQUIRED_EXPORTS = [
   'player/index.html',
   'portal/index.html',
   'alerts/index.html',
+  'staff/index.html',
   'staff/dashboard/index.html',
   '_next/static',
 ];

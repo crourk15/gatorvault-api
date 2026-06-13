@@ -3,8 +3,9 @@
 /**
  * Staff dashboard — internal FutureCast control room.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FutureCastSubNav } from '@/components/site/FutureCastSubNav';
+import { UiError } from '@/components/site/UiMessage';
 import { MovementHeatmap } from '@/components/futurecast/MovementHeatmap';
 import {
   fetchStaffDashboard,
@@ -55,43 +56,45 @@ export default function StaffDashboardPage(): React.ReactElement {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const load = useCallback(async (isInitial: boolean) => {
+    if (isInitial) {
+      setLoading(true);
+      setError(null);
+    }
+
+    try {
+      const dashboard = await fetchStaffDashboard();
+      setData(dashboard);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not load the staff dashboard.');
+    } finally {
+      if (isInitial) setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     let timer: ReturnType<typeof setInterval> | undefined;
 
-    async function load(isInitial: boolean) {
-      if (isInitial) {
-        setLoading(true);
-        setError(null);
-      }
-
-      try {
-        const dashboard = await fetchStaffDashboard();
-        if (!cancelled) {
-          setData(dashboard);
-          setError(null);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Failed to load dashboard.');
-        }
-      } finally {
-        if (!cancelled && isInitial) setLoading(false);
-      }
+    async function run(isInitial: boolean) {
+      if (cancelled) return;
+      await load(isInitial);
     }
 
-    void load(true);
-    timer = setInterval(() => void load(false), REFRESH_MS);
+    void run(true);
+    timer = setInterval(() => void run(false), REFRESH_MS);
 
     return () => {
       cancelled = true;
       if (timer) clearInterval(timer);
     };
-  }, []);
+  }, [load]);
 
   if (loading) {
     return (
       <div className="fc-staff-dashboard-wrap">
+        <FutureCastSubNav active="staff" />
         <p className="fc-staff-dashboard__status">Loading dashboard…</p>
       </div>
     );
@@ -100,7 +103,14 @@ export default function StaffDashboardPage(): React.ReactElement {
   if (error || !data) {
     return (
       <div className="fc-staff-dashboard-wrap">
-        <p className="fc-staff-dashboard__error">{error ?? 'Failed to load dashboard.'}</p>
+        <FutureCastSubNav active="staff" />
+        <UiError
+          title="Staff dashboard unavailable"
+          message={error ?? 'Failed to load dashboard.'}
+          retry={() => void load(true)}
+          backHref="/"
+          backLabel="← Back to GatorVault"
+        />
       </div>
     );
   }

@@ -2,7 +2,9 @@
  * Big Board API helpers.
  */
 import type { Request, Response, NextFunction } from 'express';
-import { PLAYER_LIFECYCLE, POSITIONS } from '../../shared/enums';
+import type { PlayerLifecycleStatus } from '../../shared/enums';
+import { POSITIONS } from '../../shared/enums';
+import { normalizeLifecycleInput, portalDbStatuses } from '../../shared/lifecycle';
 import { BIG_BOARD_SORTS, type BigBoardSort } from './utils';
 
 export function asyncHandler(
@@ -44,8 +46,12 @@ function parseEnum<T extends string>(raw: unknown, field: string, allowed: reado
   return value as T;
 }
 
-export function parseLifecycle(raw: unknown) {
-  return parseEnum(raw, 'lifecycle', PLAYER_LIFECYCLE);
+export function parseLifecycle(raw: unknown): PlayerLifecycleStatus | undefined {
+  const normalized = normalizeLifecycleInput(raw);
+  if (!normalized) return undefined;
+  if (normalized === 'HS') return 'HS';
+  if (normalized === 'PORTAL') return 'PORTAL';
+  throw new Error('lifecycle ROSTER is not available on /api/big-board — use /api/roster/players');
 }
 
 export function parsePosition(raw: unknown): string | undefined {

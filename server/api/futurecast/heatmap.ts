@@ -4,13 +4,16 @@
 import type { Request, Response } from 'express';
 import { listStockBoardRows } from '../../models/predictions';
 import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
-import { filterFutureCastStockRows } from './feed-filters';
+import { filterFutureCastStockRows, FUTURECAST_CLASS_YEAR } from './feed-filters';
 
 const WINDOW_DAYS = 7;
+const HS_STOCK_FILTERS = { lifecycle: 'HS' as const, class_year: FUTURECAST_CLASS_YEAR };
 
 export const handleGetMovementHeatmap = asyncHandler(async (_req: Request, res: Response) => {
   try {
-    const rows = filterFutureCastStockRows(await listStockBoardRows(WINDOW_DAYS));
+    const rows = filterFutureCastStockRows(
+      await listStockBoardRows(WINDOW_DAYS, HS_STOCK_FILTERS)
+    );
 
     let upCount = 0;
     let downCount = 0;

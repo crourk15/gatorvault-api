@@ -15,8 +15,18 @@ function mountRosterRoutes(app) {
 
   app.get('/api/roster/players', (req, res) => {
     try {
-      const players = rosterStore.getAllRosterPlayers();
-      return res.json({ ok: true, count: players.length, players });
+      const players = rosterStore.getAllRosterPlayers().map((p) => ({
+        ...p,
+        lifecycle: 'ROSTER',
+      }));
+      return res.json({
+        ok: true,
+        lifecycle: 'ROSTER',
+        count: players.length,
+        empty: players.length === 0,
+        message: players.length === 0 ? 'No players found for this category yet.' : undefined,
+        players,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

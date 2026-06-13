@@ -72,9 +72,13 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
       listPredictions({
         class_year: FUTURECAST_CLASS_YEAR,
         status: 'ACTIVE',
+        lifecycle: 'HS',
         limit: 500,
       }),
-      listStockBoardRows(MOVEMENT_WINDOW_DAYS),
+      listStockBoardRows(MOVEMENT_WINDOW_DAYS, {
+        lifecycle: 'HS',
+        class_year: FUTURECAST_CLASS_YEAR,
+      }),
       listPortalCandidates({ class_year: FUTURECAST_CLASS_YEAR }),
     ]);
 

@@ -12,7 +12,11 @@ const STATIC_ROUTES = [
   '/futurecast/stock',
   '/futurecast/snapshots',
   '/alerts',
+  '/staff',
   '/staff/dashboard',
+  '/recruiting-board',
+  '/players',
+  '/scouting',
 ];
 
 function uiFile(...parts) {

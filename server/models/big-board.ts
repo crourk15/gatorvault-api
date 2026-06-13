@@ -4,6 +4,7 @@
  */
 import { db } from './db';
 import type { PlayerLifecycleStatus, PortalStatus, SignalType, UFStatus } from '../shared/enums';
+import { portalDbStatuses } from '../shared/lifecycle';
 import { FUTURECAST_PLAYERS_TABLE, playerFromRow, type PlayerRow } from './player-types';
 
 export interface BigBoardFilters {
@@ -68,8 +69,15 @@ export async function listBigBoardPlayers(filters: BigBoardFilters = {}): Promis
     params.push(filters.position);
   }
   if (filters.lifecycle) {
-    conditions.push(`p.status = $${idx++}`);
-    params.push(filters.lifecycle);
+    if (filters.lifecycle === 'PORTAL') {
+      const statuses = portalDbStatuses();
+      conditions.push(`p.status IN (${statuses.map((_, i) => `$${idx + i}`).join(', ')})`);
+      statuses.forEach((s) => params.push(s));
+      idx += statuses.length;
+    } else {
+      conditions.push(`p.status = $${idx++}`);
+      params.push(filters.lifecycle);
+    }
   }
 
   const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';

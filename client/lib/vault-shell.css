@@ -1,0 +1,131 @@
+.gv-vault-shell {
+  min-height: 100vh;
+  background: #060f1f;
+  color: #e2e8f0;
+}
+
+.gv-vault-shell__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(0, 48, 135, 0.35);
+  background: rgba(6, 15, 31, 0.97);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.gv-vault-shell__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  color: #fa4616;
+  text-decoration: none;
+}
+
+.gv-vault-shell__topnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+}
+
+.gv-vault-shell__topnav a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.gv-vault-shell__topnav a:hover,
+.gv-vault-shell__topnav a.is-active {
+  color: #fff;
+}
+
+.gv-vault-shell__body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: calc(100vh - 56px);
+}
+
+@media (max-width: 768px) {
+  .gv-vault-shell__body {
+    grid-template-columns: 1fr;
+  }
+  .gv-vault-shell__sidebar {
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 48, 135, 0.25);
+  }
+  .gv-vault-shell__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+}
+
+.gv-vault-shell__sidebar {
+  padding: 1rem 0.75rem;
+  border-right: 1px solid rgba(0, 48, 135, 0.25);
+  background: rgba(10, 22, 40, 0.65);
+}
+
+.gv-vault-shell__sidebar-label {
+  margin: 0 0 0.75rem 0.65rem;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.gv-vault-shell__nav {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gv-vault-shell__nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.5rem;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+
+.gv-vault-shell__nav-link:hover {
+  background: rgba(0, 48, 135, 0.2);
+  color: #fff;
+}
+
+.gv-vault-shell__nav-link.is-active {
+  background: rgba(250, 70, 22, 0.12);
+  color: #fa4616;
+}
+
+.gv-vault-shell__main {
+  padding: 1.25rem 1.5rem 2rem;
+  max-width: 1200px;
+}
+
+.gv-vault-crosslink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #fa4616;
+  text-decoration: none;
+}
+
+.gv-vault-crosslink:hover {
+  color: #fff;
+}

@@ -144,7 +144,7 @@ const PORTAL_INTEL_SELECT = `
 export async function listPortalCandidates(
   filters: PortalCandidateFilters = {}
 ): Promise<PortalIntelRow[]> {
-  const conditions: string[] = [`p.status IN ('COLLEGE', 'PORTAL')`];
+  const conditions: string[] = [`p.status = 'PORTAL'`];
   const params: unknown[] = [];
   let idx = 1;
 

@@ -3,28 +3,23 @@
 import React from 'react';
 import { usePathname } from '@/lib/use-pathname';
 
-export type SiteNavId =
-  | 'home'
-  | 'futurecast'
-  | 'recruiting-board'
-  | 'players'
-  | 'scouting';
-
-const LINKS: { id: SiteNavId; href: string; label: string }[] = [
-  { id: 'home', href: '/', label: 'Vault' },
+const LINKS = [
+  { id: 'home', href: '/', label: 'Home' },
+  { id: 'vault', href: '/vault', label: 'Inside the Vault' },
   { id: 'futurecast', href: '/futurecast', label: 'FutureCast' },
-  { id: 'recruiting-board', href: '/recruiting-board', label: 'Recruiting Board' },
-  { id: 'players', href: '/players', label: 'Players' },
-  { id: 'scouting', href: '/scouting', label: 'Scouting' },
-];
+] as const;
 
-function activeId(pathname: string): SiteNavId | null {
+function activeId(pathname: string): string | null {
   const p = pathname.replace(/\/$/, '') || '/';
-  if (p === '/' || p.startsWith('/?')) return 'home';
-  if (p.startsWith('/recruiting-board') || p.startsWith('/recruiting')) return 'recruiting-board';
-  if (p.startsWith('/players')) return 'players';
-  if (p.startsWith('/scouting')) return 'scouting';
-  if (p.startsWith('/futurecast') || p.startsWith('/player') || p.startsWith('/portal') || p.startsWith('/alerts')) {
+  if (p === '/') return 'home';
+  if (p.startsWith('/vault')) return 'vault';
+  if (
+    p.startsWith('/futurecast') ||
+    p.startsWith('/player') ||
+    p.startsWith('/portal') ||
+    p.startsWith('/alerts') ||
+    p.startsWith('/staff')
+  ) {
     return 'futurecast';
   }
   return null;

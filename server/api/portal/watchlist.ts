@@ -29,11 +29,18 @@ export interface PortalWatchlistPlayer {
   slug: string;
   position: string;
   classYear: number;
+  lifecycle: 'PORTAL';
+  ufInterest: boolean;
   portalLikelihood: number;
   depthChartRisk: number;
   snapShare: number | null;
   volatility: number;
   rank: number;
+}
+
+function hasUfInterest(ufStatus: string | null | undefined, ufFitScore: number | null | undefined): boolean {
+  if (ufStatus && String(ufStatus).toUpperCase() !== 'NONE') return true;
+  return (ufFitScore ?? 0) > 0;
 }
 
 export const handleGetPortalWatchlist = asyncHandler(async (req: Request, res: Response) => {
@@ -46,7 +53,9 @@ export const handleGetPortalWatchlist = asyncHandler(async (req: Request, res: R
     const likelihoodMax = parseLikelihoodMax(req.query.likelihood_max);
 
     const rows = await listPortalCandidates({ class_year, position });
-    const enriched = rows.map((row) => {
+    const enriched = rows
+      .filter((row) => hasUfInterest(row.uf_status, row.uf_fit_score))
+      .map((row) => {
       const input = portalRowToEngineInput(row);
       const portalLikelihood = computePortalLikelihood(input);
       const snapShareRaw = input.college_snaps
@@ -58,6 +67,8 @@ export const handleGetPortalWatchlist = asyncHandler(async (req: Request, res: R
         slug: row.slug,
         position: row.position,
         classYear: row.class_year,
+        lifecycle: 'PORTAL' as const,
+        ufInterest: true,
         portalLikelihood,
         depthChartRisk: computeDepthChartRisk(input),
         snapShare: snapShareRaw != null ? Math.round(snapShareRaw * 1000) / 1000 : null,
@@ -85,7 +96,13 @@ export const handleGetPortalWatchlist = asyncHandler(async (req: Request, res: R
       rank: index + 1,
     }));
 
-    res.json({ players });
+    res.json({
+      lifecycle: 'PORTAL',
+      count: players.length,
+      empty: players.length === 0,
+      message: players.length === 0 ? 'No players found for this category yet.' : undefined,
+      players,
+    });
   } catch (err) {
     handlePortalApiError(res, err);
   }

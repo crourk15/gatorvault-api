@@ -50,7 +50,7 @@ export function isTopTargetRow(row: {
 
 /** HS-only rows for FutureCast homepage sections (no portal/college leak). */
 export function isHsLifecycle(row: { lifecycle?: string | null }): boolean {
-  return String(row.lifecycle ?? 'HS').toUpperCase() === 'HS';
+  return String(row.lifecycle ?? '').toUpperCase() === 'HS';
 }
 
 export function dedupeByPlayerId<T extends { playerId: string; confidence?: number }>(

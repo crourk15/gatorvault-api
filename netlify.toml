@@ -82,6 +82,16 @@
   status = 200
 
 [[redirects]]
+  from = "/staff"
+  to = "/staff/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/vault/futurecast"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
   from = "/recruiting-board"
   to = "/recruiting-board/index.html"
   status = 200

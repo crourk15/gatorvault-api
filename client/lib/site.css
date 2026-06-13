@@ -187,6 +187,36 @@
 
 .gv-page-section__header {
   margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.gv-page-section__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  background: rgba(250, 70, 22, 0.15);
+  color: #fa4616;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.gv-board-card__profile-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fa4616;
+  text-decoration: none;
+}
+
+.gv-board-card__profile-link:hover {
+  color: #fff;
 }
 
 .gv-page-section__title {

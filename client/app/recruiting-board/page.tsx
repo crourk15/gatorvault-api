@@ -3,6 +3,6 @@
 import React from 'react';
 import { RecruitingBoardPage } from '@/components/site/RecruitingBoardPage';
 
-export default function RecruitingBoardRoute(): React.ReactElement {
+export default function PublicRecruitingBoardPage(): React.ReactElement {
   return <RecruitingBoardPage />;
 }

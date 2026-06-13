@@ -135,6 +135,19 @@
         .nav-fc-link{color:#FA4616 !important;font-weight:700 !important;}
         .nav-fc-link:hover{color:#fff !important;}
         .vpane{display:none;}.vpane.active{display:block;}
+        .gv-futurecast-embed{width:100%;min-height:calc(100vh - 220px);border:0;border-radius:12px;background:#030915;display:block;}
+        .gv-futurecast-embed-wrap{background:#060f1f;border:1px solid rgba(0,48,135,.25);border-radius:16px;overflow:hidden;padding:0;}
+        .gv-futurecast-embed-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(0,48,135,.2);background:rgba(6,15,31,.95);}
+        .gv-vault-layout{display:flex;gap:0;align-items:flex-start;}
+        .gv-vault-layout-wrap{display:flex;gap:0;align-items:flex-start;}
+        .gv-vault-sidebar{width:220px;flex-shrink:0;padding:1rem .75rem;border-right:1px solid rgba(0,48,135,.25);background:rgba(10,22,40,.55);position:sticky;top:7rem;max-height:calc(100vh - 8rem);overflow-y:auto;}
+        .gv-vault-sidebar__label{margin:0 0 .75rem .5rem;font-size:.625rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#64748b;}
+        .gv-vault-sidebar__link{display:flex;align-items:center;gap:.5rem;padding:.5rem .65rem;border-radius:.5rem;color:#94a3b8;text-decoration:none;font-size:.8125rem;font-weight:600;margin-bottom:.15rem;}
+        .gv-vault-sidebar__link:hover{background:rgba(0,48,135,.2);color:#fff;}
+        .gv-vault-sidebar__link.is-active{background:rgba(250,70,22,.12);color:#FA4616;}
+        .gv-vault-main{flex:1;min-width:0;}
+        .gv-vault-crosslink-inline{display:inline-flex;align-items:center;gap:.35rem;margin-top:.75rem;font-size:.8125rem;font-weight:700;color:#FA4616;text-decoration:none;}
+        .gv-vault-crosslink-inline:hover{color:#fff;}
         .vtab{transition:all .15s;border-bottom:3px solid transparent;padding-bottom:6px;}
         .vtab.active{color:#FA4616;border-bottom-color:#FA4616;}
         .locked-overlay{position:absolute;inset:0;background:rgba(6,15,31,.88);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:2;border-radius:inherit;}
@@ -778,7 +791,9 @@
             <div data-id="96" class="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between h-16">
                 <div data-id="97" class="flex items-center gap-2"><span data-id="98" class="text-2xl">🐊</span><span data-id="99" class="font-display text-xl font-bold text-gator-orange tracking-wide">GATORVAULT</span></div>
                 <div data-id="100" class="hidden md:flex items-center gap-6">
-                    <a data-id="101" href="#futurecast-sec" class="text-sm text-surface-200 hover:text-gator-orange transition nav-scroll nav-fc-link">FutureCast</a>
+                    <a href="/" class="text-sm text-surface-200 hover:text-white transition">Home</a>
+                    <a href="/vault" class="text-sm text-surface-200 hover:text-white transition">Inside the Vault</a>
+                    <a href="/futurecast" id="nav-futurecast-top" class="text-sm text-surface-200 hover:text-gator-orange transition nav-fc-link">FutureCast</a>
                     <a data-id="101b" href="#feat-sec" class="text-sm text-surface-200 hover:text-gator-orange transition nav-scroll">Features</a>
                     <a data-id="102" href="#persona-sec" class="text-sm text-surface-200 hover:text-gator-orange transition nav-scroll">Who It's For</a>
                     <a data-id="103" href="#bible-sec" class="text-sm text-surface-200 hover:text-gator-orange transition nav-scroll">Season Bible</a>
@@ -798,7 +813,9 @@
                 <button data-id="117" id="mob-menu-close" class="p-2 text-white" onclick="document.getElementById('mob-menu').classList.add('hidden')"><i data-id="118" data-lucide="x" class="w-6 h-6"></i></button>
             </div>
             <div data-id="119" class="flex flex-col gap-4">
-                <a data-id="120" href="#futurecast-sec" class="text-lg text-gator-orange font-bold nav-scroll mob-close-link">FutureCast</a>
+                <a href="/" class="text-lg text-surface-200 hover:text-white mob-close-link">Home</a>
+                <a href="/vault" class="text-lg text-surface-200 hover:text-white mob-close-link">Inside the Vault</a>
+                <a href="/futurecast" class="text-lg text-gator-orange font-bold mob-close-link">FutureCast</a>
                 <a data-id="120b" href="#feat-sec" class="text-lg text-surface-200 hover:text-gator-orange nav-scroll mob-close-link">Features</a>
                 <a data-id="121" href="#persona-sec" class="text-lg text-surface-200 hover:text-gator-orange nav-scroll mob-close-link">Who It's For</a>
                 <a data-id="122" href="#bible-sec" class="text-lg text-surface-200 hover:text-gator-orange nav-scroll mob-close-link">Season Bible</a>
@@ -855,7 +872,7 @@
                 <div data-id="171" style="display:inline-block;background:#064e3b;border:1px solid #22c55e;border-radius:20px;padding:6px 18px;font-size:13px;color:#34d399;font-weight:700;margin-bottom:24px;">🎟️ Try FREE for 30 days · No credit card required</div>
                 <div data-id="172" class="flex flex-col sm:flex-row gap-4 justify-center">
                     <button data-id="173" id="hero-join" class="bg-gator-orange hover:bg-gator-orangedk text-white font-bold text-lg px-8 py-4 rounded-xl transition pulse-glow min-h-[44px] inline-flex items-center justify-center gap-2" onclick="if(window.openRegModal)openRegModal('film')">>🔐 Start Free — No Card Required</button>
-                    <a href="/futurecast" class="bg-gator-blue hover:bg-gator-lightblue text-white font-bold text-lg px-8 py-4 rounded-xl transition min-h-[44px] inline-flex items-center justify-center gap-2 border border-gator-blue/40">📈 Open FutureCast</a>
+                    <a href="/futurecast" id="hero-fc-open" onclick="return gvOpenFutureCast(event)" class="bg-gator-blue hover:bg-gator-lightblue text-white font-bold text-lg px-8 py-4 rounded-xl transition min-h-[44px] inline-flex items-center justify-center gap-2 border border-gator-blue/40">📈 Open FutureCast</a>
                     <button data-id="174" id="hero-see" class="border-2 border-surface-200/30 hover:border-gator-orange text-white font-semibold text-lg px-8 py-4 rounded-xl transition min-h-[44px] flex items-center justify-center" onclick="if(window.openVault)openVault()">See What's Inside</button>
                 </div>
                 <p data-id="175" class="text-xs text-surface-200/50 mt-6">🏅 Founding Member badge for all charter subscribers · First 100 only</p>
@@ -874,9 +891,9 @@
                         </div>
                         <h2 id="futurecast-sec-title" class="gv-fc-feature__title">FutureCast — <em>Florida Recruiting Intelligence</em></h2>
                         <p class="gv-fc-feature__desc">Live recruiting predictions, movement tracking, portal intel, and class analytics for the Florida Gators.</p>
-                        <a href="/futurecast" class="gv-fc-feature__cta">Open FutureCast →</a>
+                        <a href="/futurecast" id="fc-feature-cta" onclick="return gvOpenFutureCast(event)" class="gv-fc-feature__cta">Open FutureCast →</a>
                     </div>
-                    <a href="/futurecast" id="futurecast-preview-card" class="gv-fc-preview-card" aria-label="Open FutureCast — live recruiting preview">
+                    <a href="/futurecast" id="futurecast-preview-card" onclick="return gvOpenFutureCast(event)" class="gv-fc-preview-card" aria-label="Open FutureCast — live recruiting preview">
                         <div class="gv-fc-preview-card__head">
                             <h3>Live Preview</h3>
                             <span class="gv-fc-preview-card__hint">Movement · Targets · Portal</span>
@@ -1130,6 +1147,7 @@
                     <button data-id="475" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="gameweek">🏈 Game Week</button>
                     <button data-id="476" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="community">💬 Community</button>
                     <button data-id="477" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="highlights">📺 Film Room</button>
+                    <button id="vtab-futurecast" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="futurecast">📈 FutureCast</button>
                     <button data-id="478" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="livescores">📊 Live Scores</button>
                     <button data-id="478b" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="live">⚡ Live</button>
                     <button data-id="479" class="vtab px-3 py-3 text-xs md:text-sm font-semibold text-surface-200 whitespace-nowrap" data-vtab="alerts">🔔 My Alerts</button>
@@ -1173,7 +1191,21 @@
                 </div>
             </div>
 
-            <div data-id="499" id="gv-vault-content" class="max-w-7xl mx-auto px-4 md:px-6 py-6">
+            <div data-id="499" id="gv-vault-content" class="max-w-7xl mx-auto px-4 md:px-6 py-6 gv-vault-layout-wrap">
+                <nav id="gv-vault-sidebar" class="gv-vault-sidebar gv-desk-only" aria-label="Vault navigation">
+                        <p class="gv-vault-sidebar__label">The Vault</p>
+                        <a href="/vault" class="gv-vault-sidebar__link" data-vault-href="/vault">🏠 Dashboard</a>
+                        <a href="/vault/depth-chart" class="gv-vault-sidebar__link" data-vault-href="/vault/depth-chart">📋 Depth Chart</a>
+                        <a href="/vault/recruiting" class="gv-vault-sidebar__link" data-vault-href="/vault/recruiting">🎯 Recruiting</a>
+                        <a href="/vault/futurecast" class="gv-vault-sidebar__link" data-vault-href="/vault/futurecast">📈 FutureCast</a>
+                        <a href="/vault/portal" class="gv-vault-sidebar__link" data-vault-href="/vault/portal">🔄 Portal</a>
+                        <a href="/vault/film-room" class="gv-vault-sidebar__link" data-vault-href="/vault/film-room">📺 Film Room</a>
+                        <a href="/vault/game-week" class="gv-vault-sidebar__link" data-vault-href="/vault/game-week">🏈 Game Week</a>
+                        <a href="/vault/live-feed" class="gv-vault-sidebar__link" data-vault-href="/vault/live-feed">⚡ Live Feed</a>
+                        <a href="/vault/recruiting-board" class="gv-vault-sidebar__link" data-vault-href="/vault/recruiting-board">📊 Recruiting Board</a>
+                        <a href="/vault/staff" class="gv-vault-sidebar__link" data-vault-href="/vault/staff">⚙️ Staff</a>
+                </nav>
+                <div class="gv-vault-main">
                 <!-- ====== MOBILE HOME (ESPN stacked modules) ====== -->
                 <div id="vpane-mhome" class="vpane gv-mob-only fade-in">
                     <section class="gv-mob-section gv-mob-module">
@@ -1374,6 +1406,8 @@
                 <!-- ====== RECRUITING ====== -->
                 <div data-id="550" id="vpane-recruit" class="vpane fade-in space-y-6">
                     <h1 data-id="551" class="font-display text-2xl md:text-3xl font-bold text-white">Recruiting</h1>
+                    <a href="/vault/futurecast" class="gv-vault-crosslink-inline">Open FutureCast in Vault →</a>
+                    <a href="/vault/recruiting-board" class="gv-vault-crosslink-inline" style="margin-left:1rem">Recruiting Board →</a>
                     <div data-id="552" class="flex gap-2 flex-wrap">
                         <button data-id="553" class="rec-tab active bg-gator-orange text-white text-xs font-bold px-4 py-2 rounded-lg" data-rtab="c2026">2026 Class</button>
                         <button data-id="554" class="rec-tab bg-surface-700 text-surface-200 text-xs font-bold px-4 py-2 rounded-lg" data-rtab="b2027">2027 Board</button>
@@ -1399,6 +1433,7 @@
                     <div>
                         <h1 data-id="598" class="font-display text-2xl md:text-3xl font-bold text-white">Portal Radar</h1>
                         <p class="text-surface-200 text-sm mt-1 max-w-2xl">Incoming transfers only — On3-sourced profiles with War Room insider scouting when available.</p>
+                        <a href="/vault/futurecast" class="gv-vault-crosslink-inline">View Portal Watchlist in FutureCast →</a>
                     </div>
                     <div data-id="599" class="bg-surface-700 border border-gator-blue/20 rounded-2xl overflow-hidden">
                         <div data-id="600" class="p-4 border-b border-gator-blue/20 flex flex-wrap items-center justify-between gap-2">
@@ -1530,6 +1565,20 @@
                             <p id="film-room-hub-desc" class="text-xs text-surface-200/60"></p>
                             <div id="highlights-shell"></div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- ====== FUTURECAST ====== -->
+                <div id="vpane-futurecast" class="vpane fade-in space-y-4">
+                    <div class="gv-futurecast-embed-wrap">
+                        <div class="gv-futurecast-embed-header">
+                            <div>
+                                <h1 class="font-display text-xl md:text-2xl font-bold text-white">📈 FutureCast</h1>
+                                <p class="text-surface-200 text-xs md:text-sm mt-0.5">2027 cycle predictions, stock board, and portal intel — embedded in the Vault.</p>
+                            </div>
+                            <a href="/futurecast" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-gator-orange hover:text-white whitespace-nowrap">Open full screen ↗</a>
+                        </div>
+                        <iframe id="gv-futurecast-embed" class="gv-futurecast-embed" title="FutureCast" src="about:blank" loading="lazy"></iframe>
                     </div>
                 </div>
 
@@ -1999,6 +2048,7 @@
                         <p id="feedback-survey-msg" class="text-xs text-green-400 hidden"></p>
                     </div>
                 </div>
+                    </div><!-- gv-vault-main -->
             </div>
 
             <p class="text-[10px] text-surface-200/25 mt-1 gv-mob-only" id="gv-build-stamp-mobile">UI mhome-v3-20260614</p>
@@ -2983,6 +3033,7 @@
             showAdminPinModal();
             return;
         }
+        if(tab==='futurecast'){location.href='/vault/futurecast';return;}
         if(tab==='highlights'){try{gvLoadHighlights();}catch(e){}}
         if(tab==='recruit'||tab==='portal'){try{gvLoadRecruitingLive(true);}catch(e){}}
         if(tab==='articles'){try{gvLoadPublishedContent(true);}catch(e){}}
@@ -2998,6 +3049,7 @@
         document.querySelectorAll('.vtab').forEach(function(t){t.classList.remove('active');t.classList.remove('text-gator-orange');t.classList.add('text-surface-200');});
         var pane=document.getElementById('vpane-'+tab);if(pane){pane.classList.add('active');pane.style.display='block';}
         var tabEl=document.querySelector('[data-vtab="'+tab+'"]');if(tabEl){tabEl.classList.add('active');tabEl.classList.remove('text-surface-200');tabEl.classList.add('text-gator-orange');}
+        if(typeof gvSyncVaultSidebar==='function')gvSyncVaultSidebar(tab);
         if(typeof trackEvent==='function') trackEvent('Vault','tab_viewed',tab);
         if(tab==='analytics') refreshAnalytics();
         if(scrollTeamDc&&typeof gvScrollTeamSection==='function')setTimeout(function(){gvScrollTeamSection('gv-team-dc-section');},150);
@@ -3020,6 +3072,7 @@
         if(s==='/recruit'||s==='recruit'||s.indexOf('#recruit')>=0){if(typeof openVault==='function')openVault();showVTab('recruit');return true;}
         if(s==='/players'||s==='players'||s.indexOf('tab=players')>=0){if(typeof openVault==='function')openVault();showVTab('players');return true;}
         if(s==='/portal'||s==='portal'||s.indexOf('#portal')>=0){if(typeof openVault==='function')openVault();showVTab('portal');return true;}
+        if(s==='/futurecast'||s==='futurecast'||s.indexOf('#futurecast')>=0||s.indexOf('/vault/futurecast')>=0||s.indexOf('tab=futurecast')>=0){if(typeof openVault==='function')openVault();showVTab('futurecast');return true;}
         var playerM=s.match(/\/player\/([^/?#]+)/);
         if(playerM){
             if(opts.recruitModal!==false&&(opts.type==='commit'||opts.forceModal))gvOpenRecruitProfile(decodeURIComponent(playerM[1]));
@@ -3031,6 +3084,16 @@
         return false;
     }
     window.gvNavigate=gvNavigate;
+
+    var GV_VAULT_PATH_MAP={start:'/vault',team:'/vault/depth-chart',recruit:'/vault/recruiting',futurecast:'/vault/futurecast',portal:'/vault/portal',highlights:'/vault/film-room',gameweek:'/vault/game-week',live:'/vault/live-feed',analytics:'/vault/staff'};
+    var GV_PATH_TO_TAB={'/vault':'start','/vault/depth-chart':'team','/vault/recruiting':'recruit','/vault/futurecast':'futurecast','/vault/portal':'portal','/vault/film-room':'highlights','/vault/game-week':'gameweek','/vault/live-feed':'live','/vault/staff':'analytics'};
+    function gvVaultPathToTab(path){var p=(path||'').replace(/\/$/,'');if(GV_PATH_TO_TAB[p])return GV_PATH_TO_TAB[p];if(p.indexOf('/vault/futurecast')===0)return 'futurecast';return null;}
+    function gvIsVaultMember(){try{var s=JSON.parse(localStorage.getItem('gv_session')||'null');return !!(s&&s.email);}catch(e){return false;}}
+    function gvOpenFutureCast(e){if(e&&e.preventDefault)e.preventDefault();if(gvIsVaultMember()){location.href='/vault/futurecast';return false;}location.href='/futurecast';return false;}
+    window.gvOpenFutureCast=gvOpenFutureCast;
+    function gvSyncVaultSidebar(tab){var path=GV_VAULT_PATH_MAP[tab]||'/vault';document.querySelectorAll('.gv-vault-sidebar__link').forEach(function(a){a.classList.toggle('is-active',a.getAttribute('data-vault-href')===path);});}
+    window.gvSyncVaultSidebar=gvSyncVaultSidebar;
+    window.gvVaultPathToTab=gvVaultPathToTab;
 
     function gvOpenArticle(id){
         if(!id)return;
@@ -3370,6 +3433,15 @@
     function gvHandleDeepLink(){
         var params=new URLSearchParams(location.search);
         if(params.get('open')==='vault'&&typeof openVault==='function')openVault();
+        var path=location.pathname.replace(/\/$/,'')||'/';
+        var vaultTab=gvVaultPathToTab(path);
+        if(vaultTab){
+            if(typeof openVault==='function')openVault();
+            setTimeout(function(){showVTab(vaultTab);},300);
+            return;
+        }
+        if(path==='/vault/recruiting-board'||path==='/recruiting-board')return;
+        if(path.indexOf('/vault/futurecast')===0)return;
         if(location.pathname.replace(/\/$/,'')==='/players'){if(typeof openVault==='function')openVault();setTimeout(function(){showVTab('players');},300);return;}
         var tab=params.get('tab');
         if(tab)setTimeout(function(){showVTab(tab);},300);
@@ -3379,6 +3451,7 @@
         if(hash==='articles'){if(typeof openVault==='function')openVault();showVTab('articles');}
         else if(hash==='recruit'){if(typeof openVault==='function')openVault();showVTab('recruit');}
         else if(hash==='portal'){if(typeof openVault==='function')openVault();showVTab('portal');}
+        else if(hash==='futurecast'){if(typeof openVault==='function')openVault();showVTab('futurecast');}
         else if(hash==='team'||hash==='dc'||hash==='depth-chart'){if(typeof openVault==='function')openVault();showVTab('team');}
         else if(hash.indexOf('article=')===0)gvOpenArticle(hash.split('=')[1]);
         if(params.get('team')&&typeof openVault==='function'){
@@ -3399,6 +3472,21 @@
             t.removeEventListener('click',t._gvTabHandler);
             t._gvTabHandler=function(e){e.preventDefault();e.stopPropagation();showVTab(tabVal);};
             t.addEventListener('click',t._gvTabHandler);
+        });
+        document.querySelectorAll('.gv-vault-sidebar__link').forEach(function(a){
+            a.removeEventListener('click',a._gvSideHandler);
+            a._gvSideHandler=function(e){
+                var href=a.getAttribute('data-vault-href')||'';
+                var tab=gvVaultPathToTab(href);
+                if(tab){
+                    e.preventDefault();
+                    if(typeof openVault==='function')openVault();
+                    if(tab==='futurecast'){location.href='/vault/futurecast';return;}
+                    showVTab(tab);
+                    try{history.pushState(null,'',href);}catch(err){}
+                }
+            };
+            a.addEventListener('click',a._gvSideHandler);
         });
         document.querySelectorAll('.start-nav').forEach(function(b){
             var gotoVal=b.dataset.goto;

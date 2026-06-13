@@ -1,24 +1,28 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from '@/lib/use-pathname';
+import { futureCastSubHref, type FutureCastSubId } from '@/lib/vault-routes';
 
-export type FutureCastSubNavId = 'home' | 'stock' | 'snapshots' | 'alerts' | 'staff';
-
-const SUB_LINKS: { id: FutureCastSubNavId; href: string; label: string }[] = [
-  { id: 'home', href: '/futurecast', label: 'Home' },
-  { id: 'stock', href: '/futurecast/stock', label: 'Stock Up / Down' },
-  { id: 'snapshots', href: '/futurecast/snapshots', label: 'Snapshots' },
-  { id: 'alerts', href: '/alerts', label: 'Alerts' },
-  { id: 'staff', href: '/staff/dashboard', label: 'Staff' },
+const SUB_LINKS: { id: FutureCastSubId; label: string }[] = [
+  { id: 'home', label: 'Home' },
+  { id: 'stock', label: 'Stock Up / Down' },
+  { id: 'snapshots', label: 'Snapshots' },
+  { id: 'alerts', label: 'Alerts' },
+  { id: 'staff', label: 'Staff' },
 ];
 
-export function FutureCastSubNav({ active }: { active: FutureCastSubNavId }): React.ReactElement {
+export type { FutureCastSubId };
+
+export function FutureCastSubNav({ active }: { active: FutureCastSubId }): React.ReactElement {
+  const pathname = usePathname();
+
   return (
     <nav className="fc-futurecast-nav" aria-label="FutureCast">
       {SUB_LINKS.map((link) => (
         <a
           key={link.id}
-          href={link.href}
+          href={futureCastSubHref(pathname, link.id)}
           className={`fc-futurecast-nav__link${active === link.id ? ' is-active' : ''}`}
         >
           {link.label}

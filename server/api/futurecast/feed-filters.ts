@@ -14,6 +14,7 @@ import type { SerializedFeedPrediction } from '../predictions/utils-api';
 
 export function filterFutureCastFeedRows<T extends PredictionFeedRow>(rows: T[]): T[] {
   return rows.filter((row) =>
+    isHsLifecycle(row) &&
     isFutureCastEligible({
       class_year: row.class_year,
       lifecycle: row.lifecycle,

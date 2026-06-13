@@ -8,6 +8,7 @@ const { buildOn3ProfileUrl } = require('./on3-urls');
 const { buildHeatCheck } = require('./heat-check-store');
 const highlightsStore = require('./highlights-store');
 const interviewsStore = require('./interviews-store');
+const { enrichBoard } = require('./recruiting-board-enrich');
 
 const { verifyAdminPin, primaryAdminPin, pinFromReq: adminPinFromReq } = require('./admin-pin');
 const RECRUITING_ADMIN_PIN = primaryAdminPin();
@@ -32,8 +33,21 @@ function mountRecruitingRoutes(app) {
   app.get('/api/recruiting/board', async (req, res) => {
     try {
       const classYear = parseInt(req.query.class || req.query.classYear || '2027', 10);
+      const staffMode =
+        req.query.mode === 'staff' ||
+        req.query.staff === '1' ||
+        String(req.query.staffMode || '').toLowerCase() === 'true';
       const board = await store.getBoard(classYear);
-      return res.json({ ok: true, ...board });
+      const enriched = enrichBoard(board, staffMode);
+      if (!enriched.players.length) {
+        return res.json({
+          ok: true,
+          empty: true,
+          message: 'No players found for this category yet.',
+          ...enriched,
+        });
+      }
+      return res.json({ ok: true, ...enriched });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
