@@ -639,6 +639,27 @@
   gap: 1rem;
 }
 
+.fc-futurecast-page {
+  padding: 1rem;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.fc-futurecast-page__title {
+  margin: 0 0 1rem;
+  color: #fff;
+  font-family: Oswald, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.fc-futurecast-page__subtitle {
+  margin: 0 0 1.5rem;
+  color: #8b949e;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
 .fc-prediction-card-v2 {
   display: flex;
   gap: 1rem;

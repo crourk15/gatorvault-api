@@ -8,6 +8,7 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
+      "@/*": ["client/*"],
       "@server/*": ["server/*"]
     }
   },
