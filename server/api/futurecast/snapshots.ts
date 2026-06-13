@@ -6,25 +6,28 @@ import { listStockBoardRows, type StockBoardRow } from '../../models/predictions
 import {
   asyncHandler,
   handlePredictionsApiError,
-  serializeStockPrediction,
+  serializeStockRowsWithVolatility,
 } from '../predictions/utils-api';
 
 const DAILY_WINDOW_DAYS = 1;
 const WEEKLY_WINDOW_DAYS = 7;
 const MAX_PER_BUCKET = 10;
 
-function splitSnapshotRows(rows: StockBoardRow[], limit: number) {
-  const up = rows
+async function splitSnapshotRows(rows: StockBoardRow[], limit: number) {
+  const upRows = rows
     .filter((row) => row.window_delta > 0)
     .sort((a, b) => b.window_delta - a.window_delta)
-    .slice(0, limit)
-    .map(serializeStockPrediction);
+    .slice(0, limit);
 
-  const down = rows
+  const downRows = rows
     .filter((row) => row.window_delta < 0)
     .sort((a, b) => a.window_delta - b.window_delta)
-    .slice(0, limit)
-    .map(serializeStockPrediction);
+    .slice(0, limit);
+
+  const [up, down] = await Promise.all([
+    serializeStockRowsWithVolatility(upRows),
+    serializeStockRowsWithVolatility(downRows),
+  ]);
 
   return { up, down };
 }
@@ -36,8 +39,8 @@ export const handleGetMovementSnapshots = asyncHandler(async (_req: Request, res
       listStockBoardRows(WEEKLY_WINDOW_DAYS),
     ]);
 
-    const daily = splitSnapshotRows(dailyRows, MAX_PER_BUCKET);
-    const weekly = splitSnapshotRows(weeklyRows, MAX_PER_BUCKET);
+    const daily = await splitSnapshotRows(dailyRows, MAX_PER_BUCKET);
+    const weekly = await splitSnapshotRows(weeklyRows, MAX_PER_BUCKET);
 
     res.json({
       dailyUp: daily.up,

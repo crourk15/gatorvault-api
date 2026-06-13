@@ -1099,6 +1099,12 @@
   color: #8b949e;
 }
 
+.fc-prediction-card-v2__volatility {
+  margin: 0.35rem 0 0;
+  font-size: 0.75rem;
+  color: #8b949e;
+}
+
 .fc-prediction-card {
   display: block;
   background: linear-gradient(145deg, #0a1628, #121c2e);
@@ -1440,4 +1446,58 @@
   fill: #fa4616;
   stroke: #1f242c;
   stroke-width: 1;
+}
+
+.fc-player-page__section--volatility {
+  margin-top: 2rem;
+}
+
+.fc-volatility-meter {
+  padding: 1rem;
+  border: 1px solid #30363d;
+  border-radius: 0.75rem;
+  background: #1f242c;
+}
+
+.fc-volatility-meter__title {
+  margin: 0 0 0.5rem;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.fc-volatility-meter__score-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fc-volatility-meter__dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+}
+
+.fc-volatility-meter__dot--stable {
+  background: #3fb950;
+}
+
+.fc-volatility-meter__dot--moderate {
+  background: #f2cc60;
+}
+
+.fc-volatility-meter__dot--volatile {
+  background: #f85149;
+}
+
+.fc-volatility-meter__score {
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.fc-volatility-meter__hint {
+  margin: 0.5rem 0 0;
+  color: #8b949e;
+  font-size: 0.75rem;
 }

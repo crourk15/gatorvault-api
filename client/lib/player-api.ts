@@ -40,6 +40,7 @@ export interface PlayerCore {
   ufFitScore?: number | null;
   fitScoreBreakdown?: FitScoreBreakdown | null;
   movementHistory?: MovementHistoryPoint[];
+  volatilityScore?: number;
 }
 
 export interface HighSchoolProfile {

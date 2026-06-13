@@ -6,7 +6,7 @@ import { listStockBoardRows } from '../../models/predictions';
 import {
   asyncHandler,
   handlePredictionsApiError,
-  serializeStockPrediction,
+  serializeStockRowsWithVolatility,
 } from '../predictions/utils-api';
 
 const DEFAULT_WINDOW_DAYS = 7;
@@ -21,17 +21,20 @@ export const handleGetStockBoard = asyncHandler(async (req: Request, res: Respon
 
     const rows = await listStockBoardRows(resolvedWindow);
 
-    const stockUp = rows
+    const upRows = rows
       .filter((row) => row.window_delta > 0)
       .sort((a, b) => b.window_delta - a.window_delta)
-      .slice(0, MAX_PER_SIDE)
-      .map(serializeStockPrediction);
+      .slice(0, MAX_PER_SIDE);
 
-    const stockDown = rows
+    const downRows = rows
       .filter((row) => row.window_delta < 0)
       .sort((a, b) => a.window_delta - b.window_delta)
-      .slice(0, MAX_PER_SIDE)
-      .map(serializeStockPrediction);
+      .slice(0, MAX_PER_SIDE);
+
+    const [stockUp, stockDown] = await Promise.all([
+      serializeStockRowsWithVolatility(upRows),
+      serializeStockRowsWithVolatility(downRows),
+    ]);
 
     res.json({ stockUp, stockDown, windowDays: resolvedWindow });
   } catch (err) {

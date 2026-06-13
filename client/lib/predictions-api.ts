@@ -22,6 +22,7 @@ export interface FeedPrediction {
   status: PredictionStatus;
   createdAt: string;
   updatedAt: string;
+  volatilityScore?: number;
 }
 
 export interface PlayerPrediction {

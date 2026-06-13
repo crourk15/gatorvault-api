@@ -12,7 +12,7 @@ import {
   sendError,
 } from '../players/utils';
 import { PREDICTION_STATUSES } from '../../models/prediction-types';
-import { fitScoreBreakdownFromRow, insertPredictionHistory } from '../../models/predictions';
+import { fitScoreBreakdownFromRow, insertPredictionHistory, calculateVolatility, listMovementHistoryByPlayerIds, VOLATILITY_WINDOW_DAYS } from '../../models/predictions';
 
 export { asyncHandler, handleApiError, isUuid, parseLimit, parseOptionalInt, parsePosition, sendError };
 
@@ -54,6 +54,7 @@ export function serializeFeedPrediction(row: {
   fit_staff?: number | null;
   fit_need?: number | null;
   fit_geo?: number | null;
+  volatilityScore?: number;
 }) {
   return {
     id: row.id,
@@ -72,18 +73,49 @@ export function serializeFeedPrediction(row: {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     fitScoreBreakdown: fitScoreBreakdownFromRow(row),
+    volatilityScore: row.volatilityScore ?? 0,
   };
 }
 
 export type SerializedFeedPrediction = ReturnType<typeof serializeFeedPrediction>;
 
 export function serializeStockPrediction(
-  row: Parameters<typeof serializeFeedPrediction>[0] & { window_delta: number }
+  row: Parameters<typeof serializeFeedPrediction>[0] & { window_delta: number },
+  volatilityScore = 0
 ): SerializedFeedPrediction {
   return serializeFeedPrediction({
     ...row,
     delta: row.window_delta,
+    volatilityScore,
   });
+}
+
+export async function serializeFeedRowsWithVolatility(
+  rows: Parameters<typeof serializeFeedPrediction>[0][]
+): Promise<SerializedFeedPrediction[]> {
+  const playerIds = [...new Set(rows.map((row) => row.player_id))];
+  const historyMap = await listMovementHistoryByPlayerIds(playerIds, VOLATILITY_WINDOW_DAYS);
+
+  return rows.map((row) =>
+    serializeFeedPrediction({
+      ...row,
+      volatilityScore: calculateVolatility(historyMap.get(row.player_id) ?? []),
+    })
+  );
+}
+
+export async function serializeStockRowsWithVolatility(
+  rows: (Parameters<typeof serializeFeedPrediction>[0] & { window_delta: number })[]
+): Promise<SerializedFeedPrediction[]> {
+  const playerIds = [...new Set(rows.map((row) => row.player_id))];
+  const historyMap = await listMovementHistoryByPlayerIds(playerIds, VOLATILITY_WINDOW_DAYS);
+
+  return rows.map((row) =>
+    serializeStockPrediction(
+      row,
+      calculateVolatility(historyMap.get(row.player_id) ?? [])
+    )
+  );
 }
 
 export function applyFeedFilters(

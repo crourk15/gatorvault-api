@@ -5,8 +5,10 @@ import type { Request, Response } from 'express';
 import { getPlayerById } from '../../models/player';
 import { getUFSpecificProfileByPlayerId } from '../../models/uf-specific-profile';
 import {
+  calculateVolatility,
   listMovementHistoryByPlayerId,
   movementHistoryFromRows,
+  recentMovementHistory,
 } from '../../models/predictions';
 import { buildFitScoreBreakdown } from './fit-breakdown';
 import {
@@ -34,6 +36,7 @@ export const handleGetPlayerById = asyncHandler(async (req: Request, res: Respon
     const ufProfile = await getUFSpecificProfileByPlayerId(id);
     const fitScoreBreakdown = buildFitScoreBreakdown(player, ufProfile);
     const movementRows = await listMovementHistoryByPlayerId(id);
+    const volatilityScore = calculateVolatility(recentMovementHistory(movementRows));
 
     res.json({
       player: {
@@ -41,6 +44,7 @@ export const handleGetPlayerById = asyncHandler(async (req: Request, res: Respon
         ufFitScore: ufProfile?.uf_fit_score ?? null,
         fitScoreBreakdown,
         movementHistory: movementHistoryFromRows(movementRows),
+        volatilityScore,
       },
     });
   } catch (err) {

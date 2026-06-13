@@ -18,6 +18,7 @@ export interface PredictionCardData {
   type: string;
   confidence: number;
   delta?: number;
+  volatilityScore?: number;
   createdAt: string;
 }
 
@@ -43,6 +44,7 @@ export function feedPredictionToCard(p: FeedPrediction): PredictionCardData {
     type: `${sourceTypeLabel(p.sourceType).toLowerCase()} pick`,
     confidence: p.confidence,
     delta: p.delta,
+    volatilityScore: p.volatilityScore,
     createdAt: p.createdAt,
   };
 }
@@ -74,6 +76,11 @@ export function PredictionCard({ prediction }: PredictionCardProps): React.React
             </div>
           )}
           <ConfidenceBar value={prediction.confidence} />
+          {prediction.volatilityScore !== undefined && (
+            <p className="fc-prediction-card-v2__volatility">
+              Volatility: {prediction.volatilityScore}
+            </p>
+          )}
           <p className="fc-prediction-card-v2__date">
             {new Date(prediction.createdAt).toLocaleString()}
           </p>

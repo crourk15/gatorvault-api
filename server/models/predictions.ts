@@ -55,6 +55,56 @@ export function movementHistoryFromRows(rows: MovementHistoryRow[]): MovementHis
   }));
 }
 
+export const VOLATILITY_WINDOW_DAYS = 14;
+
+export function calculateVolatility(history: MovementHistoryRow[]): number {
+  if (!history || history.length < 2) return 0;
+
+  const values = history.map((entry) => entry.confidence);
+  const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+  const variance =
+    values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / values.length;
+  const stdDev = Math.sqrt(variance);
+  return Math.min(100, Math.round((stdDev / 25) * 100));
+}
+
+export function recentMovementHistory(
+  rows: MovementHistoryRow[],
+  windowDays = VOLATILITY_WINDOW_DAYS
+): MovementHistoryRow[] {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - Math.max(1, Math.floor(windowDays)));
+  const cutoffTime = cutoff.getTime();
+  return rows.filter((row) => new Date(row.date).getTime() >= cutoffTime);
+}
+
+export async function listMovementHistoryByPlayerIds(
+  playerIds: string[],
+  windowDays = VOLATILITY_WINDOW_DAYS
+): Promise<Map<string, MovementHistoryRow[]>> {
+  if (!playerIds.length) return new Map();
+
+  const days = Math.max(1, Math.floor(windowDays));
+  const { rows } = await db.query<{ player_id: string; date: string; confidence: number }>(
+    `
+    SELECT player_id, date::text AS date, confidence
+    FROM futurecast.prediction_history
+    WHERE player_id = ANY($1::uuid[])
+      AND date >= CURRENT_DATE - $2::int
+    ORDER BY player_id, date ASC
+    `,
+    [playerIds, days]
+  );
+
+  const grouped = new Map<string, MovementHistoryRow[]>();
+  for (const row of rows) {
+    const list = grouped.get(row.player_id) ?? [];
+    list.push({ date: row.date, confidence: row.confidence });
+    grouped.set(row.player_id, list);
+  }
+  return grouped;
+}
+
 export async function listMovementHistoryByPlayerId(
   playerId: string
 ): Promise<MovementHistoryRow[]> {

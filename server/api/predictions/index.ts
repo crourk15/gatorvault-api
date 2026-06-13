@@ -17,7 +17,7 @@ import {
   parsePosition,
   parsePredictionStatus,
   parseQueryFlag,
-  serializeFeedPrediction,
+  serializeFeedRowsWithVolatility,
 } from './utils-api';
 
 export const handleListPredictions = asyncHandler(async (req: Request, res: Response) => {
@@ -41,7 +41,7 @@ export const handleListPredictions = asyncHandler(async (req: Request, res: Resp
       rows = await listPredictions({ class_year, position, status, limit: 500 });
     }
 
-    let predictions = rows.map(serializeFeedPrediction);
+    let predictions = await serializeFeedRowsWithVolatility(rows);
     predictions = applyFeedFilters(predictions, { hsOnly, portalOnly, floridaOnly, trendingUp });
     predictions = predictions.slice(0, limit);
 

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { ConfidenceBar } from '@/components/futurecast/ConfidenceBar';
 import { FitScoreBreakdown } from '@/components/player/FitScoreBreakdown';
 import { MovementHistoryGraph } from '@/components/player/MovementHistoryGraph';
+import { VolatilityMeter } from '@/components/player/VolatilityMeter';
 import {
   fetchPlayerById,
   fetchPlayerProfiles,
@@ -89,6 +90,9 @@ function PlayerPageContent({
       <section className="fc-player-page__section fc-player-page__section--movement">
         <h2 className="fc-player-page__section-title">Movement History</h2>
         <MovementHistoryGraph history={player.movementHistory} />
+      </section>
+      <section className="fc-player-page__section fc-player-page__section--volatility">
+        <VolatilityMeter score={player.volatilityScore} />
       </section>
       <section className="fc-player-page__section">
         <h2 className="fc-player-page__section-title">Offers</h2>
