@@ -22,6 +22,10 @@ export interface PredictionCardData {
   stabilityScore?: number;
   volatilityScore?: number;
   createdAt: string;
+  compositeScore?: number;
+  nationalRank?: number | null;
+  positionRank?: number | null;
+  stateRank?: number | null;
 }
 
 export interface PredictionCardProps {
@@ -43,6 +47,10 @@ export function feedPredictionToCard(p: FeedPrediction): PredictionCardData {
     stabilityScore: p.stabilityScore,
     volatilityScore: p.volatilityScore,
     createdAt: p.createdAt,
+    compositeScore: p.compositeScore,
+    nationalRank: p.nationalRank,
+    positionRank: p.positionRank,
+    stateRank: p.stateRank,
   };
 }
 
@@ -67,6 +75,10 @@ function cardDataToFeed(data: PredictionCardData): FeedPrediction {
     ufProbability: data.ufProbability,
     stabilityScore: data.stabilityScore,
     volatilityScore: data.volatilityScore,
+    compositeScore: data.compositeScore ?? 0,
+    nationalRank: data.nationalRank ?? null,
+    positionRank: data.positionRank ?? null,
+    stateRank: data.stateRank ?? null,
   };
 }
 
