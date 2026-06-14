@@ -14,10 +14,21 @@ const API_URL = (process.env.API_URL || process.env.DEPLOY_GUARDIAN_API_URL || '
   ''
 );
 const PORTAL_SMOKE_SLUG = process.env.SMOKE_PORTAL_SLUG || 'test-slug';
+const CRAWLER_UA = 'GatorVault-QA-Crawler/1.0';
 
-async function fetchCheck(label, url, { allow404 = false, expectIncludes = [] } = {}) {
+const VAULT_SMOKE_PATHS = [
+  '/vault',
+  '/vault/recruiting',
+  '/vault/live',
+  '/vault/team',
+  '/vault/futurecast',
+  '/vault/film-room',
+  '/vault/schedule',
+];
+
+async function fetchCheck(label, url, { allow404 = false, expectIncludes = [], headers = {} } = {}) {
   try {
-    const res = await fetch(url, { redirect: 'follow' });
+    const res = await fetch(url, { redirect: 'follow', headers });
     const text = await res.text();
     const failed = !res.ok && !(allow404 && res.status === 404);
     const missing = expectIncludes.filter((s) => !text.includes(s));
@@ -30,15 +41,25 @@ async function fetchCheck(label, url, { allow404 = false, expectIncludes = [] } 
 }
 
 async function main() {
-  const checks = [
+  const checks = [];
+
+  for (const vaultPath of VAULT_SMOKE_PATHS) {
+    checks.push(
+      await fetchCheck(`vault-route${vaultPath.replace(/\//g, '-')}`, `${SITE_URL}${vaultPath}`, {
+        headers: { 'User-Agent': CRAWLER_UA },
+        expectIncludes: ['GatorVault'],
+      })
+    );
+  }
+
+  checks.push(
     await fetchCheck('vault-futurecast', `${SITE_URL}/vault/futurecast/`, {
+      headers: { 'User-Agent': CRAWLER_UA },
       expectIncludes: ['FutureCast', 'futurecast'],
-    }),
-    await fetchCheck('vault-home', `${SITE_URL}/vault`, {
-      expectIncludes: ['vault', 'GatorVault'],
     }),
     await fetchCheck('portal-profile', `${SITE_URL}/vault/portal/player/${PORTAL_SMOKE_SLUG}/`, {
       allow404: true,
+      headers: { 'User-Agent': CRAWLER_UA },
       expectIncludes: ['portal', 'Portal'],
     }),
     await fetchCheck('api-futurecast-home', `${API_URL}/api/futurecast/home`, {
@@ -46,8 +67,8 @@ async function main() {
     }),
     await fetchCheck('build-manifest', `${SITE_URL}/build-manifest.json`, {
       expectIncludes: ['buildId'],
-    }),
-  ];
+    })
+  );
 
   const htmlRes = await fetch(`${SITE_URL}/vault/futurecast/`);
   const html = await htmlRes.text();

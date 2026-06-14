@@ -61,3 +61,30 @@ console.log(
   outPath,
   `(${LEGACY_QUERY_RULES.length + LEGACY_RETIREMENT_REDIRECTS.length + REACT_REWRITES.length + ADMIN_AND_LEGACY_HTML.length + 1} rules)`
 );
+
+/** Ensure netlify.toml does not duplicate vault rewrites (conflicts → crawler 403). */
+function assertNetlifyTomlRouting() {
+  const netlifyTomlPath = path.join(__dirname, '..', '..', 'netlify.toml');
+  if (!fs.existsSync(netlifyTomlPath)) return;
+  const text = fs.readFileSync(netlifyTomlPath, 'utf8');
+  const redirectBlocks = text.split('[[redirects]]').slice(1);
+  const forbidden = [
+    '/.netlify/functions',
+    'from = "/vault',
+    'from = "/futurecast',
+    'from = "/portal"',
+    'from = "/recruiting',
+  ];
+  for (const block of redirectBlocks) {
+    for (const needle of forbidden) {
+      if (block.includes(needle)) {
+        console.error(
+          `[generate-redirects] netlify.toml redirect must not contain "${needle}" — use server/_redirects only`
+        );
+        process.exit(1);
+      }
+    }
+  }
+}
+
+assertNetlifyTomlRouting();

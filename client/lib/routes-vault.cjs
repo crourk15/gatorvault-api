@@ -100,9 +100,14 @@ function subRouteRewrites(prefix, exportPath) {
   ];
 }
 
+const FUTURECAST_SUB_ROUTES = ['trending', 'movement', 'stock', 'snapshots', 'alerts', 'staff'];
+
 const VAULT_REACT_REWRITES = [
   ...subRouteRewrites('/vault/recruiting/board', '/vault/recruiting/board/index.html'),
   ...subRouteRewrites('/vault/recruiting', '/vault/recruiting/index.html'),
+  ...FUTURECAST_SUB_ROUTES.flatMap((sub) =>
+    subRouteRewrites(`/vault/futurecast/${sub}`, `/vault/futurecast/${sub}/index.html`)
+  ),
   ...subRouteRewrites('/vault/futurecast', '/vault/futurecast/index.html'),
   { from: '/vault/futurecast/player/*', to: '/vault/futurecast/player/index.html', status: 200 },
   { from: '/vault/recruiting/player/*', to: '/vault/recruiting/player/index.html', status: 200 },

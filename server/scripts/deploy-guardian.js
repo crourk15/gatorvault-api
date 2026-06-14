@@ -96,6 +96,9 @@ function checkStaticRoutes() {
     if (!text.includes('/vault/portal/player')) errors.push('[routing] _redirects missing /vault/portal/player');
     if (!text.includes('/vault/scouting')) errors.push('[routing] _redirects missing /vault/scouting');
     if (!text.includes('/vault/players/')) errors.push('[routing] _redirects missing /vault/players');
+    if (!text.includes('/vault/live')) errors.push('[routing] _redirects missing /vault/live');
+    if (!text.includes('/vault/team')) errors.push('[routing] _redirects missing /vault/team');
+    if (!text.includes('/vault/schedule')) errors.push('[routing] _redirects missing /vault/schedule');
     if (!text.includes('/join')) errors.push('[routing] _redirects missing /join');
     for (const forbidden of FORBIDDEN_VAULT_MONOLITH) {
       if (text.includes(forbidden)) {
@@ -107,6 +110,20 @@ function checkStaticRoutes() {
     }
   } else {
     errors.push('[routing] server/_redirects missing');
+  }
+
+  const netlifyTomlPath = path.join(SERVER_ROOT, '..', 'netlify.toml');
+  if (fs.existsSync(netlifyTomlPath)) {
+    const toml = fs.readFileSync(netlifyTomlPath, 'utf8');
+    const redirectBlocks = toml.split('[[redirects]]').slice(1);
+    for (const block of redirectBlocks) {
+      if (block.includes('/.netlify/functions')) {
+        errors.push('[routing] netlify.toml references /.netlify/functions — static site must use server/_redirects');
+      }
+      if (block.includes('from = "/vault')) {
+        errors.push('[routing] netlify.toml duplicates /vault rewrites — remove them (use server/_redirects only)');
+      }
+    }
   }
 
   const manifestPath = path.join(SERVER_ROOT, 'build-manifest.json');
