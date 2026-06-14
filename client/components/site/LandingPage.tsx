@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { HomepageFutureCastWidget } from '@/components/site/HomepageFutureCastWidget';
+import { HomepageHighPriorityWidget } from '@/components/site/HomepageHighPriorityWidget';
 import { LANDING_FEATURES, PRICING_TIERS } from '@/lib/pricing-tiers';
 
 export function LandingPage(): React.ReactElement {
@@ -57,6 +58,7 @@ export function LandingPage(): React.ReactElement {
             </a>
           </div>
           <HomepageFutureCastWidget />
+          <HomepageHighPriorityWidget />
         </div>
       </section>
 

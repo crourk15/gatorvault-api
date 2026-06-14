@@ -68,6 +68,9 @@ async function main() {
     await fetchCheck('api-futurecast-staff-notes', `${API_URL}/api/futurecast/staff-notes?year=2027`, {
       expectIncludes: ['notes', 'classYear'],
     }),
+    await fetchCheck('api-futurecast-high-priority', `${API_URL}/api/futurecast/high-priority?year=2027`, {
+      expectIncludes: ['players', 'priorityScore', 'compositeScore'],
+    }),
     await fetchCheck('build-manifest', `${SITE_URL}/build-manifest.json`, {
       expectIncludes: ['buildId'],
     })

@@ -1836,3 +1836,237 @@
 .gv-join__back a:hover {
   color: #fff;
 }
+
+/* High Priority Targets — homepage widget + recruiting hub cards */
+.gv-hp-widget {
+  margin-top: 1rem;
+  background: rgba(10, 22, 40, 0.92);
+  border: 2px solid rgba(0, 48, 135, 0.45);
+  border-radius: 1rem;
+  padding: 1.15rem 1.25rem;
+}
+
+.gv-hp-widget__head h3 {
+  margin: 0 0 0.2rem;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.gv-hp-widget__head p {
+  margin: 0 0 0.85rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.gv-hp-widget__grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.gv-hp-widget__link {
+  display: inline-block;
+  margin-top: 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #fa4616;
+  text-decoration: none;
+}
+
+.gv-hp-widget__skeleton {
+  height: 5.5rem;
+  border-radius: 0.65rem;
+  background: linear-gradient(90deg, rgba(30, 41, 59, 0.6), rgba(51, 65, 85, 0.35), rgba(30, 41, 59, 0.6));
+  margin-bottom: 0.5rem;
+}
+
+.gv-hp-board-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .gv-hp-board-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .gv-hp-board-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.gv-hp-card {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(100, 116, 139, 0.35);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.gv-hp-card--headliner {
+  border-color: rgba(250, 70, 22, 0.55);
+}
+
+.gv-hp-card__link {
+  display: block;
+  padding: 1rem 1.05rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.gv-hp-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.gv-hp-card__rank {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #fa4616;
+  margin-bottom: 0.15rem;
+}
+
+.gv-hp-card__name {
+  margin: 0;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.gv-hp-card__meta {
+  margin: 0.2rem 0 0;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.gv-hp-card__ratings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.65rem;
+  margin-bottom: 0.55rem;
+}
+
+.gv-hp-card__composite {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+
+.gv-hp-card__composite-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.gv-hp-card__ranks {
+  font-size: 0.75rem;
+  color: #cbd5e1;
+}
+
+.gv-hp-card__visits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.55rem;
+}
+
+.gv-hp-card__visit {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  color: #e2e8f0;
+}
+
+.gv-hp-card__visit--ov {
+  border-color: rgba(250, 70, 22, 0.65);
+  color: #fdba74;
+}
+
+.gv-hp-card__visit--uv {
+  border-color: rgba(59, 130, 246, 0.55);
+  color: #93c5fd;
+}
+
+.gv-hp-card__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.45rem;
+  margin-bottom: 0.55rem;
+}
+
+.gv-hp-card--compact .gv-hp-card__metrics {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.gv-hp-card__metric {
+  font-size: 0.6875rem;
+  color: #94a3b8;
+}
+
+.gv-hp-card__metric strong {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.875rem;
+  color: #fff;
+}
+
+.gv-hp-card__fit-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6875rem;
+  color: #94a3b8;
+  margin-bottom: 0.25rem;
+}
+
+.gv-hp-card__fit-track {
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgba(51, 65, 85, 0.8);
+  overflow: hidden;
+}
+
+.gv-hp-card__fit-fill {
+  height: 100%;
+  border-radius: inherit;
+}
+
+.gv-hp-card__fit-fill--high {
+  background: #22c55e;
+}
+
+.gv-hp-card__fit-fill--mid {
+  background: #eab308;
+}
+
+.gv-hp-card__fit-fill--low {
+  background: #ef4444;
+}
+
+.gv-hp-card__note {
+  margin: 0.65rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: #cbd5e1;
+}
+
+.gv-hp-card__predictors {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.6875rem;
+  color: #64748b;
+}
+
+.gv-hp-card__predictors li {
+  margin-top: 0.15rem;
+}

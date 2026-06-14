@@ -12,12 +12,14 @@ import { handleGetFutureCastPredictions } from './predictions-route';
 import { handleGetFutureCastCommits, handleGetFutureCastTargets } from './commits-targets';
 import { handleGetFutureCastBigBoard } from './big-board-route';
 import { handleGetFutureCastStaffNotes } from './staff-notes';
+import { handleGetFutureCastHighPriority } from './high-priority';
 
 export function mountFutureCastFeatureRoutes(app: Express): void {
   app.get('/api/futurecast/home', handleGetFutureCastHome);
   app.get('/api/futurecast/class', handleGetFutureCastClass);
   app.get('/api/futurecast/predictions', handleGetFutureCastPredictions);
   app.get('/api/futurecast/staff-notes', handleGetFutureCastStaffNotes);
+  app.get('/api/futurecast/high-priority', handleGetFutureCastHighPriority);
   app.get('/api/futurecast/commits', handleGetFutureCastCommits);
   app.get('/api/futurecast/targets', handleGetFutureCastTargets);
   app.get('/api/futurecast/big-board', handleGetFutureCastBigBoard);

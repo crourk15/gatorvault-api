@@ -4,6 +4,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { fetchRecruitingBoard, type RecruitingBoardPlayer, type RecruitingBoardResponse } from '@/lib/recruiting-board-api';
 import { fetchRecruitingHeatCheck, type HeatCheckItem } from '@/lib/recruiting-api';
 import { fetchStaffDashboard, type StaffDashboardPlayer } from '@/lib/staff-api';
+import { fetchHighPriorityTargets, type HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import { HighPriorityTargetCard } from '@/components/futurecast/HighPriorityTargetCard';
 import { ScoutingDepartmentPage } from '@/components/site/ScoutingDepartmentPage';
 import {
   ClassicRecruitCard,
@@ -217,6 +219,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     fallers: StaffDashboardPlayer[];
     volatile: StaffDashboardPlayer[];
   }>({ risers: [], fallers: [], volatile: [] });
+  const [highPriority, setHighPriority] = useState<HighPriorityPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -262,12 +265,18 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     else setRefreshing(true);
     if (isInitial) setError(null);
     try {
-      const [d26, d27, d28, heat, staff] = await Promise.all([
+      const [d26, d27, d28, heat, staff, priority] = await Promise.all([
         fetchRecruitingBoard(2026),
         fetchRecruitingBoard(2027),
         fetchRecruitingBoard(2028),
         fetchRecruitingHeatCheck(isInitial),
         fetchStaffDashboard().catch(() => null),
+        fetchHighPriorityTargets().catch(() => ({
+          classYear: 2027,
+          count: 0,
+          updatedAt: '',
+          players: [] as HighPriorityPlayer[],
+        })),
       ]);
       setB26({
         commits: rankCommits(filterRecruitingHsOnly(d26.commits ?? [])),
@@ -291,6 +300,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
           volatile: staff.highVolatility ?? [],
         });
       }
+      setHighPriority(priority.players ?? []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load recruiting hub.');
     } finally {
@@ -320,12 +330,6 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     window.addEventListener('pagehide', onLeave);
     return () => window.removeEventListener('pagehide', onLeave);
   }, [persistHubState]);
-
-  const highPriority = useMemo(() => {
-    const headliners = b27.targets.filter((p) => p.headliner);
-    const rest = b27.targets.filter((p) => !p.headliner);
-    return rankTargets([...headliners, ...rest]).slice(0, 10);
-  }, [b27.targets]);
 
   const rankings = useMemo(() => {
     const pool = rankYear === 2027 ? b27.targets : b28.targets;
@@ -409,7 +413,12 @@ export function VaultRecruitingHubPage(): React.ReactElement {
             Insider intel, visit schedule, staff confidence, and prediction schools — the advantage
             board.
           </p>
-          {renderGrid(highPriority, 'priority', 'No priority targets loaded.')}
+          <div className="gv-hp-board-grid">
+            {highPriority.map((p, i) => (
+              <HighPriorityTargetCard key={p.slug} player={p} rank={i + 1} />
+            ))}
+          </div>
+          {highPriority.length === 0 && <UiEmpty message="No priority targets loaded." />}
         </section>
       )}
 
