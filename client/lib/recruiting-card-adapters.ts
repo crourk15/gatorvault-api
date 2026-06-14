@@ -91,11 +91,12 @@ export function fromFeedPrediction(
     natlRank: p.nationalRank ?? p.natlRank ?? 0,
     posRank: p.positionRank ?? p.posRank ?? 0,
     stateRank: p.stateRank ?? 0,
-    stars: p.stars,
-    fitScore: p.ufFitScore ?? undefined,
+    stars: p.stars ?? 0,
+    fitScore: p.ufFitScore ?? 0,
     ufProbability:
-      p.ufProbability != null
-        ? p.ufProbability / 100
+    p.ufProbability != null
+      ? p.ufProbability / 100
+      : 0,  
         : isCommit && p.confidence
           ? p.confidence / 100
           : p.confidence
