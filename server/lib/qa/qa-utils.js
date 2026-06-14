@@ -190,14 +190,19 @@ function moduleResult(module, checks) {
 async function fetchSiteBundleText(siteUrl, pagePath) {
   const base = siteUrl.replace(/\/$/, '');
   const { text: html } = await fetchText(`${base}${pagePath}`);
-  const scripts = [];
-  const re = /<script[^>]+src=["']([^"']+)["']/gi;
+  const assets = [];
+  const scriptRe = /<script[^>]+src=["']([^"']+)["']/gi;
+  const cssRe = /<link[^>]+rel=["']stylesheet["'][^>]+href=["']([^"']+)["']|<link[^>]+href=["']([^"']+\.css[^"']*)["'][^>]+rel=["']stylesheet["']/gi;
   let m;
-  while ((m = re.exec(html))) {
-    if (m[1] && !m[1].includes('google') && !m[1].includes('cdn.jsdelivr')) scripts.push(m[1]);
+  while ((m = scriptRe.exec(html))) {
+    if (m[1] && !m[1].includes('google') && !m[1].includes('cdn.jsdelivr')) assets.push(m[1]);
+  }
+  while ((m = cssRe.exec(html))) {
+    const href = m[1] || m[2];
+    if (href && !href.includes('fonts.googleapis')) assets.push(href);
   }
   let bundled = html;
-  for (const src of scripts.slice(0, 8)) {
+  for (const src of assets.slice(0, 12)) {
     const url = src.startsWith('http') ? src : `${base}${src.startsWith('/') ? '' : '/'}${src}`;
     try {
       const { text } = await fetchText(url);

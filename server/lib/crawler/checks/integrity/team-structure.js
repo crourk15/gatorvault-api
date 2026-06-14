@@ -59,8 +59,10 @@ async function runTeamStructureChecks() {
   checks.push(
     await check('pages:react-team', 'pages', 'React Team / depth chart', async () => {
       const text = await fetchSiteBundleText(config.SITE_URL, '/vault/team');
-      if (isRetiredPattern(text)) {
-        const err = new Error('Team page contains retired monolith hooks');
+      const monolithHooks = ['vpane-start', 'gvOpenTeamDetail', 'openHighlightPlayer', 'film-room-hub-landing'];
+      const monolithHit = monolithHooks.find((pat) => text.includes(pat));
+      if (monolithHit) {
+        const err = new Error(`Team page contains retired monolith hooks (${monolithHit})`);
         err.repro = 'Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail';
         throw err;
       }
