@@ -1018,6 +1018,255 @@
   text-align: center;
 }
 
+/* Homepage FutureCast live widget */
+.gv-landing-fc-widget {
+  background: rgba(10, 22, 40, 0.92);
+  border: 2px solid rgba(250, 70, 22, 0.38);
+  border-radius: 1rem;
+  padding: 1.25rem 1.35rem;
+}
+
+.gv-landing-fc-widget__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.gv-landing-fc-widget__head h3 {
+  margin: 0 0 0.25rem;
+  font-family: Oswald, sans-serif;
+  font-size: 1.125rem;
+  color: #fff;
+}
+
+.gv-landing-fc-widget__live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #22c55e;
+}
+
+.gv-landing-fc-widget__refresh {
+  font-size: 0.6875rem;
+  color: #64748b;
+}
+
+.gv-landing-fc-widget__impact-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 520px) {
+  .gv-landing-fc-widget__impact-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.gv-landing-fc-widget__impact {
+  padding: 0.55rem 0.65rem;
+  background: rgba(0, 48, 135, 0.22);
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  border-radius: 0.5rem;
+}
+
+.gv-landing-fc-widget__impact p {
+  margin: 0 0 0.15rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.gv-landing-fc-widget__impact strong {
+  display: block;
+  font-family: Oswald, sans-serif;
+  font-size: 1.25rem;
+  color: #fa4616;
+  line-height: 1.1;
+}
+
+.gv-landing-fc-widget__impact span {
+  font-size: 0.625rem;
+  color: #94a3b8;
+}
+
+.gv-landing-fc-widget__heat {
+  margin-bottom: 1rem;
+}
+
+.gv-landing-fc-widget__panels .gv-landing-fc-widget__panel-name {
+  margin: 0 0 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.gv-landing-fc-widget__panel-row,
+.gv-landing-fc-widget__panel-sub {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.gv-landing-fc-widget__featured,
+.gv-landing-fc-widget__predictions,
+.gv-landing-fc-widget__predictors {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(0, 48, 135, 0.35);
+}
+
+.gv-landing-fc-widget__featured h4,
+.gv-landing-fc-widget__predictions h4,
+.gv-landing-fc-widget__predictors h4 {
+  margin: 0 0 0.65rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.gv-landing-fc-widget__pick-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.gv-landing-fc-widget__pick {
+  padding: 0.5rem 0.65rem;
+  background: rgba(0, 20, 50, 0.45);
+  border-radius: 0.5rem;
+}
+
+.gv-landing-fc-widget__pick-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.gv-landing-fc-widget__pick-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.gv-landing-fc-widget__pick-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6875rem;
+  color: #64748b;
+  margin-bottom: 0.35rem;
+}
+
+.gv-landing-fc-widget__sparkline {
+  display: block;
+  margin-top: 0.35rem;
+  color: #22c55e;
+}
+
+.gv-landing-fc-widget__predictors ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.gv-landing-fc-widget__predictors li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.gv-landing-fc-widget__predictors li span:first-child {
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.gv-landing-fc-widget__foot {
+  display: block;
+  text-decoration: none;
+}
+
+.gv-landing-fc-widget--error {
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #fca5a5;
+}
+
+.gv-landing-fc-widget__error-detail {
+  font-size: 0.8125rem;
+  color: #94a3b8;
+  margin: 0.35rem 0 0.75rem;
+}
+
+.gv-landing-fc-widget__retry,
+.gv-landing-fc-widget__cta-link {
+  display: inline-block;
+  margin-right: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #fa4616;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.gv-landing-fc-widget--loading .gv-landing-fc-widget__skeleton {
+  background: linear-gradient(90deg, rgba(30, 58, 95, 0.5) 25%, rgba(51, 85, 136, 0.55) 50%, rgba(30, 58, 95, 0.5) 75%);
+  background-size: 200% 100%;
+  animation: gv-fc-skeleton 1.2s ease-in-out infinite;
+  border-radius: 0.375rem;
+}
+
+@keyframes gv-fc-skeleton {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.gv-landing-fc-widget__skeleton--title {
+  height: 1.25rem;
+  width: 8rem;
+  margin-bottom: 0.35rem;
+}
+
+.gv-landing-fc-widget__skeleton--badge {
+  height: 0.75rem;
+  width: 5rem;
+}
+
+.gv-landing-fc-widget__skeleton--stat {
+  height: 3.25rem;
+}
+
+.gv-landing-fc-widget__skeleton--heat {
+  height: 3rem;
+}
+
+.gv-landing-fc-widget__skeleton--panel {
+  height: 4.5rem;
+}
+
 .gv-landing-features {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));

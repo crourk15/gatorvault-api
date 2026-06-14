@@ -7,11 +7,15 @@ import { handleGetMovementSnapshots } from './snapshots';
 import { handleGetMovementHeatmap } from './heatmap';
 
 import { handleGetFutureCastHome } from './home';
+import { handleGetFutureCastClass } from './class';
+import { handleGetFutureCastPredictions } from './predictions-route';
 import { handleGetFutureCastCommits, handleGetFutureCastTargets } from './commits-targets';
 import { handleGetFutureCastBigBoard } from './big-board-route';
 
 export function mountFutureCastFeatureRoutes(app: Express): void {
   app.get('/api/futurecast/home', handleGetFutureCastHome);
+  app.get('/api/futurecast/class', handleGetFutureCastClass);
+  app.get('/api/futurecast/predictions', handleGetFutureCastPredictions);
   app.get('/api/futurecast/commits', handleGetFutureCastCommits);
   app.get('/api/futurecast/targets', handleGetFutureCastTargets);
   app.get('/api/futurecast/big-board', handleGetFutureCastBigBoard);

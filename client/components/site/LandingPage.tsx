@@ -1,70 +1,8 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { fetchFutureCastHome, type FutureCastHomeResponse } from '@/lib/futurecast-home-api';
+import React, { useState } from 'react';
+import { HomepageFutureCastWidget } from '@/components/site/HomepageFutureCastWidget';
 import { LANDING_FEATURES, PRICING_TIERS } from '@/lib/pricing-tiers';
-
-function FutureCastPreview(): React.ReactElement {
-  const [data, setData] = useState<FutureCastHomeResponse | null>(null);
-
-  const load = useCallback(async () => {
-    try {
-      setData(await fetchFutureCastHome('fit'));
-    } catch {
-      setData(null);
-    }
-  }, []);
-
-  useEffect(() => {
-    void load();
-  }, [load]);
-
-  const buckets = data?.heatmap?.buckets ?? [];
-  const up = buckets.find((b) => /up/i.test(b.label))?.count ?? '—';
-  const down = buckets.find((b) => /down/i.test(b.label))?.count ?? '—';
-  const flat = buckets.find((b) => /flat/i.test(b.label))?.count ?? '—';
-  const topTarget = data?.topTargets?.[0];
-  const latestCommit = data?.commits?.[0];
-  const portalPick = data?.portalWatchlist?.[0];
-
-  return (
-    <a href="/futurecast" className="gv-landing-fc-preview">
-      <div className="gv-landing-fc-preview__head">
-        <h3>Live Preview</h3>
-        <span>Movement · Targets · Portal</span>
-      </div>
-      <div className="gv-landing-fc-preview__heat">
-        <div>
-          <p>Up</p>
-          <strong>{up}</strong>
-        </div>
-        <div>
-          <p>Down</p>
-          <strong>{down}</strong>
-        </div>
-        <div>
-          <p>Flat</p>
-          <strong>{flat}</strong>
-        </div>
-      </div>
-      <div className="gv-landing-fc-preview__panels">
-        <div>
-          <h4>Top Target</h4>
-          <p>{topTarget?.fullName ?? 'Loading…'}</p>
-        </div>
-        <div>
-          <h4>Latest Commit</h4>
-          <p>{latestCommit?.fullName ?? '—'}</p>
-        </div>
-        <div>
-          <h4>Portal Watch</h4>
-          <p>{portalPick?.fullName ?? '—'}</p>
-        </div>
-      </div>
-      <p className="gv-landing-fc-preview__foot">Tap to open FutureCast →</p>
-    </a>
-  );
-}
 
 export function LandingPage(): React.ReactElement {
   const [annual, setAnnual] = useState(false);
@@ -118,7 +56,7 @@ export function LandingPage(): React.ReactElement {
               Open FutureCast →
             </a>
           </div>
-          <FutureCastPreview />
+          <HomepageFutureCastWidget />
         </div>
       </section>
 
