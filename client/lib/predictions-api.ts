@@ -2,11 +2,12 @@
  * FutureCast Predictions API client.
  */
 import { getApiBase } from './big-board-api';
+import type { RankingFields } from '@/types/futurecast';
 
 export type PredictionSourceType = 'MODEL' | 'STAFF' | 'FAN' | 'BLENDED';
 export type PredictionStatus = 'ACTIVE' | 'HIT' | 'MISS' | 'WITHDRAWN';
 
-export interface FeedPrediction {
+export interface FeedPrediction extends RankingFields {
   id: string;
   playerId: string;
   playerSlug: string;

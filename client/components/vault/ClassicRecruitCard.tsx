@@ -68,9 +68,14 @@ export function ClassicRecruitCard({
 }): React.ReactElement {
   const lifecycle = recruitingProfileLifecycle(player);
   const href = playerProfilePath(player.slug, lifecycle, true, player.name, 'recruiting');
-  const ratingStr = formatCompositeRating(
-    player.displayRating ?? player.rating ?? (playerRating(player as RecruitingBoardPlayer) || 0) / 100
-  );
+  const rawRating =
+    player.displayRating ??
+    player.rating ??
+    (playerRating(player as RecruitingBoardPlayer) || null);
+  const ratingStr =
+    rawRating != null && Number(rawRating) > 0
+      ? formatCompositeRating(rawRating)
+      : null;
   const pos = playerPos(player as RecruitingBoardPlayer);
   const visit = visitBadge(player);
   const skinny = player.skinny || player.profileNote || player.notePreview || player.notes;

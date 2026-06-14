@@ -24,7 +24,12 @@ export function fromBigBoard(p: BigBoardPlayer): RecruitingBoardPlayer {
     tier: 'HIGH',
     position: p.position,
     classYear: p.classYear,
-    natlRank: p.rank,
+    rating: p.compositeScore || p.rating,
+    displayRating: p.compositeScore || p.rating,
+    natlRank: p.nationalRank ?? p.natlRank ?? p.rank,
+    posRank: p.positionRank ?? p.posRank,
+    stateRank: p.stateRank,
+    stars: p.stars,
     fitScore: p.ufFitScore,
     ufProbability: p.ufFitScore > 0 ? Math.min(1, p.ufFitScore / 100) : null,
     skinny:
@@ -79,6 +84,12 @@ export function fromFeedPrediction(
     position: p.position,
     classYear: typeof p.classYear === 'number' ? p.classYear : undefined,
     school: p.school ?? undefined,
+    rating: p.compositeScore || p.rating,
+    displayRating: p.compositeScore || p.rating,
+    natlRank: p.nationalRank ?? p.natlRank,
+    posRank: p.positionRank ?? p.posRank,
+    stateRank: p.stateRank,
+    stars: p.stars,
     fitScore: p.ufFitScore ?? undefined,
     ufProbability:
       p.ufProbability != null

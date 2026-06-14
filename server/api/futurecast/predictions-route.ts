@@ -24,6 +24,7 @@ import {
 } from './feed-filters';
 import { dedupeByPlayerId } from './eligibility';
 import { sendCachedJson } from './response-cache';
+import { enrichFeedPlayers } from './ranking-enrichment';
 
 export const handleGetFutureCastPredictions = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -81,7 +82,7 @@ export const handleGetFutureCastPredictions = asyncHandler(async (req: Request, 
 
     return {
       classYear,
-      predictions: withHistory,
+      predictions: enrichFeedPlayers(withHistory),
       predictors,
       windowDays: VOLATILITY_WINDOW_DAYS,
     };

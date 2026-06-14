@@ -9,6 +9,7 @@ import type { Request, Response } from 'express';
 import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
 import { FUTURECAST_CLASS_YEAR } from './eligibility';
 import { sendCachedJson } from './response-cache';
+import { enrichFeedPlayers } from './ranking-enrichment';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -183,7 +184,7 @@ export const handleGetFutureCastStaffNotes = asyncHandler(async (req: Request, r
         updatedAt,
         count: notes.length,
         staleFiltered,
-        notes,
+        notes: enrichFeedPlayers(notes),
       };
     });
   } catch (err) {

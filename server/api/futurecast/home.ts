@@ -27,6 +27,7 @@ import { isHsLifecycle, isTrendingEligibleRow } from './eligibility';
 import { applyMomentumBoosts, loadSignalMomentumBoosts } from './momentum';
 import { listRecruitingStoreCommits, mergeLiveCommits } from './live-commits';
 import { sendCachedJson } from './response-cache';
+import { enrichFeedPlayers } from './ranking-enrichment';
 
 const MOVEMENT_WINDOW_DAYS = 7;
 const SECTION_LIMIT = 12;
@@ -200,11 +201,11 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
         buckets: buildHeatmapBuckets(enrichedMovement),
         windowDays: MOVEMENT_WINDOW_DAYS,
       },
-      commits: sortedCommits.slice(0, COMMITS_LIMIT),
+      commits: enrichFeedPlayers(sortedCommits.slice(0, COMMITS_LIMIT)),
       commitTotal: sortedCommits.length,
-      topTargets: sortTargets(topTargets).slice(0, SECTION_LIMIT),
-      trendingUp: hsTrendingUp,
-      trendingDown: hsTrendingDown,
+      topTargets: enrichFeedPlayers(sortTargets(topTargets).slice(0, SECTION_LIMIT)),
+      trendingUp: enrichFeedPlayers(hsTrendingUp),
+      trendingDown: enrichFeedPlayers(hsTrendingDown),
       portalWatchlist,
     };
     });

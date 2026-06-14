@@ -2,6 +2,7 @@
  * FutureCast Big Board API client.
  * @see server/api/big-board/index.ts
  */
+import type { RankingFields } from '@/types/futurecast';
 
 export type BigBoardSort =
   | 'rank'
@@ -13,7 +14,7 @@ export type BigBoardSort =
 
 export type BigBoardLifecycle = 'HS' | 'COLLEGE' | 'PORTAL';
 
-export interface BigBoardPlayer {
+export interface BigBoardPlayer extends RankingFields {
   id: string;
   fullName: string;
   slug: string;

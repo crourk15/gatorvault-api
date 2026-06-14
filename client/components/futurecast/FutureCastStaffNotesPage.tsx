@@ -38,14 +38,20 @@ function NoteSkeletonGrid(): React.ReactElement {
 
 function BreakdownCard({ entry }: { entry: FutureCastStaffNote }): React.ReactElement {
   const href = playerProfilePath(entry.playerSlug, 'HIGH_SCHOOL', true, entry.playerName, 'futurecast');
-  const meta = [entry.position, entry.school, entry.classYear ? `Class of ${entry.classYear}` : null]
-    .filter(Boolean)
-    .join(' · ');
+  const metaParts = [
+    entry.position,
+    entry.school,
+    entry.classYear ? `Class of ${entry.classYear}` : null,
+    entry.nationalRank != null ? `#${entry.nationalRank} natl` : null,
+  ].filter(Boolean);
 
   return (
     <a href={href} className="fc-staff-note-card" data-testid="fc-staff-note-card">
       <h3 className="fc-staff-note-card__name">{entry.playerName}</h3>
-      {meta ? <p className="fc-staff-note-card__meta">{meta}</p> : null}
+      {entry.compositeScore > 0 ? (
+        <p className="fc-staff-note-card__projection">{entry.compositeScore.toFixed(2)} Composite</p>
+      ) : null}
+      {metaParts.length ? <p className="fc-staff-note-card__meta">{metaParts.join(' · ')}</p> : null}
       {entry.projection ? <p className="fc-staff-note-card__projection">{entry.projection}</p> : null}
       {entry.notePreview ? <p className="fc-staff-note-card__note">{entry.notePreview}</p> : null}
       {entry.comparison ? <p className="fc-staff-note-card__comp">Comp: {entry.comparison}</p> : null}

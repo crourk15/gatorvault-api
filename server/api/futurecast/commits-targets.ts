@@ -15,6 +15,7 @@ import {
   FUTURECAST_CLASS_YEAR,
   partitionHomepagePredictions,
 } from './feed-filters';
+import { enrichFeedPlayers } from './ranking-enrichment';
 
 const DEFAULT_LIMIT = 50;
 
@@ -54,7 +55,7 @@ export const handleGetFutureCastCommits = asyncHandler(async (req: Request, res:
       count: slice.length,
       empty: slice.length === 0,
       message: slice.length === 0 ? 'No players found for this category yet.' : undefined,
-      commits: slice,
+      commits: enrichFeedPlayers(slice),
     });
   } catch (err) {
     handlePredictionsApiError(res, err);
@@ -77,7 +78,7 @@ export const handleGetFutureCastTargets = asyncHandler(async (req: Request, res:
       count: slice.length,
       empty: slice.length === 0,
       message: slice.length === 0 ? 'No players found for this category yet.' : undefined,
-      targets: slice,
+      targets: enrichFeedPlayers(slice),
     });
   } catch (err) {
     handlePredictionsApiError(res, err);

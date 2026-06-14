@@ -13,6 +13,7 @@ import {
   parsePosition,
   parseSort,
 } from '../big-board/utils-api';
+import { enrichFeedPlayers } from './ranking-enrichment';
 
 export const handleGetFutureCastBigBoard = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -32,7 +33,7 @@ export const handleGetFutureCastBigBoard = asyncHandler(async (req: Request, res
     res.json({
       lifecycle: 'HIGH_SCHOOL',
       classYear: class_year ?? null,
-      players,
+      players: enrichFeedPlayers(players),
     });
   } catch (err) {
     handleApiError(res, err);

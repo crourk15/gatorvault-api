@@ -9,6 +9,7 @@ import {
   serializeStockRowsWithVolatility,
 } from '../predictions/utils-api';
 import { filterFutureCastStockRows, FUTURECAST_CLASS_YEAR } from './feed-filters';
+import { enrichFeedPlayers } from './ranking-enrichment';
 
 const DEFAULT_WINDOW_DAYS = 7;
 const MAX_PER_SIDE = 25;
@@ -40,7 +41,11 @@ export const handleGetStockBoard = asyncHandler(async (req: Request, res: Respon
       serializeStockRowsWithVolatility(downRows),
     ]);
 
-    res.json({ stockUp, stockDown, windowDays: resolvedWindow });
+    res.json({
+      stockUp: enrichFeedPlayers(stockUp),
+      stockDown: enrichFeedPlayers(stockDown),
+      windowDays: resolvedWindow,
+    });
   } catch (err) {
     handlePredictionsApiError(res, err);
   }

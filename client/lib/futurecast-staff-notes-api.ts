@@ -18,6 +18,14 @@ export interface FutureCastStaffNote {
   classYear: number | null;
   year: number | null;
   playerType: string;
+  compositeScore: number;
+  nationalRank: number | null;
+  positionRank: number | null;
+  stateRank: number | null;
+  rating?: number | null;
+  natlRank?: number | null;
+  posRank?: number | null;
+  stars?: number | null;
   projection: string | null;
   staffNotes: string | null;
   insiderNotes: string | null;
