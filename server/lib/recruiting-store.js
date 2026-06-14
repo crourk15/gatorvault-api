@@ -64,6 +64,8 @@ const BLOCKED_PLAYER_SLUGS = new Set([
   'kennedee-jackson',
   'tj-shanahan-jr',
   't-j-shanahan',
+  'devon-hall',
+  'derrick-malone',
 ]);
 
 function isBlockedPlayer(p) {

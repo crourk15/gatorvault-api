@@ -1367,27 +1367,6 @@
       ]
     },
     {
-      "id": "gm2_1781192941692_i0pag",
-      "at": "2026-06-11T15:49:01.692Z",
-      "layer": "auto-repair",
-      "action": "allow",
-      "playerSlug": "devon-hall",
-      "reason": "identity_healed",
-      "source": "boot"
-    },
-    {
-      "id": "gm2_1781192941689_ppu1o",
-      "at": "2026-06-11T15:49:01.689Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "auto-repair-heal",
-      "playerSlug": "devon-hall",
-      "reason": "repair_mode_write",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
       "id": "gm2_1781192941435_3bcj7",
       "at": "2026-06-11T15:49:01.435Z",
       "layer": "sil",
@@ -1407,27 +1386,6 @@
       "playerSlug": "justin-williams",
       "reason": "invalid_player_on_write",
       "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1781192941260_u1fq0",
-      "at": "2026-06-11T15:49:01.260Z",
-      "layer": "auto-repair",
-      "action": "allow",
-      "playerSlug": "derrick-malone",
-      "reason": "identity_healed",
-      "source": "boot"
-    },
-    {
-      "id": "gm2_1781192941257_shavy",
-      "at": "2026-06-11T15:49:01.257Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "auto-repair-heal",
-      "playerSlug": "derrick-malone",
-      "reason": "repair_mode_write",
-      "errors": [
-        "invalid_school"
-      ]
     },
     {
       "id": "gm2_1781192941102_7798u",
@@ -1529,48 +1487,6 @@
       "action": "allow",
       "subsystem": "gm2-sanitize",
       "playerSlug": "amare-patterson",
-      "reason": "repair_mode_write",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
-      "id": "gm2_1781192940200_lufoh",
-      "at": "2026-06-11T15:49:00.200Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "devon-hall",
-      "reason": "invalid_school",
-      "source": "boot"
-    },
-    {
-      "id": "gm2_1781192940197_ill76",
-      "at": "2026-06-11T15:49:00.197Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "gm2-sanitize",
-      "playerSlug": "devon-hall",
-      "reason": "repair_mode_write",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
-      "id": "gm2_1781192940193_ns695",
-      "at": "2026-06-11T15:49:00.193Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "derrick-malone",
-      "reason": "invalid_school",
-      "source": "boot"
-    },
-    {
-      "id": "gm2_1781192940190_4z0jn",
-      "at": "2026-06-11T15:49:00.190Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "gm2-sanitize",
-      "playerSlug": "derrick-malone",
       "reason": "repair_mode_write",
       "errors": [
         "invalid_school"

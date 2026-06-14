@@ -61,9 +61,7 @@ const class2027 = [
 ];
 
 const targets2027 = [
-  { name: "Tra'Von Hall", pos: 'WR', note: 'on3 reports: Oklahoma commit visited Gainesville May 30-31 and remains a top flip candidate.' },
-  { name: 'Derrick Malone', pos: 'EDGE', note: 'on3 recruiting sources say Florida is trending, decision is close, and the in-home visit gave UF momentum.' },
-  { name: 'Devon Hall', pos: 'S', note: 'on3 intel: Ocala native with a visit scheduled, strong UF ties, and Florida viewed as a leading option.' }
+  { name: "Tra'Von Hall", pos: 'WR', note: 'on3 reports: Oklahoma commit visited Gainesville May 30-31 and remains a top flip candidate.' }
 ];
 
 const portalIncoming = [

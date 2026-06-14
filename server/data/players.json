@@ -1612,52 +1612,6 @@
   },
   {
     "id": null,
-    "full_name": "Tra'Von Hall",
-    "slug": "travon-hall",
-    "class_year": 2027,
-    "position": "WR",
-    "status": "HS",
-    "height": null,
-    "weight": null,
-    "hometown": null,
-    "state": null,
-    "high_school": "Oklahoma commit",
-    "stars": 4,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
-    "committed_to": "Florida",
-    "high_school_profile": {
-      "offers": [
-        {
-          "school": "Florida",
-          "date": null
-        }
-      ],
-      "stats": {
-        "stars": 4,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
-        "on3_id": null
-      },
-      "recruiting_notes": "Oklahoma commit visited Gainesville May 30-31. Top flip candidate.",
-      "discovery_score": null
-    },
-    "signals": [
-      {
-        "signal_type": "OFFER",
-        "signal_value": {
-          "school": "Florida"
-        },
-        "created_at": "2026-06-11T15:49:00.163Z"
-      }
-    ]
-  },
-  {
-    "id": null,
     "full_name": "Tramond Collins",
     "slug": "tramond-collins",
     "class_year": 2027,
@@ -1929,98 +1883,6 @@
           "school": "Florida"
         },
         "created_at": "2026-06-03T12:00:00.000Z"
-      }
-    ]
-  },
-  {
-    "id": null,
-    "full_name": "Derrick Malone",
-    "slug": "derrick-malone",
-    "class_year": 2027,
-    "position": "EDGE",
-    "status": "HS",
-    "height": null,
-    "weight": null,
-    "hometown": null,
-    "state": null,
-    "high_school": null,
-    "stars": 0,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
-    "committed_to": "Florida",
-    "high_school_profile": {
-      "offers": [
-        {
-          "school": "Florida",
-          "date": null
-        }
-      ],
-      "stats": {
-        "stars": 0,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
-        "on3_id": null
-      },
-      "recruiting_notes": "on3 recruiting sources say Florida is trending, decision is close, and the in-home visit gave UF momentum.",
-      "discovery_score": null
-    },
-    "signals": [
-      {
-        "signal_type": "OFFER",
-        "signal_value": {
-          "school": "Florida"
-        },
-        "created_at": "2026-06-11T15:49:01.258Z"
-      }
-    ]
-  },
-  {
-    "id": null,
-    "full_name": "Devon Hall",
-    "slug": "devon-hall",
-    "class_year": 2027,
-    "position": "S",
-    "status": "HS",
-    "height": null,
-    "weight": null,
-    "hometown": null,
-    "state": null,
-    "high_school": null,
-    "stars": 0,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
-    "committed_to": "Florida",
-    "high_school_profile": {
-      "offers": [
-        {
-          "school": "Florida",
-          "date": null
-        }
-      ],
-      "stats": {
-        "stars": 0,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
-        "on3_id": null
-      },
-      "recruiting_notes": "on3 intel: Ocala native with a visit scheduled, strong UF ties, and Florida viewed as a leading option.",
-      "discovery_score": null
-    },
-    "signals": [
-      {
-        "signal_type": "OFFER",
-        "signal_value": {
-          "school": "Florida"
-        },
-        "created_at": "2026-06-11T15:49:01.690Z"
       }
     ]
   },
@@ -3656,105 +3518,9 @@
         "signal_value": {
           "school": "Texas"
         },
-        "created_at": "2026-06-11T15:49:00.384Z"
+        "created_at": "2026-06-13T18:24:26.618Z"
       }
     ]
-  },
-  {
-    "id": null,
-    "full_name": "Amare Patterson",
-    "slug": "amare-patterson",
-    "class_year": 2027,
-    "position": "WR",
-    "status": "HS",
-    "height": null,
-    "weight": null,
-    "hometown": null,
-    "state": null,
-    "high_school": null,
-    "stars": 0,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
-    "committed_to": null,
-    "high_school_profile": {
-      "offers": [],
-      "stats": {
-        "stars": 0,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
-        "on3_id": "243198"
-      },
-      "recruiting_notes": "OV to Florida cancelled · now visiting South Carolina",
-      "discovery_score": null
-    }
-  },
-  {
-    "id": null,
-    "full_name": "Jaylen Brown",
-    "slug": "jaylen-brown",
-    "class_year": 2025,
-    "position": "WR",
-    "status": "HS",
-    "height": null,
-    "weight": null,
-    "hometown": null,
-    "state": null,
-    "high_school": "IMG Academy",
-    "stars": 5,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
-    "committed_to": null,
-    "high_school_profile": {
-      "offers": [],
-      "stats": {
-        "stars": 5,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
-        "on3_id": null
-      },
-      "recruiting_notes": null,
-      "discovery_score": null
-    }
-  },
-  {
-    "id": null,
-    "full_name": "Trey Morrison",
-    "slug": "trey-morrison",
-    "class_year": 2025,
-    "position": "WR",
-    "status": "HS",
-    "height": null,
-    "weight": null,
-    "hometown": null,
-    "state": null,
-    "high_school": "IMG Academy",
-    "stars": 5,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
-    "committed_to": null,
-    "high_school_profile": {
-      "offers": [],
-      "stats": {
-        "stars": 5,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
-        "on3_id": null
-      },
-      "recruiting_notes": null,
-      "discovery_score": null
-    }
   },
   {
     "id": null,
@@ -3763,28 +3529,28 @@
     "class_year": 2027,
     "position": "DL",
     "status": "HS",
-    "height": null,
-    "weight": null,
-    "hometown": "Lake Dallas HS",
+    "height": 77,
+    "weight": 280,
+    "hometown": "Lake Dallas",
     "state": "TX",
     "high_school": null,
     "stars": 5,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
+    "composite_rating": 0.981,
+    "ranking_national": 8,
+    "ranking_position": 2,
+    "ranking_state": 2,
     "committed_to": null,
     "high_school_profile": {
       "offers": [],
       "stats": {
         "stars": 5,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
+        "rating": 98.1,
+        "natl_rank": 8,
+        "pos_rank": 2,
+        "state_rank": 2,
         "on3_id": "jalen-brewster"
       },
-      "recruiting_notes": null,
+      "recruiting_notes": "5★ DL — national priority; UF among top schools monitoring.",
       "discovery_score": null
     }
   },
@@ -3795,28 +3561,28 @@
     "class_year": 2027,
     "position": "CB",
     "status": "HS",
-    "height": null,
-    "weight": null,
+    "height": 72,
+    "weight": 175,
     "hometown": "East St. Louis",
     "state": "IL",
     "high_school": null,
     "stars": 4,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
+    "composite_rating": 0.908,
+    "ranking_national": 200,
+    "ranking_position": 22,
+    "ranking_state": 5,
     "committed_to": null,
     "high_school_profile": {
       "offers": [],
       "stats": {
         "stars": 4,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
-        "on3_id": null
+        "rating": 90.8,
+        "natl_rank": 200,
+        "pos_rank": 22,
+        "state_rank": 5,
+        "on3_id": "raheem-floyd"
       },
-      "recruiting_notes": "CB · 4★ · East St. Louis, IL · official visit June 11–13",
+      "recruiting_notes": "4★ CB · official visit June 11–13",
       "discovery_score": null
     }
   },
@@ -3846,9 +3612,73 @@
         "natl_rank": null,
         "pos_rank": null,
         "state_rank": null,
-        "on3_id": null
+        "on3_id": "marquis-evans"
       },
       "recruiting_notes": "EDGE · 3★ · Spain Park, AL · official visit June 11–13",
+      "discovery_score": null
+    }
+  },
+  {
+    "id": null,
+    "full_name": "Kamauri Whitfield",
+    "slug": "kamauri-whitfield",
+    "class_year": 2027,
+    "position": "ATH",
+    "status": "HS",
+    "height": 73,
+    "weight": 195,
+    "hometown": "Douglas County",
+    "state": "GA",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.912,
+    "ranking_national": 175,
+    "ranking_position": 14,
+    "ranking_state": 16,
+    "committed_to": null,
+    "high_school_profile": {
+      "offers": [],
+      "stats": {
+        "stars": 4,
+        "rating": 91.2,
+        "natl_rank": 175,
+        "pos_rank": 14,
+        "state_rank": 16,
+        "on3_id": "kamauri-whitfield"
+      },
+      "recruiting_notes": "4★ athlete with UF offer; Rivals PM trending Florida at 60% confidence.",
+      "discovery_score": null
+    }
+  },
+  {
+    "id": null,
+    "full_name": "Tre Geathers",
+    "slug": "tre-geathers",
+    "class_year": 2027,
+    "position": "LB",
+    "status": "HS",
+    "height": 74,
+    "weight": 220,
+    "hometown": "Miami",
+    "state": "FL",
+    "high_school": null,
+    "stars": 4,
+    "composite_rating": 0.905,
+    "ranking_national": 210,
+    "ranking_position": 18,
+    "ranking_state": 22,
+    "committed_to": null,
+    "high_school_profile": {
+      "offers": [],
+      "stats": {
+        "stars": 4,
+        "rating": 90.5,
+        "natl_rank": 210,
+        "pos_rank": 18,
+        "state_rank": 22,
+        "on3_id": null
+      },
+      "recruiting_notes": "UF momentum building per Corey Bender RPM — major battle brewing.",
       "discovery_score": null
     }
   }
