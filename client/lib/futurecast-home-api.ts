@@ -7,8 +7,9 @@ import type { FeedPrediction, PredictorLeaderboardEntry } from './predictions-ap
 import type { MovementHeatmapBucket } from './predictions-api';
 
 export const FUTURECAST_WIDGET_YEAR = 2027;
-export const FUTURECAST_FETCH_TIMEOUT_MS = 2_500;
+export const FUTURECAST_FETCH_TIMEOUT_MS = 8_000;
 export const FUTURECAST_CLIENT_CACHE_TTL_MS = 5 * 60_000;
+export const FUTURECAST_STALE_CACHE_MAX_MS = 24 * 60 * 60_000;
 
 const CACHE_KEY = 'gv:futurecast:widget:v2';
 
@@ -197,7 +198,7 @@ export function sanitizeFutureCastPredictions(
   };
 }
 
-function readClientCache(): CachedBundle | null {
+function parseClientCache(maxAgeMs: number): CachedBundle | null {
   if (typeof window === 'undefined') return null;
   try {
     const raw = localStorage.getItem(CACHE_KEY);
@@ -208,13 +209,21 @@ function readClientCache(): CachedBundle | null {
       console.info(`FutureCast stale-cache-year: ${parsed.year}`);
       return null;
     }
-    if (Date.now() - parsed.savedAt > FUTURECAST_CLIENT_CACHE_TTL_MS) {
+    if (Date.now() - parsed.savedAt > maxAgeMs) {
       return null;
     }
     return parsed;
   } catch {
     return null;
   }
+}
+
+function readClientCache(): CachedBundle | null {
+  return parseClientCache(FUTURECAST_CLIENT_CACHE_TTL_MS);
+}
+
+function readStaleClientCache(): CachedBundle | null {
+  return parseClientCache(FUTURECAST_STALE_CACHE_MAX_MS);
 }
 
 function writeClientCache(bundle: FutureCastWidgetBundle): void {
@@ -369,8 +378,9 @@ export async function loadFutureCastWidgetBundle(options?: {
       console.info('FutureCast temporarily offline (502/503)');
     }
 
-    if (cached) {
-      const predictionsLoaded = cached.bundle.predictions.predictions.length;
+    const stale = readStaleClientCache();
+    if (stale) {
+      const predictionsLoaded = stale.bundle.predictions.predictions.length;
       logWidgetLoad({
         loadMs,
         fromCache: true,
@@ -378,7 +388,7 @@ export async function loadFutureCastWidgetBundle(options?: {
         staleFiltered: 0,
       });
       return {
-        bundle: cached.bundle,
+        bundle: stale.bundle,
         meta: {
           loadMs,
           apiMs,

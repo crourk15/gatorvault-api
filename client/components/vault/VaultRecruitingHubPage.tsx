@@ -264,50 +264,80 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     if (isInitial) setLoading(true);
     else setRefreshing(true);
     if (isInitial) setError(null);
+
+    const p26 = fetchRecruitingBoard(2026);
+    const p27 = fetchRecruitingBoard(2027);
+    const p28 = fetchRecruitingBoard(2028);
+    const pHeat = fetchRecruitingHeatCheck(!isInitial);
+    const pStaff = fetchStaffDashboard();
+    const pPriority = fetchHighPriorityTargets();
+
+    void p27
+      .then((d27) => {
+        setB27({
+          commits: rankCommits(filterRecruitingHsOnly(d27.commits ?? [])),
+          targets: rankTargets(filterRecruitingHsOnly(d27.targets ?? [])),
+          rankings: d27.rankings ?? null,
+        });
+        if (isInitial) {
+          setLoading(false);
+          loadedOnce.current = true;
+        }
+      })
+      .catch(() => {
+        if (isInitial) {
+          setLoading(false);
+          loadedOnce.current = true;
+        }
+      });
+
     try {
-      const [d26, d27, d28, heat, staff, priority] = await Promise.all([
-        fetchRecruitingBoard(2026),
-        fetchRecruitingBoard(2027),
-        fetchRecruitingBoard(2028),
-        fetchRecruitingHeatCheck(isInitial),
-        fetchStaffDashboard().catch(() => null),
-        fetchHighPriorityTargets().catch(() => ({
-          classYear: 2027,
-          count: 0,
-          updatedAt: '',
-          players: [] as HighPriorityPlayer[],
-        })),
-      ]);
-      setB26({
-        commits: rankCommits(filterRecruitingHsOnly(d26.commits ?? [])),
-        rankings: d26.rankings ?? null,
-      });
-      setB27({
-        commits: rankCommits(filterRecruitingHsOnly(d27.commits ?? [])),
-        targets: rankTargets(filterRecruitingHsOnly(d27.targets ?? [])),
-        rankings: d27.rankings ?? null,
-      });
-      setB28({
-        commits: rankCommits(filterRecruitingHsOnly(d28.commits ?? [])),
-        targets: rankTargets(filterRecruitingHsOnly(d28.targets ?? [])),
-      });
-      setRising(heat.rising ?? []);
-      setCooling(heat.cooling ?? []);
-      if (staff) {
-        setIntel({
-          risers: staff.topRisers ?? [],
-          fallers: staff.topFallers ?? [],
-          volatile: staff.highVolatility ?? [],
+      const results = await Promise.allSettled([p26, p27, p28, pHeat, pStaff, pPriority]);
+      const [r26, , r28, rHeat, rStaff, rPriority] = results;
+
+      if (r26.status === 'fulfilled') {
+        setB26({
+          commits: rankCommits(filterRecruitingHsOnly(r26.value.commits ?? [])),
+          rankings: r26.value.rankings ?? null,
         });
       }
-      setHighPriority(priority.players ?? []);
+      if (r28.status === 'fulfilled') {
+        setB28({
+          commits: rankCommits(filterRecruitingHsOnly(r28.value.commits ?? [])),
+          targets: rankTargets(filterRecruitingHsOnly(r28.value.targets ?? [])),
+        });
+      }
+      if (rHeat.status === 'fulfilled') {
+        setRising(rHeat.value.rising ?? []);
+        setCooling(rHeat.value.cooling ?? []);
+      }
+      if (rStaff.status === 'fulfilled') {
+        setIntel({
+          risers: rStaff.value.topRisers ?? [],
+          fallers: rStaff.value.topFallers ?? [],
+          volatile: rStaff.value.highVolatility ?? [],
+        });
+      }
+      if (rPriority.status === 'fulfilled') {
+        setHighPriority(rPriority.value.players ?? []);
+      }
+
+      const anySuccess = results.some((r) => r.status === 'fulfilled');
+      if (!anySuccess && isInitial) {
+        const firstErr = results.find((r) => r.status === 'rejected') as PromiseRejectedResult | undefined;
+        setError(
+          firstErr?.reason instanceof Error
+            ? firstErr.reason.message
+            : 'Could not load recruiting hub.'
+        );
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load recruiting hub.');
     } finally {
-      if (isInitial) {
+      if (isInitial && !loadedOnce.current) {
         setLoading(false);
         loadedOnce.current = true;
-      } else {
+      } else if (!isInitial) {
         setRefreshing(false);
       }
     }

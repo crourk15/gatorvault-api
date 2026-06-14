@@ -9,6 +9,9 @@ const { buildHeatCheck } = require('./heat-check-store');
 const highlightsStore = require('./highlights-store');
 const interviewsStore = require('./interviews-store');
 const { enrichBoard } = require('./recruiting-board-enrich');
+const { createMemoryCache } = require('./memory-cache');
+
+const boardCache = createMemoryCache(parseInt(process.env.RECRUITING_BOARD_CACHE_MS || '45000', 10));
 
 const { verifyAdminPin, primaryAdminPin, pinFromReq: adminPinFromReq } = require('./admin-pin');
 const RECRUITING_ADMIN_PIN = primaryAdminPin();
@@ -37,8 +40,22 @@ function mountRecruitingRoutes(app) {
         req.query.mode === 'staff' ||
         req.query.staff === '1' ||
         String(req.query.staffMode || '').toLowerCase() === 'true';
-      const board = await store.getBoard(classYear);
-      const enriched = enrichBoard(board, staffMode);
+      const force = req.query.force === '1' || req.query.live === '1';
+      const cacheKey = `board:${classYear}:${staffMode ? 'staff' : 'public'}`;
+
+      let enriched;
+      if (force) {
+        const board = await store.getBoard(classYear);
+        enriched = enrichBoard(board, staffMode);
+        boardCache.set(cacheKey, enriched);
+      } else {
+        const { value } = await boardCache.wrap(cacheKey, async () => {
+          const board = await store.getBoard(classYear);
+          return enrichBoard(board, staffMode);
+        });
+        enriched = value;
+      }
+
       if (!enriched.players.length) {
         return res.json({
           ok: true,

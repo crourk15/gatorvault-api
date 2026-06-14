@@ -6,6 +6,7 @@ import { apiFetch } from './api-fetch';
 export const HIGH_PRIORITY_YEAR = 2027;
 export const HIGH_PRIORITY_CACHE_KEY = 'gv:futurecast:high-priority:v1';
 export const HIGH_PRIORITY_CACHE_TTL_MS = 5 * 60_000;
+export const HIGH_PRIORITY_STALE_CACHE_MAX_MS = 24 * 60 * 60_000;
 
 export type VisitBadgeType = 'OV' | 'UV' | 'Game Day' | 'Junior Day' | 'Spring Visit';
 
@@ -59,7 +60,7 @@ export interface HighPriorityResponse {
   players: HighPriorityPlayer[];
 }
 
-export function readHighPriorityCache(): HighPriorityResponse | null {
+function readHighPriorityCacheEntry(maxAgeMs: number): HighPriorityResponse | null {
   if (typeof window === 'undefined') return null;
   try {
     const raw = localStorage.getItem(HIGH_PRIORITY_CACHE_KEY);
@@ -68,11 +69,19 @@ export function readHighPriorityCache(): HighPriorityResponse | null {
       savedAt: number;
       payload: HighPriorityResponse;
     };
-    if (Date.now() - savedAt > HIGH_PRIORITY_CACHE_TTL_MS) return null;
+    if (Date.now() - savedAt > maxAgeMs) return null;
     return payload;
   } catch {
     return null;
   }
+}
+
+export function readHighPriorityCache(): HighPriorityResponse | null {
+  return readHighPriorityCacheEntry(HIGH_PRIORITY_CACHE_TTL_MS);
+}
+
+export function readStaleHighPriorityCache(): HighPriorityResponse | null {
+  return readHighPriorityCacheEntry(HIGH_PRIORITY_STALE_CACHE_MAX_MS);
 }
 
 export function writeHighPriorityCache(payload: HighPriorityResponse): void {
@@ -90,5 +99,11 @@ export function writeHighPriorityCache(payload: HighPriorityResponse): void {
 export async function fetchHighPriorityTargets(
   year = HIGH_PRIORITY_YEAR
 ): Promise<HighPriorityResponse> {
-  return apiFetch<HighPriorityResponse>(`/api/futurecast/high-priority?year=${year}`);
+  try {
+    return await apiFetch<HighPriorityResponse>(`/api/futurecast/high-priority?year=${year}`);
+  } catch (err) {
+    const stale = readStaleHighPriorityCache();
+    if (stale) return stale;
+    throw err;
+  }
 }

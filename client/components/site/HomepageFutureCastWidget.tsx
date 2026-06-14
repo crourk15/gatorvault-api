@@ -312,7 +312,7 @@ function WidgetError({
       <p>{title}</p>
       {!offline ? (
         <p className="gv-landing-fc-widget__error-detail">
-          Live API did not respond within 2.5 seconds.
+          Live API did not respond in time.
         </p>
       ) : (
         <p className="gv-landing-fc-widget__error-detail">
