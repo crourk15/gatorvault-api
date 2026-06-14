@@ -57,10 +57,10 @@ async function main() {
       headers: { 'User-Agent': CRAWLER_UA },
       expectIncludes: ['FutureCast', 'futurecast'],
     }),
-    await fetchCheck('portal-profile', `${SITE_URL}/vault/portal/player/${PORTAL_SMOKE_SLUG}/`, {
+    await fetchCheck('recruiting-player-profile', `${SITE_URL}/vault/recruiting/player/${PORTAL_SMOKE_SLUG}/`, {
       allow404: true,
       headers: { 'User-Agent': CRAWLER_UA },
-      expectIncludes: ['portal', 'Portal'],
+      expectIncludes: ['recruiting', 'Recruiting'],
     }),
     await fetchCheck('api-futurecast-home', `${API_URL}/api/futurecast/home`, {
       expectIncludes: ['trendingUp', 'commits'],

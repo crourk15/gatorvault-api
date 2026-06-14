@@ -190,7 +190,10 @@ function analyzeWrongOrdering() {
   const issues = [];
   const filmSection = SITE_SECTIONS.find((s) => s.id === 'vault-film-room');
   if (filmSection?.expectedOrder) {
-    const clientFilm = readLocal('../client/lib/film-room-api.ts') || readLocal('vault/film-room/index.html');
+    const clientFilm =
+      readLocal('../client/lib/film-room-api.ts') ||
+      readLocal('../client/components/vault/VaultFilmRoomPage.tsx') ||
+      readLocal('vault/film-room/index.html');
     filmSection.expectedOrder.forEach((hub, i) => {
       if (clientFilm && !clientFilm.includes(hub)) {
         issues.push({
@@ -213,7 +216,7 @@ function analyzeWrongOrdering() {
     readLocal('../client/lib/depth-chart-data.ts') ||
     readLocal('data/roster/depth-chart.json') ||
     readLocal('vault/team/index.html');
-  if (depthSrc && !depthSrc.includes('QB') && !depthSrc.includes('DEPTH_BY_PHASE')) {
+  if (depthSrc && !depthSrc.includes('QB') && !depthSrc.includes('DEPTH_BY_PHASE') && !depthSrc.includes('gv-team-dc-grid')) {
     issues.push({
       ruleId: 'B2',
       checkId: 'crawler:wrong-ordering',
@@ -473,7 +476,12 @@ async function analyzeTeamData() {
   }
 
   const depthSrc = readLocal('../client/lib/depth-chart-data.ts') || readLocal('vault/team/index.html');
-  if (!depthSrc.includes('DEPTH_BY_PHASE') && !depthSrc.includes('gv-dc-grid')) {
+  if (
+    depthSrc &&
+    !depthSrc.includes('DEPTH_BY_PHASE') &&
+    !depthSrc.includes('gv-team-dc-grid') &&
+    !depthSrc.includes('gv-dc-grid')
+  ) {
     issues.push({
       ruleId: 'E2',
       checkId: 'crawler:depth-chart',
@@ -585,15 +593,18 @@ async function analyze404Assets() {
   return require('../crawler/checks/crawler-404').analyze404Assets();
 }
 
-/** Pressers & highlights — React Film Room categories */
+/** Pressers & highlights — React Film Room categories (source TS, not SSG shell HTML). */
 function analyzePressersHighlights() {
   const issues = [];
-  const filmHtml =
-    readLocal('vault/film-room/index.html') ||
-    readLocal('../client/lib/film-room-api.ts') ||
-    readLocal('index.html');
+  const filmSrc = [
+    readLocal('../client/lib/film-room-api.ts'),
+    readLocal('../client/components/vault/VaultFilmRoomPage.tsx'),
+    readLocal('vault/film-room/index.html'),
+  ]
+    .filter(Boolean)
+    .join('\n');
 
-  if (!filmHtml.includes('UF Press Conferences') && !filmHtml.includes('Press Conferences')) {
+  if (!filmSrc.includes('UF Press Conferences') && !filmSrc.includes('Press Conferences')) {
     issues.push({
       ruleId: 'B1',
       checkId: 'crawler:pressers-missing',
@@ -608,7 +619,7 @@ function analyzePressersHighlights() {
     });
   }
 
-  if (!filmHtml.includes('Highlights') && !filmHtml.includes('gv-film-lesson')) {
+  if (!filmSrc.includes('Highlights') && !filmSrc.includes('gv-film-lesson')) {
     issues.push({
       ruleId: 'B1',
       checkId: 'crawler:highlights-missing',

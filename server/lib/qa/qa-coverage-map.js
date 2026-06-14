@@ -27,6 +27,7 @@ const SITE_SECTIONS = [
       '.gv-team-page',
       '.gv-hub-tabs',
       '.gv-team-roster',
+      '.gv-team-dc-grid',
       '.gv-dc-grid'
     ],
     dataFiles: ['data/roster/players.json'],
