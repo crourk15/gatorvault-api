@@ -55,6 +55,21 @@
     Cache-Control = "no-store, must-revalidate"
 
 [[headers]]
+  for = "/api/futurecast/home"
+  [headers.values]
+    Cache-Control = "public, max-age=300, s-maxage=600, stale-while-revalidate=60"
+
+[[headers]]
+  for = "/api/futurecast/class"
+  [headers.values]
+    Cache-Control = "public, max-age=300, s-maxage=600, stale-while-revalidate=60"
+
+[[headers]]
+  for = "/api/futurecast/predictions"
+  [headers.values]
+    Cache-Control = "public, max-age=300, s-maxage=600, stale-while-revalidate=60"
+
+[[headers]]
   for = "/css/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"

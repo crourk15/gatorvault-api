@@ -26,6 +26,7 @@ import {
 import { isHsLifecycle, isTrendingEligibleRow } from './eligibility';
 import { applyMomentumBoosts, loadSignalMomentumBoosts } from './momentum';
 import { listRecruitingStoreCommits, mergeLiveCommits } from './live-commits';
+import { sendCachedJson } from './response-cache';
 
 const MOVEMENT_WINDOW_DAYS = 7;
 const SECTION_LIMIT = 12;
@@ -80,7 +81,9 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
   try {
     const commitSort =
       req.query.commitSort === 'stability' ? ('stability' as const) : ('fit' as const);
+    const cacheKey = `futurecast:home:${commitSort}`;
 
+    await sendCachedJson(res, cacheKey, async () => {
     const [predictionRows, movementRows, portalRows] = await Promise.all([
       listPredictions({
         class_year: FUTURECAST_CLASS_YEAR,
@@ -190,7 +193,7 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
       }));
 
     const sortedCommits = sortCommits(commits, commitSort);
-    res.json({
+    return {
       classYear: FUTURECAST_CLASS_YEAR,
       commitSort,
       heatmap: {
@@ -203,6 +206,7 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
       trendingUp: hsTrendingUp,
       trendingDown: hsTrendingDown,
       portalWatchlist,
+    };
     });
   } catch (err) {
     handlePredictionsApiError(res, err);

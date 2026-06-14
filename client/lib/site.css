@@ -1042,6 +1042,164 @@
   color: #fff;
 }
 
+.gv-landing-fc-widget__sub {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
+.gv-landing-fc-widget__section {
+  margin-bottom: 1rem;
+  padding-top: 0.15rem;
+}
+
+.gv-landing-fc-widget__section-title {
+  margin: 0 0 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.gv-landing-fc-widget__card {
+  padding: 0.75rem 0.85rem;
+  background: rgba(0, 20, 50, 0.45);
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  border-radius: 0.65rem;
+}
+
+.gv-landing-fc-widget__card--featured {
+  border-color: rgba(250, 70, 22, 0.35);
+  background: rgba(10, 22, 40, 0.75);
+}
+
+.gv-landing-fc-widget__card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.45rem;
+}
+
+.gv-landing-fc-widget__card-name {
+  margin: 0 0 0.2rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.gv-landing-fc-widget__card-meta {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.gv-landing-fc-widget__card-confidence {
+  margin-bottom: 0.45rem;
+}
+
+.gv-landing-fc-widget__card-confidence > span {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.gv-landing-fc-widget__predictor-tags {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.gv-landing-fc-widget__predictor-tags li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(0, 48, 135, 0.35);
+  font-size: 0.625rem;
+  color: #cbd5e1;
+}
+
+.gv-landing-fc-widget__predictor-tags li span:last-child {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.gv-landing-fc-widget__trending-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+}
+
+@media (min-width: 520px) {
+  .gv-landing-fc-widget__trending-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .gv-landing-fc-widget__trending-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.gv-landing-fc-widget__empty {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.gv-landing-fc-widget__skeleton-movement {
+  display: flex;
+  gap: 0.35rem;
+  margin: 0.5rem 0;
+  color: rgba(100, 116, 139, 0.45);
+  font-size: 0.75rem;
+}
+
+.gv-landing-fc-widget__skeleton--line-lg {
+  height: 1.1rem;
+  width: 70%;
+  margin-bottom: 0.35rem;
+}
+
+.gv-landing-fc-widget__skeleton--line-md {
+  height: 0.9rem;
+  width: 65%;
+  margin-bottom: 0.3rem;
+}
+
+.gv-landing-fc-widget__skeleton--line-sm {
+  height: 0.7rem;
+  width: 45%;
+  margin-bottom: 0.35rem;
+}
+
+.gv-landing-fc-widget__skeleton--bar {
+  height: 0.45rem;
+  width: 100%;
+  margin-bottom: 0.35rem;
+}
+
+.gv-landing-fc-widget__skeleton--spark {
+  height: 1.5rem;
+  width: 5.5rem;
+}
+
+.gv-landing-fc-widget__skeleton--foot {
+  height: 0.85rem;
+  width: 55%;
+  margin-top: 0.5rem;
+}
+
 .gv-landing-fc-widget__live {
   display: inline-flex;
   align-items: center;
@@ -1062,12 +1220,11 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
-  margin-bottom: 1rem;
 }
 
 @media (min-width: 520px) {
   .gv-landing-fc-widget__impact-row {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 

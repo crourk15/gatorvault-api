@@ -7,6 +7,7 @@ import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-ap
 import { listPredictions } from '../../models/predictions';
 import { FUTURECAST_CLASS_YEAR } from './feed-filters';
 import { filterModelPredictionsOnly, dedupeFeedRows } from './feed-filters';
+import { sendCachedJson } from './response-cache';
 
 const require = createRequire(import.meta.url);
 
@@ -26,6 +27,13 @@ function avgRating(commits: { rating?: unknown }[]): number | null {
 export const handleGetFutureCastClass = asyncHandler(async (req: Request, res: Response) => {
   try {
     const classYear = parseYear(req.query.year ?? req.query.class_year, FUTURECAST_CLASS_YEAR);
+    if (classYear !== FUTURECAST_CLASS_YEAR) {
+      res.status(400).json({ error: `Only ${FUTURECAST_CLASS_YEAR} cycle is supported` });
+      return;
+    }
+    const cacheKey = `futurecast:class:${classYear}`;
+
+    await sendCachedJson(res, cacheKey, async () => {
     const store = require('../../lib/recruiting-store');
     const board = await store.getBoard(classYear);
     const allRankings = await store.getRankings();
@@ -55,7 +63,7 @@ export const handleGetFutureCastClass = asyncHandler(async (req: Request, res: R
       }
     }
 
-    res.json({
+    return {
       classYear,
       commitCount: commits.length,
       targetCount: (board.targets || []).length,
@@ -72,6 +80,7 @@ export const handleGetFutureCastClass = asyncHandler(async (req: Request, res: R
         : null,
       classImpactScore,
       teamImpactScore,
+    };
     });
   } catch (err) {
     handlePredictionsApiError(res, err);

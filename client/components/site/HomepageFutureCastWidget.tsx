@@ -1,38 +1,53 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ConfidenceBar } from '@/components/futurecast/ConfidenceBar';
 import { TrendingIndicator } from '@/components/futurecast/TrendingIndicator';
 import {
-  fetchFutureCastClass,
-  fetchFutureCastHome,
-  fetchFutureCastPredictions,
-  type FeedPredictionWithHistory,
-  type FutureCastClassResponse,
-  type FutureCastHomeResponse,
-  type FutureCastPredictionsResponse,
-  type TrendHistoryPoint,
+  FUTURECAST_WIDGET_YEAR,
+  loadFutureCastWidgetBundle,
+  readFutureCastWidgetCache,
+  type FutureCastWidgetBundle,
+  type FutureCastWidgetLoadMeta,
 } from '@/lib/futurecast-home-api';
+import {
+  buildFutureCastWidgetView,
+  type FutureCastWidgetView,
+  type WidgetProspectCard,
+} from '@/lib/futurecast-widget-model';
 
 const REFRESH_MS = 60_000;
-const CLASS_YEAR = 2027;
+const PREDICTIONS_LIMIT = 6;
+const FOOTER_HREF = '/vault/futurecast';
 
 function formatScore(value: number | null | undefined): string {
   if (value == null || !Number.isFinite(value)) return '—';
   return value >= 10 ? value.toFixed(1) : `${Math.round(value)}`;
 }
 
-function TrendSparkline({ points }: { points: TrendHistoryPoint[] }): React.ReactElement | null {
-  if (!points.length) return null;
-  const vals = points.map((p) => p.confidence);
-  const min = Math.min(...vals);
-  const max = Math.max(...vals);
+function formatUpdatedAt(iso: string | null, fallback: Date | null): string {
+  if (iso) {
+    const d = new Date(iso);
+    if (!Number.isNaN(d.getTime())) {
+      return d.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    }
+  }
+  if (fallback) {
+    return fallback.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  }
+  return '—';
+}
+
+function TrendSparkline({ values }: { values: number[] }): React.ReactElement | null {
+  if (values.length < 2) return null;
+  const min = Math.min(...values);
+  const max = Math.max(...values);
   const range = max - min || 1;
-  const w = 72;
-  const h = 22;
-  const coords = vals
+  const w = 88;
+  const h = 26;
+  const coords = values
     .map((v, i) => {
-      const x = vals.length === 1 ? w / 2 : (i / (vals.length - 1)) * w;
+      const x = values.length === 1 ? w / 2 : (i / (values.length - 1)) * w;
       const y = h - ((v - min) / range) * (h - 4) - 2;
       return `${x},${y}`;
     })
@@ -51,47 +66,265 @@ function TrendSparkline({ points }: { points: TrendHistoryPoint[] }): React.Reac
   );
 }
 
+function PredictorList({ predictors }: { predictors: WidgetProspectCard['topPredictors'] }): React.ReactElement | null {
+  if (!predictors.length) return null;
+  return (
+    <ul className="gv-landing-fc-widget__predictor-tags">
+      {predictors.map((p) => (
+        <li key={p.name}>
+          <span>{p.name}</span>
+          {p.score > 0 ? <span>{p.score}%</span> : null}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ProspectCard({
+  card,
+  featured = false,
+}: {
+  card: WidgetProspectCard;
+  featured?: boolean;
+}): React.ReactElement {
+  return (
+    <article
+      className={`gv-landing-fc-widget__card${featured ? ' gv-landing-fc-widget__card--featured' : ''}`}
+      data-testid={featured ? 'fc-top-prospect' : 'fc-trending-card'}
+    >
+      <div className="gv-landing-fc-widget__card-head">
+        <div>
+          <h4 className="gv-landing-fc-widget__card-name">{card.playerName}</h4>
+          <p className="gv-landing-fc-widget__card-meta">
+            {card.position} · {card.team}
+          </p>
+        </div>
+        <TrendingIndicator delta={card.movementDelta} />
+      </div>
+      <div className="gv-landing-fc-widget__card-confidence">
+        <span>{Math.round(card.confidence)}% UF</span>
+        <ConfidenceBar value={card.confidence} />
+      </div>
+      <PredictorList predictors={card.topPredictors} />
+      {card.trendHistory.length > 1 ? <TrendSparkline values={card.trendHistory} /> : null}
+    </article>
+  );
+}
+
+function WidgetHeader({
+  updatedLabel,
+  fromCache,
+}: {
+  updatedLabel: string;
+  fromCache: boolean;
+}): React.ReactElement {
+  return (
+    <header className="gv-landing-fc-widget__head">
+      <div>
+        <h3>FutureCast — {FUTURECAST_WIDGET_YEAR} Cycle</h3>
+        <p className="gv-landing-fc-widget__sub">
+          Movement, confidence, predictors, and class impact
+        </p>
+      </div>
+      <span className="gv-landing-fc-widget__refresh" title="Live FutureCast API">
+        {fromCache ? 'Cached · ' : 'Updated '}
+        {updatedLabel}
+      </span>
+    </header>
+  );
+}
+
 function WidgetSkeleton(): React.ReactElement {
   return (
     <div className="gv-landing-fc-widget gv-landing-fc-widget--loading" data-testid="fc-widget-skeleton">
-      <div className="gv-landing-fc-widget__head">
-        <div className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--title" />
-        <div className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--badge" />
-      </div>
-      <div className="gv-landing-fc-widget__impact-row">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--stat" />
-        ))}
-      </div>
-      <div className="gv-landing-fc-widget__heat">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--heat" />
-        ))}
-      </div>
-      <div className="gv-landing-fc-widget__panels">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--panel" />
-        ))}
-      </div>
+      <WidgetHeader updatedLabel="—" fromCache={false} />
+
+      <section className="gv-landing-fc-widget__section">
+        <h4 className="gv-landing-fc-widget__section-title">Top Prospect</h4>
+        <div className="gv-landing-fc-widget__card gv-landing-fc-widget__card--featured">
+          <div className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--line-lg" />
+          <div className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--line-sm" />
+          <div className="gv-landing-fc-widget__skeleton-movement" aria-hidden>
+            <span>•</span>
+            <span>•</span>
+            <span>•</span>
+          </div>
+          <div className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--bar" />
+          <div className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--spark" />
+        </div>
+      </section>
+
+      <section className="gv-landing-fc-widget__section">
+        <h4 className="gv-landing-fc-widget__section-title">Class Impact</h4>
+        <div className="gv-landing-fc-widget__impact-row">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--stat" />
+          ))}
+        </div>
+      </section>
+
+      <section className="gv-landing-fc-widget__section">
+        <h4 className="gv-landing-fc-widget__section-title">Trending Predictions</h4>
+        <div className="gv-landing-fc-widget__trending-grid">
+          {Array.from({ length: 6 }, (_, i) => (
+            <div key={i} className="gv-landing-fc-widget__card">
+              <div className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--line-md" />
+              <div className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--line-sm" />
+              <div className="gv-landing-fc-widget__skeleton-movement" aria-hidden>
+                <span>•</span>
+              </div>
+              <div className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--bar" />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="gv-landing-fc-widget__skeleton gv-landing-fc-widget__skeleton--foot" />
     </div>
   );
 }
 
-function PickRow({ pick }: { pick: FeedPredictionWithHistory }): React.ReactElement {
+function ClassImpactSummary({
+  summary,
+}: {
+  summary: FutureCastWidgetView['classSummary'];
+}): React.ReactElement | null {
+  const items: React.ReactNode[] = [];
+
+  if (summary.classImpactScore != null) {
+    items.push(
+      <div key="class" className="gv-landing-fc-widget__impact">
+        <p>Class Impact</p>
+        <strong>{formatScore(summary.classImpactScore)}</strong>
+      </div>
+    );
+  }
+  if (summary.teamImpactScore != null) {
+    items.push(
+      <div key="team" className="gv-landing-fc-widget__impact">
+        <p>Team Impact</p>
+        <strong>{formatScore(summary.teamImpactScore)}</strong>
+      </div>
+    );
+  }
+  if (summary.nationalRank != null) {
+    items.push(
+      <div key="natl" className="gv-landing-fc-widget__impact">
+        <p>National</p>
+        <strong>#{summary.nationalRank}</strong>
+      </div>
+    );
+  }
+  if (summary.secRank != null) {
+    items.push(
+      <div key="sec" className="gv-landing-fc-widget__impact">
+        <p>SEC</p>
+        <strong>#{summary.secRank}</strong>
+      </div>
+    );
+  }
+  if (summary.blueChipRatio != null) {
+    items.push(
+      <div key="blue" className="gv-landing-fc-widget__impact">
+        <p>Blue Chip</p>
+        <strong>{summary.blueChipRatio}%</strong>
+      </div>
+    );
+  }
+  if (summary.inStatePercentage > 0) {
+    items.push(
+      <div key="instate" className="gv-landing-fc-widget__impact">
+        <p>In-State</p>
+        <strong>{summary.inStatePercentage}%</strong>
+      </div>
+    );
+  }
+
+  if (!items.length) return null;
+
   return (
-    <div className="gv-landing-fc-widget__pick">
-      <div className="gv-landing-fc-widget__pick-head">
-        <span className="gv-landing-fc-widget__pick-name">{pick.fullName}</span>
-        <TrendingIndicator delta={pick.delta ?? 0} />
-      </div>
-      <div className="gv-landing-fc-widget__pick-meta">
-        <span>{pick.position}</span>
-        <span>{Math.round(pick.confidence)}% UF</span>
-      </div>
-      <ConfidenceBar value={pick.confidence} />
-      {pick.trendHistory && pick.trendHistory.length > 1 ? (
-        <TrendSparkline points={pick.trendHistory} />
-      ) : null}
+    <section className="gv-landing-fc-widget__section" data-testid="fc-class-impact">
+      <h4 className="gv-landing-fc-widget__section-title">Class Impact</h4>
+      <div className="gv-landing-fc-widget__impact-row">{items}</div>
+    </section>
+  );
+}
+
+function WidgetContent({
+  view,
+  lastRefresh,
+  fromCache,
+}: {
+  view: FutureCastWidgetView;
+  lastRefresh: Date | null;
+  fromCache: boolean;
+}): React.ReactElement {
+  const updatedLabel = formatUpdatedAt(view.updatedAt, lastRefresh);
+
+  return (
+    <div className="gv-landing-fc-widget" data-testid="homepage-fc-widget">
+      <WidgetHeader updatedLabel={updatedLabel} fromCache={fromCache} />
+
+      <section className="gv-landing-fc-widget__section">
+        <h4 className="gv-landing-fc-widget__section-title">Top Prospect</h4>
+        {view.topProspect ? (
+          <ProspectCard card={view.topProspect} featured />
+        ) : (
+          <p className="gv-landing-fc-widget__empty">No top prospect in the {FUTURECAST_WIDGET_YEAR} board yet.</p>
+        )}
+      </section>
+
+      <ClassImpactSummary summary={view.classSummary} />
+
+      <section className="gv-landing-fc-widget__section">
+        <h4 className="gv-landing-fc-widget__section-title">Trending Predictions</h4>
+        {view.trending.length > 0 ? (
+          <div className="gv-landing-fc-widget__trending-grid">
+            {view.trending.map((card) => (
+              <ProspectCard key={card.playerId} card={card} />
+            ))}
+          </div>
+        ) : (
+          <p className="gv-landing-fc-widget__empty">No trending predictions available.</p>
+        )}
+      </section>
+
+      <a href={FOOTER_HREF} className="gv-landing-fc-preview__foot gv-landing-fc-widget__foot">
+        View Full FutureCast Board →
+      </a>
+    </div>
+  );
+}
+
+function WidgetError({
+  meta,
+  onRetry,
+}: {
+  meta: FutureCastWidgetLoadMeta | null;
+  onRetry: () => void;
+}): React.ReactElement {
+  const offline = meta?.offline;
+  const title = offline ? 'FutureCast temporarily offline' : 'FutureCast unavailable — retry';
+
+  return (
+    <div className="gv-landing-fc-widget gv-landing-fc-widget--error" role="alert">
+      <WidgetHeader updatedLabel="—" fromCache={false} />
+      <p>{title}</p>
+      {!offline ? (
+        <p className="gv-landing-fc-widget__error-detail">
+          Live API did not respond within 2.5 seconds.
+        </p>
+      ) : (
+        <p className="gv-landing-fc-widget__error-detail">
+          The FutureCast service returned a temporary error. Try again shortly.
+        </p>
+      )}
+      <button type="button" className="gv-landing-fc-widget__retry" onClick={onRetry}>
+        Retry
+      </button>
+      <a href={FOOTER_HREF} className="gv-landing-fc-widget__cta-link">
+        View Full FutureCast Board →
+      </a>
     </div>
   );
 }
@@ -109,23 +342,13 @@ class FutureCastWidgetErrorBoundary extends React.Component<
   render(): React.ReactNode {
     if (this.state.error) {
       return (
-        <div className="gv-landing-fc-widget gv-landing-fc-widget--error" role="alert">
-          <p>FutureCast preview unavailable.</p>
-          <p className="gv-landing-fc-widget__error-detail">{this.state.error.message}</p>
-          <button
-            type="button"
-            className="gv-landing-fc-widget__retry"
-            onClick={() => {
-              this.setState({ error: null });
-              this.props.onRetry?.();
-            }}
-          >
-            Retry
-          </button>
-          <a href="/futurecast" className="gv-landing-fc-widget__cta-link">
-            Open FutureCast →
-          </a>
-        </div>
+        <WidgetError
+          meta={null}
+          onRetry={() => {
+            this.setState({ error: null });
+            this.props.onRetry?.();
+          }}
+        />
       );
     }
     return this.props.children;
@@ -133,49 +356,61 @@ class FutureCastWidgetErrorBoundary extends React.Component<
 }
 
 function HomepageFutureCastWidgetInner(): React.ReactElement {
-  const [home, setHome] = useState<FutureCastHomeResponse | null>(null);
-  const [classData, setClassData] = useState<FutureCastClassResponse | null>(null);
-  const [predictions, setPredictions] = useState<FutureCastPredictionsResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [bundle, setBundle] = useState<FutureCastWidgetBundle | null>(null);
+  const [meta, setMeta] = useState<FutureCastWidgetLoadMeta | null>(null);
+  const [hydrating, setHydrating] = useState(true);
+  const [failed, setFailed] = useState(false);
+  const [fromCache, setFromCache] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
+  const bundleRef = useRef<FutureCastWidgetBundle | null>(null);
 
-  const load = useCallback(async (isInitial: boolean) => {
-    if (isInitial) {
-      setLoading(true);
-      setError(null);
+  const view = useMemo(
+    () => (bundle ? buildFutureCastWidgetView(bundle) : null),
+    [bundle]
+  );
+
+  const load = useCallback(async (isBackground: boolean) => {
+    if (!isBackground && !bundleRef.current) {
+      setHydrating(true);
     }
-    try {
-      const [homeRes, classRes, predRes] = await Promise.all([
-        fetchFutureCastHome('fit'),
-        fetchFutureCastClass(CLASS_YEAR),
-        fetchFutureCastPredictions(CLASS_YEAR, 4),
-      ]);
-      setHome(homeRes);
-      setClassData(classRes);
-      setPredictions(predRes);
+
+    const result = await loadFutureCastWidgetBundle({ predictionsLimit: PREDICTIONS_LIMIT });
+
+    if (result.bundle) {
+      bundleRef.current = result.bundle;
+      setBundle(result.bundle);
+      setMeta(result.meta);
       setLastRefresh(new Date());
-      setError(null);
-    } catch (err) {
-      if (isInitial) {
-        setError(err instanceof Error ? err.message : 'Failed to load FutureCast.');
-      }
-    } finally {
-      if (isInitial) setLoading(false);
+      setFromCache(result.meta.fromCache);
+      setFailed(false);
+    } else if (!bundleRef.current) {
+      setMeta(result.meta);
+      setFailed(true);
     }
+
+    setHydrating(false);
   }, []);
 
   useEffect(() => {
+    const cached = readFutureCastWidgetCache();
+    if (cached) {
+      bundleRef.current = cached;
+      setBundle(cached);
+      setFromCache(true);
+      setLastRefresh(new Date());
+      setHydrating(false);
+    }
+
     let cancelled = false;
     let timer: ReturnType<typeof setInterval> | undefined;
 
-    async function run(isInitial: boolean) {
+    async function run(isBackground: boolean) {
       if (cancelled) return;
-      await load(isInitial);
+      await load(isBackground);
     }
 
-    void run(true);
-    timer = setInterval(() => void run(false), REFRESH_MS);
+    void run(!!cached);
+    timer = setInterval(() => void run(true), REFRESH_MS);
 
     return () => {
       cancelled = true;
@@ -183,176 +418,19 @@ function HomepageFutureCastWidgetInner(): React.ReactElement {
     };
   }, [load]);
 
-  if (loading && !home) {
+  if (hydrating && !bundle) {
     return <WidgetSkeleton />;
   }
 
-  if (error && !home) {
-    return (
-      <div className="gv-landing-fc-widget gv-landing-fc-widget--error" role="alert">
-        <p>FutureCast preview unavailable.</p>
-        <p className="gv-landing-fc-widget__error-detail">{error}</p>
-        <button type="button" className="gv-landing-fc-widget__retry" onClick={() => void load(true)}>
-          Retry
-        </button>
-        <a href="/futurecast" className="gv-landing-fc-widget__cta-link">
-          Open FutureCast →
-        </a>
-      </div>
-    );
+  if (failed && !bundle) {
+    return <WidgetError meta={meta} onRetry={() => void load(false)} />;
   }
 
-  const buckets = home?.heatmap?.buckets ?? [];
-  const up = buckets.find((b) => /up/i.test(b.label))?.count ?? 0;
-  const down = buckets.find((b) => /down/i.test(b.label))?.count ?? 0;
-  const flat = buckets.find((b) => /flat/i.test(b.label))?.count ?? 0;
-  const topTarget = home?.topTargets?.[0];
-  const latestCommit = home?.commits?.[0];
-  const portalPick = home?.portalWatchlist?.[0];
-  const featuredPick = predictions?.predictions?.[0] ?? null;
+  if (!view) {
+    return <WidgetSkeleton />;
+  }
 
-  return (
-    <div className="gv-landing-fc-widget" data-testid="homepage-fc-widget">
-      <div className="gv-landing-fc-widget__head">
-        <div>
-          <h3>Live Preview</h3>
-          <span className="gv-landing-fc-widget__live">
-            <span className="gv-landing-pulse" aria-hidden />
-            Live · {CLASS_YEAR} cycle
-          </span>
-        </div>
-        {lastRefresh ? (
-          <span className="gv-landing-fc-widget__refresh" title="Auto-refreshes every minute">
-            Updated {lastRefresh.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
-          </span>
-        ) : null}
-      </div>
-
-      <div className="gv-landing-fc-widget__impact-row">
-        <div className="gv-landing-fc-widget__impact">
-          <p>Class Impact</p>
-          <strong>{formatScore(classData?.classImpactScore)}</strong>
-          {classData?.rankings?.nationalRank != null ? (
-            <span>#{classData.rankings.nationalRank} natl</span>
-          ) : null}
-        </div>
-        <div className="gv-landing-fc-widget__impact">
-          <p>Team Impact</p>
-          <strong>{formatScore(classData?.teamImpactScore)}</strong>
-          <span>avg commit fit</span>
-        </div>
-        <div className="gv-landing-fc-widget__impact">
-          <p>Commits</p>
-          <strong>{classData?.commitCount ?? home?.commitTotal ?? '—'}</strong>
-          <span>{classData?.blueChips ?? 0} blue-chips</span>
-        </div>
-        <div className="gv-landing-fc-widget__impact">
-          <p>SEC Rank</p>
-          <strong>
-            {classData?.rankings?.secRank != null ? `#${classData.rankings.secRank}` : '—'}
-          </strong>
-          <span>{classData?.inStatePct ?? 0}% in-state</span>
-        </div>
-      </div>
-
-      <div className="gv-landing-fc-preview__heat gv-landing-fc-widget__heat">
-        <div>
-          <p>Up</p>
-          <strong>{up}</strong>
-        </div>
-        <div>
-          <p>Down</p>
-          <strong>{down}</strong>
-        </div>
-        <div>
-          <p>Flat</p>
-          <strong>{flat}</strong>
-        </div>
-      </div>
-
-      <div className="gv-landing-fc-preview__panels gv-landing-fc-widget__panels">
-        <div>
-          <h4>Top Target</h4>
-          {topTarget ? (
-            <>
-              <p className="gv-landing-fc-widget__panel-name">{topTarget.fullName}</p>
-              <ConfidenceBar value={topTarget.confidence} />
-              <div className="gv-landing-fc-widget__panel-row">
-                <TrendingIndicator delta={topTarget.delta ?? 0} />
-                <span>{Math.round(topTarget.confidence)}% UF</span>
-              </div>
-            </>
-          ) : (
-            <p>—</p>
-          )}
-        </div>
-        <div>
-          <h4>Latest Commit</h4>
-          {latestCommit ? (
-            <>
-              <p className="gv-landing-fc-widget__panel-name">{latestCommit.fullName}</p>
-              <span className="gv-landing-fc-widget__panel-sub">
-                {latestCommit.position} · Fit {formatScore(latestCommit.ufFitScore ?? null)}
-              </span>
-            </>
-          ) : (
-            <p>—</p>
-          )}
-        </div>
-        <div>
-          <h4>Portal Watch</h4>
-          {portalPick ? (
-            <>
-              <p className="gv-landing-fc-widget__panel-name">{portalPick.fullName}</p>
-              <span className="gv-landing-fc-widget__panel-sub">
-                {portalPick.portalLikelihood}% likelihood
-              </span>
-            </>
-          ) : (
-            <p>—</p>
-          )}
-        </div>
-      </div>
-
-      {featuredPick ? (
-        <div className="gv-landing-fc-widget__featured">
-          <h4>Trend History · {featuredPick.fullName}</h4>
-          <PickRow pick={featuredPick} />
-        </div>
-      ) : null}
-
-      {predictions?.predictions && predictions.predictions.length > 1 ? (
-        <div className="gv-landing-fc-widget__predictions">
-          <h4>Active Predictions</h4>
-          <div className="gv-landing-fc-widget__pick-list">
-            {predictions.predictions.slice(0, 4).map((p) => (
-              <PickRow key={p.playerId} pick={p} />
-            ))}
-          </div>
-        </div>
-      ) : null}
-
-      {predictions?.predictors?.length ? (
-        <div className="gv-landing-fc-widget__predictors">
-          <h4>Predictors</h4>
-          <ul>
-            {predictions.predictors.slice(0, 3).map((p) => (
-              <li key={p.predictorId}>
-                <span>{p.name}</span>
-                <span>
-                  {p.picks} picks · {p.hits + p.misses > 0 ? `${Math.round(p.hitRate * 100)}% hit` : '—'}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-
-      <a href="/futurecast" className="gv-landing-fc-preview__foot gv-landing-fc-widget__foot">
-        Open FutureCast Master Board →
-      </a>
-    </div>
-  );
+  return <WidgetContent view={view} lastRefresh={lastRefresh} fromCache={fromCache} />;
 }
 
 export function HomepageFutureCastWidget(): React.ReactElement {
@@ -360,7 +438,9 @@ export function HomepageFutureCastWidget(): React.ReactElement {
 
   return (
     <FutureCastWidgetErrorBoundary onRetry={() => setRetryKey((k) => k + 1)}>
-      <HomepageFutureCastWidgetInner key={retryKey} />
+      <Suspense fallback={<WidgetSkeleton />}>
+        <HomepageFutureCastWidgetInner key={retryKey} />
+      </Suspense>
     </FutureCastWidgetErrorBoundary>
   );
 }

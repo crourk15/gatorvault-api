@@ -23,6 +23,7 @@ import {
   FUTURECAST_CLASS_YEAR,
 } from './feed-filters';
 import { dedupeByPlayerId } from './eligibility';
+import { sendCachedJson } from './response-cache';
 
 export const handleGetFutureCastPredictions = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -30,8 +31,14 @@ export const handleGetFutureCastPredictions = asyncHandler(async (req: Request, 
       parseOptionalInt(req.query.year, 'year') ??
       parseOptionalInt(req.query.class_year, 'class_year') ??
       FUTURECAST_CLASS_YEAR;
+    if (classYear !== FUTURECAST_CLASS_YEAR) {
+      res.status(400).json({ error: `Only ${FUTURECAST_CLASS_YEAR} cycle is supported` });
+      return;
+    }
     const limit = parseLimit(req.query.limit, 8, 24);
+    const cacheKey = `futurecast:predictions:${classYear}:${limit}`;
 
+    await sendCachedJson(res, cacheKey, async () => {
     let rows = await listPredictions({
       class_year: classYear,
       status: 'ACTIVE',
@@ -72,11 +79,12 @@ export const handleGetFutureCastPredictions = asyncHandler(async (req: Request, 
       };
     });
 
-    res.json({
+    return {
       classYear,
       predictions: withHistory,
       predictors,
       windowDays: VOLATILITY_WINDOW_DAYS,
+    };
     });
   } catch (err) {
     handlePredictionsApiError(res, err);

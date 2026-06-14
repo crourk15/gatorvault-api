@@ -9,7 +9,13 @@ const DEPLOY_VERSION =
 
 /** Always fresh — no browser/CDN cache after deploy. */
 const NO_STORE_PREFIXES = [
-  '/api/futurecast/',
+  '/api/futurecast/stock',
+  '/api/futurecast/snapshots',
+  '/api/futurecast/heatmap',
+  '/api/futurecast/movement',
+  '/api/futurecast/commits',
+  '/api/futurecast/targets',
+  '/api/futurecast/big-board',
   '/api/portal/',
   '/api/players/',
   '/api/recruiting/',
@@ -25,6 +31,9 @@ const NO_STORE_PREFIXES = [
 
 /** Short TTL (seconds) — semi-static catalog/board data. */
 const SHORT_TTL_ROUTES = [
+  { prefix: '/api/futurecast/home', maxAge: 300, sMaxAge: 600 },
+  { prefix: '/api/futurecast/class', maxAge: 300, sMaxAge: 600 },
+  { prefix: '/api/futurecast/predictions', maxAge: 300, sMaxAge: 600 },
   { prefix: '/api/film-room/catalog', maxAge: 60 },
   { prefix: '/api/recruiting/board', maxAge: 45 },
   { prefix: '/api/roster/players', maxAge: 45 },
@@ -37,7 +46,8 @@ function cacheControlForPath(pathname) {
 
   for (const route of SHORT_TTL_ROUTES) {
     if (path === route.prefix || path.startsWith(`${route.prefix}/`)) {
-      return `public, max-age=${route.maxAge}, must-revalidate`;
+      const sMax = route.sMaxAge ?? route.maxAge;
+      return `public, max-age=${route.maxAge}, s-maxage=${sMax}, stale-while-revalidate=60`;
     }
   }
 

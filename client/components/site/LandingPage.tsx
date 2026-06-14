@@ -52,7 +52,7 @@ export function LandingPage(): React.ReactElement {
               Live recruiting predictions, movement tracking, portal intel, and class analytics for
               the Florida Gators.
             </p>
-            <a href="/futurecast" className="gv-landing-link">
+            <a href="/vault/futurecast" className="gv-landing-link">
               Open FutureCast →
             </a>
           </div>
