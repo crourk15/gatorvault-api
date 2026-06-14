@@ -29,9 +29,11 @@ export function fromBigBoard(p: BigBoardPlayer): RecruitingBoardPlayer {
     natlRank: p.nationalRank ?? p.natlRank ?? p.rank ?? 0,
     posRank: p.positionRank ?? p.posRank ?? 0,
     stateRank: p.stateRank ?? 0,
-    stars: p.stars,
-    fitScore: p.ufFitScore,
-    ufProbability: p.ufFitScore > 0 ? Math.min(1, p.ufFitScore / 100) : null,
+    stars: p.stars ?? 0,
+    fitScore: p.ufFitScore ?? 0,
+    ufProbability: p.ufFitScore > 0
+    ? Math.min(1, p.ufFitScore / 100)
+    : 0,
     skinny:
       p.portalLikelihood > 0
         ? `Portal likelihood ${p.portalLikelihood}% · ${p.signalCount} signals`
