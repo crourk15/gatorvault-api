@@ -58,6 +58,19 @@ function isTestPlayer(p) {
   return slug === 'test-recruit' || name === 'test recruit';
 }
 
+/** Admin-purged slugs — ingest must not re-add (Phase 10). */
+const BLOCKED_PLAYER_SLUGS = new Set([
+  'jaylen-jordan',
+  'kennedee-jackson',
+  'tj-shanahan-jr',
+  't-j-shanahan',
+]);
+
+function isBlockedPlayer(p) {
+  const slug = String(p?.slug || p?.id || '').toLowerCase();
+  return BLOCKED_PLAYER_SLUGS.has(slug);
+}
+
 function isFloridaCommit(p) {
   if (!p) return false;
   const status = String(p.status || '').toLowerCase();
@@ -266,6 +279,9 @@ function preservePlayerFields(existing, incoming) {
 }
 
 async function upsertPlayer(player, options = {}) {
+  if (isBlockedPlayer(player)) {
+    return null;
+  }
   const existing = player?.slug ? await getPlayerBySlug(player.slug) : null;
   const merged = existing ? preservePlayerFields(existing, player) : player;
   const gm2 = require('./gm2');

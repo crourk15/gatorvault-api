@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { fetchRecruitingBoard, type RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { fetchRecruitingBoard, type RecruitingBoardPlayer, type RecruitingBoardResponse } from '@/lib/recruiting-board-api';
 import { fetchRecruitingHeatCheck, type HeatCheckItem } from '@/lib/recruiting-api';
 import { fetchStaffDashboard, type StaffDashboardPlayer } from '@/lib/staff-api';
 import { ScoutingDepartmentPage } from '@/components/site/ScoutingDepartmentPage';
@@ -17,7 +17,8 @@ import {
 } from '@/lib/vault-route-map';
 import { ensurePlayerSlug } from '@/lib/slug';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
-import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
+import { saveVaultPageState, useVaultDataReload, useVaultPageRestore, notifyVaultNavigation } from '@/lib/vault-navigation';
+import { ClassSummaryBar } from '@/components/vault/RecruitingBoardClassic';
 
 /** Portal window closed until Dec transfer portal opens */
 const PORTAL_SEASON_OPEN = false;
@@ -189,16 +190,21 @@ function MovementIntelPanel({
 }
 
 export function VaultRecruitingHubPage(): React.ReactElement {
-  const [tab, setTab] = useState<RecruitingHubTab>(() => resolveRecruitingTab());
-  const [intelSub, setIntelSub] = useState<IntelSubView>(() => {
-    if (typeof window === 'undefined') return 'heat';
-    return window.location.pathname.includes('heat-check') ? 'heat' : 'heat';
-  });
+  const [tab, setTab] = useState<RecruitingHubTab>('commits-2026');
+  const [intelSub, setIntelSub] = useState<IntelSubView>('heat');
   const [rankYear, setRankYear] = useState<2027 | 2028>(2027);
-  const [b26, setB26] = useState<{ commits: RecruitingBoardPlayer[] }>({ commits: [] });
-  const [b27, setB27] = useState<{ commits: RecruitingBoardPlayer[]; targets: RecruitingBoardPlayer[] }>({
+  const [b26, setB26] = useState<{ commits: RecruitingBoardPlayer[]; rankings: RecruitingBoardResponse['rankings'] }>({
+    commits: [],
+    rankings: null,
+  });
+  const [b27, setB27] = useState<{
+    commits: RecruitingBoardPlayer[];
+    targets: RecruitingBoardPlayer[];
+    rankings: RecruitingBoardResponse['rankings'];
+  }>({
     commits: [],
     targets: [],
+    rankings: null,
   });
   const [b28, setB28] = useState<{ commits: RecruitingBoardPlayer[]; targets: RecruitingBoardPlayer[] }>({
     commits: [],
@@ -212,12 +218,16 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     volatile: StaffDashboardPlayer[];
   }>({ risers: [], fallers: [], volatile: [] });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const loadedOnce = useRef(false);
 
-  useVaultPageRestore('recruiting-hub', (saved) => {
+  const restoreHubState = useCallback((saved: { tab?: string; rankYear?: number }) => {
     if (saved.tab && TAB_LABELS.some((t) => t.id === saved.tab)) setTab(saved.tab as RecruitingHubTab);
     if (saved.rankYear === 2027 || saved.rankYear === 2028) setRankYear(saved.rankYear);
-  });
+  }, []);
+
+  useVaultPageRestore('recruiting-hub', restoreHubState);
 
   const persistHubState = useCallback(() => {
     saveVaultPageState('recruiting-hub', {
@@ -231,6 +241,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     setTab(next);
     if (typeof window !== 'undefined') {
       window.history.replaceState(null, '', recruitingTabPath(next));
+      notifyVaultNavigation();
       saveVaultPageState('recruiting-hub', { tab: next, rankYear, scrollY: window.scrollY });
     }
   }, [rankYear]);
@@ -239,26 +250,33 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     setTab(resolveRecruitingTab());
     const onNav = () => setTab(resolveRecruitingTab());
     window.addEventListener('popstate', onNav);
-    return () => window.removeEventListener('popstate', onNav);
+    window.addEventListener('vault:navigation', onNav);
+    return () => {
+      window.removeEventListener('popstate', onNav);
+      window.removeEventListener('vault:navigation', onNav);
+    };
   }, []);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const load = useCallback(async (isInitial: boolean) => {
+    if (isInitial) setLoading(true);
+    else setRefreshing(true);
+    if (isInitial) setError(null);
     try {
       const [d26, d27, d28, heat, staff] = await Promise.all([
         fetchRecruitingBoard(2026),
         fetchRecruitingBoard(2027),
         fetchRecruitingBoard(2028),
-        fetchRecruitingHeatCheck(),
+        fetchRecruitingHeatCheck(isInitial),
         fetchStaffDashboard().catch(() => null),
       ]);
       setB26({
         commits: rankCommits(filterRecruitingHsOnly(d26.commits ?? [])),
+        rankings: d26.rankings ?? null,
       });
       setB27({
         commits: rankCommits(filterRecruitingHsOnly(d27.commits ?? [])),
         targets: rankTargets(filterRecruitingHsOnly(d27.targets ?? [])),
+        rankings: d27.rankings ?? null,
       });
       setB28({
         commits: rankCommits(filterRecruitingHsOnly(d28.commits ?? [])),
@@ -276,15 +294,26 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load recruiting hub.');
     } finally {
-      setLoading(false);
+      if (isInitial) {
+        setLoading(false);
+        loadedOnce.current = true;
+      } else {
+        setRefreshing(false);
+      }
     }
   }, []);
 
   useEffect(() => {
-    void load();
+    let cancelled = false;
+    void load(true).then(() => {
+      if (cancelled) return;
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [load]);
 
-  useVaultDataReload(load);
+  useVaultDataReload(() => void load(false));
 
   useEffect(() => {
     const onLeave = () => persistHubState();
@@ -356,12 +385,24 @@ export function VaultRecruitingHubPage(): React.ReactElement {
         ))}
       </div>
 
-      {loading && <p className="gv-page-status">Loading recruiting hub…</p>}
+      {loading && !loadedOnce.current && <p className="gv-page-status">Loading recruiting hub…</p>}
+      {refreshing && loadedOnce.current && (
+        <p className="gv-page-status gv-page-status--inline">Refreshing…</p>
+      )}
       {error && !loading && (
-        <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Dashboard" />
+        <UiError message={error} retry={() => void load(true)} backHref="/vault" backLabel="← Dashboard" />
       )}
 
-      {!loading && !error && tab === 'priority' && (
+      {loadedOnce.current && !error && (
+        <ClassSummaryBar
+          commits={b27.commits}
+          rankings={b27.rankings}
+          classYear={2027}
+          compareRankings={b26.rankings ?? undefined}
+        />
+      )}
+
+      {loadedOnce.current && !error && tab === 'priority' && (
         <section className="gv-rh-priority">
           <h2 className="gv-vault-alerts__section-title">Top 10 UF Priority Targets</h2>
           <p className="gv-page-subtitle">
@@ -372,23 +413,23 @@ export function VaultRecruitingHubPage(): React.ReactElement {
         </section>
       )}
 
-      {!loading && !error && tab === 'commits-2026' &&
+      {loadedOnce.current && !error && tab === 'commits-2026' &&
         renderGrid(b26.commits, 'commit', 'No 2026 commits yet.')}
 
-      {!loading && !error && tab === 'heat-check' && (
+      {loadedOnce.current && !error && tab === 'heat-check' && (
         <HeatCheckPanel rising={rising} cooling={cooling} />
       )}
 
-      {!loading && !error && tab === 'commits-2027' &&
+      {loadedOnce.current && !error && tab === 'commits-2027' &&
         renderGrid(b27.commits, 'commit', 'No 2027 commits yet.')}
 
-      {!loading && !error && tab === 'targets-2027' &&
+      {loadedOnce.current && !error && tab === 'targets-2027' &&
         renderGrid(b27.targets, 'target', 'No 2027 targets.')}
 
-      {!loading && !error && tab === 'targets-2028' &&
+      {loadedOnce.current && !error && tab === 'targets-2028' &&
         renderGrid(b28.targets, 'target', 'No 2028 targets yet — early discovery board coming soon.')}
 
-      {!loading && !error && tab === 'intel' && (
+      {loadedOnce.current && !error && tab === 'intel' && (
         <MovementIntelPanel
           intelSub={intelSub}
           setIntelSub={setIntelSub}
@@ -400,13 +441,13 @@ export function VaultRecruitingHubPage(): React.ReactElement {
         />
       )}
 
-      {!loading && !error && tab === 'scouting' && (
+      {loadedOnce.current && !error && tab === 'scouting' && (
         <div className="gv-rh-scouting">
           <ScoutingDepartmentPage inVault />
         </div>
       )}
 
-      {!loading && !error && tab === 'portal' && (
+      {loadedOnce.current && !error && tab === 'portal' && (
         <div className="gv-rh-portal">
           {!PORTAL_SEASON_OPEN ? (
             <div className="gv-rh-portal-closed">
@@ -422,7 +463,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
         </div>
       )}
 
-      {!loading && !error && tab === 'rankings' && (
+      {loadedOnce.current && !error && tab === 'rankings' && (
         <div className="gv-rh-rankings">
           <div className="gv-hub-tabs gv-hub-tabs--sub">
             <button

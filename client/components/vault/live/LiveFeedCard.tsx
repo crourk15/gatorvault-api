@@ -6,7 +6,7 @@ import { feedIcon, timeAgo } from './live-feed-utils';
 
 export function LiveFeedCard({ item }: { item: LiveFeedItem }): React.ReactElement {
   return (
-    <li className="gv-live-feed__row gv-live-feed__row--headline">
+    <li className="gv-live-feed__row gv-live-feed__row--headline gv-live-media-card">
       <span className="gv-live-feed__row-icon" aria-hidden="true">
         {feedIcon(item)}
       </span>

@@ -21,30 +21,30 @@ export function LiveFeedShell({
       {error && !loading && (
         <UiError message={error} retry={onRetry} backHref="/vault" backLabel="← Dashboard" />
       )}
-      {!loading && !error ? children : null}
+      {!error ? children : null}
     </>
   );
 }
 
 export function PodcastFeed({ podcasts }: { podcasts: PodcastShow[] }): React.ReactElement {
   return (
-    <div className="live-feed-list" data-testid="live-podcast-feed">
+    <div className="gv-live-feed__list live-feed-list" data-testid="live-podcast-feed">
       {podcasts.map((show, i) => (
-        <article key={i} className="live-pod-card">
-          <span className="live-pod-card__icon" aria-hidden="true">
+        <article key={i} className="gv-live-feed__podcast-card gv-live-media-card">
+          <span className="gv-live-feed__podcast-icon gv-live-podcast-thumb" aria-hidden="true">
             🎙️
           </span>
-          <div>
-            <p className="live-pod-card__title">{show.title}</p>
-            {show.description ? <p className="live-pod-card__desc">{show.description}</p> : null}
-            <div className="live-pod-platforms">
+          <div className="gv-live-feed__podcast-body">
+            <p className="gv-live-feed__podcast-title">{show.title}</p>
+            {show.description ? <p className="gv-live-feed__podcast-desc">{show.description}</p> : null}
+            <div className="gv-live-feed__podcast-platforms">
               {show.platforms?.map((pl) => (
                 <a
                   key={pl.url}
                   href={pl.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="live-pod-platform-pill"
+                  className="gv-live-feed__podcast-pill"
                 >
                   {pl.name}
                 </a>

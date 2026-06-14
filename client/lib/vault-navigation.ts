@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 const STATE_PREFIX = 'gv-vault-state:';
 
@@ -78,15 +78,19 @@ export function useVaultPageRestore(
   pageKey: string,
   onRestore: (state: VaultPageState) => void
 ): void {
-  const restore = useCallback(onRestore, [onRestore]);
+  const restoredRef = useRef(false);
+  const onRestoreRef = useRef(onRestore);
+  onRestoreRef.current = onRestore;
 
   useEffect(() => {
-    const saved = peekVaultPageState(pageKey);
-    if (saved) restore(saved);
+    if (restoredRef.current) return;
+    restoredRef.current = true;
+    const saved = consumeVaultPageState(pageKey);
+    if (saved) onRestoreRef.current(saved);
     if (saved?.scrollY != null) {
       requestAnimationFrame(() => window.scrollTo(0, saved.scrollY ?? 0));
     }
-  }, [pageKey, restore]);
+  }, [pageKey]);
 }
 
 /** Re-run data loaders when returning via bfcache. */

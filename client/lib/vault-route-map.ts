@@ -186,7 +186,11 @@ export function parseRecruitingTabFromSearch(): RecruitingHubTab | null {
 }
 
 export function resolveRecruitingTab(pathname?: string): RecruitingHubTab {
-  return parseRecruitingTabFromPath(pathname) ?? parseRecruitingTabFromSearch() ?? 'commits-2026';
+  const p = normPath(pathname ?? (typeof window !== 'undefined' ? window.location.pathname : ''));
+  const fromSearch = parseRecruitingTabFromSearch();
+  const fromPath = parseRecruitingTabFromPath(pathname);
+  if (p === '/vault/recruiting' && fromSearch) return fromSearch;
+  return fromPath ?? fromSearch ?? 'commits-2026';
 }
 
 export function recruitingTabPath(tab: RecruitingHubTab): string {
@@ -217,7 +221,7 @@ export function parseFilmRoomSegmentFromPath(pathname?: string): FilmRoomSegment
   if (p.includes('/film-room/breakdowns')) return 'breakdowns';
   if (p.includes('/film-room/press')) return 'press';
   if (p.includes('/film-room/highlights')) return 'highlights';
-  if (p.includes('/film-room/scheme') || p === '/vault/film-room') return 'scheme';
+  if (p.includes('/film-room/scheme')) return 'scheme';
   return null;
 }
 

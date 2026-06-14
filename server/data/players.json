@@ -967,52 +967,6 @@
   },
   {
     "id": null,
-    "full_name": "Jaylen Jordan",
-    "slug": "jaylen-jordan",
-    "class_year": 2026,
-    "position": "TE",
-    "status": "HS",
-    "height": 78,
-    "weight": 240,
-    "hometown": null,
-    "state": null,
-    "high_school": "Hilliard FL",
-    "stars": 3,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
-    "committed_to": "Florida",
-    "high_school_profile": {
-      "offers": [
-        {
-          "school": "Florida",
-          "date": null
-        }
-      ],
-      "stats": {
-        "stars": 3,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
-        "on3_id": null
-      },
-      "recruiting_notes": "TE · 3★ · Hilliard FL",
-      "discovery_score": null
-    },
-    "signals": [
-      {
-        "signal_type": "OFFER",
-        "signal_value": {
-          "school": "Florida"
-        },
-        "created_at": "2026-06-11T15:49:00.099Z"
-      }
-    ]
-  },
-  {
-    "id": null,
     "full_name": "Ace Ciongoli",
     "slug": "ace-ciongoli",
     "class_year": 2026,
@@ -1055,52 +1009,6 @@
           "school": "Florida"
         },
         "created_at": "2026-01-26T12:00:00.000Z"
-      }
-    ]
-  },
-  {
-    "id": null,
-    "full_name": "Kennedee Jackson",
-    "slug": "kennedee-jackson",
-    "class_year": 2027,
-    "position": "OL",
-    "status": "HS",
-    "height": 78,
-    "weight": 301,
-    "hometown": "Lithonia",
-    "state": "GA",
-    "high_school": null,
-    "stars": 4,
-    "composite_rating": 0.929,
-    "ranking_national": 98,
-    "ranking_position": 9,
-    "ranking_state": 8,
-    "committed_to": "Florida",
-    "high_school_profile": {
-      "offers": [
-        {
-          "school": "Florida",
-          "date": "2026-06-02"
-        }
-      ],
-      "stats": {
-        "stars": 4,
-        "rating": 92.85688405797102,
-        "natl_rank": 98,
-        "pos_rank": 9,
-        "state_rank": 8,
-        "on3_id": "284256"
-      },
-      "recruiting_notes": "OT · 4★ · Lithonia, GA · #98 natl",
-      "discovery_score": null
-    },
-    "signals": [
-      {
-        "signal_type": "OFFER",
-        "signal_value": {
-          "school": "Florida"
-        },
-        "created_at": "2026-06-02T12:00:00.000Z"
       }
     ]
   },
@@ -2259,52 +2167,6 @@
   },
   {
     "id": null,
-    "full_name": "T.J. Shanahan",
-    "slug": "tj-shanahan-jr",
-    "class_year": 2026,
-    "position": "OL",
-    "status": "HS",
-    "height": 76,
-    "weight": 316,
-    "hometown": "Orlando",
-    "state": "FL",
-    "high_school": null,
-    "stars": 3,
-    "composite_rating": null,
-    "ranking_national": null,
-    "ranking_position": null,
-    "ranking_state": null,
-    "committed_to": "Florida",
-    "high_school_profile": {
-      "offers": [
-        {
-          "school": "Florida",
-          "date": "2026-01-06"
-        }
-      ],
-      "stats": {
-        "stars": 3,
-        "rating": null,
-        "natl_rank": null,
-        "pos_rank": null,
-        "state_rank": null,
-        "on3_id": "113148"
-      },
-      "recruiting_notes": "IOL · 3★ · Orlando, FL",
-      "discovery_score": null
-    },
-    "signals": [
-      {
-        "signal_type": "OFFER",
-        "signal_value": {
-          "school": "Florida"
-        },
-        "created_at": "2026-01-06T12:00:00.000Z"
-      }
-    ]
-  },
-  {
-    "id": null,
     "full_name": "Evan Pryor",
     "slug": "evan-pryor",
     "class_year": 2026,
@@ -3422,53 +3284,6 @@
           "school": "Florida"
         },
         "created_at": "2026-05-12T12:00:00.000Z"
-      }
-    ]
-  },
-  {
-    "id": null,
-    "full_name": "T.J. Shanahan",
-    "slug": "t-j-shanahan",
-    "class_year": 2026,
-    "position": "OL",
-    "status": "PORTAL",
-    "height": 76,
-    "weight": 316,
-    "hometown": null,
-    "state": null,
-    "high_school": "Penn State",
-    "stars": 3,
-    "composite_rating": 0.892,
-    "ranking_national": 260,
-    "ranking_position": 16,
-    "ranking_state": null,
-    "committed_to": "Florida",
-    "college_profile": {
-      "college": "Penn State",
-      "years_played": null,
-      "games_played": null,
-      "snaps": {},
-      "stats": {},
-      "depth_history": []
-    },
-    "portal_profile": {
-      "previous_school": "Penn State",
-      "entered_portal_at": null,
-      "exited_portal_at": null,
-      "portal_status": "COMMITTED",
-      "destination_school": "Florida",
-      "eligibility_remaining": null,
-      "reason_tags": [],
-      "portal_likelihood": null,
-      "likelihood_reason": null
-    },
-    "signals": [
-      {
-        "signal_type": "OFFER",
-        "signal_value": {
-          "school": "Florida"
-        },
-        "created_at": "2026-01-06T12:00:00.000Z"
       }
     ]
   },

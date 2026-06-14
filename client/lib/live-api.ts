@@ -82,13 +82,8 @@ export function buildSocialLanes(beat: BeatPost[]): SocialFeedLane[] {
     (p) => !ufOfficial.includes(p) && (p.outlet || p.writerName)
   );
   const xPosts = beat.filter((p) => p.url?.includes('twitter.com') || p.url?.includes('x.com'));
-  const instagram = beat.filter((p) =>
-    /instagram\.com/i.test(p.url ?? '') || /instagram/i.test(`${p.handle} ${p.outlet}`)
-  );
-
   return [
     { id: 'x', label: 'X / Twitter', icon: '𝕏', posts: xPosts.slice(0, 8) },
-    { id: 'instagram', label: 'Instagram', icon: '📸', posts: instagram.slice(0, 6) },
     { id: 'beat', label: 'UF Beat Writers', icon: '✍️', posts: beatWriters.slice(0, 8) },
     { id: 'uf', label: 'UF Official', icon: '🐊', posts: ufOfficial.slice(0, 6) },
   ];

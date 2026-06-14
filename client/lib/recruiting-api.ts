@@ -17,8 +17,9 @@ export interface HeatCheckResponse {
   updatedAt?: string;
 }
 
-export async function fetchRecruitingHeatCheck(): Promise<HeatCheckResponse> {
-  return apiFetch<HeatCheckResponse>('/api/recruiting/heat-check');
+export async function fetchRecruitingHeatCheck(force = false): Promise<HeatCheckResponse> {
+  const q = force ? '?force=1' : '';
+  return apiFetch<HeatCheckResponse>(`/api/recruiting/heat-check${q}`);
 }
 
 export interface PortalIncomingPlayer {

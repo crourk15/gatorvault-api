@@ -34,12 +34,10 @@ const class2026 = [
   { name: 'Micah Jones', pos: 'TE', school: 'Sandalwood HS, Jacksonville FL', htWt: '6-4 / 230', stars: 3, status: 'Enrolled' },
   { name: 'Byron Louis', pos: 'RB', school: 'Dr. Phillips HS, Orlando FL', htWt: '5-10 / 195', stars: 3, status: 'Enrolled' },
   { name: 'Jalen Wiggins', pos: 'EDGE', school: 'Mainland HS, Daytona Beach FL', htWt: '6-3 / 220', stars: 3, status: 'Enrolled' },
-  { name: 'Jaylen Jordan', pos: 'TE', school: 'Hilliard FL', htWt: '6-6 / 240', stars: 3, status: 'Committed' },
   { name: 'Ace Ciongoli', pos: 'WR', school: "St. Sebastian's, Needham MA", htWt: '5-11 / 190', stars: 3, status: 'Enrolled' }
 ];
 
 const class2027 = [
-  { name: 'Kennedee Jackson', pos: 'OT', school: 'Lithonia (Lithonia, GA)', htWt: '6-5.5 / 301', stars: 4, rating: '91.77', natl: 139, posRk: 14, stRk: 14, date: '06/02/26', inState: false },
   { name: "Ja'Bios Smith", pos: 'LB', school: 'Swainsboro (Swainsboro, GA)', htWt: '6-2 / 205', stars: 4, rating: '91.78', natl: 138, posRk: 11, stRk: 13, date: '05/29/26', inState: false },
   { name: 'Elias Pearl', pos: 'WR', school: 'Port Charlotte (Port Charlotte, FL)', htWt: '5-11 / 183', stars: 4, rating: '92.47', natl: 95, posRk: 17, stRk: 11, date: '05/19/26', inState: true },
   { name: 'Peyton Miller', pos: 'IOL', school: 'Anna (Anna, TX)', htWt: '6-5 / 290', stars: 4, rating: '91.85', natl: 130, posRk: 10, stRk: 17, date: '04/27/26', inState: false },
@@ -72,7 +70,6 @@ const portalIncoming = [
   { name: 'Eric Singleton Jr.', pos: 'WR', from: 'Auburn', htWt: '6-2 / 185', stars: 4, note: 'Auburn transfer is the clear WR1.' },
   { name: 'Harrison Moore', pos: 'C', from: 'Georgia Tech', htWt: '6-3 / 300', stars: 3, note: 'Georgia Tech transfer starts at center.' },
   { name: 'Eagan Boyer', pos: 'LT', from: 'Penn State', htWt: '6-5 / 305', stars: 3, note: 'Penn State transfer. Backup tackle.' },
-  { name: 'TJ Shanahan Jr.', pos: 'RG', from: 'Penn State', htWt: '6-4 / 315', stars: 3, note: 'Battling Bryce Lovett for RG.' },
   { name: 'Evan Pryor', pos: 'RB', from: 'Cincinnati', htWt: '5-10 / 195', stars: 3, note: 'Cincinnati transfer adds RB depth.' },
   { name: 'Luke Harpring', pos: 'TE', from: 'Georgia Tech', htWt: '6-5 / 245', stars: 3, note: 'Georgia Tech TE.' },
   { name: 'Cam Dooley', pos: 'FS/S', from: 'Kentucky', htWt: '6-1 / 205', stars: 3, note: 'Kentucky transfer.' },

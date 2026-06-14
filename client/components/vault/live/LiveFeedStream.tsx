@@ -22,7 +22,7 @@ export function LiveFeedStream({
 
   return (
     <>
-      <div className="gv-live-feed__chips">
+      <div className="gv-live-feed__chips gv-live-category-chips">
         {CATEGORY_CHIPS.map((chip) => (
           <button
             key={chip.id}
