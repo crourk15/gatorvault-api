@@ -94,14 +94,11 @@ export function fromFeedPrediction(
     stars: p.stars ?? 0,
     fitScore: p.ufFitScore ?? 0,
     ufProbability:
-    p.ufProbability != null
-      ? p.ufProbability / 100
-      : 0,  
-        : isCommit && p.confidence
+      p.ufProbability != null
+        ? p.ufProbability / 100
+        : isCommit && p.confidence != null
           ? p.confidence / 100
-          : p.confidence
-            ? p.confidence / 100
-            : null,
+          : 0,
     movementDirection:
       p.delta != null ? (p.delta > 0 ? 'up' : p.delta < 0 ? 'down' : 'flat') : undefined,
     skinny: undefined,
