@@ -26,6 +26,7 @@ import {
   FUTURECAST_CLASS_YEAR,
 } from '../futurecast/feed-filters';
 import { dedupeByPlayerId } from '../futurecast/eligibility';
+import { enrichFeedPlayers } from '../futurecast/ranking-enrichment';
 
 export const handleListPredictions = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -59,7 +60,7 @@ export const handleListPredictions = asyncHandler(async (req: Request, res: Resp
     predictions = applyFeedFilters(predictions, { hsOnly, portalOnly, floridaOnly, trendingUp });
     predictions = predictions.slice(0, limit);
 
-    res.json({ predictions });
+    res.json({ predictions: enrichFeedPlayers(predictions) });
   } catch (err) {
     handlePredictionsApiError(res, err);
   }

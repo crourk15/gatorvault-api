@@ -14,6 +14,7 @@ import {
   parsePosition,
   parseSort,
 } from './utils-api';
+import { enrichFeedPlayers } from '../futurecast/ranking-enrichment';
 
 export const handleGetBigBoard = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -25,7 +26,7 @@ export const handleGetBigBoard = asyncHandler(async (req: Request, res: Response
     const limit = parseLimit(req.query.limit, 200, 500);
 
     const raw = await listBigBoardPlayers({ class_year, position, lifecycle });
-    const players = buildBigBoard(raw, sort, order, limit);
+    const players = enrichFeedPlayers(buildBigBoard(raw, sort, order, limit));
 
     res.json({ players });
   } catch (err) {
