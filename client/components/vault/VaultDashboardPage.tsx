@@ -5,6 +5,7 @@ import { fetchFutureCastHome } from '@/lib/futurecast-home-api';
 import { fetchRecruitingBoard } from '@/lib/recruiting-board-api';
 import { fetchNilDashboard } from '@/lib/nil-api';
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
+import { PodcastsRecruitingSection } from '@/components/vault/live/PodcastsRecruitingSection';
 
 const QUICK_LINKS = [
   {
@@ -186,6 +187,8 @@ export function VaultDashboardPage(): React.ReactElement {
           <span className="gv-vault-dashboard__pulse-label">{pulse.nextGame}</span>
         </a>
       </section>
+
+      <PodcastsRecruitingSection limit={4} />
 
       <div className="gv-vault-dashboard__grid">
         {QUICK_LINKS.map((item) => (

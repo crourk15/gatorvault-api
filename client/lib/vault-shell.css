@@ -3067,6 +3067,204 @@ a.gv-live-feed__row-title:hover {
   line-height: 1.3;
 }
 
+/* Podcasts + Recruiting Updates — premium card hub */
+.gv-vault-media-section {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.gv-vault-media-section__block {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.gv-vault-media-section__title {
+  margin: 0;
+  font-family: Oswald, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gv-vault-media-section__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gv-vault-media-section__icon--blue {
+  color: #60a5fa;
+}
+
+.gv-vault-media-section__icon--orange {
+  color: #fa4616;
+}
+
+.gv-vault-media-section__svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.gv-vault-media-section__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .gv-vault-media-section__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.gv-vault-media-section__empty {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.gv-vault-media-section--live {
+  padding-top: 0;
+  padding-bottom: 1.5rem;
+}
+
+.gv-vault-media-card {
+  border-radius: 0.75rem;
+  background: #0d0f12;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: background 0.2s ease;
+}
+
+.gv-vault-media-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.gv-vault-media-card--skeleton {
+  min-height: 7rem;
+  background: linear-gradient(
+    90deg,
+    rgba(13, 15, 18, 0.9) 25%,
+    rgba(30, 41, 59, 0.55) 50%,
+    rgba(13, 15, 18, 0.9) 75%
+  );
+  background-size: 200% 100%;
+  animation: gv-vault-media-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes gv-vault-media-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.gv-vault-media-card__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.gv-vault-media-card__title-row,
+.gv-vault-media-card__headline-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.gv-vault-media-card__icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.gv-vault-media-card__icon--blue {
+  color: #60a5fa;
+}
+
+.gv-vault-media-card__icon--orange {
+  color: #fa4616;
+}
+
+.gv-vault-media-card__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.35;
+}
+
+.gv-vault-media-card__desc {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.gv-vault-media-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.gv-vault-media-card__link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.gv-vault-media-card__link:hover {
+  color: #60a5fa;
+}
+
+.gv-vault-media-card__update {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gv-vault-media-card__headline {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.4;
+}
+
+.gv-vault-media-card__headline--link {
+  text-decoration: none;
+  color: #fff;
+  transition: color 0.15s ease;
+}
+
+.gv-vault-media-card__headline--link:hover {
+  color: #fa4616;
+}
+
+.gv-vault-media-card__meta {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .gv-schedule-row__intel {
   font-size: 0.8125rem;
   color: #94a3b8;

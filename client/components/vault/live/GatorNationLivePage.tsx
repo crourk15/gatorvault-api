@@ -18,6 +18,7 @@ import { BeatWriterFeed } from './BeatWriterFeed';
 import { LiveFeedHeader } from './LiveFeedHeader';
 import { LiveFeedShell, PodcastFeed } from './LiveFeedShell';
 import { LiveFeedStream } from './LiveFeedStream';
+import { PodcastsRecruitingSection } from './PodcastsRecruitingSection';
 import { LIVE_REFRESH_MS, LIVE_STATE_KEY, type FeedCategory } from './live-feed-utils';
 
 function liveTabToInternal(tab: LiveFeedTab): 'feed' | 'beat' | 'podcast' {
@@ -133,6 +134,8 @@ export function GatorNationLivePage(): React.ReactElement {
   return (
     <div className="gv-live-feed gv-live-feed--espn" data-testid="vault-live-feed">
       <LiveFeedHeader feed={feed} tab={tab} updatedAt={updatedAt} onSelectTab={selectTab} />
+
+      <PodcastsRecruitingSection limit={6} className="gv-vault-media-section--live" />
 
       <div className="gv-live-feed__social-lanes">
         {socialLanes.map((lane) => (
