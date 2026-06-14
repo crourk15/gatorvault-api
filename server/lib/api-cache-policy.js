@@ -34,6 +34,7 @@ const SHORT_TTL_ROUTES = [
   { prefix: '/api/futurecast/home', maxAge: 300, sMaxAge: 600 },
   { prefix: '/api/futurecast/class', maxAge: 300, sMaxAge: 600 },
   { prefix: '/api/futurecast/predictions', maxAge: 300, sMaxAge: 600 },
+  { prefix: '/api/futurecast/staff-notes', maxAge: 300, sMaxAge: 600 },
   { prefix: '/api/film-room/catalog', maxAge: 60 },
   { prefix: '/api/recruiting/board', maxAge: 45 },
   { prefix: '/api/roster/players', maxAge: 45 },

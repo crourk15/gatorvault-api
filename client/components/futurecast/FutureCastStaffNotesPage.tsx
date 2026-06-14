@@ -1,69 +1,130 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { FutureCastSubNav } from '@/components/site/FutureCastSubNav';
-import { fetchWarRoomBreakdowns, type WarRoomBreakdown } from '@/lib/war-room-api';
+import {
+  loadFutureCastStaffNotes,
+  readFutureCastStaffNotesCache,
+  STAFF_NOTES_YEAR,
+  type FutureCastStaffNote,
+  type FutureCastStaffNotesResponse,
+  type StaffNotesLoadMeta,
+} from '@/lib/futurecast-staff-notes-api';
 import { playerProfilePath } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 import '@/lib/futurecast.css';
 
-/** 2026 UF commit slugs — excluded from Staff Notes (cycle closed). */
-const EXCLUDED_2026_SLUGS = new Set([
-  'davian-groce', 'cj-bronaugh', 'kevin-ford', 'justin-williams', 'jareylan-mccoy',
-  'dylan-purter', 'will-griffin', 'kendall-guervil', 'tyler-chukuyem', 'malik-morris',
-  'heze-kent', 'marquez-daniel', 'kaiden-hall', 'duke-clark', 'gnivre-carr',
-  'corey-brown', 'desmond-green', 'javarii-luckas', 'micah-jones', 'byron-louis',
-  'jalen-wiggins', 'jaylen-jordan', 'ace-ciongoli',
-]);
-
-function isExcluded2026(b: WarRoomBreakdown): boolean {
-  if (EXCLUDED_2026_SLUGS.has(b.playerSlug)) return true;
-  const story = `${b.recruitingStory ?? ''} ${b.projection ?? ''}`.toLowerCase();
-  if (/\b2026\b/.test(story) && !/\b2027\b/.test(story)) return true;
-  return false;
+function formatUpdatedAt(iso: string | null | undefined): string {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '—';
+  return d.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 }
 
-function BreakdownCard({ entry }: { entry: WarRoomBreakdown }): React.ReactElement {
+function NoteSkeletonGrid(): React.ReactElement {
+  return (
+    <div className="fc-staff-notes-grid fc-staff-notes-grid--loading" data-testid="fc-staff-notes-skeleton">
+      {Array.from({ length: 6 }, (_, i) => (
+        <div key={i} className="fc-staff-note-card fc-staff-note-card--skeleton">
+          <div className="fc-staff-note-card__skeleton fc-staff-note-card__skeleton--title" />
+          <div className="fc-staff-note-card__skeleton fc-staff-note-card__skeleton--line" />
+          <div className="fc-staff-note-card__skeleton fc-staff-note-card__skeleton--line" />
+          <div className="fc-staff-note-card__skeleton fc-staff-note-card__skeleton--line-short" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function BreakdownCard({ entry }: { entry: FutureCastStaffNote }): React.ReactElement {
   const href = playerProfilePath(entry.playerSlug, 'HIGH_SCHOOL', true, entry.playerName, 'futurecast');
-  const note = entry.insiderNotes || entry.staffNotes || entry.projection || entry.recruitingStory;
+  const meta = [entry.position, entry.school, entry.classYear ? `Class of ${entry.classYear}` : null]
+    .filter(Boolean)
+    .join(' · ');
 
   return (
-    <a href={href} className="fc-staff-note-card">
+    <a href={href} className="fc-staff-note-card" data-testid="fc-staff-note-card">
       <h3 className="fc-staff-note-card__name">{entry.playerName}</h3>
-      {entry.projection && <p className="fc-staff-note-card__projection">{entry.projection}</p>}
-      {note && (
-        <p className="fc-staff-note-card__note">
-          {String(note).length > 280 ? `${String(note).slice(0, 280)}…` : note}
-        </p>
-      )}
-      {entry.comparison && (
-        <p className="fc-staff-note-card__comp">Comp: {entry.comparison}</p>
-      )}
+      {meta ? <p className="fc-staff-note-card__meta">{meta}</p> : null}
+      {entry.projection ? <p className="fc-staff-note-card__projection">{entry.projection}</p> : null}
+      {entry.notePreview ? <p className="fc-staff-note-card__note">{entry.notePreview}</p> : null}
+      {entry.comparison ? <p className="fc-staff-note-card__comp">Comp: {entry.comparison}</p> : null}
+      {entry.analystName ? (
+        <p className="fc-staff-note-card__analyst">{entry.analystName}</p>
+      ) : null}
     </a>
   );
 }
 
-export default function FutureCastStaffNotesPage(): React.ReactElement {
-  const [notes, setNotes] = useState<WarRoomBreakdown[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+function StaffNotesContent({
+  data,
+  fromCache,
+}: {
+  data: FutureCastStaffNotesResponse;
+  fromCache: boolean;
+}): React.ReactElement {
+  return (
+    <>
+      <p className="fc-staff-notes-updated">
+        {fromCache ? 'Cached · ' : 'Updated '}
+        {formatUpdatedAt(data.updatedAt)} · {data.count} evaluations
+      </p>
+      <div className="fc-staff-notes-grid">
+        {data.notes.map((entry) => (
+          <BreakdownCard key={entry.playerSlug} entry={entry} />
+        ))}
+        {data.notes.length === 0 ? (
+          <UiEmpty message={`No staff notes for the ${STAFF_NOTES_YEAR} cycle yet.`} />
+        ) : null}
+      </div>
+    </>
+  );
+}
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const all = await fetchWarRoomBreakdowns();
-      setNotes(all.filter((b) => !isExcluded2026(b)));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load staff notes.');
-    } finally {
-      setLoading(false);
+function FutureCastStaffNotesPageInner(): React.ReactElement {
+  const [data, setData] = useState<FutureCastStaffNotesResponse | null>(null);
+  const [meta, setMeta] = useState<StaffNotesLoadMeta | null>(null);
+  const [hydrating, setHydrating] = useState(true);
+  const [fromCache, setFromCache] = useState(false);
+  const dataRef = useRef<FutureCastStaffNotesResponse | null>(null);
+
+  const load = useCallback(async (isBackground: boolean) => {
+    if (!isBackground && !dataRef.current) setHydrating(true);
+
+    const result = await loadFutureCastStaffNotes();
+    if (result.data) {
+      dataRef.current = result.data;
+      setData(result.data);
+      setMeta(result.meta);
+      setFromCache(result.meta.fromCache);
+    } else if (!dataRef.current) {
+      setMeta(result.meta);
     }
+    setHydrating(false);
   }, []);
 
   useEffect(() => {
-    void load();
+    const cached = readFutureCastStaffNotesCache();
+    if (cached) {
+      dataRef.current = cached;
+      setData(cached);
+      setFromCache(true);
+      setHydrating(false);
+    }
+
+    let cancelled = false;
+    void (async () => {
+      if (cancelled) return;
+      await load(!!cached);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [load]);
+
+  const offline = meta?.offline;
+  const timedOut = meta?.timedOut;
 
   return (
     <div className="fc-futurecast-page" data-testid="vault-futurecast-staff-notes">
@@ -71,23 +132,45 @@ export default function FutureCastStaffNotesPage(): React.ReactElement {
       <div className="gv-page-hero">
         <h1 className="gv-page-title">Staff Notes</h1>
         <p className="gv-page-subtitle">
-          Insider evaluations for 2027+ targets — 2026 cycle notes removed.
+          Live insider evaluations and scouting intel for {STAFF_NOTES_YEAR}+ Florida targets.
         </p>
       </div>
 
-      {loading && <p className="fc-staff-dashboard__status">Loading staff notes…</p>}
-      {error && !loading && (
-        <UiError message={error} retry={() => void load()} backHref="/vault/futurecast" backLabel="← FutureCast" />
-      )}
+      {hydrating && !data ? <NoteSkeletonGrid /> : null}
 
-      {!loading && !error && (
-        <div className="fc-staff-notes-grid">
-          {notes.map((entry) => (
-            <BreakdownCard key={entry.playerSlug} entry={entry} />
-          ))}
-          {notes.length === 0 && <UiEmpty message="No staff notes for the current cycle." />}
-        </div>
-      )}
+      {!hydrating && !data && (timedOut || offline) ? (
+        <UiError
+          title={offline ? 'FutureCast temporarily offline' : 'FutureCast unavailable — retry'}
+          message={
+            offline
+              ? 'Staff notes could not be loaded from the API.'
+              : 'Staff notes did not load within 2.5 seconds.'
+          }
+          retry={() => void load(false)}
+          backHref="/vault/futurecast"
+          backLabel="← FutureCast"
+        />
+      ) : null}
+
+      {!hydrating && !data && !timedOut && !offline ? (
+        <UiError
+          title="FutureCast unavailable — retry"
+          message="Could not load staff notes."
+          retry={() => void load(false)}
+          backHref="/vault/futurecast"
+          backLabel="← FutureCast"
+        />
+      ) : null}
+
+      {data ? <StaffNotesContent data={data} fromCache={fromCache} /> : null}
     </div>
+  );
+}
+
+export default function FutureCastStaffNotesPage(): React.ReactElement {
+  return (
+    <Suspense fallback={<NoteSkeletonGrid />}>
+      <FutureCastStaffNotesPageInner />
+    </Suspense>
   );
 }

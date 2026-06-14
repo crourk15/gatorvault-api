@@ -53,6 +53,7 @@ const FORBIDDEN_VAULT_MONOLITH = [
 
 const CORE_API_PROBES = [
   { id: 'futurecast-home', path: '/api/futurecast/home' },
+  { id: 'futurecast-staff-notes', path: '/api/futurecast/staff-notes?year=2027' },
   { id: 'portal-players', path: '/api/portal/players?limit=5' },
   { id: 'recruiting-board', path: '/api/recruiting/board' },
   { id: 'roster-players', path: '/api/roster/players' },

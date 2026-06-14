@@ -2051,6 +2051,53 @@
   font-style: italic;
 }
 
+.fc-staff-note-card__meta {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0 0 0.35rem;
+}
+
+.fc-staff-note-card__analyst {
+  font-size: 0.6875rem;
+  color: #22c55e;
+  margin: 0.5rem 0 0;
+  font-weight: 600;
+}
+
+.fc-staff-notes-updated {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0 0 1rem;
+}
+
+.fc-staff-note-card--skeleton {
+  pointer-events: none;
+}
+
+.fc-staff-note-card__skeleton {
+  background: linear-gradient(90deg, rgba(30, 58, 95, 0.5) 25%, rgba(51, 85, 136, 0.55) 50%, rgba(30, 58, 95, 0.5) 75%);
+  background-size: 200% 100%;
+  animation: gv-fc-skeleton 1.2s ease-in-out infinite;
+  border-radius: 0.375rem;
+}
+
+.fc-staff-note-card__skeleton--title {
+  height: 1rem;
+  width: 70%;
+  margin-bottom: 0.5rem;
+}
+
+.fc-staff-note-card__skeleton--line {
+  height: 0.65rem;
+  width: 100%;
+  margin-bottom: 0.35rem;
+}
+
+.fc-staff-note-card__skeleton--line-short {
+  height: 0.65rem;
+  width: 55%;
+}
+
 .fc-home-card__badge--visit {
   background: rgba(250, 70, 22, 0.2);
   color: #fb923c;
