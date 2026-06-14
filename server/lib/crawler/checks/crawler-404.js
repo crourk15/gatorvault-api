@@ -108,6 +108,12 @@ async function analyze404Assets() {
   }
 
   const sample = [...allAssets].slice(0, 30);
+  if (useProductionHtml && allAssets.size) {
+    const preview = sample.slice(0, 3).join(', ');
+    console.log(
+      `[qa:crawler:404] production-html assets=${allAssets.size} sample=${preview}`
+    );
+  }
   await Promise.all(
     sample.map(async (rel) => {
       if (!useProductionHtml) {

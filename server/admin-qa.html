@@ -91,11 +91,14 @@
       var el = document.getElementById('stats');
       var up = data.uptime || {};
       var last = data.lastRun || {};
+      var build = data.crawlerBuild || {};
+      var buildLabel = build.short ? ('build ' + build.short + ' · ' + (build.assetSource || 'production-html')) : '—';
       el.innerHTML = [
         stat('Uptime', (up.percent != null ? up.percent + '%' : '—'), 'ok'),
         stat('Checks', up.checks || 0, ''),
         stat('Last Run', last.pass ? 'PASS' : (last.at ? 'FAIL' : '—'), last.pass ? 'ok' : (last.at ? 'fail' : '')),
         stat('Failed Checks', last.failed || 0, last.failed ? 'fail' : 'ok'),
+        stat('Crawler Build', buildLabel, ''),
         stat('Duration', last.at ? (data.recentRuns && data.recentRuns[0] ? data.recentRuns[0].durationMs + 'ms' : '—') : '—', '')
       ].join('');
     }
@@ -106,7 +109,7 @@
 
     function renderModules(moduleStatus) {
       var el = document.getElementById('modules');
-      var mods = ['api','content','integrity','pages','browser','ux','visual-integrity','mobile-behavior'];
+      var mods = ['api','content','integrity','pages','browser','ux','visual-integrity','mobile-behavior','crawler'];
       el.innerHTML = mods.map(function(m) {
         var s = moduleStatus[m] || {};
         var pass = s.pass !== false && s.at;

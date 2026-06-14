@@ -3,6 +3,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { getQaCrawlerBuild } = require('./qa-build-info');
 
 const DATA_DIR = path.join(__dirname, '..', '..', 'data', 'ops');
 const RUNS_PATH = path.join(DATA_DIR, 'qa-runs.json');
@@ -92,7 +93,8 @@ function getDashboard() {
     moduleStatus: doc.moduleStatus,
     recentRuns: (doc.runs || []).slice(0, 20),
     errors: (doc.errors || []).slice(0, 50),
-    updatedAt: doc.updatedAt || null
+    updatedAt: doc.updatedAt || null,
+    crawlerBuild: (doc.runs && doc.runs[0]?.crawlerBuild) || getQaCrawlerBuild(),
   };
 }
 

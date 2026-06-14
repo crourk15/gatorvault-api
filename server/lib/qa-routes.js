@@ -107,13 +107,15 @@ function mountQaRoutes(app) {
     const doc = qaStore.readDoc();
     const last = doc.lastRun;
     const mobile = mobileBehaviorStore.readDoc().lastRun;
+    const { getQaCrawlerBuild } = require('./qa/qa-build-info');
     return res.json({
       ok: true,
       enabled: process.env.QA_CRAWLER_ENABLED !== 'false',
       lastRun: last,
       mobileBehavior: mobile,
       healthy: last ? last.pass : null,
-      uptime: doc.uptime
+      uptime: doc.uptime,
+      crawlerBuild: (doc.runs && doc.runs[0]?.crawlerBuild) || getQaCrawlerBuild(),
     });
   });
 

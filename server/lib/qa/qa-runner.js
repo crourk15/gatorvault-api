@@ -5,6 +5,7 @@ const config = require('./qa-config');
 const qaStore = require('./qa-store');
 const qaAlerts = require('./qa-alerts');
 const { runCrawlerPhases } = require('./qa-crawler-phases');
+const { getQaCrawlerBuild, formatQaCrawlerBuildLog } = require('./qa-build-info');
 
 let running = false;
 let lastPass = true;
@@ -17,6 +18,8 @@ async function runQaCrawl(opts = {}) {
   const startedAt = new Date().toISOString();
   const t0 = Date.now();
   const id = `qa_${Date.now()}`;
+  const crawlerBuild = getQaCrawlerBuild();
+  console.log(`[qa] crawl start ${id} | ${formatQaCrawlerBuildLog()}`);
 
   try {
     const crawl = await runCrawlerPhases(opts);
@@ -28,6 +31,7 @@ async function runQaCrawl(opts = {}) {
       finishedAt: new Date().toISOString(),
       durationMs: Date.now() - t0,
       pass: failed.length === 0,
+      crawlerBuild,
       modules,
       errors,
       issues,
@@ -125,7 +129,9 @@ function startQaScheduler() {
     'min | 3-phase: fetch→analyze→emit | browser:',
     config.BROWSER_ENABLED ? 'on' : 'off (set QA_BROWSER_ENABLED=true + install playwright)',
     '| mobile-behavior:',
-    config.MOBILE_BEHAVIOR_ENABLED ? 'on' : 'off'
+    config.MOBILE_BEHAVIOR_ENABLED ? 'on' : 'off',
+    '|',
+    formatQaCrawlerBuildLog()
   );
 
   const tick = () => {
