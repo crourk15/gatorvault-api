@@ -1,4 +1,7 @@
-/** FutureCast elite board — shared types (2027 allow-list only). */
+/**
+ * FutureCast elite board — shared types (2027 allow-list only).
+ * API response types: client/lib/futurecast-elite-api-types.ts
+ */
 
 export type FutureCastPriority = 'high' | 'medium' | 'low';
 
@@ -16,10 +19,13 @@ export type FutureCastPlayer = {
   natlRank?: number | null;
   posRank?: number | null;
   stateRank?: number | null;
+  /** UF % (Likelihood) — see futurecast-elite-metrics.ts. Board field; high-priority API uses ufProbability. */
   ufConfidence: number;
+  /** Fit % (Scheme Match) — scheme, roster, and athletic fit. */
   fitScore: number;
   trendDelta7d: number;
   volatility7d: number;
+  /** Priority tier tag; numeric Priority Score (importance) is on high-priority API. */
   priority: FutureCastPriority;
 };
 
@@ -33,6 +39,7 @@ export type CommitWatchEntry = {
   playerId: string;
   slug: string;
   name: string;
+  /** UF % (Likelihood). */
   ufConfidence: number;
   recentMovement: number;
 };
@@ -45,6 +52,7 @@ export type MasterBoardResponse = {
     buckets: { label: string; count: number }[];
     windowDays: number;
   };
+  /** Average UF % (Likelihood) across the allow-list board. */
   ufConfidenceAverage: number;
   confidenceSparkline: number[];
   commitWatch: CommitWatchEntry[];
@@ -94,6 +102,7 @@ export type StaffNote = {
   playerName: string;
   note?: string;
   notePreview?: string | null;
+  /** Priority tier tag on staff notes (not numeric Priority Score). */
   priority?: FutureCastPriority;
   createdAt?: string | null;
   updatedAt?: string | null;
@@ -104,6 +113,7 @@ export type StaffNote = {
   nationalRank?: number | null;
   posRank?: number | null;
   stateRank?: number | null;
+  /** Fit % (Scheme Match). */
   fitScore?: number;
   trendDelta7d?: number;
   staffNotes?: string | null;

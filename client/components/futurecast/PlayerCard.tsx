@@ -1,5 +1,7 @@
 /**
  * Big Board player card — ClassicRecruitCard only.
+ * Elite four-metric cards use TrendingPlayerCard, HighPriorityTargetCard, etc.
+ * Metric definitions: client/lib/futurecast-elite-metrics.ts
  */
 'use client';
 

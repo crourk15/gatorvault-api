@@ -1025,6 +1025,41 @@
   margin: 0;
 }
 
+/* Metric legend */
+.fc-legend {
+  padding: 1.25rem;
+  background: var(--gv-card);
+  border-radius: var(--gv-radius-card);
+  border: 1px solid var(--gv-border);
+}
+
+.fc-legend-title {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gv-text-primary);
+}
+
+.fc-legend-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.fc-legend-list li {
+  margin-bottom: 0.5rem;
+  color: var(--gv-text-secondary);
+  font-size: 0.9rem;
+}
+
+.fc-legend-list li:last-child {
+  margin-bottom: 0;
+}
+
+.fc-legend-list strong {
+  color: var(--gv-text-primary);
+}
+
 /* Animations */
 @keyframes gv-pulse {
   0% { transform: scale(1); opacity: 1; }

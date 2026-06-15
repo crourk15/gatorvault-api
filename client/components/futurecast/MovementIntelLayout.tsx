@@ -8,6 +8,7 @@ import { InsiderPaywall } from './InsiderPaywall';
 import { FutureCastInsiderCTA } from './FutureCastInsiderCTA';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
 import type { MovementIntelResponse } from '@/lib/futurecast-board-types';
+import { FC_METRIC_LABELS, formatUfPercent } from '@/lib/futurecast-elite-metrics';
 
 type Props = {
   data: MovementIntelResponse;
@@ -55,12 +56,12 @@ export function MovementIntelLayout({ data }: Props): React.ReactElement {
             title="Stable Targets"
             players={data.stable}
             tone="stable"
-            valueLabel={(p) => `${p.ufConfidence.toFixed(0)}% UF`}
+            valueLabel={(p) => `${FC_METRIC_LABELS.uf} ${formatUfPercent(p.ufConfidence)}`}
           />
         </div>
         <div className="gv-row gv-row--split fc-elite-row fc-elite-row--split">
-          <FitScoreList title="Fit Score Leaders" players={data.fitScoreLeaders} leaders />
-          <FitScoreList title="Fit Score Risks" players={data.fitScoreRisks} />
+          <FitScoreList title={`${FC_METRIC_LABELS.fit} Leaders`} players={data.fitScoreLeaders} leaders />
+          <FitScoreList title={`${FC_METRIC_LABELS.fit} Risks`} players={data.fitScoreRisks} />
         </div>
         <AlertsList alerts={data.alerts} />
       </InsiderPaywall>

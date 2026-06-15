@@ -252,17 +252,19 @@ lifecycle: "HIGH_SCHOOL" | "PORTAL" | "ROSTER"
 
 ### 6.3 Player card fields
 
-Each card displays:
+Each card displays the four FutureCast Elite metrics (see `client/lib/futurecast-elite-metrics.ts`):
 
-- Name
-- Position
-- Class year
-- State
-- UF Probability
-- Fit Score
-- Staff Grade
-- Status
-- Notes preview (public)
+| UI label | Name | Field |
+|----------|------|-------|
+| UF % | Likelihood | `ufProbability` / `ufConfidence` |
+| Staff % | Insider Confidence | `staffConfidence` |
+| Fit % | Scheme Match | `fitScore` |
+| Priority Score | Importance | `priorityScore` |
+
+Also shown where relevant:
+
+- Name, position, class year, state
+- Status, notes preview (public)
 - **Full Profile** link → HS profile (`/futurecast/player/:slug` or vault equivalent)
 
 ### 6.4 Data source

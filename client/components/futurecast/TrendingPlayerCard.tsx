@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
+import { FC_METRIC_LABELS, formatFitPercent, formatUfPercent } from '@/lib/futurecast-elite-metrics';
 import { playerProfilePath } from '@/lib/player-routes';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
 
@@ -38,8 +39,12 @@ export function TrendingPlayerCard({ player, direction }: Props): React.ReactEle
           {player.stateRank != null ? <span>#{player.stateRank} ST</span> : null}
         </div>
         <div className={`gv-trending-metrics${!insider ? ' gv-insider-blur' : ''}`}>
-          <span>UF {insider ? `${player.ufConfidence.toFixed(0)}%` : '—%'}</span>
-          <span className="gv-fit-badge">Fit {insider ? player.fitScore : '—'}</span>
+          <span title="Likelihood">
+            {FC_METRIC_LABELS.uf} {insider ? formatUfPercent(player.ufConfidence) : '—'}
+          </span>
+          <span className="gv-fit-badge" title="Scheme Match">
+            {FC_METRIC_LABELS.fit} {insider ? formatFitPercent(player.fitScore) : '—'}
+          </span>
           <span>
             {insider
               ? `${player.trendDelta7d > 0 ? '+' : ''}${player.trendDelta7d.toFixed(2)}`

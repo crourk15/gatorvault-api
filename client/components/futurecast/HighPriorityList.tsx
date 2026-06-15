@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
+import { FC_METRIC_LABELS, formatFitPercent, formatMetricLine, formatUfPercent } from '@/lib/futurecast-elite-metrics';
 import { playerProfilePath } from '@/lib/player-routes';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
 
@@ -38,7 +39,8 @@ export function HighPriorityList({ players, limit }: Props): React.ReactElement 
               </span>
               {insider ? (
                 <span className="gv-priority-meta">
-                  UF {p.ufConfidence.toFixed(0)}% · Fit {p.fitScore}
+                  {formatMetricLine(FC_METRIC_LABELS.uf, formatUfPercent(p.ufConfidence))} ·{' '}
+                  {formatMetricLine(FC_METRIC_LABELS.fit, formatFitPercent(p.fitScore))}
                 </span>
               ) : null}
             </a>

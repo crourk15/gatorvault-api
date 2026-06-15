@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import { FC_METRIC_LABELS } from '@/lib/futurecast-elite-metrics';
 import { InsiderPaywall } from './InsiderPaywall';
 
 type Props = {
@@ -39,7 +40,7 @@ export function ConfidenceMeter({ average, sparkline }: Props): React.ReactEleme
 
   const gauge = (
     <article className="gv-card">
-      <div className="gv-card-title">UF Confidence Meter</div>
+      <div className="gv-card-title">{FC_METRIC_LABELS.uf} Meter</div>
       <div className="gv-confidence">
         <div className="gv-confidence-gauge-wrap">
           <svg className="gv-confidence-gauge" viewBox="0 0 88 88" aria-hidden="true">
@@ -55,8 +56,8 @@ export function ConfidenceMeter({ average, sparkline }: Props): React.ReactEleme
           <span className="gv-confidence-value-center">{rounded}%</span>
         </div>
         <div className="gv-confidence-labels">
-          <div className="gv-confidence-label-main">Overall FutureCast confidence</div>
-          <div className="gv-confidence-label-sub">Based on model outputs · 2027 allow-list</div>
+          <div className="gv-confidence-label-main">Average Likelihood (UF %)</div>
+          <div className="gv-confidence-label-sub">Model commit probability · 2027 allow-list</div>
           <svg className="gv-confidence-sparkline" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
             <polyline points={points} fill="none" stroke="currentColor" strokeWidth="2" />
           </svg>
@@ -70,7 +71,7 @@ export function ConfidenceMeter({ average, sparkline }: Props): React.ReactEleme
       variant="overlay"
       teaser={
         <article className="gv-card">
-          <div className="gv-card-title">UF Confidence Meter</div>
+          <div className="gv-card-title">{FC_METRIC_LABELS.uf} Meter</div>
           <p className="gv-insider-blur" style={{ fontSize: '2rem', fontWeight: 700, margin: 0 }}>
             —%
           </p>

@@ -1,5 +1,6 @@
 /**
  * GET /api/futurecast/high-priority?year=2027 — UF priority target board.
+ * Response metric types: server/types/futurecast-elite-api.ts
  */
 import { createRequire } from 'node:module';
 import fs from 'node:fs';

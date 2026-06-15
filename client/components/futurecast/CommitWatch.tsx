@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { CommitWatchEntry } from '@/lib/futurecast-board-types';
+import { FC_METRIC_LABELS, formatUfPercent } from '@/lib/futurecast-elite-metrics';
 import { playerProfilePath } from '@/lib/player-routes';
 import { InsiderPaywall } from './InsiderPaywall';
 
@@ -31,7 +32,9 @@ export function CommitWatch({ entries }: Props): React.ReactElement {
             className={`gv-commit-card${e.recentMovement > 0 ? ' gv-pulse' : ''}`}
           >
             <div className="gv-commit-name">{e.name}</div>
-            <div className="gv-commit-meta">UF {e.ufConfidence.toFixed(0)}%</div>
+            <div className="gv-commit-meta">
+              {FC_METRIC_LABELS.uf} {formatUfPercent(e.ufConfidence)}
+            </div>
             <div className="gv-commit-trend">
               <img src="/icons/trending-up.svg" alt="" width={16} height={16} />
               +{e.recentMovement.toFixed(2)}

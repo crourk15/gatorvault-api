@@ -1,5 +1,6 @@
 /**
  * FutureCast board data — ONLY verified 2027 allow-list players.
+ * Player card metrics: see client/lib/futurecast-elite-metrics.ts
  */
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
@@ -46,10 +47,13 @@ export interface FutureCastBoardPlayer {
   natlRank?: number | null;
   posRank?: number | null;
   stateRank?: number | null;
+  /** UF % (Likelihood) — FutureCast commit likelihood for Florida. */
   ufConfidence: number;
+  /** Fit % (Scheme Match) — scheme, roster, and athletic fit. */
   fitScore: number;
   trendDelta7d: number;
   volatility7d: number;
+  /** Priority tier tag; numeric Priority Score is on high-priority API. */
   priority: FutureCastPriority;
 }
 

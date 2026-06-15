@@ -1,7 +1,9 @@
 /**
  * High Priority Targets API — /api/futurecast/high-priority
+ * Response types: server/types/futurecast-elite-api.ts
  */
 import { apiFetch } from './api-fetch';
+import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 export const HIGH_PRIORITY_YEAR = 2027;
 export const HIGH_PRIORITY_CACHE_KEY = 'gv:futurecast:high-priority:v1';
@@ -20,7 +22,7 @@ export interface HighPriorityPredictor {
   score: number;
 }
 
-export interface HighPriorityPlayer {
+export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
   id: string;
   slug: string;
   name: string;
@@ -37,11 +39,7 @@ export interface HighPriorityPlayer {
   rating: number | null;
   natlRank: number | null;
   posRank: number | null;
-  ufProbability: number;
   movementDelta: number;
-  fitScore: number;
-  staffConfidence: number;
-  priorityScore: number;
   insiderNotes: string | null;
   notePreview: string | null;
   skinny: string | null;

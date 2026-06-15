@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import type { StaffNote } from '@/lib/futurecast-board-types';
+import { FC_METRIC_LABELS, formatFitPercent } from '@/lib/futurecast-elite-metrics';
 import { playerProfilePath } from '@/lib/player-routes';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
 
@@ -76,7 +77,7 @@ export function StaffNoteCard({ note, blurred }: Props): React.ReactElement {
         <div className="gv-staff-note-foot">
           {insider && note.fitScore != null ? (
             <span className="gv-staff-note-fit">
-              Fit {note.fitScore}
+              {FC_METRIC_LABELS.fit} {formatFitPercent(note.fitScore)}
               {note.trendDelta7d != null ? (
                 <img
                   src={note.trendDelta7d >= 0 ? '/icons/trending-up.svg' : '/icons/trending-down.svg'}

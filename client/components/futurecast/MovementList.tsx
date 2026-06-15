@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
+import { FC_METRIC_LABELS, formatFitPercent } from '@/lib/futurecast-elite-metrics';
 import { playerProfilePath } from '@/lib/player-routes';
 
 type Props = {
@@ -70,7 +71,7 @@ export function FitScoreList({
       title={title}
       players={players}
       tone={leaders ? 'fit' : 'risk'}
-      valueLabel={(p) => `Fit ${p.fitScore}`}
+      valueLabel={(p) => `${FC_METRIC_LABELS.fit} ${formatFitPercent(p.fitScore)}`}
     />
   );
 }

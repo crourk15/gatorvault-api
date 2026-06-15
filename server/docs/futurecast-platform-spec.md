@@ -400,13 +400,18 @@ Table / grid:
 
 Use these names in UI, marketing, and API field labels where user-visible:
 
-| Internal | Fan-facing name |
-|----------|-----------------|
-| Big board hub | **FutureCast Big Board** — UF recruiting + portal hub |
-| Unified profile | **Player Profiles 2.0** — unified player journey mapped to UF |
-| Portal UI | **Portal Watchlist** — Portal Intelligence Layer |
-| Underclassmen feed | **FutureCast Early Discovery** — 2027+ and beyond |
-| Composite metric | **UF Fit Score™** — 0–100 UF-specific fit metric |
+| Internal field | UI label | Definition |
+|----------------|----------|------------|
+| `ufProbability` / `ufConfidence` | **UF %** | FutureCast model commit likelihood for Florida |
+| `staffConfidence` | **Staff %** | Insider / staff sentiment score |
+| `fitScore` | **Fit %** | Scheme + roster + athletic fit |
+| `priorityScore` | **Priority Score** | 2027 class importance ranking (not a probability) |
+| Big board hub | — | **FutureCast Big Board** — UF recruiting + portal hub |
+| Unified profile | — | **Player Profiles 2.0** — unified player journey mapped to UF |
+| Portal UI | — | **Portal Watchlist** — Portal Intelligence Layer |
+| Underclassmen feed | — | **FutureCast Early Discovery** — 2027+ and beyond |
+
+**Elite card source of truth:** `client/lib/futurecast-elite-metrics.ts`
 
 ---
 

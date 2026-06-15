@@ -3,6 +3,13 @@
 import React from 'react';
 import { TrendingIndicator } from '@/components/futurecast/TrendingIndicator';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import {
+  FC_METRIC_LABELS,
+  formatFitPercent,
+  formatPriorityScore,
+  formatStaffPercent,
+  formatUfPercent,
+} from '@/lib/futurecast-elite-metrics';
 import { formatCompositeRating, formatRank } from '@/lib/recruiting-board-utils';
 import { playerProfilePath } from '@/lib/player-routes';
 
@@ -78,25 +85,25 @@ export function HighPriorityTargetCard({
 
         <div className="gv-hp-card__metrics">
           <div className="gv-hp-card__metric">
-            <span className="gv-hp-card__metric-label">UF Probability</span>
-            <strong>{Math.round(player.ufProbability)}%</strong>
+            <span className="gv-hp-card__metric-label">{FC_METRIC_LABELS.uf}</span>
+            <strong>{formatUfPercent(player.ufProbability)}</strong>
           </div>
           <div className="gv-hp-card__metric">
-            <span className="gv-hp-card__metric-label">Staff Confidence</span>
-            <strong>{Math.round(player.staffConfidence)}%</strong>
+            <span className="gv-hp-card__metric-label">{FC_METRIC_LABELS.staff}</span>
+            <strong>{formatStaffPercent(player.staffConfidence)}</strong>
           </div>
           {!compact && (
             <div className="gv-hp-card__metric">
-              <span className="gv-hp-card__metric-label">Priority Score</span>
-              <strong>{player.priorityScore.toFixed(1)}</strong>
+              <span className="gv-hp-card__metric-label">{FC_METRIC_LABELS.priority}</span>
+              <strong>{formatPriorityScore(player.priorityScore)}</strong>
             </div>
           )}
         </div>
 
         <div className="gv-hp-card__fit">
           <div className="gv-hp-card__fit-head">
-            <span>Fit Score</span>
-            <span>{Math.round(player.fitScore)}</span>
+            <span>{FC_METRIC_LABELS.fit}</span>
+            <span>{formatFitPercent(player.fitScore)}</span>
           </div>
           <div className="gv-hp-card__fit-track" aria-hidden>
             <div
