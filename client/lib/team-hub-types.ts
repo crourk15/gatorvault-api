@@ -34,6 +34,7 @@ export type TeamPlayer = {
   id: string;
   name: string;
   position: string;
+  positionGroup?: string | null;
   classYear: string;
   hometown?: string;
   state?: string;

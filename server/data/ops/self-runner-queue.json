@@ -1,7 +1,779 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-13T17:10:46.711Z",
+  "updatedAt": "2026-06-14T14:24:01.754Z",
   "items": [
+    {
+      "id": "sr_fix_020",
+      "sourceIssueId": "fix_content:film-room-spell",
+      "checkId": "content:film-room-spell",
+      "title": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+      "module": "content",
+      "classification": "ui-regression",
+      "ruleId": "A1",
+      "category": "A",
+      "severity": "medium",
+      "severityScore": 63,
+      "impact": "internal",
+      "status": "pending",
+      "patchType": "layout-overflow",
+      "patchPreview": {
+        "file": "client/components/vault/VaultFilmRoomPage.tsx",
+        "files": [
+          "client/components/vault/VaultFilmRoomPage.tsx"
+        ],
+        "diff": [
+          {
+            "file": "client/components/vault/VaultFilmRoomPage.tsx",
+            "before": ".gv-team-modal-body { overflow: hidden; }",
+            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
+          }
+        ],
+        "before": ".gv-team-modal-body { overflow: hidden; }",
+        "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
+      },
+      "patch": {
+        "edits": [
+          {
+            "file": "client/lib/vault-shell.css",
+            "type": "react-css-append",
+            "marker": "/* Self-Runner: content:film-room-spell */",
+            "text": "\n/* Self-Runner 3.0: React vault scroll + modal guards */\n.gv-vault-shell__main { min-width: 0; }\n.gv-hub-tabs--scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }\n.gv-vault-bottom-nav { z-index: 55; }\n"
+          }
+        ]
+      },
+      "template": {
+        "ruleId": "A1",
+        "category": "A",
+        "classification": "layout-overflow",
+        "safetyRules": [
+          "Never remove min-width:0 or min-height:0 from modal flex children",
+          "Only modify overflow on the targeted selector — do not change global body overflow",
+          "Preserve mobile scroll behavior — test 390px viewport after apply",
+          "Max 1 CSS file per patch unless issue spans shell + styles"
+        ],
+        "diff": [
+          {
+            "file": "client/components/vault/VaultFilmRoomPage.tsx",
+            "before": ".gv-team-modal-body { overflow: hidden; }",
+            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
+          }
+        ]
+      },
+      "safetyRules": [
+        "Never remove min-width:0 or min-height:0 from modal flex children",
+        "Only modify overflow on the targeted selector — do not change global body overflow",
+        "Preserve mobile scroll behavior — test 390px viewport after apply",
+        "Max 1 CSS file per patch unless issue spans shell + styles"
+      ],
+      "suggestedFix": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
+      "description": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
+      "filesToModify": [
+        "client/components/vault/VaultFilmRoomPage.tsx"
+      ],
+      "codeDiff": [
+        {
+          "file": "client/components/vault/VaultFilmRoomPage.tsx",
+          "before": ".gv-team-modal-body { overflow: hidden; }",
+          "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
+        }
+      ],
+      "codeDiffHint": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
+      "testPlan": [
+        "Load /api/film-room/catalog",
+        "Verify full text is visible",
+        "Verify no clipping on right or bottom",
+        "Verify mobile layout unchanged"
+      ],
+      "qaSteps": [
+        "Load /api/film-room/catalog",
+        "Verify full text is visible",
+        "Verify no clipping on right or bottom",
+        "Verify mobile layout unchanged",
+        "Verify QA check content:film-room-spell passes",
+        "POST /api/product-intel/recompute — issue cleared from fix queue"
+      ],
+      "rollbackPlan": {
+        "strategy": "git-revert",
+        "summary": "Restore previous overflow rules if regression detected.",
+        "steps": [
+          "Revert: client/components/vault/VaultFilmRoomPage.tsx",
+          "Redeploy Netlify (static) and Render (API) if needed",
+          "POST /api/product-intel/recompute",
+          "POST /api/qa/run — verify check passes"
+        ]
+      },
+      "repro": null,
+      "riskLevel": "medium",
+      "blocked": false,
+      "blockReason": null,
+      "requiresManualApproval": false,
+      "v2": false,
+      "createdAt": "2026-06-13T23:24:18.728Z",
+      "approvedAt": null,
+      "completedAt": null,
+      "rejectedAt": null
+    },
+    {
+      "id": "sr_fix_019",
+      "sourceIssueId": "fix_content:articles-spell",
+      "checkId": "content:articles-spell",
+      "title": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+      "module": "content",
+      "classification": "ui-regression",
+      "ruleId": "A1",
+      "category": "A",
+      "severity": "medium",
+      "severityScore": 63,
+      "impact": "internal",
+      "status": "pending",
+      "patchType": "layout-overflow",
+      "patchPreview": {
+        "file": "client/lib/vault-shell.css",
+        "files": [
+          "client/lib/vault-shell.css"
+        ],
+        "diff": [
+          {
+            "file": "client/lib/vault-shell.css",
+            "before": ".gv-team-modal-body { overflow: hidden; }",
+            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
+          }
+        ],
+        "before": ".gv-team-modal-body { overflow: hidden; }",
+        "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
+      },
+      "patch": {
+        "edits": [
+          {
+            "file": "client/lib/vault-shell.css",
+            "type": "react-css-append",
+            "marker": "/* Self-Runner: content:articles-spell */",
+            "text": "\n/* Self-Runner 3.0: React vault scroll + modal guards */\n.gv-vault-shell__main { min-width: 0; }\n.gv-hub-tabs--scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }\n.gv-vault-bottom-nav { z-index: 55; }\n"
+          }
+        ]
+      },
+      "template": {
+        "ruleId": "A1",
+        "category": "A",
+        "classification": "layout-overflow",
+        "safetyRules": [
+          "Never remove min-width:0 or min-height:0 from modal flex children",
+          "Only modify overflow on the targeted selector — do not change global body overflow",
+          "Preserve mobile scroll behavior — test 390px viewport after apply",
+          "Max 1 CSS file per patch unless issue spans shell + styles"
+        ],
+        "diff": [
+          {
+            "file": "client/lib/vault-shell.css",
+            "before": ".gv-team-modal-body { overflow: hidden; }",
+            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
+          }
+        ]
+      },
+      "safetyRules": [
+        "Never remove min-width:0 or min-height:0 from modal flex children",
+        "Only modify overflow on the targeted selector — do not change global body overflow",
+        "Preserve mobile scroll behavior — test 390px viewport after apply",
+        "Max 1 CSS file per patch unless issue spans shell + styles"
+      ],
+      "suggestedFix": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
+      "description": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
+      "filesToModify": [
+        "client/lib/vault-shell.css"
+      ],
+      "codeDiff": [
+        {
+          "file": "client/lib/vault-shell.css",
+          "before": ".gv-team-modal-body { overflow: hidden; }",
+          "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
+        }
+      ],
+      "codeDiffHint": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
+      "testPlan": [
+        "Load /api/articles/published",
+        "Verify full text is visible",
+        "Verify no clipping on right or bottom",
+        "Verify mobile layout unchanged"
+      ],
+      "qaSteps": [
+        "Load /api/articles/published",
+        "Verify full text is visible",
+        "Verify no clipping on right or bottom",
+        "Verify mobile layout unchanged",
+        "Verify QA check content:articles-spell passes",
+        "POST /api/product-intel/recompute — issue cleared from fix queue"
+      ],
+      "rollbackPlan": {
+        "strategy": "git-revert",
+        "summary": "Restore previous overflow rules if regression detected.",
+        "steps": [
+          "Revert: client/lib/vault-shell.css",
+          "Redeploy Netlify (static) and Render (API) if needed",
+          "POST /api/product-intel/recompute",
+          "POST /api/qa/run — verify check passes"
+        ]
+      },
+      "repro": null,
+      "riskLevel": "medium",
+      "blocked": false,
+      "blockReason": null,
+      "requiresManualApproval": false,
+      "v2": false,
+      "createdAt": "2026-06-13T23:24:18.725Z",
+      "approvedAt": null,
+      "completedAt": null,
+      "rejectedAt": null
+    },
+    {
+      "id": "sr_fix_018",
+      "sourceIssueId": "fix_ux:live-feed-layout",
+      "checkId": "ux:live-feed-layout",
+      "title": "Live Feed layout CSS missing: gv-live-feed__row, gv-live-feed__row-time",
+      "module": "ux",
+      "classification": "ui-regression",
+      "ruleId": "A1",
+      "category": "A",
+      "severity": "medium",
+      "severityScore": 66,
+      "impact": "internal",
+      "status": "pending",
+      "patchType": "react-css",
+      "patchPreview": {
+        "file": "client/lib/vault-shell.css",
+        "before": ".gv-team-modal-body { overflow: hidden; }",
+        "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
+        "files": [
+          "client/components/vault/VaultLiveFeedPage.tsx"
+        ],
+        "diff": [
+          {
+            "file": "client/components/vault/VaultLiveFeedPage.tsx",
+            "before": ".gv-team-modal-body { overflow: hidden; }",
+            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
+          }
+        ]
+      },
+      "patch": {
+        "edits": [
+          {
+            "file": "client/lib/vault-shell.css",
+            "type": "react-css-append",
+            "marker": "/* Self-Runner: ux:live-feed-layout */",
+            "text": "\n.gv-live-ticker { display: flex; overflow: hidden; }\n.gv-live-feed__tabs { display: flex; gap: 0.5rem; }\n.gv-live-feed__row-time { font-variant-numeric: tabular-nums; }\n"
+          }
+        ]
+      },
+      "template": {
+        "ruleId": "A1",
+        "category": "A",
+        "classification": "layout-overflow",
+        "safetyRules": [
+          "Never remove min-width:0 or min-height:0 from modal flex children",
+          "Only modify overflow on the targeted selector — do not change global body overflow",
+          "Preserve mobile scroll behavior — test 390px viewport after apply",
+          "Max 1 CSS file per patch unless issue spans shell + styles"
+        ],
+        "diff": [
+          {
+            "file": "client/components/vault/VaultLiveFeedPage.tsx",
+            "before": ".gv-team-modal-body { overflow: hidden; }",
+            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
+          }
+        ]
+      },
+      "safetyRules": [
+        "Never remove min-width:0 or min-height:0 from modal flex children",
+        "Only modify overflow on the targeted selector — do not change global body overflow",
+        "Preserve mobile scroll behavior — test 390px viewport after apply",
+        "Max 1 CSS file per patch unless issue spans shell + styles"
+      ],
+      "suggestedFix": "React vault route /vault/live-feed — fix in client/components/vault/VaultLiveFeedPage.tsx. Live Feed layout CSS missing: gv-live-feed__row, gv-live-feed__row-time",
+      "description": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
+      "filesToModify": [
+        "client/components/vault/VaultLiveFeedPage.tsx"
+      ],
+      "codeDiff": [
+        {
+          "file": "client/components/vault/VaultLiveFeedPage.tsx",
+          "before": ".gv-team-modal-body { overflow: hidden; }",
+          "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
+        }
+      ],
+      "codeDiffHint": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
+      "testPlan": [
+        "Load /",
+        "Verify full text is visible",
+        "Verify no clipping on right or bottom",
+        "Verify mobile layout unchanged"
+      ],
+      "qaSteps": [
+        "Load /",
+        "Verify full text is visible",
+        "Verify no clipping on right or bottom",
+        "Verify mobile layout unchanged",
+        "Verify QA check ux:live-feed-layout passes",
+        "POST /api/product-intel/recompute — issue cleared from fix queue"
+      ],
+      "rollbackPlan": {
+        "strategy": "git-revert",
+        "summary": "Restore previous overflow rules if regression detected.",
+        "steps": [
+          "Revert: client/components/vault/VaultLiveFeedPage.tsx",
+          "Redeploy Netlify (static) and Render (API) if needed",
+          "POST /api/product-intel/recompute",
+          "POST /api/qa/run — verify check passes"
+        ]
+      },
+      "repro": null,
+      "riskLevel": "low",
+      "blocked": false,
+      "blockReason": null,
+      "requiresManualApproval": false,
+      "v2": false,
+      "createdAt": "2026-06-13T23:24:18.722Z",
+      "approvedAt": null,
+      "completedAt": null,
+      "rejectedAt": null
+    },
+    {
+      "id": "sr_fix_017",
+      "sourceIssueId": "fix_pages:react-live-feed",
+      "checkId": "pages:react-live-feed",
+      "title": "Live Feed React markers missing: Headlines",
+      "module": "pages",
+      "classification": "autoposter-stale",
+      "ruleId": "B3",
+      "category": "B",
+      "severity": "high",
+      "severityScore": 73,
+      "impact": "internal",
+      "status": "pending",
+      "patchType": "react-component",
+      "patchPreview": {
+        "file": "client/components/vault/VaultLiveFeedPage.tsx",
+        "files": [
+          "client/components/vault/VaultLiveFeedPage.tsx",
+          "client/lib/vault-shell.css"
+        ],
+        "before": "Live Feed React markers missing: Headlines",
+        "after": "Ensure client/components/vault/VaultLiveFeedPage.tsx renders correctly at /vault/live-feed with data-testid=\"vault-live-feed\"",
+        "diff": [
+          {
+            "file": "lib/x-autoposter.js",
+            "before": "// stale autoposter config",
+            "after": "// verify cron + ingest pipeline active"
+          }
+        ]
+      },
+      "patch": {
+        "edits": [
+          {
+            "file": "components/vault/VaultLiveFeedPage.tsx",
+            "type": "react-component-review",
+            "checkId": "pages:react-live-feed",
+            "route": "/vault/live-feed",
+            "testid": "vault-live-feed",
+            "note": "Manual TypeScript/React fix required — self-runner cannot auto-edit TSX safely"
+          }
+        ]
+      },
+      "template": {
+        "ruleId": "C4",
+        "category": "C",
+        "classification": "autoposter-stale",
+        "safetyRules": [
+          "Do not duplicate posts when forcing refresh",
+          "Verify UF-only filter still active after restart",
+          "Check Render cron env vars before code changes"
+        ],
+        "diff": [
+          {
+            "file": "lib/x-autoposter.js",
+            "before": "// stale autoposter config",
+            "after": "// verify cron + ingest pipeline active"
+          }
+        ]
+      },
+      "safetyRules": [
+        "Do not duplicate posts when forcing refresh",
+        "Verify UF-only filter still active after restart",
+        "Check Render cron env vars before code changes"
+      ],
+      "suggestedFix": "React vault route /vault/live-feed — fix in client/components/vault/VaultLiveFeedPage.tsx. Live Feed React markers missing: Headlines",
+      "description": "Restore autoposter activity for Team Overview.",
+      "filesToModify": [
+        "lib/x-autoposter.js",
+        "data/live/feed-items.json"
+      ],
+      "codeDiff": [
+        {
+          "file": "lib/x-autoposter.js",
+          "before": "// stale autoposter config",
+          "after": "// verify cron + ingest pipeline active"
+        }
+      ],
+      "codeDiffHint": "// verify cron + ingest pipeline active",
+      "testPlan": [
+        "Verify post within 6h during active window",
+        "Check autoposter logs on Render",
+        "Latest Updates shows fresh intel"
+      ],
+      "qaSteps": [
+        "Verify post within 6h during active window",
+        "Check autoposter logs on Render",
+        "Latest Updates shows fresh intel",
+        "Verify QA check pages:react-live-feed passes",
+        "POST /api/product-intel/recompute — issue cleared from fix queue"
+      ],
+      "rollbackPlan": {
+        "strategy": "git-revert",
+        "summary": "Revert autoposter config if duplicate spike occurs.",
+        "steps": [
+          "Revert: lib/x-autoposter.js, data/live/feed-items.json",
+          "Redeploy Netlify (static) and Render (API) if needed",
+          "POST /api/product-intel/recompute",
+          "POST /api/qa/run — verify check passes"
+        ]
+      },
+      "repro": null,
+      "riskLevel": "medium",
+      "blocked": false,
+      "blockReason": null,
+      "requiresManualApproval": true,
+      "v2": false,
+      "createdAt": "2026-06-13T23:24:18.706Z",
+      "approvedAt": null,
+      "completedAt": null,
+      "rejectedAt": null
+    },
+    {
+      "id": "sr_fix_016",
+      "sourceIssueId": "fix_pages:react-recruiting-hub",
+      "checkId": "pages:react-recruiting-hub",
+      "title": "Recruiting Hub markers missing: 2026 Commits",
+      "module": "pages",
+      "classification": "recruiting-board-mismatch",
+      "ruleId": "D1",
+      "category": "D",
+      "severity": "high",
+      "severityScore": 84,
+      "impact": "user-facing",
+      "status": "pending",
+      "patchType": "react-component",
+      "patchPreview": {
+        "file": "client/components/vault/VaultRecruitingHubPage.tsx",
+        "files": [
+          "data/recruiting/board.json"
+        ],
+        "before": "\"{}\"",
+        "after": "\"{}\"",
+        "diff": [
+          {
+            "file": "data/recruiting/board.json",
+            "before": "\"{}\"",
+            "after": "\"{}\""
+          }
+        ]
+      },
+      "patch": {
+        "edits": [
+          {
+            "file": "components/vault/VaultRecruitingHubPage.tsx",
+            "type": "react-component-review",
+            "checkId": "pages:react-recruiting-hub",
+            "route": "/vault/recruiting",
+            "testid": "vault-recruiting-hub",
+            "note": "Manual TypeScript/React fix required — self-runner cannot auto-edit TSX safely"
+          }
+        ]
+      },
+      "template": {
+        "ruleId": "D1",
+        "category": "D",
+        "classification": "recruiting-board-mismatch",
+        "safetyRules": [
+          "Verify player against master recruiting DB before edit",
+          "Never remove committed players without explicit flag",
+          "Stars must be 0–5; position must match roster enum",
+          "Dedupe by player id — not display name alone"
+        ],
+        "diff": [
+          {
+            "file": "data/recruiting/board.json",
+            "before": "\"{}\"",
+            "after": "\"{}\""
+          }
+        ]
+      },
+      "safetyRules": [
+        "Verify player against master recruiting DB before edit",
+        "Never remove committed players without explicit flag",
+        "Stars must be 0–5; position must match roster enum",
+        "Dedupe by player id — not display name alone"
+      ],
+      "suggestedFix": "React vault route /vault/recruiting — fix in client/components/vault/VaultRecruitingHubPage.tsx. Recruiting Hub markers missing: 2026 Commits",
+      "description": "Fix mismatch for Recruiting Hub markers missing: 2026 Commits on Recruiting Board.",
+      "filesToModify": [
+        "data/recruiting/board.json"
+      ],
+      "codeDiff": [
+        {
+          "file": "data/recruiting/board.json",
+          "before": "\"{}\"",
+          "after": "\"{}\""
+        }
+      ],
+      "codeDiffHint": "\"{}\"",
+      "testPlan": [
+        "Load Recruiting Board",
+        "Verify player appears correctly",
+        "Verify ordering and ranking correct"
+      ],
+      "qaSteps": [
+        "Load Recruiting Board",
+        "Verify player appears correctly",
+        "Verify ordering and ranking correct",
+        "Verify QA check pages:react-recruiting-hub passes",
+        "POST /api/product-intel/recompute — issue cleared from fix queue"
+      ],
+      "rollbackPlan": {
+        "strategy": "git-revert",
+        "summary": "Restore previous entry if data mismatch occurs.",
+        "steps": [
+          "Revert: data/recruiting/board.json",
+          "Redeploy Netlify (static) and Render (API) if needed",
+          "POST /api/product-intel/recompute",
+          "POST /api/qa/run — verify check passes"
+        ]
+      },
+      "repro": null,
+      "riskLevel": "medium",
+      "blocked": false,
+      "blockReason": null,
+      "requiresManualApproval": true,
+      "v2": false,
+      "createdAt": "2026-06-13T23:24:18.692Z",
+      "approvedAt": null,
+      "completedAt": null,
+      "rejectedAt": null
+    },
+    {
+      "id": "sr_fix_015",
+      "sourceIssueId": "fix_pages:react-team",
+      "checkId": "pages:react-team",
+      "title": "Team page contains retired monolith hooks",
+      "module": "pages",
+      "classification": "missing-content",
+      "ruleId": "B1",
+      "category": "B",
+      "severity": "high",
+      "severityScore": 87,
+      "impact": "user-facing",
+      "status": "pending",
+      "patchType": "react-component",
+      "patchPreview": {
+        "file": "client/components/vault/VaultTeamPage.tsx",
+        "files": [
+          "client/components/vault/VaultTeamPage.tsx"
+        ],
+        "before": ".gv-team-modal-body",
+        "after": ".gv-team-modal-body /* restored content */",
+        "diff": [
+          {
+            "file": "client/components/vault/VaultTeamPage.tsx",
+            "before": ".gv-team-modal-body",
+            "after": ".gv-team-modal-body /* restored content */"
+          }
+        ]
+      },
+      "patch": {
+        "edits": [
+          {
+            "file": "components/vault/VaultTeamPage.tsx",
+            "type": "react-component-review",
+            "checkId": "pages:react-team",
+            "route": "/vault/team",
+            "testid": "vault-team",
+            "note": "Manual TypeScript/React fix required — self-runner cannot auto-edit TSX safely"
+          }
+        ]
+      },
+      "template": {
+        "ruleId": "B1",
+        "category": "B",
+        "classification": "missing-content",
+        "safetyRules": [
+          "Never duplicate existing section markers or IDs",
+          "Insert content adjacent to surrounding sections — match formatting",
+          "Verify hooks are wired before adding visible markup",
+          "Do not remove existing era/card data when restoring"
+        ],
+        "diff": [
+          {
+            "file": "client/components/vault/VaultTeamPage.tsx",
+            "before": ".gv-team-modal-body",
+            "after": ".gv-team-modal-body /* restored content */"
+          }
+        ]
+      },
+      "safetyRules": [
+        "Never duplicate existing section markers or IDs",
+        "Insert content adjacent to surrounding sections — match formatting",
+        "Verify hooks are wired before adding visible markup",
+        "Do not remove existing era/card data when restoring"
+      ],
+      "suggestedFix": "React vault route /vault/team — fix in client/components/vault/VaultTeamPage.tsx. Team page contains retired monolith hooks",
+      "description": "Restore missing content for Team Overview.",
+      "filesToModify": [
+        "client/components/vault/VaultTeamPage.tsx"
+      ],
+      "codeDiff": [
+        {
+          "file": "client/components/vault/VaultTeamPage.tsx",
+          "before": ".gv-team-modal-body",
+          "after": ".gv-team-modal-body /* restored content */"
+        }
+      ],
+      "codeDiffHint": ".gv-team-modal-body /* restored content */",
+      "testPlan": [
+        "Load /",
+        "Verify content appears",
+        "Verify formatting matches surrounding sections"
+      ],
+      "qaSteps": [
+        "Load /",
+        "Verify content appears",
+        "Verify formatting matches surrounding sections",
+        "Verify QA check pages:react-team passes",
+        "POST /api/product-intel/recompute — issue cleared from fix queue"
+      ],
+      "rollbackPlan": {
+        "strategy": "git-revert",
+        "summary": "Remove inserted content if duplication occurs.",
+        "steps": [
+          "Revert: client/components/vault/VaultTeamPage.tsx",
+          "Redeploy Netlify (static) and Render (API) if needed",
+          "POST /api/product-intel/recompute",
+          "POST /api/qa/run — verify check passes"
+        ]
+      },
+      "repro": "Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail",
+      "riskLevel": "medium",
+      "blocked": false,
+      "blockReason": null,
+      "requiresManualApproval": true,
+      "v2": false,
+      "createdAt": "2026-06-13T23:24:18.680Z",
+      "approvedAt": null,
+      "completedAt": null,
+      "rejectedAt": null
+    },
+    {
+      "id": "sr_fix_014",
+      "sourceIssueId": "fix_integrity:film-sources",
+      "checkId": "integrity:film-sources",
+      "title": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+      "module": "integrity",
+      "classification": "broken-link",
+      "ruleId": "F3",
+      "category": "F",
+      "severity": "high",
+      "severityScore": 87,
+      "impact": "user-facing",
+      "status": "pending",
+      "patchType": "film-source-url",
+      "patchPreview": {
+        "file": "data/film-room-knowledge/",
+        "before": "/missing/asset",
+        "after": "/css/gv-team.css",
+        "files": [
+          "index.html"
+        ],
+        "diff": [
+          {
+            "file": "index.html",
+            "before": "/missing/asset",
+            "after": "/css/gv-team.css"
+          }
+        ]
+      },
+      "patch": {
+        "edits": [
+          {
+            "file": "data/film-room-knowledge",
+            "type": "replace-broken-source-urls",
+            "replacements": []
+          }
+        ]
+      },
+      "template": {
+        "ruleId": "F3",
+        "category": "F",
+        "classification": "404-detected",
+        "safetyRules": [
+          "Verify asset exists locally before updating production path",
+          "Use HEAD request to confirm 200 on production",
+          "Do not redirect external links without verification"
+        ],
+        "diff": [
+          {
+            "file": "index.html",
+            "before": "/missing/asset",
+            "after": "/css/gv-team.css"
+          }
+        ]
+      },
+      "safetyRules": [
+        "Verify asset exists locally before updating production path",
+        "Use HEAD request to confirm 200 on production",
+        "Do not redirect external links without verification"
+      ],
+      "suggestedFix": "Fix broken Film Room source URLs in data/film-room-knowledge/*.json for React verified source links",
+      "description": "Fix broken asset or link: .gv-team-modal-body.",
+      "filesToModify": [
+        "index.html"
+      ],
+      "codeDiff": [
+        {
+          "file": "index.html",
+          "before": "/missing/asset",
+          "after": "/css/gv-team.css"
+        }
+      ],
+      "codeDiffHint": "/css/gv-team.css",
+      "testPlan": [
+        "Load /api/film-room/catalog — no 404 in network tab",
+        "Verify asset renders correctly",
+        "Run crawler:404 check passes"
+      ],
+      "qaSteps": [
+        "Load /api/film-room/catalog — no 404 in network tab",
+        "Verify asset renders correctly",
+        "Run crawler:404 check passes",
+        "Verify QA check integrity:film-sources passes",
+        "POST /api/product-intel/recompute — issue cleared from fix queue"
+      ],
+      "rollbackPlan": {
+        "strategy": "git-revert",
+        "summary": "Restore previous asset path if new path fails.",
+        "steps": [
+          "Revert: index.html",
+          "Redeploy Netlify (static) and Render (API) if needed",
+          "POST /api/product-intel/recompute",
+          "POST /api/qa/run — verify check passes"
+        ]
+      },
+      "repro": null,
+      "riskLevel": "low",
+      "blocked": false,
+      "blockReason": null,
+      "requiresManualApproval": false,
+      "v2": false,
+      "createdAt": "2026-06-13T23:24:18.660Z",
+      "approvedAt": null,
+      "completedAt": null,
+      "rejectedAt": null
+    },
     {
       "id": "sr_fix_013",
       "sourceIssueId": "fix_pages:vault-schedule:mobile",
@@ -1278,6 +2050,720 @@
     }
   ],
   "log": [
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_e1082bd7",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-14T14:24:01.753Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 2,
+      "runId": "qa_1781447015550",
+      "log": {
+        "at": "2026-06-14T14:24:01.694Z",
+        "runId": "qa_1781447015550",
+        "openFixQueue": 2,
+        "eligibleOpenIssues": 0,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          }
+        ],
+        "summary": "qa_run_qa_1781447015550 — 0 failed / 111 total checks"
+      },
+      "at": "2026-06-14T14:24:01.696Z"
+    },
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_926daeec",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-14T11:55:49.055Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 2,
+      "runId": "qa_1781438122710",
+      "log": {
+        "at": "2026-06-14T11:55:49.004Z",
+        "runId": "qa_1781438122710",
+        "openFixQueue": 2,
+        "eligibleOpenIssues": 0,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          }
+        ],
+        "summary": "qa_run_qa_1781438122710 — 0 failed / 111 total checks"
+      },
+      "at": "2026-06-14T11:55:49.008Z"
+    },
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_0d4c6bd9",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-14T02:05:01.680Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 2,
+      "runId": "qa_1781402674862",
+      "log": {
+        "at": "2026-06-14T02:05:01.626Z",
+        "runId": "qa_1781402674862",
+        "openFixQueue": 2,
+        "eligibleOpenIssues": 0,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          }
+        ],
+        "summary": "qa_run_qa_1781402674862 — 0 failed / 106 total checks"
+      },
+      "at": "2026-06-14T02:05:01.632Z"
+    },
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_c78cf202",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-14T02:03:15.019Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 7,
+      "runId": "qa_1781402570287",
+      "log": {
+        "at": "2026-06-14T02:03:14.917Z",
+        "runId": "qa_1781402570287",
+        "openFixQueue": 7,
+        "eligibleOpenIssues": 5,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_ux:scroll-containers",
+            "checkId": "ux:scroll-containers",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pages:react-team",
+            "checkId": "pages:react-team",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:modal-zindex",
+            "checkId": "ux:modal-zindex",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:tap-targets",
+            "checkId": "ux:tap-targets",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:mobile-safari",
+            "checkId": "ux:mobile-safari",
+            "reason": "already_pending"
+          }
+        ],
+        "summary": "qa_run_qa_1781402570287 — 5 failed / 106 total checks"
+      },
+      "at": "2026-06-14T02:03:14.928Z"
+    },
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_502908f9",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-13T23:29:58.363Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 19,
+      "runId": "qa_1781393350276",
+      "log": {
+        "at": "2026-06-13T23:29:58.197Z",
+        "runId": "qa_1781393350276",
+        "openFixQueue": 19,
+        "eligibleOpenIssues": 9,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_ux:scroll-containers",
+            "checkId": "ux:scroll-containers",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_integrity:react-markers",
+            "checkId": "integrity:react-markers",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pages:react-team",
+            "checkId": "pages:react-team",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:modal-zindex",
+            "checkId": "ux:modal-zindex",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pages:react-recruiting-hub",
+            "checkId": "pages:react-recruiting-hub",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:recruiting-board",
+            "checkId": "pi:api:recruiting-board",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:recruiting-board-fail",
+            "checkId": "pi:api:recruiting-board-fail",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:roster-players",
+            "checkId": "pi:api:roster-players",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:roster-players-fail",
+            "checkId": "pi:api:roster-players-fail",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_crawler:api-latency",
+            "checkId": "crawler:api-latency",
+            "reason": "no_eligibility_rule",
+            "detail": "crawler:api-latency",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api-latency:ping-fail",
+            "checkId": "pi:api-latency:ping-fail",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:api-latency:ping-fail",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pages:react-live-feed",
+            "checkId": "pages:react-live-feed",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:tap-targets",
+            "checkId": "ux:tap-targets",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:live-feed-layout",
+            "checkId": "ux:live-feed-layout",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:mobile-safari",
+            "checkId": "ux:mobile-safari",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:portal-players",
+            "checkId": "pi:api:portal-players",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:player-slug",
+            "checkId": "pi:api:player-slug",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:articles-published",
+            "checkId": "pi:api:articles-published",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          }
+        ],
+        "summary": "qa_run_qa_1781393350276 — 11 failed / 111 total checks"
+      },
+      "at": "2026-06-13T23:29:58.215Z"
+    },
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_710c98b5",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-13T23:24:18.778Z"
+    },
+    {
+      "action": "generate",
+      "created": 7,
+      "skipped": 9,
+      "runId": "qa_1781393030658",
+      "log": {
+        "at": "2026-06-13T23:24:18.655Z",
+        "runId": "qa_1781393030658",
+        "openFixQueue": 16,
+        "eligibleOpenIssues": 12,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_ux:scroll-containers",
+            "checkId": "ux:scroll-containers",
+            "reason": "already_pending"
+          },
+          {
+            "action": "created",
+            "id": "sr_fix_014",
+            "sourceIssueId": "fix_integrity:film-sources",
+            "checkId": "integrity:film-sources",
+            "patchType": "film-source-url",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_integrity:react-markers",
+            "checkId": "integrity:react-markers",
+            "reason": "already_pending"
+          },
+          {
+            "action": "created",
+            "id": "sr_fix_015",
+            "sourceIssueId": "fix_pages:react-team",
+            "checkId": "pages:react-team",
+            "patchType": "react-component",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:modal-zindex",
+            "checkId": "ux:modal-zindex",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_crawler:404",
+            "checkId": "crawler:404",
+            "reason": "no_eligibility_rule",
+            "detail": "crawler:404",
+            "severity": "high"
+          },
+          {
+            "action": "created",
+            "id": "sr_fix_016",
+            "sourceIssueId": "fix_pages:react-recruiting-hub",
+            "checkId": "pages:react-recruiting-hub",
+            "patchType": "react-component",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          },
+          {
+            "action": "created",
+            "id": "sr_fix_017",
+            "sourceIssueId": "fix_pages:react-live-feed",
+            "checkId": "pages:react-live-feed",
+            "patchType": "react-component",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:tap-targets",
+            "checkId": "ux:tap-targets",
+            "reason": "already_pending"
+          },
+          {
+            "action": "created",
+            "id": "sr_fix_018",
+            "sourceIssueId": "fix_ux:live-feed-layout",
+            "checkId": "ux:live-feed-layout",
+            "patchType": "react-css",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:mobile-safari",
+            "checkId": "ux:mobile-safari",
+            "reason": "already_pending"
+          },
+          {
+            "action": "created",
+            "id": "sr_fix_019",
+            "sourceIssueId": "fix_content:articles-spell",
+            "checkId": "content:articles-spell",
+            "patchType": "layout-overflow",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_content:content-accuracy-spell",
+            "checkId": "content:content-accuracy-spell",
+            "reason": "no_eligibility_rule",
+            "detail": "content:content-accuracy-spell",
+            "severity": "medium"
+          },
+          {
+            "action": "created",
+            "id": "sr_fix_020",
+            "sourceIssueId": "fix_content:film-room-spell",
+            "checkId": "content:film-room-spell",
+            "patchType": "layout-overflow",
+            "severity": "medium"
+          }
+        ],
+        "summary": "qa_run_qa_1781393030658 — 23 failed / 120 total checks"
+      },
+      "at": "2026-06-13T23:24:18.731Z"
+    },
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_0f8ba697",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-13T18:10:57.918Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 10,
+      "runId": "qa_1781374231459",
+      "log": {
+        "at": "2026-06-13T18:10:57.848Z",
+        "runId": "qa_1781374231459",
+        "openFixQueue": 10,
+        "eligibleOpenIssues": 7,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_ux:scroll-containers",
+            "checkId": "ux:scroll-containers",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:modal-zindex",
+            "checkId": "ux:modal-zindex",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_crawler:pressers-missing",
+            "checkId": "crawler:pressers-missing",
+            "reason": "no_patch_template",
+            "patchType": "react-component"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_crawler:highlights-missing",
+            "checkId": "crawler:highlights-missing",
+            "reason": "no_patch_template",
+            "patchType": "react-component"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:tap-targets",
+            "checkId": "ux:tap-targets",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:mobile-safari",
+            "checkId": "ux:mobile-safari",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_visual-integrity:live-feed-layout",
+            "checkId": "visual-integrity:live-feed-layout",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:filmroom:categories",
+            "checkId": "pi:filmroom:categories",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:filmroom:categories",
+            "severity": "medium"
+          }
+        ],
+        "summary": "qa_run_qa_1781374231459 — 7 failed / 112 total checks"
+      },
+      "at": "2026-06-13T18:10:57.857Z"
+    },
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_f339f795",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-13T17:21:50.101Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 11,
+      "runId": "qa_1781371285361",
+      "log": {
+        "at": "2026-06-13T17:21:50.000Z",
+        "runId": "qa_1781371285361",
+        "openFixQueue": 11,
+        "eligibleOpenIssues": 7,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_ux:scroll-containers",
+            "checkId": "ux:scroll-containers",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:modal-zindex",
+            "checkId": "ux:modal-zindex",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_crawler:404",
+            "checkId": "crawler:404",
+            "reason": "no_eligibility_rule",
+            "detail": "crawler:404",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_crawler:pressers-missing",
+            "checkId": "crawler:pressers-missing",
+            "reason": "no_patch_template",
+            "patchType": "react-component"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_crawler:highlights-missing",
+            "checkId": "crawler:highlights-missing",
+            "reason": "no_patch_template",
+            "patchType": "react-component"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:tap-targets",
+            "checkId": "ux:tap-targets",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:mobile-safari",
+            "checkId": "ux:mobile-safari",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_visual-integrity:live-feed-layout",
+            "checkId": "visual-integrity:live-feed-layout",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:filmroom:categories",
+            "checkId": "pi:filmroom:categories",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:filmroom:categories",
+            "severity": "medium"
+          }
+        ],
+        "summary": "qa_run_qa_1781371285361 — 17 failed / 121 total checks"
+      },
+      "at": "2026-06-13T17:21:50.023Z"
+    },
     {
       "action": "v2_generate",
       "v2Scan": {

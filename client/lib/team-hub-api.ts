@@ -59,6 +59,7 @@ function mapRosterPlayer(p: RosterPlayer): TeamPlayer {
     id: p.id || p.slug,
     name: p.name,
     position: pos,
+    positionGroup: p.positionGroup ?? null,
     classYear: normalizeClassYear(p),
     hometown,
     state: stateMatch?.[1],

@@ -1,7 +1,896 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-13T17:10:46.743Z",
+  "updatedAt": "2026-06-14T02:03:15.030Z",
   "alerts": [
+    {
+      "id": "alert_1781402595029_hmf7r",
+      "at": "2026-06-14T02:03:15.029Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 5 check(s)",
+      "message": "Run qa_1781402570287 at 2026-06-14T02:03:12.211Z\nDuration: 21924ms\nModules: api=PASS, content=PASS, integrity=PASS, pages=FAIL, ux=FAIL, browser=PASS, visual-integrity=PASS, mobile-behavior=PASS, crawler=PASS\n\n• *ux/ux:scroll-containers*: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n  URL: /\n  Repro: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n• *pages/pages:react-team*: Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail\n  URL: /\n  Repro: Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail\n• *ux/ux:modal-zindex*: Vault header z-index stacking not found — modals may render behind shell\n  URL: /\n  Repro: Vault header z-index stacking not found — modals may render behind shell\n• *ux/ux:tap-targets*: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n  URL: /\n  Repro: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n• *ux/ux:mobile-safari*: Mobile Safari safe-area/viewport meta incomplete in vault bundle\n  URL: /\n  Repro: Mobile Safari safe-area/viewport meta incomplete in vault bundle",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-5-ux:scroll-containers",
+      "meta": {
+        "runId": "qa_1781402570287",
+        "errors": [
+          {
+            "id": "ux:scroll-containers",
+            "module": "ux",
+            "message": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "url": "/",
+            "repro": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "details": {
+              "classification": "layout-overflow",
+              "ruleId": "A1",
+              "severity": "medium",
+              "severityScore": 63,
+              "confidence": 90,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:react-team",
+            "module": "pages",
+            "message": "Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail",
+            "url": "/",
+            "repro": "Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail",
+            "details": {
+              "classification": "missing-content",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:modal-zindex",
+            "module": "ux",
+            "message": "Vault header z-index stacking not found — modals may render behind shell",
+            "url": "/",
+            "repro": "Vault header z-index stacking not found — modals may render behind shell",
+            "details": {
+              "classification": "panel-clipping",
+              "ruleId": "A2",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:tap-targets",
+            "module": "ux",
+            "message": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "url": "/",
+            "repro": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:mobile-safari",
+            "module": "ux",
+            "message": "Mobile Safari safe-area/viewport meta incomplete in vault bundle",
+            "url": "/",
+            "repro": "Mobile Safari safe-area/viewport meta incomplete in vault bundle",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781402595027_ogtea",
+      "at": "2026-06-14T02:03:15.027Z",
+      "severity": "error",
+      "type": "job_failure_streak",
+      "title": "qa:crawler failed 8x in a row",
+      "message": "QA crawl failed (5)",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "streak:qa:crawler",
+      "meta": {
+        "failureStreak": 8
+      }
+    },
+    {
+      "id": "alert_1781393398376_78i9i",
+      "at": "2026-06-13T23:29:58.376Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 11 check(s)",
+      "message": "Run qa_1781393350276 at 2026-06-13T23:29:55.277Z\nDuration: 45001ms\nModules: api=PASS, content=PASS, integrity=FAIL, pages=FAIL, ux=FAIL, browser=PASS, visual-integrity=PASS, mobile-behavior=PASS, crawler=FAIL\n\n• *ux/ux:scroll-containers*: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n  URL: /\n  Repro: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n• *integrity/integrity:react-markers*: 1 route validation issue(s)\n  URL: /\n  Repro: 1 route validation issue(s)\n• *pages/pages:react-team*: Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail\n  URL: /\n  Repro: Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail\n• *ux/ux:modal-zindex*: Vault header z-index stacking not found — modals may render behind shell\n  URL: /\n  Repro: Vault header z-index stacking not found — modals may render behind shell\n• *pages/pages:react-recruiting-hub*: Recruiting Hub markers missing: 2026 Commits\n  URL: /vault/recruiting\n  Repro: Recruiting Hub markers missing: 2026 Commits\n• *crawler/crawler:api-latency*: Restore API endpoint health on Render\n  URL: /\n  Repro: Restore API endpoint health on Render\n• *pages/pages:react-live-feed*: Live Feed React markers missing: Headlines\n  URL: /vault/live-feed\n  Repro: Live Feed React markers missing: Headlines\n• *ux/ux:tap-targets*: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n  URL: /\n  Repro: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-11-ux:scroll-containers",
+      "meta": {
+        "runId": "qa_1781393350276",
+        "errors": [
+          {
+            "id": "ux:scroll-containers",
+            "module": "ux",
+            "message": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "url": "/",
+            "repro": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "details": {
+              "classification": "layout-overflow",
+              "ruleId": "A1",
+              "severity": "medium",
+              "severityScore": 63,
+              "confidence": 90,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "integrity:react-markers",
+            "module": "integrity",
+            "message": "1 route validation issue(s)",
+            "url": "/",
+            "repro": "1 route validation issue(s)",
+            "details": {
+              "classification": "missing-content",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:react-team",
+            "module": "pages",
+            "message": "Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail",
+            "url": "/",
+            "repro": "Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail",
+            "details": {
+              "classification": "missing-content",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:modal-zindex",
+            "module": "ux",
+            "message": "Vault header z-index stacking not found — modals may render behind shell",
+            "url": "/",
+            "repro": "Vault header z-index stacking not found — modals may render behind shell",
+            "details": {
+              "classification": "panel-clipping",
+              "ruleId": "A2",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:react-recruiting-hub",
+            "module": "pages",
+            "message": "Recruiting Hub markers missing: 2026 Commits",
+            "url": "/vault/recruiting",
+            "repro": "Recruiting Hub markers missing: 2026 Commits",
+            "details": {
+              "classification": "recruiting-board-mismatch",
+              "ruleId": "D1",
+              "severity": "medium",
+              "severityScore": 57,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:api-latency",
+            "module": "crawler",
+            "message": "Restore API endpoint health on Render",
+            "url": "/",
+            "repro": "Restore API endpoint health on Render",
+            "details": {
+              "classification": "api-latency",
+              "ruleId": "F1",
+              "severity": "critical",
+              "severityScore": 52,
+              "confidence": 99,
+              "selector": "/api/ping",
+              "domPath": "/api/ping",
+              "screenshot": null,
+              "sectionId": "api-health"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:react-live-feed",
+            "module": "pages",
+            "message": "Live Feed React markers missing: Headlines",
+            "url": "/vault/live-feed",
+            "repro": "Live Feed React markers missing: Headlines",
+            "details": {
+              "classification": "autoposter-stale",
+              "ruleId": "B3",
+              "severity": "medium",
+              "severityScore": 46,
+              "confidence": 70,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:tap-targets",
+            "module": "ux",
+            "message": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "url": "/",
+            "repro": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:live-feed-layout",
+            "module": "ux",
+            "message": "Live Feed layout CSS missing: gv-live-feed__row, gv-live-feed__row-time",
+            "url": "/",
+            "repro": "Live Feed layout CSS missing: gv-live-feed__row, gv-live-feed__row-time",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:mobile-safari",
+            "module": "ux",
+            "message": "Mobile Safari safe-area/viewport meta incomplete in vault bundle",
+            "url": "/",
+            "repro": "Mobile Safari safe-area/viewport meta incomplete in vault bundle",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781393058787_jvhf5",
+      "at": "2026-06-13T23:24:18.787Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 23 check(s)",
+      "message": "Run qa_1781393030658 at 2026-06-13T23:24:12.684Z\nDuration: 22026ms\nModules: api=PASS, content=FAIL, integrity=FAIL, pages=FAIL, ux=FAIL, browser=PASS, visual-integrity=PASS, mobile-behavior=PASS, crawler=FAIL\n\n• *ux/ux:scroll-containers*: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n  URL: /\n  Repro: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n• *integrity/integrity:film-sources*: HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog\n  URL: /api/film-room/catalog\n  Repro: HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog\n• *integrity/integrity:react-markers*: 1 route validation issue(s)\n  URL: /\n  Repro: 1 route validation issue(s)\n• *pages/pages:react-team*: Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail\n  URL: /\n  Repro: Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail\n• *ux/ux:modal-zindex*: Vault header z-index stacking not found — modals may render behind shell\n  URL: /\n  Repro: Vault header z-index stacking not found — modals may render behind shell\n• *crawler/crawler:404*: Deploy missing asset js/vault-chunks/r-vault-team-page-e97f60aeb392f5a1.js from client build to Netlify\n  URL: /\n  Repro: Deploy missing asset js/vault-chunks/r-vault-team-page-e97f60aeb392f5a1.js from client build to Netlify\n• *pages/pages:react-recruiting-hub*: Recruiting Hub markers missing: 2026 Commits\n  URL: /vault/recruiting\n  Repro: Recruiting Hub markers missing: 2026 Commits\n• *pages/pages:react-live-feed*: Live Feed React markers missing: Headlines\n  URL: /vault/live-feed\n  Repro: Live Feed React markers missing: Headlines",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-23-ux:scroll-containers",
+      "meta": {
+        "runId": "qa_1781393030658",
+        "errors": [
+          {
+            "id": "ux:scroll-containers",
+            "module": "ux",
+            "message": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "url": "/",
+            "repro": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "details": {
+              "classification": "layout-overflow",
+              "ruleId": "A1",
+              "severity": "medium",
+              "severityScore": 63,
+              "confidence": 90,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+            "url": "/api/film-room/catalog",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+            "details": {
+              "classification": "broken-link",
+              "ruleId": "F3",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "integrity:react-markers",
+            "module": "integrity",
+            "message": "1 route validation issue(s)",
+            "url": "/",
+            "repro": "1 route validation issue(s)",
+            "details": {
+              "classification": "missing-content",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:react-team",
+            "module": "pages",
+            "message": "Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail",
+            "url": "/",
+            "repro": "Deploy React VaultTeamPage — remove vpane/gvOpenTeamDetail",
+            "details": {
+              "classification": "missing-content",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:modal-zindex",
+            "module": "ux",
+            "message": "Vault header z-index stacking not found — modals may render behind shell",
+            "url": "/",
+            "repro": "Vault header z-index stacking not found — modals may render behind shell",
+            "details": {
+              "classification": "panel-clipping",
+              "ruleId": "A2",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:404",
+            "module": "crawler",
+            "message": "Deploy missing asset js/vault-chunks/r-vault-team-page-e97f60aeb392f5a1.js from client build to Netlify",
+            "url": "/",
+            "repro": "Deploy missing asset js/vault-chunks/r-vault-team-page-e97f60aeb392f5a1.js from client build to Netlify",
+            "details": {
+              "classification": "404-detected",
+              "ruleId": "F3",
+              "severity": "high",
+              "severityScore": 60,
+              "confidence": 95,
+              "selector": "js/vault-chunks/r-vault-team-page-e97f60aeb392f5a1.js",
+              "domPath": "js/vault-chunks/r-vault-team-page-e97f60aeb392f5a1.js",
+              "screenshot": null,
+              "sectionId": "static-assets"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:react-recruiting-hub",
+            "module": "pages",
+            "message": "Recruiting Hub markers missing: 2026 Commits",
+            "url": "/vault/recruiting",
+            "repro": "Recruiting Hub markers missing: 2026 Commits",
+            "details": {
+              "classification": "recruiting-board-mismatch",
+              "ruleId": "D1",
+              "severity": "medium",
+              "severityScore": 57,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "pages:react-live-feed",
+            "module": "pages",
+            "message": "Live Feed React markers missing: Headlines",
+            "url": "/vault/live-feed",
+            "repro": "Live Feed React markers missing: Headlines",
+            "details": {
+              "classification": "autoposter-stale",
+              "ruleId": "B3",
+              "severity": "medium",
+              "severityScore": 46,
+              "confidence": 70,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:tap-targets",
+            "module": "ux",
+            "message": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "url": "/",
+            "repro": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:live-feed-layout",
+            "module": "ux",
+            "message": "Live Feed layout CSS missing: gv-live-feed__row, gv-live-feed__row-time",
+            "url": "/",
+            "repro": "Live Feed layout CSS missing: gv-live-feed__row, gv-live-feed__row-time",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781393058785_vfnba",
+      "at": "2026-06-13T23:24:18.785Z",
+      "severity": "error",
+      "type": "job_failure_streak",
+      "title": "qa:crawler failed 6x in a row",
+      "message": "QA crawl failed (23)",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "streak:qa:crawler",
+      "meta": {
+        "failureStreak": 6
+      }
+    },
+    {
+      "id": "alert_1781374257926_1ekhi",
+      "at": "2026-06-13T18:10:57.926Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 7 check(s)",
+      "message": "Run qa_1781374231459 at 2026-06-13T18:10:53.064Z\nDuration: 21606ms\nModules: api=PASS, content=PASS, integrity=PASS, pages=PASS, ux=FAIL, browser=PASS, visual-integrity=FAIL, mobile-behavior=PASS, crawler=FAIL\n\n• *ux/ux:scroll-containers*: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n  URL: /\n  Repro: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n• *ux/ux:modal-zindex*: Vault header z-index stacking not found — modals may render behind shell\n  URL: /\n  Repro: Vault header z-index stacking not found — modals may render behind shell\n• *crawler/crawler:pressers-missing*: Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage\n  URL: /vault/film-room\n  Repro: Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage\n• *crawler/crawler:highlights-missing*: Verify Film Room catalog includes Highlights hub category\n  URL: /vault/film-room\n  Repro: Verify Film Room catalog includes Highlights hub category\n• *ux/ux:tap-targets*: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n  URL: /\n  Repro: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n• *ux/ux:mobile-safari*: Mobile Safari safe-area/viewport meta incomplete in vault bundle\n  URL: /\n  Repro: Mobile Safari safe-area/viewport meta incomplete in vault bundle\n• *visual-integrity/visual-integrity:live-feed-layout*: Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row\n  URL: /\n  Repro: Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-7-ux:scroll-containers",
+      "meta": {
+        "runId": "qa_1781374231459",
+        "errors": [
+          {
+            "id": "ux:scroll-containers",
+            "module": "ux",
+            "message": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "url": "/",
+            "repro": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "details": {
+              "classification": "layout-overflow",
+              "ruleId": "A1",
+              "severity": "medium",
+              "severityScore": 63,
+              "confidence": 90,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:modal-zindex",
+            "module": "ux",
+            "message": "Vault header z-index stacking not found — modals may render behind shell",
+            "url": "/",
+            "repro": "Vault header z-index stacking not found — modals may render behind shell",
+            "details": {
+              "classification": "panel-clipping",
+              "ruleId": "A2",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:pressers-missing",
+            "module": "crawler",
+            "message": "Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage",
+            "url": "/vault/film-room",
+            "repro": "Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage",
+            "details": {
+              "classification": "pressers-missing",
+              "ruleId": "B1",
+              "severity": "high",
+              "severityScore": 60,
+              "confidence": 90,
+              "selector": ".gv-film-hub-card",
+              "domPath": "film-room-press-category",
+              "screenshot": null,
+              "sectionId": "vault-film-room"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:highlights-missing",
+            "module": "crawler",
+            "message": "Verify Film Room catalog includes Highlights hub category",
+            "url": "/vault/film-room",
+            "repro": "Verify Film Room catalog includes Highlights hub category",
+            "details": {
+              "classification": "highlights-missing",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 85,
+              "selector": ".gv-film-lessons",
+              "domPath": "film-room-highlights",
+              "screenshot": null,
+              "sectionId": "vault-film-room"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:tap-targets",
+            "module": "ux",
+            "message": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "url": "/",
+            "repro": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:mobile-safari",
+            "module": "ux",
+            "message": "Mobile Safari safe-area/viewport meta incomplete in vault bundle",
+            "url": "/",
+            "repro": "Mobile Safari safe-area/viewport meta incomplete in vault bundle",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "visual-integrity:live-feed-layout",
+            "module": "visual-integrity",
+            "message": "Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row",
+            "url": "/",
+            "repro": "Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781374257924_cjsip",
+      "at": "2026-06-13T18:10:57.924Z",
+      "severity": "error",
+      "type": "job_failure_streak",
+      "title": "qa:crawler failed 5x in a row",
+      "message": "QA crawl failed (7)",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "streak:qa:crawler",
+      "meta": {
+        "failureStreak": 5
+      }
+    },
+    {
+      "id": "alert_1781371310114_pbtai",
+      "at": "2026-06-13T17:21:50.114Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 17 check(s)",
+      "message": "Run qa_1781371285361 at 2026-06-13T17:21:46.524Z\nDuration: 21163ms\nModules: api=PASS, content=PASS, integrity=PASS, pages=PASS, ux=FAIL, browser=PASS, visual-integrity=FAIL, mobile-behavior=PASS, crawler=FAIL\n\n• *ux/ux:scroll-containers*: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n  URL: /\n  Repro: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n• *ux/ux:modal-zindex*: Vault header z-index stacking not found — modals may render behind shell\n  URL: /\n  Repro: Vault header z-index stacking not found — modals may render behind shell\n• *crawler/crawler:404*: Deploy missing asset _next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js from client build to Netlify\n  URL: /\n  Repro: Deploy missing asset _next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js from client build to Netlify\n• *crawler/crawler:pressers-missing*: Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage\n  URL: /vault/film-room\n  Repro: Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage\n• *crawler/crawler:highlights-missing*: Verify Film Room catalog includes Highlights hub category\n  URL: /vault/film-room\n  Repro: Verify Film Room catalog includes Highlights hub category\n• *ux/ux:tap-targets*: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n  URL: /\n  Repro: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n• *ux/ux:mobile-safari*: Mobile Safari safe-area/viewport meta incomplete in vault bundle\n  URL: /\n  Repro: Mobile Safari safe-area/viewport meta incomplete in vault bundle\n• *visual-integrity/visual-integrity:live-feed-layout*: Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row\n  URL: /\n  Repro: Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-17-ux:scroll-containers",
+      "meta": {
+        "runId": "qa_1781371285361",
+        "errors": [
+          {
+            "id": "ux:scroll-containers",
+            "module": "ux",
+            "message": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "url": "/",
+            "repro": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
+            "details": {
+              "classification": "layout-overflow",
+              "ruleId": "A1",
+              "severity": "medium",
+              "severityScore": 63,
+              "confidence": 90,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:modal-zindex",
+            "module": "ux",
+            "message": "Vault header z-index stacking not found — modals may render behind shell",
+            "url": "/",
+            "repro": "Vault header z-index stacking not found — modals may render behind shell",
+            "details": {
+              "classification": "panel-clipping",
+              "ruleId": "A2",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:404",
+            "module": "crawler",
+            "message": "Deploy missing asset _next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js from client build to Netlify",
+            "url": "/",
+            "repro": "Deploy missing asset _next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js from client build to Netlify",
+            "details": {
+              "classification": "404-detected",
+              "ruleId": "F3",
+              "severity": "high",
+              "severityScore": 60,
+              "confidence": 95,
+              "selector": "_next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js",
+              "domPath": "_next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js",
+              "screenshot": null,
+              "sectionId": "static-assets"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:pressers-missing",
+            "module": "crawler",
+            "message": "Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage",
+            "url": "/vault/film-room",
+            "repro": "Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage",
+            "details": {
+              "classification": "pressers-missing",
+              "ruleId": "B1",
+              "severity": "high",
+              "severityScore": 60,
+              "confidence": 90,
+              "selector": ".gv-film-hub-card",
+              "domPath": "film-room-press-category",
+              "screenshot": null,
+              "sectionId": "vault-film-room"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:highlights-missing",
+            "module": "crawler",
+            "message": "Verify Film Room catalog includes Highlights hub category",
+            "url": "/vault/film-room",
+            "repro": "Verify Film Room catalog includes Highlights hub category",
+            "details": {
+              "classification": "highlights-missing",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 85,
+              "selector": ".gv-film-lessons",
+              "domPath": "film-room-highlights",
+              "screenshot": null,
+              "sectionId": "vault-film-room"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:tap-targets",
+            "module": "ux",
+            "message": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "url": "/",
+            "repro": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:mobile-safari",
+            "module": "ux",
+            "message": "Mobile Safari safe-area/viewport meta incomplete in vault bundle",
+            "url": "/",
+            "repro": "Mobile Safari safe-area/viewport meta incomplete in vault bundle",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "visual-integrity:live-feed-layout",
+            "module": "visual-integrity",
+            "message": "Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row",
+            "url": "/",
+            "repro": "Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
     {
       "id": "alert_1781370646741_7ytud",
       "at": "2026-06-13T17:10:46.741Z",

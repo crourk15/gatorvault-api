@@ -2,6 +2,7 @@
  * Recruiting board tier enrichment for /api/recruiting/board
  */
 const { slugify } = require('./slug');
+const { filterBlockedRecruits } = require('./recruiting-blocked-players');
 const TIER_LABELS = {
   TOP: 'Top Priorities',
   HIGH: 'High Interest',
@@ -92,8 +93,8 @@ function enrichPlayer(player, isCommit, staffMode) {
 }
 
 function enrichBoard(board, staffMode = false) {
-  const commits = (board.commits || []).map((p) => enrichPlayer(p, true, staffMode));
-  const targets = (board.targets || []).map((p) => enrichPlayer(p, false, staffMode));
+  const commits = filterBlockedRecruits(board.commits || []).map((p) => enrichPlayer(p, true, staffMode));
+  const targets = filterBlockedRecruits(board.targets || []).map((p) => enrichPlayer(p, false, staffMode));
   const players = [...commits, ...targets];
 
   const tiers = ['TOP', 'HIGH', 'MEDIUM', 'LOW', 'EVAL'].map((tier) => ({

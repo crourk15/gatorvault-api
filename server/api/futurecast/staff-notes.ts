@@ -13,6 +13,8 @@ import { enrichFeedPlayers } from './ranking-enrichment';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const { ALLOWLIST_2027 } = require('../../lib/recruiting-target-allowlist');
+const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 
 interface RecruitingMeta {
@@ -172,8 +174,35 @@ export const handleGetFutureCastStaffNotes = asyncHandler(async (req: Request, r
         .map(({ entry }) => entry)
         .sort((a, b) => String(a.playerName).localeCompare(String(b.playerName)));
 
+      const allowedSet = new Set(ALLOWLIST_2027.map((s: string) => s.toLowerCase()));
+      const filteredNotes = filterBlockedRecruits(
+        notes.filter((n) => allowedSet.has(String(n.playerSlug || '').toLowerCase()))
+      );
+
+      let playerBySlug: Map<string, { fitScore: number; trendDelta7d: number; priority: string }> =
+        new Map();
+      try {
+        const { loadAllowlistedBoardPlayers } = await import('./allowlist-board');
+        const boardPlayers = await loadAllowlistedBoardPlayers();
+        playerBySlug = new Map(
+          boardPlayers.map((p) => [
+            p.slug,
+            { fitScore: p.fitScore, trendDelta7d: p.trendDelta7d, priority: p.priority },
+          ])
+        );
+      } catch {
+        /* optional */
+      }
+
+      const enrichedNotes = filteredNotes.map((note) => {
+        const board = playerBySlug.get(String(note.playerSlug || '').toLowerCase());
+        return board
+          ? { ...note, fitScore: board.fitScore, trendDelta7d: board.trendDelta7d, priority: board.priority }
+          : note;
+      });
+
       const updatedAt =
-        notes
+        enrichedNotes
           .map((n) => n.updatedAt)
           .filter(Boolean)
           .sort()
@@ -182,9 +211,10 @@ export const handleGetFutureCastStaffNotes = asyncHandler(async (req: Request, r
       return {
         classYear: minYear,
         updatedAt,
-        count: notes.length,
+        count: enrichedNotes.length,
+        totalNotes: enrichedNotes.length,
         staleFiltered,
-        notes: enrichFeedPlayers(notes),
+        notes: enrichFeedPlayers(enrichedNotes),
       };
     });
   } catch (err) {

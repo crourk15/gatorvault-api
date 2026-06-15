@@ -187,7 +187,7 @@
   display: flex;
   gap: 2.5rem;
   width: max-content;
-  animation: gv-gnl-ticker-scroll 22s linear infinite;
+  animation: gv-gnl-ticker-scroll 24s linear infinite;
 }
 
 .gv-gnl-ticker__track:hover {

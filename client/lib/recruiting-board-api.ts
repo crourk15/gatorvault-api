@@ -2,6 +2,7 @@
  * Recruiting board API — /api/recruiting/board
  */
 import { apiFetch } from './api-fetch';
+import { filterBlockedRecruits } from './recruiting-blocked-players';
 
 export type RecruitingBoardTier = 'TOP' | 'HIGH' | 'MEDIUM' | 'LOW' | 'EVAL';
 
@@ -77,9 +78,25 @@ export async function fetchRecruitingBoard(
   staffMode = false
 ): Promise<RecruitingBoardResponse> {
   const staff = staffMode ? '&mode=staff' : '';
-  return apiFetch<RecruitingBoardResponse>(
+  const data = await apiFetch<RecruitingBoardResponse>(
     `/api/recruiting/board?class=${classYear}${staff}`
   );
+  return sanitizeRecruitingBoard(data);
+}
+
+function sanitizeRecruitingBoard(data: RecruitingBoardResponse): RecruitingBoardResponse {
+  const filterList = (list?: RecruitingBoardPlayer[]) => filterBlockedRecruits(list ?? []);
+  const tiers = data.tiers?.map((tier) => {
+    const players = filterList(tier.players);
+    return { ...tier, players, count: players.length };
+  });
+  return {
+    ...data,
+    players: filterList(data.players),
+    commits: filterList(data.commits),
+    targets: filterList(data.targets),
+    tiers,
+  };
 }
 
 export const TIER_ORDER: RecruitingBoardTier[] = ['TOP', 'HIGH', 'MEDIUM', 'LOW', 'EVAL'];

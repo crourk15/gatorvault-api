@@ -28,6 +28,8 @@ import { sendCachedJson } from './response-cache';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const { filterAllowlistedTargets } = require('../../lib/recruiting-target-allowlist');
+const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players');
 const TARGET_BOARD_PATH = path.join(__dirname, '../../data/recruiting/2027-target-board.json');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 
@@ -166,7 +168,11 @@ function loadTargetBoard(): TargetBoardEntry[] {
     const raw = JSON.parse(fs.readFileSync(TARGET_BOARD_PATH, 'utf8')) as {
       targets?: TargetBoardEntry[];
     };
-    return raw.targets ?? [];
+    const allowlisted = filterAllowlistedTargets(
+      (raw.targets ?? []).map((t) => ({ ...t, classYear: FUTURECAST_CLASS_YEAR })),
+      FUTURECAST_CLASS_YEAR
+    );
+    return filterBlockedRecruits(allowlisted);
   } catch {
     return [];
   }

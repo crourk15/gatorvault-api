@@ -185,14 +185,28 @@
   }
 
   var ROSTER_FILTERS = ['All', 'QB', 'RB', 'WR', 'OL', 'DL', 'LB', 'DB', 'ST'];
-  var POS_GROUPS = {
-    QB: ['QB'], RB: ['RB', 'FB'], WR: ['WR', 'TE'],
-    OL: ['OL', 'OT', 'OG', 'C', 'IOL', 'LT', 'LG', 'RG', 'RT'],
-    DL: ['DL', 'DT', 'DE', 'EDGE', 'NT', 'END', 'NOSE'],
-    LB: ['LB', 'MIKE', 'WILL', 'SAM', 'JACK', 'OLB', 'ILB'],
-    DB: ['DB', 'CB', 'S', 'SS', 'FS', 'NB', 'STAR'],
-    ST: ['K', 'P', 'LS', 'KR', 'PR']
-  };
+  var OL_POSITIONS = { LT: 1, LG: 1, C: 1, RG: 1, RT: 1, OL: 1, IOL: 1, OT: 1, OG: 1 };
+  var DB_POSITIONS = { CB: 1, S: 1, SS: 1, FS: 1, NB: 1, DB: 1, STAR: 1 };
+  var DL_POSITIONS = { DL: 1, DT: 1, DE: 1, EDGE: 1, NT: 1, END: 1, NOSE: 1 };
+  var LB_POSITIONS = { LB: 1, MIKE: 1, WILL: 1, SAM: 1, JACK: 1, OLB: 1, ILB: 1 };
+  var RB_POSITIONS = { RB: 1, FB: 1 };
+  var WR_POSITIONS = { WR: 1, TE: 1 };
+  var ST_POSITIONS = { K: 1, P: 1, LS: 1, KR: 1, PR: 1 };
+
+  function resolveRosterPositionGroup(pos, positionGroup) {
+    var group = String(positionGroup || '').toUpperCase();
+    if (['OL', 'DB', 'DL', 'LB', 'RB', 'WR', 'QB', 'ST'].indexOf(group) >= 0) return group;
+    var p = String(pos || '').toUpperCase();
+    if (p === 'QB') return 'QB';
+    if (RB_POSITIONS[p]) return 'RB';
+    if (WR_POSITIONS[p]) return 'WR';
+    if (OL_POSITIONS[p]) return 'OL';
+    if (DL_POSITIONS[p]) return 'DL';
+    if (LB_POSITIONS[p]) return 'LB';
+    if (DB_POSITIONS[p]) return 'DB';
+    if (ST_POSITIONS[p]) return 'ST';
+    return null;
+  }
 
   var TEAM_PREFIXES = ['mteam', 'team'];
 
@@ -863,10 +877,7 @@
 
   function playerMatchesRosterFilter(p, filter) {
     if (!filter || filter === 'All') return true;
-    var pos = String(p.pos || '').toUpperCase();
-    var group = POS_GROUPS[filter];
-    if (!group) return pos === filter;
-    return group.some(function (g) { return pos === g || pos.indexOf(g) === 0; });
+    return resolveRosterPositionGroup(p.pos || p.position, p.positionGroup || p.group) === filter;
   }
 
   function renderRosterList(listEl, filter) {

@@ -27,6 +27,18 @@
 /?open=vault&tab=apparel  /vault/apparel  301
 
 # Retired standalone / monolith HTML → vault pillars (301)
+/futurecast/master-board  /vault/futurecast  301
+/futurecast/master-board/  /vault/futurecast  301
+/futurecast/master-board/*  /vault/futurecast  301
+/futurecast/trending-board  /vault/futurecast/trending  301
+/futurecast/trending-board/  /vault/futurecast/trending  301
+/futurecast/trending-board/*  /vault/futurecast/trending  301
+/futurecast/movement-intel  /vault/futurecast/movement  301
+/futurecast/movement-intel/  /vault/futurecast/movement  301
+/futurecast/movement-intel/*  /vault/futurecast/movement  301
+/futurecast/staff-notes  /vault/futurecast/staff  301
+/futurecast/staff-notes/  /vault/futurecast/staff  301
+/futurecast/staff-notes/*  /vault/futurecast/staff  301
 /futurecast  /vault/futurecast  301
 /futurecast/  /vault/futurecast  301
 /futurecast/*  /vault/futurecast  301

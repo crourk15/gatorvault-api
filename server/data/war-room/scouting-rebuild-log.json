@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "reason": "recruiting_player_update",
+  "startedAt": "2026-06-13T21:01:15.918Z",
+  "finishedAt": "2026-06-13T21:01:21.303Z",
+  "total": 1,
+  "updated": 0,
+  "unchanged": 0,
+  "blank": 1,
+  "errors": [
+    {
+      "slug": "kamauri-whitfield",
+      "error": "scoutingDb.importLegacyBreakdown is not a function"
+    }
+  ],
+  "updatesAdded": 0
+}

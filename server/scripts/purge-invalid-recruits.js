@@ -8,14 +8,8 @@ const fs = require('fs');
 const path = require('path');
 
 const SERVER = path.join(__dirname, '..');
-const REMOVE_SLUGS = new Set([
-  'jaylen-jordan',
-  'kennedee-jackson',
-  'tj-shanahan-jr',
-  't-j-shanahan',
-  'devon-hall',
-  'derrick-malone',
-]);
+const { BLOCKED_PLAYER_SLUGS } = require('../lib/recruiting-blocked-players');
+const REMOVE_SLUGS = BLOCKED_PLAYER_SLUGS;
 
 function readJson(rel, fallback) {
   const p = path.join(SERVER, rel);
@@ -77,10 +71,15 @@ function purgeOn3Snapshot() {
 
 function purgeTargetBoard() {
   const rel = 'data/recruiting/2027-target-board.json';
+  const { ALLOWLIST_2027 } = require('../lib/recruiting-target-allowlist');
+  const { filterBlockedRecruits } = require('../lib/recruiting-blocked-players');
   const doc = readJson(rel, null);
   if (!doc?.targets || !Array.isArray(doc.targets)) return 0;
   const before = doc.targets.length;
-  doc.targets = doc.targets.filter((t) => !REMOVE_SLUGS.has(String(t.slug || '').toLowerCase()));
+  const allowed = new Set(ALLOWLIST_2027);
+  doc.targets = filterBlockedRecruits(
+    doc.targets.filter((t) => allowed.has(String(t.slug || '').toLowerCase()))
+  );
   const removed = before - doc.targets.length;
   if (removed) writeJson(rel, doc);
   return removed;

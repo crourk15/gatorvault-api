@@ -58,20 +58,7 @@ function isTestPlayer(p) {
   return slug === 'test-recruit' || name === 'test recruit';
 }
 
-/** Admin-purged slugs — ingest must not re-add (Phase 10). */
-const BLOCKED_PLAYER_SLUGS = new Set([
-  'jaylen-jordan',
-  'kennedee-jackson',
-  'tj-shanahan-jr',
-  't-j-shanahan',
-  'devon-hall',
-  'derrick-malone',
-]);
-
-function isBlockedPlayer(p) {
-  const slug = String(p?.slug || p?.id || '').toLowerCase();
-  return BLOCKED_PLAYER_SLUGS.has(slug);
-}
+const { isBlockedRecruit: isBlockedPlayer } = require('./recruiting-blocked-players');
 
 function isFloridaCommit(p) {
   if (!p) return false;
@@ -247,7 +234,7 @@ async function getAllPlayers() {
   } else {
     players = (await loadPlayersLocal()).map(normalizePlayer);
   }
-  return players.filter((p) => !isTestPlayer(p));
+  return players.filter((p) => !isTestPlayer(p) && !isBlockedPlayer(p));
 }
 
 async function getPlayerBySlug(slug) {

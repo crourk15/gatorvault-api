@@ -1,38 +1,14 @@
 /**
- * GET /api/futurecast/heatmap — Up / Down / Flat movement bucket counts.
+ * GET /api/futurecast/heatmap — Up / Down / Flat movement bucket counts (allow-list only).
  */
 import type { Request, Response } from 'express';
-import { listStockBoardRows } from '../../models/predictions';
 import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
-import { filterMovementIntelStockRows, MOVEMENT_INTEL_MIN_CLASS_YEAR } from './feed-filters';
-
-const WINDOW_DAYS = 7;
-const HS_STOCK_FILTERS = { lifecycle: 'HS' as const, min_class_year: MOVEMENT_INTEL_MIN_CLASS_YEAR };
+import { buildAllowlistHeatmapPayload } from './allowlist-board';
+import { sendCachedJson } from './response-cache';
 
 export const handleGetMovementHeatmap = asyncHandler(async (_req: Request, res: Response) => {
   try {
-    const rows = filterMovementIntelStockRows(
-      await listStockBoardRows(WINDOW_DAYS, HS_STOCK_FILTERS)
-    );
-
-    let upCount = 0;
-    let downCount = 0;
-    let flatCount = 0;
-
-    for (const row of rows) {
-      if (row.window_delta > 0) upCount += 1;
-      else if (row.window_delta < 0) downCount += 1;
-      else flatCount += 1;
-    }
-
-    res.json({
-      buckets: [
-        { label: 'Up', count: upCount },
-        { label: 'Down', count: downCount },
-        { label: 'Flat', count: flatCount },
-      ],
-      windowDays: WINDOW_DAYS,
-    });
+    await sendCachedJson(res, 'futurecast:heatmap:allowlist', buildAllowlistHeatmapPayload);
   } catch (err) {
     handlePredictionsApiError(res, err);
   }

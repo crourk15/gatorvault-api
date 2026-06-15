@@ -81,6 +81,18 @@ const RETIRED_PATTERNS = [
 ];
 
 const LEGACY_ROUTE_REDIRECTS = [
+  { from: '/futurecast/master-board', to: '/vault/futurecast' },
+  { from: '/futurecast/master-board/', to: '/vault/futurecast' },
+  { from: '/futurecast/master-board/*', to: '/vault/futurecast' },
+  { from: '/futurecast/trending-board', to: '/vault/futurecast/trending' },
+  { from: '/futurecast/trending-board/', to: '/vault/futurecast/trending' },
+  { from: '/futurecast/trending-board/*', to: '/vault/futurecast/trending' },
+  { from: '/futurecast/movement-intel', to: '/vault/futurecast/movement' },
+  { from: '/futurecast/movement-intel/', to: '/vault/futurecast/movement' },
+  { from: '/futurecast/movement-intel/*', to: '/vault/futurecast/movement' },
+  { from: '/futurecast/staff-notes', to: '/vault/futurecast/staff' },
+  { from: '/futurecast/staff-notes/', to: '/vault/futurecast/staff' },
+  { from: '/futurecast/staff-notes/*', to: '/vault/futurecast/staff' },
   { from: '/futurecast', to: '/vault/futurecast' },
   { from: '/futurecast/', to: '/vault/futurecast' },
   { from: '/futurecast/*', to: '/vault/futurecast' },

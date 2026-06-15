@@ -108,27 +108,12 @@ export const FALLBACK_COACHES: Omit<Coach, 'bio' | 'highlights'>[] = [
   { id: 'mcgrew', initials: 'JM', name: 'Jeff McGrew', title: 'Equipment & Logistics', group: 'support' },
 ];
 
+export {
+  rosterMatchesFilter,
+  type RosterFilter,
+} from './roster-position-groups';
+
 export const ROSTER_FILTER_OPTIONS = ['All', 'QB', 'RB', 'WR', 'OL', 'DL', 'LB', 'DB', 'ST'] as const;
-
-export type RosterFilter = (typeof ROSTER_FILTER_OPTIONS)[number];
-
-const POS_GROUPS: Record<string, string[]> = {
-  QB: ['QB'],
-  RB: ['RB', 'FB'],
-  WR: ['WR', 'TE'],
-  OL: ['OL', 'OT', 'OG', 'C', 'IOL', 'LT', 'LG', 'RG', 'RT'],
-  DL: ['DL', 'DT', 'DE', 'EDGE', 'NT', 'END', 'NOSE'],
-  LB: ['LB', 'MIKE', 'WILL', 'SAM', 'JACK', 'OLB', 'ILB'],
-  DB: ['DB', 'CB', 'S', 'SS', 'FS', 'NB', 'STAR'],
-  ST: ['K', 'P', 'LS', 'KR', 'PR'],
-};
-
-export function rosterMatchesFilter(position: string, filter: RosterFilter): boolean {
-  if (filter === 'All') return true;
-  const pos = position.toUpperCase();
-  const group = POS_GROUPS[filter];
-  return group?.some((g) => pos === g || pos.startsWith(g)) ?? false;
-}
 
 export function coachInitials(name: string): string {
   return name

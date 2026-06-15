@@ -6,6 +6,7 @@ export interface RosterPlayer {
   name: string;
   pos?: string;
   position?: string;
+  positionGroup?: string | null;
   year?: string;
   class?: string;
   height?: string;

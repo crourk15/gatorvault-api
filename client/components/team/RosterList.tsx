@@ -12,7 +12,7 @@ type Props = {
 
 export function RosterList({ players, filter }: Props): React.ReactElement {
   const filtered = useMemo(
-    () => players.filter((p) => rosterMatchesFilter(p.position, filter)),
+    () => players.filter((p) => rosterMatchesFilter(p.position, filter, p.positionGroup)),
     [players, filter]
   );
 

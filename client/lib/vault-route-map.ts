@@ -110,9 +110,10 @@ export function parseFutureCastSegmentFromPath(pathname?: string): FutureCastSeg
   if (p in FUTURECAST_LEGACY_PATH_ALIASES) {
     return FUTURECAST_LEGACY_PATH_ALIASES[p];
   }
-  if (p.includes('/futurecast/trending')) return 'trending';
-  if (p.includes('/futurecast/movement')) return 'movement';
-  if (p.includes('/futurecast/staff')) return 'staff';
+  if (p.includes('/futurecast/trending') || p.includes('/trending-board')) return 'trending';
+  if (p.includes('/futurecast/movement') || p.includes('/movement-intel')) return 'movement';
+  if (p.includes('/futurecast/staff') || p.includes('/staff-notes')) return 'staff';
+  if (p.includes('/master-board')) return 'master';
   return 'master';
 }
 

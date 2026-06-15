@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { slugify } = require('./slug');
+const { resolveRosterPositionGroup } = require('./roster-position-groups');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'roster');
 const PLAYERS_PATH = path.join(DATA_DIR, 'players.json');
@@ -109,6 +110,9 @@ function normalizeRosterPlayer(raw) {
   player.hasHeadshot = !!player.headshotUrl;
   player.displayRating = displayRating(player);
   player.ratingIsOverride = player.ratingOverride != null && player.ratingOverride !== '';
+  const pos = String(player.pos || player.position || '').toUpperCase();
+  const storedGroup = raw.positionGroup || raw.group;
+  player.positionGroup = resolveRosterPositionGroup(pos, storedGroup);
   return player;
 }
 

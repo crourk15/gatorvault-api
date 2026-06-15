@@ -1,6 +1,686 @@
 {
   "entries": [
     {
+      "at": "2026-06-14T14:24:01.750Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_e1082bd7",
+      "finished": true,
+      "issueCount": 0,
+      "patchCount": 1
+    },
+    {
+      "at": "2026-06-14T14:24:01.748Z",
+      "level": "info",
+      "event": "patch_proposed",
+      "scanId": "sr2_scan_e1082bd7",
+      "patchType": "multi-file-v2",
+      "files": [
+        null
+      ]
+    },
+    {
+      "at": "2026-06-14T14:24:01.746Z",
+      "level": "info",
+      "event": "multi_file_patch",
+      "bundleKey": "blueprint",
+      "files": [
+        null
+      ],
+      "edits": 1,
+      "blocked": false
+    },
+    {
+      "at": "2026-06-14T14:24:01.731Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/scouting-database.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\scouting-database.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T14:24:01.729Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/breakdowns.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\war-room-breakdowns.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T14:24:01.725Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/recruiting/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\recruiting-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T14:24:01.715Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/live/feed-items.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\feed-items.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T14:24:01.710Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/coaching-staff.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\coaching-staff.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T14:24:01.707Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/roster/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\roster-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T14:24:01.700Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_e1082bd7",
+      "mode": "scan-only"
+    },
+    {
+      "at": "2026-06-14T11:55:49.052Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_926daeec",
+      "finished": true,
+      "issueCount": 0,
+      "patchCount": 1
+    },
+    {
+      "at": "2026-06-14T11:55:49.050Z",
+      "level": "info",
+      "event": "patch_proposed",
+      "scanId": "sr2_scan_926daeec",
+      "patchType": "multi-file-v2",
+      "files": [
+        null
+      ]
+    },
+    {
+      "at": "2026-06-14T11:55:49.048Z",
+      "level": "info",
+      "event": "multi_file_patch",
+      "bundleKey": "blueprint",
+      "files": [
+        null
+      ],
+      "edits": 1,
+      "blocked": false
+    },
+    {
+      "at": "2026-06-14T11:55:49.035Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/scouting-database.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\scouting-database.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T11:55:49.032Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/breakdowns.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\war-room-breakdowns.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T11:55:49.029Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/recruiting/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\recruiting-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T11:55:49.025Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/live/feed-items.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\feed-items.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T11:55:49.021Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/coaching-staff.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\coaching-staff.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T11:55:49.018Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/roster/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\roster-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T11:55:49.012Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_926daeec",
+      "mode": "scan-only"
+    },
+    {
+      "at": "2026-06-14T02:05:01.677Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_0d4c6bd9",
+      "finished": true,
+      "issueCount": 0,
+      "patchCount": 1
+    },
+    {
+      "at": "2026-06-14T02:05:01.676Z",
+      "level": "info",
+      "event": "patch_proposed",
+      "scanId": "sr2_scan_0d4c6bd9",
+      "patchType": "multi-file-v2",
+      "files": [
+        null
+      ]
+    },
+    {
+      "at": "2026-06-14T02:05:01.673Z",
+      "level": "info",
+      "event": "multi_file_patch",
+      "bundleKey": "blueprint",
+      "files": [
+        null
+      ],
+      "edits": 1,
+      "blocked": false
+    },
+    {
+      "at": "2026-06-14T02:05:01.660Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/scouting-database.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\scouting-database.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T02:05:01.657Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/breakdowns.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\war-room-breakdowns.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T02:05:01.654Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/recruiting/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\recruiting-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T02:05:01.648Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/live/feed-items.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\feed-items.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T02:05:01.644Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/coaching-staff.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\coaching-staff.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T02:05:01.641Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/roster/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\roster-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T02:05:01.635Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_0d4c6bd9",
+      "mode": "scan-only"
+    },
+    {
+      "at": "2026-06-14T02:03:15.015Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_c78cf202",
+      "finished": true,
+      "issueCount": 0,
+      "patchCount": 1
+    },
+    {
+      "at": "2026-06-14T02:03:15.012Z",
+      "level": "info",
+      "event": "patch_proposed",
+      "scanId": "sr2_scan_c78cf202",
+      "patchType": "multi-file-v2",
+      "files": [
+        null
+      ]
+    },
+    {
+      "at": "2026-06-14T02:03:15.006Z",
+      "level": "info",
+      "event": "multi_file_patch",
+      "bundleKey": "blueprint",
+      "files": [
+        null
+      ],
+      "edits": 1,
+      "blocked": false
+    },
+    {
+      "at": "2026-06-14T02:03:14.985Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/scouting-database.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\scouting-database.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T02:03:14.979Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/breakdowns.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\war-room-breakdowns.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T02:03:14.973Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/recruiting/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\recruiting-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T02:03:14.967Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/live/feed-items.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\feed-items.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T02:03:14.957Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/coaching-staff.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\coaching-staff.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T02:03:14.952Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/roster/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\roster-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-14T02:03:14.933Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_c78cf202",
+      "mode": "scan-only"
+    },
+    {
+      "at": "2026-06-13T23:29:58.355Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_502908f9",
+      "finished": true,
+      "issueCount": 0,
+      "patchCount": 1
+    },
+    {
+      "at": "2026-06-13T23:29:58.352Z",
+      "level": "info",
+      "event": "patch_proposed",
+      "scanId": "sr2_scan_502908f9",
+      "patchType": "multi-file-v2",
+      "files": [
+        null
+      ]
+    },
+    {
+      "at": "2026-06-13T23:29:58.346Z",
+      "level": "info",
+      "event": "multi_file_patch",
+      "bundleKey": "blueprint",
+      "files": [
+        null
+      ],
+      "edits": 1,
+      "blocked": false
+    },
+    {
+      "at": "2026-06-13T23:29:58.305Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/scouting-database.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\scouting-database.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T23:29:58.296Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/breakdowns.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\war-room-breakdowns.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T23:29:58.286Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/recruiting/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\recruiting-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T23:29:58.263Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/live/feed-items.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\feed-items.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T23:29:58.252Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/coaching-staff.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\coaching-staff.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T23:29:58.247Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/roster/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\roster-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T23:29:58.221Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_502908f9",
+      "mode": "scan-only"
+    },
+    {
+      "at": "2026-06-13T23:24:18.775Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_710c98b5",
+      "finished": true,
+      "issueCount": 0,
+      "patchCount": 1
+    },
+    {
+      "at": "2026-06-13T23:24:18.773Z",
+      "level": "info",
+      "event": "patch_proposed",
+      "scanId": "sr2_scan_710c98b5",
+      "patchType": "multi-file-v2",
+      "files": [
+        null
+      ]
+    },
+    {
+      "at": "2026-06-13T23:24:18.771Z",
+      "level": "info",
+      "event": "multi_file_patch",
+      "bundleKey": "blueprint",
+      "files": [
+        null
+      ],
+      "edits": 1,
+      "blocked": false
+    },
+    {
+      "at": "2026-06-13T23:24:18.758Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/scouting-database.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\scouting-database.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T23:24:18.756Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/breakdowns.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\war-room-breakdowns.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T23:24:18.752Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/recruiting/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\recruiting-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T23:24:18.748Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/live/feed-items.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\feed-items.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T23:24:18.743Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/coaching-staff.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\coaching-staff.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T23:24:18.741Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/roster/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\roster-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T23:24:18.733Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_710c98b5",
+      "mode": "scan-only"
+    },
+    {
+      "at": "2026-06-13T18:10:57.914Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_0f8ba697",
+      "finished": true,
+      "issueCount": 0,
+      "patchCount": 1
+    },
+    {
+      "at": "2026-06-13T18:10:57.913Z",
+      "level": "info",
+      "event": "patch_proposed",
+      "scanId": "sr2_scan_0f8ba697",
+      "patchType": "multi-file-v2",
+      "files": [
+        null
+      ]
+    },
+    {
+      "at": "2026-06-13T18:10:57.910Z",
+      "level": "info",
+      "event": "multi_file_patch",
+      "bundleKey": "blueprint",
+      "files": [
+        null
+      ],
+      "edits": 1,
+      "blocked": false
+    },
+    {
+      "at": "2026-06-13T18:10:57.894Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/scouting-database.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\scouting-database.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T18:10:57.890Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/breakdowns.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\war-room-breakdowns.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T18:10:57.886Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/recruiting/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\recruiting-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T18:10:57.881Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/live/feed-items.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\feed-items.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T18:10:57.876Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/coaching-staff.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\coaching-staff.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T18:10:57.873Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/roster/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\roster-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T18:10:57.861Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_0f8ba697",
+      "mode": "scan-only"
+    },
+    {
+      "at": "2026-06-13T17:21:50.097Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_f339f795",
+      "finished": true,
+      "issueCount": 0,
+      "patchCount": 1
+    },
+    {
+      "at": "2026-06-13T17:21:50.096Z",
+      "level": "info",
+      "event": "patch_proposed",
+      "scanId": "sr2_scan_f339f795",
+      "patchType": "multi-file-v2",
+      "files": [
+        null
+      ]
+    },
+    {
+      "at": "2026-06-13T17:21:50.093Z",
+      "level": "info",
+      "event": "multi_file_patch",
+      "bundleKey": "blueprint",
+      "files": [
+        null
+      ],
+      "edits": 1,
+      "blocked": false
+    },
+    {
+      "at": "2026-06-13T17:21:50.071Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/scouting-database.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\scouting-database.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T17:21:50.067Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/war-room/breakdowns.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\war-room-breakdowns.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T17:21:50.062Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/recruiting/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\recruiting-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T17:21:50.055Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/live/feed-items.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\feed-items.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T17:21:50.045Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/coaching-staff.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\coaching-staff.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T17:21:50.042Z",
+      "level": "warn",
+      "event": "snapshot_restore",
+      "path": "data/roster/players.json",
+      "snapshot": "C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\data\\ops\\self-runner-snapshots\\roster-players.json",
+      "reason": "known_good"
+    },
+    {
+      "at": "2026-06-13T17:21:50.029Z",
+      "level": "info",
+      "event": "scan",
+      "scanId": "sr2_scan_f339f795",
+      "mode": "scan-only"
+    },
+    {
       "at": "2026-06-13T17:10:46.700Z",
       "level": "info",
       "event": "scan",
@@ -1380,5 +2060,5 @@
       "mode": "assisted"
     }
   ],
-  "updatedAt": "2026-06-13T17:10:46.700Z"
+  "updatedAt": "2026-06-14T14:24:01.750Z"
 }

@@ -1,6 +1,3 @@
-/**
- * GET /api/futurecast/home — grouped 2027-cycle homepage sections.
- */
 import type { Request, Response } from 'express';
 import {
   computeDepthChartRisk,
@@ -28,6 +25,13 @@ import { applyMomentumBoosts, loadSignalMomentumBoosts } from './momentum';
 import { listRecruitingStoreCommits, mergeLiveCommits } from './live-commits';
 import { sendCachedJson } from './response-cache';
 import { enrichFeedPlayers } from './ranking-enrichment';
+import {
+  buildHeatmapResponse,
+  getAllowlistSlugSet,
+  loadAllowlistedBoardPlayers,
+} from './allowlist-board';
+
+const ALLOWED_SLUGS = getAllowlistSlugSet();
 
 const MOVEMENT_WINDOW_DAYS = 7;
 const SECTION_LIMIT = 12;
@@ -42,24 +46,6 @@ function normalizeSlug(value: string | null | undefined): string {
   } catch {
     return String(value).toLowerCase().trim();
   }
-}
-
-function buildHeatmapBuckets(rows: Awaited<ReturnType<typeof listStockBoardRows>>) {
-  let upCount = 0;
-  let downCount = 0;
-  let flatCount = 0;
-
-  for (const row of rows) {
-    if (row.window_delta > 0) upCount += 1;
-    else if (row.window_delta < 0) downCount += 1;
-    else flatCount += 1;
-  }
-
-  return [
-    { label: 'Up', count: upCount },
-    { label: 'Down', count: downCount },
-    { label: 'Flat', count: flatCount },
-  ];
 }
 
 function sortCommits(
@@ -111,7 +97,9 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
       if (row.playerId) commitSlugs.add(normalizeSlug(row.playerId));
     }
     const trendingMovement = filterTrendingStockRows(movementRows).filter(
-      (row) => !commitSlugs.has(normalizeSlug(row.slug))
+      (row) =>
+        !commitSlugs.has(normalizeSlug(row.slug)) &&
+        ALLOWED_SLUGS.has(normalizeSlug(row.slug))
     );
     const playerIds = trendingMovement.map((row) => row.player_id);
     const signalBoosts = await loadSignalMomentumBoosts(MOVEMENT_WINDOW_DAYS, playerIds);
@@ -162,6 +150,9 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
         })
     );
 
+    const allowOnly = <T extends { playerSlug?: string | null }>(rows: T[]) =>
+      rows.filter((row) => ALLOWED_SLUGS.has(normalizeSlug(row.playerSlug)));
+
     const portalWatchlist = portalRows
       .filter((row) => row.lifecycle === 'PORTAL' || row.lifecycle === 'COLLEGE')
       .filter((row) =>
@@ -194,18 +185,19 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
       }));
 
     const sortedCommits = sortCommits(commits, commitSort);
+    const allowlistHeatmap = buildHeatmapResponse(await loadAllowlistedBoardPlayers());
     return {
       classYear: FUTURECAST_CLASS_YEAR,
       commitSort,
       heatmap: {
-        buckets: buildHeatmapBuckets(enrichedMovement),
-        windowDays: MOVEMENT_WINDOW_DAYS,
+        buckets: allowlistHeatmap.buckets,
+        windowDays: allowlistHeatmap.windowDays,
       },
       commits: enrichFeedPlayers(sortedCommits.slice(0, COMMITS_LIMIT)),
       commitTotal: sortedCommits.length,
-      topTargets: enrichFeedPlayers(sortTargets(topTargets).slice(0, SECTION_LIMIT)),
-      trendingUp: enrichFeedPlayers(hsTrendingUp),
-      trendingDown: enrichFeedPlayers(hsTrendingDown),
+      topTargets: enrichFeedPlayers(allowOnly(sortTargets(topTargets)).slice(0, SECTION_LIMIT)),
+      trendingUp: enrichFeedPlayers(allowOnly(hsTrendingUp)),
+      trendingDown: enrichFeedPlayers(allowOnly(hsTrendingDown)),
       portalWatchlist,
     };
     });

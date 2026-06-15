@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-13T17:10:46.715Z",
+  "updatedAt": "2026-06-14T14:24:01.755Z",
   "subsystems": {
     "autoposter": {
       "subsystem": "autoposter",
@@ -57,120 +57,24 @@
     },
     "qa:crawler": {
       "subsystem": "qa:crawler",
-      "lastRun": "2026-06-13T17:10:46.715Z",
-      "lastStatus": "error",
-      "lastMessage": "QA crawl failed (9)",
+      "lastRun": "2026-06-14T14:24:01.755Z",
+      "lastStatus": "success",
+      "lastMessage": "QA crawl passed (111 checks)",
       "lastDetails": {
-        "runId": "qa_1781370627642",
+        "runId": "qa_1781447015550",
         "summary": {
           "total": 111,
-          "passed": 102,
-          "failed": 9,
-          "emitted": 9
+          "passed": 111,
+          "failed": 0,
+          "emitted": 0
         },
-        "errors": [
-          {
-            "id": "ux:scroll-containers",
-            "module": "ux",
-            "message": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
-            "url": "/",
-            "repro": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
-            "details": {
-              "classification": "layout-overflow",
-              "ruleId": "A1",
-              "severity": "medium",
-              "severityScore": 63,
-              "confidence": 90,
-              "selector": null,
-              "domPath": null,
-              "screenshot": null,
-              "sectionId": null
-            },
-            "screenshot": null
-          },
-          {
-            "id": "ux:modal-zindex",
-            "module": "ux",
-            "message": "Vault header z-index stacking not found — modals may render behind shell",
-            "url": "/",
-            "repro": "Vault header z-index stacking not found — modals may render behind shell",
-            "details": {
-              "classification": "panel-clipping",
-              "ruleId": "A2",
-              "severity": "medium",
-              "severityScore": 60,
-              "confidence": 88,
-              "selector": null,
-              "domPath": null,
-              "screenshot": null,
-              "sectionId": null
-            },
-            "screenshot": null
-          },
-          {
-            "id": "crawler:pressers-missing",
-            "module": "crawler",
-            "message": "Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage",
-            "url": "/vault/film-room",
-            "repro": "Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage",
-            "details": {
-              "classification": "pressers-missing",
-              "ruleId": "B1",
-              "severity": "high",
-              "severityScore": 60,
-              "confidence": 90,
-              "selector": ".gv-film-hub-card",
-              "domPath": "film-room-press-category",
-              "screenshot": null,
-              "sectionId": "vault-film-room"
-            },
-            "screenshot": null
-          },
-          {
-            "id": "crawler:highlights-missing",
-            "module": "crawler",
-            "message": "Verify Film Room catalog includes Highlights hub category",
-            "url": "/vault/film-room",
-            "repro": "Verify Film Room catalog includes Highlights hub category",
-            "details": {
-              "classification": "highlights-missing",
-              "ruleId": "B1",
-              "severity": "medium",
-              "severityScore": 60,
-              "confidence": 85,
-              "selector": ".gv-film-lessons",
-              "domPath": "film-room-highlights",
-              "screenshot": null,
-              "sectionId": "vault-film-room"
-            },
-            "screenshot": null
-          },
-          {
-            "id": "pages:vault-schedule:desktop",
-            "module": "pages",
-            "message": "HTTP 404 https://gatorvaultinsider.com/vault/schedule",
-            "url": "/vault/schedule",
-            "repro": "HTTP 404 https://gatorvaultinsider.com/vault/schedule",
-            "details": {
-              "classification": "ui-regression",
-              "ruleId": "A1",
-              "severity": "low",
-              "severityScore": 39,
-              "confidence": 60,
-              "selector": null,
-              "domPath": null,
-              "screenshot": null,
-              "sectionId": null
-            },
-            "screenshot": null
-          }
-        ]
+        "errors": []
       },
       "lastCounts": null,
-      "lastSuccess": "2026-06-11T21:13:56.151Z",
-      "lastFailure": "2026-06-13T17:10:46.715Z",
+      "lastSuccess": "2026-06-14T14:24:01.755Z",
+      "lastFailure": "2026-06-14T14:23:15.376Z",
       "lastWarning": null,
-      "failureStreak": 3
+      "failureStreak": 0
     },
     "cron:portal-ingest": {
       "subsystem": "cron:portal-ingest",
@@ -298,25 +202,25 @@
     },
     "product-intel": {
       "subsystem": "product-intel",
-      "lastRun": "2026-06-13T17:10:45.982Z",
+      "lastRun": "2026-06-14T14:24:01.664Z",
       "lastStatus": "warning",
-      "lastMessage": "Product Intelligence scored 82/100 — 12 fix item(s)",
+      "lastMessage": "Product Intelligence scored 100/100 — 2 fix item(s)",
       "lastDetails": {
-        "runId": "qa_1781370627642",
-        "overall": 82,
-        "fixQueue": 12,
+        "runId": "qa_1781447015550",
+        "overall": 100,
+        "fixQueue": 2,
         "layers": {
           "data": {
             "counts": {
-              "total": 12,
+              "total": 2,
               "bySource": {
-                "qa": 9,
+                "qa": 0,
                 "apiHealth": 0,
                 "cacheHealth": 0,
                 "autoposter": 1,
                 "recruiting": 0,
                 "teamData": 1,
-                "filmRoom": 1
+                "filmRoom": 0
               }
             },
             "sources": [
@@ -338,30 +242,25 @@
           },
           "classification": {
             "active": [
-              "layout-overflow",
-              "panel-clipping",
-              "pressers-missing",
-              "highlights-missing",
               "roster-mismatch",
-              "autoposter-stale",
-              "ui-regression"
+              "autoposter-stale"
             ],
-            "total": 12
+            "total": 2
           },
           "severity": {
-            "critical": 1,
-            "high": 5,
-            "medium": 6,
+            "critical": 0,
+            "high": 2,
+            "medium": 0,
             "low": 0
           },
-          "proposals": 12,
+          "proposals": 2,
           "approvalGate": "self-runner"
         }
       },
       "lastCounts": null,
       "lastSuccess": "2026-06-11T21:03:28.379Z",
       "lastFailure": null,
-      "lastWarning": "2026-06-13T17:10:45.982Z",
+      "lastWarning": "2026-06-14T14:24:01.664Z",
       "failureStreak": 0
     }
   }

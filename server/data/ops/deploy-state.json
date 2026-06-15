@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-13T17:10:09.127Z",
+  "updatedAt": "2026-06-14T13:46:42.318Z",
   "api": {
     "service": "render",
     "timestamp": "2026-06-12T03:22:29.088Z",
@@ -22,20 +22,23 @@
   "lastGuardianCheck": {
     "ok": true,
     "phase": "pre",
-    "checkedAt": "2026-06-13T17:10:09.126Z",
+    "checkedAt": "2026-06-14T11:50:47.374Z",
     "errors": []
   },
   "lastFailedCheck": {
-    "type": "guardian-pre",
-    "at": "2026-06-13T17:09:12.061Z",
+    "type": "smoke-test",
+    "at": "2026-06-14T11:51:36.757Z",
     "errors": [
-      "[qa] require(lib/qa-routes) failed: Identifier 'runReactRouteValidationChecks' has already been declared",
-      "[self-runner] require(lib/self-runner/self-runner-routes) failed: Identifier 'runReactRouteValidationChecks' has already been declared"
+      {
+        "label": "portal-profile",
+        "error": "missing: portal",
+        "url": "https://gatorvaultinsider.com/vault/portal/player/test-slug/"
+      }
     ]
   },
   "lastSmokeTest": {
     "ok": true,
-    "checkedAt": "2026-06-13T15:28:11.659Z",
+    "checkedAt": "2026-06-14T13:46:42.315Z",
     "failed": [],
     "site": "https://gatorvaultinsider.com"
   }

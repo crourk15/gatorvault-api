@@ -1,19 +1,19 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-13T17:10:45.957Z",
-  "lastRunId": "qa_1781370627642",
-  "lastComputedAt": "2026-06-13T17:10:42.889Z",
+  "updatedAt": "2026-06-14T14:24:01.650Z",
+  "lastRunId": "qa_1781447015550",
+  "lastComputedAt": "2026-06-14T14:23:58.914Z",
   "scores": {
     "modules": {
       "api": 100,
       "content": 100,
       "integrity": 100,
-      "pages": 50,
-      "ux": 60,
+      "pages": 100,
+      "ux": 100,
       "browser": 100,
-      "visual-integrity": 90,
+      "visual-integrity": 100,
       "mobile-behavior": 100,
-      "overall": 82
+      "overall": 100
     },
     "pages": {
       "/": {
@@ -28,13 +28,13 @@
         "score": 100
       },
       "/vault/team": {
-        "score": 80
+        "score": 100
       },
       "/vault/recruiting": {
         "score": 100
       },
       "/vault/live-feed": {
-        "score": 90
+        "score": 100
       },
       "/vault/futurecast": {
         "score": 100
@@ -45,372 +45,18 @@
       }
     },
     "features": {
-      "react_vault_shell": 90,
-      "team_roster_depth": 90,
-      "film_room_hub": 90,
+      "react_vault_shell": 100,
+      "team_roster_depth": 100,
+      "film_room_hub": 100,
       "recruiting_hub": 100,
       "live_feed": 100,
-      "mobile_navigation": 80,
+      "mobile_navigation": 100,
       "admin_hub": 100,
-      "qa_monitor": 68
+      "qa_monitor": 62
     },
-    "overall": 82
+    "overall": 100
   },
   "fixQueue": [
-    {
-      "id": "fix_ux:scroll-containers",
-      "title": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
-      "module": "ux",
-      "source": "ux",
-      "classification": "layout-overflow",
-      "ruleId": "A1",
-      "category": "A",
-      "ruleName": "Layout Overflow",
-      "severity": "critical",
-      "severityScore": 90,
-      "severityLabel": "Critical — must fix",
-      "severityComponents": {
-        "impact": 85,
-        "frequency": 100,
-        "confidence": 90
-      },
-      "impact": "user-facing",
-      "repro": null,
-      "suggestedFix": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-      "eta": "short",
-      "checkId": "ux:scroll-containers",
-      "url": null,
-      "details": null,
-      "proposal": {
-        "title": "Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)",
-        "description": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-        "classification": "layout-overflow",
-        "ruleId": "A1",
-        "category": "A",
-        "filesToModify": [
-          "client/lib/vault-shell.css"
-        ],
-        "patchType": "layout-overflow",
-        "codeDiffHint": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
-        "codeDiff": [
-          {
-            "file": "client/lib/vault-shell.css",
-            "before": ".gv-team-modal-body { overflow: hidden; }",
-            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
-          }
-        ],
-        "safetyRules": [
-          "Never remove min-width:0 or min-height:0 from modal flex children",
-          "Only modify overflow on the targeted selector — do not change global body overflow",
-          "Preserve mobile scroll behavior — test 390px viewport after apply",
-          "Max 1 CSS file per patch unless issue spans shell + styles"
-        ],
-        "testPlan": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged"
-        ],
-        "qaSteps": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged",
-          "Verify QA check ux:scroll-containers passes",
-          "POST /api/product-intel/recompute — issue cleared from fix queue"
-        ],
-        "rollbackPlan": {
-          "strategy": "git-revert",
-          "summary": "Restore previous overflow rules if regression detected.",
-          "steps": [
-            "Revert: client/lib/vault-shell.css",
-            "Redeploy Netlify (static) and Render (API) if needed",
-            "POST /api/product-intel/recompute",
-            "POST /api/qa/run — verify check passes"
-          ]
-        },
-        "approvalGate": {
-          "steps": [
-            "Apply patch",
-            "Optional redeploy",
-            "QA crawl",
-            "Product Health recompute",
-            "Mark completed"
-          ]
-        }
-      },
-      "createdAt": "2026-06-13T17:10:42.889Z",
-      "runId": "qa_1781370627642",
-      "resolved": false
-    },
-    {
-      "id": "fix_ux:modal-zindex",
-      "title": "Vault header z-index stacking not found — modals may render behind shell",
-      "module": "ux",
-      "source": "ux",
-      "classification": "panel-clipping",
-      "ruleId": "A2",
-      "category": "A",
-      "ruleName": "Panel Clipping",
-      "severity": "high",
-      "severityScore": 87,
-      "severityLabel": "High — should fix",
-      "severityComponents": {
-        "impact": 80,
-        "frequency": 100,
-        "confidence": 88
-      },
-      "impact": "user-facing",
-      "repro": null,
-      "suggestedFix": "Correct z-index and layering for Team Overview panel to prevent clipping.",
-      "eta": "short",
-      "checkId": "ux:modal-zindex",
-      "url": null,
-      "details": null,
-      "proposal": {
-        "title": "Vault header z-index stacking not found — modals may render behind shell",
-        "description": "Correct z-index and layering for Team Overview panel to prevent clipping.",
-        "classification": "panel-clipping",
-        "ruleId": "A2",
-        "category": "A",
-        "filesToModify": [
-          "client/lib/vault-shell.css"
-        ],
-        "patchType": "panel-layering",
-        "codeDiffHint": ".gv-team-modal-body { z-index: 3; position: relative; }",
-        "codeDiff": [
-          {
-            "file": "client/lib/vault-shell.css",
-            "before": ".gv-team-modal-body { z-index: 1; }",
-            "after": ".gv-team-modal-body { z-index: 3; position: relative; }"
-          }
-        ],
-        "safetyRules": [
-          "Do not set z-index above modal overlay (9999) unless fixing modal stack",
-          "Verify Team Identity panel does not cover Program History modal text",
-          "Test Film Room header does not overlap category cards",
-          "Preserve pointer-events on interactive elements"
-        ],
-        "testPlan": [
-          "Load /",
-          "Verify text is fully visible",
-          "Verify background no longer overlaps content"
-        ],
-        "qaSteps": [
-          "Load /",
-          "Verify text is fully visible",
-          "Verify background no longer overlaps content",
-          "Verify QA check ux:modal-zindex passes",
-          "POST /api/product-intel/recompute — issue cleared from fix queue"
-        ],
-        "rollbackPlan": {
-          "strategy": "git-revert",
-          "summary": "Restore previous z-index if layering breaks other sections.",
-          "steps": [
-            "Revert: client/lib/vault-shell.css",
-            "Redeploy Netlify (static) and Render (API) if needed",
-            "POST /api/product-intel/recompute",
-            "POST /api/qa/run — verify check passes"
-          ]
-        },
-        "approvalGate": {
-          "steps": [
-            "Apply patch",
-            "Optional redeploy",
-            "QA crawl",
-            "Product Health recompute",
-            "Mark completed"
-          ]
-        }
-      },
-      "createdAt": "2026-06-13T17:10:42.889Z",
-      "runId": "qa_1781370627642",
-      "resolved": false
-    },
-    {
-      "id": "fix_crawler:pressers-missing",
-      "title": "Press Conferences category missing from React Film Room hub",
-      "module": "crawler",
-      "source": "crawler",
-      "classification": "pressers-missing",
-      "ruleId": "B1",
-      "category": "B",
-      "ruleName": "Missing Content",
-      "severity": "high",
-      "severityScore": 87,
-      "severityLabel": "High — should fix",
-      "severityComponents": {
-        "impact": 80,
-        "frequency": 100,
-        "confidence": 92
-      },
-      "impact": "user-facing",
-      "repro": "Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage",
-      "suggestedFix": "Restore missing content for vault-film-room.",
-      "eta": "short",
-      "checkId": "crawler:pressers-missing",
-      "url": "https://gatorvaultinsider.com/vault/film-room",
-      "details": {
-        "ruleId": "B1",
-        "sectionId": "vault-film-room",
-        "selector": ".gv-film-hub-card",
-        "domPath": "film-room-press-category",
-        "severity": "high",
-        "confidence": 90,
-        "category": "M"
-      },
-      "proposal": {
-        "title": "Press Conferences category missing from React Film Room hub",
-        "description": "Restore missing content for vault-film-room.",
-        "classification": "pressers-missing",
-        "ruleId": "B1",
-        "category": "B",
-        "filesToModify": [
-          "client/components/vault/VaultFilmRoomPage.tsx"
-        ],
-        "patchType": "missing-content",
-        "codeDiffHint": ".gv-film-hub-card /* restored content */",
-        "codeDiff": [
-          {
-            "file": "client/components/vault/VaultFilmRoomPage.tsx",
-            "before": ".gv-film-hub-card",
-            "after": ".gv-film-hub-card /* restored content */"
-          }
-        ],
-        "safetyRules": [
-          "Never duplicate existing section markers or IDs",
-          "Insert content adjacent to surrounding sections — match formatting",
-          "Verify hooks are wired before adding visible markup",
-          "Do not remove existing era/card data when restoring"
-        ],
-        "testPlan": [
-          "Load /",
-          "Verify content appears",
-          "Verify formatting matches surrounding sections"
-        ],
-        "qaSteps": [
-          "Load /",
-          "Verify content appears",
-          "Verify formatting matches surrounding sections",
-          "Verify QA check crawler:pressers-missing passes",
-          "POST /api/product-intel/recompute — issue cleared from fix queue"
-        ],
-        "rollbackPlan": {
-          "strategy": "git-revert",
-          "summary": "Remove inserted content if duplication occurs.",
-          "steps": [
-            "Revert: client/components/vault/VaultFilmRoomPage.tsx",
-            "Redeploy Netlify (static) and Render (API) if needed",
-            "POST /api/product-intel/recompute",
-            "POST /api/qa/run — verify check passes"
-          ]
-        },
-        "approvalGate": {
-          "steps": [
-            "Apply patch",
-            "Optional redeploy",
-            "QA crawl",
-            "Product Health recompute",
-            "Mark completed"
-          ]
-        }
-      },
-      "createdAt": "2026-06-13T17:10:42.889Z",
-      "runId": "qa_1781370627642",
-      "resolved": false
-    },
-    {
-      "id": "fix_crawler:highlights-missing",
-      "title": "Highlights category missing from React Film Room",
-      "module": "crawler",
-      "source": "crawler",
-      "classification": "highlights-missing",
-      "ruleId": "B1",
-      "category": "B",
-      "ruleName": "Missing Content",
-      "severity": "high",
-      "severityScore": 87,
-      "severityLabel": "High — should fix",
-      "severityComponents": {
-        "impact": 80,
-        "frequency": 100,
-        "confidence": 92
-      },
-      "impact": "user-facing",
-      "repro": "Verify Film Room catalog includes Highlights hub category",
-      "suggestedFix": "Restore missing content for vault-film-room.",
-      "eta": "short",
-      "checkId": "crawler:highlights-missing",
-      "url": "https://gatorvaultinsider.com/vault/film-room",
-      "details": {
-        "ruleId": "B1",
-        "sectionId": "vault-film-room",
-        "selector": ".gv-film-lessons",
-        "domPath": "film-room-highlights",
-        "severity": "medium",
-        "confidence": 85,
-        "category": "M"
-      },
-      "proposal": {
-        "title": "Highlights category missing from React Film Room",
-        "description": "Restore missing content for vault-film-room.",
-        "classification": "highlights-missing",
-        "ruleId": "B1",
-        "category": "B",
-        "filesToModify": [
-          "client/components/vault/VaultFilmRoomPage.tsx"
-        ],
-        "patchType": "missing-content",
-        "codeDiffHint": ".gv-film-lessons /* restored content */",
-        "codeDiff": [
-          {
-            "file": "client/components/vault/VaultFilmRoomPage.tsx",
-            "before": ".gv-film-lessons",
-            "after": ".gv-film-lessons /* restored content */"
-          }
-        ],
-        "safetyRules": [
-          "Never duplicate existing section markers or IDs",
-          "Insert content adjacent to surrounding sections — match formatting",
-          "Verify hooks are wired before adding visible markup",
-          "Do not remove existing era/card data when restoring"
-        ],
-        "testPlan": [
-          "Load /",
-          "Verify content appears",
-          "Verify formatting matches surrounding sections"
-        ],
-        "qaSteps": [
-          "Load /",
-          "Verify content appears",
-          "Verify formatting matches surrounding sections",
-          "Verify QA check crawler:highlights-missing passes",
-          "POST /api/product-intel/recompute — issue cleared from fix queue"
-        ],
-        "rollbackPlan": {
-          "strategy": "git-revert",
-          "summary": "Remove inserted content if duplication occurs.",
-          "steps": [
-            "Revert: client/components/vault/VaultFilmRoomPage.tsx",
-            "Redeploy Netlify (static) and Render (API) if needed",
-            "POST /api/product-intel/recompute",
-            "POST /api/qa/run — verify check passes"
-          ]
-        },
-        "approvalGate": {
-          "steps": [
-            "Apply patch",
-            "Optional redeploy",
-            "QA crawl",
-            "Product Health recompute",
-            "Mark completed"
-          ]
-        }
-      },
-      "createdAt": "2026-06-13T17:10:42.889Z",
-      "runId": "qa_1781370627642",
-      "resolved": false
-    },
     {
       "id": "fix_pi:roster:numbers",
       "title": "111 players",
@@ -491,13 +137,13 @@
           ]
         }
       },
-      "createdAt": "2026-06-13T17:10:42.889Z",
-      "runId": "qa_1781370627642",
+      "createdAt": "2026-06-14T14:23:58.914Z",
+      "runId": "qa_1781447015550",
       "resolved": false
     },
     {
       "id": "fix_pi:autoposter-stale:24h",
-      "title": "Last post 98h ago",
+      "title": "Last post 119h ago",
       "module": "integrity",
       "source": "autoposter-logs",
       "classification": "autoposter-stale",
@@ -520,7 +166,7 @@
       "url": null,
       "details": null,
       "proposal": {
-        "title": "Last post 98h ago",
+        "title": "Last post 119h ago",
         "description": "Restore autoposter activity for Team Overview.",
         "classification": "autoposter-stale",
         "ruleId": "B3",
@@ -575,548 +221,25 @@
           ]
         }
       },
-      "createdAt": "2026-06-13T17:10:42.889Z",
-      "runId": "qa_1781370627642",
-      "resolved": false
-    },
-    {
-      "id": "fix_pages:vault-schedule:desktop",
-      "title": "HTTP 404 https://gatorvaultinsider.com/vault/schedule",
-      "module": "pages",
-      "source": "pages",
-      "classification": "ui-regression",
-      "ruleId": "A1",
-      "category": "A",
-      "ruleName": "Unclassified Issue",
-      "severity": "medium",
-      "severityScore": 66,
-      "severityLabel": "Medium — optional",
-      "severityComponents": {
-        "impact": 50,
-        "frequency": 100,
-        "confidence": 60
-      },
-      "impact": "internal",
-      "repro": null,
-      "suggestedFix": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-      "eta": "medium",
-      "checkId": "pages:vault-schedule:desktop",
-      "url": "https://gatorvaultinsider.com/vault/schedule",
-      "details": null,
-      "proposal": {
-        "title": "HTTP 404 https://gatorvaultinsider.com/vault/schedule",
-        "description": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-        "classification": "ui-regression",
-        "ruleId": "A1",
-        "category": "A",
-        "filesToModify": [
-          "vault/team/index.html"
-        ],
-        "patchType": "layout-overflow",
-        "codeDiffHint": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
-        "codeDiff": [
-          {
-            "file": "vault/team/index.html",
-            "before": ".gv-team-modal-body { overflow: hidden; }",
-            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
-          }
-        ],
-        "safetyRules": [
-          "Never remove min-width:0 or min-height:0 from modal flex children",
-          "Only modify overflow on the targeted selector — do not change global body overflow",
-          "Preserve mobile scroll behavior — test 390px viewport after apply",
-          "Max 1 CSS file per patch unless issue spans shell + styles"
-        ],
-        "testPlan": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged"
-        ],
-        "qaSteps": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged",
-          "Verify QA check pages:vault-schedule:desktop passes",
-          "POST /api/product-intel/recompute — issue cleared from fix queue"
-        ],
-        "rollbackPlan": {
-          "strategy": "git-revert",
-          "summary": "Restore previous overflow rules if regression detected.",
-          "steps": [
-            "Revert: vault/team/index.html",
-            "Redeploy Netlify (static) and Render (API) if needed",
-            "POST /api/product-intel/recompute",
-            "POST /api/qa/run — verify check passes"
-          ]
-        },
-        "approvalGate": {
-          "steps": [
-            "Apply patch",
-            "Optional redeploy",
-            "QA crawl",
-            "Product Health recompute",
-            "Mark completed"
-          ]
-        }
-      },
-      "createdAt": "2026-06-13T17:10:42.889Z",
-      "runId": "qa_1781370627642",
-      "resolved": false
-    },
-    {
-      "id": "fix_pages:vault-schedule:mobile",
-      "title": "HTTP 404 https://gatorvaultinsider.com/vault/schedule",
-      "module": "pages",
-      "source": "pages",
-      "classification": "ui-regression",
-      "ruleId": "A1",
-      "category": "A",
-      "ruleName": "Unclassified Issue",
-      "severity": "medium",
-      "severityScore": 66,
-      "severityLabel": "Medium — optional",
-      "severityComponents": {
-        "impact": 50,
-        "frequency": 100,
-        "confidence": 60
-      },
-      "impact": "internal",
-      "repro": null,
-      "suggestedFix": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-      "eta": "medium",
-      "checkId": "pages:vault-schedule:mobile",
-      "url": "https://gatorvaultinsider.com/vault/schedule",
-      "details": null,
-      "proposal": {
-        "title": "HTTP 404 https://gatorvaultinsider.com/vault/schedule",
-        "description": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-        "classification": "ui-regression",
-        "ruleId": "A1",
-        "category": "A",
-        "filesToModify": [
-          "vault/team/index.html"
-        ],
-        "patchType": "layout-overflow",
-        "codeDiffHint": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
-        "codeDiff": [
-          {
-            "file": "vault/team/index.html",
-            "before": ".gv-team-modal-body { overflow: hidden; }",
-            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
-          }
-        ],
-        "safetyRules": [
-          "Never remove min-width:0 or min-height:0 from modal flex children",
-          "Only modify overflow on the targeted selector — do not change global body overflow",
-          "Preserve mobile scroll behavior — test 390px viewport after apply",
-          "Max 1 CSS file per patch unless issue spans shell + styles"
-        ],
-        "testPlan": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged"
-        ],
-        "qaSteps": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged",
-          "Verify QA check pages:vault-schedule:mobile passes",
-          "POST /api/product-intel/recompute — issue cleared from fix queue"
-        ],
-        "rollbackPlan": {
-          "strategy": "git-revert",
-          "summary": "Restore previous overflow rules if regression detected.",
-          "steps": [
-            "Revert: vault/team/index.html",
-            "Redeploy Netlify (static) and Render (API) if needed",
-            "POST /api/product-intel/recompute",
-            "POST /api/qa/run — verify check passes"
-          ]
-        },
-        "approvalGate": {
-          "steps": [
-            "Apply patch",
-            "Optional redeploy",
-            "QA crawl",
-            "Product Health recompute",
-            "Mark completed"
-          ]
-        }
-      },
-      "createdAt": "2026-06-13T17:10:42.889Z",
-      "runId": "qa_1781370627642",
-      "resolved": false
-    },
-    {
-      "id": "fix_ux:tap-targets",
-      "title": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
-      "module": "ux",
-      "source": "ux",
-      "classification": "ui-regression",
-      "ruleId": "A1",
-      "category": "A",
-      "ruleName": "Unclassified Issue",
-      "severity": "medium",
-      "severityScore": 66,
-      "severityLabel": "Medium — optional",
-      "severityComponents": {
-        "impact": 50,
-        "frequency": 100,
-        "confidence": 60
-      },
-      "impact": "internal",
-      "repro": null,
-      "suggestedFix": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-      "eta": "medium",
-      "checkId": "ux:tap-targets",
-      "url": null,
-      "details": {
-        "missing": [
-          "min-height:44px",
-          "min-h-[44px]",
-          "touch-action:manipulation",
-          "-webkit-tap-highlight-color"
-        ]
-      },
-      "proposal": {
-        "title": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
-        "description": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-        "classification": "ui-regression",
-        "ruleId": "A1",
-        "category": "A",
-        "filesToModify": [
-          "client/lib/vault-shell.css"
-        ],
-        "patchType": "layout-overflow",
-        "codeDiffHint": "min-height:44px,min-h-[44px],touch-action:manipulation,-webkit-tap-highlight-color { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
-        "codeDiff": [
-          {
-            "file": "client/lib/vault-shell.css",
-            "before": "min-height:44px,min-h-[44px],touch-action:manipulation,-webkit-tap-highlight-color { overflow: hidden; }",
-            "after": "min-height:44px,min-h-[44px],touch-action:manipulation,-webkit-tap-highlight-color { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
-          }
-        ],
-        "safetyRules": [
-          "Never remove min-width:0 or min-height:0 from modal flex children",
-          "Only modify overflow on the targeted selector — do not change global body overflow",
-          "Preserve mobile scroll behavior — test 390px viewport after apply",
-          "Max 1 CSS file per patch unless issue spans shell + styles"
-        ],
-        "testPlan": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged"
-        ],
-        "qaSteps": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged",
-          "Verify QA check ux:tap-targets passes",
-          "POST /api/product-intel/recompute — issue cleared from fix queue"
-        ],
-        "rollbackPlan": {
-          "strategy": "git-revert",
-          "summary": "Restore previous overflow rules if regression detected.",
-          "steps": [
-            "Revert: client/lib/vault-shell.css",
-            "Redeploy Netlify (static) and Render (API) if needed",
-            "POST /api/product-intel/recompute",
-            "POST /api/qa/run — verify check passes"
-          ]
-        },
-        "approvalGate": {
-          "steps": [
-            "Apply patch",
-            "Optional redeploy",
-            "QA crawl",
-            "Product Health recompute",
-            "Mark completed"
-          ]
-        }
-      },
-      "createdAt": "2026-06-13T17:10:42.889Z",
-      "runId": "qa_1781370627642",
-      "resolved": false
-    },
-    {
-      "id": "fix_ux:mobile-safari",
-      "title": "Mobile Safari safe-area/viewport meta incomplete in vault bundle",
-      "module": "ux",
-      "source": "ux",
-      "classification": "ui-regression",
-      "ruleId": "A1",
-      "category": "A",
-      "ruleName": "Unclassified Issue",
-      "severity": "medium",
-      "severityScore": 66,
-      "severityLabel": "Medium — optional",
-      "severityComponents": {
-        "impact": 50,
-        "frequency": 100,
-        "confidence": 60
-      },
-      "impact": "internal",
-      "repro": null,
-      "suggestedFix": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-      "eta": "medium",
-      "checkId": "ux:mobile-safari",
-      "url": null,
-      "details": null,
-      "proposal": {
-        "title": "Mobile Safari safe-area/viewport meta incomplete in vault bundle",
-        "description": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-        "classification": "ui-regression",
-        "ruleId": "A1",
-        "category": "A",
-        "filesToModify": [
-          "client/lib/vault-shell.css"
-        ],
-        "patchType": "layout-overflow",
-        "codeDiffHint": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
-        "codeDiff": [
-          {
-            "file": "client/lib/vault-shell.css",
-            "before": ".gv-team-modal-body { overflow: hidden; }",
-            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
-          }
-        ],
-        "safetyRules": [
-          "Never remove min-width:0 or min-height:0 from modal flex children",
-          "Only modify overflow on the targeted selector — do not change global body overflow",
-          "Preserve mobile scroll behavior — test 390px viewport after apply",
-          "Max 1 CSS file per patch unless issue spans shell + styles"
-        ],
-        "testPlan": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged"
-        ],
-        "qaSteps": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged",
-          "Verify QA check ux:mobile-safari passes",
-          "POST /api/product-intel/recompute — issue cleared from fix queue"
-        ],
-        "rollbackPlan": {
-          "strategy": "git-revert",
-          "summary": "Restore previous overflow rules if regression detected.",
-          "steps": [
-            "Revert: client/lib/vault-shell.css",
-            "Redeploy Netlify (static) and Render (API) if needed",
-            "POST /api/product-intel/recompute",
-            "POST /api/qa/run — verify check passes"
-          ]
-        },
-        "approvalGate": {
-          "steps": [
-            "Apply patch",
-            "Optional redeploy",
-            "QA crawl",
-            "Product Health recompute",
-            "Mark completed"
-          ]
-        }
-      },
-      "createdAt": "2026-06-13T17:10:42.889Z",
-      "runId": "qa_1781370627642",
-      "resolved": false
-    },
-    {
-      "id": "fix_visual-integrity:live-feed-layout",
-      "title": "Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row",
-      "module": "visual-integrity",
-      "source": "visual-integrity",
-      "classification": "ui-regression",
-      "ruleId": "A1",
-      "category": "A",
-      "ruleName": "Unclassified Issue",
-      "severity": "medium",
-      "severityScore": 66,
-      "severityLabel": "Medium — optional",
-      "severityComponents": {
-        "impact": 50,
-        "frequency": 100,
-        "confidence": 60
-      },
-      "impact": "internal",
-      "repro": null,
-      "suggestedFix": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-      "eta": "medium",
-      "checkId": "visual-integrity:live-feed-layout",
-      "url": null,
-      "details": null,
-      "proposal": {
-        "title": "Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row",
-        "description": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-        "classification": "ui-regression",
-        "ruleId": "A1",
-        "category": "A",
-        "filesToModify": [
-          "client/components/vault/VaultLiveFeedPage.tsx"
-        ],
-        "patchType": "layout-overflow",
-        "codeDiffHint": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
-        "codeDiff": [
-          {
-            "file": "client/components/vault/VaultLiveFeedPage.tsx",
-            "before": ".gv-team-modal-body { overflow: hidden; }",
-            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
-          }
-        ],
-        "safetyRules": [
-          "Never remove min-width:0 or min-height:0 from modal flex children",
-          "Only modify overflow on the targeted selector — do not change global body overflow",
-          "Preserve mobile scroll behavior — test 390px viewport after apply",
-          "Max 1 CSS file per patch unless issue spans shell + styles"
-        ],
-        "testPlan": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged"
-        ],
-        "qaSteps": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged",
-          "Verify QA check visual-integrity:live-feed-layout passes",
-          "POST /api/product-intel/recompute — issue cleared from fix queue"
-        ],
-        "rollbackPlan": {
-          "strategy": "git-revert",
-          "summary": "Restore previous overflow rules if regression detected.",
-          "steps": [
-            "Revert: client/components/vault/VaultLiveFeedPage.tsx",
-            "Redeploy Netlify (static) and Render (API) if needed",
-            "POST /api/product-intel/recompute",
-            "POST /api/qa/run — verify check passes"
-          ]
-        },
-        "approvalGate": {
-          "steps": [
-            "Apply patch",
-            "Optional redeploy",
-            "QA crawl",
-            "Product Health recompute",
-            "Mark completed"
-          ]
-        }
-      },
-      "createdAt": "2026-06-13T17:10:42.889Z",
-      "runId": "qa_1781370627642",
-      "resolved": false
-    },
-    {
-      "id": "fix_pi:filmroom:categories",
-      "title": "Offensive Scheme, Defensive Scheme, Film Breakdown, UF Press Conferences, Highlights",
-      "module": "integrity",
-      "source": "film-room",
-      "classification": "ui-regression",
-      "ruleId": "A1",
-      "category": "A",
-      "ruleName": "Unclassified Issue",
-      "severity": "medium",
-      "severityScore": 66,
-      "severityLabel": "Medium — optional",
-      "severityComponents": {
-        "impact": 50,
-        "frequency": 100,
-        "confidence": 60
-      },
-      "impact": "internal",
-      "repro": null,
-      "suggestedFix": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-      "eta": "medium",
-      "checkId": "pi:filmroom:categories",
-      "url": null,
-      "details": null,
-      "proposal": {
-        "title": "Offensive Scheme, Defensive Scheme, Film Breakdown, UF Press Conferences, Highlights",
-        "description": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
-        "classification": "ui-regression",
-        "ruleId": "A1",
-        "category": "A",
-        "filesToModify": [
-          "client/lib/vault-shell.css"
-        ],
-        "patchType": "layout-overflow",
-        "codeDiffHint": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
-        "codeDiff": [
-          {
-            "file": "client/lib/vault-shell.css",
-            "before": ".gv-team-modal-body { overflow: hidden; }",
-            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
-          }
-        ],
-        "safetyRules": [
-          "Never remove min-width:0 or min-height:0 from modal flex children",
-          "Only modify overflow on the targeted selector — do not change global body overflow",
-          "Preserve mobile scroll behavior — test 390px viewport after apply",
-          "Max 1 CSS file per patch unless issue spans shell + styles"
-        ],
-        "testPlan": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged"
-        ],
-        "qaSteps": [
-          "Load /",
-          "Verify full text is visible",
-          "Verify no clipping on right or bottom",
-          "Verify mobile layout unchanged",
-          "Verify QA check pi:filmroom:categories passes",
-          "POST /api/product-intel/recompute — issue cleared from fix queue"
-        ],
-        "rollbackPlan": {
-          "strategy": "git-revert",
-          "summary": "Restore previous overflow rules if regression detected.",
-          "steps": [
-            "Revert: client/lib/vault-shell.css",
-            "Redeploy Netlify (static) and Render (API) if needed",
-            "POST /api/product-intel/recompute",
-            "POST /api/qa/run — verify check passes"
-          ]
-        },
-        "approvalGate": {
-          "steps": [
-            "Apply patch",
-            "Optional redeploy",
-            "QA crawl",
-            "Product Health recompute",
-            "Mark completed"
-          ]
-        }
-      },
-      "createdAt": "2026-06-13T17:10:42.889Z",
-      "runId": "qa_1781370627642",
+      "createdAt": "2026-06-14T14:23:58.914Z",
+      "runId": "qa_1781447015550",
       "resolved": false
     }
   ],
   "dailySummaries": [
     {
-      "date": "2026-06-13",
-      "overallHealth": 82,
+      "date": "2026-06-14",
+      "overallHealth": 100,
       "moduleScores": {
         "api": 100,
         "content": 100,
         "integrity": 100,
-        "pages": 50,
-        "ux": 60,
+        "pages": 100,
+        "ux": 100,
         "browser": 100,
-        "visual-integrity": 90,
+        "visual-integrity": 100,
         "mobile-behavior": 100,
-        "overall": 82
+        "overall": 100
       },
       "pageScores": {
         "/": {
@@ -1131,13 +254,87 @@
           "score": 100
         },
         "/vault/team": {
-          "score": 80
+          "score": 100
         },
         "/vault/recruiting": {
           "score": 100
         },
         "/vault/live-feed": {
-          "score": 90
+          "score": 100
+        },
+        "/vault/futurecast": {
+          "score": 100
+        },
+        "/admin": {
+          "desktop": 100,
+          "mobile": 100
+        }
+      },
+      "featureScores": {
+        "react_vault_shell": 100,
+        "team_roster_depth": 100,
+        "film_room_hub": 100,
+        "recruiting_hub": 100,
+        "live_feed": 100,
+        "mobile_navigation": 100,
+        "admin_hub": 100,
+        "qa_monitor": 62
+      },
+      "topIssues": [],
+      "improvements": [
+        "Overall health up 35 → 100"
+      ],
+      "regressions": [],
+      "pass": true,
+      "runId": "qa_1781447015550",
+      "signalCounts": {
+        "total": 2,
+        "bySource": {
+          "qa": 0,
+          "apiHealth": 0,
+          "cacheHealth": 0,
+          "autoposter": 1,
+          "recruiting": 0,
+          "teamData": 1,
+          "filmRoom": 0
+        }
+      },
+      "narrative": "Platform health is strong at 100/100 — all checks passed. Data layer collected 2 signal(s) across 7 sources."
+    },
+    {
+      "date": "2026-06-13",
+      "overallHealth": 35,
+      "moduleScores": {
+        "api": 35,
+        "content": 100,
+        "integrity": 75,
+        "pages": 25,
+        "ux": 50,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 35
+      },
+      "pageScores": {
+        "/": {
+          "desktop": 100,
+          "mobile": 100
+        },
+        "/vault": {
+          "desktop": 100,
+          "mobile": 100
+        },
+        "/vault/film-room": {
+          "score": 100
+        },
+        "/vault/team": {
+          "score": 55
+        },
+        "/vault/recruiting": {
+          "score": 75
+        },
+        "/vault/live-feed": {
+          "score": 65
         },
         "/vault/futurecast": {
           "score": 100
@@ -1149,13 +346,13 @@
       },
       "featureScores": {
         "react_vault_shell": 90,
-        "team_roster_depth": 90,
-        "film_room_hub": 90,
-        "recruiting_hub": 100,
-        "live_feed": 100,
+        "team_roster_depth": 65,
+        "film_room_hub": 100,
+        "recruiting_hub": 75,
+        "live_feed": 65,
         "mobile_navigation": 80,
         "admin_hub": 100,
-        "qa_monitor": 68
+        "qa_monitor": 61
       },
       "topIssues": [
         {
@@ -1168,6 +365,24 @@
           "url": null
         },
         {
+          "id": "integrity:react-markers",
+          "module": "integrity",
+          "message": "1 route validation issue(s)",
+          "severity": "medium",
+          "severityScore": 60,
+          "classification": "missing-content",
+          "url": null
+        },
+        {
+          "id": "pages:react-team",
+          "module": "pages",
+          "message": "Team page contains retired monolith hooks",
+          "severity": "medium",
+          "severityScore": 60,
+          "classification": "missing-content",
+          "url": null
+        },
+        {
           "id": "ux:modal-zindex",
           "module": "ux",
           "message": "Vault header z-index stacking not found — modals may render behind shell",
@@ -1177,79 +392,61 @@
           "url": null
         },
         {
-          "id": "crawler:pressers-missing",
-          "module": "crawler",
-          "message": "Press Conferences category missing from React Film Room hub",
-          "severity": "medium",
-          "severityScore": 60,
-          "classification": "pressers-missing",
-          "url": "https://gatorvaultinsider.com/vault/film-room"
-        },
-        {
-          "id": "crawler:highlights-missing",
-          "module": "crawler",
-          "message": "Highlights category missing from React Film Room",
-          "severity": "medium",
-          "severityScore": 60,
-          "classification": "highlights-missing",
-          "url": "https://gatorvaultinsider.com/vault/film-room"
-        },
-        {
-          "id": "pages:vault-schedule:desktop",
+          "id": "pages:react-recruiting-hub",
           "module": "pages",
-          "message": "HTTP 404 https://gatorvaultinsider.com/vault/schedule",
-          "severity": "low",
-          "severityScore": 39,
-          "classification": "ui-regression",
-          "url": "https://gatorvaultinsider.com/vault/schedule"
+          "message": "Recruiting Hub markers missing: 2026 Commits",
+          "severity": "medium",
+          "severityScore": 57,
+          "classification": "recruiting-board-mismatch",
+          "url": "https://gatorvaultinsider.com/vault/recruiting"
         },
         {
-          "id": "pages:vault-schedule:mobile",
-          "module": "pages",
-          "message": "HTTP 404 https://gatorvaultinsider.com/vault/schedule",
-          "severity": "low",
-          "severityScore": 39,
-          "classification": "ui-regression",
-          "url": "https://gatorvaultinsider.com/vault/schedule"
-        },
-        {
-          "id": "ux:tap-targets",
-          "module": "ux",
-          "message": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
-          "severity": "low",
-          "severityScore": 39,
-          "classification": "ui-regression",
+          "id": "crawler:api-latency",
+          "module": "crawler",
+          "message": "/api/ping unreachable: HTTP 502 https://gatorvault-api.onrender.com/api/ping",
+          "severity": "medium",
+          "severityScore": 52,
+          "classification": "api-latency",
           "url": null
         },
         {
-          "id": "ux:mobile-safari",
-          "module": "ux",
-          "message": "Mobile Safari safe-area/viewport meta incomplete in vault bundle",
-          "severity": "low",
-          "severityScore": 39,
-          "classification": "ui-regression",
+          "id": "crawler:api-latency",
+          "module": "crawler",
+          "message": "/api/recruiting/board unreachable: HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+          "severity": "medium",
+          "severityScore": 52,
+          "classification": "api-latency",
           "url": null
+        },
+        {
+          "id": "pages:react-live-feed",
+          "module": "pages",
+          "message": "Live Feed React markers missing: Headlines",
+          "severity": "medium",
+          "severityScore": 46,
+          "classification": "autoposter-stale",
+          "url": "https://gatorvaultinsider.com/vault/live-feed"
         }
       ],
       "improvements": [],
       "regressions": [
-        "Overall health down 100 → 82"
+        "Overall health down 100 → 35"
       ],
       "pass": false,
-      "runId": "qa_1781370627642",
+      "runId": "qa_1781393350276",
       "signalCounts": {
-        "total": 12,
+        "total": 20,
         "bySource": {
-          "qa": 9,
-          "apiHealth": 0,
+          "qa": 11,
+          "apiHealth": 6,
           "cacheHealth": 0,
           "autoposter": 1,
-          "recruiting": 0,
+          "recruiting": 1,
           "teamData": 1,
-          "filmRoom": 1
+          "filmRoom": 0
         }
       },
-      "narrative": "Platform health scored 82/100 with 8 prioritized issue(s). Data layer collected 12 signal(s) across 7 sources. Weakest modules: pages (50), ux (60). Top: [medium/63] layout-overflow: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)"
+      "narrative": "Platform health scored 35/100 with 8 prioritized issue(s). Data layer collected 20 signal(s) across 7 sources. Weakest modules: pages (25), api (35), ux (50). Top: [medium/63] layout-overflow: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)"
     },
     {
       "date": "2026-06-11",
@@ -1314,6 +511,554 @@
   ],
   "weeklyReports": [],
   "snapshots": [
+    {
+      "at": "2026-06-14T14:23:58.914Z",
+      "runId": "qa_1781447015550",
+      "overall": 100,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 100
+      },
+      "pass": true,
+      "openFixes": 2,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 2,
+            "bySource": {
+              "qa": 0,
+              "apiHealth": 0,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 1,
+              "filmRoom": 0
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "roster-mismatch",
+            "autoposter-stale"
+          ],
+          "total": 2
+        },
+        "severity": {
+          "critical": 0,
+          "high": 2,
+          "medium": 0,
+          "low": 0
+        },
+        "proposals": 2,
+        "approvalGate": "self-runner"
+      }
+    },
+    {
+      "at": "2026-06-14T11:55:46.179Z",
+      "runId": "qa_1781438122710",
+      "overall": 100,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 100
+      },
+      "pass": true,
+      "openFixes": 2,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 2,
+            "bySource": {
+              "qa": 0,
+              "apiHealth": 0,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 1,
+              "filmRoom": 0
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "roster-mismatch",
+            "autoposter-stale"
+          ],
+          "total": 2
+        },
+        "severity": {
+          "critical": 0,
+          "high": 2,
+          "medium": 0,
+          "low": 0
+        },
+        "proposals": 2,
+        "approvalGate": "self-runner"
+      }
+    },
+    {
+      "at": "2026-06-14T02:04:56.802Z",
+      "runId": "qa_1781402674862",
+      "overall": 100,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 100
+      },
+      "pass": true,
+      "openFixes": 2,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 2,
+            "bySource": {
+              "qa": 0,
+              "apiHealth": 0,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 1,
+              "filmRoom": 0
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "roster-mismatch",
+            "autoposter-stale"
+          ],
+          "total": 2
+        },
+        "severity": {
+          "critical": 0,
+          "high": 2,
+          "medium": 0,
+          "low": 0
+        },
+        "proposals": 2,
+        "approvalGate": "self-runner"
+      }
+    },
+    {
+      "at": "2026-06-14T02:03:12.211Z",
+      "runId": "qa_1781402570287",
+      "overall": 90,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 75,
+        "ux": 60,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 90
+      },
+      "pass": false,
+      "openFixes": 7,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 7,
+            "bySource": {
+              "qa": 5,
+              "apiHealth": 0,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 1,
+              "filmRoom": 0
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "layout-overflow",
+            "missing-content",
+            "panel-clipping",
+            "roster-mismatch",
+            "autoposter-stale",
+            "ui-regression"
+          ],
+          "total": 7
+        },
+        "severity": {
+          "critical": 1,
+          "high": 4,
+          "medium": 2,
+          "low": 0
+        },
+        "proposals": 7,
+        "approvalGate": "self-runner"
+      }
+    },
+    {
+      "at": "2026-06-13T23:29:55.277Z",
+      "runId": "qa_1781393350276",
+      "overall": 35,
+      "modules": {
+        "api": 35,
+        "content": 100,
+        "integrity": 75,
+        "pages": 25,
+        "ux": 50,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 35
+      },
+      "pass": false,
+      "openFixes": 19,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 20,
+            "bySource": {
+              "qa": 11,
+              "apiHealth": 6,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 1,
+              "teamData": 1,
+              "filmRoom": 0
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "layout-overflow",
+            "missing-content",
+            "panel-clipping",
+            "recruiting-board-mismatch",
+            "roster-mismatch",
+            "api-latency",
+            "autoposter-stale",
+            "ui-regression"
+          ],
+          "total": 19
+        },
+        "severity": {
+          "critical": 1,
+          "high": 12,
+          "medium": 6,
+          "low": 0
+        },
+        "proposals": 19,
+        "approvalGate": "self-runner"
+      }
+    },
+    {
+      "at": "2026-06-13T23:24:12.684Z",
+      "runId": "qa_1781393030658",
+      "overall": 59,
+      "modules": {
+        "api": 100,
+        "content": 85,
+        "integrity": 35,
+        "pages": 25,
+        "ux": 50,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 59
+      },
+      "pass": false,
+      "openFixes": 16,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 25,
+            "bySource": {
+              "qa": 23,
+              "apiHealth": 0,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 1,
+              "filmRoom": 0
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "layout-overflow",
+            "broken-link",
+            "missing-content",
+            "panel-clipping",
+            "404-detected",
+            "recruiting-board-mismatch",
+            "roster-mismatch",
+            "autoposter-stale",
+            "ui-regression"
+          ],
+          "total": 16
+        },
+        "severity": {
+          "critical": 1,
+          "high": 9,
+          "medium": 6,
+          "low": 0
+        },
+        "proposals": 16,
+        "approvalGate": "self-runner"
+      }
+    },
+    {
+      "at": "2026-06-13T18:10:53.064Z",
+      "runId": "qa_1781374231459",
+      "overall": 93,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 60,
+        "browser": 100,
+        "visual-integrity": 90,
+        "mobile-behavior": 100,
+        "overall": 93
+      },
+      "pass": false,
+      "openFixes": 10,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 10,
+            "bySource": {
+              "qa": 7,
+              "apiHealth": 0,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 1,
+              "filmRoom": 1
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "layout-overflow",
+            "panel-clipping",
+            "pressers-missing",
+            "highlights-missing",
+            "roster-mismatch",
+            "autoposter-stale",
+            "ui-regression"
+          ],
+          "total": 10
+        },
+        "severity": {
+          "critical": 1,
+          "high": 5,
+          "medium": 4,
+          "low": 0
+        },
+        "proposals": 10,
+        "approvalGate": "self-runner"
+      }
+    },
+    {
+      "at": "2026-06-13T17:21:46.524Z",
+      "runId": "qa_1781371285361",
+      "overall": 93,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 60,
+        "browser": 100,
+        "visual-integrity": 90,
+        "mobile-behavior": 100,
+        "overall": 93
+      },
+      "pass": false,
+      "openFixes": 11,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 20,
+            "bySource": {
+              "qa": 17,
+              "apiHealth": 0,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 1,
+              "filmRoom": 1
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "layout-overflow",
+            "panel-clipping",
+            "404-detected",
+            "pressers-missing",
+            "highlights-missing",
+            "roster-mismatch",
+            "autoposter-stale",
+            "ui-regression"
+          ],
+          "total": 11
+        },
+        "severity": {
+          "critical": 1,
+          "high": 6,
+          "medium": 4,
+          "low": 0
+        },
+        "proposals": 11,
+        "approvalGate": "self-runner"
+      }
+    },
     {
       "at": "2026-06-13T17:10:42.889Z",
       "runId": "qa_1781370627642",
@@ -1781,17 +1526,17 @@
     "keep": [
       {
         "feature": "react_vault_shell",
-        "score": 90,
+        "score": 100,
         "reason": "High score — core quality signal"
       },
       {
         "feature": "team_roster_depth",
-        "score": 90,
+        "score": 100,
         "reason": "High score — core quality signal"
       },
       {
         "feature": "film_room_hub",
-        "score": 90,
+        "score": 100,
         "reason": "High score — core quality signal"
       },
       {
@@ -1801,6 +1546,11 @@
       },
       {
         "feature": "live_feed",
+        "score": 100,
+        "reason": "High score — core quality signal"
+      },
+      {
+        "feature": "mobile_navigation",
         "score": 100,
         "reason": "High score — core quality signal"
       },
@@ -1825,13 +1575,18 @@
         "reason": "Page health strong"
       },
       {
+        "page": "/vault/team",
+        "score": 100,
+        "reason": "Page health strong"
+      },
+      {
         "page": "/vault/recruiting",
         "score": 100,
         "reason": "Page health strong"
       },
       {
         "page": "/vault/live-feed",
-        "score": 90,
+        "score": 100,
         "reason": "Page health strong"
       },
       {
@@ -1843,102 +1598,46 @@
         "page": "/admin",
         "score": 100,
         "reason": "Page health strong"
+      },
+      {
+        "area": "public-site",
+        "reason": "Integrity and pages modules healthy"
       }
     ],
     "upgrade": [
       {
         "feature": "qa_monitor",
-        "score": 68,
+        "score": 62,
         "reason": "Important but not premium — prioritize UX polish"
       }
     ]
   },
   "signalHistory": {
-    "pages:vault-schedule:desktop": {
-      "count": 1,
-      "firstSeen": "2026-06-13T17:10:45.891Z",
-      "lastSeen": "2026-06-13T17:10:45.891Z",
-      "recentRuns": 1
-    },
-    "pages:vault-schedule:mobile": {
-      "count": 1,
-      "firstSeen": "2026-06-13T17:10:45.899Z",
-      "lastSeen": "2026-06-13T17:10:45.899Z",
-      "recentRuns": 1
-    },
-    "ux:modal-zindex": {
-      "count": 1,
-      "firstSeen": "2026-06-13T17:10:45.902Z",
-      "lastSeen": "2026-06-13T17:10:45.902Z",
-      "recentRuns": 1
-    },
-    "ux:tap-targets": {
-      "count": 1,
-      "firstSeen": "2026-06-13T17:10:45.905Z",
-      "lastSeen": "2026-06-13T17:10:45.905Z",
-      "recentRuns": 1
-    },
-    "ux:scroll-containers": {
-      "count": 1,
-      "firstSeen": "2026-06-13T17:10:45.907Z",
-      "lastSeen": "2026-06-13T17:10:45.907Z",
-      "recentRuns": 1
-    },
-    "ux:mobile-safari": {
-      "count": 1,
-      "firstSeen": "2026-06-13T17:10:45.909Z",
-      "lastSeen": "2026-06-13T17:10:45.909Z",
-      "recentRuns": 1
-    },
-    "visual-integrity:live-feed-layout": {
-      "count": 1,
-      "firstSeen": "2026-06-13T17:10:45.913Z",
-      "lastSeen": "2026-06-13T17:10:45.913Z",
-      "recentRuns": 1
-    },
-    "crawler:pressers-missing": {
-      "count": 1,
-      "firstSeen": "2026-06-13T17:10:45.916Z",
-      "lastSeen": "2026-06-13T17:10:45.916Z",
-      "recentRuns": 1
-    },
-    "crawler:highlights-missing": {
-      "count": 1,
-      "firstSeen": "2026-06-13T17:10:45.920Z",
-      "lastSeen": "2026-06-13T17:10:45.920Z",
-      "recentRuns": 1
-    },
     "pi:autoposter-stale:24h": {
       "count": 1,
-      "firstSeen": "2026-06-13T17:10:45.923Z",
-      "lastSeen": "2026-06-13T17:10:45.923Z",
+      "firstSeen": "2026-06-14T14:24:01.647Z",
+      "lastSeen": "2026-06-14T14:24:01.647Z",
       "recentRuns": 1
     },
     "pi:roster:numbers": {
       "count": 1,
-      "firstSeen": "2026-06-13T17:10:45.926Z",
-      "lastSeen": "2026-06-13T17:10:45.926Z",
-      "recentRuns": 1
-    },
-    "pi:filmroom:categories": {
-      "count": 1,
-      "firstSeen": "2026-06-13T17:10:45.933Z",
-      "lastSeen": "2026-06-13T17:10:45.933Z",
+      "firstSeen": "2026-06-14T14:24:01.649Z",
+      "lastSeen": "2026-06-14T14:24:01.649Z",
       "recentRuns": 1
     }
   },
   "intelligenceLayers": {
     "data": {
       "counts": {
-        "total": 12,
+        "total": 2,
         "bySource": {
-          "qa": 9,
+          "qa": 0,
           "apiHealth": 0,
           "cacheHealth": 0,
           "autoposter": 1,
           "recruiting": 0,
           "teamData": 1,
-          "filmRoom": 1
+          "filmRoom": 0
         }
       },
       "sources": [
@@ -1960,23 +1659,18 @@
     },
     "classification": {
       "active": [
-        "layout-overflow",
-        "panel-clipping",
-        "pressers-missing",
-        "highlights-missing",
         "roster-mismatch",
-        "autoposter-stale",
-        "ui-regression"
+        "autoposter-stale"
       ],
-      "total": 12
+      "total": 2
     },
     "severity": {
-      "critical": 1,
-      "high": 5,
-      "medium": 6,
+      "critical": 0,
+      "high": 2,
+      "medium": 0,
       "low": 0
     },
-    "proposals": 12,
+    "proposals": 2,
     "approvalGate": "self-runner"
   }
 }
