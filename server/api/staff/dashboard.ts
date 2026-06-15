@@ -16,9 +16,15 @@ import {
   handlePredictionsApiError,
 } from '../predictions/utils-api';
 import { isFutureCastDataError, respondDatabaseUnavailable } from '../futurecast/db-fallback';
+import { MOVEMENT_INTEL_MIN_CLASS_YEAR } from '../futurecast/eligibility';
+import { filterMovementIntelStockRows } from '../futurecast/feed-filters';
 
 const LIST_LIMIT = 10;
 const MOVEMENT_WINDOW_DAYS = 7;
+const MOVEMENT_FILTERS = {
+  lifecycle: 'HS' as const,
+  min_class_year: MOVEMENT_INTEL_MIN_CLASS_YEAR,
+};
 
 export interface StaffDashboardPlayer {
   id: string;
@@ -65,10 +71,11 @@ async function listFitScorePlayers(order: 'asc' | 'desc', limit: number): Promis
     JOIN futurecast.uf_specific_profiles uf ON uf.player_id = p.id
     WHERE uf.uf_fit_score IS NOT NULL
       AND p.status = 'HS'
+      AND p.class_year >= $2
     ORDER BY uf.uf_fit_score ${order === 'desc' ? 'DESC' : 'ASC'}
     LIMIT $1
     `,
-    [limit]
+    [limit, MOVEMENT_INTEL_MIN_CLASS_YEAR]
   );
 
   return rows.map((row) => ({
@@ -83,7 +90,12 @@ async function volatilityPlayers(
   direction: 'high' | 'low',
   limit: number
 ): Promise<StaffDashboardPlayer[]> {
-  const rows = await listPredictions({ status: 'ACTIVE', lifecycle: 'HS', limit: 500 });
+  const rows = await listPredictions({
+    status: 'ACTIVE',
+    lifecycle: 'HS',
+    min_class_year: MOVEMENT_INTEL_MIN_CLASS_YEAR,
+    limit: 500,
+  });
   const playerIds = [...new Set(rows.map((row) => row.player_id))];
   const historyMap = await listMovementHistoryByPlayerIds(playerIds, VOLATILITY_WINDOW_DAYS);
 
@@ -136,17 +148,18 @@ function buildHeatmapBuckets(rows: Awaited<ReturnType<typeof listStockBoardRows>
 
 export const handleGetStaffDashboard = asyncHandler(async (_req: Request, res: Response) => {
   try {
-    const [movementRows, fitLeaders, fitRisks, volatilityHigh, volatilityLow] = await Promise.all([
-      listStockBoardRows(MOVEMENT_WINDOW_DAYS, { lifecycle: 'HS' }),
+    const [movementRowsRaw, fitLeaders, fitRisks, volatilityHigh, volatilityLow] = await Promise.all([
+      listStockBoardRows(MOVEMENT_WINDOW_DAYS, MOVEMENT_FILTERS),
       listFitScorePlayers('desc', LIST_LIMIT),
       listFitScorePlayers('asc', LIST_LIMIT),
       volatilityPlayers('high', LIST_LIMIT),
       volatilityPlayers('low', LIST_LIMIT),
     ]);
+    const movementRows = filterMovementIntelStockRows(movementRowsRaw);
 
     let alerts: Awaited<ReturnType<typeof listAlerts>> = [];
     try {
-      alerts = await listAlerts(LIST_LIMIT);
+      alerts = await listAlerts(LIST_LIMIT, MOVEMENT_INTEL_MIN_CLASS_YEAR);
     } catch (alertErr) {
       if (!isFutureCastDataError(alertErr)) throw alertErr;
     }

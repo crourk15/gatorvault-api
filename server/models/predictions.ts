@@ -167,6 +167,7 @@ export interface StockBoardRow extends PredictionFeedRow {
 export interface StockBoardFilters {
   lifecycle?: PlayerLifecycleStatus;
   class_year?: number;
+  min_class_year?: number;
 }
 
 export async function listStockBoardRows(
@@ -181,6 +182,10 @@ export async function listStockBoardRows(
   if (filters.class_year != null) {
     conditions.push(`p.class_year = $${idx++}`);
     params.push(filters.class_year);
+  }
+  if (filters.min_class_year != null) {
+    conditions.push(`p.class_year >= $${idx++}`);
+    params.push(filters.min_class_year);
   }
   idx = appendLifecycleFilter(conditions, params, idx, filters.lifecycle);
 
@@ -229,6 +234,7 @@ export async function listStockBoardRows(
 
 export interface ListPredictionsFilters {
   class_year?: number;
+  min_class_year?: number;
   position?: string;
   status?: string;
   lifecycle?: PlayerLifecycleStatus;
@@ -274,6 +280,10 @@ export async function listPredictions(
   if (filters.class_year != null) {
     conditions.push(`p.class_year = $${idx++}`);
     params.push(filters.class_year);
+  }
+  if (filters.min_class_year != null) {
+    conditions.push(`p.class_year >= $${idx++}`);
+    params.push(filters.min_class_year);
   }
   if (filters.position) {
     conditions.push(`p.position = $${idx++}`);

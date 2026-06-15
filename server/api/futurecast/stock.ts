@@ -8,12 +8,12 @@ import {
   handlePredictionsApiError,
   serializeStockRowsWithVolatility,
 } from '../predictions/utils-api';
-import { filterFutureCastStockRows, FUTURECAST_CLASS_YEAR } from './feed-filters';
+import { filterMovementIntelStockRows, MOVEMENT_INTEL_MIN_CLASS_YEAR } from './feed-filters';
 import { enrichFeedPlayers } from './ranking-enrichment';
 
 const DEFAULT_WINDOW_DAYS = 7;
 const MAX_PER_SIDE = 25;
-const HS_STOCK_FILTERS = { lifecycle: 'HS' as const, class_year: FUTURECAST_CLASS_YEAR };
+const HS_STOCK_FILTERS = { lifecycle: 'HS' as const, min_class_year: MOVEMENT_INTEL_MIN_CLASS_YEAR };
 
 export const handleGetStockBoard = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -22,7 +22,7 @@ export const handleGetStockBoard = asyncHandler(async (req: Request, res: Respon
       rawWindow != null && rawWindow !== '' ? Number(rawWindow) : DEFAULT_WINDOW_DAYS;
     const resolvedWindow = Number.isFinite(windowDays) ? windowDays : DEFAULT_WINDOW_DAYS;
 
-    const rows = filterFutureCastStockRows(
+    const rows = filterMovementIntelStockRows(
       await listStockBoardRows(resolvedWindow, HS_STOCK_FILTERS)
     );
 

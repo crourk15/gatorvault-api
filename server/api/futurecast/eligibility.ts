@@ -3,6 +3,23 @@
  */
 export const FUTURECAST_CLASS_YEAR = 2027;
 
+/** Movement Intel includes the current cycle (2027) and future classes only. */
+export const MOVEMENT_INTEL_MIN_CLASS_YEAR = FUTURECAST_CLASS_YEAR;
+
+export function parseClassYear(value: number | string | null | undefined): number | null {
+  if (value == null || value === '') return null;
+  const n = typeof value === 'number' ? value : parseInt(String(value), 10);
+  return Number.isFinite(n) ? n : null;
+}
+
+export function isMovementIntelEligible(row: {
+  class_year?: number | string | null;
+  classYear?: number | string | null;
+}): boolean {
+  const y = parseClassYear(row.class_year ?? row.classYear);
+  return y != null && y >= MOVEMENT_INTEL_MIN_CLASS_YEAR;
+}
+
 export function isFloridaSchool(value: string | null | undefined): boolean {
   if (!value) return false;
   return /\bflorida\b/i.test(String(value).replace(/\s+/g, ' ').trim());

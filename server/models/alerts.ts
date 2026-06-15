@@ -54,8 +54,18 @@ export async function createAlert(
   );
 }
 
-export async function listAlerts(limit = 50): Promise<Alert[]> {
+export async function listAlerts(limit = 50, minClassYear?: number): Promise<Alert[]> {
   const capped = Math.min(Math.max(limit, 1), 200);
+  const params: unknown[] = [capped];
+  const classFilter =
+    minClassYear != null && Number.isFinite(minClassYear)
+      ? `WHERE p.class_year >= $2`
+      : '';
+
+  if (classFilter) {
+    params.push(minClassYear);
+  }
+
   const { rows } = await db.query<AlertRow>(
     `
     SELECT
@@ -69,10 +79,11 @@ export async function listAlerts(limit = 50): Promise<Alert[]> {
       p.slug
     FROM ${FUTURECAST_ALERTS_TABLE} a
     JOIN futurecast.players p ON p.id = a.player_id
+    ${classFilter}
     ORDER BY a.created_at DESC
     LIMIT $1
     `,
-    [capped]
+    params
   );
   return rows.map(alertFromRow);
 }

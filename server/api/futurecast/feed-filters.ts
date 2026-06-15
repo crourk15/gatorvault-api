@@ -7,6 +7,7 @@ import {
   FUTURECAST_CLASS_YEAR,
   isFutureCastEligible,
   isHsLifecycle,
+  isMovementIntelEligible,
   isTopTargetRow,
   isTrendingEligibleRow,
   isUfCommitRow,
@@ -37,6 +38,13 @@ export function dedupeStockRows(rows: StockBoardRow[]): StockBoardRow[] {
 
 export function filterFutureCastStockRows(rows: StockBoardRow[]): StockBoardRow[] {
   return dedupeStockRows(filterFutureCastFeedRows(rows));
+}
+
+/** Movement Intel — 2027+ HS targets (excludes prior-cycle 2026 players). */
+export function filterMovementIntelStockRows(rows: StockBoardRow[]): StockBoardRow[] {
+  return dedupeStockRows(
+    rows.filter((row) => isHsLifecycle(row) && isMovementIntelEligible({ class_year: row.class_year }))
+  );
 }
 
 export function filterTrendingStockRows(rows: StockBoardRow[]): StockBoardRow[] {
@@ -94,4 +102,4 @@ export function partitionHomepagePredictions(rows: SerializedFeedPrediction[]): 
   return { commits, topTargets };
 }
 
-export { FUTURECAST_CLASS_YEAR };
+export { FUTURECAST_CLASS_YEAR, MOVEMENT_INTEL_MIN_CLASS_YEAR } from './eligibility';
