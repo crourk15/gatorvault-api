@@ -60,12 +60,16 @@ const REQUIRED_EXPORTS = [
 ];
 
 const CHUNK_VERIFY_HTML = [
-  'index.html',
-  'welcome/index.html',
-  'insider/index.html',
-  'gatornation-live/index.html',
-  'recruiting-hub/index.html',
-  ...vaultMap.REQUIRED_VAULT_EXPORTS.filter((p) => p.endsWith('.html')),
+  ...new Set([
+    'index.html',
+    'welcome/index.html',
+    'insider/index.html',
+    'gatornation-live/index.html',
+    'recruiting-hub/index.html',
+    'team/index.html',
+    'directory/index.html',
+    ...REQUIRED_EXPORTS.filter((p) => p.endsWith('.html')),
+  ]),
 ];
 
 function rmRecursive(target) {

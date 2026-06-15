@@ -106,9 +106,12 @@ function feedCategory(item: LiveFeedItem): string {
 function isExcludedLiveFeedItem(item: LiveFeedItem): boolean {
   const blob = `${item.title ?? ''} ${item.type ?? ''}`.toLowerCase();
   if (!blob.trim()) return true;
-  const mentions2026 = /\b2026\b/.test(blob);
-  if (mentions2026 && (blob.includes('commit') || blob.includes('signed'))) return true;
-  if (mentions2026 && (blob.includes('portal') || blob.includes('transfer'))) return true;
+  if (/\bcommit\b|\bsigned\b|\bdecommit\b/.test(blob)) return true;
+  if (/\bportal\b/.test(blob) && /\bcommit\b/.test(blob)) return true;
+  if (item.createdAt) {
+    const ageMs = Date.now() - new Date(item.createdAt).getTime();
+    if (Number.isFinite(ageMs) && ageMs > 48 * 60 * 60 * 1000) return true;
+  }
   return false;
 }
 
@@ -175,11 +178,14 @@ export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePan
 
   const beatWriterHighlights = beat.slice(0, 6).map((post) => {
     const writer = post.writerName || post.handle || post.outlet || 'Beat Writer';
-    const snippet = String(post.text || '').slice(0, 80);
+    const snippet = String(post.text || '').slice(0, 120);
     return {
-      text: `${writer}: “${snippet}${snippet.length >= 80 ? '…' : ''}”`,
+      text: snippet,
       source: post.outlet || 'Beat',
       timestamp: post.publishedAt || undefined,
+      url: post.url,
+      handle: post.handle,
+      writerName: writer,
     };
   });
 

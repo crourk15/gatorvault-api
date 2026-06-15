@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui';
 
 export function RecruitingHubPremiumHero(): React.ReactElement {
@@ -15,7 +14,7 @@ export function RecruitingHubPremiumHero(): React.ReactElement {
           Boards, FutureCast, NIL, Portal — all in one place.
         </p>
         <div className="gv-rh-premium-hero__cta">
-          <Button href="/recruiting-board" variant="primary">
+          <Button href="/vault/recruiting/board" variant="primary">
             View Recruiting Board
           </Button>
         </div>
@@ -29,7 +28,7 @@ const MODULES = [
     icon: '🎯',
     title: 'Recruiting Board',
     description: 'Priority tiers, staff notes, and live board updates.',
-    href: '/recruiting-board',
+    href: '/vault/recruiting/board',
   },
   {
     icon: '📈',
@@ -41,7 +40,7 @@ const MODULES = [
     icon: '🔄',
     title: 'Portal Tracker',
     description: 'Incoming and outgoing portal movement with status tags.',
-    href: '/vault/portal',
+    href: '/vault/recruiting/portal',
   },
   {
     icon: '💰',
@@ -56,13 +55,13 @@ export function RecruitingHubModules(): React.ReactElement {
     <section className="gv-rh-modules gv-rh-hub__frame" data-testid="rh-modules">
       <div className="gv-rh-modules__grid">
         {MODULES.map((mod) => (
-          <Link key={mod.title} href={mod.href} className="gv-ds-card gv-rh-module">
+          <a key={mod.title} href={mod.href} className="gv-ds-card gv-rh-module">
             <span className="gv-rh-module__icon" aria-hidden="true">
               {mod.icon}
             </span>
             <h3 className="gv-rh-module__title">{mod.title}</h3>
             <p className="gv-rh-module__desc">{mod.description}</p>
-          </Link>
+          </a>
         ))}
       </div>
     </section>

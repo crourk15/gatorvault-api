@@ -10,6 +10,8 @@ import '@/lib/vault-recruiting-hub.css';
 import '@/lib/recruiting-hub-premium.css';
 import '@/lib/schedule-premium.css';
 import '@/lib/vault-gatornation-live.css';
+import '@/lib/gnl-hero.css';
+import '@/lib/player-directory-premium.css';
 import '@/lib/vault-team-hub.css';
 import '@/lib/gv-team.css';
 import '@/lib/media-card.css';

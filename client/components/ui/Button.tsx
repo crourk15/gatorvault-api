@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 
 type Variant = 'primary' | 'secondary';
 
@@ -27,9 +26,9 @@ export function Button(props: ButtonProps | LinkProps): React.ReactElement {
   if ('href' in props && props.href) {
     const { href, ...rest } = props;
     return (
-      <Link href={href} className={btnClass(variant, className)} {...rest}>
+      <a href={href} className={btnClass(variant, className)} {...rest}>
         {children}
-      </Link>
+      </a>
     );
   }
 

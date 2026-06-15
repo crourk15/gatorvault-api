@@ -20,6 +20,24 @@ function flatChunkName(relFromApp) {
   return `r-${relFromApp.replace(/\\/g, '/').replace(/\//g, '-')}`;
 }
 
+function encodeDynamicPath(rel) {
+  return rel.replace(/\[/g, '%5B').replace(/\]/g, '%5D');
+}
+
+function addChunkMappings(map, rel, publicPath) {
+  map.set(`/_next/static/chunks/app/${rel}`, publicPath);
+  map.set(`/_next/static/chunks/routes/${rel}`, publicPath);
+  map.set(`/_next/static/chunks/${flatChunkName(rel)}`, publicPath);
+  map.set(`static/chunks/app/${rel}`, publicPath.replace(/^\//, ''));
+
+  const encoded = encodeDynamicPath(rel);
+  if (encoded !== rel) {
+    map.set(`/_next/static/chunks/app/${encoded}`, publicPath);
+    map.set(`/_next/static/chunks/routes/${encoded}`, publicPath);
+    map.set(`static/chunks/app/${encoded}`, publicPath.replace(/^\//, ''));
+  }
+}
+
 function publishVaultChunk(serverDir, sourceFile, flatName) {
   const destDir = path.join(serverDir, VAULT_CHUNKS_DIR);
   fs.mkdirSync(destDir, { recursive: true });
@@ -48,10 +66,7 @@ function buildReplacementMap(serverDir) {
 
   for (const { file, rel, flat } of collectAppChunks(chunksDir)) {
     const publicPath = publishVaultChunk(serverDir, file, flat);
-    map.set(`/_next/static/chunks/app/${rel}`, publicPath);
-    map.set(`/_next/static/chunks/routes/${rel}`, publicPath);
-    map.set(`/_next/static/chunks/${flat}`, publicPath);
-    map.set(`static/chunks/app/${rel}`, publicPath.replace(/^\//, ''));
+    addChunkMappings(map, rel, publicPath);
   }
 
   if (fs.existsSync(chunksDir)) {
@@ -134,6 +149,7 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
     'gatornation-live',
     'recruiting-hub',
     'directory',
+    'team',
     'join',
     'vault',
     'futurecast',

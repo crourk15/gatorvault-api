@@ -3,6 +3,14 @@ import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 export type ScheduleSectionId = 'non-conference' | 'sec' | 'rivalry';
 export type HomeOrAway = 'vs' | '@' | 'neutral';
 
+export type TicketVendor = {
+  id: string;
+  name: string;
+  logo: string;
+  url: string;
+  priceFrom: number;
+};
+
 export type PremiumScheduleGame = {
   id: string;
   opponentName: string;
@@ -17,7 +25,7 @@ export type PremiumScheduleGame = {
   predictedScoreUF: number;
   predictedScoreOpp: number;
   intelUrl: string;
-  ticketsUrl: string;
+  ticketVendors: TicketVendor[];
   section: ScheduleSectionId;
 };
 
@@ -102,6 +110,33 @@ function normalizeTv(tv?: string): string {
   return tv;
 }
 
+function ticketVendorsForGame(opponent: string): TicketVendor[] {
+  const q = encodeURIComponent(`Florida Gators ${opponent}`);
+  return [
+    {
+      id: 'stubhub',
+      name: 'StubHub',
+      logo: 'SH',
+      url: `https://www.stubhub.com/search?q=${q}`,
+      priceFrom: 45,
+    },
+    {
+      id: 'seatgeek',
+      name: 'SeatGeek',
+      logo: 'SG',
+      url: `https://seatgeek.com/search?q=${q}`,
+      priceFrom: 42,
+    },
+    {
+      id: 'vivid',
+      name: 'VividSeats',
+      logo: 'VS',
+      url: `https://www.vividseats.com/search?q=${q}`,
+      priceFrom: 48,
+    },
+  ];
+}
+
 export function toPremiumScheduleGame(game: ScheduleGame): PremiumScheduleGame {
   const { uf, opp } = parsePrediction(game.pred);
   const { date, time } = splitDateTime(game.date);
@@ -121,7 +156,7 @@ export function toPremiumScheduleGame(game: ScheduleGame): PremiumScheduleGame {
     predictedScoreUF: uf,
     predictedScoreOpp: opp,
     intelUrl: `/vault/game-week?game=${game.id}`,
-    ticketsUrl: 'https://floridagators.com/tickets',
+    ticketVendors: ticketVendorsForGame(game.opp),
     section: SECTION_BY_ID[game.id] ?? 'sec',
   };
 }

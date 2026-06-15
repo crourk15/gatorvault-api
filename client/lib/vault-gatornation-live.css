@@ -14,7 +14,7 @@
   --gnl-pill: 9999px;
   --gnl-frame-max: 1280px;
   --gnl-frame-margin: 5%;
-  margin: -1.25rem -1.5rem 0;
+  margin: 0;
   padding-bottom: 2.5rem;
   color: #fff;
   font-family: var(--gv-font);
@@ -23,7 +23,7 @@
 
 @media (max-width: 767px) {
   .gv-gnl {
-    margin: -1rem -1rem 0;
+    margin: 0;
     --gnl-frame-margin: 1rem;
   }
 }
@@ -51,11 +51,12 @@
 .gv-gnl__section--movement {
   max-width: 920px;
   margin-left: auto;
+  margin-right: auto;
 }
 
 @media (min-width: 1024px) {
   .gv-gnl__section--movement {
-    margin-right: var(--gnl-frame-margin);
+    margin-right: auto;
   }
 }
 
@@ -187,6 +188,7 @@
 
 /* Ticker */
 .gv-gnl-ticker {
+  position: relative;
   background: var(--gnl-card);
   border-top: 1px solid var(--gnl-border);
   border-bottom: 1px solid var(--gnl-border);
@@ -194,12 +196,28 @@
   margin-bottom: 2.5rem;
 }
 
+.gv-gnl-ticker__live-badge {
+  position: absolute;
+  left: var(--gnl-frame-margin, 5%);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 0.3rem 0.55rem;
+  border-radius: var(--gnl-pill);
+  background: rgba(255, 77, 77, 0.15);
+  border: 1px solid rgba(255, 77, 77, 0.45);
+  color: var(--gnl-red);
+}
+
 .gv-gnl-ticker__viewport {
   overflow: hidden;
   height: 48px;
   display: flex;
   align-items: center;
-  padding: 0 1rem;
+  padding: 0 1rem 0 calc(var(--gnl-frame-margin, 5%) + 3.5rem);
 }
 
 .gv-gnl-ticker__loading {
@@ -252,6 +270,92 @@
 .gv-gnl-ticker__tag--commit { color: var(--gnl-blue); }
 .gv-gnl-ticker__tag--portal { color: var(--gnl-purple); }
 .gv-gnl-ticker__tag--rumor { color: var(--gnl-green); }
+
+/* Beat writer card grid */
+.gv-gnl-beat-grid__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4, 16px);
+}
+
+@media (max-width: 1024px) {
+  .gv-gnl-beat-grid__cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gv-gnl-beat-card {
+  padding: var(--space-4, 16px);
+  transition: box-shadow 180ms ease-out, border-color 180ms ease-out, transform 180ms ease-out;
+}
+
+.gv-gnl-beat-card:hover {
+  box-shadow: 0 8px 24px rgba(250, 70, 22, 0.12);
+  border-color: rgba(250, 70, 22, 0.3);
+  transform: translateY(-2px);
+}
+
+.gv-gnl-beat-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 12px);
+  margin-bottom: var(--space-3, 12px);
+}
+
+.gv-gnl-beat-card__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  background: rgba(0, 48, 135, 0.35);
+  border: 1px solid rgba(77, 163, 255, 0.35);
+}
+
+.gv-gnl-beat-card__writer {
+  margin: 0;
+  font-weight: 700;
+  color: #fff;
+}
+
+.gv-gnl-beat-card__source {
+  display: inline-block;
+  margin-top: 0.15rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--gv-body-text, #d0d8e0);
+}
+
+.gv-gnl-beat-card__text {
+  margin: 0 0 var(--space-2, 8px);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--gv-body-text, #d0d8e0);
+}
+
+.gv-gnl-beat-card__time {
+  margin: 0 0 var(--space-3, 12px);
+  font-size: 0.75rem;
+  color: var(--gv-storm, #94a3b8);
+}
+
+.gv-gnl-beat-card__cta {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--gnl-orange);
+  text-decoration: none;
+}
+
+.gv-gnl-beat-card__cta:hover {
+  text-decoration: underline;
+}
 
 /* Podcast grid */
 .gv-gnl-podcast-grid {
