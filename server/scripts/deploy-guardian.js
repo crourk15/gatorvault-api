@@ -18,6 +18,8 @@ const {
   MONOLITH_ARCHIVE_HTML,
   FORBIDDEN_IN_ROOT_INDEX,
   isReactMarketingIndex,
+  isRootWelcomeRedirect,
+  isWelcomeLandingIndex,
 } = require('../lib/guardian/monolith-archive');
 const { verifyChunkAssets } = require('../../client/scripts/verify-chunk-assets');
 
@@ -27,6 +29,7 @@ const PROBE_API = process.argv.includes('--api') || (!STATIC_ONLY && process.env
 
 const REQUIRED_HTML_ROUTES = [
   'index.html',
+  'welcome/index.html',
   ...REQUIRED_VAULT_EXPORTS,
   'players/index.html',
   'portal/index.html',
@@ -135,7 +138,18 @@ function checkStaticRoutes() {
   const indexPath = path.join(SERVER_ROOT, 'index.html');
   if (fs.existsSync(indexPath)) {
     const indexHtml = fs.readFileSync(indexPath, 'utf8');
-    if (!isReactMarketingIndex(indexHtml)) {
+    // Root now redirects to /welcome/ — validate welcome/index.html, not the redirect shell.
+    if (isRootWelcomeRedirect(indexHtml)) {
+      const welcomePath = path.join(SERVER_ROOT, 'welcome', 'index.html');
+      if (!fs.existsSync(welcomePath)) {
+        errors.push('[routing] missing export: welcome/index.html');
+      } else {
+        const welcomeHtml = fs.readFileSync(welcomePath, 'utf8');
+        if (!isWelcomeLandingIndex(welcomeHtml)) {
+          errors.push('[routing] welcome/index.html is not a valid Welcome page export');
+        }
+      }
+    } else if (!isReactMarketingIndex(indexHtml)) {
       errors.push('[routing] index.html is not the React marketing landing export');
     }
     for (const forbidden of FORBIDDEN_IN_ROOT_INDEX) {
