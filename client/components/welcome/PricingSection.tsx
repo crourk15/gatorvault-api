@@ -2,45 +2,65 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { PRICING_TIERS, type PricingTier } from '@/lib/pricing-tiers';
-import { WELCOME_LINKS } from '@/components/welcome/links';
+import '@/lib/pricing-section.css';
 
-const WELCOME_TIER_FEATURES: Record<PricingTier['id'], string[]> = {
-  locker: ['Recruiting Hub', 'Live Feed', 'Directory Access'],
-  film: ['Everything in Locker Room', 'Film Room Breakdown', 'Advanced Player Profiles'],
-  war: ['Everything in Film Room', 'Insider Intel', 'War Room Chat', 'NIL + Portal Tracker (full)'],
-};
+const TIERS = [
+  {
+    name: 'Locker Room',
+    price: '$4.99 / month',
+    features: [
+      'Recruiting Hub',
+      'Live Feed (read-only)',
+      'Directory Access',
+      'Basic Player Profiles',
+    ],
+    popular: false,
+  },
+  {
+    name: 'Film Room',
+    price: '$9.99 / month',
+    features: [
+      'Everything in Locker Room',
+      'Film Room Breakdowns',
+      'Advanced Player Profiles',
+      'FutureCast Predictions',
+    ],
+    popular: true,
+  },
+  {
+    name: 'War Room',
+    price: '$19.99 / month',
+    features: [
+      'Everything in Film Room',
+      'Insider Intel',
+      'War Room Chat',
+      'NIL + Portal Tracker (full)',
+    ],
+    popular: false,
+  },
+] as const;
 
 export function PricingSection(): React.ReactElement {
   return (
-    <section className="welcome-pricing" id="pricing" data-testid="welcome-pricing">
-      <div className="welcome-pricing__inner">
-        <h2 className="welcome-pricing__title">Choose Your Plan</h2>
-        <p className="welcome-pricing__subtitle">Simple pricing. Cancel anytime.</p>
-        <div className="welcome-pricing__grid">
-          {PRICING_TIERS.map((tier) => (
-            <article
-              key={tier.id}
-              className={`welcome-pricing__card${tier.popular ? ' welcome-pricing__card--popular' : ''}`}
-            >
-              {tier.popular ? (
-                <span className="welcome-pricing__badge">Most Popular</span>
-              ) : null}
-              <h3 className="welcome-pricing__name">
-                {tier.icon} {tier.name}
-              </h3>
-              <p className="welcome-pricing__price">${tier.monthly.toFixed(2)} / month</p>
-              <ul className="welcome-pricing__features">
-                {(WELCOME_TIER_FEATURES[tier.id] ?? tier.features).map((feature) => (
-                  <li key={feature}>✓ {feature}</li>
-                ))}
-              </ul>
-              <Link href={WELCOME_LINKS.insider} className="welcome-pricing__cta">
-                Join Now
-              </Link>
-            </article>
-          ))}
-        </div>
+    <section className="pricing-section" id="pricing" data-testid="welcome-pricing">
+      <h2>Choose Your Plan</h2>
+      <p className="pricing-subtitle">Simple pricing. Cancel anytime.</p>
+      <div className="pricing-grid">
+        {TIERS.map((tier) => (
+          <div key={tier.name} className={`pricing-card${tier.popular ? ' popular' : ''}`}>
+            {tier.popular ? <div className="popular-badge">Most Popular</div> : null}
+            <h3>{tier.name}</h3>
+            <p className="price">{tier.price}</p>
+            <ul>
+              {tier.features.map((feature) => (
+                <li key={feature}>✓ {feature}</li>
+              ))}
+            </ul>
+            <Link href="/insider" className="pricing-cta">
+              Join Now
+            </Link>
+          </div>
+        ))}
       </div>
     </section>
   );

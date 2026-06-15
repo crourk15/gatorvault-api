@@ -2,50 +2,41 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { WELCOME_LINKS } from './links';
+import '@/lib/free-vs-insider.css';
 
 const ROWS = [
-  { feature: 'Recruiting Hub', free: 'Limited', insider: 'Full access' },
-  { feature: 'Player Profiles', free: 'Limited', insider: 'Full access' },
-  { feature: 'Live Feed', free: 'Read-only', insider: 'Full Insider feed' },
-  { feature: 'FutureCast', free: 'Locked', insider: 'Full predictions' },
-  { feature: 'Film Room', free: 'Locked', insider: 'Full breakdowns' },
-  { feature: 'War Room Intel', free: 'No', insider: 'Yes' },
-  { feature: 'Insider Chat', free: 'No', insider: 'Yes' },
-  { feature: 'NIL Tracker', free: 'Limited', insider: 'Full access' },
-  { feature: 'Portal Tracker', free: 'Limited', insider: 'Full access' },
+  ['Recruiting Hub', 'Limited', 'Full Access'],
+  ['Player Profiles', 'Limited', 'Full Access'],
+  ['Live Feed', 'Read-only', 'Full Insider Feed'],
+  ['FutureCast', 'Locked', 'Full Predictions'],
+  ['Film Room', 'Locked', 'Full Breakdowns'],
+  ['War Room Intel', 'No', 'Yes'],
+  ['Insider Chat', 'No', 'Yes'],
+  ['NIL Tracker', 'Limited', 'Full Access'],
+  ['Portal Tracker', 'Limited', 'Full Access'],
 ] as const;
 
-/** Free vs Insider comparison table with upgrade CTA. */
 export function FreeVsInsider(): React.ReactElement {
   return (
-    <section className="insider-table fvi-section" data-testid="free-vs-insider">
-      <h2 className="insider-table-title">Free vs Insider</h2>
-      <div className="insider-table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Feature</th>
-              <th scope="col">Free</th>
-              <th scope="col">Insider</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ROWS.map((row) => (
-              <tr key={row.feature}>
-                <td>{row.feature}</td>
-                <td>{row.free}</td>
-                <td>{row.insider}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <section className="fvi-section" data-testid="free-vs-insider">
+      <h2>Free vs Insider</h2>
+      <div className="fvi-table">
+        <div className="fvi-header">
+          <div>Feature</div>
+          <div>Free</div>
+          <div>Insider</div>
+        </div>
+        {ROWS.map(([feature, free, insider]) => (
+          <div key={feature} className="fvi-row">
+            <div>{feature}</div>
+            <div>{free}</div>
+            <div>{insider}</div>
+          </div>
+        ))}
       </div>
-      <div className="insider-table-cta">
-        <Link href={WELCOME_LINKS.insider} className="welcome-cta-primary">
-          Upgrade to Insider
-        </Link>
-      </div>
+      <Link href="/insider" className="fvi-cta">
+        Upgrade to Insider
+      </Link>
     </section>
   );
 }

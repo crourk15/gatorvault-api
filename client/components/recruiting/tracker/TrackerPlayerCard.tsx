@@ -25,17 +25,19 @@ export function TrackerPlayerCard({ player }: Props): React.ReactElement {
       className={`tracker-card status-${trackerStatusClass(player.status)}`}
       data-testid="tracker-player-card"
     >
-      <div className="tracker-photo" aria-hidden="true">
-        {player.name.slice(0, 1)}
-      </div>
+      {player.photoUrl ? (
+        <img src={player.photoUrl} alt="" className="tracker-photo" />
+      ) : (
+        <div className="tracker-photo tracker-photo--fallback" aria-hidden="true">
+          {player.name.slice(0, 1)}
+        </div>
+      )}
       <div className="tracker-info">
         <h3>{player.name}</h3>
         <p>
           {player.position} • {player.rating > 0 ? player.rating.toFixed(2) : '—'}
-          {player.ranking > 0 ? ` • #${player.ranking}` : ''}
         </p>
         <p className="tracker-school">{player.school}</p>
-        {player.prediction ? <p className="tracker-prediction">{player.prediction}</p> : null}
       </div>
       <div className="tracker-status">{player.status}</div>
     </Link>
