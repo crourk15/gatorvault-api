@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import type { ContentLatestItem, ContentLatestResponse } from '@/lib/vault-dashboard-api';
 import { timeAgo } from './dashboard-utils';
 import { GV_COPY } from '@/lib/gatorvault-copy';
+import { MediaCard } from '@/components/media/MediaCard';
+import { resolvePodcastLogo, resolvePodcastLogoFallback } from '@/lib/podcast-catalog';
 
 type TabId = 'articles' | 'podcasts' | 'filmRoom' | 'community';
 
@@ -78,28 +80,47 @@ export function DashboardLatestContent({
               <span className="gv-dash-content__meta">{GV_COPY.empty.noContent}</span>
             </li>
           )}
-          {items.map((item) => (
-            <li key={item.id} className="gv-dash-content__row">
-              <span className="gv-dash-content__thumb" aria-hidden="true">
-                {item.icon || '📌'}
-              </span>
-              <div className="gv-dash-content__body">
-                <a href={item.href} className="gv-dash-content__title">
-                  {item.title}
-                </a>
-                <div className="gv-dash-content__meta">
-                  {item.source}
-                  {item.timestamp ? ` · ${timeAgo(item.timestamp)}` : ''}
-                  {item.replyCount != null && item.replyCount > 0
-                    ? ` · ${item.replyCount} replies`
-                    : ''}
+          {items.map((item) =>
+            tab === 'podcasts' ? (
+              <li key={item.id} className="gv-dash-content__row gv-dash-content__row--media">
+                <MediaCard
+                  title={item.title}
+                  subtitle={
+                    [item.source, item.timestamp ? timeAgo(item.timestamp) : null]
+                      .filter(Boolean)
+                      .join(' · ') || undefined
+                  }
+                  imageUrl={
+                    item.icon?.startsWith('/') ? item.icon : resolvePodcastLogo(item.title)
+                  }
+                  imageFallback={resolvePodcastLogoFallback(item.title)}
+                  href={item.href}
+                  className="media-card--podcast"
+                />
+              </li>
+            ) : (
+              <li key={item.id} className="gv-dash-content__row">
+                <span className="gv-dash-content__thumb" aria-hidden="true">
+                  {item.icon || '📌'}
+                </span>
+                <div className="gv-dash-content__body">
+                  <a href={item.href} className="gv-dash-content__title">
+                    {item.title}
+                  </a>
+                  <div className="gv-dash-content__meta">
+                    {item.source}
+                    {item.timestamp ? ` · ${timeAgo(item.timestamp)}` : ''}
+                    {item.replyCount != null && item.replyCount > 0
+                      ? ` · ${item.replyCount} replies`
+                      : ''}
+                  </div>
                 </div>
-              </div>
-              <span className="gv-dash-content__chev" aria-hidden="true">
-                ›
-              </span>
-            </li>
-          ))}
+                <span className="gv-dash-content__chev" aria-hidden="true">
+                  ›
+                </span>
+              </li>
+            )
+          )}
         </ul>
       </div>
     </section>

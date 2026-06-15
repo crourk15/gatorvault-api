@@ -1,4 +1,9 @@
 import { getApiBase } from './big-board-api';
+import {
+  findPodcastCatalogEntry,
+  resolvePodcastLogo,
+  resolvePodcastHosts,
+} from './podcast-catalog';
 
 export interface LiveFeedItem {
   id?: string;
@@ -19,11 +24,14 @@ export interface BeatPost {
 }
 
 export interface PodcastShow {
+  id?: string;
   title?: string;
   description?: string;
+  logoUrl?: string;
   thumbnailUrl?: string;
   image?: string;
   artwork?: string;
+  hosts?: string[];
   platforms?: { name: string; url: string }[];
 }
 
@@ -49,10 +57,21 @@ function normalizePodcastShow(raw: Record<string, unknown>): PodcastShow {
         url: String(p.url ?? '#'),
       }))
     : [];
+  const id = String(raw.id ?? '');
+  const title = String(raw.title ?? raw.name ?? 'Podcast');
+  const catalog = findPodcastCatalogEntry(id || title);
+  const logoUrl = String(
+    raw.logoUrl ?? catalog?.logoUrl ?? resolvePodcastLogo(id || title)
+  );
   return {
-    title: String(raw.title ?? raw.name ?? 'Podcast'),
+    id: id || catalog?.id,
+    title,
     description: String(raw.description ?? ''),
-    thumbnailUrl: String(raw.thumbnailUrl ?? raw.image ?? raw.artwork ?? ''),
+    logoUrl,
+    thumbnailUrl: String(raw.thumbnailUrl ?? raw.image ?? raw.artwork ?? logoUrl),
+    hosts: Array.isArray(raw.hosts)
+      ? (raw.hosts as unknown[]).map((h) => String(h))
+      : catalog?.hosts ?? resolvePodcastHosts(id || title),
     platforms,
   };
 }

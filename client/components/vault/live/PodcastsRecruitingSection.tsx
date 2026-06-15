@@ -6,6 +6,12 @@ import {
   type LiveFeedItem,
   type PodcastShow,
 } from '@/lib/live-api';
+import { MediaCard } from '@/components/media/MediaCard';
+import {
+  resolvePodcastHosts,
+  resolvePodcastLogo,
+  resolvePodcastLogoFallback,
+} from '@/lib/podcast-catalog';
 import { LIVE_REFRESH_MS, matchesCategory, timeAgo } from './live-feed-utils';
 
 function MicIcon({ className }: { className?: string }): React.ReactElement {
@@ -55,31 +61,35 @@ function VaultMediaCard({
 }
 
 export function PodcastCard({ show }: { show: PodcastShow }): React.ReactElement {
+  const catalogKey = show.id ?? show.title;
+  const hosts = show.hosts?.length
+    ? show.hosts.join(', ')
+    : resolvePodcastHosts(catalogKey).join(', ');
+  const imageUrl = show.logoUrl ?? show.thumbnailUrl ?? resolvePodcastLogo(catalogKey);
   return (
-    <VaultMediaCard testId="podcast-card">
-      <div className="gv-vault-media-card__stack">
-        <div className="gv-vault-media-card__title-row">
-          <MicIcon className="gv-vault-media-card__icon gv-vault-media-card__icon--blue" />
-          <h3 className="gv-vault-media-card__title">{show.title ?? 'Podcast'}</h3>
-        </div>
-        {show.description ? (
-          <p className="gv-vault-media-card__desc">{show.description}</p>
-        ) : null}
-        <div className="gv-vault-media-card__links">
-          {(show.platforms ?? []).map((pl) => (
-            <a
-              key={pl.url}
-              href={pl.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="gv-vault-media-card__link"
-            >
-              {pl.name}
-            </a>
-          ))}
-        </div>
+    <MediaCard
+      title={show.title ?? 'Podcast'}
+      subtitle={hosts || show.description}
+      imageUrl={imageUrl}
+      imageFallback={resolvePodcastLogoFallback(catalogKey)}
+      className="media-card--podcast"
+      testId="podcast-card"
+    >
+      <div className="media-card-links">
+        {(show.platforms ?? []).map((pl) => (
+          <a
+            key={pl.url}
+            href={pl.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="media-card-link"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {pl.name}
+          </a>
+        ))}
       </div>
-    </VaultMediaCard>
+    </MediaCard>
   );
 }
 
@@ -130,7 +140,7 @@ function SectionHeader({
 }
 
 function CardGrid({ children }: { children: React.ReactNode }): React.ReactElement {
-  return <div className="gv-vault-media-section__grid">{children}</div>;
+  return <div className="podcast-grid gv-vault-media-section__grid">{children}</div>;
 }
 
 function SkeletonCard(): React.ReactElement {

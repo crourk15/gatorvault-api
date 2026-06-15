@@ -185,12 +185,15 @@
 
 .gv-gnl-ticker__track {
   display: flex;
-  gap: 2.5rem;
+  gap: 3rem;
   width: max-content;
-  animation: gv-gnl-ticker-scroll 14s ease-out infinite;
+  white-space: nowrap;
+  animation: gv-gnl-ticker-scroll 14s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
-.gv-gnl-ticker__track:hover {
+.gv-gnl-ticker:hover .gv-gnl-ticker__track {
   animation-play-state: paused;
 }
 
@@ -228,20 +231,12 @@
 
 /* Podcast grid */
 .gv-gnl-podcast-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
-@media (min-width: 768px) {
-  .gv-gnl-podcast-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  /* podcast-grid class supplies 1/2-column layout */
 }
 
 @media (min-width: 1024px) {
   .gv-gnl-podcast-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

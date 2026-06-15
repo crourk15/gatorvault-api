@@ -12,14 +12,18 @@ function LiveTicker({ items }: { items: LiveFeedItem[] }): React.ReactElement {
       .map((h) => h.title?.trim())
       .filter(Boolean)
       .join(' · ') || 'GatorNation Live — commits, portal, and beat writers updating in real time';
+  const loop = [tickerText, tickerText];
   return (
     <div className="gv-live-ticker" aria-label="Breaking headlines ticker">
       <span className="gv-live-ticker__badge">LIVE</span>
       <div className="gv-live-ticker__track">
-        <span className="gv-live-ticker__text">{tickerText}</span>
-        <span className="gv-live-ticker__text" aria-hidden="true">
-          {tickerText}
-        </span>
+        <div className="gv-live-ticker__scroll">
+          {loop.map((text, idx) => (
+            <span key={idx} className="gv-live-ticker__text" aria-hidden={idx === 1 ? true : undefined}>
+              {text}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -14,9 +14,12 @@ export type LiveTickerProps = {
 };
 
 export type PodcastCardProps = {
+  id?: string;
   title: string;
   description: string;
+  logoUrl?: string;
   thumbnailUrl?: string;
+  hosts?: string[];
   appleUrl: string;
   spotifyUrl: string;
   youtubeUrl: string;

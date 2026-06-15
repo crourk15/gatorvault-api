@@ -2,6 +2,8 @@
   {
     "id": "gators-breakdown",
     "name": "Gators Breakdown",
+    "logoUrl": "/images/podcasts/gators-breakdown.png",
+    "hosts": ["David Waters"],
     "rssUrl": "https://feeds.megaphone.fm/gatorsbreakdown",
     "siteUrl": "https://gatorsbreakdown.com",
     "appleUrl": "https://podcasts.apple.com/us/podcast/gators-breakdown/id1169061256",
@@ -11,6 +13,8 @@
   {
     "id": "gators-online",
     "name": "Gators Online Podcast",
+    "logoUrl": "/images/podcasts/gators-online.png",
+    "hosts": ["On3 Florida"],
     "appleId": "1618949280",
     "appleUrl": "https://podcasts.apple.com/us/podcast/gators-online-podcast/id1618949280",
     "spotifyUrl": "https://open.spotify.com/show/2TJLOsWkqpA7UoLmJuXi6W",
@@ -20,6 +24,8 @@
   {
     "id": "gnfp",
     "name": "Gator Nation Football Podcast",
+    "logoUrl": "/images/podcasts/gnfp.png",
+    "hosts": ["GNFP"],
     "rssUrl": "https://feeds.simplecast.com/WN52YflC",
     "siteUrl": "https://gnfp.com",
     "appleUrl": "https://podcasts.apple.com/us/podcast/the-gator-nation-football-podcast/id1035206093",
@@ -28,6 +34,8 @@
   {
     "id": "gator-tales",
     "name": "Gator Tales",
+    "logoUrl": "/images/podcasts/gator-tales.png",
+    "hosts": ["Sean Kelley"],
     "rssUrl": "https://floridagators.com/gatortales-rss",
     "siteUrl": "https://floridagators.com/gatortales",
     "appleUrl": "https://podcasts.apple.com/us/podcast/gator-tales-with-sean-kelley/id1036270178",

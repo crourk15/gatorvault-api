@@ -11,6 +11,11 @@ import type {
 import { fetchLiveTicker, fetchMovementPreview, computeMomentumPct } from './vault-dashboard-api';
 import { fetchLiveDashboard, type BeatPost, type LiveFeedItem, type PodcastShow } from './live-api';
 import { fetchRecruitingBoard } from './recruiting-board-api';
+import {
+  PODCAST_CATALOG,
+  resolvePodcastLogo,
+  resolvePodcastLogoFallback,
+} from './podcast-catalog';
 
 export const LIVE_HUB_REFRESH_MS = 45_000;
 
@@ -31,44 +36,18 @@ export type LivePanelItems = {
   staffNotes: LivePanelProps['items'];
 };
 
-export const DEFAULT_PODCASTS: PodcastCardProps[] = [
-  {
-    title: 'Gators Breakdown',
-    description: 'Daily Florida Gators analysis and recruiting intel.',
-    thumbnailUrl: '/brand/logos/gv-monogram.svg',
-    appleUrl: '#',
-    spotifyUrl: '#',
-    youtubeUrl: '#',
-    websiteUrl: '#',
-  },
-  {
-    title: 'Gator Nation Football Podcast',
-    description: 'Deep-dive conversations on Florida football and culture.',
-    thumbnailUrl: '/brand/logos/gv-monogram.svg',
-    appleUrl: '#',
-    spotifyUrl: '#',
-    youtubeUrl: '#',
-    websiteUrl: '#',
-  },
-  {
-    title: 'Gators Online Podcast',
-    description: 'Recruiting, team news, and insider notes from the beat.',
-    thumbnailUrl: '/brand/logos/gatorvault-wordmark.svg',
-    appleUrl: '#',
-    spotifyUrl: '#',
-    youtubeUrl: '#',
-    websiteUrl: '#',
-  },
-  {
-    title: 'Gator Tales',
-    description: 'Official Florida Gators storytelling and interviews.',
-    thumbnailUrl: '/brand/logos/gv-monogram.svg',
-    appleUrl: '#',
-    spotifyUrl: '#',
-    youtubeUrl: '#',
-    websiteUrl: '#',
-  },
-];
+export const DEFAULT_PODCASTS: PodcastCardProps[] = PODCAST_CATALOG.map((entry) => ({
+  id: entry.id,
+  title: entry.name,
+  description: `${entry.name} — Florida Gators coverage.`,
+  logoUrl: entry.logoUrl,
+  thumbnailUrl: entry.logoFallback,
+  hosts: entry.hosts,
+  appleUrl: '#',
+  spotifyUrl: '#',
+  youtubeUrl: '#',
+  websiteUrl: '#',
+}));
 
 const SOURCE_LOGOS: Record<string, string> = {
   on3: 'O3',
@@ -139,17 +118,25 @@ export function normalizePodcasts(shows: PodcastShow[]): PodcastCardProps[] {
     const platforms = show.platforms ?? [];
     const find = (name: string) =>
       platforms.find((p) => p.name.toLowerCase().includes(name))?.url || '#';
+    const catalogKey = show.id ?? show.title ?? DEFAULT_PODCASTS[idx]?.id;
+    const fallback = DEFAULT_PODCASTS[idx];
     return {
-      title: show.title || DEFAULT_PODCASTS[idx]?.title || 'Podcast',
-      description: show.description || DEFAULT_PODCASTS[idx]?.description || '',
+      id: show.id ?? fallback?.id,
+      title: show.title || fallback?.title || 'Podcast',
+      description: show.description || fallback?.description || '',
+      logoUrl:
+        show.logoUrl ||
+        resolvePodcastLogo(catalogKey) ||
+        fallback?.logoUrl,
       thumbnailUrl:
         show.thumbnailUrl ||
-        DEFAULT_PODCASTS[idx]?.thumbnailUrl ||
-        '/brand/logos/gv-monogram.svg',
+        resolvePodcastLogoFallback(catalogKey) ||
+        fallback?.thumbnailUrl,
+      hosts: show.hosts?.length ? show.hosts : fallback?.hosts,
       appleUrl: find('apple'),
       spotifyUrl: find('spotify'),
       youtubeUrl: find('youtube'),
-      websiteUrl: find('web') || platforms[0]?.url || '#',
+      websiteUrl: find('web') || platforms[0]?.url || fallback?.websiteUrl || '#',
     };
   });
 }
