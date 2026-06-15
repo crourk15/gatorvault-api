@@ -361,13 +361,9 @@
   gap: 3rem;
   width: max-content;
   white-space: nowrap;
-  animation: gv-dash-ticker-scroll 14s linear infinite;
+  animation: gv-dash-ticker-scroll 19s linear infinite;
   will-change: transform;
   transform: translateZ(0);
-}
-
-.gv-dash-ticker:hover .gv-dash-ticker__track {
-  animation-play-state: paused;
 }
 
 .gv-dash-ticker__item {
