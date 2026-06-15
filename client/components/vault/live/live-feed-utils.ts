@@ -1,6 +1,6 @@
 import type { LiveFeedItem } from '@/lib/live-api';
 
-export const LIVE_REFRESH_MS = 60_000;
+export const LIVE_REFRESH_MS = 45_000;
 export const LIVE_STATE_KEY = 'live';
 
 export type FeedCategory = 'all' | 'news' | 'recruiting' | 'portal' | 'game' | 'podcast';

@@ -1,61 +1,45 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  buildSocialLanes,
-  fetchLiveDashboard,
-  type BeatPost,
-  type LiveFeedItem,
-  type PodcastShow,
-} from '@/lib/live-api';
-import {
-  liveFeedTabPath,
-  parseLiveFeedTabFromPath,
-  type LiveFeedTab,
-} from '@/lib/vault-route-map';
+import React, { useCallback, useEffect, useState } from 'react';
+import { fetchLiveHubBundle, LIVE_HUB_REFRESH_MS, type LiveHubBundle } from '@/lib/gatornation-live-api';
+import { GNL_COPY } from '@/lib/gatornation-live-types';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
-import { BeatWriterFeed } from './BeatWriterFeed';
-import { LiveFeedHeader } from './LiveFeedHeader';
-import { LiveFeedShell, PodcastFeed } from './LiveFeedShell';
-import { LiveFeedStream } from './LiveFeedStream';
-import { PodcastsRecruitingSection } from './PodcastsRecruitingSection';
-import { LIVE_REFRESH_MS, LIVE_STATE_KEY, type FeedCategory } from './live-feed-utils';
+import { LIVE_STATE_KEY } from '@/components/vault/live/live-feed-utils';
+import { UiError } from '@/components/site/UiMessage';
+import { LiveHero } from '@/components/gatornation-live/LiveHero';
+import { LiveTicker } from '@/components/gatornation-live/LiveTicker';
+import { PodcastGrid } from '@/components/gatornation-live/PodcastGrid';
+import { RecruitingFeed } from '@/components/gatornation-live/RecruitingFeed';
+import { LivePanelsGrid } from '@/components/gatornation-live/LivePanelsGrid';
+import { RecruitingSnapshot } from '@/components/gatornation-live/RecruitingSnapshot';
+import { MovementIntelPreview } from '@/components/gatornation-live/MovementIntelPreview';
+import { LiveFooter } from '@/components/gatornation-live/LiveFooter';
 
-function liveTabToInternal(tab: LiveFeedTab): 'feed' | 'beat' | 'podcast' {
-  if (tab === 'beat') return 'beat';
-  if (tab === 'podcasts') return 'podcast';
-  return 'feed';
-}
+const EMPTY_BUNDLE: LiveHubBundle = {
+  ticker: [],
+  feed: [],
+  podcasts: [],
+  panels: { visitsNow: [], portalBuzz: [], beatWriterHighlights: [], staffNotes: [] },
+  snapshot: {
+    commits: 0,
+    nationalRank: null,
+    secRank: null,
+    blueChips: 0,
+    inStatePercent: 0,
+    momentum: 0,
+    momentumTrend: 'neutral',
+  },
+  movement: null,
+  updatedAt: null,
+};
 
-/** GatorNation Live — original ESPN row layout (crawler: gv-live-ticker, gv-live-feed__tabs, gv-live-feed__row). */
+/** GatorNation Live — premium real-time media hub. */
 export function GatorNationLivePage(): React.ReactElement {
-  const [tab, setTab] = useState<'feed' | 'beat' | 'podcast'>(() =>
-    liveTabToInternal(parseLiveFeedTabFromPath() ?? 'headlines')
-  );
-  const [category, setCategory] = useState<FeedCategory>('all');
-  const [feed, setFeed] = useState<LiveFeedItem[]>([]);
-  const [beat, setBeat] = useState<BeatPost[]>([]);
-  const [podcasts, setPodcasts] = useState<PodcastShow[]>([]);
+  const [bundle, setBundle] = useState<LiveHubBundle>(EMPTY_BUNDLE);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
 
-  useVaultPageRestore(LIVE_STATE_KEY, (saved) => {
-    if (saved.tab === 'beat' || saved.tab === 'podcast' || saved.tab === 'feed') {
-      setTab(saved.tab);
-    }
-    if (saved.filters?.category) {
-      setCategory(saved.filters.category as FeedCategory);
-    }
-  });
-
-  const persistState = useCallback(() => {
-    saveVaultPageState(LIVE_STATE_KEY, {
-      tab,
-      scrollY: window.scrollY,
-      filters: { category },
-    });
-  }, [tab, category]);
+  useVaultPageRestore(LIVE_STATE_KEY, () => {});
 
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) {
@@ -63,13 +47,9 @@ export function GatorNationLivePage(): React.ReactElement {
       setError(null);
     }
     try {
-      const dash = await fetchLiveDashboard(60);
-      setFeed(dash.feed);
-      setBeat(dash.beat.posts ?? []);
-      setPodcasts(dash.podcasts.shows ?? []);
-      setUpdatedAt(dash.updatedAt ?? new Date().toISOString());
+      setBundle(await fetchLiveHubBundle(!isInitial));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load live feed.');
+      setError(err instanceof Error ? err.message : 'Could not load GatorNation Live.');
     } finally {
       if (isInitial) setLoading(false);
     }
@@ -83,32 +63,13 @@ export function GatorNationLivePage(): React.ReactElement {
   }, []);
 
   useEffect(() => {
-    const sync = () => setTab(liveTabToInternal(parseLiveFeedTabFromPath() ?? 'headlines'));
-    sync();
-    window.addEventListener('popstate', sync);
-    return () => window.removeEventListener('popstate', sync);
-  }, []);
-
-  const selectTab = (next: LiveFeedTab) => {
-    const internal = liveTabToInternal(next);
-    setTab(internal);
-    if (typeof window !== 'undefined') {
-      window.history.replaceState(null, '', liveFeedTabPath(next));
-      saveVaultPageState(LIVE_STATE_KEY, { tab: internal, scrollY: window.scrollY, filters: { category } });
-    }
-  };
-
-  useEffect(() => {
     let cancelled = false;
     let timer: ReturnType<typeof setInterval> | undefined;
 
-    async function run(isInitial: boolean) {
-      if (cancelled) return;
-      await load(isInitial);
-    }
-
-    void run(true);
-    timer = setInterval(() => void run(false), LIVE_REFRESH_MS);
+    void load(true);
+    timer = setInterval(() => {
+      if (!cancelled) void load(false);
+    }, LIVE_HUB_REFRESH_MS);
 
     return () => {
       cancelled = true;
@@ -117,61 +78,50 @@ export function GatorNationLivePage(): React.ReactElement {
   }, [load]);
 
   useEffect(() => {
-    const onLeave = () => persistState();
-    const onHidden = () => {
-      if (document.visibilityState === 'hidden') persistState();
-    };
-    window.addEventListener('pagehide', onLeave);
-    document.addEventListener('visibilitychange', onHidden);
-    return () => {
-      window.removeEventListener('pagehide', onLeave);
-      document.removeEventListener('visibilitychange', onHidden);
-    };
-  }, [persistState]);
-
-  const socialLanes = useMemo(() => buildSocialLanes(beat), [beat]);
+    const persist = () => saveVaultPageState(LIVE_STATE_KEY, { scrollY: window.scrollY });
+    window.addEventListener('pagehide', persist);
+    return () => window.removeEventListener('pagehide', persist);
+  }, []);
 
   return (
-    <div className="gv-live-feed gv-live-feed--espn" data-testid="vault-live-feed">
-      <LiveFeedHeader feed={feed} tab={tab} updatedAt={updatedAt} onSelectTab={selectTab} />
+    <div className="gv-gnl" data-testid="vault-live-feed">
+      <LiveHero />
+      <LiveTicker items={bundle.ticker} loading={loading && !bundle.ticker.length} />
 
-      <PodcastsRecruitingSection limit={6} className="gv-vault-media-section--live" />
+      {error && !loading && (
+        <div className="gv-gnl__frame gv-gnl__section">
+          <UiError message={error} retry={() => void load(true)} backHref="/vault" backLabel="← Dashboard" />
+        </div>
+      )}
 
-      <div className="gv-live-feed__social-lanes">
-        {socialLanes.map((lane) => (
-          <section key={lane.id} className="gv-live-feed__social-lane">
-            <h2 className="gv-live-feed__social-lane-title">
-              <span aria-hidden="true">{lane.icon}</span> {lane.label}
-            </h2>
-            <ul className="gv-live-feed__list">
-              {lane.posts.slice(0, 4).map((p, i) => (
-                <li key={`${lane.id}-${i}`} className="gv-live-feed__row gv-live-feed__row--social">
-                  <span className="gv-live-feed__row-icon" aria-hidden="true">
-                    {lane.icon}
-                  </span>
-                  <div className="gv-live-feed__row-body">
-                    {p.handle && (
-                      <p className="gv-live-feed__beat-handle">@{p.handle.replace(/^@/, '')}</p>
-                    )}
-                    <p className="gv-live-feed__beat-text">{p.text?.slice(0, 160)}</p>
-                  </div>
-                </li>
-              ))}
-              {lane.posts.length === 0 && (
-                <li className="gv-live-feed__row gv-live-feed__row--empty">No posts in this lane yet.</li>
-              )}
-            </ul>
-          </section>
-        ))}
-      </div>
+      <section className="gv-gnl__section gv-gnl__frame" aria-label="Podcast hub" id="podcast-hub">
+        <h2 className="gv-gnl__section-title">{GNL_COPY.podcastHub}</h2>
+        <PodcastGrid podcasts={bundle.podcasts} />
+      </section>
 
-      <LiveFeedShell loading={loading} error={error} onRetry={() => void load(true)}>
-        {tab === 'feed' && (
-          <LiveFeedStream feed={feed} category={category} onCategoryChange={setCategory} />
+      <section className="gv-gnl__section gv-gnl__frame" aria-label="Latest recruiting updates">
+        <h2 className="gv-gnl__section-title">{GNL_COPY.recruitingFeed}</h2>
+        {loading && bundle.feed.length === 0 ? (
+          <p className="gv-gnl-status">Loading feed…</p>
+        ) : (
+          <RecruitingFeed items={bundle.feed} />
         )}
-        {tab === 'beat' && <BeatWriterFeed beat={beat} />}
-        {tab === 'podcast' && <PodcastFeed podcasts={podcasts} />}
-      </LiveFeedShell>
+      </section>
+
+      <section className="gv-gnl__section gv-gnl__frame" aria-label="Live panels">
+        <h2 className="gv-gnl__section-title">{GNL_COPY.livePanels}</h2>
+        <LivePanelsGrid panels={bundle.panels} />
+      </section>
+
+      <section className="gv-gnl__section gv-gnl__frame" aria-label="Recruiting snapshot">
+        <RecruitingSnapshot {...bundle.snapshot} />
+      </section>
+
+      <section className="gv-gnl__section gv-gnl__frame gv-gnl__section--movement" aria-label="Movement intel">
+        <MovementIntelPreview data={bundle.movement} loading={loading && !bundle.movement} />
+      </section>
+
+      <LiveFooter />
     </div>
   );
 }

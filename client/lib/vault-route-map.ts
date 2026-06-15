@@ -54,12 +54,19 @@ export const RECRUITING_TAB_PATHS: Record<RecruitingHubTab, string> = {
   rankings: '/vault/recruiting/rankings',
 };
 
+/** Alternate hub base (same tabs, different URL prefix) */
+export const RECRUITING_HUB_BASE = '/recruiting-hub';
+
 /** Legacy paths → current tab (2026 removed, heat merged into movement intel) */
 export const RECRUITING_LEGACY_PATH_ALIASES: Record<string, RecruitingHubTab> = {
   '/vault/recruiting': 'commits-2026',
   '/vault/recruiting/2026/commits': 'commits-2026',
   '/vault/recruiting/2026/targets': 'targets-2027',
   '/vault/recruiting/heat-check': 'heat-check',
+  [RECRUITING_HUB_BASE]: 'commits-2026',
+  [`${RECRUITING_HUB_BASE}/2026/commits`]: 'commits-2026',
+  [`${RECRUITING_HUB_BASE}/2026/targets`]: 'targets-2027',
+  [`${RECRUITING_HUB_BASE}/heat-check`]: 'heat-check',
 };
 
 /** Live Feed tabs */
@@ -137,6 +144,7 @@ export const LEGACY_ROUTE_REDIRECTS: { from: string; to: string }[] = [
   { from: '/futurecast/*', to: '/vault/futurecast' },
   { from: '/team.html', to: '/vault/team' },
   { from: '/recruiting.html', to: '/vault/recruiting' },
+  { from: '/recruiting-hub.html', to: '/recruiting-hub' },
   { from: '/film-room.html', to: '/vault/film-room' },
   { from: '/latest-updates.html', to: '/vault/live' },
   { from: '/portal.html', to: '/vault/recruiting/portal' },
@@ -170,9 +178,12 @@ export function parseRecruitingTabFromPath(pathname?: string): RecruitingHubTab 
     return RECRUITING_LEGACY_PATH_ALIASES[p];
   }
   for (const [tab, path] of Object.entries(RECRUITING_TAB_PATHS) as [RecruitingHubTab, string][]) {
-    if (p === path || p.startsWith(`${path}/`)) return tab;
+    const altPath = path.replace('/vault/recruiting', RECRUITING_HUB_BASE);
+    if (p === path || p.startsWith(`${path}/`) || p === altPath || p.startsWith(`${altPath}/`)) {
+      return tab;
+    }
   }
-  if (p.startsWith('/vault/recruiting/player/')) {
+  if (p.startsWith('/vault/recruiting/player/') || p.startsWith(`${RECRUITING_HUB_BASE}/player/`)) {
     return 'commits-2027';
   }
   return null;
@@ -189,12 +200,17 @@ export function resolveRecruitingTab(pathname?: string): RecruitingHubTab {
   const p = normPath(pathname ?? (typeof window !== 'undefined' ? window.location.pathname : ''));
   const fromSearch = parseRecruitingTabFromSearch();
   const fromPath = parseRecruitingTabFromPath(pathname);
-  if (p === '/vault/recruiting' && fromSearch) return fromSearch;
+  if ((p === '/vault/recruiting' || p === RECRUITING_HUB_BASE) && fromSearch) return fromSearch;
   return fromPath ?? fromSearch ?? 'commits-2026';
 }
 
-export function recruitingTabPath(tab: RecruitingHubTab): string {
-  return RECRUITING_TAB_PATHS[tab] ?? VAULT_PILLAR_ROUTES.recruiting;
+export function recruitingTabPath(tab: RecruitingHubTab, pathname?: string): string {
+  const vaultPath = RECRUITING_TAB_PATHS[tab] ?? VAULT_PILLAR_ROUTES.recruiting;
+  const p = pathname ?? (typeof window !== 'undefined' ? window.location.pathname : '');
+  if (normPath(p).startsWith(RECRUITING_HUB_BASE)) {
+    return vaultPath.replace('/vault/recruiting', RECRUITING_HUB_BASE);
+  }
+  return vaultPath;
 }
 
 export function parseLiveFeedTabFromPath(pathname?: string): LiveFeedTab | null {

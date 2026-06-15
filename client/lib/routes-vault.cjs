@@ -25,6 +25,8 @@ const PILLAR_QA = {
   '/': { testid: 'landing-page', markers: ['landing-page'] },
 };
 
+const RECRUITING_HUB_BASE = '/recruiting-hub';
+
 const RECRUITING_SUB_ROUTES = [
   '/vault/recruiting/board',
   '/vault/recruiting/priority',
@@ -36,6 +38,17 @@ const RECRUITING_SUB_ROUTES = [
   '/vault/recruiting/portal',
   '/vault/recruiting/rankings',
   '/vault/recruiting/heat-check',
+  `${RECRUITING_HUB_BASE}`,
+  `${RECRUITING_HUB_BASE}/priority`,
+  `${RECRUITING_HUB_BASE}/2027/commits`,
+  `${RECRUITING_HUB_BASE}/2027/targets`,
+  `${RECRUITING_HUB_BASE}/2028/targets`,
+  `${RECRUITING_HUB_BASE}/movement`,
+  `${RECRUITING_HUB_BASE}/scouting`,
+  `${RECRUITING_HUB_BASE}/portal`,
+  `${RECRUITING_HUB_BASE}/rankings`,
+  `${RECRUITING_HUB_BASE}/heat-check`,
+  '/gatornation-live',
 ];
 
 const PLAYER_PROFILE_ROUTES = {

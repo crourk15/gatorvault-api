@@ -5,10 +5,8 @@ import '@/lib/gatorvault-brand.css';
 import '@/lib/vault-shell.css';
 import '@/lib/vault-dashboard.css';
 import '@/lib/vault-recruiting-hub.css';
-import '@/lib/vault-gatornation-live.css';
-import '@/lib/gv-team.css';
 
-export default function VaultLayout({
+export default function RecruitingHubLayout({
   children,
 }: {
   children: React.ReactNode;
