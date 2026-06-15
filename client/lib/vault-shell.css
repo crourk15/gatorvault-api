@@ -2598,13 +2598,9 @@ a.gv-live-item__title:hover {
   gap: 3rem;
   width: max-content;
   white-space: nowrap;
-  animation: gv-ticker-scroll 14s linear infinite;
+  animation: gv-ticker-scroll 19s linear infinite;
   will-change: transform;
   transform: translateZ(0);
-}
-
-.gv-live-ticker:hover .gv-live-ticker__scroll {
-  animation-play-state: paused;
 }
 
 .gv-live-ticker__text {

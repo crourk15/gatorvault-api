@@ -280,13 +280,9 @@
   width: max-content;
   gap: var(--space-9);
   white-space: nowrap;
-  animation: gvDsTickerScroll 14s linear infinite;
+  animation: gvDsTickerScroll 19s linear infinite;
   will-change: transform;
   transform: translateZ(0);
-}
-
-.gv-ds-ticker:hover .gv-ds-ticker__track {
-  animation-play-state: paused;
 }
 
 @keyframes gvDsTickerScroll {

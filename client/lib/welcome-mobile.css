@@ -21,7 +21,15 @@
 @media (max-width: 640px) {
   .welcome-hero-premium {
     min-height: auto;
-    padding: 48px 16px 56px;
+    padding: 48px 16px 40px;
+  }
+
+  .welcome-hero-premium__ticker {
+    display: none;
+  }
+
+  .welcome-hero-premium__content {
+    padding-bottom: 0;
   }
 
   .welcome-hero-premium__headline {
@@ -63,10 +71,16 @@
 
   .pricing-grid {
     grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .pricing-card {
+    margin: 0;
   }
 
   .pricing-card.popular {
-    margin-top: 12px;
+    margin-top: 16px;
+    margin-bottom: 4px;
   }
 
   .welcome-value__grid {

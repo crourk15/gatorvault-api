@@ -94,13 +94,9 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gv-electric-blue);
-  animation: welcomeHeroTicker 14s linear infinite;
+  animation: welcomeHeroTicker 19s linear infinite;
   will-change: transform;
   transform: translateZ(0);
-}
-
-.welcome-hero-premium__ticker:hover .welcome-hero-premium__ticker-track {
-  animation-play-state: paused;
 }
 
 .welcome-hero-premium__content {
