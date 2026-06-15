@@ -5,6 +5,7 @@ import { VaultRouteGate } from '@/components/VaultRouteGate';
 import '@/lib/gv-design-system.css';
 import '@/lib/gatorvault-brand.css';
 import '@/lib/vault-shell.css';
+import '@/lib/vault-admin.css';
 import '@/lib/vault-dashboard.css';
 import '@/lib/vault-recruiting-hub.css';
 import '@/lib/recruiting-hub-premium.css';

@@ -196,8 +196,6 @@
 /admin-ops/articles/*  /admin-ops-article-view.html  200
 /admin/ops/articles/*  /admin-ops-article-view.html  200
 /vault/ops  /admin.html  200
-/vault/admin  /admin.html  200
-/vault/admin/*  /admin.html  200
 /admin/self-runner  /admin-self-runner.html  200
 /admin/recruiting-board  /admin.html  200
 /admin/recruiting  /admin.html  200

@@ -36,6 +36,7 @@ import { RecruitingHubTools } from '@/components/vault/recruiting/RecruitingHubT
 import {
   RecruitingHubHeadlinerCommit,
   pickHeadlinerCommit,
+  filterCommitsWithoutHeadliner,
 } from '@/components/vault/recruiting/RecruitingHubHeadlinerCommit';
 import { normalizePercent } from '@/lib/futurecast-elite-metrics';
 
@@ -265,10 +266,10 @@ export function VaultRecruitingHubPage(): React.ReactElement {
   );
 
   const headliner = useMemo(() => pickHeadlinerCommit(b27.commits), [b27.commits]);
-  const commitsWithoutHeadliner = useMemo(() => {
-    if (!headliner) return b27.commits;
-    return b27.commits.filter((p) => p.slug !== headliner.slug);
-  }, [b27.commits, headliner]);
+  const commitsWithoutHeadliner = useMemo(
+    () => filterCommitsWithoutHeadliner(b27.commits, headliner),
+    [b27.commits, headliner]
+  );
 
   const enrichPlayer = (p: RecruitingBoardPlayer) => ({
     ...p,

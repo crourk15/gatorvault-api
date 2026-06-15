@@ -162,6 +162,7 @@ const REQUIRED_VAULT_EXPORTS = [
   'vault/live-feed/index.html',
   'vault/film-room/index.html',
   'vault/schedule/index.html',
+  'vault/admin/index.html',
 ];
 
 function routeToExport(routePath) {

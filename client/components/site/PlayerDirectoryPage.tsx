@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import '@/lib/vault-shell.css';
+import '@/lib/player-directory-premium.css';
 import { fetchBigBoard, type BigBoardLifecycle, type BigBoardPlayer, type BigBoardSort } from '@/lib/big-board-api';
 import { fromBigBoard } from '@/lib/recruiting-card-adapters';
 import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';

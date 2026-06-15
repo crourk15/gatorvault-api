@@ -142,7 +142,8 @@ async function main() {
       skinny: r.skinny || `${r.pos} · ${r.stars}★ · ${r.school}`,
       profileNote: r.name === 'Maxwell Hiller'
         ? 'The #3 player in the country at any position. Landing Hiller gives this class an elite anchor along the interior offensive line.'
-        : ''
+        : '',
+      headliner: r.name === 'Maxwell Hiller',
     });
   }
 

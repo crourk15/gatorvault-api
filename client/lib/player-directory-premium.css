@@ -1,12 +1,14 @@
 /* Player Directory — premium card polish */
 
 .gv-player-dir .gv-rb-grid {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: var(--space-5, 20px);
 }
 
 .gv-player-dir .gv-rb-card--classic {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(77, 163, 255, 0.12);
+  border-left-width: 4px;
   transition: box-shadow 180ms ease-out, border-color 180ms ease-out, transform 180ms ease-out;
 }
 
@@ -18,7 +20,13 @@
   transform: translateY(-2px);
 }
 
+.gv-player-dir .gv-rb-card__link {
+  padding: 1.25rem 1.375rem;
+}
+
 .gv-player-dir .gv-rb-card__name {
+  font-family: Oswald, Inter, sans-serif;
+  font-size: 1.125rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: #fff;
@@ -31,65 +39,26 @@
   border: 1px solid rgba(77, 163, 255, 0.35);
 }
 
+.gv-player-dir .gv-rb-card__rating-badge {
+  box-shadow: 0 0 16px rgba(0, 48, 135, 0.25);
+}
+
+.gv-player-dir .gv-rb-card__rating-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
 .gv-player-dir .gv-rb-card__stars {
   font-size: 0.95rem;
   filter: drop-shadow(0 0 6px rgba(255, 214, 0, 0.35));
 }
 
-.gv-podcast-episode__hero {
-  position: relative;
+.gv-player-dir .gv-rb-card__school {
+  font-size: 0.8125rem;
+  line-height: 1.45;
 }
 
-.gv-podcast-episode__badge {
-  display: inline-block;
-  margin-bottom: var(--space-3, 12px);
-  padding: 0.35rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.6875rem;
+.gv-player-dir .gv-page-section__title {
+  font-family: Oswald, Inter, sans-serif;
   font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: rgba(250, 70, 22, 0.15);
-  border: 1px solid rgba(250, 70, 22, 0.4);
-  color: var(--gv-gator-orange, #fa4616);
-}
-
-.gv-podcast-episode__player {
-  display: grid;
-  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
-  gap: var(--space-6, 24px);
-  padding: var(--space-6, 24px);
-  max-width: 720px;
-}
-
-.gv-podcast-episode__art {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.gv-podcast-episode__show {
-  margin: 0 0 var(--space-2, 8px);
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--gv-gator-orange, #fa4616);
-}
-
-.gv-podcast-episode__desc {
-  margin: 0 0 var(--space-5, 20px);
-  color: var(--gv-body-text, #d0d8e0);
-  line-height: 1.5;
-}
-
-.gv-podcast-episode__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3, 12px);
-}
-
-@media (max-width: 640px) {
-  .gv-podcast-episode__player {
-    grid-template-columns: 1fr;
-  }
 }
