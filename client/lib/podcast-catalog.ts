@@ -1,6 +1,6 @@
 /**
  * Canonical podcast metadata — logo paths and host names for Podcast Hub surfaces.
- * Drop PNG assets at /public/images/podcasts/*.png (SVG fallbacks ship until then).
+ * PNG assets at /public/images/podcasts/*.png are synced from each show's RSS/Apple artwork.
  */
 
 export type PodcastCatalogEntry = {
