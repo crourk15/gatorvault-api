@@ -16,7 +16,11 @@ This directory includes:
 - `/gradients/` — Swamp Night, Blue Glow, Orange Fireline  
 - `/logo-lockups/` — Horizontal, vertical, badge, and social lockups  
 - `/social-kit/` — Twitter/X headers, profile icons, badges  
-- `/press-kit/` — Press release, brand overview, launch campaign, content calendar  
+- `/press-kit/` — Press release, brand overview, launch campaign, content calendar, assets  
+- `/insider-badges/` — 5-level badge system and usage rules  
+- `/marketing/` — Launch email sequence  
+- `/ads-kit/` — Paid social and YouTube ad copy  
+- `/website/` — Landing page wireframe  
 - `/usage-guidelines.md` — Rules for logo, color, and typography usage  
 - `/components/` — UI component references (buttons, cards, tabs, meters)
 

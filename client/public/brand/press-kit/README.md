@@ -10,8 +10,8 @@ Included:
 - [Social launch campaign](./social-launch-campaign.md)
 - [30-day content calendar](./content-calendar.md)
 - [Tagline library](./taglines.md)
-- Logo assets (SVG + PNG) — see [`/brand/logos/`](../logos/) and [`/brand/social-kit/`](../social-kit/)
-- Insider badge system — see [`/brand/badges/`](../badges/)
+- [Press kit assets](./assets/) — logos, badges, dashboard screenshots, social PNGs, textures
+- Insider badge system — see [`/brand/insider-badges/`](../insider-badges/) and [`/brand/badges/`](../badges/)
 
 For media inquiries:  
 **press@gatorvault.com**
