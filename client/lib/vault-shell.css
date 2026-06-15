@@ -2530,9 +2530,24 @@ a.gv-live-item__title:hover {
 
 .gv-live-ticker__track {
   flex: 1;
-  display: flex;
   overflow: hidden;
+  display: flex;
   align-items: center;
+  min-width: 0;
+}
+
+.gv-live-ticker__scroll {
+  display: flex;
+  gap: 3rem;
+  width: max-content;
+  white-space: nowrap;
+  animation: gv-ticker-scroll 14s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.gv-live-ticker:hover .gv-live-ticker__scroll {
+  animation-play-state: paused;
 }
 
 .gv-live-ticker__text {
@@ -2541,11 +2556,6 @@ a.gv-live-item__title:hover {
   font-size: 0.75rem;
   font-weight: 700;
   color: #fff;
-  animation: gv-ticker-scroll 14s ease-out infinite;
-}
-
-.gv-live-ticker:hover .gv-live-ticker__text {
-  animation-play-state: paused;
 }
 
 @keyframes gv-ticker-scroll {
@@ -2553,7 +2563,7 @@ a.gv-live-item__title:hover {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
 

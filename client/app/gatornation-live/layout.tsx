@@ -5,6 +5,7 @@ import '@/lib/gatorvault-brand.css';
 import '@/lib/vault-shell.css';
 import '@/lib/vault-dashboard.css';
 import '@/lib/vault-gatornation-live.css';
+import '@/lib/media-card.css';
 
 export default function GatorNationLiveLayout({
   children,

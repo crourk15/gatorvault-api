@@ -9,6 +9,7 @@ import '@/lib/vault-recruiting-hub.css';
 import '@/lib/vault-gatornation-live.css';
 import '@/lib/vault-team-hub.css';
 import '@/lib/gv-team.css';
+import '@/lib/media-card.css';
 
 export default function VaultLayout({
   children,

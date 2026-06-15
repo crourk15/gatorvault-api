@@ -358,8 +358,12 @@
 
 .gv-dash-ticker__track {
   display: flex;
+  gap: 3rem;
   width: max-content;
-  animation: gv-dash-ticker-scroll 14s ease-out infinite;
+  white-space: nowrap;
+  animation: gv-dash-ticker-scroll 14s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .gv-dash-ticker:hover .gv-dash-ticker__track {
@@ -682,6 +686,15 @@
 
 .gv-dash-content__row:last-child {
   border-bottom: none;
+}
+
+.gv-dash-content__row--media {
+  display: block;
+  padding: 0.65rem 0;
+}
+
+.gv-dash-content__row--media .media-card {
+  width: 100%;
 }
 
 .gv-dash-content__thumb {

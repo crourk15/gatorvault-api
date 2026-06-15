@@ -10,9 +10,9 @@ type Props = {
 
 export function PodcastGrid({ podcasts }: Props): React.ReactElement {
   return (
-    <div className="gv-gnl-podcast-grid" data-testid="gnl-podcast-grid">
+    <div className="podcast-grid gv-gnl-podcast-grid" data-testid="gnl-podcast-grid">
       {podcasts.map((pod, idx) => (
-        <PodcastCard key={`${pod.title}_${idx}`} {...pod} />
+        <PodcastCard key={`${pod.id ?? pod.title}_${idx}`} {...pod} />
       ))}
     </div>
   );

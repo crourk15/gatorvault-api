@@ -1,0 +1,88 @@
+/* Unified media card — Podcast Hub, GatorNation Live, Dashboard */
+.media-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #0d1b2a;
+  border: 1px solid #1b263b;
+  text-decoration: none;
+  color: #fff;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.media-card:hover {
+  border-color: rgba(250, 70, 22, 0.45);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.media-card-image {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.media-card--podcast .media-card-image {
+  width: 72px;
+  height: 72px;
+}
+
+.media-card-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.media-card-title {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.media-card-subtitle {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #a5b4c3;
+  line-height: 1.4;
+}
+
+.media-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+}
+
+.media-card-link {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid #1b263b;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  text-decoration: none;
+}
+
+.media-card-link:hover {
+  border-color: var(--gv-orange, #fa4616);
+  color: var(--gv-orange, #fa4616);
+}
+
+.podcast-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .podcast-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
