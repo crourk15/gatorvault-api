@@ -1,0 +1,242 @@
+/* Recruiting Hub — premium dashboard modules */
+
+.gv-rh-premium-hero {
+  position: relative;
+  padding: var(--space-9, 48px) 0;
+  overflow: hidden;
+}
+
+.gv-rh-premium-hero__bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(165deg, #001a33 0%, #002b4f 55%, #001225 100%);
+}
+
+.gv-rh-premium-hero__lights {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 220, 120, 0.1) 0, transparent 7%),
+    radial-gradient(circle at 50% 6%, rgba(255, 255, 255, 0.06) 0, transparent 11%);
+  pointer-events: none;
+}
+
+.gv-rh-premium-hero__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+}
+
+.gv-rh-premium-hero__title {
+  margin: 0;
+  font-family: Oswald, Inter, sans-serif;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.gv-rh-premium-hero__sub {
+  margin: var(--space-3, 12px) 0 0;
+  font-size: 1.05rem;
+  color: var(--gv-body-text, #d0d8e0);
+}
+
+.gv-rh-premium-hero__cta {
+  margin-top: var(--space-6, 24px);
+}
+
+.gv-rh-modules {
+  padding: var(--space-7, 32px) 0;
+}
+
+.gv-rh-modules__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-6, 24px);
+}
+
+@media (max-width: 1024px) {
+  .gv-rh-modules__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .gv-rh-modules__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gv-rh-module {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: var(--space-5, 20px);
+}
+
+.gv-rh-module__icon {
+  font-size: 1.5rem;
+  margin-bottom: var(--space-3, 12px);
+}
+
+.gv-rh-module__title {
+  margin: 0 0 var(--space-2, 8px);
+  font-family: Oswald, Inter, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.gv-rh-module__desc {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--gv-body-text, #d0d8e0);
+  line-height: 1.45;
+}
+
+.gv-rh-class {
+  padding: var(--space-7, 32px) 0;
+  background: rgba(0, 26, 51, 0.35);
+}
+
+.gv-rh-class__header {
+  margin-bottom: var(--space-5, 20px);
+}
+
+.gv-rh-class__title {
+  margin: 0 0 var(--space-2, 8px);
+  font-family: Oswald, Inter, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.gv-rh-class__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4, 16px);
+  margin-top: var(--space-5, 20px);
+}
+
+@media (max-width: 640px) {
+  .gv-rh-class__stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gv-rh-class-stat {
+  padding: var(--space-4, 16px);
+  text-align: center;
+}
+
+.gv-rh-class-stat__value {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--gv-gator-orange, #fa4616);
+}
+
+.gv-rh-class-stat__label {
+  margin: var(--space-1, 4px) 0 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gv-body-text, #d0d8e0);
+}
+
+.gv-rh-intel {
+  padding: var(--space-7, 32px) 0;
+}
+
+.gv-rh-intel__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-4, 16px);
+}
+
+.gv-rh-intel-card {
+  padding: var(--space-4, 16px);
+}
+
+.gv-rh-intel-tag {
+  display: inline-block;
+  margin-bottom: var(--space-2, 8px);
+  padding: var(--space-1, 4px) var(--space-2, 8px);
+  border-radius: 6px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.gv-rh-intel-tag--hot {
+  background: rgba(250, 70, 22, 0.2);
+  color: var(--gv-gator-orange, #fa4616);
+}
+
+.gv-rh-intel-tag--warm {
+  background: rgba(255, 214, 0, 0.15);
+  color: var(--gv-warning-yellow, #ffd600);
+}
+
+.gv-rh-intel-tag--watch {
+  background: rgba(77, 163, 255, 0.15);
+  color: var(--gv-electric-blue, #4da3ff);
+}
+
+.gv-rh-intel-tag--cold {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--gv-body-text, #d0d8e0);
+}
+
+.gv-rh-intel-card__title {
+  margin: 0 0 var(--space-2, 8px);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.gv-rh-intel-card__body {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--gv-body-text, #d0d8e0);
+  line-height: 1.45;
+}
+
+.gv-rh-tools {
+  padding: var(--space-7, 32px) 0 var(--space-9, 48px);
+}
+
+.gv-rh-tools__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-6, 24px);
+}
+
+.gv-rh-tool {
+  padding: var(--space-5, 20px);
+}
+
+.gv-rh-tool__title {
+  margin: 0 0 var(--space-2, 8px);
+  font-family: Oswald, Inter, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.gv-rh-tool__desc {
+  margin: 0 0 var(--space-4, 16px);
+  font-size: 0.9rem;
+  color: var(--gv-body-text, #d0d8e0);
+}
+
+.gv-rh-section-heading {
+  margin: 0 0 var(--space-5, 20px);
+  font-family: Oswald, Inter, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+}

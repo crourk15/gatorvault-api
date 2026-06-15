@@ -22,9 +22,9 @@ const REACT_LANDING_MARKERS = [
 
 /** Welcome A/B page export (canonical landing at /welcome/). */
 const WELCOME_LANDING_MARKERS = [
-  'app/welcome/page',
-  '/_next/static/',
   'data-testid="welcome-page"',
+  '/_next/static/',
+  'js/vault-chunks/r-welcome-page',
 ];
 
 function isReactMarketingIndex(html) {

@@ -6,6 +6,7 @@ import { GNL_COPY } from '@/lib/gatornation-live-types';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
 import { LIVE_STATE_KEY } from '@/components/vault/live/live-feed-utils';
 import { UiError } from '@/components/site/UiMessage';
+import { Button } from '@/components/ui';
 import { GNLHero, buildGNLHeroEpisode } from '@/components/gatornation-live/GNLHero';
 import { LiveTicker } from '@/components/gatornation-live/LiveTicker';
 import { LivePanel } from '@/components/gatornation-live/LivePanel';
@@ -102,28 +103,35 @@ export function GatorNationLivePage(): React.ReactElement {
         </div>
       )}
 
-      <section className="gv-gnl__section gv-gnl__frame" aria-label="Latest headlines">
-        <h2 className="gv-gnl__section-title">Latest Headlines</h2>
-        {loading && bundle.feed.length === 0 ? (
-          <p className="gv-gnl-status">Loading feed…</p>
-        ) : (
-          <RecruitingFeed items={bundle.feed} />
-        )}
-      </section>
+      <section className="gv-gnl__tri-column gv-gnl__frame gv-gnl__section" aria-label="Live content">
+        <div className="gv-gnl__tri-col">
+          <h2 className="gv-gnl__section-title">Latest Headlines</h2>
+          {loading && bundle.feed.length === 0 ? (
+            <p className="gv-gnl-status">Loading feed…</p>
+          ) : (
+            <RecruitingFeed items={bundle.feed} />
+          )}
+        </div>
 
-      <section className="gv-gnl__section gv-gnl__frame" aria-label="Beat writers">
-        <LivePanel
-          title={GNL_COPY.panels.beat.title}
-          description={GNL_COPY.panels.beat.description}
-          items={bundle.panels.beatWriterHighlights}
-        />
-      </section>
+        <div className="gv-gnl__tri-col">
+          <LivePanel
+            title={GNL_COPY.panels.beat.title}
+            description={GNL_COPY.panels.beat.description}
+            items={bundle.panels.beatWriterHighlights}
+          />
+          <div className="gv-gnl__tri-col-cta">
+            <Button href="/gatornation-live" variant="secondary">
+              View All Beat Writers
+            </Button>
+          </div>
+        </div>
 
-      <section className="gv-gnl__section gv-gnl__frame" aria-label="Recruiting intel">
-        <h2 className="gv-gnl__section-title">Recruiting Intel</h2>
-        <RecruitingSnapshot {...bundle.snapshot} />
-        <div className="gv-gnl__section--movement">
-          <MovementIntelPreview data={bundle.movement} loading={loading && !bundle.movement} />
+        <div className="gv-gnl__tri-col">
+          <h2 className="gv-gnl__section-title">Recruiting Intel</h2>
+          <RecruitingSnapshot {...bundle.snapshot} />
+          <div className="gv-gnl__section--movement">
+            <MovementIntelPreview data={bundle.movement} loading={loading && !bundle.movement} />
+          </div>
         </div>
       </section>
 

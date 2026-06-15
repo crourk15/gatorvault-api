@@ -13,10 +13,10 @@ export function FooterCTA(): React.ReactElement {
         <h2>{title}</h2>
         <p>{subtitle}</p>
         <div className="welcome-hero-cta welcome-hero-cta--center">
-          <a href={WELCOME_LINKS.join} className="welcome-cta-primary">
+          <a href={WELCOME_LINKS.join} className="gv-ds-btn gv-ds-btn--primary">
             {ctas.primary}
           </a>
-          <a href={WELCOME_LINKS.join} className="welcome-cta-secondary">
+          <a href={WELCOME_LINKS.insider} className="gv-ds-btn gv-ds-btn--secondary">
             {ctas.secondary}
           </a>
         </div>

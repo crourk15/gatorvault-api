@@ -1,15 +1,15 @@
 /* GatorNation Live — real-time media hub */
 
 .gv-gnl {
-  --gnl-navy: #0f172a;
-  --gnl-orange: #f97316;
-  --gnl-blue: #1d4ed8;
-  --gnl-green: #4ade80;
+  --gnl-navy: var(--gv-deep-navy, #0a1a2f);
+  --gnl-orange: var(--gv-gator-orange, #fa4616);
+  --gnl-blue: var(--gv-uf-blue, #003087);
+  --gnl-green: var(--gv-swamp-green, #00c853);
   --gnl-red: #ff4d4d;
-  --gnl-yellow: #facc15;
+  --gnl-yellow: var(--gv-warning-yellow, #ffd600);
   --gnl-purple: #a855f7;
-  --gnl-card: #020617;
-  --gnl-border: #1e293b;
+  --gnl-card: var(--gv-deep-navy, #0a1a2f);
+  --gnl-border: var(--gv-steel-blue, #1b3a57);
   --gnl-radius: 0.75rem;
   --gnl-pill: 9999px;
   --gnl-frame-max: 1280px;
@@ -60,10 +60,34 @@
 }
 
 .gv-gnl__section-title {
+  font-family: Oswald, Inter, sans-serif;
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 800;
   margin: 0 0 1rem;
   letter-spacing: -0.02em;
+}
+
+/* 3-column content grid */
+.gv-gnl__tri-column {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-6, 24px);
+  align-items: start;
+}
+
+.gv-gnl__tri-col {
+  min-width: 0;
+}
+
+.gv-gnl__tri-col-cta {
+  margin-top: var(--space-4, 16px);
+}
+
+@media (max-width: 1024px) {
+  .gv-gnl__tri-column {
+    grid-template-columns: 1fr;
+    gap: var(--space-7, 32px);
+  }
 }
 
 /* Hero */

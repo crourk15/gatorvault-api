@@ -1,14 +1,16 @@
 .fvi-section {
-  padding: 48px 24px;
+  padding: 56px 24px;
   text-align: center;
-  background: #0d1b2a;
+  background: #001a33;
 }
 
 .fvi-section h2 {
   margin: 0;
+  font-family: Oswald, Inter, sans-serif;
   font-size: clamp(1.5rem, 2.5vw, 2rem);
   font-weight: 800;
-  color: #e8f1ff;
+  letter-spacing: -0.02em;
+  color: #fff;
 }
 
 .fvi-table {
@@ -24,16 +26,17 @@
   grid-template-columns: 2fr 1fr 1fr;
   gap: 8px;
   padding: 12px;
-  background: #11253a;
-  border: 1px solid #1b3a57;
+  background: var(--gv-deep-navy, #0a1a2f);
+  border: 1px solid var(--gv-steel-blue, #1b3a57);
   border-radius: 8px;
-  color: white;
+  color: #fff;
   text-align: left;
   align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .fvi-header {
-  background: #1b3a57;
+  background: var(--gv-steel-blue, #1b3a57);
   font-weight: bold;
 }
 
@@ -41,34 +44,17 @@
   margin-top: 24px;
   display: inline-block;
   padding: 12px 24px;
-  background: #ff7a00;
+  background: var(--gv-gator-orange, #fa4616);
   color: white;
   border-radius: 8px;
   text-decoration: none;
   font-weight: bold;
+  transition: transform 180ms ease-out, filter 180ms ease-out;
 }
 
 .fvi-cta:hover {
   filter: brightness(1.08);
-}
-
-.welcome-bright .fvi-section {
-  background: #e8eef8;
-}
-
-.welcome-bright .fvi-section h2 {
-  color: #0b1b33;
-}
-
-.welcome-bright .fvi-header,
-.welcome-bright .fvi-row {
-  background: #fff;
-  border-color: #c5d4e8;
-  color: #0b1b33;
-}
-
-.welcome-bright .fvi-header {
-  background: #dbe4f0;
+  transform: scale(1.02);
 }
 
 @media (max-width: 640px) {
