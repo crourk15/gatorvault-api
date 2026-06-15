@@ -958,8 +958,9 @@
 }
 
 .gv-rh-hub .gv-dash-movement .gv-dash__frame {
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  overflow: visible;
 }
 
 .gv-rh-movement-wrap {

@@ -16,6 +16,8 @@ export function VaultRouteGate(): null {
 
   React.useEffect(() => {
     if (!ready) return;
+    const p = pathname.replace(/\/$/, '') || '/';
+    if (p.startsWith('/join') || p.startsWith('/insider') || p.startsWith('/welcome')) return;
     const dest = vaultGateRedirect(pathname, !!user?.email);
     if (dest) window.location.replace(dest);
   }, [pathname, ready, user?.email]);

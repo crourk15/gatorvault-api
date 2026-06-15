@@ -39,8 +39,9 @@ export function JoinPage(): React.ReactElement {
     setTier(tierFromQuery());
     const params = new URLSearchParams(window.location.search);
     if (params.get('mode') === 'signin') setMode('signin');
+    if (params.get('reauth') === '1') return;
     const existing = loadSession();
-    if (existing?.email) {
+    if (existing?.email && existing?.token) {
       redirectAfterAuth();
     }
   }, []);

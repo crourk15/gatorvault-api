@@ -123,6 +123,13 @@
   color: #fff;
 }
 
+.gv-headliner-card__role {
+  margin: 0 0 var(--space-4, 16px);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gv-electric-blue, #4da3ff);
+}
+
 .gv-headliner-card__badges {
   display: flex;
   flex-wrap: wrap;
@@ -148,6 +155,12 @@
 
 .gv-headliner-card__badge--stars {
   color: #fbbf24;
+}
+
+.gv-headliner-card__badge--commit {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #86efac;
 }
 
 .gv-headliner-card__meta,

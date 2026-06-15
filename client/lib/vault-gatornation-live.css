@@ -269,8 +269,13 @@
   width: max-content;
   white-space: nowrap;
   animation: gv-gnl-ticker-scroll 14s linear infinite;
+  animation-play-state: paused;
   will-change: transform;
   transform: translateZ(0);
+}
+
+.gv-gnl-ticker.is-ready .gv-gnl-ticker__track {
+  animation-play-state: running;
 }
 
 .gv-gnl-ticker:hover .gv-gnl-ticker__track {
@@ -680,8 +685,9 @@
 }
 
 .gv-gnl .gv-dash-movement .gv-dash__frame {
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  overflow: visible;
 }
 
 /* Footer */

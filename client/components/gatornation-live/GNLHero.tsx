@@ -72,7 +72,7 @@ export function buildGNLHeroEpisode(
   });
 
   const slug = featured?.id ?? catalog?.id ?? 'gators-breakdown';
-  const playUrl = `/vault/podcast/${slug}`;
+  const playUrl = `/vault/podcast/${slug}/`;
   const showName = catalog?.name ?? featured?.title ?? 'GatorNation Live';
   const title = featured?.title ?? showName;
 

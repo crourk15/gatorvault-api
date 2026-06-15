@@ -115,6 +115,63 @@
   color: #fa4616;
 }
 
+.gv-vault-shell__nav-link--admin {
+  border: 1px solid rgba(250, 70, 22, 0.35);
+  background: rgba(250, 70, 22, 0.08);
+}
+
+.gv-vault-shell__nav-link--admin.is-active,
+.gv-vault-shell__nav-link--admin:hover {
+  background: rgba(250, 70, 22, 0.18);
+  color: #fa4616;
+}
+
+.gv-vault-shell__skeleton {
+  display: grid;
+  gap: 0.85rem;
+  padding: 0.5rem 0;
+  animation: gv-vault-shell-pulse 1.2s ease-in-out infinite;
+}
+
+.gv-vault-shell__skeleton-bar {
+  height: 1.25rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.gv-vault-shell__skeleton-bar--short {
+  width: 55%;
+}
+
+.gv-vault-shell__skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.gv-vault-shell__skeleton-card {
+  min-height: 120px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+@keyframes gv-vault-shell-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+
+@media (max-width: 768px) {
+  .gv-vault-shell__skeleton-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .gv-vault-shell__main {
   padding: 1.25rem 1.5rem 2rem;
   max-width: none;

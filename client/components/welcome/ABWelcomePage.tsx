@@ -12,35 +12,24 @@ function pickVariant(): Variant {
   return Math.random() < 0.5 ? 'A' : 'B';
 }
 
+/** A/B wrapper — both variants share the same layout; avoid hydration swap flicker. */
 export function ABWelcomePage(): React.ReactElement {
   const [variant, setVariant] = useState<Variant>('A');
-  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setHydrated(true);
-
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored === 'A' || stored === 'B') {
-        if (stored !== 'A') {
-          setVariant(stored);
-        }
+        setVariant(stored);
         return;
       }
-
       const picked = pickVariant();
       localStorage.setItem(STORAGE_KEY, picked);
-      if (picked !== 'A') {
-        setVariant(picked);
-      }
+      setVariant(picked);
     } catch {
-      // localStorage blocked — keep SSR default (A).
+      /* localStorage blocked — keep default A */
     }
   }, []);
 
-  if (!hydrated) {
-    return <WelcomeA />;
-  }
-
-  return variant === 'A' ? <WelcomeA /> : <WelcomeB />;
+  return variant === 'B' ? <WelcomeB /> : <WelcomeA />;
 }

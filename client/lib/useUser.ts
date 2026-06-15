@@ -13,8 +13,17 @@ export function useUser(): {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setUser(loadSession());
-    setReady(true);
+    const sync = () => {
+      setUser(loadSession());
+      setReady(true);
+    };
+    sync();
+    window.addEventListener('storage', sync);
+    window.addEventListener('gv-auth-changed', sync);
+    return () => {
+      window.removeEventListener('storage', sync);
+      window.removeEventListener('gv-auth-changed', sync);
+    };
   }, []);
 
   return {
