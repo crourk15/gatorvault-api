@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-15T17:00:37.823Z",
+  "updatedAt": "2026-06-15T17:31:51.084Z",
   "api": {
     "service": "render",
     "timestamp": "2026-06-12T03:22:29.088Z",
@@ -22,13 +22,14 @@
   "lastGuardianCheck": {
     "ok": true,
     "phase": "pre",
-    "checkedAt": "2026-06-15T17:00:37.822Z",
+    "checkedAt": "2026-06-15T17:31:51.082Z",
     "errors": []
   },
   "lastFailedCheck": {
     "type": "guardian-pre",
-    "at": "2026-06-15T14:04:13.968Z",
+    "at": "2026-06-15T17:29:04.955Z",
     "errors": [
+      "[routing] welcome/index.html is not a valid Welcome page export",
       "[routing] welcome/index.html is not a valid Welcome page export"
     ]
   },

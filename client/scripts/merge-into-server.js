@@ -17,6 +17,8 @@ const REQUIRED_EXPORTS = [
   ...vaultMap.REQUIRED_VAULT_EXPORTS,
   'welcome/index.html',
   'insider/index.html',
+  'gatornation-live/index.html',
+  'recruiting-hub/index.html',
   'directory/index.html',
   'scouting/reports/index.html',
   'scouting/queue/index.html',
@@ -59,6 +61,10 @@ const REQUIRED_EXPORTS = [
 
 const CHUNK_VERIFY_HTML = [
   'index.html',
+  'welcome/index.html',
+  'insider/index.html',
+  'gatornation-live/index.html',
+  'recruiting-hub/index.html',
   ...vaultMap.REQUIRED_VAULT_EXPORTS.filter((p) => p.endsWith('.html')),
 ];
 

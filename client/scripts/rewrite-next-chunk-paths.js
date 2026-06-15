@@ -128,7 +128,23 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
     }
   }
 
-  const htmlRoots = ['join', 'vault', 'futurecast', 'player', 'players', 'portal', 'recruiting-board', 'scouting', 'alerts', 'staff'];
+  const htmlRoots = [
+    'welcome',
+    'insider',
+    'gatornation-live',
+    'recruiting-hub',
+    'directory',
+    'join',
+    'vault',
+    'futurecast',
+    'player',
+    'players',
+    'portal',
+    'recruiting-board',
+    'scouting',
+    'alerts',
+    'staff',
+  ];
   for (const root of htmlRoots) {
     const target = path.join(serverDir, root);
     if (!fs.existsSync(target)) continue;
