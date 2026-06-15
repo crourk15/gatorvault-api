@@ -51,6 +51,7 @@ export function consumeVaultPageState(pageKey: string): VaultPageState | null {
 
 export function prefetchVaultHref(href: string): void {
   if (typeof window === 'undefined' || !href.startsWith('/vault')) return;
+  if (/\/player\/|\/podcast\/|\/players\//.test(href)) return;
   const existing = document.querySelector(`link[rel="prefetch"][href="${href}"]`);
   if (existing) return;
   const link = document.createElement('link');

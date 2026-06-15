@@ -3,6 +3,7 @@
 import React from 'react';
 import type { LiveTickerProps, TickerTag } from '@/lib/gatornation-live-types';
 import { tickerTagEmoji } from '@/lib/gatornation-live-api';
+import { useHydrated } from '@/hooks/useHydrated';
 
 const TAG_CLASS: Record<TickerTag, string> = {
   BREAKING: 'breaking',
@@ -53,10 +54,15 @@ function TickerTrack({ items }: { items: LiveTickerProps['items'] }): React.Reac
 }
 
 export function LiveTicker({ items }: LiveTickerProps): React.ReactElement {
+  const hydrated = useHydrated();
   const display = items.length ? items : FIRST_PAINT_FALLBACK;
 
   return (
-    <section className="gv-gnl-ticker" aria-label="Live ticker" data-testid="gnl-ticker">
+    <section
+      className={`gv-gnl-ticker${hydrated ? ' is-ready' : ''}`}
+      aria-label="Live ticker"
+      data-testid="gnl-ticker"
+    >
       <span className="gv-gnl-ticker__live-badge" aria-hidden="true">
         LIVE
       </span>

@@ -493,6 +493,8 @@
   align-items: flex-end;
   height: 80px;
   margin: 0.75rem 0;
+  padding: 0 0.35rem;
+  overflow: visible;
 }
 
 .gv-dash-sparkline__bar {

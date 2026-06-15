@@ -6,6 +6,7 @@ import '@/lib/pricing-section.css';
 
 const TIERS = [
   {
+    id: 'locker' as const,
     name: 'Locker Room',
     price: '$4.99 / month',
     features: [
@@ -17,6 +18,7 @@ const TIERS = [
     popular: false,
   },
   {
+    id: 'film' as const,
     name: 'Film Room',
     price: '$9.99 / month',
     features: [
@@ -28,6 +30,7 @@ const TIERS = [
     popular: true,
   },
   {
+    id: 'war' as const,
     name: 'War Room',
     price: '$19.99 / month',
     features: [
@@ -56,7 +59,7 @@ export function PricingSection(): React.ReactElement {
                 <li key={feature}>✓ {feature}</li>
               ))}
             </ul>
-            <Link href="/insider" className="pricing-cta">
+            <Link href={`/join?tier=${tier.id}`} className="pricing-cta">
               Join Now
             </Link>
           </div>

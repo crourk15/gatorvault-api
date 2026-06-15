@@ -33,6 +33,7 @@ export function saveSession(session: AuthSession): void {
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    window.dispatchEvent(new CustomEvent('gv-auth-changed'));
   } catch {
     /* ignore */
   }
@@ -42,6 +43,7 @@ export function clearSession(): void {
   if (typeof window === 'undefined') return;
   try {
     localStorage.removeItem(SESSION_KEY);
+    window.dispatchEvent(new CustomEvent('gv-auth-changed'));
   } catch {
     /* ignore */
   }

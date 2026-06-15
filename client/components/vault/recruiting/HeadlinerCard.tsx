@@ -70,8 +70,13 @@ export function HeadlinerCard({ player }: Props): React.ReactElement {
       <div className="gv-headliner-card__body">
         <HeadlinerPhoto player={player} />
         <div className="gv-headliner-card__content">
-          <span className="gv-headliner-card__eyebrow">Class of {classYear} · Headliner</span>
+          <span className="gv-headliner-card__eyebrow">Class of {classYear} · Headliner Commit</span>
           <h2 className="gv-headliner-card__name">{player.name}</h2>
+          <p className="gv-headliner-card__role">
+            {pos}
+            {player.school ? ` · ${player.school}` : ''}
+            {player.state ? ` · ${player.state}` : ''}
+          </p>
           <div className="gv-headliner-card__badges">
             {natl != null ? (
               <span className="gv-headliner-card__badge gv-headliner-card__badge--natl">
@@ -87,6 +92,7 @@ export function HeadlinerCard({ player }: Props): React.ReactElement {
                 {starsDisplay(player.stars)}
               </span>
             ) : null}
+            <span className="gv-headliner-card__badge gv-headliner-card__badge--commit">Committed</span>
           </div>
           <p className="gv-headliner-card__meta">
             {player.htWt ? `${player.htWt} · ` : ''}

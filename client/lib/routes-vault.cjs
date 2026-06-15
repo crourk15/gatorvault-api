@@ -129,16 +129,19 @@ function subRouteRewrites(prefix, exportPath) {
 const FUTURECAST_SUB_ROUTES = ['trending', 'movement', 'stock', 'snapshots', 'alerts', 'staff'];
 
 const VAULT_REACT_REWRITES = [
+  // Dynamic profile + podcast routes MUST precede parent wildcards (Netlify first-match).
+  { from: '/vault/recruiting/player/*', to: '/vault/recruiting/player/index.html', status: 200 },
+  { from: '/vault/futurecast/player/*', to: '/vault/futurecast/player/index.html', status: 200 },
+  { from: '/vault/players/*', to: '/vault/players/index.html', status: 200 },
+  { from: '/vault/podcast/*', to: '/vault/podcast/:splat/index.html', status: 200 },
+  ...subRouteRewrites('/vault/admin', '/vault/admin/index.html'),
   ...subRouteRewrites('/vault/recruiting/board', '/vault/recruiting/board/index.html'),
-  ...subRouteRewrites('/vault/recruiting', '/vault/recruiting/index.html'),
   ...FUTURECAST_SUB_ROUTES.flatMap((sub) =>
     subRouteRewrites(`/vault/futurecast/${sub}`, `/vault/futurecast/${sub}/index.html`)
   ),
   ...subRouteRewrites('/vault/futurecast', '/vault/futurecast/index.html'),
-  { from: '/vault/futurecast/player/*', to: '/vault/futurecast/player/index.html', status: 200 },
-  { from: '/vault/recruiting/player/*', to: '/vault/recruiting/player/index.html', status: 200 },
+  ...subRouteRewrites('/vault/recruiting', '/vault/recruiting/index.html'),
   ...subRouteRewrites('/vault/team', '/vault/team/index.html'),
-  { from: '/vault/players/*', to: '/vault/players/index.html', status: 200 },
   ...subRouteRewrites('/vault/live', '/vault/live/index.html'),
   ...subRouteRewrites('/vault/live-feed', '/vault/live/index.html'),
   ...subRouteRewrites('/vault/film-room', '/vault/film-room/index.html'),
@@ -163,6 +166,7 @@ const REQUIRED_VAULT_EXPORTS = [
   'vault/film-room/index.html',
   'vault/schedule/index.html',
   'vault/admin/index.html',
+  'vault/podcast/gators-breakdown/index.html',
 ];
 
 function routeToExport(routePath) {

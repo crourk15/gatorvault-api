@@ -80,7 +80,7 @@ function RecruitCardInner({
       />
       {elite && <span className="gv-rh-elite-card__elite-badge">Elite</span>}
 
-      <div className="gv-rh-elite-card__link">
+      <a href={href} className="gv-rh-elite-card__link">
         <div className={`gv-rh-elite-card__aside${elite ? '' : ' gv-rh-elite-card__aside--compact'}`}>
           {elite && (
             <div className="gv-rh-elite-card__visual">
@@ -178,11 +178,9 @@ function RecruitCardInner({
             )}
           </div>
 
-          <a href={href} className="gv-btn gv-btn--secondary gv-rh-elite-card__profile-btn">
-            View Profile
-          </a>
+          <span className="gv-btn gv-btn--secondary gv-rh-elite-card__profile-btn">View Profile</span>
         </div>
-      </div>
+      </a>
     </article>
   );
 }

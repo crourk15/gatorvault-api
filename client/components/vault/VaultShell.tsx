@@ -2,9 +2,12 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { usePathname } from '@/lib/use-pathname';
-import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath } from '@/lib/vault-routes';
+import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath, type VaultSectionId } from '@/lib/vault-routes';
 import { prefetchVaultHref } from '@/lib/vault-navigation';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
+import { useUser } from '@/hooks/useUser';
+import { isVaultAdmin } from '@/lib/admin-access';
+import { useHydrated } from '@/hooks/useHydrated';
 
 function sidebarActive(pathname: string, href: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
@@ -66,6 +69,20 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
   const pathname = usePathname();
   const [navOpen, setNavOpen] = useState(false);
   const inVault = isVaultPath(pathname);
+  const hydrated = useHydrated();
+  const { user, ready: authReady } = useUser();
+  const adminUser = authReady && isVaultAdmin(user);
+
+  const adminNavItem = {
+    id: 'admin' as VaultSectionId,
+    label: 'Admin Console',
+    href: '/vault/admin',
+    icon: '🔐',
+  };
+  const coreNav = adminUser ? [adminNavItem, ...VAULT_PILLARS] : VAULT_PILLARS;
+  const secondaryNav = adminUser
+    ? VAULT_SECONDARY.filter((item) => item.id !== 'admin')
+    : VAULT_SECONDARY;
 
   const toggleNav = useCallback(() => setNavOpen((v) => !v), []);
   const closeNav = useCallback(() => setNavOpen(false), []);
@@ -117,20 +134,20 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
         >
           <p className="gv-vault-shell__sidebar-label">Core</p>
           <ul className="gv-vault-shell__nav">
-            {VAULT_PILLARS.map((item) => (
+            {coreNav.map((item) => (
               <li key={item.id}>
                 <NavLink
                   item={item}
                   pathname={pathname}
                   onClick={closeNav}
-                  className="gv-vault-shell__nav-link"
+                  className={`gv-vault-shell__nav-link${item.id === 'admin' ? ' gv-vault-shell__nav-link--admin' : ''}`}
                 />
               </li>
             ))}
           </ul>
           <p className="gv-vault-shell__sidebar-label gv-vault-shell__sidebar-label--secondary">More</p>
           <ul className="gv-vault-shell__nav">
-            {VAULT_SECONDARY.map((item) => (
+            {secondaryNav.map((item) => (
               <li key={item.id}>
                 <NavLink
                   item={item}
@@ -142,7 +159,21 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
             ))}
           </ul>
         </aside>
-        <main className="gv-vault-shell__main">{children}</main>
+        <main className="gv-vault-shell__main">
+          {!hydrated ? (
+            <div className="gv-vault-shell__skeleton" aria-busy="true" aria-label="Loading vault">
+              <div className="gv-vault-shell__skeleton-bar" />
+              <div className="gv-vault-shell__skeleton-bar gv-vault-shell__skeleton-bar--short" />
+              <div className="gv-vault-shell__skeleton-grid">
+                <div className="gv-vault-shell__skeleton-card" />
+                <div className="gv-vault-shell__skeleton-card" />
+                <div className="gv-vault-shell__skeleton-card" />
+              </div>
+            </div>
+          ) : (
+            children
+          )}
+        </main>
       </div>
       <nav className="gv-vault-bottom-nav" aria-label="Vault quick navigation">
         {VAULT_BOTTOM_NAV.map((item) => (
