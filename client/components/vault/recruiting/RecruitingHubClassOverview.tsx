@@ -50,7 +50,7 @@ export function RecruitingHubClassOverview({ b26, b27, b28 }: Props): React.Reac
     { label: 'Prior SEC Rank', value: '—' },
     { label: 'Blue Chips', value: String(blueChipCount(commits)) },
     { label: 'In-State %', value: inStatePct(commits) },
-    { label: 'Head Coach', value: 'Billy Napier' },
+    { label: 'Head Coach', value: 'Sumrall', sub: 'Jon Sumrall' },
   ];
 
   return (
@@ -63,6 +63,9 @@ export function RecruitingHubClassOverview({ b26, b27, b28 }: Props): React.Reac
         {stats.map((stat) => (
           <article key={stat.label} className="gv-ds-card gv-rh-class-stat">
             <p className="gv-rh-class-stat__value">{stat.value}</p>
+            {'sub' in stat && stat.sub ? (
+              <p className="gv-rh-class-stat__sub">{stat.sub}</p>
+            ) : null}
             <p className="gv-rh-class-stat__label">{stat.label}</p>
           </article>
         ))}

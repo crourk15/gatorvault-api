@@ -12,13 +12,20 @@ const TAG_CLASS: Record<TickerTag, string> = {
   RUMOR: 'rumor',
 };
 
-const FALLBACK: LiveTickerProps['items'] = [
+const FIRST_PAINT_FALLBACK: LiveTickerProps['items'] = [
   {
     type: 'BREAKING',
     text: 'GatorNation Live — recruiting, portal, and beat writers updating all day',
     timestamp: new Date().toISOString(),
     source: 'GatorVault',
     url: '/vault/live',
+  },
+  {
+    type: 'COMMIT',
+    text: 'Florida recruiting board updating in real time — commits, visits, and portal intel',
+    timestamp: new Date().toISOString(),
+    source: 'GatorVault',
+    url: '/vault/recruiting',
   },
 ];
 
@@ -45,8 +52,8 @@ function TickerTrack({ items }: { items: LiveTickerProps['items'] }): React.Reac
   );
 }
 
-export function LiveTicker({ items, loading }: LiveTickerProps): React.ReactElement {
-  const display = items.length ? items : FALLBACK;
+export function LiveTicker({ items }: LiveTickerProps): React.ReactElement {
+  const display = items.length ? items : FIRST_PAINT_FALLBACK;
 
   return (
     <section className="gv-gnl-ticker" aria-label="Live ticker" data-testid="gnl-ticker">

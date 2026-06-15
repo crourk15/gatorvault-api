@@ -34,9 +34,10 @@ import { RecruitingHubClassOverview } from '@/components/vault/recruiting/Recrui
 import { RecruitingHubLatestIntel } from '@/components/vault/recruiting/RecruitingHubLatestIntel';
 import { RecruitingHubTools } from '@/components/vault/recruiting/RecruitingHubTools';
 import {
-  RecruitingHubHeadlinerCommit,
+  HeadlinerCard,
   pickHeadlinerCommit,
-} from '@/components/vault/recruiting/RecruitingHubHeadlinerCommit';
+  filterCommitsWithoutHeadliner,
+} from '@/components/vault/recruiting/HeadlinerCard';
 import { normalizePercent } from '@/lib/futurecast-elite-metrics';
 
 function rankCommits(list: RecruitingBoardPlayer[]): RecruitingBoardPlayer[] {
@@ -265,10 +266,10 @@ export function VaultRecruitingHubPage(): React.ReactElement {
   );
 
   const headliner = useMemo(() => pickHeadlinerCommit(b27.commits), [b27.commits]);
-  const commitsWithoutHeadliner = useMemo(() => {
-    if (!headliner) return b27.commits;
-    return b27.commits.filter((p) => p.slug !== headliner.slug);
-  }, [b27.commits, headliner]);
+  const commitsWithoutHeadliner = useMemo(
+    () => filterCommitsWithoutHeadliner(b27.commits, headliner),
+    [b27.commits, headliner]
+  );
 
   const enrichPlayer = (p: RecruitingBoardPlayer) => ({
     ...p,
@@ -342,7 +343,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
 
         {showContent && tab === 'commits-2027' && (
           <>
-            {headliner ? <RecruitingHubHeadlinerCommit player={headliner} /> : null}
+            {headliner ? <HeadlinerCard player={headliner} /> : null}
             {renderGrid(commitsWithoutHeadliner, 'commit', 'No 2027 commits yet.')}
           </>
         )}

@@ -37,11 +37,18 @@ export function WelcomeHero(): React.ReactElement {
       <div className="welcome-hero-premium__motion" aria-hidden="true" />
       <HeroTicker />
       <div className="welcome-hero-premium__content">
-        <h1 className="welcome-hero-premium__headline">The Home of Florida Recruiting Intel</h1>
-        <p className="welcome-hero-premium__subheadline">Built for Gator Nation.</p>
+        <h1 className="welcome-hero-premium__headline">
+          Built for Gator Nation — The all-in-one hub for Florida Gators news, recruiting, film, and
+          insider intel.
+        </h1>
+        <p className="welcome-hero-premium__subheadline">
+          Everything Florida fans care about — recruiting movement, verified intel, class rankings,
+          film breakdowns, and real-time updates — all in one place, built with purpose and built for
+          you.
+        </p>
         <div className="welcome-hero-premium__actions">
           <Link href={WELCOME_LINKS.insider} className="gv-ds-btn gv-ds-btn--primary">
-            Become an Insider
+            Become an Insider →
           </Link>
           <Link href={WELCOME_LINKS.join} className="gv-ds-btn gv-ds-btn--secondary">
             Start Free

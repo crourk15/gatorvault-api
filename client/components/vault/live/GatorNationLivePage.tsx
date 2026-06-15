@@ -85,7 +85,7 @@ export function GatorNationLivePage(): React.ReactElement {
   }, []);
 
   const heroEpisode = useMemo(
-    () => buildGNLHeroEpisode(bundle.feed, bundle.podcasts, '/vault/live'),
+    () => buildGNLHeroEpisode(bundle.feed, bundle.podcasts),
     [bundle.feed, bundle.podcasts]
   );
 
@@ -114,24 +114,24 @@ export function GatorNationLivePage(): React.ReactElement {
         </div>
 
         <div className="gv-gnl__tri-col">
-          <BeatWriterCardGrid
-            title={GNL_COPY.panels.beat.title}
-            description={GNL_COPY.panels.beat.description}
-            items={bundle.panels.beatWriterHighlights}
-          />
-          <div className="gv-gnl__tri-col-cta">
-            <Button href="/vault/live" variant="secondary">
-              View All Beat Writers
-            </Button>
-          </div>
-        </div>
-
-        <div className="gv-gnl__tri-col">
           <h2 className="gv-gnl__section-title">Recruiting Intel</h2>
           <RecruitingSnapshot {...bundle.snapshot} />
           <div className="gv-gnl__section--movement">
             <MovementIntelPreview data={bundle.movement} loading={loading && !bundle.movement} />
           </div>
+        </div>
+      </section>
+
+      <section className="gv-gnl__beat-section gv-gnl__frame gv-gnl__section" aria-label="Beat writer highlights">
+        <BeatWriterCardGrid
+          title={GNL_COPY.panels.beat.title}
+          description={GNL_COPY.panels.beat.description}
+          items={bundle.panels.beatWriterHighlights}
+        />
+        <div className="gv-gnl__tri-col-cta">
+          <Button href="/vault/live#beat-writers" variant="secondary">
+            View All Beat Writers
+          </Button>
         </div>
       </section>
 

@@ -127,8 +127,6 @@ const ADMIN_AND_LEGACY_HTML = [
   { from: '/admin-ops/articles/*', to: '/admin-ops-article-view.html', status: 200 },
   { from: '/admin/ops/articles/*', to: '/admin-ops-article-view.html', status: 200 },
   { from: '/vault/ops', to: '/admin.html', status: 200 },
-  { from: '/vault/admin', to: '/admin.html', status: 200 },
-  { from: '/vault/admin/*', to: '/admin.html', status: 200 },
   { from: '/admin/self-runner', to: '/admin-self-runner.html', status: 200 },
   { from: '/admin/recruiting-board', to: '/admin.html', status: 200 },
   { from: '/admin/recruiting', to: '/admin.html', status: 200 },

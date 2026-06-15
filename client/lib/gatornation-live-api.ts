@@ -223,9 +223,7 @@ export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> 
   const beat = dash?.beat?.posts ?? [];
   const now = new Date().toISOString();
 
-  const ticker: LiveTickerItem[] = (tickerRes?.items ?? [])
-    .filter((item) => !isExcludedLiveFeedItem({ title: item.text, type: item.category }))
-    .map((item) => ({
+  const ticker: LiveTickerItem[] = (tickerRes?.items ?? []).map((item) => ({
     type: mapTickerTag(item.category, item.text),
     text: item.text,
     timestamp: tickerRes?.updatedAt || now,

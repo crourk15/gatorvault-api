@@ -1,0 +1,180 @@
+/* HeadlinerCard — premium class headliner hero */
+
+.gv-headliner-card {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--space-6, 24px);
+  border-radius: 14px;
+  border: 1px solid rgba(77, 163, 255, 0.2);
+  background: linear-gradient(135deg, rgba(0, 48, 135, 0.65) 0%, rgba(10, 26, 47, 0.98) 55%, rgba(10, 26, 47, 1) 100%);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(250, 70, 22, 0.08);
+  transition: box-shadow 220ms ease-out;
+}
+
+.gv-headliner-card:hover {
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.5),
+    0 0 32px rgba(250, 70, 22, 0.12),
+    0 0 0 1px rgba(250, 70, 22, 0.2);
+}
+
+.gv-headliner-card__accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--gv-gator-orange, #fa4616), #ffd600, var(--gv-gator-orange, #fa4616));
+  z-index: 2;
+}
+
+.gv-headliner-card__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 85% 20%, rgba(250, 70, 22, 0.12) 0, transparent 45%);
+  pointer-events: none;
+}
+
+.gv-headliner-card__body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+  gap: var(--space-7, 32px);
+  padding: var(--space-8, 40px);
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .gv-headliner-card__body {
+    grid-template-columns: 1fr;
+    padding: var(--space-6, 24px);
+  }
+}
+
+.gv-headliner-card__photo {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(77, 163, 255, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  background: rgba(0, 48, 135, 0.35);
+}
+
+.gv-headliner-card__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gv-headliner-card__photo--fallback {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(160deg, rgba(0, 48, 135, 0.55), rgba(10, 26, 47, 0.95));
+}
+
+.gv-headliner-card__monogram {
+  font-family: Oswald, Inter, sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  color: #fff;
+  opacity: 0.9;
+}
+
+.gv-headliner-card__photo-pos {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.gv-headliner-card__content {
+  min-width: 0;
+}
+
+.gv-headliner-card__eyebrow {
+  display: inline-block;
+  margin-bottom: var(--space-2, 8px);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gv-gator-orange, #fa4616);
+}
+
+.gv-headliner-card__name {
+  margin: 0 0 var(--space-3, 12px);
+  font-family: Oswald, Inter, sans-serif;
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.05;
+  color: #fff;
+}
+
+.gv-headliner-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 8px);
+  margin-bottom: var(--space-4, 16px);
+}
+
+.gv-headliner-card__badge {
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.gv-headliner-card__badge--natl {
+  background: rgba(250, 70, 22, 0.15);
+  border-color: rgba(250, 70, 22, 0.35);
+  color: var(--gv-gator-orange, #fa4616);
+}
+
+.gv-headliner-card__badge--stars {
+  color: #fbbf24;
+}
+
+.gv-headliner-card__meta,
+.gv-headliner-card__school,
+.gv-headliner-card__ranks,
+.gv-headliner-card__commit {
+  margin: var(--space-2, 8px) 0 0;
+  font-size: 0.875rem;
+  color: var(--gv-body-text, #d0d8e0);
+}
+
+.gv-headliner-card__school {
+  font-weight: 600;
+  color: #fff;
+}
+
+.gv-headliner-card__quote {
+  margin: var(--space-4, 16px) 0;
+  padding: var(--space-4, 16px) var(--space-5, 20px);
+  border-left: 3px solid var(--gv-gator-orange, #fa4616);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.9375rem;
+  font-style: italic;
+  line-height: 1.55;
+  color: #fff;
+}
+
+.gv-headliner-card .gv-ds-btn {
+  margin-top: var(--space-4, 16px);
+}

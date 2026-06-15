@@ -6,7 +6,7 @@ const pages = [
   '/vault/live/',
   '/vault/schedule/',
   '/vault/recruiting/',
-  '/vault/admin',
+  '/vault/admin/',
   '/vault/podcast/gators-breakdown/',
   '/vault/players/',
 ];

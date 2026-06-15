@@ -1,95 +1,130 @@
-/* Player Directory — premium card polish */
+/* PlayerDirectoryCard — premium recruiting cards */
 
-.gv-player-dir .gv-rb-grid {
+.gv-player-dir .gv-pdir-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: var(--space-5, 20px);
 }
 
-.gv-player-dir .gv-rb-card--classic {
+.gv-pdir-card {
+  border-radius: 12px;
+  border: 1px solid rgba(0, 48, 135, 0.45);
+  border-left: 4px solid var(--gv-uf-blue, #003087);
+  background: linear-gradient(180deg, rgba(10, 22, 40, 0.98) 0%, rgba(10, 26, 47, 1) 100%);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(77, 163, 255, 0.12);
   transition: box-shadow 180ms ease-out, border-color 180ms ease-out, transform 180ms ease-out;
 }
 
-.gv-player-dir .gv-rb-card--classic:hover {
-  box-shadow:
-    0 8px 28px rgba(250, 70, 22, 0.18),
-    0 4px 16px rgba(0, 0, 0, 0.4);
+.gv-pdir-card:hover {
   border-color: rgba(250, 70, 22, 0.35);
-  transform: translateY(-2px);
+  box-shadow:
+    0 10px 32px rgba(250, 70, 22, 0.15),
+    0 4px 16px rgba(0, 0, 0, 0.4);
+  transform: scale(1.02);
 }
 
-.gv-player-dir .gv-rb-card__name {
-  font-weight: 800;
+.gv-pdir-card__link {
+  display: block;
+  padding: 16px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.gv-pdir-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.gv-pdir-card__name {
+  margin: 0;
+  font-family: Oswald, Inter, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
   letter-spacing: -0.02em;
   color: #fff;
-  text-shadow: 0 0 12px rgba(0, 48, 135, 0.25);
+  line-height: 1.15;
 }
 
-.gv-player-dir .gv-rb-card__pos-pill {
-  font-weight: 700;
-  background: rgba(0, 48, 135, 0.35);
+.gv-pdir-card__badge-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.gv-pdir-card__pos {
+  display: inline-flex;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(0, 48, 135, 0.45);
   border: 1px solid rgba(77, 163, 255, 0.35);
+  color: #fff;
 }
 
-.gv-player-dir .gv-rb-card__stars {
-  font-size: 0.95rem;
+.gv-pdir-card__stars {
+  font-size: 0.875rem;
+  color: #fbbf24;
   filter: drop-shadow(0 0 6px rgba(255, 214, 0, 0.35));
 }
 
-.gv-podcast-episode__hero {
-  position: relative;
+.gv-pdir-card__rating-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-.gv-podcast-episode__badge {
-  display: inline-block;
-  margin-bottom: var(--space-3, 12px);
-  padding: 0.35rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.6875rem;
+.gv-pdir-card__composite {
+  font-family: Oswald, Inter, sans-serif;
+  font-size: 1.75rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: rgba(250, 70, 22, 0.15);
-  border: 1px solid rgba(250, 70, 22, 0.4);
-  color: var(--gv-gator-orange, #fa4616);
+  color: #fff;
+  line-height: 1;
 }
 
-.gv-podcast-episode__player {
-  display: grid;
-  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
-  gap: var(--space-6, 24px);
-  padding: var(--space-6, 24px);
-  max-width: 720px;
-}
-
-.gv-podcast-episode__art {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.gv-podcast-episode__show {
-  margin: 0 0 var(--space-2, 8px);
-  font-size: 0.875rem;
+.gv-pdir-card__composite-label {
+  font-size: 0.6875rem;
   font-weight: 700;
-  color: var(--gv-gator-orange, #fa4616);
-}
-
-.gv-podcast-episode__desc {
-  margin: 0 0 var(--space-5, 20px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--gv-body-text, #d0d8e0);
-  line-height: 1.5;
 }
 
-.gv-podcast-episode__actions {
+.gv-pdir-card__ranks {
+  margin: 0 0 12px;
+  font-size: 0.8125rem;
+  color: var(--gv-body-text, #d0d8e0);
+}
+
+.gv-pdir-card__metrics {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3, 12px);
+  gap: 10px;
 }
 
-@media (max-width: 640px) {
-  .gv-podcast-episode__player {
-    grid-template-columns: 1fr;
-  }
+.gv-pdir-card__metric {
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: var(--gv-body-text, #d0d8e0);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gv-pdir-card__metric strong {
+  color: #fff;
+  font-weight: 800;
+}
+
+.gv-player-dir .gv-page-section__title {
+  font-family: Oswald, Inter, sans-serif;
+  font-weight: 800;
 }
