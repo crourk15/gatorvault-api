@@ -189,8 +189,10 @@
     align-items: stretch;
   }
 
+  .welcome-hero-premium__actions .gv-ds-btn,
   .welcome-hero-premium__actions .gv-btn-primary,
   .welcome-hero-premium__actions .gv-btn-secondary {
     width: 100%;
+    min-height: 48px;
   }
 }

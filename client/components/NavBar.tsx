@@ -30,6 +30,12 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
     setMenuOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.body.classList.toggle('gv-nav-menu-open', menuOpen);
+    return () => document.body.classList.remove('gv-nav-menu-open');
+  }, [menuOpen]);
+
   const linkClass = (id: string) =>
     `gv-site-nav__link gv-nav-premium__link${current === id ? ' is-active' : ''}`;
 
