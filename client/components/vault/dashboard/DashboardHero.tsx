@@ -3,6 +3,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import type { HotCarouselItem, TickerResponse } from '@/lib/vault-dashboard-api';
 import { GV_COPY } from '@/lib/gatorvault-copy';
+import { GatorVaultMonogram } from '@/components/brand/GatorVaultWordmark';
+import { InsiderBadge } from '@/components/brand/InsiderBadge';
+import { badgeLevelForTier, type InsiderBadgeLevel } from '@/lib/gatorvault-brand-assets';
+import { loadSession } from '@/lib/auth-api';
 
 type Props = {
   ticker: TickerResponse | null;
@@ -20,6 +24,12 @@ export function DashboardHero({
   loading,
 }: Props): React.ReactElement {
   const [slide, setSlide] = useState(0);
+  const [badgeLevel, setBadgeLevel] = useState<InsiderBadgeLevel>(3);
+
+  useEffect(() => {
+    const session = loadSession();
+    setBadgeLevel(badgeLevelForTier(session?.tier));
+  }, []);
 
   const hot = useMemo(() => {
     if (!ticker) return [];
@@ -72,7 +82,11 @@ export function DashboardHero({
       <div className="gv-dash__frame gv-dash-hero__inner">
         <div className="gv-dash-hero__split">
           <div className="gv-dash-hero__left">
-            <p className="gv-dash-hero__brand">🐊 {GV_COPY.brand.insider.toUpperCase()}</p>
+            <div className="gv-dash-hero__brand-row">
+              <GatorVaultMonogram height={36} className="gv-dash-hero__monogram" />
+              <InsiderBadge level={badgeLevel} size={36} className="gv-dash-hero__badge" />
+              <span className="gv-dash-hero__brand">{GV_COPY.brand.insider.toUpperCase()}</span>
+            </div>
             <p className="gv-dash-hero__story-label">{GV_COPY.headlines.heroStoryline.toUpperCase()}</p>
             <p className="gv-dash-hero__storyline">&ldquo;{storyline}&rdquo;</p>
 

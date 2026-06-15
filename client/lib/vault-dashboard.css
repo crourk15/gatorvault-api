@@ -155,14 +155,21 @@
   gap: 1rem;
 }
 
+.gv-dash-hero__brand-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.25rem;
+  animation: gv-dash-slide-up 250ms 200ms ease-out both;
+}
+
 .gv-dash-hero__brand {
-  font-family: 'Oswald', sans-serif;
-  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: var(--gv-orange);
   margin: 0;
-  animation: gv-dash-slide-up 250ms 200ms ease-out both;
 }
 
 .gv-dash-hero__story-label {

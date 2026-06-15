@@ -283,3 +283,38 @@
   font-size: 0.875rem;
   font-weight: 600;
 }
+
+/* ── Logo system ── */
+.gv-brand-wordmark,
+.gv-vault-shell__wordmark,
+.gv-site-header__wordmark {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.gv-brand-monogram,
+.gv-brand-badge {
+  display: block;
+  flex-shrink: 0;
+}
+
+.gv-vault-shell__wordmark {
+  max-height: 28px;
+  width: auto;
+}
+
+.gv-site-header__wordmark {
+  max-height: 30px;
+  width: auto;
+}
+
+@media (max-width: 480px) {
+  .gv-vault-shell__wordmark {
+    max-height: 22px;
+  }
+
+  .gv-site-header__wordmark {
+    max-height: 24px;
+  }
+}

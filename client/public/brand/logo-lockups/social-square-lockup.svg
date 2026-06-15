@@ -1,0 +1,9 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GatorVault social lockup">
+  <rect width="400" height="400" rx="40" fill="#0A0F1A"/>
+  <rect x="152" y="48" width="96" height="96" rx="16" fill="#0021A5"/>
+  <path d="M176 72h48v12h-36v12h24v12h-36v12h36v12h-48V72z" fill="#FA4616"/>
+  <text x="40" y="220" font-family="Inter, sans-serif" font-weight="800" font-size="36" fill="#FFFFFF">GATOR</text>
+  <text x="168" y="220" font-family="Inter, sans-serif" font-weight="800" font-size="36" fill="#FFFFFF">VAULT</text>
+  <rect x="168" y="228" width="120" height="5" fill="#FA4616" rx="2.5"/>
+  <text x="200" y="280" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="14" fill="#A7B0C0">INSIDER</text>
+</svg>

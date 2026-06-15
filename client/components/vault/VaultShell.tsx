@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { usePathname } from '@/lib/use-pathname';
 import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath } from '@/lib/vault-routes';
 import { prefetchVaultHref } from '@/lib/vault-navigation';
+import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 
 function sidebarActive(pathname: string, href: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
@@ -93,8 +94,7 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
             ☰
           </button>
           <a href={inVault ? '/vault' : '/'} className="gv-vault-shell__brand">
-            <span>🐊</span>
-            <span>GatorVault</span>
+            <GatorVaultWordmark height={28} className="gv-vault-shell__wordmark" />
           </a>
         </div>
       </header>

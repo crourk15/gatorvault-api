@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { usePathname } from '@/lib/use-pathname';
 import { loadSession } from '@/lib/auth-api';
+import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 
 const LINKS = [
   { id: 'home', href: '/', label: 'Home' },
@@ -40,8 +41,7 @@ export function GatorVaultSiteNav({ marketing = false }: { marketing?: boolean }
     <header className={`gv-site-header${marketing ? ' gv-site-header--marketing' : ''}`}>
       <div className="gv-site-header__inner">
         <a href="/" className="gv-site-header__brand">
-          <span className="gv-site-header__brand-mark">🐊</span>
-          <span className="gv-site-header__brand-text">GatorVault</span>
+          <GatorVaultWordmark height={30} className="gv-site-header__wordmark" />
         </a>
         <nav className="gv-site-nav" aria-label="Main">
           {LINKS.map((link) => (
