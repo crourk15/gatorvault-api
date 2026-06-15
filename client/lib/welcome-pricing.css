@@ -1,0 +1,126 @@
+/* Welcome pricing — shared across A/B variants */
+
+.welcome-pricing {
+  padding: 3rem 1.5rem;
+  background: #0d1b2a;
+}
+
+.welcome-pricing__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.welcome-pricing__title {
+  margin: 0;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 800;
+  color: #e8f1ff;
+}
+
+.welcome-pricing__subtitle {
+  margin: 0.75rem 0 0;
+  color: #9bb7d6;
+  font-size: 1.05rem;
+}
+
+.welcome-pricing__grid {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.welcome-pricing__card {
+  position: relative;
+  background: #11253a;
+  border: 1px solid #1b3a57;
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: #e8f1ff;
+  text-align: left;
+}
+
+.welcome-pricing__card--popular {
+  border-color: #ff7a21;
+  box-shadow: 0 0 12px rgba(255, 122, 33, 0.35);
+}
+
+.welcome-pricing__badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff7a21;
+  color: #fff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.welcome-pricing__name {
+  margin: 0.5rem 0 0;
+  font-size: 1.25rem;
+}
+
+.welcome-pricing__price {
+  margin: 0.75rem 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ff7a21;
+}
+
+.welcome-pricing__features {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+  color: #c5d7ef;
+  font-size: 0.95rem;
+}
+
+.welcome-pricing__cta {
+  display: inline-block;
+  margin-top: 1.25rem;
+  padding: 0.65rem 1.25rem;
+  background: #ff7a21;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.welcome-pricing__cta:hover {
+  filter: brightness(1.08);
+}
+
+.welcome-bright .welcome-pricing {
+  background: #e8eef8;
+}
+
+.welcome-bright .welcome-pricing__title {
+  color: #0b1b33;
+}
+
+.welcome-bright .welcome-pricing__subtitle {
+  color: #4a607a;
+}
+
+.welcome-bright .welcome-pricing__card {
+  background: #fff;
+  border-color: #c5d4e8;
+  color: #0b1b33;
+}
+
+.welcome-bright .welcome-pricing__features {
+  color: #4a607a;
+}
+
+@media (max-width: 640px) {
+  .welcome-pricing {
+    padding: 2.5rem 1rem;
+  }
+}

@@ -88,6 +88,7 @@ export function PlayerProfilePage({
           return;
         }
         if (result.kind !== 'futurecast') {
+          setError('Player profile is not available on this route.');
           return;
         }
         const bundle = result.bundle;

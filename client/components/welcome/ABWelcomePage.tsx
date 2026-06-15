@@ -13,23 +13,37 @@ function pickVariant(): Variant {
 }
 
 export function ABWelcomePage(): React.ReactElement {
-  // SSR/static export must render real content — never gate on client-only state.
+  // SSR/static export always renders variant A — never gate on client-only state.
   const [variant, setVariant] = useState<Variant>('A');
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    setHydrated(true);
+
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored === 'A' || stored === 'B') {
-        setVariant(stored);
+        // Only switch if different from SSR default — prevents hydration flicker.
+        if (stored !== 'A') {
+          setVariant(stored);
+        }
         return;
       }
+
       const picked = pickVariant();
       localStorage.setItem(STORAGE_KEY, picked);
-      setVariant(picked);
+      if (picked !== 'A') {
+        setVariant(picked);
+      }
     } catch {
       // localStorage blocked — keep SSR default (A).
     }
   }, []);
+
+  // Match SSR markup until hydration completes.
+  if (!hydrated) {
+    return <WelcomeA />;
+  }
 
   return variant === 'A' ? <WelcomeA /> : <WelcomeB />;
 }

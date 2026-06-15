@@ -4,6 +4,7 @@ import React from 'react';
 import { welcomeContent } from './content';
 import { WELCOME_LINKS, welcomeCardHref } from './links';
 import { InsiderComparisonTable } from '@/components/InsiderComparisonTable';
+import { PricingSection } from '@/components/welcome/PricingSection';
 import { WelcomeStickyCTA } from './FooterCTA';
 
 type SectionContent = {
@@ -30,6 +31,7 @@ export function WelcomeB(): React.ReactElement {
       <SectionBright id="recruiting-preview" content={sections.hub} />
       <SectionBright id="film-preview" content={sections.filmRoom} />
       <SectionBright id="insider-preview" content={sections.insider} />
+      <PricingSection />
       <InsiderComparisonTable />
       <FooterBright content={sections.footer} />
       <WelcomeStickyCTA />

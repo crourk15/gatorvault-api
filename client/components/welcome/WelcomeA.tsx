@@ -10,6 +10,7 @@ import {
 } from './WelcomePreviewSection';
 import { FooterCTA, WelcomeStickyCTA } from './FooterCTA';
 import { InsiderComparisonTable } from '@/components/InsiderComparisonTable';
+import { PricingSection } from '@/components/welcome/PricingSection';
 
 /** Variant A — cinematic Swamp Night Elite theme. */
 export function WelcomeA(): React.ReactElement {
@@ -20,6 +21,7 @@ export function WelcomeA(): React.ReactElement {
       <RecruitingHubPreview />
       <FilmRoomPreview />
       <InsiderBenefits />
+      <PricingSection />
       <InsiderComparisonTable />
       <FooterCTA />
       <WelcomeStickyCTA />

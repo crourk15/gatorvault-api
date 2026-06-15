@@ -5,15 +5,15 @@ import Link from 'next/link';
 import { WELCOME_LINKS } from '@/components/welcome/links';
 
 const ROWS = [
-  { feature: 'FutureCast Trending', free: 'Limited', insider: 'Full Access' },
-  { feature: 'Movement Intel', free: 'Blurred', insider: 'Full Access' },
-  { feature: 'Staff Notes', free: '3 blurred notes', insider: 'All notes + confidence' },
-  { feature: 'UF % (Likelihood)', free: 'Top 3 only', insider: 'All recruits' },
-  { feature: 'Fit % (Scheme Match)', free: 'Hidden', insider: 'Full Access' },
-  { feature: 'Priority Score (Importance)', free: 'Hidden', insider: 'Full Access' },
-  { feature: 'Portal Tracker', free: 'Limited', insider: 'Full Access' },
-  { feature: 'Film Room', free: 'Highlights only', insider: 'Cut-ups + evaluations' },
-  { feature: 'Live Updates', free: 'No', insider: 'Yes' },
+  { feature: 'Recruiting Hub', free: 'Limited', insider: 'Full access' },
+  { feature: 'Player Profiles', free: 'Limited', insider: 'Full access' },
+  { feature: 'Live Feed', free: 'Read-only', insider: 'Full Insider feed' },
+  { feature: 'FutureCast', free: 'Locked', insider: 'Full predictions' },
+  { feature: 'Film Room', free: 'Locked', insider: 'Full breakdowns' },
+  { feature: 'War Room Intel', free: 'No', insider: 'Yes' },
+  { feature: 'Insider Chat', free: 'No', insider: 'Yes' },
+  { feature: 'NIL Tracker', free: 'Limited', insider: 'Full access' },
+  { feature: 'Portal Tracker', free: 'Limited', insider: 'Full access' },
 ] as const;
 
 export function InsiderComparisonTable(): React.ReactElement {
@@ -41,8 +41,8 @@ export function InsiderComparisonTable(): React.ReactElement {
         </table>
       </div>
       <div className="insider-table-cta">
-        <Link href={WELCOME_LINKS.join} className="welcome-cta-primary">
-          Become an Insider
+        <Link href={WELCOME_LINKS.insider} className="welcome-cta-primary">
+          Upgrade to Insider
         </Link>
       </div>
     </div>
