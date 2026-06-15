@@ -21,6 +21,9 @@ export interface BeatPost {
 export interface PodcastShow {
   title?: string;
   description?: string;
+  thumbnailUrl?: string;
+  image?: string;
+  artwork?: string;
   platforms?: { name: string; url: string }[];
 }
 
@@ -49,6 +52,7 @@ function normalizePodcastShow(raw: Record<string, unknown>): PodcastShow {
   return {
     title: String(raw.title ?? raw.name ?? 'Podcast'),
     description: String(raw.description ?? ''),
+    thumbnailUrl: String(raw.thumbnailUrl ?? raw.image ?? raw.artwork ?? ''),
     platforms,
   };
 }

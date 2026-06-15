@@ -6,6 +6,7 @@ import { PlayerProfilePage } from '@/components/futurecast/player/PlayerProfileP
 import { RosterProfilePage } from '@/components/vault/RosterProfilePage';
 import type { RosterPlayer } from '@/lib/roster-api';
 import { vaultTeamBackHref } from '@/lib/vault-navigation';
+import { useHydrated } from '@/hooks/useHydrated';
 
 function slugFromPathname(): string {
   if (typeof window === 'undefined') return '';
@@ -14,9 +15,10 @@ function slugFromPathname(): string {
 }
 
 export default function VaultPlayersPage(): React.ReactElement {
-  const [slug, setSlug] = useState(() => slugFromPathname());
+  const hydrated = useHydrated();
+  const [slug, setSlug] = useState('');
   const [rosterPlayer, setRosterPlayer] = useState<RosterPlayer | null>(null);
-  const [loading, setLoading] = useState(!!slugFromPathname());
+  const [loading, setLoading] = useState(false);
   const [useFcProfile, setUseFcProfile] = useState(false);
 
   useEffect(() => {
@@ -63,6 +65,10 @@ export default function VaultPlayersPage(): React.ReactElement {
       window.removeEventListener('popstate', onNav);
     };
   }, []);
+
+  if (!hydrated) {
+    return <p className="fc-profile-empty">Loading…</p>;
+  }
 
   if (!slug) {
     return <PlayerDirectoryPage inVault />;

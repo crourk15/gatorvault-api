@@ -8,6 +8,7 @@ const {
   ADMIN_AND_LEGACY_HTML,
   LEGACY_VAULT_TAB_REDIRECTS,
   LEGACY_RETIREMENT_REDIRECTS,
+  ROOT_LANDING_REDIRECT,
 } = require('../lib/routes');
 
 const serverDir = path.join(__dirname, '..', '..', 'server');
@@ -50,6 +51,9 @@ const lines = [
   '# React UI (Next.js static export)',
   ...REACT_REWRITES.map(formatRule),
   '',
+  '# Root → Welcome landing',
+  ...ROOT_LANDING_REDIRECT.map(formatRule),
+  '',
   '# Admin + legacy HTML',
   ...ADMIN_AND_LEGACY_HTML.map(formatRule),
   '',
@@ -59,7 +63,7 @@ fs.writeFileSync(outPath, lines.join('\n'), 'utf8');
 console.log(
   '[generate-redirects] Wrote',
   outPath,
-  `(${LEGACY_QUERY_RULES.length + LEGACY_RETIREMENT_REDIRECTS.length + REACT_REWRITES.length + ADMIN_AND_LEGACY_HTML.length + 1} rules)`
+  `(${LEGACY_QUERY_RULES.length + LEGACY_RETIREMENT_REDIRECTS.length + REACT_REWRITES.length + ROOT_LANDING_REDIRECT.length + ADMIN_AND_LEGACY_HTML.length + 1} rules)`
 );
 
 /** Ensure netlify.toml does not duplicate vault rewrites (conflicts → crawler 403). */

@@ -141,6 +141,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px;
   padding: 0.75rem 1.5rem;
   border-radius: 999px;
   font-weight: 600;
@@ -261,9 +262,18 @@
 
 .welcome-insider {
   max-width: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding-left: var(--welcome-spacing-lg);
   padding-right: var(--welcome-spacing-lg);
   background: radial-gradient(circle at top, #001a33 0%, #000814 60%, #000000 100%);
+}
+
+.welcome-insider-hero {
+  min-height: auto;
+}
+
+.welcome-insider-hero__inner {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .welcome-insider .welcome-section-header,
@@ -294,6 +304,59 @@
   margin: 0 0 var(--welcome-spacing-md);
   font-size: 0.95rem;
   color: var(--welcome-text-2);
+}
+
+/* Free vs Insider comparison table */
+.insider-table {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--welcome-spacing-xl) var(--welcome-spacing-lg);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.insider-table-title {
+  margin: 0 0 var(--welcome-spacing-md);
+  font-size: 1.6rem;
+  text-align: center;
+}
+
+.insider-table-scroll {
+  overflow-x: auto;
+  margin-bottom: var(--welcome-spacing-md);
+}
+
+.insider-table table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+}
+
+.insider-table th,
+.insider-table td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.9rem;
+}
+
+.insider-table th {
+  color: var(--welcome-text-1);
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.insider-table td:nth-child(2) {
+  color: var(--welcome-text-muted);
+}
+
+.insider-table td:nth-child(3) {
+  color: var(--welcome-accent-orange);
+  font-weight: 600;
+}
+
+.insider-table-cta {
+  display: flex;
+  justify-content: center;
 }
 
 /* Sticky mobile CTA */
@@ -344,6 +407,21 @@
 
   .welcome-section {
     padding: var(--welcome-spacing-lg);
+  }
+
+  .welcome-hero-cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .welcome-cta-primary,
+  .welcome-cta-secondary {
+    width: 100%;
+    text-align: center;
+  }
+
+  .welcome-section-grid {
+    grid-template-columns: 1fr;
   }
 
   .welcome-sticky-cta {

@@ -2,10 +2,11 @@
 
 import React from 'react';
 import { BRAND_LOGOS } from '@/lib/gatorvault-brand-assets';
-import { WELCOME_COPY, WELCOME_LINKS } from '@/lib/welcome-copy';
+import { welcomeContent } from './content';
+import { WELCOME_LINKS, welcomeCardHref } from './links';
 
 export function HeroSection(): React.ReactElement {
-  const { hero } = WELCOME_COPY;
+  const { badge, title, subtitle, stats, ctas, previewCards } = welcomeContent.hero;
 
   return (
     <section className="welcome-hero" data-testid="welcome-hero">
@@ -23,19 +24,19 @@ export function HeroSection(): React.ReactElement {
             width={220}
             height={48}
           />
-          <span className="welcome-hero-badge">{hero.badge}</span>
-          <h1 className="welcome-hero-title">{hero.title}</h1>
-          <p className="welcome-hero-subtitle">{hero.subtitle}</p>
+          <span className="welcome-hero-badge">{badge}</span>
+          <h1 className="welcome-hero-title">{title}</h1>
+          <p className="welcome-hero-subtitle">{subtitle}</p>
           <div className="welcome-hero-cta">
             <a href={WELCOME_LINKS.join} className="welcome-cta-primary">
-              {hero.ctaPrimary}
+              {ctas.primary}
             </a>
             <a href={WELCOME_LINKS.futurecast} className="welcome-cta-secondary">
-              {hero.ctaSecondary}
+              {ctas.secondary}
             </a>
           </div>
           <div className="welcome-hero-stats">
-            {hero.stats.map((stat) => (
+            {stats.map((stat) => (
               <span key={stat} className="welcome-stat">
                 {stat}
               </span>
@@ -44,12 +45,24 @@ export function HeroSection(): React.ReactElement {
         </div>
 
         <div className="welcome-hero-preview">
-          {hero.preview.map((card) => (
-            <a key={card.title} href={card.href} className="welcome-hero-card welcome-card">
-              <h3>{card.title}</h3>
-              <p>{card.body}</p>
-            </a>
-          ))}
+          {previewCards.map((card) => {
+            const href = welcomeCardHref(card.title);
+            const className = 'welcome-hero-card welcome-card';
+            if (href) {
+              return (
+                <a key={card.title} href={href} className={className}>
+                  <h3>{card.title}</h3>
+                  <p>{card.body}</p>
+                </a>
+              );
+            }
+            return (
+              <article key={card.title} className={className}>
+                <h3>{card.title}</h3>
+                <p>{card.body}</p>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -64,6 +64,21 @@
 /vault/depth-chart/*  /vault/team  301
 
 # React UI (Next.js static export)
+/welcome  /welcome/index.html  200
+/welcome/  /welcome/index.html  200
+/welcome/*  /welcome/index.html  200
+/insider  /insider/index.html  200
+/insider/  /insider/index.html  200
+/insider/*  /insider/index.html  200
+/directory  /directory/index.html  200
+/directory/  /directory/index.html  200
+/directory/*  /directory/index.html  200
+/scouting/reports  /scouting/reports/index.html  200
+/scouting/reports/  /scouting/reports/index.html  200
+/scouting/queue  /scouting/queue/index.html  200
+/scouting/queue/  /scouting/queue/index.html  200
+/scouting/database  /scouting/database/index.html  200
+/scouting/database/  /scouting/database/index.html  200
 /join  /join/index.html  200
 /join/  /join/index.html  200
 /join/*  /join/index.html  200
@@ -150,6 +165,9 @@
 /vault/alerts/*  /vault/alerts/index.html  200
 /vault/apparel  /vault/apparel/index.html  200
 /vault/apparel/*  /vault/apparel/index.html  200
+
+# Root → Welcome landing
+/  /welcome/  301!
 
 # Admin + legacy HTML
 /highlight/*  /highlight.html  200

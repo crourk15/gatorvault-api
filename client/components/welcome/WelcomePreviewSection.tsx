@@ -1,11 +1,13 @@
 'use client';
 
 import React from 'react';
-import { WELCOME_COPY } from '@/lib/welcome-copy';
+import { welcomeContent } from './content';
+import { welcomeCardHref } from './links';
 
-type Card = { title: string; body: string; href?: string };
+type Card = { title: string; body: string };
 
 function PreviewCard({ card }: { card: Card }): React.ReactElement {
+  const href = welcomeCardHref(card.title);
   const inner = (
     <>
       <h3>{card.title}</h3>
@@ -13,9 +15,9 @@ function PreviewCard({ card }: { card: Card }): React.ReactElement {
     </>
   );
 
-  if (card.href) {
+  if (href) {
     return (
-      <a href={card.href} className="welcome-card">
+      <a href={href} className="welcome-card">
         {inner}
       </a>
     );
@@ -43,6 +45,7 @@ export function WelcomePreviewSection({
 }: Props): React.ReactElement {
   return (
     <section
+      id={id}
       className={`welcome-section${variant === 'insider' ? ' welcome-insider' : ''}`}
       data-testid={id}
     >
@@ -61,52 +64,52 @@ export function WelcomePreviewSection({
 }
 
 export function FutureCastPreview(): React.ReactElement {
-  const { futurecast } = WELCOME_COPY;
+  const section = welcomeContent.sections.futurecast;
   return (
     <WelcomePreviewSection
-      id="welcome-futurecast"
-      title={futurecast.title}
-      subtitle={futurecast.subtitle}
-      body={futurecast.body}
-      cards={futurecast.cards}
+      id="futurecast-preview"
+      title={section.title}
+      subtitle={section.subtitle}
+      body={section.body}
+      cards={section.cards}
     />
   );
 }
 
 export function RecruitingHubPreview(): React.ReactElement {
-  const { recruiting } = WELCOME_COPY;
+  const section = welcomeContent.sections.hub;
   return (
     <WelcomePreviewSection
-      id="welcome-recruiting"
-      title={recruiting.title}
-      subtitle={recruiting.subtitle}
-      cards={recruiting.cards}
+      id="recruiting-preview"
+      title={section.title}
+      subtitle={section.subtitle}
+      cards={section.cards}
     />
   );
 }
 
 export function FilmRoomPreview(): React.ReactElement {
-  const { filmRoom } = WELCOME_COPY;
+  const section = welcomeContent.sections.filmRoom;
   return (
     <WelcomePreviewSection
-      id="welcome-film-room"
-      title={filmRoom.title}
-      subtitle={filmRoom.subtitle}
-      body={filmRoom.body}
-      cards={filmRoom.cards}
+      id="film-preview"
+      title={section.title}
+      subtitle={section.subtitle}
+      body={section.body}
+      cards={section.cards}
     />
   );
 }
 
 export function InsiderBenefits(): React.ReactElement {
-  const { insider } = WELCOME_COPY;
+  const section = welcomeContent.sections.insider;
   return (
     <WelcomePreviewSection
       id="welcome-insider"
-      title={insider.title}
-      subtitle={insider.subtitle}
-      body={insider.body}
-      cards={insider.cards}
+      title={section.title}
+      subtitle={section.subtitle}
+      body={section.body}
+      cards={section.cards}
       variant="insider"
     />
   );

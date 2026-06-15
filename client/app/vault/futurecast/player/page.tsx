@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { PlayerProfilePage } from '@/components/futurecast/player/PlayerProfilePage';
+import { useHydrated } from '@/hooks/useHydrated';
 
 function slugFromPathname(): string {
   if (typeof window === 'undefined') return '';
@@ -10,16 +11,21 @@ function slugFromPathname(): string {
 }
 
 export default function VaultFutureCastPlayerPage(): React.ReactElement {
-  const [slug, setSlug] = useState(() => slugFromPathname());
+  const hydrated = useHydrated();
+  const [slug, setSlug] = useState('');
 
   useEffect(() => {
     setSlug(slugFromPathname());
     const onNav = () => setSlug(slugFromPathname());
     window.addEventListener('popstate', onNav);
-    return () => window.removeEventListener('popstate', onNav);
+    window.addEventListener('vault:navigation', onNav);
+    return () => {
+      window.removeEventListener('popstate', onNav);
+      window.removeEventListener('vault:navigation', onNav);
+    };
   }, []);
 
-  if (!slug) {
+  if (!hydrated || !slug) {
     return <p className="fc-profile-empty fc-player-page-wrap">Loading player…</p>;
   }
 

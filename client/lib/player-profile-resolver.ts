@@ -1,12 +1,12 @@
 /**
  * Multi-source player profile resolution — FutureCast, roster, recruiting store.
  */
-import { getApiBase } from './big-board-api';
 import {
   fetchPlayerProfile,
   type PlayerProfileBundle,
 } from './player-api';
 import { fetchRosterPlayerBySlug, type RosterPlayer } from './roster-api';
+import { fetchRecruitingBoard, type RecruitingBoardPlayer } from './recruiting-board-api';
 import { ensurePlayerSlug, isValidSlug, slugify } from './slug';
 import { playerLifecycleKind, playerProfilePath } from './player-routes';
 
@@ -15,34 +15,38 @@ export type ProfileResolveResult =
   | { kind: 'roster'; slug: string; player: RosterPlayer }
   | { kind: 'redirect'; slug: string; href: string };
 
-async function tryRecruitingStoreSlug(rawSlug: string): Promise<string | null> {
-  try {
-    const res = await fetch(
-      `${getApiBase()}/api/recruiting/board?class=2027&limit=1`
-    );
-    if (!res.ok) return null;
-    const data = (await res.json()) as {
-      players?: { slug?: string; name?: string }[];
-      commits?: { slug?: string; name?: string }[];
-      targets?: { slug?: string; name?: string }[];
-    };
-    const all = [...(data.commits ?? []), ...(data.targets ?? []), ...(data.players ?? [])];
-    const match = all.find(
-      (p) =>
-        p.slug === rawSlug ||
-        slugify(p.name) === rawSlug ||
-        slugify(p.slug) === rawSlug
-    );
-    return match ? ensurePlayerSlug(match.slug, match.name) : null;
-  } catch {
-    return null;
+export type ProfileResolveOptions = {
+  /** When true, stay on recruiting profile route — do not bounce to roster. */
+  recruitingContext?: boolean;
+};
+
+async function findRecruitingBoardPlayer(rawSlug: string): Promise<RecruitingBoardPlayer | null> {
+  const needle = rawSlug.trim().toLowerCase();
+  for (const classYear of [2027, 2028]) {
+    try {
+      const board = await fetchRecruitingBoard(classYear);
+      const pool = [
+        ...(board.commits ?? []),
+        ...(board.targets ?? []),
+        ...(board.players ?? []),
+      ];
+      const match = pool.find((p) => {
+        const s = ensurePlayerSlug(p.slug, p.name).toLowerCase();
+        return s === needle || slugify(p.name) === needle;
+      });
+      if (match) return match;
+    } catch {
+      /* try next class year */
+    }
   }
+  return null;
 }
 
 /** Resolve profile from slug or name; tries alternate slug forms. */
 export async function resolvePlayerProfile(
   rawSlug: string,
-  inVault = true
+  inVault = true,
+  options?: ProfileResolveOptions
 ): Promise<ProfileResolveResult> {
   const candidates = [
     rawSlug.trim().toLowerCase(),
@@ -66,19 +70,29 @@ export async function resolvePlayerProfile(
       /* try next source */
     }
 
-    try {
-      const roster = await fetchRosterPlayerBySlug(slug);
-      if (roster) {
-        return { kind: 'roster', slug, player: roster };
+    if (!options?.recruitingContext) {
+      try {
+        const roster = await fetchRosterPlayerBySlug(slug);
+        if (roster) {
+          return { kind: 'roster', slug, player: roster };
+        }
+      } catch {
+        /* continue */
       }
-    } catch {
-      /* continue */
     }
   }
 
-  const storeSlug = await tryRecruitingStoreSlug(candidates[0] ?? rawSlug);
-  if (storeSlug && storeSlug !== candidates[0]) {
-    return resolvePlayerProfile(storeSlug, inVault);
+  if (options?.recruitingContext) {
+    const boardPlayer = await findRecruitingBoardPlayer(candidates[0] ?? rawSlug);
+    if (boardPlayer) {
+      const slug = ensurePlayerSlug(boardPlayer.slug, boardPlayer.name);
+      try {
+        const bundle = await fetchPlayerProfile(slug);
+        return { kind: 'futurecast', slug, bundle };
+      } catch {
+        throw new Error(`Profile for ${boardPlayer.name || slug} is not available yet.`);
+      }
+    }
   }
 
   throw new Error('Player not found — check the recruiting board or roster for this profile.');

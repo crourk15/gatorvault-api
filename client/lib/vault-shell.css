@@ -2541,7 +2541,11 @@ a.gv-live-item__title:hover {
   font-size: 0.75rem;
   font-weight: 700;
   color: #fff;
-  animation: gv-ticker-scroll 40s linear infinite;
+  animation: gv-ticker-scroll 14s ease-out infinite;
+}
+
+.gv-live-ticker:hover .gv-live-ticker__text {
+  animation-play-state: paused;
 }
 
 @keyframes gv-ticker-scroll {

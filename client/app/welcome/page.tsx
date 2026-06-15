@@ -2,13 +2,14 @@
 
 import React from 'react';
 import '@/lib/welcome-elite.css';
+import '@/lib/welcome-bright.css';
 import { PublicSiteShell } from '@/components/site/PublicSiteShell';
-import { WelcomePage } from '@/components/welcome/WelcomePage';
+import { ABWelcomePage } from '@/components/welcome/ABWelcomePage';
 
 export default function WelcomeRoute(): React.ReactElement {
   return (
     <PublicSiteShell marketing>
-      <WelcomePage />
+      <ABWelcomePage />
     </PublicSiteShell>
   );
 }

@@ -1,13 +1,6 @@
-'use client';
+import { redirect } from 'next/navigation';
 
-import React from 'react';
-import { LandingPage } from '@/components/site/LandingPage';
-import { PublicSiteShell } from '@/components/site/PublicSiteShell';
-
-export default function HomePage(): React.ReactElement {
-  return (
-    <PublicSiteShell marketing>
-      <LandingPage />
-    </PublicSiteShell>
-  );
+/** Canonical landing page is /welcome — root redirects for SEO and nav consistency. */
+export default function HomePage(): never {
+  redirect('/welcome/');
 }

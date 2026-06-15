@@ -24,7 +24,7 @@ export function isPortalRecruit(player: {
   return lc === 'PORTAL' || cat === 'portal' || st.includes('portal');
 }
 
-/** Recruiting board row → profile lifecycle. */
+/** Recruiting board row → profile lifecycle (recruiting hub always uses recruiting profiles). */
 export function recruitingProfileLifecycle(player: {
   status?: string | null;
   lifecycle?: string | null;
@@ -33,14 +33,6 @@ export function recruitingProfileLifecycle(player: {
   isCommittedToUF?: boolean;
 }): string {
   if (isPortalRecruit(player)) return 'PORTAL';
-  const st = String(player.status || '').toLowerCase();
-  if (st.includes('enroll') || st.includes('signed')) return 'ROSTER';
-  if (player.isCommittedToUF && player.classYear != null && player.classYear <= 2026) {
-    return 'ROSTER';
-  }
-  if (player.classYear != null && player.classYear <= 2026 && st.includes('commit')) {
-    return 'ROSTER';
-  }
   return player.lifecycle || 'HIGH_SCHOOL';
 }
 

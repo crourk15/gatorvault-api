@@ -21,16 +21,12 @@ export function PodcastCard({
 
   return (
     <article className="gv-gnl-podcast-card" data-testid="gnl-podcast-card">
-      <div
-        className="gv-gnl-podcast-card__thumb"
-        style={
-          thumbnailUrl
-            ? { backgroundImage: `url(${thumbnailUrl})`, backgroundSize: 'cover' }
-            : undefined
-        }
-        aria-hidden="true"
-      >
-        {!thumbnailUrl && '🎙️'}
+      <div className="gv-gnl-podcast-card__thumb" aria-hidden="true">
+        {thumbnailUrl ? (
+          <img src={thumbnailUrl} alt="" className="gv-gnl-podcast-card__img" loading="lazy" />
+        ) : (
+          '🎙️'
+        )}
       </div>
       <h3 className="gv-gnl-podcast-card__title">{title}</h3>
       <p className="gv-gnl-podcast-card__desc">{description}</p>

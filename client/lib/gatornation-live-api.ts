@@ -35,6 +35,7 @@ export const DEFAULT_PODCASTS: PodcastCardProps[] = [
   {
     title: 'Gators Breakdown',
     description: 'Daily Florida Gators analysis and recruiting intel.',
+    thumbnailUrl: '/brand/logos/gv-monogram.svg',
     appleUrl: '#',
     spotifyUrl: '#',
     youtubeUrl: '#',
@@ -43,6 +44,7 @@ export const DEFAULT_PODCASTS: PodcastCardProps[] = [
   {
     title: 'Gator Nation Football Podcast',
     description: 'Deep-dive conversations on Florida football and culture.',
+    thumbnailUrl: '/brand/logos/gv-monogram.svg',
     appleUrl: '#',
     spotifyUrl: '#',
     youtubeUrl: '#',
@@ -51,6 +53,7 @@ export const DEFAULT_PODCASTS: PodcastCardProps[] = [
   {
     title: 'Gators Online Podcast',
     description: 'Recruiting, team news, and insider notes from the beat.',
+    thumbnailUrl: '/brand/logos/gatorvault-wordmark.svg',
     appleUrl: '#',
     spotifyUrl: '#',
     youtubeUrl: '#',
@@ -59,6 +62,7 @@ export const DEFAULT_PODCASTS: PodcastCardProps[] = [
   {
     title: 'Gator Tales',
     description: 'Official Florida Gators storytelling and interviews.',
+    thumbnailUrl: '/brand/logos/gv-monogram.svg',
     appleUrl: '#',
     spotifyUrl: '#',
     youtubeUrl: '#',
@@ -120,6 +124,15 @@ function feedCategory(item: LiveFeedItem): string {
   return 'Update';
 }
 
+function isExcludedLiveFeedItem(item: LiveFeedItem): boolean {
+  const blob = `${item.title ?? ''} ${item.type ?? ''}`.toLowerCase();
+  if (!blob.trim()) return true;
+  const mentions2026 = /\b2026\b/.test(blob);
+  if (mentions2026 && (blob.includes('commit') || blob.includes('signed'))) return true;
+  if (mentions2026 && (blob.includes('portal') || blob.includes('transfer'))) return true;
+  return false;
+}
+
 export function normalizePodcasts(shows: PodcastShow[]): PodcastCardProps[] {
   if (!shows.length) return DEFAULT_PODCASTS;
   return shows.slice(0, 4).map((show, idx) => {
@@ -129,6 +142,10 @@ export function normalizePodcasts(shows: PodcastShow[]): PodcastCardProps[] {
     return {
       title: show.title || DEFAULT_PODCASTS[idx]?.title || 'Podcast',
       description: show.description || DEFAULT_PODCASTS[idx]?.description || '',
+      thumbnailUrl:
+        show.thumbnailUrl ||
+        DEFAULT_PODCASTS[idx]?.thumbnailUrl ||
+        '/brand/logos/gv-monogram.svg',
       appleUrl: find('apple'),
       spotifyUrl: find('spotify'),
       youtubeUrl: find('youtube'),
@@ -139,7 +156,7 @@ export function normalizePodcasts(shows: PodcastShow[]): PodcastCardProps[] {
 
 export function buildRecruitingFeed(feed: LiveFeedItem[]): RecruitingUpdateCardProps[] {
   return feed
-    .filter((item) => item.title)
+    .filter((item) => item.title && !isExcludedLiveFeedItem(item))
     .slice(0, 24)
     .map((item) => ({
       source: item.source || 'GatorVault',
@@ -213,7 +230,9 @@ export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> 
   const beat = dash?.beat?.posts ?? [];
   const now = new Date().toISOString();
 
-  const ticker: LiveTickerItem[] = (tickerRes?.items ?? []).map((item) => ({
+  const ticker: LiveTickerItem[] = (tickerRes?.items ?? [])
+    .filter((item) => !isExcludedLiveFeedItem({ title: item.text, type: item.category }))
+    .map((item) => ({
     type: mapTickerTag(item.category, item.text),
     text: item.text,
     timestamp: tickerRes?.updatedAt || now,

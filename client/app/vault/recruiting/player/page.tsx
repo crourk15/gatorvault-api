@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { PlayerProfilePage } from '@/components/futurecast/player/PlayerProfilePage';
+import { useHydrated } from '@/hooks/useHydrated';
 
 function slugFromPathname(): string {
   if (typeof window === 'undefined') return '';
@@ -11,16 +12,21 @@ function slugFromPathname(): string {
 
 /** Recruiting-context player profile — same component as FutureCast/roster routes. */
 export default function VaultRecruitingPlayerPage(): React.ReactElement {
-  const [slug, setSlug] = useState(() => slugFromPathname());
+  const hydrated = useHydrated();
+  const [slug, setSlug] = useState('');
 
   useEffect(() => {
     setSlug(slugFromPathname());
     const onNav = () => setSlug(slugFromPathname());
     window.addEventListener('popstate', onNav);
-    return () => window.removeEventListener('popstate', onNav);
+    window.addEventListener('vault:navigation', onNav);
+    return () => {
+      window.removeEventListener('popstate', onNav);
+      window.removeEventListener('vault:navigation', onNav);
+    };
   }, []);
 
-  if (!slug) {
+  if (!hydrated || !slug) {
     return <p className="fc-profile-empty fc-player-page-wrap">Loading player…</p>;
   }
 

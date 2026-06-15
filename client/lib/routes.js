@@ -14,6 +14,22 @@ const LEGACY_RETIREMENT_REDIRECTS = vaultRoutes.LEGACY_ROUTE_REDIRECTS.map((r) =
 
 /** @type {RedirectRule[]} */
 const REACT_REWRITES = [
+  // Marketing landing + insider
+  { from: '/welcome', to: '/welcome/index.html', status: 200 },
+  { from: '/welcome/', to: '/welcome/index.html', status: 200 },
+  { from: '/welcome/*', to: '/welcome/index.html', status: 200 },
+  { from: '/insider', to: '/insider/index.html', status: 200 },
+  { from: '/insider/', to: '/insider/index.html', status: 200 },
+  { from: '/insider/*', to: '/insider/index.html', status: 200 },
+  { from: '/directory', to: '/directory/index.html', status: 200 },
+  { from: '/directory/', to: '/directory/index.html', status: 200 },
+  { from: '/directory/*', to: '/directory/index.html', status: 200 },
+  { from: '/scouting/reports', to: '/scouting/reports/index.html', status: 200 },
+  { from: '/scouting/reports/', to: '/scouting/reports/index.html', status: 200 },
+  { from: '/scouting/queue', to: '/scouting/queue/index.html', status: 200 },
+  { from: '/scouting/queue/', to: '/scouting/queue/index.html', status: 200 },
+  { from: '/scouting/database', to: '/scouting/database/index.html', status: 200 },
+  { from: '/scouting/database/', to: '/scouting/database/index.html', status: 200 },
   // Marketing + auth
   { from: '/join', to: '/join/index.html', status: 200 },
   { from: '/join/', to: '/join/index.html', status: 200 },
@@ -108,10 +124,15 @@ const ADMIN_AND_LEGACY_HTML = [
 
 const REQUIRED_VAULT_EXPORTS = vaultRoutes.REQUIRED_VAULT_EXPORTS;
 
+/** Root → Welcome landing (301). Listed after legacy query rules in generate-redirects. */
+/** @type {RedirectRule[]} */
+const ROOT_LANDING_REDIRECT = [{ from: '/', to: '/welcome/', status: 301, force: true }];
+
 module.exports = {
   REACT_REWRITES,
   LEGACY_RETIREMENT_REDIRECTS,
   LEGACY_VAULT_TAB_REDIRECTS,
   ADMIN_AND_LEGACY_HTML,
   REQUIRED_VAULT_EXPORTS,
+  ROOT_LANDING_REDIRECT,
 };

@@ -15,6 +15,12 @@ const nextDir = path.join(serverDir, '_next');
 /** Required export paths for Netlify (canonical vault map + legacy standalone). */
 const REQUIRED_EXPORTS = [
   ...vaultMap.REQUIRED_VAULT_EXPORTS,
+  'welcome/index.html',
+  'insider/index.html',
+  'directory/index.html',
+  'scouting/reports/index.html',
+  'scouting/queue/index.html',
+  'scouting/database/index.html',
   'futurecast/index.html',
   'futurecast/alerts/index.html',
   'futurecast/staff/index.html',

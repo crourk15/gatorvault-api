@@ -6,9 +6,8 @@ import type { RecruitingHubTab } from '@/lib/vault-route-map';
 /** Visible tabs per wireframe (targets-2027 route still works via URL) */
 export const RECRUITING_TAB_LABELS: { id: RecruitingHubTab; label: string }[] = [
   { id: 'priority', label: 'High Priority' },
-  { id: 'commits-2026', label: '2026 Commits' },
-  { id: 'heat-check', label: 'Heat Check' },
   { id: 'commits-2027', label: '2027 Commits' },
+  { id: 'targets-2027', label: '2027 Targets' },
   { id: 'targets-2028', label: '2028 Targets' },
   { id: 'intel', label: 'Movement Intel' },
   { id: 'scouting', label: 'Scouting' },

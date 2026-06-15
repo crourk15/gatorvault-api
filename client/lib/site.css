@@ -111,8 +111,138 @@
   background: #003087;
 }
 
+.nav-insider-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 122, 33, 0.55);
+  background: rgba(255, 122, 33, 0.12);
+  color: #ffb366;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .gv-site--marketing .gv-site-header {
   background: rgba(3, 9, 21, 0.98);
+}
+
+.gv-site-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.4rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 48, 135, 0.55);
+  background: rgba(0, 26, 51, 0.65);
+  color: #e2e8f0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gv-site-nav-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.gv-site-nav-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.gv-site-header__tools {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+.gv-site-nav-actions--menu {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .gv-site-header__inner {
+    flex-wrap: nowrap;
+  }
+
+  .gv-site-nav-toggle {
+    display: inline-flex;
+  }
+
+  .gv-site-nav-actions--inline {
+    display: flex;
+  }
+
+  .gv-site-nav-actions--menu {
+    display: none;
+  }
+
+  .gv-site-nav-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    left: 1rem;
+    right: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.75rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 48, 135, 0.45);
+    background: rgba(3, 9, 21, 0.98);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+
+  .gv-site-nav-panel.is-open {
+    display: flex;
+  }
+
+  .gv-site-header__inner {
+    position: relative;
+  }
+
+  .gv-site-nav {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .gv-site-nav__link,
+  .gv-site-nav__cta {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .gv-site-nav-panel {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .gv-site-header__tools {
+    display: none;
+  }
+
+  .gv-site-nav-actions--menu {
+    display: flex;
+  }
 }
 
 .gv-marketing-main {

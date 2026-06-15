@@ -57,17 +57,24 @@ export const RECRUITING_TAB_PATHS: Record<RecruitingHubTab, string> = {
 /** Alternate hub base (same tabs, different URL prefix) */
 export const RECRUITING_HUB_BASE = '/recruiting-hub';
 
-/** Legacy paths → current tab (2026 removed, heat merged into movement intel) */
+/** Legacy paths → current tab (2026 cycle retired → 2027) */
 export const RECRUITING_LEGACY_PATH_ALIASES: Record<string, RecruitingHubTab> = {
-  '/vault/recruiting': 'commits-2026',
-  '/vault/recruiting/2026/commits': 'commits-2026',
+  '/vault/recruiting': 'commits-2027',
+  '/vault/recruiting/2026/commits': 'commits-2027',
   '/vault/recruiting/2026/targets': 'targets-2027',
-  '/vault/recruiting/heat-check': 'heat-check',
-  [RECRUITING_HUB_BASE]: 'commits-2026',
-  [`${RECRUITING_HUB_BASE}/2026/commits`]: 'commits-2026',
+  '/vault/recruiting/heat-check': 'intel',
+  [RECRUITING_HUB_BASE]: 'commits-2027',
+  [`${RECRUITING_HUB_BASE}/2026/commits`]: 'commits-2027',
   [`${RECRUITING_HUB_BASE}/2026/targets`]: 'targets-2027',
-  [`${RECRUITING_HUB_BASE}/heat-check`]: 'heat-check',
+  [`${RECRUITING_HUB_BASE}/heat-check`]: 'intel',
 };
+
+/** Map deprecated tab ids to active hub tabs. */
+export function normalizeRecruitingTab(tab: RecruitingHubTab): RecruitingHubTab {
+  if (tab === 'commits-2026') return 'commits-2027';
+  if (tab === 'heat-check') return 'intel';
+  return tab;
+}
 
 /** Live Feed tabs */
 export const LIVE_FEED_TAB_PATHS: Record<LiveFeedTab, string> = {
@@ -201,8 +208,11 @@ export function resolveRecruitingTab(pathname?: string): RecruitingHubTab {
   const p = normPath(pathname ?? (typeof window !== 'undefined' ? window.location.pathname : ''));
   const fromSearch = parseRecruitingTabFromSearch();
   const fromPath = parseRecruitingTabFromPath(pathname);
-  if ((p === '/vault/recruiting' || p === RECRUITING_HUB_BASE) && fromSearch) return fromSearch;
-  return fromPath ?? fromSearch ?? 'commits-2026';
+  if ((p === '/vault/recruiting' || p === RECRUITING_HUB_BASE) && fromSearch) {
+    return normalizeRecruitingTab(fromSearch);
+  }
+  const resolved = fromPath ?? fromSearch ?? 'commits-2027';
+  return normalizeRecruitingTab(resolved);
 }
 
 export function recruitingTabPath(tab: RecruitingHubTab, pathname?: string): string {

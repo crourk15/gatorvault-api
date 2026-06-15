@@ -77,14 +77,53 @@ function ScoutingProfileCard({
   );
 }
 
-export function ScoutingDepartmentPage({ inVault = false }: { inVault?: boolean } = {}): React.ReactElement {
+type ScoutingView = 'hub' | 'reports' | 'queue' | 'directory';
+
+function viewFromHash(): ScoutingView {
+  if (typeof window === 'undefined') return 'hub';
+  const h = window.location.hash.replace('#', '').toLowerCase();
+  if (h === 'reports' || h === 'queue' || h === 'directory') return h;
+  return 'hub';
+}
+
+export function ScoutingDepartmentPage({
+  inVault = false,
+  initialView,
+}: {
+  inVault?: boolean;
+  initialView?: ScoutingView;
+} = {}): React.ReactElement {
   const [list, setList] = useState<ScoutingBreakdown[]>([]);
   const [locked, setLocked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [type, setType] = useState('all');
-  const [view, setView] = useState<'hub' | 'reports' | 'queue' | 'directory'>('hub');
+  const [hydrated, setHydrated] = useState(false);
+  const [view, setView] = useState<ScoutingView>(initialView ?? 'hub');
+
+  useEffect(() => {
+    setView(initialView ?? viewFromHash());
+    setHydrated(true);
+    const onHash = () => setView(viewFromHash());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, [initialView]);
+
+  useEffect(() => {
+    if (!hydrated || initialView) return;
+    const hash = view === 'hub' ? '' : `#${view}`;
+    const next = `${window.location.pathname}${window.location.search}${hash}`;
+    if (`${window.location.pathname}${window.location.search}${window.location.hash}` !== next) {
+      window.history.replaceState(null, '', next);
+    }
+  }, [view, hydrated, initialView]);
+
+  const openView = (next: ScoutingView) => {
+    setView(next);
+    const hash = next === 'hub' ? '' : `#${next}`;
+    window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${hash}`);
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -140,7 +179,7 @@ export function ScoutingDepartmentPage({ inVault = false }: { inVault?: boolean 
       </div>
 
       <div className="gv-scout-hub">
-        <a href={inVault ? '/vault/players' : '/players'} className="gv-scout-hub__card">
+        <a href={inVault ? '/vault/players' : '/directory'} className="gv-scout-hub__card">
           <span className="gv-scout-hub__icon">📋</span>
           <h2>Player Directory</h2>
           <p>Search HS recruits, portal, and college players with filters and profile links.</p>
@@ -148,7 +187,7 @@ export function ScoutingDepartmentPage({ inVault = false }: { inVault?: boolean 
         <button
           type="button"
           className={`gv-scout-hub__card${view === 'reports' ? ' is-active' : ''}`}
-          onClick={() => setView('reports')}
+          onClick={() => openView('reports')}
         >
           <span className="gv-scout-hub__icon">📊</span>
           <h2>Scouting Reports</h2>
@@ -157,7 +196,7 @@ export function ScoutingDepartmentPage({ inVault = false }: { inVault?: boolean 
         <button
           type="button"
           className={`gv-scout-hub__card${view === 'queue' ? ' is-active' : ''}`}
-          onClick={() => setView('queue')}
+          onClick={() => openView('queue')}
         >
           <span className="gv-scout-hub__icon">⏳</span>
           <h2>Evaluation Queue</h2>
@@ -166,7 +205,7 @@ export function ScoutingDepartmentPage({ inVault = false }: { inVault?: boolean 
         <button
           type="button"
           className={`gv-scout-hub__card${view === 'directory' ? ' is-active' : ''}`}
-          onClick={() => setView('directory')}
+          onClick={() => openView('directory')}
         >
           <span className="gv-scout-hub__icon">🔍</span>
           <h2>Full Database</h2>

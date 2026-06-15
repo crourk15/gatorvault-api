@@ -359,7 +359,7 @@
 .gv-dash-ticker__track {
   display: flex;
   width: max-content;
-  animation: gv-dash-ticker-scroll 22s linear infinite;
+  animation: gv-dash-ticker-scroll 14s ease-out infinite;
 }
 
 .gv-dash-ticker:hover .gv-dash-ticker__track {

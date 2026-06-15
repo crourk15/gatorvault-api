@@ -48,8 +48,10 @@ export function PlayerProfilePage({
 }: PlayerProfilePageProps): React.ReactElement {
   const pathname = usePathname();
   const inVault = isVaultPath(pathname);
-  const backHref = backHrefProp ?? futureCastBase(pathname);
-  const backLabel = backLabelProp ?? (inVault ? '← FutureCast' : '← FutureCast');
+  const isRecruitingProfileRoute = pathname.includes('/recruiting/player/');
+  const backHref = backHrefProp ?? (isRecruitingProfileRoute ? '/vault/recruiting' : futureCastBase(pathname));
+  const backLabel =
+    backLabelProp ?? (isRecruitingProfileRoute ? '← Recruiting Hub' : inVault ? '← FutureCast' : '← FutureCast');
   const [data, setData] = useState<PlayerProfileBundle | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -58,10 +60,11 @@ export function PlayerProfilePage({
   const [portalIntelLoading, setPortalIntelLoading] = useState(false);
   const [ufFitIntel, setUfFitIntel] = useState<UfFitIntelResponse | null>(null);
   const [ufFitIntelLoading, setUfFitIntelLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<ProfileTabId>(() => {
-    if (typeof window === 'undefined') return 'overview';
-    return parseProfileTab(new URLSearchParams(window.location.search).get('tab'));
-  });
+  const [activeTab, setActiveTab] = useState<ProfileTabId>('overview');
+
+  useEffect(() => {
+    setActiveTab(parseProfileTab(new URLSearchParams(window.location.search).get('tab')));
+  }, [slug]);
 
   useEffect(() => {
     let cancelled = false;
@@ -70,14 +73,14 @@ export function PlayerProfilePage({
     setPortalIntel(null);
     setPortalPredictions([]);
     setUfFitIntel(null);
-    resolvePlayerProfile(slug, inVault)
+    resolvePlayerProfile(slug, inVault, { recruitingContext: isRecruitingProfileRoute })
       .then((result) => {
         if (cancelled) return;
         if (result.kind === 'redirect') {
           window.location.replace(result.href);
           return;
         }
-        if (result.kind === 'roster') {
+        if (result.kind === 'roster' && !isRecruitingProfileRoute) {
           const dest = inVault
             ? `/vault/players/${encodeURIComponent(result.slug)}`
             : `/players/${encodeURIComponent(result.slug)}`;

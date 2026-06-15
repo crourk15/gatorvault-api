@@ -12,6 +12,7 @@ import { filterRecruitingHsOnly } from '@/lib/player-routes';
 import { fromStaffDashboard, resolveCardVariant } from '@/lib/recruiting-card-adapters';
 import {
   type RecruitingHubTab,
+  normalizeRecruitingTab,
   recruitingTabPath,
   resolveRecruitingTab,
 } from '@/lib/vault-route-map';
@@ -21,7 +22,6 @@ import { saveVaultPageState, useVaultDataReload, useVaultPageRestore, notifyVaul
 import { RecruitingHubHero, computeHubMomentum } from '@/components/vault/recruiting/RecruitingHubHero';
 import { RecruitingTabBar, RecruitingSubTabBar } from '@/components/vault/recruiting/RecruitingTabBar';
 import { PlayerCardEnhanced } from '@/components/vault/recruiting/EliteRecruitCard';
-import { HeatCheckPanel } from '@/components/vault/recruiting/RecruitingHeatCheckPanel';
 import { ScoutingTiles } from '@/components/vault/recruiting/RecruitingScoutingTiles';
 import { PortalList } from '@/components/vault/recruiting/RecruitingPortalSection';
 import { RankingsTable } from '@/components/vault/recruiting/RecruitingRankingsTable';
@@ -49,12 +49,8 @@ function rankTargets(list: RecruitingBoardPlayer[]): RecruitingBoardPlayer[] {
 }
 
 export function VaultRecruitingHubPage(): React.ReactElement {
-  const [tab, setTab] = useState<RecruitingHubTab>('commits-2026');
+  const [tab, setTab] = useState<RecruitingHubTab>('commits-2027');
   const [rankYear, setRankYear] = useState<2027 | 2028>(2027);
-  const [b26, setB26] = useState<{ commits: RecruitingBoardPlayer[]; rankings: RecruitingBoardResponse['rankings'] }>({
-    commits: [],
-    rankings: null,
-  });
   const [b27, setB27] = useState<{
     commits: RecruitingBoardPlayer[];
     targets: RecruitingBoardPlayer[];
@@ -84,11 +80,11 @@ export function VaultRecruitingHubPage(): React.ReactElement {
 
   const restoreHubState = useCallback((saved: { tab?: string; rankYear?: number }) => {
     const tabs: RecruitingHubTab[] = [
-      'priority', 'commits-2026', 'heat-check', 'commits-2027', 'targets-2027',
+      'priority', 'commits-2027', 'targets-2027',
       'targets-2028', 'intel', 'scouting', 'portal', 'rankings',
     ];
     if (saved.tab && tabs.includes(saved.tab as RecruitingHubTab)) {
-      setTab(saved.tab as RecruitingHubTab);
+      setTab(normalizeRecruitingTab(saved.tab as RecruitingHubTab));
     }
     if (saved.rankYear === 2027 || saved.rankYear === 2028) setRankYear(saved.rankYear);
   }, []);
@@ -105,19 +101,20 @@ export function VaultRecruitingHubPage(): React.ReactElement {
 
   const setTabAndUrl = useCallback(
     (next: RecruitingHubTab) => {
-      setTab(next);
+      const canonical = normalizeRecruitingTab(next);
+      setTab(canonical);
       if (typeof window !== 'undefined') {
-        window.history.replaceState(null, '', recruitingTabPath(next, window.location.pathname));
+        window.history.replaceState(null, '', recruitingTabPath(canonical, window.location.pathname));
         notifyVaultNavigation();
-        saveVaultPageState('recruiting-hub', { tab: next, rankYear, scrollY: window.scrollY });
+        saveVaultPageState('recruiting-hub', { tab: canonical, rankYear, scrollY: window.scrollY });
       }
     },
     [rankYear]
   );
 
   useEffect(() => {
-    setTab(resolveRecruitingTab());
-    const onNav = () => setTab(resolveRecruitingTab());
+    setTab(normalizeRecruitingTab(resolveRecruitingTab()));
+    const onNav = () => setTab(normalizeRecruitingTab(resolveRecruitingTab()));
     window.addEventListener('popstate', onNav);
     window.addEventListener('vault:navigation', onNav);
     return () => {
@@ -131,7 +128,6 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     else setRefreshing(true);
     if (isInitial) setError(null);
 
-    const p26 = fetchRecruitingBoard(2026);
     const p27 = fetchRecruitingBoard(2027);
     const p28 = fetchRecruitingBoard(2028);
     const pHeat = fetchRecruitingHeatCheck(!isInitial);
@@ -158,15 +154,9 @@ export function VaultRecruitingHubPage(): React.ReactElement {
       });
 
     try {
-      const results = await Promise.allSettled([p26, p27, p28, pHeat, pStaff, pPriority]);
-      const [r26, , r28, rHeat, rStaff, rPriority] = results;
+      const results = await Promise.allSettled([p27, p28, pHeat, pStaff, pPriority]);
+      const [, r28, rHeat, rStaff, rPriority] = results;
 
-      if (r26.status === 'fulfilled') {
-        setB26({
-          commits: rankCommits(filterRecruitingHsOnly(r26.value.commits ?? [])),
-          rankings: r26.value.rankings ?? null,
-        });
-      }
       if (r28.status === 'fulfilled') {
         setB28({
           commits: rankCommits(filterRecruitingHsOnly(r28.value.commits ?? [])),
@@ -318,18 +308,6 @@ export function VaultRecruitingHubPage(): React.ReactElement {
             </div>
             {highPriority.length === 0 && <UiEmpty message="No priority targets loaded." />}
           </section>
-        )}
-
-        {showContent && tab === 'commits-2026' &&
-          renderGrid(b26.commits, 'commit', 'No 2026 commits yet.')}
-
-        {showContent && tab === 'heat-check' && (
-          <HeatCheckPanel
-            rising={rising}
-            cooling={cooling}
-            staff={staffDashboard}
-            playerPool={playerPool}
-          />
         )}
 
         {showContent && tab === 'commits-2027' &&

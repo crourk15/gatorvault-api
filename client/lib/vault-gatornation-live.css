@@ -187,7 +187,7 @@
   display: flex;
   gap: 2.5rem;
   width: max-content;
-  animation: gv-gnl-ticker-scroll 24s linear infinite;
+  animation: gv-gnl-ticker-scroll 14s ease-out infinite;
 }
 
 .gv-gnl-ticker__track:hover {
@@ -263,6 +263,14 @@
   justify-content: center;
   font-size: 2rem;
   margin-bottom: 0.85rem;
+  overflow: hidden;
+}
+
+.gv-gnl-podcast-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .gv-gnl-podcast-card__title {
