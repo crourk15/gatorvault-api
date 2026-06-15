@@ -8,7 +8,7 @@ const ROUTES = [
   { path: '/vault/live/', markers: ['gnl-hero', 'gnl-ticker', 'vault-live-feed'] },
   { path: '/vault/schedule/', markers: ['gv-sched', 'gv-sched-tickets'] },
   { path: '/vault/players/', markers: ['players-directory-page', 'gv-player-dir'] },
-  { path: '/vault/admin', markers: ['admin', 'Admin'] },
+  { path: '/vault/admin/', markers: ['vault-admin-page', 'gv-vault-shell', 'Admin Console'] },
   { path: '/vault/podcast/gators-breakdown/', markers: ['vault-podcast-episode', 'gators-breakdown'] },
   { path: '/vault/recruiting/board/', markers: ['recruiting-board', 'gv-rb'] },
 ];
