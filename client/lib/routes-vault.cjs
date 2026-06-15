@@ -49,6 +49,7 @@ const RECRUITING_SUB_ROUTES = [
   `${RECRUITING_HUB_BASE}/rankings`,
   `${RECRUITING_HUB_BASE}/heat-check`,
   '/gatornation-live',
+  '/team',
 ];
 
 const PLAYER_PROFILE_ROUTES = {
