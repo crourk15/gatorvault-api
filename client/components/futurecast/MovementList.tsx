@@ -39,9 +39,20 @@ export function MovementList({ title, players, valueLabel, tone = 'up' }: Props)
   );
 }
 
-export function VolatilityList(props: Omit<Props, 'tone'>): React.ReactElement {
+export function VolatilityList({
+  title,
+  players,
+}: {
+  title: string;
+  players: FutureCastPlayer[];
+}): React.ReactElement {
   return (
-    <MovementList {...props} tone="volatile" valueLabel={(p) => `σ ${p.volatility7d.toFixed(2)}`} />
+    <MovementList
+      title={title}
+      players={players}
+      tone="volatile"
+      valueLabel={(p) => `σ ${p.volatility7d.toFixed(2)}`}
+    />
   );
 }
 
