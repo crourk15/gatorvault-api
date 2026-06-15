@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import type { StaffNote } from '@/lib/futurecast-board-types';
 
 export type StaffNotesFilterState = {
   position: string;
@@ -58,9 +59,9 @@ export function StaffNotesFilters({ filters, onChange, positions }: Props): Reac
 }
 
 export function applyStaffNotesFilters(
-  notes: Array<{ position?: string | null; priority?: string; fitScore?: number }>,
+  notes: StaffNote[],
   filters: StaffNotesFilterState
-) {
+): StaffNote[] {
   return notes.filter((n) => {
     if (filters.position && n.position !== filters.position) return false;
     if (filters.priority && n.priority !== filters.priority) return false;

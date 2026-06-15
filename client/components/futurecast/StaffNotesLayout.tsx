@@ -40,7 +40,11 @@ export function StaffNotesLayout({ notes, updatedAt, totalNotes }: Props): React
       ) : null}
       <div className="gv-staff-grid fc-staff-notes-elite-grid">
         {visible.map((note) => (
-          <StaffNoteCard key={note.playerSlug} note={note} blurred={!insider} />
+          <StaffNoteCard
+            key={`${note.playerName}-${note.updatedAt ?? note.createdAt ?? note.id ?? ''}`}
+            note={note}
+            blurred={!insider}
+          />
         ))}
         {visible.length === 0 ? <p className="fc-elite-empty">No staff notes for this filter.</p> : null}
       </div>
