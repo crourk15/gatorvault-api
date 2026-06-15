@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import type { TrackerStatusFilter } from '@/lib/recruiting-tracker-types';
+import type { TrackerStatusFilter } from '@/lib/recruiting-tracker-api';
 
 type Props = {
   search: string;
@@ -69,11 +69,11 @@ export function TrackerFilters({
         onChange={(e) => onStatusFilterChange(e.target.value as TrackerStatusFilter)}
       >
         <option value="all">All statuses</option>
-        <option value="committed">Committed</option>
-        <option value="trending">Trending</option>
-        <option value="offered">Offered</option>
-        <option value="warm">Warm</option>
-        <option value="cold">Cold</option>
+        <option value="Committed">Committed</option>
+        <option value="Trending">Trending</option>
+        <option value="Offered">Offered</option>
+        <option value="Warm">Warm</option>
+        <option value="Cold">Cold</option>
       </select>
       {updatedLabel ? (
         <p className="tracker-filters__updated">Last updated {updatedLabel}</p>

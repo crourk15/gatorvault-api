@@ -3,7 +3,6 @@
 import React from 'react';
 import { ABWelcomePage } from '@/components/welcome/ABWelcomePage';
 
-/** @deprecated Use WelcomeA — kept for direct imports. */
 export function WelcomePage(): React.ReactElement {
   return <ABWelcomePage />;
 }
@@ -11,3 +10,7 @@ export function WelcomePage(): React.ReactElement {
 export { WelcomeA } from './WelcomeA';
 export { WelcomeB } from './WelcomeB';
 export { ABWelcomePage } from './ABWelcomePage';
+export { MarketingWelcomePage } from './MarketingWelcomePage';
+export { WelcomeHero } from './WelcomeHero';
+export { PricingSection } from './PricingSection';
+export { FreeVsInsider } from './FreeVsInsider';

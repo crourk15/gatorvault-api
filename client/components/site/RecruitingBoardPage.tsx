@@ -10,12 +10,12 @@ import {
   type RecruitingBoardTier,
 } from '@/lib/recruiting-board-api';
 import { playerPos } from '@/lib/recruiting-board-utils';
-import { fetchTrackerBoard, trackerPlayersFromBoard } from '@/lib/recruiting-tracker-api';
+import { useRecruitingData } from '@/hooks/use-recruiting-data';
 import {
   filterTrackerPlayers,
   sortTrackerPlayers,
   type TrackerStatusFilter,
-} from '@/lib/recruiting-tracker-types';
+} from '@/lib/recruiting-tracker-api';
 import { TrackerFilters } from '@/components/recruiting/tracker/TrackerFilters';
 import { TrackerList } from '@/components/recruiting/tracker/TrackerList';
 import { TrackerSkeleton } from '@/components/recruiting/tracker/TrackerSkeleton';
@@ -44,7 +44,6 @@ export function RecruitingBoardPage({ inVault = false }: { inVault?: boolean }):
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [emptyMessage, setEmptyMessage] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [sort, setSort] = useState<SortMode>('ufProbability');
@@ -58,6 +57,14 @@ export function RecruitingBoardPage({ inVault = false }: { inVault?: boolean }):
     (new URLSearchParams(window.location.search).get('mode') === 'staff' ||
       new URLSearchParams(window.location.search).get('staff') === '1');
 
+  const {
+    players: trackerSource,
+    loading: trackerLoading,
+    error: trackerError,
+    updatedAt: trackerUpdatedAt,
+    reload: reloadTracker,
+  } = useRecruitingData(classYear, staffMode);
+
   useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedSearch(search.trim()), 250);
     return () => window.clearTimeout(timer);
@@ -67,12 +74,8 @@ export function RecruitingBoardPage({ inVault = false }: { inVault?: boolean }):
     setLoading(true);
     setError(null);
     try {
-      const [board, tracker] = await Promise.all([
-        fetchRecruitingBoard(classYear, staffMode),
-        fetchTrackerBoard(classYear, staffMode),
-      ]);
+      const board = await fetchRecruitingBoard(classYear, staffMode);
       setPlayers(board.players || [...(board.commits || []), ...(board.targets || [])]);
-      setLastUpdated(tracker.updatedAt);
       setEmptyMessage(board.empty ? board.message || 'No players found for this category yet.' : null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load recruiting board.');
@@ -85,6 +88,10 @@ export function RecruitingBoardPage({ inVault = false }: { inVault?: boolean }):
   useEffect(() => {
     void load();
   }, [load]);
+
+  const pageLoading = loading || trackerLoading;
+  const pageError = error || trackerError;
+  const lastUpdated = trackerUpdatedAt;
 
   const positions = useMemo(() => {
     const set = new Set(players.map((p) => playerPos(p)).filter((p) => p !== '—'));
@@ -115,10 +122,20 @@ export function RecruitingBoardPage({ inVault = false }: { inVault?: boolean }):
   }, [players, debouncedSearch, sort, tierFilter, positionFilter, stateFilter]);
 
   const trackerPlayers = useMemo(() => {
-    const normalized = trackerPlayersFromBoard(filtered);
-    const statusFiltered = filterTrackerPlayers(normalized, statusFilter);
+    const q = debouncedSearch.toLowerCase();
+    let out = trackerSource;
+    if (q) {
+      out = out.filter((p) =>
+        [p.name, p.school, p.position, p.offerStatus, p.prediction]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+          .includes(q)
+      );
+    }
+    const statusFiltered = filterTrackerPlayers(out, statusFilter);
     return sortTrackerPlayers(statusFiltered, trackerSort);
-  }, [filtered, statusFilter, trackerSort]);
+  }, [trackerSource, debouncedSearch, statusFilter, trackerSort]);
 
   const tierSections = useMemo(() => {
     return TIER_ORDER.map((tier) => ({
@@ -187,16 +204,23 @@ export function RecruitingBoardPage({ inVault = false }: { inVault?: boolean }):
         </select>
       </div>
 
-      {loading && <TrackerSkeleton rows={8} />}
-      {error && !loading && (
-        <UiError message={error} retry={() => void load()} backHref={inVault ? '/vault' : '/'} />
+      {pageLoading && <TrackerSkeleton rows={8} />}
+      {pageError && !pageLoading && (
+        <UiError
+          message={pageError}
+          retry={() => {
+            void load();
+            reloadTracker();
+          }}
+          backHref={inVault ? '/vault' : '/'}
+        />
       )}
 
-      {!loading && !error && emptyMessage && trackerPlayers.length === 0 && (
+      {!pageLoading && !pageError && emptyMessage && trackerPlayers.length === 0 && (
         <UiEmpty message={emptyMessage} />
       )}
 
-      {!loading && !error && trackerPlayers.length > 0 && (
+      {!pageLoading && !pageError && trackerPlayers.length > 0 && (
         <section className="gv-page-section">
           <div className="gv-page-section__header">
             <h2 className="gv-page-section__title">Board Tracker</h2>
@@ -206,7 +230,7 @@ export function RecruitingBoardPage({ inVault = false }: { inVault?: boolean }):
         </section>
       )}
 
-      {!loading && !error &&
+      {!pageLoading && !pageError &&
         tierSections.map((section) => (
           <section key={section.tier} className="gv-page-section">
             <div className="gv-page-section__header">

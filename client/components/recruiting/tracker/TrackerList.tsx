@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import type { TrackerPlayer } from '@/lib/recruiting-tracker-types';
+import type { TrackerPlayer } from '@/lib/tracker-api';
 import { TrackerPlayerCard } from './TrackerPlayerCard';
 
 type Props = {
