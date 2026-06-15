@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import { formatUfPercent, normalizePercent } from '@/lib/futurecast-elite-metrics';
 
 type IntelTag = 'hot' | 'warm' | 'watch' | 'cold';
 
@@ -13,10 +14,10 @@ const TAG_LABEL: Record<IntelTag, string> = {
 };
 
 function tagForPlayer(p: HighPriorityPlayer): IntelTag {
-  const uf = Number(p.ufProbability ?? 0);
-  if (uf >= 0.7) return 'hot';
-  if (uf >= 0.5) return 'warm';
-  if (uf >= 0.3) return 'watch';
+  const uf = normalizePercent(p.ufProbability);
+  if (uf >= 70) return 'hot';
+  if (uf >= 50) return 'warm';
+  if (uf >= 30) return 'watch';
   return 'cold';
 }
 
@@ -36,14 +37,18 @@ export function RecruitingHubLatestIntel({ players }: Props): React.ReactElement
         ) : (
           cards.map((p) => {
             const tag = tagForPlayer(p);
+            const ufPct = normalizePercent(p.ufProbability);
             return (
               <article key={p.slug} className="gv-ds-card gv-rh-intel-card">
                 <span className={`gv-rh-intel-tag gv-rh-intel-tag--${tag}`}>{TAG_LABEL[tag]}</span>
                 <h3 className="gv-rh-intel-card__title">{p.name}</h3>
                 <p className="gv-rh-intel-card__body">
-                  {p.position ?? 'Recruit'} · UF {Math.round(Number(p.ufProbability ?? 0) * 100)}%
+                  {p.position ?? 'Recruit'} · UF {formatUfPercent(p.ufProbability)}
                   {p.notePreview || p.insiderNotes ? ` — ${p.notePreview ?? p.insiderNotes}` : ''}
                 </p>
+                <div className="gv-rh-intel-meter" aria-label={`UF confidence ${ufPct} percent`}>
+                  <div className="gv-rh-intel-meter__fill" style={{ width: `${ufPct}%` }} />
+                </div>
               </article>
             );
           })

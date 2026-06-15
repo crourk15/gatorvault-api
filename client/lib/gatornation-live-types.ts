@@ -42,6 +42,9 @@ export type LivePanelProps = {
     text: string;
     timestamp?: string;
     source?: string;
+    url?: string;
+    handle?: string;
+    writerName?: string;
   }[];
 };
 

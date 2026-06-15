@@ -9,7 +9,7 @@ import { UiError } from '@/components/site/UiMessage';
 import { Button } from '@/components/ui';
 import { GNLHero, buildGNLHeroEpisode } from '@/components/gatornation-live/GNLHero';
 import { LiveTicker } from '@/components/gatornation-live/LiveTicker';
-import { LivePanel } from '@/components/gatornation-live/LivePanel';
+import { BeatWriterCardGrid } from '@/components/gatornation-live/BeatWriterCardGrid';
 import { PodcastGrid } from '@/components/gatornation-live/PodcastGrid';
 import { RecruitingFeed } from '@/components/gatornation-live/RecruitingFeed';
 import { RecruitingSnapshot } from '@/components/gatornation-live/RecruitingSnapshot';
@@ -85,7 +85,7 @@ export function GatorNationLivePage(): React.ReactElement {
   }, []);
 
   const heroEpisode = useMemo(
-    () => buildGNLHeroEpisode(bundle.feed, bundle.podcasts),
+    () => buildGNLHeroEpisode(bundle.feed, bundle.podcasts, '/vault/live'),
     [bundle.feed, bundle.podcasts]
   );
 
@@ -114,13 +114,13 @@ export function GatorNationLivePage(): React.ReactElement {
         </div>
 
         <div className="gv-gnl__tri-col">
-          <LivePanel
+          <BeatWriterCardGrid
             title={GNL_COPY.panels.beat.title}
             description={GNL_COPY.panels.beat.description}
             items={bundle.panels.beatWriterHighlights}
           />
           <div className="gv-gnl__tri-col-cta">
-            <Button href="/gatornation-live" variant="secondary">
+            <Button href="/vault/live" variant="secondary">
               View All Beat Writers
             </Button>
           </div>

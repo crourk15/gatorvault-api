@@ -30,7 +30,7 @@ export function GameCard(props: Props): React.ReactElement {
     predictedScoreUF,
     predictedScoreOpp,
     intelUrl,
-    ticketsUrl,
+    ticketVendors,
   } = props;
 
   return (
@@ -69,7 +69,7 @@ export function GameCard(props: Props): React.ReactElement {
       </div>
 
       <div className="gv-sched-game-card__right">
-        <GameActions intelUrl={intelUrl} ticketsUrl={ticketsUrl} />
+        <GameActions intelUrl={intelUrl} ticketVendors={ticketVendors} />
       </div>
     </article>
   );

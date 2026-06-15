@@ -16,7 +16,7 @@
   --gv-frame-margin: 5%;
   --gv-section-pad: 2rem;
   --gv-rhythm: 1.5rem;
-  margin: -1.25rem -1.5rem 0;
+  margin: 0;
   color: var(--gv-white);
   font-family: var(--gv-font);
   padding-bottom: 2rem;
@@ -25,7 +25,7 @@
 
 @media (max-width: 767px) {
   .gv-rh-hub {
-    margin: -1rem -1rem 0;
+    margin: 0;
     --gv-frame-margin: 1rem;
     --gv-section-pad: 1.25rem;
   }

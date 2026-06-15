@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui';
 
 export function RecruitingHubTools(): React.ReactElement {
@@ -23,9 +22,9 @@ export function RecruitingHubTools(): React.ReactElement {
           <p className="gv-rh-tool__desc">
             Staff-style breakdowns, fit scores, and scouting reports for every target.
           </p>
-          <Link href="/vault/scouting" className="gv-ds-btn gv-ds-btn--secondary">
+          <Button href="/vault/scouting" variant="secondary">
             View Scouting
-          </Link>
+          </Button>
         </article>
       </div>
     </section>

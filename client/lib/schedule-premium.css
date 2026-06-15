@@ -373,6 +373,60 @@
   text-align: center;
 }
 
+.gv-sched-tickets__label {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--gv-body-text, #d0d8e0);
+}
+
+.gv-sched-tickets__vendors {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 8px);
+}
+
+.gv-sched-tickets__vendor {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  padding: var(--space-2, 8px) var(--space-3, 12px);
+  border-radius: 8px;
+  text-decoration: none;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: border-color 180ms ease-out, background 180ms ease-out;
+}
+
+.gv-sched-tickets__vendor:hover {
+  border-color: rgba(250, 70, 22, 0.35);
+  background: rgba(250, 70, 22, 0.08);
+}
+
+.gv-sched-tickets__logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-size: 0.625rem;
+  font-weight: 800;
+  background: rgba(0, 48, 135, 0.35);
+}
+
+.gv-sched-tickets__name {
+  flex: 1;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.gv-sched-tickets__price {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--gv-gator-orange, #fa4616);
+}
+
 /* ── Mobile ── */
 @media (max-width: 900px) {
   .gv-sched-game-card {

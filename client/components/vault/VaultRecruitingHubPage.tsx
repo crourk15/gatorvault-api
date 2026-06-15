@@ -33,6 +33,11 @@ import {
 import { RecruitingHubClassOverview } from '@/components/vault/recruiting/RecruitingHubClassOverview';
 import { RecruitingHubLatestIntel } from '@/components/vault/recruiting/RecruitingHubLatestIntel';
 import { RecruitingHubTools } from '@/components/vault/recruiting/RecruitingHubTools';
+import {
+  RecruitingHubHeadlinerCommit,
+  pickHeadlinerCommit,
+} from '@/components/vault/recruiting/RecruitingHubHeadlinerCommit';
+import { normalizePercent } from '@/lib/futurecast-elite-metrics';
 
 function rankCommits(list: RecruitingBoardPlayer[]): RecruitingBoardPlayer[] {
   return [...list].sort((a, b) => {
@@ -57,6 +62,15 @@ function rankTargets(list: RecruitingBoardPlayer[]): RecruitingBoardPlayer[] {
 export function VaultRecruitingHubPage(): React.ReactElement {
   const [tab, setTab] = useState<RecruitingHubTab>('commits-2027');
   const [rankYear, setRankYear] = useState<2027 | 2028>(2027);
+  const [b26, setB26] = useState<{
+    commits: RecruitingBoardPlayer[];
+    targets: RecruitingBoardPlayer[];
+    rankings: RecruitingBoardResponse['rankings'];
+  }>({
+    commits: [],
+    targets: [],
+    rankings: null,
+  });
   const [b27, setB27] = useState<{
     commits: RecruitingBoardPlayer[];
     targets: RecruitingBoardPlayer[];
@@ -66,9 +80,14 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     targets: [],
     rankings: null,
   });
-  const [b28, setB28] = useState<{ commits: RecruitingBoardPlayer[]; targets: RecruitingBoardPlayer[] }>({
+  const [b28, setB28] = useState<{
+    commits: RecruitingBoardPlayer[];
+    targets: RecruitingBoardPlayer[];
+    rankings: RecruitingBoardResponse['rankings'];
+  }>({
     commits: [],
     targets: [],
+    rankings: null,
   });
   const [rising, setRising] = useState<HeatCheckItem[]>([]);
   const [cooling, setCooling] = useState<HeatCheckItem[]>([]);
@@ -134,6 +153,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     else setRefreshing(true);
     if (isInitial) setError(null);
 
+    const p26 = fetchRecruitingBoard(2026);
     const p27 = fetchRecruitingBoard(2027);
     const p28 = fetchRecruitingBoard(2028);
     const pHeat = fetchRecruitingHeatCheck(!isInitial);
@@ -160,13 +180,21 @@ export function VaultRecruitingHubPage(): React.ReactElement {
       });
 
     try {
-      const results = await Promise.allSettled([p27, p28, pHeat, pStaff, pPriority]);
-      const [, r28, rHeat, rStaff, rPriority] = results;
+      const results = await Promise.allSettled([p26, p27, p28, pHeat, pStaff, pPriority]);
+      const [r26, , r28, rHeat, rStaff, rPriority] = results;
 
+      if (r26.status === 'fulfilled') {
+        setB26({
+          commits: rankCommits(filterRecruitingHsOnly(r26.value.commits ?? [])),
+          targets: rankTargets(filterRecruitingHsOnly(r26.value.targets ?? [])),
+          rankings: r26.value.rankings ?? null,
+        });
+      }
       if (r28.status === 'fulfilled') {
         setB28({
           commits: rankCommits(filterRecruitingHsOnly(r28.value.commits ?? [])),
           targets: rankTargets(filterRecruitingHsOnly(r28.value.targets ?? [])),
+          rankings: r28.value.rankings ?? null,
         });
       }
       if (rHeat.status === 'fulfilled') {
@@ -236,6 +264,12 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     [b27.commits, b27.targets, b28.targets]
   );
 
+  const headliner = useMemo(() => pickHeadlinerCommit(b27.commits), [b27.commits]);
+  const commitsWithoutHeadliner = useMemo(() => {
+    if (!headliner) return b27.commits;
+    return b27.commits.filter((p) => p.slug !== headliner.slug);
+  }, [b27.commits, headliner]);
+
   const enrichPlayer = (p: RecruitingBoardPlayer) => ({
     ...p,
     movementDirection:
@@ -243,8 +277,8 @@ export function VaultRecruitingHubPage(): React.ReactElement {
       (p.ufOvStatus === 'cancelled' ? ('down' as const) : p.ufOvStatus === 'scheduled' ? ('up' as const) : undefined),
     predictionSchools:
       p.predictionSchools ??
-      (p.ufProbability
-        ? [{ school: 'Florida', pct: Math.round(Number(p.ufProbability) * 100) }]
+      (p.ufProbability != null
+        ? [{ school: 'Florida', pct: normalizePercent(p.ufProbability) }]
         : undefined),
   });
 
@@ -274,7 +308,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     <div className="gv-rh-hub" data-testid="vault-recruiting-hub">
       <RecruitingHubPremiumHero />
       <RecruitingHubModules />
-      <RecruitingHubClassOverview b27={b27} b28={b28} />
+      <RecruitingHubClassOverview b26={b26} b27={b27} b28={b28} />
       <RecruitingHubLatestIntel players={highPriority} />
       <RecruitingHubTools />
 
@@ -306,8 +340,12 @@ export function VaultRecruitingHubPage(): React.ReactElement {
           </section>
         )}
 
-        {showContent && tab === 'commits-2027' &&
-          renderGrid(b27.commits, 'commit', 'No 2027 commits yet.')}
+        {showContent && tab === 'commits-2027' && (
+          <>
+            {headliner ? <RecruitingHubHeadlinerCommit player={headliner} /> : null}
+            {renderGrid(commitsWithoutHeadliner, 'commit', 'No 2027 commits yet.')}
+          </>
+        )}
 
         {showContent && tab === 'targets-2027' &&
           renderGrid(b27.targets, 'target', 'No 2027 targets.')}

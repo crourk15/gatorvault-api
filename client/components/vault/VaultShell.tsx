@@ -29,6 +29,9 @@ function sidebarActive(pathname: string, href: string): boolean {
   if (h === '/vault/futurecast') {
     return p === h || p.startsWith(`${h}/`);
   }
+  if (h === '/vault/admin') {
+    return p === '/vault/admin' || p.startsWith('/vault/admin/');
+  }
   return p === h || p.startsWith(`${h}/`);
 }
 

@@ -59,8 +59,16 @@ export const FC_METRIC_LABELS = {
   priority: FC_METRIC_PRIORITY.label,
 } as const;
 
-export function formatUfPercent(value: number): string {
-  return `${Math.round(value)}%`;
+/** Normalize API values that may be 0–1 or already 0–100. */
+export function normalizePercent(value: number | null | undefined): number {
+  const n = Number(value ?? 0);
+  if (!Number.isFinite(n)) return 0;
+  if (n >= 0 && n <= 1) return Math.round(n * 100);
+  return Math.round(Math.min(100, Math.max(0, n)));
+}
+
+export function formatUfPercent(value: number | null | undefined): string {
+  return `${normalizePercent(value)}%`;
 }
 
 export function formatStaffPercent(value: number): string {

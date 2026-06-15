@@ -134,6 +134,7 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
     'gatornation-live',
     'recruiting-hub',
     'directory',
+    'team',
     'join',
     'vault',
     'futurecast',

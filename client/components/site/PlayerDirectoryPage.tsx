@@ -62,7 +62,7 @@ export function PlayerDirectoryPage({ inVault = false }: { inVault?: boolean } =
     lifecycle === 'HS' ? 'High School Recruits' : lifecycle === 'PORTAL' ? 'Portal Players' : 'College Players';
 
   return (
-    <div className="gv-page" data-testid="players-directory-page">
+    <div className="gv-page gv-player-dir" data-testid="players-directory-page">
       <div className="gv-page-hero">
         <h1 className="gv-page-title">Player Directory</h1>
         <p className="gv-page-subtitle">
