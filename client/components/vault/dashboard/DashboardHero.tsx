@@ -6,7 +6,7 @@ import { GV_COPY } from '@/lib/gatorvault-copy';
 import { GatorVaultMonogram } from '@/components/brand/GatorVaultWordmark';
 import { InsiderBadge } from '@/components/brand/InsiderBadge';
 import { badgeLevelForTier, type InsiderBadgeLevel } from '@/lib/gatorvault-brand-assets';
-import { loadSession } from '@/lib/auth-api';
+import { loadSession, effectiveTier } from '@/lib/auth-api';
 
 type Props = {
   ticker: TickerResponse | null;
@@ -28,7 +28,7 @@ export function DashboardHero({
 
   useEffect(() => {
     const session = loadSession();
-    setBadgeLevel(badgeLevelForTier(session?.tier));
+    setBadgeLevel(badgeLevelForTier(effectiveTier(session)));
   }, []);
 
   const hot = useMemo(() => {

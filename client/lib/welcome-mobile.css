@@ -7,8 +7,25 @@
   min-width: 0;
 }
 
+.gv-site--marketing {
+  width: 100%;
+  max-width: 100%;
+}
+
+.gv-site--marketing .welcome-premium,
+.gv-site--marketing .welcome {
+  width: 100%;
+  max-width: 100%;
+}
+
 .welcome-premium {
   padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 899px) {
+  .gv-site--marketing .welcome-hero-premium {
+    padding-top: 24px;
+  }
 }
 
 @media (max-width: 768px) {

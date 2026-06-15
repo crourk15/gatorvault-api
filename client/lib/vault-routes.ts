@@ -44,7 +44,6 @@ export const VAULT_SECONDARY: { id: VaultSectionId; label: string; href: string;
   { id: 'nil', label: 'NIL Tracker', href: '/vault/nil', icon: '💰' },
   { id: 'alerts', label: 'My Alerts', href: '/vault/alerts', icon: '🔔' },
   { id: 'apparel', label: 'Apparel', href: '/vault/apparel', icon: '👕' },
-  { id: 'admin', label: 'Admin Console', href: '/vault/admin', icon: '🔐' },
 ];
 
 /** Full sidebar = pillars + secondary (legacy export name). */

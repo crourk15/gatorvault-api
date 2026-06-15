@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import type { LiveTickerProps, TickerTag } from '@/lib/gatornation-live-types';
 import { tickerTagEmoji } from '@/lib/gatornation-live-api';
+import { applyTickerScrollDuration } from '@/lib/ticker-duration';
 
 const TAG_CLASS: Record<TickerTag, string> = {
   BREAKING: 'breaking',
@@ -30,9 +31,15 @@ const FIRST_PAINT_FALLBACK: LiveTickerProps['items'] = [
 ];
 
 function TickerTrack({ items }: { items: LiveTickerProps['items'] }): React.ReactElement {
+  const trackRef = useRef<HTMLDivElement>(null);
   const loop = [...items, ...items];
+
+  useLayoutEffect(() => {
+    applyTickerScrollDuration(trackRef.current);
+  }, [items]);
+
   return (
-    <div className="gv-gnl-ticker__track">
+    <div ref={trackRef} className="gv-gnl-ticker__track">
       {loop.map((item, idx) => (
         <a
           key={`${item.type}_${idx}_${item.text.slice(0, 24)}`}

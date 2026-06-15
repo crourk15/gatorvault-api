@@ -6,7 +6,7 @@ const feedback = require('./feedback-store');
 const access = require('./access-config');
 const pointsStore = require('./points-store');
 const personas = require('./persona-config');
-const { getSessionFromReq } = require('./session-auth');
+const { getSessionFromReq, effectiveTier } = require('./session-auth');
 
 const ADMIN_PIN = process.env.RECRUITING_ADMIN_PIN || process.env.EMAIL_TEST_PIN || 'GV2026admin';
 
@@ -68,7 +68,7 @@ function mountPlatformRoutes(app) {
         email: session.email,
         points: row.points,
         tier: row.tier,
-        paymentTier: session.tier || 'locker',
+        paymentTier: effectiveTier(session) || 'locker',
         ...access.nextPointsTierInfo(row.points),
         history: row.history.slice(0, 10)
       });
@@ -100,7 +100,7 @@ function mountPlatformRoutes(app) {
       }
       const catalog = filmRoom.buildFilmRoomCatalog();
       const session = getSessionFromReq(req);
-      const paymentTier = session?.tier || null;
+      const paymentTier = effectiveTier(session);
       const items = (catalog.items || []).map((item) => {
         const locked = !access.hasPaymentTier(paymentTier, 'film');
         return { ...item, minPaymentTier: 'film', locked };
@@ -114,7 +114,7 @@ function mountPlatformRoutes(app) {
   app.get('/api/film-room/lesson/:id', (req, res) => {
     try {
       const session = getSessionFromReq(req);
-      if (!access.hasPaymentTier(session?.tier, 'film')) {
+      if (!access.hasPaymentTier(effectiveTier(session), 'film')) {
         return res.status(403).json({ ok: false, error: 'Film tier required', locked: true });
       }
       const out = filmRoom.getLessonDetail(req.params.id);

@@ -110,9 +110,6 @@
 /staff  /staff/index.html  200
 /staff/dashboard  /staff/dashboard/index.html  200
 /staff/dashboard/*  /staff/dashboard/index.html  200
-/vault/recruiting/board  /vault/recruiting/board/index.html  200
-/vault/recruiting/board/  /vault/recruiting/board/index.html  200
-/vault/recruiting/board/*  /vault/recruiting/board/index.html  200
 /vault/recruiting/player/*  /vault/recruiting/player/index.html  200
 /vault/futurecast/player/*  /vault/futurecast/player/index.html  200
 /vault/players/*  /vault/players/index.html  200
@@ -120,6 +117,9 @@
 /vault/admin  /vault/admin/index.html  200
 /vault/admin/  /vault/admin/index.html  200
 /vault/admin/*  /vault/admin/index.html  200
+/vault/recruiting/board  /vault/recruiting/board/index.html  200
+/vault/recruiting/board/  /vault/recruiting/board/index.html  200
+/vault/recruiting/board/*  /vault/recruiting/board/index.html  200
 /vault/futurecast/trending  /vault/futurecast/trending/index.html  200
 /vault/futurecast/trending/  /vault/futurecast/trending/index.html  200
 /vault/futurecast/trending/*  /vault/futurecast/trending/index.html  200

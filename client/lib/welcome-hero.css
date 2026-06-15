@@ -94,7 +94,7 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gv-electric-blue);
-  animation: welcomeHeroTicker 19s linear infinite;
+  animation: welcomeHeroTicker 90s linear infinite;
   will-change: transform;
   transform: translateZ(0);
 }

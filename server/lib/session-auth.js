@@ -26,6 +26,22 @@ function getSessionFromReq(req) {
 
 const TIER_LEVELS = { locker: 0, film: 1, war: 2 };
 
+function isAdminAccount(email) {
+  const e = String(email || '').trim().toLowerCase();
+  if (!e) return false;
+  return (
+    e.endsWith('@gatorvaultinsider.com') ||
+    e === 'gatorvaultinsider@gmail.com' ||
+    e.includes('crourk')
+  );
+}
+
+function effectiveTier(session) {
+  if (!session) return null;
+  if (isAdminAccount(session.email)) return 'war';
+  return session.tier;
+}
+
 function tierLevel(tier) {
   const t = String(tier || '').toLowerCase();
   if (t === 'war' || t === 'elite') return TIER_LEVELS.war;
@@ -35,7 +51,7 @@ function tierLevel(tier) {
 
 function sessionHasTier(session, minTier) {
   if (!session) return false;
-  return tierLevel(session.tier) >= tierLevel(minTier);
+  return tierLevel(effectiveTier(session)) >= tierLevel(minTier);
 }
 
 module.exports = {
@@ -43,5 +59,7 @@ module.exports = {
   getSessionFromReq,
   tierLevel,
   sessionHasTier,
+  isAdminAccount,
+  effectiveTier,
   TIER_LEVELS
 };

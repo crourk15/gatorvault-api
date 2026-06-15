@@ -361,7 +361,7 @@
   gap: 3rem;
   width: max-content;
   white-space: nowrap;
-  animation: gv-dash-ticker-scroll 19s linear infinite;
+  animation: gv-dash-ticker-scroll 90s linear infinite;
   will-change: transform;
   transform: translateZ(0);
 }

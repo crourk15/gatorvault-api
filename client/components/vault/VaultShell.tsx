@@ -5,8 +5,6 @@ import { usePathname } from '@/lib/use-pathname';
 import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath, type VaultSectionId } from '@/lib/vault-routes';
 import { prefetchVaultHref } from '@/lib/vault-navigation';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
-import { useUser } from '@/hooks/useUser';
-import { isVaultAdmin } from '@/lib/admin-access';
 import { useHydrated } from '@/hooks/useHydrated';
 
 function sidebarActive(pathname: string, href: string): boolean {
@@ -70,19 +68,9 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
   const [navOpen, setNavOpen] = useState(false);
   const inVault = isVaultPath(pathname);
   const hydrated = useHydrated();
-  const { user, ready: authReady } = useUser();
-  const adminUser = authReady && isVaultAdmin(user);
 
-  const adminNavItem = {
-    id: 'admin' as VaultSectionId,
-    label: 'Admin Console',
-    href: '/vault/admin',
-    icon: '🔐',
-  };
-  const coreNav = adminUser ? [adminNavItem, ...VAULT_PILLARS] : VAULT_PILLARS;
-  const secondaryNav = adminUser
-    ? VAULT_SECONDARY.filter((item) => item.id !== 'admin')
-    : VAULT_SECONDARY;
+  const coreNav = VAULT_PILLARS;
+  const secondaryNav = VAULT_SECONDARY.filter((item) => item.id !== 'admin');
 
   const toggleNav = useCallback(() => setNavOpen((v) => !v), []);
   const closeNav = useCallback(() => setNavOpen(false), []);
@@ -140,7 +128,7 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
                   item={item}
                   pathname={pathname}
                   onClick={closeNav}
-                  className={`gv-vault-shell__nav-link${item.id === 'admin' ? ' gv-vault-shell__nav-link--admin' : ''}`}
+                  className="gv-vault-shell__nav-link"
                 />
               </li>
             ))}

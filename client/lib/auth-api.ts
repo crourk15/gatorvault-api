@@ -1,7 +1,6 @@
 import { getApiBase } from './big-board-api';
 
 export type PaymentTierId = 'locker' | 'film' | 'war';
-
 export type AuthSession = {
   token: string;
   email: string;
@@ -17,13 +16,37 @@ export type AuthSession = {
 
 const SESSION_KEY = 'gv_session';
 
+/** Operator / staff accounts — war-tier access without public admin nav. */
+export function isAdminAccount(email: string | null | undefined): boolean {
+  const e = email?.trim().toLowerCase() ?? '';
+  if (!e) return false;
+  return (
+    e.endsWith('@gatorvaultinsider.com') ||
+    e === 'gatorvaultinsider@gmail.com' ||
+    e.includes('crourk')
+  );
+}
+
+/** Highest paid tier for feature gates — operators always get war. */
+export function effectiveTier(session: AuthSession | null | undefined): PaymentTierId | string {
+  if (!session?.email) return 'locker';
+  if (isAdminAccount(session.email)) return 'war';
+  return session.tier || 'locker';
+}
+
+function normalizeSession(session: AuthSession): AuthSession {  const tier = effectiveTier(session);
+  if (tier === session.tier) return session;
+  return { ...session, tier };
+}
+
 export function loadSession(): AuthSession | null {
   if (typeof window === 'undefined') return null;
   try {
     const raw = localStorage.getItem(SESSION_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as AuthSession;
-    return parsed?.email ? parsed : null;
+    if (!parsed?.email) return null;
+    return normalizeSession(parsed);
   } catch {
     return null;
   }
@@ -32,8 +55,7 @@ export function loadSession(): AuthSession | null {
 export function saveSession(session: AuthSession): void {
   if (typeof window === 'undefined') return;
   try {
-    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    window.dispatchEvent(new CustomEvent('gv-auth-changed'));
+    localStorage.setItem(SESSION_KEY, JSON.stringify(normalizeSession(session)));    window.dispatchEvent(new CustomEvent('gv-auth-changed'));
   } catch {
     /* ignore */
   }
@@ -77,8 +99,7 @@ export async function registerAccount(opts: {
   if (!res.ok || !res.data.session) {
     throw new Error(res.data.error || 'Registration failed.');
   }
-  return { session: res.data.session, emailSent: res.data.emailSent };
-}
+  return { session: normalizeSession(res.data.session), emailSent: res.data.emailSent };}
 
 export async function loginAccount(opts: {
   email: string;
@@ -96,5 +117,5 @@ export async function loginAccount(opts: {
   if (!res.ok || !res.data.session) {
     throw new Error(res.data.error || 'Incorrect email or password.');
   }
-  return res.data.session;
+  return normalizeSession(res.data.session);
 }

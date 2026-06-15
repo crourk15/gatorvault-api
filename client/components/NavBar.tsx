@@ -54,7 +54,10 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
           </Link>
         </div>
 
-        <nav className="gv-nav-premium__center gv-site-nav" aria-label="Main">
+        <nav
+          className="gv-nav-premium__center gv-site-nav gv-nav-premium__desktop-only"
+          aria-label="Main"
+        >
           {MAIN_LINKS.map((link) => (
             <Link key={link.id} href={resolveHref(link)} className={linkClass(link.id)}>
               {link.label}
@@ -62,7 +65,7 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
           ))}
         </nav>
 
-        <div className="gv-nav-premium__right gv-site-nav-actions">
+        <div className="gv-nav-premium__right gv-nav-premium__desktop-only">
           <ThemeToggle />
           {!hydrated || !ready ? (
             <span className="gv-site-nav__link" aria-hidden="true">
@@ -103,7 +106,11 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
         </button>
       </div>
 
-      <div id="nav-links-panel" className={`gv-site-nav-panel gv-nav-premium__mobile${menuOpen ? ' is-open' : ''}`}>
+      <div
+        id="nav-links-panel"
+        className={`gv-site-nav-panel gv-nav-premium__mobile${menuOpen ? ' is-open' : ''}`}
+        hidden={!menuOpen}
+      >
         <nav className="gv-site-nav nav-links-inner" aria-label="Mobile main">
           {MAIN_LINKS.map((link) => (
             <Link key={link.id} href={resolveHref(link)} className={linkClass(link.id)}>
@@ -113,16 +120,31 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
         </nav>
         <div className="gv-nav-premium__mobile-actions">
           <ThemeToggle />
-          {!loggedIn && hydrated && ready ? (
-            <Link href="/join?mode=signin" className="gv-site-nav__link">
-              Sign in
-            </Link>
-          ) : null}
-          {!showInsider && hydrated && ready ? (
-            <Link href="/insider" className="gv-site-nav__cta">
-              Become an Insider
-            </Link>
-          ) : null}
+          {!hydrated || !ready ? null : loggedIn ? (
+            <>
+              <Link href="/vault" className="gv-site-nav__link">
+                Profile
+              </Link>
+              {showInsider ? <span className="nav-insider-badge">Insider</span> : null}
+              {!showInsider ? (
+                <Link href="/insider" className="gv-site-nav__cta">
+                  Become an Insider
+                </Link>
+              ) : null}
+              <Link href="/vault" className="gv-site-nav__cta gv-site-nav__cta--vault">
+                Enter Vault
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/join?mode=signin" className="gv-site-nav__link">
+                Sign in
+              </Link>
+              <Link href="/insider" className="gv-site-nav__cta">
+                Become an Insider
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

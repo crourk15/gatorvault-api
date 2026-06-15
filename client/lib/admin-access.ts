@@ -1,6 +1,7 @@
 import type { AuthSession } from './auth-api';
+import { isAdminAccount } from './auth-api';
 
-/** Client-side admin detection for vault sidebar + console access. */
+/** Client-side admin detection (PIN session or operator email). */
 export function isVaultAdmin(session: AuthSession | null): boolean {
   if (typeof window === 'undefined') return false;
 
@@ -15,14 +16,7 @@ export function isVaultAdmin(session: AuthSession | null): boolean {
     /* private mode / quota */
   }
 
-  if (session?.tier === 'war') return true;
-
-  const email = session?.email?.trim().toLowerCase() ?? '';
-  if (!email) return false;
-
-  return (
-    email.endsWith('@gatorvaultinsider.com') ||
-    email === 'gatorvaultinsider@gmail.com' ||
-    email.includes('crourk')
-  );
+  return isAdminAccount(session?.email);
 }
+
+export { isAdminAccount, effectiveTier } from './auth-api';

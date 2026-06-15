@@ -41,14 +41,16 @@
   flex-shrink: 0;
 }
 
+.gv-nav-premium__desktop-only {
+  display: none !important;
+}
+
 .gv-nav-premium__center {
-  display: none;
   justify-content: center;
   gap: var(--space-1, 4px);
 }
 
 .gv-nav-premium__right {
-  display: none;
   align-items: center;
   gap: var(--space-2, 8px);
   justify-content: flex-end;
@@ -103,12 +105,9 @@
 }
 
 @media (min-width: 900px) {
-  .gv-nav-premium__center {
-    display: flex;
-  }
-
-  .gv-nav-premium__right {
-    display: flex;
+  .gv-nav-premium__desktop-only.gv-nav-premium__center,
+  .gv-nav-premium__desktop-only.gv-nav-premium__right {
+    display: flex !important;
   }
 
   .gv-site-nav-toggle {
@@ -121,23 +120,39 @@
 }
 
 @media (max-width: 899px) {
-  .gv-nav-premium__inner {
-    grid-template-columns: 1fr auto;
+  .gv-site-header.gv-nav-premium {
+    position: sticky;
+    top: 0;
   }
 
-  .gv-nav-premium__right {
-    display: none;
+  .gv-nav-premium__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3, 12px);
+    height: 56px;
+    min-height: 56px;
+    max-height: 56px;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+
+  .gv-nav-premium__left {
+    min-width: 0;
+    flex: 1 1 auto;
   }
 
   .gv-site-nav-toggle {
     display: inline-flex;
+    flex-shrink: 0;
   }
 
   .gv-nav-premium__mobile,
   .gv-site-nav-panel.gv-nav-premium__mobile {
     display: none;
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 56px;
     left: 0;
     right: 0;
     z-index: 110;
@@ -155,7 +170,7 @@
 
   .gv-nav-premium__mobile.is-open,
   .gv-site-nav-panel.gv-nav-premium__mobile.is-open {
-    display: flex;
+    display: flex !important;
   }
 
   .gv-nav-premium__mobile .gv-site-nav {
@@ -170,6 +185,28 @@
     width: 100%;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+  }
+
+  .gv-nav-premium__inner > .gv-nav-premium__desktop-only {
+    display: none !important;
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .gv-nav-premium__mobile .gv-nav-premium__mobile-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .gv-nav-premium__mobile .gv-nav-premium__mobile-actions .gv-site-nav__link,
+  .gv-nav-premium__mobile .gv-nav-premium__mobile-actions .gv-site-nav__cta,
+  .gv-nav-premium__mobile .gv-nav-premium__mobile-actions .nav-insider-badge {
+    width: 100%;
     justify-content: center;
   }
 }

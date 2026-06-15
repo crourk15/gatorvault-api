@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import type { TickerItem } from '@/lib/vault-dashboard-api';
+import { applyTickerScrollDuration } from '@/lib/ticker-duration';
 import { TICKER_CATEGORY_LABEL } from './dashboard-utils';
 
 export function DashboardTicker({
@@ -11,16 +12,7 @@ export function DashboardTicker({
   items: TickerItem[];
   loading?: boolean;
 }): React.ReactElement {
-  if (loading) {
-    return (
-      <section className="gv-dash-ticker" aria-label="Live ticker">
-        <span className="gv-dash-ticker__badge">LIVE</span>
-        <div className="gv-dash-ticker__viewport">
-          <div className="gv-dash-skeleton" style={{ height: 40, margin: 0, borderRadius: 0 }} />
-        </div>
-      </section>
-    );
-  }
+  const trackRef = useRef<HTMLDivElement>(null);
 
   const loop = items.length ? [...items, ...items] : [];
   const fallback = [
@@ -34,11 +26,27 @@ export function DashboardTicker({
   ];
   const display = loop.length ? loop : [...fallback, ...fallback];
 
+  useLayoutEffect(() => {
+    if (loading) return;
+    applyTickerScrollDuration(trackRef.current);
+  }, [items, loading]);
+
+  if (loading) {
+    return (
+      <section className="gv-dash-ticker" aria-label="Live ticker">
+        <span className="gv-dash-ticker__badge">LIVE</span>
+        <div className="gv-dash-ticker__viewport">
+          <div className="gv-dash-skeleton" style={{ height: 40, margin: 0, borderRadius: 0 }} />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="gv-dash-ticker" aria-label="Live ticker" data-testid="dashboard-ticker">
       <span className="gv-dash-ticker__badge">LIVE</span>
       <div className="gv-dash-ticker__viewport">
-        <div className="gv-dash-ticker__track">
+        <div ref={trackRef} className="gv-dash-ticker__track">
           {display.map((item, idx) => (
             <React.Fragment key={`${item.id}_${idx}`}>
               <a href={item.url} className="gv-dash-ticker__item">

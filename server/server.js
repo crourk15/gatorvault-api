@@ -28,6 +28,7 @@ const { mountVaultGradeAdminRoutes } = require('./lib/vault-grade-admin-routes')
 const { apiMonitorMiddleware } = require('./lib/api-monitor');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
+const { effectiveTier } = require('./lib/session-auth');
 
 const fetch = require('node-fetch');
 const nodemailer = require('nodemailer');
@@ -518,13 +519,14 @@ app.post('/api/login', async (req, res) => {
       ? trialEndDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
       : null;
     const pts = pointsStore.getUserPoints(user.email);
+    const tier = effectiveTier({ email: user.email, tier: user.tier });
 
     return res.json({
       ok: true,
       session: {
         token,
         email: user.email,
-        tier: user.tier,
+        tier,
         name: user.name,
         trialEnd,
         trialEndISO: user.trialEnd || null,
@@ -550,7 +552,7 @@ app.get('/api/session', (req, res) => {
     ok: true,
     session: {
       email: session.email,
-      tier: session.tier,
+      tier: effectiveTier(session),
       name: session.name,
       points: pts.points,
       pointsTier: pts.tier
