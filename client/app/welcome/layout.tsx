@@ -18,5 +18,5 @@ export default function WelcomeLayout({
 }: {
   children: React.ReactNode;
 }): React.ReactElement {
-  return children;
+  return <>{children}</>;
 }

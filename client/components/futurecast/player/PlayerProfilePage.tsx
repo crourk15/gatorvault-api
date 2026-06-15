@@ -87,6 +87,9 @@ export function PlayerProfilePage({
           window.location.replace(dest);
           return;
         }
+        if (result.kind !== 'futurecast') {
+          return;
+        }
         const bundle = result.bundle;
         setData(bundle);
         const tasks: Promise<void>[] = [];

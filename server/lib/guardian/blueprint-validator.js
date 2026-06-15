@@ -8,6 +8,8 @@ const schemaValidator = require('../self-runner/schema-validator');
 const {
   MONOLITH_ARCHIVE_HTML,
   isReactMarketingIndex,
+  isRootWelcomeRedirect,
+  isWelcomeLandingIndex,
   REACT_LANDING_MARKERS,
 } = require('./monolith-archive');
 
@@ -74,6 +76,25 @@ function verifyHtmlBlueprint() {
   }
   const html = index.content;
   const missing = [];
+
+  if (isRootWelcomeRedirect(html)) {
+    const welcome = readFileRel('welcome/index.html');
+    if (!welcome.ok) {
+      errors.push(welcome.error);
+    } else if (!isWelcomeLandingIndex(welcome.content)) {
+      errors.push('[routing] welcome/index.html is not a valid Welcome page export');
+    }
+
+    const legacy = readFileRel(MONOLITH_ARCHIVE_HTML);
+    if (legacy.ok) {
+      verifyMonolithHooks(legacy.content, bp, errors, warnings, missing, MONOLITH_ARCHIVE_HTML);
+    } else {
+      warnings.push(
+        `${MONOLITH_ARCHIVE_HTML} missing — monolith vpane hooks not verified (Phase 5 archive)`
+      );
+    }
+    return { ok: errors.length === 0, errors, warnings, missing };
+  }
 
   if (isReactMarketingIndex(html)) {
     for (const marker of REACT_LANDING_MARKERS) {

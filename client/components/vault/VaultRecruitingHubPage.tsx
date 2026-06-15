@@ -226,8 +226,8 @@ export function VaultRecruitingHubPage(): React.ReactElement {
   const nextTargets = useMemo(() => b27.targets.slice(0, 3), [b27.targets]);
 
   const playerPool = useMemo(
-    () => [...b26.commits, ...b27.commits, ...b27.targets, ...b28.targets],
-    [b26.commits, b27.commits, b27.targets, b28.targets]
+    () => [...b27.commits, ...b27.targets, ...b28.targets],
+    [b27.commits, b27.targets, b28.targets]
   );
 
   const momentumPct = useMemo(
@@ -277,7 +277,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
         nextTargets={nextTargets}
         commits={b27.commits}
         rankings={b27.rankings}
-        compareRankings={b26.rankings ?? undefined}
+        compareRankings={undefined}
         classYear={2027}
         priorClassYear={2026}
       />

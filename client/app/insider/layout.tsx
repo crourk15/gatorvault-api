@@ -18,5 +18,6 @@ export default function InsiderLayout({
 }: {
   children: React.ReactNode;
 }): React.ReactElement {
-  return children;
+  // Valid: always returns a ReactElement wrapper (children alone is ReactNode).
+  return <>{children}</>;
 }

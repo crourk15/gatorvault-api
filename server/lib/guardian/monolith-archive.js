@@ -20,9 +20,25 @@ const REACT_LANDING_MARKERS = [
   'gv-marketing-main',
 ];
 
+/** Welcome A/B page export (canonical landing at /welcome/). */
+const WELCOME_LANDING_MARKERS = [
+  'app/welcome/page',
+  '/_next/static/',
+];
+
 function isReactMarketingIndex(html) {
   if (!html) return false;
   return REACT_LANDING_MARKERS.some((m) => html.includes(m));
+}
+
+function isRootWelcomeRedirect(html) {
+  if (!html) return false;
+  return html.includes('NEXT_REDIRECT') && html.includes('/welcome');
+}
+
+function isWelcomeLandingIndex(html) {
+  if (!html) return false;
+  return WELCOME_LANDING_MARKERS.every((m) => html.includes(m));
 }
 
 function isMonolithVaultIndex(html) {
@@ -34,6 +50,9 @@ module.exports = {
   MONOLITH_ARCHIVE_HTML,
   FORBIDDEN_IN_ROOT_INDEX,
   REACT_LANDING_MARKERS,
+  WELCOME_LANDING_MARKERS,
   isReactMarketingIndex,
+  isRootWelcomeRedirect,
+  isWelcomeLandingIndex,
   isMonolithVaultIndex,
 };
