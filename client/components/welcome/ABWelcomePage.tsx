@@ -12,23 +12,24 @@ function pickVariant(): Variant {
   return Math.random() < 0.5 ? 'A' : 'B';
 }
 
-function readVariant(): Variant {
-  if (typeof window === 'undefined') return 'A';
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored === 'A' || stored === 'B') return stored;
-  const variant = pickVariant();
-  localStorage.setItem(STORAGE_KEY, variant);
-  return variant;
-}
-
 export function ABWelcomePage(): React.ReactElement {
-  const [variant, setVariant] = useState<Variant | null>(null);
+  // SSR/static export must render real content — never gate on client-only state.
+  const [variant, setVariant] = useState<Variant>('A');
 
   useEffect(() => {
-    setVariant(readVariant());
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored === 'A' || stored === 'B') {
+        setVariant(stored);
+        return;
+      }
+      const picked = pickVariant();
+      localStorage.setItem(STORAGE_KEY, picked);
+      setVariant(picked);
+    } catch {
+      // localStorage blocked — keep SSR default (A).
+    }
   }, []);
-
-  if (!variant) return <div className="welcome welcome-bright welcome--loading" aria-hidden="true" />;
 
   return variant === 'A' ? <WelcomeA /> : <WelcomeB />;
 }

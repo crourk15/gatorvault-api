@@ -24,6 +24,7 @@ const REACT_LANDING_MARKERS = [
 const WELCOME_LANDING_MARKERS = [
   'app/welcome/page',
   '/_next/static/',
+  'data-testid="welcome-page"',
 ];
 
 function isReactMarketingIndex(html) {
