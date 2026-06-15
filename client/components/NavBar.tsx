@@ -7,6 +7,15 @@ import { getVaultNavHref, navActiveId } from '@/lib/navConfig';
 import { useUser } from '@/hooks/useUser';
 import { useHydrated } from '@/hooks/useHydrated';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
+
+const MAIN_LINKS = [
+  { id: 'home', label: 'Home', href: '/welcome' },
+  { id: 'futurecast', label: 'FutureCast', vaultKey: 'futurecast' as const },
+  { id: 'recruiting', label: 'Recruiting', vaultKey: 'recruiting' as const },
+  { id: 'filmRoom', label: 'Film Room', vaultKey: 'filmRoom' as const },
+  { id: 'insider', label: 'Insider', href: '/insider' },
+] as const;
 
 export function NavBar({ marketing = false }: { marketing?: boolean }): React.ReactElement {
   const pathname = usePathname();
@@ -15,7 +24,6 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
   const { user, isInsider, ready } = useUser();
   const loggedIn = hydrated && ready && !!user?.email;
   const showInsider = hydrated && ready && isInsider;
-  const showUpgrade = hydrated && ready && !!user?.email && !isInsider;
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -23,76 +31,92 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
   }, [pathname]);
 
   const linkClass = (id: string) =>
-    `gv-site-nav__link nav-link${current === id ? ' is-active' : ''}`;
+    `gv-site-nav__link gv-nav-premium__link${current === id ? ' is-active' : ''}`;
+
+  const resolveHref = (link: (typeof MAIN_LINKS)[number]): string => {
+    if ('href' in link && link.href) return link.href;
+    if ('vaultKey' in link && link.vaultKey) return getVaultNavHref(link.vaultKey, loggedIn);
+    return '/welcome';
+  };
 
   return (
-    <header className={`gv-site-header nav${marketing ? ' gv-site-header--marketing' : ''}`}>
-      <div className="gv-site-header__inner nav-inner">
-        <div className="nav-left">
+    <header className={`gv-site-header gv-nav-premium nav${marketing ? ' gv-site-header--marketing' : ''}`}>
+      <div className="gv-nav-premium__inner">
+        <div className="gv-nav-premium__left">
           <Link href="/welcome" className="gv-site-header__brand nav-logo">
             <GatorVaultWordmark height={30} className="gv-site-header__wordmark" />
           </Link>
         </div>
 
-        <div className="gv-site-header__tools nav-tools">
-          <div className="nav-right gv-site-nav-actions gv-site-nav-actions--inline">
-            {!hydrated || !ready ? (
-              <span className="gv-site-nav__link" aria-hidden="true">
-                &nbsp;
-              </span>
-            ) : null}
-            {!loggedIn && hydrated && ready ? (
-              <Link href="/join" className="gv-site-nav__cta nav-cta">
-                Start Free
-              </Link>
-            ) : null}
-            {showUpgrade ? (
-              <Link href="/insider" className="gv-site-nav__cta nav-cta">
-                Upgrade
-              </Link>
-            ) : null}
-            {showInsider ? <span className="nav-insider-badge">Insider</span> : null}
-            {!loggedIn && hydrated && ready ? (
-              <Link href="/join?mode=signin" className="gv-site-nav__link">
-                Sign in
-              </Link>
-            ) : null}
-            {loggedIn ? (
-              <Link href="/vault" className="gv-site-nav__cta gv-site-nav__cta--vault">
-                Enter Vault
-              </Link>
-            ) : null}
-          </div>
+        <nav className="gv-nav-premium__center gv-site-nav" aria-label="Main">
+          {MAIN_LINKS.map((link) => (
+            <Link key={link.id} href={resolveHref(link)} className={linkClass(link.id)}>
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
-          <button
-            type="button"
-            className="gv-site-nav-toggle"
-            aria-expanded={menuOpen}
-            aria-controls="nav-links-panel"
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            <span className="gv-site-nav-toggle__label">{menuOpen ? 'Close' : 'Menu'}</span>
-          </button>
+        <div className="gv-nav-premium__right gv-site-nav-actions">
+          <ThemeToggle />
+          {!hydrated || !ready ? (
+            <span className="gv-site-nav__link" aria-hidden="true">
+              &nbsp;
+            </span>
+          ) : null}
+          {!loggedIn && hydrated && ready ? (
+            <Link href="/join?mode=signin" className="gv-site-nav__link">
+              Sign in
+            </Link>
+          ) : null}
+          {loggedIn ? (
+            <Link href="/vault" className="gv-site-nav__link">
+              Profile
+            </Link>
+          ) : null}
+          {showInsider ? <span className="nav-insider-badge">Insider</span> : null}
+          {!showInsider && hydrated && ready ? (
+            <Link href="/insider" className="gv-site-nav__cta gv-nav-premium__cta">
+              Become an Insider
+            </Link>
+          ) : null}
+          {loggedIn ? (
+            <Link href="/vault" className="gv-site-nav__cta gv-site-nav__cta--vault">
+              Enter Vault
+            </Link>
+          ) : null}
         </div>
 
-        <div id="nav-links-panel" className={`gv-site-nav-panel nav-links${menuOpen ? ' is-open' : ''}`}>
-          <nav className="gv-site-nav nav-links-inner" aria-label="Main">
-            <Link href="/welcome" className={linkClass('home')}>
-              Home
+        <button
+          type="button"
+          className="gv-site-nav-toggle"
+          aria-expanded={menuOpen}
+          aria-controls="nav-links-panel"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span className="gv-site-nav-toggle__label">{menuOpen ? 'Close' : 'Menu'}</span>
+        </button>
+      </div>
+
+      <div id="nav-links-panel" className={`gv-site-nav-panel gv-nav-premium__mobile${menuOpen ? ' is-open' : ''}`}>
+        <nav className="gv-site-nav nav-links-inner" aria-label="Mobile main">
+          {MAIN_LINKS.map((link) => (
+            <Link key={link.id} href={resolveHref(link)} className={linkClass(link.id)}>
+              {link.label}
             </Link>
-            <Link href={getVaultNavHref('futurecast', loggedIn)} className={linkClass('futurecast')}>
-              FutureCast
+          ))}
+        </nav>
+        <div className="gv-nav-premium__mobile-actions">
+          <ThemeToggle />
+          {!loggedIn && hydrated && ready ? (
+            <Link href="/join?mode=signin" className="gv-site-nav__link">
+              Sign in
             </Link>
-            <Link href={getVaultNavHref('recruiting', loggedIn)} className={linkClass('recruiting')}>
-              Recruiting
+          ) : null}
+          {!showInsider && hydrated && ready ? (
+            <Link href="/insider" className="gv-site-nav__cta">
+              Become an Insider
             </Link>
-            <Link href={getVaultNavHref('filmRoom', loggedIn)} className={linkClass('filmRoom')}>
-              Film Room
-            </Link>
-            <Link href="/insider" className={linkClass('insider')}>
-              Insider
-            </Link>
-          </nav>
+          ) : null}
         </div>
       </div>
     </header>

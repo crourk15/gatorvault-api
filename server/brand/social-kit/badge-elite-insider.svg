@@ -1,0 +1,19 @@
+<svg width="200" height="240" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GatorVault Elite Insider">
+  <defs>
+    <filter id="goldGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#D4AF37" flood-opacity="0.35"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#goldGlow)">
+    <path d="M52 20c12 12 20 24 20 36 0 16-12 28-20 36-8-8-20-20-20-36 0-12 8-24 20-36z" fill="#0021A5"/>
+    <path d="M52 32c8 8 12 16 12 24 0 10-6 18-12 24-6-6-12-14-12-24 0-8 4-16 12-24z" fill="#FA4616"/>
+    <circle cx="92" cy="44" r="10" fill="#D4AF37"/>
+  </g>
+  <text x="100" y="210" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="18" fill="#0021A5">ELITE INSIDER</text>
+</svg>

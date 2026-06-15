@@ -12,5 +12,7 @@ export { WelcomeB } from './WelcomeB';
 export { ABWelcomePage } from './ABWelcomePage';
 export { MarketingWelcomePage } from './MarketingWelcomePage';
 export { WelcomeHero } from './WelcomeHero';
+export { ValueProposition } from './ValueProposition';
+export { SocialProof } from './SocialProof';
 export { PricingSection } from './PricingSection';
 export { FreeVsInsider } from './FreeVsInsider';

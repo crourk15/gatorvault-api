@@ -1,0 +1,5 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GatorVault profile">
+  <rect width="400" height="400" fill="#0021A5"/>
+  <rect x="152" y="152" width="96" height="96" rx="16" fill="#0021A5" stroke="#FA4616" stroke-width="4"/>
+  <path d="M176 176h48v12h-36v12h24v12h-36v12h36v12h-48V176z" fill="#FA4616"/>
+</svg>

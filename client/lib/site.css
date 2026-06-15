@@ -19,9 +19,113 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(3, 9, 21, 0.96);
-  border-bottom: 1px solid rgba(0, 48, 135, 0.45);
-  backdrop-filter: blur(10px);
+  height: 64px;
+  background: rgba(10, 26, 47, 0.9);
+  border-bottom: 1px solid var(--gv-steel-blue, #1b3a57);
+  backdrop-filter: blur(12px);
+}
+
+.gv-nav-premium__inner {
+  max-width: var(--gv-container-wide, 1280px);
+  height: 64px;
+  padding: 0 var(--space-6, 24px);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-4, 16px);
+}
+
+.gv-nav-premium__left {
+  flex-shrink: 0;
+}
+
+.gv-nav-premium__center {
+  display: none;
+  justify-content: center;
+  gap: var(--space-1, 4px);
+}
+
+.gv-nav-premium__right {
+  display: none;
+  align-items: center;
+  gap: var(--space-2, 8px);
+  justify-content: flex-end;
+}
+
+.gv-nav-premium__link {
+  position: relative;
+  border-radius: 0;
+  border: none;
+  padding: var(--space-2, 8px) var(--space-3, 12px);
+  color: var(--text-primary, #d0d8e0);
+  transition: color 180ms ease-out;
+}
+
+.gv-nav-premium__link:hover {
+  color: var(--gv-electric-blue, #4da3ff);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.gv-nav-premium__link.is-active {
+  font-weight: 800;
+  color: #fff;
+  background: transparent;
+  border: none;
+}
+
+.gv-nav-premium__link.is-active::after {
+  content: '';
+  position: absolute;
+  left: var(--space-3, 12px);
+  right: var(--space-3, 12px);
+  bottom: 0;
+  height: 2px;
+  background: var(--gv-gator-orange, #fa4616);
+  border-radius: 2px;
+}
+
+.gv-nav-premium__cta {
+  border-radius: 8px;
+  padding: var(--space-2, 8px) var(--space-4, 16px);
+}
+
+.gv-nav-premium__mobile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2, 8px);
+  align-items: center;
+  margin-top: var(--space-3, 12px);
+  padding-top: var(--space-3, 12px);
+  border-top: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+}
+
+@media (min-width: 900px) {
+  .gv-nav-premium__center {
+    display: flex;
+  }
+
+  .gv-nav-premium__right {
+    display: flex;
+  }
+
+  .gv-site-nav-toggle {
+    display: none !important;
+  }
+
+  .gv-nav-premium__mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 899px) {
+  .gv-nav-premium__inner {
+    grid-template-columns: 1fr auto;
+  }
+
+  .gv-nav-premium__right {
+    display: none;
+  }
 }
 
 .gv-site-header__inner {

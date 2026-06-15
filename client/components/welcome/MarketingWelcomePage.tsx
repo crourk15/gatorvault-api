@@ -2,19 +2,21 @@
 
 import React from 'react';
 import { WelcomeHero } from './WelcomeHero';
+import { ValueProposition } from './ValueProposition';
+import { SocialProof } from './SocialProof';
 import { PricingSection } from './PricingSection';
 import { FreeVsInsider } from './FreeVsInsider';
-import { KeyFeatures } from './KeyFeatures';
 import { FooterCTA, WelcomeStickyCTA } from './FooterCTA';
 
-/** Shared marketing + conversion layout for /welcome. */
+/** Premium marketing + conversion layout for /welcome. */
 export function MarketingWelcomePage(): React.ReactElement {
   return (
     <>
       <WelcomeHero />
+      <ValueProposition />
+      <SocialProof />
       <PricingSection />
       <FreeVsInsider />
-      <KeyFeatures />
       <FooterCTA />
       <WelcomeStickyCTA />
     </>

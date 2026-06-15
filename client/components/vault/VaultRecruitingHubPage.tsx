@@ -19,7 +19,6 @@ import {
 import { ensurePlayerSlug } from '@/lib/slug';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore, notifyVaultNavigation } from '@/lib/vault-navigation';
-import { RecruitingHubHero, computeHubMomentum } from '@/components/vault/recruiting/RecruitingHubHero';
 import { RecruitingTabBar, RecruitingSubTabBar } from '@/components/vault/recruiting/RecruitingTabBar';
 import { PlayerCardEnhanced } from '@/components/vault/recruiting/EliteRecruitCard';
 import { ScoutingTiles } from '@/components/vault/recruiting/RecruitingScoutingTiles';
@@ -27,6 +26,13 @@ import { PortalList } from '@/components/vault/recruiting/RecruitingPortalSectio
 import { RankingsTable } from '@/components/vault/recruiting/RecruitingRankingsTable';
 import { RecruitingHubFooter } from '@/components/vault/recruiting/RecruitingHubFooter';
 import { isElitePlayer } from '@/lib/recruiting-hub-utils';
+import {
+  RecruitingHubPremiumHero,
+  RecruitingHubModules,
+} from '@/components/vault/recruiting/RecruitingHubPremium';
+import { RecruitingHubClassOverview } from '@/components/vault/recruiting/RecruitingHubClassOverview';
+import { RecruitingHubLatestIntel } from '@/components/vault/recruiting/RecruitingHubLatestIntel';
+import { RecruitingHubTools } from '@/components/vault/recruiting/RecruitingHubTools';
 
 function rankCommits(list: RecruitingBoardPlayer[]): RecruitingBoardPlayer[] {
   return [...list].sort((a, b) => {
@@ -230,11 +236,6 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     [b27.commits, b27.targets, b28.targets]
   );
 
-  const momentumPct = useMemo(
-    () => computeHubMomentum(staffDashboard, b27.rankings?.classScore ?? null),
-    [staffDashboard, b27.rankings?.classScore]
-  );
-
   const enrichPlayer = (p: RecruitingBoardPlayer) => ({
     ...p,
     movementDirection:
@@ -271,16 +272,11 @@ export function VaultRecruitingHubPage(): React.ReactElement {
 
   return (
     <div className="gv-rh-hub" data-testid="vault-recruiting-hub">
-      <RecruitingHubHero
-        momentumPct={momentumPct}
-        staff={staffDashboard}
-        nextTargets={nextTargets}
-        commits={b27.commits}
-        rankings={b27.rankings}
-        compareRankings={undefined}
-        classYear={2027}
-        priorClassYear={2026}
-      />
+      <RecruitingHubPremiumHero />
+      <RecruitingHubModules />
+      <RecruitingHubClassOverview b27={b27} b28={b28} />
+      <RecruitingHubLatestIntel players={highPriority} />
+      <RecruitingHubTools />
 
       <RecruitingTabBar active={tab} onChange={setTabAndUrl} />
 
