@@ -1,213 +1,152 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { fetchFutureCastHome } from '@/lib/futurecast-home-api';
-import { fetchRecruitingBoard } from '@/lib/recruiting-board-api';
-import { fetchNilDashboard } from '@/lib/nil-api';
-import { SCHEDULE_GAMES } from '@/lib/schedule-data';
-import { PodcastsRecruitingSection } from '@/components/vault/live/PodcastsRecruitingSection';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import '@/lib/vault-dashboard.css';
+import { DashboardHero } from '@/components/vault/dashboard/DashboardHero';
+import { DashboardTicker } from '@/components/vault/dashboard/DashboardTicker';
+import { DashboardMovementPreview } from '@/components/vault/dashboard/DashboardMovementPreview';
+import { DashboardRecruitingSnapshot } from '@/components/vault/dashboard/DashboardRecruitingSnapshot';
+import { DashboardLatestContent } from '@/components/vault/dashboard/DashboardLatestContent';
+import { DashboardQuickActions } from '@/components/vault/dashboard/DashboardQuickActions';
+import { DashboardPersonalized } from '@/components/vault/dashboard/DashboardPersonalized';
+import {
+  DASHBOARD_REFRESH,
+  computeMomentumPct,
+  daysUntilNextGame,
+  fetchContentLatest,
+  fetchLiveTicker,
+  fetchMovementPreview,
+  fetchPersonalizedHints,
+  fetchRecruitingSnapshot,
+  type ContentLatestResponse,
+  type PersonalizedResponse,
+  type RecruitingSnapshot,
+  type TickerResponse,
+} from '@/lib/vault-dashboard-api';
+import type { StaffDashboardResponse } from '@/lib/staff-api';
+import { fetchFutureCastClass } from '@/lib/futurecast-home-api';
 
-const QUICK_LINKS = [
-  {
-    href: '/vault/recruiting/board',
-    icon: '📊',
-    title: 'Recruiting Board',
-    desc: 'Classic board — composite ratings, commits, targets, and class summary.',
-  },
-  {
-    href: '/vault/recruiting',
-    icon: '🎯',
-    title: 'Recruiting Hub',
-    desc: 'Commits, targets, portal, heat check, and scouting.',
-  },
-  {
-    href: '/vault/futurecast',
-    icon: '📈',
-    title: 'FutureCast',
-    desc: 'Master board, trending, movement intel, and staff notes.',
-  },
-  {
-    href: '/vault/team',
-    icon: '👥',
-    title: 'Team',
-    desc: 'Full roster, depth chart, and portal tags.',
-  },
-  {
-    href: '/vault/live',
-    icon: '⚡',
-    title: 'GatorNation Live',
-    desc: 'X-style live feed — commits, portal, beat writers, and podcasts.',
-  },
-  {
-    href: '/vault/schedule',
-    icon: '🎟️',
-    title: 'Schedule & Tickets',
-    desc: 'Full 2026 schedule with TV info and ticket links.',
-  },
-  {
-    href: '/vault/film-room',
-    icon: '📺',
-    title: 'Film Room',
-    desc: 'Scheme breakdowns, clips, and press conferences.',
-  },
-  {
-    href: '/vault/game-week',
-    icon: '🏈',
-    title: 'Game Week',
-    desc: 'Matchups, win probability, and film notes.',
-  },
-  {
-    href: '/vault/live-scores',
-    icon: '📊',
-    title: 'Live Scores',
-    desc: 'Schedule, live scores, and season stat placeholders.',
-  },
-  {
-    href: '/vault/articles',
-    icon: '📰',
-    title: 'Insider Articles',
-    desc: 'Film breakdowns, coaching intel, and roster analysis.',
-  },
-  {
-    href: '/vault/community',
-    icon: '💬',
-    title: 'Community',
-    desc: 'Member threads, live rooms, and community pulse.',
-  },
-  {
-    href: '/vault/game-zone',
-    icon: '🏆',
-    title: 'Game Zone',
-    desc: 'Score predictor, polls, trivia, and Vault points.',
-  },
-  {
-    href: '/vault/nil',
-    icon: '💰',
-    title: 'NIL Tracker',
-    desc: 'SEC rankings, UF KPIs, and recent NIL events.',
-  },
-  {
-    href: '/vault/futurecast/movement',
-    icon: '📡',
-    title: 'Movement Intel',
-    desc: 'Full movement dashboard — risers, fallers, volatility.',
-  },
-  {
-    href: '/vault/alerts',
-    icon: '🔔',
-    title: 'My Alerts',
-    desc: 'Notification preferences and your personalized feed.',
-  },
-  {
-    href: '/vault/apparel',
-    icon: '👕',
-    title: 'Apparel',
-    desc: 'Official shops and gameday gear storefronts.',
-  },
-];
-
-interface DashboardPulse {
-  commits: number;
-  targets: number;
-  trending: number;
-  nilSecRank: number | null;
-  nextGame: string;
-  nextGamePct: number;
-}
+const TICKER_DEBOUNCE_MS = 400;
 
 export function VaultDashboardPage(): React.ReactElement {
-  const nextGame = SCHEDULE_GAMES[0];
-  const [pulse, setPulse] = useState<DashboardPulse>({
-    commits: 0,
-    targets: 0,
-    trending: 0,
-    nilSecRank: null,
-    nextGame: nextGame?.label ?? 'Season opener',
-    nextGamePct: nextGame?.ufPct ?? 0,
-  });
+  const [ticker, setTicker] = useState<TickerResponse | null>(null);
+  const [movement, setMovement] = useState<StaffDashboardResponse | null>(null);
+  const [recruiting, setRecruiting] = useState<RecruitingSnapshot | null>(null);
+  const [content, setContent] = useState<ContentLatestResponse | null>(null);
+  const [personalized, setPersonalized] = useState<PersonalizedResponse | null>(null);
+  const [momentumPct, setMomentumPct] = useState(72);
+  const [loading, setLoading] = useState(true);
+  const tickerDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const applyTicker = useCallback((data: TickerResponse) => {
+    if (tickerDebounceRef.current) clearTimeout(tickerDebounceRef.current);
+    tickerDebounceRef.current = setTimeout(() => {
+      setTicker(data);
+    }, TICKER_DEBOUNCE_MS);
+  }, []);
+
+  const loadTicker = useCallback(
+    async (force = false) => {
+      try {
+        const data = await fetchLiveTicker(force);
+        applyTicker(data);
+      } catch {
+        /* keep prior */
+      }
+    },
+    [applyTicker]
+  );
+
+  const loadMovement = useCallback(async (force = false) => {
+    try {
+      const [data, classData] = await Promise.all([
+        fetchMovementPreview(force),
+        fetchFutureCastClass().catch(() => null),
+      ]);
+      setMovement(data);
+      setMomentumPct(
+        computeMomentumPct(data.heatmap, classData?.rankings?.classScore ?? classData?.classImpactScore)
+      );
+    } catch {
+      /* keep prior */
+    }
+  }, []);
+
+  const loadRecruiting = useCallback(async (force = false) => {
+    try {
+      const data = await fetchRecruitingSnapshot(force);
+      setRecruiting(data);
+    } catch {
+      /* keep prior */
+    }
+  }, []);
+
+  const loadContent = useCallback(async (force = false) => {
+    try {
+      const data = await fetchContentLatest(force);
+      setContent(data);
+    } catch {
+      /* keep prior */
+    }
+  }, []);
+
+  const loadPersonalized = useCallback(async () => {
+    try {
+      const data = await fetchPersonalizedHints();
+      setPersonalized(data);
+    } catch {
+      /* keep prior */
+    }
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
-    async function loadPulse() {
-      try {
-        const [board, fc, nil] = await Promise.all([
-          fetchRecruitingBoard(2027).catch(() => null),
-          fetchFutureCastHome().catch(() => null),
-          fetchNilDashboard().catch(() => null),
-        ]);
-        if (cancelled) return;
-        setPulse({
-          commits: board?.commits?.length ?? fc?.commits?.length ?? 0,
-          targets: board?.targets?.length ?? fc?.topTargets?.length ?? 0,
-          trending: (fc?.trendingUp?.length ?? 0) + (fc?.trendingDown?.length ?? 0),
-          nilSecRank: nil?.ufStanding?.secRank ?? null,
-          nextGame: nextGame?.label ?? 'Season opener',
-          nextGamePct: nextGame?.ufPct ?? 0,
-        });
-      } catch {
-        /* keep defaults */
-      }
+
+    async function boot() {
+      const [tickerData] = await Promise.all([
+        fetchLiveTicker(true).catch(() => null),
+        loadMovement(true),
+        loadRecruiting(true),
+        loadContent(true),
+        loadPersonalized(),
+      ]);
+      if (tickerData) setTicker(tickerData);
+      if (!cancelled) setLoading(false);
     }
-    void loadPulse();
+
+    void boot();
+
+    const tickerTimer = window.setInterval(() => void loadTicker(true), DASHBOARD_REFRESH.ticker);
+    const movementTimer = window.setInterval(() => void loadMovement(true), DASHBOARD_REFRESH.movement);
+    const recruitingTimer = window.setInterval(() => void loadRecruiting(true), DASHBOARD_REFRESH.recruiting);
+    const contentTimer = window.setInterval(() => void loadContent(true), DASHBOARD_REFRESH.content);
+    const personalTimer = window.setInterval(() => void loadPersonalized(), 60_000);
+
     return () => {
       cancelled = true;
+      if (tickerDebounceRef.current) clearTimeout(tickerDebounceRef.current);
+      window.clearInterval(tickerTimer);
+      window.clearInterval(movementTimer);
+      window.clearInterval(recruitingTimer);
+      window.clearInterval(contentTimer);
+      window.clearInterval(personalTimer);
     };
-  }, [nextGame?.label, nextGame?.ufPct]);
+  }, [loadContent, loadMovement, loadPersonalized, loadRecruiting, loadTicker]);
 
   return (
-    <div className="gv-vault-dashboard" data-testid="vault-dashboard">
-      <div className="gv-page-hero">
-        <h1 className="gv-page-title">Welcome to GatorVault 🐊</h1>
-        <p className="gv-page-subtitle">
-          Recruiting Hub, FutureCast, Team, Live Feed, and Schedule — your five core pillars.
-        </p>
-      </div>
-
-      <section className="gv-vault-dashboard__pulse" aria-label="Live pillar pulse">
-        <a href="/vault/recruiting" className="gv-vault-dashboard__pulse-card">
-          <span className="gv-vault-dashboard__pulse-value">{pulse.commits}</span>
-          <span className="gv-vault-dashboard__pulse-label">2027 Commits</span>
-        </a>
-        <a href="/vault/futurecast" className="gv-vault-dashboard__pulse-card">
-          <span className="gv-vault-dashboard__pulse-value">{pulse.trending}</span>
-          <span className="gv-vault-dashboard__pulse-label">Trending Moves</span>
-        </a>
-        <a href="/vault/recruiting?tab=targets-2027" className="gv-vault-dashboard__pulse-card">
-          <span className="gv-vault-dashboard__pulse-value">{pulse.targets}</span>
-          <span className="gv-vault-dashboard__pulse-label">Top Targets</span>
-        </a>
-        <a href="/vault/nil" className="gv-vault-dashboard__pulse-card">
-          <span className="gv-vault-dashboard__pulse-value">
-            {pulse.nilSecRank != null ? `#${pulse.nilSecRank}` : '—'}
-          </span>
-          <span className="gv-vault-dashboard__pulse-label">NIL SEC Rank</span>
-        </a>
-        <a href="/vault/game-week" className="gv-vault-dashboard__pulse-card">
-          <span className="gv-vault-dashboard__pulse-value">{pulse.nextGamePct}%</span>
-          <span className="gv-vault-dashboard__pulse-label">{pulse.nextGame}</span>
-        </a>
-      </section>
-
-      <PodcastsRecruitingSection limit={4} />
-
-      <div className="gv-vault-dashboard__grid">
-        {QUICK_LINKS.map((item) => (
-          <a key={item.href} href={item.href} className="gv-vault-dashboard__card">
-            <span className="gv-vault-dashboard__icon" aria-hidden="true">
-              {item.icon}
-            </span>
-            <h2 className="gv-vault-dashboard__card-title">{item.title}</h2>
-            <p className="gv-vault-dashboard__card-desc">{item.desc}</p>
-          </a>
-        ))}
-      </div>
-
-      <section className="gv-vault-dashboard__welcome">
-        <h2 className="gv-vault-dashboard__welcome-title">Welcome Email</h2>
-        <p className="gv-vault-dashboard__welcome-text">
-          You&apos;ll receive one welcome email with your access link, tier benefits, and next steps.
-        </p>
-      </section>
+    <div className="gv-dash" data-testid="vault-dashboard">
+      <DashboardHero
+        ticker={ticker}
+        momentumPct={momentumPct}
+        daysUntilGame={recruiting?.nextGameDays ?? daysUntilNextGame()}
+        loading={loading && !ticker}
+      />
+      <DashboardTicker items={ticker?.items ?? []} loading={loading && !ticker} />
+      <DashboardMovementPreview data={movement} loading={loading && !movement} />
+      <DashboardRecruitingSnapshot snapshot={recruiting} loading={loading && !recruiting} />
+      <DashboardLatestContent data={content} loading={loading && !content} />
+      <DashboardQuickActions />
+      <DashboardPersonalized data={personalized} loading={loading && !personalized} />
     </div>
   );
 }
