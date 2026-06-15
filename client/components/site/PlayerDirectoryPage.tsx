@@ -1,11 +1,9 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import '@/lib/vault-shell.css';
 import '@/lib/player-directory-premium.css';
 import { fetchBigBoard, type BigBoardLifecycle, type BigBoardPlayer, type BigBoardSort } from '@/lib/big-board-api';
-import { fromBigBoard } from '@/lib/recruiting-card-adapters';
-import { ClassicRecruitCard } from '@/components/vault/ClassicRecruitCard';
+import { PlayerDirectoryCard } from '@/components/site/PlayerDirectoryCard';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 const LIFECYCLE_TABS: { id: BigBoardLifecycle; label: string }[] = [
@@ -127,14 +125,9 @@ export function PlayerDirectoryPage({ inVault = false }: { inVault?: boolean } =
             <p className="gv-page-section__subtitle">{filtered.length} players</p>
           </div>
           {filtered.length > 0 ? (
-            <div className="gv-rb-grid">
+            <div className="gv-pdir-grid">
               {filtered.map((p) => (
-                <ClassicRecruitCard
-                  key={p.id}
-                  player={fromBigBoard(p)}
-                  variant="target"
-                  rank={p.rank}
-                />
+                <PlayerDirectoryCard key={p.id} player={p} inVault={inVault} />
               ))}
             </div>
           ) : (

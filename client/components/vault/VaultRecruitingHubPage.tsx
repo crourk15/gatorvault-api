@@ -34,10 +34,10 @@ import { RecruitingHubClassOverview } from '@/components/vault/recruiting/Recrui
 import { RecruitingHubLatestIntel } from '@/components/vault/recruiting/RecruitingHubLatestIntel';
 import { RecruitingHubTools } from '@/components/vault/recruiting/RecruitingHubTools';
 import {
-  RecruitingHubHeadlinerCommit,
+  HeadlinerCard,
   pickHeadlinerCommit,
   filterCommitsWithoutHeadliner,
-} from '@/components/vault/recruiting/RecruitingHubHeadlinerCommit';
+} from '@/components/vault/recruiting/HeadlinerCard';
 import { normalizePercent } from '@/lib/futurecast-elite-metrics';
 
 function rankCommits(list: RecruitingBoardPlayer[]): RecruitingBoardPlayer[] {
@@ -343,7 +343,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
 
         {showContent && tab === 'commits-2027' && (
           <>
-            {headliner ? <RecruitingHubHeadlinerCommit player={headliner} /> : null}
+            {headliner ? <HeadlinerCard player={headliner} /> : null}
             {renderGrid(commitsWithoutHeadliner, 'commit', 'No 2027 commits yet.')}
           </>
         )}

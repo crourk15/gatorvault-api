@@ -9,6 +9,7 @@ import '@/lib/vault-admin.css';
 import '@/lib/vault-dashboard.css';
 import '@/lib/vault-recruiting-hub.css';
 import '@/lib/recruiting-hub-premium.css';
+import '@/lib/headliner-card.css';
 import '@/lib/schedule-premium.css';
 import '@/lib/vault-gatornation-live.css';
 import '@/lib/gnl-hero.css';
