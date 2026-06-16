@@ -61,7 +61,7 @@ export function buildGNLHeroEpisode(
   podcasts: PodcastCardProps[]
 ): GNLHeroEpisode {
   const featured = podcasts[0];
-  const catalog = findPodcastCatalogEntry(featured?.id ?? featured?.title);
+  const catalog = findPodcastCatalogEntry('gators-breakdown');
   const latestNews = feed.find((item) => item.category !== 'Commit') ?? feed[0];
   const timestamp = latestNews?.timestamp ?? new Date().toISOString();
   const date = new Date(timestamp).toLocaleString('en-US', {
@@ -71,10 +71,10 @@ export function buildGNLHeroEpisode(
     minute: '2-digit',
   });
 
-  const slug = featured?.id ?? catalog?.id ?? 'gators-breakdown';
-  const playUrl = `/vault/live/episode/${slug}`;
-  const showName = catalog?.name ?? featured?.title ?? 'GatorNation Live';
-  const title = featured?.title ?? showName;
+  const slug = 'gators-breakdown';
+  const playUrl = `/vault/podcast/${slug}`;
+  const showName = catalog?.name ?? 'Gators Breakdown';
+  const title = featured?.title && featured.title !== showName ? featured.title : showName;
 
   return {
     title,

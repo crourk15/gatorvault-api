@@ -7,6 +7,7 @@ import { SocialProof } from './SocialProof';
 import { PricingSection } from './PricingSection';
 import { FreeVsInsider } from './FreeVsInsider';
 import { FooterCTA, WelcomeStickyCTA } from './FooterCTA';
+import { OperatorAccessFooter } from './OperatorAccessFooter';
 
 /** Premium marketing + conversion layout for /welcome. */
 export function MarketingWelcomePage(): React.ReactElement {
@@ -18,6 +19,7 @@ export function MarketingWelcomePage(): React.ReactElement {
       <PricingSection />
       <FreeVsInsider />
       <FooterCTA />
+      <OperatorAccessFooter />
       <WelcomeStickyCTA />
     </>
   );

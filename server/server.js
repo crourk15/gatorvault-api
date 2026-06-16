@@ -542,6 +542,36 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+const { verifyAdminPin } = require('./lib/admin-pin');
+
+/** Operator PIN login — War Room full access from landing page Admin Access footer. */
+app.post('/api/operator/login', (req, res) => {
+  try {
+    const pin = String(req.body.pin || '').trim();
+    if (!verifyAdminPin(pin)) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN.' });
+    }
+    const email = 'operator@gatorvault';
+    const token = signSession({ email, tier: 'war', name: 'Operator', exp: Date.now() + TOKEN_TTL_MS });
+    return res.json({
+      ok: true,
+      session: {
+        token,
+        email,
+        tier: 'war',
+        name: 'Operator',
+        trialEnd: null,
+        trialEndISO: null,
+        createdAt: new Date().toISOString(),
+        daysLeft: null
+      }
+    });
+  } catch (err) {
+    console.error('operator login error', err);
+    return res.status(500).json({ ok: false, error: 'Operator login failed.' });
+  }
+});
+
 app.get('/api/session', (req, res) => {
   const auth = req.get('Authorization') || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : req.query.token;

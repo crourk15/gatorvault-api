@@ -7,15 +7,16 @@
   --gv-grid-gap: 2rem;
   --gv-rhythm: 2rem;
   --vault-safe-top: env(safe-area-inset-top, 0px);
-  margin: calc(-1 * 1.25rem) -1.5rem 0;
+  margin: 0;
   color: var(--gv-white);
   font-family: var(--gv-font);
 }
 
-@media (min-width: 768px) {
-  .gv-dash {
-    margin: calc(-1 * 1.5rem) -2rem 0;
-  }
+/* Flush dashboard hero under vault header — no dark padding band above hero */
+.gv-vault-shell__main:has(.gv-dash) {
+  padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 @media (min-width: 768px) {
@@ -26,7 +27,6 @@
 
 @media (max-width: 767px) {
   .gv-dash {
-    margin: calc(-1 * 1rem) -1rem 0;
     --gv-frame-margin: 1rem;
     --gv-grid-gap: 1.25rem;
     --gv-rhythm: 1.25rem;
@@ -75,19 +75,20 @@
 /* Hero — 420px desktop, stadium night + gradient overlay */
 .gv-dash-hero {
   position: relative;
-  min-height: 420px;
-  padding-top: max(2.75rem, var(--vault-safe-top, 0px));
+  min-height: 320px;
+  padding-top: max(1.25rem, var(--vault-safe-top, 0px));
   padding-bottom: 2rem;
   overflow: hidden;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   animation: gv-dash-fade-in 300ms ease-out;
 }
 
 @media (max-width: 767px) {
   .gv-dash-hero {
-    min-height: 280px;
-    padding: 1.75rem 0 1.25rem;
+    min-height: 260px;
+    padding-top: max(1rem, var(--vault-safe-top, 0px));
+    padding-bottom: 1.25rem;
   }
 }
 

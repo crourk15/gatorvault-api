@@ -84,6 +84,8 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
     return items;
   }, [user]);
 
+  const showAdminLink = isVaultAdmin(user);
+
   const toggleNav = useCallback(() => setNavOpen((v) => !v), []);
   const closeNav = useCallback(() => setNavOpen(false), []);
 
@@ -122,7 +124,7 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
             <GatorVaultWordmark height={28} className="gv-vault-shell__wordmark" />
           </VaultNavLink>
         </div>
-        {isVaultAdmin(user) ? (
+        {showAdminLink ? (
           <VaultNavLink href="/vault/admin" className="gv-vault-shell__admin-link">
             War Room
           </VaultNavLink>

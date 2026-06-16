@@ -23,6 +23,7 @@ export function isAdminAccount(email: string | null | undefined): boolean {
   return (
     e.endsWith('@gatorvaultinsider.com') ||
     e === 'gatorvaultinsider@gmail.com' ||
+    e === 'operator@gatorvault' ||
     e.includes('crourk')
   );
 }

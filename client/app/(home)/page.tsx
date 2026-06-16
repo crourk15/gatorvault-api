@@ -10,6 +10,7 @@ import '@/lib/welcome-social-proof.css';
 import '@/lib/pricing-section.css';
 import '@/lib/welcome-mobile.css';
 import '@/lib/free-vs-insider.css';
+import '@/lib/operator-access.css';
 import { PublicSiteShell } from '@/components/site/PublicSiteShell';
 import { MarketingWelcomePage } from '@/components/welcome/MarketingWelcomePage';
 
