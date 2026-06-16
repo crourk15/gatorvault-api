@@ -822,6 +822,30 @@ body.gv-nav-menu-open {
   align-self: center;
 }
 
+.gv-route-error {
+  min-height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: #060f1f;
+}
+
+.gv-route-error__card {
+  max-width: 32rem;
+  width: 100%;
+}
+
+.gv-ui-message__btn--secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #e2e8f0;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  text-decoration: none;
+}
+
 /* Recruiting board tiers */
 .gv-board-tier {
   font-size: 0.625rem;

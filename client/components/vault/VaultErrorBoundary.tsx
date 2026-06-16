@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { RouteErrorFallback } from '@/components/errors/RouteErrorFallback';
 
 type Props = { children: React.ReactNode };
 type State = { error: Error | null };
@@ -12,16 +13,26 @@ export class VaultErrorBoundary extends React.Component<Props, State> {
     return { error };
   }
 
+  componentDidCatch(error: Error, info: React.ErrorInfo): void {
+    console.error('[VaultErrorBoundary]', error.message, info.componentStack);
+  }
+
+  private retry = (): void => {
+    this.setState({ error: null });
+  };
+
   render(): React.ReactNode {
     if (this.state.error) {
       return (
-        <div className="gv-page-status gv-page-status--error" role="alert">
-          <p>Something went wrong loading this Vault page.</p>
-          <p className="gv-page-subtitle">{this.state.error.message}</p>
-          <button type="button" className="gv-hub-tab" onClick={() => window.location.reload()}>
-            Reload page
-          </button>
-        </div>
+        <RouteErrorFallback
+          error={this.state.error}
+          title="This Vault page failed to load"
+          onRetry={this.retry}
+          dashboardHref="/vault"
+          dashboardLabel="Go to Dashboard"
+          homeHref="/"
+          homeLabel="← Home"
+        />
       );
     }
     return this.props.children;
