@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import {
   loginAccount,
-  loadSession,
   registerAccount,
   saveSession,
+  verifyStoredSession,
+  safeAuthRedirectPath,
   type PaymentTierId,
 } from '@/lib/auth-api';
 import { PRICING_TIERS } from '@/lib/pricing-tiers';
@@ -26,7 +27,7 @@ function redirectAfterAuth(): void {
     /* private mode */
   }
   const next = new URLSearchParams(window.location.search).get('next');
-  const dest = next && next.startsWith('/') ? next : '/vault';
+  const dest = safeAuthRedirectPath(next, '/vault');
   window.setTimeout(() => {
     window.location.href = dest;
   }, 150);
@@ -48,11 +49,17 @@ export function JoinPage(): React.ReactElement {
     const params = new URLSearchParams(window.location.search);
     if (params.get('mode') === 'signin') setMode('signin');
     if (params.get('reauth') === '1') return;
-    if (params.get('mode') === 'signin') return;
-    const existing = loadSession();
-    if (existing?.email && existing?.token) {
+
+    let cancelled = false;
+    void verifyStoredSession().then((session) => {
+      if (cancelled) return;
+      if (!session?.email || !session?.token) return;
+      if (params.get('mode') === 'signin') return;
       redirectAfterAuth();
-    }
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const tierMeta = PRICING_TIERS.find((t) => t.id === tier) ?? PRICING_TIERS[1];

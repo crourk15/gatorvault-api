@@ -8,6 +8,13 @@ import { usePathname } from '@/lib/use-pathname';
 
 const AUTH_HANDOFF_KEY = 'gv_auth_handoff';
 
+const VAULT_AUTH_PATHS = ['/vault/login', '/vault/membership', '/vault/auth/callback', '/auth/callback'];
+
+function isVaultAuthPath(pathname: string): boolean {
+  const p = pathname.replace(/\/$/, '') || '/';
+  return VAULT_AUTH_PATHS.some((base) => p === base || p.startsWith(`${base}/`));
+}
+
 function isAuthenticated(email?: string | null, token?: string | null): boolean {
   return !!(email?.trim() && token?.trim());
 }
@@ -31,6 +38,7 @@ export function VaultRouteGate(): null {
     if (!ready) return;
     const p = pathname.replace(/\/$/, '') || '/';
     if (p.startsWith('/join') || p.startsWith('/insider') || p.startsWith('/welcome')) return;
+    if (isVaultAuthPath(p)) return;
 
     const handoff =
       typeof window !== 'undefined' && sessionStorage.getItem(AUTH_HANDOFF_KEY) === '1';

@@ -1,9 +1,16 @@
 'use client';
 
 import React from 'react';
-import { VaultDashboardPage } from '@/components/vault/VaultDashboardPage';
+import { PublicSiteShell } from '@/components/site/PublicSiteShell';
+import { MarketingWelcomePage } from '@/components/welcome/MarketingWelcomePage';
 
-/** Dashboard — hero + momentum, headlines/movement, games/portal/nil. */
-export default function DashboardPage(): React.ReactElement {
-  return <VaultDashboardPage />;
+/** Public marketing landing at /. Vault dashboard lives at /vault. */
+export default function HomePage(): React.ReactElement {
+  return (
+    <PublicSiteShell marketing>
+      <div data-testid="landing-page">
+        <MarketingWelcomePage />
+      </div>
+    </PublicSiteShell>
+  );
 }

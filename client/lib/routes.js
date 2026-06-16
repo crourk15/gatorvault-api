@@ -13,7 +13,6 @@ const LEGACY_RETIREMENT_REDIRECTS = [
     ...r,
     status: 301,
   })),
-  ...siteRoutes.VAULT_TO_SITE_REDIRECTS,
 ];
 
 /** @type {RedirectRule[]} */

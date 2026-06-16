@@ -16,6 +16,24 @@ export type AuthSession = {
 
 const SESSION_KEY = 'gv_session';
 
+/** Auth-only paths — never use as post-login ?next= destinations (avoids redirect loops). */
+export const AUTH_ONLY_PATHS = [
+  '/vault/login',
+  '/vault/membership',
+  '/vault/auth/callback',
+  '/auth/callback',
+  '/join',
+] as const;
+
+/** Safe post-auth destination; strips membership/login/callback loops. */
+export function safeAuthRedirectPath(next?: string | null, fallback = '/vault'): string {
+  const candidate = (next || '').trim();
+  if (!candidate.startsWith('/')) return fallback;
+  const path = candidate.replace(/\/$/, '') || '/';
+  if (AUTH_ONLY_PATHS.some((p) => path === p || path.startsWith(`${p}/`))) return fallback;
+  return candidate;
+}
+
 /** Operator / staff accounts — war-tier access without public admin nav. */
 export function isAdminAccount(email: string | null | undefined): boolean {
   const e = email?.trim().toLowerCase() ?? '';
@@ -85,6 +103,48 @@ async function authPost<T>(path: string, body: Record<string, unknown>): Promise
   });
   const data = (await res.json()) as T;
   return { ok: res.ok, status: res.status, data };
+}
+
+/** Validate stored session token with the API — clears stale local sessions. */
+export async function verifyStoredSession(): Promise<AuthSession | null> {
+  const session = loadSession();
+  if (!session?.token) return null;
+  const base = getApiBase();
+  try {
+    const res = await fetch(`${base}/api/session`, {
+      headers: { Authorization: `Bearer ${session.token}` },
+    });
+    if (!res.ok) {
+      clearSession();
+      return null;
+    }
+    const data = (await res.json()) as { ok?: boolean; session?: AuthSession };
+    if (!data.ok || !data.session?.email) {
+      clearSession();
+      return null;
+    }
+    const merged = normalizeSession({ ...session, ...data.session, token: session.token });
+    saveSession(merged);
+    return merged;
+  } catch {
+    return session;
+  }
+}
+
+export async function registerAccount(opts: {
+  email: string;
+  password: string;
+  name: string;
+  tier: PaymentTierId;
+}): Promise<{ session: AuthSession; emailSent?: boolean }> {
+  const res = await authPost<{ ok?: boolean; error?: string; session?: AuthSession; emailSent?: boolean }>(
+    '/api/register',
+    opts
+  );
+  if (!res.ok || !res.data.session) {
+    throw new Error(res.data.error || 'Registration failed.');
+  }
+  return { session: normalizeSession(res.data.session), emailSent: res.data.emailSent };
 }
 
 export async function loginAccount(opts: {

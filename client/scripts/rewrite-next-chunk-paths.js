@@ -143,37 +143,16 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
     }
   }
 
-  const htmlRoots = [
-    'welcome',
-    'insider',
-    'gatornation-live',
-    'recruiting-hub',
-    'directory',
-    'team',
-    'join',
-    'vault',
-    'futurecast',
-    'player',
-    'players',
-    'portal',
-    'recruiting-board',
-    'scouting',
-    'alerts',
-    'staff',
-  ];
-  for (const root of htmlRoots) {
-    const target = path.join(serverDir, root);
-    if (!fs.existsSync(target)) continue;
-    walkFiles(target, (file) => {
-      if (!/\.(html|txt)$/.test(file)) return;
-      const raw = fs.readFileSync(file, 'utf8');
-      const updated = applyReplacements(raw, map);
-      if (updated !== raw) {
-        fs.writeFileSync(file, updated);
-        filesUpdated++;
-      }
-    });
-  }
+  walkFiles(serverDir, (file) => {
+    if (!/\.(html|txt)$/.test(file)) return;
+    if (file.includes(`${path.sep}admin`)) return;
+    const raw = fs.readFileSync(file, 'utf8');
+    const updated = applyReplacements(raw, map);
+    if (updated !== raw) {
+      fs.writeFileSync(file, updated);
+      filesUpdated++;
+    }
+  });
 
   return { filesUpdated, flatChunks: map.size, vaultChunksDir: VAULT_CHUNKS_DIR };
 }

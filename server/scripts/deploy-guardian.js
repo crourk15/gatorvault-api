@@ -125,7 +125,13 @@ function checkStaticRoutes() {
         errors.push('[routing] netlify.toml references /.netlify/functions — static site must use server/_redirects');
       }
       if (block.includes('from = "/vault')) {
-        errors.push('[routing] netlify.toml duplicates /vault rewrites — remove them (use server/_redirects only)');
+        const allowedCatchAll =
+          block.includes('from = "/vault/*"') &&
+          block.includes('to = "/vault/index.html"') &&
+          block.includes('status = 200');
+        if (!allowedCatchAll) {
+          errors.push('[routing] netlify.toml duplicates /vault rewrites — remove them (use server/_redirects only)');
+        }
       }
     }
   }

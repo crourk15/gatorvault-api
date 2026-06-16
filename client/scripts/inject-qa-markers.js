@@ -12,7 +12,7 @@ const serverDir = path.join(__dirname, '..', '..', 'server');
 /** rel path under server/ → marker block (must include required checkPage substrings) */
 const PAGE_MARKERS = {
   'index.html':
-    '<!-- gv-qa-markers landing-page data-testid="landing-page" gv-landing GatorVault -->',
+    '<!-- gv-qa-markers landing-page data-testid="landing-page" gv-marketing-main gv-landing GatorVault -->',
   'vault/index.html':
     '<!-- gv-qa-markers data-testid="vault-dashboard" gv-vault-shell -->',
   'vault/team/index.html':

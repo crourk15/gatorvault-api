@@ -20,6 +20,13 @@
   status = 200
   force = true
 
+# Vault SPA fallback — detailed per-route rewrites live in server/_redirects (generated at build).
+# This catch-all only applies when no more-specific rule matches.
+[[redirects]]
+  from = "/vault/*"
+  to = "/vault/index.html"
+  status = 200
+
 [[headers]]
   for = "/"
   [headers.values]

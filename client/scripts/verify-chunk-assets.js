@@ -26,12 +26,27 @@ function collectAssetsFromHtmlFiles(serverDir, htmlFiles) {
   return assets;
 }
 
+function resolveAsset(serverDir, rel) {
+  const full = path.join(serverDir, rel);
+  if (fs.existsSync(full)) return true;
+
+  if (rel.startsWith('_next/static/chunks/app/')) {
+    const flat = `r-${rel.slice('_next/static/chunks/app/'.length).replace(/\//g, '-')}`;
+    if (fs.existsSync(path.join(serverDir, 'js/vault-chunks', flat))) return true;
+  }
+  if (rel.startsWith('_next/static/chunks/')) {
+    const base = path.basename(rel);
+    const mentry = base.replace(/^main-app-/, 'mentry-').replace(/^main-entry-/, 'mentry-');
+    if (fs.existsSync(path.join(serverDir, 'js/vault-chunks', mentry))) return true;
+  }
+  return false;
+}
+
 function verifyChunkAssets(serverDir, htmlFiles) {
   const assets = collectAssetsFromHtmlFiles(serverDir, htmlFiles);
   const missing = [];
   for (const rel of assets) {
-    const full = path.join(serverDir, rel);
-    if (!fs.existsSync(full)) missing.push(rel);
+    if (!resolveAsset(serverDir, rel)) missing.push(rel);
   }
   return { assets: [...assets], missing };
 }

@@ -74,7 +74,7 @@ function assertNetlifyTomlRouting() {
   const redirectBlocks = text.split('[[redirects]]').slice(1);
   const forbidden = [
     '/.netlify/functions',
-    'from = "/vault',
+    'from = "/vault"',
     'from = "/futurecast',
     'from = "/portal"',
     'from = "/recruiting',

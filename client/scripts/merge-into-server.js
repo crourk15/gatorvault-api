@@ -4,6 +4,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { spawnSync } = require('child_process');
 const vaultMap = require('../lib/routes-vault.cjs');
 const { verifyChunkAssets } = require('./verify-chunk-assets');
 const { rewriteNextChunkPathsForNetlify } = require('./rewrite-next-chunk-paths');
@@ -113,8 +114,16 @@ function verifyChunks() {
 }
 
 if (!fs.existsSync(outDir)) {
-  console.error('[netlify] client/out missing — run: npm run build --prefix client');
-  process.exit(1);
+  console.warn('[netlify] client/out missing — rebuilding client export…');
+  const build = spawnSync(
+    process.platform === 'win32' ? 'npm.cmd' : 'npm',
+    ['run', 'build'],
+    { stdio: 'inherit', cwd: path.join(__dirname, '..'), shell: process.platform === 'win32' }
+  );
+  if (build.status !== 0 || !fs.existsSync(outDir)) {
+    console.error('[netlify] client/out missing after rebuild — run: npm run build --prefix client');
+    process.exit(1);
+  }
 }
 
 require('./generate-redirects.js');
@@ -133,7 +142,6 @@ require('./generate-vault-route-manifest.js');
 verifyExports();
 verifyChunks();
 
-const { spawnSync } = require('child_process');
 const hydrationStability = spawnSync(
   process.execPath,
   [path.join(__dirname, '..', '..', 'server', 'scripts', 'verify-hydration-stability.js')],

@@ -39,13 +39,17 @@ export function ClassOverview({ b26, b27, b28 }: Props): React.ReactElement {
 
   const bundle = year === '2026' ? b26 : year === '2028' ? b28 : b27;
   const classYear = year === '2026' ? 2026 : year === '2028' ? 2028 : 2027;
+  const classCommits = useMemo(
+    () => bundle.commits.filter((p) => Number(p.classYear) === classYear),
+    [bundle.commits, classYear]
+  );
   const compareRankings = useMemo(() => {
     if (classYear === 2027) return b26.rankings;
     if (classYear === 2028) return b27.rankings;
     return null;
   }, [classYear, b26.rankings, b27.rankings]);
 
-  const featured = useMemo(() => topCommits(bundle.commits), [bundle.commits]);
+  const featured = useMemo(() => topCommits(classCommits), [classCommits]);
 
   return (
     <section className="rh-class-overview rh-frame" data-testid="rh-class-overview">
@@ -54,7 +58,7 @@ export function ClassOverview({ b26, b27, b28 }: Props): React.ReactElement {
         <Tabs options={YEAR_TABS} active={year} onChange={setYear} aria-label="Recruiting class year" />
       </div>
       <StatsBar
-        commits={bundle.commits}
+        commits={classCommits}
         rankings={bundle.rankings}
         compareRankings={compareRankings ?? undefined}
         classYear={classYear}

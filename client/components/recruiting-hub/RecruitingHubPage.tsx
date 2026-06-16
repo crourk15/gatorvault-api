@@ -26,8 +26,12 @@ export function RecruitingHubPage(): React.ReactElement {
       <ModuleRow />
       <StickyTabsBar active={data.tab} onChange={data.setTabAndUrl} />
       <HighPriorityIntelFeed items={intelItems} loading={intelLoading || (data.loading && !data.loadedOnce)} />
-      <ClassOverview b26={data.b26} b27={data.b27} b28={data.b28} />
-      <HeadlinerSpotlight player={data.headliner} />
+      {data.loadedOnce && !data.error ? (
+        <>
+          <ClassOverview b26={data.b26} b27={data.b27} b28={data.b28} />
+          <HeadlinerSpotlight player={data.headliner} />
+        </>
+      ) : null}
       <CommitsGrid
         players={data.gridConfig.players}
         title={data.gridConfig.title}

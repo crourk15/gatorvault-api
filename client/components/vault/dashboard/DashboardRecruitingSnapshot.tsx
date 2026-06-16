@@ -81,7 +81,12 @@ export function DashboardRecruitingSnapshot({
   return (
     <section className="gv-dash-recruit gv-dash__section" aria-label="Recruiting snapshot" data-testid="dashboard-recruiting">
       <div className="gv-dash__frame">
-        <h2 className="gv-dash__section-heading gv-type-h2">{GV_COPY.headlines.recruitingSnapshot}</h2>
+        <div className="gv-dash-recruit__head">
+          <h2 className="gv-dash__section-heading gv-type-h2">{GV_COPY.headlines.recruitingSnapshot}</h2>
+          <a href={`${SITE_ROUTES.recruiting}?tab=priority`} className="gv-btn gv-btn--primary gv-dash-recruit__cta">
+            High Priority Intel →
+          </a>
+        </div>
         <div className="gv-dash-recruit__grid">
         {CARDS.map((card) => (
           <a key={card.key} href={card.href} className="gv-dash-recruit__card">
