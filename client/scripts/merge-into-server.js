@@ -127,6 +127,7 @@ verifyExports();
 verifyChunks();
 
 require('./stamp-build-meta.js');
+require('./inject-qa-markers.js');
 
 const { spawnSync } = require('child_process');
 const guardian = spawnSync(

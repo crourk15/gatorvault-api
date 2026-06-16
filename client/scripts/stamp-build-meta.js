@@ -8,7 +8,6 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const serverDir = path.join(__dirname, '..', '..', 'server');
-const indexPath = path.join(serverDir, 'index.html');
 
 function gitCommit() {
   try {
@@ -45,8 +44,9 @@ const opsVersion = {
 fs.writeFileSync(path.join(serverDir, 'build-manifest.json'), JSON.stringify(manifest, null, 2));
 fs.writeFileSync(path.join(serverDir, 'ops-version.json'), JSON.stringify(opsVersion, null, 2));
 
-if (fs.existsSync(indexPath)) {
-  let html = fs.readFileSync(indexPath, 'utf8');
+function stampHtmlFile(filePath) {
+  if (!fs.existsSync(filePath)) return;
+  let html = fs.readFileSync(filePath, 'utf8');
   const metaTag = `<meta name="gatorvault-build" content="${buildId}">`;
 
   if (html.includes('name="gatorvault-build"')) {
@@ -60,7 +60,20 @@ if (fs.existsSync(indexPath)) {
   html = html.replace(/(\/gv-global\.css\?v=)[^"']+/g, `$1${buildId}`);
   html = html.replace(/(\/gv-feedback\.css\?v=)[^"']+/g, `$1${buildId}`);
 
-  fs.writeFileSync(indexPath, html);
+  fs.writeFileSync(filePath, html);
 }
+
+/** Stamp build id into every exported HTML page (not just /). */
+function walkHtml(dir) {
+  if (!fs.existsSync(dir)) return;
+  for (const name of fs.readdirSync(dir)) {
+    const full = path.join(dir, name);
+    const stat = fs.statSync(full);
+    if (stat.isDirectory()) walkHtml(full);
+    else if (name === 'index.html') stampHtmlFile(full);
+  }
+}
+
+walkHtml(serverDir);
 
 console.log('[stamp-build] buildId=', buildId, 'commit=', gitShort(commit));

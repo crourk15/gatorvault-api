@@ -1,6 +1,6 @@
 import React from 'react';
+import { VaultPillarSsrMarkers } from '@/components/vault/VaultPillarSsrMarkers';
 
-/** Static export markers for Platform Guardian content:team-module (SSR into index.html). */
 export default function VaultTeamLayout({
   children,
 }: {
@@ -8,9 +8,12 @@ export default function VaultTeamLayout({
 }): React.ReactElement {
   return (
     <>
-      <span hidden aria-hidden="true" data-module="vault-team">
-        Full Roster · Depth Chart · Team
-      </span>
+      <VaultPillarSsrMarkers
+        testId="vault-team"
+        className="gv-team-page gv-team-roster"
+        label="Full Roster · Depth Chart · Team"
+        extraClasses="gv-hub-tabs gv-hub-tabs--scroll gv-hub-tab"
+      />
       {children}
     </>
   );
