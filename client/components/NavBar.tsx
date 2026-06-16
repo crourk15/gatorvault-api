@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from '@/lib/use-pathname';
 import { getVaultNavHref, navActiveId } from '@/lib/navConfig';
 import { useUser } from '@/hooks/useUser';
+import { isVaultAdmin } from '@/lib/admin-access';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
@@ -20,10 +21,12 @@ function AuthLinks({
   loggedIn,
   showInsider,
   ready,
+  user,
 }: {
   loggedIn: boolean;
   showInsider: boolean;
   ready: boolean;
+  user: ReturnType<typeof useUser>['user'];
 }): React.ReactElement {
   if (!ready) {
     return (
@@ -44,6 +47,11 @@ function AuthLinks({
         <Link href="/vault" className="gv-site-nav__link">
           Profile
         </Link>
+        {isVaultAdmin(user) ? (
+          <Link href="/vault/admin" className="gv-site-nav__link">
+            War Room
+          </Link>
+        ) : null}
         {showInsider ? <span className="nav-insider-badge">Insider</span> : null}
         {!showInsider ? (
           <Link href="/insider" className="gv-site-nav__cta gv-nav-premium__cta">
@@ -73,7 +81,7 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
   const pathname = usePathname();
   const current = navActiveId(pathname);
   const { user, isInsider, ready } = useUser();
-  const loggedIn = ready && !!user?.email;
+  const loggedIn = ready && !!(user?.email && user?.token);
   const showInsider = ready && isInsider;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -118,7 +126,7 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
 
         <div className="gv-nav-premium__right gv-nav-premium__desktop-only" suppressHydrationWarning>
           <ThemeToggle />
-          <AuthLinks loggedIn={loggedIn} showInsider={showInsider} ready={ready} />
+          <AuthLinks loggedIn={loggedIn} showInsider={showInsider} ready={ready} user={user} />
         </div>
 
         <button
@@ -146,7 +154,7 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
         </nav>
         <div className="gv-nav-premium__mobile-actions" suppressHydrationWarning>
           <ThemeToggle />
-          <AuthLinks loggedIn={loggedIn} showInsider={showInsider} ready={ready} />
+          <AuthLinks loggedIn={loggedIn} showInsider={showInsider} ready={ready} user={user} />
         </div>
       </div>
     </header>

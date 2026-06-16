@@ -1,6 +1,7 @@
 /** Navigation targets for Welcome Page CTAs and preview cards. */
 export const WELCOME_LINKS = {
   join: '/join',
+  signIn: '/join?mode=signin',
   insider: '/insider',
   vault: '/vault',
   futurecast: '/vault/futurecast',

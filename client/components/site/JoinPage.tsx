@@ -20,8 +20,16 @@ function tierFromQuery(): PaymentTierId {
 }
 
 function redirectAfterAuth(): void {
+  try {
+    sessionStorage.setItem('gv_auth_handoff', '1');
+  } catch {
+    /* private mode */
+  }
   const next = new URLSearchParams(window.location.search).get('next');
-  window.location.href = next && next.startsWith('/') ? next : '/vault';
+  const dest = next && next.startsWith('/') ? next : '/vault';
+  window.setTimeout(() => {
+    window.location.href = dest;
+  }, 150);
 }
 
 export function JoinPage(): React.ReactElement {
@@ -40,6 +48,7 @@ export function JoinPage(): React.ReactElement {
     const params = new URLSearchParams(window.location.search);
     if (params.get('mode') === 'signin') setMode('signin');
     if (params.get('reauth') === '1') return;
+    if (params.get('mode') === 'signin') return;
     const existing = loadSession();
     if (existing?.email && existing?.token) {
       redirectAfterAuth();

@@ -134,6 +134,7 @@ const VAULT_REACT_REWRITES = [
   { from: '/vault/futurecast/player/*', to: '/vault/futurecast/player/index.html', status: 200 },
   { from: '/vault/players/*', to: '/vault/players/index.html', status: 200 },
   { from: '/vault/podcast/*', to: '/vault/podcast/:splat/index.html', status: 200 },
+  { from: '/vault/live/episode/*', to: '/vault/live/episode/:splat/index.html', status: 200 },
   ...subRouteRewrites('/vault/admin', '/vault/admin/index.html'),
   ...subRouteRewrites('/vault/recruiting/board', '/vault/recruiting/board/index.html'),
   ...FUTURECAST_SUB_ROUTES.flatMap((sub) =>
@@ -167,6 +168,10 @@ const REQUIRED_VAULT_EXPORTS = [
   'vault/schedule/index.html',
   'vault/admin/index.html',
   'vault/podcast/gators-breakdown/index.html',
+  'vault/live/episode/gators-breakdown/index.html',
+  'vault/live/episode/gators-online/index.html',
+  'vault/live/episode/gnfp/index.html',
+  'vault/live/episode/gator-tales/index.html',
 ];
 
 function routeToExport(routePath) {

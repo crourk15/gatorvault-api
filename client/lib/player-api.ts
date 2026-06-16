@@ -3,6 +3,7 @@
  * @see server/api/players/
  */
 import { getApiBase, type BigBoardPlayer } from './big-board-api';
+import { coerceDisplayText } from './coerce-text';
 import { playerProfilePath } from './player-routes';
 
 export type PlayerLifecycle = 'HS' | 'COLLEGE' | 'PORTAL';
@@ -133,6 +134,20 @@ async function apiFetch<T>(path: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+function sanitizeProfileBundle(bundle: PlayerProfileBundle): PlayerProfileBundle {
+  const hs = bundle.highSchoolProfile;
+  const uf = bundle.ufSpecificProfile;
+  return {
+    ...bundle,
+    highSchoolProfile: hs
+      ? { ...hs, recruitingNotes: coerceDisplayText(hs.recruitingNotes) }
+      : null,
+    ufSpecificProfile: uf
+      ? { ...uf, evaluationNotes: coerceDisplayText(uf.evaluationNotes) }
+      : null,
+  };
+}
+
 export async function fetchPlayerBySlug(slug: string): Promise<{ player: PlayerCore }> {
   return apiFetch(`/api/players/slug/${encodeURIComponent(slug)}`);
 }
@@ -180,7 +195,7 @@ export async function fetchPlayerProfile(slug: string): Promise<PlayerProfileBun
 
   const slugBody = (await res.json()) as PlayerProfileBundle & { source?: string };
   if (slugBody.source === 'recruiting-store') {
-    return {
+    return sanitizeProfileBundle({
       player: slugBody.player,
       highSchoolProfile: slugBody.highSchoolProfile ?? null,
       collegeProfile: slugBody.collegeProfile ?? null,
@@ -188,7 +203,7 @@ export async function fetchPlayerProfile(slug: string): Promise<PlayerProfileBun
       ufSpecificProfile: slugBody.ufSpecificProfile ?? null,
       signals: slugBody.signals ?? [],
       related: slugBody.related ?? [],
-    };
+    });
   }
 
   const { player } = slugBody;
@@ -197,12 +212,12 @@ export async function fetchPlayerProfile(slug: string): Promise<PlayerProfileBun
     fetchPlayerSignals(player.id),
     fetchRelatedPlayers(player.id),
   ]);
-  return {
+  return sanitizeProfileBundle({
     player,
     ...profiles,
     signals: signalsRes.signals,
     related: relatedRes.players,
-  };
+  });
 }
 
 export function buildPlayerShareUrl(

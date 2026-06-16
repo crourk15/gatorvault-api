@@ -1,11 +1,20 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useUser } from '@/hooks/useUser';
 import { usePathname } from '@/lib/use-pathname';
 import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath, type VaultSectionId } from '@/lib/vault-routes';
+import { isVaultAdmin } from '@/lib/admin-access';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
 import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
+
+const ADMIN_NAV_ITEM = {
+  id: 'admin' as VaultSectionId,
+  label: 'War Room',
+  href: '/vault/admin',
+  icon: '⚙️',
+};
 
 function sidebarActive(pathname: string, href: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
@@ -64,11 +73,16 @@ function NavLink({
 export function VaultShell({ children }: { children: React.ReactNode }): React.ReactElement {
   const pathname = usePathname();
   const { isNavigating } = useVaultNavigation();
+  const { user } = useUser();
   const [navOpen, setNavOpen] = useState(false);
   const inVault = isVaultPath(pathname);
 
   const coreNav = VAULT_PILLARS;
-  const secondaryNav = VAULT_SECONDARY.filter((item) => item.id !== 'admin');
+  const secondaryNav = useMemo(() => {
+    const items = [...VAULT_SECONDARY];
+    if (isVaultAdmin(user)) items.push(ADMIN_NAV_ITEM);
+    return items;
+  }, [user]);
 
   const toggleNav = useCallback(() => setNavOpen((v) => !v), []);
   const closeNav = useCallback(() => setNavOpen(false), []);
@@ -108,6 +122,11 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
             <GatorVaultWordmark height={28} className="gv-vault-shell__wordmark" />
           </VaultNavLink>
         </div>
+        {isVaultAdmin(user) ? (
+          <VaultNavLink href="/vault/admin" className="gv-vault-shell__admin-link">
+            War Room
+          </VaultNavLink>
+        ) : null}
       </header>
       {navOpen && (
         <button

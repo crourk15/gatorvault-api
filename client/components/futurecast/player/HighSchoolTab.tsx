@@ -4,6 +4,7 @@
 import React from 'react';
 import type { HighSchoolProfile, PlayerCore } from '../../../lib/player-api';
 import { formatHeight, formatWeight } from '../../../lib/player-derived';
+import { coerceDisplayText } from '../../../lib/coerce-text';
 
 export interface HighSchoolTabProps {
   player: PlayerCore;
@@ -31,6 +32,7 @@ export function HighSchoolTab({ player, profile }: HighSchoolTabProps): React.Re
   const stateRank = player.rankingState ?? stats.state_rank;
   const films = filmLinks(stats);
   const measurables = stats.measurables ?? stats.verified_measurables ?? stats;
+  const recruitingNotes = coerceDisplayText(profile.recruitingNotes);
 
   return (
     <div className="fc-profile-panel" data-testid="tab-high-school">
@@ -97,12 +99,12 @@ export function HighSchoolTab({ player, profile }: HighSchoolTabProps): React.Re
         </section>
       )}
 
-      {profile.recruitingNotes && (
+      {recruitingNotes ? (
         <section className="fc-profile-section">
           <h2>Recruiting Notes</h2>
-          <p>{profile.recruitingNotes}</p>
+          <p>{recruitingNotes}</p>
         </section>
-      )}
+      ) : null}
     </div>
   );
 }

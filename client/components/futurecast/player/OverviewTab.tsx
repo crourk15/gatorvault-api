@@ -5,6 +5,7 @@ import React from 'react';
 import type { PlayerProfileBundle } from '../../../lib/player-api';
 import type { PlayerMetrics } from '../../../lib/player-derived';
 import { signalSummaryText, formatSignalValue, formatDate, signalWeight } from '../../../lib/player-derived';
+import { coerceDisplayText } from '../../../lib/coerce-text';
 import { RelatedPlayers } from './RelatedPlayers';
 import { PredictionsPanel } from './PredictionsPanel';
 
@@ -19,6 +20,8 @@ export function OverviewTab({ data, metrics }: OverviewTabProps): React.ReactEle
   const recentSignals = [...signals]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 5);
+  const hsNotes = coerceDisplayText(highSchoolProfile?.recruitingNotes);
+  const evalNotes = coerceDisplayText(ufSpecificProfile?.evaluationNotes);
 
   return (
     <div className="fc-profile-panel" data-testid="tab-overview">
@@ -68,11 +71,11 @@ export function OverviewTab({ data, metrics }: OverviewTabProps): React.ReactEle
         </section>
       )}
 
-      {(highSchoolProfile?.recruitingNotes || ufSpecificProfile?.evaluationNotes) && (
+      {(hsNotes || evalNotes) && (
         <section className="fc-profile-section">
           <h2>Notes</h2>
-          {highSchoolProfile?.recruitingNotes && <p>{highSchoolProfile.recruitingNotes}</p>}
-          {ufSpecificProfile?.evaluationNotes && <p>{ufSpecificProfile.evaluationNotes}</p>}
+          {hsNotes ? <p>{hsNotes}</p> : null}
+          {evalNotes ? <p>{evalNotes}</p> : null}
         </section>
       )}
 

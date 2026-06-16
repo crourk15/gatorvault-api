@@ -6,9 +6,16 @@
   --gv-card-pad: 1.5rem;
   --gv-grid-gap: 2rem;
   --gv-rhythm: 2rem;
-  margin: -1.25rem -1.5rem 0;
+  --vault-safe-top: env(safe-area-inset-top, 0px);
+  margin: calc(-1 * 1.25rem) -1.5rem 0;
   color: var(--gv-white);
   font-family: var(--gv-font);
+}
+
+@media (min-width: 768px) {
+  .gv-dash {
+    margin: calc(-1 * 1.5rem) -2rem 0;
+  }
 }
 
 @media (min-width: 768px) {
@@ -19,7 +26,7 @@
 
 @media (max-width: 767px) {
   .gv-dash {
-    margin: -1rem -1rem 0;
+    margin: calc(-1 * 1rem) -1rem 0;
     --gv-frame-margin: 1rem;
     --gv-grid-gap: 1.25rem;
     --gv-rhythm: 1.25rem;
@@ -69,7 +76,8 @@
 .gv-dash-hero {
   position: relative;
   min-height: 420px;
-  padding: 2.75rem 0 2rem;
+  padding-top: max(2.75rem, var(--vault-safe-top, 0px));
+  padding-bottom: 2rem;
   overflow: hidden;
   display: flex;
   align-items: center;

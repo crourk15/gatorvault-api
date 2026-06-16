@@ -27,17 +27,28 @@ export const vaultNavPaths = {
 
 export type VaultNavKey = keyof typeof vaultNavPaths;
 
-/** Logged-out → welcome preview; logged-in (free or Insider) → vault route. */
+/** Logged-out → welcome preview; logged-in → vault route. Sign-in preserves return path. */
+export function joinHref(nextPath?: string, mode: 'signin' | 'signup' = 'signup'): string {
+  const params = new URLSearchParams();
+  if (mode === 'signin') params.set('mode', 'signin');
+  if (nextPath && nextPath.startsWith('/')) params.set('next', nextPath);
+  const q = params.toString();
+  return q ? `/join?${q}` : '/join';
+}
+
+/** Logged-out → sign-in with return path; logged-in → vault route. */
 export function getVaultNavHref(key: VaultNavKey, loggedIn: boolean): string {
   const item = vaultNavPaths[key];
-  if (!loggedIn) return `/welcome#${item.preview}`;
+  if (!loggedIn) return joinHref(item.href, 'signin');
   return item.href;
 }
 
 /** Resolve nav href based on auth — logged-out users land on welcome previews. */
 export function getNavHref(item: MainNavItem, loggedIn: boolean): string {
   if (item.id === 'home' || item.id === 'insider') return item.href;
-  if (!loggedIn && item.previewAnchor) return `/welcome#${item.previewAnchor}`;
+  if (!loggedIn && item.previewAnchor) {
+    return joinHref(item.href, 'signin');
+  }
   return item.href;
 }
 
@@ -45,9 +56,9 @@ export function getNavHref(item: MainNavItem, loggedIn: boolean): string {
 export function vaultGateRedirect(pathname: string, loggedIn: boolean): string | null {
   if (loggedIn) return null;
   const p = pathname.replace(/\/$/, '') || '/';
-  if (p.startsWith('/vault/futurecast')) return '/welcome#futurecast-preview';
-  if (p.startsWith('/vault/recruiting')) return '/welcome#recruiting-preview';
-  if (p.startsWith('/vault/film-room')) return '/welcome#film-preview';
+  if (p.startsWith('/vault/futurecast')) return joinHref('/vault/futurecast', 'signin');
+  if (p.startsWith('/vault/recruiting')) return joinHref(p, 'signin');
+  if (p.startsWith('/vault/film-room')) return joinHref('/vault/film-room', 'signin');
   return null;
 }
 

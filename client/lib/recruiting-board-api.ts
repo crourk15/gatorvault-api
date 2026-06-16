@@ -47,6 +47,9 @@ export interface RecruitingBoardPlayer {
   inState?: boolean;
   movementDirection?: 'up' | 'down' | 'flat';
   predictionSchools?: { school: string; pct: number }[];
+  strengths?: string[];
+  weaknesses?: string[];
+  evaluatorNotes?: string | null;
 }
 
 export interface RecruitingBoardTierSection {

@@ -5,6 +5,7 @@ import React from 'react';
 import type { UFSpecificProfile } from '../../../lib/player-api';
 import type { UfFitIntelResponse } from '../../../lib/uf-fit-api';
 import { fitTierLabel, formatFitDelta } from '../../../lib/uf-fit-api';
+import { coerceDisplayText } from '../../../lib/coerce-text';
 
 export interface UFFitTabProps {
   profile: UFSpecificProfile | null;
@@ -104,12 +105,12 @@ export function UFFitTab({ profile, intel, intelLoading }: UFFitTabProps): React
         </section>
       )}
 
-      {profile?.evaluationNotes && (
+      {coerceDisplayText(profile?.evaluationNotes) ? (
         <section className="fc-profile-section">
           <h2>Evaluation Notes</h2>
-          <p>{profile.evaluationNotes}</p>
+          <p>{coerceDisplayText(profile?.evaluationNotes)}</p>
         </section>
-      )}
+      ) : null}
 
       {profile && profile.tags.length > 0 && (
         <section className="fc-profile-section">

@@ -309,11 +309,11 @@ export function VaultRecruitingHubPage(): React.ReactElement {
     <div className="gv-rh-hub" data-testid="vault-recruiting-hub">
       <RecruitingHubPremiumHero />
       <RecruitingHubModules />
-      <RecruitingHubClassOverview b26={b26} b27={b27} b28={b28} />
-      <RecruitingHubLatestIntel players={highPriority} />
-      <RecruitingHubTools />
 
       <RecruitingTabBar active={tab} onChange={setTabAndUrl} />
+      <RecruitingHubLatestIntel players={highPriority} />
+      <RecruitingHubClassOverview b26={b26} b27={b27} b28={b28} />
+      <RecruitingHubTools />
 
       <div className="gv-rh-content gv-rh-hub__frame">
         {loading && !loadedOnce.current && (
@@ -346,7 +346,11 @@ export function VaultRecruitingHubPage(): React.ReactElement {
 
         {showContent && tab === 'commits-2027' && (
           <>
-            {headliner ? <HeadlinerCard player={headliner} /> : null}
+            {headliner ? (
+              <div className="gv-rh-headliner-wrap">
+                <HeadlinerCard player={headliner} />
+              </div>
+            ) : null}
             {renderGrid(commitsWithoutHeadliner, 'commit', 'No 2027 commits yet.')}
           </>
         )}

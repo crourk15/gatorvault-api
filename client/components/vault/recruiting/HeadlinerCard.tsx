@@ -13,6 +13,7 @@ import {
   starsDisplay,
 } from '@/lib/recruiting-board-utils';
 import { playerProfilePath, recruitingProfileLifecycle } from '@/lib/player-routes';
+import { RecruitingEvalSections } from '@/components/vault/recruiting/RecruitingEvalSections';
 
 type Props = {
   player: RecruitingBoardPlayer;
@@ -59,12 +60,11 @@ export function HeadlinerCard({ player }: Props): React.ReactElement {
     player.displayRating ?? player.rating ?? playerRating(player) / 100
   );
   const pos = playerPos(player);
-  const quote = player.profileNote || player.skinny || player.notes;
   const natl = player.natlRank ?? player.natl;
   const classYear = player.classYear ?? 2027;
 
   return (
-    <section className="gv-headliner-card" data-testid="rh-headliner-commit">
+    <section className="gv-headliner-card gv-rh-headliner-wrap" data-testid="rh-headliner-commit">
       <div className="gv-headliner-card__accent" aria-hidden="true" />
       <div className="gv-headliner-card__glow" aria-hidden="true" />
       <div className="gv-headliner-card__body">
@@ -109,7 +109,7 @@ export function HeadlinerCard({ player }: Props): React.ReactElement {
               Committed: {formatCommitDate(player.commitDate)}
             </p>
           ) : null}
-          {quote ? <blockquote className="gv-headliner-card__quote">{quote}</blockquote> : null}
+          <RecruitingEvalSections player={player} className="gv-headliner-card__eval" />
           <Button href={href} variant="primary">
             View Profile →
           </Button>

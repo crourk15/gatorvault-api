@@ -112,6 +112,50 @@
   color: #fff;
 }
 
+.gv-rh-class .gv-rb-summary {
+  margin-top: var(--space-4, 16px);
+}
+
+.gv-rh-class__avg {
+  margin: var(--space-4, 16px) 0 0;
+  font-size: 0.875rem;
+  color: var(--gv-storm, #94a3b8);
+}
+
+.gv-rh-class__detail {
+  margin-top: var(--space-6, 24px);
+}
+
+.gv-rh-class__detail-title {
+  margin: 0 0 var(--space-4, 16px);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.gv-rh-class__detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-4, 16px);
+}
+
+.gv-rh-class-player {
+  padding: var(--space-5, 20px);
+}
+
+.gv-rh-class-player__name {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.gv-rh-class-player__meta {
+  margin: 0 0 var(--space-3, 12px);
+  font-size: 0.8125rem;
+  color: var(--gv-electric-blue, #4da3ff);
+}
+
 .gv-rh-class__stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

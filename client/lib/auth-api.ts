@@ -45,7 +45,7 @@ export function loadSession(): AuthSession | null {
     const raw = localStorage.getItem(SESSION_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as AuthSession;
-    if (!parsed?.email) return null;
+    if (!parsed?.email || !parsed?.token) return null;
     return normalizeSession(parsed);
   } catch {
     return null;

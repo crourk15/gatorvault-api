@@ -134,7 +134,7 @@ export function PlayerProfilePage({
     return () => {
       cancelled = true;
     };
-  }, [slug, inVault]);
+  }, [slug, inVault, isRecruitingProfileRoute]);
 
   const onTabChange = useCallback((tab: ProfileTabId) => {
     setActiveTab(tab);

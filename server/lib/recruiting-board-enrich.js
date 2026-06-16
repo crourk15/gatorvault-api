@@ -3,6 +3,7 @@
  */
 const { slugify } = require('./slug');
 const { filterBlockedRecruits } = require('./recruiting-blocked-players');
+const { getBreakdownBySlug } = require('./war-room-store');
 const TIER_LABELS = {
   TOP: 'Top Priorities',
   HIGH: 'High Interest',
@@ -45,10 +46,28 @@ function staffGrade(player) {
   return 'C';
 }
 
+function mergeWarRoomFields(player, enriched) {
+  const slug = enriched.slug || slugify(player.name);
+  const breakdown = getBreakdownBySlug(slug);
+  if (!breakdown) return enriched;
+  const strengths = Array.isArray(breakdown.strengths) ? breakdown.strengths.filter(Boolean) : [];
+  const weaknesses = Array.isArray(breakdown.weaknesses) ? breakdown.weaknesses.filter(Boolean) : [];
+  const evaluatorNotes =
+    breakdown.insiderNotes || breakdown.staffNotes || breakdown.recruitingStory || null;
+  return {
+    ...enriched,
+    strengths,
+    weaknesses,
+    evaluatorNotes,
+    skinny: enriched.skinny || (evaluatorNotes ? String(evaluatorNotes).slice(0, 280) : null),
+    profileNote: enriched.profileNote || breakdown.recruitingStory || null,
+  };
+}
+
 function enrichPlayer(player, isCommit, staffMode) {
   const tier = assignTier(player);
   const slug = player.slug || slugify(player.name);
-  return {
+  const base = {
     slug,
     name: player.name,
     position: player.pos || player.position || null,
@@ -90,6 +109,7 @@ function enrichPlayer(player, isCommit, staffMode) {
     commitDate: player.commitDate || player.commit_date || null,
     inState: player.inState ?? player.in_state ?? (String(player.state || player.st || '').toUpperCase() === 'FL'),
   };
+  return mergeWarRoomFields(player, base);
 }
 
 function enrichBoard(board, staffMode = false) {
