@@ -11,6 +11,7 @@
     "deploy:guardian:static": "node server/scripts/deploy-guardian.js --phase=pre --static --skip-api",
     "deploy:smoke": "node server/scripts/deploy-smoke-post.js",
     "deploy:netlify": "node scripts/trigger-netlify-deploy.js",
+    "purge:netlify-cdn": "node scripts/purge-netlify-cdn.js",
     "verify:hydration:local": "node server/scripts/verify-hydration-stability.js",
     "verify:hydration:production": "node server/scripts/verify-hydration-production.js",
     "verify:qa:local": "node server/scripts/verify-qa-markers-local.js",
