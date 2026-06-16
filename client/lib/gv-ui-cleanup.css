@@ -1157,6 +1157,7 @@ body {
 .gv-vault-shell--dashboard .gv-vault-shell__body {
   margin-top: 0;
   padding-top: 0;
+  align-items: start;
 }
 
 .gv-vault-shell--dashboard .gv-vault-shell__nav {
@@ -1165,11 +1166,24 @@ body {
 }
 
 .gv-vault-shell--dashboard .gv-vault-shell__sidebar {
-  padding-top: 0.75rem;
+  padding: 0 0.75rem 1rem;
+}
+
+.gv-vault-shell--dashboard .gv-vault-shell__sidebar-label {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.gv-vault-shell--dashboard .gv-vault-shell__main:has(.gv-dash) .gv-dash-hero {
+  width: 100%;
 }
 
 @media (max-width: 767px) {
   .gv-vault-shell--dashboard .gv-vault-shell__header {
     padding: 0 0.75rem;
+  }
+
+  .gv-vault-shell--dashboard .gv-vault-shell__sidebar {
+    padding-top: 0.5rem;
   }
 }
