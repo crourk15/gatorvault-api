@@ -1,26 +1,27 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { PlayerProfilePage } from '@/components/futurecast/player/PlayerProfilePage';
-
-function slugFromPathname(): string {
-  if (typeof window === 'undefined') return '';
-  const match = window.location.pathname.match(/\/player\/([^/]+)\/?$/);
-  return match ? decodeURIComponent(match[1]) : '';
-}
+import { UiError } from '@/components/site/UiMessage';
+import { PLAYER_SLUG_PATTERNS, playerSlugFromPath } from '@/lib/player-slug-from-path';
+import { usePathname } from '@/lib/use-pathname';
 
 export default function PlayerBySlugPage(): React.ReactElement {
-  const [slug, setSlug] = useState(() => slugFromPathname());
-
-  useEffect(() => {
-    setSlug(slugFromPathname());
-    const onNav = () => setSlug(slugFromPathname());
-    window.addEventListener('popstate', onNav);
-    return () => window.removeEventListener('popstate', onNav);
-  }, []);
+  const pathname = usePathname();
+  const slug = useMemo(
+    () => playerSlugFromPath(pathname, PLAYER_SLUG_PATTERNS.standalone),
+    [pathname]
+  );
 
   if (!slug) {
-    return <p className="fc-profile-empty fc-player-page-wrap">Loading player…</p>;
+    return (
+      <UiError
+        title="Player not found"
+        message="No player slug in this URL."
+        backHref="/vault/futurecast"
+        backLabel="← FutureCast"
+      />
+    );
   }
 
   return <PlayerProfilePage slug={slug} />;

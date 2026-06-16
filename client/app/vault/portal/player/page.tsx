@@ -1,23 +1,28 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { PortalProfilePage } from '@/components/portal/PortalProfilePage';
-
-function slugFromPathname(): string {
-  if (typeof window === 'undefined') return '';
-  const match = window.location.pathname.match(/\/vault\/portal\/player\/([^/]+)\/?$/);
-  return match ? decodeURIComponent(match[1]) : '';
-}
+import { UiError } from '@/components/site/UiMessage';
+import { PLAYER_SLUG_PATTERNS, playerSlugFromPath } from '@/lib/player-slug-from-path';
+import { usePathname } from '@/lib/use-pathname';
+import { vaultPortalBackHref, vaultPortalBackLabel } from '@/lib/vault-routes';
 
 export default function VaultPortalPlayerPage(): React.ReactElement {
-  const [slug, setSlug] = useState('');
-
-  useEffect(() => {
-    setSlug(slugFromPathname());
-  }, []);
+  const pathname = usePathname();
+  const slug = useMemo(
+    () => playerSlugFromPath(pathname, PLAYER_SLUG_PATTERNS.portal),
+    [pathname]
+  );
 
   if (!slug) {
-    return <p className="gv-page-status">Loading profile…</p>;
+    return (
+      <UiError
+        title="Player not found"
+        message="No player slug in this URL."
+        backHref={vaultPortalBackHref(pathname)}
+        backLabel={vaultPortalBackLabel(pathname)}
+      />
+    );
   }
 
   return <PortalProfilePage slug={slug} />;

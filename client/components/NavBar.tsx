@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname } from '@/lib/use-pathname';
 import { getVaultNavHref, navActiveId } from '@/lib/navConfig';
 import { useUser } from '@/hooks/useUser';
-import { useHydrated } from '@/hooks/useHydrated';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
@@ -17,13 +16,65 @@ const MAIN_LINKS = [
   { id: 'insider', label: 'Insider', href: '/insider' },
 ] as const;
 
+function AuthLinks({
+  loggedIn,
+  showInsider,
+  ready,
+}: {
+  loggedIn: boolean;
+  showInsider: boolean;
+  ready: boolean;
+}): React.ReactElement {
+  if (!ready) {
+    return (
+      <>
+        <Link href="/join?mode=signin" className="gv-site-nav__link">
+          Sign in
+        </Link>
+        <Link href="/insider" className="gv-site-nav__cta gv-nav-premium__cta">
+          Become an Insider
+        </Link>
+      </>
+    );
+  }
+
+  if (loggedIn) {
+    return (
+      <>
+        <Link href="/vault" className="gv-site-nav__link">
+          Profile
+        </Link>
+        {showInsider ? <span className="nav-insider-badge">Insider</span> : null}
+        {!showInsider ? (
+          <Link href="/insider" className="gv-site-nav__cta gv-nav-premium__cta">
+            Become an Insider
+          </Link>
+        ) : null}
+        <Link href="/vault" className="gv-site-nav__cta gv-site-nav__cta--vault">
+          Enter Vault
+        </Link>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Link href="/join?mode=signin" className="gv-site-nav__link">
+        Sign in
+      </Link>
+      <Link href="/insider" className="gv-site-nav__cta gv-nav-premium__cta">
+        Become an Insider
+      </Link>
+    </>
+  );
+}
+
 export function NavBar({ marketing = false }: { marketing?: boolean }): React.ReactElement {
   const pathname = usePathname();
   const current = navActiveId(pathname);
-  const hydrated = useHydrated();
   const { user, isInsider, ready } = useUser();
-  const loggedIn = hydrated && ready && !!user?.email;
-  const showInsider = hydrated && ready && isInsider;
+  const loggedIn = ready && !!user?.email;
+  const showInsider = ready && isInsider;
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -65,34 +116,9 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
           ))}
         </nav>
 
-        <div className="gv-nav-premium__right gv-nav-premium__desktop-only">
+        <div className="gv-nav-premium__right gv-nav-premium__desktop-only" suppressHydrationWarning>
           <ThemeToggle />
-          {!hydrated || !ready ? (
-            <span className="gv-site-nav__link" aria-hidden="true">
-              &nbsp;
-            </span>
-          ) : null}
-          {!loggedIn && hydrated && ready ? (
-            <Link href="/join?mode=signin" className="gv-site-nav__link">
-              Sign in
-            </Link>
-          ) : null}
-          {loggedIn ? (
-            <Link href="/vault" className="gv-site-nav__link">
-              Profile
-            </Link>
-          ) : null}
-          {showInsider ? <span className="nav-insider-badge">Insider</span> : null}
-          {!showInsider && hydrated && ready ? (
-            <Link href="/insider" className="gv-site-nav__cta gv-nav-premium__cta">
-              Become an Insider
-            </Link>
-          ) : null}
-          {loggedIn ? (
-            <Link href="/vault" className="gv-site-nav__cta gv-site-nav__cta--vault">
-              Enter Vault
-            </Link>
-          ) : null}
+          <AuthLinks loggedIn={loggedIn} showInsider={showInsider} ready={ready} />
         </div>
 
         <button
@@ -118,33 +144,9 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
             </Link>
           ))}
         </nav>
-        <div className="gv-nav-premium__mobile-actions">
+        <div className="gv-nav-premium__mobile-actions" suppressHydrationWarning>
           <ThemeToggle />
-          {!hydrated || !ready ? null : loggedIn ? (
-            <>
-              <Link href="/vault" className="gv-site-nav__link">
-                Profile
-              </Link>
-              {showInsider ? <span className="nav-insider-badge">Insider</span> : null}
-              {!showInsider ? (
-                <Link href="/insider" className="gv-site-nav__cta">
-                  Become an Insider
-                </Link>
-              ) : null}
-              <Link href="/vault" className="gv-site-nav__cta gv-site-nav__cta--vault">
-                Enter Vault
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link href="/join?mode=signin" className="gv-site-nav__link">
-                Sign in
-              </Link>
-              <Link href="/insider" className="gv-site-nav__cta">
-                Become an Insider
-              </Link>
-            </>
-          )}
+          <AuthLinks loggedIn={loggedIn} showInsider={showInsider} ready={ready} />
         </div>
       </div>
     </header>

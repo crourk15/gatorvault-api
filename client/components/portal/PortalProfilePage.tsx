@@ -146,7 +146,16 @@ export function PortalProfilePage({ slug }: { slug: string }): React.ReactElemen
     return base;
   }, [data, portalIntel]);
 
-  if (loading) return <ProfileSkeleton />;
+  if (loading) {
+    return (
+      <div className="fc-profile-page fc-player-page-wrap" data-testid="portal-profile-page">
+        <nav className="fc-profile-back">
+          <a href={backHref}>{backLabel}</a>
+        </nav>
+        <ProfileSkeleton />
+      </div>
+    );
+  }
 
   if (error || !data || !metrics) {
     const isTransient =

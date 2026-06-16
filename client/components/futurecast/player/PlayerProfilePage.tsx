@@ -182,7 +182,16 @@ export function PlayerProfilePage({
     [data]
   );
 
-  if (loading) return <ProfileSkeleton />;
+  if (loading) {
+    return (
+      <div className="fc-profile-page fc-player-page-wrap" data-testid="player-profile-page">
+        <nav className="fc-profile-back">
+          <a href={backHref}>{backLabel}</a>
+        </nav>
+        <ProfileSkeleton />
+      </div>
+    );
+  }
   if (error || !data || !metrics) {
     return (
       <UiError

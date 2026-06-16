@@ -99,25 +99,25 @@ export function ScoutingDepartmentPage({
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [type, setType] = useState('all');
-  const [hydrated, setHydrated] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [view, setView] = useState<ScoutingView>(initialView ?? 'hub');
 
   useEffect(() => {
     setView(initialView ?? viewFromHash());
-    setHydrated(true);
+    setMounted(true);
     const onHash = () => setView(viewFromHash());
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, [initialView]);
 
   useEffect(() => {
-    if (!hydrated || initialView) return;
+    if (!mounted || initialView) return;
     const hash = view === 'hub' ? '' : `#${view}`;
     const next = `${window.location.pathname}${window.location.search}${hash}`;
     if (`${window.location.pathname}${window.location.search}${window.location.hash}` !== next) {
       window.history.replaceState(null, '', next);
     }
-  }, [view, hydrated, initialView]);
+  }, [view, mounted, initialView]);
 
   const openView = (next: ScoutingView) => {
     setView(next);

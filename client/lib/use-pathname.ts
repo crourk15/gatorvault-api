@@ -3,12 +3,29 @@
 import { useEffect, useState } from 'react';
 import { usePathname as useNextPathname } from 'next/navigation';
 
+function readBrowserPath(): string {
+  return typeof window !== 'undefined' ? window.location.pathname : '';
+}
+
+/** Prefer browser URL when Next pathname is a rewrite prefix (player slugs, nested static routes). */
+function resolvePathname(nextPath: string | null, hardPath: string): string {
+  const browser = readBrowserPath();
+  const candidate = nextPath || hardPath || browser;
+  if (!browser) return candidate;
+
+  if (nextPath && browser.startsWith(nextPath) && browser.length > nextPath.length) {
+    return browser;
+  }
+  if (hardPath && browser.startsWith(hardPath) && browser.length > hardPath.length) {
+    return browser;
+  }
+  return browser || candidate;
+}
+
 /** Pathname synced with Next client router + hard navigations. */
 export function usePathname(): string {
   const nextPath = useNextPathname();
-  const [hardPath, setHardPath] = useState(
-    () => (typeof window !== 'undefined' ? window.location.pathname : '')
-  );
+  const [hardPath, setHardPath] = useState(readBrowserPath);
 
   useEffect(() => {
     const sync = () => setHardPath(window.location.pathname);
@@ -25,7 +42,7 @@ export function usePathname(): string {
       window.removeEventListener('vault:navigation', sync);
       window.removeEventListener('pageshow', onPageShow);
     };
-  }, []);
+  }, [nextPath]);
 
-  return nextPath || hardPath;
+  return resolvePathname(nextPath, hardPath);
 }
