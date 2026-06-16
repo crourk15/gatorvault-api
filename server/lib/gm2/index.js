@@ -8,8 +8,12 @@ const pgv = require('./pre-render-validator');
 const quarantine = require('./quarantine-store');
 const decisionLog = require('./decision-log');
 const identityValidator = require('../identity-record-validator');
-const publicAlerts = require('../recruiting-public-alerts');
 const autoRepair = require('./auto-repair');
+
+/** Lazy load — recruiting-public-alerts → intel-store → gm2 circular dep if required at top level. */
+function publicAlerts() {
+  return require('../recruiting-public-alerts');
+}
 const { GM2_FEATURES, GM2_ACTIONS } = require('./types');
 
 function ingestSignal(signal, { subsystem = 'unknown', skipFreshness = false } = {}) {
@@ -128,7 +132,7 @@ function ingestEvent(event, options = {}) {
 }
 
 function filterPublicEvents(events) {
-  const filtered = publicAlerts.filterPublicEvents(events || []);
+  const filtered = publicAlerts().filterPublicEvents(events || []);
   return rulesEngine.filterForFeature(GM2_FEATURES.RECRUITING_ALERTS, filtered);
 }
 
@@ -137,12 +141,12 @@ function filterPublicIntel(intel) {
 }
 
 function filterPublicLiveFeed(items) {
-  const base = publicAlerts.filterPublicLiveFeed(items || []);
+  const base = publicAlerts().filterPublicLiveFeed(items || []);
   return rulesEngine.filterForFeature(GM2_FEATURES.LIVE_FEED, base);
 }
 
 function filterPublicHeadlines(items) {
-  const base = publicAlerts.filterPublicLiveFeed(items || []);
+  const base = publicAlerts().filterPublicLiveFeed(items || []);
   return rulesEngine.filterForFeature(GM2_FEATURES.HEADLINES, base);
 }
 

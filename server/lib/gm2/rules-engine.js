@@ -1,7 +1,9 @@
 /**
  * GM 2.0 — Rules Engine (RE). Feature-specific guardrails for all downstream consumers.
  */
-const publicAlerts = require('../recruiting-public-alerts');
+function publicAlerts() {
+  return require('../recruiting-public-alerts');
+}
 const identityValidator = require('../identity-record-validator');
 const beatPrefilter = require('../beat-intel-prefilter');
 const decommitValidator = require('../decommit-validator');
@@ -18,20 +20,20 @@ function isQuarantined(record) {
 
 function rulesForRecruitingAlerts(record) {
   if (isQuarantined(record)) return { allow: false, reason: 'player_quarantined' };
-  if (record.eventType && !publicAlerts.isPublicRecruitingEvent(record)) {
+  if (record.eventType && !publicAlerts().isPublicRecruitingEvent(record)) {
     return { allow: false, reason: 'not_public_recruiting_event' };
   }
   if (record.eventType == null && record.type) {
     const fake = { eventType: record.type, source: record.source, playerSlug: record.playerSlug, title: record.title };
-    if (!publicAlerts.isPublicRecruitingEvent(fake)) return { allow: false, reason: 'not_public_alert' };
+    if (!publicAlerts().isPublicRecruitingEvent(fake)) return { allow: false, reason: 'not_public_alert' };
   }
   return { allow: true };
 }
 
 function rulesForIntel(record) {
   if (isQuarantined(record)) return { allow: false, reason: 'player_quarantined' };
-  if (!publicAlerts.isPublicIntelItem(record)) return { allow: false, reason: 'not_public_intel' };
-  if (publicAlerts.isBrewsterFalseCommit(record)) return { allow: false, reason: 'false_commit_intel' };
+  if (!publicAlerts().isPublicIntelItem(record)) return { allow: false, reason: 'not_public_intel' };
+  if (publicAlerts().isBrewsterFalseCommit(record)) return { allow: false, reason: 'false_commit_intel' };
   return { allow: true };
 }
 
@@ -40,8 +42,8 @@ function rulesForLiveFeedItem(item, { recentFeed = [] } = {}) {
   const coachText = [item?.title, item?.summary, item?.text, item?.headline].filter(Boolean).join(' ');
   const coachCheck = coachIdentity.validateCoachIdentityText(coachText);
   if (!coachCheck.ok) return { allow: false, reason: 'coach_identity_blocked', blocked: coachCheck.blocked };
-  if (publicAlerts.isInvalidHeadlineFeedItem(item)) return { allow: false, reason: 'invalid_headline' };
-  if (!publicAlerts.isPublicLiveFeedItem(item)) return { allow: false, reason: 'not_public_feed_item' };
+  if (publicAlerts().isInvalidHeadlineFeedItem(item)) return { allow: false, reason: 'invalid_headline' };
+  if (!publicAlerts().isPublicLiveFeedItem(item)) return { allow: false, reason: 'not_public_feed_item' };
   const key = feedDedup.feedDedupeKey(item);
   if (key && (recentFeed || []).some((other) => {
     if (other === item || feedDedup.feedDedupeKey(other) !== key) return false;
@@ -63,7 +65,7 @@ function rulesForHeatCheckPlayer(player, intelRows = []) {
   const pv = identityValidator.validatePlayerIdentityRecord(player);
   if (!pv.valid) return { allow: false, reason: 'invalid_identity', errors: pv.errors };
   const hasVerifiedIntel = (intelRows || []).some(
-    (i) => i.playerSlug === player.slug && publicAlerts.isPublicIntelItem(i)
+    (i) => i.playerSlug === player.slug && publicAlerts().isPublicIntelItem(i)
   );
   if (!hasVerifiedIntel && !player.stars) return { allow: false, reason: 'no_verified_intel' };
   return { allow: true };
@@ -71,7 +73,7 @@ function rulesForHeatCheckPlayer(player, intelRows = []) {
 
 function rulesForAutoposter(candidate) {
   if (isQuarantined(candidate)) return { allow: false, reason: 'player_quarantined' };
-  if (publicAlerts.isBrewsterFalseQueueItem(candidate)) return { allow: false, reason: 'false_commit_queue' };
+  if (publicAlerts().isBrewsterFalseQueueItem(candidate)) return { allow: false, reason: 'false_commit_queue' };
   const et = String(candidate.intelType || candidate.eventType || candidate.sourceEventType || '').toLowerCase();
   const trigger = String(candidate.triggerType || '').toLowerCase();
   if (trigger === 'program_news' || et === 'program_news') {
