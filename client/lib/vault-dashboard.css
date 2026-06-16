@@ -12,12 +12,7 @@
   font-family: var(--gv-font);
 }
 
-/* Flush dashboard hero under vault header — no dark padding band above hero */
-.gv-vault-shell__main:has(.gv-dash) {
-  padding-top: 0;
-  padding-left: 0;
-  padding-right: 0;
-}
+/* Flush handled globally in gv-ui-cleanup.css */
 
 @media (min-width: 768px) {
   .gv-dash {

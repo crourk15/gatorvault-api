@@ -19,7 +19,7 @@
   margin: 0;
   color: var(--gv-white);
   font-family: var(--gv-font);
-  padding-bottom: 2rem;
+  padding-bottom: 0;
   background: var(--gv-gradient-hero-blue, linear-gradient(165deg, #0021a5 0%, #001656 55%, #001a33 100%));
 }
 
@@ -348,9 +348,9 @@
 /* ── Premium tab bar ── */
 .gv-rh-tabs-wrap {
   position: sticky;
-  top: 0;
+  top: var(--gv-shell-header-height, 56px);
   z-index: 20;
-  background: rgba(10, 15, 26, 0.92);
+  background: rgba(0, 26, 51, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   margin-top: var(--gv-section-pad);

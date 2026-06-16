@@ -1,6 +1,6 @@
 .gv-vault-shell {
   min-height: 100vh;
-  background: #060f1f;
+  background: var(--gv-navy, #001a33);
   color: #e2e8f0;
 }
 
@@ -17,7 +17,7 @@
   gap: 1rem;
   padding: 0.75rem 1.25rem;
   border-bottom: 1px solid rgba(0, 48, 135, 0.35);
-  background: rgba(6, 15, 31, 0.97);
+  background: rgba(0, 26, 51, 0.97);
   position: sticky;
   top: 0;
   z-index: 40;
@@ -737,7 +737,7 @@ body.gv-live-page-active .gv-vault-shell__main {
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
   border: 2px solid rgba(0, 48, 135, 0.3);
-  background: #060f1f;
+  background: #001a33;
   color: #fff;
   font-size: 0.875rem;
 }
@@ -2574,7 +2574,7 @@ a.gv-live-item__title:hover {
     left: 0;
     right: 0;
     z-index: 55;
-    background: rgba(6, 15, 31, 0.98);
+    background: rgba(0, 26, 51, 0.98);
     border-top: 1px solid rgba(0, 48, 135, 0.4);
     padding: 0.35rem 0 calc(0.35rem + env(safe-area-inset-bottom, 0));
     justify-content: space-around;
@@ -3865,7 +3865,7 @@ a.gv-live-feed__row-title:hover {
 .live-feed-item {
   padding: 0.75rem;
   border-radius: 0.65rem;
-  background: #060f1f;
+  background: #001a33;
   border: 1px solid rgba(0, 48, 135, 0.25);
 }
 
@@ -3968,7 +3968,7 @@ a.live-feed-link:hover {
 .gv-beat-card {
   padding: 0.7rem;
   border-radius: 0.65rem;
-  background: #060f1f;
+  background: #001a33;
   border-left: 3px solid #a855f7;
   cursor: pointer;
 }
@@ -4041,10 +4041,6 @@ a.live-feed-link:hover {
   .live-feed-list {
     max-height: min(520px, calc(100vh - 320px));
   }
-
-  .gv-vault-shell__main {
-    padding-bottom: 5rem;
-  }
 }
 
 .live-pod-card {
@@ -4052,7 +4048,7 @@ a.live-feed-link:hover {
   gap: 0.75rem;
   padding: 0.85rem;
   border-radius: 0.65rem;
-  background: #060f1f;
+  background: #001a33;
   border: 1px solid rgba(0, 48, 135, 0.2);
 }
 

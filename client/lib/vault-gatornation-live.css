@@ -14,7 +14,7 @@
   --gnl-frame-max: 1280px;
   --gnl-frame-margin: clamp(16px, 5vw, 48px);
   margin: 0;
-  padding-bottom: 2.5rem;
+  padding-bottom: 0;
   color: var(--gv-white, #ffffff);
   font-family: var(--gv-font);
   background: var(--gnl-navy);
@@ -757,4 +757,25 @@
   font-size: 0.875rem;
   color: var(--gv-storm);
   padding: 0.5rem 0;
+}
+
+@media (max-width: 767px) {
+  .gv-gnl-ticker__viewport {
+    padding-left: calc(var(--gnl-frame-margin, 1rem) + 3rem);
+    height: 44px;
+  }
+
+  .gv-gnl-feed-card {
+    min-height: 88px;
+  }
+
+  .gv-gnl-podcast-card {
+    min-height: 120px;
+  }
+
+  .gv-gnl-podcast-card__btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
 }

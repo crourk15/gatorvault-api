@@ -3,7 +3,7 @@
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background: var(--gv-bg, #060f1f);
+  background: var(--gv-bg, #001a33);
   color: var(--gv-text, #e2e8f0);
 }
 
@@ -25,7 +25,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(6, 15, 31, 0.95);
+  background: rgba(0, 26, 51, 0.97);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(148, 163, 184, 0.12);
 }
@@ -177,7 +177,7 @@
   justify-content: space-around;
   padding: 0.5rem 0.25rem;
   padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0));
-  background: rgba(6, 15, 31, 0.98);
+  background: rgba(0, 26, 51, 0.98);
   border-top: 1px solid rgba(148, 163, 184, 0.15);
   backdrop-filter: blur(12px);
 }
@@ -382,23 +382,6 @@
 
 .gv-ds-table--sortable th button:hover {
   color: #fbbf24;
-}
-
-.gv-page-layout {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.gv-page-layout--2col {
-  display: grid;
-  gap: 1rem;
-}
-
-@media (min-width: 768px) {
-  .gv-page-layout--2col {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 
 .gv-detail-stub {

@@ -40,6 +40,7 @@ export function PodcastCard({
       subtitle={subtitle}
       imageUrl={imageUrl}
       imageFallback={imageFallback}
+      href={id ? `/vault/podcast/${id}` : `/vault/podcast/gators-breakdown`}
       className="media-card--podcast"
       testId="gnl-podcast-card"
     >

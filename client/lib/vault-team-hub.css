@@ -1,20 +1,20 @@
 /* GatorVault Team Hub — brand tokens aligned with Recruiting Hub / GatorNation Live */
 
 .gv-team-hub {
-  --th-primary: #0f172a;
-  --th-accent: #f97316;
-  --th-blue: #1d4ed8;
+  --th-primary: var(--gv-navy, #001a33);
+  --th-accent: var(--gv-orange, #fa4616);
+  --th-blue: var(--gv-blue, #0021a5);
   --th-green: #4ade80;
   --th-red: #ff4d4d;
   --th-yellow: #facc15;
-  --th-card-bg: #020617;
-  --th-border: #1e293b;
-  --th-radius-card: 0.75rem;
+  --th-card-bg: var(--gv-white, #ffffff);
+  --th-border: rgba(0, 33, 165, 0.18);
+  --th-radius-card: 12px;
   --th-radius-pill: 9999px;
   --gv-frame-max: 1280px;
   --gv-frame-margin: 5%;
-  margin: -1.25rem -1.5rem 0;
-  padding-bottom: 2.5rem;
+  margin: 0;
+  padding-bottom: 0;
   color: var(--gv-white);
   font-family: var(--gv-font);
   background: var(--th-primary);
@@ -22,7 +22,7 @@
 
 @media (max-width: 767px) {
   .gv-team-hub {
-    margin: -1rem -1rem 0;
+    margin: 0;
     --gv-frame-margin: 1rem;
   }
 }

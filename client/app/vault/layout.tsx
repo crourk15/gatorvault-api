@@ -28,6 +28,7 @@ import '@/lib/player-directory-premium.css';
 import '@/lib/vault-team-hub.css';
 import '@/lib/gv-team.css';
 import '@/lib/media-card.css';
+import '@/lib/gv-ui-cleanup.css';
 
 export const viewport: Viewport = {
   width: 'device-width',
