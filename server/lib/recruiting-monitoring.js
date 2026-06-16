@@ -15,7 +15,9 @@ const MONITORING_SECRET =
   process.env.MONITORING_SECRET || process.env.INGEST_CRON_SECRET || process.env.RECRUITING_ADMIN_PIN || 'GV2026admin';
 const DISCORD_WEBHOOK = process.env.MONITORING_DISCORD_WEBHOOK || process.env.DISCORD_WEBHOOK_URL || null;
 const ALERT_EMAIL = process.env.MONITORING_ALERT_EMAIL || process.env.ALERT_EMAIL || null;
-const INGEST_STALE_MS = parseInt(process.env.MONITORING_INGEST_STALE_MS || '600000', 10);
+const INGEST_STALE_MS = parseInt(process.env.MONITORING_INGEST_STALE_MS || String(2 * 3600000), 10);
+const BEAT_STALE_MS = parseInt(process.env.MONITORING_BEAT_STALE_MS || String(15 * 60 * 1000), 10);
+const AUTOPOSTER_IDLE_MS = parseInt(process.env.MONITORING_AUTOPOSTER_IDLE_MS || String(6 * 3600000), 10);
 
 const counters = {
   blockedEvents: 0,
@@ -190,17 +192,72 @@ function verifyMonitoringSecret(secret) {
 
 async function runHealthCheck() {
   const { getIngestStatus } = require('./on3-ingest');
+  const pipelineHealth = require('./pipeline-health');
   const status = getIngestStatus();
+  const report = pipelineHealth.getHealthReport();
   const now = Date.now();
   const issues = [];
 
   const lastRunMs = status.lastRun ? new Date(status.lastRun).getTime() : null;
-  const stale = !lastRunMs || now - lastRunMs > INGEST_STALE_MS;
-  if (process.env.ON3_INGEST_ENABLED === 'true' && stale) {
+  const ingestStale = !lastRunMs || now - lastRunMs > INGEST_STALE_MS;
+  if (process.env.ON3_INGEST_ENABLED === 'true' && ingestStale) {
     issues.push({
-      code: 'ingest_stale',
-      message: `On3 ingest last run ${status.lastRun || 'never'} (threshold ${INGEST_STALE_MS}ms)`
+      code: 'on3_ingest_stale',
+      message: `On3 ingest last run ${status.lastRun || 'never'} (threshold ${Math.round(INGEST_STALE_MS / 3600000)}h)`
     });
+  }
+
+  const beatFetchedAt = report.beatCache?.fetchedAt;
+  const beatFetchedMs = beatFetchedAt ? new Date(beatFetchedAt).getTime() : null;
+  const beatStale = !beatFetchedMs || now - beatFetchedMs > BEAT_STALE_MS;
+  if (beatStale) {
+    issues.push({
+      code: 'beat_stream_stale',
+      message: `Beat cache last fetch ${beatFetchedAt || 'never'} (threshold ${Math.round(BEAT_STALE_MS / 60000)}m)`
+    });
+  }
+  if (report.beatCache?.error) {
+    issues.push({
+      code: 'beat_stream_error',
+      message: report.beatCache.error
+    });
+  }
+  if ((report.beatCache?.postCount || 0) === 0 && process.env.X_BEARER_TOKEN) {
+    issues.push({
+      code: 'beat_stream_empty',
+      message: 'Beat cache has zero posts despite X_BEARER_TOKEN being set'
+    });
+  }
+
+  const lastPostAt = report.autoposter?.lastPostAt || report.autoposter?.lastPostSuccess || null;
+  const lastPostMs = lastPostAt ? new Date(lastPostAt).getTime() : null;
+  const autoposterIdle =
+    process.env.X_AUTOPOST_ENABLED === 'true' &&
+    (!lastPostMs || now - lastPostMs > AUTOPOSTER_IDLE_MS);
+  if (autoposterIdle) {
+    issues.push({
+      code: 'autoposter_idle',
+      message: `No autoposter success since ${lastPostAt || 'never'} (threshold ${Math.round(AUTOPOSTER_IDLE_MS / 3600000)}h)`
+    });
+  }
+  if (report.autoposter?.lastError) {
+    issues.push({
+      code: 'autoposter_error',
+      message: report.autoposter.lastError
+    });
+  }
+
+  try {
+    const intelStore = require('./recruiting-intel-store');
+    const ghost = intelStore.reconcileGhostQueuedIntel();
+    if (ghost.cleared) {
+      issues.push({
+        code: 'autoposter_ghost_queue',
+        message: `Cleared ${ghost.cleared} intel row(s) with xPostQueued but no queue item`
+      });
+    }
+  } catch {
+    /* optional */
   }
 
   if (counters.blockedEvents > 0 && counters.verificationFailures > 5) {
@@ -217,34 +274,49 @@ async function runHealthCheck() {
     });
   }
 
-  const report = {
+  const healthReport = {
     ok: issues.length === 0,
     at: new Date().toISOString(),
     ingest: {
       enabled: process.env.ON3_INGEST_ENABLED === 'true',
       lastRun: status.lastRun,
       initialized: status.initialized,
-      stale,
+      stale: ingestStale,
       staleThresholdMs: INGEST_STALE_MS
+    },
+    beat: {
+      fetchedAt: beatFetchedAt,
+      postCount: report.beatCache?.postCount || 0,
+      error: report.beatCache?.error || null,
+      stale: beatStale,
+      staleThresholdMs: BEAT_STALE_MS
+    },
+    autoposter: {
+      enabled: process.env.X_AUTOPOST_ENABLED === 'true',
+      lastPostAt,
+      queuePending: report.autoposter?.queuePending || 0,
+      idle: autoposterIdle,
+      idleThresholdMs: AUTOPOSTER_IDLE_MS,
+      lastError: report.autoposter?.lastError || null
     },
     counters: getCounters(),
     recentIngestLog: status.recentLog || [],
     issues
   };
 
-  if (issues.length) {
+  if (issues.some((i) => ['beat_stream_error', 'autoposter_error', 'on3_ingest_stale'].includes(i.code))) {
     counters.healthAlerts += 1;
     await sendMonitoringAlert({
       level: 'warning',
       type: 'health_alert',
       reason: issues.map((i) => i.message).join('; '),
-      detail: 'Recruiting pipeline health check detected abnormalities',
+      detail: 'Pipeline health check detected abnormalities',
       meta: { issues },
       notify: true
     });
   }
 
-  return report;
+  return healthReport;
 }
 
 module.exports = {

@@ -31,6 +31,21 @@ function initSupabase() {
   }
 }
 
+function getStoreInfo() {
+  const sb = initSupabase();
+  return {
+    mode: sb ? 'supabase' : 'json',
+    supabaseConfigured: !!(process.env.SUPABASE_URL && (process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY)),
+    paths: sb
+      ? null
+      : {
+          players: PLAYERS_PATH,
+          events: EVENTS_PATH,
+          rankings: RANKINGS_PATH
+        }
+  };
+}
+
 function ensureDataDir() {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
@@ -813,6 +828,7 @@ module.exports = {
   isFloridaCommit,
   isCommittedAnywhere,
   normalizePlayer,
+  getStoreInfo,
   getAllPlayers,
   getPlayerBySlug,
   upsertPlayer,

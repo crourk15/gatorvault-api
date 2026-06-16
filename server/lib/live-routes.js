@@ -74,9 +74,44 @@ function mountLiveRoutes(app) {
 
   app.get('/api/live/beat/status', async (req, res) => {
     try {
-      const { validateXBearerToken, getXTokenStatus } = require('./live-beat');
-      const status = req.query.validate === '1' ? await validateXBearerToken({ force: true }) : getXTokenStatus();
-      return res.json({ ok: true, status });
+      const liveBeat = require('./live-beat');
+      const liveStore = require('./live-store');
+      const cache = liveStore.loadBeatCache();
+      const status =
+        req.query.validate === '1'
+          ? await liveBeat.validateXBearerToken({ force: true })
+          : liveBeat.getXTokenStatus();
+      return res.json({
+        ok: true,
+        status,
+        cache: {
+          fetchedAt: cache.fetchedAt || null,
+          postCount: (cache.posts || []).length,
+          source: cache.source || null,
+          error: cache.error || null,
+          tokenStatus: cache.tokenStatus || null
+        },
+        env: {
+          bearerConfigured: !!(process.env.X_BEARER_TOKEN || process.env.TWITTER_BEARER_TOKEN),
+          nitterBases: (process.env.NITTER_BASES || '').split(',').filter(Boolean).length
+        }
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/live/beat/refresh', async (req, res) => {
+    const pin = pinFromReq(req);
+    const isCron = req.headers['x-live-cron'] === process.env.LIVE_CRON_SECRET;
+    if (!isCron && !verifyAdminPin(pin)) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN or cron secret' });
+    }
+    try {
+      const liveBeat = require('./live-beat');
+      const refreshed = await liveBeat.refreshBeatStream();
+      const beat = liveBeat.getBeatPosts(parseInt(req.query.limit || '40', 10));
+      return res.json({ ok: true, refreshed, beat });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

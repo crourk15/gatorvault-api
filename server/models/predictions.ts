@@ -365,6 +365,12 @@ export async function upsertActiveModelPrediction(
     const oldConfidence = current.confidence;
 
     const delta = data.confidence - current.confidence;
+    console.log('[futurecast] upsert prediction UPDATE', {
+      playerId: data.player_id,
+      school: data.school,
+      confidence: data.confidence,
+      delta
+    });
     const { rows } = await db.query<PredictionRow>(
       `
       UPDATE ${FUTURECAST_PREDICTIONS_TABLE}
@@ -389,6 +395,11 @@ export async function upsertActiveModelPrediction(
     return predictionFromRow(rows[0]);
   }
 
+  console.log('[futurecast] upsert prediction INSERT', {
+    playerId: data.player_id,
+    school: data.school,
+    confidence: data.confidence
+  });
   const { rows } = await db.query<PredictionRow>(
     `
     INSERT INTO ${FUTURECAST_PREDICTIONS_TABLE}

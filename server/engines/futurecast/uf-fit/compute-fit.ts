@@ -17,13 +17,21 @@ export function computeCompositeScore(sub: UfFitSubScores): number {
 }
 
 export async function gatherSubScores(_playerId: string): Promise<UfFitSubScores> {
-  // TODO(Phase 2): War Room, roster need, geo, visits, FutureCast — spec §2.3 table
-  throw new Error('TODO: gatherSubScores');
+  // Phase 2 stub — return neutral sub-scores until War Room / roster need wiring is complete.
+  return {
+    scheme_fit_score: 50,
+    positional_need_score: 50,
+    athletic_profile_score: 50,
+    geographic_ties_score: 50,
+    timeline_fit_score: 50,
+    culture_fit_score: 50,
+    recruiting_momentum_score: 50
+  };
 }
 
-export async function computeUfFitForPlayer(_playerId: string): Promise<number> {
-  // TODO(Phase 2): gatherSubScores → computeCompositeScore → persist UFSpecificProfile
-  throw new Error('TODO: computeUfFitForPlayer');
+export async function computeUfFitForPlayer(playerId: string): Promise<number> {
+  const sub = await gatherSubScores(playerId);
+  return computeCompositeScore(sub);
 }
 
 export async function computeUfFitBatch(): Promise<{ playersUpdated: number }> {

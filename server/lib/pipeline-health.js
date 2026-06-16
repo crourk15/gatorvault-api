@@ -18,6 +18,7 @@ function defaultStatus() {
     lastLiveRefresh: null,
     lastArticlePull: null,
     lastBeatPull: null,
+    lastBeatLateIngest: null,
     lastPodcastPull: null,
     lastRecruitingIngest: null,
     lastError: null,
@@ -90,7 +91,8 @@ function getHealthReport() {
       fetchedAt: beatCache.fetchedAt || null,
       source: beatCache.source || null,
       postCount: (beatCache.posts || []).length,
-      error: beatCache.error || null
+      error: beatCache.error || null,
+      tokenStatus: beatCache.tokenStatus || null
     },
     feed: {
       itemCount: (feedCache.items || []).length,
@@ -123,10 +125,18 @@ function readJson(filePath, fallback) {
   }
 }
 
+function recordBeatLateIngest(result) {
+  return save({
+    lastBeatLateIngest: nowIso(),
+    lastBeatLateProcessed: result?.processedCount || 0
+  });
+}
+
 module.exports = {
   STATUS_PATH,
   load,
   save,
   recordLiveRefresh,
+  recordBeatLateIngest,
   getHealthReport
 };

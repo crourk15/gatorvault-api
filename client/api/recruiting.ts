@@ -85,22 +85,25 @@ export function fetchRecruitingClass(year: number): Promise<RecruitingClassPaylo
 }
 
 export function fetchRecruitingPlayer(id: string): Promise<RecruitingPlayerPayload> {
-  return cachedFetch(`gv:recruiting:player:${id}`, `/api/recruiting/player/${encodeURIComponent(id)}`);
+  return cachedFetch(`gv:recruiting:player:${id}`, `/api/recruiting/player/${encodeURIComponent(id)}`).then((raw) => {
+    const wrapped = raw as { player?: RecruitingPlayerPayload };
+    return wrapped.player ?? (raw as RecruitingPlayerPayload);
+  });
 }
 
 export function fetchHighPriorityIntel(): Promise<RecruitingIntelItem[]> {
   return cachedFetch('gv:recruiting:intel:hp', '/api/recruiting/intel/high-priority').then((raw) => {
     if (Array.isArray(raw)) return raw;
-    const wrapped = raw as { intel?: RecruitingIntelItem[] };
-    return wrapped.intel ?? [];
+    const wrapped = raw as { items?: RecruitingIntelItem[]; intel?: RecruitingIntelItem[] };
+    return wrapped.items ?? wrapped.intel ?? [];
   });
 }
 
 export function fetchRecruitingTargets(year: number): Promise<RecruitingPlayer[]> {
   return cachedFetch(`gv:recruiting:targets:${year}`, `/api/recruiting/targets/${year}`).then((raw) => {
     if (Array.isArray(raw)) return raw;
-    const wrapped = raw as { targets?: RecruitingPlayer[] };
-    return wrapped.targets ?? [];
+    const wrapped = raw as { items?: RecruitingPlayer[]; targets?: RecruitingPlayer[] };
+    return wrapped.items ?? wrapped.targets ?? [];
   });
 }
 

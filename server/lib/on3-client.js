@@ -164,26 +164,33 @@ async function fetchFloridaSnapshot(classYears) {
   const boards = {};
   const rankings = {};
   const errors = [];
+  const urls = [];
 
   for (const year of years) {
     try {
       const url = pageUrl(year);
+      urls.push(url);
+      console.log(`[on3-client] fetching class ${year}: ${url}`);
       const html = await fetchHtml(url, year);
       const next = extractNextData(html);
       const pageProps = next?.props?.pageProps || {};
       const list = pageProps.playerList?.list || [];
       boards[year] = list.map((row) => normalizeOn3Row(row, year)).filter((p) => p.name);
       rankings[year] = normalizeTeamRank(pageProps.teamRank, year);
+      console.log(
+        `[on3-client] class ${year}: ${boards[year].length} commit(s), nationalRank=${rankings[year]?.nationalRank ?? 'n/a'}`
+      );
       if (!boards[year].length) {
         errors.push({ year, type: 'commits', error: 'No commits found in On3 page data' });
       }
     } catch (e) {
+      console.warn(`[on3-client] class ${year} fetch failed: ${e.message}`);
       errors.push({ year, type: 'commits', error: e.message });
       boards[year] = [];
     }
   }
 
-  return { boards, rankings, errors };
+  return { boards, rankings, errors, urls };
 }
 
 /** Portal transfer row on the UF commits board (has transferRating, not HS recruit rating). */

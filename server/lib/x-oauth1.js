@@ -140,10 +140,6 @@ async function oauth1Request({ method = 'GET', url, form = {} }) {
   return data;
 }
 
-/**
- * Signed OAuth 1.0a request with JSON body (X API v2).
- * Signature uses oauth params only — JSON body is excluded per OAuth 1.0a spec.
- */
 async function oauth1RequestJson({ method = 'POST', url, json = {} }) {
   const creds = loadOAuth1Credentials();
   if (!isOAuth1Configured(creds)) {
@@ -183,11 +179,79 @@ async function oauth1RequestJson({ method = 'POST', url, json = {} }) {
   return data;
 }
 
+let _verifyCache = {
+  configured: false,
+  ok: false,
+  screenName: null,
+  userId: null,
+  error: null,
+  checkedAt: null
+};
+
+/**
+ * Verify OAuth 1.0a posting credentials (account/verify_credentials).
+ */
+async function verifyOAuth1Credentials({ force = false } = {}) {
+  if (!isOAuth1Configured()) {
+    _verifyCache = {
+      configured: false,
+      ok: false,
+      screenName: null,
+      userId: null,
+      error:
+        'OAuth 1.0a keys missing. Set X_OAUTH1_API_KEY, X_OAUTH1_API_SECRET, X_OAUTH1_ACCESS_TOKEN, X_OAUTH1_ACCESS_TOKEN_SECRET.',
+      checkedAt: new Date().toISOString()
+    };
+    return { ..._verifyCache };
+  }
+
+  const stale =
+    !_verifyCache.checkedAt || Date.now() - new Date(_verifyCache.checkedAt).getTime() > 5 * 60 * 1000;
+  if (!force && _verifyCache.configured && _verifyCache.ok && !stale) {
+    return { ..._verifyCache };
+  }
+
+  try {
+    const data = await oauth1Request({
+      method: 'GET',
+      url: 'https://api.twitter.com/1.1/account/verify_credentials.json',
+      form: { skip_status: 'true', include_email: 'false' }
+    });
+    _verifyCache = {
+      configured: true,
+      ok: true,
+      screenName: data.screen_name || null,
+      userId: data.id_str || String(data.id || ''),
+      error: null,
+      checkedAt: new Date().toISOString()
+    };
+    console.log(`[x-oauth1] OAuth verify PASS — @${_verifyCache.screenName}`);
+    return { ..._verifyCache };
+  } catch (err) {
+    _verifyCache = {
+      configured: true,
+      ok: false,
+      screenName: null,
+      userId: null,
+      error: err.message,
+      checkedAt: new Date().toISOString()
+    };
+    console.error(`[x-oauth1] OAuth verify FAIL — ${err.message}`);
+    return { ..._verifyCache };
+  }
+}
+
+function getOAuth1VerifyCache() {
+  return { ..._verifyCache };
+}
+
 module.exports = {
   loadOAuth1Credentials,
   isOAuth1Configured,
   buildOAuth1Authorization,
   oauth1Request,
   oauth1RequestJson,
+  verifyOAuth1Credentials,
+  getOAuth1VerifyCache,
   percentEncode
 };

@@ -408,6 +408,13 @@ async function runOn3Ingest(options = {}) {
   const isFirstRun = !snapshot.initialized;
   const baseline = forceBaseline || isFirstRun;
 
+  console.log('[on3-ingest] start', {
+    classYears,
+    baseline,
+    org: process.env.ON3_ORG_SLUG || 'florida-gators',
+    siteBase: process.env.ON3_SITE_BASE || 'https://www.on3.com'
+  });
+
   const live = await on3.fetchFloridaSnapshot(classYears);
   const result = {
     ok: live.errors.length === 0 || Object.values(live.boards).some((b) => b.length > 0),
@@ -416,8 +423,18 @@ async function runOn3Ingest(options = {}) {
     fired: [],
     skipped: [],
     errors: live.errors,
+    urls: live.urls || [],
+    parsedCounts: Object.fromEntries(
+      classYears.map((y) => [y, (live.boards[y] || []).length])
+    ),
     lastRun: new Date().toISOString()
   };
+
+  console.log('[on3-ingest] fetched', {
+    urls: result.urls,
+    parsedCounts: result.parsedCounts,
+    errorCount: live.errors.length
+  });
 
   if (live.errors.length) {
     for (const errRow of live.errors) {
@@ -581,7 +598,16 @@ async function runOn3Ingest(options = {}) {
     level: 'info',
     baseline: result.baseline,
     fired: result.fired.length,
-    errors: result.errors.length
+    errors: result.errors.length,
+    parsedCounts: result.parsedCounts,
+    urls: result.urls
+  });
+
+  console.log('[on3-ingest] complete', {
+    fired: result.fired.length,
+    skipped: result.skipped.length,
+    errors: result.errors.length,
+    baseline: result.baseline
   });
 
   return result;

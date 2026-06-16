@@ -472,6 +472,11 @@ async function collectFreshPostCandidates() {
 }
 
 async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
+  try {
+    intelStore.reconcileGhostQueuedIntel();
+  } catch {
+    /* optional */
+  }
   const doc = store.loadQueue();
   const pending = doc.items.filter((i) => i.status === 'pending');
   const need = Math.max(minPending - pending.length, pending.length === 0 ? 1 : 0);
@@ -533,11 +538,19 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
       enqueued.push(out.item);
       doc.items.push(out.item);
       if (raw.sourceIntelId) {
-        intelStore.markIntelXPostQueued(raw.sourceIntelId);
+        const marked = intelStore.markIntelXPostQueued(raw.sourceIntelId, { queueItemId: out.item.id });
+        if (!marked) {
+          console.warn(
+            `[x-autoposter] enqueue ok but intel mark failed for ${raw.sourceIntelId} (${out.item.id})`
+          );
+        }
       }
       added += 1;
-    } catch {
-      /* skip invalid */
+    } catch (err) {
+      console.warn(`[x-autoposter] refill enqueue failed: ${err.message}`, {
+        player: raw.playerName,
+        fingerprint: raw.intelFingerprint || raw.commitFingerprint
+      });
     }
   }
 

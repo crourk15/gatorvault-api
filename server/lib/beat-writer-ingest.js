@@ -549,6 +549,10 @@ async function queueAutoposter(row, intelItem, built) {
     const check = policy.validatePostContent(payload);
     if (!check.valid) return { queued: false, reason: 'policy', errors: check.errors };
     const out = xStore.enqueuePost(payload);
+    if (intelItem?.id) {
+      const intelStore = require('./recruiting-intel-store');
+      intelStore.markIntelXPostQueued(intelItem.id, { queueItemId: out.item.id });
+    }
     return { queued: true, item: out.item };
   } catch (e) {
     return { queued: false, reason: e.message };

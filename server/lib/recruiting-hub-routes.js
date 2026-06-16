@@ -113,6 +113,14 @@ function mapIntelFromPlayer(player, index) {
 }
 
 function mountRecruitingHubRoutes(app) {
+  function hubMeta(extra = {}) {
+    return {
+      dataSource: store.getStoreInfo(),
+      generatedAt: new Date().toISOString(),
+      ...extra
+    };
+  }
+
   app.get('/api/recruiting/class/:year', async (req, res) => {
     try {
       const year = parseInt(req.params.year, 10);
@@ -135,7 +143,7 @@ function mountRecruitingHubRoutes(app) {
         return buildClassPayload(year, commits, enriched.rankings, compareRankings);
       });
 
-      return res.json({ ok: true, ...value });
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), ...value });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -155,7 +163,7 @@ function mountRecruitingHubRoutes(app) {
       });
 
       if (!player) return res.status(404).json({ ok: false, error: 'Player not found' });
-      return res.json(mapPlayerToHub(player));
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), player: mapPlayerToHub(player) });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -172,7 +180,7 @@ function mountRecruitingHubRoutes(app) {
           .slice(0, 12);
         return targets.map(mapIntelFromPlayer);
       });
-      return res.json(value);
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -190,7 +198,7 @@ function mountRecruitingHubRoutes(app) {
         const enriched = enrichBoard(board, false);
         return (enriched.targets || []).map(mapPlayerToHub);
       });
-      return res.json(value);
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

@@ -682,6 +682,27 @@ function mountRecruitingRoutes(app) {
     }
   });
 
+  app.get('/api/recruiting/pipeline/health', async (req, res) => {
+    try {
+      const monitoring = require('./recruiting-monitoring');
+      const pipelineHealth = require('./pipeline-health');
+      const pin = String(req.query.pin || req.get('X-Recruiting-Pin') || '');
+      const isCron = req.headers['x-ingest-cron'] === INGEST_CRON_SECRET;
+      if (!isCron && pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
+        return res.status(401).json({ ok: false, error: 'Invalid admin pin or ingest secret' });
+      }
+      const report = await monitoring.runHealthCheck();
+      return res.json({
+        ok: report.ok,
+        report,
+        pipeline: pipelineHealth.getHealthReport(),
+        store: require('./recruiting-store').getStoreInfo()
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   mountRecruitingHubRoutes(app);
 }
 

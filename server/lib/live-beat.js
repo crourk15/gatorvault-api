@@ -348,6 +348,15 @@ async function refreshBeatStream() {
   };
   store.saveBeatCache(next);
 
+  console.log('[live-beat] refresh complete', {
+    posts: merged.length,
+    source: next.source,
+    xHits,
+    nitterHits,
+    error: next.error || null,
+    tokenOk: tokenStatus.ok
+  });
+
   purgeNonFloridaBeatFromFeed();
 
   try {

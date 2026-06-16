@@ -210,13 +210,60 @@ function addIntel(raw) {
   return Promise.resolve({ item: row, created: true, duplicate: false, player: null });
 }
 
-function markIntelXPostQueued(idOrFingerprint) {
+function markIntelXPostQueued(idOrFingerprint, { queueItemId } = {}) {
+  const xStore = require('./x-autoposter-store');
   const doc = loadIntelDoc();
   const idx = doc.items.findIndex((i) => i.id === idOrFingerprint || i.fingerprint === idOrFingerprint);
   if (idx < 0) return null;
+
+  const intel = doc.items[idx];
+  const hasQueueItem =
+    (queueItemId && xStore.loadQueue().items.some((i) => i.id === queueItemId)) ||
+    xStore.hasActiveQueueItemForIntel(intel.id) ||
+    xStore.hasActiveQueueItemForIntel(intel.fingerprint);
+
+  if (!hasQueueItem) {
+    console.warn(
+      `[intel-store] refused markIntelXPostQueued — no durable queue item for ${intel.id || intel.fingerprint}`
+    );
+    return null;
+  }
+
   doc.items[idx] = { ...doc.items[idx], xPostQueued: true, alertPosted: true };
   saveIntelDoc(doc);
   return doc.items[idx];
+}
+
+function clearIntelXPostQueued(idOrFingerprint, reason = 'queue_missing') {
+  const doc = loadIntelDoc();
+  const idx = doc.items.findIndex((i) => i.id === idOrFingerprint || i.fingerprint === idOrFingerprint);
+  if (idx < 0) return null;
+  if (!doc.items[idx].xPostQueued) return doc.items[idx];
+  doc.items[idx] = { ...doc.items[idx], xPostQueued: false, xPostQueueClearedReason: reason };
+  saveIntelDoc(doc);
+  return doc.items[idx];
+}
+
+/** Clear xPostQueued flags that have no matching queue row (ghost queued intel). */
+function reconcileGhostQueuedIntel() {
+  const xStore = require('./x-autoposter-store');
+  const queueDoc = xStore.loadQueue();
+  const doc = loadIntelDoc();
+  let cleared = 0;
+  doc.items = (doc.items || []).map((item) => {
+    if (!item.xPostQueued) return item;
+    const hasMatch = queueDoc.items.some(
+      (q) =>
+        (q.sourceIntelId === item.id || q.intelFingerprint === item.fingerprint) &&
+        ['pending', 'sent', 'failed', 'skipped_duplicate'].includes(q.status)
+    );
+    if (hasMatch) return item;
+    cleared += 1;
+    return { ...item, xPostQueued: false, xPostQueueClearedReason: 'reconcile_ghost' };
+  });
+  if (cleared) saveIntelDoc(doc);
+  if (cleared) console.warn(`[intel-store] reconciled ${cleared} ghost xPostQueued flag(s)`);
+  return { cleared };
 }
 
 function updateIntelIdentity(idOrFingerprint, patch) {
@@ -333,6 +380,8 @@ module.exports = {
   addIntel,
   hasIntelFingerprint,
   markIntelXPostQueued,
+  clearIntelXPostQueued,
+  reconcileGhostQueuedIntel,
   updateIntelIdentity,
   getIntelForPlayer,
   getUnqueuedIntel,

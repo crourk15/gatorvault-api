@@ -948,8 +948,15 @@ function startBeatLateIngestScheduler() {
         return runBeatLateIngestSweep();
       })
       .then((r) => {
+        try {
+          require('./lib/pipeline-health').recordBeatLateIngest(r);
+        } catch {
+          /* optional */
+        }
         if (r.processedCount) {
           console.log('[beat-late-ingest] recovered', r.processedCount, 'missed post(s)');
+        } else {
+          console.log('[beat-late-ingest] sweep ok — processed', r.processedCount || 0, 'postsFetched', r.postsFetched || 0);
         }
       })
       .catch((err) => console.warn('[beat-late-ingest]', err.message));
@@ -958,6 +965,26 @@ function startBeatLateIngestScheduler() {
   setTimeout(tick, bootDelay);
   setInterval(tick, intervalMs);
   console.log('Beat late ingest sweep: every', Math.round(intervalMs / 1000), 's');
+}
+
+let _gvPipelineMonitoringStarted = false;
+function startPipelineMonitoringScheduler() {
+  if (_gvPipelineMonitoringStarted) return;
+  _gvPipelineMonitoringStarted = true;
+  const monitoring = require('./lib/recruiting-monitoring');
+  const intervalMs = Math.max(
+    300000,
+    parseInt(process.env.MONITORING_HEALTH_INTERVAL_MS || String(15 * 60 * 1000), 10) || 15 * 60 * 1000
+  );
+  const bootDelay = Math.max(120000, parseInt(process.env.MONITORING_HEALTH_BOOT_DELAY_MS || '180000', 10) || 180000);
+
+  const tick = () => {
+    monitoring.runHealthCheck().catch((err) => console.warn('[pipeline-monitoring]', err.message));
+  };
+
+  setTimeout(tick, bootDelay);
+  setInterval(tick, intervalMs);
+  console.log('Pipeline monitoring: every', Math.round(intervalMs / 60000), 'min');
 }
 
 let _gvGm2AutoRepairStarted = false;
@@ -1135,6 +1162,15 @@ app.listen(PORT, () => {
     console.warn('Roster API: failed to init', e.message);
   }
   try {
+    const intelStore = require('./lib/recruiting-intel-store');
+    const ghost = intelStore.reconcileGhostQueuedIntel();
+    if (ghost.cleared) {
+      console.warn('[startup] cleared', ghost.cleared, 'ghost xPostQueued intel flag(s)');
+    }
+  } catch (e) {
+    console.warn('[startup] intel reconcile skipped:', e.message);
+  }
+  try {
     startOn3IngestScheduler();
   } catch (e) {
     console.warn('On3 ingest scheduler failed to start', e.message);
@@ -1154,6 +1190,7 @@ app.listen(PORT, () => {
       .catch((err) => console.warn('[live-dashboard] Beat token check failed', err.message));
     startLiveDashboardScheduler();
     startBeatLateIngestScheduler();
+    startPipelineMonitoringScheduler();
   } catch (e) {
     console.warn('Live dashboard scheduler failed to start', e.message);
   }
@@ -1164,6 +1201,13 @@ app.listen(PORT, () => {
   }
   try {
     const { startXAutoposterScheduler } = require('./lib/x-autoposter');
+    const { verifyOAuth1Credentials } = require('./lib/x-oauth1');
+    verifyOAuth1Credentials()
+      .then((s) => {
+        if (s.ok) console.log('[autoposter] OAuth1 startup verify PASS — @' + s.screenName);
+        else console.warn('[autoposter] OAuth1 startup verify FAIL —', s.error);
+      })
+      .catch((err) => console.warn('[autoposter] OAuth1 startup verify error', err.message));
     startXAutoposterScheduler();
     try {
       const freshness = require('./lib/autoposter-freshness');

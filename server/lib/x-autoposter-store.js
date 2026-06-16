@@ -5,6 +5,8 @@ const policy = require('./x-autoposter-policy');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'x');
 const QUEUE_PATH = path.join(DATA_DIR, 'autoposter-queue.json');
+const OPS_LOG_PATH = path.join(DATA_DIR, 'autoposter-ops-log.json');
+const OPS_LOG_MAX = 200;
 
 function nowIso() {
   return new Date().toISOString();
@@ -138,11 +140,73 @@ function getMixStats(options) {
   return policy.computeMixStats(sent);
 }
 
+function appendOpsLog(entry) {
+  let doc;
+  try {
+    doc = JSON.parse(fs.readFileSync(OPS_LOG_PATH, 'utf8'));
+  } catch {
+    doc = { version: 1, entries: [] };
+  }
+  doc.entries = doc.entries || [];
+  doc.entries.unshift({ ts: nowIso(), ...entry });
+  doc.entries = doc.entries.slice(0, OPS_LOG_MAX);
+  doc.updatedAt = nowIso();
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.writeFileSync(OPS_LOG_PATH, JSON.stringify(doc, null, 2));
+  return doc.entries[0];
+}
+
+function logQueueOp(action, item, extra = {}) {
+  const row = {
+    action,
+    itemId: item?.id || null,
+    intelFingerprint: item?.intelFingerprint || item?.commitFingerprint || null,
+    sourceIntelId: item?.sourceIntelId || null,
+    playerName: item?.playerName || null,
+    status: item?.status || null,
+    queueLength: loadQueue().items.length,
+    ...extra
+  };
+  appendOpsLog(row);
+  const tag = `[x-autoposter-queue] ${action}`;
+  if (extra.error) console.warn(tag, row);
+  else console.log(tag, {
+    itemId: row.itemId,
+    fingerprint: row.intelFingerprint,
+    player: row.playerName,
+    pending: loadQueue().items.filter((i) => i.status === 'pending').length
+  });
+}
+
+function findByIntel(idOrFingerprint) {
+  const key = String(idOrFingerprint || '');
+  const doc = loadQueue();
+  return (
+    doc.items.find(
+      (i) =>
+        i.sourceIntelId === key ||
+        i.intelFingerprint === key ||
+        i.commitFingerprint === key
+    ) || null
+  );
+}
+
+function hasActiveQueueItemForIntel(idOrFingerprint) {
+  const key = String(idOrFingerprint || '');
+  const doc = loadQueue();
+  return doc.items.some(
+    (i) =>
+      (i.sourceIntelId === key || i.intelFingerprint === key) &&
+      ['pending', 'sent'].includes(i.status)
+  );
+}
+
 function enqueuePost(raw) {
   const doc = loadQueue();
   const item = normalizeItem(raw, { validate: true });
   doc.items.push(item);
   saveQueue(doc);
+  logQueueOp('enqueue', item, { source: item.source || 'manual' });
   return { item, mix: getMixStats() };
 }
 
@@ -152,6 +216,7 @@ function updatePost(id, patch) {
   if (idx < 0) throw new Error('Queue item not found');
   doc.items[idx] = { ...doc.items[idx], ...patch };
   saveQueue(doc);
+  logQueueOp('update', doc.items[idx], { patchKeys: Object.keys(patch || {}) });
   return doc.items[idx];
 }
 
@@ -161,6 +226,7 @@ function cancelPost(id) {
 
 module.exports = {
   QUEUE_PATH,
+  OPS_LOG_PATH,
   loadQueue,
   saveQueue,
   normalizeItem,
@@ -170,5 +236,9 @@ module.exports = {
   enqueuePost,
   updatePost,
   cancelPost,
+  appendOpsLog,
+  logQueueOp,
+  findByIntel,
+  hasActiveQueueItemForIntel,
   nowIso
 };

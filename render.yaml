@@ -31,6 +31,10 @@ services:
         value: "120000"
       - key: ON3_CLASS_YEARS
         value: "2026,2027"
+      - key: ON3_ORG_SLUG
+        value: "florida-gators"
+      - key: ON3_SITE_BASE
+        value: "https://www.on3.com"
       - key: ON3_INGEST_BOOT_DELAY_MS
         value: "15000"
       - key: RIVALS_PM_INGEST_ENABLED
@@ -62,6 +66,20 @@ services:
       - key: X_BEARER_TOKEN
         sync: false
       - key: LIVE_POLL_INTERVAL_MS
+        value: "180000"
+      - key: BEAT_LATE_INGEST_INTERVAL_MS
+        value: "300000"
+      - key: BEAT_LATE_INGEST_BOOT_DELAY_MS
+        value: "60000"
+      - key: MONITORING_INGEST_STALE_MS
+        value: "7200000"
+      - key: MONITORING_BEAT_STALE_MS
+        value: "900000"
+      - key: MONITORING_AUTOPOSTER_IDLE_MS
+        value: "21600000"
+      - key: MONITORING_HEALTH_INTERVAL_MS
+        value: "900000"
+      - key: MONITORING_HEALTH_BOOT_DELAY_MS
         value: "180000"
       - key: X_OAUTH1_API_KEY
         sync: false

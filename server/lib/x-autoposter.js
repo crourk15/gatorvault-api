@@ -4,7 +4,7 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { loadOAuth1Credentials, isOAuth1Configured, oauth1Request, oauth1RequestJson } = require('./x-oauth1');
+const { loadOAuth1Credentials, isOAuth1Configured, oauth1Request, oauth1RequestJson, verifyOAuth1Credentials } = require('./x-oauth1');
 const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
 const { refillAutoposterQueue } = require('./x-autoposter-fill');
@@ -126,53 +126,9 @@ function getConfigStatus() {
 }
 
 async function verifyCredentials({ force = false } = {}) {
-  if (!isOAuth1Configured()) {
-    _statusCache = {
-      configured: false,
-      ok: false,
-      screenName: null,
-      userId: null,
-      error:
-        'OAuth 1.0a keys missing. Set X_OAUTH1_API_KEY, X_OAUTH1_API_SECRET, X_OAUTH1_ACCESS_TOKEN, X_OAUTH1_ACCESS_TOKEN_SECRET.',
-      checkedAt: store.nowIso()
-    };
-    return { ..._statusCache };
-  }
-
-  const stale =
-    !_statusCache.checkedAt ||
-    Date.now() - new Date(_statusCache.checkedAt).getTime() > 5 * 60 * 1000;
-  if (!force && _statusCache.configured && _statusCache.ok && !stale) {
-    return { ..._statusCache };
-  }
-
-  try {
-    const data = await oauth1Request({
-      method: 'GET',
-      url: `${API_V11}/account/verify_credentials.json`,
-      form: { skip_status: 'true', include_email: 'false' }
-    });
-
-    _statusCache = {
-      configured: true,
-      ok: true,
-      screenName: data.screen_name || null,
-      userId: data.id_str || String(data.id || ''),
-      error: null,
-      checkedAt: store.nowIso()
-    };
-    return { ..._statusCache };
-  } catch (err) {
-    _statusCache = {
-      configured: true,
-      ok: false,
-      screenName: null,
-      userId: null,
-      error: err.message,
-      checkedAt: store.nowIso()
-    };
-    return { ..._statusCache };
-  }
+  const result = await verifyOAuth1Credentials({ force });
+  _statusCache = { ...result, checkedAt: result.checkedAt || store.nowIso() };
+  return { ..._statusCache };
 }
 
 async function uploadMedia({ filePath, base64, mimeType }) {
@@ -267,6 +223,7 @@ function isDuplicateTweetError(err) {
 
 async function processQueueItem(item) {
   saveSchedulerStatus({ lastPostAttempt: store.nowIso(), lastError: null });
+  store.logQueueOp('post_attempt', item, { preview: String(item.text || '').slice(0, 120) });
   autopostLog('info', 'Posting…', {
     itemId: item.id,
     category: item.category,
@@ -311,6 +268,7 @@ async function processQueueItem(item) {
       error: null,
       validationErrors: []
     });
+    store.logQueueOp('post_success', { ...item, status: 'sent', tweetId: result.tweetId });
     const postedAt = store.nowIso();
     freshness.recordLastPost(postedAt);
     saveSchedulerStatus({
@@ -356,6 +314,7 @@ async function processQueueItem(item) {
       error: err.message,
       sentAt: store.nowIso()
     });
+    store.logQueueOp('post_failed', { ...item, status: 'failed' }, { error: err.message });
     saveSchedulerStatus({ lastError: err.message });
     opsMonitor.logEvent({
       subsystem: 'autoposter',

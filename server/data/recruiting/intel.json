@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-09T15:06:37.837Z",
+  "updatedAt": "2026-06-16T14:32:41.855Z",
   "items": [
     {
       "id": "intel_243198_visit_cancelled_2026-06-09",
@@ -48,8 +48,9 @@
       "reportedAt": "2026-06-09T12:00:00.000Z",
       "fingerprint": "243862|official_visit|2026-06-11",
       "alertPosted": true,
-      "xPostQueued": true,
-      "createdAt": "2026-06-09T12:00:00.000Z"
+      "xPostQueued": false,
+      "createdAt": "2026-06-09T12:00:00.000Z",
+      "xPostQueueClearedReason": "reconcile_ghost"
     }
   ]
 }
