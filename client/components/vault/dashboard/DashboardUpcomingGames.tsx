@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Button, Card, GridLayout, PageSection } from '@/components/brand';
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
 import { SITE_ROUTES, gameWeekRoute } from '@/lib/site-routes';
+import { ProbabilityGauge } from '@/components/ui/ProbabilityGauge';
 
 export function DashboardUpcomingGames(): React.ReactElement {
   const upcoming = SCHEDULE_GAMES.slice(0, 3);
@@ -11,30 +11,24 @@ export function DashboardUpcomingGames(): React.ReactElement {
   return (
     <section className="gv-dash-games gv-dash__section" aria-label="Upcoming games" data-testid="dashboard-upcoming-games">
       <div className="gv-dash__frame">
-        <PageSection
-          title="Upcoming Games"
-          action={<Button href={SITE_ROUTES.schedule} variant="secondary">Full Schedule</Button>}
-        >
-          <GridLayout cols={3}>
-            {upcoming.map((game) => (
-              <Card key={game.id} href={gameWeekRoute(game.id)}>
-                <p className="gv-type-label">{game.date}</p>
-                <h3 className="gv-type-h3" style={{ margin: '0.35rem 0' }}>
-                  vs {game.opp}
-                </h3>
-                <p className="gv-type-body" style={{ opacity: 0.75, margin: 0 }}>
-                  {game.venue}
-                </p>
-                <div className="gv-prob-bar" style={{ marginTop: '0.75rem' }}>
-                  <div className="gv-prob-bar__fill" style={{ width: `${game.ufPct}%` }} />
-                </div>
-                <p style={{ margin: '0.35rem 0 0', fontSize: '0.8125rem', fontWeight: 700, color: 'var(--gv-blue)' }}>
-                  UF {game.ufPct}% win prob
-                </p>
-              </Card>
-            ))}
-          </GridLayout>
-        </PageSection>
+        <div className="gv-dash-games__header">
+          <h2 className="gv-dash-today__heading">Upcoming Games</h2>
+          <a href={SITE_ROUTES.schedule} className="gv-dash-card__link">
+            Full schedule →
+          </a>
+        </div>
+        <div className="gv-dash-games__grid">
+          {upcoming.map((game) => (
+            <a key={game.id} href={gameWeekRoute(game.id)} className="gv-dash-games__card">
+              <p className="gv-dash-games__date">{game.date}</p>
+              <h3 className="gv-dash-games__matchup">vs {game.opp}</h3>
+              <p className="gv-dash-games__venue">{game.venue}</p>
+              <div className="gv-dash-games__gauge">
+                <ProbabilityGauge value={game.ufPct} label="UF Win Prob" size={80} />
+              </div>
+            </a>
+          ))}
+        </div>
       </div>
     </section>
   );

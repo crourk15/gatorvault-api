@@ -7,6 +7,7 @@ import { GatorVaultMonogram } from '@/components/brand/GatorVaultWordmark';
 import { InsiderBadge } from '@/components/brand/InsiderBadge';
 import { badgeLevelForTier, type InsiderBadgeLevel } from '@/lib/gatorvault-brand-assets';
 import { loadSession, effectiveTier } from '@/lib/auth-api';
+import { ProbabilityGauge } from '@/components/ui/ProbabilityGauge';
 
 type Props = {
   ticker: TickerResponse | null;
@@ -95,30 +96,18 @@ export function DashboardHero({
                 FLORIDA vs FAU — {daysUntilGame} DAYS
               </span>
             </div>
-
-            <div
-              className="gv-dash-hero__temp"
-              title={GV_COPY.tooltips.momentum}
-            >
-              <div className="gv-dash-hero__temp-row">
-                <span aria-hidden="true">🔥</span>
-                <span>
-                  Recruiting Momentum: {momentumPct}% (Trending {trending})
-                </span>
-              </div>
-              <div
-                className="gv-dash-hero__temp-bar"
-                role="progressbar"
-                aria-valuenow={momentumPct}
-                aria-valuemin={0}
-                aria-valuemax={100}
-              >
-                <div className="gv-dash-hero__temp-fill" style={{ width: `${momentumPct}%` }} />
-              </div>
-            </div>
           </div>
 
           <div className="gv-dash-hero__right">
+            <div className="gv-dash-hero__gauge-wrap">
+              <ProbabilityGauge
+                value={momentumPct}
+                label={`UF Recruiting Momentum (Trending ${trending})`}
+                size={120}
+                className="gv-dash-hero__gauge"
+              />
+            </div>
+
             <p className="gv-dash-hero__carousel-label">{GV_COPY.headlines.whatsHot.toUpperCase()}</p>
             <div className="gv-dash-hero__carousel" aria-label="What's hot today carousel">
               {visibleCards.map((item) => (

@@ -3,7 +3,7 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import type { TickerItem } from '@/lib/vault-dashboard-api';
 import { applyTickerScrollDuration } from '@/lib/ticker-duration';
-import { TICKER_CATEGORY_LABEL } from './dashboard-utils';
+import { TICKER_STRIP_LABEL } from './dashboard-utils';
 
 export function DashboardTicker({
   items,
@@ -50,7 +50,7 @@ export function DashboardTicker({
           {display.map((item, idx) => (
             <React.Fragment key={`${item.id}_${idx}`}>
               <a href={item.url} className="gv-dash-ticker__item">
-                <strong>{TICKER_CATEGORY_LABEL[item.category] || 'UPDATE'}:</strong>{' '}
+                <strong>{TICKER_STRIP_LABEL[item.category] || 'Update'}:</strong>{' '}
                 {item.text}
               </a>
               {idx < display.length - 1 && (

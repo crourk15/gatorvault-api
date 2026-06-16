@@ -4,15 +4,12 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import '@/lib/vault-dashboard.css';
 import { DashboardHero } from '@/components/vault/dashboard/DashboardHero';
 import { DashboardTicker } from '@/components/vault/dashboard/DashboardTicker';
-import { DashboardMovementPreview } from '@/components/vault/dashboard/DashboardMovementPreview';
-import { DashboardRecruitingSnapshot } from '@/components/vault/dashboard/DashboardRecruitingSnapshot';
-import { DashboardLatestContent } from '@/components/vault/dashboard/DashboardLatestContent';
+import { DashboardTodayInVault } from '@/components/vault/dashboard/DashboardTodayInVault';
 import { DashboardQuickActions } from '@/components/vault/dashboard/DashboardQuickActions';
-import { DashboardPersonalized } from '@/components/vault/dashboard/DashboardPersonalized';
-import { DashboardHeatCheck } from '@/components/vault/dashboard/DashboardHeatCheck';
+import { DashboardWatchlist } from '@/components/vault/dashboard/DashboardWatchlist';
+import { DashboardMovementFeed } from '@/components/vault/dashboard/DashboardMovementFeed';
 import { DashboardUpcomingGames } from '@/components/vault/dashboard/DashboardUpcomingGames';
 import { DashboardPortalActivity } from '@/components/vault/dashboard/DashboardPortalActivity';
-import { DashboardNilTrends } from '@/components/vault/dashboard/DashboardNilTrends';
 import {
   DASHBOARD_REFRESH,
   computeMomentumPct,
@@ -27,14 +24,13 @@ import {
   type RecruitingSnapshot,
   type TickerResponse,
 } from '@/lib/vault-dashboard-api';
-import type { StaffDashboardResponse } from '@/lib/staff-api';
 import { fetchFutureCastClass } from '@/lib/futurecast-home-api';
 
 const TICKER_DEBOUNCE_MS = 400;
 
 export function VaultDashboardPage(): React.ReactElement {
   const [ticker, setTicker] = useState<TickerResponse | null>(null);
-  const [movement, setMovement] = useState<StaffDashboardResponse | null>(null);
+  const [movement, setMovement] = useState<Awaited<ReturnType<typeof fetchMovementPreview>> | null>(null);
   const [recruiting, setRecruiting] = useState<RecruitingSnapshot | null>(null);
   const [content, setContent] = useState<ContentLatestResponse | null>(null);
   const [personalized, setPersonalized] = useState<PersonalizedResponse | null>(null);
@@ -146,15 +142,16 @@ export function VaultDashboardPage(): React.ReactElement {
         loading={loading && !ticker}
       />
       <DashboardTicker items={ticker?.items ?? []} loading={loading && !ticker} />
-      <DashboardHeatCheck />
-      <DashboardMovementPreview data={movement} loading={loading && !movement} />
-      <DashboardRecruitingSnapshot snapshot={recruiting} loading={loading && !recruiting} />
-      <DashboardLatestContent data={content} loading={loading && !content} />
+      <DashboardTodayInVault snapshot={recruiting} loading={loading && !recruiting} />
+      <DashboardQuickActions />
+      <DashboardWatchlist data={personalized} loading={loading && !personalized} />
+      <DashboardMovementFeed
+        movement={movement}
+        content={content}
+        loading={loading && !movement && !content}
+      />
       <DashboardUpcomingGames />
       <DashboardPortalActivity snapshot={recruiting} />
-      <DashboardNilTrends snapshot={recruiting} />
-      <DashboardQuickActions />
-      <DashboardPersonalized data={personalized} loading={loading && !personalized} />
     </div>
   );
 }

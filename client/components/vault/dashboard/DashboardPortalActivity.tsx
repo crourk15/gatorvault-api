@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Card, Chip, PageSection } from '@/components/brand';
 import type { RecruitingSnapshot } from '@/lib/vault-dashboard-api';
+import { SITE_ROUTES } from '@/lib/site-routes';
 
 const MOCK_PORTAL = [
   { name: 'Marcus Webb', pos: 'EDGE', dir: 'in' as const, from: 'Auburn' },
@@ -20,38 +20,39 @@ export function DashboardPortalActivity({ snapshot }: Props): React.ReactElement
   return (
     <section className="gv-dash-portal gv-dash__section" aria-label="Portal activity" data-testid="dashboard-portal">
       <div className="gv-dash__frame">
-        <PageSection
-          title="Portal Activity"
-          subtitle={`${active} active targets tracked`}
-          action={<Chip variant="orange">{active} Active</Chip>}
-        >
-          <div className="gv-dash-portal__list">
-            {MOCK_PORTAL.map((p) => (
-              <Card key={p.name} className="gv-dash-portal__row">
-                <div className="gv-dash-portal__row-inner">
-                  <div>
-                    <strong>{p.name}</strong>
-                    <span style={{ marginLeft: '0.5rem', opacity: 0.65 }}>{p.pos}</span>
-                  </div>
-                  <span
-                    className={
-                      p.dir === 'in'
-                        ? 'gv-portal-tag gv-portal-tag--in'
-                        : p.dir === 'out'
-                          ? 'gv-portal-tag gv-portal-tag--out'
-                          : 'gv-portal-tag gv-portal-tag--target'
-                    }
-                  >
-                    {p.dir === 'in' ? 'Portal In' : p.dir === 'out' ? 'Portal Out' : 'Target'}
-                  </span>
-                </div>
-                <p style={{ margin: '0.25rem 0 0', fontSize: '0.8125rem', opacity: 0.7 }}>
-                  {p.dir === 'out' ? 'Entered portal' : `From ${p.from}`}
-                </p>
-              </Card>
-            ))}
+        <article className="gv-dash-card gv-dash-portal__card">
+          <div className="gv-dash-portal__head">
+            <div>
+              <p className="gv-dash-card__eyebrow">Portal Activity</p>
+              <h3 className="gv-dash-card__title">{active} active targets</h3>
+            </div>
+            <span className="gv-dash-portal__chip">{active} Active</span>
           </div>
-        </PageSection>
+          <ul className="gv-dash-portal__compact">
+            {MOCK_PORTAL.map((p) => (
+              <li key={p.name} className="gv-dash-portal__compact-row">
+                <div className="gv-dash-portal__compact-name">
+                  <strong>{p.name}</strong>
+                  <span>{p.pos}</span>
+                </div>
+                <span
+                  className={
+                    p.dir === 'in'
+                      ? 'gv-portal-tag gv-portal-tag--in'
+                      : p.dir === 'out'
+                        ? 'gv-portal-tag gv-portal-tag--out'
+                        : 'gv-portal-tag gv-portal-tag--target'
+                  }
+                >
+                  {p.dir === 'in' ? 'In' : p.dir === 'out' ? 'Out' : 'Target'}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <a href={SITE_ROUTES.futurecast} className="gv-dash-card__link">
+            Portal watchlist →
+          </a>
+        </article>
       </div>
     </section>
   );
