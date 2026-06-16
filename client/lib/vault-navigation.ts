@@ -62,7 +62,6 @@ export function prefetchVaultHref(href: string): void {
 
 export function notifyVaultNavigation(): void {
   if (typeof window === 'undefined') return;
-  window.dispatchEvent(new PopStateEvent('popstate'));
   window.dispatchEvent(new CustomEvent('vault:navigation'));
 }
 

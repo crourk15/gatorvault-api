@@ -1,15 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname as useNextPathname } from 'next/navigation';
 
-/** Client-side pathname for static export (no Next router on all routes). */
+/** Pathname synced with Next client router + hard navigations. */
 export function usePathname(): string {
-  const [pathname, setPathname] = useState(
+  const nextPath = useNextPathname();
+  const [hardPath, setHardPath] = useState(
     () => (typeof window !== 'undefined' ? window.location.pathname : '')
   );
 
   useEffect(() => {
-    const sync = () => setPathname(window.location.pathname);
+    const sync = () => setHardPath(window.location.pathname);
     sync();
     window.addEventListener('popstate', sync);
     window.addEventListener('vault:navigation', sync);
@@ -25,5 +27,5 @@ export function usePathname(): string {
     };
   }, []);
 
-  return pathname;
+  return nextPath || hardPath;
 }

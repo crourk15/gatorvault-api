@@ -4044,6 +4044,19 @@ a.live-feed-link:hover {
   border-color: rgba(250, 70, 22, 0.4);
 }
 
+.gv-vault-shell.is-navigating .gv-vault-shell__main {
+  opacity: 0.94;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+
+.gv-vault-shell.is-navigating .gv-vault-shell__header,
+.gv-vault-shell.is-navigating .gv-vault-shell__sidebar,
+.gv-vault-shell.is-navigating .gv-vault-bottom-nav {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* Mobile tap targets — Platform Guardian ux:tap-targets */
 .gv-nav-item,
 .gv-tab,

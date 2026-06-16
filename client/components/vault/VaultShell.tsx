@@ -5,6 +5,8 @@ import { usePathname } from '@/lib/use-pathname';
 import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath, type VaultSectionId } from '@/lib/vault-routes';
 import { prefetchVaultHref } from '@/lib/vault-navigation';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
+import { VaultNavLink } from '@/components/vault/VaultNavLink';
+import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
 
 function sidebarActive(pathname: string, href: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
@@ -47,23 +49,22 @@ function NavLink({
   className: string;
 }): React.ReactElement {
   return (
-    <a
+    <VaultNavLink
       href={item.href}
       className={`${className}${sidebarActive(pathname, item.href) ? ' is-active' : ''}`}
       onClick={onClick}
-      onMouseEnter={() => prefetchVaultHref(item.href)}
-      onFocus={() => prefetchVaultHref(item.href)}
     >
       <span className="gv-vault-shell__nav-icon" aria-hidden="true">
         {item.icon}
       </span>
       <span className="gv-vault-shell__nav-label">{item.label}</span>
-    </a>
+    </VaultNavLink>
   );
 }
 
 export function VaultShell({ children }: { children: React.ReactNode }): React.ReactElement {
   const pathname = usePathname();
+  const { isNavigating } = useVaultNavigation();
   const [navOpen, setNavOpen] = useState(false);
   const inVault = isVaultPath(pathname);
 
@@ -87,7 +88,7 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
   }, []);
 
   return (
-    <div className="gv-vault-shell">
+    <div className={`gv-vault-shell${isNavigating ? ' is-navigating' : ''}`}>
       <style
         dangerouslySetInnerHTML={{
           __html:
@@ -105,9 +106,9 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
           >
             ☰
           </button>
-          <a href={inVault ? '/vault' : '/'} className="gv-vault-shell__brand">
+          <VaultNavLink href={inVault ? '/vault' : '/'} className="gv-vault-shell__brand">
             <GatorVaultWordmark height={28} className="gv-vault-shell__wordmark" />
-          </a>
+          </VaultNavLink>
         </div>
       </header>
       {navOpen && (
@@ -155,20 +156,18 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
       </div>
       <nav className="gv-vault-bottom-nav" aria-label="Vault quick navigation">
         {VAULT_BOTTOM_NAV.map((item) => (
-          <a
+          <VaultNavLink
             key={item.id}
             href={item.href}
             className={`gv-vault-bottom-nav__item${
               sidebarActive(pathname, item.href) ? ' is-active' : ''
             }`}
-            onMouseEnter={() => prefetchVaultHref(item.href)}
-            onFocus={() => prefetchVaultHref(item.href)}
           >
             <span className="gv-vault-bottom-nav__icon" aria-hidden="true">
               {item.icon}
             </span>
             <span className="gv-vault-bottom-nav__label">{item.label.replace(' Hub', '').replace('Schedule & ', '')}</span>
-          </a>
+          </VaultNavLink>
         ))}
       </nav>
     </div>
