@@ -20,7 +20,7 @@ export function DashboardTodayInVault({ snapshot, loading }: Props): React.React
 
   if (loading && !snapshot) {
     return (
-      <section className="gv-dash-today gv-dash__section" aria-label="Today in the Vault">
+      <section className="gv-dash-today" aria-label="Today in the Vault">
         <div className="gv-dash__frame">
           <h2 className="gv-dash-today__heading">Today in the Vault</h2>
           <div className="gv-dash-today__grid">
@@ -35,7 +35,7 @@ export function DashboardTodayInVault({ snapshot, loading }: Props): React.React
 
   return (
     <section
-      className="gv-dash-today gv-dash__section"
+      className="gv-dash-today"
       aria-label="Today in the Vault"
       data-testid="dashboard-today"
     >

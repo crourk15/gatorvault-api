@@ -6,6 +6,8 @@
   --gv-card-pad: 1.5rem;
   --gv-grid-gap: 2rem;
   --gv-rhythm: 2rem;
+  --gv-dash-gap-hero-ticker: 0.5rem;
+  --gv-dash-gap-ticker-today: 1.5rem;
   --vault-safe-top: env(safe-area-inset-top, 0px);
   margin: 0;
   color: var(--gv-white);
@@ -17,7 +19,9 @@
 
 @media (min-width: 768px) {
   .gv-dash {
-    --gv-section-pad: 3rem;
+    --gv-section-pad: 2.5rem;
+    --gv-dash-gap-hero-ticker: 1rem;
+    --gv-dash-gap-ticker-today: 1.75rem;
   }
 }
 
@@ -45,9 +49,15 @@
   }
 }
 
+/* Section rhythm: bottom pad only; top gap from previous sibling (landing-style, no double stack) */
 .gv-dash__section {
-  padding-top: var(--gv-section-pad);
+  padding-top: 0;
   padding-bottom: var(--gv-section-pad);
+}
+
+.gv-dash__section + .gv-dash__section,
+.gv-dash-today + .gv-dash__section {
+  padding-top: var(--gv-section-pad);
 }
 
 .gv-dash__section-title {
@@ -73,7 +83,8 @@
   position: relative;
   min-height: 320px;
   padding-top: max(1.25rem, var(--vault-safe-top, 0px));
-  padding-bottom: 2rem;
+  padding-bottom: var(--gv-dash-gap-hero-ticker);
+  margin-bottom: 0;
   overflow: hidden;
   display: flex;
   align-items: flex-start;
@@ -84,7 +95,7 @@
   .gv-dash-hero {
     min-height: 260px;
     padding-top: max(1rem, var(--vault-safe-top, 0px));
-    padding-bottom: 1.25rem;
+    padding-bottom: var(--gv-dash-gap-hero-ticker);
   }
 }
 
@@ -334,11 +345,12 @@
   transform: scale(1.25);
 }
 
-/* Ticker */
+/* Ticker — flush to hero; no extra top margin */
 .gv-dash-ticker {
   display: flex;
   align-items: stretch;
   min-height: 40px;
+  margin: 0;
   background: #000;
   border-bottom: 2px solid var(--gv-orange);
 }
@@ -1011,7 +1023,7 @@
   font-size: 1.375rem;
   font-weight: 700;
   color: var(--gv-blue);
-  margin: 0 0 1.25rem;
+  margin: 0 0 1rem;
 }
 
 .gv-dash-card {
@@ -1205,9 +1217,12 @@
   line-height: 1.35;
 }
 
-/* Today in Vault */
+/* Today in Vault — tight follow after ticker (24–32px), not full section pad */
 .gv-dash-today {
   background: var(--gv-navy);
+  padding-top: var(--gv-dash-gap-ticker-today);
+  padding-bottom: var(--gv-section-pad);
+  margin-top: 0;
 }
 
 .gv-dash-today__grid {
