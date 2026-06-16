@@ -5,7 +5,6 @@ import { usePathname } from '@/lib/use-pathname';
 import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath, type VaultSectionId } from '@/lib/vault-routes';
 import { prefetchVaultHref } from '@/lib/vault-navigation';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
-import { useHydrated } from '@/hooks/useHydrated';
 
 function sidebarActive(pathname: string, href: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
@@ -67,7 +66,6 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
   const pathname = usePathname();
   const [navOpen, setNavOpen] = useState(false);
   const inVault = isVaultPath(pathname);
-  const hydrated = useHydrated();
 
   const coreNav = VAULT_PILLARS;
   const secondaryNav = VAULT_SECONDARY.filter((item) => item.id !== 'admin');
@@ -153,21 +151,7 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
             ))}
           </ul>
         </aside>
-        <main className="gv-vault-shell__main">
-          {!hydrated ? (
-            <div className="gv-vault-shell__skeleton" aria-busy="true" aria-label="Loading vault">
-              <div className="gv-vault-shell__skeleton-bar" />
-              <div className="gv-vault-shell__skeleton-bar gv-vault-shell__skeleton-bar--short" />
-              <div className="gv-vault-shell__skeleton-grid">
-                <div className="gv-vault-shell__skeleton-card" />
-                <div className="gv-vault-shell__skeleton-card" />
-                <div className="gv-vault-shell__skeleton-card" />
-              </div>
-            </div>
-          ) : (
-            children
-          )}
-        </main>
+        <main className="gv-vault-shell__main">{children}</main>
       </div>
       <nav className="gv-vault-bottom-nav" aria-label="Vault quick navigation">
         {VAULT_BOTTOM_NAV.map((item) => (

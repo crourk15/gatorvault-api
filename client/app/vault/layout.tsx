@@ -26,15 +26,21 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
+const vaultShellCriticalCss =
+  '.gv-vault-shell{min-height:100vh;min-height:100dvh;background:#060f1f;color:#e2e8f0;display:flex;flex-direction:column}.gv-vault-shell__main{flex:1;min-height:0;width:100%}';
+
 export default function VaultLayout({
   children,
 }: {
   children: React.ReactNode;
 }): React.ReactElement {
   return (
-    <VaultErrorBoundary>
-      <VaultRouteGate />
-      <VaultShell>{children}</VaultShell>
-    </VaultErrorBoundary>
+    <>
+      <style dangerouslySetInnerHTML={{ __html: vaultShellCriticalCss }} />
+      <VaultErrorBoundary>
+        <VaultRouteGate />
+        <VaultShell>{children}</VaultShell>
+      </VaultErrorBoundary>
+    </>
   );
 }
