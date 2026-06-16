@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Chip, GridLayout, PageLayout, PageSection, TabBar } from '@/components/brand';
+import { DYNAMIC_PATH_PATTERNS, segmentFromPath } from '@/lib/dynamic-path-parser';
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
+import { SITE_ROUTES, gameWeekRoute } from '@/lib/site-routes';
+import { usePathname } from '@/lib/use-pathname';
 
 const TABS = [
   { id: 'intel', label: 'Game Week Intel' },
@@ -97,8 +100,19 @@ function GameCard({ game }: { game: ScheduleGame }): React.ReactElement {
 }
 
 export function VaultGameWeekPage(): React.ReactElement {
+  const pathname = usePathname();
+  const urlGameId = useMemo(
+    () => segmentFromPath(pathname, DYNAMIC_PATH_PATTERNS.gameWeekGame),
+    [pathname]
+  );
   const [gameId, setGameId] = useState('fau');
   const [tab, setTab] = useState('intel');
+
+  useEffect(() => {
+    if (urlGameId && SCHEDULE_GAMES.some((g) => g.id === urlGameId)) {
+      setGameId(urlGameId);
+    }
+  }, [urlGameId]);
   const game = SCHEDULE_GAMES.find((g) => g.id === gameId) ?? SCHEDULE_GAMES[0];
   const days = useMemo(() => daysUntilKickoff(game.date), [game.date]);
 
@@ -163,7 +177,7 @@ export function VaultGameWeekPage(): React.ReactElement {
               {game.pred}
             </p>
             <p>UF win probability: {game.ufPct}%</p>
-            <Button href="/vault/game-zone">Open Game Zone</Button>
+            <Button href={SITE_ROUTES.gameZone}>Open Game Zone</Button>
           </Card>
         </PageSection>
       )}

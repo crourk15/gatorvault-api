@@ -1,8 +1,8 @@
 /** Player profile slug patterns — static export rewrites share one index.html per route. */
 export const PLAYER_SLUG_PATTERNS = {
-  roster: /\/vault\/players\/([^/]+)\/?$/,
-  recruiting: /\/vault\/recruiting\/player\/([^/]+)\/?$/,
-  futurecast: /\/vault\/futurecast\/player\/([^/]+)\/?$/,
+  roster: /\/(?:vault\/players|team\/player)\/([^/]+)\/?$/,
+  recruiting: /\/(?:vault\/recruiting\/player|recruiting\/player)\/([^/]+)\/?$/,
+  futurecast: /\/(?:vault\/futurecast\/player|futurecast\/player)\/([^/]+)\/?$/,
   portal: /\/vault\/portal\/player\/([^/]+)\/?$/,
   standalone: /\/player\/([^/]+)\/?$/,
 } as const;

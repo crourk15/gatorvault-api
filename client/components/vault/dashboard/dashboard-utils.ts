@@ -1,3 +1,5 @@
+import { SITE_ROUTES } from '@/lib/site-routes';
+
 export function timeAgo(iso?: string | null): string {
   if (!iso) return '';
   const ms = Date.now() - new Date(iso).getTime();
@@ -21,11 +23,11 @@ export const TICKER_CATEGORY_LABEL: Record<string, string> = {
 };
 
 export const QUICK_ACTIONS = [
-  { href: '/vault/recruiting', icon: '🎯', label: 'Recruiting Hub' },
-  { href: '/vault/futurecast', icon: '📈', label: 'FutureCast' },
-  { href: '/vault/team', icon: '👥', label: 'Team' },
-  { href: '/vault/game-week', icon: '🏈', label: 'Game Week' },
-  { href: '/vault/film-room', icon: '📺', label: 'Film Room' },
-  { href: '/vault/nil', icon: '💰', label: 'NIL Tracker' },
-  { href: '/vault/community', icon: '💬', label: 'Community' },
+  { href: SITE_ROUTES.recruiting, icon: '🎯', label: 'Recruiting Hub' },
+  { href: SITE_ROUTES.futurecast, icon: '📈', label: 'FutureCast' },
+  { href: SITE_ROUTES.team, icon: '👥', label: 'Team' },
+  { href: SITE_ROUTES.gameWeek, icon: '🏈', label: 'Game Week' },
+  { href: SITE_ROUTES.filmRoom, icon: '📺', label: 'Film Room' },
+  { href: SITE_ROUTES.nil, icon: '💰', label: 'NIL Tracker' },
+  { href: SITE_ROUTES.community, icon: '💬', label: 'Community' },
 ] as const;

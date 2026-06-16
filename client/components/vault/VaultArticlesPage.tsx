@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Card, Chip, GridLayout, PageLayout, PageSection } from '@/components/brand';
 import { fetchPublishedFeed, type PublishedArticle, type PublishedStoryline } from '@/lib/content-api';
+import { articleRoute } from '@/lib/site-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 const CATEGORIES = ['Recruiting', 'Film Room', 'Game Week', 'Roster', 'NIL', 'Community'];
@@ -15,7 +16,7 @@ const AUTHORS = [
 
 function ArticleCard({ article }: { article: PublishedArticle }): React.ReactElement {
   return (
-    <Card href={`/article/${encodeURIComponent(article.id)}`} className="gv-article-card">
+    <Card href={articleRoute(article.id)} className="gv-article-card">
       <div className="gv-article-card__meta">
         {article.badge ? <Chip variant="blue">{article.badge}</Chip> : null}
         {article.readMin ? <span className="gv-article-card__read">{article.readMin} min read</span> : null}
@@ -30,7 +31,7 @@ function ArticleCard({ article }: { article: PublishedArticle }): React.ReactEle
   );
 }
 
-export function VaultArticlesPage(): React.ReactElement {
+export function VaultArticlesPage({ initialArticleId }: { initialArticleId?: string } = {}): React.ReactElement {
   const [articles, setArticles] = useState<PublishedArticle[]>([]);
   const [storylines, setStorylines] = useState<PublishedStoryline[]>([]);
   const [category, setCategory] = useState('');
@@ -55,7 +56,9 @@ export function VaultArticlesPage(): React.ReactElement {
     void load();
   }, [load]);
 
-  const featured = articles[0];
+  const featured = initialArticleId
+    ? articles.find((a) => a.id === initialArticleId) ?? articles[0]
+    : articles[0];
   const filtered = category
     ? articles.filter((a) => (a.badge || '').toLowerCase().includes(category.toLowerCase()))
     : articles.slice(featured ? 1 : 0);
@@ -74,7 +77,7 @@ export function VaultArticlesPage(): React.ReactElement {
 
       {!loading && !error && featured && (
         <PageSection title="Featured Article">
-          <Card variant="accent" href={`/article/${encodeURIComponent(featured.id)}`} className="gv-articles__featured">
+          <Card variant="accent" href={articleRoute(featured.id)} className="gv-articles__featured">
             <Chip variant="orange">Featured</Chip>
             <h2 className="gv-type-h2" style={{ margin: '0.75rem 0' }}>{featured.title}</h2>
             {featured.excerpt ? <p>{featured.excerpt}</p> : null}

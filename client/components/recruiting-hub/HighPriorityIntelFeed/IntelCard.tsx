@@ -6,6 +6,7 @@ import { PositionIcon } from '@/components/ui/PositionIcon';
 import { Card } from '@/components/ui/Card';
 import { formatIntelTimestamp } from '@/components/recruiting-hub/utils/formatDate';
 import { playerProfilePath } from '@/lib/player-routes';
+import { nilPlayerRoute, playerProfileRoute, SITE_ROUTES } from '@/lib/site-routes';
 
 type Props = {
   item: RecruitingIntelItem;
@@ -23,13 +24,24 @@ export function IntelCard({ item, playerName, position }: Props): React.ReactEle
         <PositionIcon position={position} size="sm" variant="on-white" showLabel={false} />
         <h3 className="rh-intel-card__name">{playerName}</h3>
       </div>
-      <div className="rh-intel-card__meter" aria-label={`UF probability ${ufPct} percent`}>
+      <a
+        href={playerProfileRoute(item.playerId, 'futurecast')}
+        className="rh-intel-card__meter rh-intel-card__meter--link"
+        aria-label={`UF probability ${ufPct} percent — view FutureCast`}
+      >
         <div className="rh-intel-card__meter-fill" style={{ width: `${ufPct}%` }} />
-      </div>
+        <span className="rh-intel-card__meter-label">{ufPct}% UF</span>
+      </a>
       <p className="rh-intel-card__text">{item.text}</p>
       <p className="rh-intel-card__time">{formatIntelTimestamp(item.timestamp)}</p>
-      <a href={href} className="rh-intel-card__link">
+      <a href={playerProfilePath(item.playerId, 'target', true, playerName, 'recruiting')} className="rh-intel-card__link">
         View More Intel →
+      </a>
+      <a
+        href={playerProfileRoute(item.playerId, 'futurecast')}
+        className="rh-intel-card__link rh-intel-card__link--fc"
+      >
+        View FutureCast →
       </a>
     </Card>
   );

@@ -23,16 +23,5 @@ export default function GameZoneDetailPage(): React.ReactElement {
     );
   }
 
-  return (
-    <>
-      <VaultGameZonePage />
-      <DetailPageStub
-        title="Live Game Zone"
-        id={gameId}
-        idLabel="Game"
-        backHref={SITE_ROUTES.gameZone}
-        backLabel="← Game Zone Hub"
-      />
-    </>
-  );
+  return <VaultGameZonePage />;
 }

@@ -3,6 +3,7 @@
 import React from 'react';
 import { Button, Card, GridLayout, PageSection } from '@/components/brand';
 import type { RecruitingSnapshot } from '@/lib/vault-dashboard-api';
+import { SITE_ROUTES } from '@/lib/site-routes';
 
 type Props = {
   snapshot: RecruitingSnapshot | null;
@@ -16,7 +17,7 @@ export function DashboardNilTrends({ snapshot }: Props): React.ReactElement {
       <div className="gv-dash__frame">
         <PageSection
           title="NIL Trends"
-          action={<Button href="/vault/nil" variant="secondary">NIL Tracker</Button>}
+          action={<Button href={SITE_ROUTES.nil} variant="secondary">NIL Tracker</Button>}
         >
           <GridLayout cols={3}>
             <Card variant="stat">

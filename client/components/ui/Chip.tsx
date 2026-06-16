@@ -2,28 +2,29 @@
 
 import React from 'react';
 
-export type ChipVariant = 'default' | 'accent' | 'success' | 'danger' | 'warning' | 'muted';
+export type ChipVariant = 'in' | 'out' | 'target' | 'timestamp';
 
 type Props = {
+  variant: ChipVariant;
   children: React.ReactNode;
-  variant?: ChipVariant;
   className?: string;
 };
 
-export function portalStatusToChipVariant(status?: string | null): ChipVariant {
-  const s = (status || '').toLowerCase();
-  if (s.includes('commit') || s.includes('signed')) return 'success';
-  if (s.includes('portal') || s.includes('transfer')) return 'warning';
-  if (s.includes('decommit') || s.includes('flip')) return 'danger';
-  if (s.includes('target') || s.includes('watch')) return 'accent';
-  return 'default';
-}
-
-export function Chip({ children, variant = 'default', className = '' }: Props): React.ReactElement {
-  const mapped = variant === 'warning' ? 'accent' : variant === 'muted' ? 'default' : variant;
+export function Chip({ variant, children, className = '' }: Props): React.ReactElement {
   return (
-    <span className={`gv-ds-chip gv-ds-chip--${mapped}${className ? ` ${className}` : ''}`}>
+    <span className={`gv-chip gv-chip--${variant}${className ? ` ${className}` : ''}`}>
       {children}
     </span>
   );
+}
+
+/** Map portal / transfer status strings to chip variant */
+export function portalStatusToChipVariant(status?: string | null): ChipVariant {
+  const s = String(status ?? '')
+    .trim()
+    .toUpperCase()
+    .replace(/[\s-]+/g, '_');
+  if (/IN|INCOMING|ENTERED|PORTAL_IN/.test(s)) return 'in';
+  if (/OUT|OUTGOING|EXIT|PORTAL_OUT|TRANSFERRED/.test(s)) return 'out';
+  return 'target';
 }

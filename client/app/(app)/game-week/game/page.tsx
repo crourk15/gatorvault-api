@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { VaultGameWeekPage } from '@/components/vault/VaultGameWeekPage';
 import { DetailPageStub } from '@/components/shell/DetailPageStub';
+import { Button } from '@/components/ui/Button';
 import { DYNAMIC_PATH_PATTERNS, segmentFromPath } from '@/lib/dynamic-path-parser';
-import { SITE_ROUTES } from '@/lib/site-routes';
+import { SITE_ROUTES, gameZoneRoute } from '@/lib/site-routes';
 import { usePathname } from '@/lib/use-pathname';
 
 export default function GameWeekDetailPage(): React.ReactElement {
@@ -24,15 +24,19 @@ export default function GameWeekDetailPage(): React.ReactElement {
   }
 
   return (
-    <>
-      <VaultGameWeekPage />
-      <DetailPageStub
-        title="Game Week Detail"
-        id={gameId}
-        idLabel="Game"
-        backHref={SITE_ROUTES.gameWeek}
-        backLabel="← All Game Week"
-      />
-    </>
+    <DetailPageStub
+      title="Game Week"
+      id={gameId}
+      idLabel="Game"
+      backHref={SITE_ROUTES.gameWeek}
+      backLabel="← Game Week"
+    >
+      <p style={{ marginBottom: '1rem', color: '#94a3b8' }}>
+        Countdown, matchup intel, and keys to watch for this opponent.
+      </p>
+      <Button href={gameZoneRoute(gameId)} variant="primary">
+        Enter Game Zone on game day →
+      </Button>
+    </DetailPageStub>
   );
 }

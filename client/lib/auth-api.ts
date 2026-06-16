@@ -87,21 +87,6 @@ async function authPost<T>(path: string, body: Record<string, unknown>): Promise
   return { ok: res.ok, status: res.status, data };
 }
 
-export async function registerAccount(opts: {
-  email: string;
-  password: string;
-  name: string;
-  tier: PaymentTierId;
-}): Promise<{ session: AuthSession; emailSent?: boolean }> {
-  const res = await authPost<{ ok?: boolean; error?: string; session?: AuthSession; emailSent?: boolean }>(
-    '/api/register',
-    opts
-  );
-  if (!res.ok || !res.data.session) {
-    throw new Error(res.data.error || 'Registration failed.');
-  }
-  return { session: normalizeSession(res.data.session), emailSent: res.data.emailSent };}
-
 export async function loginAccount(opts: {
   email: string;
   password: string;

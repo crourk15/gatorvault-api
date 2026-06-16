@@ -3,6 +3,7 @@
 import React from 'react';
 import { Button, Card, GridLayout, PageSection } from '@/components/brand';
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
+import { SITE_ROUTES, gameWeekRoute } from '@/lib/site-routes';
 
 export function DashboardUpcomingGames(): React.ReactElement {
   const upcoming = SCHEDULE_GAMES.slice(0, 3);
@@ -12,11 +13,11 @@ export function DashboardUpcomingGames(): React.ReactElement {
       <div className="gv-dash__frame">
         <PageSection
           title="Upcoming Games"
-          action={<Button href="/vault/schedule" variant="secondary">Full Schedule</Button>}
+          action={<Button href={SITE_ROUTES.schedule} variant="secondary">Full Schedule</Button>}
         >
           <GridLayout cols={3}>
             {upcoming.map((game) => (
-              <Card key={game.id} href={`/vault/game-week?game=${game.id}`}>
+              <Card key={game.id} href={gameWeekRoute(game.id)}>
                 <p className="gv-type-label">{game.date}</p>
                 <h3 className="gv-type-h3" style={{ margin: '0.35rem 0' }}>
                   vs {game.opp}

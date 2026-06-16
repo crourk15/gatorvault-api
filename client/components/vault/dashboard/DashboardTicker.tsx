@@ -20,7 +20,7 @@ export function DashboardTicker({
       id: 'fallback',
       text: 'GatorNation Live — commits, portal buzz, and beat writers updating in real time',
       category: 'breaking',
-      url: '/vault/live',
+      url: '/gator-nation-live',
       source: 'GatorVault',
     },
   ];

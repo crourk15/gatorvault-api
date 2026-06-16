@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import type { PersonalizedResponse } from '@/lib/vault-dashboard-api';
 import { GV_COPY } from '@/lib/gatorvault-copy';
+import { SITE_ROUTES } from '@/lib/site-routes';
 
 function PersonalPanel({
   title,
@@ -113,7 +114,7 @@ export function DashboardPersonalized({
               ))}
               {data.favoriteThreads.length === 0 && (
                 <li>
-                  <a href="/vault/community">{GV_COPY.microcopy.joinConversation}</a>
+                  <a href={SITE_ROUTES.community}>{GV_COPY.microcopy.joinConversation}</a>
                 </li>
               )}
             </ul>

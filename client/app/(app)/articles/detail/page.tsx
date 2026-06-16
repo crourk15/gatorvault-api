@@ -13,5 +13,5 @@ export default function ArticleDetailPage(): React.ReactElement {
     [pathname]
   );
 
-  return <VaultArticlesPage highlightId={articleId || undefined} />;
+  return <VaultArticlesPage initialArticleId={articleId || undefined} />;
 }

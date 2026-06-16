@@ -18,6 +18,8 @@ const LEGACY_RETIREMENT_REDIRECTS = [
 
 /** @type {RedirectRule[]} */
 const REACT_REWRITES = [
+  // Flat product sitemap (canonical)
+  ...siteRoutes.SITE_REACT_REWRITES,
   // Marketing landing + insider
   { from: '/welcome', to: '/welcome/index.html', status: 200 },
   { from: '/welcome/', to: '/welcome/index.html', status: 200 },
@@ -40,74 +42,52 @@ const REACT_REWRITES = [
   { from: '/join/*', to: '/join/index.html', status: 200 },
   // Public standalone (non-vault) pages
   { from: '/player/*', to: '/player/index.html', status: 200 },
-  { from: '/futurecast/predictions', to: '/vault/futurecast', status: 301 },
-  { from: '/futurecast/player/*', to: '/player/:splat', status: 301 },
-  { from: '/portal', to: '/vault/recruiting/portal', status: 301 },
-  { from: '/portal/', to: '/vault/recruiting/portal', status: 301 },
-  { from: '/portal/*', to: '/vault/recruiting/portal', status: 301 },
-  { from: '/recruiting-board', to: '/vault/recruiting/board', status: 301 },
-  { from: '/recruiting-board/*', to: '/vault/recruiting/board', status: 301 },
-  { from: '/gatornation-live', to: '/gatornation-live/index.html', status: 200 },
-  { from: '/gatornation-live/', to: '/gatornation-live/index.html', status: 200 },
-  { from: '/gatornation-live/*', to: '/gatornation-live/index.html', status: 200 },
-  { from: '/recruiting-hub', to: '/recruiting-hub/index.html', status: 200 },
-  { from: '/recruiting-hub/', to: '/recruiting-hub/index.html', status: 200 },
-  { from: '/recruiting-hub/*', to: '/recruiting-hub/index.html', status: 200 },
-  // Flat site sitemap (Phase 9)
-  ...siteRoutes.SITE_REACT_REWRITES,
-  // Vault — React-native route map (Phase 8 final)
+  { from: '/futurecast/predictions', to: '/futurecast', status: 301 },
+  { from: '/futurecast/player/*', to: '/futurecast/player/index.html', status: 200 },
+  { from: '/portal', to: '/recruiting/portal', status: 301 },
+  { from: '/portal/', to: '/recruiting/portal', status: 301 },
+  { from: '/portal/*', to: '/recruiting/portal', status: 301 },
+  { from: '/recruiting-board', to: '/recruiting/board', status: 301 },
+  { from: '/recruiting-board/*', to: '/recruiting/board', status: 301 },
+  { from: '/gatornation-live', to: '/gator-nation-live', status: 301 },
+  { from: '/gatornation-live/', to: '/gator-nation-live', status: 301 },
+  { from: '/gatornation-live/*', to: '/gator-nation-live/:splat', status: 301 },
+  { from: '/recruiting-hub', to: '/recruiting', status: 301 },
+  { from: '/recruiting-hub/', to: '/recruiting', status: 301 },
+  { from: '/recruiting-hub/*', to: '/recruiting/:splat', status: 301 },
+  // Legacy vault static exports (301 to flat routes via LEGACY_RETIREMENT_REDIRECTS)
   ...vaultRoutes.VAULT_REACT_REWRITES,
-  { from: '/scouting', to: '/vault/recruiting/scouting', status: 301 },
-  { from: '/scouting/*', to: '/vault/recruiting/scouting', status: 301 },
-  { from: '/players', to: '/vault/players', status: 301 },
-  { from: '/players/*', to: '/vault/players/index.html', status: 200 },
+  { from: '/scouting', to: '/recruiting/scouting', status: 301 },
+  { from: '/scouting/*', to: '/recruiting/scouting', status: 301 },
+  { from: '/players', to: '/team/player/index.html', status: 301 },
+  { from: '/players/*', to: '/team/player/:splat', status: 301 },
   { from: '/alerts', to: '/alerts/index.html', status: 200 },
   { from: '/alerts/*', to: '/alerts/index.html', status: 200 },
   { from: '/staff', to: '/staff/index.html', status: 200 },
   { from: '/staff/dashboard', to: '/staff/dashboard/index.html', status: 200 },
   { from: '/staff/dashboard/*', to: '/staff/dashboard/index.html', status: 200 },
-  // Vault — React-native route map (Phase 8 final)
-  ...vaultRoutes.VAULT_REACT_REWRITES,
-  // Secondary vault (drawer only — still exported if present)
-  { from: '/vault/game-week', to: '/vault/game-week/index.html', status: 200 },
-  { from: '/vault/game-week/*', to: '/vault/game-week/index.html', status: 200 },
-  { from: '/vault/live-scores', to: '/vault/live-scores/index.html', status: 200 },
-  { from: '/vault/live-scores/*', to: '/vault/live-scores/index.html', status: 200 },
-  { from: '/vault/articles', to: '/vault/articles/index.html', status: 200 },
-  { from: '/vault/articles/*', to: '/vault/articles/index.html', status: 200 },
-  { from: '/vault/community', to: '/vault/community/index.html', status: 200 },
-  { from: '/vault/community/*', to: '/vault/community/index.html', status: 200 },
-  { from: '/vault/game-zone', to: '/vault/game-zone/index.html', status: 200 },
-  { from: '/vault/game-zone/*', to: '/vault/game-zone/index.html', status: 200 },
-  { from: '/vault/nil', to: '/vault/nil/index.html', status: 200 },
-  { from: '/vault/nil/*', to: '/vault/nil/index.html', status: 200 },
-  { from: '/vault/staff', to: '/vault/staff/index.html', status: 200 },
-  { from: '/vault/alerts', to: '/vault/alerts/index.html', status: 200 },
-  { from: '/vault/alerts/*', to: '/vault/alerts/index.html', status: 200 },
-  { from: '/vault/apparel', to: '/vault/apparel/index.html', status: 200 },
-  { from: '/vault/apparel/*', to: '/vault/apparel/index.html', status: 200 },
 ];
 
 /** Legacy monolith query → canonical vault path (301). */
 const LEGACY_VAULT_TAB_REDIRECTS = {
-  start: '/vault',
-  team: '/vault/team',
-  recruit: '/vault/recruiting',
-  futurecast: '/vault/futurecast',
-  portal: '/vault/recruiting/portal',
-  highlights: '/vault/film-room/highlights',
-  gameweek: '/vault/game-week',
-  live: '/vault/live',
-  analytics: '/vault/futurecast/movement',
-  scouting: '/vault/recruiting/scouting',
-  articles: '/vault/articles',
-  community: '/vault/community',
-  gamezone: '/vault/game-zone',
-  nil: '/vault/nil',
-  livescores: '/vault/live-scores',
-  players: '/vault/players',
+  start: '/',
+  team: '/team',
+  recruit: '/recruiting',
+  futurecast: '/futurecast',
+  portal: '/recruiting/portal',
+  highlights: '/film-room/highlights',
+  gameweek: '/game-week',
+  live: '/gator-nation-live',
+  analytics: '/futurecast/movement',
+  scouting: '/recruiting/scouting',
+  articles: '/articles',
+  community: '/community',
+  gamezone: '/game-zone',
+  nil: '/nil',
+  livescores: '/live-scores',
+  players: '/team',
   alerts: '/vault/alerts',
-  tickets: '/vault/schedule',
+  tickets: '/schedule',
   apparel: '/vault/apparel',
 };
 
@@ -135,9 +115,12 @@ const ADMIN_AND_LEGACY_HTML = [
   { from: '/admin/recruiting', to: '/admin.html', status: 200 },
 ];
 
-const REQUIRED_VAULT_EXPORTS = vaultRoutes.REQUIRED_VAULT_EXPORTS;
+const REQUIRED_VAULT_EXPORTS = [
+  ...siteRoutes.REQUIRED_SITE_EXPORTS,
+  ...vaultRoutes.REQUIRED_VAULT_EXPORTS,
+];
 
-/** Root serves React marketing landing (client/app/page.tsx). Welcome stays at /welcome/. */
+/** Root serves React dashboard (client/app/(app)/page.tsx). Welcome stays at /welcome/. */
 /** @type {RedirectRule[]} */
 const ROOT_LANDING_REDIRECT = [];
 

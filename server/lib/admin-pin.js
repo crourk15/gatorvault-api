@@ -8,6 +8,7 @@ function normalizePin(value) {
 
 function collectAdminPins() {
   const raw = [
+    process.env.ADMIN_PASSWORD,
     process.env.OPS_ADMIN_PIN,
     process.env.RECRUITING_ADMIN_PIN,
     process.env.ROSTER_ADMIN_PIN,

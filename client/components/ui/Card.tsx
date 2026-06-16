@@ -1,29 +1,32 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+
+type Variant = 'light' | 'dark';
 
 type Props = {
-  children: React.ReactNode;
+  variant?: Variant;
+  interactive?: boolean;
   className?: string;
-  href?: string;
-  hover?: boolean;
-  'data-testid'?: string;
-};
+  children: React.ReactNode;
+} & React.HTMLAttributes<HTMLDivElement>;
 
-export function Card({ children, className = '', href, hover = false, 'data-testid': testId }: Props): React.ReactElement {
-  const cls = `gv-ds-card${hover ? ' gv-ds-card--hover' : ''}${className ? ` ${className}` : ''}`;
+function cardClass(variant: Variant, interactive: boolean, className?: string): string {
+  const parts = ['gv-card', `gv-card--${variant}`];
+  if (interactive) parts.push('gv-card--interactive');
+  if (className) parts.push(className);
+  return parts.join(' ');
+}
 
-  if (href) {
-    return (
-      <Link href={href} className={cls} data-testid={testId}>
-        {children}
-      </Link>
-    );
-  }
-
+export function Card({
+  variant = 'dark',
+  interactive = false,
+  className,
+  children,
+  ...rest
+}: Props): React.ReactElement {
   return (
-    <div className={cls} data-testid={testId}>
+    <div className={cardClass(variant, interactive, className)} {...rest}>
       {children}
     </div>
   );

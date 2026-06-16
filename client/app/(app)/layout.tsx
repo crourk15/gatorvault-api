@@ -10,6 +10,8 @@ import '@/lib/schedule-premium.css';
 import '@/lib/vault-gatornation-live.css';
 import '@/lib/vault-team-hub.css';
 import '@/lib/futurecast-elite.css';
+import '@/lib/gv-page-layout.css';
+import '@/lib/vault-shell.css';
 
 export default function AppLayout({
   children,

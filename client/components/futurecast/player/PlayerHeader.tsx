@@ -53,7 +53,7 @@ export function PlayerHeader({
       <div className="fc-profile-header__top">
         <div>
           <p className="fc-profile-header__position">
-            <PositionIcon position={player.position} size="sm" className="fc-profile-header__pos-icon" />
+            <PositionIcon position={player.position} size="sm" variant="on-blue" showLabel={false} className="fc-profile-header__pos-icon" />
             {player.position} · Class of {player.classYear}
           </p>
           <h1 className="fc-profile-header__name gv-h1">{player.fullName}</h1>

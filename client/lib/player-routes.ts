@@ -46,7 +46,7 @@ export function playerProfilePath(
 ): string {
   const resolved = ensurePlayerSlug(slug, name);
   if (!isValidSlug(resolved)) {
-    return inVault ? '/vault/recruiting' : '/vault/recruiting';
+    return '/vault/recruiting';
   }
   const kind = playerLifecycleKind(lifecycle);
 
@@ -63,9 +63,9 @@ export function playerProfilePath(
     return playerProfileRoute(resolved, kind === 'roster' ? 'roster' : 'futurecast');
   }
 
-  if (kind === 'portal') return `/vault/recruiting/player/${encodeURIComponent(resolved)}`;
-  if (kind === 'roster') return `/vault/players/${encodeURIComponent(resolved)}`;
-  return `/vault/futurecast/player/${encodeURIComponent(resolved)}`;
+  if (kind === 'portal') return playerProfileRoute(resolved, 'recruiting');
+  if (kind === 'roster') return playerProfileRoute(resolved, 'roster');
+  return playerProfileRoute(resolved, 'futurecast');
 }
 
 function scoutingTypeToKind(playerType?: string | null): PlayerRouteKind {

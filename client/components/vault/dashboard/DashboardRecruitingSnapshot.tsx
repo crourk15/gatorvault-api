@@ -3,6 +3,7 @@
 import React from 'react';
 import type { RecruitingSnapshot } from '@/lib/vault-dashboard-api';
 import { GV_COPY } from '@/lib/gatorvault-copy';
+import { SITE_ROUTES } from '@/lib/site-routes';
 
 const CARDS: {
   key: keyof RecruitingSnapshot;
@@ -15,42 +16,42 @@ const CARDS: {
     key: 'commits',
     label: '2027 Commits',
     icon: '🎯',
-    href: '/vault/recruiting?tab=commits-2027',
+    href: `${SITE_ROUTES.recruiting}?tab=commits-2027`,
     format: (s) => String(s.commits),
   },
   {
     key: 'targets',
     label: 'Top Targets',
     icon: '⭐',
-    href: '/vault/recruiting?tab=targets-2027',
+    href: `${SITE_ROUTES.recruiting}?tab=targets-2027`,
     format: (s) => String(s.targets),
   },
   {
     key: 'portalActive',
     label: 'Portal Active',
     icon: '🔄',
-    href: '/vault/portal',
+    href: `${SITE_ROUTES.recruiting}/portal`,
     format: (s) => String(s.portalActive),
   },
   {
     key: 'classRank',
     label: 'Class Rank',
     icon: '🏆',
-    href: '/vault/recruiting/board',
+    href: `${SITE_ROUTES.recruiting}/board`,
     format: (s) => (s.classRank != null ? `#${s.classRank}` : '—'),
   },
   {
     key: 'nilSecRank',
     label: 'NIL Rank (SEC)',
     icon: '💰',
-    href: '/vault/nil',
+    href: SITE_ROUTES.nil,
     format: (s) => (s.nilSecRank != null ? `#${s.nilSecRank}` : '—'),
   },
   {
     key: 'winProbability',
     label: 'Win Prob vs FAU',
     icon: '🏈',
-    href: '/vault/game-week',
+    href: SITE_ROUTES.gameWeek,
     format: (s) => `${s.winProbability}%`,
   },
 ];

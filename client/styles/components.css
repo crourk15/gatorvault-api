@@ -26,6 +26,29 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
 }
 
+.gv-stat-card {
+  background: var(--gv-blue-primary);
+  border-radius: var(--gv-radius-card);
+  padding: var(--gv-space-5);
+  color: var(--gv-white);
+  box-shadow: var(--gv-shadow-card);
+  border: none;
+}
+
+.gv-stat-card__value {
+  font-family: var(--gv-font-family);
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 800;
+  line-height: 1;
+  margin: 0;
+}
+
+.gv-stat-card__label {
+  font-size: var(--gv-label-size);
+  color: rgba(255, 255, 255, 0.78);
+  margin: 0.35rem 0 0;
+}
+
 /* ── Button ── */
 .gv-btn {
   display: inline-flex;

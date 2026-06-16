@@ -12,5 +12,5 @@ export default function CommunityThreadPage(): React.ReactElement {
     [pathname]
   );
 
-  return <VaultCommunityPage threadId={threadId || undefined} />;
+  return <VaultCommunityPage initialThreadId={threadId || undefined} />;
 }

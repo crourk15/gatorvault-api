@@ -173,16 +173,15 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-}
-
-.fc-profile-header__pos-icon {
-  color: var(--gv-orange-primary, #fa4616);
-}
   font-size: 0.8125rem;
   color: rgba(229, 229, 229, 0.85);
   margin: 0 0 0.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.fc-profile-header__pos-icon {
+  color: var(--gv-orange-primary, #fa4616);
 }
 
 .fc-profile-header__name {

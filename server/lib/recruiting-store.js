@@ -90,6 +90,13 @@ function isCommittedAnywhere(p) {
   return !!committedTo;
 }
 
+function normalizeClassYear(raw) {
+  const y = raw?.classYear ?? raw?.class_year;
+  if (y == null || y === '') return null;
+  const n = parseInt(String(y), 10);
+  return Number.isFinite(n) ? n : null;
+}
+
 function normalizePlayer(raw) {
   const slug = raw.slug || slugify(raw.name);
   const committedTo = raw.committedTo ?? raw.committed_to ?? null;
@@ -105,7 +112,7 @@ function normalizePlayer(raw) {
     slug,
     name: raw.name,
     pos: raw.pos,
-    classYear: raw.classYear || raw.class_year || null,
+    classYear: normalizeClassYear(raw),
     school: raw.school || '',
     htWt: raw.htWt || raw.ht_wt || '',
     stars: raw.stars || 0,
@@ -614,12 +621,12 @@ async function getBoard(classYear) {
   const { filterAllowlistedTargets } = require('./recruiting-target-allowlist');
   const players = await getAllPlayers();
   const year = parseInt(classYear, 10);
-  const commits = players.filter((p) => p.classYear === year && isFloridaCommit(p));
+  const commits = players.filter((p) => Number(p.classYear) === year && isFloridaCommit(p));
   const rawTargets = players.filter(
-    (p) => p.classYear === year && p.category === 'target' && !isFloridaCommit(p)
+    (p) => Number(p.classYear) === year && p.category === 'target' && !isFloridaCommit(p)
   );
   const targets = filterAllowlistedTargets(rawTargets, year);
-  const rankings = (await getRankings()).find((r) => r.classYear === year) || null;
+  const rankings = (await getRankings()).find((r) => Number(r.classYear) === year) || null;
   return { classYear: year, commits, targets, rankings };
 }
 

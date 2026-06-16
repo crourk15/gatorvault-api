@@ -35,7 +35,7 @@ function timeAgo(iso?: string): string {
   return `${Math.floor(h / 24)}d ago`;
 }
 
-export function VaultCommunityPage(): React.ReactElement {
+export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: string } = {}): React.ReactElement {
   const [sort, setSort] = useState<SortId>('trending');
   const [category, setCategory] = useState('');
   const [categories, setCategories] = useState<CommunityCategory[]>([]);
@@ -75,10 +75,6 @@ export function VaultCommunityPage(): React.ReactElement {
     }
   }, [sort, category, newCategory]);
 
-  useEffect(() => {
-    void load();
-  }, [load]);
-
   const openThread = useCallback(async (id: string) => {
     setSelectedId(id);
     try {
@@ -88,6 +84,14 @@ export function VaultCommunityPage(): React.ReactElement {
       setSelectedPosts([]);
     }
   }, []);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  useEffect(() => {
+    if (initialThreadId) void openThread(initialThreadId);
+  }, [initialThreadId, openThread]);
 
   const submitThread = async () => {
     if (!newTitle.trim() || !newBody.trim()) return;

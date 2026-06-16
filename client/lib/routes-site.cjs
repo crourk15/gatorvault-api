@@ -1,5 +1,5 @@
 /**
- * Flat site route rewrites (CJS) — used by routes.js + generate-redirects.
+ * Flat sitemap rewrites + legacy redirects (CJS for routes.js / Netlify).
  */
 
 function subRouteRewrites(prefix, exportPath) {
@@ -10,39 +10,35 @@ function subRouteRewrites(prefix, exportPath) {
   ];
 }
 
-/** Dynamic routes — wildcard → single index.html (slug parsed client-side). */
-const SITE_DYNAMIC_REWRITES = [
-  { from: '/recruiting/player/*', to: '/recruiting/player/index.html', status: 200 },
-  { from: '/futurecast/player/*', to: '/futurecast/player/index.html', status: 200 },
-  { from: '/team/player/*', to: '/team/player/index.html', status: 200 },
-  { from: '/schedule/*', to: '/schedule/season/index.html', status: 200 },
-  { from: '/game-week/*', to: '/game-week/game/index.html', status: 200 },
-  { from: '/articles/*', to: '/articles/detail/index.html', status: 200 },
-  { from: '/community/thread/*', to: '/community/thread/detail/index.html', status: 200 },
-  { from: '/game-zone/*', to: '/game-zone/game/index.html', status: 200 },
-];
-
-const SITE_STATIC_REWRITES = [
-  ...subRouteRewrites('/', '/index.html'),
+/** Static-export SPA rewrites for canonical product routes. */
+const SITE_REACT_REWRITES = [
+  { from: '/', to: '/index.html', status: 200 },
+  ...subRouteRewrites('/recruiting/player', '/recruiting/player/index.html'),
   ...subRouteRewrites('/recruiting', '/recruiting/index.html'),
-  ...subRouteRewrites('/futurecast', '/futurecast/index.html'),
+  ...subRouteRewrites('/futurecast/player', '/futurecast/player/index.html'),
   ...subRouteRewrites('/futurecast/trending', '/futurecast/trending/index.html'),
   ...subRouteRewrites('/futurecast/movement', '/futurecast/movement/index.html'),
   ...subRouteRewrites('/futurecast/staff', '/futurecast/staff/index.html'),
+  ...subRouteRewrites('/futurecast', '/futurecast/index.html'),
+  ...subRouteRewrites('/team/player', '/team/player/index.html'),
   ...subRouteRewrites('/team', '/team/index.html'),
   ...subRouteRewrites('/gator-nation-live', '/gator-nation-live/index.html'),
+  { from: '/schedule/*', to: '/schedule/season/index.html', status: 200 },
   ...subRouteRewrites('/schedule', '/schedule/index.html'),
   ...subRouteRewrites('/film-room', '/film-room/index.html'),
+  { from: '/game-week/*', to: '/game-week/game/index.html', status: 200 },
   ...subRouteRewrites('/game-week', '/game-week/index.html'),
   ...subRouteRewrites('/live-scores', '/live-scores/index.html'),
+  { from: '/articles/*', to: '/articles/detail/index.html', status: 200 },
   ...subRouteRewrites('/articles', '/articles/index.html'),
+  { from: '/community/thread/*', to: '/community/thread/detail/index.html', status: 200 },
   ...subRouteRewrites('/community', '/community/index.html'),
+  { from: '/game-zone/*', to: '/game-zone/game/index.html', status: 200 },
   ...subRouteRewrites('/game-zone', '/game-zone/index.html'),
   ...subRouteRewrites('/nil', '/nil/index.html'),
 ];
 
-const SITE_REACT_REWRITES = [...SITE_DYNAMIC_REWRITES, ...SITE_STATIC_REWRITES];
-
+/** Legacy /vault/* and aliases → flat site paths (301). */
 const VAULT_TO_SITE_REDIRECTS = [
   { from: '/vault', to: '/', status: 301 },
   { from: '/vault/', to: '/', status: 301 },
@@ -77,7 +73,6 @@ const VAULT_TO_SITE_REDIRECTS = [
   { from: '/gatornation-live/*', to: '/gator-nation-live/:splat', status: 301 },
   { from: '/recruiting-hub', to: '/recruiting', status: 301 },
   { from: '/recruiting-hub/*', to: '/recruiting/:splat', status: 301 },
-  { from: '/recruiting', to: '/recruiting/index.html', status: 200 },
 ];
 
 const REQUIRED_SITE_EXPORTS = [
@@ -86,6 +81,9 @@ const REQUIRED_SITE_EXPORTS = [
   'recruiting/player/index.html',
   'futurecast/index.html',
   'futurecast/player/index.html',
+  'futurecast/trending/index.html',
+  'futurecast/movement/index.html',
+  'futurecast/staff/index.html',
   'team/index.html',
   'team/player/index.html',
   'gator-nation-live/index.html',

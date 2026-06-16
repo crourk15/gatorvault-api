@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { FutureCastElitePageShell } from '@/components/futurecast/FutureCastElitePageShell';
-import { TrendingBoardLayout } from '@/components/futurecast/TrendingBoardLayout';
+import { TrendingBoardPageContent } from '@/components/futurecast/TrendingBoardPageContent';
 
 export default function FutureCastTrendingPage(): React.ReactElement {
   return (
     <FutureCastElitePageShell segment="trending" testId="futurecast-trending">
-      <TrendingBoardLayout />
+      <TrendingBoardPageContent />
     </FutureCastElitePageShell>
   );
 }

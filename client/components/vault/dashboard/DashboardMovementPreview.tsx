@@ -5,6 +5,7 @@ import type { StaffDashboardResponse } from '@/lib/staff-api';
 import { buildWhyItMatters, heatmapSparkPct } from '@/lib/vault-dashboard-api';
 import { GV_COPY } from '@/lib/gatorvault-copy';
 import { playerProfilePath } from '@/lib/player-routes';
+import { SITE_ROUTES } from '@/lib/site-routes';
 
 export function DashboardMovementPreview({
   data,
@@ -98,7 +99,7 @@ export function DashboardMovementPreview({
               {windowDays}-day volatility score: <strong>{sparkPct}%</strong>
             </p>
             <a
-              href="/vault/futurecast/movement"
+              href={`${SITE_ROUTES.futurecast}/movement`}
               className="gv-btn gv-btn--secondary gv-dash-movement__cta"
               title={GV_COPY.tooltips.movementScore}
             >

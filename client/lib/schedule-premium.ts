@@ -1,4 +1,5 @@
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
+import { gameWeekRoute } from '@/lib/site-routes';
 
 export type ScheduleSectionId = 'non-conference' | 'sec' | 'rivalry';
 export type HomeOrAway = 'vs' | '@' | 'neutral';
@@ -155,7 +156,7 @@ export function toPremiumScheduleGame(game: ScheduleGame): PremiumScheduleGame {
     winProbability: game.ufPct,
     predictedScoreUF: uf,
     predictedScoreOpp: opp,
-    intelUrl: `/vault/game-week?game=${game.id}`,
+    intelUrl: gameWeekRoute(game.id),
     ticketVendors: ticketVendorsForGame(game.opp),
     section: SECTION_BY_ID[game.id] ?? 'sec',
   };

@@ -1,10 +1,5 @@
-import type { Config } from 'tailwindcss';
-
-/**
- * GatorVault Tailwind extension — mirrors Figma/CSS token spec.
- * Install tailwindcss + postcss when adopting utility classes in build.
- */
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
   content: ['./app/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
@@ -53,5 +48,3 @@ const config: Config = {
   },
   plugins: [],
 };
-
-export default config;
