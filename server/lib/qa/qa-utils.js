@@ -187,10 +187,23 @@ function moduleResult(module, checks) {
   };
 }
 
+function extractVaultShellCssHrefs(html) {
+  const hrefs = [];
+  const re =
+    /<link[^>]+data-gv-vault-shell-css[^>]+href=["']([^"']+)["']|<link[^>]+href=["']([^"']+)["'][^>]+data-gv-vault-shell-css/gi;
+  let m;
+  while ((m = re.exec(html))) {
+    const href = m[1] || m[2];
+    if (href && !hrefs.includes(href)) hrefs.push(href);
+  }
+  return hrefs;
+}
+
 async function fetchSiteBundleText(siteUrl, pagePath) {
   const base = siteUrl.replace(/\/$/, '');
   const { text: html } = await fetchText(`${base}${pagePath}`);
   const assets = [];
+  const vaultShellCss = extractVaultShellCssHrefs(html);
   const scriptRe = /<script[^>]+src=["']([^"']+)["']/gi;
   const cssRe = /<link[^>]+rel=["']stylesheet["'][^>]+href=["']([^"']+)["']|<link[^>]+href=["']([^"']+\.css[^"']*)["'][^>]+rel=["']stylesheet["']/gi;
   let m;
@@ -201,8 +214,23 @@ async function fetchSiteBundleText(siteUrl, pagePath) {
     const href = m[1] || m[2];
     if (href && !href.includes('fonts.googleapis')) assets.push(href);
   }
+  const toLoad = [];
+  const seen = new Set();
+  for (const href of vaultShellCss) {
+    if (!seen.has(href)) {
+      seen.add(href);
+      toLoad.push(href);
+    }
+  }
+  for (const href of assets) {
+    if (toLoad.length >= 12 + vaultShellCss.length) break;
+    if (!seen.has(href)) {
+      seen.add(href);
+      toLoad.push(href);
+    }
+  }
   let bundled = html;
-  for (const src of assets.slice(0, 12)) {
+  for (const src of toLoad) {
     const url = src.startsWith('http') ? src : `${base}${src.startsWith('/') ? '' : '/'}${src}`;
     try {
       const { text } = await fetchText(url);
