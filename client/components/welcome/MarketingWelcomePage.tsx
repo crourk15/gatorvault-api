@@ -3,7 +3,7 @@
 import React from 'react';
 import { LandingHeroElite } from './LandingHeroElite';
 import { LandingSystemOverview } from './LandingSystemOverview';
-import { LandingPreviewStrip } from './LandingPreviewStrip';
+import { LandingWhyGatorVault } from './LandingWhyGatorVault';
 import { LandingSocialProofElite } from './LandingSocialProofElite';
 import { LandingFinalCTA } from './LandingFinalCTA';
 import { PricingSection } from './PricingSection';
@@ -11,13 +11,13 @@ import { FreeVsInsider } from './FreeVsInsider';
 import { WelcomeStickyCTA } from './FooterCTA';
 import { OperatorAccessFooter } from './OperatorAccessFooter';
 
-/** Full elite marketing landing for /welcome/. */
+/** Elite marketing landing — served at / and /welcome/. */
 export function MarketingWelcomePage(): React.ReactElement {
   return (
     <>
       <LandingHeroElite />
       <LandingSystemOverview />
-      <LandingPreviewStrip />
+      <LandingWhyGatorVault />
       <LandingSocialProofElite />
       <PricingSection />
       <FreeVsInsider />

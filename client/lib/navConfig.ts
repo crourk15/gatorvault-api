@@ -11,7 +11,7 @@ export type MainNavItem = {
 };
 
 export const mainNav: MainNavItem[] = [
-  { id: 'home', label: 'Home', href: '/welcome' },
+  { id: 'home', label: 'Home', href: '/' },
   { id: 'futurecast', label: 'FutureCast', href: '/vault/futurecast', previewAnchor: 'futurecast-preview' },
   { id: 'recruiting', label: 'Recruiting', href: '/vault/recruiting', previewAnchor: 'recruiting-preview' },
   { id: 'filmRoom', label: 'Film Room', href: '/vault/film-room', previewAnchor: 'film-preview' },

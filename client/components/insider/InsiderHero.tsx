@@ -18,7 +18,7 @@ export function InsiderHero(): React.ReactElement {
             <Button href={WELCOME_LINKS.join} variant="primary">
               Become an Insider
             </Button>
-            <Button href="/welcome" variant="secondary">
+            <Button href="/" variant="secondary">
               See the Welcome Tour
             </Button>
           </div>

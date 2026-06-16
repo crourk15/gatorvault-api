@@ -1,5 +1,5 @@
 /**
- * GatorVault elite marketing landing — /welcome/
+ * GatorVault elite marketing landing — / and /welcome/
  * UF Blue · Orange · Swamp Navy
  */
 
@@ -73,22 +73,19 @@
   animation: gvLandingTicker 22s linear infinite;
 }
 
-.gv-hero-feature-card,
-.gv-preview-feature {
+.gv-hero-feature-card {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important;
 }
 
-.gv-hero-feature-card .gv-heading-m,
-.gv-preview-feature .gv-heading-m {
+.gv-hero-feature-card .gv-heading-m {
   color: var(--gv-white);
   font-size: 0.9375rem;
 }
 
-.gv-hero-feature-card .gv-body-m,
-.gv-preview-feature .gv-body-m {
+.gv-hero-feature-card .gv-body-m {
   color: var(--gv-storm);
   font-size: 0.8125rem;
 }
@@ -255,62 +252,56 @@
 }
 
 /* ===========================
-   PREVIEW STRIP
+   WHY GATORVAULT EXISTS
    =========================== */
-.gv-preview-strip {
+.gv-why-gv {
   background: var(--gv-storm);
   padding: 80px 0;
 }
 
-.gv-preview-container {
+.gv-why-container {
   max-width: var(--gv-frame-max);
   margin: 0 auto;
   padding: var(--gv-frame-margin);
 }
 
-.gv-preview-title {
+.gv-why-title {
   font-family: var(--gv-font);
   font-size: var(--gv-text-h2);
   font-weight: 700;
   color: var(--gv-blue);
   text-align: center;
-  margin: 0 0 12px;
+  margin: 0 0 48px;
 }
 
-.gv-preview-sub {
-  font-family: var(--gv-font);
-  text-align: center;
-  margin: 0 auto 48px;
-  max-width: 520px;
-  color: var(--gv-graphite);
-  font-size: var(--gv-text-body);
-}
-
-.gv-preview-row {
+.gv-why-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
 }
 
-.gv-preview-card {
-  background: var(--gv-navy);
-  padding: 24px;
+.gv-why-card {
+  background: var(--gv-white);
   border-radius: var(--gv-radius-md);
-  box-shadow: var(--gv-shadow-lift);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 28px 24px;
+  border-top: 4px solid var(--gv-orange);
+  box-shadow: var(--gv-shadow-soft);
 }
 
-.gv-preview-card--media {
-  padding: 0;
-  overflow: hidden;
+.gv-why-card-title {
+  font-family: var(--gv-font);
+  font-size: var(--gv-text-h3);
+  font-weight: 700;
+  color: var(--gv-blue);
+  margin: 0 0 12px;
 }
 
-.gv-preview-media {
-  height: 100%;
-}
-
-.gv-preview-media .gv-ds-media-card__body {
-  color: var(--gv-white);
+.gv-why-card-body {
+  font-family: var(--gv-font);
+  font-size: var(--gv-text-body);
+  color: var(--gv-graphite);
+  margin: 0;
+  line-height: 1.55;
 }
 
 /* ===========================
@@ -479,10 +470,14 @@
   }
 
   .gv-system,
-  .gv-preview-strip,
+  .gv-why-gv,
   .gv-social-elite,
   .gv-final-cta {
     padding: 56px 0;
+  }
+
+  .gv-why-grid {
+    grid-template-columns: 1fr;
   }
 
   .gv-social-metrics {

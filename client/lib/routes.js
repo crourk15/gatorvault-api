@@ -20,9 +20,9 @@ const REACT_REWRITES = [
   // Flat product sitemap (canonical)
   ...siteRoutes.SITE_REACT_REWRITES,
   // Marketing landing + insider
-  { from: '/welcome', to: '/welcome/index.html', status: 200 },
-  { from: '/welcome/', to: '/welcome/index.html', status: 200 },
-  { from: '/welcome/*', to: '/welcome/index.html', status: 200 },
+  { from: '/welcome', to: '/', status: 301 },
+  { from: '/welcome/', to: '/', status: 301 },
+  { from: '/welcome/*', to: '/', status: 301 },
   { from: '/insider', to: '/insider/index.html', status: 200 },
   { from: '/insider/', to: '/insider/index.html', status: 200 },
   { from: '/insider/*', to: '/insider/index.html', status: 200 },
@@ -119,7 +119,7 @@ const REQUIRED_VAULT_EXPORTS = [
   ...vaultRoutes.REQUIRED_VAULT_EXPORTS,
 ];
 
-/** Root serves React dashboard (client/app/(app)/page.tsx). Welcome stays at /welcome/. */
+/** Root serves elite marketing landing (client/app/(marketing)/page.tsx). /welcome redirects to /. */
 /** @type {RedirectRule[]} */
 const ROOT_LANDING_REDIRECT = [];
 
