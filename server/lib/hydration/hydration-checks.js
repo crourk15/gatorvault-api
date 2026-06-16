@@ -256,6 +256,32 @@ function checkMobileSafari(root) {
   return errors;
 }
 
+const VAULT_HYDRATION_CSS_SNIPPET = '[data-hydrating] .gv-vault-shell__main';
+
+function checkVaultHydrationGuard(root) {
+  const errors = [];
+  for (const page of PILLAR_PAGES.filter((p) => p.urlPath.startsWith('/vault'))) {
+    const html = readText(root, page.rel);
+    if (!html) {
+      errors.push(`[G] ${page.id} export missing for hydration guard check`);
+      continue;
+    }
+    if (!html.includes('gv-vault-root')) {
+      errors.push(`[G] ${page.id} missing gv-vault-root wrapper`);
+    }
+    if (!html.includes('data-gv-hydration-boot')) {
+      errors.push(`[G] ${page.id} missing hydration boot script`);
+    }
+    if (!html.includes('data-hydrating')) {
+      errors.push(`[G] ${page.id} missing data-hydrating SSR marker`);
+    }
+    if (!html.includes('data-gv-hydration-css') && !html.includes(VAULT_HYDRATION_CSS_SNIPPET)) {
+      errors.push(`[G] ${page.id} missing hydration critical CSS`);
+    }
+  }
+  return errors;
+}
+
 function localBundleText(root, rel) {
   const htmlPath = path.join(root, rel);
   if (!fs.existsSync(htmlPath)) return null;
@@ -288,6 +314,7 @@ function runLocalHydrationChecks(root) {
     ...checkCssLoadOrder(root, 'vault/recruiting/index.html'),
     ...checkCssLoadOrder(root, 'vault/live-feed/index.html'),
     ...checkMobileSafari(root),
+    ...checkVaultHydrationGuard(root),
   ];
   return { ok: errors.length === 0, errors };
 }
@@ -300,6 +327,7 @@ module.exports = {
   checkSsrMarkers,
   checkCssLoadOrder,
   checkMobileSafari,
+  checkVaultHydrationGuard,
   localBundleText,
   findCssHrefBySignature,
   firstScriptIndex,

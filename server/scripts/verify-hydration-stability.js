@@ -18,6 +18,7 @@ if (ok) {
   console.log('  ✓ C vault-shell + layout CSS before scripts');
   console.log('  ✓ E no skeleton hydration gate in SSR');
   console.log('  ✓ F mobile Safari viewport + safe-area');
+  console.log('  ✓ G vault hydration guard + 3s SSR fallback');
   process.exit(0);
 }
 

@@ -4,6 +4,11 @@ import { VaultShell } from '@/components/vault/VaultShell';
 import { VaultErrorBoundary } from '@/components/vault/VaultErrorBoundary';
 import { VaultNavigationProvider } from '@/components/vault/VaultNavigationProvider';
 import { VaultRouteGate } from '@/components/VaultRouteGate';
+import { VaultHydrationGuard } from '@/components/vault/VaultHydrationGuard';
+import {
+  VAULT_HYDRATION_BOOT_SCRIPT,
+  VAULT_HYDRATION_CRITICAL_CSS,
+} from '@/lib/vault-hydration-guard.js';
 import '@/lib/gv-design-system.css';
 import '@/lib/gatorvault-brand.css';
 import '@/lib/vault-shell.css';
@@ -37,13 +42,24 @@ export default function VaultLayout({
 }): React.ReactElement {
   return (
     <>
-      <style dangerouslySetInnerHTML={{ __html: vaultShellCriticalCss }} />
-      <VaultErrorBoundary>
-        <VaultRouteGate />
-        <VaultNavigationProvider>
-          <VaultShell>{children}</VaultShell>
-        </VaultNavigationProvider>
-      </VaultErrorBoundary>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `${vaultShellCriticalCss}${VAULT_HYDRATION_CRITICAL_CSS}`,
+        }}
+      />
+      <script
+        data-gv-hydration-boot=""
+        dangerouslySetInnerHTML={{ __html: VAULT_HYDRATION_BOOT_SCRIPT }}
+      />
+      <div id="gv-vault-root" data-hydrating="true">
+        <VaultHydrationGuard />
+        <VaultErrorBoundary>
+          <VaultRouteGate />
+          <VaultNavigationProvider>
+            <VaultShell>{children}</VaultShell>
+          </VaultNavigationProvider>
+        </VaultErrorBoundary>
+      </div>
     </>
   );
 }

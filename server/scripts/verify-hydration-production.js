@@ -149,13 +149,25 @@ async function main() {
     } else {
       console.log('OK   F mobile Safari: viewport + safe-area');
     }
+    if (!vault.includes('gv-vault-root')) {
+      failed++;
+      console.log('FAIL G vault: gv-vault-root missing');
+    } else if (!vault.includes('data-gv-hydration-boot')) {
+      failed++;
+      console.log('FAIL G vault: hydration boot script missing');
+    } else if (!vault.includes('data-hydrating')) {
+      failed++;
+      console.log('FAIL G vault: data-hydrating marker missing');
+    } else {
+      console.log('OK   G vault: hydration guard + SSR fallback markers present');
+    }
   } catch (e) {
     failed++;
     console.log('FAIL mobile safari check:', e.message);
   }
 
   console.log('');
-  console.log('G Manual: open browser console on /vault/team — no "Hydration failed" or "Chunk load error"');
+  console.log('H Manual: open browser console on /vault/team — no "Hydration failed" or "Chunk load error"');
 
   if (failed) {
     console.error(`[hydration-production] FAIL (${failed} check(s))`);

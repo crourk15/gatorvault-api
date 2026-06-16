@@ -4057,6 +4057,22 @@ a.live-feed-link:hover {
   pointer-events: auto;
 }
 
+/* Phase 5 — SSR stays visible until React hydrates (data-hydrating cleared by guard or 3s timeout). */
+[data-hydrating] .gv-vault-shell,
+[data-hydrating] .gv-vault-shell__main {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+[data-hydrating] .gv-vault-shell.is-navigating .gv-vault-shell__main {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+[data-hydrating] .gv-vault-shell__main > * {
+  visibility: visible !important;
+}
+
 /* Mobile tap targets — Platform Guardian ux:tap-targets */
 .gv-nav-item,
 .gv-tab,
