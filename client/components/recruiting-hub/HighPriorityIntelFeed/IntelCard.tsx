@@ -6,7 +6,7 @@ import { PositionIcon } from '@/components/ui/PositionIcon';
 import { Card } from '@/components/ui/Card';
 import { formatIntelTimestamp } from '@/components/recruiting-hub/utils/formatDate';
 import { playerProfilePath } from '@/lib/player-routes';
-import { nilPlayerRoute, playerProfileRoute, SITE_ROUTES } from '@/lib/site-routes';
+import { playerProfileRoute } from '@/lib/site-routes';
 
 type Props = {
   item: RecruitingIntelItem;
@@ -15,7 +15,6 @@ type Props = {
 };
 
 export function IntelCard({ item, playerName, position }: Props): React.ReactElement {
-  const href = playerProfilePath(item.playerId, 'target', true, playerName, 'recruiting');
   const ufPct = Math.min(100, Math.max(0, item.ufProbability));
 
   return (
