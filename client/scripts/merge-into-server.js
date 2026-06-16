@@ -56,6 +56,7 @@ const REQUIRED_EXPORTS = [
   'staff/index.html',
   'staff/dashboard/index.html',
   'js/vault-chunks',
+  'js/vault-route-manifest.json',
   '_next/static',
 ];
 
@@ -123,13 +124,13 @@ rmRecursive(nextDir);
 copyRecursive(outDir, serverDir);
 const netlifyPaths = rewriteNextChunkPathsForNetlify(serverDir);
 console.log(`[netlify] Published vault route chunks to js/vault-chunks/ (${netlifyPaths.flatChunks} bundles, ${netlifyPaths.filesUpdated} refs updated)`);
-verifyExports();
-verifyChunks();
-
 require('./stamp-build-meta.js');
 require('./inject-vault-shell-css.js');
 require('./inject-qa-markers.js');
 require('./inject-landing-export.js');
+require('./generate-vault-route-manifest.js');
+verifyExports();
+verifyChunks();
 
 const { spawnSync } = require('child_process');
 const hydrationStability = spawnSync(

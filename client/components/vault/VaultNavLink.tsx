@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import type { LinkProps } from 'next/link';
-import { prefetchVaultHref } from '@/lib/vault-navigation';
+import { prefetchVaultHref, warmVaultPlayerRoute } from '@/lib/vault-navigation';
 import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
 
 type Props = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> &
@@ -27,7 +27,10 @@ export function VaultNavLink({
   const { beginNavigation } = useVaultNavigation();
   const path = href.split('?')[0].split('#')[0];
 
-  const warm = () => prefetchVaultHref(path);
+  const warm = () => {
+    if (/\/player\/|\/players\//.test(path)) warmVaultPlayerRoute(path);
+    else prefetchVaultHref(path);
+  };
 
   return (
     <Link

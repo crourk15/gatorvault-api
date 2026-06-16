@@ -1,6 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
+import { prefetchVaultHref, warmVaultBottomNavRoutes, warmVaultPlayerRoute, warmVaultRoute } from '@/lib/vault-preload';
+
+export { prefetchVaultHref, warmVaultBottomNavRoutes, warmVaultPlayerRoute, warmVaultRoute };
 
 const STATE_PREFIX = 'gv-vault-state:';
 
@@ -47,17 +50,6 @@ export function consumeVaultPageState(pageKey: string): VaultPageState | null {
   } catch {
     return null;
   }
-}
-
-export function prefetchVaultHref(href: string): void {
-  if (typeof window === 'undefined' || !href.startsWith('/vault')) return;
-  if (/\/player\/|\/podcast\/|\/players\//.test(href)) return;
-  const existing = document.querySelector(`link[rel="prefetch"][href="${href}"]`);
-  if (existing) return;
-  const link = document.createElement('link');
-  link.rel = 'prefetch';
-  link.href = href;
-  document.head.appendChild(link);
 }
 
 export function notifyVaultNavigation(): void {
@@ -117,14 +109,18 @@ export function bindVaultLinkState(
   const onClick = () => saveVaultPageState(pageKey, getState());
   const onEnter = () => {
     const href = el.getAttribute('href');
-    if (href) prefetchVaultHref(href);
+    if (!href) return;
+    if (/\/player\/|\/players\//.test(href)) warmVaultPlayerRoute(href);
+    else prefetchVaultHref(href);
   };
   el.addEventListener('click', onClick);
   el.addEventListener('mouseenter', onEnter);
   el.addEventListener('focus', onEnter);
+  el.addEventListener('touchstart', onEnter, { passive: true });
   return () => {
     el.removeEventListener('click', onClick);
     el.removeEventListener('mouseenter', onEnter);
     el.removeEventListener('focus', onEnter);
+    el.removeEventListener('touchstart', onEnter);
   };
 }

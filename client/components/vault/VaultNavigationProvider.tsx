@@ -2,7 +2,7 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { prefetchVaultHref, notifyVaultNavigation } from '@/lib/vault-navigation';
+import { prefetchVaultHref, notifyVaultNavigation, warmVaultBottomNavRoutes, warmVaultPlayerRoute } from '@/lib/vault-navigation';
 import { isVaultClientNavHref, vaultNavPathsEqual } from '@/lib/vault-nav-utils';
 
 type VaultNavContextValue = {
@@ -39,6 +39,41 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
   }, [pathname]);
 
   useEffect(() => {
+    warmVaultBottomNavRoutes(pathname);
+  }, [pathname]);
+
+  useEffect(() => {
+    let lastHref = '';
+    const warmFromAnchor = (anchor: HTMLAnchorElement | null) => {
+      if (!anchor || !anchor.closest('.gv-vault-shell')) return;
+      const href = anchor.getAttribute('href');
+      if (!href || !isVaultClientNavHref(href)) return;
+      const path = href.split('?')[0].split('#')[0];
+      if (path === lastHref) return;
+      lastHref = path;
+      if (/\/player\/|\/players\//.test(path)) warmVaultPlayerRoute(path);
+      else prefetchVaultHref(path);
+    };
+
+    const onMouseOver = (event: MouseEvent) => {
+      const anchor = (event.target as Element | null)?.closest('a[href]') as HTMLAnchorElement | null;
+      warmFromAnchor(anchor);
+    };
+
+    const onTouchStart = (event: TouchEvent) => {
+      const anchor = (event.target as Element | null)?.closest('a[href]') as HTMLAnchorElement | null;
+      warmFromAnchor(anchor);
+    };
+
+    document.addEventListener('mouseover', onMouseOver, true);
+    document.addEventListener('touchstart', onTouchStart, { capture: true, passive: true });
+    return () => {
+      document.removeEventListener('mouseover', onMouseOver, true);
+      document.removeEventListener('touchstart', onTouchStart, true);
+    };
+  }, []);
+
+  useEffect(() => {
     const onClick = (event: MouseEvent) => {
       if (event.defaultPrevented) return;
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
@@ -59,7 +94,9 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
 
       event.preventDefault();
       beginNavigation();
-      prefetchVaultHref(href.split('?')[0].split('#')[0]);
+      const path = href.split('?')[0].split('#')[0];
+      if (/\/player\/|\/players\//.test(path)) warmVaultPlayerRoute(path);
+      else prefetchVaultHref(path);
       router.push(href);
       notifyVaultNavigation();
     };

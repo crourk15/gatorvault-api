@@ -52,6 +52,11 @@
     Pragma = "no-cache"
 
 [[headers]]
+  for = "/js/vault-route-manifest.json"
+  [headers.values]
+    Cache-Control = "no-store, must-revalidate"
+
+[[headers]]
   for = "/build-manifest.json"
   [headers.values]
     Cache-Control = "no-store, must-revalidate"

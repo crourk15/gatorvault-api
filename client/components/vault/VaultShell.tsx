@@ -3,7 +3,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { usePathname } from '@/lib/use-pathname';
 import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath, type VaultSectionId } from '@/lib/vault-routes';
-import { prefetchVaultHref } from '@/lib/vault-navigation';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
 import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
@@ -76,7 +75,6 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
 
   useEffect(() => {
     setNavOpen(false);
-    prefetchVaultHref(pathname);
   }, [pathname]);
 
   useEffect(() => {
