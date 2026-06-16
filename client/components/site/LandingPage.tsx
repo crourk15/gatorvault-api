@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { HomepageFutureCastWidget } from '@/components/site/HomepageFutureCastWidget';
 import { HomepageHighPriorityWidget } from '@/components/site/HomepageHighPriorityWidget';
+import { LandingNavLink } from '@/components/site/LandingNavLink';
 import { LANDING_FEATURES, PRICING_TIERS } from '@/lib/pricing-tiers';
 
 export function LandingPage(): React.ReactElement {
@@ -26,15 +27,15 @@ export function LandingPage(): React.ReactElement {
           </p>
           <p className="gv-landing-hero__trial">🎟️ Try FREE for 30 days · No credit card required</p>
           <div className="gv-landing-hero__actions">
-            <a href="/join?tier=film" className="gv-landing-btn gv-landing-btn--primary">
+            <LandingNavLink href="/join?tier=film" className="gv-landing-btn gv-landing-btn--primary">
               🔐 Start Free — No Card Required
-            </a>
-            <a href="/futurecast" className="gv-landing-btn gv-landing-btn--blue">
+            </LandingNavLink>
+            <LandingNavLink href="/vault/futurecast" className="gv-landing-btn gv-landing-btn--blue">
               📈 Open FutureCast
-            </a>
-            <a href="/vault" className="gv-landing-btn gv-landing-btn--outline">
+            </LandingNavLink>
+            <LandingNavLink href="/vault" className="gv-landing-btn gv-landing-btn--outline">
               See What&apos;s Inside
-            </a>
+            </LandingNavLink>
           </div>
           <p className="gv-landing-hero__footnote">
             🏅 Founding Member badge for charter subscribers · First 100 only
@@ -53,9 +54,9 @@ export function LandingPage(): React.ReactElement {
               Live recruiting predictions, movement tracking, portal intel, and class analytics for
               the Florida Gators.
             </p>
-            <a href="/vault/futurecast" className="gv-landing-link">
+            <LandingNavLink href="/vault/futurecast" className="gv-landing-link">
               Open FutureCast →
-            </a>
+            </LandingNavLink>
           </div>
           <HomepageFutureCastWidget />
           <HomepageHighPriorityWidget />
@@ -72,11 +73,15 @@ export function LandingPage(): React.ReactElement {
           </div>
           <div className="gv-landing-features">
             {LANDING_FEATURES.map((f) => (
-              <a key={f.title} href={f.href} className="gv-landing-feature">
+              <LandingNavLink
+                key={f.title}
+                href={f.href === '/futurecast' ? '/vault/futurecast' : f.href}
+                className="gv-landing-feature"
+              >
                 <span className="gv-landing-feature__icon">{f.icon}</span>
                 <h3>{f.title}</h3>
                 <p>{f.desc}</p>
-              </a>
+              </LandingNavLink>
             ))}
           </div>
         </div>
@@ -141,8 +146,9 @@ export function LandingPage(): React.ReactElement {
       <footer className="gv-landing-footer">
         <p>🐊 GatorVault Insider · Built for Gator Nation</p>
         <p>
-          <a href="/join">Join</a> · <a href="/vault">Enter the Vault</a> ·{' '}
-          <a href="/futurecast">FutureCast</a>
+          <LandingNavLink href="/join">Join</LandingNavLink> ·{' '}
+          <LandingNavLink href="/vault">Enter the Vault</LandingNavLink> ·{' '}
+          <LandingNavLink href="/vault/futurecast">FutureCast</LandingNavLink>
         </p>
       </footer>
     </div>

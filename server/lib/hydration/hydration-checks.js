@@ -146,10 +146,38 @@ function checkBuildIdMatch(root) {
   if (nextBuildMatch) {
     const staticDirs = path.join(root, '_next', 'static');
     if (fs.existsSync(staticDirs)) {
-      const dirs = fs.readdirSync(staticDirs).filter((d) => !d.startsWith('chunks') && !d.startsWith('css'));
+      const dirs = fs.readdirSync(staticDirs).filter((d) => {
+        if (d === 'chunks' || d === 'css' || d === 'development') return false;
+        return fs.statSync(path.join(staticDirs, d)).isDirectory();
+      });
       if (dirs.length && !dirs.includes(nextBuildMatch[1])) {
         errors.push(`[A] Next buildId ${nextBuildMatch[1]} has no matching _next/static folder (${dirs.join(', ')})`);
       }
+    }
+  }
+
+  const landingPath = path.join(root, 'index.html');
+  if (fs.existsSync(landingPath)) {
+    const landingHtml = fs.readFileSync(landingPath, 'utf8');
+    const landingBuild = landingHtml.match(/"buildId":"([^"]+)"/);
+    const staticDirs = path.join(root, '_next', 'static');
+    if (fs.existsSync(staticDirs)) {
+      const dir = fs.readdirSync(staticDirs).find((d) => {
+        if (d === 'chunks' || d === 'css' || d === 'development') return false;
+        return fs.statSync(path.join(staticDirs, d)).isDirectory();
+      });
+      if (dir && landingBuild && landingBuild[1] !== dir) {
+        errors.push(`[A] landing buildId mismatch: html=${landingBuild[1]} static=${dir}`);
+      }
+      if (dir && buildId && metaMatch && !String(buildId).startsWith(metaMatch[1].slice(0, 12))) {
+        /* already checked meta vs manifest */
+      }
+    }
+    if (!landingHtml.includes('r-(home)-layout-')) {
+      errors.push('[A] landing index.html missing r-(home)-layout chunk script');
+    }
+    if (!landingHtml.includes('data-gv-landing-css') && !landingHtml.includes('gv-landing')) {
+      errors.push('[C] landing CSS markers missing from index.html');
     }
   }
 

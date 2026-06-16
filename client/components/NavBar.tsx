@@ -10,7 +10,7 @@ import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 const MAIN_LINKS = [
-  { id: 'home', label: 'Home', href: '/welcome' },
+  { id: 'home', label: 'Home', href: '/' },
   { id: 'futurecast', label: 'FutureCast', vaultKey: 'futurecast' as const },
   { id: 'recruiting', label: 'Recruiting', vaultKey: 'recruiting' as const },
   { id: 'filmRoom', label: 'Film Room', vaultKey: 'filmRoom' as const },
@@ -42,14 +42,14 @@ export function NavBar({ marketing = false }: { marketing?: boolean }): React.Re
   const resolveHref = (link: (typeof MAIN_LINKS)[number]): string => {
     if ('href' in link && link.href) return link.href;
     if ('vaultKey' in link && link.vaultKey) return getVaultNavHref(link.vaultKey, loggedIn);
-    return '/welcome';
+    return '/';
   };
 
   return (
     <header className={`gv-site-header gv-nav-premium nav${marketing ? ' gv-site-header--marketing' : ''}`}>
       <div className="gv-nav-premium__inner">
         <div className="gv-nav-premium__left">
-          <Link href="/welcome" className="gv-site-header__brand nav-logo">
+          <Link href="/" className="gv-site-header__brand nav-logo">
             <GatorVaultWordmark height={30} className="gv-site-header__wordmark" />
           </Link>
         </div>

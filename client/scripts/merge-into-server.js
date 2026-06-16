@@ -129,6 +129,7 @@ verifyChunks();
 require('./stamp-build-meta.js');
 require('./inject-vault-shell-css.js');
 require('./inject-qa-markers.js');
+require('./inject-landing-export.js');
 
 const { spawnSync } = require('child_process');
 const hydrationStability = spawnSync(

@@ -108,13 +108,34 @@ async function main() {
     const landing = await fetchText('/');
     if (!landing.includes('landing-page')) {
       failed++;
-      console.log('FAIL E landing: landing-page marker missing');
+      console.log('FAIL B landing: landing-page marker missing');
     } else {
-      console.log('OK   E landing: integrity OK');
+      console.log('OK   B landing: markers present');
+    }
+    if (!landing.includes('r-(home)-layout-')) {
+      failed++;
+      console.log('FAIL A landing: r-(home)-layout chunk not in HTML');
+    } else {
+      console.log('OK   A landing: home layout chunk present');
+    }
+    const landingMeta = landing.match(/name="gatorvault-build"\s+content="([^"]+)"/);
+    const vault = await fetchText('/vault/');
+    const vaultMeta = vault.match(/name="gatorvault-build"\s+content="([^"]+)"/);
+    if (landingMeta && vaultMeta && landingMeta[1] !== vaultMeta[1]) {
+      failed++;
+      console.log(`FAIL A BUILD_ID mismatch: landing=${landingMeta[1]} vault=${vaultMeta[1]}`);
+    } else if (landingMeta && vaultMeta) {
+      console.log(`OK   A BUILD_ID match: ${landingMeta[1]}`);
+    }
+    if (!landing.includes('viewport-fit=cover')) {
+      failed++;
+      console.log('FAIL F landing: viewport-fit=cover missing');
+    } else {
+      console.log('OK   E/F landing: integrity OK');
     }
   } catch (e) {
     failed++;
-    console.log('FAIL landing check:', e.message);
+    console.log('FAIL landing checks:', e.message);
   }
 
   try {
