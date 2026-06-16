@@ -2,17 +2,3992 @@
   "version": 1,
   "uptime": {
     "since": null,
-    "checks": 42,
-    "successes": 26
+    "checks": 45,
+    "successes": 27
   },
   "lastRun": {
-    "id": "qa_1781447015550",
-    "at": "2026-06-14T14:23:58.914Z",
+    "id": "qa_1781608910343",
+    "at": "2026-06-16T11:22:16.540Z",
     "pass": true,
-    "durationMs": 23364,
+    "durationMs": 26197,
     "failed": 0
   },
   "runs": [
+    {
+      "id": "qa_1781608910343",
+      "startedAt": "2026-06-16T11:21:50.328Z",
+      "finishedAt": "2026-06-16T11:22:16.540Z",
+      "durationMs": 26197,
+      "pass": true,
+      "crawlerBuild": {
+        "commit": "fd8a180d2a120b7650b8cb53b17bfb4b7b267f4b",
+        "short": "fd8a180",
+        "branch": null,
+        "service": "gatorvault-api",
+        "runtime": "local",
+        "assetSource": "production-html",
+        "builtAt": "2026-06-16T10:28:59.641Z"
+      },
+      "modules": {
+        "api": {
+          "module": "api",
+          "pass": true,
+          "total": 19,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "api:ping",
+              "module": "api",
+              "label": "/api/ping",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:recruiting-ingest-status",
+              "module": "api",
+              "label": "/api/recruiting/ingest/status",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-pipeline-health",
+              "module": "api",
+              "label": "/api/live/pipeline/health",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-dashboard",
+              "module": "api",
+              "label": "/api/live/dashboard",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-feed",
+              "module": "api",
+              "label": "/api/live/feed",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:film-room-catalog",
+              "module": "api",
+              "label": "/api/film-room/catalog",
+              "pass": true,
+              "details": {
+                "count": 19,
+                "lessons": 10
+              }
+            },
+            {
+              "id": "api:articles-published",
+              "module": "api",
+              "label": "/api/articles/published",
+              "pass": true,
+              "details": {
+                "count": 0
+              }
+            },
+            {
+              "id": "api:content-published",
+              "module": "api",
+              "label": "/api/content/published",
+              "pass": true,
+              "details": {
+                "count": 6
+              }
+            },
+            {
+              "id": "api:roster-players",
+              "module": "api",
+              "label": "/api/roster/players",
+              "pass": true,
+              "details": {
+                "count": 111
+              }
+            },
+            {
+              "id": "api:recruiting-board",
+              "module": "api",
+              "label": "/api/recruiting/board",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:recruiting-portal",
+              "module": "api",
+              "label": "/api/recruiting/portal",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:pricing",
+              "module": "api",
+              "label": "/api/pricing",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:personas",
+              "module": "api",
+              "label": "/api/personas",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:content-ingest-status",
+              "module": "api",
+              "label": "/api/content/ingest/status",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:war-room-breakdowns",
+              "module": "api",
+              "label": "/api/war-room/breakdowns",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:nil-dashboard",
+              "module": "api",
+              "label": "/api/nil/dashboard",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:film-room-lesson",
+              "module": "api",
+              "label": "Film Room lesson detail",
+              "pass": true,
+              "details": {
+                "slug": "frl00008-0000-4000-8000-000000000008",
+                "sources": 1
+              }
+            },
+            {
+              "id": "api:film-room-legacy-video",
+              "module": "api",
+              "label": "Legacy Film Room video",
+              "pass": true,
+              "details": {
+                "title": "Film Guy Network — Florida Spring Game Film Study",
+                "youtubeId": "yy4X6d2hAj0"
+              }
+            },
+            {
+              "id": "api:schedule",
+              "module": "api",
+              "label": "Schedule (live dashboard games)",
+              "pass": true,
+              "details": {
+                "games": 0
+              }
+            }
+          ]
+        },
+        "content": {
+          "module": "content",
+          "pass": true,
+          "total": 4,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "content:articles-spell",
+              "module": "content",
+              "label": "Articles spell/grammar",
+              "pass": true,
+              "details": {
+                "scanned": 0
+              }
+            },
+            {
+              "id": "content:content-accuracy-spell",
+              "module": "content",
+              "label": "Content accuracy spell/grammar",
+              "pass": true,
+              "details": {
+                "scanned": 6
+              }
+            },
+            {
+              "id": "content:film-room-spell",
+              "module": "content",
+              "label": "Film Room lesson text",
+              "pass": true,
+              "details": {
+                "scanned": 10
+              }
+            },
+            {
+              "id": "content:team-module",
+              "module": "content",
+              "label": "Team page text markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "integrity": {
+          "module": "integrity",
+          "checks": [
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": true,
+              "details": {
+                "count": 50
+              }
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": true,
+              "details": {
+                "players": 28
+              }
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": true,
+              "details": {
+                "checked": 0
+              }
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": true,
+              "details": {
+                "probed": 0
+              }
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": true,
+              "details": {
+                "sources": 11
+              }
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": true,
+              "details": {
+                "total": 111,
+                "missingHeadshots": 0,
+                "pctMissing": 0
+              }
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": true,
+              "details": {
+                "stale": 0,
+                "beatError": null
+              }
+            },
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": true,
+              "details": {
+                "count": 50
+              }
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": true,
+              "details": {
+                "players": 28
+              }
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": true,
+              "details": {
+                "checked": 0
+              }
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": true,
+              "details": {
+                "probed": 0
+              }
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": true,
+              "details": {
+                "sources": 11
+              }
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": true,
+              "details": {
+                "total": 111,
+                "missingHeadshots": 0,
+                "pctMissing": 0
+              }
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": true,
+              "details": {
+                "stale": 0,
+                "beatError": null
+              }
+            },
+            {
+              "id": "integrity:react-exports",
+              "module": "integrity",
+              "label": "Vault route map static exports",
+              "pass": true,
+              "details": {
+                "exports": 16
+              }
+            },
+            {
+              "id": "integrity:react-markers",
+              "module": "integrity",
+              "label": "React testid markers in static HTML",
+              "pass": true,
+              "details": {
+                "routes": 9
+              }
+            },
+            {
+              "id": "integrity:react-routes",
+              "module": "integrity",
+              "label": "Vault pillar routes registered",
+              "pass": true,
+              "details": {
+                "pillars": 8,
+                "subRoutes": 22
+              }
+            },
+            {
+              "id": "integrity:film-room-catalog",
+              "module": "integrity",
+              "label": "Film Room React structure",
+              "pass": true,
+              "details": {
+                "categories": 0
+              }
+            },
+            {
+              "id": "integrity:roster-data",
+              "module": "integrity",
+              "label": "Roster API data file",
+              "pass": true,
+              "details": {
+                "players": 111
+              }
+            },
+            {
+              "id": "integrity:depth-chart-data",
+              "module": "integrity",
+              "label": "Depth chart React data module",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "integrity:autoposter-dedup",
+              "module": "integrity",
+              "label": "Live Feed dedup integrity",
+              "pass": true,
+              "details": {
+                "feedItems": 83
+              }
+            },
+            {
+              "id": "integrity:production-vault-shell",
+              "module": "integrity",
+              "label": "Production vault uses React shell",
+              "pass": true,
+              "details": {
+                "reactShell": true
+              }
+            }
+          ],
+          "pass": true,
+          "finishedAt": "2026-06-16T11:22:13.748Z"
+        },
+        "pages": {
+          "module": "pages",
+          "pass": true,
+          "total": 25,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "pages:home:desktop",
+              "module": "pages",
+              "label": "/ React landing (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:home:mobile",
+              "module": "pages",
+              "label": "/ React landing (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:admin-hub:desktop",
+              "module": "pages",
+              "label": "/admin React landing (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/admin",
+                "viewport": "desktop",
+                "markers": 2
+              }
+            },
+            {
+              "id": "pages:admin-hub:mobile",
+              "module": "pages",
+              "label": "/admin React landing (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/admin",
+                "viewport": "mobile",
+                "markers": 2
+              }
+            },
+            {
+              "id": "pages:vault-dashboard:desktop",
+              "module": "pages",
+              "label": "/vault (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-dashboard:mobile",
+              "module": "pages",
+              "label": "/vault (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-recruiting:desktop",
+              "module": "pages",
+              "label": "/vault/recruiting (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/recruiting",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-recruiting:mobile",
+              "module": "pages",
+              "label": "/vault/recruiting (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/recruiting",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-futurecast:desktop",
+              "module": "pages",
+              "label": "/vault/futurecast (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/futurecast",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-futurecast:mobile",
+              "module": "pages",
+              "label": "/vault/futurecast (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/futurecast",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-team:desktop",
+              "module": "pages",
+              "label": "/vault/team (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/team",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-team:mobile",
+              "module": "pages",
+              "label": "/vault/team (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/team",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-depthChart:desktop",
+              "module": "pages",
+              "label": "/vault/depth-chart (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/depth-chart",
+                "viewport": "desktop",
+                "markers": 0
+              }
+            },
+            {
+              "id": "pages:vault-depthChart:mobile",
+              "module": "pages",
+              "label": "/vault/depth-chart (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/depth-chart",
+                "viewport": "mobile",
+                "markers": 0
+              }
+            },
+            {
+              "id": "pages:vault-live-feed:desktop",
+              "module": "pages",
+              "label": "/vault/live (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/live",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-live-feed:mobile",
+              "module": "pages",
+              "label": "/vault/live (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/live",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-film-room:desktop",
+              "module": "pages",
+              "label": "/vault/film-room (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/film-room",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-film-room:mobile",
+              "module": "pages",
+              "label": "/vault/film-room (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/film-room",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-schedule:desktop",
+              "module": "pages",
+              "label": "/vault/schedule (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/schedule",
+                "viewport": "desktop",
+                "markers": 4
+              }
+            },
+            {
+              "id": "pages:vault-schedule:mobile",
+              "module": "pages",
+              "label": "/vault/schedule (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/schedule",
+                "viewport": "mobile",
+                "markers": 4
+              }
+            },
+            {
+              "id": "pages:react-team",
+              "module": "pages",
+              "label": "React Team / depth chart",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-film-room",
+              "module": "pages",
+              "label": "React Film Room production markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-recruiting-hub",
+              "module": "pages",
+              "label": "React Recruiting Hub",
+              "pass": true,
+              "details": {
+                "tabs": 5
+              }
+            },
+            {
+              "id": "pages:react-futurecast",
+              "module": "pages",
+              "label": "React FutureCast",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-live-feed",
+              "module": "pages",
+              "label": "React Live Feed + ticker",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "ux": {
+          "module": "ux",
+          "pass": true,
+          "total": 6,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "ux:modal-zindex",
+              "module": "ux",
+              "label": "Modal / overlay z-index in React CSS",
+              "pass": true,
+              "details": {
+                "vaultShell": true,
+                "stickyHeader": true
+              }
+            },
+            {
+              "id": "ux:tap-targets",
+              "module": "ux",
+              "label": "Mobile tap target CSS",
+              "pass": true,
+              "details": {
+                "patternsChecked": 4
+              }
+            },
+            {
+              "id": "ux:scroll-containers",
+              "module": "ux",
+              "label": "Scroll containers (hub tabs + live feed)",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            },
+            {
+              "id": "ux:live-feed-layout",
+              "module": "ux",
+              "label": "Live Feed ESPN layout markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "ux:mobile-safari",
+              "module": "ux",
+              "label": "Mobile Safari safe-area / viewport",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            },
+            {
+              "id": "ux:bottom-nav",
+              "module": "ux",
+              "label": "React mobile bottom nav",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "browser": {
+          "module": "browser",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "browser:no-playwright",
+              "module": "browser",
+              "label": "Browser crawl",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "playwright not installed — run: npm install playwright && npx playwright install chromium"
+              }
+            }
+          ]
+        },
+        "visual-integrity": {
+          "module": "visual-integrity",
+          "pass": true,
+          "total": 13,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "visual-integrity:vault-dashboard:markers",
+              "module": "visual-integrity",
+              "label": "Vault Dashboard React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-dashboard:markers:production",
+              "module": "visual-integrity",
+              "label": "Vault Dashboard React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-team:markers",
+              "module": "visual-integrity",
+              "label": "Team React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/team",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-team:markers:production",
+              "module": "visual-integrity",
+              "label": "Team React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/team",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-film-room:markers",
+              "module": "visual-integrity",
+              "label": "Film Room React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/film-room",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-film-room:markers:production",
+              "module": "visual-integrity",
+              "label": "Film Room React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/film-room",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-recruiting-hub:markers",
+              "module": "visual-integrity",
+              "label": "Recruiting Hub React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/recruiting",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-recruiting-hub:markers:production",
+              "module": "visual-integrity",
+              "label": "Recruiting Hub React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/recruiting",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-live-feed:markers",
+              "module": "visual-integrity",
+              "label": "Live Feed React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/live-feed",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-live-feed:markers:production",
+              "module": "visual-integrity",
+              "label": "Live Feed React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/live-feed",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-shell-theme",
+              "module": "visual-integrity",
+              "label": "VaultShell theme tokens",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "visual-integrity:live-feed-layout",
+              "module": "visual-integrity",
+              "label": "Live Feed visual layout",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "visual-integrity:landing-page",
+              "module": "visual-integrity",
+              "label": "React landing page",
+              "pass": true,
+              "details": {
+                "reactLanding": true
+              }
+            }
+          ]
+        },
+        "mobile-behavior": {
+          "module": "mobile-behavior",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "mobile-behavior:no-playwright",
+              "module": "mobile-behavior",
+              "label": "Mobile behavior QA",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "playwright not installed — run: npm install playwright && npx playwright install chromium"
+              }
+            }
+          ]
+        },
+        "crawler": {
+          "module": "crawler",
+          "pass": true,
+          "total": 18,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "crawler:overflow",
+              "module": "crawler",
+              "label": "Overflow Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "A1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:layering",
+              "module": "crawler",
+              "label": "Layering / Z-Index",
+              "pass": true,
+              "details": {
+                "ruleId": "A2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:background",
+              "module": "crawler",
+              "label": "Wrong Background",
+              "pass": true,
+              "details": {
+                "ruleId": "A3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:viewport-divergence",
+              "module": "crawler",
+              "label": "Mobile/Desktop Divergence",
+              "pass": true,
+              "details": {
+                "ruleId": "A4",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:missing-content",
+              "module": "crawler",
+              "label": "Missing Content",
+              "pass": true,
+              "details": {
+                "ruleId": "B1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:wrong-ordering",
+              "module": "crawler",
+              "label": "Wrong Ordering",
+              "pass": true,
+              "details": {
+                "ruleId": "B2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:stale-content",
+              "module": "crawler",
+              "label": "Stale Content",
+              "pass": true,
+              "details": {
+                "ruleId": "B3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-dup",
+              "module": "crawler",
+              "label": "Duplicate Posts",
+              "pass": true,
+              "details": {
+                "ruleId": "C1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-similarity",
+              "module": "crawler",
+              "label": "Similarity Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "C2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:uf-only",
+              "module": "crawler",
+              "label": "UF-Only Filter",
+              "pass": true,
+              "details": {
+                "ruleId": "C3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-stale",
+              "module": "crawler",
+              "label": "Stale Autoposter",
+              "pass": true,
+              "details": {
+                "ruleId": "C4",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:recruiting-mismatch",
+              "module": "crawler",
+              "label": "Recruiting Board Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "D1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:war-room",
+              "module": "crawler",
+              "label": "War Room Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "D2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:roster-mismatch",
+              "module": "crawler",
+              "label": "Roster Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "E1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:depth-chart",
+              "module": "crawler",
+              "label": "Depth Chart Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "E2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:api-latency",
+              "module": "crawler",
+              "label": "API Latency",
+              "pass": true,
+              "details": {
+                "ruleId": "F1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:cache-stale",
+              "module": "crawler",
+              "label": "Cache Stale",
+              "pass": true,
+              "details": {
+                "ruleId": "F2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:404",
+              "module": "crawler",
+              "label": "404 Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "F3",
+                "skipped": false
+              }
+            }
+          ]
+        }
+      },
+      "errors": [],
+      "issues": [],
+      "phases": {
+        "fetch": {
+          "snapshotCount": 18,
+          "playwright": false
+        },
+        "analyze": {
+          "failedChecks": 0,
+          "crawlerIssues": 0
+        },
+        "emit": {
+          "total": 0,
+          "byCategory": {},
+          "bySeverity": {},
+          "emittedAt": "2026-06-16T11:22:16.540Z"
+        },
+        "timingsMs": {
+          "fetch": 7915,
+          "analyze": 2792,
+          "emit": 0,
+          "modules": 15484
+        }
+      },
+      "screenshot": null,
+      "summary": {
+        "total": 111,
+        "passed": 111,
+        "failed": 0,
+        "emitted": 0
+      }
+    },
+    {
+      "id": "qa_1781606685626",
+      "startedAt": "2026-06-16T10:44:45.614Z",
+      "finishedAt": "2026-06-16T10:45:34.885Z",
+      "durationMs": 49259,
+      "pass": false,
+      "crawlerBuild": {
+        "commit": "fd8a180d2a120b7650b8cb53b17bfb4b7b267f4b",
+        "short": "fd8a180",
+        "branch": null,
+        "service": "gatorvault-api",
+        "runtime": "local",
+        "assetSource": "production-html",
+        "builtAt": "2026-06-16T10:28:59.641Z"
+      },
+      "modules": {
+        "api": {
+          "module": "api",
+          "pass": true,
+          "total": 19,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "api:ping",
+              "module": "api",
+              "label": "/api/ping",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:recruiting-ingest-status",
+              "module": "api",
+              "label": "/api/recruiting/ingest/status",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-pipeline-health",
+              "module": "api",
+              "label": "/api/live/pipeline/health",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-dashboard",
+              "module": "api",
+              "label": "/api/live/dashboard",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-feed",
+              "module": "api",
+              "label": "/api/live/feed",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:film-room-catalog",
+              "module": "api",
+              "label": "/api/film-room/catalog",
+              "pass": true,
+              "details": {
+                "count": 19,
+                "lessons": 10
+              }
+            },
+            {
+              "id": "api:articles-published",
+              "module": "api",
+              "label": "/api/articles/published",
+              "pass": true,
+              "details": {
+                "count": 0
+              }
+            },
+            {
+              "id": "api:content-published",
+              "module": "api",
+              "label": "/api/content/published",
+              "pass": true,
+              "details": {
+                "count": 6
+              }
+            },
+            {
+              "id": "api:roster-players",
+              "module": "api",
+              "label": "/api/roster/players",
+              "pass": true,
+              "details": {
+                "count": 111
+              }
+            },
+            {
+              "id": "api:recruiting-board",
+              "module": "api",
+              "label": "/api/recruiting/board",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:recruiting-portal",
+              "module": "api",
+              "label": "/api/recruiting/portal",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:pricing",
+              "module": "api",
+              "label": "/api/pricing",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:personas",
+              "module": "api",
+              "label": "/api/personas",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:content-ingest-status",
+              "module": "api",
+              "label": "/api/content/ingest/status",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:war-room-breakdowns",
+              "module": "api",
+              "label": "/api/war-room/breakdowns",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:nil-dashboard",
+              "module": "api",
+              "label": "/api/nil/dashboard",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:film-room-lesson",
+              "module": "api",
+              "label": "Film Room lesson detail",
+              "pass": true,
+              "details": {
+                "slug": "frl00008-0000-4000-8000-000000000008",
+                "sources": 1
+              }
+            },
+            {
+              "id": "api:film-room-legacy-video",
+              "module": "api",
+              "label": "Legacy Film Room video",
+              "pass": true,
+              "details": {
+                "title": "Film Guy Network — Florida Spring Game Film Study",
+                "youtubeId": "yy4X6d2hAj0"
+              }
+            },
+            {
+              "id": "api:schedule",
+              "module": "api",
+              "label": "Schedule (live dashboard games)",
+              "pass": true,
+              "details": {
+                "games": 0
+              }
+            }
+          ]
+        },
+        "content": {
+          "module": "content",
+          "pass": true,
+          "total": 4,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "content:articles-spell",
+              "module": "content",
+              "label": "Articles spell/grammar",
+              "pass": true,
+              "details": {
+                "scanned": 0
+              }
+            },
+            {
+              "id": "content:content-accuracy-spell",
+              "module": "content",
+              "label": "Content accuracy spell/grammar",
+              "pass": true,
+              "details": {
+                "scanned": 6
+              }
+            },
+            {
+              "id": "content:film-room-spell",
+              "module": "content",
+              "label": "Film Room lesson text",
+              "pass": true,
+              "details": {
+                "scanned": 10
+              }
+            },
+            {
+              "id": "content:team-module",
+              "module": "content",
+              "label": "Team page text markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "integrity": {
+          "module": "integrity",
+          "checks": [
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": true,
+              "details": {
+                "count": 50
+              }
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": true,
+              "details": {
+                "players": 28
+              }
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": true,
+              "details": {
+                "checked": 0
+              }
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": true,
+              "details": {
+                "probed": 0
+              }
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": true,
+              "details": {
+                "sources": 11
+              }
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": true,
+              "details": {
+                "total": 111,
+                "missingHeadshots": 0,
+                "pctMissing": 0
+              }
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": true,
+              "details": {
+                "stale": 0,
+                "beatError": null
+              }
+            },
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": true,
+              "details": {
+                "count": 50
+              }
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": true,
+              "details": {
+                "players": 28
+              }
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": true,
+              "details": {
+                "checked": 0
+              }
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": true,
+              "details": {
+                "probed": 0
+              }
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": true,
+              "details": {
+                "sources": 11
+              }
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": true,
+              "details": {
+                "total": 111,
+                "missingHeadshots": 0,
+                "pctMissing": 0
+              }
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": true,
+              "details": {
+                "stale": 0,
+                "beatError": null
+              }
+            },
+            {
+              "id": "integrity:react-exports",
+              "module": "integrity",
+              "label": "Vault route map static exports",
+              "pass": true,
+              "details": {
+                "exports": 16
+              }
+            },
+            {
+              "id": "integrity:react-markers",
+              "module": "integrity",
+              "label": "React testid markers in static HTML",
+              "pass": true,
+              "details": {
+                "routes": 9
+              }
+            },
+            {
+              "id": "integrity:react-routes",
+              "module": "integrity",
+              "label": "Vault pillar routes registered",
+              "pass": true,
+              "details": {
+                "pillars": 8,
+                "subRoutes": 22
+              }
+            },
+            {
+              "id": "integrity:film-room-catalog",
+              "module": "integrity",
+              "label": "Film Room React structure",
+              "pass": true,
+              "details": {
+                "categories": 0
+              }
+            },
+            {
+              "id": "integrity:roster-data",
+              "module": "integrity",
+              "label": "Roster API data file",
+              "pass": true,
+              "details": {
+                "players": 111
+              }
+            },
+            {
+              "id": "integrity:depth-chart-data",
+              "module": "integrity",
+              "label": "Depth chart React data module",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "integrity:autoposter-dedup",
+              "module": "integrity",
+              "label": "Live Feed dedup integrity",
+              "pass": true,
+              "details": {
+                "feedItems": 83
+              }
+            },
+            {
+              "id": "integrity:production-vault-shell",
+              "module": "integrity",
+              "label": "Production vault uses React shell",
+              "pass": true,
+              "details": {
+                "reactShell": true
+              }
+            }
+          ],
+          "pass": true,
+          "finishedAt": "2026-06-16T10:45:09.529Z"
+        },
+        "pages": {
+          "module": "pages",
+          "pass": true,
+          "total": 25,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "pages:home:desktop",
+              "module": "pages",
+              "label": "/ React landing (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:home:mobile",
+              "module": "pages",
+              "label": "/ React landing (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:admin-hub:desktop",
+              "module": "pages",
+              "label": "/admin React landing (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/admin",
+                "viewport": "desktop",
+                "markers": 2
+              }
+            },
+            {
+              "id": "pages:admin-hub:mobile",
+              "module": "pages",
+              "label": "/admin React landing (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/admin",
+                "viewport": "mobile",
+                "markers": 2
+              }
+            },
+            {
+              "id": "pages:vault-dashboard:desktop",
+              "module": "pages",
+              "label": "/vault (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-dashboard:mobile",
+              "module": "pages",
+              "label": "/vault (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-recruiting:desktop",
+              "module": "pages",
+              "label": "/vault/recruiting (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/recruiting",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-recruiting:mobile",
+              "module": "pages",
+              "label": "/vault/recruiting (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/recruiting",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-futurecast:desktop",
+              "module": "pages",
+              "label": "/vault/futurecast (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/futurecast",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-futurecast:mobile",
+              "module": "pages",
+              "label": "/vault/futurecast (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/futurecast",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-team:desktop",
+              "module": "pages",
+              "label": "/vault/team (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/team",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-team:mobile",
+              "module": "pages",
+              "label": "/vault/team (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/team",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-depthChart:desktop",
+              "module": "pages",
+              "label": "/vault/depth-chart (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/depth-chart",
+                "viewport": "desktop",
+                "markers": 0
+              }
+            },
+            {
+              "id": "pages:vault-depthChart:mobile",
+              "module": "pages",
+              "label": "/vault/depth-chart (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/depth-chart",
+                "viewport": "mobile",
+                "markers": 0
+              }
+            },
+            {
+              "id": "pages:vault-live-feed:desktop",
+              "module": "pages",
+              "label": "/vault/live (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/live",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-live-feed:mobile",
+              "module": "pages",
+              "label": "/vault/live (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/live",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-film-room:desktop",
+              "module": "pages",
+              "label": "/vault/film-room (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/film-room",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-film-room:mobile",
+              "module": "pages",
+              "label": "/vault/film-room (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/film-room",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-schedule:desktop",
+              "module": "pages",
+              "label": "/vault/schedule (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/schedule",
+                "viewport": "desktop",
+                "markers": 4
+              }
+            },
+            {
+              "id": "pages:vault-schedule:mobile",
+              "module": "pages",
+              "label": "/vault/schedule (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/schedule",
+                "viewport": "mobile",
+                "markers": 4
+              }
+            },
+            {
+              "id": "pages:react-team",
+              "module": "pages",
+              "label": "React Team / depth chart",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-film-room",
+              "module": "pages",
+              "label": "React Film Room production markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-recruiting-hub",
+              "module": "pages",
+              "label": "React Recruiting Hub",
+              "pass": true,
+              "details": {
+                "tabs": 5
+              }
+            },
+            {
+              "id": "pages:react-futurecast",
+              "module": "pages",
+              "label": "React FutureCast",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-live-feed",
+              "module": "pages",
+              "label": "React Live Feed + ticker",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "ux": {
+          "module": "ux",
+          "pass": false,
+          "total": 6,
+          "failed": 1,
+          "checks": [
+            {
+              "id": "ux:modal-zindex",
+              "module": "ux",
+              "label": "Modal / overlay z-index in React CSS",
+              "pass": true,
+              "details": {
+                "vaultShell": true,
+                "stickyHeader": true
+              }
+            },
+            {
+              "id": "ux:tap-targets",
+              "module": "ux",
+              "label": "Mobile tap target CSS",
+              "pass": false,
+              "error": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+              "details": {
+                "missing": [
+                  "min-height:44px",
+                  "min-h-[44px]",
+                  "touch-action:manipulation",
+                  "-webkit-tap-highlight-color"
+                ]
+              },
+              "url": null,
+              "repro": null
+            },
+            {
+              "id": "ux:scroll-containers",
+              "module": "ux",
+              "label": "Scroll containers (hub tabs + live feed)",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            },
+            {
+              "id": "ux:live-feed-layout",
+              "module": "ux",
+              "label": "Live Feed ESPN layout markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "ux:mobile-safari",
+              "module": "ux",
+              "label": "Mobile Safari safe-area / viewport",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            },
+            {
+              "id": "ux:bottom-nav",
+              "module": "ux",
+              "label": "React mobile bottom nav",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "browser": {
+          "module": "browser",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "browser:no-playwright",
+              "module": "browser",
+              "label": "Browser crawl",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "playwright not installed — run: npm install playwright && npx playwright install chromium"
+              }
+            }
+          ]
+        },
+        "visual-integrity": {
+          "module": "visual-integrity",
+          "pass": true,
+          "total": 13,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "visual-integrity:vault-dashboard:markers",
+              "module": "visual-integrity",
+              "label": "Vault Dashboard React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-dashboard:markers:production",
+              "module": "visual-integrity",
+              "label": "Vault Dashboard React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-team:markers",
+              "module": "visual-integrity",
+              "label": "Team React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/team",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-team:markers:production",
+              "module": "visual-integrity",
+              "label": "Team React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/team",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-film-room:markers",
+              "module": "visual-integrity",
+              "label": "Film Room React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/film-room",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-film-room:markers:production",
+              "module": "visual-integrity",
+              "label": "Film Room React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/film-room",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-recruiting-hub:markers",
+              "module": "visual-integrity",
+              "label": "Recruiting Hub React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/recruiting",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-recruiting-hub:markers:production",
+              "module": "visual-integrity",
+              "label": "Recruiting Hub React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/recruiting",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-live-feed:markers",
+              "module": "visual-integrity",
+              "label": "Live Feed React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/live-feed",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-live-feed:markers:production",
+              "module": "visual-integrity",
+              "label": "Live Feed React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/live-feed",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-shell-theme",
+              "module": "visual-integrity",
+              "label": "VaultShell theme tokens",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "visual-integrity:live-feed-layout",
+              "module": "visual-integrity",
+              "label": "Live Feed visual layout",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "visual-integrity:landing-page",
+              "module": "visual-integrity",
+              "label": "React landing page",
+              "pass": true,
+              "details": {
+                "reactLanding": true
+              }
+            }
+          ]
+        },
+        "mobile-behavior": {
+          "module": "mobile-behavior",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "mobile-behavior:no-playwright",
+              "module": "mobile-behavior",
+              "label": "Mobile behavior QA",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "playwright not installed — run: npm install playwright && npx playwright install chromium"
+              }
+            }
+          ]
+        },
+        "crawler": {
+          "module": "crawler",
+          "pass": false,
+          "total": 20,
+          "failed": 3,
+          "checks": [
+            {
+              "id": "crawler:api-latency",
+              "module": "crawler",
+              "label": "/api/ping unreachable: HTTP 502 https://gatorvault-api.onrender.com/api/ping",
+              "pass": false,
+              "error": "/api/ping unreachable: HTTP 502 https://gatorvault-api.onrender.com/api/ping",
+              "url": null,
+              "repro": "Restore API endpoint health on Render",
+              "details": {
+                "ruleId": "F1",
+                "sectionId": "api-health",
+                "selector": "/api/ping",
+                "domPath": "/api/ping",
+                "severity": "critical",
+                "confidence": 99,
+                "category": "A"
+              }
+            },
+            {
+              "id": "crawler:api-latency",
+              "module": "crawler",
+              "label": "/api/live/dashboard unreachable: HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+              "pass": false,
+              "error": "/api/live/dashboard unreachable: HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+              "url": null,
+              "repro": "Restore API endpoint health on Render",
+              "details": {
+                "ruleId": "F1",
+                "sectionId": "api-health",
+                "selector": "/api/live/dashboard",
+                "domPath": "/api/live/dashboard",
+                "severity": "critical",
+                "confidence": 99,
+                "category": "A"
+              }
+            },
+            {
+              "id": "crawler:api-latency",
+              "module": "crawler",
+              "label": "/api/recruiting/board unreachable: HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+              "pass": false,
+              "error": "/api/recruiting/board unreachable: HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+              "url": null,
+              "repro": "Restore API endpoint health on Render",
+              "details": {
+                "ruleId": "F1",
+                "sectionId": "api-health",
+                "selector": "/api/recruiting/board",
+                "domPath": "/api/recruiting/board",
+                "severity": "critical",
+                "confidence": 99,
+                "category": "A"
+              }
+            },
+            {
+              "id": "crawler:overflow",
+              "module": "crawler",
+              "label": "Overflow Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "A1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:layering",
+              "module": "crawler",
+              "label": "Layering / Z-Index",
+              "pass": true,
+              "details": {
+                "ruleId": "A2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:background",
+              "module": "crawler",
+              "label": "Wrong Background",
+              "pass": true,
+              "details": {
+                "ruleId": "A3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:viewport-divergence",
+              "module": "crawler",
+              "label": "Mobile/Desktop Divergence",
+              "pass": true,
+              "details": {
+                "ruleId": "A4",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:missing-content",
+              "module": "crawler",
+              "label": "Missing Content",
+              "pass": true,
+              "details": {
+                "ruleId": "B1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:wrong-ordering",
+              "module": "crawler",
+              "label": "Wrong Ordering",
+              "pass": true,
+              "details": {
+                "ruleId": "B2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:stale-content",
+              "module": "crawler",
+              "label": "Stale Content",
+              "pass": true,
+              "details": {
+                "ruleId": "B3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-dup",
+              "module": "crawler",
+              "label": "Duplicate Posts",
+              "pass": true,
+              "details": {
+                "ruleId": "C1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-similarity",
+              "module": "crawler",
+              "label": "Similarity Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "C2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:uf-only",
+              "module": "crawler",
+              "label": "UF-Only Filter",
+              "pass": true,
+              "details": {
+                "ruleId": "C3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-stale",
+              "module": "crawler",
+              "label": "Stale Autoposter",
+              "pass": true,
+              "details": {
+                "ruleId": "C4",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:recruiting-mismatch",
+              "module": "crawler",
+              "label": "Recruiting Board Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "D1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:war-room",
+              "module": "crawler",
+              "label": "War Room Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "D2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:roster-mismatch",
+              "module": "crawler",
+              "label": "Roster Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "E1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:depth-chart",
+              "module": "crawler",
+              "label": "Depth Chart Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "E2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:cache-stale",
+              "module": "crawler",
+              "label": "Cache Stale",
+              "pass": true,
+              "details": {
+                "ruleId": "F2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:404",
+              "module": "crawler",
+              "label": "404 Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "F3",
+                "skipped": false
+              }
+            }
+          ]
+        }
+      },
+      "errors": [
+        {
+          "id": "crawler:api-latency",
+          "module": "crawler",
+          "message": "Restore API endpoint health on Render",
+          "url": "/",
+          "repro": "Restore API endpoint health on Render",
+          "details": {
+            "classification": "api-latency",
+            "ruleId": "F1",
+            "severity": "critical",
+            "severityScore": 52,
+            "confidence": 99,
+            "selector": "/api/ping",
+            "domPath": "/api/ping",
+            "screenshot": null,
+            "sectionId": "api-health"
+          },
+          "screenshot": null
+        },
+        {
+          "id": "ux:tap-targets",
+          "module": "ux",
+          "message": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+          "url": "/",
+          "repro": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        }
+      ],
+      "issues": [
+        {
+          "id": "crawler:api-latency",
+          "category": "F",
+          "classification": "api-latency",
+          "ruleId": "F1",
+          "ruleName": "API Latency",
+          "severity": "critical",
+          "severityScore": 52,
+          "confidence": 99,
+          "page": "/",
+          "selector": "/api/ping",
+          "domPath": "/api/ping",
+          "screenshotCrop": null,
+          "recommendedFix": "Restore API endpoint health on Render",
+          "module": "crawler",
+          "sectionId": "api-health",
+          "details": {
+            "sectionId": "api-health",
+            "ruleId": "F1",
+            "selector": "/api/ping",
+            "domPath": "/api/ping",
+            "severity": "critical",
+            "confidence": 99,
+            "category": "A"
+          },
+          "emittedAt": "2026-06-16T10:45:34.883Z"
+        },
+        {
+          "id": "ux:tap-targets",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+          "module": "ux",
+          "sectionId": null,
+          "details": {
+            "missing": [
+              "min-height:44px",
+              "min-h-[44px]",
+              "touch-action:manipulation",
+              "-webkit-tap-highlight-color"
+            ]
+          },
+          "emittedAt": "2026-06-16T10:45:34.882Z"
+        }
+      ],
+      "phases": {
+        "fetch": {
+          "snapshotCount": 18,
+          "playwright": false
+        },
+        "analyze": {
+          "failedChecks": 4,
+          "crawlerIssues": 3
+        },
+        "emit": {
+          "total": 2,
+          "byCategory": {
+            "F": 1,
+            "A": 1
+          },
+          "bySeverity": {
+            "critical": 1,
+            "low": 1
+          },
+          "emittedAt": "2026-06-16T10:45:34.885Z"
+        },
+        "timingsMs": {
+          "fetch": 7029,
+          "analyze": 25351,
+          "emit": 5,
+          "modules": 16870
+        }
+      },
+      "screenshot": null,
+      "summary": {
+        "total": 113,
+        "passed": 109,
+        "failed": 4,
+        "emitted": 2
+      }
+    },
+    {
+      "id": "qa_1781606547450",
+      "startedAt": "2026-06-16T10:42:27.440Z",
+      "finishedAt": "2026-06-16T10:42:54.781Z",
+      "durationMs": 27331,
+      "pass": false,
+      "crawlerBuild": {
+        "commit": "fd8a180d2a120b7650b8cb53b17bfb4b7b267f4b",
+        "short": "fd8a180",
+        "branch": null,
+        "service": "gatorvault-api",
+        "runtime": "local",
+        "assetSource": "production-html",
+        "builtAt": "2026-06-16T10:28:59.641Z"
+      },
+      "modules": {
+        "api": {
+          "module": "api",
+          "pass": true,
+          "total": 19,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "api:ping",
+              "module": "api",
+              "label": "/api/ping",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:recruiting-ingest-status",
+              "module": "api",
+              "label": "/api/recruiting/ingest/status",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-pipeline-health",
+              "module": "api",
+              "label": "/api/live/pipeline/health",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-dashboard",
+              "module": "api",
+              "label": "/api/live/dashboard",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-feed",
+              "module": "api",
+              "label": "/api/live/feed",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:film-room-catalog",
+              "module": "api",
+              "label": "/api/film-room/catalog",
+              "pass": true,
+              "details": {
+                "count": 19,
+                "lessons": 10
+              }
+            },
+            {
+              "id": "api:articles-published",
+              "module": "api",
+              "label": "/api/articles/published",
+              "pass": true,
+              "details": {
+                "count": 0
+              }
+            },
+            {
+              "id": "api:content-published",
+              "module": "api",
+              "label": "/api/content/published",
+              "pass": true,
+              "details": {
+                "count": 6
+              }
+            },
+            {
+              "id": "api:roster-players",
+              "module": "api",
+              "label": "/api/roster/players",
+              "pass": true,
+              "details": {
+                "count": 111
+              }
+            },
+            {
+              "id": "api:recruiting-board",
+              "module": "api",
+              "label": "/api/recruiting/board",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:recruiting-portal",
+              "module": "api",
+              "label": "/api/recruiting/portal",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:pricing",
+              "module": "api",
+              "label": "/api/pricing",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:personas",
+              "module": "api",
+              "label": "/api/personas",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:content-ingest-status",
+              "module": "api",
+              "label": "/api/content/ingest/status",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:war-room-breakdowns",
+              "module": "api",
+              "label": "/api/war-room/breakdowns",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:nil-dashboard",
+              "module": "api",
+              "label": "/api/nil/dashboard",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:film-room-lesson",
+              "module": "api",
+              "label": "Film Room lesson detail",
+              "pass": true,
+              "details": {
+                "slug": "frl00008-0000-4000-8000-000000000008",
+                "sources": 1
+              }
+            },
+            {
+              "id": "api:film-room-legacy-video",
+              "module": "api",
+              "label": "Legacy Film Room video",
+              "pass": true,
+              "details": {
+                "title": "Film Guy Network — Florida Spring Game Film Study",
+                "youtubeId": "yy4X6d2hAj0"
+              }
+            },
+            {
+              "id": "api:schedule",
+              "module": "api",
+              "label": "Schedule (live dashboard games)",
+              "pass": true,
+              "details": {
+                "games": 0
+              }
+            }
+          ]
+        },
+        "content": {
+          "module": "content",
+          "pass": false,
+          "total": 4,
+          "failed": 3,
+          "checks": [
+            {
+              "id": "content:articles-spell",
+              "module": "content",
+              "label": "Articles spell/grammar",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/articles/published",
+              "repro": null
+            },
+            {
+              "id": "content:content-accuracy-spell",
+              "module": "content",
+              "label": "Content accuracy spell/grammar",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/content/published",
+              "repro": null
+            },
+            {
+              "id": "content:film-room-spell",
+              "module": "content",
+              "label": "Film Room lesson text",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "repro": null
+            },
+            {
+              "id": "content:team-module",
+              "module": "content",
+              "label": "Team page text markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "integrity": {
+          "module": "integrity",
+          "checks": [
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": true,
+              "details": {
+                "count": 50
+              }
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": true,
+              "details": {
+                "players": 28
+              }
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": true,
+              "details": {
+                "checked": 0
+              }
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": true,
+              "details": {
+                "probed": 0
+              }
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": true,
+              "details": {
+                "sources": 11
+              }
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": true,
+              "details": {
+                "total": 111,
+                "missingHeadshots": 0,
+                "pctMissing": 0
+              }
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": true,
+              "details": {
+                "stale": 0,
+                "beatError": null
+              }
+            },
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": true,
+              "details": {
+                "count": 50
+              }
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": true,
+              "details": {
+                "players": 28
+              }
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": true,
+              "details": {
+                "checked": 0
+              }
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": true,
+              "details": {
+                "probed": 0
+              }
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": true,
+              "details": {
+                "sources": 11
+              }
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": true,
+              "details": {
+                "total": 111,
+                "missingHeadshots": 0,
+                "pctMissing": 0
+              }
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": true,
+              "details": {
+                "stale": 0,
+                "beatError": null
+              }
+            },
+            {
+              "id": "integrity:react-exports",
+              "module": "integrity",
+              "label": "Vault route map static exports",
+              "pass": true,
+              "details": {
+                "exports": 16
+              }
+            },
+            {
+              "id": "integrity:react-markers",
+              "module": "integrity",
+              "label": "React testid markers in static HTML",
+              "pass": true,
+              "details": {
+                "routes": 9
+              }
+            },
+            {
+              "id": "integrity:react-routes",
+              "module": "integrity",
+              "label": "Vault pillar routes registered",
+              "pass": true,
+              "details": {
+                "pillars": 8,
+                "subRoutes": 22
+              }
+            },
+            {
+              "id": "integrity:film-room-catalog",
+              "module": "integrity",
+              "label": "Film Room React structure",
+              "pass": true,
+              "details": {
+                "categories": 0
+              }
+            },
+            {
+              "id": "integrity:roster-data",
+              "module": "integrity",
+              "label": "Roster API data file",
+              "pass": true,
+              "details": {
+                "players": 111
+              }
+            },
+            {
+              "id": "integrity:depth-chart-data",
+              "module": "integrity",
+              "label": "Depth chart React data module",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "integrity:autoposter-dedup",
+              "module": "integrity",
+              "label": "Live Feed dedup integrity",
+              "pass": true,
+              "details": {
+                "feedItems": 83
+              }
+            },
+            {
+              "id": "integrity:production-vault-shell",
+              "module": "integrity",
+              "label": "Production vault uses React shell",
+              "pass": true,
+              "details": {
+                "reactShell": true
+              }
+            }
+          ],
+          "pass": true,
+          "finishedAt": "2026-06-16T10:42:51.985Z"
+        },
+        "pages": {
+          "module": "pages",
+          "pass": true,
+          "total": 25,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "pages:home:desktop",
+              "module": "pages",
+              "label": "/ React landing (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:home:mobile",
+              "module": "pages",
+              "label": "/ React landing (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:admin-hub:desktop",
+              "module": "pages",
+              "label": "/admin React landing (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/admin",
+                "viewport": "desktop",
+                "markers": 2
+              }
+            },
+            {
+              "id": "pages:admin-hub:mobile",
+              "module": "pages",
+              "label": "/admin React landing (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/admin",
+                "viewport": "mobile",
+                "markers": 2
+              }
+            },
+            {
+              "id": "pages:vault-dashboard:desktop",
+              "module": "pages",
+              "label": "/vault (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-dashboard:mobile",
+              "module": "pages",
+              "label": "/vault (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-recruiting:desktop",
+              "module": "pages",
+              "label": "/vault/recruiting (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/recruiting",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-recruiting:mobile",
+              "module": "pages",
+              "label": "/vault/recruiting (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/recruiting",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-futurecast:desktop",
+              "module": "pages",
+              "label": "/vault/futurecast (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/futurecast",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-futurecast:mobile",
+              "module": "pages",
+              "label": "/vault/futurecast (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/futurecast",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-team:desktop",
+              "module": "pages",
+              "label": "/vault/team (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/team",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-team:mobile",
+              "module": "pages",
+              "label": "/vault/team (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/team",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-depthChart:desktop",
+              "module": "pages",
+              "label": "/vault/depth-chart (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/depth-chart",
+                "viewport": "desktop",
+                "markers": 0
+              }
+            },
+            {
+              "id": "pages:vault-depthChart:mobile",
+              "module": "pages",
+              "label": "/vault/depth-chart (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/depth-chart",
+                "viewport": "mobile",
+                "markers": 0
+              }
+            },
+            {
+              "id": "pages:vault-live-feed:desktop",
+              "module": "pages",
+              "label": "/vault/live (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/live",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-live-feed:mobile",
+              "module": "pages",
+              "label": "/vault/live (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/live",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-film-room:desktop",
+              "module": "pages",
+              "label": "/vault/film-room (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/film-room",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-film-room:mobile",
+              "module": "pages",
+              "label": "/vault/film-room (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/film-room",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-schedule:desktop",
+              "module": "pages",
+              "label": "/vault/schedule (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/schedule",
+                "viewport": "desktop",
+                "markers": 4
+              }
+            },
+            {
+              "id": "pages:vault-schedule:mobile",
+              "module": "pages",
+              "label": "/vault/schedule (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/schedule",
+                "viewport": "mobile",
+                "markers": 4
+              }
+            },
+            {
+              "id": "pages:react-team",
+              "module": "pages",
+              "label": "React Team / depth chart",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-film-room",
+              "module": "pages",
+              "label": "React Film Room production markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-recruiting-hub",
+              "module": "pages",
+              "label": "React Recruiting Hub",
+              "pass": true,
+              "details": {
+                "tabs": 5
+              }
+            },
+            {
+              "id": "pages:react-futurecast",
+              "module": "pages",
+              "label": "React FutureCast",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-live-feed",
+              "module": "pages",
+              "label": "React Live Feed + ticker",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "ux": {
+          "module": "ux",
+          "pass": false,
+          "total": 6,
+          "failed": 1,
+          "checks": [
+            {
+              "id": "ux:modal-zindex",
+              "module": "ux",
+              "label": "Modal / overlay z-index in React CSS",
+              "pass": true,
+              "details": {
+                "vaultShell": true,
+                "stickyHeader": true
+              }
+            },
+            {
+              "id": "ux:tap-targets",
+              "module": "ux",
+              "label": "Mobile tap target CSS",
+              "pass": false,
+              "error": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+              "details": {
+                "missing": [
+                  "min-height:44px",
+                  "min-h-[44px]",
+                  "touch-action:manipulation",
+                  "-webkit-tap-highlight-color"
+                ]
+              },
+              "url": null,
+              "repro": null
+            },
+            {
+              "id": "ux:scroll-containers",
+              "module": "ux",
+              "label": "Scroll containers (hub tabs + live feed)",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            },
+            {
+              "id": "ux:live-feed-layout",
+              "module": "ux",
+              "label": "Live Feed ESPN layout markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "ux:mobile-safari",
+              "module": "ux",
+              "label": "Mobile Safari safe-area / viewport",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            },
+            {
+              "id": "ux:bottom-nav",
+              "module": "ux",
+              "label": "React mobile bottom nav",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "browser": {
+          "module": "browser",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "browser:no-playwright",
+              "module": "browser",
+              "label": "Browser crawl",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "playwright not installed — run: npm install playwright && npx playwright install chromium"
+              }
+            }
+          ]
+        },
+        "visual-integrity": {
+          "module": "visual-integrity",
+          "pass": true,
+          "total": 13,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "visual-integrity:vault-dashboard:markers",
+              "module": "visual-integrity",
+              "label": "Vault Dashboard React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-dashboard:markers:production",
+              "module": "visual-integrity",
+              "label": "Vault Dashboard React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-team:markers",
+              "module": "visual-integrity",
+              "label": "Team React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/team",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-team:markers:production",
+              "module": "visual-integrity",
+              "label": "Team React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/team",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-film-room:markers",
+              "module": "visual-integrity",
+              "label": "Film Room React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/film-room",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-film-room:markers:production",
+              "module": "visual-integrity",
+              "label": "Film Room React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/film-room",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-recruiting-hub:markers",
+              "module": "visual-integrity",
+              "label": "Recruiting Hub React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/recruiting",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-recruiting-hub:markers:production",
+              "module": "visual-integrity",
+              "label": "Recruiting Hub React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/recruiting",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-live-feed:markers",
+              "module": "visual-integrity",
+              "label": "Live Feed React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/live-feed",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-live-feed:markers:production",
+              "module": "visual-integrity",
+              "label": "Live Feed React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/live-feed",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-shell-theme",
+              "module": "visual-integrity",
+              "label": "VaultShell theme tokens",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "visual-integrity:live-feed-layout",
+              "module": "visual-integrity",
+              "label": "Live Feed visual layout",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "visual-integrity:landing-page",
+              "module": "visual-integrity",
+              "label": "React landing page",
+              "pass": true,
+              "details": {
+                "reactLanding": true
+              }
+            }
+          ]
+        },
+        "mobile-behavior": {
+          "module": "mobile-behavior",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "mobile-behavior:no-playwright",
+              "module": "mobile-behavior",
+              "label": "Mobile behavior QA",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "playwright not installed — run: npm install playwright && npx playwright install chromium"
+              }
+            }
+          ]
+        },
+        "crawler": {
+          "module": "crawler",
+          "pass": true,
+          "total": 18,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "crawler:overflow",
+              "module": "crawler",
+              "label": "Overflow Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "A1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:layering",
+              "module": "crawler",
+              "label": "Layering / Z-Index",
+              "pass": true,
+              "details": {
+                "ruleId": "A2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:background",
+              "module": "crawler",
+              "label": "Wrong Background",
+              "pass": true,
+              "details": {
+                "ruleId": "A3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:viewport-divergence",
+              "module": "crawler",
+              "label": "Mobile/Desktop Divergence",
+              "pass": true,
+              "details": {
+                "ruleId": "A4",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:missing-content",
+              "module": "crawler",
+              "label": "Missing Content",
+              "pass": true,
+              "details": {
+                "ruleId": "B1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:wrong-ordering",
+              "module": "crawler",
+              "label": "Wrong Ordering",
+              "pass": true,
+              "details": {
+                "ruleId": "B2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:stale-content",
+              "module": "crawler",
+              "label": "Stale Content",
+              "pass": true,
+              "details": {
+                "ruleId": "B3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-dup",
+              "module": "crawler",
+              "label": "Duplicate Posts",
+              "pass": true,
+              "details": {
+                "ruleId": "C1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-similarity",
+              "module": "crawler",
+              "label": "Similarity Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "C2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:uf-only",
+              "module": "crawler",
+              "label": "UF-Only Filter",
+              "pass": true,
+              "details": {
+                "ruleId": "C3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-stale",
+              "module": "crawler",
+              "label": "Stale Autoposter",
+              "pass": true,
+              "details": {
+                "ruleId": "C4",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:recruiting-mismatch",
+              "module": "crawler",
+              "label": "Recruiting Board Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "D1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:war-room",
+              "module": "crawler",
+              "label": "War Room Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "D2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:roster-mismatch",
+              "module": "crawler",
+              "label": "Roster Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "E1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:depth-chart",
+              "module": "crawler",
+              "label": "Depth Chart Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "E2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:api-latency",
+              "module": "crawler",
+              "label": "API Latency",
+              "pass": true,
+              "details": {
+                "ruleId": "F1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:cache-stale",
+              "module": "crawler",
+              "label": "Cache Stale",
+              "pass": true,
+              "details": {
+                "ruleId": "F2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:404",
+              "module": "crawler",
+              "label": "404 Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "F3",
+                "skipped": false
+              }
+            }
+          ]
+        }
+      },
+      "errors": [
+        {
+          "id": "ux:tap-targets",
+          "module": "ux",
+          "message": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+          "url": "/",
+          "repro": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "content:articles-spell",
+          "module": "content",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "url": "/api/articles/published",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 36,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "content:content-accuracy-spell",
+          "module": "content",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+          "url": "/api/content/published",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 36,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "content:film-room-spell",
+          "module": "content",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "url": "/api/film-room/catalog",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 36,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        }
+      ],
+      "issues": [
+        {
+          "id": "ux:tap-targets",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+          "module": "ux",
+          "sectionId": null,
+          "details": {
+            "missing": [
+              "min-height:44px",
+              "min-h-[44px]",
+              "touch-action:manipulation",
+              "-webkit-tap-highlight-color"
+            ]
+          },
+          "emittedAt": "2026-06-16T10:42:54.780Z"
+        },
+        {
+          "id": "content:articles-spell",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 36,
+          "confidence": 60,
+          "page": "/api/articles/published",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "module": "content",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T10:42:54.778Z"
+        },
+        {
+          "id": "content:content-accuracy-spell",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 36,
+          "confidence": 60,
+          "page": "/api/content/published",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+          "module": "content",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T10:42:54.779Z"
+        },
+        {
+          "id": "content:film-room-spell",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 36,
+          "confidence": 60,
+          "page": "/api/film-room/catalog",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "module": "content",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T10:42:54.779Z"
+        }
+      ],
+      "phases": {
+        "fetch": {
+          "snapshotCount": 18,
+          "playwright": false
+        },
+        "analyze": {
+          "failedChecks": 4,
+          "crawlerIssues": 0
+        },
+        "emit": {
+          "total": 4,
+          "byCategory": {
+            "A": 4
+          },
+          "bySeverity": {
+            "low": 4
+          },
+          "emittedAt": "2026-06-16T10:42:54.780Z"
+        },
+        "timingsMs": {
+          "fetch": 7728,
+          "analyze": 2785,
+          "emit": 10,
+          "modules": 16804
+        }
+      },
+      "screenshot": null,
+      "summary": {
+        "total": 111,
+        "passed": 107,
+        "failed": 4,
+        "emitted": 4
+      }
+    },
     {
       "id": "qa_1781447015550",
       "startedAt": "2026-06-14T14:23:35.549Z",
@@ -33709,54 +37684,54 @@
       "pass": true,
       "total": 19,
       "failed": 0,
-      "at": "2026-06-14T14:23:58.914Z"
+      "at": "2026-06-16T11:22:16.540Z"
     },
     "content": {
       "pass": true,
       "total": 4,
       "failed": 0,
-      "at": "2026-06-14T14:23:58.914Z"
+      "at": "2026-06-16T11:22:16.540Z"
     },
     "integrity": {
       "pass": true,
-      "at": "2026-06-14T14:23:58.914Z"
+      "at": "2026-06-16T11:22:16.540Z"
     },
     "pages": {
       "pass": true,
       "total": 25,
       "failed": 0,
-      "at": "2026-06-14T14:23:58.914Z"
+      "at": "2026-06-16T11:22:16.540Z"
     },
     "ux": {
       "pass": true,
       "total": 6,
       "failed": 0,
-      "at": "2026-06-14T14:23:58.914Z"
+      "at": "2026-06-16T11:22:16.540Z"
     },
     "browser": {
       "pass": true,
       "total": 1,
       "failed": 0,
-      "at": "2026-06-14T14:23:58.914Z"
+      "at": "2026-06-16T11:22:16.540Z"
     },
     "visual-integrity": {
       "pass": true,
       "total": 13,
       "failed": 0,
-      "at": "2026-06-14T14:23:58.914Z"
+      "at": "2026-06-16T11:22:16.540Z"
     },
     "mobile-behavior": {
       "pass": true,
       "total": 1,
       "failed": 0,
-      "at": "2026-06-14T14:23:58.914Z"
+      "at": "2026-06-16T11:22:16.540Z"
     },
     "crawler": {
       "pass": true,
       "total": 18,
       "failed": 0,
-      "at": "2026-06-14T14:23:58.914Z"
+      "at": "2026-06-16T11:22:16.540Z"
     }
   },
-  "updatedAt": "2026-06-14T14:24:01.656Z"
+  "updatedAt": "2026-06-16T11:22:19.278Z"
 }

@@ -10,6 +10,7 @@ const highlightsStore = require('./highlights-store');
 const interviewsStore = require('./interviews-store');
 const { enrichBoard } = require('./recruiting-board-enrich');
 const { createMemoryCache } = require('./memory-cache');
+const { mountRecruitingHubRoutes } = require('./recruiting-hub-routes');
 
 const boardCache = createMemoryCache(parseInt(process.env.RECRUITING_BOARD_CACHE_MS || '45000', 10));
 
@@ -680,6 +681,8 @@ function mountRecruitingRoutes(app) {
       return res.status(500).json({ ok: false, error: err.message });
     }
   });
+
+  mountRecruitingHubRoutes(app);
 }
 
 module.exports = { mountRecruitingRoutes, verifyAdminPin };

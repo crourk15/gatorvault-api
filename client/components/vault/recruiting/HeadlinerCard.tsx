@@ -14,6 +14,7 @@ import {
 } from '@/lib/recruiting-board-utils';
 import { playerProfilePath, recruitingProfileLifecycle } from '@/lib/player-routes';
 import { RecruitingEvalSections } from '@/components/vault/recruiting/RecruitingEvalSections';
+import { RecruitingPositionIcon } from '@/components/recruiting-hub/Icons/PositionIcon';
 
 type Props = {
   player: RecruitingBoardPlayer;
@@ -68,7 +69,10 @@ export function HeadlinerCard({ player }: Props): React.ReactElement {
       <div className="gv-headliner-card__accent" aria-hidden="true" />
       <div className="gv-headliner-card__glow" aria-hidden="true" />
       <div className="gv-headliner-card__body">
-        <HeadlinerPhoto player={player} />
+        <div className="gv-headliner-card__icon-col">
+          <RecruitingPositionIcon position={pos} size="lg" />
+          <HeadlinerPhoto player={player} />
+        </div>
         <div className="gv-headliner-card__content">
           <span className="gv-headliner-card__eyebrow">Class of {classYear} · Headliner Commit</span>
           <h2 className="gv-headliner-card__name">{player.name}</h2>

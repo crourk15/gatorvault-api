@@ -1,0 +1,200 @@
+/**
+ * Recruiting Hub spec endpoints — class, player, intel, targets.
+ */
+const store = require('./recruiting-store');
+const { enrichBoard } = require('./recruiting-board-enrich');
+const { createMemoryCache } = require('./memory-cache');
+
+const HUB_CACHE_MS = 5 * 60 * 1000;
+const hubCache = createMemoryCache(HUB_CACHE_MS);
+
+function avgStars(players) {
+  if (!players.length) return 0;
+  return players.reduce((acc, p) => acc + (Number(p.stars) || 0), 0) / players.length;
+}
+
+function blueChipRatio(players) {
+  if (!players.length) return 0;
+  const blue = players.filter((p) => (Number(p.stars) || 0) >= 4).length;
+  return Math.round((blue / players.length) * 100) / 100;
+}
+
+function inStateRatio(players) {
+  if (!players.length) return 0;
+  const instate = players.filter((p) => p.inState || String(p.state || '').toUpperCase() === 'FL').length;
+  return Math.round((instate / players.length) * 100) / 100;
+}
+
+function buildClassPayload(year, commits, rankings, compareRankings) {
+  const nationalRank = rankings?.nationalRank ?? 0;
+  const prevNational = compareRankings?.nationalRank;
+  const yoyMovement =
+    prevNational != null && nationalRank > 0 ? prevNational - nationalRank : 0;
+
+  return {
+    year,
+    commits: commits.length,
+    classScore: rankings?.classScore ?? Math.round(avgStars(commits) * 100) / 100,
+    nationalRank,
+    secRank: rankings?.secRank ?? 0,
+    blueChipRatio: blueChipRatio(commits),
+    inStateRatio: inStateRatio(commits),
+    yoyMovement,
+    players: commits.map(mapPlayerToHub),
+  };
+}
+
+function mapPlayerToHub(player) {
+  const intel = [];
+  const note = player.notePreview || player.insiderNotes || player.notes;
+  if (note) {
+    intel.push({
+      id: `${player.slug}-note`,
+      playerId: player.slug,
+      timestamp: player.visitStart || player.commitDate || new Date().toISOString(),
+      text: note,
+      ufProbability:
+        player.ufProbability != null
+          ? player.ufProbability <= 1
+            ? Math.round(player.ufProbability * 100)
+            : Math.round(player.ufProbability)
+          : 0,
+    });
+  }
+
+  return {
+    id: player.slug,
+    slug: player.slug,
+    name: player.name,
+    position: player.position || player.pos || null,
+    pos: player.pos || player.position || null,
+    class: player.classYear,
+    classYear: player.classYear,
+    rating: player.rating ?? player.displayRating ?? null,
+    nationalRank: player.natlRank ?? player.natl ?? null,
+    natlRank: player.natlRank ?? player.natl ?? null,
+    stateRank: player.stateRank ?? null,
+    positionRank: player.posRank ?? null,
+    posRank: player.posRank ?? null,
+    status: player.isCommittedToUF ? 'commit' : player.isTarget ? 'target' : player.status || 'target',
+    fitScore: player.fitScore ?? null,
+    skinny: player.skinny ?? player.profileNote ?? null,
+    strengths: player.strengths ?? [],
+    weaknesses: player.weaknesses ?? [],
+    evaluatorNotes: player.evaluatorNotes ?? player.notes ?? null,
+    commitmentDate: player.commitDate ?? null,
+    commitDate: player.commitDate ?? null,
+    stars: player.stars,
+    school: player.school,
+    state: player.state,
+    inState: player.inState,
+    ufProbability: player.ufProbability ?? null,
+    tier: player.tier,
+    isCommittedToUF: player.isCommittedToUF,
+    isTarget: player.isTarget,
+    intel,
+  };
+}
+
+function mapIntelFromPlayer(player, index) {
+  const uf =
+    player.ufProbability != null
+      ? player.ufProbability <= 1
+        ? Math.round(player.ufProbability * 100)
+        : Math.round(player.ufProbability)
+      : 0;
+  return {
+    id: `${player.slug || player.name}-${index}`,
+    playerId: player.slug,
+    timestamp: player.visitStart || player.commitDate || new Date().toISOString(),
+    text: player.notePreview || player.insiderNotes || player.skinny || player.notes || 'Insider tracking active.',
+    ufProbability: uf,
+  };
+}
+
+function mountRecruitingHubRoutes(app) {
+  app.get('/api/recruiting/class/:year', async (req, res) => {
+    try {
+      const year = parseInt(req.params.year, 10);
+      if (!Number.isFinite(year)) {
+        return res.status(400).json({ ok: false, error: 'Invalid class year' });
+      }
+      const compareYear = year === 2027 ? 2026 : year === 2028 ? 2027 : null;
+      const cacheKey = `hub:class:${year}`;
+
+      const { value } = await hubCache.wrap(cacheKey, async () => {
+        const board = await store.getBoard(year);
+        const enriched = enrichBoard(board, false);
+        let compareRankings = null;
+        if (compareYear) {
+          const prevBoard = await store.getBoard(compareYear);
+          const prevEnriched = enrichBoard(prevBoard, false);
+          compareRankings = prevEnriched.rankings;
+        }
+        const commits = enriched.commits || [];
+        return buildClassPayload(year, commits, enriched.rankings, compareRankings);
+      });
+
+      return res.json({ ok: true, ...value });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/player/:id', async (req, res) => {
+    try {
+      const id = String(req.params.id || '').trim();
+      if (!id) return res.status(400).json({ ok: false, error: 'Missing player id' });
+      const cacheKey = `hub:player:${id}`;
+
+      const { value: player } = await hubCache.wrap(cacheKey, async () => {
+        const hit = await store.getPlayerBySlug(id);
+        if (hit) return hit;
+        const all = await store.getAllPlayers();
+        return all.find((p) => p.slug === id || p.on3Id === id || p.name === id) || null;
+      });
+
+      if (!player) return res.status(404).json({ ok: false, error: 'Player not found' });
+      return res.json(mapPlayerToHub(player));
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/intel/high-priority', async (req, res) => {
+    try {
+      const cacheKey = 'hub:intel:high-priority';
+      const { value } = await hubCache.wrap(cacheKey, async () => {
+        const board = await store.getBoard(2027);
+        const enriched = enrichBoard(board, false);
+        const targets = [...(enriched.targets || [])]
+          .sort((a, b) => (Number(b.ufProbability) || 0) - (Number(a.ufProbability) || 0))
+          .slice(0, 12);
+        return targets.map(mapIntelFromPlayer);
+      });
+      return res.json(value);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/targets/:year', async (req, res) => {
+    try {
+      const year = parseInt(req.params.year, 10);
+      if (!Number.isFinite(year)) {
+        return res.status(400).json({ ok: false, error: 'Invalid class year' });
+      }
+      const cacheKey = `hub:targets:${year}`;
+      const { value } = await hubCache.wrap(cacheKey, async () => {
+        const board = await store.getBoard(year);
+        const enriched = enrichBoard(board, false);
+        return (enriched.targets || []).map(mapPlayerToHub);
+      });
+      return res.json(value);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+}
+
+module.exports = { mountRecruitingHubRoutes, buildClassPayload, mapPlayerToHub };

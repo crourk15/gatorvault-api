@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-16T00:27:10.925Z",
+  "updatedAt": "2026-06-16T11:23:21.284Z",
   "api": {
     "service": "render",
     "timestamp": "2026-06-12T03:22:29.088Z",
@@ -22,7 +22,7 @@
   "lastGuardianCheck": {
     "ok": true,
     "phase": "pre",
-    "checkedAt": "2026-06-16T00:27:10.924Z",
+    "checkedAt": "2026-06-16T11:23:21.280Z",
     "errors": []
   },
   "lastFailedCheck": {
@@ -35,7 +35,7 @@
   },
   "lastSmokeTest": {
     "ok": true,
-    "checkedAt": "2026-06-14T13:46:42.315Z",
+    "checkedAt": "2026-06-16T11:22:51.161Z",
     "failed": [],
     "site": "https://gatorvaultinsider.com"
   }

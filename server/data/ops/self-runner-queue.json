@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-14T14:24:01.754Z",
+  "updatedAt": "2026-06-16T11:22:19.431Z",
   "items": [
     {
       "id": "sr_fix_020",
@@ -2050,6 +2050,242 @@
     }
   ],
   "log": [
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_3642a88c",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-16T11:22:19.430Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 2,
+      "runId": "qa_1781608910343",
+      "log": {
+        "at": "2026-06-16T11:22:19.344Z",
+        "runId": "qa_1781608910343",
+        "openFixQueue": 2,
+        "eligibleOpenIssues": 0,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          }
+        ],
+        "summary": "qa_run_qa_1781608910343 — 0 failed / 111 total checks"
+      },
+      "at": "2026-06-16T11:22:19.348Z"
+    },
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_8ef1100e",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-16T10:45:37.833Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 12,
+      "runId": "qa_1781606685626",
+      "log": {
+        "at": "2026-06-16T10:45:37.766Z",
+        "runId": "qa_1781606685626",
+        "openFixQueue": 12,
+        "eligibleOpenIssues": 1,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:recruiting-board",
+            "checkId": "pi:api:recruiting-board",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:recruiting-board-fail",
+            "checkId": "pi:api:recruiting-board-fail",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:roster-players-fail",
+            "checkId": "pi:api:roster-players-fail",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_crawler:api-latency",
+            "checkId": "crawler:api-latency",
+            "reason": "no_eligibility_rule",
+            "detail": "crawler:api-latency",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api-latency:ping-fail",
+            "checkId": "pi:api-latency:ping-fail",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:api-latency:ping-fail",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:tap-targets",
+            "checkId": "ux:tap-targets",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:futurecast-home",
+            "checkId": "pi:api:futurecast-home",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:portal-players",
+            "checkId": "pi:api:portal-players",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:player-slug",
+            "checkId": "pi:api:player-slug",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:film-room-catalog",
+            "checkId": "pi:api:film-room-catalog",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:articles-published",
+            "checkId": "pi:api:articles-published",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          }
+        ],
+        "summary": "qa_run_qa_1781606685626 — 4 failed / 113 total checks"
+      },
+      "at": "2026-06-16T10:45:37.770Z"
+    },
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_1a51bf33",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-16T10:42:57.297Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 6,
+      "runId": "qa_1781606547450",
+      "log": {
+        "at": "2026-06-16T10:42:57.232Z",
+        "runId": "qa_1781606547450",
+        "openFixQueue": 6,
+        "eligibleOpenIssues": 3,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_ux:tap-targets",
+            "checkId": "ux:tap-targets",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_content:articles-spell",
+            "checkId": "content:articles-spell",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_content:content-accuracy-spell",
+            "checkId": "content:content-accuracy-spell",
+            "reason": "no_eligibility_rule",
+            "detail": "content:content-accuracy-spell",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_content:film-room-spell",
+            "checkId": "content:film-room-spell",
+            "reason": "already_pending"
+          }
+        ],
+        "summary": "qa_run_qa_1781606547450 — 4 failed / 111 total checks"
+      },
+      "at": "2026-06-16T10:42:57.237Z"
+    },
     {
       "action": "v2_generate",
       "v2Scan": {

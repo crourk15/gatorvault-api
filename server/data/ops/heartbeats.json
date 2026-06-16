@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-14T14:24:01.755Z",
+  "updatedAt": "2026-06-16T11:22:19.432Z",
   "subsystems": {
     "autoposter": {
       "subsystem": "autoposter",
@@ -57,11 +57,11 @@
     },
     "qa:crawler": {
       "subsystem": "qa:crawler",
-      "lastRun": "2026-06-14T14:24:01.755Z",
+      "lastRun": "2026-06-16T11:22:19.432Z",
       "lastStatus": "success",
       "lastMessage": "QA crawl passed (111 checks)",
       "lastDetails": {
-        "runId": "qa_1781447015550",
+        "runId": "qa_1781608910343",
         "summary": {
           "total": 111,
           "passed": 111,
@@ -71,8 +71,8 @@
         "errors": []
       },
       "lastCounts": null,
-      "lastSuccess": "2026-06-14T14:24:01.755Z",
-      "lastFailure": "2026-06-14T14:23:15.376Z",
+      "lastSuccess": "2026-06-16T11:22:19.432Z",
+      "lastFailure": "2026-06-16T10:45:37.835Z",
       "lastWarning": null,
       "failureStreak": 0
     },
@@ -202,11 +202,11 @@
     },
     "product-intel": {
       "subsystem": "product-intel",
-      "lastRun": "2026-06-14T14:24:01.664Z",
+      "lastRun": "2026-06-16T11:22:19.289Z",
       "lastStatus": "warning",
       "lastMessage": "Product Intelligence scored 100/100 — 2 fix item(s)",
       "lastDetails": {
-        "runId": "qa_1781447015550",
+        "runId": "qa_1781608910343",
         "overall": 100,
         "fixQueue": 2,
         "layers": {
@@ -260,7 +260,7 @@
       "lastCounts": null,
       "lastSuccess": "2026-06-11T21:03:28.379Z",
       "lastFailure": null,
-      "lastWarning": "2026-06-14T14:24:01.664Z",
+      "lastWarning": "2026-06-16T11:22:19.289Z",
       "failureStreak": 0
     }
   }

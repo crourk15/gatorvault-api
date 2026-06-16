@@ -6,7 +6,8 @@ import '@/lib/gatorvault-brand.css';
 import '@/lib/vault-shell.css';
 import '@/lib/vault-dashboard.css';
 import '@/lib/vault-recruiting-hub.css';
-import '@/lib/recruiting-hub-premium.css';
+import '@/styles/recruiting-hub-tokens.css';
+import '@/styles/recruiting-hub-globals.css';
 
 export default function RecruitingHubLayout({
   children,

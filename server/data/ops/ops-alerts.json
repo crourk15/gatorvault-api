@@ -1,7 +1,157 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-14T02:03:15.030Z",
+  "updatedAt": "2026-06-16T10:45:37.841Z",
   "alerts": [
+    {
+      "id": "alert_1781606737840_j0fif",
+      "at": "2026-06-16T10:45:37.840Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 4 check(s)",
+      "message": "Run qa_1781606685626 at 2026-06-16T10:45:34.885Z\nDuration: 49259ms\nModules: api=PASS, content=PASS, integrity=PASS, pages=PASS, ux=FAIL, browser=PASS, visual-integrity=PASS, mobile-behavior=PASS, crawler=FAIL\n\n• *crawler/crawler:api-latency*: Restore API endpoint health on Render\n  URL: /\n  Repro: Restore API endpoint health on Render\n• *ux/ux:tap-targets*: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n  URL: /\n  Repro: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-4-crawler:api-latency",
+      "meta": {
+        "runId": "qa_1781606685626",
+        "errors": [
+          {
+            "id": "crawler:api-latency",
+            "module": "crawler",
+            "message": "Restore API endpoint health on Render",
+            "url": "/",
+            "repro": "Restore API endpoint health on Render",
+            "details": {
+              "classification": "api-latency",
+              "ruleId": "F1",
+              "severity": "critical",
+              "severityScore": 52,
+              "confidence": 99,
+              "selector": "/api/ping",
+              "domPath": "/api/ping",
+              "screenshot": null,
+              "sectionId": "api-health"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:tap-targets",
+            "module": "ux",
+            "message": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "url": "/",
+            "repro": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781606577303_x11fd",
+      "at": "2026-06-16T10:42:57.303Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 4 check(s)",
+      "message": "Run qa_1781606547450 at 2026-06-16T10:42:54.781Z\nDuration: 27331ms\nModules: api=PASS, content=FAIL, integrity=PASS, pages=PASS, ux=FAIL, browser=PASS, visual-integrity=PASS, mobile-behavior=PASS, crawler=PASS\n\n• *ux/ux:tap-targets*: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n  URL: /\n  Repro: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n• *content/content:articles-spell*: HTTP 502 https://gatorvault-api.onrender.com/api/articles/published\n  URL: /api/articles/published\n  Repro: HTTP 502 https://gatorvault-api.onrender.com/api/articles/published\n• *content/content:content-accuracy-spell*: HTTP 502 https://gatorvault-api.onrender.com/api/content/published\n  URL: /api/content/published\n  Repro: HTTP 502 https://gatorvault-api.onrender.com/api/content/published\n• *content/content:film-room-spell*: HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog\n  URL: /api/film-room/catalog\n  Repro: HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-4-ux:tap-targets",
+      "meta": {
+        "runId": "qa_1781606547450",
+        "errors": [
+          {
+            "id": "ux:tap-targets",
+            "module": "ux",
+            "message": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "url": "/",
+            "repro": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "content:articles-spell",
+            "module": "content",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+            "url": "/api/articles/published",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 36,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "content:content-accuracy-spell",
+            "module": "content",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+            "url": "/api/content/published",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 36,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "content:film-room-spell",
+            "module": "content",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+            "url": "/api/film-room/catalog",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 36,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
     {
       "id": "alert_1781402595029_hmf7r",
       "at": "2026-06-14T02:03:15.029Z",

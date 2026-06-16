@@ -1,7 +1,361 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-14T14:24:01.755Z",
+  "updatedAt": "2026-06-16T11:22:19.432Z",
   "events": [
+    {
+      "id": "ops_1781608939432_eyjsij",
+      "subsystem": "qa:crawler",
+      "status": "success",
+      "message": "QA crawl passed (111 checks)",
+      "details": {
+        "runId": "qa_1781608910343",
+        "summary": {
+          "total": 111,
+          "passed": 111,
+          "failed": 0,
+          "emitted": 0
+        },
+        "errors": []
+      },
+      "counts": null,
+      "timestamp": "2026-06-16T11:22:19.432Z"
+    },
+    {
+      "id": "ops_1781608939289_846w5y",
+      "subsystem": "product-intel",
+      "status": "warning",
+      "message": "Product Intelligence scored 100/100 — 2 fix item(s)",
+      "details": {
+        "runId": "qa_1781608910343",
+        "overall": 100,
+        "fixQueue": 2,
+        "layers": {
+          "data": {
+            "counts": {
+              "total": 2,
+              "bySource": {
+                "qa": 0,
+                "apiHealth": 0,
+                "cacheHealth": 0,
+                "autoposter": 1,
+                "recruiting": 0,
+                "teamData": 1,
+                "filmRoom": 0
+              }
+            },
+            "sources": [
+              "qa-crawler",
+              "live-dashboard",
+              "mobile-behavior",
+              "admin-hub",
+              "autoposter-logs",
+              "recruiting-board",
+              "film-room",
+              "team-overview",
+              "program-history",
+              "roster-depth-chart",
+              "press-conferences",
+              "highlights",
+              "api-health",
+              "cache-health"
+            ]
+          },
+          "classification": {
+            "active": [
+              "roster-mismatch",
+              "autoposter-stale"
+            ],
+            "total": 2
+          },
+          "severity": {
+            "critical": 0,
+            "high": 2,
+            "medium": 0,
+            "low": 0
+          },
+          "proposals": 2,
+          "approvalGate": "self-runner"
+        }
+      },
+      "counts": null,
+      "timestamp": "2026-06-16T11:22:19.289Z"
+    },
+    {
+      "id": "ops_1781606737835_pscsoa",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (4)",
+      "details": {
+        "runId": "qa_1781606685626",
+        "summary": {
+          "total": 113,
+          "passed": 109,
+          "failed": 4,
+          "emitted": 2
+        },
+        "errors": [
+          {
+            "id": "crawler:api-latency",
+            "module": "crawler",
+            "message": "Restore API endpoint health on Render",
+            "url": "/",
+            "repro": "Restore API endpoint health on Render",
+            "details": {
+              "classification": "api-latency",
+              "ruleId": "F1",
+              "severity": "critical",
+              "severityScore": 52,
+              "confidence": 99,
+              "selector": "/api/ping",
+              "domPath": "/api/ping",
+              "screenshot": null,
+              "sectionId": "api-health"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "ux:tap-targets",
+            "module": "ux",
+            "message": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "url": "/",
+            "repro": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-16T10:45:37.835Z"
+    },
+    {
+      "id": "ops_1781606737728_xqom4c",
+      "subsystem": "product-intel",
+      "status": "warning",
+      "message": "Product Intelligence scored 35/100 — 12 fix item(s)",
+      "details": {
+        "runId": "qa_1781606685626",
+        "overall": 35,
+        "fixQueue": 12,
+        "layers": {
+          "data": {
+            "counts": {
+              "total": 14,
+              "bySource": {
+                "qa": 4,
+                "apiHealth": 7,
+                "cacheHealth": 0,
+                "autoposter": 1,
+                "recruiting": 1,
+                "teamData": 1,
+                "filmRoom": 0
+              }
+            },
+            "sources": [
+              "qa-crawler",
+              "live-dashboard",
+              "mobile-behavior",
+              "admin-hub",
+              "autoposter-logs",
+              "recruiting-board",
+              "film-room",
+              "team-overview",
+              "program-history",
+              "roster-depth-chart",
+              "press-conferences",
+              "highlights",
+              "api-health",
+              "cache-health"
+            ]
+          },
+          "classification": {
+            "active": [
+              "recruiting-board-mismatch",
+              "roster-mismatch",
+              "api-latency",
+              "autoposter-stale",
+              "ui-regression"
+            ],
+            "total": 12
+          },
+          "severity": {
+            "critical": 0,
+            "high": 6,
+            "medium": 6,
+            "low": 0
+          },
+          "proposals": 12,
+          "approvalGate": "self-runner"
+        }
+      },
+      "counts": null,
+      "timestamp": "2026-06-16T10:45:37.728Z"
+    },
+    {
+      "id": "ops_1781606577298_8uixkz",
+      "subsystem": "qa:crawler",
+      "status": "error",
+      "message": "QA crawl failed (4)",
+      "details": {
+        "runId": "qa_1781606547450",
+        "summary": {
+          "total": 111,
+          "passed": 107,
+          "failed": 4,
+          "emitted": 4
+        },
+        "errors": [
+          {
+            "id": "ux:tap-targets",
+            "module": "ux",
+            "message": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "url": "/",
+            "repro": "Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "content:articles-spell",
+            "module": "content",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+            "url": "/api/articles/published",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 36,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "content:content-accuracy-spell",
+            "module": "content",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+            "url": "/api/content/published",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 36,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "content:film-room-spell",
+            "module": "content",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+            "url": "/api/film-room/catalog",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 36,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          }
+        ]
+      },
+      "counts": null,
+      "timestamp": "2026-06-16T10:42:57.298Z"
+    },
+    {
+      "id": "ops_1781606577199_hw9um5",
+      "subsystem": "product-intel",
+      "status": "warning",
+      "message": "Product Intelligence scored 99/100 — 6 fix item(s)",
+      "details": {
+        "runId": "qa_1781606547450",
+        "overall": 99,
+        "fixQueue": 6,
+        "layers": {
+          "data": {
+            "counts": {
+              "total": 6,
+              "bySource": {
+                "qa": 4,
+                "apiHealth": 0,
+                "cacheHealth": 0,
+                "autoposter": 1,
+                "recruiting": 0,
+                "teamData": 1,
+                "filmRoom": 0
+              }
+            },
+            "sources": [
+              "qa-crawler",
+              "live-dashboard",
+              "mobile-behavior",
+              "admin-hub",
+              "autoposter-logs",
+              "recruiting-board",
+              "film-room",
+              "team-overview",
+              "program-history",
+              "roster-depth-chart",
+              "press-conferences",
+              "highlights",
+              "api-health",
+              "cache-health"
+            ]
+          },
+          "classification": {
+            "active": [
+              "roster-mismatch",
+              "autoposter-stale",
+              "ui-regression"
+            ],
+            "total": 6
+          },
+          "severity": {
+            "critical": 0,
+            "high": 2,
+            "medium": 4,
+            "low": 0
+          },
+          "proposals": 6,
+          "approvalGate": "self-runner"
+        }
+      },
+      "counts": null,
+      "timestamp": "2026-06-16T10:42:57.199Z"
+    },
     {
       "id": "ops_1781447041755_mabjqt",
       "subsystem": "qa:crawler",

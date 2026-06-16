@@ -2,47 +2,23 @@
 
 import React from 'react';
 import type { RecruitingHubTab } from '@/lib/vault-route-map';
+import {
+  StickyTabsBar,
+  STICKY_TAB_LABELS,
+} from '@/components/recruiting-hub/StickyTabsBar';
 
-/** Visible tabs per wireframe (targets-2027 route still works via URL) */
-export const RECRUITING_TAB_LABELS: { id: RecruitingHubTab; label: string }[] = [
-  { id: 'priority', label: 'High Priority' },
-  { id: 'commits-2026', label: '2026 Commits' },
-  { id: 'commits-2027', label: '2027 Commits' },
-  { id: 'targets-2027', label: '2027 Targets' },
-  { id: 'targets-2028', label: '2028 Targets' },
-  { id: 'intel', label: 'Movement Intel' },
-  { id: 'scouting', label: 'Scouting' },
-  { id: 'portal', label: 'Portal' },
-  { id: 'rankings', label: 'Rankings' },
-];
+export { STICKY_TAB_LABELS as RECRUITING_TAB_LABELS };
 
 type Props = {
   active: RecruitingHubTab;
   onChange: (tab: RecruitingHubTab) => void;
 };
 
-export function RecruitingTabBar({ active, onChange }: Props): React.ReactElement {
-  return (
-    <div className="gv-rh-tabs-wrap">
-      <div className="gv-rh-tabs gv-rh-hub__frame gv-hub-tabs gv-hub-tabs--scroll" role="tablist">
-        {RECRUITING_TAB_LABELS.map(({ id, label }) => (
-          <button
-            key={id}
-            type="button"
-            role="tab"
-            aria-selected={active === id}
-            className={`gv-rh-tab gv-hub-tab${active === id ? ' is-active' : ''}`}
-            onClick={() => onChange(id)}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+/** @deprecated use StickyTabsBar */
+export function RecruitingTabBar(props: Props): React.ReactElement {
+  return <StickyTabsBar {...props} />;
 }
 
-/** @deprecated alias */
 export const RecruitingTabs = RecruitingTabBar;
 
 type SubTabProps = {
@@ -53,14 +29,14 @@ type SubTabProps = {
 
 export function RecruitingSubTabBar({ options, active, onChange }: SubTabProps): React.ReactElement {
   return (
-    <div className="gv-rh-tabs gv-rh-tabs--sub" role="tablist">
+    <div className="rh-sticky-tabs__inner rh-sticky-tabs__inner--sub" role="tablist">
       {options.map(({ id, label }) => (
         <button
           key={id}
           type="button"
           role="tab"
           aria-selected={active === id}
-          className={`gv-rh-tab${active === id ? ' is-active' : ''}`}
+          className={`rh-sticky-tabs__tab${active === id ? ' is-active' : ''}`}
           onClick={() => onChange(id)}
         >
           {label}
