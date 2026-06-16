@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { Card, Chip, GridLayout, PageLayout, PageSection } from '@/components/brand';
 import { fetchNilDashboard, type NilDashboard, type NilEvent, type NilProgramRow } from '@/lib/nil-api';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
@@ -47,19 +48,13 @@ export function VaultNilPage(): React.ReactElement {
   const trend = data?.trendHistory ?? [];
 
   return (
-    <div className="gv-nil" data-testid="vault-nil">
-      <div className="gv-page-hero gv-nil__hero">
-        <div>
-          <h1 className="gv-page-title">💰 NIL Tracker</h1>
-          <p className="gv-page-subtitle">
-            SEC NIL standing — where Florida ranks, trend over time, position impact, and recruiting
-            correlation.
-          </p>
-        </div>
-        {data?.updatedAt ? (
-          <span className="gv-nil__updated">{formatUpdated(data.updatedAt)}</span>
-        ) : null}
-      </div>
+    <PageLayout
+      theme="white"
+      title="NIL Tracker"
+      subtitle="SEC NIL standing — where Florida ranks, trend over time, position impact, and recruiting correlation."
+      testId="vault-nil"
+      accent={data?.updatedAt ? <Chip variant="neutral">{formatUpdated(data.updatedAt)}</Chip> : null}
+    >
 
       {loading && <p className="gv-page-status">Loading NIL dashboard…</p>}
       {error && !loading && (
@@ -68,6 +63,27 @@ export function VaultNilPage(): React.ReactElement {
 
       {!loading && !error && data && (
         <>
+          <PageSection title="Player Valuations">
+            <GridLayout cols={3}>
+              <Card variant="stat">
+                <p className="gv-stat-card__value">#{uf?.secRank ?? '—'}</p>
+                <p className="gv-stat-card__label">SEC Rank</p>
+              </Card>
+              <Card>
+                <p className="gv-type-label">National Rank</p>
+                <p className="gv-type-number" style={{ fontSize: '2rem', color: 'var(--gv-orange)' }}>
+                  #{uf?.nationalRank ?? '—'}
+                </p>
+              </Card>
+              <Card>
+                <p className="gv-type-label">Est. Annual Pool</p>
+                <p className="gv-type-number" style={{ fontSize: '2rem', color: 'var(--gv-orange)' }}>
+                  {uf?.estimatedAnnualPoolM != null ? `$${uf.estimatedAnnualPoolM}M` : '—'}
+                </p>
+              </Card>
+            </GridLayout>
+          </PageSection>
+
           <div className="gv-nil__kpis">
             <div className="gv-recruit-stat">
               <span>SEC Rank</span>
@@ -155,8 +171,9 @@ export function VaultNilPage(): React.ReactElement {
             </section>
           </div>
 
-          <section className="gv-nil__panel">
-            <h2 className="gv-vault-alerts__section-title">Recent UF NIL Events</h2>
+          <PageSection title="Deal Tracker">
+            <section className="gv-nil__panel">
+              <h2 className="gv-vault-alerts__section-title">Recent UF NIL Events</h2>
             <ul className="gv-nil__events">
               {events.map((ev: NilEvent, i) => (
                 <li key={ev.id ?? i} className="gv-nil__event">
@@ -170,7 +187,32 @@ export function VaultNilPage(): React.ReactElement {
               ))}
             </ul>
             {events.length === 0 && <UiEmpty message="No recent NIL events." />}
-          </section>
+            </section>
+          </PageSection>
+
+          <PageSection title="UF Collective Activity">
+            <Card variant="accent">
+              <Chip variant="blue">{uf?.collective ?? 'Gators Collective'}</Chip>
+              {data.recruitingCorrelation?.note ? (
+                <p className="gv-nil__corr" style={{ marginTop: '0.75rem' }}>{data.recruitingCorrelation.note}</p>
+              ) : (
+                <p style={{ marginTop: '0.75rem' }}>Collective activity tracked weekly.</p>
+              )}
+            </Card>
+          </PageSection>
+
+          <PageSection title="Top Earners">
+            <GridLayout cols={3}>
+              {rankings.slice(0, 3).map((row: NilProgramRow) => (
+                <Card key={row.id}>
+                  <strong>{row.name}</strong>
+                  <p style={{ color: 'var(--gv-orange)', fontWeight: 800, margin: '0.35rem 0' }}>
+                    {row.metrics?.estimatedAnnualPoolM != null ? `$${row.metrics.estimatedAnnualPoolM}M` : '—'}
+                  </p>
+                </Card>
+              ))}
+            </GridLayout>
+          </PageSection>
 
           <p className="gv-nil__disclaimer">
             NIL estimates are directional — not audited financials. Rankings reflect modeled collective
@@ -178,6 +220,6 @@ export function VaultNilPage(): React.ReactElement {
           </p>
         </>
       )}
-    </div>
+    </PageLayout>
   );
 }

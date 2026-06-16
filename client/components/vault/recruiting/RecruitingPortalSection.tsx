@@ -48,8 +48,8 @@ export function PortalList(): React.ReactElement {
   return (
     <div className="gv-rh-portal-grid" data-testid="portal-grid">
       {players.map((p) => (
-        <article key={p.id} className="gv-rh-portal-card">
-          <span className="gv-rh-portal-card__badge">Transfer Portal</span>
+        <article key={p.id} className="gv-rh-portal-card gv-rh-portal-card--in">
+          <span className="gv-rh-portal-card__badge gv-rh-portal-card__badge--in">IN</span>
           <PlayerCardEnhanced
             forceElite
             variant="target"

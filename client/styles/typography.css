@@ -1,0 +1,82 @@
+/**
+ * GatorVault design tokens — typography (Inter)
+ */
+:root {
+  --gv-font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* GV/H1: ExtraBold 800, 32px, 120%, -1% letter-spacing */
+  --gv-h1-size: 32px;
+  --gv-h1-weight: 800;
+  --gv-h1-line: 1.2;
+  --gv-h1-tracking: -0.01em;
+
+  /* GV/H2: Bold 700, 24px, 120% */
+  --gv-h2-size: 24px;
+  --gv-h2-weight: 700;
+  --gv-h2-line: 1.2;
+
+  /* GV/H3: SemiBold 600, 20px, 120% */
+  --gv-h3-size: 20px;
+  --gv-h3-weight: 600;
+  --gv-h3-line: 1.2;
+
+  /* GV/Body: Regular 400, 14–16px, 140% */
+  --gv-body-size: 16px;
+  --gv-body-size-sm: 14px;
+  --gv-body-weight: 400;
+  --gv-body-line: 1.4;
+
+  /* GV/Label: Medium 500, 12px, 130% */
+  --gv-label-size: 12px;
+  --gv-label-weight: 500;
+  --gv-label-line: 1.3;
+}
+
+.gv-h1 {
+  margin: 0;
+  font-family: var(--gv-font-family);
+  font-size: var(--gv-h1-size);
+  font-weight: var(--gv-h1-weight);
+  line-height: var(--gv-h1-line);
+  letter-spacing: var(--gv-h1-tracking);
+}
+
+.gv-h2 {
+  margin: 0;
+  font-family: var(--gv-font-family);
+  font-size: var(--gv-h2-size);
+  font-weight: var(--gv-h2-weight);
+  line-height: var(--gv-h2-line);
+}
+
+.gv-h3 {
+  margin: 0;
+  font-family: var(--gv-font-family);
+  font-size: var(--gv-h3-size);
+  font-weight: var(--gv-h3-weight);
+  line-height: var(--gv-h3-line);
+}
+
+.gv-body {
+  margin: 0;
+  font-family: var(--gv-font-family);
+  font-size: var(--gv-body-size);
+  font-weight: var(--gv-body-weight);
+  line-height: var(--gv-body-line);
+}
+
+.gv-body-sm {
+  margin: 0;
+  font-family: var(--gv-font-family);
+  font-size: var(--gv-body-size-sm);
+  font-weight: var(--gv-body-weight);
+  line-height: var(--gv-body-line);
+}
+
+.gv-label {
+  margin: 0;
+  font-family: var(--gv-font-family);
+  font-size: var(--gv-label-size);
+  font-weight: var(--gv-label-weight);
+  line-height: var(--gv-label-line);
+}

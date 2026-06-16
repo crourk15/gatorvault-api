@@ -1,22 +1,21 @@
 /* GatorNation Live — real-time media hub */
 
 .gv-gnl {
-  --gnl-navy: var(--gv-deep-navy, #0a1a2f);
-  --gnl-orange: var(--gv-gator-orange, #fa4616);
-  --gnl-blue: var(--gv-uf-blue, #003087);
-  --gnl-green: var(--gv-swamp-green, #00c853);
-  --gnl-red: #ff4d4d;
-  --gnl-yellow: var(--gv-warning-yellow, #ffd600);
-  --gnl-purple: #a855f7;
-  --gnl-card: var(--gv-deep-navy, #0a1a2f);
-  --gnl-border: var(--gv-steel-blue, #1b3a57);
-  --gnl-radius: 0.75rem;
+  --gnl-navy: var(--gv-navy, #001a33);
+  --gnl-orange: var(--gv-orange, #fa4616);
+  --gnl-blue: var(--gv-blue, #0021a5);
+  --gnl-green: var(--gv-success, #16a34a);
+  --gnl-red: var(--gv-heatmap-red, #ff4d4d);
+  --gnl-yellow: var(--gv-warning, #facc15);
+  --gnl-card: var(--gv-white, #ffffff);
+  --gnl-border: rgba(0, 33, 165, 0.18);
+  --gnl-radius: 12px;
   --gnl-pill: 9999px;
   --gnl-frame-max: 1280px;
-  --gnl-frame-margin: 5%;
+  --gnl-frame-margin: clamp(16px, 5vw, 48px);
   margin: 0;
   padding-bottom: 2.5rem;
-  color: #fff;
+  color: var(--gv-white, #ffffff);
   font-family: var(--gv-font);
   background: var(--gnl-navy);
 }
@@ -61,11 +60,12 @@
 }
 
 .gv-gnl__section-title {
-  font-family: Oswald, Inter, sans-serif;
+  font-family: Inter, sans-serif;
   font-size: 1.25rem;
   font-weight: 800;
   margin: 0 0 1rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
+  color: var(--gv-white, #ffffff);
 }
 
 /* 3-column content grid */
@@ -227,11 +227,12 @@
 /* Ticker */
 .gv-gnl-ticker {
   position: relative;
-  background: var(--gnl-card);
-  border-top: 1px solid var(--gnl-border);
-  border-bottom: 1px solid var(--gnl-border);
+  background: var(--gnl-blue);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   overflow: hidden;
   margin-bottom: 2.5rem;
+  color: var(--gv-white, #ffffff);
 }
 
 .gv-gnl-ticker__live-badge {
@@ -375,9 +376,17 @@
 }
 
 .gv-gnl-beat-card__time {
+  display: inline-block;
   margin: 0 0 var(--space-3, 12px);
-  font-size: 0.75rem;
-  color: var(--gv-storm, #94a3b8);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--gnl-pill);
+  background: rgba(250, 70, 22, 0.12);
+  color: var(--gnl-orange);
+  border: 1px solid rgba(250, 70, 22, 0.35);
 }
 
 .gv-gnl-beat-card__cta {
@@ -496,12 +505,14 @@
   border: 1px solid var(--gnl-border);
   border-radius: var(--gnl-radius);
   text-decoration: none;
-  color: inherit;
-  transition: border-color 150ms ease;
+  color: var(--gv-navy, #001a33);
+  box-shadow: var(--gv-shadow-card, 0 4px 16px rgba(0, 26, 51, 0.22));
+  transition: border-color 150ms ease, transform 150ms ease;
 }
 
 .gv-gnl-feed-card:hover {
-  border-color: rgba(249, 115, 22, 0.4);
+  border-color: var(--gnl-orange);
+  transform: translateY(-2px);
 }
 
 .gv-gnl-feed-card__badge {
@@ -520,13 +531,22 @@
   font-size: 0.9375rem;
   font-weight: 600;
   margin: 0 0 0.35rem;
-  color: #fff;
+  color: var(--gv-navy, #001a33);
 }
 
 .gv-gnl-feed-card__meta {
   font-size: 0.75rem;
-  color: var(--gv-storm);
+  color: #6b7280;
   margin: 0;
+}
+
+.gv-gnl-feed-card__time-chip {
+  display: inline-flex;
+  margin-right: 0.35rem;
+}
+
+.gv-live-feed__row-time {
+  display: none;
 }
 
 .gv-gnl-feed-card__cat {

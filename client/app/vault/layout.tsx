@@ -9,8 +9,10 @@ import {
   VAULT_HYDRATION_BOOT_SCRIPT,
   VAULT_HYDRATION_CRITICAL_CSS,
 } from '@/lib/vault-hydration-guard.js';
+import '@/styles/index.css';
 import '@/lib/gv-design-system.css';
 import '@/lib/gatorvault-brand.css';
+import '@/lib/gv-page-layout.css';
 import '@/lib/vault-shell.css';
 import '@/lib/vault-admin.css';
 import '@/lib/vault-dashboard.css';
@@ -34,7 +36,7 @@ export const viewport: Viewport = {
 };
 
 const vaultShellCriticalCss =
-  '.gv-vault-shell{min-height:100vh;min-height:100dvh;background:#060f1f;color:#e2e8f0;display:flex;flex-direction:column}.gv-vault-shell__main{flex:1;min-height:0;width:100%}';
+  '.gv-vault-shell{min-height:100vh;min-height:100dvh;background:#001a33;color:#ffffff;display:flex;flex-direction:column}.gv-vault-shell__main{flex:1;min-height:0;width:100%}';
 
 export default function VaultLayout({
   children,

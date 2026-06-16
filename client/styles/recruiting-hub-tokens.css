@@ -1,44 +1,50 @@
+/**
+ * Recruiting Hub — tokens aligned to GatorVault Figma spec
+ */
 :root {
-  /* Colors */
-  --color-bg-primary: #0a0a0c;
-  --color-bg-secondary: #111216;
-  --color-bg-tertiary: #1a1b1f;
-  --color-border-default: #1f1f24;
-  --color-border-hover: #ff7a00;
-  --color-accent-orange: #ff7a00;
-  --color-accent-blue: #1e90ff;
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #a1a1a8;
+  /* Brand (from colors.css) */
+  --color-bg-primary: var(--gv-navy-swamp, #001a33);
+  --color-bg-secondary: var(--gv-white, #ffffff);
+  --color-bg-tertiary: #f5f7fa;
+  --color-border-default: var(--gv-border-card, rgba(0, 26, 51, 0.2));
+  --color-border-hover: var(--gv-orange-primary, #fa4616);
+  --color-accent-orange: var(--gv-orange-primary, #fa4616);
+  --color-accent-blue: var(--gv-blue-primary, #0021a5);
+  --color-text-primary: var(--gv-white, #ffffff);
+  --color-text-secondary: var(--gv-gray-storm, #e5e5e5);
+  --color-text-on-light: var(--gv-black-graphite, #1a1a1a);
+  --color-text-on-dark: var(--gv-white, #ffffff);
+  --color-text-muted-on-dark: rgba(229, 229, 229, 0.75);
+  --gv-gradient-hero-blue: linear-gradient(165deg, #0021a5 0%, #001656 55%, #001a33 100%);
 
-  /* Spacing */
-  --space-xxs: 4px;
-  --space-xs: 8px;
-  --space-sm: 12px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
-  --space-xxl: 48px;
+  /* Spacing (GV scale) */
+  --space-xxs: var(--gv-space-1, 4px);
+  --space-xs: var(--gv-space-2, 8px);
+  --space-sm: var(--gv-space-3, 12px);
+  --space-md: var(--gv-space-4, 16px);
+  --space-lg: var(--gv-space-5, 24px);
+  --space-xl: var(--gv-space-6, 32px);
+  --space-xxl: var(--gv-space-7, 48px);
 
   /* Typography */
-  --font-heading: 'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --text-h1: 32px;
-  --text-h2: 24px;
-  --text-h3: 20px;
-  --text-body: 16px;
-  --text-small: 14px;
+  --font-heading: var(--gv-font-family, 'Inter', sans-serif);
+  --font-body: var(--gv-font-family, 'Inter', sans-serif);
+  --text-h1: var(--gv-h1-size, 32px);
+  --text-h2: var(--gv-h2-size, 24px);
+  --text-h3: var(--gv-h3-size, 20px);
+  --text-body: var(--gv-body-size, 16px);
+  --text-small: var(--gv-body-size-sm, 14px);
 
   /* Radius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-sm: var(--gv-radius-card, 12px);
+  --radius-md: var(--gv-radius-card, 12px);
+  --radius-lg: var(--gv-radius-card, 12px);
 
-  /* Animation */
-  --transition-fast: 150ms ease-out;
+  --transition-fast: 160ms ease-out;
 
   /* Layout */
-  --rh-frame-max: 1280px;
-  --rh-gutter-desktop: 80px;
-  --rh-gutter-tablet: 40px;
-  --rh-gutter-mobile: 20px;
+  --rh-frame-max: var(--gv-container-max, 1248px);
+  --rh-gutter-desktop: var(--gv-grid-margin-desktop, 48px);
+  --rh-gutter-tablet: var(--gv-grid-gutter-tablet, 24px);
+  --rh-gutter-mobile: var(--gv-grid-gutter-mobile, 16px);
 }

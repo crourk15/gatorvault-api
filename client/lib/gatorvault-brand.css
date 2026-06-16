@@ -1,21 +1,19 @@
 /**
- * GatorVault Brand Kit — colors, gradients, typography, component library.
- * Import once at vault layout (or root) for token availability app-wide.
+ * GatorVault Brand Kit — Figma spec tokens (canonical)
  */
-
 :root {
   /* PRIMARY */
   --gv-blue: #0021a5;
   --gv-orange: #fa4616;
-  --gv-navy: #0a0f1a;
+  --gv-navy: #001a33;
   --gv-white: #ffffff;
+  --gv-graphite: #1a1a1a;
+  --gv-storm: #e5e5e5;
+  --gv-muted: #e5e5e5;
 
-  /* SECONDARY */
+  /* SECONDARY / utility */
   --gv-swamp: #1c3f2c;
-  --gv-storm: #a7b0c0;
   --gv-fog: #e5e7eb;
-
-  /* UTILITY */
   --gv-success: #16a34a;
   --gv-warning: #facc15;
   --gv-error: #dc2626;
@@ -23,222 +21,57 @@
   --gv-heatmap-green: #4ade80;
 
   /* GRADIENTS */
-  --gv-gradient-swamp-night: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.75) 0%,
-    rgba(0, 0, 0, 0.15) 100%
-  );
-  --gv-gradient-blue-glow: linear-gradient(90deg, #0021a5 0%, #0a0f1a 100%);
+  --gv-gradient-hero-blue: linear-gradient(165deg, #0021a5 0%, #001656 55%, #001a33 100%);
+  --gv-gradient-swamp-night: linear-gradient(180deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.15) 100%);
+  --gv-gradient-blue-glow: linear-gradient(90deg, #0021a5 0%, #001a33 100%);
   --gv-gradient-orange-fire: linear-gradient(90deg, #fa4616 0%, #ff7a45 100%);
   --gv-gradient-momentum: linear-gradient(90deg, #fa4616 0%, #facc15 100%);
 
   /* TYPOGRAPHY */
   --gv-font: 'Inter', system-ui, sans-serif;
-  --gv-text-h1: clamp(2rem, 2.5vw, 2.5rem);
-  --gv-text-h2: clamp(1.5rem, 2vw, 1.75rem);
-  --gv-text-h3: clamp(1.125rem, 1.5vw, 1.25rem);
-  --gv-text-body: 0.9375rem;
-  --gv-text-label: 0.8125rem;
+  --gv-text-h1: 32px;
+  --gv-text-h2: 24px;
+  --gv-text-h3: 20px;
+  --gv-text-body: 16px;
+  --gv-text-label: 12px;
   --gv-text-number: clamp(2rem, 3vw, 3rem);
 
   /* SPACING & SHAPE */
+  --gv-space-1: 4px;
+  --gv-space-2: 8px;
+  --gv-space-3: 12px;
+  --gv-space-4: 16px;
+  --gv-space-5: 24px;
+  --gv-space-6: 32px;
+  --gv-space-7: 48px;
+  --gv-space-8: 64px;
+  --gv-section-spacing: var(--gv-space-7);
+  --gv-grid-gutter: var(--gv-space-5);
   --gv-radius-sm: 8px;
   --gv-radius-md: 12px;
-  --gv-radius-lg: 16px;
+  --gv-radius-lg: 12px;
   --gv-radius-pill: 999px;
-  --gv-shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.22);
+  --gv-shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.18);
   --gv-shadow-lift: 0 14px 36px rgba(0, 33, 165, 0.35);
-  --gv-frame-max: 1280px;
-  --gv-frame-margin: 5rem;
+  --gv-frame-max: 1248px;
+  --gv-frame-margin: clamp(16px, 5vw, 48px);
+  --gv-border-card: rgba(0, 26, 51, 0.2);
 }
 
-/* ── Buttons ── */
-.gv-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1.25rem;
-  border-radius: var(--gv-radius-md);
-  font-family: var(--gv-font);
-  font-size: var(--gv-text-body);
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  border: none;
-  transition: transform 160ms ease-out, box-shadow 160ms ease-out, background 160ms;
-}
-
-.gv-btn--primary {
-  background: var(--gv-blue);
-  color: var(--gv-white);
-  box-shadow: var(--gv-shadow-soft);
-}
-
-.gv-btn--primary:hover {
-  background: #0030c9;
-  transform: translateY(-2px);
-  box-shadow: var(--gv-shadow-lift);
-}
-
-.gv-btn--secondary {
-  background: transparent;
-  color: var(--gv-blue);
-  border: 2px solid var(--gv-blue);
-}
-
-.gv-btn--secondary:hover {
-  background: rgba(0, 33, 165, 0.12);
-}
-
-.gv-btn--danger {
-  background: var(--gv-error);
-  color: var(--gv-white);
-}
-
-.gv-btn--danger:hover {
-  filter: brightness(1.08);
-}
-
-/* ── Cards ── */
-.gv-card {
-  background: var(--gv-navy);
-  border-radius: var(--gv-radius-lg);
-  padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: var(--gv-shadow-soft);
-  transition: transform 180ms ease-out, box-shadow 180ms ease-out;
-}
-
-.gv-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(0, 33, 165, 0.25);
-}
-
-.gv-stat-card {
-  background: var(--gv-blue);
-  border-radius: var(--gv-radius-md);
-  padding: 1.5rem;
-  color: var(--gv-white);
-  box-shadow: var(--gv-shadow-soft);
-}
-
-.gv-stat-card__value {
-  font-family: var(--gv-font);
-  font-size: var(--gv-text-number);
-  font-weight: 800;
-  line-height: 1;
-}
-
-.gv-stat-card__label {
-  font-size: var(--gv-text-label);
-  color: rgba(255, 255, 255, 0.78);
-  margin-top: 0.35rem;
-}
-
-/* ── Badges & pills ── */
-.gv-badge {
-  display: inline-block;
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--gv-radius-pill);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--gv-white);
-}
-
-.gv-badge--commit {
-  background: var(--gv-success);
-}
-
-.gv-badge--trending {
-  background: var(--gv-orange);
-}
-
-.gv-badge--new {
-  background: var(--gv-blue);
-}
-
-/* ── Tabs ── */
-.gv-tab-bar {
-  display: flex;
-  gap: 0.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.gv-tab {
-  position: relative;
-  padding: 1rem;
-  border: none;
-  background: transparent;
-  color: var(--gv-storm);
-  font-family: var(--gv-font);
-  font-size: var(--gv-text-body);
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 200ms;
-}
-
-.gv-tab:hover {
-  color: var(--gv-fog);
-}
-
-.gv-tab.is-active {
-  color: var(--gv-white);
-}
-
-.gv-tab.is-active::after {
-  content: '';
-  position: absolute;
-  left: 0.75rem;
-  right: 0.75rem;
-  bottom: -1px;
-  height: 2px;
-  background: var(--gv-orange);
-}
-
-/* ── Textures (hero / backgrounds) ── */
-.gv-texture-stadium-lights::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 12% 18%, rgba(255, 220, 120, 0.09) 0, transparent 7%),
-    radial-gradient(circle at 88% 12%, rgba(255, 220, 120, 0.07) 0, transparent 6%),
-    radial-gradient(circle at 50% 6%, rgba(255, 255, 255, 0.06) 0, transparent 11%),
-    radial-gradient(circle at 72% 28%, rgba(250, 70, 22, 0.05) 0, transparent 5%);
-}
-
-.gv-texture-swamp-mist::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgba(28, 63, 44, 0.12) 45%,
-    rgba(10, 15, 26, 0.35) 100%
-  );
-}
-
-.gv-texture-turf {
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(28, 63, 44, 0.06) 0,
-    rgba(28, 63, 44, 0.06) 2px,
-    transparent 2px,
-    transparent 28px
-  );
+/* Legacy aliases */
+:root {
+  --gv-uf-blue: var(--gv-blue);
+  --gv-gator-orange: var(--gv-orange);
+  --gv-deep-navy: var(--gv-navy);
 }
 
 /* ── Typography utilities ── */
 .gv-type-h1 {
   font-family: var(--gv-font);
   font-size: var(--gv-text-h1);
-  font-weight: 700;
-  line-height: 1.15;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
 .gv-type-h2 {
@@ -251,22 +84,23 @@
 .gv-type-h3 {
   font-family: var(--gv-font);
   font-size: var(--gv-text-h3);
-  font-weight: 700;
-  line-height: 1.3;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .gv-type-body {
   font-family: var(--gv-font);
   font-size: var(--gv-text-body);
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .gv-type-label {
   font-family: var(--gv-font);
   font-size: var(--gv-text-label);
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--gv-storm);
 }
@@ -280,7 +114,7 @@
 
 .gv-type-ticker {
   font-family: var(--gv-font);
-  font-size: 0.875rem;
+  font-size: 14px;
   font-weight: 600;
 }
 

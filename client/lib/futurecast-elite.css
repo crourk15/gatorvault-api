@@ -2,14 +2,14 @@
  * FutureCast Elite Visual System — global tokens, cards, motion, paywall
  */
 :root {
-  /* Colors */
-  --gv-bg: #020617;
-  --gv-card: #0f172a;
-  --gv-border: #1e293b;
-  --gv-text-primary: #e5e7eb;
-  --gv-text-secondary: #9ca3af;
-  --gv-orange: #f97316;
-  --gv-blue: #1d4ed8;
+  /* Colors — Figma spec */
+  --gv-bg: var(--gv-blue-primary, #0021a5);
+  --gv-card: var(--gv-white, #ffffff);
+  --gv-border: var(--gv-border-card, rgba(0, 26, 51, 0.2));
+  --gv-text-primary: var(--gv-white, #ffffff);
+  --gv-text-secondary: var(--gv-gray-storm, #e5e5e5);
+  --gv-orange: var(--gv-orange-primary, #fa4616);
+  --gv-blue: var(--gv-blue-primary, #0021a5);
   --gv-green: #4ade80;
   --gv-red: #ff4d4d;
   --gv-yellow: #facc15;
@@ -42,7 +42,7 @@
   --gv-motion-pulse: 1.5s infinite;
 
   /* Gradients & overlays */
-  --gv-gradient-swamp-night: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+  --gv-gradient-swamp-night: linear-gradient(165deg, #0021a5 0%, #001656 55%, #001a33 100%);
   --gv-gradient-accent: linear-gradient(90deg, var(--gv-orange), var(--gv-blue));
   --gv-overlay-lights-opacity: 0.2;
   --gv-overlay-mist-opacity: 0.15;
@@ -349,7 +349,7 @@
   justify-content: center;
   font-size: 0.65rem;
   font-weight: 800;
-  color: rgba(249, 115, 22, 0.25);
+  color: rgba(0, 33, 165, 0.2);
   letter-spacing: 0.08em;
   z-index: 0;
 }
@@ -362,22 +362,22 @@
 
 .gv-confidence-gauge-track {
   fill: none;
-  stroke: rgba(30, 41, 59, 0.9);
+  stroke: rgba(0, 33, 165, 0.2);
   stroke-width: 8;
 }
 
 .gv-confidence-gauge-arc {
   fill: none;
-  stroke: var(--gv-orange);
+  stroke: var(--gv-orange, #fa4616);
   stroke-width: 8;
   stroke-linecap: round;
   stroke-dasharray: 226;
   transition: stroke-dashoffset var(--gv-motion-gauge);
 }
 
-.gv-confidence-gauge-arc--high { stroke: var(--gv-green); }
-.gv-confidence-gauge-arc--mid { stroke: var(--gv-yellow); }
-.gv-confidence-gauge-arc--low { stroke: var(--gv-red); }
+.gv-confidence-gauge-arc--high { stroke: var(--gv-orange, #fa4616); }
+.gv-confidence-gauge-arc--mid { stroke: var(--gv-orange, #fa4616); }
+.gv-confidence-gauge-arc--low { stroke: rgba(0, 33, 165, 0.55); }
 
 .gv-confidence-value-center {
   position: absolute;

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Card, GridLayout, PageLayout, PageSection, TabBar } from '@/components/brand';
 import {
   FILM_HUB_ORDER,
   fetchFilmRoomCatalog,
@@ -9,10 +10,13 @@ import {
 import {
   filmRoomHubFromSegment,
   parseFilmRoomSegmentFromPath,
-  FILM_ROOM_SEGMENT_PATHS,
-  type FilmRoomSegment,
 } from '@/lib/vault-route-map';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
+
+const HUB_TABS = FILM_HUB_ORDER.map((name) => ({
+  id: name,
+  label: name.replace('UF ', '').replace(' Scheme', ''),
+}));
 
 const HUB_ICONS: Record<string, string> = {
   'Offensive Scheme': '⚔️',
@@ -26,9 +30,9 @@ export function VaultFilmRoomPage(): React.ReactElement {
   const [items, setItems] = useState<FilmRoomCatalogItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [hub, setHub] = useState<string | null>(() => {
+  const [hub, setHub] = useState<string>(() => {
     const seg = parseFilmRoomSegmentFromPath();
-    return seg ? filmRoomHubFromSegment(seg) : null;
+    return seg ? filmRoomHubFromSegment(seg) : FILM_HUB_ORDER[0];
   });
 
   useEffect(() => {
@@ -65,79 +69,88 @@ export function VaultFilmRoomPage(): React.ReactElement {
   }, [items]);
 
   const filtered = useMemo(() => {
-    if (!hub) return [];
     return items.filter((i) => (i.filmHub || 'Offensive Scheme') === hub);
   }, [items, hub]);
 
   return (
-    <div className="gv-film-room" data-testid="vault-film-room">
-      <div className="gv-page-hero">
-        <h1 className="gv-page-title">Film Room</h1>
-        <p className="gv-page-subtitle">
-          Scheme breakdowns, press conferences, and verified coaching analysis.
-        </p>
-      </div>
+    <PageLayout
+      theme="chalkboard"
+      title="Film Room"
+      subtitle="Scheme breakdowns, press conferences, and verified coaching analysis."
+      testId="vault-film-room"
+    >
+      <TabBar
+        options={HUB_TABS}
+        active={hub}
+        onChange={setHub}
+        aria-label="Film room categories"
+      />
 
       {loading && <p className="gv-page-status">Loading Film Room…</p>}
       {error && !loading && (
         <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
       )}
 
-      {!hub && (
-        <div className="gv-film-hub-grid" data-testid="film-room-hub">
-          {FILM_HUB_ORDER.map((name) => (
-            <button
-              key={name}
-              type="button"
-              className="gv-film-hub-card"
-              onClick={() => setHub(name)}
-              disabled={loading}
-            >
-              <span className="gv-film-hub-card__icon">{HUB_ICONS[name] ?? '📺'}</span>
-              <h2 className="gv-film-hub-card__title">{name}</h2>
-              <p className="gv-film-hub-card__count">
-                {loading ? '…' : `${hubCounts[name] ?? 0} lessons`}
-              </p>
-            </button>
-          ))}
-        </div>
-      )}
-
-      {!loading && !error && hub && (
+      {!loading && !error && (
         <>
-          <button type="button" className="gv-film-back" onClick={() => setHub(null)}>
-            ← All categories
-          </button>
-          <h2 className="gv-vault-alerts__section-title">{hub}</h2>
-          <div className="gv-film-lessons">
-            {filtered.map((item) => (
-              <article key={item.id} className="gv-film-lesson">
-                <h3 className="gv-film-lesson__title">{item.title}</h3>
-                {item.dek ? <p className="gv-film-lesson__dek">{item.dek}</p> : null}
-                <p className="gv-film-lesson__meta">
-                  {item.source || 'Verified source'}
-                  {item.locked ? ' · 🔒 Film tier' : ''}
-                </p>
-                {item.sourceUrl && !item.locked ? (
-                  <a
-                    href={item.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="gv-film-lesson__link"
-                  >
-                    Open source →
-                  </a>
-                ) : null}
-              </article>
-            ))}
-            {filtered.length === 0 && <UiEmpty message="No lessons in this category yet." />}
-          </div>
+          <PageSection
+            title={hub}
+            subtitle={`${hubCounts[hub] ?? 0} lessons · ${HUB_ICONS[hub] ?? '📺'}`}
+          >
+            <div className="gv-film-diagram" aria-hidden="true">
+              <svg viewBox="0 0 400 200" className="gv-film-diagram__svg">
+                <line x1="40" y1="100" x2="360" y2="100" stroke="var(--gv-orange)" strokeWidth="2" strokeDasharray="6 4" />
+                <circle cx="120" cy="100" r="24" fill="none" stroke="var(--gv-orange)" strokeWidth="2" />
+                <circle cx="200" cy="60" r="20" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" />
+                <circle cx="280" cy="100" r="24" fill="none" stroke="var(--gv-orange)" strokeWidth="2" />
+                <text x="200" y="180" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="12">
+                  Chalkboard schematic preview
+                </text>
+              </svg>
+            </div>
+
+            <div className="gv-film-lessons">
+              {filtered.map((item) => (
+                <Card key={item.id} className="gv-film-lesson">
+                  <h3 className="gv-film-lesson__title">{item.title}</h3>
+                  {item.dek ? <p className="gv-film-lesson__dek">{item.dek}</p> : null}
+                  <p className="gv-film-lesson__meta">
+                    {item.source || 'Verified source'}
+                    {item.locked ? ' · 🔒 Film tier' : ''}
+                  </p>
+                  {item.sourceUrl && !item.locked ? (
+                    <a
+                      href={item.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="gv-film-lesson__link"
+                    >
+                      Open source →
+                    </a>
+                  ) : null}
+                </Card>
+              ))}
+              {filtered.length === 0 && <UiEmpty message="No lessons in this category yet." />}
+            </div>
+          </PageSection>
+
+          {items.length === 0 && (
+            <UiEmpty message="Film Room catalog is empty." hint="Run ensure:film-room on the API." />
+          )}
+
+          <PageSection title="Hub Overview">
+            <GridLayout cols={3}>
+              {FILM_HUB_ORDER.map((name) => (
+                <Card key={name} onClick={() => setHub(name)}>
+                  <span style={{ fontSize: '1.5rem' }}>{HUB_ICONS[name] ?? '📺'}</span>
+                  <h3 className="gv-type-h3" style={{ margin: '0.35rem 0' }}>{name}</h3>
+                  <p style={{ margin: 0, opacity: 0.75 }}>{hubCounts[name] ?? 0} lessons</p>
+                </Card>
+              ))}
+            </GridLayout>
+          </PageSection>
         </>
       )}
-
-      {!loading && !error && !hub && items.length === 0 && (
-        <UiEmpty message="Film Room catalog is empty." hint="Run ensure:film-room on the API." />
-      )}
-    </div>
+    </PageLayout>
   );
 }

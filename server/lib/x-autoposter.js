@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { loadOAuth1Credentials, isOAuth1Configured, oauth1Request, oauth1RequestJson, verifyOAuth1Credentials } = require('./x-oauth1');
 const store = require('./x-autoposter-store');
+const intelStore = require('./recruiting-intel-store');
 const policy = require('./x-autoposter-policy');
 const { refillAutoposterQueue } = require('./x-autoposter-fill');
 const cadence = require('./x-autoposter-cadence');
@@ -224,15 +225,50 @@ function isDuplicateTweetError(err) {
 async function processQueueItem(item) {
   saveSchedulerStatus({ lastPostAttempt: store.nowIso(), lastError: null });
   store.logQueueOp('post_attempt', item, { preview: String(item.text || '').slice(0, 120) });
+
+  let workingItem = item;
+  try {
+    const intelligencePipeline = require('./autoposter/intelligence-pipeline');
+    const prepared = await intelligencePipeline.prepareQueueItemForPost(item);
+    if (!prepared.ok) {
+      const errMsg = prepared.reason || 'rewrite_failed';
+      autopostLog('error', `Error: intelligence rewrite failed`, {
+        itemId: item.id,
+        errMsg,
+        quality: prepared.quality
+      });
+      store.updatePost(item.id, {
+        status: 'failed',
+        error: errMsg,
+        validationErrors: [{ message: errMsg }],
+        sentAt: store.nowIso()
+      });
+      saveSchedulerStatus({ lastError: errMsg });
+      return { ok: false, itemId: item.id, error: errMsg, rewrite: prepared.quality };
+    }
+    if (prepared.item && prepared.item.text) {
+      workingItem = prepared.item;
+      if (workingItem.text !== item.text) {
+        store.updatePost(item.id, {
+          text: workingItem.text,
+          validationMeta: workingItem.validationMeta,
+          templateBlocks: workingItem.templateBlocks
+        });
+      }
+    }
+  } catch (pipeErr) {
+    autopostLog('warn', `Intelligence pipeline fallback: ${pipeErr.message}`, { itemId: item.id });
+  }
+
   autopostLog('info', 'Posting…', {
-    itemId: item.id,
-    category: item.category,
-    source: item.source,
-    topic: item.topic,
-    text: String(item.text || ''),
-    preview: String(item.text || '').slice(0, 120)
+    itemId: workingItem.id,
+    category: workingItem.category,
+    source: workingItem.source,
+    topic: workingItem.topic,
+    text: String(workingItem.text || ''),
+    preview: String(workingItem.text || '').slice(0, 120)
   });
-  const check = policy.validatePostContent(item);
+  const check = policy.validatePostContent(workingItem);
   if (!check.valid) {
     const errMsg = check.errors.map((e) => e.message).join(' ');
     autopostLog('error', `Error: validation failed`, {
@@ -253,14 +289,14 @@ async function processQueueItem(item) {
 
   try {
     const result = await postTweet({
-      text: item.text,
-      mediaBase64: item.mediaBase64 || null,
-      mediaMime: item.mediaMime || null,
-      inReplyToStatusId: item.action === 'reply' ? item.inReplyToStatusId : null,
-      quoteTweetUrl: item.action === 'quote' ? item.quoteTweetUrl : null,
-      quoteTweetId: item.action === 'quote' ? item.quoteTweetId : null
+      text: workingItem.text,
+      mediaBase64: workingItem.mediaBase64 || null,
+      mediaMime: workingItem.mediaMime || null,
+      inReplyToStatusId: workingItem.action === 'reply' ? workingItem.inReplyToStatusId : null,
+      quoteTweetUrl: workingItem.action === 'quote' ? workingItem.quoteTweetUrl : null,
+      quoteTweetId: workingItem.action === 'quote' ? workingItem.quoteTweetId : null
     });
-    store.updatePost(item.id, {
+    store.updatePost(workingItem.id, {
       status: 'sent',
       sentAt: store.nowIso(),
       tweetId: result.tweetId,
@@ -268,7 +304,7 @@ async function processQueueItem(item) {
       error: null,
       validationErrors: []
     });
-    store.logQueueOp('post_success', { ...item, status: 'sent', tweetId: result.tweetId });
+    store.logQueueOp('post_success', { ...workingItem, status: 'sent', tweetId: result.tweetId });
     const postedAt = store.nowIso();
     freshness.recordLastPost(postedAt);
     saveSchedulerStatus({
@@ -276,15 +312,33 @@ async function processQueueItem(item) {
       lastPostSuccess: postedAt,
       lastError: null
     });
+    try {
+      const monitoring = require('./autoposter/autoposter-monitoring');
+      monitoring.logAutoposterEvent('post_success', {
+        itemId: workingItem.id,
+        intelId: workingItem.sourceIntelId,
+        playerName: workingItem.playerName,
+        statusId: result.tweetId,
+        tweetUrl: result.tweetUrl
+      });
+      if (workingItem.sourceIntelId) {
+        intelStore.markIntelXPosted(workingItem.sourceIntelId, {
+          tweetId: result.tweetId,
+          tweetUrl: result.tweetUrl
+        });
+      }
+    } catch {
+      /* optional */
+    }
     opsMonitor.logEvent({
       subsystem: 'autoposter',
       status: 'success',
       message: 'Post successful',
-      details: { tweetId: result.tweetId, itemId: item.id, category: item.category }
+      details: { tweetId: result.tweetId, itemId: workingItem.id, category: workingItem.category }
     });
-    if (isReplyEnabled() && item.action === 'post') {
+    if (isReplyEnabled() && workingItem.action === 'post') {
       try {
-        const replyOut = await scheduleRepliesForSentPost({ item, tweetId: result.tweetId });
+        const replyOut = await scheduleRepliesForSentPost({ item: workingItem, tweetId: result.tweetId });
         if (replyOut.scheduled > 0) {
           autopostLog('info', `Scheduled ${replyOut.scheduled} reply/replies`, { parentTweetId: result.tweetId });
         }

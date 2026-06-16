@@ -13,7 +13,15 @@ import {
   pointsProgressPct,
 } from '@/lib/vault-points';
 import { UiError } from '@/components/site/UiMessage';
+import { Card, Chip, GridLayout, PageLayout, PageSection } from '@/components/brand';
 
+const MOCK_PBP = [
+  { clock: '14:22 Q1', play: 'Baugh rush left for 8 yards', gain: 8 },
+  { clock: '13:45 Q1', play: 'Jones Jr. pass complete to Singleton — 22 yards', gain: 22 },
+  { clock: '12:58 Q1', play: 'Baugh rush up middle — TOUCHDOWN', gain: 6 },
+];
+
+const MOCK_MOMENTUM = [20, 35, 55, 48, 72, 65, 80, 75, 90, 85];
 const PRED_STORAGE = 'gv_prediction';
 const PRED_POINTS_KEY = 'gv_predPoints';
 const TRIVIA_POINTS_KEY = 'gv_triviaPoints';
@@ -146,18 +154,13 @@ export function VaultGameZonePage(): React.ReactElement {
       : nextGame?.awayTeam || nextGame?.away || 'FAU';
 
   return (
-    <div className="gv-game-zone" data-testid="vault-game-zone">
-      <div className="gv-page-hero gv-game-zone__hero">
-        <div>
-          <h1 className="gv-page-title">🏆 Game Zone</h1>
-          <p className="gv-page-subtitle">
-            Predictions, live trend signals, fan polls, and Vault point progress — sharpen your picks
-            before kickoff.
-          </p>
-        </div>
-        <span className="gv-game-zone__pill">Live Match Insight</span>
-      </div>
-
+    <PageLayout
+      theme="navy"
+      title="Game Zone"
+      subtitle="Predictions, live trend signals, fan polls, and Vault point progress — sharpen your picks before kickoff."
+      testId="vault-game-zone"
+      accent={<Chip variant="orange">Live Match Insight</Chip>}
+    >
       {loading && <p className="gv-page-status">Loading game data…</p>}
       {error && !loading && (
         <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
@@ -165,6 +168,59 @@ export function VaultGameZonePage(): React.ReactElement {
 
       {!loading && !error && (
         <>
+          <GridLayout cols={2}>
+            <PageSection title="Live Win Probability">
+              <Card variant="stat">
+                <p className="gv-stat-card__value">74%</p>
+                <p className="gv-stat-card__label">UF vs {oppName}</p>
+                <div className="gv-prob-bar" style={{ marginTop: '0.75rem' }}>
+                  <div className="gv-prob-bar__fill" style={{ width: '74%' }} />
+                </div>
+              </Card>
+            </PageSection>
+            <PageSection title="Momentum Heatmap">
+              <Card>
+                <div className="gv-dash-sparkline" aria-hidden="true">
+                  {MOCK_MOMENTUM.map((h, i) => (
+                    <div
+                      key={i}
+                      className={`gv-dash-sparkline__bar${h >= 70 ? ' is-hot' : ''}`}
+                      style={{ height: `${h}%` }}
+                    />
+                  ))}
+                </div>
+              </Card>
+            </PageSection>
+          </GridLayout>
+
+          <GridLayout cols={2}>
+            <PageSection title="Drive Chart">
+              <Card>
+                <p>Q1 — 8 plays, 72 yards — <strong className="gv-trend gv-trend--up">TD</strong></p>
+                <p>Q2 — 6 plays, 41 yards — FG</p>
+              </Card>
+            </PageSection>
+            <PageSection title="Play-by-Play">
+              <Card>
+                <ul style={{ margin: 0, paddingLeft: '1.25rem' }}>
+                  {MOCK_PBP.map((p) => (
+                    <li key={p.clock} style={{ marginBottom: '0.35rem' }}>
+                      <Chip variant="neutral">{p.clock}</Chip> {p.play}
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            </PageSection>
+          </GridLayout>
+
+          <PageSection title="Player & Team Stats">
+            <GridLayout cols={3}>
+              <Card><strong>Baugh</strong><p>98 rush yds · 1 TD</p></Card>
+              <Card><strong>Jones Jr.</strong><p>14/18 · 187 pass yds</p></Card>
+              <Card><strong>UF Defense</strong><p>2 sacks · 1 INT</p></Card>
+            </GridLayout>
+          </PageSection>
+
           <div className="gv-game-zone__grid gv-game-zone__grid--2">
             <section className="gv-game-zone__card">
               <div className="gv-game-zone__card-head">
@@ -361,6 +417,6 @@ export function VaultGameZonePage(): React.ReactElement {
           </div>
         </>
       )}
-    </div>
+    </PageLayout>
   );
 }

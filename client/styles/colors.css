@@ -1,0 +1,30 @@
+/**
+ * GatorVault design tokens — colors (Figma spec)
+ */
+:root {
+  --gv-blue-primary: #0021a5;
+  --gv-orange-primary: #fa4616;
+  --gv-navy-swamp: #001a33;
+  --gv-gray-storm: #e5e5e5;
+  --gv-white: #ffffff;
+  --gv-black-graphite: #1a1a1a;
+
+  /* Semantic aliases */
+  --gv-color-primary: var(--gv-blue-primary);
+  --gv-color-accent: var(--gv-orange-primary);
+  --gv-color-surface-dark: var(--gv-navy-swamp);
+  --gv-color-surface-light: var(--gv-white);
+  --gv-color-text-muted: var(--gv-gray-storm);
+  --gv-color-text-body: var(--gv-black-graphite);
+
+  /* Borders & shadows */
+  --gv-border-card: rgba(0, 26, 51, 0.2);
+  --gv-shadow-card: 0 8px 24px rgba(0, 0, 0, 0.18);
+
+  /* Page backgrounds */
+  --gv-bg-recruiting-hub: linear-gradient(180deg, var(--gv-blue-primary) 0%, var(--gv-navy-swamp) 100%);
+  --gv-bg-gnl: var(--gv-navy-swamp);
+  --gv-bg-futurecast: var(--gv-blue-primary);
+  --gv-bg-portal: var(--gv-navy-swamp);
+  --gv-bg-nil: var(--gv-white);
+}

@@ -1,10 +1,17 @@
+export { Avatar } from './Avatar';
 export { Button } from './Button';
+export { Card } from './Card';
+export { Chip, portalStatusToChipVariant, type ChipVariant } from './Chip';
 export { FeatureCard } from './FeatureCard';
 export { Filters } from './Filters';
 export { Container, Grid2, Grid3, Section } from './Layout';
 export { MediaCardDS } from './MediaCardDS';
+export { MovementArrow } from './MovementArrow';
+export { PositionIcon } from './PositionIcon';
+export { ProbabilityGauge } from './ProbabilityGauge';
 export { SearchBar } from './SearchBar';
-export { Tabs } from './Tabs';
+export { Tab, Tabs, type TabOption } from './Tab';
+export { Table, type TableColumn } from './Table';
 export { ThemeToggle } from './ThemeToggle';
 export { Ticker } from './Ticker';
 export { BodyL, BodyM, HeadingL, HeadingM, HeadingXL, Label } from './Typography';

@@ -4,6 +4,11 @@
  */
 const { TRUSTED_REPORTERS } = require('./content-validator');
 const quality = require('./x-autoposter-validation');
+const { GM2_REWRITE_PROMPT } = require('./autoposter/gm2-rewrite-prompt');
+const insiderToneGuide = require('./autoposter/insider-tone');
+const postingEngineRules = require('./autoposter/posting-engine');
+const rewriteQuality = require('./autoposter/quality-checks');
+const autoposterPolicy = require('./autoposter/autoposter-policy');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 
@@ -281,9 +286,10 @@ function computeMixStats(sentItems) {
 }
 
 function getContentPolicy() {
+  const engineRules = postingEngineRules.getPolicyRules();
   return {
     mission: 'Credible sourced Gator news + real-time engagement + natural GatorVault promotion',
-    tone: 'fan-first, authoritative, trustworthy',
+    tone: 'insider-level recruiting analyst — confident, subtle, analytical (see insiderToneGuide)',
     authPosting: 'oauth1_user_context',
     beatStream: 'bearer_read_only',
     contentMix: CONTENT_MIX,
@@ -293,33 +299,55 @@ function getContentPolicy() {
     newsTopics: NEWS_TOPICS,
     trustedSources: TRUSTED_REPORTERS,
     siteUrl: SITE_URL,
+    gm2RewritePrompt: GM2_REWRITE_PROMPT,
+    autoposterEngine: {
+      pipeline: 'intel → identity match → context enrichment → GM2 rewrite → quality checks → post',
+      modules: [
+        'autoposter/identity-matcher.js',
+        'autoposter/context-enrichment.js',
+        'autoposter/rewrite-engine.js',
+        'autoposter/quality-checks.js',
+        'autoposter/autoposter-policy.js',
+        'autoposter/posting-engine.js',
+        'autoposter/autoposter-monitoring.js',
+        'autoposter/gm2-rewrite-prompt.js',
+        'autoposter/insider-tone.js'
+      ],
+      ...engineRules,
+      isEligibleIntel: autoposterPolicy.isEligibleIntel
+    },
+    insiderToneGuide: insiderToneGuide.getToneGuide(),
     freshness: {
       normalMaxAgeMs: quality.MAX_NEWS_AGE_MS,
       normalMaxAgeHours: quality.MAX_NEWS_AGE_MS / (60 * 60 * 1000),
       breakingMaxAgeMs: quality.MAX_BREAKING_AGE_MS,
-      breakingMaxAgeMinutes: quality.MAX_BREAKING_AGE_MS / (60 * 1000)
+      breakingMaxAgeMinutes: quality.MAX_BREAKING_AGE_MS / (60 * 1000),
+      intelFreshnessMs: postingEngineRules.INTEL_FRESHNESS_MS,
+      intelFreshnessHours: postingEngineRules.INTEL_FRESHNESS_MS / (60 * 60 * 1000)
     },
     qualityScoring: {
       weights: quality.SCORE_WEIGHTS,
       postingThreshold: quality.POSTING_THRESHOLD,
       sourceConfidenceRequired: quality.SOURCE_CONFIDENCE_REQUIRED,
       hardSkipTypes: [...quality.HARD_SKIP_TYPES],
-      label: 'Identity 40% · Context 30% · Insider 30% · Source 100% · 85% min to publish'
+      minRewriteWords: rewriteQuality.MIN_REWRITE_WORDS,
+      overlapMax: rewriteQuality.OVERLAP_MAX,
+      label: 'Identity 40% · Context 30% · Insider 30% · Source 100% · 85% min to publish · 40 word rewrite min'
     },
     rules: [
       'No AI-invented news or unsourced factual claims',
-      'Elite insider template v2: identity · lead insight+context · projection',
-      'Lead insight: what UF staff actually feels (priority, momentum, staff push)',
-      'Context: visit type, relationships, competition, timeline',
-      'Projection: UF probability, movement delta, fit score, what to watch next',
-      'Identity block: class year, position, name, school, ranking (On3 preferred)',
+      'GM2 exact prompt enforced on every rewrite (autoposter/gm2-rewrite-prompt.js)',
+      '3-block template: LEAD INSIGHT · CONTEXT · PROJECTION',
       'Must rewrite beat text — max 20% source overlap (regenerate if exceeded)',
-      'Must reject generic tracking-only projection lines',
+      'Minimum 40 words in rewrite body; reject generic fluff and hype tone',
+      'Must inject UF probability, movement delta, visit type, competition, timeline when available',
+      'Identity block: class year, position, name, school, ranking (On3 preferred)',
       'No duplicate sentences; skip if any required block is missing',
-      'Freshness: 3h normal news · 30m breaking/urgent · 60m intel default',
-      'No emojis, hashtags, or headline-only posts',
+      'Freshness: 48h intel default · 3h normal news · 30m breaking/urgent',
+      'No emojis, hashtags, breaking language, or fanboy tone',
       'News posts require credible sources',
-      'OAuth 1.0a for all posting; Bearer read-only for beat stream'
+      'OAuth 1.0a for all posting; Bearer read-only for beat stream',
+      'Log every rewrite attempt, skip, and post in autoposter-ops-log.json'
     ],
     insiderTemplate: require('./x-autoposter-insider-prompt').getInsiderTemplatePolicy()
   };

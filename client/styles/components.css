@@ -1,0 +1,242 @@
+/**
+ * GatorVault design system — component primitives (Card, Button, Tab, Chip)
+ */
+
+/* ── Card ── */
+.gv-card {
+  border-radius: var(--gv-radius-card);
+  border: 1px solid var(--gv-border-card);
+  box-shadow: var(--gv-shadow-card);
+  padding: var(--gv-space-4);
+  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+}
+
+.gv-card--dark {
+  background: var(--gv-navy-swamp);
+  color: var(--gv-white);
+}
+
+.gv-card--light {
+  background: var(--gv-white);
+  color: var(--gv-black-graphite);
+}
+
+.gv-card--interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+}
+
+/* ── Button ── */
+.gv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gv-space-2);
+  padding: var(--gv-space-3) var(--gv-space-5);
+  border-radius: var(--gv-radius-pill);
+  font-family: var(--gv-font-family);
+  font-size: var(--gv-body-size-sm);
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: filter 160ms ease-out, transform 160ms ease-out, box-shadow 160ms ease-out;
+}
+
+.gv-btn--primary {
+  background: var(--gv-orange-primary);
+  color: var(--gv-white);
+}
+
+.gv-btn--primary:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.gv-btn--secondary {
+  background: var(--gv-blue-primary);
+  color: var(--gv-white);
+}
+
+.gv-btn--secondary:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.gv-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Tabs ── */
+.gv-tabs {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.gv-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.gv-tab {
+  flex-shrink: 0;
+  position: relative;
+  padding: var(--gv-space-4) var(--gv-space-5);
+  border: none;
+  background: transparent;
+  color: var(--gv-gray-storm);
+  font-family: var(--gv-font-family);
+  font-size: var(--gv-body-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 160ms ease-out;
+}
+
+.gv-tab:hover {
+  color: var(--gv-white);
+}
+
+.gv-tab.is-active {
+  color: var(--gv-white);
+  font-weight: 700;
+}
+
+.gv-tab.is-active::after {
+  content: '';
+  position: absolute;
+  left: var(--gv-space-4);
+  right: var(--gv-space-4);
+  bottom: 0;
+  height: 3px;
+  background: var(--gv-orange-primary);
+  border-radius: 3px 3px 0 0;
+}
+
+.gv-tabs--light {
+  border-bottom-color: var(--gv-border-card);
+}
+
+.gv-tabs--light .gv-tab {
+  color: #9ca3af;
+}
+
+.gv-tabs--light .gv-tab:hover,
+.gv-tabs--light .gv-tab.is-active {
+  color: var(--gv-black-graphite);
+}
+
+/* ── Chips ── */
+.gv-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gv-space-1) var(--gv-space-3);
+  border-radius: var(--gv-radius-pill);
+  font-family: var(--gv-font-family);
+  font-size: var(--gv-label-size);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: var(--gv-label-line);
+  white-space: nowrap;
+}
+
+.gv-chip--in {
+  background: var(--gv-orange-primary);
+  color: var(--gv-white);
+  border: none;
+}
+
+.gv-chip--out {
+  background: var(--gv-blue-primary);
+  color: var(--gv-white);
+  border: none;
+}
+
+.gv-chip--target {
+  background: var(--gv-white);
+  color: var(--gv-blue-primary);
+  border: 1px solid var(--gv-blue-primary);
+}
+
+.gv-chip--timestamp {
+  background: var(--gv-orange-primary);
+  color: var(--gv-white);
+  border: none;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── Position icon ── */
+.gv-pos-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+.gv-pos-icon svg {
+  display: block;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.gv-pos-icon--sm {
+  width: 24px;
+  height: 24px;
+}
+
+.gv-pos-icon--md {
+  width: 32px;
+  height: 32px;
+}
+
+.gv-pos-icon--lg {
+  width: 40px;
+  height: 40px;
+}
+
+.gv-pos-icon--sm svg {
+  width: 24px;
+  height: 24px;
+}
+
+.gv-pos-icon--md svg {
+  width: 32px;
+  height: 32px;
+}
+
+.gv-pos-icon--lg svg {
+  width: 40px;
+  height: 40px;
+}
+
+.gv-pos-icon__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gv-card--interactive:hover,
+  .gv-btn--primary:hover,
+  .gv-btn--secondary:hover {
+    transform: none;
+  }
+}

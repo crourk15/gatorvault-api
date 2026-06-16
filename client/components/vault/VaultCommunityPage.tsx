@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { Card, Chip, PageLayout, PageSection } from '@/components/brand';
 import {
   createCommunityThread,
   fetchCommunityCategories,
@@ -17,6 +18,13 @@ import {
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 type SortId = 'trending' | 'recent' | 'active' | 'replies';
+
+const TRENDING_TOPICS = ['QB battle 2026', 'Portal targets', 'Georgia week', 'NIL rankings', 'Depth chart'];
+
+const STAFF_POSTS = [
+  { title: 'Spring practice intel', author: 'GatorVault Staff', badge: 'staff' as const },
+  { title: 'Recruiting board update', author: 'Insider Desk', badge: 'staff' as const },
+];
 
 function timeAgo(iso?: string): string {
   if (!iso) return '';
@@ -103,16 +111,36 @@ export function VaultCommunityPage(): React.ReactElement {
   };
 
   return (
-    <div className="gv-community" data-testid="vault-community">
-      <div className="gv-page-hero">
-        <h1 className="gv-page-title">Community</h1>
-        <p className="gv-page-subtitle">
-          Member-led talk, game week analysis, recruiting debate, and insider reaction.
-        </p>
-      </div>
-
+    <PageLayout
+      theme="white"
+      title="Community"
+      subtitle="Member-led talk, game week analysis, recruiting debate, and insider reaction."
+      testId="vault-community"
+    >
       <div className="gv-community__layout">
         <div className="gv-community__main">
+          <PageSection title="Trending Topics">
+            <div className="gv-ds-filters">
+              {TRENDING_TOPICS.map((t) => (
+                <Chip key={t} variant="trending">
+                  {t}
+                </Chip>
+              ))}
+            </div>
+          </PageSection>
+
+          <PageSection title="Staff Posts">
+            <div className="gv-community__staff-grid">
+              {STAFF_POSTS.map((p) => (
+                <Card key={p.title}>
+                  <Chip variant="staff">Staff</Chip>
+                  <h3 className="gv-type-h3" style={{ margin: '0.5rem 0' }}>{p.title}</h3>
+                  <p style={{ margin: 0, opacity: 0.7 }}>{p.author}</p>
+                </Card>
+              ))}
+            </div>
+          </PageSection>
+
           <div className="gv-community__toolbar">
             <div className="gv-alert-choices">
               {(['trending', 'recent', 'active', 'replies'] as SortId[]).map((s) => (
@@ -201,29 +229,38 @@ export function VaultCommunityPage(): React.ReactElement {
           )}
 
           {!loading && !error && !selectedId && (
-            <ul className="gv-community__threads">
-              {threads.map((t) => (
-                <li key={t.id}>
-                  <button type="button" className="gv-community__thread-row" onClick={() => void openThread(t.id)}>
-                    <span className="gv-community__thread-title">
-                      {t.pinned ? '📌 ' : ''}
-                      {t.title}
-                    </span>
-                    <span className="gv-community__thread-meta">
-                      {t.categoryLabel || t.categorySlug || 'General'} · {t.replyCount ?? 0} replies ·{' '}
-                      {timeAgo(t.lastActivityAt || t.createdAt)}
-                    </span>
-                  </button>
-                </li>
-              ))}
-              {threads.length === 0 && <UiEmpty message="No threads yet — start the conversation." />}
-            </ul>
+            <PageSection title="Threads">
+              <ul className="gv-community__threads">
+                {threads.map((t) => (
+                  <li key={t.id}>
+                    <button type="button" className="gv-community__thread-row" onClick={() => void openThread(t.id)}>
+                      <span className="gv-community__thread-title">
+                        {t.pinned ? '📌 ' : ''}
+                        {t.title}
+                      </span>
+                      <span className="gv-community__thread-meta">
+                        {t.categoryLabel || t.categorySlug || 'General'} · {t.replyCount ?? 0} replies ·{' '}
+                        {timeAgo(t.lastActivityAt || t.createdAt)}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+                {threads.length === 0 && <UiEmpty message="No threads yet — start the conversation." />}
+              </ul>
+            </PageSection>
           )}
         </div>
 
         <aside className="gv-community__aside">
           <section className="gv-community__panel">
-            <h2 className="gv-vault-alerts__section-title">Live Rooms</h2>
+            <h2 className="gv-vault-alerts__section-title">Recruiting Q&amp;A</h2>
+            <Card>
+              <p style={{ margin: 0 }}>Ask recruiting questions — staff answers weekly.</p>
+            </Card>
+          </section>
+
+          <section className="gv-community__panel">
+            <h2 className="gv-vault-alerts__section-title">Game Week Threads</h2>
             {rooms.map((r) => (
               <div key={r.id} className="gv-community__room">
                 <p className="gv-community__room-title">{r.title}</p>
@@ -259,6 +296,6 @@ export function VaultCommunityPage(): React.ReactElement {
           </section>
         </aside>
       </div>
-    </div>
+    </PageLayout>
   );
 }

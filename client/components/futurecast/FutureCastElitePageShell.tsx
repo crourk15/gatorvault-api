@@ -17,7 +17,7 @@ export function FutureCastElitePageShell({ segment, testId, children }: Props): 
   const insider = isFutureCastInsider();
 
   return (
-    <div className="gv-page fc-futurecast-page fc-futurecast-page--elite" data-testid={testId}>
+    <div className="gv-page fc-futurecast-page fc-futurecast-page--elite gv-page-layout gv-page-layout--blue" data-testid={testId}>
       <div className="gv-container">
         <FutureCastSubNav active={segment} />
         {children}

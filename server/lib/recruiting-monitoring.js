@@ -331,6 +331,20 @@ async function runHealthCheck() {
     });
   }
 
+  try {
+    const apMon = require('./autoposter/autoposter-monitoring');
+    await apMon.alertIfIdle(healthReport.autoposter || report.autoposter || {});
+    await apMon.checkBeatFreshness({ cache: report.beatCache || {} });
+    await apMon.checkOn3Ingest({
+      lastParsedCount: status.lastParsedCount ?? status.lastFired ?? 0,
+      lastRun: status.lastRun,
+      lastRunAgeHours: status.lastRun ? (now - new Date(status.lastRun).getTime()) / 3600000 : Infinity
+    });
+    await apMon.checkRewriteFailures(apMon.getRewriteFailureStats());
+  } catch (e) {
+    console.warn('[recruiting-monitoring] autoposter monitoring hooks failed:', e.message);
+  }
+
   return healthReport;
 }
 

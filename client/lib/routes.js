@@ -2,15 +2,19 @@
  * Canonical route registry — single source for redirects and deploy-guardian.
  */
 const vaultRoutes = require('./routes-vault.cjs');
+const siteRoutes = require('./routes-site.cjs');
 
 /** @typedef {{ from: string, to: string, status?: number, force?: boolean }} RedirectRule */
 
 /** Legacy standalone + monolith HTML → vault (301). */
 /** @type {RedirectRule[]} */
-const LEGACY_RETIREMENT_REDIRECTS = vaultRoutes.LEGACY_ROUTE_REDIRECTS.map((r) => ({
-  ...r,
-  status: 301,
-}));
+const LEGACY_RETIREMENT_REDIRECTS = [
+  ...vaultRoutes.LEGACY_ROUTE_REDIRECTS.map((r) => ({
+    ...r,
+    status: 301,
+  })),
+  ...siteRoutes.VAULT_TO_SITE_REDIRECTS,
+];
 
 /** @type {RedirectRule[]} */
 const REACT_REWRITES = [
@@ -49,11 +53,10 @@ const REACT_REWRITES = [
   { from: '/recruiting-hub', to: '/recruiting-hub/index.html', status: 200 },
   { from: '/recruiting-hub/', to: '/recruiting-hub/index.html', status: 200 },
   { from: '/recruiting-hub/*', to: '/recruiting-hub/index.html', status: 200 },
-  { from: '/team', to: '/team/index.html', status: 200 },
-  { from: '/team/', to: '/team/index.html', status: 200 },
-  { from: '/team/*', to: '/team/index.html', status: 200 },
-  { from: '/recruiting', to: '/vault/recruiting', status: 301 },
-  { from: '/recruits', to: '/vault/recruiting', status: 301 },
+  // Flat site sitemap (Phase 9)
+  ...siteRoutes.SITE_REACT_REWRITES,
+  // Vault — React-native route map (Phase 8 final)
+  ...vaultRoutes.VAULT_REACT_REWRITES,
   { from: '/scouting', to: '/vault/recruiting/scouting', status: 301 },
   { from: '/scouting/*', to: '/vault/recruiting/scouting', status: 301 },
   { from: '/players', to: '/vault/players', status: 301 },

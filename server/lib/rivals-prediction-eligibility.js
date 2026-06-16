@@ -90,7 +90,7 @@ async function evaluatePredictionGate(row, snapshot) {
 }
 
 async function checkIntelForAutopost(intel) {
-  if (!intel || intel.eventType !== 'prediction') return { allowed: true };
+  if (!intel || !['prediction', 'prediction_change'].includes(intel.eventType)) return { allowed: true };
   const isRivalsPm =
     intel.rivalsPickKey || /rivals|futurecast|prediction machine/i.test(String(intel.source || intel.status || ''));
   if (!isRivalsPm) return { allowed: true };

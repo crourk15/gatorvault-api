@@ -2,11 +2,12 @@
  * FutureCast shared UI styles (Big Board, PlayerCard).
  */
 .fc-player-card {
-  background: linear-gradient(145deg, #0a1628, #121c2e);
-  border: 1px solid rgba(0, 48, 135, 0.45);
+  background: var(--gv-white, #ffffff);
+  border: 1px solid rgba(0, 33, 165, 0.18);
   border-radius: 12px;
   padding: 1rem;
   cursor: pointer;
+  color: var(--gv-navy, #001a33);
   transition: border-color 0.15s ease, transform 0.15s ease;
 }
 
@@ -133,23 +134,26 @@
 .fc-profile-page {
   max-width: 900px;
   margin: 0 auto;
-  padding: 1rem 1rem 3rem;
-  color: #e2e8f0;
+  padding: 0 1rem 3rem;
+  color: var(--gv-navy, #001a33);
+  background: var(--gv-white, #ffffff);
 }
 
 .fc-profile-back a {
-  color: #fa4616;
+  color: var(--gv-orange, #fa4616);
   font-weight: 600;
   font-size: 0.875rem;
   text-decoration: none;
 }
 
-.fc-profile-back a:hover { color: #fff; }
+.fc-profile-back a:hover { color: var(--gv-blue, #0021a5); }
 
 .fc-profile-header {
-  margin: 1rem 0 1.25rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(0, 48, 135, 0.35);
+  margin: 0 -1rem 1.25rem;
+  padding: 1.5rem 1rem 1.25rem;
+  background: var(--gv-blue, #0021a5);
+  color: var(--gv-white, #ffffff);
+  border-bottom: none;
 }
 
 .fc-profile-header__top {
@@ -159,19 +163,34 @@
   gap: 1rem;
 }
 
+.fc-profile-header__identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
 .fc-profile-header__position {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.fc-profile-header__pos-icon {
+  color: var(--gv-orange-primary, #fa4616);
+}
   font-size: 0.8125rem;
-  color: #64748b;
+  color: rgba(229, 229, 229, 0.85);
   margin: 0 0 0.25rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .fc-profile-header__name {
-  font-family: 'Oswald', sans-serif;
+  font-family: Inter, sans-serif;
   font-size: clamp(1.75rem, 5vw, 2.25rem);
-  font-weight: 700;
-  color: #fff;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--gv-white, #ffffff);
   margin: 0;
   line-height: 1.1;
 }
@@ -180,12 +199,12 @@
 .fc-profile-header__measurables {
   margin: 0.35rem 0 0;
   font-size: 0.875rem;
-  color: #94a3b8;
+  color: rgba(229, 229, 229, 0.85);
 }
 
 .fc-profile-share {
-  background: linear-gradient(135deg, #003087, #00205b);
-  border: 1px solid #fa4616;
+  background: var(--gv-orange, #fa4616);
+  border: 1px solid var(--gv-orange, #fa4616);
   color: #fff;
   border-radius: 8px;
   padding: 0.5rem 1rem;
@@ -271,8 +290,8 @@
   overflow-x: auto;
   padding: 0.75rem 0;
   margin-bottom: 0.5rem;
-  background: #060f1f;
-  border-bottom: 1px solid rgba(0, 48, 135, 0.35);
+  background: var(--gv-white, #ffffff);
+  border-bottom: 1px solid rgba(0, 33, 165, 0.18);
   -webkit-overflow-scrolling: touch;
 }
 
@@ -280,18 +299,18 @@
   flex-shrink: 0;
   background: transparent;
   border: 1px solid transparent;
-  color: #94a3b8;
+  color: rgba(0, 26, 51, 0.65);
   border-radius: 9999px;
   padding: 0.4rem 0.85rem;
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .fc-profile-tab.is-active {
-  background: rgba(250, 70, 22, 0.15);
-  border-color: #fa4616;
-  color: #fa4616;
+  background: rgba(250, 70, 22, 0.12);
+  border-color: var(--gv-orange, #fa4616);
+  color: var(--gv-orange, #fa4616);
 }
 
 .fc-profile-tab.is-disabled {
@@ -304,15 +323,17 @@
 .fc-profile-section {
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: linear-gradient(145deg, #0a1628, #0d1524);
-  border: 1px solid rgba(0, 48, 135, 0.3);
+  background: var(--gv-white, #ffffff);
+  border: 1px solid rgba(0, 33, 165, 0.18);
   border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08);
 }
 
 .fc-profile-section h2 {
-  font-family: 'Oswald', sans-serif;
+  font-family: Inter, sans-serif;
   font-size: 1rem;
-  color: #fa4616;
+  font-weight: 600;
+  color: var(--gv-blue, #0021a5);
   margin: 0 0 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -333,7 +354,7 @@
   margin-bottom: 0.15rem;
 }
 
-.fc-profile-dl dd { margin: 0; font-size: 0.9375rem; color: #e2e8f0; }
+.fc-profile-dl dd { margin: 0; font-size: 0.9375rem; color: var(--gv-navy, #001a33); }
 
 .fc-profile-muted { color: #64748b; font-size: 0.875rem; margin: 0.5rem 0 0; }
 
@@ -1418,15 +1439,16 @@
 
 .fc-confidence-bar {
   width: 100%;
-  height: 0.5rem;
-  border-radius: 9999px;
-  background: #0d1117;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(0, 33, 165, 0.15);
   overflow: hidden;
 }
 
 .fc-confidence-bar__fill {
   height: 100%;
-  background: #0021a5;
+  background: var(--gv-orange, #fa4616);
+  border-radius: inherit;
   transition: width 0.15s ease;
 }
 

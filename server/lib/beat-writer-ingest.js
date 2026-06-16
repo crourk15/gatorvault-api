@@ -201,6 +201,70 @@ function parseVisitDate(text) {
   return null;
 }
 
+const MONTH_MAP = {
+  jan: 1,
+  january: 1,
+  feb: 2,
+  february: 2,
+  mar: 3,
+  march: 3,
+  apr: 4,
+  april: 4,
+  may: 5,
+  jun: 6,
+  june: 6,
+  jul: 7,
+  july: 7,
+  aug: 8,
+  august: 8,
+  sep: 9,
+  sept: 9,
+  september: 9,
+  oct: 10,
+  october: 10,
+  nov: 11,
+  november: 11,
+  dec: 12,
+  december: 12
+};
+
+function pad2(n) {
+  return String(n).padStart(2, '0');
+}
+
+/** Parse visit windows like "June 11–13" or "from June 11-13". */
+function parseVisitWindow(text) {
+  const t = String(text || '');
+  const classYear = parseClassYear(t);
+  const year = classYear && classYear >= 2026 ? classYear - 1 : new Date().getFullYear();
+
+  const range = t.match(
+    /\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+(\d{1,2})\s*[–—-]\s*(\d{1,2})\b/i
+  );
+  if (range) {
+    const month = MONTH_MAP[range[1].toLowerCase().replace(/\./g, '')];
+    const visitStart = `${year}-${pad2(month)}-${pad2(range[2])}`;
+    const visitEnd = `${year}-${pad2(month)}-${pad2(range[3])}`;
+    return { visitStart, visitEnd, visitDates: `${visitStart} to ${visitEnd}` };
+  }
+
+  const fromRange = t.match(
+    /from\s+(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+(\d{1,2})\s*[–—-]\s*(\d{1,2})/i
+  );
+  if (fromRange) {
+    const month = MONTH_MAP[fromRange[1].toLowerCase().replace(/\./g, '')];
+    const visitStart = `${year}-${pad2(month)}-${pad2(fromRange[2])}`;
+    const visitEnd = `${year}-${pad2(month)}-${pad2(fromRange[3])}`;
+    return { visitStart, visitEnd, visitDates: `${visitStart} to ${visitEnd}` };
+  }
+
+  const single = parseVisitDate(t);
+  if (single) {
+    return { visitStart: single, visitEnd: null, visitDates: single };
+  }
+  return { visitStart: null, visitEnd: null, visitDates: null };
+}
+
 function parseSchool(text) {
   const m = String(text || '').match(SCHOOL_RE);
   return m ? m[1].trim() : null;
@@ -386,6 +450,7 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
   const pos = parsePosition(text) || vagueClues?.pos || '';
   const school = parseSchool(text) || parseCollegeSchool(text) || vagueClues?.school || '';
   const visitDate = parseVisitDate(text);
+  const visitWindow = parseVisitWindow(text);
   const eventType = resolveRecruitingEventType(text);
 
   return {
@@ -399,8 +464,11 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     stars: parseStars(text) || vagueClues?.stars || null,
     eventType,
     status: buildRecruitingStatus(eventType, text),
-    visitStart: visitDate,
-    visitEnd: null,
+    visitStart: visitWindow.visitStart || visitDate,
+    visitEnd: visitWindow.visitEnd,
+    visitDates: visitWindow.visitDates,
+    ufRelevant: true,
+    text: text.replace(/\s+/g, ' ').slice(0, 280),
     detail: text.replace(/\s+/g, ' ').slice(0, 280),
     timestamp,
     articleUrl: post.url || null,
@@ -533,6 +601,8 @@ async function queueAutoposter(row, intelItem, built) {
       intelFingerprint: fp,
       intelType: row.eventType,
       playerName: row.playerName || null,
+      playerSlug: row.playerSlug || null,
+      classYear: row.classYear || null,
       identityConfirmed: isNonPlayerBeat ? true : row.identityConfirmed !== false,
       postUrgency: isProgramNews ? 'breaking' : null,
       urgencyLabel: isProgramNews ? 'breaking' : isTeamEvent ? 'major_beat' : null,
@@ -543,7 +613,7 @@ async function queueAutoposter(row, intelItem, built) {
       scheduledAt: new Date(Date.now() + (isProgramNews ? 60 : 2) * 60 * 1000).toISOString(),
       status: 'pending',
       templateBlocks: built.templateBlocks,
-      validationMeta: { ...(built.validationMeta || {}), beatText: row.detail || null },
+      validationMeta: { ...(built.validationMeta || {}), beatText: row.text || row.detail || null },
       playerContext: built.context || built.playerContext,
       qualityScore: built.qualityScore ?? null,
       qualityBreakdown: built.qualityBreakdown ?? null,
@@ -1006,7 +1076,7 @@ async function processBeatVisitIntelRow(row, snapshot) {
     playerSlug: player.slug,
     playerName: player.name,
     classYear: player.classYear,
-    pos: player.pos,
+    pos: row.pos || player.pos,
     stars: row.stars || player.stars,
     school: row.school || player.school,
     highSchool: row.highSchool,
@@ -1014,10 +1084,14 @@ async function processBeatVisitIntelRow(row, snapshot) {
     status: row.status,
     visitStart: row.visitStart,
     visitEnd: row.visitEnd,
+    visitDates: row.visitDates || null,
     timestamp: row.timestamp,
     source: row.source,
     sourceHandle: row.sourceHandle,
+    sourceType: row.sourceType || 'beat',
     detail: row.detail,
+    text: row.text || row.detail,
+    ufRelevant: row.ufRelevant !== false,
     fingerprint: row.fingerprint,
     articleUrl: row.articleUrl,
     identityConfirmed: true,

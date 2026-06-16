@@ -1,14 +1,23 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
+import { Card, Chip, GridLayout, PageLayout, PageSection } from '@/components/brand';
 import { fetchPublishedFeed, type PublishedArticle, type PublishedStoryline } from '@/lib/content-api';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
+const CATEGORIES = ['Recruiting', 'Film Room', 'Game Week', 'Roster', 'NIL', 'Community'];
+
+const AUTHORS = [
+  { name: 'GatorVault Staff', role: 'Editorial', articles: 48 },
+  { name: 'GatorVault Film Desk', role: 'Film Analysis', articles: 32 },
+  { name: 'GatorVault Analytics', role: 'Data & Trends', articles: 21 },
+];
+
 function ArticleCard({ article }: { article: PublishedArticle }): React.ReactElement {
   return (
-    <a href={`/article/${encodeURIComponent(article.id)}`} className="gv-article-card">
+    <Card href={`/article/${encodeURIComponent(article.id)}`} className="gv-article-card">
       <div className="gv-article-card__meta">
-        {article.badge ? <span className="gv-article-card__badge">{article.badge}</span> : null}
+        {article.badge ? <Chip variant="blue">{article.badge}</Chip> : null}
         {article.readMin ? <span className="gv-article-card__read">{article.readMin} min read</span> : null}
       </div>
       <h2 className="gv-article-card__title">{article.title}</h2>
@@ -17,13 +26,14 @@ function ArticleCard({ article }: { article: PublishedArticle }): React.ReactEle
         {article.author || 'GatorVault Staff'}
         {article.date ? ` · ${article.date}` : ''}
       </p>
-    </a>
+    </Card>
   );
 }
 
 export function VaultArticlesPage(): React.ReactElement {
   const [articles, setArticles] = useState<PublishedArticle[]>([]);
   const [storylines, setStorylines] = useState<PublishedStoryline[]>([]);
+  const [category, setCategory] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,24 +55,39 @@ export function VaultArticlesPage(): React.ReactElement {
     void load();
   }, [load]);
 
-  return (
-    <div className="gv-articles" data-testid="vault-articles">
-      <div className="gv-page-hero">
-        <h1 className="gv-page-title">Insider Articles</h1>
-        <p className="gv-page-subtitle">
-          Film breakdowns, coaching intel, and roster analysis written for members who want more than
-          surface-level takes.
-        </p>
-      </div>
+  const featured = articles[0];
+  const filtered = category
+    ? articles.filter((a) => (a.badge || '').toLowerCase().includes(category.toLowerCase()))
+    : articles.slice(featured ? 1 : 0);
 
+  return (
+    <PageLayout
+      theme="white"
+      title="Insider Articles"
+      subtitle="Film breakdowns, coaching intel, and roster analysis for members who want more than surface-level takes."
+      testId="vault-articles"
+    >
       {loading && <p className="gv-page-status">Loading articles…</p>}
       {error && !loading && (
         <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
       )}
 
+      {!loading && !error && featured && (
+        <PageSection title="Featured Article">
+          <Card variant="accent" href={`/article/${encodeURIComponent(featured.id)}`} className="gv-articles__featured">
+            <Chip variant="orange">Featured</Chip>
+            <h2 className="gv-type-h2" style={{ margin: '0.75rem 0' }}>{featured.title}</h2>
+            {featured.excerpt ? <p>{featured.excerpt}</p> : null}
+            <p style={{ opacity: 0.7, margin: 0 }}>
+              {featured.author || 'GatorVault Staff'}
+              {featured.date ? ` · ${featured.date}` : ''}
+            </p>
+          </Card>
+        </PageSection>
+      )}
+
       {!loading && !error && storylines.length > 0 && (
-        <section className="gv-articles__storylines">
-          <h2 className="gv-vault-alerts__section-title">Season Storylines</h2>
+        <PageSection title="Season Storylines">
           <ul className="gv-storyline-list">
             {storylines.map((s) => (
               <li key={s.id} className="gv-storyline-item">
@@ -73,19 +98,57 @@ export function VaultArticlesPage(): React.ReactElement {
               </li>
             ))}
           </ul>
-        </section>
+        </PageSection>
       )}
 
       {!loading && !error && (
-        <section className="gv-articles__feed">
-          {articles.map((a) => (
-            <ArticleCard key={a.id} article={a} />
-          ))}
-          {articles.length === 0 && (
-            <UiEmpty message="No published articles yet." hint="Check /api/content/published on the API." />
-          )}
-        </section>
+        <>
+          <PageSection title="Categories">
+            <div className="gv-ds-filters">
+              <button
+                type="button"
+                className={`gv-ds-filter${!category ? ' is-active' : ''}`}
+                onClick={() => setCategory('')}
+              >
+                All
+              </button>
+              {CATEGORIES.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  className={`gv-ds-filter${category === c ? ' is-active' : ''}`}
+                  onClick={() => setCategory(c)}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+          </PageSection>
+
+          <PageSection title="Latest Articles">
+            <section className="gv-articles__feed">
+              {filtered.map((a) => (
+                <ArticleCard key={a.id} article={a} />
+              ))}
+              {filtered.length === 0 && articles.length === 0 && (
+                <UiEmpty message="No published articles yet." hint="Check /api/content/published on the API." />
+              )}
+            </section>
+          </PageSection>
+
+          <PageSection title="Authors">
+            <GridLayout cols={3}>
+              {AUTHORS.map((author) => (
+                <Card key={author.name}>
+                  <h3 className="gv-type-h3" style={{ margin: 0 }}>{author.name}</h3>
+                  <Chip variant="blue">{author.role}</Chip>
+                  <p style={{ margin: '0.5rem 0 0', opacity: 0.75 }}>{author.articles} articles</p>
+                </Card>
+              ))}
+            </GridLayout>
+          </PageSection>
+        </>
       )}
-    </div>
+    </PageLayout>
   );
 }

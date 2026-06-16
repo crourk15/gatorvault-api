@@ -386,109 +386,9 @@ function pickNonOverlapping(variants, sourceText, { minLen = 24 } = {}) {
   return null;
 }
 
-function rewriteBeatUpdate({
-  beatText,
-  ctx = null,
-  intel = null,
-  research = null,
-  newsEvent = null,
-  eventType = null,
-  sourceLabel = null,
-  postKind = 'recruiting',
-  sport = 'football',
-  rewriteMetrics = null
-} = {}) {
-  if (sport !== 'football') {
-    return { ok: false, reason: 'non_football_sport', sport };
-  }
-  if (!isRewriterEnabled() || !beatText) {
-    return { ok: false, reason: 'disabled_or_empty' };
-  }
-
-  const signal = analyzeRecruitingSignal({
-    beatText,
-    ctx,
-    intel,
-    research,
-    eventType: eventType || research?.eventType || intel?.eventType,
-    newsEvent
-  });
-  signal.situation = postSpec.detectSituation(beatText, signal.eventType);
-  const sourceText = template.stripEmojisHashtags(beatText);
-
-  const metrics = rewriteMetrics || research?.rewriteMetrics || intel?.rewriteMetrics || {};
-  const insiderBlocks = insiderPrompt.composeInsiderBlocks({
-    signal,
-    research,
-    metrics,
-    intel,
-    sourceLabel: sourceLabel || intel?.source || research?.source,
-    situation: signal.situation
-  });
-
-  let contextLine = insiderBlocks.contextLine;
-  let insiderLine = insiderBlocks.insiderLine;
-
-  for (let attempt = 0; attempt < MAX_REGEN_ATTEMPTS; attempt += 1) {
-    const check = insiderPrompt.validateInsiderBlocks({ contextLine, insiderLine }, sourceText);
-    if (check.ok) break;
-
-    const contextVariants = buildContextVariants(signal, ctx, research, beatText);
-    const insiderVariants = buildInsiderVariants(signal, ctx, research, contextLine, beatText);
-    const nextContext = pickNonOverlapping(contextVariants, sourceText) || contextVariants[attempt] || contextLine;
-    const nextInsider = pickNonOverlapping(insiderVariants, sourceText) || insiderVariants[attempt] || insiderLine;
-    contextLine = nextContext || contextLine;
-    insiderLine = nextInsider || insiderLine;
-
-    if (attempt === MAX_REGEN_ATTEMPTS - 1) {
-      const finalCheck = insiderPrompt.validateInsiderBlocks({ contextLine, insiderLine }, sourceText);
-      if (!finalCheck.ok) {
-        return {
-          ok: false,
-          reason: finalCheck.errors[0] || 'rewrite_failed',
-          signal,
-          overlap: sourceOverlapRatio(`${contextLine} ${insiderLine}`, sourceText),
-          errors: finalCheck.errors
-        };
-      }
-    }
-  }
-
-  const combined = `${contextLine} ${insiderLine}`;
-  if (exceedsOverlap(combined, sourceText)) {
-    return {
-      ok: false,
-      reason: 'overlap_exceeded',
-      signal,
-      overlap: sourceOverlapRatio(combined, sourceText)
-    };
-  }
-
-  return {
-    ok: true,
-    contextLine,
-    insiderLine,
-    leadInsight: insiderBlocks.leadInsight,
-    contextBlock: insiderBlocks.contextBlock,
-    projection: insiderLine,
-    signal,
-    meta: {
-      rewrittenFromQuote: signal.quotes.length > 0,
-      quoteCount: signal.quotes.length,
-      sentiment: signal.sentiment,
-      ufStanding: signal.ufStanding,
-      visitSchedule: signal.visitSchedule,
-      competition: signal.competition,
-      playerIntent: signal.playerIntent,
-      momentum: signal.momentum,
-      returnVisitPotential: signal.returnVisitPotential,
-      situation: signal.situation,
-      overlapRatio: sourceOverlapRatio(combined, sourceText),
-      sport,
-      template: 'elite_insider_v2',
-      rewriteMetrics: metrics
-    }
-  };
+function rewriteBeatUpdate(input = {}) {
+  const rewriteEngine = require('./autoposter/rewrite-engine');
+  return rewriteEngine.rewriteIntel(input);
 }
 
 function buildFootballPerReportFallback(sourceLabel) {
@@ -500,7 +400,7 @@ function resolveInsiderFallback({ sourceLabel, sport = 'football', contextBuilde
   if (contextBuilderFailed && sport === 'football') {
     return buildFootballPerReportFallback(sourceLabel);
   }
-  return 'Florida is actively tracking — more clarity expected soon.';
+  return 'UF quietly strengthened its position — staff confidence is growing behind the scenes.';
 }
 
 function sanitizeRewrittenLine(line, beatText, maxLen = 160) {
@@ -518,6 +418,9 @@ module.exports = {
   sourceOverlapRatio,
   exceedsOverlap,
   rewriteBeatUpdate,
+  buildContextVariants,
+  buildInsiderVariants,
+  pickNonOverlapping,
   buildFootballPerReportFallback,
   resolveInsiderFallback,
   sanitizeRewrittenLine,

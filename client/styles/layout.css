@@ -1,0 +1,91 @@
+/**
+ * GatorVault design tokens — grid, spacing, layout
+ */
+:root {
+  /* Spacing scale: 4/8/12/16/24/32/48/64px */
+  --gv-space-1: 4px;
+  --gv-space-2: 8px;
+  --gv-space-3: 12px;
+  --gv-space-4: 16px;
+  --gv-space-5: 24px;
+  --gv-space-6: 32px;
+  --gv-space-7: 48px;
+  --gv-space-8: 64px;
+
+  /* Shape */
+  --gv-radius-card: 12px;
+  --gv-radius-pill: 999px;
+
+  /* Desktop grid: 12 col, 80px width, 24px gutter, 48px margin */
+  --gv-grid-cols-desktop: 12;
+  --gv-grid-col-width: 80px;
+  --gv-grid-gutter-desktop: 24px;
+  --gv-grid-margin-desktop: 48px;
+
+  /* Tablet: 8 col, 24px gutter */
+  --gv-grid-cols-tablet: 8;
+  --gv-grid-gutter-tablet: 24px;
+
+  /* Mobile: 4 col, 16px gutter */
+  --gv-grid-cols-mobile: 4;
+  --gv-grid-gutter-mobile: 16px;
+
+  /* Container max derived from 12×80 + 11×24 + 2×48 = 1248px */
+  --gv-container-max: 1248px;
+}
+
+.gv-container {
+  width: 100%;
+  max-width: var(--gv-container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gv-grid-gutter-mobile);
+  padding-right: var(--gv-grid-gutter-mobile);
+}
+
+@media (min-width: 768px) {
+  .gv-container {
+    padding-left: var(--gv-grid-gutter-tablet);
+    padding-right: var(--gv-grid-gutter-tablet);
+  }
+}
+
+@media (min-width: 1024px) {
+  .gv-container {
+    padding-left: var(--gv-grid-margin-desktop);
+    padding-right: var(--gv-grid-margin-desktop);
+  }
+}
+
+.gv-grid {
+  display: grid;
+  gap: var(--gv-grid-gutter-mobile);
+  grid-template-columns: repeat(var(--gv-grid-cols-mobile), minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .gv-grid {
+    gap: var(--gv-grid-gutter-tablet);
+    grid-template-columns: repeat(var(--gv-grid-cols-tablet), minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .gv-grid {
+    gap: var(--gv-grid-gutter-desktop);
+    grid-template-columns: repeat(var(--gv-grid-cols-desktop), minmax(0, 1fr));
+  }
+}
+
+.gv-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gv-grid-gutter-desktop);
+}
+
+@media (max-width: 767px) {
+  .gv-grid-2 {
+    grid-template-columns: 1fr;
+    gap: var(--gv-grid-gutter-mobile);
+  }
+}

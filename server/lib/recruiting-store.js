@@ -219,6 +219,27 @@ async function loadPlayersLocal() {
   return readJson(PLAYERS_PATH, []);
 }
 
+/** Sync lookup for autoposter identity-matcher (local JSON fallback). */
+function findBySlug(slug) {
+  if (!slug) return null;
+  const players = readJson(PLAYERS_PATH, []).map(normalizePlayer);
+  return players.find((p) => p.slug === slug) || null;
+}
+
+function findByNameAndClass(name, classYear) {
+  if (!name) return null;
+  const key = String(name).trim().toLowerCase();
+  const players = readJson(PLAYERS_PATH, []).map(normalizePlayer);
+  return (
+    players.find(
+      (p) =>
+        String(p.name || '')
+          .trim()
+          .toLowerCase() === key && String(p.classYear) === String(classYear)
+    ) || null
+  );
+}
+
 async function savePlayersLocal(players) {
   writeJson(PLAYERS_PATH, players);
 }
@@ -831,6 +852,8 @@ module.exports = {
   getStoreInfo,
   getAllPlayers,
   getPlayerBySlug,
+  findBySlug,
+  findByNameAndClass,
   upsertPlayer,
   getRankings,
   upsertRanking,

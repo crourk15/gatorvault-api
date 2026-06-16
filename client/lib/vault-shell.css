@@ -1158,11 +1158,29 @@ body.gv-live-page-active .gv-vault-shell__main {
 
 .gv-portal-badge {
   font-size: 0.6875rem;
-  font-weight: 700;
-  color: #64748b;
-  padding: 0.25rem 0.5rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.55rem;
   border-radius: 9999px;
-  border: 1px solid rgba(0, 48, 135, 0.3);
+}
+
+.gv-portal-badge--in {
+  background: var(--gv-orange, #fa4616);
+  color: var(--gv-white, #ffffff);
+  border: 1px solid var(--gv-orange, #fa4616);
+}
+
+.gv-portal-badge--out {
+  background: var(--gv-blue, #0021a5);
+  color: var(--gv-white, #ffffff);
+  border: 1px solid var(--gv-blue, #0021a5);
+}
+
+.gv-portal-badge--target {
+  background: var(--gv-white, #ffffff);
+  color: var(--gv-blue, #0021a5);
+  border: 1px solid var(--gv-blue, #0021a5);
 }
 
 .gv-portal-incoming__list {
@@ -2053,6 +2071,20 @@ a.gv-live-item__title:hover {
   margin: 0.15rem 0 0;
 }
 
+.gv-nil {
+  background: var(--gv-white, #ffffff);
+  color: var(--gv-graphite, #1a1a1a);
+  padding-bottom: 2rem;
+}
+
+.gv-nil .gv-page-title {
+  color: var(--gv-blue, #0021a5);
+}
+
+.gv-nil .gv-page-subtitle {
+  color: rgba(26, 26, 26, 0.65);
+}
+
 .gv-nil__hero {
   display: flex;
   justify-content: space-between;
@@ -2093,10 +2125,11 @@ a.gv-live-item__title:hover {
 
 .gv-nil__panel {
   padding: 1.25rem;
-  background: #1e293b;
-  border: 1px solid rgba(0, 48, 135, 0.25);
-  border-radius: 1rem;
+  background: var(--gv-white, #ffffff);
+  border: 1px solid rgba(0, 33, 165, 0.18);
+  border-radius: 12px;
   margin-bottom: 1rem;
+  box-shadow: var(--gv-shadow-card, 0 4px 16px rgba(0, 26, 51, 0.08));
 }
 
 .gv-nil__table-wrap {
@@ -2115,19 +2148,19 @@ a.gv-live-item__title:hover {
   font-size: 0.6875rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #64748b;
-  border-bottom: 1px solid rgba(0, 48, 135, 0.25);
+  color: var(--gv-blue, #0021a5);
+  border-bottom: 1px solid rgba(0, 33, 165, 0.18);
 }
 
 .gv-nil__table td {
   padding: 0.625rem 0.75rem;
-  color: #e2e8f0;
-  border-bottom: 1px solid rgba(0, 48, 135, 0.1);
+  color: var(--gv-graphite, #1a1a1a);
+  border-bottom: 1px solid rgba(0, 33, 165, 0.08);
 }
 
 .gv-nil__table tr.is-uf td {
-  color: #fa4616;
-  font-weight: 600;
+  color: var(--gv-orange, #fa4616);
+  font-weight: 700;
 }
 
 .gv-nil__trend {
@@ -2169,13 +2202,14 @@ a.gv-live-item__title:hover {
 
 .gv-nil__event {
   padding: 0.875rem;
-  background: #0f172a;
-  border-radius: 0.75rem;
+  background: var(--gv-storm, #e5e5e5);
+  border-radius: 12px;
+  border-left: 3px solid var(--gv-orange, #fa4616);
 }
 
 .gv-nil__event-title {
   font-weight: 700;
-  color: #fff;
+  color: var(--gv-blue, #0021a5);
   margin: 0 0 0.25rem;
   font-size: 0.9375rem;
 }

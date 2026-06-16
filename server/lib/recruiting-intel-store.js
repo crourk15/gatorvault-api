@@ -37,11 +37,26 @@ function saveIntelDoc(doc) {
   return doc;
 }
 
+function inferUfRelevant(raw = {}) {
+  if (raw.ufRelevant === false) return false;
+  if (raw.ufRelevant === true) return true;
+  const detail = String(raw.detail || raw.text || raw.summary || '');
+  const et = String(raw.eventType || raw.event_type || '').toLowerCase();
+  if (/florida|gators|\buf\b|gainesville/i.test(detail)) return true;
+  if (['official_visit', 'unofficial_visit', 'commit', 'flip', 'portal_in', 'offer', 'prediction', 'prediction_change'].includes(et)) return true;
+  if (/rivals_pm|rivals pm|prediction machine|futurecast/i.test(String(raw.source || ''))) return true;
+  return raw.directlyInvolvesUF !== false;
+}
+
 function normalizeIntel(raw) {
   const playerId = String(raw.playerId || raw.on3Id || raw.player_id || '').trim();
   const eventType = String(raw.eventType || raw.event_type || '').trim().toLowerCase();
   const timestamp = raw.timestamp || raw.visitStart || raw.reportedAt || raw.createdAt || nowIso();
   const fingerprint = raw.fingerprint || intelFingerprint(playerId, eventType, timestamp);
+  const detail = raw.detail || raw.summary || raw.text || '';
+  const visitDates =
+    raw.visitDates ||
+    (raw.visitStart && raw.visitEnd ? `${raw.visitStart} to ${raw.visitEnd}` : raw.visitStart || null);
 
   return {
     id: raw.id || `intel_${playerId}_${eventType}_${normalizeIntelTimestampDay(timestamp)}`,
@@ -54,14 +69,19 @@ function normalizeIntel(raw) {
     status: raw.status || null,
     visitStart: raw.visitStart || null,
     visitEnd: raw.visitEnd || null,
+    visitDates,
     timestamp,
     source: raw.source || 'manual',
     sourceHandle: raw.sourceHandle || raw.source_handle || null,
-    detail: raw.detail || raw.summary || '',
+    sourceType: raw.sourceType || raw.source_type || null,
+    detail,
+    text: raw.text || detail,
+    ufRelevant: inferUfRelevant(raw),
     reportedAt: raw.reportedAt || nowIso(),
     fingerprint,
     alertPosted: !!raw.alertPosted,
     xPostQueued: !!raw.xPostQueued,
+    xPosted: !!raw.xPosted,
     analystName: raw.analystName || raw.analyst_name || null,
     confidencePct: raw.confidencePct != null ? Number(raw.confidencePct) : raw.confidence_pct != null ? Number(raw.confidence_pct) : null,
     stars: raw.stars != null ? Number(raw.stars) : null,
@@ -74,6 +94,18 @@ function normalizeIntel(raw) {
     articleUrl: raw.articleUrl || raw.article_url || null,
     rivalsPickKey: raw.rivalsPickKey || raw.rivals_pick_key || null,
     predictionSchool: raw.predictionSchool || raw.prediction_school || null,
+    priorConfidencePct:
+      raw.priorConfidencePct != null
+        ? Number(raw.priorConfidencePct)
+        : raw.prior_confidence_pct != null
+          ? Number(raw.prior_confidence_pct)
+          : null,
+    movementDelta:
+      raw.movementDelta != null
+        ? Number(raw.movementDelta)
+        : raw.movement_delta != null
+          ? Number(raw.movement_delta)
+          : null,
     identityConfirmed: !!raw.identityConfirmed,
     identityConfirmationMode: raw.identityConfirmationMode || raw.identity_confirmation_mode || null,
     identityConfirmedAt: raw.identityConfirmedAt || raw.identity_confirmed_at || null,
@@ -104,6 +136,21 @@ function listIntel({ limit = 100, since = null, eventType = null } = {}) {
   }
   items.sort((a, b) => new Date(b.reportedAt || b.createdAt) - new Date(a.reportedAt || a.createdAt));
   return items.slice(0, limit);
+}
+
+function getHistoryForPlayer(playerIdOrSlug, { limit = 20 } = {}) {
+  const key = String(playerIdOrSlug || '').toLowerCase();
+  if (!key) return [];
+  const doc = loadIntelDoc();
+  return (doc.items || [])
+    .filter(
+      (i) =>
+        String(i.playerSlug || '').toLowerCase() === key ||
+        String(i.playerId || '').toLowerCase() === key ||
+        String(i.id || '').toLowerCase() === key
+    )
+    .sort((a, b) => new Date(b.reportedAt || b.createdAt) - new Date(a.reportedAt || a.createdAt))
+    .slice(0, limit);
 }
 
 function hasIntelFingerprint(fp) {
@@ -197,7 +244,7 @@ function addIntel(raw) {
     }));
   }
 
-  if (row.eventType === 'prediction' || row.eventType === 'rivals_futurecast') {
+  if (row.eventType === 'prediction' || row.eventType === 'prediction_change' || row.eventType === 'rivals_futurecast') {
     const store = require('./recruiting-store');
     return store.upsertTargetFromVisitIntel(row).then((player) => ({
       item: row,
@@ -230,6 +277,21 @@ function markIntelXPostQueued(idOrFingerprint, { queueItemId } = {}) {
   }
 
   doc.items[idx] = { ...doc.items[idx], xPostQueued: true, alertPosted: true };
+  saveIntelDoc(doc);
+  return doc.items[idx];
+}
+
+function markIntelXPosted(idOrFingerprint, { tweetId = null, tweetUrl = null } = {}) {
+  const doc = loadIntelDoc();
+  const idx = doc.items.findIndex((i) => i.id === idOrFingerprint || i.fingerprint === idOrFingerprint);
+  if (idx < 0) return null;
+  doc.items[idx] = {
+    ...doc.items[idx],
+    xPosted: true,
+    xPostedAt: nowIso(),
+    xPostTweetId: tweetId || doc.items[idx].xPostTweetId || null,
+    xPostTweetUrl: tweetUrl || doc.items[idx].xPostTweetUrl || null
+  };
   saveIntelDoc(doc);
   return doc.items[idx];
 }
@@ -360,12 +422,13 @@ function getUnqueuedIntel({ maxAgeMs = 7 * 86400000 } = {}) {
   return listIntel({ limit: 50 }).filter((i) => {
     if (i.resolutionStatus === 'needs_resolution') return false;
     if (i.xPostQueued) return false;
+    if (i.xPosted) return false;
     if (new Date(i.reportedAt || i.createdAt).getTime() < cutoff) return false;
-    if (i.eventType === 'prediction') {
+    if (i.eventType === 'prediction' || i.eventType === 'prediction_change') {
       const ts = i.timestamp || i.reportedAt || i.createdAt;
       const eligibility = require('./rivals-prediction-eligibility');
       const isRivalsPm =
-        i.rivalsPickKey || /rivals|futurecast|prediction machine/i.test(String(i.source || i.status || ''));
+        i.rivalsPickKey || /rivals|futurecast|prediction machine|rivals_pm/i.test(String(i.source || i.status || ''));
       if (isRivalsPm && !eligibility.isTodayOrNewer(ts)) return false;
     }
     return true;
@@ -377,9 +440,11 @@ module.exports = {
   loadIntelDoc,
   saveIntelDoc,
   listIntel,
+  getHistoryForPlayer,
   addIntel,
   hasIntelFingerprint,
   markIntelXPostQueued,
+  markIntelXPosted,
   clearIntelXPostQueued,
   reconcileGhostQueuedIntel,
   updateIntelIdentity,

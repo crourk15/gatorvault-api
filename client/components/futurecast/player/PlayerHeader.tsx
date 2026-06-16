@@ -11,6 +11,8 @@ import {
   lifecycleColor,
 } from '../../../lib/player-derived';
 import { buildPlayerShareUrl } from '../../../lib/player-api';
+import { PositionIcon } from '@/components/ui/PositionIcon';
+import { Chip, portalStatusToChipVariant } from '@/components/ui/Chip';
 import { usePathname } from '@/lib/use-pathname';
 import { isVaultPath } from '@/lib/vault-routes';
 
@@ -50,8 +52,11 @@ export function PlayerHeader({
     <header className="fc-profile-header" data-testid="player-header">
       <div className="fc-profile-header__top">
         <div>
-          <p className="fc-profile-header__position">{player.position} · Class of {player.classYear}</p>
-          <h1 className="fc-profile-header__name">{player.fullName}</h1>
+          <p className="fc-profile-header__position">
+            <PositionIcon position={player.position} size="sm" className="fc-profile-header__pos-icon" />
+            {player.position} · Class of {player.classYear}
+          </p>
+          <h1 className="fc-profile-header__name gv-h1">{player.fullName}</h1>
           {location && <p className="fc-profile-header__location">{location}</p>}
           {(player.height || player.weight) && (
             <p className="fc-profile-header__measurables">
@@ -72,7 +77,9 @@ export function PlayerHeader({
           {lifecycle}
         </span>
         {portalProfile?.portalStatus && (
-          <span className="fc-profile-portal-status">{portalProfile.portalStatus.replace(/_/g, ' ')}</span>
+          <Chip variant={portalStatusToChipVariant(portalProfile.portalStatus)}>
+            {portalProfile.portalStatus.replace(/_/g, ' ')}
+          </Chip>
         )}
         {player.stars != null && (
           <span className="fc-profile-stars">{player.stars}★</span>

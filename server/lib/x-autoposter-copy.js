@@ -369,7 +369,7 @@ async function buildIntelCopyAsync(intel) {
   if (!resolved.ok) return resolved.payload;
   intel = resolved.intel;
 
-  if (intel.eventType === 'prediction' || intel.eventType === 'rivals_futurecast') {
+  if (intel.eventType === 'prediction' || intel.eventType === 'prediction_change' || intel.eventType === 'rivals_futurecast') {
     const prediction = require('./x-autoposter-prediction');
     const built = await prediction.buildPredictionPost({
       intel,

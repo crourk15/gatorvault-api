@@ -13,6 +13,7 @@ const { clearHeatCheckCache } = require('./heat-check-store');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { intelFingerprint } = require('./commit-fingerprint');
 const eligibility = require('./rivals-prediction-eligibility');
+const futurecastStore = require('./futurecast-store');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'rivals-pm-snapshot.json');
@@ -40,7 +41,74 @@ function writeJson(filePath, data) {
 }
 
 function loadSnapshot() {
-  return readJson(SNAPSHOT_PATH, { version: 2, fingerprints: {}, pickKeys: {}, lastRun: null });
+  return readJson(SNAPSHOT_PATH, { version: 2, fingerprints: {}, pickKeys: {}, pickState: {}, lastRun: null });
+}
+
+function getPriorPickState(snapshot, row) {
+  if (!row?.pickKey || !snapshot?.pickState) return null;
+  return snapshot.pickState[String(row.pickKey)] || null;
+}
+
+function resolvePredictionEvent(row, snapshot) {
+  const prior = getPriorPickState(snapshot, row);
+  const priorConfidence = prior?.confidence ?? null;
+  const hasChange =
+    priorConfidence != null &&
+    row.confidence != null &&
+    Number(priorConfidence) !== Number(row.confidence);
+  const eventType = hasChange ? 'prediction_change' : 'prediction';
+  const movementDelta =
+    hasChange && row.confidence != null && priorConfidence != null
+      ? Number(row.confidence) - Number(priorConfidence)
+      : null;
+  return { eventType, priorConfidence, movementDelta, hasChange };
+}
+
+function buildPredictionChangeText(row, priorConfidence) {
+  const pos = row.pos ? `${row.pos} ` : '';
+  const year = row.classYear || '';
+  const name = row.playerName || 'prospect';
+  const current = row.confidence != null ? Math.round(Number(row.confidence)) : null;
+  const prior = priorConfidence != null ? Math.round(Number(priorConfidence)) : null;
+  if (current == null || prior == null) {
+    return `Rivals PM now has UF as the pick for ${year} ${pos}${name}.`;
+  }
+  const direction = current > prior ? 'up' : current < prior ? 'down' : 'steady';
+  return `Rivals PM now has UF as the pick for ${year} ${pos}${name}, confidence ${direction} from ${prior}% to ${current}%.`;
+}
+
+function rememberPickState(snapshot, row) {
+  if (!row?.pickKey || row.confidence == null) return;
+  snapshot.pickState = snapshot.pickState || {};
+  snapshot.pickState[String(row.pickKey)] = {
+    confidence: Number(row.confidence),
+    timestamp: row.timestamp || new Date().toISOString()
+  };
+}
+
+function writeFuturecastPrediction(player, row, { priorConfidence, movementDelta, eventType }) {
+  futurecastStore.upsertPrediction({
+    slug: player.slug,
+    classYear: player.classYear || row.classYear,
+    confidence: row.confidence,
+    priorConfidence,
+    movementDelta,
+    analystName: row.analystName,
+    source: 'rivals_pm',
+    timestamp: row.timestamp
+  });
+  if (eventType === 'prediction_change') {
+    futurecastStore.appendPredictionHistory({
+      slug: player.slug,
+      classYear: player.classYear || row.classYear,
+      confidence: row.confidence,
+      priorConfidence,
+      movementDelta,
+      source: 'rivals_pm',
+      eventType,
+      timestamp: row.timestamp
+    });
+  }
 }
 
 function saveSnapshot(doc) {
@@ -126,7 +194,7 @@ async function buildAutoposterText(row) {
     patch: playerContext.verifiedPatchFromRow(row),
     intel: {
       id: row.intelId || null,
-      eventType: 'prediction',
+      eventType: row.eventType || 'prediction',
       playerName: row.playerName,
       playerSlug: row.playerSlug,
       analystName: row.analystName,
@@ -152,6 +220,7 @@ async function buildAutoposterText(row) {
 async function queueAutoposter(row, intelId) {
   try {
     const xStore = require('./x-autoposter-store');
+    const intelStore = require('./recruiting-intel-store');
     const policy = require('./x-autoposter-policy');
     const textResult = await buildAutoposterText({ ...row, intelId });
     const built = textResult && typeof textResult === 'object' ? textResult : null;
@@ -190,6 +259,9 @@ async function queueAutoposter(row, intelId) {
     const check = policy.validatePostContent(payload);
     if (!check.valid) return { queued: false, reason: 'policy', errors: check.errors };
     const out = xStore.enqueuePost(payload);
+    if (intelId) {
+      intelStore.markIntelXPostQueued(intelId, { queueItemId: out.item.id });
+    }
     return { queued: true, item: out.item };
   } catch (e) {
     return { queued: false, reason: e.message };
@@ -212,6 +284,13 @@ async function processPrediction(row, snapshot) {
   ].filter(Boolean);
   row.detail = detailParts.join(' · ');
 
+  const predictionEvent = resolvePredictionEvent(row, snapshot);
+  row.eventType = predictionEvent.eventType;
+  if (predictionEvent.hasChange) {
+    row.text = buildPredictionChangeText(row, predictionEvent.priorConfidence);
+    row.detail = row.text;
+  }
+
   const existing = gate.player || (await store.getPlayerBySlug(row.playerSlug));
   if (eligibility.isCommittedAnywhere(existing, row) || !eligibility.isActiveUfTarget(existing, row)) {
     eligibility.markSeen(snapshot, row, 'ineligible_at_process');
@@ -232,7 +311,7 @@ async function processPrediction(row, snapshot) {
   const copy = require('./recruiting-alert-templates').buildRecruitingCopy({
     player: mergedPlayer,
     existing,
-    eventType: 'prediction',
+    eventType: row.eventType,
     row
   });
   const playerPatch = {
@@ -256,6 +335,7 @@ async function processPrediction(row, snapshot) {
     profileNote: copy.profileNote
   };
   const player = await store.upsertPlayer(playerPatch);
+  writeFuturecastPrediction(player, row, predictionEvent);
 
   const intelResult = await intelStore.addIntel({
     playerId: String(row.on3Id || player.on3Id || player.slug),
@@ -263,15 +343,19 @@ async function processPrediction(row, snapshot) {
     playerName: player.name,
     classYear: player.classYear,
     pos: player.pos,
-    eventType: 'prediction',
-    status: 'Rivals FutureCast · Florida',
+    eventType: row.eventType,
+    status: row.eventType === 'prediction_change' ? 'Rivals PM movement · Florida' : 'Rivals FutureCast · Florida',
     timestamp: row.timestamp,
-    source: row.source,
+    source: 'rivals_pm',
     sourceHandle: row.analystHandle,
     detail: row.detail,
+    text: row.text || row.detail,
+    ufRelevant: true,
     fingerprint: row.fingerprint,
     analystName: row.analystName,
     confidencePct: row.confidence,
+    priorConfidencePct: predictionEvent.priorConfidence,
+    movementDelta: predictionEvent.movementDelta,
     ufRpmPct: row.ufRpmPct,
     stars: row.stars,
     natlRank: row.natlRank,
@@ -291,12 +375,15 @@ async function processPrediction(row, snapshot) {
   await store.createEvent({
     playerId: player.id,
     playerSlug: player.slug,
-    eventType: 'prediction',
-    title: `Rivals PM: ${row.analystName} picks Florida for ${player.name}`,
+    eventType: row.eventType,
+    title:
+      row.eventType === 'prediction_change'
+        ? `Rivals PM movement: ${row.analystName} on ${player.name}`
+        : `Rivals PM: ${row.analystName} picks Florida for ${player.name}`,
     detail: copy.profileNote,
     skinny: copy.skinny,
     classYear: player.classYear,
-    payload: { player, rivals: row },
+    payload: { player, rivals: row, priorConfidence: predictionEvent.priorConfidence, movementDelta: predictionEvent.movementDelta },
     source: 'rivals_pm'
   });
 
@@ -306,25 +393,31 @@ async function processPrediction(row, snapshot) {
   liveStore.upsertFeedItem({
     id: `rivals_pm_${row.fingerprint}`,
     dedupeKey: row.fingerprint,
-    type: 'prediction',
-    title: `Rivals PM: ${row.analystName} → ${player.name}`,
+    type: row.eventType,
+    title:
+      row.eventType === 'prediction_change'
+        ? `Rivals PM movement: ${row.analystName} → ${player.name}`
+        : `Rivals PM: ${row.analystName} → ${player.name}`,
     summary: row.detail,
     source_url: row.articleUrl || `/player/${player.slug}`,
     source: 'rivals_pm',
     author: row.analystName,
     createdAt: row.timestamp,
     meta: {
-      eventType: 'prediction',
+      eventType: row.eventType,
       playerSlug: player.slug,
       analystName: row.analystName,
       confidence: row.confidence,
+      priorConfidence: predictionEvent.priorConfidence,
+      movementDelta: predictionEvent.movementDelta,
       internalAlert: true,
       alertId: alert.id
     }
   });
 
-  const autopost = await queueAutoposter({ ...row, playerSlug: player.slug }, intelResult.item?.id);
+  const autopost = await queueAutoposter({ ...row, playerSlug: player.slug, eventType: row.eventType }, intelResult.item?.id);
   snapshot.fingerprints[row.fingerprint] = row.timestamp;
+  rememberPickState(snapshot, row);
 
   return {
     processed: true,
@@ -441,6 +534,8 @@ module.exports = {
   runRivalsPredictionIngest,
   getRivalsPmStatus,
   processPrediction,
+  resolvePredictionEvent,
+  buildPredictionChangeText,
   SNAPSHOT_PATH,
   INTERNAL_ALERTS_PATH
 };

@@ -989,3 +989,23 @@
     background-position: -200% 0;
   }
 }
+
+/* Portal activity rows */
+.gv-dash-portal__list {
+  display: grid;
+  gap: var(--gv-grid-gap);
+}
+
+.gv-dash-portal__row-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.gv-dash-heat .gv-type-label,
+.gv-dash-nil .gv-type-label {
+  color: var(--gv-blue);
+}
+

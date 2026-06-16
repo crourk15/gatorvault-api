@@ -106,6 +106,12 @@ async function buildNewsFromEvent(ev) {
 }
 
 async function buildNewsFromIntel(intel) {
+  const { matchIntelToPlayer } = require('./autoposter/identity-matcher');
+  const { isEligibleIntel } = require('./autoposter/autoposter-policy');
+  const player = matchIntelToPlayer(intel);
+  if (!player) return null;
+  if (!isEligibleIntel(intel, player)) return null;
+
   const built = await copy.buildIntelCopyAsync(intel);
   if (built?._nonPlayerSkip || built?.skipReason === 'non_player_intel') return null;
   if (built?._nonFootballSkip || built?.skipReason === 'non_football_sport') return null;
@@ -114,7 +120,7 @@ async function buildNewsFromIntel(intel) {
   if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
   const fp = intel.fingerprint || intelFingerprint(intel.playerId, intel.eventType, intel.timestamp);
   const intelType = String(intel.eventType || '').toLowerCase();
-  const urgentIntel = /visit_cancel|visit_scheduled|rivals_prediction|injury/.test(intelType);
+  const urgentIntel = /visit_cancel|visit_scheduled|rivals_prediction|prediction_change|prediction/.test(intelType);
   return attachNewsMeta(
     {
       text: built.text,
@@ -127,9 +133,15 @@ async function buildNewsFromIntel(intel) {
       intelFingerprint: fp,
       intelType: intel.eventType,
       playerName: built.playerName || intel.playerName,
+      playerSlug: intel.playerSlug || player?.playerId || null,
+      classYear: intel.classYear || player?.classYear || null,
       sourceIntelId: intel.id,
       sourceEventCreatedAt: intel.timestamp || intel.createdAt || null,
-      eventTimestamp: intel.timestamp || intel.createdAt || null
+      eventTimestamp: intel.timestamp || intel.createdAt || null,
+      validationMeta: {
+        beatText: intel.text || intel.detail || null,
+        situation: postSpec.detectSituation(intel.text || intel.detail, intel.eventType)
+      }
     },
     built
   );

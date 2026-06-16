@@ -9,6 +9,10 @@ import { DashboardRecruitingSnapshot } from '@/components/vault/dashboard/Dashbo
 import { DashboardLatestContent } from '@/components/vault/dashboard/DashboardLatestContent';
 import { DashboardQuickActions } from '@/components/vault/dashboard/DashboardQuickActions';
 import { DashboardPersonalized } from '@/components/vault/dashboard/DashboardPersonalized';
+import { DashboardHeatCheck } from '@/components/vault/dashboard/DashboardHeatCheck';
+import { DashboardUpcomingGames } from '@/components/vault/dashboard/DashboardUpcomingGames';
+import { DashboardPortalActivity } from '@/components/vault/dashboard/DashboardPortalActivity';
+import { DashboardNilTrends } from '@/components/vault/dashboard/DashboardNilTrends';
 import {
   DASHBOARD_REFRESH,
   computeMomentumPct,
@@ -142,9 +146,13 @@ export function VaultDashboardPage(): React.ReactElement {
         loading={loading && !ticker}
       />
       <DashboardTicker items={ticker?.items ?? []} loading={loading && !ticker} />
+      <DashboardHeatCheck />
       <DashboardMovementPreview data={movement} loading={loading && !movement} />
       <DashboardRecruitingSnapshot snapshot={recruiting} loading={loading && !recruiting} />
       <DashboardLatestContent data={content} loading={loading && !content} />
+      <DashboardUpcomingGames />
+      <DashboardPortalActivity snapshot={recruiting} />
+      <DashboardNilTrends snapshot={recruiting} />
       <DashboardQuickActions />
       <DashboardPersonalized data={personalized} loading={loading && !personalized} />
     </div>

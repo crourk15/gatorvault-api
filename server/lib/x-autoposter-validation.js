@@ -4,6 +4,8 @@
 const template = require('./x-autoposter-template');
 const postSpec = require('./x-autoposter-post-spec');
 const { TRUSTED_REPORTERS } = require('./content-validator');
+const qualityChecks = require('./autoposter/quality-checks');
+const insiderTone = require('./autoposter/insider-tone');
 
 const MAX_NEWS_AGE_MS = parseInt(
   process.env.X_AUTOPOST_MAX_NEWS_AGE_MS || String(postSpec.MAX_INTEL_AGE_MS),
@@ -108,6 +110,9 @@ const HARD_SKIP_TYPES = new Set([
   'missing_situation',
   'similar_post',
   'verbatim_overlap',
+  'rewrite_too_short',
+  'forbidden_tone',
+  'generic_fluff',
   'non_football_sport'
 ]);
 
@@ -548,11 +553,33 @@ function collectHardSkipReasons(item, blocks, meta) {
   const beatSource = meta.beatText || item.validationMeta?.beatText || null;
   if (beatSource) {
     const combined = [blocks.context, blocks.insider].filter(Boolean).join(' ');
-    if (hasExcessiveSourceOverlap(combined, beatSource)) {
+    if (hasExcessiveSourceOverlap(combined, beatSource, qualityChecks.OVERLAP_MAX)) {
       skips.push({
         type: 'verbatim_overlap',
-        message: 'Caption overlaps source tweet >40% — automatic skip (verbatim beat copy blocked).'
+        message: `Caption overlaps source >${Math.round(qualityChecks.OVERLAP_MAX * 100)}% — automatic skip (beat copy blocked).`
       });
+    }
+    const rewriteQc = qualityChecks.runQualityChecks({
+      text: combined,
+      beatText: beatSource,
+      blocks,
+      requireContext: true
+    });
+    if (rewriteQc.errors.includes('too_short')) {
+      skips.push({
+        type: 'rewrite_too_short',
+        message: `Rewrite under ${qualityChecks.MIN_REWRITE_WORDS} words — automatic skip.`
+      });
+    }
+    if (rewriteQc.errors.includes('forbidden_tone')) {
+      skips.push({ type: 'forbidden_tone', message: 'Hype or forbidden tone detected — automatic skip.' });
+    }
+    if (rewriteQc.errors.includes('generic_fluff')) {
+      skips.push({ type: 'generic_fluff', message: 'Generic fluff rewrite — automatic skip.' });
+    }
+    const toneOnly = insiderTone.validateInsiderTone(item.text || combined, { minWords: qualityChecks.MIN_REWRITE_WORDS });
+    if (toneOnly.errors.includes('forbidden_tone')) {
+      skips.push({ type: 'forbidden_tone', message: 'Forbidden insider tone in post body — automatic skip.' });
     }
     try {
       const sportClassifier = require('./x-autoposter-sport-classifier');

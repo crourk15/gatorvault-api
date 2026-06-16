@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { PortalWatchlistGrid } from '@/components/futurecast/PortalWatchlistGrid';
+import { Chip } from '@/components/ui/Chip';
 import { fetchPortalIncoming, type PortalIncomingPlayer } from '@/lib/recruiting-api';
 import { playerProfilePath } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
@@ -30,9 +31,9 @@ export function VaultPortalDirectoryPage(): React.ReactElement {
   }, [load]);
 
   return (
-    <div className="gv-portal-directory" data-testid="vault-portal">
+    <div className="gv-portal-directory gv-page-layout gv-page-layout--navy" data-testid="vault-portal">
       <div className="gv-page-hero">
-        <h1 className="gv-page-title">Portal Radar</h1>
+        <h1 className="gv-page-title gv-h1">Portal Radar</h1>
         <p className="gv-page-subtitle">
           Incoming transfers and portal watchlist.{' '}
           <a href="/vault/futurecast">FutureCast Portal Watchlist →</a>
@@ -58,6 +59,7 @@ export function VaultPortalDirectoryPage(): React.ReactElement {
             {incoming.map((p) => (
               <li key={p.id}>
                 <a href={playerProfilePath(p.slug, 'PORTAL', true)} className="gv-portal-incoming__row">
+                  <Chip variant="in">IN</Chip>
                   <span className="gv-portal-incoming__name">{p.fullName}</span>
                   <span className="gv-portal-incoming__meta">
                     {p.position} · {p.classYear}

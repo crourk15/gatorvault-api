@@ -107,6 +107,15 @@ function rulesForAutoposter(candidate) {
     if (!check.ok && beatText) {
       return { allow: false, reason: check.errors[0] || 'insider_template_failed' };
     }
+    const qualityChecks = require('../autoposter/quality-checks');
+    const insiderTone = require('../autoposter/insider-tone');
+    const rewriteBody = [blocks.context, blocks.insider].filter(Boolean).join(' ');
+    if (rewriteBody) {
+      const qc = qualityChecks.runQualityChecks({ text: rewriteBody, beatText, blocks });
+      if (!qc.ok) return { allow: false, reason: qc.errors[0] || 'rewrite_quality_failed' };
+      const tone = insiderTone.validateInsiderTone(candidate.text || rewriteBody);
+      if (!tone.ok) return { allow: false, reason: tone.errors[0] || 'forbidden_tone' };
+    }
   } catch {
     /* optional */
   }

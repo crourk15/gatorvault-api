@@ -187,7 +187,7 @@ function validateInsiderBlocks(blocks, beatText) {
 
 function getInsiderTemplatePolicy() {
   return {
-    name: 'elite_insider_v2',
+    name: 'gm2_exact_v1',
     blocks: ['identity', 'lead_insight+context', 'projection'],
     overlapMax: quoteRewriter.OVERLAP_THRESHOLD,
     minContextLen: MIN_CONTEXT_LEN,

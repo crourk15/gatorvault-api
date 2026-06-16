@@ -17,15 +17,15 @@
   --space-9: 48px;
   --space-10: 64px;
 
-  /* Brand colors (premium palette) */
-  --gv-uf-blue: #003087;
-  --gv-gator-orange: #fa4616;
-  --gv-deep-navy: #0a1a2f;
-  --gv-steel-blue: #1b3a57;
-  --gv-electric-blue: #4da3ff;
-  --gv-swamp-green: #00c853;
-  --gv-warning-yellow: #ffd600;
-  --gv-body-text: #d0d8e0;
+  /* Brand colors — UF official (alias gatorvault-brand.css) */
+  --gv-uf-blue: var(--gv-blue, #0021a5);
+  --gv-gator-orange: var(--gv-orange, #fa4616);
+  --gv-deep-navy: var(--gv-navy, #001a33);
+  --gv-steel-blue: rgba(0, 33, 165, 0.35);
+  --gv-electric-blue: var(--gv-blue, #0021a5);
+  --gv-swamp-green: #16a34a;
+  --gv-warning-yellow: var(--gv-warning, #facc15);
+  --gv-body-text: rgba(255, 255, 255, 0.88);
 
   /* Layout */
   --gv-container-max: 1120px;
@@ -34,10 +34,10 @@
   --gv-section-padding: var(--space-9);
   --gv-hero-padding: var(--space-10);
   --gv-card-padding: var(--space-4);
-  --gv-page-margin: clamp(16px, 5vw, 80px);
+  --gv-page-margin: clamp(16px, 5vw, 48px);
 
-  /* Typography */
-  --gv-font-display: Oswald, Inter, system-ui, sans-serif;
+  /* Typography — Inter */
+  --gv-font-display: Inter, system-ui, sans-serif;
   --gv-font-body: Inter, system-ui, sans-serif;
 }
 
@@ -47,7 +47,7 @@
   font-family: var(--gv-font-display);
   font-size: clamp(2rem, 5vw, 3.25rem);
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
   line-height: 1.05;
   color: #fff;
 }
@@ -57,7 +57,7 @@
   font-family: var(--gv-font-display);
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   line-height: 1.15;
   color: #fff;
 }
@@ -66,7 +66,7 @@
   margin: 0;
   font-family: var(--gv-font-display);
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.25;
   color: #fff;
 }
@@ -172,7 +172,7 @@
 }
 
 .gv-ds-btn--primary {
-  background: var(--gv-gator-orange);
+  background: var(--gv-gator-orange, #fa4616);
   color: #fff;
 }
 
@@ -184,30 +184,31 @@
 
 .gv-ds-btn--secondary {
   background: transparent;
-  color: var(--gv-gator-orange);
-  border: 1px solid var(--gv-gator-orange);
+  color: var(--gv-uf-blue, #0021a5);
+  border: 1px solid var(--gv-uf-blue, #0021a5);
 }
 
 .gv-ds-btn--secondary:hover {
-  background: var(--gv-gator-orange);
-  color: #fff;
+  background: rgba(0, 33, 165, 0.1);
+  color: var(--gv-uf-blue, #0021a5);
   transform: scale(1.03);
 }
 
 /* ── Cards ── */
 .gv-ds-card {
-  background: var(--gv-deep-navy);
-  border: 1px solid var(--gv-steel-blue);
+  background: var(--gv-white, #ffffff);
+  border: 1px solid rgba(0, 33, 165, 0.18);
   border-radius: 12px;
   padding: var(--gv-card-padding);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 26, 51, 0.22);
+  color: var(--gv-navy, #001a33);
   transition: transform 180ms ease-out, box-shadow 180ms ease-out, border-color 180ms ease-out;
 }
 
 .gv-ds-card:hover {
-  transform: scale(1.03) translateY(-2px);
+  transform: translateY(-2px);
   border-color: var(--gv-gator-orange);
-  box-shadow: 0 12px 28px rgba(250, 70, 22, 0.22), 0 4px 12px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 12px 28px rgba(0, 33, 165, 0.18);
 }
 
 .gv-ds-feature-card {
@@ -334,7 +335,7 @@
 }
 
 .gv-ds-tab:hover {
-  color: var(--gv-electric-blue);
+  color: var(--gv-uf-blue, #0021a5);
 }
 
 .gv-ds-tab.is-active {

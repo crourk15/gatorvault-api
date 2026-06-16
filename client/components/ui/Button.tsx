@@ -16,7 +16,7 @@ type ButtonProps = BaseProps &
 type LinkProps = BaseProps & { href: string } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>;
 
 function btnClass(variant: Variant, className?: string): string {
-  const base = `gv-ds-btn gv-ds-btn--${variant}`;
+  const base = `gv-btn gv-btn--${variant}`;
   return className ? `${base} ${className}` : base;
 }
 
