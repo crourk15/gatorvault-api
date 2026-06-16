@@ -15,7 +15,7 @@ const TIERS = [
       'Directory Access',
       'Basic Player Profiles',
     ],
-    popular: false,
+    featured: false,
   },
   {
     id: 'film' as const,
@@ -27,7 +27,7 @@ const TIERS = [
       'Advanced Player Profiles',
       'FutureCast Predictions',
     ],
-    popular: true,
+    featured: true,
   },
   {
     id: 'war' as const,
@@ -39,7 +39,7 @@ const TIERS = [
       'War Room Chat',
       'NIL + Portal Tracker (full)',
     ],
-    popular: false,
+    featured: false,
   },
 ] as const;
 
@@ -50,8 +50,11 @@ export function PricingSection(): React.ReactElement {
       <p className="pricing-subtitle">Simple pricing. Cancel anytime.</p>
       <div className="pricing-grid">
         {TIERS.map((tier) => (
-          <div key={tier.name} className={`pricing-card${tier.popular ? ' popular' : ''}`}>
-            {tier.popular ? <div className="popular-badge">Most Popular</div> : null}
+          <div
+            key={tier.name}
+            className={`pricing-card${tier.featured ? ' popular gv-pricing-tier--featured' : ''}`}
+          >
+            {tier.featured ? <div className="popular-badge">Most Popular</div> : null}
             <h3>{tier.name}</h3>
             <p className="price">{tier.price}</p>
             <ul>
@@ -62,6 +65,8 @@ export function PricingSection(): React.ReactElement {
             <Link href={`/join?tier=${tier.id}`} className="pricing-cta">
               Join Now
             </Link>
+            <p className="pricing-micro">Cancel anytime</p>
+            <p className="pricing-micro">Instant access to Vault</p>
           </div>
         ))}
       </div>

@@ -6,9 +6,9 @@ import '@/lib/free-vs-insider.css';
 
 const ROWS = [
   ['Recruiting Hub', 'Limited', 'Full Access'],
-  ['Player Profiles', 'Limited', 'Full Access'],
-  ['Live Feed', 'Read-only', 'Full Insider Feed'],
-  ['FutureCast', 'Locked', 'Full Predictions'],
+  ['Player Profiles', 'Limited', 'Advanced'],
+  ['Live Feed', 'Read-only', 'Insider Feed'],
+  ['FutureCast', 'Public', 'Insider probabilities'],
   ['Film Room', 'Locked', 'Full Breakdowns'],
   ['War Room Intel', 'No', 'Yes'],
   ['Insider Chat', 'No', 'Yes'],

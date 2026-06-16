@@ -1,26 +1,29 @@
 'use client';
 
 import React from 'react';
-import { LandingHero } from './LandingHero';
-import { LandingValueProp } from './LandingValueProp';
-import { LandingSocialProof } from './LandingSocialProof';
+import { LandingHeroElite } from './LandingHeroElite';
+import { LandingSystemOverview } from './LandingSystemOverview';
+import { LandingPreviewStrip } from './LandingPreviewStrip';
+import { LandingSocialProofElite } from './LandingSocialProofElite';
+import { LandingFinalCTA } from './LandingFinalCTA';
 import { PricingSection } from './PricingSection';
 import { FreeVsInsider } from './FreeVsInsider';
-import { FooterCTA, WelcomeStickyCTA } from './FooterCTA';
+import { WelcomeStickyCTA } from './FooterCTA';
 import { OperatorAccessFooter } from './OperatorAccessFooter';
 
-/** Marketing landing composition for /welcome/. */
+/** Full elite marketing landing for /welcome/. */
 export function MarketingWelcomePage(): React.ReactElement {
   return (
-    <div className="gv-landing-page">
-      <LandingHero />
-      <LandingValueProp />
-      <LandingSocialProof />
+    <>
+      <LandingHeroElite />
+      <LandingSystemOverview />
+      <LandingPreviewStrip />
+      <LandingSocialProofElite />
       <PricingSection />
       <FreeVsInsider />
-      <FooterCTA />
+      <LandingFinalCTA />
       <WelcomeStickyCTA />
       <OperatorAccessFooter />
-    </div>
+    </>
   );
 }

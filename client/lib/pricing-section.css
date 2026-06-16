@@ -58,9 +58,17 @@
   box-shadow: 0 12px 28px rgba(250, 70, 22, 0.22), 0 4px 12px rgba(0, 0, 0, 0.45);
 }
 
-.pricing-card.popular {
-  border-color: var(--gv-gator-orange, #fa4616);
-  box-shadow: 0 0 16px rgba(250, 70, 22, 0.28), 0 4px 12px rgba(0, 0, 0, 0.4);
+.pricing-card.popular,
+.gv-pricing-tier--featured {
+  border: 2px solid var(--gv-orange, #fa4616);
+  box-shadow: var(--gv-shadow-lift, 0 14px 36px rgba(0, 33, 165, 0.35));
+}
+
+.pricing-micro {
+  margin: 8px 0 0;
+  font-size: 0.8125rem;
+  color: var(--gv-body-text, #d0d8e0);
+  line-height: 1.35;
 }
 
 .popular-badge {
