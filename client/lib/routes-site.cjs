@@ -100,6 +100,9 @@ const REQUIRED_SITE_EXPORTS = [
   'game-zone/index.html',
   'game-zone/game/index.html',
   'nil/index.html',
+  'welcome/index.html',
+  'insider/index.html',
+  'join/index.html',
 ];
 
 module.exports = {

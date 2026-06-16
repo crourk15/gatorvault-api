@@ -16,7 +16,7 @@ function sessionLoggedIn(): boolean {
   return isAuthenticated(session?.email, session?.token);
 }
 
-/** Static-export auth gate for gated product routes. */
+/** Static-export auth gate for gated product routes (/(app)/* only — not /welcome). */
 export function AppRouteGate(): null {
   const pathname = usePathname();
   const { user, ready } = useUser();
