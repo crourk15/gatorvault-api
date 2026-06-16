@@ -87,6 +87,11 @@ body {
   padding-right: 0;
 }
 
+#gv-vault-root {
+  padding: 0;
+  margin: 0;
+}
+
 /* TabBar base (gv-tab-bar) — used by Film Room, Game Week, etc. */
 .gv-tab-bar {
   display: flex;
@@ -1114,4 +1119,24 @@ body {
 
 .gv-page-layout .gv-card:not([class*='gv-dash']) {
   border-radius: var(--gv-radius-md);
+}
+
+/* ── Vault dashboard: flush under nav (overrides vault-shell__main inset) ── */
+.gv-vault-shell__main:has(.gv-dash) {
+  padding: 0 !important;
+}
+
+@media (max-width: 767px) {
+  .gv-vault-shell__main:has(.gv-dash) {
+    padding-bottom: var(--gv-mobile-nav-height) !important;
+  }
+}
+
+.gv-vault-shell__main:has(.gv-dash) .gv-dash {
+  margin-top: 0;
+}
+
+.gv-vault-shell__main:has(.gv-dash) .gv-dash-hero {
+  padding-top: 0;
+  margin-top: 0;
 }
