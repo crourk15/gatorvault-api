@@ -4043,3 +4043,16 @@ a.live-feed-link:hover {
   color: #fb923c;
   border-color: rgba(250, 70, 22, 0.4);
 }
+
+/* Mobile tap targets — Platform Guardian ux:tap-targets */
+.gv-nav-item,
+.gv-tab,
+.gv-button,
+.gv-list-item,
+.gv-vault-shell__nav-link,
+.gv-vault-bottom-nav__item,
+.gv-hub-tab {
+  min-height:44px;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}

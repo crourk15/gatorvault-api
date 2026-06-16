@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { VaultTicketsPage } from '@/components/vault/VaultTicketsPage';
+import { SchedulePageShell } from '@/components/schedule';
 
-export default function VaultScheduleRoute(): React.ReactElement {
-  return <VaultTicketsPage />;
+export default function VaultSchedulePage(): React.ReactElement {
+  return <SchedulePageShell defaultSeason="2026" />;
 }

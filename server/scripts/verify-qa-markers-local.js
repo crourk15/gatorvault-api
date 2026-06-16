@@ -38,6 +38,7 @@ const pages = [
   { path: 'vault/live-feed/index.html', markers: ['vault-live-feed', 'gv-live-feed', 'Headlines', 'gv-live-ticker'] },
   { path: 'vault/film-room/index.html', markers: ['vault-film-room', 'gv-film-room'] },
   { path: 'vault/futurecast/index.html', markers: ['vault-futurecast-page', 'FutureCast'] },
+  { path: 'vault/schedule/index.html', markers: ['vault-schedule', 'gv-schedule-page', 'Schedule'] },
 ];
 
 const uxChecks = [

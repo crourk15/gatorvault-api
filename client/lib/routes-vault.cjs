@@ -21,7 +21,7 @@ const PILLAR_QA = {
   '/vault/team': { testid: 'vault-team', markers: ['vault-team', 'gv-team-page'] },
   '/vault/live': { testid: 'vault-live-feed', markers: ['vault-live-feed', 'gv-live-feed'] },
   '/vault/film-room': { testid: 'vault-film-room', markers: ['vault-film-room', 'gv-film-room'] },
-  '/vault/schedule': { testid: 'vault-schedule', markers: ['vault-schedule', 'Schedule'] },
+  '/vault/schedule': { testid: 'vault-schedule', markers: ['vault-schedule', 'gv-schedule-page', 'Schedule'] },
   '/': { testid: 'landing-page', markers: ['landing-page'] },
 };
 

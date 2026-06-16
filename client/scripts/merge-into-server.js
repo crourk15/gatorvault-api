@@ -131,6 +131,16 @@ require('./inject-vault-shell-css.js');
 require('./inject-qa-markers.js');
 
 const { spawnSync } = require('child_process');
+const hydrationStability = spawnSync(
+  process.execPath,
+  [path.join(__dirname, '..', '..', 'server', 'scripts', 'verify-hydration-stability.js')],
+  { stdio: 'inherit', cwd: path.join(__dirname, '..', '..', 'server') }
+);
+if (hydrationStability.status !== 0) {
+  console.error('[netlify] hydration stability check failed — blocking publish');
+  process.exit(hydrationStability.status || 1);
+}
+
 const guardian = spawnSync(
   process.execPath,
   [path.join(__dirname, '..', '..', 'server', 'scripts', 'deploy-guardian.js'), '--phase=pre', '--static', '--skip-api'],

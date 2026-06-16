@@ -1,24 +1,38 @@
 #!/usr/bin/env node
 /**
- * Ensure vault-shell.css chunk loads before other styles on vault HTML exports.
- * Prevents dark blank screens when CSS arrives after React paints the shell.
+ * Ensure vault layout CSS loads in mandatory order before React scripts.
+ * Order: vault-shell → hub-tabs → live-feed → team-page (deduped by href).
  */
 const fs = require('fs');
 const path = require('path');
+const { REQUIRED_CSS_SIGNATURES } = require('../../server/lib/hydration/hydration-checks');
 
 const serverDir = path.join(__dirname, '..', '..', 'server');
 const cssDir = path.join(serverDir, '_next', 'static', 'css');
 
-function findVaultShellCssHref() {
-  if (!fs.existsSync(cssDir)) return null;
-  for (const file of fs.readdirSync(cssDir)) {
-    if (!file.endsWith('.css')) continue;
-    const text = fs.readFileSync(path.join(cssDir, file), 'utf8');
-    if (text.includes('.gv-vault-shell{') || text.includes('.gv-vault-shell ')) {
-      return `/_next/static/css/${file}`;
+function cssFileText(file) {
+  return fs.readFileSync(path.join(cssDir, file), 'utf8');
+}
+
+function findCssHrefsInPriorityOrder() {
+  if (!fs.existsSync(cssDir)) return [];
+  const files = fs.readdirSync(cssDir).filter((f) => f.endsWith('.css'));
+  const hrefs = [];
+  const seen = new Set();
+
+  for (const sig of REQUIRED_CSS_SIGNATURES) {
+    for (const file of files) {
+      const href = `/_next/static/css/${file}`;
+      if (seen.has(href)) continue;
+      const text = cssFileText(file);
+      if (sig.patterns.some((p) => text.includes(p))) {
+        hrefs.push({ id: sig.id, href });
+        seen.add(href);
+        break;
+      }
     }
   }
-  return null;
+  return hrefs;
 }
 
 function walkHtml(dir, out = []) {
@@ -31,7 +45,7 @@ function walkHtml(dir, out = []) {
   return out;
 }
 
-function reorderVaultShellCss(html, vaultShellHref) {
+function reorderVaultCss(html, priorityHrefs) {
   const linkRe =
     /<link[^>]+rel=["']stylesheet["'][^>]+href=["']([^"']+)["'][^>]*>|<link[^>]+href=["']([^"']+)["'][^>]+rel=["']stylesheet["'][^>]*>/gi;
   const links = [];
@@ -39,23 +53,31 @@ function reorderVaultShellCss(html, vaultShellHref) {
   while ((m = linkRe.exec(html))) {
     links.push(m[0]);
   }
-  if (!links.length) return html;
+  if (!links.length || !priorityHrefs.length) return html;
 
-  const vaultLink = links.find((tag) => tag.includes(vaultShellHref));
-  if (!vaultLink) return html;
+  const prioritySet = new Set(priorityHrefs.map((p) => p.href));
+  const orderedTags = [];
+  for (const item of priorityHrefs) {
+    const tag = links.find((t) => t.includes(item.href));
+    if (!tag) continue;
+    if (item.id === 'vault-shell') {
+      const preload = `<link rel="preload" href="${item.href}" as="style" data-gv-vault-shell-css="preload"/>`;
+      const marked = tag.includes('data-gv-vault-shell-css')
+        ? tag
+        : tag.replace('<link ', '<link data-gv-vault-shell-css="bundle" ');
+      orderedTags.push(preload + marked);
+    } else {
+      orderedTags.push(tag);
+    }
+  }
 
-  const others = links.filter((tag) => tag !== vaultLink);
+  const others = links.filter((tag) => !priorityHrefs.some((p) => tag.includes(p.href)));
   let without = html;
   for (const tag of links) {
     without = without.replace(tag, '');
   }
 
-  const preload = `<link rel="preload" href="${vaultShellHref}" as="style" data-gv-vault-shell-css="preload"/>`;
-  const markedVaultLink = vaultLink.includes('data-gv-vault-shell-css')
-    ? vaultLink
-    : vaultLink.replace('<link ', '<link data-gv-vault-shell-css="bundle" ');
-  const block = preload + markedVaultLink + others.join('');
-
+  const block = orderedTags.join('') + others.join('');
   const insertRe = /(<meta name="viewport"[^>]*\/>|<meta charSet="utf-8"\/>)/i;
   if (insertRe.test(without)) {
     return without.replace(insertRe, `$1${block}`);
@@ -63,10 +85,11 @@ function reorderVaultShellCss(html, vaultShellHref) {
   return without.replace('<head>', `<head>${block}`);
 }
 
-function injectVaultShellCssFirst() {
-  const vaultShellHref = findVaultShellCssHref();
-  if (!vaultShellHref) {
-    console.error('[inject-vault-shell-css] vault-shell.css chunk not found in _next/static/css');
+function injectVaultCssOrder() {
+  const priorityHrefs = findCssHrefsInPriorityOrder();
+  const vaultShell = priorityHrefs.find((p) => p.id === 'vault-shell');
+  if (!vaultShell) {
+    console.error('[inject-vault-css] vault-shell.css chunk not found in _next/static/css');
     process.exit(1);
   }
 
@@ -76,7 +99,7 @@ function injectVaultShellCssFirst() {
 
   for (const filePath of files) {
     const html = fs.readFileSync(filePath, 'utf8');
-    const next = reorderVaultShellCss(html, vaultShellHref);
+    const next = reorderVaultCss(html, priorityHrefs);
     if (next !== html) {
       fs.writeFileSync(filePath, next);
       updated++;
@@ -84,10 +107,10 @@ function injectVaultShellCssFirst() {
   }
 
   console.log(
-    `[inject-vault-shell-css] vault-shell bundle ${vaultShellHref} prioritized on ${updated}/${files.length} vault pages`
+    `[inject-vault-css] CSS order ${priorityHrefs.map((p) => p.id).join(' → ')} on ${updated}/${files.length} vault pages`
   );
 }
 
-injectVaultShellCssFirst();
+injectVaultCssOrder();
 
-module.exports = { injectVaultShellCssFirst, findVaultShellCssHref };
+module.exports = { injectVaultCssOrder, findCssHrefsInPriorityOrder };

@@ -27,6 +27,8 @@ const PAGE_MARKERS = {
     '<!-- gv-qa-markers data-testid="vault-film-room" gv-film-room -->',
   'vault/futurecast/index.html':
     '<!-- gv-qa-markers data-testid="vault-futurecast-page" FutureCast -->',
+  'vault/schedule/index.html':
+    '<!-- gv-qa-markers data-testid="vault-schedule" gv-schedule-page Schedule -->',
 };
 
 function injectMarkers() {

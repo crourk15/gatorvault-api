@@ -1,30 +1,27 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { PlayerDirectoryPage } from '@/components/site/PlayerDirectoryPage';
 import { PlayerProfilePage } from '@/components/futurecast/player/PlayerProfilePage';
 import { RosterProfilePage } from '@/components/vault/RosterProfilePage';
 import type { RosterPlayer } from '@/lib/roster-api';
 import { vaultTeamBackHref } from '@/lib/vault-navigation';
-import { useHydrated } from '@/hooks/useHydrated';
+import { usePathname } from '@/lib/use-pathname';
 
-function slugFromPathname(): string {
-  if (typeof window === 'undefined') return '';
-  const match = window.location.pathname.match(/\/vault\/players\/([^/]+)\/?$/);
+function slugFromPathname(pathname: string): string {
+  const match = pathname.match(/\/vault\/players\/([^/]+)\/?$/);
   return match ? decodeURIComponent(match[1]) : '';
 }
 
 export default function VaultPlayersPage(): React.ReactElement {
-  const hydrated = useHydrated();
-  const [slug, setSlug] = useState('');
+  const pathname = usePathname();
+  const slug = useMemo(() => slugFromPathname(pathname), [pathname]);
   const [rosterPlayer, setRosterPlayer] = useState<RosterPlayer | null>(null);
   const [loading, setLoading] = useState(false);
   const [useFcProfile, setUseFcProfile] = useState(false);
 
   useEffect(() => {
-    const next = slugFromPathname();
-    setSlug(next);
-    if (!next) {
+    if (!slug) {
       setLoading(false);
       setRosterPlayer(null);
       setUseFcProfile(false);
@@ -33,7 +30,7 @@ export default function VaultPlayersPage(): React.ReactElement {
     let cancelled = false;
     setLoading(true);
     import('@/lib/player-profile-resolver').then(({ resolvePlayerProfile }) =>
-      resolvePlayerProfile(next, true)
+      resolvePlayerProfile(slug, true)
         .then((result) => {
           if (cancelled) return;
           if (result.kind === 'redirect') {
@@ -58,17 +55,10 @@ export default function VaultPlayersPage(): React.ReactElement {
           if (!cancelled) setLoading(false);
         })
     );
-    const onNav = () => setSlug(slugFromPathname());
-    window.addEventListener('popstate', onNav);
     return () => {
       cancelled = true;
-      window.removeEventListener('popstate', onNav);
     };
-  }, []);
-
-  if (!hydrated) {
-    return <p className="fc-profile-empty">Loading…</p>;
-  }
+  }, [slug]);
 
   if (!slug) {
     return <PlayerDirectoryPage inVault />;

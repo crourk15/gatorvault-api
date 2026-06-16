@@ -22,7 +22,7 @@ export function SchedulePageShell({ defaultSeason = '2026' }: Props): React.Reac
   const grouped = useMemo(() => groupGamesBySection(games), [games]);
 
   return (
-    <div className="gv-sched-page" data-testid="vault-schedule">
+    <div className="gv-schedule-page gv-sched-page" data-testid="vault-schedule">
       <HeroSchedule
         title={`${season} Florida Gators Football Schedule`}
         subtitle="TV info, tickets, win probabilities, and game-week intel — all in one place."
