@@ -90,6 +90,12 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
 
   return (
     <div className="gv-vault-shell">
+      <style
+        dangerouslySetInnerHTML={{
+          __html:
+            '.gv-hub-tabs--scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}.gv-vault-bottom-nav{padding-bottom:env(safe-area-inset-bottom,0)}',
+        }}
+      />
       <header className="gv-vault-shell__header">
         <div className="gv-vault-shell__header-start">
           <button

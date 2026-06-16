@@ -17,14 +17,14 @@ type Props = {
 
 export function DepthChartTabs({ active, onChange }: Props): React.ReactElement {
   return (
-    <div className="gv-team-dc-tabs" role="tablist" aria-label="Depth chart unit">
+    <div className="gv-team-dc-tabs gv-hub-tabs gv-hub-tabs--scroll" role="tablist" aria-label="Depth chart unit">
       {TABS.map(({ id, label }) => (
         <button
           key={id}
           type="button"
           role="tab"
           aria-selected={active === id}
-          className={`gv-team-dc-tab${active === id ? ' is-active' : ''}`}
+          className={`gv-team-dc-tab gv-hub-tab${active === id ? ' is-active' : ''}`}
           onClick={() => onChange(id)}
         >
           {label}

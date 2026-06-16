@@ -134,9 +134,9 @@ const ADMIN_AND_LEGACY_HTML = [
 
 const REQUIRED_VAULT_EXPORTS = vaultRoutes.REQUIRED_VAULT_EXPORTS;
 
-/** Root → Welcome landing (301). Listed after legacy query rules in generate-redirects. */
+/** Root serves React marketing landing (client/app/page.tsx). Welcome stays at /welcome/. */
 /** @type {RedirectRule[]} */
-const ROOT_LANDING_REDIRECT = [{ from: '/', to: '/welcome/', status: 301, force: true }];
+const ROOT_LANDING_REDIRECT = [];
 
 module.exports = {
   REACT_REWRITES,

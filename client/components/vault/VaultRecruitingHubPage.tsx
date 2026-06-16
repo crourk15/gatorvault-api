@@ -106,7 +106,7 @@ export function VaultRecruitingHubPage(): React.ReactElement {
 
   const restoreHubState = useCallback((saved: { tab?: string; rankYear?: number }) => {
     const tabs: RecruitingHubTab[] = [
-      'priority', 'commits-2027', 'targets-2027',
+      'priority', 'commits-2026', 'commits-2027', 'targets-2027',
       'targets-2028', 'intel', 'scouting', 'portal', 'rankings',
     ];
     if (saved.tab && tabs.includes(saved.tab as RecruitingHubTab)) {
@@ -340,6 +340,9 @@ export function VaultRecruitingHubPage(): React.ReactElement {
             {highPriority.length === 0 && <UiEmpty message="No priority targets loaded." />}
           </section>
         )}
+
+        {showContent && tab === 'commits-2026' &&
+          renderGrid(rankCommits(b26.commits), 'commit', 'No 2026 commits yet.')}
 
         {showContent && tab === 'commits-2027' && (
           <>

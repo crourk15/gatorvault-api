@@ -90,12 +90,26 @@ export function GatorNationLivePage(): React.ReactElement {
   );
 
   return (
-    <div className="gv-gnl" data-testid="vault-live-feed">
+    <div className="gv-gnl gv-live-feed" data-testid="vault-live-feed">
       <div className="gv-gnl__frame">
         <GNLHero episode={heroEpisode} />
       </div>
 
       <LiveTicker items={bundle.ticker} loading={loading && !bundle.ticker.length} />
+
+      <div className="gv-gnl__frame gv-gnl__section">
+        <div className="gv-live-feed__tabs" role="tablist" aria-label="Live feed sections">
+          <button type="button" className="gv-live-feed__tab is-active" role="tab" aria-selected>
+            Headlines
+          </button>
+          <button type="button" className="gv-live-feed__tab" role="tab" aria-selected={false}>
+            Beat Writers
+          </button>
+          <button type="button" className="gv-live-feed__tab" role="tab" aria-selected={false}>
+            Podcasts
+          </button>
+        </div>
+      </div>
 
       {error && !loading && (
         <div className="gv-gnl__frame gv-gnl__section">

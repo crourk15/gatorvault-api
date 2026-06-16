@@ -20,14 +20,16 @@ export function RecruitingUpdateCard({
   category,
 }: RecruitingUpdateCardProps): React.ReactElement {
   return (
-    <a href={url} className="gv-gnl-feed-card" data-testid="gnl-feed-card">
+    <a href={url} className="gv-gnl-feed-card gv-live-feed__row gv-live-feed__row--headline" data-testid="gnl-feed-card">
       <span className="gv-gnl-feed-card__badge" aria-label={source}>
         {sourceBadge(source)}
       </span>
       <div className="gv-gnl-feed-card__body">
         <p className="gv-gnl-feed-card__headline">{headline}</p>
         <p className="gv-gnl-feed-card__meta">
-          {formatTimeAgo(timestamp)} • Source: {source}
+          <span className="gv-live-feed__row-time">{formatTimeAgo(timestamp)}</span>
+          {' · Source: '}
+          {source}
           <span className="gv-gnl-feed-card__cat">{category}</span>
         </p>
       </div>

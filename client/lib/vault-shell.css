@@ -4,6 +4,12 @@
   color: #e2e8f0;
 }
 
+.gv-page-title {
+  font-family: Oswald, sans-serif;
+  font-weight: 700;
+  color: #fff;
+}
+
 .gv-vault-shell__header {
   display: flex;
   align-items: center;

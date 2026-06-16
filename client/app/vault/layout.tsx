@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Viewport } from 'next';
 import { VaultShell } from '@/components/vault/VaultShell';
 import { VaultErrorBoundary } from '@/components/vault/VaultErrorBoundary';
 import { VaultRouteGate } from '@/components/VaultRouteGate';
@@ -18,6 +19,12 @@ import '@/lib/player-directory-premium.css';
 import '@/lib/vault-team-hub.css';
 import '@/lib/gv-team.css';
 import '@/lib/media-card.css';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
 
 export default function VaultLayout({
   children,

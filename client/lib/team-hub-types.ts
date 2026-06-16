@@ -79,7 +79,7 @@ export const TEAM_COPY = {
     supportTitle: 'Support Staff',
   },
   roster: {
-    title: 'Roster',
+    title: 'Full Roster',
     subtitle: 'Filter by position, class, and hometown to explore the full Florida roster.',
   },
   depthChart: {
@@ -92,7 +92,7 @@ export const TEAM_COPY = {
     links: [
       { href: '#program-history', label: 'Program History' },
       { href: '#coaching-staff', label: 'Coaching Staff' },
-      { href: '#roster', label: 'Roster' },
+      { href: '#roster', label: 'Full Roster' },
       { href: '#depth-chart', label: 'Depth Chart' },
     ],
   },

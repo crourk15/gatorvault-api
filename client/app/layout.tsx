@@ -1,8 +1,15 @@
 import React from 'react';
+import type { Viewport } from 'next';
 import '@/lib/gv-theme.css';
 import '@/lib/gv-design-system.css';
 import '@/lib/site.css';
 import { AppProviders } from '@/components/AppProviders';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
 
 const themeBootScript = `(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}})();`;
 

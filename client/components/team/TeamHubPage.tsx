@@ -87,7 +87,7 @@ export function TeamHubPage(): React.ReactElement {
         : bundle.depthChart.specialTeams;
 
   return (
-    <div className="gv-team-hub" data-testid="vault-team">
+    <div className="gv-team-hub gv-team-page" data-testid="vault-team">
       <TeamHero />
 
       {error && !loading && (
@@ -103,7 +103,7 @@ export function TeamHubPage(): React.ReactElement {
           <TeamIdentitySection blocks={bundle.identity} />
           <CoachingStaffGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} />
 
-          <section className="gv-team-hub__section gv-team-hub__frame" id="roster" aria-label="Roster">
+          <section className="gv-team-hub__section gv-team-hub__frame gv-team-roster" id="roster" aria-label="Full Roster">
             <h2 className="gv-team-hub__section-title">{TEAM_COPY.roster.title}</h2>
             <p className="gv-team-hub__section-sub">{TEAM_COPY.roster.subtitle}</p>
             {loading && bundle.roster.length === 0 ? (

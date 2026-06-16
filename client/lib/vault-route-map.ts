@@ -60,18 +60,17 @@ export const RECRUITING_HUB_BASE = '/recruiting-hub';
 /** Legacy paths → current tab (2026 cycle retired → 2027) */
 export const RECRUITING_LEGACY_PATH_ALIASES: Record<string, RecruitingHubTab> = {
   '/vault/recruiting': 'commits-2027',
-  '/vault/recruiting/2026/commits': 'commits-2027',
+  '/vault/recruiting/2026/commits': 'commits-2026',
   '/vault/recruiting/2026/targets': 'targets-2027',
   '/vault/recruiting/heat-check': 'intel',
   [RECRUITING_HUB_BASE]: 'commits-2027',
-  [`${RECRUITING_HUB_BASE}/2026/commits`]: 'commits-2027',
+  [`${RECRUITING_HUB_BASE}/2026/commits`]: 'commits-2026',
   [`${RECRUITING_HUB_BASE}/2026/targets`]: 'targets-2027',
   [`${RECRUITING_HUB_BASE}/heat-check`]: 'intel',
 };
 
 /** Map deprecated tab ids to active hub tabs. */
 export function normalizeRecruitingTab(tab: RecruitingHubTab): RecruitingHubTab {
-  if (tab === 'commits-2026') return 'commits-2027';
   if (tab === 'heat-check') return 'intel';
   return tab;
 }

@@ -180,7 +180,6 @@
 /vault/apparel/*  /vault/apparel/index.html  200
 
 # Root → Welcome landing
-/  /welcome/  301!
 
 # Admin + legacy HTML
 /highlight/*  /highlight.html  200

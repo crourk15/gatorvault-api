@@ -13,13 +13,6 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Canonical landing — /welcome (also in server/_redirects from generate-redirects.js)
-[[redirects]]
-  from = "/"
-  to = "/welcome"
-  status = 301
-  force = true
-
 # Proxy API through same origin — no external API URLs in the browser
 [[redirects]]
   from = "/api/*"

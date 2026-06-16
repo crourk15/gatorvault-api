@@ -39,7 +39,7 @@ function TickerTrack({ items }: { items: LiveTickerProps['items'] }): React.Reac
   }, [items]);
 
   return (
-    <div ref={trackRef} className="gv-gnl-ticker__track">
+    <div ref={trackRef} className="gv-gnl-ticker__track gv-live-ticker__scroll">
       {loop.map((item, idx) => (
         <a
           key={`${item.type}_${idx}_${item.text.slice(0, 24)}`}
@@ -52,7 +52,7 @@ function TickerTrack({ items }: { items: LiveTickerProps['items'] }): React.Reac
           <span className={`gv-gnl-ticker__tag gv-gnl-ticker__tag--${TAG_CLASS[item.type]}`}>
             {item.type}
           </span>
-          <span className="gv-gnl-ticker__text">{item.text}</span>
+          <span className="gv-gnl-ticker__text gv-live-ticker__text">{item.text}</span>
         </a>
       ))}
     </div>
@@ -63,7 +63,7 @@ export function LiveTicker({ items }: LiveTickerProps): React.ReactElement {
   const display = items.length ? items : FIRST_PAINT_FALLBACK;
 
   return (
-    <section className="gv-gnl-ticker" aria-label="Live ticker" data-testid="gnl-ticker">
+    <section className="gv-gnl-ticker gv-live-ticker" aria-label="Live ticker" data-testid="gnl-ticker">
       <span className="gv-gnl-ticker__live-badge" aria-hidden="true">
         LIVE
       </span>
