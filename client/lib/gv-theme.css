@@ -60,7 +60,7 @@
 }
 
 [data-theme='light'] .insider-landing,
-[data-theme='light'] .welcome-premium {
+[data-theme='light'] .gv-marketing-main {
   background: var(--bg-primary);
   color: var(--text-primary);
 }

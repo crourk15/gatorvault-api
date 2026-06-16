@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import '@/lib/welcome-hero.css';
 import { WELCOME_LINKS } from './links';
 
 const TICKER_ITEMS = [

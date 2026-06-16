@@ -1,23 +1,19 @@
 'use client';
 
 import React from 'react';
-import '@/lib/gv-design-system.css';
-import '@/lib/welcome-elite.css';
-import '@/lib/welcome-premium.css';
-import '@/lib/welcome-hero.css';
-import '@/lib/welcome-value-proposition.css';
-import '@/lib/welcome-social-proof.css';
+import { PublicSiteShell } from '@/components/site/PublicSiteShell';
+import { MarketingWelcomePage } from '@/components/welcome/MarketingWelcomePage';
+import '@/lib/welcome-landing.css';
+import '@/lib/welcome-conversion.css';
 import '@/lib/pricing-section.css';
-import '@/lib/operator-access.css';
 import '@/lib/free-vs-insider.css';
 import '@/lib/operator-access.css';
-import { PublicSiteShell } from '@/components/site/PublicSiteShell';
-import { ABWelcomePage } from '@/components/welcome/ABWelcomePage';
+import '@/lib/welcome-mobile.css';
 
-export default function WelcomeRoute(): React.ReactElement {
+export default function LandingPage(): React.ReactElement {
   return (
     <PublicSiteShell marketing>
-      <ABWelcomePage />
+      <MarketingWelcomePage />
     </PublicSiteShell>
   );
 }

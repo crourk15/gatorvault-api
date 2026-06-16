@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import '@/lib/welcome-value-proposition.css';
 
 const CARDS = [
   {

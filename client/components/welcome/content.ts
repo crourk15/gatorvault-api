@@ -1,4 +1,21 @@
 // client/components/welcome/content.ts — copy source of truth
+
+export const landingContent = {
+  heroHeadline: 'Built for Gator Nation.',
+  heroSubheadline: 'Verified intel. Real-time updates. Elite recruiting tools.',
+  features: {
+    recruiting: 'Verified intel, movement tracking, and priority board updates.',
+    futurecast: 'UF probability, Fit Score, predictor movement, and trend analysis.',
+    gnl: 'Daily shows, headlines, and real-time reactions.',
+    filmroom: 'Breakdowns, highlights, and press conferences — all in one place.',
+  },
+  socialProof: {
+    stat1: { number: '24/7', label: 'Real-time updates' },
+    stat2: { number: '#1', label: 'Florida recruiting hub' },
+    stat3: { number: '1000s', label: 'of Gator fans served' },
+  },
+} as const;
+
 export const welcomeContent = {
   hero: {
     badge: 'Elite of the Elite',

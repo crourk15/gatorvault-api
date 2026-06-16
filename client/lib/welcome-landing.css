@@ -1,0 +1,159 @@
+/**
+ * GatorVault marketing landing — /welcome/
+ * Clean white layout, UF blue/orange accents.
+ */
+
+.gv-landing-container {
+  max-width: var(--gv-frame-max);
+  margin: 0 auto;
+  padding: var(--gv-frame-margin);
+}
+
+/* Hero */
+.gv-landing-hero {
+  background: var(--gv-white);
+  padding: 96px 0 72px;
+  text-align: center;
+}
+
+.gv-landing-h1 {
+  font-family: var(--gv-font);
+  font-size: clamp(2rem, 5vw, var(--gv-text-h1));
+  font-weight: 700;
+  color: var(--gv-blue);
+  margin: 0 0 16px;
+  line-height: 1.15;
+}
+
+.gv-landing-sub {
+  font-family: var(--gv-font);
+  font-size: var(--gv-text-body);
+  color: var(--gv-graphite);
+  max-width: 640px;
+  margin: 0 auto 32px;
+  line-height: 1.5;
+}
+
+.gv-landing-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+
+.gv-landing-cta-row .gv-btn {
+  min-height: 44px;
+  min-width: 160px;
+}
+
+/* Value prop */
+.gv-landing-value {
+  background: var(--gv-white);
+  padding: 80px 0;
+}
+
+.gv-landing-h2 {
+  font-family: var(--gv-font);
+  font-size: var(--gv-text-h2);
+  font-weight: 600;
+  text-align: center;
+  margin: 0 0 48px;
+  color: var(--gv-blue);
+  line-height: 1.2;
+}
+
+.gv-landing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.gv-landing-grid .gv-card {
+  min-height: 100%;
+  box-shadow: var(--gv-shadow-soft);
+}
+
+.gv-landing-card-title {
+  font-family: var(--gv-font);
+  font-size: var(--gv-text-h3);
+  font-weight: 600;
+  color: var(--gv-blue);
+  margin: 0 0 8px;
+}
+
+.gv-landing-card-body {
+  font-family: var(--gv-font);
+  font-size: var(--gv-text-body);
+  color: var(--gv-graphite);
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Social proof */
+.gv-landing-social {
+  background: var(--gv-white);
+  padding: 80px 0;
+  border-top: 1px solid var(--gv-storm);
+}
+
+.gv-landing-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 48px;
+  margin-top: 32px;
+}
+
+.gv-landing-stat {
+  text-align: center;
+  min-width: 140px;
+}
+
+.gv-landing-stat-number {
+  display: block;
+  font-family: var(--gv-font);
+  font-size: var(--gv-text-number);
+  font-weight: 700;
+  color: var(--gv-blue);
+  line-height: 1.1;
+}
+
+.gv-landing-stat-label {
+  display: block;
+  font-family: var(--gv-font);
+  font-size: var(--gv-text-label);
+  color: var(--gv-graphite);
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* Marketing shell — white page background (landing only) */
+.gv-landing-page {
+  background: var(--gv-white);
+}
+
+@media (max-width: 767px) {
+  .gv-landing-hero {
+    padding: 64px 0 48px;
+  }
+
+  .gv-landing-value,
+  .gv-landing-social {
+    padding: 56px 0;
+  }
+
+  .gv-landing-cta-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .gv-landing-cta-row .gv-btn {
+    width: 100%;
+  }
+
+  .gv-landing-stats {
+    flex-direction: column;
+    gap: 24px;
+  }
+}

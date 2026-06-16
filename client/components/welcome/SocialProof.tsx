@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import '@/lib/welcome-social-proof.css';
 
 const PILLARS = [
   {

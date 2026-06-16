@@ -1,0 +1,84 @@
+/**
+ * Shared marketing conversion blocks — FooterCTA, WelcomeStickyCTA.
+ * Used by /welcome/ and /insider/.
+ */
+
+.gv-marketing-main {
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+.welcome-footer {
+  padding: 64px var(--gv-frame-margin);
+  background: var(--gv-navy);
+  color: var(--gv-white);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.welcome-footer-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.welcome-footer-inner h2 {
+  margin: 0 0 0.5rem;
+  font-family: var(--gv-font);
+  font-size: var(--gv-text-h2);
+  font-weight: 700;
+  color: var(--gv-white);
+}
+
+.welcome-footer-inner p {
+  margin: 0 0 var(--gv-space-5);
+  font-size: var(--gv-text-body);
+  color: var(--gv-storm);
+  line-height: 1.5;
+}
+
+.welcome-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gv-space-3);
+}
+
+.welcome-hero-cta--center {
+  justify-content: center;
+}
+
+.welcome-sticky-cta {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 0.9rem 1rem;
+  padding-bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
+  background: var(--gv-orange);
+  color: var(--gv-white);
+  font-family: var(--gv-font);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .welcome-sticky-cta {
+    display: block;
+  }
+
+  .welcome-footer .welcome-hero-cta {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 22rem;
+    margin-inline: auto;
+  }
+
+  .welcome-footer .welcome-hero-cta .gv-ds-btn,
+  .welcome-footer .welcome-hero-cta .gv-btn {
+    width: 100%;
+    min-height: 48px;
+  }
+}
