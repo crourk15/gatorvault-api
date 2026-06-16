@@ -1,11 +1,12 @@
 /**
  * Recruiting Quote Rewriter — never post beat writer text verbatim.
- * Extracts quote meaning, rewrites in GatorVault voice, blocks >40% source overlap.
+ * Extracts quote meaning, rewrites in GatorVault voice, blocks >20% source overlap (env override).
  */
 const template = require('./x-autoposter-template');
 const postSpec = require('./x-autoposter-post-spec');
+const insiderPrompt = require('./x-autoposter-insider-prompt');
 
-const OVERLAP_THRESHOLD = parseFloat(process.env.X_AUTOPOST_QUOTE_OVERLAP_MAX || '0.4', 10);
+const OVERLAP_THRESHOLD = parseFloat(process.env.X_AUTOPOST_QUOTE_OVERLAP_MAX || '0.2', 10);
 const MAX_REGEN_ATTEMPTS = parseInt(process.env.X_AUTOPOST_QUOTE_REGEN_ATTEMPTS || '4', 10);
 
 const QUOTE_PATTERNS = [
@@ -369,11 +370,12 @@ function buildInsiderVariants(signal, ctx, research, contextLine, beatText) {
     }
   }
 
-  variants.push('Florida is actively tracking — more clarity expected soon.');
+  variants.push('Next staff touch should clarify where Florida stands in the race.');
 
   return variants
     .map((v) => template.sanitizeCopyLine(v, 140, { eliteMode: true }))
-    .filter((v) => template.stripEmojisHashtags(v).toLowerCase() !== contextNorm);
+    .filter((v) => template.stripEmojisHashtags(v).toLowerCase() !== contextNorm)
+    .filter((v) => !insiderPrompt.isGenericInsiderLine(v));
 }
 
 function pickNonOverlapping(variants, sourceText, { minLen = 24 } = {}) {
@@ -393,7 +395,8 @@ function rewriteBeatUpdate({
   eventType = null,
   sourceLabel = null,
   postKind = 'recruiting',
-  sport = 'football'
+  sport = 'football',
+  rewriteMetrics = null
 } = {}) {
   if (sport !== 'football') {
     return { ok: false, reason: 'non_football_sport', sport };
@@ -411,34 +414,44 @@ function rewriteBeatUpdate({
     newsEvent
   });
   signal.situation = postSpec.detectSituation(beatText, signal.eventType);
-
-  const contextVariants = buildContextVariants(signal, ctx, research, beatText);
   const sourceText = template.stripEmojisHashtags(beatText);
 
-  let contextLine = null;
-  for (let i = 0; i < Math.min(MAX_REGEN_ATTEMPTS, contextVariants.length); i += 1) {
-    const candidate = contextVariants[i];
-    if (candidate && !exceedsOverlap(candidate, sourceText)) {
-      contextLine = candidate;
-      break;
-    }
-  }
-  if (!contextLine) {
-    contextLine = pickNonOverlapping(contextVariants, sourceText) || contextVariants[contextVariants.length - 1];
-  }
+  const metrics = rewriteMetrics || research?.rewriteMetrics || intel?.rewriteMetrics || {};
+  const insiderBlocks = insiderPrompt.composeInsiderBlocks({
+    signal,
+    research,
+    metrics,
+    intel,
+    sourceLabel: sourceLabel || intel?.source || research?.source,
+    situation: signal.situation
+  });
 
-  const insiderVariants = buildInsiderVariants(signal, ctx, research, contextLine, beatText);
-  let insiderLine = pickNonOverlapping(insiderVariants, sourceText);
-  if (!insiderLine) {
-    for (const v of insiderVariants) {
-      if (v && !exceedsOverlap(`${contextLine} ${v}`, sourceText)) {
-        insiderLine = v;
-        break;
+  let contextLine = insiderBlocks.contextLine;
+  let insiderLine = insiderBlocks.insiderLine;
+
+  for (let attempt = 0; attempt < MAX_REGEN_ATTEMPTS; attempt += 1) {
+    const check = insiderPrompt.validateInsiderBlocks({ contextLine, insiderLine }, sourceText);
+    if (check.ok) break;
+
+    const contextVariants = buildContextVariants(signal, ctx, research, beatText);
+    const insiderVariants = buildInsiderVariants(signal, ctx, research, contextLine, beatText);
+    const nextContext = pickNonOverlapping(contextVariants, sourceText) || contextVariants[attempt] || contextLine;
+    const nextInsider = pickNonOverlapping(insiderVariants, sourceText) || insiderVariants[attempt] || insiderLine;
+    contextLine = nextContext || contextLine;
+    insiderLine = nextInsider || insiderLine;
+
+    if (attempt === MAX_REGEN_ATTEMPTS - 1) {
+      const finalCheck = insiderPrompt.validateInsiderBlocks({ contextLine, insiderLine }, sourceText);
+      if (!finalCheck.ok) {
+        return {
+          ok: false,
+          reason: finalCheck.errors[0] || 'rewrite_failed',
+          signal,
+          overlap: sourceOverlapRatio(`${contextLine} ${insiderLine}`, sourceText),
+          errors: finalCheck.errors
+        };
       }
     }
-  }
-  if (!insiderLine) {
-    insiderLine = insiderVariants[insiderVariants.length - 1] || 'Florida is actively tracking — more clarity expected soon.';
   }
 
   const combined = `${contextLine} ${insiderLine}`;
@@ -455,6 +468,9 @@ function rewriteBeatUpdate({
     ok: true,
     contextLine,
     insiderLine,
+    leadInsight: insiderBlocks.leadInsight,
+    contextBlock: insiderBlocks.contextBlock,
+    projection: insiderLine,
     signal,
     meta: {
       rewrittenFromQuote: signal.quotes.length > 0,
@@ -468,7 +484,9 @@ function rewriteBeatUpdate({
       returnVisitPotential: signal.returnVisitPotential,
       situation: signal.situation,
       overlapRatio: sourceOverlapRatio(combined, sourceText),
-      sport
+      sport,
+      template: 'elite_insider_v2',
+      rewriteMetrics: metrics
     }
   };
 }

@@ -149,10 +149,53 @@ function listMissingCoreIdentity(identity) {
 function resolveUfStatus(player) {
   if (!player) return null;
   if (/^florida$/i.test(String(player.committedTo || ''))) return 'committed';
-  if (player.category === 'target' || player.headliner) return 'priority target';
+  if (player.category === 'target' || player.headliner) return 'staff priority';
   if (player.ufRpmPct > 0) return 'RPM interest';
   if (player.category === 'recruit') return 'UF recruit';
   return player.category || null;
+}
+
+/** FutureCast + board metrics for rewrite engine (UF probability, movement, fit). */
+async function enrichRewriteMetrics(identity = {}, intel = {}) {
+  const store = require('./recruiting-store');
+  const slug = identity.playerSlug || intel.playerSlug || null;
+  let player = slug ? await store.getPlayerBySlug(slug) : null;
+  if (!player && identity.name) {
+    const all = await store.getAllPlayers();
+    player = all.find((p) => String(p.name || '').toLowerCase() === String(identity.name).toLowerCase()) || null;
+  }
+
+  const metrics = {
+    ufProbability: player?.ufProbability ?? player?.ufRpmPct ?? intel?.confidencePct ?? null,
+    movementDelta: player?.movementDelta ?? player?.delta ?? null,
+    fitScore: player?.fitScore ?? null,
+    ufStatus: resolveUfStatus(player || identity),
+    visitType: intel?.eventType || null,
+    visitStart: intel?.visitStart || null,
+    visitEnd: intel?.visitEnd || null,
+    sourceCredibility: intel?.sourceHandle || intel?.source || null,
+    competition: intel?.nextVisitSchool || intel?.cancelledSchool || null,
+    timeline: intel?.visitEnd || intel?.visitStart || null,
+    classYear: identity.classYear || identity.class || player?.classYear || null,
+    natlRank: identity.natlRank || player?.natlRank || null,
+    stars: identity.rating || player?.stars || null
+  };
+
+  if (metrics.ufProbability == null && slug) {
+    try {
+      const fcPath = path.join(__dirname, '..', 'data', 'futurecast', `futurecast-${metrics.classYear || 2027}.json`);
+      const fcRows = JSON.parse(fs.readFileSync(fcPath, 'utf8'));
+      const row = (fcRows || []).find((r) => r.slug === slug);
+      if (row?.predictions?.length) {
+        const uf = row.predictions.find((p) => /florida|gators|\buf\b/i.test(String(p.school || '')));
+        if (uf?.confidence != null) metrics.ufProbability = uf.confidence;
+      }
+    } catch {
+      /* optional cache */
+    }
+  }
+
+  return metrics;
 }
 
 function nameSimilarity(a, b) {
@@ -379,7 +422,7 @@ function detectSituationFromBeat(intel = {}) {
   return postSpec.detectSituation(beatText, intel.eventType || intel.sourceEventType);
 }
 
-function identityToPlayerContext(identity) {
+function identityToPlayerContext(identity, rewriteMetrics = null) {
   if (!identity) return null;
   return {
     name: identity.name,
@@ -401,7 +444,8 @@ function identityToPlayerContext(identity) {
       (identity.natlRank > 0 || identity.starsLabel)
     ),
     ufStatus: identity.ufStatus,
-    isUFtarget: identity.isUFtarget
+    isUFtarget: identity.isUFtarget,
+    rewriteMetrics: rewriteMetrics || null
   };
 }
 
@@ -483,13 +527,16 @@ async function fetchAutoposterPlayerData(intel = {}) {
     identitySource: identity.identitySource || 'gatorvault_db'
   };
 
+  const rewriteMetrics = await enrichRewriteMetrics(identity, intel);
+
   return {
     ok: true,
     data,
     identity,
-    ctx: identityToPlayerContext(identity),
+    ctx: identityToPlayerContext(identity, rewriteMetrics),
     situation: data.situation,
-    nameHints
+    nameHints,
+    rewriteMetrics
   };
 }
 
@@ -635,6 +682,7 @@ module.exports = {
   fetchFromGatorVaultDB,
   enrichPlayerIdentity,
   fetchAutoposterPlayerData,
+  enrichRewriteMetrics,
   fetchAutoposterCoachData,
   findCoachInStaffDb,
   passesUfFilter,

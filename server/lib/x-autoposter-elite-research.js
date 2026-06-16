@@ -276,7 +276,8 @@ async function researchUpdate(input = {}) {
     intel = null,
     article = null,
     sourceLabel = null,
-    newsEvent = null
+    newsEvent = null,
+    rewriteMetrics = null
   } = input;
 
   const articleBits = loadArticleBody(article);
@@ -363,7 +364,8 @@ async function researchUpdate(input = {}) {
       latestIntelDays: daysAgo(intelRows[0]?.reportedAt),
       visitWindow: formatVisitWindow(intelRows.find((r) => /visit/i.test(r.eventType || '')) || {})
     },
-    sourcesUsed
+    sourcesUsed,
+    rewriteMetrics: rewriteMetrics || intel?.rewriteMetrics || null
   };
 
   const inferred = inferEventType(research);

@@ -87,6 +87,29 @@ function rulesForAutoposter(candidate) {
   if (/beat/.test(src) && !candidate.identityConfirmed) {
     return { allow: false, reason: 'unverified_beat_autopost' };
   }
+  try {
+    const insiderPrompt = require('../x-autoposter-insider-prompt');
+    const blocks = candidate.templateBlocks || {};
+    const beatText = candidate.validationMeta?.beatText || null;
+    if (beatText && candidate.text) {
+      const quoteRewriter = require('../x-autoposter-recruiting-quote-rewriter');
+      if (quoteRewriter.exceedsOverlap(candidate.text, beatText)) {
+        return { allow: false, reason: 'verbatim_beat_overlap' };
+      }
+    }
+    if (insiderPrompt.isGenericInsiderLine(blocks.insider)) {
+      return { allow: false, reason: 'generic_insider_line' };
+    }
+    const check = insiderPrompt.validateInsiderBlocks(
+      { contextLine: blocks.context, insiderLine: blocks.insider },
+      beatText
+    );
+    if (!check.ok && beatText) {
+      return { allow: false, reason: check.errors[0] || 'insider_template_failed' };
+    }
+  } catch {
+    /* optional */
+  }
   return { allow: true };
 }
 

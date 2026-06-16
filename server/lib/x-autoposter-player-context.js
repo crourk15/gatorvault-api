@@ -212,7 +212,8 @@ function buildVerifiedInsiderAngle({ ctx, playerSlug, beatText, intel, contextLi
       research,
       eventType: intel?.eventType || copyMeta.triggerType,
       postKind: copyMeta.postKind || 'recruiting',
-      sport: copyMeta.sport || 'football'
+      sport: copyMeta.sport || 'football',
+      rewriteMetrics: research?.rewriteMetrics || ctx?.rewriteMetrics || null
     });
     if (rewritten.ok && rewritten.insiderLine) {
       const insider = quoteRewriter.sanitizeRewrittenLine(rewritten.insiderLine, beatText, 140);
@@ -258,7 +259,8 @@ function buildVerifiedContextLine({ newsEvent, sourceLabel, beatText, intel, cop
       eventType: intel?.eventType || copyMeta.triggerType,
       sourceLabel,
       postKind: copyMeta.postKind || 'recruiting',
-      sport: copyMeta.sport || 'football'
+      sport: copyMeta.sport || 'football',
+      rewriteMetrics: research?.rewriteMetrics || ctx?.rewriteMetrics || null
     });
     if (rewritten.ok && rewritten.contextLine) {
       const line = quoteRewriter.sanitizeRewrittenLine(rewritten.contextLine, beatText, 160);
@@ -810,7 +812,8 @@ async function buildPlayerNewsPost({
       eventType: intel?.eventType || copyMeta.triggerType,
       sourceLabel,
       postKind: copyMeta.postKind || kind,
-      sport: copyMeta.sport || 'football'
+      sport: copyMeta.sport || 'football',
+      rewriteMetrics: playerData.rewriteMetrics || ctx?.rewriteMetrics || null
     });
     if (rewritten.ok) {
       const ctxLine = quoteRewriter.sanitizeRewrittenLine(rewritten.contextLine, beatText, 160);

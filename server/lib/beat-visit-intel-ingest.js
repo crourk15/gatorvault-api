@@ -59,9 +59,9 @@ function appendWarRoomVisit(row) {
   writeJson(WAR_ROOM_VISITS_PATH, doc);
 }
 
-async function buildAutoposterText(row) {
+async function buildAutoposterPayload(row) {
   const copy = require('./x-autoposter-copy');
-  const built = await copy.buildIntelCopyAsync({
+  return copy.buildIntelCopyAsync({
     eventType: 'visit_cancelled',
     playerName: row.playerName,
     playerSlug: row.playerSlug,
@@ -69,19 +69,25 @@ async function buildAutoposterText(row) {
     source: row.source,
     analystName: row.source,
     pos: row.pos,
-    classYear: row.classYear
+    classYear: row.classYear,
+    detail: row.detail || null
   });
-  return built?.text || null;
 }
 
 async function queueAutoposter(row, intelId) {
   try {
     const xStore = require('./x-autoposter-store');
     const policy = require('./x-autoposter-policy');
-    const text = await buildAutoposterText(row);
+    const postSpec = require('./x-autoposter-post-spec');
+    const dataLayer = require('./x-autoposter-data-layer');
+    const built = await buildAutoposterPayload(row);
     const fp = row.fingerprint;
     const copy = require('./x-autoposter-copy');
-    if (!text || copy.isBrokenCopy(text) || !copy.isValidPlayerName(row.playerName)) {
+    if (
+      !built?.text ||
+      copy.isBrokenCopy(built.text, built) ||
+      !copy.isValidPlayerName(row.playerName)
+    ) {
       return { queued: false, reason: 'invalid_copy' };
     }
     const doc = xStore.loadQueue();
@@ -90,8 +96,19 @@ async function queueAutoposter(row, intelId) {
     );
     if (dup) return { queued: false, reason: 'duplicate' };
 
+    const fresh = dataLayer.assertIntelFresh({ timestamp: row.timestamp, sourceEventCreatedAt: row.timestamp });
+    if (!fresh.ok) {
+      console.log(`[beat-visit-intel] skip autoposter: ${fresh.logTag || fresh.skipReason} — ${fresh.reason}`);
+      return { queued: false, reason: fresh.skipReason || 'stale_intel' };
+    }
+
+    const similar = postSpec.findSimilarInQueue(built.text, doc.items);
+    if (similar.hit) {
+      return { queued: false, reason: 'similar_post', similarity: similar.similarity };
+    }
+
     const payload = {
-      text,
+      text: built.text,
       category: 'news',
       topic: 'recruiting',
       sources: [{ label: row.source, url: row.articleUrl || SITE_URL }],
@@ -99,10 +116,36 @@ async function queueAutoposter(row, intelId) {
       intelFingerprint: fp,
       intelType: 'visit_cancelled',
       playerName: row.playerName,
+      identityConfirmed: row.identityConfirmed !== false,
       sourceIntelId: intelId,
+      sourceEventCreatedAt: row.timestamp || null,
+      situation: built.validationMeta?.situation || postSpec.detectSituation(built.text, 'visit_cancelled'),
       scheduledAt: new Date(Date.now() + 2 * 60 * 1000).toISOString(),
-      status: 'pending'
+      status: 'pending',
+      templateBlocks: built.templateBlocks,
+      validationMeta: { ...(built.validationMeta || {}), beatText: row.detail || null },
+      playerContext: built.context || built.playerContext,
+      qualityScore: built.qualityScore ?? null,
+      qualityBreakdown: built.qualityBreakdown ?? null,
+      sourceConfidence: built.sourceConfidence ?? null
     };
+
+    const validation = require('./x-autoposter-validation');
+    const qualityGate = validation.passesNewsQualityGate(payload);
+    if (!qualityGate.pass) {
+      console.warn('[beat-visit-intel] autoposter quality gate failed', {
+        player: row.playerName,
+        fingerprint: fp,
+        skips: qualityGate.skips?.map((s) => s.type)
+      });
+      return { queued: false, reason: 'quality_gate', skips: qualityGate.skips };
+    }
+
+    const gm2 = require('./gm2');
+    if (!gm2.filterAutoposterCandidate(payload)) {
+      return { queued: false, reason: 'gm2_rejected' };
+    }
+
     const check = policy.validatePostContent(payload);
     if (!check.valid) return { queued: false, reason: 'policy', errors: check.errors };
     const out = xStore.enqueuePost(payload);
@@ -314,7 +357,8 @@ module.exports = {
   runBeatVisitIntelIngest,
   ingestManualVisitIntel,
   processVisitIntelRow,
-  buildAutoposterText,
+  buildAutoposterPayload,
+  buildAutoposterText: async (row) => (await buildAutoposterPayload(row))?.text || null,
   SNAPSHOT_PATH,
   WAR_ROOM_VISITS_PATH
 };

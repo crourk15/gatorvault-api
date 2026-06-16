@@ -308,18 +308,20 @@ function getContentPolicy() {
     },
     rules: [
       'No AI-invented news or unsourced factual claims',
-      'News posts require identity · context · insider angle (verified sources only)',
+      'Elite insider template v2: identity · lead insight+context · projection',
+      'Lead insight: what UF staff actually feels (priority, momentum, staff push)',
+      'Context: visit type, relationships, competition, timeline',
+      'Projection: UF probability, movement delta, fit score, what to watch next',
       'Identity block: class year, position, name, school, ranking (On3 preferred)',
-      'Context block: verified human reporting only — no headline-only or generic NEWS lines',
-      'Insider angle: verified analyst insight only — no rank-only fallback',
+      'Must rewrite beat text — max 20% source overlap (regenerate if exceeded)',
+      'Must reject generic tracking-only projection lines',
       'No duplicate sentences; skip if any required block is missing',
-      'Freshness: 3h normal news · 30m breaking/urgent',
+      'Freshness: 3h normal news · 30m breaking/urgent · 60m intel default',
       'No emojis, hashtags, or headline-only posts',
       'News posts require credible sources',
-      'Engagement: replies, quotes, hype — facts still need sources',
-      'Promo: blend GatorVault into the news cycle; value → engagement → promotion',
       'OAuth 1.0a for all posting; Bearer read-only for beat stream'
-    ]
+    ],
+    insiderTemplate: require('./x-autoposter-insider-prompt').getInsiderTemplatePolicy()
   };
 }
 

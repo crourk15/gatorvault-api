@@ -22,7 +22,8 @@ function pickBestFactualSentence(research) {
       newsEvent: research.explicitNewsEvent,
       sourceLabel: research.primarySource,
       postKind: 'recruiting',
-      sport: 'football'
+      sport: 'football',
+      rewriteMetrics: research.rewriteMetrics || null
     });
     if (rewritten.ok && rewritten.contextLine) {
       return rewritten.contextLine;
@@ -115,7 +116,8 @@ function buildEliteInsiderLine(research, contextLine) {
       newsEvent: research.explicitNewsEvent,
       sourceLabel: research.primarySource,
       postKind: 'recruiting',
-      sport: 'football'
+      sport: 'football',
+      rewriteMetrics: research.rewriteMetrics || null
     });
     if (rewritten.ok && rewritten.insiderLine) {
       const insider = quoteRewriter.sanitizeRewrittenLine(rewritten.insiderLine, research.combinedText, 140);
@@ -250,7 +252,8 @@ async function buildElitePlayerPost(input = {}) {
     ...input,
     playerName: playerData.data.name,
     playerSlug: playerData.data.playerSlug,
-    patch: null
+    patch: null,
+    rewriteMetrics: playerData.rewriteMetrics || null
   });
 
   if (!research.hasUsableSignal) {
@@ -315,7 +318,8 @@ async function buildElitePlayerPost(input = {}) {
         newsEvent: input.newsEvent,
         sourceLabel: research.primarySource,
         postKind: kind,
-        sport: 'football'
+        sport: 'football',
+        rewriteMetrics: playerData.rewriteMetrics || research.rewriteMetrics || null
       });
       if (retry.ok) {
         contextLine = trimLine(retry.contextLine, 160);

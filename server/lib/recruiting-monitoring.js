@@ -260,6 +260,21 @@ async function runHealthCheck() {
     /* optional */
   }
 
+  if ((process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL) && process.env.NODE_ENV === 'production') {
+    try {
+      const { Pool } = require('pg');
+      const dbUrl = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
+      const pool = new Pool({ connectionString: dbUrl, ssl: { rejectUnauthorized: false } });
+      await pool.query('select 1');
+      await pool.end();
+    } catch (e) {
+      issues.push({
+        code: 'futurecast_db_unreachable',
+        message: `FutureCast DATABASE_URL check failed: ${e.message}`
+      });
+    }
+  }
+
   if (counters.blockedEvents > 0 && counters.verificationFailures > 5) {
     issues.push({
       code: 'high_verification_failures',

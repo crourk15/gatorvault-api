@@ -533,7 +533,7 @@ async function queueAutoposter(row, intelItem, built) {
       intelFingerprint: fp,
       intelType: row.eventType,
       playerName: row.playerName || null,
-      identityConfirmed: isNonPlayerBeat ? true : undefined,
+      identityConfirmed: isNonPlayerBeat ? true : row.identityConfirmed !== false,
       postUrgency: isProgramNews ? 'breaking' : null,
       urgencyLabel: isProgramNews ? 'breaking' : isTeamEvent ? 'major_beat' : null,
       sourceEventType: isProgramNews ? 'program_news' : isTeamEvent ? 'team_event' : row.eventType,
@@ -543,9 +543,29 @@ async function queueAutoposter(row, intelItem, built) {
       scheduledAt: new Date(Date.now() + (isProgramNews ? 60 : 2) * 60 * 1000).toISOString(),
       status: 'pending',
       templateBlocks: built.templateBlocks,
-      validationMeta: built.validationMeta,
-      playerContext: built.context || built.playerContext
+      validationMeta: { ...(built.validationMeta || {}), beatText: row.detail || null },
+      playerContext: built.context || built.playerContext,
+      qualityScore: built.qualityScore ?? null,
+      qualityBreakdown: built.qualityBreakdown ?? null,
+      sourceConfidence: built.sourceConfidence ?? null
     };
+
+    const validation = require('./x-autoposter-validation');
+    const qualityGate = validation.passesNewsQualityGate(payload);
+    if (!qualityGate.pass) {
+      console.warn('[beat-writer-ingest] autoposter quality gate failed', {
+        player: row.playerName,
+        fingerprint: fp,
+        skips: qualityGate.skips?.map((s) => s.type)
+      });
+      return { queued: false, reason: 'quality_gate', skips: qualityGate.skips };
+    }
+
+    const gm2 = require('./gm2');
+    if (!gm2.filterAutoposterCandidate(payload)) {
+      return { queued: false, reason: 'gm2_rejected' };
+    }
+
     const check = policy.validatePostContent(payload);
     if (!check.valid) return { queued: false, reason: 'policy', errors: check.errors };
     const out = xStore.enqueuePost(payload);

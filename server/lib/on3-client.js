@@ -174,14 +174,23 @@ async function fetchFloridaSnapshot(classYears) {
       const html = await fetchHtml(url, year);
       const next = extractNextData(html);
       const pageProps = next?.props?.pageProps || {};
-      const list = pageProps.playerList?.list || [];
+      const list =
+        pageProps.playerList?.list ||
+        pageProps.commitList?.list ||
+        pageProps.commits?.list ||
+        pageProps.data?.playerList?.list ||
+        [];
       boards[year] = list.map((row) => normalizeOn3Row(row, year)).filter((p) => p.name);
       rankings[year] = normalizeTeamRank(pageProps.teamRank, year);
       console.log(
         `[on3-client] class ${year}: ${boards[year].length} commit(s), nationalRank=${rankings[year]?.nationalRank ?? 'n/a'}`
       );
       if (!boards[year].length) {
-        errors.push({ year, type: 'commits', error: 'No commits found in On3 page data' });
+        errors.push({
+          year,
+          type: 'commits',
+          error: 'No commits found in On3 page data — check playerList path or DOM change'
+        });
       }
     } catch (e) {
       console.warn(`[on3-client] class ${year} fetch failed: ${e.message}`);

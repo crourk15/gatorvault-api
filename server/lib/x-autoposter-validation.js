@@ -579,6 +579,16 @@ function collectHardSkipReasons(item, blocks, meta) {
   if (blocks.context && prediction.isBarePredictionLine(blocks.context)) {
     skips.push({ type: 'headline_only', message: 'Bare prediction context — automatic skip.' });
   }
+  if (blocks.insider) {
+    try {
+      const insiderPrompt = require('./x-autoposter-insider-prompt');
+      if (insiderPrompt.isGenericInsiderLine(blocks.insider)) {
+        skips.push({ type: 'generic_insider', message: 'Generic insider/projection line — automatic skip.' });
+      }
+    } catch {
+      /* optional */
+    }
+  }
   if (meta.predictionPost && blocks.identity && !/\(\s*.+,\s*.+\)/.test(blocks.identity)) {
     skips.push({ type: 'missing_identity', message: 'Prediction post missing school/hometown identity.' });
   }
