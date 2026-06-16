@@ -149,7 +149,11 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  padding-top: max(0.75rem, var(--vault-safe-top, 0px));
+  padding-top: 0;
+}
+
+.gv-dash-hero .gv-dash__frame {
+  padding-top: 0.75rem;
 }
 
 .gv-dash-hero__split {

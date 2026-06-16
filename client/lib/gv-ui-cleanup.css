@@ -4,7 +4,7 @@
  */
 
 :root {
-  --gv-shell-header-height: 56px;
+  --gv-shell-header-height: 64px;
   --gv-mobile-nav-height: calc(4.5rem + env(safe-area-inset-bottom, 0px));
   --gv-bg-shell: var(--gv-navy, #001a33);
 }
@@ -1139,4 +1139,37 @@ body {
 .gv-vault-shell__main:has(.gv-dash) .gv-dash-hero {
   padding-top: 0;
   margin-top: 0;
+}
+
+.gv-vault-shell__main:has(.gv-dash) .gv-dash-hero__inner {
+  padding-top: 0;
+}
+
+/* Dashboard shell: compact header + flush hero under nav (landing rhythm) */
+.gv-vault-shell--dashboard .gv-vault-shell__header {
+  min-height: var(--gv-shell-header-height);
+  height: var(--gv-shell-header-height);
+  padding: 0 1rem;
+  margin: 0;
+  box-shadow: none;
+}
+
+.gv-vault-shell--dashboard .gv-vault-shell__body {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.gv-vault-shell--dashboard .gv-vault-shell__nav {
+  margin: 0;
+  padding: 0;
+}
+
+.gv-vault-shell--dashboard .gv-vault-shell__sidebar {
+  padding-top: 0.75rem;
+}
+
+@media (max-width: 767px) {
+  .gv-vault-shell--dashboard .gv-vault-shell__header {
+    padding: 0 0.75rem;
+  }
 }

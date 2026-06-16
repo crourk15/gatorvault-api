@@ -15,7 +15,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.75rem 1.25rem;
+  box-sizing: border-box;
+  min-height: var(--gv-shell-header-height, 64px);
+  height: var(--gv-shell-header-height, 64px);
+  padding: 0 1.25rem;
+  margin: 0;
   border-bottom: 1px solid rgba(0, 48, 135, 0.35);
   background: rgba(0, 26, 51, 0.97);
   position: sticky;
@@ -93,7 +97,10 @@
 .gv-vault-shell__body {
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
-  min-height: calc(100vh - 56px);
+  min-height: calc(100vh - var(--gv-shell-header-height, 64px));
+  min-height: calc(100dvh - var(--gv-shell-header-height, 64px));
+  margin: 0;
+  padding: 0;
 }
 
 .gv-vault-shell__sidebar {
@@ -272,7 +279,7 @@ body.gv-live-page-active .gv-vault-shell__main {
 
   .gv-vault-shell__sidebar {
     position: fixed;
-    top: 56px;
+    top: var(--gv-shell-header-height, 64px);
     left: 0;
     bottom: 0;
     width: min(280px, 86vw);
@@ -290,7 +297,7 @@ body.gv-live-page-active .gv-vault-shell__main {
   .gv-vault-shell__backdrop {
     display: block;
     position: fixed;
-    inset: 56px 0 0;
+    inset: var(--gv-shell-header-height, 64px) 0 0;
     z-index: 45;
     border: none;
     background: rgba(0, 0, 0, 0.55);

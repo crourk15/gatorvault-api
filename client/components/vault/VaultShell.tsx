@@ -76,6 +76,8 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
   const { user } = useUser();
   const [navOpen, setNavOpen] = useState(false);
   const inVault = isVaultPath(pathname);
+  const isDashboard =
+    (pathname.replace(/\/$/, '') || '/') === '/vault';
 
   const coreNav = VAULT_PILLARS;
   const secondaryNav = useMemo(() => {
@@ -102,7 +104,11 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
   }, []);
 
   return (
-    <div className={`gv-vault-shell${isNavigating ? ' is-navigating' : ''}`}>
+    <div
+      className={`gv-vault-shell${isNavigating ? ' is-navigating' : ''}${
+        isDashboard ? ' gv-vault-shell--dashboard' : ''
+      }`}
+    >
       <style
         dangerouslySetInnerHTML={{
           __html:
