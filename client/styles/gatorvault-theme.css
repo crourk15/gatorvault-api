@@ -177,6 +177,15 @@
 }
 
 .gv-home-card__accent {
+  height: 3px;
+  width: 40px;
+  background: var(--th-accent);
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.gv-home-card__eyebrow {
+  margin: 0;
   color: var(--th-accent);
   font-size: 0.875rem;
   font-weight: 600;

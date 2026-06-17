@@ -24,7 +24,7 @@ export function HomeFutureCastSnapshot({ data, loading }: Props): React.ReactEle
   if (loading || !data) {
     return (
       <HomeModuleCard
-        gridClass="gv-home__cell--4"
+        gridClass="gv-home__cell--6"
         eyebrow="FutureCast"
         title="Momentum snapshot"
         ariaLabel="FutureCast snapshot"
@@ -42,7 +42,7 @@ export function HomeFutureCastSnapshot({ data, loading }: Props): React.ReactEle
 
   return (
     <HomeModuleCard
-      gridClass="gv-home__cell--4"
+      gridClass="gv-home__cell--6"
       eyebrow="FutureCast"
       title="Momentum snapshot"
       stats={[

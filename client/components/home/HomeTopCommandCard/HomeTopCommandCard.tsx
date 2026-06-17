@@ -42,7 +42,8 @@ export function HomeTopCommandCard({
     >
       <div className="gv-home-command-card__head">
         <div>
-          <p className="gv-home-card__accent">GatorVault Insider</p>
+          <div className="gv-home-card__accent" />
+          <p className="gv-home-card__eyebrow">GatorVault Insider</p>
           <h1 className="gv-home-command-card__title">GatorVault Home</h1>
           <p className="gv-home-command-card__subtitle">{subtitle}</p>
         </div>

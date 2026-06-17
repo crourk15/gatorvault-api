@@ -27,7 +27,7 @@ export function HomeRecruitingSnapshot({
   if (loading || !snapshot) {
     return (
       <HomeModuleCard
-        gridClass="gv-home__cell--8"
+        gridClass="gv-home__cell--6"
         eyebrow="Recruiting Hub"
         title={GV_COPY.headlines.recruitingSnapshot}
         ariaLabel="Recruiting snapshot"
@@ -62,7 +62,7 @@ export function HomeRecruitingSnapshot({
 
   return (
     <HomeModuleCard
-      gridClass="gv-home__cell--8"
+      gridClass="gv-home__cell--6"
       eyebrow="Recruiting Hub"
       title={GV_COPY.headlines.recruitingSnapshot}
       stats={[

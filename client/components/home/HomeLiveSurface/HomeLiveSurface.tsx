@@ -65,10 +65,11 @@ export function HomeLiveSurface({ tickerItems, movement, content, loading }: Pro
       <article className="gv-home-card gv-home-feed" aria-label="Live movement feed">
         <div className="gv-home-feed__header">
           <div>
-            <p className="gv-home-card__accent">Movement Intel</p>
+            <div className="gv-home-card__accent" />
+            <p className="gv-home-card__eyebrow">Movement Intel</p>
             <h2 className="gv-home-card__title">{GV_COPY.headlines.movementIntel}</h2>
           </div>
-          <a href={`${SITE_ROUTES.futurecast}/movement`} className="gv-home-card__link">
+          <a href={`${SITE_ROUTES.futurecast}/movement`} className="gv-home-link">
             Full intel →
           </a>
         </div>

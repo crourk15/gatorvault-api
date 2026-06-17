@@ -440,12 +440,27 @@ function parseScheduleCard(game: ScheduleGame): HomeGameCard {
 }
 
 export function buildHomeGnlItems(ticker: TickerResponse | null): HomeGnlItem[] {
-  return (ticker?.items ?? []).slice(0, 5).map((item) => ({
+  const fromTicker = (ticker?.items ?? []).slice(0, 5).map((item) => ({
     id: item.id,
     author: item.source || 'GatorVault',
     text: item.text,
     href: item.url,
   }));
+  if (fromTicker.length > 0) return fromTicker;
+
+  const fromHot = (ticker?.hotToday ?? []).slice(0, 5).map((item) => ({
+    id: item.id,
+    author: 'Trending',
+    text: item.title,
+    href: item.url,
+  }));
+  if (fromHot.length > 0) return fromHot;
+
+  if (ticker?.storyline) {
+    return [{ id: 'storyline', author: 'GatorVault', text: ticker.storyline }];
+  }
+
+  return [];
 }
 
 function depthStarter(row: DepthChartPosition): string {

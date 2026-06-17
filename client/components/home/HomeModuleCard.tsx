@@ -37,52 +37,48 @@ export function HomeModuleCard({
   children,
   className = '',
 }: Props): React.ReactElement {
+  const statsClass =
+    stats && stats.length === 2
+      ? 'gv-home-card__stats gv-home-card__stats--two'
+      : stats && stats.length >= 3
+        ? 'gv-home-card__stats gv-home-card__stats--three'
+        : 'gv-home-card__stats';
+
   if (loading) {
     return (
-      <article
-        className={`gv-home__cell ${gridClass} gv-home-card ${className}`.trim()}
-        aria-label={ariaLabel}
-        data-testid={testId}
-      >
+      <article className={`gv-home__cell ${gridClass}`.trim()} aria-label={ariaLabel} data-testid={testId}>
         <div className="gv-home-skeleton gv-home-skeleton--card" style={{ minHeight: skeletonHeight }} />
       </article>
     );
   }
 
   return (
-    <article
-      className={`gv-home__cell ${gridClass} gv-home-card ${className}`.trim()}
-      aria-label={ariaLabel}
-      data-testid={testId}
-    >
-      <p className="gv-home-card__accent">{eyebrow}</p>
-      <h2 className="gv-home-card__title">{title}</h2>
-      {subtitle ? <p className="gv-home-card__meta">{subtitle}</p> : null}
+    <article className={`gv-home__cell ${gridClass}`.trim()} aria-label={ariaLabel} data-testid={testId}>
+      <div className={`gv-home-card ${className}`.trim()}>
+        <div className="gv-home-card__accent" />
+        <p className="gv-home-card__eyebrow">{eyebrow}</p>
+        <h2 className="gv-home-card__title">{title}</h2>
+        {subtitle ? <p className="gv-home-card__meta">{subtitle}</p> : null}
 
-      {stats && stats.length > 0 ? (
-        <div className="gv-home-card__stats">
-          {stats.map((stat) => (
-            <div key={stat.label} className="gv-home-card__stat-item">
-              <span
-                className={`gv-home-card__stat-value${
-                  stat.tone ? ` gv-home-card__stat-value--${stat.tone}` : ''
-                }`}
-              >
-                {stat.value}
-              </span>
-              <span className="gv-home-card__stat-label">{stat.label}</span>
-            </div>
-          ))}
-        </div>
-      ) : null}
+        {stats && stats.length > 0 ? (
+          <div className={statsClass}>
+            {stats.map((stat) => (
+              <div key={stat.label} className="stat">
+                <span>{stat.label}</span>
+                <strong>{stat.value}</strong>
+              </div>
+            ))}
+          </div>
+        ) : null}
 
-      {children}
+        {children}
 
-      {link ? (
-        <a href={link.href} className="gv-home-card__link">
-          {link.label}
-        </a>
-      ) : null}
+        {link ? (
+          <a href={link.href} className="gv-home-link">
+            {link.label}
+          </a>
+        ) : null}
+      </div>
     </article>
   );
 }
