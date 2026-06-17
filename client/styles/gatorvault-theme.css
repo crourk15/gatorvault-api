@@ -1,0 +1,121 @@
+/**
+ * GatorVault Design Tokens — unified UF theme system (platform source of truth)
+ */
+:root {
+  /* BRAND COLORS */
+  --uf-blue: #0021a5;
+  --gator-orange: #fa4616;
+  --vault-navy: #001a33;
+  --deep-navy: #001a33;
+  --white: #ffffff;
+  --graphite: #1a1a1a;
+  --muted-gray: #cbd5e1;
+  --subtle-gray: #94a3b8;
+
+  /* SEMANTIC COLORS */
+  --momentum-up: #4ade80;
+  --momentum-down: #ff4d4d;
+  --hot: #f97316;
+  --cooling: #3b82f6;
+  --flip-risk: #ef4444;
+  --portal-green: #22c55e;
+  --star-gold: #fbbf24;
+  --fit-blue: #93c5fd;
+  --portal-purple: #c4b5fd;
+
+  /* BACKGROUNDS */
+  --page-bg: var(--vault-navy);
+  --card-bg: var(--white);
+  --card-bg-dark: #0a1628;
+
+  /* BORDERS & SHADOWS */
+  --card-border: rgba(0, 33, 165, 0.18);
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --radius-md: 12px;
+
+  /* TYPOGRAPHY */
+  --heading-color-dark: var(--white);
+  --heading-color-light: var(--uf-blue);
+  --body-color-dark: var(--muted-gray);
+  --body-color-light: var(--graphite);
+  --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* SPACING */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* GRID */
+  --max-width: 1440px;
+  --grid-gap: 24px;
+
+  /* HERO */
+  --hero-gradient: linear-gradient(180deg, #0021a5 0%, #001a33 100%);
+  --hero-height: 180px;
+
+  /* ENERGY ELEMENTS */
+  --ticker-gradient: linear-gradient(90deg, #fa4616, #facc15);
+  --pulse-red: #ef4444;
+  --blue-glow: 0 0 24px rgba(0, 33, 165, 0.4);
+
+  /* Legacy aliases — keep existing CSS working during migration */
+  --gv-blue: var(--uf-blue);
+  --gv-blue-primary: var(--uf-blue);
+  --gv-orange: var(--gator-orange);
+  --gv-orange-primary: var(--gator-orange);
+  --gv-navy: var(--vault-navy);
+  --gv-navy-swamp: var(--vault-navy);
+  --gv-deep-navy: var(--deep-navy);
+  --gv-white: var(--white);
+  --gv-graphite: var(--graphite);
+  --gv-black-graphite: var(--graphite);
+  --gv-storm: #e5e5e5;
+  --gv-muted: var(--subtle-gray);
+  --gv-success: var(--portal-green);
+  --gv-warning: #facc15;
+  --gv-error: var(--flip-risk);
+  --gv-heatmap-red: var(--momentum-down);
+  --gv-heatmap-green: var(--momentum-up);
+  --gv-border-card: var(--card-border);
+  --gv-shadow-card: var(--card-shadow);
+  --gv-frame-max: var(--max-width);
+  --gv-font: var(--font-family);
+  --gv-gradient-hero-blue: var(--hero-gradient);
+  --gv-gradient-blue-glow: linear-gradient(90deg, #0021a5 0%, #001a33 100%);
+  --gv-gradient-orange-fire: linear-gradient(90deg, #fa4616 0%, #ff7a45 100%);
+  --gv-gradient-momentum: var(--ticker-gradient);
+}
+
+/* Shared platform card primitive */
+.gv-card,
+.gv-dash-card {
+  background: var(--card-bg);
+  color: var(--graphite);
+  border: 1px solid var(--card-border);
+  border-top: 3px solid var(--gator-orange);
+  border-radius: var(--radius-md);
+  box-shadow: var(--card-shadow);
+}
+
+.gv-card__title,
+.gv-dash-card__title {
+  color: var(--heading-color-light);
+  font-family: var(--font-family);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.gv-card__body,
+.gv-dash-card__body {
+  color: var(--body-color-light);
+  font-family: var(--font-family);
+}
+
+.gv-card__meta,
+.gv-dash-card__meta {
+  color: var(--subtle-gray);
+  font-size: 0.875rem;
+}

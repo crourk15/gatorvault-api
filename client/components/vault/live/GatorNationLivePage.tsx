@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import '@/lib/gatornation-live.css';
 import { fetchLiveHubBundle, LIVE_HUB_REFRESH_MS, type LiveHubBundle } from '@/lib/gatornation-live-api';
 import { GNL_COPY } from '@/lib/gatornation-live-types';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
 import { LIVE_STATE_KEY } from '@/components/vault/live/live-feed-utils';
 import { UiError } from '@/components/site/UiMessage';
 import { Button } from '@/components/ui';
+import { GNLPageHero } from '@/components/gatornation-live/GNLPageHero';
 import { GNLHero, buildGNLHeroEpisode } from '@/components/gatornation-live/GNLHero';
 import { LiveTicker } from '@/components/gatornation-live/LiveTicker';
 import { BeatWriterCardGrid } from '@/components/gatornation-live/BeatWriterCardGrid';
@@ -34,7 +36,7 @@ const EMPTY_BUNDLE: LiveHubBundle = {
   updatedAt: null,
 };
 
-/** GatorNation Live — premium real-time media hub. */
+/** GatorNation Live — premium real-time media hub (Dashboard blueprint layout). */
 export function GatorNationLivePage(): React.ReactElement {
   const [bundle, setBundle] = useState<LiveHubBundle>(EMPTY_BUNDLE);
   const [loading, setLoading] = useState(true);
@@ -90,69 +92,66 @@ export function GatorNationLivePage(): React.ReactElement {
   );
 
   return (
-    <div className="gv-gnl gv-live-feed" data-testid="vault-live-feed">
-      <div className="gv-gnl__frame">
-        <GNLHero episode={heroEpisode} />
-      </div>
+    <div className="gv-gnl gv-gnl-shell gv-live-feed" data-testid="vault-live-feed">
+      <section className="gv-gnl-hero-section" aria-label="Hero section">
+        <GNLPageHero />
+        <LiveTicker items={bundle.ticker} loading={loading && !bundle.ticker.length} />
+      </section>
 
-      <LiveTicker items={bundle.ticker} loading={loading && !bundle.ticker.length} />
+      <div className="gv-gnl__frame gv-gnl__command">
+        {error && !loading && (
+          <UiError
+            message={error}
+            retry={() => void load(true)}
+            backHref="/vault"
+            backLabel="← Dashboard"
+          />
+        )}
 
-      <div className="gv-gnl__frame gv-gnl__section">
-        <div className="gv-live-feed__tabs" role="tablist" aria-label="Live feed sections">
-          <button type="button" className="gv-live-feed__tab is-active" role="tab" aria-selected>
-            Headlines
-          </button>
-          <button type="button" className="gv-live-feed__tab" role="tab" aria-selected={false}>
-            Beat Writers
-          </button>
-          <button type="button" className="gv-live-feed__tab" role="tab" aria-selected={false}>
-            Podcasts
-          </button>
-        </div>
-      </div>
+        <div className="gv-gnl__grid">
+          <div className="gv-gnl__cell gv-gnl__cell--12">
+            <GNLHero episode={heroEpisode} />
+          </div>
 
-      {error && !loading && (
-        <div className="gv-gnl__frame gv-gnl__section">
-          <UiError message={error} retry={() => void load(true)} backHref="/vault" backLabel="← Dashboard" />
-        </div>
-      )}
+          <div className="gv-gnl__cell gv-gnl__cell--8">
+            <article className="gv-gnl-card" aria-label="Latest headlines">
+              <h2 className="gv-gnl-card__title">{GNL_COPY.recruitingFeed}</h2>
+              {loading && bundle.feed.length === 0 ? (
+                <p className="gv-gnl-status">Loading feed…</p>
+              ) : (
+                <RecruitingFeed items={bundle.feed} />
+              )}
+            </article>
+          </div>
 
-      <section className="gv-gnl__tri-column gv-gnl__frame gv-gnl__section" aria-label="Live content">
-        <div className="gv-gnl__tri-col">
-          <h2 className="gv-gnl__section-title">Latest Headlines</h2>
-          {loading && bundle.feed.length === 0 ? (
-            <p className="gv-gnl-status">Loading feed…</p>
-          ) : (
-            <RecruitingFeed items={bundle.feed} />
-          )}
-        </div>
-
-        <div className="gv-gnl__tri-col">
-          <h2 className="gv-gnl__section-title">Recruiting Intel</h2>
-          <RecruitingSnapshot {...bundle.snapshot} />
-          <div className="gv-gnl__section--movement">
+          <div className="gv-gnl__cell gv-gnl__cell--4 gv-gnl__cell--stack">
+            <RecruitingSnapshot {...bundle.snapshot} />
             <MovementIntelPreview data={bundle.movement} loading={loading && !bundle.movement} />
           </div>
-        </div>
-      </section>
 
-      <section className="gv-gnl__beat-section gv-gnl__frame gv-gnl__section" aria-label="Beat writer highlights">
-        <BeatWriterCardGrid
-          title={GNL_COPY.panels.beat.title}
-          description={GNL_COPY.panels.beat.description}
-          items={bundle.panels.beatWriterHighlights}
-        />
-        <div className="gv-gnl__tri-col-cta">
-          <Button href="/vault/live#beat-writers" variant="secondary">
-            View All Beat Writers
-          </Button>
-        </div>
-      </section>
+          <div className="gv-gnl__cell gv-gnl__cell--12">
+            <article className="gv-gnl-card gv-gnl-beat-wrap">
+              <BeatWriterCardGrid
+                title={GNL_COPY.panels.beat.title}
+                description={GNL_COPY.panels.beat.description}
+                items={bundle.panels.beatWriterHighlights}
+              />
+              <div className="gv-gnl__tri-col-cta">
+                <Button href="/vault/live#beat-writers" variant="secondary">
+                  View All Beat Writers
+                </Button>
+              </div>
+            </article>
+          </div>
 
-      <section className="gv-gnl__section gv-gnl__frame" aria-label="Podcast hub" id="podcast-hub">
-        <h2 className="gv-gnl__section-title">{GNL_COPY.podcastHub}</h2>
-        <PodcastGrid podcasts={bundle.podcasts} />
-      </section>
+          <div className="gv-gnl__cell gv-gnl__cell--12">
+            <article className="gv-gnl-card" aria-label="Podcast hub" id="podcast-hub">
+              <h2 className="gv-gnl-card__title">{GNL_COPY.podcastHub}</h2>
+              <PodcastGrid podcasts={bundle.podcasts} />
+            </article>
+          </div>
+        </div>
+      </div>
 
       <LiveFooter />
     </div>

@@ -29,9 +29,9 @@ export function BeatWriterCardGrid({ title, description, items }: Props): React.
   const cards = items.slice(0, 3);
 
   return (
-      <section className="gv-gnl-beat-grid" data-testid="gnl-beat-writer-grid" id="beat-writers">
-      <h2 className="gv-gnl__section-title">{title}</h2>
-      {description ? <p className="gv-gnl-panel__desc">{description}</p> : null}
+    <div className="gv-gnl-beat-grid" data-testid="gnl-beat-writer-grid" id="beat-writers">
+      <h2 className="gv-gnl-card__title">{title}</h2>
+      {description ? <p className="gv-gnl-card__subtitle">{description}</p> : null}
       <div className="gv-gnl-beat-grid__cards">
         {cards.length === 0 ? (
           <p className="gv-gnl-panel__secondary">Nothing active right now.</p>
@@ -69,6 +69,6 @@ export function BeatWriterCardGrid({ title, description, items }: Props): React.
           ))
         )}
       </div>
-    </section>
+    </div>
   );
 }

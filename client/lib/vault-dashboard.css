@@ -1,18 +1,34 @@
-/* GatorVault Dashboard — uses brand kit tokens from gatorvault-brand.css */
+/* GatorVault Dashboard — Master Blueprint v2 (UF Vault Navy command center) */
 
 .gv-dash {
-  --gv-muted: var(--gv-storm);
-  --gv-section-pad: 2rem;
-  --gv-card-pad: 1.5rem;
-  --gv-grid-gap: 2rem;
-  --gv-rhythm: 2rem;
-  --gv-dash-gap-hero-ticker: 0.375rem;
-  --gv-dash-gap-ticker-today: 1.25rem;
+  --gv-muted: var(--subtle-gray);
+  --gv-section-pad: var(--space-lg);
+  --gv-card-pad: var(--space-md);
+  --gv-grid-gap: var(--grid-gap);
+  --gv-rhythm: var(--space-lg);
+  --gv-frame-max: var(--max-width);
+  --gv-frame-margin: var(--space-xl);
+  --gv-dash-body: var(--graphite);
+  --gv-dash-meta: var(--subtle-gray);
+  --gv-dash-subtitle: var(--muted-gray);
+  --gv-dash-card-border: var(--card-border);
+  --gv-dash-card-shadow: var(--card-shadow);
+  --gv-dash-semantic-up: var(--momentum-up);
+  --gv-dash-semantic-down: var(--momentum-down);
+  --gv-dash-semantic-hot: var(--hot);
+  --gv-dash-semantic-cooling: var(--cooling);
+  --gv-dash-semantic-flip: var(--flip-risk);
+  --gv-dash-semantic-portal: var(--portal-green);
+  --gv-dash-semantic-star: var(--star-gold);
   --vault-safe-top: env(safe-area-inset-top, 0px);
   margin: 0;
-  color: var(--gv-white);
-  font-family: var(--gv-font);
-  background: var(--gv-navy);
+  color: var(--heading-color-dark);
+  font-family: var(--font-family);
+  background: var(--page-bg);
+}
+
+.gv-dash-hero-section {
+  width: 100%;
 }
 
 /* Flush handled globally in gv-ui-cleanup.css */
@@ -33,13 +49,79 @@
   }
 }
 
-/* 12-col frame — 1440 canvas, 80px margins */
+/* 12-col command center frame */
 .gv-dash__frame {
   max-width: var(--gv-frame-max);
   margin: 0 auto;
   width: 100%;
   padding-left: var(--gv-frame-margin);
   padding-right: var(--gv-frame-margin);
+}
+
+.gv-dash__command {
+  padding-top: 1.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.gv-dash__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--gv-grid-gap);
+  align-items: start;
+}
+
+.gv-dash__cell--12 { grid-column: span 12; }
+.gv-dash__cell--8 { grid-column: span 12; }
+.gv-dash__cell--6 { grid-column: span 12; }
+.gv-dash__cell--4 { grid-column: span 12; }
+
+@media (min-width: 768px) {
+  .gv-dash__cell--8 { grid-column: span 8; }
+  .gv-dash__cell--6 { grid-column: span 6; }
+  .gv-dash__cell--4 { grid-column: span 4; }
+}
+
+.gv-dash__grid .gv-dash__section,
+.gv-dash__grid .gv-dash-recruit,
+.gv-dash__grid .gv-dash-movement,
+.gv-dash__grid .gv-dash-portal,
+.gv-dash__grid .gv-dash-today,
+.gv-dash__grid .gv-dash-actions,
+.gv-dash__grid .gv-dash-watchlist,
+.gv-dash__grid .gv-dash-games,
+.gv-dash__grid .gv-dash-feed {
+  padding-top: 0;
+  padding-bottom: 0;
+  background: transparent;
+}
+
+.gv-dash__grid .gv-dash__frame {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.gv-dash-panel {
+  height: 100%;
+}
+
+.gv-dash-panel__title,
+.gv-dash-today__heading {
+  font-family: Inter, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 1rem;
+}
+
+.gv-dash-card .gv-dash-panel__title {
+  color: var(--heading-color-light);
+}
+
+.gv-dash-panel__subtitle {
+  margin: -0.5rem 0 1rem;
+  color: var(--gv-dash-meta);
+  font-size: 0.875rem;
 }
 
 @media (max-width: 767px) {
@@ -78,31 +160,33 @@
   color: #fff;
 }
 
-/* Hero — compact flush band under nav; stadium night + gradient overlay */
+/* Hero — top-anchored, not vertically centered */
 .gv-dash-hero {
   position: relative;
-  min-height: 210px;
-  padding-top: 0;
-  padding-bottom: var(--gv-dash-gap-hero-ticker);
+  min-height: var(--hero-height);
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-xl);
   margin-bottom: 0;
   overflow: hidden;
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
+  justify-content: flex-start;
   animation: gv-dash-fade-in 300ms ease-out;
 }
 
 @media (max-width: 767px) {
   .gv-dash-hero {
-    min-height: 190px;
-    padding-top: 0;
-    padding-bottom: var(--gv-dash-gap-hero-ticker);
+    min-height: 180px;
+    padding-top: 20px;
+    padding-bottom: 24px;
   }
 }
 
 .gv-dash-hero__bg {
   position: absolute;
   inset: 0;
-  background: var(--gv-gradient-blue-glow);
+  background: var(--hero-gradient);
 }
 
 .gv-dash-hero__bg::before {
@@ -110,8 +194,68 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 120% 80% at 50% 100%, rgba(28, 63, 44, 0.55), transparent 55%),
-    radial-gradient(ellipse 90% 50% at 80% 10%, rgba(250, 70, 22, 0.18), transparent 45%);
+    radial-gradient(ellipse 90% 50% at 80% 10%, rgba(250, 70, 22, 0.14), transparent 45%),
+    radial-gradient(ellipse 120% 80% at 50% 100%, rgba(28, 63, 44, 0.35), transparent 55%);
+}
+
+.gv-dash-hero__energy-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: var(--ticker-gradient);
+  animation: gv-dash-energy-pulse 4s ease-in-out infinite;
+  z-index: 2;
+}
+
+@keyframes gv-dash-energy-pulse {
+  0%, 100% { opacity: 0.85; transform: scaleX(1); }
+  50% { opacity: 1; transform: scaleX(1.02); }
+}
+
+.gv-dash-hero__live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pulse-red);
+  box-shadow: 0 0 12px var(--pulse-red);
+  margin-right: 0.4rem;
+  vertical-align: middle;
+  animation: gv-dash-live-pulse 2s ease-in-out infinite;
+}
+
+@keyframes gv-dash-live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+.gv-dash-hero__title {
+  margin: 0;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--heading-color-dark);
+  line-height: 1.15;
+  text-shadow: var(--blue-glow);
+}
+
+.gv-dash-hero__title-accent {
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.65rem;
+  background: var(--gator-orange);
+  border-radius: 999px;
+}
+
+.gv-dash-hero__subtitle {
+  margin: 0.75rem 0 0;
+  max-width: 36rem;
+  color: var(--body-color-dark);
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .gv-dash-hero__bg::after {
@@ -265,7 +409,7 @@
 .gv-dash-hero__right {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   animation: gv-dash-slide-up 250ms 400ms ease-out both;
 }
 
@@ -445,9 +589,10 @@
 .gv-dash-movement__card {
   padding: var(--gv-card-pad);
   border-radius: 12px;
-  background: var(--gv-navy);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  border: 1px solid var(--gv-dash-card-border);
+  border-top: 3px solid #fa4616;
+  box-shadow: var(--gv-dash-card-shadow);
 }
 
 .gv-dash-movement__card-title {
@@ -455,14 +600,15 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   margin: 0 0 0.75rem;
+  color: #0021a5;
 }
 
 .gv-dash-movement__card-title--up {
-  color: var(--gv-heatmap-green);
+  color: var(--gv-dash-semantic-up);
 }
 
 .gv-dash-movement__card-title--down {
-  color: var(--gv-heatmap-red);
+  color: var(--gv-dash-semantic-down);
 }
 
 .gv-dash-movement__list {
@@ -476,8 +622,9 @@
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.4rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(0, 33, 165, 0.08);
   font-size: 0.875rem;
+  color: #1a1a1a;
 }
 
 .gv-dash-movement__player:last-child {
@@ -485,7 +632,7 @@
 }
 
 .gv-dash-movement__player a {
-  color: #fff;
+  color: #0021a5;
   text-decoration: none;
 }
 
@@ -582,26 +729,26 @@
   margin: 0;
 }
 
-/* Recruiting snapshot */
+/* Recruiting snapshot — unified white stat cards */
 .gv-dash-recruit {
-  background: linear-gradient(180deg, #0d1525 0%, var(--gv-navy) 100%);
+  background: transparent;
 }
 
 .gv-dash-recruit__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--gv-grid-gap);
 }
 
-@media (max-width: 1024px) {
+@media (min-width: 640px) {
   .gv-dash-recruit__grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 767px) {
+@media (min-width: 1024px) {
   .gv-dash-recruit__grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 
@@ -609,17 +756,19 @@
   display: block;
   padding: var(--gv-card-pad);
   border-radius: 12px;
-  background: var(--gv-blue);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  border: 1px solid var(--gv-dash-card-border);
+  border-top: 3px solid #fa4616;
   text-decoration: none;
-  color: #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-  transition: transform 180ms ease-out, box-shadow 180ms ease-out;
+  color: #1a1a1a;
+  box-shadow: var(--gv-dash-card-shadow);
+  transition: transform 180ms ease-out, box-shadow 180ms ease-out, border-color 180ms ease-out;
 }
 
 .gv-dash-recruit__card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 14px 36px rgba(0, 33, 165, 0.45);
+  transform: translateY(-2px);
+  border-color: rgba(0, 33, 165, 0.35);
+  box-shadow: 0 0 24px rgba(0, 33, 165, 0.4);
 }
 
 .gv-dash-recruit__icon {
@@ -630,11 +779,11 @@
 
 .gv-dash-recruit__value {
   display: block;
-  font-family: var(--gv-font);
+  font-family: Inter, var(--gv-font), sans-serif;
   font-size: 2rem;
   font-weight: 800;
   line-height: 1;
-  color: var(--gv-white);
+  color: #0021a5;
   margin-bottom: 0.35rem;
 }
 
@@ -642,7 +791,7 @@
   display: block;
   font-size: 0.875rem;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.75);
+  color: #94a3b8;
 }
 
 /* Latest content tabs */
@@ -1030,36 +1179,29 @@
 }
 
 /* ── Elite dashboard: shared white cards ── */
-.gv-dash-today__heading {
-  font-family: var(--gv-font);
-  font-size: 1.375rem;
-  font-weight: 700;
-  color: var(--gv-blue);
-  margin: 0 0 1rem;
-}
-
 .gv-dash-card {
-  background: var(--gv-white);
-  color: var(--gv-navy);
-  border-radius: 14px;
+  background: var(--card-bg);
+  color: var(--graphite);
+  border-radius: var(--radius-md);
   padding: var(--gv-card-pad);
-  box-shadow: 0 8px 28px rgba(10, 15, 26, 0.12);
-  border: 1px solid rgba(0, 33, 165, 0.06);
+  box-shadow: var(--gv-dash-card-shadow);
+  border: 1px solid var(--gv-dash-card-border);
+  border-top: 3px solid var(--gator-orange);
 }
 
 .gv-dash-card__eyebrow {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--gv-orange);
+  color: #fa4616;
   margin: 0 0 0.5rem;
 }
 
 .gv-dash-card__title {
-  font-size: 1.0625rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: var(--gv-blue);
+  color: #0021a5;
   margin: 0 0 0.35rem;
 }
 
@@ -1067,14 +1209,20 @@
   font-size: 2.25rem;
   font-weight: 800;
   line-height: 1;
-  color: var(--gv-blue);
+  color: #0021a5;
   margin: 0 0 0.35rem;
 }
 
 .gv-dash-card__meta {
-  font-size: 0.8125rem;
-  color: #64748b;
+  font-size: 0.875rem;
+  color: #94a3b8;
   margin: 0;
+}
+
+.gv-dash-card__body {
+  color: #1a1a1a;
+  font-size: 0.9375rem;
+  line-height: 1.5;
 }
 
 .gv-dash-card__link {
@@ -1458,12 +1606,13 @@ a.gv-dash-feed__title:hover {
   gap: 0.35rem;
   min-height: 110px;
   padding: 1.15rem;
-  border-radius: 14px;
-  background: var(--gv-white);
-  border: 1px solid rgba(0, 33, 165, 0.06);
-  color: var(--gv-navy);
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid var(--gv-dash-card-border);
+  border-top: 3px solid #fa4616;
+  color: #001a33;
   text-decoration: none;
-  box-shadow: 0 6px 20px rgba(10, 15, 26, 0.1);
+  box-shadow: var(--gv-dash-card-shadow);
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
@@ -1481,17 +1630,17 @@ a.gv-dash-feed__title:hover {
 .gv-dash-actions__label {
   font-size: 0.9375rem;
   font-weight: 700;
-  color: var(--gv-blue);
+  color: #0021a5;
 }
 
 .gv-dash-actions__desc {
-  font-size: 0.75rem;
-  color: #64748b;
+  font-size: 0.875rem;
+  color: #94a3b8;
 }
 
-/* Upcoming games — premium white cards */
+/* Upcoming games — unified white cards */
 .gv-dash-games {
-  background: var(--gv-navy);
+  background: transparent;
 }
 
 .gv-dash-games__header {
@@ -1517,12 +1666,13 @@ a.gv-dash-feed__title:hover {
 .gv-dash-games__card {
   display: block;
   padding: var(--gv-card-pad);
-  border-radius: 14px;
-  background: var(--gv-white);
-  box-shadow: 0 8px 28px rgba(10, 15, 26, 0.12);
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: var(--gv-dash-card-shadow);
   text-decoration: none;
-  color: var(--gv-navy);
-  border: 1px solid rgba(0, 33, 165, 0.06);
+  color: #001a33;
+  border: 1px solid var(--gv-dash-card-border);
+  border-top: 3px solid #fa4616;
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
@@ -1641,5 +1791,341 @@ a.gv-dash-feed__title:hover {
 
 .gv-dash-ticker__item:hover {
   color: var(--gv-orange);
+}
+
+/* FutureCast / GNL / Team snapshot panels */
+.gv-dash-fc-snapshot {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.gv-dash-fc-snapshot__row {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0;
+}
+
+.gv-dash-fc-snapshot__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.gv-dash-fc-snapshot__label--up { color: var(--gv-dash-semantic-up); }
+.gv-dash-fc-snapshot__label--down { color: var(--gv-dash-semantic-down); }
+
+.gv-dash-fc-snapshot__name {
+  color: #0021a5;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.gv-dash-fc-snapshot__name:hover { color: #fa4616; }
+
+.gv-dash-fc-snapshot__delta {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.gv-dash-fc-snapshot__delta--up { color: var(--gv-dash-semantic-up); }
+.gv-dash-fc-snapshot__delta--down { color: var(--gv-dash-semantic-down); }
+
+.gv-dash-gnl-preview__list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.gv-dash-gnl-preview__item {
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid rgba(0, 33, 165, 0.08);
+  color: #1a1a1a;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.gv-dash-gnl-preview__item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.gv-dash-gnl-preview__link {
+  color: #0021a5;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.gv-dash-gnl-preview__link:hover { color: #fa4616; }
+
+.gv-dash-gnl-preview__empty {
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+.gv-dash-team-snapshot__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .gv-dash-team-snapshot__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gv-dash-team-snapshot__value {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0021a5;
+}
+
+.gv-dash-team-snapshot__value--up { color: var(--gv-dash-semantic-up); }
+.gv-dash-team-snapshot__value--down { color: var(--gv-dash-semantic-down); }
+.gv-dash-team-snapshot__value--neutral { color: #0021a5; }
+
+.gv-portal-tag--in { color: var(--gv-dash-semantic-portal); }
+.gv-portal-tag--out { color: var(--gv-dash-semantic-flip); }
+.gv-portal-tag--target { color: var(--gv-dash-semantic-hot); }
+
+.gv-dash-watchlist__trend--up { color: var(--gv-dash-semantic-up); }
+.gv-dash-watchlist__trend--down { color: var(--gv-dash-semantic-down); }
+.gv-dash-card__trend--up { color: var(--gv-dash-semantic-up); }
+
+/* Quick stats row */
+.gv-dash-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+@media (min-width: 640px) {
+  .gv-dash-quick-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .gv-dash-quick-stats {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.gv-dash-quick-stats__item {
+  display: block;
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--card-border);
+  text-decoration: none;
+  color: inherit;
+  background: rgba(0, 33, 165, 0.03);
+}
+
+.gv-dash-quick-stats__item:hover {
+  box-shadow: var(--blue-glow);
+}
+
+.gv-dash-quick-stats__value {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--heading-color-light);
+}
+
+.gv-dash-quick-stats__value--up { color: var(--momentum-up); }
+.gv-dash-quick-stats__value--down { color: var(--momentum-down); }
+.gv-dash-quick-stats__value--hot { color: var(--hot); }
+.gv-dash-quick-stats__value--cooling { color: var(--cooling); }
+.gv-dash-quick-stats__value--neutral { color: var(--heading-color-light); }
+
+/* Recruiting panel signals */
+.gv-dash-recruit-panel__signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.gv-dash-signal {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--card-border);
+}
+
+.gv-dash-signal--hot { color: var(--hot); background: rgba(249, 115, 22, 0.12); }
+.gv-dash-signal--cooling { color: var(--cooling); background: rgba(59, 130, 246, 0.12); }
+.gv-dash-signal--flip { color: var(--flip-risk); background: rgba(239, 68, 68, 0.12); }
+.gv-dash-signal--portal { color: var(--portal-green); background: rgba(34, 197, 94, 0.12); }
+
+.gv-dash-recruit-panel__block {
+  margin-bottom: 1rem;
+}
+
+.gv-dash-recruit-panel__label {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--subtle-gray);
+}
+
+.gv-dash-recruit-panel__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.gv-dash-recruit-panel__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--body-color-light);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.gv-dash-recruit-panel__list a {
+  color: var(--heading-color-light);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.gv-dash-recruit-panel__list a:hover { color: var(--gator-orange); }
+
+.gv-dash-recruit-panel__delta--up { color: var(--momentum-up); font-weight: 700; }
+
+/* FutureCast leaders */
+.gv-dash-fc-leaders {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.gv-dash-fc-leaders__row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  align-items: start;
+}
+
+.gv-dash-fc-leaders__rank {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--gator-orange);
+}
+
+.gv-dash-fc-leaders__name {
+  color: var(--heading-color-light);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.gv-dash-fc-leaders__name:hover { color: var(--gator-orange); }
+
+.gv-dash-fc-leaders__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+}
+
+.gv-dash-fc-leaders__pct { color: var(--heading-color-light); font-weight: 700; }
+.gv-dash-fc-leaders__delta--up { color: var(--momentum-up); font-weight: 700; }
+.gv-dash-fc-leaders__delta--down { color: var(--momentum-down); font-weight: 700; }
+
+.gv-dash-fc-leaders__badge {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.gv-dash-fc-leaders__badge--elite { color: var(--hot); background: rgba(249, 115, 22, 0.15); }
+.gv-dash-fc-leaders__badge--strong { color: var(--fit-blue); background: rgba(147, 197, 253, 0.15); }
+.gv-dash-fc-leaders__badge--watch { color: var(--subtle-gray); background: rgba(148, 163, 184, 0.15); }
+
+/* GatorNation Live preview hero overlay */
+.gv-dash-gnl-preview {
+  position: relative;
+  overflow: hidden;
+}
+
+.gv-dash-gnl-preview__hero {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255, 220, 120, 0.14), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 85% 20%, rgba(250, 70, 22, 0.12), transparent 50%);
+}
+
+.gv-dash-gnl-preview > *:not(.gv-dash-gnl-preview__hero) {
+  position: relative;
+  z-index: 1;
+}
+
+.gv-dash-gnl-preview__trending {
+  margin-bottom: 1rem;
+}
+
+.gv-dash-gnl-preview__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.gv-dash-gnl-preview__chip {
+  display: inline-block;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(250, 70, 22, 0.1);
+  border: 1px solid rgba(250, 70, 22, 0.25);
+  color: var(--heading-color-light);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.gv-dash-gnl-preview__chip:hover {
+  background: rgba(250, 70, 22, 0.18);
+  color: var(--gator-orange);
+}
+
+.gv-dash-team-snapshot__sections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 767px) {
+  .gv-dash-team-snapshot__sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .gv-dash {
+    --gv-frame-margin: 1rem;
+  }
 }
 

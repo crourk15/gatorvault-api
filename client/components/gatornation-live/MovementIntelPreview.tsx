@@ -12,10 +12,10 @@ type Props = {
 
 export function MovementIntelPreview({ data, loading }: Props): React.ReactElement {
   return (
-    <div className="gv-gnl-movement" data-testid="gnl-movement-intel">
-      <h2 className="gv-gnl__section-title">{GNL_COPY.movementIntel.title}</h2>
-      <p className="gv-gnl__section-sub">{GNL_COPY.movementIntel.subtitle}</p>
+    <article className="gv-gnl-card gv-gnl-movement" data-testid="gnl-movement-intel">
+      <h2 className="gv-gnl-card__title">{GNL_COPY.movementIntel.title}</h2>
+      <p className="gv-gnl-card__subtitle">{GNL_COPY.movementIntel.subtitle}</p>
       <DashboardMovementPreview data={data} loading={loading} />
-    </div>
+    </article>
   );
 }

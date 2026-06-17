@@ -124,9 +124,9 @@
 /nil  /nil/index.html  200
 /nil/  /nil/index.html  200
 /nil/*  /nil/index.html  200
-/welcome  /welcome/index.html  200
-/welcome/  /welcome/index.html  200
-/welcome/*  /welcome/index.html  200
+/welcome  /  301
+/welcome/  /  301
+/welcome/*  /  301
 /insider  /insider/index.html  200
 /insider/  /insider/index.html  200
 /insider/*  /insider/index.html  200

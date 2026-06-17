@@ -17,9 +17,9 @@ export function RecruitingSnapshot({
     momentumTrend === 'up' ? '↑' : momentumTrend === 'down' ? '↓' : '→';
 
   return (
-    <section className="gv-gnl-snapshot" aria-label="Recruiting snapshot" data-testid="gnl-snapshot">
-      <h2 className="gv-gnl__section-title">{GNL_COPY.snapshot.title}</h2>
-      <p className="gv-gnl-snapshot__subtitle">{GNL_COPY.snapshot.subtitle}</p>
+    <section className="gv-gnl-card gv-gnl-snapshot" aria-label="Recruiting snapshot" data-testid="gnl-snapshot">
+      <h2 className="gv-gnl-card__title">{GNL_COPY.snapshot.title}</h2>
+      <p className="gv-gnl-card__subtitle">{GNL_COPY.snapshot.subtitle}</p>
       <div className="gv-gnl-snapshot__grid">
         <div>
           <p className="gv-gnl-snapshot__stat-label">Commits</p>

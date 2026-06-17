@@ -81,8 +81,8 @@
 }
 
 .gv-top-nav__link.is-active {
-  color: #fbbf24;
-  background: rgba(251, 191, 36, 0.1);
+  color: #fa4616;
+  background: rgba(250, 70, 22, 0.12);
 }
 
 .gv-top-nav__menu-btn {
@@ -202,7 +202,7 @@
 }
 
 .gv-mobile-bottom-nav__item.is-active {
-  color: #fbbf24;
+  color: #fa4616;
 }
 
 .gv-mobile-bottom-nav__icon {

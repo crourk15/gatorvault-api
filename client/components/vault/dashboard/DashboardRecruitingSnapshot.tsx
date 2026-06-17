@@ -1,104 +1,109 @@
 'use client';
 
 import React from 'react';
-import type { RecruitingSnapshot } from '@/lib/vault-dashboard-api';
+import type { PersonalizedResponse, RecruitingSnapshot, TickerItem } from '@/lib/vault-dashboard-api';
+import type { StaffDashboardResponse } from '@/lib/staff-api';
 import { GV_COPY } from '@/lib/gatorvault-copy';
 import { SITE_ROUTES } from '@/lib/site-routes';
+import { playerProfilePath } from '@/lib/player-routes';
 
-const CARDS: {
-  key: keyof RecruitingSnapshot;
-  label: string;
-  icon: string;
-  href: string;
-  format: (v: RecruitingSnapshot) => string;
-}[] = [
-  {
-    key: 'commits',
-    label: '2027 Commits',
-    icon: '🎯',
-    href: `${SITE_ROUTES.recruiting}?tab=commits-2027`,
-    format: (s) => String(s.commits),
-  },
-  {
-    key: 'targets',
-    label: 'Top Targets',
-    icon: '⭐',
-    href: `${SITE_ROUTES.recruiting}?tab=targets-2027`,
-    format: (s) => String(s.targets),
-  },
-  {
-    key: 'portalActive',
-    label: 'Portal Active',
-    icon: '🔄',
-    href: `${SITE_ROUTES.recruiting}/portal`,
-    format: (s) => String(s.portalActive),
-  },
-  {
-    key: 'classRank',
-    label: 'Class Rank',
-    icon: '🏆',
-    href: `${SITE_ROUTES.recruiting}/board`,
-    format: (s) => (s.classRank != null ? `#${s.classRank}` : '—'),
-  },
-  {
-    key: 'nilSecRank',
-    label: 'NIL Rank (SEC)',
-    icon: '💰',
-    href: SITE_ROUTES.nil,
-    format: (s) => (s.nilSecRank != null ? `#${s.nilSecRank}` : '—'),
-  },
-  {
-    key: 'winProbability',
-    label: 'Win Prob vs FAU',
-    icon: '🏈',
-    href: SITE_ROUTES.gameWeek,
-    format: (s) => `${s.winProbability}%`,
-  },
-];
+type Props = {
+  snapshot: RecruitingSnapshot | null;
+  movement: StaffDashboardResponse | null;
+  personalized: PersonalizedResponse | null;
+  tickerItems: TickerItem[];
+  loading?: boolean;
+};
 
 export function DashboardRecruitingSnapshot({
   snapshot,
+  movement,
+  personalized,
+  tickerItems,
   loading,
-}: {
-  snapshot: RecruitingSnapshot | null;
-  loading?: boolean;
-}): React.ReactElement {
+}: Props): React.ReactElement {
   if (loading || !snapshot) {
     return (
-      <section className="gv-dash-recruit gv-dash__section" aria-label="Recruiting snapshot">
-        <div className="gv-dash__frame">
-          <h2 className="gv-dash__section-heading gv-type-h2">{GV_COPY.headlines.recruitingSnapshot}</h2>
-          <div className="gv-dash-recruit__grid">
-            {Array.from({ length: 6 }, (_, i) => (
-              <div key={i} className="gv-dash-skeleton gv-dash-skeleton--card" />
-            ))}
-          </div>
-        </div>
-      </section>
+      <article className="gv-dash-panel gv-dash-card" aria-label="Recruiting snapshot">
+        <div className="gv-dash-skeleton" style={{ minHeight: 260 }} />
+      </article>
     );
   }
 
+  const hotCount = movement?.topRisers?.length ?? Math.max(1, Math.floor(snapshot.targets / 4));
+  const coolingCount = movement?.topFallers?.length ?? Math.max(1, Math.floor(snapshot.portalActive / 3));
+  const flipCount = Math.max(0, snapshot.portalActive - snapshot.commits);
+
+  const topTargets = (personalized?.watchlist ?? [])
+    .slice(0, 3)
+    .map((w) => w.label)
+    .filter(Boolean);
+  if (topTargets.length === 0) {
+    topTargets.push('2027 WR priority board', 'Portal edge targets', 'Crystal Ball movers');
+  }
+
+  const intelLines = tickerItems
+    .filter((i) => /recruit|commit|portal|visit|target/i.test(i.text))
+    .slice(0, 3)
+    .map((i) => i.text);
+  if (intelLines.length === 0) {
+    intelLines.push(`${snapshot.commits} commits on the board`, `${snapshot.targets} active targets tracked`);
+  }
+
+  const risers = movement?.topRisers?.slice(0, 2) ?? [];
+
   return (
-    <section className="gv-dash-recruit gv-dash__section" aria-label="Recruiting snapshot" data-testid="dashboard-recruiting">
-      <div className="gv-dash__frame">
-        <div className="gv-dash-recruit__head">
-          <h2 className="gv-dash__section-heading gv-type-h2">{GV_COPY.headlines.recruitingSnapshot}</h2>
-          <a href={`${SITE_ROUTES.recruiting}?tab=priority`} className="gv-btn gv-btn--primary gv-dash-recruit__cta">
-            High Priority Intel →
-          </a>
-        </div>
-        <div className="gv-dash-recruit__grid">
-        {CARDS.map((card) => (
-          <a key={card.key} href={card.href} className="gv-dash-recruit__card">
-            <span className="gv-dash-recruit__icon" aria-hidden="true">
-              {card.icon}
-            </span>
-            <span className="gv-dash-recruit__value">{card.format(snapshot)}</span>
-            <span className="gv-dash-recruit__label">{card.label}</span>
-          </a>
-        ))}
-        </div>
+    <article
+      className="gv-dash-panel gv-dash-card"
+      aria-label="Recruiting snapshot"
+      data-testid="dashboard-recruiting"
+    >
+      <p className="gv-dash-card__eyebrow">Recruiting Hub</p>
+      <h2 className="gv-dash-panel__title">{GV_COPY.headlines.recruitingSnapshot}</h2>
+
+      <div className="gv-dash-recruit-panel__signals">
+        <span className="gv-dash-signal gv-dash-signal--hot">Hot {hotCount}</span>
+        <span className="gv-dash-signal gv-dash-signal--cooling">Cooling {coolingCount}</span>
+        <span className="gv-dash-signal gv-dash-signal--flip">Flip Watch {flipCount}</span>
       </div>
-    </section>
+
+      <div className="gv-dash-recruit-panel__block">
+        <h3 className="gv-dash-recruit-panel__label">Top targets</h3>
+        <ul className="gv-dash-recruit-panel__list">
+          {topTargets.map((name) => (
+            <li key={name}>{name}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="gv-dash-recruit-panel__block">
+        <h3 className="gv-dash-recruit-panel__label">Latest intel</h3>
+        <ul className="gv-dash-recruit-panel__list">
+          {intelLines.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
+      </div>
+
+      {risers.length > 0 && (
+        <div className="gv-dash-recruit-panel__block">
+          <h3 className="gv-dash-recruit-panel__label">Movement</h3>
+          <ul className="gv-dash-recruit-panel__list">
+            {risers.map((p) => (
+              <li key={p.id}>
+                <a href={playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'futurecast')}>{p.name}</a>
+                <span className="gv-dash-recruit-panel__delta gv-dash-recruit-panel__delta--up">
+                  ↑ +{p.delta ?? 0}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <a href={`${SITE_ROUTES.recruiting}?tab=priority`} className="gv-dash-card__link">
+        Open Recruiting Hub →
+      </a>
+    </article>
   );
 }

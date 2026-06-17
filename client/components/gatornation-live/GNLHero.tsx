@@ -21,38 +21,43 @@ type Props = {
   episode: GNLHeroEpisode;
 };
 
+/** Featured episode card — lives in the 12-col grid, not the page hero band. */
 export function GNLHero({ episode }: Props): React.ReactElement {
   return (
-    <section className="gnl-hero" data-testid="gnl-hero" aria-label="Latest episode">
-      <a href={episode.playUrl} className="gnl-hero__thumb-wrap" aria-label={`View episode: ${episode.title}`}>
-        <div className="gnl-hero-thumb">
-          <img src={episode.thumbnailUrl} alt="" />
-          <span className="gnl-hero-thumb__overlay" aria-hidden="true" />
-          <span className="gnl-hero-thumb__play" aria-hidden="true">
-            ▶
-          </span>
-        </div>
-      </a>
-      <div className="gnl-hero-content">
-        <p className="gnl-hero-eyebrow">
-          <span className="gnl-hero-eyebrow__badge">Now Playing</span>
-          Latest Episode
-        </p>
-        <h1>{episode.title}</h1>
-        <p className="gnl-hero-show">{episode.showName}</p>
-        {episode.hosts ? <p className="gnl-hero-hosts">Hosts: {episode.hosts}</p> : null}
-        {episode.description ? <p className="gnl-hero-desc">{episode.description}</p> : null}
-        <p className="gnl-hero-date">{episode.date}</p>
-        <div className="gnl-hero-actions">
-          <Button href={episode.playUrl} variant="primary">
-            View Episode →
-          </Button>
-          <Button href="/vault/live#podcast-hub" variant="secondary">
-            All Podcasts
-          </Button>
+    <article className="gv-gnl-card gv-gnl-episode-card" data-testid="gnl-hero" aria-label="Latest episode">
+      <p className="gv-gnl-card__eyebrow">
+        <span className="gv-gnl-hero__live-dot" aria-hidden="true" />
+        Now Playing · Latest Episode
+      </p>
+      <div className="gv-gnl-episode">
+        <a
+          href={episode.playUrl}
+          className="gv-gnl-episode__thumb-wrap"
+          aria-label={`View episode: ${episode.title}`}
+        >
+          <div className="gv-gnl-episode-thumb">
+            <img src={episode.thumbnailUrl} alt="" />
+            <span className="gv-gnl-episode-thumb__overlay" aria-hidden="true" />
+            <span className="gv-gnl-episode-thumb__play" aria-hidden="true">▶</span>
+          </div>
+        </a>
+        <div className="gv-gnl-episode__content">
+          <h2 className="gv-gnl-episode__title">{episode.title}</h2>
+          <p className="gv-gnl-episode__show">{episode.showName}</p>
+          {episode.hosts ? <p className="gv-gnl-episode__hosts">Hosts: {episode.hosts}</p> : null}
+          {episode.description ? <p className="gv-gnl-episode__desc">{episode.description}</p> : null}
+          <p className="gv-gnl-episode__date">{episode.date}</p>
+          <div className="gv-gnl-episode__actions">
+            <Button href={episode.playUrl} variant="primary">
+              View Episode →
+            </Button>
+            <Button href="#podcast-hub" variant="secondary">
+              All Podcasts
+            </Button>
+          </div>
         </div>
       </div>
-    </section>
+    </article>
   );
 }
 

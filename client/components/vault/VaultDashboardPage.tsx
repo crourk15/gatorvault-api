@@ -4,22 +4,20 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import '@/lib/vault-dashboard.css';
 import { DashboardHero } from '@/components/vault/dashboard/DashboardHero';
 import { DashboardTicker } from '@/components/vault/dashboard/DashboardTicker';
-import { DashboardTodayInVault } from '@/components/vault/dashboard/DashboardTodayInVault';
-import { DashboardQuickActions } from '@/components/vault/dashboard/DashboardQuickActions';
-import { DashboardWatchlist } from '@/components/vault/dashboard/DashboardWatchlist';
-import { DashboardMovementFeed } from '@/components/vault/dashboard/DashboardMovementFeed';
-import { DashboardUpcomingGames } from '@/components/vault/dashboard/DashboardUpcomingGames';
+import { DashboardQuickStats } from '@/components/vault/dashboard/DashboardQuickStats';
+import { DashboardRecruitingSnapshot } from '@/components/vault/dashboard/DashboardRecruitingSnapshot';
+import { DashboardFutureCastSnapshot } from '@/components/vault/dashboard/DashboardFutureCastSnapshot';
 import { DashboardPortalActivity } from '@/components/vault/dashboard/DashboardPortalActivity';
+import { DashboardNilTrends } from '@/components/vault/dashboard/DashboardNilTrends';
+import { DashboardGatorNationPreview } from '@/components/vault/dashboard/DashboardGatorNationPreview';
+import { DashboardTeamSnapshot } from '@/components/vault/dashboard/DashboardTeamSnapshot';
 import {
   DASHBOARD_REFRESH,
   computeMomentumPct,
-  daysUntilNextGame,
-  fetchContentLatest,
   fetchLiveTicker,
   fetchMovementPreview,
   fetchPersonalizedHints,
   fetchRecruitingSnapshot,
-  type ContentLatestResponse,
   type PersonalizedResponse,
   type RecruitingSnapshot,
   type TickerResponse,
@@ -32,9 +30,9 @@ export function VaultDashboardPage(): React.ReactElement {
   const [ticker, setTicker] = useState<TickerResponse | null>(null);
   const [movement, setMovement] = useState<Awaited<ReturnType<typeof fetchMovementPreview>> | null>(null);
   const [recruiting, setRecruiting] = useState<RecruitingSnapshot | null>(null);
-  const [content, setContent] = useState<ContentLatestResponse | null>(null);
   const [personalized, setPersonalized] = useState<PersonalizedResponse | null>(null);
   const [momentumPct, setMomentumPct] = useState(72);
+  const [movementDelta, setMovementDelta] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const tickerDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -64,9 +62,13 @@ export function VaultDashboardPage(): React.ReactElement {
         fetchFutureCastClass().catch(() => null),
       ]);
       setMovement(data);
-      setMomentumPct(
-        computeMomentumPct(data.heatmap, classData?.rankings?.classScore ?? classData?.classImpactScore)
+      const pct = computeMomentumPct(
+        data.heatmap,
+        classData?.rankings?.classScore ?? classData?.classImpactScore
       );
+      setMomentumPct(pct);
+      const topRiser = data.topRisers?.[0];
+      setMovementDelta(topRiser?.delta ?? null);
     } catch {
       /* keep prior */
     }
@@ -76,15 +78,6 @@ export function VaultDashboardPage(): React.ReactElement {
     try {
       const data = await fetchRecruitingSnapshot(force);
       setRecruiting(data);
-    } catch {
-      /* keep prior */
-    }
-  }, []);
-
-  const loadContent = useCallback(async (force = false) => {
-    try {
-      const data = await fetchContentLatest(force);
-      setContent(data);
     } catch {
       /* keep prior */
     }
@@ -107,7 +100,6 @@ export function VaultDashboardPage(): React.ReactElement {
         fetchLiveTicker(true).catch(() => null),
         loadMovement(true),
         loadRecruiting(true),
-        loadContent(true),
         loadPersonalized(),
       ]);
       if (tickerData) setTicker(tickerData);
@@ -119,7 +111,6 @@ export function VaultDashboardPage(): React.ReactElement {
     const tickerTimer = window.setInterval(() => void loadTicker(true), DASHBOARD_REFRESH.ticker);
     const movementTimer = window.setInterval(() => void loadMovement(true), DASHBOARD_REFRESH.movement);
     const recruitingTimer = window.setInterval(() => void loadRecruiting(true), DASHBOARD_REFRESH.recruiting);
-    const contentTimer = window.setInterval(() => void loadContent(true), DASHBOARD_REFRESH.content);
     const personalTimer = window.setInterval(() => void loadPersonalized(), 60_000);
 
     return () => {
@@ -128,30 +119,59 @@ export function VaultDashboardPage(): React.ReactElement {
       window.clearInterval(tickerTimer);
       window.clearInterval(movementTimer);
       window.clearInterval(recruitingTimer);
-      window.clearInterval(contentTimer);
       window.clearInterval(personalTimer);
     };
-  }, [loadContent, loadMovement, loadPersonalized, loadRecruiting, loadTicker]);
+  }, [loadMovement, loadPersonalized, loadRecruiting, loadTicker]);
 
   return (
-    <div className="gv-dash" data-testid="vault-dashboard">
-      <DashboardHero
-        ticker={ticker}
-        momentumPct={momentumPct}
-        daysUntilGame={recruiting?.nextGameDays ?? daysUntilNextGame()}
-        loading={loading && !ticker}
-      />
-      <DashboardTicker items={ticker?.items ?? []} loading={loading && !ticker} />
-      <DashboardTodayInVault snapshot={recruiting} loading={loading && !recruiting} />
-      <DashboardQuickActions />
-      <DashboardWatchlist data={personalized} loading={loading && !personalized} />
-      <DashboardMovementFeed
-        movement={movement}
-        content={content}
-        loading={loading && !movement && !content}
-      />
-      <DashboardUpcomingGames />
-      <DashboardPortalActivity snapshot={recruiting} />
+    <div className="gv-dash gv-dash-shell" data-testid="vault-dashboard">
+      <section className="gv-dash-hero-section" aria-label="Hero section">
+        <DashboardHero ticker={ticker} loading={loading && !ticker} />
+        <DashboardTicker items={ticker?.items ?? []} loading={loading && !ticker} />
+      </section>
+
+      <div className="gv-dash__frame gv-dash__command">
+        <div className="gv-dash__grid">
+          <div className="gv-dash__cell gv-dash__cell--12">
+            <DashboardQuickStats
+              snapshot={recruiting}
+              momentumPct={momentumPct}
+              movementDelta={movementDelta}
+              loading={loading && !recruiting}
+            />
+          </div>
+
+          <div className="gv-dash__cell gv-dash__cell--8">
+            <DashboardRecruitingSnapshot
+              snapshot={recruiting}
+              movement={movement}
+              personalized={personalized}
+              tickerItems={ticker?.items ?? []}
+              loading={loading && !recruiting}
+            />
+          </div>
+
+          <div className="gv-dash__cell gv-dash__cell--4">
+            <DashboardFutureCastSnapshot data={movement} loading={loading && !movement} />
+          </div>
+
+          <div className="gv-dash__cell gv-dash__cell--6">
+            <DashboardPortalActivity snapshot={recruiting} />
+          </div>
+
+          <div className="gv-dash__cell gv-dash__cell--6">
+            <DashboardNilTrends snapshot={recruiting} />
+          </div>
+
+          <div className="gv-dash__cell gv-dash__cell--12">
+            <DashboardGatorNationPreview ticker={ticker} />
+          </div>
+
+          <div className="gv-dash__cell gv-dash__cell--12">
+            <DashboardTeamSnapshot />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

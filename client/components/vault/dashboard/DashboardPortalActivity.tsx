@@ -18,9 +18,8 @@ export function DashboardPortalActivity({ snapshot }: Props): React.ReactElement
   const active = snapshot?.portalActive ?? 12;
 
   return (
-    <section className="gv-dash-portal gv-dash__section" aria-label="Portal activity" data-testid="dashboard-portal">
-      <div className="gv-dash__frame">
-        <article className="gv-dash-card gv-dash-portal__card">
+    <section className="gv-dash-portal" aria-label="Portal activity" data-testid="dashboard-portal">
+      <article className="gv-dash-panel gv-dash-card gv-dash-portal__card">
           <div className="gv-dash-portal__head">
             <div>
               <p className="gv-dash-card__eyebrow">Portal Activity</p>
@@ -49,11 +48,10 @@ export function DashboardPortalActivity({ snapshot }: Props): React.ReactElement
               </li>
             ))}
           </ul>
-          <a href={SITE_ROUTES.futurecast} className="gv-dash-card__link">
-            Portal watchlist →
-          </a>
-        </article>
-      </div>
+        <a href={SITE_ROUTES.futurecast} className="gv-dash-card__link">
+          Portal watchlist →
+        </a>
+      </article>
     </section>
   );
 }
