@@ -66,6 +66,10 @@ export const GNL_COPY = {
     liveBadge: (seconds: number) => `LIVE • Updates every ${seconds} seconds`,
   },
   podcastHub: 'Podcast Hub',
+  mediaGrid: 'Media Grid',
+  trendingTopics: 'Trending Topics',
+  filmRoomPreview: 'Film Room',
+  filmRoomPreviewSubtitle: 'Scheme breakdowns, personnel notes, and cut-ups from the vault.',
   recruitingFeed: 'Latest Recruiting Updates',
   livePanels: 'Live Panels',
   snapshot: {

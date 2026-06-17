@@ -59,7 +59,7 @@
 }
 
 .gv-dash__command {
-  padding-top: 1.5rem;
+  padding-top: var(--space-lg);
   padding-bottom: 2.5rem;
 }
 
@@ -2127,5 +2127,90 @@ a.gv-dash-feed__title:hover {
   .gv-dash {
     --gv-frame-margin: 1rem;
   }
+}
+
+/* Top Command Card — replaces gradient hero */
+.gv-dash-command-card {
+  padding: var(--space-lg);
+}
+
+.gv-dash-command-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.gv-dash-command-card__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  color: var(--heading-color-light);
+  line-height: 1.15;
+}
+
+.gv-dash-command-card__subtitle {
+  margin: 0.5rem 0 0;
+  max-width: 42rem;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--subtle-gray);
+}
+
+.gv-dash-command-card__live {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--flip-risk);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.gv-dash-command-card__stats {
+  margin-bottom: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--card-border);
+}
+
+.gv-dash-command-card__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--card-border);
+}
+
+@media (min-width: 640px) {
+  .gv-dash-command-card__actions {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .gv-dash-command-card__actions {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+}
+
+.gv-dash-command-card__action {
+  padding: var(--space-sm);
+  text-align: center;
+}
+
+.gv-dash-command-card__action .gv-dash-actions__label {
+  font-size: 0.8125rem;
+}
+
+.gv-dash__grid .gv-dash-ticker {
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 

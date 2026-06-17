@@ -8,14 +8,14 @@ import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/l
 import { LIVE_STATE_KEY } from '@/components/vault/live/live-feed-utils';
 import { UiError } from '@/components/site/UiMessage';
 import { Button } from '@/components/ui';
-import { GNLPageHero } from '@/components/gatornation-live/GNLPageHero';
+import { GNLLivePulse } from '@/components/gatornation-live/GNLLivePulse';
 import { GNLHero, buildGNLHeroEpisode } from '@/components/gatornation-live/GNLHero';
 import { LiveTicker } from '@/components/gatornation-live/LiveTicker';
+import { GNLTrendingTopics } from '@/components/gatornation-live/GNLTrendingTopics';
 import { BeatWriterCardGrid } from '@/components/gatornation-live/BeatWriterCardGrid';
 import { PodcastGrid } from '@/components/gatornation-live/PodcastGrid';
+import { GNLFilmRoomPreview } from '@/components/gatornation-live/GNLFilmRoomPreview';
 import { RecruitingFeed } from '@/components/gatornation-live/RecruitingFeed';
-import { RecruitingSnapshot } from '@/components/gatornation-live/RecruitingSnapshot';
-import { MovementIntelPreview } from '@/components/gatornation-live/MovementIntelPreview';
 import { LiveFooter } from '@/components/gatornation-live/LiveFooter';
 
 const EMPTY_BUNDLE: LiveHubBundle = {
@@ -36,7 +36,7 @@ const EMPTY_BUNDLE: LiveHubBundle = {
   updatedAt: null,
 };
 
-/** GatorNation Live — premium real-time media hub (Dashboard blueprint layout). */
+/** GatorNation Live — media-first live hub (no Team Hub / recruiting snapshot content). */
 export function GatorNationLivePage(): React.ReactElement {
   const [bundle, setBundle] = useState<LiveHubBundle>(EMPTY_BUNDLE);
   const [loading, setLoading] = useState(true);
@@ -93,11 +93,6 @@ export function GatorNationLivePage(): React.ReactElement {
 
   return (
     <div className="gv-gnl gv-gnl-shell gv-live-feed" data-testid="vault-live-feed">
-      <section className="gv-gnl-hero-section" aria-label="Hero section">
-        <GNLPageHero />
-        <LiveTicker items={bundle.ticker} loading={loading && !bundle.ticker.length} />
-      </section>
-
       <div className="gv-gnl__frame gv-gnl__command">
         {error && !loading && (
           <UiError
@@ -110,23 +105,19 @@ export function GatorNationLivePage(): React.ReactElement {
 
         <div className="gv-gnl__grid">
           <div className="gv-gnl__cell gv-gnl__cell--12">
+            <GNLLivePulse />
+          </div>
+
+          <div className="gv-gnl__cell gv-gnl__cell--12">
+            <LiveTicker items={bundle.ticker} loading={loading && !bundle.ticker.length} />
+          </div>
+
+          <div className="gv-gnl__cell gv-gnl__cell--12">
             <GNLHero episode={heroEpisode} />
           </div>
 
-          <div className="gv-gnl__cell gv-gnl__cell--8">
-            <article className="gv-gnl-card" aria-label="Latest headlines">
-              <h2 className="gv-gnl-card__title">{GNL_COPY.recruitingFeed}</h2>
-              {loading && bundle.feed.length === 0 ? (
-                <p className="gv-gnl-status">Loading feed…</p>
-              ) : (
-                <RecruitingFeed items={bundle.feed} />
-              )}
-            </article>
-          </div>
-
-          <div className="gv-gnl__cell gv-gnl__cell--4 gv-gnl__cell--stack">
-            <RecruitingSnapshot {...bundle.snapshot} />
-            <MovementIntelPreview data={bundle.movement} loading={loading && !bundle.movement} />
+          <div className="gv-gnl__cell gv-gnl__cell--12">
+            <GNLTrendingTopics feed={bundle.feed} ticker={bundle.ticker} />
           </div>
 
           <div className="gv-gnl__cell gv-gnl__cell--12">
@@ -145,10 +136,25 @@ export function GatorNationLivePage(): React.ReactElement {
           </div>
 
           <div className="gv-gnl__cell gv-gnl__cell--12">
+            <article className="gv-gnl-card" aria-label="Media grid">
+              <h2 className="gv-gnl-card__title">{GNL_COPY.mediaGrid}</h2>
+              {loading && bundle.feed.length === 0 ? (
+                <p className="gv-gnl-status">Loading media…</p>
+              ) : (
+                <RecruitingFeed items={bundle.feed} />
+              )}
+            </article>
+          </div>
+
+          <div className="gv-gnl__cell gv-gnl__cell--6">
             <article className="gv-gnl-card" aria-label="Podcast hub" id="podcast-hub">
               <h2 className="gv-gnl-card__title">{GNL_COPY.podcastHub}</h2>
               <PodcastGrid podcasts={bundle.podcasts} />
             </article>
+          </div>
+
+          <div className="gv-gnl__cell gv-gnl__cell--6">
+            <GNLFilmRoomPreview />
           </div>
         </div>
       </div>

@@ -24,10 +24,10 @@ type Props = {
 /** Featured episode card — lives in the 12-col grid, not the page hero band. */
 export function GNLHero({ episode }: Props): React.ReactElement {
   return (
-    <article className="gv-gnl-card gv-gnl-episode-card" data-testid="gnl-hero" aria-label="Latest episode">
+    <article className="gv-gnl-card gv-gnl-episode-card" data-testid="gnl-hero" aria-label="Latest clips">
       <p className="gv-gnl-card__eyebrow">
         <span className="gv-gnl-hero__live-dot" aria-hidden="true" />
-        Now Playing · Latest Episode
+        Latest Clips
       </p>
       <div className="gv-gnl-episode">
         <a

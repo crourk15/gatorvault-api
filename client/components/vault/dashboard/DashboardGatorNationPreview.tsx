@@ -23,7 +23,7 @@ export function DashboardGatorNationPreview({ ticker }: Props): React.ReactEleme
         <span className="gv-dash-hero__live-dot" aria-hidden="true" />
         GatorNation Live
       </p>
-      <h2 className="gv-dash-panel__title">ESPN-style live pulse</h2>
+      <h2 className="gv-dash-panel__title">GatorNation Live</h2>
       <p className="gv-dash-panel__subtitle">Latest clips, live ticker, and trending topics from the beat.</p>
 
       {hot.length > 0 && (

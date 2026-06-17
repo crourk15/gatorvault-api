@@ -330,3 +330,103 @@
     width: 100%;
   }
 }
+
+/* Live pulse — compact card (no gradient hero) */
+.gv-gnl-pulse {
+  background: var(--card-bg);
+  color: var(--graphite);
+}
+
+.gv-gnl-pulse__row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.gv-gnl-pulse__badge {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--flip-risk);
+}
+
+.gv-gnl-pulse__title {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: var(--heading-color-light);
+  line-height: 1.15;
+}
+
+.gv-gnl-pulse__subtitle {
+  margin: 0;
+  max-width: 40rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--subtle-gray);
+}
+
+/* Trending topics */
+.gv-gnl-trending__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.gv-gnl-trending__chip {
+  display: inline-block;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(0, 33, 165, 0.06);
+  border: 1px solid var(--card-border);
+  color: var(--heading-color-light);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.gv-gnl-trending__chip:hover {
+  background: rgba(250, 70, 22, 0.1);
+  color: var(--gator-orange);
+}
+
+/* Film Room preview */
+.gv-gnl-film-preview__list {
+  list-style: none;
+  margin: 0 0 var(--space-md);
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.gv-gnl-film-preview__link {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--card-border);
+  text-decoration: none;
+  color: inherit;
+  background: rgba(0, 33, 165, 0.03);
+}
+
+.gv-gnl-film-preview__link:hover {
+  box-shadow: var(--blue-glow);
+}
+
+.gv-gnl-film-preview__title {
+  font-weight: 600;
+  color: var(--heading-color-light);
+}
+
+.gv-gnl-film-preview__meta {
+  font-size: 0.8125rem;
+  color: var(--subtle-gray);
+  white-space: nowrap;
+}
+

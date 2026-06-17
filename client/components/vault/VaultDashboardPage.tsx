@@ -2,9 +2,8 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import '@/lib/vault-dashboard.css';
-import { DashboardHero } from '@/components/vault/dashboard/DashboardHero';
+import { DashboardTopCommandCard } from '@/components/vault/dashboard/DashboardTopCommandCard';
 import { DashboardTicker } from '@/components/vault/dashboard/DashboardTicker';
-import { DashboardQuickStats } from '@/components/vault/dashboard/DashboardQuickStats';
 import { DashboardRecruitingSnapshot } from '@/components/vault/dashboard/DashboardRecruitingSnapshot';
 import { DashboardFutureCastSnapshot } from '@/components/vault/dashboard/DashboardFutureCastSnapshot';
 import { DashboardPortalActivity } from '@/components/vault/dashboard/DashboardPortalActivity';
@@ -125,20 +124,20 @@ export function VaultDashboardPage(): React.ReactElement {
 
   return (
     <div className="gv-dash gv-dash-shell" data-testid="vault-dashboard">
-      <section className="gv-dash-hero-section" aria-label="Hero section">
-        <DashboardHero ticker={ticker} loading={loading && !ticker} />
-        <DashboardTicker items={ticker?.items ?? []} loading={loading && !ticker} />
-      </section>
-
       <div className="gv-dash__frame gv-dash__command">
         <div className="gv-dash__grid">
           <div className="gv-dash__cell gv-dash__cell--12">
-            <DashboardQuickStats
+            <DashboardTopCommandCard
+              ticker={ticker}
               snapshot={recruiting}
               momentumPct={momentumPct}
               movementDelta={movementDelta}
               loading={loading && !recruiting}
             />
+          </div>
+
+          <div className="gv-dash__cell gv-dash__cell--12">
+            <DashboardTicker items={ticker?.items ?? []} loading={loading && !ticker} />
           </div>
 
           <div className="gv-dash__cell gv-dash__cell--8">
