@@ -23,7 +23,8 @@ const FUZZY_NAME_THRESHOLD = 0.85;
 const UF_INTEL_RES =
   /\b(?:florida|gators|\buf\b|gainesville|the swamp|uf's|gator nation)\b/i;
 
-function resolveIntelTimestamp(intel = {}) {
+function resolveIntelTimestamp(intel) {
+  intel = intel || {};
   const raw =
     intel.timestamp ||
     intel.sourceEventCreatedAt ||
@@ -37,7 +38,8 @@ function resolveIntelTimestamp(intel = {}) {
 }
 
 /** Rule 2 — reject before ANY fetch */
-function assertIntelFresh(intel = {}) {
+function assertIntelFresh(intel) {
+  intel = intel || {};
   if (process.env.X_AUTOPOST_BYPASS_FRESHNESS === 'true') {
     const ts = resolveIntelTimestamp(intel);
     if (!ts) {

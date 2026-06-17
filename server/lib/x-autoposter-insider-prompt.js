@@ -33,7 +33,8 @@ function isGenericInsiderLine(line) {
   return GENERIC_INSIDER_RES.some((re) => re.test(t));
 }
 
-function formatVisitType(intel = {}, situation = null) {
+function formatVisitType(intel, situation = null) {
+  intel = intel || {};
   const et = String(intel.eventType || '').toLowerCase();
   const sit = String(situation || '').toLowerCase();
   if (et.includes('official') || /official visit|\bov\b/.test(String(intel.detail || ''))) return 'official visit';
@@ -146,6 +147,7 @@ function buildProjectionLine({ signal, research, metrics, intel, visitType }) {
  * Compose insider blocks using elite template (context = lead+context merged for 3-line tweet).
  */
 function composeInsiderBlocks({ signal, research, metrics, intel, sourceLabel, situation }) {
+  intel = intel || {};
   const visitType = formatVisitType(intel, situation);
   const lead = buildLeadInsightLine({ signal, research, metrics, sourceLabel });
   const contextExtra = buildContextLine({ signal, research, metrics, intel, visitType, sourceLabel });

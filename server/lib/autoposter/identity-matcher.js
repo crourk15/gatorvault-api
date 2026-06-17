@@ -18,14 +18,16 @@ function mapPlayerRecord(player) {
   };
 }
 
-function matchIntelToPlayer(intel = {}) {
+function matchIntelToPlayer(intel) {
+  intel = intel || {};
   const player =
     (intel.playerSlug && recruitingStore.findBySlug(intel.playerSlug)) ||
     (intel.playerName && recruitingStore.findByNameAndClass(intel.playerName, intel.classYear));
   return mapPlayerRecord(player);
 }
 
-async function matchIdentity(intel = {}) {
+async function matchIdentity(intel) {
+  intel = intel || {};
   const stub = matchIntelToPlayer(intel);
   const intelInput = {
     playerName: intel.playerName || stub?.name,

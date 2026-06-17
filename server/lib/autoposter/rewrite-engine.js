@@ -93,7 +93,7 @@ async function rewriteIntelPipeline(input = {}) {
   const {
     beatText,
     ctx = null,
-    intel = null,
+    intel: rawIntel = null,
     research = null,
     newsEvent = null,
     eventType = null,
@@ -102,6 +102,7 @@ async function rewriteIntelPipeline(input = {}) {
     sport = 'football',
     rewriteMetrics = null
   } = input;
+  const intel = rawIntel || {};
 
   if (sport !== 'football') {
     logRewriteOp('rewrite_skip', { reason: 'non_football_sport', sport });
