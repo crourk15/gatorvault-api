@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import '@/lib/futurecast-page.css';
 import { loadFutureCastPageData, type FutureCastPageData } from '@/lib/api/futurecast';
+import { ApiFetchError } from '@/lib/api-fetch';
 import { UiError } from '@/components/site/UiMessage';
 import { FutureCastPageLayout } from './FutureCastPageLayout';
 import { FutureCastPageHero } from './FutureCastPageHero';
@@ -29,7 +30,15 @@ export function FutureCastEliteHomepage(): React.ReactElement {
       setData(next);
       setError(null);
     } catch (err) {
-      if (initial) setError(err instanceof Error ? err.message : 'Failed to load FutureCast.');
+      if (initial) {
+        const message =
+          err instanceof ApiFetchError
+            ? err.message
+            : err instanceof Error
+              ? err.message
+              : 'Failed to load FutureCast.';
+        setError(message);
+      }
     } finally {
       if (initial) setLoading(false);
     }
@@ -62,6 +71,11 @@ export function FutureCastEliteHomepage(): React.ReactElement {
 
   return (
     <FutureCastPageLayout>
+      {data.loadWarnings.length > 0 ? (
+        <p className="fc-empty" role="status" data-testid="fc-load-warnings">
+          {data.loadWarnings[0]}
+        </p>
+      ) : null}
       <FutureCastPageHero summary={data.summary} metrics={data.metrics} heatLevel={data.heatLevel} />
       <FutureCastMasterBoard
         commits={data.home.commits ?? []}

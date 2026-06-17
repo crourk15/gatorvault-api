@@ -1,7 +1,7 @@
 /**
  * FutureCast Predictions API client.
  */
-import { getApiBase } from './big-board-api';
+import { apiFetch } from './api-fetch';
 import type { RankingFields } from '@/types/futurecast';
 
 export type PredictionSourceType = 'MODEL' | 'STAFF' | 'FAN' | 'BLENDED';
@@ -72,13 +72,8 @@ export interface StockBoardResponse {
   windowDays: number;
 }
 
-async function apiFetch<T>(path: string): Promise<T> {
-  const res = await fetch(`${getApiBase()}${path}`);
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error((body as { error?: string }).error || `API ${res.status}`);
-  }
-  return res.json() as Promise<T>;
+async function predictionsApiFetch<T>(path: string): Promise<T> {
+  return apiFetch<T>(path);
 }
 
 function buildQuery(params: Record<string, string | number | boolean | undefined>): string {
@@ -93,7 +88,7 @@ function buildQuery(params: Record<string, string | number | boolean | undefined
 export async function fetchPredictionsFeed(
   query: PredictionsFeedQuery = {}
 ): Promise<FeedPrediction[]> {
-  const data = await apiFetch<{ predictions: FeedPrediction[] }>(
+  const data = await predictionsApiFetch<{ predictions: FeedPrediction[] }>(
     `/api/predictions${buildQuery({
       class_year: query.class_year,
       position: query.position,
@@ -110,7 +105,7 @@ export async function fetchPredictionsFeed(
 }
 
 export async function fetchStockBoard(): Promise<StockBoardResponse> {
-  return apiFetch<StockBoardResponse>('/api/futurecast/stock');
+  return predictionsApiFetch<StockBoardResponse>('/api/futurecast/stock');
 }
 
 export interface MovementSnapshotsResponse {
@@ -123,7 +118,7 @@ export interface MovementSnapshotsResponse {
 }
 
 export async function fetchMovementSnapshots(): Promise<MovementSnapshotsResponse> {
-  return apiFetch<MovementSnapshotsResponse>('/api/futurecast/snapshots');
+  return predictionsApiFetch<MovementSnapshotsResponse>('/api/futurecast/snapshots');
 }
 
 export interface MovementHeatmapBucket {
@@ -137,7 +132,7 @@ export interface MovementHeatmapResponse {
 }
 
 export async function fetchMovementHeatmap(): Promise<MovementHeatmapResponse> {
-  return apiFetch<MovementHeatmapResponse>('/api/futurecast/heatmap');
+  return predictionsApiFetch<MovementHeatmapResponse>('/api/futurecast/heatmap');
 }
 
 export async function fetchPlayerPredictions(playerId: string): Promise<PlayerPrediction[]> {
