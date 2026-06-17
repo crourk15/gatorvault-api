@@ -145,15 +145,61 @@ export async function insertPredictionHistory(
   playerId: string,
   confidence: number
 ): Promise<void> {
+  await insertPredictionHistoryForDate(playerId, new Date().toISOString().slice(0, 10), confidence);
+}
+
+export async function insertPredictionHistoryForDate(
+  playerId: string,
+  date: string,
+  confidence: number
+): Promise<void> {
   await db.query(
     `
     INSERT INTO futurecast.prediction_history (player_id, date, confidence)
-    VALUES ($1, CURRENT_DATE, $2)
+    VALUES ($1, $2::date, $3)
     ON CONFLICT (player_id, date) DO UPDATE
       SET confidence = EXCLUDED.confidence
     `,
-    [playerId, confidence]
+    [playerId, date, confidence]
   );
+}
+
+function dateKeyDaysAgo(days: number): string {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() - Math.max(1, Math.floor(days)));
+  return d.toISOString().slice(0, 10);
+}
+
+/** Seed a baseline history row so window_delta reflects prior vs current confidence. */
+export async function ensureMovementWindowBaseline(
+  playerId: string,
+  currentConfidence: number,
+  options: { priorConfidence?: number | null; windowDays?: number } = {}
+): Promise<number | null> {
+  const windowDays = options.windowDays ?? 7;
+  const prior =
+    options.priorConfidence != null && Number.isFinite(Number(options.priorConfidence))
+      ? Math.round(Number(options.priorConfidence))
+      : null;
+  const current = Math.round(Number(currentConfidence));
+  if (prior == null || prior === current) return null;
+
+  const { rows } = await db.query<{ has_baseline: boolean }>(
+    `
+    SELECT EXISTS (
+      SELECT 1
+      FROM futurecast.prediction_history ph
+      WHERE ph.player_id = $1
+        AND ph.date <= CURRENT_DATE - $2::int
+    ) AS has_baseline
+    `,
+    [playerId, windowDays]
+  );
+  if (rows[0]?.has_baseline) return current - prior;
+
+  await insertPredictionHistoryForDate(playerId, dateKeyDaysAgo(windowDays), prior);
+  await insertPredictionHistoryForDate(playerId, new Date().toISOString().slice(0, 10), current);
+  return current - prior;
 }
 
 export interface StockBoardRow extends PredictionFeedRow {

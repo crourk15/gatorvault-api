@@ -111,7 +111,7 @@ function writeFuturecastPrediction(player, row, { priorConfidence, movementDelta
   }
 }
 
-async function syncRivalsPredictionToPostgres(player, row) {
+async function syncRivalsPredictionToPostgres(player, row, predictionEvent = {}) {
   const dbUrl = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
   if (!dbUrl) {
     console.warn('[rivals-pm] DATABASE_URL missing — skipping Postgres prediction sync');
@@ -121,22 +121,67 @@ async function syncRivalsPredictionToPostgres(player, row) {
 
   try {
     const { getPlayerBySlug } = await import('../models/player.ts');
-    const { upsertActiveModelPrediction } = await import('../models/predictions.ts');
+    const { ensureMovementWindowBaseline, upsertActiveModelPrediction } = await import('../models/predictions.ts');
     const pgPlayer = await getPlayerBySlug(player.slug);
     if (!pgPlayer) {
       console.warn(`[rivals-pm] Postgres player not found for slug ${player.slug}`);
       return;
     }
+    const confidence = Math.round(Number(row.confidence));
+    if (predictionEvent.priorConfidence != null) {
+      await ensureMovementWindowBaseline(pgPlayer.id, confidence, {
+        priorConfidence: predictionEvent.priorConfidence
+      });
+    }
     await upsertActiveModelPrediction({
       player_id: pgPlayer.id,
       school: row.predictionSchool || 'Florida',
-      confidence: Math.round(Number(row.confidence)),
+      confidence,
       source_type: 'MODEL',
       predictor_id: 'rivals_pm'
     });
   } catch (e) {
     console.warn('[rivals-pm] Postgres prediction sync failed:', e.message);
   }
+}
+
+async function reseedPostgresMovementFromIntel() {
+  const dbUrl = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
+  if (!dbUrl) return { ok: false, reason: 'no_database', seeded: 0 };
+
+  const rows = intelStore.listIntel({ limit: 500 }).filter((intel) => {
+    if (!intel?.playerSlug) return false;
+    const current = intel.confidencePct ?? intel.ufRpmPct;
+    const prior = intel.priorConfidencePct;
+    return current != null && prior != null && Number(current) !== Number(prior);
+  });
+
+  let seeded = 0;
+  try {
+    const { getPlayerBySlug } = await import('../models/player.ts');
+    const { ensureMovementWindowBaseline, upsertActiveModelPrediction } = await import('../models/predictions.ts');
+
+    for (const intel of rows) {
+      const pgPlayer = await getPlayerBySlug(intel.playerSlug);
+      if (!pgPlayer) continue;
+      const confidence = Math.round(Number(intel.confidencePct ?? intel.ufRpmPct));
+      const prior = Math.round(Number(intel.priorConfidencePct));
+      const delta = await ensureMovementWindowBaseline(pgPlayer.id, confidence, { priorConfidence: prior });
+      if (delta == null) continue;
+      await upsertActiveModelPrediction({
+        player_id: pgPlayer.id,
+        school: intel.predictionSchool || 'Florida',
+        confidence,
+        source_type: 'MODEL',
+        predictor_id: 'rivals_pm'
+      });
+      seeded += 1;
+    }
+  } catch (e) {
+    return { ok: false, reason: e.message, seeded };
+  }
+
+  return { ok: true, seeded, candidates: rows.length };
 }
 
 function saveSnapshot(doc) {
@@ -364,7 +409,7 @@ async function processPrediction(row, snapshot, options = {}) {
   };
   const player = await store.upsertPlayer(playerPatch);
   writeFuturecastPrediction(player, row, predictionEvent);
-  await syncRivalsPredictionToPostgres(player, row);
+  await syncRivalsPredictionToPostgres(player, row, predictionEvent);
 
   const intelResult = await intelStore.addIntel({
     playerId: String(row.on3Id || player.on3Id || player.slug),
@@ -468,7 +513,7 @@ async function collectBeatPredictions({ backfill = false } = {}) {
   return rows;
 }
 
-async function runRivalsPredictionIngest({ force = false, backfill = false } = {}) {
+async function runRivalsPredictionIngest({ force = false, backfill = false, reseed = false } = {}) {
   const backfillMode =
     backfill || process.env.RIVALS_PM_BACKFILL === 'true' || process.env.RIVALS_PM_BACKFILL === '1';
   const snapshot = loadSnapshot();
@@ -518,6 +563,12 @@ async function runRivalsPredictionIngest({ force = false, backfill = false } = {
   saveSnapshot(snapshot);
   if (results.processed.length) invalidateRecruitingIntelCaches();
 
+  let reseedResult = null;
+  if (reseed) {
+    reseedResult = await reseedPostgresMovementFromIntel();
+    if (reseedResult?.seeded) invalidateRecruitingIntelCaches();
+  }
+
   appendLog({
     processed: results.processed.length,
     skipped: results.skipped.length,
@@ -533,9 +584,11 @@ async function runRivalsPredictionIngest({ force = false, backfill = false } = {
     ...results,
     processedCount: results.processed.length,
     lastRun: snapshot.lastRun,
+    reseed: reseedResult,
     policy: {
       todayOnly: !backfillMode,
       backfill: backfillMode,
+      reseed: !!reseed,
       timezone: eligibility.TZ,
       todayKey: eligibility.toDateKey(new Date().toISOString())
     }
@@ -567,6 +620,7 @@ function getRivalsPmStatus() {
 module.exports = {
   runRivalsPredictionIngest,
   getRivalsPmStatus,
+  reseedPostgresMovementFromIntel,
   processPrediction,
   resolvePredictionEvent,
   buildPredictionChangeText,

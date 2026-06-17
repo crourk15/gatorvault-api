@@ -481,7 +481,11 @@ function mountRecruitingRoutes(app) {
         req.body.backfill === true ||
         req.query.backfill === '1' ||
         req.query.backfill === 'true';
-      const result = await runRivalsPredictionIngest({ force, backfill });
+      const reseed =
+        req.body.reseed === true ||
+        req.query.reseed === '1' ||
+        req.query.reseed === 'true';
+      const result = await runRivalsPredictionIngest({ force, backfill, reseed });
       return res.json({ ok: true, ...result });
     } catch (err) {
       console.error('rivals-pm ingest error', err);
