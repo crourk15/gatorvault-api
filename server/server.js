@@ -1061,16 +1061,20 @@ try {
   console.log('[guardian] boot verified, starting server...');
 } catch (err) {
   console.error(err.message || err);
-  require('./lib/guardian/guardian-alerts')
-    .alertGuardian({
-      type: 'boot_failed',
-      severity: 'critical',
-      title: 'API boot failed',
-      message: String(err.message || err).slice(0, 500),
-      notifySms: true
-    })
-    .catch(() => {});
-  process.exit(1);
+  if (process.env.GUARDIAN_BOOT_LENIENT === 'true') {
+    console.warn('[guardian] GUARDIAN_BOOT_LENIENT=true — starting server despite boot verification failure');
+  } else {
+    require('./lib/guardian/guardian-alerts')
+      .alertGuardian({
+        type: 'boot_failed',
+        severity: 'critical',
+        title: 'API boot failed',
+        message: String(err.message || err).slice(0, 500),
+        notifySms: true
+      })
+      .catch(() => {});
+    process.exit(1);
+  }
 }
 
 app.listen(PORT, () => {

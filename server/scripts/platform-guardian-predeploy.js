@@ -63,6 +63,10 @@ async function main() {
         meta: { errors: errors.slice(0, 10), source: 'platform-guardian-predeploy' }
       });
     }
+    if (process.env.GUARDIAN_BOOT_LENIENT === 'true') {
+      console.warn('[guardian] GUARDIAN_BOOT_LENIENT=true — continuing despite pre-deploy FAIL');
+      process.exit(0);
+    }
     process.exit(1);
   }
   try {
