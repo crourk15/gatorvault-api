@@ -16,14 +16,14 @@
   --fc-bg: var(--th-primary);
   --fc-card: var(--th-card-bg);
   --fc-border: var(--th-border);
-  --fc-text: var(--th-body);
+  --fc-text: var(--th-body-dark);
   --fc-muted: var(--th-meta);
   --fc-blue: var(--th-blue);
   --fc-orange: var(--th-accent);
   --gv-bg: var(--th-primary);
   --gv-card: var(--th-card-bg);
   --gv-border: var(--th-border);
-  --gv-text-primary: var(--heading-color-dark);
+  --gv-text-primary: var(--th-body-dark);
   --gv-text-secondary: var(--th-meta);
   --gv-orange: var(--th-accent);
   --gv-blue: var(--th-blue);
@@ -32,7 +32,7 @@
   --gv-shadow-card: var(--th-shadow);
   --gv-radius-card: var(--th-radius-card);
   background: var(--th-primary);
-  color: var(--heading-color-dark);
+  color: var(--th-meta);
   font-family: var(--font-family);
 }
 
@@ -60,12 +60,20 @@
 
 /* ── Section titles on navy ── */
 .rh-title-bar__title,
+.futurecast-page__section-title,
+.gv-elite-hero__title,
+.fc-elite-section__title {
+  color: var(--th-heading-light);
+}
+
 .rh-hero__title,
 .gv-rh-hero__title,
-.fc-page-hero__title,
-.futurecast-page__section-title,
-.gv-elite-hero__title {
+.gv-rh-premium-hero__title {
   color: var(--heading-color-dark);
+}
+
+.fc-page-hero__title {
+  color: var(--th-heading-light);
 }
 
 .rh-section__title,
@@ -116,7 +124,7 @@
 .rh-rank-sim__select {
   background: var(--th-card-bg) !important;
   background-image: none !important;
-  color: var(--th-body);
+  color: var(--th-body-dark);
   border: 1px solid var(--th-border);
   border-top: 3px solid var(--th-accent);
   border-radius: var(--th-radius-card);
@@ -331,7 +339,7 @@
 
 .rh-fc-table__grid td,
 .rh-nil-table__grid td {
-  color: var(--th-body);
+  color: var(--th-body-dark);
   border-bottom-color: var(--th-border);
 }
 
@@ -376,7 +384,7 @@
 .gv-rh-hub {
   --rh-card-bg: var(--th-card-bg);
   --rh-border: var(--th-border);
-  color: var(--heading-color-dark);
+  color: var(--th-meta);
 }
 
 .gv-rh-hero {
@@ -416,4 +424,226 @@
   .fc-futurecast-page {
     --th-frame-margin: var(--space-md);
   }
+}
+
+/* ── Text legibility: legacy dark-mode / white-on-white cleanup ── */
+.rh-page {
+  color: var(--th-meta);
+}
+
+.rh-hero__title,
+.gv-rh-hero__title,
+.gv-rh-premium-hero__title {
+  color: var(--heading-color-dark) !important;
+}
+
+.rh-hero__subtitle,
+.gv-rh-premium-hero__sub {
+  color: var(--th-meta) !important;
+}
+
+/* Unified card surfaces + readable body text */
+:is(.rh-page, .gv-rh-hub) :is(
+  .rh-module-card,
+  .rh-board-card,
+  .rh-commit-card,
+  .rh-commit-eval-card,
+  .rh-portal-card,
+  .rh-tool-tile,
+  .intel-card,
+  .commit-card,
+  .gv-rh-card,
+  .gv-rh-panel,
+  .gv-rh-elite-card,
+  .gv-rh-intel-card,
+  .gv-rh-module,
+  .gv-rh-tool,
+  .gv-rh-class-player,
+  .gv-rh-class-stat,
+  .gv-rh-headliner,
+  .gv-rh-heat__panel,
+  .gv-rh-rankings-wrap
+),
+:is(.fc-futurecast-page, .fc-futurecast-page--elite, .futurecast-page) :is(
+  .fc-elite-card,
+  .fc-player-card,
+  .fc-page-hero,
+  .fc-page-hero__metric,
+  .fc-panel,
+  .fc-prediction-card,
+  .fc-related-card,
+  .fc-trending-card,
+  .fc-score-card,
+  .fc-portal-card,
+  .fc-uf-total,
+  .gv-movement-list,
+  .gv-movement-mini-card,
+  .fc-movement-list__link,
+  .fc-stock-board-wrap,
+  .fc-movement-heatmap,
+  .fc-table,
+  .fc-big-board-toolbar,
+  .intel-card,
+  .commit-card
+) {
+  background: var(--th-card-bg) !important;
+  background-image: none !important;
+  color: var(--th-body-dark) !important;
+  mix-blend-mode: normal !important;
+}
+
+/* Section titles on navy shell */
+.hp-intel-section__title,
+.rh-title-bar__title,
+.rh-section-title,
+.rh-section__title,
+.rh-panel-title,
+.futurecast-page__section-title,
+.fc-stock-board__title,
+.fc-movement-heatmap__title {
+  color: var(--th-heading-light) !important;
+}
+
+/* Card headings + names */
+:is(.rh-page, .gv-rh-hub, .fc-futurecast-page, .futurecast-page)
+  :is(
+    .rh-module-card,
+    .intel-card,
+    .commit-card,
+    .fc-elite-card,
+    .fc-player-card,
+    .fc-panel,
+    .fc-score-card,
+    .fc-portal-card,
+    .gv-rh-elite-card,
+    .gv-rh-intel-card,
+    .gv-rh-module,
+    .gv-rh-tool,
+    .gv-rh-headliner,
+    .fc-related-card,
+    .fc-prediction-card,
+    .fc-uf-total,
+    .gv-movement-list,
+    .fc-movement-heatmap,
+    .fc-stock-board-wrap
+  )
+  :is(
+    h1, h2, h3, h4, h5, h6,
+    [class*="__name"],
+    [class*="__title"],
+    [class*="__heading"],
+    .fc-score-card__value,
+    .fc-uf-total__score,
+    .fc-related-card__name,
+    .fc-portal-card__name,
+    .fc-movement-heatmap__label
+  ) {
+  color: var(--th-heading-light) !important;
+}
+
+/* Metadata + secondary copy on cards */
+:is(.rh-page, .gv-rh-hub, .fc-futurecast-page, .futurecast-page)
+  :is(
+    .rh-module-card,
+    .intel-card,
+    .commit-card,
+    .fc-elite-card,
+    .fc-player-card,
+    .fc-panel,
+    .fc-score-card,
+    .fc-portal-card,
+    .gv-rh-elite-card,
+    .gv-rh-intel-card,
+    .gv-rh-module,
+    .gv-rh-tool,
+    .gv-rh-headliner,
+    .fc-related-card,
+    .fc-prediction-card,
+    .fc-movement-heatmap,
+    .fc-stock-board-wrap
+  )
+  :is(
+    [class*="__meta"],
+    [class*="__desc"],
+    [class*="__sub"],
+    [class*="__time"],
+    [class*="__label"],
+    [class*="__meas"],
+    [class*="__position"],
+    [class*="__body"],
+    [class*="__intel-text"],
+    .rh-muted,
+    .fc-score-card__label,
+    .fc-stock-board__subtitle,
+    .fc-movement-heatmap__count,
+    .fc-profile-header__location,
+    .fc-profile-header__measurables
+  ) {
+  color: var(--th-meta) !important;
+  opacity: 1 !important;
+}
+
+/* Legacy explicit white text inside cards (not primary/orange buttons) */
+:is(.rh-page, .gv-rh-hub, .fc-futurecast-page, .futurecast-page)
+  :is(
+    .rh-module-card,
+    .intel-card,
+    .commit-card,
+    .fc-elite-card,
+    .fc-player-card,
+    .fc-panel,
+    .fc-score-card,
+    .fc-portal-card,
+    .gv-rh-elite-card,
+    .gv-rh-intel-card,
+    .gv-rh-module,
+    .gv-rh-tool,
+    .gv-rh-headliner,
+    .gv-rh-heat__panel,
+    .gv-rh-rankings-wrap,
+    .fc-related-card,
+    .fc-prediction-card,
+    .fc-uf-total,
+    .gv-movement-list,
+    .fc-movement-heatmap,
+    .fc-stock-board-wrap,
+    .fc-table
+  )
+  :is(p, span, div, td, th, li, a, label, dd, dt, blockquote) {
+  color: inherit;
+}
+
+.gv-rh-heat__name,
+.gv-rh-heat__row a,
+.gv-rh-rankings td a,
+.gv-rh-rankings th:hover,
+.gv-rh-intel-card__title,
+.gv-rh-intel-card__body,
+.gv-rh-module__title,
+.gv-rh-module__desc,
+.gv-rh-tool__title,
+.gv-rh-tool__desc,
+.gv-rh-class-player__name,
+.gv-rh-headliner__name,
+.gv-rh-headliner__quote,
+.fc-related-card__name,
+.fc-player-card__name,
+.fc-score-card__value,
+.fc-uf-total__score,
+.fc-portal-card__name,
+.fc-movement-heatmap__title,
+.fc-movement-heatmap__label,
+.fc-stock-board__title,
+.fc-stock-board__subtitle {
+  opacity: 1 !important;
+}
+
+/* Keep white text only on filled accent buttons */
+.intel-card__btn--primary,
+.commit-card__btn--intel,
+.fc-profile-share,
+.gv-rh-elite-card__elite-badge,
+[class*="__btn--primary"],
+[class*="__cta--primary"] {
+  color: var(--white, #fff) !important;
 }

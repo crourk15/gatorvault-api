@@ -3,7 +3,7 @@
 /* ── Page shell — navy bg, white cards ── */
 .rh-page {
   background: var(--th-primary, var(--page-bg));
-  color: var(--heading-color-dark);
+  color: var(--th-meta);
   font-family: var(--font-body);
   padding-bottom: 0;
 }
@@ -55,7 +55,7 @@
 
 .rh-muted {
   margin: 0;
-  color: var(--color-text-muted-on-dark, rgba(229, 229, 229, 0.75));
+  color: var(--th-meta, var(--color-text-secondary));
   font-size: var(--text-small);
 }
 
@@ -137,7 +137,7 @@
   border-top: 3px solid var(--th-accent, var(--color-accent-orange));
   border-radius: var(--th-radius-card, var(--radius-sm));
   box-shadow: var(--th-shadow, var(--gv-shadow-card));
-  color: var(--th-body, var(--color-text-on-light));
+  color: var(--th-body-dark, var(--th-body));
   text-decoration: none;
   transition: border-color var(--transition-fast), transform var(--transition-fast);
 }
@@ -165,13 +165,13 @@
   margin: 0 0 var(--space-xs);
   font-size: var(--text-h3);
   font-weight: 600;
-  color: var(--color-text-on-light);
+  color: var(--th-heading-light, var(--color-text-on-light));
 }
 
 .rh-module-card__desc {
   margin: 0;
   font-size: var(--text-small);
-  color: #6b7280;
+  color: var(--th-meta);
   line-height: 1.45;
 }
 

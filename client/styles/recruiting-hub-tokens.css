@@ -19,10 +19,10 @@
   --color-border-subtle: var(--th-border);
   --color-border-default: var(--th-border);
   --color-border-hover: color-mix(in srgb, var(--th-accent) 35%, var(--th-border));
-  --color-text-primary: var(--th-body);
+  --color-text-primary: var(--th-body-dark, var(--th-body));
   --color-text-secondary: var(--th-meta);
   --color-text-on-dark: var(--heading-color-dark);
-  --color-text-on-light: var(--th-body);
+  --color-text-on-light: var(--th-body-dark, var(--th-body));
   --color-text-muted-on-dark: var(--th-meta);
   --color-accent-orange: var(--th-accent);
   --color-accent-blue: var(--th-blue);

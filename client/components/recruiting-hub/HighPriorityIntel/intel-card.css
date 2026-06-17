@@ -183,7 +183,7 @@
 }
 
 .intel-card__btn:hover {
-  opacity: 0.9;
+  filter: brightness(1.05);
 }
 
 .intel-card__btn--primary {

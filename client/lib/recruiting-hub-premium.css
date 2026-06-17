@@ -9,16 +9,11 @@
 .gv-rh-premium-hero__bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(165deg, #001a33 0%, #002b4f 55%, #001225 100%);
+  background: var(--th-primary, var(--page-bg));
 }
 
 .gv-rh-premium-hero__lights {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 12% 18%, rgba(255, 220, 120, 0.1) 0, transparent 7%),
-    radial-gradient(circle at 50% 6%, rgba(255, 255, 255, 0.06) 0, transparent 11%);
-  pointer-events: none;
+  display: none;
 }
 
 .gv-rh-premium-hero__inner {
@@ -33,7 +28,7 @@
   font-size: clamp(2rem, 4vw, 2.75rem);
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #fff;
+  color: var(--heading-color-dark, #fff);
 }
 
 .gv-rh-premium-hero__sub {
@@ -85,19 +80,19 @@
   font-family: Oswald, Inter, sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--th-heading-light, var(--uf-blue));
 }
 
 .gv-rh-module__desc {
   margin: 0;
   font-size: 0.875rem;
-  color: var(--gv-body-text, #d0d8e0);
+  color: var(--th-meta, var(--gv-body-text, #94a3b8));
   line-height: 1.45;
 }
 
 .gv-rh-class {
   padding: var(--space-7, 32px) 0;
-  background: rgba(0, 26, 51, 0.35);
+  background: transparent;
 }
 
 .gv-rh-class__header {
@@ -109,7 +104,7 @@
   font-family: Oswald, Inter, sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--th-heading-light, var(--uf-blue));
 }
 
 .gv-rh-class .gv-rb-summary {
@@ -130,7 +125,7 @@
   margin: 0 0 var(--space-4, 16px);
   font-size: 1rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--th-heading-light, var(--uf-blue));
 }
 
 .gv-rh-class__detail-grid {
@@ -147,7 +142,7 @@
   margin: 0 0 0.35rem;
   font-size: 1.05rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--th-heading-light, var(--uf-blue));
 }
 
 .gv-rh-class-player__meta {
@@ -239,13 +234,13 @@
   margin: 0 0 var(--space-2, 8px);
   font-size: 0.95rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--th-heading-light, var(--uf-blue));
 }
 
 .gv-rh-intel-card__body {
   margin: 0;
   font-size: 0.85rem;
-  color: var(--gv-body-text, #d0d8e0);
+  color: var(--th-body-dark, var(--graphite));
   line-height: 1.45;
 }
 
@@ -268,13 +263,13 @@
   font-family: Oswald, Inter, sans-serif;
   font-size: 1.15rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--th-heading-light, var(--uf-blue));
 }
 
 .gv-rh-tool__desc {
   margin: 0 0 var(--space-4, 16px);
   font-size: 0.9rem;
-  color: var(--gv-body-text, #d0d8e0);
+  color: var(--th-meta, var(--gv-body-text, #94a3b8));
 }
 
 .gv-rh-section-heading {
@@ -282,7 +277,7 @@
   font-family: Oswald, Inter, sans-serif;
   font-size: 1.35rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--th-heading-light, var(--uf-blue));
 }
 
 .gv-rh-class__stats--expanded {
@@ -361,7 +356,7 @@
   font-family: Oswald, Inter, sans-serif;
   font-size: 2.25rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--heading-color-dark, #fff);
   line-height: 1;
 }
 
@@ -400,7 +395,7 @@
 .gv-rh-headliner__pos-pill {
   background: rgba(0, 48, 135, 0.45);
   border: 1px solid rgba(77, 163, 255, 0.35);
-  color: #fff;
+  color: var(--heading-color-dark, #fff);
 }
 
 .gv-rh-headliner__natl {
@@ -420,11 +415,11 @@
   margin: var(--space-4, 16px) 0;
   padding: var(--space-4, 16px) var(--space-5, 20px);
   border-left: 3px solid var(--gv-gator-orange, #fa4616);
-  background: rgba(255, 255, 255, 0.04);
+  background: color-mix(in srgb, var(--th-blue) 4%, var(--th-card-bg));
   font-size: 0.9375rem;
   font-style: italic;
   line-height: 1.5;
-  color: #fff;
+  color: var(--th-body-dark, var(--graphite));
 }
 
 .gv-rh-class-stat__sub {
@@ -435,10 +430,7 @@
 }
 
 .gv-rh-headliner__bg {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(0, 48, 135, 0.55) 0%, rgba(250, 70, 22, 0.25) 100%);
-  pointer-events: none;
+  display: none;
 }
 
 .gv-rh-headliner__content {
@@ -461,12 +453,12 @@
   font-family: Oswald, Inter, sans-serif;
   font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 800;
-  color: #fff;
+  color: var(--th-heading-light, var(--uf-blue));
 }
 
 .gv-rh-headliner__meta {
   margin: 0 0 var(--space-4, 16px);
-  color: var(--gv-body-text, #d0d8e0);
+  color: var(--th-meta, var(--gv-body-text, #94a3b8));
 }
 
 .gv-rh-headliner__badges {

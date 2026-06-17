@@ -9,7 +9,7 @@
   --fc-muted: var(--subtle-gray);
   --fc-blue: var(--uf-blue);
   --fc-orange: var(--gator-orange);
-  color: var(--heading-color-dark);
+  color: var(--th-body-dark, var(--graphite));
   background: var(--page-bg);
 }
 
@@ -48,6 +48,7 @@
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   line-height: 1.1;
+  color: var(--th-heading-light, var(--uf-blue));
 }
 
 .fc-page-hero__sub {

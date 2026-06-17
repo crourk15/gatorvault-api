@@ -382,11 +382,11 @@
 }
 
 .gv-rh-tab:hover {
-  color: #fff;
+  color: var(--th-meta);
 }
 
 .gv-rh-tab.is-active {
-  color: #fff;
+  color: var(--th-accent);
   font-weight: 700;
 }
 
@@ -815,7 +815,7 @@
 }
 
 .gv-rh-heat__name {
-  color: #fff;
+  color: var(--th-heading-light, var(--th-body-dark));
   font-weight: 600;
   font-size: 0.875rem;
   text-decoration: none;
@@ -890,7 +890,7 @@
 }
 
 .gv-rh-heat__row a {
-  color: #fff;
+  color: var(--th-heading-light, var(--th-body-dark));
   font-weight: 600;
   font-size: 0.875rem;
   text-decoration: none;
@@ -1148,7 +1148,7 @@
 }
 
 .gv-rh-rankings th:hover {
-  color: #fff;
+  color: var(--th-heading-light);
 }
 
 .gv-rh-rankings th.is-sorted {
@@ -1165,7 +1165,7 @@
 }
 
 .gv-rh-rankings td a {
-  color: #fff;
+  color: var(--th-heading-light, var(--th-body-dark));
   font-weight: 600;
   text-decoration: none;
 }

@@ -100,6 +100,7 @@
   --th-heading-light: var(--uf-blue);
   --th-meta: var(--subtle-gray);
   --th-body: var(--graphite);
+  --th-body-dark: var(--graphite);
   --th-radius-card: var(--radius-md);
   --th-shadow: var(--card-shadow);
   --th-frame-max: var(--max-width);
@@ -131,7 +132,7 @@
 .fc-player-card,
 .rh-unified-card {
   background: var(--th-card-bg);
-  color: var(--th-body);
+  color: var(--th-body-dark);
   border: 1px solid var(--th-border);
   border-top: 3px solid var(--th-accent);
   border-radius: var(--th-radius-card);
@@ -157,7 +158,7 @@
 .gv-home-card__body,
 .gv-rh-card__body,
 .fc-elite-card__body {
-  color: var(--th-body);
+  color: var(--th-body-dark);
   font-family: var(--font-family);
 }
 

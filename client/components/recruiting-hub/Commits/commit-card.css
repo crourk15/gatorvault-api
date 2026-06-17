@@ -1,5 +1,5 @@
 /**
- * Commit card — UF dark theme (design tokens)
+ * Commit card — unified white card theme
  */
 
 .commit-card {
@@ -10,11 +10,12 @@
   gap: var(--space-3);
   min-height: 100%;
   padding: var(--space-4);
-  background: var(--color-bg-card, #111827);
-  border: 1px solid var(--color-border-subtle, #1f2933);
+  background: var(--th-card-bg, var(--color-bg-card));
+  border: 1px solid var(--th-border, var(--color-border-subtle));
+  border-top: 3px solid var(--th-accent, var(--color-uf-orange));
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
-  color: var(--color-text-primary, #f9fafb);
+  color: var(--th-body-dark, var(--color-text-primary));
 }
 
 .commit-card__photo-wrap {
@@ -23,8 +24,8 @@
   aspect-ratio: 4 / 3;
   border-radius: var(--radius-md);
   overflow: hidden;
-  background: rgba(0, 33, 165, 0.15);
-  border: 1px solid var(--color-border-subtle, #1f2933);
+  background: color-mix(in srgb, var(--th-blue) 8%, var(--th-card-bg));
+  border: 1px solid var(--th-border, var(--color-border-subtle));
 }
 
 .commit-card__photo {
@@ -42,8 +43,8 @@
   height: 100%;
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
-  color: var(--color-uf-blue, #0021a5);
-  background: linear-gradient(145deg, rgba(0, 33, 165, 0.35), rgba(17, 24, 39, 0.95));
+  color: var(--th-heading-light, var(--color-uf-blue));
+  background: color-mix(in srgb, var(--th-blue) 12%, var(--th-card-bg));
 }
 
 .commit-card__head {
@@ -57,14 +58,14 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   line-height: 1.25;
-  color: var(--color-text-primary, #f9fafb);
+  color: var(--th-heading-light, var(--color-text-primary));
 }
 
 .commit-card__position {
   margin: 0;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary, #9ca3af);
+  color: var(--th-meta, var(--color-text-secondary));
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -72,7 +73,7 @@
 .commit-card__meas {
   margin: 0;
   font-size: var(--font-size-sm);
-  color: var(--color-text-secondary, #9ca3af);
+  color: var(--th-meta, var(--color-text-secondary));
 }
 
 .commit-card__rank-row {
@@ -85,25 +86,25 @@
 .commit-card__ranking {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary, #f9fafb);
+  color: var(--th-body-dark, var(--color-text-primary));
 }
 
 .commit-card__stars {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.06em;
-  color: var(--color-uf-orange, #fa4616);
+  color: var(--th-accent, var(--color-uf-orange));
 }
 
 .commit-card__meta {
   margin: 0;
   font-size: var(--font-size-sm);
   line-height: 1.45;
-  color: var(--color-text-secondary, #9ca3af);
+  color: var(--th-meta, var(--color-text-secondary));
 }
 
 .commit-card__meta strong {
-  color: var(--color-text-primary, #f9fafb);
+  color: var(--th-body-dark, var(--color-text-primary));
   font-weight: var(--font-weight-semibold);
 }
 
@@ -134,13 +135,13 @@
 }
 
 .commit-card__btn--intel {
-  background: var(--color-uf-blue, #0021a5);
-  color: #fff;
-  border: 1px solid rgba(0, 33, 165, 0.6);
+  background: var(--th-blue, var(--color-uf-blue));
+  color: var(--white, #fff);
+  border: 1px solid color-mix(in srgb, var(--th-blue) 60%, transparent);
 }
 
 .commit-card__btn--fc {
   background: transparent;
-  color: var(--color-uf-orange, #fa4616);
-  border: 1px solid rgba(250, 70, 22, 0.45);
+  color: var(--th-accent, var(--color-uf-orange));
+  border: 1px solid color-mix(in srgb, var(--th-accent) 45%, transparent);
 }

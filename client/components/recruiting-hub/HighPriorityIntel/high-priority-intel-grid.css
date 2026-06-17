@@ -10,7 +10,7 @@
   margin: 0 0 var(--rh-title-gap, var(--space-6));
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary);
+  color: var(--th-heading-light, var(--color-text-primary));
 }
 
 .hp-intel-section__sub {
@@ -40,7 +40,7 @@
 .hp-intel-grid__skeleton {
   min-height: 260px;
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.05);
+  background: color-mix(in srgb, var(--th-blue) 6%, var(--th-card-bg));
   animation: hp-intel-pulse 1.2s ease-in-out infinite;
 }
 
