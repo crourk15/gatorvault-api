@@ -619,6 +619,10 @@
   margin: 0;
   font-size: var(--text-sm, 0.875rem);
   color: var(--th-meta, rgba(255, 255, 255, 0.78));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
 }
 
 .rh-movement-summary__meta {
@@ -631,4 +635,210 @@
   margin: var(--space-sm) 0 0;
   font-size: var(--text-sm, 0.875rem);
   color: var(--th-meta-muted, rgba(255, 255, 255, 0.6));
+}
+
+/* ── Movement Intel presentation (stock dashboard + badges) ── */
+.rh-section-head {
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.rh-section-sub {
+  margin: var(--space-xs) 0 0;
+  font-size: var(--text-small, 0.875rem);
+  line-height: 1.45;
+  color: var(--th-meta, var(--color-text-secondary));
+}
+
+.rh-movement-section {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid color-mix(in srgb, var(--th-border, #e2e8f0) 65%, transparent);
+}
+
+.rh-movement-section:first-child,
+.gv-home-movement-intel__section:first-of-type {
+  margin-top: var(--space-md);
+  padding-top: 0;
+  border-top: none;
+}
+
+.rh-movement-section__title {
+  margin: 0 0 var(--space-md);
+  font-size: var(--text-h3, 1.05rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--th-heading-light, var(--color-uf-blue));
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.rh-movement-section__title::before {
+  content: '';
+  width: 4px;
+  height: 1.05em;
+  border-radius: 2px;
+  background: var(--color-accent-orange);
+  flex-shrink: 0;
+}
+
+.rh-movement-section__title--rise::before {
+  background: var(--momentum-up, #22c55e);
+}
+
+.rh-movement-section__title--fall::before {
+  background: var(--momentum-down, #ef4444);
+}
+
+.rh-movement-section__title--volatile::before {
+  background: var(--gv-yellow, #eab308);
+}
+
+.rh-movement-stock-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid color-mix(in srgb, var(--th-border, #e2e8f0) 55%, transparent);
+  background: color-mix(in srgb, var(--th-card-bg, #fff) 92%, transparent);
+}
+
+.rh-movement-stock-row + .rh-movement-stock-row {
+  margin-top: var(--space-xs);
+}
+
+.rh-movement-stock-row--volatile {
+  background: color-mix(in srgb, var(--gv-yellow, #eab308) 10%, var(--th-card-bg, #fff));
+  border-color: color-mix(in srgb, var(--gv-yellow, #eab308) 28%, var(--th-border, #e2e8f0));
+}
+
+.rh-movement-stock-row__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rh-movement-stock-row__name {
+  font-size: var(--text-body, 0.9375rem);
+  font-weight: 700;
+  color: var(--th-heading-light, var(--color-text-primary));
+  text-decoration: none;
+  line-height: 1.25;
+}
+
+.rh-movement-stock-row__name:hover {
+  color: var(--color-accent-orange);
+}
+
+.rh-movement-stock-row__meta {
+  font-size: var(--text-small, 0.8125rem);
+  color: var(--th-meta, var(--color-text-secondary));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rh-movement-stock-row__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+.rh-movement-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  border: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.rh-movement-badge__icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.rh-movement-badge--rise {
+  color: var(--momentum-up, #16a34a);
+  background: color-mix(in srgb, var(--momentum-up, #22c55e) 14%, transparent);
+  border-color: color-mix(in srgb, var(--momentum-up, #22c55e) 45%, transparent);
+}
+
+.rh-movement-badge--fall {
+  color: var(--momentum-down, #dc2626);
+  background: color-mix(in srgb, var(--momentum-down, #ef4444) 14%, transparent);
+  border-color: color-mix(in srgb, var(--momentum-down, #ef4444) 45%, transparent);
+}
+
+.rh-movement-badge--volatile {
+  color: #b45309;
+  background: color-mix(in srgb, var(--gv-yellow, #eab308) 18%, transparent);
+  border-color: color-mix(in srgb, var(--gv-yellow, #eab308) 50%, transparent);
+}
+
+.rh-movement-badge--flat {
+  color: var(--th-meta, var(--color-text-secondary));
+  background: color-mix(in srgb, var(--th-meta, #94a3b8) 12%, transparent);
+  border-color: color-mix(in srgb, var(--th-meta, #94a3b8) 35%, transparent);
+}
+
+.rh-movement-sparkline {
+  width: 44px;
+  height: 22px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.rh-movement-sparkline--up {
+  color: var(--momentum-up, #22c55e);
+}
+
+.rh-movement-sparkline--down {
+  color: var(--momentum-down, #ef4444);
+}
+
+.rh-movement-sparkline--flat {
+  color: var(--th-meta, #94a3b8);
+}
+
+.rh-analyst-signals {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm, 6px);
+  background: color-mix(in srgb, var(--color-uf-blue, #0021a5) 6%, var(--th-card-bg, #fff));
+  border: 1px solid color-mix(in srgb, var(--color-uf-blue, #0021a5) 14%, var(--th-border, #e2e8f0));
+  border-left: 3px solid var(--color-uf-blue, #0021a5);
+}
+
+.rh-analyst-signals__label {
+  display: block;
+  margin: 0 0 var(--space-xs);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-uf-blue, #0021a5);
+}
+
+.rh-analyst-signals__text {
+  margin: 0;
+  font-size: var(--text-small, 0.8125rem);
+  line-height: 1.45;
+  color: var(--color-text-primary, var(--th-body-dark));
+}
+
+.gv-rh-movement-wrap .rh-movement-section__title,
+.gv-rh-movement-wrap .rh-movement-stock-row {
+  color-scheme: light;
 }

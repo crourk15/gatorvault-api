@@ -16,10 +16,8 @@ function ufPct(p: HighPriorityPlayer): number {
   return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
 }
 
-function movementArrow(delta: number): string {
-  if (delta > 0) return '↑';
-  if (delta < 0) return '↓';
-  return '→';
+function movementDelta(p: HighPriorityPlayer): number {
+  return p.delta7d ?? p.movementDelta ?? 0;
 }
 
 function competingSchools(p: HighPriorityPlayer): string {
@@ -35,6 +33,49 @@ function competingSchools(p: HighPriorityPlayer): string {
 
 function lastIntel(p: HighPriorityPlayer): string {
   return p.notePreview?.trim() || p.insiderNotes?.trim() || p.skinny?.trim() || 'Tracking active';
+}
+
+function MovementSparkline({ end, delta }: { end: number; delta: number }): React.ReactElement {
+  const start = Math.max(0, Math.min(100, end - delta));
+  const pts = [start, start + delta * 0.25, start + delta * 0.5, start + delta * 0.75, end];
+  const coords = pts.map((v, i) => `${(i / 4) * 40},${22 - (v / 100) * 18}`).join(' ');
+  const trend = delta > 0 ? 'up' : delta < 0 ? 'down' : 'flat';
+  return (
+    <svg className={`rh-movement-sparkline rh-movement-sparkline--${trend}`} viewBox="0 0 40 24" aria-hidden>
+      <polyline points={coords} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MovementBadge({ delta }: { delta: number }): React.ReactElement {
+  if (delta > 0) {
+    return (
+      <span className="rh-movement-badge rh-movement-badge--rise">
+        <span className="rh-movement-badge__icon" aria-hidden>
+          ↑
+        </span>
+        +{Math.abs(delta)}%
+      </span>
+    );
+  }
+  if (delta < 0) {
+    return (
+      <span className="rh-movement-badge rh-movement-badge--fall">
+        <span className="rh-movement-badge__icon" aria-hidden>
+          ↓
+        </span>
+        {delta}%
+      </span>
+    );
+  }
+  return (
+    <span className="rh-movement-badge rh-movement-badge--flat">
+      <span className="rh-movement-badge__icon" aria-hidden>
+        →
+      </span>
+      —
+    </span>
+  );
 }
 
 export function FutureCastMovementTable({ players }: Props): React.ReactElement {
@@ -55,8 +96,8 @@ export function FutureCastMovementTable({ players }: Props): React.ReactElement 
         av = ufPct(a);
         bv = ufPct(b);
       } else if (sortKey === 'movement') {
-        av = a.delta7d ?? a.movementDelta ?? 0;
-        bv = b.delta7d ?? b.movementDelta ?? 0;
+        av = movementDelta(a);
+        bv = movementDelta(b);
       } else {
         av = a.fitScore ?? 0;
         bv = b.fitScore ?? 0;
@@ -109,24 +150,44 @@ export function FutureCastMovementTable({ players }: Props): React.ReactElement 
             </tr>
           </thead>
           <tbody>
-            {rows.map((p) => (
-              <tr key={p.slug}>
-                <td>
-                  <a href={playerProfileRoute(p.slug, 'futurecast')} className="rh-fc-table__player">
-                    <strong>{p.name}</strong>
-                    <span>{p.position}</span>
-                  </a>
-                </td>
-                <td className="rh-fc-table__pct">{ufPct(p)}%</td>
-                <td className="rh-fc-table__move">
-                  {movementArrow(p.delta7d ?? p.movementDelta ?? 0)}{' '}
-                  {Math.abs(p.delta7d ?? p.movementDelta ?? 0) || '—'}
-                </td>
-                <td className="rh-fc-table__intel">{lastIntel(p)}</td>
-                <td>{competingSchools(p)}</td>
-                <td>{p.fitScore != null ? Math.round(p.fitScore) : '—'}</td>
-              </tr>
-            ))}
+            {rows.map((p) => {
+              const delta = movementDelta(p);
+              const intel = lastIntel(p);
+              const hasAnalystNote = intel !== 'Tracking active';
+
+              return (
+                <tr key={p.slug}>
+                  <td>
+                    <a href={playerProfileRoute(p.slug, 'futurecast')} className="rh-fc-table__player">
+                      <strong>{p.name}</strong>
+                      <span>
+                        {p.position}
+                        {p.school ? ` · ${p.school}` : ''}
+                      </span>
+                    </a>
+                  </td>
+                  <td className="rh-fc-table__pct">{ufPct(p)}%</td>
+                  <td className="rh-fc-table__move">
+                    <div className="rh-movement-stock-row__right">
+                      <MovementSparkline end={ufPct(p)} delta={delta} />
+                      <MovementBadge delta={delta} />
+                    </div>
+                  </td>
+                  <td className="rh-fc-table__intel">
+                    {hasAnalystNote ? (
+                      <div className="rh-analyst-signals">
+                        <span className="rh-analyst-signals__label">Analyst Signals</span>
+                        <p className="rh-analyst-signals__text">{intel}</p>
+                      </div>
+                    ) : (
+                      <span className="rh-analyst-signals__text">{intel}</span>
+                    )}
+                  </td>
+                  <td>{competingSchools(p)}</td>
+                  <td>{p.fitScore != null ? Math.round(p.fitScore) : '—'}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

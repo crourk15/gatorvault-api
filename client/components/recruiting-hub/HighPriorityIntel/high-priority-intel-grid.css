@@ -7,7 +7,7 @@
 }
 
 .hp-intel-section__title {
-  margin: 0 0 var(--rh-title-gap, var(--space-6));
+  margin: 0;
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
   color: var(--th-heading-light, var(--color-text-primary));

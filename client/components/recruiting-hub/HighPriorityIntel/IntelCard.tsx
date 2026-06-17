@@ -45,10 +45,13 @@ export function IntelCard(props: IntelCardProps): React.ReactElement {
       {/* Heat tag */}
       <span className={`intel-card__heat intel-card__heat--${heatStatus}`}>{HEAT_LABELS[heatStatus]}</span>
 
-      {/* Middle — intel type + text */}
+      {/* Middle — intel type + analyst signals */}
       <div className="intel-card__middle">
         <span className="intel-card__intel-type">{intelType}</span>
-        <p className="intel-card__intel-text">{intelText}</p>
+        <div className="rh-analyst-signals">
+          <span className="rh-analyst-signals__label">Analyst Signals</span>
+          <p className="rh-analyst-signals__text intel-card__intel-text">{intelText}</p>
+        </div>
       </div>
 
       {/* Bottom — timestamp + actions */}

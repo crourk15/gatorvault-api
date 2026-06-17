@@ -15,8 +15,9 @@ export function FutureCastSection({ players, lastUpdated }: Props): React.ReactE
 
   return (
     <section className="rh-section rh-section--panel rh-container" data-testid="rh-futurecast-section">
-      <header className="rh-section__header">
-        <h2 className="rh-section__title">FutureCast</h2>
+      <header className="rh-section__header rh-section-head">
+        <h2 className="rh-section__title rh-section-title">FutureCast</h2>
+        <p className="rh-section-sub">UF probability movement, fit scores, and analyst signals for priority targets.</p>
         {updatedLabel ? <p className="rh-section__updated">{updatedLabel}</p> : null}
       </header>
       <FutureCastTable players={players} />

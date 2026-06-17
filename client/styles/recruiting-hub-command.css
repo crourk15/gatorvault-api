@@ -374,6 +374,11 @@
   font-weight: var(--font-weight-bold);
 }
 
+.rh-fc-row__move .rh-movement-stock-row__right,
+.rh-fc-table__move .rh-movement-stock-row__right {
+  justify-content: flex-end;
+}
+
 .rh-fc-row__move--up {
   color: var(--th-accent, var(--color-uf-orange));
 }

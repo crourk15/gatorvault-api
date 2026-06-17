@@ -14,8 +14,21 @@ export function MovementSummaryLine({ summary }: Props): React.ReactElement | nu
   return (
     <div className="rh-movement-summary rh-container" data-testid="rh-movement-summary">
       <p className="rh-movement-summary__line">
-        UF trending up on {summary.rising} targets, down on {summary.falling}, volatile on{' '}
-        {summary.volatile}.
+        <span className="rh-movement-badge rh-movement-badge--rise">
+          <span className="rh-movement-badge__icon" aria-hidden>↑</span>
+          {summary.rising}
+        </span>
+        {' '}rising ·{' '}
+        <span className="rh-movement-badge rh-movement-badge--fall">
+          <span className="rh-movement-badge__icon" aria-hidden>↓</span>
+          {summary.falling}
+        </span>
+        {' '}falling ·{' '}
+        <span className="rh-movement-badge rh-movement-badge--volatile">
+          <span className="rh-movement-badge__icon" aria-hidden>⚡</span>
+          {summary.volatile}
+        </span>
+        {' '}volatile
       </p>
       <p className="rh-movement-summary__meta">
         Last updated: {formatIntelUpdated(summary.lastUpdated)}

@@ -2354,11 +2354,8 @@ body.gv-nav-menu-open {
   background: #ef4444;
 }
 
-.gv-hp-card__note {
+.gv-hp-card__signals {
   margin: 0.65rem 0 0;
-  font-size: 0.75rem;
-  line-height: 1.45;
-  color: #cbd5e1;
 }
 
 .gv-hp-card__predictors {

@@ -30,9 +30,9 @@ export function MovementIntelLayout({ data }: Props): React.ReactElement {
       <InsiderPaywall
         hideGate
         teaser={
-          <section className="gv-card">
-            <h2 className="gv-card-title">Movement Intel</h2>
-            <p className="gv-card-subtitle">Risers, fallers, volatility, and fit scores — Insider only.</p>
+          <section className="gv-card rh-section-head">
+            <h2 className="gv-card-title rh-section-title">Movement Intel</h2>
+            <p className="gv-card-subtitle rh-section-sub">Risers, fallers, volatility, and fit scores — Insider only.</p>
           </section>
         }
       >

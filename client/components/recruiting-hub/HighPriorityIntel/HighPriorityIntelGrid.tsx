@@ -25,9 +25,9 @@ function IntelGridSkeleton(): React.ReactElement {
 export function HighPriorityIntelGrid({ items, loading, lastUpdated }: Props): React.ReactElement {
   return (
     <section className="hp-intel-section rh-container" data-testid="rh-high-priority-intel-grid">
-      <header>
-        <h2 className="hp-intel-section__title">High Priority Intel</h2>
-        <p className="hp-intel-section__sub">Structured intel on UF&apos;s top targets — probability, heat, and next action.</p>
+      <header className="rh-section-head">
+        <h2 className="hp-intel-section__title rh-section-title">High Priority Intel</h2>
+        <p className="hp-intel-section__sub rh-section-sub">Structured intel on UF&apos;s top targets — probability, heat, and next action.</p>
         {lastUpdated ? (
           <p className="hp-intel-section__updated">Last updated: {formatIntelUpdated(lastUpdated)}</p>
         ) : null}

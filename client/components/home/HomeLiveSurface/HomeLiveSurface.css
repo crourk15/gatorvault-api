@@ -84,12 +84,36 @@
   color: var(--th-heading-light, var(--uf-blue));
 }
 
-.gv-home-movement-intel .gv-home-subtitle {
-  margin-top: 0.5rem;
+.gv-home-movement-intel__section {
+  margin-top: var(--space-lg, 1.25rem);
+  padding-top: var(--space-md, 1rem);
+  border-top: 1px solid color-mix(in srgb, var(--th-border, #e2e8f0) 60%, transparent);
 }
 
-.gv-home-movement-intel .gv-home-subtitle:first-of-type {
+.gv-home-movement-intel__section:first-of-type {
+  margin-top: var(--space-sm, 0.75rem);
+  padding-top: 0;
+  border-top: none;
+}
+
+.gv-home-movement-intel .gv-home-subtitle,
+.gv-home-movement-intel .rh-movement-section__title {
   margin-top: 0;
+  margin-bottom: var(--space-sm, 0.75rem);
+}
+
+.gv-home-movement-intel .gv-home-list {
+  gap: var(--space-xs, 0.5rem);
+}
+
+.gv-home-movement-intel .gv-home-list li {
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.gv-home-movement-intel .rh-movement-stock-row {
+  width: 100%;
 }
 
 /* Legacy movement feed (unused) */

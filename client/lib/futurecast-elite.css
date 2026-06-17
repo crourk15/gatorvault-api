@@ -705,7 +705,8 @@
 }
 
 .gv-movement-mini-card,
-.fc-movement-list__link {
+.fc-movement-list__link,
+.gv-movement-list__items a.rh-movement-stock-row {
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
@@ -721,8 +722,15 @@
   transition: transform 0.15s linear;
 }
 
+.gv-movement-list__items a.rh-movement-stock-row--volatile {
+  background: color-mix(in srgb, var(--gv-yellow) 8%, var(--gv-card));
+  border-color: color-mix(in srgb, var(--gv-yellow) 25%, var(--gv-border));
+  border-top-color: var(--gv-yellow);
+}
+
 .gv-movement-mini-card:hover,
-.fc-movement-list__link:hover {
+.fc-movement-list__link:hover,
+.gv-movement-list__items a.rh-movement-stock-row:hover {
   transform: translateY(-2px);
 }
 

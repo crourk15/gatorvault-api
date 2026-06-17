@@ -146,18 +146,30 @@
 }
 
 .gv-home-badge--rise {
-  border-color: #2ecc71;
-  color: #2ecc71;
+  border-color: var(--momentum-up, #22c55e);
+  color: var(--momentum-up, #16a34a);
+  background: color-mix(in srgb, var(--momentum-up, #22c55e) 12%, transparent);
+  font-size: 0.875rem;
+  padding: 0.35rem 0.7rem;
+  border-width: 2px;
 }
 
 .gv-home-badge--fall {
-  border-color: #e74c3c;
-  color: #e74c3c;
+  border-color: var(--momentum-down, #ef4444);
+  color: var(--momentum-down, #dc2626);
+  background: color-mix(in srgb, var(--momentum-down, #ef4444) 12%, transparent);
+  font-size: 0.875rem;
+  padding: 0.35rem 0.7rem;
+  border-width: 2px;
 }
 
 .gv-home-badge--volatile {
-  border-color: #3498db;
-  color: #3498db;
+  border-color: var(--gv-yellow, #eab308);
+  color: #b45309;
+  background: color-mix(in srgb, var(--gv-yellow, #eab308) 16%, transparent);
+  font-size: 0.875rem;
+  padding: 0.35rem 0.7rem;
+  border-width: 2px;
 }
 
 .gv-home-link,

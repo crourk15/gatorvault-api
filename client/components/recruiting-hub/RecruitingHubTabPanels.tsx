@@ -68,9 +68,12 @@ export function RecruitingHubTabPanels({
         <div className="gv-rh-movement-wrap">
           <MovementIntelPreview data={staffDashboard} loading={!staffDashboard && loading} />
           {(intel.risers.length > 0 || intel.fallers.length > 0) && (
-            <section style={{ marginTop: 'var(--space-lg)' }}>
-              <h2 className="rh-panel-title">Movement Tracker</h2>
-              <div className="gv-rh-elite-grid" style={{ marginTop: 'var(--space-md)' }}>
+            <section className="rh-movement-section">
+              <header className="rh-section-head">
+                <h2 className="rh-panel-title rh-section-title">Movement Tracker</h2>
+                <p className="rh-section-sub">Live UF% shifts on priority targets — stock-style movement read.</p>
+              </header>
+              <div className="gv-rh-elite-grid">
                 {[...intel.risers.slice(0, 6), ...intel.fallers.slice(0, 4)].map((p) => (
                   <PlayerCardEnhanced key={p.id} player={fromStaffDashboard(p)} variant="target" forceElite />
                 ))}

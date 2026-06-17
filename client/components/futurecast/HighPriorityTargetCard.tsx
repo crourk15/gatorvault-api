@@ -113,7 +113,12 @@ export function HighPriorityTargetCard({
           </div>
         </div>
 
-        {!compact && note && <p className="gv-hp-card__note">{note}</p>}
+        {!compact && note && (
+          <div className="rh-analyst-signals gv-hp-card__signals">
+            <span className="rh-analyst-signals__label">Analyst Signals</span>
+            <p className="rh-analyst-signals__text">{note}</p>
+          </div>
+        )}
 
         {!compact && player.predictors.length > 0 && (
           <ul className="gv-hp-card__predictors">

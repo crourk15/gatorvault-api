@@ -1,18 +1,25 @@
 /* Movement intel panel — shared by Recruiting Hub and GatorNation Live */
 
+.gv-home-movement__head {
+  margin-bottom: var(--space-lg);
+}
+
 .gv-home-movement__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--home-grid-gap, var(--grid-gap));
 }
 
-@media (max-width: 1023px) {
-  .gv-home-movement__grid { grid-template-columns: repeat(2, 1fr); }
-  .gv-home-movement__grid .gv-home-movement__card:last-child { grid-column: 1 / -1; }
+@media (max-width: 1279px) {
+  .gv-home-movement__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 767px) {
-  .gv-home-movement__grid { grid-template-columns: 1fr; }
+  .gv-home-movement__grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .gv-home-movement__card {
@@ -22,6 +29,16 @@
   border: 1px solid var(--card-border);
   border-top: 3px solid var(--gator-orange);
   box-shadow: var(--card-shadow);
+}
+
+.gv-home-movement__card--volatile {
+  background: color-mix(in srgb, var(--gv-yellow, #eab308) 6%, var(--card-bg));
+  border-color: color-mix(in srgb, var(--gv-yellow, #eab308) 22%, var(--card-border));
+  border-top-color: var(--gv-yellow, #eab308);
+}
+
+.gv-home-movement__card--heatmap {
+  border-top-color: var(--uf-blue);
 }
 
 .gv-home-movement__card-title {
@@ -39,6 +56,14 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.gv-home-movement__list .rh-movement-stock-row {
+  text-decoration: none;
+  color: inherit;
 }
 
 .gv-home-movement__player {
@@ -105,6 +130,7 @@
   border-radius: var(--radius-md);
   background: color-mix(in srgb, var(--white) 3%, transparent);
   border: 1px solid color-mix(in srgb, var(--white) 6%, transparent);
+  border-top: 2px solid color-mix(in srgb, var(--gator-orange) 35%, transparent);
 }
 
 .gv-home-movement__footer-title {
