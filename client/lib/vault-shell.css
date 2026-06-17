@@ -7,6 +7,20 @@
   color: #e2e8f0;
 }
 
+/* SSR QA markers must never participate in layout (gv-vault-shell overrides [hidden]). */
+[hidden].gv-vault-shell,
+[hidden].gv-vault-ssr-marker,
+.gv-vault-ssr-marker[hidden],
+.gv-vault-shell__main > [hidden] {
+  display: none !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+}
+
 .gv-page-title {
   font-family: Oswald, sans-serif;
   font-weight: 700;

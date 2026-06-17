@@ -8,7 +8,7 @@ export default function VaultHomeLayout({
 }): React.ReactElement {
   return (
     <>
-      <VaultPillarSsrMarkers testId="vault-home" className="gv-vault-shell" />
+      <VaultPillarSsrMarkers testId="vault-home" className="gv-home" />
       {children}
     </>
   );
