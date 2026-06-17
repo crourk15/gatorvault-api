@@ -1,60 +1,65 @@
 'use client';
 
 import React from 'react';
-import type { RecruitingSnapshot } from '@/lib/vault-home-api';
-import { SITE_ROUTES } from '@/lib/site-routes';
-import './HomePortalTracker.css';
-
-const MOCK_PORTAL = [
-  { name: 'Marcus Webb', pos: 'EDGE', dir: 'in' as const, from: 'Auburn' },
-  { name: 'Tyler Brooks', pos: 'WR', dir: 'target' as const, from: 'Georgia' },
-  { name: 'Jordan Hale', pos: 'CB', dir: 'out' as const, from: 'UF' },
-];
+import type { HomePortalSummary } from '@/lib/vault-home-api';
 
 type Props = {
-  snapshot: RecruitingSnapshot | null;
+  data: HomePortalSummary | null;
+  loading?: boolean;
 };
 
-export function HomePortalTracker({ snapshot }: Props): React.ReactElement {
-  const active = snapshot?.portalActive ?? 12;
+export function HomePortalTracker({ data, loading }: Props): React.ReactElement {
+  const inboundCount = data?.inboundCount ?? 0;
+  const outboundCount = data?.outboundCount ?? 0;
+  const targetCount = data?.targetCount ?? 0;
+  const topPlayers = data?.topPlayers ?? [];
+
+  if (loading && !data) {
+    return (
+      <article className="gv-home__cell gv-home__cell--6" aria-label="Portal tracker" data-testid="home-portal">
+        <div className="gv-home-skeleton gv-home-skeleton--card" />
+      </article>
+    );
+  }
 
   return (
-    <article
-      className="gv-home__cell gv-home__cell--6 gv-home-panel gv-home-card gv-home-portal__card"
-      aria-label="Portal tracker"
-      data-testid="home-portal"
-    >
-      <div className="gv-home-portal__head">
-        <div>
-          <p className="gv-home-card__eyebrow">Portal Tracker</p>
-          <h3 className="gv-home-card__title">{active} active targets</h3>
+    <article className="gv-home__cell gv-home__cell--6" aria-label="Portal tracker" data-testid="home-portal">
+      <div className="gv-home-card">
+        <div className="gv-home-card__accent" />
+        <h2 className="gv-home-card__title">Portal Movement</h2>
+        <div className="gv-home-card__stats gv-home-card__stats--three">
+          <div className="stat">
+            <span>Inbound</span>
+            <strong>{inboundCount}</strong>
+          </div>
+          <div className="stat">
+            <span>Outbound</span>
+            <strong>{outboundCount}</strong>
+          </div>
+          <div className="stat">
+            <span>Targets</span>
+            <strong>{targetCount}</strong>
+          </div>
         </div>
-        <span className="gv-home-portal__chip">{active} Active</span>
+        <ul className="gv-home-list gv-home-list--portal">
+          {topPlayers.map((p) => (
+            <li key={p.id}>
+              <span className="gv-home-list__primary">
+                {p.name} <span className="gv-home-list__meta">{p.position}</span>
+              </span>
+              <span className={`gv-home-badge gv-home-badge--${p.status.toLowerCase()}`}>{p.status}</span>
+            </li>
+          ))}
+          {topPlayers.length === 0 && (
+            <li>
+              <span className="gv-home-list__meta">Portal intel updating — check back shortly.</span>
+            </li>
+          )}
+        </ul>
+        <a href="/portal" className="gv-home-link">
+          Open Portal Tracker →
+        </a>
       </div>
-      <ul className="gv-home-portal__compact">
-        {MOCK_PORTAL.map((p) => (
-          <li key={p.name} className="gv-home-portal__compact-row">
-            <div className="gv-home-portal__compact-name">
-              <strong>{p.name}</strong>
-              <span>{p.pos}</span>
-            </div>
-            <span
-              className={
-                p.dir === 'in'
-                  ? 'gv-portal-tag gv-portal-tag--in'
-                  : p.dir === 'out'
-                    ? 'gv-portal-tag gv-portal-tag--out'
-                    : 'gv-portal-tag gv-portal-tag--target'
-              }
-            >
-              {p.dir === 'in' ? 'In' : p.dir === 'out' ? 'Out' : 'Target'}
-            </span>
-          </li>
-        ))}
-      </ul>
-      <a href={SITE_ROUTES.futurecast} className="gv-home-card__link">
-        Portal watchlist →
-      </a>
     </article>
   );
 }

@@ -1,89 +1,226 @@
-/* Shared Home page primitives used across section components */
+/* Elite Home page card system + shared primitives */
 
-.gv-home-shell .gv-home-card {
-  padding: var(--home-section-pad);
+.gv-home-shell .gv-home__cell > .gv-home-card,
+.gv-home-shell .gv-home-card.gv-home-card--module {
+  background: var(--th-card-bg, var(--card-bg));
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid var(--th-border, var(--card-border));
+  color: var(--th-body-dark, var(--graphite));
+}
+
+.gv-home-card__accent {
+  height: 3px;
+  width: 40px;
+  background: var(--th-accent, var(--gator-orange));
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.gv-home-card__title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--th-heading-light, var(--uf-blue));
+  line-height: 1.2;
+}
+
+.gv-home-subtitle {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--th-heading-light, var(--uf-blue));
+}
+
+.gv-home-body {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--th-body-dark, var(--graphite));
+  line-height: 1.5;
+}
+
+.gv-home-meta,
+.gv-home-card__meta {
+  font-size: 0.85rem;
+  color: var(--th-meta, var(--subtle-gray));
+}
+
+.gv-home-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--th-heading-light, var(--uf-blue));
+}
+
+.gv-home-card__stats {
+  display: grid;
+  gap: 12px;
+}
+
+.gv-home-card__stats--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.gv-home-card__stats--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gv-home-card__stats .stat span {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--th-meta, var(--subtle-gray));
+}
+
+.gv-home-card__stats .stat strong {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--th-heading-light, var(--uf-blue));
+  font-weight: 700;
+}
+
+.gv-home-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gv-home-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.gv-home-list__primary {
+  font-size: 0.95rem;
+  color: var(--th-body-dark, var(--graphite));
+}
+
+.gv-home-list__meta {
+  font-size: 0.85rem;
+  color: var(--th-meta, var(--subtle-gray));
+}
+
+.gv-home-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.gv-home-badge--set {
+  border-color: var(--th-dc-locked, var(--portal-green));
+  color: var(--th-dc-locked, var(--portal-green));
+}
+
+.gv-home-badge--open {
+  border-color: var(--th-dc-battle, var(--gator-orange));
+  color: var(--th-dc-battle, var(--gator-orange));
+}
+
+.gv-home-badge--out,
+.gv-home-badge--questionable {
+  border-color: var(--th-dc-watch, var(--cooling));
+  color: var(--th-dc-watch, var(--cooling));
+}
+
+.gv-home-badge--probable {
+  border-color: var(--th-dc-locked, var(--portal-green));
+  color: var(--th-dc-locked, var(--portal-green));
+}
+
+.gv-home-badge--in,
+.gv-home-badge--target,
+.gv-home-badge--warm,
+.gv-home-badge--cool {
+  border-color: var(--th-accent, var(--gator-orange));
+  color: var(--th-accent, var(--gator-orange));
+}
+
+.gv-home-link,
+.gv-home-card__link {
+  font-size: 0.9rem;
+  color: var(--th-heading-light, var(--uf-blue));
+  text-decoration: none;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.gv-home-link:hover,
+.gv-home-card__link:hover {
+  text-decoration: underline;
+}
+
+.gv-home-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.gv-home-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gv-home-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 900px) {
+  .gv-home-grid--two,
+  .gv-home-grid--three {
+    grid-template-columns: 1fr;
+  }
+
+  .gv-home-card__stats--three {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gv-home-gamecard {
+  background: var(--th-card-bg, var(--card-bg));
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gv-home-gamecard__prob {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gv-home-prob {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--th-heading-light, var(--uf-blue));
+}
+
+.gv-home-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
 .gv-home-panel { height: 100%; }
 
-.gv-home-panel__title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--heading-color-light);
-  margin: 0 0 1rem;
-}
-
-.gv-home-panel__subtitle {
-  margin: -0.5rem 0 1rem;
-  color: var(--subtle-gray);
-  font-size: 0.875rem;
-}
-
 .gv-home-card__eyebrow {
-  margin: 0 0 0.5rem;
+  margin: 0;
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--gator-orange);
 }
-
-.gv-home-card__link {
-  display: inline-block;
-  margin-top: 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--gator-orange);
-  text-decoration: none;
-}
-
-.gv-home-card__link:hover { text-decoration: underline; }
-
-.gv-home-card__body {
-  color: var(--body-color-light);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.gv-home-card__stat {
-  font-size: 2.25rem;
-  font-weight: 800;
-  line-height: 1;
-  color: var(--heading-color-light);
-  margin: 0 0 0.35rem;
-}
-
-.gv-home-card__nil-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-md);
-  margin: 1rem 0;
-}
-
-.gv-home-card__nil-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--subtle-gray);
-  margin: 0 0 0.25rem;
-}
-
-.gv-home-card__nil-value {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--heading-color-light);
-  margin: 0 0 0.25rem;
-}
-
-.gv-home-card__nil-value--sm { font-size: 0.9375rem; }
-
-.gv-home-card__trend {
-  font-size: 0.8125rem;
-  font-weight: 600;
-}
-
-.gv-home-card__trend--up { color: var(--momentum-up); }
 
 .gv-home-skeleton {
   border-radius: var(--radius-md);
@@ -135,7 +272,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .gv-home-recruit-panel__block { margin-bottom: 1rem; }
@@ -166,7 +303,7 @@
 }
 
 .gv-home-recruit-panel__list a {
-  color: var(--heading-color-light);
+  color: var(--uf-blue);
   text-decoration: none;
   font-weight: 600;
 }
@@ -174,7 +311,3 @@
 .gv-home-recruit-panel__list a:hover { color: var(--gator-orange); }
 
 .gv-home-recruit-panel__delta--up { color: var(--momentum-up); font-weight: 700; }
-
-.gv-portal-tag--in { color: var(--portal-green); }
-.gv-portal-tag--out { color: var(--flip-risk); }
-.gv-portal-tag--target { color: var(--hot); }

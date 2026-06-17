@@ -42,28 +42,28 @@ export function HomeTopCommandCard({
     >
       <div className="gv-home-command-card__head">
         <div>
-          <p className="gv-home-card__eyebrow">GatorVault Insider</p>
+          <p className="gv-home-card__accent">GatorVault Insider</p>
           <h1 className="gv-home-command-card__title">GatorVault Home</h1>
           <p className="gv-home-command-card__subtitle">{subtitle}</p>
         </div>
         <span className="gv-home-command-card__status">Status: Online</span>
       </div>
 
-      <div className="gv-home-quick-stats gv-home-command-card__stats">
+      <div className="gv-home-card__stats gv-home-command-card__stats">
         {stats.map((stat) => {
-          const toneClass = stat.tone ? ` gv-home-quick-stats__value--${stat.tone}` : '';
+          const toneClass = stat.tone ? ` gv-home-card__stat-value--${stat.tone}` : '';
           const inner = (
             <>
-              <p className={`gv-home-quick-stats__value${toneClass}`}>{stat.value}</p>
-              <p className="gv-home-card__meta">{stat.label}</p>
+              <span className={`gv-home-card__stat-value${toneClass}`}>{stat.value}</span>
+              <span className="gv-home-card__stat-label">{stat.label}</span>
             </>
           );
           return stat.href ? (
-            <a key={stat.label} href={stat.href} className="gv-home-quick-stats__item">
+            <a key={stat.label} href={stat.href} className="gv-home-card__stat-item gv-home-quick-stats__item">
               {inner}
             </a>
           ) : (
-            <div key={stat.label} className="gv-home-quick-stats__item">
+            <div key={stat.label} className="gv-home-card__stat-item gv-home-quick-stats__item">
               {inner}
             </div>
           );

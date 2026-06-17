@@ -15,13 +15,22 @@ import { HomeUpcomingGames } from '@/components/home/HomeUpcomingGames';
 import { HomeCTASection } from '@/components/home/HomeCTASection';
 import {
   HOME_REFRESH,
+  buildHomeGnlItems,
   computeMomentumPct,
   fetchContentLatest,
+  fetchHomeNilPulse,
+  fetchHomePortalSummary,
+  fetchHomeTeamSnapshot,
+  fetchHomeUpcomingGames,
   fetchLiveTicker,
   fetchMovementPreview,
   fetchPersonalizedHints,
   fetchRecruitingSnapshot,
   type ContentLatestResponse,
+  type HomeNilPulse,
+  type HomePortalSummary,
+  type HomeTeamSnapshotData,
+  type HomeUpcomingGamesData,
   type PersonalizedResponse,
   type RecruitingSnapshot,
   type TickerResponse,
@@ -36,6 +45,10 @@ export function VaultHomePage(): React.ReactElement {
   const [content, setContent] = useState<ContentLatestResponse | null>(null);
   const [recruiting, setRecruiting] = useState<RecruitingSnapshot | null>(null);
   const [personalized, setPersonalized] = useState<PersonalizedResponse | null>(null);
+  const [portal, setPortal] = useState<HomePortalSummary | null>(null);
+  const [team, setTeam] = useState<HomeTeamSnapshotData | null>(null);
+  const [nilPulse, setNilPulse] = useState<HomeNilPulse | null>(null);
+  const [schedule, setSchedule] = useState<HomeUpcomingGamesData | null>(null);
   const [momentumPct, setMomentumPct] = useState(72);
   const [movementDelta, setMovementDelta] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -106,6 +119,38 @@ export function VaultHomePage(): React.ReactElement {
     }
   }, []);
 
+  const loadPortal = useCallback(async (force = false) => {
+    try {
+      setPortal(await fetchHomePortalSummary(force));
+    } catch {
+      /* keep prior */
+    }
+  }, []);
+
+  const loadTeam = useCallback(async (force = false) => {
+    try {
+      setTeam(await fetchHomeTeamSnapshot(force));
+    } catch {
+      /* keep prior */
+    }
+  }, []);
+
+  const loadNil = useCallback(async (force = false) => {
+    try {
+      setNilPulse(await fetchHomeNilPulse(force));
+    } catch {
+      /* keep prior */
+    }
+  }, []);
+
+  const loadSchedule = useCallback(async (force = false) => {
+    try {
+      setSchedule(await fetchHomeUpcomingGames(force));
+    } catch {
+      /* keep prior */
+    }
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -116,6 +161,10 @@ export function VaultHomePage(): React.ReactElement {
         loadRecruiting(true),
         loadContent(true),
         loadPersonalized(),
+        loadPortal(true),
+        loadTeam(true),
+        loadNil(true),
+        loadSchedule(true),
       ]);
       if (tickerData) setTicker(tickerData);
       if (!cancelled) setLoading(false);
@@ -127,6 +176,12 @@ export function VaultHomePage(): React.ReactElement {
     const movementTimer = window.setInterval(() => void loadMovement(true), HOME_REFRESH.movement);
     const contentTimer = window.setInterval(() => void loadContent(true), HOME_REFRESH.movement);
     const recruitingTimer = window.setInterval(() => void loadRecruiting(true), HOME_REFRESH.recruiting);
+    const moduleTimer = window.setInterval(() => {
+      void loadPortal(true);
+      void loadTeam(true);
+      void loadNil(true);
+      void loadSchedule(true);
+    }, HOME_REFRESH.recruiting);
     const personalTimer = window.setInterval(() => void loadPersonalized(), 60_000);
 
     return () => {
@@ -136,9 +191,20 @@ export function VaultHomePage(): React.ReactElement {
       window.clearInterval(movementTimer);
       window.clearInterval(contentTimer);
       window.clearInterval(recruitingTimer);
+      window.clearInterval(moduleTimer);
       window.clearInterval(personalTimer);
     };
-  }, [loadContent, loadMovement, loadPersonalized, loadRecruiting, loadTicker]);
+  }, [
+    loadContent,
+    loadMovement,
+    loadNil,
+    loadPersonalized,
+    loadPortal,
+    loadRecruiting,
+    loadSchedule,
+    loadTeam,
+    loadTicker,
+  ]);
 
   return (
     <div className="gv-home gv-home-shell" data-testid="vault-home">
@@ -159,7 +225,7 @@ export function VaultHomePage(): React.ReactElement {
             loading={loading && !movement && !content}
           />
 
-          <HomeGatorNationPreview ticker={ticker} />
+          <HomeGatorNationPreview items={buildHomeGnlItems(ticker)} />
 
           <HomeRecruitingSnapshot
             snapshot={recruiting}
@@ -171,13 +237,13 @@ export function VaultHomePage(): React.ReactElement {
 
           <HomeFutureCastSnapshot data={movement} loading={loading && !movement} />
 
-          <HomeTeamSnapshot />
+          <HomeTeamSnapshot data={team} loading={loading && !team} />
 
-          <HomePortalTracker snapshot={recruiting} />
+          <HomePortalTracker data={portal} loading={loading && !portal} />
 
-          <HomeNilTrends snapshot={recruiting} />
+          <HomeNilTrends data={nilPulse} loading={loading && !nilPulse} />
 
-          <HomeUpcomingGames />
+          <HomeUpcomingGames data={schedule} loading={loading && !schedule} />
 
           <HomeCTASection />
         </div>

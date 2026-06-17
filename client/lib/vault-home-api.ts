@@ -10,8 +10,13 @@ import {
 } from './predictions-api';
 import { fetchRecruitingBoard } from './recruiting-board-api';
 import { fetchFutureCastHome, fetchFutureCastClass } from './futurecast-home-api';
-import { fetchNilDashboard } from './nil-api';
-import { SCHEDULE_GAMES } from './schedule-data';
+import { fetchNilDashboard, type NilDashboard } from './nil-api';
+import { SCHEDULE_GAMES, type ScheduleGame } from './schedule-data';
+import { fetchPortalWatchlist } from './portal-api';
+import { fetchPortalIncoming } from './recruiting-api';
+import { fetchTeamHubBundle } from './team-hub-api';
+import { fetchRosterPlayers } from './roster-api';
+import type { DepthChartPosition } from './team-hub-types';
 import { loadAlertPrefs, loadLocalRecentAlerts } from './alert-prefs';
 
 export const HOME_REFRESH = {
@@ -99,6 +104,76 @@ export type HomeBundle = {
   recruiting: RecruitingSnapshot | null;
   momentumPct: number;
   personalized: PersonalizedResponse | null;
+  portal: HomePortalSummary | null;
+  team: HomeTeamSnapshotData | null;
+  nil: HomeNilPulse | null;
+  schedule: HomeUpcomingGamesData | null;
+};
+
+export type HomePortalPlayer = {
+  id: string;
+  name: string;
+  position: string;
+  status: 'IN' | 'OUT' | 'TARGET' | 'WARM' | 'COOL';
+};
+
+export type HomePortalSummary = {
+  inboundCount: number;
+  outboundCount: number;
+  targetCount: number;
+  topPlayers: HomePortalPlayer[];
+};
+
+export type HomeDepthItem = {
+  position: string;
+  player: string;
+  status: 'SET' | 'OPEN';
+};
+
+export type HomeBattleItem = {
+  label: string;
+  players: string;
+};
+
+export type HomeInjuryItem = {
+  name: string;
+  status: 'OUT' | 'QUESTIONABLE' | 'PROBABLE';
+};
+
+export type HomeTeamSnapshotData = {
+  depthPreview: HomeDepthItem[];
+  battles: HomeBattleItem[];
+  injuries: HomeInjuryItem[];
+  snapSummary: string;
+};
+
+export type HomeNilPulse = {
+  secRank: number;
+  estPool: string;
+  movementLabel: string;
+  movementDelta: string;
+  topEarner: string;
+  topEarnerNote: string;
+};
+
+export type HomeGnlItem = {
+  id: string;
+  author: string;
+  text: string;
+  href?: string;
+};
+
+export type HomeGameCard = {
+  id: string;
+  opponent: string;
+  dateLabel: string;
+  timeLabel: string;
+  venue: string;
+  probability: number;
+};
+
+export type HomeUpcomingGamesData = {
+  games: HomeGameCard[];
 };
 
 type CacheSlot<T> = { at: number; data: T | null };
@@ -108,11 +183,19 @@ const memoryCache: {
   content: CacheSlot<ContentLatestResponse>;
   movement: CacheSlot<StaffDashboardResponse>;
   recruiting: CacheSlot<RecruitingSnapshot>;
+  portal: CacheSlot<HomePortalSummary>;
+  team: CacheSlot<HomeTeamSnapshotData>;
+  nil: CacheSlot<HomeNilPulse>;
+  schedule: CacheSlot<HomeUpcomingGamesData>;
 } = {
   ticker: { at: 0, data: null },
   content: { at: 0, data: null },
   movement: { at: 0, data: null },
   recruiting: { at: 0, data: null },
+  portal: { at: 0, data: null },
+  team: { at: 0, data: null },
+  nil: { at: 0, data: null },
+  schedule: { at: 0, data: null },
 };
 
 function readCache<T>(slot: CacheSlot<T>, ttlMs: number): T | null {
@@ -280,6 +363,237 @@ export async function fetchRecruitingSnapshot(force = false): Promise<Recruiting
   };
 
   return writeCache(memoryCache.recruiting, snapshot);
+}
+
+function mapPortalStatus(
+  direction: 'in' | 'out' | 'target',
+  likelihood?: number
+): HomePortalPlayer['status'] {
+  if (direction === 'in') return 'IN';
+  if (direction === 'out') return 'OUT';
+  if (likelihood != null && likelihood >= 0.7) return 'WARM';
+  if (likelihood != null && likelihood <= 0.35) return 'COOL';
+  return 'TARGET';
+}
+
+function mapDepthStatus(status: DepthChartPosition['status']): HomeDepthItem['status'] {
+  return status === 'Locked' ? 'SET' : 'OPEN';
+}
+
+function mapInjuryStatusElite(injury: string): HomeInjuryItem['status'] {
+  const value = injury.toLowerCase();
+  if (value === 'red' || value === 'out') return 'OUT';
+  if (value === 'yellow' || value === 'questionable') return 'QUESTIONABLE';
+  return 'PROBABLE';
+}
+
+function pickKeyDepthRows(positions: DepthChartPosition[]): HomeDepthItem[] {
+  const labels = ['QB', 'WR (Z)', 'JACK', 'CB'];
+  const picked: HomeDepthItem[] = [];
+  for (const label of labels) {
+    const row = positions.find((p) => p.label === label || p.label.startsWith(label.split(' ')[0]));
+    if (row) {
+      picked.push({
+        position: row.label,
+        player: depthStarter(row),
+        status: mapDepthStatus(row.status),
+      });
+    }
+  }
+  if (picked.length >= 3) return picked.slice(0, 3);
+  return positions.slice(0, 3).map((row) => ({
+    position: row.label,
+    player: depthStarter(row),
+    status: mapDepthStatus(row.status),
+  }));
+}
+
+function formatNilPool(value: number | null | undefined): string {
+  if (value == null) return '—';
+  return `$${value.toFixed(1)}M`;
+}
+
+function formatNilMovement(pct: number | null | undefined, label: string | null | undefined): {
+  movementLabel: string;
+  movementDelta: string;
+} {
+  if (pct == null) {
+    return { movementLabel: label ?? 'Stable', movementDelta: '—' };
+  }
+  const sign = pct >= 0 ? '↑' : '↓';
+  return {
+    movementLabel: `${sign} YoY`,
+    movementDelta: `${pct >= 0 ? '+' : ''}${pct}%`,
+  };
+}
+
+function parseScheduleCard(game: ScheduleGame): HomeGameCard {
+  const parts = game.date.split(' · ');
+  return {
+    id: game.id,
+    opponent: game.opp,
+    dateLabel: parts[0] ?? game.date,
+    timeLabel: parts[1] ?? '',
+    venue: game.venue,
+    probability: game.ufPct,
+  };
+}
+
+export function buildHomeGnlItems(ticker: TickerResponse | null): HomeGnlItem[] {
+  return (ticker?.items ?? []).slice(0, 5).map((item) => ({
+    id: item.id,
+    author: item.source || 'GatorVault',
+    text: item.text,
+    href: item.url,
+  }));
+}
+
+function depthStarter(row: DepthChartPosition): string {
+  return row.players[0]?.name?.split('/')[0]?.trim() || 'TBD';
+}
+
+function flattenBattles(positions: DepthChartPosition[]): HomeBattleItem[] {
+  return positions
+    .filter((row) => row.status === 'Battle')
+    .slice(0, 3)
+    .map((row) => ({
+      label: row.label,
+      players: row.players
+        .slice(0, 2)
+        .map((p) => p.name)
+        .join(' / '),
+    }));
+}
+
+export async function fetchHomePortalSummary(force = false): Promise<HomePortalSummary> {
+  if (!force) {
+    const cached = readCache(memoryCache.portal, HOME_REFRESH.recruiting);
+    if (cached) return cached;
+  }
+
+  const [watchlist, incoming] = await Promise.all([
+    fetchPortalWatchlist({ limit: 12, sort: 'likelihood' }).catch(() => ({ players: [] })),
+    fetchPortalIncoming(12).catch(() => []),
+  ]);
+
+  const topPlayers: HomePortalPlayer[] = [];
+  let inboundCount = 0;
+  let outboundCount = 0;
+  let targetCount = 0;
+
+  for (const player of incoming) {
+    inboundCount += 1;
+    if (topPlayers.length < 3) {
+      topPlayers.push({
+        id: `in-${player.id}`,
+        name: player.fullName,
+        position: player.position,
+        status: 'IN',
+      });
+    }
+  }
+
+  for (const player of watchlist.players) {
+    const likelihood =
+      player.portalLikelihood <= 1 ? player.portalLikelihood : player.portalLikelihood / 100;
+    const direction = likelihood >= 0.55 ? 'out' : 'target';
+    if (direction === 'out') outboundCount += 1;
+    else targetCount += 1;
+
+    if (topPlayers.length < 3) {
+      topPlayers.push({
+        id: `wl-${player.id}`,
+        name: player.fullName,
+        position: player.position,
+        status: mapPortalStatus(direction, likelihood),
+      });
+    }
+  }
+
+  return writeCache(memoryCache.portal, {
+    inboundCount,
+    outboundCount,
+    targetCount,
+    topPlayers: topPlayers.slice(0, 3),
+  });
+}
+
+export async function fetchHomeTeamSnapshot(force = false): Promise<HomeTeamSnapshotData> {
+  if (!force) {
+    const cached = readCache(memoryCache.team, HOME_REFRESH.recruiting);
+    if (cached) return cached;
+  }
+
+  const [bundle, roster] = await Promise.all([
+    fetchTeamHubBundle().catch(() => null),
+    fetchRosterPlayers().catch(() => []),
+  ]);
+
+  const offense = bundle?.depthChart.offense ?? [];
+  const defense = bundle?.depthChart.defense ?? [];
+  const allPositions = [...offense, ...defense];
+  const lockedCount = bundle?.commandStats.startersLocked ?? allPositions.filter((row) => row.status === 'Locked').length;
+  const battleCount = bundle?.commandStats.positionBattles ?? allPositions.filter((row) => row.status === 'Battle').length;
+
+  const injuries = roster
+    .filter((p) => p.injury && p.injury.toLowerCase() !== 'green')
+    .slice(0, 3)
+    .map((p) => ({
+      name: p.name,
+      status: mapInjuryStatusElite(String(p.injury)),
+    }));
+
+  const data: HomeTeamSnapshotData = {
+    depthPreview: pickKeyDepthRows([...offense, ...defense]),
+    injuries,
+    battles: flattenBattles(allPositions),
+    snapSummary: `Starters locked at ${lockedCount}/22 — ${battleCount} open battles ahead of fall camp.`,
+  };
+
+  return writeCache(memoryCache.team, data);
+}
+
+export async function fetchHomeNilPulse(force = false): Promise<HomeNilPulse> {
+  if (!force) {
+    const cached = readCache(memoryCache.nil, HOME_REFRESH.recruiting);
+    if (cached) return cached;
+  }
+
+  const dashboard: NilDashboard = await fetchNilDashboard().catch(() => ({}));
+  const standing = dashboard.ufStanding ?? {};
+  const recentEvents = dashboard.recentEvents ?? [];
+  const movement = formatNilMovement(standing.trendPct, standing.trend);
+
+  const pulse: HomeNilPulse = {
+    secRank: standing.secRank ?? 0,
+    estPool: formatNilPool(standing.estimatedAnnualPoolM),
+    movementLabel: movement.movementLabel,
+    movementDelta: movement.movementDelta,
+    topEarner: standing.collective ?? dashboard.secRankings?.[0]?.collective ?? 'Gators Collective',
+    topEarnerNote:
+      recentEvents.length > 0
+        ? `${recentEvents.length} recent NIL events`
+        : 'Tracking collective activity',
+  };
+
+  return writeCache(memoryCache.nil, pulse);
+}
+
+export function buildUpcomingScheduleGames(limit = 3): ScheduleGame[] {
+  const now = Date.now();
+  const upcoming = SCHEDULE_GAMES.filter((game) => {
+    const parsed = Date.parse(game.date.replace(/ · .+$/, ''));
+    return Number.isFinite(parsed) ? parsed >= now - 86_400_000 : true;
+  });
+  return (upcoming.length ? upcoming : SCHEDULE_GAMES).slice(0, limit);
+}
+
+export async function fetchHomeUpcomingGames(force = false): Promise<HomeUpcomingGamesData> {
+  if (!force) {
+    const cached = readCache(memoryCache.schedule, HOME_REFRESH.hero);
+    if (cached) return cached;
+  }
+  return writeCache(memoryCache.schedule, { games: buildUpcomingScheduleGames(3).map(parseScheduleCard) });
 }
 
 export async function fetchPersonalizedHints(): Promise<PersonalizedResponse> {

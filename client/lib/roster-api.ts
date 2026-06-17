@@ -18,6 +18,7 @@ export interface RosterPlayer {
   vaultGrade?: number | null;
   lifecycle?: string;
   transferInfo?: string | null;
+  injury?: string | null;
   bio?: string | null;
   jersey?: string | number | null;
   stars?: number | null;

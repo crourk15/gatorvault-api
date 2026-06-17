@@ -107,6 +107,9 @@
   --th-frame-margin: var(--space-xl);
   --th-grid-gap: var(--grid-gap);
   --th-section-pad: var(--space-lg);
+  --th-dc-locked: var(--portal-green);
+  --th-dc-battle: var(--gator-orange);
+  --th-dc-watch: var(--cooling);
 
   /* Home page semantic tokens */
   --home-body: var(--graphite);
@@ -171,4 +174,34 @@
 .rh-board-card__meta {
   color: var(--th-meta);
   font-size: 0.875rem;
+}
+
+.gv-home-card__accent {
+  color: var(--th-accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.gv-home-card__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: var(--space-md);
+}
+
+.gv-home-card__stat-value {
+  color: var(--th-heading-light);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.gv-home-card__stat-value--accent { color: var(--th-accent); }
+.gv-home-card__stat-label {
+  color: var(--th-meta);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }

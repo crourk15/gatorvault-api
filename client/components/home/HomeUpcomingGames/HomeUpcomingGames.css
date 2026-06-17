@@ -1,9 +1,5 @@
 .gv-home-games__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.25rem;
+  display: none;
 }
 
 .gv-home-games__grid {
@@ -21,13 +17,8 @@
 .gv-home-games__card {
   display: block;
   padding: var(--home-card-pad, var(--space-md));
-  border-radius: 12px;
-  background: var(--card-bg);
-  box-shadow: var(--card-shadow);
   text-decoration: none;
-  color: var(--heading-color-dark);
-  border: 1px solid var(--card-border);
-  border-top: 3px solid var(--gator-orange);
+  color: var(--th-body-dark, var(--graphite));
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 

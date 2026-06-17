@@ -6,6 +6,7 @@ import type { StaffDashboardResponse } from '@/lib/staff-api';
 import { GV_COPY } from '@/lib/gatorvault-copy';
 import { SITE_ROUTES } from '@/lib/site-routes';
 import { playerProfilePath } from '@/lib/player-routes';
+import { HomeModuleCard } from '@/components/home/HomeModuleCard';
 import './HomeRecruitingSnapshot.css';
 
 type Props = {
@@ -25,9 +26,15 @@ export function HomeRecruitingSnapshot({
 }: Props): React.ReactElement {
   if (loading || !snapshot) {
     return (
-      <article className="gv-home__cell gv-home__cell--8 gv-home-panel gv-home-card" aria-label="Recruiting snapshot">
-        <div className="gv-home-skeleton" style={{ minHeight: 260 }} />
-      </article>
+      <HomeModuleCard
+        gridClass="gv-home__cell--8"
+        eyebrow="Recruiting Hub"
+        title={GV_COPY.headlines.recruitingSnapshot}
+        ariaLabel="Recruiting snapshot"
+        testId="home-recruiting"
+        loading
+        skeletonHeight={260}
+      />
     );
   }
 
@@ -54,14 +61,19 @@ export function HomeRecruitingSnapshot({
   const risers = movement?.topRisers?.slice(0, 2) ?? [];
 
   return (
-    <article
-      className="gv-home__cell gv-home__cell--8 gv-home-panel gv-home-card"
-      aria-label="Recruiting snapshot"
-      data-testid="home-recruiting"
+    <HomeModuleCard
+      gridClass="gv-home__cell--8"
+      eyebrow="Recruiting Hub"
+      title={GV_COPY.headlines.recruitingSnapshot}
+      stats={[
+        { value: String(snapshot.commits), label: 'Commits', tone: 'accent' },
+        { value: String(snapshot.targets), label: 'Targets', tone: 'up' },
+        { value: snapshot.classRank != null ? `#${snapshot.classRank}` : '—', label: 'Class rank', tone: 'neutral' },
+      ]}
+      link={{ href: `${SITE_ROUTES.recruiting}?tab=priority`, label: 'Open Recruiting Hub →' }}
+      ariaLabel="Recruiting snapshot"
+      testId="home-recruiting"
     >
-      <p className="gv-home-card__eyebrow">Recruiting Hub</p>
-      <h2 className="gv-home-panel__title">{GV_COPY.headlines.recruitingSnapshot}</h2>
-
       <div className="gv-home-recruit-panel__signals">
         <span className="gv-home-signal gv-home-signal--hot">Hot {hotCount}</span>
         <span className="gv-home-signal gv-home-signal--cooling">Cooling {coolingCount}</span>
@@ -101,10 +113,6 @@ export function HomeRecruitingSnapshot({
           </ul>
         </div>
       )}
-
-      <a href={`${SITE_ROUTES.recruiting}?tab=priority`} className="gv-home-card__link">
-        Open Recruiting Hub →
-      </a>
-    </article>
+    </HomeModuleCard>
   );
 }

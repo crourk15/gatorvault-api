@@ -5,6 +5,7 @@ import type { StaffDashboardResponse } from '@/lib/staff-api';
 import { heatmapSparkPct } from '@/lib/vault-home-api';
 import { SITE_ROUTES } from '@/lib/site-routes';
 import { playerProfilePath } from '@/lib/player-routes';
+import { HomeModuleCard } from '@/components/home/HomeModuleCard';
 import './HomeFutureCastSnapshot.css';
 
 type Props = {
@@ -22,9 +23,15 @@ function fitBadge(delta: number | null | undefined): { label: string; tone: 'eli
 export function HomeFutureCastSnapshot({ data, loading }: Props): React.ReactElement {
   if (loading || !data) {
     return (
-      <article className="gv-home__cell gv-home__cell--4 gv-home-panel gv-home-card" aria-label="FutureCast snapshot">
-        <div className="gv-home-skeleton" style={{ minHeight: 220 }} />
-      </article>
+      <HomeModuleCard
+        gridClass="gv-home__cell--4"
+        eyebrow="FutureCast"
+        title="Momentum snapshot"
+        ariaLabel="FutureCast snapshot"
+        testId="home-futurecast"
+        loading
+        skeletonHeight={220}
+      />
     );
   }
 
@@ -34,13 +41,19 @@ export function HomeFutureCastSnapshot({ data, loading }: Props): React.ReactEle
   const sparkPct = heatmapSparkPct(data.heatmap.buckets);
 
   return (
-    <article
-      className="gv-home__cell gv-home__cell--4 gv-home-panel gv-home-card"
-      aria-label="FutureCast snapshot"
-      data-testid="home-futurecast"
+    <HomeModuleCard
+      gridClass="gv-home__cell--4"
+      eyebrow="FutureCast"
+      title="Momentum snapshot"
+      stats={[
+        { value: String(leaders.length), label: 'Top risers', tone: 'up' },
+        { value: `${sparkPct}%`, label: 'Volatility', tone: 'accent' },
+      ]}
+      subtitle={`${data.movementWindowDays || 7}-day movement window`}
+      link={{ href: `${SITE_ROUTES.futurecast}/movement`, label: 'Open FutureCast →' }}
+      ariaLabel="FutureCast snapshot"
+      testId="home-futurecast"
     >
-      <p className="gv-home-card__eyebrow">FutureCast</p>
-      <h2 className="gv-home-panel__title">Momentum Snapshot</h2>
       <ul className="gv-home-fc-leaders">
         {leaders.map((p, idx) => {
           const badge = fitBadge(p.delta);
@@ -74,12 +87,6 @@ export function HomeFutureCastSnapshot({ data, loading }: Props): React.ReactEle
           <li className="gv-home-gnl-preview__empty">FutureCast probabilities updating.</li>
         )}
       </ul>
-      <p className="gv-home-card__meta">
-        {data.movementWindowDays || 7}-day volatility: <strong>{sparkPct}%</strong>
-      </p>
-      <a href={`${SITE_ROUTES.futurecast}/movement`} className="gv-home-card__link">
-        Open FutureCast →
-      </a>
-    </article>
+    </HomeModuleCard>
   );
 }
