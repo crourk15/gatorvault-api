@@ -83,3 +83,82 @@
   font-size: 0.75rem;
   color: #f87171;
 }
+
+/* Full-screen PIN modal (legacy admin-pin-modal-ov) */
+.gv-op-access-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(4px);
+}
+
+.gv-op-access-modal__card {
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(0, 48, 135, 0.35);
+  background: #0b1220;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+  text-align: left;
+}
+
+.gv-op-access-modal__title {
+  margin: 0 0 0.35rem;
+  font-family: Oswald, Inter, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.gv-op-access-modal__hint {
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #94a3b8;
+}
+
+body.gv-op-access-open {
+  overflow: hidden;
+}
+
+/* Marketing landing sits on white — footer toggle must stay visible above sticky CTA */
+.gv-site--marketing .gv-op-access {
+  background: #eef2f7;
+  border-top: 1px solid rgba(0, 33, 165, 0.1);
+  padding-bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+.gv-site--marketing .gv-op-access__toggle {
+  color: rgba(0, 33, 165, 0.62);
+  font-size: 0.6875rem;
+}
+
+.gv-site--marketing .gv-op-access__toggle:hover {
+  color: #0021a5;
+}
+
+.gv-site--marketing .gv-op-access__panel {
+  background: rgba(0, 33, 165, 0.08);
+  border-color: rgba(0, 33, 165, 0.2);
+}
+
+.gv-site--marketing .gv-op-access__hint {
+  color: rgba(15, 23, 42, 0.72);
+}
+
+.gv-site--marketing .gv-op-access__cancel {
+  color: rgba(51, 65, 85, 0.85);
+}
+
+@media (max-width: 767px) {
+  .gv-site--marketing .gv-op-access {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  }
+}

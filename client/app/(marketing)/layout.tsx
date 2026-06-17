@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { PublicSiteShell } from '@/components/site/PublicSiteShell';
+import '@/lib/operator-access.css';
 
 /**
  * Marketing routes (/ and /welcome) — PublicSiteShell only.
