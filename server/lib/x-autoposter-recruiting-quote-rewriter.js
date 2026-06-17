@@ -4,7 +4,6 @@
  */
 const template = require('./x-autoposter-template');
 const postSpec = require('./x-autoposter-post-spec');
-const insiderPrompt = require('./x-autoposter-insider-prompt');
 
 const OVERLAP_THRESHOLD = parseFloat(process.env.X_AUTOPOST_QUOTE_OVERLAP_MAX || '0.2', 10);
 const MAX_REGEN_ATTEMPTS = parseInt(process.env.X_AUTOPOST_QUOTE_REGEN_ATTEMPTS || '4', 10);
@@ -320,6 +319,7 @@ function buildContextVariants(signal, ctx, research, beatText) {
 }
 
 function buildInsiderVariants(signal, ctx, research, contextLine, beatText) {
+  const insiderPrompt = require('./x-autoposter-insider-prompt');
   const name = ctx?.name || research?.playerName || 'Target';
   const contextNorm = template.stripEmojisHashtags(contextLine || '').toLowerCase();
   const situation = postSpec.detectSituation(beatText || '', signal.eventType);

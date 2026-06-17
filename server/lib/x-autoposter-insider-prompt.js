@@ -13,7 +13,6 @@
  * - Regenerate when similarity to source exceeds threshold
  */
 const template = require('./x-autoposter-template');
-const quoteRewriter = require('./x-autoposter-recruiting-quote-rewriter');
 
 const MIN_CONTEXT_LEN = parseInt(process.env.X_AUTOPOST_MIN_CONTEXT_LEN || '28', 10);
 const MIN_INSIDER_LEN = parseInt(process.env.X_AUTOPOST_MIN_INSIDER_LEN || '24', 10);
@@ -168,6 +167,7 @@ function composeInsiderBlocks({ signal, research, metrics, intel, sourceLabel, s
 }
 
 function validateInsiderBlocks(blocks, beatText) {
+  const quoteRewriter = require('./x-autoposter-recruiting-quote-rewriter');
   const errors = [];
   if (!blocks?.contextLine || blocks.contextLine.length < MIN_CONTEXT_LEN) {
     errors.push('context_too_short');
@@ -188,6 +188,7 @@ function validateInsiderBlocks(blocks, beatText) {
 }
 
 function getInsiderTemplatePolicy() {
+  const quoteRewriter = require('./x-autoposter-recruiting-quote-rewriter');
   return {
     name: 'gm2_exact_v1',
     blocks: ['identity', 'lead_insight+context', 'projection'],
