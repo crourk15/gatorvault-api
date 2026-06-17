@@ -11,8 +11,12 @@ type Props = {
 
 export function ProgramHistoryTimeline({ eras, onSelectEra }: Props): React.ReactElement {
   return (
-    <section className="gv-team-hub__section gv-team-hub__frame" id="program-history" aria-label="Program history">
-      <h2 className="gv-team-hub__section-title">{TEAM_COPY.programHistory.title}</h2>
+    <section
+      className="gv-team__cell gv-team__cell--12 gv-team-card gv-team-section"
+      id="program-history"
+      aria-label="Program history"
+    >
+      <h2 className="gv-team-card__title">{TEAM_COPY.programHistory.title}</h2>
       <div className="gv-team-timeline" role="list">
         {eras.map((era) => (
           <button

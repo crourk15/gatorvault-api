@@ -64,11 +64,26 @@ export type DepthChart = {
 
 export type DepthChartTab = 'offense' | 'defense' | 'specialTeams';
 
+export type TeamCommandStats = {
+  rosterCount: number;
+  startersLocked: number;
+  positionBattles: number;
+  offenseCount?: number;
+  defenseCount?: number;
+  updatedLabel: string;
+};
+
 export const TEAM_COPY = {
   hero: {
     title: 'FLORIDA GATORS FOOTBALL',
     subtitle: 'Program history, culture, roster, and depth chart—one hub for Gator Nation.',
     badge: 'Updated June 2026',
+  },
+  commandCard: {
+    eyebrow: 'GatorVault Insider',
+    title: 'Florida Gators Football',
+    subtitle: 'Program history, culture, roster, and depth chart—one hub for Gator Nation.',
+    statusPrefix: 'Season: 2026 · Updated',
   },
   programHistory: { title: 'Program History' },
   achievements: { title: 'Program Achievements' },
@@ -97,3 +112,10 @@ export const TEAM_COPY = {
     ],
   },
 } as const;
+
+export const TEAM_QUICK_ACTIONS = [
+  { href: '#roster', icon: '👥', label: 'Full Roster' },
+  { href: '#depth-chart', icon: '📋', label: 'Depth Chart' },
+  { href: '#coaching-staff', icon: '🏈', label: 'Coaching Staff' },
+  { href: '#program-history', icon: '📜', label: 'Program History' },
+] as const;

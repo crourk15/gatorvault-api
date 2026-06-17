@@ -263,6 +263,20 @@ body {
   margin: 0;
 }
 
+.gv-vault-shell__main:has(.gv-team-hub) .gv-team__frame {
+  margin-top: 0;
+  padding-top: var(--space-lg);
+}
+
+.gv-vault-shell__main:has(.gv-team-hub) .gv-team__command {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.gv-vault-shell__main:has(.gv-team-hub) .gv-team-command-card {
+  margin-top: 0;
+}
+
 /* ── GatorNation Live — flush hero + ticker ── */
 .gv-gnl-hero {
   margin-top: 0;
@@ -322,7 +336,7 @@ body {
 
 /* ── Team hub — brand cards, centered tabs, roster grid ── */
 .gv-team-hub .gv-team-roster-card__name {
-  color: var(--gv-navy, #001a33);
+  color: var(--heading-color-light);
 }
 
 .gv-team-hub .gv-team-roster-tag {

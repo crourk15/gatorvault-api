@@ -10,8 +10,8 @@ type Props = {
 
 export function ProgramAchievementsStats({ achievements }: Props): React.ReactElement {
   return (
-    <section className="gv-team-hub__section gv-team-hub__frame" aria-label="Program achievements">
-      <h2 className="gv-team-hub__section-title">{TEAM_COPY.achievements.title}</h2>
+    <section className="gv-team__cell gv-team__cell--12 gv-team-card gv-team-section" aria-label="Program achievements">
+      <h2 className="gv-team-card__title">{TEAM_COPY.achievements.title}</h2>
       <div className="gv-team-ach-grid">
         {achievements.map((item) => (
           <div key={item.id} className="gv-team-ach-card">

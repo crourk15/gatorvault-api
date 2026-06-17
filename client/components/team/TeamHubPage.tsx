@@ -7,7 +7,7 @@ import { TEAM_COPY } from '@/lib/team-hub-types';
 import type { RosterFilter } from '@/lib/team-hub-data';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
 import { UiError } from '@/components/site/UiMessage';
-import { TeamHero } from '@/components/team/TeamHero';
+import { TeamTopCommandCard } from '@/components/team/TeamTopCommandCard';
 import { ProgramHistoryTimeline } from '@/components/team/ProgramHistoryTimeline';
 import { ProgramAchievementsStats } from '@/components/team/ProgramAchievementsStats';
 import { TeamIdentitySection } from '@/components/team/TeamIdentitySection';
@@ -26,6 +26,12 @@ const EMPTY_BUNDLE: TeamHubBundle = {
   coaches: [],
   roster: [],
   depthChart: { offense: [], defense: [], specialTeams: [] },
+  commandStats: {
+    rosterCount: 0,
+    startersLocked: 0,
+    positionBattles: 0,
+    updatedLabel: '—',
+  },
   updatedAt: null,
 };
 
@@ -87,46 +93,65 @@ export function TeamHubPage(): React.ReactElement {
         : bundle.depthChart.specialTeams;
 
   return (
-    <div className="gv-team-hub gv-team-page" data-testid="vault-team">
-      <TeamHero />
-
+    <div className="gv-team-hub gv-team-shell" data-testid="vault-team">
       {error && !loading && (
-        <div className="gv-team-hub__section gv-team-hub__frame">
-          <UiError message={error} retry={() => void load(true)} backHref="/vault" backLabel="← Dashboard" />
+        <div className="gv-team__frame gv-team__command">
+          <div className="gv-team__grid">
+            <div className="gv-team__cell gv-team__cell--12">
+              <UiError message={error} retry={() => void load(true)} backHref="/vault" backLabel="← Dashboard" />
+            </div>
+          </div>
         </div>
       )}
 
       {!error && (
         <>
-          <ProgramHistoryTimeline eras={bundle.eras} onSelectEra={setSelectedEra} />
-          <ProgramAchievementsStats achievements={bundle.achievements} />
-          <TeamIdentitySection blocks={bundle.identity} />
-          <CoachingStaffGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} />
+          <div className="gv-team__frame gv-team__command">
+            <div className="gv-team__grid">
+              <TeamTopCommandCard
+                stats={bundle.commandStats}
+                loading={loading && bundle.roster.length === 0}
+              />
 
-          <section className="gv-team-hub__section gv-team-hub__frame gv-team-roster" id="roster" aria-label="Full Roster">
-            <h2 className="gv-team-hub__section-title">{TEAM_COPY.roster.title}</h2>
-            <p className="gv-team-hub__section-sub">{TEAM_COPY.roster.subtitle}</p>
-            {loading && bundle.roster.length === 0 ? (
-              <p className="gv-team-status">Loading roster…</p>
-            ) : (
-              <>
-                <RosterFilters active={rosterFilter} onChange={setRosterFilter} />
-                <RosterList players={bundle.roster} filter={rosterFilter} />
-              </>
-            )}
-          </section>
+              <ProgramHistoryTimeline eras={bundle.eras} onSelectEra={setSelectedEra} />
+              <ProgramAchievementsStats achievements={bundle.achievements} />
+              <TeamIdentitySection blocks={bundle.identity} />
+              <CoachingStaffGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} />
 
-          <section className="gv-team-hub__section gv-team-hub__frame" id="depth-chart" aria-label="Depth chart">
-            <h2 className="gv-team-hub__section-title">{TEAM_COPY.depthChart.title}</h2>
-            <p className="gv-team-hub__section-sub">{TEAM_COPY.depthChart.subtitle}</p>
-            <div className="gv-team-dc-legend">
-              <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--locked">Locked</span>
-              <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--battle">Battle</span>
-              <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--watch">Watch</span>
+              <section
+                className="gv-team__cell gv-team__cell--12 gv-team-card gv-team-section gv-team-roster"
+                id="roster"
+                aria-label="Full Roster"
+              >
+                <h2 className="gv-team-card__title">{TEAM_COPY.roster.title}</h2>
+                <p className="gv-team-section__sub">{TEAM_COPY.roster.subtitle}</p>
+                {loading && bundle.roster.length === 0 ? (
+                  <p className="gv-team-status">Loading roster…</p>
+                ) : (
+                  <>
+                    <RosterFilters active={rosterFilter} onChange={setRosterFilter} />
+                    <RosterList players={bundle.roster} filter={rosterFilter} />
+                  </>
+                )}
+              </section>
+
+              <section
+                className="gv-team__cell gv-team__cell--12 gv-team-card gv-team-section"
+                id="depth-chart"
+                aria-label="Depth chart"
+              >
+                <h2 className="gv-team-card__title">{TEAM_COPY.depthChart.title}</h2>
+                <p className="gv-team-section__sub">{TEAM_COPY.depthChart.subtitle}</p>
+                <div className="gv-team-dc-legend">
+                  <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--locked">Locked</span>
+                  <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--battle">Battle</span>
+                  <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--watch">Watch</span>
+                </div>
+                <DepthChartTabs active={dcTab} onChange={setDcTab} />
+                <DepthChartGrid positions={dcPositions} />
+              </section>
             </div>
-            <DepthChartTabs active={dcTab} onChange={setDcTab} />
-            <DepthChartGrid positions={dcPositions} />
-          </section>
+          </div>
 
           <TeamFooter />
         </>

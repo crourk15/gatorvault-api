@@ -15,12 +15,12 @@ export function CoachingStaffGrid({ coaches, onSelectCoach }: Props): React.Reac
 
   return (
     <section
-      className="gv-team-hub__section gv-team-hub__frame"
+      className="gv-team__cell gv-team__cell--12 gv-team-card gv-team-section"
       id="coaching-staff"
       aria-label="Coaching staff"
     >
-      <h2 className="gv-team-hub__section-title">{TEAM_COPY.coachingStaff.title}</h2>
-      <p className="gv-team-hub__section-sub">{TEAM_COPY.coachingStaff.subtitle}</p>
+      <h2 className="gv-team-card__title">{TEAM_COPY.coachingStaff.title}</h2>
+      <p className="gv-team-section__sub">{TEAM_COPY.coachingStaff.subtitle}</p>
 
       <div className="gv-team-staff-grid">
         {coaching.map((coach) => (
@@ -43,7 +43,7 @@ export function CoachingStaffGrid({ coaches, onSelectCoach }: Props): React.Reac
 
       {support.length > 0 && (
         <>
-          <h3 className="gv-team-hub__section-title" style={{ marginTop: '1.5rem', fontSize: '1rem' }}>
+          <h3 className="gv-team-card__title gv-team-section__subheading">
             {TEAM_COPY.coachingStaff.supportTitle}
           </h3>
           <div className="gv-team-support-list">

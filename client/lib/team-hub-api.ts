@@ -8,7 +8,8 @@ import {
   TEAM_IDENTITY,
   coachInitials,
 } from './team-hub-data';
-import type { Coach, DepthChart, Era, Achievement, IdentityBlock, TeamPlayer } from './team-hub-types';
+import type { Coach, DepthChart, Era, Achievement, IdentityBlock, TeamPlayer, TeamCommandStats } from './team-hub-types';
+import { computeTeamCommandStats } from '@/components/team/team-command-stats';
 
 export type TeamHubBundle = {
   eras: Era[];
@@ -17,6 +18,7 @@ export type TeamHubBundle = {
   coaches: Coach[];
   roster: TeamPlayer[];
   depthChart: DepthChart;
+  commandStats: TeamCommandStats;
   updatedAt: string | null;
 };
 
@@ -105,10 +107,44 @@ async function fetchCoachingStaff(): Promise<Coach[]> {
   }
 }
 
+async function fetchDepthChartMeta(): Promise<{
+  playerCount?: number;
+  updatedAt?: string;
+  units?: { offense?: number; defense?: number };
+} | null> {
+  const base = getApiBase();
+  const url = base ? `${base}/data/roster/depth-chart-meta.json` : '/data/roster/depth-chart-meta.json';
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    return (await res.json()) as {
+      playerCount?: number;
+      updatedAt?: string;
+      units?: { offense?: number; defense?: number };
+    };
+  } catch {
+    return null;
+  }
+}
+
+function countRosterUnits(roster: TeamPlayer[]): { offense: number; defense: number } {
+  let offense = 0;
+  let defense = 0;
+  for (const p of roster) {
+    const group = String(p.positionGroup ?? p.position ?? '').toLowerCase();
+    if (group.includes('off') || /^(qb|rb|wr|te|ol|lt|lg|rg|rt|c|fb)/.test(group)) offense += 1;
+    else if (group.includes('def') || /^(dl|lb|db|cb|s|de|dt|edge|jack|mike|will|sam|star|ss|fs|nb)/.test(group)) {
+      defense += 1;
+    }
+  }
+  return { offense, defense };
+}
+
 export async function fetchTeamHubBundle(): Promise<TeamHubBundle> {
-  const [rosterResult, coaches] = await Promise.allSettled([
+  const [rosterResult, coaches, meta] = await Promise.allSettled([
     fetchRosterPlayers(),
     fetchCoachingStaff(),
+    fetchDepthChartMeta(),
   ]);
 
   const roster =
@@ -116,13 +152,21 @@ export async function fetchTeamHubBundle(): Promise<TeamHubBundle> {
       ? rosterResult.value.map(mapRosterPlayer).sort((a, b) => a.name.localeCompare(b.name))
       : [];
 
+  const depthChart = TEAM_DEPTH_CHART;
+  const metaData = meta.status === 'fulfilled' ? meta.value : null;
+  const unitCounts = countRosterUnits(roster);
+  const commandStats = computeTeamCommandStats(roster, depthChart, metaData);
+  commandStats.offenseCount = metaData?.units?.offense ?? unitCounts.offense;
+  commandStats.defenseCount = metaData?.units?.defense ?? unitCounts.defense;
+
   return {
     eras: TEAM_ERAS,
     achievements: TEAM_ACHIEVEMENTS,
     identity: TEAM_IDENTITY,
     coaches: coaches.status === 'fulfilled' ? coaches.value : FALLBACK_COACHES.map((c) => ({ ...c })),
     roster,
-    depthChart: TEAM_DEPTH_CHART,
-    updatedAt: new Date().toISOString(),
+    depthChart,
+    commandStats,
+    updatedAt: metaData?.updatedAt ?? new Date().toISOString(),
   };
 }

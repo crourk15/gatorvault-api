@@ -1,32 +1,112 @@
-/* GatorVault Team Hub — brand tokens aligned with Recruiting Hub / GatorNation Live */
+/* GatorVault Team Hub — Dashboard blueprint shell (gv-team-* prefix) */
 
-.gv-team-hub {
-  --th-primary: var(--gv-navy, #001a33);
-  --th-accent: var(--gv-orange, #fa4616);
-  --th-blue: var(--gv-blue, #0021a5);
-  --th-green: #4ade80;
-  --th-red: #ff4d4d;
-  --th-yellow: #facc15;
-  --th-card-bg: var(--gv-white, #ffffff);
-  --th-border: rgba(0, 33, 165, 0.18);
-  --th-radius-card: 12px;
+.gv-team-hub,
+.gv-team-shell {
+  --th-primary: var(--page-bg);
+  --th-accent: var(--gator-orange);
+  --th-blue: var(--uf-blue);
+  --th-green: var(--momentum-up);
+  --th-red: var(--momentum-down);
+  --th-yellow: var(--star-gold);
+  --th-card-bg: var(--card-bg);
+  --th-border: var(--card-border);
+  --th-radius-card: var(--radius-md);
   --th-radius-pill: 9999px;
-  --gv-frame-max: 1280px;
-  --gv-frame-margin: 5%;
+  --gv-frame-max: var(--max-width);
+  --gv-frame-margin: var(--space-xl);
+  --gv-grid-gap: var(--grid-gap);
+  --gv-section-pad: var(--space-lg);
+  --gv-card-pad: var(--space-md);
   margin: 0;
   padding-bottom: 0;
-  color: var(--gv-white);
-  font-family: var(--gv-font);
-  background: var(--th-primary);
+  color: var(--heading-color-dark);
+  font-family: var(--font-family);
+  background: var(--page-bg);
 }
 
 @media (max-width: 767px) {
-  .gv-team-hub {
-    margin: 0;
-    --gv-frame-margin: 1rem;
+  .gv-team-hub,
+  .gv-team-shell {
+    --gv-frame-margin: var(--space-md);
+    --gv-grid-gap: 1.25rem;
+    --gv-section-pad: 1.25rem;
   }
 }
 
+/* 12-col command center frame */
+.gv-team__frame {
+  max-width: var(--gv-frame-max);
+  margin: 0 auto;
+  width: 100%;
+  margin-top: 0;
+  padding-top: var(--space-lg);
+  padding-left: var(--gv-frame-margin);
+  padding-right: var(--gv-frame-margin);
+}
+
+.gv-team__command {
+  padding-top: 0;
+  margin-top: 0;
+  padding-bottom: 2.5rem;
+}
+
+.gv-team__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--gv-grid-gap);
+  align-items: start;
+}
+
+.gv-team__cell--12 { grid-column: span 12; }
+.gv-team__cell--8 { grid-column: span 12; }
+.gv-team__cell--6 { grid-column: span 12; }
+.gv-team__cell--4 { grid-column: span 12; }
+
+@media (min-width: 768px) {
+  .gv-team__cell--8 { grid-column: span 8; }
+  .gv-team__cell--6 { grid-column: span 6; }
+  .gv-team__cell--4 { grid-column: span 4; }
+}
+
+.gv-team-section {
+  padding: var(--space-lg);
+}
+
+.gv-team-section__sub {
+  font-size: 0.875rem;
+  color: var(--subtle-gray);
+  margin: -0.25rem 0 1.25rem;
+  line-height: 1.5;
+}
+
+.gv-team-section__subheading {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+}
+
+.gv-team-card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--heading-color-light);
+  margin: 0 0 0.75rem;
+}
+
+.gv-team-card__eyebrow {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gator-orange);
+  margin: 0 0 0.5rem;
+}
+
+.gv-team-card__meta {
+  color: var(--subtle-gray);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Legacy aliases — sections now live inside grid cells */
 .gv-team-hub__frame {
   max-width: var(--gv-frame-max);
   margin: 0 auto;
@@ -36,87 +116,20 @@
 }
 
 .gv-team-hub__section {
-  margin-bottom: 2.5rem;
+  margin-bottom: 0;
 }
 
 .gv-team-hub__section-title {
   font-size: 1.25rem;
   font-weight: 700;
+  color: var(--heading-color-light);
   margin: 0 0 0.35rem;
 }
 
 .gv-team-hub__section-sub {
   font-size: 0.875rem;
-  color: var(--gv-storm);
+  color: var(--subtle-gray);
   margin: 0 0 1.25rem;
-}
-
-.gv-team-hero {
-  position: relative;
-  padding: 3rem 0 2rem;
-  overflow: hidden;
-}
-
-@media (max-width: 767px) {
-  .gv-team-hero {
-    padding: 2rem 0 1.5rem;
-  }
-}
-
-.gv-team-hero__bg {
-  position: absolute;
-  inset: 0;
-  background: var(--gv-gradient-swamp-night);
-}
-
-.gv-team-hero__bg::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 15% 20%, rgba(255, 220, 120, 0.1) 0, transparent 8%),
-    radial-gradient(circle at 85% 15%, rgba(255, 220, 120, 0.07) 0, transparent 7%);
-  opacity: 0.12;
-}
-
-.gv-team-hero__inner {
-  position: relative;
-  z-index: 1;
-}
-
-.gv-team-hero__wordmark {
-  margin-bottom: 1rem;
-  opacity: 0.95;
-}
-
-.gv-team-hero__title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  margin: 0 0 0.5rem;
-  line-height: 1.1;
-}
-
-.gv-team-hero__subtitle {
-  font-size: 0.875rem;
-  color: var(--gv-storm);
-  max-width: 42rem;
-  margin: 0 0 1rem;
-  line-height: 1.5;
-}
-
-.gv-team-hero__badge {
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.35rem 0.75rem;
-  border-radius: var(--th-radius-pill);
-  background: rgba(249, 115, 22, 0.15);
-  border: 1px solid rgba(249, 115, 22, 0.35);
-  color: var(--th-accent);
 }
 
 .gv-team-timeline {
@@ -137,13 +150,13 @@
   text-align: left;
   cursor: pointer;
   transition: border-color 150ms ease, transform 150ms ease;
-  color: inherit;
+  color: var(--body-color-light);
   font: inherit;
 }
 
 .gv-team-era-card:hover,
 .gv-team-era-card:focus-visible {
-  border-color: rgba(249, 115, 22, 0.45);
+  border-color: color-mix(in srgb, var(--gator-orange) 45%, transparent);
   transform: translateY(-2px);
   outline: none;
 }
@@ -198,7 +211,7 @@
 
 .gv-team-ach-card__label {
   font-size: 0.8125rem;
-  color: var(--gv-storm);
+  color: var(--subtle-gray);
   margin: 0;
 }
 
@@ -230,7 +243,7 @@
 
 .gv-team-identity-card__desc {
   font-size: 0.875rem;
-  color: var(--gv-storm);
+  color: var(--subtle-gray);
   margin: 0;
   line-height: 1.5;
 }
@@ -271,7 +284,7 @@
 
 .gv-team-staff-card:hover,
 .gv-team-staff-card:focus-visible {
-  border-color: rgba(249, 115, 22, 0.4);
+  border-color: color-mix(in srgb, var(--gator-orange) 40%, transparent);
   outline: none;
 }
 
@@ -283,10 +296,11 @@
   align-items: center;
   justify-content: center;
   border-radius: 0.5rem;
-  background: linear-gradient(145deg, rgba(29, 78, 216, 0.35), rgba(15, 23, 42, 0.9));
-  border: 1px solid rgba(29, 78, 216, 0.45);
+  background: color-mix(in srgb, var(--uf-blue) 35%, var(--card-bg-dark));
+  border: 1px solid color-mix(in srgb, var(--uf-blue) 45%, transparent);
   font-size: 0.6875rem;
   font-weight: 800;
+  color: var(--heading-color-light);
 }
 
 .gv-team-staff-card__name {
@@ -297,7 +311,7 @@
 
 .gv-team-staff-card__title {
   font-size: 0.75rem;
-  color: var(--gv-storm);
+  color: var(--subtle-gray);
   margin: 0;
   line-height: 1.35;
 }
@@ -310,15 +324,15 @@
 
 .gv-team-support-row {
   font-size: 0.8125rem;
-  color: var(--gv-storm);
+  color: var(--subtle-gray);
   padding: 0.65rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: color-mix(in srgb, var(--uf-blue) 4%, var(--card-bg));
   border-radius: var(--th-radius-card);
   border: 1px solid var(--th-border);
 }
 
 .gv-team-support-row strong {
-  color: var(--gv-white);
+  color: var(--body-color-light);
 }
 
 .gv-team-roster-filters {
@@ -337,14 +351,14 @@
   border-radius: var(--th-radius-pill);
   border: 1px solid var(--th-border);
   background: transparent;
-  color: var(--gv-storm);
+  color: var(--subtle-gray);
   cursor: pointer;
 }
 
 .gv-team-roster-chip.is-active {
   background: var(--th-accent);
   border-color: var(--th-accent);
-  color: #fff;
+  color: var(--white);
 }
 
 .gv-team-roster-grid {
@@ -380,7 +394,7 @@
 
 .gv-team-roster-card__meta {
   font-size: 0.75rem;
-  color: var(--gv-storm);
+  color: var(--subtle-gray);
   margin: 0;
 }
 
@@ -397,7 +411,9 @@
   text-transform: uppercase;
   padding: 0.15rem 0.4rem;
   border-radius: var(--th-radius-pill);
-  background: rgba(255, 255, 255, 0.06);
+  background: color-mix(in srgb, var(--gator-orange) 12%, transparent);
+  color: var(--gator-orange);
+  border: 1px solid color-mix(in srgb, var(--gator-orange) 25%, transparent);
 }
 
 .gv-team-dc-tabs {
@@ -414,14 +430,14 @@
   border-radius: var(--th-radius-pill);
   border: 1px solid var(--th-border);
   background: transparent;
-  color: var(--gv-storm);
+  color: var(--subtle-gray);
   cursor: pointer;
 }
 
 .gv-team-dc-tab.is-active {
   background: var(--th-accent);
   border-color: var(--th-accent);
-  color: #fff;
+  color: var(--white);
 }
 
 .gv-team-dc-legend {
@@ -439,17 +455,17 @@
 }
 
 .gv-team-dc-legend-pill--locked {
-  background: rgba(74, 222, 128, 0.15);
+  background: color-mix(in srgb, var(--momentum-up) 15%, transparent);
   color: var(--th-green);
 }
 
 .gv-team-dc-legend-pill--battle {
-  background: rgba(250, 204, 21, 0.15);
+  background: color-mix(in srgb, var(--star-gold) 15%, transparent);
   color: var(--th-yellow);
 }
 
 .gv-team-dc-legend-pill--watch {
-  background: rgba(255, 77, 77, 0.15);
+  background: color-mix(in srgb, var(--momentum-down) 15%, transparent);
   color: var(--th-red);
 }
 
@@ -496,28 +512,28 @@
 }
 
 .gv-team-dc-status--Locked {
-  background: rgba(74, 222, 128, 0.15);
+  background: color-mix(in srgb, var(--momentum-up) 15%, transparent);
   color: var(--th-green);
 }
 
 .gv-team-dc-status--Battle {
-  background: rgba(250, 204, 21, 0.15);
+  background: color-mix(in srgb, var(--star-gold) 15%, transparent);
   color: var(--th-yellow);
 }
 
 .gv-team-dc-status--Watch {
-  background: rgba(255, 77, 77, 0.15);
+  background: color-mix(in srgb, var(--momentum-down) 15%, transparent);
   color: var(--th-red);
 }
 
 .gv-team-dc-player {
   font-size: 0.8125rem;
   margin: 0.35rem 0 0;
-  color: var(--gv-storm);
+  color: var(--subtle-gray);
 }
 
 .gv-team-dc-player strong {
-  color: var(--gv-white);
+  color: var(--body-color-light);
 }
 
 .gv-team-modal-overlay {
@@ -545,7 +561,7 @@
   float: right;
   background: transparent;
   border: none;
-  color: var(--gv-storm);
+  color: var(--subtle-gray);
   font-size: 1.25rem;
   cursor: pointer;
   line-height: 1;
@@ -566,7 +582,7 @@
 
 .gv-team-modal__body {
   font-size: 0.875rem;
-  color: var(--gv-storm);
+  color: var(--subtle-gray);
   line-height: 1.55;
 }
 
@@ -609,5 +625,137 @@
 
 .gv-team-status {
   font-size: 0.875rem;
-  color: var(--gv-storm);
+  color: var(--subtle-gray);
+}
+
+/* Top Program Command Card */
+.gv-team-command-card {
+  padding: var(--space-lg);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.gv-team-command-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.gv-team-command-card__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  color: var(--heading-color-light);
+  line-height: 1.15;
+}
+
+.gv-team-command-card__subtitle {
+  margin: 0.5rem 0 0;
+  max-width: 42rem;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--subtle-gray);
+}
+
+.gv-team-command-card__status {
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--subtle-gray);
+  letter-spacing: 0.02em;
+}
+
+.gv-team-command-card__stats {
+  margin-bottom: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--card-border);
+}
+
+.gv-team-command-card__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--card-border);
+}
+
+@media (min-width: 640px) {
+  .gv-team-command-card__actions {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.gv-team-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+@media (min-width: 640px) {
+  .gv-team-quick-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.gv-team-quick-stats__item {
+  min-width: 0;
+}
+
+.gv-team-quick-stats__value {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--heading-color-light);
+}
+
+.gv-team-action-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--card-border);
+  background: color-mix(in srgb, var(--uf-blue) 4%, var(--card-bg));
+  color: var(--body-color-light);
+  text-decoration: none;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.gv-team-action-tile:hover {
+  border-color: color-mix(in srgb, var(--gator-orange) 35%, transparent);
+  background: color-mix(in srgb, var(--gator-orange) 8%, var(--card-bg));
+}
+
+.gv-team-action-tile__icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.gv-team-action-tile__label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.gv-team-skeleton {
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--uf-blue) 6%, var(--card-bg)) 25%,
+    color-mix(in srgb, var(--uf-blue) 12%, var(--card-bg)) 50%,
+    color-mix(in srgb, var(--uf-blue) 6%, var(--card-bg)) 75%
+  );
+  background-size: 200% 100%;
+  animation: gv-team-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes gv-team-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }

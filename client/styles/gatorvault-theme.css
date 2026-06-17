@@ -91,7 +91,8 @@
 
 /* Shared platform card primitive */
 .gv-card,
-.gv-dash-card {
+.gv-dash-card,
+.gv-team-card {
   background: var(--card-bg);
   color: var(--graphite);
   border: 1px solid var(--card-border);
@@ -101,7 +102,8 @@
 }
 
 .gv-card__title,
-.gv-dash-card__title {
+.gv-dash-card__title,
+.gv-team-card__title {
   color: var(--heading-color-light);
   font-family: var(--font-family);
   font-size: 1.25rem;
@@ -115,7 +117,8 @@
 }
 
 .gv-card__meta,
-.gv-dash-card__meta {
+.gv-dash-card__meta,
+.gv-team-card__meta {
   color: var(--subtle-gray);
   font-size: 0.875rem;
 }

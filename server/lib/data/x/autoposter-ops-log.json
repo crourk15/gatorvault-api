@@ -2,7 +2,7 @@
   "version": 1,
   "entries": [
     {
-      "ts": "2026-06-16T16:43:12.601Z",
+      "ts": "2026-06-17T14:15:53.219Z",
       "type": "rewrite_success",
       "action": "rewrite_success",
       "details": {
@@ -11,82 +11,34 @@
         "wordCount": 85,
         "mode": "stub"
       },
-      "timestamp": "2026-06-16T16:43:12.601Z"
+      "timestamp": "2026-06-17T14:15:53.219Z"
     },
     {
-      "ts": "2026-06-16T16:40:32.365Z",
-      "type": "rewrite_failed",
-      "action": "rewrite_failed",
+      "ts": "2026-06-17T14:15:53.201Z",
+      "type": "rewrite_success",
+      "action": "rewrite_success",
       "details": {
         "playerName": "Jayden Harris",
-        "attempts": 3,
-        "mode": "stub",
-        "quality": {
-          "ok": false,
-          "similarity": 0.27450980392156865,
-          "lengthOk": true,
-          "toneOk": true,
-          "contextOk": true
-        }
-      },
-      "timestamp": "2026-06-16T16:40:32.365Z"
-    },
-    {
-      "ts": "2026-06-16T16:40:32.361Z",
-      "type": "rewrite_regen",
-      "action": "rewrite_regen",
-      "details": {
-        "attempt": 3,
-        "errors": {
-          "ok": false,
-          "similarity": 0.27450980392156865,
-          "lengthOk": true,
-          "toneOk": true,
-          "contextOk": true
-        },
-        "playerName": "Jayden Harris",
+        "attempts": 1,
+        "wordCount": 103,
         "mode": "stub"
       },
-      "timestamp": "2026-06-16T16:40:32.361Z"
+      "timestamp": "2026-06-17T14:15:53.201Z"
     },
     {
-      "ts": "2026-06-16T16:40:32.357Z",
-      "type": "rewrite_regen",
-      "action": "rewrite_regen",
+      "ts": "2026-06-17T14:15:53.199Z",
+      "type": "rewrite_success",
+      "action": "rewrite_success",
       "details": {
-        "attempt": 2,
-        "errors": {
-          "ok": false,
-          "similarity": 0.27450980392156865,
-          "lengthOk": true,
-          "toneOk": true,
-          "contextOk": true
-        },
-        "playerName": "Jayden Harris",
+        "playerName": "Easton Royal",
+        "attempts": 1,
+        "wordCount": 99,
         "mode": "stub"
       },
-      "timestamp": "2026-06-16T16:40:32.357Z"
+      "timestamp": "2026-06-17T14:15:53.199Z"
     },
     {
-      "ts": "2026-06-16T16:40:32.353Z",
-      "type": "rewrite_regen",
-      "action": "rewrite_regen",
-      "details": {
-        "attempt": 1,
-        "errors": {
-          "ok": false,
-          "similarity": 0.27450980392156865,
-          "lengthOk": true,
-          "toneOk": true,
-          "contextOk": true
-        },
-        "playerName": "Jayden Harris",
-        "mode": "stub"
-      },
-      "timestamp": "2026-06-16T16:40:32.353Z"
-    },
-    {
-      "ts": "2026-06-16T16:39:38.741Z",
+      "ts": "2026-06-17T13:43:41.426Z",
       "type": "rewrite_success",
       "action": "rewrite_success",
       "details": {
@@ -95,81 +47,8 @@
         "wordCount": 85,
         "mode": "stub"
       },
-      "timestamp": "2026-06-16T16:39:38.741Z"
-    },
-    {
-      "ts": "2026-06-16T16:39:38.734Z",
-      "type": "rewrite_failed",
-      "action": "rewrite_failed",
-      "details": {
-        "playerName": "Jayden Harris",
-        "attempts": 3,
-        "mode": "stub",
-        "quality": {
-          "ok": false,
-          "similarity": 0.27450980392156865,
-          "lengthOk": true,
-          "toneOk": true,
-          "contextOk": true
-        }
-      },
-      "timestamp": "2026-06-16T16:39:38.734Z"
-    },
-    {
-      "ts": "2026-06-16T16:39:38.730Z",
-      "type": "rewrite_regen",
-      "action": "rewrite_regen",
-      "details": {
-        "attempt": 3,
-        "errors": {
-          "ok": false,
-          "similarity": 0.27450980392156865,
-          "lengthOk": true,
-          "toneOk": true,
-          "contextOk": true
-        },
-        "playerName": "Jayden Harris",
-        "mode": "stub"
-      },
-      "timestamp": "2026-06-16T16:39:38.730Z"
-    },
-    {
-      "ts": "2026-06-16T16:39:38.725Z",
-      "type": "rewrite_regen",
-      "action": "rewrite_regen",
-      "details": {
-        "attempt": 2,
-        "errors": {
-          "ok": false,
-          "similarity": 0.27450980392156865,
-          "lengthOk": true,
-          "toneOk": true,
-          "contextOk": true
-        },
-        "playerName": "Jayden Harris",
-        "mode": "stub"
-      },
-      "timestamp": "2026-06-16T16:39:38.725Z"
-    },
-    {
-      "ts": "2026-06-16T16:39:38.719Z",
-      "type": "rewrite_regen",
-      "action": "rewrite_regen",
-      "details": {
-        "attempt": 1,
-        "errors": {
-          "ok": false,
-          "similarity": 0.27450980392156865,
-          "lengthOk": true,
-          "toneOk": true,
-          "contextOk": true
-        },
-        "playerName": "Jayden Harris",
-        "mode": "stub"
-      },
-      "timestamp": "2026-06-16T16:39:38.719Z"
+      "timestamp": "2026-06-17T13:43:41.426Z"
     }
   ],
-  "updatedAt": "2026-06-16T16:43:12.604Z"
-}
+  "updatedAt": "2026-06-17T14:15:53.219Z"
 }
