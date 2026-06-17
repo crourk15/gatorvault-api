@@ -31,7 +31,12 @@ function competingSchools(p: HighPriorityPlayer): string {
   return '—';
 }
 
+function movementDelta(player: HighPriorityPlayer): number {
+  return player.delta7d ?? player.movementDelta ?? 0;
+}
+
 export function FutureCastRow({ player }: Props): React.ReactElement {
+  const delta = movementDelta(player);
   return (
     <tr>
       <td>
@@ -42,7 +47,7 @@ export function FutureCastRow({ player }: Props): React.ReactElement {
       </td>
       <td className="rh-fc-row__pct">{ufPct(player)}%</td>
       <td className="rh-fc-row__move">
-        {movementArrow(player.movementDelta ?? 0)} {Math.abs(player.movementDelta ?? 0) || '—'}
+        {movementArrow(delta)} {Math.abs(delta) || '—'}
       </td>
       <td className="rh-fc-row__intel">{lastIntel(player)}</td>
       <td>{competingSchools(player)}</td>

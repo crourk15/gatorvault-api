@@ -24,8 +24,13 @@ export type MovementIntelAlert = {
 export type MovementIntelResponse = {
   ok?: boolean;
   updatedAt?: string;
+  lastUpdated?: string;
   risers: MovementIntelItem[];
   fallers: MovementIntelItem[];
   volatile: MovementIntelItem[];
   alerts: MovementIntelAlert[];
 };
+
+export function movementDelta7d(item: MovementIntelItem): number {
+  return item.delta ?? 0;
+}

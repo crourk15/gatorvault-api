@@ -10,8 +10,11 @@ import type { Request, Response } from 'express';
 import {
   listMovementHistoryByPlayerIds,
   listPredictions,
+  listRollingMovement,
+  ROLLING_MOVEMENT_WINDOW_DAYS,
   VOLATILITY_WINDOW_DAYS,
 } from '../../models/predictions';
+import { listCompetingVolatilityBoosts } from '../../models/competing-school-history';
 import { loadRecruitingRankings } from '../../lib/load-recruiting-rankings';
 import {
   asyncHandler,
@@ -65,6 +68,7 @@ export interface HighPriorityPlayer {
   posRank: number | null;
   ufProbability: number;
   movementDelta: number;
+  delta7d: number;
   fitScore: number;
   staffConfidence: number;
   priorityScore: number;
@@ -239,6 +243,17 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       rows = dedupeFeedRows(rows);
       const serialized = await serializeFeedRowsWithVolatility(rows);
 
+      const boosts = await listCompetingVolatilityBoosts(ROLLING_MOVEMENT_WINDOW_DAYS).catch(
+        () => new Map<string, number>()
+      );
+      const rollingRows = await listRollingMovement(
+        { class_year: classYear, lifecycle: 'HS' },
+        boosts
+      );
+      const delta7dBySlug = new Map(
+        rollingRows.map((row) => [row.slug, row.delta7d])
+      );
+
       const predictionBySlug = new Map<string, (typeof serialized)[number]>();
       for (const p of serialized) {
         if (p.playerSlug) predictionBySlug.set(p.playerSlug, p);
@@ -260,7 +275,8 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         const stateRank = rank?.stateRank ?? target.stateRank ?? null;
 
         const ufProbability = toPercent(model?.confidence ?? model?.ufProbability ?? target.ufProbability);
-        const movementDelta = model?.delta ?? 0;
+        const delta7d = delta7dBySlug.get(slug) ?? model?.delta ?? 0;
+        const movementDelta = delta7d;
         const fitScore = Math.round(model?.ufFitScore ?? target.rating ?? compositeScore ?? 0);
         const staffConfidence = Math.round(
           model?.fitScoreBreakdown?.staff ??
@@ -308,6 +324,7 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
           posRank: positionRank,
           ufProbability,
           movementDelta,
+          delta7d,
           fitScore,
           staffConfidence,
           priorityScore,
@@ -326,10 +343,12 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const sorted = [...players].sort((a, b) => b.priorityScore - a.priorityScore);
       const top10 = sorted.slice(0, 10);
 
+      const lastUpdated = new Date().toISOString();
       return {
         classYear,
         count: top10.length,
-        updatedAt: new Date().toISOString(),
+        updatedAt: lastUpdated,
+        lastUpdated,
         players: top10,
       };
     });

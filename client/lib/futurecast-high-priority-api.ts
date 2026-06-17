@@ -40,6 +40,7 @@ export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
   natlRank: number | null;
   posRank: number | null;
   movementDelta: number;
+  delta7d: number;
   insiderNotes: string | null;
   notePreview: string | null;
   skinny: string | null;
@@ -55,6 +56,7 @@ export interface HighPriorityResponse {
   classYear: number;
   count: number;
   updatedAt: string;
+  lastUpdated?: string;
   players: HighPriorityPlayer[];
 }
 

@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import { UiError } from '@/components/site/UiMessage';
 import { PageTitleBar } from '@/components/recruiting-hub/PageTitleBar';
 import { LivePulseBar } from '@/components/recruiting-hub/LivePulseBar';
+import { MovementSummaryLine } from '@/components/recruiting-hub/MovementSummaryLine';
 import { CommitsSection, mapCommits } from '@/components/recruiting-hub/Commits';
 import { HighPriorityIntelGrid } from '@/components/recruiting-hub/HighPriorityIntel';
 import { RecruitingBoardSection } from '@/components/recruiting-hub/RecruitingBoardSection';
@@ -18,7 +19,11 @@ import { useIntelFeed } from '@/hooks/useIntelFeed';
 
 export function RecruitingHubPage(): React.ReactElement {
   const data = useRecruitingData();
-  const { items: highPriorityIntelItems, loading: intelLoading } = useIntelFeed(data.highPriority);
+  const {
+    items: highPriorityIntelItems,
+    loading: intelLoading,
+    lastUpdated: intelLastUpdated,
+  } = useIntelFeed(data.highPriority);
   const showContent = data.loadedOnce && !data.error;
 
   const flipWatchCount = useMemo(
@@ -53,14 +58,22 @@ export function RecruitingHubPage(): React.ReactElement {
             flipWatchCount={flipWatchCount}
             portalStorm={flipWatchCount >= 2}
           />
+          <MovementSummaryLine summary={data.movementSummary} />
           <CommitsSection
             commits2026={commits2026}
             commits2027={commits2027}
             commits2028={commits2028}
           />
-          <HighPriorityIntelGrid items={highPriorityIntelItems} loading={intelLoading} />
+          <HighPriorityIntelGrid
+            items={highPriorityIntelItems}
+            loading={intelLoading}
+            lastUpdated={intelLastUpdated}
+          />
           <RecruitingBoardSection targets={data.b27.targets} />
-          <FutureCastSection players={data.highPriority} />
+          <FutureCastSection
+            players={data.highPriority}
+            lastUpdated={data.highPriorityLastUpdated}
+          />
           <PortalTrackerSection
             incoming={data.portal.incoming}
             targets={data.portal.targets}

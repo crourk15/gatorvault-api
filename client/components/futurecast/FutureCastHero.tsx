@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { timeAgo } from '@/components/home/home-utils';
 
 type Props = {
   title?: string;
   subtitle?: string;
   badge?: string;
+  lastUpdated?: string | null;
 };
 
 const DEFAULT_TITLE = 'FutureCast — Florida Recruiting Intelligence';
@@ -15,9 +17,13 @@ const DEFAULT_BADGE = 'Updated daily';
 export function FutureCastHero({
   title = DEFAULT_TITLE,
   subtitle = DEFAULT_SUBTITLE,
-  badge = DEFAULT_BADGE,
+  badge,
+  lastUpdated,
 }: Props): React.ReactElement {
   const heroRef = useRef<HTMLElement>(null);
+  const badgeLabel =
+    badge ??
+    (lastUpdated ? `Updated ${timeAgo(lastUpdated)}` : DEFAULT_BADGE);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -44,7 +50,7 @@ export function FutureCastHero({
       <div className="gv-hero-content">
         <h1 className="gv-hero-title">{title}</h1>
         <p className="gv-hero-subtitle">{subtitle}</p>
-        {badge ? <span className="gv-hero-badge">{badge}</span> : null}
+        {badgeLabel ? <span className="gv-hero-badge">{badgeLabel}</span> : null}
         <div className="gv-hero-underline" aria-hidden="true" />
       </div>
     </header>

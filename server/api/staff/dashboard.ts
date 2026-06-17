@@ -4,12 +4,12 @@
 import type { Request, Response } from 'express';
 import { listAlerts } from '../../models/alerts';
 import {
-  calculateVolatility,
-  listMovementHistoryByPlayerIds,
-  listPredictions,
-  listStockBoardRows,
+  listRollingMovement,
+  MOVEMENT_VOLATILITY_THRESHOLD,
+  ROLLING_MOVEMENT_WINDOW_DAYS,
   VOLATILITY_WINDOW_DAYS,
 } from '../../models/predictions';
+import { listCompetingVolatilityBoosts } from '../../models/competing-school-history';
 import { db } from '../../models/db';
 import {
   asyncHandler,
@@ -17,10 +17,9 @@ import {
 } from '../predictions/utils-api';
 import { isFutureCastDataError, respondDatabaseUnavailable } from '../futurecast/db-fallback';
 import { MOVEMENT_INTEL_MIN_CLASS_YEAR } from '../futurecast/eligibility';
-import { filterMovementIntelStockRows } from '../futurecast/feed-filters';
+import { filterMovementIntelRollingRows } from '../futurecast/feed-filters';
 
 const LIST_LIMIT = 10;
-const MOVEMENT_WINDOW_DAYS = 7;
 const MOVEMENT_FILTERS = {
   lifecycle: 'HS' as const,
   min_class_year: MOVEMENT_INTEL_MIN_CLASS_YEAR,
@@ -31,30 +30,32 @@ export interface StaffDashboardPlayer {
   slug: string;
   name: string;
   delta?: number;
+  delta7d?: number;
   volatilityScore?: number;
   ufFitScore?: number | null;
 }
 
 function movementPlayers(
-  rows: Awaited<ReturnType<typeof listStockBoardRows>>,
+  rows: Awaited<ReturnType<typeof listRollingMovement>>,
   direction: 'up' | 'down',
   limit: number
 ): StaffDashboardPlayer[] {
   const filtered =
     direction === 'up'
-      ? rows.filter((row) => row.window_delta > 0)
-      : rows.filter((row) => row.window_delta < 0);
+      ? rows.filter((row) => row.delta7d >= 5)
+      : rows.filter((row) => row.delta7d <= -5);
 
   const sorted =
     direction === 'up'
-      ? filtered.sort((a, b) => b.window_delta - a.window_delta)
-      : filtered.sort((a, b) => a.window_delta - b.window_delta);
+      ? filtered.sort((a, b) => b.delta7d - a.delta7d)
+      : filtered.sort((a, b) => a.delta7d - b.delta7d);
 
   return sorted.slice(0, limit).map((row) => ({
-    id: row.player_id,
+    id: row.playerId,
     slug: row.slug,
-    name: row.full_name,
-    delta: row.window_delta,
+    name: row.fullName,
+    delta: row.delta7d,
+    delta7d: row.delta7d,
   }));
 }
 
@@ -86,56 +87,40 @@ async function listFitScorePlayers(order: 'asc' | 'desc', limit: number): Promis
   }));
 }
 
-async function volatilityPlayers(
+function volatilityPlayersFromRolling(
+  rows: Awaited<ReturnType<typeof listRollingMovement>>,
   direction: 'high' | 'low',
   limit: number
-): Promise<StaffDashboardPlayer[]> {
-  const rows = await listPredictions({
-    status: 'ACTIVE',
-    lifecycle: 'HS',
-    min_class_year: MOVEMENT_INTEL_MIN_CLASS_YEAR,
-    limit: 500,
-  });
-  const playerIds = [...new Set(rows.map((row) => row.player_id))];
-  const historyMap = await listMovementHistoryByPlayerIds(playerIds, VOLATILITY_WINDOW_DAYS);
-
-  const scored = rows.map((row) => ({
-    row,
-    volatilityScore: calculateVolatility(historyMap.get(row.player_id) ?? []),
-  }));
-
-  scored.sort((a, b) =>
+): StaffDashboardPlayer[] {
+  const sorted = [...rows].sort((a, b) =>
     direction === 'high'
       ? b.volatilityScore - a.volatilityScore
       : a.volatilityScore - b.volatilityScore
   );
 
-  const seen = new Set<string>();
   const out: StaffDashboardPlayer[] = [];
-
-  for (const entry of scored) {
-    if (seen.has(entry.row.player_id)) continue;
-    seen.add(entry.row.player_id);
+  for (const row of sorted) {
+    if (out.some((p) => p.id === row.playerId)) continue;
     out.push({
-      id: entry.row.player_id,
-      slug: entry.row.slug,
-      name: entry.row.full_name,
-      volatilityScore: entry.volatilityScore,
+      id: row.playerId,
+      slug: row.slug,
+      name: row.fullName,
+      volatilityScore: row.volatilityScore,
+      delta7d: row.delta7d,
     });
     if (out.length >= limit) break;
   }
-
   return out;
 }
 
-function buildHeatmapBuckets(rows: Awaited<ReturnType<typeof listStockBoardRows>>) {
+function buildHeatmapBuckets(rows: Awaited<ReturnType<typeof listRollingMovement>>) {
   let upCount = 0;
   let downCount = 0;
   let flatCount = 0;
 
   for (const row of rows) {
-    if (row.window_delta > 0) upCount += 1;
-    else if (row.window_delta < 0) downCount += 1;
+    if (row.delta7d >= 5) upCount += 1;
+    else if (row.delta7d <= -5) downCount += 1;
     else flatCount += 1;
   }
 
@@ -148,14 +133,17 @@ function buildHeatmapBuckets(rows: Awaited<ReturnType<typeof listStockBoardRows>
 
 export const handleGetStaffDashboard = asyncHandler(async (_req: Request, res: Response) => {
   try {
-    const [movementRowsRaw, fitLeaders, fitRisks, volatilityHigh, volatilityLow] = await Promise.all([
-      listStockBoardRows(MOVEMENT_WINDOW_DAYS, MOVEMENT_FILTERS),
+    const boosts = await listCompetingVolatilityBoosts(ROLLING_MOVEMENT_WINDOW_DAYS).catch(
+      () => new Map<string, number>()
+    );
+    const movementRowsRaw = await listRollingMovement(MOVEMENT_FILTERS, boosts);
+    const movementRows = filterMovementIntelRollingRows(movementRowsRaw);
+    const [fitLeaders, fitRisks] = await Promise.all([
       listFitScorePlayers('desc', LIST_LIMIT),
       listFitScorePlayers('asc', LIST_LIMIT),
-      volatilityPlayers('high', LIST_LIMIT),
-      volatilityPlayers('low', LIST_LIMIT),
     ]);
-    const movementRows = filterMovementIntelStockRows(movementRowsRaw);
+    const volatilityHigh = volatilityPlayersFromRolling(movementRows, 'high', LIST_LIMIT);
+    const volatilityLow = volatilityPlayersFromRolling(movementRows, 'low', LIST_LIMIT);
 
     let alerts: Awaited<ReturnType<typeof listAlerts>> = [];
     try {
@@ -173,11 +161,12 @@ export const handleGetStaffDashboard = asyncHandler(async (_req: Request, res: R
       fitRisks,
       heatmap: {
         buckets: buildHeatmapBuckets(movementRows),
-        windowDays: MOVEMENT_WINDOW_DAYS,
+        windowDays: ROLLING_MOVEMENT_WINDOW_DAYS,
       },
       alerts,
-      movementWindowDays: MOVEMENT_WINDOW_DAYS,
+      movementWindowDays: ROLLING_MOVEMENT_WINDOW_DAYS,
       volatilityWindowDays: VOLATILITY_WINDOW_DAYS,
+      lastUpdated: new Date().toISOString(),
     });
   } catch (err) {
     if (isFutureCastDataError(err)) {
@@ -188,10 +177,11 @@ export const handleGetStaffDashboard = asyncHandler(async (_req: Request, res: R
         lowVolatility: [],
         fitLeaders: [],
         fitRisks: [],
-        heatmap: { buckets: [], windowDays: MOVEMENT_WINDOW_DAYS },
+        heatmap: { buckets: [], windowDays: ROLLING_MOVEMENT_WINDOW_DAYS },
         alerts: [],
-        movementWindowDays: MOVEMENT_WINDOW_DAYS,
+        movementWindowDays: ROLLING_MOVEMENT_WINDOW_DAYS,
         volatilityWindowDays: VOLATILITY_WINDOW_DAYS,
+        lastUpdated: new Date().toISOString(),
       }, err);
       return;
     }

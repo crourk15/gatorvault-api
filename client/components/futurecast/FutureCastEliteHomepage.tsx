@@ -76,7 +76,12 @@ export function FutureCastEliteHomepage(): React.ReactElement {
           {data.loadWarnings[0]}
         </p>
       ) : null}
-      <FutureCastPageHero summary={data.summary} metrics={data.metrics} heatLevel={data.heatLevel} />
+      <FutureCastPageHero
+        summary={data.summary}
+        metrics={data.metrics}
+        heatLevel={data.heatLevel}
+        lastUpdated={data.highPriorityLastUpdated ?? data.summary.lastUpdated ?? null}
+      />
       <FutureCastMasterBoard
         commits={data.home.commits ?? []}
         targets={data.targets}

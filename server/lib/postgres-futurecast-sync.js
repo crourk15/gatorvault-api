@@ -12,7 +12,8 @@ function loadModels() {
   if (!models) {
     models = {
       ...req('../models/player.ts'),
-      ...req('../models/predictions.ts')
+      ...req('../models/predictions.ts'),
+      ...req('../models/competing-school-history.ts')
     };
   }
   return models;
@@ -49,7 +50,13 @@ async function syncModelPrediction(player, row, predictionEvent = {}) {
     predictor_id: 'rivals_pm'
   });
 
-  return { ok: true, slug: player.slug, windowDelta };
+  let competingLogged = 0;
+  if (Array.isArray(row.competingSchools) && row.competingSchools.length) {
+    const { logCompetingSchoolRanks } = loadModels();
+    competingLogged = await logCompetingSchoolRanks(pgPlayer.id, row.competingSchools);
+  }
+
+  return { ok: true, slug: player.slug, windowDelta, competingLogged };
 }
 
 async function reseedMovementBaselines(candidates) {

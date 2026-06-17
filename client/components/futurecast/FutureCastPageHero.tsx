@@ -1,12 +1,13 @@
 'use client';
 
-import React from 'react';
+import { formatRelativeUpdated } from '@/components/recruiting-hub/utils/formatDate';
 import type { FutureCastHeatLevel, FutureCastHeroMetrics, FutureCastPageSummary } from '@/lib/api/futurecast';
 
 type Props = {
   summary: FutureCastPageSummary;
   metrics: FutureCastHeroMetrics;
   heatLevel: FutureCastHeatLevel;
+  lastUpdated?: string | null;
 };
 
 const HEAT_LABELS: Record<FutureCastHeatLevel, string> = {
@@ -15,7 +16,7 @@ const HEAT_LABELS: Record<FutureCastHeatLevel, string> = {
   cold: 'Cool cycle',
 };
 
-export function FutureCastPageHero({ summary, metrics, heatLevel }: Props): React.ReactElement {
+export function FutureCastPageHero({ summary, metrics, heatLevel, lastUpdated }: Props): React.ReactElement {
   return (
     <header className="fc-page-hero futurecast-page__section" data-testid="fc-page-hero">
       <h1 className="fc-page-hero__title">FutureCast — UF Recruiting Prediction &amp; Intel</h1>
@@ -44,6 +45,11 @@ export function FutureCastPageHero({ summary, metrics, heatLevel }: Props): Reac
         </div>
       </div>
       <span className={`fc-page-hero__heat fc-page-hero__heat--${heatLevel}`}>{HEAT_LABELS[heatLevel]}</span>
+      {lastUpdated ? (
+        <p className="fc-page-hero__updated" data-testid="fc-page-hero-updated">
+          Updated {formatRelativeUpdated(lastUpdated)}
+        </p>
+      ) : null}
     </header>
   );
 }

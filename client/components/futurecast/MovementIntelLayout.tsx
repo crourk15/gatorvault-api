@@ -19,7 +19,7 @@ export function MovementIntelLayout({ data }: Props): React.ReactElement {
 
   return (
     <div className="gv-elite-stack fc-elite-page" data-testid="fc-movement-intel-layout">
-      <FutureCastHero badge={`Updated ${new Date(data.updatedAt).toLocaleDateString()}`} />
+      <FutureCastHero lastUpdated={data.updatedAt} />
       <div className="gv-row fc-elite-row">
         <MovementHeatmapCard
           heatmap={data.movementHeatmap}

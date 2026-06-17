@@ -147,9 +147,11 @@ function clearHubCache() {
 
 function mountRecruitingHubRoutes(app) {
   function hubMeta(extra = {}) {
+    const now = new Date().toISOString();
     return {
       dataSource: store.getStoreInfo(),
-      generatedAt: new Date().toISOString(),
+      generatedAt: now,
+      lastUpdated: now,
       ...extra
     };
   }
@@ -213,7 +215,12 @@ function mountRecruitingHubRoutes(app) {
         const result = await hubCache.wrap(cacheKey, () => buildHighPriorityIntel());
         value = result.value;
       }
-      return res.json({ ok: true, meta: hubMeta({ cacheKey, forced: force }), items: value });
+      return res.json({
+        ok: true,
+        meta: hubMeta({ cacheKey, forced: force, lastUpdated: new Date().toISOString() }),
+        items: value,
+        lastUpdated: new Date().toISOString(),
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -221,6 +228,15 @@ function mountRecruitingHubRoutes(app) {
 
   const { handleGetRecruitingMovementIntel } = require('../api/recruiting/movement-intel.ts');
   app.get('/api/recruiting/movement-intel', handleGetRecruitingMovementIntel);
+
+  const { handleGetMovementWindow } = require('../api/recruiting/movement-window.ts');
+  app.get('/api/recruiting/movement-window', handleGetMovementWindow);
+
+  const { handleGetCompetingDeltas } = require('../api/recruiting/competing-deltas.ts');
+  app.get('/api/recruiting/competing-deltas', handleGetCompetingDeltas);
+
+  const { handleGetMovementSummary } = require('../api/recruiting/movement-summary.ts');
+  app.get('/api/recruiting/movement-summary', handleGetMovementSummary);
 
   app.get('/api/recruiting/targets/:year', async (req, res) => {
     try {

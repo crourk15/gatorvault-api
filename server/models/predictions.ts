@@ -77,6 +77,8 @@ export function movementHistoryFromRows(rows: MovementHistoryRow[]): MovementHis
 }
 
 export const VOLATILITY_WINDOW_DAYS = 14;
+export const ROLLING_MOVEMENT_WINDOW_DAYS = 7;
+export const MOVEMENT_VOLATILITY_THRESHOLD = 15;
 
 export function calculateVolatility(history: MovementHistoryRow[]): number {
   if (!history || history.length < 2) return 0;
@@ -87,6 +89,14 @@ export function calculateVolatility(history: MovementHistoryRow[]): number {
     values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / values.length;
   const stdDev = Math.sqrt(variance);
   return Math.min(100, Math.round((stdDev / 25) * 100));
+}
+
+/** Std-dev volatility over a rolling day window (default 7). */
+export function calculateWindowVolatility(
+  history: MovementHistoryRow[],
+  windowDays = ROLLING_MOVEMENT_WINDOW_DAYS
+): number {
+  return calculateVolatility(recentMovementHistory(history, windowDays));
 }
 
 export function recentMovementHistory(
@@ -276,6 +286,67 @@ export async function listStockBoardRows(
     params
   );
   return rows;
+}
+
+export interface RollingMovement {
+  playerId: string;
+  slug: string;
+  fullName: string;
+  position: string;
+  classYear: number;
+  ufProbNow: number;
+  ufProb7dAgo: number;
+  delta7d: number;
+  volatilityScore: number;
+}
+
+function resolveUfProb7dAgo(
+  history: MovementHistoryRow[],
+  prevConfidence: number,
+  windowDays: number
+): number {
+  const cutoff = new Date();
+  cutoff.setUTCDate(cutoff.getUTCDate() - Math.max(1, Math.floor(windowDays)));
+  const cutoffKey = cutoff.toISOString().slice(0, 10);
+
+  const atOrBefore = history.filter((row) => row.date <= cutoffKey);
+  if (atOrBefore.length) return atOrBefore[atOrBefore.length - 1].confidence;
+  if (history.length) return history[0].confidence;
+  return prevConfidence;
+}
+
+export async function listRollingMovement(
+  filters: StockBoardFilters = {},
+  competingBoosts?: Map<string, number>
+): Promise<RollingMovement[]> {
+  const windowDays = ROLLING_MOVEMENT_WINDOW_DAYS;
+  const rows = await listStockBoardRows(windowDays, filters);
+  const playerIds = rows.map((row) => row.player_id);
+  const historyMap = await listMovementHistoryByPlayerIds(playerIds, windowDays);
+
+  return rows.map((row) => {
+    const history = historyMap.get(row.player_id) ?? [];
+    const ufProbNow = row.confidence;
+    const ufProb7dAgo = resolveUfProb7dAgo(history, row.prev_confidence, windowDays);
+    const delta7d = ufProbNow - ufProb7dAgo;
+    const boost = competingBoosts?.get(row.player_id) ?? 0;
+    const volatilityScore = Math.min(
+      100,
+      calculateWindowVolatility(history, windowDays) + boost
+    );
+
+    return {
+      playerId: row.player_id,
+      slug: row.slug,
+      fullName: row.full_name,
+      position: row.position,
+      classYear: row.class_year,
+      ufProbNow,
+      ufProb7dAgo,
+      delta7d,
+      volatilityScore,
+    };
+  });
 }
 
 export interface ListPredictionsFilters {

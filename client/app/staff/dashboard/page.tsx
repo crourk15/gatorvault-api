@@ -12,6 +12,7 @@ import {
   type StaffDashboardPlayer,
   type StaffDashboardResponse,
 } from '@/lib/staff-api';
+import { timeAgo } from '@/components/home/home-utils';
 import { playerProfilePath } from '@/lib/player-routes';
 import { usePathname } from '@/lib/use-pathname';
 import { isVaultPath } from '@/lib/vault-routes';
@@ -134,6 +135,7 @@ export default function StaffDashboardPage(): React.ReactElement {
       <h1 className="fc-staff-dashboard__title">Movement Intel</h1>
       <p className="fc-staff-dashboard__subtitle">
         FutureCast risers, fallers, and fit scores.
+        {data.lastUpdated ? ` Updated ${timeAgo(data.lastUpdated)}.` : null}
         {degraded && ' Database offline — showing empty window until API reconnects.'}
         {' '}Admin analytics live at{' '}
         <a href="/admin/product-health">/admin/product-health</a> (ops PIN required).
@@ -148,14 +150,14 @@ export default function StaffDashboardPage(): React.ReactElement {
           title={`Top Risers (${data.movementWindowDays} Days)`}
           tone="up"
           players={data.topRisers}
-          valueLabel={(player) => `+${player.delta ?? 0}%`}
+          valueLabel={(player) => `+${player.delta7d ?? player.delta ?? 0}%`}
           inVault={inVault}
         />
         <PlayerLinks
           title={`Top Fallers (${data.movementWindowDays} Days)`}
           tone="down"
           players={data.topFallers}
-          valueLabel={(player) => `${player.delta ?? 0}%`}
+          valueLabel={(player) => `${player.delta7d ?? player.delta ?? 0}%`}
           inVault={inVault}
         />
         <PlayerLinks

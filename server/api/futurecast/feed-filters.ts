@@ -1,7 +1,7 @@
 /**
  * Filter + dedupe FutureCast feed rows (2027 cycle, no enrolled Gators).
  */
-import type { PredictionFeedRow, StockBoardRow } from '../../models/predictions';
+import type { PredictionFeedRow, RollingMovement, StockBoardRow } from '../../models/predictions';
 import {
   dedupeByPlayerId,
   FUTURECAST_CLASS_YEAR,
@@ -45,6 +45,18 @@ export function filterMovementIntelStockRows(rows: StockBoardRow[]): StockBoardR
   return dedupeStockRows(
     rows.filter((row) => isHsLifecycle(row) && isMovementIntelEligible({ class_year: row.class_year }))
   );
+}
+
+export function filterMovementIntelRollingRows(rows: RollingMovement[]): RollingMovement[] {
+  const best = new Map<string, RollingMovement>();
+  for (const row of rows) {
+    if (!isMovementIntelEligible({ class_year: row.classYear })) continue;
+    const existing = best.get(row.playerId);
+    if (!existing || Math.abs(row.delta7d) > Math.abs(existing.delta7d)) {
+      best.set(row.playerId, row);
+    }
+  }
+  return [...best.values()];
 }
 
 export function filterTrendingStockRows(rows: StockBoardRow[]): StockBoardRow[] {

@@ -21,8 +21,8 @@ function sortPlayers(list: HighPriorityPlayer[], key: SortKey, asc: boolean): Hi
       if (av <= 1) av *= 100;
       if (bv <= 1) bv *= 100;
     } else if (key === 'movement') {
-      av = a.movementDelta ?? 0;
-      bv = b.movementDelta ?? 0;
+      av = a.delta7d ?? a.movementDelta ?? 0;
+      bv = b.delta7d ?? b.movementDelta ?? 0;
     } else {
       av = a.fitScore ?? 0;
       bv = b.fitScore ?? 0;

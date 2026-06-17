@@ -2,13 +2,17 @@
  * GET /api/recruiting/movement-intel — UF% deltas + intel.json events.
  */
 import type { Request, Response } from 'express';
-import { listStockBoardRows } from '../../models/predictions';
+import {
+  listRollingMovement,
+  MOVEMENT_VOLATILITY_THRESHOLD,
+  ROLLING_MOVEMENT_WINDOW_DAYS,
+} from '../../models/predictions';
+import { listCompetingVolatilityBoosts } from '../../models/competing-school-history';
 import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
 import { isFutureCastDataError, respondDatabaseUnavailable } from '../futurecast/db-fallback';
 import { MOVEMENT_INTEL_MIN_CLASS_YEAR } from '../futurecast/eligibility';
-import { filterMovementIntelStockRows } from '../futurecast/feed-filters';
+import { filterMovementIntelRollingRows } from '../futurecast/feed-filters';
 
-const MOVEMENT_WINDOW_DAYS = 7;
 const MOVEMENT_FILTERS = {
   lifecycle: 'HS' as const,
   min_class_year: MOVEMENT_INTEL_MIN_CLASS_YEAR,
@@ -51,10 +55,14 @@ function toDelta(value: number | null | undefined): number {
   return Math.round(value);
 }
 
-function classifyMovement(delta: number, intelEvents: IntelRow[]): MovementType | null {
+function classifyMovement(
+  delta: number,
+  volatilityScore: number,
+  intelEvents: IntelRow[]
+): MovementType | null {
   if (delta >= 5) return 'RISE';
   if (delta <= -5) return 'FALL';
-  if (Math.abs(delta) > 0 || intelEvents.length > 0) return 'VOLATILE';
+  if (volatilityScore >= MOVEMENT_VOLATILITY_THRESHOLD || intelEvents.length > 0) return 'VOLATILE';
   return null;
 }
 
@@ -162,14 +170,18 @@ function loadPublicIntel(): IntelRow[] {
 export async function buildRecruitingMovementIntelPayload(): Promise<{
   ok: boolean;
   updatedAt: string;
+  lastUpdated: string;
   risers: MovementIntelItem[];
   fallers: MovementIntelItem[];
   volatile: MovementIntelItem[];
   alerts: MovementIntelAlert[];
 }> {
+  const boosts = await listCompetingVolatilityBoosts(ROLLING_MOVEMENT_WINDOW_DAYS).catch(
+    () => new Map<string, number>()
+  );
   const [movementRows, schoolBySlug] = await Promise.all([
-    filterMovementIntelStockRows(
-      await listStockBoardRows(MOVEMENT_WINDOW_DAYS, MOVEMENT_FILTERS)
+    filterMovementIntelRollingRows(
+      await listRollingMovement(MOVEMENT_FILTERS, boosts)
     ),
     loadSchoolBySlug(),
   ]);
@@ -180,23 +192,23 @@ export async function buildRecruitingMovementIntelPayload(): Promise<{
   const seen = new Set<string>();
 
   for (const row of movementRows) {
-    const ufProb = toPct(row.confidence);
-    const delta = toDelta(row.window_delta);
-    const events = intelEventsForPlayer(intelByPlayer, row.slug, row.player_id);
-    const movementType = classifyMovement(delta, events);
+    const ufProb = toPct(row.ufProbNow);
+    const delta = toDelta(row.delta7d);
+    const events = intelEventsForPlayer(intelByPlayer, row.slug, row.playerId);
+    const movementType = classifyMovement(delta, row.volatilityScore, events);
     if (!movementType) continue;
 
-    seen.add(row.player_id);
+    seen.add(row.playerId);
     items.push({
-      id: row.player_id,
+      id: row.playerId,
       slug: row.slug,
-      name: row.full_name,
+      name: row.fullName,
       position: row.position || '—',
-      school: schoolBySlug.get(row.slug.toLowerCase()) || row.state || '—',
+      school: schoolBySlug.get(row.slug.toLowerCase()) || '—',
       ufProb,
       delta,
       movementType,
-      lastUpdate: String(row.updated_at || new Date().toISOString()),
+      lastUpdate: new Date().toISOString(),
       tags: mapTags(events),
     });
   }
@@ -222,7 +234,7 @@ export async function buildRecruitingMovementIntelPayload(): Promise<{
           ? toPct(Number(row.ufRpmPct))
           : 0;
 
-    const movementType = classifyMovement(intelDelta, events);
+    const movementType = classifyMovement(intelDelta, 0, events);
     if (movementType !== 'VOLATILE') continue;
 
     seen.add(playerId);
@@ -240,9 +252,11 @@ export async function buildRecruitingMovementIntelPayload(): Promise<{
     });
   }
 
+  const lastUpdated = new Date().toISOString();
   return {
     ok: true,
-    updatedAt: new Date().toISOString(),
+    updatedAt: lastUpdated,
+    lastUpdated,
     risers: items
       .filter((item) => item.movementType === 'RISE')
       .sort((a, b) => b.delta - a.delta),
@@ -267,6 +281,7 @@ export const handleGetRecruitingMovementIntel = asyncHandler(async (_req: Reques
         {
           ok: true,
           updatedAt: new Date().toISOString(),
+          lastUpdated: new Date().toISOString(),
           risers: [],
           fallers: [],
           volatile: [],

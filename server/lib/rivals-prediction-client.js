@@ -38,6 +38,17 @@ function isFloridaPick(pick) {
   return slug === UF_SLUG || /florida|\bgators\b|\buf\b/.test(name);
 }
 
+function extractCompetingSchools(player) {
+  const preds = (player.predictions || [])
+    .map((p) => ({
+      school: p.organization?.fullName || p.organization?.name || '',
+      percent: p.percent != null ? Number(p.percent) : 0
+    }))
+    .filter((p) => p.school)
+    .sort((a, b) => b.percent - a.percent);
+  return preds.map((p, i) => ({ school: p.school, rank: i + 1 }));
+}
+
 function normalizePredictionRow(row, classYear, sourceLabel) {
   const pick = row?.pick || {};
   const player = row?.player || {};
@@ -97,6 +108,7 @@ function normalizePredictionRow(row, classYear, sourceLabel) {
     natlRank: rating.nationalRank || null,
     isCommitted,
     committedTo,
+    competingSchools: extractCompetingSchools(player),
     source: sourceLabel,
     sourceType: 'rivals_pm',
     fingerprint: `rivals_pick_${pick.key}_${pick.dateAdded}`
@@ -143,6 +155,7 @@ async function fetchAllUfPredictions(classYears = [2027, 2028, 2029]) {
 module.exports = {
   UF_SLUG,
   isFloridaPick,
+  extractCompetingSchools,
   normalizePredictionRow,
   fetchUfExpertPredictions,
   fetchNationalRivalsPredictions,

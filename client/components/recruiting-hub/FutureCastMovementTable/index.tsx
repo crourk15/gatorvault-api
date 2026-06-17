@@ -55,8 +55,8 @@ export function FutureCastMovementTable({ players }: Props): React.ReactElement 
         av = ufPct(a);
         bv = ufPct(b);
       } else if (sortKey === 'movement') {
-        av = a.movementDelta ?? 0;
-        bv = b.movementDelta ?? 0;
+        av = a.delta7d ?? a.movementDelta ?? 0;
+        bv = b.delta7d ?? b.movementDelta ?? 0;
       } else {
         av = a.fitScore ?? 0;
         bv = b.fitScore ?? 0;
@@ -119,7 +119,8 @@ export function FutureCastMovementTable({ players }: Props): React.ReactElement 
                 </td>
                 <td className="rh-fc-table__pct">{ufPct(p)}%</td>
                 <td className="rh-fc-table__move">
-                  {movementArrow(p.movementDelta ?? 0)} {Math.abs(p.movementDelta ?? 0) || '—'}
+                  {movementArrow(p.delta7d ?? p.movementDelta ?? 0)}{' '}
+                  {Math.abs(p.delta7d ?? p.movementDelta ?? 0) || '—'}
                 </td>
                 <td className="rh-fc-table__intel">{lastIntel(p)}</td>
                 <td>{competingSchools(p)}</td>

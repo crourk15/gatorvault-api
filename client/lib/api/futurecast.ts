@@ -50,6 +50,7 @@ export type FutureCastPageData = {
   predictions: FutureCastPredictionsResponse;
   targets: FeedPrediction[];
   highPriority: HighPriorityPlayer[];
+  highPriorityLastUpdated: string | null;
   stock: StockBoardResponse;
   snapshots: MovementSnapshotsResponse;
   summary: FutureCastPageSummary;
@@ -232,7 +233,8 @@ function buildPageData(
   highPriority: HighPriorityPlayer[],
   stock: StockBoardResponse,
   snapshots: MovementSnapshotsResponse,
-  warnings: string[]
+  warnings: string[],
+  highPriorityLastUpdated: string | null = null
 ): FutureCastPageData {
   const resolvedTargets = targets.length ? targets : home.topTargets ?? [];
 
@@ -242,6 +244,7 @@ function buildPageData(
     predictions,
     targets: resolvedTargets,
     highPriority,
+    highPriorityLastUpdated,
     stock,
     snapshots,
     summary: {
@@ -340,6 +343,7 @@ export async function loadFutureCastPageData(): Promise<FutureCastPageData> {
     highPriority,
     stock ?? EMPTY_STOCK,
     snapshots ?? EMPTY_SNAPSHOTS,
-    warnings
+    warnings,
+    highPriorityRes?.lastUpdated ?? highPriorityRes?.updatedAt ?? null
   );
 }

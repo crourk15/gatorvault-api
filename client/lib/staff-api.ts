@@ -13,6 +13,7 @@ export interface StaffDashboardPlayer {
   slug: string;
   name: string;
   delta?: number;
+  delta7d?: number;
   volatilityScore?: number;
   ufFitScore?: number | null;
   lifecycle?: string | null;
@@ -32,6 +33,7 @@ export interface StaffDashboardResponse {
   alerts: FutureCastAlert[];
   movementWindowDays: number;
   volatilityWindowDays: number;
+  lastUpdated?: string;
   unavailable?: boolean;
 }
 

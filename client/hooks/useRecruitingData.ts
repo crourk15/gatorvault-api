@@ -9,6 +9,7 @@ import {
 } from '@/components/recruiting-hub/utils/portalData';
 import { fetchStaffDashboard, type StaffDashboardPlayer, type StaffDashboardResponse } from '@/lib/staff-api';
 import { fetchHighPriorityTargets, type HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import { fetchMovementSummary, type MovementSummary } from '@/lib/recruiting-movement-api';
 import { filterRecruitingHsOnly } from '@/lib/player-routes';
 import {
   type RecruitingHubTab,
@@ -50,6 +51,8 @@ export function useRecruitingData() {
     volatile: StaffDashboardPlayer[];
   }>({ risers: [], fallers: [], volatile: [] });
   const [highPriority, setHighPriority] = useState<HighPriorityPlayer[]>([]);
+  const [highPriorityLastUpdated, setHighPriorityLastUpdated] = useState<string | null>(null);
+  const [movementSummary, setMovementSummary] = useState<MovementSummary | null>(null);
   const [portal, setPortal] = useState<PortalBuckets>(EMPTY_PORTAL);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -112,6 +115,7 @@ export function useRecruitingData() {
     const pHeat = fetchRecruitingHeatCheck(!isInitial);
     const pStaff = fetchStaffDashboard();
     const pPriority = fetchHighPriorityTargets();
+    const pMovementSummary = fetchMovementSummary();
     const pPortal = fetchRecruitingPortalBoard();
     const pAllPlayers = fetchAllRecruitingPlayers();
 
@@ -135,8 +139,10 @@ export function useRecruitingData() {
       });
 
     try {
-      const results = await Promise.allSettled([p26, p27, p28, pHeat, pStaff, pPriority, pPortal, pAllPlayers]);
-      const [r26, , r28, rHeat, rStaff, rPriority, rPortal, rAllPlayers] = results;
+      const results = await Promise.allSettled([
+        p26, p27, p28, pHeat, pStaff, pPriority, pMovementSummary, pPortal, pAllPlayers,
+      ]);
+      const [r26, , r28, rHeat, rStaff, rPriority, rMovementSummary, rPortal, rAllPlayers] = results;
 
       if (r26.status === 'fulfilled') {
         setB26({
@@ -166,6 +172,12 @@ export function useRecruitingData() {
       }
       if (rPriority.status === 'fulfilled') {
         setHighPriority(rPriority.value.players ?? []);
+        setHighPriorityLastUpdated(
+          rPriority.value.lastUpdated ?? rPriority.value.updatedAt ?? null
+        );
+      }
+      if (rMovementSummary.status === 'fulfilled') {
+        setMovementSummary(rMovementSummary.value);
       }
       if (rPortal.status === 'fulfilled' || rAllPlayers.status === 'fulfilled') {
         const incoming = rPortal.status === 'fulfilled' ? rPortal.value : [];
@@ -252,6 +264,8 @@ export function useRecruitingData() {
     staffDashboard,
     intel,
     highPriority,
+    highPriorityLastUpdated,
+    movementSummary,
     loading,
     refreshing,
     error,

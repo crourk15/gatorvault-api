@@ -609,3 +609,26 @@
 .gv-headliner-card__icon-col .gv-headliner-card__photo {
   width: 100%;
 }
+
+.rh-movement-summary {
+  margin-top: calc(var(--space-md) * -1);
+  margin-bottom: var(--space-md);
+}
+
+.rh-movement-summary__line {
+  margin: 0;
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--th-meta, rgba(255, 255, 255, 0.78));
+}
+
+.rh-movement-summary__meta {
+  margin: var(--space-xs) 0 0;
+  font-size: var(--text-xs, 0.75rem);
+  color: var(--th-meta-muted, rgba(255, 255, 255, 0.55));
+}
+
+.fc-page-hero__updated {
+  margin: var(--space-sm) 0 0;
+  font-size: var(--text-sm, 0.875rem);
+  color: var(--th-meta-muted, rgba(255, 255, 255, 0.6));
+}
