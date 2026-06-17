@@ -33,6 +33,7 @@ type ClassBundle = {
 
 const EMPTY_BUNDLE: ClassBundle = { commits: [], targets: [], rankings: null };
 const EMPTY_PORTAL: PortalBuckets = { incoming: [], targets: [], outgoing: [] };
+const RECRUITING_POLL_MS = 90_000;
 
 export function useRecruitingData() {
   const [tab, setTab] = useState<RecruitingHubTab>('commits-2027');
@@ -195,11 +196,18 @@ export function useRecruitingData() {
 
   useEffect(() => {
     let cancelled = false;
+    let timer: ReturnType<typeof setInterval> | undefined;
+
     void load(true).then(() => {
       if (cancelled) return;
     });
+    timer = setInterval(() => {
+      if (!cancelled) void load(false);
+    }, RECRUITING_POLL_MS);
+
     return () => {
       cancelled = true;
+      if (timer) clearInterval(timer);
     };
   }, [load]);
 

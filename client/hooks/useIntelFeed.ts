@@ -6,6 +6,8 @@ import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import type { IntelCardProps } from '@/components/recruiting-hub/types/intel';
 import { mapPlayerToIntelCard, mapToIntelCard } from '@/components/recruiting-hub/utils/intelMapping';
 
+const INTEL_POLL_MS = 60_000;
+
 function mergeIntel(players: HighPriorityPlayer[], apiIntel: RecruitingIntelItem[]): IntelCardProps[] {
   const bySlug = new Map(players.map((p) => [p.slug, p]));
 
@@ -25,19 +27,26 @@ export function useIntelFeed(players: HighPriorityPlayer[]): {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    void fetchHighPriorityIntel()
-      .then((intel) => {
+    let timer: ReturnType<typeof setInterval> | undefined;
+
+    async function load(force = false) {
+      if (!cancelled && apiIntel.length === 0) setLoading(true);
+      try {
+        const intel = await fetchHighPriorityIntel({ force });
         if (!cancelled) setApiIntel(intel);
-      })
-      .catch(() => {
+      } catch {
         if (!cancelled) setApiIntel([]);
-      })
-      .finally(() => {
+      } finally {
         if (!cancelled) setLoading(false);
-      });
+      }
+    }
+
+    void load(false);
+    timer = setInterval(() => void load(true), INTEL_POLL_MS);
+
     return () => {
       cancelled = true;
+      if (timer) clearInterval(timer);
     };
   }, []);
 

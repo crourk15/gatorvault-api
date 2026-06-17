@@ -27,7 +27,15 @@ function createMemoryCache(defaultTtlMs = 60_000) {
     return { value, hit: false };
   }
 
-  return { get, set, wrap };
+  function remove(key) {
+    store.delete(key);
+  }
+
+  function clear() {
+    store.clear();
+  }
+
+  return { get, set, wrap, remove, clear };
 }
 
 module.exports = { createMemoryCache };

@@ -10,7 +10,7 @@ const cancelParser = require('./beat-visit-intel-parser');
 const store = require('./recruiting-store');
 const intelStore = require('./recruiting-intel-store');
 const liveStore = require('./live-store');
-const { clearHeatCheckCache } = require('./heat-check-store');
+const { invalidateRecruitingIntelCaches } = require('./recruiting-intel-cache');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { slugify } = require('./slug');
 
@@ -1271,7 +1271,7 @@ async function runBeatWriterIngest({ force = false, manualRows = [], posts = nul
   }
 
   saveSnapshot(snapshot);
-  if (results.processed.length) clearHeatCheckCache();
+  if (results.processed.length) invalidateRecruitingIntelCaches();
 
   try {
     const { queuePlayerScoutingRefresh } = require('./scouting-update-engine');
@@ -1297,7 +1297,7 @@ async function ingestManualBeatVisitIntel(row) {
   const snapshot = loadSnapshot();
   const out = await processBeatVisitIntelRow(row, snapshot);
   saveSnapshot(snapshot);
-  if (out.processed) clearHeatCheckCache();
+  if (out.processed) invalidateRecruitingIntelCaches();
   return out;
 }
 

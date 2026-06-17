@@ -2,6 +2,7 @@
  * Recruiting Hub spec endpoints — class, player, intel, targets.
  */
 const store = require('./recruiting-store');
+const gm2 = require('./gm2');
 const { enrichBoard } = require('./recruiting-board-enrich');
 const { createMemoryCache } = require('./memory-cache');
 
@@ -96,20 +97,50 @@ function mapPlayerToHub(player) {
   };
 }
 
-function mapIntelFromPlayer(player, index) {
+function mapIntelFromIntelRow(intel, player) {
   const uf =
-    player.ufProbability != null
-      ? player.ufProbability <= 1
-        ? Math.round(player.ufProbability * 100)
-        : Math.round(player.ufProbability)
-      : 0;
+    intel.confidencePct != null
+      ? Math.round(intel.confidencePct)
+      : player?.ufProbability != null
+        ? player.ufProbability <= 1
+          ? Math.round(player.ufProbability * 100)
+          : Math.round(player.ufProbability)
+        : player?.rivalsConfidence != null
+          ? Math.round(player.rivalsConfidence)
+          : 0;
   return {
-    id: `${player.slug || player.name}-${index}`,
-    playerId: player.slug,
-    timestamp: player.visitStart || player.commitDate || new Date().toISOString(),
-    text: player.notePreview || player.insiderNotes || player.skinny || player.notes || 'Insider tracking active.',
+    id: intel.id || intel.fingerprint,
+    playerId: intel.playerSlug || intel.playerId,
+    timestamp: intel.reportedAt || intel.timestamp || intel.createdAt || new Date().toISOString(),
+    text: intel.text || intel.detail || 'Insider tracking active.',
     ufProbability: uf,
   };
+}
+
+async function buildHighPriorityIntel(limit = 12) {
+  const { intel } = gm2.getPublicIntel({ limit: Math.max(limit, 50), subsystem: 'recruiting-hub' });
+  const allPlayers = await store.getAllPlayers();
+  const bySlug = new Map();
+  const byOn3 = new Map();
+  for (const p of allPlayers) {
+    if (p.slug) bySlug.set(p.slug, p);
+    if (p.on3Id) byOn3.set(String(p.on3Id), p);
+  }
+
+  const items = [];
+  for (const row of intel) {
+    const player =
+      (row.playerSlug && bySlug.get(row.playerSlug)) ||
+      (row.playerId && byOn3.get(String(row.playerId))) ||
+      null;
+    items.push(mapIntelFromIntelRow(row, player));
+    if (items.length >= limit) break;
+  }
+  return items;
+}
+
+function clearHubCache() {
+  hubCache.clear();
 }
 
 function mountRecruitingHubRoutes(app) {
@@ -171,16 +202,16 @@ function mountRecruitingHubRoutes(app) {
 
   app.get('/api/recruiting/intel/high-priority', async (req, res) => {
     try {
+      const force = req.query.force === '1' || req.query.force === 'true';
       const cacheKey = 'hub:intel:high-priority';
-      const { value } = await hubCache.wrap(cacheKey, async () => {
-        const board = await store.getBoard(2027);
-        const enriched = enrichBoard(board, false);
-        const targets = [...(enriched.targets || [])]
-          .sort((a, b) => (Number(b.ufProbability) || 0) - (Number(a.ufProbability) || 0))
-          .slice(0, 12);
-        return targets.map(mapIntelFromPlayer);
-      });
-      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+      let value;
+      if (force) {
+        value = await buildHighPriorityIntel();
+      } else {
+        const result = await hubCache.wrap(cacheKey, () => buildHighPriorityIntel());
+        value = result.value;
+      }
+      return res.json({ ok: true, meta: hubMeta({ cacheKey, forced: force }), items: value });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -205,4 +236,4 @@ function mountRecruitingHubRoutes(app) {
   });
 }
 
-module.exports = { mountRecruitingHubRoutes, buildClassPayload, mapPlayerToHub };
+module.exports = { mountRecruitingHubRoutes, buildClassPayload, mapPlayerToHub, clearHubCache, buildHighPriorityIntel };

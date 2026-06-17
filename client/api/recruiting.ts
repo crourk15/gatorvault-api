@@ -5,6 +5,7 @@ import { apiFetch } from '@/lib/api-fetch';
 import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 
 export const RECRUITING_CACHE_TTL_MS = 5 * 60_000;
+export const RECRUITING_INTEL_CACHE_TTL_MS = 60_000;
 
 export interface RecruitingPlayer extends RecruitingBoardPlayer {
   id?: string;
@@ -72,10 +73,28 @@ function writeCache<T>(key: string, payload: T): void {
   }
 }
 
-async function cachedFetch<T>(key: string, path: string): Promise<T> {
-  const hit = readCache<T>(key, RECRUITING_CACHE_TTL_MS);
-  if (hit) return hit;
-  const payload = await apiFetch<T>(path);
+function invalidateCacheKey(key: string): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    /* quota */
+  }
+}
+
+async function cachedFetch<T>(
+  key: string,
+  path: string,
+  maxAgeMs = RECRUITING_CACHE_TTL_MS,
+  force = false
+): Promise<T> {
+  if (!force) {
+    const hit = readCache<T>(key, maxAgeMs);
+    if (hit) return hit;
+  }
+  const sep = path.includes('?') ? '&' : '?';
+  const url = force ? `${path}${sep}force=1` : path;
+  const payload = await apiFetch<T>(url);
   writeCache(key, payload);
   return payload;
 }
@@ -91,12 +110,22 @@ export function fetchRecruitingPlayer(id: string): Promise<RecruitingPlayerPaylo
   });
 }
 
-export function fetchHighPriorityIntel(): Promise<RecruitingIntelItem[]> {
-  return cachedFetch('gv:recruiting:intel:hp', '/api/recruiting/intel/high-priority').then((raw) => {
+export function fetchHighPriorityIntel(options?: { force?: boolean }): Promise<RecruitingIntelItem[]> {
+  const force = options?.force ?? false;
+  return cachedFetch(
+    'gv:recruiting:intel:hp',
+    '/api/recruiting/intel/high-priority',
+    RECRUITING_INTEL_CACHE_TTL_MS,
+    force
+  ).then((raw) => {
     if (Array.isArray(raw)) return raw;
     const wrapped = raw as { items?: RecruitingIntelItem[]; intel?: RecruitingIntelItem[] };
     return wrapped.items ?? wrapped.intel ?? [];
   });
+}
+
+export function invalidateRecruitingIntelCache(): void {
+  invalidateCacheKey('gv:recruiting:intel:hp');
 }
 
 export function fetchRecruitingTargets(year: number): Promise<RecruitingPlayer[]> {

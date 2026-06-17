@@ -6,24 +6,46 @@ import { UiError } from '@/components/site/UiMessage';
 import { fetchFutureCastMovementIntel } from '@/lib/futurecast-board-api';
 import type { MovementIntelResponse } from '@/lib/futurecast-board-types';
 
+const REFRESH_MS = 60_000;
+
 export function MovementIntelPageContent(): React.ReactElement {
   const [data, setData] = useState<MovementIntelResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (isInitial: boolean) => {
+    if (isInitial) {
+      setLoading(true);
+      setError(null);
+    }
     try {
       setData(await fetchFutureCastMovementIntel());
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load movement intel.');
+      if (isInitial) {
+        setError(err instanceof Error ? err.message : 'Failed to load movement intel.');
+      }
     } finally {
-      setLoading(false);
+      if (isInitial) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    void load();
+    let cancelled = false;
+    let timer: ReturnType<typeof setInterval> | undefined;
+
+    async function run(isInitial: boolean) {
+      if (cancelled) return;
+      await load(isInitial);
+    }
+
+    void run(true);
+    timer = setInterval(() => void run(false), REFRESH_MS);
+
+    return () => {
+      cancelled = true;
+      if (timer) clearInterval(timer);
+    };
   }, [load]);
 
   if (loading) return <p className="fc-elite-loading">Loading movement intel…</p>;

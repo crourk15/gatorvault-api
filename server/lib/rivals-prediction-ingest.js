@@ -9,7 +9,7 @@ const { getBeatPosts } = require('./live-beat');
 const store = require('./recruiting-store');
 const intelStore = require('./recruiting-intel-store');
 const liveStore = require('./live-store');
-const { clearHeatCheckCache } = require('./heat-check-store');
+const { invalidateRecruitingIntelCaches } = require('./recruiting-intel-cache');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { intelFingerprint } = require('./commit-fingerprint');
 const eligibility = require('./rivals-prediction-eligibility');
@@ -108,6 +108,34 @@ function writeFuturecastPrediction(player, row, { priorConfidence, movementDelta
       eventType,
       timestamp: row.timestamp
     });
+  }
+}
+
+async function syncRivalsPredictionToPostgres(player, row) {
+  const dbUrl = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
+  if (!dbUrl) {
+    console.warn('[rivals-pm] DATABASE_URL missing — skipping Postgres prediction sync');
+    return;
+  }
+  if (!player?.slug || row.confidence == null) return;
+
+  try {
+    const { getPlayerBySlug } = await import('../models/player.ts');
+    const { upsertActiveModelPrediction } = await import('../models/predictions.ts');
+    const pgPlayer = await getPlayerBySlug(player.slug);
+    if (!pgPlayer) {
+      console.warn(`[rivals-pm] Postgres player not found for slug ${player.slug}`);
+      return;
+    }
+    await upsertActiveModelPrediction({
+      player_id: pgPlayer.id,
+      school: row.predictionSchool || 'Florida',
+      confidence: Math.round(Number(row.confidence)),
+      source_type: 'MODEL',
+      predictor_id: 'rivals_pm'
+    });
+  } catch (e) {
+    console.warn('[rivals-pm] Postgres prediction sync failed:', e.message);
   }
 }
 
@@ -336,6 +364,7 @@ async function processPrediction(row, snapshot) {
   };
   const player = await store.upsertPlayer(playerPatch);
   writeFuturecastPrediction(player, row, predictionEvent);
+  await syncRivalsPredictionToPostgres(player, row);
 
   const intelResult = await intelStore.addIntel({
     playerId: String(row.on3Id || player.on3Id || player.slug),
@@ -485,7 +514,7 @@ async function runRivalsPredictionIngest({ force = false } = {}) {
   }
 
   saveSnapshot(snapshot);
-  if (results.processed.length) clearHeatCheckCache();
+  if (results.processed.length) invalidateRecruitingIntelCaches();
 
   appendLog({
     processed: results.processed.length,

@@ -378,7 +378,7 @@ export async function loadFutureCastWidgetBundle(options?: {
       console.info('FutureCast temporarily offline (502/503)');
     }
 
-    const stale = readStaleClientCache();
+    const stale = offline ? readStaleClientCache() : null;
     if (stale) {
       const predictionsLoaded = stale.bundle.predictions.predictions.length;
       logWidgetLoad({

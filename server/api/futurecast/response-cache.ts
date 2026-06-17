@@ -19,3 +19,7 @@ export async function sendCachedJson(
   res.setHeader('X-GatorVault-Cache', hit ? 'HIT' : 'MISS');
   res.json(value);
 }
+
+export function clearFuturecastCache(): void {
+  cache.clear();
+}
