@@ -1,6 +1,8 @@
 /**
  * Rivals Prediction Machine ingest — detect UF FutureCast picks, update board, Heat Check, autoposter, alerts.
  */
+require('tsx/cjs');
+
 const fs = require('fs');
 const path = require('path');
 const client = require('./rivals-prediction-client');
@@ -145,33 +147,76 @@ async function syncRivalsPredictionToPostgres(player, row, predictionEvent = {})
   }
 }
 
+function collectMovementReseedCandidates(intelRows) {
+  const explicit = new Map();
+  const historyBySlug = new Map();
+
+  for (const intel of intelRows) {
+    if (!intel?.playerSlug) continue;
+    const current = intel.confidencePct ?? intel.ufRpmPct;
+    if (current == null) continue;
+
+    if (intel.priorConfidencePct != null && Number(intel.priorConfidencePct) !== Number(current)) {
+      explicit.set(intel.playerSlug, {
+        playerSlug: intel.playerSlug,
+        confidence: Math.round(Number(current)),
+        priorConfidence: Math.round(Number(intel.priorConfidencePct)),
+        predictionSchool: intel.predictionSchool || 'Florida'
+      });
+      continue;
+    }
+
+    const list = historyBySlug.get(intel.playerSlug) || [];
+    list.push({
+      confidence: Math.round(Number(current)),
+      timestamp: intel.timestamp || intel.reportedAt || intel.createdAt || ''
+    });
+    historyBySlug.set(intel.playerSlug, list);
+  }
+
+  const candidates = [...explicit.values()];
+  for (const [playerSlug, history] of historyBySlug) {
+    if (explicit.has(playerSlug)) continue;
+    const sorted = history.sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    );
+    if (sorted.length < 2) continue;
+    const priorConfidence = sorted[0].confidence;
+    const confidence = sorted[sorted.length - 1].confidence;
+    if (priorConfidence === confidence) continue;
+    candidates.push({
+      playerSlug,
+      confidence,
+      priorConfidence,
+      predictionSchool: 'Florida'
+    });
+  }
+
+  return candidates;
+}
+
 async function reseedPostgresMovementFromIntel() {
   const dbUrl = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
   if (!dbUrl) return { ok: false, reason: 'no_database', seeded: 0 };
 
-  const rows = intelStore.listIntel({ limit: 500 }).filter((intel) => {
-    if (!intel?.playerSlug) return false;
-    const current = intel.confidencePct ?? intel.ufRpmPct;
-    const prior = intel.priorConfidencePct;
-    return current != null && prior != null && Number(current) !== Number(prior);
-  });
+  const candidates = collectMovementReseedCandidates(intelStore.listIntel({ limit: 500 }));
 
   let seeded = 0;
   try {
     const { getPlayerBySlug } = await import('../models/player.ts');
     const { ensureMovementWindowBaseline, upsertActiveModelPrediction } = await import('../models/predictions.ts');
 
-    for (const intel of rows) {
+    for (const intel of candidates) {
       const pgPlayer = await getPlayerBySlug(intel.playerSlug);
       if (!pgPlayer) continue;
-      const confidence = Math.round(Number(intel.confidencePct ?? intel.ufRpmPct));
-      const prior = Math.round(Number(intel.priorConfidencePct));
-      const delta = await ensureMovementWindowBaseline(pgPlayer.id, confidence, { priorConfidence: prior });
+      const delta = await ensureMovementWindowBaseline(pgPlayer.id, intel.confidence, {
+        priorConfidence: intel.priorConfidence
+      });
       if (delta == null) continue;
       await upsertActiveModelPrediction({
         player_id: pgPlayer.id,
         school: intel.predictionSchool || 'Florida',
-        confidence,
+        confidence: intel.confidence,
         source_type: 'MODEL',
         predictor_id: 'rivals_pm'
       });
@@ -181,7 +226,7 @@ async function reseedPostgresMovementFromIntel() {
     return { ok: false, reason: e.message, seeded };
   }
 
-  return { ok: true, seeded, candidates: rows.length };
+  return { ok: true, seeded, candidates: candidates.length };
 }
 
 function saveSnapshot(doc) {
