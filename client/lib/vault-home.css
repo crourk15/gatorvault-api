@@ -22,7 +22,7 @@
   --home-heading-dark: var(--heading-color-dark);
   --home-body-light: var(--body-color-light);
   --home-meta: var(--subtle-gray);
-  --home-frame-pad-top: var(--space-lg);
+  --home-frame-pad-top: 24px;
   margin: 0;
   color: var(--heading-color-dark);
   font-family: var(--font-family);
@@ -49,9 +49,12 @@
 }
 
 .gv-home__command {
-  padding-top: 0;
   margin-top: 0;
   padding-bottom: 2.5rem;
+}
+
+.gv-home__frame.gv-home__command {
+  padding-top: var(--home-frame-pad-top);
 }
 
 .gv-home__grid {

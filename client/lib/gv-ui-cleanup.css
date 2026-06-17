@@ -178,11 +178,10 @@ body {
 
 .gv-vault-shell__main:has(.gv-home) .gv-home__frame {
   margin-top: 0;
-  padding-top: var(--space-lg);
+  padding-top: 24px;
 }
 
 .gv-vault-shell__main:has(.gv-home) .gv-home__command {
-  padding-top: 0;
   margin-top: 0;
 }
 
@@ -1071,11 +1070,27 @@ body {
 }
 
 /* ── Vault home: flush under nav (overrides vault-shell__main inset) ── */
+.gv-vault-shell--home .gv-vault-shell__body,
+.gv-vault-shell__main:has(.gv-home) {
+  margin: 0 !important;
+  padding-top: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.gv-vault-shell--home .gv-vault-shell__main,
 .gv-vault-shell__main:has(.gv-home) {
   padding: 0 !important;
 }
 
+#gv-vault-root:has(.gv-home),
+#gv-vault-root:has(.gv-vault-shell--home) {
+  margin: 0;
+  padding: 0;
+}
+
 @media (max-width: 767px) {
+  .gv-vault-shell--home .gv-vault-shell__main,
   .gv-vault-shell__main:has(.gv-home) {
     padding-bottom: var(--gv-mobile-nav-height) !important;
   }
@@ -1091,8 +1106,8 @@ body {
 }
 
 .gv-vault-shell--home .gv-vault-shell__body {
-  margin-top: 0;
-  padding-top: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   align-items: start;
 }
 

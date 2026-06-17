@@ -1,5 +1,8 @@
 .gv-vault-shell {
   min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
   background: var(--gv-navy, #001a33);
   color: #e2e8f0;
 }
@@ -209,6 +212,28 @@
   max-width: none;
   width: 100%;
   min-width: 0;
+}
+
+/* Home — shell wrappers flush under header; page frame owns top inset */
+.gv-vault-shell--home .gv-vault-shell__body,
+.gv-vault-shell__main:has(.gv-home) {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.gv-vault-shell--home .gv-vault-shell__main,
+.gv-vault-shell__main:has(.gv-home) {
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .gv-vault-shell--home .gv-vault-shell__main,
+  .gv-vault-shell__main:has(.gv-home) {
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0));
+  }
 }
 
 /* Team page inside vault shell — preserve document scroll + modal layering */
