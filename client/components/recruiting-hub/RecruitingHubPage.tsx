@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import { UiError } from '@/components/site/UiMessage';
 import { PageTitleBar } from '@/components/recruiting-hub/PageTitleBar';
 import { LivePulseBar } from '@/components/recruiting-hub/LivePulseBar';
+import { CommitsSection, mapCommits } from '@/components/recruiting-hub/Commits';
 import { HighPriorityIntelGrid } from '@/components/recruiting-hub/HighPriorityIntel';
 import { RecruitingBoardSection } from '@/components/recruiting-hub/RecruitingBoardSection';
 import { FutureCastSection } from '@/components/recruiting-hub/FutureCastSection';
@@ -24,6 +25,10 @@ export function RecruitingHubPage(): React.ReactElement {
     () => data.highPriority.filter((p) => p.committedTo && p.committedTo !== 'Florida').length,
     [data.highPriority]
   );
+
+  const commits2026 = useMemo(() => mapCommits(data.b26.commits, 2026), [data.b26.commits]);
+  const commits2027 = useMemo(() => mapCommits(data.b27.commits, 2027), [data.b27.commits]);
+  const commits2028 = useMemo(() => mapCommits(data.b28.commits, 2028), [data.b28.commits]);
 
   return (
     <div className="rh-page" data-testid="vault-recruiting-hub">
@@ -47,6 +52,11 @@ export function RecruitingHubPage(): React.ReactElement {
             cooling={data.cooling}
             flipWatchCount={flipWatchCount}
             portalStorm={flipWatchCount >= 2}
+          />
+          <CommitsSection
+            commits2026={commits2026}
+            commits2027={commits2027}
+            commits2028={commits2028}
           />
           <HighPriorityIntelGrid items={highPriorityIntelItems} loading={intelLoading} />
           <RecruitingBoardSection targets={data.b27.targets} />

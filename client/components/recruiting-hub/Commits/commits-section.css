@@ -1,0 +1,81 @@
+/**
+ * Florida Gators recruiting class — multi-year tabs + horizontal scroll
+ */
+
+.commits-section {
+  margin-top: var(--rh-section-gap, var(--space-8));
+}
+
+.commits-section__header {
+  margin-bottom: var(--space-4);
+}
+
+.commits-section__title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary, #f9fafb);
+}
+
+.commits-section__sub {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  color: var(--color-text-secondary, #9ca3af);
+}
+
+.commits-section__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.commits-section__tab {
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary, #9ca3af);
+  background: transparent;
+  border: 1px solid var(--color-border-subtle, #1f2933);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 160ms ease-out, border-color 160ms ease-out, background 160ms ease-out;
+}
+
+.commits-section__tab:hover {
+  color: var(--color-text-primary, #f9fafb);
+  border-color: var(--color-uf-blue, #0021a5);
+}
+
+.commits-section__tab--active {
+  color: var(--color-text-primary, #f9fafb);
+  background: rgba(0, 33, 165, 0.25);
+  border-color: var(--color-uf-blue, #0021a5);
+}
+
+.commits-section__empty {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary, #9ca3af);
+}
+
+.commits-section__scroll {
+  display: flex;
+  gap: var(--space-4);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.commits-section__scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.commits-section__scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border-subtle, #1f2933);
+  border-radius: 999px;
+}
