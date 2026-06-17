@@ -99,7 +99,7 @@ export function GatorNationLivePage(): React.ReactElement {
             message={error}
             retry={() => void load(true)}
             backHref="/vault"
-            backLabel="← Dashboard"
+            backLabel="← Home"
           />
         )}
 

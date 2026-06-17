@@ -29,8 +29,8 @@ const PAGE_CHECKS = {
     score: ['visual-integrity:landing-page']
   },
   '/vault': {
-    desktop: ['pages:vault-dashboard:desktop'],
-    mobile: ['pages:vault-dashboard:mobile']
+    desktop: ['pages:vault-home:desktop'],
+    mobile: ['pages:vault-home:mobile']
   },
   '/vault/film-room': {
     score: [

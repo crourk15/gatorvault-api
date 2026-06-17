@@ -15,7 +15,7 @@ import '@/lib/gatorvault-brand.css';
 import '@/lib/gv-page-layout.css';
 import '@/lib/vault-shell.css';
 import '@/lib/vault-admin.css';
-import '@/lib/vault-dashboard.css';
+import '@/lib/vault-home.css';
 import '@/lib/vault-recruiting-hub.css';
 import '@/styles/recruiting-hub-tokens.css';
 import '@/styles/recruiting-hub-globals.css';

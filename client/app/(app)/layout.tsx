@@ -4,7 +4,7 @@ import { AppRouteGate } from '@/components/shell/AppRouteGate';
 import '@/lib/app-shell.css';
 import '@/lib/gv-design-system.css';
 import '@/lib/gatorvault-brand.css';
-import '@/lib/vault-dashboard.css';
+import '@/lib/vault-home.css';
 import '@/lib/vault-recruiting-hub.css';
 import '@/styles/recruiting-hub-globals.css';
 import '@/styles/recruiting-hub-command.css';

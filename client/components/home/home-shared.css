@@ -1,0 +1,180 @@
+/* Shared Home page primitives used across section components */
+
+.gv-home-shell .gv-home-card {
+  padding: var(--home-section-pad);
+}
+
+.gv-home-panel { height: 100%; }
+
+.gv-home-panel__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--heading-color-light);
+  margin: 0 0 1rem;
+}
+
+.gv-home-panel__subtitle {
+  margin: -0.5rem 0 1rem;
+  color: var(--subtle-gray);
+  font-size: 0.875rem;
+}
+
+.gv-home-card__eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gator-orange);
+}
+
+.gv-home-card__link {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gator-orange);
+  text-decoration: none;
+}
+
+.gv-home-card__link:hover { text-decoration: underline; }
+
+.gv-home-card__body {
+  color: var(--body-color-light);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.gv-home-card__stat {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--heading-color-light);
+  margin: 0 0 0.35rem;
+}
+
+.gv-home-card__nil-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  margin: 1rem 0;
+}
+
+.gv-home-card__nil-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--subtle-gray);
+  margin: 0 0 0.25rem;
+}
+
+.gv-home-card__nil-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--heading-color-light);
+  margin: 0 0 0.25rem;
+}
+
+.gv-home-card__nil-value--sm { font-size: 0.9375rem; }
+
+.gv-home-card__trend {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.gv-home-card__trend--up { color: var(--momentum-up); }
+
+.gv-home-skeleton {
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--uf-blue) 6%, var(--card-bg)) 25%,
+    color-mix(in srgb, var(--uf-blue) 12%, var(--card-bg)) 50%,
+    color-mix(in srgb, var(--uf-blue) 6%, var(--card-bg)) 75%
+  );
+  background-size: 200% 100%;
+  animation: gv-home-shimmer 1.2s ease-in-out infinite;
+}
+
+.gv-home-skeleton--card { min-height: 180px; }
+
+@keyframes gv-home-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.gv-home-live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 0.35rem;
+  border-radius: 50%;
+  background: var(--pulse-red);
+  vertical-align: middle;
+}
+
+.gv-home-signal {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--card-border);
+}
+
+.gv-home-signal--hot { color: var(--hot); background: color-mix(in srgb, var(--hot) 12%, transparent); }
+.gv-home-signal--cooling { color: var(--cooling); background: color-mix(in srgb, var(--cooling) 12%, transparent); }
+.gv-home-signal--flip { color: var(--flip-risk); background: color-mix(in srgb, var(--flip-risk) 12%, transparent); }
+.gv-home-signal--portal { color: var(--portal-green); background: color-mix(in srgb, var(--portal-green) 12%, transparent); }
+
+.gv-home-recruit-panel__signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.gv-home-recruit-panel__block { margin-bottom: 1rem; }
+
+.gv-home-recruit-panel__label {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--subtle-gray);
+}
+
+.gv-home-recruit-panel__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.gv-home-recruit-panel__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--body-color-light);
+  font-size: 0.9375rem;
+}
+
+.gv-home-recruit-panel__list a {
+  color: var(--heading-color-light);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.gv-home-recruit-panel__list a:hover { color: var(--gator-orange); }
+
+.gv-home-recruit-panel__delta--up { color: var(--momentum-up); font-weight: 700; }
+
+.gv-portal-tag--in { color: var(--portal-green); }
+.gv-portal-tag--out { color: var(--flip-risk); }
+.gv-portal-tag--target { color: var(--hot); }

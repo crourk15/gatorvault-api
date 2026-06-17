@@ -527,9 +527,9 @@ const RULE_EXPECTATIONS = {
     expected: 'Mobile landing renders React marketing page at /',
     defaultFile: 'client/app/page.tsx'
   },
-  'pages:vault-dashboard': {
-    rule: 'React vault dashboard',
-    expected: '/vault export includes data-testid="vault-dashboard"',
+  'pages:vault-home': {
+    rule: 'React vault home',
+    expected: '/vault export includes data-testid="vault-home"',
     defaultFile: 'vault/index.html'
   },
   'pages:vault-team': {

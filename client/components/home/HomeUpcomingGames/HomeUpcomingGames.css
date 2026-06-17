@@ -1,0 +1,64 @@
+.gv-home-games__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.gv-home-games__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--home-grid-gap, var(--grid-gap));
+}
+
+@media (max-width: 900px) {
+  .gv-home-games__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gv-home-games__card {
+  display: block;
+  padding: var(--home-card-pad, var(--space-md));
+  border-radius: 12px;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  text-decoration: none;
+  color: var(--heading-color-dark);
+  border: 1px solid var(--card-border);
+  border-top: 3px solid var(--gator-orange);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.gv-home-games__card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(0, 33, 165, 0.16);
+}
+
+.gv-home-games__date {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gator-orange);
+  margin: 0 0 0.35rem;
+}
+
+.gv-home-games__matchup {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--uf-blue);
+  margin: 0 0 0.25rem;
+}
+
+.gv-home-games__venue {
+  font-size: 0.8125rem;
+  color: var(--subtle-gray);
+  margin: 0 0 0.75rem;
+}
+
+.gv-home-games__gauge {
+  display: flex;
+  justify-content: center;
+}

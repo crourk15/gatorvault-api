@@ -46,7 +46,7 @@ const { routeMap } = require('../crawler/load-config');
 
 function reactVaultPagesFromRouteMap() {
   const idByKey = {
-    dashboard: 'vault-dashboard',
+    dashboard: 'vault-home',
     recruiting: 'vault-recruiting',
     futurecast: 'vault-futurecast',
     team: 'vault-team',

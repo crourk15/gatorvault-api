@@ -1,0 +1,123 @@
+/* Movement intel panel — shared by Recruiting Hub and GatorNation Live */
+
+.gv-home-movement__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--home-grid-gap, var(--grid-gap));
+}
+
+@media (max-width: 1023px) {
+  .gv-home-movement__grid { grid-template-columns: repeat(2, 1fr); }
+  .gv-home-movement__grid .gv-home-movement__card:last-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 767px) {
+  .gv-home-movement__grid { grid-template-columns: 1fr; }
+}
+
+.gv-home-movement__card {
+  padding: var(--home-card-pad, var(--space-md));
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-top: 3px solid var(--gator-orange);
+  box-shadow: var(--card-shadow);
+}
+
+.gv-home-movement__card-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.75rem;
+  color: var(--heading-color-light);
+}
+
+.gv-home-movement__card-title--up { color: var(--momentum-up); }
+.gv-home-movement__card-title--down { color: var(--momentum-down); }
+
+.gv-home-movement__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.gv-home-movement__player {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--uf-blue) 8%, transparent);
+  font-size: 0.875rem;
+  color: var(--body-color-light);
+}
+
+.gv-home-movement__player a {
+  color: var(--heading-color-light);
+  text-decoration: none;
+}
+
+.gv-home-movement__player a:hover { color: var(--gator-orange); }
+
+.gv-home-movement__delta--up { color: var(--momentum-up); font-weight: 800; }
+.gv-home-movement__delta--down { color: var(--momentum-down); font-weight: 800; }
+
+.gv-home-sparkline {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: 80px;
+  margin: 0.75rem 0;
+}
+
+.gv-home-sparkline__bar {
+  flex: 1;
+  min-height: 4px;
+  border-radius: 2px 2px 0 0;
+  background: color-mix(in srgb, var(--gator-orange) 25%, transparent);
+}
+
+.gv-home-sparkline__bar.is-hot {
+  background: var(--gv-gradient-orange-fire, linear-gradient(90deg, #fa4616, #ff7a45));
+}
+
+.gv-home-movement__metric {
+  font-size: 0.875rem;
+  color: var(--subtle-gray);
+  margin: 0;
+}
+
+.gv-home-movement__metric strong {
+  color: var(--heading-color-light);
+  font-weight: 800;
+}
+
+.gv-home-movement__cta {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.8125rem;
+  border-color: var(--gator-orange);
+  color: var(--gator-orange);
+}
+
+.gv-home-movement__footer {
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--white) 3%, transparent);
+  border: 1px solid color-mix(in srgb, var(--white) 6%, transparent);
+}
+
+.gv-home-movement__footer-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--gator-orange);
+  margin: 0 0 0.5rem;
+}
+
+.gv-home-movement__footer-text {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--muted-gray);
+  margin: 0;
+}

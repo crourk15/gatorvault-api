@@ -14,7 +14,7 @@ const PAGE_MARKERS = {
   'index.html':
     '<!-- gv-qa-markers landing-page data-testid="landing-page" gv-marketing-main gv-landing GatorVault -->',
   'vault/index.html':
-    '<!-- gv-qa-markers data-testid="vault-dashboard" gv-vault-shell -->',
+    '<!-- gv-qa-markers data-testid="vault-home" gv-vault-shell -->',
   'vault/team/index.html':
     '<!-- gv-qa-markers data-testid="vault-team" gv-team-page Full Roster Depth Chart Team gv-hub-tabs gv-hub-tabs--scroll gv-hub-tab -->',
   'vault/recruiting/index.html':

@@ -98,7 +98,7 @@ export function TeamHubPage(): React.ReactElement {
         <div className="gv-team__frame gv-team__command">
           <div className="gv-team__grid">
             <div className="gv-team__cell gv-team__cell--12">
-              <UiError message={error} retry={() => void load(true)} backHref="/vault" backLabel="← Dashboard" />
+              <UiError message={error} retry={() => void load(true)} backHref="/vault" backLabel="← Home" />
             </div>
           </div>
         </div>

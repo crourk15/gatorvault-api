@@ -20,7 +20,7 @@ export function LiveFeedShell({
     <>
       {loading && <p className="gv-page-status">Loading live feed…</p>}
       {error && !loading && (
-        <UiError message={error} retry={onRetry} backHref="/vault" backLabel="← Dashboard" />
+        <UiError message={error} retry={onRetry} backHref="/vault" backLabel="← Home" />
       )}
       {!error ? children : null}
     </>

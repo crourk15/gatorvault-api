@@ -180,11 +180,11 @@ export function VaultGameZonePage(): React.ReactElement {
             </PageSection>
             <PageSection title="Momentum Heatmap">
               <Card>
-                <div className="gv-dash-sparkline" aria-hidden="true">
+                <div className="gv-home-sparkline" aria-hidden="true">
                   {MOCK_MOMENTUM.map((h, i) => (
                     <div
                       key={i}
-                      className={`gv-dash-sparkline__bar${h >= 70 ? ' is-hot' : ''}`}
+                      className={`gv-home-sparkline__bar${h >= 70 ? ' is-hot' : ''}`}
                       style={{ height: `${h}%` }}
                     />
                   ))}

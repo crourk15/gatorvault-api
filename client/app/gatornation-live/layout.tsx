@@ -4,7 +4,7 @@ import { VaultErrorBoundary } from '@/components/vault/VaultErrorBoundary';
 import '@/lib/gv-design-system.css';
 import '@/lib/gatorvault-brand.css';
 import '@/lib/vault-shell.css';
-import '@/lib/vault-dashboard.css';
+import '@/lib/vault-home.css';
 import '@/lib/vault-gatornation-live.css';
 import '@/lib/gnl-hero.css';
 import '@/lib/media-card.css';

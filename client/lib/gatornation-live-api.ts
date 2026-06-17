@@ -8,7 +8,7 @@ import type {
   RecruitingSnapshotProps,
   LivePanelProps,
 } from './gatornation-live-types';
-import { fetchLiveTicker, fetchMovementPreview, computeMomentumPct } from './vault-dashboard-api';
+import { fetchLiveTicker, fetchMovementPreview, computeMomentumPct } from './vault-home-api';
 import { fetchLiveDashboard, type BeatPost, type LiveFeedItem, type PodcastShow } from './live-api';
 import { fetchRecruitingBoard } from './recruiting-board-api';
 import {

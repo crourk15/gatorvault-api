@@ -11,11 +11,11 @@ const SITE_SECTIONS = [
     selectors: ['[data-testid="landing-page"]', '.gv-landing-hero', '.gv-landing-pricing']
   },
   {
-    id: 'vault-dashboard',
+    id: 'vault-home',
     label: 'Vault Dashboard',
     page: '/vault',
     areas: ['quick-links', 'sidebar'],
-    selectors: ['[data-testid="vault-dashboard"]', '.gv-vault-shell', '.gv-vault-shell__sidebar']
+    selectors: ['[data-testid="vault-home"]', '.gv-vault-shell', '.gv-vault-shell__sidebar']
   },
   {
     id: 'vault-team',

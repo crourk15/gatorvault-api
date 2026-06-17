@@ -1,0 +1,76 @@
+.gv-home-fc-leaders {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.gv-home-fc-leaders__row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  align-items: start;
+}
+
+.gv-home-fc-leaders__rank {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--gator-orange);
+}
+
+.gv-home-fc-leaders__name {
+  color: var(--heading-color-light);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.gv-home-fc-leaders__name:hover {
+  color: var(--gator-orange);
+}
+
+.gv-home-fc-leaders__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+}
+
+.gv-home-fc-leaders__pct {
+  color: var(--heading-color-light);
+  font-weight: 700;
+}
+
+.gv-home-fc-leaders__delta--up {
+  color: var(--momentum-up);
+  font-weight: 700;
+}
+
+.gv-home-fc-leaders__delta--down {
+  color: var(--momentum-down);
+  font-weight: 700;
+}
+
+.gv-home-fc-leaders__badge {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.gv-home-fc-leaders__badge--elite {
+  color: var(--hot);
+  background: rgba(249, 115, 22, 0.15);
+}
+
+.gv-home-fc-leaders__badge--strong {
+  color: var(--fit-blue);
+  background: rgba(147, 197, 253, 0.15);
+}
+
+.gv-home-fc-leaders__badge--watch {
+  color: var(--subtle-gray);
+  background: rgba(148, 163, 184, 0.15);
+}

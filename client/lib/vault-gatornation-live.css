@@ -113,7 +113,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.gv-gnl__tri-col .gv-dash-movement__grid {
+.gv-gnl__tri-col .gv-home-movement__grid {
   grid-template-columns: 1fr;
 }
 
@@ -603,19 +603,19 @@
 }
 
 /* Movement wrap */
-.gv-gnl .gv-dash-movement {
+.gv-gnl .gv-home-movement {
   margin: 0;
   padding: 0;
   background: transparent;
 }
 
-.gv-gnl .gv-dash-movement .gv-dash__frame {
+.gv-gnl .gv-home-movement .gv-home__frame {
   padding-left: 0;
   padding-right: 0;
   overflow: visible;
 }
 
-.gv-gnl .gv-dash-movement .gv-dash-card {
+.gv-gnl .gv-home-movement .gv-home-card {
   border-top-width: 2px;
 }
 

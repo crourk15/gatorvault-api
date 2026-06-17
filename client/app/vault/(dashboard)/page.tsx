@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { VaultDashboardPage } from '@/components/vault/VaultDashboardPage';
+import { VaultHomePage } from '@/components/home/VaultHomePage';
 
 export default function VaultIndexPage(): React.ReactElement {
-  return <VaultDashboardPage />;
+  return <VaultHomePage />;
 }

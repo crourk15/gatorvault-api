@@ -4,7 +4,7 @@ import React from 'react';
 import { HighPriorityTargetCard } from '@/components/futurecast/HighPriorityTargetCard';
 import { ScoutingDepartmentPage } from '@/components/site/ScoutingDepartmentPage';
 import { UiEmpty } from '@/components/site/UiMessage';
-import { DashboardMovementPreview } from '@/components/vault/dashboard/DashboardMovementPreview';
+import { MovementIntelPreview } from '@/components/shared/MovementIntelPreview';
 import { PlayerCardEnhanced } from '@/components/vault/recruiting/EliteRecruitCard';
 import { PortalList } from '@/components/vault/recruiting/RecruitingPortalSection';
 import { RankingsTable } from '@/components/vault/recruiting/RecruitingRankingsTable';
@@ -66,7 +66,7 @@ export function RecruitingHubTabPanels({
 
       {tab === 'intel' && (
         <div className="gv-rh-movement-wrap">
-          <DashboardMovementPreview data={staffDashboard} loading={!staffDashboard && loading} />
+          <MovementIntelPreview data={staffDashboard} loading={!staffDashboard && loading} />
           {(intel.risers.length > 0 || intel.fallers.length > 0) && (
             <section style={{ marginTop: 'var(--space-lg)' }}>
               <h2 className="rh-panel-title">Movement Tracker</h2>

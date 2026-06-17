@@ -67,7 +67,7 @@ function movementDirection(p: FeedPrediction): 'up' | 'down' | 'flat' {
 export function FutureCastHomepage({ mode = 'full' }: { mode?: 'full' | 'master' | 'trending' }): React.ReactElement {
   const pathname = usePathname();
   const backHref = vaultFutureCastBackHref(pathname);
-  const backLabel = isVaultPath(pathname) ? '← Vault Dashboard' : '← GatorVault Home';
+  const backLabel = isVaultPath(pathname) ? '← Vault Home' : '← GatorVault Home';
   const [data, setData] = useState<FutureCastHomeResponse | null>(null);
   const [commitSort, setCommitSort] = useState<CommitSort>('fit');
   const [loading, setLoading] = useState(true);

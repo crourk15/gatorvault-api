@@ -39,7 +39,7 @@ export function RecruitingHubPage(): React.ReactElement {
       ) : null}
       {data.error && !data.loading ? (
         <div className="rh-container">
-          <UiError message={data.error} retry={data.reload} backHref="/vault" backLabel="← Dashboard" />
+          <UiError message={data.error} retry={data.reload} backHref="/vault" backLabel="← Home" />
         </div>
       ) : null}
 

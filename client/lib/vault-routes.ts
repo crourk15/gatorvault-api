@@ -4,7 +4,7 @@
 import { VAULT_PILLAR_ROUTES, FUTURECAST_SEGMENT_PATHS, type FutureCastSegment } from './vault-route-map';
 
 export type VaultSectionId =
-  | 'dashboard'
+  | 'home'
   | 'recruiting'
   | 'futurecast'
   | 'team'
@@ -25,7 +25,7 @@ export type VaultSectionId =
 
 /** Core vault pillars — sidebar primary + mobile bottom nav. */
 export const VAULT_PILLARS: { id: VaultSectionId; label: string; href: string; icon: string }[] = [
-  { id: 'dashboard', label: 'Dashboard', href: VAULT_PILLAR_ROUTES.dashboard, icon: '🏠' },
+  { id: 'home', label: 'Home', href: VAULT_PILLAR_ROUTES.home, icon: '🏠' },
   { id: 'recruiting', label: 'Recruiting Hub', href: VAULT_PILLAR_ROUTES.recruiting, icon: '🎯' },
   { id: 'futurecast', label: 'FutureCast', href: VAULT_PILLAR_ROUTES.futurecast, icon: '📈' },
   { id: 'team', label: 'Team', href: VAULT_PILLAR_ROUTES.team, icon: '👥' },
@@ -50,7 +50,7 @@ export const VAULT_SECONDARY: { id: VaultSectionId; label: string; href: string;
 export const VAULT_SIDEBAR = [...VAULT_PILLARS, ...VAULT_SECONDARY];
 
 /** Mobile bottom nav — core pillars only (no dashboard to keep 5 slots). */
-export const VAULT_BOTTOM_NAV = VAULT_PILLARS.filter((item) => item.id !== 'dashboard');
+export const VAULT_BOTTOM_NAV = VAULT_PILLARS.filter((item) => item.id !== 'home');
 
 export function isVaultPath(pathname?: string): boolean {
   const p =

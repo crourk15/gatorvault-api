@@ -10,7 +10,7 @@ const PILLAR_PAGES = [
     id: 'dashboard',
     rel: 'vault/index.html',
     urlPath: '/vault',
-    markers: ['data-testid="vault-dashboard"', 'gv-vault-shell'],
+    markers: ['data-testid="vault-home"', 'gv-vault-shell'],
   },
   {
     id: 'team',

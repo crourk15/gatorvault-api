@@ -26,8 +26,7 @@ body {
 .gv-hub-tab,
 .rh-sticky-tabs__tab,
 .rh-tool-button,
-.gv-dash-tabs__btn,
-.gv-dash-actions__btn,
+.gv-home-action-tile,
 .gv-mobile-bottom-nav__item,
 .gv-top-nav__link,
 .gv-top-nav__menu-btn {
@@ -67,7 +66,7 @@ body {
 
 /* ── Full-bleed flush — no dark band above heroes ── */
 .gv-vault-shell__main:has(
-    .gv-dash,
+    .gv-home,
     .rh-page,
     .gv-gnl,
     .gv-rh-hub,
@@ -81,7 +80,7 @@ body {
     .gv-live-feed,
     .gv-film-room
   ),
-.gv-app-shell__main:has(.rh-page, .gv-page-layout, .fc-futurecast-page, .gv-dash) {
+.gv-app-shell__main:has(.rh-page, .gv-page-layout, .fc-futurecast-page, .gv-home) {
   padding-top: 0;
   padding-left: 0;
   padding-right: 0;
@@ -167,66 +166,28 @@ body {
   padding-bottom: 0;
 }
 
-/* Hide breadcrumbs on flush dashboard in app shell */
-.gv-app-shell:has(.gv-dash) .gv-breadcrumbs {
+/* Hide breadcrumbs on flush home in app shell */
+.gv-app-shell:has(.gv-home) .gv-breadcrumbs {
   display: none;
 }
 
-/* ── Dashboard polish ── */
-.gv-dash-hero__left {
-  text-align: left;
+/* ── Home hub — flush under nav ── */
+.gv-vault-shell__main:has(.gv-home) .gv-home {
+  margin: 0;
 }
 
-.gv-dash-hero__storyline {
-  text-align: left;
-  max-width: 36rem;
+.gv-vault-shell__main:has(.gv-home) .gv-home__frame {
+  margin-top: 0;
+  padding-top: var(--space-lg);
 }
 
-@media (min-width: 901px) {
-  .gv-dash-hero__left .gv-dash-hero__storyline {
-    text-align: left;
-  }
+.gv-vault-shell__main:has(.gv-home) .gv-home__command {
+  padding-top: 0;
+  margin-top: 0;
 }
 
-.gv-dash-hero__right {
-  text-align: center;
-}
-
-@media (min-width: 901px) {
-  .gv-dash-hero__right {
-    text-align: left;
-  }
-}
-
-.gv-dash-games {
-  background: var(--gv-navy);
-}
-
-.gv-dash-games .gv-page-grid--3 {
-  gap: var(--gv-grid-gap, 1.5rem);
-}
-
-.gv-dash-games .gv-card {
-  min-height: 140px;
-}
-
-.gv-dash-portal {
-  background: linear-gradient(180deg, var(--gv-navy) 0%, #000d1a 100%);
-}
-
-.gv-dash-portal__list .gv-card {
-  background: var(--gv-white);
-  color: var(--gv-navy);
-}
-
-.gv-dash-nil {
-  background: var(--gv-white);
-  color: var(--gv-graphite);
-}
-
-.gv-dash-nil .gv-page-section__title,
-.gv-dash-nil .gv-type-h3 {
-  color: var(--gv-navy);
+.gv-vault-shell__main:has(.gv-home) .gv-home-command-card {
+  margin-top: 0;
 }
 
 /* ── Recruiting Hub — sticky tabs under header ── */
@@ -311,27 +272,9 @@ body {
   }
 }
 
-/* ── Hour 2: Dashboard momentum + portal/NIL alignment ── */
-.gv-dash-hero__temp {
+/* ── Home portal/NIL alignment ── */
+.gv-home-portal__compact {
   width: 100%;
-  max-width: 22rem;
-}
-
-.gv-dash-hero__temp-bar {
-  max-width: 100%;
-}
-
-.gv-dash-portal__row-inner {
-  width: 100%;
-}
-
-.gv-dash-portal__list {
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-}
-
-.gv-dash-heat .gv-page-grid,
-.gv-dash-recruit__grid {
-  align-items: stretch;
 }
 
 /* ── Team hub — brand cards, centered tabs, roster grid ── */
@@ -549,7 +492,7 @@ body {
 @media (max-width: 900px) {
   .gv-page-grid--2,
   .gv-page-grid--3,
-  .gv-dash-games .gv-page-grid--3 {
+  .gv-home-games__grid {
     grid-template-columns: 1fr;
   }
 
@@ -571,7 +514,7 @@ body {
   }
 
   .gv-page-layout__body,
-  .gv-dash__frame,
+  .gv-home__frame,
   .rh-frame,
   .gv-team-hub__frame,
   .gv-gnl__frame {
@@ -613,7 +556,7 @@ body {
 
 /* ── Final polish: typography, shadows, spacing ── */
 .gv-page-layout,
-.gv-dash,
+.gv-home,
 .rh-page,
 .gv-team-hub,
 .gv-gnl,
@@ -1123,50 +1066,23 @@ body {
   color: var(--gv-white);
 }
 
-.gv-page-layout .gv-card:not([class*='gv-dash']) {
+.gv-page-layout .gv-card:not([class*='gv-home']) {
   border-radius: var(--gv-radius-md);
 }
 
-/* ── Vault dashboard: flush under nav (overrides vault-shell__main inset) ── */
-.gv-vault-shell__main:has(.gv-dash) {
+/* ── Vault home: flush under nav (overrides vault-shell__main inset) ── */
+.gv-vault-shell__main:has(.gv-home) {
   padding: 0 !important;
 }
 
 @media (max-width: 767px) {
-  .gv-vault-shell__main:has(.gv-dash) {
+  .gv-vault-shell__main:has(.gv-home) {
     padding-bottom: var(--gv-mobile-nav-height) !important;
   }
 }
 
-.gv-vault-shell__main:has(.gv-dash) .gv-dash {
-  margin-top: 0;
-}
-
-.gv-vault-shell__main:has(.gv-dash) .gv-dash__frame {
-  margin-top: 0;
-  padding-top: var(--space-lg);
-}
-
-.gv-vault-shell__main:has(.gv-dash) .gv-dash__command {
-  padding-top: 0;
-  margin-top: 0;
-}
-
-.gv-vault-shell__main:has(.gv-dash) .gv-dash-command-card {
-  margin-top: 0;
-}
-
-.gv-vault-shell__main:has(.gv-dash) .gv-dash-hero {
-  padding-top: 0;
-  margin-top: 0;
-}
-
-.gv-vault-shell__main:has(.gv-dash) .gv-dash-hero__inner {
-  padding-top: 0;
-}
-
-/* Dashboard shell: compact header + flush hero under nav (landing rhythm) */
-.gv-vault-shell--dashboard .gv-vault-shell__header {
+/* Home shell: compact header + flush top under nav */
+.gv-vault-shell--home .gv-vault-shell__header {
   min-height: var(--gv-shell-header-height);
   height: var(--gv-shell-header-height);
   padding: 0 1rem;
@@ -1174,36 +1090,32 @@ body {
   box-shadow: none;
 }
 
-.gv-vault-shell--dashboard .gv-vault-shell__body {
+.gv-vault-shell--home .gv-vault-shell__body {
   margin-top: 0;
   padding-top: 0;
   align-items: start;
 }
 
-.gv-vault-shell--dashboard .gv-vault-shell__nav {
+.gv-vault-shell--home .gv-vault-shell__nav {
   margin: 0;
   padding: 0;
 }
 
-.gv-vault-shell--dashboard .gv-vault-shell__sidebar {
+.gv-vault-shell--home .gv-vault-shell__sidebar {
   padding: 0 0.75rem 1rem;
 }
 
-.gv-vault-shell--dashboard .gv-vault-shell__sidebar-label {
+.gv-vault-shell--home .gv-vault-shell__sidebar-label {
   margin-top: 0;
   margin-bottom: 0.5rem;
 }
 
-.gv-vault-shell--dashboard .gv-vault-shell__main:has(.gv-dash) .gv-dash-hero {
-  width: 100%;
-}
-
 @media (max-width: 767px) {
-  .gv-vault-shell--dashboard .gv-vault-shell__header {
+  .gv-vault-shell--home .gv-vault-shell__header {
     padding: 0 0.75rem;
   }
 
-  .gv-vault-shell--dashboard .gv-vault-shell__sidebar {
+  .gv-vault-shell--home .gv-vault-shell__sidebar {
     padding-top: 0.5rem;
   }
 }

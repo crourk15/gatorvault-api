@@ -7,7 +7,7 @@ const SITE = process.env.SITE_URL || config.SITE_URL;
 
 const pages = [
   { path: '/', markers: ['data-testid="landing-page"', 'gv-landing', 'GatorVault'] },
-  { path: '/vault', markers: ['vault-dashboard', 'gv-vault-shell'] },
+  { path: '/vault', markers: ['vault-home', 'gv-vault-shell'] },
   { path: '/vault/team', markers: ['data-testid="vault-team"', 'gv-team-page', 'Full Roster', 'Depth Chart'] },
   { path: '/vault/recruiting', markers: ['vault-recruiting-hub', '2026 Commits', 'gv-hub-tabs', 'Heat Check'] },
   { path: '/vault/live-feed', markers: ['vault-live-feed', 'gv-live-feed', 'gv-live-ticker', 'Headlines', 'Beat Writers'] },

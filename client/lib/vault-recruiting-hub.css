@@ -952,12 +952,12 @@
 }
 
 /* Movement preview inside hub */
-.gv-rh-hub .gv-dash-movement {
+.gv-rh-hub .gv-home-movement {
   margin: 0;
   padding: 0;
 }
 
-.gv-rh-hub .gv-dash-movement .gv-dash__frame {
+.gv-rh-hub .gv-home-movement .gv-home__frame {
   padding-left: 1rem;
   padding-right: 1rem;
   overflow: visible;

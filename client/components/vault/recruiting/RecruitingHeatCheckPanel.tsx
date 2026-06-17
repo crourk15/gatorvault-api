@@ -4,7 +4,7 @@ import React from 'react';
 import type { HeatCheckItem } from '@/lib/recruiting-api';
 import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
-import { heatmapSparkPct } from '@/lib/vault-dashboard-api';
+import { heatmapSparkPct } from '@/lib/vault-home-api';
 import { findPlayerInPool, schoolLogoInitials } from '@/lib/recruiting-hub-utils';
 import { playerProfilePath } from '@/lib/player-routes';
 import { playerPos } from '@/lib/recruiting-board-utils';

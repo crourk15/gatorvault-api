@@ -32,7 +32,7 @@ async function bundleText(htmlPath) {
 
 const pages = [
   { path: 'index.html', markers: ['landing-page', 'gv-landing', 'GatorVault'] },
-  { path: 'vault/index.html', markers: ['vault-dashboard', 'gv-vault-shell'] },
+  { path: 'vault/index.html', markers: ['vault-home', 'gv-vault-shell'] },
   { path: 'vault/team/index.html', markers: ['vault-team', 'gv-team-page', 'Full Roster'] },
   { path: 'vault/recruiting/index.html', markers: ['vault-recruiting-hub', '2026 Commits', 'gv-hub-tabs'] },
   { path: 'vault/live-feed/index.html', markers: ['vault-live-feed', 'gv-live-feed', 'Headlines', 'gv-live-ticker'] },

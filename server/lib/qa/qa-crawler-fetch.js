@@ -70,7 +70,7 @@ function buildStaticSnapshot(section, viewport) {
 
 async function bootstrapVault(page, viewport) {
   await page.goto(`${config.SITE_URL}/vault`, { waitUntil: 'domcontentloaded', timeout: 45000 });
-  await page.waitForSelector('.gv-vault-shell, [data-testid="vault-dashboard"]', { timeout: 25000 });
+  await page.waitForSelector('.gv-vault-shell, [data-testid="vault-home"]', { timeout: 25000 });
   if (viewport === 'mobile') {
     await page.setViewportSize(MOBILE_VIEWPORT);
   }

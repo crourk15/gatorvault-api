@@ -1,0 +1,59 @@
+.gv-home-portal__card {
+  max-width: 640px;
+}
+
+.gv-home-portal__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.gv-home-portal__chip {
+  flex-shrink: 0;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(250, 70, 22, 0.12);
+  color: var(--gator-orange);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.gv-home-portal__compact {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.gv-home-portal__compact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--uf-blue) 6%, transparent);
+}
+
+.gv-home-portal__compact-row:last-child {
+  border-bottom: none;
+}
+
+.gv-home-portal__compact-name {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.gv-home-portal__compact-name strong {
+  color: var(--uf-blue);
+}
+
+.gv-home-portal__compact-name span {
+  color: var(--subtle-gray);
+  font-size: 0.8125rem;
+}

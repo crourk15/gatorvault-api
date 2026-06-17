@@ -87,11 +87,25 @@
   --gv-gradient-blue-glow: linear-gradient(90deg, #0021a5 0%, #001a33 100%);
   --gv-gradient-orange-fire: linear-gradient(90deg, #fa4616 0%, #ff7a45 100%);
   --gv-gradient-momentum: var(--ticker-gradient);
+
+  /* Home page semantic tokens */
+  --home-body: var(--graphite);
+  --home-meta: var(--subtle-gray);
+  --home-subtitle: var(--muted-gray);
+  --home-card-border: var(--card-border);
+  --home-card-shadow: var(--card-shadow);
+  --home-semantic-up: var(--momentum-up);
+  --home-semantic-down: var(--momentum-down);
+  --home-semantic-hot: var(--hot);
+  --home-semantic-cooling: var(--cooling);
+  --home-semantic-flip: var(--flip-risk);
+  --home-semantic-portal: var(--portal-green);
+  --home-semantic-star: var(--star-gold);
 }
 
 /* Shared platform card primitive */
 .gv-card,
-.gv-dash-card,
+.gv-home-card,
 .gv-team-card {
   background: var(--card-bg);
   color: var(--graphite);
@@ -102,7 +116,7 @@
 }
 
 .gv-card__title,
-.gv-dash-card__title,
+.gv-home-card__title,
 .gv-team-card__title {
   color: var(--heading-color-light);
   font-family: var(--font-family);
@@ -111,13 +125,13 @@
 }
 
 .gv-card__body,
-.gv-dash-card__body {
+.gv-home-card__body {
   color: var(--body-color-light);
   font-family: var(--font-family);
 }
 
 .gv-card__meta,
-.gv-dash-card__meta,
+.gv-home-card__meta,
 .gv-team-card__meta {
   color: var(--subtle-gray);
   font-size: 0.875rem;

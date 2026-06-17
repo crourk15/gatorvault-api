@@ -43,7 +43,7 @@ async function runSectionChecks() {
         err.repro = 'Publish React vault/index.html — not legacy-index.html';
         throw err;
       }
-      if (!text.includes('gv-vault-shell') && !text.includes('vault-dashboard')) {
+      if (!text.includes('gv-vault-shell') && !text.includes('vault-home')) {
         throw new Error('Production /vault missing React VaultShell markers');
       }
       return { reactShell: true };

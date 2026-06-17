@@ -5,7 +5,7 @@ import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 import type { RecruitingBoardResponse } from '@/lib/recruiting-board-api';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
-import { computeMomentumPct, heatmapSparkPct } from '@/lib/vault-dashboard-api';
+import { computeMomentumPct, heatmapSparkPct } from '@/lib/vault-home-api';
 import { momentumTrend } from '@/lib/recruiting-hub-utils';
 import { playerProfilePath } from '@/lib/player-routes';
 import { playerPos } from '@/lib/recruiting-board-utils';

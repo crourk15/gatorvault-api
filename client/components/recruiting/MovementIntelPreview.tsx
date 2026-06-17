@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
-import { DashboardMovementPreview } from '@/components/vault/dashboard/DashboardMovementPreview';
+import { MovementIntelPreview as SharedMovementIntelPreview } from '@/components/shared/MovementIntelPreview';
 
 type Props = {
   data: StaffDashboardResponse | null;
@@ -12,7 +12,7 @@ type Props = {
 export function MovementIntelPreview({ data, loading }: Props): React.ReactElement {
   return (
     <div className="gv-rh-movement-preview" data-testid="recruiting-movement-intel">
-      <DashboardMovementPreview data={data} loading={loading} />
+      <SharedMovementIntelPreview data={data} loading={loading} />
     </div>
   );
 }

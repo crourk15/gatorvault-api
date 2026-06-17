@@ -3,7 +3,7 @@
  * Used by routes.js, server crawler, and QA validation.
  */
 const VAULT_PILLAR_ROUTES = {
-  dashboard: '/vault',
+  home: '/vault',
   recruiting: '/vault/recruiting',
   futurecast: '/vault/futurecast',
   team: '/vault/team',
@@ -15,7 +15,7 @@ const VAULT_PILLAR_ROUTES = {
 
 /** QA markers per pillar export */
 const PILLAR_QA = {
-  '/vault': { testid: 'vault-dashboard', markers: ['vault-dashboard', 'gv-vault-shell'] },
+  '/vault': { testid: 'vault-home', markers: ['vault-home', 'gv-vault-shell'] },
   '/vault/recruiting': { testid: 'vault-recruiting-hub', markers: ['vault-recruiting-hub', 'Recruiting Hub'] },
   '/vault/futurecast': { testid: 'vault-futurecast-page', markers: ['vault-futurecast-page', 'FutureCast'] },
   '/vault/team': { testid: 'vault-team', markers: ['vault-team', 'gv-team-page'] },

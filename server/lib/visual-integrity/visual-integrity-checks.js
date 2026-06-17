@@ -11,7 +11,7 @@ const mapper = require('./visual-integrity-mapper');
 const SERVER_ROOT = path.join(__dirname, '..', '..');
 
 const REACT_VAULT_ROUTES = [
-  { path: '/vault', label: 'Vault Dashboard', testid: 'vault-dashboard' },
+  { path: '/vault', label: 'Vault Home', testid: 'vault-home' },
   { path: '/vault/team', label: 'Team', testid: 'vault-team' },
   { path: '/vault/film-room', label: 'Film Room', testid: 'vault-film-room' },
   { path: '/vault/recruiting', label: 'Recruiting Hub', testid: 'vault-recruiting-hub' },
