@@ -290,14 +290,16 @@ async function getValidatedSignals(options = {}) {
 
   const gm2Players = filterBoardPlayers(allPlayers);
   const recruitingPlayers = cycle.filterRecruitingPlayers(gm2Players);
-  const intel2027 = cycle.filterRecruitingIntel(intel);
+  const intel2027 = cycle.filterRecruitingIntel((intel || []).filter(Boolean));
   const events2027 = cycle.filterRecruitingEvents(
     filterPublicEvents(
-      events.filter((e) => Date.now() - new Date(e.createdAt).getTime() < 14 * 86400000)
+      (events || []).filter(Boolean).filter((e) => Date.now() - new Date(e.createdAt).getTime() < 14 * 86400000)
     )
   );
 
-  const visits2027 = intel2027.filter((i) => /visit|ov|unofficial/i.test(i.eventType || ''));
+  const visits2027 = intel2027.filter(
+    (i) => i && /visit|ov|unofficial/i.test(i.eventType || '')
+  );
 
   let heatCheck = null;
   try {
@@ -336,6 +338,7 @@ async function getValidatedSignals(options = {}) {
     intel: {
       visits: visits2027,
       upcoming: visits2027.filter((i) => {
+        if (!i) return false;
         const t = String(i.eventType || '').toLowerCase();
         if (!/official_visit|unofficial_visit|visit/.test(t)) return false;
         if (/cancel|post_visit_reaction/.test(t)) return false;
@@ -343,6 +346,7 @@ async function getValidatedSignals(options = {}) {
         return ts >= Date.now() - 3 * 86400000;
       }),
       recent: visits2027.filter((i) => {
+        if (!i) return false;
         const t = String(i.eventType || '').toLowerCase();
         if (!/official_visit|unofficial_visit|visit/.test(t)) return false;
         const ts = new Date(i.timestamp || i.createdAt || i.reportedAt || 0).getTime();

@@ -1335,6 +1335,7 @@ app.listen(PORT, () => {
     console.warn('[gv-om] init skipped', e.message);
   }
   setTimeout(() => {
+    if (process.env.PRODUCT_INTEL_ENABLED === 'false') return;
     process.env.QA_API_URL = `http://127.0.0.1:${PORT}`;
     require('./lib/product-intel/product-intel-engine')
       .recomputeFromDeployProbes({ source: 'deploy-boot' })

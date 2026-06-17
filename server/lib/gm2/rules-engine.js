@@ -232,6 +232,7 @@ function filterForFeature(feature, items, context = {}) {
   }
   if (feature === GM2_FEATURES.RECRUITING_ALERTS || feature === GM2_FEATURES.MY_ALERTS) {
     return items.filter((item) => {
+      if (!item) return false;
       if (item.eventType) return runRulesEngine(feature, item).allow;
       return runRulesEngine(GM2_FEATURES.LIVE_FEED, item).allow || rulesForIntel(item).allow;
     });

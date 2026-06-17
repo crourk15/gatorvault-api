@@ -24,6 +24,7 @@ function uniqueSources(list) {
 }
 
 function isUpcomingVisit(intel) {
+  if (!intel) return false;
   const t = String(intel.eventType || '').toLowerCase();
   if (!/official_visit|unofficial_visit|visit/.test(t)) return false;
   if (/cancel|post_visit_reaction/.test(t)) return false;
@@ -32,6 +33,7 @@ function isUpcomingVisit(intel) {
 }
 
 function isRecentCompletedVisit(intel) {
+  if (!intel) return false;
   const t = String(intel.eventType || '').toLowerCase();
   if (!/official_visit|unofficial_visit|visit/.test(t)) return false;
   const ts = new Date(intel.timestamp || intel.createdAt || intel.reportedAt || 0).getTime();
