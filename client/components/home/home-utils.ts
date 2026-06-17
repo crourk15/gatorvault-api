@@ -1,5 +1,4 @@
 import { SITE_ROUTES } from '@/lib/site-routes';
-import type { ContentLatestResponse, PersonalizedResponse } from '@/lib/vault-home-api';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
 import { playerProfilePath } from '@/lib/player-routes';
 
@@ -44,10 +43,7 @@ export type MovementFeedItem = {
   icon?: string;
 };
 
-export function buildMovementFeedItems(
-  movement: StaffDashboardResponse | null,
-  content: ContentLatestResponse | null
-): MovementFeedItem[] {
+export function buildMovementFeedItems(movement: StaffDashboardResponse | null): MovementFeedItem[] {
   const items: MovementFeedItem[] = [];
 
   movement?.alerts?.slice(0, 4).forEach((alert, idx) => {
@@ -80,24 +76,6 @@ export function buildMovementFeedItems(
       meta: p.delta != null ? `${p.delta} movement score` : undefined,
       href: playerProfilePath(p.slug, 'HIGH_SCHOOL', true, p.name, 'futurecast'),
       icon: '↓',
-    });
-  });
-
-  const contentRows = [
-    ...(content?.articles ?? []).slice(0, 2).map((c) => ({ ...c, kind: 'article' as const })),
-    ...(content?.podcasts ?? []).slice(0, 1).map((c) => ({ ...c, kind: 'podcast' as const })),
-    ...(content?.filmRoom ?? []).slice(0, 1).map((c) => ({ ...c, kind: 'film' as const })),
-    ...(content?.community ?? []).slice(0, 1).map((c) => ({ ...c, kind: 'community' as const })),
-  ];
-
-  contentRows.forEach((row) => {
-    items.push({
-      id: `content_${row.id}`,
-      type: 'content',
-      title: row.title,
-      meta: [row.source, row.timestamp ? timeAgo(row.timestamp) : null].filter(Boolean).join(' · '),
-      href: row.href,
-      icon: row.icon ?? (row.kind === 'podcast' ? '🎙️' : row.kind === 'film' ? '🎬' : '📰'),
     });
   });
 

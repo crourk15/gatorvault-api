@@ -17,7 +17,7 @@ import {
   HOME_REFRESH,
   buildHomeGnlItems,
   computeMomentumPct,
-  fetchContentLatest,
+  fetchHomeMovementIntel,
   fetchHomeNilPulse,
   fetchHomePortalSummary,
   fetchHomeTeamSnapshot,
@@ -26,7 +26,7 @@ import {
   fetchMovementPreview,
   fetchPersonalizedHints,
   fetchRecruitingSnapshot,
-  type ContentLatestResponse,
+  type HomeMovementIntelData,
   type HomeNilPulse,
   type HomePortalSummary,
   type HomeTeamSnapshotData,
@@ -42,7 +42,7 @@ const TICKER_DEBOUNCE_MS = 400;
 export function VaultHomePage(): React.ReactElement {
   const [ticker, setTicker] = useState<TickerResponse | null>(null);
   const [movement, setMovement] = useState<Awaited<ReturnType<typeof fetchMovementPreview>> | null>(null);
-  const [content, setContent] = useState<ContentLatestResponse | null>(null);
+  const [movementIntel, setMovementIntel] = useState<HomeMovementIntelData | null>(null);
   const [recruiting, setRecruiting] = useState<RecruitingSnapshot | null>(null);
   const [personalized, setPersonalized] = useState<PersonalizedResponse | null>(null);
   const [portal, setPortal] = useState<HomePortalSummary | null>(null);
@@ -101,10 +101,9 @@ export function VaultHomePage(): React.ReactElement {
     }
   }, []);
 
-  const loadContent = useCallback(async (force = false) => {
+  const loadMovementIntel = useCallback(async (force = false) => {
     try {
-      const data = await fetchContentLatest(force);
-      setContent(data);
+      setMovementIntel(await fetchHomeMovementIntel(force));
     } catch {
       /* keep prior */
     }
@@ -158,8 +157,8 @@ export function VaultHomePage(): React.ReactElement {
       const [tickerData] = await Promise.all([
         fetchLiveTicker(true).catch(() => null),
         loadMovement(true),
+        loadMovementIntel(true),
         loadRecruiting(true),
-        loadContent(true),
         loadPersonalized(),
         loadPortal(true),
         loadTeam(true),
@@ -173,8 +172,10 @@ export function VaultHomePage(): React.ReactElement {
     void boot();
 
     const tickerTimer = window.setInterval(() => void loadTicker(true), HOME_REFRESH.ticker);
-    const movementTimer = window.setInterval(() => void loadMovement(true), HOME_REFRESH.movement);
-    const contentTimer = window.setInterval(() => void loadContent(true), HOME_REFRESH.movement);
+    const movementTimer = window.setInterval(() => {
+      void loadMovement(true);
+      void loadMovementIntel(true);
+    }, HOME_REFRESH.movement);
     const recruitingTimer = window.setInterval(() => void loadRecruiting(true), HOME_REFRESH.recruiting);
     const moduleTimer = window.setInterval(() => {
       void loadPortal(true);
@@ -189,14 +190,13 @@ export function VaultHomePage(): React.ReactElement {
       if (tickerDebounceRef.current) clearTimeout(tickerDebounceRef.current);
       window.clearInterval(tickerTimer);
       window.clearInterval(movementTimer);
-      window.clearInterval(contentTimer);
       window.clearInterval(recruitingTimer);
       window.clearInterval(moduleTimer);
       window.clearInterval(personalTimer);
     };
   }, [
-    loadContent,
     loadMovement,
+    loadMovementIntel,
     loadNil,
     loadPersonalized,
     loadPortal,
@@ -220,9 +220,8 @@ export function VaultHomePage(): React.ReactElement {
 
           <HomeLiveSurface
             tickerItems={ticker?.items ?? []}
-            movement={movement}
-            content={content}
-            loading={loading && !movement && !content}
+            movementIntel={movementIntel}
+            loading={loading && !movementIntel}
           />
 
           <HomeGatorNationPreview items={buildHomeGnlItems(ticker)} />

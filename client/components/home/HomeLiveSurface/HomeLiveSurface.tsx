@@ -1,22 +1,19 @@
 'use client';
 
 import React, { useLayoutEffect, useRef } from 'react';
-import type { ContentLatestResponse, TickerItem } from '@/lib/vault-home-api';
-import type { StaffDashboardResponse } from '@/lib/staff-api';
+import type { HomeMovementIntelData, TickerItem } from '@/lib/vault-home-api';
 import { applyTickerScrollDuration } from '@/lib/ticker-duration';
-import { GV_COPY } from '@/lib/gatorvault-copy';
-import { SITE_ROUTES } from '@/lib/site-routes';
-import { TICKER_STRIP_LABEL, buildMovementFeedItems } from '@/components/home/home-utils';
+import { TICKER_STRIP_LABEL } from '@/components/home/home-utils';
+import { HomeMovementIntel } from '@/components/home/HomeMovementIntel/HomeMovementIntel';
 import './HomeLiveSurface.css';
 
 type Props = {
   tickerItems: TickerItem[];
-  movement: StaffDashboardResponse | null;
-  content: ContentLatestResponse | null;
+  movementIntel: HomeMovementIntelData | null;
   loading?: boolean;
 };
 
-export function HomeLiveSurface({ tickerItems, movement, content, loading }: Props): React.ReactElement {
+export function HomeLiveSurface({ tickerItems, movementIntel, loading }: Props): React.ReactElement {
   const trackRef = useRef<HTMLDivElement>(null);
   const loop = tickerItems.length ? [...tickerItems, ...tickerItems] : [];
   const fallback = [
@@ -29,7 +26,6 @@ export function HomeLiveSurface({ tickerItems, movement, content, loading }: Pro
     },
   ];
   const display = loop.length ? loop : [...fallback, ...fallback];
-  const feedItems = buildMovementFeedItems(movement, content);
 
   useLayoutEffect(() => {
     if (loading) return;
@@ -62,47 +58,7 @@ export function HomeLiveSurface({ tickerItems, movement, content, loading }: Pro
         </div>
       </section>
 
-      <article className="gv-home-card gv-home-feed" aria-label="Live movement feed">
-        <div className="gv-home-feed__header">
-          <div>
-            <div className="gv-home-card__accent" />
-            <p className="gv-home-card__eyebrow">Movement Intel</p>
-            <h2 className="gv-home-card__title">{GV_COPY.headlines.movementIntel}</h2>
-          </div>
-          <a href={`${SITE_ROUTES.futurecast}/movement`} className="gv-home-link">
-            Full intel →
-          </a>
-        </div>
-        {loading ? (
-          <div className="gv-home-skeleton" style={{ minHeight: 160 }} />
-        ) : (
-          <ul className="gv-home-feed__list">
-            {feedItems.map((item) => (
-              <li key={item.id} className="gv-home-feed__row">
-                <span className="gv-home-feed__icon" aria-hidden="true">
-                  {item.icon}
-                </span>
-                <div className="gv-home-feed__body">
-                  <span className={`gv-home-feed__tag gv-home-feed__tag--${item.type}`}>
-                    {item.type}
-                  </span>
-                  {item.href ? (
-                    <a href={item.href} className="gv-home-feed__title">
-                      {item.title}
-                    </a>
-                  ) : (
-                    <p className="gv-home-feed__title">{item.title}</p>
-                  )}
-                  {item.meta ? <p className="gv-home-feed__meta">{item.meta}</p> : null}
-                </div>
-              </li>
-            ))}
-            {feedItems.length === 0 && (
-              <li className="gv-home-feed__empty">Movement intel updating — check back shortly.</li>
-            )}
-          </ul>
-        )}
-      </article>
+      <HomeMovementIntel data={movementIntel} loading={loading && !movementIntel} />
     </div>
   );
 }

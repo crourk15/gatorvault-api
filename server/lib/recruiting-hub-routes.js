@@ -217,6 +217,9 @@ function mountRecruitingHubRoutes(app) {
     }
   });
 
+  const { handleGetRecruitingMovementIntel } = require('../api/recruiting/movement-intel.ts');
+  app.get('/api/recruiting/movement-intel', handleGetRecruitingMovementIntel);
+
   app.get('/api/recruiting/targets/:year', async (req, res) => {
     try {
       const year = parseInt(req.params.year, 10);

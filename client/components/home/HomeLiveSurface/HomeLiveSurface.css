@@ -74,7 +74,25 @@
   100% { transform: translateX(-50%); }
 }
 
-/* Movement feed */
+/* Movement intel panel */
+.gv-home-movement-intel__link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.gv-home-movement-intel__link:hover {
+  color: var(--th-heading-light, var(--uf-blue));
+}
+
+.gv-home-movement-intel .gv-home-subtitle {
+  margin-top: 0.5rem;
+}
+
+.gv-home-movement-intel .gv-home-subtitle:first-of-type {
+  margin-top: 0;
+}
+
+/* Legacy movement feed (unused) */
 .gv-home-feed__header {
   display: flex;
   align-items: center;

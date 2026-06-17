@@ -176,6 +176,26 @@ export type HomeUpcomingGamesData = {
   games: HomeGameCard[];
 };
 
+export type HomeMovementPlayer = {
+  id: string;
+  slug: string;
+  name: string;
+  delta: number;
+  ufPct?: number | null;
+};
+
+export type HomeMovementAlert = {
+  id: string;
+  playerId: string;
+  playerName: string | null;
+  eventType: string;
+  text: string;
+  timestamp: string;
+  movementDelta?: number | null;
+};
+
+export type HomeMovementIntelData = import('./movement-intel-types').MovementIntelResponse;
+
 type CacheSlot<T> = { at: number; data: T | null };
 
 const memoryCache: {
@@ -187,6 +207,7 @@ const memoryCache: {
   team: CacheSlot<HomeTeamSnapshotData>;
   nil: CacheSlot<HomeNilPulse>;
   schedule: CacheSlot<HomeUpcomingGamesData>;
+  movementIntel: CacheSlot<HomeMovementIntelData>;
 } = {
   ticker: { at: 0, data: null },
   content: { at: 0, data: null },
@@ -196,6 +217,7 @@ const memoryCache: {
   team: { at: 0, data: null },
   nil: { at: 0, data: null },
   schedule: { at: 0, data: null },
+  movementIntel: { at: 0, data: null },
 };
 
 function readCache<T>(slot: CacheSlot<T>, ttlMs: number): T | null {
@@ -292,6 +314,15 @@ export async function fetchMovementPreview(force = false): Promise<StaffDashboar
   }
 
   return writeCache(memoryCache.movement, data);
+}
+
+export async function fetchHomeMovementIntel(force = false): Promise<HomeMovementIntelData> {
+  if (!force) {
+    const cached = readCache(memoryCache.movementIntel, HOME_REFRESH.movement);
+    if (cached) return cached;
+  }
+  const data = await fetchJson<HomeMovementIntelData>('/api/recruiting/movement-intel');
+  return writeCache(memoryCache.movementIntel, data);
 }
 
 const NEXT_GAME_ISO = '2026-09-05T19:45:00-04:00';

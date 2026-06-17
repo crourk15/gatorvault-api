@@ -42,6 +42,7 @@ const SHORT_TTL_ROUTES = [
   { prefix: '/api/content/latest', maxAge: 120, sMaxAge: 120 },
   { prefix: '/api/live/ticker', maxAge: 30, sMaxAge: 30 },
   { prefix: '/api/staff/dashboard', maxAge: 300, sMaxAge: 300 },
+  { prefix: '/api/recruiting/movement-intel', maxAge: 300, sMaxAge: 300 },
   { prefix: '/api/roster/players', maxAge: 45 },
   { prefix: '/api/articles/published', maxAge: 30 },
 ];
