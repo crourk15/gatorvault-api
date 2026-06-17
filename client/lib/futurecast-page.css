@@ -1,0 +1,344 @@
+/**
+ * FutureCast master page — UF dark elite theme (#111827 shell)
+ */
+.futurecast-page {
+  --fc-bg: #111827;
+  --fc-card: #1f2933;
+  --fc-border: #1f2933;
+  --fc-text: #f9fafb;
+  --fc-muted: #9ca3af;
+  --fc-blue: #0021a5;
+  --fc-orange: #fa4616;
+  color: var(--fc-text);
+}
+
+.futurecast-page__section {
+  margin-bottom: 2.5rem;
+}
+
+.futurecast-page__section-title {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.futurecast-page__section-sub {
+  margin: 0 0 1.25rem;
+  color: var(--fc-muted);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Hero */
+.fc-page-hero {
+  background: linear-gradient(135deg, #111827 0%, #0b1220 55%, #001656 100%);
+  border: 1px solid var(--fc-border);
+  border-radius: 1rem;
+  padding: 2rem 1.75rem;
+  margin-bottom: 2rem;
+}
+
+.fc-page-hero__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.fc-page-hero__sub {
+  margin: 0 0 1.5rem;
+  max-width: 42rem;
+  color: var(--fc-muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.fc-page-hero__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.fc-page-hero__metric {
+  background: var(--fc-card);
+  border: 1px solid rgba(249, 250, 251, 0.08);
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+}
+
+.fc-page-hero__metric-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--fc-text);
+}
+
+.fc-page-hero__metric-label {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--fc-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fc-page-hero__heat {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.fc-page-hero__heat--hot {
+  background: rgba(250, 70, 22, 0.2);
+  color: var(--fc-orange);
+  border: 1px solid rgba(250, 70, 22, 0.45);
+}
+
+.fc-page-hero__heat--warm {
+  background: rgba(0, 33, 165, 0.25);
+  color: #93c5fd;
+  border: 1px solid rgba(0, 33, 165, 0.5);
+}
+
+.fc-page-hero__heat--cold {
+  background: rgba(156, 163, 175, 0.15);
+  color: var(--fc-muted);
+  border: 1px solid rgba(156, 163, 175, 0.35);
+}
+
+/* Cards / panels */
+.fc-panel {
+  background: var(--fc-card);
+  border: 1px solid rgba(249, 250, 251, 0.08);
+  border-radius: 0.85rem;
+  padding: 1.25rem;
+}
+
+/* Commits strip */
+.fc-commits-strip {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 0.5rem;
+}
+
+.fc-commit-card {
+  flex: 0 0 min(280px, 85vw);
+  scroll-snap-align: start;
+  background: #111827;
+  border: 1px solid rgba(0, 33, 165, 0.35);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.fc-commit-card__name {
+  margin: 0 0 0.25rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.fc-commit-card__meta {
+  margin: 0;
+  color: var(--fc-muted);
+  font-size: 0.875rem;
+}
+
+/* Tables */
+.fc-table-wrap {
+  overflow-x: auto;
+}
+
+.fc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.fc-table th,
+.fc-table td {
+  padding: 0.75rem 0.65rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(249, 250, 251, 0.08);
+}
+
+.fc-table th {
+  color: var(--fc-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fc-table__player {
+  color: var(--fc-text);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.fc-table__player span {
+  display: block;
+  color: var(--fc-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.fc-table__move--up {
+  color: #4ade80;
+}
+
+.fc-table__move--down {
+  color: var(--fc-orange);
+}
+
+.fc-table__move--flat {
+  color: var(--fc-muted);
+}
+
+/* Heatmap windows */
+.fc-heatmap-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.fc-heatmap-tab {
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(249, 250, 251, 0.12);
+  background: transparent;
+  color: var(--fc-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fc-heatmap-tab--active {
+  background: var(--fc-blue);
+  border-color: var(--fc-blue);
+  color: var(--fc-text);
+}
+
+.fc-heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.fc-heatmap-cell {
+  background: #111827;
+  border: 1px solid rgba(249, 250, 251, 0.08);
+  border-radius: 0.65rem;
+  padding: 0.85rem;
+}
+
+.fc-heatmap-cell__name {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.fc-heatmap-cell__meta {
+  margin: 0;
+  color: var(--fc-muted);
+  font-size: 0.8rem;
+}
+
+/* Horizontal strips */
+.fc-hscroll {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 0.5rem;
+}
+
+.fc-hp-card,
+.fc-portal-card,
+.fc-stock-card {
+  flex: 0 0 min(260px, 82vw);
+  scroll-snap-align: start;
+  background: #111827;
+  border: 1px solid rgba(249, 250, 251, 0.1);
+  border-radius: 0.75rem;
+  padding: 1rem;
+}
+
+.fc-hp-card__name,
+.fc-portal-card__name {
+  margin: 0 0 0.25rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.fc-hp-card__meta,
+.fc-portal-card__meta {
+  margin: 0 0 0.65rem;
+  color: var(--fc-muted);
+  font-size: 0.85rem;
+}
+
+.fc-hp-card__intel {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--fc-text);
+}
+
+.fc-card-link {
+  display: inline-block;
+  color: var(--fc-orange);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.fc-card-link:hover {
+  text-decoration: underline;
+}
+
+/* Stock board columns */
+.fc-stock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.fc-stock-col__title {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.fc-stock-col__title--rising {
+  color: #4ade80;
+}
+
+.fc-stock-col__title--falling {
+  color: var(--fc-orange);
+}
+
+.fc-stock-col__title--volatile {
+  color: #facc15;
+}
+
+.fc-stock-item {
+  padding: 0.65rem 0;
+  border-bottom: 1px solid rgba(249, 250, 251, 0.06);
+}
+
+.fc-stock-item:last-child {
+  border-bottom: none;
+}
+
+.fc-empty {
+  color: var(--fc-muted);
+  font-size: 0.95rem;
+  margin: 0;
+}

@@ -2,13 +2,13 @@
 
 import React from 'react';
 import { FutureCastElitePageShell } from '@/components/futurecast/FutureCastElitePageShell';
-import { MasterBoardLayout } from '@/components/futurecast/MasterBoardLayout';
+import { FutureCastEliteHomepage } from '@/components/futurecast/FutureCastEliteHomepage';
 
-/** FutureCast — gauge hero, movement cards, sortable table. */
+/** FutureCast — full elite master board page. */
 export default function FutureCastPage(): React.ReactElement {
   return (
     <FutureCastElitePageShell segment="master" testId="futurecast-page">
-      <MasterBoardLayout />
+      <FutureCastEliteHomepage />
     </FutureCastElitePageShell>
   );
 }
