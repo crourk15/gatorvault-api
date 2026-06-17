@@ -8,10 +8,7 @@
   function resolveAdminApiBase() {
     var host = (location.hostname || '').toLowerCase();
     if (host === 'localhost' || host === '127.0.0.1') return 'http://localhost:3000';
-    if (host === 'gatorvault-api.onrender.com') return location.origin;
-    if (host.indexOf('gatorvault') >= 0 || host.indexOf('gatorvaultinsider') >= 0 || host.endsWith('.netlify.app')) {
-      return 'https://gatorvault-api.onrender.com';
-    }
+    // Same-origin — Netlify/_redirects proxy /api/* to Render (see netlify.toml).
     return location.origin;
   }
 
@@ -199,13 +196,46 @@
     return { 'X-Ops-Pin': p, 'X-Recruiting-Pin': p };
   }
 
+  function responseLooksLikeHtml(text) {
+    var t = String(text || '').trim();
+    return t.indexOf('<!DOCTYPE') === 0 || t.indexOf('<html') === 0;
+  }
+
+  function infraResponseError(status, text) {
+    var err = new Error(
+      'API unavailable (HTTP ' + status + '). Received HTML instead of JSON — the /api proxy or Render backend may be down.'
+    );
+    err.isInfra = true;
+    return err;
+  }
+
+  function parseVerifyPinBody(r, text) {
+    if (responseLooksLikeHtml(text)) throw infraResponseError(r.status, text);
+    var j = {};
+    try {
+      j = text ? JSON.parse(text) : {};
+    } catch (e) {
+      throw infraResponseError(r.status, text);
+    }
+    if (r.ok && j && j.ok) return true;
+    if (r.status === 401) return false;
+    return null;
+  }
+
   function verifyPinViaStatus(p) {
     return fetch(API + '/api/ops/status?pin=' + encodeURIComponent(p), {
       method: 'GET',
       headers: adminPinHeaders(p),
       credentials: 'omit'
     }).then(function (r) {
-      return r.json().catch(function () { return {}; }).then(function (j) {
+      return r.text().then(function (text) {
+        if (responseLooksLikeHtml(text)) throw infraResponseError(r.status, text);
+        var j = {};
+        try {
+          j = text ? JSON.parse(text) : {};
+        } catch (e) {
+          throw infraResponseError(r.status, text);
+        }
         return !!(r.ok && j && j.ok);
       });
     });
@@ -217,22 +247,28 @@
       cb(false);
       return;
     }
-    fetch(API + '/api/ops/verify-pin?pin=' + encodeURIComponent(p), {
-      method: 'GET',
-      headers: adminPinHeaders(p),
-      credentials: 'omit'
+    var hdrs = Object.assign({ 'Content-Type': 'application/json' }, adminPinHeaders(p));
+    fetch(API + '/api/ops/verify-pin', {
+      method: 'POST',
+      headers: hdrs,
+      credentials: 'omit',
+      body: JSON.stringify({ pin: p })
     })
       .then(function (r) {
-        if (r.status === 404) return verifyPinViaStatus(p);
-        return r.json().catch(function () { return {}; }).then(function (j) {
-          if (r.ok && j && j.ok) return true;
-          if (r.status === 401) return false;
+        return r.text().then(function (text) {
+          if (r.status === 404) return verifyPinViaStatus(p);
+          var parsed = parseVerifyPinBody(r, text);
+          if (parsed === true) return true;
+          if (parsed === false) return false;
           return verifyPinViaStatus(p);
         });
       })
-      .catch(function () { return verifyPinViaStatus(p); })
+      .catch(function (err) {
+        if (err && err.isInfra) throw err;
+        return verifyPinViaStatus(p);
+      })
       .then(function (ok) { cb(!!ok); })
-      .catch(function () { cb(false); });
+      .catch(function (err) { cb(false, err && err.message ? err.message : null); });
   }
 
   function panelSrc(panel) {
@@ -609,12 +645,12 @@
       if (!p) return;
       gateErr.classList.add('hidden');
       gateBtn.disabled = true;
-      verifyPin(p, function (ok) {
+      verifyPin(p, function (ok, errMsg) {
         gateBtn.disabled = false;
         if (ok) {
           unlockAdmin(p);
         } else {
-          gateErr.textContent = 'Invalid PIN. Use your OPS_ADMIN_PIN or RECRUITING_ADMIN_PIN value from Render.';
+          gateErr.textContent = errMsg || 'Invalid PIN. Use your OPS_ADMIN_PIN or RECRUITING_ADMIN_PIN value from Render.';
           gateErr.classList.remove('hidden');
         }
       });

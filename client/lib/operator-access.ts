@@ -34,7 +34,18 @@ export async function loginWithOperatorPin(pin: string): Promise<AuthSession> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ pin: pin.trim() }),
   });
-  const data = (await res.json()) as { ok?: boolean; error?: string; session?: AuthSession };
+  const text = await res.text();
+  if (text.trim().startsWith('<')) {
+    throw new Error(
+      'API unavailable — server returned HTML instead of JSON. Check Netlify /api proxy and Render deploy status.'
+    );
+  }
+  let data: { ok?: boolean; error?: string; session?: AuthSession };
+  try {
+    data = JSON.parse(text) as { ok?: boolean; error?: string; session?: AuthSession };
+  } catch {
+    throw new Error('API returned an invalid response. Try again shortly.');
+  }
   if (!res.ok || !data.session) {
     throw new Error(data.error || 'Invalid admin PIN.');
   }

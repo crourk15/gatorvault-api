@@ -451,8 +451,17 @@
       var p=document.getElementById('gate-pin').value.trim();
       fetch(API+'/api/ops/status?pin='+encodeURIComponent(p))
         .then(function(r){
-          if(r.status===401)throw new Error('Invalid PIN');
-          return r.json().then(function(j){return{status:r.status,body:j};});
+          return r.text().then(function(text){
+            if(text.trim().indexOf('<!DOCTYPE')===0||text.trim().indexOf('<html')===0){
+              throw new Error('API unavailable (HTTP '+r.status+'). Received HTML instead of JSON — check Render deploy or Netlify /api proxy.');
+            }
+            var j={};
+            try{j=text?JSON.parse(text):{};}catch(e){
+              throw new Error('API returned an invalid response (HTTP '+r.status+').');
+            }
+            if(r.status===401)throw new Error('Invalid PIN');
+            return{status:r.status,body:j};
+          });
         })
         .then(function(res){
           var j=res.body;
