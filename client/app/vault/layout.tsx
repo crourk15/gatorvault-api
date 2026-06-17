@@ -30,6 +30,7 @@ import '@/lib/vault-team-hub.css';
 import '@/lib/gv-team.css';
 import '@/lib/media-card.css';
 import '@/lib/gv-ui-cleanup.css';
+import '@/styles/hub-unified-theme.css';
 
 export const viewport: Viewport = {
   width: 'device-width',

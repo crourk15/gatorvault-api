@@ -15,6 +15,7 @@ import '@/lib/futurecast-elite.css';
 import '@/lib/gv-page-layout.css';
 import '@/lib/vault-shell.css';
 import '@/lib/gv-ui-cleanup.css';
+import '@/styles/hub-unified-theme.css';
 
 export default function AppLayout({
   children,

@@ -2,14 +2,15 @@
  * FutureCast master page — UF dark elite theme (#111827 shell)
  */
 .futurecast-page {
-  --fc-bg: #111827;
-  --fc-card: #1f2933;
-  --fc-border: #1f2933;
-  --fc-text: #f9fafb;
-  --fc-muted: #9ca3af;
-  --fc-blue: #0021a5;
-  --fc-orange: #fa4616;
-  color: var(--fc-text);
+  --fc-bg: var(--page-bg);
+  --fc-card: var(--card-bg);
+  --fc-border: var(--card-border);
+  --fc-text: var(--graphite);
+  --fc-muted: var(--subtle-gray);
+  --fc-blue: var(--uf-blue);
+  --fc-orange: var(--gator-orange);
+  color: var(--heading-color-dark);
+  background: var(--page-bg);
 }
 
 .futurecast-page__section {
@@ -21,6 +22,7 @@
   font-size: clamp(1.25rem, 2.5vw, 1.75rem);
   font-weight: 800;
   letter-spacing: -0.02em;
+  color: var(--uf-blue);
 }
 
 .futurecast-page__section-sub {
@@ -32,11 +34,13 @@
 
 /* Hero */
 .fc-page-hero {
-  background: linear-gradient(135deg, #111827 0%, #0b1220 55%, #001656 100%);
-  border: 1px solid var(--fc-border);
-  border-radius: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-top: 3px solid var(--gator-orange);
+  border-radius: var(--radius-md);
   padding: 2rem 1.75rem;
   margin-bottom: 2rem;
+  box-shadow: var(--card-shadow);
 }
 
 .fc-page-hero__title {
@@ -71,7 +75,7 @@
   display: block;
   font-size: 1.5rem;
   font-weight: 800;
-  color: var(--fc-text);
+  color: var(--gator-orange);
 }
 
 .fc-page-hero__metric-label {
@@ -190,15 +194,15 @@
 }
 
 .fc-table__move--up {
-  color: #4ade80;
+  color: var(--gator-orange);
 }
 
 .fc-table__move--down {
-  color: var(--fc-orange);
+  color: var(--cooling, #3b82f6);
 }
 
 .fc-table__move--flat {
-  color: var(--fc-muted);
+  color: var(--momentum-up, #4ade80);
 }
 
 /* Heatmap windows */
@@ -220,9 +224,9 @@
 }
 
 .fc-heatmap-tab--active {
-  background: var(--fc-blue);
-  border-color: var(--fc-blue);
-  color: var(--fc-text);
+  background: color-mix(in srgb, var(--gator-orange) 12%, var(--card-bg));
+  border-color: var(--gator-orange);
+  color: var(--gator-orange);
 }
 
 .fc-heatmap-grid {

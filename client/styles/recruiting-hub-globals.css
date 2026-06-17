@@ -1,9 +1,9 @@
 @import './recruiting-hub-tokens.css';
 
-/* ── Page shell — Blue gradient bg, white cards ── */
+/* ── Page shell — navy bg, white cards ── */
 .rh-page {
-  background: var(--gv-gradient-hero-blue, linear-gradient(165deg, #0021a5 0%, #001656 55%, #001a33 100%));
-  color: var(--color-text-on-dark, #ffffff);
+  background: var(--th-primary, var(--page-bg));
+  color: var(--heading-color-dark);
   font-family: var(--font-body);
   padding-bottom: 0;
 }
@@ -44,7 +44,7 @@
   font-size: var(--text-h2);
   font-weight: 800;
   letter-spacing: -0.01em;
-  color: var(--color-text-on-dark, #ffffff);
+  color: var(--th-heading-light, var(--uf-blue));
 }
 
 .rh-panel-title {
@@ -79,7 +79,7 @@
 .rh-hero__bg {
   position: absolute;
   inset: 0;
-  background: var(--gv-gradient-hero-blue, linear-gradient(165deg, #0021a5 0%, #001656 55%, #001a33 100%));
+  background: transparent;
   z-index: 0;
 }
 
@@ -132,11 +132,12 @@
   display: block;
   min-height: 140px;
   padding: var(--space-md);
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-default);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--gv-shadow-card);
-  color: var(--color-text-on-light);
+  background: var(--th-card-bg, var(--color-bg-secondary));
+  border: 1px solid var(--th-border, var(--color-border-default));
+  border-top: 3px solid var(--th-accent, var(--color-accent-orange));
+  border-radius: var(--th-radius-card, var(--radius-sm));
+  box-shadow: var(--th-shadow, var(--gv-shadow-card));
+  color: var(--th-body, var(--color-text-on-light));
   text-decoration: none;
   transition: border-color var(--transition-fast), transform var(--transition-fast);
 }
@@ -222,7 +223,7 @@
 }
 
 .rh-sticky-tabs__tab.is-active {
-  color: var(--color-text-on-dark, #ffffff);
+  color: var(--th-accent, var(--color-accent-orange));
   font-weight: 700;
 }
 

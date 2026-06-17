@@ -1,26 +1,40 @@
 /**
- * Recruiting Hub — Figma-aligned design tokens
+ * Recruiting Hub — unified platform tokens (maps to gatorvault-theme.css)
  */
 :root {
-  /* Primary */
-  --color-uf-blue: #0021a5;
-  --color-uf-orange: #fa4616;
+  --rh-frame-max: var(--th-frame-max, var(--max-width));
+  --rh-section-gap: var(--th-section-pad, var(--space-lg));
+  --rh-title-gap: var(--space-md);
+  --rh-gutter-desktop: var(--th-frame-margin, var(--space-xl));
+  --rh-gutter-tablet: var(--space-lg);
+  --rh-gutter-mobile: var(--space-md);
 
-  /* Neutrals */
-  --color-bg-dark: #0a0f1a;
-  --color-bg-card: #111827;
-  --color-border-subtle: #1f2933;
-  --color-text-primary: #f9fafb;
-  --color-text-secondary: #9ca3af;
-
-  /* Status */
-  --color-status-hot: #f97316;
-  --color-status-cooling: #3b82f6;
-  --color-status-flip: #ef4444;
-  --color-status-portal: #22c55e;
+  /* Platform-aligned palette */
+  --color-uf-blue: var(--th-blue);
+  --color-uf-orange: var(--th-accent);
+  --color-bg-dark: var(--th-primary);
+  --color-bg-card: var(--th-card-bg);
+  --color-bg-secondary: var(--th-card-bg);
+  --color-bg-primary: var(--th-primary);
+  --color-border-subtle: var(--th-border);
+  --color-border-default: var(--th-border);
+  --color-border-hover: color-mix(in srgb, var(--th-accent) 35%, var(--th-border));
+  --color-text-primary: var(--th-body);
+  --color-text-secondary: var(--th-meta);
+  --color-text-on-dark: var(--heading-color-dark);
+  --color-text-on-light: var(--th-body);
+  --color-text-muted-on-dark: var(--th-meta);
+  --color-accent-orange: var(--th-accent);
+  --color-accent-blue: var(--th-blue);
+  --color-status-hot: var(--th-accent);
+  --color-status-cooling: var(--cooling);
+  --color-status-flip: var(--flip-risk);
+  --color-status-portal: var(--th-green);
 
   /* Typography */
-  --font-family-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Text', sans-serif;
+  --font-family-sans: var(--font-family);
+  --font-heading: var(--font-family);
+  --font-body: var(--font-family);
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-md: 1rem;
@@ -31,48 +45,30 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
+  --text-h1: 1.5rem;
+  --text-h2: 1.25rem;
+  --text-h3: 1.125rem;
+  --text-body: 1rem;
+  --text-small: 0.875rem;
 
   /* Spacing */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
+  --space-1: var(--space-xs);
+  --space-2: var(--space-sm);
   --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
+  --space-4: var(--space-md);
+  --space-6: var(--space-lg);
+  --space-8: var(--space-xl);
+  --space-xs: var(--space-sm);
+  --space-sm: 0.75rem;
+  --space-md: var(--space-md);
+  --space-lg: var(--space-lg);
+  --space-xl: var(--space-xl);
+  --space-xxl: var(--space-2xl);
 
-  /* Radius & shadow */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.35);
-
-  /* Layout */
-  --rh-frame-max: 1280px;
-  --rh-section-gap: var(--space-8);
-  --rh-title-gap: var(--space-6);
-
-  /* Legacy aliases (existing components) */
-  --color-bg-primary: var(--color-bg-dark);
-  --color-bg-secondary: var(--color-bg-card);
-  --color-accent-orange: var(--color-uf-orange);
-  --color-accent-blue: var(--color-uf-blue);
-  --color-text-on-dark: var(--color-text-primary);
-  --color-text-muted-on-dark: var(--color-text-secondary);
-  --font-heading: var(--font-family-sans);
-  --font-body: var(--font-family-sans);
-  --text-h1: var(--font-size-2xl);
-  --text-h2: var(--font-size-xl);
-  --text-h3: var(--font-size-lg);
-  --text-body: var(--font-size-md);
-  --text-small: var(--font-size-sm);
-  --space-xs: var(--space-2);
-  --space-sm: var(--space-3);
-  --space-md: var(--space-4);
-  --space-lg: var(--space-6);
-  --space-xl: var(--space-8);
-  --space-xxl: calc(var(--space-8) + var(--space-4));
-  --rh-gutter-desktop: var(--space-8);
-  --rh-gutter-tablet: var(--space-6);
-  --rh-gutter-mobile: var(--space-4);
+  /* Shape */
+  --radius-sm: var(--th-radius-card);
+  --radius-md: var(--th-radius-card);
+  --radius-lg: var(--th-radius-card);
+  --shadow-soft: var(--th-shadow);
   --transition-fast: 160ms ease-out;
 }

@@ -9,6 +9,7 @@ import '@/lib/vault-recruiting-hub.css';
 import '@/styles/recruiting-hub-tokens.css';
 import '@/styles/recruiting-hub-globals.css';
 import '@/styles/recruiting-hub-command.css';
+import '@/styles/hub-unified-theme.css';
 
 export default function RecruitingHubLayout({
   children,

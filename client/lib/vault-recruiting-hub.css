@@ -1,26 +1,39 @@
 /* GatorVault Recruiting Hub — wireframe tokens + GameDay layout */
 
 .gv-rh-hub {
-  /* UF brand palette */
-  --rh-primary: var(--gv-blue, #0021a5);
-  --rh-accent: var(--gv-orange, #fa4616);
-  --rh-heat-up: var(--gv-heatmap-green, #4ade80);
-  --rh-heat-down: var(--gv-heatmap-red, #ff4d4d);
-  --rh-volatile: var(--gv-warning, #facc15);
-  --rh-card-bg: var(--gv-white, #ffffff);
-  --rh-border: rgba(0, 33, 165, 0.18);
-  --rh-radius-card: 12px;
+  /* Unified hub tokens */
+  --th-primary: var(--page-bg);
+  --th-accent: var(--gator-orange);
+  --th-blue: var(--uf-blue);
+  --th-green: var(--momentum-up);
+  --th-red: var(--momentum-down);
+  --th-yellow: var(--star-gold);
+  --th-card-bg: var(--card-bg);
+  --th-border: var(--card-border);
+  --th-heading-light: var(--uf-blue);
+  --th-meta: var(--subtle-gray);
+  --th-body: var(--graphite);
+  --th-radius-card: var(--radius-md);
+  --th-shadow: var(--card-shadow);
+  --rh-primary: var(--th-primary);
+  --rh-accent: var(--th-accent);
+  --rh-heat-up: var(--th-green);
+  --rh-heat-down: var(--cooling);
+  --rh-volatile: var(--th-accent);
+  --rh-card-bg: var(--th-card-bg);
+  --rh-border: var(--th-border);
+  --rh-radius-card: var(--th-radius-card);
   --rh-radius-pill: 9999px;
-  --gv-muted: rgba(229, 229, 229, 0.72);
-  --gv-frame-max: 1280px;
-  --gv-frame-margin: clamp(16px, 5vw, 48px);
-  --gv-section-pad: 48px;
-  --gv-rhythm: 24px;
+  --gv-muted: var(--th-meta);
+  --gv-frame-max: var(--max-width);
+  --gv-frame-margin: var(--space-xl);
+  --gv-section-pad: var(--space-lg);
+  --gv-rhythm: var(--grid-gap);
   margin: 0;
-  color: var(--gv-white);
-  font-family: var(--gv-font);
+  color: var(--heading-color-dark);
+  font-family: var(--font-family);
   padding-bottom: 0;
-  background: var(--gv-gradient-hero-blue, linear-gradient(165deg, #0021a5 0%, #001656 55%, #001a33 100%));
+  background: var(--page-bg);
 }
 
 @media (max-width: 767px) {
@@ -57,25 +70,12 @@
 .gv-rh-hero__bg {
   position: absolute;
   inset: 0;
-  background: var(--gv-gradient-swamp-night);
+  background: transparent;
 }
 
-.gv-rh-hero__bg::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 12% 18%, rgba(255, 220, 120, 0.09) 0, transparent 9%),
-    radial-gradient(circle at 88% 12%, rgba(255, 220, 120, 0.07) 0, transparent 7%),
-    radial-gradient(circle at 50% 6%, rgba(255, 255, 255, 0.05) 0, transparent 11%);
-  pointer-events: none;
-}
-
+.gv-rh-hero__bg::before,
 .gv-rh-hero__bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 70%, rgba(10, 15, 26, 0.85));
+  display: none;
 }
 
 .gv-rh-hero__inner {
@@ -300,20 +300,17 @@
   padding: 0.85rem 1rem;
   overflow: hidden;
   border: 1px solid var(--rh-border);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  border-top: 3px solid var(--rh-accent);
+  box-shadow: var(--th-shadow, var(--card-shadow));
 }
 
 .gv-rh-summary__card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 100% 0%, rgba(250, 70, 22, 0.12), transparent 45%);
-  pointer-events: none;
+  display: none;
 }
 
 .gv-rh-summary__card--accent {
-  background: linear-gradient(135deg, var(--gv-blue) 0%, #001656 100%);
+  background: var(--rh-card-bg);
+  border-top-color: var(--rh-accent);
 }
 
 .gv-rh-summary__icon {
@@ -323,11 +320,12 @@
 }
 
 .gv-rh-summary__value {
-  font-family: var(--gv-font);
+  font-family: var(--font-family);
   font-size: 1.75rem;
   font-weight: 800;
   line-height: 1;
   margin: 0;
+  color: var(--rh-accent);
 }
 
 .gv-rh-summary__label {
@@ -540,11 +538,11 @@
 }
 
 .gv-rh-elite-card__status-bar--commit {
-  background: linear-gradient(90deg, #16a34a, #4ade80);
+  background: var(--rh-green, var(--momentum-up));
 }
 
 .gv-rh-elite-card__status-bar--target {
-  background: linear-gradient(90deg, var(--rh-accent), #fb923c);
+  background: var(--rh-accent);
 }
 
 .gv-rh-elite-card__visual {
@@ -561,12 +559,12 @@
   height: 2.5rem;
   padding: 0 0.35rem;
   border-radius: 0.5rem;
-  background: linear-gradient(145deg, rgba(249, 115, 22, 0.25), rgba(15, 23, 42, 0.9));
-  border: 1px solid rgba(249, 115, 22, 0.45);
+  background: color-mix(in srgb, var(--rh-accent) 12%, var(--rh-card-bg));
+  border: 1px solid color-mix(in srgb, var(--rh-accent) 45%, var(--rh-border));
   font-size: 0.6875rem;
   font-weight: 800;
   letter-spacing: 0.04em;
-  color: #fff;
+  color: var(--rh-accent);
 }
 
 .gv-rh-elite-card__state-flag {

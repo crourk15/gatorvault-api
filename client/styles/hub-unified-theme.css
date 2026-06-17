@@ -1,0 +1,419 @@
+/**
+ * Recruiting Hub + FutureCast — unified visual system (Home / Team Hub parity)
+ */
+
+/* ── Shell tokens ── */
+.rh-page,
+.gv-rh-hub,
+.fc-futurecast-page,
+.fc-futurecast-page--elite,
+.futurecast-page,
+.gv-page.fc-futurecast-page {
+  --rh-primary: var(--th-primary);
+  --rh-accent: var(--th-accent);
+  --rh-card-bg: var(--th-card-bg);
+  --rh-border: var(--th-border);
+  --fc-bg: var(--th-primary);
+  --fc-card: var(--th-card-bg);
+  --fc-border: var(--th-border);
+  --fc-text: var(--th-body);
+  --fc-muted: var(--th-meta);
+  --fc-blue: var(--th-blue);
+  --fc-orange: var(--th-accent);
+  --gv-bg: var(--th-primary);
+  --gv-card: var(--th-card-bg);
+  --gv-border: var(--th-border);
+  --gv-text-primary: var(--heading-color-dark);
+  --gv-text-secondary: var(--th-meta);
+  --gv-orange: var(--th-accent);
+  --gv-blue: var(--th-blue);
+  --gv-green: var(--th-green);
+  --gv-red: var(--th-red);
+  --gv-shadow-card: var(--th-shadow);
+  --gv-radius-card: var(--th-radius-card);
+  background: var(--th-primary);
+  color: var(--heading-color-dark);
+  font-family: var(--font-family);
+}
+
+/* ── Remove gradient shells ── */
+.rh-page,
+.gv-rh-hub {
+  background: var(--th-primary) !important;
+}
+
+.rh-hero__bg,
+.gv-rh-hero__bg,
+.gv-rh-hero__bg::before,
+.gv-rh-hero__bg::after,
+.fc-page-hero,
+.gv-elite-hero,
+.fc-elite-hero {
+  background: var(--th-card-bg) !important;
+  background-image: none !important;
+}
+
+.gv-rh-hero__bg::before,
+.gv-rh-hero__bg::after {
+  display: none !important;
+}
+
+/* ── Section titles on navy ── */
+.rh-title-bar__title,
+.rh-hero__title,
+.gv-rh-hero__title,
+.fc-page-hero__title,
+.futurecast-page__section-title,
+.gv-elite-hero__title {
+  color: var(--heading-color-dark);
+}
+
+.rh-section__title,
+.rh-section-title,
+.rh-panel-title,
+.rh-board-tier__title,
+.rh-portal-column__title,
+.rh-needs-meter__title,
+.rh-rank-sim__title,
+.fc-page-hero__metric-label,
+.gv-movement-list__title,
+.fc-elite-section__title {
+  color: var(--th-heading-light);
+}
+
+/* ── White card surfaces ── */
+.rh-section--panel,
+.rh-module-card,
+.rh-board-card,
+.rh-commit-card,
+.rh-commit-eval-card,
+.rh-portal-card,
+.rh-tool-tile,
+.rh-live-pulse__bar,
+.rh-live-pulse__temp,
+.rh-class-summary__stat,
+.rh-stats-bar__item,
+.rh-yoy-chart,
+.rh-headliner .gv-headliner-card,
+.gv-rh-card,
+.gv-rh-panel,
+.gv-rh-intel-unified,
+.intel-card,
+.rh-commit-card,
+.fc-elite-card,
+.fc-player-card,
+.fc-page-hero,
+.fc-page-hero__metric,
+.fc-heatmap-cell,
+.fc-prediction-card,
+.gv-movement-list,
+.gv-movement-mini-card,
+.fc-movement-list__link,
+.fc-trending-card,
+.gv-trending-card,
+.fc-big-board-toolbar select,
+.fc-big-board-toolbar button,
+.rh-rank-sim__select {
+  background: var(--th-card-bg) !important;
+  background-image: none !important;
+  color: var(--th-body);
+  border: 1px solid var(--th-border);
+  border-top: 3px solid var(--th-accent);
+  border-radius: var(--th-radius-card);
+  box-shadow: var(--th-shadow);
+}
+
+.rh-module-card:hover,
+.rh-commit-card:hover,
+.rh-tool-tile:hover,
+.gv-rh-card:hover,
+.fc-player-card:hover {
+  border-color: color-mix(in srgb, var(--th-accent) 40%, var(--th-border));
+}
+
+/* ── Card headings ── */
+.rh-module-card__title,
+.rh-board-card__name,
+.rh-commit-card__name,
+.rh-commit-eval-card__name,
+.rh-portal-card__name,
+.rh-tool-tile__body strong,
+.gv-rh-card__name,
+.fc-player-card__name,
+.gv-trending-name,
+.fc-trending-name {
+  color: var(--th-heading-light) !important;
+}
+
+/* ── Metadata ── */
+.rh-module-card__desc,
+.rh-board-card__meta,
+.rh-board-card__line,
+.rh-commit-card__meta,
+.rh-portal-card__pos,
+.rh-tool-tile__body p,
+.rh-page__status,
+.rh-status,
+.rh-title-bar__sub,
+.rh-hero__subtitle,
+.fc-player-card__meta,
+.fc-page-hero__sub,
+.futurecast-page__section-sub,
+.fc-table__player span,
+.rh-fc-row__intel,
+.rh-nil-row__player span {
+  color: var(--th-meta) !important;
+}
+
+/* ── Stat cards — orange values ── */
+.rh-stats-bar__value,
+.rh-class-summary__stat strong,
+.rh-pulse-metric--accent .rh-pulse-metric__value,
+.rh-board-card__uf,
+.rh-fc-row__pct,
+.rh-rank-sim__output strong,
+.fc-page-hero__metric-value,
+.gv-ds-gauge__value,
+.fc-player-card__rank {
+  color: var(--th-accent) !important;
+}
+
+.rh-stats-bar__label,
+.rh-pulse-metric__label,
+.rh-class-summary__stat span,
+.fc-page-hero__metric-label {
+  color: var(--th-meta);
+}
+
+/* ── Heat / progress bars — solid accent, no gradients ── */
+.rh-board-card__heat-fill,
+.rh-needs-item__bar div,
+.gv-rh-heat__fill,
+.fc-confidence-bar__fill {
+  background: var(--th-accent) !important;
+  background-image: none !important;
+}
+
+.rh-board-card__heat,
+.rh-needs-item__bar {
+  background: color-mix(in srgb, var(--th-blue) 8%, var(--th-card-bg));
+}
+
+/* ── Tabs — active orange ── */
+.rh-sticky-tabs {
+  background: rgba(0, 26, 51, 0.95);
+  border-bottom: 1px solid var(--th-border);
+}
+
+.rh-sticky-tabs__tab {
+  color: var(--th-meta);
+}
+
+.rh-sticky-tabs__tab:hover,
+.rh-sticky-tabs__tab.is-active {
+  color: var(--th-accent);
+}
+
+.rh-sticky-tabs__tab.is-active::after {
+  background: var(--th-accent);
+}
+
+.gv-hub-tab.is-active,
+.gv-hub-tabs .gv-hub-tab.is-active,
+.fc-futurecast-nav__link.is-active,
+.gv-futurecast-nav__link.is-active,
+.fc-heatmap-tab--active {
+  color: var(--th-accent) !important;
+  border-color: var(--th-accent) !important;
+  background: color-mix(in srgb, var(--th-accent) 12%, var(--th-card-bg)) !important;
+}
+
+.gv-hub-tab,
+.fc-heatmap-tab,
+.fc-futurecast-nav__link,
+.gv-futurecast-nav__link {
+  color: var(--th-meta);
+  border-radius: var(--th-radius-card);
+}
+
+/* ── Chips / filters / tags ── */
+.rh-signal-tag {
+  border-color: var(--th-border);
+  color: var(--th-meta);
+  background: var(--th-card-bg);
+}
+
+.rh-signal-tag--active,
+.rh-signal-tag.is-active {
+  border-color: var(--th-accent);
+  color: var(--th-accent);
+  background: color-mix(in srgb, var(--th-accent) 10%, var(--th-card-bg));
+}
+
+.rh-board-card__tag,
+.gv-rh-tag,
+.fc-fit-badge,
+.fc-status {
+  background: color-mix(in srgb, var(--th-blue) 8%, var(--th-card-bg));
+  color: var(--th-heading-light);
+  border: 1px solid var(--th-border);
+}
+
+.rh-signal-tag--hot.rh-signal-tag--active,
+.fc-fit-badge--elite {
+  border-color: var(--th-accent);
+  color: var(--th-accent);
+  background: color-mix(in srgb, var(--th-accent) 12%, var(--th-card-bg));
+}
+
+.rh-signal-tag--cooling.rh-signal-tag--active,
+.fc-fit-badge--strong {
+  border-color: var(--cooling);
+  color: var(--cooling);
+  background: color-mix(in srgb, var(--cooling) 10%, var(--th-card-bg));
+}
+
+.rh-signal-tag--portal.rh-signal-tag--active,
+.rh-needs-item--filled .rh-needs-item__status,
+.rh-nil-row__comfort--in {
+  border-color: var(--th-green);
+  color: var(--th-green);
+  background: color-mix(in srgb, var(--th-green) 10%, var(--th-card-bg));
+}
+
+.gv-rh-filter-chip.is-active,
+.gv-team-roster-chip.is-active {
+  background: color-mix(in srgb, var(--th-accent) 12%, var(--th-card-bg));
+  border-color: var(--th-accent);
+  color: var(--th-accent);
+}
+
+/* ── Movement indicators ── */
+.fc-table__move--up,
+.rh-fc-row__move--up,
+.gv-movement-list--up .gv-movement-list__value,
+.fc-movement-list--up .fc-movement-list__value,
+.gv-trend--up,
+.fc-trend--up {
+  color: var(--th-accent) !important;
+}
+
+.fc-table__move--down,
+.rh-fc-row__move--down,
+.gv-movement-list--down .gv-movement-list__value,
+.fc-movement-list--down .fc-movement-list__value,
+.gv-trend--down,
+.fc-trend--down {
+  color: var(--cooling) !important;
+}
+
+.fc-table__move--flat,
+.rh-fc-row__move--flat,
+.gv-movement-list--stable .gv-movement-list__value,
+.gv-movement-list--fit .gv-movement-list__value,
+.fc-movement-list--locked .fc-movement-list__value,
+.gv-movement-list--locked .gv-movement-list__value {
+  color: var(--th-green) !important;
+}
+
+.fc-futurecast-page .gv-movement-list__arrow,
+.fc-futurecast-page .gv-trend {
+  color: inherit;
+}
+
+/* ── Tables on white cards ── */
+.rh-fc-table__grid th,
+.rh-nil-table__grid th {
+  background: color-mix(in srgb, var(--th-blue) 4%, var(--th-card-bg));
+  color: var(--th-heading-light);
+  border-bottom-color: var(--th-border);
+}
+
+.rh-fc-table__grid td,
+.rh-nil-table__grid td {
+  color: var(--th-body);
+  border-bottom-color: var(--th-border);
+}
+
+.rh-fc-table__grid tbody tr:hover,
+.rh-nil-table__grid tbody tr:hover {
+  background: color-mix(in srgb, var(--th-blue) 4%, var(--th-card-bg));
+}
+
+/* ── FutureCast elite overrides ── */
+.fc-futurecast-page .fc-elite-card,
+.fc-futurecast-page .gv-elite-card {
+  background: var(--th-card-bg);
+  border: 1px solid var(--th-border);
+  border-top: 3px solid var(--th-accent);
+  box-shadow: var(--th-shadow);
+}
+
+.fc-futurecast-page .gv-confidence-gauge-wrap,
+.fc-futurecast-page .gv-ds-table-wrap {
+  background: transparent;
+}
+
+.gv-filters select,
+.gv-filters input,
+.fc-trending-filters select,
+.fc-trending-filters input,
+.fc-staff-notes-filters select,
+.fc-staff-notes-filters input,
+.fc-big-board-toolbar select {
+  background: var(--th-card-bg) !important;
+  border: 1px solid var(--th-border);
+  color: var(--th-body);
+}
+
+.fc-big-board-toolbar button {
+  background: color-mix(in srgb, var(--th-accent) 12%, var(--th-card-bg)) !important;
+  border-color: var(--th-accent) !important;
+  color: var(--th-accent) !important;
+}
+
+/* ── Recruiting hub wireframe shell ── */
+.gv-rh-hub {
+  --rh-card-bg: var(--th-card-bg);
+  --rh-border: var(--th-border);
+  color: var(--heading-color-dark);
+}
+
+.gv-rh-hero {
+  min-height: auto;
+}
+
+.gv-rh-sticky-tabs,
+.gv-hub-tabs {
+  background: rgba(0, 26, 51, 0.95);
+}
+
+.gv-hub-tab.is-active {
+  color: var(--th-accent);
+  border-bottom-color: var(--th-accent);
+}
+
+/* ── YoY chart bars ── */
+.rh-yoy-chart__bar--current {
+  background: var(--th-accent);
+}
+
+.rh-yoy-chart__bar--prev {
+  background: color-mix(in srgb, var(--th-blue) 20%, var(--th-card-bg));
+}
+
+/* ── Links ── */
+.rh-board-card__link,
+.rh-portal-card__link,
+.rh-tool-tile__cta,
+.rh-module-card__link {
+  color: var(--th-accent);
+}
+
+@media (max-width: 767px) {
+  .rh-page,
+  .gv-rh-hub,
+  .fc-futurecast-page {
+    --th-frame-margin: var(--space-md);
+  }
+}

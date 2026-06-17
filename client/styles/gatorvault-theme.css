@@ -88,6 +88,25 @@
   --gv-gradient-orange-fire: linear-gradient(90deg, #fa4616 0%, #ff7a45 100%);
   --gv-gradient-momentum: var(--ticker-gradient);
 
+  /* Unified hub tokens (Home, Team, Recruiting, FutureCast) */
+  --th-primary: var(--page-bg);
+  --th-accent: var(--gator-orange);
+  --th-blue: var(--uf-blue);
+  --th-green: var(--momentum-up);
+  --th-red: var(--momentum-down);
+  --th-yellow: var(--star-gold);
+  --th-card-bg: var(--card-bg);
+  --th-border: var(--card-border);
+  --th-heading-light: var(--uf-blue);
+  --th-meta: var(--subtle-gray);
+  --th-body: var(--graphite);
+  --th-radius-card: var(--radius-md);
+  --th-shadow: var(--card-shadow);
+  --th-frame-max: var(--max-width);
+  --th-frame-margin: var(--space-xl);
+  --th-grid-gap: var(--grid-gap);
+  --th-section-pad: var(--space-lg);
+
   /* Home page semantic tokens */
   --home-body: var(--graphite);
   --home-meta: var(--subtle-gray);
@@ -106,33 +125,49 @@
 /* Shared platform card primitive */
 .gv-card,
 .gv-home-card,
-.gv-team-card {
-  background: var(--card-bg);
-  color: var(--graphite);
-  border: 1px solid var(--card-border);
-  border-top: 3px solid var(--gator-orange);
-  border-radius: var(--radius-md);
-  box-shadow: var(--card-shadow);
+.gv-team-card,
+.gv-rh-card,
+.fc-elite-card,
+.fc-player-card,
+.rh-unified-card {
+  background: var(--th-card-bg);
+  color: var(--th-body);
+  border: 1px solid var(--th-border);
+  border-top: 3px solid var(--th-accent);
+  border-radius: var(--th-radius-card);
+  box-shadow: var(--th-shadow);
 }
 
 .gv-card__title,
 .gv-home-card__title,
-.gv-team-card__title {
-  color: var(--heading-color-light);
+.gv-team-card__title,
+.gv-rh-card__title,
+.fc-elite-card__title,
+.rh-section__title,
+.rh-section-title,
+.rh-panel-title,
+.rh-board-tier__title {
+  color: var(--th-heading-light);
   font-family: var(--font-family);
   font-size: 1.25rem;
   font-weight: 700;
 }
 
 .gv-card__body,
-.gv-home-card__body {
-  color: var(--body-color-light);
+.gv-home-card__body,
+.gv-rh-card__body,
+.fc-elite-card__body {
+  color: var(--th-body);
   font-family: var(--font-family);
 }
 
 .gv-card__meta,
 .gv-home-card__meta,
-.gv-team-card__meta {
-  color: var(--subtle-gray);
+.gv-team-card__meta,
+.gv-rh-card__meta,
+.fc-elite-card__meta,
+.rh-muted,
+.rh-board-card__meta {
+  color: var(--th-meta);
   font-size: 0.875rem;
 }

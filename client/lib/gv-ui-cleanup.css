@@ -480,7 +480,11 @@ body {
 /* ── FutureCast — Fit Score table, movement ── */
 .fc-futurecast-page .fc-elite-card,
 .fc-futurecast-page .fc-elite-section {
-  border-radius: 12px;
+  background: var(--th-card-bg, var(--card-bg));
+  border: 1px solid var(--th-border, var(--card-border));
+  border-top: 3px solid var(--th-accent, var(--gator-orange));
+  border-radius: var(--th-radius-card, 12px);
+  box-shadow: var(--th-shadow, var(--card-shadow));
 }
 
 .fc-futurecast-page .gv-movement-list__items {

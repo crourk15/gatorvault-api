@@ -2,20 +2,18 @@
  * FutureCast Elite Visual System — global tokens, cards, motion, paywall
  */
 :root {
-  /* Colors — Figma spec */
-  --gv-bg: var(--gv-blue-primary, #0021a5);
-  --gv-card: var(--gv-white, #ffffff);
-  --gv-border: var(--gv-border-card, rgba(0, 26, 51, 0.2));
-  --gv-text-primary: var(--gv-white, #ffffff);
-  --gv-text-secondary: var(--gv-gray-storm, #e5e5e5);
-  --gv-orange: var(--gv-orange-primary, #fa4616);
-  --gv-blue: var(--gv-blue-primary, #0021a5);
-  --gv-green: #4ade80;
-  --gv-red: #ff4d4d;
-  --gv-yellow: #facc15;
-
-  /* Typography */
-  --gv-font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Unified with gatorvault-theme.css */
+  --gv-bg: var(--page-bg);
+  --gv-card: var(--card-bg);
+  --gv-border: var(--card-border);
+  --gv-text-primary: var(--heading-color-dark);
+  --gv-text-secondary: var(--subtle-gray);
+  --gv-orange: var(--gator-orange);
+  --gv-blue: var(--uf-blue);
+  --gv-green: var(--momentum-up);
+  --gv-red: var(--momentum-down);
+  --gv-yellow: var(--star-gold);
+  --gv-font-family: var(--font-family);
   --gv-font-hero: clamp(2rem, 5vw, 3.75rem);
   --gv-font-section: clamp(1rem, 2vw, 1.25rem);
   --gv-font-body: clamp(0.875rem, 1.5vw, 1rem);
@@ -23,29 +21,17 @@
   --gv-weight-hero: 800;
   --gv-weight-section: 700;
   --gv-weight-body: 500;
-
-  /* Radius */
-  --gv-radius-card: 0.75rem;
-  --gv-radius-block: 0.6rem;
+  --gv-radius-card: var(--radius-md);
+  --gv-radius-block: var(--radius-md);
   --gv-radius-pill: 9999px;
-
-  /* Shadows */
-  --gv-shadow-card: 0 10px 25px rgba(0, 0, 0, 0.4);
-  --gv-shadow-card-hover: 0 14px 32px rgba(0, 0, 0, 0.55);
-  --gv-shadow-hero: 0 20px 40px rgba(0, 0, 0, 0.6);
-
-  /* Motion */
+  --gv-shadow-card: var(--card-shadow);
+  --gv-shadow-card-hover: var(--card-shadow);
+  --gv-shadow-hero: var(--card-shadow);
   --gv-motion-hover: 0.15s linear;
   --gv-motion-fade: 0.4s linear;
   --gv-motion-sparkline: 0.6s linear;
   --gv-motion-gauge: 0.8s linear;
   --gv-motion-pulse: 1.5s infinite;
-
-  /* Gradients & overlays */
-  --gv-gradient-swamp-night: linear-gradient(165deg, #0021a5 0%, #001656 55%, #001a33 100%);
-  --gv-gradient-accent: linear-gradient(90deg, var(--gv-orange), var(--gv-blue));
-  --gv-overlay-lights-opacity: 0.2;
-  --gv-overlay-mist-opacity: 0.15;
 }
 
 /* Page shell */
@@ -130,40 +116,18 @@
 .fc-elite-hero {
   position: relative;
   padding: 2.5rem 1.5rem 3rem;
-  border-radius: 1rem;
+  border-radius: var(--gv-radius-card);
   overflow: hidden;
-  background: var(--gv-gradient-swamp-night);
-  box-shadow: var(--gv-shadow-hero);
+  background: var(--gv-card);
+  box-shadow: var(--gv-shadow-card);
   border: 1px solid var(--gv-border);
+  border-top: 3px solid var(--gv-orange);
   animation: gv-fade-in var(--gv-motion-fade) both;
 }
 
-.gv-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("/textures/stadium-lights.png");
-  background-repeat: no-repeat;
-  background-position: top center;
-  background-size: cover;
-  opacity: var(--gv-overlay-lights-opacity);
-  pointer-events: none;
-  will-change: transform;
-  transform: translateY(calc(var(--gv-parallax, 0px) * -1));
-}
-
+.gv-hero::before,
 .gv-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("/textures/swamp-mist.png");
-  background-repeat: no-repeat;
-  background-position: bottom center;
-  background-size: cover;
-  opacity: var(--gv-overlay-mist-opacity);
-  pointer-events: none;
-  will-change: transform;
-  transform: translateY(var(--gv-parallax, 0px));
+  display: none;
 }
 
 .gv-hero-content,
@@ -724,14 +688,14 @@
 }
 
 .gv-movement-list--up .gv-movement-list__value,
-.fc-movement-list--up .fc-movement-list__value { color: var(--gv-green); }
+.fc-movement-list--up .fc-movement-list__value { color: var(--gv-orange); }
 .gv-movement-list--down .gv-movement-list__value,
-.fc-movement-list--down .fc-movement-list__value { color: var(--gv-red); }
+.fc-movement-list--down .fc-movement-list__value { color: var(--cooling, #3b82f6); }
 .gv-movement-list--volatile .gv-movement-list__value,
-.fc-movement-list--volatile .fc-movement-list__value { color: var(--gv-yellow); }
-.gv-movement-list--stable .gv-movement-list__value { color: var(--gv-text-secondary); }
+.fc-movement-list--volatile .fc-movement-list__value { color: var(--gv-orange); }
+.gv-movement-list--stable .gv-movement-list__value,
 .gv-movement-list--fit .gv-movement-list__value { color: var(--gv-green); }
-.gv-movement-list--risk .gv-movement-list__value { color: var(--gv-red); }
+.gv-movement-list--risk .gv-movement-list__value { color: var(--cooling, #3b82f6); }
 
 .gv-movement-list__items,
 .fc-movement-list__items {
@@ -747,9 +711,10 @@
   gap: 0.5rem;
   padding: 0.55rem 0.65rem;
   margin-bottom: 0.35rem;
-  border-radius: 0.5rem;
-  background: rgba(2, 6, 23, 0.55);
+  border-radius: var(--gv-radius-card);
+  background: var(--gv-card);
   border: 1px solid var(--gv-border);
+  border-top: 3px solid var(--gv-orange);
   text-decoration: none;
   color: inherit;
   font-size: 0.8125rem;
