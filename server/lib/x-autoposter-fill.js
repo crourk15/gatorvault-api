@@ -13,6 +13,7 @@ const { getBeatPosts } = require('./live-beat');
 const beatFilters = require('./beat-writer-filters');
 const copy = require('./x-autoposter-copy');
 const cadence = require('./x-autoposter-cadence');
+const pipelineGuards = require('./pipeline-guards');
 const validation = require('./x-autoposter-validation');
 const postSpec = require('./x-autoposter-post-spec');
 
@@ -484,6 +485,9 @@ async function collectFreshPostCandidates() {
 }
 
 async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
+  if (!pipelineGuards.autopostEnabled()) {
+    return { ok: true, skipped: true, reason: 'autoposter disabled', pending: 0, enqueued: [] };
+  }
   try {
     intelStore.reconcileGhostQueuedIntel();
   } catch {

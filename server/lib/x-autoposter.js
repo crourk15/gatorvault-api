@@ -12,6 +12,7 @@ const { refillAutoposterQueue } = require('./x-autoposter-fill');
 const cadence = require('./x-autoposter-cadence');
 const freshness = require('./autoposter-freshness');
 const opsMonitor = require('./ops-monitor');
+const pipelineGuards = require('./pipeline-guards');
 const {
   isReplyEnabled,
   scheduleRepliesForSentPost,
@@ -223,6 +224,9 @@ function isDuplicateTweetError(err) {
 }
 
 async function processQueueItem(item) {
+  if (!pipelineGuards.autopostEnabled()) {
+    return { ok: false, skipped: true, reason: 'autoposter disabled', itemId: item?.id };
+  }
   saveSchedulerStatus({ lastPostAttempt: store.nowIso(), lastError: null });
   store.logQueueOp('post_attempt', item, { preview: String(item.text || '').slice(0, 120) });
 
@@ -431,9 +435,9 @@ let _schedulerTimer = null;
 let _processing = false;
 
 function startXAutoposterScheduler() {
-  if (process.env.X_AUTOPOST_ENABLED !== 'true') {
-    autopostLog('warn', 'Cron disabled — set X_AUTOPOST_ENABLED=true');
-    saveSchedulerStatus({ lastError: 'Scheduler disabled — X_AUTOPOST_ENABLED is not true' });
+  if (!pipelineGuards.autopostEnabled()) {
+    autopostLog('warn', 'Cron disabled — X_PIPELINES_ENABLED and X_AUTOPOST_ENABLED must be true');
+    saveSchedulerStatus({ lastError: 'Scheduler disabled — autoposter pipelines off' });
     return;
   }
 

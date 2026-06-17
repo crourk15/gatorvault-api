@@ -1,8 +1,17 @@
-const { describe, it } = require('node:test');
+const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const { rewriteIntel } = require('../../lib/autoposter/rewrite-engine');
+const { enablePipelineEnvForTests, restorePipelineEnv } = require('./enable-pipeline-env');
 
 describe('rewrite-engine', () => {
+  let savedEnv;
+  before(() => {
+    savedEnv = enablePipelineEnvForTests();
+  });
+  after(() => {
+    restorePipelineEnv(savedEnv);
+  });
+
   it('produces insider-style rewrite with context', async () => {
     const player = {
       name: 'Easton Royal',

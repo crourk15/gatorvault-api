@@ -12,6 +12,7 @@ const identityMatcher = require('./identity-matcher');
 const contextEnrichment = require('./context-enrichment');
 const qualityChecks = require('./quality-checks');
 const monitoring = require('./autoposter-monitoring');
+const pipelineGuards = require('../pipeline-guards');
 
 const MAX_REGEN_ATTEMPTS = parseInt(process.env.X_AUTOPOST_QUOTE_REGEN_ATTEMPTS || '3', 10);
 
@@ -55,7 +56,11 @@ async function buildPrompt(player, context, intel) {
   });
 }
 
-async function rewriteIntelStub(player, context, intel) {
+async function rewriteIntelStub(player, context, rawIntel) {
+  if (!pipelineGuards.gm2RewriteEnabled()) {
+    return pipelineGuards.pipelinesSkipped('gm2 rewrite disabled');
+  }
+  const intel = pipelineGuards.guardIntelForPipeline(rawIntel);
   const prompt = await buildPrompt(player, context, intel);
   const sourceText = String(intel.text || intel.detail || '');
   let attempts = 0;
@@ -90,6 +95,9 @@ async function rewriteIntelStub(player, context, intel) {
 }
 
 async function rewriteIntelPipeline(input = {}) {
+  if (!pipelineGuards.intelRewriteEnabled()) {
+    return pipelineGuards.pipelinesSkipped('intel rewrite disabled');
+  }
   const {
     beatText,
     ctx = null,
@@ -102,7 +110,7 @@ async function rewriteIntelPipeline(input = {}) {
     sport = 'football',
     rewriteMetrics = null
   } = input;
-  const intel = rawIntel || {};
+  const intel = pipelineGuards.guardIntelForPipeline(rawIntel);
 
   if (sport !== 'football') {
     logRewriteOp('rewrite_skip', { reason: 'non_football_sport', sport });

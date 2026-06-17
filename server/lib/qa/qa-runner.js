@@ -4,6 +4,7 @@
 const config = require('./qa-config');
 const qaStore = require('./qa-store');
 const qaAlerts = require('./qa-alerts');
+const pipelineGuards = require('../pipeline-guards');
 const { runCrawlerPhases } = require('./qa-crawler-phases');
 const { getQaCrawlerBuild, formatQaCrawlerBuildLog } = require('./qa-build-info');
 
@@ -119,6 +120,7 @@ async function runQaCrawl(opts = {}) {
 }
 
 function startQaScheduler() {
+  if (!pipelineGuards.guardScheduledJobStart('qa-crawler')) return null;
   if (!config.ENABLED) {
     console.log('[qa] crawler disabled (QA_CRAWLER_ENABLED=false)');
     return null;

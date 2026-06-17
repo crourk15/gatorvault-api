@@ -8,6 +8,7 @@ const contextEnrichment = require('./context-enrichment');
 const rewriteEngine = require('./rewrite-engine');
 const qualityChecks = require('./quality-checks');
 const monitoring = require('./autoposter-monitoring');
+const pipelineGuards = require('../pipeline-guards');
 
 function findIntelForItem(item = {}) {
   if (item.sourceIntelId) {
@@ -49,6 +50,12 @@ function buildTweetFromRewrite(player, rewriteText) {
 }
 
 async function prepareQueueItemForPost(item = {}) {
+  if (!pipelineGuards.pipelinesEnabled()) {
+    return { ok: true, item, skipped: true, reason: 'pipelines disabled' };
+  }
+  if (!pipelineGuards.intelRewriteEnabled()) {
+    return { ok: true, item, skipped: true, reason: 'intel rewrite disabled' };
+  }
   if (process.env.X_AUTOPOST_INTELLIGENCE_REWRITE === 'false') {
     return { ok: true, item, skipped: true, reason: 'rewrite_disabled' };
   }
@@ -56,7 +63,7 @@ async function prepareQueueItemForPost(item = {}) {
     return { ok: true, item, skipped: true, reason: 'non_news' };
   }
 
-  const intel = findIntelForItem(item);
+  const intel = pipelineGuards.guardIntelForPipeline(findIntelForItem(item));
   const beatText = intelToBeatText(intel, item);
   if (!beatText) {
     return { ok: true, item, skipped: true, reason: 'no_beat_text' };

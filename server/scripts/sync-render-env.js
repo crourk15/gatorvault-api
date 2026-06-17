@@ -29,6 +29,16 @@ const SYNC_KEYS = [
   'BEEHIIV_AUTOMATION_ID'
 ];
 
+/** Always synced to Render — production pipeline kill switches. */
+const STABILITY_ENV = {
+  X_PIPELINES_ENABLED: 'false',
+  X_AUTOPOST_ENABLED: 'false',
+  X_GM2_REWRITE_ENABLED: 'false',
+  X_INTEL_REWRITE_ENABLED: 'false',
+  X_AUTOPROMPT_ENABLED: 'false',
+  X_SCHEDULED_JOBS_ENABLED: 'false'
+};
+
 const key = process.env.RENDER_API_KEY;
 if (!key) {
   console.error('Missing RENDER_API_KEY — add to server/.env (Render → Account Settings → API Keys)');
@@ -87,6 +97,9 @@ async function main() {
     const val = env[k];
     if (val == null || val === '') continue;
     updates.push({ key: k, value: String(val) });
+  }
+  for (const [k, val] of Object.entries(STABILITY_ENV)) {
+    updates.push({ key: k, value: val });
   }
 
   if (!updates.length) {

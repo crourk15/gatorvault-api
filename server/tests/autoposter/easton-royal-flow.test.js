@@ -1,15 +1,24 @@
-const { describe, it } = require('node:test');
+const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const { parseBeatPostForVisitIntel } = require('../../lib/beat-writer-ingest');
 const { matchIntelToPlayer } = require('../../lib/autoposter/identity-matcher');
 const { isEligibleIntel } = require('../../lib/autoposter/autoposter-policy');
 const { enrichContext } = require('../../lib/autoposter/context-enrichment');
 const { rewriteIntel } = require('../../lib/autoposter/rewrite-engine');
+const { enablePipelineEnvForTests, restorePipelineEnv } = require('./enable-pipeline-env');
 
 const BEAT_TWEET =
   '2027 WR Easton Royal will take an official visit to Florida from June 11–13.';
 
 describe('Easton Royal official visit flow', () => {
+  let savedEnv;
+  before(() => {
+    savedEnv = enablePipelineEnvForTests();
+  });
+  after(() => {
+    restorePipelineEnv(savedEnv);
+  });
+
   it('parses Corey/Tyler beat tweet into structured intel row', () => {
     const row = parseBeatPostForVisitIntel(
       {

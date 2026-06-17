@@ -2,6 +2,8 @@
  * GM2 Rewrite Prompt — canonical system prompt for every autoposter rewrite.
  * DO NOT edit, trim, or reinterpret this text without explicit product approval.
  */
+const pipelineGuards = require('../pipeline-guards');
+
 const GM2_REWRITE_PROMPT = `You are GatorVault's Recruiting Insider Engine. Rewrite the provided recruiting intel into an elite, insider-quality update written in the voice of a plugged-in Florida Gators recruiting analyst.
 
 Your job is to transform raw intel (beat writer posts, visit notes, predictions, movement, staff feedback, etc.) into a polished insider update that provides context, insight, and projection.
@@ -84,6 +86,9 @@ function buildGM2UserPayload({ beatText, identity, context, intel, metrics } = {
 }
 
 function formatGM2PromptBundle(input = {}) {
+  if (!pipelineGuards.autopromptEnabled()) {
+    return pipelineGuards.pipelinesSkipped('autoprompt disabled');
+  }
   return {
     system: GM2_REWRITE_PROMPT,
     user: buildGM2UserPayload(input)

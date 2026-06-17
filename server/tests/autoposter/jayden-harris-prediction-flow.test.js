@@ -1,4 +1,4 @@
-const { describe, it } = require('node:test');
+const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const {
   resolvePredictionEvent,
@@ -8,11 +8,20 @@ const { matchIntelToPlayer } = require('../../lib/autoposter/identity-matcher');
 const { isEligibleIntel } = require('../../lib/autoposter/autoposter-policy');
 const { enrichContext } = require('../../lib/autoposter/context-enrichment');
 const { rewriteIntel } = require('../../lib/autoposter/rewrite-engine');
+const { enablePipelineEnvForTests, restorePipelineEnv } = require('./enable-pipeline-env');
 
 const PREDICTION_INTEL_TEXT =
   'Rivals PM now has UF as the pick for 2026 CB Jayden Harris, confidence up from 40% to 70%.';
 
 describe('Jayden Harris prediction_change flow', () => {
+  let savedEnv;
+  before(() => {
+    savedEnv = enablePipelineEnvForTests();
+  });
+  after(() => {
+    restorePipelineEnv(savedEnv);
+  });
+
   it('detects confidence movement as prediction_change', () => {
     const row = {
       pickKey: 'pick_jayden_harris',

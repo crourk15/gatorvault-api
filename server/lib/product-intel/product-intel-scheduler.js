@@ -4,6 +4,7 @@
 const qaStore = require('../qa/qa-store');
 const store = require('./product-intel-store');
 const engine = require('./product-intel-engine');
+const pipelineGuards = require('../pipeline-guards');
 
 let lastDailyKey = '';
 let lastWeeklyKey = '';
@@ -45,6 +46,7 @@ async function syncIfStale(opts = {}) {
 }
 
 async function startProductIntelScheduler() {
+  if (!pipelineGuards.guardScheduledJobStart('product-intel')) return;
   if (process.env.PRODUCT_INTEL_ENABLED === 'false') {
     console.log('[product-intel] scheduler disabled (PRODUCT_INTEL_ENABLED=false)');
     return;

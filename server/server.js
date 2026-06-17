@@ -29,6 +29,7 @@ const { apiMonitorMiddleware } = require('./lib/api-monitor');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
 const { effectiveTier } = require('./lib/session-auth');
+const pipelineGuards = require('./lib/pipeline-guards');
 
 const fetch = require('node-fetch');
 const nodemailer = require('nodemailer');
@@ -857,6 +858,7 @@ app.get('/api/test/logs/stream', (req, res) => {
 
 let _gvLiveSchedulerStarted = false;
 function startLiveDashboardScheduler() {
+  if (!pipelineGuards.guardScheduledJobStart('live-dashboard')) return;
   if (_gvLiveSchedulerStarted) return;
   _gvLiveSchedulerStarted = true;
   const { refreshLiveDashboard } = require('./lib/live-aggregator');
@@ -880,6 +882,7 @@ function startLiveDashboardScheduler() {
 
 let _gvIngestSchedulerStarted = false;
 function startOn3IngestScheduler() {
+  if (!pipelineGuards.guardScheduledJobStart('on3-ingest')) return;
   if (process.env.ON3_INGEST_ENABLED !== 'true') return;
   if (_gvIngestSchedulerStarted) return;
   _gvIngestSchedulerStarted = true;
@@ -906,6 +909,7 @@ function startOn3IngestScheduler() {
 
 let _gvRivalsPmSchedulerStarted = false;
 function startRivalsPmIngestScheduler() {
+  if (!pipelineGuards.guardScheduledJobStart('rivals-pm-ingest')) return;
   if (process.env.RIVALS_PM_INGEST_ENABLED !== 'true') return;
   if (_gvRivalsPmSchedulerStarted) return;
   _gvRivalsPmSchedulerStarted = true;
@@ -932,6 +936,7 @@ function startRivalsPmIngestScheduler() {
 
 let _gvBeatLateIngestStarted = false;
 function startBeatLateIngestScheduler() {
+  if (!pipelineGuards.guardScheduledJobStart('beat-late-ingest')) return;
   if (_gvBeatLateIngestStarted) return;
   _gvBeatLateIngestStarted = true;
   const intervalMs = Math.max(
@@ -969,6 +974,7 @@ function startBeatLateIngestScheduler() {
 
 let _gvPipelineMonitoringStarted = false;
 function startPipelineMonitoringScheduler() {
+  if (!pipelineGuards.guardScheduledJobStart('pipeline-monitoring')) return;
   if (_gvPipelineMonitoringStarted) return;
   _gvPipelineMonitoringStarted = true;
   const monitoring = require('./lib/recruiting-monitoring');
@@ -989,6 +995,7 @@ function startPipelineMonitoringScheduler() {
 
 let _gvGm2AutoRepairStarted = false;
 function startGm2AutoRepairScheduler() {
+  if (!pipelineGuards.guardScheduledJobStart('gm2-auto-repair')) return;
   if (process.env.GM2_AUTO_REPAIR_ENABLED === 'false') return;
   if (_gvGm2AutoRepairStarted) return;
   _gvGm2AutoRepairStarted = true;
@@ -1012,6 +1019,7 @@ function startGm2AutoRepairScheduler() {
 }
 
 function startMediaIngestScheduler() {
+  if (!pipelineGuards.guardScheduledJobStart('media-ingest')) return;
   if (process.env.MEDIA_INGEST_ENABLED !== 'true') return;
   if (_gvMediaIngestStarted) return;
   _gvMediaIngestStarted = true;
@@ -1227,6 +1235,9 @@ app.listen(PORT, () => {
     console.warn('X AutoPoster scheduler failed to start', e.message);
   }
   try {
+    if (!pipelineGuards.scheduledJobsEnabled()) {
+      console.log('[portal] On3 transfer sync skipped — X_SCHEDULED_JOBS_ENABLED is not true');
+    } else {
     const { syncPortalFromOn3 } = require('./lib/on3-ingest');
     const bootDelay = Math.max(5000, parseInt(process.env.ON3_PORTAL_SYNC_BOOT_DELAY_MS || '12000', 10) || 12000);
     setTimeout(() => {
@@ -1236,6 +1247,7 @@ app.listen(PORT, () => {
         .then((r) => console.log('[portal] On3 transfer sync:', r.count, 'players from', r.url))
         .catch((err) => console.warn('[portal] On3 transfer sync failed:', err.message));
     }, bootDelay);
+    }
   } catch (e) {
     console.warn('Portal sync on boot failed to schedule', e.message);
   }
@@ -1244,7 +1256,7 @@ app.listen(PORT, () => {
   } catch (e) {
     console.warn('Media ingest scheduler failed to start', e.message);
   }
-  if (process.env.FILM_ROOM_SYNC_ENABLED === 'true') {
+  if (pipelineGuards.scheduledJobsEnabled() && process.env.FILM_ROOM_SYNC_ENABLED === 'true') {
     try {
       const { rebuildFilmRoomCatalog } = require('./lib/film-room-feed');
       const filmInterval = parseInt(process.env.FILM_ROOM_SYNC_INTERVAL_MS || '21600000', 10);
@@ -1264,7 +1276,7 @@ app.listen(PORT, () => {
       console.warn('Film Room knowledge refresh scheduler failed to start', e.message);
     }
   }
-  if (process.env.SCOUTING_UPDATE_ENABLED === 'true') {
+  if (pipelineGuards.scheduledJobsEnabled() && process.env.SCOUTING_UPDATE_ENABLED === 'true') {
     try {
       const scoutingInterval = parseInt(process.env.SCOUTING_UPDATE_INTERVAL_MS || '21600000', 10);
       const runScoutingUpdate = () => {
@@ -1297,7 +1309,7 @@ app.listen(PORT, () => {
       console.warn('Scouting update scheduler failed to start', e.message);
     }
   }
-  if (process.env.ARTICLE_ENGINE_ENABLED !== 'false') {
+  if (pipelineGuards.scheduledJobsEnabled() && process.env.ARTICLE_ENGINE_ENABLED !== 'false') {
     try {
       const articleInterval = parseInt(process.env.ARTICLE_ENGINE_INTERVAL_MS || '604800000', 10);
       const runArticleEngine = () => {

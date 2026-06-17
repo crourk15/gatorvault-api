@@ -3,6 +3,7 @@
  * Uses the canonical GM2 prompt + template composition (no external LLM required).
  */
 const { GM2_REWRITE_PROMPT } = require('./autoposter/gm2-rewrite-prompt');
+const pipelineGuards = require('./pipeline-guards');
 
 function formatVisitLabel(visitType) {
   const t = String(visitType || '').toLowerCase();
@@ -76,7 +77,11 @@ function buildPredictionChangeParagraph(player = {}, context = {}, intel = {}) {
 }
 
 async function complete(promptOrBundle) {
+  if (!pipelineGuards.gm2RewriteEnabled()) {
+    return pipelineGuards.pipelinesSkipped('gm2 rewrite disabled');
+  }
   if (promptOrBundle && typeof promptOrBundle === 'object' && promptOrBundle.player) {
+    promptOrBundle.intel = pipelineGuards.guardIntelForPipeline(promptOrBundle.intel);
     const et = String(promptOrBundle.intel?.eventType || '').toLowerCase();
     if (et === 'prediction_change' || et === 'prediction') {
       return buildPredictionChangeParagraph(

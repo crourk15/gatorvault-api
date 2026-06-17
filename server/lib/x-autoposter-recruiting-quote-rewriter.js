@@ -4,6 +4,7 @@
  */
 const template = require('./x-autoposter-template');
 const postSpec = require('./x-autoposter-post-spec');
+const pipelineGuards = require('./pipeline-guards');
 
 const OVERLAP_THRESHOLD = parseFloat(process.env.X_AUTOPOST_QUOTE_OVERLAP_MAX || '0.2', 10);
 const MAX_REGEN_ATTEMPTS = parseInt(process.env.X_AUTOPOST_QUOTE_REGEN_ATTEMPTS || '4', 10);
@@ -28,7 +29,7 @@ const STOP_WORDS = new Set([
 const PER_REPORT_RE = /^per .+ report\.?$/i;
 
 function isRewriterEnabled() {
-  return process.env.X_AUTOPOST_QUOTE_REWRITER !== 'false';
+  return pipelineGuards.intelRewriteEnabled() && process.env.X_AUTOPOST_QUOTE_REWRITER !== 'false';
 }
 
 function isPerReportLine(text) {
@@ -387,8 +388,14 @@ function pickNonOverlapping(variants, sourceText, { minLen = 24 } = {}) {
 }
 
 function rewriteBeatUpdate(input = {}) {
+  if (!pipelineGuards.intelRewriteEnabled()) {
+    return pipelineGuards.pipelinesSkipped('intel rewrite disabled');
+  }
   const rewriteEngine = require('./autoposter/rewrite-engine');
-  return rewriteEngine.rewriteIntel(input);
+  return rewriteEngine.rewriteIntel({
+    ...input,
+    intel: pipelineGuards.guardIntelForPipeline(input.intel)
+  });
 }
 
 function buildFootballPerReportFallback(sourceLabel) {
