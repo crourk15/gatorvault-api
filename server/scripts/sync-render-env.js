@@ -110,18 +110,10 @@ async function main() {
   console.log('\nSyncing env vars:');
   for (const u of updates) {
     console.log(`  ${u.key}: ${mask(u.value)}`);
-    const prev = byKey[u.key];
-    if (prev && prev.id) {
-      await api(`/services/${svc.id}/env-vars/${prev.id}`, {
-        method: 'PUT',
-        body: JSON.stringify({ value: u.value })
-      });
-    } else {
-      await api(`/services/${svc.id}/env-vars`, {
-        method: 'POST',
-        body: JSON.stringify(u)
-      });
-    }
+    await api(`/services/${svc.id}/env-vars/${encodeURIComponent(u.key)}`, {
+      method: 'PUT',
+      body: JSON.stringify({ value: u.value })
+    });
   }
 
   console.log('\nEnv sync complete.');
