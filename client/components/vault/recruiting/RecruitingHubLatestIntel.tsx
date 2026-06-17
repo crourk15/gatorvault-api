@@ -1,4 +1,4 @@
 'use client';
 
-/** @deprecated import from @/components/recruiting-hub/HighPriorityIntelFeed */
-export { HighPriorityIntelFeed as RecruitingHubLatestIntel } from '@/components/recruiting-hub/HighPriorityIntelFeed';
+/** @deprecated import from @/components/recruiting-hub/HighPriorityIntel */
+export { HighPriorityIntelGrid as RecruitingHubLatestIntel } from '@/components/recruiting-hub/HighPriorityIntel';

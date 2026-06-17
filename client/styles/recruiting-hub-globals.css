@@ -237,114 +237,6 @@
   border-radius: 3px 3px 0 0;
 }
 
-/* ── HighPriorityIntelFeed ── */
-.rh-intel-feed {
-  padding: var(--space-lg) 0;
-}
-
-.rh-intel-feed__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-sm);
-  align-items: stretch;
-}
-
-@media (max-width: 767px) {
-  .rh-intel-feed__grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.rh-intel-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  min-height: 168px;
-  padding: var(--space-md);
-  background: var(--color-bg-secondary, #ffffff);
-  border: 1px solid rgba(0, 33, 165, 0.18);
-  border-radius: var(--radius-sm);
-  color: var(--color-text-primary, #001a33);
-  box-shadow: var(--gv-shadow-card, 0 4px 16px rgba(0, 26, 51, 0.28));
-  transition: border-color var(--transition-fast), transform var(--transition-fast);
-}
-
-.rh-intel-card:hover {
-  border-color: var(--color-accent-orange);
-  transform: translateY(-2px);
-}
-
-.rh-intel-card__head {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.rh-intel-card__name {
-  margin: 0;
-  font-size: var(--text-h3);
-  font-weight: 600;
-  color: var(--color-text-primary, #001a33);
-}
-
-.rh-intel-card__meter {
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(0, 33, 165, 0.12);
-  overflow: hidden;
-}
-
-.rh-intel-card__meter-fill {
-  height: 100%;
-  background: var(--color-accent-orange, #fa4616);
-  border-radius: inherit;
-  transition: width 400ms ease-out;
-}
-
-.rh-intel-card__text {
-  margin: 0;
-  font-size: var(--text-small);
-  color: var(--color-text-secondary);
-  line-height: 1.45;
-}
-
-.rh-intel-card__time {
-  margin: 0;
-  font-size: 12px;
-  color: var(--color-text-secondary);
-}
-
-.rh-intel-card__link {
-  margin-top: auto;
-  align-self: flex-end;
-  text-align: right;
-  font-size: var(--text-small);
-  font-weight: 600;
-  color: var(--color-accent-orange);
-  text-decoration: none;
-}
-
-.rh-intel-card__link--fc {
-  align-self: flex-end;
-  text-align: right;
-  font-size: var(--text-small);
-  font-weight: 600;
-  color: var(--color-accent-orange);
-  text-decoration: none;
-}
-
-.rh-class-overview__header .gv-tabs {
-  flex-shrink: 0;
-}
-
-.rh-class-overview__header .gv-tab {
-  min-height: 44px;
-}
-
-.rh-intel-card__link:hover {
-  text-decoration: underline;
-}
-
 /* ── ClassOverview ── */
 .rh-class-overview {
   padding: var(--space-lg) 0;
@@ -654,8 +546,8 @@
 }
 
 /* PositionIcon — uses .gv-pos-icon tokens from gatorvault-brand.css */
-.rh-intel-card .gv-pos-icon--on-blue {
-  color: var(--gv-blue, #0021a5);
+.intel-card .gv-pos-icon--on-blue {
+  color: var(--color-uf-blue, #0021a5);
 }
 
 @media (max-width: 767px) {

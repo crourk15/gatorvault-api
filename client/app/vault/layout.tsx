@@ -19,6 +19,7 @@ import '@/lib/vault-dashboard.css';
 import '@/lib/vault-recruiting-hub.css';
 import '@/styles/recruiting-hub-tokens.css';
 import '@/styles/recruiting-hub-globals.css';
+import '@/styles/recruiting-hub-command.css';
 import '@/lib/headliner-card.css';
 import '@/lib/schedule-premium.css';
 import '@/lib/vault-gatornation-live.css';

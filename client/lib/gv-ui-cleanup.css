@@ -250,14 +250,6 @@ body {
   align-items: center;
 }
 
-.rh-intel-feed__grid {
-  align-items: stretch;
-}
-
-.rh-intel-card {
-  min-height: 168px;
-}
-
 .rh-page > * + * {
   margin-top: var(--space-xxl, 2rem);
 }
@@ -575,7 +567,7 @@ body {
 
   .gv-card,
   .rh-module-card,
-  .rh-intel-card,
+  .intel-card,
   .rh-commit-card,
   .gv-team-roster-card,
   .gv-sched-game-card,
@@ -618,7 +610,7 @@ body {
 
 .gv-card,
 .rh-module-card,
-.rh-intel-card,
+.intel-card,
 .gv-team-roster-card,
 .gv-sched-game-card,
 .gv-article-card,

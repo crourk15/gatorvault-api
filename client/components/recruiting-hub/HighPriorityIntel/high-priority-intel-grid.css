@@ -1,0 +1,55 @@
+/**
+ * HighPriorityIntelGrid — 2×2 desktop, 1×4 mobile
+ */
+
+.hp-intel-section {
+  margin-top: var(--rh-section-gap, var(--space-8));
+}
+
+.hp-intel-section__title {
+  margin: 0 0 var(--rh-title-gap, var(--space-6));
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.hp-intel-section__sub {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.hp-intel-section__empty {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.hp-intel-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .hp-intel-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.hp-intel-grid__skeleton {
+  min-height: 260px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  animation: hp-intel-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes hp-intel-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
