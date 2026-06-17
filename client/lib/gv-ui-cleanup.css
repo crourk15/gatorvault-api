@@ -1128,6 +1128,20 @@ body {
   margin-top: 0;
 }
 
+.gv-vault-shell__main:has(.gv-dash) .gv-dash__frame {
+  margin-top: 0;
+  padding-top: var(--space-lg);
+}
+
+.gv-vault-shell__main:has(.gv-dash) .gv-dash__command {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.gv-vault-shell__main:has(.gv-dash) .gv-dash-command-card {
+  margin-top: 0;
+}
+
 .gv-vault-shell__main:has(.gv-dash) .gv-dash-hero {
   padding-top: 0;
   margin-top: 0;

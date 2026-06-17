@@ -22,7 +22,7 @@ export function DashboardTopCommandCard({
 }: Props): React.ReactElement {
   if (loading || !snapshot) {
     return (
-      <article className="gv-dash-command-card" aria-label="Command center">
+      <article className="gv-dash__cell gv-dash__cell--12 gv-dash-command-card" aria-label="Command center">
         <div className="gv-dash-skeleton" style={{ minHeight: 220 }} />
       </article>
     );
@@ -35,7 +35,7 @@ export function DashboardTopCommandCard({
 
   return (
     <article
-      className="gv-dash-command-card gv-dash-card"
+      className="gv-dash__cell gv-dash__cell--12 gv-dash-command-card gv-dash-card"
       aria-label="Command center"
       data-testid="dashboard-command-card"
     >
@@ -45,10 +45,7 @@ export function DashboardTopCommandCard({
           <h1 className="gv-dash-command-card__title">GatorVault Dashboard</h1>
           <p className="gv-dash-command-card__subtitle">{subtitle}</p>
         </div>
-        <span className="gv-dash-command-card__live" aria-live="polite">
-          <span className="gv-dash-hero__live-dot" aria-hidden="true" />
-          Live
-        </span>
+        <span className="gv-dash-command-card__status">Status: Online</span>
       </div>
 
       <div className="gv-dash-quick-stats gv-dash-command-card__stats">

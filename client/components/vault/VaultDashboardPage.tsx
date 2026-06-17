@@ -3,20 +3,22 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import '@/lib/vault-dashboard.css';
 import { DashboardTopCommandCard } from '@/components/vault/dashboard/DashboardTopCommandCard';
-import { DashboardTicker } from '@/components/vault/dashboard/DashboardTicker';
 import { DashboardRecruitingSnapshot } from '@/components/vault/dashboard/DashboardRecruitingSnapshot';
 import { DashboardFutureCastSnapshot } from '@/components/vault/dashboard/DashboardFutureCastSnapshot';
 import { DashboardPortalActivity } from '@/components/vault/dashboard/DashboardPortalActivity';
 import { DashboardNilTrends } from '@/components/vault/dashboard/DashboardNilTrends';
 import { DashboardGatorNationPreview } from '@/components/vault/dashboard/DashboardGatorNationPreview';
 import { DashboardTeamSnapshot } from '@/components/vault/dashboard/DashboardTeamSnapshot';
+import { DashboardMovementFeed } from '@/components/vault/dashboard/DashboardMovementFeed';
 import {
   DASHBOARD_REFRESH,
   computeMomentumPct,
+  fetchContentLatest,
   fetchLiveTicker,
   fetchMovementPreview,
   fetchPersonalizedHints,
   fetchRecruitingSnapshot,
+  type ContentLatestResponse,
   type PersonalizedResponse,
   type RecruitingSnapshot,
   type TickerResponse,
@@ -28,6 +30,7 @@ const TICKER_DEBOUNCE_MS = 400;
 export function VaultDashboardPage(): React.ReactElement {
   const [ticker, setTicker] = useState<TickerResponse | null>(null);
   const [movement, setMovement] = useState<Awaited<ReturnType<typeof fetchMovementPreview>> | null>(null);
+  const [content, setContent] = useState<ContentLatestResponse | null>(null);
   const [recruiting, setRecruiting] = useState<RecruitingSnapshot | null>(null);
   const [personalized, setPersonalized] = useState<PersonalizedResponse | null>(null);
   const [momentumPct, setMomentumPct] = useState(72);
@@ -82,6 +85,15 @@ export function VaultDashboardPage(): React.ReactElement {
     }
   }, []);
 
+  const loadContent = useCallback(async (force = false) => {
+    try {
+      const data = await fetchContentLatest(force);
+      setContent(data);
+    } catch {
+      /* keep prior */
+    }
+  }, []);
+
   const loadPersonalized = useCallback(async () => {
     try {
       const data = await fetchPersonalizedHints();
@@ -99,6 +111,7 @@ export function VaultDashboardPage(): React.ReactElement {
         fetchLiveTicker(true).catch(() => null),
         loadMovement(true),
         loadRecruiting(true),
+        loadContent(true),
         loadPersonalized(),
       ]);
       if (tickerData) setTicker(tickerData);
@@ -109,6 +122,7 @@ export function VaultDashboardPage(): React.ReactElement {
 
     const tickerTimer = window.setInterval(() => void loadTicker(true), DASHBOARD_REFRESH.ticker);
     const movementTimer = window.setInterval(() => void loadMovement(true), DASHBOARD_REFRESH.movement);
+    const contentTimer = window.setInterval(() => void loadContent(true), DASHBOARD_REFRESH.movement);
     const recruitingTimer = window.setInterval(() => void loadRecruiting(true), DASHBOARD_REFRESH.recruiting);
     const personalTimer = window.setInterval(() => void loadPersonalized(), 60_000);
 
@@ -117,28 +131,23 @@ export function VaultDashboardPage(): React.ReactElement {
       if (tickerDebounceRef.current) clearTimeout(tickerDebounceRef.current);
       window.clearInterval(tickerTimer);
       window.clearInterval(movementTimer);
+      window.clearInterval(contentTimer);
       window.clearInterval(recruitingTimer);
       window.clearInterval(personalTimer);
     };
-  }, [loadMovement, loadPersonalized, loadRecruiting, loadTicker]);
+  }, [loadContent, loadMovement, loadPersonalized, loadRecruiting, loadTicker]);
 
   return (
     <div className="gv-dash gv-dash-shell" data-testid="vault-dashboard">
       <div className="gv-dash__frame gv-dash__command">
         <div className="gv-dash__grid">
-          <div className="gv-dash__cell gv-dash__cell--12">
-            <DashboardTopCommandCard
-              ticker={ticker}
-              snapshot={recruiting}
-              momentumPct={momentumPct}
-              movementDelta={movementDelta}
-              loading={loading && !recruiting}
-            />
-          </div>
-
-          <div className="gv-dash__cell gv-dash__cell--12">
-            <DashboardTicker items={ticker?.items ?? []} loading={loading && !ticker} />
-          </div>
+          <DashboardTopCommandCard
+            ticker={ticker}
+            snapshot={recruiting}
+            momentumPct={momentumPct}
+            movementDelta={movementDelta}
+            loading={loading && !recruiting}
+          />
 
           <div className="gv-dash__cell gv-dash__cell--8">
             <DashboardRecruitingSnapshot
@@ -168,6 +177,14 @@ export function VaultDashboardPage(): React.ReactElement {
 
           <div className="gv-dash__cell gv-dash__cell--12">
             <DashboardTeamSnapshot />
+          </div>
+
+          <div className="gv-dash__cell gv-dash__cell--12">
+            <DashboardMovementFeed
+              movement={movement}
+              content={content}
+              loading={loading && !movement && !content}
+            />
           </div>
         </div>
       </div>
