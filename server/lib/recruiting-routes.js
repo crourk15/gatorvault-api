@@ -477,7 +477,11 @@ function mountRecruitingRoutes(app) {
         return res.status(401).json({ ok: false, error: 'Invalid ingest secret' });
       }
       const force = req.body.force === true || req.query.force === 'true';
-      const result = await runRivalsPredictionIngest({ force });
+      const backfill =
+        req.body.backfill === true ||
+        req.query.backfill === '1' ||
+        req.query.backfill === 'true';
+      const result = await runRivalsPredictionIngest({ force, backfill });
       return res.json({ ok: true, ...result });
     } catch (err) {
       console.error('rivals-pm ingest error', err);

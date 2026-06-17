@@ -194,6 +194,36 @@ function isPublicRecruitingEvent(event) {
   return VERIFIED_INTEL_SOURCES.has(source);
 }
 
+const PUBLIC_INTEL_VISIT_TYPES = new Set([
+  'official_visit',
+  'unofficial_visit',
+  'visit_cancelled',
+  'ov_change',
+  'visit'
+]);
+
+const PUBLIC_INTEL_OFFER_TYPES = new Set(['offer']);
+
+const PUBLIC_INTEL_STAFF_TYPES = new Set(['staff_note', 'target_update']);
+
+function isBeatIntelSource(intel) {
+  const source = String(intel?.source || '').toLowerCase();
+  if (/beat|auto:beat|beat_writer/.test(source)) return true;
+  if (String(intel?.sourceType || '').toLowerCase() === 'beat') return true;
+  return false;
+}
+
+function isPublicIntelEventType(et) {
+  return (
+    PUBLIC_INTEL_VISIT_TYPES.has(et) ||
+    PUBLIC_INTEL_OFFER_TYPES.has(et) ||
+    PUBLIC_INTEL_STAFF_TYPES.has(et) ||
+    et === 'prediction' ||
+    et === 'prediction_change' ||
+    et === 'rivals_futurecast'
+  );
+}
+
 function isPublicIntelItem(intel) {
   if (!intel) return false;
   if (intel.resolutionStatus === 'needs_resolution' || intel.surfaced === false) return false;
@@ -203,18 +233,24 @@ function isPublicIntelItem(intel) {
 
   const source = String(intel.source || '').toLowerCase();
   const et = String(intel.eventType || '').toLowerCase();
-
-  if (isInternalEventSource(source)) return false;
+  const identityOk = !!intel.identityConfirmed;
 
   if (et === 'commit' || et === 'flip') return false;
 
   if (VERIFIED_INTEL_SOURCES.has(source)) {
-    if (et === 'prediction' || et === 'rivals_futurecast') return true;
-    return !!intel.identityConfirmed;
+    if (et === 'prediction' || et === 'prediction_change' || et === 'rivals_futurecast') return true;
+    return identityOk;
   }
 
-  if (/beat|auto:/.test(source)) {
-    return !!(intel.identityConfirmed && (intel.alertPosted || intel.xPostQueued));
+  if (isBeatIntelSource(intel)) {
+    if (PUBLIC_INTEL_VISIT_TYPES.has(et) || PUBLIC_INTEL_OFFER_TYPES.has(et) || PUBLIC_INTEL_STAFF_TYPES.has(et)) {
+      return identityOk;
+    }
+    return identityOk && (intel.alertPosted || intel.xPostQueued);
+  }
+
+  if (identityOk && isPublicIntelEventType(et) && !isInternalEventSource(source)) {
+    return true;
   }
 
   return false;

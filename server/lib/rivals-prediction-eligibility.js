@@ -58,7 +58,13 @@ function markSeen(snapshot, row, reason) {
   snapshot.lastSkipReason[row.fingerprint] = reason;
 }
 
-async function evaluatePredictionGate(row, snapshot) {
+async function evaluatePredictionGate(row, snapshot, options = {}) {
+  const backfill = !!(
+    options.backfill ||
+    process.env.RIVALS_PM_BACKFILL === 'true' ||
+    process.env.RIVALS_PM_BACKFILL === '1'
+  );
+
   if (!row?.fingerprint || !row.playerName) {
     return { allowed: false, reason: 'invalid', markSeen: false };
   }
@@ -67,7 +73,7 @@ async function evaluatePredictionGate(row, snapshot) {
     return { allowed: false, reason: 'already_processed', markSeen: false };
   }
 
-  if (!isTodayOrNewer(row.timestamp)) {
+  if (!backfill && !isTodayOrNewer(row.timestamp)) {
     return { allowed: false, reason: 'before_today', markSeen: true };
   }
 

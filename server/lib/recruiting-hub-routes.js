@@ -1,6 +1,8 @@
 /**
  * Recruiting Hub spec endpoints — class, player, intel, targets.
  */
+require('tsx/cjs');
+
 const store = require('./recruiting-store');
 const gm2 = require('./gm2');
 const { enrichBoard } = require('./recruiting-board-enrich');

@@ -296,10 +296,10 @@ async function queueAutoposter(row, intelId) {
   }
 }
 
-async function processPrediction(row, snapshot) {
+async function processPrediction(row, snapshot, options = {}) {
   if (!row?.fingerprint || !row.playerName) return { skipped: true, reason: 'invalid' };
 
-  const gate = await eligibility.evaluatePredictionGate(row, snapshot);
+  const gate = await eligibility.evaluatePredictionGate(row, snapshot, options);
   if (!gate.allowed) {
     if (gate.markSeen) eligibility.markSeen(snapshot, row, gate.reason);
     return { skipped: true, reason: gate.reason, fingerprint: row.fingerprint };
@@ -457,18 +457,20 @@ async function processPrediction(row, snapshot) {
   };
 }
 
-async function collectBeatPredictions() {
-  const beat = getBeatPosts(60);
+async function collectBeatPredictions({ backfill = false } = {}) {
+  const beat = getBeatPosts(backfill ? 200 : 60);
   const rows = [];
   for (const post of beat.posts || []) {
-    if (!eligibility.isTodayOrNewer(post.publishedAt)) continue;
+    if (!backfill && !eligibility.isTodayOrNewer(post.publishedAt)) continue;
     const parsed = beatParser.parseBeatPostForPrediction(post);
-    if (parsed && eligibility.isTodayOrNewer(parsed.timestamp)) rows.push(parsed);
+    if (parsed && (backfill || eligibility.isTodayOrNewer(parsed.timestamp))) rows.push(parsed);
   }
   return rows;
 }
 
-async function runRivalsPredictionIngest({ force = false } = {}) {
+async function runRivalsPredictionIngest({ force = false, backfill = false } = {}) {
+  const backfillMode =
+    backfill || process.env.RIVALS_PM_BACKFILL === 'true' || process.env.RIVALS_PM_BACKFILL === '1';
   const snapshot = loadSnapshot();
   const results = { processed: [], skipped: [], errors: [] };
 
@@ -481,7 +483,7 @@ async function runRivalsPredictionIngest({ force = false } = {}) {
 
   let beatRows = [];
   try {
-    beatRows = await collectBeatPredictions();
+    beatRows = await collectBeatPredictions({ backfill: backfillMode });
   } catch (e) {
     results.errors.push({ stage: 'beat', error: e.message });
   }
@@ -495,7 +497,7 @@ async function runRivalsPredictionIngest({ force = false } = {}) {
 
   for (const row of candidates) {
     try {
-      const gate = await eligibility.evaluatePredictionGate(row, snapshot);
+      const gate = await eligibility.evaluatePredictionGate(row, snapshot, { backfill: backfillMode });
       if (!gate.allowed) {
         if (gate.markSeen) eligibility.markSeen(snapshot, row, gate.reason);
         results.skipped.push({
@@ -505,7 +507,7 @@ async function runRivalsPredictionIngest({ force = false } = {}) {
         });
         continue;
       }
-      const out = await processPrediction(row, snapshot);
+      const out = await processPrediction(row, snapshot, { backfill: backfillMode });
       if (out.processed) results.processed.push(out);
       else results.skipped.push(out);
     } catch (e) {
@@ -521,7 +523,8 @@ async function runRivalsPredictionIngest({ force = false } = {}) {
     skipped: results.skipped.length,
     errors: results.errors.length,
     candidates: candidates.length,
-    todayOnly: true,
+    todayOnly: !backfillMode,
+    backfill: backfillMode,
     tz: eligibility.TZ
   });
 
@@ -531,7 +534,8 @@ async function runRivalsPredictionIngest({ force = false } = {}) {
     processedCount: results.processed.length,
     lastRun: snapshot.lastRun,
     policy: {
-      todayOnly: true,
+      todayOnly: !backfillMode,
+      backfill: backfillMode,
       timezone: eligibility.TZ,
       todayKey: eligibility.toDateKey(new Date().toISOString())
     }
@@ -549,7 +553,8 @@ function getRivalsPmStatus() {
     trackedPicks: Object.keys(snapshot.fingerprints || {}).length,
     trackedPickKeys: Object.keys(snapshot.pickKeys || {}).length,
     policy: {
-      todayOnly: true,
+      todayOnly: process.env.RIVALS_PM_BACKFILL !== 'true' && process.env.RIVALS_PM_BACKFILL !== '1',
+      backfill: process.env.RIVALS_PM_BACKFILL === 'true' || process.env.RIVALS_PM_BACKFILL === '1',
       timezone: eligibility.TZ,
       todayKey: eligibility.toDateKey(new Date().toISOString()),
       skipCommitted: true,

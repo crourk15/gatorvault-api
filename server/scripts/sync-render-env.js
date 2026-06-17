@@ -29,14 +29,20 @@ const SYNC_KEYS = [
   'BEEHIIV_AUTOMATION_ID'
 ];
 
-/** Always synced to Render — production pipeline kill switches. */
+/** Autopost / rewrite kill switches — schedulers are not disabled here. */
 const STABILITY_ENV = {
-  X_PIPELINES_ENABLED: 'false',
   X_AUTOPOST_ENABLED: 'false',
   X_GM2_REWRITE_ENABLED: 'false',
   X_INTEL_REWRITE_ENABLED: 'false',
-  X_AUTOPROMPT_ENABLED: 'false',
-  X_SCHEDULED_JOBS_ENABLED: 'false'
+  X_AUTOPROMPT_ENABLED: 'false'
+};
+
+/** Production intel schedulers — enabled on every sync. */
+const PIPELINE_ENV = {
+  X_PIPELINES_ENABLED: 'true',
+  X_SCHEDULED_JOBS_ENABLED: 'true',
+  RIVALS_PM_INGEST_ENABLED: 'true',
+  ON3_INGEST_ENABLED: 'true'
 };
 
 const key = process.env.RENDER_API_KEY;
@@ -98,7 +104,7 @@ async function main() {
     if (val == null || val === '') continue;
     updates.push({ key: k, value: String(val) });
   }
-  for (const [k, val] of Object.entries(STABILITY_ENV)) {
+  for (const [k, val] of Object.entries({ ...PIPELINE_ENV, ...STABILITY_ENV })) {
     updates.push({ key: k, value: val });
   }
 

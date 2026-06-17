@@ -128,6 +128,51 @@ assert(
   })
 );
 
+assert(
+  'allows beat writer official visit intel with identityConfirmed',
+  publicAlerts.isPublicIntelItem({
+    playerSlug: 'some-player',
+    eventType: 'official_visit',
+    source: 'auto:beat-writer',
+    analystName: 'Hayes Fawcett',
+    sourceHandle: 'hayesfawcett3',
+    sourceType: 'beat',
+    identityConfirmed: true
+  })
+);
+
+assert(
+  'allows legacy beat writer visit intel via sourceType',
+  publicAlerts.isPublicIntelItem({
+    playerSlug: 'some-player',
+    eventType: 'official_visit',
+    source: 'Hayes Fawcett',
+    sourceHandle: 'hayesfawcett3',
+    sourceType: 'beat',
+    identityConfirmed: true
+  })
+);
+
+assert(
+  'blocks unconfirmed beat writer offer intel',
+  !publicAlerts.isPublicIntelItem({
+    playerSlug: 'some-player',
+    eventType: 'offer',
+    source: 'auto:beat-writer',
+    identityConfirmed: false
+  })
+);
+
+assert(
+  'allows rivals_pm prediction intel',
+  publicAlerts.isPublicIntelItem({
+    playerSlug: 'some-player',
+    eventType: 'prediction',
+    source: 'rivals_pm',
+    confidencePct: 72
+  })
+);
+
 if (process.exitCode) {
   console.error('\nPublic recruiting alerts tests failed.');
 } else {
