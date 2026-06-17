@@ -1,4 +1,9 @@
 module.exports = (app) => {
+  /** Render liveness probe — must return 2xx while the process is listening. */
+  app.get('/health', (_req, res) => {
+    res.status(200).json({ ok: true, alive: true, time: Date.now() });
+  });
+
   app.get('/api/health', (req, res) => {
     let dashboard = null;
     let deploy = null;
