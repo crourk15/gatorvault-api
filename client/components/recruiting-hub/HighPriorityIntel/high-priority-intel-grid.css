@@ -19,6 +19,12 @@
   color: var(--color-text-secondary);
 }
 
+.hp-intel-section__updated {
+  margin: var(--space-xs) 0 0;
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--color-text-secondary);
+}
+
 .hp-intel-section__empty {
   margin: 0;
   font-size: var(--font-size-sm);

@@ -2,12 +2,14 @@
 
 import React from 'react';
 import type { IntelCardProps } from '@/components/recruiting-hub/types/intel';
+import { formatIntelUpdated } from '@/components/recruiting-hub/utils/formatDate';
 import { IntelCard } from './IntelCard';
 import './high-priority-intel-grid.css';
 
 type Props = {
   items: IntelCardProps[];
   loading?: boolean;
+  lastUpdated?: string | null;
 };
 
 function IntelGridSkeleton(): React.ReactElement {
@@ -20,12 +22,15 @@ function IntelGridSkeleton(): React.ReactElement {
   );
 }
 
-export function HighPriorityIntelGrid({ items, loading }: Props): React.ReactElement {
+export function HighPriorityIntelGrid({ items, loading, lastUpdated }: Props): React.ReactElement {
   return (
     <section className="hp-intel-section rh-container" data-testid="rh-high-priority-intel-grid">
       <header>
         <h2 className="hp-intel-section__title">High Priority Intel</h2>
         <p className="hp-intel-section__sub">Structured intel on UF&apos;s top targets — probability, heat, and next action.</p>
+        {lastUpdated ? (
+          <p className="hp-intel-section__updated">Last updated: {formatIntelUpdated(lastUpdated)}</p>
+        ) : null}
       </header>
 
       {loading && items.length === 0 ? (

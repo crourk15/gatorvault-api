@@ -21,8 +21,10 @@ function mergeIntel(players: HighPriorityPlayer[], apiIntel: RecruitingIntelItem
 export function useIntelFeed(players: HighPriorityPlayer[]): {
   items: IntelCardProps[];
   loading: boolean;
+  lastUpdated: string | null;
 } {
   const [apiIntel, setApiIntel] = useState<RecruitingIntelItem[]>([]);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,7 +35,10 @@ export function useIntelFeed(players: HighPriorityPlayer[]): {
       if (!cancelled && apiIntel.length === 0) setLoading(true);
       try {
         const intel = await fetchHighPriorityIntel({ force });
-        if (!cancelled) setApiIntel(intel);
+        if (!cancelled) {
+          setApiIntel(intel.items);
+          setLastUpdated(intel.lastUpdated);
+        }
       } catch {
         if (!cancelled) setApiIntel([]);
       } finally {
@@ -52,5 +57,5 @@ export function useIntelFeed(players: HighPriorityPlayer[]): {
 
   const items = useMemo(() => mergeIntel(players, apiIntel), [apiIntel, players]);
 
-  return { items, loading: loading && items.length === 0 };
+  return { items, loading: loading && items.length === 0, lastUpdated };
 }

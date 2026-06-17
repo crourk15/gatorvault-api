@@ -110,7 +110,12 @@ export function fetchRecruitingPlayer(id: string): Promise<RecruitingPlayerPaylo
   });
 }
 
-export function fetchHighPriorityIntel(options?: { force?: boolean }): Promise<RecruitingIntelItem[]> {
+export type HighPriorityIntelResponse = {
+  items: RecruitingIntelItem[];
+  lastUpdated: string | null;
+};
+
+export function fetchHighPriorityIntel(options?: { force?: boolean }): Promise<HighPriorityIntelResponse> {
   const force = options?.force ?? false;
   return cachedFetch(
     'gv:recruiting:intel:hp',
@@ -118,9 +123,19 @@ export function fetchHighPriorityIntel(options?: { force?: boolean }): Promise<R
     RECRUITING_INTEL_CACHE_TTL_MS,
     force
   ).then((raw) => {
-    if (Array.isArray(raw)) return raw;
-    const wrapped = raw as { items?: RecruitingIntelItem[]; intel?: RecruitingIntelItem[] };
-    return wrapped.items ?? wrapped.intel ?? [];
+    if (Array.isArray(raw)) {
+      return { items: raw, lastUpdated: null };
+    }
+    const wrapped = raw as {
+      items?: RecruitingIntelItem[];
+      intel?: RecruitingIntelItem[];
+      lastUpdated?: string;
+      meta?: { lastUpdated?: string };
+    };
+    return {
+      items: wrapped.items ?? wrapped.intel ?? [],
+      lastUpdated: wrapped.lastUpdated ?? wrapped.meta?.lastUpdated ?? null,
+    };
   });
 }
 

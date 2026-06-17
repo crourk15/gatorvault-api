@@ -51,3 +51,9 @@ export async function fetchMovementWindow(): Promise<MovementWindowResponse> {
 export async function fetchCompetingDeltas(): Promise<CompetingDeltasResponse> {
   return apiFetch<CompetingDeltasResponse>('/api/recruiting/competing-deltas');
 }
+
+export type MovementSummary = MovementSummaryResponse;
+
+export async function fetchMovementSummary(): Promise<MovementSummaryResponse> {
+  return apiFetch<MovementSummaryResponse>('/api/recruiting/movement-summary');
+}
