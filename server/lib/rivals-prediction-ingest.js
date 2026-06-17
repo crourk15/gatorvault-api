@@ -16,6 +16,7 @@ const { buildOn3ProfileUrl } = require('./on3-urls');
 const { intelFingerprint } = require('./commit-fingerprint');
 const eligibility = require('./rivals-prediction-eligibility');
 const futurecastStore = require('./futurecast-store');
+const postgresSync = require('./postgres-futurecast-sync');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'rivals-pm-snapshot.json');
@@ -114,34 +115,13 @@ function writeFuturecastPrediction(player, row, { priorConfidence, movementDelta
 }
 
 async function syncRivalsPredictionToPostgres(player, row, predictionEvent = {}) {
-  const dbUrl = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
-  if (!dbUrl) {
-    console.warn('[rivals-pm] DATABASE_URL missing — skipping Postgres prediction sync');
-    return;
-  }
-  if (!player?.slug || row.confidence == null) return;
-
   try {
-    const { getPlayerBySlug } = await import('../models/player.ts');
-    const { ensureMovementWindowBaseline, upsertActiveModelPrediction } = await import('../models/predictions.ts');
-    const pgPlayer = await getPlayerBySlug(player.slug);
-    if (!pgPlayer) {
-      console.warn(`[rivals-pm] Postgres player not found for slug ${player.slug}`);
-      return;
+    const result = await postgresSync.syncModelPrediction(player, row, predictionEvent);
+    if (!result.ok && result.reason === 'player_not_in_postgres') {
+      console.warn(`[rivals-pm] Postgres player not found for slug ${result.slug}`);
+    } else if (!result.ok && result.reason === 'no_database') {
+      console.warn('[rivals-pm] DATABASE_URL missing — skipping Postgres prediction sync');
     }
-    const confidence = Math.round(Number(row.confidence));
-    if (predictionEvent.priorConfidence != null) {
-      await ensureMovementWindowBaseline(pgPlayer.id, confidence, {
-        priorConfidence: predictionEvent.priorConfidence
-      });
-    }
-    await upsertActiveModelPrediction({
-      player_id: pgPlayer.id,
-      school: row.predictionSchool || 'Florida',
-      confidence,
-      source_type: 'MODEL',
-      predictor_id: 'rivals_pm'
-    });
   } catch (e) {
     console.warn('[rivals-pm] Postgres prediction sync failed:', e.message);
   }
@@ -196,37 +176,12 @@ function collectMovementReseedCandidates(intelRows) {
 }
 
 async function reseedPostgresMovementFromIntel() {
-  const dbUrl = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
-  if (!dbUrl) return { ok: false, reason: 'no_database', seeded: 0 };
-
   const candidates = collectMovementReseedCandidates(intelStore.listIntel({ limit: 500 }));
-
-  let seeded = 0;
   try {
-    const { getPlayerBySlug } = await import('../models/player.ts');
-    const { ensureMovementWindowBaseline, upsertActiveModelPrediction } = await import('../models/predictions.ts');
-
-    for (const intel of candidates) {
-      const pgPlayer = await getPlayerBySlug(intel.playerSlug);
-      if (!pgPlayer) continue;
-      const delta = await ensureMovementWindowBaseline(pgPlayer.id, intel.confidence, {
-        priorConfidence: intel.priorConfidence
-      });
-      if (delta == null) continue;
-      await upsertActiveModelPrediction({
-        player_id: pgPlayer.id,
-        school: intel.predictionSchool || 'Florida',
-        confidence: intel.confidence,
-        source_type: 'MODEL',
-        predictor_id: 'rivals_pm'
-      });
-      seeded += 1;
-    }
+    return await postgresSync.reseedMovementBaselines(candidates);
   } catch (e) {
-    return { ok: false, reason: e.message, seeded };
+    return { ok: false, reason: e.message, seeded: 0 };
   }
-
-  return { ok: true, seeded, candidates: candidates.length };
 }
 
 function saveSnapshot(doc) {
