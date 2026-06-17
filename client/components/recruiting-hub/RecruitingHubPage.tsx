@@ -26,9 +26,9 @@ export function RecruitingHubPage(): React.ReactElement {
     [data.highPriority]
   );
 
-  const commits2026 = useMemo(() => mapCommits(data.b26.commits, 2026), [data.b26.commits]);
-  const commits2027 = useMemo(() => mapCommits(data.b27.commits, 2027), [data.b27.commits]);
-  const commits2028 = useMemo(() => mapCommits(data.b28.commits, 2028), [data.b28.commits]);
+  const commits2026 = useMemo(() => mapCommits(data.class2026.commits, 2026), [data.class2026.commits]);
+  const commits2027 = useMemo(() => mapCommits(data.class2027.commits, 2027), [data.class2027.commits]);
+  const commits2028 = useMemo(() => mapCommits(data.class2028.commits, 2028), [data.class2028.commits]);
 
   return (
     <div className="rh-page" data-testid="vault-recruiting-hub">
@@ -61,7 +61,11 @@ export function RecruitingHubPage(): React.ReactElement {
           <HighPriorityIntelGrid items={highPriorityIntelItems} loading={intelLoading} />
           <RecruitingBoardSection targets={data.b27.targets} />
           <FutureCastSection players={data.highPriority} />
-          <PortalTrackerSection highPriority={data.highPriority} targets={data.b27.targets} />
+          <PortalTrackerSection
+            incoming={data.portal.incoming}
+            targets={data.portal.targets}
+            outgoing={data.portal.outgoing}
+          />
           <NILTrackerSection players={data.highPriority} />
           <ClassEngineSection b26={data.b26} b27={data.b27} b28={data.b28} highPriority={data.highPriority} />
         </>

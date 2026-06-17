@@ -2,7 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { fetchRecruitingBoard, type RecruitingBoardPlayer, type RecruitingBoardResponse } from '@/lib/recruiting-board-api';
-import { fetchRecruitingHeatCheck, type HeatCheckItem } from '@/lib/recruiting-api';
+import { fetchRecruitingHeatCheck, fetchRecruitingPortalBoard, fetchAllRecruitingPlayers, type HeatCheckItem } from '@/lib/recruiting-api';
+import {
+  buildPortalBuckets,
+  type PortalBuckets,
+} from '@/components/recruiting-hub/utils/portalData';
 import { fetchStaffDashboard, type StaffDashboardPlayer, type StaffDashboardResponse } from '@/lib/staff-api';
 import { fetchHighPriorityTargets, type HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { filterRecruitingHsOnly } from '@/lib/player-routes';
@@ -28,6 +32,7 @@ type ClassBundle = {
 };
 
 const EMPTY_BUNDLE: ClassBundle = { commits: [], targets: [], rankings: null };
+const EMPTY_PORTAL: PortalBuckets = { incoming: [], targets: [], outgoing: [] };
 
 export function useRecruitingData() {
   const [tab, setTab] = useState<RecruitingHubTab>('commits-2027');
@@ -44,6 +49,7 @@ export function useRecruitingData() {
     volatile: StaffDashboardPlayer[];
   }>({ risers: [], fallers: [], volatile: [] });
   const [highPriority, setHighPriority] = useState<HighPriorityPlayer[]>([]);
+  const [portal, setPortal] = useState<PortalBuckets>(EMPTY_PORTAL);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -105,6 +111,8 @@ export function useRecruitingData() {
     const pHeat = fetchRecruitingHeatCheck(!isInitial);
     const pStaff = fetchStaffDashboard();
     const pPriority = fetchHighPriorityTargets();
+    const pPortal = fetchRecruitingPortalBoard();
+    const pAllPlayers = fetchAllRecruitingPlayers();
 
     void p27
       .then((d27) => {
@@ -126,8 +134,8 @@ export function useRecruitingData() {
       });
 
     try {
-      const results = await Promise.allSettled([p26, p27, p28, pHeat, pStaff, pPriority]);
-      const [r26, , r28, rHeat, rStaff, rPriority] = results;
+      const results = await Promise.allSettled([p26, p27, p28, pHeat, pStaff, pPriority, pPortal, pAllPlayers]);
+      const [r26, , r28, rHeat, rStaff, rPriority, rPortal, rAllPlayers] = results;
 
       if (r26.status === 'fulfilled') {
         setB26({
@@ -157,6 +165,11 @@ export function useRecruitingData() {
       }
       if (rPriority.status === 'fulfilled') {
         setHighPriority(rPriority.value.players ?? []);
+      }
+      if (rPortal.status === 'fulfilled' || rAllPlayers.status === 'fulfilled') {
+        const incoming = rPortal.status === 'fulfilled' ? rPortal.value : [];
+        const allPlayers = rAllPlayers.status === 'fulfilled' ? rAllPlayers.value : [];
+        setPortal(buildPortalBuckets(incoming, allPlayers));
       }
 
       const anySuccess = results.some((r) => r.status === 'fulfilled');
@@ -222,6 +235,10 @@ export function useRecruitingData() {
     b26,
     b27,
     b28,
+    class2026: b26,
+    class2027: b27,
+    class2028: b28,
+    portal,
     rising,
     cooling,
     staffDashboard,

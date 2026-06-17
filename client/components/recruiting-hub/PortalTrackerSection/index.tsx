@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
-import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
+import React, { useMemo } from 'react';
+import type { PortalPlayer } from '@/components/recruiting-hub/utils/portalData';
+import { filterPortalPlayers } from '@/components/recruiting-hub/utils/portalData';
 import { playerProfilePath } from '@/lib/player-routes';
 
 export type PortalCardProps = {
@@ -36,16 +36,20 @@ export function PortalCard({ direction, name, position, slug, lines }: PortalCar
   );
 }
 
-function impactScore(p: HighPriorityPlayer): number {
-  const fit = p.fitScore ?? 50;
-  const prob = p.ufProbability != null ? (p.ufProbability <= 1 ? p.ufProbability * 100 : p.ufProbability) : 40;
-  return Math.round((fit + prob) / 2);
+function playerPosition(p: PortalPlayer): string {
+  return p.position || p.pos || '—';
 }
 
-function nilProjection(p: HighPriorityPlayer): string {
+function nilProjection(p: PortalPlayer): string {
   const stars = p.stars ?? 4;
   const base = stars >= 5 ? 180 : stars >= 4 ? 95 : 45;
   return `$${base}K–$${base * 2}K`;
+}
+
+function impactScore(p: PortalPlayer): number {
+  const fit = p.fitScore ?? 50;
+  const prob = p.ufProbability != null ? (p.ufProbability <= 1 ? p.ufProbability * 100 : p.ufProbability) : 40;
+  return Math.round((fit + prob) / 2);
 }
 
 type ColumnProps = {
@@ -63,31 +67,39 @@ export function PortalColumn({ title, children }: ColumnProps): React.ReactEleme
 }
 
 type SectionProps = {
-  highPriority: HighPriorityPlayer[];
-  targets: RecruitingBoardPlayer[];
+  incoming: PortalPlayer[];
+  targets: PortalPlayer[];
+  outgoing: PortalPlayer[];
 };
 
-export function PortalTrackerSection({ highPriority, targets }: SectionProps): React.ReactElement {
-  const incoming = highPriority.filter((p) => p.committedTo && p.committedTo !== 'Florida').slice(0, 4);
-  const outgoing = targets.filter((p) => p.committedTo === 'Florida' && p.movementDirection === 'down').slice(0, 4);
+export function PortalTrackerSection({ incoming, targets, outgoing }: SectionProps): React.ReactElement {
+  const incomingRows = useMemo(
+    () => filterPortalPlayers([...incoming, ...targets]).filter((p) => p.portalStatus === 'in' || p.portalStatus === 'target'),
+    [incoming, targets]
+  );
+  const outgoingRows = useMemo(
+    () => filterPortalPlayers(outgoing).filter((p) => p.portalStatus === 'out'),
+    [outgoing]
+  );
 
   return (
     <section className="rh-section rh-container" data-testid="rh-portal-tracker-section">
       <h2 className="rh-section__title">Portal Tracker</h2>
       <div className="rh-portal-grid">
         <PortalColumn title="Incoming Portal Targets">
-          {incoming.length === 0 ? (
+          {incomingRows.length === 0 ? (
             <p className="rh-section__empty">No incoming portal targets flagged — flip commits appear here when active.</p>
           ) : (
-            incoming.map((p) => (
+            incomingRows.map((p) => (
               <PortalCard
                 key={p.slug}
                 direction="incoming"
                 name={p.name}
-                position={p.position}
+                position={playerPosition(p)}
                 slug={p.slug}
                 lines={[
-                  { label: 'Eligibility', value: 'Immediate' },
+                  { label: 'Status', value: p.portalStatus === 'target' ? 'Portal target' : 'Incoming' },
+                  { label: 'Previous', value: p.fromSchool || p.school || '—' },
                   { label: 'Impact score', value: String(impactScore(p)) },
                   { label: 'NIL projection', value: nilProjection(p) },
                   { label: 'Competing', value: p.committedTo ?? 'Open' },
@@ -97,18 +109,18 @@ export function PortalTrackerSection({ highPriority, targets }: SectionProps): R
           )}
         </PortalColumn>
         <PortalColumn title="Outgoing Portal">
-          {outgoing.length === 0 ? (
+          {outgoingRows.length === 0 ? (
             <p className="rh-section__empty">No outgoing transfers flagged this cycle.</p>
           ) : (
-            outgoing.map((p) => (
+            outgoingRows.map((p) => (
               <PortalCard
                 key={p.slug}
                 direction="outgoing"
                 name={p.name}
-                position={p.position || p.pos || '—'}
+                position={playerPosition(p)}
                 lines={[
-                  { label: 'Destination', value: 'TBD' },
-                  { label: 'Reason', value: 'Playing time / NIL / depth chart' },
+                  { label: 'Destination', value: p.committedTo && p.committedTo !== 'Florida' ? p.committedTo : 'TBD' },
+                  { label: 'Previous', value: p.fromSchool || p.school || 'Florida' },
                 ]}
               />
             ))

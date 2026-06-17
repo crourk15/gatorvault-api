@@ -16,6 +16,7 @@ export interface RecruitingBoardPlayer {
   stars?: number;
   rating?: number | null;
   school?: string | null;
+  fromSchool?: string | null;
   tier: RecruitingBoardTier;
   tierLabel?: string;
   ufProbability?: number | null;
@@ -46,6 +47,8 @@ export interface RecruitingBoardPlayer {
   commitDate?: string | null;
   inState?: boolean;
   movementDirection?: 'up' | 'down' | 'flat';
+  category?: string;
+  portalStatus?: 'in' | 'target' | 'out' | string;
   predictionSchools?: { school: string; pct: number }[];
   strengths?: string[];
   weaknesses?: string[];
