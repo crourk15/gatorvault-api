@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import { FutureCastRow } from './FutureCastRow';
 import { FutureCastVerticalCard } from './FutureCastVerticalCard';
 
 type Props = {
@@ -56,7 +57,7 @@ export function FutureCastTable({ players }: Props): React.ReactElement {
   };
 
   return (
-    <div className="rh-fc-table rh-fc-table--vertical">
+    <div className="rh-fc-table rh-fc-table--responsive">
       <div className="rh-fc-sort-bar" role="toolbar" aria-label="Sort FutureCast targets">
         {SORT_OPTIONS.map(({ key, label }) => (
           <button
@@ -70,6 +71,39 @@ export function FutureCastTable({ players }: Props): React.ReactElement {
           </button>
         ))}
       </div>
+
+      <div className="rh-fc-table__desktop">
+        <table className="rh-fc-table__grid">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>
+                <button type="button" className="rh-fc-table__sort" onClick={() => toggle('ufProbability')}>
+                  UF Probability %
+                </button>
+              </th>
+              <th>
+                <button type="button" className="rh-fc-table__sort" onClick={() => toggle('movement')}>
+                  Movement
+                </button>
+              </th>
+              <th>Last Intel</th>
+              <th>Competing Schools</th>
+              <th>
+                <button type="button" className="rh-fc-table__sort" onClick={() => toggle('fitScore')}>
+                  Fit Score
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((p) => (
+              <FutureCastRow key={p.slug} player={p} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       <div className="rh-fc-card-stack">
         {rows.map((p) => (
           <FutureCastVerticalCard key={p.slug} player={p} />

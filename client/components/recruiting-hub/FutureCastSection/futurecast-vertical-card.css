@@ -4,6 +4,20 @@
   gap: 14px;
 }
 
+.rh-fc-table__desktop {
+  display: none;
+}
+
+.rh-nil-table__desktop {
+  display: none;
+}
+
+.rh-nil-card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
 .rh-fc-card {
   width: 100%;
   max-width: 100%;

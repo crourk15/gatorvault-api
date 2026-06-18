@@ -3,7 +3,7 @@
  */
 
 .commits-section {
-  margin-top: var(--rh-section-gap, var(--space-8));
+  margin-top: 0;
 }
 
 .commits-section__header {

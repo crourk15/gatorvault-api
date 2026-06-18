@@ -106,13 +106,11 @@ export function RecruitingHubPage(): React.ReactElement {
             />
             <NILTrackerSection players={data.highPriority} />
             <ClassEngineSection b26={data.b26} b27={data.b27} b28={data.b28} highPriority={data.highPriority} />
+            <DeepDiveSection />
           </div>
         </div>
       ) : null}
 
-      <div className="rh-elite-bottom rh-frame">
-        <DeepDiveSection />
-      </div>
       <RecruitingHubFooter />
     </div>
   );
