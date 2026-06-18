@@ -9,6 +9,7 @@ export type FutureCastSummary = {
   activeBattles: number;
   volatilityIndex: number;
   battleHeat: string;
+  battleHeatScore: number;
 };
 
 function battleHeatLabel(score: number): string {
@@ -47,11 +48,14 @@ export function useFutureCastSummary(): FutureCastSummary | null {
           (movement?.highVolatility?.length ?? 0) * 8 + Math.round(commitLikelihood7d * 0.4)
         );
 
+        const battleHeatScore = Math.min(10, activeBattles + 2);
+
         setSummary({
           commitLikelihood7d,
           activeBattles,
           volatilityIndex,
-          battleHeat: battleHeatLabel(Math.min(10, activeBattles + 2)),
+          battleHeat: battleHeatLabel(battleHeatScore),
+          battleHeatScore: battleHeatScore * 10,
         });
       } catch {
         /* keep null */

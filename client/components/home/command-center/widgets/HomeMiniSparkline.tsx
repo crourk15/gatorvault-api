@@ -17,7 +17,11 @@ export function HomeMiniSparkline({ values, tone = 'neutral' }: Props): React.Re
     .join(' ');
 
   return (
-    <svg className={`gv-hcc-sparkline gv-hcc-sparkline--${tone}`} viewBox="0 0 48 22" aria-hidden>
+    <svg
+      className={`gv-sparkline gv-hcc-sparkline gv-hcc-sparkline--${tone}`}
+      viewBox="0 0 48 22"
+      aria-hidden
+    >
       <polyline points={coords} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );

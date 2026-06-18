@@ -1,59 +1,37 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import '@/lib/vault-home.css';
-import '@/components/home/gv-home-page.css';
-import { HomeHeader } from '@/components/home/HomeHeader';
-import { HomeMetricsSlider } from '@/components/home/HomeMetricsSlider';
-import { HomeActionGrid } from '@/components/home/HomeActionGrid';
-import { HomeRecruitingPulseWidget } from '@/components/home/HomeRecruitingPulseWidget';
-import { HomeFutureCastPulseWidget } from '@/components/home/HomeFutureCastPulseWidget';
-import { HomeHighPriorityIntelPreview } from '@/components/home/HomeHighPriorityIntelPreview';
-import { HomeMovementIntelPreview } from '@/components/home/HomeMovementIntelPreview';
-import { HomeBoardsSlider } from '@/components/home/HomeBoardsSlider';
-import { HomeLiveAlertsFeed } from '@/components/home/HomeLiveAlertsFeed';
-import { HomeLiveMediaPreview } from '@/components/home/HomeLiveMediaPreview';
+import '@/components/home/home-command-center.css';
+import '@/components/home/command-center/home-command-center-desktop.css';
+import { useIsDesktop } from '@/hooks/useIsDesktop';
+import { HomePageDesktop } from '@/components/home/command-center/HomePageDesktop';
+
+const HomePageMobile = dynamic(
+  () => import('@/components/home/command-center/HomePageMobile').then((m) => m.HomePageMobile),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="mobile-app gv-home-page" data-testid="vault-home-loading">
+        <div className="gv-home-skeleton-block" style={{ minHeight: 240 }} aria-hidden />
+      </div>
+    ),
+  }
+);
+
+const PREFETCH_ROUTES = ['/vault/recruiting', '/vault/futurecast', '/vault/team'] as const;
 
 export function VaultHomePage(): React.ReactElement {
-  return (
-    <div className="mobile-app gv-home-page" data-testid="vault-home">
-      <HomeHeader />
+  const isDesktop = useIsDesktop();
+  const router = useRouter();
 
-      <section className="gv-section gv-section--metrics">
-        <HomeMetricsSlider />
-      </section>
+  useEffect(() => {
+    PREFETCH_ROUTES.forEach((route) => {
+      router.prefetch(route);
+    });
+  }, [router]);
 
-      <section className="gv-section gv-section--actions">
-        <HomeActionGrid />
-      </section>
-
-      <section className="gv-section gv-section--pulse">
-        <HomeRecruitingPulseWidget />
-      </section>
-
-      <section className="gv-section gv-section--pulse">
-        <HomeFutureCastPulseWidget />
-      </section>
-
-      <section className="gv-section gv-section--intel">
-        <HomeHighPriorityIntelPreview />
-      </section>
-
-      <section className="gv-section gv-section--movement">
-        <HomeMovementIntelPreview />
-      </section>
-
-      <section className="gv-section gv-section--boards">
-        <HomeBoardsSlider />
-      </section>
-
-      <section className="gv-section gv-section--alerts">
-        <HomeLiveAlertsFeed />
-      </section>
-
-      <section className="gv-section gv-section--media">
-        <HomeLiveMediaPreview />
-      </section>
-    </div>
-  );
+  return isDesktop ? <HomePageDesktop /> : <HomePageMobile />;
 }

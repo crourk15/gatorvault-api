@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { fetchHomeMovementIntel, fetchRecruitingSnapshot } from '@/lib/vault-home-api';
+import { fetchHomeMovementIntel, fetchLiveTicker, fetchRecruitingSnapshot } from '@/lib/vault-home-api';
 import { loadFutureCastWidgetBundle } from '@/lib/futurecast-home-api';
 
 export type RecruitingSummary = {
@@ -10,6 +10,7 @@ export type RecruitingSummary = {
   avgRating: number;
   ufCommitProbability7d: number;
   movement: { up: number; down: number; volatile: number };
+  updatedAt?: string;
 };
 
 export function useRecruitingSummary(): RecruitingSummary | null {
@@ -20,10 +21,11 @@ export function useRecruitingSummary(): RecruitingSummary | null {
 
     void (async () => {
       try {
-        const [snap, intel, fc] = await Promise.all([
+        const [snap, intel, fc, ticker] = await Promise.all([
           fetchRecruitingSnapshot(),
           fetchHomeMovementIntel(),
           loadFutureCastWidgetBundle({ predictionsLimit: 1 }).then((r) => r.bundle),
+          fetchLiveTicker(),
         ]);
         if (cancelled) return;
         const blueChip =
@@ -40,6 +42,7 @@ export function useRecruitingSummary(): RecruitingSummary | null {
             down: intel.fallers?.length ?? 0,
             volatile: intel.volatile?.length ?? 0,
           },
+          updatedAt: ticker.updatedAt,
         });
       } catch {
         /* keep null */

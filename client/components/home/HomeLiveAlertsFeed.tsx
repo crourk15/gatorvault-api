@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { useLiveAlertsFeed } from '@/hooks/home/useLiveAlertsFeed';
+import { InViewObserver } from '@/components/home/InViewObserver';
 
 const ALERT_ICONS: Record<string, string> = {
   futurecast: '📈',
@@ -24,7 +25,7 @@ export function HomeLiveAlertsFeed(): React.ReactElement | null {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('gv-alert-row--new');
+            entry.target.classList.add('gv-alert-row--visible');
           }
         });
       },
@@ -42,7 +43,8 @@ export function HomeLiveAlertsFeed(): React.ReactElement | null {
   if (!alerts.length) return null;
 
   return (
-    <div className="gv-card gv-card--alerts" data-testid="home-live-alerts">
+    <InViewObserver className="gv-card gv-card--fade-in gv-card--alerts" visibleClass="gv-card--visible">
+      <div data-testid="home-live-alerts">
       <div className="gv-card__header">
         <div className="gv-card__title">Today&apos;s Recruiting Feed</div>
         <div className="gv-card__meta">Live alerts</div>
@@ -50,14 +52,19 @@ export function HomeLiveAlertsFeed(): React.ReactElement | null {
       <div ref={feedRef} className="gv-card__body gv-alerts-feed">
         {alerts.map((a) => (
           <div key={a.id} className="gv-alert-row">
-            <span className={`gv-alert-row__icon gv-alert-row__icon--${a.type}`} aria-hidden>
-              {ALERT_ICONS[a.type] ?? '•'}
-            </span>
+            {a.isNew ? (
+              <span className="gv-badge gv-badge--new gv-alert-row__badge">New</span>
+            ) : (
+              <span className={`gv-alert-row__icon gv-alert-row__icon--${a.type}`} aria-hidden>
+                {ALERT_ICONS[a.type] ?? '•'}
+              </span>
+            )}
             <span className="gv-alert-row__text">{a.text}</span>
             <span className="gv-alert-row__time">{a.timeAgo}</span>
           </div>
         ))}
       </div>
-    </div>
+      </div>
+    </InViewObserver>
   );
 }

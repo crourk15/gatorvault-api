@@ -35,47 +35,32 @@ const HomeLiveAlertsFeed = dynamic(
   }
 );
 
-/** Mobile-first Home Command Center layout (<1024px). */
-export function HomePageMobile(): React.ReactElement {
+/**
+ * Desktop – Home Command Center (Figma 1440×900)
+ * 12-col grid · 3-col sticky metrics (260px) · 9-col fluid main content
+ */
+export function HomePageDesktop(): React.ReactElement {
   return (
-    <div className="mobile-app gv-home-page" data-testid="vault-home-mobile">
-      <HomeHeader />
+    <div className="gv-home-desktop mobile-app" data-testid="vault-home-desktop">
+      <div className="gv-hcc-desktop-artboard">
+        <div className="gv-hcc-desktop-frame">
+          <aside className="gv-hcc-desktop-left" aria-label="Left – Metrics">
+            <HomeHeader />
+            <HomeMetricsSlider />
+          </aside>
 
-      <section className="gv-section gv-section--metrics">
-        <HomeMetricsSlider />
-      </section>
-
-      <section className="gv-section gv-section--actions">
-        <HomeActionGrid />
-      </section>
-
-      <section className="gv-section gv-section--pulse">
-        <HomeRecruitingPulseWidget />
-      </section>
-
-      <section className="gv-section gv-section--pulse">
-        <HomeFutureCastPulseWidget />
-      </section>
-
-      <section className="gv-section gv-section--intel">
-        <HomeHighPriorityIntelPreview />
-      </section>
-
-      <section className="gv-section gv-section--movement">
-        <HomeMovementIntelPreview />
-      </section>
-
-      <section className="gv-section gv-section--boards">
-        <HomeBoardsSlider />
-      </section>
-
-      <section className="gv-section gv-section--alerts">
-        <HomeLiveAlertsFeed />
-      </section>
-
-      <section className="gv-section gv-section--media">
-        <HomeLiveMediaPreview />
-      </section>
+          <main className="gv-hcc-desktop-right" aria-label="Right – Command Center">
+            <HomeActionGrid />
+            <HomeRecruitingPulseWidget />
+            <HomeFutureCastPulseWidget />
+            <HomeHighPriorityIntelPreview />
+            <HomeMovementIntelPreview />
+            <HomeBoardsSlider />
+            <HomeLiveAlertsFeed />
+            <HomeLiveMediaPreview />
+          </main>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHomeMetrics } from '@/hooks/home/useHomeMetrics';
 import { HomeMiniSparkline } from '@/components/home/command-center/widgets/HomeMiniSparkline';
 
 export function HomeMetricsSlider(): React.ReactElement {
   const metrics = useHomeMetrics();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
     const root = scrollRef.current;
@@ -28,6 +29,9 @@ export function HomeMetricsSlider(): React.ReactElement {
     return () => observer.disconnect();
   }, [metrics]);
 
+  const handlePressStart = useCallback((id: string) => () => setActiveId(id), []);
+  const handlePressEnd = useCallback(() => setActiveId(null), []);
+
   if (!metrics) {
     return (
       <div className="gv-metrics-slider">
@@ -44,21 +48,38 @@ export function HomeMetricsSlider(): React.ReactElement {
     <div className="gv-metrics-slider" data-testid="home-metrics-slider">
       <div ref={scrollRef} className="gv-metrics-slider__scroll no-scrollbar">
         {metrics.map((m) => {
+          const cardClass = [
+            'gv-metric-card',
+            activeId === m.id ? 'gv-metric-card--active' : '',
+          ]
+            .filter(Boolean)
+            .join(' ');
+
           const inner = (
             <>
               <div className="gv-metric-card__label">{m.label}</div>
               <div className="gv-metric-card__value">{m.value}</div>
+              {m.meta ? <div className="gv-metric-card__meta">{m.meta}</div> : null}
               <div className="gv-metric-card__sparkline">
                 <HomeMiniSparkline values={m.sparkline ?? []} tone={m.tone} />
               </div>
             </>
           );
+
+          const pressProps = {
+            onMouseDown: handlePressStart(m.id),
+            onMouseUp: handlePressEnd,
+            onMouseLeave: handlePressEnd,
+            onTouchStart: handlePressStart(m.id),
+            onTouchEnd: handlePressEnd,
+          };
+
           return m.href ? (
-            <a key={m.id} href={m.href} className="gv-metric-card">
+            <a key={m.id} href={m.href} className={cardClass} {...pressProps}>
               {inner}
             </a>
           ) : (
-            <div key={m.id} className="gv-metric-card">
+            <div key={m.id} className={cardClass} {...pressProps}>
               {inner}
             </div>
           );

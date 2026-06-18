@@ -16,6 +16,7 @@ export type HomeMetricCard = {
   icon: string;
   label: string;
   value: string;
+  meta?: string;
   href?: string;
   tone?: 'up' | 'down' | 'neutral' | 'hot' | 'warm' | 'cool';
   sparkline?: number[];

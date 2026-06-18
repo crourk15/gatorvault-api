@@ -9,6 +9,7 @@ export type HomeAlert = {
   type: 'futurecast' | 'analyst' | 'portal' | 'nil' | 'intel';
   text: string;
   timeAgo: string;
+  isNew: boolean;
 };
 
 function mapCategory(category: string): HomeAlert['type'] {
@@ -17,6 +18,11 @@ function mapCategory(category: string): HomeAlert['type'] {
   if (category === 'staff' || category === 'beat') return 'analyst';
   if (category === 'recruiting') return 'intel';
   return 'futurecast';
+}
+
+function isNewAlert(timeLabel: string): boolean {
+  const normalized = timeLabel.trim().toLowerCase();
+  return normalized === 'new' || normalized === 'just now' || normalized === 'live';
 }
 
 export function useLiveAlertsFeed(): HomeAlert[] | null {
@@ -30,23 +36,29 @@ export function useLiveAlertsFeed(): HomeAlert[] | null {
         if (cancelled) return;
 
         const rows: HomeAlert[] = [
-          ...(ticker.items ?? []).slice(0, 8).map((item) => ({
-            id: item.id,
-            type: mapCategory(item.category),
-            text: item.text,
-            timeAgo: timeAgo(ticker.updatedAt) || 'Just now',
-          })),
+          ...(ticker.items ?? []).slice(0, 8).map((item) => {
+            const label = timeAgo(ticker.updatedAt) || 'Just now';
+            return {
+              id: item.id,
+              type: mapCategory(item.category),
+              text: item.text,
+              timeAgo: label,
+              isNew: isNewAlert(label),
+            };
+          }),
           ...buildMovementFeedItems(movement).slice(0, 4).map((item) => ({
             id: item.id,
             type: 'intel' as const,
             text: item.title,
             timeAgo: 'Live',
+            isNew: true,
           })),
           ...(personalized?.alerts ?? []).slice(0, 3).map((a) => ({
             id: a.id,
             type: 'analyst' as const,
             text: a.title,
             timeAgo: 'New',
+            isNew: true,
           })),
         ].slice(0, 10);
 
