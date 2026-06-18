@@ -27,7 +27,6 @@
     board: '/recruiting-board.html?embed=1',
     content: '/content-admin.html?embed=1',
     community: '/community-admin.html?embed=1',
-    'war-room': '/war-room-admin.html?embed=1',
     gm2: '/admin-ops-gm2.html?embed=1',
     identity: '/admin-ops-identity-patterns.html?embed=1'
   };
@@ -50,8 +49,7 @@
     '/recruiting-admin.html': { section: 'recruiting', panel: 'alerts' },
     '/recruiting-board.html': { section: 'team', panel: 'board' },
     '/content-admin.html': { section: 'content', panel: 'content-accuracy' },
-    '/community-admin.html': { section: 'community', panel: 'moderation' },
-    '/war-room-admin.html': { section: 'team', panel: 'war-room' }
+    '/community-admin.html': { section: 'community', panel: 'moderation' }
   };
 
   var SECTIONS = [
@@ -117,8 +115,7 @@
       desc: 'Depth chart, roster, coaching staff, team history, film room',
       panels: [
         { id: 'board', label: 'Roster & Board', embed: 'board' },
-        { id: 'vault-grades', label: 'Vault Grades Manager', inline: true },
-        { id: 'war-room', label: 'War Room Breakdowns', embed: 'war-room' }
+        { id: 'vault-grades', label: 'Vault Grades Manager', inline: true }
       ]
     },
     {

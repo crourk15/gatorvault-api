@@ -1,22 +1,13 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useUser } from '@/hooks/useUser';
+import React, { useCallback, useEffect, useState } from 'react';
 import { usePathname } from '@/lib/use-pathname';
-import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath, type VaultSectionId } from '@/lib/vault-routes';
-import { isVaultAdmin } from '@/lib/admin-access';
+import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath } from '@/lib/vault-routes';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
 import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
 import { warmVaultApi } from '@/lib/vault-api-warmup';
 import { MobileBackToTop } from '@/components/vault/MobileBackToTop';
-
-const ADMIN_NAV_ITEM = {
-  id: 'admin' as VaultSectionId,
-  label: 'War Room',
-  href: '/vault/admin',
-  icon: '⚙️',
-};
 
 function sidebarActive(pathname: string, href: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
@@ -40,9 +31,6 @@ function sidebarActive(pathname: string, href: string): boolean {
   }
   if (h === '/vault/futurecast') {
     return p === h || p.startsWith(`${h}/`);
-  }
-  if (h === '/vault/admin') {
-    return p === '/vault/admin' || p.startsWith('/vault/admin/');
   }
   return p === h || p.startsWith(`${h}/`);
 }
@@ -75,20 +63,13 @@ function NavLink({
 export function VaultShell({ children }: { children: React.ReactNode }): React.ReactElement {
   const pathname = usePathname();
   const { isNavigating } = useVaultNavigation();
-  const { user } = useUser();
   const [navOpen, setNavOpen] = useState(false);
   const inVault = isVaultPath(pathname);
   const isHome =
     (pathname.replace(/\/$/, '') || '/') === '/vault';
 
   const coreNav = VAULT_PILLARS;
-  const secondaryNav = useMemo(() => {
-    const items = [...VAULT_SECONDARY];
-    if (isVaultAdmin(user)) items.push(ADMIN_NAV_ITEM);
-    return items;
-  }, [user]);
-
-  const showAdminLink = isVaultAdmin(user);
+  const secondaryNav = VAULT_SECONDARY;
 
   const toggleNav = useCallback(() => setNavOpen((v) => !v), []);
   const closeNav = useCallback(() => setNavOpen(false), []);
@@ -136,11 +117,6 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
             <GatorVaultWordmark height={28} className="gv-vault-shell__wordmark" />
           </VaultNavLink>
         </div>
-        {showAdminLink ? (
-          <VaultNavLink href="/vault/admin" className="gv-vault-shell__admin-link">
-            War Room
-          </VaultNavLink>
-        ) : null}
       </header>
       {navOpen && (
         <button
