@@ -3,6 +3,7 @@
 import React from 'react';
 import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
 import { FC_METRIC_LABELS, formatFitPercent, formatMetricLine, formatUfPercent } from '@/lib/futurecast-elite-metrics';
+import { futureCastLabHref, FUTURECAST_LAB_ANCHORS } from '@/lib/vault-route-map';
 import { playerProfilePath } from '@/lib/player-routes';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
 
@@ -21,7 +22,7 @@ export function HighPriorityList({ players, limit }: Props): React.ReactElement 
         <h2 className="gv-card-title" style={{ margin: 0 }}>
           High Priority Targets
         </h2>
-        <a href="/vault/futurecast#fc-master" className="gv-section-link">
+        <a href={futureCastLabHref(FUTURECAST_LAB_ANCHORS.masterBoard)} className="gv-section-link">
           Master Board →
         </a>
       </div>

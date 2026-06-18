@@ -176,7 +176,7 @@ export function FutureCastHomepage({ mode = 'full' }: { mode?: 'full' | 'master'
           testId="home-priority"
         >
           <p className="fc-home-section__footer-link">
-            <a href="/vault/futurecast#fc-master">Open Master Board →</a>
+            <a href="/vault/futurecast#master-board">Open Master Board →</a>
           </p>
         </Section>
       )}

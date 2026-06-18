@@ -48,7 +48,7 @@ export function WarRoomPreviewSection(): React.ReactElement {
           ))}
         </div>
         <div className="insider-preview-cta">
-          <Button href="/vault/futurecast/staff" variant="primary">
+          <Button href="/vault/futurecast#signals" variant="primary">
             Enter War Room
           </Button>
         </div>

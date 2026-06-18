@@ -99,7 +99,7 @@ export function HeatCheckPanel({ rising, cooling, staff, playerPool }: Props): R
           <p className="gv-rh-heat__vol-value">{sparkPct}%</p>
         </div>
         <a
-          href="/vault/futurecast/movement"
+          href="/vault/futurecast#movement"
           className="gv-btn gv-btn--primary gv-rh-heat__cta"
         >
           {GV_COPY.microcopy.openMovementIntel}

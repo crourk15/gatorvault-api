@@ -3,5 +3,5 @@
 import { FutureCastSectionRedirect } from '@/components/futurecast/FutureCastSectionRedirect';
 
 export default function FutureCastMovementRedirect() {
-  return <FutureCastSectionRedirect href="/futurecast#fc-movement" />;
+  return <FutureCastSectionRedirect href="/futurecast#movement" />;
 }

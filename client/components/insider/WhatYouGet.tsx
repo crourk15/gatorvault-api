@@ -14,7 +14,7 @@ const BENEFITS = [
     icon: '🛡️',
     title: 'War Room Intel',
     description: 'Insider notes, confidence scores, and recruiting feel from the war room.',
-    href: '/vault/futurecast/staff',
+    href: '/vault/futurecast#signals',
   },
   {
     icon: '💬',

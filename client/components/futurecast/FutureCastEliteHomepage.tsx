@@ -3,11 +3,14 @@
 import React, { useEffect } from 'react';
 import { UiError } from '@/components/site/UiMessage';
 import { FutureCastLabPageDesktop } from './lab/FutureCastLabPageDesktop';
+import { FutureCastLabPageMobile } from './mobile/FutureCastLabPageMobile';
 import { FutureCastLabAnchors } from './lab/FutureCastLabAnchors';
 import { useFutureCastLabData } from './lab/useFutureCastLabData';
+import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
 
 export function FutureCastEliteHomepage(): React.ReactElement {
   const lab = useFutureCastLabData();
+  const isDesktop = useIsCommandCenterDesktop();
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.location.hash) return;
@@ -27,7 +30,7 @@ export function FutureCastEliteHomepage(): React.ReactElement {
 
   return (
     <div className="mobile-app" data-testid="fc-elite-homepage">
-      <FutureCastLabPageDesktop data={lab} />
+      {isDesktop ? <FutureCastLabPageDesktop data={lab} /> : <FutureCastLabPageMobile data={lab} />}
       <FutureCastLabAnchors />
     </div>
   );

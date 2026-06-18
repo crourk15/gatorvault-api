@@ -1210,3 +1210,15 @@
     display: none;
   }
 }
+
+/* Mobile FutureCast Lab shell */
+.fc-lab-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-5, 24px);
+  padding: 0 var(--gv-space-4, 16px) var(--gv-space-6, 32px);
+}
+
+.fc-lab-mobile section {
+  scroll-margin-top: 72px;
+}

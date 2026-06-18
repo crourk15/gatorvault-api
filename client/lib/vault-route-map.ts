@@ -97,24 +97,58 @@ export const FILM_ROOM_SEGMENT_PATHS: Record<FilmRoomSegment, string> = {
   highlights: '/vault/film-room/highlights',
 };
 
+/** Canonical FutureCast Lab section anchor IDs on /vault/futurecast */
+export const FUTURECAST_LAB_ANCHORS = {
+  overview: 'overview',
+  masterBoard: 'master-board',
+  trending: 'trending',
+  signals: 'signals',
+  movement: 'movement',
+  positions: 'positions',
+  portal: 'portal',
+  feed: 'feed',
+} as const;
+
+export type FutureCastLabAnchor = (typeof FUTURECAST_LAB_ANCHORS)[keyof typeof FUTURECAST_LAB_ANCHORS];
+
+/** Deep-link helper: `/vault/futurecast#<anchor>` */
+export function futureCastLabHref(anchor: FutureCastLabAnchor): string {
+  return `/vault/futurecast#${anchor}`;
+}
+
 /** FutureCast sub-routes (single page + hash sections) */
 export const FUTURECAST_SEGMENT_PATHS: Record<FutureCastSegment, string> = {
-  master: '/vault/futurecast',
-  trending: '/vault/futurecast#fc-trending',
-  movement: '/vault/futurecast#fc-movement',
-  staff: '/vault/futurecast#fc-signals',
+  master: futureCastLabHref(FUTURECAST_LAB_ANCHORS.masterBoard),
+  trending: futureCastLabHref(FUTURECAST_LAB_ANCHORS.trending),
+  movement: futureCastLabHref(FUTURECAST_LAB_ANCHORS.movement),
+  staff: futureCastLabHref(FUTURECAST_LAB_ANCHORS.signals),
 };
 
 /** Jump links for unified FutureCast Lab command center */
 export const FUTURECAST_LAB_SECTIONS = [
-  { id: 'fc-master', href: '/vault/futurecast#fc-master', shortLabel: 'Targets' },
-  { id: 'fc-trending', href: '/vault/futurecast#fc-trending', shortLabel: 'Battles' },
-  { id: 'fc-signals', href: '/vault/futurecast#fc-signals', shortLabel: 'Signals' },
-  { id: 'fc-movement', href: '/vault/futurecast#fc-movement', shortLabel: 'Movement' },
-  { id: 'fc-positions', href: '/vault/futurecast#fc-positions', shortLabel: 'Positions' },
-  { id: 'fc-portal', href: '/vault/futurecast#fc-portal', shortLabel: 'Portal' },
-  { id: 'fc-feed', href: '/vault/futurecast#fc-feed', shortLabel: 'Feed' },
+  { id: FUTURECAST_LAB_ANCHORS.overview, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.overview), shortLabel: 'Overview' },
+  { id: FUTURECAST_LAB_ANCHORS.masterBoard, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.masterBoard), shortLabel: 'Targets' },
+  { id: FUTURECAST_LAB_ANCHORS.trending, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.trending), shortLabel: 'Battles' },
+  { id: FUTURECAST_LAB_ANCHORS.signals, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.signals), shortLabel: 'Signals' },
+  { id: FUTURECAST_LAB_ANCHORS.movement, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.movement), shortLabel: 'Movement' },
+  { id: FUTURECAST_LAB_ANCHORS.positions, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.positions), shortLabel: 'Positions' },
+  { id: FUTURECAST_LAB_ANCHORS.portal, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.portal), shortLabel: 'Portal' },
+  { id: FUTURECAST_LAB_ANCHORS.feed, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.feed), shortLabel: 'Feed' },
 ] as const;
+
+/** Legacy fc-* hash aliases → segment (backward compatible deep links) */
+const FUTURECAST_HASH_SEGMENT: Record<string, FutureCastSegment> = {
+  [FUTURECAST_LAB_ANCHORS.overview]: 'master',
+  [FUTURECAST_LAB_ANCHORS.masterBoard]: 'master',
+  [FUTURECAST_LAB_ANCHORS.trending]: 'trending',
+  [FUTURECAST_LAB_ANCHORS.movement]: 'movement',
+  [FUTURECAST_LAB_ANCHORS.signals]: 'staff',
+  'fc-hero': 'master',
+  'fc-master': 'master',
+  'fc-trending': 'trending',
+  'fc-movement': 'movement',
+  'fc-signals': 'staff',
+};
 
 /** Legacy board path → trending */
 export const FUTURECAST_LEGACY_PATH_ALIASES: Record<string, FutureCastSegment> = {
@@ -126,10 +160,9 @@ export function parseFutureCastSegmentFromPath(pathname?: string, hash?: string)
   const p = normPath(pathname ?? (typeof window !== 'undefined' ? window.location.pathname : ''));
   const h = (hash ?? (typeof window !== 'undefined' ? window.location.hash.slice(1) : '')).replace(/^#/, '');
 
-  if (h === 'fc-trending') return 'trending';
-  if (h === 'fc-movement') return 'movement';
-  if (h === 'fc-signals') return 'staff';
-  if (h === 'fc-master') return 'master';
+  if (h && FUTURECAST_HASH_SEGMENT[h]) {
+    return FUTURECAST_HASH_SEGMENT[h];
+  }
 
   if (p in FUTURECAST_LEGACY_PATH_ALIASES) {
     return FUTURECAST_LEGACY_PATH_ALIASES[p];

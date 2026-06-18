@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import type { FutureCastPlayer, MovementIntelResponse } from '@/lib/futurecast-board-types';
-import { playerProfileRoute } from '@/lib/vault-route-map';
+import { futureCastLabHref, FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 import { ModuleShell, MovementBadge, MovementSparkline, UfProbBar } from './primitives';
 import { ufPctFromFc } from './fc-lab-types';
 
@@ -56,7 +56,7 @@ export function FutureCastMovementPanel({ movementIntel }: Props): React.ReactEl
       title="FutureCast Movement — 7-Day Window"
       sub="FutureCast movement window — risers, fallers, and volatile targets."
       action={
-        <a href="/vault/futurecast#fc-movement" className="rh-cc-link">
+        <a href={futureCastLabHref(FUTURECAST_LAB_ANCHORS.movement)} className="rh-cc-link">
           Full movement intel →
         </a>
       }

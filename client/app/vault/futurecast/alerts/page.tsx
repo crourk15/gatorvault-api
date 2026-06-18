@@ -3,5 +3,5 @@
 import { FutureCastSectionRedirect } from '@/components/futurecast/FutureCastSectionRedirect';
 
 export default function VaultFutureCastAlertsRedirect() {
-  return <FutureCastSectionRedirect href="/vault/futurecast#fc-feed" />;
+  return <FutureCastSectionRedirect href="/vault/futurecast#feed" />;
 }
