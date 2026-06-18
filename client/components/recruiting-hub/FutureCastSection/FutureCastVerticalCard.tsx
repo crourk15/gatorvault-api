@@ -11,7 +11,6 @@ import {
   movementDelta,
   ufPct,
 } from './futurecast-player-utils';
-import './futurecast-vertical-card.css';
 
 type Props = {
   player: HighPriorityPlayer;

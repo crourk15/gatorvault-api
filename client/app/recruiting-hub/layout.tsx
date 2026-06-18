@@ -12,7 +12,6 @@ import '@/styles/recruiting-hub-command.css';
 import '@/styles/hub-unified-theme.css';
 import '@/lib/recruiting-hub-elite.css';
 import '@/lib/vault-mobile-vertical.css';
-import '@/lib/recruiting-hub-desktop-overrides.css';
 
 export default function RecruitingHubLayout({
   children,

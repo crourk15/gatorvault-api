@@ -2,8 +2,10 @@
 
 import React, { useMemo, useState } from 'react';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import { useIsNarrowHub } from '@/hooks/useIsNarrowHub';
 import { FutureCastRow } from './FutureCastRow';
 import { FutureCastVerticalCard } from './FutureCastVerticalCard';
+import './futurecast-vertical-card.css';
 
 type Props = {
   players: HighPriorityPlayer[];
@@ -40,6 +42,7 @@ const SORT_OPTIONS: { key: SortKey; label: string }[] = [
 ];
 
 export function FutureCastTable({ players }: Props): React.ReactElement {
+  const narrow = useIsNarrowHub();
   const [sortKey, setSortKey] = useState<SortKey>('ufProbability');
   const [sortAsc, setSortAsc] = useState(false);
 
@@ -56,59 +59,67 @@ export function FutureCastTable({ players }: Props): React.ReactElement {
     }
   };
 
+  const sortBar = (
+    <div className="rh-fc-sort-bar" role="toolbar" aria-label="Sort FutureCast targets">
+      {SORT_OPTIONS.map(({ key, label }) => (
+        <button
+          key={key}
+          type="button"
+          className={`rh-fc-sort-bar__btn${sortKey === key ? ' is-active' : ''}`}
+          onClick={() => toggle(key)}
+        >
+          {label}
+          {sortKey === key ? (sortAsc ? ' ↑' : ' ↓') : ''}
+        </button>
+      ))}
+    </div>
+  );
+
+  if (narrow) {
+    return (
+      <div className="rh-fc-table rh-fc-table--mobile">
+        {sortBar}
+        <div className="rh-fc-card-stack">
+          {rows.map((p) => (
+            <FutureCastVerticalCard key={p.slug} player={p} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="rh-fc-table rh-fc-table--responsive">
-      <div className="rh-fc-sort-bar" role="toolbar" aria-label="Sort FutureCast targets">
-        {SORT_OPTIONS.map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            className={`rh-fc-sort-bar__btn${sortKey === key ? ' is-active' : ''}`}
-            onClick={() => toggle(key)}
-          >
-            {label}
-            {sortKey === key ? (sortAsc ? ' ↑' : ' ↓') : ''}
-          </button>
-        ))}
-      </div>
-
-      <div className="rh-fc-table__desktop">
-        <table className="rh-fc-table__grid">
-          <thead>
-            <tr>
-              <th>Player</th>
-              <th>
-                <button type="button" className="rh-fc-table__sort" onClick={() => toggle('ufProbability')}>
-                  UF Probability %
-                </button>
-              </th>
-              <th>
-                <button type="button" className="rh-fc-table__sort" onClick={() => toggle('movement')}>
-                  Movement
-                </button>
-              </th>
-              <th>Last Intel</th>
-              <th>Competing Schools</th>
-              <th>
-                <button type="button" className="rh-fc-table__sort" onClick={() => toggle('fitScore')}>
-                  Fit Score
-                </button>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((p) => (
-              <FutureCastRow key={p.slug} player={p} />
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="rh-fc-card-stack">
-        {rows.map((p) => (
-          <FutureCastVerticalCard key={p.slug} player={p} />
-        ))}
-      </div>
+    <div className="rh-fc-table">
+      {sortBar}
+      <table className="rh-fc-table__grid">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>
+              <button type="button" className="rh-fc-table__sort" onClick={() => toggle('ufProbability')}>
+                UF Probability %
+              </button>
+            </th>
+            <th>
+              <button type="button" className="rh-fc-table__sort" onClick={() => toggle('movement')}>
+                Movement
+              </button>
+            </th>
+            <th>Last Intel</th>
+            <th>Competing Schools</th>
+            <th>
+              <button type="button" className="rh-fc-table__sort" onClick={() => toggle('fitScore')}>
+                Fit Score
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((p) => (
+            <FutureCastRow key={p.slug} player={p} />
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

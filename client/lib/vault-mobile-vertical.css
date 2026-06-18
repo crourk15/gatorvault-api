@@ -294,12 +294,6 @@
     gap: 14px !important;
   }
 
-  .rh-elite-dashboard__duo {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 18px !important;
-  }
-
   .rh-page--elite .rh-module-row {
     display: none !important;
   }
@@ -309,5 +303,37 @@
 @media (min-width: 768px) {
   .rh-elite-mobile-only {
     display: none !important;
+  }
+}
+
+/* Desktop: restore hub grids after mobile-only column overrides */
+@media (min-width: 768px) {
+  .rh-page--elite .rh-board-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    flex-direction: unset !important;
+  }
+
+  .rh-page--elite .rh-portal-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    flex-direction: unset !important;
+  }
+
+  .rh-page--elite .rh-class-summary {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    flex-direction: unset !important;
+  }
+
+  .rh-page--elite .commits-section__scroll {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+  }
+
+  .rh-page--elite .commit-card {
+    flex: 0 0 280px !important;
+    width: auto !important;
+    max-width: none !important;
   }
 }

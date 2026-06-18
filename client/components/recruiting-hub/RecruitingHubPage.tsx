@@ -19,8 +19,6 @@ import { RecruitingHubFooter } from '@/components/vault/recruiting/RecruitingHub
 import { useRecruitingData } from '@/hooks/useRecruitingData';
 import { useIntelFeed } from '@/hooks/useIntelFeed';
 
-import '@/lib/recruiting-hub-desktop-overrides.css';
-
 export function RecruitingHubPage(): React.ReactElement {
   const data = useRecruitingData();
   const {
@@ -87,29 +85,30 @@ export function RecruitingHubPage(): React.ReactElement {
             lastUpdated={intelLastUpdated}
           />
 
-          <div className="rh-elite-dashboard__duo">
-            <CommitsSection
-              commits2026={commits2026}
-              commits2027={commits2027}
-              commits2028={commits2028}
-            />
-            <RecruitingBoardSection targets={data.b27.targets} />
-          </div>
+          <CommitsSection
+            commits2026={commits2026}
+            commits2027={commits2027}
+            commits2028={commits2028}
+          />
 
-          <div className="rh-elite-dashboard__stack">
-            <FutureCastSection
-              players={data.highPriority}
-              lastUpdated={data.highPriorityLastUpdated}
-            />
-            <PortalTrackerSection
-              incoming={data.portal.incoming}
-              targets={data.portal.targets}
-              outgoing={data.portal.outgoing}
-            />
-            <NILTrackerSection players={data.highPriority} />
-            <ClassEngineSection b26={data.b26} b27={data.b27} b28={data.b28} highPriority={data.highPriority} />
-            <DeepDiveSection />
-          </div>
+          <RecruitingBoardSection targets={data.b27.targets} />
+
+          <FutureCastSection
+            players={data.highPriority}
+            lastUpdated={data.highPriorityLastUpdated}
+          />
+
+          <PortalTrackerSection
+            incoming={data.portal.incoming}
+            targets={data.portal.targets}
+            outgoing={data.portal.outgoing}
+          />
+
+          <NILTrackerSection players={data.highPriority} />
+
+          <ClassEngineSection b26={data.b26} b27={data.b27} b28={data.b28} highPriority={data.highPriority} />
+
+          <DeepDiveSection />
         </div>
       ) : null}
 

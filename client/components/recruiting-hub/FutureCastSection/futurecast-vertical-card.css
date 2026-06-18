@@ -1,8 +1,6 @@
 .rh-fc-card-stack {
-  gap: 14px;
-}
-
-.rh-nil-card-stack {
+  display: flex;
+  flex-direction: column;
   gap: 14px;
 }
 
@@ -128,11 +126,14 @@
 
 .rh-fc-sort-bar {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 14px;
 }
 
 .rh-fc-sort-bar__btn {
-  min-height: 44px;
+  min-height: 36px;
   padding: 10px 14px;
   border-radius: 10px;
   border: 1px solid var(--th-border);
@@ -140,7 +141,6 @@
   color: var(--th-body-dark);
   font-size: 13px;
   font-weight: 600;
-  text-align: left;
   cursor: pointer;
 }
 
@@ -148,4 +148,17 @@
   border-color: var(--th-blue);
   color: var(--th-heading-light, var(--gator-blue));
   background: color-mix(in srgb, var(--th-blue) 8%, #fff);
+}
+
+@media (max-width: 767px) {
+  .rh-fc-table--mobile .rh-fc-sort-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .rh-fc-table--mobile .rh-fc-sort-bar__btn {
+    min-height: 44px;
+    text-align: left;
+  }
 }
