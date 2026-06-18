@@ -690,3 +690,39 @@ export function heatmapSparkPct(buckets: StaffDashboardResponse['heatmap']['buck
   if (!total) return 0;
   return Math.round((up / total) * 100);
 }
+
+export type HomeBoardPreview = {
+  year: number;
+  classRank: number | null;
+  blueChipPct: number | null;
+  commitCount: number;
+};
+
+export async function fetchHomeBoardsPreview(force = false): Promise<HomeBoardPreview[]> {
+  const years = [2026, 2027, 2028] as const;
+  const { fetchRecruitingClass } = await import('@/api/recruiting');
+  const payloads = await Promise.all(
+    years.map((year) => fetchRecruitingClass(year).catch(() => null))
+  );
+  return years.map((year, index) => {
+    const data = payloads[index];
+    return {
+      year,
+      classRank: data?.nationalRank ?? null,
+      blueChipPct:
+        data?.blueChipRatio != null ? Math.round(data.blueChipRatio * 100) : null,
+      commitCount: data?.commits ?? 0,
+    };
+  });
+}
+
+export async function fetchHomeIntelPreview(force = false): Promise<
+  import('@/components/recruiting-hub/HighPriorityIntel/types').HighPriorityIntelItem[]
+> {
+  const { mapBoardTargetToHighPriorityIntelItem } = await import(
+    '@/components/recruiting-hub/utils/intelMapping'
+  );
+  const board = await fetchRecruitingBoard(2027).catch(() => null);
+  const targets = board?.targets?.slice(0, 6) ?? [];
+  return targets.map((player, index) => mapBoardTargetToHighPriorityIntelItem(player, index));
+}
