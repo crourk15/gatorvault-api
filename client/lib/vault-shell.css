@@ -308,6 +308,16 @@ body.gv-live-page-active .gv-vault-shell__main {
     justify-content: center;
   }
 
+  .gv-vault-shell__main {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .gv-vault-shell__header {
+    padding-top: env(safe-area-inset-top, 0px);
+    box-sizing: border-box;
+  }
+
   .gv-vault-shell__topnav--desktop {
     display: none;
   }

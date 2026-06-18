@@ -31,9 +31,9 @@
     margin-top: 0;
   }
 
-  /* ── Single-column grids (vault-wide) ── */
-  .gv-vault-shell__main [class*='__grid'],
-  .gv-vault-shell__main [class*='-grid'],
+  /* ── Single-column grids (vault-wide) — excludes 2-col home actions, RH summary, board slider ── */
+  .gv-vault-shell__main [class*='__grid']:not(.gv-home-command-card__actions):not(.gv-rh-summary__grid),
+  .gv-vault-shell__main [class*='-grid']:not(.rh-cc-board-cards),
   .gv-vault-shell__main .gv-home-command-grid,
   .gv-vault-shell__main .gv-home__grid,
   .gv-vault-shell__main .gv-team-roster-grid,
@@ -51,6 +51,30 @@
     flex-direction: column !important;
     grid-template-columns: unset !important;
     gap: 14px !important;
+  }
+
+  /* Preserve 2-col home nav + RH summary tiles; horizontal board slider */
+  .gv-vault-shell__main .gv-home-command-card__actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    flex-direction: unset !important;
+    gap: 12px !important;
+  }
+
+  .gv-vault-shell__main .gv-rh-summary__grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    flex-direction: unset !important;
+    gap: 12px !important;
+  }
+
+  .gv-vault-shell__main .rh-cc-board-cards {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    grid-template-columns: unset !important;
+    overflow-x: auto !important;
+    gap: 12px !important;
   }
 
   .hp-intel-grid,

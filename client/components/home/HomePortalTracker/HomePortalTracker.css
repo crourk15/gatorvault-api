@@ -1,5 +1,7 @@
 .gv-home-portal__card {
-  max-width: 640px;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
 }
 
 .gv-home-portal__head {

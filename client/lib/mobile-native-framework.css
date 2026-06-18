@@ -1,19 +1,108 @@
 /**
  * Mobile-native app framework (≤1023px)
  * Full-width vertical rhythm, typography, and card density.
+ * Root fix: no max-width containers, 16px gutters, safe-area headers.
  */
 
 @media (max-width: 1023px) {
   :root {
-    --mobile-gutter: 16px;
-    --mobile-section-gap: 24px;
-    --mobile-card-gap: 14px;
-    --mobile-title: clamp(1.25rem, 5vw, 1.375rem);
-    --mobile-section-title: clamp(1rem, 4vw, 1.125rem);
-    --mobile-card-title: 0.9375rem;
-    --mobile-meta: 0.8125rem;
-    --mobile-radius: 14px;
+    /* Spacing tokens */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 20px;
+    --space-2xl: 24px;
+
+    --mobile-gutter: var(--space-lg);
+    --mobile-section-gap: var(--space-2xl);
+    --mobile-card-gap: var(--space-md);
+
+    /* Typography tokens */
+    --mobile-title: 22px;
+    --mobile-title-weight: 700;
+    --mobile-section-title: 18px;
+    --mobile-section-weight: 600;
+    --mobile-card-title: 16px;
+    --mobile-card-weight: 600;
+    --mobile-body: 14px;
+    --mobile-meta: 12px;
+
+    --mobile-radius: 12px;
+    --mobile-card-padding: var(--space-lg);
     --mobile-tap: 44px;
+    --gv-frame-margin: var(--space-lg);
+    --home-frame-margin: var(--space-lg);
+  }
+
+  html,
+  body,
+  .gv-body,
+  .fc-body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* ── Global: kill narrow web containers on mobile/tablet ── */
+  .gv-container,
+  .gv-container--wide,
+  .gv-hero-container,
+  .gv-final-container,
+  .gv-system-inner,
+  .gv-why-container,
+  .gv-social-inner,
+  .gv-home__frame,
+  .gv-rh-hub__frame,
+  .gv-page-layout__body,
+  .gv-team-hub__frame,
+  .gv-gnl__frame,
+  .fc-futurecast-page .gv-container,
+  .gv-site-header__inner,
+  .gv-nav-premium__inner,
+  .gv-top-nav__inner,
+  .gv-gw-matchup {
+    max-width: none !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box;
+  }
+
+  /* Shell main: edge-to-edge; frames own 16px padding */
+  .gv-vault-shell__main,
+  .gv-app-shell__main,
+  .gv-site-main,
+  .gv-marketing-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden;
+  }
+
+  /* Safe-area headers (logo not under status bar / clock) */
+  .gv-site-header.gv-nav-premium,
+  .gv-site-header,
+  .gv-vault-shell__header,
+  .gv-top-nav {
+    padding-top: env(safe-area-inset-top, 0px);
+    box-sizing: border-box;
+  }
+
+  .gv-nav-premium__inner {
+    height: auto !important;
+    min-height: 56px;
+    max-height: none !important;
+    padding-left: var(--mobile-gutter) !important;
+    padding-right: var(--mobile-gutter) !important;
+    overflow: visible;
+  }
+
+  .gv-vault-shell__header {
+    padding-left: var(--mobile-gutter);
+    padding-right: var(--mobile-gutter);
   }
 
   .gv-vault-shell__main,
@@ -26,7 +115,12 @@
   .gv-vault-shell__main .rh-frame,
   .gv-vault-shell__main .gv-home__frame,
   .gv-app-shell__main .gv-container,
-  .gv-app-shell__main .rh-frame {
+  .gv-app-shell__main .rh-frame,
+  .gv-marketing-main .gv-hero-container,
+  .gv-marketing-main .gv-final-container,
+  .gv-marketing-main .gv-system-inner,
+  .gv-marketing-main .gv-why-container,
+  .gv-marketing-main .gv-social-inner {
     max-width: none !important;
     width: 100% !important;
     padding-left: var(--mobile-gutter) !important;
@@ -41,34 +135,75 @@
   }
 
   /* Typography scale */
+  .gv-home-command-card__title,
+  .rh-cc-hero__title,
+  .fc-lab-hero__title,
+  .fc-profile-header__name {
+    font-size: var(--mobile-title) !important;
+    font-weight: var(--mobile-title-weight) !important;
+  }
+
   .mobile-app .rh-cc-module__title,
-  .mobile-app .fc-lab-module__title,
   .rh-page--elite .rh-section-title,
-  .fc-futurecast-page .fc-section-title {
+  .fc-futurecast-page .fc-section-title,
+  .fc-profile-section h2 {
     font-size: var(--mobile-section-title) !important;
+    font-weight: var(--mobile-section-weight) !important;
+  }
+
+  .fc-lab-target-card__name,
+  .rh-cc-intel-card__name,
+  .gv-home-module-card__title {
+    font-size: var(--mobile-card-title) !important;
+    font-weight: var(--mobile-card-weight) !important;
   }
 
   .mobile-app .rh-cc-module__sub,
-  .mobile-app .fc-lab-module__sub {
+  .fc-lab-target-card__meta,
+  .gv-home-command-card__subtitle,
+  .fc-profile-header__location,
+  .fc-profile-header__measurables {
     font-size: var(--mobile-meta) !important;
   }
 
-  /* Native card shell */
-  .rh-cc-module,
+  .mobile-app,
+  .rh-page--elite,
+  .fc-futurecast-page,
+  .fc-profile-page {
+    font-size: var(--mobile-body);
+  }
+
+  /* Native card shell — full width, 16px padding, 12px radius */
   .fc-lab-target-card,
   .fc-lab-signal-card,
   .fc-lab-battle-row,
+  .rh-cc-move-row,
   .hp-intel-card,
   .rh-fc-card,
   .rh-nil-card,
-  .gv-home-card {
+  .rh-cc-intel-card,
+  .rh-board-card,
+  .rh-commit-card,
+  .gv-home-card,
+  .gv-home-module-card,
+  .fc-profile-section {
     border-radius: var(--mobile-radius) !important;
     box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+    padding: var(--mobile-card-padding) !important;
   }
 
   .rh-cc-module {
-    width: 100%;
+    border-radius: var(--mobile-radius) !important;
+    box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     margin-inline: 0;
+    overflow: visible !important;
   }
 
   /* Tap targets */
@@ -155,14 +290,22 @@
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
     gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
     padding-bottom: 8px !important;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .gv-home-command-card__stats::-webkit-scrollbar {
+    display: none;
   }
 
   .gv-home-command-card__stats .gv-home-card__stat-item,
   .gv-home-command-card__stats .gv-home-quick-stats__item {
-    flex: 0 0 min(78vw, 280px) !important;
+    flex: 0 0 140px !important;
+    min-width: 140px !important;
     scroll-snap-align: start;
     min-height: 88px;
     padding: 14px 16px !important;
@@ -178,8 +321,30 @@
   }
 
   .gv-home-command-card__actions {
+    display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 12px !important;
+    flex-direction: unset !important;
+    gap: var(--space-md) !important;
+    width: 100% !important;
+  }
+
+  /* Landing / join CTAs — full width, no fixed max */
+  .gv-hero-sub,
+  .gv-final-sub,
+  .gv-hero-cta-row .gv-btn,
+  .gv-final-buttons .gv-btn,
+  .welcome-sticky-cta,
+  .gv-paywall-sticky-cta,
+  .gv-join__submit {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+  }
+
+  .gv-hero-cta-row,
+  .gv-final-buttons {
+    width: 100%;
   }
 
   .gv-home-action-tile {
@@ -193,13 +358,62 @@
 
   .gv-home-command-card__title {
     font-size: var(--mobile-title) !important;
+    font-weight: var(--mobile-title-weight) !important;
   }
 
   .gv-home-command-card__subtitle {
     font-size: var(--mobile-meta) !important;
   }
 
-  /* Player profile feed */
+  /* Player profile — full-width hero, scores, probability bars */
+  .fc-profile-page,
+  .fc-profile-page--feed {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding-left: var(--mobile-gutter) !important;
+    padding-right: var(--mobile-gutter) !important;
+    box-sizing: border-box;
+  }
+
+  .fc-profile-page .fc-profile-header,
+  .fc-profile-page--feed .fc-profile-header {
+    margin-left: calc(-1 * var(--mobile-gutter)) !important;
+    margin-right: calc(-1 * var(--mobile-gutter)) !important;
+    width: calc(100% + 2 * var(--mobile-gutter)) !important;
+    max-width: none !important;
+    box-sizing: border-box;
+  }
+
+  .fc-profile-page .fc-profile-header__scores,
+  .fc-profile-page--feed .fc-profile-header__scores {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: var(--space-md) !important;
+    width: 100% !important;
+  }
+
+  .fc-profile-page .fc-score-card,
+  .fc-profile-page--feed .fc-score-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .fc-profile-page .fc-prediction-item,
+  .fc-profile-page--feed .fc-prediction-item {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: var(--space-sm) !important;
+    align-items: stretch !important;
+    width: 100% !important;
+  }
+
+  .fc-profile-page .fc-prediction-item__bar-wrap,
+  .fc-profile-page--feed .fc-prediction-item__bar-wrap {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
   .gv-vault-shell__main .fc-profile-page--feed,
   .gv-app-shell__main .fc-profile-page--feed {
     padding-left: var(--mobile-gutter);
@@ -242,10 +456,107 @@
     gap: var(--mobile-card-gap) !important;
   }
 
-  .rh-cc-board-cards,
+  /* RH summary + scout tiles — 2-col (override vault-mobile-vertical single-col) */
+  .gv-rh-summary__grid,
+  .gv-rh-scout-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    flex-direction: unset !important;
+    gap: var(--space-md) !important;
+    width: 100% !important;
+  }
+
+  /* RH recruiting boards — horizontal slider (2026/2027/2028) */
+  .rh-cc-board-cards {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    grid-template-columns: unset !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    gap: var(--space-md) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-bottom: var(--space-sm) !important;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .rh-cc-board-cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rh-cc-board-card {
+    flex: 0 0 min(72vw, 260px) !important;
+    width: auto !important;
+    max-width: none !important;
+    scroll-snap-align: start;
+  }
+
+  /* Full-bleed horizontal scroll rows — no parent clip */
+  .rh-cc-module:has(.rh-cc-intel-scroll),
+  .rh-cc-module:has(.rh-cc-board-cards) {
+    overflow: visible !important;
+  }
+
+  .rh-cc-module__body:has(.rh-cc-intel-scroll),
+  .rh-cc-module__body:has(.rh-cc-board-cards) {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow: visible !important;
+  }
+
+  .rh-cc-intel-scroll {
+    margin-inline: 0;
+    padding-inline: var(--mobile-gutter);
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    box-sizing: border-box;
+  }
+
+  .rh-cc-intel-scroll > [role='listitem'] {
+    flex: 0 0 min(320px, 85%) !important;
+    scroll-snap-align: start;
+  }
+
+  .rh-cc-intel-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
   .fc-lab-pos-table__head,
   .fc-lab-pos-row {
     grid-template-columns: 1fr !important;
+  }
+
+  /* Player / intel cards — full bleed within gutter */
+  .hp-intel-card,
+  .gv-hp-card,
+  .rh-board-card,
+  .rh-commit-card,
+  .rh-fc-card,
+  .rh-nil-card,
+  .fc-profile-page--feed,
+  .fc-profile-page--feed .fc-profile-header,
+  .fc-profile-page--feed .fc-profile-scores,
+  .fc-profile-page--feed .fc-profile-tab-panel,
+  .gv-home-cta__tile,
+  .gv-home-module-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+  }
+
+  .gv-home-portal-tracker,
+  .home-portal-tracker {
+    max-width: none !important;
+    width: 100% !important;
   }
 
   .fc-lab-pos-row__summary {
@@ -254,9 +565,291 @@
 
   .fc-lab-target-cards {
     max-height: none !important;
+    overflow: visible !important;
+    width: 100% !important;
   }
 
   .fc-lab-signal-grid {
     grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+
+  /* FutureCast Lab mobile shell — no clipping, full-width cards */
+  .fc-lab-mobile {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding-left: var(--mobile-gutter) !important;
+    padding-right: var(--mobile-gutter) !important;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .fc-lab-mobile section,
+  .fc-lab-mobile .rh-cc-module,
+  .fc-lab-mobile .fc-lab-target-card,
+  .fc-lab-mobile .fc-lab-battle-row,
+  .fc-lab-mobile .fc-lab-signal-card,
+  .fc-lab-mobile .rh-cc-move-row {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .fc-lab-mobile .rh-cc-module {
+    overflow: visible !important;
+  }
+
+  .fc-lab-bleed {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .fc-lab-mobile .fc-lab-segment-bar__track,
+  .fc-lab-mobile .fc-lab-analyst__track,
+  .fc-lab-mobile .rh-cc-prob-bar__track {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+     MOBILE FINALIZATION — global system enforcement
+     ══════════════════════════════════════════════════════════════ */
+
+  /* Full-width frames — no desktop max-width anywhere on mobile */
+  [class*='__frame'],
+  .rh-frame,
+  .gv-page-layout,
+  .gv-page-layout__body,
+  .gv-page-layout__inner,
+  .fc-futurecast-page,
+  .fc-futurecast-page--elite,
+  .gv-home,
+  .gv-home-shell,
+  .gv-marketing-main,
+  .pricing-section,
+  .gv-join__card {
+    max-width: none !important;
+    width: 100% !important;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .gv-home__frame,
+  .rh-cc-main,
+  .rh-cc-feed__inner,
+  .mobile-app > section,
+  .fc-lab-mobile > section {
+    padding-left: var(--mobile-gutter) !important;
+    padding-right: var(--mobile-gutter) !important;
+  }
+
+  /* Landing hero — safe-area + nav clearance (marketing routes) */
+  .gv-site--marketing .gv-hero-elite {
+    padding-top: calc(56px + env(safe-area-inset-top, 0px)) !important;
+    box-sizing: border-box;
+  }
+
+  /* Subtitles / copy blocks — never narrow-column clip */
+  .rh-cc-hero__sub,
+  .fc-lab-hero__sub,
+  .gv-hero-sub,
+  .gv-final-sub,
+  .gv-why-lead {
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  /* Typography token scale — all primary surfaces */
+  .gv-hero-title {
+    font-size: clamp(1.75rem, 7vw, var(--mobile-title)) !important;
+    font-weight: var(--mobile-title-weight) !important;
+  }
+
+  .gv-home__section-heading,
+  .gv-type-h2,
+  .rh-cc-feed__title,
+  .rh-cc-module__title,
+  .fc-lab-module__title,
+  .gv-home-movement__head .gv-type-h2 {
+    font-size: var(--mobile-section-title) !important;
+    font-weight: var(--mobile-section-weight) !important;
+  }
+
+  .gv-home-card__title,
+  .rh-cc-board-card__year,
+  .fc-lab-battle-row__schools,
+  .fc-lab-portal-card__name,
+  .pricing-card__name {
+    font-size: var(--mobile-card-title) !important;
+    font-weight: var(--mobile-card-weight) !important;
+  }
+
+  .gv-home-card__meta,
+  .gv-home-card__eyebrow,
+  .rh-cc-feed__text,
+  .fc-lab-hero__metric-label,
+  .rh-cc-hero__metric-label,
+  .gv-home-movement__metric,
+  .pricing-card__desc {
+    font-size: var(--mobile-meta) !important;
+  }
+
+  .mobile-app,
+  .gv-home,
+  .gv-marketing-main,
+  .fc-profile-page {
+    font-size: var(--mobile-body);
+    line-height: 1.5;
+  }
+
+  /* Section vertical rhythm */
+  .gv-home__grid,
+  .gv-home__section,
+  .rh-cc-page,
+  .fc-lab-mobile,
+  .fc-lab-mobile > section + section {
+    gap: var(--mobile-section-gap) !important;
+  }
+
+  .gv-home__section {
+    margin-top: var(--mobile-section-gap) !important;
+  }
+
+  .gv-home__section:first-child,
+  .gv-home__grid > :first-child {
+    margin-top: 0 !important;
+  }
+
+  .rh-cc-module + .rh-cc-module,
+  .fc-lab-mobile > section {
+    margin-top: 0;
+  }
+
+  /* Mobile card system — full width, 16px pad, 12px radius */
+  .gv-home-card:not(.gv-home-command-card),
+  .gv-home-movement__card,
+  .fc-lab-target-card,
+  .fc-lab-portal-card,
+  .fc-elite-card,
+  .pricing-card,
+  .gv-home-cta__tile,
+  .gv-preview-card,
+  .rh-cc-eco-card {
+    border-radius: var(--mobile-radius) !important;
+    padding: var(--mobile-card-padding) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+    box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08) !important;
+  }
+
+  .rh-cc-board-cards .rh-cc-board-card {
+    width: auto !important;
+    flex: 0 0 min(72vw, 260px) !important;
+  }
+
+  .rh-cc-intel-scroll > [role='listitem'] .rh-cc-intel-card {
+    width: 100% !important;
+  }
+
+  /* Horizontal sliders — overflow-x-auto, parents never clip */
+  .fc-lab-hero__metrics,
+  .rh-cc-tabs,
+  .fc-lab-battle-tabs,
+  .gv-ui-scroll-row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    gap: var(--space-md) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    box-sizing: border-box;
+  }
+
+  .fc-lab-hero__metrics::-webkit-scrollbar,
+  .rh-cc-tabs::-webkit-scrollbar,
+  .fc-lab-battle-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .fc-lab-hero__metric {
+    flex: 0 0 140px !important;
+    min-width: 140px !important;
+    scroll-snap-align: start;
+  }
+
+  .rh-cc-hero__metrics {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    overflow: visible !important;
+  }
+
+  .rh-cc-module:has(.fc-lab-hero__metrics),
+  .fc-lab-hero:has(.fc-lab-hero__metrics) {
+    overflow: visible !important;
+  }
+
+  .fc-lab-hero__inner:has(.fc-lab-hero__metrics),
+  .rh-cc-module__body:has(.fc-lab-hero__metrics) {
+    overflow: visible !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .fc-lab-hero__metrics {
+    padding-inline: var(--mobile-gutter);
+  }
+
+  /* Tab strips inside modules — scroll, not wrap clip */
+  .rh-cc-module__body .rh-cc-tabs {
+    margin-inline: 0;
+    padding-bottom: var(--space-sm);
+  }
+
+  /* Movement intel preview — vertical stack on mobile (wireframe) */
+  .gv-home-movement__grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--mobile-card-gap) !important;
+    width: 100% !important;
+  }
+
+  .gv-home-movement__card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Player profile — typography + spacing tokens */
+  .fc-profile-page.mobile-app .fc-profile-section__title,
+  .fc-profile-page--feed .fc-profile-section h2 {
+    font-size: var(--mobile-section-title) !important;
+    font-weight: var(--mobile-section-weight) !important;
+  }
+
+  .fc-profile-page.mobile-app .fc-profile-header__name {
+    font-size: var(--mobile-title) !important;
+    font-weight: var(--mobile-title-weight) !important;
+  }
+
+  /* Utility: hide scrollbars on touch sliders */
+  .no-scrollbar,
+  .gv-mobile-slider {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar,
+  .gv-mobile-slider::-webkit-scrollbar {
+    display: none;
   }
 }

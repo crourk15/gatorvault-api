@@ -5,11 +5,51 @@
 .gv-marketing-main {
   overflow-x: clip;
   min-width: 0;
+  width: 100%;
+  max-width: 100%;
 }
 
 .gv-site--marketing {
   width: 100%;
   max-width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .gv-site-header.gv-nav-premium {
+    position: sticky;
+    top: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .gv-nav-premium__inner {
+    max-width: none !important;
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .gv-hero-container,
+  .gv-final-container,
+  .gv-system-inner,
+  .gv-why-container,
+  .gv-social-inner {
+    max-width: none !important;
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+  }
+
+  .gv-hero-sub {
+    max-width: none !important;
+  }
+
+  .gv-hero-cta-row .gv-btn,
+  .gv-final-buttons .gv-btn,
+  .welcome-sticky-cta {
+    width: 100%;
+    max-width: none;
+  }
 }
 
 @media (max-width: 640px) {

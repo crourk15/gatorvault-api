@@ -123,6 +123,8 @@
   .gv-site-header.gv-nav-premium {
     position: sticky;
     top: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+    box-sizing: border-box;
   }
 
   .gv-nav-premium__inner {
@@ -130,12 +132,16 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-3, 12px);
-    height: 56px;
+    height: auto;
     min-height: 56px;
-    max-height: 56px;
+    max-height: none;
+    max-width: none;
+    width: 100%;
     padding-top: 0;
     padding-bottom: 0;
-    overflow: hidden;
+    padding-left: 16px;
+    padding-right: 16px;
+    overflow: visible;
   }
 
   .gv-nav-premium__left {

@@ -444,16 +444,25 @@
    =========================== */
 @media (max-width: 767px) {
   .gv-hero-elite {
-    padding: 64px 0 56px;
+    padding: calc(64px + env(safe-area-inset-top, 0px)) 0 56px;
   }
 
   .gv-hero-container {
     grid-template-columns: 1fr;
+    max-width: none;
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
   }
 
   .gv-hero-left,
   .gv-hero-right {
     grid-column: span 12;
+  }
+
+  .gv-hero-sub {
+    max-width: none;
   }
 
   .gv-hero-title {

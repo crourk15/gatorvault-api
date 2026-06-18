@@ -5,6 +5,7 @@ import '@/lib/gv-theme.css';
 import '@/lib/gatorvault-brand.css';
 import '@/lib/gv-design-system.css';
 import '@/lib/site.css';
+import '@/lib/mobile-native-framework.css';
 import { AppProviders } from '@/components/AppProviders';
 
 export const viewport: Viewport = {
