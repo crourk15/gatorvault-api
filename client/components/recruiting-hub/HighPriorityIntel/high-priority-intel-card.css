@@ -311,3 +311,41 @@
   border-color: #4b5563;
   color: #d1d5db;
 }
+
+@media (max-width: 767px) {
+  .hp-intel-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hp-intel-title {
+    max-width: 100%;
+  }
+
+  .hp-intel-analyst-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .hp-intel-analyst-metrics {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .hp-intel-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hp-intel-actions {
+    flex-direction: column;
+  }
+
+  .hp-intel-btn {
+    min-height: 44px;
+    width: 100%;
+    justify-content: center;
+  }
+}

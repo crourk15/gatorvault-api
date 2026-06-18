@@ -1,0 +1,121 @@
+.rh-nil-card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rh-nil-card {
+  width: 100%;
+  max-width: 100%;
+}
+
+.rh-nil-card__header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.rh-nil-card__identity {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  min-height: 44px;
+}
+
+.rh-nil-card__name {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.rh-nil-card__meta {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #9fb3d1;
+}
+
+.rh-nil-card__valuation {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e67e22;
+}
+
+.rh-nil-card__block {
+  margin-top: 10px;
+}
+
+.rh-nil-card__metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.rh-nil-card__metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rh-nil-card__label {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9fb3d1;
+}
+
+.rh-nil-card__value {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #d0e0ff;
+}
+
+.rh-nil-card__comfort {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid;
+}
+
+.rh-nil-card__comfort--in {
+  color: #2ecc71;
+  border-color: #2ecc7133;
+  background: rgba(46, 204, 113, 0.08);
+}
+
+.rh-nil-card__comfort--stretch {
+  color: #f1c40f;
+  border-color: #f1c40f33;
+  background: rgba(241, 196, 15, 0.08);
+}
+
+.rh-nil-card__comfort--out {
+  color: #e74c3c;
+  border-color: #e74c3c33;
+  background: rgba(231, 76, 60, 0.08);
+}
+
+.rh-nil-card__footer {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rh-nil-card__footer .hp-intel-btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding-inline: 16px;
+}

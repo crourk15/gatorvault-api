@@ -36,7 +36,7 @@ export function RecruitingHubPage(): React.ReactElement {
   const commits2028 = useMemo(() => mapCommits(data.class2028.commits, 2028), [data.class2028.commits]);
 
   return (
-    <div className="rh-page" data-testid="vault-recruiting-hub">
+    <div className="rh-page rh-vertical-dashboard" data-testid="vault-recruiting-hub">
       <PageTitleBar />
 
       {data.loading && !data.loadedOnce ? (

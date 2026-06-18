@@ -1,0 +1,296 @@
+/**
+ * Vault mobile — vertical-first layout (≤767px)
+ * One card per row, no horizontal scroll, 44px tap targets, section rhythm.
+ */
+
+.rh-vertical-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rh-vertical-dashboard > section {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 767px) {
+  .gv-vault-shell__main {
+    overflow-x: hidden;
+  }
+
+  /* ── Vertical rhythm ── */
+  .gv-vault-shell__main .rh-page > section,
+  .gv-vault-shell__main .rh-section,
+  .gv-vault-shell__main .hp-intel-section,
+  .gv-vault-shell__main .fc-futurecast-page > section,
+  .gv-vault-shell__main .gv-sched-section {
+    margin-top: 22px;
+  }
+
+  .gv-vault-shell__main .rh-page > section:first-child,
+  .gv-vault-shell__main .rh-section:first-child {
+    margin-top: 0;
+  }
+
+  /* ── Single-column grids (vault-wide) ── */
+  .gv-vault-shell__main [class*='__grid'],
+  .gv-vault-shell__main [class*='-grid'],
+  .gv-vault-shell__main .gv-home-command-grid,
+  .gv-vault-shell__main .gv-team-roster-grid,
+  .gv-vault-shell__main .rh-commit-grid,
+  .gv-vault-shell__main .rh-board-grid,
+  .gv-vault-shell__main .rh-nil-grid,
+  .gv-vault-shell__main .fc-big-board-grid,
+  .gv-vault-shell__main .gv-film-hub-grid,
+  .gv-vault-shell__main .gv-home-portal__grid,
+  .gv-vault-shell__main .rh-stats-bar,
+  .gv-vault-shell__main .rh-class-summary,
+  .gv-vault-shell__main .rh-yoy-chart,
+  .gv-vault-shell__main .gv-sched-section__games {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: unset !important;
+    gap: 14px !important;
+  }
+
+  .hp-intel-grid,
+  .rh-fc-card-stack,
+  .rh-nil-card-stack {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  /* ── No horizontal table scroll — hide legacy tables in vault ── */
+  .gv-vault-shell__main .rh-fc-table__grid,
+  .gv-vault-shell__main .rh-nil-table__grid,
+  .gv-vault-shell__main .rh-board-table__grid {
+    display: none !important;
+  }
+
+  .gv-vault-shell__main .rh-fc-table,
+  .gv-vault-shell__main .rh-nil-table,
+  .gv-vault-shell__main .rh-board-table {
+    overflow-x: visible !important;
+  }
+
+  /* ── Intel cards full width ── */
+  .gv-vault-shell__main .hp-intel-card,
+  .gv-vault-shell__main .intel-card,
+  .gv-vault-shell__main .rh-fc-card,
+  .gv-vault-shell__main .rh-nil-card,
+  .gv-vault-shell__main .rh-module-card,
+  .gv-vault-shell__main .rh-commit-card,
+  .gv-vault-shell__main .rh-board-card,
+  .gv-vault-shell__main .fc-elite-card,
+  .gv-vault-shell__main .gv-sched-game-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-inline: 0 !important;
+  }
+
+  /* ── Recruiting Hub vertical dashboard ── */
+  .rh-vertical-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .rh-vertical-dashboard > section {
+    margin-top: 0 !important;
+  }
+
+  .rh-live-pulse__bar,
+  .rh-live-pulse__metrics {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .rh-live-pulse__temp,
+  .rh-pulse-metric {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .rh-movement-summary-line {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  /* ── Player profile vertical feed ── */
+  .fc-profile-page--feed .fc-profile-header__top {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .fc-profile-page--feed .fc-profile-share {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .fc-profile-page--feed .fc-profile-header__scores,
+  .fc-profile-page--feed .fc-profile-metrics-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    grid-template-columns: unset !important;
+  }
+
+  .fc-profile-page--feed .fc-score-card,
+  .fc-profile-page--feed .fc-profile-metrics-row > div {
+    width: 100% !important;
+  }
+
+  .fc-profile-page--feed .fc-profile-tabs {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    overflow-x: visible !important;
+    gap: 8px !important;
+  }
+
+  .fc-profile-page--feed .fc-profile-tab {
+    width: 100%;
+    min-height: 44px;
+    justify-content: flex-start;
+  }
+
+  .fc-profile-page--feed .fc-profile-section,
+  .fc-profile-page--feed .fc-profile-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .fc-profile-page--feed .fc-profile-dl > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .fc-profile-page--feed .fc-profile-actions,
+  .fc-profile-page--feed .fc-profile-actions-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .fc-profile-page--feed .fc-profile-actions .gv-btn,
+  .fc-profile-page--feed .fc-profile-actions a {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .fc-profile-page--feed .fc-profile-dl,
+  .fc-profile-page--feed .fc-related-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .fc-profile-page--feed .fc-prediction-item {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    grid-template-columns: unset !important;
+  }
+
+  .fc-profile-page--feed .fc-signal-feed__head,
+  .fc-profile-page--feed .fc-film-links {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  /* ── Commits: vertical stack (no carousel scroll) ── */
+  .gv-vault-shell__main .commits-section__scroll {
+    flex-direction: column !important;
+    overflow-x: visible !important;
+    scroll-snap-type: none !important;
+    gap: 14px !important;
+  }
+
+  .gv-vault-shell__main .commit-card {
+    flex: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .gv-vault-shell__main .commits-section__tab {
+    min-height: 44px;
+  }
+
+  /* ── Heat check rows ── */
+  .gv-vault-shell__main .gv-rh-heat__row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    grid-template-columns: unset !important;
+  }
+
+  /* ── Deep dive tool tiles ── */
+  .gv-vault-shell__main .rh-tool-tile {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .gv-vault-shell__main .rh-needs-meter__grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Hub tabs / chips ── */
+  .gv-vault-shell__main .rh-hub-tabs,
+  .gv-vault-shell__main .gv-hub-tabs,
+  .gv-vault-shell__main .gv-tabs {
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .gv-vault-shell__main .rh-hub-tabs__scroll,
+  .gv-vault-shell__main .gv-hub-tabs--scroll {
+    overflow-x: visible !important;
+  }
+
+  /* ── 44px+ tap targets ── */
+  .gv-vault-shell__main a.gv-btn,
+  .gv-vault-shell__main button.gv-btn,
+  .gv-vault-shell__main .hp-intel-btn,
+  .gv-vault-shell__main .intel-card__btn,
+  .gv-vault-shell__main .rh-fc-sort-bar__btn,
+  .gv-vault-shell__main .gv-tab,
+  .gv-vault-shell__main .gv-hub-tab,
+  .gv-vault-shell__main .fc-profile-tab,
+  .gv-vault-shell__main .rh-fc-card__identity {
+    min-height: 44px;
+  }
+
+  .gv-vault-shell__main .gv-vault-shell__nav-link,
+  .gv-vault-shell__main .gv-vault-bottom-nav__item {
+    min-height: 44px;
+  }
+
+  /* ── Schedule / tickets cards ── */
+  .gv-vault-shell__main .gv-sched-game-card {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: unset !important;
+    gap: 14px !important;
+  }
+
+  .gv-vault-shell__main .gv-sched-game-card__center,
+  .gv-vault-shell__main .gv-sched-game-card__right {
+    width: 100%;
+  }
+}
+
+/* Desktop: intel grid stays single column for vertical-first product direction */
+.hp-intel-grid {
+  grid-template-columns: 1fr;
+  gap: 14px;
+}

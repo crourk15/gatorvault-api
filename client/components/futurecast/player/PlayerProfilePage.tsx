@@ -165,7 +165,7 @@ export function PlayerProfilePage({
 
   if (loading && !profile) {
     return (
-      <div className="fc-profile-page fc-player-page-wrap" data-testid="player-profile-page">
+      <div className="fc-profile-page fc-profile-page--feed" data-testid="player-profile-page">
         <nav className="fc-profile-back">
           <a href={backHref}>{backLabel}</a>
         </nav>
@@ -189,7 +189,7 @@ export function PlayerProfilePage({
   }
 
   return (
-    <div className="fc-profile-page" data-testid="player-profile-page">
+    <div className="fc-profile-page fc-profile-page--feed" data-testid="player-profile-page">
       <nav className="fc-profile-back">
         <a href={backHref}>{backLabel}</a>
       </nav>

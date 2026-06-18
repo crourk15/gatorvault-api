@@ -1,5 +1,5 @@
 /**
- * HighPriorityIntelGrid — 2×2 desktop, 1×4 mobile
+ * HighPriorityIntelGrid — vertical stack (one card per row)
  */
 
 .hp-intel-section {
@@ -32,15 +32,9 @@
 }
 
 .hp-intel-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-
-@media (min-width: 768px) {
-  .hp-intel-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .hp-intel-grid__skeleton {
