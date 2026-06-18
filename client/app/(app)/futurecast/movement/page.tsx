@@ -1,13 +1,7 @@
 'use client';
 
-import React from 'react';
-import { FutureCastElitePageShell } from '@/components/futurecast/FutureCastElitePageShell';
-import { MovementIntelPageContent } from '@/components/futurecast/MovementIntelPageContent';
+import { FutureCastSectionRedirect } from '@/components/futurecast/FutureCastSectionRedirect';
 
-export default function FutureCastMovementPage(): React.ReactElement {
-  return (
-    <FutureCastElitePageShell segment="movement" testId="futurecast-movement">
-      <MovementIntelPageContent />
-    </FutureCastElitePageShell>
-  );
+export default function FutureCastMovementRedirect() {
+  return <FutureCastSectionRedirect href="/futurecast#fc-movement" />;
 }

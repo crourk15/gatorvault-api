@@ -68,7 +68,7 @@ export function PortalNilPulse({ portal }: Props): React.ReactElement {
                 <li key={p.slug} className="rh-cc-portal-row">
                   <div>
                     <a
-                      href={playerProfileRoute(p.slug, 'futurecast')}
+                      href={playerProfileRoute(p.slug, 'recruiting')}
                       className="rh-cc-portal-row__name"
                     >
                       {p.name}

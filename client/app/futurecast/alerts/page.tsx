@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
-import { AlertsFeed } from '@/components/futurecast/AlertsFeed';
+import { FutureCastSectionRedirect } from '@/components/futurecast/FutureCastSectionRedirect';
 
-export default function FutureCastAlertsPage(): React.ReactElement {
-  return <AlertsFeed />;
+export default function LegacyFutureCastAlertsRedirect() {
+  return <FutureCastSectionRedirect href="/vault/futurecast#fc-feed" />;
 }

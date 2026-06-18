@@ -10,7 +10,7 @@ import { ModuleShell, MovementBadge, MovementSparkline, UfProbBar, ufPctFromRaw 
 type Tab = 'risers' | 'fallers' | 'volatile';
 
 function playerHref(item: MovementIntelItem): string {
-  return playerProfilePath(item.slug || item.id, 'HIGH_SCHOOL', true, item.name, 'futurecast');
+  return playerProfilePath(item.slug || item.id, 'HIGH_SCHOOL', true, item.name, 'recruiting');
 }
 
 function MovementRow({ item, tone }: { item: MovementIntelItem; tone: Tab }): React.ReactElement {
@@ -67,7 +67,7 @@ export function MovementIntelPanel(): React.ReactElement {
     <ModuleShell
       title="Movement Intel — Risers, Fallers, Volatile"
       action={
-        <a href="/vault/futurecast/movement" className="rh-cc-link">
+        <a href="/vault/recruiting/movement" className="rh-cc-link">
           View full Movement Intel →
         </a>
       }

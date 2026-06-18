@@ -1,20 +1,21 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import type { MasterBoardResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 import {
   CompetingSchoolsBar,
   ModuleShell,
   MovementBadge,
   UfProbBar,
-  ufPctFromRaw,
 } from './primitives';
+import { futureCastPlayerToLabTarget, ufPctFromFc } from './fc-lab-types';
 
 type Tab = 'battles' | 'lean-uf' | 'lean-elsewhere';
 
 type Props = {
-  players: HighPriorityPlayer[];
+  masterBoard: MasterBoardResponse;
+  trendingBoard: TrendingBoardResponse;
 };
 
 const TAB_META: Record<Tab, { label: string; icon: string; battleClass: string; battleLabel: string }> = {
@@ -28,17 +29,15 @@ const TAB_META: Record<Tab, { label: string; icon: string; battleClass: string; 
   },
 };
 
-function classifyPlayer(p: HighPriorityPlayer): Tab {
-  const pct = ufPctFromRaw(p.ufProbability);
-  if (p.committedTo && p.committedTo !== 'Florida') return 'lean-elsewhere';
-  if (pct < 40) return 'lean-elsewhere';
-  if (pct >= 67) return 'lean-uf';
+function classifyTab(ufPct: number): Tab {
+  if (ufPct < 40) return 'lean-elsewhere';
+  if (ufPct >= 67) return 'lean-uf';
   return 'battles';
 }
 
-function BattleRow({ player, tab }: { player: HighPriorityPlayer; tab: Tab }): React.ReactElement {
-  const pct = ufPctFromRaw(player.ufProbability);
-  const delta = Math.round(player.delta7d ?? player.movementDelta ?? 0);
+function BattleRow({ player, tab }: { player: ReturnType<typeof futureCastPlayerToLabTarget>; tab: Tab }): React.ReactElement {
+  const pct = ufPctFromFc(player.ufProbability);
+  const delta = Math.round(player.delta7d);
   const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
   const meta = TAB_META[tab];
 
@@ -66,30 +65,46 @@ function BattleRow({ player, tab }: { player: HighPriorityPlayer; tab: Tab }): R
   );
 }
 
-export function FutureCastBattlesPanel({ players }: Props): React.ReactElement {
+export function FutureCastBattlesPanel({ masterBoard, trendingBoard }: Props): React.ReactElement {
   const [tab, setTab] = useState<Tab>('battles');
 
+  const pool = useMemo(() => {
+    const merged = [
+      ...masterBoard.players,
+      ...trendingBoard.trendingUp,
+      ...trendingBoard.trendingDown,
+      ...masterBoard.movementSummary.volatilePlayers,
+    ];
+    const seen = new Set<string>();
+    return merged.filter((p) => {
+      if (seen.has(p.slug)) return false;
+      seen.add(p.slug);
+      return true;
+    });
+  }, [masterBoard, trendingBoard]);
+
   const buckets = useMemo(() => {
-    const result: Record<Tab, HighPriorityPlayer[]> = {
+    const result: Record<Tab, ReturnType<typeof futureCastPlayerToLabTarget>[]> = {
       battles: [],
       'lean-uf': [],
       'lean-elsewhere': [],
     };
-    for (const p of players) {
-      result[classifyPlayer(p)].push(p);
+    for (const p of pool) {
+      const lab = futureCastPlayerToLabTarget(p);
+      result[classifyTab(ufPctFromFc(lab.ufProbability))].push(lab);
     }
     for (const key of Object.keys(result) as Tab[]) {
-      result[key].sort((a, b) => ufPctFromRaw(b.ufProbability) - ufPctFromRaw(a.ufProbability));
+      result[key].sort((a, b) => ufPctFromFc(b.ufProbability) - ufPctFromFc(a.ufProbability));
     }
     return result;
-  }, [players]);
+  }, [pool]);
 
   const rows = buckets[tab].slice(0, 8);
 
   return (
     <ModuleShell
       title="Battles & Leaning Targets"
-      sub="Contested recruits and lean buckets — replaces the old Trending Board."
+      sub="Trending board buckets — battles, lean UF, and lean elsewhere."
       testId="fc-lab-battles"
     >
       <div className="rh-cc-tabs" role="tablist" aria-label="Battle categories">

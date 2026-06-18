@@ -1,5 +1,6 @@
 import type { RecruitingIntelItem } from '@/api/recruiting';
 import { HIGH_PRIORITY_YEAR, type HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 import type {
   AnalystSignal,
   HighPriorityIntelItem,
@@ -132,6 +133,41 @@ export function mapToHighPriorityIntelItem(
     intelLabel,
     intelSummary: intelTextFor(player, intel.text),
     analystSignals: mapAnalystSignals(player, ufProb, timestamp),
+    lastUpdated: timestamp,
+  };
+}
+
+export function mapBoardTargetToHighPriorityIntelItem(
+  player: RecruitingBoardPlayer,
+  index: number,
+  intel?: RecruitingIntelItem
+): HighPriorityIntelItem {
+  const ufProb = normalizeUfPct(intel?.ufProbability ?? player.ufProbability);
+  const delta =
+    player.movementDirection === 'up' ? 3 : player.movementDirection === 'down' ? -3 : 0;
+  const heatStatus = inferHeatStatus(undefined, ufProb);
+  const legacyType = player.visitStart || player.ufOvStatus ? 'Visit Intel' : 'RPM Movement';
+  const { intelType, intelLabel } = resolveIntelType(undefined, heatStatus, legacyType);
+  const timestamp = intel?.timestamp || player.visitStart || new Date().toISOString();
+
+  return {
+    id: intel?.id || player.slug || `target-${index}`,
+    slug: player.slug || `target-${index}`,
+    name: player.name,
+    position: player.position ?? player.pos ?? '—',
+    school: player.school ?? player.fromSchool ?? undefined,
+    classYear: player.classYear ?? 2027,
+    ufProb,
+    delta7d: delta,
+    intelType,
+    intelLabel,
+    intelSummary:
+      intel?.text?.trim() ||
+      player.notePreview?.trim() ||
+      player.notes?.trim() ||
+      player.skinny?.trim() ||
+      'Insider tracking active.',
+    analystSignals: [],
     lastUpdated: timestamp,
   };
 }

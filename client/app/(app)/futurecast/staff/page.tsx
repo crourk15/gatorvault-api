@@ -1,13 +1,7 @@
 'use client';
 
-import React from 'react';
-import { FutureCastElitePageShell } from '@/components/futurecast/FutureCastElitePageShell';
-import { StaffNotesPageContent } from '@/components/futurecast/StaffNotesPageContent';
+import { FutureCastSectionRedirect } from '@/components/futurecast/FutureCastSectionRedirect';
 
-export default function FutureCastStaffPage(): React.ReactElement {
-  return (
-    <FutureCastElitePageShell segment="staff" testId="futurecast-staff">
-      <StaffNotesPageContent />
-    </FutureCastElitePageShell>
-  );
+export default function FutureCastStaffRedirect() {
+  return <FutureCastSectionRedirect href="/futurecast#fc-signals" />;
 }

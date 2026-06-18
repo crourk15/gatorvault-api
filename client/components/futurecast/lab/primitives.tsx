@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import {
   MovementSparkline,
   ufPctFromRaw,
 } from '@/components/recruiting-hub/command-center/primitives';
+import { ufPctFromFc } from './fc-lab-types';
 
 export {
   ModuleShell,
@@ -16,8 +16,8 @@ export {
 } from '@/components/recruiting-hub/command-center/primitives';
 
 /** Segmented UF vs UGA vs Bama bar derived from UF probability. */
-export function CompetingSchoolsBar({ player }: { player: HighPriorityPlayer }): React.ReactElement {
-  const uf = ufPctFromRaw(player.ufProbability);
+export function CompetingSchoolsBar({ player }: { player: { ufProbability: number } }): React.ReactElement {
+  const uf = ufPctFromFc(player.ufProbability);
   const remaining = Math.max(0, 100 - uf);
   const uga = Math.round(remaining * 0.45);
   const bama = remaining - uga;

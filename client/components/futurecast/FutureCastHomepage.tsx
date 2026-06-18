@@ -176,7 +176,7 @@ export function FutureCastHomepage({ mode = 'full' }: { mode?: 'full' | 'master'
           testId="home-priority"
         >
           <p className="fc-home-section__footer-link">
-            <a href="/vault/recruiting/priority">Open High Priority Targets in Recruiting Hub →</a>
+            <a href="/vault/futurecast#fc-master">Open Master Board →</a>
           </p>
         </Section>
       )}
@@ -202,7 +202,7 @@ export function FutureCastHomepage({ mode = 'full' }: { mode?: 'full' | 'master'
             </CardGrid>
             {isVaultPath(pathname) && (
               <p className="fc-home-section__footer-link">
-                <a href="/vault/recruiting">View Recruiting Hub →</a>
+                <a href="/vault/futurecast">View FutureCast Lab →</a>
               </p>
             )}
           </>

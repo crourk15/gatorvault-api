@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname } from '@/lib/use-pathname';
 import {
   FUTURECAST_SEGMENT_PATHS,
@@ -23,7 +23,16 @@ export function FutureCastSubNav({
   active?: FutureCastSegment;
 }): React.ReactElement {
   const pathname = usePathname();
-  const current = active ?? parseFutureCastSegmentFromPath(pathname);
+  const [hash, setHash] = useState('');
+
+  useEffect(() => {
+    const syncHash = () => setHash(window.location.hash.slice(1));
+    syncHash();
+    window.addEventListener('hashchange', syncHash);
+    return () => window.removeEventListener('hashchange', syncHash);
+  }, [pathname]);
+
+  const current = active ?? parseFutureCastSegmentFromPath(pathname, hash);
 
   return (
     <nav className="fc-futurecast-nav" aria-label="FutureCast">

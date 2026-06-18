@@ -1,54 +1,41 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { fetchStaffDashboard, type StaffDashboardResponse } from '@/lib/staff-api';
-import {
-  fetchCompetingDeltas,
-  fetchMovementSummary,
-  type CompetingDeltasResponse,
-  type MovementSummary,
-} from '@/lib/recruiting-movement-api';
-import { fetchHomeMovementIntel, type HomeMovementIntelData } from '@/lib/vault-home-api';
+import { loadFutureCastLabData, type FutureCastLabDataMap } from '@/lib/futurecast-lab-data';
 
 const LAB_POLL_MS = 90_000;
 
-export type FutureCastLabData = {
-  staffDashboard: StaffDashboardResponse | null;
-  movementSummary: MovementSummary | null;
-  movementIntel: HomeMovementIntelData | null;
-  competingDeltas: CompetingDeltasResponse | null;
+export type FutureCastLabData = FutureCastLabDataMap & {
   loading: boolean;
   refreshing: boolean;
+  error: string | null;
 };
 
 export function useFutureCastLabData(): FutureCastLabData {
-  const [staffDashboard, setStaffDashboard] = useState<StaffDashboardResponse | null>(null);
-  const [movementSummary, setMovementSummary] = useState<MovementSummary | null>(null);
-  const [movementIntel, setMovementIntel] = useState<HomeMovementIntelData | null>(null);
-  const [competingDeltas, setCompetingDeltas] = useState<CompetingDeltasResponse | null>(null);
+  const [data, setData] = useState<FutureCastLabDataMap | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async (isInitial: boolean) => {
-    if (isInitial) setLoading(true);
-    else setRefreshing(true);
-
-    const results = await Promise.allSettled([
-      fetchStaffDashboard(),
-      fetchMovementSummary(),
-      fetchHomeMovementIntel(!isInitial),
-      fetchCompetingDeltas(),
-    ]);
-
-    const [rStaff, rSummary, rIntel, rDeltas] = results;
-
-    if (rStaff.status === 'fulfilled') setStaffDashboard(rStaff.value);
-    if (rSummary.status === 'fulfilled') setMovementSummary(rSummary.value);
-    if (rIntel.status === 'fulfilled') setMovementIntel(rIntel.value);
-    if (rDeltas.status === 'fulfilled') setCompetingDeltas(rDeltas.value);
-
-    if (isInitial) setLoading(false);
-    else setRefreshing(false);
+    if (isInitial) {
+      setLoading(true);
+      setError(null);
+    } else {
+      setRefreshing(true);
+    }
+    try {
+      const next = await loadFutureCastLabData();
+      setData(next);
+      setError(null);
+    } catch (err) {
+      if (isInitial) {
+        setError(err instanceof Error ? err.message : 'Failed to load FutureCast Lab.');
+      }
+    } finally {
+      if (isInitial) setLoading(false);
+      else setRefreshing(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -66,12 +53,62 @@ export function useFutureCastLabData(): FutureCastLabData {
     };
   }, [load]);
 
+  const empty = data ?? {
+    masterBoard: {
+      classYear: 2027,
+      updatedAt: '',
+      movementHeatmap: { upCount: 0, downCount: 0, flatCount: 0 },
+      heatmap: { buckets: [], windowDays: 7 },
+      ufConfidenceAverage: 0,
+      confidenceSparkline: [],
+      commitWatch: [],
+      highPriority: { playerIds: [], players: [] },
+      movementSummary: {
+        risers: [],
+        fallers: [],
+        highVolatility: [],
+        riserPlayers: [],
+        fallerPlayers: [],
+        volatilePlayers: [],
+      },
+      players: [],
+    },
+    trendingBoard: { classYear: 2027, updatedAt: '', trendingUp: [], trendingDown: [] },
+    movementIntel: {
+      classYear: 2027,
+      updatedAt: '',
+      movementHeatmap: { upCount: 0, downCount: 0, flatCount: 0 },
+      heatmap: { buckets: [], windowDays: 7 },
+      risers: [],
+      fallers: [],
+      highVolatility: [],
+      stable: [],
+      fitScoreLeaders: [],
+      fitScoreRisks: [],
+      alerts: [],
+    },
+    staffNotes: { classYear: 2027, updatedAt: '', totalNotes: 0, count: 0, notes: [] },
+    home: {
+      classYear: 2027,
+      commitSort: 'fit',
+      heatmap: { buckets: [], windowDays: 7 },
+      commits: [],
+      topTargets: [],
+      trendingUp: [],
+      trendingDown: [],
+      portalWatchlist: [],
+    },
+    stock: { stockUp: [], stockDown: [], windowDays: 7 },
+    summary: { classYear: 2027, commitCount: 0, targetCount: 0, nationalRank: null },
+    metrics: { avgUFProbability: 0, highPriorityCount: 0, activePredictions: 0 },
+    heatLevel: 'warm' as const,
+    lastUpdated: null,
+  };
+
   return {
-    staffDashboard,
-    movementSummary,
-    movementIntel,
-    competingDeltas,
+    ...empty,
     loading,
     refreshing,
+    error,
   };
 }

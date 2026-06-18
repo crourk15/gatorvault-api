@@ -28,9 +28,9 @@
 /* ── Hero — premium 300–340px ── */
 .fc-lab-hero {
   position: relative;
-  min-height: 320px;
+  min-height: 300px;
   color: var(--gv-white, #fff);
-  overflow: visible;
+  overflow: hidden;
 }
 
 .fc-lab-hero__bg {
@@ -64,8 +64,8 @@
 .fc-lab-hero__inner {
   position: relative;
   z-index: 1;
-  padding-top: 48px;
-  padding-bottom: 32px;
+  padding-top: var(--gv-space-6, 32px);
+  padding-bottom: var(--gv-space-6, 32px);
 }
 
 .fc-lab-hero__grid {
@@ -674,7 +674,14 @@
   min-width: 0;
 }
 
-/* ── Target rows ── */
+.fc-lab-main--stacked {
+  grid-template-columns: 1fr;
+}
+
+.fc-lab-main--stacked > section {
+  min-width: 0;
+}
+
 .fc-lab-target-list {
   display: flex;
   flex-direction: column;
@@ -1130,5 +1137,76 @@
   .fc-lab-meter__ring {
     width: 120px;
     height: 120px;
+  }
+}
+
+/* ── Floating section anchors + back to top ── */
+.fc-lab-anchors {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(72px, calc(env(safe-area-inset-bottom) + 64px));
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--gv-space-2, 8px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.fc-lab-anchors.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.fc-lab-anchors__sections {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  max-width: min(320px, calc(100vw - 24px));
+}
+
+.fc-lab-anchors__btn {
+  padding: 6px 10px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gv-navy, #001a33);
+  background: var(--gv-white, #fff);
+  border: 1px solid var(--gv-border-card, rgba(0, 26, 51, 0.2));
+  border-radius: var(--gv-radius-pill, 999px);
+  box-shadow: var(--gv-shadow-sm, 0 2px 8px rgba(0, 26, 51, 0.12));
+  text-decoration: none;
+}
+
+.fc-lab-anchors__btn:hover {
+  border-color: var(--gv-orange, #fa4616);
+  color: var(--gv-orange, #fa4616);
+}
+
+.fc-lab-anchors__top {
+  padding: 8px 14px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--gv-white, #fff);
+  background: var(--gv-blue, #0021a5);
+  border: none;
+  border-radius: var(--gv-radius-pill, 999px);
+  box-shadow: var(--gv-shadow-sm, 0 2px 8px rgba(0, 26, 51, 0.2));
+  cursor: pointer;
+}
+
+.fc-lab-anchors__top:hover {
+  background: var(--gv-orange, #fa4616);
+}
+
+@media (max-width: 767px) {
+  .fc-lab-anchors__sections {
+    display: none;
   }
 }

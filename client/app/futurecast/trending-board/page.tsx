@@ -1,3 +1,7 @@
 'use client';
 
-export { default } from '@/app/vault/futurecast/trending/page';
+import { FutureCastSectionRedirect } from '@/components/futurecast/FutureCastSectionRedirect';
+
+export default function LegacyFutureCastTrendingRedirect() {
+  return <FutureCastSectionRedirect href="/vault/futurecast#fc-trending" />;
+}

@@ -1,4 +1,7 @@
 'use client';
 
-import React from 'react';
-export { default } from '../../../futurecast/snapshots/page';
+import { FutureCastSectionRedirect } from '@/components/futurecast/FutureCastSectionRedirect';
+
+export default function VaultFutureCastSnapshotsRedirect() {
+  return <FutureCastSectionRedirect href="/vault/futurecast#fc-hero" />;
+}

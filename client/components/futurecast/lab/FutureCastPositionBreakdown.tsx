@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
-import { ModuleShell, ufPctFromRaw } from './primitives';
+import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
+import { ModuleShell } from './primitives';
+import { ufPctFromFc } from './fc-lab-types';
 
 type PositionBucket = {
   position: string;
@@ -13,13 +14,13 @@ type PositionBucket = {
 };
 
 type Props = {
-  players: HighPriorityPlayer[];
+  players: FutureCastPlayer[];
   activePredictions?: number;
 };
 
 export function FutureCastPositionBreakdown({ players, activePredictions }: Props): React.ReactElement {
   const buckets = useMemo(() => {
-    const map = new Map<string, HighPriorityPlayer[]>();
+    const map = new Map<string, FutureCastPlayer[]>();
     for (const p of players) {
       const pos = p.position || 'Other';
       const list = map.get(pos) ?? [];
@@ -30,17 +31,17 @@ export function FutureCastPositionBreakdown({ players, activePredictions }: Prop
     const result: PositionBucket[] = [];
     for (const [position, list] of map) {
       const avgUfProb = Math.round(
-        list.reduce((acc, p) => acc + ufPctFromRaw(p.ufProbability), 0) / list.length
+        list.reduce((acc, p) => acc + ufPctFromFc(p.ufConfidence), 0) / list.length
       );
       const avgVolatility = Math.round(
-        list.reduce((acc, p) => acc + Math.abs(p.delta7d ?? p.movementDelta ?? 0), 0) / list.length
+        list.reduce((acc, p) => acc + Math.abs(p.trendDelta7d ?? p.volatility7d ?? 0), 0) / list.length
       );
       result.push({
         position,
         count: list.length,
         avgUfProb,
         avgVolatility,
-        activePredictions: list.filter((p) => (p.predictors?.length ?? 0) > 0).length,
+        activePredictions: list.filter((p) => p.ufConfidence > 0).length,
       });
     }
 

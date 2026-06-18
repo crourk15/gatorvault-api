@@ -2,26 +2,30 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { fetchHighPriorityIntel, type RecruitingIntelItem } from '@/api/recruiting';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 import type { HighPriorityIntelItem } from '@/components/recruiting-hub/HighPriorityIntel/types';
 import {
-  mapPlayerToHighPriorityIntelItem,
+  mapBoardTargetToHighPriorityIntelItem,
   mapToHighPriorityIntelItem,
 } from '@/components/recruiting-hub/utils/intelMapping';
 
 const INTEL_POLL_MS = 60_000;
 
-function mergeIntel(players: HighPriorityPlayer[], apiIntel: RecruitingIntelItem[]): HighPriorityIntelItem[] {
-  const bySlug = new Map(players.map((p) => [p.slug, p]));
+function mergeIntel(targets: RecruitingBoardPlayer[], apiIntel: RecruitingIntelItem[]): HighPriorityIntelItem[] {
+  const bySlug = new Map(targets.map((p) => [p.slug, p]));
 
   if (apiIntel.length) {
-    return apiIntel.slice(0, 4).map((intel) => mapToHighPriorityIntelItem(intel, bySlug.get(intel.playerId)));
+    return apiIntel.slice(0, 4).map((intel, i) => {
+      const target = bySlug.get(intel.playerId);
+      if (target) return mapBoardTargetToHighPriorityIntelItem(target, i, intel);
+      return mapToHighPriorityIntelItem(intel, undefined);
+    });
   }
 
-  return players.slice(0, 4).map((p, i) => mapPlayerToHighPriorityIntelItem(p, i));
+  return targets.slice(0, 4).map((p, i) => mapBoardTargetToHighPriorityIntelItem(p, i));
 }
 
-export function useIntelFeed(players: HighPriorityPlayer[]): {
+export function useIntelFeed(targets: RecruitingBoardPlayer[]): {
   items: HighPriorityIntelItem[];
   loading: boolean;
   lastUpdated: string | null;
@@ -58,7 +62,7 @@ export function useIntelFeed(players: HighPriorityPlayer[]): {
     };
   }, []);
 
-  const items = useMemo(() => mergeIntel(players, apiIntel), [apiIntel, players]);
+  const items = useMemo(() => mergeIntel(targets, apiIntel), [apiIntel, targets]);
 
   return { items, loading: loading && items.length === 0, lastUpdated };
 }

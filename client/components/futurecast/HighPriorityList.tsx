@@ -21,8 +21,8 @@ export function HighPriorityList({ players, limit }: Props): React.ReactElement 
         <h2 className="gv-card-title" style={{ margin: 0 }}>
           High Priority Targets
         </h2>
-        <a href="/vault/recruiting" className="gv-section-link">
-          Recruiting Hub →
+        <a href="/vault/futurecast#fc-master" className="gv-section-link">
+          Master Board →
         </a>
       </div>
       <ul className="gv-priority-list">

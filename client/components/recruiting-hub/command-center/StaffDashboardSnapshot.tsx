@@ -55,7 +55,7 @@ export function StaffDashboardSnapshot({ staffDashboard }: Props): React.ReactEl
                   'HIGH_SCHOOL',
                   true,
                   topVolatile.name,
-                  'futurecast'
+                  'recruiting'
                 )}
                 className="rh-cc-focus-card__name"
               >

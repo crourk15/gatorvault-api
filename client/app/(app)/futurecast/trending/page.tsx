@@ -1,13 +1,7 @@
 'use client';
 
-import React from 'react';
-import { FutureCastElitePageShell } from '@/components/futurecast/FutureCastElitePageShell';
-import { TrendingBoardPageContent } from '@/components/futurecast/TrendingBoardPageContent';
+import { FutureCastSectionRedirect } from '@/components/futurecast/FutureCastSectionRedirect';
 
-export default function FutureCastTrendingPage(): React.ReactElement {
-  return (
-    <FutureCastElitePageShell segment="trending" testId="futurecast-trending">
-      <TrendingBoardPageContent />
-    </FutureCastElitePageShell>
-  );
+export default function FutureCastTrendingRedirect() {
+  return <FutureCastSectionRedirect href="/futurecast#fc-trending" />;
 }

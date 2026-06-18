@@ -1,17 +1,15 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
-import type { HighPriorityIntelItem } from '@/components/recruiting-hub/HighPriorityIntel/types';
+import type { MasterBoardResponse, StaffNotesResponse } from '@/lib/futurecast-board-types';
 import { formatIntelUpdated } from '@/components/recruiting-hub/utils/formatDate';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 import { AnalystConfidenceMeter, ModuleShell } from './primitives';
+import { ufPctFromFc } from './fc-lab-types';
 
 type Props = {
-  players: HighPriorityPlayer[];
-  intelItems: HighPriorityIntelItem[];
-  loading?: boolean;
-  lastUpdated?: string | null;
+  staffNotes: StaffNotesResponse;
+  masterBoard: MasterBoardResponse;
 };
 
 type SignalCard = {
@@ -20,7 +18,6 @@ type SignalCard = {
   name: string;
   position: string;
   analyst: string;
-  outlet: string;
   pick: 'UF' | 'Other';
   confidencePct: number;
   rpmPct: number;
@@ -28,48 +25,42 @@ type SignalCard = {
   timestamp: string;
 };
 
-function buildSignals(players: HighPriorityPlayer[], intelItems: HighPriorityIntelItem[]): SignalCard[] {
+function buildSignals(staffNotes: StaffNotesResponse, masterBoard: MasterBoardResponse): SignalCard[] {
+  const bySlug = new Map(masterBoard.players.map((p) => [p.slug, p]));
   const cards: SignalCard[] = [];
 
-  for (const item of intelItems) {
-    for (const signal of item.analystSignals.slice(0, 2)) {
-      cards.push({
-        id: signal.id,
-        slug: item.slug,
-        name: item.name,
-        position: item.position,
-        analyst: signal.analyst,
-        outlet: signal.outlet,
-        pick: item.ufProb >= 50 ? 'UF' : 'Other',
-        confidencePct: signal.confidencePct,
-        rpmPct: signal.rpmPct,
-        summary: item.intelSummary,
-        timestamp: signal.timestamp,
-      });
-    }
+  for (const note of staffNotes.notes.slice(0, 12)) {
+    const player = bySlug.get(note.playerSlug);
+    const ufPct = player ? ufPctFromFc(player.ufConfidence) : 50;
+    cards.push({
+      id: note.id ?? `${note.playerSlug}-${note.updatedAt}`,
+      slug: note.playerSlug,
+      name: note.playerName,
+      position: note.position ?? player?.position ?? '—',
+      analyst: 'Staff Notes',
+      pick: ufPct >= 50 ? 'UF' : 'Other',
+      confidencePct: ufPct,
+      rpmPct: ufPct,
+      summary: note.notePreview ?? note.note ?? note.staffNotes ?? 'FutureCast staff activity.',
+      timestamp: note.updatedAt ?? note.createdAt ?? staffNotes.updatedAt,
+    });
   }
 
-  if (cards.length < 8) {
-    for (const p of players) {
-      if (cards.length >= 8) break;
-      for (const pred of p.predictors ?? []) {
-        if (cards.length >= 8) break;
-        const rpm = pred.score <= 1 ? Math.round(pred.score * 100) : Math.round(pred.score);
-        cards.push({
-          id: `${p.slug}-${pred.name}`,
-          slug: p.slug,
-          name: p.name,
-          position: p.position,
-          analyst: pred.name,
-          outlet: 'RPM',
-          pick: rpm >= 50 ? 'UF' : 'Other',
-          confidencePct: rpm,
-          rpmPct: rpm,
-          summary: p.notePreview ?? p.skinny ?? 'Analyst FutureCast activity.',
-          timestamp: new Date().toISOString(),
-        });
-      }
-    }
+  for (const p of masterBoard.highPriority.players.slice(0, 6)) {
+    if (cards.length >= 8) break;
+    const pct = ufPctFromFc(p.ufConfidence);
+    cards.push({
+      id: `model-${p.slug}`,
+      slug: p.slug,
+      name: p.name,
+      position: p.position,
+      analyst: 'FutureCast Model',
+      pick: pct >= 50 ? 'UF' : 'Other',
+      confidencePct: pct,
+      rpmPct: pct,
+      summary: `Model projection ${pct}% for ${p.name}.`,
+      timestamp: masterBoard.updatedAt,
+    });
   }
 
   return cards.slice(0, 8);
@@ -81,7 +72,6 @@ function SignalCardView({ card }: { card: SignalCard }): React.ReactElement {
       <header className="fc-lab-signal-card__head">
         <span className="fc-lab-signal-card__analyst">
           <span aria-hidden>🎯</span> {card.analyst}
-          {card.outlet !== 'RPM' ? ` · ${card.outlet}` : ''}
         </span>
         <time className="fc-lab-signal-card__time">{formatIntelUpdated(card.timestamp)}</time>
       </header>
@@ -101,27 +91,24 @@ function SignalCardView({ card }: { card: SignalCard }): React.ReactElement {
   );
 }
 
-export function FutureCastAnalystSignals({ players, intelItems, loading, lastUpdated }: Props): React.ReactElement {
-  const signals = useMemo(() => buildSignals(players, intelItems), [players, intelItems]);
+export function FutureCastAnalystSignals({ staffNotes, masterBoard }: Props): React.ReactElement {
+  const signals = useMemo(
+    () => buildSignals(staffNotes, masterBoard),
+    [staffNotes, masterBoard]
+  );
 
   return (
     <ModuleShell
       title="Analyst Signals — FutureCast Activity"
-      sub="RPM predictors and insider picks — replaces Staff Notes + Signals pages."
+      sub="Staff notes and FutureCast model signals — prediction engine only."
       testId="fc-lab-analyst-signals"
       action={
-        lastUpdated ? (
-          <span className="rh-cc-module__stamp">Updated {formatIntelUpdated(lastUpdated)}</span>
+        staffNotes.updatedAt ? (
+          <span className="rh-cc-module__stamp">Updated {formatIntelUpdated(staffNotes.updatedAt)}</span>
         ) : null
       }
     >
-      {loading && signals.length === 0 ? (
-        <div className="fc-lab-signal-grid">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="rh-cc-skeleton fc-lab-signal-card" aria-hidden />
-          ))}
-        </div>
-      ) : signals.length === 0 ? (
+      {signals.length === 0 ? (
         <p className="rh-cc-empty">No analyst signals loaded yet.</p>
       ) : (
         <div className="fc-lab-signal-grid">

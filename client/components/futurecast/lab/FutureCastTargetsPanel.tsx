@@ -1,10 +1,8 @@
 'use client';
 
 import React from 'react';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
-import { HIGH_PRIORITY_YEAR } from '@/lib/futurecast-high-priority-api';
+import type { MasterBoardResponse } from '@/lib/futurecast-board-types';
 import { playerProfileRoute } from '@/lib/vault-route-map';
-import { analystConfidence } from '@/components/recruiting-hub/FutureCastSection/futurecast-player-utils';
 import {
   AnalystConfidenceMeter,
   CompetingSchoolsBar,
@@ -13,25 +11,17 @@ import {
   MovementBadge,
   MovementSparkline,
   UfProbBar,
-  ufPctFromRaw,
 } from './primitives';
+import { futureCastPlayerToLabTarget, type FcLabTarget, ufPctFromFc } from './fc-lab-types';
 
 type Props = {
-  players: HighPriorityPlayer[];
+  masterBoard: MasterBoardResponse;
 };
 
-function TargetCard({ player }: { player: HighPriorityPlayer }): React.ReactElement {
-  const pct = ufPctFromRaw(player.ufProbability);
-  const delta = Math.round(player.delta7d ?? player.movementDelta ?? 0);
+function TargetCard({ player }: { player: FcLabTarget }): React.ReactElement {
+  const pct = ufPctFromFc(player.ufProbability);
+  const delta = Math.round(player.delta7d);
   const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
-  const classYear = player.classYear ?? HIGH_PRIORITY_YEAR;
-  const predictors = player.predictors?.slice(0, 2) ?? [];
-  const predictorLine =
-    predictors.length > 0
-      ? predictors
-          .map((p) => `${p.name} ${Math.round(p.score <= 1 ? p.score * 100 : p.score)}%`)
-          .join(', ')
-      : null;
 
   return (
     <article className="fc-lab-target-card" data-testid="fc-lab-target-card">
@@ -41,7 +31,7 @@ function TargetCard({ player }: { player: HighPriorityPlayer }): React.ReactElem
             {player.name}
           </a>
           <p className="fc-lab-target-card__meta">
-            {player.position} · {player.school ?? '—'} · Class {classYear}
+            {player.position} · {player.school ?? '—'} · Class {player.classYear}
           </p>
         </div>
         <MovementBadge delta={delta} tone={tone} />
@@ -60,15 +50,8 @@ function TargetCard({ player }: { player: HighPriorityPlayer }): React.ReactElem
 
       <div className="fc-lab-target-card__badges">
         <FitScoreBadge score={player.fitScore} />
-        <AnalystConfidenceMeter
-          value={analystConfidence(player) ?? player.staffConfidence}
-          label="Analyst confidence"
-        />
+        <AnalystConfidenceMeter value={player.modelPct} label="FutureCast Model" />
       </div>
-
-      {predictorLine ? (
-        <p className="fc-lab-target-card__predictors">{predictorLine}</p>
-      ) : null}
 
       <footer className="fc-lab-target-card__foot">
         <a href={playerProfileRoute(player.slug, 'futurecast')} className="fc-lab-target-card__cta">
@@ -79,19 +62,20 @@ function TargetCard({ player }: { player: HighPriorityPlayer }): React.ReactElem
   );
 }
 
-export function FutureCastTargetsPanel({ players }: Props): React.ReactElement {
-  const rows = [...players]
-    .sort((a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0))
-    .slice(0, 8);
+export function FutureCastTargetsPanel({ masterBoard }: Props): React.ReactElement {
+  const rows = [...masterBoard.players]
+    .sort((a, b) => b.ufConfidence - a.ufConfidence)
+    .slice(0, 10)
+    .map(futureCastPlayerToLabTarget);
 
   return (
     <ModuleShell
-      title="Top UF Targets"
-      sub="Premium FutureCast master board — probability, movement, fit, and competing schools."
+      title="Top UF Targets — Master Board"
+      sub="Premium FutureCast master board with probability, movement, fit, and competing schools."
       testId="fc-lab-targets"
     >
       {rows.length === 0 ? (
-        <p className="rh-cc-empty">No high-priority targets loaded.</p>
+        <p className="rh-cc-empty">No master board targets loaded.</p>
       ) : (
         <div className="fc-lab-target-cards">
           {rows.map((p) => (

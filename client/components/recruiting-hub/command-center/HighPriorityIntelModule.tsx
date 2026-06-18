@@ -41,7 +41,7 @@ function IntelCard({ item }: { item: HighPriorityIntelItem }): React.ReactElemen
     >
       <header className="rh-cc-intel-card__head">
         <div>
-          <a href={playerProfileRoute(item.slug, 'futurecast')} className="rh-cc-intel-card__name">
+          <a href={playerProfileRoute(item.slug, 'recruiting')} className="rh-cc-intel-card__name">
             {item.name}
           </a>
           <p className="rh-cc-intel-card__meta">
@@ -66,16 +66,10 @@ function IntelCard({ item }: { item: HighPriorityIntelItem }): React.ReactElemen
 
       <footer className="rh-cc-intel-card__foot">
         <a
-          href={playerProfileRoute(item.slug, 'futurecast')}
+          href={playerProfilePath(item.slug, 'target', true, item.name, 'recruiting')}
           className="rh-cc-intel-card__link rh-cc-intel-card__link--primary"
         >
-          FutureCast →
-        </a>
-        <a
-          href={playerProfilePath(item.slug, 'target', true, item.name, 'recruiting')}
-          className="rh-cc-intel-card__link"
-        >
-          More Intel
+          More Intel →
         </a>
       </footer>
     </article>

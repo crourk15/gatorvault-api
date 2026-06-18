@@ -16,7 +16,7 @@ export function RecruitingHubPage(): React.ReactElement {
     items: highPriorityIntelItems,
     loading: intelLoading,
     lastUpdated: intelLastUpdated,
-  } = useIntelFeed(data.highPriority);
+  } = useIntelFeed(data.b27.targets);
   const showContent = data.loadedOnce && !data.error;
 
   return (
@@ -37,8 +37,6 @@ export function RecruitingHubPage(): React.ReactElement {
           b26={data.b26}
           b27={data.b27}
           b28={data.b28}
-          highPriority={data.highPriority}
-          highPriorityLastUpdated={data.highPriorityLastUpdated}
           movementSummary={data.movementSummary}
           staffDashboard={data.staffDashboard}
           portal={data.portal}

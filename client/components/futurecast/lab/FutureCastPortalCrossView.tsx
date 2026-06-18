@@ -1,14 +1,15 @@
 'use client';
 
 import React, { useMemo } from 'react';
+import type { MasterBoardResponse } from '@/lib/futurecast-board-types';
 import type { PortalWatchlistHomePlayer } from '@/lib/futurecast-home-api';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
-import { FitScoreBadge, ModuleShell, UfProbBar, ufPctFromRaw } from './primitives';
+import { FitScoreBadge, ModuleShell, UfProbBar } from './primitives';
+import { ufPctFromFc } from './fc-lab-types';
 
 type Props = {
   portalPlayers: PortalWatchlistHomePlayer[];
-  highPriority: HighPriorityPlayer[];
+  masterBoard: MasterBoardResponse;
 };
 
 type CrossRow = {
@@ -23,15 +24,15 @@ type CrossRow = {
   fitScore: number | null;
 };
 
-export function FutureCastPortalCrossView({ portalPlayers, highPriority }: Props): React.ReactElement {
-  const hpBySlug = useMemo(
-    () => new Map(highPriority.map((p) => [p.slug, p])),
-    [highPriority]
+export function FutureCastPortalCrossView({ portalPlayers, masterBoard }: Props): React.ReactElement {
+  const boardBySlug = useMemo(
+    () => new Map(masterBoard.players.map((p) => [p.slug, p])),
+    [masterBoard]
   );
 
   const rows = useMemo((): CrossRow[] => {
     return portalPlayers.slice(0, 10).map((p) => {
-      const hp = hpBySlug.get(p.slug);
+      const board = boardBySlug.get(p.slug);
       return {
         id: p.id,
         slug: p.slug,
@@ -40,11 +41,11 @@ export function FutureCastPortalCrossView({ portalPlayers, highPriority }: Props
         classYear: p.classYear,
         portalLikelihood: Math.round(p.portalLikelihood),
         volatility: Math.round(p.volatility),
-        ufProb: hp ? ufPctFromRaw(hp.ufProbability) : null,
-        fitScore: hp?.fitScore ?? null,
+        ufProb: board ? ufPctFromFc(board.ufConfidence) : null,
+        fitScore: board?.fitScore ?? null,
       };
     });
-  }, [portalPlayers, hpBySlug]);
+  }, [portalPlayers, boardBySlug]);
 
   return (
     <ModuleShell

@@ -2,8 +2,7 @@
 
 import React, { useMemo } from 'react';
 import type { HeatCheckItem } from '@/lib/recruiting-api';
-import type { RecruitingBoardResponse } from '@/lib/recruiting-board-api';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import type { RecruitingBoardPlayer, RecruitingBoardResponse } from '@/lib/recruiting-board-api';
 import type { MovementSummary } from '@/lib/recruiting-movement-api';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
 import type { HighPriorityIntelItem } from '@/components/recruiting-hub/HighPriorityIntel/types';
@@ -13,7 +12,7 @@ import { ufPctFromRaw } from './primitives';
 
 type Props = {
   rankings: RecruitingBoardResponse['rankings'];
-  highPriority: HighPriorityPlayer[];
+  targets: RecruitingBoardPlayer[];
   movementSummary: MovementSummary | null;
   staffDashboard: StaffDashboardResponse | null;
   intelItems: HighPriorityIntelItem[];
@@ -22,21 +21,27 @@ type Props = {
   lastUpdated?: string | null;
 };
 
-function blueChipPct(players: HighPriorityPlayer[]): string {
+function blueChipPct(players: RecruitingBoardPlayer[]): string {
   if (!players.length) return '—';
   const chips = players.filter((p) => (Number(p.stars) || 0) >= 4).length;
   return `${Math.round((chips / players.length) * 100)}%`;
 }
 
-function avgRating(players: HighPriorityPlayer[]): string {
+function avgRating(players: RecruitingBoardPlayer[]): string {
   const rated = players.filter((p) => p.rating != null && Number(p.rating) > 0);
   if (!rated.length) return '—';
   return (rated.reduce((a, p) => a + Number(p.rating), 0) / rated.length).toFixed(4);
 }
 
+function movementDelta(player: RecruitingBoardPlayer): number {
+  if (player.movementDirection === 'up') return 3;
+  if (player.movementDirection === 'down') return -3;
+  return 0;
+}
+
 export function HeroPulse({
   rankings,
-  highPriority,
+  targets,
   movementSummary,
   staffDashboard,
   intelItems,
@@ -45,19 +50,17 @@ export function HeroPulse({
   lastUpdated,
 }: Props): React.ReactElement {
   const avgUfProb = useMemo(() => {
-    if (!highPriority.length) return 0;
-    const sum = highPriority.reduce((acc, p) => acc + ufPctFromRaw(p.ufProbability), 0);
-    return Math.round(sum / highPriority.length);
-  }, [highPriority]);
+    const withProb = targets.filter((p) => p.ufProbability != null);
+    if (!withProb.length) return 0;
+    const sum = withProb.reduce((acc, p) => acc + ufPctFromRaw(p.ufProbability), 0);
+    return Math.round(sum / withProb.length);
+  }, [targets]);
 
   const avgDelta = useMemo(() => {
-    if (!highPriority.length) return 0;
-    const sum = highPriority.reduce(
-      (acc, p) => acc + (p.delta7d ?? p.movementDelta ?? 0),
-      0
-    );
-    return Math.round(sum / highPriority.length);
-  }, [highPriority]);
+    if (!targets.length) return 0;
+    const sum = targets.reduce((acc, p) => acc + movementDelta(p), 0);
+    return Math.round(sum / targets.length);
+  }, [targets]);
 
   const alerts = useMemo(() => {
     const fromStaff = (staffDashboard?.alerts ?? []).slice(0, 3).map((a) => ({
@@ -94,7 +97,7 @@ export function HeroPulse({
             <p className="rh-cc-hero__eyebrow">UF Recruiting Command Center</p>
             <h1 className="rh-cc-hero__title">UF Recruiting Pulse — 2027 Class</h1>
             <p className="rh-cc-hero__sub">
-              Live intel, movement, and FutureCast for UF targets.
+              Live intel, movement, and board pulse for UF targets.
             </p>
             <div className="rh-cc-hero__metrics">
               <div className="rh-cc-hero__metric rh-cc-hero__metric--rank">
@@ -105,11 +108,11 @@ export function HeroPulse({
               </div>
               <div className="rh-cc-hero__metric">
                 <span className="rh-cc-hero__metric-label">Blue Chip %</span>
-                <strong className="rh-cc-hero__metric-value">{blueChipPct(highPriority)}</strong>
+                <strong className="rh-cc-hero__metric-value">{blueChipPct(targets)}</strong>
               </div>
               <div className="rh-cc-hero__metric">
                 <span className="rh-cc-hero__metric-label">Avg Rating</span>
-                <strong className="rh-cc-hero__metric-value">{avgRating(highPriority)}</strong>
+                <strong className="rh-cc-hero__metric-value">{avgRating(targets)}</strong>
               </div>
               <div className="rh-cc-hero__metric">
                 <span className="rh-cc-hero__metric-label">Total Points</span>

@@ -1,14 +1,13 @@
 'use client';
 
 import React from 'react';
-import type { RecruitingBoardResponse } from '@/lib/recruiting-board-api';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
-import { playerProfileRoute } from '@/lib/site-routes';
+import type { RecruitingBoardPlayer, RecruitingBoardResponse } from '@/lib/recruiting-board-api';
+import { playerProfileRoute } from '@/lib/vault-route-map';
 import { ModuleShell, MovementBadge, UfProbBar, ufPctFromRaw } from './primitives';
 
 type ClassBundle = {
   commits: unknown[];
-  targets: unknown[];
+  targets: RecruitingBoardPlayer[];
   rankings: RecruitingBoardResponse['rankings'];
 };
 
@@ -16,20 +15,16 @@ type Props = {
   b26: ClassBundle;
   b27: ClassBundle;
   b28: ClassBundle;
-  highPriority: HighPriorityPlayer[];
 };
 
 function classCard(year: number, bundle: ClassBundle): React.ReactElement {
   const rank = bundle.rankings?.nationalRank;
-  const score = bundle.rankings?.classScore;
   const commits = bundle.commits.length;
   const targets = bundle.targets.length;
   const blueChip =
     targets > 0
       ? Math.round(
-          ((bundle.targets as { stars?: number }[]).filter((t) => (Number(t.stars) || 0) >= 4).length /
-            targets) *
-            100
+          (bundle.targets.filter((t) => (Number(t.stars) || 0) >= 4).length / targets) * 100
         )
       : 0;
 
@@ -44,8 +39,14 @@ function classCard(year: number, bundle: ClassBundle): React.ReactElement {
   );
 }
 
-export function RecruitingBoardsOverview({ b26, b27, b28, highPriority }: Props): React.ReactElement {
-  const stock = highPriority.slice(0, 5);
+function targetDelta(player: RecruitingBoardPlayer): number {
+  if (player.movementDirection === 'up') return 3;
+  if (player.movementDirection === 'down') return -3;
+  return 0;
+}
+
+export function RecruitingBoardsOverview({ b26, b27, b28 }: Props): React.ReactElement {
+  const stock = b27.targets.slice(0, 5);
 
   return (
     <ModuleShell
@@ -63,10 +64,10 @@ export function RecruitingBoardsOverview({ b26, b27, b28, highPriority }: Props)
         <ul className="rh-cc-stock__list">
           {stock.map((p) => {
             const pct = ufPctFromRaw(p.ufProbability);
-            const delta = p.delta7d ?? p.movementDelta ?? 0;
+            const delta = targetDelta(p);
             return (
               <li key={p.slug} className="rh-cc-stock__row">
-                <a href={playerProfileRoute(p.slug, 'futurecast')} className="rh-cc-stock__name">
+                <a href={playerProfileRoute(p.slug, 'recruiting')} className="rh-cc-stock__name">
                   {p.name}
                 </a>
                 <UfProbBar value={pct} />

@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import type { FutureCastPageData } from '@/lib/api/futurecast';
-import { useIntelFeed } from '@/hooks/useIntelFeed';
+import type { FutureCastLabDataMap } from '@/lib/futurecast-lab-data';
 import { FutureCastHero } from './FutureCastHero';
 import { FutureCastTargetsPanel } from './FutureCastTargetsPanel';
 import { FutureCastBattlesPanel } from './FutureCastBattlesPanel';
@@ -11,61 +10,59 @@ import { FutureCastMovementPanel } from './FutureCastMovementPanel';
 import { FutureCastPositionBreakdown } from './FutureCastPositionBreakdown';
 import { FutureCastPortalCrossView } from './FutureCastPortalCrossView';
 import { FutureCastLiveFeed } from './FutureCastLiveFeed';
-import { useFutureCastLabData } from './useFutureCastLabData';
 
 type Props = {
-  data: FutureCastPageData;
+  data: FutureCastLabDataMap;
 };
 
 export function FutureCastLabPageDesktop({ data }: Props): React.ReactElement {
-  const labData = useFutureCastLabData();
-  const { items: intelItems, loading: intelLoading, lastUpdated: intelLastUpdated } = useIntelFeed(
-    data.highPriority
-  );
-
   return (
     <div className="fc-lab-page" data-testid="fc-lab-page-desktop">
-      <FutureCastHero
-        summary={data.summary}
-        metrics={data.metrics}
-        heatLevel={data.heatLevel}
-        highPriority={data.highPriority}
-        staffDashboard={labData.staffDashboard}
-        movementSummary={labData.movementSummary}
-        lastUpdated={intelLastUpdated ?? data.highPriorityLastUpdated}
-      />
-
-      <div className="fc-lab-main rh-frame">
-        <div className="fc-lab-col fc-lab-col--left">
-          <FutureCastTargetsPanel players={data.highPriority} />
-          <FutureCastBattlesPanel players={data.highPriority} />
-          <FutureCastAnalystSignals
-            players={data.highPriority}
-            intelItems={intelItems}
-            loading={intelLoading}
-            lastUpdated={intelLastUpdated}
-          />
-        </div>
-
-        <div className="fc-lab-col fc-lab-col--right">
-          <FutureCastMovementPanel initialData={labData.movementIntel} />
-          <FutureCastPositionBreakdown
-            players={data.highPriority}
-            activePredictions={data.metrics.activePredictions}
-          />
-          <FutureCastPortalCrossView
-            portalPlayers={data.home.portalWatchlist ?? []}
-            highPriority={data.highPriority}
-          />
-        </div>
+      <div id="fc-hero">
+        <FutureCastHero
+          summary={data.summary}
+          metrics={data.metrics}
+          heatLevel={data.heatLevel}
+          masterBoard={data.masterBoard}
+          movementIntel={data.movementIntel}
+          lastUpdated={data.lastUpdated}
+        />
       </div>
 
-      <FutureCastLiveFeed
-        players={data.highPriority}
-        intelItems={intelItems}
-        movementIntel={labData.movementIntel}
-        staffDashboard={labData.staffDashboard}
-      />
+      <div className="fc-lab-main fc-lab-main--stacked rh-frame">
+        <section id="fc-master">
+          <FutureCastTargetsPanel masterBoard={data.masterBoard} />
+        </section>
+        <section id="fc-trending">
+          <FutureCastBattlesPanel masterBoard={data.masterBoard} trendingBoard={data.trendingBoard} />
+        </section>
+        <section id="fc-signals">
+          <FutureCastAnalystSignals staffNotes={data.staffNotes} masterBoard={data.masterBoard} />
+        </section>
+        <section id="fc-movement">
+          <FutureCastMovementPanel movementIntel={data.movementIntel} />
+        </section>
+        <section id="fc-positions">
+          <FutureCastPositionBreakdown
+            players={data.masterBoard.players}
+            activePredictions={data.metrics.activePredictions}
+          />
+        </section>
+        <section id="fc-portal">
+          <FutureCastPortalCrossView
+            portalPlayers={data.home.portalWatchlist ?? []}
+            masterBoard={data.masterBoard}
+          />
+        </section>
+      </div>
+
+      <div id="fc-feed">
+        <FutureCastLiveFeed
+          masterBoard={data.masterBoard}
+          staffNotes={data.staffNotes}
+          movementIntel={data.movementIntel}
+        />
+      </div>
     </div>
   );
 }
