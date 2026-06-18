@@ -3,17 +3,16 @@
  * One card per row, no horizontal scroll, 44px tap targets, section rhythm.
  */
 
-.rh-vertical-dashboard {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.rh-vertical-dashboard > section {
-  margin-top: 0 !important;
-}
-
 @media (max-width: 767px) {
+  .rh-vertical-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .rh-vertical-dashboard > section {
+    margin-top: 0 !important;
+  }
   .gv-vault-shell__main {
     overflow-x: hidden;
   }
@@ -91,7 +90,8 @@
   }
 
   /* ── Recruiting Hub vertical dashboard ── */
-  .rh-vertical-dashboard {
+  .rh-vertical-dashboard,
+  .rh-elite-dashboard {
     display: flex;
     flex-direction: column;
     gap: 22px;
@@ -287,10 +287,27 @@
   .gv-vault-shell__main .gv-sched-game-card__right {
     width: 100%;
   }
+
+  /* Recruiting Hub: single-column intel on mobile only */
+  .hp-intel-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .rh-elite-dashboard__duo {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+  }
+
+  .rh-page--elite .rh-module-row {
+    display: none !important;
+  }
 }
 
-/* Desktop: intel grid stays single column for vertical-first product direction */
-.hp-intel-grid {
-  grid-template-columns: 1fr;
-  gap: 14px;
+/* Desktop / laptop: allow 2-column intel grid on wide screens (see recruiting-hub-elite.css) */
+@media (min-width: 768px) {
+  .rh-elite-mobile-only {
+    display: none !important;
+  }
 }

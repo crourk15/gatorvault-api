@@ -66,6 +66,7 @@
 .rh-title-bar__title,
 .futurecast-page__section-title,
 .gv-elite-hero__title,
+.gv-rh-elite-hero__title,
 .fc-elite-section__title,
 .gv-sched-section__header .gv-heading-l,
 .gv-sched-section__header h2 {
@@ -75,6 +76,7 @@
 .rh-hero__title,
 .gv-rh-hero__title,
 .gv-rh-premium-hero__title,
+.gv-rh-elite-hero__title,
 .gv-sched-hero__title {
   color: var(--heading-color-dark);
 }
@@ -464,6 +466,12 @@
   .rh-portal-card,
   .rh-tool-tile,
   .intel-card,
+  .hp-intel-card,
+  .rh-elite-data-card,
+  .rh-elite-panel,
+  .gv-rh-elite-stat,
+  .rh-fc-card,
+  .rh-nil-card,
   .commit-card,
   .gv-rh-card,
   .gv-rh-panel,
@@ -497,6 +505,12 @@
   .fc-table,
   .fc-big-board-toolbar,
   .intel-card,
+  .hp-intel-card,
+  .rh-elite-data-card,
+  .rh-elite-panel,
+  .gv-rh-elite-stat,
+  .rh-fc-card,
+  .rh-nil-card,
   .commit-card
 ) {
   background: var(--th-card-bg) !important;
@@ -522,6 +536,12 @@
   :is(
     .rh-module-card,
     .intel-card,
+  .hp-intel-card,
+  .rh-elite-data-card,
+  .rh-elite-panel,
+  .gv-rh-elite-stat,
+  .rh-fc-card,
+  .rh-nil-card,
     .commit-card,
     .fc-elite-card,
     .fc-player-card,
@@ -559,6 +579,12 @@
   :is(
     .rh-module-card,
     .intel-card,
+  .hp-intel-card,
+  .rh-elite-data-card,
+  .rh-elite-panel,
+  .gv-rh-elite-stat,
+  .rh-fc-card,
+  .rh-nil-card,
     .commit-card,
     .fc-elite-card,
     .fc-player-card,
@@ -601,6 +627,12 @@
   :is(
     .rh-module-card,
     .intel-card,
+  .hp-intel-card,
+  .rh-elite-data-card,
+  .rh-elite-panel,
+  .gv-rh-elite-stat,
+  .rh-fc-card,
+  .rh-nil-card,
     .commit-card,
     .fc-elite-card,
     .fc-player-card,

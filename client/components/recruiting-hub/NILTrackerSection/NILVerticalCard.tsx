@@ -22,7 +22,7 @@ export function NILVerticalCard({ player }: Props): React.ReactElement {
   const valuation = estimateNilValuation(player);
 
   return (
-    <article className="rh-nil-card hp-intel-card hp-intel-card--nil" data-testid="rh-nil-vertical-card">
+    <article className="rh-nil-card rh-elite-data-card rh-elite-data-card--nil hp-intel-card hp-intel-card--nil" data-testid="rh-nil-vertical-card">
       <header className="rh-nil-card__header">
         <PlayerNavLink href={playerProfileRoute(player.slug, 'futurecast')} className="rh-nil-card__identity">
           <span className="rh-nil-card__name">{player.name}</span>

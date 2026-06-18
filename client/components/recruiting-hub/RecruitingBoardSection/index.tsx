@@ -32,7 +32,7 @@ export function RecruitingBoardSection({ targets }: Props): React.ReactElement {
   const buckets = useMemo(() => bucketTargets(targets), [targets]);
 
   return (
-    <section className="rh-section rh-container" data-testid="rh-recruiting-board-section">
+    <section className="rh-section rh-section--panel rh-container" data-testid="rh-recruiting-board-section">
       <h2 className="rh-section__title">Recruiting Board</h2>
       <div className="rh-board-grid">
         <BoardTierColumn title="Tier 1 — Priority Targets" players={buckets.tier1} />

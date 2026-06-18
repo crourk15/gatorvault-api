@@ -3,8 +3,10 @@
  */
 
 .hp-intel-section {
-  margin-top: var(--rh-section-gap, var(--space-8));
+  margin-top: 0;
 }
+
+/* Panel chrome comes from .rh-elite-panel on the hub page */
 
 .hp-intel-section__title {
   margin: 0;
@@ -37,11 +39,19 @@
   gap: 14px;
 }
 
+@media (min-width: 1024px) {
+  .rh-page--elite .hp-intel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
 .hp-intel-grid__skeleton {
-  min-height: 320px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #101520, #0b1020);
-  border: 1px solid #1f2a3a;
+  min-height: 280px;
+  border-radius: var(--th-radius-card, 12px);
+  background: color-mix(in srgb, var(--th-border) 30%, #fff);
+  border: 1px solid var(--th-border);
   animation: hp-intel-pulse 1.2s ease-in-out infinite;
 }
 

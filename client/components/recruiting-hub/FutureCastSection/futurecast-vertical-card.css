@@ -27,15 +27,15 @@
 .rh-fc-card__name {
   display: block;
   font-size: 15px;
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 700;
+  color: var(--th-heading-light, var(--gator-blue));
 }
 
 .rh-fc-card__meta {
   display: block;
   margin-top: 2px;
   font-size: 12px;
-  color: #9fb3d1;
+  color: var(--th-meta);
 }
 
 .rh-fc-card__fit {
@@ -61,7 +61,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #9fb3d1;
+  color: var(--th-meta);
 }
 
 .rh-fc-card__value,
@@ -69,7 +69,7 @@
   margin: 0;
   font-size: 12px;
   line-height: 1.45;
-  color: #d0e0ff;
+  color: var(--th-body-dark);
 }
 
 .rh-fc-card__confidence {
@@ -79,11 +79,11 @@
 
 .rh-fc-card__confidence-value {
   font-weight: 700;
-  color: #ffffff;
+  color: var(--th-heading-light, var(--gator-blue));
 }
 
 .rh-fc-card__confidence-src {
-  color: #9fb3d1;
+  color: var(--th-meta);
   font-size: 12px;
 }
 
@@ -135,9 +135,9 @@
   min-height: 44px;
   padding: 10px 14px;
   border-radius: 10px;
-  border: 1px solid #1f2a3a;
-  background: #0b1020;
-  color: #d0e0ff;
+  border: 1px solid var(--th-border);
+  background: var(--th-card-bg);
+  color: var(--th-body-dark);
   font-size: 13px;
   font-weight: 600;
   text-align: left;
@@ -145,6 +145,7 @@
 }
 
 .rh-fc-sort-bar__btn.is-active {
-  border-color: #3498db;
-  color: #ffffff;
+  border-color: var(--th-blue);
+  color: var(--th-heading-light, var(--gator-blue));
+  background: color-mix(in srgb, var(--th-blue) 8%, #fff);
 }

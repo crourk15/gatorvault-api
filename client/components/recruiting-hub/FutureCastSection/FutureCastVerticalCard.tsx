@@ -44,7 +44,7 @@ export function FutureCastVerticalCard({ player }: Props): React.ReactElement {
   const fit = player.fitScore != null ? Math.round(player.fitScore) : null;
 
   return (
-    <article className="rh-fc-card hp-intel-card hp-intel-card--rpm" data-testid="rh-fc-vertical-card">
+    <article className="rh-fc-card rh-elite-data-card rh-elite-data-card--rpm hp-intel-card hp-intel-card--rpm" data-testid="rh-fc-vertical-card">
       <header className="rh-fc-card__header">
         <PlayerNavLink href={playerProfileRoute(player.slug, 'futurecast')} className="rh-fc-card__identity">
           <span className="rh-fc-card__name">{player.name}</span>

@@ -24,7 +24,7 @@ function IntelGridSkeleton(): React.ReactElement {
 
 export function HighPriorityIntelGrid({ items, loading, lastUpdated }: Props): React.ReactElement {
   return (
-    <section className="hp-intel-section rh-container" data-testid="rh-high-priority-intel-grid">
+    <section className="hp-intel-section rh-elite-panel rh-container" data-testid="rh-high-priority-intel-grid">
       <header className="rh-section-head">
         <h2 className="hp-intel-section__title rh-section-title">High Priority Intel</h2>
         <p className="hp-intel-section__sub rh-section-sub">

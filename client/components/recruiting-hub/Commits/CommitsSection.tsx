@@ -31,7 +31,7 @@ export function CommitsSection({ commits2026, commits2027, commits2028 }: Props)
   const activeCommits = byYear[activeYear];
 
   return (
-    <section className="commits-section rh-container" data-testid="rh-commits-section">
+    <section className="commits-section rh-section rh-section--panel rh-container" data-testid="rh-commits-section">
       <header className="commits-section__header">
         <h2 className="commits-section__title">Florida Gators Recruiting Class</h2>
         <p className="commits-section__sub">2026 and beyond — verified commits, real-time updates.</p>

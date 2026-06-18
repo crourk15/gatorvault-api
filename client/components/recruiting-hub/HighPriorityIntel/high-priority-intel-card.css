@@ -1,41 +1,38 @@
 /**
- * High Priority Intel — elite card (Recruiting Hub)
+ * High Priority Intel — unified vault card (UF blue / orange / white)
  */
 
 .hp-intel-card {
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
+  border-radius: var(--th-radius-card, 12px);
   padding: 14px 16px;
-  background: #0b1020;
-  border: 1px solid #1f2a3a;
-  color: #ffffff;
+  background: var(--th-card-bg, #fff);
+  border: 1px solid var(--th-border);
+  border-top: 3px solid var(--th-accent, var(--gator-orange));
+  box-shadow: var(--th-shadow);
+  color: var(--th-body-dark);
   min-height: 0;
 }
 
 .hp-intel-card--battle {
-  background: linear-gradient(135deg, #20160b, #0b1020);
-  border-color: #f1c40f33;
+  border-left: 4px solid #f1c40f;
 }
 
 .hp-intel-card--visit {
-  background: linear-gradient(135deg, #0b1620, #0b1020);
-  border-color: #3498db33;
+  border-left: 4px solid var(--th-blue, #0021a5);
 }
 
 .hp-intel-card--rpm {
-  background: linear-gradient(135deg, #101520, #0b1020);
-  border-color: #2ecc7133;
+  border-left: 4px solid var(--th-green, #2ecc71);
 }
 
 .hp-intel-card--nil {
-  background: linear-gradient(135deg, #201510, #0b1020);
-  border-color: #e67e2233;
+  border-left: 4px solid var(--th-accent);
 }
 
 .hp-intel-card--heat {
-  background: linear-gradient(135deg, #201010, #0b1020);
-  border-color: #e74c3c33;
+  border-left: 4px solid var(--th-red, #e74c3c);
 }
 
 .hp-intel-header {
@@ -53,16 +50,16 @@
 
 .hp-intel-name {
   display: block;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 15px;
-  color: #ffffff;
+  color: var(--th-heading-light, var(--gator-blue));
   line-height: 1.25;
 }
 
 .hp-intel-meta {
   display: block;
   font-size: 12px;
-  color: #9fb3d1;
+  color: var(--th-meta);
   margin-top: 2px;
 }
 
@@ -71,6 +68,10 @@
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--th-primary) 6%, transparent);
+  border: 1px solid var(--th-border);
 }
 
 .hp-intel-icon {
@@ -80,30 +81,34 @@
 
 .hp-intel-label-text {
   font-size: 11px;
-  font-weight: 500;
-  color: #f1c40f;
+  font-weight: 600;
+  color: var(--th-body-dark);
   white-space: nowrap;
 }
 
 .hp-intel-card--visit .hp-intel-label-text {
-  color: #3498db;
+  color: var(--th-blue);
 }
 
 .hp-intel-card--rpm .hp-intel-label-text {
-  color: #2ecc71;
+  color: var(--th-green, #2ecc71);
 }
 
 .hp-intel-card--nil .hp-intel-label-text {
-  color: #e67e22;
+  color: var(--th-accent);
 }
 
 .hp-intel-card--heat .hp-intel-label-text {
-  color: #e74c3c;
+  color: var(--th-red, #e74c3c);
 }
 
 .hp-intel-prob {
   margin-top: 8px;
   margin-bottom: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--th-primary) 4%, #fff);
+  border: 1px solid var(--th-border);
 }
 
 .hp-intel-prob-main {
@@ -113,33 +118,32 @@
 }
 
 .hp-intel-prob-value {
-  font-size: 18px;
-  font-weight: 600;
-  color: #ffffff;
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: var(--th-blue, var(--gator-blue));
 }
 
 .hp-intel-prob-caption {
-  font-size: 11px;
-  color: #9fb3d1;
+  font-size: 12px;
+  color: var(--th-meta);
 }
 
 .hp-intel-prob-bar {
-  margin-top: 4px;
-  height: 4px;
+  height: 8px;
+  margin-top: 8px;
   border-radius: 999px;
-  background: #1f2a3a;
+  background: color-mix(in srgb, var(--th-border) 40%, #fff);
   overflow: hidden;
 }
 
 .hp-intel-prob-fill {
   height: 100%;
-  background: linear-gradient(90deg, #2ecc71, #3498db);
-  border-radius: inherit;
-  transition: width 0.2s ease-out;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--th-blue), var(--th-accent));
 }
 
 .hp-intel-prob-delta {
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .hp-intel-badge {
@@ -148,48 +152,50 @@
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 11px;
+  font-weight: 600;
   border: 1px solid;
 }
 
 .hp-intel-badge--up {
-  color: #2ecc71;
-  border-color: #2ecc71;
+  color: var(--th-green, #2ecc71);
+  border-color: color-mix(in srgb, var(--th-green) 40%, transparent);
+  background: color-mix(in srgb, var(--th-green) 10%, #fff);
 }
 
 .hp-intel-badge--down {
-  color: #e74c3c;
-  border-color: #e74c3c;
+  color: var(--th-red, #e74c3c);
+  border-color: color-mix(in srgb, var(--th-red) 40%, transparent);
+  background: color-mix(in srgb, var(--th-red) 10%, #fff);
 }
 
 .hp-intel-badge--flat {
-  color: #3498db;
-  border-color: #3498db;
+  color: var(--th-blue);
+  border-color: color-mix(in srgb, var(--th-blue) 30%, transparent);
+  background: color-mix(in srgb, var(--th-blue) 8%, #fff);
 }
 
 .hp-intel-summary {
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .hp-intel-summary-text {
   margin: 0;
-  font-size: 12px;
-  line-height: 1.45;
-  color: #d0e0ff;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--th-body-dark);
 }
 
 .hp-intel-analyst {
   margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--th-border);
 }
 
 .hp-intel-section-title {
-  margin: 0 0 4px;
+  margin: 0 0 8px;
   font-size: 12px;
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 700;
+  color: var(--th-heading-light, var(--gator-blue));
 }
 
 .hp-intel-analyst-list {
@@ -199,60 +205,61 @@
 }
 
 .hp-intel-analyst-item {
-  padding: 6px 8px;
-  border-radius: 8px;
-  background: #111827;
-  margin-bottom: 4px;
+  padding: 8px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--th-border) 60%, transparent);
 }
 
 .hp-intel-analyst-item:last-child {
-  margin-bottom: 0;
+  border-bottom: none;
 }
 
 .hp-intel-analyst-header {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: flex-start;
   gap: 8px;
 }
 
 .hp-intel-analyst-name {
   font-size: 12px;
-  font-weight: 500;
-  color: #ffffff;
-  min-width: 0;
+  font-weight: 600;
+  color: var(--th-body-dark);
 }
 
 .hp-intel-analyst-outlet {
-  font-size: 11px;
-  color: #9fb3d1;
+  font-weight: 500;
+  color: var(--th-meta);
 }
 
 .hp-intel-analyst-time {
   font-size: 11px;
-  color: #9fb3d1;
-  flex-shrink: 0;
+  color: var(--th-meta);
+  white-space: nowrap;
 }
 
 .hp-intel-analyst-metrics {
   display: flex;
-  gap: 12px;
-  margin-top: 4px;
+  gap: 16px;
+  margin-top: 6px;
 }
 
 .hp-intel-analyst-metric {
-  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .hp-intel-analyst-label {
-  display: block;
-  color: #9fb3d1;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--th-meta);
 }
 
 .hp-intel-analyst-value {
   display: block;
-  color: #ffffff;
-  font-weight: 600;
+  color: var(--th-heading-light, var(--gator-blue));
+  font-weight: 700;
 }
 
 .hp-intel-footer {
@@ -272,12 +279,12 @@
 
 .hp-intel-updated {
   font-size: 11px;
-  color: #9fb3d1;
+  color: var(--th-meta);
 }
 
 .hp-intel-actions {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -286,30 +293,31 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  padding: 6px 12px;
+  padding: 8px 14px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   border: 1px solid transparent;
   background: transparent;
-  color: #ffffff;
   text-decoration: none;
-  min-height: 32px;
+  min-height: 40px;
   cursor: pointer;
   transition: filter 0.15s ease, border-color 0.15s ease;
 }
 
 .hp-intel-btn:hover {
-  filter: brightness(1.08);
+  filter: brightness(1.05);
 }
 
 .hp-intel-btn--primary {
-  background: #1d4ed8;
-  border-color: #1d4ed8;
+  background: var(--th-accent, var(--gator-orange));
+  border-color: var(--th-accent);
+  color: #fff;
 }
 
 .hp-intel-btn--ghost {
-  border-color: #4b5563;
-  color: #d1d5db;
+  border-color: var(--th-border);
+  color: var(--th-blue, var(--gator-blue));
+  background: #fff;
 }
 
 @media (max-width: 767px) {
@@ -346,6 +354,5 @@
   .hp-intel-btn {
     min-height: 44px;
     width: 100%;
-    justify-content: center;
   }
 }

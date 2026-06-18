@@ -11,7 +11,7 @@ export function DeepDiveSection(): React.ReactElement {
   const warRoomLocked = !isVaultAdmin(user);
 
   return (
-    <section className="rh-section rh-container" data-testid="rh-deep-dive-section">
+    <section className="rh-section rh-section--panel rh-deep-dive rh-container" data-testid="rh-deep-dive-section">
       <h2 className="rh-section__title">War Room &amp; Tools</h2>
       <div className="rh-tool-grid">
         <ToolTile

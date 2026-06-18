@@ -2,7 +2,9 @@
 
 import React, { useMemo } from 'react';
 import { UiError } from '@/components/site/UiMessage';
-import { PageTitleBar } from '@/components/recruiting-hub/PageTitleBar';
+import { RecruitingHubHero } from '@/components/recruiting-hub/RecruitingHubHero';
+import { RecruitingHubMobileHeader } from '@/components/recruiting-hub/RecruitingHubMobileHeader';
+import { ModuleRow } from '@/components/recruiting-hub/ModuleRow';
 import { LivePulseBar } from '@/components/recruiting-hub/LivePulseBar';
 import { MovementSummaryLine } from '@/components/recruiting-hub/MovementSummaryLine';
 import { CommitsSection, mapCommits } from '@/components/recruiting-hub/Commits';
@@ -36,55 +38,81 @@ export function RecruitingHubPage(): React.ReactElement {
   const commits2028 = useMemo(() => mapCommits(data.class2028.commits, 2028), [data.class2028.commits]);
 
   return (
-    <div className="rh-page rh-vertical-dashboard" data-testid="vault-recruiting-hub">
-      <PageTitleBar />
+    <div className="rh-page rh-page--elite" data-testid="vault-recruiting-hub">
+      <div className="rh-elite-desktop-only">
+        <RecruitingHubHero
+          nationalRank={data.b27.rankings?.nationalRank}
+          classScore={data.b27.rankings?.classScore}
+          commitCount={data.b27.commits.length}
+          targetCount={data.b27.targets.length}
+        />
+        <ModuleRow />
+      </div>
+      <div className="rh-elite-mobile-only">
+        <RecruitingHubMobileHeader />
+      </div>
 
       {data.loading && !data.loadedOnce ? (
-        <p className="rh-page__status rh-container">Loading recruiting hub…</p>
+        <p className="rh-page__status rh-frame">Loading recruiting hub…</p>
       ) : null}
       {data.error && !data.loading ? (
-        <div className="rh-container">
+        <div className="rh-frame">
           <UiError message={data.error} retry={data.reload} backHref="/vault" backLabel="← Home" />
         </div>
       ) : null}
 
       {showContent ? (
-        <>
-          <LivePulseBar
-            rankings={data.b27.rankings}
-            targets={data.b27.targets}
-            rising={data.rising}
-            cooling={data.cooling}
-            flipWatchCount={flipWatchCount}
-            portalStorm={flipWatchCount >= 2}
-          />
-          <MovementSummaryLine summary={data.movementSummary} />
-          <CommitsSection
-            commits2026={commits2026}
-            commits2027={commits2027}
-            commits2028={commits2028}
-          />
+        <div className="rh-elite-dashboard rh-frame">
+          <section className="rh-elite-panel rh-elite-panel--command" data-testid="rh-elite-command-panel">
+            <header className="rh-elite-panel__head">
+              <h2 className="rh-elite-panel__title">Live Recruiting Pulse</h2>
+              <p className="rh-elite-panel__sub">Class temperature, movement signals, and composite metrics.</p>
+            </header>
+            <LivePulseBar
+              rankings={data.b27.rankings}
+              targets={data.b27.targets}
+              rising={data.rising}
+              cooling={data.cooling}
+              flipWatchCount={flipWatchCount}
+              portalStorm={flipWatchCount >= 2}
+            />
+            <MovementSummaryLine summary={data.movementSummary} />
+          </section>
+
           <HighPriorityIntelGrid
             items={highPriorityIntelItems}
             loading={intelLoading}
             lastUpdated={intelLastUpdated}
           />
-          <RecruitingBoardSection targets={data.b27.targets} />
-          <FutureCastSection
-            players={data.highPriority}
-            lastUpdated={data.highPriorityLastUpdated}
-          />
-          <PortalTrackerSection
-            incoming={data.portal.incoming}
-            targets={data.portal.targets}
-            outgoing={data.portal.outgoing}
-          />
-          <NILTrackerSection players={data.highPriority} />
-          <ClassEngineSection b26={data.b26} b27={data.b27} b28={data.b28} highPriority={data.highPriority} />
-        </>
+
+          <div className="rh-elite-dashboard__duo">
+            <CommitsSection
+              commits2026={commits2026}
+              commits2027={commits2027}
+              commits2028={commits2028}
+            />
+            <RecruitingBoardSection targets={data.b27.targets} />
+          </div>
+
+          <div className="rh-elite-dashboard__stack">
+            <FutureCastSection
+              players={data.highPriority}
+              lastUpdated={data.highPriorityLastUpdated}
+            />
+            <PortalTrackerSection
+              incoming={data.portal.incoming}
+              targets={data.portal.targets}
+              outgoing={data.portal.outgoing}
+            />
+            <NILTrackerSection players={data.highPriority} />
+            <ClassEngineSection b26={data.b26} b27={data.b27} b28={data.b28} highPriority={data.highPriority} />
+          </div>
+        </div>
       ) : null}
 
-      <DeepDiveSection />
+      <div className="rh-elite-bottom rh-frame">
+        <DeepDiveSection />
+      </div>
       <RecruitingHubFooter />
     </div>
   );

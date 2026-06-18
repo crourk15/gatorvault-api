@@ -83,7 +83,7 @@ export function PortalTrackerSection({ incoming, targets, outgoing }: SectionPro
   );
 
   return (
-    <section className="rh-section rh-container" data-testid="rh-portal-tracker-section">
+    <section className="rh-section rh-section--panel rh-container" data-testid="rh-portal-tracker-section">
       <h2 className="rh-section__title">Portal Tracker</h2>
       <div className="rh-portal-grid">
         <PortalColumn title="Incoming Portal Targets">

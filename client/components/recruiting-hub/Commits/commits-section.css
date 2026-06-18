@@ -14,7 +14,7 @@
   margin: 0;
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-text-primary, #f9fafb);
+  color: var(--th-heading-light, var(--color-uf-blue));
 }
 
 .commits-section__sub {
