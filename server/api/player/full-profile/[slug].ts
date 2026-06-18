@@ -3,7 +3,7 @@
  */
 import type { Request, Response } from 'express';
 import { asyncHandler, handleApiError, isSlug, sendError } from '../../players/utils';
-import { buildFullProfileBySlug } from './build-full-profile';
+import { buildFullProfileBySlug } from '../build-full-profile';
 
 export const handleGetFullProfile = asyncHandler(async (req: Request, res: Response) => {
   try {
