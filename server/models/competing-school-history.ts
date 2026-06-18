@@ -19,6 +19,14 @@ export interface CompetingSchoolDelta {
   volatilityBoost: number;
 }
 
+export interface CompetingSchoolSnapshot {
+  school: string;
+  rankNow: number;
+  rankPrior: number | null;
+  delta: number;
+  volatilityBoost: number;
+}
+
 export function competingVolatilityBoost(rankDelta: number): number {
   const abs = Math.abs(rankDelta);
   if (abs >= 4) return 20;
@@ -62,6 +70,57 @@ export async function logCompetingSchoolRanks(
   }
 
   return inserted;
+}
+
+/** Latest rank per school for one player (7-day window deltas). */
+export async function listCompetingSchoolsForPlayer(
+  playerId: string,
+  windowDays = 7
+): Promise<CompetingSchoolSnapshot[]> {
+  const days = Math.max(1, Math.floor(windowDays));
+  const { rows } = await db.query<{
+    school: string;
+    rank_now: number;
+    rank_prior: number | null;
+  }>(
+    `
+    WITH recent AS (
+      SELECT
+        h.school,
+        h.rank,
+        h.created_at,
+        ROW_NUMBER() OVER (PARTITION BY h.school ORDER BY h.created_at DESC) AS rn
+      FROM futurecast.competing_school_history h
+      WHERE h.player_id = $1
+        AND h.created_at >= now() - ($2::int || ' days')::interval
+    ),
+    paired AS (
+      SELECT
+        r1.school,
+        r1.rank AS rank_now,
+        r2.rank AS rank_prior
+      FROM recent r1
+      LEFT JOIN recent r2 ON r2.school = r1.school AND r2.rn = 2
+      WHERE r1.rn = 1
+    )
+    SELECT school, rank_now, rank_prior
+    FROM paired
+    ORDER BY rank_now ASC, school ASC
+    `,
+    [playerId, days]
+  );
+
+  return rows.map((row) => {
+    const delta =
+      row.rank_prior != null ? row.rank_prior - row.rank_now : 0;
+    return {
+      school: row.school,
+      rankNow: row.rank_now,
+      rankPrior: row.rank_prior,
+      delta,
+      volatilityBoost: competingVolatilityBoost(delta),
+    };
+  });
 }
 
 export async function listCompetingVolatilityBoosts(

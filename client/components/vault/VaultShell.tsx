@@ -8,6 +8,7 @@ import { isVaultAdmin } from '@/lib/admin-access';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
 import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
+import { warmVaultApi } from '@/lib/vault-api-warmup';
 
 const ADMIN_NAV_ITEM = {
   id: 'admin' as VaultSectionId,
@@ -94,6 +95,10 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
   useEffect(() => {
     setNavOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    warmVaultApi();
+  }, []);
 
   useEffect(() => {
     const onPageShow = (e: PageTransitionEvent) => {

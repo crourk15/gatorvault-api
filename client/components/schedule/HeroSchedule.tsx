@@ -12,12 +12,11 @@ type Props = {
 
 export function HeroSchedule({ title, subtitle, primaryCta, secondaryCta }: Props): React.ReactElement {
   return (
-    <section className="gv-sched-hero" data-testid="schedule-hero">
-      <div className="gv-sched-hero__bg" aria-hidden="true" />
-      <div className="gv-sched-hero__lights" aria-hidden="true" />
-      <div className="gv-container gv-sched-hero__inner">
-        <h1 className="gv-sched-hero__title">{title}</h1>
-        <p className="gv-sched-hero__sub">{subtitle}</p>
+    <section className="gv-sched-hero rh-hero" data-testid="schedule-hero">
+      <div className="rh-hero__bg gv-sched-hero__bg" aria-hidden="true" />
+      <div className="gv-sched-hero__inner rh-container">
+        <h1 className="gv-sched-hero__title rh-hero__title">{title}</h1>
+        <p className="gv-sched-hero__sub rh-hero__subtitle">{subtitle}</p>
         {(primaryCta || secondaryCta) && (
           <div className="gv-sched-hero__cta">
             {primaryCta ? (

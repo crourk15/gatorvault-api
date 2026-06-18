@@ -35,6 +35,7 @@
     "migrate:alerts:tsx": "npx tsx migrators/run-migration.ts migrations/015_create_alerts.sql",
     "migrate:rolling-movement": "npx tsx migrators/run-migration.ts migrations/016_rolling_movement_index.sql",
     "migrate:competing-schools": "npx tsx migrators/run-migration.ts migrations/017_competing_school_history.sql",
+    "migrate:player-slugs": "npx tsx migrators/run-migration.ts migrations/018_create_player_slugs.sql",
     "sync:predictions": "npx tsx scripts/sync-predictions.js",
     "sync:database-url": "node scripts/sync-database-url.js --deploy",
     "transform:players": "npx tsx scripts/transform-recruiting-data.ts",

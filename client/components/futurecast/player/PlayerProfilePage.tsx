@@ -2,15 +2,18 @@
 
 /**
  * Player Profile 2.0 — full page shell.
- * Route: /futurecast/player/:slug
+ * Single aggregated API fetch + client cache.
  */
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { type PlayerProfileBundle } from '../../../lib/player-api';
-import { resolvePlayerProfile } from '../../../lib/player-profile-resolver';
-import { fetchPortalPredictions, type PortalIntelPayload, type TransferPrediction } from '../../../lib/portal-api';
-import { fetchUfFitIntel, type UfFitIntelResponse } from '../../../lib/uf-fit-api';
-import { computePlayerMetrics } from '../../../lib/player-derived';
-import '../../../lib/futurecast.css';
+import {
+  fetchFullProfile,
+  mapFullProfileToBundle,
+  type FullProfilePayload,
+} from '@/lib/player-full-profile-api';
+import type { PortalIntelPayload, TransferPrediction } from '@/lib/portal-api';
+import type { UfFitIntelResponse } from '@/lib/uf-fit-api';
+import { computePlayerMetrics } from '@/lib/player-derived';
+import '@/lib/futurecast.css';
 import { PlayerHeader } from './PlayerHeader';
 import { PlayerTabs, parseProfileTab, type ProfileTabId } from './PlayerTabs';
 import { OverviewTab } from './OverviewTab';
@@ -22,6 +25,7 @@ import { SignalsTab } from './SignalsTab';
 import { UiError } from '@/components/site/UiMessage';
 import { usePathname } from '@/lib/use-pathname';
 import { futureCastBase, isVaultPath } from '@/lib/vault-routes';
+import { readProfileCache, profileCacheKey } from '@/lib/profile-cache';
 
 function ProfileSkeleton(): React.ReactElement {
   return (
@@ -37,29 +41,33 @@ function ProfileSkeleton(): React.ReactElement {
 
 export interface PlayerProfilePageProps {
   slug: string;
+  playerId?: string | null;
   backHref?: string;
   backLabel?: string;
+  recruitingContext?: boolean;
 }
 
 export function PlayerProfilePage({
   slug,
+  playerId: playerIdProp,
   backHref: backHrefProp,
   backLabel: backLabelProp,
+  recruitingContext = false,
 }: PlayerProfilePageProps): React.ReactElement {
   const pathname = usePathname();
   const inVault = isVaultPath(pathname);
-  const isRecruitingProfileRoute = pathname.includes('/recruiting/player/');
+  const isRecruitingProfileRoute =
+    recruitingContext || pathname.includes('/recruiting/player/');
   const backHref = backHrefProp ?? (isRecruitingProfileRoute ? '/vault/recruiting' : futureCastBase(pathname));
   const backLabel =
     backLabelProp ?? (isRecruitingProfileRoute ? '← Recruiting Hub' : inVault ? '← FutureCast' : '← FutureCast');
-  const [data, setData] = useState<PlayerProfileBundle | null>(null);
+
+  const cacheKey = profileCacheKey(slug, playerIdProp);
+  const cached = readProfileCache(cacheKey);
+
+  const [profile, setProfile] = useState<FullProfilePayload | null>(cached);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [portalIntel, setPortalIntel] = useState<PortalIntelPayload | null>(null);
-  const [portalPredictions, setPortalPredictions] = useState<TransferPrediction[]>([]);
-  const [portalIntelLoading, setPortalIntelLoading] = useState(false);
-  const [ufFitIntel, setUfFitIntel] = useState<UfFitIntelResponse | null>(null);
-  const [ufFitIntelLoading, setUfFitIntelLoading] = useState(false);
+  const [loading, setLoading] = useState(!cached);
   const [activeTab, setActiveTab] = useState<ProfileTabId>('overview');
 
   useEffect(() => {
@@ -68,73 +76,36 @@ export function PlayerProfilePage({
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setError(null);
-    setPortalIntel(null);
-    setPortalPredictions([]);
-    setUfFitIntel(null);
-    resolvePlayerProfile(slug, inVault, { recruitingContext: isRecruitingProfileRoute })
-      .then((result) => {
+    const instant = readProfileCache(cacheKey);
+    if (instant) {
+      setProfile(instant);
+      setLoading(false);
+      setError(null);
+    } else {
+      setLoading(true);
+      setError(null);
+    }
+
+    void fetchFullProfile(slug, { playerId: playerIdProp })
+      .then((payload) => {
         if (cancelled) return;
-        if (result.kind === 'redirect') {
-          window.location.replace(result.href);
-          return;
-        }
-        if (result.kind === 'roster' && !isRecruitingProfileRoute) {
-          const dest = inVault
-            ? `/vault/players/${encodeURIComponent(result.slug)}`
-            : `/players/${encodeURIComponent(result.slug)}`;
-          window.location.replace(dest);
-          return;
-        }
-        if (result.kind !== 'futurecast') {
-          return;
-        }
-        const bundle = result.bundle;
-        setData(bundle);
-        const tasks: Promise<void>[] = [];
-        const lifecycle = bundle.player.status;
-        if (lifecycle === 'COLLEGE' || lifecycle === 'PORTAL' || bundle.portalProfile) {
-          setPortalIntelLoading(true);
-          tasks.push(
-            fetchPortalPredictions(bundle.player.id)
-              .then((res) => {
-                if (!cancelled) {
-                  setPortalIntel(res.intel);
-                  setPortalPredictions(res.predictions);
-                }
-              })
-              .catch(() => {})
-              .finally(() => {
-                if (!cancelled) setPortalIntelLoading(false);
-              })
-          );
-        }
-        if (bundle.ufSpecificProfile) {
-          setUfFitIntelLoading(true);
-          tasks.push(
-            fetchUfFitIntel(bundle.player.id)
-              .then((res) => {
-                if (!cancelled) setUfFitIntel(res);
-              })
-              .catch(() => {})
-              .finally(() => {
-                if (!cancelled) setUfFitIntelLoading(false);
-              })
-          );
-        }
-        return tasks.length ? Promise.all(tasks).then(() => undefined) : undefined;
+        setProfile(payload);
+        setError(null);
       })
       .catch((err) => {
-        if (!cancelled) setError(err instanceof Error ? err.message : 'Failed to load player');
+        if (cancelled) return;
+        if (!instant) {
+          setError(err instanceof Error ? err.message : 'Failed to load player');
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
+
     return () => {
       cancelled = true;
     };
-  }, [slug, inVault, isRecruitingProfileRoute]);
+  }, [slug, playerIdProp, cacheKey]);
 
   const onTabChange = useCallback((tab: ProfileTabId) => {
     setActiveTab(tab);
@@ -145,6 +116,11 @@ export function PlayerProfilePage({
       window.history.replaceState(null, '', url.toString());
     }
   }, []);
+
+  const data = useMemo(() => (profile ? mapFullProfileToBundle(profile) : null), [profile]);
+  const portalIntel = profile?.portalPredictions?.intel ?? null;
+  const portalPredictions = profile?.portalPredictions?.predictions ?? [];
+  const ufFitIntel = profile?.fitIntel ?? null;
 
   const metrics = useMemo(() => {
     if (!data) return null;
@@ -163,7 +139,12 @@ export function PlayerProfilePage({
       result = {
         ...result,
         portalLikelihoodPct: Math.round(portalIntel.portalLikelihood * 100),
-        portalColor: portalIntel.portalLikelihood >= 0.7 ? 'high' as const : portalIntel.portalLikelihood >= 0.4 ? 'medium' as const : 'low' as const,
+        portalColor:
+          portalIntel.portalLikelihood >= 0.7
+            ? ('high' as const)
+            : portalIntel.portalLikelihood >= 0.4
+              ? ('medium' as const)
+              : ('low' as const),
       };
     }
     return result;
@@ -182,7 +163,7 @@ export function PlayerProfilePage({
     [data]
   );
 
-  if (loading) {
+  if (loading && !profile) {
     return (
       <div className="fc-profile-page fc-player-page-wrap" data-testid="player-profile-page">
         <nav className="fc-profile-back">
@@ -192,6 +173,7 @@ export function PlayerProfilePage({
       </div>
     );
   }
+
   if (error || !data || !metrics) {
     return (
       <UiError
@@ -225,17 +207,13 @@ export function PlayerProfilePage({
             profile={data.portalProfile}
             collegeProfile={data.collegeProfile}
             signals={data.signals}
-            intel={portalIntel}
-            predictions={portalPredictions}
-            intelLoading={portalIntelLoading}
+            intel={portalIntel as PortalIntelPayload | null}
+            predictions={portalPredictions as TransferPrediction[]}
+            intelLoading={false}
           />
         )}
         {activeTab === 'uf-fit' && (
-          <UFFitTab
-            profile={data.ufSpecificProfile}
-            intel={ufFitIntel}
-            intelLoading={ufFitIntelLoading}
-          />
+          <UFFitTab profile={data.ufSpecificProfile} intel={ufFitIntel as UfFitIntelResponse | null} intelLoading={false} />
         )}
         {activeTab === 'signals' && <SignalsTab signals={data.signals} />}
       </div>

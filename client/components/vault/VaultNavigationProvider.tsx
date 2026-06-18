@@ -1,9 +1,10 @@
 'use client';
 
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { prefetchVaultHref, notifyVaultNavigation, warmVaultBottomNavRoutes, warmVaultPlayerRoute } from '@/lib/vault-navigation';
 import { isVaultClientNavHref, vaultNavPathsEqual } from '@/lib/vault-nav-utils';
+import { isPlayerProfileHref, playerSlugFromHref, prefetchFullProfile } from '@/lib/player-full-profile-api';
 
 type VaultNavContextValue = {
   isNavigating: boolean;
@@ -42,6 +43,59 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
     warmVaultBottomNavRoutes(pathname);
   }, [pathname]);
 
+  const prefetchedProfiles = useRef(new Set<string>());
+
+  const warmPlayerLink = useCallback((href: string) => {
+    const path = href.split('?')[0].split('#')[0];
+    if (isPlayerProfileHref(path)) {
+      warmVaultPlayerRoute(path);
+      const slug = playerSlugFromHref(path);
+      if (slug && !prefetchedProfiles.current.has(slug)) {
+        prefetchedProfiles.current.add(slug);
+        prefetchFullProfile(slug);
+      }
+      return;
+    }
+    prefetchVaultHref(path);
+  }, []);
+
+  useEffect(() => {
+    const shell = document.querySelector('.gv-vault-shell');
+    if (!shell || typeof IntersectionObserver === 'undefined') return;
+
+    const observed = new WeakSet<Element>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const anchor = entry.target as HTMLAnchorElement;
+          const href = anchor.getAttribute('href');
+          if (href) warmPlayerLink(href);
+          observer.unobserve(anchor);
+        }
+      },
+      { rootMargin: '120px', threshold: 0.01 }
+    );
+
+    const scanLinks = () => {
+      shell.querySelectorAll('a[href]').forEach((node) => {
+        const anchor = node as HTMLAnchorElement;
+        const href = anchor.getAttribute('href');
+        if (!href || !isPlayerProfileHref(href) || observed.has(anchor)) return;
+        observed.add(anchor);
+        observer.observe(anchor);
+      });
+    };
+
+    scanLinks();
+    const mutation = new MutationObserver(scanLinks);
+    mutation.observe(shell, { childList: true, subtree: true });
+    return () => {
+      observer.disconnect();
+      mutation.disconnect();
+    };
+  }, [pathname, warmPlayerLink]);
+
   useEffect(() => {
     let lastHref = '';
     const warmFromAnchor = (anchor: HTMLAnchorElement | null) => {
@@ -51,8 +105,7 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
       const path = href.split('?')[0].split('#')[0];
       if (path === lastHref) return;
       lastHref = path;
-      if (/\/player\/|\/players\//.test(path)) warmVaultPlayerRoute(path);
-      else prefetchVaultHref(path);
+      warmPlayerLink(href);
     };
 
     const onMouseOver = (event: MouseEvent) => {
@@ -94,16 +147,14 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
 
       event.preventDefault();
       beginNavigation();
-      const path = href.split('?')[0].split('#')[0];
-      if (/\/player\/|\/players\//.test(path)) warmVaultPlayerRoute(path);
-      else prefetchVaultHref(path);
+      warmPlayerLink(href);
       router.push(href);
       notifyVaultNavigation();
     };
 
     document.addEventListener('click', onClick, true);
     return () => document.removeEventListener('click', onClick, true);
-  }, [router, beginNavigation]);
+  }, [router, beginNavigation, warmPlayerLink]);
 
   const value = useMemo(
     () => ({ isNavigating, beginNavigation }),

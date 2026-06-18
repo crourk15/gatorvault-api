@@ -8,7 +8,9 @@
 .fc-futurecast-page,
 .fc-futurecast-page--elite,
 .futurecast-page,
-.gv-page.fc-futurecast-page {
+.gv-page.fc-futurecast-page,
+.gv-sched-page,
+.gv-schedule-page {
   --rh-primary: var(--th-primary);
   --rh-accent: var(--th-accent);
   --rh-card-bg: var(--th-card-bg);
@@ -46,6 +48,8 @@
 .gv-rh-hero__bg,
 .gv-rh-hero__bg::before,
 .gv-rh-hero__bg::after,
+.gv-sched-hero__bg,
+.gv-sched-hero__lights,
 .fc-page-hero,
 .gv-elite-hero,
 .fc-elite-hero {
@@ -62,13 +66,16 @@
 .rh-title-bar__title,
 .futurecast-page__section-title,
 .gv-elite-hero__title,
-.fc-elite-section__title {
+.fc-elite-section__title,
+.gv-sched-section__header .gv-heading-l,
+.gv-sched-section__header h2 {
   color: var(--th-heading-light);
 }
 
 .rh-hero__title,
 .gv-rh-hero__title,
-.gv-rh-premium-hero__title {
+.gv-rh-premium-hero__title,
+.gv-sched-hero__title {
   color: var(--heading-color-dark);
 }
 
@@ -119,6 +126,8 @@
 .fc-movement-list__link,
 .fc-trending-card,
 .gv-trending-card,
+.gv-sched-game-card,
+.gv-ticket-card,
 .fc-big-board-toolbar select,
 .fc-big-board-toolbar button,
 .rh-rank-sim__select {
@@ -135,7 +144,9 @@
 .rh-commit-card:hover,
 .rh-tool-tile:hover,
 .gv-rh-card:hover,
-.fc-player-card:hover {
+.fc-player-card:hover,
+.gv-sched-game-card:hover,
+.gv-ticket-card:hover {
   border-color: color-mix(in srgb, var(--th-accent) 40%, var(--th-border));
 }
 
@@ -164,6 +175,7 @@
 .rh-status,
 .rh-title-bar__sub,
 .rh-hero__subtitle,
+.gv-sched-hero__sub,
 .fc-player-card__meta,
 .fc-page-hero__sub,
 .futurecast-page__section-sub,
@@ -197,7 +209,8 @@
 .rh-board-card__heat-fill,
 .rh-needs-item__bar div,
 .gv-rh-heat__fill,
-.fc-confidence-bar__fill {
+.fc-confidence-bar__fill,
+.gv-sched-win-bar__fill {
   background: var(--th-accent) !important;
   background-image: none !important;
 }

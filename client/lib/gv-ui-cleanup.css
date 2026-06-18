@@ -153,6 +153,7 @@ body {
   .gv-vault-shell__main:has(.rh-page),
   .gv-vault-shell__main:has(.gv-gnl),
   .gv-vault-shell__main:has(.gv-team-hub),
+  .gv-vault-shell__main:has(.gv-sched-page),
   .gv-app-shell__main:has(.rh-page) {
     padding-bottom: var(--gv-mobile-nav-height);
   }
@@ -162,6 +163,7 @@ body {
 .gv-vault-shell__main .rh-page,
 .gv-vault-shell__main .gv-gnl,
 .gv-vault-shell__main .gv-rh-hub,
+.gv-vault-shell__main .gv-sched-page,
 .gv-app-shell__main .rh-page {
   padding-bottom: 0;
 }
@@ -235,6 +237,15 @@ body {
 
 .gv-vault-shell__main:has(.gv-team-hub) .gv-team-command-card {
   margin-top: 0;
+}
+
+/* ── Schedule & Tickets — flush under vault nav ── */
+.gv-vault-shell__main:has(.gv-sched-page) .gv-sched-page {
+  margin: 0;
+}
+
+.gv-vault-shell__main:has(.gv-sched-page) .gv-sched-hero {
+  padding-top: var(--space-lg, 24px);
 }
 
 /* ── GatorNation Live — flush hero + ticker ── */

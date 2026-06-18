@@ -612,3 +612,47 @@ export async function listPredictionCandidates(
 export function mapSignalTypes(raw: string[] | null): SignalType[] {
   return (raw ?? []).filter(Boolean) as SignalType[];
 }
+
+/** Rolling 7-day movement for a single player (profile bundle). */
+export async function getRollingMovementForPlayer(
+  playerId: string,
+  competingBoost = 0
+): Promise<RollingMovement | null> {
+  const predictions = await listPredictionsByPlayerId(playerId);
+  const active = predictions.find((p) => p.status === 'ACTIVE' && p.source_type === 'MODEL');
+  if (!active) return null;
+
+  const { rows } = await db.query<{
+    slug: string;
+    full_name: string;
+    position: string;
+    class_year: number;
+  }>(
+    `SELECT slug, full_name, position, class_year FROM ${FUTURECAST_PLAYERS_TABLE} WHERE id = $1 LIMIT 1`,
+    [playerId]
+  );
+  if (!rows.length) return null;
+  const pl = rows[0];
+
+  const history = await listMovementHistoryByPlayerId(playerId);
+  const recent = recentMovementHistory(history, ROLLING_MOVEMENT_WINDOW_DAYS);
+  const ufProbNow = active.confidence;
+  const ufProb7dAgo = resolveUfProb7dAgo(recent, active.confidence, ROLLING_MOVEMENT_WINDOW_DAYS);
+  const delta7d = ufProbNow - ufProb7dAgo;
+  const volatilityScore = Math.min(
+    100,
+    calculateWindowVolatility(recent, ROLLING_MOVEMENT_WINDOW_DAYS) + competingBoost
+  );
+
+  return {
+    playerId,
+    slug: pl.slug,
+    fullName: pl.full_name,
+    position: pl.position,
+    classYear: pl.class_year,
+    ufProbNow,
+    ufProb7dAgo,
+    delta7d,
+    volatilityScore,
+  };
+}

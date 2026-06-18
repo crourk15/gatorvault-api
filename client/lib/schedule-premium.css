@@ -1,80 +1,94 @@
-/* Schedule page — premium redesign */
+/* Schedule & Tickets — unified with Recruiting Hub / Team / FutureCast */
 
 .gv-sched-page {
   min-height: 100%;
+  background: var(--th-primary, var(--page-bg));
+  color: var(--th-meta, var(--subtle-gray));
+  font-family: var(--font-family);
 }
 
-/* ── Hero ── */
+/* ── Hero (rh-hero parity) ── */
 .gv-sched-hero {
   position: relative;
-  padding: var(--space-9, 48px) 0 var(--space-10, 64px);
-  overflow: hidden;
+  padding: var(--space-xl, 32px) 0 var(--space-lg, 24px);
+  border-bottom: 3px solid var(--th-accent, var(--gator-orange));
+  overflow: visible;
 }
 
-.gv-sched-hero__bg {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(165deg, #001a33 0%, var(--gv-uf-blue, #003087) 45%, #001225 100%);
-}
-
+.gv-sched-hero__bg,
 .gv-sched-hero__lights {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(255, 220, 120, 0.12) 0, transparent 8%),
-    radial-gradient(circle at 82% 18%, rgba(255, 220, 120, 0.08) 0, transparent 9%),
-    radial-gradient(circle at 50% 100%, rgba(77, 163, 255, 0.08) 0, transparent 35%);
-  pointer-events: none;
+  display: none;
 }
 
 .gv-sched-hero__inner {
   position: relative;
   z-index: 1;
-  max-width: 760px;
+  max-width: var(--th-frame-max, var(--max-width));
+  margin: 0 auto;
+  padding-left: var(--th-frame-margin, var(--space-xl));
+  padding-right: var(--th-frame-margin, var(--space-xl));
+}
+
+.gv-sched-hero__inner::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 3px;
+  margin-bottom: var(--space-md, 16px);
+  border-radius: 999px;
+  background: var(--th-accent, var(--gator-orange));
 }
 
 .gv-sched-hero__title {
   margin: 0;
-  font-family: var(--gv-font-display);
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-family: var(--font-family);
+  font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.08;
-  color: #fff;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--heading-color-dark, #fff);
 }
 
 .gv-sched-hero__sub {
-  margin: var(--space-3, 12px) 0 0;
-  font-size: 1.05rem;
+  margin: var(--space-sm, 8px) 0 0;
+  font-size: 0.9375rem;
   line-height: 1.5;
-  color: var(--gv-body-text, #d0d8e0);
+  color: var(--th-meta, var(--subtle-gray));
+  max-width: 42rem;
 }
 
 .gv-sched-hero__cta {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3, 12px);
-  margin-top: var(--space-6, 24px);
+  gap: var(--space-md, 16px);
+  margin-top: var(--space-lg, 24px);
+}
+
+/* ── Body ── */
+.gv-sched-page__body {
+  max-width: var(--th-frame-max, var(--max-width));
+  margin: 0 auto;
+  padding: var(--space-lg, 24px) var(--th-frame-margin, var(--space-xl)) var(--space-2xl, 48px);
+}
+
+.gv-sched-page__body.gv-container {
+  max-width: var(--th-frame-max, var(--max-width));
 }
 
 /* ── Filters ── */
-.gv-sched-page__body {
-  padding: var(--space-7, 32px) 0 var(--space-10, 64px);
-}
-
 .gv-sched-filters {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4, 16px);
-  margin-bottom: var(--space-8, 40px);
+  gap: var(--space-md, 16px);
+  margin-bottom: var(--space-xl, 32px);
 }
 
 .gv-sched-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4, 16px);
+  gap: var(--space-md, 16px);
 }
 
 .gv-sched-legend__item {
@@ -82,7 +96,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--gv-body-text);
+  color: var(--th-meta, var(--subtle-gray));
 }
 
 .gv-sched-legend__item::before {
@@ -96,66 +110,77 @@
 }
 
 .gv-sched-legend__item--favored::before {
-  background: linear-gradient(90deg, var(--gv-gator-orange), var(--gv-uf-blue));
+  background: var(--th-accent, var(--gator-orange));
 }
 
 .gv-sched-legend__item--tossup::before {
-  background: var(--gv-steel-blue, #1b3a57);
+  background: var(--th-blue, var(--uf-blue));
 }
 
 .gv-sched-legend__item--underdog::before {
-  background: #8b3a3a;
+  background: var(--th-red, var(--momentum-down));
 }
 
 .gv-sched-empty {
-  margin: var(--space-8, 40px) 0;
+  margin: var(--space-xl, 32px) 0;
   text-align: center;
-  color: var(--gv-body-text);
+  color: var(--th-meta, var(--subtle-gray));
 }
 
 /* ── Section ── */
 .gv-sched-section {
-  padding: var(--space-9, 48px) 0 0;
+  padding: var(--space-xl, 32px) 0 0;
 }
 
 .gv-sched-section__header {
-  margin-bottom: var(--space-6, 24px);
+  margin-bottom: var(--space-lg, 24px);
+}
+
+.gv-sched-section__header .gv-heading-l,
+.gv-sched-section__header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--th-heading-light, var(--uf-blue));
 }
 
 .gv-sched-section__header .gv-body-m {
-  margin-top: var(--space-2, 8px);
+  margin-top: var(--space-sm, 8px);
   max-width: 640px;
+  color: var(--th-meta, var(--subtle-gray));
 }
 
 .gv-sched-section__games {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5, 20px);
+  gap: var(--space-lg, 24px);
 }
 
-/* ── Game card ── */
+/* ── Game card (white hub card) ── */
 .gv-sched-game-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto;
-  gap: var(--space-5, 20px);
+  gap: var(--space-lg, 24px);
   align-items: center;
-  padding: var(--space-4, 16px);
+  padding: var(--space-md, 16px);
   min-height: 168px;
-  background: var(--bg-secondary, #11253a);
-  border: 1px solid var(--border-subtle, #1b3a57);
-  border-radius: 12px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  background: var(--th-card-bg, #fff);
+  color: var(--th-body-dark, var(--graphite));
+  border: 1px solid var(--th-border, var(--card-border));
+  border-top: 3px solid var(--th-accent, var(--gator-orange));
+  border-radius: var(--th-radius-card, 12px);
+  box-shadow: var(--th-shadow, var(--card-shadow));
+  transition: transform 0.16s ease-out, border-color 0.16s ease-out, box-shadow 0.16s ease-out;
 }
 
 .gv-sched-game-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(250, 70, 22, 0.45);
-  box-shadow: 0 8px 28px rgba(250, 70, 22, 0.12);
+  border-color: color-mix(in srgb, var(--th-accent) 35%, var(--th-border));
 }
 
 .gv-sched-game-card__badge {
   display: inline-block;
-  margin-bottom: var(--space-3, 12px);
+  margin-bottom: var(--space-md, 16px);
   padding: 2px 8px;
   font-size: 0.65rem;
   font-weight: 700;
@@ -164,25 +189,25 @@
 }
 
 .gv-sched-game-card__badge--home {
-  background: rgba(0, 48, 135, 0.35);
-  color: #7eb8ff;
+  background: color-mix(in srgb, var(--th-blue) 12%, transparent);
+  color: var(--th-blue, var(--uf-blue));
 }
 
 .gv-sched-game-card__badge--away {
-  background: rgba(250, 70, 22, 0.15);
-  color: var(--gv-gator-orange);
+  background: color-mix(in srgb, var(--th-accent) 12%, transparent);
+  color: var(--th-accent, var(--gator-orange));
 }
 
 .gv-sched-game-card__badge--neutral {
-  background: rgba(255, 214, 0, 0.12);
-  color: var(--gv-warning-yellow);
+  background: color-mix(in srgb, var(--th-yellow, var(--star-gold)) 18%, transparent);
+  color: color-mix(in srgb, var(--th-yellow) 80%, var(--graphite));
 }
 
 .gv-sched-game-card__identity {
   display: flex;
   align-items: center;
-  gap: var(--space-3, 12px);
-  margin-bottom: var(--space-3, 12px);
+  gap: var(--space-md, 16px);
+  margin-bottom: var(--space-md, 16px);
 }
 
 .gv-sched-game-card__opp-logo {
@@ -192,21 +217,28 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--gv-steel-blue, #1b3a57);
-  font-family: var(--gv-font-display);
+  background: color-mix(in srgb, var(--th-blue) 10%, var(--th-card-bg));
+  border: 1px solid var(--th-border);
+  font-family: var(--font-family);
   font-size: 0.75rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--th-heading-light, var(--uf-blue));
   flex-shrink: 0;
 }
 
 .gv-sched-game-card__opp-name {
   font-size: 1.1rem;
+  color: var(--th-heading-light, var(--uf-blue));
+}
+
+.gv-sched-game-card__opp-full,
+.gv-sched-game-card__stadium,
+.gv-sched-game-card__meta .gv-body-m {
+  color: var(--th-meta, var(--subtle-gray));
 }
 
 .gv-sched-game-card__opp-full {
   font-size: 0.8125rem;
-  opacity: 0.85;
 }
 
 .gv-sched-game-card__meta .gv-body-m + .gv-body-m {
@@ -215,13 +247,12 @@
 
 .gv-sched-game-card__stadium {
   font-size: 0.8125rem;
-  opacity: 0.8;
 }
 
 .gv-sched-game-card__center {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3, 12px);
+  gap: var(--space-md, 16px);
 }
 
 .gv-sched-game-card__right {
@@ -233,20 +264,28 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--space-2, 8px);
+  margin-bottom: var(--space-sm, 8px);
+}
+
+.gv-sched-win-bar__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--th-meta);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .gv-sched-win-bar__pct {
-  font-family: var(--gv-font-display);
+  font-family: var(--font-family);
   font-size: 0.9375rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--th-accent, var(--gator-orange));
 }
 
 .gv-sched-win-bar__track {
   height: 8px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: color-mix(in srgb, var(--th-blue) 8%, var(--th-card-bg));
   overflow: hidden;
 }
 
@@ -257,15 +296,15 @@
 }
 
 .gv-sched-win-bar__fill--favored {
-  background: linear-gradient(90deg, var(--gv-gator-orange), var(--gv-uf-blue));
+  background: var(--th-accent, var(--gator-orange));
 }
 
 .gv-sched-win-bar__fill--tossup {
-  background: linear-gradient(90deg, var(--gv-steel-blue), var(--gv-electric-blue));
+  background: var(--th-blue, var(--uf-blue));
 }
 
 .gv-sched-win-bar__fill--underdog {
-  background: linear-gradient(90deg, #6b3030, #a04545);
+  background: var(--th-red, var(--momentum-down));
 }
 
 /* ── Scoreboard ── */
@@ -273,11 +312,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-3, 12px);
-  padding: var(--space-3, 12px);
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--border-subtle, #1b3a57);
+  gap: var(--space-md, 16px);
+  padding: var(--space-md, 16px);
+  border-radius: var(--th-radius-card, 12px);
+  background: color-mix(in srgb, var(--th-blue) 6%, var(--th-card-bg));
+  border: 1px solid var(--th-border);
 }
 
 .gv-sched-scoreboard__team {
@@ -294,9 +333,10 @@
 }
 
 .gv-sched-scoreboard__logo--text {
-  font-family: var(--gv-font-display);
+  font-family: var(--font-family);
   font-size: 0.7rem;
   font-weight: 700;
+  color: var(--th-heading-light);
 }
 
 .gv-sched-scoreboard__abbr {
@@ -304,19 +344,19 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--gv-body-text);
+  color: var(--th-meta);
 }
 
 .gv-sched-scoreboard__score {
-  font-family: var(--gv-font-display);
+  font-family: var(--font-family);
   font-size: 1.5rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--th-heading-light, var(--uf-blue));
   line-height: 1;
 }
 
 .gv-sched-scoreboard__divider {
-  color: var(--gv-body-text);
+  color: var(--th-meta);
   opacity: 0.5;
   font-weight: 300;
 }
@@ -331,40 +371,34 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--gv-body-text);
+  background: color-mix(in srgb, var(--th-blue) 8%, var(--th-card-bg));
+  border: 1px solid var(--th-border);
+  color: var(--th-meta);
 }
 
 .gv-sched-tv--espn {
-  background: rgba(204, 0, 0, 0.2);
-  color: #ff8080;
+  background: color-mix(in srgb, var(--th-red) 10%, var(--th-card-bg));
+  color: var(--th-red);
+  border-color: color-mix(in srgb, var(--th-red) 25%, var(--th-border));
 }
 
-.gv-sched-tv--abc {
-  background: rgba(0, 48, 135, 0.35);
-  color: #7eb8ff;
+.gv-sched-tv--abc,
+.gv-sched-tv--cbs,
+.gv-sched-tv--fox {
+  background: color-mix(in srgb, var(--th-blue) 10%, var(--th-card-bg));
+  color: var(--th-blue);
 }
 
 .gv-sched-tv--secn {
-  background: rgba(250, 70, 22, 0.18);
-  color: #ffb899;
+  background: color-mix(in srgb, var(--th-accent) 10%, var(--th-card-bg));
+  color: var(--th-accent);
 }
 
-.gv-sched-tv--cbs {
-  background: rgba(0, 100, 200, 0.2);
-  color: #80c4ff;
-}
-
-.gv-sched-tv--fox {
-  background: rgba(0, 60, 120, 0.25);
-  color: #99c2ff;
-}
-
-/* ── Actions ── */
+/* ── Actions & tickets ── */
 .gv-sched-actions {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3, 12px);
+  gap: var(--space-md, 16px);
 }
 
 .gv-sched-actions__btn {
@@ -377,31 +411,31 @@
   margin: 0;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--gv-body-text, #d0d8e0);
+  color: var(--th-meta);
 }
 
 .gv-sched-tickets__vendors {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2, 8px);
+  gap: var(--space-sm, 8px);
 }
 
 .gv-sched-tickets__vendor {
   display: flex;
   align-items: center;
-  gap: var(--space-2, 8px);
-  padding: var(--space-2, 8px) var(--space-3, 12px);
-  border-radius: 8px;
+  gap: var(--space-sm, 8px);
+  padding: var(--space-sm, 8px) var(--space-md, 16px);
+  border-radius: var(--th-radius-card, 12px);
   text-decoration: none;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: border-color 180ms ease-out, background 180ms ease-out;
+  color: var(--th-body-dark);
+  background: var(--th-card-bg);
+  border: 1px solid var(--th-border);
+  transition: border-color 160ms ease-out, background 160ms ease-out;
 }
 
 .gv-sched-tickets__vendor:hover {
-  border-color: rgba(250, 70, 22, 0.35);
-  background: rgba(250, 70, 22, 0.08);
+  border-color: color-mix(in srgb, var(--th-accent) 35%, var(--th-border));
+  background: color-mix(in srgb, var(--th-accent) 6%, var(--th-card-bg));
 }
 
 .gv-sched-tickets__logo {
@@ -412,7 +446,8 @@
   place-items: center;
   font-size: 0.625rem;
   font-weight: 800;
-  background: rgba(0, 48, 135, 0.35);
+  background: color-mix(in srgb, var(--th-blue) 12%, var(--th-card-bg));
+  color: var(--th-heading-light);
 }
 
 .gv-sched-tickets__name {
@@ -424,7 +459,7 @@
 .gv-sched-tickets__price {
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--gv-gator-orange, #fa4616);
+  color: var(--th-accent, var(--gator-orange));
 }
 
 /* ── Mobile ── */
@@ -451,7 +486,17 @@
 
 @media (max-width: 640px) {
   .gv-sched-hero {
-    padding: var(--space-7, 32px) 0 var(--space-8, 40px);
+    padding: var(--space-lg, 24px) 0;
+  }
+
+  .gv-sched-hero__inner {
+    padding-left: var(--space-md, 16px);
+    padding-right: var(--space-md, 16px);
+  }
+
+  .gv-sched-page__body {
+    padding-left: var(--space-md, 16px);
+    padding-right: var(--space-md, 16px);
   }
 
   .gv-sched-hero__cta {
@@ -463,28 +508,7 @@
     justify-content: center;
   }
 
-  .gv-sched-game-card {
-    padding: var(--space-4, 16px);
-    margin: 0;
-  }
-
   .gv-sched-section {
-    padding-top: var(--space-6, 24px);
+    padding-top: var(--space-lg, 24px);
   }
-}
-
-/* Light theme adjustments */
-[data-theme='light'] .gv-sched-hero__title,
-[data-theme='light'] .gv-sched-game-card__opp-name,
-[data-theme='light'] .gv-sched-scoreboard__score,
-[data-theme='light'] .gv-sched-win-bar__pct {
-  color: var(--gv-deep-navy, #0a1a2f);
-}
-
-[data-theme='light'] .gv-sched-game-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 48, 135, 0.1);
-}
-
-[data-theme='light'] .gv-sched-scoreboard {
-  background: rgba(0, 48, 135, 0.04);
 }

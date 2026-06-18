@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import { PlayerNavLink } from '@/components/vault/PlayerNavLink';
 import { playerProfileRoute } from '@/lib/site-routes';
 
 type Props = {
@@ -80,13 +81,13 @@ export function FutureCastRow({ player }: Props): React.ReactElement {
   return (
     <tr>
       <td>
-        <a href={playerProfileRoute(player.slug, 'futurecast')} className="rh-fc-row__player">
+        <PlayerNavLink href={playerProfileRoute(player.slug, 'futurecast')} className="rh-fc-row__player">
           <strong>{player.name}</strong>
           <span>
             {player.position}
             {player.school ? ` · ${player.school}` : ''}
           </span>
-        </a>
+        </PlayerNavLink>
       </td>
       <td className="rh-fc-row__pct">{ufPct(player)}%</td>
       <td className="rh-fc-row__move">
