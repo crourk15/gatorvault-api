@@ -1,0 +1,127 @@
+/**
+ * Recruiting Hub — desktop layout overrides (import LAST in vault layout)
+ * Beats component-scoped CSS that loads later in the route chunk.
+ */
+
+/* Default: desktop / laptop */
+.rh-fc-table__desktop,
+.rh-nil-table__desktop {
+  display: block;
+}
+
+.rh-fc-card-stack,
+.rh-nil-card-stack {
+  display: none;
+}
+
+.rh-fc-sort-bar {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.rh-fc-sort-bar__btn {
+  min-height: 36px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .rh-page .commits-section__scroll {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory;
+  }
+
+  .rh-page .commit-card {
+    flex: 0 0 280px !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  .rh-page .rh-board-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    flex-direction: unset !important;
+    gap: var(--space-4) !important;
+  }
+
+  .rh-page .rh-portal-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    flex-direction: unset !important;
+    gap: var(--space-4) !important;
+  }
+
+  .rh-page .rh-class-summary {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    flex-direction: unset !important;
+    gap: var(--space-3) !important;
+  }
+
+  .rh-page .rh-needs-meter__grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+  }
+
+  .rh-page .rh-tool-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: var(--space-3) !important;
+  }
+
+  .rh-page .rh-tool-tile {
+    flex-direction: row !important;
+    align-items: center !important;
+  }
+
+  .rh-page .rh-fc-table__grid,
+  .rh-page .rh-nil-table__grid {
+    display: table !important;
+    width: 100%;
+  }
+
+  .rh-page .rh-fc-table__desktop,
+  .rh-page .rh-nil-table__desktop {
+    display: block !important;
+  }
+
+  .rh-page .rh-fc-card-stack,
+  .rh-page .rh-nil-card-stack {
+    display: none !important;
+  }
+
+  @media (min-width: 1024px) {
+    .rh-page .rh-elite-dashboard__duo {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+      gap: var(--space-lg, 24px) !important;
+      align-items: start;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .rh-fc-table__desktop,
+  .rh-nil-table__desktop {
+    display: none !important;
+  }
+
+  .rh-fc-card-stack,
+  .rh-nil-card-stack {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  .rh-fc-sort-bar {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .rh-fc-sort-bar__btn {
+    min-height: 44px;
+    text-align: left;
+  }
+}

@@ -33,6 +33,7 @@ import '@/lib/gv-ui-cleanup.css';
 import '@/styles/hub-unified-theme.css';
 import '@/lib/recruiting-hub-elite.css';
 import '@/lib/vault-mobile-vertical.css';
+import '@/lib/recruiting-hub-desktop-overrides.css';
 
 export const viewport: Viewport = {
   width: 'device-width',

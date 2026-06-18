@@ -199,7 +199,7 @@
   gap: var(--space-4);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .rh-board-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }

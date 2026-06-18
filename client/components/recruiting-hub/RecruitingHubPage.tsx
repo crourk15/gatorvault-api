@@ -19,6 +19,8 @@ import { RecruitingHubFooter } from '@/components/vault/recruiting/RecruitingHub
 import { useRecruitingData } from '@/hooks/useRecruitingData';
 import { useIntelFeed } from '@/hooks/useIntelFeed';
 
+import '@/lib/recruiting-hub-desktop-overrides.css';
+
 export function RecruitingHubPage(): React.ReactElement {
   const data = useRecruitingData();
   const {

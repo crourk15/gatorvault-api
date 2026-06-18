@@ -1,20 +1,8 @@
 .rh-fc-card-stack {
-  display: flex;
-  flex-direction: column;
   gap: 14px;
 }
 
-.rh-fc-table__desktop {
-  display: none;
-}
-
-.rh-nil-table__desktop {
-  display: none;
-}
-
 .rh-nil-card-stack {
-  display: flex;
-  flex-direction: column;
   gap: 14px;
 }
 
@@ -140,8 +128,6 @@
 
 .rh-fc-sort-bar {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
   margin-bottom: 14px;
 }
 
