@@ -80,7 +80,7 @@ export function FutureCastEliteHomepage(): React.ReactElement {
         summary={data.summary}
         metrics={data.metrics}
         heatLevel={data.heatLevel}
-        lastUpdated={data.highPriorityLastUpdated ?? data.summary.lastUpdated ?? null}
+        lastUpdated={data.highPriorityLastUpdated ?? null}
       />
       <FutureCastMasterBoard
         commits={data.home.commits ?? []}

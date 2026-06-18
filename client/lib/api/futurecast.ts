@@ -156,6 +156,7 @@ function boardPlayerToHighPriority(p: FutureCastPlayer): HighPriorityPlayer {
     natlRank: p.natlRank ?? null,
     posRank: p.posRank ?? null,
     movementDelta: p.trendDelta7d,
+    delta7d: p.trendDelta7d,
     insiderNotes: null,
     notePreview: null,
     skinny: null,
