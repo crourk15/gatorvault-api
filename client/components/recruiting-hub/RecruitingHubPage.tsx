@@ -16,11 +16,14 @@ import { NILTrackerSection } from '@/components/recruiting-hub/NILTrackerSection
 import { ClassEngineSection } from '@/components/recruiting-hub/ClassEngineSection';
 import { DeepDiveSection } from '@/components/recruiting-hub/DeepDiveSection';
 import { RecruitingHubFooter } from '@/components/vault/recruiting/RecruitingHubFooter';
+import { RecruitingHubCommandCenter } from '@/components/recruiting-hub/command-center/RecruitingHubCommandCenter';
 import { useRecruitingData } from '@/hooks/useRecruitingData';
 import { useIntelFeed } from '@/hooks/useIntelFeed';
+import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
 
 export function RecruitingHubPage(): React.ReactElement {
   const data = useRecruitingData();
+  const isCommandCenterDesktop = useIsCommandCenterDesktop();
   const {
     items: highPriorityIntelItems,
     loading: intelLoading,
@@ -39,15 +42,17 @@ export function RecruitingHubPage(): React.ReactElement {
 
   return (
     <div className="rh-page rh-page--elite" data-testid="vault-recruiting-hub">
-      <div className="rh-elite-desktop-only">
-        <RecruitingHubHero
-          nationalRank={data.b27.rankings?.nationalRank}
-          classScore={data.b27.rankings?.classScore}
-          commitCount={data.b27.commits.length}
-          targetCount={data.b27.targets.length}
-        />
-        <ModuleRow />
-      </div>
+      {!isCommandCenterDesktop ? (
+        <div className="rh-elite-desktop-only">
+          <RecruitingHubHero
+            nationalRank={data.b27.rankings?.nationalRank}
+            classScore={data.b27.rankings?.classScore}
+            commitCount={data.b27.commits.length}
+            targetCount={data.b27.targets.length}
+          />
+          <ModuleRow />
+        </div>
+      ) : null}
       <div className="rh-elite-mobile-only">
         <RecruitingHubMobileHeader />
       </div>
@@ -61,7 +66,25 @@ export function RecruitingHubPage(): React.ReactElement {
         </div>
       ) : null}
 
-      {showContent ? (
+      {showContent && isCommandCenterDesktop ? (
+        <RecruitingHubCommandCenter
+          b26={data.b26}
+          b27={data.b27}
+          b28={data.b28}
+          highPriority={data.highPriority}
+          highPriorityLastUpdated={data.highPriorityLastUpdated}
+          movementSummary={data.movementSummary}
+          staffDashboard={data.staffDashboard}
+          portal={data.portal}
+          rising={data.rising}
+          cooling={data.cooling}
+          intelItems={highPriorityIntelItems}
+          intelLoading={intelLoading}
+          intelLastUpdated={intelLastUpdated}
+        />
+      ) : null}
+
+      {showContent && !isCommandCenterDesktop ? (
         <div className="rh-elite-dashboard rh-frame">
           <section className="rh-elite-panel rh-elite-panel--command" data-testid="rh-elite-command-panel">
             <header className="rh-elite-panel__head">

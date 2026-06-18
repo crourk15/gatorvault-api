@@ -17,6 +17,7 @@ import '@/lib/vault-shell.css';
 import '@/lib/gv-ui-cleanup.css';
 import '@/styles/hub-unified-theme.css';
 import '@/lib/recruiting-hub-elite.css';
+import '@/lib/recruiting-hub-command-center.css';
 import '@/lib/vault-mobile-vertical.css';
 
 export default function AppLayout({
