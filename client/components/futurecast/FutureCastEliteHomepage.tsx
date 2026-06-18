@@ -5,6 +5,7 @@ import '@/lib/futurecast-page.css';
 import { loadFutureCastPageData, type FutureCastPageData } from '@/lib/api/futurecast';
 import { ApiFetchError } from '@/lib/api-fetch';
 import { UiError } from '@/components/site/UiMessage';
+import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
 import { FutureCastPageLayout } from './FutureCastPageLayout';
 import { FutureCastPageHero } from './FutureCastPageHero';
 import { FutureCastMasterBoard } from './FutureCastMasterBoard';
@@ -12,10 +13,12 @@ import { FutureCastMovementHeatmap } from './FutureCastMovementHeatmap';
 import { FutureCastHighPriorityStrip } from './FutureCastHighPriorityStrip';
 import { FutureCastPortalWatchlist } from './FutureCastPortalWatchlist';
 import { FutureCastStockBoard } from './FutureCastStockBoard';
+import { FutureCastLabPageDesktop } from './lab/FutureCastLabPageDesktop';
 
 const REFRESH_MS = 60_000;
 
 export function FutureCastEliteHomepage(): React.ReactElement {
+  const isCommandCenterDesktop = useIsCommandCenterDesktop();
   const [data, setData] = useState<FutureCastPageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,6 +70,10 @@ export function FutureCastEliteHomepage(): React.ReactElement {
   }
   if (!data) {
     return <p className="fc-elite-empty">No FutureCast data available.</p>;
+  }
+
+  if (isCommandCenterDesktop) {
+    return <FutureCastLabPageDesktop data={data} />;
   }
 
   return (
