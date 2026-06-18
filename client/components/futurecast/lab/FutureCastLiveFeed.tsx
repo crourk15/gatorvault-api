@@ -24,6 +24,38 @@ export function FutureCastLiveFeed({
   const items = useMemo(() => {
     const feed: FeedItem[] = [];
 
+    for (const p of players.slice(0, 4)) {
+      const pred = p.predictors?.[0];
+      if (pred) {
+        const pct = pred.score <= 1 ? Math.round(pred.score * 100) : Math.round(pred.score);
+        feed.push({
+          icon: '🎯',
+          text: `${pred.name} → UF FutureCast for ${p.name} (${pct}%)`,
+        });
+      }
+    }
+
+    for (const riser of movementIntel?.risers?.slice(0, 2) ?? []) {
+      feed.push({
+        icon: '🔁',
+        text: `Prediction trending up for ${riser.name} (+${riser.delta}%)`,
+      });
+    }
+
+    for (const item of intelItems.slice(0, 3)) {
+      if (item.intelType === 'BATTLE') {
+        feed.push({
+          icon: '⚠️',
+          text: `Battle intensifying vs Georgia for ${item.position} target ${item.name}`,
+        });
+      } else if (item.intelType === 'VISIT') {
+        feed.push({
+          icon: '📍',
+          text: `Official visit scheduled for ${item.name}`,
+        });
+      }
+    }
+
     for (const alert of staffDashboard?.alerts ?? []) {
       feed.push({
         icon: alert.type === 'VISIT' ? '📍' : alert.type === 'OFFER' ? '🎯' : '⚠️',
@@ -31,48 +63,25 @@ export function FutureCastLiveFeed({
       });
     }
 
-    for (const item of intelItems.slice(0, 4)) {
+    for (const faller of movementIntel?.fallers?.slice(0, 1) ?? []) {
       feed.push({
-        icon:
-          item.intelType === 'RPM'
-            ? '🎯'
-            : item.intelType === 'VISIT'
-              ? '📍'
-              : item.intelType === 'BATTLE'
-                ? '⚠️'
-                : '🔥',
-        text: `${item.name}: ${item.intelSummary}`,
+        icon: '🔁',
+        text: `Prediction flipped from Georgia → UF on ${faller.name}`,
       });
-    }
-
-    for (const mover of movementIntel?.risers?.slice(0, 3) ?? []) {
-      feed.push({
-        icon: '📈',
-        text: `${mover.name} rising — UF prob +${mover.delta}%`,
-      });
-    }
-
-    for (const p of players.slice(0, 2)) {
-      if (p.predictors?.[0]) {
-        feed.push({
-          icon: '🎯',
-          text: `${p.predictors[0].name} signal on ${p.name}`,
-        });
-      }
     }
 
     if (feed.length < 4) {
       feed.push({
         icon: 'ℹ️',
-        text: 'FutureCast Lab live — intel refreshes every 90 seconds',
+        text: 'FutureCast Lab live — predictions refresh every 90 seconds',
       });
     }
 
-    return feed.slice(0, 14);
+    return feed.slice(0, 16);
   }, [intelItems, movementIntel, players, staffDashboard?.alerts]);
 
   return (
-    <section className="fc-lab-feed" data-testid="fc-lab-live-feed">
+    <section className="fc-lab-feed fc-lab-bleed" data-testid="fc-lab-live-feed">
       <div className="fc-lab-feed__inner rh-frame">
         <h2 className="fc-lab-feed__title">FutureCast Live Feed</h2>
         <div className="fc-lab-feed__track" tabIndex={0} role="list" aria-label="FutureCast live feed">

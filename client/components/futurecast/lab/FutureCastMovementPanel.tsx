@@ -72,8 +72,8 @@ export function FutureCastMovementPanel({ initialData }: Props): React.ReactElem
 
   return (
     <ModuleShell
-      title="FutureCast Movement"
-      sub="Risers, fallers, and volatile targets in the rolling movement window."
+      title="FutureCast Movement — 7-Day Window"
+      sub="Risers, fallers, and volatile targets — replaces the Movement Intel page."
       action={
         <a href="/vault/futurecast/movement" className="rh-cc-link">
           Full movement intel →

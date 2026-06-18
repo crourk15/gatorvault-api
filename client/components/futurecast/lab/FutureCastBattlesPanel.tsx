@@ -3,9 +3,8 @@
 import React, { useMemo, useState } from 'react';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
-import { competingSchoolsFromHighPriority } from '../futurecast-page-utils';
 import {
-  FitScoreBadge,
+  CompetingSchoolsBar,
   ModuleShell,
   MovementBadge,
   UfProbBar,
@@ -18,6 +17,17 @@ type Props = {
   players: HighPriorityPlayer[];
 };
 
+const TAB_META: Record<Tab, { label: string; icon: string; battleClass: string; battleLabel: string }> = {
+  battles: { label: 'Battles', icon: '⚠️', battleClass: 'fc-lab-battle-label--battle', battleLabel: 'Battle' },
+  'lean-uf': { label: 'Lean UF', icon: '🟦', battleClass: 'fc-lab-battle-label--uf', battleLabel: 'Lean UF' },
+  'lean-elsewhere': {
+    label: 'Lean Elsewhere',
+    icon: '🔴',
+    battleClass: 'fc-lab-battle-label--other',
+    battleLabel: 'Lean Other',
+  },
+};
+
 function classifyPlayer(p: HighPriorityPlayer): Tab {
   const pct = ufPctFromRaw(p.ufProbability);
   if (p.committedTo && p.committedTo !== 'Florida') return 'lean-elsewhere';
@@ -26,25 +36,31 @@ function classifyPlayer(p: HighPriorityPlayer): Tab {
   return 'battles';
 }
 
-function BattleRow({ player }: { player: HighPriorityPlayer }): React.ReactElement {
+function BattleRow({ player, tab }: { player: HighPriorityPlayer; tab: Tab }): React.ReactElement {
   const pct = ufPctFromRaw(player.ufProbability);
   const delta = Math.round(player.delta7d ?? player.movementDelta ?? 0);
   const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
+  const meta = TAB_META[tab];
 
   return (
     <div className="fc-lab-battle-row">
       <div className="fc-lab-battle-row__identity">
-        <a href={playerProfileRoute(player.slug, 'futurecast')} className="fc-lab-battle-row__name">
-          {player.name}
-        </a>
+        <div className="fc-lab-battle-row__head">
+          <a href={playerProfileRoute(player.slug, 'futurecast')} className="fc-lab-battle-row__name">
+            {player.name}
+          </a>
+          <span className={`fc-lab-battle-label ${meta.battleClass}`}>
+            <span aria-hidden>{meta.icon}</span> {meta.battleLabel}
+          </span>
+        </div>
         <span className="fc-lab-battle-row__meta">
-          {player.position} · {competingSchoolsFromHighPriority(player)}
+          {player.position} · {player.school ?? '—'}
         </span>
         <UfProbBar value={pct} />
+        <CompetingSchoolsBar player={player} />
       </div>
       <div className="fc-lab-battle-row__right">
         <MovementBadge delta={delta} tone={tone} />
-        <FitScoreBadge score={player.fitScore} />
       </div>
     </div>
   );
@@ -69,16 +85,11 @@ export function FutureCastBattlesPanel({ players }: Props): React.ReactElement {
   }, [players]);
 
   const rows = buckets[tab].slice(0, 8);
-  const tabLabels: Record<Tab, string> = {
-    battles: 'Battles',
-    'lean-uf': 'Lean UF',
-    'lean-elsewhere': 'Lean Elsewhere',
-  };
 
   return (
     <ModuleShell
       title="Battles & Leaning Targets"
-      sub="Contested recruits grouped by FutureCast lean and battle heat."
+      sub="Contested recruits and lean buckets — replaces the old Trending Board."
       testId="fc-lab-battles"
     >
       <div className="rh-cc-tabs" role="tablist" aria-label="Battle categories">
@@ -91,7 +102,7 @@ export function FutureCastBattlesPanel({ players }: Props): React.ReactElement {
             className={`rh-cc-tabs__btn${tab === id ? ' is-active' : ''}`}
             onClick={() => setTab(id)}
           >
-            {tabLabels[id]} ({buckets[id].length})
+            {TAB_META[id].icon} {TAB_META[id].label} ({buckets[id].length})
           </button>
         ))}
       </div>
@@ -99,7 +110,7 @@ export function FutureCastBattlesPanel({ players }: Props): React.ReactElement {
         {rows.length === 0 ? (
           <p className="rh-cc-empty">No targets in this bucket yet.</p>
         ) : (
-          rows.map((p) => <BattleRow key={p.slug} player={p} />)
+          rows.map((p) => <BattleRow key={p.slug} player={p} tab={tab} />)
         )}
       </div>
     </ModuleShell>

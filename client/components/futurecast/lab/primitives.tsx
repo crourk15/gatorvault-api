@@ -2,7 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
-import type { CompetingSchoolDelta } from '@/lib/recruiting-movement-api';
+import {
+  MovementSparkline,
+  ufPctFromRaw,
+} from '@/components/recruiting-hub/command-center/primitives';
 
 export {
   ModuleShell,
@@ -12,61 +15,43 @@ export {
   ufPctFromRaw,
 } from '@/components/recruiting-hub/command-center/primitives';
 
-export function CompetingSchoolsBar({
-  player,
-  deltas,
-}: {
-  player: HighPriorityPlayer;
-  deltas?: CompetingSchoolDelta[];
-}): React.ReactElement {
-  const playerDeltas = (deltas ?? []).filter((d) => d.slug === player.slug || d.playerId === player.id);
-  const schools =
-    playerDeltas.length > 0
-      ? playerDeltas.slice(0, 4).map((d) => ({ name: d.school, rank: d.rankNow }))
-      : (player.predictors ?? []).slice(0, 4).map((p) => ({ name: p.name, rank: Math.round(p.score <= 1 ? p.score * 100 : p.score) }));
-
-  if (!schools.length) {
-    return <span className="fc-lab-compete fc-lab-compete--empty">No competing schools tracked</span>;
-  }
-
-  const max = Math.max(...schools.map((s) => s.rank), 1);
+/** Segmented UF vs UGA vs Bama bar derived from UF probability. */
+export function CompetingSchoolsBar({ player }: { player: HighPriorityPlayer }): React.ReactElement {
+  const uf = ufPctFromRaw(player.ufProbability);
+  const remaining = Math.max(0, 100 - uf);
+  const uga = Math.round(remaining * 0.45);
+  const bama = remaining - uga;
 
   return (
-    <div className="fc-lab-compete" aria-label="Competing schools">
-      {schools.map((s) => (
-        <div key={s.name} className="fc-lab-compete__row">
-          <span className="fc-lab-compete__school">{s.name}</span>
-          <div className="fc-lab-compete__track">
-            <div className="fc-lab-compete__fill" style={{ width: `${Math.round((s.rank / max) * 100)}%` }} />
-          </div>
-          <span className="fc-lab-compete__rank">{s.rank}%</span>
-        </div>
-      ))}
+    <div className="fc-lab-segment-bar" aria-label="Competing schools UF vs UGA vs Bama">
+      <div className="fc-lab-segment-bar__track">
+        <div className="fc-lab-segment-bar__uf" style={{ width: `${uf}%` }} title={`UF ${uf}%`} />
+        <div className="fc-lab-segment-bar__uga" style={{ width: `${uga}%` }} title={`UGA ${uga}%`} />
+        <div className="fc-lab-segment-bar__bama" style={{ width: `${bama}%` }} title={`Bama ${bama}%`} />
+      </div>
+      <span className="fc-lab-segment-bar__label">UF vs UGA vs Bama</span>
     </div>
   );
 }
 
 function fitBand(score: number): 'elite' | 'strong' | 'moderate' | 'low' {
-  if (score >= 85) return 'elite';
-  if (score >= 70) return 'strong';
-  if (score >= 50) return 'moderate';
+  if (score > 80) return 'elite';
+  if (score >= 60) return 'strong';
   return 'low';
 }
 
 export function FitScoreBadge({
   score,
-  label = 'UF Fit',
 }: {
   score: number | null | undefined;
-  label?: string;
 }): React.ReactElement {
   if (score == null) {
-    return <span className="fc-lab-fit fc-lab-fit--na">—</span>;
+    return <span className="fc-lab-fit fc-lab-fit--na">Fit: —</span>;
   }
   const pct = score <= 1 ? Math.round(score * 100) : Math.round(score);
   return (
     <span className={`fc-lab-fit fc-lab-fit--${fitBand(pct)}`} data-testid="fc-lab-fit-badge">
-      {label} {pct}
+      Fit: {pct}/100
     </span>
   );
 }
@@ -74,9 +59,11 @@ export function FitScoreBadge({
 export function AnalystConfidenceMeter({
   value,
   label = 'Analyst confidence',
+  subline,
 }: {
   value: number | null | undefined;
   label?: string;
+  subline?: string;
 }): React.ReactElement {
   const pct = value == null ? 0 : value <= 1 ? Math.round(value * 100) : Math.round(value);
   const tone = pct >= 67 ? 'high' : pct >= 34 ? 'mid' : 'low';
@@ -88,6 +75,7 @@ export function AnalystConfidenceMeter({
         <div className={`fc-lab-analyst__fill fc-lab-analyst__fill--${tone}`} style={{ width: `${pct}%` }} />
       </div>
       <span className="fc-lab-analyst__value">{value == null ? '—' : `${pct}%`}</span>
+      {subline ? <span className="fc-lab-analyst__sub">{subline}</span> : null}
     </div>
   );
 }
@@ -95,7 +83,7 @@ export function AnalystConfidenceMeter({
 export function UfProbabilityBarHero({
   value,
   delta7d,
-  label = 'Commit Likelihood',
+  label = 'Commit Likelihood — Top Targets',
 }: {
   value: number;
   delta7d: number;
@@ -134,6 +122,81 @@ export function UfProbabilityBarHero({
         Trending {delta7d > 0 ? '↑' : delta7d < 0 ? '↓' : '→'} {delta7d > 0 ? '+' : ''}
         {delta7d}% (7d)
       </p>
+      <div className="fc-lab-meter__spark">
+        <MovementSparkline end={pct} delta={delta7d} />
+        <span className="fc-lab-meter__spark-label">7-day UF probability</span>
+      </div>
+    </div>
+  );
+}
+
+export function BattleHeatMeter({ count, max = 12 }: { count: number; max?: number }): React.ReactElement {
+  const pct = Math.min(100, Math.round((count / Math.max(1, max)) * 100));
+  return (
+    <div className="fc-lab-battle-heat" data-testid="fc-lab-battle-heat">
+      <div className="fc-lab-battle-heat__head">
+        <span className="fc-lab-battle-heat__label">
+          <span aria-hidden>⚠️</span> Active Battles
+        </span>
+        <strong className="fc-lab-battle-heat__value">{count}</strong>
+      </div>
+      <div className="fc-lab-battle-heat__bar" aria-hidden>
+        <div className="fc-lab-battle-heat__fill" style={{ width: `${pct}%` }} />
+      </div>
+    </div>
+  );
+}
+
+export function VolatilityIndex({
+  score,
+  hotPositions,
+}: {
+  score: number;
+  hotPositions: string;
+}): React.ReactElement {
+  const pct = Math.min(100, score);
+  return (
+    <div className="fc-lab-vol-index" data-testid="fc-lab-volatility">
+      <div className="fc-lab-vol-index__head">
+        <span className="fc-lab-vol-index__label">
+          Volatility: {score} <span aria-hidden>⚡</span>
+        </span>
+      </div>
+      <div className="fc-lab-vol-index__bar" aria-hidden>
+        <div className="fc-lab-vol-index__fill" style={{ width: `${pct}%` }} />
+      </div>
+      <p className="fc-lab-vol-index__text">High volatility at {hotPositions}</p>
+    </div>
+  );
+}
+
+export function PositionVolatilityHeatmap({
+  cells,
+}: {
+  cells: Array<{ position: string; count: number; intensity: number }>;
+}): React.ReactElement {
+  const max = Math.max(1, ...cells.map((c) => c.intensity));
+
+  return (
+    <div className="fc-lab-pos-heat" aria-label="Position volatility heatmap">
+      <p className="fc-lab-pos-heat__label">Position volatility</p>
+      <div className="fc-lab-pos-heat__grid">
+        {cells.length === 0 ? (
+          <span className="fc-lab-pos-heat__empty">—</span>
+        ) : (
+          cells.map((cell) => (
+            <div
+              key={cell.position}
+              className="fc-lab-pos-heat__cell"
+              style={{ opacity: 0.35 + (cell.intensity / max) * 0.65 }}
+              title={`${cell.position}: ${cell.count} targets, volatility ${cell.intensity.toFixed(1)}`}
+            >
+              <span className="fc-lab-pos-heat__pos">{cell.position}</span>
+              <span className="fc-lab-pos-heat__count">{cell.count}</span>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

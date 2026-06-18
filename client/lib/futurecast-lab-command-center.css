@@ -1,22 +1,36 @@
 /**
- * UF FutureCast Lab — desktop layout (≥1024px)
- * Mirrors recruiting-hub-command-center.css patterns with fc-lab-* namespace.
+ * UF FutureCast Lab — unified desktop command center (≥1024px)
+ * Reuses Recruiting Hub command-center module tokens where noted.
  */
 
-/* ── Page shell ── */
 .fc-lab-page {
+  --card-bg: var(--gv-white, #fff);
+  --card-border: var(--gv-border-card, rgba(0, 26, 51, 0.2));
+  --accent-blue: var(--gv-blue, #0021a5);
+  --accent-orange: var(--gv-orange, #fa4616);
+  --meter-green: var(--gv-success, #16a34a);
+  --meter-red: var(--gv-error, #dc2626);
+  --meter-yellow: var(--gv-warning, #facc15);
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-5, 24px);
   padding-bottom: var(--gv-space-6, 32px);
 }
 
-/* ── Hero — navy gradient ~280px ── */
+/* Full-bleed hero + feed inside gv-container */
+.fc-lab-bleed {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+/* ── Hero — premium 300–340px ── */
 .fc-lab-hero {
   position: relative;
-  min-height: 280px;
+  min-height: 320px;
   color: var(--gv-white, #fff);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .fc-lab-hero__bg {
@@ -26,18 +40,32 @@
   pointer-events: none;
 }
 
+.fc-lab-hero__bg::before {
+  content: 'UF';
+  position: absolute;
+  right: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(6rem, 14vw, 10rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+  user-select: none;
+}
+
 .fc-lab-hero__bg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 70% 20%, rgba(250, 70, 22, 0.12) 0%, transparent 60%);
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(250, 70, 22, 0.14) 0%, transparent 60%);
 }
 
 .fc-lab-hero__inner {
   position: relative;
   z-index: 1;
-  padding-top: var(--gv-space-6, 32px);
-  padding-bottom: var(--gv-space-6, 32px);
+  padding-top: 48px;
+  padding-bottom: 32px;
 }
 
 .fc-lab-hero__grid {
@@ -127,47 +155,399 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
-.fc-lab-hero__panel-title {
-  margin: 0 0 var(--gv-space-2, 8px);
-  font-size: 0.875rem;
+.fc-lab-hero__col--heat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-3, 12px);
+}
+
+/* Battle heat + volatility gadgets */
+.fc-lab-battle-heat,
+.fc-lab-vol-index {
+  padding: var(--gv-space-3, 12px);
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--gv-radius-sm, 8px);
+}
+
+.fc-lab-battle-heat__head,
+.fc-lab-vol-index__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--gv-space-2, 8px);
+}
+
+.fc-lab-battle-heat__label,
+.fc-lab-vol-index__label {
+  font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--gv-orange, #fa4616);
+  color: rgba(255, 255, 255, 0.75);
 }
 
-.fc-lab-hero__movement-line {
-  margin: 0 0 var(--gv-space-4, 16px);
-  font-size: 0.875rem;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.85);
+.fc-lab-battle-heat__value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--accent-orange, #fa4616);
 }
 
-.fc-lab-hero__alerts-title {
-  margin: 0 0 var(--gv-space-2, 8px);
+.fc-lab-battle-heat__bar,
+.fc-lab-vol-index__bar {
+  height: 8px;
+  border-radius: var(--gv-radius-pill, 999px);
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.fc-lab-battle-heat__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--meter-green, #16a34a) 0%, var(--meter-yellow, #facc15) 50%, var(--meter-red, #dc2626) 100%);
+  transition: width 0.5s ease;
+}
+
+.fc-lab-vol-index__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.3) 0%, var(--accent-orange, #fa4616) 100%);
+  transition: width 0.5s ease;
+}
+
+.fc-lab-vol-index__text {
+  margin: var(--gv-space-2, 8px) 0 0;
   font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.fc-lab-pos-heat__label {
+  margin: 0 0 var(--gv-space-2, 8px);
+  font-size: 0.625rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.55);
 }
 
-.fc-lab-hero__alerts {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.fc-lab-pos-heat__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.fc-lab-pos-heat__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 4px;
+  background: var(--accent-blue, #0021a5);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.fc-lab-pos-heat__pos {
+  font-size: 0.625rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.fc-lab-pos-heat__count {
+  font-size: 0.5625rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.fc-lab-meter__spark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: var(--gv-space-2, 8px);
+}
+
+.fc-lab-meter__spark-label {
+  font-size: 0.625rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.fc-lab-meter__ring--high {
+  filter: drop-shadow(0 0 24px rgba(250, 70, 22, 0.5));
+}
+
+/* ── Premium target cards ── */
+.fc-lab-target-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-4, 16px);
+  max-height: 720px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.fc-lab-target-card {
+  padding: var(--gv-space-4, 16px);
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--card-border, rgba(0, 26, 51, 0.2));
+  border-radius: var(--gv-radius-md, 12px);
+  box-shadow: var(--gv-shadow-soft, 0 4px 12px rgba(0, 0, 0, 0.06));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fc-lab-target-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--gv-shadow-card, 0 8px 24px rgba(0, 0, 0, 0.12));
+}
+
+.fc-lab-target-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gv-space-3, 12px);
+  margin-bottom: var(--gv-space-3, 12px);
+}
+
+.fc-lab-target-card__name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--accent-blue, #0021a5);
+  text-decoration: none;
+}
+
+.fc-lab-target-card__name:hover {
+  color: var(--accent-orange, #fa4616);
+}
+
+.fc-lab-target-card__meta {
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  color: var(--gv-graphite, #1a1a1a);
+  opacity: 0.65;
+}
+
+.fc-lab-target-card__prob {
+  margin-bottom: var(--gv-space-2, 8px);
+}
+
+.fc-lab-target-card__spark {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-2, 8px);
+  margin-bottom: var(--gv-space-3, 12px);
+}
+
+.fc-lab-target-card__spark-label {
+  font-size: 0.6875rem;
+  color: var(--gv-graphite, #1a1a1a);
+  opacity: 0.55;
+}
+
+.fc-lab-target-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-space-2, 8px);
+  margin-top: var(--gv-space-3, 12px);
+}
+
+.fc-lab-target-card__predictors {
+  margin: var(--gv-space-2, 8px) 0 0;
+  font-size: 0.6875rem;
+  color: var(--gv-graphite, #1a1a1a);
+  opacity: 0.7;
+}
+
+.fc-lab-target-card__foot {
+  margin-top: var(--gv-space-3, 12px);
+  padding-top: var(--gv-space-3, 12px);
+  border-top: 1px solid var(--card-border, rgba(0, 26, 51, 0.12));
+}
+
+.fc-lab-target-card__cta {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent-orange, #fa4616);
+  text-decoration: none;
+}
+
+.fc-lab-target-card__cta:hover {
+  color: var(--accent-blue, #0021a5);
+}
+
+/* Segmented competing schools bar */
+.fc-lab-segment-bar {
+  margin-top: var(--gv-space-2, 8px);
+}
+
+.fc-lab-segment-bar__track {
+  display: flex;
+  height: 8px;
+  border-radius: var(--gv-radius-pill, 999px);
+  overflow: hidden;
+  background: var(--gv-fog, #e5e7eb);
+}
+
+.fc-lab-segment-bar__uf {
+  background: var(--accent-blue, #0021a5);
+}
+
+.fc-lab-segment-bar__uga {
+  background: #ba0c2f;
+}
+
+.fc-lab-segment-bar__bama {
+  background: #9e1b32;
+}
+
+.fc-lab-segment-bar__label {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--gv-graphite, #1a1a1a);
+  opacity: 0.55;
+}
+
+/* Battle labels */
+.fc-lab-battle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  border-radius: var(--gv-radius-pill, 999px);
+  white-space: nowrap;
+}
+
+.fc-lab-battle-label--battle {
+  color: var(--meter-yellow, #ca8a04);
+  background: rgba(250, 204, 21, 0.15);
+}
+
+.fc-lab-battle-label--uf {
+  color: var(--accent-blue, #0021a5);
+  background: rgba(0, 33, 165, 0.1);
+}
+
+.fc-lab-battle-label--other {
+  color: var(--meter-red, #dc2626);
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.fc-lab-battle-row__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-2, 8px);
+  margin-bottom: 4px;
+}
+
+.fc-lab-battle-row {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.fc-lab-battle-row__identity {
+  flex: 1;
+  min-width: 0;
+}
+
+.fc-lab-battle-row__right {
+  margin-top: var(--gv-space-2, 8px);
+  justify-content: flex-start;
+}
+
+/* Position breakdown table */
+.fc-lab-pos-table__head {
+  display: grid;
+  grid-template-columns: 80px 1fr 72px 72px 72px;
+  gap: var(--gv-space-2, 8px);
+  padding: 0 var(--gv-space-3, 12px) var(--gv-space-2, 8px);
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gv-graphite, #1a1a1a);
+  opacity: 0.5;
+}
+
+.fc-lab-pos-table {
   display: flex;
   flex-direction: column;
   gap: var(--gv-space-2, 8px);
 }
 
-.fc-lab-hero__alert {
-  padding: var(--gv-space-2, 8px) var(--gv-space-3, 12px);
+.fc-lab-pos-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 72px 72px 72px;
+  gap: var(--gv-space-2, 8px);
+  align-items: center;
+  padding: var(--gv-space-3, 12px);
+  border: 1px solid var(--card-border, rgba(0, 26, 51, 0.12));
+  border-radius: var(--gv-radius-sm, 8px);
+  background: linear-gradient(145deg, rgba(0, 33, 165, 0.03) 0%, transparent 100%);
+}
+
+.fc-lab-pos-row__pos {
+  font-weight: 800;
+  color: var(--accent-blue, #0021a5);
+}
+
+.fc-lab-pos-row__summary {
+  font-size: 0.75rem;
+  color: var(--gv-graphite, #1a1a1a);
+  opacity: 0.75;
+}
+
+.fc-lab-pos-row__avg,
+.fc-lab-pos-row__pred,
+.fc-lab-pos-row__vol {
   font-size: 0.8125rem;
-  line-height: 1.4;
-  background: rgba(0, 0, 0, 0.25);
-  border-left: 3px solid var(--gv-orange, #fa4616);
-  border-radius: 0 var(--gv-radius-sm, 8px) var(--gv-radius-sm, 8px) 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.fc-lab-pos-table__foot {
+  margin: var(--gv-space-3, 12px) 0 0;
+  font-size: 0.75rem;
+  color: var(--gv-graphite, #1a1a1a);
+  opacity: 0.55;
+}
+
+/* Analyst signal cards — premium */
+.fc-lab-signal-card__time {
+  font-size: 0.625rem;
+  color: var(--gv-graphite, #1a1a1a);
+  opacity: 0.5;
+}
+
+.fc-lab-signal-card__metrics {
+  display: flex;
+  gap: var(--gv-space-3, 12px);
+  margin: var(--gv-space-2, 8px) 0;
+}
+
+.fc-lab-signal-card__metric {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--accent-blue, #0021a5);
+}
+
+.fc-lab-fit--elite {
+  color: var(--meter-green, #16a34a);
+  background: rgba(22, 163, 74, 0.12);
+}
+
+.fc-lab-fit--strong {
+  color: #ca8a04;
+  background: rgba(250, 204, 21, 0.15);
+}
+
+.fc-lab-fit--low {
+  color: var(--meter-red, #dc2626);
+  background: rgba(220, 38, 38, 0.08);
 }
 
 /* ── UF Probability Meter (hero) ── */

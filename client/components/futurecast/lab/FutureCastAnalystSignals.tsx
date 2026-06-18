@@ -5,7 +5,7 @@ import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import type { HighPriorityIntelItem } from '@/components/recruiting-hub/HighPriorityIntel/types';
 import { formatIntelUpdated } from '@/components/recruiting-hub/utils/formatDate';
 import { playerProfileRoute } from '@/lib/vault-route-map';
-import { AnalystConfidenceMeter, FitScoreBadge, ModuleShell, MovementBadge, UfProbBar } from './primitives';
+import { AnalystConfidenceMeter, ModuleShell } from './primitives';
 
 type Props = {
   players: HighPriorityPlayer[];
@@ -20,75 +20,82 @@ type SignalCard = {
   name: string;
   position: string;
   analyst: string;
-  score: number;
-  ufProb: number;
-  delta7d: number;
+  outlet: string;
+  pick: 'UF' | 'Other';
+  confidencePct: number;
+  rpmPct: number;
   summary: string;
+  timestamp: string;
 };
 
 function buildSignals(players: HighPriorityPlayer[], intelItems: HighPriorityIntelItem[]): SignalCard[] {
   const cards: SignalCard[] = [];
 
-  for (const item of intelItems.slice(0, 4)) {
-    for (const signal of item.analystSignals.slice(0, 1)) {
+  for (const item of intelItems) {
+    for (const signal of item.analystSignals.slice(0, 2)) {
       cards.push({
         id: signal.id,
         slug: item.slug,
         name: item.name,
         position: item.position,
         analyst: signal.analyst,
-        score: signal.rpmPct,
-        ufProb: item.ufProb,
-        delta7d: item.delta7d,
+        outlet: signal.outlet,
+        pick: item.ufProb >= 50 ? 'UF' : 'Other',
+        confidencePct: signal.confidencePct,
+        rpmPct: signal.rpmPct,
         summary: item.intelSummary,
+        timestamp: signal.timestamp,
       });
     }
   }
 
-  if (cards.length < 6) {
+  if (cards.length < 8) {
     for (const p of players) {
-      if (cards.length >= 6) break;
+      if (cards.length >= 8) break;
       for (const pred of p.predictors ?? []) {
-        if (cards.length >= 6) break;
+        if (cards.length >= 8) break;
+        const rpm = pred.score <= 1 ? Math.round(pred.score * 100) : Math.round(pred.score);
         cards.push({
           id: `${p.slug}-${pred.name}`,
           slug: p.slug,
           name: p.name,
           position: p.position,
           analyst: pred.name,
-          score: pred.score <= 1 ? Math.round(pred.score * 100) : Math.round(pred.score),
-          ufProb: p.ufProbability <= 1 ? Math.round(p.ufProbability * 100) : Math.round(p.ufProbability),
-          delta7d: Math.round(p.delta7d ?? p.movementDelta ?? 0),
-          summary: p.notePreview ?? p.skinny ?? p.insiderNotes ?? 'Analyst tracking active.',
+          outlet: 'RPM',
+          pick: rpm >= 50 ? 'UF' : 'Other',
+          confidencePct: rpm,
+          rpmPct: rpm,
+          summary: p.notePreview ?? p.skinny ?? 'Analyst FutureCast activity.',
+          timestamp: new Date().toISOString(),
         });
       }
     }
   }
 
-  return cards.slice(0, 6);
+  return cards.slice(0, 8);
 }
 
 function SignalCardView({ card }: { card: SignalCard }): React.ReactElement {
-  const delta = card.delta7d;
-  const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
-
   return (
     <article className="fc-lab-signal-card" data-testid="fc-lab-signal-card">
       <header className="fc-lab-signal-card__head">
-        <div>
-          <a href={playerProfileRoute(card.slug, 'futurecast')} className="fc-lab-signal-card__name">
-            {card.name}
-          </a>
-          <p className="fc-lab-signal-card__meta">{card.position} · {card.analyst}</p>
-        </div>
-        <span className="fc-lab-signal-card__analyst">{card.analyst}</span>
+        <span className="fc-lab-signal-card__analyst">
+          <span aria-hidden>🎯</span> {card.analyst}
+          {card.outlet !== 'RPM' ? ` · ${card.outlet}` : ''}
+        </span>
+        <time className="fc-lab-signal-card__time">{formatIntelUpdated(card.timestamp)}</time>
       </header>
-      <div className="fc-lab-signal-card__prob">
-        <UfProbBar value={card.ufProb} />
-        <MovementBadge delta={delta} tone={tone} />
+      <a href={playerProfileRoute(card.slug, 'futurecast')} className="fc-lab-signal-card__name">
+        {card.name}
+      </a>
+      <p className="fc-lab-signal-card__meta">
+        {card.position} · Pick: <strong>{card.pick}</strong>
+      </p>
+      <div className="fc-lab-signal-card__metrics">
+        <span className="fc-lab-signal-card__metric">Confidence {card.confidencePct}%</span>
+        <span className="fc-lab-signal-card__metric">UF RPM {card.rpmPct}%</span>
       </div>
-      <AnalystConfidenceMeter value={card.score} label="RPM signal" />
-      <FitScoreBadge score={card.score} label="Signal" />
+      <AnalystConfidenceMeter value={card.confidencePct} label="Signal strength" />
       <p className="fc-lab-signal-card__summary">{card.summary}</p>
     </article>
   );
@@ -99,8 +106,8 @@ export function FutureCastAnalystSignals({ players, intelItems, loading, lastUpd
 
   return (
     <ModuleShell
-      title="Analyst Signals"
-      sub="RPM predictors and insider signals on UF's highest-priority targets."
+      title="Analyst Signals — FutureCast Activity"
+      sub="RPM predictors and insider picks — replaces Staff Notes + Signals pages."
       testId="fc-lab-analyst-signals"
       action={
         lastUpdated ? (
@@ -110,7 +117,7 @@ export function FutureCastAnalystSignals({ players, intelItems, loading, lastUpd
     >
       {loading && signals.length === 0 ? (
         <div className="fc-lab-signal-grid">
-          {Array.from({ length: 3 }).map((_, i) => (
+          {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="rh-cc-skeleton fc-lab-signal-card" aria-hidden />
           ))}
         </div>

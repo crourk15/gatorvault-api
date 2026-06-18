@@ -23,8 +23,6 @@ export function FutureCastLabPageDesktop({ data }: Props): React.ReactElement {
     data.highPriority
   );
 
-  const competingDeltas = labData.competingDeltas?.items;
-
   return (
     <div className="fc-lab-page" data-testid="fc-lab-page-desktop">
       <FutureCastHero
@@ -39,7 +37,7 @@ export function FutureCastLabPageDesktop({ data }: Props): React.ReactElement {
 
       <div className="fc-lab-main rh-frame">
         <div className="fc-lab-col fc-lab-col--left">
-          <FutureCastTargetsPanel players={data.highPriority} competingDeltas={competingDeltas} />
+          <FutureCastTargetsPanel players={data.highPriority} />
           <FutureCastBattlesPanel players={data.highPriority} />
           <FutureCastAnalystSignals
             players={data.highPriority}
@@ -51,7 +49,10 @@ export function FutureCastLabPageDesktop({ data }: Props): React.ReactElement {
 
         <div className="fc-lab-col fc-lab-col--right">
           <FutureCastMovementPanel initialData={labData.movementIntel} />
-          <FutureCastPositionBreakdown players={data.highPriority} />
+          <FutureCastPositionBreakdown
+            players={data.highPriority}
+            activePredictions={data.metrics.activePredictions}
+          />
           <FutureCastPortalCrossView
             portalPlayers={data.home.portalWatchlist ?? []}
             highPriority={data.highPriority}
