@@ -1,7 +1,6 @@
 /**
- * Desktop – Home Command Center (Figma board)
- * Artboard: 1440×900 · bg #050A18
- * Grid: 12 columns · 32px gutters · 1280px content · 260px sticky left (3 cols) · 9-col right
+ * Desktop – Home Command Center
+ * 12-column grid · 260px sticky left · GatorVault theme (navy page, white cards)
  */
 
 @media (min-width: 1024px) {
@@ -34,17 +33,11 @@
     --font-metric-label: 14px;
     --font-metric-meta: 12px;
 
-    /* Vault dark palette */
-    --gv-desktop-bg: #050a18;
-    --gv-desktop-card: #0b1020;
-    --gv-desktop-border: rgba(255, 255, 255, 0.08);
-    --gv-desktop-text: #f1f5f9;
-    --gv-desktop-muted: #94a3b8;
-
+    /* GatorVault theme tokens (shared with Recruiting Hub / FutureCast) */
     width: 100%;
     min-height: 100vh;
-    background: var(--gv-desktop-bg);
-    color: var(--gv-desktop-text);
+    background: var(--page-bg);
+    color: var(--muted-gray);
     box-sizing: border-box;
   }
 
@@ -115,14 +108,14 @@
     font-size: var(--font-display);
     font-weight: var(--font-display-weight);
     letter-spacing: 0.06em;
-    color: var(--gv-desktop-text);
+    color: var(--white);
   }
 
   .gv-home-desktop .gv-home-header__status {
     margin-top: var(--space-xs);
     font-size: var(--font-meta);
     font-weight: var(--font-meta-weight);
-    color: var(--gv-desktop-muted);
+    color: var(--muted-gray);
   }
 
   .gv-home-desktop .gv-dot--live {
@@ -132,11 +125,12 @@
   /* Cards */
   .gv-home-desktop .gv-card {
     padding: var(--space-lg);
-    border-radius: 16px;
-    background: var(--gv-desktop-card);
-    border: 1px solid var(--gv-desktop-border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    color: var(--gv-desktop-text);
+    border-radius: var(--th-radius-card, 12px);
+    background: var(--th-card-bg);
+    border: 1px solid var(--th-border);
+    border-top: 3px solid var(--th-accent);
+    box-shadow: var(--th-shadow);
+    color: var(--th-body);
   }
 
   .gv-home-desktop .gv-card--fade-in {
@@ -153,12 +147,13 @@
   .gv-home-desktop .gv-card__title {
     font-size: var(--font-section);
     font-weight: var(--font-section-weight);
+    color: var(--th-heading-light);
   }
 
   .gv-home-desktop .gv-card__meta {
     font-size: var(--font-meta);
     font-weight: var(--font-meta-weight);
-    color: var(--gv-desktop-muted);
+    color: var(--th-meta);
   }
 
   .gv-home-desktop .gv-link {
@@ -180,10 +175,11 @@
     min-height: 88px;
     flex: none;
     padding: var(--space-md);
-    border-radius: 12px;
-    background: linear-gradient(145deg, rgba(0, 33, 165, 0.1) 0%, var(--gv-desktop-card) 55%);
-    border: 1px solid var(--gv-desktop-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    border-radius: var(--th-radius-card, 12px);
+    background: var(--th-card-bg);
+    border: 1px solid var(--th-border);
+    border-top: 3px solid var(--th-accent);
+    box-shadow: var(--th-shadow);
     opacity: 1;
     transform: none;
     transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
@@ -199,19 +195,19 @@
   .gv-home-desktop .gv-metric-card__label {
     font-size: var(--font-metric-label);
     font-weight: 600;
-    color: var(--gv-desktop-muted);
+    color: var(--th-meta);
   }
 
   .gv-home-desktop .gv-metric-card__value {
     font-size: var(--font-metric-value);
     font-weight: 700;
-    color: var(--gv-desktop-text);
+    color: var(--th-heading-light);
   }
 
   .gv-home-desktop .gv-metric-card__meta {
     font-size: var(--font-metric-meta);
     font-weight: 400;
-    color: var(--gv-desktop-muted);
+    color: var(--th-meta);
   }
 
   /* Action grid – 4 cols, 160×120 tiles */
@@ -224,22 +220,23 @@
   .gv-home-desktop .gv-action-tile {
     min-height: 120px;
     padding: var(--space-md);
-    border-radius: 12px;
-    background: var(--gv-desktop-card);
-    border: 1px solid var(--gv-desktop-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    border-radius: var(--th-radius-card, 12px);
+    background: var(--th-card-bg);
+    border: 1px solid var(--th-border);
+    border-top: 3px solid var(--th-accent);
+    box-shadow: var(--th-shadow);
     transition: transform 0.15s ease-out, background 0.15s ease-out;
   }
 
   .gv-home-desktop .gv-action-tile:hover {
     transform: scale(1.03);
-    background: #111a33;
+    background: color-mix(in srgb, var(--uf-blue) 6%, var(--card-bg));
   }
 
   .gv-home-desktop .gv-action-tile__label {
     font-size: var(--font-card-title);
     font-weight: var(--font-card-title-weight);
-    color: var(--gv-desktop-text);
+    color: var(--th-heading-light);
   }
 
   /* Pulse widgets ~240px */
@@ -253,7 +250,7 @@
   }
 
   .gv-home-desktop .gv-meter__bar {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(0, 33, 165, 0.08);
   }
 
   .gv-home-desktop .gv-meter__fill {
@@ -272,7 +269,7 @@
   .gv-home-desktop .gv-meter__label,
   .gv-home-desktop .gv-movement-summary {
     font-size: var(--font-body);
-    color: var(--gv-desktop-muted);
+    color: var(--th-meta);
   }
 
   /* Movement intel – 48px tabs, 3-col grid, 72px rows */
@@ -283,8 +280,8 @@
 
   .gv-home-desktop .gv-tab {
     font-size: var(--font-meta);
-    border-color: var(--gv-desktop-border);
-    color: var(--gv-desktop-muted);
+    border-color: var(--th-border);
+    color: var(--th-meta);
   }
 
   .gv-home-desktop .gv-tab--active {
@@ -300,9 +297,9 @@
   .gv-home-desktop .gv-movement-row {
     min-height: 72px;
     padding: var(--space-sm) var(--space-md);
-    border: 1px solid var(--gv-desktop-border);
+    border: 1px solid var(--th-border);
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(0, 33, 165, 0.04);
     transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
   }
 
@@ -313,7 +310,7 @@
 
   .gv-home-desktop .gv-movement-row__name {
     font-size: var(--font-body);
-    color: var(--gv-desktop-text);
+    color: var(--th-body);
   }
 
   /* Boards – 3 visible, 180px height */
@@ -328,9 +325,10 @@
     min-height: 180px;
     min-width: 0;
     padding: var(--space-lg);
-    border-radius: 16px;
-    background: rgba(0, 33, 165, 0.08);
-    border: 1px solid var(--gv-desktop-border);
+    border-radius: var(--th-radius-card, 12px);
+    background: var(--th-card-bg);
+    border: 1px solid var(--th-border);
+    border-top: 3px solid var(--th-accent);
     transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
   }
 
@@ -342,14 +340,14 @@
   .gv-home-desktop .gv-board-card__year {
     font-size: var(--font-card-title);
     font-weight: var(--font-card-title-weight);
-    color: var(--gv-desktop-text);
+    color: var(--th-heading-light);
   }
 
   .gv-home-desktop .gv-board-card__rank,
   .gv-home-desktop .gv-board-card__bluechip,
   .gv-home-desktop .gv-board-card__commits {
     font-size: var(--font-body);
-    color: var(--gv-desktop-muted);
+    color: var(--th-meta);
   }
 
   /* Alerts – 2-col grid */
@@ -364,7 +362,7 @@
     transform: translateY(8px);
     transition: opacity 0.25s ease-out, transform 0.25s ease-out;
     font-size: var(--font-body);
-    color: var(--gv-desktop-text);
+    color: var(--th-body);
   }
 
   .gv-home-desktop .gv-alert-row--visible,
@@ -374,34 +372,34 @@
   }
 
   .gv-home-desktop .gv-alert-row__time {
-    color: var(--gv-desktop-muted);
+    color: var(--th-meta);
     font-size: var(--font-meta);
   }
 
   /* Intel rows */
   .gv-home-desktop .gv-intel-row {
-    border-bottom-color: var(--gv-desktop-border);
+    border-bottom-color: var(--th-border);
     transition: background 0.15s ease-out;
   }
 
   .gv-home-desktop .gv-intel-row:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(0, 33, 165, 0.04);
   }
 
   .gv-home-desktop .gv-intel-row__name {
     font-size: var(--font-card-title);
     font-weight: var(--font-card-title-weight);
-    color: var(--gv-desktop-text);
+    color: var(--th-heading-light);
   }
 
   .gv-home-desktop .gv-intel-row__pos,
   .gv-home-desktop .gv-intel-row__fit {
-    color: var(--gv-desktop-muted);
+    color: var(--th-meta);
   }
 
   .gv-home-desktop .gv-media-row {
     font-size: var(--font-body);
-    color: var(--gv-desktop-text);
+    color: var(--th-body);
     transition: transform 0.15s ease-out;
   }
 
@@ -412,9 +410,9 @@
   .gv-home-desktop .gv-home-skeleton-block {
     background: linear-gradient(
       90deg,
-      rgba(255, 255, 255, 0.04) 0%,
-      rgba(255, 255, 255, 0.08) 50%,
-      rgba(255, 255, 255, 0.04) 100%
+      rgba(0, 33, 165, 0.06) 0%,
+      rgba(0, 33, 165, 0.12) 50%,
+      rgba(0, 33, 165, 0.06) 100%
     );
   }
 }

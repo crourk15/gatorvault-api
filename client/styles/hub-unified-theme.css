@@ -10,7 +10,9 @@
 .futurecast-page,
 .gv-page.fc-futurecast-page,
 .gv-sched-page,
-.gv-schedule-page {
+.gv-schedule-page,
+.gv-home-page,
+.gv-home-desktop {
   --rh-primary: var(--th-primary);
   --rh-accent: var(--th-accent);
   --rh-card-bg: var(--th-card-bg);
@@ -77,7 +79,8 @@
 .gv-rh-hero__title,
 .gv-rh-premium-hero__title,
 .gv-rh-elite-hero__title,
-.gv-sched-hero__title {
+.gv-sched-hero__title,
+.gv-home-header__title {
   color: var(--heading-color-dark);
 }
 
@@ -94,7 +97,13 @@
 .rh-rank-sim__title,
 .fc-page-hero__metric-label,
 .gv-movement-list__title,
-.fc-elite-section__title {
+.fc-elite-section__title,
+.gv-card__title,
+.gv-action-tile__label,
+.gv-metric-card__value,
+.gv-intel-row__name,
+.gv-board-card__year,
+.gv-movement-row__name {
   color: var(--th-heading-light);
 }
 
@@ -132,7 +141,11 @@
 .gv-ticket-card,
 .fc-big-board-toolbar select,
 .fc-big-board-toolbar button,
-.rh-rank-sim__select {
+.rh-rank-sim__select,
+.gv-card,
+.gv-metric-card,
+.gv-action-tile,
+.gv-board-card {
   background: var(--th-card-bg) !important;
   background-image: none !important;
   color: var(--th-body-dark);
@@ -148,7 +161,10 @@
 .gv-rh-card:hover,
 .fc-player-card:hover,
 .gv-sched-game-card:hover,
-.gv-ticket-card:hover {
+.gv-ticket-card:hover,
+.gv-action-tile:hover,
+.gv-metric-card:hover,
+.gv-board-card:hover {
   border-color: color-mix(in srgb, var(--th-accent) 40%, var(--th-border));
 }
 
@@ -183,7 +199,20 @@
 .futurecast-page__section-sub,
 .fc-table__player span,
 .rh-fc-row__intel,
-.rh-nil-row__player span {
+.rh-nil-row__player span,
+.gv-home-header__status,
+.gv-card__meta,
+.gv-metric-card__label,
+.gv-metric-card__meta,
+.gv-intel-row__pos,
+.gv-intel-row__fit,
+.gv-board-card__rank,
+.gv-board-card__bluechip,
+.gv-board-card__commits,
+.gv-alert-row__time,
+.gv-meter__label,
+.gv-movement-summary,
+.gv-battle-heat {
   color: var(--th-meta) !important;
 }
 
