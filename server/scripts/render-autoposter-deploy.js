@@ -75,6 +75,9 @@ async function main() {
     if (ev.key) byKey[ev.key] = ev.value ?? ev;
   }
 
+  await upsertEnvVar(svc.id, 'X_PIPELINES_ENABLED', 'true');
+  console.log('Set X_PIPELINES_ENABLED=true on Render');
+
   await upsertEnvVar(svc.id, 'X_AUTOPOST_ENABLED', 'true');
   console.log('Set X_AUTOPOST_ENABLED=true on Render');
 
@@ -86,6 +89,7 @@ async function main() {
     'X_OAUTH1_API_SECRET',
     'X_OAUTH1_ACCESS_TOKEN',
     'X_OAUTH1_ACCESS_TOKEN_SECRET',
+    'X_PIPELINES_ENABLED',
     'X_AUTOPOST_ENABLED',
     'X_AUTOPOST_REPLY_ENABLED'
   ];
@@ -94,6 +98,7 @@ async function main() {
     const val = typeof byKey[k] === 'string' ? byKey[k] : byKey[k]?.value;
     if (val) local[k] = val;
   }
+  local.X_PIPELINES_ENABLED = 'true';
   local.X_AUTOPOST_ENABLED = 'true';
   local.X_AUTOPOST_REPLY_ENABLED = 'true';
   upsertLocalEnv(local);

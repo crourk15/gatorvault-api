@@ -29,15 +29,14 @@ const SYNC_KEYS = [
   'BEEHIIV_AUTOMATION_ID'
 ];
 
-/** Autopost / rewrite kill switches — schedulers are not disabled here. */
+/** Rewrite kill switches — do not disable X_AUTOPOST here (use render-autoposter-deploy.js). */
 const STABILITY_ENV = {
-  X_AUTOPOST_ENABLED: 'false',
   X_GM2_REWRITE_ENABLED: 'false',
   X_INTEL_REWRITE_ENABLED: 'false',
   X_AUTOPROMPT_ENABLED: 'false'
 };
 
-/** Production intel schedulers — enabled on every sync. */
+/** Production intel schedulers + pipelines shell — enabled on every sync. */
 const PIPELINE_ENV = {
   X_PIPELINES_ENABLED: 'true',
   X_SCHEDULED_JOBS_ENABLED: 'true',
@@ -129,8 +128,8 @@ async function main() {
       method: 'POST',
       body: JSON.stringify({ clearCache: 'clear' })
     });
-    const row = deploy.deploy || deploy;
-    console.log('Deploy triggered:', row.id, row.status || 'started');
+    const row = deploy?.deploy || deploy || {};
+    console.log('Deploy triggered:', row.id || '(unknown)', row.status || 'started');
     console.log('Monitor: https://dashboard.render.com/web/' + svc.id);
   } else {
     console.log('Note: Render picks up env var changes on next deploy. Re-run with --deploy to redeploy now.');
