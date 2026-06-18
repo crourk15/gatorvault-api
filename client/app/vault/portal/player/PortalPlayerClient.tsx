@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { PlayerProfilePage } from '@/components/futurecast/player/PlayerProfilePage';
+import { PortalProfilePage } from '@/components/portal/PortalProfilePage';
 import { UiError } from '@/components/site/UiMessage';
 import { PLAYER_SLUG_PATTERNS, playerSlugFromPath } from '@/lib/player-slug-from-path';
 import { usePathname } from '@/lib/use-pathname';
+import { vaultPortalBackHref, vaultPortalBackLabel } from '@/lib/vault-routes';
 
-export default function PlayerBySlugPage(): React.ReactElement {
+export default function PortalPlayerClient(): React.ReactElement {
   const pathname = usePathname();
   const slug = useMemo(
-    () => playerSlugFromPath(pathname, PLAYER_SLUG_PATTERNS.standalone),
+    () => playerSlugFromPath(pathname, PLAYER_SLUG_PATTERNS.portal),
     [pathname]
   );
 
@@ -18,11 +19,11 @@ export default function PlayerBySlugPage(): React.ReactElement {
       <UiError
         title="Player not found"
         message="No player slug in this URL."
-        backHref="/vault/futurecast"
-        backLabel="← FutureCast"
+        backHref={vaultPortalBackHref(pathname)}
+        backLabel={vaultPortalBackLabel(pathname)}
       />
     );
   }
 
-  return <PlayerProfilePage slug={slug} />;
+  return <PortalProfilePage slug={slug} />;
 }

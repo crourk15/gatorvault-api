@@ -1,6 +1,10 @@
 /**
  * Canonical flat sitemap — top-level product routes + nav + breadcrumbs.
  */
+import {
+  playerProfileRoute as vaultPlayerProfileRoute,
+  type PlayerProfileContext as VaultPlayerProfileContext,
+} from './vault-route-map';
 
 export type SiteSectionId =
   | 'dashboard'
@@ -67,17 +71,11 @@ export const MOBILE_BOTTOM_NAV: TopNavItem[] = [
 
 export type PlayerProfileContext = 'recruiting' | 'futurecast' | 'team';
 
+/** Canonical vault player profile paths (recruiting hub + FutureCast live under /vault/*). */
 export function playerProfileRoute(slug: string, context: PlayerProfileContext): string {
-  const safe = encodeURIComponent(slug);
-  switch (context) {
-    case 'recruiting':
-      return `${SITE_ROUTES.recruiting}/player/${safe}`;
-    case 'team':
-      return `${SITE_ROUTES.team}/player/${safe}`;
-    case 'futurecast':
-    default:
-      return `${SITE_ROUTES.futurecast}/player/${safe}`;
-  }
+  const vaultContext: VaultPlayerProfileContext =
+    context === 'team' ? 'roster' : context;
+  return vaultPlayerProfileRoute(slug, vaultContext);
 }
 
 export function scheduleSeasonRoute(season: string): string {

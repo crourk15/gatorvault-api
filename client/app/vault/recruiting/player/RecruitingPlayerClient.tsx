@@ -7,7 +7,7 @@ import { PLAYER_SLUG_PATTERNS, playerSlugFromPath } from '@/lib/player-slug-from
 import { usePathname } from '@/lib/use-pathname';
 
 /** Recruiting-context player profile — single resolve + aggregated fetch. */
-export default function VaultRecruitingPlayerPage(): React.ReactElement {
+export default function RecruitingPlayerClient(): React.ReactElement {
   const pathname = usePathname();
   const slug = useMemo(
     () => playerSlugFromPath(pathname, PLAYER_SLUG_PATTERNS.recruiting),

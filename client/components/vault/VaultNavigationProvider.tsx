@@ -4,6 +4,23 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 import { usePathname, useRouter } from 'next/navigation';
 import { prefetchVaultHref, notifyVaultNavigation, warmVaultBottomNavRoutes, warmVaultPlayerRoute } from '@/lib/vault-navigation';
 import { isVaultClientNavHref, vaultNavPathsEqual } from '@/lib/vault-nav-utils';
+
+function normalizeVaultNavHref(href: string): string {
+  try {
+    const url = new URL(href, 'https://gatorvaultinsider.com');
+    if (!url.pathname.startsWith('/vault')) return href;
+    const path = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
+    return `${path}${url.search}${url.hash}`;
+  } catch {
+    return href;
+  }
+}
+
+function scrollToVaultHash(hash: string): void {
+  const id = hash.replace(/^#/, '');
+  if (!id) return;
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 import { isPlayerProfileHref, playerSlugFromHref, prefetchFullProfile } from '@/lib/player-full-profile-api';
 
 type VaultNavContextValue = {
@@ -136,10 +153,31 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
       if (!anchor.closest('.gv-vault-shell')) return;
       if (anchor.hasAttribute('data-vault-nav') || anchor.hasAttribute('data-no-vault-nav')) return;
 
-      const href = anchor.getAttribute('href');
-      if (!href || !isVaultClientNavHref(href)) return;
+      const rawHref = anchor.getAttribute('href');
+      if (!rawHref || !isVaultClientNavHref(rawHref)) return;
 
-      const current = `${window.location.pathname}${window.location.search}`;
+      const href = normalizeVaultNavHref(rawHref);
+      const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+      try {
+        const target = new URL(href, window.location.origin);
+        const here = new URL(current, window.location.origin);
+        const samePath =
+          target.pathname.replace(/\/$/, '') === here.pathname.replace(/\/$/, '') &&
+          target.search === here.search;
+        if (samePath && target.hash) {
+          event.preventDefault();
+          if (target.hash !== here.hash) {
+            window.history.replaceState(null, '', `${target.pathname}${target.search}${target.hash}`);
+            scrollToVaultHash(target.hash);
+            notifyVaultNavigation();
+          }
+          return;
+        }
+      } catch {
+        /* fall through to client nav */
+      }
+
       if (vaultNavPathsEqual(href, current)) {
         event.preventDefault();
         return;
