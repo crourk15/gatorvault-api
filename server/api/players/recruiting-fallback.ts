@@ -68,9 +68,17 @@ function lifecycleFromRecruiting(p: RecruitingPlayer): 'HS' | 'COLLEGE' | 'PORTA
 export async function getRecruitingPlayerBySlug(slug: string): Promise<RecruitingPlayer | null> {
   try {
     const store = require('../../lib/recruiting-store');
-    const player = await store.getPlayerBySlug(slug);
+    const resolve =
+      typeof store.resolvePlayerKey === 'function'
+        ? store.resolvePlayerKey.bind(store)
+        : store.getPlayerBySlug.bind(store);
+    const player = await resolve(String(slug || '').trim());
     return player || null;
-  } catch {
+  } catch (err) {
+    console.warn(
+      '[recruiting-fallback] player lookup failed:',
+      err instanceof Error ? err.message : err
+    );
     return null;
   }
 }

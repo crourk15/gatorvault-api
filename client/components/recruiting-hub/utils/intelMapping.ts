@@ -214,7 +214,7 @@ export function mapToIntelCard(
     intelType: inferIntelType(player),
     intelText: intelTextFor(player, intel.text),
     timestamp: intel.timestamp || player?.visitStart || new Date().toISOString(),
-    playerId: intel.playerId || player?.slug || '',
+    playerId: player?.slug || intel.playerSlug || intel.playerId || '',
   };
 }
 

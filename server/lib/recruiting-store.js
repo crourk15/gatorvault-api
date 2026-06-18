@@ -292,6 +292,25 @@ async function getPlayerBySlug(slug) {
   return p ? normalizePlayer(p) : null;
 }
 
+/** Resolve recruiting player by slug or On3 id (hub links sometimes pass numeric ids). */
+async function resolvePlayerKey(key) {
+  const raw = String(key || '').trim();
+  if (!raw) return null;
+  const normalized = raw.toLowerCase();
+  const bySlug = await getPlayerBySlug(normalized);
+  if (bySlug) return bySlug;
+  if (!/^\d+$/.test(raw)) return null;
+  const sb = initSupabase();
+  if (sb) {
+    const { data, error } = await sb.from('players').select('*').eq('on3_id', raw).maybeSingle();
+    if (error) throw error;
+    return rowToPlayer(data);
+  }
+  const players = await loadPlayersLocal();
+  const p = players.find((x) => String(x.on3Id || '') === raw);
+  return p ? normalizePlayer(p) : null;
+}
+
 function preservePlayerFields(existing, incoming) {
   const identityValidator = require('./identity-record-validator');
   const merged = { ...existing, ...incoming };
@@ -859,6 +878,7 @@ module.exports = {
   getStoreInfo,
   getAllPlayers,
   getPlayerBySlug,
+  resolvePlayerKey,
   findBySlug,
   findByNameAndClass,
   upsertPlayer,

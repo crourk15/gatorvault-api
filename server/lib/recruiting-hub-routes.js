@@ -112,7 +112,8 @@ function mapIntelFromIntelRow(intel, player) {
           : 0;
   return {
     id: intel.id || intel.fingerprint,
-    playerId: intel.playerSlug || intel.playerId,
+    playerId: player?.slug || intel.playerSlug || intel.playerId,
+    playerSlug: player?.slug || intel.playerSlug || null,
     timestamp: intel.reportedAt || intel.timestamp || intel.createdAt || new Date().toISOString(),
     text: intel.text || intel.detail || 'Insider tracking active.',
     ufProbability: uf,
@@ -191,10 +192,13 @@ function mountRecruitingHubRoutes(app) {
       const cacheKey = `hub:player:${id}`;
 
       const { value: player } = await hubCache.wrap(cacheKey, async () => {
-        const hit = await store.getPlayerBySlug(id);
+        const hit =
+          (typeof store.resolvePlayerKey === 'function'
+            ? await store.resolvePlayerKey(id)
+            : null) || (await store.getPlayerBySlug(id));
         if (hit) return hit;
         const all = await store.getAllPlayers();
-        return all.find((p) => p.slug === id || p.on3Id === id || p.name === id) || null;
+        return all.find((p) => p.slug === id || String(p.on3Id || '') === id || p.name === id) || null;
       });
 
       if (!player) return res.status(404).json({ ok: false, error: 'Player not found' });

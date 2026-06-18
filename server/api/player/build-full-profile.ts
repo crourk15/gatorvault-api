@@ -97,6 +97,20 @@ function rosterPlayerBySlug(slug: string): Record<string, unknown> | null {
   }
 }
 
+async function safeResolvePostgresPlayerBySlug(
+  slug: string
+): Promise<{ playerId: string; canonicalSlug: string } | null> {
+  try {
+    return await resolvePostgresPlayerBySlug(slug);
+  } catch (err) {
+    console.warn(
+      '[player-profile] Postgres slug resolve failed, using recruiting store fallback:',
+      err instanceof Error ? err.message : err
+    );
+    return null;
+  }
+}
+
 async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileResponse | null> {
   const recruiting = await getRecruitingPlayerBySlug(slug);
   if (!recruiting) return null;
@@ -128,16 +142,17 @@ export async function buildFullProfileBySlug(slug: string): Promise<FullProfileR
   const normalized = String(slug || '').trim().toLowerCase();
   if (!normalized) return null;
 
-  const resolved = await resolvePostgresPlayerBySlug(normalized);
-  if (!resolved) {
-    return buildRecruitingStoreProfile(normalized);
-  }
+  try {
+    const resolved = await safeResolvePostgresPlayerBySlug(normalized);
+    if (!resolved) {
+      return buildRecruitingStoreProfile(normalized);
+    }
 
-  const { playerId } = resolved;
-  const player = await getPlayerById(playerId);
-  if (!player) {
-    return buildRecruitingStoreProfile(normalized);
-  }
+    const { playerId } = resolved;
+    const player = await getPlayerById(playerId);
+    if (!player) {
+      return buildRecruitingStoreProfile(normalized);
+    }
 
   const [
     highSchoolProfile,
@@ -283,6 +298,13 @@ export async function buildFullProfileBySlug(slug: string): Promise<FullProfileR
     competingSchools,
     futurecastSummary,
   };
+  } catch (err) {
+    console.warn(
+      '[player-profile] Postgres full profile failed, using recruiting store fallback:',
+      err instanceof Error ? err.message : err
+    );
+    return buildRecruitingStoreProfile(normalized);
+  }
 }
 
 export type ResolveKind = 'futurecast' | 'roster' | 'recruiting-fallback';
@@ -302,22 +324,29 @@ export async function resolvePlayerSlugRecord(
   const normalized = String(slug || '').trim().toLowerCase();
   if (!normalized) return null;
 
-  const postgres = await resolvePostgresPlayerBySlug(normalized);
-  if (postgres) {
-    const player = await getPlayerById(postgres.playerId);
-    if (player) {
-      let redirectHref: string | null = null;
-      if (player.status === 'PORTAL' && context !== 'recruiting') {
-        redirectHref = `/vault/recruiting/player/${encodeURIComponent(player.slug)}/`;
+  try {
+    const postgres = await safeResolvePostgresPlayerBySlug(normalized);
+    if (postgres) {
+      const player = await getPlayerById(postgres.playerId);
+      if (player) {
+        let redirectHref: string | null = null;
+        if (player.status === 'PORTAL' && context !== 'recruiting') {
+          redirectHref = `/vault/recruiting/player/${encodeURIComponent(player.slug)}/`;
+        }
+        return {
+          kind: 'futurecast',
+          playerId: player.id,
+          canonicalSlug: player.slug,
+          redirectHref,
+          roster: null,
+        };
       }
-      return {
-        kind: 'futurecast',
-        playerId: player.id,
-        canonicalSlug: player.slug,
-        redirectHref,
-        roster: null,
-      };
     }
+  } catch (err) {
+    console.warn(
+      '[player-profile] Postgres resolve failed, using recruiting store fallback:',
+      err instanceof Error ? err.message : err
+    );
   }
 
   const recruiting = await getRecruitingPlayerBySlug(normalized);
