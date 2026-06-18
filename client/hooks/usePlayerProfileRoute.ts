@@ -37,10 +37,7 @@ function canonicalProfileHref(
   if (context === 'roster' || kind === 'roster') {
     return playerProfileRoute(canonicalSlug, 'roster');
   }
-  if (context === 'futurecast') {
-    return playerProfileRoute(canonicalSlug, 'futurecast');
-  }
-  return playerProfileRoute(canonicalSlug, kind === 'roster' ? 'roster' : 'futurecast');
+  return playerProfileRoute(canonicalSlug, 'futurecast');
 }
 
 export function usePlayerProfileRoute(
