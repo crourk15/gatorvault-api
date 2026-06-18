@@ -9,6 +9,7 @@ import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
 import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
 import { warmVaultApi } from '@/lib/vault-api-warmup';
+import { MobileBackToTop } from '@/components/vault/MobileBackToTop';
 
 const ADMIN_NAV_ITEM = {
   id: 'admin' as VaultSectionId,
@@ -200,6 +201,7 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
           </VaultNavLink>
         ))}
       </nav>
+      <MobileBackToTop />
     </div>
   );
 }

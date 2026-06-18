@@ -852,4 +852,178 @@
   .gv-mobile-slider::-webkit-scrollbar {
     display: none;
   }
+
+  /* ── Polish pass: interaction, elevation, motion ── */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    .gv-mobile-fade-in,
+    .rh-cc-intel-card,
+    .fc-lab-target-card {
+      animation: none !important;
+    }
+  }
+
+  .mobile-app,
+  .gv-marketing-main,
+  .gv-vault-shell {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-app a:active,
+  .mobile-app button:active:not(:disabled),
+  .gv-btn:active,
+  .gv-home-action-tile:active,
+  .rh-cc-tabs__btn:active,
+  .gv-vault-bottom-nav__item:active {
+    opacity: 0.88;
+    transform: scale(0.98);
+    transition: opacity 0.12s ease, transform 0.12s ease;
+  }
+
+  /* Section separators */
+  .fc-lab-mobile > section + section,
+  .fc-lab-mobile > section + section[data-lazy-mounted],
+  .rh-cc-main > .rh-cc-module + .rh-cc-module,
+  .gv-home__grid > .gv-home__cell + .gv-home__cell {
+    border-top: 1px solid rgba(0, 26, 51, 0.08);
+    padding-top: var(--mobile-section-gap);
+  }
+
+  .fc-lab-mobile > section:first-child,
+  .rh-cc-main > .rh-cc-module:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  /* Icon sizing */
+  .gv-vault-shell__nav-icon,
+  .gv-vault-bottom-nav__icon {
+    font-size: 20px;
+    line-height: 22px;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Fade-in on mount */
+  @keyframes gv-mobile-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .gv-mobile-fade-in,
+  .rh-cc-intel-card,
+  .fc-lab-target-card,
+  .fc-lab-signal-card,
+  .gv-home-module-card,
+  .gv-home-movement__card,
+  .rh-cc-move-row {
+    animation: gv-mobile-fade-in 0.35s ease-out both;
+  }
+
+  /* Active Movement Intel tab highlight */
+  .rh-cc-tabs__btn.is-active {
+    box-shadow: 0 2px 10px rgba(0, 33, 165, 0.28);
+  }
+
+  /* Animated probability / heat bars */
+  .rh-cc-prob-bar__fill,
+  .fc-lab-battle-heat__fill,
+  .fc-lab-vol-index__fill,
+  .fc-prediction-item__bar-fill,
+  .fc-lab-segment-bar__uf,
+  .fc-lab-segment-bar__uga,
+  .fc-lab-segment-bar__bama {
+    transition: width 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Board slider snap feedback */
+  .rh-cc-board-cards {
+    scroll-snap-type: x mandatory;
+  }
+
+  /* Skeleton loaders */
+  .gv-mobile-section-skeleton,
+  .rh-cc-skeleton {
+    border-radius: var(--mobile-radius);
+    background: linear-gradient(
+      90deg,
+      rgba(0, 26, 51, 0.06) 0%,
+      rgba(0, 26, 51, 0.1) 50%,
+      rgba(0, 26, 51, 0.06) 100%
+    );
+    background-size: 200% 100%;
+    animation: gv-mobile-shimmer 1.2s ease-in-out infinite;
+  }
+
+  @keyframes gv-mobile-shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  /* Floating back-to-top */
+  .gv-mobile-back-top {
+    position: fixed;
+    right: max(var(--mobile-gutter), env(safe-area-inset-right, 0px));
+    bottom: max(calc(72px + env(safe-area-inset-bottom, 0px)), 80px);
+    z-index: 45;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: var(--mobile-radius);
+    background: var(--gv-blue, #0021a5);
+    color: #fff;
+    font-size: 1.125rem;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(0, 33, 165, 0.35);
+    cursor: pointer;
+  }
+
+  .gv-mobile-back-top:active {
+    background: var(--gv-orange, #fa4616);
+  }
+
+  /* FC lab anchors — no 100vw clip */
+  .fc-lab-anchors__sections {
+    max-width: calc(100% - 2 * var(--mobile-gutter)) !important;
+  }
+
+  /* Sticky module headers on long mobile pages */
+  .rh-cc-module__head,
+  .fc-lab-module__head {
+    position: sticky;
+    top: calc(56px + env(safe-area-inset-top, 0px));
+    z-index: 2;
+    background: inherit;
+    padding-bottom: var(--space-sm);
+  }
+
+  .rh-cc-hero .rh-cc-module__head,
+  .fc-lab-hero .fc-lab-module__head {
+    position: static;
+  }
+
+  /* Profile hero subtle entrance */
+  .fc-profile-page.mobile-app .fc-profile-header {
+    animation: gv-mobile-fade-in 0.4s ease-out both;
+  }
 }

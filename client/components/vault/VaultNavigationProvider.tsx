@@ -4,6 +4,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 import { usePathname, useRouter } from 'next/navigation';
 import { prefetchVaultHref, notifyVaultNavigation, warmVaultBottomNavRoutes, warmVaultPlayerRoute } from '@/lib/vault-navigation';
 import { isVaultClientNavHref, vaultNavPathsEqual } from '@/lib/vault-nav-utils';
+import { isPlayerProfileHref, playerSlugFromHref, prefetchFullProfile } from '@/lib/player-full-profile-api';
 
 function normalizeVaultNavHref(href: string): string {
   try {
@@ -21,7 +22,6 @@ function scrollToVaultHash(hash: string): void {
   if (!id) return;
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-import { isPlayerProfileHref, playerSlugFromHref, prefetchFullProfile } from '@/lib/player-full-profile-api';
 
 type VaultNavContextValue = {
   isNavigating: boolean;
@@ -169,9 +169,9 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
           event.preventDefault();
           if (target.hash !== here.hash) {
             window.history.replaceState(null, '', `${target.pathname}${target.search}${target.hash}`);
-            scrollToVaultHash(target.hash);
-            notifyVaultNavigation();
           }
+          scrollToVaultHash(target.hash);
+          notifyVaultNavigation();
           return;
         }
       } catch {

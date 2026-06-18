@@ -11,6 +11,7 @@ import { FutureCastMovementPanel } from '@/components/futurecast/lab/FutureCastM
 import { FutureCastPositionBreakdown } from '@/components/futurecast/lab/FutureCastPositionBreakdown';
 import { FutureCastPortalCrossView } from '@/components/futurecast/lab/FutureCastPortalCrossView';
 import { FutureCastLiveFeed } from '@/components/futurecast/lab/FutureCastLiveFeed';
+import { LazyMountSection } from '@/components/shared/LazyMountSection';
 
 type Props = {
   data: FutureCastLabDataMap;
@@ -33,37 +34,37 @@ export function FutureCastLabPageMobile({ data }: Props): React.ReactElement {
           lastUpdated={data.lastUpdated}
         />
       </section>
-      <section id={FUTURECAST_LAB_ANCHORS.masterBoard}>
+      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.masterBoard}>
         <FutureCastTargetsPanel masterBoard={data.masterBoard} />
-      </section>
-      <section id={FUTURECAST_LAB_ANCHORS.trending}>
+      </LazyMountSection>
+      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.trending}>
         <FutureCastBattlesPanel masterBoard={data.masterBoard} trendingBoard={data.trendingBoard} />
-      </section>
-      <section id={FUTURECAST_LAB_ANCHORS.movement}>
+      </LazyMountSection>
+      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.movement}>
         <FutureCastMovementPanel movementIntel={data.movementIntel} />
-      </section>
-      <section id={FUTURECAST_LAB_ANCHORS.signals}>
+      </LazyMountSection>
+      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.signals}>
         <FutureCastAnalystSignals staffNotes={data.staffNotes} masterBoard={data.masterBoard} />
-      </section>
-      <section id={FUTURECAST_LAB_ANCHORS.positions}>
+      </LazyMountSection>
+      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.positions}>
         <FutureCastPositionBreakdown
           players={data.masterBoard.players}
           activePredictions={data.metrics.activePredictions}
         />
-      </section>
-      <section id={FUTURECAST_LAB_ANCHORS.portal}>
+      </LazyMountSection>
+      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.portal}>
         <FutureCastPortalCrossView
           portalPlayers={data.home.portalWatchlist ?? []}
           masterBoard={data.masterBoard}
         />
-      </section>
-      <section id={FUTURECAST_LAB_ANCHORS.feed}>
+      </LazyMountSection>
+      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.feed}>
         <FutureCastLiveFeed
           masterBoard={data.masterBoard}
           staffNotes={data.staffNotes}
           movementIntel={data.movementIntel}
         />
-      </section>
+      </LazyMountSection>
     </div>
   );
 }

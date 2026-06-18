@@ -22,7 +22,13 @@ export function FutureCastEliteHomepage(): React.ReactElement {
   }, [lab.loading]);
 
   if (lab.loading && !lab.masterBoard.players.length) {
-    return <p className="fc-elite-loading">Loading FutureCast…</p>;
+    return (
+      <div className="mobile-app fc-lab-mobile" data-testid="fc-elite-loading">
+        <div className="rh-cc-skeleton" style={{ minHeight: 300, borderRadius: 12 }} />
+        <div className="rh-cc-skeleton" style={{ minHeight: 180, borderRadius: 12 }} />
+        <div className="rh-cc-skeleton" style={{ minHeight: 180, borderRadius: 12 }} />
+      </div>
+    );
   }
   if (lab.error && !lab.masterBoard.players.length) {
     return <UiError message={lab.error} />;

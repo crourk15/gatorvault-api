@@ -24,7 +24,11 @@ export function RecruitingHubPage(): React.ReactElement {
       {!isCommandCenterDesktop ? <RecruitingHubMobileHeader /> : null}
 
       {data.loading && !data.loadedOnce ? (
-        <p className="rh-page__status rh-frame">Loading recruiting hub…</p>
+        <div className="rh-frame rh-cc-page" aria-busy="true" aria-label="Loading recruiting hub">
+          <div className="rh-cc-skeleton" style={{ minHeight: 280, borderRadius: 12 }} />
+          <div className="rh-cc-skeleton" style={{ minHeight: 200, borderRadius: 12, marginTop: 16 }} />
+          <div className="rh-cc-skeleton" style={{ minHeight: 160, borderRadius: 12, marginTop: 16 }} />
+        </div>
       ) : null}
       {data.error && !data.loading ? (
         <div className="rh-frame">
