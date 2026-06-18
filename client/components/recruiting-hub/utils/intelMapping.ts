@@ -118,7 +118,7 @@ export function mapToHighPriorityIntelItem(
   const legacyType = inferIntelType(player);
   const { intelType, intelLabel } = resolveIntelType(player, heatStatus, legacyType);
   const timestamp = intel.timestamp || player?.visitStart || new Date().toISOString();
-  const slug = intel.playerId || player?.slug || '';
+  const slug = intel.playerSlug || player?.slug || '';
 
   return {
     id: intel.id || `${slug}-${timestamp}`,
@@ -214,7 +214,7 @@ export function mapToIntelCard(
     intelType: inferIntelType(player),
     intelText: intelTextFor(player, intel.text),
     timestamp: intel.timestamp || player?.visitStart || new Date().toISOString(),
-    playerId: player?.slug || intel.playerSlug || intel.playerId || '',
+    playerId: player?.slug || intel.playerSlug || '',
   };
 }
 

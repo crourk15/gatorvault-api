@@ -4,15 +4,15 @@ import React from 'react';
 import type { MovementIntelItem, MovementIntelResponse } from '@/lib/movement-intel-types';
 import { movementDelta7d } from '@/lib/movement-intel-types';
 import { formatIntelUpdated } from '@/components/recruiting-hub/utils/formatDate';
-import { playerProfilePath } from '@/lib/player-routes';
+import { playerHref } from '@/lib/player-link';
 
 type Props = {
   data: MovementIntelResponse | null;
   loading?: boolean;
 };
 
-function playerHref(item: { id: string; slug?: string; name: string }): string {
-  return playerProfilePath(item.slug || item.id, 'HIGH_SCHOOL', true, item.name, 'futurecast');
+function profileHref(item: { id: string; slug?: string; name: string }): string {
+  return playerHref({ slug: item.slug, id: item.id, name: item.name }, 'futurecast', 'HIGH_SCHOOL');
 }
 
 function ufPct(item: MovementIntelItem): number {
@@ -85,7 +85,7 @@ function MovementStockRow({
   return (
     <div className={rowClass}>
       <div className="rh-movement-stock-row__identity">
-        <a href={playerHref(item)} className="rh-movement-stock-row__name gv-home-movement-intel__link">
+        <a href={profileHref(item)} className="rh-movement-stock-row__name gv-home-movement-intel__link">
           {item.name}
         </a>
         <span className="rh-movement-stock-row__meta">

@@ -41,7 +41,9 @@
 /futurecast/staff-notes/*  /vault/futurecast/staff  301
 /futurecast  /vault/futurecast  301
 /futurecast/  /vault/futurecast  301
-/futurecast/*  /vault/futurecast  301
+/vault/recruiting-hub  /vault/recruiting  301
+/vault/recruiting-hub/  /vault/recruiting  301
+/vault/recruiting-hub/*  /vault/recruiting/:splat  301
 /team.html  /vault/team  301
 /recruiting.html  /vault/recruiting  301
 /film-room.html  /vault/film-room  301
@@ -95,7 +97,9 @@
 /gator-nation-live  /gator-nation-live/index.html  200
 /gator-nation-live/  /gator-nation-live/index.html  200
 /gator-nation-live/*  /gator-nation-live/index.html  200
-/schedule/*  /schedule/season/index.html  200
+/schedule/season  /schedule/season/index.html  200
+/schedule/season/  /schedule/season/index.html  200
+/schedule/season/*  /schedule/season/index.html  200
 /schedule  /schedule/index.html  200
 /schedule/  /schedule/index.html  200
 /schedule/*  /schedule/index.html  200

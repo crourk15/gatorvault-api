@@ -145,7 +145,6 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
 
   walkFiles(serverDir, (file) => {
     if (!/\.(html|txt)$/.test(file)) return;
-    if (file.includes(`${path.sep}admin`)) return;
     const raw = fs.readFileSync(file, 'utf8');
     const updated = applyReplacements(raw, map);
     if (updated !== raw) {
@@ -157,4 +156,22 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
   return { filesUpdated, flatChunks: map.size, vaultChunksDir: VAULT_CHUNKS_DIR };
 }
 
-module.exports = { rewriteNextChunkPathsForNetlify, flatChunkName, VAULT_CHUNKS_DIR };
+/** Fail build if any HTML still references App Router chunk paths Netlify CDN drops. */
+function assertNoUnrewrittenAppChunkRefs(serverDir) {
+  const offenders = [];
+  const bad = /\/_next\/static\/chunks\/(?:app|routes)\//;
+  walkFiles(serverDir, (file) => {
+    if (!/\.html$/.test(file)) return;
+    const rel = path.relative(serverDir, file).replace(/\\/g, '/');
+    const raw = fs.readFileSync(file, 'utf8');
+    if (bad.test(raw)) offenders.push(rel);
+  });
+  if (offenders.length) {
+    throw new Error(
+      `[rewrite-next-chunk-paths] HTML still references /_next/static/chunks/app/ — ` +
+        `${offenders.slice(0, 8).join(', ')}${offenders.length > 8 ? ` (+${offenders.length - 8} more)` : ''}`
+    );
+  }
+}
+
+module.exports = { rewriteNextChunkPathsForNetlify, flatChunkName, VAULT_CHUNKS_DIR, assertNoUnrewrittenAppChunkRefs };

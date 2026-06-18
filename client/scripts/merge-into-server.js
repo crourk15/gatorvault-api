@@ -7,7 +7,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const vaultMap = require('../lib/routes-vault.cjs');
 const { verifyChunkAssets } = require('./verify-chunk-assets');
-const { rewriteNextChunkPathsForNetlify } = require('./rewrite-next-chunk-paths');
+const { rewriteNextChunkPathsForNetlify, assertNoUnrewrittenAppChunkRefs } = require('./rewrite-next-chunk-paths');
 
 const outDir = path.join(__dirname, '..', 'out');
 const serverDir = path.join(__dirname, '..', '..', 'server');
@@ -70,6 +70,7 @@ const CHUNK_VERIFY_HTML = [
     'recruiting-hub/index.html',
     'team/index.html',
     'directory/index.html',
+    'vault/admin/index.html',
     ...REQUIRED_EXPORTS.filter((p) => p.endsWith('.html')),
   ]),
 ];
@@ -133,6 +134,7 @@ rmRecursive(nextDir);
 copyRecursive(outDir, serverDir);
 const netlifyPaths = rewriteNextChunkPathsForNetlify(serverDir);
 console.log(`[netlify] Published vault route chunks to js/vault-chunks/ (${netlifyPaths.flatChunks} bundles, ${netlifyPaths.filesUpdated} refs updated)`);
+assertNoUnrewrittenAppChunkRefs(serverDir);
 require('./stamp-build-meta.js');
 require('./inject-vault-shell-css.js');
 require('./inject-vault-hydration-guard.js');

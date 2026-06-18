@@ -6,7 +6,7 @@ import { GNL_COPY } from '@/lib/gatornation-live-types';
 
 const LINKS = [
   { href: '#podcast-hub', label: 'Podcasts' },
-  { href: '/recruiting-hub', label: 'Recruiting Hub' },
+  { href: '/vault/recruiting', label: 'Recruiting Hub' },
   { href: '/vault/futurecast#movement', label: 'Movement Intel' },
   { href: '/vault/recruiting/portal', label: 'Portal' },
 ];

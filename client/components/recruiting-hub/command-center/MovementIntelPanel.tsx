@@ -4,13 +4,13 @@ import React, { useEffect, useState } from 'react';
 import type { MovementIntelItem, MovementIntelResponse } from '@/lib/movement-intel-types';
 import { movementDelta7d } from '@/lib/movement-intel-types';
 import { fetchHomeMovementIntel } from '@/lib/vault-home-api';
-import { playerProfilePath } from '@/lib/player-routes';
+import { playerHref } from '@/lib/player-link';
 import { ModuleShell, MovementBadge, MovementSparkline, UfProbBar, ufPctFromRaw } from './primitives';
 
 type Tab = 'risers' | 'fallers' | 'volatile';
 
-function playerHref(item: MovementIntelItem): string {
-  return playerProfilePath(item.slug || item.id, 'HIGH_SCHOOL', true, item.name, 'recruiting');
+function profileHref(item: MovementIntelItem): string {
+  return playerHref({ slug: item.slug, id: item.id, name: item.name }, 'recruiting', 'HIGH_SCHOOL');
 }
 
 function MovementRow({ item, tone }: { item: MovementIntelItem; tone: Tab }): React.ReactElement {
@@ -19,7 +19,7 @@ function MovementRow({ item, tone }: { item: MovementIntelItem; tone: Tab }): Re
   return (
     <div className={`rh-cc-move-row${tone === 'volatile' ? ' rh-cc-move-row--volatile' : ''}`}>
       <div className="rh-cc-move-row__identity">
-        <a href={playerHref(item)} className="rh-cc-move-row__name">
+        <a href={profileHref(item)} className="rh-cc-move-row__name">
           {item.name}
         </a>
         <span className="rh-cc-move-row__meta">

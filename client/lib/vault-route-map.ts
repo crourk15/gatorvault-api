@@ -199,7 +199,9 @@ export function playerProfileRoute(slug: string, context: PlayerProfileContext):
 export const LEGACY_ROUTE_REDIRECTS: { from: string; to: string }[] = [
   { from: '/futurecast', to: '/vault/futurecast' },
   { from: '/futurecast/', to: '/vault/futurecast' },
-  { from: '/futurecast/*', to: '/vault/futurecast' },
+  { from: '/vault/recruiting-hub', to: '/vault/recruiting' },
+  { from: '/vault/recruiting-hub/', to: '/vault/recruiting' },
+  { from: '/vault/recruiting-hub/*', to: '/vault/recruiting/:splat' },
   { from: '/team.html', to: '/vault/team' },
   { from: '/recruiting.html', to: '/vault/recruiting' },
   { from: '/recruiting-hub.html', to: '/recruiting-hub' },

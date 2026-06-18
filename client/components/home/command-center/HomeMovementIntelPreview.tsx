@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import type { HomeMovementIntelData } from '@/lib/vault-home-api';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
 import { movementDelta7d } from '@/lib/movement-intel-types';
-import { playerProfilePath } from '@/lib/player-routes';
+import { playerHref } from '@/lib/player-link';
 import { SITE_ROUTES } from '@/lib/site-routes';
 import { HomeMiniSparkline } from './widgets/HomeMiniSparkline';
 
@@ -111,7 +111,7 @@ export function HomeMovementIntelPreview({ movementIntel, movement, loading }: P
           return (
             <li key={item.id}>
               <a
-                href={playerProfilePath(item.slug || item.id, 'HIGH_SCHOOL', true, item.name, 'recruiting')}
+                href={playerHref({ slug: item.slug, id: item.id, name: item.name }, 'recruiting', 'HIGH_SCHOOL')}
                 className="gv-hcc-move-row"
               >
                 <span className="gv-hcc-move-row__name">{item.name}</span>

@@ -3,10 +3,10 @@ const https = require('https');
 const base = 'https://gatorvaultinsider.com';
 
 const ROUTES = [
-  { path: '/vault/', markers: ['Dashboard', 'gv-vault-shell'] },
-  { path: '/vault/recruiting/', markers: ['Recruiting Hub', 'rh-class-overview', 'rh-latest-intel'] },
+  { path: '/vault/', markers: ['vault-home', 'gv-vault-shell'] },
+  { path: '/vault/recruiting/', markers: ['vault-recruiting-hub', 'Recruiting Hub'] },
   { path: '/vault/live/', markers: ['gnl-hero', 'gnl-ticker', 'vault-live-feed'] },
-  { path: '/vault/schedule/', markers: ['gv-sched', 'gv-sched-tickets'] },
+  { path: '/vault/schedule/', markers: ['gv-sched', 'gv-sched-tickets', 'vault-schedule'] },
   { path: '/vault/players/', markers: ['players-directory-page', 'gv-player-dir'] },
   { path: '/vault/admin/', markers: ['vault-admin-page', 'gv-vault-shell', 'Admin Console'] },
   { path: '/vault/podcast/gators-breakdown/', markers: ['vault-podcast-episode', 'gators-breakdown'] },

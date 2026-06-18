@@ -8,6 +8,7 @@ import {
   type ProfileRouteContext,
   type ResolvePlayerKind,
 } from '@/lib/player-full-profile-api';
+import { playerProfileRoute } from '@/lib/vault-route-map';
 
 export type PlayerProfileRouteState =
   | { phase: 'loading' }
@@ -25,6 +26,23 @@ function mapRoster(raw: Record<string, unknown>): RosterPlayer {
   return raw as unknown as RosterPlayer;
 }
 
+function canonicalProfileHref(
+  canonicalSlug: string,
+  kind: ResolvePlayerKind,
+  context: ProfileRouteContext
+): string {
+  if (context === 'recruiting' || kind === 'recruiting-fallback') {
+    return playerProfileRoute(canonicalSlug, 'recruiting');
+  }
+  if (context === 'roster' || kind === 'roster') {
+    return playerProfileRoute(canonicalSlug, 'roster');
+  }
+  if (context === 'futurecast') {
+    return playerProfileRoute(canonicalSlug, 'futurecast');
+  }
+  return playerProfileRoute(canonicalSlug, kind === 'roster' ? 'roster' : 'futurecast');
+}
+
 export function usePlayerProfileRoute(
   slug: string | null,
   context: ProfileRouteContext = 'auto'
@@ -40,13 +58,23 @@ export function usePlayerProfileRoute(
 
     let cancelled = false;
     setState({ phase: 'loading' });
+    const normalized = slug.trim().toLowerCase();
 
     void resolvePlayerSlug(slug, context)
       .then((resolved) => {
         if (cancelled) return;
         if (resolved.redirectHref) {
-          router.push(resolved.redirectHref);
+          router.replace(resolved.redirectHref);
           setState({ phase: 'redirect', href: resolved.redirectHref });
+          return;
+        }
+        if (
+          resolved.canonicalSlug &&
+          resolved.canonicalSlug.toLowerCase() !== normalized
+        ) {
+          const href = canonicalProfileHref(resolved.canonicalSlug, resolved.kind, context);
+          router.replace(href);
+          setState({ phase: 'redirect', href });
           return;
         }
         if (resolved.kind === 'roster' && resolved.roster) {

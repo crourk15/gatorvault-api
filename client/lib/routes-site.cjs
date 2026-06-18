@@ -23,7 +23,7 @@ const SITE_REACT_REWRITES = [
   ...subRouteRewrites('/team/player', '/team/player/index.html'),
   ...subRouteRewrites('/team', '/team/index.html'),
   ...subRouteRewrites('/gator-nation-live', '/gator-nation-live/index.html'),
-  { from: '/schedule/*', to: '/schedule/season/index.html', status: 200 },
+  ...subRouteRewrites('/schedule/season', '/schedule/season/index.html'),
   ...subRouteRewrites('/schedule', '/schedule/index.html'),
   ...subRouteRewrites('/film-room', '/film-room/index.html'),
   { from: '/game-week/*', to: '/game-week/game/index.html', status: 200 },
