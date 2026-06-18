@@ -207,7 +207,7 @@ export function VaultHomePage(): React.ReactElement {
   ]);
 
   return (
-    <div className="gv-home gv-home-shell" data-testid="vault-home">
+    <div className="gv-home gv-home-shell mobile-app" data-testid="vault-home">
       <div className="gv-home__frame gv-home__command">
         <div className="gv-home__grid">
           <HomeTopCommandCard

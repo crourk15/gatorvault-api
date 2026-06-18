@@ -3,6 +3,8 @@
 import React from 'react';
 import { PublicSiteShell } from '@/components/site/PublicSiteShell';
 import '@/lib/operator-access.css';
+import '@/lib/welcome-mobile.css';
+import '@/lib/mobile-native-framework.css';
 
 /**
  * Marketing routes (/ and /welcome) — PublicSiteShell only.
