@@ -5,20 +5,11 @@ import '@/lib/futurecast-page.css';
 import { loadFutureCastPageData, type FutureCastPageData } from '@/lib/api/futurecast';
 import { ApiFetchError } from '@/lib/api-fetch';
 import { UiError } from '@/components/site/UiMessage';
-import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
-import { FutureCastPageLayout } from './FutureCastPageLayout';
-import { FutureCastPageHero } from './FutureCastPageHero';
-import { FutureCastMasterBoard } from './FutureCastMasterBoard';
-import { FutureCastMovementHeatmap } from './FutureCastMovementHeatmap';
-import { FutureCastHighPriorityStrip } from './FutureCastHighPriorityStrip';
-import { FutureCastPortalWatchlist } from './FutureCastPortalWatchlist';
-import { FutureCastStockBoard } from './FutureCastStockBoard';
 import { FutureCastLabPageDesktop } from './lab/FutureCastLabPageDesktop';
 
 const REFRESH_MS = 60_000;
 
 export function FutureCastEliteHomepage(): React.ReactElement {
-  const isCommandCenterDesktop = useIsCommandCenterDesktop();
   const [data, setData] = useState<FutureCastPageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -72,32 +63,14 @@ export function FutureCastEliteHomepage(): React.ReactElement {
     return <p className="fc-elite-empty">No FutureCast data available.</p>;
   }
 
-  if (isCommandCenterDesktop) {
-    return <FutureCastLabPageDesktop data={data} />;
-  }
-
   return (
-    <FutureCastPageLayout>
+    <div className="mobile-app" data-testid="fc-elite-homepage">
       {data.loadWarnings.length > 0 ? (
-        <p className="fc-empty" role="status" data-testid="fc-load-warnings">
+        <p className="fc-empty rh-frame" role="status" data-testid="fc-load-warnings">
           {data.loadWarnings[0]}
         </p>
       ) : null}
-      <FutureCastPageHero
-        summary={data.summary}
-        metrics={data.metrics}
-        heatLevel={data.heatLevel}
-        lastUpdated={data.highPriorityLastUpdated ?? null}
-      />
-      <FutureCastMasterBoard
-        commits={data.home.commits ?? []}
-        targets={data.targets}
-        predictions={data.predictions}
-      />
-      <FutureCastMovementHeatmap snapshots={data.snapshots} stock={data.stock} />
-      <FutureCastHighPriorityStrip players={data.highPriority} />
-      <FutureCastPortalWatchlist portalPlayers={data.home.portalWatchlist ?? []} />
-      <FutureCastStockBoard stock={data.stock} />
-    </FutureCastPageLayout>
+      <FutureCastLabPageDesktop data={data} />
+    </div>
   );
 }

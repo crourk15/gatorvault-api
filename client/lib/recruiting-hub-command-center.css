@@ -1194,10 +1194,34 @@
   }
 }
 
-/* ── Responsive guard — command center is desktop-only (≥1024) ── */
+/* ── Mobile & tablet: vertical command center (not hidden) ── */
 @media (max-width: 1023px) {
   .rh-cc-page {
-    display: none;
+    display: flex;
+  }
+
+  .rh-cc-hero__col--meter,
+  .rh-cc-hero__col--alerts,
+  .rh-cc-hero__col--heat {
+    width: 100%;
+  }
+
+  .rh-cc-intel-scroll {
+    max-height: none;
+  }
+
+  .rh-cc-board-cards {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 12px;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .rh-cc-board-card {
+    flex: 0 0 min(72vw, 260px);
+    scroll-snap-align: start;
   }
 }
 

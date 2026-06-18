@@ -199,8 +199,8 @@
   }
 }
 
-/* ── Mobile: compact header, vertical feed (not laptop layout) ── */
-@media (max-width: 767px) {
+/* ── Mobile & tablet: compact header + vertical feed (<1024) ── */
+@media (max-width: 1023px) {
   .rh-page--elite {
     display: flex;
     flex-direction: column;
@@ -208,7 +208,8 @@
   }
 
   .rh-page--elite > section,
-  .rh-page--elite > .rh-elite-dashboard {
+  .rh-page--elite > .rh-elite-dashboard,
+  .rh-page--elite > .rh-cc-page {
     margin-top: 0 !important;
   }
 
@@ -236,13 +237,25 @@
     color: var(--heading-color-dark, #fff);
   }
 
+  .rh-elite-mobile-header__eyebrow {
+    margin: 0 0 4px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--th-accent, var(--gator-orange));
+  }
+
   .rh-elite-mobile-header__sub {
     margin: 6px 0 0;
     font-size: 0.875rem;
     line-height: 1.45;
     color: var(--th-meta);
   }
+}
 
+/* ── Phone-only refinements ── */
+@media (max-width: 767px) {
   .rh-elite-dashboard {
     gap: 18px;
     padding-top: 18px;

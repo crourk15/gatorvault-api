@@ -35,6 +35,7 @@
   .gv-vault-shell__main [class*='__grid'],
   .gv-vault-shell__main [class*='-grid'],
   .gv-vault-shell__main .gv-home-command-grid,
+  .gv-vault-shell__main .gv-home__grid,
   .gv-vault-shell__main .gv-team-roster-grid,
   .gv-vault-shell__main .rh-commit-grid,
   .gv-vault-shell__main .rh-board-grid,

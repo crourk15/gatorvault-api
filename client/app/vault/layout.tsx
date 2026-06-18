@@ -35,6 +35,7 @@ import '@/lib/recruiting-hub-elite.css';
 import '@/lib/recruiting-hub-command-center.css';
 import '@/lib/futurecast-lab-command-center.css';
 import '@/lib/vault-mobile-vertical.css';
+import '@/lib/mobile-native-framework.css';
 
 export const viewport: Viewport = {
   width: 'device-width',

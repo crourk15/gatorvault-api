@@ -1,0 +1,262 @@
+/**
+ * Mobile-native app framework (≤1023px)
+ * Full-width vertical rhythm, typography, and card density.
+ */
+
+@media (max-width: 1023px) {
+  :root {
+    --mobile-gutter: 16px;
+    --mobile-section-gap: 24px;
+    --mobile-card-gap: 14px;
+    --mobile-title: clamp(1.25rem, 5vw, 1.375rem);
+    --mobile-section-title: clamp(1rem, 4vw, 1.125rem);
+    --mobile-card-title: 0.9375rem;
+    --mobile-meta: 0.8125rem;
+    --mobile-radius: 14px;
+    --mobile-tap: 44px;
+  }
+
+  .gv-vault-shell__main,
+  .gv-app-shell__main {
+    overflow-x: hidden;
+  }
+
+  /* Edge-to-edge content with safe padding */
+  .gv-vault-shell__main .gv-container,
+  .gv-vault-shell__main .rh-frame,
+  .gv-vault-shell__main .gv-home__frame,
+  .gv-app-shell__main .gv-container,
+  .gv-app-shell__main .rh-frame {
+    max-width: none !important;
+    width: 100% !important;
+    padding-left: var(--mobile-gutter) !important;
+    padding-right: var(--mobile-gutter) !important;
+    box-sizing: border-box;
+  }
+
+  .mobile-app,
+  .rh-page--elite,
+  .fc-futurecast-page--elite {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Typography scale */
+  .mobile-app .rh-cc-module__title,
+  .mobile-app .fc-lab-module__title,
+  .rh-page--elite .rh-section-title,
+  .fc-futurecast-page .fc-section-title {
+    font-size: var(--mobile-section-title) !important;
+  }
+
+  .mobile-app .rh-cc-module__sub,
+  .mobile-app .fc-lab-module__sub {
+    font-size: var(--mobile-meta) !important;
+  }
+
+  /* Native card shell */
+  .rh-cc-module,
+  .fc-lab-target-card,
+  .fc-lab-signal-card,
+  .fc-lab-battle-row,
+  .hp-intel-card,
+  .rh-fc-card,
+  .rh-nil-card,
+  .gv-home-card {
+    border-radius: var(--mobile-radius) !important;
+    box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08) !important;
+  }
+
+  .rh-cc-module {
+    width: 100%;
+    margin-inline: 0;
+  }
+
+  /* Tap targets */
+  .rh-cc-tabs__btn,
+  .rh-cc-link,
+  .fc-lab-target-card__cta,
+  .gv-home-action-tile,
+  .gv-home-quick-stats__item,
+  .gv-vault-bottom-nav__link,
+  .gv-mobile-bottom-nav__link {
+    min-height: var(--mobile-tap);
+  }
+
+  /* Vertical module rhythm */
+  .rh-cc-page,
+  .fc-lab-page {
+    gap: var(--mobile-section-gap) !important;
+  }
+
+  .rh-cc-main,
+  .fc-lab-main,
+  .rh-cc-col,
+  .fc-lab-col {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--mobile-section-gap) !important;
+  }
+
+  /* Hero stacks on phone/tablet */
+  .rh-cc-hero__grid,
+  .fc-lab-hero__grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--mobile-section-gap) !important;
+  }
+
+  .rh-cc-hero,
+  .fc-lab-hero {
+    min-height: 0 !important;
+  }
+
+  .rh-cc-hero__inner,
+  .fc-lab-hero__inner {
+    padding-top: 28px !important;
+    padding-bottom: 24px !important;
+  }
+
+  .rh-cc-hero__metrics,
+  .fc-lab-hero__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .rh-cc-hero__title,
+  .fc-lab-hero__title {
+    font-size: var(--mobile-title) !important;
+  }
+
+  /* Live feeds → vertical on narrow phones */
+  @media (max-width: 767px) {
+    .rh-cc-feed__track,
+    .fc-lab-feed__track {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      overflow-x: visible !important;
+      gap: var(--mobile-card-gap) !important;
+    }
+
+    .rh-cc-feed__item,
+    .fc-lab-feed__item {
+      white-space: normal !important;
+      border-radius: var(--mobile-radius) !important;
+    }
+  }
+
+  /* Home command card */
+  .gv-home__grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--mobile-section-gap) !important;
+  }
+
+  .gv-home-command-card__stats {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    gap: 12px !important;
+    padding-bottom: 8px !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+
+  .gv-home-command-card__stats .gv-home-card__stat-item,
+  .gv-home-command-card__stats .gv-home-quick-stats__item {
+    flex: 0 0 min(78vw, 280px) !important;
+    scroll-snap-align: start;
+    min-height: 88px;
+    padding: 14px 16px !important;
+  }
+
+  .gv-home-command-card__stats .gv-home-card__stat-value,
+  .gv-home-quick-stats__value {
+    font-size: 1.625rem !important;
+  }
+
+  .gv-home-command-card__stats .gv-home-card__stat-label {
+    font-size: var(--mobile-meta) !important;
+  }
+
+  .gv-home-command-card__actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  .gv-home-action-tile {
+    min-height: 72px !important;
+    padding: 12px !important;
+  }
+
+  .gv-home-action-tile__label {
+    font-size: var(--mobile-meta) !important;
+  }
+
+  .gv-home-command-card__title {
+    font-size: var(--mobile-title) !important;
+  }
+
+  .gv-home-command-card__subtitle {
+    font-size: var(--mobile-meta) !important;
+  }
+
+  /* Player profile feed */
+  .gv-vault-shell__main .fc-profile-page--feed,
+  .gv-app-shell__main .fc-profile-page--feed {
+    padding-left: var(--mobile-gutter);
+    padding-right: var(--mobile-gutter);
+  }
+
+  .fc-profile-page--feed .fc-profile-header,
+  .fc-profile-page--feed .fc-profile-scores,
+  .fc-profile-page--feed .fc-profile-tabs,
+  .fc-profile-page--feed .fc-profile-actions {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .fc-profile-page--feed .fc-profile-tabs {
+    overflow-x: visible !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .fc-profile-page--feed .fc-profile-tab {
+    min-height: var(--mobile-tap);
+    flex: 1 1 calc(50% - 4px);
+  }
+
+  /* FutureCast stacked page tables → hide horizontal scroll areas */
+  .fc-futurecast-page .fc-table-wrap,
+  .fc-futurecast-page .fc-commits-strip {
+    overflow-x: visible !important;
+  }
+
+  .fc-futurecast-page .fc-commits-strip {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .hp-intel-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: var(--mobile-card-gap) !important;
+  }
+
+  .rh-cc-board-cards,
+  .fc-lab-pos-table__head,
+  .fc-lab-pos-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .fc-lab-pos-row__summary {
+    grid-column: 1 / -1;
+  }
+
+  .fc-lab-target-cards {
+    max-height: none !important;
+  }
+
+  .fc-lab-signal-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

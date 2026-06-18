@@ -1114,9 +1114,21 @@
   line-height: 1.3;
 }
 
-/* ── Desktop only guard ── */
+/* ── Mobile & tablet: vertical FutureCast Lab ── */
 @media (max-width: 1023px) {
   .fc-lab-page {
-    display: none;
+    display: flex;
+  }
+
+  .fc-lab-bleed {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .fc-lab-meter__ring {
+    width: 120px;
+    height: 120px;
   }
 }
