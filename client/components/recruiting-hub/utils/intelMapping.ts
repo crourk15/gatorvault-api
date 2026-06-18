@@ -1,5 +1,5 @@
 import type { RecruitingIntelItem } from '@/api/recruiting';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import { HIGH_PRIORITY_YEAR, type HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import type {
   AnalystSignal,
   HighPriorityIntelItem,
@@ -57,11 +57,11 @@ function resolveDelta7d(player: HighPriorityPlayer | undefined): number {
   return 0;
 }
 
-function resolveClassYear(player: HighPriorityPlayer | undefined, fallback = 2027): number {
+function resolveClassYear(player: HighPriorityPlayer | undefined, fallback = HIGH_PRIORITY_YEAR): number {
   const raw = player?.classYear;
   if (typeof raw === 'number' && Number.isFinite(raw)) return raw;
-  const parsed = parseInt(String(fallback), 10);
-  return Number.isFinite(parsed) ? parsed : 2027;
+  if (typeof fallback === 'number' && Number.isFinite(fallback)) return fallback;
+  return HIGH_PRIORITY_YEAR;
 }
 
 function resolveIntelType(

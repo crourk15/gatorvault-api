@@ -26,6 +26,7 @@ export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
   id: string;
   slug: string;
   name: string;
+  classYear?: number | null;
   position: string;
   school: string | null;
   htWt: string | null;
