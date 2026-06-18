@@ -19,6 +19,8 @@ export interface RecruitingPlayer extends RecruitingBoardPlayer {
 export interface RecruitingIntelItem {
   id: string;
   playerId: string;
+  /** Canonical recruiting slug when resolved from intel row (preferred over numeric On3 id). */
+  playerSlug?: string | null;
   timestamp: string;
   text: string;
   ufProbability: number;
