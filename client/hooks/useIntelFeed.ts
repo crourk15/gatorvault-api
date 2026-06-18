@@ -3,23 +3,26 @@
 import { useEffect, useMemo, useState } from 'react';
 import { fetchHighPriorityIntel, type RecruitingIntelItem } from '@/api/recruiting';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
-import type { IntelCardProps } from '@/components/recruiting-hub/types/intel';
-import { mapPlayerToIntelCard, mapToIntelCard } from '@/components/recruiting-hub/utils/intelMapping';
+import type { HighPriorityIntelItem } from '@/components/recruiting-hub/HighPriorityIntel/types';
+import {
+  mapPlayerToHighPriorityIntelItem,
+  mapToHighPriorityIntelItem,
+} from '@/components/recruiting-hub/utils/intelMapping';
 
 const INTEL_POLL_MS = 60_000;
 
-function mergeIntel(players: HighPriorityPlayer[], apiIntel: RecruitingIntelItem[]): IntelCardProps[] {
+function mergeIntel(players: HighPriorityPlayer[], apiIntel: RecruitingIntelItem[]): HighPriorityIntelItem[] {
   const bySlug = new Map(players.map((p) => [p.slug, p]));
 
   if (apiIntel.length) {
-    return apiIntel.slice(0, 4).map((intel) => mapToIntelCard(intel, bySlug.get(intel.playerId)));
+    return apiIntel.slice(0, 4).map((intel) => mapToHighPriorityIntelItem(intel, bySlug.get(intel.playerId)));
   }
 
-  return players.slice(0, 4).map((p, i) => mapPlayerToIntelCard(p, i));
+  return players.slice(0, 4).map((p, i) => mapPlayerToHighPriorityIntelItem(p, i));
 }
 
 export function useIntelFeed(players: HighPriorityPlayer[]): {
-  items: IntelCardProps[];
+  items: HighPriorityIntelItem[];
   loading: boolean;
   lastUpdated: string | null;
 } {

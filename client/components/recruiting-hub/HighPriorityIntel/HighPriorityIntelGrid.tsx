@@ -1,13 +1,13 @@
 'use client';
 
 import React from 'react';
-import type { IntelCardProps } from '@/components/recruiting-hub/types/intel';
+import type { HighPriorityIntelItem } from '@/components/recruiting-hub/HighPriorityIntel/types';
 import { formatIntelUpdated } from '@/components/recruiting-hub/utils/formatDate';
-import { IntelCard } from './IntelCard';
+import { HighPriorityIntelCard } from './HighPriorityIntelCard';
 import './high-priority-intel-grid.css';
 
 type Props = {
-  items: IntelCardProps[];
+  items: HighPriorityIntelItem[];
   loading?: boolean;
   lastUpdated?: string | null;
 };
@@ -27,7 +27,9 @@ export function HighPriorityIntelGrid({ items, loading, lastUpdated }: Props): R
     <section className="hp-intel-section rh-container" data-testid="rh-high-priority-intel-grid">
       <header className="rh-section-head">
         <h2 className="hp-intel-section__title rh-section-title">High Priority Intel</h2>
-        <p className="hp-intel-section__sub rh-section-sub">Structured intel on UF&apos;s top targets — probability, heat, and next action.</p>
+        <p className="hp-intel-section__sub rh-section-sub">
+          Structured intel on UF&apos;s top targets — probability, heat, and next action.
+        </p>
         {lastUpdated ? (
           <p className="hp-intel-section__updated">Last updated: {formatIntelUpdated(lastUpdated)}</p>
         ) : null}
@@ -40,7 +42,7 @@ export function HighPriorityIntelGrid({ items, loading, lastUpdated }: Props): R
       ) : (
         <div className="hp-intel-grid">
           {items.slice(0, 4).map((item) => (
-            <IntelCard key={`${item.playerId}-${item.timestamp}`} {...item} />
+            <HighPriorityIntelCard key={`${item.slug}-${item.id}`} item={item} />
           ))}
         </div>
       )}

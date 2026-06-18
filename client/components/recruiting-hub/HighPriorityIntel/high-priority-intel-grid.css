@@ -34,7 +34,7 @@
 .hp-intel-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-4);
+  gap: 12px;
 }
 
 @media (min-width: 768px) {
@@ -44,9 +44,10 @@
 }
 
 .hp-intel-grid__skeleton {
-  min-height: 260px;
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--th-blue) 6%, var(--th-card-bg));
+  min-height: 320px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #101520, #0b1020);
+  border: 1px solid #1f2a3a;
   animation: hp-intel-pulse 1.2s ease-in-out infinite;
 }
 

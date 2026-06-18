@@ -1,0 +1,313 @@
+/**
+ * High Priority Intel — elite card (Recruiting Hub)
+ */
+
+.hp-intel-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: #0b1020;
+  border: 1px solid #1f2a3a;
+  color: #ffffff;
+  min-height: 0;
+}
+
+.hp-intel-card--battle {
+  background: linear-gradient(135deg, #20160b, #0b1020);
+  border-color: #f1c40f33;
+}
+
+.hp-intel-card--visit {
+  background: linear-gradient(135deg, #0b1620, #0b1020);
+  border-color: #3498db33;
+}
+
+.hp-intel-card--rpm {
+  background: linear-gradient(135deg, #101520, #0b1020);
+  border-color: #2ecc7133;
+}
+
+.hp-intel-card--nil {
+  background: linear-gradient(135deg, #201510, #0b1020);
+  border-color: #e67e2233;
+}
+
+.hp-intel-card--heat {
+  background: linear-gradient(135deg, #201010, #0b1020);
+  border-color: #e74c3c33;
+}
+
+.hp-intel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.hp-intel-title {
+  max-width: 70%;
+  min-width: 0;
+}
+
+.hp-intel-name {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.hp-intel-meta {
+  display: block;
+  font-size: 12px;
+  color: #9fb3d1;
+  margin-top: 2px;
+}
+
+.hp-intel-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.hp-intel-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.hp-intel-label-text {
+  font-size: 11px;
+  font-weight: 500;
+  color: #f1c40f;
+  white-space: nowrap;
+}
+
+.hp-intel-card--visit .hp-intel-label-text {
+  color: #3498db;
+}
+
+.hp-intel-card--rpm .hp-intel-label-text {
+  color: #2ecc71;
+}
+
+.hp-intel-card--nil .hp-intel-label-text {
+  color: #e67e22;
+}
+
+.hp-intel-card--heat .hp-intel-label-text {
+  color: #e74c3c;
+}
+
+.hp-intel-prob {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.hp-intel-prob-main {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.hp-intel-prob-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.hp-intel-prob-caption {
+  font-size: 11px;
+  color: #9fb3d1;
+}
+
+.hp-intel-prob-bar {
+  margin-top: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #1f2a3a;
+  overflow: hidden;
+}
+
+.hp-intel-prob-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2ecc71, #3498db);
+  border-radius: inherit;
+  transition: width 0.2s ease-out;
+}
+
+.hp-intel-prob-delta {
+  margin-top: 6px;
+}
+
+.hp-intel-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  border: 1px solid;
+}
+
+.hp-intel-badge--up {
+  color: #2ecc71;
+  border-color: #2ecc71;
+}
+
+.hp-intel-badge--down {
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+.hp-intel-badge--flat {
+  color: #3498db;
+  border-color: #3498db;
+}
+
+.hp-intel-summary {
+  margin-top: 6px;
+}
+
+.hp-intel-summary-text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #d0e0ff;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.hp-intel-analyst {
+  margin-top: 10px;
+}
+
+.hp-intel-section-title {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.hp-intel-analyst-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hp-intel-analyst-item {
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #111827;
+  margin-bottom: 4px;
+}
+
+.hp-intel-analyst-item:last-child {
+  margin-bottom: 0;
+}
+
+.hp-intel-analyst-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.hp-intel-analyst-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #ffffff;
+  min-width: 0;
+}
+
+.hp-intel-analyst-outlet {
+  font-size: 11px;
+  color: #9fb3d1;
+}
+
+.hp-intel-analyst-time {
+  font-size: 11px;
+  color: #9fb3d1;
+  flex-shrink: 0;
+}
+
+.hp-intel-analyst-metrics {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.hp-intel-analyst-metric {
+  font-size: 11px;
+}
+
+.hp-intel-analyst-label {
+  display: block;
+  color: #9fb3d1;
+}
+
+.hp-intel-analyst-value {
+  display: block;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.hp-intel-footer {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (min-width: 480px) {
+  .hp-intel-footer {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.hp-intel-updated {
+  font-size: 11px;
+  color: #9fb3d1;
+}
+
+.hp-intel-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.hp-intel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #ffffff;
+  text-decoration: none;
+  min-height: 32px;
+  cursor: pointer;
+  transition: filter 0.15s ease, border-color 0.15s ease;
+}
+
+.hp-intel-btn:hover {
+  filter: brightness(1.08);
+}
+
+.hp-intel-btn--primary {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.hp-intel-btn--ghost {
+  border-color: #4b5563;
+  color: #d1d5db;
+}
