@@ -20,10 +20,10 @@ export type FutureCastPlayer = {
   posRank?: number | null;
   stateRank?: number | null;
   /** UF % (Likelihood) — see futurecast-elite-metrics.ts. Board field; high-priority API uses ufProbability. */
-  ufConfidence: number;
+  ufConfidence: number | null;
   /** Fit % (Scheme Match) — scheme, roster, and athletic fit. */
-  fitScore: number;
-  trendDelta7d: number;
+  fitScore: number | null;
+  trendDelta7d: number | null;
   volatility7d: number;
   /** Priority tier tag; numeric Priority Score (importance) is on high-priority API. */
   priority: FutureCastPriority;

@@ -7,7 +7,7 @@ export type UnderclassmenPlayer = FutureCastPlayer & {
   classYear: number;
   tier: UnderclassmenTier;
   discoveryScore?: number | null;
-  earlyMovement?: number;
+  earlyMovement?: number | null;
 };
 
 export type UnderclassmenClassBucket = {

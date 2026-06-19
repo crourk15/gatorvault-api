@@ -7,6 +7,24 @@ const insiderTone = require('./insider-tone');
 const OVERLAP_MAX = parseFloat(process.env.X_AUTOPOST_QUOTE_OVERLAP_MAX || '0.2', 10);
 const MIN_REWRITE_WORDS = parseInt(process.env.X_AUTOPOST_MIN_REWRITE_WORDS || '40', 10);
 
+const UNKNOWN_PATTERNS = [
+  /\bunknown player\b/i,
+  /\bunknown recruit\b/i,
+  /\bunknown prospect\b/i,
+  /\bunknown field\b/i,
+  /\bTBD player\b/i,
+  /\b\[unknown\]/i,
+  /\bnull\b/i
+];
+
+const BAD_PROBABILITY_PATTERNS = [
+  /\b0\.?\d{1,2}%\b/,
+  /\b0%\s+uf\b/i,
+  /\bUF at 0%\b/i
+];
+
+const INCOMPLETE_SENTENCE_RE = /(?:^|[.!?]\s+)([^.!?]{12,})$/;
+
 const CONTEXT_KEYWORDS = ['visit', 'staff', 'coach', 'timeline', 'group', 'traction', 'momentum', 'movement', 'confidence', 'prediction', 'futurecast'];
 
 function quoteRewriter() {
@@ -35,6 +53,24 @@ function similarityScore(source, rewrite) {
 
 function isInsiderTone(text) {
   return insiderTone.validateInsiderTone(text, { minWords: 0 }).errors.indexOf('forbidden_tone') === -1;
+}
+
+function hasIncompleteSentence(text) {
+  const t = String(text || '').trim();
+  if (!t) return false;
+  if (/\.{3}$/.test(t)) return true;
+  if (/[,;:—-]$/.test(t)) return true;
+  const tail = t.split(/[.!?]/).pop()?.trim() || '';
+  if (tail.length >= 18 && !/[.!?]$/.test(t)) return true;
+  return INCOMPLETE_SENTENCE_RE.test(t);
+}
+
+function hasUnknownPlaceholder(text) {
+  return UNKNOWN_PATTERNS.some((re) => re.test(String(text || '')));
+}
+
+function hasBadProbability(text) {
+  return BAD_PROBABILITY_PATTERNS.some((re) => re.test(String(text || '')));
 }
 
 function hasContext(text) {
@@ -94,6 +130,9 @@ function runQualityChecks({ text, beatText, blocks = null, requireContext = true
   if (insiderTone.isGenericFluff(body)) errors.push('generic_fluff');
   if (/#[A-Za-z0-9_]+/.test(body)) errors.push('has_hashtag');
   if (/[\u{1F300}-\u{1FAFF}]/u.test(body)) errors.push('has_emoji');
+  if (hasUnknownPlaceholder(body)) errors.push('unknown_placeholder');
+  if (hasBadProbability(body)) errors.push('bad_probability_format');
+  if (hasIncompleteSentence(body)) errors.push('incomplete_sentence');
 
   return {
     ok: errors.length === 0,
@@ -111,6 +150,9 @@ module.exports = {
   similarityScore,
   isInsiderTone,
   hasContext,
+  hasIncompleteSentence,
+  hasUnknownPlaceholder,
+  hasBadProbability,
   validateRewrite,
   runQualityChecks
 };

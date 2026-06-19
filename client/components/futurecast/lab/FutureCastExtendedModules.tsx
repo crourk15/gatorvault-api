@@ -22,18 +22,32 @@ type Props = {
   underclassmen: UnderclassmenPlayer[];
 };
 
+function formatMetric(value: number | null | undefined, suffix = '%'): string {
+  if (value == null || Number.isNaN(value)) return 'TBD';
+  return `${Math.round(value)}${suffix}`;
+}
+
 function formatCompetitorLabel(p: UnderclassmenPlayer): string {
   const top = p.competingSchools?.[0];
   if (!top?.name) return '';
   const short = top.name.replace(/\bUniversity\b/gi, '').trim().split(' ')[0]?.slice(0, 8) || top.name.slice(0, 8);
-  return ` · vs ${short} ${Math.round(top.pct)}%`;
+  const pct = top.pct != null && Number.isFinite(top.pct) ? Math.round(top.pct) : null;
+  return pct != null ? ` · vs ${short} ${pct}%` : ` · vs ${short} TBD`;
 }
 
 function formatEarlyMovement(p: UnderclassmenPlayer): string {
-  const move = p.earlyMovement ?? p.trendDelta7d ?? 0;
-  if (Math.abs(move) < 0.005) return '';
+  const move = p.earlyMovement ?? p.trendDelta7d;
+  if (move == null || Number.isNaN(move) || Math.abs(move) < 0.005) return '';
   const pct = move <= 1 && move >= -1 ? Math.round(move * 100) : Math.round(move);
   return ` · Δ${pct > 0 ? '+' : ''}${pct}%`;
+}
+
+function formatUnderclassmenMeta(p: UnderclassmenPlayer): string {
+  const tierLabel = p.tier === 'watchlist' ? 'Watch' : 'Target';
+  const uf = formatMetric(p.ufConfidence);
+  const fit = formatMetric(p.fitScore);
+  const stars = Number(p.stars) > 0 ? `${Number(p.stars)}★` : '—★';
+  return `${tierLabel} · UF ${uf} · Fit ${fit}${formatEarlyMovement(p)}${formatCompetitorLabel(p)} · ${stars}`;
 }
 
 function FitBar({ label, value }: { label: string; value: number }): React.ReactElement {
@@ -134,7 +148,7 @@ export function FutureCastExtendedModules({
     () =>
       underclassmen
         .filter((p) => (Number(p.classYear) || 0) >= 2028)
-        .sort((a, b) => b.ufConfidence - a.ufConfidence)
+        .sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1))
         .slice(0, 12),
     [underclassmen]
   );
@@ -195,8 +209,8 @@ export function FutureCastExtendedModules({
           empty="No underclassmen watchlist loaded."
           items={youngerProspects.map((p) => ({
             key: p.slug,
-            primary: `${p.name} · ${p.position || '—'} · '${String(p.classYear || '2028').slice(2)}`,
-            meta: `${p.tier === 'watchlist' ? 'Watch' : 'Target'} · UF ${Math.round(p.ufConfidence)}% · Fit ${Math.round(p.fitScore)}${formatEarlyMovement(p)}${formatCompetitorLabel(p)} · ${Number(p.stars) || '—'}★`,
+            primary: `${p.name} · ${p.position && p.position !== 'TBD' ? p.position : 'TBD'} · '${String(p.classYear || '').slice(2) || 'TBD'}`,
+            meta: formatUnderclassmenMeta(p),
             href: playerProfileRoute(p.slug, 'futurecast'),
           }))}
         />

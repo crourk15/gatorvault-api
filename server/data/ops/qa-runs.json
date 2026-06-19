@@ -2,17 +2,5247 @@
   "version": 1,
   "uptime": {
     "since": null,
-    "checks": 45,
-    "successes": 27
+    "checks": 48,
+    "successes": 28
   },
   "lastRun": {
-    "id": "qa_1781608910343",
-    "at": "2026-06-16T11:22:16.540Z",
+    "id": "qa_1781633888188",
+    "at": "2026-06-16T18:18:36.935Z",
     "pass": true,
-    "durationMs": 26197,
+    "durationMs": 28747,
     "failed": 0
   },
   "runs": [
+    {
+      "id": "qa_1781633888188",
+      "startedAt": "2026-06-16T18:18:08.187Z",
+      "finishedAt": "2026-06-16T18:18:36.935Z",
+      "durationMs": 28747,
+      "pass": true,
+      "crawlerBuild": {
+        "commit": "d90f65164f2bce426c90cf4592f2df856873d000",
+        "short": "d90f651",
+        "branch": null,
+        "service": "gatorvault-api",
+        "runtime": "local",
+        "assetSource": "production-html",
+        "builtAt": "2026-06-16T17:41:09.034Z"
+      },
+      "modules": {
+        "api": {
+          "module": "api",
+          "pass": true,
+          "total": 19,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "api:ping",
+              "module": "api",
+              "label": "/api/ping",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:recruiting-ingest-status",
+              "module": "api",
+              "label": "/api/recruiting/ingest/status",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-pipeline-health",
+              "module": "api",
+              "label": "/api/live/pipeline/health",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-dashboard",
+              "module": "api",
+              "label": "/api/live/dashboard",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-feed",
+              "module": "api",
+              "label": "/api/live/feed",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:film-room-catalog",
+              "module": "api",
+              "label": "/api/film-room/catalog",
+              "pass": true,
+              "details": {
+                "count": 19,
+                "lessons": 10
+              }
+            },
+            {
+              "id": "api:articles-published",
+              "module": "api",
+              "label": "/api/articles/published",
+              "pass": true,
+              "details": {
+                "count": 0
+              }
+            },
+            {
+              "id": "api:content-published",
+              "module": "api",
+              "label": "/api/content/published",
+              "pass": true,
+              "details": {
+                "count": 6
+              }
+            },
+            {
+              "id": "api:roster-players",
+              "module": "api",
+              "label": "/api/roster/players",
+              "pass": true,
+              "details": {
+                "count": 111
+              }
+            },
+            {
+              "id": "api:recruiting-board",
+              "module": "api",
+              "label": "/api/recruiting/board",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:recruiting-portal",
+              "module": "api",
+              "label": "/api/recruiting/portal",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:pricing",
+              "module": "api",
+              "label": "/api/pricing",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:personas",
+              "module": "api",
+              "label": "/api/personas",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:content-ingest-status",
+              "module": "api",
+              "label": "/api/content/ingest/status",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:war-room-breakdowns",
+              "module": "api",
+              "label": "/api/war-room/breakdowns",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:nil-dashboard",
+              "module": "api",
+              "label": "/api/nil/dashboard",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:film-room-lesson",
+              "module": "api",
+              "label": "Film Room lesson detail",
+              "pass": true,
+              "details": {
+                "slug": "frl00008-0000-4000-8000-000000000008",
+                "sources": 1
+              }
+            },
+            {
+              "id": "api:film-room-legacy-video",
+              "module": "api",
+              "label": "Legacy Film Room video",
+              "pass": true,
+              "details": {
+                "title": "Film Guy Network — Florida Spring Game Film Study",
+                "youtubeId": "yy4X6d2hAj0"
+              }
+            },
+            {
+              "id": "api:schedule",
+              "module": "api",
+              "label": "Schedule (live dashboard games)",
+              "pass": true,
+              "details": {
+                "games": 0
+              }
+            }
+          ]
+        },
+        "content": {
+          "module": "content",
+          "pass": true,
+          "total": 4,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "content:articles-spell",
+              "module": "content",
+              "label": "Articles spell/grammar",
+              "pass": true,
+              "details": {
+                "scanned": 0
+              }
+            },
+            {
+              "id": "content:content-accuracy-spell",
+              "module": "content",
+              "label": "Content accuracy spell/grammar",
+              "pass": true,
+              "details": {
+                "scanned": 6
+              }
+            },
+            {
+              "id": "content:film-room-spell",
+              "module": "content",
+              "label": "Film Room lesson text",
+              "pass": true,
+              "details": {
+                "scanned": 10
+              }
+            },
+            {
+              "id": "content:team-module",
+              "module": "content",
+              "label": "Team page text markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "integrity": {
+          "module": "integrity",
+          "checks": [
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": true,
+              "details": {
+                "count": 50
+              }
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": true,
+              "details": {
+                "players": 28
+              }
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": true,
+              "details": {
+                "checked": 0
+              }
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": true,
+              "details": {
+                "probed": 0
+              }
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": true,
+              "details": {
+                "sources": 11
+              }
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": true,
+              "details": {
+                "total": 111,
+                "missingHeadshots": 0,
+                "pctMissing": 0
+              }
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": true,
+              "details": {
+                "stale": 0,
+                "beatError": "X API validation failed (HTTP 429): {\"title\":\"Too Many Requests\",\"detail\":\"Too Many Requests\",\"type\":\"about:blank\",\"status\":429}. Nitter fallback also returned no posts."
+              }
+            },
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": true,
+              "details": {
+                "count": 50
+              }
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": true,
+              "details": {
+                "players": 28
+              }
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": true,
+              "details": {
+                "checked": 0
+              }
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": true,
+              "details": {
+                "probed": 0
+              }
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": true,
+              "details": {
+                "sources": 11
+              }
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": true,
+              "details": {
+                "total": 111,
+                "missingHeadshots": 0,
+                "pctMissing": 0
+              }
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": true,
+              "details": {
+                "stale": 0,
+                "beatError": "X API validation failed (HTTP 429): {\"title\":\"Too Many Requests\",\"detail\":\"Too Many Requests\",\"type\":\"about:blank\",\"status\":429}. Nitter fallback also returned no posts."
+              }
+            },
+            {
+              "id": "integrity:react-exports",
+              "module": "integrity",
+              "label": "Vault route map static exports",
+              "pass": true,
+              "details": {
+                "exports": 30
+              }
+            },
+            {
+              "id": "integrity:react-markers",
+              "module": "integrity",
+              "label": "React testid markers in static HTML",
+              "pass": true,
+              "details": {
+                "routes": 9
+              }
+            },
+            {
+              "id": "integrity:react-routes",
+              "module": "integrity",
+              "label": "Vault pillar routes registered",
+              "pass": true,
+              "details": {
+                "pillars": 8,
+                "subRoutes": 22
+              }
+            },
+            {
+              "id": "integrity:film-room-catalog",
+              "module": "integrity",
+              "label": "Film Room React structure",
+              "pass": true,
+              "details": {
+                "categories": 0
+              }
+            },
+            {
+              "id": "integrity:roster-data",
+              "module": "integrity",
+              "label": "Roster API data file",
+              "pass": true,
+              "details": {
+                "players": 111
+              }
+            },
+            {
+              "id": "integrity:depth-chart-data",
+              "module": "integrity",
+              "label": "Depth chart React data module",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "integrity:autoposter-dedup",
+              "module": "integrity",
+              "label": "Live Feed dedup integrity",
+              "pass": true,
+              "details": {
+                "feedItems": 83
+              }
+            },
+            {
+              "id": "integrity:production-vault-shell",
+              "module": "integrity",
+              "label": "Production vault uses React shell",
+              "pass": true,
+              "details": {
+                "reactShell": true
+              }
+            }
+          ],
+          "pass": true,
+          "finishedAt": "2026-06-16T18:18:33.654Z"
+        },
+        "pages": {
+          "module": "pages",
+          "pass": true,
+          "total": 25,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "pages:home:desktop",
+              "module": "pages",
+              "label": "/ React landing (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:home:mobile",
+              "module": "pages",
+              "label": "/ React landing (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:admin-hub:desktop",
+              "module": "pages",
+              "label": "/admin React landing (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/admin",
+                "viewport": "desktop",
+                "markers": 2
+              }
+            },
+            {
+              "id": "pages:admin-hub:mobile",
+              "module": "pages",
+              "label": "/admin React landing (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/admin",
+                "viewport": "mobile",
+                "markers": 2
+              }
+            },
+            {
+              "id": "pages:vault-dashboard:desktop",
+              "module": "pages",
+              "label": "/vault (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-dashboard:mobile",
+              "module": "pages",
+              "label": "/vault (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-recruiting:desktop",
+              "module": "pages",
+              "label": "/vault/recruiting (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/recruiting",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-recruiting:mobile",
+              "module": "pages",
+              "label": "/vault/recruiting (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/recruiting",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-futurecast:desktop",
+              "module": "pages",
+              "label": "/vault/futurecast (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/futurecast",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-futurecast:mobile",
+              "module": "pages",
+              "label": "/vault/futurecast (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/futurecast",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-team:desktop",
+              "module": "pages",
+              "label": "/vault/team (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/team",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-team:mobile",
+              "module": "pages",
+              "label": "/vault/team (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/team",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-depthChart:desktop",
+              "module": "pages",
+              "label": "/vault/depth-chart (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/depth-chart",
+                "viewport": "desktop",
+                "markers": 0
+              }
+            },
+            {
+              "id": "pages:vault-depthChart:mobile",
+              "module": "pages",
+              "label": "/vault/depth-chart (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/depth-chart",
+                "viewport": "mobile",
+                "markers": 0
+              }
+            },
+            {
+              "id": "pages:vault-live-feed:desktop",
+              "module": "pages",
+              "label": "/vault/live (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/live",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-live-feed:mobile",
+              "module": "pages",
+              "label": "/vault/live (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/live",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-film-room:desktop",
+              "module": "pages",
+              "label": "/vault/film-room (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/film-room",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-film-room:mobile",
+              "module": "pages",
+              "label": "/vault/film-room (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/film-room",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-schedule:desktop",
+              "module": "pages",
+              "label": "/vault/schedule (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/schedule",
+                "viewport": "desktop",
+                "markers": 4
+              }
+            },
+            {
+              "id": "pages:vault-schedule:mobile",
+              "module": "pages",
+              "label": "/vault/schedule (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/schedule",
+                "viewport": "mobile",
+                "markers": 4
+              }
+            },
+            {
+              "id": "pages:react-team",
+              "module": "pages",
+              "label": "React Team / depth chart",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-film-room",
+              "module": "pages",
+              "label": "React Film Room production markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-recruiting-hub",
+              "module": "pages",
+              "label": "React Recruiting Hub",
+              "pass": true,
+              "details": {
+                "tabs": 5
+              }
+            },
+            {
+              "id": "pages:react-futurecast",
+              "module": "pages",
+              "label": "React FutureCast",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-live-feed",
+              "module": "pages",
+              "label": "React Live Feed + ticker",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "ux": {
+          "module": "ux",
+          "pass": true,
+          "total": 6,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "ux:modal-zindex",
+              "module": "ux",
+              "label": "Modal / overlay z-index in React CSS",
+              "pass": true,
+              "details": {
+                "vaultShell": true,
+                "stickyHeader": true
+              }
+            },
+            {
+              "id": "ux:tap-targets",
+              "module": "ux",
+              "label": "Mobile tap target CSS",
+              "pass": true,
+              "details": {
+                "patternsChecked": 4
+              }
+            },
+            {
+              "id": "ux:scroll-containers",
+              "module": "ux",
+              "label": "Scroll containers (hub tabs + live feed)",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            },
+            {
+              "id": "ux:live-feed-layout",
+              "module": "ux",
+              "label": "Live Feed ESPN layout markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "ux:mobile-safari",
+              "module": "ux",
+              "label": "Mobile Safari safe-area / viewport",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            },
+            {
+              "id": "ux:bottom-nav",
+              "module": "ux",
+              "label": "React mobile bottom nav",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "browser": {
+          "module": "browser",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "browser:disabled",
+              "module": "browser",
+              "label": "Browser crawl",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "QA_BROWSER_ENABLED not set"
+              }
+            }
+          ]
+        },
+        "visual-integrity": {
+          "module": "visual-integrity",
+          "pass": true,
+          "total": 13,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "visual-integrity:vault-dashboard:markers",
+              "module": "visual-integrity",
+              "label": "Vault Dashboard React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-dashboard:markers:production",
+              "module": "visual-integrity",
+              "label": "Vault Dashboard React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-team:markers",
+              "module": "visual-integrity",
+              "label": "Team React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/team",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-team:markers:production",
+              "module": "visual-integrity",
+              "label": "Team React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/team",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-film-room:markers",
+              "module": "visual-integrity",
+              "label": "Film Room React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/film-room",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-film-room:markers:production",
+              "module": "visual-integrity",
+              "label": "Film Room React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/film-room",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-recruiting-hub:markers",
+              "module": "visual-integrity",
+              "label": "Recruiting Hub React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/recruiting",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-recruiting-hub:markers:production",
+              "module": "visual-integrity",
+              "label": "Recruiting Hub React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/recruiting",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-live-feed:markers",
+              "module": "visual-integrity",
+              "label": "Live Feed React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/live-feed",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-live-feed:markers:production",
+              "module": "visual-integrity",
+              "label": "Live Feed React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/live-feed",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-shell-theme",
+              "module": "visual-integrity",
+              "label": "VaultShell theme tokens",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "visual-integrity:live-feed-layout",
+              "module": "visual-integrity",
+              "label": "Live Feed visual layout",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "visual-integrity:landing-page",
+              "module": "visual-integrity",
+              "label": "React landing page",
+              "pass": true,
+              "details": {
+                "reactLanding": true
+              }
+            }
+          ]
+        },
+        "mobile-behavior": {
+          "module": "mobile-behavior",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "mobile-behavior:no-playwright",
+              "module": "mobile-behavior",
+              "label": "Mobile behavior QA",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "playwright not installed — run: npm install playwright && npx playwright install chromium"
+              }
+            }
+          ]
+        },
+        "crawler": {
+          "module": "crawler",
+          "pass": true,
+          "total": 18,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "crawler:overflow",
+              "module": "crawler",
+              "label": "Overflow Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "A1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:layering",
+              "module": "crawler",
+              "label": "Layering / Z-Index",
+              "pass": true,
+              "details": {
+                "ruleId": "A2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:background",
+              "module": "crawler",
+              "label": "Wrong Background",
+              "pass": true,
+              "details": {
+                "ruleId": "A3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:viewport-divergence",
+              "module": "crawler",
+              "label": "Mobile/Desktop Divergence",
+              "pass": true,
+              "details": {
+                "ruleId": "A4",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:missing-content",
+              "module": "crawler",
+              "label": "Missing Content",
+              "pass": true,
+              "details": {
+                "ruleId": "B1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:wrong-ordering",
+              "module": "crawler",
+              "label": "Wrong Ordering",
+              "pass": true,
+              "details": {
+                "ruleId": "B2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:stale-content",
+              "module": "crawler",
+              "label": "Stale Content",
+              "pass": true,
+              "details": {
+                "ruleId": "B3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-dup",
+              "module": "crawler",
+              "label": "Duplicate Posts",
+              "pass": true,
+              "details": {
+                "ruleId": "C1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-similarity",
+              "module": "crawler",
+              "label": "Similarity Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "C2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:uf-only",
+              "module": "crawler",
+              "label": "UF-Only Filter",
+              "pass": true,
+              "details": {
+                "ruleId": "C3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-stale",
+              "module": "crawler",
+              "label": "Stale Autoposter",
+              "pass": true,
+              "details": {
+                "ruleId": "C4",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:recruiting-mismatch",
+              "module": "crawler",
+              "label": "Recruiting Board Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "D1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:war-room",
+              "module": "crawler",
+              "label": "War Room Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "D2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:roster-mismatch",
+              "module": "crawler",
+              "label": "Roster Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "E1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:depth-chart",
+              "module": "crawler",
+              "label": "Depth Chart Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "E2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:api-latency",
+              "module": "crawler",
+              "label": "API Latency",
+              "pass": true,
+              "details": {
+                "ruleId": "F1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:cache-stale",
+              "module": "crawler",
+              "label": "Cache Stale",
+              "pass": true,
+              "details": {
+                "ruleId": "F2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:404",
+              "module": "crawler",
+              "label": "404 Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "F3",
+                "skipped": false
+              }
+            }
+          ]
+        }
+      },
+      "errors": [],
+      "issues": [],
+      "phases": {
+        "fetch": {
+          "snapshotCount": 18,
+          "playwright": false
+        },
+        "analyze": {
+          "failedChecks": 0,
+          "crawlerIssues": 0
+        },
+        "emit": {
+          "total": 0,
+          "byCategory": {},
+          "bySeverity": {},
+          "emittedAt": "2026-06-16T18:18:36.935Z"
+        },
+        "timingsMs": {
+          "fetch": 9186,
+          "analyze": 3279,
+          "emit": 1,
+          "modules": 16279
+        }
+      },
+      "screenshot": null,
+      "summary": {
+        "total": 111,
+        "passed": 111,
+        "failed": 0,
+        "emitted": 0
+      }
+    },
+    {
+      "id": "qa_1781632985387",
+      "startedAt": "2026-06-16T18:03:05.160Z",
+      "finishedAt": "2026-06-16T18:03:33.257Z",
+      "durationMs": 27870,
+      "pass": false,
+      "crawlerBuild": {
+        "commit": "d90f65164f2bce426c90cf4592f2df856873d000",
+        "short": "d90f651",
+        "branch": null,
+        "service": "gatorvault-api",
+        "runtime": "local",
+        "assetSource": "production-html",
+        "builtAt": "2026-06-16T17:41:09.034Z"
+      },
+      "modules": {
+        "api": {
+          "module": "api",
+          "pass": false,
+          "total": 19,
+          "failed": 1,
+          "checks": [
+            {
+              "id": "api:ping",
+              "module": "api",
+              "label": "/api/ping",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:recruiting-ingest-status",
+              "module": "api",
+              "label": "/api/recruiting/ingest/status",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-pipeline-health",
+              "module": "api",
+              "label": "/api/live/pipeline/health",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-dashboard",
+              "module": "api",
+              "label": "/api/live/dashboard",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:live-feed",
+              "module": "api",
+              "label": "/api/live/feed",
+              "pass": false,
+              "error": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+              "details": {
+                "status": 500,
+                "body": {
+                  "ok": false,
+                  "error": "publicAlerts.filterPublicLiveFeed is not a function"
+                }
+              },
+              "url": "https://gatorvault-api.onrender.com/api/live/feed",
+              "repro": null
+            },
+            {
+              "id": "api:film-room-catalog",
+              "module": "api",
+              "label": "/api/film-room/catalog",
+              "pass": true,
+              "details": {
+                "count": 19,
+                "lessons": 10
+              }
+            },
+            {
+              "id": "api:articles-published",
+              "module": "api",
+              "label": "/api/articles/published",
+              "pass": true,
+              "details": {
+                "count": 0
+              }
+            },
+            {
+              "id": "api:content-published",
+              "module": "api",
+              "label": "/api/content/published",
+              "pass": true,
+              "details": {
+                "count": 6
+              }
+            },
+            {
+              "id": "api:roster-players",
+              "module": "api",
+              "label": "/api/roster/players",
+              "pass": true,
+              "details": {
+                "count": 111
+              }
+            },
+            {
+              "id": "api:recruiting-board",
+              "module": "api",
+              "label": "/api/recruiting/board",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:recruiting-portal",
+              "module": "api",
+              "label": "/api/recruiting/portal",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:pricing",
+              "module": "api",
+              "label": "/api/pricing",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:personas",
+              "module": "api",
+              "label": "/api/personas",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:content-ingest-status",
+              "module": "api",
+              "label": "/api/content/ingest/status",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:war-room-breakdowns",
+              "module": "api",
+              "label": "/api/war-room/breakdowns",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:nil-dashboard",
+              "module": "api",
+              "label": "/api/nil/dashboard",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "api:film-room-lesson",
+              "module": "api",
+              "label": "Film Room lesson detail",
+              "pass": true,
+              "details": {
+                "slug": "frl00008-0000-4000-8000-000000000008",
+                "sources": 1
+              }
+            },
+            {
+              "id": "api:film-room-legacy-video",
+              "module": "api",
+              "label": "Legacy Film Room video",
+              "pass": true,
+              "details": {
+                "title": "Film Guy Network — Florida Spring Game Film Study",
+                "youtubeId": "yy4X6d2hAj0"
+              }
+            },
+            {
+              "id": "api:schedule",
+              "module": "api",
+              "label": "Schedule (live dashboard games)",
+              "pass": true,
+              "details": {
+                "games": 0
+              }
+            }
+          ]
+        },
+        "content": {
+          "module": "content",
+          "pass": true,
+          "total": 4,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "content:articles-spell",
+              "module": "content",
+              "label": "Articles spell/grammar",
+              "pass": true,
+              "details": {
+                "scanned": 0
+              }
+            },
+            {
+              "id": "content:content-accuracy-spell",
+              "module": "content",
+              "label": "Content accuracy spell/grammar",
+              "pass": true,
+              "details": {
+                "scanned": 6
+              }
+            },
+            {
+              "id": "content:film-room-spell",
+              "module": "content",
+              "label": "Film Room lesson text",
+              "pass": true,
+              "details": {
+                "scanned": 10
+              }
+            },
+            {
+              "id": "content:team-module",
+              "module": "content",
+              "label": "Team page text markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "integrity": {
+          "module": "integrity",
+          "checks": [
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": false,
+              "error": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+              "details": {
+                "status": 500,
+                "body": {
+                  "ok": false,
+                  "error": "publicAlerts.filterPublicLiveFeed is not a function"
+                }
+              },
+              "url": "https://gatorvault-api.onrender.com/api/live/feed",
+              "repro": null
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": true,
+              "details": {
+                "players": 28
+              }
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": true,
+              "details": {
+                "checked": 0
+              }
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": true,
+              "details": {
+                "probed": 0
+              }
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": true,
+              "details": {
+                "sources": 11
+              }
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": true,
+              "details": {
+                "total": 111,
+                "missingHeadshots": 0,
+                "pctMissing": 0
+              }
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": true,
+              "details": {
+                "stale": 0,
+                "beatError": "X API validation failed (HTTP 429): {\"title\":\"Too Many Requests\",\"detail\":\"Too Many Requests\",\"type\":\"about:blank\",\"status\":429}. Nitter fallback also returned no posts."
+              }
+            },
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": false,
+              "error": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+              "details": {
+                "status": 500,
+                "body": {
+                  "ok": false,
+                  "error": "publicAlerts.filterPublicLiveFeed is not a function"
+                }
+              },
+              "url": "https://gatorvault-api.onrender.com/api/live/feed",
+              "repro": null
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": true,
+              "details": {
+                "players": 28
+              }
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": true,
+              "details": {
+                "checked": 0
+              }
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": true,
+              "details": {
+                "probed": 0
+              }
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": true,
+              "details": {
+                "sources": 11
+              }
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": true,
+              "details": {
+                "total": 111,
+                "missingHeadshots": 0,
+                "pctMissing": 0
+              }
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": true,
+              "details": {
+                "stale": 0,
+                "beatError": "X API validation failed (HTTP 429): {\"title\":\"Too Many Requests\",\"detail\":\"Too Many Requests\",\"type\":\"about:blank\",\"status\":429}. Nitter fallback also returned no posts."
+              }
+            },
+            {
+              "id": "integrity:react-exports",
+              "module": "integrity",
+              "label": "Vault route map static exports",
+              "pass": true,
+              "details": {
+                "exports": 30
+              }
+            },
+            {
+              "id": "integrity:react-markers",
+              "module": "integrity",
+              "label": "React testid markers in static HTML",
+              "pass": true,
+              "details": {
+                "routes": 9
+              }
+            },
+            {
+              "id": "integrity:react-routes",
+              "module": "integrity",
+              "label": "Vault pillar routes registered",
+              "pass": true,
+              "details": {
+                "pillars": 8,
+                "subRoutes": 22
+              }
+            },
+            {
+              "id": "integrity:film-room-catalog",
+              "module": "integrity",
+              "label": "Film Room React structure",
+              "pass": true,
+              "details": {
+                "categories": 0
+              }
+            },
+            {
+              "id": "integrity:roster-data",
+              "module": "integrity",
+              "label": "Roster API data file",
+              "pass": true,
+              "details": {
+                "players": 111
+              }
+            },
+            {
+              "id": "integrity:depth-chart-data",
+              "module": "integrity",
+              "label": "Depth chart React data module",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "integrity:autoposter-dedup",
+              "module": "integrity",
+              "label": "Live Feed dedup integrity",
+              "pass": true,
+              "details": {
+                "feedItems": 83
+              }
+            },
+            {
+              "id": "integrity:production-vault-shell",
+              "module": "integrity",
+              "label": "Production vault uses React shell",
+              "pass": true,
+              "details": {
+                "reactShell": true
+              }
+            }
+          ],
+          "pass": false,
+          "finishedAt": "2026-06-16T18:03:30.245Z"
+        },
+        "pages": {
+          "module": "pages",
+          "pass": true,
+          "total": 25,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "pages:home:desktop",
+              "module": "pages",
+              "label": "/ React landing (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:home:mobile",
+              "module": "pages",
+              "label": "/ React landing (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:admin-hub:desktop",
+              "module": "pages",
+              "label": "/admin React landing (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/admin",
+                "viewport": "desktop",
+                "markers": 2
+              }
+            },
+            {
+              "id": "pages:admin-hub:mobile",
+              "module": "pages",
+              "label": "/admin React landing (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/admin",
+                "viewport": "mobile",
+                "markers": 2
+              }
+            },
+            {
+              "id": "pages:vault-dashboard:desktop",
+              "module": "pages",
+              "label": "/vault (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-dashboard:mobile",
+              "module": "pages",
+              "label": "/vault (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-recruiting:desktop",
+              "module": "pages",
+              "label": "/vault/recruiting (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/recruiting",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-recruiting:mobile",
+              "module": "pages",
+              "label": "/vault/recruiting (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/recruiting",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-futurecast:desktop",
+              "module": "pages",
+              "label": "/vault/futurecast (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/futurecast",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-futurecast:mobile",
+              "module": "pages",
+              "label": "/vault/futurecast (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/futurecast",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-team:desktop",
+              "module": "pages",
+              "label": "/vault/team (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/team",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-team:mobile",
+              "module": "pages",
+              "label": "/vault/team (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/team",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-depthChart:desktop",
+              "module": "pages",
+              "label": "/vault/depth-chart (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/depth-chart",
+                "viewport": "desktop",
+                "markers": 0
+              }
+            },
+            {
+              "id": "pages:vault-depthChart:mobile",
+              "module": "pages",
+              "label": "/vault/depth-chart (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/depth-chart",
+                "viewport": "mobile",
+                "markers": 0
+              }
+            },
+            {
+              "id": "pages:vault-live-feed:desktop",
+              "module": "pages",
+              "label": "/vault/live (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/live",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-live-feed:mobile",
+              "module": "pages",
+              "label": "/vault/live (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/live",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-film-room:desktop",
+              "module": "pages",
+              "label": "/vault/film-room (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/film-room",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-film-room:mobile",
+              "module": "pages",
+              "label": "/vault/film-room (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/film-room",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-schedule:desktop",
+              "module": "pages",
+              "label": "/vault/schedule (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/schedule",
+                "viewport": "desktop",
+                "markers": 4
+              }
+            },
+            {
+              "id": "pages:vault-schedule:mobile",
+              "module": "pages",
+              "label": "/vault/schedule (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/schedule",
+                "viewport": "mobile",
+                "markers": 4
+              }
+            },
+            {
+              "id": "pages:react-team",
+              "module": "pages",
+              "label": "React Team / depth chart",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-film-room",
+              "module": "pages",
+              "label": "React Film Room production markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-recruiting-hub",
+              "module": "pages",
+              "label": "React Recruiting Hub",
+              "pass": true,
+              "details": {
+                "tabs": 5
+              }
+            },
+            {
+              "id": "pages:react-futurecast",
+              "module": "pages",
+              "label": "React FutureCast",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-live-feed",
+              "module": "pages",
+              "label": "React Live Feed + ticker",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "ux": {
+          "module": "ux",
+          "pass": true,
+          "total": 6,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "ux:modal-zindex",
+              "module": "ux",
+              "label": "Modal / overlay z-index in React CSS",
+              "pass": true,
+              "details": {
+                "vaultShell": true,
+                "stickyHeader": true
+              }
+            },
+            {
+              "id": "ux:tap-targets",
+              "module": "ux",
+              "label": "Mobile tap target CSS",
+              "pass": true,
+              "details": {
+                "patternsChecked": 4
+              }
+            },
+            {
+              "id": "ux:scroll-containers",
+              "module": "ux",
+              "label": "Scroll containers (hub tabs + live feed)",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            },
+            {
+              "id": "ux:live-feed-layout",
+              "module": "ux",
+              "label": "Live Feed ESPN layout markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "ux:mobile-safari",
+              "module": "ux",
+              "label": "Mobile Safari safe-area / viewport",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            },
+            {
+              "id": "ux:bottom-nav",
+              "module": "ux",
+              "label": "React mobile bottom nav",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "browser": {
+          "module": "browser",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "browser:disabled",
+              "module": "browser",
+              "label": "Browser crawl",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "QA_BROWSER_ENABLED not set"
+              }
+            }
+          ]
+        },
+        "visual-integrity": {
+          "module": "visual-integrity",
+          "pass": true,
+          "total": 13,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "visual-integrity:vault-dashboard:markers",
+              "module": "visual-integrity",
+              "label": "Vault Dashboard React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-dashboard:markers:production",
+              "module": "visual-integrity",
+              "label": "Vault Dashboard React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-team:markers",
+              "module": "visual-integrity",
+              "label": "Team React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/team",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-team:markers:production",
+              "module": "visual-integrity",
+              "label": "Team React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/team",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-film-room:markers",
+              "module": "visual-integrity",
+              "label": "Film Room React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/film-room",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-film-room:markers:production",
+              "module": "visual-integrity",
+              "label": "Film Room React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/film-room",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-recruiting-hub:markers",
+              "module": "visual-integrity",
+              "label": "Recruiting Hub React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/recruiting",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-recruiting-hub:markers:production",
+              "module": "visual-integrity",
+              "label": "Recruiting Hub React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/recruiting",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-live-feed:markers",
+              "module": "visual-integrity",
+              "label": "Live Feed React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/live-feed",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-live-feed:markers:production",
+              "module": "visual-integrity",
+              "label": "Live Feed React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/live-feed",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-shell-theme",
+              "module": "visual-integrity",
+              "label": "VaultShell theme tokens",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "visual-integrity:live-feed-layout",
+              "module": "visual-integrity",
+              "label": "Live Feed visual layout",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "visual-integrity:landing-page",
+              "module": "visual-integrity",
+              "label": "React landing page",
+              "pass": true,
+              "details": {
+                "reactLanding": true
+              }
+            }
+          ]
+        },
+        "mobile-behavior": {
+          "module": "mobile-behavior",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "mobile-behavior:no-playwright",
+              "module": "mobile-behavior",
+              "label": "Mobile behavior QA",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "playwright not installed — run: npm install playwright && npx playwright install chromium"
+              }
+            }
+          ]
+        },
+        "crawler": {
+          "module": "crawler",
+          "pass": false,
+          "total": 18,
+          "failed": 1,
+          "checks": [
+            {
+              "id": "crawler:cache-stale",
+              "module": "crawler",
+              "label": "/api/live/dashboard cache age 144s (max 45s)",
+              "pass": false,
+              "error": "/api/live/dashboard cache age 144s (max 45s)",
+              "url": null,
+              "repro": "Trigger cache refresh cron or live-aggregator pipeline",
+              "details": {
+                "ruleId": "F2",
+                "sectionId": "api-health",
+                "selector": "/api/live/dashboard",
+                "domPath": "/api/live/dashboard",
+                "severity": "high",
+                "confidence": 92,
+                "category": "C"
+              }
+            },
+            {
+              "id": "crawler:overflow",
+              "module": "crawler",
+              "label": "Overflow Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "A1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:layering",
+              "module": "crawler",
+              "label": "Layering / Z-Index",
+              "pass": true,
+              "details": {
+                "ruleId": "A2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:background",
+              "module": "crawler",
+              "label": "Wrong Background",
+              "pass": true,
+              "details": {
+                "ruleId": "A3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:viewport-divergence",
+              "module": "crawler",
+              "label": "Mobile/Desktop Divergence",
+              "pass": true,
+              "details": {
+                "ruleId": "A4",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:missing-content",
+              "module": "crawler",
+              "label": "Missing Content",
+              "pass": true,
+              "details": {
+                "ruleId": "B1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:wrong-ordering",
+              "module": "crawler",
+              "label": "Wrong Ordering",
+              "pass": true,
+              "details": {
+                "ruleId": "B2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:stale-content",
+              "module": "crawler",
+              "label": "Stale Content",
+              "pass": true,
+              "details": {
+                "ruleId": "B3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-dup",
+              "module": "crawler",
+              "label": "Duplicate Posts",
+              "pass": true,
+              "details": {
+                "ruleId": "C1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-similarity",
+              "module": "crawler",
+              "label": "Similarity Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "C2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:uf-only",
+              "module": "crawler",
+              "label": "UF-Only Filter",
+              "pass": true,
+              "details": {
+                "ruleId": "C3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-stale",
+              "module": "crawler",
+              "label": "Stale Autoposter",
+              "pass": true,
+              "details": {
+                "ruleId": "C4",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:recruiting-mismatch",
+              "module": "crawler",
+              "label": "Recruiting Board Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "D1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:war-room",
+              "module": "crawler",
+              "label": "War Room Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "D2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:roster-mismatch",
+              "module": "crawler",
+              "label": "Roster Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "E1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:depth-chart",
+              "module": "crawler",
+              "label": "Depth Chart Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "E2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:api-latency",
+              "module": "crawler",
+              "label": "API Latency",
+              "pass": true,
+              "details": {
+                "ruleId": "F1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:404",
+              "module": "crawler",
+              "label": "404 Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "F3",
+                "skipped": false
+              }
+            }
+          ]
+        }
+      },
+      "errors": [
+        {
+          "id": "integrity:feed-dedup",
+          "module": "integrity",
+          "message": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+          "url": "/api/live/feed",
+          "repro": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+          "details": {
+            "classification": "autoposter-duplication",
+            "ruleId": "C1",
+            "severity": "medium",
+            "severityScore": 67,
+            "confidence": 95,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "crawler:cache-stale",
+          "module": "crawler",
+          "message": "Trigger cache refresh cron or live-aggregator pipeline",
+          "url": "/",
+          "repro": "Trigger cache refresh cron or live-aggregator pipeline",
+          "details": {
+            "classification": "cache-stale",
+            "ruleId": "F2",
+            "severity": "high",
+            "severityScore": 54,
+            "confidence": 92,
+            "selector": "/api/live/dashboard",
+            "domPath": "/api/live/dashboard",
+            "screenshot": null,
+            "sectionId": "api-health"
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:live-feed",
+          "module": "api",
+          "message": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+          "url": "/api/live/feed",
+          "repro": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        }
+      ],
+      "issues": [
+        {
+          "id": "integrity:feed-dedup",
+          "category": "C",
+          "classification": "autoposter-duplication",
+          "ruleId": "C1",
+          "ruleName": "Duplicate Detection",
+          "severity": "medium",
+          "severityScore": 67,
+          "confidence": 95,
+          "page": "/api/live/feed",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+          "module": "integrity",
+          "sectionId": null,
+          "details": {
+            "status": 500,
+            "body": {
+              "ok": false,
+              "error": "publicAlerts.filterPublicLiveFeed is not a function"
+            }
+          },
+          "emittedAt": "2026-06-16T18:03:33.256Z"
+        },
+        {
+          "id": "crawler:cache-stale",
+          "category": "F",
+          "classification": "cache-stale",
+          "ruleId": "F2",
+          "ruleName": "Cache Stale",
+          "severity": "high",
+          "severityScore": 54,
+          "confidence": 92,
+          "page": "/",
+          "selector": "/api/live/dashboard",
+          "domPath": "/api/live/dashboard",
+          "screenshotCrop": null,
+          "recommendedFix": "Trigger cache refresh cron or live-aggregator pipeline",
+          "module": "crawler",
+          "sectionId": "api-health",
+          "details": {
+            "sectionId": "api-health",
+            "ruleId": "F2",
+            "selector": "/api/live/dashboard",
+            "domPath": "/api/live/dashboard",
+            "severity": "high",
+            "confidence": 92,
+            "category": "C"
+          },
+          "emittedAt": "2026-06-16T18:03:33.257Z"
+        },
+        {
+          "id": "api:live-feed",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/api/live/feed",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 500,
+            "body": {
+              "ok": false,
+              "error": "publicAlerts.filterPublicLiveFeed is not a function"
+            }
+          },
+          "emittedAt": "2026-06-16T18:03:33.255Z"
+        }
+      ],
+      "phases": {
+        "fetch": {
+          "snapshotCount": 18,
+          "playwright": false
+        },
+        "analyze": {
+          "failedChecks": 4,
+          "crawlerIssues": 1
+        },
+        "emit": {
+          "total": 3,
+          "byCategory": {
+            "C": 1,
+            "F": 1,
+            "A": 1
+          },
+          "bySeverity": {
+            "medium": 1,
+            "high": 1,
+            "low": 1
+          },
+          "emittedAt": "2026-06-16T18:03:33.257Z"
+        },
+        "timingsMs": {
+          "fetch": 8863,
+          "analyze": 3007,
+          "emit": 5,
+          "modules": 15885
+        }
+      },
+      "screenshot": null,
+      "summary": {
+        "total": 111,
+        "passed": 107,
+        "failed": 4,
+        "emitted": 3
+      }
+    },
+    {
+      "id": "qa_1781632657651",
+      "startedAt": "2026-06-16T17:57:37.640Z",
+      "finishedAt": "2026-06-16T18:00:45.262Z",
+      "durationMs": 187611,
+      "pass": false,
+      "crawlerBuild": {
+        "commit": "d90f65164f2bce426c90cf4592f2df856873d000",
+        "short": "d90f651",
+        "branch": null,
+        "service": "gatorvault-api",
+        "runtime": "local",
+        "assetSource": "production-html",
+        "builtAt": "2026-06-16T17:41:09.034Z"
+      },
+      "modules": {
+        "api": {
+          "module": "api",
+          "pass": false,
+          "total": 19,
+          "failed": 19,
+          "checks": [
+            {
+              "id": "api:ping",
+              "module": "api",
+              "label": "/api/ping",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/ping",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/ping",
+              "repro": null
+            },
+            {
+              "id": "api:recruiting-ingest-status",
+              "module": "api",
+              "label": "/api/recruiting/ingest/status",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/ingest/status",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/recruiting/ingest/status",
+              "repro": null
+            },
+            {
+              "id": "api:live-pipeline-health",
+              "module": "api",
+              "label": "/api/live/pipeline/health",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/live/pipeline/health",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/live/pipeline/health",
+              "repro": null
+            },
+            {
+              "id": "api:live-dashboard",
+              "module": "api",
+              "label": "/api/live/dashboard",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/live/dashboard",
+              "repro": null
+            },
+            {
+              "id": "api:live-feed",
+              "module": "api",
+              "label": "/api/live/feed",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/live/feed",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/live/feed",
+              "repro": null
+            },
+            {
+              "id": "api:film-room-catalog",
+              "module": "api",
+              "label": "/api/film-room/catalog",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "repro": null
+            },
+            {
+              "id": "api:articles-published",
+              "module": "api",
+              "label": "/api/articles/published",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/articles/published",
+              "repro": null
+            },
+            {
+              "id": "api:content-published",
+              "module": "api",
+              "label": "/api/content/published",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/content/published",
+              "repro": null
+            },
+            {
+              "id": "api:roster-players",
+              "module": "api",
+              "label": "/api/roster/players",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/roster/players",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/roster/players",
+              "repro": null
+            },
+            {
+              "id": "api:recruiting-board",
+              "module": "api",
+              "label": "/api/recruiting/board",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/recruiting/board",
+              "repro": null
+            },
+            {
+              "id": "api:recruiting-portal",
+              "module": "api",
+              "label": "/api/recruiting/portal",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/portal",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/recruiting/portal",
+              "repro": null
+            },
+            {
+              "id": "api:pricing",
+              "module": "api",
+              "label": "/api/pricing",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/pricing",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/pricing",
+              "repro": null
+            },
+            {
+              "id": "api:personas",
+              "module": "api",
+              "label": "/api/personas",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/personas",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/personas",
+              "repro": null
+            },
+            {
+              "id": "api:content-ingest-status",
+              "module": "api",
+              "label": "/api/content/ingest/status",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/content/ingest/status",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/content/ingest/status",
+              "repro": null
+            },
+            {
+              "id": "api:war-room-breakdowns",
+              "module": "api",
+              "label": "/api/war-room/breakdowns",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/war-room/breakdowns",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/war-room/breakdowns",
+              "repro": null
+            },
+            {
+              "id": "api:nil-dashboard",
+              "module": "api",
+              "label": "/api/nil/dashboard",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/nil/dashboard",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/nil/dashboard",
+              "repro": null
+            },
+            {
+              "id": "api:film-room-lesson",
+              "module": "api",
+              "label": "Film Room lesson detail",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "repro": null
+            },
+            {
+              "id": "api:film-room-legacy-video",
+              "module": "api",
+              "label": "Legacy Film Room video",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "repro": null
+            },
+            {
+              "id": "api:schedule",
+              "module": "api",
+              "label": "Schedule (live dashboard games)",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/live/dashboard",
+              "repro": null
+            }
+          ]
+        },
+        "content": {
+          "module": "content",
+          "pass": false,
+          "total": 4,
+          "failed": 3,
+          "checks": [
+            {
+              "id": "content:articles-spell",
+              "module": "content",
+              "label": "Articles spell/grammar",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/articles/published",
+              "repro": null
+            },
+            {
+              "id": "content:content-accuracy-spell",
+              "module": "content",
+              "label": "Content accuracy spell/grammar",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/content/published",
+              "repro": null
+            },
+            {
+              "id": "content:film-room-spell",
+              "module": "content",
+              "label": "Film Room lesson text",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "repro": null
+            },
+            {
+              "id": "content:team-module",
+              "module": "content",
+              "label": "Team page text markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "integrity": {
+          "module": "integrity",
+          "checks": [
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/live/feed",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/live/feed",
+              "repro": null
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/recruiting/board",
+              "repro": null
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/articles/published",
+              "repro": null
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/articles/published",
+              "repro": null
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "repro": null
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/roster/players",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/roster/players",
+              "repro": null
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/live/pipeline/health",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/live/pipeline/health",
+              "repro": null
+            },
+            {
+              "id": "integrity:feed-dedup",
+              "module": "integrity",
+              "label": "Latest Updates dedup",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/live/feed",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/live/feed",
+              "repro": null
+            },
+            {
+              "id": "integrity:rankings",
+              "module": "integrity",
+              "label": "Recruiting star ratings",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/recruiting/board",
+              "repro": null
+            },
+            {
+              "id": "integrity:article-dates",
+              "module": "integrity",
+              "label": "Article date sanity",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/articles/published",
+              "repro": null
+            },
+            {
+              "id": "integrity:article-links",
+              "module": "integrity",
+              "label": "Article broken links (sample)",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/articles/published",
+              "repro": null
+            },
+            {
+              "id": "integrity:film-sources",
+              "module": "integrity",
+              "label": "Film Room source URLs",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/film-room/catalog",
+              "repro": null
+            },
+            {
+              "id": "integrity:roster-images",
+              "module": "integrity",
+              "label": "Roster headshot coverage",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/roster/players",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/roster/players",
+              "repro": null
+            },
+            {
+              "id": "integrity:depth-chart",
+              "module": "integrity",
+              "label": "Depth chart metadata",
+              "pass": true,
+              "details": {
+                "positions": "ok"
+              }
+            },
+            {
+              "id": "integrity:live-freshness",
+              "module": "integrity",
+              "label": "Live pipeline freshness",
+              "pass": false,
+              "error": "HTTP 502 https://gatorvault-api.onrender.com/api/live/pipeline/health",
+              "details": {
+                "status": 502,
+                "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+              },
+              "url": "https://gatorvault-api.onrender.com/api/live/pipeline/health",
+              "repro": null
+            },
+            {
+              "id": "integrity:react-exports",
+              "module": "integrity",
+              "label": "Vault route map static exports",
+              "pass": true,
+              "details": {
+                "exports": 30
+              }
+            },
+            {
+              "id": "integrity:react-markers",
+              "module": "integrity",
+              "label": "React testid markers in static HTML",
+              "pass": true,
+              "details": {
+                "routes": 9
+              }
+            },
+            {
+              "id": "integrity:react-routes",
+              "module": "integrity",
+              "label": "Vault pillar routes registered",
+              "pass": true,
+              "details": {
+                "pillars": 8,
+                "subRoutes": 22
+              }
+            },
+            {
+              "id": "integrity:film-room-catalog",
+              "module": "integrity",
+              "label": "Film Room React structure",
+              "pass": true,
+              "details": {
+                "categories": 0
+              }
+            },
+            {
+              "id": "integrity:roster-data",
+              "module": "integrity",
+              "label": "Roster API data file",
+              "pass": true,
+              "details": {
+                "players": 111
+              }
+            },
+            {
+              "id": "integrity:depth-chart-data",
+              "module": "integrity",
+              "label": "Depth chart React data module",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "integrity:autoposter-dedup",
+              "module": "integrity",
+              "label": "Live Feed dedup integrity",
+              "pass": true,
+              "details": {
+                "feedItems": 83
+              }
+            },
+            {
+              "id": "integrity:production-vault-shell",
+              "module": "integrity",
+              "label": "Production vault uses React shell",
+              "pass": true,
+              "details": {
+                "reactShell": true
+              }
+            }
+          ],
+          "pass": false,
+          "finishedAt": "2026-06-16T17:59:49.763Z"
+        },
+        "pages": {
+          "module": "pages",
+          "pass": true,
+          "total": 25,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "pages:home:desktop",
+              "module": "pages",
+              "label": "/ React landing (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:home:mobile",
+              "module": "pages",
+              "label": "/ React landing (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:admin-hub:desktop",
+              "module": "pages",
+              "label": "/admin React landing (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/admin",
+                "viewport": "desktop",
+                "markers": 2
+              }
+            },
+            {
+              "id": "pages:admin-hub:mobile",
+              "module": "pages",
+              "label": "/admin React landing (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/admin",
+                "viewport": "mobile",
+                "markers": 2
+              }
+            },
+            {
+              "id": "pages:vault-dashboard:desktop",
+              "module": "pages",
+              "label": "/vault (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-dashboard:mobile",
+              "module": "pages",
+              "label": "/vault (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-recruiting:desktop",
+              "module": "pages",
+              "label": "/vault/recruiting (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/recruiting",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-recruiting:mobile",
+              "module": "pages",
+              "label": "/vault/recruiting (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/recruiting",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-futurecast:desktop",
+              "module": "pages",
+              "label": "/vault/futurecast (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/futurecast",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-futurecast:mobile",
+              "module": "pages",
+              "label": "/vault/futurecast (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/futurecast",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-team:desktop",
+              "module": "pages",
+              "label": "/vault/team (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/team",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-team:mobile",
+              "module": "pages",
+              "label": "/vault/team (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/team",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-depthChart:desktop",
+              "module": "pages",
+              "label": "/vault/depth-chart (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/depth-chart",
+                "viewport": "desktop",
+                "markers": 0
+              }
+            },
+            {
+              "id": "pages:vault-depthChart:mobile",
+              "module": "pages",
+              "label": "/vault/depth-chart (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/depth-chart",
+                "viewport": "mobile",
+                "markers": 0
+              }
+            },
+            {
+              "id": "pages:vault-live-feed:desktop",
+              "module": "pages",
+              "label": "/vault/live (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/live",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-live-feed:mobile",
+              "module": "pages",
+              "label": "/vault/live (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/live",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-film-room:desktop",
+              "module": "pages",
+              "label": "/vault/film-room (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/film-room",
+                "viewport": "desktop",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-film-room:mobile",
+              "module": "pages",
+              "label": "/vault/film-room (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/film-room",
+                "viewport": "mobile",
+                "markers": 3
+              }
+            },
+            {
+              "id": "pages:vault-schedule:desktop",
+              "module": "pages",
+              "label": "/vault/schedule (desktop)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/schedule",
+                "viewport": "desktop",
+                "markers": 4
+              }
+            },
+            {
+              "id": "pages:vault-schedule:mobile",
+              "module": "pages",
+              "label": "/vault/schedule (mobile)",
+              "pass": true,
+              "details": {
+                "url": "https://gatorvaultinsider.com/vault/schedule",
+                "viewport": "mobile",
+                "markers": 4
+              }
+            },
+            {
+              "id": "pages:react-team",
+              "module": "pages",
+              "label": "React Team / depth chart",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-film-room",
+              "module": "pages",
+              "label": "React Film Room production markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-recruiting-hub",
+              "module": "pages",
+              "label": "React Recruiting Hub",
+              "pass": true,
+              "details": {
+                "tabs": 5
+              }
+            },
+            {
+              "id": "pages:react-futurecast",
+              "module": "pages",
+              "label": "React FutureCast",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "pages:react-live-feed",
+              "module": "pages",
+              "label": "React Live Feed + ticker",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "ux": {
+          "module": "ux",
+          "pass": true,
+          "total": 6,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "ux:modal-zindex",
+              "module": "ux",
+              "label": "Modal / overlay z-index in React CSS",
+              "pass": true,
+              "details": {
+                "vaultShell": true,
+                "stickyHeader": true
+              }
+            },
+            {
+              "id": "ux:tap-targets",
+              "module": "ux",
+              "label": "Mobile tap target CSS",
+              "pass": true,
+              "details": {
+                "patternsChecked": 4
+              }
+            },
+            {
+              "id": "ux:scroll-containers",
+              "module": "ux",
+              "label": "Scroll containers (hub tabs + live feed)",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            },
+            {
+              "id": "ux:live-feed-layout",
+              "module": "ux",
+              "label": "Live Feed ESPN layout markers",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "ux:mobile-safari",
+              "module": "ux",
+              "label": "Mobile Safari safe-area / viewport",
+              "pass": true,
+              "details": {
+                "matched": 3
+              }
+            },
+            {
+              "id": "ux:bottom-nav",
+              "module": "ux",
+              "label": "React mobile bottom nav",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            }
+          ]
+        },
+        "browser": {
+          "module": "browser",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "browser:disabled",
+              "module": "browser",
+              "label": "Browser crawl",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "QA_BROWSER_ENABLED not set"
+              }
+            }
+          ]
+        },
+        "visual-integrity": {
+          "module": "visual-integrity",
+          "pass": true,
+          "total": 13,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "visual-integrity:vault-dashboard:markers",
+              "module": "visual-integrity",
+              "label": "Vault Dashboard React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-dashboard:markers:production",
+              "module": "visual-integrity",
+              "label": "Vault Dashboard React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-team:markers",
+              "module": "visual-integrity",
+              "label": "Team React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/team",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-team:markers:production",
+              "module": "visual-integrity",
+              "label": "Team React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/team",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-film-room:markers",
+              "module": "visual-integrity",
+              "label": "Film Room React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/film-room",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-film-room:markers:production",
+              "module": "visual-integrity",
+              "label": "Film Room React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/film-room",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-recruiting-hub:markers",
+              "module": "visual-integrity",
+              "label": "Recruiting Hub React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/recruiting",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-recruiting-hub:markers:production",
+              "module": "visual-integrity",
+              "label": "Recruiting Hub React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/recruiting",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-live-feed:markers",
+              "module": "visual-integrity",
+              "label": "Live Feed React markers",
+              "pass": true,
+              "details": {
+                "route": "/vault/live-feed",
+                "clean": true,
+                "source": "local"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-live-feed:markers:production",
+              "module": "visual-integrity",
+              "label": "Live Feed React markers (production)",
+              "pass": true,
+              "details": {
+                "route": "/vault/live-feed",
+                "clean": true,
+                "source": "production"
+              }
+            },
+            {
+              "id": "visual-integrity:vault-shell-theme",
+              "module": "visual-integrity",
+              "label": "VaultShell theme tokens",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "visual-integrity:live-feed-layout",
+              "module": "visual-integrity",
+              "label": "Live Feed visual layout",
+              "pass": true,
+              "details": {
+                "ok": true
+              }
+            },
+            {
+              "id": "visual-integrity:landing-page",
+              "module": "visual-integrity",
+              "label": "React landing page",
+              "pass": true,
+              "details": {
+                "reactLanding": true
+              }
+            }
+          ]
+        },
+        "mobile-behavior": {
+          "module": "mobile-behavior",
+          "pass": true,
+          "total": 1,
+          "failed": 0,
+          "checks": [
+            {
+              "id": "mobile-behavior:no-playwright",
+              "module": "mobile-behavior",
+              "label": "Mobile behavior QA",
+              "pass": true,
+              "details": {
+                "skipped": true,
+                "reason": "playwright not installed — run: npm install playwright && npx playwright install chromium"
+              }
+            }
+          ]
+        },
+        "crawler": {
+          "module": "crawler",
+          "pass": false,
+          "total": 20,
+          "failed": 3,
+          "checks": [
+            {
+              "id": "crawler:api-latency",
+              "module": "crawler",
+              "label": "/api/ping unreachable after 3 attempt(s): HTTP 502 https://gatorvault-api.onrender.com/api/ping",
+              "pass": false,
+              "error": "/api/ping unreachable after 3 attempt(s): HTTP 502 https://gatorvault-api.onrender.com/api/ping",
+              "url": null,
+              "repro": "Restore API endpoint health on Render",
+              "details": {
+                "ruleId": "F1",
+                "sectionId": "api-health",
+                "selector": "/api/ping",
+                "domPath": "/api/ping",
+                "severity": "critical",
+                "confidence": 99,
+                "category": "A"
+              }
+            },
+            {
+              "id": "crawler:api-latency",
+              "module": "crawler",
+              "label": "/api/live/dashboard unreachable after 3 attempt(s): HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+              "pass": false,
+              "error": "/api/live/dashboard unreachable after 3 attempt(s): HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+              "url": null,
+              "repro": "Restore API endpoint health on Render",
+              "details": {
+                "ruleId": "F1",
+                "sectionId": "api-health",
+                "selector": "/api/live/dashboard",
+                "domPath": "/api/live/dashboard",
+                "severity": "critical",
+                "confidence": 99,
+                "category": "A"
+              }
+            },
+            {
+              "id": "crawler:api-latency",
+              "module": "crawler",
+              "label": "/api/recruiting/board unreachable after 3 attempt(s): HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+              "pass": false,
+              "error": "/api/recruiting/board unreachable after 3 attempt(s): HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+              "url": null,
+              "repro": "Restore API endpoint health on Render",
+              "details": {
+                "ruleId": "F1",
+                "sectionId": "api-health",
+                "selector": "/api/recruiting/board",
+                "domPath": "/api/recruiting/board",
+                "severity": "critical",
+                "confidence": 99,
+                "category": "A"
+              }
+            },
+            {
+              "id": "crawler:overflow",
+              "module": "crawler",
+              "label": "Overflow Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "A1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:layering",
+              "module": "crawler",
+              "label": "Layering / Z-Index",
+              "pass": true,
+              "details": {
+                "ruleId": "A2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:background",
+              "module": "crawler",
+              "label": "Wrong Background",
+              "pass": true,
+              "details": {
+                "ruleId": "A3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:viewport-divergence",
+              "module": "crawler",
+              "label": "Mobile/Desktop Divergence",
+              "pass": true,
+              "details": {
+                "ruleId": "A4",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:missing-content",
+              "module": "crawler",
+              "label": "Missing Content",
+              "pass": true,
+              "details": {
+                "ruleId": "B1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:wrong-ordering",
+              "module": "crawler",
+              "label": "Wrong Ordering",
+              "pass": true,
+              "details": {
+                "ruleId": "B2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:stale-content",
+              "module": "crawler",
+              "label": "Stale Content",
+              "pass": true,
+              "details": {
+                "ruleId": "B3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-dup",
+              "module": "crawler",
+              "label": "Duplicate Posts",
+              "pass": true,
+              "details": {
+                "ruleId": "C1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-similarity",
+              "module": "crawler",
+              "label": "Similarity Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "C2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:uf-only",
+              "module": "crawler",
+              "label": "UF-Only Filter",
+              "pass": true,
+              "details": {
+                "ruleId": "C3",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:autoposter-stale",
+              "module": "crawler",
+              "label": "Stale Autoposter",
+              "pass": true,
+              "details": {
+                "ruleId": "C4",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:recruiting-mismatch",
+              "module": "crawler",
+              "label": "Recruiting Board Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "D1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:war-room",
+              "module": "crawler",
+              "label": "War Room Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "D2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:roster-mismatch",
+              "module": "crawler",
+              "label": "Roster Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "E1",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:depth-chart",
+              "module": "crawler",
+              "label": "Depth Chart Mismatch",
+              "pass": true,
+              "details": {
+                "ruleId": "E2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:cache-stale",
+              "module": "crawler",
+              "label": "Cache Stale",
+              "pass": true,
+              "details": {
+                "ruleId": "F2",
+                "skipped": false
+              }
+            },
+            {
+              "id": "crawler:404",
+              "module": "crawler",
+              "label": "404 Detection",
+              "pass": true,
+              "details": {
+                "ruleId": "F3",
+                "skipped": false
+              }
+            }
+          ]
+        }
+      },
+      "errors": [
+        {
+          "id": "integrity:feed-dedup",
+          "module": "integrity",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/live/feed",
+          "url": "/api/live/feed",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/live/feed",
+          "details": {
+            "classification": "autoposter-duplication",
+            "ruleId": "C1",
+            "severity": "medium",
+            "severityScore": 67,
+            "confidence": 95,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:film-room-catalog",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "url": "/api/film-room/catalog",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "details": {
+            "classification": "filmroom-structure",
+            "ruleId": "B1",
+            "severity": "medium",
+            "severityScore": 60,
+            "confidence": 92,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "integrity:article-links",
+          "module": "integrity",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "url": "/api/articles/published",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "details": {
+            "classification": "broken-link",
+            "ruleId": "F3",
+            "severity": "medium",
+            "severityScore": 60,
+            "confidence": 92,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "integrity:film-sources",
+          "module": "integrity",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "url": "/api/film-room/catalog",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "details": {
+            "classification": "broken-link",
+            "ruleId": "F3",
+            "severity": "medium",
+            "severityScore": 60,
+            "confidence": 92,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:recruiting-ingest-status",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/ingest/status",
+          "url": "/api/recruiting/ingest/status",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/ingest/status",
+          "details": {
+            "classification": "recruiting-board-mismatch",
+            "ruleId": "D1",
+            "severity": "medium",
+            "severityScore": 57,
+            "confidence": 88,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:recruiting-board",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+          "url": "/api/recruiting/board",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+          "details": {
+            "classification": "recruiting-board-mismatch",
+            "ruleId": "D1",
+            "severity": "medium",
+            "severityScore": 57,
+            "confidence": 88,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:recruiting-portal",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/portal",
+          "url": "/api/recruiting/portal",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/portal",
+          "details": {
+            "classification": "recruiting-board-mismatch",
+            "ruleId": "D1",
+            "severity": "medium",
+            "severityScore": 57,
+            "confidence": 88,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "integrity:rankings",
+          "module": "integrity",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+          "url": "/api/recruiting/board",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+          "details": {
+            "classification": "recruiting-board-mismatch",
+            "ruleId": "D1",
+            "severity": "medium",
+            "severityScore": 57,
+            "confidence": 88,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:live-pipeline-health",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/live/pipeline/health",
+          "url": "/api/live/pipeline/health",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/live/pipeline/health",
+          "details": {
+            "classification": "cache-stale",
+            "ruleId": "F2",
+            "severity": "medium",
+            "severityScore": 54,
+            "confidence": 90,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:live-dashboard",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+          "url": "/api/live/dashboard",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+          "details": {
+            "classification": "cache-stale",
+            "ruleId": "F2",
+            "severity": "medium",
+            "severityScore": 54,
+            "confidence": 90,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:roster-players",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/roster/players",
+          "url": "/api/roster/players",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/roster/players",
+          "details": {
+            "classification": "roster-mismatch",
+            "ruleId": "E1",
+            "severity": "medium",
+            "severityScore": 54,
+            "confidence": 85,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "integrity:roster-images",
+          "module": "integrity",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/roster/players",
+          "url": "/api/roster/players",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/roster/players",
+          "details": {
+            "classification": "missing-image",
+            "ruleId": "E1",
+            "severity": "medium",
+            "severityScore": 54,
+            "confidence": 85,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "integrity:live-freshness",
+          "module": "integrity",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/live/pipeline/health",
+          "url": "/api/live/pipeline/health",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/live/pipeline/health",
+          "details": {
+            "classification": "cache-stale",
+            "ruleId": "F2",
+            "severity": "medium",
+            "severityScore": 54,
+            "confidence": 90,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:ping",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/ping",
+          "url": "/api/ping",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/ping",
+          "details": {
+            "classification": "api-latency",
+            "ruleId": "F1",
+            "severity": "medium",
+            "severityScore": 52,
+            "confidence": 95,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "crawler:api-latency",
+          "module": "crawler",
+          "message": "Restore API endpoint health on Render",
+          "url": "/",
+          "repro": "Restore API endpoint health on Render",
+          "details": {
+            "classification": "api-latency",
+            "ruleId": "F1",
+            "severity": "critical",
+            "severityScore": 52,
+            "confidence": 99,
+            "selector": "/api/ping",
+            "domPath": "/api/ping",
+            "screenshot": null,
+            "sectionId": "api-health"
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:war-room-breakdowns",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/war-room/breakdowns",
+          "url": "/api/war-room/breakdowns",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/war-room/breakdowns",
+          "details": {
+            "classification": "recruiting-board-mismatch",
+            "ruleId": "D2",
+            "severity": "medium",
+            "severityScore": 47,
+            "confidence": 75,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:live-feed",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/live/feed",
+          "url": "/api/live/feed",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/live/feed",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:articles-published",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "url": "/api/articles/published",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:content-published",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+          "url": "/api/content/published",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:pricing",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/pricing",
+          "url": "/api/pricing",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/pricing",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:personas",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/personas",
+          "url": "/api/personas",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/personas",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:content-ingest-status",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/content/ingest/status",
+          "url": "/api/content/ingest/status",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/content/ingest/status",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:nil-dashboard",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/nil/dashboard",
+          "url": "/api/nil/dashboard",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/nil/dashboard",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:film-room-lesson",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "url": "/api/film-room/catalog",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:film-room-legacy-video",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "url": "/api/film-room/catalog",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "api:schedule",
+          "module": "api",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+          "url": "/api/live/dashboard",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "integrity:article-dates",
+          "module": "integrity",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "url": "/api/articles/published",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 39,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "content:articles-spell",
+          "module": "content",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "url": "/api/articles/published",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 36,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "content:content-accuracy-spell",
+          "module": "content",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+          "url": "/api/content/published",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 36,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        },
+        {
+          "id": "content:film-room-spell",
+          "module": "content",
+          "message": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "url": "/api/film-room/catalog",
+          "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "details": {
+            "classification": "ui-regression",
+            "ruleId": "A1",
+            "severity": "low",
+            "severityScore": 36,
+            "confidence": 60,
+            "selector": null,
+            "domPath": null,
+            "screenshot": null,
+            "sectionId": null
+          },
+          "screenshot": null
+        }
+      ],
+      "issues": [
+        {
+          "id": "integrity:feed-dedup",
+          "category": "C",
+          "classification": "autoposter-duplication",
+          "ruleId": "C1",
+          "ruleName": "Duplicate Detection",
+          "severity": "medium",
+          "severityScore": 67,
+          "confidence": 95,
+          "page": "/api/live/feed",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/live/feed",
+          "module": "integrity",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.256Z"
+        },
+        {
+          "id": "api:film-room-catalog",
+          "category": "B",
+          "classification": "filmroom-structure",
+          "ruleId": "B1",
+          "ruleName": "Missing Content",
+          "severity": "medium",
+          "severityScore": 60,
+          "confidence": 92,
+          "page": "/api/film-room/catalog",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.250Z"
+        },
+        {
+          "id": "integrity:article-links",
+          "category": "F",
+          "classification": "broken-link",
+          "ruleId": "F3",
+          "ruleName": "404 Detection",
+          "severity": "medium",
+          "severityScore": 60,
+          "confidence": 92,
+          "page": "/api/articles/published",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "module": "integrity",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.257Z"
+        },
+        {
+          "id": "integrity:film-sources",
+          "category": "F",
+          "classification": "broken-link",
+          "ruleId": "F3",
+          "ruleName": "404 Detection",
+          "severity": "medium",
+          "severityScore": 60,
+          "confidence": 92,
+          "page": "/api/film-room/catalog",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "module": "integrity",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.257Z"
+        },
+        {
+          "id": "api:recruiting-ingest-status",
+          "category": "D",
+          "classification": "recruiting-board-mismatch",
+          "ruleId": "D1",
+          "ruleName": "Recruiting Board Mismatch",
+          "severity": "medium",
+          "severityScore": 57,
+          "confidence": 88,
+          "page": "/api/recruiting/ingest/status",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/ingest/status",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.248Z"
+        },
+        {
+          "id": "api:recruiting-board",
+          "category": "D",
+          "classification": "recruiting-board-mismatch",
+          "ruleId": "D1",
+          "ruleName": "Recruiting Board Mismatch",
+          "severity": "medium",
+          "severityScore": 57,
+          "confidence": 88,
+          "page": "/api/recruiting/board",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.251Z"
+        },
+        {
+          "id": "api:recruiting-portal",
+          "category": "D",
+          "classification": "recruiting-board-mismatch",
+          "ruleId": "D1",
+          "ruleName": "Recruiting Board Mismatch",
+          "severity": "medium",
+          "severityScore": 57,
+          "confidence": 88,
+          "page": "/api/recruiting/portal",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/portal",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.252Z"
+        },
+        {
+          "id": "integrity:rankings",
+          "category": "D",
+          "classification": "recruiting-board-mismatch",
+          "ruleId": "D1",
+          "ruleName": "Recruiting Board Mismatch",
+          "severity": "medium",
+          "severityScore": 57,
+          "confidence": 88,
+          "page": "/api/recruiting/board",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+          "module": "integrity",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.256Z"
+        },
+        {
+          "id": "api:live-pipeline-health",
+          "category": "F",
+          "classification": "cache-stale",
+          "ruleId": "F2",
+          "ruleName": "Cache Stale",
+          "severity": "medium",
+          "severityScore": 54,
+          "confidence": 90,
+          "page": "/api/live/pipeline/health",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/live/pipeline/health",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.249Z"
+        },
+        {
+          "id": "api:live-dashboard",
+          "category": "F",
+          "classification": "cache-stale",
+          "ruleId": "F2",
+          "ruleName": "Cache Stale",
+          "severity": "medium",
+          "severityScore": 54,
+          "confidence": 90,
+          "page": "/api/live/dashboard",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.249Z"
+        },
+        {
+          "id": "api:roster-players",
+          "category": "E",
+          "classification": "roster-mismatch",
+          "ruleId": "E1",
+          "ruleName": "Roster Mismatch",
+          "severity": "medium",
+          "severityScore": 54,
+          "confidence": 85,
+          "page": "/api/roster/players",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/roster/players",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.251Z"
+        },
+        {
+          "id": "integrity:roster-images",
+          "category": "E",
+          "classification": "missing-image",
+          "ruleId": "E1",
+          "ruleName": "Roster Mismatch",
+          "severity": "medium",
+          "severityScore": 54,
+          "confidence": 85,
+          "page": "/api/roster/players",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/roster/players",
+          "module": "integrity",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.257Z"
+        },
+        {
+          "id": "integrity:live-freshness",
+          "category": "F",
+          "classification": "cache-stale",
+          "ruleId": "F2",
+          "ruleName": "Cache Stale",
+          "severity": "medium",
+          "severityScore": 54,
+          "confidence": 90,
+          "page": "/api/live/pipeline/health",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/live/pipeline/health",
+          "module": "integrity",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.258Z"
+        },
+        {
+          "id": "api:ping",
+          "category": "F",
+          "classification": "api-latency",
+          "ruleId": "F1",
+          "ruleName": "API Latency",
+          "severity": "medium",
+          "severityScore": 52,
+          "confidence": 95,
+          "page": "/api/ping",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/ping",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.245Z"
+        },
+        {
+          "id": "crawler:api-latency",
+          "category": "F",
+          "classification": "api-latency",
+          "ruleId": "F1",
+          "ruleName": "API Latency",
+          "severity": "critical",
+          "severityScore": 52,
+          "confidence": 99,
+          "page": "/",
+          "selector": "/api/ping",
+          "domPath": "/api/ping",
+          "screenshotCrop": null,
+          "recommendedFix": "Restore API endpoint health on Render",
+          "module": "crawler",
+          "sectionId": "api-health",
+          "details": {
+            "sectionId": "api-health",
+            "ruleId": "F1",
+            "selector": "/api/ping",
+            "domPath": "/api/ping",
+            "severity": "critical",
+            "confidence": 99,
+            "category": "A"
+          },
+          "emittedAt": "2026-06-16T18:00:45.260Z"
+        },
+        {
+          "id": "api:war-room-breakdowns",
+          "category": "D",
+          "classification": "recruiting-board-mismatch",
+          "ruleId": "D2",
+          "ruleName": "War Room Mismatch",
+          "severity": "medium",
+          "severityScore": 47,
+          "confidence": 75,
+          "page": "/api/war-room/breakdowns",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/war-room/breakdowns",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.253Z"
+        },
+        {
+          "id": "api:live-feed",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/api/live/feed",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/live/feed",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.249Z"
+        },
+        {
+          "id": "api:articles-published",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/api/articles/published",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.250Z"
+        },
+        {
+          "id": "api:content-published",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/api/content/published",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.250Z"
+        },
+        {
+          "id": "api:pricing",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/api/pricing",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/pricing",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.252Z"
+        },
+        {
+          "id": "api:personas",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/api/personas",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/personas",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.252Z"
+        },
+        {
+          "id": "api:content-ingest-status",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/api/content/ingest/status",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/content/ingest/status",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.252Z"
+        },
+        {
+          "id": "api:nil-dashboard",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/api/nil/dashboard",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/nil/dashboard",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.253Z"
+        },
+        {
+          "id": "api:film-room-lesson",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/api/film-room/catalog",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.254Z"
+        },
+        {
+          "id": "api:film-room-legacy-video",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/api/film-room/catalog",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.254Z"
+        },
+        {
+          "id": "api:schedule",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/api/live/dashboard",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+          "module": "api",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.254Z"
+        },
+        {
+          "id": "integrity:article-dates",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 39,
+          "confidence": 60,
+          "page": "/api/articles/published",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "module": "integrity",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.256Z"
+        },
+        {
+          "id": "content:articles-spell",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 36,
+          "confidence": 60,
+          "page": "/api/articles/published",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+          "module": "content",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.255Z"
+        },
+        {
+          "id": "content:content-accuracy-spell",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 36,
+          "confidence": 60,
+          "page": "/api/content/published",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/content/published",
+          "module": "content",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.255Z"
+        },
+        {
+          "id": "content:film-room-spell",
+          "category": "A",
+          "classification": "ui-regression",
+          "ruleId": "A1",
+          "ruleName": "Unclassified Issue",
+          "severity": "low",
+          "severityScore": 36,
+          "confidence": 60,
+          "page": "/api/film-room/catalog",
+          "selector": null,
+          "domPath": null,
+          "screenshotCrop": null,
+          "recommendedFix": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+          "module": "content",
+          "sectionId": null,
+          "details": {
+            "status": 502,
+            "body": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>502</title>\n    <style>@font-face {\n  font-fami"
+          },
+          "emittedAt": "2026-06-16T18:00:45.255Z"
+        }
+      ],
+      "phases": {
+        "fetch": {
+          "snapshotCount": 18,
+          "playwright": false
+        },
+        "analyze": {
+          "failedChecks": 39,
+          "crawlerIssues": 3
+        },
+        "emit": {
+          "total": 30,
+          "byCategory": {
+            "C": 1,
+            "B": 1,
+            "F": 7,
+            "D": 5,
+            "E": 2,
+            "A": 14
+          },
+          "bySeverity": {
+            "medium": 15,
+            "critical": 1,
+            "low": 14
+          },
+          "emittedAt": "2026-06-16T18:00:45.261Z"
+        },
+        "timingsMs": {
+          "fetch": 12928,
+          "analyze": 55477,
+          "emit": 21,
+          "modules": 119182
+        }
+      },
+      "screenshot": null,
+      "summary": {
+        "total": 113,
+        "passed": 74,
+        "failed": 39,
+        "emitted": 30
+      }
+    },
     {
       "id": "qa_1781608910343",
       "startedAt": "2026-06-16T11:21:50.328Z",
@@ -37684,54 +42914,54 @@
       "pass": true,
       "total": 19,
       "failed": 0,
-      "at": "2026-06-16T11:22:16.540Z"
+      "at": "2026-06-16T18:18:36.935Z"
     },
     "content": {
       "pass": true,
       "total": 4,
       "failed": 0,
-      "at": "2026-06-16T11:22:16.540Z"
+      "at": "2026-06-16T18:18:36.935Z"
     },
     "integrity": {
       "pass": true,
-      "at": "2026-06-16T11:22:16.540Z"
+      "at": "2026-06-16T18:18:36.935Z"
     },
     "pages": {
       "pass": true,
       "total": 25,
       "failed": 0,
-      "at": "2026-06-16T11:22:16.540Z"
+      "at": "2026-06-16T18:18:36.935Z"
     },
     "ux": {
       "pass": true,
       "total": 6,
       "failed": 0,
-      "at": "2026-06-16T11:22:16.540Z"
+      "at": "2026-06-16T18:18:36.935Z"
     },
     "browser": {
       "pass": true,
       "total": 1,
       "failed": 0,
-      "at": "2026-06-16T11:22:16.540Z"
+      "at": "2026-06-16T18:18:36.935Z"
     },
     "visual-integrity": {
       "pass": true,
       "total": 13,
       "failed": 0,
-      "at": "2026-06-16T11:22:16.540Z"
+      "at": "2026-06-16T18:18:36.935Z"
     },
     "mobile-behavior": {
       "pass": true,
       "total": 1,
       "failed": 0,
-      "at": "2026-06-16T11:22:16.540Z"
+      "at": "2026-06-16T18:18:36.935Z"
     },
     "crawler": {
       "pass": true,
       "total": 18,
       "failed": 0,
-      "at": "2026-06-16T11:22:16.540Z"
+      "at": "2026-06-16T18:18:36.935Z"
     }
   },
-  "updatedAt": "2026-06-16T11:22:19.278Z"
+  "updatedAt": "2026-06-16T18:18:43.925Z"
 }

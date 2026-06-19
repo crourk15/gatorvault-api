@@ -10,10 +10,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
-import { loadBoardPlayersForSlugs, type FutureCastBoardPlayer } from './allowlist-board';
 import { sendCachedJson } from './response-cache';
 import {
   buildUnderclassmenIntelForSlug,
+  loadUnderclassmenBoardPlayers,
   type UnderclassmenIntelBundle,
 } from '../../lib/underclassmen-intel';
 
@@ -26,10 +26,11 @@ const DEFAULT_YEARS = [2028, 2029, 2030] as const;
 
 export type UnderclassmenTier = 'target' | 'watchlist';
 
-export type UnderclassmenPlayer = FutureCastBoardPlayer & {
+export type UnderclassmenPlayer = import('./allowlist-board').FutureCastBoardPlayer & {
   tier: UnderclassmenTier;
   discoveryScore?: number | null;
-  earlyMovement?: number;
+  /** Rolling UF Δ% from FutureCast movement engine (30d window). */
+  earlyMovement?: number | null;
 };
 
 export type UnderclassmenClassBucket = {
@@ -86,8 +87,8 @@ function bucketForYear(
 ): UnderclassmenClassBucket {
   const all = [...targets, ...watchlist];
   const earlyMovement = all
-    .filter((p) => Math.abs(p.earlyMovement ?? p.trendDelta7d) >= 0.02)
-    .sort((a, b) => Math.abs(b.earlyMovement ?? b.trendDelta7d) - Math.abs(a.earlyMovement ?? a.trendDelta7d));
+    .filter((p) => p.earlyMovement != null && Math.abs(p.earlyMovement) >= 0.02)
+    .sort((a, b) => Math.abs(b.earlyMovement ?? 0) - Math.abs(a.earlyMovement ?? 0));
   return {
     classYear,
     targets,
@@ -127,7 +128,7 @@ export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YE
       continue;
     }
 
-    const enriched = await loadBoardPlayersForSlugs(year, slugs);
+    const enriched = await loadUnderclassmenBoardPlayers(year, slugs);
     const targets: UnderclassmenPlayer[] = [];
     const watchlist: UnderclassmenPlayer[] = [];
 
@@ -137,10 +138,9 @@ export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YE
         year === 2030 || entry?.tier === 'watchlist' ? 'watchlist' : 'target';
       const row: UnderclassmenPlayer = {
         ...player,
-        classYear: year,
         tier,
         discoveryScore: entry?.discoveryScore ?? null,
-        earlyMovement: entry?.earlyMovement ?? player.trendDelta7d,
+        earlyMovement: player.trendDelta7d,
       };
       if (tier === 'watchlist') watchlist.push(row);
       else targets.push(row);
@@ -158,7 +158,7 @@ export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YE
     updatedAt,
     years,
     classes,
-    players: flat.sort((a, b) => b.ufConfidence - a.ufConfidence),
+    players: flat.sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1)),
     empty,
     message: empty ? 'No underclassmen intel loaded for requested years.' : undefined,
   };

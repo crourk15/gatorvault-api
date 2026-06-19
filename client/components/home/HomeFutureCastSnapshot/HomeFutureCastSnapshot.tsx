@@ -3,7 +3,7 @@
 import React from 'react';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
 import { heatmapSparkPct } from '@/lib/vault-home-api';
-import { SITE_ROUTES } from '@/lib/site-routes';
+import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
 import { playerProfilePath } from '@/lib/player-routes';
 import { HomeModuleCard } from '@/components/home/HomeModuleCard';
 import './HomeFutureCastSnapshot.css';
@@ -50,7 +50,7 @@ export function HomeFutureCastSnapshot({ data, loading }: Props): React.ReactEle
         { value: `${sparkPct}%`, label: 'Volatility', tone: 'accent' },
       ]}
       subtitle={`${data.movementWindowDays || 7}-day movement window`}
-      link={{ href: `${SITE_ROUTES.futurecast}/movement`, label: 'Open FutureCast →' }}
+      link={{ href: `${VAULT_PILLAR_ROUTES.futurecast}/movement`, label: 'Open FutureCast →' }}
       ariaLabel="FutureCast snapshot"
       testId="home-futurecast"
     >

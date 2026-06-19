@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-16T11:22:19.269Z",
-  "lastRunId": "qa_1781608910343",
-  "lastComputedAt": "2026-06-16T11:22:16.540Z",
+  "updatedAt": "2026-06-16T18:18:43.919Z",
+  "lastRunId": "qa_1781633888188",
+  "lastComputedAt": "2026-06-16T18:18:36.935Z",
   "scores": {
     "modules": {
       "api": 100,
@@ -52,7 +52,7 @@
       "live_feed": 100,
       "mobile_navigation": 100,
       "admin_hub": 100,
-      "qa_monitor": 60
+      "qa_monitor": 58
     },
     "overall": 100
   },
@@ -137,13 +137,13 @@
           ]
         }
       },
-      "createdAt": "2026-06-16T11:22:16.540Z",
-      "runId": "qa_1781608910343",
+      "createdAt": "2026-06-16T18:18:36.935Z",
+      "runId": "qa_1781633888188",
       "resolved": false
     },
     {
       "id": "fix_pi:autoposter-stale:24h",
-      "title": "Last post 164h ago",
+      "title": "Last post 171h ago",
       "module": "integrity",
       "source": "autoposter-logs",
       "classification": "autoposter-stale",
@@ -166,7 +166,7 @@
       "url": null,
       "details": null,
       "proposal": {
-        "title": "Last post 164h ago",
+        "title": "Last post 171h ago",
         "description": "Restore autoposter activity for Team Overview.",
         "classification": "autoposter-stale",
         "ruleId": "B3",
@@ -221,8 +221,94 @@
           ]
         }
       },
-      "createdAt": "2026-06-16T11:22:16.540Z",
-      "runId": "qa_1781608910343",
+      "createdAt": "2026-06-16T18:18:36.935Z",
+      "runId": "qa_1781633888188",
+      "resolved": false
+    },
+    {
+      "id": "fix_pi:filmroom:categories",
+      "title": "Offensive Scheme, Defensive Scheme, UF Press Conferences",
+      "module": "integrity",
+      "source": "film-room",
+      "classification": "ui-regression",
+      "ruleId": "A1",
+      "category": "A",
+      "ruleName": "Unclassified Issue",
+      "severity": "medium",
+      "severityScore": 66,
+      "severityLabel": "Medium — optional",
+      "severityComponents": {
+        "impact": 50,
+        "frequency": 100,
+        "confidence": 60
+      },
+      "impact": "internal",
+      "repro": null,
+      "suggestedFix": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
+      "eta": "medium",
+      "checkId": "pi:filmroom:categories",
+      "url": null,
+      "details": null,
+      "proposal": {
+        "title": "Offensive Scheme, Defensive Scheme, UF Press Conferences",
+        "description": "Fix overflow/clipping in Team Overview by enabling scroll or auto-expansion.",
+        "classification": "ui-regression",
+        "ruleId": "A1",
+        "category": "A",
+        "filesToModify": [
+          "client/lib/vault-shell.css"
+        ],
+        "patchType": "layout-overflow",
+        "codeDiffHint": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }",
+        "codeDiff": [
+          {
+            "file": "client/lib/vault-shell.css",
+            "before": ".gv-team-modal-body { overflow: hidden; }",
+            "after": ".gv-team-modal-body { overflow-y: auto; max-height: none; min-height: 0; min-width: 0; }"
+          }
+        ],
+        "safetyRules": [
+          "Never remove min-width:0 or min-height:0 from modal flex children",
+          "Only modify overflow on the targeted selector — do not change global body overflow",
+          "Preserve mobile scroll behavior — test 390px viewport after apply",
+          "Max 1 CSS file per patch unless issue spans shell + styles"
+        ],
+        "testPlan": [
+          "Load /",
+          "Verify full text is visible",
+          "Verify no clipping on right or bottom",
+          "Verify mobile layout unchanged"
+        ],
+        "qaSteps": [
+          "Load /",
+          "Verify full text is visible",
+          "Verify no clipping on right or bottom",
+          "Verify mobile layout unchanged",
+          "Verify QA check pi:filmroom:categories passes",
+          "POST /api/product-intel/recompute — issue cleared from fix queue"
+        ],
+        "rollbackPlan": {
+          "strategy": "git-revert",
+          "summary": "Restore previous overflow rules if regression detected.",
+          "steps": [
+            "Revert: client/lib/vault-shell.css",
+            "Redeploy Netlify (static) and Render (API) if needed",
+            "POST /api/product-intel/recompute",
+            "POST /api/qa/run — verify check passes"
+          ]
+        },
+        "approvalGate": {
+          "steps": [
+            "Apply patch",
+            "Optional redeploy",
+            "QA crawl",
+            "Product Health recompute",
+            "Mark completed"
+          ]
+        }
+      },
+      "createdAt": "2026-06-16T18:18:36.935Z",
+      "runId": "qa_1781633888188",
       "resolved": false
     }
   ],
@@ -278,15 +364,15 @@
         "live_feed": 100,
         "mobile_navigation": 100,
         "admin_hub": 100,
-        "qa_monitor": 60
+        "qa_monitor": 58
       },
       "topIssues": [],
       "improvements": [],
       "regressions": [],
       "pass": true,
-      "runId": "qa_1781608910343",
+      "runId": "qa_1781633888188",
       "signalCounts": {
-        "total": 2,
+        "total": 3,
         "bySource": {
           "qa": 0,
           "apiHealth": 0,
@@ -294,10 +380,10 @@
           "autoposter": 1,
           "recruiting": 0,
           "teamData": 1,
-          "filmRoom": 0
+          "filmRoom": 1
         }
       },
-      "narrative": "Platform health is strong at 100/100 — all checks passed. Data layer collected 2 signal(s) across 7 sources."
+      "narrative": "Platform health is strong at 100/100 — all checks passed. Data layer collected 3 signal(s) across 7 sources."
     },
     {
       "date": "2026-06-14",
@@ -583,6 +669,213 @@
   ],
   "weeklyReports": [],
   "snapshots": [
+    {
+      "at": "2026-06-16T18:18:36.935Z",
+      "runId": "qa_1781633888188",
+      "overall": 100,
+      "modules": {
+        "api": 100,
+        "content": 100,
+        "integrity": 100,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 100
+      },
+      "pass": true,
+      "openFixes": 3,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 3,
+            "bySource": {
+              "qa": 0,
+              "apiHealth": 0,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 1,
+              "filmRoom": 1
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "roster-mismatch",
+            "autoposter-stale",
+            "ui-regression"
+          ],
+          "total": 3
+        },
+        "severity": {
+          "critical": 0,
+          "high": 2,
+          "medium": 1,
+          "low": 0
+        },
+        "proposals": 3,
+        "approvalGate": "self-runner"
+      }
+    },
+    {
+      "at": "2026-06-16T18:03:33.257Z",
+      "runId": "qa_1781632985387",
+      "overall": 76,
+      "modules": {
+        "api": 75,
+        "content": 100,
+        "integrity": 20,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 76
+      },
+      "pass": false,
+      "openFixes": 6,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 7,
+            "bySource": {
+              "qa": 4,
+              "apiHealth": 0,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 0,
+              "teamData": 1,
+              "filmRoom": 1
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "autoposter-duplication",
+            "cache-stale",
+            "roster-mismatch",
+            "autoposter-stale",
+            "ui-regression"
+          ],
+          "total": 6
+        },
+        "severity": {
+          "critical": 1,
+          "high": 3,
+          "medium": 2,
+          "low": 0
+        },
+        "proposals": 6,
+        "approvalGate": "self-runner"
+      }
+    },
+    {
+      "at": "2026-06-16T18:00:45.262Z",
+      "runId": "qa_1781632657651",
+      "overall": 35,
+      "modules": {
+        "api": 0,
+        "content": 85,
+        "integrity": 0,
+        "pages": 100,
+        "ux": 100,
+        "browser": 100,
+        "visual-integrity": 100,
+        "mobile-behavior": 100,
+        "overall": 35
+      },
+      "pass": false,
+      "openFixes": 42,
+      "layers": {
+        "data": {
+          "counts": {
+            "total": 51,
+            "bySource": {
+              "qa": 39,
+              "apiHealth": 8,
+              "cacheHealth": 0,
+              "autoposter": 1,
+              "recruiting": 1,
+              "teamData": 1,
+              "filmRoom": 1
+            }
+          },
+          "sources": [
+            "qa-crawler",
+            "live-dashboard",
+            "mobile-behavior",
+            "admin-hub",
+            "autoposter-logs",
+            "recruiting-board",
+            "film-room",
+            "team-overview",
+            "program-history",
+            "roster-depth-chart",
+            "press-conferences",
+            "highlights",
+            "api-health",
+            "cache-health"
+          ]
+        },
+        "classification": {
+          "active": [
+            "autoposter-duplication",
+            "filmroom-structure",
+            "broken-link",
+            "recruiting-board-mismatch",
+            "cache-stale",
+            "roster-mismatch",
+            "missing-image",
+            "api-latency",
+            "autoposter-stale",
+            "ui-regression"
+          ],
+          "total": 42
+        },
+        "severity": {
+          "critical": 1,
+          "high": 21,
+          "medium": 20,
+          "low": 0
+        },
+        "proposals": 42,
+        "approvalGate": "self-runner"
+      }
+    },
     {
       "at": "2026-06-16T11:22:16.540Z",
       "runId": "qa_1781608910343",
@@ -1878,7 +2171,7 @@
     "upgrade": [
       {
         "feature": "qa_monitor",
-        "score": 60,
+        "score": 58,
         "reason": "Important but not premium — prioritize UX polish"
       }
     ]
@@ -1886,21 +2179,27 @@
   "signalHistory": {
     "pi:autoposter-stale:24h": {
       "count": 1,
-      "firstSeen": "2026-06-16T11:22:19.264Z",
-      "lastSeen": "2026-06-16T11:22:19.264Z",
+      "firstSeen": "2026-06-16T18:18:43.913Z",
+      "lastSeen": "2026-06-16T18:18:43.913Z",
       "recentRuns": 1
     },
     "pi:roster:numbers": {
       "count": 1,
-      "firstSeen": "2026-06-16T11:22:19.267Z",
-      "lastSeen": "2026-06-16T11:22:19.267Z",
+      "firstSeen": "2026-06-16T18:18:43.916Z",
+      "lastSeen": "2026-06-16T18:18:43.916Z",
+      "recentRuns": 1
+    },
+    "pi:filmroom:categories": {
+      "count": 1,
+      "firstSeen": "2026-06-16T18:18:43.917Z",
+      "lastSeen": "2026-06-16T18:18:43.917Z",
       "recentRuns": 1
     }
   },
   "intelligenceLayers": {
     "data": {
       "counts": {
-        "total": 2,
+        "total": 3,
         "bySource": {
           "qa": 0,
           "apiHealth": 0,
@@ -1908,7 +2207,7 @@
           "autoposter": 1,
           "recruiting": 0,
           "teamData": 1,
-          "filmRoom": 0
+          "filmRoom": 1
         }
       },
       "sources": [
@@ -1931,17 +2230,18 @@
     "classification": {
       "active": [
         "roster-mismatch",
-        "autoposter-stale"
+        "autoposter-stale",
+        "ui-regression"
       ],
-      "total": 2
+      "total": 3
     },
     "severity": {
       "critical": 0,
       "high": 2,
-      "medium": 0,
+      "medium": 1,
       "low": 0
     },
-    "proposals": 2,
+    "proposals": 3,
     "approvalGate": "self-runner"
   }
 }

@@ -10,6 +10,7 @@ const path = require('path');
 const API = 'https://api.render.com/v1';
 const SERVICE_NAME = 'gatorvault-api';
 const ENV_PATH = path.join(__dirname, '..', '.env');
+const { UF_PREMIUM_AUTOPOSTER_ENV } = require('../lib/autoposter/uf-premium-mode');
 
 const key = process.env.RENDER_API_KEY;
 if (!key) {
@@ -84,6 +85,11 @@ async function main() {
   await upsertEnvVar(svc.id, 'X_AUTOPOST_REPLY_ENABLED', 'true');
   console.log('Set X_AUTOPOST_REPLY_ENABLED=true on Render');
 
+  for (const [key, value] of Object.entries(UF_PREMIUM_AUTOPOSTER_ENV)) {
+    await upsertEnvVar(svc.id, key, value);
+    console.log(`Set ${key}=${value} on Render`);
+  }
+
   const pullKeys = [
     'X_OAUTH1_API_KEY',
     'X_OAUTH1_API_SECRET',
@@ -101,6 +107,7 @@ async function main() {
   local.X_PIPELINES_ENABLED = 'true';
   local.X_AUTOPOST_ENABLED = 'true';
   local.X_AUTOPOST_REPLY_ENABLED = 'true';
+  Object.assign(local, UF_PREMIUM_AUTOPOSTER_ENV);
   upsertLocalEnv(local);
   console.log('Updated local server/.env with Render X OAuth keys');
 

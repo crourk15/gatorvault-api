@@ -117,13 +117,17 @@
   grid-template-columns: 1fr;
 }
 
-.gv-gnl-feed-card__headline,
-.gv-gnl-beat-card__text {
+.gv-gnl-feed-card__headline {
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   word-break: break-word;
+}
+
+.gv-gnl-beat-card__text {
+  word-break: break-word;
+  line-height: 1.5;
 }
 
 .gv-gnl-beat-card__writer {

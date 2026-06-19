@@ -8,10 +8,10 @@ export type FcLabTarget = {
   position: string;
   school: string | null;
   classYear: number;
-  ufProbability: number;
-  delta7d: number;
-  fitScore: number;
-  modelPct: number;
+  ufProbability: number | null;
+  delta7d: number | null;
+  fitScore: number | null;
+  modelPct: number | null;
   stars: number | null;
   committedTo?: string | null;
   predictors: Array<{ name: string; score: number }>;

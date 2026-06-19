@@ -5,10 +5,12 @@ import '@/lib/gv-design-system.css';
 import '@/lib/gatorvault-brand.css';
 import '@/lib/vault-shell.css';
 import '@/lib/vault-home.css';
+import '@/lib/home-premium.css';
 import '@/lib/vault-gatornation-live.css';
 import '@/lib/gnl-hero.css';
 import '@/lib/media-card.css';
 import '@/lib/uf-premium-mobile.css';
+import '@/lib/uf-premium-gnl.css';
 
 export default function GatorNationLiveLayout({
   children,

@@ -716,6 +716,34 @@ export async function fetchHomeBoardsPreview(force = false): Promise<HomeBoardPr
   });
 }
 
+export async function fetchHomeBundle(force = false): Promise<HomeBundle> {
+  const [ticker, movement, content, recruiting, personalized, portal, team, nil, schedule] =
+    await Promise.all([
+      fetchLiveTicker(force).catch(() => null),
+      fetchMovementPreview(force).catch(() => null),
+      fetchContentLatest(force).catch(() => null),
+      fetchRecruitingSnapshot(force).catch(() => null),
+      fetchPersonalizedHints().catch(() => null),
+      fetchHomePortalSummary(force).catch(() => null),
+      fetchHomeTeamSnapshot(force).catch(() => null),
+      fetchHomeNilPulse(force).catch(() => null),
+      fetchHomeUpcomingGames(force).catch(() => null),
+    ]);
+
+  return {
+    ticker,
+    movement,
+    content,
+    recruiting,
+    momentumPct: movement ? heatmapSparkPct(movement.heatmap.buckets) : 0,
+    personalized,
+    portal,
+    team,
+    nil,
+    schedule,
+  };
+}
+
 export async function fetchHomeIntelPreview(force = false): Promise<
   import('@/components/recruiting-hub/HighPriorityIntel/types').HighPriorityIntelItem[]
 > {

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-16T11:22:19.432Z",
+  "updatedAt": "2026-06-16T18:18:44.019Z",
   "subsystems": {
     "autoposter": {
       "subsystem": "autoposter",
@@ -57,11 +57,11 @@
     },
     "qa:crawler": {
       "subsystem": "qa:crawler",
-      "lastRun": "2026-06-16T11:22:19.432Z",
+      "lastRun": "2026-06-16T18:18:44.019Z",
       "lastStatus": "success",
       "lastMessage": "QA crawl passed (111 checks)",
       "lastDetails": {
-        "runId": "qa_1781608910343",
+        "runId": "qa_1781633888188",
         "summary": {
           "total": 111,
           "passed": 111,
@@ -71,8 +71,8 @@
         "errors": []
       },
       "lastCounts": null,
-      "lastSuccess": "2026-06-16T11:22:19.432Z",
-      "lastFailure": "2026-06-16T10:45:37.835Z",
+      "lastSuccess": "2026-06-16T18:18:44.019Z",
+      "lastFailure": "2026-06-16T18:03:36.215Z",
       "lastWarning": null,
       "failureStreak": 0
     },
@@ -202,17 +202,17 @@
     },
     "product-intel": {
       "subsystem": "product-intel",
-      "lastRun": "2026-06-16T11:22:19.289Z",
+      "lastRun": "2026-06-16T18:18:43.936Z",
       "lastStatus": "warning",
-      "lastMessage": "Product Intelligence scored 100/100 — 2 fix item(s)",
+      "lastMessage": "Product Intelligence scored 100/100 — 3 fix item(s)",
       "lastDetails": {
-        "runId": "qa_1781608910343",
+        "runId": "qa_1781633888188",
         "overall": 100,
-        "fixQueue": 2,
+        "fixQueue": 3,
         "layers": {
           "data": {
             "counts": {
-              "total": 2,
+              "total": 3,
               "bySource": {
                 "qa": 0,
                 "apiHealth": 0,
@@ -220,7 +220,7 @@
                 "autoposter": 1,
                 "recruiting": 0,
                 "teamData": 1,
-                "filmRoom": 0
+                "filmRoom": 1
               }
             },
             "sources": [
@@ -243,24 +243,25 @@
           "classification": {
             "active": [
               "roster-mismatch",
-              "autoposter-stale"
+              "autoposter-stale",
+              "ui-regression"
             ],
-            "total": 2
+            "total": 3
           },
           "severity": {
             "critical": 0,
             "high": 2,
-            "medium": 0,
+            "medium": 1,
             "low": 0
           },
-          "proposals": 2,
+          "proposals": 3,
           "approvalGate": "self-runner"
         }
       },
       "lastCounts": null,
       "lastSuccess": "2026-06-11T21:03:28.379Z",
       "lastFailure": null,
-      "lastWarning": "2026-06-16T11:22:19.289Z",
+      "lastWarning": "2026-06-16T18:18:43.936Z",
       "failureStreak": 0
     }
   }

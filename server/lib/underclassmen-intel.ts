@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
-import { loadBoardPlayersForSlugs, type FutureCastBoardPlayer } from '../api/futurecast/allowlist-board';
+import { loadBoardPlayersForSlugs, UNDERCLASSMEN_MOVEMENT_WINDOW_DAYS, type FutureCastBoardPlayer } from '../api/futurecast/allowlist-board';
 import { getRecruitingPlayerBySlug } from '../api/players/recruiting-fallback';
 
 const require = createRequire(import.meta.url);
@@ -25,8 +25,8 @@ export type UnderclassmenEarlyIntel = {
   classYear: number;
   position: string;
   tier: 'target' | 'watchlist';
-  ufProbability: number;
-  fitScore: number;
+  ufProbability: number | null;
+  fitScore: number | null;
   discoveryScore: number | null;
   volatilityScore: number;
   priority: string;
@@ -43,12 +43,12 @@ export type UnderclassmenEarlySignal = {
 };
 
 export type UnderclassmenEarlyMovement = {
-  trendDelta7d: number;
+  trendDelta7d: number | null;
   volatility7d: number;
   movementWindow: {
-    ufProbNow: number;
-    ufProb7dAgo: number;
-    delta7d: number;
+    ufProbNow: number | null;
+    ufProb7dAgo: number | null;
+    delta7d: number | null;
     volatilityScore: number;
     windowDays: number;
   } | null;
@@ -73,8 +73,8 @@ export type UnderclassmenRelatedIntel = {
   fullName: string;
   classYear: number;
   position: string;
-  ufConfidence: number;
-  fitScore: number;
+  ufConfidence: number | null;
+  fitScore: number | null;
 };
 
 export type UnderclassmenIntelBundle = {
@@ -151,12 +151,6 @@ async function resolveClassYear(slug: string, entry?: EarlyWatchEntry): Promise<
   return isUnderclassmenClassYear(year) ? year : null;
 }
 
-function toPercent(value: number | null | undefined): number {
-  if (value == null || !Number.isFinite(value)) return 0;
-  const n = Number(value);
-  return n <= 1 ? Math.round(n * 1000) / 10 : Math.round(n * 10) / 10;
-}
-
 function synthesizeMovementHistory(
   ufConfidence: number,
   trendDelta7d: number
@@ -211,8 +205,8 @@ function buildEarlySignals(
     });
   }
 
-  const movement = player.earlyMovement ?? player.trendDelta7d ?? entry?.earlyMovement ?? 0;
-  if (Math.abs(movement) >= 0.02) {
+  const movement = player.trendDelta7d;
+  if (movement != null && Math.abs(movement) >= 0.02) {
     signals.push({
       id: `${intelUuid}-momentum`,
       playerId: intelUuid,
@@ -226,7 +220,7 @@ function buildEarlySignals(
     });
   }
 
-  for (const school of player.competingSchools ?? entry?.competingSchools ?? []) {
+  for (const school of player.competingSchools ?? []) {
     if (!school?.name) continue;
     signals.push({
       id: `${intelUuid}-compete-${school.name.toLowerCase().replace(/\s+/g, '-')}`,
@@ -235,7 +229,7 @@ function buildEarlySignals(
       signalValue: {
         school: school.name,
         interestPct: school.pct,
-        source: 'early-watchlist',
+        source: 'futurecast-compete',
       },
       createdAt: now,
     });
@@ -252,7 +246,7 @@ function buildFutureCastPicks(
   const picks: UnderclassmenFutureCastPick[] = [];
 
   const floridaPct = player.ufConfidence;
-  if (floridaPct > 0) {
+  if (floridaPct != null && floridaPct > 0) {
     picks.push({
       id: `${intelUuid}-pick-florida`,
       school: 'Florida',
@@ -283,45 +277,50 @@ function buildFutureCastPicks(
   return picks.sort((a, b) => b.confidence - a.confidence);
 }
 
-function resolvePriority(ufConfidence: number, fitScore: number): 'high' | 'medium' | 'low' {
-  const score = ufConfidence * 0.6 + fitScore * 0.4;
-  if (score >= 55 || ufConfidence >= 60) return 'high';
-  if (score >= 35 || ufConfidence >= 40) return 'medium';
-  return 'low';
+function loadTargetBoardEntry(slug: string, classYear: number): Record<string, unknown> | null {
+  const boardPath = path.join(__dirname, `../data/recruiting/${classYear}-target-board.json`);
+  try {
+    const board = JSON.parse(fs.readFileSync(boardPath, 'utf8')) as {
+      targets?: Array<Record<string, unknown>>;
+    };
+    return (
+      board.targets?.find((t) => String(t.slug || '').toLowerCase() === slug.toLowerCase()) ?? null
+    );
+  } catch {
+    return null;
+  }
 }
 
-function buildSeedBoardPlayer(
+function buildMinimalBoardPlayer(
   slug: string,
   classYear: number,
   entry?: EarlyWatchEntry
 ): FutureCastBoardPlayer | null {
-  if (!entry?.slug && !entry?.name) return null;
-  const ufConfidence = toPercent(entry?.ufProbability);
-  const fitScore = Math.round(Number(entry?.fitScore ?? entry?.rating ?? 0));
-  const trendDelta7d = Number(entry?.earlyMovement ?? 0);
-  const competingSchools = entry?.competingSchools ?? [];
+  const board = loadTargetBoardEntry(slug, classYear);
+  if (!entry?.slug && !entry?.name && !board?.name) return null;
+  const position = String(board?.pos || board?.position || '').trim().toUpperCase();
   return {
     id: intelUuidForSlug(slug),
     slug,
-    name: String(entry?.name || slug),
-    classYear,
-    position: String(entry?.pos || entry?.position || 'ATH').toUpperCase(),
-    school: (entry as { school?: string }).school ?? null,
+    name: String(board?.name || entry?.name || slug),
+    classYear: Number(board?.classYear ?? entry?.classYear ?? classYear),
+    position: position || 'TBD',
+    school: (board?.school as string) ?? (entry as { school?: string }).school ?? null,
     hometown: null,
-    state: (entry as { state?: string }).state ?? null,
-    composite: Math.round(Number(entry?.rating ?? 0) * 100) / 100,
-    stars: Number((entry as { stars?: number }).stars ?? 0) || 0,
-    natlRank: null,
-    posRank: null,
-    stateRank: null,
-    ufConfidence,
-    fitScore,
-    trendDelta7d,
-    volatility7d: Math.round(Math.abs(trendDelta7d) * 100) / 100,
-    priority: resolvePriority(ufConfidence, fitScore),
-    committedTo: null,
-    predictors: competingSchools.map((s) => ({ name: s.name, score: s.pct })),
-    competingSchools,
+    state: (board?.state as string) ?? (entry as { state?: string }).state ?? null,
+    composite: Math.round(Number(board?.rating ?? 0) * 100) / 100,
+    stars: Number(board?.stars ?? (entry as { stars?: number }).stars ?? 0) || 0,
+    natlRank: (board?.natlRank as number) ?? null,
+    posRank: (board?.posRank as number) ?? null,
+    stateRank: (board?.stateRank as number) ?? null,
+    ufConfidence: null,
+    fitScore: null,
+    trendDelta7d: null,
+    volatility7d: 0,
+    priority: 'low',
+    committedTo: (board?.committedTo as string) ?? null,
+    predictors: [],
+    competingSchools: [],
   };
 }
 
@@ -330,38 +329,38 @@ async function buildSeedBoardPlayerFromRecruiting(
   classYear: number,
   entry?: EarlyWatchEntry
 ): Promise<FutureCastBoardPlayer | null> {
-  const fromWatch = buildSeedBoardPlayer(slug, classYear, entry);
-  if (fromWatch) return fromWatch;
-
   const recruiting = await getRecruitingPlayerBySlug(slug);
-  if (!recruiting) return null;
+  const board = loadTargetBoardEntry(slug, classYear);
+  if (!recruiting && !board && !entry?.name) return null;
 
-  const ufConfidence = toPercent(entry?.ufProbability);
-  const fitScore = Math.round(Number(entry?.fitScore ?? recruiting.rating ?? 0));
-  const trendDelta7d = Number(entry?.earlyMovement ?? 0);
-  const competingSchools = entry?.competingSchools ?? [];
+  const position = String(
+    recruiting?.position || recruiting?.pos || board?.pos || board?.position || ''
+  )
+    .trim()
+    .toUpperCase();
+
   return {
     id: intelUuidForSlug(slug),
     slug,
-    name: String(recruiting.name || slug),
-    classYear,
-    position: String(recruiting.position || 'ATH').toUpperCase(),
-    school: recruiting.highSchool ?? null,
-    hometown: recruiting.hometown ?? null,
-    state: recruiting.state ?? null,
-    composite: Math.round(Number(recruiting.rating ?? 0) * 100) / 100,
-    stars: Number(recruiting.stars ?? 0) || 0,
-    natlRank: recruiting.natlRank ?? null,
-    posRank: recruiting.posRank ?? null,
-    stateRank: recruiting.stateRank ?? null,
-    ufConfidence: ufConfidence || fitScore * 0.4,
-    fitScore,
-    trendDelta7d,
-    volatility7d: Math.round(Math.abs(trendDelta7d) * 100) / 100,
-    priority: resolvePriority(ufConfidence || fitScore * 0.4, fitScore),
-    committedTo: recruiting.committedTo ?? null,
-    predictors: competingSchools.map((s) => ({ name: s.name, score: s.pct })),
-    competingSchools,
+    name: String(recruiting?.name || board?.name || entry?.name || slug),
+    classYear: Number(recruiting?.classYear ?? board?.classYear ?? entry?.classYear ?? classYear),
+    position: position || 'TBD',
+    school: recruiting?.highSchool ?? (board?.school as string) ?? null,
+    hometown: recruiting?.hometown ?? null,
+    state: recruiting?.state ?? (board?.state as string) ?? null,
+    composite: Math.round(Number(recruiting?.rating ?? board?.rating ?? 0) * 100) / 100,
+    stars: Number(recruiting?.stars ?? board?.stars ?? 0) || 0,
+    natlRank: recruiting?.natlRank ?? (board?.natlRank as number) ?? null,
+    posRank: recruiting?.posRank ?? (board?.posRank as number) ?? null,
+    stateRank: recruiting?.stateRank ?? (board?.stateRank as number) ?? null,
+    ufConfidence: null,
+    fitScore: null,
+    trendDelta7d: null,
+    volatility7d: 0,
+    priority: 'low',
+    committedTo: recruiting?.committedTo ?? (board?.committedTo as string) ?? null,
+    predictors: [],
+    competingSchools: [],
   };
 }
 
@@ -370,7 +369,9 @@ async function loadEnrichedBoardPlayers(
   slugs: string[]
 ): Promise<FutureCastBoardPlayer[]> {
   try {
-    return await loadBoardPlayersForSlugs(classYear, slugs);
+    return await loadBoardPlayersForSlugs(classYear, slugs, {
+      movementWindowDays: UNDERCLASSMEN_MOVEMENT_WINDOW_DAYS,
+    });
   } catch (err) {
     console.warn(
       '[underclassmen-intel] board enrichment unavailable, using seed fallback:',
@@ -381,6 +382,14 @@ async function loadEnrichedBoardPlayers(
     );
     return rows.filter((p): p is FutureCastBoardPlayer => p != null);
   }
+}
+
+/** Authoritative underclassmen board rows with FutureCast metrics when available. */
+export async function loadUnderclassmenBoardPlayers(
+  classYear: number,
+  slugs: string[]
+): Promise<FutureCastBoardPlayer[]> {
+  return loadEnrichedBoardPlayers(classYear, slugs);
 }
 
 function buildRelatedIntel(
@@ -395,7 +404,7 @@ function buildRelatedIntel(
     .sort((a, b) => {
       const posMatch = (p: FutureCastBoardPlayer) =>
         p.position === position ? 1 : 0;
-      return posMatch(b) - posMatch(a) || b.ufConfidence - a.ufConfidence;
+      return posMatch(b) - posMatch(a) || (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1);
     })
     .slice(0, 6)
     .map((p) => ({
@@ -442,42 +451,48 @@ export async function buildUnderclassmenIntelForSlug(
   const intelUuid = intelUuidForSlug(normalized);
   const tier: 'target' | 'watchlist' =
     classYear === 2030 || entry?.tier === 'watchlist' ? 'watchlist' : 'target';
-  const trendDelta7d = player.trendDelta7d ?? entry?.earlyMovement ?? 0;
+  const trendDelta7d = player.trendDelta7d;
   const ufConfidence = player.ufConfidence;
-  const movementHistory = synthesizeMovementHistory(ufConfidence, trendDelta7d);
+  const movementHistory =
+    ufConfidence != null && trendDelta7d != null
+      ? synthesizeMovementHistory(ufConfidence, trendDelta7d)
+      : [];
 
   const earlyIntel: UnderclassmenEarlyIntel = {
     slug: normalized,
     name: player.name,
-    classYear,
+    classYear: player.classYear,
     position: player.position,
     tier,
-    ufProbability: toPercent(entry?.ufProbability ?? ufConfidence / 100),
+    ufProbability: ufConfidence,
     fitScore: player.fitScore,
     discoveryScore: entry?.discoveryScore ?? null,
     volatilityScore: player.volatility7d,
     priority: player.priority,
     committedTo: player.committedTo ?? null,
-    competingSchools: player.competingSchools ?? entry?.competingSchools ?? [],
+    competingSchools: player.competingSchools ?? [],
   };
 
   const earlyMovement: UnderclassmenEarlyMovement = {
     trendDelta7d,
     volatility7d: player.volatility7d,
-    movementWindow: {
-      ufProbNow: ufConfidence,
-      ufProb7dAgo: Math.max(0, ufConfidence - trendDelta7d * 100),
-      delta7d: trendDelta7d * 100,
-      volatilityScore: player.volatility7d,
-      windowDays: 7,
-    },
+    movementWindow:
+      ufConfidence != null && trendDelta7d != null
+        ? {
+            ufProbNow: ufConfidence,
+            ufProb7dAgo: Math.max(0, ufConfidence - trendDelta7d * 100),
+            delta7d: trendDelta7d * 100,
+            volatilityScore: player.volatility7d,
+            windowDays: UNDERCLASSMEN_MOVEMENT_WINDOW_DAYS,
+          }
+        : null,
     movementHistory,
   };
 
   return {
     intelUuid,
     slug: normalized,
-    classYear,
+    classYear: player.classYear,
     earlyIntel,
     earlySignals: buildEarlySignals(intelUuid, player, tier, entry),
     earlyMovement,

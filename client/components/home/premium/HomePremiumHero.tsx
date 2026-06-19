@@ -1,0 +1,27 @@
+'use client';
+
+import React from 'react';
+import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
+
+export function HomePremiumHero(): React.ReactElement {
+  return (
+    <section className="uf-premium-hero" aria-label="GatorVault home hero" data-testid="home-premium-hero">
+      <div className="uf-premium-hero__inner">
+        <span className="uf-premium-hero__accent" aria-hidden="true" />
+        <h1 className="uf-premium-hero__title">Only Gators Get Out Alive.</h1>
+        <p className="uf-premium-hero__sub">UF football. Recruiting. FutureCast. All here.</p>
+        <div className="uf-premium-hero__ctas">
+          <a href={VAULT_PILLAR_ROUTES.recruiting} className="uf-premium-cta uf-premium-cta--primary">
+            Recruiting Hub
+          </a>
+          <a href={VAULT_PILLAR_ROUTES.futurecast} className="uf-premium-cta uf-premium-cta--secondary">
+            FutureCast
+          </a>
+          <a href={VAULT_PILLAR_ROUTES.team} className="uf-premium-cta uf-premium-cta--secondary">
+            Team Page
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}

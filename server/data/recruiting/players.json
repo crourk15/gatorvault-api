@@ -35,7 +35,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-1",
+    "weight": "190",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC rotation contributor with red-zone and third-down upside.",
+    "scoutingReport": "WR · 4★ · Frisco, TX · #60 natl",
+    "fitScore": 95,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ WR · #60 natl · Frisco, TX",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "cj-bronaugh",
@@ -73,7 +95,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-1",
+    "weight": "175",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "SEC starter with NFL secondary upside if consistency holds.",
+    "scoutingReport": "CB · 4★ · Winter Garden, FL · #84 natl",
+    "fitScore": 95,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ CB · #84 natl · Winter Garden, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "kevin-ford",
@@ -111,7 +155,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-3",
+    "weight": "245",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "EDGE · 4★ · Duncanville, TX · #149 natl",
+    "fitScore": 93,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ EDGE · #149 natl · Duncanville, TX",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "justin-williams",
@@ -149,7 +215,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-11",
+    "weight": "190",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC rotation contributor with red-zone and third-down upside.",
+    "scoutingReport": "WR · 4★ · Gainesville, FL · #158 natl",
+    "fitScore": 93,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ WR · #158 natl ·",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "jareylan-mccoy",
@@ -187,7 +275,27 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "DL · 4★ · Tupelo, MS · #173 natl",
+    "fitScore": 92,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ DL · #173 natl · Tupelo, MS",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "dylan-purter",
@@ -225,7 +333,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-0",
+    "weight": "165",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "SEC rotation defensive back with special-teams value.",
+    "scoutingReport": "S · 4★ · Tuskegee, AL · #204 natl",
+    "fitScore": 92,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ S · #204 natl · Tuskegee, AL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "will-griffin",
@@ -263,7 +393,27 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "strengths": [
+      "Arm talent and timing in the intermediate game",
+      "Poise under pressure in the pocket",
+      "Leadership and command of the huddle"
+    ],
+    "weaknesses": [
+      "Decision speed vs. disguised coverages",
+      "Consistency on deep-ball accuracy"
+    ],
+    "schemeFit": "Spread passing quarterback who can distribute on rhythm and extend when structure breaks down.",
+    "projection": "SEC-caliber signal-caller with starter trajectory in Billy Napier's system.",
+    "scoutingReport": "QB · 4★ · Tampa, FL · #259 natl",
+    "fitScore": 91,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ QB · #259 natl · Tampa, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "kendall-guervil",
@@ -301,7 +451,27 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "DL · 4★ · Fort Myers, FL · #276 natl",
+    "fitScore": 91,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ DL · #276 natl · Fort Myers, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "tyler-chukuyem",
@@ -339,7 +509,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-6",
+    "weight": "290",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "scoutingReport": "OT · 4★ · Douglasville, GA · #281 natl",
+    "fitScore": 91,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ OT · #281 natl · Douglasville, GA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "malik-morris",
@@ -377,7 +569,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-1",
+    "weight": "260",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside or outside linebacker in UF's multiple front and nickel packages.",
+    "projection": "SEC starter with special-teams value and defensive rotation upside.",
+    "scoutingReport": "LB · 4★ · Lakeland, FL · #362 natl",
+    "fitScore": 90,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ LB · #362 natl · Lakeland, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "heze-kent",
@@ -415,7 +629,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-6",
+    "weight": "320",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "scoutingReport": "OT · 4★ · Brunswick, GA · #366 natl",
+    "fitScore": 90,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ OT · #366 natl · Brunswick, GA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "marquez-daniel",
@@ -453,7 +689,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-5",
+    "weight": "187",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC rotation contributor with red-zone and third-down upside.",
+    "scoutingReport": "WR · 4★ · Tuskegee, AL · #367 natl",
+    "fitScore": 90,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ WR · #367 natl · Tuskegee, AL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "kaiden-hall",
@@ -491,7 +749,27 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "SEC rotation defensive back with special-teams value.",
+    "scoutingReport": "S · 4★ · Milton, FL · #386 natl",
+    "fitScore": 90,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ S · #386 natl · Milton, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "duke-clark",
@@ -529,7 +807,29 @@
     "nextVisitSchool": null,
     "visitStart": null,
     "visitEnd": null,
-    "headliner": false
+    "headliner": false,
+    "height": "5-11",
+    "weight": "200",
+    "strengths": [
+      "Vision and patience between the tackles",
+      "Contact balance through second-level defenders",
+      "Pass-catching reliability out of the backfield"
+    ],
+    "weaknesses": [
+      "Top-end breakaway speed in the open field",
+      "Pass protection technique vs. blitzers"
+    ],
+    "schemeFit": "Every-down back who fits UF's inside/outside zone and screen package.",
+    "projection": "Rotation back with early-down and short-yardage value in the SEC.",
+    "scoutingReport": "RB · 4★ · Armwood HS, Seffner FL",
+    "fitScore": 55,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "C",
+    "evaluationSummary": "4★ RB · #— natl · Armwood HS, Seffner FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "gnivre-carr",
@@ -567,7 +867,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-4",
+    "weight": "325",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "scoutingReport": "IOL · 3★ · Ocala, FL · #505 natl",
+    "fitScore": 89,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ IOL · #505 natl · Ocala, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "corey-brown",
@@ -605,7 +927,29 @@
     "nextVisitSchool": null,
     "visitStart": null,
     "visitEnd": null,
-    "headliner": false
+    "headliner": false,
+    "height": "6-4",
+    "weight": "305",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "scoutingReport": "OL · 3★ · Dillard HS, Fort Lauderdale FL",
+    "fitScore": 55,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "C",
+    "evaluationSummary": "3★ OL · #— natl · Dillard HS, Fort Lauderdale FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "desmond-green",
@@ -643,7 +987,27 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "scoutingReport": "IOL · 3★ · Saint Stephen, SC · #884 natl",
+    "fitScore": 87,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ IOL · #884 natl · Saint Stephen, SC",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "javarii-luckas",
@@ -681,7 +1045,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-5",
+    "weight": "270",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "scoutingReport": "OT · 3★ · Belle Glade, FL · #1147 natl",
+    "fitScore": 86,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ OT · #1147 natl · Belle Glade, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "micah-jones",
@@ -719,7 +1105,29 @@
     "nextVisitSchool": null,
     "visitStart": null,
     "visitEnd": null,
-    "headliner": false
+    "headliner": false,
+    "height": "6-4",
+    "weight": "230",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Starter-caliber tight end in a pro-style spread if development continues.",
+    "scoutingReport": "TE · 3★ · Sandalwood HS, Jacksonville FL",
+    "fitScore": 55,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "C",
+    "evaluationSummary": "3★ TE · #— natl · Sandalwood HS, Jacksonville FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "byron-louis",
@@ -757,7 +1165,29 @@
     "nextVisitSchool": null,
     "visitStart": null,
     "visitEnd": null,
-    "headliner": false
+    "headliner": false,
+    "height": "5-10",
+    "weight": "195",
+    "strengths": [
+      "Vision and patience between the tackles",
+      "Contact balance through second-level defenders",
+      "Pass-catching reliability out of the backfield"
+    ],
+    "weaknesses": [
+      "Top-end breakaway speed in the open field",
+      "Pass protection technique vs. blitzers"
+    ],
+    "schemeFit": "Every-down back who fits UF's inside/outside zone and screen package.",
+    "projection": "Rotation back with early-down and short-yardage value in the SEC.",
+    "scoutingReport": "RB · 3★ · Dr. Phillips HS, Orlando FL",
+    "fitScore": 55,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "C",
+    "evaluationSummary": "3★ RB · #— natl · Dr. Phillips HS, Orlando FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "jalen-wiggins",
@@ -795,7 +1225,29 @@
     "nextVisitSchool": null,
     "visitStart": null,
     "visitEnd": null,
-    "headliner": false
+    "headliner": false,
+    "height": "6-3",
+    "weight": "220",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "EDGE · 3★ · Mainland HS, Daytona Beach FL",
+    "fitScore": 55,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "C",
+    "evaluationSummary": "3★ EDGE · #— natl · Mainland HS, Daytona Beach FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "ace-ciongoli",
@@ -833,7 +1285,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-11",
+    "weight": "190",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC rotation contributor with red-zone and third-down upside.",
+    "scoutingReport": "WR · 3★ · Needham, MA",
+    "fitScore": 81,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "B+",
+    "evaluationSummary": "3★ WR · #3144 natl · Indiana",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "jabios-smith",
@@ -871,7 +1345,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-2",
+    "weight": "205",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside or outside linebacker in UF's multiple front and nickel packages.",
+    "projection": "SEC starter with special-teams value and defensive rotation upside.",
+    "scoutingReport": "LB · 4★ · Swainsboro, GA · #153 natl",
+    "fitScore": 92,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ LB · #153 natl · Swainsboro, GA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "elias-pearl",
@@ -909,7 +1405,36 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-11",
+    "weight": "183",
+    "strengths": [
+      "Versatile wide receiver who is both a YAC monster and technician.",
+      "Measured in at 5-foot-10, 183 pounds with plus length (6-foot-5 wing-span) at the Rivals Camp in Miami coming out of his junior season.",
+      "Tested as a top athlete at the Rivals Camp, ripping off a 4.5-second 40-yard dash, a 10 foot broad jump and 32.4-inch vertical.",
+      "Turned in a breakout junior season, accounting for over 1,300 yards and 24 touchdowns from scrimmage.",
+      "Has outstanding foundational movement skills with impressive lower body flexibility.",
+      "Able to easily stack corners off the line with his acceleration and long stride.",
+      "Long arms for his frame pair with coordination to result in a wide catch radius.",
+      "A natural hands catcher who shows high-end ball-tracking skills to locate the football over his shoulder."
+    ],
+    "weaknesses": [
+      "May not have prototypical height, but has the skills to play all over the formation."
+    ],
+    "schemeFit": "Versatile wideout who can play all over the formation in UF's spread passing game",
+    "projection": "Well-rounded skill set gives him one of the highest floors of 2027 wide receiver prospects per Charles Power",
+    "playerComp": "On3 Rivals player comp: Deebo Samuel — similar size, movement, YAC ability and catch radius at the same stage",
+    "scoutingReport": "Versatile wide receiver who is both a YAC monster and technician. Measured in at 5-foot-10, 183 pounds with plus length (6-foot-5 wing-span) at the Rivals Camp in Miami coming out of his junior season. Tested as a top athlete at the Rivals Camp, ripping off a 4.5-second 40-yard dash, a 10 foot broad jump and 32.4-inch vertical. Turned in a breakout junior season, accounting for over 1,300 yards and 24 touchdowns from scrimmage. Has outstanding foundational movement skills with impressive lower body flexibility. Able to easily stack corners off the line with his acceleration and long stride. Long arms for his frame pair with coordination to result in a wide catch radius. A natural hands catcher who shows high-end ball-tracking skills to locate the football over his shoulder. One of the more dangerous wide receiver prospects after the catch in the 2027 cycle. Dynamic with the ball in his hands and maximizes yards after the catch. A slasher in space, quickly cutting to make defenders miss. Slips out of arm tackles and fights through contact. Shows his ability with the ball in his hands as a return man, taking back three kicks as a junior. May not have prototypical height, but has the skills to play all over the formation. A competitive player who makes key plays in big moments of games. Well-rounded skill set and versatility give him one of the highest floors of 2027 wide receiver prospects.",
+    "recruitingStory": "Committed to Florida in May 2026; Port Charlotte star ranked No. 95 nationally per On3 class article.",
+    "scoutingVerified": true,
+    "fitScore": 93,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ WR · #90 natl · Port Charlotte, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "peyton-miller",
@@ -947,7 +1472,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-5",
+    "weight": "290",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "scoutingReport": "IOL · 4★ · Anna, TX · #127 natl",
+    "fitScore": 92,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ IOL · #127 natl · Anna, TX",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "devoun-kendrick",
@@ -985,7 +1532,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-4",
+    "weight": "300",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "DL · 3★ · Tampa, FL · #582 natl",
+    "fitScore": 88,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ DL · #582 natl · Tampa, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "tommy-douglas",
@@ -1023,7 +1592,27 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Starter-caliber tight end in a pro-style spread if development continues.",
+    "scoutingReport": "TE · 4★ · Princeton, NJ · #349 natl",
+    "fitScore": 89,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ TE · #349 natl · Princeton, NJ",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "aamaury-fountain",
@@ -1061,7 +1650,38 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-3",
+    "weight": "182",
+    "strengths": [
+      "Big-framed cornerback with length, coordination, and coverage instincts.",
+      "Has considerable length for the position.",
+      "Uses his big frame and long arms to disrupt wide receivers off the line when working in press coverage.",
+      "Able to reroute pass-catchers with ease.",
+      "Shows smooth movement skills with the ability to flip his hips and redirect in coverage, especially for a bigger cornerback.",
+      "Shows quality natural instincts when reading routes and breaking on the football.",
+      "Able to track and locate the ball.",
+      "Physical as a run defender."
+    ],
+    "weaknesses": [
+      "Has unverified size, but listed at around 6-foot-3, 185 pounds.",
+      "Does not have any verified athletic markers and pure top end speed remains a question.",
+      "Also older for the cycle, turning 19 years old in February of his junior year."
+    ],
+    "schemeFit": "Press-man corner with length to reroute receivers in UF's secondary",
+    "projection": "Upside to develop into one of the top cornerback prospects in the 2027 cycle per Charles Power",
+    "playerComp": "On3 Rivals player comp: Julius Brents — tall, high-cut corner with considerable length",
+    "scoutingReport": "Big-framed cornerback with length, coordination, and coverage instincts. Has unverified size, but listed at around 6-foot-3, 185 pounds. Has considerable length for the position. Uses his big frame and long arms to disrupt wide receivers off the line when working in press coverage. Able to reroute pass-catchers with ease. Shows smooth movement skills with the ability to flip his hips and redirect in coverage, especially for a bigger cornerback. Shows quality natural instincts when reading routes and breaking on the football. Able to track and locate the ball. Physical as a run defender. Also worked at wide receiver some as a junior. Does not have any verified athletic markers and pure top end speed remains a question. Also older for the cycle, turning 19 years old in February of his junior year. Size and instincts make him an intriguing corner prospect with some remaining questions to be answered. Has the upside to develop into one of the top cornerback prospects in the 2027 cycle.",
+    "recruitingStory": "Flipped from South Carolina and committed to Florida in April 2026.",
+    "scoutingVerified": true,
+    "fitScore": 92,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ CB · #145 natl · Warner Robins, GA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "davin-davidson",
@@ -1099,7 +1719,39 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-6",
+    "weight": "215",
+    "strengths": [
+      "Towering quarterback prospect with a big-time arm and intriguing upside.",
+      "The tallest top quarterback in the 2027 cycle.",
+      "Measured in at 6-foot-6.5, 215 pounds with a 9.75-inch hand prior to his senior season.",
+      "Touts outstanding arm strength with the ability to generate a ton of zip on passes to the intermediate and deep areas of the field.",
+      "Can rip the football on a line from 30 yards out.",
+      "Shows flashes of arm dexterity.",
+      "A solid mover at his size.",
+      "Completed 64.6% of his passes for 2360 yards, 23 touchdowns against 6 interceptions while helping his team to a state title."
+    ],
+    "weaknesses": [
+      "As a result is still early in his development in comparison with his blue-chip peers.",
+      "As a taller, longer quarterback will need to continue tightening up his mechanics and footwork.",
+      "Will also need to improve at changing speeds, as he's primarily a fastball thrower at this point.",
+      "Has a high upside, but may be a few years away."
+    ],
+    "schemeFit": "Pro-style spread quarterback with intermediate and deep ball traits",
+    "projection": "High upside, but may be a few years away per Charles Power",
+    "playerComp": "On3 Rivals player comp: Josh Freeman — jumbo quarterback with big league arm and developmental profile",
+    "scoutingReport": "Towering quarterback prospect with a big-time arm and intriguing upside. The tallest top quarterback in the 2027 cycle. Measured in at 6-foot-6.5, 215 pounds with a 9.75-inch hand prior to his senior season. Touts outstanding arm strength with the ability to generate a ton of zip on passes to the intermediate and deep areas of the field. Can rip the football on a line from 30 yards out. Shows flashes of arm dexterity. A solid mover at his size. Completed 64.6% of his passes for 2360 yards, 23 touchdowns against 6 interceptions while helping his team to a state title. A low volume passer attempting a little over 14 passes per game and accounting for 163 total yards per game as a junior. As a result is still early in his development in comparison with his blue-chip peers. As a taller, longer quarterback will need to continue tightening up his mechanics and footwork. Will also need to improve at changing speeds, as he's primarily a fastball thrower at this point. Should benefit greatly from increased in-game reps. Has a high upside, but may be a few years away.",
+    "recruitingStory": "Committed to Florida in April 2026 over Georgia and other SEC programs.",
+    "scoutingVerified": true,
+    "fitScore": 92,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ QB · #115 natl · Sarasota, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "maxwell-hiller",
@@ -1137,7 +1789,34 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "strengths": [
+      "Elite interior offensive line prospect with ready-to-play size, athleticism, and physicality.",
+      "Measured in at around 6-foot-5, 305 pounds as a junior.",
+      "Arm length checks in at 32 inches or a shade under.",
+      "Registers as a plus athlete in the combine setting.",
+      "A dominant run blocker on Friday nights.",
+      "A fluid, reactive mover at the second level.",
+      "Locks on defenders and imposes his will.",
+      "Not uncommon to see him drive defensive linemen to the sideline."
+    ],
+    "weaknesses": [
+      "Has the movement skills to play some tackle at the college level, but lack of arm length will ultimately force him inside."
+    ],
+    "schemeFit": "Interior OL cornerstone in Florida's retool up front",
+    "projection": "Most ready-to-play interior offensive line prospect in the 2027 cycle; could be primed for instant impact",
+    "playerComp": "On3 Rivals player comp: David DeCastro — dominant run blocker with plus athleticism for the position",
+    "scoutingReport": "Elite interior offensive line prospect with ready-to-play size, athleticism, and physicality. Measured in at around 6-foot-5, 305 pounds as a junior. Arm length checks in at 32 inches or a shade under. Registers as a plus athlete in the combine setting. A dominant run blocker on Friday nights. A fluid, reactive mover at the second level. Locks on defenders and imposes his will. Not uncommon to see him drive defensive linemen to the sideline. Plays with an innate edge and level of physicality. Has the movement skills to project as a high-level pass protector. High level of coordination leads to a natural technical acuity with advanced hand placement and usage. Has the movement skills to play some tackle at the college level, but lack of arm length will ultimately force him inside. Also plays basketball. His younger brother, Colton Hiller, is a five-star basketball prospect in the 2028 cycle. Has a strong case as the most ready-to-play interior offensive line prospect in the 2027 cycle and could be primed for an instant impact at the college level.",
+    "recruitingStory": "Committed April 2026; Rivals No. 4 overall and No. 1 interior offensive lineman in the 2027 cycle.",
+    "scoutingVerified": true,
+    "fitScore": 99,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "5★ IOL · #3 natl · Coatesville, PA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "anthony-jennings",
@@ -1175,7 +1854,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-11",
+    "weight": "160",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC rotation contributor with red-zone and third-down upside.",
+    "scoutingReport": "WR · 4★ · Fort Lauderdale, FL · #294 natl",
+    "fitScore": 90,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ WR · #294 natl · Fort Lauderdale, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "andrew-beard",
@@ -1213,7 +1914,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-9",
+    "weight": "195",
+    "strengths": [
+      "Vision and patience between the tackles",
+      "Contact balance through second-level defenders",
+      "Pass-catching reliability out of the backfield"
+    ],
+    "weaknesses": [
+      "Top-end breakaway speed in the open field",
+      "Pass protection technique vs. blitzers"
+    ],
+    "schemeFit": "Every-down back who fits UF's inside/outside zone and screen package.",
+    "projection": "Rotation back with early-down and short-yardage value in the SEC.",
+    "scoutingReport": "RB · 4★ · Bogart, GA · #181 natl",
+    "fitScore": 91,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ RB · #181 natl · Bogart, GA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "elijah-hutcheson",
@@ -1251,7 +1974,27 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "scoutingReport": "OT · 4★ · Roanoke, VA · #99 natl",
+    "fitScore": 93,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ OT · #99 natl · Roanoke, VA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "kailib-dillard",
@@ -1289,7 +2032,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-2",
+    "weight": "170",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "SEC rotation defensive back with special-teams value.",
+    "scoutingReport": "S · 3★ · Tulsa, OK · #519 natl",
+    "fitScore": 88,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ S · #519 natl · Tulsa, OK",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "stive-bentley-keumajou",
@@ -1327,7 +2092,27 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "DL · 3★ · Coral Gables, FL · #517 natl",
+    "fitScore": 88,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ DL · #517 natl · Coral Gables, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "tramond-collins",
@@ -1365,7 +2150,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-0",
+    "weight": "185",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC rotation contributor with red-zone and third-down upside.",
+    "scoutingReport": "WR · 4★ · Cottondale, FL · #129 natl",
+    "fitScore": 92,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ WR · #129 natl · Cottondale, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "jackson-ballinger",
@@ -1403,7 +2210,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-5",
+    "weight": "230",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Starter-caliber tight end in a pro-style spread if development continues.",
+    "scoutingReport": "TE · 3★ · Centerburg, OH · #418 natl",
+    "fitScore": 89,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ TE · #418 natl · Centerburg, OH",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "amare-nugent",
@@ -1441,7 +2270,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-11",
+    "weight": "180",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "SEC starter with NFL secondary upside if consistency holds.",
+    "scoutingReport": "CB · 4★ · Plantation, FL · #246 natl",
+    "fitScore": 90,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ CB · #246 natl · Plantation, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "cain-van-norden",
@@ -1479,7 +2330,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-7",
+    "weight": "299",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "DL · 3★ · District Heights, MD · #578 natl",
+    "fitScore": 88,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ DL · #578 natl · District Heights, MD",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "cahron-wheeler",
@@ -1517,7 +2390,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-5",
+    "weight": "245",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "EDGE · 4★ · Baltimore, MD · #123 natl",
+    "fitScore": 92,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ EDGE · #123 natl · Baltimore, MD",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "zahmar-tookes",
@@ -1555,7 +2450,27 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "DL · 4★ · Rochester, NY · #316 natl",
+    "fitScore": 90,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ DL · #316 natl · Rochester, NY",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "eric-singleton-jr",
@@ -1593,7 +2508,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-11",
+    "weight": "165",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC rotation contributor with red-zone and third-down upside.",
+    "scoutingReport": "WR · 3★ · Douglasville, GA",
+    "fitScore": 94,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ WR · #38 natl · Douglasville, GA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "harrison-moore",
@@ -1631,7 +2568,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-5",
+    "weight": "230",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "scoutingReport": "IOL · 3★ · Southlake, TX",
+    "fitScore": 89,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ IOL · #319 natl · Southlake, TX",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "eagan-boyer",
@@ -1669,7 +2628,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-8",
+    "weight": "302",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "scoutingReport": "OT · 3★ · Cornelius, NC",
+    "fitScore": 87,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ OT · #944 natl · Penn State",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "evan-pryor",
@@ -1707,7 +2688,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-10",
+    "weight": "190",
+    "strengths": [
+      "Vision and patience between the tackles",
+      "Contact balance through second-level defenders",
+      "Pass-catching reliability out of the backfield"
+    ],
+    "weaknesses": [
+      "Top-end breakaway speed in the open field",
+      "Pass protection technique vs. blitzers"
+    ],
+    "schemeFit": "Every-down back who fits UF's inside/outside zone and screen package.",
+    "projection": "Rotation back with early-down and short-yardage value in the SEC.",
+    "scoutingReport": "RB · 3★ · Cornelius, NC",
+    "fitScore": 89,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ RB · #250 natl · Cincinnati",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "luke-harpring",
@@ -1745,7 +2748,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-3",
+    "weight": "215",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Starter-caliber tight end in a pro-style spread if development continues.",
+    "scoutingReport": "TE · 3★ · Atlanta, GA",
+    "fitScore": 89,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ TE · #322 natl · Atlanta, GA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "cam-dooley",
@@ -1783,7 +2808,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-2",
+    "weight": "195",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "SEC rotation defensive back with special-teams value.",
+    "scoutingReport": "S · 3★ · Valley, AL",
+    "fitScore": 89,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ S · #299 natl · Kentucky",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "dj-coleman",
@@ -1821,7 +2868,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-0",
+    "weight": "180",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "SEC rotation defensive back with special-teams value.",
+    "scoutingReport": "S · 3★ · Mesquite, TX",
+    "fitScore": 89,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ S · #300 natl · Baylor",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "patrick-durkin",
@@ -1859,7 +2928,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-10",
+    "weight": "170",
+    "strengths": [
+      "Leg strength on field goals and kickoffs",
+      "Routine consistency in pressure moments",
+      "Holder operation reliability"
+    ],
+    "weaknesses": [
+      "Deep-range accuracy in adverse weather",
+      "Directional kickoff placement"
+    ],
+    "schemeFit": "Special teams specialist in UF's field-position game.",
+    "projection": "Reliable place-kicker with game-winning upside.",
+    "scoutingReport": "K · 3★ · Plainfield, IL",
+    "fitScore": 83,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "B+",
+    "evaluationSummary": "3★ K · #2913 natl · Tulane",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "lacota-dippre",
@@ -1897,7 +2988,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-4",
+    "weight": "240",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Starter-caliber tight end in a pro-style spread if development continues.",
+    "scoutingReport": "TE · 3★ · Jermyn, PA",
+    "fitScore": 87,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ TE · #680 natl · James Madison",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.475Z"
   },
   {
     "id": "bailey-stockton",
@@ -1935,7 +3048,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-9",
+    "weight": "175",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC rotation contributor with red-zone and third-down upside.",
+    "scoutingReport": "WR · 3★ · Athens, GA",
+    "fitScore": 87,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ WR · #934 natl · Athens, GA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "dk-kalu",
@@ -1973,7 +3108,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-3",
+    "weight": "270",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "DL · 3★ · Missouri City, TX",
+    "fitScore": 86,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ DL · #1172 natl · Baylor",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "alec-clark",
@@ -2011,7 +3168,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-1",
+    "weight": "184",
+    "strengths": [
+      "Hang time and directional punting",
+      "Operation speed and consistency",
+      "Pinning ability inside the 20"
+    ],
+    "weaknesses": [
+      "Consistency in wet or windy conditions",
+      "Rugby-style placement when needed"
+    ],
+    "schemeFit": "Field-position weapon in UF's complementary special teams unit.",
+    "projection": "SEC-caliber punter with hidden-yardage value.",
+    "scoutingReport": "P · 3★ · Melbourne, VIC",
+    "fitScore": 80,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "B+",
+    "evaluationSummary": "3★ P · #3197 natl · Tulane",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "emmanuel-oyebadejo",
@@ -2049,7 +3228,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-7",
+    "weight": "315",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "DL · 3★ · England",
+    "fitScore": 90,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ DL · #197 natl · Jacksonville State",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "london-montgomery",
@@ -2087,7 +3288,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-10",
+    "weight": "185",
+    "strengths": [
+      "Vision and patience between the tackles",
+      "Contact balance through second-level defenders",
+      "Pass-catching reliability out of the backfield"
+    ],
+    "weaknesses": [
+      "Top-end breakaway speed in the open field",
+      "Pass protection technique vs. blitzers"
+    ],
+    "schemeFit": "Every-down back who fits UF's inside/outside zone and screen package.",
+    "projection": "Rotation back with early-down and short-yardage value in the SEC.",
+    "scoutingReport": "RB · 3★ · Scranton, PA",
+    "fitScore": 89,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ RB · #303 natl · East Carolina",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "carter-milliron",
@@ -2125,7 +3348,28 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-0",
+    "weight": "257",
+    "strengths": [
+      "Snap accuracy and velocity on operation",
+      "Coverage reliability after the snap",
+      "Consistency in high-leverage moments"
+    ],
+    "weaknesses": [
+      "Limited positional versatility elsewhere"
+    ],
+    "schemeFit": "Long-snap specialist on UF's punt and field-goal units.",
+    "projection": "Reliable long snapper with multi-year starter stability.",
+    "scoutingReport": "LS · 3★ · Hoover, AL",
+    "fitScore": 80,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "B+",
+    "evaluationSummary": "3★ LS · #3207 natl · Louisiana",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "miller-fealy",
@@ -2163,7 +3407,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-2",
+    "weight": "210",
+    "strengths": [
+      "Hang time and directional punting",
+      "Operation speed and consistency",
+      "Pinning ability inside the 20"
+    ],
+    "weaknesses": [
+      "Consistency in wet or windy conditions",
+      "Rugby-style placement when needed"
+    ],
+    "schemeFit": "Field-position weapon in UF's complementary special teams unit.",
+    "projection": "SEC-caliber punter with hidden-yardage value.",
+    "scoutingReport": "P · 3★ · Melbourne, VIC",
+    "fitScore": 80,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "B+",
+    "evaluationSummary": "3★ P · #3215 natl · UT Martin",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "tj-bullard",
@@ -2201,7 +3467,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-1",
+    "weight": "200",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside or outside linebacker in UF's multiple front and nickel packages.",
+    "projection": "SEC starter with special-teams value and defensive rotation upside.",
+    "scoutingReport": "LB · 3★ · Tampa, FL",
+    "fitScore": 84,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ LB · #2517 natl · UCF",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "jaylen-lloyd",
@@ -2239,7 +3527,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-11",
+    "weight": "180",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC rotation contributor with red-zone and third-down upside.",
+    "scoutingReport": "WR · 3★ · Omaha, NE",
+    "fitScore": 86,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ WR · #1076 natl · Oklahoma State",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "mason-clinton",
@@ -2277,7 +3587,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-5",
+    "weight": "265",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "DL · 3★ · Petal, MS",
+    "fitScore": 86,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ DL · #1921 natl · Southern Miss",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "evan-chieca",
@@ -2315,7 +3647,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-5",
+    "weight": "250",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Starter-caliber tight end in a pro-style spread if development continues.",
+    "scoutingReport": "TE · 3★ · Lindenhurst, NY",
+    "fitScore": 85,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ TE · #2019 natl · New Haven",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "jordy-lowery",
@@ -2353,7 +3707,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-11",
+    "weight": "167",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "SEC starter with NFL secondary upside if consistency holds.",
+    "scoutingReport": "CB · 3★ · Bartow, FL",
+    "fitScore": 87,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ CB · #1062 natl · East Carolina",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "ellis-mcgaskin",
@@ -2391,7 +3767,27 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside or outside linebacker in UF's multiple front and nickel packages.",
+    "projection": "SEC starter with special-teams value and defensive rotation upside.",
+    "scoutingReport": "LB · 4★ · Mobile, AL · #354 natl",
+    "fitScore": 89,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ LB · #354 natl · Mobile, AL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "cj-hester",
@@ -2429,7 +3825,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-1",
+    "weight": "175",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "SEC starter with NFL secondary upside if consistency holds.",
+    "scoutingReport": "CB · 3★ · Cocoa, FL · #503 natl",
+    "fitScore": 89,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ CB · #503 natl · Cocoa, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "chancellor-campbell",
@@ -2467,7 +3885,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-8",
+    "weight": "310",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "scoutingReport": "OT · 3★ · Saint Petersburg, FL · #627 natl",
+    "fitScore": 88,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ OT · #627 natl · Saint Petersburg, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "elijah-owens",
@@ -2505,7 +3945,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-3",
+    "weight": "210",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "SEC rotation defensive back with special-teams value.",
+    "scoutingReport": "S · 3★ · Mobile, AL · #63 natl",
+    "fitScore": 87,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ S · #63 natl · Mobile, AL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "eric-parks",
@@ -2543,7 +4005,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-0",
+    "weight": "190",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "SEC rotation defensive back with special-teams value.",
+    "scoutingReport": "S · 3★ · Tampa, FL · #1750 natl",
+    "fitScore": 85,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ S · #1750 natl · Tampa, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "javier-jones",
@@ -2581,7 +4065,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-1",
+    "weight": "185",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "SEC starter with NFL secondary upside if consistency holds.",
+    "scoutingReport": "CB · 3★ · Phoenix, AZ · #265 natl",
+    "fitScore": 83,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "B+",
+    "evaluationSummary": "3★ CB · #265 natl · Phoenix, AZ",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "micah-mays",
@@ -2619,7 +4125,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-2",
+    "weight": "174",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC rotation contributor with red-zone and third-down upside.",
+    "scoutingReport": "WR · 3★ · North Palm Beach, FL",
+    "fitScore": 88,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ WR · #421 natl · Wake Forest",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "aaron-philo",
@@ -2657,7 +4185,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-1",
+    "weight": "205",
+    "strengths": [
+      "Arm talent and timing in the intermediate game",
+      "Poise under pressure in the pocket",
+      "Leadership and command of the huddle"
+    ],
+    "weaknesses": [
+      "Decision speed vs. disguised coverages",
+      "Consistency on deep-ball accuracy"
+    ],
+    "schemeFit": "Spread passing quarterback who can distribute on rhythm and extend when structure breaks down.",
+    "projection": "SEC-caliber signal-caller with starter trajectory in Billy Napier's system.",
+    "scoutingReport": "QB · 3★ · Bogart, GA",
+    "fitScore": 91,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A",
+    "evaluationSummary": "3★ QB · #165 natl · Bogart, GA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "emeka-ugorji",
@@ -2695,7 +4245,27 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "scoutingReport": "OT · 3★ · Dallas, TX",
+    "fitScore": 87,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ OT · #954 natl · Stanford",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "kanye-clark",
@@ -2733,7 +4303,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "5-11",
+    "weight": "190",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "SEC rotation defensive back with special-teams value.",
+    "scoutingReport": "S · 3★ · Sacramento, CA",
+    "fitScore": 86,
+    "futurecastProbability": null,
+    "pipelineState": "enrolled",
+    "interestMeter": "neutral",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ S · #1285 natl · UCLA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "jaylen-jordon",
@@ -2771,7 +4363,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-6",
+    "weight": "240",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Starter-caliber tight end in a pro-style spread if development continues.",
+    "scoutingReport": "TE · 3★ · Hilliard, FL",
+    "fitScore": 86,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A-",
+    "evaluationSummary": "3★ TE · #1686 natl · Jacksonville",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "kamarion-johnson",
@@ -2809,7 +4423,29 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-0",
+    "weight": "185",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside or outside linebacker in UF's multiple front and nickel packages.",
+    "projection": "SEC starter with special-teams value and defensive rotation upside.",
+    "scoutingReport": "ATH · 4★ · Homerville, GA · #351 natl",
+    "fitScore": 89,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ ATH · #351 natl · Homerville, GA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "jaydee-lane",
@@ -2847,7 +4483,28 @@
     "ufOvCancelledAt": null,
     "nextVisitSchool": null,
     "visitStart": null,
-    "visitEnd": null
+    "visitEnd": null,
+    "height": "6-1",
+    "weight": "220",
+    "strengths": [
+      "Snap accuracy and velocity on operation",
+      "Coverage reliability after the snap",
+      "Consistency in high-leverage moments"
+    ],
+    "weaknesses": [
+      "Limited positional versatility elsewhere"
+    ],
+    "schemeFit": "Long-snap specialist on UF's punt and field-goal units.",
+    "projection": "Reliable long snapper with multi-year starter stability.",
+    "scoutingReport": "LS · 3★ · Mendenhall, MS · #1808 natl",
+    "fitScore": 80,
+    "futurecastProbability": null,
+    "pipelineState": "committed",
+    "interestMeter": "hot",
+    "positionGrade": "B+",
+    "evaluationSummary": "3★ LS · #1808 natl · Mendenhall, MS",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.477Z"
   },
   {
     "id": "easton-royal",
@@ -2886,7 +4543,29 @@
     "nextVisitSchool": null,
     "visitStart": "2026-06-11",
     "visitEnd": "2026-06-13",
-    "ufProbability": 0.48
+    "ufProbability": 48,
+    "height": "6-0",
+    "weight": "175",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC rotation contributor with red-zone and third-down upside.",
+    "scoutingReport": "Official visit to UF June 11–13; Texas commit but Florida pushing hard.",
+    "fitScore": 90,
+    "futurecastProbability": 48,
+    "pipelineState": "uncommitted",
+    "interestMeter": "warm",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ WR · #120 natl · Brother Martin HS, New Orleans LA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.478Z"
   },
   {
     "id": "jalen-brewster",
@@ -2925,7 +4604,29 @@
     "starsDisplay": null,
     "headliner": true,
     "updatedAt": "2026-06-13T18:24:26.618Z",
-    "ufProbability": 0.38
+    "ufProbability": 38,
+    "height": "6-5",
+    "weight": "280",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "5★ DL — national priority; UF among top schools monitoring.",
+    "fitScore": 98,
+    "futurecastProbability": 38,
+    "pipelineState": "uncommitted",
+    "interestMeter": "warm",
+    "positionGrade": "A",
+    "evaluationSummary": "5★ DL · #8 natl · Lake Dallas, TX",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.478Z"
   },
   {
     "id": "raheem-floyd",
@@ -2965,13 +4666,34 @@
     "headliner": true,
     "isUFtarget": true,
     "updatedAt": "2026-06-13T21:01:01.170Z",
-    "ufProbability": 0.55,
+    "ufProbability": 55,
     "ratingOverride": null,
     "vaultGrade": null,
     "vaultGradeUpdatedAt": null,
-    "fitScore": null,
+    "fitScore": 91,
     "displayRating": 90.8,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "height": "6-0",
+    "weight": "175",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "SEC starter with NFL secondary upside if consistency holds.",
+    "scoutingReport": "4★ CB · official visit June 11–13",
+    "futurecastProbability": 55,
+    "pipelineState": "uncommitted",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ CB · #200 natl · East St. Louis, IL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.478Z"
   },
   {
     "id": "marquis-evans",
@@ -3014,9 +4736,28 @@
     "vaultGrade": null,
     "vaultGradeUpdatedAt": null,
     "ufProbability": null,
-    "fitScore": null,
+    "fitScore": 55,
     "displayRating": null,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "scoutingReport": "EDGE · 3★ · Spain Park, AL · official visit June 11–13",
+    "futurecastProbability": null,
+    "pipelineState": "uncommitted",
+    "interestMeter": "neutral",
+    "positionGrade": "C",
+    "evaluationSummary": "3★ EDGE · #— natl · Spain Park, AL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.478Z"
   },
   {
     "slug": "kamauri-whitfield",
@@ -3033,7 +4774,7 @@
     "committedTo": null,
     "skinny": "4★ athlete with UF offer; Rivals PM trending Florida at 60% confidence.",
     "headliner": true,
-    "ufProbability": 0.62,
+    "ufProbability": 62,
     "id": "kamauri-whitfield",
     "classYear": 2027,
     "category": "target",
@@ -3059,9 +4800,30 @@
     "visitStart": null,
     "visitEnd": null,
     "starsDisplay": null,
-    "fitScore": null,
+    "fitScore": 91,
     "displayRating": 91.2,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "height": "6-1",
+    "weight": "195",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside or outside linebacker in UF's multiple front and nickel packages.",
+    "projection": "SEC starter with special-teams value and defensive rotation upside.",
+    "scoutingReport": "4★ athlete with UF offer; Rivals PM trending Florida at 60% confidence.",
+    "futurecastProbability": 62,
+    "pipelineState": "uncommitted",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ ATH · #175 natl · Douglas County, GA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.478Z"
   },
   {
     "slug": "tre-geathers",
@@ -3086,7 +4848,29 @@
     "category": "recruit",
     "status": "commit",
     "lifecycle": "commit",
-    "updatedAt": "2026-06-19T18:00:00.000Z"
+    "updatedAt": "2026-06-19T18:00:00.000Z",
+    "height": "6-2",
+    "weight": "220",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside or outside linebacker in UF's multiple front and nickel packages.",
+    "projection": "SEC starter with special-teams value and defensive rotation upside.",
+    "scoutingReport": "LB · 4★ · Miami, FL · UF Commit No. 23",
+    "fitScore": 91,
+    "futurecastProbability": 100,
+    "pipelineState": "commit",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ LB · #210 natl · Miami, FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.478Z"
   },
   {
     "id": "jayden-harris",
@@ -3105,6 +4889,25 @@
     "on3Slug": "jayden-harris",
     "ufProbability": 70,
     "movementDelta": 30,
-    "updatedAt": "2026-06-16T12:00:00.000Z"
+    "updatedAt": "2026-06-16T12:00:00.000Z",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "SEC starter with NFL secondary upside if consistency holds.",
+    "fitScore": 92,
+    "futurecastProbability": 70,
+    "pipelineState": "uncommitted",
+    "interestMeter": "hot",
+    "positionGrade": "A",
+    "evaluationSummary": "4★ CB · #85 natl · IMG Academy, Bradenton FL",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.478Z"
   }
 ]

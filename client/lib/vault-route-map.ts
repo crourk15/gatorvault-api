@@ -38,6 +38,9 @@ export const VAULT_PILLAR_ROUTES = {
   liveFeed: '/vault/live',
   filmRoom: '/vault/film-room',
   schedule: '/vault/schedule',
+  nil: '/vault/nil',
+  articles: '/vault/articles',
+  community: '/vault/community',
 } as const;
 
 /** Recruiting Hub — path ↔ tab */

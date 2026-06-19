@@ -1,0 +1,1570 @@
+﻿GatorVault diagnostic packet ΓÇö 2026-06-18T19:23:22.906Z
+API base: https://gatorvault-api.onrender.com
+
+========================================================================
+2. NETWORK / API PROBES
+========================================================================
+[
+  {
+    "label": "resolve slug (recruiting)",
+    "requestUrl": "https://gatorvault-api.onrender.com/api/player/resolve/davian-groce?context=recruiting",
+    "statusCode": 200,
+    "responseBody": {
+      "ok": true,
+      "kind": "recruiting-fallback",
+      "playerId": "175389",
+      "canonicalSlug": "davian-groce",
+      "redirectHref": null,
+      "roster": null
+    },
+    "error": null
+  },
+  {
+    "label": "resolve On3 id (recruiting)",
+    "requestUrl": "https://gatorvault-api.onrender.com/api/player/resolve/175389?context=recruiting",
+    "statusCode": 200,
+    "responseBody": {
+      "ok": true,
+      "kind": "recruiting-fallback",
+      "playerId": "175389",
+      "canonicalSlug": "davian-groce",
+      "redirectHref": null,
+      "roster": null
+    },
+    "error": null
+  },
+  {
+    "label": "full profile by slug",
+    "requestUrl": "https://gatorvault-api.onrender.com/api/player/full-profile/davian-groce",
+    "statusCode": 200,
+    "responseBody": {
+      "ok": true,
+      "lastUpdated": "2026-06-18T19:23:24.011Z",
+      "source": "recruiting-store",
+      "player": {
+        "id": "175389",
+        "fullName": "Davian Groce",
+        "slug": "davian-groce",
+        "classYear": 2026,
+        "position": "ATH",
+        "status": "HS",
+        "height": null,
+        "weight": null,
+        "hometown": null,
+        "state": null,
+        "highSchool": null,
+        "stars": 4,
+        "compositeRating": 95.41666666666667,
+        "rankingNational": 60,
+        "rankingPosition": 10,
+        "rankingState": 7,
+        "committedTo": "Florida",
+        "ufFitScore": null,
+        "fitScoreBreakdown": null,
+        "movementHistory": [],
+        "volatilityScore": 0
+      },
+      "highSchoolProfile": {
+        "id": "davian-groce",
+        "playerId": "175389",
+        "offers": [],
+        "stats": {},
+        "recruitingNotes": null,
+        "discoveryScore": null
+      },
+      "collegeProfile": null,
+      "portalProfile": null,
+      "ufSpecificProfile": null,
+      "movementWindow": null,
+      "movementHistory": [],
+      "signals": [],
+      "related": [],
+      "portalPredictions": null,
+      "fitIntel": null,
+      "competingSchools": [],
+      "futurecastSummary": null
+    },
+    "error": null
+  },
+  {
+    "label": "hub player by slug",
+    "requestUrl": "https://gatorvault-api.onrender.com/api/recruiting/player/davian-groce",
+    "statusCode": 200,
+    "responseBody": {
+      "ok": true,
+      "meta": {
+        "dataSource": {
+          "mode": "json",
+          "supabaseConfigured": false,
+          "paths": {
+            "players": "/opt/render/project/src/server/data/recruiting/players.json",
+            "events": "/opt/render/project/src/server/data/recruiting/events.json",
+            "rankings": "/opt/render/project/src/server/data/recruiting/rankings.json"
+          }
+        },
+        "generatedAt": "2026-06-18T19:23:23.512Z",
+        "lastUpdated": "2026-06-18T19:23:23.512Z",
+        "cacheKey": "hub:player:davian-groce"
+      },
+      "player": {
+        "id": "davian-groce",
+        "slug": "davian-groce",
+        "name": "Davian Groce",
+        "position": "WR",
+        "pos": "WR",
+        "class": 2026,
+        "classYear": 2026,
+        "rating": 95.41666666666667,
+        "nationalRank": 60,
+        "natlRank": 60,
+        "stateRank": 7,
+        "positionRank": 10,
+        "posRank": 10,
+        "status": "committed",
+        "fitScore": null,
+        "skinny": "WR ┬╖ 4Γÿà ┬╖ Frisco, TX ┬╖ #60 natl",
+        "strengths": [],
+        "weaknesses": [],
+        "evaluatorNotes": null,
+        "commitmentDate": "2025-08-11",
+        "commitDate": "2025-08-11",
+        "stars": 4,
+        "school": "Frisco, TX",
+        "inState": false,
+        "ufProbability": null,
+        "intel": []
+      }
+    },
+    "error": null
+  },
+  {
+    "label": "hub player by On3 id",
+    "requestUrl": "https://gatorvault-api.onrender.com/api/recruiting/player/175389",
+    "statusCode": 200,
+    "responseBody": {
+      "ok": true,
+      "meta": {
+        "dataSource": {
+          "mode": "json",
+          "supabaseConfigured": false,
+          "paths": {
+            "players": "/opt/render/project/src/server/data/recruiting/players.json",
+            "events": "/opt/render/project/src/server/data/recruiting/events.json",
+            "rankings": "/opt/render/project/src/server/data/recruiting/rankings.json"
+          }
+        },
+        "generatedAt": "2026-06-18T19:23:23.524Z",
+        "lastUpdated": "2026-06-18T19:23:23.524Z",
+        "cacheKey": "hub:player:175389"
+      },
+      "player": {
+        "id": "davian-groce",
+        "slug": "davian-groce",
+        "name": "Davian Groce",
+        "position": "WR",
+        "pos": "WR",
+        "class": 2026,
+        "classYear": 2026,
+        "rating": 95.41666666666667,
+        "nationalRank": 60,
+        "natlRank": 60,
+        "stateRank": 7,
+        "positionRank": 10,
+        "posRank": 10,
+        "status": "committed",
+        "fitScore": null,
+        "skinny": "WR ┬╖ 4Γÿà ┬╖ Frisco, TX ┬╖ #60 natl",
+        "strengths": [],
+        "weaknesses": [],
+        "evaluatorNotes": null,
+        "commitmentDate": "2025-08-11",
+        "commitDate": "2025-08-11",
+        "stars": 4,
+        "school": "Frisco, TX",
+        "inState": false,
+        "ufProbability": null,
+        "intel": []
+      }
+    },
+    "error": null
+  },
+  {
+    "label": "autoposter status",
+    "requestUrl": "https://gatorvault-api.onrender.com/api/x/autoposter/status",
+    "statusCode": 200,
+    "responseBody": {
+      "ok": true,
+      "configured": true,
+      "authMode": "oauth1_user_context",
+      "account": "@gatorvault",
+      "envKeysLoaded": {
+        "X_OAUTH1_API_KEY": true,
+        "X_OAUTH1_API_SECRET": true,
+        "X_OAUTH1_ACCESS_TOKEN": true,
+        "X_OAUTH1_ACCESS_TOKEN_SECRET": true,
+        "TWITTER_API_KEY": false,
+        "TWITTER_API_SECRET": false,
+        "TWITTER_ACCESS_TOKEN": false,
+        "TWITTER_ACCESS_SECRET": false
+      },
+      "apiKeyHint": "Xvz3ΓÇª",
+      "accessTokenHint": "20615197ΓÇª",
+      "schedulerEnabled": true,
+      "replyEnabled": true,
+      "schedulerIntervalMs": 60000,
+      "contentMix": "50% news ┬╖ 30% engagement ┬╖ 20% promo",
+      "cadence": {
+        "normalCooldownMs": 2700000,
+        "normalCooldownMinutes": 45,
+        "burstCooldownMs": 420000,
+        "burstCooldownMinutes": 7,
+        "nightCooldownMs": 9000000,
+        "nightCooldownMinutes": 150,
+        "breakingBurstMs": 120000,
+        "nightModeHoursEt": "00:00ΓÇô06:00",
+        "nightTimezone": "America/New_York",
+        "urgentLabels": [
+          "commitment",
+          "portal",
+          "injury",
+          "staff",
+          "analysis",
+          "major_beat",
+          "breaking"
+        ],
+        "description": "Normal 45m ┬╖ Urgent/breaking bypass interval ┬╖ Burst min 7m (2m when 2+ breaking) ┬╖ Night 2.5h for routine posts"
+      },
+      "lastVerify": {
+        "configured": true,
+        "ok": false,
+        "screenName": null,
+        "userId": null,
+        "error": "network timeout at: https://api.twitter.com/1.1/account/verify_credentials.json?skip_status=true&include_email=false",
+        "checkedAt": "2026-06-18T19:20:38.975Z"
+      },
+      "scheduler": {
+        "version": 1,
+        "updatedAt": "2026-06-18T19:23:04.988Z",
+        "schedulerEnabled": true,
+        "schedulerStartedAt": "2026-06-18T19:19:32.239Z",
+        "lastRun": "2026-06-18T19:23:03.886Z",
+        "lastPostAttempt": "2026-06-11T15:47:20.931Z",
+        "lastPostSuccess": null,
+        "lastPostAt": null,
+        "lastCadenceCheck": "2026-06-18T19:23:04.987Z",
+        "lastCadenceReason": "no_due_posts",
+        "cadenceWaitMs": 0,
+        "lastRefillAt": "2026-06-18T19:23:04.987Z",
+        "lastRefillCount": 0,
+        "lastProcessedCount": 0,
+        "lastError": null
+      },
+      "lastRun": "2026-06-18T19:23:03.886Z",
+      "lastPostAttempt": "2026-06-11T15:47:20.931Z",
+      "lastPostSuccess": null,
+      "lastPostAt": null,
+      "lastCadenceReason": "no_due_posts",
+      "cadenceWaitMs": 0,
+      "nightMode": false,
+      "cadenceWindow": {
+        "allowed": false,
+        "reason": "no_due_posts",
+        "waitMs": 0,
+        "cooldownMs": 0,
+        "tier": null,
+        "label": null,
+        "breakingCount": 0
+      },
+      "lastRefillAt": "2026-06-18T19:23:04.987Z",
+      "lastError": null,
+      "queuePending": 0,
+      "queueDue": 0,
+      "queueRecent": [],
+      "mix": {
+        "window": 0,
+        "counts": {
+          "news": 0,
+          "engagement": 0,
+          "promo": 0,
+          "other": 0
+        },
+        "targetPercent": {
+          "news": 50,
+          "engagement": 30,
+          "promo": 20
+        },
+        "actualPercent": {
+          "news": 0,
+          "engagement": 0,
+          "promo": 0
+        },
+        "driftPercent": {
+          "news": -50,
+          "engagement": -30,
+          "promo": -20
+        },
+        "suggestedNextCategory": "news"
+      },
+      "verify": null,
+      "pipeline": {
+        "version": 1,
+        "updatedAt": "2026-06-18T19:23:11.305Z",
+        "lastLiveRefresh": "2026-06-18T19:23:11.305Z",
+        "lastArticlePull": "2026-06-18T19:23:11.305Z",
+        "lastBeatPull": "2026-06-18T19:23:08.260Z",
+        "lastBeatLateIngest": "2026-06-18T19:20:56.185Z",
+        "lastPodcastPull": "2026-06-18T19:23:11.304Z",
+        "lastRecruitingIngest": "2026-06-18T19:23:11.305Z",
+        "lastError": null,
+        "lastLiveRefreshError": null,
+        "lastBeatLateProcessed": 6,
+        "beatCache": {
+          "fetchedAt": "2026-06-18T19:23:08.260Z",
+          "source": "x",
+          "postCount": 80,
+          "error": null,
+          "tokenStatus": {
+            "configured": true,
+            "ok": true
+          }
+        },
+        "feed": {
+          "itemCount": 0,
+          "updatedAt": null
+        },
+        "articles": {
+          "publishedCount": 6,
+          "lastPublishedAt": "May 28, 2026"
+        },
+        "on3Ingest": {
+          "lastRun": "2026-06-18T19:21:32.688Z",
+          "enabled": true
+        },
+        "autoposter": {
+          "schedulerEnabled": true,
+          "version": 1,
+          "updatedAt": "2026-06-18T19:23:04.988Z",
+          "schedulerStartedAt": "2026-06-18T19:19:32.239Z",
+          "lastRun": "2026-06-18T19:23:03.886Z",
+          "lastPostAttempt": "2026-06-11T15:47:20.931Z",
+          "lastPostSuccess": null,
+          "lastPostAt": null,
+          "lastCadenceCheck": "2026-06-18T19:23:04.987Z",
+          "lastCadenceReason": "no_due_posts",
+          "cadenceWaitMs": 0,
+          "lastRefillAt": "2026-06-18T19:23:04.987Z",
+          "lastRefillCount": 0,
+          "lastProcessedCount": 0,
+          "lastError": null,
+          "queuePending": 0,
+          "queueDue": 0,
+          "lastSentAt": null,
+          "lastSentTweetId": null
+        }
+      },
+      "logs": [
+        {
+          "ts": "2026-06-18T19:23:04.989Z",
+          "level": "info",
+          "message": "Cron tick ΓÇö no post",
+          "detail": {
+            "skipped": true,
+            "reason": "no_due_posts",
+            "pendingCount": 0
+          }
+        },
+        {
+          "ts": "2026-06-18T19:23:04.987Z",
+          "level": "info",
+          "message": "Cadence hold (no_due_posts)",
+          "detail": {}
+        },
+        {
+          "ts": "2026-06-18T19:21:40.223Z",
+          "level": "info",
+          "message": "Cron tick ΓÇö no post",
+          "detail": {
+            "skipped": true,
+            "reason": "no_due_posts",
+            "pendingCount": 0
+          }
+        },
+        {
+          "ts": "2026-06-18T19:21:40.099Z",
+          "level": "info",
+          "message": "Cadence hold (no_due_posts)",
+          "detail": {}
+        },
+        {
+          "ts": "2026-06-18T19:20:38.975Z",
+          "level": "error",
+          "message": "Error: OAuth verify failed ΓÇö network timeout at: https://api.twitter.com/1.1/account/verify_credentials.json?skip_status=true&include_email=false",
+          "detail": null
+        },
+        {
+          "ts": "2026-06-18T19:20:38.854Z",
+          "level": "info",
+          "message": "Cron tick ΓÇö no post",
+          "detail": {
+            "skipped": true,
+            "reason": "no_due_posts",
+            "pendingCount": 0
+          }
+        },
+        {
+          "ts": "2026-06-18T19:20:38.852Z",
+          "level": "info",
+          "message": "Cadence hold (no_due_posts)",
+          "detail": {}
+        },
+        {
+          "ts": "2026-06-18T19:20:38.837Z",
+          "level": "info",
+          "message": "Cron started",
+          "detail": {
+            "intervalMs": 60000,
+            "bootDelay": 20000,
+            "replyEnabled": true
+          }
+        }
+      ]
+    },
+    "error": null
+  },
+  {
+    "label": "recruiting class 2027",
+    "requestUrl": "https://gatorvault-api.onrender.com/api/recruiting/class/2027",
+    "statusCode": 200,
+    "responseBody": {
+      "ok": true,
+      "meta": {
+        "dataSource": {
+          "mode": "json",
+          "supabaseConfigured": false,
+          "paths": {
+            "players": "/opt/render/project/src/server/data/recruiting/players.json",
+            "events": "/opt/render/project/src/server/data/recruiting/events.json",
+            "rankings": "/opt/render/project/src/server/data/recruiting/rankings.json"
+          }
+        },
+        "generatedAt": "2026-06-18T19:23:23.534Z",
+        "lastUpdated": "2026-06-18T19:23:23.534Z",
+        "cacheKey": "hub:class:2027"
+      },
+      "year": 2027,
+      "commits": 22,
+      "classScore": 92.386635559392,
+      "nationalRank": 5,
+      "secRank": 3,
+      "blueChipRatio": 0.73,
+      "inStateRatio": 0.32,
+      "yoyMovement": 11,
+      "players": [
+        {
+          "id": "jabios-smith",
+          "slug": "jabios-smith",
+          "name": "Ja'Bios Smith",
+          "position": "LB",
+          "pos": "LB",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 91.67898550724637,
+          "nationalRank": 153,
+          "natlRank": 153,
+          "stateRank": 14,
+          "positionRank": 14,
+          "posRank": 14,
+          "status": "commit",
+          "fitScore": 91.67898550724637,
+          "skinny": "LB ┬╖ 4Γÿà ┬╖ Swainsboro, GA ┬╖ #153 natl",
+          "strengths": [
+            "Florida's first official visit weekend brought several priority targets to Gainesville, giving the Gators' coaching staff a chance to make its pitch"
+          ],
+          "weaknesses": [],
+          "evaluatorNotes": "Florida's first official visit weekend brought several priority targets to Gainesville, giving the Gators' coaching staff a chance to make its pitch",
+          "commitmentDate": "2026-05-29",
+          "commitDate": "2026-05-29",
+          "stars": 4,
+          "school": "Swainsboro, GA",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "jabios-smith-note",
+              "playerId": "jabios-smith",
+              "timestamp": "2026-05-29",
+              "text": "LB ┬╖ 4Γÿà ┬╖ Swainsboro, GA ┬╖ #153 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "elias-pearl",
+          "slug": "elias-pearl",
+          "name": "Elias Pearl",
+          "position": "WR",
+          "pos": "WR",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 92.96666666666667,
+          "nationalRank": 90,
+          "natlRank": 90,
+          "stateRank": 11,
+          "positionRank": 16,
+          "posRank": 16,
+          "status": "commit",
+          "fitScore": 92.96666666666667,
+          "skinny": "WR ┬╖ 4Γÿà ┬╖ Port Charlotte, FL ┬╖ #90 natl",
+          "strengths": [
+            "Versatile wide receiver who is both a YAC monster and technician.",
+            "Measured in at 5-foot-10, 183 pounds with plus length (6-foot-5 wing-span) at the Rivals Camp in Miami coming out of his junior season.",
+            "Tested as a top athlete at the Rivals Camp, ripping off a 4.5-second 40-yard dash, a 10 foot broad jump and 32.4-inch vertical.",
+            "Turned in a breakout junior season, accounting for over 1,300 yards and 24 touchdowns from scrimmage.",
+            "Has outstanding foundational movement skills with impressive lower body flexibility.",
+            "Able to easily stack corners off the line with his acceleration and long stride.",
+            "Long arms for his frame pair with coordination to result in a wide catch radius.",
+            "A natural hands catcher who shows high-end ball-tracking skills to locate the football over his shoulder."
+          ],
+          "weaknesses": [
+            "May not have prototypical height, but has the skills to play all over the formation."
+          ],
+          "evaluatorNotes": "Versatile wide receiver who is both a YAC monster and technician. Measured in at 5-foot-10, 183 pounds with plus length (6-foot-5 wing-span) at the Rivals Camp in Miami coming out of his junior season. Tested as a top athlete at the Rivals Camp, ripping off a 4.5-second 40-yard dash, a 10 foot broad jump and 32.4-inch vertical. Turned in a breakout junior season, accounting for over 1,300 yards and 24 touchdowns from scrimmage. Has outstanding foundational movement skills with impressive lower body flexibility. Able to easily stack corners off the line with his acceleration and long stride. Long arms for his frame pair with coordination to result in a wide catch radius. A natural hands catcher who shows high-end ball-tracking skills to locate the football over his shoulder. One of the more dangerous wide receiver prospects after the catch in the 2027 cycle. Dynamic with the ball in his hands and maximizes yards after the catch. A slasher in space, quickly cutting to make defenders miss. Slips out of arm tackles and fights through contact. Shows his ability with the ball in his hands as a return man, taking back three kicks as a junior. May not have prototypical height, but has the skills to play all over the formation. A competitive player who makes key plays in big moments of games. Well-rounded skill set and versatility give him one of the highest floors of 2027 wide receiver prospects.",
+          "commitmentDate": "2026-05-19",
+          "commitDate": "2026-05-19",
+          "stars": 4,
+          "school": "Port Charlotte, FL",
+          "state": null,
+          "inState": true,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "elias-pearl-note",
+              "playerId": "elias-pearl",
+              "timestamp": "2026-05-19",
+              "text": "WR ┬╖ 4Γÿà ┬╖ Port Charlotte, FL ┬╖ #90 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "peyton-miller",
+          "slug": "peyton-miller",
+          "name": "Peyton Miller",
+          "position": "IOL",
+          "pos": "IOL",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 92.08115942028986,
+          "nationalRank": 127,
+          "natlRank": 127,
+          "stateRank": 19,
+          "positionRank": 11,
+          "posRank": 11,
+          "status": "commit",
+          "fitScore": 92.08115942028986,
+          "skinny": "IOL ┬╖ 4Γÿà ┬╖ Anna, TX ┬╖ #127 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-04-27",
+          "commitDate": "2026-04-27",
+          "stars": 4,
+          "school": "Anna, TX",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "peyton-miller-note",
+              "playerId": "peyton-miller",
+              "timestamp": "2026-04-27",
+              "text": "IOL ┬╖ 4Γÿà ┬╖ Anna, TX ┬╖ #127 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "devoun-kendrick",
+          "slug": "devoun-kendrick",
+          "name": "De'Voun Kendrick",
+          "position": "DL",
+          "pos": "DL",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 87.7,
+          "nationalRank": 582,
+          "natlRank": 582,
+          "stateRank": 48,
+          "positionRank": 64,
+          "posRank": 64,
+          "status": "commit",
+          "fitScore": 87.7,
+          "skinny": "DL ┬╖ 3Γÿà ┬╖ Tampa, FL ┬╖ #582 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-04-27",
+          "commitDate": "2026-04-27",
+          "stars": 3,
+          "school": "Tampa, FL",
+          "state": null,
+          "inState": true,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "devoun-kendrick-note",
+              "playerId": "devoun-kendrick",
+              "timestamp": "2026-04-27",
+              "text": "DL ┬╖ 3Γÿà ┬╖ Tampa, FL ┬╖ #582 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "tommy-douglas",
+          "slug": "tommy-douglas",
+          "name": "Tommy Douglas",
+          "position": "TE",
+          "pos": "TE",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 89.33333333333333,
+          "nationalRank": 349,
+          "natlRank": 349,
+          "stateRank": 7,
+          "positionRank": 20,
+          "posRank": 20,
+          "status": "commit",
+          "fitScore": 89.33333333333333,
+          "skinny": "TE ┬╖ 4Γÿà ┬╖ Princeton, NJ ┬╖ #349 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-04-16",
+          "commitDate": "2026-04-16",
+          "stars": 4,
+          "school": "Princeton, NJ",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "tommy-douglas-note",
+              "playerId": "tommy-douglas",
+              "timestamp": "2026-04-16",
+              "text": "TE ┬╖ 4Γÿà ┬╖ Princeton, NJ ┬╖ #349 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "aamaury-fountain",
+          "slug": "aamaury-fountain",
+          "name": "Aamaury Fountain",
+          "position": "CB",
+          "pos": "CB",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 91.80212716222533,
+          "nationalRank": 145,
+          "natlRank": 145,
+          "stateRank": 12,
+          "positionRank": 18,
+          "posRank": 18,
+          "status": "commit",
+          "fitScore": 91.80212716222533,
+          "skinny": "CB ┬╖ 4Γÿà ┬╖ Warner Robins, GA ┬╖ #145 natl",
+          "strengths": [
+            "Big-framed cornerback with length, coordination, and coverage instincts.",
+            "Has considerable length for the position.",
+            "Uses his big frame and long arms to disrupt wide receivers off the line when working in press coverage.",
+            "Able to reroute pass-catchers with ease.",
+            "Shows smooth movement skills with the ability to flip his hips and redirect in coverage, especially for a bigger cornerback.",
+            "Shows quality natural instincts when reading routes and breaking on the football.",
+            "Able to track and locate the ball.",
+            "Physical as a run defender."
+          ],
+          "weaknesses": [
+            "Has unverified size, but listed at around 6-foot-3, 185 pounds.",
+            "Does not have any verified athletic markers and pure top end speed remains a question.",
+            "Also older for the cycle, turning 19 years old in February of his junior year."
+          ],
+          "evaluatorNotes": "Big-framed cornerback with length, coordination, and coverage instincts. Has unverified size, but listed at around 6-foot-3, 185 pounds. Has considerable length for the position. Uses his big frame and long arms to disrupt wide receivers off the line when working in press coverage. Able to reroute pass-catchers with ease. Shows smooth movement skills with the ability to flip his hips and redirect in coverage, especially for a bigger cornerback. Shows quality natural instincts when reading routes and breaking on the football. Able to track and locate the ball. Physical as a run defender. Also worked at wide receiver some as a junior. Does not have any verified athletic markers and pure top end speed remains a question. Also older for the cycle, turning 19 years old in February of his junior year. Size and instincts make him an intriguing corner prospect with some remaining questions to be answered. Has the upside to develop into one of the top cornerback prospects in the 2027 cycle.",
+          "commitmentDate": "2026-04-11",
+          "commitDate": "2026-04-11",
+          "stars": 4,
+          "school": "Warner Robins, GA",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "aamaury-fountain-note",
+              "playerId": "aamaury-fountain",
+              "timestamp": "2026-04-11",
+              "text": "CB ┬╖ 4Γÿà ┬╖ Warner Robins, GA ┬╖ #145 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "davin-davidson",
+          "slug": "davin-davidson",
+          "name": "Davin Davidson",
+          "position": "QB",
+          "pos": "QB",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 92.26666666666667,
+          "nationalRank": 115,
+          "natlRank": 115,
+          "stateRank": 13,
+          "positionRank": 10,
+          "posRank": 10,
+          "status": "commit",
+          "fitScore": 92.26666666666667,
+          "skinny": "QB ┬╖ 4Γÿà ┬╖ Sarasota, FL ┬╖ #115 natl",
+          "strengths": [
+            "Towering quarterback prospect with a big-time arm and intriguing upside.",
+            "The tallest top quarterback in the 2027 cycle.",
+            "Measured in at 6-foot-6.5, 215 pounds with a 9.75-inch hand prior to his senior season.",
+            "Touts outstanding arm strength with the ability to generate a ton of zip on passes to the intermediate and deep areas of the field.",
+            "Can rip the football on a line from 30 yards out.",
+            "Shows flashes of arm dexterity.",
+            "A solid mover at his size.",
+            "Completed 64.6% of his passes for 2360 yards, 23 touchdowns against 6 interceptions while helping his team to a state title."
+          ],
+          "weaknesses": [
+            "As a result is still early in his development in comparison with his blue-chip peers.",
+            "As a taller, longer quarterback will need to continue tightening up his mechanics and footwork.",
+            "Will also need to improve at changing speeds, as he's primarily a fastball thrower at this point.",
+            "Has a high upside, but may be a few years away."
+          ],
+          "evaluatorNotes": "Towering quarterback prospect with a big-time arm and intriguing upside. The tallest top quarterback in the 2027 cycle. Measured in at 6-foot-6.5, 215 pounds with a 9.75-inch hand prior to his senior season. Touts outstanding arm strength with the ability to generate a ton of zip on passes to the intermediate and deep areas of the field. Can rip the football on a line from 30 yards out. Shows flashes of arm dexterity. A solid mover at his size. Completed 64.6% of his passes for 2360 yards, 23 touchdowns against 6 interceptions while helping his team to a state title. A low volume passer attempting a little over 14 passes per game and accounting for 163 total yards per game as a junior. As a result is still early in his development in comparison with his blue-chip peers. As a taller, longer quarterback will need to continue tightening up his mechanics and footwork. Will also need to improve at changing speeds, as he's primarily a fastball thrower at this point. Should benefit greatly from increased in-game reps. Has a high upside, but may be a few years away.",
+          "commitmentDate": "2026-04-09",
+          "commitDate": "2026-04-09",
+          "stars": 4,
+          "school": "Sarasota, FL",
+          "state": null,
+          "inState": true,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "davin-davidson-note",
+              "playerId": "davin-davidson",
+              "timestamp": "2026-04-09",
+              "text": "QB ┬╖ 4Γÿà ┬╖ Sarasota, FL ┬╖ #115 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "maxwell-hiller",
+          "slug": "maxwell-hiller",
+          "name": "Maxwell Hiller",
+          "position": "IOL",
+          "pos": "IOL",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 98.54623655913979,
+          "nationalRank": 3,
+          "natlRank": 3,
+          "stateRank": 1,
+          "positionRank": 1,
+          "posRank": 1,
+          "status": "commit",
+          "fitScore": 98.54623655913979,
+          "skinny": "The #3 player nationally. Program-defining interior OL anchor for the 2027 class.",
+          "strengths": [
+            "Elite interior offensive line prospect with ready-to-play size, athleticism, and physicality.",
+            "Measured in at around 6-foot-5, 305 pounds as a junior.",
+            "Arm length checks in at 32 inches or a shade under.",
+            "Registers as a plus athlete in the combine setting.",
+            "A dominant run blocker on Friday nights.",
+            "A fluid, reactive mover at the second level.",
+            "Locks on defenders and imposes his will.",
+            "Not uncommon to see him drive defensive linemen to the sideline."
+          ],
+          "weaknesses": [
+            "Has the movement skills to play some tackle at the college level, but lack of arm length will ultimately force him inside."
+          ],
+          "evaluatorNotes": "Elite interior offensive line prospect with ready-to-play size, athleticism, and physicality. Measured in at around 6-foot-5, 305 pounds as a junior. Arm length checks in at 32 inches or a shade under. Registers as a plus athlete in the combine setting. A dominant run blocker on Friday nights. A fluid, reactive mover at the second level. Locks on defenders and imposes his will. Not uncommon to see him drive defensive linemen to the sideline. Plays with an innate edge and level of physicality. Has the movement skills to project as a high-level pass protector. High level of coordination leads to a natural technical acuity with advanced hand placement and usage. Has the movement skills to play some tackle at the college level, but lack of arm length will ultimately force him inside. Also plays basketball. His younger brother, Colton Hiller, is a five-star basketball prospect in the 2028 cycle. Has a strong case as the most ready-to-play interior offensive line prospect in the 2027 cycle and could be primed for an instant impact at the college level.",
+          "commitmentDate": "2026-04-08",
+          "commitDate": "2026-04-08",
+          "stars": 5,
+          "school": "Coatesville, PA",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "maxwell-hiller-note",
+              "playerId": "maxwell-hiller",
+              "timestamp": "2026-04-08",
+              "text": "The #3 player nationally. Program-defining interior OL anchor for the 2027 class.",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "anthony-jennings",
+          "slug": "anthony-jennings",
+          "name": "Anthony Jennings",
+          "position": "WR",
+          "pos": "WR",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 89.9927536231884,
+          "nationalRank": 294,
+          "natlRank": 294,
+          "stateRank": 25,
+          "positionRank": 47,
+          "posRank": 47,
+          "status": "commit",
+          "fitScore": 89.9927536231884,
+          "skinny": "WR ┬╖ 4Γÿà ┬╖ Fort Lauderdale, FL ┬╖ #294 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-04-25",
+          "commitDate": "2026-04-25",
+          "stars": 4,
+          "school": "Fort Lauderdale, FL",
+          "state": null,
+          "inState": true,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "anthony-jennings-note",
+              "playerId": "anthony-jennings",
+              "timestamp": "2026-04-25",
+              "text": "WR ┬╖ 4Γÿà ┬╖ Fort Lauderdale, FL ┬╖ #294 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "andrew-beard",
+          "slug": "andrew-beard",
+          "name": "Andrew Beard",
+          "position": "RB",
+          "pos": "RB",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 91.3054347826087,
+          "nationalRank": 181,
+          "natlRank": 181,
+          "stateRank": 19,
+          "positionRank": 12,
+          "posRank": 12,
+          "status": "commit",
+          "fitScore": 91.3054347826087,
+          "skinny": "RB ┬╖ 4Γÿà ┬╖ Bogart, GA ┬╖ #181 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-05-08",
+          "commitDate": "2026-05-08",
+          "stars": 4,
+          "school": "Bogart, GA",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "andrew-beard-note",
+              "playerId": "andrew-beard",
+              "timestamp": "2026-05-08",
+              "text": "RB ┬╖ 4Γÿà ┬╖ Bogart, GA ┬╖ #181 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "elijah-hutcheson",
+          "slug": "elijah-hutcheson",
+          "name": "Elijah Hutcheson",
+          "position": "OT",
+          "pos": "OT",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 92.85,
+          "nationalRank": 99,
+          "natlRank": 99,
+          "stateRank": 2,
+          "positionRank": 10,
+          "posRank": 10,
+          "status": "commit",
+          "fitScore": 92.85,
+          "skinny": "OT ┬╖ 4Γÿà ┬╖ Roanoke, VA ┬╖ #99 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-05-05",
+          "commitDate": "2026-05-05",
+          "stars": 4,
+          "school": "Roanoke, VA",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "elijah-hutcheson-note",
+              "playerId": "elijah-hutcheson",
+              "timestamp": "2026-05-05",
+              "text": "OT ┬╖ 4Γÿà ┬╖ Roanoke, VA ┬╖ #99 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "kailib-dillard",
+          "slug": "kailib-dillard",
+          "name": "Kailib Dillard",
+          "position": "S",
+          "pos": "S",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 88.01594202898552,
+          "nationalRank": 519,
+          "natlRank": 519,
+          "stateRank": 12,
+          "positionRank": 45,
+          "posRank": 45,
+          "status": "commit",
+          "fitScore": 88.01594202898552,
+          "skinny": "S ┬╖ 3Γÿà ┬╖ Tulsa, OK ┬╖ #519 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-05-05",
+          "commitDate": "2026-05-05",
+          "stars": 3,
+          "school": "Tulsa, OK",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "kailib-dillard-note",
+              "playerId": "kailib-dillard",
+              "timestamp": "2026-05-05",
+              "text": "S ┬╖ 3Γÿà ┬╖ Tulsa, OK ┬╖ #519 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "stive-bentley-keumajou",
+          "slug": "stive-bentley-keumajou",
+          "name": "Stive-Bentley Keumajou",
+          "position": "DL",
+          "pos": "DL",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 88.03333333333333,
+          "nationalRank": 517,
+          "natlRank": 517,
+          "stateRank": 43,
+          "positionRank": 55,
+          "posRank": 55,
+          "status": "commit",
+          "fitScore": 88.03333333333333,
+          "skinny": "DL ┬╖ 3Γÿà ┬╖ Coral Gables, FL ┬╖ #517 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-05-06",
+          "commitDate": "2026-05-06",
+          "stars": 3,
+          "school": "Coral Gables, FL",
+          "state": null,
+          "inState": true,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "stive-bentley-keumajou-note",
+              "playerId": "stive-bentley-keumajou",
+              "timestamp": "2026-05-06",
+              "text": "DL ┬╖ 3Γÿà ┬╖ Coral Gables, FL ┬╖ #517 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "tramond-collins",
+          "slug": "tramond-collins",
+          "name": "Tramond Collins",
+          "position": "WR",
+          "pos": "WR",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 92.0663043478261,
+          "nationalRank": 129,
+          "natlRank": 129,
+          "stateRank": 14,
+          "positionRank": 20,
+          "posRank": 20,
+          "status": "commit",
+          "fitScore": 92.0663043478261,
+          "skinny": "WR ┬╖ 4Γÿà ┬╖ Cottondale, FL ┬╖ #129 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-03-11",
+          "commitDate": "2026-03-11",
+          "stars": 4,
+          "school": "Cottondale, FL",
+          "state": null,
+          "inState": true,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "tramond-collins-note",
+              "playerId": "tramond-collins",
+              "timestamp": "2026-03-11",
+              "text": "WR ┬╖ 4Γÿà ┬╖ Cottondale, FL ┬╖ #129 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "jackson-ballinger",
+          "slug": "jackson-ballinger",
+          "name": "Jackson Ballinger",
+          "position": "TE",
+          "pos": "TE",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 88.7,
+          "nationalRank": 418,
+          "natlRank": 418,
+          "stateRank": 18,
+          "positionRank": 25,
+          "posRank": 25,
+          "status": "commit",
+          "fitScore": 88.7,
+          "skinny": "TE ┬╖ 3Γÿà ┬╖ Centerburg, OH ┬╖ #418 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-02-24",
+          "commitDate": "2026-02-24",
+          "stars": 3,
+          "school": "Centerburg, OH",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "jackson-ballinger-note",
+              "playerId": "jackson-ballinger",
+              "timestamp": "2026-02-24",
+              "text": "TE ┬╖ 3Γÿà ┬╖ Centerburg, OH ┬╖ #418 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "amare-nugent",
+          "slug": "amare-nugent",
+          "name": "Amare Nugent",
+          "position": "CB",
+          "pos": "CB",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 90.48623188405797,
+          "nationalRank": 246,
+          "natlRank": 246,
+          "stateRank": 21,
+          "positionRank": 27,
+          "posRank": 27,
+          "status": "commit",
+          "fitScore": 90.48623188405797,
+          "skinny": "CB ┬╖ 4Γÿà ┬╖ Plantation, FL ┬╖ #246 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-01-24",
+          "commitDate": "2026-01-24",
+          "stars": 4,
+          "school": "Plantation, FL",
+          "state": null,
+          "inState": true,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "amare-nugent-note",
+              "playerId": "amare-nugent",
+              "timestamp": "2026-01-24",
+              "text": "CB ┬╖ 4Γÿà ┬╖ Plantation, FL ┬╖ #246 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "cain-van-norden",
+          "slug": "cain-van-norden",
+          "name": "Cain Van Norden",
+          "position": "DL",
+          "pos": "DL",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 87.7,
+          "nationalRank": 578,
+          "natlRank": 578,
+          "stateRank": 13,
+          "positionRank": 62,
+          "posRank": 62,
+          "status": "commit",
+          "fitScore": 87.7,
+          "skinny": "DL ┬╖ 3Γÿà ┬╖ District Heights, MD ┬╖ #578 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-05-15",
+          "commitDate": "2026-05-15",
+          "stars": 3,
+          "school": "District Heights, MD",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "cain-van-norden-note",
+              "playerId": "cain-van-norden",
+              "timestamp": "2026-05-15",
+              "text": "DL ┬╖ 3Γÿà ┬╖ District Heights, MD ┬╖ #578 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "cahron-wheeler",
+          "slug": "cahron-wheeler",
+          "name": "Cahron Wheeler",
+          "position": "EDGE",
+          "pos": "EDGE",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 92.1268115942029,
+          "nationalRank": 123,
+          "natlRank": 123,
+          "stateRank": 3,
+          "positionRank": 15,
+          "posRank": 15,
+          "status": "commit",
+          "fitScore": 92.1268115942029,
+          "skinny": "EDGE ┬╖ 4Γÿà ┬╖ Baltimore, MD ┬╖ #123 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-06-05",
+          "commitDate": "2026-06-05",
+          "stars": 4,
+          "school": "Baltimore, MD",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "cahron-wheeler-note",
+              "playerId": "cahron-wheeler",
+              "timestamp": "2026-06-05",
+              "text": "EDGE ┬╖ 4Γÿà ┬╖ Baltimore, MD ┬╖ #123 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "zahmar-tookes",
+          "slug": "zahmar-tookes",
+          "name": "Zahmar Tookes",
+          "position": "DL",
+          "pos": "DL",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 89.67826086956522,
+          "nationalRank": 316,
+          "natlRank": 316,
+          "stateRank": 2,
+          "positionRank": 33,
+          "posRank": 33,
+          "status": "commit",
+          "fitScore": 89.67826086956522,
+          "skinny": "DL ┬╖ 4Γÿà ┬╖ Rochester, NY ┬╖ #316 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-06-03",
+          "commitDate": "2026-06-03",
+          "stars": 4,
+          "school": "Rochester, NY",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "zahmar-tookes-note",
+              "playerId": "zahmar-tookes",
+              "timestamp": "2026-06-03",
+              "text": "DL ┬╖ 4Γÿà ┬╖ Rochester, NY ┬╖ #316 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "ellis-mcgaskin",
+          "slug": "ellis-mcgaskin",
+          "name": "Ellis McGaskin",
+          "position": "LB",
+          "pos": "LB",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 89.32608695652173,
+          "nationalRank": 354,
+          "natlRank": 354,
+          "stateRank": 18,
+          "positionRank": 32,
+          "posRank": 32,
+          "status": "commit",
+          "fitScore": 89.32608695652173,
+          "skinny": "LB ┬╖ 4Γÿà ┬╖ Mobile, AL ┬╖ #354 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-06-06",
+          "commitDate": "2026-06-06",
+          "stars": 4,
+          "school": "Mobile, AL",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "ellis-mcgaskin-note",
+              "playerId": "ellis-mcgaskin",
+              "timestamp": "2026-06-06",
+              "text": "LB ┬╖ 4Γÿà ┬╖ Mobile, AL ┬╖ #354 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "kamarion-johnson",
+          "slug": "kamarion-johnson",
+          "name": "Kamarion Johnson",
+          "position": "ATH",
+          "pos": "ATH",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 89.33333333333333,
+          "nationalRank": 351,
+          "natlRank": 351,
+          "stateRank": 40,
+          "positionRank": 12,
+          "posRank": 12,
+          "status": "commit",
+          "fitScore": 89.33333333333333,
+          "skinny": "ATH ┬╖ 4Γÿà ┬╖ Homerville, GA ┬╖ #351 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-06-05",
+          "commitDate": "2026-06-05",
+          "stars": 4,
+          "school": "Homerville, GA",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "kamarion-johnson-note",
+              "playerId": "kamarion-johnson",
+              "timestamp": "2026-06-05",
+              "text": "ATH ┬╖ 4Γÿà ┬╖ Homerville, GA ┬╖ #351 natl",
+              "ufProbability": 0
+            }
+          ]
+        },
+        {
+          "id": "jaydee-lane",
+          "slug": "jaydee-lane",
+          "name": "Jaydee Lane",
+          "position": "LS",
+          "pos": "LS",
+          "class": 2027,
+          "classYear": 2027,
+          "rating": 80,
+          "nationalRank": 1808,
+          "natlRank": 1808,
+          "stateRank": 36,
+          "positionRank": 2,
+          "posRank": 2,
+          "status": "commit",
+          "fitScore": 80,
+          "skinny": "LS ┬╖ 3Γÿà ┬╖ Mendenhall, MS ┬╖ #1808 natl",
+          "strengths": [],
+          "weaknesses": [],
+          "evaluatorNotes": null,
+          "commitmentDate": "2026-06-08",
+          "commitDate": "2026-06-08",
+          "stars": 3,
+          "school": "Mendenhall, MS",
+          "state": null,
+          "inState": false,
+          "ufProbability": null,
+          "tier": "TOP",
+          "isCommittedToUF": true,
+          "isTarget": false,
+          "intel": [
+            {
+              "id": "jaydee-lane-note",
+              "playerId": "jaydee-lane",
+              "timestamp": "2026-06-08",
+              "text": "LS ┬╖ 3Γÿà ┬╖ Mendenhall, MS ┬╖ #1808 natl",
+              "ufProbability": 0
+            }
+          ]
+        }
+      ]
+    },
+    "error": null
+  },
+  {
+    "label": "high-priority intel",
+    "requestUrl": "https://gatorvault-api.onrender.com/api/recruiting/intel/high-priority",
+    "statusCode": 200,
+    "responseBody": {
+      "ok": true,
+      "meta": {
+        "dataSource": {
+          "mode": "json",
+          "supabaseConfigured": false,
+          "paths": {
+            "players": "/opt/render/project/src/server/data/recruiting/players.json",
+            "events": "/opt/render/project/src/server/data/recruiting/events.json",
+            "rankings": "/opt/render/project/src/server/data/recruiting/rankings.json"
+          }
+        },
+        "generatedAt": "2026-06-18T19:23:23.721Z",
+        "lastUpdated": "2026-06-18T19:23:23.721Z",
+        "cacheKey": "hub:intel:high-priority",
+        "forced": false
+      },
+      "items": [
+        {
+          "id": "intel_tre-geathers_target_update_2026-06-18",
+          "playerId": "tre-geathers",
+          "playerSlug": "tre-geathers",
+          "timestamp": "2026-06-18T19:20:45.119Z",
+          "text": "BREAKING: Florida has landed commitment No. 23 ΓÇö and it's from LB Tre Geathers. A space-ready linebacker with speed, instincts and major upside. The Gators are excited about this one.. STORY: https://t.co/LEArJH5PIs https://t.co/G7peb5Cy3h",
+          "ufProbability": 58
+        },
+        {
+          "id": "intel_jayden-harris-test_unofficial_visit_2026-06-17",
+          "playerId": "jayden-harris",
+          "playerSlug": "jayden-harris",
+          "timestamp": "2026-06-18T19:20:53.438Z",
+          "text": "Florida set to host 4-star 2028 EDGE Jayden Bell on campus this weekend for Grille in the Ville. Γ₧í∩╕Å: https://t.co/mFC3jPBSi7 https://t.co/rB4HogEVbC",
+          "ufProbability": 70
+        }
+      ],
+      "lastUpdated": "2026-06-18T19:23:23.721Z"
+    },
+    "error": null
+  }
+]
+
+========================================================================
+3. SERVER STATE (local .env + guards)
+========================================================================
+{
+  "env": {
+    "X_PIPELINES_ENABLED": "true",
+    "X_AUTOPOST_ENABLED": "true",
+    "X_GM2_REWRITE_ENABLED": "(unset)",
+    "X_INTEL_REWRITE_ENABLED": "(unset)",
+    "X_SCHEDULED_JOBS_ENABLED": "(unset)",
+    "DATABASE_URL": "(set)",
+    "NODE_ENV": "(unset)"
+  },
+  "pipelineGuards": {
+    "pipelinesEnabled": true,
+    "autopostEnabled": true,
+    "gm2RewriteEnabled": false,
+    "intelRewriteEnabled": false
+  },
+  "autoposterConfig": {
+    "configured": true,
+    "authMode": "oauth1_user_context",
+    "account": "@gatorvault",
+    "envKeysLoaded": {
+      "X_OAUTH1_API_KEY": true,
+      "X_OAUTH1_API_SECRET": true,
+      "X_OAUTH1_ACCESS_TOKEN": true,
+      "X_OAUTH1_ACCESS_TOKEN_SECRET": true,
+      "TWITTER_API_KEY": false,
+      "TWITTER_API_SECRET": false,
+      "TWITTER_ACCESS_TOKEN": false,
+      "TWITTER_ACCESS_SECRET": false
+    },
+    "apiKeyHint": "Xvz3ΓÇª",
+    "accessTokenHint": "20615197ΓÇª",
+    "schedulerEnabled": true,
+    "replyEnabled": true,
+    "schedulerIntervalMs": 60000,
+    "contentMix": "50% news ┬╖ 30% engagement ┬╖ 20% promo",
+    "cadence": {
+      "normalCooldownMs": 2700000,
+      "normalCooldownMinutes": 45,
+      "burstCooldownMs": 420000,
+      "burstCooldownMinutes": 7,
+      "nightCooldownMs": 9000000,
+      "nightCooldownMinutes": 150,
+      "breakingBurstMs": 120000,
+      "nightModeHoursEt": "00:00ΓÇô06:00",
+      "nightTimezone": "America/New_York",
+      "urgentLabels": [
+        "commitment",
+        "portal",
+        "injury",
+        "staff",
+        "analysis",
+        "major_beat",
+        "breaking"
+      ],
+      "description": "Normal 45m ┬╖ Urgent/breaking bypass interval ┬╖ Burst min 7m (2m when 2+ breaking) ┬╖ Night 2.5h for routine posts"
+    },
+    "lastVerify": null,
+    "scheduler": {
+      "version": 1,
+      "updatedAt": "2026-06-12T03:22:29.073Z",
+      "schedulerEnabled": true,
+      "schedulerStartedAt": "2026-06-12T03:22:29.073Z",
+      "lastRun": "2026-06-11T17:52:21.817Z",
+      "lastPostAttempt": "2026-06-11T15:47:20.931Z",
+      "lastPostSuccess": null,
+      "lastPostAt": null,
+      "lastCadenceCheck": "2026-06-11T17:52:21.930Z",
+      "lastCadenceReason": "no_due_posts",
+      "cadenceWaitMs": 0,
+      "lastRefillAt": "2026-06-11T17:52:21.914Z",
+      "lastRefillCount": 0,
+      "lastProcessedCount": 0,
+      "lastError": null
+    }
+  },
+  "localResolve": {
+    "message": "Cannot find module 'C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\api\\big-board\\engine' imported from C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\api\\player\\build-full-profile.ts",
+    "stack": "Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\api\\big-board\\engine' imported from C:\\Users\\crour\\OneDrive\\Desktop\\gatorvault\\server\\api\\player\\build-full-profile.ts\n    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\n    at moduleResolve (node:internal/modules/esm/resolve:865:10)\n    at defaultResolve (node:internal/modules/esm/resolve:992:11)\n    at #cachedDefaultResolve (node:internal/modules/esm/loader:691:20)\n    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:708:38)\n    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:740:52)\n    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:590:27)",
+    "note": "TS module may need npx tsx on some machines; API probes above are authoritative for production."
+  }
+}
+
+========================================================================
+4. URL / ROUTING REFERENCE
+========================================================================
+{
+  "exampleFailure": {
+    "clicked": "/vault/recruiting/player/175389",
+    "navigatedTo": "/vault/recruiting/player/175389",
+    "expectedAfterFix": "/vault/recruiting/player/davian-groce",
+    "clientResolveCalls": [
+      "GET https://gatorvault-api.onrender.com/api/player/resolve/175389?context=recruiting",
+      "GET https://gatorvault-api.onrender.com/api/player/full-profile/davian-groce"
+    ],
+    "staticExportNote": "Netlify serves /vault/recruiting/player/* via catch-all; slug is read from window.location.pathname in RecruitingPlayerClient."
+  },
+  "profileRoutes": {
+    "recruiting": "/vault/recruiting/player/{slug}",
+    "futurecast": "/vault/futurecast/player/{slug}",
+    "roster": "/vault/players/{slug}",
+    "portal": "/vault/portal/player/{slug}"
+  },
+  "errorUi": {
+    "missingSlug": "UiError title \"Player not found\" ΓÇö RecruitingPlayerClient when pathname has no slug",
+    "resolveFailed": "UiError title \"Player not found\" message from ApiFetchError (404/500 body.error)",
+    "profileLoadFailed": "PlayerProfilePage UiError after resolve succeeds but full-profile fetch fails",
+    "reactCrash": "VaultErrorBoundary logs [VaultErrorBoundary] + componentStack in console"
+  }
+}
+
+========================================================================
+1. BROWSER CONSOLE ΓÇö capture manually
+========================================================================
+
+Steps:
+  1. Open site ΓåÆ F12 ΓåÆ Console + Network (Preserve log ON)
+  2. Reproduce the broken click
+  3. Copy ALL red console lines + stack traces
+  4. In Network, filter "Fetch/XHR", click failing request, copy:
+       Request URL / Status / Response (Preview or Response tab)
+  5. Note final address bar URL vs link href
+
+Paste into ticket with this script output.
+

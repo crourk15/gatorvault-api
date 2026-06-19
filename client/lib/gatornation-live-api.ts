@@ -164,7 +164,7 @@ export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePan
     .filter((item) => /visit|on campus|ov/i.test(String(item.title)))
     .slice(0, 6)
     .map((item) => ({
-      text: String(item.title).slice(0, 80),
+      text: String(item.title || '').trim(),
       source: item.source || 'Recruiting',
       timestamp: item.createdAt || undefined,
     }));
@@ -173,29 +173,31 @@ export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePan
     .filter((item) => /portal|transfer/i.test(String(item.title)))
     .slice(0, 6)
     .map((item) => ({
-      text: String(item.title).slice(0, 80),
+      text: String(item.title || '').trim(),
       source: 'Portal',
       timestamp: item.createdAt || undefined,
     }));
 
-  const beatWriterHighlights = beat.slice(0, 6).map((post) => {
-    const writer = post.writerName || post.handle || post.outlet || 'Beat Writer';
-    const snippet = String(post.text || '').slice(0, 120);
-    return {
-      text: snippet,
-      source: post.outlet || 'Beat',
-      timestamp: post.publishedAt || undefined,
-      url: post.url,
-      handle: post.handle,
-      writerName: writer,
-    };
-  });
+  const beatWriterHighlights = beat
+    .filter((post) => String(post.text || '').trim())
+    .slice(0, 12)
+    .map((post) => {
+      const writer = post.writerName || post.handle || post.outlet || 'Beat Writer';
+      return {
+        text: String(post.text || '').trim(),
+        source: post.outlet || 'Beat',
+        timestamp: post.publishedAt || undefined,
+        url: post.url,
+        handle: post.handle,
+        writerName: writer,
+      };
+    });
 
   const staffNotes = feed
     .filter((item) => /staff|coach|internal/i.test(String(item.title)))
     .slice(0, 4)
     .map((item) => ({
-      text: String(item.title).slice(0, 72),
+      text: String(item.title || '').trim(),
       source: 'Insider',
       timestamp: item.createdAt || undefined,
     }));

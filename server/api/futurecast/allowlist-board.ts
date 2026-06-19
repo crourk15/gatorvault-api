@@ -36,6 +36,7 @@ function targetBoardPath(classYear: number): string {
 }
 const RIVALS_PREDICTIONS_PATH = path.join(__dirname, '../../data/war-room/rivals-predictions.json');
 const MOVEMENT_WINDOW_DAYS = 7;
+export const UNDERCLASSMEN_MOVEMENT_WINDOW_DAYS = 30;
 
 function isFloridaSchool(value: string | null | undefined): boolean {
   if (!value) return false;
@@ -67,7 +68,9 @@ function loadRivalsCompetingSchools(): Map<string, { name: string; pct: number }
       const total = entries.reduce((sum, [, score]) => sum + score, 0) || 1;
       out.set(
         slug,
-        entries.map(([name, score]) => ({ name, pct: Math.round((score / total) * 100) }))
+        entries
+          .filter(([name]) => !isFloridaSchool(name))
+          .map(([name, score]) => ({ name, pct: Math.round((score / total) * 100) }))
       );
     }
     return out;
@@ -99,11 +102,12 @@ export interface FutureCastBoardPlayer {
   natlRank?: number | null;
   posRank?: number | null;
   stateRank?: number | null;
-  /** UF % (Likelihood) — FutureCast commit likelihood for Florida. */
-  ufConfidence: number;
-  /** Fit % (Scheme Match) — scheme, roster, and athletic fit. */
-  fitScore: number;
-  trendDelta7d: number;
+  /** UF % (Likelihood) — FutureCast commit likelihood for Florida. Null when unknown. */
+  ufConfidence: number | null;
+  /** Fit % (Scheme Match) — scheme, roster, and athletic fit. Null when unknown. */
+  fitScore: number | null;
+  /** Rolling UF probability delta for movementWindowDays. Null when unknown. */
+  trendDelta7d: number | null;
   volatility7d: number;
   /** Priority tier tag; numeric Priority Score is on high-priority API. */
   priority: FutureCastPriority;
@@ -119,17 +123,47 @@ export interface MovementHeatmapData {
   windowDays: number;
 }
 
+export type LoadBoardOptions = {
+  /** Movement window for Δ% (default 7 for 2027 board, 30 for underclassmen). */
+  movementWindowDays?: number;
+};
+
 function toPercent(value: number | null | undefined): number {
   if (value == null || !Number.isFinite(value)) return 0;
   const n = Number(value);
   return n <= 1 ? Math.round(n * 1000) / 10 : Math.round(n * 10) / 10;
 }
 
-function resolvePriority(ufConfidence: number, fitScore: number): FutureCastPriority {
-  const score = ufConfidence * 0.6 + fitScore * 0.4;
-  if (score >= 55 || ufConfidence >= 60) return 'high';
-  if (score >= 35 || ufConfidence >= 40) return 'medium';
+function toPercentOrNull(value: number | null | undefined): number | null {
+  if (value == null || !Number.isFinite(value)) return null;
+  return toPercent(value);
+}
+
+function resolvePriority(ufConfidence: number | null, fitScore: number | null): FutureCastPriority {
+  const uf = ufConfidence ?? 0;
+  const fit = fitScore ?? 0;
+  const score = uf * 0.6 + fit * 0.4;
+  if (score >= 55 || uf >= 60) return 'high';
+  if (score >= 35 || uf >= 40) return 'medium';
   return 'low';
+}
+
+async function loadRecruitingPlayer(slug: string): Promise<Record<string, unknown> | null> {
+  try {
+    const store = require('../../lib/recruiting-store');
+    const player = await store.getPlayerBySlug(slug);
+    return player || null;
+  } catch {
+    return null;
+  }
+}
+
+function resolveCompetingSchools(
+  rivals: { name: string; pct: number }[] | undefined
+): { name: string; pct: number }[] {
+  return (rivals ?? [])
+    .filter((s) => s?.name && !isFloridaSchool(s.name))
+    .sort((a, b) => Number(b.pct) - Number(a.pct));
 }
 
 function loadEarlyWatchlistMeta(): Map<string, Record<string, unknown>> {
@@ -173,24 +207,24 @@ function loadSeedMeta(classYear = FUTURECAST_CLASS_YEAR): Map<string, Record<str
   } catch {
     /* optional */
   }
-  if (classYear >= 2029) {
-    for (const [slug, entry] of loadEarlyWatchlistMeta()) {
-      if (Number(entry.classYear) === classYear && !map.has(slug)) map.set(slug, entry);
-    }
-  }
   return map;
 }
 
-function buildHeatmap(players: FutureCastBoardPlayer[]): MovementHeatmapData {
+function buildHeatmap(players: FutureCastBoardPlayer[], windowDays = MOVEMENT_WINDOW_DAYS): MovementHeatmapData {
   let upCount = 0;
   let downCount = 0;
   let flatCount = 0;
   for (const p of players) {
-    if (p.trendDelta7d > 0) upCount += 1;
-    else if (p.trendDelta7d < 0) downCount += 1;
+    const delta = p.trendDelta7d;
+    if (delta == null) {
+      flatCount += 1;
+      continue;
+    }
+    if (delta > 0) upCount += 1;
+    else if (delta < 0) downCount += 1;
     else flatCount += 1;
   }
-  return { upCount, downCount, flatCount, windowDays: MOVEMENT_WINDOW_DAYS };
+  return { upCount, downCount, flatCount, windowDays };
 }
 
 /** Static allow-list slug set — prefer getLiveTargetSlugSet() at runtime. */
@@ -241,17 +275,18 @@ async function resolveBoardSlugs(classYear: number): Promise<string[]> {
 /** Build enriched FutureCast player rows for explicit slugs and class year. */
 export async function loadBoardPlayersForSlugs(
   classYear: number,
-  slugs: string[]
+  slugs: string[],
+  options: LoadBoardOptions = {}
 ): Promise<FutureCastBoardPlayer[]> {
+  const movementWindowDays = options.movementWindowDays ?? MOVEMENT_WINDOW_DAYS;
   const allowedSlugs = [...new Set(slugs.map((s) => String(s).toLowerCase()).filter(Boolean))];
   const allowedSet = new Set(allowedSlugs);
   const rankings = loadRecruitingRankings();
   const seedMeta = loadSeedMeta(classYear);
   const rivalsSchools = loadRivalsCompetingSchools();
-  const earlyMeta = loadEarlyWatchlistMeta();
 
   const [stockRowsRaw, predictionRows] = await Promise.all([
-    listStockBoardRows(MOVEMENT_WINDOW_DAYS, {
+    listStockBoardRows(movementWindowDays, {
       lifecycle: 'HS',
       class_year: classYear,
     }),
@@ -277,64 +312,90 @@ export async function loadBoardPlayersForSlugs(
   );
 
   const playerIds = serialized.map((p) => p.playerId).filter(Boolean);
-  const historyMap = await listMovementHistoryByPlayerIds(playerIds, VOLATILITY_WINDOW_DAYS);
+  const historyMap = await listMovementHistoryByPlayerIds(playerIds, movementWindowDays);
 
   const players: FutureCastBoardPlayer[] = [];
 
   for (const slug of allowedSlugs) {
     if (isBlockedRecruit({ slug })) continue;
 
-    const seed = seedMeta.get(slug) ?? earlyMeta.get(slug) ?? {};
+    const seed = seedMeta.get(slug) ?? {};
+    const recruiting = await loadRecruitingPlayer(slug);
     const rank = rankings.get(slug);
     const stock = stockBySlug.get(slug);
     const model = predictionBySlug.get(slug);
 
+    const resolvedClassYear = Number(
+      recruiting?.classYear ?? seed.classYear ?? classYear
+    );
     const name =
-      String(seed.name || CANONICAL_TARGET_NAMES[slug] || slug).trim() ||
+      String(recruiting?.name || seed.name || CANONICAL_TARGET_NAMES[slug] || slug).trim() ||
       CANONICAL_TARGET_NAMES[slug] ||
       slug;
 
-    const seedMovement = Number(seed.earlyMovement ?? 0);
-    const trendDelta7d = stock?.window_delta ?? model?.delta ?? seedMovement;
+    const trendRaw =
+      stock?.window_delta != null
+        ? Number(stock.window_delta)
+        : model?.delta != null
+          ? Number(model.delta)
+          : null;
+    const trendDelta7d =
+      trendRaw != null && Number.isFinite(trendRaw)
+        ? Math.round(trendRaw * 1000) / 1000
+        : null;
     const history = model?.playerId ? historyMap.get(model.playerId) ?? [] : [];
     const volatility7d =
       history.length > 0
         ? Math.round(calculateVolatility(history) * 100) / 100
-        : Math.round(Math.abs(trendDelta7d) * 100) / 100;
+        : trendDelta7d != null
+          ? Math.round(Math.abs(trendDelta7d) * 100) / 100
+          : 0;
 
-    const committedTo = seedCommittedTo(seed) ?? model?.committedTo ?? null;
+    const committedTo =
+      (recruiting?.committedTo as string | null) ??
+      seedCommittedTo(seed) ??
+      model?.committedTo ??
+      null;
     const ufCommitted = isFloridaSchool(committedTo);
-    let ufConfidence = toPercent(model?.confidence ?? model?.ufProbability ?? seed.ufProbability);
+    let ufConfidence = toPercentOrNull(model?.confidence ?? model?.ufProbability);
     if (ufCommitted) ufConfidence = 100;
 
-    const seedCompetitors = Array.isArray(seed.competingSchools)
-      ? (seed.competingSchools as Array<{ name: string; pct: number }>)
-      : [];
-    const competingSchools = rivalsSchools.get(slug)?.length ? rivalsSchools.get(slug)! : seedCompetitors;
+    const competingSchools = resolveCompetingSchools(rivalsSchools.get(slug));
     const predictors = rivalsPredictors(slug, competingSchools);
-    const fitScore = Math.round(
-      model?.ufFitScore ?? Number(seed.fitScore ?? seed.rating ?? rank?.compositeScore ?? 0)
-    );
+    const fitScore =
+      model?.ufFitScore != null && Number.isFinite(Number(model.ufFitScore))
+        ? Math.round(Number(model.ufFitScore))
+        : null;
+
+    const position = String(
+      recruiting?.pos ||
+        recruiting?.position ||
+        rank?.position ||
+        seed.pos ||
+        seed.position ||
+        model?.position ||
+        ''
+    )
+      .trim()
+      .toUpperCase();
 
     players.push({
-      id: model?.playerId ?? (isUnderclassmenClassYear(classYear) ? intelUuidForSlug(slug) : slug),
+      id: model?.playerId ?? (isUnderclassmenClassYear(resolvedClassYear) ? intelUuidForSlug(slug) : slug),
       slug,
       name,
-      classYear,
-      position: String(
-        seed.pos || seed.position || model?.position || rank?.position || '—'
-      ).toUpperCase(),
-      school: (seed.school as string) ?? model?.school ?? null,
-      hometown: (seed.hometown as string) ?? null,
-      state: (seed.state as string) ?? rank?.state ?? null,
-      composite: Math.round((rank?.compositeScore ?? Number(seed.rating ?? 0)) * 100) / 100,
-      stars: Number(rank?.stars ?? seed.stars ?? 0) || 0,
-      natlRank: rank?.nationalRank ?? (seed.natlRank as number) ?? null,
-      posRank: rank?.positionRank ?? (seed.posRank as number) ?? null,
-      stateRank: rank?.stateRank ?? (seed.stateRank as number) ?? null,
+      classYear: resolvedClassYear,
+      position: position || 'TBD',
+      school: (recruiting?.school as string) ?? (seed.school as string) ?? model?.school ?? null,
+      hometown: (recruiting?.hometown as string) ?? (seed.hometown as string) ?? null,
+      state: (recruiting?.state as string) ?? (seed.state as string) ?? rank?.state ?? null,
+      composite: Math.round((rank?.compositeScore ?? Number(recruiting?.rating ?? seed.rating ?? 0)) * 100) / 100,
+      stars: Number(rank?.stars ?? recruiting?.stars ?? seed.stars ?? 0) || 0,
+      natlRank: rank?.nationalRank ?? (recruiting?.natlRank as number) ?? (seed.natlRank as number) ?? null,
+      posRank: rank?.positionRank ?? (recruiting?.posRank as number) ?? (seed.posRank as number) ?? null,
+      stateRank: rank?.stateRank ?? (recruiting?.stateRank as number) ?? (seed.stateRank as number) ?? null,
       ufConfidence,
       fitScore,
-      trendDelta7d: Math.round(trendDelta7d * 1000) / 1000,
+      trendDelta7d,
       volatility7d,
       priority: resolvePriority(ufConfidence, fitScore),
       committedTo,
@@ -343,7 +404,7 @@ export async function loadBoardPlayersForSlugs(
     });
   }
 
-  return players.sort((a, b) => b.ufConfidence - a.ufConfidence);
+  return players.sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1));
 }
 
 export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlayer[]> {
@@ -356,12 +417,12 @@ export async function buildMasterBoardPayload() {
   const heatmap = buildHeatmap(players);
 
   const trendingUp = [...players]
-    .filter((p) => p.trendDelta7d > 0)
-    .sort((a, b) => b.trendDelta7d - a.trendDelta7d);
+    .filter((p) => (p.trendDelta7d ?? 0) > 0)
+    .sort((a, b) => (b.trendDelta7d ?? 0) - (a.trendDelta7d ?? 0));
 
   const trendingDown = [...players]
-    .filter((p) => p.trendDelta7d < 0)
-    .sort((a, b) => a.trendDelta7d - b.trendDelta7d);
+    .filter((p) => (p.trendDelta7d ?? 0) < 0)
+    .sort((a, b) => (a.trendDelta7d ?? 0) - (b.trendDelta7d ?? 0));
 
   const activeTargets = players.filter((p) => !isFloridaSchool(p.committedTo ?? null));
 
@@ -371,28 +432,33 @@ export async function buildMasterBoardPayload() {
 
   const highPriority = [...players]
     .filter((p) => p.priority === 'high')
-    .sort((a, b) => b.ufConfidence - a.ufConfidence);
+    .sort((a, b) => (b.ufConfidence ?? 0) - (a.ufConfidence ?? 0));
 
   const commitWatch = [...players]
-    .filter((p) => p.ufConfidence >= 50 && p.trendDelta7d > 0)
-    .sort((a, b) => b.ufConfidence + b.trendDelta7d - (a.ufConfidence + a.trendDelta7d))
+    .filter((p) => (p.ufConfidence ?? 0) >= 50 && (p.trendDelta7d ?? 0) > 0)
+    .sort(
+      (a, b) =>
+        (b.ufConfidence ?? 0) +
+        (b.trendDelta7d ?? 0) -
+        ((a.ufConfidence ?? 0) + (a.trendDelta7d ?? 0))
+    )
     .slice(0, 3)
     .map((p) => ({
       playerId: p.id,
       slug: p.slug,
       name: p.name,
-      ufConfidence: p.ufConfidence,
-      recentMovement: p.trendDelta7d,
+      ufConfidence: p.ufConfidence ?? 0,
+      recentMovement: p.trendDelta7d ?? 0,
     }));
 
   const ufConfidenceAverage =
     players.length > 0
-      ? Math.round((players.reduce((sum, p) => sum + p.ufConfidence, 0) / players.length) * 10) / 10
+      ? Math.round(
+          (players.reduce((sum, p) => sum + (p.ufConfidence ?? 0), 0) / players.length) * 10
+        ) / 10
       : 0;
 
-  const confidenceSparkline = players
-    .slice(0, 12)
-    .map((p) => p.ufConfidence);
+  const confidenceSparkline = players.slice(0, 12).map((p) => p.ufConfidence ?? 0);
 
   return {
     classYear: FUTURECAST_CLASS_YEAR,
@@ -434,8 +500,12 @@ export async function buildTrendingBoardPayload() {
   return {
     classYear: FUTURECAST_CLASS_YEAR,
     updatedAt: new Date().toISOString(),
-    trendingUp: players.filter((p) => p.trendDelta7d > 0).sort((a, b) => b.trendDelta7d - a.trendDelta7d),
-    trendingDown: players.filter((p) => p.trendDelta7d < 0).sort((a, b) => a.trendDelta7d - b.trendDelta7d),
+    trendingUp: players
+      .filter((p) => (p.trendDelta7d ?? 0) > 0)
+      .sort((a, b) => (b.trendDelta7d ?? 0) - (a.trendDelta7d ?? 0)),
+    trendingDown: players
+      .filter((p) => (p.trendDelta7d ?? 0) < 0)
+      .sort((a, b) => (a.trendDelta7d ?? 0) - (b.trendDelta7d ?? 0)),
   };
 }
 
@@ -444,16 +514,24 @@ export async function buildMovementIntelPayload() {
   const activeTargets = players.filter((p) => !isFloridaSchool(p.committedTo ?? null));
   const heatmap = buildHeatmap(activeTargets);
 
-  const risers = activeTargets.filter((p) => p.trendDelta7d > 0).sort((a, b) => b.trendDelta7d - a.trendDelta7d);
-  const fallers = activeTargets.filter((p) => p.trendDelta7d < 0).sort((a, b) => a.trendDelta7d - b.trendDelta7d);
+  const risers = activeTargets
+    .filter((p) => (p.trendDelta7d ?? 0) > 0)
+    .sort((a, b) => (b.trendDelta7d ?? 0) - (a.trendDelta7d ?? 0));
+  const fallers = activeTargets
+    .filter((p) => (p.trendDelta7d ?? 0) < 0)
+    .sort((a, b) => (a.trendDelta7d ?? 0) - (b.trendDelta7d ?? 0));
   const highVolatility = [...activeTargets]
     .filter((p) => p.volatility7d >= 0.15)
     .sort((a, b) => b.volatility7d - a.volatility7d);
   const stable = activeTargets
-    .filter((p) => p.volatility7d < 0.1 && Math.abs(p.trendDelta7d) < 0.05)
-    .sort((a, b) => b.ufConfidence - a.ufConfidence);
-  const fitScoreLeaders = [...activeTargets].sort((a, b) => b.fitScore - a.fitScore);
-  const fitScoreRisks = [...activeTargets].sort((a, b) => a.fitScore - b.fitScore);
+    .filter((p) => p.volatility7d < 0.1 && Math.abs(p.trendDelta7d ?? 0) < 0.05)
+    .sort((a, b) => (b.ufConfidence ?? 0) - (a.ufConfidence ?? 0));
+  const fitScoreLeaders = [...activeTargets].sort(
+    (a, b) => (b.fitScore ?? -1) - (a.fitScore ?? -1)
+  );
+  const fitScoreRisks = [...activeTargets].sort(
+    (a, b) => (a.fitScore ?? 999) - (b.fitScore ?? 999)
+  );
 
   let alerts: { id: string; message: string; createdAt: string }[] = [];
   try {

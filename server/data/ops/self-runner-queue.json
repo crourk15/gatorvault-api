@@ -1,7 +1,115 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-16T11:22:19.431Z",
+  "updatedAt": "2026-06-16T18:18:44.019Z",
   "items": [
+    {
+      "id": "sr_fix_021",
+      "sourceIssueId": "fix_integrity:feed-dedup",
+      "checkId": "integrity:feed-dedup",
+      "title": "HTTP 502 https://gatorvault-api.onrender.com/api/live/feed",
+      "module": "integrity",
+      "classification": "autoposter-duplication",
+      "ruleId": "C1",
+      "category": "C",
+      "severity": "critical",
+      "severityScore": 94,
+      "impact": "user-facing",
+      "status": "pending",
+      "patchType": "feed-dedup-v2",
+      "patchPreview": {
+        "file": "data/live/feed-items.json",
+        "before": "0 feed integrity issue(s)",
+        "after": "repairFeedItems() with SHA-256 dedupe — Live Feed React page reads this API",
+        "files": [
+          "data/live/feed-items.json"
+        ],
+        "diff": [
+          {
+            "file": "data/live/feed-items.json",
+            "before": "1 feed integrity issue(s)",
+            "after": "repairFeedItems() after validateFeedIntegrity() — real SHA-256 normalized hashes"
+          }
+        ]
+      },
+      "patch": {
+        "edits": [
+          {
+            "file": "data/live/feed-items.json",
+            "type": "repair-feed-integrity",
+            "windowSec": 172800
+          }
+        ]
+      },
+      "template": {
+        "ruleId": "C1",
+        "category": "C",
+        "classification": "autoposter-duplication",
+        "safetyRules": [
+          "Never emit addDedupeRule() or placeholder hashes (text-hash, normalized-text-hash)",
+          "Use live-feed-dedup.js repairFeedItems() — keep newest item when duplicates detected",
+          "Dedupe window from SELF_RUNNER_DEDUPE_WINDOW_SEC — minimum 1 hour",
+          "Unique intel must still post after repair apply"
+        ],
+        "diff": [
+          {
+            "file": "data/live/feed-items.json",
+            "before": "1 feed integrity issue(s)",
+            "after": "repairFeedItems() after validateFeedIntegrity() — real SHA-256 normalized hashes"
+          }
+        ]
+      },
+      "safetyRules": [
+        "Never emit addDedupeRule() or placeholder hashes (text-hash, normalized-text-hash)",
+        "Use live-feed-dedup.js repairFeedItems() — keep newest item when duplicates detected",
+        "Dedupe window from SELF_RUNNER_DEDUPE_WINDOW_SEC — minimum 1 hour",
+        "Unique intel must still post after repair apply"
+      ],
+      "suggestedFix": "Repair data/live/feed-items.json — VaultLiveFeedPage displays via /api/live/dashboard",
+      "description": "Repair feed integrity for HTTP 502 https://gatorvault-api.onrender.com/api/live/feed via canonical SHA-256 dedupe.",
+      "filesToModify": [
+        "data/live/feed-items.json"
+      ],
+      "codeDiff": [
+        {
+          "file": "data/live/feed-items.json",
+          "before": "1 feed integrity issue(s)",
+          "after": "repairFeedItems() after validateFeedIntegrity() — real SHA-256 normalized hashes"
+        }
+      ],
+      "codeDiffHint": "validateFeedIntegrity() → repairFeedItems() — real SHA-256 hashes on feed-items.json",
+      "testPlan": [
+        "Run validateFeedIntegrity() on feed-items.json — must pass",
+        "Verify integrity:autoposter-dedup QA check passes",
+        "Verify unique intel still posts after repair"
+      ],
+      "qaSteps": [
+        "Run validateFeedIntegrity() on feed-items.json — must pass",
+        "Verify integrity:autoposter-dedup QA check passes",
+        "Verify unique intel still posts after repair",
+        "Verify QA check integrity:feed-dedup passes",
+        "POST /api/product-intel/recompute — issue cleared from fix queue"
+      ],
+      "rollbackPlan": {
+        "strategy": "git-revert",
+        "summary": "Restore feed-items.json from snapshot if repair removes valid items.",
+        "steps": [
+          "Revert: data/live/feed-items.json",
+          "Redeploy Netlify (static) and Render (API) if needed",
+          "POST /api/product-intel/recompute",
+          "POST /api/qa/run — verify check passes"
+        ]
+      },
+      "repro": null,
+      "riskLevel": "low",
+      "blocked": false,
+      "blockReason": null,
+      "requiresManualApproval": false,
+      "v2": true,
+      "createdAt": "2026-06-16T18:00:47.983Z",
+      "approvedAt": null,
+      "completedAt": null,
+      "rejectedAt": null
+    },
     {
       "id": "sr_fix_020",
       "sourceIssueId": "fix_content:film-room-spell",
@@ -2050,6 +2158,490 @@
     }
   ],
   "log": [
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_63d20b69",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-16T18:18:44.018Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 3,
+      "runId": "qa_1781633888188",
+      "log": {
+        "at": "2026-06-16T18:18:43.959Z",
+        "runId": "qa_1781633888188",
+        "openFixQueue": 3,
+        "eligibleOpenIssues": 0,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:filmroom:categories",
+            "checkId": "pi:filmroom:categories",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:filmroom:categories",
+            "severity": "medium"
+          }
+        ],
+        "summary": "qa_run_qa_1781633888188 — 0 failed / 111 total checks"
+      },
+      "at": "2026-06-16T18:18:43.962Z"
+    },
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_ac563936",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-16T18:03:36.214Z"
+    },
+    {
+      "action": "generate",
+      "created": 0,
+      "skipped": 6,
+      "runId": "qa_1781632985387",
+      "log": {
+        "at": "2026-06-16T18:03:36.146Z",
+        "runId": "qa_1781632985387",
+        "openFixQueue": 6,
+        "eligibleOpenIssues": 1,
+        "decisions": [
+          {
+            "action": "skipped",
+            "id": "fix_integrity:feed-dedup",
+            "checkId": "integrity:feed-dedup",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_crawler:cache-stale",
+            "checkId": "crawler:cache-stale",
+            "reason": "no_eligibility_rule",
+            "detail": "crawler:cache-stale",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:roster:numbers",
+            "checkId": "pi:roster:numbers",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:roster:numbers",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:live-feed",
+            "checkId": "api:live-feed",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:filmroom:categories",
+            "checkId": "pi:filmroom:categories",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:filmroom:categories",
+            "severity": "medium"
+          }
+        ],
+        "summary": "qa_run_qa_1781632985387 — 4 failed / 111 total checks"
+      },
+      "at": "2026-06-16T18:03:36.150Z"
+    },
+    {
+      "action": "v2_generate",
+      "v2Scan": {
+        "scanId": "sr2_scan_9d513a33",
+        "issues": 0,
+        "patches": 1,
+        "blocked": 0,
+        "enqueued": 0,
+        "autoApplied": 0
+      },
+      "at": "2026-06-16T18:00:48.049Z"
+    },
+    {
+      "action": "generate",
+      "created": 1,
+      "skipped": 41,
+      "runId": "qa_1781632657651",
+      "log": {
+        "at": "2026-06-16T18:00:47.975Z",
+        "runId": "qa_1781632657651",
+        "openFixQueue": 42,
+        "eligibleOpenIssues": 4,
+        "decisions": [
+          {
+            "action": "created",
+            "id": "sr_fix_021",
+            "sourceIssueId": "fix_integrity:feed-dedup",
+            "checkId": "integrity:feed-dedup",
+            "patchType": "feed-dedup-v2",
+            "severity": "critical"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:film-room-catalog",
+            "checkId": "api:film-room-catalog",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_integrity:article-links",
+            "checkId": "integrity:article-links",
+            "reason": "no_eligibility_rule",
+            "detail": "integrity:article-links",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_integrity:film-sources",
+            "checkId": "integrity:film-sources",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:recruiting-ingest-status",
+            "checkId": "api:recruiting-ingest-status",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:recruiting-board",
+            "checkId": "api:recruiting-board",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:recruiting-portal",
+            "checkId": "api:recruiting-portal",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_integrity:rankings",
+            "checkId": "integrity:rankings",
+            "reason": "no_eligibility_rule",
+            "detail": "integrity:rankings",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:recruiting-board",
+            "checkId": "pi:api:recruiting-board",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:recruiting-board-fail",
+            "checkId": "pi:api:recruiting-board-fail",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:live-pipeline-health",
+            "checkId": "api:live-pipeline-health",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:live-dashboard",
+            "checkId": "api:live-dashboard",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:roster-players",
+            "checkId": "api:roster-players",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_integrity:roster-images",
+            "checkId": "integrity:roster-images",
+            "reason": "no_eligibility_rule",
+            "detail": "integrity:roster-images",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_integrity:live-freshness",
+            "checkId": "integrity:live-freshness",
+            "reason": "no_eligibility_rule",
+            "detail": "integrity:live-freshness",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:roster-players",
+            "checkId": "pi:api:roster-players",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:roster-players-fail",
+            "checkId": "pi:api:roster-players-fail",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:ping",
+            "checkId": "api:ping",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_crawler:api-latency",
+            "checkId": "crawler:api-latency",
+            "reason": "no_eligibility_rule",
+            "detail": "crawler:api-latency",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api-latency:ping-fail",
+            "checkId": "pi:api-latency:ping-fail",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:api-latency:ping-fail",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:autoposter-stale:24h",
+            "checkId": "pi:autoposter-stale:24h",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:autoposter-stale:24h",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:war-room-breakdowns",
+            "checkId": "api:war-room-breakdowns",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "high"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:live-feed",
+            "checkId": "api:live-feed",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:articles-published",
+            "checkId": "api:articles-published",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:content-published",
+            "checkId": "api:content-published",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:pricing",
+            "checkId": "api:pricing",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:personas",
+            "checkId": "api:personas",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:content-ingest-status",
+            "checkId": "api:content-ingest-status",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:nil-dashboard",
+            "checkId": "api:nil-dashboard",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:film-room-lesson",
+            "checkId": "api:film-room-lesson",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:film-room-legacy-video",
+            "checkId": "api:film-room-legacy-video",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_api:schedule",
+            "checkId": "api:schedule",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_integrity:article-dates",
+            "checkId": "integrity:article-dates",
+            "reason": "no_eligibility_rule",
+            "detail": "integrity:article-dates",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:futurecast-home",
+            "checkId": "pi:api:futurecast-home",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:portal-players",
+            "checkId": "pi:api:portal-players",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:player-slug",
+            "checkId": "pi:api:player-slug",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:film-room-catalog",
+            "checkId": "pi:api:film-room-catalog",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:api:articles-published",
+            "checkId": "pi:api:articles-published",
+            "reason": "ineligible_module",
+            "detail": "api",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_pi:filmroom:categories",
+            "checkId": "pi:filmroom:categories",
+            "reason": "no_eligibility_rule",
+            "detail": "pi:filmroom:categories",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_content:articles-spell",
+            "checkId": "content:articles-spell",
+            "reason": "already_pending"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_content:content-accuracy-spell",
+            "checkId": "content:content-accuracy-spell",
+            "reason": "no_eligibility_rule",
+            "detail": "content:content-accuracy-spell",
+            "severity": "medium"
+          },
+          {
+            "action": "skipped",
+            "id": "fix_content:film-room-spell",
+            "checkId": "content:film-room-spell",
+            "reason": "already_pending"
+          }
+        ],
+        "summary": "qa_run_qa_1781632657651 — 39 failed / 113 total checks"
+      },
+      "at": "2026-06-16T18:00:47.989Z"
+    },
     {
       "action": "v2_generate",
       "v2Scan": {

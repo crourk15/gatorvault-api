@@ -62,9 +62,9 @@ export type RecruitingSnapshotProps = {
 /** Brand-aligned section copy */
 export const GNL_COPY = {
   hero: {
-    title: 'GATORNATION LIVE',
-    subtitle: 'Real-time updates from beat writers, insiders, and official sources.',
-    liveBadge: (seconds: number) => `LIVE • Updates every ${seconds} seconds`,
+    title: 'GatorNation Live',
+    subtitle: 'Real-time UF football intel.',
+    liveBadge: (seconds: number) => `● LIVE · Auto-refresh every ${seconds} seconds`,
   },
   podcastHub: 'Podcast Hub',
   mediaGrid: 'Media Grid',

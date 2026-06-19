@@ -31,7 +31,18 @@
       "Still refining counter moves vs. elite tackles"
     ],
     "projection": "All-SEC caliber edge defender with NFL draft ceiling if he stays healthy through 2026.",
-    "schemeFit": "Ideal JACK in Brad White's 3-3-5 - primary blitzer and edge setter in the odd front."
+    "schemeFit": "Ideal JACK in Brad White's 3-3-5 - primary blitzer and edge setter in the odd front.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "A",
+    "fitScore": 90,
+    "playerComp": null,
+    "developmentProjection": "All-SEC caliber edge defender with NFL draft ceiling if he stays healthy through 2026.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 243000,
+    "recruitingBackground": "4-star recruit · Shawnee, Kan. Mill Valley",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.464Z"
   },
   {
     "slug": "cormani-mcclain",
@@ -63,7 +74,18 @@
       "Penalty discipline needs consistency"
     ],
     "projection": "First-round NFL corner projection if he re-establishes top-tier form in 2026.",
-    "schemeFit": "Press-man boundary corner - perfect fit for aggressive single-high looks."
+    "schemeFit": "Press-man boundary corner - perfect fit for aggressive single-high looks.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "A",
+    "fitScore": 91,
+    "playerComp": null,
+    "developmentProjection": "First-round NFL corner projection if he re-establishes top-tier form in 2026.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 668250,
+    "recruitingBackground": "5-star recruit · Lakeland, Fla. Lakeland · Transfer from Colorado",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "jadan-baugh",
@@ -95,7 +117,18 @@
       "Durability through a heavy workload is the question"
     ],
     "projection": "SEC starter with 1,000-yard season upside in a balanced offense.",
-    "schemeFit": "Every-down back in a pro-style/run-first scheme - early-down and short-yardage hammer."
+    "schemeFit": "Every-down back in a pro-style/run-first scheme - early-down and short-yardage hammer.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "A",
+    "fitScore": 88,
+    "playerComp": null,
+    "developmentProjection": "SEC starter with 1,000-yard season upside in a balanced offense.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 243000,
+    "recruitingBackground": "4-star recruit · Atlanta, Ga. Columbia",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "eric-singleton-jr",
@@ -127,7 +160,18 @@
       "Contested catch rate vs. length can vary"
     ],
     "projection": "1,000-yard receiver and primary target for the new staff in 2026.",
-    "schemeFit": "Move-the-chains X/slot hybrid - early-down and red-zone focal point."
+    "schemeFit": "Move-the-chains X/slot hybrid - early-down and red-zone focal point.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "A-",
+    "fitScore": 89,
+    "playerComp": null,
+    "developmentProjection": "1,000-yard receiver and primary target for the new staff in 2026.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 267300,
+    "recruitingBackground": "4-star recruit · Atlanta, Ga. Alexander · Transfer from Georgia Tech / Auburn",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "vernell-brown-iii",
@@ -149,7 +193,29 @@
     "bio": "Gainesville legacy and starting F/slot receiver. Quickness and vision make him the top return option.",
     "stats": "Slot weapon at F - Versatile route runner.",
     "injury": "green",
-    "depthChartTier": "starter"
+    "depthChartTier": "starter",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC starter contributor with red-zone and third-down upside.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "A-",
+    "fitScore": 86,
+    "playerComp": null,
+    "developmentProjection": "SEC starter contributor with red-zone and third-down upside.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 243000,
+    "recruitingBackground": "4-star recruit · Gainesville, Fla. Jones",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "myles-graham",
@@ -171,7 +237,29 @@
     "bio": "Gainesville native and All-SEC candidate with speed and instinct in space.",
     "stats": "All-SEC candidate - Second-level communicator.",
     "injury": "green",
-    "depthChartTier": "starter"
+    "depthChartTier": "starter",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside linebacker in UF's 3-3-5 stack and run-fit responsibilities.",
+    "projection": "SEC starter linebacker with starter trajectory.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "A-",
+    "fitScore": 86,
+    "playerComp": null,
+    "developmentProjection": "SEC starter linebacker with starter trajectory.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 243000,
+    "recruitingBackground": "4-star recruit · Gainesville, Fla. Buchholz",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "dijon-johnson",
@@ -193,7 +281,29 @@
     "bio": "Press-man corner with physical coverage skills. Rotates with McClain in the secondary.",
     "stats": "Press-man corner - Physical coverage.",
     "injury": "green",
-    "depthChartTier": "starter"
+    "depthChartTier": "starter",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "SEC starter with NFL secondary upside if consistency holds.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "A-",
+    "fitScore": 86,
+    "playerComp": null,
+    "developmentProjection": "SEC starter with NFL secondary upside if consistency holds.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 243000,
+    "recruitingBackground": "4-star recruit · Tampa, Fla. Wharton",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "dallas-wilson",
@@ -215,7 +325,29 @@
     "bio": "Tampa Bay Tech product and projected X receiver with size to win on the boundary.",
     "stats": "X receiver - Projected starter.",
     "injury": "green",
-    "depthChartTier": "starter"
+    "depthChartTier": "starter",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC starter contributor with red-zone and third-down upside.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "A-",
+    "fitScore": 86,
+    "playerComp": null,
+    "developmentProjection": "SEC starter contributor with red-zone and third-down upside.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 243000,
+    "recruitingBackground": "4-star recruit · Tampa, Fla. Tampa Bay Tech",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "tramell-jones-jr",
@@ -237,7 +369,29 @@
     "bio": "Jacksonville product and dual-threat spring starter candidate with game experience.",
     "stats": "Spring starter candidate - Dual-threat QB.",
     "injury": "green",
-    "depthChartTier": "starter"
+    "depthChartTier": "starter",
+    "strengths": [
+      "Arm talent and timing in the intermediate game",
+      "Poise under pressure in the pocket",
+      "Leadership and command of the huddle"
+    ],
+    "weaknesses": [
+      "Decision speed vs. disguised coverages",
+      "Consistency on deep-ball accuracy"
+    ],
+    "schemeFit": "Spread passing quarterback who can distribute on rhythm and extend when structure breaks down.",
+    "projection": "SEC-caliber signal-caller with starter trajectory in Billy Napier's system.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "A-",
+    "fitScore": 85,
+    "playerComp": null,
+    "developmentProjection": "SEC-caliber signal-caller with starter trajectory in Billy Napier's system.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 243000,
+    "recruitingBackground": "4-star recruit · Jacksonville, Fla. Mandarin",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "bryce-thornton",
@@ -259,7 +413,29 @@
     "bio": "Strong safety enforcer and physical leader in the secondary.",
     "stats": "SS enforcer - Physical leader in secondary.",
     "injury": "green",
-    "depthChartTier": "starter"
+    "depthChartTier": "starter",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "SEC starter defensive back with special-teams value.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "A-",
+    "fitScore": 85,
+    "playerComp": null,
+    "developmentProjection": "SEC starter defensive back with special-teams value.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 162000,
+    "recruitingBackground": "3-star recruit · College Park, Ga. Milton",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "jaden-robinson",
@@ -281,7 +457,29 @@
     "bio": "Lake City native and MIKE linebacker. Communication and pre-snap reads anchor the defense.",
     "stats": "Field general - MIKE linebacker.",
     "injury": "green",
-    "depthChartTier": "starter"
+    "depthChartTier": "starter",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside linebacker in UF's 3-3-5 stack and run-fit responsibilities.",
+    "projection": "SEC starter linebacker with starter trajectory.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "A-",
+    "fitScore": 85,
+    "playerComp": null,
+    "developmentProjection": "SEC starter linebacker with starter trajectory.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 243000,
+    "recruitingBackground": "4-star recruit · Lake City, Fla. Columbia",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "lacota-dippre",
@@ -303,7 +501,29 @@
     "bio": "James Madison transfer and starting Y tight end. Legitimate vertical weapon in the offense.",
     "stats": "Starting Y tight end - Red-zone threat.",
     "injury": "green",
-    "depthChartTier": "starter"
+    "depthChartTier": "starter",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Starter-caliber tight end in a pro-style spread if development continues.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "A-",
+    "fitScore": 86,
+    "playerComp": null,
+    "developmentProjection": "Starter-caliber tight end in a pro-style spread if development continues.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 178200,
+    "recruitingBackground": "3-star recruit · Scranton, Pa. Lakeland (Pa.) · Transfer from Charlotte / James Madison",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "aaron-philo",
@@ -325,7 +545,29 @@
     "bio": "Georgia Tech transfer with a cleaner pro-style delivery. Strong on third downs in spring work.",
     "stats": "GT transfer - Rhythm passer in QB battle.",
     "injury": "green",
-    "depthChartTier": "starter"
+    "depthChartTier": "starter",
+    "strengths": [
+      "Arm talent and timing in the intermediate game",
+      "Poise under pressure in the pocket",
+      "Leadership and command of the huddle"
+    ],
+    "weaknesses": [
+      "Decision speed vs. disguised coverages",
+      "Consistency on deep-ball accuracy"
+    ],
+    "schemeFit": "Spread passing quarterback who can distribute on rhythm and extend when structure breaks down.",
+    "projection": "SEC-caliber signal-caller with starter trajectory in Billy Napier's system.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "A-",
+    "fitScore": 86,
+    "playerComp": null,
+    "developmentProjection": "SEC-caliber signal-caller with starter trajectory in Billy Napier's system.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 267300,
+    "recruitingBackground": "4-star recruit · Bogart, Ga. Prince Avenue Christian · Transfer from Georgia Tech",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "kanye-clark",
@@ -347,7 +589,29 @@
     "bio": "UCLA transfer projected as the starting STAR/nickel in the 3-3-5.",
     "stats": "Starting STAR - Nickel fit in 3-3-5.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Hybrid coverage and blitz versatility",
+      "Twitch and short-area closing speed",
+      "Matchup flexibility in nickel packages"
+    ],
+    "weaknesses": [
+      "Size vs. bigger slot receivers",
+      "Run-fit discipline vs. heavy sets"
+    ],
+    "schemeFit": "STAR/nickel defender in UF's sub-package defense.",
+    "projection": "High-impact nickel with every-down sub-package value.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B+",
+    "fitScore": 85,
+    "playerComp": null,
+    "developmentProjection": "High-impact nickel with every-down sub-package value.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 132000,
+    "recruitingBackground": "3-star recruit · Sacramento, Calif. Capital Christian · Transfer from UCLA",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "brendan-bett",
@@ -369,7 +633,29 @@
     "bio": "Baylor transfer nose tackle - key piece in Brad White's 3-3-5 front.",
     "stats": "Starting nose - Run-stuffer in 3-3-5.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B+",
+    "fitScore": 84,
+    "playerComp": null,
+    "developmentProjection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 132000,
+    "recruitingBackground": "3-star recruit · Gadsden, Ala. Ellison HS · Transfer from Baylor",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "cam-dooley",
@@ -391,7 +677,29 @@
     "bio": "Kentucky transfer who projects as a starting safety in the new scheme.",
     "stats": "Portal safety - Starter candidate.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "SEC rotation defensive back with special-teams value.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B+",
+    "fitScore": 84,
+    "playerComp": null,
+    "developmentProjection": "SEC rotation defensive back with special-teams value.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 132000,
+    "recruitingBackground": "3-star recruit · Valley, Ala. Valley · Transfer from Kentucky",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "evan-pryor",
@@ -413,7 +721,29 @@
     "bio": "Ohio State/Cincinnati transfer RB who adds experienced depth behind Baugh.",
     "stats": "Veteran RB depth - Change-of-pace back.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Vision and patience between the tackles",
+      "Contact balance through second-level defenders",
+      "Pass-catching reliability out of the backfield"
+    ],
+    "weaknesses": [
+      "Top-end breakaway speed in the open field",
+      "Pass protection technique vs. blitzers"
+    ],
+    "schemeFit": "Every-down back who fits UF's inside/outside zone and screen package.",
+    "projection": "Rotation back with early-down and short-yardage value in the SEC.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B+",
+    "fitScore": 83,
+    "playerComp": null,
+    "developmentProjection": "Rotation back with early-down and short-yardage value in the SEC.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 71500,
+    "recruitingBackground": "3-star recruit · Cornelius, N.C. Williams Amos Hough · Transfer from Ohio State / Cincinnati",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "lj-mccray",
@@ -435,7 +765,29 @@
     "bio": "LJ McCray is a R-So. DL from Daytona, Fla. Mainland. Spring roster profile for the 2026 Gators.",
     "stats": "dl - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B+",
+    "fitScore": 80,
+    "playerComp": null,
+    "developmentProjection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 450000,
+    "recruitingBackground": "5-star recruit · Daytona, Fla. Mainland",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "tj-shanahan-jr",
@@ -457,7 +809,29 @@
     "bio": "Penn State/TAMU transfer competing for a starting guard spot on the rebuilt OL.",
     "stats": "Portal RG - Dead heat for starting job.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B+",
+    "fitScore": 82,
+    "playerComp": null,
+    "developmentProjection": "SEC starter track with NFL size and developmental upside.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 71500,
+    "recruitingBackground": "3-star recruit · Orlando, Fla. Westlake · Transfer from Texas A&M / Penn State",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "kofi-asare",
@@ -479,7 +853,29 @@
     "bio": "Kofi Asare is a R-Sr. JACK from Worcester, Mass. Doherty Memorial. Transfer from UMass. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from UMass - hybrid edge on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Explosive first step off the edge",
+      "Pass-rush bend and finish ability",
+      "Versatility to drop into short zones"
+    ],
+    "weaknesses": [
+      "Setting the edge vs. power run schemes",
+      "Counter move repertoire vs. elite tackles"
+    ],
+    "schemeFit": "Primary edge blitzer and setter in Brad White's 3-3-5 odd front.",
+    "projection": "All-SEC caliber edge defender with NFL draft ceiling.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B",
+    "fitScore": 81,
+    "playerComp": null,
+    "developmentProjection": "All-SEC caliber edge defender with NFL draft ceiling.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 71500,
+    "recruitingBackground": "3-star recruit · Worcester, Mass. Doherty Memorial · Transfer from UMass",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "tj-bullard",
@@ -501,7 +897,29 @@
     "bio": "TJ Bullard is a R-Sr. ILB from Tampa, Fla. Berkeley Prep. Transfer from UCF. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from UCF - linebacker on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside linebacker in UF's 3-3-5 stack and run-fit responsibilities.",
+    "projection": "SEC rotation linebacker with starter trajectory.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B",
+    "fitScore": 81,
+    "playerComp": null,
+    "developmentProjection": "SEC rotation linebacker with starter trajectory.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 71500,
+    "recruitingBackground": "3-star recruit · Tampa, Fla. Berkeley Prep · Transfer from UCF",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "jordy-lowery",
@@ -523,7 +941,29 @@
     "bio": "Jordy Lowery is a R-Sr. CB from Bartow, Fla. Bartow. Transfer from Western Carolina / East Carolina. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Western Carolina / East Carolina - cb on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "SEC starter with NFL secondary upside if consistency holds.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B",
+    "fitScore": 81,
+    "playerComp": null,
+    "developmentProjection": "SEC starter with NFL secondary upside if consistency holds.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 71500,
+    "recruitingBackground": "3-star recruit · Bartow, Fla. Bartow · Transfer from Western Carolina / East Carolina",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "eagan-boyer",
@@ -545,7 +985,29 @@
     "bio": "Penn State transfer with length at tackle. Push for RT or swing tackle role.",
     "stats": "Portal OL - RT depth/push.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B",
+    "fitScore": 81,
+    "playerComp": null,
+    "developmentProjection": "SEC starter track with NFL size and developmental upside.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 71500,
+    "recruitingBackground": "3-star recruit · Cornelius, N.C. Hough · Transfer from Penn State",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "dj-coleman",
@@ -567,7 +1029,29 @@
     "bio": "DJ Coleman is a Sr. S from Mesquite, Texas Horn. Transfer from Baylor. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Baylor - s on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "SEC rotation defensive back with special-teams value.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B",
+    "fitScore": 81,
+    "playerComp": null,
+    "developmentProjection": "SEC rotation defensive back with special-teams value.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 71500,
+    "recruitingBackground": "3-star recruit · Mesquite, Texas Horn · Transfer from Baylor",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "harrison-moore",
@@ -589,7 +1073,29 @@
     "bio": "Southlake Carroll transfer who projects as the starting center.",
     "stats": "Starting center - OL anchor.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B",
+    "fitScore": 79,
+    "playerComp": null,
+    "developmentProjection": "SEC starter track with NFL size and developmental upside.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 65000,
+    "recruitingBackground": "3-star recruit · Southlake, Texas Carroll",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "jeramiah-mccloud",
@@ -611,7 +1117,29 @@
     "bio": "Jeramiah McCloud is a So. DL from Sylvester, Ga. Lee County. Spring roster profile for the 2026 Gators.",
     "stats": "dl - So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B",
+    "fitScore": 78,
+    "playerComp": null,
+    "developmentProjection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 65000,
+    "recruitingBackground": "3-star recruit · Sylvester, Ga. Lee County",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "elijah-owens",
@@ -633,7 +1161,29 @@
     "bio": "Elijah Owens is a So. STAR from Mobile, Ala. Citronelle. Transfer from Mississippi Gulf Coast CC. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Mississippi Gulf Coast CC - STAR/nickel on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Hybrid coverage and blitz versatility",
+      "Twitch and short-area closing speed",
+      "Matchup flexibility in nickel packages"
+    ],
+    "weaknesses": [
+      "Size vs. bigger slot receivers",
+      "Run-fit discipline vs. heavy sets"
+    ],
+    "schemeFit": "STAR/nickel defender in UF's sub-package defense.",
+    "projection": "High-impact nickel with every-down sub-package value.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B",
+    "fitScore": 79,
+    "playerComp": null,
+    "developmentProjection": "High-impact nickel with every-down sub-package value.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "3-star recruit · Mobile, Ala. Citronelle · Transfer from Mississippi Gulf Coast CC",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "emmanuel-oyebadejo",
@@ -655,7 +1205,29 @@
     "bio": "Emmanuel Oyebadejo is a R-Sr. DL from Manchester, England Loreto College. Transfer from University of Exeter / Jacksonville State. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from University of Exeter / Jacksonville State - dl on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B",
+    "fitScore": 79,
+    "playerComp": null,
+    "developmentProjection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "3-star recruit · Manchester, England Loreto College · Transfer from University of Exeter / Jacksonville State",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "carter-milliron",
@@ -677,7 +1249,28 @@
     "bio": "Carter Milliron is a R-Sr. LS from Hoover, Ala. Hoover. Transfer from Louisiana. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Louisiana - ls on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Snap accuracy and velocity on operation",
+      "Coverage reliability after the snap",
+      "Consistency in high-leverage moments"
+    ],
+    "weaknesses": [
+      "Limited positional versatility elsewhere"
+    ],
+    "schemeFit": "Long-snap specialist on UF's punt and field-goal units.",
+    "projection": "Reliable long snapper with multi-year starter stability.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B",
+    "fitScore": 79,
+    "playerComp": null,
+    "developmentProjection": "Reliable long snapper with multi-year starter stability.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "3-star recruit · Hoover, Ala. Hoover · Transfer from Louisiana",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "alfonzo-allen-jr",
@@ -699,7 +1292,29 @@
     "bio": "Alfonzo Allen Jr. is a R-Sr. S from Miami, Fla. Miami Central. Transfer from Baylor. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Baylor - s on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "SEC rotation defensive back with special-teams value.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B",
+    "fitScore": 79,
+    "playerComp": null,
+    "developmentProjection": "SEC rotation defensive back with special-teams value.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "3-star recruit · Miami, Fla. Miami Central · Transfer from Baylor",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "aaron-chiles",
@@ -721,7 +1336,29 @@
     "bio": "Aaron Chiles is a Jr. ILB from Largo, Md. Our Lady of Good Counsel. Spring roster profile for the 2026 Gators.",
     "stats": "linebacker - Jr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside linebacker in UF's 3-3-5 stack and run-fit responsibilities.",
+    "projection": "SEC rotation linebacker with starter trajectory.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B",
+    "fitScore": 76,
+    "playerComp": null,
+    "developmentProjection": "SEC rotation linebacker with starter trajectory.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "3-star recruit · Largo, Md. Our Lady of Good Counsel",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "kahleil-jackson",
@@ -743,7 +1380,29 @@
     "bio": "Kahleil Jackson is a Gr. WR from Hawthorne, Fla. Hawthorne. Spring roster profile for the 2026 Gators.",
     "stats": "wr - Gr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "SEC rotation contributor with red-zone and third-down upside.",
+    "eligibilityYearsRemaining": 0,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B",
+    "fitScore": 76,
+    "playerComp": null,
+    "developmentProjection": "SEC rotation contributor with red-zone and third-down upside.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "3-star recruit · Hawthorne, Fla. Hawthorne",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "javion-toombs",
@@ -765,7 +1424,29 @@
     "bio": "Javion Toombs is a R-Sr. CB from Fort Pierce, Fla. Centennial. Spring roster profile for the 2026 Gators.",
     "stats": "cb - R-Sr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "SEC starter with NFL secondary upside if consistency holds.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B",
+    "fitScore": 76,
+    "playerComp": null,
+    "developmentProjection": "SEC starter with NFL secondary upside if consistency holds.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "3-star recruit · Fort Pierce, Fla. Centennial",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "knijeah-harris",
@@ -787,7 +1468,29 @@
     "bio": "Knijeah Harris is a Sr. OL from Pahokee, Fla. IMG Academy. Spring roster profile for the 2026 Gators.",
     "stats": "ol - Sr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "SEC starter track with NFL size and developmental upside.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B",
+    "fitScore": 76,
+    "playerComp": null,
+    "developmentProjection": "SEC starter track with NFL size and developmental upside.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "3-star recruit · Pahokee, Fla. IMG Academy",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "kamran-james",
@@ -809,7 +1512,29 @@
     "bio": "Kamran James is a Sr. DL from Orlando, Fla. Olympia. Spring roster profile for the 2026 Gators.",
     "stats": "dl - Sr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "rotation"
+    "depthChartTier": "rotation",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "eligibilityYearsRemaining": 1,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B",
+    "fitScore": 76,
+    "playerComp": null,
+    "developmentProjection": "Rotation-to-starter defensive lineman with SEC production upside.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "3-star recruit · Orlando, Fla. Olympia",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "emeka-ugorji",
@@ -831,7 +1556,29 @@
     "bio": "Emeka Ugorji is a So. OL from Oak Cliff, Texas Oak Cliff. Transfer from Stanford. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Stanford - ol on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B-",
+    "fitScore": 77,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Oak Cliff, Texas Oak Cliff · Transfer from Stanford",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "jvari-flowers",
@@ -853,7 +1600,29 @@
     "bio": "J'Vari Flowers is a So. CB from Miami, Fla. Northwestern. Spring roster profile for the 2026 Gators.",
     "stats": "cb - So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "Developmental cb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 74,
+    "playerComp": null,
+    "developmentProjection": "Developmental cb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Miami, Fla. Northwestern",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "myles-johnson",
@@ -875,7 +1644,29 @@
     "bio": "Myles Johnson is a So. ILB from Brewton, Ala. T.R. Miller. Spring roster profile for the 2026 Gators.",
     "stats": "linebacker - So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside linebacker in UF's 3-3-5 stack and run-fit responsibilities.",
+    "projection": "Developmental ilb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 74,
+    "playerComp": null,
+    "developmentProjection": "Developmental ilb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Brewton, Ala. T.R. Miller",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "patrick-durkin",
@@ -897,7 +1688,29 @@
     "bio": "Patrick Durkin is a R-So. K from Chicago, Ill. Joliet Catholic Academy. Transfer from Tulane. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Tulane - k on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Leg strength on field goals and kickoffs",
+      "Routine consistency in pressure moments",
+      "Holder operation reliability"
+    ],
+    "weaknesses": [
+      "Deep-range accuracy in adverse weather",
+      "Directional kickoff placement"
+    ],
+    "schemeFit": "Special teams specialist in UF's field-position game.",
+    "projection": "Developmental k with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B-",
+    "fitScore": 76,
+    "playerComp": null,
+    "developmentProjection": "Developmental k with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Chicago, Ill. Joliet Catholic Academy · Transfer from Tulane",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "ty-jackson",
@@ -919,7 +1732,29 @@
     "bio": "Ty Jackson is a So. ILB from Fort Lauderdale, Fla. Seminole Ridge. Spring roster profile for the 2026 Gators.",
     "stats": "linebacker - So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside linebacker in UF's 3-3-5 stack and run-fit responsibilities.",
+    "projection": "Developmental ilb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 74,
+    "playerComp": null,
+    "developmentProjection": "Developmental ilb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Fort Lauderdale, Fla. Seminole Ridge",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "vincent-brown-jr",
@@ -941,7 +1776,29 @@
     "bio": "Vincent Brown Jr. is a R-Jr. CB from Gainesville, Fla. Wildwood. Transfer from Southeastern. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Southeastern - cb on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "Developmental cb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B-",
+    "fitScore": 75,
+    "playerComp": null,
+    "developmentProjection": "Developmental cb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Gainesville, Fla. Wildwood · Transfer from Southeastern",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "micah-mays-jr",
@@ -963,7 +1820,29 @@
     "bio": "Micah Mays Jr. is a R-Jr. WR from West Palm Beach, Fla. The Benjamin School. Transfer from Wake Forest. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Wake Forest - wr on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B-",
+    "fitScore": 75,
+    "playerComp": null,
+    "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "West Palm Beach, Fla. The Benjamin School · Transfer from Wake Forest",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "evan-jackson",
@@ -985,7 +1864,29 @@
     "bio": "Evan Jackson is a R-So. ILB from Fort Lauderdale, Fla. Seminole Ridge. Transfer from Keiser. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Keiser - linebacker on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside linebacker in UF's 3-3-5 stack and run-fit responsibilities.",
+    "projection": "Developmental ilb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B-",
+    "fitScore": 75,
+    "playerComp": null,
+    "developmentProjection": "Developmental ilb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Fort Lauderdale, Fla. Seminole Ridge · Transfer from Keiser",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "jaylen-lloyd",
@@ -1007,7 +1908,29 @@
     "bio": "Jaylen Lloyd is a R-Jr. WR from Omaha, Neb. Omaha Westside. Transfer from Nebraska / Oklahoma State. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Nebraska / Oklahoma State - wr on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B-",
+    "fitScore": 75,
+    "playerComp": null,
+    "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Omaha, Neb. Omaha Westside · Transfer from Nebraska / Oklahoma State",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "ace-ciongoli",
@@ -1029,7 +1952,29 @@
     "bio": "Ace Ciongoli is a R-Fr. WR from Needham, Mass. St. SebastianÃ¢â‚¬â„¢s. Transfer from Indiana. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Indiana - wr on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B-",
+    "fitScore": 75,
+    "playerComp": null,
+    "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Needham, Mass. St. SebastianÃ¢â‚¬â„¢s · Transfer from Indiana",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "aidan-warner",
@@ -1051,7 +1996,29 @@
     "bio": "Aidan Warner is a R-Jr. QB from Winter Park, Fla. Winter Park. Transfer from Yale. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Yale - qb on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Arm talent and timing in the intermediate game",
+      "Poise under pressure in the pocket",
+      "Leadership and command of the huddle"
+    ],
+    "weaknesses": [
+      "Decision speed vs. disguised coverages",
+      "Consistency on deep-ball accuracy"
+    ],
+    "schemeFit": "Spread passing quarterback who can distribute on rhythm and extend when structure breaks down.",
+    "projection": "Developmental qb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B-",
+    "fitScore": 75,
+    "playerComp": null,
+    "developmentProjection": "Developmental qb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Winter Park, Fla. Winter Park · Transfer from Yale",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "bailey-stockton",
@@ -1073,7 +2040,29 @@
     "bio": "Bailey Stockton is a R-Jr. WR from Bogart, Ga. Prince Avenue Christian. Transfer from Georgia Tech. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Georgia Tech - wr on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "B-",
+    "fitScore": 75,
+    "playerComp": null,
+    "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Bogart, Ga. Prince Avenue Christian · Transfer from Georgia Tech",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "marquez-daniel",
@@ -1095,7 +2084,29 @@
     "bio": "Marquez Daniel is a Fr. WR from Tuskegee, Ala. Booker T. Washington. Spring roster profile for the 2026 Gators.",
     "stats": "wr - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 72,
+    "playerComp": null,
+    "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Tuskegee, Ala. Booker T. Washington",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "lagonza-hayward",
@@ -1117,7 +2128,29 @@
     "bio": "Lagonza Hayward is a So. S from Lyons, Ga. Toombs County. Spring roster profile for the 2026 Gators.",
     "stats": "s - So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "Developmental s with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 72,
+    "playerComp": null,
+    "developmentProjection": "Developmental s with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Lyons, Ga. Toombs County",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "justin-williams",
@@ -1139,7 +2172,29 @@
     "bio": "Justin Williams is a Fr. WR from Gainesville, Fla. Buchholz. Spring roster profile for the 2026 Gators.",
     "stats": "wr - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 72,
+    "playerComp": null,
+    "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Gainesville, Fla. Buchholz",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "joseph-mbatchou",
@@ -1161,7 +2216,29 @@
     "bio": "Joseph Mbatchou is a So. DL from Loganville, Ga. Grayson. Spring roster profile for the 2026 Gators.",
     "stats": "dl - So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 72,
+    "playerComp": null,
+    "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Loganville, Ga. Grayson",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "malik-morris",
@@ -1183,7 +2260,29 @@
     "bio": "Malik Morris is a Fr. ILB from Lakeland, Fla. Lakeland. Spring roster profile for the 2026 Gators.",
     "stats": "linebacker - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside linebacker in UF's 3-3-5 stack and run-fit responsibilities.",
+    "projection": "Developmental ilb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 72,
+    "playerComp": null,
+    "developmentProjection": "Developmental ilb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Lakeland, Fla. Lakeland",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "drake-stubbs",
@@ -1205,7 +2304,29 @@
     "bio": "Drake Stubbs is a So. S from Jacksonville, Fla. Mandarin. Spring roster profile for the 2026 Gators.",
     "stats": "s - So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "Developmental s with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 72,
+    "playerComp": null,
+    "developmentProjection": "Developmental s with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Jacksonville, Fla. Mandarin",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "dylan-purter",
@@ -1227,7 +2348,29 @@
     "bio": "Dylan Purter is a Fr. STAR from Tuskegee, Ala. Booker T. Washington. Spring roster profile for the 2026 Gators.",
     "stats": "STAR/nickel - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Hybrid coverage and blitz versatility",
+      "Twitch and short-area closing speed",
+      "Matchup flexibility in nickel packages"
+    ],
+    "weaknesses": [
+      "Size vs. bigger slot receivers",
+      "Run-fit discipline vs. heavy sets"
+    ],
+    "schemeFit": "STAR/nickel defender in UF's sub-package defense.",
+    "projection": "Developmental star with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 72,
+    "playerComp": null,
+    "developmentProjection": "Developmental star with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Tuskegee, Ala. Booker T. Washington",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "cj-hester",
@@ -1249,7 +2392,29 @@
     "bio": "CJ Hester is a Fr. CB from Titusville, Fla. Cocoa. Spring roster profile for the 2026 Gators.",
     "stats": "cb - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "Developmental cb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 72,
+    "playerComp": null,
+    "developmentProjection": "Developmental cb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Titusville, Fla. Cocoa",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "cj-bronaugh",
@@ -1271,7 +2436,29 @@
     "bio": "CJ Bronaugh is a Fr. CB from Orlando, Fla. Windermere. Spring roster profile for the 2026 Gators.",
     "stats": "cb - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "Developmental cb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 72,
+    "playerComp": null,
+    "developmentProjection": "Developmental cb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Orlando, Fla. Windermere",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "davian-groce",
@@ -1293,7 +2480,29 @@
     "bio": "Davian Groce is a Fr. WR from Frisco, Texas Frisco Lone Star. Spring roster profile for the 2026 Gators.",
     "stats": "wr - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 72,
+    "playerComp": null,
+    "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Frisco, Texas Frisco Lone Star",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "kj-ford",
@@ -1315,7 +2524,29 @@
     "bio": "KJ Ford is a Fr. JACK from Dallas, Texas Duncanville. Spring roster profile for the 2026 Gators.",
     "stats": "hybrid edge - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Explosive first step off the edge",
+      "Pass-rush bend and finish ability",
+      "Versatility to drop into short zones"
+    ],
+    "weaknesses": [
+      "Setting the edge vs. power run schemes",
+      "Counter move repertoire vs. elite tackles"
+    ],
+    "schemeFit": "Primary edge blitzer and setter in Brad White's 3-3-5 odd front.",
+    "projection": "Developmental jack with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 72,
+    "playerComp": null,
+    "developmentProjection": "Developmental jack with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Dallas, Texas Duncanville",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "will-griffin",
@@ -1337,7 +2568,29 @@
     "bio": "Will Griffin is a Fr. QB from Treasure Island, Fla. Jesuit. Spring roster profile for the 2026 Gators.",
     "stats": "qb - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Arm talent and timing in the intermediate game",
+      "Poise under pressure in the pocket",
+      "Leadership and command of the huddle"
+    ],
+    "weaknesses": [
+      "Decision speed vs. disguised coverages",
+      "Consistency on deep-ball accuracy"
+    ],
+    "schemeFit": "Spread passing quarterback who can distribute on rhythm and extend when structure breaks down.",
+    "projection": "Developmental qb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "B-",
+    "fitScore": 72,
+    "playerComp": null,
+    "developmentProjection": "Developmental qb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Treasure Island, Fla. Jesuit",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "hunter-solwold",
@@ -1359,7 +2612,28 @@
     "bio": "Hunter Solwold is a R-Fr. LS from Fallston, Md. Fallston. Transfer from Washington. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Washington - ls on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Snap accuracy and velocity on operation",
+      "Coverage reliability after the snap",
+      "Consistency in high-leverage moments"
+    ],
+    "weaknesses": [
+      "Limited positional versatility elsewhere"
+    ],
+    "schemeFit": "Long-snap specialist on UF's punt and field-goal units.",
+    "projection": "Developmental ls with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "C+",
+    "fitScore": 73,
+    "playerComp": null,
+    "developmentProjection": "Developmental ls with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Fallston, Md. Fallston · Transfer from Washington",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "miller-fealy",
@@ -1381,7 +2655,29 @@
     "bio": "Miller Fealy is a R-So. P from Melbourne, Australia Marcellin College. Transfer from Southwestern Oklahoma. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Southwestern Oklahoma - p on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Hang time and directional punting",
+      "Operation speed and consistency",
+      "Pinning ability inside the 20"
+    ],
+    "weaknesses": [
+      "Consistency in wet or windy conditions",
+      "Rugby-style placement when needed"
+    ],
+    "schemeFit": "Field-position weapon in UF's complementary special teams unit.",
+    "projection": "Developmental p with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "C+",
+    "fitScore": 73,
+    "playerComp": null,
+    "developmentProjection": "Developmental p with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Melbourne, Australia Marcellin College · Transfer from Southwestern Oklahoma",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "london-montgomery",
@@ -1403,7 +2699,29 @@
     "bio": "London Montgomery is a R-Jr. RB from Scranton, Pa. Scranton Prep. Transfer from Penn State / East Carolina. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Penn State / East Carolina - rb on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Vision and patience between the tackles",
+      "Contact balance through second-level defenders",
+      "Pass-catching reliability out of the backfield"
+    ],
+    "weaknesses": [
+      "Top-end breakaway speed in the open field",
+      "Pass protection technique vs. blitzers"
+    ],
+    "schemeFit": "Every-down back who fits UF's inside/outside zone and screen package.",
+    "projection": "Developmental rb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "C+",
+    "fitScore": 73,
+    "playerComp": null,
+    "developmentProjection": "Developmental rb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Scranton, Pa. Scranton Prep · Transfer from Penn State / East Carolina",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "evan-chieca",
@@ -1425,7 +2743,29 @@
     "bio": "Evan Chieca is a R-Jr. TE from Lindenhurst, N.Y. Lindenhurst. Transfer from New Haven. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from New Haven - te on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Developmental te with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "C+",
+    "fitScore": 73,
+    "playerComp": null,
+    "developmentProjection": "Developmental te with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Lindenhurst, N.Y. Lindenhurst · Transfer from New Haven",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "luke-harpring",
@@ -1447,7 +2787,29 @@
     "bio": "Luke Harpring is a R-So. TE from Atlanta, Ga. Marist School. Transfer from Georgia Tech. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Georgia Tech - te on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Developmental te with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "C+",
+    "fitScore": 73,
+    "playerComp": null,
+    "developmentProjection": "Developmental te with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Atlanta, Ga. Marist School · Transfer from Georgia Tech",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "dk-kalu",
@@ -1469,7 +2831,29 @@
     "bio": "DK Kalu is a R-Jr. DL from Missouri City, Texas Ridge Point. Transfer from Baylor. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Baylor - dl on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "C+",
+    "fitScore": 73,
+    "playerComp": null,
+    "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Missouri City, Texas Ridge Point · Transfer from Baylor",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "alec-clark",
@@ -1491,7 +2875,29 @@
     "bio": "Alec Clark is a R-Jr. P from Perth, Australia Howard Scholar Academy. Transfer from Marshall / Tulane. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Marshall / Tulane - p on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Hang time and directional punting",
+      "Operation speed and consistency",
+      "Pinning ability inside the 20"
+    ],
+    "weaknesses": [
+      "Consistency in wet or windy conditions",
+      "Rugby-style placement when needed"
+    ],
+    "schemeFit": "Field-position weapon in UF's complementary special teams unit.",
+    "projection": "Developmental p with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "C+",
+    "fitScore": 73,
+    "playerComp": null,
+    "developmentProjection": "Developmental p with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Perth, Australia Howard Scholar Academy · Transfer from Marshall / Tulane",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "liam-padron",
@@ -1513,7 +2919,29 @@
     "bio": "Liam Padron is a R-So. K from St. Augustine, Fla. Bartram Trail. Transfer from Texas A&M. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Texas A&M - k on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Leg strength on field goals and kickoffs",
+      "Routine consistency in pressure moments",
+      "Holder operation reliability"
+    ],
+    "weaknesses": [
+      "Deep-range accuracy in adverse weather",
+      "Directional kickoff placement"
+    ],
+    "schemeFit": "Special teams specialist in UF's field-position game.",
+    "projection": "Developmental k with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "C+",
+    "fitScore": 73,
+    "playerComp": null,
+    "developmentProjection": "Developmental k with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "St. Augustine, Fla. Bartram Trail · Transfer from Texas A&M",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "mason-clinton",
@@ -1535,7 +2963,29 @@
     "bio": "Mason Clinton is a R-Jr. DL from Hattiesburg, Miss. Petal. Transfer from Louisiana / East Mississippi CC / Southern Miss. Spring roster profile for the 2026 Gators.",
     "stats": "Transfer from Louisiana / East Mississippi CC / Southern Miss - dl on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "Portal transfer",
+    "positionGrade": "C+",
+    "fitScore": 73,
+    "playerComp": null,
+    "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 16500,
+    "recruitingBackground": "Hattiesburg, Miss. Petal · Transfer from Louisiana / East Mississippi CC / Southern Miss",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "tj-abrams",
@@ -1557,7 +3007,29 @@
     "bio": "TJ Abrams is a R-So. WR from Fort Myers, Fla. Dunbar. Spring roster profile for the 2026 Gators.",
     "stats": "wr - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Fort Myers, Fla. Dunbar",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "ben-hanks-iii",
@@ -1579,7 +3051,29 @@
     "bio": "Ben Hanks III is a R-Fr. CB from Overtown, Fla. Booker T. Washington. Spring roster profile for the 2026 Gators.",
     "stats": "cb - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "Developmental cb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental cb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Overtown, Fla. Booker T. Washington",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "titus-bullard",
@@ -1601,7 +3095,29 @@
     "bio": "Titus Bullard is a R-So. JACK from Tampa, Fla. Berkeley Prep. Spring roster profile for the 2026 Gators.",
     "stats": "hybrid edge - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Explosive first step off the edge",
+      "Pass-rush bend and finish ability",
+      "Versatility to drop into short zones"
+    ],
+    "weaknesses": [
+      "Setting the edge vs. power run schemes",
+      "Counter move repertoire vs. elite tackles"
+    ],
+    "schemeFit": "Primary edge blitzer and setter in Brad White's 3-3-5 odd front.",
+    "projection": "Developmental jack with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental jack with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Tampa, Fla. Berkeley Prep",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "tripp-brown-jr",
@@ -1623,7 +3139,29 @@
     "bio": "Tripp Brown Jr. is a Fr. TE from Tampa, Fla. Plant. Spring roster profile for the 2026 Gators.",
     "stats": "te - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Developmental te with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental te with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Tampa, Fla. Plant",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "corey-brown",
@@ -1645,7 +3183,29 @@
     "bio": "Corey Brown is a Fr. OL from Gainesville, Fla. Jones. Spring roster profile for the 2026 Gators.",
     "stats": "ol - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Gainesville, Fla. Jones",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "jareylan-mccoy",
@@ -1667,7 +3227,29 @@
     "bio": "JaReylan McCoy is a Fr. DL from Tupelo, Miss. Tupelo. Spring roster profile for the 2026 Gators.",
     "stats": "dl - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Tupelo, Miss. Tupelo",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "heze-kent",
@@ -1689,7 +3271,29 @@
     "bio": "Heze Kent is a Fr. TE from Brunswick, Ga. Brunswick. Spring roster profile for the 2026 Gators.",
     "stats": "te - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Developmental te with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental te with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Brunswick, Ga. Brunswick",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "onis-konanbanny",
@@ -1711,7 +3315,29 @@
     "bio": "Onis Konanbanny is a R-Fr. CB from London, England Heathwood Hall Episcopal. Spring roster profile for the 2026 Gators.",
     "stats": "cb - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Press technique at the line of scrimmage"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Boundary or field corner in UF's man and zone coverages.",
+    "projection": "Developmental cb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental cb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "London, England Heathwood Hall Episcopal",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "chancellor-campbell",
@@ -1733,7 +3359,29 @@
     "bio": "Chancellor Campbell is a Fr. OL from St. Petersburg, Fla. Lakewood. Spring roster profile for the 2026 Gators.",
     "stats": "ol - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "St. Petersburg, Fla. Lakewood",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "kendall-guervil",
@@ -1755,7 +3403,29 @@
     "bio": "Kendall Guervil is a Fr. DL from Fort Myers, Fla. Fort Myers. Spring roster profile for the 2026 Gators.",
     "stats": "dl - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Fort Myers, Fla. Fort Myers",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "desmond-green",
@@ -1777,7 +3447,29 @@
     "bio": "Desmond Green is a Fr. OL from Alvin, S.C. Timberland. Spring roster profile for the 2026 Gators.",
     "stats": "ol - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Alvin, S.C. Timberland",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "aaron-williams",
@@ -1799,7 +3491,29 @@
     "bio": "Aaron Williams is a R-So. QB from Orlando, Fla. Winter Park. Spring roster profile for the 2026 Gators.",
     "stats": "qb - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Arm talent and timing in the intermediate game",
+      "Poise under pressure in the pocket",
+      "Leadership and command of the huddle"
+    ],
+    "weaknesses": [
+      "Decision speed vs. disguised coverages",
+      "Consistency on deep-ball accuracy"
+    ],
+    "schemeFit": "Spread passing quarterback who can distribute on rhythm and extend when structure breaks down.",
+    "projection": "Developmental qb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental qb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Orlando, Fla. Winter Park",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "dylan-leighton",
@@ -1821,7 +3535,29 @@
     "bio": "Dylan Leighton is a R-Fr. ILB from New Port Richey, Fla. J.W. Mitchell. Spring roster profile for the 2026 Gators.",
     "stats": "linebacker - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside linebacker in UF's 3-3-5 stack and run-fit responsibilities.",
+    "projection": "Developmental ilb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental ilb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "New Port Richey, Fla. J.W. Mitchell",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "jaden-edgecombe",
@@ -1843,7 +3579,29 @@
     "bio": "Jaden Edgecombe is a R-Jr. WR from Cocoa, Fla. Cocoa. Spring roster profile for the 2026 Gators.",
     "stats": "wr - R-Jr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Route nuance and separation at all three levels",
+      "Hands and body control in traffic",
+      "Yards-after-catch burst in space"
+    ],
+    "weaknesses": [
+      "Contested-catch wins vs. longer corners",
+      "Physicality as a perimeter blocker"
+    ],
+    "schemeFit": "Move-the-chains receiver in UF's spread passing attack — slot or boundary.",
+    "projection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental wr with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Cocoa, Fla. Cocoa",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "tyler-chukuyem",
@@ -1865,7 +3623,29 @@
     "bio": "Tyler Chukuyem is a Fr. OL from Douglasville, Ga. South Paulding. Spring roster profile for the 2026 Gators.",
     "stats": "ol - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Douglasville, Ga. South Paulding",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "matthew-kade",
@@ -1887,7 +3667,29 @@
     "bio": "Matthew Kade is a R-So. ILB from Gainesville, Fla. Buchholz. Spring roster profile for the 2026 Gators.",
     "stats": "linebacker - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Instincts and pursuit angles to the football",
+      "Tackling reliability in space",
+      "Coverage awareness in zone drops"
+    ],
+    "weaknesses": [
+      "Block shedding vs. bigger linemen",
+      "Man-coverage matchups on shifty backs"
+    ],
+    "schemeFit": "Inside linebacker in UF's 3-3-5 stack and run-fit responsibilities.",
+    "projection": "Developmental ilb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental ilb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Gainesville, Fla. Buchholz",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "charles-emanuel-iii",
@@ -1909,7 +3711,29 @@
     "bio": "Charles Emanuel III is a R-So. JACK from Orlando, Fla. Lake Nona. Spring roster profile for the 2026 Gators.",
     "stats": "hybrid edge - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Explosive first step off the edge",
+      "Pass-rush bend and finish ability",
+      "Versatility to drop into short zones"
+    ],
+    "weaknesses": [
+      "Setting the edge vs. power run schemes",
+      "Counter move repertoire vs. elite tackles"
+    ],
+    "schemeFit": "Primary edge blitzer and setter in Brad White's 3-3-5 odd front.",
+    "projection": "Developmental jack with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental jack with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Orlando, Fla. Lake Nona",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "erich-seager",
@@ -1931,7 +3755,29 @@
     "bio": "Erich Seager is a R-Jr. JACK from Lake Butler, Fla. Union County. Spring roster profile for the 2026 Gators.",
     "stats": "hybrid edge - R-Jr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Explosive first step off the edge",
+      "Pass-rush bend and finish ability",
+      "Versatility to drop into short zones"
+    ],
+    "weaknesses": [
+      "Setting the edge vs. power run schemes",
+      "Counter move repertoire vs. elite tackles"
+    ],
+    "schemeFit": "Primary edge blitzer and setter in Brad White's 3-3-5 odd front.",
+    "projection": "Developmental jack with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental jack with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Lake Butler, Fla. Union County",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "gnivre-carr",
@@ -1953,7 +3799,29 @@
     "bio": "G'Nivre Carr is a Fr. OL from Ocala, Fla. IMG Academy. Spring roster profile for the 2026 Gators.",
     "stats": "ol - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Ocala, Fla. IMG Academy",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "javarii-luckas",
@@ -1975,7 +3843,29 @@
     "bio": "Javarii Luckas is a Fr. OL from Belle Glade, Fla. Glades Central / Rise Prep. Spring roster profile for the 2026 Gators.",
     "stats": "ol - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Belle Glade, Fla. Glades Central / Rise Prep",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "kaiden-hall",
@@ -1997,7 +3887,29 @@
     "bio": "Kaiden Hall is a Fr. S from Milton, Fla. Milton. Spring roster profile for the 2026 Gators.",
     "stats": "s - Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "Developmental s with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 70,
+    "playerComp": null,
+    "developmentProjection": "Developmental s with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Milton, Fla. Milton",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "kelvin-jimenez",
@@ -2019,7 +3931,29 @@
     "bio": "Kelvin Jimenez is a R-So. RB from Cape Coral, Fla. Mariner. Spring roster profile for the 2026 Gators.",
     "stats": "rb - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Vision and patience between the tackles",
+      "Contact balance through second-level defenders",
+      "Pass-catching reliability out of the backfield"
+    ],
+    "weaknesses": [
+      "Top-end breakaway speed in the open field",
+      "Pass protection technique vs. blitzers"
+    ],
+    "schemeFit": "Every-down back who fits UF's inside/outside zone and screen package.",
+    "projection": "Developmental rb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental rb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Cape Coral, Fla. Mariner",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "brandon-rabasco",
@@ -2041,7 +3975,29 @@
     "bio": "Brandon Rabasco is a R-So. K from Hollywood, Fla. South Broward. Spring roster profile for the 2026 Gators.",
     "stats": "k - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Leg strength on field goals and kickoffs",
+      "Routine consistency in pressure moments",
+      "Holder operation reliability"
+    ],
+    "weaknesses": [
+      "Deep-range accuracy in adverse weather",
+      "Directional kickoff placement"
+    ],
+    "schemeFit": "Special teams specialist in UF's field-position game.",
+    "projection": "Developmental k with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental k with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Hollywood, Fla. South Broward",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "brian-case",
@@ -2063,7 +4019,29 @@
     "bio": "Brian Case is a R-Fr. RB from Ponte Vedra Beach, Fla. Ponte Vedra. Spring roster profile for the 2026 Gators.",
     "stats": "rb - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Vision and patience between the tackles",
+      "Contact balance through second-level defenders",
+      "Pass-catching reliability out of the backfield"
+    ],
+    "weaknesses": [
+      "Top-end breakaway speed in the open field",
+      "Pass protection technique vs. blitzers"
+    ],
+    "schemeFit": "Every-down back who fits UF's inside/outside zone and screen package.",
+    "projection": "Developmental rb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental rb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Ponte Vedra Beach, Fla. Ponte Vedra",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "jamari-lyons",
@@ -2085,7 +4063,29 @@
     "bio": "Jamari Lyons is a R-Jr. DL from Cocoa, Fla. Viera. Spring roster profile for the 2026 Gators.",
     "stats": "dl - R-Jr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Cocoa, Fla. Viera",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "brayden-slade",
@@ -2107,7 +4107,29 @@
     "bio": "Brayden Slade is a R-Jr. S from Coconut Creek, Fla. Monarch. Spring roster profile for the 2026 Gators.",
     "stats": "s - R-Jr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Coverage twitch and recovery speed in phase",
+      "Ball skills and route recognition",
+      "Versatility to play multiple secondary spots"
+    ],
+    "weaknesses": [
+      "Physicality vs. bigger receivers",
+      "Tackle consistency in run support"
+    ],
+    "schemeFit": "Secondary depth piece in UF's multiple coverage looks.",
+    "projection": "Developmental s with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental s with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Coconut Creek, Fla. Monarch",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "duke-clark",
@@ -2129,7 +4151,29 @@
     "bio": "Duke Clark is a R-Fr. RB from Tampa, Fla. Plant. Spring roster profile for the 2026 Gators.",
     "stats": "rb - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Vision and patience between the tackles",
+      "Contact balance through second-level defenders",
+      "Pass-catching reliability out of the backfield"
+    ],
+    "weaknesses": [
+      "Top-end breakaway speed in the open field",
+      "Pass protection technique vs. blitzers"
+    ],
+    "schemeFit": "Every-down back who fits UF's inside/outside zone and screen package.",
+    "projection": "Developmental rb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental rb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Tampa, Fla. Plant",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "sebastian-scott",
@@ -2151,7 +4195,29 @@
     "bio": "Sebastian Scott is a R-Jr. DL from West Palm Beach, Fla. Cardinal Newman. Spring roster profile for the 2026 Gators.",
     "stats": "dl - R-Jr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "West Palm Beach, Fla. Cardinal Newman",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "amir-jackson",
@@ -2173,7 +4239,29 @@
     "bio": "Amir Jackson is a R-So. TE from Statesboro, Ga. Portal. Spring roster profile for the 2026 Gators.",
     "stats": "te - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Developmental te with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental te with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Statesboro, Ga. Portal",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "bryce-lovett",
@@ -2195,7 +4283,29 @@
     "bio": "Bryce Lovett is a R-Jr. OL from Rockledge, Fla. Rockledge. Spring roster profile for the 2026 Gators.",
     "stats": "ol - R-Jr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Rockledge, Fla. Rockledge",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "fletcher-westphal",
@@ -2217,7 +4327,29 @@
     "bio": "Fletcher Westphal is a R-So. OL from Leesburg, Va. Tuscarora. Spring roster profile for the 2026 Gators.",
     "stats": "ol - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Leesburg, Va. Tuscarora",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "roderick-kearney",
@@ -2239,7 +4371,29 @@
     "bio": "Roderick Kearney is a R-Jr. OL from Jacksonville, Fla. Orange Park. Spring roster profile for the 2026 Gators.",
     "stats": "ol - R-Jr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Jacksonville, Fla. Orange Park",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "anthony-rubio",
@@ -2261,7 +4415,29 @@
     "bio": "Anthony Rubio is a R-Jr. RB from Miami, Fla. Belen Jesuit. Spring roster profile for the 2026 Gators.",
     "stats": "rb - R-Jr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Vision and patience between the tackles",
+      "Contact balance through second-level defenders",
+      "Pass-catching reliability out of the backfield"
+    ],
+    "weaknesses": [
+      "Top-end breakaway speed in the open field",
+      "Pass protection technique vs. blitzers"
+    ],
+    "schemeFit": "Every-down back who fits UF's inside/outside zone and screen package.",
+    "projection": "Developmental rb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental rb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Miami, Fla. Belen Jesuit",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "jahari-medlock",
@@ -2283,7 +4459,29 @@
     "bio": "Jahari Medlock is a R-Fr. OL from Atlanta, Ga. Charles Drew. Spring roster profile for the 2026 Gators.",
     "stats": "ol - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Atlanta, Ga. Charles Drew",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "tj-dice-jr",
@@ -2305,7 +4503,29 @@
     "bio": "TJ Dice Jr. is a R-Fr. OL from College Park, Ga. Langston Hughes. Spring roster profile for the 2026 Gators.",
     "stats": "ol - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "College Park, Ga. Langston Hughes",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "caden-jones",
@@ -2327,7 +4547,29 @@
     "bio": "Caden Jones is a R-Jr. OL from New Orleans, La. De La Salle. Spring roster profile for the 2026 Gators.",
     "stats": "ol - R-Jr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 2,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "New Orleans, La. De La Salle",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "jalen-wiggins",
@@ -2349,7 +4591,29 @@
     "bio": "Jalen Wiggins is a R-Fr. DL from Tallahassee, Fla. James Richards. Spring roster profile for the 2026 Gators.",
     "stats": "dl - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Get-off and first-step quickness at the line",
+      "Hand usage to disengage blockers",
+      "Motor and finish rate in pursuit"
+    ],
+    "weaknesses": [
+      "Anchor vs. double teams on early downs",
+      "Counter moves vs. veteran tackles"
+    ],
+    "schemeFit": "Defensive lineman in Billy White's odd-front pressure packages.",
+    "projection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental dl with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Tallahassee, Fla. James Richards",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "micah-jones",
@@ -2371,7 +4635,29 @@
     "bio": "Micah Jones is a R-Fr. TE from Madison, Miss. Madison Central. Spring roster profile for the 2026 Gators.",
     "stats": "te - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Inline blocking strength at the point of attack",
+      "Soft hands as a seam and intermediate target",
+      "Red-zone presence as a mismatch"
+    ],
+    "weaknesses": [
+      "Long-speed separation vs. safeties",
+      "Route precision at the top of breaks"
+    ],
+    "schemeFit": "Hybrid Y attached to UF's run game and play-action passing.",
+    "projection": "Developmental te with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental te with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Madison, Miss. Madison Central",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "nicholas-inglis",
@@ -2393,7 +4679,29 @@
     "bio": "Nicholas Inglis is a R-So. P from Dallas, Texas Episcopal. Spring roster profile for the 2026 Gators.",
     "stats": "p - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Hang time and directional punting",
+      "Operation speed and consistency",
+      "Pinning ability inside the 20"
+    ],
+    "weaknesses": [
+      "Consistency in wet or windy conditions",
+      "Rugby-style placement when needed"
+    ],
+    "schemeFit": "Field-position weapon in UF's complementary special teams unit.",
+    "projection": "Developmental p with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental p with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Dallas, Texas Episcopal",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "jason-zandamela",
@@ -2415,7 +4723,29 @@
     "bio": "Jason Zandamela is a R-So. OL from Clearwater, Fla. Clearwater Academy. Spring roster profile for the 2026 Gators.",
     "stats": "ol - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Clearwater, Fla. Clearwater Academy",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "daniel-pierre-louis",
@@ -2437,7 +4767,29 @@
     "bio": "Daniel Pierre Louis is a R-Fr. OL from Royal Palm Beach, Fla. Seminole Ridge. Spring roster profile for the 2026 Gators.",
     "stats": "ol - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Royal Palm Beach, Fla. Seminole Ridge",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "mark-faircloth",
@@ -2459,7 +4811,29 @@
     "bio": "Mark Faircloth is a R-So. OL from Quincy, Fla. Florida State University School. Spring roster profile for the 2026 Gators.",
     "stats": "ol - R-So. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Core strength and pad level in the run game",
+      "Hand placement and footwork in pass pro",
+      "Football IQ in protection calls"
+    ],
+    "weaknesses": [
+      "Recovery speed vs. elite edge speed",
+      "Consistency finishing blocks to the whistle"
+    ],
+    "schemeFit": "Interior or tackle fit in UF's zone-heavy run scheme and vertical passing game.",
+    "projection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 3,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental ol with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Quincy, Fla. Florida State University School",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   },
   {
     "slug": "byron-louis",
@@ -2481,6 +4855,28 @@
     "bio": "Byron Louis is a R-Fr. RB from Miramar, Fla. American Heritage. Spring roster profile for the 2026 Gators.",
     "stats": "rb - R-Fr. on the 2026 spring roster.",
     "injury": "green",
-    "depthChartTier": "developmental"
+    "depthChartTier": "developmental",
+    "strengths": [
+      "Vision and patience between the tackles",
+      "Contact balance through second-level defenders",
+      "Pass-catching reliability out of the backfield"
+    ],
+    "weaknesses": [
+      "Top-end breakaway speed in the open field",
+      "Pass protection technique vs. blitzers"
+    ],
+    "schemeFit": "Every-down back who fits UF's inside/outside zone and screen package.",
+    "projection": "Developmental rb with special-teams and depth-chart climb potential.",
+    "eligibilityYearsRemaining": 4,
+    "transferStatus": "High school / standard path",
+    "positionGrade": "C+",
+    "fitScore": 68,
+    "playerComp": null,
+    "developmentProjection": "Developmental rb with special-teams and depth-chart climb potential.",
+    "injuryHistory": "No significant injury history on file.",
+    "nilValuation": 15000,
+    "recruitingBackground": "Miramar, Fla. American Heritage",
+    "profileTier": "uf-premium",
+    "profileEnrichedAt": "2026-06-19T15:47:37.474Z"
   }
 ]

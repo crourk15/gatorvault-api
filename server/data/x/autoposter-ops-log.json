@@ -2,7 +2,16 @@
   "version": 1,
   "entries": [
     {
-      "ts": "2026-06-16T16:43:12.586Z",
+      "ts": "2026-06-19T15:42:37.526Z",
+      "action": "rewrite_success",
+      "subsystem": "rewrite-engine",
+      "playerName": "Jayden Harris",
+      "attempts": 1,
+      "wordCount": 103,
+      "mode": "stub"
+    },
+    {
+      "ts": "2026-06-19T15:42:37.208Z",
       "action": "rewrite_success",
       "subsystem": "rewrite-engine",
       "playerName": "Easton Royal",
@@ -11,67 +20,25 @@
       "mode": "stub"
     },
     {
-      "ts": "2026-06-16T16:40:32.363Z",
-      "action": "rewrite_failed",
+      "ts": "2026-06-19T15:42:37.169Z",
+      "action": "rewrite_success",
       "subsystem": "rewrite-engine",
-      "playerName": "Jayden Harris",
-      "attempts": 3,
-      "mode": "stub",
-      "quality": {
-        "ok": false,
-        "similarity": 0.27450980392156865,
-        "lengthOk": true,
-        "toneOk": true,
-        "contextOk": true
-      }
-    },
-    {
-      "ts": "2026-06-16T16:40:32.360Z",
-      "action": "rewrite_regen",
-      "subsystem": "rewrite-engine",
-      "attempt": 3,
-      "errors": {
-        "ok": false,
-        "similarity": 0.27450980392156865,
-        "lengthOk": true,
-        "toneOk": true,
-        "contextOk": true
-      },
-      "playerName": "Jayden Harris",
+      "playerName": "Easton Royal",
+      "attempts": 1,
+      "wordCount": 99,
       "mode": "stub"
     },
     {
-      "ts": "2026-06-16T16:40:32.355Z",
-      "action": "rewrite_regen",
+      "ts": "2026-06-17T17:30:46.498Z",
+      "action": "rewrite_success",
       "subsystem": "rewrite-engine",
-      "attempt": 2,
-      "errors": {
-        "ok": false,
-        "similarity": 0.27450980392156865,
-        "lengthOk": true,
-        "toneOk": true,
-        "contextOk": true
-      },
       "playerName": "Jayden Harris",
+      "attempts": 1,
+      "wordCount": 103,
       "mode": "stub"
     },
     {
-      "ts": "2026-06-16T16:40:32.330Z",
-      "action": "rewrite_regen",
-      "subsystem": "rewrite-engine",
-      "attempt": 1,
-      "errors": {
-        "ok": false,
-        "similarity": 0.27450980392156865,
-        "lengthOk": true,
-        "toneOk": true,
-        "contextOk": true
-      },
-      "playerName": "Jayden Harris",
-      "mode": "stub"
-    },
-    {
-      "ts": "2026-06-16T16:39:38.737Z",
+      "ts": "2026-06-17T14:15:53.216Z",
       "action": "rewrite_success",
       "subsystem": "rewrite-engine",
       "playerName": "Easton Royal",
@@ -80,67 +47,16 @@
       "mode": "stub"
     },
     {
-      "ts": "2026-06-16T16:39:38.733Z",
-      "action": "rewrite_failed",
+      "ts": "2026-06-17T14:15:53.199Z",
+      "action": "rewrite_success",
       "subsystem": "rewrite-engine",
       "playerName": "Jayden Harris",
-      "attempts": 3,
-      "mode": "stub",
-      "quality": {
-        "ok": false,
-        "similarity": 0.27450980392156865,
-        "lengthOk": true,
-        "toneOk": true,
-        "contextOk": true
-      }
-    },
-    {
-      "ts": "2026-06-16T16:39:38.728Z",
-      "action": "rewrite_regen",
-      "subsystem": "rewrite-engine",
-      "attempt": 3,
-      "errors": {
-        "ok": false,
-        "similarity": 0.27450980392156865,
-        "lengthOk": true,
-        "toneOk": true,
-        "contextOk": true
-      },
-      "playerName": "Jayden Harris",
+      "attempts": 1,
+      "wordCount": 103,
       "mode": "stub"
     },
     {
-      "ts": "2026-06-16T16:39:38.724Z",
-      "action": "rewrite_regen",
-      "subsystem": "rewrite-engine",
-      "attempt": 2,
-      "errors": {
-        "ok": false,
-        "similarity": 0.27450980392156865,
-        "lengthOk": true,
-        "toneOk": true,
-        "contextOk": true
-      },
-      "playerName": "Jayden Harris",
-      "mode": "stub"
-    },
-    {
-      "ts": "2026-06-16T16:39:38.715Z",
-      "action": "rewrite_regen",
-      "subsystem": "rewrite-engine",
-      "attempt": 1,
-      "errors": {
-        "ok": false,
-        "similarity": 0.27450980392156865,
-        "lengthOk": true,
-        "toneOk": true,
-        "contextOk": true
-      },
-      "playerName": "Jayden Harris",
-      "mode": "stub"
-    },
-    {
-      "ts": "2026-06-16T16:39:38.703Z",
+      "ts": "2026-06-17T14:15:53.193Z",
       "action": "rewrite_success",
       "subsystem": "rewrite-engine",
       "playerName": "Easton Royal",
@@ -149,60 +65,23 @@
       "mode": "stub"
     },
     {
-      "ts": "2026-06-16T16:35:52.396Z",
-      "action": "rewrite_failed",
-      "subsystem": "rewrite-engine",
-      "playerName": "Jayden Harris",
-      "attempts": 3,
-      "mode": "stub",
-      "quality": {
-        "ok": false,
-        "similarity": 0.35135135135135137,
-        "lengthOk": true,
-        "toneOk": true,
-        "contextOk": true
-      }
-    },
-    {
-      "ts": "2026-06-16T16:35:52.388Z",
-      "action": "rewrite_regen",
-      "subsystem": "rewrite-engine",
-      "attempt": 3,
-      "errors": {
-        "ok": false,
-        "similarity": 0.35135135135135137,
-        "lengthOk": true,
-        "toneOk": true,
-        "contextOk": true
-      },
-      "playerName": "Jayden Harris",
-      "mode": "stub"
-    },
-    {
-      "ts": "2026-06-16T16:35:52.381Z",
-      "action": "rewrite_regen",
-      "subsystem": "rewrite-engine",
-      "attempt": 2,
-      "errors": {
-        "ok": false,
-        "similarity": 0.35135135135135137,
-        "lengthOk": true,
-        "toneOk": true,
-        "contextOk": true
-      },
-      "playerName": "Jayden Harris",
-      "mode": "stub"
-    },
-    {
-      "ts": "2026-06-16T16:35:52.367Z",
+      "ts": "2026-06-17T13:43:41.424Z",
       "action": "rewrite_success",
       "subsystem": "rewrite-engine",
       "playerName": "Easton Royal",
       "attempts": 1,
-      "wordCount": 99,
+      "wordCount": 85,
+      "mode": "stub"
+    },
+    {
+      "ts": "2026-06-17T13:43:41.414Z",
+      "action": "rewrite_success",
+      "subsystem": "rewrite-engine",
+      "playerName": "Jayden Harris",
+      "attempts": 1,
+      "wordCount": 103,
       "mode": "stub"
     }
   ],
-  "updatedAt": "2026-06-16T16:43:12.589Z"
-}
+  "updatedAt": "2026-06-19T15:42:37.527Z"
 }

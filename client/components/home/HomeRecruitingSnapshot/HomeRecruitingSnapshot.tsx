@@ -4,7 +4,7 @@ import React from 'react';
 import type { PersonalizedResponse, RecruitingSnapshot, TickerItem } from '@/lib/vault-home-api';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
 import { GV_COPY } from '@/lib/gatorvault-copy';
-import { SITE_ROUTES } from '@/lib/site-routes';
+import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
 import { playerProfilePath } from '@/lib/player-routes';
 import { HomeModuleCard } from '@/components/home/HomeModuleCard';
 import './HomeRecruitingSnapshot.css';
@@ -70,7 +70,7 @@ export function HomeRecruitingSnapshot({
         { value: String(snapshot.targets), label: 'Targets', tone: 'up' },
         { value: snapshot.classRank != null ? `#${snapshot.classRank}` : '—', label: 'Class rank', tone: 'neutral' },
       ]}
-      link={{ href: `${SITE_ROUTES.recruiting}?tab=priority`, label: 'Open Recruiting Hub →' }}
+      link={{ href: `${VAULT_PILLAR_ROUTES.recruiting}?tab=priority`, label: 'Explore Recruiting Hub →' }}
       ariaLabel="Recruiting snapshot"
       testId="home-recruiting"
     >

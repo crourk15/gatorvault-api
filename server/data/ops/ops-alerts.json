@@ -1,7 +1,290 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-16T10:45:37.841Z",
+  "updatedAt": "2026-06-16T18:03:36.221Z",
   "alerts": [
+    {
+      "id": "alert_1781633016219_r0khw",
+      "at": "2026-06-16T18:03:36.219Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 4 check(s)",
+      "message": "Run qa_1781632985387 at 2026-06-16T18:03:33.257Z\nDuration: 27870ms\nModules: api=FAIL, content=PASS, integrity=FAIL, pages=PASS, ux=PASS, browser=PASS, visual-integrity=PASS, mobile-behavior=PASS, crawler=FAIL\n\n• *integrity/integrity:feed-dedup*: HTTP 500 https://gatorvault-api.onrender.com/api/live/feed\n  URL: /api/live/feed\n  Repro: HTTP 500 https://gatorvault-api.onrender.com/api/live/feed\n• *crawler/crawler:cache-stale*: Trigger cache refresh cron or live-aggregator pipeline\n  URL: /\n  Repro: Trigger cache refresh cron or live-aggregator pipeline\n• *api/api:live-feed*: HTTP 500 https://gatorvault-api.onrender.com/api/live/feed\n  URL: /api/live/feed\n  Repro: HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-4-integrity:feed-dedup",
+      "meta": {
+        "runId": "qa_1781632985387",
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+            "url": "/api/live/feed",
+            "repro": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+            "details": {
+              "classification": "autoposter-duplication",
+              "ruleId": "C1",
+              "severity": "medium",
+              "severityScore": 67,
+              "confidence": 95,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "crawler:cache-stale",
+            "module": "crawler",
+            "message": "Trigger cache refresh cron or live-aggregator pipeline",
+            "url": "/",
+            "repro": "Trigger cache refresh cron or live-aggregator pipeline",
+            "details": {
+              "classification": "cache-stale",
+              "ruleId": "F2",
+              "severity": "high",
+              "severityScore": 54,
+              "confidence": 92,
+              "selector": "/api/live/dashboard",
+              "domPath": "/api/live/dashboard",
+              "screenshot": null,
+              "sectionId": "api-health"
+            },
+            "screenshot": null
+          },
+          {
+            "id": "api:live-feed",
+            "module": "api",
+            "message": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+            "url": "/api/live/feed",
+            "repro": "HTTP 500 https://gatorvault-api.onrender.com/api/live/feed",
+            "details": {
+              "classification": "ui-regression",
+              "ruleId": "A1",
+              "severity": "low",
+              "severityScore": 39,
+              "confidence": 60,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
+    {
+      "id": "alert_1781632848057_d2y0f",
+      "at": "2026-06-16T18:00:48.057Z",
+      "severity": "error",
+      "type": "qa_regression",
+      "title": "QA Crawler FAILED — 39 check(s)",
+      "message": "Run qa_1781632657651 at 2026-06-16T18:00:45.262Z\nDuration: 187611ms\nModules: api=FAIL, content=FAIL, integrity=FAIL, pages=PASS, ux=PASS, browser=PASS, visual-integrity=PASS, mobile-behavior=PASS, crawler=FAIL\n\n• *integrity/integrity:feed-dedup*: HTTP 502 https://gatorvault-api.onrender.com/api/live/feed\n  URL: /api/live/feed\n  Repro: HTTP 502 https://gatorvault-api.onrender.com/api/live/feed\n• *api/api:film-room-catalog*: HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog\n  URL: /api/film-room/catalog\n  Repro: HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog\n• *integrity/integrity:article-links*: HTTP 502 https://gatorvault-api.onrender.com/api/articles/published\n  URL: /api/articles/published\n  Repro: HTTP 502 https://gatorvault-api.onrender.com/api/articles/published\n• *integrity/integrity:film-sources*: HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog\n  URL: /api/film-room/catalog\n  Repro: HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog\n• *api/api:recruiting-ingest-status*: HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/ingest/status\n  URL: /api/recruiting/ingest/status\n  Repro: HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/ingest/status\n• *api/api:recruiting-board*: HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board\n  URL: /api/recruiting/board\n  Repro: HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board\n• *api/api:recruiting-portal*: HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/portal\n  URL: /api/recruiting/portal\n  Repro: HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/portal\n• *integrity/integrity:rankings*: HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board\n  URL: /api/recruiting/board\n  Repro: HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+      "subsystem": "qa:crawler",
+      "dedupeKey": "qa-fail-39-integrity:feed-dedup",
+      "meta": {
+        "runId": "qa_1781632657651",
+        "errors": [
+          {
+            "id": "integrity:feed-dedup",
+            "module": "integrity",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/live/feed",
+            "url": "/api/live/feed",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/live/feed",
+            "details": {
+              "classification": "autoposter-duplication",
+              "ruleId": "C1",
+              "severity": "medium",
+              "severityScore": 67,
+              "confidence": 95,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "api:film-room-catalog",
+            "module": "api",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+            "url": "/api/film-room/catalog",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+            "details": {
+              "classification": "filmroom-structure",
+              "ruleId": "B1",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "integrity:article-links",
+            "module": "integrity",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+            "url": "/api/articles/published",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/articles/published",
+            "details": {
+              "classification": "broken-link",
+              "ruleId": "F3",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "integrity:film-sources",
+            "module": "integrity",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+            "url": "/api/film-room/catalog",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/film-room/catalog",
+            "details": {
+              "classification": "broken-link",
+              "ruleId": "F3",
+              "severity": "medium",
+              "severityScore": 60,
+              "confidence": 92,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "api:recruiting-ingest-status",
+            "module": "api",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/ingest/status",
+            "url": "/api/recruiting/ingest/status",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/ingest/status",
+            "details": {
+              "classification": "recruiting-board-mismatch",
+              "ruleId": "D1",
+              "severity": "medium",
+              "severityScore": 57,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "api:recruiting-board",
+            "module": "api",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+            "url": "/api/recruiting/board",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+            "details": {
+              "classification": "recruiting-board-mismatch",
+              "ruleId": "D1",
+              "severity": "medium",
+              "severityScore": 57,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "api:recruiting-portal",
+            "module": "api",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/portal",
+            "url": "/api/recruiting/portal",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/portal",
+            "details": {
+              "classification": "recruiting-board-mismatch",
+              "ruleId": "D1",
+              "severity": "medium",
+              "severityScore": 57,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "integrity:rankings",
+            "module": "integrity",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+            "url": "/api/recruiting/board",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/recruiting/board",
+            "details": {
+              "classification": "recruiting-board-mismatch",
+              "ruleId": "D1",
+              "severity": "medium",
+              "severityScore": 57,
+              "confidence": 88,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "api:live-pipeline-health",
+            "module": "api",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/live/pipeline/health",
+            "url": "/api/live/pipeline/health",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/live/pipeline/health",
+            "details": {
+              "classification": "cache-stale",
+              "ruleId": "F2",
+              "severity": "medium",
+              "severityScore": 54,
+              "confidence": 90,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          },
+          {
+            "id": "api:live-dashboard",
+            "module": "api",
+            "message": "HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+            "url": "/api/live/dashboard",
+            "repro": "HTTP 502 https://gatorvault-api.onrender.com/api/live/dashboard",
+            "details": {
+              "classification": "cache-stale",
+              "ruleId": "F2",
+              "severity": "medium",
+              "severityScore": 54,
+              "confidence": 90,
+              "selector": null,
+              "domPath": null,
+              "screenshot": null,
+              "sectionId": null
+            },
+            "screenshot": null
+          }
+        ],
+        "screenshot": null,
+        "siteUrl": "https://gatorvaultinsider.com",
+        "apiUrl": "https://gatorvault-api.onrender.com"
+      }
+    },
     {
       "id": "alert_1781606737840_j0fif",
       "at": "2026-06-16T10:45:37.840Z",
