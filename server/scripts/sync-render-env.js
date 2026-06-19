@@ -29,19 +29,11 @@ const SYNC_KEYS = [
   'BEEHIIV_AUTOMATION_ID'
 ];
 
-/** Rewrite kill switches — do not disable X_AUTOPOST here (use render-autoposter-deploy.js). */
-const STABILITY_ENV = {
-  X_GM2_REWRITE_ENABLED: 'false',
-  X_INTEL_REWRITE_ENABLED: 'false',
-  X_AUTOPROMPT_ENABLED: 'false'
-};
+const { PIPELINE_ACTIVATION_ENV } = require('../lib/pipeline-activation-env');
 
-/** Production intel schedulers + pipelines shell — enabled on every sync. */
+/** Intel schedulers + UF Premium autoposter — enabled on every sync (rewrite stays on). */
 const PIPELINE_ENV = {
-  X_PIPELINES_ENABLED: 'true',
-  X_SCHEDULED_JOBS_ENABLED: 'true',
-  RIVALS_PM_INGEST_ENABLED: 'true',
-  ON3_INGEST_ENABLED: 'true'
+  ...PIPELINE_ACTIVATION_ENV,
 };
 
 const key = process.env.RENDER_API_KEY;
@@ -103,7 +95,7 @@ async function main() {
     if (val == null || val === '') continue;
     updates.push({ key: k, value: String(val) });
   }
-  for (const [k, val] of Object.entries({ ...PIPELINE_ENV, ...STABILITY_ENV })) {
+  for (const [k, val] of Object.entries(PIPELINE_ENV)) {
     updates.push({ key: k, value: val });
   }
 

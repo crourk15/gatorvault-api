@@ -1,4 +1,6 @@
 require('dotenv').config();
+const { applyToProcessEnv } = require('./lib/autoposter/uf-premium-mode');
+applyToProcessEnv();
 const express = require('express');
 const bodyParser = require('body-parser');
 const { mountRecruitingRoutes } = require('./lib/recruiting-routes');

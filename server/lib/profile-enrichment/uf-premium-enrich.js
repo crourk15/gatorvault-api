@@ -119,6 +119,11 @@ function enrichRecruitingPlayer(player, breakdown, futurecastBySlug) {
   next.futurecastProbability = next.ufProbability ?? fc?.ufProbability ?? null;
   next.pipelineState = next.pipelineState || fc?.pipelineState || next.status || 'target';
   next.interestMeter = next.interestMeter || meterFromStatus(next.status, next.ufProbability);
+  next.offers = Array.isArray(next.offers) ? next.offers : next.offerList || [];
+  next.visits = Array.isArray(next.visits) ? next.visits : next.visitHistory || [];
+  next.visitHistory = next.visits;
+  next.offerList = next.offers;
+  next.playerComp = next.playerComp || next.comp || null;
   next.positionGrade = next.positionGrade || positionGradeFromRating(next.rating);
   next.evaluationSummary =
     next.evaluationSummary ||

@@ -46,12 +46,25 @@ type RecruitingPlayer = {
   stateRank?: number;
   height?: string;
   weight?: number;
+  htWt?: string;
+  fitScore?: number;
+  ufProbability?: number;
+  offers?: string[];
+  visits?: Array<{ date?: string; school?: string; type?: string }>;
+  interestMeter?: string;
   hometown?: string;
-  state?: string;
+  pos?: string;
   highSchool?: string;
   previousSchool?: string;
   portalStatus?: string;
 };
+
+function parseHtWt(htWt?: string): { height: string | null; weight: number | null } {
+  const raw = String(htWt || '');
+  const m = raw.match(/(\d-\d+)\s*\/\s*(\d+)/);
+  if (!m) return { height: null, weight: null };
+  return { height: m[1], weight: Number(m[2]) };
+}
 
 function parseHeight(raw?: string): number | null {
   if (!raw) return null;
@@ -91,15 +104,21 @@ export function mapRecruitingToPlayerCore(p: RecruitingPlayer): FallbackPlayerCo
     isUnderclassmenClassYear(classYear)
       ? intelUuidForSlug(p.slug)
       : String(p.on3Id || p.slug);
+  const parsed = parseHtWt(p.htWt);
+  const heightInches = parseHeight(p.height || parsed.height || undefined);
+  const weight = p.weight ?? parsed.weight ?? null;
+  const ufProb = p.ufProbability != null ? Number(p.ufProbability) : null;
+  const fit = p.fitScore != null ? Number(p.fitScore) : null;
+
   return {
     id,
     fullName: p.name || p.slug,
     slug: p.slug,
     classYear: p.classYear ?? 0,
-    position: p.position || 'ATH',
+    position: p.position || p.pos || 'ATH',
     status: lifecycle,
-    height: parseHeight(p.height),
-    weight: p.weight ?? null,
+    height: heightInches,
+    weight,
     hometown: p.hometown ?? null,
     state: p.state ?? null,
     highSchool: p.highSchool ?? null,
@@ -109,7 +128,7 @@ export function mapRecruitingToPlayerCore(p: RecruitingPlayer): FallbackPlayerCo
     rankingPosition: p.posRank ?? null,
     rankingState: p.stateRank ?? null,
     committedTo: p.committedTo ?? null,
-    ufFitScore: null,
+    ufFitScore: fit,
     fitScoreBreakdown: null,
     movementHistory: [],
     volatilityScore: 0,
@@ -129,10 +148,12 @@ export function mapRecruitingProfiles(p: RecruitingPlayer) {
         ? {
             id: p.slug,
             playerId,
-            offers: [],
+            offers: Array.isArray(p.offers) ? p.offers : [],
             stats: {},
             recruitingNotes: null,
             discoveryScore: null,
+            visitHistory: Array.isArray(p.visits) ? p.visits : [],
+            interestMeter: p.interestMeter ?? null,
           }
         : null,
     collegeProfile: null,
