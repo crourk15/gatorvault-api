@@ -11,7 +11,7 @@ export function GNLPageHero(): React.ReactElement {
 
   return (
     <section
-      className="gv-gnl-hero gv-gnl-hero--wireframe gv-texture-stadium-lights"
+      className="gv-gnl-hero gv-gnl-hero--wireframe"
       aria-label="GatorNation Live hero"
       data-testid="gnl-page-hero"
     >

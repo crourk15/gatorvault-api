@@ -1,5 +1,6 @@
 import { getApiBase } from './big-board-api';
 import {
+  catalogPlatformsFromStreams,
   findPodcastCatalogEntry,
   resolvePodcastLogo,
   resolvePodcastHosts,
@@ -42,6 +43,9 @@ export interface LiveDashboard {
   beat: { posts?: BeatPost[]; error?: string };
   podcasts: { shows?: PodcastShow[] };
   updatedAt?: string;
+  refreshedAt?: string;
+  cacheAgeMs?: number | null;
+  stale?: boolean;
 }
 
 export interface SocialFeedLane {
@@ -53,15 +57,19 @@ export interface SocialFeedLane {
 }
 
 function normalizePodcastShow(raw: Record<string, unknown>): PodcastShow {
-  const platforms = Array.isArray(raw.platforms)
+  const id = String(raw.id ?? '');
+  const title = String(raw.title ?? raw.name ?? 'Podcast');
+  const catalog = findPodcastCatalogEntry(id || title);
+  const platformsFromRaw = Array.isArray(raw.platforms)
     ? (raw.platforms as Record<string, unknown>[]).map((p) => ({
         name: String(p.name ?? p.label ?? 'Listen'),
         url: String(p.url ?? '#'),
       }))
     : [];
-  const id = String(raw.id ?? '');
-  const title = String(raw.title ?? raw.name ?? 'Podcast');
-  const catalog = findPodcastCatalogEntry(id || title);
+  const platforms =
+    platformsFromRaw.length > 0
+      ? platformsFromRaw
+      : catalogPlatformsFromStreams(id || title);
   const logoUrl = String(
     raw.logoUrl ?? catalog?.logoUrl ?? resolvePodcastLogo(id || title)
   );
@@ -86,8 +94,13 @@ function normalizePodcastShow(raw: Record<string, unknown>): PodcastShow {
   };
 }
 
-export async function fetchLiveDashboard(limit = 40): Promise<LiveDashboard> {
-  const res = await fetch(`${getApiBase()}/api/live/dashboard?limit=${limit}`, {
+export async function fetchLiveDashboard(
+  limit = 40,
+  options: { force?: boolean } = {}
+): Promise<LiveDashboard> {
+  const qs = new URLSearchParams({ limit: String(limit), _t: String(Date.now()) });
+  if (options.force) qs.set('refresh', '1');
+  const res = await fetch(`${getApiBase()}/api/live/dashboard?${qs.toString()}`, {
     cache: 'no-store',
   });
   if (!res.ok) throw new Error(`Live dashboard ${res.status}`);
@@ -103,6 +116,9 @@ export async function fetchLiveDashboard(limit = 40): Promise<LiveDashboard> {
       shows: rawShows.map((s) => normalizePodcastShow(s as Record<string, unknown>)),
     },
     updatedAt: data.updatedAt,
+    refreshedAt: data.refreshedAt,
+    cacheAgeMs: data.cacheAgeMs ?? null,
+    stale: data.stale,
   };
 }
 

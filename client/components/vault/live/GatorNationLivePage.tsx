@@ -28,6 +28,7 @@ const EMPTY_BUNDLE: LiveHubBundle = {
   breakingNews: null,
   gameDay: null,
   updatedAt: null,
+  refreshedAt: null,
 };
 
 /** GatorNation Live — Elite UF Premium modules (45s refresh). */
@@ -35,6 +36,7 @@ export function GatorNationLivePage(): React.ReactElement {
   const [bundle, setBundle] = useState<LiveHubBundle>(EMPTY_BUNDLE);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pollSeq, setPollSeq] = useState(0);
 
   useVaultPageRestore(LIVE_STATE_KEY, () => {});
 
@@ -44,7 +46,9 @@ export function GatorNationLivePage(): React.ReactElement {
       setError(null);
     }
     try {
-      setBundle(await fetchLiveHubBundle(!isInitial));
+      const next = await fetchLiveHubBundle(!isInitial);
+      setBundle(next);
+      if (!isInitial) setPollSeq((n) => n + 1);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load GatorNation Live.');
     } finally {
@@ -97,7 +101,7 @@ export function GatorNationLivePage(): React.ReactElement {
       )}
 
       <GNLPageHero />
-      <GNLLiveFeedModule bundle={bundle} loading={loading} />
+      <GNLLiveFeedModule bundle={bundle} loading={loading} refreshKey={bundle.refreshedAt ?? `${pollSeq}`} />
     </div>
   );
 }

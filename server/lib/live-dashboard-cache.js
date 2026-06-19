@@ -102,13 +102,20 @@ function scheduleAsyncWarm(feedLimit = DEFAULT_FEED_LIMIT) {
   });
 }
 
-function getCachedDashboard({ feedLimit = DEFAULT_FEED_LIMIT, allowStale = true } = {}) {
+function getCachedDashboard({ feedLimit = DEFAULT_FEED_LIMIT, allowStale = true, force = false } = {}) {
   const now = Date.now();
-  const stale = !snapshotAt || now - snapshotAt > REFRESH_MS;
+  const stale = force || !snapshotAt || now - snapshotAt > REFRESH_MS;
 
   if (!snapshot || stale) {
-    scheduleAsyncWarm(feedLimit);
+    if (!warming) {
+      warmDashboardCache(feedLimit);
+    } else {
+      scheduleAsyncWarm(feedLimit);
+    }
   }
+
+  const cacheAgeMs = snapshotAt ? Date.now() - snapshotAt : null;
+  const stillStale = force ? false : cacheAgeMs == null || cacheAgeMs > REFRESH_MS;
 
   if (!snapshot) {
     return { ...minimalFallback(snapshot ? 'warming' : 'cache_miss'), ok: true };
@@ -118,10 +125,11 @@ function getCachedDashboard({ feedLimit = DEFAULT_FEED_LIMIT, allowStale = true 
   const out = {
     ...snapshot,
     feed: (snapshot.feed || []).slice(0, limit),
-    stale: stale || snapshot.stale === true,
+    stale: stillStale || snapshot.stale === true,
     degraded: snapshot.degraded === true,
-    cacheAgeMs: snapshotAt ? now - snapshotAt : null,
-    mobileRefreshSignal: getMobileRefreshSignal()
+    cacheAgeMs,
+    mobileRefreshSignal: getMobileRefreshSignal(),
+    refreshedAt: new Date().toISOString()
   };
 
   if (!allowStale && out.stale && !warming) {

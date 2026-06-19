@@ -12,10 +12,11 @@ import { GNLGameDayCountdown } from '@/components/gatornation-live/GNLGameDayCou
 type Props = {
   bundle: LiveHubBundle;
   loading?: boolean;
+  refreshKey?: string | null;
 };
 
 /** Elite UF Premium GNL body — ticker, beat writers, podcasts, breaking, game day. */
-export function GNLLiveFeedModule({ bundle, loading }: Props): React.ReactElement {
+export function GNLLiveFeedModule({ bundle, loading, refreshKey }: Props): React.ReactElement {
   const beatItems = useMemo(
     () => bundle.panels.beatWriterHighlights.filter((item) => item.text?.trim()),
     [bundle.panels.beatWriterHighlights]
@@ -27,7 +28,10 @@ export function GNLLiveFeedModule({ bundle, loading }: Props): React.ReactElemen
         {loading && bundle.ticker.length === 0 ? (
           <div className="gv-gnl-elite-skeleton" aria-hidden="true" />
         ) : (
-          <GNLEliteTicker items={bundle.ticker} refreshKey={bundle.updatedAt} />
+          <GNLEliteTicker
+            items={bundle.ticker}
+            refreshKey={refreshKey ?? bundle.refreshedAt ?? bundle.updatedAt}
+          />
         )}
 
         <section className="gv-gnl-elite-card gv-gnl-elite-beat">

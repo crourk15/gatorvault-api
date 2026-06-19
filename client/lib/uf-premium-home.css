@@ -323,7 +323,16 @@
 
 /* ── Sections ── */
 .uf-premium-section {
+  display: flex;
+  flex-direction: column;
   margin-top: var(--uf-section-gap);
+  isolation: isolate;
+}
+
+.uf-premium-section .uf-premium-grid,
+.uf-premium-section .uf-premium-podcasts {
+  position: relative;
+  z-index: 1;
 }
 
 .uf-premium-section__head {
@@ -347,6 +356,9 @@
 
 .uf-premium-section__cta {
   margin-top: var(--uf-module-gap);
+  position: relative;
+  z-index: 2;
+  clear: both;
 }
 
 .uf-premium-section__cta .uf-premium-cta--primary {

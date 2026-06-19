@@ -17,6 +17,7 @@ import {
   PODCAST_CATALOG,
   resolvePodcastLogo,
   resolvePodcastLogoFallback,
+  resolvePodcastStreams,
 } from './podcast-catalog';
 
 export const LIVE_HUB_REFRESH_MS = 45_000;
@@ -38,18 +39,21 @@ export type LivePanelItems = {
   staffNotes: LivePanelProps['items'];
 };
 
-export const DEFAULT_PODCASTS: PodcastCardProps[] = PODCAST_CATALOG.map((entry) => ({
-  id: entry.id,
-  title: entry.name,
-  description: `${entry.name} — Florida Gators coverage.`,
-  logoUrl: entry.logoUrl,
-  thumbnailUrl: entry.logoFallback,
-  hosts: entry.hosts,
-  appleUrl: '#',
-  spotifyUrl: '#',
-  youtubeUrl: '#',
-  websiteUrl: '#',
-}));
+export const DEFAULT_PODCASTS: PodcastCardProps[] = PODCAST_CATALOG.map((entry) => {
+  const streams = resolvePodcastStreams(entry.id);
+  return {
+    id: entry.id,
+    title: entry.name,
+    description: `${entry.name} — Florida Gators coverage.`,
+    logoUrl: entry.logoUrl,
+    thumbnailUrl: entry.logoFallback,
+    hosts: entry.hosts,
+    appleUrl: streams.appleUrl ?? '#',
+    spotifyUrl: streams.spotifyUrl ?? '#',
+    youtubeUrl: streams.youtubeUrl ?? '#',
+    websiteUrl: streams.siteUrl ?? '#',
+  };
+});
 
 const SOURCE_LOGOS: Record<string, string> = {
   on3: 'O3',
@@ -261,13 +265,22 @@ function isExcludedLiveFeedItem(item: LiveFeedItem): boolean {
   return false;
 }
 
+function platformUrl(
+  platforms: { name: string; url: string }[],
+  needle: string,
+  fallback?: string
+): string {
+  const hit = platforms.find((p) => p.name.toLowerCase().includes(needle))?.url;
+  if (hit && hit !== '#') return hit;
+  return fallback ?? '#';
+}
+
 export function normalizePodcasts(shows: PodcastShow[]): PodcastCardProps[] {
   if (!shows.length) return DEFAULT_PODCASTS;
   return shows.slice(0, 4).map((show, idx) => {
     const platforms = show.platforms ?? [];
-    const find = (name: string) =>
-      platforms.find((p) => p.name.toLowerCase().includes(name))?.url || '#';
     const catalogKey = show.id ?? show.title ?? DEFAULT_PODCASTS[idx]?.id;
+    const catalogStreams = resolvePodcastStreams(catalogKey);
     const fallback = DEFAULT_PODCASTS[idx];
     return {
       id: show.id ?? fallback?.id,
@@ -282,10 +295,14 @@ export function normalizePodcasts(shows: PodcastShow[]): PodcastCardProps[] {
         resolvePodcastLogoFallback(catalogKey) ||
         fallback?.thumbnailUrl,
       hosts: show.hosts?.length ? show.hosts : fallback?.hosts,
-      appleUrl: find('apple'),
-      spotifyUrl: find('spotify'),
-      youtubeUrl: find('youtube'),
-      websiteUrl: find('web') || platforms[0]?.url || fallback?.websiteUrl || '#',
+      appleUrl: platformUrl(platforms, 'apple', catalogStreams.appleUrl),
+      spotifyUrl: platformUrl(platforms, 'spotify', catalogStreams.spotifyUrl),
+      youtubeUrl: platformUrl(platforms, 'youtube', catalogStreams.youtubeUrl),
+      websiteUrl:
+        platformUrl(platforms, 'web', catalogStreams.siteUrl) ||
+        platforms[0]?.url ||
+        fallback?.websiteUrl ||
+        '#',
       episodeTitle: show.episodeTitle,
       publishedAt: show.publishedAt,
     };
@@ -348,18 +365,20 @@ export type LiveHubBundle = {
   breakingNews: BreakingNewsItem | null;
   gameDay: GnlGameDay | null;
   updatedAt: string | null;
+  refreshedAt: string | null;
 };
 
 /** GNL live bundle — live dashboard + beat writers + podcasts only (no RH/FC). */
-export async function fetchLiveHubBundle(_force = false): Promise<LiveHubBundle> {
+export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> {
   const [dash, gameDay] = await Promise.all([
-    fetchLiveDashboard(40).catch(() => null),
+    fetchLiveDashboard(40, { force }).catch(() => null),
     fetchGnlGameDay().catch(() => null),
   ]);
 
   const feedItems = dash?.feed ?? [];
   const beat = dash?.beat?.posts ?? [];
   const ticker = buildLiveDashboardTicker(feedItems);
+  const refreshedAt = dash?.refreshedAt ?? dash?.updatedAt ?? new Date().toISOString();
 
   return {
     ticker,
@@ -378,6 +397,7 @@ export async function fetchLiveHubBundle(_force = false): Promise<LiveHubBundle>
     movement: null,
     breakingNews: pickBreakingNews(ticker, feedItems),
     gameDay,
-    updatedAt: dash?.updatedAt ?? null,
+    updatedAt: dash?.updatedAt ?? refreshedAt,
+    refreshedAt,
   };
 }

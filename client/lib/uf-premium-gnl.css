@@ -7,19 +7,24 @@
   --uf-blue: #0021a5;
   --uf-orange: #fa4616;
   --uf-navy: #001a33;
-  --card-bg: rgba(255, 255, 255, 0.04);
-  --card-border: rgba(255, 255, 255, 0.08);
+  --uf-page-bg: #001a33;
+  --uf-card-surface: #ffffff;
+  --uf-card-border-color: rgba(0, 26, 51, 0.2);
+  --card-bg: var(--uf-card-surface);
+  --card-border: var(--uf-card-border-color);
   --uf-section-gap: 32px;
   --uf-module-gap: 24px;
   --uf-inner-gap: 16px;
   --uf-card-radius: 14px;
   --uf-card-border: var(--card-border);
   --uf-card-shadow: 0 8px 28px rgba(0, 26, 51, 0.14);
-  --gnl-panel-bg: #0a2540;
-  --gnl-beat-bg: var(--card-bg);
+  --uf-card-text: #1a1a1a;
+  --uf-card-text-muted: rgba(26, 26, 26, 0.65);
+  --gnl-panel-bg: var(--uf-card-surface);
+  --gnl-beat-bg: var(--uf-card-surface);
   min-height: 100%;
   color: rgba(255, 255, 255, 0.92);
-  background: var(--uf-navy);
+  background: var(--uf-page-bg);
   overflow-x: hidden;
 }
 
@@ -71,12 +76,19 @@
 
 /* ── Hero ── */
 .uf-premium-gnl .gv-gnl-hero--wireframe {
-  min-height: clamp(320px, 40vh, 420px);
-  background: linear-gradient(165deg, var(--uf-blue) 0%, var(--uf-navy) 100%);
+  min-height: clamp(300px, 38vh, 340px);
 }
 
 .uf-premium-gnl .gv-gnl-hero--wireframe .gv-gnl-hero__bg {
-  background: linear-gradient(165deg, var(--uf-blue) 0%, var(--uf-navy) 100%);
+  background: linear-gradient(165deg, #0021a5 0%, #001656 55%, #001a33 100%);
+}
+
+.uf-premium-gnl .gv-gnl-hero--wireframe .gv-gnl-hero__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(250, 70, 22, 0.14) 0%, transparent 60%);
+  pointer-events: none;
 }
 
 .uf-premium-gnl .gv-gnl-hero__title-accent--top {
@@ -238,10 +250,11 @@
   position: relative;
   padding: var(--uf-module-gap);
   border-radius: var(--uf-card-radius);
-  border: 1px solid var(--card-border);
-  background: var(--card-bg);
+  border: 1px solid var(--uf-card-border-color);
+  background: var(--uf-card-surface);
   box-shadow: var(--uf-card-shadow);
   overflow: hidden;
+  color: var(--uf-card-text);
 }
 
 .uf-premium-gnl .gv-gnl-elite-card::before {
@@ -263,14 +276,14 @@
   margin: 0 0 8px;
   font-size: 1.125rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--uf-blue);
 }
 
 .uf-premium-gnl .gv-gnl-elite-card__sub {
   margin: 0;
   font-size: 0.9375rem;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--uf-card-text-muted);
 }
 
 /* Live ticker */
@@ -307,10 +320,10 @@
   gap: 6px;
   padding: var(--uf-inner-gap);
   border-radius: 12px;
-  border: 1px solid var(--card-border);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(0, 26, 51, 0.12);
+  background: rgba(0, 26, 51, 0.04);
   text-decoration: none;
-  color: #fff;
+  color: var(--uf-card-text);
   transition: border-color 150ms ease, transform 150ms ease;
 }
 
@@ -821,4 +834,90 @@
 
 .uf-premium-gnl .gv-gnl-ticker__tag--podcast {
   color: var(--uf-orange);
+}
+
+/* FutureCast Lab parity — white panels, dark typography on navy canvas */
+.gv-vault-shell:has(.uf-premium-gnl),
+.gv-vault-shell__main:has(.uf-premium-gnl),
+#gv-vault-root:has(.uf-premium-gnl) {
+  background: var(--uf-page-bg);
+}
+
+.uf-premium-gnl .gv-gnl-elite-ticker__text {
+  color: var(--uf-card-text);
+}
+
+.uf-premium-gnl .gv-gnl-elite-ticker__source,
+.uf-premium-gnl .gv-gnl-elite-ticker__timestamp {
+  color: var(--uf-card-text-muted);
+}
+
+.uf-premium-gnl .gv-gnl-elite-breaking {
+  background: var(--uf-card-surface);
+}
+
+.uf-premium-gnl .gv-gnl-elite-breaking__text {
+  color: var(--uf-card-text);
+}
+
+.uf-premium-gnl .gv-gnl-elite-breaking__meta {
+  color: var(--uf-card-text-muted);
+}
+
+.uf-premium-gnl .gv-gnl-elite-breaking__link:hover {
+  color: #c93a12;
+}
+
+.uf-premium-gnl .gv-gnl-elite-gameday__label,
+.uf-premium-gnl .gv-gnl-elite-gameday__kickoff {
+  color: var(--uf-card-text-muted);
+}
+
+.uf-premium-gnl .gv-gnl-elite-gameday__team {
+  color: var(--uf-card-text);
+}
+
+.uf-premium-gnl .gv-gnl-elite-podcast-card {
+  background: var(--uf-card-surface);
+  border-color: var(--uf-card-border-color);
+}
+
+.uf-premium-gnl .gv-gnl-elite-podcast-card__title {
+  color: var(--uf-card-text);
+}
+
+.uf-premium-gnl .gv-gnl-elite-podcast-card__episode,
+.uf-premium-gnl .gv-gnl-elite-podcast-card__time {
+  color: var(--uf-card-text-muted);
+}
+
+.uf-premium-gnl .gv-gnl-elite-podcast-card__cta:hover {
+  color: #c93a12;
+}
+
+.uf-premium-gnl .gv-gnl-elite-beat .gv-gnl-beat-grid .gv-gnl-card__title {
+  color: var(--uf-blue);
+}
+
+.uf-premium-gnl .gv-gnl-elite-beat .gv-gnl-card__subtitle,
+.uf-premium-gnl .gv-gnl-panel__secondary,
+.uf-premium-gnl .gv-gnl-status {
+  color: var(--uf-card-text-muted);
+}
+
+.uf-premium-gnl .gv-gnl-beat-card {
+  background: var(--uf-card-surface);
+  border-color: var(--uf-card-border-color);
+}
+
+.uf-premium-gnl .gv-gnl-beat-card__writer {
+  color: var(--uf-blue);
+}
+
+.uf-premium-gnl .gv-gnl-beat-card__source {
+  color: var(--uf-card-text-muted);
+}
+
+.uf-premium-gnl .gv-gnl-beat-card__text {
+  color: var(--uf-card-text);
 }

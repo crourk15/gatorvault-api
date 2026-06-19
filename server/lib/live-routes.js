@@ -11,10 +11,11 @@ function pinFromReq(req) {
 function mountLiveRoutes(app) {
   app.get('/api/live/dashboard', (req, res) => {
     const feedLimit = parseInt(req.query.limit || '60', 10) || 60;
+    const force = req.query.refresh === '1' || req.query.force === '1';
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     try {
       const dashCache = require('./live-dashboard-cache');
-      const dash = dashCache.getCachedDashboard({ feedLimit });
+      const dash = dashCache.getCachedDashboard({ feedLimit, force });
       if (dash.stale) res.set('X-GV-Dashboard-Stale', '1');
       return res.status(200).json({ ok: true, ...dash });
     } catch (err) {
@@ -57,6 +58,28 @@ function mountLiveRoutes(app) {
       );
       res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
       return res.json({ ok: true, feed, updatedAt: liveStore.nowIso() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** GNL client alias — same live dashboard snapshot with forced cache refresh. */
+  app.get('/api/gnl/feed', (req, res) => {
+    const feedLimit = parseInt(req.query.limit || '40', 10) || 40;
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    try {
+      const dashCache = require('./live-dashboard-cache');
+      const dash = dashCache.getCachedDashboard({ feedLimit, force: true });
+      if (dash.stale) res.set('X-GV-Dashboard-Stale', '1');
+      return res.status(200).json({
+        ok: true,
+        feed: dash.feed || [],
+        beat: dash.beat || { posts: [] },
+        podcasts: dash.podcasts || { shows: [] },
+        updatedAt: dash.updatedAt || liveStore.nowIso(),
+        refreshedAt: dash.refreshedAt || liveStore.nowIso(),
+        cacheAgeMs: dash.cacheAgeMs ?? null
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
