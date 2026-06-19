@@ -3,7 +3,6 @@
 import React from 'react';
 import type { PersonalizedResponse, RecruitingSnapshot, TickerItem } from '@/lib/vault-home-api';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
-import { GV_COPY } from '@/lib/gatorvault-copy';
 import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
 import { playerProfilePath } from '@/lib/player-routes';
 import { HomeModuleCard } from '@/components/home/HomeModuleCard';
@@ -29,7 +28,7 @@ export function HomeRecruitingSnapshot({
       <HomeModuleCard
         gridClass="gv-home__cell--6"
         eyebrow="Recruiting Hub"
-        title={GV_COPY.headlines.recruitingSnapshot}
+        title="Recruiting Hub Preview"
         ariaLabel="Recruiting snapshot"
         testId="home-recruiting"
         loading
@@ -64,7 +63,7 @@ export function HomeRecruitingSnapshot({
     <HomeModuleCard
       gridClass="gv-home__cell--6"
       eyebrow="Recruiting Hub"
-      title={GV_COPY.headlines.recruitingSnapshot}
+      title="Recruiting Hub Preview"
       stats={[
         { value: String(snapshot.commits), label: 'Commits', tone: 'accent' },
         { value: String(snapshot.targets), label: 'Targets', tone: 'up' },

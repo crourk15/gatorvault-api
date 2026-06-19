@@ -45,11 +45,14 @@ export function HomeRecruitingPreview({
   const commits = snapshot?.commits ?? 0;
   const classRank = snapshot?.classRank != null ? `#${snapshot.classRank}` : '—';
   const buckets = movement?.heatmap?.buckets ?? [];
-  const heatLabels = ['Cool', 'Warm', 'Hot'];
-  const heatValues =
-    buckets.length >= 3
-      ? buckets.slice(0, 3).map((b) => b.count ?? 0)
-      : [Math.max(1, Math.floor(commits / 3)), Math.max(1, snapshot?.targets ?? 0), heatmapSparkPct(buckets)];
+  const heatBuckets =
+    buckets.length > 0
+      ? buckets.slice(0, 3)
+      : [
+          { label: 'Cool', count: Math.max(1, Math.floor(commits / 3)) },
+          { label: 'Warm', count: Math.max(1, snapshot?.targets ?? 0) },
+          { label: 'Hot', count: heatmapSparkPct(buckets) },
+        ];
 
   return (
     <div className="uf-premium-grid uf-premium-grid--3" data-testid="home-recruiting-preview">
@@ -87,10 +90,10 @@ export function HomeRecruitingPreview({
       <article className="uf-premium-card">
         <h3 className="uf-premium-card__title">Movement Heatmap</h3>
         <div className="uf-premium-heatmap" aria-label="Movement heatmap">
-          {heatLabels.map((label, idx) => (
-            <div key={label} className="uf-premium-heatmap__pill">
-              <strong>{heatValues[idx] ?? 0}</strong>
-              <span>{label}</span>
+          {heatBuckets.map((bucket) => (
+            <div key={bucket.label} className="uf-premium-heatmap__pill">
+              <strong>{bucket.count ?? 0}</strong>
+              <span>{bucket.label}</span>
             </div>
           ))}
         </div>

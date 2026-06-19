@@ -118,11 +118,15 @@
 }
 
 .gv-gnl-feed-card__headline {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
   word-break: break-word;
+  line-height: 1.45;
+}
+
+.gv-gnl-feed--full .gv-gnl-feed-card__headline,
+.gv-gnl-beat-thread__text {
+  overflow: visible;
+  display: block;
+  -webkit-line-clamp: unset;
 }
 
 .gv-gnl-beat-card__text {

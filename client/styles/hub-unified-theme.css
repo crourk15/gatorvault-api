@@ -12,7 +12,8 @@
 .gv-sched-page,
 .gv-schedule-page,
 .gv-home-page,
-.gv-home-desktop {
+.gv-home-desktop,
+.gv-home-premium-page {
   --rh-primary: var(--th-primary);
   --rh-accent: var(--th-accent);
   --rh-card-bg: var(--th-card-bg);

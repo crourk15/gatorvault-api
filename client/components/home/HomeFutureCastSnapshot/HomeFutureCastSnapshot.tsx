@@ -26,7 +26,8 @@ export function HomeFutureCastSnapshot({ data, loading }: Props): React.ReactEle
       <HomeModuleCard
         gridClass="gv-home__cell--6"
         eyebrow="FutureCast"
-        title="Momentum snapshot"
+        title="FutureCast Preview"
+        subtitle="Trending players and probability shifts"
         ariaLabel="FutureCast snapshot"
         testId="home-futurecast"
         loading
@@ -44,12 +45,12 @@ export function HomeFutureCastSnapshot({ data, loading }: Props): React.ReactEle
     <HomeModuleCard
       gridClass="gv-home__cell--6"
       eyebrow="FutureCast"
-      title="Momentum snapshot"
+      title="FutureCast Preview"
+      subtitle={`Trending players · ${data.movementWindowDays || 7}-day movement window`}
       stats={[
         { value: String(leaders.length), label: 'Top risers', tone: 'up' },
         { value: `${sparkPct}%`, label: 'Volatility', tone: 'accent' },
       ]}
-      subtitle={`${data.movementWindowDays || 7}-day movement window`}
       link={{ href: `${VAULT_PILLAR_ROUTES.futurecast}/movement`, label: 'Open FutureCast →' }}
       ariaLabel="FutureCast snapshot"
       testId="home-futurecast"
