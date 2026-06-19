@@ -574,7 +574,19 @@
     width: 100% !important;
   }
 
-  /* FutureCast Lab mobile shell — no clipping, full-width cards */
+  /* FutureCast Lab mobile shell — single gutter (no stacked .gv-container + section padding) */
+  .gv-vault-shell__main .fc-futurecast-page.fc-futurecast-page--elite > .gv-container,
+  .fc-futurecast-page.fc-futurecast-page--elite > .gv-container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .fc-futurecast-page .fc-futurecast-nav {
+    padding-left: var(--mobile-gutter) !important;
+    padding-right: var(--mobile-gutter) !important;
+    box-sizing: border-box;
+  }
+
   .fc-lab-mobile {
     width: 100% !important;
     max-width: 100% !important;
@@ -583,6 +595,11 @@
     padding-right: var(--mobile-gutter) !important;
     box-sizing: border-box;
     overflow-x: hidden;
+  }
+
+  .fc-lab-mobile > section {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 
   .fc-lab-mobile section,
@@ -640,8 +657,7 @@
   .gv-home__frame,
   .rh-cc-main,
   .rh-cc-feed__inner,
-  .mobile-app > section,
-  .fc-lab-mobile > section {
+  .mobile-app > section {
     padding-left: var(--mobile-gutter) !important;
     padding-right: var(--mobile-gutter) !important;
   }
