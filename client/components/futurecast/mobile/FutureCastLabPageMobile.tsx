@@ -19,14 +19,13 @@ type Props = {
 
 /**
  * Mobile FutureCast Lab layout (<1024px).
- * Matches Recruiting Hub: full-bleed compact hero + single rh-frame gutter for panels.
+ * Matches Recruiting Hub: full-bleed hero + single rh-frame gutter for panels.
  */
 export function FutureCastLabPageMobile({ data }: Props): React.ReactElement {
   return (
     <>
       <section id={FUTURECAST_LAB_ANCHORS.overview} className="fc-lab-mobile-hero">
         <FutureCastHero
-          compact
           summary={data.summary}
           metrics={data.metrics}
           heatLevel={data.heatLevel}

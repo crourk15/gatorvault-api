@@ -601,11 +601,59 @@
 
   .fc-lab-mobile-hero .fc-lab-hero__inner {
     padding-top: 20px !important;
-    padding-bottom: 16px !important;
+    padding-bottom: 20px !important;
+  }
+
+  .fc-lab-mobile-hero .fc-lab-hero__grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--mobile-section-gap) !important;
   }
 
   .fc-lab-mobile-hero .fc-lab-hero__metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .fc-lab-mobile-hero .fc-lab-hero__title {
+    font-size: var(--mobile-title) !important;
+  }
+
+  /* Flat panels on dark FutureCast page — readable copy + tabs */
+  .fc-futurecast-page--elite .fc-lab-mobile-section__title {
+    color: #fff !important;
+  }
+
+  .fc-futurecast-page--elite .fc-lab-mobile-section__sub {
+    color: rgba(255, 255, 255, 0.72) !important;
+    opacity: 1 !important;
+  }
+
+  .fc-futurecast-page--elite .fc-lab-mobile .rh-cc-tabs {
+    border-bottom-color: rgba(255, 255, 255, 0.16) !important;
+  }
+
+  .fc-futurecast-page--elite .fc-lab-mobile .rh-cc-tabs__btn {
+    color: rgba(255, 255, 255, 0.82) !important;
+    border-color: rgba(255, 255, 255, 0.22) !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+  }
+
+  .fc-futurecast-page--elite .fc-lab-mobile .rh-cc-tabs__btn.is-active {
+    color: #fff !important;
+    background: var(--gv-blue, #0021a5) !important;
+    border-color: var(--gv-blue, #0021a5) !important;
+  }
+
+  .fc-futurecast-page--elite .fc-lab-mobile .rh-cc-empty {
+    color: rgba(255, 255, 255, 0.62) !important;
+    opacity: 1 !important;
+  }
+
+  .fc-futurecast-page--elite .fc-lab-mobile .rh-cc-link {
+    color: var(--gv-orange, #fa4616) !important;
+  }
+
+  .fc-futurecast-page--elite .fc-lab-mobile .rh-cc-module__stamp {
+    color: rgba(255, 255, 255, 0.55) !important;
   }
 
   .fc-lab-mobile {
@@ -633,7 +681,6 @@
     margin: 0;
     font-size: var(--mobile-section-title) !important;
     font-weight: var(--mobile-section-weight) !important;
-    color: var(--gv-blue, #0021a5);
     line-height: 1.2;
   }
 
@@ -641,7 +688,6 @@
     margin: 4px 0 0;
     font-size: var(--mobile-meta) !important;
     line-height: 1.45;
-    opacity: 0.65;
   }
 
   .fc-lab-mobile-section__head {
