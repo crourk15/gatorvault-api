@@ -39,7 +39,7 @@ export function BeatWriterCardGrid({ title, description, items }: Props): React.
           <p className="gv-gnl-panel__secondary">Nothing active right now.</p>
         ) : (
           cards.map((item, idx) => (
-            <article key={`${item.writerName ?? item.source}_${idx}`} className="gv-gnl-beat-card">
+            <article key={`${item.writerName ?? item.source}_${idx}`} className="gv-gnl-beat-card gv-gnl-beat-card--x">
               <div className="gv-gnl-beat-card__head">
                 <span className="gv-gnl-beat-card__avatar" aria-hidden="true">
                   {avatarInitials(item.writerName, item.handle)}
@@ -62,9 +62,9 @@ export function BeatWriterCardGrid({ title, description, items }: Props): React.
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="gv-gnl-beat-card__cta"
+                  className="gv-gnl-beat-card__cta gv-gnl-beat-card__cta--x"
                 >
-                  Read More →
+                  View on X →
                 </a>
               ) : null}
             </article>

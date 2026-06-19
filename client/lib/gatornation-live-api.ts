@@ -7,10 +7,14 @@ import type {
   RecruitingUpdateCardProps,
   RecruitingSnapshotProps,
   LivePanelProps,
+  BreakingNewsItem,
+  GnlGameDay,
 } from './gatornation-live-types';
 import { fetchLiveTicker, fetchMovementPreview, computeMomentumPct } from './vault-home-api';
 import { fetchLiveDashboard, type BeatPost, type LiveFeedItem, type PodcastShow } from './live-api';
 import { fetchRecruitingBoard } from './recruiting-board-api';
+import { fetchBettingLines, type BettingGame } from './betting-api';
+import { SCHEDULE_GAMES } from './schedule-data';
 import {
   buildIntelFeedItem,
   dedupeIntelFeedItems,
@@ -73,10 +77,13 @@ export function sourceBadge(source?: string): string {
 
 export function mapTickerTag(category: string, text: string): TickerTag {
   const blob = `${category} ${text}`.toLowerCase();
+  if (blob.includes('podcast') || blob.includes('episode') || blob.includes('listen')) return 'PODCAST';
+  if (blob.includes('team') || blob.includes('roster') || blob.includes('depth chart')) return 'TEAM';
   if (blob.includes('portal') || blob.includes('transfer')) return 'PORTAL';
   if (blob.includes('commit')) return 'COMMIT';
   if (blob.includes('visit') || blob.includes(' ov') || blob.includes('on campus')) return 'VISIT';
   if (blob.includes('rumor') || blob.includes('beat')) return 'RUMOR';
+  if (blob.includes('break')) return 'BREAKING';
   return 'BREAKING';
 }
 
@@ -92,9 +99,124 @@ export function tickerTagEmoji(tag: TickerTag): string {
       return '🟣';
     case 'RUMOR':
       return '🟢';
+    case 'TEAM':
+      return '🐊';
+    case 'PODCAST':
+      return '🎙';
     default:
       return '🔴';
   }
+}
+
+function parseKickoffIso(raw?: string | null): string | null {
+  if (!raw) return null;
+  const ms = Date.parse(raw);
+  if (Number.isFinite(ms)) return new Date(ms).toISOString();
+  const match = raw.match(/^([A-Za-z]+ \d+, \d{4})/);
+  if (!match) return null;
+  const timeMatch = raw.match(/(\d{1,2}:\d{2}\s*[AP]M)/i);
+  const combined = timeMatch ? `${match[1]} ${timeMatch[1]} ET` : match[1];
+  const parsed = Date.parse(combined);
+  return Number.isFinite(parsed) ? new Date(parsed).toISOString() : null;
+}
+
+function opponentFromBettingGame(game: BettingGame): string {
+  const away = game.awayTeam || game.away || '';
+  const home = game.homeTeam || game.home || '';
+  const blob = `${away} ${home}`.toLowerCase();
+  if (blob.includes('florida') || blob.includes('gators')) {
+    return away.toLowerCase().includes('florida') ? home : away;
+  }
+  return game.game || away || home || 'Next opponent';
+}
+
+export async function fetchGnlGameDay(): Promise<GnlGameDay | null> {
+  try {
+    const lines = await fetchBettingLines();
+    const game = lines.nextGame;
+    if (game) {
+      const opponent = opponentFromBettingGame(game);
+      const kickoffLabel = game.kickoff || game.date || 'Kickoff TBD';
+      return {
+        opponent,
+        opponentAbbr: opponent.split(/\s+/)[0]?.slice(0, 4).toUpperCase() || 'OPP',
+        kickoffIso: parseKickoffIso(game.kickoff || game.date),
+        kickoffLabel,
+        venue: 'Ben Hill Griffin Stadium',
+      };
+    }
+  } catch {
+    /* fall through to schedule seed */
+  }
+
+  const seed = SCHEDULE_GAMES[0];
+  if (!seed) return null;
+  return {
+    opponent: seed.opp,
+    opponentAbbr: seed.id.toUpperCase(),
+    kickoffIso: parseKickoffIso(seed.date),
+    kickoffLabel: seed.date,
+    venue: seed.venue,
+  };
+}
+
+export function enrichTickerFromFeed(ticker: LiveTickerItem[], feed: LiveFeedItem[]): LiveTickerItem[] {
+  const seen = new Set(ticker.map((t) => t.text.toLowerCase()));
+  const extra: LiveTickerItem[] = [];
+
+  for (const item of feed) {
+    const text = String(item.title || '').trim();
+    if (!text || seen.has(text.toLowerCase())) continue;
+    extra.push({
+      type: mapTickerTag(String(item.type || item.source || ''), text),
+      text,
+      timestamp: item.createdAt || new Date().toISOString(),
+      source: item.source || 'GatorVault',
+      url: item.url,
+    });
+    seen.add(text.toLowerCase());
+    if (ticker.length + extra.length >= 16) break;
+  }
+
+  return [...ticker, ...extra].slice(0, 16);
+}
+
+export function pickBreakingNews(
+  ticker: LiveTickerItem[],
+  feed: RecruitingUpdateCardProps[]
+): BreakingNewsItem | null {
+  const fromTicker = ticker.find((t) => t.type === 'BREAKING');
+  if (fromTicker) {
+    return {
+      text: fromTicker.text,
+      url: fromTicker.url || '/gator-nation-live',
+      timestamp: fromTicker.timestamp,
+      source: fromTicker.source,
+    };
+  }
+
+  const fromFeed = feed.find(
+    (f) => /break/i.test(f.category) || /break/i.test(f.headline)
+  );
+  if (fromFeed) {
+    return {
+      text: fromFeed.headline,
+      url: fromFeed.url,
+      timestamp: fromFeed.timestamp,
+      source: fromFeed.source,
+    };
+  }
+
+  if (ticker[0]) {
+    return {
+      text: ticker[0].text,
+      url: ticker[0].url || '/gator-nation-live',
+      timestamp: ticker[0].timestamp,
+      source: ticker[0].source,
+    };
+  }
+
+  return null;
 }
 
 function isExcludedLiveFeedItem(item: LiveFeedItem): boolean {
@@ -212,28 +334,34 @@ export type LiveHubBundle = {
   panels: LivePanelItems;
   snapshot: RecruitingSnapshotProps & { momentumTrend: 'up' | 'down' | 'neutral' };
   movement: Awaited<ReturnType<typeof fetchMovementPreview>> | null;
+  breakingNews: BreakingNewsItem | null;
+  gameDay: GnlGameDay | null;
   updatedAt: string | null;
 };
 
 export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> {
-  const [tickerRes, dash, board27, movement] = await Promise.all([
+  const [tickerRes, dash, board27, movement, gameDay] = await Promise.all([
     fetchLiveTicker(force).catch(() => null),
     fetchLiveDashboard(40).catch(() => null),
     fetchRecruitingBoard(2027).catch(() => null),
     fetchMovementPreview(force).catch(() => null),
+    fetchGnlGameDay().catch(() => null),
   ]);
 
   const feedItems = dash?.feed ?? [];
   const beat = dash?.beat?.posts ?? [];
   const now = new Date().toISOString();
 
-  const ticker: LiveTickerItem[] = (tickerRes?.items ?? []).map((item) => ({
+  const baseTicker: LiveTickerItem[] = (tickerRes?.items ?? []).map((item) => ({
     type: mapTickerTag(item.category, item.text),
     text: item.text,
     timestamp: tickerRes?.updatedAt || now,
     source: item.source || 'GatorVault',
     url: item.url,
   }));
+
+  const feed = buildRecruitingFeed(feedItems);
+  const ticker = enrichTickerFromFeed(baseTicker, feedItems);
 
   const commits = board27?.commits ?? [];
   const blueChips = commits.filter((c) => (Number(c.stars) || 0) >= 4).length;
@@ -243,7 +371,7 @@ export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> 
 
   return {
     ticker,
-    feed: buildRecruitingFeed(feedItems),
+    feed,
     podcasts: normalizePodcasts(dash?.podcasts?.shows ?? []),
     panels: buildLivePanels(feedItems, beat),
     snapshot: {
@@ -256,6 +384,8 @@ export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> 
       momentumTrend: momentum >= 65 ? 'up' : momentum <= 45 ? 'down' : 'neutral',
     },
     movement,
+    breakingNews: pickBreakingNews(ticker, feed),
+    gameDay,
     updatedAt: dash?.updatedAt ?? tickerRes?.updatedAt ?? null,
   };
 }

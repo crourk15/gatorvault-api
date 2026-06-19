@@ -24,10 +24,12 @@ const EMPTY_BUNDLE: LiveHubBundle = {
     momentumTrend: 'neutral',
   },
   movement: null,
+  breakingNews: null,
+  gameDay: null,
   updatedAt: null,
 };
 
-/** GatorNation Live — wireframe hero + live feed module (45s refresh). */
+/** GatorNation Live — Elite UF Premium modules (45s refresh). */
 export function GatorNationLivePage(): React.ReactElement {
   const [bundle, setBundle] = useState<LiveHubBundle>(EMPTY_BUNDLE);
   const [loading, setLoading] = useState(true);
@@ -79,7 +81,7 @@ export function GatorNationLivePage(): React.ReactElement {
 
   return (
     <div
-      className="gv-gnl gv-gnl-shell gv-gnl-shell--wireframe uf-premium-gnl gv-live-feed"
+      className="gv-gnl gv-gnl-shell gv-gnl-shell--elite uf-premium-gnl gv-live-feed"
       data-testid="vault-live-feed"
     >
       {error && !loading && (

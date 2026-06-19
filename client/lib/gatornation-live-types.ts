@@ -1,6 +1,6 @@
 /** GatorNation Live — dev-ready prop types */
 
-export type TickerTag = 'BREAKING' | 'VISIT' | 'COMMIT' | 'PORTAL' | 'RUMOR';
+export type TickerTag = 'BREAKING' | 'VISIT' | 'COMMIT' | 'PORTAL' | 'RUMOR' | 'TEAM' | 'PODCAST';
 
 export type LiveTickerProps = {
   items: {
@@ -11,6 +11,21 @@ export type LiveTickerProps = {
     url?: string;
   }[];
   loading?: boolean;
+};
+
+export type BreakingNewsItem = {
+  text: string;
+  url: string;
+  timestamp: string;
+  source: string;
+};
+
+export type GnlGameDay = {
+  opponent: string;
+  opponentAbbr: string;
+  kickoffIso: string | null;
+  kickoffLabel: string;
+  venue: string;
 };
 
 export type PodcastCardProps = {

@@ -11,6 +11,8 @@ const TAG_CLASS: Record<TickerTag, string> = {
   COMMIT: 'commit',
   PORTAL: 'portal',
   RUMOR: 'rumor',
+  TEAM: 'team',
+  PODCAST: 'podcast',
 };
 
 const FIRST_PAINT_FALLBACK: LiveTickerProps['items'] = [
