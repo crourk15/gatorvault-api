@@ -23,10 +23,10 @@ export function FutureCastEliteHomepage(): React.ReactElement {
 
   if (lab.loading && !lab.masterBoard.players.length) {
     return (
-      <div className="rh-frame fc-lab-mobile" data-testid="fc-elite-loading">
-        <div className="rh-cc-skeleton" style={{ minHeight: 300, borderRadius: 12 }} />
-        <div className="rh-cc-skeleton" style={{ minHeight: 180, borderRadius: 12 }} />
-        <div className="rh-cc-skeleton" style={{ minHeight: 180, borderRadius: 12 }} />
+      <div className="rh-cc-page rh-frame" data-testid="fc-elite-loading" aria-busy="true">
+        <div className="rh-cc-skeleton" style={{ minHeight: 280, borderRadius: 12 }} />
+        <div className="rh-cc-skeleton" style={{ minHeight: 200, borderRadius: 12, marginTop: 16 }} />
+        <div className="rh-cc-skeleton" style={{ minHeight: 160, borderRadius: 12, marginTop: 16 }} />
       </div>
     );
   }
@@ -35,9 +35,9 @@ export function FutureCastEliteHomepage(): React.ReactElement {
   }
 
   return (
-    <div className="mobile-app" data-testid="fc-elite-homepage">
+    <>
       {isDesktop ? <FutureCastLabPageDesktop data={lab} /> : <FutureCastLabPageMobile data={lab} />}
       <FutureCastLabAnchors />
-    </div>
+    </>
   );
 }

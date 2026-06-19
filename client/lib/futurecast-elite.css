@@ -34,13 +34,21 @@
   --gv-motion-pulse: 1.5s infinite;
 }
 
-/* Page shell */
+/* Page shell — align with Recruiting Hub light command-center page */
 .gv-page,
 .fc-futurecast-page.fc-futurecast-page--elite {
   min-height: 100vh;
-  background: var(--gv-bg);
-  color: var(--gv-text-primary);
+  background: var(--page-bg, var(--gv-bg));
+  color: var(--heading-color-dark, var(--gv-text-primary));
   font-family: var(--gv-font-family);
+}
+
+.fc-futurecast-page.fc-futurecast-page--elite.rh-page--elite {
+  padding-bottom: calc(var(--space-8, 32px) + env(safe-area-inset-bottom, 0px));
+}
+
+.fc-futurecast-nav-wrap {
+  margin-bottom: 0;
 }
 
 .gv-container {

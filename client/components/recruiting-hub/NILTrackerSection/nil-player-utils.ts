@@ -1,10 +1,14 @@
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 
-export function estimateNilValuation(p: HighPriorityPlayer): string {
+export function parseNilValuationK(p: HighPriorityPlayer): number {
   const stars = p.stars ?? 4;
   const rank = p.nationalRank ?? p.natlRank ?? 200;
   const base = Math.max(35, 220 - rank / 2) * (stars >= 5 ? 1.4 : stars >= 4 ? 1 : 0.7);
-  return `$${Math.round(base)}K`;
+  return Math.round(base);
+}
+
+export function estimateNilValuation(p: HighPriorityPlayer): string {
+  return `$${parseNilValuationK(p)}K`;
 }
 
 export function ufNilFitLabel(p: HighPriorityPlayer): string {

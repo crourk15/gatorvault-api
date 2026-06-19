@@ -219,6 +219,8 @@
 
   /* Vertical module rhythm */
   .rh-cc-page,
+  .fc-lab-cc-page,
+  .nil-cc-page,
   .fc-lab-page {
     gap: var(--mobile-section-gap) !important;
   }
@@ -574,89 +576,19 @@
     width: 100% !important;
   }
 
-  /* FutureCast Lab mobile — match Recruiting Hub (full-bleed hero + single rh-frame gutter) */
-  .gv-vault-shell__main .fc-futurecast-page.fc-futurecast-page--elite > .gv-container,
-  .fc-futurecast-page.fc-futurecast-page--elite > .gv-container {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  .fc-futurecast-page .fc-futurecast-nav {
+  /* FutureCast Lab mobile — rh-cc-page parity with Recruiting Hub */
+  .fc-futurecast-page .fc-futurecast-nav-wrap {
     padding-left: var(--mobile-gutter) !important;
     padding-right: var(--mobile-gutter) !important;
     box-sizing: border-box;
   }
 
-  .fc-lab-mobile-hero {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
+  .fc-futurecast-page .fc-futurecast-nav {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 
-  .fc-lab-mobile-hero .fc-lab-hero {
-    min-height: 0 !important;
-  }
-
-  .fc-lab-mobile-hero .fc-lab-hero__inner {
-    padding-top: 20px !important;
-    padding-bottom: 20px !important;
-  }
-
-  .fc-lab-mobile-hero .fc-lab-hero__grid {
-    grid-template-columns: 1fr !important;
-    gap: var(--mobile-section-gap) !important;
-  }
-
-  .fc-lab-mobile-hero .fc-lab-hero__metrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-
-  .fc-lab-mobile-hero .fc-lab-hero__title {
-    font-size: var(--mobile-title) !important;
-  }
-
-  /* Flat panels on dark FutureCast page — readable copy + tabs */
-  .fc-futurecast-page--elite .fc-lab-mobile-section__title {
-    color: #fff !important;
-  }
-
-  .fc-futurecast-page--elite .fc-lab-mobile-section__sub {
-    color: rgba(255, 255, 255, 0.72) !important;
-    opacity: 1 !important;
-  }
-
-  .fc-futurecast-page--elite .fc-lab-mobile .rh-cc-tabs {
-    border-bottom-color: rgba(255, 255, 255, 0.16) !important;
-  }
-
-  .fc-futurecast-page--elite .fc-lab-mobile .rh-cc-tabs__btn {
-    color: rgba(255, 255, 255, 0.82) !important;
-    border-color: rgba(255, 255, 255, 0.22) !important;
-    background: rgba(255, 255, 255, 0.06) !important;
-  }
-
-  .fc-futurecast-page--elite .fc-lab-mobile .rh-cc-tabs__btn.is-active {
-    color: #fff !important;
-    background: var(--gv-blue, #0021a5) !important;
-    border-color: var(--gv-blue, #0021a5) !important;
-  }
-
-  .fc-futurecast-page--elite .fc-lab-mobile .rh-cc-empty {
-    color: rgba(255, 255, 255, 0.62) !important;
-    opacity: 1 !important;
-  }
-
-  .fc-futurecast-page--elite .fc-lab-mobile .rh-cc-link {
-    color: var(--gv-orange, #fa4616) !important;
-  }
-
-  .fc-futurecast-page--elite .fc-lab-mobile .rh-cc-module__stamp {
-    color: rgba(255, 255, 255, 0.55) !important;
-  }
-
-  .fc-lab-mobile {
+  .fc-lab-cc-page {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
@@ -669,52 +601,18 @@
     gap: var(--mobile-section-gap) !important;
   }
 
-  .fc-lab-mobile > section {
+  .fc-lab-cc-page > section {
     padding-left: 0 !important;
     padding-right: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
+    scroll-margin-top: 72px;
   }
 
-  .fc-lab-mobile-section__title {
-    margin: 0;
-    font-size: var(--mobile-section-title) !important;
-    font-weight: var(--mobile-section-weight) !important;
-    line-height: 1.2;
-  }
-
-  .fc-lab-mobile-section__sub {
-    margin: 4px 0 0;
-    font-size: var(--mobile-meta) !important;
-    line-height: 1.45;
-  }
-
-  .fc-lab-mobile-section__head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-md);
-    margin-bottom: var(--mobile-card-gap);
-  }
-
-  .fc-lab-mobile-section__body:has(.fc-lab-target-cards),
-  .fc-lab-mobile-section__body:has(.fc-lab-battle-list),
-  .fc-lab-mobile-section__body:has(.fc-lab-signal-grid),
-  .fc-lab-mobile-section__body:has(.fc-lab-pos-table),
-  .fc-lab-mobile-section__body:has(.fc-lab-portal-list),
-  .fc-lab-mobile-section__body:has(.rh-cc-move-list) {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  .fc-lab-mobile .fc-lab-target-card,
-  .fc-lab-mobile .fc-lab-battle-row,
-  .fc-lab-mobile .fc-lab-signal-card,
-  .fc-lab-mobile .rh-cc-move-row {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
+  .fc-lab-cc-page .fc-lab-hero__inner {
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
   }
 
   .fc-lab-bleed {
@@ -724,10 +622,67 @@
     margin-right: 0 !important;
   }
 
-  .fc-lab-mobile .fc-lab-segment-bar__track,
-  .fc-lab-mobile .fc-lab-analyst__track,
-  .fc-lab-mobile .rh-cc-prob-bar__track {
+  .fc-lab-cc-page .fc-lab-target-card,
+  .fc-lab-cc-page .fc-lab-battle-row,
+  .fc-lab-cc-page .fc-lab-signal-card,
+  .fc-lab-cc-page .rh-cc-move-row {
     width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .fc-lab-cc-page .fc-lab-segment-bar__track,
+  .fc-lab-cc-page .fc-lab-analyst__track,
+  .fc-lab-cc-page .rh-cc-prob-bar__track {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  @media (max-width: 767px) {
+    .fc-futurecast-page--elite .rh-cc-module__sub {
+      display: none;
+    }
+
+    .gv-nil-page .nil-elite-section__sub {
+      display: none;
+    }
+  }
+
+  /* NIL Tracker mobile — rh-cc-page parity */
+  .nil-cc-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    box-sizing: border-box;
+    overflow-x: visible !important;
+    display: flex;
+    flex-direction: column;
+    gap: var(--mobile-section-gap) !important;
+  }
+
+  .nil-cc-page > section,
+  .nil-cc-page .nil-hero,
+  .nil-cc-page .nil-metrics {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .nil-bleed {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .nil-cc-page .nil-player-card,
+  .nil-cc-page .nil-feed__item {
+    width: 100% !important;
+    max-width: 100% !important;
     min-width: 0 !important;
   }
 
@@ -825,8 +780,8 @@
   .gv-home__grid,
   .gv-home__section,
   .rh-cc-page,
-  .fc-lab-mobile,
-  .fc-lab-mobile > section + section {
+  .fc-lab-cc-page,
+  .fc-lab-cc-page > section + section {
     gap: var(--mobile-section-gap) !important;
   }
 
@@ -840,7 +795,7 @@
   }
 
   .rh-cc-module + .rh-cc-module,
-  .fc-lab-mobile > section {
+  .fc-lab-cc-page .rh-cc-col > section {
     margin-top: 0;
   }
 
@@ -1004,16 +959,18 @@
   }
 
   /* Section separators */
-  .fc-lab-mobile > section + section,
-  .fc-lab-mobile > section + section[data-lazy-mounted],
+  .fc-lab-cc-page .rh-cc-col > section + section,
+  .fc-lab-cc-page .rh-cc-col > section + section[data-lazy-mounted],
   .rh-cc-main > .rh-cc-module + .rh-cc-module,
+  .rh-cc-col > section + section .rh-cc-module:first-child,
   .gv-home__grid > .gv-home__cell + .gv-home__cell {
     border-top: 1px solid rgba(0, 26, 51, 0.08);
     padding-top: var(--mobile-section-gap);
   }
 
-  .fc-lab-mobile > section:first-child,
-  .rh-cc-main > .rh-cc-module:first-child {
+  .fc-lab-cc-page > section:first-child,
+  .rh-cc-main > .rh-cc-module:first-child,
+  .fc-lab-cc-page .rh-cc-col > section:first-child {
     border-top: none;
     padding-top: 0;
   }

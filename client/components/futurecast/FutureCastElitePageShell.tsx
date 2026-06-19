@@ -3,7 +3,9 @@
 import React from 'react';
 import '@/lib/futurecast-elite.css';
 import { FutureCastSubNav } from '@/components/site/FutureCastSubNav';
+import { FutureCastMobileHeader } from '@/components/futurecast/FutureCastMobileHeader';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
+import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
 import type { FutureCastSegment } from '@/lib/vault-route-map';
 
 type Props = {
@@ -12,16 +14,21 @@ type Props = {
   children: React.ReactNode;
 };
 
-/** Shared shell for all four FutureCast elite pages. */
+/** Shared shell — same page rhythm as Recruiting Hub (`rh-page--elite`). */
 export function FutureCastElitePageShell({ segment, testId, children }: Props): React.ReactElement {
   const insider = isFutureCastInsider();
+  const isDesktop = useIsCommandCenterDesktop();
 
   return (
-    <div className="gv-page fc-futurecast-page fc-futurecast-page--elite gv-page-layout gv-page-layout--blue" data-testid={testId}>
-      <div className="gv-container">
+    <div
+      className="rh-page rh-page--elite fc-futurecast-page fc-futurecast-page--elite mobile-app gv-page"
+      data-testid={testId}
+    >
+      {!isDesktop ? <FutureCastMobileHeader /> : null}
+      <div className="fc-futurecast-nav-wrap rh-frame">
         <FutureCastSubNav active={segment} />
-        {children}
       </div>
+      {children}
       {!insider ? (
         <a href="/join" className="gv-paywall-sticky-cta">
           Unlock FutureCast Insider · Try FREE for 30 days

@@ -75,6 +75,7 @@ body {
     .gv-sched-page,
     .gv-page-layout,
     .fc-futurecast-page,
+    .gv-nil-page,
     .gv-portal-directory,
     .gv-nil,
     .gv-live-feed,
@@ -164,6 +165,8 @@ body {
 .gv-vault-shell__main .gv-gnl,
 .gv-vault-shell__main .gv-rh-hub,
 .gv-vault-shell__main .gv-sched-page,
+.gv-vault-shell__main .fc-futurecast-page.fc-futurecast-page--elite,
+.gv-vault-shell__main .gv-nil-page,
 .gv-app-shell__main .rh-page {
   padding-bottom: 0;
 }
