@@ -24,7 +24,7 @@ export type NilEliteData = {
   portalLosses: NilPortalImpactRow[];
   loading: boolean;
   error: string | null;
-  reload: () => void;
+  reload: () => Promise<void>;
 };
 
 function buildPortalImpact(players: HighPriorityPlayer[], dashboard: NilDashboard | null) {
