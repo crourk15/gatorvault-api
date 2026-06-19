@@ -32,12 +32,21 @@ export function GNLPodcastSpotlight({ podcasts, updatedAt }: Props): React.React
           const href = pod.id ? `/vault/podcast/${pod.id}` : '/vault/podcast/gators-breakdown';
           return (
             <article key={key} className="gv-gnl-elite-podcast-card">
-              <div className="gv-gnl-elite-podcast-card__logo-wrap">
-                <img src={logo} alt="" className="gv-gnl-elite-podcast-card__logo" />
+              <div className="gv-gnl-elite-podcast-card__logo-wrap uf-podcast-logo-wrap">
+                <img
+                  src={logo}
+                  alt=""
+                  className="gv-gnl-elite-podcast-card__logo"
+                  width={56}
+                  height={56}
+                  loading="lazy"
+                />
               </div>
               <h3 className="gv-gnl-elite-podcast-card__title">{pod.title}</h3>
-              <p className="gv-gnl-elite-podcast-card__episode">{pod.description || 'Latest episode'}</p>
-              <p className="gv-gnl-elite-podcast-card__time">{formatTime(updatedAt)}</p>
+              <p className="gv-gnl-elite-podcast-card__episode">
+                {pod.episodeTitle ? `Episode: "${pod.episodeTitle}"` : 'Latest episode'}
+              </p>
+              <p className="gv-gnl-elite-podcast-card__time">{formatTime(pod.publishedAt ?? updatedAt)}</p>
               <a href={href} className="gv-gnl-elite-podcast-card__cta">
                 Listen →
               </a>

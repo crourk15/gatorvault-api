@@ -39,8 +39,8 @@ export function HomeNilPreview({ data, loading }: Props): React.ReactElement {
       <article className="uf-premium-card">
         <h3 className="uf-premium-card__title">NIL Valuation</h3>
         <div className="uf-premium-metric">
-          <span className="uf-premium-metric__value">{estPool}</span>
           <span className="uf-premium-metric__label">Estimated pool</span>
+          <span className="uf-premium-metric__value">{estPool}</span>
         </div>
         <p className="uf-premium-card__body">{movement}</p>
       </article>
@@ -48,10 +48,10 @@ export function HomeNilPreview({ data, loading }: Props): React.ReactElement {
       <article className="uf-premium-card">
         <h3 className="uf-premium-card__title">Competitiveness Grade</h3>
         <div className="uf-premium-metric">
-          <span className="uf-premium-metric__value">{grade}</span>
           <span className="uf-premium-metric__label">
             SEC rank {data?.secRank ? `#${data.secRank}` : '—'}
           </span>
+          <span className="uf-premium-metric__value">{grade}</span>
         </div>
       </article>
 

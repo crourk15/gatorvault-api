@@ -24,13 +24,16 @@ export function HomeSchedulePreview({ data, loading }: Props): React.ReactElemen
   }
 
   return (
-    <article className="uf-premium-card" data-testid="home-schedule-preview">
+    <article className="uf-premium-card uf-premium-card--schedule" data-testid="home-schedule-preview">
       <h3 className="uf-premium-card__title">Next Game</h3>
       <p className="uf-premium-schedule__opp">vs {next.opponent}</p>
       <p className="uf-premium-schedule__meta">
         {next.dateLabel} · {next.timeLabel}
       </p>
       <p className="uf-premium-schedule__meta">{next.venue}</p>
+      <a href="/vault/schedule" className="uf-premium-cta uf-premium-cta--primary uf-premium-cta--block">
+        View Full Schedule
+      </a>
     </article>
   );
 }

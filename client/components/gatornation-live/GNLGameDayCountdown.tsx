@@ -3,15 +3,26 @@
 import React, { useEffect, useState } from 'react';
 import type { GnlGameDay } from '@/lib/gatornation-live-types';
 
+function plural(n: number, word: string): string {
+  return `${n} ${word}${n === 1 ? '' : 's'}`;
+}
+
 function formatCountdown(ms: number): string {
   if (ms <= 0) return 'Kickoff';
+
   const totalSec = Math.floor(ms / 1000);
   const days = Math.floor(totalSec / 86400);
   const hours = Math.floor((totalSec % 86400) / 3600);
   const minutes = Math.floor((totalSec % 3600) / 60);
-  if (days > 0) return `${days}d ${hours}h ${minutes}m`;
-  if (hours > 0) return `${hours}h ${minutes}m`;
-  return `${minutes}m`;
+  const seconds = totalSec % 60;
+
+  const parts: string[] = [];
+  if (days > 0) parts.push(plural(days, 'day'));
+  if (hours > 0) parts.push(plural(hours, 'hour'));
+  if (minutes > 0) parts.push(plural(minutes, 'minute'));
+  if (days === 0 && hours === 0) parts.push(plural(seconds, 'second'));
+
+  return `Kickoff in: ${parts.join(' ')}`;
 }
 
 type Props = {
@@ -31,7 +42,7 @@ export function GNLGameDayCountdown({ game }: Props): React.ReactElement | null 
       setRemaining(ms);
     };
     tick();
-    const id = setInterval(tick, 60_000);
+    const id = setInterval(tick, 1_000);
     return () => clearInterval(id);
   }, [game?.kickoffIso]);
 
@@ -56,7 +67,9 @@ export function GNLGameDayCountdown({ game }: Props): React.ReactElement | null 
       </div>
       <p className="gv-gnl-elite-gameday__kickoff">{game.kickoffLabel}</p>
       {remaining != null && game.kickoffIso ? (
-        <p className="gv-gnl-elite-gameday__countdown">{formatCountdown(remaining)}</p>
+        <p className="gv-gnl-elite-gameday__countdown gv-gnl-elite-gameday__countdown--live">
+          {formatCountdown(remaining)}
+        </p>
       ) : null}
     </article>
   );

@@ -122,8 +122,7 @@
   line-height: 1.45;
 }
 
-.gv-gnl-feed--full .gv-gnl-feed-card__headline,
-.gv-gnl-beat-thread__text {
+.gv-gnl-feed--full .gv-gnl-feed-card__headline {
   overflow: visible;
   display: block;
   -webkit-line-clamp: unset;

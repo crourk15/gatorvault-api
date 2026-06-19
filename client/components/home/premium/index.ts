@@ -7,3 +7,4 @@ export { HomeNilPreview } from './HomeNilPreview';
 export { HomeTeamPreview } from './HomeTeamPreview';
 export { HomeSchedulePreview } from './HomeSchedulePreview';
 export { HomeContentPreview } from './HomeContentPreview';
+export { HomePodcastPreview } from './HomePodcastPreview';

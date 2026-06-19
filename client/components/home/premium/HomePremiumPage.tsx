@@ -11,6 +11,7 @@ import { fetchTeamHubBundle, type TeamHubBundle } from '@/lib/team-hub-api';
 import { useVaultDataReload } from '@/lib/vault-navigation';
 import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
 import { HomePremiumHero } from '@/components/home/premium/HomePremiumHero';
+import { HomePremiumTicker } from '@/components/home/premium/HomePremiumTicker';
 import { HomePremiumSection } from '@/components/home/premium/HomePremiumSection';
 import { HomeRecruitingPreview } from '@/components/home/premium/HomeRecruitingPreview';
 import { HomeFutureCastPreview } from '@/components/home/premium/HomeFutureCastPreview';
@@ -19,6 +20,7 @@ import { HomeNilPreview } from '@/components/home/premium/HomeNilPreview';
 import { HomeSchedulePreview } from '@/components/home/premium/HomeSchedulePreview';
 import { HomeContentPreview } from '@/components/home/premium/HomeContentPreview';
 import { HomeGnlPreview } from '@/components/home/premium/HomeGnlPreview';
+import { HomePodcastPreview } from '@/components/home/premium/HomePodcastPreview';
 import { buildHomeGnlItems } from '@/lib/vault-home-api';
 
 const EMPTY_BUNDLE: HomeBundle = {
@@ -85,6 +87,7 @@ export function HomePremiumPage(): React.ReactElement {
   return (
     <div className="uf-premium-home" data-testid="vault-home-premium">
       <HomePremiumHero />
+      <HomePremiumTicker ticker={bundle.ticker} loading={loading && !bundle.ticker} />
 
       <div className="uf-premium-home__frame">
         <HomePremiumSection
@@ -140,16 +143,15 @@ export function HomePremiumPage(): React.ReactElement {
           <HomeSchedulePreview data={bundle.schedule} loading={loading && !bundle.schedule} />
         </HomePremiumSection>
 
-        <HomePremiumSection
-          title="GatorNation Live"
-          ctaLabel="Open GatorNation Live"
-          ctaHref={VAULT_PILLAR_ROUTES.liveFeed}
-          testId="home-section-gnl"
-        >
+        <HomePremiumSection title="GatorNation Live" testId="home-section-gnl">
           <HomeGnlPreview
             items={buildHomeGnlItems(bundle.ticker)}
             loading={loading && !bundle.ticker}
           />
+        </HomePremiumSection>
+
+        <HomePremiumSection title="Podcast Spotlight" testId="home-section-podcasts">
+          <HomePodcastPreview />
         </HomePremiumSection>
 
         <HomePremiumSection title="Articles / Community / Film Room" testId="home-section-content">

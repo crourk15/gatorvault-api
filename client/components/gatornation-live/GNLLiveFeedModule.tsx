@@ -14,13 +14,12 @@ type Props = {
   loading?: boolean;
 };
 
-/** Elite UF Premium GNL body — ticker, breaking, beat writers, podcasts, game day. */
+/** Elite UF Premium GNL body — ticker, beat writers, podcasts, breaking, game day. */
 export function GNLLiveFeedModule({ bundle, loading }: Props): React.ReactElement {
-  const beatItems = useMemo(() => {
-    const highlights = bundle.panels.beatWriterHighlights.filter((item) => item.text?.trim());
-    if (highlights.length > 0) return highlights;
-    return bundle.panels.portalBuzz.filter((item) => item.text?.trim());
-  }, [bundle.panels.beatWriterHighlights, bundle.panels.portalBuzz]);
+  const beatItems = useMemo(
+    () => bundle.panels.beatWriterHighlights.filter((item) => item.text?.trim()),
+    [bundle.panels.beatWriterHighlights]
+  );
 
   return (
     <div className="gv-gnl-elite" aria-label="GatorNation Live modules" data-testid="gnl-live-feed-module">
@@ -31,9 +30,6 @@ export function GNLLiveFeedModule({ bundle, loading }: Props): React.ReactElemen
           <GNLEliteTicker items={bundle.ticker} refreshKey={bundle.updatedAt} />
         )}
 
-        <GNLBreakingNewsPanel item={bundle.breakingNews} />
-        <GNLGameDayCountdown game={bundle.gameDay} />
-
         <section className="gv-gnl-elite-card gv-gnl-elite-beat">
           <BeatWriterCardGrid
             title={GNL_COPY.panels.beat.title}
@@ -43,6 +39,11 @@ export function GNLLiveFeedModule({ bundle, loading }: Props): React.ReactElemen
         </section>
 
         <GNLPodcastSpotlight podcasts={bundle.podcasts} updatedAt={bundle.updatedAt} />
+
+        <div className="gv-gnl-elite-bottom">
+          <GNLBreakingNewsPanel item={bundle.breakingNews} />
+          <GNLGameDayCountdown game={bundle.gameDay} />
+        </div>
       </div>
     </div>
   );

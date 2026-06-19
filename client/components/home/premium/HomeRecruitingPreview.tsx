@@ -65,8 +65,8 @@ export function HomeRecruitingPreview({
       <article className="uf-premium-card">
         <h3 className="uf-premium-card__title">Commits</h3>
         <div className="uf-premium-metric">
-          <span className="uf-premium-metric__value">{commits}</span>
           <span className="uf-premium-metric__label">Total commits</span>
+          <span className="uf-premium-metric__value">{commits}</span>
         </div>
         <p className="uf-premium-card__body">
           Class rank {classRank} · {snapshot?.targets ?? 0} active targets on the board.
@@ -79,8 +79,8 @@ export function HomeRecruitingPreview({
           {heatBuckets.length ? (
             heatBuckets.map((bucket) => (
               <div key={bucket.label} className="uf-premium-heatmap__pill">
-                <strong>{bucket.count ?? 0}</strong>
                 <span>{bucket.label}</span>
+                <strong>{bucket.count ?? 0}</strong>
               </div>
             ))
           ) : (

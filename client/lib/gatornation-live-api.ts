@@ -10,15 +10,9 @@ import type {
   BreakingNewsItem,
   GnlGameDay,
 } from './gatornation-live-types';
-import { fetchLiveTicker, fetchMovementPreview, computeMomentumPct } from './vault-home-api';
 import { fetchLiveDashboard, type BeatPost, type LiveFeedItem, type PodcastShow } from './live-api';
-import { fetchRecruitingBoard } from './recruiting-board-api';
 import { fetchBettingLines, type BettingGame } from './betting-api';
 import { SCHEDULE_GAMES } from './schedule-data';
-import {
-  buildIntelFeedItem,
-  dedupeIntelFeedItems,
-} from './recruiting-intel-feed';
 import {
   PODCAST_CATALOG,
   resolvePodcastLogo,
@@ -160,30 +154,55 @@ export async function fetchGnlGameDay(): Promise<GnlGameDay | null> {
   };
 }
 
-export function enrichTickerFromFeed(ticker: LiveTickerItem[], feed: LiveFeedItem[]): LiveTickerItem[] {
-  const seen = new Set(ticker.map((t) => t.text.toLowerCase()));
-  const extra: LiveTickerItem[] = [];
+function isExcludedTickerFeedItem(item: LiveFeedItem): boolean {
+  const blob = `${item.url ?? ''} ${item.source ?? ''} ${item.title ?? ''}`.toLowerCase();
+  if (blob.includes('futurecast')) return true;
+  if (blob.includes('/recruiting-hub') || blob.includes('recruiting hub')) return true;
+  return false;
+}
 
-  for (const item of feed) {
+/** Live dashboard feed only — deduped, newest first, no RH/FC sources. */
+export function buildLiveDashboardTicker(feed: LiveFeedItem[]): LiveTickerItem[] {
+  const seen = new Set<string>();
+  const items: LiveTickerItem[] = [];
+
+  const sorted = [...feed]
+    .filter((item) => {
+      const text = String(item.title || '').trim();
+      return text && !isExcludedTickerFeedItem(item) && !isExcludedLiveFeedItem(item);
+    })
+    .sort((a, b) => {
+      const ta = Date.parse(a.createdAt || '') || 0;
+      const tb = Date.parse(b.createdAt || '') || 0;
+      return tb - ta;
+    });
+
+  for (const item of sorted) {
     const text = String(item.title || '').trim();
-    if (!text || seen.has(text.toLowerCase())) continue;
-    extra.push({
+    const key = text.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    items.push({
       type: mapTickerTag(String(item.type || item.source || ''), text),
       text,
       timestamp: item.createdAt || new Date().toISOString(),
       source: item.source || 'GatorVault',
       url: item.url,
     });
-    seen.add(text.toLowerCase());
-    if (ticker.length + extra.length >= 16) break;
+    if (items.length >= 16) break;
   }
 
-  return [...ticker, ...extra].slice(0, 16);
+  return items;
+}
+
+/** @deprecated Use buildLiveDashboardTicker */
+export function enrichTickerFromFeed(_ticker: LiveTickerItem[], feed: LiveFeedItem[]): LiveTickerItem[] {
+  return buildLiveDashboardTicker(feed);
 }
 
 export function pickBreakingNews(
   ticker: LiveTickerItem[],
-  feed: RecruitingUpdateCardProps[]
+  feed: LiveFeedItem[] | RecruitingUpdateCardProps[]
 ): BreakingNewsItem | null {
   const fromTicker = ticker.find((t) => t.type === 'BREAKING');
   if (fromTicker) {
@@ -195,15 +214,28 @@ export function pickBreakingNews(
     };
   }
 
-  const fromFeed = feed.find(
-    (f) => /break/i.test(f.category) || /break/i.test(f.headline)
-  );
+  const fromFeed = feed.find((f) => {
+    if ('headline' in f) {
+      return /break/i.test(f.category) || /break/i.test(f.headline);
+    }
+    const title = String(f.title || '');
+    const type = String(f.type || '');
+    return /break/i.test(type) || /break/i.test(title);
+  });
   if (fromFeed) {
+    if ('headline' in fromFeed) {
+      return {
+        text: fromFeed.headline,
+        url: fromFeed.url,
+        timestamp: fromFeed.timestamp,
+        source: fromFeed.source,
+      };
+    }
     return {
-      text: fromFeed.headline,
-      url: fromFeed.url,
-      timestamp: fromFeed.timestamp,
-      source: fromFeed.source,
+      text: String(fromFeed.title || ''),
+      url: fromFeed.url || '/gator-nation-live',
+      timestamp: fromFeed.createdAt || new Date().toISOString(),
+      source: fromFeed.source || 'GatorVault',
     };
   }
 
@@ -254,31 +286,10 @@ export function normalizePodcasts(shows: PodcastShow[]): PodcastCardProps[] {
       spotifyUrl: find('spotify'),
       youtubeUrl: find('youtube'),
       websiteUrl: find('web') || platforms[0]?.url || fallback?.websiteUrl || '#',
+      episodeTitle: show.episodeTitle,
+      publishedAt: show.publishedAt,
     };
   });
-}
-
-export function buildRecruitingFeed(feed: LiveFeedItem[]): RecruitingUpdateCardProps[] {
-  const intelItems = feed
-    .filter((item) => item.title && !isExcludedLiveFeedItem(item))
-    .map((item) =>
-      buildIntelFeedItem({
-        id: String(item.id || item.url || item.title),
-        headline: String(item.title),
-        timestamp: item.createdAt || new Date().toISOString(),
-        source: item.source || 'GatorVault',
-        url: item.url || '/vault/live',
-      })
-    );
-
-  return dedupeIntelFeedItems(intelItems, 24).map((item) => ({
-    source: item.source || 'GatorVault',
-    headline: item.headline,
-    url: item.url || '/vault/live',
-    timestamp: item.timestamp,
-    category: item.category,
-    icon: item.icon,
-  }));
 }
 
 export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePanelItems {
@@ -333,59 +344,40 @@ export type LiveHubBundle = {
   podcasts: PodcastCardProps[];
   panels: LivePanelItems;
   snapshot: RecruitingSnapshotProps & { momentumTrend: 'up' | 'down' | 'neutral' };
-  movement: Awaited<ReturnType<typeof fetchMovementPreview>> | null;
+  movement: null;
   breakingNews: BreakingNewsItem | null;
   gameDay: GnlGameDay | null;
   updatedAt: string | null;
 };
 
-export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> {
-  const [tickerRes, dash, board27, movement, gameDay] = await Promise.all([
-    fetchLiveTicker(force).catch(() => null),
+/** GNL live bundle — live dashboard + beat writers + podcasts only (no RH/FC). */
+export async function fetchLiveHubBundle(_force = false): Promise<LiveHubBundle> {
+  const [dash, gameDay] = await Promise.all([
     fetchLiveDashboard(40).catch(() => null),
-    fetchRecruitingBoard(2027).catch(() => null),
-    fetchMovementPreview(force).catch(() => null),
     fetchGnlGameDay().catch(() => null),
   ]);
 
   const feedItems = dash?.feed ?? [];
   const beat = dash?.beat?.posts ?? [];
-  const now = new Date().toISOString();
-
-  const baseTicker: LiveTickerItem[] = (tickerRes?.items ?? []).map((item) => ({
-    type: mapTickerTag(item.category, item.text),
-    text: item.text,
-    timestamp: tickerRes?.updatedAt || now,
-    source: item.source || 'GatorVault',
-    url: item.url,
-  }));
-
-  const feed = buildRecruitingFeed(feedItems);
-  const ticker = enrichTickerFromFeed(baseTicker, feedItems);
-
-  const commits = board27?.commits ?? [];
-  const blueChips = commits.filter((c) => (Number(c.stars) || 0) >= 4).length;
-  const inStateCount = commits.filter((c) => c.inState).length;
-  const inStatePercent = commits.length ? Math.round((inStateCount / commits.length) * 100) : 0;
-  const momentum = computeMomentumPct(movement?.heatmap, board27?.rankings?.classScore ?? null);
+  const ticker = buildLiveDashboardTicker(feedItems);
 
   return {
     ticker,
-    feed,
+    feed: [],
     podcasts: normalizePodcasts(dash?.podcasts?.shows ?? []),
     panels: buildLivePanels(feedItems, beat),
     snapshot: {
-      commits: commits.length,
-      nationalRank: board27?.rankings?.nationalRank ?? null,
-      secRank: board27?.rankings?.secRank ?? null,
-      blueChips,
-      inStatePercent,
-      momentum,
-      momentumTrend: momentum >= 65 ? 'up' : momentum <= 45 ? 'down' : 'neutral',
+      commits: 0,
+      nationalRank: null,
+      secRank: null,
+      blueChips: 0,
+      inStatePercent: 0,
+      momentum: 0,
+      momentumTrend: 'neutral',
     },
-    movement,
-    breakingNews: pickBreakingNews(ticker, feed),
+    movement: null,
+    breakingNews: pickBreakingNews(ticker, feedItems),
     gameDay,
-    updatedAt: dash?.updatedAt ?? tickerRes?.updatedAt ?? null,
+    updatedAt: dash?.updatedAt ?? null,
   };
 }

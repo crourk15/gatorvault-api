@@ -47,26 +47,31 @@ export function BeatWriterCardGrid({ title, description, items }: Props): React.
                 <div>
                   <p className="gv-gnl-beat-card__writer">
                     {item.writerName || item.handle || 'Beat Writer'}
+                    {item.source ? (
+                      <>
+                        {' — '}
+                        <span className="gv-gnl-beat-card__source">{item.source.toUpperCase()}</span>
+                      </>
+                    ) : null}
                   </p>
-                  {item.source ? (
-                    <span className="gv-gnl-beat-card__source">{item.source}</span>
-                  ) : null}
                 </div>
               </div>
               <p className="gv-gnl-beat-card__text">{item.text}</p>
-              {item.timestamp ? (
-                <p className="gv-gnl-beat-card__time">{formatTimestamp(item.timestamp)}</p>
-              ) : null}
-              {item.url ? (
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="gv-gnl-beat-card__cta gv-gnl-beat-card__cta--x"
-                >
-                  View on X →
-                </a>
-              ) : null}
+              <div className="gv-gnl-beat-card__footer">
+                {item.timestamp ? (
+                  <span className="gv-gnl-beat-card__time">{formatTimestamp(item.timestamp)}</span>
+                ) : null}
+                {item.url ? (
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="gv-gnl-beat-card__cta gv-gnl-beat-card__cta--x"
+                  >
+                    View on X →
+                  </a>
+                ) : null}
+              </div>
             </article>
           ))
         )}

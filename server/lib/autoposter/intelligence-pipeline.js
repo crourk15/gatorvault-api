@@ -9,6 +9,43 @@ const rewriteEngine = require('./rewrite-engine');
 const qualityChecks = require('./quality-checks');
 const monitoring = require('./autoposter-monitoring');
 const pipelineGuards = require('../pipeline-guards');
+const insiderTone = require('./insider-tone');
+
+const MIN_REWRITE_WORDS = parseInt(process.env.X_AUTOPOST_MIN_REWRITE_WORDS || '40', 10);
+
+function rewriteFallbackEnabled() {
+  return process.env.X_AUTOPOST_REWRITE_FALLBACK !== 'false';
+}
+
+function buildFallbackResult(item, beatText, reason, extra = {}) {
+  const queuedText = String(item.text || '').trim();
+  if (!rewriteFallbackEnabled() || !queuedText) return null;
+  const words = queuedText.split(/\s+/).filter(Boolean).length;
+  if (words < MIN_REWRITE_WORDS) return null;
+  const tone = insiderTone.validateInsiderTone(queuedText, { minWords: MIN_REWRITE_WORDS });
+  if (tone.errors.length) return null;
+
+  monitoring.logAutoposterEvent('rewrite_fallback', {
+    itemId: item.id,
+    reason,
+    ...extra
+  });
+  return {
+    ok: true,
+    item: {
+      ...item,
+      text: queuedText,
+      validationMeta: {
+        ...(item.validationMeta || {}),
+        beatText,
+        rewriteFallback: true,
+        rewriteFallbackReason: reason
+      }
+    },
+    fallback: true,
+    reason: 'rewrite_fallback'
+  };
+}
 
 function findIntelForItem(item = {}) {
   if (item.sourceIntelId) {
@@ -79,6 +116,10 @@ async function prepareQueueItemForPost(item = {}) {
       reason: 'no_player_match',
       playerName: item.playerName
     });
+    const fallback = buildFallbackResult(item, beatText, 'no_player_match', {
+      playerName: item.playerName
+    });
+    if (fallback) return fallback;
     return { ok: true, item, skipped: true, reason: 'no_player_match' };
   }
 
@@ -116,6 +157,11 @@ async function prepareQueueItemForPost(item = {}) {
       intelId: intel?.id,
       quality
     });
+    const fallback = buildFallbackResult(item, beatText, 'rewrite_failed', {
+      playerId: player.playerId,
+      intelId: intel?.id
+    });
+    if (fallback) return fallback;
     return {
       ok: false,
       reason: 'rewrite_failed',

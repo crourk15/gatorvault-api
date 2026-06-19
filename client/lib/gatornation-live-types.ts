@@ -35,6 +35,8 @@ export type PodcastCardProps = {
   logoUrl?: string;
   thumbnailUrl?: string;
   hosts?: string[];
+  episodeTitle?: string;
+  publishedAt?: string;
   appleUrl: string;
   spotifyUrl: string;
   youtubeUrl: string;

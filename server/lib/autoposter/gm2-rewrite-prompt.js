@@ -27,6 +27,7 @@ Follow this exact 3-block insider template:
    - Expected movement  
    - Decision timeline  
    - Whether UF is trending up, steady, or slipping  
+   - Optional closing clause: one subtle GatorVault reference (e.g. "Full FutureCast board on GatorVault") when platform CTA is enabled — no hashtags, no emojis, no hype  
 
 Rules:
 - DO NOT copy or paraphrase beat writer text. Generate a fresh insider update.  

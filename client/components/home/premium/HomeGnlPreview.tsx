@@ -21,7 +21,11 @@ export function HomeGnlPreview({ items, loading }: Props): React.ReactElement {
 
   return (
     <div className="uf-premium-grid uf-premium-grid--2" data-testid="home-gnl-preview">
-      <article className="uf-premium-card" aria-label="GatorNation Live preview">
+      <article className="uf-premium-card uf-premium-card--gnl-preview" aria-label="GatorNation Live preview">
+        <div className="uf-premium-card__graphic" aria-hidden="true">
+          <span className="uf-premium-card__graphic-ring" />
+          <span className="uf-premium-card__graphic-dot" />
+        </div>
         <p className="uf-premium-card__pulse">
           <span className="uf-premium-card__pulse-dot" aria-hidden="true" />
           ● LIVE
@@ -53,8 +57,11 @@ export function HomeGnlPreview({ items, loading }: Props): React.ReactElement {
             </li>
           )}
         </ul>
-        <a href={SITE_ROUTES.gatorNationLive} className="uf-premium-card__link">
-          Open GatorNation Live →
+        <a
+          href={SITE_ROUTES.gatorNationLive}
+          className="uf-premium-cta uf-premium-cta--primary uf-premium-cta--block"
+        >
+          Open GatorNation Live
         </a>
       </article>
     </div>

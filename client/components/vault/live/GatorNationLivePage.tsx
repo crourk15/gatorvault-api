@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import '@/lib/gatornation-live.css';
+import '@/lib/uf-premium-gnl.css';
 import { fetchLiveHubBundle, LIVE_HUB_REFRESH_MS, type LiveHubBundle } from '@/lib/gatornation-live-api';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
 import { LIVE_STATE_KEY } from '@/components/vault/live/live-feed-utils';

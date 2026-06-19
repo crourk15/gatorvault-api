@@ -5,6 +5,13 @@
 const { GM2_REWRITE_PROMPT } = require('./autoposter/gm2-rewrite-prompt');
 const pipelineGuards = require('./pipeline-guards');
 
+function appendGvCta(text) {
+  if (process.env.X_AUTOPOST_GV_CTA_ENABLED !== 'true') return text;
+  const body = String(text || '').trim();
+  if (!body || /gatorvault/i.test(body)) return body;
+  return `${body} Full FutureCast board on GatorVault.`;
+}
+
 function formatVisitLabel(visitType) {
   const t = String(visitType || '').toLowerCase();
   if (t.includes('official')) return 'official visit';
@@ -42,7 +49,7 @@ function buildInsiderParagraph(player = {}, context = {}, intel = {}) {
   projParts.push(`watch the ${timeline} window for the next clarity point`);
   const projection = `With a ${timeline} expected, UF is aiming to capitalize on this visit and maintain traction through the next round of trips and conversations. ${projParts.join(' — ')}.`;
 
-  return [lead, contextBlock, projection].join(' ');
+  return appendGvCta([lead, contextBlock, projection].join(' '));
 }
 
 function buildPredictionChangeParagraph(player = {}, context = {}, intel = {}) {
@@ -73,7 +80,7 @@ function buildPredictionChangeParagraph(player = {}, context = {}, intel = {}) {
   const contextBlock = ctxParts.join(' ');
   const projection = `Next checkpoint is the ${timeline} window — watch whether staff contact and campus momentum keep pushing this one Florida's way. If the numbers hold, UF looks positioned to stay in the driver's seat through the next round of movement.`;
 
-  return [lead, contextBlock, projection].join(' ');
+  return appendGvCta([lead, contextBlock, projection].join(' '));
 }
 
 async function complete(promptOrBundle) {

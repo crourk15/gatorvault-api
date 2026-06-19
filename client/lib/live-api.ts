@@ -32,6 +32,8 @@ export interface PodcastShow {
   image?: string;
   artwork?: string;
   hosts?: string[];
+  episodeTitle?: string;
+  publishedAt?: string;
   platforms?: { name: string; url: string }[];
 }
 
@@ -63,6 +65,12 @@ function normalizePodcastShow(raw: Record<string, unknown>): PodcastShow {
   const logoUrl = String(
     raw.logoUrl ?? catalog?.logoUrl ?? resolvePodcastLogo(id || title)
   );
+  const episodes = Array.isArray(raw.episodes) ? raw.episodes : [];
+  const firstEpisode = episodes[0] as Record<string, unknown> | undefined;
+  const episodeTitle = firstEpisode ? String(firstEpisode.title ?? '') : undefined;
+  const publishedAt = firstEpisode
+    ? String(firstEpisode.publishedAt ?? firstEpisode.pubDate ?? '')
+    : undefined;
   return {
     id: id || catalog?.id,
     title,
@@ -72,6 +80,8 @@ function normalizePodcastShow(raw: Record<string, unknown>): PodcastShow {
     hosts: Array.isArray(raw.hosts)
       ? (raw.hosts as unknown[]).map((h) => String(h))
       : catalog?.hosts ?? resolvePodcastHosts(id || title),
+    episodeTitle: episodeTitle || undefined,
+    publishedAt: publishedAt || undefined,
     platforms,
   };
 }
