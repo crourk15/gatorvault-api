@@ -11,6 +11,7 @@ import {
 } from '@/lib/site-routes';
 import { PremiumNavIcon, type PremiumNavIconId } from '@/components/shell/PremiumNavIcons';
 import { useAppMenu } from '@/components/shell/AppMenuContext';
+import { useMobileViewport } from '@/lib/use-mobile-viewport';
 
 const ICONS: Record<SiteSectionId, PremiumNavIconId> = {
   dashboard: 'home',
@@ -32,10 +33,13 @@ function navLabel(label: string): string {
   return label.replace('GatorNation Live', 'GNL Live');
 }
 
-export function MobileBottomNav(): React.ReactElement {
+export function MobileBottomNav(): React.ReactElement | null {
   const pathname = usePathname();
   const active = siteNavActiveId(pathname);
   const { isOpen: menuOpen, toggleMenu } = useAppMenu();
+  const isMobile = useMobileViewport();
+
+  if (!isMobile) return null;
 
   return (
     <nav className="gv-mobile-bottom-nav" aria-label="Quick navigation">

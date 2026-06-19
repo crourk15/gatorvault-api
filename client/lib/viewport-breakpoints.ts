@@ -1,0 +1,3 @@
+/** Mobile shell breakpoint — matches vault-shell.css and app-shell.css (767px / 768px). */
+export const MOBILE_MAX_WIDTH_PX = 767;
+export const MOBILE_MEDIA_QUERY = `(max-width: ${MOBILE_MAX_WIDTH_PX}px)`;
