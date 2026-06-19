@@ -25,6 +25,14 @@ function formatFeedTime(date?: string): string {
   }
 }
 
+function tagClass(category: string): string {
+  const base = 'nil-feed__tag';
+  if (category === 'Portal') return `${base} nil-feed__tag--portal`;
+  if (category === 'Valuation') return `${base} nil-feed__tag--valuation`;
+  if (category === 'Collective') return `${base} nil-feed__tag--collective`;
+  return base;
+}
+
 function categoryForEvent(ev: NilEvent): string {
   if (ev.type?.includes('collective')) return 'Collective';
   if (ev.type?.includes('portal') || ev.title.toLowerCase().includes('portal')) return 'Portal';
@@ -83,7 +91,7 @@ export function NilMovementFeed({ dashboard, players }: Props): React.ReactEleme
           <li key={item.id} className="nil-feed__item">
             <div className="nil-feed__meta">
               <span className="nil-feed__time">{item.time}</span>
-              <span className="nil-feed__tag">{item.category}</span>
+              <span className={tagClass(item.category)}>{item.category}</span>
             </div>
             <p className="nil-feed__text">{item.text}</p>
           </li>

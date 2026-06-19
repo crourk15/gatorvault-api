@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-05T00:00:00.000Z",
+  "items": [
+    { "id": "ohio-st", "school": "Ohio State Buckeyes", "slug": "ohio-state-buckeyes", "conference": "Big Ten", "collective": "The Foundation", "city": "Columbus", "state": "OH" },
+    { "id": "usc", "school": "USC Trojans", "slug": "usc-trojans", "conference": "Big Ten", "collective": "United Legacy Fund", "city": "Los Angeles", "state": "CA" },
+    { "id": "oregon", "school": "Oregon Ducks", "slug": "oregon-ducks", "conference": "Big Ten", "collective": "Division Street", "city": "Eugene", "state": "OR" },
+    { "id": "michigan", "school": "Michigan Wolverines", "slug": "michigan-wolverines", "conference": "Big Ten", "collective": "Champions Circle", "city": "Ann Arbor", "state": "MI" },
+    { "id": "nd", "school": "Notre Dame Fighting Irish", "slug": "notre-dame-fighting-irish", "conference": "Independent", "collective": "Irish NIL Collective", "city": "South Bend", "state": "IN" },
+    { "id": "penn-st", "school": "Penn State Nittany Lions", "slug": "penn-state-nittany-lions", "conference": "Big Ten", "collective": "Happy Valley NIL", "city": "University Park", "state": "PA" },
+    { "id": "miami", "school": "Miami Hurricanes", "slug": "miami-hurricanes", "conference": "ACC", "collective": "Canes Legacy", "city": "Coral Gables", "state": "FL" },
+    { "id": "clemson", "school": "Clemson Tigers", "slug": "clemson-tigers", "conference": "ACC", "collective": "Clemson United", "city": "Clemson", "state": "SC" },
+    { "id": "fsu", "school": "Florida State Seminoles", "slug": "florida-state-seminoles", "conference": "ACC", "collective": "Seminole Boost", "city": "Tallahassee", "state": "FL" },
+    { "id": "colorado", "school": "Colorado Buffaloes", "slug": "colorado-buffaloes", "conference": "Big 12", "collective": "Buffalo Edge", "city": "Boulder", "state": "CO" },
+    { "id": "tcu", "school": "TCU Horned Frogs", "slug": "tcu-horned-frogs", "conference": "Big 12", "collective": "Frog Club NIL", "city": "Fort Worth", "state": "TX" },
+    { "id": "washington", "school": "Washington Huskies", "slug": "washington-huskies", "conference": "Big Ten", "collective": "Purple Reign Collective", "city": "Seattle", "state": "WA" }
+  ]
+}

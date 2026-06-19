@@ -1,11 +1,27 @@
 /**
  * NIL Tracker — Elite command center (Recruiting Hub / FutureCast parity)
+ * Platform UF brand tokens — aligned with gatorvault-theme.css
  */
 
 .gv-nil-page {
+  --nil-uf-blue: #0021a5;
+  --nil-gator-orange: #fa4616;
+  --nil-swamp-navy: #001a33;
+  --nil-white: #ffffff;
+  --nil-gray: #d9d9d9;
+  --nil-move-up: #fa4616;
+  --nil-move-down: #d7263d;
+  --nil-move-flat: #d9d9d9;
+  --nil-portal-gain: #00c46b;
+  --nil-portal-loss: #d7263d;
+  --nil-heat-high: #ff6a00;
+  --nil-heat-mid: #fa4616;
+  --nil-heat-low: #1e90ff;
+  --nil-card-bg: #ffffff;
+  --nil-card-border: rgba(0, 33, 165, 0.18);
   min-height: 100vh;
-  background: var(--page-bg, #0a0f1f);
-  color: var(--heading-color-dark, #fff);
+  background: var(--nil-swamp-navy);
+  color: var(--nil-white);
   padding-bottom: calc(var(--space-8, 32px) + env(safe-area-inset-bottom, 0px));
 }
 
@@ -35,7 +51,7 @@
 .nil-hero__bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #0a0f1f 0%, #0021a5 55%, #001656 100%);
+  background: linear-gradient(135deg, var(--nil-swamp-navy) 0%, var(--nil-uf-blue) 55%, #001656 100%);
   pointer-events: none;
 }
 
@@ -66,7 +82,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--gator-orange, #fa4616);
+  color: var(--nil-gator-orange);
 }
 
 .nil-hero__title {
@@ -131,15 +147,15 @@
 }
 
 .nil-trend-dial__arc--up {
-  stroke: var(--momentum-up, #4ade80);
+  stroke: var(--nil-move-up);
 }
 
 .nil-trend-dial__arc--down {
-  stroke: var(--momentum-down, #ff4d4d);
+  stroke: var(--nil-move-down);
 }
 
 .nil-trend-dial__arc--flat {
-  stroke: var(--uf-blue, #0021a5);
+  stroke: var(--nil-move-flat);
 }
 
 .nil-trend-dial__center {
@@ -178,21 +194,21 @@
 }
 
 .nil-metric-card {
-  background: linear-gradient(180deg, #1a1f2b 0%, #0a0f1f 100%);
-  border: 1px solid rgba(0, 33, 165, 0.35);
-  border-top: 3px solid var(--gator-orange, #fa4616);
+  background: var(--nil-card-bg);
+  border: 1px solid var(--nil-card-border);
+  border-top: 3px solid var(--nil-gator-orange);
   border-radius: var(--radius-md, 12px);
   padding: 12px 14px;
-  color: #fff;
+  color: #1a1a1a;
   min-width: 0;
+  box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08);
 }
 
 .nil-metric-card__icon {
   display: block;
   font-size: 1rem;
   margin-bottom: 6px;
-  color: var(--uf-blue, #0021a5);
-  filter: drop-shadow(0 0 6px rgba(0, 33, 165, 0.6));
+  color: var(--nil-uf-blue);
 }
 
 .nil-metric-card__label {
@@ -201,7 +217,7 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.62);
+  color: #64748b;
   margin-bottom: 4px;
 }
 
@@ -210,6 +226,7 @@
   font-size: 1.0625rem;
   font-weight: 800;
   line-height: 1.2;
+  color: var(--nil-uf-blue);
 }
 
 /* ── Section shell (flat — no ModuleShell) ── */
@@ -226,14 +243,14 @@
   margin: 0;
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--heading-color-dark, #fff);
+  color: var(--nil-white);
 }
 
 .nil-elite-section__sub {
   margin: 4px 0 0;
   font-size: 0.8125rem;
   line-height: 1.45;
-  color: var(--subtle-gray, #94a3b8);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .gv-nil-page .rh-cc-tabs {
@@ -344,15 +361,15 @@
 }
 
 .nil-player-card__trend--up {
-  color: var(--momentum-up, #16a34a);
+  color: var(--nil-move-up);
 }
 
 .nil-player-card__trend--down {
-  color: var(--momentum-down, #dc2626);
+  color: var(--nil-move-down);
 }
 
 .nil-player-card__trend--flat {
-  color: var(--subtle-gray, #94a3b8);
+  color: var(--nil-move-flat);
 }
 
 .nil-player-card__cta {
@@ -387,8 +404,9 @@
 .nil-feed__item {
   padding: 14px 16px;
   border-radius: var(--radius-md, 12px);
-  background: linear-gradient(180deg, #1a1f2b 0%, #0f1420 100%);
-  border: 1px solid rgba(0, 33, 165, 0.28);
+  background: var(--nil-card-bg);
+  border: 1px solid var(--nil-card-border);
+  box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08);
 }
 
 .nil-feed__meta {
@@ -401,7 +419,7 @@
 .nil-feed__time {
   font-size: 0.6875rem;
   font-weight: 700;
-  color: var(--gator-orange, #fa4616);
+  color: var(--nil-gator-orange);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -413,16 +431,34 @@
   text-transform: uppercase;
   padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(0, 33, 165, 0.35);
-  color: #93c5fd;
-  border: 1px solid rgba(0, 33, 165, 0.45);
+  background: rgba(0, 33, 165, 0.08);
+  color: var(--nil-uf-blue);
+  border: 1px solid rgba(0, 33, 165, 0.2);
+}
+
+.nil-feed__tag--portal {
+  background: rgba(0, 196, 107, 0.12);
+  color: #007a42;
+  border-color: rgba(0, 196, 107, 0.35);
+}
+
+.nil-feed__tag--valuation {
+  background: rgba(250, 70, 22, 0.12);
+  color: var(--nil-gator-orange);
+  border-color: rgba(250, 70, 22, 0.35);
+}
+
+.nil-feed__tag--collective {
+  background: rgba(0, 33, 165, 0.08);
+  color: var(--nil-uf-blue);
+  border-color: rgba(0, 33, 165, 0.2);
 }
 
 .nil-feed__text {
   margin: 0;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.9);
+  color: #1a1a1a;
 }
 
 /* ── Collective comparison ── */
@@ -435,15 +471,16 @@
 .nil-compare__row {
   padding: 14px 16px;
   border-radius: var(--radius-md, 12px);
-  background: rgba(26, 31, 43, 0.85);
-  border: 1px solid rgba(0, 33, 165, 0.22);
+  background: var(--nil-card-bg);
+  border: 1px solid var(--nil-card-border);
+  box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08);
 }
 
 .nil-compare__label {
   font-size: 0.8125rem;
   font-weight: 600;
   margin-bottom: 10px;
-  color: rgba(255, 255, 255, 0.88);
+  color: #1a1a1a;
 }
 
 .nil-compare__bars {
@@ -462,21 +499,21 @@
 .nil-compare__school {
   font-size: 0.6875rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.55);
+  color: #64748b;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .nil-compare__school--uf {
-  color: #fff;
+  color: var(--nil-uf-blue);
   font-weight: 700;
 }
 
 .nil-compare__track {
   height: 8px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 26, 51, 0.08);
   overflow: hidden;
 }
 
@@ -487,12 +524,12 @@
 }
 
 .nil-compare__fill--uf {
-  background: linear-gradient(90deg, #0021a5, #fa4616);
-  box-shadow: 0 0 10px rgba(0, 33, 165, 0.45);
+  background: linear-gradient(90deg, var(--nil-uf-blue), var(--nil-gator-orange));
+  box-shadow: 0 0 10px rgba(250, 70, 22, 0.25);
 }
 
 .nil-compare__fill--peer {
-  background: rgba(255, 255, 255, 0.22);
+  background: var(--nil-gray);
 }
 
 /* ── Portal impact ── */
@@ -505,23 +542,24 @@
 .nil-portal-col {
   border-radius: var(--radius-md, 12px);
   padding: 14px;
-  background: #1a1f2b;
-  border: 1px solid rgba(0, 33, 165, 0.25);
+  background: var(--nil-card-bg);
+  border: 1px solid var(--nil-card-border);
+  box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08);
 }
 
 .nil-portal-col--gain {
-  border-top: 3px solid var(--uf-blue, #0021a5);
+  border-top: 3px solid var(--nil-portal-gain);
 }
 
 .nil-portal-col--loss {
-  border-top: 3px solid var(--gator-orange, #fa4616);
+  border-top: 3px solid var(--nil-portal-loss);
 }
 
 .nil-portal-col__title {
   margin: 0 0 10px;
   font-size: 0.9375rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--nil-uf-blue);
 }
 
 .nil-portal-col__list {
@@ -537,8 +575,8 @@
   position: relative;
   padding: 10px 12px;
   border-radius: 10px;
-  background: rgba(10, 15, 31, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 26, 51, 0.04);
+  border: 1px solid rgba(0, 26, 51, 0.08);
 }
 
 .nil-portal-col__head {
@@ -549,11 +587,11 @@
 }
 
 .nil-portal-col__head strong {
-  color: #fff;
+  color: #1a1a1a;
 }
 
 .nil-portal-col__pos {
-  color: rgba(255, 255, 255, 0.55);
+  color: #64748b;
   font-size: 0.75rem;
 }
 
@@ -561,18 +599,18 @@
   margin-top: 4px;
   font-size: 0.9375rem;
   font-weight: 800;
-  color: var(--gator-orange, #fa4616);
+  color: var(--nil-gator-orange);
 }
 
 .nil-portal-col--gain .nil-portal-col__range {
-  color: #93c5fd;
+  color: var(--nil-portal-gain);
 }
 
 .nil-portal-col__note {
   margin: 4px 0 0;
   font-size: 0.75rem;
   line-height: 1.4;
-  color: rgba(255, 255, 255, 0.62);
+  color: #64748b;
 }
 
 .nil-portal-col__trend {
@@ -583,16 +621,151 @@
 }
 
 .nil-portal-col__trend--up {
-  color: var(--momentum-up, #4ade80);
+  color: var(--nil-move-up);
 }
 
 .nil-portal-col__trend--down {
-  color: var(--momentum-down, #ff4d4d);
+  color: var(--nil-move-down);
 }
 
 .nil-portal-col__empty {
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: #64748b;
+}
+
+/* ── SEC / National ranking tables ── */
+.nil-rank-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-md, 12px);
+  background: var(--nil-card-bg);
+  border: 1px solid var(--nil-card-border);
+  box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08);
+}
+
+.nil-rank-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.nil-rank-table thead th {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #64748b;
+  background: rgba(0, 33, 165, 0.06);
+  border-bottom: 1px solid var(--nil-card-border);
+}
+
+.nil-rank-table tbody td {
+  padding: 12px 14px;
+  vertical-align: middle;
+  color: #1a1a1a;
+  border-bottom: 1px solid rgba(0, 26, 51, 0.08);
+}
+
+.nil-rank-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.nil-rank-table tbody tr.is-uf {
+  background: rgba(250, 70, 22, 0.08);
+}
+
+.nil-rank-table tbody tr.is-uf .nil-rank-table__school strong {
+  color: var(--nil-uf-blue);
+}
+
+.nil-rank-table__rank {
+  font-weight: 800;
+  color: var(--nil-uf-blue);
+  white-space: nowrap;
+}
+
+.nil-rank-table__school strong {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.nil-rank-table__collective {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.6875rem;
+  color: #64748b;
+}
+
+.nil-rank-table__pool {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.nil-rank-table__trend {
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.nil-rank-table__trend--up {
+  color: var(--nil-move-up);
+}
+
+.nil-rank-table__trend--down {
+  color: var(--nil-move-down);
+}
+
+.nil-rank-table__trend--flat {
+  color: var(--nil-move-flat);
+}
+
+.nil-rank-table__meter {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  min-width: 88px;
+}
+
+.nil-rank-table__meter-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(0, 26, 51, 0.08);
+  overflow: hidden;
+}
+
+.nil-rank-table__meter-fill {
+  height: 100%;
+  border-radius: inherit;
+}
+
+.nil-rank-table__meter-fill--score {
+  background: linear-gradient(90deg, var(--nil-uf-blue), var(--nil-gator-orange));
+}
+
+.nil-rank-table__meter-fill--high {
+  background: var(--nil-heat-high);
+}
+
+.nil-rank-table__meter-fill--mid {
+  background: var(--nil-heat-mid);
+}
+
+.nil-rank-table__meter-fill--low {
+  background: var(--nil-heat-low);
+}
+
+.nil-rank-table__meter-val {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.gv-nil-page .rh-cc-empty {
+  color: rgba(255, 255, 255, 0.72);
 }
 
 /* ── Footer CTA ── */

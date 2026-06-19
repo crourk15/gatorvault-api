@@ -2,7 +2,8 @@ import { getApiBase } from './big-board-api';
 
 export type NilProgramRow = {
   id: string;
-  name: string;
+  name?: string;
+  school?: string;
   conference?: string;
   collective?: string;
   ranking?: { secRank?: number; nationalRank?: number; score?: number } | null;
@@ -35,6 +36,7 @@ export type NilDashboard = {
     collective?: string;
   } | null;
   secRankings?: NilProgramRow[];
+  nationalRankings?: NilProgramRow[];
   trendHistory?: { period: string; valueM?: number; trend?: string; trendPct?: number }[];
   positionImpact?: { position: string; count: number }[];
   recruitingCorrelation?: { positiveEvents?: number; totalEvents?: number; note?: string };

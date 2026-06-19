@@ -9,6 +9,7 @@ import { NilMetricsBar } from '@/components/nil/NilMetricsBar';
 import { NilLeaderboard } from '@/components/nil/NilLeaderboard';
 import { NilMovementFeed } from '@/components/nil/NilMovementFeed';
 import { NilCollectiveComparison } from '@/components/nil/NilCollectiveComparison';
+import { NilProgramRankingsTable } from '@/components/nil/NilProgramRankingsTable';
 import { NilPortalImpact } from '@/components/nil/NilPortalImpact';
 import { NilFooterCta } from '@/components/nil/NilFooterCta';
 import { useNilEliteData } from '@/components/nil/useNilEliteData';
@@ -50,6 +51,7 @@ export function NilElitePage(): React.ReactElement {
           <div className="rh-cc-main rh-frame">
             <div className="rh-cc-col">
               <NilLeaderboard players={players} />
+              <NilProgramRankingsTable dashboard={dashboard} />
               <NilMovementFeed dashboard={dashboard} players={players} />
               <NilCollectiveComparison dashboard={dashboard} />
               <NilPortalImpact gains={portalGains} losses={portalLosses} />

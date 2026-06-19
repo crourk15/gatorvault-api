@@ -19,6 +19,10 @@ function loadPrograms() {
   return readJson('nil_programs.json', { items: [] }).items || [];
 }
 
+function loadNationalPrograms() {
+  return readJson('nil_national_programs.json', { items: [] }).items || [];
+}
+
 function loadMetrics() {
   return readJson('nil_metrics.json', { items: [] }).items || [];
 }
@@ -46,6 +50,7 @@ function indexByProgramId(rows) {
 function buildProgramRow(program, metrics, ranking, metricRow) {
   return {
     ...program,
+    name: program.school || program.name,
     metrics: metricRow || null,
     ranking: ranking || null
   };
@@ -87,6 +92,7 @@ function buildDashboard({ conference = 'SEC', programId = UF_ID } = {}) {
     conference,
     primary: uf,
     secRankings: rows,
+    nationalRankings: buildNationalRankings(),
     ufStanding: uf
       ? {
           secRank: uf.ranking?.secRank,
@@ -125,6 +131,21 @@ function buildTrendHistory(programId) {
   ];
 }
 
+function buildNationalRankings() {
+  const metricsById = indexByProgramId(loadMetrics());
+  const rankingsById = indexByProgramId(loadRankings());
+  const programs = [...loadPrograms(), ...loadNationalPrograms()];
+
+  return programs
+    .map((p) => {
+      const metricRow = metricsById[p.id] || null;
+      const ranking = rankingsById[p.id] || null;
+      return buildProgramRow(p, metricsById, ranking, metricRow);
+    })
+    .filter((r) => r.ranking?.nationalRank != null)
+    .sort((a, b) => (a.ranking?.nationalRank || 99) - (b.ranking?.nationalRank || 99));
+}
+
 function listSecRankings() {
   return buildDashboard().secRankings;
 }
@@ -137,5 +158,6 @@ module.exports = {
   loadRankings,
   loadEvents,
   buildDashboard,
+  buildNationalRankings,
   listSecRankings
 };
