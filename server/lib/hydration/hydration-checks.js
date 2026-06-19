@@ -173,8 +173,12 @@ function checkBuildIdMatch(root) {
         /* already checked meta vs manifest */
       }
     }
-    if (!landingHtml.includes('r-(home)-layout-')) {
-      errors.push('[A] landing index.html missing r-(home)-layout chunk script');
+    const hasLandingLayout =
+      landingHtml.includes('r-(home)-layout-') ||
+      landingHtml.includes('r-layout-') ||
+      landingHtml.includes('r-(marketing)-layout-');
+    if (!hasLandingLayout) {
+      errors.push('[A] landing index.html missing layout chunk script');
     }
     if (!landingHtml.includes('data-gv-landing-css') && !landingHtml.includes('gv-landing')) {
       errors.push('[C] landing CSS markers missing from index.html');

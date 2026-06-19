@@ -4,21 +4,23 @@ import React from 'react';
 import type { MasterBoardResponse } from '@/lib/futurecast-board-types';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 import { FutureCastTargetCard } from '@/components/futurecast/FutureCastTargetCard';
-import { ModuleShell } from './primitives';
+import { FutureCastPanelShell } from './primitives';
 import { futureCastPlayerToLabTarget } from './fc-lab-types';
 
 type Props = {
   masterBoard: MasterBoardResponse;
+  bare?: boolean;
 };
 
-export function FutureCastTargetsPanel({ masterBoard }: Props): React.ReactElement {
+export function FutureCastTargetsPanel({ masterBoard, bare }: Props): React.ReactElement {
   const rows = [...masterBoard.players]
     .sort((a, b) => b.ufConfidence - a.ufConfidence)
     .slice(0, 10)
     .map(futureCastPlayerToLabTarget);
 
   return (
-    <ModuleShell
+    <FutureCastPanelShell
+      bare={bare}
       title="Top UF Targets — Master Board"
       sub="Premium FutureCast master board with probability, movement, fit, and competing schools."
       testId="fc-lab-targets"
@@ -36,6 +38,6 @@ export function FutureCastTargetsPanel({ masterBoard }: Props): React.ReactEleme
           ))}
         </div>
       )}
-    </ModuleShell>
+    </FutureCastPanelShell>
   );
 }

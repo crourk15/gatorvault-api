@@ -574,7 +574,7 @@
     width: 100% !important;
   }
 
-  /* FutureCast Lab mobile shell — single gutter (no stacked .gv-container + section padding) */
+  /* FutureCast Lab mobile — match Recruiting Hub (full-bleed hero + single rh-frame gutter) */
   .gv-vault-shell__main .fc-futurecast-page.fc-futurecast-page--elite > .gv-container,
   .fc-futurecast-page.fc-futurecast-page--elite > .gv-container {
     padding-left: 0 !important;
@@ -587,23 +587,81 @@
     box-sizing: border-box;
   }
 
+  .fc-lab-mobile-hero {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .fc-lab-mobile-hero .fc-lab-hero {
+    min-height: 0 !important;
+  }
+
+  .fc-lab-mobile-hero .fc-lab-hero__inner {
+    padding-top: 20px !important;
+    padding-bottom: 16px !important;
+  }
+
+  .fc-lab-mobile-hero .fc-lab-hero__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
   .fc-lab-mobile {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
-    padding-left: var(--mobile-gutter) !important;
-    padding-right: var(--mobile-gutter) !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     box-sizing: border-box;
-    overflow-x: hidden;
+    overflow-x: visible !important;
+    display: flex;
+    flex-direction: column;
+    gap: var(--mobile-section-gap) !important;
   }
 
   .fc-lab-mobile > section {
     padding-left: 0 !important;
     padding-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
   }
 
-  .fc-lab-mobile section,
-  .fc-lab-mobile .rh-cc-module,
+  .fc-lab-mobile-section__title {
+    margin: 0;
+    font-size: var(--mobile-section-title) !important;
+    font-weight: var(--mobile-section-weight) !important;
+    color: var(--gv-blue, #0021a5);
+    line-height: 1.2;
+  }
+
+  .fc-lab-mobile-section__sub {
+    margin: 4px 0 0;
+    font-size: var(--mobile-meta) !important;
+    line-height: 1.45;
+    opacity: 0.65;
+  }
+
+  .fc-lab-mobile-section__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--mobile-card-gap);
+  }
+
+  .fc-lab-mobile-section__body:has(.fc-lab-target-cards),
+  .fc-lab-mobile-section__body:has(.fc-lab-battle-list),
+  .fc-lab-mobile-section__body:has(.fc-lab-signal-grid),
+  .fc-lab-mobile-section__body:has(.fc-lab-pos-table),
+  .fc-lab-mobile-section__body:has(.fc-lab-portal-list),
+  .fc-lab-mobile-section__body:has(.rh-cc-move-list) {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
   .fc-lab-mobile .fc-lab-target-card,
   .fc-lab-mobile .fc-lab-battle-row,
   .fc-lab-mobile .fc-lab-signal-card,
@@ -611,10 +669,6 @@
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
-  }
-
-  .fc-lab-mobile .rh-cc-module {
-    overflow: visible !important;
   }
 
   .fc-lab-bleed {

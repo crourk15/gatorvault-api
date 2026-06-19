@@ -1134,6 +1134,14 @@
     margin-right: 0;
   }
 
+  .fc-lab-hero--compact .fc-lab-hero__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fc-lab-hero--compact .fc-lab-hero__title {
+    font-size: var(--mobile-section-title, 18px);
+  }
+
   .fc-lab-meter__ring {
     width: 120px;
     height: 120px;

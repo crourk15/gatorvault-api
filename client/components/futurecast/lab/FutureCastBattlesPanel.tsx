@@ -5,7 +5,7 @@ import type { MasterBoardResponse, TrendingBoardResponse } from '@/lib/futurecas
 import { playerProfileRoute } from '@/lib/vault-route-map';
 import {
   CompetingSchoolsBar,
-  ModuleShell,
+  FutureCastPanelShell,
   MovementBadge,
   UfProbBar,
 } from './primitives';
@@ -16,6 +16,7 @@ type Tab = 'battles' | 'lean-uf' | 'lean-elsewhere';
 type Props = {
   masterBoard: MasterBoardResponse;
   trendingBoard: TrendingBoardResponse;
+  bare?: boolean;
 };
 
 const TAB_META: Record<Tab, { label: string; icon: string; battleClass: string; battleLabel: string }> = {
@@ -65,7 +66,7 @@ function BattleRow({ player, tab }: { player: ReturnType<typeof futureCastPlayer
   );
 }
 
-export function FutureCastBattlesPanel({ masterBoard, trendingBoard }: Props): React.ReactElement {
+export function FutureCastBattlesPanel({ masterBoard, trendingBoard, bare }: Props): React.ReactElement {
   const [tab, setTab] = useState<Tab>('battles');
 
   const pool = useMemo(() => {
@@ -102,7 +103,8 @@ export function FutureCastBattlesPanel({ masterBoard, trendingBoard }: Props): R
   const rows = buckets[tab].slice(0, 8);
 
   return (
-    <ModuleShell
+    <FutureCastPanelShell
+      bare={bare}
       title="Battles & Leaning Targets"
       sub="Trending board buckets — battles, lean UF, and lean elsewhere."
       testId="fc-lab-battles"
@@ -128,6 +130,6 @@ export function FutureCastBattlesPanel({ masterBoard, trendingBoard }: Props): R
           rows.map((p) => <BattleRow key={p.slug} player={p} tab={tab} />)
         )}
       </div>
-    </ModuleShell>
+    </FutureCastPanelShell>
   );
 }

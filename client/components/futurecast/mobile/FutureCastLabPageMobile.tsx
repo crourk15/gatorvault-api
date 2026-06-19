@@ -19,13 +19,14 @@ type Props = {
 
 /**
  * Mobile FutureCast Lab layout (<1024px).
- * Same route `/vault/futurecast` — vertical stack with full-width cards.
+ * Matches Recruiting Hub: full-bleed compact hero + single rh-frame gutter for panels.
  */
 export function FutureCastLabPageMobile({ data }: Props): React.ReactElement {
   return (
-    <div className="fc-lab-mobile mobile-app" data-testid="fc-lab-page-mobile">
-      <section id={FUTURECAST_LAB_ANCHORS.overview}>
+    <>
+      <section id={FUTURECAST_LAB_ANCHORS.overview} className="fc-lab-mobile-hero">
         <FutureCastHero
+          compact
           summary={data.summary}
           metrics={data.metrics}
           heatLevel={data.heatLevel}
@@ -34,37 +35,41 @@ export function FutureCastLabPageMobile({ data }: Props): React.ReactElement {
           lastUpdated={data.lastUpdated}
         />
       </section>
-      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.masterBoard}>
-        <FutureCastTargetsPanel masterBoard={data.masterBoard} />
-      </LazyMountSection>
-      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.trending}>
-        <FutureCastBattlesPanel masterBoard={data.masterBoard} trendingBoard={data.trendingBoard} />
-      </LazyMountSection>
-      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.movement}>
-        <FutureCastMovementPanel movementIntel={data.movementIntel} />
-      </LazyMountSection>
-      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.signals}>
-        <FutureCastAnalystSignals staffNotes={data.staffNotes} masterBoard={data.masterBoard} />
-      </LazyMountSection>
-      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.positions}>
-        <FutureCastPositionBreakdown
-          players={data.masterBoard.players}
-          activePredictions={data.metrics.activePredictions}
-        />
-      </LazyMountSection>
-      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.portal}>
-        <FutureCastPortalCrossView
-          portalPlayers={data.home.portalWatchlist ?? []}
-          masterBoard={data.masterBoard}
-        />
-      </LazyMountSection>
-      <LazyMountSection id={FUTURECAST_LAB_ANCHORS.feed}>
-        <FutureCastLiveFeed
-          masterBoard={data.masterBoard}
-          staffNotes={data.staffNotes}
-          movementIntel={data.movementIntel}
-        />
-      </LazyMountSection>
-    </div>
+      <div className="fc-lab-mobile rh-frame" data-testid="fc-lab-page-mobile">
+        <LazyMountSection id={FUTURECAST_LAB_ANCHORS.masterBoard}>
+          <FutureCastTargetsPanel bare masterBoard={data.masterBoard} />
+        </LazyMountSection>
+        <LazyMountSection id={FUTURECAST_LAB_ANCHORS.trending}>
+          <FutureCastBattlesPanel bare masterBoard={data.masterBoard} trendingBoard={data.trendingBoard} />
+        </LazyMountSection>
+        <LazyMountSection id={FUTURECAST_LAB_ANCHORS.movement}>
+          <FutureCastMovementPanel bare movementIntel={data.movementIntel} />
+        </LazyMountSection>
+        <LazyMountSection id={FUTURECAST_LAB_ANCHORS.signals}>
+          <FutureCastAnalystSignals bare staffNotes={data.staffNotes} masterBoard={data.masterBoard} />
+        </LazyMountSection>
+        <LazyMountSection id={FUTURECAST_LAB_ANCHORS.positions}>
+          <FutureCastPositionBreakdown
+            bare
+            players={data.masterBoard.players}
+            activePredictions={data.metrics.activePredictions}
+          />
+        </LazyMountSection>
+        <LazyMountSection id={FUTURECAST_LAB_ANCHORS.portal}>
+          <FutureCastPortalCrossView
+            bare
+            portalPlayers={data.home.portalWatchlist ?? []}
+            masterBoard={data.masterBoard}
+          />
+        </LazyMountSection>
+        <LazyMountSection id={FUTURECAST_LAB_ANCHORS.feed}>
+          <FutureCastLiveFeed
+            masterBoard={data.masterBoard}
+            staffNotes={data.staffNotes}
+            movementIntel={data.movementIntel}
+          />
+        </LazyMountSection>
+      </div>
+    </>
   );
 }

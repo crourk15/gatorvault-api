@@ -30,12 +30,12 @@ function resolveAsset(serverDir, rel) {
   const full = path.join(serverDir, rel);
   if (fs.existsSync(full)) return true;
 
-  if (rel.startsWith('_next/static/chunks/app/')) {
-    const flat = `r-${rel.slice('_next/static/chunks/app/'.length).replace(/\//g, '-')}`;
-    if (fs.existsSync(path.join(serverDir, 'js/vault-chunks', flat))) return true;
+  if (rel.startsWith('_next/static/chunks/app/') || rel.startsWith('_next/static/chunks/routes/')) {
+    return false;
   }
   if (rel.startsWith('_next/static/chunks/')) {
     const base = path.basename(rel);
+    if (base.startsWith('main-app-') || base.startsWith('main-entry-')) return false;
     const mentry = base.replace(/^main-app-/, 'mentry-').replace(/^main-entry-/, 'mentry-');
     if (fs.existsSync(path.join(serverDir, 'js/vault-chunks', mentry))) return true;
   }

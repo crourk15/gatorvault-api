@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
-import { ModuleShell } from './primitives';
+import { FutureCastPanelShell } from './primitives';
 import { ufPctFromFc } from './fc-lab-types';
 
 type PositionBucket = {
@@ -16,9 +16,10 @@ type PositionBucket = {
 type Props = {
   players: FutureCastPlayer[];
   activePredictions?: number;
+  bare?: boolean;
 };
 
-export function FutureCastPositionBreakdown({ players, activePredictions }: Props): React.ReactElement {
+export function FutureCastPositionBreakdown({ players, activePredictions, bare }: Props): React.ReactElement {
   const buckets = useMemo(() => {
     const map = new Map<string, FutureCastPlayer[]>();
     for (const p of players) {
@@ -49,7 +50,8 @@ export function FutureCastPositionBreakdown({ players, activePredictions }: Prop
   }, [players]);
 
   return (
-    <ModuleShell
+    <FutureCastPanelShell
+      bare={bare}
       title="Position Breakdown — UF FutureCast"
       sub="Average UF probability, active predictions, and volatility by position."
       testId="fc-lab-position-breakdown"
@@ -83,6 +85,6 @@ export function FutureCastPositionBreakdown({ players, activePredictions }: Prop
           ) : null}
         </>
       )}
-    </ModuleShell>
+    </FutureCastPanelShell>
   );
 }

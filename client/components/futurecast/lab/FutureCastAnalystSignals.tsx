@@ -4,12 +4,13 @@ import React, { useMemo } from 'react';
 import type { MasterBoardResponse, StaffNotesResponse } from '@/lib/futurecast-board-types';
 import { formatIntelUpdated } from '@/components/recruiting-hub/utils/formatDate';
 import { playerProfileRoute } from '@/lib/vault-route-map';
-import { AnalystConfidenceMeter, ModuleShell } from './primitives';
+import { AnalystConfidenceMeter, FutureCastPanelShell } from './primitives';
 import { ufPctFromFc } from './fc-lab-types';
 
 type Props = {
   staffNotes: StaffNotesResponse;
   masterBoard: MasterBoardResponse;
+  bare?: boolean;
 };
 
 type SignalCard = {
@@ -91,14 +92,15 @@ function SignalCardView({ card }: { card: SignalCard }): React.ReactElement {
   );
 }
 
-export function FutureCastAnalystSignals({ staffNotes, masterBoard }: Props): React.ReactElement {
+export function FutureCastAnalystSignals({ staffNotes, masterBoard, bare }: Props): React.ReactElement {
   const signals = useMemo(
     () => buildSignals(staffNotes, masterBoard),
     [staffNotes, masterBoard]
   );
 
   return (
-    <ModuleShell
+    <FutureCastPanelShell
+      bare={bare}
       title="Analyst Signals — FutureCast Activity"
       sub="Staff notes and FutureCast model signals — prediction engine only."
       testId="fc-lab-analyst-signals"
@@ -117,6 +119,6 @@ export function FutureCastAnalystSignals({ staffNotes, masterBoard }: Props): Re
           ))}
         </div>
       )}
-    </ModuleShell>
+    </FutureCastPanelShell>
   );
 }

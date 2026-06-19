@@ -7,6 +7,47 @@ const path = require('path');
 
 const VAULT_CHUNKS_DIR = 'js/vault-chunks';
 
+/** HTML/RSC paths Netlify publishes from merge-into-server (exclude legacy Express trees). */
+const NETLIFY_CHUNK_ASSERT_PREFIXES = ['vault/'];
+const NETLIFY_CHUNK_ASSERT_FILES = new Set([
+  'index.html',
+  'join/index.html',
+  'welcome/index.html',
+  'insider/index.html',
+  'gatornation-live/index.html',
+  'recruiting-hub/index.html',
+  'directory/index.html',
+  'futurecast/index.html',
+  'team/index.html',
+  'recruiting/index.html',
+  'recruiting-board/index.html',
+  'player/index.html',
+  'portal/index.html',
+  'alerts/index.html',
+  'staff/index.html',
+  'staff/dashboard/index.html',
+  'scouting/index.html',
+  'scouting/database/index.html',
+  'scouting/queue/index.html',
+  'scouting/reports/index.html',
+  'players/index.html',
+  'game-week/index.html',
+  'game-zone/index.html',
+  'live-scores/index.html',
+  'nil/index.html',
+  'articles/index.html',
+  'community/index.html',
+  'schedule/index.html',
+  'film-room/index.html',
+]);
+
+function shouldAssertChunkRefs(rel) {
+  if (!/\.(html|txt)$/.test(rel)) return false;
+  if (rel.startsWith('futurecast-ui/')) return false;
+  if (NETLIFY_CHUNK_ASSERT_PREFIXES.some((prefix) => rel.startsWith(prefix))) return true;
+  return NETLIFY_CHUNK_ASSERT_FILES.has(rel);
+}
+
 function walkFiles(dir, onFile) {
   if (!fs.existsSync(dir)) return;
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -61,6 +102,11 @@ function collectAppChunks(chunksDir) {
 }
 
 function buildReplacementMap(serverDir) {
+  const vaultChunksDir = path.join(serverDir, VAULT_CHUNKS_DIR);
+  if (fs.existsSync(vaultChunksDir)) {
+    fs.rmSync(vaultChunksDir, { recursive: true, force: true });
+  }
+
   const chunksDir = path.join(serverDir, '_next', 'static', 'chunks');
   const map = new Map();
 
@@ -156,19 +202,23 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
   return { filesUpdated, flatChunks: map.size, vaultChunksDir: VAULT_CHUNKS_DIR };
 }
 
-/** Fail build if any HTML still references App Router chunk paths Netlify CDN drops. */
+/** Fail build if HTML/RSC payloads still reference App Router chunk paths Netlify CDN drops. */
 function assertNoUnrewrittenAppChunkRefs(serverDir) {
   const offenders = [];
-  const bad = /\/_next\/static\/chunks\/(?:app|routes)\//;
+  const badPatterns = [
+    /\/_next\/static\/chunks\/(?:app|routes)\//,
+    /\/_next\/static\/chunks\/main-(?:app|entry)-/,
+    /(?:^|["'\s])static\/chunks\/(?:app|routes)\//,
+  ];
   walkFiles(serverDir, (file) => {
-    if (!/\.html$/.test(file)) return;
     const rel = path.relative(serverDir, file).replace(/\\/g, '/');
+    if (!shouldAssertChunkRefs(rel)) return;
     const raw = fs.readFileSync(file, 'utf8');
-    if (bad.test(raw)) offenders.push(rel);
+    if (badPatterns.some((re) => re.test(raw))) offenders.push(rel);
   });
   if (offenders.length) {
     throw new Error(
-      `[rewrite-next-chunk-paths] HTML still references /_next/static/chunks/app/ — ` +
+      `[rewrite-next-chunk-paths] Unrewritten App Router chunk refs in HTML/RSC — ` +
         `${offenders.slice(0, 8).join(', ')}${offenders.length > 8 ? ` (+${offenders.length - 8} more)` : ''}`
     );
   }

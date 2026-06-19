@@ -25,11 +25,13 @@ function readNextBuildId() {
 
 function findHomeLayoutChunkHref() {
   if (!fs.existsSync(chunksDir)) return null;
-  const match = fs
-    .readdirSync(chunksDir)
-    .filter((f) => f.startsWith('r-(home)-layout-') && f.endsWith('.js'))
-    .sort()
-    .pop();
+  const files = fs.readdirSync(chunksDir).filter((f) => f.endsWith('.js'));
+  const pick = (prefix) =>
+    files.filter((f) => f.startsWith(prefix)).sort().pop();
+  const match =
+    pick('r-(home)-layout-') ||
+    pick('r-layout-') ||
+    pick('r-(marketing)-layout-');
   return match ? `/js/vault-chunks/${match}` : null;
 }
 

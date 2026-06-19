@@ -2,18 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 import {
+  ModuleShell,
   MovementSparkline,
   ufPctFromRaw,
+  MovementBadge,
+  UfProbBar,
 } from '@/components/recruiting-hub/command-center/primitives';
 import { ufPctFromFc } from './fc-lab-types';
 
-export {
-  ModuleShell,
-  MovementSparkline,
-  MovementBadge,
-  UfProbBar,
-  ufPctFromRaw,
-} from '@/components/recruiting-hub/command-center/primitives';
+export { ModuleShell, MovementSparkline, MovementBadge, UfProbBar, ufPctFromRaw };
 
 /** Segmented UF vs UGA vs Bama bar derived from UF probability. */
 export function CompetingSchoolsBar({ player }: { player: { ufProbability: number } }): React.ReactElement {
@@ -198,5 +195,62 @@ export function PositionVolatilityHeatmap({
         )}
       </div>
     </div>
+  );
+}
+
+/** Mobile flat section — matches Recruiting Hub title + full-width cards (no ModuleShell chrome). */
+export function FutureCastLabSection({
+  title,
+  sub,
+  action,
+  children,
+  testId,
+}: {
+  title: string;
+  sub?: string;
+  action?: React.ReactNode;
+  children: React.ReactNode;
+  testId?: string;
+}): React.ReactElement {
+  return (
+    <div className="fc-lab-mobile-section" data-testid={testId}>
+      <header className="fc-lab-mobile-section__head">
+        <div>
+          <h2 className="fc-lab-mobile-section__title">{title}</h2>
+          {sub ? <p className="fc-lab-mobile-section__sub">{sub}</p> : null}
+        </div>
+        {action ? <div className="fc-lab-mobile-section__action">{action}</div> : null}
+      </header>
+      <div className="fc-lab-mobile-section__body">{children}</div>
+    </div>
+  );
+}
+
+export function FutureCastPanelShell({
+  bare,
+  title,
+  sub,
+  action,
+  children,
+  testId,
+}: {
+  bare?: boolean;
+  title: string;
+  sub?: string;
+  action?: React.ReactNode;
+  children: React.ReactNode;
+  testId?: string;
+}): React.ReactElement {
+  if (bare) {
+    return (
+      <FutureCastLabSection title={title} sub={sub} action={action} testId={testId}>
+        {children}
+      </FutureCastLabSection>
+    );
+  }
+  return (
+    <ModuleShell title={title} sub={sub} action={action} testId={testId}>
+      {children}
+    </ModuleShell>
   );
 }

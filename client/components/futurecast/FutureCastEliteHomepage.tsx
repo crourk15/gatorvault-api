@@ -23,7 +23,7 @@ export function FutureCastEliteHomepage(): React.ReactElement {
 
   if (lab.loading && !lab.masterBoard.players.length) {
     return (
-      <div className="mobile-app fc-lab-mobile" data-testid="fc-elite-loading">
+      <div className="rh-frame fc-lab-mobile" data-testid="fc-elite-loading">
         <div className="rh-cc-skeleton" style={{ minHeight: 300, borderRadius: 12 }} />
         <div className="rh-cc-skeleton" style={{ minHeight: 180, borderRadius: 12 }} />
         <div className="rh-cc-skeleton" style={{ minHeight: 180, borderRadius: 12 }} />

@@ -4,12 +4,13 @@ import React, { useMemo } from 'react';
 import type { MasterBoardResponse } from '@/lib/futurecast-board-types';
 import type { PortalWatchlistHomePlayer } from '@/lib/futurecast-home-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
-import { FitScoreBadge, ModuleShell, UfProbBar } from './primitives';
+import { FitScoreBadge, FutureCastPanelShell, UfProbBar } from './primitives';
 import { ufPctFromFc } from './fc-lab-types';
 
 type Props = {
   portalPlayers: PortalWatchlistHomePlayer[];
   masterBoard: MasterBoardResponse;
+  bare?: boolean;
 };
 
 type CrossRow = {
@@ -24,7 +25,7 @@ type CrossRow = {
   fitScore: number | null;
 };
 
-export function FutureCastPortalCrossView({ portalPlayers, masterBoard }: Props): React.ReactElement {
+export function FutureCastPortalCrossView({ portalPlayers, masterBoard, bare }: Props): React.ReactElement {
   const boardBySlug = useMemo(
     () => new Map(masterBoard.players.map((p) => [p.slug, p])),
     [masterBoard]
@@ -48,7 +49,8 @@ export function FutureCastPortalCrossView({ portalPlayers, masterBoard }: Props)
   }, [portalPlayers, boardBySlug]);
 
   return (
-    <ModuleShell
+    <FutureCastPanelShell
+      bare={bare}
       title="Portal × FutureCast"
       sub="Transfer watchlist cross-referenced with UF commit likelihood and fit."
       action={
@@ -82,6 +84,6 @@ export function FutureCastPortalCrossView({ portalPlayers, masterBoard }: Props)
           ))}
         </div>
       )}
-    </ModuleShell>
+    </FutureCastPanelShell>
   );
 }

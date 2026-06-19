@@ -33,6 +33,7 @@ type Props = {
   masterBoard: MasterBoardResponse;
   movementIntel: MovementIntelResponse;
   lastUpdated?: string | null;
+  compact?: boolean;
 };
 
 export function FutureCastHero({
@@ -42,6 +43,7 @@ export function FutureCastHero({
   masterBoard,
   movementIntel,
   lastUpdated,
+  compact = false,
 }: Props): React.ReactElement {
   const top10 = useMemo(
     () =>
@@ -111,16 +113,21 @@ export function FutureCastHero({
   const updatedLabel = lastUpdated ? formatRelativeUpdated(lastUpdated) : 'just now';
 
   return (
-    <section className="fc-lab-hero fc-lab-bleed" data-testid="fc-lab-hero">
+    <section
+      className={`fc-lab-hero fc-lab-bleed${compact ? ' fc-lab-hero--compact' : ''}`}
+      data-testid="fc-lab-hero"
+    >
       <div className="fc-lab-hero__bg" aria-hidden />
       <div className="fc-lab-hero__inner rh-frame">
         <div className="fc-lab-hero__grid">
           <div className="fc-lab-hero__col fc-lab-hero__col--overview">
-            <h1 className="fc-lab-hero__title">UF FUTURECAST LAB</h1>
-            <p className="fc-lab-hero__sub">
-              Commit likelihood, movement intel, fit scores, and competing schools for UF&apos;s top
-              targets.
-            </p>
+            <h1 className="fc-lab-hero__title">{compact ? 'FutureCast' : 'UF FUTURECAST LAB'}</h1>
+            {compact ? null : (
+              <p className="fc-lab-hero__sub">
+                Commit likelihood, movement intel, fit scores, and competing schools for UF&apos;s top
+                targets.
+              </p>
+            )}
             <div className="fc-lab-hero__metrics">
               <div className="fc-lab-hero__metric fc-lab-hero__metric--rank">
                 <span className="fc-lab-hero__metric-label">High Priority</span>
@@ -130,33 +137,41 @@ export function FutureCastHero({
                 <span className="fc-lab-hero__metric-label">Active Predictions</span>
                 <strong className="fc-lab-hero__metric-value">{metrics.activePredictions}</strong>
               </div>
-              <div className="fc-lab-hero__metric">
-                <span className="fc-lab-hero__metric-label">Avg UF %</span>
-                <strong className="fc-lab-hero__metric-value">{metrics.avgUFProbability}%</strong>
-              </div>
-              <div className="fc-lab-hero__metric">
-                <span className="fc-lab-hero__metric-label">Cycle Heat</span>
-                <strong className={`fc-lab-hero__metric-value fc-lab-hero__heat--${heatLevel}`}>
-                  {HEAT_LABELS[heatLevel]}
-                </strong>
-              </div>
+              {compact ? null : (
+                <>
+                  <div className="fc-lab-hero__metric">
+                    <span className="fc-lab-hero__metric-label">Avg UF %</span>
+                    <strong className="fc-lab-hero__metric-value">{metrics.avgUFProbability}%</strong>
+                  </div>
+                  <div className="fc-lab-hero__metric">
+                    <span className="fc-lab-hero__metric-label">Cycle Heat</span>
+                    <strong className={`fc-lab-hero__metric-value fc-lab-hero__heat--${heatLevel}`}>
+                      {HEAT_LABELS[heatLevel]}
+                    </strong>
+                  </div>
+                </>
+              )}
             </div>
             <p className="fc-lab-hero__updated">Updated {updatedLabel}</p>
           </div>
 
-          <div className="fc-lab-hero__col fc-lab-hero__col--meter">
-            <UfProbabilityBarHero
-              value={top10Avg}
-              delta7d={avgDelta}
-              label="Commit Likelihood — Top Targets"
-            />
-          </div>
+          {compact ? null : (
+            <>
+              <div className="fc-lab-hero__col fc-lab-hero__col--meter">
+                <UfProbabilityBarHero
+                  value={top10Avg}
+                  delta7d={avgDelta}
+                  label="Commit Likelihood — Top Targets"
+                />
+              </div>
 
-          <div className="fc-lab-hero__col fc-lab-hero__col--heat">
-            <BattleHeatMeter count={battleCount} />
-            <VolatilityIndex score={volatilityScore} hotPositions={volatilePositions} />
-            <PositionVolatilityHeatmap cells={positionHeatmap} />
-          </div>
+              <div className="fc-lab-hero__col fc-lab-hero__col--heat">
+                <BattleHeatMeter count={battleCount} />
+                <VolatilityIndex score={volatilityScore} hotPositions={volatilePositions} />
+                <PositionVolatilityHeatmap cells={positionHeatmap} />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>

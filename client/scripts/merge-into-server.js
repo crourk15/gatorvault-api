@@ -141,6 +141,7 @@ require('./inject-vault-hydration-guard.js');
 require('./inject-qa-markers.js');
 require('./inject-landing-export.js');
 require('./generate-vault-route-manifest.js');
+assertNoUnrewrittenAppChunkRefs(serverDir);
 verifyExports();
 verifyChunks();
 

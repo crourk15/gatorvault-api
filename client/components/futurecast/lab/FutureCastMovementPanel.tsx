@@ -3,13 +3,14 @@
 import React, { useState } from 'react';
 import type { FutureCastPlayer, MovementIntelResponse } from '@/lib/futurecast-board-types';
 import { futureCastLabHref, FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
-import { ModuleShell, MovementBadge, MovementSparkline, UfProbBar } from './primitives';
+import { FutureCastPanelShell, MovementBadge, MovementSparkline, UfProbBar } from './primitives';
 import { ufPctFromFc } from './fc-lab-types';
 
 type Tab = 'risers' | 'fallers' | 'volatile';
 
 type Props = {
   movementIntel: MovementIntelResponse;
+  bare?: boolean;
 };
 
 function MovementRow({ player, tone }: { player: FutureCastPlayer; tone: Tab }): React.ReactElement {
@@ -41,7 +42,7 @@ function MovementRow({ player, tone }: { player: FutureCastPlayer; tone: Tab }):
   );
 }
 
-export function FutureCastMovementPanel({ movementIntel }: Props): React.ReactElement {
+export function FutureCastMovementPanel({ movementIntel, bare }: Props): React.ReactElement {
   const [tab, setTab] = useState<Tab>('risers');
 
   const rows =
@@ -52,7 +53,8 @@ export function FutureCastMovementPanel({ movementIntel }: Props): React.ReactEl
         : movementIntel.highVolatility;
 
   return (
-    <ModuleShell
+    <FutureCastPanelShell
+      bare={bare}
       title="FutureCast Movement — 7-Day Window"
       sub="FutureCast movement window — risers, fallers, and volatile targets."
       action={
@@ -83,6 +85,6 @@ export function FutureCastMovementPanel({ movementIntel }: Props): React.ReactEl
           rows.slice(0, 8).map((item) => <MovementRow key={item.id} player={item} tone={tab} />)
         )}
       </div>
-    </ModuleShell>
+    </FutureCastPanelShell>
   );
 }
