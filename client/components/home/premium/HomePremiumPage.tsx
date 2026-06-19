@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import '@/lib/uf-premium-home.css';
-import '@/lib/uf-premium-gnl.css';
 import {
   fetchHomeBundle,
   HOME_REFRESH,
