@@ -47,7 +47,9 @@ export function TrendingPlayerCard({ player, direction }: Props): React.ReactEle
           </span>
           <span>
             {insider
-              ? `${player.trendDelta7d > 0 ? '+' : ''}${player.trendDelta7d.toFixed(2)}`
+              ? player.trendDelta7d != null
+                ? `${player.trendDelta7d > 0 ? '+' : ''}${player.trendDelta7d.toFixed(2)}`
+                : 'TBD'
               : '—'}
           </span>
         </div>
@@ -55,7 +57,7 @@ export function TrendingPlayerCard({ player, direction }: Props): React.ReactEle
           <div className="gv-trending-bar" aria-hidden="true">
             <div
               className="gv-trending-bar-fill"
-              style={{ width: `${Math.min(100, player.ufConfidence)}%` }}
+              style={{ width: `${Math.min(100, player.ufConfidence ?? 0)}%` }}
             />
           </div>
         ) : null}

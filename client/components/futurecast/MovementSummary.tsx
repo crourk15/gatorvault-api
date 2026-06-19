@@ -25,8 +25,9 @@ function MiniList({
             >
               {p.name}
               <span>
-                {p.trendDelta7d > 0 ? '+' : ''}
-                {p.trendDelta7d.toFixed(2)}
+                {p.trendDelta7d != null
+                  ? `${p.trendDelta7d > 0 ? '+' : ''}${p.trendDelta7d.toFixed(2)}`
+                  : 'TBD'}
               </span>
             </a>
           </li>

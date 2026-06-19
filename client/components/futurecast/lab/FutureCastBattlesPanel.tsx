@@ -38,7 +38,7 @@ function classifyTab(ufPct: number): Tab {
 
 function BattleRow({ player, tab }: { player: ReturnType<typeof futureCastPlayerToLabTarget>; tab: Tab }): React.ReactElement {
   const pct = ufPctFromFc(player.ufProbability);
-  const delta = Math.round(player.delta7d);
+  const delta = Math.round(player.delta7d ?? 0);
   const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
   const meta = TAB_META[tab];
 

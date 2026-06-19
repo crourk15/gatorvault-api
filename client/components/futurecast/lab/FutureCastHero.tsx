@@ -45,7 +45,7 @@ export function FutureCastHero({
   const top10 = useMemo(
     () =>
       [...masterBoard.players]
-        .sort((a, b) => b.ufConfidence - a.ufConfidence)
+        .sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1))
         .slice(0, 10)
         .map(futureCastPlayerToLabTarget),
     [masterBoard.players]
@@ -58,7 +58,7 @@ export function FutureCastHero({
 
   const avgDelta = useMemo(() => {
     if (!top10.length) return 0;
-    return Math.round(top10.reduce((acc, p) => acc + p.delta7d, 0) / top10.length);
+    return Math.round(top10.reduce((acc, p) => acc + (p.delta7d ?? 0), 0) / top10.length);
   }, [top10]);
 
   const battleCount = useMemo(() => {
@@ -71,7 +71,7 @@ export function FutureCastHero({
     const volatile = movementIntel.highVolatility.length;
     if (volatile > 0) return Math.min(100, volatile * 8 + 10);
     return Math.round(
-      masterBoard.players.reduce((acc, p) => acc + Math.abs(p.trendDelta7d), 0) /
+      masterBoard.players.reduce((acc, p) => acc + Math.abs(p.trendDelta7d ?? 0), 0) /
         Math.max(1, masterBoard.players.length) *
         4
     );
@@ -94,7 +94,7 @@ export function FutureCastHero({
     for (const p of masterBoard.players) {
       const cur = byPos.get(p.position) ?? { count: 0, vol: 0 };
       cur.count += 1;
-      cur.vol += Math.abs(p.trendDelta7d);
+      cur.vol += Math.abs(p.trendDelta7d ?? 0);
       byPos.set(p.position, cur);
     }
     return [...byPos.entries()]

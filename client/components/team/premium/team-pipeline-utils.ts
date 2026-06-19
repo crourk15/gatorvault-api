@@ -11,8 +11,8 @@ export function ufPctFromRaw(raw: number | null | undefined): number | null {
 
 export function buildFutureCastSlugMap(
   board: MasterBoardResponse | null | undefined
-): Map<string, { ufConfidence: number; fitScore: number }> {
-  const map = new Map<string, { ufConfidence: number; fitScore: number }>();
+): Map<string, { ufConfidence: number | null; fitScore: number | null }> {
+  const map = new Map<string, { ufConfidence: number | null; fitScore: number | null }>();
   for (const p of board?.players ?? []) {
     if (p.slug) {
       map.set(p.slug.toLowerCase(), { ufConfidence: p.ufConfidence, fitScore: p.fitScore });
@@ -24,7 +24,7 @@ export function buildFutureCastSlugMap(
 /** Prefer recruiting-board value, then FutureCast; never coerce null/undefined to 0. */
 export function resolveUfProbabilityPct(
   player: Pick<RecruitingBoardPlayer, 'ufProbability' | 'slug'>,
-  fcBySlug: Map<string, { ufConfidence: number; fitScore: number }>
+  fcBySlug: Map<string, { ufConfidence: number | null; fitScore: number | null }>
 ): number | null {
   const fromBoard = ufPctFromRaw(player.ufProbability);
   if (fromBoard != null) return fromBoard;

@@ -27,6 +27,12 @@ function formatMetric(value: number | null | undefined, suffix = '%'): string {
   return `${Math.round(value)}${suffix}`;
 }
 
+function formatTrendDelta(value: number | null | undefined): string {
+  if (value == null || Number.isNaN(value)) return 'TBD';
+  const rounded = Math.round(value);
+  return `${rounded > 0 ? '+' : ''}${rounded}%`;
+}
+
 function formatCompetitorLabel(p: UnderclassmenPlayer): string {
   const top = p.competingSchools?.[0];
   if (!top?.name) return '';
@@ -166,7 +172,7 @@ export function FutureCastExtendedModules({
         buildIntelFeedItem({
           id: `rise-${p.slug}`,
           playerName: p.name,
-          headline: `${p.name} trending up (+${Math.round(p.trendDelta7d)}% UF)`,
+          headline: `${p.name} trending up (${formatTrendDelta(p.trendDelta7d)} UF)`,
           timestamp: movementIntel.updatedAt,
           category: 'Movement',
         })
@@ -296,7 +302,7 @@ export function FutureCastExtendedModules({
               items={trend30.up.map((p) => ({
                 key: `up-${p.slug}`,
                 primary: p.name,
-                meta: `+${Math.round(p.trendDelta7d)}% · UF ${ufPctFromFc(p.ufConfidence)}%`,
+                meta: `${formatTrendDelta(p.trendDelta7d)} · UF ${ufPctFromFc(p.ufConfidence)}%`,
               }))}
             />
           </div>
@@ -307,7 +313,7 @@ export function FutureCastExtendedModules({
               items={trend30.down.map((p) => ({
                 key: `dn-${p.slug}`,
                 primary: p.name,
-                meta: `${Math.round(p.trendDelta7d)}% · UF ${ufPctFromFc(p.ufConfidence)}%`,
+                meta: `${formatTrendDelta(p.trendDelta7d)} · UF ${ufPctFromFc(p.ufConfidence)}%`,
               }))}
             />
           </div>

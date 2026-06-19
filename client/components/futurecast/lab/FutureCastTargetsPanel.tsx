@@ -18,7 +18,7 @@ export function FutureCastTargetsPanel({ masterBoard, bare }: Props): React.Reac
       const committed = p.committedTo ?? '';
       return !committed || !/\bflorida\b|\bgators\b/i.test(String(committed));
     })
-    .sort((a, b) => b.ufConfidence - a.ufConfidence)
+    .sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1))
     .slice(0, 10)
     .map(futureCastPlayerToLabTarget);
 

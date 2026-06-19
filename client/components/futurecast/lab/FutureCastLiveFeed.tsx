@@ -9,6 +9,12 @@ import {
 } from '@/lib/recruiting-intel-feed';
 import { ufPctFromFc } from './fc-lab-types';
 
+function formatTrendDelta(value: number | null | undefined): string {
+  if (value == null || Number.isNaN(value)) return 'TBD';
+  const rounded = Math.round(value);
+  return `${rounded > 0 ? '+' : ''}${rounded}%`;
+}
+
 type Props = {
   masterBoard: MasterBoardResponse;
   staffNotes: StaffNotesResponse;
@@ -43,7 +49,7 @@ export function FutureCastLiveFeed({
         buildIntelFeedItem({
           id: `fc-rise-${riser.slug}`,
           playerName: riser.name,
-          headline: `Prediction trending up for ${riser.name} (+${Math.round(riser.trendDelta7d)}%)`,
+          headline: `Prediction trending up for ${riser.name} (${formatTrendDelta(riser.trendDelta7d)})`,
           timestamp: movementIntel.updatedAt,
           category: 'Movement',
         })
@@ -81,7 +87,7 @@ export function FutureCastLiveFeed({
         buildIntelFeedItem({
           id: `fc-fall-${faller.slug}`,
           playerName: faller.name,
-          headline: `Prediction cooling on ${faller.name} (${Math.round(faller.trendDelta7d)}%)`,
+          headline: `Prediction cooling on ${faller.name} (${formatTrendDelta(faller.trendDelta7d)})`,
           timestamp: movementIntel.updatedAt,
           category: 'Movement',
         })

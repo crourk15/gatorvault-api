@@ -15,7 +15,7 @@ type Props = {
 
 function MovementRow({ player, tone }: { player: FutureCastPlayer; tone: Tab }): React.ReactElement {
   const pct = ufPctFromFc(player.ufConfidence);
-  const delta = Math.round(player.trendDelta7d);
+  const delta = Math.round(player.trendDelta7d ?? 0);
 
   return (
     <div className={`rh-cc-move-row${tone === 'volatile' ? ' rh-cc-move-row--volatile' : ''}`}>

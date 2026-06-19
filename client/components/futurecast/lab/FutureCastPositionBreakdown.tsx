@@ -42,7 +42,7 @@ export function FutureCastPositionBreakdown({ players, activePredictions, bare }
         count: list.length,
         avgUfProb,
         avgVolatility,
-        activePredictions: list.filter((p) => p.ufConfidence > 0).length,
+        activePredictions: list.filter((p) => (p.ufConfidence ?? 0) > 0).length,
       });
     }
 

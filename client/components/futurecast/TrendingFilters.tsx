@@ -77,7 +77,7 @@ export function TrendingFilters({ filters, onChange, positions, states }: Props)
   );
 }
 
-export function applyTrendingFilters<T extends { position: string; state?: string | null; composite: number; trendDelta7d: number }>(
+export function applyTrendingFilters<T extends { position: string; state?: string | null; composite: number; trendDelta7d: number | null }>(
   list: T[],
   filters: TrendingFilterState
 ): T[] {
@@ -85,7 +85,7 @@ export function applyTrendingFilters<T extends { position: string; state?: strin
     if (filters.position && p.position !== filters.position) return false;
     if (filters.state && p.state !== filters.state) return false;
     if (filters.minRating > 0 && p.composite < filters.minRating) return false;
-    if (filters.movementThreshold > 0 && Math.abs(p.trendDelta7d) < filters.movementThreshold) {
+    if (filters.movementThreshold > 0 && Math.abs(p.trendDelta7d ?? 0) < filters.movementThreshold) {
       return false;
     }
     return true;

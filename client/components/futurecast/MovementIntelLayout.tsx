@@ -68,7 +68,9 @@ export function MovementIntelLayout({ data }: Props): React.ReactElement {
                   title="Top Risers"
                   players={data.risers}
                   tone="up"
-                  valueLabel={(p) => `+${p.trendDelta7d.toFixed(2)}`}
+                  valueLabel={(p) =>
+                    p.trendDelta7d != null ? `+${p.trendDelta7d.toFixed(2)}` : 'TBD'
+                  }
                 />
               </FutureCastPanelShell>
             </section>
@@ -95,7 +97,9 @@ export function MovementIntelLayout({ data }: Props): React.ReactElement {
                   title="Top Fallers"
                   players={data.fallers}
                   tone="down"
-                  valueLabel={(p) => p.trendDelta7d.toFixed(2)}
+                  valueLabel={(p) =>
+                    p.trendDelta7d != null ? p.trendDelta7d.toFixed(2) : 'TBD'
+                  }
                 />
               </FutureCastPanelShell>
             </section>

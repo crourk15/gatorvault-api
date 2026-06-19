@@ -75,8 +75,8 @@ export function formatStaffPercent(value: number): string {
   return `${Math.round(value)}%`;
 }
 
-export function formatFitPercent(value: number): string {
-  return `${Math.round(value)}%`;
+export function formatFitPercent(value: number | null | undefined): string {
+  return `${normalizePercent(value)}%`;
 }
 
 export function formatPriorityScore(value: number): string {

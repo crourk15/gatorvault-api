@@ -20,7 +20,7 @@ export type FutureCastTargetCardProps = {
 /** Premium target card used by FutureCast Lab master board sections. */
 export function FutureCastTargetCard({ player, profileHref }: FutureCastTargetCardProps): React.ReactElement {
   const pct = ufPctFromFc(player.ufProbability);
-  const delta = Math.round(player.delta7d);
+  const delta = Math.round(player.delta7d ?? 0);
   const tone = delta > 0 ? 'rise' : delta < 0 ? 'fall' : 'flat';
 
   return (

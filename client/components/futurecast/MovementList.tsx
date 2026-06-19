@@ -50,7 +50,8 @@ export function MovementList({ title, players, valueLabel, tone = 'up' }: Props)
       <ul className="gv-movement-list__items">
         {players.slice(0, 8).map((p) => {
           const delta = p.trendDelta7d ?? 0;
-          const ufEnd = p.ufConfidence <= 1 ? Math.round(p.ufConfidence * 100) : Math.round(p.ufConfidence);
+          const uf = p.ufConfidence ?? 0;
+          const ufEnd = uf <= 1 ? Math.round(uf * 100) : Math.round(uf);
           const rowClass =
             tone === 'volatile'
               ? 'rh-movement-stock-row rh-movement-stock-row--volatile'
