@@ -136,6 +136,7 @@ const netlifyPaths = rewriteNextChunkPathsForNetlify(serverDir);
 console.log(`[netlify] Published vault route chunks to js/vault-chunks/ (${netlifyPaths.flatChunks} bundles, ${netlifyPaths.filesUpdated} refs updated)`);
 assertNoUnrewrittenAppChunkRefs(serverDir);
 require('./stamp-build-meta.js');
+require('./inject-cache-bust.js');
 require('./inject-vault-shell-css.js');
 require('./inject-vault-hydration-guard.js');
 require('./inject-qa-markers.js');

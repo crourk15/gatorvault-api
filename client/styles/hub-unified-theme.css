@@ -540,7 +540,12 @@
   .gv-rh-elite-stat,
   .rh-fc-card,
   .rh-nil-card,
-  .commit-card
+  .commit-card,
+  .rh-cc-module,
+  .fc-lab-panel-shell,
+  .fc-lab-target-card,
+  .fc-lab-battle-row,
+  .fc-lab-signal-card
 ) {
   background: var(--th-card-bg) !important;
   background-image: none !important;

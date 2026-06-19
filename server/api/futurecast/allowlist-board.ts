@@ -21,6 +21,7 @@ import {
   FUTURECAST_CLASS_YEAR,
 } from './feed-filters';
 import { serializeFeedRowsWithVolatility } from '../predictions/utils-api';
+import { intelUuidForSlug, isUnderclassmenClassYear } from '../../lib/underclassmen-intel';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -316,7 +317,7 @@ export async function loadBoardPlayersForSlugs(
     );
 
     players.push({
-      id: model?.playerId ?? slug,
+      id: model?.playerId ?? (isUnderclassmenClassYear(classYear) ? intelUuidForSlug(slug) : slug),
       slug,
       name,
       classYear,

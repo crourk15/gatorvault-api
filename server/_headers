@@ -1,3 +1,52 @@
+# Published with server/ — must match netlify.toml cache policy.
+# HTML/RSC shells: never cache (prevents stale chunk refs + mixed build versions).
+# Hashed assets (_next/static, js/vault-chunks): immutable (set in netlify.toml).
+
+/
+  Cache-Control: no-store, no-cache, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+  Netlify-CDN-Cache-Control: no-store
+
+/*.html
+  Cache-Control: no-store, no-cache, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+  Netlify-CDN-Cache-Control: no-store
+
+/*.txt
+  Cache-Control: no-store, no-cache, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+  Netlify-CDN-Cache-Control: no-store
+
+/vault/*
+  Cache-Control: no-store, no-cache, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+  Netlify-CDN-Cache-Control: no-store
+
+/futurecast/*
+  Cache-Control: no-store, no-cache, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+  Netlify-CDN-Cache-Control: no-store
+
+/build-manifest.json
+  Cache-Control: no-store, no-cache, must-revalidate
+  Pragma: no-cache
+  Netlify-CDN-Cache-Control: no-store
+
+/ops-version.json
+  Cache-Control: no-store, no-cache, must-revalidate
+  Pragma: no-cache
+  Netlify-CDN-Cache-Control: no-store
+
+/js/vault-route-manifest.json
+  Cache-Control: no-store, no-cache, must-revalidate
+  Pragma: no-cache
+  Netlify-CDN-Cache-Control: no-store
+
 /og-image.png
   Content-Type: image/png
   Cache-Control: public, max-age=86400
@@ -33,4 +82,7 @@
   Cache-Control: public, max-age=604800
 
 /index.html
-  Cache-Control: public, max-age=0, must-revalidate
+  Cache-Control: no-store, no-cache, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+  Netlify-CDN-Cache-Control: no-store

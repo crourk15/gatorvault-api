@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
 import {
   ModuleShell,
   MovementSparkline,
@@ -241,6 +240,7 @@ export function FutureCastPanelShell({
   children,
   testId,
 }: {
+  /** Flat section without rh-cc-module chrome — opt-in only. */
   bare?: boolean;
   title: string;
   sub?: string;
@@ -248,10 +248,7 @@ export function FutureCastPanelShell({
   children: React.ReactNode;
   testId?: string;
 }): React.ReactElement {
-  const isDesktop = useIsCommandCenterDesktop();
-  const useBare = bare ?? !isDesktop;
-
-  if (useBare) {
+  if (bare) {
     return (
       <FutureCastLabSection title={title} sub={sub} action={action} testId={testId}>
         {children}

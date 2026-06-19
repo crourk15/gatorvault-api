@@ -43,6 +43,11 @@ import {
 } from '../portal/engine';
 import { getUfFitIntelByPlayerId, ufFitRowToEngineInput } from '../../models/uf-fit-intel';
 import { computeUfFitIntel } from '../uf-fit/engine';
+import {
+  buildUnderclassmenIntelForSlug,
+  intelUuidForSlug,
+  isUnderclassmenClassYear,
+} from '../../lib/underclassmen-intel';
 
 const require = createRequire(import.meta.url);
 
@@ -118,6 +123,102 @@ async function buildRecruitingStoreProfile(slug: string): Promise<FullProfileRes
   const player = mapRecruitingToPlayerCore(recruiting);
   const profiles = mapRecruitingProfiles(recruiting);
   const now = new Date().toISOString();
+  const classYear = player.classYear;
+
+  if (isUnderclassmenClassYear(classYear)) {
+    const intel = await buildUnderclassmenIntelForSlug(slug);
+    if (intel) {
+      player.id = intel.intelUuid;
+      player.ufFitScore = intel.earlyIntel.fitScore;
+      player.volatilityScore = intel.earlyIntel.volatilityScore;
+      player.movementHistory = intel.earlyMovement.movementHistory;
+
+      const hsProfile = profiles.highSchoolProfile as Record<string, unknown> | null;
+      if (hsProfile) {
+        hsProfile.playerId = intel.intelUuid;
+        hsProfile.discoveryScore = intel.earlyIntel.discoveryScore;
+      }
+
+      const related = intel.relatedIntel.map((r, i) => ({
+        id: r.id,
+        slug: r.slug,
+        fullName: r.fullName,
+        classYear: r.classYear,
+        position: r.position,
+        lifecycle: 'HS',
+        portalStatus: null,
+        signalCount: 0,
+        portalLikelihood: 0,
+        ufFitScore: r.fitScore,
+        ufConfidence: r.ufConfidence,
+        rank: i + 1,
+      }));
+
+      const competingSchools = intel.earlyIntel.competingSchools.map((s, i) => ({
+        school: s.name,
+        rankNow: i + 1,
+        rankPrior: null,
+        delta: 0,
+        volatilityBoost: 0,
+      }));
+
+      const mw = intel.earlyMovement.movementWindow;
+
+      return {
+        lastUpdated: intel.updatedAt || now,
+        source: 'recruiting-store',
+        player: player as unknown as Record<string, unknown>,
+        highSchoolProfile: profiles.highSchoolProfile as Record<string, unknown> | null,
+        collegeProfile: profiles.collegeProfile,
+        portalProfile: profiles.portalProfile as Record<string, unknown> | null,
+        ufSpecificProfile: profiles.ufSpecificProfile,
+        movementWindow: mw,
+        movementHistory: intel.earlyMovement.movementHistory,
+        signals: intel.earlySignals as unknown as Record<string, unknown>[],
+        related,
+        portalPredictions: {
+          predictions: intel.earlyFutureCastPicks.map((p) => ({
+            school: p.school,
+            score: p.confidence,
+          })),
+          intel: {
+            portalLikelihood: 0,
+            depthChartRisk: 0,
+            snapShareScore: 0,
+            volatility: intel.earlyIntel.volatilityScore,
+          },
+        },
+        fitIntel: {
+          ufFitScore: intel.earlyIntel.fitScore,
+          fitTier:
+            intel.earlyIntel.fitScore >= 85
+              ? 'elite'
+              : intel.earlyIntel.fitScore >= 70
+                ? 'strong'
+                : intel.earlyIntel.fitScore >= 50
+                  ? 'moderate'
+                  : 'low',
+          schemeFit: Math.round(intel.earlyIntel.fitScore * 0.4),
+          cultureFit: Math.round(intel.earlyIntel.fitScore * 0.3),
+          positionalNeed: Math.round(intel.earlyIntel.fitScore * 0.2),
+          staffInterest: Math.round(intel.earlyIntel.fitScore * 0.1),
+          fitDelta: intel.earlyMovement.trendDelta7d * 100,
+          fitVolatility: intel.earlyIntel.volatilityScore,
+          history: [],
+        },
+        competingSchools,
+        futurecastSummary: {
+          ufProbability: intel.earlyIntel.ufProbability,
+          predictedSchool: 'Florida',
+          movementDelta: mw?.delta7d ?? null,
+          fitScore: intel.earlyIntel.fitScore,
+          volatilityScore: intel.earlyIntel.volatilityScore,
+        },
+      };
+    }
+
+    player.id = intelUuidForSlug(slug);
+  }
 
   return {
     lastUpdated: now,
@@ -351,9 +452,14 @@ export async function resolvePlayerSlugRecord(
 
   const recruiting = await getRecruitingPlayerBySlug(normalized);
   if (recruiting) {
+    const classYear = Number(recruiting.classYear ?? 0);
+    const playerId =
+      isUnderclassmenClassYear(classYear)
+        ? intelUuidForSlug(normalized)
+        : String(recruiting.on3Id || recruiting.slug);
     return {
       kind: 'recruiting-fallback',
-      playerId: String(recruiting.on3Id || recruiting.slug),
+      playerId,
       canonicalSlug: recruiting.slug,
       redirectHref: null,
       roster: null,

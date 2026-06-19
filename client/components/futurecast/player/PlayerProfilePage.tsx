@@ -158,9 +158,9 @@ export function PlayerProfilePage({
         !!data?.portalProfile ||
         data?.player.status === 'COLLEGE' ||
         data?.player.status === 'PORTAL',
-      'uf-fit': !!data?.ufSpecificProfile,
+      'uf-fit': !!data?.ufSpecificProfile || !!profile?.fitIntel,
     }),
-    [data]
+    [data, profile?.fitIntel]
   );
 
   if (loading && !profile) {

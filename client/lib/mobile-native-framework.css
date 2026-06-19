@@ -622,6 +622,13 @@
     margin-right: 0 !important;
   }
 
+  .fc-lab-cc-page .fc-lab-hero,
+  .fc-lab-cc-page .fc-lab-feed {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+
   .fc-lab-cc-page .fc-lab-target-card,
   .fc-lab-cc-page .fc-lab-battle-row,
   .fc-lab-cc-page .fc-lab-signal-card,
@@ -828,7 +835,6 @@
   }
 
   /* Horizontal sliders — overflow-x-auto, parents never clip */
-  .fc-lab-hero__metrics,
   .rh-cc-tabs,
   .fc-lab-battle-tabs,
   .gv-ui-scroll-row {
@@ -846,22 +852,26 @@
     box-sizing: border-box;
   }
 
-  .fc-lab-hero__metrics::-webkit-scrollbar,
   .rh-cc-tabs::-webkit-scrollbar,
   .fc-lab-battle-tabs::-webkit-scrollbar {
     display: none;
   }
 
-  .fc-lab-hero__metric {
-    flex: 0 0 140px !important;
-    min-width: 140px !important;
-    scroll-snap-align: start;
-  }
-
+  /* Hero metrics — 2×2 grid like Recruiting Hub (all four visible, no horizontal clip) */
+  .fc-lab-hero__metrics,
   .rh-cc-hero__metrics {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     overflow: visible !important;
+    flex-wrap: unset !important;
+    scroll-snap-type: none !important;
+  }
+
+  .fc-lab-hero__metric {
+    flex: unset !important;
+    min-width: 0 !important;
+    width: auto !important;
+    scroll-snap-align: unset;
   }
 
   .rh-cc-module:has(.fc-lab-hero__metrics),
@@ -872,12 +882,23 @@
   .fc-lab-hero__inner:has(.fc-lab-hero__metrics),
   .rh-cc-module__body:has(.fc-lab-hero__metrics) {
     overflow: visible !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
   }
 
   .fc-lab-hero__metrics {
-    padding-inline: var(--mobile-gutter);
+    padding-inline: 0;
+  }
+
+  /* Battle tabs + target cards — prevent parent module clip (RH intel-scroll parity) */
+  .rh-cc-module:has(.fc-lab-battle-tabs),
+  .fc-lab-panel-shell:has(.fc-lab-battle-tabs),
+  .rh-cc-module:has(.fc-lab-target-cards),
+  .fc-lab-panel-shell:has(.fc-lab-target-cards) {
+    overflow: visible !important;
+  }
+
+  .rh-cc-module__body:has(.fc-lab-battle-tabs),
+  .fc-lab-panel-shell .rh-cc-module__body:has(.fc-lab-battle-tabs) {
+    overflow: visible !important;
   }
 
   /* Tab strips inside modules — scroll, not wrap clip */

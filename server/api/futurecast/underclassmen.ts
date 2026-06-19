@@ -12,6 +12,10 @@ import { createRequire } from 'node:module';
 import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
 import { loadBoardPlayersForSlugs, type FutureCastBoardPlayer } from './allowlist-board';
 import { sendCachedJson } from './response-cache';
+import {
+  buildUnderclassmenIntelForSlug,
+  type UnderclassmenIntelBundle,
+} from '../../lib/underclassmen-intel';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -177,6 +181,27 @@ export const handleGetFutureCastEarlyWatchlist = asyncHandler(async (req: Reques
     const years = DEFAULT_YEARS.filter((y) => y >= (Number.isFinite(minYear) ? minYear : 2028));
     const cacheKey = `futurecast:early-watchlist:${years.join(',')}`;
     await sendCachedJson(res, cacheKey, () => buildUnderclassmenPayload([...years]));
+  } catch (err) {
+    handlePredictionsApiError(res, err);
+  }
+});
+
+/** GET /api/futurecast/underclassmen/intel/:slug — per-player early intel bundle */
+export const handleGetUnderclassmenIntelBySlug = asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const slug = String(req.params.slug || '').trim().toLowerCase();
+    if (!slug) {
+      res.status(400).json({ ok: false, error: 'slug required' });
+      return;
+    }
+    const cacheKey = `futurecast:underclassmen:intel:${slug}`;
+    await sendCachedJson(res, cacheKey, async () => {
+      const bundle = await buildUnderclassmenIntelForSlug(slug);
+      if (!bundle) {
+        return { ok: false, error: 'Underclassmen intel not found', slug };
+      }
+      return { ok: true, ...bundle } satisfies { ok: true } & UnderclassmenIntelBundle;
+    });
   } catch (err) {
     handlePredictionsApiError(res, err);
   }

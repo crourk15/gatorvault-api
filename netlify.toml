@@ -1,6 +1,11 @@
 # GatorVault Insider — Netlify (gatorvaultinsider.com)
 # Publishes server/ static vault + FutureCast Next.js export (client/out merged at build).
 #
+# Recovery deploy (chunk mismatch / stale HTML):
+#   npm run deploy:netlify:full   # clean + build + hook + CDN purge (needs env vars)
+#   npm run deploy:netlify:local  # clean + build only
+#   npm run purge:netlify-cdn     # CDN purge after deploy
+#
 # ROUTING: All /vault/* and SPA rewrites live in server/_redirects, regenerated on every
 # build from client/lib/routes.js (via client/scripts/generate-redirects.js).
 # Do NOT duplicate vault rewrites here — conflicting rules can 403 crawlers.
@@ -30,48 +35,95 @@
 [[headers]]
   for = "/"
   [headers.values]
-    Cache-Control = "no-store, must-revalidate"
+    Cache-Control = "no-store, no-cache, must-revalidate"
     Pragma = "no-cache"
+    Expires = "0"
     Netlify-CDN-Cache-Control = "no-store"
 
 [[headers]]
   for = "/*.html"
   [headers.values]
-    Cache-Control = "no-store, must-revalidate"
+    Cache-Control = "no-store, no-cache, must-revalidate"
     Pragma = "no-cache"
+    Expires = "0"
+    Netlify-CDN-Cache-Control = "no-store"
+
+[[headers]]
+  for = "/*.txt"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
+    Netlify-CDN-Cache-Control = "no-store"
 
 [[headers]]
   for = "/vault/*"
   [headers.values]
-    Cache-Control = "no-store, must-revalidate"
+    Cache-Control = "no-store, no-cache, must-revalidate"
     Pragma = "no-cache"
+    Expires = "0"
+    Netlify-CDN-Cache-Control = "no-store"
 
 [[headers]]
   for = "/futurecast/*"
   [headers.values]
-    Cache-Control = "no-store, must-revalidate"
+    Cache-Control = "no-store, no-cache, must-revalidate"
     Pragma = "no-cache"
+    Expires = "0"
+    Netlify-CDN-Cache-Control = "no-store"
 
 [[headers]]
   for = "/portal/*"
   [headers.values]
-    Cache-Control = "no-store, must-revalidate"
+    Cache-Control = "no-store, no-cache, must-revalidate"
     Pragma = "no-cache"
+    Expires = "0"
+    Netlify-CDN-Cache-Control = "no-store"
+
+[[headers]]
+  for = "/welcome/*"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
+    Netlify-CDN-Cache-Control = "no-store"
+
+[[headers]]
+  for = "/join/*"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
+    Netlify-CDN-Cache-Control = "no-store"
+
+[[headers]]
+  for = "/recruiting-hub/*"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
+    Netlify-CDN-Cache-Control = "no-store"
 
 [[headers]]
   for = "/js/vault-route-manifest.json"
   [headers.values]
-    Cache-Control = "no-store, must-revalidate"
+    Cache-Control = "no-store, no-cache, must-revalidate"
+    Pragma = "no-cache"
+    Netlify-CDN-Cache-Control = "no-store"
 
 [[headers]]
   for = "/build-manifest.json"
   [headers.values]
-    Cache-Control = "no-store, must-revalidate"
+    Cache-Control = "no-store, no-cache, must-revalidate"
+    Pragma = "no-cache"
+    Netlify-CDN-Cache-Control = "no-store"
 
 [[headers]]
   for = "/ops-version.json"
   [headers.values]
-    Cache-Control = "no-store, must-revalidate"
+    Cache-Control = "no-store, no-cache, must-revalidate"
+    Pragma = "no-cache"
+    Netlify-CDN-Cache-Control = "no-store"
 
 [[headers]]
   for = "/api/futurecast/home"

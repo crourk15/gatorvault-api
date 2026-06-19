@@ -21,6 +21,7 @@ import { handleGetFutureCastHealth } from './health';
 import {
   handleGetFutureCastEarlyWatchlist,
   handleGetFutureCastUnderclassmen,
+  handleGetUnderclassmenIntelBySlug,
 } from './underclassmen';
 
 export function mountFutureCastFeatureRoutes(app: Express): void {
@@ -42,5 +43,6 @@ export function mountFutureCastFeatureRoutes(app: Express): void {
   app.get('/api/futurecast/heatmap', handleGetMovementHeatmap);
   app.get('/api/futurecast/movement', handleGetMovementHeatmap);
   app.get('/api/futurecast/underclassmen', handleGetFutureCastUnderclassmen);
+  app.get('/api/futurecast/underclassmen/intel/:slug', handleGetUnderclassmenIntelBySlug);
   app.get('/api/futurecast/early-watchlist', handleGetFutureCastEarlyWatchlist);
 }

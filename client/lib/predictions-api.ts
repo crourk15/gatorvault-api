@@ -135,9 +135,13 @@ export async function fetchMovementHeatmap(): Promise<MovementHeatmapResponse> {
   return predictionsApiFetch<MovementHeatmapResponse>('/api/futurecast/heatmap');
 }
 
-export async function fetchPlayerPredictions(playerId: string): Promise<PlayerPrediction[]> {
+export async function fetchPlayerPredictions(
+  playerId: string,
+  slug?: string
+): Promise<PlayerPrediction[]> {
+  const qs = slug ? `?slug=${encodeURIComponent(slug)}` : '';
   const data = await apiFetch<{ playerId: string; predictions: PlayerPrediction[] }>(
-    `/api/predictions/player/${encodeURIComponent(playerId)}`
+    `/api/predictions/player/${encodeURIComponent(playerId)}${qs}`
   );
   return data.predictions;
 }

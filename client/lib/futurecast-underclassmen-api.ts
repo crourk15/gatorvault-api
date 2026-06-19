@@ -49,3 +49,36 @@ export async function fetchFutureCastEarlyWatchlist(minYear = 2028): Promise<Und
     `/api/futurecast/early-watchlist?class_year_gte=${minYear}`
   ).catch(() => EMPTY);
 }
+
+export type UnderclassmenIntelPick = {
+  id: string;
+  school: string;
+  confidence: number;
+  delta?: number;
+  sourceType: 'MODEL' | 'STAFF' | 'FAN' | 'BLENDED';
+  predictorId: string;
+  status: 'ACTIVE' | 'HIT' | 'MISS' | 'WITHDRAWN';
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UnderclassmenIntelResponse = {
+  ok: boolean;
+  intelUuid: string;
+  slug: string;
+  classYear: number;
+  earlyFutureCastPicks: UnderclassmenIntelPick[];
+  error?: string;
+};
+
+export async function fetchUnderclassmenIntel(slug: string): Promise<UnderclassmenIntelResponse | null> {
+  const normalized = slug.trim().toLowerCase();
+  if (!normalized) return null;
+  try {
+    return await apiFetch<UnderclassmenIntelResponse>(
+      `/api/futurecast/underclassmen/intel/${encodeURIComponent(normalized)}`
+    );
+  } catch {
+    return null;
+  }
+}

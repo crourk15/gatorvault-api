@@ -34,13 +34,29 @@
   --gv-motion-pulse: 1.5s infinite;
 }
 
-/* Page shell — align with Recruiting Hub light command-center page */
+/* Page shell — navy background like RH; default body color matches rh-page meta tone */
 .gv-page,
 .fc-futurecast-page.fc-futurecast-page--elite {
   min-height: 100vh;
   background: var(--page-bg, var(--gv-bg));
-  color: var(--heading-color-dark, var(--gv-text-primary));
+  color: var(--th-meta, var(--subtle-gray, var(--gv-text-secondary)));
   font-family: var(--gv-font-family);
+}
+
+/* White type only on intentional dark surfaces (hero, feed) — not white module cards */
+.fc-futurecast-page--elite .fc-lab-hero,
+.fc-futurecast-page--elite .fc-lab-hero *,
+.fc-futurecast-page--elite .fc-lab-feed,
+.fc-futurecast-page--elite .fc-lab-feed *,
+.fc-futurecast-page--elite .rh-cc-hero,
+.fc-futurecast-page--elite .rh-cc-hero * {
+  color: inherit;
+}
+
+.fc-futurecast-page--elite .fc-lab-hero,
+.fc-futurecast-page--elite .fc-lab-feed,
+.fc-futurecast-page--elite .rh-cc-hero {
+  color: var(--heading-color-dark, #fff);
 }
 
 .fc-futurecast-page.fc-futurecast-page--elite.rh-page--elite {

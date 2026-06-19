@@ -51,7 +51,7 @@ export function OverviewTab({ data, metrics }: OverviewTabProps): React.ReactEle
 
       <section className="fc-profile-section">
         <h2>FutureCast Picks</h2>
-        <PredictionsPanel playerId={player.id} />
+        <PredictionsPanel playerId={player.id} playerSlug={player.slug} classYear={player.classYear} />
       </section>
 
       {recentSignals.length > 0 && (

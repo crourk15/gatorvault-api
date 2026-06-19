@@ -2,6 +2,7 @@
  * Map recruiting-store players into FutureCast profile shapes when Postgres row is missing.
  */
 import { createRequire } from 'node:module';
+import { intelUuidForSlug, isUnderclassmenClassYear } from '../../lib/underclassmen-intel';
 
 const require = createRequire(import.meta.url);
 
@@ -85,8 +86,13 @@ export async function getRecruitingPlayerBySlug(slug: string): Promise<Recruitin
 
 export function mapRecruitingToPlayerCore(p: RecruitingPlayer): FallbackPlayerCore {
   const lifecycle = lifecycleFromRecruiting(p);
+  const classYear = p.classYear ?? 0;
+  const id =
+    isUnderclassmenClassYear(classYear)
+      ? intelUuidForSlug(p.slug)
+      : String(p.on3Id || p.slug);
   return {
-    id: String(p.on3Id || p.slug),
+    id,
     fullName: p.name || p.slug,
     slug: p.slug,
     classYear: p.classYear ?? 0,
@@ -112,12 +118,17 @@ export function mapRecruitingToPlayerCore(p: RecruitingPlayer): FallbackPlayerCo
 
 export function mapRecruitingProfiles(p: RecruitingPlayer) {
   const lifecycle = lifecycleFromRecruiting(p);
+  const classYear = p.classYear ?? 0;
+  const playerId =
+    isUnderclassmenClassYear(classYear)
+      ? intelUuidForSlug(p.slug)
+      : String(p.on3Id || p.slug);
   return {
     highSchoolProfile:
       lifecycle === 'HS'
         ? {
             id: p.slug,
-            playerId: String(p.on3Id || p.slug),
+            playerId,
             offers: [],
             stats: {},
             recruitingNotes: null,
@@ -129,7 +140,7 @@ export function mapRecruitingProfiles(p: RecruitingPlayer) {
       lifecycle === 'PORTAL'
         ? {
             id: p.slug,
-            playerId: String(p.on3Id || p.slug),
+            playerId,
             previousSchool: p.previousSchool ?? p.highSchool ?? null,
             enteredPortalAt: null,
             exitedPortalAt: null,
