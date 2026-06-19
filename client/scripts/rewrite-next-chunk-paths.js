@@ -166,6 +166,32 @@ function applyReplacements(content, map) {
   return next;
 }
 
+/** Webpack publicPath is /_next/ — RSC chunk refs must be root-absolute (/js/vault-chunks/). */
+function normalizeAbsoluteVaultChunkRefs(content) {
+  return content
+    .split('"js/vault-chunks/')
+    .join('"/js/vault-chunks/')
+    .split("'js/vault-chunks/")
+    .join("'/js/vault-chunks/");
+}
+
+function assertAbsoluteVaultChunkRefs(serverDir) {
+  const offenders = [];
+  walkFiles(serverDir, (file) => {
+    const rel = path.relative(serverDir, file).replace(/\\/g, '/');
+    if (!/\.(html|txt)$/.test(rel)) return;
+    if (!shouldAssertChunkRefs(rel)) return;
+    const raw = fs.readFileSync(file, 'utf8');
+    if (/["']js\/vault-chunks\//.test(raw)) offenders.push(rel);
+  });
+  if (offenders.length) {
+    throw new Error(
+      `[rewrite-next-chunk-paths] Relative vault-chunk refs (webpack resolves under /_next/) in ` +
+        `${offenders.slice(0, 8).join(', ')}${offenders.length > 8 ? ` (+${offenders.length - 8} more)` : ''}`
+    );
+  }
+}
+
 function rewriteNextChunkPathsForNetlify(serverDir) {
   const map = buildReplacementMap(serverDir);
   let filesUpdated = 0;
@@ -204,12 +230,15 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
   walkFiles(serverDir, (file) => {
     if (!/\.(html|txt)$/.test(file)) return;
     const raw = fs.readFileSync(file, 'utf8');
-    const updated = applyReplacements(raw, map);
+    let updated = applyReplacements(raw, map);
+    updated = normalizeAbsoluteVaultChunkRefs(updated);
     if (updated !== raw) {
       fs.writeFileSync(file, updated);
       filesUpdated++;
     }
   });
+
+  assertAbsoluteVaultChunkRefs(serverDir);
 
   return { filesUpdated, flatChunks: map.size, vaultChunksDir: VAULT_CHUNKS_DIR };
 }
@@ -236,4 +265,11 @@ function assertNoUnrewrittenAppChunkRefs(serverDir) {
   }
 }
 
-module.exports = { rewriteNextChunkPathsForNetlify, flatChunkName, VAULT_CHUNKS_DIR, assertNoUnrewrittenAppChunkRefs };
+module.exports = {
+  rewriteNextChunkPathsForNetlify,
+  flatChunkName,
+  VAULT_CHUNKS_DIR,
+  assertNoUnrewrittenAppChunkRefs,
+  normalizeAbsoluteVaultChunkRefs,
+  assertAbsoluteVaultChunkRefs,
+};

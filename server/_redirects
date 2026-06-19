@@ -4,6 +4,9 @@
 # API proxy
 /api/*  https://gatorvault-api.onrender.com/api/:splat  200
 
+# Webpack publicPath /_next/ + relative js/vault-chunks refs → canonical flat chunks
+/_next/js/vault-chunks/*  /js/vault-chunks/:splat  200!
+
 # Legacy monolith vault query params → React vault routes
 /?open=vault  /vault  301
 /?open=vault&tab=start  /  301
