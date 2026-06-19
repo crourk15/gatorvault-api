@@ -1,23 +1,28 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchTeamHubBundle, type TeamHubBundle } from '@/lib/team-hub-api';
+import { fetchRecruitingBoard } from '@/lib/recruiting-board-api';
 import type { Coach, DepthChartTab, Era } from '@/lib/team-hub-types';
-import { TEAM_COPY } from '@/lib/team-hub-types';
 import type { RosterFilter } from '@/lib/team-hub-data';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
 import { UiError } from '@/components/site/UiMessage';
-import { TeamTopCommandCard } from '@/components/team/TeamTopCommandCard';
-import { ProgramHistoryTimeline } from '@/components/team/ProgramHistoryTimeline';
-import { ProgramAchievementsStats } from '@/components/team/ProgramAchievementsStats';
-import { TeamIdentitySection } from '@/components/team/TeamIdentitySection';
-import { CoachingStaffGrid } from '@/components/team/CoachingStaffGrid';
 import { CoachingStaffModal, EraDetailModal } from '@/components/team/CoachingStaffModal';
-import { RosterFilters } from '@/components/team/RosterFilters';
-import { RosterList } from '@/components/team/RosterList';
-import { DepthChartTabs } from '@/components/team/DepthChartTabs';
-import { DepthChartGrid } from '@/components/team/DepthChartGrid';
-import { TeamFooter } from '@/components/team/TeamFooter';
+import { TeamElitePageShell } from '@/components/team/premium/TeamElitePageShell';
+import { TeamPremiumHero } from '@/components/team/premium/TeamPremiumHero';
+import { TeamPremiumSubNav } from '@/components/team/premium/TeamPremiumSubNav';
+import { TeamOverviewSection } from '@/components/team/premium/TeamOverviewSection';
+import { TeamRosterSection } from '@/components/team/premium/TeamRosterSection';
+import { TeamDepthChartSection } from '@/components/team/premium/TeamDepthChartSection';
+import { StaffCardGrid } from '@/components/team/premium/StaffCardGrid';
+import { TeamIdentityPremiumSection } from '@/components/team/premium/TeamIdentityPremiumSection';
+import { ProgramHistoryGrid } from '@/components/team/premium/ProgramHistoryGrid';
+import { TeamRecruitingPipelineSection } from '@/components/team/premium/TeamRecruitingPipelineSection';
+import {
+  buildPipelinePreview,
+  computeHeroMetrics,
+} from '@/components/team/premium/team-premium-metrics';
+import { TEAM_PREMIUM_TABS, type TeamPremiumTabId } from '@/components/team/premium/team-premium-types';
 
 const EMPTY_BUNDLE: TeamHubBundle = {
   eras: [],
@@ -35,6 +40,14 @@ const EMPTY_BUNDLE: TeamHubBundle = {
   updatedAt: null,
 };
 
+const SECTION_IDS = TEAM_PREMIUM_TABS.map((t) => t.id);
+
+function tabFromHash(): TeamPremiumTabId {
+  if (typeof window === 'undefined') return 'overview';
+  const hash = window.location.hash.replace('#', '') as TeamPremiumTabId;
+  return SECTION_IDS.includes(hash) ? hash : 'overview';
+}
+
 export function TeamHubPage(): React.ReactElement {
   const [bundle, setBundle] = useState<TeamHubBundle>(EMPTY_BUNDLE);
   const [loading, setLoading] = useState(true);
@@ -43,6 +56,8 @@ export function TeamHubPage(): React.ReactElement {
   const [dcTab, setDcTab] = useState<DepthChartTab>('offense');
   const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
   const [selectedEra, setSelectedEra] = useState<Era | null>(null);
+  const [activeTab, setActiveTab] = useState<TeamPremiumTabId>('overview');
+  const [pipelinePreview, setPipelinePreview] = useState(buildPipelinePreview(null));
 
   useVaultPageRestore('team', (saved) => {
     if (saved.rosterFilter && typeof saved.rosterFilter === 'string') {
@@ -56,7 +71,12 @@ export function TeamHubPage(): React.ReactElement {
       setError(null);
     }
     try {
-      setBundle(await fetchTeamHubBundle());
+      const [hub, board] = await Promise.all([
+        fetchTeamHubBundle(),
+        fetchRecruitingBoard(2027).catch(() => null),
+      ]);
+      setBundle(hub);
+      setPipelinePreview(buildPipelinePreview(board));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load team hub.');
     } finally {
@@ -85,6 +105,47 @@ export function TeamHubPage(): React.ReactElement {
     return () => document.body.classList.remove('gv-team-modal-open');
   }, [selectedCoach, selectedEra]);
 
+  const scrollToSection = useCallback((tab: TeamPremiumTabId) => {
+    setActiveTab(tab);
+    window.history.replaceState(null, '', `#${tab}`);
+    const el = document.getElementById(tab);
+    if (el) {
+      window.requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    }
+  }, []);
+
+  useEffect(() => {
+    const initial = tabFromHash();
+    setActiveTab(initial);
+    if (initial !== 'overview') {
+      requestAnimationFrame(() => scrollToSection(initial));
+    }
+
+    const onHash = () => setActiveTab(tabFromHash());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, [scrollToSection]);
+
+  useEffect(() => {
+    const sections = SECTION_IDS.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible[0]?.target.id) {
+          setActiveTab(visible[0].target.id as TeamPremiumTabId);
+        }
+      },
+      { rootMargin: '-120px 0px -55% 0px', threshold: [0.1, 0.25, 0.5] }
+    );
+
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, [loading, error]);
+
   const dcPositions =
     dcTab === 'offense'
       ? bundle.depthChart.offense
@@ -92,73 +153,39 @@ export function TeamHubPage(): React.ReactElement {
         ? bundle.depthChart.defense
         : bundle.depthChart.specialTeams;
 
+  const heroMetrics = useMemo(() => computeHeroMetrics(bundle), [bundle]);
+
   return (
-    <div className="gv-team-hub gv-team-shell" data-testid="vault-team">
-      {error && !loading && (
-        <div className="gv-team__frame gv-team__command">
-          <div className="gv-team__grid">
-            <div className="gv-team__cell gv-team__cell--12">
-              <UiError message={error} retry={() => void load(true)} backHref="/vault" backLabel="← Home" />
-            </div>
-          </div>
+    <TeamElitePageShell>
+      {error && !loading ? (
+        <div className="rh-frame team-cc-page">
+          <UiError message={error} retry={() => void load(true)} backHref="/vault" backLabel="← Home" />
         </div>
-      )}
-
-      {!error && (
+      ) : (
         <>
-          <div className="gv-team__frame gv-team__command">
-            <div className="gv-team__grid">
-              <TeamTopCommandCard
-                stats={bundle.commandStats}
-                loading={loading && bundle.roster.length === 0}
-              />
-
-              <ProgramHistoryTimeline eras={bundle.eras} onSelectEra={setSelectedEra} />
-              <ProgramAchievementsStats achievements={bundle.achievements} />
-              <TeamIdentitySection blocks={bundle.identity} />
-              <CoachingStaffGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} />
-
-              <section
-                className="gv-team__cell gv-team__cell--12 gv-team-card gv-team-section gv-team-roster"
-                id="roster"
-                aria-label="Full Roster"
-              >
-                <h2 className="gv-team-card__title">{TEAM_COPY.roster.title}</h2>
-                <p className="gv-team-section__sub">{TEAM_COPY.roster.subtitle}</p>
-                {loading && bundle.roster.length === 0 ? (
-                  <p className="gv-team-status">Loading roster…</p>
-                ) : (
-                  <>
-                    <RosterFilters active={rosterFilter} onChange={setRosterFilter} />
-                    <RosterList players={bundle.roster} filter={rosterFilter} />
-                  </>
-                )}
-              </section>
-
-              <section
-                className="gv-team__cell gv-team__cell--12 gv-team-card gv-team-section"
-                id="depth-chart"
-                aria-label="Depth chart"
-              >
-                <h2 className="gv-team-card__title">{TEAM_COPY.depthChart.title}</h2>
-                <p className="gv-team-section__sub">{TEAM_COPY.depthChart.subtitle}</p>
-                <div className="gv-team-dc-legend">
-                  <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--locked">Locked</span>
-                  <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--battle">Battle</span>
-                  <span className="gv-team-dc-legend-pill gv-team-dc-legend-pill--watch">Watch</span>
-                </div>
-                <DepthChartTabs active={dcTab} onChange={setDcTab} />
-                <DepthChartGrid positions={dcPositions} />
-              </section>
-            </div>
+          <TeamPremiumHero metrics={heroMetrics} loading={loading && bundle.roster.length === 0} />
+          <div className="team-premium-nav-wrap rh-frame">
+            <TeamPremiumSubNav active={activeTab} onSelect={scrollToSection} />
           </div>
-
-          <TeamFooter />
+          <div className="rh-frame team-cc-page">
+            <TeamOverviewSection bundle={bundle} pipelinePreview={pipelinePreview} />
+            <TeamRosterSection
+              roster={bundle.roster}
+              filter={rosterFilter}
+              onFilterChange={setRosterFilter}
+              loading={loading && bundle.roster.length === 0}
+            />
+            <TeamDepthChartSection dcTab={dcTab} onTabChange={setDcTab} positions={dcPositions} />
+            <StaffCardGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} />
+            <TeamIdentityPremiumSection />
+            <ProgramHistoryGrid eras={bundle.eras} onSelectEra={setSelectedEra} />
+            <TeamRecruitingPipelineSection />
+          </div>
         </>
       )}
 
       <CoachingStaffModal coach={selectedCoach} onClose={() => setSelectedCoach(null)} />
       <EraDetailModal era={selectedEra} onClose={() => setSelectedEra(null)} />
-    </div>
+    </TeamElitePageShell>
   );
 }

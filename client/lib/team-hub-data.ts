@@ -15,7 +15,13 @@ export const TEAM_ERAS: Era[] = [
     title: 'Building The Swamp Standard',
     description:
       'Dickey and Pell transformed Florida into an SEC contender. The foundation for The Swamp mystique was laid across two decades.',
-    highlights: ['Emmitt Smith era peak', 'First sustained SEC winning culture', 'Wilber Marshall defensive identity'],
+    highlights: [
+      'SEC contender foundation',
+      'Defensive identity',
+      'Emmitt Smith era',
+      'Wilber Marshall prototype',
+      'Swamp mystique begins',
+    ],
   },
   {
     id: 'era-90s',
@@ -23,7 +29,13 @@ export const TEAM_ERAS: Era[] = [
     title: 'The Steve Spurrier Era',
     description:
       'Fun & Gun revolution — first national championship in 1996, four SEC titles in six years.',
-    highlights: ['1996 National Championship', 'Danny Wuerffel Heisman (1996)', 'Fun & Gun legacy'],
+    highlights: [
+      "Fun 'n' Gun",
+      'SEC dynasty',
+      'National title',
+      'Swamp becomes iconic',
+      'National recruiting footprint',
+    ],
   },
   {
     id: 'era-2000s',
@@ -31,7 +43,13 @@ export const TEAM_ERAS: Era[] = [
     title: 'Zook Transition & Meyer Dynasty',
     description:
       'Ron Zook bridged the Spurrier exit before Urban Meyer built a two-time national champion with the spread-option.',
-    highlights: ['2006 & 2008 National Championships', 'Tim Tebow Heisman (2007)', 'Spread-option evolution'],
+    highlights: [
+      'Zook roster rebuild',
+      'Meyer modernization',
+      'Two national titles',
+      'Tebow era',
+      'NFL-level S&C',
+    ],
   },
   {
     id: 'era-2010s',
@@ -39,7 +57,12 @@ export const TEAM_ERAS: Era[] = [
     title: 'SEC East Dominance & Transition',
     description:
       'Muschamp, McElwain, and Mullen — elite defenses, Kyle Pitts TE revolution, SEC East titles.',
-    highlights: ['2015–16 SEC East titles', 'Kyle Pitts unanimous All-American', '11-win 2019 under Mullen'],
+    highlights: [
+      'Multiple SEC East titles',
+      'DBU era',
+      'Defensive resurgence',
+      'Recruiting stabilization',
+    ],
   },
   {
     id: 'era-2020s',
@@ -47,7 +70,12 @@ export const TEAM_ERAS: Era[] = [
     title: 'Portal Era',
     description:
       'Jon Sumrall culture-first reset with Brad White 3-3-5 and portal-powered roster construction.',
-    highlights: ['2026 portal-powered roster reset', 'Brad White 3-3-5 install', 'Jayden Woods JACK centerpiece'],
+    highlights: [
+      'NIL + Portal strategy',
+      'Trench emphasis',
+      'Florida HS pipelines',
+      'Rebuilding the Swamp Standard',
+    ],
   },
 ];
 

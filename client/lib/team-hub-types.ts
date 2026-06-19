@@ -28,6 +28,11 @@ export type Coach = {
   group: 'coaching' | 'support';
   bio?: string;
   highlights?: string[];
+  headshotUrl?: string;
+  recruitingRegions?: string[];
+  keyRecruits?: string[];
+  tenure?: string;
+  specialty?: string;
 };
 
 export type TeamPlayer = {
@@ -119,3 +124,22 @@ export const TEAM_QUICK_ACTIONS = [
   { href: '#coaching-staff', icon: '🏈', label: 'Coaching Staff' },
   { href: '#program-history', icon: '📜', label: 'Program History' },
 ] as const;
+
+export type TeamTab =
+  | 'overview'
+  | 'roster'
+  | 'depth-chart'
+  | 'coaching-staff'
+  | 'team-identity'
+  | 'program-history'
+  | 'recruiting-pipeline';
+
+export const TEAM_TABS: { id: TeamTab; label: string }[] = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'roster', label: 'Roster' },
+  { id: 'depth-chart', label: 'Depth Chart' },
+  { id: 'coaching-staff', label: 'Coaching Staff' },
+  { id: 'team-identity', label: 'Team Identity' },
+  { id: 'program-history', label: 'Program History' },
+  { id: 'recruiting-pipeline', label: 'Recruiting Pipeline' },
+];

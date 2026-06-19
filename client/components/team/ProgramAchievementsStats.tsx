@@ -6,20 +6,27 @@ import { TEAM_COPY } from '@/lib/team-hub-types';
 
 type Props = {
   achievements: Achievement[];
+  embedded?: boolean;
 };
 
-export function ProgramAchievementsStats({ achievements }: Props): React.ReactElement {
+export function ProgramAchievementsStats({ achievements, embedded }: Props): React.ReactElement {
+  const grid = (
+    <div className="gv-team-ach-grid">
+      {achievements.map((item) => (
+        <div key={item.id} className="gv-team-ach-card">
+          <p className="gv-team-ach-card__value">{item.value}</p>
+          <p className="gv-team-ach-card__label">{item.label}</p>
+        </div>
+      ))}
+    </div>
+  );
+
+  if (embedded) return grid;
+
   return (
     <section className="gv-team__cell gv-team__cell--12 gv-team-card gv-team-section" aria-label="Program achievements">
       <h2 className="gv-team-card__title">{TEAM_COPY.achievements.title}</h2>
-      <div className="gv-team-ach-grid">
-        {achievements.map((item) => (
-          <div key={item.id} className="gv-team-ach-card">
-            <p className="gv-team-ach-card__value">{item.value}</p>
-            <p className="gv-team-ach-card__label">{item.label}</p>
-          </div>
-        ))}
-      </div>
+      {grid}
     </section>
   );
 }
