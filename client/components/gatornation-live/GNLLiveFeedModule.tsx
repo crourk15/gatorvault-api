@@ -39,10 +39,10 @@ export function GNLLiveFeedModule({ bundle, loading }: Props): React.ReactElemen
             items={beatItems}
           />
 
-          <div className="gv-gnl-live-module__thread">
-            <h2 className="gv-gnl-card__title">Live Thread</h2>
+          <div className="gv-gnl-thread gv-gnl-live-module__thread">
+            <h2 className="gv-gnl-thread__title">Live Thread</h2>
             {loading && activeFeed.length === 0 ? (
-              <p className="gv-gnl-status">Loading live updates…</p>
+              <p className="gv-gnl-status gv-gnl-thread__empty">Loading live updates…</p>
             ) : (
               <RecruitingFeed items={activeFeed} />
             )}

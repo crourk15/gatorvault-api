@@ -16,7 +16,9 @@ function formatTimestamp(ts?: string): string {
   if (!ts) return '';
   const d = new Date(ts);
   if (Number.isNaN(d.getTime())) return ts;
-  return d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  return d
+    .toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+    .toUpperCase();
 }
 
 type Props = {
@@ -37,7 +39,7 @@ export function BeatWriterCardGrid({ title, description, items }: Props): React.
           <p className="gv-gnl-panel__secondary">Nothing active right now.</p>
         ) : (
           cards.map((item, idx) => (
-            <article key={`${item.writerName ?? item.source}_${idx}`} className="gv-ds-card gv-gnl-beat-card gv-premium-card">
+            <article key={`${item.writerName ?? item.source}_${idx}`} className="gv-gnl-beat-card">
               <div className="gv-gnl-beat-card__head">
                 <span className="gv-gnl-beat-card__avatar" aria-hidden="true">
                   {avatarInitials(item.writerName, item.handle)}

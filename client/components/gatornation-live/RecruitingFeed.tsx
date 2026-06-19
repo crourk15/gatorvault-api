@@ -10,11 +10,11 @@ type Props = {
 
 export function RecruitingFeed({ items }: Props): React.ReactElement {
   if (items.length === 0) {
-    return <p className="gv-gnl-status">No recruiting updates yet.</p>;
+    return <p className="gv-gnl-thread__empty">No recruiting updates yet.</p>;
   }
 
   return (
-    <div className="gv-gnl-feed" data-testid="gnl-recruiting-feed">
+    <div className="gv-gnl-thread__feed" data-testid="gnl-recruiting-feed">
       {items.map((item, idx) => (
         <RecruitingUpdateCard key={`${item.url}_${idx}`} {...item} />
       ))}

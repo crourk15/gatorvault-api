@@ -3,7 +3,6 @@
 import React from 'react';
 import type { RecruitingUpdateCardProps } from '@/lib/gatornation-live-types';
 import { sourceBadge } from '@/lib/gatornation-live-api';
-import { Chip } from '@/components/ui/Chip';
 import { timeAgo } from '@/components/vault/live/live-feed-utils';
 
 function formatTimeAgo(iso: string): string {
@@ -11,6 +10,16 @@ function formatTimeAgo(iso: string): string {
   const t = timeAgo(iso);
   if (t === 'Just now') return t;
   return `${t} ago`;
+}
+
+function categoryClass(category: string): string {
+  const key = category.toLowerCase();
+  if (key.includes('break')) return 'gv-gnl-thread-card__cat--breaking';
+  if (key.includes('visit') || key.includes('ov')) return 'gv-gnl-thread-card__cat--visit';
+  if (key.includes('commit')) return 'gv-gnl-thread-card__cat--commit';
+  if (key.includes('portal') || key.includes('transfer')) return 'gv-gnl-thread-card__cat--portal';
+  if (key.includes('rumor') || key.includes('beat')) return 'gv-gnl-thread-card__cat--rumor';
+  return 'gv-gnl-thread-card__cat--default';
 }
 
 export function RecruitingUpdateCard({
@@ -26,19 +35,22 @@ export function RecruitingUpdateCard({
   return (
     <a
       href={url}
-      className="gv-card gv-card--light gv-card--interactive gv-gnl-feed-card gv-live-feed__row gv-live-feed__row--headline rh-cc-feed__item"
+      className="gv-gnl-thread-card"
       data-testid="gnl-feed-card"
     >
-      <span className="rh-cc-feed__icon gv-gnl-feed-card__badge" aria-hidden>
+      <span className="gv-gnl-thread-card__badge" aria-hidden>
         {icon || sourceBadge(source)}
       </span>
-      <div className="gv-gnl-feed-card__body rh-cc-feed__body">
-        <p className="gv-gnl-feed-card__headline rh-cc-feed__text">{headline}</p>
-        <p className="gv-gnl-feed-card__meta">
-          <Chip variant="timestamp" className="gv-gnl-feed-card__time-chip">
-            {timeLabel}
-          </Chip>
-          <span className="gv-gnl-feed-card__cat">{category}</span>
+      <div className="gv-gnl-thread-card__body">
+        <p className="gv-gnl-thread-card__headline">{headline}</p>
+        <p className="gv-gnl-thread-card__meta">
+          {timeLabel}
+          {category ? (
+            <>
+              {' · '}
+              <span className={`gv-gnl-thread-card__cat ${categoryClass(category)}`}>{category}</span>
+            </>
+          ) : null}
           {' · '}
           {source}
         </p>

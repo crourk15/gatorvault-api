@@ -78,7 +78,10 @@ export function GatorNationLivePage(): React.ReactElement {
   }, []);
 
   return (
-    <div className="gv-gnl gv-gnl-shell gv-gnl-shell--wireframe gv-live-feed" data-testid="vault-live-feed">
+    <div
+      className="gv-gnl gv-gnl-shell gv-gnl-shell--wireframe uf-premium-gnl gv-live-feed"
+      data-testid="vault-live-feed"
+    >
       {error && !loading && (
         <div className="gv-gnl__frame gv-gnl__command">
           <UiError

@@ -5,7 +5,14 @@ import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
 
 export function HomePremiumHero(): React.ReactElement {
   return (
-    <section className="uf-premium-hero" aria-label="GatorVault home hero" data-testid="home-premium-hero">
+    <section
+      className="uf-premium-hero gv-texture-stadium-lights"
+      aria-label="GatorVault home hero"
+      data-testid="home-premium-hero"
+    >
+      <div className="uf-premium-hero__bg" aria-hidden="true" />
+      <div className="uf-premium-hero__fade" aria-hidden="true" />
+
       <div className="uf-premium-hero__inner">
         <span className="uf-premium-hero__accent" aria-hidden="true" />
         <h1 className="uf-premium-hero__title">Only Gators Get Out Alive.</h1>

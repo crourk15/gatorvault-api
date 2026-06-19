@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import '@/lib/uf-premium-home.css';
+import '@/lib/uf-premium-gnl.css';
 import {
   fetchHomeBundle,
   HOME_REFRESH,
@@ -18,6 +19,8 @@ import { HomeTeamPreview } from '@/components/home/premium/HomeTeamPreview';
 import { HomeNilPreview } from '@/components/home/premium/HomeNilPreview';
 import { HomeSchedulePreview } from '@/components/home/premium/HomeSchedulePreview';
 import { HomeContentPreview } from '@/components/home/premium/HomeContentPreview';
+import { HomeGnlPreview } from '@/components/home/premium/HomeGnlPreview';
+import { buildHomeGnlItems } from '@/lib/vault-home-api';
 
 const EMPTY_BUNDLE: HomeBundle = {
   ticker: null,
@@ -136,6 +139,18 @@ export function HomePremiumPage(): React.ReactElement {
           testId="home-section-schedule"
         >
           <HomeSchedulePreview data={bundle.schedule} loading={loading && !bundle.schedule} />
+        </HomePremiumSection>
+
+        <HomePremiumSection
+          title="GatorNation Live"
+          ctaLabel="Open GatorNation Live"
+          ctaHref={VAULT_PILLAR_ROUTES.liveFeed}
+          testId="home-section-gnl"
+        >
+          <HomeGnlPreview
+            items={buildHomeGnlItems(bundle.ticker)}
+            loading={loading && !bundle.ticker}
+          />
         </HomePremiumSection>
 
         <HomePremiumSection title="Articles / Community / Film Room" testId="home-section-content">
