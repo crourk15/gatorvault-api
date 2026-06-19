@@ -16,7 +16,6 @@ import '@/lib/gv-page-layout.css';
 import '@/lib/vault-shell.css';
 import '@/lib/vault-admin.css';
 import '@/lib/vault-home.css';
-import '@/lib/uf-premium-home.css';
 import '@/lib/home-premium.css';
 import '@/styles/hub-unified-theme.css';
 import '@/lib/vault-recruiting-hub.css';
@@ -46,6 +45,7 @@ import '@/lib/mobile-native-framework.css';
 
 import '@/lib/mobile-native-framework.css';
 import '@/lib/uf-premium-mobile.css';
+import '@/lib/uf-premium-home.css';
 
 export const viewport: Viewport = {
   width: 'device-width',

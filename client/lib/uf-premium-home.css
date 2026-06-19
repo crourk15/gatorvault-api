@@ -1,26 +1,31 @@
 /**
- * UF Premium Homepage — design tokens + layout (wireframe v1)
- * UF Blue #0021A5 · Gator Orange #FA4616 · Swamp Navy #001A33
+ * UF Premium Homepage — FutureCast Lab color parity
+ * UF Blue #0021A5 · Gator Orange #FA4616 · Swamp Navy #001A33 · White cards #FFFFFF
  */
 
 .uf-premium-home {
   --uf-blue: #0021a5;
   --uf-orange: #fa4616;
   --uf-navy: #001a33;
-  --card-bg: rgba(0, 33, 165, 0.12);
-  --card-border: rgba(255, 255, 255, 0.08);
+  --uf-page-bg: #001a33;
+  --uf-card-surface: #ffffff;
+  --uf-card-border-color: rgba(0, 26, 51, 0.2);
+  --card-bg: var(--uf-card-surface);
+  --card-border: var(--uf-card-border-color);
   --uf-section-gap: 32px;
   --uf-module-gap: 24px;
   --uf-inner-gap: 16px;
   --uf-card-radius: 14px;
   --uf-card-border: var(--card-border);
   --uf-card-shadow: 0 8px 28px rgba(0, 26, 51, 0.14);
-  --uf-hero-min-h: clamp(320px, 40vh, 420px);
+  --uf-hero-min-h: clamp(300px, 38vh, 340px);
   --uf-text-primary: rgba(255, 255, 255, 0.92);
   --uf-text-muted: rgba(255, 255, 255, 0.65);
+  --uf-card-text: #1a1a1a;
+  --uf-card-text-muted: rgba(26, 26, 26, 0.65);
   min-height: 100%;
   color: var(--uf-text-primary);
-  background: var(--uf-navy);
+  background: var(--uf-page-bg);
   padding-bottom: var(--uf-section-gap);
   overflow-x: hidden;
 }
@@ -67,7 +72,15 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: linear-gradient(165deg, #0021a5 0%, #001a33 100%);
+  background: linear-gradient(165deg, #0021a5 0%, #001656 55%, #001a33 100%);
+}
+
+.uf-premium-hero__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(250, 70, 22, 0.14) 0%, transparent 60%);
+  pointer-events: none;
 }
 
 .uf-premium-hero__fade {
@@ -75,7 +88,7 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(180deg, transparent 55%, rgba(0, 26, 51, 0.4) 100%);
+  background: linear-gradient(180deg, transparent 50%, rgba(0, 26, 51, 0.55) 100%);
 }
 
 .uf-premium-hero__inner {
@@ -404,19 +417,27 @@
   }
 }
 
-/* ── Card chrome (Team Command Center parity) ── */
+/* ── Card chrome (FutureCast Lab white panels on navy canvas) ── */
+.uf-premium-card,
+.uf-premium-podcast-card {
+  --uf-text-primary: var(--uf-card-text);
+  --uf-text-muted: var(--uf-card-text-muted);
+  --card-border: rgba(0, 26, 51, 0.12);
+}
+
 .uf-premium-card {
   position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
+  background: var(--uf-card-surface);
+  border: 1px solid var(--uf-card-border-color);
   border-radius: var(--uf-card-radius);
   box-shadow: var(--uf-card-shadow);
   padding: var(--uf-module-gap);
   overflow: hidden;
+  color: var(--uf-card-text);
 }
 
 .uf-premium-card::before {
@@ -432,11 +453,11 @@
 
 .uf-premium-card__title {
   margin: 0 0 12px;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--uf-text-primary);
+  font-size: 0.9375rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--uf-blue);
 }
 
 .uf-premium-card__body {
@@ -459,7 +480,7 @@
 }
 
 .uf-premium-card__list a {
-  color: var(--uf-text-primary);
+  color: var(--uf-blue);
   font-weight: 600;
   text-decoration: none;
 }
@@ -486,7 +507,7 @@
   font-size: 1.5rem;
   font-weight: 800;
   line-height: 1.1;
-  color: var(--uf-text-primary);
+  color: var(--uf-orange);
 }
 
 .uf-premium-empty {
@@ -496,12 +517,12 @@
 }
 
 .uf-premium-delta--up {
-  color: #86efac;
+  color: #16a34a;
   font-weight: 700;
 }
 
 .uf-premium-delta--down {
-  color: #fca5a5;
+  color: #dc2626;
   font-weight: 700;
 }
 
@@ -517,8 +538,8 @@
   text-align: center;
   padding: 10px 8px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--card-border);
+  background: rgba(0, 26, 51, 0.04);
+  border: 1px solid rgba(0, 26, 51, 0.1);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -534,7 +555,7 @@
 .uf-premium-heatmap__pill strong {
   display: block;
   font-size: 1.25rem;
-  color: var(--uf-text-primary);
+  color: var(--uf-blue);
 }
 
 .uf-premium-schedule__opp {
@@ -555,13 +576,14 @@
   border-radius: var(--uf-card-radius);
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.04) 25%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.04) 75%
+    rgba(255, 255, 255, 0.92) 25%,
+    rgba(255, 255, 255, 0.78) 50%,
+    rgba(255, 255, 255, 0.92) 75%
   );
   background-size: 200% 100%;
   animation: uf-premium-shimmer 1.2s infinite;
-  border: 1px solid var(--card-border);
+  border: 1px solid rgba(0, 26, 51, 0.12);
+  box-shadow: var(--uf-card-shadow);
 }
 
 .uf-premium-card__link {
@@ -574,7 +596,7 @@
 }
 
 .uf-premium-card__link:hover {
-  color: #fff;
+  color: #c93a12;
 }
 
 .uf-premium-card--gnl-preview {
@@ -723,9 +745,10 @@
   min-height: 0;
   padding: var(--uf-module-gap);
   border-radius: var(--uf-card-radius);
-  border: 1px solid var(--card-border);
-  background: var(--card-bg);
+  border: 1px solid var(--uf-card-border-color);
+  background: var(--uf-card-surface);
   box-shadow: var(--uf-card-shadow);
+  color: var(--uf-card-text);
   transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -741,7 +764,7 @@
 }
 
 .uf-premium-podcast-card:hover {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(0, 33, 165, 0.28);
   transform: translateY(-2px);
   box-shadow: 0 12px 28px rgba(0, 26, 51, 0.22);
 }
@@ -770,7 +793,7 @@
   margin: 0 0 6px;
   font-size: 0.9375rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--uf-card-text);
 }
 
 .uf-premium-podcast-card__hosts {
@@ -795,5 +818,36 @@
 }
 
 .uf-premium-podcast-card__cta:hover {
+  color: #c93a12;
+}
+
+/* ── FutureCast Lab enforcement (navy canvas + white panels) ── */
+.gv-vault-shell:has(.uf-premium-home),
+.gv-vault-shell__main:has(.uf-premium-home),
+#gv-vault-root:has(.uf-premium-home) {
+  background: var(--uf-page-bg);
+}
+
+.uf-premium-home .uf-premium-card,
+.uf-premium-home .uf-premium-podcast-card {
+  background: var(--uf-card-surface) !important;
+  border: 1px solid var(--uf-card-border-color) !important;
+  color: var(--uf-card-text) !important;
+  box-shadow: var(--uf-card-shadow);
+}
+
+.uf-premium-home .uf-premium-section__title {
   color: #fff;
+}
+
+.uf-premium-home .uf-premium-podcast-card {
+  --uf-text-muted: var(--uf-card-text-muted);
+}
+
+.uf-premium-home .uf-premium-podcast-card__hosts {
+  color: var(--uf-card-text-muted);
+}
+
+.uf-premium-home .uf-premium-ticker {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }

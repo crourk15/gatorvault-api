@@ -6,7 +6,7 @@ import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
 export function HomePremiumHero(): React.ReactElement {
   return (
     <section
-      className="uf-premium-hero gv-texture-stadium-lights"
+      className="uf-premium-hero"
       aria-label="GatorVault home hero"
       data-testid="home-premium-hero"
     >
