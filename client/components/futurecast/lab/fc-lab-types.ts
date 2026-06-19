@@ -48,3 +48,8 @@ export function ufPctFromFc(raw: number | null | undefined): number {
   if (raw == null) return 0;
   return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
 }
+
+/** UF probability in the contested battle band (34–66%). */
+export function isBattleTarget(ufPct: number): boolean {
+  return ufPct >= 34 && ufPct < 67;
+}

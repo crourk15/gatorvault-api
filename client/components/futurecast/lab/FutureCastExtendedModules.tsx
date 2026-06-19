@@ -11,7 +11,7 @@ import {
   type IntelFeedItem,
 } from '@/lib/recruiting-intel-feed';
 import { FutureCastPanelShell } from './primitives';
-import { ufPctFromFc } from './fc-lab-types';
+import { ufPctFromFc, isBattleTarget } from './fc-lab-types';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 
 type Props = {
@@ -124,7 +124,7 @@ export function FutureCastExtendedModules({
   const earlyBattles = useMemo(
     () =>
       activeTargets
-        .filter((p) => isBattle(ufPctFromFc(p.ufConfidence)))
+        .filter((p) => isBattleTarget(ufPctFromFc(p.ufConfidence)))
         .sort((a, b) => b.volatility7d - a.volatility7d)
         .slice(0, 8),
     [activeTargets]
