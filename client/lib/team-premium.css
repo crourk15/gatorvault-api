@@ -890,16 +890,53 @@
 }
 
 .team-premium-page .team-premium-module .gv-team-roster-card {
-  background: rgba(0, 33, 165, 0.04);
+  position: relative;
+  background: var(--team-swamp-navy);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-top: 3px solid var(--team-uf-blue);
-  border-radius: var(--gv-radius-sm, 8px);
+  border-radius: var(--gv-radius-md, 12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
   padding: var(--gv-space-4, 16px);
+  overflow: hidden;
 }
 
-.team-premium-page .team-premium-module .gv-team-roster-card__name {
-  font-weight: 800;
-  color: var(--team-uf-blue);
+.team-premium-page .team-premium-module .gv-team-roster-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--team-gator-orange);
+  border-radius: var(--gv-radius-md, 12px) var(--gv-radius-md, 12px) 0 0;
+}
+
+.team-premium-page .team-premium-module .gv-team-roster-card__name,
+.team-premium-page .team-premium-module a.gv-team-roster-card__name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.25rem;
+  text-decoration: none;
+}
+
+.team-premium-page .team-premium-module a.gv-team-roster-card__name:hover,
+.team-premium-page .team-premium-module a.gv-team-roster-card__name:focus-visible {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.team-premium-page .team-premium-module .gv-team-roster-card__meta {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #d9d9d9;
+  margin: 0;
+}
+
+.team-premium-page .team-premium-module .gv-team-roster-tag {
+  background: rgba(250, 70, 22, 0.12);
+  color: var(--team-gator-orange);
+  border: 1px solid rgba(250, 70, 22, 0.25);
 }
 
 @media (max-width: 1023px) {

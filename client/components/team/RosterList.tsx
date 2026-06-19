@@ -31,7 +31,7 @@ export function RosterList({ players, filter }: Props): React.ReactElement {
         return (
           <article key={player.id} className="gv-team-roster-card">
             {href ? (
-              <a href={href} className="gv-team-roster-card__name" style={{ color: 'inherit', textDecoration: 'none' }}>
+              <a href={href} className="gv-team-roster-card__name">
                 {player.name}
               </a>
             ) : (
