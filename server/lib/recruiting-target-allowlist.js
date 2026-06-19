@@ -10,7 +10,6 @@ const ALLOWLIST_2027 = [
   'jalen-brewster',
   'raheem-floyd',
   'marquis-evans',
-  'tre-geathers',
   'adryan-cole',
   'tranard-roberts',
   'jordan-christie',
@@ -127,10 +126,12 @@ function isAllowlistedTarget(player) {
 }
 
 function filterAllowlistedTargets(targets, classYear) {
+  const store = require('./recruiting-store');
   const year = parseInt(classYear, 10);
   const set = BY_YEAR[year];
   if (!set) return [];
   return (targets || []).filter((p) => {
+    if (store.isFloridaCommit(p)) return false;
     const slug = canonicalTargetSlug(p.slug || slugify(p.name));
     return set.has(slug);
   });

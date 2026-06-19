@@ -17,9 +17,10 @@ type Props = {
   data: FutureCastLabDataMap;
 };
 
+/** Desktop FutureCast Lab — UF Premium command center (RH 2-column grid). */
 export function FutureCastLabPageDesktop({ data }: Props): React.ReactElement {
   return (
-    <div className="fc-lab-page" data-testid="fc-lab-page-desktop">
+    <div className="rh-cc-page fc-lab-cc-page" data-testid="fc-lab-page-desktop">
       <section id={FUTURECAST_LAB_ANCHORS.overview}>
         <FutureCastHero
           summary={data.summary}
@@ -31,40 +32,45 @@ export function FutureCastLabPageDesktop({ data }: Props): React.ReactElement {
         />
       </section>
 
-      <div className="fc-lab-main fc-lab-main--stacked rh-frame">
-        <section id={FUTURECAST_LAB_ANCHORS.masterBoard}>
-          <FutureCastTargetsPanel masterBoard={data.masterBoard} />
-        </section>
-        <section id={FUTURECAST_LAB_ANCHORS.trending}>
-          <FutureCastBattlesPanel masterBoard={data.masterBoard} trendingBoard={data.trendingBoard} />
-        </section>
-        <section id={FUTURECAST_LAB_ANCHORS.signals}>
-          <FutureCastAnalystSignals staffNotes={data.staffNotes} masterBoard={data.masterBoard} />
-        </section>
-        <section id={FUTURECAST_LAB_ANCHORS.movement}>
-          <FutureCastMovementPanel movementIntel={data.movementIntel} />
-        </section>
-        <section id={FUTURECAST_LAB_ANCHORS.positions}>
-          <FutureCastPositionBreakdown
-            players={data.masterBoard.players}
-            activePredictions={data.metrics.activePredictions}
-          />
-        </section>
-        <section id="fc-lab-extended">
-          <FutureCastExtendedModules
-            masterBoard={data.masterBoard}
-            trendingBoard={data.trendingBoard}
-            movementIntel={data.movementIntel}
-            highPriority={data.highPriority}
-            underclassmen={data.underclassmen}
-          />
-        </section>
-        <section id={FUTURECAST_LAB_ANCHORS.portal}>
-          <FutureCastPortalCrossView
-            portalPlayers={data.home.portalWatchlist ?? []}
-            masterBoard={data.masterBoard}
-          />
-        </section>
+      <div className="rh-cc-main rh-frame">
+        <div className="rh-cc-col rh-cc-col--left">
+          <section id={FUTURECAST_LAB_ANCHORS.masterBoard}>
+            <FutureCastTargetsPanel masterBoard={data.masterBoard} />
+          </section>
+          <section id={FUTURECAST_LAB_ANCHORS.movement}>
+            <FutureCastMovementPanel movementIntel={data.movementIntel} />
+          </section>
+          <section id={FUTURECAST_LAB_ANCHORS.signals}>
+            <FutureCastAnalystSignals staffNotes={data.staffNotes} masterBoard={data.masterBoard} />
+          </section>
+          <section id={FUTURECAST_LAB_ANCHORS.positions}>
+            <FutureCastPositionBreakdown
+              players={data.masterBoard.players}
+              activePredictions={data.metrics.activePredictions}
+            />
+          </section>
+        </div>
+
+        <div className="rh-cc-col rh-cc-col--right">
+          <section id={FUTURECAST_LAB_ANCHORS.trending}>
+            <FutureCastBattlesPanel masterBoard={data.masterBoard} trendingBoard={data.trendingBoard} />
+          </section>
+          <section id={FUTURECAST_LAB_ANCHORS.portal}>
+            <FutureCastPortalCrossView
+              portalPlayers={data.home.portalWatchlist ?? []}
+              masterBoard={data.masterBoard}
+            />
+          </section>
+          <section id="fc-lab-extended">
+            <FutureCastExtendedModules
+              masterBoard={data.masterBoard}
+              trendingBoard={data.trendingBoard}
+              movementIntel={data.movementIntel}
+              highPriority={data.highPriority}
+              underclassmen={data.underclassmen}
+            />
+          </section>
+        </div>
       </div>
 
       <section id={FUTURECAST_LAB_ANCHORS.feed}>

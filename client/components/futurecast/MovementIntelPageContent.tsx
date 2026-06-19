@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { MovementIntelLayout } from '@/components/futurecast/MovementIntelLayout';
+import { FutureCastSubPageLoading } from '@/components/futurecast/FutureCastSubPageLoading';
 import { UiError } from '@/components/site/UiMessage';
 import { fetchFutureCastMovementIntel } from '@/lib/futurecast-board-api';
 import type { MovementIntelResponse } from '@/lib/futurecast-board-types';
@@ -48,9 +49,9 @@ export function MovementIntelPageContent(): React.ReactElement {
     };
   }, [load]);
 
-  if (loading) return <p className="fc-elite-loading">Loading movement intel…</p>;
+  if (loading) return <FutureCastSubPageLoading testId="fc-movement-intel-loading" />;
   if (error) return <UiError message={error} />;
-  if (!data) return <p className="fc-elite-empty">No movement intel.</p>;
+  if (!data) return <p className="rh-cc-empty">No movement intel.</p>;
 
   return <MovementIntelLayout data={data} />;
 }

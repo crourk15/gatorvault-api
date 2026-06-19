@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { formatRelativeUpdated } from '@/components/recruiting-hub/utils/formatDate';
 import type { FutureCastHeatLevel, FutureCastHeroMetrics, FutureCastPageSummary } from '@/lib/api/futurecast';
 
@@ -16,40 +17,51 @@ const HEAT_LABELS: Record<FutureCastHeatLevel, string> = {
   cold: 'Cool cycle',
 };
 
+/** @deprecated Prefer FutureCastSubPageHero or lab/FutureCastHero — premium shell hero. */
 export function FutureCastPageHero({ summary, metrics, heatLevel, lastUpdated }: Props): React.ReactElement {
   return (
-    <header className="fc-page-hero futurecast-page__section" data-testid="fc-page-hero">
-      <h1 className="fc-page-hero__title">FutureCast — UF Recruiting Prediction &amp; Intel</h1>
-      <p className="fc-page-hero__sub">
-        Commit likelihood, movement, fit scores, competing schools, and deep player profiles — all in one
-        layer.
-      </p>
-      <div className="fc-page-hero__metrics">
-        <div className="fc-page-hero__metric">
-          <span className="fc-page-hero__metric-value">{metrics.avgUFProbability}%</span>
-          <span className="fc-page-hero__metric-label">Avg UF probability (targets)</span>
-        </div>
-        <div className="fc-page-hero__metric">
-          <span className="fc-page-hero__metric-value">{metrics.highPriorityCount}</span>
-          <span className="fc-page-hero__metric-label">High-priority players</span>
-        </div>
-        <div className="fc-page-hero__metric">
-          <span className="fc-page-hero__metric-value">{metrics.activePredictions}</span>
-          <span className="fc-page-hero__metric-label">Active predictions</span>
-        </div>
-        <div className="fc-page-hero__metric">
-          <span className="fc-page-hero__metric-value">
-            {summary.nationalRank != null ? `#${summary.nationalRank}` : '—'}
-          </span>
-          <span className="fc-page-hero__metric-label">Class of {summary.classYear} natl rank</span>
+    <section className="fc-lab-hero fc-lab-bleed fc-premium-sub-hero" data-testid="fc-page-hero">
+      <div className="fc-lab-hero__bg" aria-hidden />
+      <div className="fc-lab-hero__inner rh-frame">
+        <div className="fc-lab-hero__col fc-lab-hero__col--overview">
+          <p className="fc-lab-hero__eyebrow rh-cc-hero__eyebrow">FutureCast Command Center</p>
+          <h1 className="fc-lab-hero__title rh-cc-hero__title">FutureCast — UF Recruiting Prediction &amp; Intel</h1>
+          <p className="fc-lab-hero__sub rh-cc-hero__sub">
+            Commit likelihood, movement, fit scores, competing schools, and deep player profiles — all in one layer.
+          </p>
+          <div className="fc-lab-hero__metrics rh-cc-hero__metrics">
+            <div className="fc-lab-hero__metric rh-cc-hero__metric">
+              <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Avg UF %</span>
+              <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.avgUFProbability}%</strong>
+            </div>
+            <div className="fc-lab-hero__metric fc-lab-hero__metric--rank rh-cc-hero__metric rh-cc-hero__metric--rank">
+              <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">High Priority</span>
+              <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.highPriorityCount}</strong>
+            </div>
+            <div className="fc-lab-hero__metric rh-cc-hero__metric">
+              <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Active Predictions</span>
+              <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.activePredictions}</strong>
+            </div>
+            <div className="fc-lab-hero__metric rh-cc-hero__metric">
+              <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Class Rank</span>
+              <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">
+                {summary.nationalRank != null ? `#${summary.nationalRank}` : '—'}
+              </strong>
+            </div>
+            <div className="fc-lab-hero__metric rh-cc-hero__metric">
+              <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Cycle Heat</span>
+              <strong className={`fc-lab-hero__metric-value rh-cc-hero__metric-value fc-lab-hero__heat--${heatLevel}`}>
+                {HEAT_LABELS[heatLevel]}
+              </strong>
+            </div>
+          </div>
+          {lastUpdated ? (
+            <p className="fc-lab-hero__updated" data-testid="fc-page-hero-updated">
+              Updated {formatRelativeUpdated(lastUpdated)}
+            </p>
+          ) : null}
         </div>
       </div>
-      <span className={`fc-page-hero__heat fc-page-hero__heat--${heatLevel}`}>{HEAT_LABELS[heatLevel]}</span>
-      {lastUpdated ? (
-        <p className="fc-page-hero__updated" data-testid="fc-page-hero-updated">
-          Updated {formatRelativeUpdated(lastUpdated)}
-        </p>
-      ) : null}
-    </header>
+    </section>
   );
 }

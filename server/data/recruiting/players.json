@@ -3079,13 +3079,14 @@
     "fromSchool": null,
     "commitDate": "2026-06-18",
     "skinny": "LB · 4★ · Miami, FL · UF Commit No. 23",
-    "headliner": true,
+    "headliner": false,
     "ufProbability": 100,
     "id": "tre-geathers",
     "classYear": 2027,
     "category": "recruit",
-    "status": "committed",
-    "updatedAt": "2026-06-19T12:00:00.000Z"
+    "status": "commit",
+    "lifecycle": "commit",
+    "updatedAt": "2026-06-19T18:00:00.000Z"
   },
   {
     "id": "jayden-harris",

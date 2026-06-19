@@ -1,7 +1,13 @@
 'use client';
 
-import { FutureCastSectionRedirect } from '@/components/futurecast/FutureCastSectionRedirect';
+import React from 'react';
+import { FutureCastElitePageShell } from '@/components/futurecast/FutureCastElitePageShell';
+import { MovementIntelPageContent } from '@/components/futurecast/MovementIntelPageContent';
 
-export default function VaultFutureCastMovementRedirect() {
-  return <FutureCastSectionRedirect href="/vault/futurecast#movement" />;
+export default function VaultFutureCastMovementPage(): React.ReactElement {
+  return (
+    <FutureCastElitePageShell segment="movement" testId="vault-futurecast-movement-page">
+      <MovementIntelPageContent />
+    </FutureCastElitePageShell>
+  );
 }

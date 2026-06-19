@@ -1,6 +1,42 @@
 [
   {
-    "id": "evt_1781037574608_m3hsm3",
+    "id": "evt_tre_geathers_commit_2026_06_18",
+    "playerId": "tre-geathers",
+    "playerSlug": "tre-geathers",
+    "eventType": "commit",
+    "title": "Tre Geathers commits to Florida",
+    "detail": "BREAKING: Florida has landed commitment No. 23 — LB Tre Geathers.",
+    "skinny": "LB · 4★ · Miami, FL · UF Commit No. 23",
+    "classYear": 2027,
+    "payload": {
+      "player": {
+        "id": "tre-geathers",
+        "slug": "tre-geathers",
+        "name": "Tre Geathers",
+        "pos": "LB",
+        "classYear": 2027,
+        "school": "Miami, FL",
+        "htWt": "6-2 / 220",
+        "stars": 4,
+        "rating": 90.5,
+        "natlRank": 210,
+        "posRank": 18,
+        "stateRank": 22,
+        "inState": true,
+        "category": "recruit",
+        "status": "commit",
+        "lifecycle": "commit",
+        "committedTo": "Florida",
+        "commitDate": "2026-06-18",
+        "skinny": "LB · 4★ · Miami, FL · UF Commit No. 23",
+        "ufProbability": 100,
+        "headliner": false,
+        "updatedAt": "2026-06-19T18:00:00.000Z"
+      }
+    },
+    "source": "manual",
+    "createdAt": "2026-06-18T12:00:00.000Z"
+  },
     "playerId": "jaylen-jordon",
     "playerSlug": "jaylen-jordon",
     "eventType": "commit",

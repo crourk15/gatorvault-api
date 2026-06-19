@@ -1,7 +1,13 @@
 'use client';
 
-import { FutureCastSectionRedirect } from '@/components/futurecast/FutureCastSectionRedirect';
+import React from 'react';
+import { FutureCastElitePageShell } from '@/components/futurecast/FutureCastElitePageShell';
+import { TrendingBoardPageContent } from '@/components/futurecast/TrendingBoardPageContent';
 
-export default function VaultFutureCastTrendingRedirect() {
-  return <FutureCastSectionRedirect href="/vault/futurecast#trending" />;
+export default function VaultFutureCastTrendingPage(): React.ReactElement {
+  return (
+    <FutureCastElitePageShell segment="trending" testId="vault-futurecast-trending-page">
+      <TrendingBoardPageContent />
+    </FutureCastElitePageShell>
+  );
 }

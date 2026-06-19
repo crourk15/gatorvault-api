@@ -115,27 +115,28 @@ export function FutureCastHero({
       <div className="fc-lab-hero__inner rh-frame">
         <div className="fc-lab-hero__grid">
           <div className="fc-lab-hero__col fc-lab-hero__col--overview">
-            <h1 className="fc-lab-hero__title">UF FUTURECAST LAB</h1>
-            <p className="fc-lab-hero__sub">
+            <p className="fc-lab-hero__eyebrow rh-cc-hero__eyebrow">FutureCast Command Center</p>
+            <h1 className="fc-lab-hero__title rh-cc-hero__title">UF FUTURECAST LAB</h1>
+            <p className="fc-lab-hero__sub rh-cc-hero__sub">
               Commit likelihood, movement intel, fit scores, and competing schools for UF&apos;s top
               targets.
             </p>
-            <div className="fc-lab-hero__metrics">
-              <div className="fc-lab-hero__metric fc-lab-hero__metric--rank">
-                <span className="fc-lab-hero__metric-label">High Priority</span>
-                <strong className="fc-lab-hero__metric-value">{metrics.highPriorityCount}</strong>
+            <div className="fc-lab-hero__metrics rh-cc-hero__metrics">
+              <div className="fc-lab-hero__metric fc-lab-hero__metric--rank rh-cc-hero__metric rh-cc-hero__metric--rank">
+                <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">High Priority</span>
+                <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.highPriorityCount}</strong>
               </div>
-              <div className="fc-lab-hero__metric">
-                <span className="fc-lab-hero__metric-label">Active Predictions</span>
-                <strong className="fc-lab-hero__metric-value">{metrics.activePredictions}</strong>
+              <div className="fc-lab-hero__metric rh-cc-hero__metric">
+                <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Active Predictions</span>
+                <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.activePredictions}</strong>
               </div>
-              <div className="fc-lab-hero__metric">
-                <span className="fc-lab-hero__metric-label">Avg UF %</span>
-                <strong className="fc-lab-hero__metric-value">{metrics.avgUFProbability}%</strong>
+              <div className="fc-lab-hero__metric rh-cc-hero__metric">
+                <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Avg UF %</span>
+                <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.avgUFProbability}%</strong>
               </div>
-              <div className="fc-lab-hero__metric">
-                <span className="fc-lab-hero__metric-label">Cycle Heat</span>
-                <strong className={`fc-lab-hero__metric-value fc-lab-hero__heat--${heatLevel}`}>
+              <div className="fc-lab-hero__metric rh-cc-hero__metric">
+                <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Cycle Heat</span>
+                <strong className={`fc-lab-hero__metric-value rh-cc-hero__metric-value fc-lab-hero__heat--${heatLevel}`}>
                   {HEAT_LABELS[heatLevel]}
                 </strong>
               </div>

@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { TrendingBoardLayout } from '@/components/futurecast/TrendingBoardLayout';
+import { FutureCastSubPageLoading } from '@/components/futurecast/FutureCastSubPageLoading';
 import { UiError } from '@/components/site/UiMessage';
 import { fetchFutureCastTrendingBoard } from '@/lib/futurecast-board-api';
 import type { TrendingBoardResponse } from '@/lib/futurecast-board-types';
@@ -26,9 +27,9 @@ export function TrendingBoardPageContent(): React.ReactElement {
     void load();
   }, [load]);
 
-  if (loading) return <p className="fc-elite-loading">Loading trending board…</p>;
+  if (loading) return <FutureCastSubPageLoading testId="fc-trending-loading" />;
   if (error) return <UiError message={error} />;
-  if (!data) return <p className="fc-elite-empty">No trending data.</p>;
+  if (!data) return <p className="rh-cc-empty">No trending data.</p>;
 
   return (
     <TrendingBoardLayout

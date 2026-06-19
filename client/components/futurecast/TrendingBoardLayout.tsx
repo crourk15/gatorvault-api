@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { FutureCastHero } from './FutureCastHero';
+import { FutureCastSubPageHero } from './FutureCastSubPageHero';
 import { TrendingPlayerCard } from './TrendingPlayerCard';
 import {
   TrendingFilters,
@@ -9,6 +9,7 @@ import {
   type TrendingFilterState,
 } from './TrendingFilters';
 import { FutureCastInsiderCTA } from './FutureCastInsiderCTA';
+import { FutureCastPanelShell } from './lab/primitives';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
 import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
 
@@ -46,38 +47,60 @@ export function TrendingBoardLayout({ trendingUp, trendingDown, updatedAt }: Pro
   const downVisible = insider ? down : down.slice(0, freeLimit);
 
   return (
-    <div className="gv-elite-stack fc-elite-page" data-testid="fc-trending-layout">
-      <FutureCastHero
+    <div className="rh-cc-page fc-lab-cc-page" data-testid="fc-trending-layout">
+      <FutureCastSubPageHero
+        title="Trending Board"
+        sub="Rising and falling prospects ranked by 7-day MODEL delta and signal activity."
         badge={updatedAt ? `Updated ${new Date(updatedAt).toLocaleDateString()}` : 'Updated daily'}
+        metrics={[
+          { label: 'Trending Up', value: up.length, highlight: true },
+          { label: 'Trending Down', value: down.length },
+        ]}
       />
-      {insider ? (
-        <TrendingFilters
-          filters={filters}
-          onChange={setFilters}
-          positions={positions}
-          states={states}
-        />
-      ) : null}
-      <div className="gv-trending-columns fc-trending-columns">
-        <section className="fc-trending-column">
-          <h2 className="gv-card-title fc-trending-column__title">Trending Up</h2>
-          <div className="fc-trending-column__grid">
-            {upVisible.map((p) => (
-              <TrendingPlayerCard key={p.id} player={p} direction="up" />
-            ))}
-            {upVisible.length === 0 ? <p className="fc-elite-empty">No risers match filters.</p> : null}
+
+      <div className="rh-cc-main rh-frame">
+        {insider ? (
+          <div className="rh-cc-col">
+            <section>
+              <FutureCastPanelShell title="Filters" sub="Position, state, rating, and movement threshold." testId="fc-trending-filters">
+                <TrendingFilters
+                  filters={filters}
+                  onChange={setFilters}
+                  positions={positions}
+                  states={states}
+                />
+              </FutureCastPanelShell>
+            </section>
           </div>
-        </section>
-        <section className="fc-trending-column">
-          <h2 className="gv-card-title fc-trending-column__title">Trending Down</h2>
-          <div className="fc-trending-column__grid">
-            {downVisible.map((p) => (
-              <TrendingPlayerCard key={p.id} player={p} direction="down" />
-            ))}
-            {downVisible.length === 0 ? <p className="fc-elite-empty">No fallers match filters.</p> : null}
-          </div>
-        </section>
+        ) : null}
+
+        <div className="rh-cc-col rh-cc-col--left">
+          <section>
+            <FutureCastPanelShell title="Trending Up" sub="Risers in the current window." testId="fc-trending-up">
+              <div className="fc-premium-trending-grid">
+                {upVisible.map((p) => (
+                  <TrendingPlayerCard key={p.id} player={p} direction="up" />
+                ))}
+                {upVisible.length === 0 ? <p className="rh-cc-empty">No risers match filters.</p> : null}
+              </div>
+            </FutureCastPanelShell>
+          </section>
+        </div>
+
+        <div className="rh-cc-col rh-cc-col--right">
+          <section>
+            <FutureCastPanelShell title="Trending Down" sub="Fallers in the current window." testId="fc-trending-down">
+              <div className="fc-premium-trending-grid">
+                {downVisible.map((p) => (
+                  <TrendingPlayerCard key={p.id} player={p} direction="down" />
+                ))}
+                {downVisible.length === 0 ? <p className="rh-cc-empty">No fallers match filters.</p> : null}
+              </div>
+            </FutureCastPanelShell>
+          </section>
+        </div>
       </div>
+
       {!insider ? (
         <FutureCastInsiderCTA limit={freeLimit} total={up.length + down.length} />
       ) : null}

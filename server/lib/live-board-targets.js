@@ -4,7 +4,9 @@
 const store = require('./recruiting-store');
 
 function isFloridaCommit(player) {
-  const to = String(player?.committedTo || '').toLowerCase();
+  const to = String(player?.committedTo || player?.committed_to || '').toLowerCase();
+  const status = String(player?.status || '').toLowerCase();
+  if (!(status === 'committed' || status === 'commit')) return false;
   return /\bflorida\b|\bgators\b|\buf\b/.test(to);
 }
 

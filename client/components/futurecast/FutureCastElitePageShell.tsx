@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import '@/lib/futurecast-elite.css';
 import { FutureCastSubNav } from '@/components/site/FutureCastSubNav';
 import { FutureCastMobileHeader } from '@/components/futurecast/FutureCastMobileHeader';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
@@ -14,14 +13,14 @@ type Props = {
   children: React.ReactNode;
 };
 
-/** Shared shell — same page rhythm as Recruiting Hub (`rh-page--elite`). */
+/** Shared shell — UF Premium Page standard (Recruiting Hub / NIL parity). */
 export function FutureCastElitePageShell({ segment, testId, children }: Props): React.ReactElement {
   const insider = isFutureCastInsider();
   const isDesktop = useIsCommandCenterDesktop();
 
   return (
     <div
-      className="rh-page rh-page--elite fc-futurecast-page fc-futurecast-page--elite mobile-app gv-page"
+      className="rh-page rh-page--elite fc-futurecast-page fc-futurecast-page--elite gv-fc-page mobile-app gv-page"
       data-testid={testId}
     >
       {!isDesktop ? <FutureCastMobileHeader /> : null}

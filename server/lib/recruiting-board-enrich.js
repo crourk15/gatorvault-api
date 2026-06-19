@@ -86,7 +86,7 @@ function enrichPlayer(player, isCommit, staffMode) {
         : null,
     tier,
     tierLabel: TIER_LABELS[tier],
-    lifecycle: 'HIGH_SCHOOL',
+    lifecycle: isCommit ? (player.lifecycle || 'commit') : 'HIGH_SCHOOL',
     school: player.school || null,
     stars: player.stars || null,
     rating: playerRating(player) || null,

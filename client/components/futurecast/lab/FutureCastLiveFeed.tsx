@@ -103,10 +103,10 @@ export function FutureCastLiveFeed({
   }, [masterBoard, movementIntel, staffNotes.notes, staffNotes.updatedAt]);
 
   return (
-    <section className="fc-lab-feed fc-lab-bleed" data-testid="fc-lab-live-feed">
-      <div className="fc-lab-feed__inner rh-frame">
-        <h2 className="fc-lab-feed__title">FutureCast Live Feed</h2>
-        <div className="fc-lab-feed__track" tabIndex={0} role="list" aria-label="FutureCast live feed">
+    <section className="rh-cc-feed fc-lab-feed fc-lab-bleed" data-testid="fc-lab-live-feed">
+      <div className="fc-lab-feed__inner rh-cc-feed__inner rh-frame">
+        <h2 className="rh-cc-feed__title fc-lab-feed__title">FutureCast Live Feed</h2>
+        <div className="fc-lab-feed__track rh-cc-feed__track" tabIndex={0} role="list" aria-label="FutureCast live feed">
           {items.map((item) => (
             <div key={item.id} className="fc-lab-feed__item rh-cc-feed__item" role="listitem">
               <span className="fc-lab-feed__icon rh-cc-feed__icon" aria-hidden>

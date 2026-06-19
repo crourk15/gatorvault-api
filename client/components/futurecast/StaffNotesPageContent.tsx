@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { StaffNotesLayout } from '@/components/futurecast/StaffNotesLayout';
+import { FutureCastSubPageLoading } from '@/components/futurecast/FutureCastSubPageLoading';
 import { UiError } from '@/components/site/UiMessage';
 import { fetchFutureCastStaffNotesBoard } from '@/lib/futurecast-board-api';
 import type { StaffNotesResponse } from '@/lib/futurecast-board-types';
@@ -26,9 +27,9 @@ export function StaffNotesPageContent(): React.ReactElement {
     void load();
   }, [load]);
 
-  if (loading) return <p className="fc-elite-loading">Loading staff notes…</p>;
+  if (loading) return <FutureCastSubPageLoading testId="fc-staff-notes-loading" />;
   if (error) return <UiError message={error} />;
-  if (!data) return <p className="fc-elite-empty">No staff notes.</p>;
+  if (!data) return <p className="rh-cc-empty">No staff notes.</p>;
 
   return (
     <StaffNotesLayout

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { FutureCastHero } from './FutureCastHero';
+import { FutureCastSubPageHero } from './FutureCastSubPageHero';
 import { StaffNoteCard } from './StaffNoteCard';
 import {
   StaffNotesFilters,
@@ -9,6 +9,7 @@ import {
   type StaffNotesFilterState,
 } from './StaffNotesFilters';
 import { FutureCastInsiderCTA } from './FutureCastInsiderCTA';
+import { FutureCastPanelShell } from './lab/primitives';
 import { isFutureCastInsider } from '@/lib/futurecast-insider';
 import type { StaffNote } from '@/lib/futurecast-board-types';
 
@@ -31,23 +32,48 @@ export function StaffNotesLayout({ notes, updatedAt, totalNotes }: Props): React
   const visible = insider ? filtered : filtered.slice(0, 3);
 
   return (
-    <div className="gv-elite-stack fc-elite-page" data-testid="fc-staff-notes-layout">
-      <FutureCastHero
+    <div className="rh-cc-page fc-lab-cc-page" data-testid="fc-staff-notes-layout">
+      <FutureCastSubPageHero
+        title="Staff Notes"
+        sub="Insider evaluations, scouting intel, and analyst confidence for UF targets."
         badge={`Updated ${new Date(updatedAt).toLocaleString()} · ${totalNotes} evaluations`}
+        metrics={[
+          { label: 'Evaluations', value: totalNotes, highlight: true },
+          { label: 'Showing', value: visible.length },
+          { label: 'Positions', value: positions.length || '—' },
+        ]}
       />
-      {insider ? (
-        <StaffNotesFilters filters={filters} onChange={setFilters} positions={positions} />
-      ) : null}
-      <div className="gv-staff-grid fc-staff-notes-elite-grid">
-        {visible.map((note) => (
-          <StaffNoteCard
-            key={`${note.playerName}-${note.updatedAt ?? note.createdAt ?? note.id ?? ''}`}
-            note={note}
-            blurred={!insider}
-          />
-        ))}
-        {visible.length === 0 ? <p className="fc-elite-empty">No staff notes for this filter.</p> : null}
+
+      <div className="rh-cc-main rh-frame">
+        <div className="rh-cc-col">
+          {insider ? (
+            <section>
+              <FutureCastPanelShell title="Filters" sub="Narrow by position, priority, and fit." testId="fc-staff-filters">
+                <StaffNotesFilters filters={filters} onChange={setFilters} positions={positions} />
+              </FutureCastPanelShell>
+            </section>
+          ) : null}
+          <section>
+            <FutureCastPanelShell
+              title="Analyst Evaluations"
+              sub={insider ? 'Full staff notes board.' : 'Preview — unlock Insider for full access.'}
+              testId="fc-staff-notes-grid"
+            >
+              <div className="fc-premium-staff-grid">
+                {visible.map((note) => (
+                  <StaffNoteCard
+                    key={`${note.playerName}-${note.updatedAt ?? note.createdAt ?? note.id ?? ''}`}
+                    note={note}
+                    blurred={!insider}
+                  />
+                ))}
+                {visible.length === 0 ? <p className="rh-cc-empty">No staff notes for this filter.</p> : null}
+              </div>
+            </FutureCastPanelShell>
+          </section>
+        </div>
       </div>
+
       {!insider ? <FutureCastInsiderCTA limit={3} total={filtered.length} /> : null}
     </div>
   );

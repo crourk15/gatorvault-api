@@ -256,7 +256,7 @@ export function FutureCastPanelShell({
     );
   }
   return (
-    <ModuleShell title={title} sub={sub} action={action} testId={testId} className="fc-lab-panel-shell">
+    <ModuleShell title={title} sub={sub} action={action} testId={testId} className="fc-lab-panel-shell fc-premium-module">
       {children}
     </ModuleShell>
   );

@@ -79,7 +79,7 @@ function isFloridaCommit(p) {
   if (!p) return false;
   const status = String(p.status || '').toLowerCase();
   const committedTo = String(p.committedTo || p.committed_to || '').trim();
-  return status === 'committed' && /^florida$/i.test(committedTo);
+  return (status === 'committed' || status === 'commit') && /^florida$/i.test(committedTo);
 }
 
 function isCommittedAnywhere(p) {

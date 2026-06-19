@@ -1,0 +1,374 @@
+/**
+ * UF FutureCast Hub — Premium Page Standard
+ * Parity with Recruiting Hub command center + NIL Command Center.
+ * Platform tokens: gatorvault-theme.css, hub-unified-theme.css
+ */
+
+.gv-fc-page,
+.fc-futurecast-page.fc-futurecast-page--elite.gv-fc-page {
+  --fc-uf-blue: var(--uf-blue, #0021a5);
+  --fc-gator-orange: var(--gator-orange, #fa4616);
+  --fc-swamp-navy: var(--page-bg, #001a33);
+  --fc-card-bg: var(--card-bg, #ffffff);
+  --fc-card-border: rgba(0, 33, 165, 0.18);
+  --fc-text-primary: var(--graphite, #1a1a1a);
+  --fc-text-muted: rgba(26, 26, 26, 0.65);
+  --fc-move-up: var(--momentum-up, #fa4616);
+  --fc-move-down: var(--momentum-down, #d7263d);
+  --fc-move-flat: var(--subtle-gray, #94a3b8);
+  --fc-heat-high: #ff6a00;
+  --fc-heat-mid: var(--gator-orange, #fa4616);
+  --fc-heat-low: var(--uf-blue, #0021a5);
+  min-height: 100vh;
+  background: var(--fc-swamp-navy);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* ── Command center page rhythm (RH / NIL parity) ── */
+.gv-fc-page .fc-lab-cc-page,
+.gv-fc-page .rh-cc-page.fc-lab-cc-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gv-space-5, 24px);
+  padding-bottom: var(--gv-space-6, 32px);
+}
+
+/* ── Premium sub-nav (pill tabs) ── */
+.gv-fc-page .fc-futurecast-nav-wrap {
+  padding-top: var(--gv-space-2, 8px);
+  padding-bottom: var(--gv-space-2, 8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gv-fc-page .fc-futurecast-nav {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--gv-space-2, 8px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+}
+
+.gv-fc-page .fc-futurecast-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.gv-fc-page .fc-futurecast-nav__link {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.gv-fc-page .fc-futurecast-nav__link:hover {
+  color: #fff;
+  border-color: rgba(250, 70, 22, 0.35);
+  background: rgba(250, 70, 22, 0.08);
+}
+
+.gv-fc-page .fc-futurecast-nav__link.is-active {
+  color: #fff;
+  font-weight: 700;
+  border-color: var(--fc-gator-orange);
+  background: linear-gradient(135deg, rgba(250, 70, 22, 0.22) 0%, rgba(0, 33, 165, 0.35) 100%);
+  box-shadow: 0 2px 10px rgba(250, 70, 22, 0.2);
+}
+
+/* ── Module shells — premium card hierarchy ── */
+.gv-fc-page :is(.fc-lab-panel-shell, .fc-premium-module).rh-cc-module {
+  border-top-color: var(--fc-gator-orange);
+  border-color: var(--fc-card-border);
+  box-shadow: 0 8px 28px rgba(0, 26, 51, 0.14);
+}
+
+.gv-fc-page :is(.fc-lab-panel-shell, .fc-premium-module).rh-cc-module .rh-cc-module__title {
+  color: var(--fc-uf-blue);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.gv-fc-page :is(.fc-lab-panel-shell, .fc-premium-module).rh-cc-module .rh-cc-module__sub {
+  color: var(--fc-text-muted);
+  opacity: 1;
+}
+
+.gv-fc-page :is(.fc-lab-panel-shell, .fc-premium-module).rh-cc-module .rh-cc-module__body {
+  color: var(--fc-text-primary);
+}
+
+/* Section dividers between stacked modules */
+.gv-fc-page .rh-cc-col > section + section :is(.fc-lab-panel-shell, .fc-premium-module).rh-cc-module:first-child {
+  margin-top: 0;
+}
+
+/* ── Target cards — high-contrast data rows ── */
+.gv-fc-page .fc-lab-target-card {
+  background: var(--fc-card-bg);
+  border: 1px solid var(--fc-card-border);
+  border-left: 4px solid var(--fc-uf-blue);
+  border-radius: var(--gv-radius-md, 12px);
+  box-shadow: 0 4px 16px rgba(0, 26, 51, 0.08);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.gv-fc-page .fc-lab-target-card:hover {
+  border-left-color: var(--fc-gator-orange);
+  box-shadow: 0 8px 24px rgba(0, 33, 165, 0.12);
+  transform: translateY(-1px);
+}
+
+.gv-fc-page .fc-lab-target-card__name {
+  color: var(--fc-uf-blue) !important;
+  font-weight: 800;
+  font-size: 0.9375rem;
+}
+
+.gv-fc-page .fc-lab-target-card__name:hover {
+  color: var(--fc-gator-orange) !important;
+}
+
+.gv-fc-page .fc-lab-target-card__meta {
+  color: var(--fc-text-primary) !important;
+  opacity: 0.72 !important;
+  font-weight: 500;
+}
+
+.gv-fc-page .fc-lab-target-card__cta {
+  color: var(--fc-uf-blue);
+  font-weight: 700;
+}
+
+.gv-fc-page .fc-lab-target-card__cta:hover {
+  color: var(--fc-gator-orange);
+}
+
+/* ── Battle rows ── */
+.gv-fc-page .fc-lab-battle-row {
+  background: var(--fc-card-bg);
+  border: 1px solid var(--fc-card-border);
+  border-left: 4px solid var(--fc-gator-orange);
+  border-radius: var(--gv-radius-sm, 8px);
+}
+
+.gv-fc-page .fc-lab-battle-row__name {
+  color: var(--fc-uf-blue);
+  font-weight: 800;
+}
+
+.gv-fc-page .fc-lab-battle-row__meta {
+  color: var(--fc-text-primary);
+  opacity: 0.68;
+  font-weight: 500;
+}
+
+.gv-fc-page .fc-lab-battle-label--battle {
+  color: var(--fc-heat-mid);
+  font-weight: 700;
+}
+
+.gv-fc-page .fc-lab-battle-label--uf {
+  color: var(--fc-uf-blue);
+  font-weight: 700;
+}
+
+.gv-fc-page .fc-lab-battle-label--other {
+  color: var(--fc-move-down);
+  font-weight: 700;
+}
+
+/* ── Analyst signal cards ── */
+.gv-fc-page .fc-lab-signal-card {
+  background: var(--fc-card-bg);
+  border: 1px solid var(--fc-card-border);
+  border-radius: var(--gv-radius-sm, 8px);
+  box-shadow: 0 2px 10px rgba(0, 26, 51, 0.06);
+}
+
+.gv-fc-page .fc-lab-signal-card__player {
+  color: var(--fc-uf-blue);
+  font-weight: 800;
+}
+
+/* ── Movement rows (shared RH primitive) ── */
+.gv-fc-page .rh-cc-move-row {
+  border-left: 3px solid var(--fc-uf-blue);
+}
+
+.gv-fc-page .rh-cc-move-row:hover {
+  border-left-color: var(--fc-gator-orange);
+}
+
+/* ── Probability bars — semantic contrast ── */
+.gv-fc-page .rh-cc-prob-bar__fill--rise,
+.gv-fc-page .rh-cc-prob-bar__fill--high {
+  background: linear-gradient(90deg, var(--fc-gator-orange), #ff6a00);
+}
+
+.gv-fc-page .rh-cc-prob-bar__fill--fall,
+.gv-fc-page .rh-cc-prob-bar__fill--low {
+  background: var(--fc-move-down);
+}
+
+.gv-fc-page .rh-cc-prob-bar__label {
+  color: var(--fc-text-primary);
+  font-weight: 700;
+}
+
+/* ── Live feed — RH feed parity ── */
+.gv-fc-page .fc-lab-feed.rh-cc-feed,
+.gv-fc-page .rh-cc-feed.fc-lab-feed {
+  background: linear-gradient(180deg, rgba(0, 33, 165, 0.35) 0%, var(--fc-swamp-navy) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gv-fc-page .fc-lab-feed__title,
+.gv-fc-page .rh-cc-feed__title {
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.gv-fc-page .rh-cc-feed__item,
+.gv-fc-page .fc-lab-feed__item {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 3px solid var(--fc-gator-orange);
+}
+
+.gv-fc-page .rh-cc-feed__text {
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 600;
+}
+
+.gv-fc-page .rh-cc-feed__meta {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ── Hero premium accents ── */
+.gv-fc-page .fc-lab-hero__eyebrow,
+.gv-fc-page .rh-cc-hero__eyebrow {
+  color: var(--fc-gator-orange);
+}
+
+.gv-fc-page .fc-lab-hero__metric--rank .fc-lab-hero__metric-value,
+.gv-fc-page .rh-cc-hero__metric--rank .rh-cc-hero__metric-value {
+  color: var(--fc-gator-orange);
+}
+
+.gv-fc-page .fc-lab-hero__heat--hot {
+  color: var(--fc-heat-high);
+}
+
+.gv-fc-page .fc-lab-hero__heat--warm {
+  color: var(--fc-heat-mid);
+}
+
+.gv-fc-page .fc-lab-hero__heat--cold {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Fit / segment semantic colors */
+.gv-fc-page .fc-lab-fit--elite {
+  color: var(--fc-gator-orange);
+  font-weight: 700;
+}
+
+.gv-fc-page .fc-lab-fit--strong {
+  color: var(--fc-uf-blue);
+  font-weight: 700;
+}
+
+.gv-fc-page .fc-lab-segment-bar__seg--uf {
+  background: var(--fc-uf-blue);
+}
+
+.gv-fc-page .fc-lab-segment-bar__seg--bama,
+.gv-fc-page .fc-lab-segment-bar__seg--other {
+  background: var(--fc-move-down);
+}
+
+.gv-fc-page .fc-lab-segment-bar__seg--uga {
+  background: #cc0000;
+}
+
+/* ── Sub-page hero (compact single-column) ── */
+.gv-fc-page .fc-premium-sub-hero .fc-lab-hero__inner {
+  padding-block: var(--gv-space-5, 24px) var(--gv-space-4, 20px);
+}
+
+.gv-fc-page .fc-premium-sub-hero .fc-lab-hero__col--overview {
+  max-width: 960px;
+}
+
+/* Flatten legacy gv-card chrome inside premium module bodies */
+.gv-fc-page .fc-premium-module .rh-cc-module__body > .gv-card,
+.gv-fc-page .fc-premium-module .rh-cc-module__body > article.gv-card,
+.gv-fc-page .fc-premium-module .rh-cc-module__body > section.gv-card {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.gv-fc-page .fc-premium-module .rh-cc-module__body > .gv-card > .gv-card-title:first-child,
+.gv-fc-page .fc-premium-module .rh-cc-module__body > section.gv-card > .gv-card-title:first-child,
+.gv-fc-page .fc-premium-module .rh-cc-module__body > .gv-movement-list > .rh-movement-section__title:first-child {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.gv-fc-page .fc-premium-module .rh-cc-module__body > .gv-card > .gv-section-head {
+  display: none;
+}
+
+/* Sub-page grids */
+.gv-fc-page .fc-premium-staff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--gv-space-3, 12px);
+}
+
+.gv-fc-page .fc-premium-trending-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gv-space-3, 12px);
+}
+
+.gv-fc-page .fc-premium-staff-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.gv-fc-page .fc-premium-staff-card:hover .fc-lab-signal-card__player {
+  color: var(--fc-gator-orange) !important;
+}
+
+/* Premium filter toolbars inside modules */
+.gv-fc-page .fc-premium-module .fc-trending-filters,
+.gv-fc-page .fc-premium-module .fc-staff-notes-filters {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+@media (max-width: 1023px) {
+  .gv-fc-page .fc-futurecast-nav-wrap {
+    margin-inline: 0;
+  }
+}
