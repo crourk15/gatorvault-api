@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import type { MasterBoardResponse, MovementIntelResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
-import type { RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
+import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
 import {
   buildIntelFeedItem,
   dedupeIntelFeedItems,
@@ -19,11 +19,21 @@ type Props = {
   trendingBoard: TrendingBoardResponse;
   movementIntel: MovementIntelResponse;
   highPriority: HighPriorityPlayer[];
-  underclassmen: RecruitingBoardPlayer[];
+  underclassmen: UnderclassmenPlayer[];
 };
 
-function isBattle(ufPct: number): boolean {
-  return ufPct >= 34 && ufPct < 67;
+function formatCompetitorLabel(p: UnderclassmenPlayer): string {
+  const top = p.competingSchools?.[0];
+  if (!top?.name) return '';
+  const short = top.name.replace(/\bUniversity\b/gi, '').trim().split(' ')[0]?.slice(0, 8) || top.name.slice(0, 8);
+  return ` · vs ${short} ${Math.round(top.pct)}%`;
+}
+
+function formatEarlyMovement(p: UnderclassmenPlayer): string {
+  const move = p.earlyMovement ?? p.trendDelta7d ?? 0;
+  if (Math.abs(move) < 0.005) return '';
+  const pct = move <= 1 && move >= -1 ? Math.round(move * 100) : Math.round(move);
+  return ` · Δ${pct > 0 ? '+' : ''}${pct}%`;
 }
 
 function FitBar({ label, value }: { label: string; value: number }): React.ReactElement {
@@ -124,8 +134,8 @@ export function FutureCastExtendedModules({
     () =>
       underclassmen
         .filter((p) => (Number(p.classYear) || 0) >= 2028)
-        .sort((a, b) => (Number(b.stars) || 0) - (Number(a.stars) || 0))
-        .slice(0, 10),
+        .sort((a, b) => b.ufConfidence - a.ufConfidence)
+        .slice(0, 12),
     [underclassmen]
   );
 
@@ -185,8 +195,8 @@ export function FutureCastExtendedModules({
           empty="No underclassmen watchlist loaded."
           items={youngerProspects.map((p) => ({
             key: p.slug,
-            primary: `${p.name} · ${p.pos || '—'} · '${String(p.classYear || '2028').slice(2)}`,
-            meta: `${Number(p.stars) || '—'}★ · ${p.school || '—'}`,
+            primary: `${p.name} · ${p.position || '—'} · '${String(p.classYear || '2028').slice(2)}`,
+            meta: `${p.tier === 'watchlist' ? 'Watch' : 'Target'} · UF ${Math.round(p.ufConfidence)}% · Fit ${Math.round(p.fitScore)}${formatEarlyMovement(p)}${formatCompetitorLabel(p)} · ${Number(p.stars) || '—'}★`,
             href: playerProfileRoute(p.slug, 'futurecast'),
           }))}
         />

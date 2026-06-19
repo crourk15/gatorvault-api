@@ -2,6 +2,7 @@
  * GET /api/staff/dashboard — internal FutureCast control room aggregates.
  */
 import type { Request, Response } from 'express';
+import { createRequire } from 'node:module';
 import { listAlerts } from '../../models/alerts';
 import {
   listRollingMovement,
@@ -18,6 +19,9 @@ import {
 import { isFutureCastDataError, respondDatabaseUnavailable } from '../futurecast/db-fallback';
 import { MOVEMENT_INTEL_MIN_CLASS_YEAR } from '../futurecast/eligibility';
 import { filterMovementIntelRollingRows } from '../futurecast/feed-filters';
+
+const require = createRequire(import.meta.url);
+const { filterMovementRowsToLiveTargets } = require('../../lib/live-board-targets');
 
 const LIST_LIMIT = 10;
 const MOVEMENT_FILTERS = {
@@ -137,7 +141,8 @@ export const handleGetStaffDashboard = asyncHandler(async (_req: Request, res: R
       () => new Map<string, number>()
     );
     const movementRowsRaw = await listRollingMovement(MOVEMENT_FILTERS, boosts);
-    const movementRows = filterMovementIntelRollingRows(movementRowsRaw);
+    const movementRowsFiltered = filterMovementIntelRollingRows(movementRowsRaw);
+    const movementRows = await filterMovementRowsToLiveTargets(movementRowsFiltered, 2027);
     const [fitLeaders, fitRisks] = await Promise.all([
       listFitScorePlayers('desc', LIST_LIMIT),
       listFitScorePlayers('asc', LIST_LIMIT),

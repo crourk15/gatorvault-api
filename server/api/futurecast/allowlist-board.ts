@@ -27,8 +27,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { ALLOWLIST_2027, CANONICAL_TARGET_NAMES } = require('../../lib/recruiting-target-allowlist');
 const { filterBlockedRecruits, isBlockedRecruit } = require('../../lib/recruiting-blocked-players');
 
-const TARGET_BOARD_PATH = path.join(__dirname, '../../data/recruiting/2027-target-board.json');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
+const EARLY_WATCHLIST_PATH = path.join(__dirname, '../../data/futurecast/early-watchlist.json');
+
+function targetBoardPath(classYear: number): string {
+  return path.join(__dirname, `../../data/recruiting/${classYear}-target-board.json`);
+}
 const RIVALS_PREDICTIONS_PATH = path.join(__dirname, '../../data/war-room/rivals-predictions.json');
 const MOVEMENT_WINDOW_DAYS = 7;
 
@@ -84,7 +88,7 @@ export interface FutureCastBoardPlayer {
   id: string;
   slug: string;
   name: string;
-  classYear: 2027;
+  classYear: number;
   position: string;
   school?: string | null;
   hometown?: string | null;
@@ -127,10 +131,26 @@ function resolvePriority(ufConfidence: number, fitScore: number): FutureCastPrio
   return 'low';
 }
 
-function loadSeedMeta(): Map<string, Record<string, unknown>> {
+function loadEarlyWatchlistMeta(): Map<string, Record<string, unknown>> {
   const map = new Map<string, Record<string, unknown>>();
   try {
-    const board = JSON.parse(fs.readFileSync(TARGET_BOARD_PATH, 'utf8')) as {
+    const doc = JSON.parse(fs.readFileSync(EARLY_WATCHLIST_PATH, 'utf8')) as {
+      entries?: Array<Record<string, unknown>>;
+    };
+    for (const entry of doc.entries ?? []) {
+      const slug = String(entry.slug || '').toLowerCase();
+      if (slug) map.set(slug, entry);
+    }
+  } catch {
+    /* optional */
+  }
+  return map;
+}
+
+function loadSeedMeta(classYear = FUTURECAST_CLASS_YEAR): Map<string, Record<string, unknown>> {
+  const map = new Map<string, Record<string, unknown>>();
+  try {
+    const board = JSON.parse(fs.readFileSync(targetBoardPath(classYear), 'utf8')) as {
       targets?: Array<Record<string, unknown>>;
     };
     for (const t of board.targets ?? []) {
@@ -145,11 +165,17 @@ function loadSeedMeta(): Map<string, Record<string, unknown>> {
       Record<string, unknown>
     >;
     for (const p of players) {
+      if (Number(p.classYear) !== classYear) continue;
       const slug = String(p.slug || '').toLowerCase();
       if (slug && !map.has(slug)) map.set(slug, p);
     }
   } catch {
     /* optional */
+  }
+  if (classYear >= 2029) {
+    for (const [slug, entry] of loadEarlyWatchlistMeta()) {
+      if (Number(entry.classYear) === classYear && !map.has(slug)) map.set(slug, entry);
+    }
   }
   return map;
 }
@@ -166,13 +192,19 @@ function buildHeatmap(players: FutureCastBoardPlayer[]): MovementHeatmapData {
   return { upCount, downCount, flatCount, windowDays: MOVEMENT_WINDOW_DAYS };
 }
 
-/** Sync allow-list slug set — use for filtering other FutureCast endpoints. */
+/** Static allow-list slug set — prefer getLiveTargetSlugSet() at runtime. */
 export function getAllowlistSlugSet(): Set<string> {
   return new Set(
     filterBlockedRecruits(ALLOWLIST_2027.map((slug: string) => ({ slug }))).map((p) =>
       String(p.slug).toLowerCase()
     )
   );
+}
+
+/** Runtime live-board slug set for a class year (excludes UF commits). */
+export async function getLiveBoardTargetSlugSet(classYear = FUTURECAST_CLASS_YEAR): Promise<Set<string>> {
+  const { getLiveTargetSlugSet } = require('../../lib/live-board-targets');
+  return getLiveTargetSlugSet(classYear);
 }
 
 export function buildHeatmapResponse(players: FutureCastBoardPlayer[]) {
@@ -197,23 +229,33 @@ export async function buildAllowlistHeatmapPayload() {
   return buildHeatmapResponse(players);
 }
 
-export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlayer[]> {
-  const allowedSlugs = filterBlockedRecruits(
-    ALLOWLIST_2027.map((slug: string) => ({ slug, name: CANONICAL_TARGET_NAMES[slug] }))
-  ).map((p) => String(p.slug).toLowerCase());
+async function resolveBoardSlugs(classYear: number): Promise<string[]> {
+  const { getLiveBoardTargets } = require('../../lib/live-board-targets');
+  const liveTargets = await getLiveBoardTargets(classYear);
+  return liveTargets
+    .map((t: { slug?: string }) => String(t.slug || '').toLowerCase())
+    .filter(Boolean);
+}
 
+/** Build enriched FutureCast player rows for explicit slugs and class year. */
+export async function loadBoardPlayersForSlugs(
+  classYear: number,
+  slugs: string[]
+): Promise<FutureCastBoardPlayer[]> {
+  const allowedSlugs = [...new Set(slugs.map((s) => String(s).toLowerCase()).filter(Boolean))];
   const allowedSet = new Set(allowedSlugs);
   const rankings = loadRecruitingRankings();
-  const seedMeta = loadSeedMeta();
+  const seedMeta = loadSeedMeta(classYear);
   const rivalsSchools = loadRivalsCompetingSchools();
+  const earlyMeta = loadEarlyWatchlistMeta();
 
   const [stockRowsRaw, predictionRows] = await Promise.all([
     listStockBoardRows(MOVEMENT_WINDOW_DAYS, {
       lifecycle: 'HS',
-      class_year: FUTURECAST_CLASS_YEAR,
+      class_year: classYear,
     }),
     listPredictions({
-      class_year: FUTURECAST_CLASS_YEAR,
+      class_year: classYear,
       status: 'ACTIVE',
       lifecycle: 'HS',
       limit: 500,
@@ -241,7 +283,7 @@ export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlay
   for (const slug of allowedSlugs) {
     if (isBlockedRecruit({ slug })) continue;
 
-    const seed = seedMeta.get(slug) ?? {};
+    const seed = seedMeta.get(slug) ?? earlyMeta.get(slug) ?? {};
     const rank = rankings.get(slug);
     const stock = stockBySlug.get(slug);
     const model = predictionBySlug.get(slug);
@@ -251,7 +293,8 @@ export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlay
       CANONICAL_TARGET_NAMES[slug] ||
       slug;
 
-    const trendDelta7d = stock?.window_delta ?? model?.delta ?? 0;
+    const seedMovement = Number(seed.earlyMovement ?? 0);
+    const trendDelta7d = stock?.window_delta ?? model?.delta ?? seedMovement;
     const history = model?.playerId ? historyMap.get(model.playerId) ?? [] : [];
     const volatility7d =
       history.length > 0
@@ -263,17 +306,20 @@ export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlay
     let ufConfidence = toPercent(model?.confidence ?? model?.ufProbability ?? seed.ufProbability);
     if (ufCommitted) ufConfidence = 100;
 
-    const competingSchools = rivalsSchools.get(slug) ?? [];
+    const seedCompetitors = Array.isArray(seed.competingSchools)
+      ? (seed.competingSchools as Array<{ name: string; pct: number }>)
+      : [];
+    const competingSchools = rivalsSchools.get(slug)?.length ? rivalsSchools.get(slug)! : seedCompetitors;
     const predictors = rivalsPredictors(slug, competingSchools);
     const fitScore = Math.round(
-      model?.ufFitScore ?? Number(seed.rating ?? rank?.compositeScore ?? 0)
+      model?.ufFitScore ?? Number(seed.fitScore ?? seed.rating ?? rank?.compositeScore ?? 0)
     );
 
     players.push({
       id: model?.playerId ?? slug,
       slug,
       name,
-      classYear: FUTURECAST_CLASS_YEAR as 2027,
+      classYear,
       position: String(
         seed.pos || seed.position || model?.position || rank?.position || '—'
       ).toUpperCase(),
@@ -297,6 +343,11 @@ export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlay
   }
 
   return players.sort((a, b) => b.ufConfidence - a.ufConfidence);
+}
+
+export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlayer[]> {
+  const slugs = await resolveBoardSlugs(FUTURECAST_CLASS_YEAR);
+  return loadBoardPlayersForSlugs(FUTURECAST_CLASS_YEAR, slugs);
 }
 
 export async function buildMasterBoardPayload() {
@@ -407,7 +458,7 @@ export async function buildMovementIntelPayload() {
   try {
     const { listAlerts } = await import('../../models/alerts');
     const raw = await listAlerts(8, FUTURECAST_CLASS_YEAR);
-    const allowedSet = new Set(ALLOWLIST_2027);
+    const allowedSet = await getLiveBoardTargetSlugSet(FUTURECAST_CLASS_YEAR);
     alerts = raw
       .filter((a) => !a.playerSlug || allowedSet.has(String(a.playerSlug).toLowerCase()))
       .map((a) => ({

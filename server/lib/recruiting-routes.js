@@ -9,6 +9,7 @@ const { buildHeatCheck } = require('./heat-check-store');
 const highlightsStore = require('./highlights-store');
 const interviewsStore = require('./interviews-store');
 const { enrichBoard } = require('./recruiting-board-enrich');
+const { getLiveBoardTargets } = require('./live-board-targets');
 const { createMemoryCache } = require('./memory-cache');
 const { mountRecruitingHubRoutes } = require('./recruiting-hub-routes');
 
@@ -28,6 +29,23 @@ function mountRecruitingRoutes(app) {
         storage: store.storageMode(),
         players: players.length,
         lastEventAt: events[0] ? events[0].createdAt : null
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  /** Runtime live-board targets — used by volatility engine and FutureCast bindings. */
+  app.get('/api/recruiting/live-board/targets', async (req, res) => {
+    try {
+      const classYear = parseInt(req.query.class || req.query.classYear || '2027', 10);
+      const targets = await getLiveBoardTargets(classYear);
+      return res.json({
+        ok: true,
+        classYear,
+        count: targets.length,
+        targets,
+        updatedAt: new Date().toISOString(),
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

@@ -16,9 +16,7 @@ import { filterMovementIntelRollingRows } from '../futurecast/feed-filters';
 import { clearFuturecastCache } from '../futurecast/response-cache';
 
 const require = createRequire(import.meta.url);
-const { ALLOWLIST_2027 } = require('../../lib/recruiting-target-allowlist');
-
-const ALLOWLIST_SET = new Set(ALLOWLIST_2027.map((s: string) => String(s).toLowerCase()));
+const { filterMovementRowsToLiveTargetsMulti } = require('../../lib/live-board-targets');
 
 function isFloridaSchool(value: string | null | undefined): boolean {
   if (!value) return false;
@@ -199,12 +197,11 @@ export async function buildRecruitingMovementIntelPayload(): Promise<{
   const boosts = await listCompetingVolatilityBoosts(ROLLING_MOVEMENT_WINDOW_DAYS).catch(
     () => new Map<string, number>()
   );
-  const [movementRows, metaBySlug] = await Promise.all([
-    filterMovementIntelRollingRows(
-      await listRollingMovement(MOVEMENT_FILTERS, boosts)
-    ),
-    loadRecruitingMetaBySlug(),
-  ]);
+  const movementRowsRaw = filterMovementIntelRollingRows(
+    await listRollingMovement(MOVEMENT_FILTERS, boosts)
+  );
+  const movementRows = await filterMovementRowsToLiveTargetsMulti(movementRowsRaw, [2027]);
+  const [metaBySlug] = await Promise.all([loadRecruitingMetaBySlug()]);
 
   const intel = loadPublicIntel();
   const intelByPlayer = groupIntelByPlayer(intel);
@@ -213,7 +210,6 @@ export async function buildRecruitingMovementIntelPayload(): Promise<{
 
   for (const row of movementRows) {
     const slug = String(row.slug || '').toLowerCase();
-    if (!ALLOWLIST_SET.has(slug)) continue;
     const meta = metaBySlug.get(slug);
     if (meta?.committedTo && isFloridaSchool(meta.committedTo)) continue;
 
@@ -242,9 +238,14 @@ export async function buildRecruitingMovementIntelPayload(): Promise<{
     const slug = String(row.playerSlug || row.player_slug || '').toLowerCase();
     const playerId = String(row.playerId || row.player_id || slug);
     if (!playerId || seen.has(playerId)) continue;
-    if (slug && !ALLOWLIST_SET.has(slug)) continue;
-    const meta = slug ? metaBySlug.get(slug) : undefined;
-    if (meta?.committedTo && isFloridaSchool(meta.committedTo)) continue;
+    if (slug) {
+      const meta = metaBySlug.get(slug);
+      if (meta?.committedTo && isFloridaSchool(meta.committedTo)) continue;
+      const onLiveBoard = movementRows.some(
+        (m) => String(m.slug || '').toLowerCase() === slug
+      );
+      if (!onLiveBoard) continue;
+    }
 
     const events = intelEventsForPlayer(intelByPlayer, slug, playerId);
     if (events.length === 0) continue;

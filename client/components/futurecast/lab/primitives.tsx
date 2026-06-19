@@ -220,7 +220,7 @@ export function FutureCastLabSection({
   testId?: string;
 }): React.ReactElement {
   return (
-    <div className="fc-lab-mobile-section" data-testid={testId}>
+    <div className="fc-lab-mobile-section fc-lab-panel-shell" data-testid={testId}>
       <header className="fc-lab-mobile-section__head">
         <div>
           <h2 className="fc-lab-mobile-section__title">{title}</h2>
@@ -228,7 +228,7 @@ export function FutureCastLabSection({
         </div>
         {action ? <div className="fc-lab-mobile-section__action">{action}</div> : null}
       </header>
-      <div className="fc-lab-mobile-section__body">{children}</div>
+      <div className="fc-lab-mobile-section__body fc-lab-panel-body">{children}</div>
     </div>
   );
 }
@@ -259,7 +259,7 @@ export function FutureCastPanelShell({
     );
   }
   return (
-    <ModuleShell title={title} sub={sub} action={action} testId={testId}>
+    <ModuleShell title={title} sub={sub} action={action} testId={testId} className="fc-lab-panel-shell">
       {children}
     </ModuleShell>
   );

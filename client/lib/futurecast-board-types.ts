@@ -9,7 +9,7 @@ export type FutureCastPlayer = {
   id: string;
   slug: string;
   name: string;
-  classYear: 2027;
+  classYear: number;
   position: string;
   school?: string | null;
   hometown?: string | null;

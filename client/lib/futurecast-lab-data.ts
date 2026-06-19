@@ -18,8 +18,10 @@ import type { FutureCastHeatLevel, FutureCastHeroMetrics, FutureCastPageSummary 
 import { deriveHeatLevel } from './api/futurecast';
 import { fetchStockBoard, type StockBoardResponse } from './predictions-api';
 import { fetchHighPriorityTargets, type HighPriorityPlayer } from './futurecast-high-priority-api';
-import { fetchRecruitingBoard } from './recruiting-board-api';
-import type { RecruitingBoardPlayer } from './recruiting-board-api';
+import {
+  fetchFutureCastUnderclassmen,
+  type UnderclassmenPlayer,
+} from './futurecast-underclassmen-api';
 
 const EMPTY_STOCK: StockBoardResponse = { stockUp: [], stockDown: [], windowDays: 7 };
 
@@ -35,7 +37,7 @@ export type FutureCastLabDataMap = {
   heatLevel: FutureCastHeatLevel;
   lastUpdated: string | null;
   highPriority: HighPriorityPlayer[];
-  underclassmen: RecruitingBoardPlayer[];
+  underclassmen: UnderclassmenPlayer[];
 };
 
 function buildSummary(master: MasterBoardResponse): FutureCastPageSummary {
@@ -56,7 +58,8 @@ function buildMetrics(master: MasterBoardResponse): FutureCastHeroMetrics {
 }
 
 export async function loadFutureCastLabData(): Promise<FutureCastLabDataMap> {
-  const [master, trending, movement, staffNotes, home, stock, highPriority, board28] = await Promise.all([
+  const [master, trending, movement, staffNotes, home, stock, highPriority, underclassmenPayload] =
+    await Promise.all([
     fetchFutureCastMasterBoard(),
     fetchFutureCastTrendingBoard(),
     fetchFutureCastMovementIntel(),
@@ -69,7 +72,14 @@ export async function loadFutureCastLabData(): Promise<FutureCastLabDataMap> {
       count: 0,
       updatedAt: new Date().toISOString(),
     })),
-    fetchRecruitingBoard(2028).catch(() => null),
+    fetchFutureCastUnderclassmen([2028, 2029, 2030]).catch(() => ({
+      ok: true,
+      updatedAt: new Date().toISOString(),
+      years: [2028, 2029, 2030],
+      classes: {},
+      players: [],
+      empty: true,
+    })),
   ]);
 
   return {
@@ -84,6 +94,6 @@ export async function loadFutureCastLabData(): Promise<FutureCastLabDataMap> {
     heatLevel: deriveHeatLevel(home, stock),
     lastUpdated: master.updatedAt ?? movement.updatedAt ?? null,
     highPriority: highPriority.players ?? [],
-    underclassmen: board28?.targets ?? [],
+    underclassmen: underclassmenPayload.players ?? [],
   };
 }

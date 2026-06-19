@@ -18,6 +18,10 @@ import { handleGetFutureCastTrendingBoard } from './trending-board';
 import { handleGetFutureCastMovementIntel } from './movement-intel';
 import { handleGetFutureCastPlayer } from './player-detail';
 import { handleGetFutureCastHealth } from './health';
+import {
+  handleGetFutureCastEarlyWatchlist,
+  handleGetFutureCastUnderclassmen,
+} from './underclassmen';
 
 export function mountFutureCastFeatureRoutes(app: Express): void {
   app.get('/api/futurecast/health', handleGetFutureCastHealth);
@@ -37,4 +41,6 @@ export function mountFutureCastFeatureRoutes(app: Express): void {
   app.get('/api/futurecast/snapshots', handleGetMovementSnapshots);
   app.get('/api/futurecast/heatmap', handleGetMovementHeatmap);
   app.get('/api/futurecast/movement', handleGetMovementHeatmap);
+  app.get('/api/futurecast/underclassmen', handleGetFutureCastUnderclassmen);
+  app.get('/api/futurecast/early-watchlist', handleGetFutureCastEarlyWatchlist);
 }
