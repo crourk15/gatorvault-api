@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { loginWithOperatorPin } from '@/lib/operator-access';
+import { loginWithOperatorPin, OPERATOR_POST_LOGIN_HREF } from '@/lib/operator-access';
 import { useOperatorAccessGate } from '@/lib/use-operator-access-gate';
 
-/** Footer operator PIN — unlocks War Room admin + full access (legacy landing behavior). */
+/** Footer operator PIN — personal War Room login door (Recruiting Hub, not admin console). */
 export function OperatorAccessFooter(): React.ReactElement {
   const [modalOpen, setModalOpen] = useState(false);
   const [pin, setPin] = useState('');
@@ -45,7 +45,7 @@ export function OperatorAccessFooter(): React.ReactElement {
     try {
       await loginWithOperatorPin(pin.trim());
       window.setTimeout(() => {
-        window.location.href = '/vault/admin';
+        window.location.href = OPERATOR_POST_LOGIN_HREF;
       }, 120);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invalid PIN.');
@@ -84,7 +84,7 @@ export function OperatorAccessFooter(): React.ReactElement {
               Operator Access
             </h2>
             <p className="gv-op-access-modal__hint">
-              Enter your admin PIN to unlock War Room and admin tools.
+              Enter your admin PIN to unlock full War Room access.
             </p>
             <div className="gv-op-access__row">
               <input

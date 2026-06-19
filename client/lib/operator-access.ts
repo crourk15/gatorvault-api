@@ -1,11 +1,16 @@
 /**
- * Operator / War Room admin PIN login — mirrors legacy landing-page Admin Access.
+ * Operator / War Room PIN login — mirrors legacy landing-page Admin Access.
+ * Post-login opens the Recruiting Hub (War Room premium home), not the admin console.
  */
 import { getApiBase } from './big-board-api';
 import { saveSession, type AuthSession } from './auth-api';
+import { VAULT_PILLAR_ROUTES } from './vault-route-map';
 
 const ADMIN_PIN_KEY = 'gv_admin_pin';
 const ADMIN_ACCESS_KEY = 'gv_admin_access';
+
+/** Personal War Room entry after operator PIN — not /vault/admin. */
+export const OPERATOR_POST_LOGIN_HREF = VAULT_PILLAR_ROUTES.recruiting;
 
 export function persistOperatorAccess(pin: string): void {
   if (typeof window === 'undefined') return;

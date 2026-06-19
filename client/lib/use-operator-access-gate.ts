@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { loginWithOperatorPin } from './operator-access';
+import { loginWithOperatorPin, OPERATOR_POST_LOGIN_HREF } from './operator-access';
 
 export const OPERATOR_AUTO_PIN = 'GV2026admin';
 export const OPERATOR_KEY_SEQUENCE = 'GVADMIN';
@@ -21,7 +21,7 @@ export function useOperatorAccessGate(onOpenModal: () => void): void {
         try {
           await loginWithOperatorPin(OPERATOR_AUTO_PIN);
           if (cancelled) return;
-          window.location.href = '/vault/admin';
+          window.location.href = OPERATOR_POST_LOGIN_HREF;
         } catch {
           if (!cancelled) onOpenRef.current();
         }
