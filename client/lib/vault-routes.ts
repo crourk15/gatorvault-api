@@ -49,8 +49,15 @@ export const VAULT_SECONDARY: { id: VaultSectionId; label: string; href: string;
 /** Full sidebar = pillars + secondary (legacy export name). */
 export const VAULT_SIDEBAR = [...VAULT_PILLARS, ...VAULT_SECONDARY];
 
-/** Mobile bottom nav — core pillars only (no dashboard to keep 5 slots). */
-export const VAULT_BOTTOM_NAV = VAULT_PILLARS.filter((item) => item.id !== 'home');
+/** UF Premium mobile bottom nav — Home, Recruiting, Team, GatorNation Live (+ Menu in shell). */
+export const VAULT_BOTTOM_NAV: { id: VaultSectionId; label: string; href: string; icon: string }[] = [
+  { id: 'home', label: 'Home', href: VAULT_PILLARS[0].href, icon: 'home' },
+  { id: 'recruiting', label: 'Recruiting', href: VAULT_PILLARS[1].href, icon: 'recruiting' },
+  { id: 'team', label: 'Team', href: VAULT_PILLARS[3].href, icon: 'team' },
+  { id: 'live-feed', label: 'GatorNation Live', href: VAULT_PILLARS[4].href, icon: 'live' },
+];
+
+export const VAULT_MOBILE_MENU_ITEM = { id: 'menu' as const, label: 'Menu' };
 
 export function isVaultPath(pathname?: string): boolean {
   const p =

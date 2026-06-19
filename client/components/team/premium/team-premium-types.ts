@@ -55,8 +55,8 @@ export type PortalSnapshotData = {
 };
 
 export type PipelinePreviewData = {
-  topCommits: { name: string; position: string; stars: number }[];
-  topTargets: { name: string; position: string; ufProbability: number }[];
+  topCommits: { name: string; position: string; stars: number; composite?: number }[];
+  topTargets: { name: string; position: string; ufProbability: number | null }[];
   avgFitScore: number;
   avgFutureCastProb: number;
   stateCounts: { state: string; count: number }[];

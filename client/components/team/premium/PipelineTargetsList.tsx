@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
+import { formatPipelineUfPct } from './team-pipeline-utils';
 
-type Target = { name: string; position: string; ufProbability: number };
+type Target = { name: string; position: string; ufProbability: number | null };
 
 type Props = {
   targets: Target[];
@@ -17,7 +18,7 @@ export function PipelineTargetsList({ targets }: Props): React.ReactElement {
           <li key={t.name} className="team-pipeline-list__item">
             <span className="team-pipeline-list__name">{t.name}</span>
             <span className="team-pipeline-list__meta">{t.position}</span>
-            <span className="team-pipeline-list__prob">{t.ufProbability}%</span>
+            <span className="team-pipeline-list__prob">{formatPipelineUfPct(t.ufProbability)}</span>
           </li>
         ))}
       </ul>

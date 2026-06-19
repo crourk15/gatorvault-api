@@ -60,14 +60,15 @@ export const TOP_NAV_ITEMS: TopNavItem[] = [
   { id: 'nil', label: 'NIL', href: SITE_ROUTES.nil },
 ];
 
-/** Mobile bottom nav — five primary flows. */
+/** UF Premium mobile bottom nav — five primary flows (Menu opens app drawer). */
 export const MOBILE_BOTTOM_NAV: TopNavItem[] = [
-  { id: 'dashboard', label: 'Dashboard', href: SITE_ROUTES.dashboard },
+  { id: 'dashboard', label: 'Home', href: SITE_ROUTES.dashboard },
   { id: 'recruiting', label: 'Recruiting', href: SITE_ROUTES.recruiting },
-  { id: 'gameWeek', label: 'Game Week', href: SITE_ROUTES.gameWeek },
-  { id: 'liveScores', label: 'Live Scores', href: SITE_ROUTES.liveScores },
-  { id: 'community', label: 'Community', href: SITE_ROUTES.community },
+  { id: 'team', label: 'Team', href: SITE_ROUTES.team },
+  { id: 'gatorNationLive', label: 'GatorNation Live', href: SITE_ROUTES.gatorNationLive },
 ];
+
+export const MOBILE_MENU_ITEM = { id: 'menu' as const, label: 'Menu' };
 
 export type PlayerProfileContext = 'recruiting' | 'futurecast' | 'team';
 

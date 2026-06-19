@@ -1,13 +1,18 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { usePathname } from '@/lib/use-pathname';
-import { VAULT_BOTTOM_NAV, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath } from '@/lib/vault-routes';
+import { VAULT_BOTTOM_NAV, VAULT_MOBILE_MENU_ITEM, VAULT_PILLARS, VAULT_SECONDARY, isVaultPath } from '@/lib/vault-routes';
 import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
 import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
 import { warmVaultApi } from '@/lib/vault-api-warmup';
 import { MobileBackToTop } from '@/components/vault/MobileBackToTop';
+import { AppMenuProvider } from '@/components/shell/AppMenuContext';
+import { AppMenuDrawer } from '@/components/shell/AppMenuDrawer';
+import { LivePulseFab } from '@/components/shell/LivePulseFab';
+import { PremiumNavIcon, type PremiumNavIconId } from '@/components/shell/PremiumNavIcons';
+import { useAppMenu } from '@/components/shell/AppMenuContext';
 
 function sidebarActive(pathname: string, href: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
@@ -60,10 +65,47 @@ function NavLink({
   );
 }
 
-export function VaultShell({ children }: { children: React.ReactNode }): React.ReactElement {
+function VaultBottomNav({ pathname }: { pathname: string }): React.ReactElement {
+  const { isOpen: menuOpen, toggleMenu } = useAppMenu();
+
+  const navLabel = (label: string) => label.replace('GatorNation Live', 'GNL Live').replace(' Hub', '');
+
+  return (
+    <nav className="gv-vault-bottom-nav" aria-label="Vault quick navigation">
+      {VAULT_BOTTOM_NAV.map((item) => (
+        <VaultNavLink
+          key={item.id}
+          href={item.href}
+          className={`gv-vault-bottom-nav__item${
+            sidebarActive(pathname, item.href) ? ' is-active' : ''
+          }`}
+        >
+          <span className="gv-vault-bottom-nav__icon" aria-hidden="true">
+            <PremiumNavIcon id={item.icon as PremiumNavIconId} />
+          </span>
+          <span className="gv-vault-bottom-nav__label">{navLabel(item.label)}</span>
+        </VaultNavLink>
+      ))}
+      <button
+        type="button"
+        className={`gv-vault-bottom-nav__item${menuOpen ? ' is-menu-open' : ''}`}
+        aria-expanded={menuOpen}
+        aria-controls="gv-app-menu-drawer"
+        onClick={toggleMenu}
+      >
+        <span className="gv-vault-bottom-nav__icon" aria-hidden="true">
+          <PremiumNavIcon id="menu" />
+        </span>
+        <span className="gv-vault-bottom-nav__label">{VAULT_MOBILE_MENU_ITEM.label}</span>
+      </button>
+    </nav>
+  );
+}
+
+function VaultShellInner({ children }: { children: React.ReactNode }): React.ReactElement {
   const pathname = usePathname();
   const { isNavigating } = useVaultNavigation();
-  const [navOpen, setNavOpen] = useState(false);
+  const [navOpen, setNavOpen] = React.useState(false);
   const inVault = isVaultPath(pathname);
   const isHome =
     (pathname.replace(/\/$/, '') || '/') === '/vault';
@@ -104,15 +146,6 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
       />
       <header className="gv-vault-shell__header">
         <div className="gv-vault-shell__header-start">
-          <button
-            type="button"
-            className="gv-vault-shell__menu-btn gv-vault-shell__menu-btn--mobile"
-            aria-expanded={navOpen}
-            aria-controls="gv-vault-shell-sidebar"
-            onClick={toggleNav}
-          >
-            ☰
-          </button>
           <VaultNavLink href={inVault ? '/vault' : '/'} className="gv-vault-shell__brand">
             <GatorVaultWordmark height={28} className="gv-vault-shell__wordmark" />
           </VaultNavLink>
@@ -161,23 +194,18 @@ export function VaultShell({ children }: { children: React.ReactNode }): React.R
         </aside>
         <main className="gv-vault-shell__main">{children}</main>
       </div>
-      <nav className="gv-vault-bottom-nav" aria-label="Vault quick navigation">
-        {VAULT_BOTTOM_NAV.map((item) => (
-          <VaultNavLink
-            key={item.id}
-            href={item.href}
-            className={`gv-vault-bottom-nav__item${
-              sidebarActive(pathname, item.href) ? ' is-active' : ''
-            }`}
-          >
-            <span className="gv-vault-bottom-nav__icon" aria-hidden="true">
-              {item.icon}
-            </span>
-            <span className="gv-vault-bottom-nav__label">{item.label.replace(' Hub', '').replace('Schedule & ', '')}</span>
-          </VaultNavLink>
-        ))}
-      </nav>
+      <VaultBottomNav pathname={pathname} />
+      <AppMenuDrawer />
+      <LivePulseFab />
       <MobileBackToTop />
     </div>
+  );
+}
+
+export function VaultShell({ children }: { children: React.ReactNode }): React.ReactElement {
+  return (
+    <AppMenuProvider>
+      <VaultShellInner>{children}</VaultShellInner>
+    </AppMenuProvider>
   );
 }

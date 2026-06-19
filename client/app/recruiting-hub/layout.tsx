@@ -14,6 +14,7 @@ import '@/lib/recruiting-hub-elite.css';
 import '@/lib/recruiting-hub-command-center.css';
 import '@/lib/vault-mobile-vertical.css';
 import '@/lib/mobile-native-framework.css';
+import '@/lib/uf-premium-mobile.css';
 
 export default function RecruitingHubLayout({
   children,

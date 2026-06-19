@@ -3,27 +3,39 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from '@/lib/use-pathname';
-import { MOBILE_BOTTOM_NAV, siteNavActiveId, type SiteSectionId } from '@/lib/site-routes';
+import {
+  MOBILE_BOTTOM_NAV,
+  MOBILE_MENU_ITEM,
+  siteNavActiveId,
+  type SiteSectionId,
+} from '@/lib/site-routes';
+import { PremiumNavIcon, type PremiumNavIconId } from '@/components/shell/PremiumNavIcons';
+import { useAppMenu } from '@/components/shell/AppMenuContext';
 
-const ICONS: Record<SiteSectionId, string> = {
-  dashboard: '🏠',
-  recruiting: '🎯',
-  futurecast: '📈',
-  team: '👥',
-  gatorNationLive: '⚡',
-  schedule: '🎟️',
-  filmRoom: '📺',
-  gameWeek: '🏈',
-  liveScores: '📊',
-  articles: '📰',
-  community: '💬',
-  gameZone: '🏆',
-  nil: '💰',
+const ICONS: Record<SiteSectionId, PremiumNavIconId> = {
+  dashboard: 'home',
+  recruiting: 'recruiting',
+  futurecast: 'recruiting',
+  team: 'team',
+  gatorNationLive: 'live',
+  schedule: 'home',
+  filmRoom: 'home',
+  gameWeek: 'home',
+  liveScores: 'live',
+  articles: 'home',
+  community: 'home',
+  gameZone: 'home',
+  nil: 'home',
 };
+
+function navLabel(label: string): string {
+  return label.replace('GatorNation Live', 'GNL Live');
+}
 
 export function MobileBottomNav(): React.ReactElement {
   const pathname = usePathname();
   const active = siteNavActiveId(pathname);
+  const { isOpen: menuOpen, toggleMenu } = useAppMenu();
 
   return (
     <nav className="gv-mobile-bottom-nav" aria-label="Quick navigation">
@@ -34,11 +46,23 @@ export function MobileBottomNav(): React.ReactElement {
           className={`gv-mobile-bottom-nav__item${active === item.id ? ' is-active' : ''}`}
         >
           <span className="gv-mobile-bottom-nav__icon" aria-hidden="true">
-            {ICONS[item.id]}
+            <PremiumNavIcon id={ICONS[item.id]} />
           </span>
-          <span>{item.label.replace('Game Week', 'Game').replace('Live Scores', 'Scores')}</span>
+          <span className="gv-mobile-bottom-nav__label">{navLabel(item.label)}</span>
         </Link>
       ))}
+      <button
+        type="button"
+        className={`gv-mobile-bottom-nav__item${menuOpen ? ' is-menu-open' : ''}`}
+        aria-expanded={menuOpen}
+        aria-controls="gv-app-menu-drawer"
+        onClick={toggleMenu}
+      >
+        <span className="gv-mobile-bottom-nav__icon" aria-hidden="true">
+          <PremiumNavIcon id="menu" />
+        </span>
+        <span className="gv-mobile-bottom-nav__label">{MOBILE_MENU_ITEM.label}</span>
+      </button>
     </nav>
   );
 }

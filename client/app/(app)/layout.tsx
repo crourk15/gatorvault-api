@@ -25,6 +25,9 @@ import '@/lib/nil-elite.css';
 import '@/lib/vault-mobile-vertical.css';
 import '@/lib/mobile-native-framework.css';
 
+import '@/lib/mobile-native-framework.css';
+import '@/lib/uf-premium-mobile.css';
+
 export default function AppLayout({
   children,
 }: {

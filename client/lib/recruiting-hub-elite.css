@@ -226,7 +226,7 @@
   }
 
   .rh-elite-mobile-header {
-    padding: var(--space-md) max(var(--rh-gutter-mobile, 16px), 5%);
+    /* spacing handled by uf-premium-mobile.css */
     border-bottom: 1px solid var(--th-border);
   }
 

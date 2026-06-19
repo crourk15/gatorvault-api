@@ -1,5 +1,6 @@
 import type { TeamHubBundle } from '@/lib/team-hub-api';
 import type { RecruitingBoardResponse } from '@/lib/recruiting-board-api';
+import type { MasterBoardResponse } from '@/lib/futurecast-board-types';
 import type {
   PipelinePreviewData,
   PortalSnapshotData,
@@ -7,18 +8,23 @@ import type {
   TeamHeroMetric,
   TeamSnapshotMetric,
 } from './team-premium-types';
+import {
+  buildFutureCastSlugMap,
+  commitCompositeRating,
+  resolveUfProbabilityPct,
+  ufPctFromRaw,
+} from './team-pipeline-utils';
 
 export function computeHeroMetrics(bundle: TeamHubBundle): TeamHeroMetric[] {
   const scholarshipCount = bundle.commandStats.rosterCount;
   const portalAdditions = bundle.roster.filter((p) => p.tags?.includes('portal')).length;
-
   return [
     { id: 'scholarships', label: 'Scholarship Count', value: String(scholarshipCount) },
-    { id: 'returning-prod', label: 'Returning Production %', value: '58%', hint: '2026 returning snaps' },
+    { id: 'returning-prod', label: 'Returning Production', value: '58%', hint: '2026 returning snaps' },
     { id: 'blue-chip', label: 'Blue-Chip Ratio', value: '42%', hint: '4★+ on roster' },
     { id: 'portal-add', label: 'Portal Additions', value: String(portalAdditions || 7) },
     { id: 'portal-loss', label: 'Portal Losses', value: '4' },
-    { id: 'nil-value', label: 'Team NIL Valuation', value: '$28.4M' },
+    { id: 'nil-value', label: 'NIL Valuation', value: '$28.4M' },
   ];
 }
 
@@ -54,25 +60,49 @@ export function computePortalSnapshot(bundle: TeamHubBundle): PortalSnapshotData
   };
 }
 
-export function buildPipelinePreview(board: RecruitingBoardResponse | null): PipelinePreviewData {
-  const commits = (board?.commits ?? []).slice(0, 5).map((p) => ({
-    name: p.name,
-    position: p.position ?? p.pos ?? '—',
-    stars: p.stars ?? 0,
-  }));
-
-  const targets = (board?.targets ?? board?.players ?? [])
-    .filter((p) => p.isTarget || !p.isCommittedToUF)
+export function buildPipelinePreview(
+  board: RecruitingBoardResponse | null,
+  fcBoard: MasterBoardResponse | null = null
+): PipelinePreviewData {
+  const fcBySlug = buildFutureCastSlugMap(fcBoard);
+  const commits = [...(board?.commits ?? [])]
+    .sort((a, b) => commitCompositeRating(b) - commitCompositeRating(a))
     .slice(0, 5)
     .map((p) => ({
       name: p.name,
       position: p.position ?? p.pos ?? '—',
-      ufProbability: p.ufProbability ?? 0,
+      stars: p.stars ?? 0,
+      composite: commitCompositeRating(p),
     }));
 
-  const allPlayers = [...(board?.commits ?? []), ...(board?.targets ?? board?.players ?? [])];
-  const fitScores = allPlayers.map((p) => p.fitScore).filter((s): s is number => typeof s === 'number');
-  const probs = allPlayers.map((p) => p.ufProbability).filter((s): s is number => typeof s === 'number');
+  const targetPool = board?.targets ?? board?.players ?? [];
+  const topTargets = targetPool
+    .filter((p) => p.isTarget || !p.isCommittedToUF)
+    .slice()
+    .sort((a, b) => {
+      const probA = resolveUfProbabilityPct(a, fcBySlug) ?? -1;
+      const probB = resolveUfProbabilityPct(b, fcBySlug) ?? -1;
+      if (probB !== probA) return probB - probA;
+      return commitCompositeRating(b) - commitCompositeRating(a);
+    })
+    .slice(0, 5)
+    .map((p) => ({
+      name: p.name,
+      position: p.position ?? p.pos ?? '—',
+      ufProbability: resolveUfProbabilityPct(p, fcBySlug),
+    }));
+
+  const allPlayers = [...(board?.commits ?? []), ...targetPool];
+  const fitScores = allPlayers
+    .map((p) => {
+      const fc = p.slug ? fcBySlug.get(p.slug.toLowerCase()) : undefined;
+      return p.fitScore ?? fc?.fitScore;
+    })
+    .filter((s): s is number => typeof s === 'number' && Number.isFinite(s));
+
+  const probs = allPlayers
+    .map((p) => resolveUfProbabilityPct(p, fcBySlug))
+    .filter((s): s is number => s != null);
 
   const stateMap = new Map<string, number>();
   for (const p of allPlayers) {
@@ -85,33 +115,14 @@ export function buildPipelinePreview(board: RecruitingBoardResponse | null): Pip
     .slice(0, 8);
 
   return {
-    topCommits: commits.length
-      ? commits
-      : [
-          { name: 'Jayden Woods', position: 'EDGE', stars: 4 },
-          { name: 'Marcus Johnson', position: 'CB', stars: 4 },
-          { name: 'Tyler Brooks', position: 'OL', stars: 3 },
-        ],
-    topTargets: targets.length
-      ? targets
-      : [
-          { name: 'Caleb Rivers', position: 'QB', ufProbability: 72 },
-          { name: 'Darius Cole', position: 'WR', ufProbability: 65 },
-          { name: 'Noah Martinez', position: 'LB', ufProbability: 58 },
-        ],
+    topCommits: commits,
+    topTargets,
     avgFitScore: fitScores.length
       ? Math.round((fitScores.reduce((a, b) => a + b, 0) / fitScores.length) * 10) / 10
-      : 7.8,
-    avgFutureCastProb: probs.length
-      ? Math.round(probs.reduce((a, b) => a + b, 0) / probs.length)
-      : 54,
-    stateCounts: stateCounts.length
-      ? stateCounts
-      : [
-          { state: 'FL', count: 12 },
-          { state: 'GA', count: 5 },
-          { state: 'TX', count: 3 },
-          { state: 'AL', count: 2 },
-        ],
+      : 0,
+    avgFutureCastProb: probs.length ? Math.round(probs.reduce((a, b) => a + b, 0) / probs.length) : 0,
+    stateCounts,
   };
 }
+
+export { ufPctFromRaw };

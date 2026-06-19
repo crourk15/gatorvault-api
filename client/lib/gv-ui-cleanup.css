@@ -28,8 +28,8 @@ body {
 .rh-tool-button,
 .gv-home-action-tile,
 .gv-mobile-bottom-nav__item,
-.gv-top-nav__link,
-.gv-top-nav__menu-btn {
+.gv-vault-bottom-nav__item,
+.gv-top-nav__link {
   min-height: 44px;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -200,7 +200,13 @@ body {
 }
 
 .gv-app-shell .rh-sticky-tabs {
-  top: 52px;
+  top: 0;
+}
+
+@media (min-width: 768px) {
+  .gv-app-shell .rh-sticky-tabs {
+    top: var(--gv-shell-header-height, 64px);
+  }
 }
 
 @media (min-width: 768px) {

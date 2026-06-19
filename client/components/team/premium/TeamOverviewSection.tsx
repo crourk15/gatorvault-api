@@ -17,9 +17,14 @@ import type { TeamHubBundle } from '@/lib/team-hub-api';
 type Props = {
   bundle: TeamHubBundle;
   pipelinePreview: PipelinePreviewData;
+  suppressPipelinePreview?: boolean;
 };
 
-export function TeamOverviewSection({ bundle, pipelinePreview }: Props): React.ReactElement {
+export function TeamOverviewSection({
+  bundle,
+  pipelinePreview,
+  suppressPipelinePreview = false,
+}: Props): React.ReactElement {
   const snapshot = computeSnapshotMetrics();
   const rooms = computePositionRoomHealth();
   const portal: PortalSnapshotData = computePortalSnapshot(bundle);
@@ -38,9 +43,11 @@ export function TeamOverviewSection({ bundle, pipelinePreview }: Props): React.R
         <PortalSnapshotModule data={portal} />
       </TeamPremiumModule>
 
-      <TeamPremiumModule title="Recruiting Pipeline Preview" subtitle="2027 class outlook">
-        <RecruitingPipelinePreview data={pipelinePreview} />
-      </TeamPremiumModule>
+      {!suppressPipelinePreview ? (
+        <TeamPremiumModule title="Recruiting Pipeline Preview" subtitle="2027 class outlook">
+          <RecruitingPipelinePreview data={pipelinePreview} />
+        </TeamPremiumModule>
+      ) : null}
     </div>
   );
 }

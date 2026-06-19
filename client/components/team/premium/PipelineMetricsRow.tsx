@@ -29,7 +29,9 @@ export function PipelineMetricsRow({
       </div>
       <div className="team-pipeline-metrics__card">
         <span className="team-pipeline-metrics__label">FutureCast Prob</span>
-        <span className="team-pipeline-metrics__value">{avgFutureCastProb}%</span>
+        <span className="team-pipeline-metrics__value">
+          {avgFutureCastProb > 0 ? `${avgFutureCastProb}%` : '—'}
+        </span>
       </div>
       <div className="team-pipeline-metrics__card">
         <span className="team-pipeline-metrics__label">Position Strengths</span>

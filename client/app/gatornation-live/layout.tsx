@@ -8,6 +8,7 @@ import '@/lib/vault-home.css';
 import '@/lib/vault-gatornation-live.css';
 import '@/lib/gnl-hero.css';
 import '@/lib/media-card.css';
+import '@/lib/uf-premium-mobile.css';
 
 export default function GatorNationLiveLayout({
   children,

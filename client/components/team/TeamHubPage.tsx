@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { fetchTeamHubBundle, type TeamHubBundle } from '@/lib/team-hub-api';
 import { fetchRecruitingBoard } from '@/lib/recruiting-board-api';
+import { fetchFutureCastMasterBoard } from '@/lib/futurecast-board-api';
 import type { Coach, DepthChartTab, Era } from '@/lib/team-hub-types';
 import type { RosterFilter } from '@/lib/team-hub-data';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
@@ -51,13 +52,15 @@ function tabFromHash(): TeamPremiumTabId {
 export function TeamHubPage(): React.ReactElement {
   const [bundle, setBundle] = useState<TeamHubBundle>(EMPTY_BUNDLE);
   const [loading, setLoading] = useState(true);
+  const [pipelineLoading, setPipelineLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [rosterFilter, setRosterFilter] = useState<RosterFilter>('All');
   const [dcTab, setDcTab] = useState<DepthChartTab>('offense');
   const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
   const [selectedEra, setSelectedEra] = useState<Era | null>(null);
   const [activeTab, setActiveTab] = useState<TeamPremiumTabId>('overview');
-  const [pipelinePreview, setPipelinePreview] = useState(buildPipelinePreview(null));
+  const [pipelinePreview, setPipelinePreview] = useState(() => buildPipelinePreview(null, null));
+  const [pipelineFullVisible, setPipelineFullVisible] = useState(false);
 
   useVaultPageRestore('team', (saved) => {
     if (saved.rosterFilter && typeof saved.rosterFilter === 'string') {
@@ -68,19 +71,22 @@ export function TeamHubPage(): React.ReactElement {
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) {
       setLoading(true);
+      setPipelineLoading(true);
       setError(null);
     }
     try {
-      const [hub, board] = await Promise.all([
+      const [hub, board, fcBoard] = await Promise.all([
         fetchTeamHubBundle(),
         fetchRecruitingBoard(2027).catch(() => null),
+        fetchFutureCastMasterBoard().catch(() => null),
       ]);
       setBundle(hub);
-      setPipelinePreview(buildPipelinePreview(board));
+      setPipelinePreview(buildPipelinePreview(board, fcBoard));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load team hub.');
     } finally {
       if (isInitial) setLoading(false);
+      setPipelineLoading(false);
     }
   }, []);
 
@@ -104,6 +110,18 @@ export function TeamHubPage(): React.ReactElement {
     document.body.classList.toggle('gv-team-modal-open', Boolean(selectedCoach || selectedEra));
     return () => document.body.classList.remove('gv-team-modal-open');
   }, [selectedCoach, selectedEra]);
+
+  useEffect(() => {
+    const el = document.getElementById('recruiting-pipeline');
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setPipelineFullVisible(Boolean(entry?.isIntersecting)),
+      { rootMargin: '-80px 0px -40% 0px', threshold: 0.12 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [loading, error]);
 
   const scrollToSection = useCallback((tab: TeamPremiumTabId) => {
     setActiveTab(tab);
@@ -154,21 +172,26 @@ export function TeamHubPage(): React.ReactElement {
         : bundle.depthChart.specialTeams;
 
   const heroMetrics = useMemo(() => computeHeroMetrics(bundle), [bundle]);
+  const suppressPipelinePreview = pipelineFullVisible || activeTab === 'recruiting-pipeline';
 
   return (
     <TeamElitePageShell>
       {error && !loading ? (
-        <div className="rh-frame team-cc-page">
+        <div className="rh-frame rh-cc-page team-premium-cc-page">
           <UiError message={error} retry={() => void load(true)} backHref="/vault" backLabel="← Home" />
         </div>
       ) : (
         <>
           <TeamPremiumHero metrics={heroMetrics} loading={loading && bundle.roster.length === 0} />
-          <div className="team-premium-nav-wrap rh-frame">
+          <div className="team-premium-subnav-wrap rh-frame">
             <TeamPremiumSubNav active={activeTab} onSelect={scrollToSection} />
           </div>
-          <div className="rh-frame team-cc-page">
-            <TeamOverviewSection bundle={bundle} pipelinePreview={pipelinePreview} />
+          <div className="rh-frame rh-cc-page team-premium-cc-page">
+            <TeamOverviewSection
+              bundle={bundle}
+              pipelinePreview={pipelinePreview}
+              suppressPipelinePreview={suppressPipelinePreview}
+            />
             <TeamRosterSection
               roster={bundle.roster}
               filter={rosterFilter}
@@ -179,7 +202,7 @@ export function TeamHubPage(): React.ReactElement {
             <StaffCardGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} />
             <TeamIdentityPremiumSection />
             <ProgramHistoryGrid eras={bundle.eras} onSelectEra={setSelectedEra} />
-            <TeamRecruitingPipelineSection />
+            <TeamRecruitingPipelineSection data={pipelinePreview} loading={pipelineLoading} />
           </div>
         </>
       )}

@@ -17,8 +17,10 @@ export function TeamElitePageShell({ children, testId = 'vault-team' }: Props): 
       data-testid={testId}
     >
       {!isDesktop ? (
-        <header className="team-premium-mobile-header" aria-label="Team page">
-          <span className="team-premium-mobile-header__title">Team Command Center</span>
+        <header className="rh-elite-mobile-header" aria-label="Team page" data-testid="team-mobile-header">
+          <p className="rh-elite-mobile-header__eyebrow">GatorVault Insider</p>
+          <h1 className="rh-elite-mobile-header__title">Team Command Center</h1>
+          <p className="rh-elite-mobile-header__sub">Roster, depth chart, staff, and program intel.</p>
         </header>
       ) : null}
       {children}
