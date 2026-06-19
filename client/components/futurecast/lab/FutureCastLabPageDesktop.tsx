@@ -11,6 +11,7 @@ import { FutureCastMovementPanel } from './FutureCastMovementPanel';
 import { FutureCastPositionBreakdown } from './FutureCastPositionBreakdown';
 import { FutureCastPortalCrossView } from './FutureCastPortalCrossView';
 import { FutureCastLiveFeed } from './FutureCastLiveFeed';
+import { FutureCastExtendedModules } from './FutureCastExtendedModules';
 
 type Props = {
   data: FutureCastLabDataMap;
@@ -47,6 +48,15 @@ export function FutureCastLabPageDesktop({ data }: Props): React.ReactElement {
           <FutureCastPositionBreakdown
             players={data.masterBoard.players}
             activePredictions={data.metrics.activePredictions}
+          />
+        </section>
+        <section id="fc-lab-extended">
+          <FutureCastExtendedModules
+            masterBoard={data.masterBoard}
+            trendingBoard={data.trendingBoard}
+            movementIntel={data.movementIntel}
+            highPriority={data.highPriority}
+            underclassmen={data.underclassmen}
           />
         </section>
         <section id={FUTURECAST_LAB_ANCHORS.portal}>

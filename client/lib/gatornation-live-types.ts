@@ -32,6 +32,7 @@ export type RecruitingUpdateCardProps = {
   url: string;
   timestamp: string;
   category: string;
+  icon?: string;
 };
 
 export type LivePanelProps = {

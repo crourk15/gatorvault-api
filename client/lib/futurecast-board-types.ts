@@ -27,6 +27,9 @@ export type FutureCastPlayer = {
   volatility7d: number;
   /** Priority tier tag; numeric Priority Score (importance) is on high-priority API. */
   priority: FutureCastPriority;
+  committedTo?: string | null;
+  predictors?: Array<{ name: string; score: number }>;
+  competingSchools?: Array<{ name: string; pct: number }>;
 };
 
 export type MovementHeatmap = {

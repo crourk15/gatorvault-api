@@ -103,6 +103,8 @@ export function useFutureCastLabData(): FutureCastLabData {
     metrics: { avgUFProbability: 0, highPriorityCount: 0, activePredictions: 0 },
     heatLevel: 'warm' as const,
     lastUpdated: null,
+    highPriority: [],
+    underclassmen: [],
   };
 
   return {

@@ -19,28 +19,28 @@ export function RecruitingUpdateCard({
   url,
   timestamp,
   category,
+  icon,
 }: RecruitingUpdateCardProps): React.ReactElement {
   const timeLabel = formatTimeAgo(timestamp);
 
   return (
     <a
       href={url}
-      className="gv-card gv-card--light gv-card--interactive gv-gnl-feed-card gv-live-feed__row gv-live-feed__row--headline"
+      className="gv-card gv-card--light gv-card--interactive gv-gnl-feed-card gv-live-feed__row gv-live-feed__row--headline rh-cc-feed__item"
       data-testid="gnl-feed-card"
     >
-      <span className="gv-gnl-feed-card__badge" aria-label={source}>
-        {sourceBadge(source)}
+      <span className="rh-cc-feed__icon gv-gnl-feed-card__badge" aria-hidden>
+        {icon || sourceBadge(source)}
       </span>
-      <div className="gv-gnl-feed-card__body">
-        <p className="gv-gnl-feed-card__headline">{headline}</p>
+      <div className="gv-gnl-feed-card__body rh-cc-feed__body">
+        <p className="gv-gnl-feed-card__headline rh-cc-feed__text">{headline}</p>
         <p className="gv-gnl-feed-card__meta">
           <Chip variant="timestamp" className="gv-gnl-feed-card__time-chip">
             {timeLabel}
           </Chip>
-          <span className="gv-live-feed__row-time">{timeLabel}</span>
-          {' · Source: '}
-          {source}
           <span className="gv-gnl-feed-card__cat">{category}</span>
+          {' · '}
+          {source}
         </p>
       </div>
     </a>

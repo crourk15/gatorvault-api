@@ -1,6 +1,7 @@
 /**
  * GET /api/recruiting/movement-intel — UF% deltas + intel.json events.
  */
+import { createRequire } from 'node:module';
 import type { Request, Response } from 'express';
 import {
   listRollingMovement,
@@ -12,6 +13,17 @@ import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-ap
 import { isFutureCastDataError, respondDatabaseUnavailable } from '../futurecast/db-fallback';
 import { MOVEMENT_INTEL_MIN_CLASS_YEAR } from '../futurecast/eligibility';
 import { filterMovementIntelRollingRows } from '../futurecast/feed-filters';
+import { clearFuturecastCache } from '../futurecast/response-cache';
+
+const require = createRequire(import.meta.url);
+const { ALLOWLIST_2027 } = require('../../lib/recruiting-target-allowlist');
+
+const ALLOWLIST_SET = new Set(ALLOWLIST_2027.map((s: string) => String(s).toLowerCase()));
+
+function isFloridaSchool(value: string | null | undefined): boolean {
+  if (!value) return false;
+  return /\bflorida\b|\bgators\b/i.test(String(value));
+}
 
 const MOVEMENT_FILTERS = {
   lifecycle: 'HS' as const,
@@ -147,15 +159,22 @@ function buildAlerts(intel: IntelRow[], limit: number): MovementIntelAlert[] {
   return alerts;
 }
 
-async function loadSchoolBySlug(): Promise<Map<string, string>> {
+async function loadRecruitingMetaBySlug(): Promise<
+  Map<string, { school: string; committedTo: string | null }>
+> {
   const store = require('../../lib/recruiting-store') as {
-    getAllPlayers: () => Promise<{ slug?: string; school?: string; highSchool?: string }[]>;
+    getAllPlayers: () => Promise<
+      { slug?: string; school?: string; highSchool?: string; committedTo?: string | null }[]
+    >;
   };
   const players = await store.getAllPlayers().catch(() => []);
-  const map = new Map<string, string>();
+  const map = new Map<string, { school: string; committedTo: string | null }>();
   for (const player of players) {
     if (!player.slug) continue;
-    map.set(player.slug.toLowerCase(), player.school || player.highSchool || '—');
+    map.set(player.slug.toLowerCase(), {
+      school: player.school || player.highSchool || '—',
+      committedTo: player.committedTo ?? null,
+    });
   }
   return map;
 }
@@ -176,14 +195,15 @@ export async function buildRecruitingMovementIntelPayload(): Promise<{
   volatile: MovementIntelItem[];
   alerts: MovementIntelAlert[];
 }> {
+  clearFuturecastCache();
   const boosts = await listCompetingVolatilityBoosts(ROLLING_MOVEMENT_WINDOW_DAYS).catch(
     () => new Map<string, number>()
   );
-  const [movementRows, schoolBySlug] = await Promise.all([
+  const [movementRows, metaBySlug] = await Promise.all([
     filterMovementIntelRollingRows(
       await listRollingMovement(MOVEMENT_FILTERS, boosts)
     ),
-    loadSchoolBySlug(),
+    loadRecruitingMetaBySlug(),
   ]);
 
   const intel = loadPublicIntel();
@@ -192,6 +212,11 @@ export async function buildRecruitingMovementIntelPayload(): Promise<{
   const seen = new Set<string>();
 
   for (const row of movementRows) {
+    const slug = String(row.slug || '').toLowerCase();
+    if (!ALLOWLIST_SET.has(slug)) continue;
+    const meta = metaBySlug.get(slug);
+    if (meta?.committedTo && isFloridaSchool(meta.committedTo)) continue;
+
     const ufProb = toPct(row.ufProbNow);
     const delta = toDelta(row.delta7d);
     const events = intelEventsForPlayer(intelByPlayer, row.slug, row.playerId);
@@ -204,7 +229,7 @@ export async function buildRecruitingMovementIntelPayload(): Promise<{
       slug: row.slug,
       name: row.fullName,
       position: row.position || '—',
-      school: schoolBySlug.get(row.slug.toLowerCase()) || '—',
+      school: meta?.school || '—',
       ufProb,
       delta,
       movementType,
@@ -217,6 +242,9 @@ export async function buildRecruitingMovementIntelPayload(): Promise<{
     const slug = String(row.playerSlug || row.player_slug || '').toLowerCase();
     const playerId = String(row.playerId || row.player_id || slug);
     if (!playerId || seen.has(playerId)) continue;
+    if (slug && !ALLOWLIST_SET.has(slug)) continue;
+    const meta = slug ? metaBySlug.get(slug) : undefined;
+    if (meta?.committedTo && isFloridaSchool(meta.committedTo)) continue;
 
     const events = intelEventsForPlayer(intelByPlayer, slug, playerId);
     if (events.length === 0) continue;

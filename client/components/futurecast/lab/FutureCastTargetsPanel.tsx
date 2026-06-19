@@ -14,6 +14,10 @@ type Props = {
 
 export function FutureCastTargetsPanel({ masterBoard, bare }: Props): React.ReactElement {
   const rows = [...masterBoard.players]
+    .filter((p) => {
+      const committed = p.committedTo ?? '';
+      return !committed || !/\bflorida\b|\bgators\b/i.test(String(committed));
+    })
     .sort((a, b) => b.ufConfidence - a.ufConfidence)
     .slice(0, 10)
     .map(futureCastPlayerToLabTarget);

@@ -2,6 +2,11 @@
 
 import React, { useMemo } from 'react';
 import type { MasterBoardResponse, MovementIntelResponse, StaffNotesResponse } from '@/lib/futurecast-board-types';
+import {
+  buildIntelFeedItem,
+  dedupeIntelFeedItems,
+  formatIntelTimestamp,
+} from '@/lib/recruiting-intel-feed';
 import { ufPctFromFc } from './fc-lab-types';
 
 type Props = {
@@ -10,76 +15,109 @@ type Props = {
   movementIntel: MovementIntelResponse;
 };
 
-type FeedItem = { icon: string; text: string };
-
 export function FutureCastLiveFeed({
   masterBoard,
   staffNotes,
   movementIntel,
 }: Props): React.ReactElement {
   const items = useMemo(() => {
-    const feed: FeedItem[] = [];
+    const raw = [];
     const bySlug = new Map(masterBoard.players.map((p) => [p.slug, p]));
 
     for (const p of masterBoard.players.slice(0, 4)) {
+      if (p.committedTo && /\bflorida\b|\bgators\b/i.test(String(p.committedTo))) continue;
       const pct = ufPctFromFc(p.ufConfidence);
-      feed.push({
-        icon: '🎯',
-        text: `FutureCast model → UF ${pct}% for ${p.name} (${p.position})`,
-      });
+      raw.push(
+        buildIntelFeedItem({
+          id: `fc-model-${p.slug}`,
+          playerName: p.name,
+          headline: `FutureCast model → UF ${pct}% for ${p.name} (${p.position})`,
+          timestamp: masterBoard.updatedAt,
+          category: 'Movement',
+        })
+      );
     }
 
     for (const riser of movementIntel.risers.slice(0, 2)) {
-      feed.push({
-        icon: '🔁',
-        text: `Prediction trending up for ${riser.name} (+${Math.round(riser.trendDelta7d)}%)`,
-      });
+      raw.push(
+        buildIntelFeedItem({
+          id: `fc-rise-${riser.slug}`,
+          playerName: riser.name,
+          headline: `Prediction trending up for ${riser.name} (+${Math.round(riser.trendDelta7d)}%)`,
+          timestamp: movementIntel.updatedAt,
+          category: 'Movement',
+        })
+      );
     }
 
     for (const note of staffNotes.notes.slice(0, 3)) {
       const player = bySlug.get(note.playerSlug);
       const pct = player ? ufPctFromFc(player.ufConfidence) : null;
-      feed.push({
-        icon: '📝',
-        text: `Staff note on ${note.playerName}${pct != null ? ` — UF ${pct}%` : ''}: ${note.notePreview ?? note.note ?? 'Updated'}`,
-      });
+      raw.push(
+        buildIntelFeedItem({
+          id: `fc-note-${note.playerSlug}-${note.notePreview || note.note}`,
+          playerName: note.playerName,
+          headline: `Staff note on ${note.playerName}${pct != null ? ` — UF ${pct}%` : ''}: ${note.notePreview ?? note.note ?? 'Updated'}`,
+          timestamp: staffNotes.updatedAt,
+          category: 'Staff Note',
+        })
+      );
     }
 
     for (const alert of movementIntel.alerts.slice(0, 2)) {
-      feed.push({
-        icon: '⚠️',
-        text: alert.message,
-      });
+      raw.push(
+        buildIntelFeedItem({
+          id: alert.id,
+          headline: alert.message,
+          timestamp: alert.createdAt,
+          category: 'Movement',
+          volatile: /volatile|spike/i.test(alert.message),
+        })
+      );
     }
 
     for (const faller of movementIntel.fallers.slice(0, 1)) {
-      feed.push({
-        icon: '🔁',
-        text: `Prediction cooling on ${faller.name} (${Math.round(faller.trendDelta7d)}%)`,
-      });
+      raw.push(
+        buildIntelFeedItem({
+          id: `fc-fall-${faller.slug}`,
+          playerName: faller.name,
+          headline: `Prediction cooling on ${faller.name} (${Math.round(faller.trendDelta7d)}%)`,
+          timestamp: movementIntel.updatedAt,
+          category: 'Movement',
+        })
+      );
     }
 
-    if (feed.length < 4) {
-      feed.push({
-        icon: 'ℹ️',
-        text: 'FutureCast Lab live — predictions refresh every 90 seconds',
-      });
+    const deduped = dedupeIntelFeedItems(raw, 16);
+    if (deduped.length < 4) {
+      deduped.push(
+        buildIntelFeedItem({
+          id: 'fc-feed-placeholder',
+          headline: 'FutureCast Lab live — predictions refresh every 90 seconds',
+          category: 'Update',
+        })
+      );
     }
 
-    return feed.slice(0, 16);
-  }, [masterBoard.players, movementIntel, staffNotes.notes]);
+    return deduped;
+  }, [masterBoard, movementIntel, staffNotes.notes, staffNotes.updatedAt]);
 
   return (
     <section className="fc-lab-feed fc-lab-bleed" data-testid="fc-lab-live-feed">
       <div className="fc-lab-feed__inner rh-frame">
         <h2 className="fc-lab-feed__title">FutureCast Live Feed</h2>
         <div className="fc-lab-feed__track" tabIndex={0} role="list" aria-label="FutureCast live feed">
-          {items.map((item, i) => (
-            <div key={`${item.text}-${i}`} className="fc-lab-feed__item" role="listitem">
-              <span className="fc-lab-feed__icon" aria-hidden>
+          {items.map((item) => (
+            <div key={item.id} className="fc-lab-feed__item rh-cc-feed__item" role="listitem">
+              <span className="fc-lab-feed__icon rh-cc-feed__icon" aria-hidden>
                 {item.icon}
               </span>
-              <span className="fc-lab-feed__text">{item.text}</span>
+              <div className="rh-cc-feed__body">
+                <span className="fc-lab-feed__text rh-cc-feed__text">{item.headline}</span>
+                <span className="rh-cc-feed__meta">
+                  {item.category} · {formatIntelTimestamp(item.timestamp)}
+                </span>
+              </div>
             </div>
           ))}
         </div>

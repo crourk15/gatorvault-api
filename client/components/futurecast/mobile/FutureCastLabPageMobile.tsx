@@ -11,6 +11,7 @@ import { FutureCastMovementPanel } from '@/components/futurecast/lab/FutureCastM
 import { FutureCastPositionBreakdown } from '@/components/futurecast/lab/FutureCastPositionBreakdown';
 import { FutureCastPortalCrossView } from '@/components/futurecast/lab/FutureCastPortalCrossView';
 import { FutureCastLiveFeed } from '@/components/futurecast/lab/FutureCastLiveFeed';
+import { FutureCastExtendedModules } from '@/components/futurecast/lab/FutureCastExtendedModules';
 import { LazyMountSection } from '@/components/shared/LazyMountSection';
 
 type Props = {
@@ -53,6 +54,15 @@ export function FutureCastLabPageMobile({ data }: Props): React.ReactElement {
             <FutureCastPositionBreakdown
               players={data.masterBoard.players}
               activePredictions={data.metrics.activePredictions}
+            />
+          </LazyMountSection>
+          <LazyMountSection id="fc-lab-extended">
+            <FutureCastExtendedModules
+              masterBoard={data.masterBoard}
+              trendingBoard={data.trendingBoard}
+              movementIntel={data.movementIntel}
+              highPriority={data.highPriority}
+              underclassmen={data.underclassmen}
             />
           </LazyMountSection>
           <LazyMountSection id={FUTURECAST_LAB_ANCHORS.portal}>

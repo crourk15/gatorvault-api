@@ -7,6 +7,11 @@ import type { MovementSummary } from '@/lib/recruiting-movement-api';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
 import type { HighPriorityIntelItem } from '@/components/recruiting-hub/HighPriorityIntel/types';
 import { formatIntelUpdated } from '@/components/recruiting-hub/utils/formatDate';
+import {
+  buildIntelFeedItem,
+  dedupeIntelFeedItems,
+  formatIntelTimestamp,
+} from '@/lib/recruiting-intel-feed';
 import { UFProbabilityMeter } from './UFProbabilityMeter';
 import { ufPctFromRaw } from './primitives';
 
@@ -63,17 +68,69 @@ export function HeroPulse({
   }, [targets]);
 
   const alerts = useMemo(() => {
-    const fromStaff = (staffDashboard?.alerts ?? []).slice(0, 3).map((a) => ({
-      icon: a.type === 'VISIT' ? '📍' : a.type === 'OFFER' ? '🎯' : '⚠️',
-      text: `${a.playerName}: ${a.message}`,
-    }));
-    if (fromStaff.length >= 3) return fromStaff;
-    const fromIntel = intelItems.slice(0, 3 - fromStaff.length).map((item) => ({
-      icon: item.intelType === 'VISIT' ? '📍' : item.intelType === 'RPM' ? '🎯' : '⚠️',
-      text: item.intelSummary,
-    }));
-    return [...fromStaff, ...fromIntel];
-  }, [staffDashboard?.alerts, intelItems]);
+    const raw = [];
+
+    for (const alert of staffDashboard?.alerts ?? []) {
+      const category =
+        alert.type === 'VISIT' ? 'Visit' : alert.type === 'OFFER' ? 'Offer' : 'Movement';
+      raw.push(
+        buildIntelFeedItem({
+          id: `staff-${alert.playerName}-${alert.message}`,
+          playerName: alert.playerName,
+          headline: `${alert.playerName}: ${alert.message}`,
+          timestamp: alert.createdAt || lastUpdated,
+          category,
+          volatile: alert.type !== 'VISIT' && alert.type !== 'OFFER' && /volatile|spike/i.test(alert.message),
+        })
+      );
+    }
+
+    for (const item of intelItems) {
+      raw.push(
+        buildIntelFeedItem({
+          id: `intel-${item.slug}-${item.intelSummary}`,
+          playerName: item.name,
+          headline: `${item.name}: ${item.intelSummary}`,
+          timestamp: lastUpdated,
+          category:
+            item.intelType === 'VISIT'
+              ? 'Visit'
+              : item.intelType === 'RPM'
+                ? 'Offer'
+                : item.intelType === 'BATTLE'
+                  ? 'Movement'
+                  : 'Update',
+          volatile: item.intelType === 'BATTLE',
+        })
+      );
+    }
+
+    if (movementSummary && movementSummary.volatile > 0) {
+      raw.push(
+        buildIntelFeedItem({
+          id: 'movement-volatile-summary',
+          headline: `UF volatility spike on ${movementSummary.volatile} targets`,
+          timestamp: movementSummary.lastUpdated,
+          category: 'Movement',
+          volatile: true,
+        })
+      );
+    }
+
+    for (const item of rising.slice(0, 2)) {
+      raw.push(
+        buildIntelFeedItem({
+          id: `rising-${item.playerSlug || item.playerName}`,
+          playerName: item.playerName,
+          headline: `${item.playerName} heating up on the UF board`,
+          timestamp: lastUpdated,
+          category: 'Movement',
+        })
+      );
+    }
+
+    return dedupeIntelFeedItems(raw, 6);
+  }, [staffDashboard?.alerts, intelItems, movementSummary, rising, lastUpdated]);
 
   const movementLine = useMemo(() => {
     const r = movementSummary?.rising ?? rising.length;
@@ -141,9 +198,17 @@ export function HeroPulse({
               {alerts.length === 0 ? (
                 <li className="rh-cc-hero__alert">No live alerts yet — monitoring targets.</li>
               ) : (
-                alerts.map((alert, i) => (
-                  <li key={`${alert.text}-${i}`} className="rh-cc-hero__alert">
-                    <span aria-hidden>{alert.icon}</span> {alert.text}
+                alerts.map((alert) => (
+                  <li key={alert.id} className="rh-cc-hero__alert rh-cc-hero__alert--card">
+                    <span className="rh-cc-hero__alert-icon" aria-hidden>
+                      {alert.icon}
+                    </span>
+                    <div className="rh-cc-hero__alert-body">
+                      <span className="rh-cc-hero__alert-text">{alert.headline}</span>
+                      <span className="rh-cc-hero__alert-meta">
+                        {alert.category} · {formatIntelTimestamp(alert.timestamp)}
+                      </span>
+                    </div>
                   </li>
                 ))
               )}

@@ -12,6 +12,10 @@ import { fetchLiveTicker, fetchMovementPreview, computeMomentumPct } from './vau
 import { fetchLiveDashboard, type BeatPost, type LiveFeedItem, type PodcastShow } from './live-api';
 import { fetchRecruitingBoard } from './recruiting-board-api';
 import {
+  buildIntelFeedItem,
+  dedupeIntelFeedItems,
+} from './recruiting-intel-feed';
+import {
   PODCAST_CATALOG,
   resolvePodcastLogo,
   resolvePodcastLogoFallback,
@@ -93,21 +97,9 @@ export function tickerTagEmoji(tag: TickerTag): string {
   }
 }
 
-function feedCategory(item: LiveFeedItem): string {
-  const blob = `${item.type ?? ''} ${item.title ?? ''}`.toLowerCase();
-  if (blob.includes('commit')) return 'Commit';
-  if (blob.includes('visit') || blob.includes('ov')) return 'Visit';
-  if (blob.includes('portal')) return 'Portal';
-  if (blob.includes('staff')) return 'Staff Note';
-  if (blob.includes('rumor')) return 'Rumor';
-  return 'Update';
-}
-
 function isExcludedLiveFeedItem(item: LiveFeedItem): boolean {
   const blob = `${item.title ?? ''} ${item.type ?? ''}`.toLowerCase();
   if (!blob.trim()) return true;
-  if (/\bcommit\b|\bsigned\b|\bdecommit\b/.test(blob)) return true;
-  if (/\bportal\b/.test(blob) && /\bcommit\b/.test(blob)) return true;
   if (item.createdAt) {
     const ageMs = Date.now() - new Date(item.createdAt).getTime();
     if (Number.isFinite(ageMs) && ageMs > 48 * 60 * 60 * 1000) return true;
@@ -145,16 +137,26 @@ export function normalizePodcasts(shows: PodcastShow[]): PodcastCardProps[] {
 }
 
 export function buildRecruitingFeed(feed: LiveFeedItem[]): RecruitingUpdateCardProps[] {
-  return feed
+  const intelItems = feed
     .filter((item) => item.title && !isExcludedLiveFeedItem(item))
-    .slice(0, 24)
-    .map((item) => ({
-      source: item.source || 'GatorVault',
-      headline: String(item.title),
-      url: item.url || '/vault/live',
-      timestamp: item.createdAt || new Date().toISOString(),
-      category: feedCategory(item),
-    }));
+    .map((item) =>
+      buildIntelFeedItem({
+        id: String(item.id || item.url || item.title),
+        headline: String(item.title),
+        timestamp: item.createdAt || new Date().toISOString(),
+        source: item.source || 'GatorVault',
+        url: item.url || '/vault/live',
+      })
+    );
+
+  return dedupeIntelFeedItems(intelItems, 24).map((item) => ({
+    source: item.source || 'GatorVault',
+    headline: item.headline,
+    url: item.url || '/vault/live',
+    timestamp: item.timestamp,
+    category: item.category,
+    icon: item.icon,
+  }));
 }
 
 export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePanelItems {

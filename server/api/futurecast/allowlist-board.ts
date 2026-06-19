@@ -29,7 +29,54 @@ const { filterBlockedRecruits, isBlockedRecruit } = require('../../lib/recruitin
 
 const TARGET_BOARD_PATH = path.join(__dirname, '../../data/recruiting/2027-target-board.json');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
+const RIVALS_PREDICTIONS_PATH = path.join(__dirname, '../../data/war-room/rivals-predictions.json');
 const MOVEMENT_WINDOW_DAYS = 7;
+
+function isFloridaSchool(value: string | null | undefined): boolean {
+  if (!value) return false;
+  return /\bflorida\b|\bgators\b/i.test(String(value).replace(/\s+/g, ' ').trim());
+}
+
+function seedCommittedTo(seed: Record<string, unknown>): string | null {
+  const raw = seed.committedTo ?? seed.committed_to ?? null;
+  return raw != null ? String(raw) : null;
+}
+
+function loadRivalsCompetingSchools(): Map<string, { name: string; pct: number }[]> {
+  try {
+    const doc = JSON.parse(fs.readFileSync(RIVALS_PREDICTIONS_PATH, 'utf8')) as {
+      predictions?: Array<{ playerSlug?: string; predictionSchool?: string; confidence?: number }>;
+    };
+    const bySlug = new Map<string, Map<string, number>>();
+    for (const row of doc.predictions ?? []) {
+      const slug = String(row.playerSlug || '').toLowerCase();
+      const school = String(row.predictionSchool || '').trim();
+      if (!slug || !school) continue;
+      const schools = bySlug.get(slug) ?? new Map<string, number>();
+      schools.set(school, Math.max(schools.get(school) ?? 0, Number(row.confidence) || 0));
+      bySlug.set(slug, schools);
+    }
+    const out = new Map<string, { name: string; pct: number }[]>();
+    for (const [slug, schools] of bySlug) {
+      const entries = [...schools.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4);
+      const total = entries.reduce((sum, [, score]) => sum + score, 0) || 1;
+      out.set(
+        slug,
+        entries.map(([name, score]) => ({ name, pct: Math.round((score / total) * 100) }))
+      );
+    }
+    return out;
+  } catch {
+    return new Map();
+  }
+}
+
+function rivalsPredictors(
+  slug: string,
+  schools: { name: string; pct: number }[]
+): Array<{ name: string; score: number }> {
+  return schools.map((s) => ({ name: s.name, score: s.pct }));
+}
 
 export type FutureCastPriority = 'high' | 'medium' | 'low';
 
@@ -55,6 +102,9 @@ export interface FutureCastBoardPlayer {
   volatility7d: number;
   /** Priority tier tag; numeric Priority Score is on high-priority API. */
   priority: FutureCastPriority;
+  committedTo?: string | null;
+  predictors?: Array<{ name: string; score: number }>;
+  competingSchools?: Array<{ name: string; pct: number }>;
 }
 
 export interface MovementHeatmapData {
@@ -155,6 +205,7 @@ export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlay
   const allowedSet = new Set(allowedSlugs);
   const rankings = loadRecruitingRankings();
   const seedMeta = loadSeedMeta();
+  const rivalsSchools = loadRivalsCompetingSchools();
 
   const [stockRowsRaw, predictionRows] = await Promise.all([
     listStockBoardRows(MOVEMENT_WINDOW_DAYS, {
@@ -207,8 +258,16 @@ export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlay
         ? Math.round(calculateVolatility(history) * 100) / 100
         : Math.round(Math.abs(trendDelta7d) * 100) / 100;
 
-    const ufConfidence = toPercent(model?.confidence ?? model?.ufProbability ?? seed.ufProbability);
-    const fitScore = Math.round(model?.ufFitScore ?? Number(seed.rating ?? rank?.compositeScore ?? 0));
+    const committedTo = seedCommittedTo(seed) ?? model?.committedTo ?? null;
+    const ufCommitted = isFloridaSchool(committedTo);
+    let ufConfidence = toPercent(model?.confidence ?? model?.ufProbability ?? seed.ufProbability);
+    if (ufCommitted) ufConfidence = 100;
+
+    const competingSchools = rivalsSchools.get(slug) ?? [];
+    const predictors = rivalsPredictors(slug, competingSchools);
+    const fitScore = Math.round(
+      model?.ufFitScore ?? Number(seed.rating ?? rank?.compositeScore ?? 0)
+    );
 
     players.push({
       id: model?.playerId ?? slug,
@@ -231,6 +290,9 @@ export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlay
       trendDelta7d: Math.round(trendDelta7d * 1000) / 1000,
       volatility7d,
       priority: resolvePriority(ufConfidence, fitScore),
+      committedTo,
+      predictors,
+      competingSchools,
     });
   }
 
@@ -249,7 +311,9 @@ export async function buildMasterBoardPayload() {
     .filter((p) => p.trendDelta7d < 0)
     .sort((a, b) => a.trendDelta7d - b.trendDelta7d);
 
-  const highVolatility = [...players]
+  const activeTargets = players.filter((p) => !isFloridaSchool(p.committedTo ?? null));
+
+  const highVolatility = [...activeTargets]
     .filter((p) => p.volatility7d >= 0.15)
     .sort((a, b) => b.volatility7d - a.volatility7d);
 
@@ -325,16 +389,19 @@ export async function buildTrendingBoardPayload() {
 
 export async function buildMovementIntelPayload() {
   const players = await loadAllowlistedBoardPlayers();
-  const heatmap = buildHeatmap(players);
+  const activeTargets = players.filter((p) => !isFloridaSchool(p.committedTo ?? null));
+  const heatmap = buildHeatmap(activeTargets);
 
-  const risers = players.filter((p) => p.trendDelta7d > 0).sort((a, b) => b.trendDelta7d - a.trendDelta7d);
-  const fallers = players.filter((p) => p.trendDelta7d < 0).sort((a, b) => a.trendDelta7d - b.trendDelta7d);
-  const highVolatility = [...players].sort((a, b) => b.volatility7d - a.volatility7d);
-  const stable = players
+  const risers = activeTargets.filter((p) => p.trendDelta7d > 0).sort((a, b) => b.trendDelta7d - a.trendDelta7d);
+  const fallers = activeTargets.filter((p) => p.trendDelta7d < 0).sort((a, b) => a.trendDelta7d - b.trendDelta7d);
+  const highVolatility = [...activeTargets]
+    .filter((p) => p.volatility7d >= 0.15)
+    .sort((a, b) => b.volatility7d - a.volatility7d);
+  const stable = activeTargets
     .filter((p) => p.volatility7d < 0.1 && Math.abs(p.trendDelta7d) < 0.05)
     .sort((a, b) => b.ufConfidence - a.ufConfidence);
-  const fitScoreLeaders = [...players].sort((a, b) => b.fitScore - a.fitScore);
-  const fitScoreRisks = [...players].sort((a, b) => a.fitScore - b.fitScore);
+  const fitScoreLeaders = [...activeTargets].sort((a, b) => b.fitScore - a.fitScore);
+  const fitScoreRisks = [...activeTargets].sort((a, b) => a.fitScore - b.fitScore);
 
   let alerts: { id: string; message: string; createdAt: string }[] = [];
   try {

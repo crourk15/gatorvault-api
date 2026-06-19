@@ -3075,15 +3075,17 @@
     "posRank": 18,
     "stateRank": 22,
     "inState": true,
-    "committedTo": null,
-    "skinny": "UF momentum building per Corey Bender RPM — major battle brewing.",
+    "committedTo": "Florida",
+    "fromSchool": null,
+    "commitDate": "2026-06-18",
+    "skinny": "LB · 4★ · Miami, FL · UF Commit No. 23",
     "headliner": true,
-    "ufProbability": 0.58,
+    "ufProbability": 100,
     "id": "tre-geathers",
     "classYear": 2027,
-    "category": "target",
-    "status": "uncommitted",
-    "updatedAt": "2026-06-13T18:24:26.618Z"
+    "category": "recruit",
+    "status": "committed",
+    "updatedAt": "2026-06-19T12:00:00.000Z"
   },
   {
     "id": "jayden-harris",

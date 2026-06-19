@@ -47,8 +47,19 @@ function enrichWithIntel(
   });
 }
 
+const CLASS_YEARS = [2026, 2027, 2028] as const;
+type ClassYear = (typeof CLASS_YEARS)[number];
+
+function parseYearFromSearch(): ClassYear | null {
+  if (typeof window === 'undefined') return null;
+  const raw = new URLSearchParams(window.location.search).get('year');
+  const y = Number(raw);
+  if (y === 2026 || y === 2027 || y === 2028) return y;
+  return null;
+}
+
 export function VaultRecruitingBoardPage(): React.ReactElement {
-  const [classYear, setClassYear] = useState(2027);
+  const [classYear, setClassYear] = useState<ClassYear>(() => parseYearFromSearch() ?? 2027);
   const [viewMode, setViewMode] = useState<BoardViewMode>('all');
   const [commits, setCommits] = useState<RecruitingBoardPlayer[]>([]);
   const [targets, setTargets] = useState<RecruitingBoardPlayer[]>([]);
@@ -67,7 +78,11 @@ export function VaultRecruitingBoardPage(): React.ReactElement {
   const [priorityOnly, setPriorityOnly] = useState(false);
 
   useVaultPageRestore('recruiting-board', (saved) => {
-    if (saved.classYear === 2027 || saved.classYear === 2028) setClassYear(saved.classYear);
+    const fromUrl = parseYearFromSearch();
+    if (fromUrl) setClassYear(fromUrl);
+    else if (saved.classYear === 2026 || saved.classYear === 2027 || saved.classYear === 2028) {
+      setClassYear(saved.classYear);
+    }
     if (saved.viewMode === 'all' || saved.viewMode === 'commits' || saved.viewMode === 'targets') {
       setViewMode(saved.viewMode);
     }
@@ -132,6 +147,14 @@ export function VaultRecruitingBoardPage(): React.ReactElement {
   useEffect(() => {
     void load();
   }, [load]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    params.set('year', String(classYear));
+    const next = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState(null, '', next);
+  }, [classYear]);
 
   useVaultDataReload(load);
 
@@ -213,8 +236,9 @@ export function VaultRecruitingBoardPage(): React.ReactElement {
         <select
           className="gv-page-select"
           value={classYear}
-          onChange={(e) => setClassYear(Number(e.target.value))}
+          onChange={(e) => setClassYear(Number(e.target.value) as ClassYear)}
         >
+          <option value={2026}>Class of 2026</option>
           <option value={2027}>Class of 2027</option>
           <option value={2028}>Class of 2028</option>
         </select>

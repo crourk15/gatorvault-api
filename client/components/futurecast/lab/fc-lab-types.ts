@@ -13,10 +13,19 @@ export type FcLabTarget = {
   fitScore: number;
   modelPct: number;
   stars: number | null;
+  committedTo?: string | null;
   predictors: Array<{ name: string; score: number }>;
+  competingSchools?: Array<{ name: string; pct: number }>;
 };
 
+function isFloridaCommit(value: string | null | undefined): boolean {
+  if (!value) return false;
+  return /\bflorida\b|\bgators\b/i.test(String(value));
+}
+
 export function futureCastPlayerToLabTarget(p: FutureCastPlayer): FcLabTarget {
+  const committed = p.committedTo ?? null;
+  const ufConfidence = isFloridaCommit(committed) ? 100 : p.ufConfidence;
   return {
     id: p.id,
     slug: p.slug,
@@ -24,12 +33,14 @@ export function futureCastPlayerToLabTarget(p: FutureCastPlayer): FcLabTarget {
     position: p.position,
     school: p.school ?? null,
     classYear: p.classYear,
-    ufProbability: p.ufConfidence,
+    ufProbability: ufConfidence,
     delta7d: p.trendDelta7d,
     fitScore: p.fitScore,
-    modelPct: p.ufConfidence,
+    modelPct: ufConfidence,
     stars: p.stars ?? null,
-    predictors: [],
+    committedTo: committed,
+    predictors: (p.predictors ?? []).map((x) => ({ name: x.name, score: x.score })),
+    competingSchools: (p.competingSchools ?? []).map((x) => ({ name: x.name, pct: x.pct })),
   };
 }
 

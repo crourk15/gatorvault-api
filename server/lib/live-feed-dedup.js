@@ -169,6 +169,24 @@ function feedDedupeKey(item) {
   return `${playerId}|${eventType}|${eventDate}`;
 }
 
+function feedItemPlayerName(item) {
+  return normalizePlayerName(
+    item?.meta?.player?.name ||
+      item?.meta?.playerName ||
+      item?.meta?.player_slug ||
+      ''
+  );
+}
+
+function movementEventFingerprint(item) {
+  const player = feedItemPlayerId(item) || feedItemPlayerName(item);
+  const eventType = feedItemEventType(item);
+  if (!player || !eventType) return null;
+  const blob = normalizeFeedText(item);
+  if (!/movement|trend|rpm|prediction|visit|offer|commit|portal|intel/i.test(blob)) return null;
+  return `${player}|${eventType}|${normalizePlayerName(String(item?.title || '').slice(0, 80))}`;
+}
+
 function feedItemUrl(item) {
   return String(item?.url || item?.source_url || item?.link || '').trim() || null;
 }
@@ -292,6 +310,11 @@ function findDuplicateReason(kept, candidate, { windowSec = DEDUP_WINDOW_SEC } =
       if (Math.abs(existTs - candTs) <= windowMs) {
         return { index: i, reason: 'player_event_window', hash: candHash, windowSec, key: playerKey };
       }
+    }
+
+    const moveKey = movementEventFingerprint(candidate);
+    if (moveKey && movementEventFingerprint(existing) === moveKey) {
+      return { index: i, reason: 'movement_event_fingerprint', hash: candHash, windowSec, key: moveKey };
     }
   }
   return null;
@@ -508,6 +531,7 @@ module.exports = {
   feedDedupeKey,
   feedItemPlayerId,
   feedItemEventType,
+  movementEventFingerprint,
   feedItemUrl,
   similarityRatio,
   findDuplicateReason,

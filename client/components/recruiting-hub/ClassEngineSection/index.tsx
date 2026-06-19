@@ -75,7 +75,7 @@ export function ClassSummary({ commits, rankings }: SummaryProps): React.ReactEl
 }
 
 export function ClassEngineSection({ b26, b27, b28, highPriority }: Props): React.ReactElement {
-  const [year, setYear] = useState('2027');
+  const [year, setYear] = useState('2026');
   const bundle = year === '2026' ? b26 : year === '2028' ? b28 : b27;
   const classYear = year === '2026' ? 2026 : year === '2028' ? 2028 : 2027;
   const commits = useMemo(

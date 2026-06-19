@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
 import {
   ModuleShell,
   MovementSparkline,
@@ -8,25 +9,31 @@ import {
   MovementBadge,
   UfProbBar,
 } from '@/components/recruiting-hub/command-center/primitives';
-import { ufPctFromFc } from './fc-lab-types';
+import {
+  resolveCompetingSchools,
+  competingSchoolsLabel,
+} from './competing-schools';
+import type { FcLabTarget } from './fc-lab-types';
 
 export { ModuleShell, MovementSparkline, MovementBadge, UfProbBar, ufPctFromRaw };
 
-/** Segmented UF vs UGA vs Bama bar derived from UF probability. */
-export function CompetingSchoolsBar({ player }: { player: { ufProbability: number } }): React.ReactElement {
-  const uf = ufPctFromFc(player.ufProbability);
-  const remaining = Math.max(0, 100 - uf);
-  const uga = Math.round(remaining * 0.45);
-  const bama = remaining - uga;
+export function CompetingSchoolsBar({ player }: { player: FcLabTarget }): React.ReactElement | null {
+  const segments = resolveCompetingSchools(player);
+  if (!segments.length) return null;
 
   return (
-    <div className="fc-lab-segment-bar" aria-label="Competing schools UF vs UGA vs Bama">
+    <div className="fc-lab-segment-bar" aria-label={`Competing schools ${competingSchoolsLabel(segments)}`}>
       <div className="fc-lab-segment-bar__track">
-        <div className="fc-lab-segment-bar__uf" style={{ width: `${uf}%` }} title={`UF ${uf}%`} />
-        <div className="fc-lab-segment-bar__uga" style={{ width: `${uga}%` }} title={`UGA ${uga}%`} />
-        <div className="fc-lab-segment-bar__bama" style={{ width: `${bama}%` }} title={`Bama ${bama}%`} />
+        {segments.map((seg) => (
+          <div
+            key={seg.key}
+            className={`fc-lab-segment-bar__seg fc-lab-segment-bar__seg--${seg.tone}`}
+            style={{ width: `${seg.pct}%` }}
+            title={`${seg.name} ${seg.pct}%`}
+          />
+        ))}
       </div>
-      <span className="fc-lab-segment-bar__label">UF vs UGA vs Bama</span>
+      <span className="fc-lab-segment-bar__label">{competingSchoolsLabel(segments)}</span>
     </div>
   );
 }
@@ -241,7 +248,10 @@ export function FutureCastPanelShell({
   children: React.ReactNode;
   testId?: string;
 }): React.ReactElement {
-  if (bare) {
+  const isDesktop = useIsCommandCenterDesktop();
+  const useBare = bare ?? !isDesktop;
+
+  if (useBare) {
     return (
       <FutureCastLabSection title={title} sub={sub} action={action} testId={testId}>
         {children}
