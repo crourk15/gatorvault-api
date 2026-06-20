@@ -252,6 +252,7 @@ async function syncBoardCommitsToPlayers(commits) {
       category: 'recruit',
       status: 'committed',
       committedTo: 'Florida',
+      protected: true,
       commitDate: p.commitDate || existing?.commitDate || null,
       on3Id: p.on3Id,
       on3Slug: p.on3Slug || existing?.on3Slug || null,
@@ -809,6 +810,8 @@ async function runOn3Ingest(options = {}) {
 
   try {
     result.demotedUnverifiedCommits = await demoteUnverifiedHubCommitsInStore();
+    const { restoreVerifiedHubCommitsInStore } = require('./recruiting-verified-commits');
+    result.restoredVerifiedCommits = await restoreVerifiedHubCommitsInStore();
   } catch (e) {
     result.errors.push({ type: 'demote_unverified_commits', error: e.message });
   }

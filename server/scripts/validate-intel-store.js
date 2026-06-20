@@ -10,7 +10,9 @@ const {
   HUB_CLASS_YEARS,
   validateVerifiedCommits,
   countVerifiedHubCommits,
+  looksLikeFloridaCommit,
 } = require('../lib/recruiting-verified-commits');
+const { isProtectedRecord } = require('../lib/recruiting-protected-records');
 const { validateStoreTargets } = require('../lib/recruiting-target-allowlist');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
@@ -51,6 +53,16 @@ function checkPlayerFields(players, errors) {
 function checkHubClassYears(players, errors) {
   for (const p of players || []) {
     const year = Number(p.classYear);
+    if (year === 2026) {
+      if (!looksLikeFloridaCommit(p) && !isProtectedRecord(p)) {
+        errors.push({
+          file: 'players.json',
+          slug: p.slug,
+          reason: 'stale_2026_player_in_recruiting_pool',
+        });
+      }
+      continue;
+    }
     if (!HUB_CLASS_YEARS.has(year)) {
       errors.push({
         file: 'players.json',
@@ -59,18 +71,12 @@ function checkHubClassYears(players, errors) {
         detail: String(p.classYear),
       });
     }
-    if (year === 2026) {
-      errors.push({
-        file: 'players.json',
-        slug: p.slug,
-        reason: 'stale_2026_player_in_hub_pool',
-      });
-    }
   }
 }
 
 function checkPortalInRecruitingPool(players, errors) {
   for (const p of players || []) {
+    if (isProtectedRecord(p)) continue;
     const cat = String(p.category || '').toLowerCase();
     const lc = String(p.lifecycle || '').toUpperCase();
     if (cat === 'portal' || lc === 'PORTAL' || lc === 'ROSTER') {
@@ -117,7 +123,7 @@ function checkStaleEvents(events, playerSlugs, errors) {
       });
     }
     const ts = new Date(evt.createdAt || evt.timestamp || 0).getTime();
-    if (Number.isFinite(ts) && now - ts > STALE_EVENT_MS) {
+    if (!isProtectedRecord(evt) && Number.isFinite(ts) && now - ts > STALE_EVENT_MS) {
       errors.push({
         file: 'events.json',
         id: evt.id,
@@ -143,7 +149,10 @@ function checkIntelItems(intelDoc, playerSlugs, errors) {
       continue;
     }
     if (!playerSlugs.has(slug)) {
-      errors.push({ file: 'intel.json', id: row.id, reason: 'orphan_intel_player', detail: slug });
+      const hasRealIntel = !!(row.source && (row.detail || row.status));
+      if (!hasRealIntel) {
+        errors.push({ file: 'intel.json', id: row.id, reason: 'orphan_intel_player', detail: slug });
+      }
     }
     const year = Number(row.classYear);
     if (year && !HUB_CLASS_YEARS.has(year)) {

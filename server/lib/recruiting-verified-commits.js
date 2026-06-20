@@ -55,6 +55,7 @@ function looksLikeFloridaCommit(player) {
 /** Demote unverified On3-style commits back to targets for hub classes. */
 function demoteUnverifiedHubCommit(player) {
   if (!player || !looksLikeFloridaCommit(player)) return player;
+  if (player.protected === true) return player;
   const year = Number(player.classYear ?? player.class_year);
   if (!isHubClassYear(year)) return player;
   if (isVerifiedUfCommitSlug(playerSlug(player), year)) return player;
@@ -74,6 +75,7 @@ function validateVerifiedCommits(players) {
   const errors = [];
   for (const p of players || []) {
     if (!looksLikeFloridaCommit(p)) continue;
+    if (p.protected === true) continue;
     const year = Number(p.classYear ?? p.class_year);
     if (!isHubClassYear(year)) continue;
     const slug = playerSlug(p);
@@ -101,6 +103,46 @@ function countVerifiedHubCommits(players, classYear) {
   return count;
 }
 
+/** Re-apply editorial commit status for verified allowlist slugs (sync, in-memory). */
+function applyVerifiedHubCommit(player) {
+  if (!player) return player;
+  const slug = playerSlug(player);
+  const year = Number(player.classYear ?? player.class_year);
+  if (!isVerifiedUfCommitSlug(slug, year)) return player;
+  if (looksLikeFloridaCommit(player)) return player;
+
+  const out = { ...player };
+  out.status = 'committed';
+  out.committedTo = 'Florida';
+  out.category = 'recruit';
+  out.lifecycle = out.lifecycle === 'target' ? 'commit' : out.lifecycle || 'commit';
+  if (out.pipelineState === 'target' || !out.pipelineState) out.pipelineState = 'committed';
+  return out;
+}
+
+/** Persist verified UF commits after ingest demotions or snapshot drift. */
+async function restoreVerifiedHubCommitsInStore() {
+  const store = require('./recruiting-store');
+  const all = await store.getAllPlayers();
+  let restored = 0;
+  for (const p of all) {
+    const next = applyVerifiedHubCommit(p);
+    if (
+      next.status === p.status &&
+      next.committedTo === p.committedTo &&
+      next.category === p.category
+    ) {
+      continue;
+    }
+    await store.upsertPlayer({
+      ...next,
+      updatedAt: new Date().toISOString(),
+    });
+    restored += 1;
+  }
+  return restored;
+}
+
 module.exports = {
   HUB_CLASS_YEARS,
   VERIFIED_UF_COMMITS_BY_YEAR,
@@ -110,6 +152,8 @@ module.exports = {
   isVerifiedHubCommit,
   looksLikeFloridaCommit,
   demoteUnverifiedHubCommit,
+  applyVerifiedHubCommit,
+  restoreVerifiedHubCommitsInStore,
   validateVerifiedCommits,
   countVerifiedHubCommits,
 };

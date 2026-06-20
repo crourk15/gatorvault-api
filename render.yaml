@@ -145,3 +145,17 @@ services:
         sync: false
       - key: DATABASE_URL
         sync: false
+
+  # Keep the API warm on Render free tier (spin-down after ~15 min idle).
+  - type: cron
+    name: gatorvault-api-keepalive
+    schedule: "*/12 * * * *"
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-keepalive-ping.js
+    envVars:
+      - key: KEEPALIVE_URL
+        value: https://gatorvault-api.onrender.com/health
+      - key: KEEPALIVE_PING_URL
+        value: https://gatorvault-api.onrender.com/api/ping

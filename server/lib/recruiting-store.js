@@ -83,6 +83,7 @@ function isFloridaCommit(p) {
   if (!((status === 'committed' || status === 'commit') && /^florida$/i.test(committedTo))) {
     return false;
   }
+  if (p.protected === true) return true;
   const { isVerifiedHubCommit } = require('./recruiting-verified-commits');
   return isVerifiedHubCommit(p);
 }

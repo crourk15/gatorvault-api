@@ -43,7 +43,9 @@
     "transform:players": "npx tsx scripts/transform-recruiting-data.ts",
     "test:autoposter": "node --test tests/autoposter/*.test.js",
     "clean:recruiting-hub": "node scripts/clean-recruiting-hub-data.js",
+    "restore:recruiting": "node scripts/restore-recruiting-from-backup.js",
     "validate:intel-store": "node scripts/validate-intel-store.js",
+    "keepalive:ping": "node scripts/render-keepalive-ping.js",
     "test:recruiting": "node --test tests/recruiting/*.test.js"
   },
   "engines": {

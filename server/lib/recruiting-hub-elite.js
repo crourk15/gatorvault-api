@@ -142,15 +142,24 @@ async function buildHubClassOverview(year = 2027) {
     falling = targets.filter((p) => p.movementDirection === 'down').length;
   }
 
+  const { countVerifiedHubCommits } = require('./recruiting-verified-commits');
+  const store = require('./recruiting-store');
+  const allPlayers = await store.getAllPlayers();
+  const hubYear = Number(year);
+  const commitCount =
+    hubYear >= 2027 && hubYear <= 2029
+      ? countVerifiedHubCommits(allPlayers, hubYear)
+      : commits.length;
+
   const rankTrend = trendFromDelta(falling - rising);
   const chipTrend = chip != null && chip >= 70 ? 'up' : 'stable';
-  const commitTrend = commits.length > 0 ? 'up' : 'stable';
+  const commitTrend = commitCount > 0 ? 'up' : 'stable';
   const ratingTrend = rising >= 2 ? 'up' : rising === 0 && falling > 0 ? 'down' : 'stable';
 
   return {
     classRank: enriched.rankings?.nationalRank != null ? `#${enriched.rankings.nationalRank}` : '—',
     blueChip: chip != null ? `${chip}%` : '—',
-    commits: commits.length ? String(commits.length) : '—',
+    commits: commitCount ? String(commitCount) : '—',
     avgRating: avg != null ? formatRating(avg) : '—',
     trendRank: trendDisplay(rankTrend),
     trendBlueChip: trendDisplay(chipTrend),
@@ -159,7 +168,7 @@ async function buildHubClassOverview(year = 2027) {
     sparklines: {
       classRank: buildSparkline(enriched.rankings?.nationalRank ?? 10, rankTrend === 'up' ? 'down' : rankTrend),
       blueChip: buildSparkline(chip ?? 60, chipTrend),
-      commits: buildSparkline(commits.length || 18, commitTrend),
+      commits: buildSparkline(commitCount || 18, commitTrend),
       avgRating: buildSparkline(Math.round((avg ?? 90) - 80), ratingTrend),
     },
   };

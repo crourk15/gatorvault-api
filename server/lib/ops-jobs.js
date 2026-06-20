@@ -162,6 +162,24 @@ const JOBS = {
       return { ok: report.healthy !== false, report };
     }
   },
+  'api-keepalive': {
+    label: 'Render API keep-alive ping',
+    subsystem: 'cron:api-keepalive',
+    schedule: 'Every 12m (Render cron)',
+    async run() {
+      const { spawnSync } = require('child_process');
+      const path = require('path');
+      const script = path.join(__dirname, '..', 'scripts', 'render-keepalive-ping.js');
+      const out = spawnSync(process.execPath, [script], {
+        encoding: 'utf8',
+        env: process.env,
+      });
+      if (out.status !== 0) {
+        throw new Error(out.stderr || out.stdout || 'keepalive ping failed');
+      }
+      return { ok: true, output: (out.stdout || '').trim() };
+    }
+  },
   'qa-crawler': {
     label: 'QA crawler (full site + API)',
     subsystem: 'qa:crawler',

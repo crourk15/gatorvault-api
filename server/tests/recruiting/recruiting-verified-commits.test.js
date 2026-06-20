@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const {
   isVerifiedHubCommit,
   demoteUnverifiedHubCommit,
+  applyVerifiedHubCommit,
   validateVerifiedCommits,
   countVerifiedHubCommits,
 } = require('../../lib/recruiting-verified-commits');
@@ -26,6 +27,16 @@ test('verified 2027 UF commits are only tre-geathers, jaydee-lane, ellis-mcgaski
 test('isFloridaCommit respects verified allowlist for 2027', () => {
   assert.equal(
     store.isFloridaCommit({ slug: 'ellis-mcgaskin', classYear: 2027, status: 'committed', committedTo: 'Florida' }),
+    true
+  );
+  assert.equal(
+    store.isFloridaCommit({
+      slug: 'maxwell-hiller',
+      classYear: 2027,
+      status: 'committed',
+      committedTo: 'Florida',
+      protected: true,
+    }),
     true
   );
   assert.equal(
@@ -67,4 +78,17 @@ test('countVerifiedHubCommits returns 3 for canonical store slugs', () => {
     2027
   );
   assert.equal(count, 3);
+});
+
+test('applyVerifiedHubCommit restores demoted verified slug', () => {
+  const restored = applyVerifiedHubCommit({
+    slug: 'jaydee-lane',
+    classYear: 2027,
+    status: 'uncommitted',
+    committedTo: null,
+    category: 'target',
+  });
+  assert.equal(restored.status, 'committed');
+  assert.equal(restored.committedTo, 'Florida');
+  assert.equal(restored.category, 'recruit');
 });

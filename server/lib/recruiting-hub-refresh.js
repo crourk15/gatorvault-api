@@ -6,6 +6,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 async function refreshRecruitingHubCaches(options = {}) {
   const { clearHubCache } = require('./recruiting-hub-routes');
   const { syncStaffAssignments } = require('./recruiting-staff-assignments');
+  const { restoreVerifiedHubCommitsInStore } = require('./recruiting-verified-commits');
   const {
     loadHubDataset,
     buildBattleBoardRows,
@@ -15,6 +16,7 @@ async function refreshRecruitingHubCaches(options = {}) {
     buildBattlesListRows,
   } = require('./recruiting-hub-data');
 
+  const restoredVerifiedCommits = await restoreVerifiedHubCommitsInStore();
   const staffSync = await syncStaffAssignments();
 
   let geoNormalizedCount = 0;
@@ -64,6 +66,7 @@ async function refreshRecruitingHubCaches(options = {}) {
 
   return {
     refreshedAt: new Date().toISOString(),
+    restoredVerifiedCommits,
     enrichedPlayerCount: dataset.players.size,
     battleBoardCount: battleBoard.length,
     movementFeedCount: movementFeed.length,
