@@ -4,11 +4,9 @@ import React, { useCallback } from 'react';
 import { fetchRecruitingHubBattles, type RhHubBattle } from '@/lib/recruiting-hub-elite-api';
 import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
 
-export function RecruitingBattlesMovement(): React.ReactElement | null {
+export function RecruitingBattlesMovement(): React.ReactElement {
   const loadBattles = useCallback(() => fetchRecruitingHubBattles(), []);
-  const { data, loading } = useRecruitingHubQuery<RhHubBattle[]>(loadBattles);
-
-  if (!data && !loading) return null;
+  const { data, loading, error } = useRecruitingHubQuery<RhHubBattle[]>(loadBattles);
 
   return (
     <>
@@ -18,7 +16,11 @@ export function RecruitingBattlesMovement(): React.ReactElement | null {
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-battles" aria-hidden="true" />
-      ) : !data?.length ? (
+      ) : !data ? (
+        <section className="rh-card" data-testid="rh-elite-battles">
+          <p className="rh-empty">{error ? 'Could not load battle intel.' : 'Battle intel updating — check back shortly.'}</p>
+        </section>
+      ) : !data.length ? (
         <section className="rh-card" data-testid="rh-elite-battles">
           <p className="rh-empty">Battle intel updating — check back shortly.</p>
         </section>

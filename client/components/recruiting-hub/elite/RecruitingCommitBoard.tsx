@@ -4,11 +4,9 @@ import React, { useCallback } from 'react';
 import { fetchRecruitingHubCommits, type RhHubCommit } from '@/lib/recruiting-hub-elite-api';
 import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
 
-export function RecruitingCommitBoard(): React.ReactElement | null {
+export function RecruitingCommitBoard(): React.ReactElement {
   const loadCommits = useCallback(() => fetchRecruitingHubCommits(), []);
-  const { data, loading } = useRecruitingHubQuery<RhHubCommit[]>(loadCommits);
-
-  if (!data && !loading) return null;
+  const { data, loading, error } = useRecruitingHubQuery<RhHubCommit[]>(loadCommits);
 
   return (
     <>
@@ -18,7 +16,11 @@ export function RecruitingCommitBoard(): React.ReactElement | null {
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-commit-board" aria-hidden="true" />
-      ) : !data?.length ? (
+      ) : !data ? (
+        <section className="rh-card" data-testid="rh-elite-commit-board">
+          <p className="rh-empty">{error ? 'Could not load commits.' : 'No commits loaded for this class yet.'}</p>
+        </section>
+      ) : !data.length ? (
         <section className="rh-card" data-testid="rh-elite-commit-board">
           <p className="rh-empty">No commits loaded for this class yet.</p>
         </section>

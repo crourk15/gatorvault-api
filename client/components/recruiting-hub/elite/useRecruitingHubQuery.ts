@@ -6,18 +6,22 @@ import { useEffect, useState } from 'react';
 export function useRecruitingHubQuery<T>(fetcher: () => Promise<T>): {
   data: T | null;
   loading: boolean;
+  error: boolean;
 } {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
+    setError(false);
     void fetcher()
       .then((result) => {
         if (!cancelled) setData(result);
       })
       .catch(() => {
-        /* caller handles empty state */
+        if (!cancelled) setError(true);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -27,5 +31,5 @@ export function useRecruitingHubQuery<T>(fetcher: () => Promise<T>): {
     };
   }, [fetcher]);
 
-  return { data, loading };
+  return { data, loading, error };
 }

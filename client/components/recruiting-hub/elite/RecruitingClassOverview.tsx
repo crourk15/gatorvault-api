@@ -62,11 +62,9 @@ function Metric({
   );
 }
 
-export function RecruitingClassOverview(): React.ReactElement | null {
+export function RecruitingClassOverview(): React.ReactElement {
   const loadOverview = useCallback(() => fetchRecruitingHubClassOverview(), []);
-  const { data, loading } = useRecruitingHubQuery<RhHubClassOverview>(loadOverview);
-
-  if (!data && !loading) return null;
+  const { data, loading, error } = useRecruitingHubQuery<RhHubClassOverview>(loadOverview);
 
   const sparks = data?.sparklines;
 
@@ -80,8 +78,10 @@ export function RecruitingClassOverview(): React.ReactElement | null {
         <span className="rh-card-watermark" aria-hidden="true">
           UF
         </span>
-        {loading || !data ? (
+        {loading ? (
           <div className="rh-skeleton" aria-hidden="true" />
+        ) : !data ? (
+          <p className="rh-empty">{error ? 'Could not load class overview.' : 'Class overview unavailable.'}</p>
         ) : (
           <div className="rh-metrics-row">
             <Metric label="Class rank" value={data.classRank} trend={data.trendRank} sparkline={sparks?.classRank} />

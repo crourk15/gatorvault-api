@@ -4,11 +4,9 @@ import React, { useCallback } from 'react';
 import { fetchRecruitingHubPositions, type RhHubPositionRoom } from '@/lib/recruiting-hub-elite-api';
 import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
 
-export function RecruitingPositionSnapshot(): React.ReactElement | null {
+export function RecruitingPositionSnapshot(): React.ReactElement {
   const loadPositions = useCallback(() => fetchRecruitingHubPositions(), []);
-  const { data, loading } = useRecruitingHubQuery<RhHubPositionRoom[]>(loadPositions);
-
-  if (!data && !loading) return null;
+  const { data, loading, error } = useRecruitingHubQuery<RhHubPositionRoom[]>(loadPositions);
 
   return (
     <>
@@ -18,7 +16,11 @@ export function RecruitingPositionSnapshot(): React.ReactElement | null {
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-position-snapshot" aria-hidden="true" />
-      ) : !data?.length ? (
+      ) : !data ? (
+        <section className="rh-card" data-testid="rh-elite-position-snapshot">
+          <p className="rh-empty">{error ? 'Could not load position snapshot.' : 'Position breakdown unavailable.'}</p>
+        </section>
+      ) : !data.length ? (
         <section className="rh-card" data-testid="rh-elite-position-snapshot">
           <p className="rh-empty">Position breakdown loading.</p>
         </section>
