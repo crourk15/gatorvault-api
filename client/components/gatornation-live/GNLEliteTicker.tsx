@@ -2,29 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { LiveTickerItem } from '@/lib/gatornation-live-api';
-import type { TickerTag } from '@/lib/gatornation-live-types';
-import { GNLDashBadge } from '@/components/gatornation-live/GNLDashBadge';
-import { GNLModuleHead } from '@/components/gatornation-live/GNLModuleHead';
-
-const TAG_SLUG: Record<TickerTag, string> = {
-  BREAKING: 'breaking',
-  VISIT: 'visit',
-  COMMIT: 'commit',
-  PORTAL: 'portal',
-  RUMOR: 'rumor',
-  TEAM: 'team',
-  PODCAST: 'podcast',
-};
-
-const TAG_TONE: Record<TickerTag, 'breaking' | 'visit' | 'commit' | 'portal' | 'rumor' | 'team' | 'podcast'> = {
-  BREAKING: 'breaking',
-  VISIT: 'visit',
-  COMMIT: 'commit',
-  PORTAL: 'portal',
-  RUMOR: 'rumor',
-  TEAM: 'team',
-  PODCAST: 'podcast',
-};
+import { filterExcludedPortalClassItems } from '@/lib/portal-class-filter';
 
 const FALLBACK: LiveTickerItem[] = [
   {
@@ -45,26 +23,22 @@ function itemKey(item: LiveTickerItem): string {
   return `${item.type}_${item.text.slice(0, 80).toLowerCase()}`;
 }
 
-function formatTime(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return '';
-  return d
-    .toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-    })
-    .toUpperCase();
-}
-
-/** UF Premium live ticker — horizontal scroll desktop, vertical stack mobile. */
+/** UF Premium live ticker — white band, blue text, smooth horizontal scroll. */
 export function GNLEliteTicker({ items, refreshKey }: Props): React.ReactElement {
   const prevRefreshKey = useRef<string | null>(null);
   const seenKeys = useRef<Set<string>>(new Set());
   const [newKeys, setNewKeys] = useState<Set<string>>(new Set());
 
-  const display = useMemo(() => (items.length ? items : FALLBACK), [items]);
+  const display = useMemo(() => {
+    const filtered = filterExcludedPortalClassItems(
+      items,
+      (item) => item.text,
+      (item) => ({ type: item.type, source: item.source })
+    );
+    return filtered.length ? filtered : FALLBACK;
+  }, [items]);
+
+  const marqueeItems = useMemo(() => [...display, ...display], [display]);
 
   useEffect(() => {
     const keys = display.map(itemKey);
@@ -89,45 +63,32 @@ export function GNLEliteTicker({ items, refreshKey }: Props): React.ReactElement
   }, [refreshKey, display]);
 
   return (
-    <section
-      className="gv-gnl-elite-card gv-gnl-elite-ticker"
-      aria-label="Live ticker"
-      data-testid="gnl-ticker"
-    >
-      <GNLModuleHead
-        title="Live Ticker"
-        subtitle="Real-time intel across recruiting, portal, and the beat"
-        badge={<GNLDashBadge label="LIVE" tone="live" pulse />}
-        count={`${display.length} updates`}
-      />
-      <div className="gv-gnl-elite-ticker__track">
-        {display.map((item, idx) => {
-          const key = itemKey(item);
-          return (
-            <a
-              key={`${key}_${idx}`}
-              href={item.url || '/gator-nation-live'}
-              className={[
-                'gv-gnl-elite-ticker__item',
-                `gv-gnl-elite-ticker__item--${TAG_SLUG[item.type]}`,
-                newKeys.has(key) ? 'gv-gnl-elite-ticker__item--new' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-            >
-              <div className="gv-gnl-elite-ticker__line">
-                <GNLDashBadge label={item.type} tone={TAG_TONE[item.type]} />
-                <span className="gv-gnl-elite-ticker__text">{item.text}</span>
-              </div>
-              <div className="gv-gnl-elite-ticker__meta">
-                <span className="gv-gnl-elite-ticker__source">{item.source}</span>
-                {item.timestamp ? (
-                  <span className="gv-gnl-elite-ticker__timestamp">{formatTime(item.timestamp)}</span>
+    <section className="gv-gnl-ticker-band" aria-label="Live ticker" data-testid="gnl-ticker">
+      <div className="gv-gnl-ticker-band__viewport">
+        <div className="gv-gnl-ticker-band__track" aria-live="polite">
+          {marqueeItems.map((item, idx) => {
+            const key = itemKey(item);
+            const isNew = newKeys.has(key) && idx < display.length;
+            return (
+              <a
+                key={`${key}_${idx}`}
+                href={item.url || '/gator-nation-live'}
+                className={[
+                  'gv-gnl-ticker-band__item',
+                  isNew ? 'gv-gnl-ticker-band__item--new' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                <span className="gv-gnl-ticker-band__tag">{item.type}</span>
+                <span className="gv-gnl-ticker-band__text">{item.text}</span>
+                {item.source ? (
+                  <span className="gv-gnl-ticker-band__source">{item.source}</span>
                 ) : null}
-              </div>
-            </a>
-          );
-        })}
+              </a>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

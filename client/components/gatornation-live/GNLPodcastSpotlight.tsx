@@ -48,13 +48,15 @@ export function GNLPodcastSpotlight({ podcasts, updatedAt }: Props): React.React
                   loading="lazy"
                 />
               </div>
-              <h3 className="gv-gnl-elite-podcast-card__title">{pod.title}</h3>
+              <h3 className="gv-gnl-elite-podcast-card__title">
+                <span className="gv-gnl-elite-podcast-card__title-text">{pod.title}</span>
+              </h3>
               <p className="gv-gnl-elite-podcast-card__episode">
                 {pod.episodeTitle ? `Episode: "${pod.episodeTitle}"` : 'Latest episode'}
               </p>
               <p className="gv-gnl-elite-podcast-card__time">{formatTime(pod.publishedAt ?? updatedAt)}</p>
               <a href={href} className="gv-gnl-elite-podcast-card__cta">
-                Listen →
+                Listen now →
               </a>
             </article>
           );

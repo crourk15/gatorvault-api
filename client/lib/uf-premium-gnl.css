@@ -15,12 +15,12 @@
   --uf-section-gap: 32px;
   --uf-module-gap: 24px;
   --uf-inner-gap: 16px;
-  --uf-card-radius: 14px;
+  --uf-card-radius: 8px;
   --uf-card-border: var(--card-border);
-  --uf-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  --gnl-divider: #1f2937;
-  --uf-card-text: #1a1a1a;
-  --uf-card-text-muted: rgba(26, 26, 26, 0.65);
+  --uf-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --gnl-divider: rgba(0, 33, 165, 0.12);
+  --uf-card-text: #0021a5;
+  --uf-card-text-muted: rgba(0, 33, 165, 0.65);
   --gnl-panel-bg: var(--uf-card-surface);
   --gnl-beat-bg: var(--uf-card-surface);
   min-height: 100%;

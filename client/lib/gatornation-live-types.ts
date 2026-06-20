@@ -80,7 +80,8 @@ export type RecruitingSnapshotProps = {
 export const GNL_COPY = {
   hero: {
     title: 'GatorNation Live',
-    subtitle: 'Real-time UF football intel.',
+    subtitle: 'Real-time UF Football Pulse',
+    meta: 'Updated continuously · Powered by real-time intel',
     liveBadge: (seconds: number) => `● LIVE · Auto-refresh every ${seconds} seconds`,
   },
   podcastHub: 'Podcast Hub',

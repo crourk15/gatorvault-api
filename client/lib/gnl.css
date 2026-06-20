@@ -1,0 +1,332 @@
+/**
+ * GatorNation Live — page redesign overrides (scoped to .uf-premium-gnl)
+ * Tokens: #0021A5 · #FA4616 · white cards
+ */
+
+.uf-premium-gnl {
+  --uf-blue: #0021a5;
+  --uf-orange: #fa4616;
+  --uf-card-surface: #ffffff;
+  --uf-card-text: #0021a5;
+  --uf-card-text-muted: rgba(0, 33, 165, 0.65);
+  --uf-card-radius: 8px;
+  --uf-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --uf-card-padding: clamp(20px, 2.5vw, 24px);
+}
+
+/* ── Hero redesign ── */
+.uf-premium-gnl .gv-gnl-hero--redesign {
+  min-height: clamp(240px, 32vh, 300px);
+}
+
+.uf-premium-gnl .gv-gnl-hero--redesign .gv-gnl-hero__bg {
+  background: #0021a5;
+}
+
+.uf-premium-gnl .gv-gnl-hero--redesign .gv-gnl-hero__bg::after {
+  display: none;
+}
+
+.uf-premium-gnl .gv-gnl-hero--redesign .gv-gnl-hero__overlay,
+.uf-premium-gnl .gv-gnl-hero--redesign .gv-gnl-hero__energy-bar {
+  display: none;
+}
+
+.uf-premium-gnl .gv-gnl-hero__meta {
+  margin: 12px 0 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* ── Live ticker band ── */
+.uf-premium-gnl .gv-gnl-ticker-band {
+  background: #ffffff;
+  color: var(--uf-blue);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.uf-premium-gnl .gv-gnl-ticker-band__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.uf-premium-gnl .gv-gnl-ticker-band__track {
+  display: flex;
+  align-items: stretch;
+  width: max-content;
+  animation: gnl-ticker-scroll 48s linear infinite;
+}
+
+.uf-premium-gnl .gv-gnl-ticker-band__track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes gnl-ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.uf-premium-gnl .gv-gnl-ticker-band__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  padding: 14px 20px;
+  text-decoration: none;
+  color: var(--uf-blue);
+  border-right: 2px solid var(--uf-orange);
+  transition: background-color 0.15s ease;
+}
+
+.uf-premium-gnl .gv-gnl-ticker-band__item:hover {
+  background: rgba(0, 33, 165, 0.04);
+}
+
+.uf-premium-gnl .gv-gnl-ticker-band__item--new {
+  animation: gnl-ticker-item-flash 0.4s ease-out;
+}
+
+@keyframes gnl-ticker-item-flash {
+  0% {
+    background: rgba(250, 70, 22, 0.12);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.uf-premium-gnl .gv-gnl-ticker-band__tag {
+  flex-shrink: 0;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--uf-blue);
+  border: 1px solid var(--uf-orange);
+  border-radius: 999px;
+  padding: 3px 8px;
+}
+
+.uf-premium-gnl .gv-gnl-ticker-band__text {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.uf-premium-gnl .gv-gnl-ticker-band__source {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(0, 33, 165, 0.55);
+}
+
+/* ── White cards (global) ── */
+.uf-premium-gnl .gv-gnl-elite-card {
+  padding: var(--uf-card-padding);
+  border-radius: var(--uf-card-radius);
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  background: var(--uf-card-surface);
+  box-shadow: var(--uf-card-shadow);
+  color: var(--uf-card-text);
+}
+
+.uf-premium-gnl .gv-gnl-elite-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+.uf-premium-gnl .gv-gnl-dash-badge {
+  color: var(--uf-blue);
+  background: transparent;
+  border-color: var(--uf-orange);
+}
+
+.uf-premium-gnl .gv-gnl-dash-badge--live,
+.uf-premium-gnl .gv-gnl-dash-badge--breaking,
+.uf-premium-gnl .gv-gnl-dash-badge--visit,
+.uf-premium-gnl .gv-gnl-dash-badge--commit,
+.uf-premium-gnl .gv-gnl-dash-badge--portal,
+.uf-premium-gnl .gv-gnl-dash-badge--rumor,
+.uf-premium-gnl .gv-gnl-dash-badge--team,
+.uf-premium-gnl .gv-gnl-dash-badge--beat,
+.uf-premium-gnl .gv-gnl-dash-badge--podcast,
+.uf-premium-gnl .gv-gnl-dash-badge--gameday,
+.uf-premium-gnl .gv-gnl-dash-badge--neutral {
+  color: var(--uf-blue);
+  background: transparent;
+  border-color: var(--uf-orange);
+}
+
+/* ── Pulse summary ── */
+.uf-premium-gnl .gv-gnl-pulse__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--uf-module-gap, 24px);
+}
+
+@media (min-width: 768px) {
+  .uf-premium-gnl .gv-gnl-pulse__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.uf-premium-gnl .gv-gnl-pulse__quadrant {
+  padding: 16px;
+  border-radius: var(--uf-card-radius);
+  border: 1px solid rgba(0, 33, 165, 0.12);
+  background: rgba(0, 33, 165, 0.03);
+  min-height: 120px;
+}
+
+.uf-premium-gnl .gv-gnl-pulse__quadrant--empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.uf-premium-gnl .gv-gnl-pulse__label {
+  margin: 0 0 8px;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--uf-orange);
+}
+
+.uf-premium-gnl .gv-gnl-pulse__text {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--uf-blue);
+}
+
+.uf-premium-gnl .gv-gnl-pulse__text--link {
+  text-decoration: none;
+  color: var(--uf-blue);
+}
+
+.uf-premium-gnl .gv-gnl-pulse__text--link:hover {
+  color: var(--uf-orange);
+}
+
+.uf-premium-gnl .gv-gnl-pulse__source {
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--uf-card-text-muted);
+}
+
+.uf-premium-gnl .gv-gnl-pulse__empty {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--uf-card-text-muted);
+}
+
+/* ── Beat writer cards ── */
+.uf-premium-gnl .gv-gnl-beat-card {
+  padding: var(--uf-card-padding);
+  border-radius: var(--uf-card-radius);
+  box-shadow: var(--uf-card-shadow);
+}
+
+.uf-premium-gnl .gv-gnl-beat-card__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 33, 165, 0.12);
+}
+
+.uf-premium-gnl .gv-gnl-beat-card__identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.uf-premium-gnl .gv-gnl-beat-card__writer {
+  margin: 0;
+  font-weight: 700;
+  color: var(--uf-blue);
+}
+
+.uf-premium-gnl .gv-gnl-beat-card__text {
+  color: var(--uf-blue);
+}
+
+.uf-premium-gnl .gv-gnl-beat-card__time {
+  margin-left: auto;
+  color: rgba(0, 33, 165, 0.45);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.uf-premium-gnl .gv-gnl-beat-card__footer {
+  display: none;
+}
+
+/* ── Podcast spotlight ── */
+.uf-premium-gnl .gv-gnl-elite-podcast-card {
+  align-items: center;
+  text-align: center;
+  padding: var(--uf-card-padding);
+  border-radius: var(--uf-card-radius);
+  box-shadow: var(--uf-card-shadow);
+}
+
+.uf-premium-gnl .gv-gnl-elite-podcast-card__logo-wrap,
+.uf-premium-gnl .uf-podcast-logo-wrap {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.uf-premium-gnl .gv-gnl-elite-podcast-card__title {
+  position: relative;
+  width: 100%;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.uf-premium-gnl .gv-gnl-elite-podcast-card__title-text {
+  display: inline-block;
+  color: var(--uf-blue);
+  border-bottom: 3px solid var(--uf-orange);
+  padding-bottom: 4px;
+}
+
+.uf-premium-gnl .gv-gnl-elite-podcast-card:hover {
+  transform: translateY(-3px);
+}
+
+.uf-premium-gnl .gv-gnl-elite-podcast-card__cta {
+  color: var(--uf-orange);
+}
+
+.uf-premium-gnl .gv-gnl-elite {
+  padding-top: 0;
+}
+
+.uf-premium-gnl .gv-gnl-elite__stack {
+  padding-top: var(--uf-section-gap, 32px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uf-premium-gnl .gv-gnl-ticker-band__track {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+}

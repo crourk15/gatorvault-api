@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import '@/lib/uf-premium-gnl.css';
+import '@/lib/gnl.css';
 import {
   DEFAULT_PODCASTS,
   fetchLiveHubBundle,
@@ -88,18 +89,6 @@ export function GatorNationLivePage(): React.ReactElement {
     return () => window.removeEventListener('pagehide', persist);
   }, []);
 
-  const podcastCount = bundle.podcasts.length > 0 ? bundle.podcasts.length : DEFAULT_PODCASTS.length;
-
-  const heroMetrics = [
-    { label: 'Ticker items', value: String(bundle.ticker.length || '—') },
-    { label: 'Beat highlights', value: String(bundle.panels.beatWriterHighlights.length || '0') },
-    {
-      label: 'Breaking',
-      value: bundle.breakingNews?.text ? 'Active' : 'Clear',
-    },
-    { label: 'Podcasts', value: String(podcastCount) },
-  ];
-
   return (
     <div
       className="gv-gnl gv-gnl-shell gv-gnl-shell--elite uf-premium-gnl gv-live-feed"
@@ -116,7 +105,7 @@ export function GatorNationLivePage(): React.ReactElement {
         </div>
       )}
 
-      <GNLPageHero metrics={heroMetrics} />
+      <GNLPageHero />
       <GNLLiveFeedModule bundle={bundle} loading={loading} refreshKey={bundle.refreshedAt ?? `${pollSeq}`} />
     </div>
   );

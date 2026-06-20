@@ -10,6 +10,7 @@ import type {
   BreakingNewsItem,
   GnlGameDay,
 } from './gatornation-live-types';
+import { filterExcludedPortalClassItems } from './portal-class-filter';
 import { fetchLiveDashboard, type BeatPost, type LiveFeedItem, type PodcastShow } from './live-api';
 import { fetchBettingLines, type BettingGame } from './betting-api';
 import { SCHEDULE_GAMES } from './schedule-data';
@@ -196,7 +197,11 @@ export function buildLiveDashboardTicker(feed: LiveFeedItem[]): LiveTickerItem[]
     if (items.length >= 16) break;
   }
 
-  return items;
+  return filterExcludedPortalClassItems(
+    items,
+    (item) => item.text,
+    (item) => ({ type: item.type, source: item.source })
+  );
 }
 
 /** @deprecated Use buildLiveDashboardTicker */
@@ -319,29 +324,37 @@ export function buildLivePanels(feed: LiveFeedItem[], beat: BeatPost[]): LivePan
       timestamp: item.createdAt || undefined,
     }));
 
-  const portalBuzz = feed
-    .filter((item) => /portal|transfer/i.test(String(item.title)))
-    .slice(0, 6)
-    .map((item) => ({
-      text: String(item.title || '').trim(),
-      source: 'Portal',
-      timestamp: item.createdAt || undefined,
-    }));
+  const portalBuzz = filterExcludedPortalClassItems(
+    feed
+      .filter((item) => /portal|transfer/i.test(String(item.title)))
+      .slice(0, 6)
+      .map((item) => ({
+        text: String(item.title || '').trim(),
+        source: 'Portal',
+        timestamp: item.createdAt || undefined,
+      })),
+    (item) => item.text,
+    (item) => ({ type: 'PORTAL', source: item.source })
+  );
 
-  const beatWriterHighlights = beat
-    .filter((post) => String(post.text || '').trim())
-    .slice(0, 12)
-    .map((post) => {
-      const writer = post.writerName || post.handle || post.outlet || 'Beat Writer';
-      return {
-        text: String(post.text || '').trim(),
-        source: post.outlet || 'Beat',
-        timestamp: post.publishedAt || undefined,
-        url: post.url,
-        handle: post.handle,
-        writerName: writer,
-      };
-    });
+  const beatWriterHighlights = filterExcludedPortalClassItems(
+    beat
+      .filter((post) => String(post.text || '').trim())
+      .slice(0, 12)
+      .map((post) => {
+        const writer = post.writerName || post.handle || post.outlet || 'Beat Writer';
+        return {
+          text: String(post.text || '').trim(),
+          source: post.outlet || 'Beat',
+          timestamp: post.publishedAt || undefined,
+          url: post.url,
+          handle: post.handle,
+          writerName: writer,
+        };
+      }),
+    (item) => item.text,
+    (item) => ({ source: item.source })
+  );
 
   const staffNotes = feed
     .filter((item) => /staff|coach|internal/i.test(String(item.title)))

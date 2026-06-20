@@ -3,11 +3,11 @@
 import React, { useMemo } from 'react';
 import type { LiveHubBundle } from '@/lib/gatornation-live-api';
 import { GNL_COPY } from '@/lib/gatornation-live-types';
+import { filterExcludedPortalClassItems } from '@/lib/portal-class-filter';
 import { BeatWriterCardGrid } from '@/components/gatornation-live/BeatWriterCardGrid';
 import { GNLEliteTicker } from '@/components/gatornation-live/GNLEliteTicker';
-import { GNLBreakingNewsPanel } from '@/components/gatornation-live/GNLBreakingNewsPanel';
 import { GNLPodcastSpotlight } from '@/components/gatornation-live/GNLPodcastSpotlight';
-import { GNLGameDayCountdown } from '@/components/gatornation-live/GNLGameDayCountdown';
+import { GNLPulseSummary } from '@/components/gatornation-live/GNLPulseSummary';
 
 type Props = {
   bundle: LiveHubBundle;
@@ -15,20 +15,27 @@ type Props = {
   refreshKey?: string | null;
 };
 
-/** Elite UF Premium GNL body — ticker, beat writers, podcasts, breaking, game day. */
+/** Elite UF Premium GNL body — ticker, pulse, beat writers, podcasts. */
 export function GNLLiveFeedModule({ bundle, loading: _loading, refreshKey }: Props): React.ReactElement {
   const beatItems = useMemo(
-    () => bundle.panels.beatWriterHighlights.filter((item) => item.text?.trim()),
+    () =>
+      filterExcludedPortalClassItems(
+        bundle.panels.beatWriterHighlights.filter((item) => item.text?.trim()),
+        (item) => item.text,
+        (item) => ({ source: item.source })
+      ),
     [bundle.panels.beatWriterHighlights]
   );
 
   return (
     <div className="gv-gnl-elite" aria-label="GatorNation Live modules" data-testid="gnl-live-feed-module">
+      <GNLEliteTicker
+        items={bundle.ticker}
+        refreshKey={refreshKey ?? bundle.refreshedAt ?? bundle.updatedAt}
+      />
+
       <div className="gv-gnl__frame gv-gnl-elite__stack">
-        <GNLEliteTicker
-          items={bundle.ticker}
-          refreshKey={refreshKey ?? bundle.refreshedAt ?? bundle.updatedAt}
-        />
+        <GNLPulseSummary bundle={bundle} />
 
         <section className="gv-gnl-elite-card gv-gnl-elite-beat">
           <BeatWriterCardGrid
@@ -39,11 +46,6 @@ export function GNLLiveFeedModule({ bundle, loading: _loading, refreshKey }: Pro
         </section>
 
         <GNLPodcastSpotlight podcasts={bundle.podcasts} updatedAt={bundle.updatedAt} />
-
-        <div className="gv-gnl-elite-bottom">
-          <GNLBreakingNewsPanel item={bundle.breakingNews} />
-          <GNLGameDayCountdown game={bundle.gameDay} />
-        </div>
       </div>
     </div>
   );

@@ -53,34 +53,27 @@ export function BeatWriterCardGrid({ title, description, items }: Props): React.
                 <span className="gv-gnl-beat-card__avatar" aria-hidden="true">
                   {avatarInitials(item.writerName, item.handle)}
                 </span>
-                <div>
-                  <p className="gv-gnl-beat-card__writer">
-                    {item.writerName || item.handle || 'Beat Writer'}
-                    {item.source ? (
-                      <>
-                        {' — '}
-                        <span className="gv-gnl-beat-card__source">{item.source.toUpperCase()}</span>
-                      </>
-                    ) : null}
-                  </p>
+                <div className="gv-gnl-beat-card__identity">
+                  <p className="gv-gnl-beat-card__writer">{item.writerName || item.handle || 'Beat Writer'}</p>
+                  {item.source ? (
+                    <GNLDashBadge label={item.source.toUpperCase()} tone="beat" />
+                  ) : null}
                 </div>
-              </div>
-              <p className="gv-gnl-beat-card__text">{item.text}</p>
-              <div className="gv-gnl-beat-card__footer">
                 {item.timestamp ? (
                   <span className="gv-gnl-beat-card__time">{formatTimestamp(item.timestamp)}</span>
                 ) : null}
-                {item.url ? (
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="gv-gnl-beat-card__cta gv-gnl-beat-card__cta--x"
-                  >
-                    View on X →
-                  </a>
-                ) : null}
               </div>
+              <p className="gv-gnl-beat-card__text">{item.text}</p>
+              {item.url ? (
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="gv-gnl-beat-card__cta gv-gnl-beat-card__cta--x"
+                >
+                  View on X →
+                </a>
+              ) : null}
             </article>
           ))
         )}
