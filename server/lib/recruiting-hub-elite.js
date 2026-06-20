@@ -47,7 +47,7 @@ function buildSparkline(base, trend) {
   for (let i = 0; i < points; i += 1) {
     const progress = i / (points - 1);
     const drift = trend === 'up' ? progress * 12 : trend === 'down' ? (1 - progress) * 12 : 0;
-    values.push(Math.max(0, Math.round(base - 6 + drift + (i % 2 === 0 ? 1 : 0)));
+    values.push(Math.max(0, Math.round(base - 6 + drift + (i % 2 === 0 ? 1 : 0))));
   }
   return values;
 }
