@@ -1,0 +1,321 @@
+/**
+ * Recruiting Hub Elite Chrome — WOW parity (white cards, blue text, orange chrome)
+ * Scoped under .rh-elite-chrome to avoid clashing with legacy RH modules.
+ */
+
+.rh-elite-chrome {
+  --gator-blue: #0021a5;
+  --gator-orange: #fa4616;
+  --page-bg: #0b1120;
+  --card-bg: #ffffff;
+  --card-text: #0021a5;
+  --muted-text: #6b7280;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+  padding-bottom: 32px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.rh-elite-chrome > * + * {
+  margin-top: 0;
+}
+
+/* Section header */
+.rh-elite-chrome .rh-section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin: 24px 0 12px;
+}
+
+.rh-elite-chrome .rh-section-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.rh-elite-chrome .rh-section-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+/* Card base */
+.rh-elite-chrome .rh-card {
+  background: var(--card-bg);
+  color: var(--card-text);
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+  padding: 20px 22px;
+  border-top: 4px solid var(--gator-orange);
+}
+
+/* Badges */
+.rh-elite-chrome .rh-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--gator-orange);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gator-blue);
+  background: #fff7ed;
+}
+
+.rh-elite-chrome .rh-skeleton {
+  min-height: 120px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 25%, rgba(255, 255, 255, 0.14) 50%, rgba(255, 255, 255, 0.08) 75%);
+  background-size: 200% 100%;
+  animation: rh-elite-shimmer 1.2s infinite;
+}
+
+@keyframes rh-elite-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.rh-elite-chrome .rh-empty {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted-text);
+}
+
+/* Hero strip */
+.rh-elite-chrome .rh-hero-strip {
+  background: #111827;
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.rh-elite-chrome .rh-hero-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rh-elite-chrome .rh-hero-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.rh-elite-chrome .rh-hero-subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #d1d5db;
+}
+
+.rh-elite-chrome .rh-hero-badge {
+  margin-left: 16px;
+  flex-shrink: 0;
+}
+
+/* Class overview */
+.rh-elite-chrome .rh-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+@media (max-width: 767px) {
+  .rh-elite-chrome .rh-metrics-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.rh-elite-chrome .rh-metric-label {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-metric-value {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.rh-elite-chrome .rh-metric-trend {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--muted-text);
+}
+
+/* Commit board */
+.rh-elite-chrome .rh-commit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .rh-elite-chrome .rh-commit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .rh-elite-chrome .rh-commit-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rh-elite-chrome .rh-commit-card {
+  position: relative;
+  background: var(--card-bg);
+  color: var(--card-text);
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+  padding: 16px 18px;
+  border-top: 4px solid var(--gator-orange);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.rh-elite-chrome .rh-commit-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.rh-elite-chrome .rh-commit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.rh-elite-chrome .rh-commit-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--card-text);
+  text-decoration: none;
+}
+
+.rh-elite-chrome .rh-commit-name:hover {
+  color: var(--gator-orange);
+}
+
+.rh-elite-chrome .rh-commit-pos {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-commit-body {
+  margin: 6px 0 8px;
+  font-size: 13px;
+}
+
+.rh-elite-chrome .rh-commit-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted-text);
+}
+
+/* Battles & movement */
+.rh-elite-chrome .rh-battle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 767px) {
+  .rh-elite-chrome .rh-battle-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rh-elite-chrome .rh-battle-card {
+  background: var(--card-bg);
+  color: var(--card-text);
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+  padding: 16px 18px;
+  border-top: 4px solid var(--gator-orange);
+}
+
+.rh-elite-chrome .rh-battle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.rh-elite-chrome .rh-battle-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rh-elite-chrome .rh-battle-body {
+  margin: 6px 0 8px;
+  font-size: 13px;
+}
+
+.rh-elite-chrome .rh-battle-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted-text);
+}
+
+/* Position snapshot */
+.rh-elite-chrome .rh-position-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .rh-elite-chrome .rh-position-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .rh-elite-chrome .rh-position-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rh-elite-chrome .rh-position-card {
+  background: var(--card-bg);
+  color: var(--card-text);
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+  padding: 14px 16px;
+  border-top: 4px solid var(--gator-orange);
+}
+
+.rh-elite-chrome .rh-position-label {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.rh-elite-chrome .rh-position-meta {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--muted-text);
+}

@@ -1,22 +1,16 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { UiError } from '@/components/site/UiMessage';
 import { RecruitingHubMobileHeader } from '@/components/recruiting-hub/RecruitingHubMobileHeader';
 import { RecruitingHubFooter } from '@/components/vault/recruiting/RecruitingHubFooter';
 import { RecruitingHubCommandCenter } from '@/components/recruiting-hub/command-center/RecruitingHubCommandCenter';
 import { useRecruitingData } from '@/hooks/useRecruitingData';
-import { useIntelFeed } from '@/hooks/useIntelFeed';
 import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
 
 export function RecruitingHubPage(): React.ReactElement {
   const data = useRecruitingData();
   const isCommandCenterDesktop = useIsCommandCenterDesktop();
-  const {
-    items: highPriorityIntelItems,
-    loading: intelLoading,
-    lastUpdated: intelLastUpdated,
-  } = useIntelFeed(data.b27.targets);
   const showContent = data.loadedOnce && !data.error;
 
   return (
@@ -38,17 +32,11 @@ export function RecruitingHubPage(): React.ReactElement {
 
       {showContent ? (
         <RecruitingHubCommandCenter
-          b26={data.b26}
           b27={data.b27}
-          b28={data.b28}
           movementSummary={data.movementSummary}
           staffDashboard={data.staffDashboard}
-          portal={data.portal}
           rising={data.rising}
           cooling={data.cooling}
-          intelItems={highPriorityIntelItems}
-          intelLoading={intelLoading}
-          intelLastUpdated={intelLastUpdated}
         />
       ) : null}
 
