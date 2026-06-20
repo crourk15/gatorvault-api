@@ -1,28 +1,24 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
-import '@/lib/uf-premium-home.css';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import '@/lib/home.css';
 import {
   fetchHomeBundle,
   HOME_REFRESH,
   type HomeBundle,
 } from '@/lib/vault-home-api';
-import { fetchTeamHubBundle, type TeamHubBundle } from '@/lib/team-hub-api';
+import { fetchRecruitingBoard, type RecruitingBoardResponse } from '@/lib/recruiting-board-api';
+import { fetchLiveHubBundle } from '@/lib/gatornation-live-api';
+import type { LivePanelProps } from '@/lib/gatornation-live-types';
+import { filterExcludedPortalClassItems } from '@/lib/portal-class-filter';
 import { useVaultDataReload } from '@/lib/vault-navigation';
-import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
-import { SITE_ROUTES } from '@/lib/site-routes';
-import { HomePremiumHero } from '@/components/home/premium/HomePremiumHero';
-import { HomePremiumTicker } from '@/components/home/premium/HomePremiumTicker';
-import { HomePremiumSection } from '@/components/home/premium/HomePremiumSection';
-import { HomeRecruitingPreview } from '@/components/home/premium/HomeRecruitingPreview';
-import { HomeFutureCastPreview } from '@/components/home/premium/HomeFutureCastPreview';
-import { HomeTeamPreview } from '@/components/home/premium/HomeTeamPreview';
-import { HomeNilPreview } from '@/components/home/premium/HomeNilPreview';
-import { HomeSchedulePreview } from '@/components/home/premium/HomeSchedulePreview';
-import { HomeContentPreview } from '@/components/home/premium/HomeContentPreview';
-import { HomeGnlPreview } from '@/components/home/premium/HomeGnlPreview';
-import { HomePodcastPreview } from '@/components/home/premium/HomePodcastPreview';
-import { buildHomeGnlItems } from '@/lib/vault-home-api';
+import { HomeCommandCenter } from '@/components/home/premium/command/HomeCommandCenter';
+import {
+  buildBeatPosts,
+  buildFutureCastTargets,
+  buildGameDayView,
+  buildRecruitingMetricsView,
+} from '@/components/home/premium/command/home-command-utils';
 
 const EMPTY_BUNDLE: HomeBundle = {
   ticker: null,
@@ -37,32 +33,30 @@ const EMPTY_BUNDLE: HomeBundle = {
   schedule: null,
 };
 
-const EMPTY_TEAM: TeamHubBundle = {
-  eras: [],
-  achievements: [],
-  identity: [],
-  coaches: [],
-  roster: [],
-  depthChart: { offense: [], defense: [], specialTeams: [] },
-  commandStats: { rosterCount: 0, startersLocked: 0, positionBattles: 0, updatedLabel: '—' },
-  updatedAt: null,
-};
-
-/** UF Premium home — wireframe-exact sections wired to vault home APIs. */
+/** Vault home — command center layout (hero → gameday → strip → recruiting → FC → beat). */
 export function HomePremiumPage(): React.ReactElement {
   const [bundle, setBundle] = useState<HomeBundle>(EMPTY_BUNDLE);
-  const [teamBundle, setTeamBundle] = useState<TeamHubBundle>(EMPTY_TEAM);
+  const [board, setBoard] = useState<RecruitingBoardResponse | null>(null);
+  const [beatItems, setBeatItems] = useState<LivePanelProps['items']>([]);
   const [loading, setLoading] = useState(true);
+  const [countdownTick, setCountdownTick] = useState(0);
 
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) setLoading(true);
     try {
-      const [home, team] = await Promise.all([
+      const [home, recruitingBoard, live] = await Promise.all([
         fetchHomeBundle(!isInitial),
-        fetchTeamHubBundle().catch(() => EMPTY_TEAM),
+        fetchRecruitingBoard(2027).catch(() => null),
+        fetchLiveHubBundle(!isInitial).catch(() => null),
       ]);
       setBundle(home);
-      setTeamBundle(team);
+      setBoard(recruitingBoard);
+      const highlights = filterExcludedPortalClassItems(
+        live?.panels.beatWriterHighlights.filter((item) => item.text?.trim()) ?? [],
+        (item) => item.text,
+        (item) => ({ source: item.source })
+      );
+      setBeatItems(highlights);
     } finally {
       if (isInitial) setLoading(false);
     }
@@ -85,75 +79,37 @@ export function HomePremiumPage(): React.ReactElement {
     };
   }, [load]);
 
+  useEffect(() => {
+    const id = setInterval(() => setCountdownTick((n) => n + 1), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const gameDay = useMemo(() => {
+    void countdownTick;
+    return buildGameDayView();
+  }, [countdownTick]);
+
+  const recruitingMetrics = useMemo(
+    () => buildRecruitingMetricsView(bundle.recruiting, board),
+    [bundle.recruiting, board]
+  );
+
+  const futureCastTargets = useMemo(
+    () => buildFutureCastTargets(bundle.movement, board),
+    [bundle.movement, board]
+  );
+
+  const beatPosts = useMemo(() => buildBeatPosts(beatItems), [beatItems]);
+
   return (
-    <div className="uf-premium-home" data-testid="vault-home-premium">
-      <HomePremiumHero />
-      <HomePremiumTicker ticker={bundle.ticker} loading={loading && !bundle.ticker} />
-
-      <div className="uf-premium-home__frame">
-        <HomePremiumSection title="Recruiting Hub" testId="home-section-recruiting">
-          <HomeRecruitingPreview
-            snapshot={bundle.recruiting}
-            movement={bundle.movement}
-            personalized={bundle.personalized}
-            loading={loading && !bundle.recruiting}
-          />
-        </HomePremiumSection>
-
-        <HomePremiumSection title="FutureCast" testId="home-section-futurecast">
-          <HomeFutureCastPreview movement={bundle.movement} loading={loading && !bundle.movement} />
-        </HomePremiumSection>
-
-        <HomePremiumSection
-          title="Team Snapshot"
-          ctaLabel="View Team Page"
-          ctaHref={VAULT_PILLAR_ROUTES.team}
-          testId="home-section-team"
-        >
-          <HomeTeamPreview
-            bundle={teamBundle}
-            loading={loading && teamBundle.commandStats.rosterCount === 0}
-          />
-        </HomePremiumSection>
-
-        <HomePremiumSection
-          title="NIL Tracker"
-          ctaLabel="Open NIL Command Center"
-          ctaHref={VAULT_PILLAR_ROUTES.nil}
-          testId="home-section-nil"
-        >
-          <HomeNilPreview data={bundle.nil} loading={loading && !bundle.nil} />
-        </HomePremiumSection>
-
-        <HomePremiumSection
-          title="Schedule & Tickets"
-          ctaLabel="View Full Schedule"
-          ctaHref={VAULT_PILLAR_ROUTES.schedule}
-          testId="home-section-schedule"
-        >
-          <HomeSchedulePreview data={bundle.schedule} loading={loading && !bundle.schedule} />
-        </HomePremiumSection>
-
-        <HomePremiumSection
-          title="GatorNation Live"
-          ctaLabel="Open GatorNation Live"
-          ctaHref={SITE_ROUTES.gatorNationLive}
-          testId="home-section-gnl"
-        >
-          <HomeGnlPreview
-            items={buildHomeGnlItems(bundle.ticker)}
-            loading={loading && !bundle.ticker}
-          />
-        </HomePremiumSection>
-
-        <HomePremiumSection title="Podcast Spotlight" testId="home-section-podcasts">
-          <HomePodcastPreview />
-        </HomePremiumSection>
-
-        <HomePremiumSection title="Articles / Community / Film Room" testId="home-section-content">
-          <HomeContentPreview content={bundle.content} loading={loading && !bundle.content} />
-        </HomePremiumSection>
-      </div>
+    <div className="home-page" data-testid="vault-home-premium">
+      <HomeCommandCenter
+        gameDay={gameDay}
+        recruitingMetrics={recruitingMetrics}
+        futureCastTargets={futureCastTargets}
+        beatPosts={beatPosts}
+        loading={loading}
+      />
     </div>
   );
 }
