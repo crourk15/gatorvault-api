@@ -26,7 +26,7 @@ export function RecruitingCommitBoard(): React.ReactElement {
         </section>
       ) : (
         <section className="rh-commit-grid" data-testid="rh-elite-commit-board">
-          {data.map((c) => (
+          {data.slice(0, 9).map((c) => (
             <article key={c.id} className="rh-commit-card">
               <div className="rh-commit-header">
                 <div>

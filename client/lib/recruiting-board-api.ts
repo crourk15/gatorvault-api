@@ -53,6 +53,10 @@ export interface RecruitingBoardPlayer {
   strengths?: string[];
   weaknesses?: string[];
   evaluatorNotes?: string | null;
+  playerComp?: string | null;
+  schemeFit?: string | null;
+  projection?: string | null;
+  jerseyNumber?: string | number | null;
 }
 
 export interface RecruitingBoardTierSection {

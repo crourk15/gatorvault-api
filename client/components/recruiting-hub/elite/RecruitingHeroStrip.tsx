@@ -27,7 +27,7 @@ export function RecruitingHeroStrip(): React.ReactElement {
           <div className="rh-hero-title">Recruiting Command Center</div>
           <div className="rh-hero-subtitle">UF&apos;s class, movement, and battles—one place.</div>
         </div>
-        <span className="rh-badge rh-hero-badge rh-hero-badge--pulse">2027 WAR ROOM</span>
+        <span className="rh-badge rh-hero-badge rh-hero-badge--pulse">WAR ROOM</span>
       </div>
       <div className="rh-hero-ticker" aria-label="Recruiting intel ticker">
         <div className="rh-hero-ticker-track">

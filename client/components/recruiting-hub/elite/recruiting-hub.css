@@ -111,8 +111,8 @@
   overflow: hidden;
   background: linear-gradient(135deg, #0021a5, #1d4ed8);
   border-radius: 12px;
-  padding: 28px 30px;
-  margin-bottom: 24px;
+  padding: 34px 36px;
+  margin-bottom: 29px;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
   color: #ffffff;
 }
@@ -430,5 +430,603 @@
 
 .rh-elite-chrome .rh-position-meta {
   font-size: 12px;
+  color: var(--muted-text);
+}
+
+/* Signing Day Tracker */
+.rh-elite-chrome .rh-signing-tracker {
+  margin-bottom: 24px;
+}
+
+.rh-elite-chrome .rh-signing-tracker__header {
+  margin-bottom: 16px;
+}
+
+.rh-elite-chrome .rh-signing-tracker__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--card-text);
+}
+
+.rh-elite-chrome .rh-signing-tracker__sub {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-signing-tracker__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 767px) {
+  .rh-elite-chrome .rh-signing-tracker__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rh-elite-chrome .rh-signing-event {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  transition: box-shadow 0.2s ease;
+}
+
+.rh-elite-chrome .rh-signing-event--live {
+  border-color: var(--gator-orange);
+  box-shadow: 0 0 0 2px rgba(250, 70, 22, 0.25), 0 0 18px rgba(250, 70, 22, 0.35);
+}
+
+.rh-elite-chrome .rh-badge--live {
+  background: var(--gator-orange);
+  color: #ffffff;
+  border-color: var(--gator-orange);
+  animation: rh-badge-pulse 3s ease-in-out infinite;
+}
+
+.rh-elite-chrome .rh-signing-event__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.rh-elite-chrome .rh-signing-event__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--card-text);
+}
+
+.rh-elite-chrome .rh-signing-event__dates {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-signing-event__countdown {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 8px 0 10px;
+  font-size: 13px;
+}
+
+.rh-elite-chrome .rh-signing-event__countdown-value strong {
+  font-size: 18px;
+  color: var(--gator-blue);
+}
+
+.rh-elite-chrome .rh-signing-event__countdown--past {
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-signing-event__live-feed {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #fff7ed;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gator-orange);
+}
+
+.rh-elite-chrome .rh-signing-event__live-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gator-orange);
+  animation: rh-badge-pulse 1.5s ease-in-out infinite;
+}
+
+.rh-elite-chrome .rh-signing-event__link {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gator-blue);
+  text-decoration: none;
+}
+
+.rh-elite-chrome .rh-signing-event__link:hover {
+  color: var(--gator-orange);
+}
+
+/* Class cards row */
+.rh-elite-chrome .rh-class-cards__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+  .rh-elite-chrome .rh-class-cards__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rh-elite-chrome .rh-class-card {
+  position: relative;
+  background: var(--card-bg);
+  color: var(--card-text);
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+  padding: 20px 22px;
+  border-top: 4px solid var(--gator-orange);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  overflow: hidden;
+}
+
+.rh-elite-chrome .rh-class-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.rh-elite-chrome .rh-class-card__watermark {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 3rem;
+  font-weight: 800;
+  opacity: 0.05;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+}
+
+.rh-elite-chrome .rh-class-card__title {
+  margin: 0 0 12px;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.rh-elite-chrome .rh-class-card__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.rh-elite-chrome .rh-class-card__stats dt {
+  margin: 0;
+  font-size: 11px;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-class-card__stats dd {
+  margin: 2px 0 0;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.rh-elite-chrome .rh-class-card__link {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gator-blue);
+  text-decoration: none;
+}
+
+.rh-elite-chrome .rh-class-card__link:hover {
+  color: var(--gator-orange);
+}
+
+.rh-elite-chrome .rh-class-card__skeleton {
+  min-height: 72px;
+  margin-bottom: 12px;
+}
+
+/* Class commits page */
+.rh-elite-chrome .rh-class-commits-page__header,
+.rh-elite-chrome .rh-signing-page__header {
+  margin-bottom: 20px;
+}
+
+.rh-elite-chrome .rh-class-commits-page__back,
+.rh-elite-chrome .rh-signing-page__back {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-decoration: none;
+}
+
+.rh-elite-chrome .rh-class-commits-page__back:hover,
+.rh-elite-chrome .rh-signing-page__back:hover {
+  color: var(--gator-orange);
+}
+
+.rh-elite-chrome .rh-class-commits-page__title,
+.rh-elite-chrome .rh-signing-page__title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.rh-elite-chrome .rh-class-commits-page__sub,
+.rh-elite-chrome .rh-signing-page__dates {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.rh-elite-chrome .rh-elite-commits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 767px) {
+  .rh-elite-chrome .rh-elite-commits-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rh-elite-chrome .rh-elite-commit-card {
+  background: var(--card-bg);
+  color: var(--card-text);
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+  padding: 18px 20px;
+  border-top: 4px solid var(--gator-orange);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__meta {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__move--up {
+  color: #16a34a;
+  margin-left: 6px;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__move--down {
+  color: #dc2626;
+  margin-left: 6px;
+}
+
+.rh-elite-chrome .rh-elite-commit__stability {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  font-size: 12px;
+}
+
+.rh-elite-chrome .rh-elite-commit__stability-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.rh-elite-chrome .rh-elite-commit__stability-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--gator-blue), var(--gator-orange));
+}
+
+.rh-elite-chrome .rh-elite-commit-card__uf {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin: 6px 0 8px;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__chip {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #eff6ff;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gator-blue);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__line {
+  margin: 6px 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__intel {
+  font-style: italic;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 12px;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-elite-commit-card__profile-link {
+  font-weight: 700;
+  color: var(--gator-blue);
+  text-decoration: none;
+}
+
+.rh-elite-chrome .rh-elite-commit-card__profile-link:hover {
+  color: var(--gator-orange);
+}
+
+/* Signing detail page list */
+.rh-elite-chrome .rh-signing-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rh-elite-chrome .rh-signing-page__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--card-bg);
+  color: var(--card-text);
+  border-radius: 10px;
+  border-top: 3px solid var(--gator-orange);
+  box-shadow: var(--card-shadow);
+}
+
+.rh-elite-chrome .rh-signing-page__name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.rh-elite-chrome .rh-signing-page__meta {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-signing-page__aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.rh-elite-chrome .rh-signing-page__uf {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--gator-blue);
+}
+
+.rh-elite-chrome .rh-signing-page__link {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gator-orange);
+  text-decoration: none;
+}
+
+/* Signing Day Tracker */
+.rh-elite-chrome .rh-signing-card {
+  margin-bottom: 24px;
+}
+
+.rh-elite-chrome .rh-signing-row {
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.rh-elite-chrome .rh-signing-row:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.rh-elite-chrome .rh-signing-row--live {
+  border-radius: 8px;
+  padding: 12px;
+  margin-left: -12px;
+  margin-right: -12px;
+  box-shadow: 0 0 0 1px rgba(250, 70, 22, 0.35), 0 0 18px rgba(250, 70, 22, 0.25);
+  background: linear-gradient(180deg, rgba(250, 70, 22, 0.06), transparent);
+}
+
+.rh-elite-chrome .rh-signing-row__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.rh-elite-chrome .rh-signing-row__label {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.rh-elite-chrome .rh-signing-row__dates {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.rh-elite-chrome .rh-signing-row__countdown {
+  font-size: 12px;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-signing-row__live-feed {
+  font-size: 12px;
+  color: var(--gator-orange);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.rh-elite-chrome .rh-signing-row__link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--gator-blue);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.rh-elite-chrome .rh-signing-row__link:hover {
+  text-decoration: underline;
+}
+
+.rh-elite-chrome .rh-badge--live {
+  background: var(--gator-orange);
+  color: #ffffff;
+  border-color: var(--gator-orange);
+}
+
+/* Class cards grid */
+.rh-elite-chrome .rh-class-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 900px) {
+  .rh-elite-chrome .rh-class-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rh-elite-chrome .rh-class-card {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.rh-elite-chrome .rh-class-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.rh-elite-chrome .rh-class-card__title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.rh-elite-chrome .rh-class-card__meta {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.rh-elite-chrome .rh-class-card__link {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gator-blue);
+}
+
+/* Elite commit board extras */
+.rh-elite-chrome .rh-elite-commit-detail {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.rh-elite-chrome .rh-elite-commit-detail__label {
+  color: var(--muted-text);
+  min-width: 88px;
+}
+
+.rh-elite-chrome .rh-elite-commit-detail__value {
+  flex: 1;
+}
+
+.rh-elite-chrome .rh-elite-commit-profile-link {
+  display: inline-block;
+  margin: 8px 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gator-blue);
+  text-decoration: none;
+}
+
+.rh-elite-chrome .rh-elite-commit-profile-link:hover {
+  text-decoration: underline;
+}
+
+.rh-elite-chrome .rh-elite-back-link {
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+
+.rh-elite-chrome .rh-elite-back-link a {
+  color: #9ca3af;
+  text-decoration: none;
+}
+
+.rh-elite-chrome .rh-elite-back-link a:hover {
+  color: #ffffff;
+}
+
+.rh-elite-chrome .rh-signing-page-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.rh-elite-chrome .rh-signing-page-copy {
+  margin: 0;
+  font-size: 14px;
   color: var(--muted-text);
 }

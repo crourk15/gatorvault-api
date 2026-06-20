@@ -108,6 +108,14 @@ function enrichPlayer(player, isCommit, staffMode) {
     profileNote: player.profileNote || null,
     commitDate: player.commitDate || player.commit_date || null,
     inState: player.inState ?? player.in_state ?? (String(player.state || player.st || '').toUpperCase() === 'FL'),
+    playerComp: player.playerComp || null,
+    schemeFit: player.schemeFit || null,
+    projection: player.projection || null,
+    jerseyNumber: player.jerseyNumber ?? player.jersey ?? null,
+    vaultGrade: player.vaultGrade ?? null,
+    movementDirection:
+      player.movementDirection ??
+      (player.interestMeter === 'rising' ? 'up' : player.interestMeter === 'falling' ? 'down' : 'flat'),
   };
   return mergeWarRoomFields(player, base);
 }

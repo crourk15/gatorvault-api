@@ -20,6 +20,8 @@ export type RhHubClassOverview = {
   };
 };
 
+export type RhHubClassOverviewByYear = Record<number, RhHubClassOverview>;
+
 export type RhHubCommit = {
   id: string;
   name: string;
@@ -29,6 +31,20 @@ export type RhHubCommit = {
   commitDate: string;
   statusBadge?: string;
   profileUrl: string;
+  stabilityMeter?: string;
+  ufPercent?: string;
+  movement?: string;
+  enrolled?: boolean;
+  jerseyNumber?: string | number | null;
+  positionRoomFit?: string;
+  earlyImpactProjection?: string;
+  strengths?: string | null;
+  weaknesses?: string | null;
+  playerComp?: string | null;
+  gvGrade?: string;
+  nilEstimate?: string | null;
+  projection?: string | null;
+  insiderIntel?: string | null;
 };
 
 export type RhHubBattle = {
@@ -60,6 +76,17 @@ export async function fetchRecruitingHubTicker(year = HUB_YEAR): Promise<string[
 
 export async function fetchRecruitingHubClassOverview(year = HUB_YEAR): Promise<RhHubClassOverview> {
   return apiFetch<RhHubClassOverview>(`/api/recruiting/hub/class-overview?year=${year}`);
+}
+
+export async function fetchRecruitingHubClassOverviewAll(): Promise<RhHubClassOverviewByYear> {
+  const data = await apiFetch<Record<string, RhHubClassOverview> & { ok?: boolean }>(
+    '/api/recruiting/hub/class-overview/all'
+  );
+  return {
+    2026: data['2026'],
+    2027: data['2027'],
+    2028: data['2028'],
+  };
 }
 
 export async function fetchRecruitingHubCommits(year = HUB_YEAR): Promise<RhHubCommit[]> {

@@ -183,6 +183,76 @@ async function buildHubClassOverview(year = 2027) {
   };
 }
 
+function movementLabel(player) {
+  if (player.movementDirection === 'up') return 'Trending up';
+  if (player.movementDirection === 'down') return 'Trending down';
+  return 'Stable';
+}
+
+function stabilityMeter(player) {
+  const raw = player.stabilityScore ?? player.fitScore ?? parseUfPct(player.ufProbability);
+  if (raw >= 80) return 'Locked In';
+  if (raw >= 55) return 'Steady';
+  if (raw >= 35) return 'Tracking';
+  return 'Volatile';
+}
+
+function formatNilEstimate(player) {
+  const raw = player.nilEstimate ?? player.nilValue ?? player.nilProjection;
+  if (raw != null && raw !== '') {
+    if (typeof raw === 'number' && Number.isFinite(raw)) {
+      return raw >= 1000 ? `$${Math.round(raw / 1000)}K` : `$${Math.round(raw)}`;
+    }
+    return String(raw);
+  }
+  const stars = Number(player.stars) || 0;
+  if (stars >= 5) return '$400K–$750K';
+  if (stars >= 4) return '$75K–$250K';
+  if (stars >= 3) return '$15K–$75K';
+  return null;
+}
+
+function formatStrengths(player) {
+  const list = player.strengths;
+  if (Array.isArray(list) && list.length) return list.slice(0, 2).join(' · ');
+  return null;
+}
+
+function formatWeaknesses(player) {
+  const list = player.weaknesses;
+  if (Array.isArray(list) && list.length) return list.slice(0, 2).join(' · ');
+  return null;
+}
+
+function mapHubCommit(player, classYear) {
+  const pct = parseUfPct(player.ufProbability);
+  const slug = player.slug || player.name;
+  return {
+    id: slug,
+    name: player.name,
+    position: playerPos(player),
+    rating: formatRating(player.displayRating ?? player.rating ?? player.vaultGrade),
+    rankNote: rankNote(player),
+    commitDate: formatCommitDate(player),
+    statusBadge: classYear >= 2027 ? commitStatusBadge(player) : 'Enrolled',
+    profileUrl: profileUrl(player),
+    stabilityMeter: stabilityMeter(player),
+    ufPercent: pct > 0 ? `${pct}%` : '—',
+    movement: movementLabel(player),
+    enrolled: classYear <= 2026,
+    jerseyNumber: player.jerseyNumber ?? player.jersey ?? null,
+    positionRoomFit: player.schemeFit ?? (player.fitScore != null ? `Fit ${Math.round(Number(player.fitScore))}/100` : null),
+    earlyImpactProjection: player.projection ?? player.earlyImpact ?? player.skinny ?? null,
+    strengths: formatStrengths(player),
+    weaknesses: formatWeaknesses(player),
+    playerComp: player.playerComp ?? player.comp ?? null,
+    gvGrade: formatRating(player.vaultGrade ?? player.displayRating ?? player.rating),
+    nilEstimate: formatNilEstimate(player),
+    projection: player.projection ?? player.skinny ?? player.profileNote ?? null,
+    insiderIntel: player.notePreview ?? player.notes ?? player.insiderNotes ?? null,
+  };
+}
+
 async function buildHubCommits(year = 2027) {
   const enriched = await loadEnrichedBoard(year);
   const commits = [...(enriched.commits || [])].sort((a, b) => {
@@ -191,16 +261,16 @@ async function buildHubCommits(year = 2027) {
     return ra - rb;
   });
 
-  return commits.slice(0, 9).map((player) => ({
-    id: player.slug || player.name,
-    name: player.name,
-    position: playerPos(player),
-    rating: formatRating(player.displayRating ?? player.rating ?? player.vaultGrade),
-    rankNote: rankNote(player),
-    commitDate: formatCommitDate(player),
-    statusBadge: commitStatusBadge(player),
-    profileUrl: profileUrl(player),
-  }));
+  return commits.map((player) => mapHubCommit(player, year));
+}
+
+async function buildHubClassOverviewAll() {
+  const years = [2026, 2027, 2028];
+  const out = {};
+  for (const year of years) {
+    out[year] = await buildHubClassOverview(year);
+  }
+  return out;
 }
 
 async function buildHubBattles(year = 2027) {
@@ -300,6 +370,7 @@ async function buildHubPositions(year = 2027) {
 module.exports = {
   buildHubTicker,
   buildHubClassOverview,
+  buildHubClassOverviewAll,
   buildHubCommits,
   buildHubBattles,
   buildHubPositions,

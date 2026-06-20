@@ -263,6 +263,7 @@ function mountRecruitingHubRoutes(app) {
   const {
     buildHubTicker,
     buildHubClassOverview,
+    buildHubClassOverviewAll,
     buildHubCommits,
     buildHubBattles,
     buildHubPositions,
@@ -279,6 +280,16 @@ function mountRecruitingHubRoutes(app) {
       const cacheKey = `hub:elite:ticker:${year}`;
       const { value } = await hubCache.wrap(cacheKey, () => buildHubTicker(year));
       return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/hub/class-overview/all', async (req, res) => {
+    try {
+      const cacheKey = 'hub:elite:class-overview:all';
+      const { value } = await hubCache.wrap(cacheKey, () => buildHubClassOverviewAll());
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), ...value });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

@@ -3,6 +3,8 @@
 import React from 'react';
 import './recruiting-hub.css';
 import { RecruitingHeroStrip } from '@/components/recruiting-hub/elite/RecruitingHeroStrip';
+import { SigningDayTracker } from '@/components/recruiting-hub/elite/SigningDayTracker';
+import { ClassCards } from '@/components/recruiting-hub/elite/ClassCards';
 import { RecruitingClassOverview } from '@/components/recruiting-hub/elite/RecruitingClassOverview';
 import { RecruitingCommitBoard } from '@/components/recruiting-hub/elite/RecruitingCommitBoard';
 import { RecruitingBattlesMovement } from '@/components/recruiting-hub/elite/RecruitingBattlesMovement';
@@ -13,6 +15,8 @@ export function RecruitingHubElite(): React.ReactElement {
   return (
     <div className="rh-frame rh-elite-chrome" data-testid="rh-elite-chrome">
       <RecruitingHeroStrip />
+      <SigningDayTracker />
+      <ClassCards />
       <RecruitingClassOverview />
       <RecruitingCommitBoard />
       <RecruitingBattlesMovement />
