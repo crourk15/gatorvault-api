@@ -96,7 +96,11 @@ function mountPlatformRoutes(app) {
   app.get('/api/film-room/catalog', async (req, res) => {
     try {
       if (req.query.sync === '1' || req.query.force === '1') {
-        store.reloadKnowledge();
+        try {
+          store.reloadKnowledge();
+        } catch (reloadErr) {
+          console.warn('[film-room] knowledge reload skipped:', reloadErr.message);
+        }
       }
       const catalog = filmRoom.buildFilmRoomCatalog();
       const session = getSessionFromReq(req);
@@ -107,7 +111,18 @@ function mountPlatformRoutes(app) {
       });
       return res.json({ ...catalog, items });
     } catch (err) {
-      return res.status(500).json({ ok: false, error: err.message });
+      console.error('[film-room] catalog error:', err.message);
+      return res.json({
+        ok: true,
+        mode: 'degraded',
+        items: [],
+        categories: filmRoom.FILM_ROOM_CATEGORIES || [],
+        hubs: filmRoom.FILM_HUBS || [],
+        byCategory: {},
+        counts: { total: 0, knowledgeLessons: 0, legacyVideos: 0, validated: 0, skipped: 0 },
+        degraded: true,
+        warning: err.message,
+      });
     }
   });
 

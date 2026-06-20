@@ -7,6 +7,8 @@
 const fs = require('fs');
 const path = require('path');
 const { isBlockedRecruit } = require('../lib/recruiting-blocked-players');
+const { demoteUnverifiedHubCommit, validateVerifiedCommits, isVerifiedHubCommit, looksLikeFloridaCommit } = require('../lib/recruiting-verified-commits');
+const { isAllowlistedTarget } = require('../lib/recruiting-target-allowlist');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const HUB_CLASS_YEARS = new Set([2027, 2028, 2029]);
@@ -63,12 +65,19 @@ function isHubEligiblePlayer(player) {
   const lc = String(player.lifecycle || '').toUpperCase();
   if (lc === 'ROSTER') return false;
 
-  return true;
+  if (looksLikeFloridaCommit(player)) {
+    return isVerifiedHubCommit(player);
+  }
+
+  return isAllowlistedTarget(player);
 }
 
-function shouldRemoveEvent(evt, removedSlugs) {
+function shouldRemoveEvent(evt, keptSlugs, removedSlugs) {
   const slug = String(evt.playerSlug || evt.playerId || '').toLowerCase();
+  const eventType = String(evt.eventType || '').toLowerCase();
+  if (eventType === 'ranking_change' || slug === 'class-2027') return false;
   if (!slug || removedSlugs.has(slug)) return true;
+  if (slug && !keptSlugs.has(slug)) return true;
   if (isBlockedRecruit({ slug, name: evt.title })) return true;
 
   const year = eventClassYear(evt);
@@ -97,10 +106,10 @@ function dedupeEvents(events) {
   return out;
 }
 
-function cleanIntelItems(items, removedSlugs) {
+function cleanIntelItems(items, keptSlugs, removedSlugs) {
   return (items || []).filter((row) => {
     const slug = String(row.playerSlug || row.player_slug || '').toLowerCase();
-    if (!slug || removedSlugs.has(slug)) return false;
+    if (!slug || removedSlugs.has(slug) || !keptSlugs.has(slug)) return false;
     if (isBlockedRecruit({ slug, name: row.playerName })) return false;
     const year = Number(row.classYear);
     if (year && !HUB_CLASS_YEARS.has(year)) return false;
@@ -123,10 +132,14 @@ function main() {
   const offerLogsPath = path.join(DATA_DIR, 'offer_logs.json');
 
   const players = readJson(playersPath, []);
-  const keptPlayers = players.filter(isHubEligiblePlayer);
+  const demotedPlayers = players.map(demoteUnverifiedHubCommit);
+  const keptPlayers = demotedPlayers.filter(isHubEligiblePlayer);
+  const keptSlugs = new Set(
+    keptPlayers.map((p) => String(p.slug || '').toLowerCase()).filter(Boolean)
+  );
   const removedSlugs = new Set(
     players
-      .filter((p) => !isHubEligiblePlayer(p))
+      .filter((p) => !isHubEligiblePlayer(demoteUnverifiedHubCommit(p)))
       .map((p) => String(p.slug || '').toLowerCase())
       .filter(Boolean)
   );
@@ -139,10 +152,10 @@ function main() {
     process.exit(1);
   }
 
-  const filteredEvents = dedupeEvents(events.filter((evt) => !shouldRemoveEvent(evt, removedSlugs)));
+  const filteredEvents = dedupeEvents(events.filter((evt) => !shouldRemoveEvent(evt, keptSlugs, removedSlugs)));
 
   const intelDoc = readJson(intelPath, { version: 1, items: [] });
-  intelDoc.items = cleanIntelItems(intelDoc.items, removedSlugs);
+  intelDoc.items = cleanIntelItems(intelDoc.items, keptSlugs, removedSlugs);
   intelDoc.updatedAt = new Date().toISOString();
 
   const visitDoc = readJson(visitLogsPath, { version: 1, items: [] });
@@ -160,6 +173,17 @@ function main() {
   writeJson(offerLogsPath, offerDoc);
 
   console.log('[clean-recruiting] players', players.length, '->', keptPlayers.length);
+  const unverified = validateVerifiedCommits(keptPlayers);
+  if (unverified.length) {
+    console.warn('[clean-recruiting] unverified UF commits remain:', unverified.map((e) => e.slug).join(', '));
+  }
+  const uf2027 = keptPlayers.filter(
+    (p) =>
+      Number(p.classYear) === 2027 &&
+      (p.status === 'committed' || p.status === 'commit') &&
+      /^florida$/i.test(String(p.committedTo || ''))
+  );
+  console.log('[clean-recruiting] 2027 verified UF commits:', uf2027.length, uf2027.map((p) => p.slug).join(', '));
   console.log('[clean-recruiting] removed slugs sample:', [...removedSlugs].slice(0, 12).join(', '));
   console.log('[clean-recruiting] cam-dooley removed:', removedSlugs.has('cam-dooley'));
   console.log('[clean-recruiting] events', events.length, '->', filteredEvents.length);

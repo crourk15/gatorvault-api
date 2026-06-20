@@ -80,7 +80,11 @@ function isFloridaCommit(p) {
   if (!p) return false;
   const status = String(p.status || '').toLowerCase();
   const committedTo = String(p.committedTo || p.committed_to || '').trim();
-  return (status === 'committed' || status === 'commit') && /^florida$/i.test(committedTo);
+  if (!((status === 'committed' || status === 'commit') && /^florida$/i.test(committedTo))) {
+    return false;
+  }
+  const { isVerifiedHubCommit } = require('./recruiting-verified-commits');
+  return isVerifiedHubCommit(p);
 }
 
 function isCommittedAnywhere(p) {

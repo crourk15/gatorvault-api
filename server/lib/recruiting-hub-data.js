@@ -384,26 +384,27 @@ function buildHeatIndexRows(enrichedPlayers) {
 function buildBattlesListRows(enrichedPlayers) {
   const battles = enrichedPlayers
     .filter((p) => !p.isCommit && p.ufScore != null && p.ufScore >= 34)
-    .map((player) => ({
-      id: player.slug || player.name,
-      name: player.name,
-      position: player.position || playerPos(player),
-      ufPercent: `${player.ufScore}%`,
-      tag: futureCastTag(player.ufScore),
-      note:
-        player.notePreview ??
-        player.notes ??
-        player.skinny ??
-        'Key battle on the board.',
-      movement:
-        player.movementDirection === 'up'
-          ? 'Trending up'
-          : player.movementDirection === 'down'
-            ? 'Trending down'
-            : player.ufScore >= 70
-              ? 'Stable'
-              : 'Stable',
-    }));
+    .map((player) => {
+      const note = player.notePreview ?? player.notes ?? player.skinny ?? null;
+      if (!note || !String(note).trim()) return null;
+      return {
+        id: player.slug || player.name,
+        name: player.name,
+        position: player.position || playerPos(player),
+        ufPercent: `${player.ufScore}%`,
+        tag: futureCastTag(player.ufScore),
+        note: String(note).trim(),
+        movement:
+          player.movementDirection === 'up'
+            ? 'Trending up'
+            : player.movementDirection === 'down'
+              ? 'Trending down'
+              : player.ufScore >= 70
+                ? 'Stable'
+                : 'Stable',
+      };
+    })
+    .filter(Boolean);
 
   battles.sort((a, b) => parseInt(b.ufPercent, 10) - parseInt(a.ufPercent, 10));
   return battles.slice(0, 6);

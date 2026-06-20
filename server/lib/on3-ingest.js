@@ -210,9 +210,29 @@ async function shouldSkipCommitAlert(eventType, player, snapshot) {
   return null;
 }
 
+async function demoteUnverifiedHubCommitsInStore() {
+  const { demoteUnverifiedHubCommit } = require('./recruiting-verified-commits');
+  const all = await store.getAllPlayers();
+  let demoted = 0;
+  for (const p of all) {
+    const next = demoteUnverifiedHubCommit(p);
+    if (
+      next.status !== p.status ||
+      next.committedTo !== p.committedTo ||
+      next.category !== p.category
+    ) {
+      await store.upsertPlayer(next);
+      demoted += 1;
+    }
+  }
+  return demoted;
+}
+
 async function syncBoardCommitsToPlayers(commits) {
+  const { isVerifiedHubCommit } = require('./recruiting-verified-commits');
   let synced = 0;
   for (const p of commits || []) {
+    if (!isVerifiedHubCommit(p)) continue;
     const existing = await findExistingPlayer(p);
     const slug = existing?.slug || store.slugify(p.name);
     await store.upsertPlayer({
@@ -785,6 +805,12 @@ async function runOn3Ingest(options = {}) {
     }
   } catch (e) {
     result.errors.push({ type: 'visit_offer_sync', error: e.message });
+  }
+
+  try {
+    result.demotedUnverifiedCommits = await demoteUnverifiedHubCommitsInStore();
+  } catch (e) {
+    result.errors.push({ type: 'demote_unverified_commits', error: e.message });
   }
 
   console.log('[on3-ingest] complete', {

@@ -85,25 +85,40 @@ function lessonToCatalogItem(lesson, conceptCategory) {
 }
 
 function buildFilmRoomCatalog() {
-  const lessons = engine.listValidatedLessons();
-  const lessonItems = lessons.map((lesson) => {
-    let conceptCategory = null;
-    try {
-      const ref = lesson.references?.conceptId;
-      if (ref) {
-        const concept = store.getConcept(ref);
-        conceptCategory = concept?.category || null;
+  let lessonItems = [];
+  let legacyItems = [];
+  let knowledgeError = null;
+
+  try {
+    const lessons = engine.listValidatedLessons();
+    lessonItems = lessons.map((lesson) => {
+      let conceptCategory = null;
+      try {
+        const ref = lesson.references?.conceptId;
+        if (ref) {
+          const concept = store.getConcept(ref);
+          conceptCategory = concept?.category || null;
+        }
+      } catch (e) {
+        conceptCategory = null;
       }
-    } catch (e) {
-      conceptCategory = null;
-    }
-    return lessonToCatalogItem(lesson, conceptCategory);
-  });
-  const legacyItems = legacy.loadLegacyVideoCatalog().map((item) => {
-    item.schemeSide = item.category === legacy.LEGACY_CATEGORIES.PRESS ? null : item.schemeSide;
-    item.filmHub = inferFilmHub(item);
-    return item;
-  });
+      return lessonToCatalogItem(lesson, conceptCategory);
+    });
+  } catch (err) {
+    knowledgeError = err.message || String(err);
+  }
+
+  try {
+    legacyItems = legacy.loadLegacyVideoCatalog().map((item) => {
+      item.schemeSide = item.category === legacy.LEGACY_CATEGORIES.PRESS ? null : item.schemeSide;
+      item.filmHub = inferFilmHub(item);
+      return item;
+    });
+  } catch (err) {
+    if (!knowledgeError) knowledgeError = err.message || String(err);
+    legacyItems = [];
+  }
+
   const items = [...lessonItems, ...legacyItems].sort(
     (a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0)
   );
@@ -112,6 +127,22 @@ function buildFilmRoomCatalog() {
   FILM_HUBS.forEach((hub) => {
     byCategory[hub] = items.filter((i) => i.filmHub === hub).length;
   });
+
+  let manifestUpdatedAt = null;
+  try {
+    manifestUpdatedAt = store.loadKnowledge().manifest.updatedAt;
+  } catch {
+    manifestUpdatedAt = new Date().toISOString();
+  }
+
+  let totalLessons = 0;
+  let skippedLessons = 0;
+  try {
+    totalLessons = store.listLessons().length;
+    skippedLessons = totalLessons - lessonItems.length;
+  } catch {
+    skippedLessons = 0;
+  }
 
   return {
     ok: true,
@@ -125,9 +156,11 @@ function buildFilmRoomCatalog() {
       knowledgeLessons: lessonItems.length,
       legacyVideos: legacyItems.length,
       validated: lessonItems.length,
-      skipped: store.listLessons().length - lessonItems.length
+      skipped: skippedLessons
     },
-    updatedAt: store.loadKnowledge().manifest.updatedAt,
+    updatedAt: manifestUpdatedAt,
+    degraded: !!knowledgeError,
+    warning: knowledgeError,
     policy: {
       translatorOnly: true,
       mergedLegacyVideo: true,

@@ -41,7 +41,10 @@
     "sync:predictions": "npx tsx scripts/sync-predictions.js",
     "sync:database-url": "node scripts/sync-database-url.js --deploy",
     "transform:players": "npx tsx scripts/transform-recruiting-data.ts",
-    "test:autoposter": "node --test tests/autoposter/*.test.js"
+    "test:autoposter": "node --test tests/autoposter/*.test.js",
+    "clean:recruiting-hub": "node scripts/clean-recruiting-hub-data.js",
+    "validate:intel-store": "node scripts/validate-intel-store.js",
+    "test:recruiting": "node --test tests/recruiting/*.test.js"
   },
   "engines": {
     "node": ">=18"

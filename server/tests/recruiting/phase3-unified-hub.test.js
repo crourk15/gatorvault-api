@@ -83,19 +83,26 @@ describe('Phase 3 unified hub data', () => {
     }
   });
 
-  it('buildBattlesListRows never emits ufPercent dash padding', () => {
+  it('buildBattlesListRows skips rows without real intel notes', () => {
     const rows = buildBattlesListRows([
       enrichHubPlayer(
         { slug: 'low-uf', name: 'Low UF', classYear: 2027, ufProbability: 10 },
         { intelRows: [], visitLogs: [], offerLogs: [] }
       ),
       enrichHubPlayer(
-        { slug: 'battle-target', name: 'Battle Target', classYear: 2027, ufProbability: 48 },
+        {
+          slug: 'battle-target',
+          name: 'Battle Target',
+          classYear: 2027,
+          ufProbability: 48,
+          skinny: '4★ WR · official visit scheduled',
+        },
         { intelRows: [], visitLogs: [], offerLogs: [] }
       ),
     ]);
     assert.equal(rows.length, 1);
     assert.equal(rows[0].ufPercent, '48%');
+    assert.match(rows[0].note, /official visit/i);
   });
 });
 
