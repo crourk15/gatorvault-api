@@ -395,7 +395,9 @@ function mountRecruitingHubRoutes(app) {
         return res.status(403).json({ ok: false, error: 'Forbidden' });
       }
       const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
-      const result = await refreshRecruitingHubCaches();
+      const geoBackfill =
+        req.query.geoBackfill === 'true' || req.query.geoBackfill === '1';
+      const result = await refreshRecruitingHubCaches({ geoBackfill });
       return res.json({ ok: true, meta: hubMeta(), ...result });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
