@@ -1,9 +1,9 @@
 /**
- * Recruiting Hub Intel Store — curated UF recruiting movement curation + pool.
- * Payload builders delegate to recruiting-hub-data.js (Phase 3).
+ * Recruiting Hub Intel Store — intel curation + thin delegates to recruiting-hub-data.
  */
 const store = require('./recruiting-store');
 const { enrichBoard } = require('./recruiting-board-enrich');
+const { STAFF_DIRECTORY } = require('./recruiting-staff-directory');
 
 const HUB_CLASS_YEARS = [2027, 2028, 2029];
 const VERIFIED_SOURCES = new Set(['on3', 'manual', 'rivals_pm', 'auto:beat-writer']);
@@ -30,7 +30,8 @@ const ALLOWED_INTEL_EVENTS = new Set([
   'commit_watch',
 ]);
 
-const BLOCKED_SUMMARY = /podcast|camp recap|gator tales|gnfp|breakdown show|listen now|spotify|apple podcasts|youtube\.com\/watch/i;
+const BLOCKED_SUMMARY =
+  /podcast|camp recap|gator tales|gnfp|breakdown show|listen now|spotify|apple podcasts|youtube\.com\/watch/i;
 
 function playerPos(player) {
   return player?.position || player?.pos || '—';
@@ -175,18 +176,18 @@ async function buildHubBattleBoard() {
   return hubData.buildHubBattleBoard();
 }
 
-async function buildHubFootprint(_year = null) {
-  void _year;
+async function buildHubFootprint(year = null) {
   const hubData = require('./recruiting-hub-data');
-  return hubData.buildHubFootprint();
+  return hubData.buildHubFootprint(year);
 }
 
 module.exports = {
   loadHubRecruitingPool,
-  buildHubMovementFeed,
-  buildHubBattleBoard,
-  buildHubFootprint,
   isCuratedHubIntel,
   VERIFIED_SOURCES,
   BLOCKED_SOURCE,
+  STAFF_ALLOWLIST: STAFF_DIRECTORY,
+  buildHubMovementFeed,
+  buildHubBattleBoard,
+  buildHubFootprint,
 };
