@@ -15,6 +15,7 @@ import type {
 } from '@/components/home/premium/command/home-command-utils';
 
 type Props = {
+  heroTickerItems: string[];
   gameDay: HomeGameDayView;
   recruitingMetrics: HomeRecruitingMetricsView;
   futureCastTargets: HomeFutureCastTargetView[];
@@ -22,8 +23,9 @@ type Props = {
   loading?: boolean;
 };
 
-/** Home command center — hero → gameday → strip → recruiting → FutureCast → beat writers. */
+/** WOW home command center — hero → gameday → strip → recruiting → FutureCast → beat writers. */
 export function HomeCommandCenter({
+  heroTickerItems,
   gameDay,
   recruitingMetrics,
   futureCastTargets,
@@ -31,8 +33,8 @@ export function HomeCommandCenter({
   loading,
 }: Props): React.ReactElement {
   return (
-    <div className="home-page__frame">
-      <HomeCommandHero />
+    <div className="home-wow-page__frame">
+      <HomeCommandHero tickerItems={heroTickerItems} />
       <HomeCommandGameDay game={gameDay} />
       <HomeCommandLiveStrip />
       <HomeCommandRecruitingSnapshot metrics={recruitingMetrics} loading={loading} />

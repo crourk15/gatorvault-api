@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import '@/lib/home.css';
+import '@/lib/home-wow.css';
 import {
   fetchHomeBundle,
   HOME_REFRESH,
@@ -17,6 +17,7 @@ import {
   buildBeatPosts,
   buildFutureCastTargets,
   buildGameDayView,
+  buildHeroTickerItems,
   buildRecruitingMetricsView,
 } from '@/components/home/premium/command/home-command-utils';
 
@@ -33,13 +34,12 @@ const EMPTY_BUNDLE: HomeBundle = {
   schedule: null,
 };
 
-/** Vault home — command center layout (hero → gameday → strip → recruiting → FC → beat). */
+/** Vault home — WOW command center (hero → gameday → strip → recruiting → FC → beat). */
 export function HomePremiumPage(): React.ReactElement {
   const [bundle, setBundle] = useState<HomeBundle>(EMPTY_BUNDLE);
   const [board, setBoard] = useState<RecruitingBoardResponse | null>(null);
   const [beatItems, setBeatItems] = useState<LivePanelProps['items']>([]);
   const [loading, setLoading] = useState(true);
-  const [countdownTick, setCountdownTick] = useState(0);
 
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) setLoading(true);
@@ -79,19 +79,12 @@ export function HomePremiumPage(): React.ReactElement {
     };
   }, [load]);
 
-  useEffect(() => {
-    const id = setInterval(() => setCountdownTick((n) => n + 1), 60_000);
-    return () => clearInterval(id);
-  }, []);
-
-  const gameDay = useMemo(() => {
-    void countdownTick;
-    return buildGameDayView();
-  }, [countdownTick]);
+  const heroTickerItems = useMemo(() => buildHeroTickerItems(bundle), [bundle]);
+  const gameDay = useMemo(() => buildGameDayView(), []);
 
   const recruitingMetrics = useMemo(
-    () => buildRecruitingMetricsView(bundle.recruiting, board),
-    [bundle.recruiting, board]
+    () => buildRecruitingMetricsView(bundle.recruiting, board, bundle.movement),
+    [bundle.recruiting, bundle.movement, board]
   );
 
   const futureCastTargets = useMemo(
@@ -102,8 +95,9 @@ export function HomePremiumPage(): React.ReactElement {
   const beatPosts = useMemo(() => buildBeatPosts(beatItems), [beatItems]);
 
   return (
-    <div className="home-page" data-testid="vault-home-premium">
+    <div className="home-wow-page" data-testid="vault-home-premium">
       <HomeCommandCenter
+        heroTickerItems={heroTickerItems}
         gameDay={gameDay}
         recruitingMetrics={recruitingMetrics}
         futureCastTargets={futureCastTargets}

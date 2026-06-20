@@ -1,16 +1,31 @@
-import type { RecruitingBoardResponse } from '@/lib/recruiting-board-api';
-import type { RecruitingSnapshot, HomeBundle } from '@/lib/vault-home-api';
+import type { HomeBundle } from '@/lib/vault-home-api';
+import type { RecruitingSnapshot } from '@/lib/vault-home-api';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
-import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
+import type { RecruitingBoardResponse, RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 import type { LivePanelProps } from '@/lib/gatornation-live-types';
+import { SCHEDULE_GAMES } from '@/lib/schedule-data';
 
-const NEXT_GAME_ISO = '2026-09-05T19:45:00-04:00';
+export const NEXT_GAME_KICKOFF_ISO = '2026-09-05T19:45:00-04:00';
+
+const NEXT_GAME = SCHEDULE_GAMES[0];
+const RIVAL_OPPONENT_IDS = new Set(['fsu', 'uga', 'auburn', 'miami']);
+
+export type MetricTrend = 'up' | 'down' | 'stable';
+
+export type HomeMetricBlock = {
+  label: string;
+  value: string;
+  trend: MetricTrend;
+  trendLabel: string;
+  sparkline: number[];
+};
 
 export type HomeGameDayView = {
   opponent: string;
-  opponentAbbr: string;
+  opponentShort: string;
   dateLabel: string;
-  countdownLabel: string;
+  kickoffIso: string;
+  isRival: boolean;
 };
 
 export type HomeRecruitingMetricsView = {
@@ -18,6 +33,8 @@ export type HomeRecruitingMetricsView = {
   blueChip: string;
   commits: string;
   avgRating: string;
+  updatedLabel: string;
+  blocks: HomeMetricBlock[];
 };
 
 export type HomeFutureCastTargetView = {
@@ -25,6 +42,9 @@ export type HomeFutureCastTargetView = {
   name: string;
   position: string;
   ufPercent: string;
+  ufPctNum: number;
+  tag: string;
+  movement: MetricTrend;
 };
 
 export type HomeBeatPostView = {
@@ -37,73 +57,176 @@ export type HomeBeatPostView = {
   badge?: string;
 };
 
-export function nextScheduleGame(): ScheduleGame {
-  return SCHEDULE_GAMES[0] ?? {
-    id: 'fau',
-    label: 'Sep 5 vs FAU',
-    opp: 'FAU Owls',
-    date: 'September 5, 2026 · 7:45 PM ET',
-    venue: 'Ben Hill Griffin Stadium',
-    ufPct: 94,
-    keys: [],
-    swing: [],
-    film: '',
-    pred: '',
-  };
+function trendFromDelta(delta: number): MetricTrend {
+  if (delta > 0) return 'up';
+  if (delta < 0) return 'down';
+  return 'stable';
 }
 
-export function formatKickoffCountdown(iso = NEXT_GAME_ISO): string {
-  const ms = new Date(iso).getTime() - Date.now();
-  if (ms <= 0) return 'Kickoff';
+function trendLabel(trend: MetricTrend): string {
+  if (trend === 'up') return '↑ Rising';
+  if (trend === 'down') return '↓ Falling';
+  return '→ Stable';
+}
 
-  const totalMin = Math.floor(ms / 60_000);
-  const days = Math.floor(totalMin / (60 * 24));
-  const hours = Math.floor((totalMin % (60 * 24)) / 60);
-  const minutes = totalMin % 60;
+function buildSparkline(base: number, trend: MetricTrend): number[] {
+  const points = 7;
+  const values: number[] = [];
+  for (let i = 0; i < points; i += 1) {
+    const progress = i / (points - 1);
+    const drift = trend === 'up' ? progress * 12 : trend === 'down' ? (1 - progress) * 12 : 0;
+    values.push(Math.max(0, Math.round(base - 6 + drift + (i % 2 === 0 ? 1 : 0))));
+  }
+  return values;
+}
 
-  const parts: string[] = [];
-  if (days > 0) parts.push(`${days} day${days === 1 ? '' : 's'}`);
-  if (hours > 0) parts.push(`${hours} hour${hours === 1 ? '' : 's'}`);
-  parts.push(`${minutes} minute${minutes === 1 ? '' : 's'}`);
-  return parts.join(' · ');
+function futureCastTag(pct: number): string {
+  if (pct >= 70) return 'Lean UF';
+  if (pct >= 34) return 'Battle';
+  return 'Lean Elsewhere';
+}
+
+function parseUfPct(player: RecruitingBoardPlayer): number {
+  const raw = player.ufProbability;
+  if (raw == null || !Number.isFinite(Number(raw))) return 0;
+  const num = Number(raw);
+  return Math.min(100, Math.max(0, Math.round(num <= 1 ? num * 100 : num)));
+}
+
+function boardPlayers(board: RecruitingBoardResponse | null): RecruitingBoardPlayer[] {
+  if (!board) return [];
+  if (board.players?.length) return board.players;
+  const fromTiers = board.tiers?.flatMap((tier) => tier.players) ?? [];
+  if (fromTiers.length) return fromTiers;
+  return [...(board.targets ?? []), ...(board.commits ?? [])];
+}
+
+function avgRating(players: RecruitingBoardPlayer[]): number | null {
+  const ratings = players
+    .map((p) => p.rating ?? p.displayRating ?? p.vaultGrade)
+    .filter((v): v is number => v != null && Number.isFinite(Number(v)));
+  if (!ratings.length) return null;
+  return ratings.reduce((sum, v) => sum + Number(v), 0) / ratings.length;
+}
+
+function blueChipPct(players: RecruitingBoardPlayer[]): number | null {
+  if (!players.length) return null;
+  const blue = players.filter((p) => (p.stars ?? 0) >= 4).length;
+  return Math.round((blue / players.length) * 100);
+}
+
+export function opponentInitials(opponent: string): string {
+  const parts = opponent.replace(/[^a-zA-Z\s]/g, '').trim().split(/\s+/);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  return opponent.slice(0, 3).toUpperCase();
+}
+
+export function avatarInitials(name: string): string {
+  return name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('');
 }
 
 export function buildGameDayView(): HomeGameDayView {
-  const game = nextScheduleGame();
-  const abbr = game.opp.split(' ')[0]?.slice(0, 3).toUpperCase() ?? 'OPP';
   return {
-    opponent: game.opp,
-    opponentAbbr: abbr,
-    dateLabel: game.date,
-    countdownLabel: formatKickoffCountdown(),
+    opponent: NEXT_GAME.opp,
+    opponentShort: opponentInitials(NEXT_GAME.opp),
+    dateLabel: NEXT_GAME.date,
+    kickoffIso: NEXT_GAME_KICKOFF_ISO,
+    isRival: RIVAL_OPPONENT_IDS.has(NEXT_GAME.id),
   };
 }
 
-function ufPctFromDelta(delta: number | null | undefined): number {
-  return Math.min(99, Math.max(20, 55 + (delta ?? 0) * 2));
+export function buildHeroTickerItems(bundle: HomeBundle | null): string[] {
+  const fromTicker = (bundle?.ticker?.items ?? [])
+    .map((item) => item.text?.trim())
+    .filter(Boolean)
+    .slice(0, 4);
+
+  const storyline = bundle?.ticker?.storyline?.trim();
+  const fallbacks = [
+    '2027 class trending nationally — UF in the mix',
+    'FutureCast leans UF for multiple blue-chip targets',
+    'Staff locked in for summer evals and camps',
+    'GatorNation Live — real-time pulse from the Swamp',
+  ];
+
+  const combined = [...fromTicker];
+  if (storyline) combined.push(storyline);
+  return [...combined, ...fallbacks].slice(0, 4);
 }
 
 export function buildRecruitingMetricsView(
   recruiting: RecruitingSnapshot | null,
-  board: RecruitingBoardResponse | null
+  board: RecruitingBoardResponse | null,
+  movement: StaffDashboardResponse | null
 ): HomeRecruitingMetricsView {
-  const commits = board?.commits ?? [];
-  const ratings = commits
-    .map((p) => p.displayRating ?? p.rating ?? p.vaultGrade)
-    .filter((v): v is number => v != null && Number.isFinite(v));
-  const avgRating =
-    ratings.length > 0
-      ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1)
-      : '—';
-  const blueChipCount = commits.filter((p) => (p.stars ?? 0) >= 4).length;
-  const blueChipPct =
-    commits.length > 0 ? `${Math.round((blueChipCount / commits.length) * 100)}%` : '—';
+  const players = boardPlayers(board);
+  const risers = movement?.topRisers?.length ?? 0;
+  const fallers = movement?.topFallers?.length ?? 0;
+  const classTrend = trendFromDelta(fallers - risers);
+  const commitTrend: MetricTrend = (recruiting?.commits ?? 0) > 0 ? 'up' : 'stable';
+  const ratingTrend: MetricTrend = risers >= 2 ? 'up' : risers === 0 && fallers > 0 ? 'down' : 'stable';
+
+  const rankNum = recruiting?.classRank ?? board?.rankings?.nationalRank ?? null;
+  const chipPct = blueChipPct(players);
+  const blueChipTrend: MetricTrend = chipPct != null && chipPct >= 70 ? 'up' : 'stable';
+  const avg = avgRating(players);
+
+  const classRank = rankNum != null ? `#${rankNum}` : '—';
+  const blueChip = chipPct != null ? `${chipPct}%` : '—';
+  const commits = recruiting?.commits != null ? String(recruiting.commits) : '—';
+  const avgRatingLabel = avg != null ? avg.toFixed(1) : '—';
+
+  const updatedLabel = movement?.lastUpdated
+    ? `Updated ${new Date(movement.lastUpdated).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+      })}`
+    : 'Updated recently';
 
   return {
-    classRank: recruiting?.classRank != null ? `#${recruiting.classRank}` : '—',
-    blueChip: blueChipPct,
-    commits: String(recruiting?.commits ?? commits.length ?? 0),
-    avgRating,
+    classRank,
+    blueChip,
+    commits,
+    avgRating: avgRatingLabel,
+    updatedLabel,
+    blocks: [
+      {
+        label: 'Class rank',
+        value: classRank,
+        trend: classTrend,
+        trendLabel: trendLabel(classTrend),
+        sparkline: buildSparkline(rankNum ?? 10, classTrend === 'up' ? 'down' : classTrend),
+      },
+      {
+        label: 'Blue chip %',
+        value: blueChip,
+        trend: blueChipTrend,
+        trendLabel: trendLabel(blueChipTrend),
+        sparkline: buildSparkline(chipPct ?? 60, blueChipTrend),
+      },
+      {
+        label: 'Commits',
+        value: commits,
+        trend: commitTrend,
+        trendLabel: trendLabel(commitTrend),
+        sparkline: buildSparkline(recruiting?.commits ?? 18, commitTrend),
+      },
+      {
+        label: 'Avg rating',
+        value: avgRatingLabel,
+        trend: ratingTrend,
+        trendLabel: trendLabel(ratingTrend),
+        sparkline: buildSparkline(Math.round((avg ?? 90) - 80), ratingTrend),
+      },
+    ],
   };
 }
 
@@ -111,62 +234,83 @@ export function buildFutureCastTargets(
   movement: StaffDashboardResponse | null,
   board: RecruitingBoardResponse | null
 ): HomeFutureCastTargetView[] {
-  const fromBoard = (board?.targets ?? [])
-    .slice(0, 3)
-    .map((p) => ({
-      id: p.slug,
-      name: p.name,
-      position: p.position ?? p.pos ?? '—',
-      ufPercent:
-        p.ufProbability != null
-          ? `${Math.round(p.ufProbability <= 1 ? p.ufProbability * 100 : p.ufProbability)}%`
-          : '—',
-    }));
-
-  if (fromBoard.length >= 3) return fromBoard;
-
-  const risers = [...(movement?.topRisers ?? [])]
-    .sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0))
-    .slice(0, 3)
-    .map((p) => ({
-      id: p.id,
+  const fromMovement = (movement?.fitLeaders ?? []).slice(0, 6).map((p, idx) => {
+    const ufPctNum = Math.min(100, Math.max(0, Math.round((p.ufFitScore ?? 0) * 100)));
+    const delta = p.delta7d ?? p.delta ?? 0;
+    return {
+      id: p.id || p.slug || String(idx),
       name: p.name,
       position: '—',
-      ufPercent: `${ufPctFromDelta(p.delta)}%`,
-    }));
+      ufPercent: `${ufPctNum}%`,
+      ufPctNum,
+      tag: futureCastTag(ufPctNum),
+      movement: trendFromDelta(delta),
+    };
+  });
 
-  return risers.length ? risers : fromBoard;
-}
+  if (fromMovement.length >= 3) return fromMovement.slice(0, 6);
 
-function formatBeatTime(ts?: string): string {
-  if (!ts) return '';
-  const d = new Date(ts);
-  if (Number.isNaN(d.getTime())) return ts;
-  return d
-    .toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
-    .toUpperCase();
+  const fromBoard = boardPlayers(board)
+    .filter((p) => parseUfPct(p) > 0)
+    .sort((a, b) => parseUfPct(b) - parseUfPct(a))
+    .slice(0, 6)
+    .map((p) => {
+      const ufPctNum = parseUfPct(p);
+      const dir = p.movementDirection ?? 'flat';
+      return {
+        id: p.slug || p.name,
+        name: p.name,
+        position: p.position ?? p.pos ?? '—',
+        ufPercent: `${ufPctNum}%`,
+        ufPctNum,
+        tag: futureCastTag(ufPctNum),
+        movement: dir === 'up' ? 'up' : dir === 'down' ? 'down' : 'stable',
+      } satisfies HomeFutureCastTargetView;
+    });
+
+  return fromBoard.length ? fromBoard : fromMovement;
 }
 
 export function buildBeatPosts(items: LivePanelProps['items']): HomeBeatPostView[] {
   return items.slice(0, 3).map((item, idx) => ({
-    id: `${item.writerName ?? item.source ?? 'beat'}_${idx}`,
-    writerName: item.writerName || item.handle || 'Beat Writer',
-    outlet: item.source || 'Beat',
+    id: String(idx),
+    writerName: item.writerName ?? item.handle ?? item.source ?? 'Beat Writer',
+    outlet: item.source ?? 'UF Beat',
     text: item.text,
-    timestamp: formatBeatTime(item.timestamp),
-    xUrl: item.url || '/gator-nation-live',
-    badge: item.source ? item.source.toUpperCase() : 'BEAT',
+    timestamp: item.timestamp ?? '',
+    xUrl: item.url ?? '#',
+    badge: 'Beat Writer',
   }));
 }
 
-export function opponentInitials(opp: string): string {
-  const parts = opp.split(/\s+/).filter(Boolean);
-  if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-  return opp.slice(0, 2).toUpperCase();
+export function computeKickoffProgress(kickoffIso: string): {
+  countdown: string;
+  progressPct: number;
+  daysLeft: number;
+} {
+  const kickoff = new Date(kickoffIso).getTime();
+  const now = Date.now();
+  const diff = kickoff - now;
+  const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+  const hours = Math.max(0, Math.floor((diff / (1000 * 60 * 60)) % 24));
+  const minutes = Math.max(0, Math.floor((diff / (1000 * 60)) % 60));
+  const seconds = Math.max(0, Math.floor((diff / 1000) % 60));
+
+  const countdown =
+    diff <= 0
+      ? 'Kickoff — Go Gators!'
+      : `${days} days · ${hours} hours · ${minutes} minutes · ${seconds}s`;
+
+  const startWindow = kickoff - 1000 * 60 * 60 * 24 * 90;
+  const totalSpan = kickoff - startWindow;
+  const clamped = Math.min(Math.max(now - startWindow, 0), totalSpan);
+  const progressPct = totalSpan > 0 ? (clamped / totalSpan) * 100 : 100;
+
+  return { countdown, progressPct, daysLeft: days };
 }
 
-export function avatarInitials(name: string): string {
-  const parts = name.split(/\s+/).filter(Boolean);
-  if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-  return name.slice(0, 2).toUpperCase();
+export function gameDayBadge(daysLeft: number, isRival: boolean): string | null {
+  if (isRival && daysLeft <= 14) return 'RIVALRY WEEK';
+  if (daysLeft <= 7) return 'GAME WEEK';
+  return null;
 }
