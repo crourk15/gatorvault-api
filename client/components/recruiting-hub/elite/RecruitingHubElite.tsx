@@ -8,6 +8,8 @@ import { ClassCards } from '@/components/recruiting-hub/elite/ClassCards';
 import { RecruitingClassOverview } from '@/components/recruiting-hub/elite/RecruitingClassOverview';
 import { TopTargetsHeatIndex } from '@/components/recruiting-hub/elite/TopTargetsHeatIndex';
 import { MovementIntelFeed } from '@/components/recruiting-hub/elite/MovementIntelFeed';
+import { BattleBoard } from '@/components/recruiting-hub/elite/BattleBoard';
+import { RecruitingFootprintMap } from '@/components/recruiting-hub/elite/footprint/RecruitingFootprintMap';
 import { RecruitingBattlesMovement } from '@/components/recruiting-hub/elite/RecruitingBattlesMovement';
 import { RecruitingPositionSnapshot } from '@/components/recruiting-hub/elite/RecruitingPositionSnapshot';
 
@@ -21,6 +23,8 @@ export function RecruitingHubElite(): React.ReactElement {
       <RecruitingClassOverview />
       <TopTargetsHeatIndex />
       <MovementIntelFeed />
+      <BattleBoard />
+      <RecruitingFootprintMap />
       <RecruitingBattlesMovement />
       <RecruitingPositionSnapshot />
     </div>

@@ -1198,3 +1198,324 @@
   border-color: #7c3aed;
   color: #5b21b6;
 }
+
+/* Battle Board */
+.rh-elite-chrome .rh-battle-board-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 900px) {
+  .rh-elite-chrome .rh-battle-board-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rh-elite-chrome .rh-battle-board-card__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.rh-elite-chrome .rh-battle-board-card__badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rh-elite-chrome .rh-badge--battle-easy {
+  background: #ecfdf5;
+  border-color: #16a34a;
+  color: #166534;
+}
+
+.rh-elite-chrome .rh-badge--battle-moderate {
+  background: #eff6ff;
+  border-color: #2563eb;
+  color: #1e40af;
+}
+
+.rh-elite-chrome .rh-badge--battle-hard {
+  background: #fff7ed;
+  border-color: var(--gator-orange);
+  color: var(--gator-blue);
+}
+
+.rh-elite-chrome .rh-badge--battle-flip {
+  background: #fef3c7;
+  border-color: #d97706;
+  color: #92400e;
+}
+
+.rh-elite-chrome .rh-badge--battle-longshot {
+  background: #fef2f2;
+  border-color: #dc2626;
+  color: #991b1b;
+}
+
+.rh-elite-chrome .rh-battle-board-card__uf {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.rh-elite-chrome .rh-battle-board-card__uf strong {
+  font-size: 20px;
+  color: var(--gator-blue);
+}
+
+.rh-elite-chrome .rh-battle-board-card__competitors {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.rh-elite-chrome .rh-battle-board-competitor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rh-elite-chrome .rh-battle-board-competitor__logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: var(--gator-blue);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.rh-elite-chrome .rh-battle-board-competitor__meta {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.rh-elite-chrome .rh-battle-board-competitor__school {
+  font-weight: 600;
+}
+
+.rh-elite-chrome .rh-battle-board-competitor__score {
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-battle-board-card__visit,
+.rh-elite-chrome .rh-battle-board-card__intel {
+  font-size: 12px;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-battle-board-card__intel {
+  margin-top: 6px;
+  line-height: 1.45;
+}
+
+.rh-elite-chrome .rh-battle-board-card__uf--blue strong {
+  color: #0021a5;
+}
+
+.rh-elite-chrome .rh-battle-board-card__uf--orange strong {
+  color: #f97316;
+}
+
+.rh-elite-chrome .rh-battle-board-card__uf--red strong {
+  color: #dc2626;
+}
+
+.rh-elite-chrome .rh-battle-board-card__uf--blue {
+  border-left: 3px solid #0021a5;
+  padding-left: 8px;
+}
+
+.rh-elite-chrome .rh-battle-board-card__uf--orange {
+  border-left: 3px solid #f97316;
+  padding-left: 8px;
+}
+
+.rh-elite-chrome .rh-battle-board-card__uf--red {
+  border-left: 3px solid #dc2626;
+  padding-left: 8px;
+}
+
+/* Recruiting Footprint Map */
+.rh-elite-chrome .rh-footprint-skeleton {
+  min-height: 420px;
+}
+
+.rh-elite-chrome .rh-footprint-map__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .rh-elite-chrome .rh-footprint-map__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rh-elite-chrome .rh-footprint-map__canvas-wrap {
+  background: #0f172a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.rh-elite-chrome .rh-footprint-map__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.rh-elite-chrome .rh-footprint-map__bg {
+  fill: #111827;
+}
+
+.rh-elite-chrome .rh-footprint-state-circle {
+  cursor: pointer;
+  transition: stroke-width 0.15s ease, fill-opacity 0.15s ease;
+}
+
+.rh-elite-chrome .rh-footprint-state-label {
+  fill: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.rh-elite-chrome .rh-footprint-momentum-label {
+  fill: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.rh-elite-chrome .rh-footprint-momentum-label--up {
+  fill: #22c55e;
+}
+
+.rh-elite-chrome .rh-footprint-momentum-label--down {
+  fill: #ef4444;
+}
+
+.rh-elite-chrome .rh-footprint-momentum-label--flat {
+  fill: #9ca3af;
+}
+
+.rh-elite-chrome .rh-footprint-map__sidebar {
+  font-size: 13px;
+}
+
+.rh-elite-chrome .rh-footprint-tooltip__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gator-blue);
+  margin-bottom: 10px;
+}
+
+.rh-elite-chrome .rh-footprint-tooltip__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+.rh-elite-chrome .rh-footprint-tooltip__stats dt {
+  font-size: 11px;
+  color: var(--muted-text);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.rh-elite-chrome .rh-footprint-tooltip__stats dd {
+  margin: 0;
+  font-weight: 700;
+  color: var(--card-text);
+}
+
+.rh-elite-chrome .rh-footprint-tooltip__players {
+  margin: 0 0 10px;
+  padding-left: 18px;
+  color: var(--card-text);
+  line-height: 1.45;
+}
+
+.rh-elite-chrome .rh-footprint-tooltip__staff {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-footprint-legend__title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gator-blue);
+}
+
+.rh-elite-chrome .rh-footprint-legend__list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rh-elite-chrome .rh-footprint-legend__list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--card-text);
+}
+
+.rh-elite-chrome .rh-footprint-legend__swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.rh-elite-chrome .rh-footprint-legend__swatch--blue {
+  background: #0021a5;
+}
+
+.rh-elite-chrome .rh-footprint-legend__swatch--orange {
+  background: #f97316;
+}
+
+.rh-elite-chrome .rh-footprint-legend__swatch--red {
+  background: #dc2626;
+}
+
+.rh-elite-chrome .rh-footprint-legend__swatch--purple {
+  background: #9333ea;
+}
+
+.rh-elite-chrome .rh-footprint-legend__hint {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: var(--muted-text);
+  line-height: 1.45;
+}
+
+.rh-elite-chrome .rh-footprint-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted-text);
+}

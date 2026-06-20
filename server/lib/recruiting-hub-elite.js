@@ -474,157 +474,19 @@ async function buildHubHeatIndex(year = 2027) {
   return scored.slice(0, 12);
 }
 
-function mapMovementEventType(raw) {
-  const et = String(raw || '').toLowerCase();
-  if (/visit/.test(et)) return 'visit';
-  if (et === 'offer' || /offer/.test(et)) return 'offer';
-  if (/rise|up|trend|momentum|flip/.test(et)) return 'up';
-  if (/fall|down|cool|slip/.test(et)) return 'down';
-  return 'intel';
+async function buildHubMovementFeed(_year = 2027) {
+  const { buildHubMovementFeed: buildCuratedFeed } = require('./recruiting-hub-intel-store');
+  return buildCuratedFeed();
 }
 
-function feedItemFromIntel(row, playerMeta) {
-  const slug = String(row.playerSlug || row.player_slug || playerMeta?.slug || '').trim();
-  const name =
-    String(row.playerName || row.player_name || playerMeta?.name || slug || 'Target').trim();
-  const ts = row.reportedAt || row.timestamp || row.createdAt || new Date().toISOString();
-  const event = mapMovementEventType(row.eventType || row.type || row.detail);
-  const summary =
-    String(row.text || row.detail || row.headline || 'Insider movement tracked on the board.').trim();
-
-  return {
-    id: String(row.id || row.fingerprint || `${slug}-${ts}`),
-    timestamp: ts,
-    name,
-    position: playerMeta?.position || row.position || '—',
-    event,
-    summary,
-    profileUrl: profileUrl({ slug, name }),
-  };
+async function buildHubBattleBoard(_year = 2027) {
+  const { buildHubBattleBoard: buildBoard } = require('./recruiting-hub-intel-store');
+  return buildBoard();
 }
 
-async function buildHubMovementFeed(year = 2027) {
-  const enriched = await loadEnrichedBoard(year);
-  const bySlug = new Map();
-  for (const p of [...(enriched.targets || []), ...(enriched.commits || [])]) {
-    if (p.slug) bySlug.set(String(p.slug).toLowerCase(), p);
-  }
-
-  const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
-  const items = [];
-
-  try {
-    const { buildRecruitingMovementIntelPayload } = require('../api/recruiting/movement-intel.ts');
-    const payload = await buildRecruitingMovementIntelPayload();
-    for (const alert of payload.alerts || []) {
-      const ts = alert.timestamp || new Date().toISOString();
-      if (new Date(ts).getTime() < cutoff) continue;
-      const event =
-        alert.type === 'VISIT'
-          ? 'visit'
-          : alert.type === 'OFFER'
-            ? 'offer'
-            : alert.type === 'PREDICTION_SHIFT'
-              ? 'up'
-              : 'intel';
-      items.push({
-        id: alert.id,
-        timestamp: ts,
-        name: alert.player,
-        position: '—',
-        event,
-        summary: alert.detail,
-        profileUrl: '/vault/recruiting',
-      });
-    }
-
-    for (const bucket of [payload.risers, payload.fallers, payload.volatile]) {
-      for (const row of bucket || []) {
-        const slug = String(row.slug || '').toLowerCase();
-        const meta = bySlug.get(slug);
-        const ts = row.lastUpdate || new Date().toISOString();
-        if (new Date(ts).getTime() < cutoff) continue;
-        items.push({
-          id: row.id || slug,
-          timestamp: ts,
-          name: row.name,
-          position: row.position || playerPos(meta || {}),
-          event:
-            row.movementType === 'FALL' ? 'down' : row.movementType === 'RISE' ? 'up' : 'intel',
-          summary: `${row.name} — UF ${row.ufProb}% (${row.delta >= 0 ? '+' : ''}${row.delta} 7d)`,
-          profileUrl: profileUrl(meta || { slug: row.slug, name: row.name }),
-        });
-      }
-    }
-  } catch {
-    /* fallback below */
-  }
-
-  try {
-    const gm2 = require('./gm2');
-    const { intel } = gm2.getPublicIntel({ limit: 80, subsystem: 'recruiting-hub' });
-    for (const row of intel) {
-      const ts = row.reportedAt || row.timestamp || row.createdAt;
-      if (!ts || new Date(ts).getTime() < cutoff) continue;
-      const slug = String(row.playerSlug || '').toLowerCase();
-      const meta = bySlug.get(slug);
-      items.push(feedItemFromIntel(row, meta));
-    }
-  } catch {
-    /* optional */
-  }
-
-  for (const player of enriched.targets || []) {
-    if (player.movementDirection !== 'up' && player.movementDirection !== 'down') continue;
-    items.push({
-      id: `${player.slug}-movement`,
-      timestamp: new Date().toISOString(),
-      name: player.name,
-      position: playerPos(player),
-      event: player.movementDirection === 'up' ? 'up' : 'down',
-      summary:
-        player.notePreview ??
-        player.skinny ??
-        (player.movementDirection === 'up'
-          ? 'Momentum building on the board.'
-          : 'Cooling on the recruiting trail.'),
-      profileUrl: profileUrl(player),
-    });
-  }
-
-  const seen = new Set();
-  const deduped = [];
-  for (const item of items.sort(
-    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-  )) {
-    const key = `${item.id}-${item.summary.slice(0, 40)}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    deduped.push(item);
-    if (deduped.length >= 25) break;
-  }
-
-  if (deduped.length < 5) {
-    try {
-      const heat = await buildHeatCheck();
-      for (const row of heat.rising || []) {
-        if (deduped.length >= 12) break;
-        deduped.push({
-          id: `heat-${row.playerSlug || row.playerName}`,
-          timestamp: row.updatedAt || new Date().toISOString(),
-          name: row.playerName,
-          position: row.position || '—',
-          event: 'up',
-          summary: row.headline ?? row.triggerLabel ?? 'Momentum building on the board.',
-          profileUrl: profileUrl({ slug: row.playerSlug, name: row.playerName }),
-        });
-      }
-    } catch {
-      /* optional */
-    }
-  }
-
-  return deduped.slice(0, 25);
+async function buildHubFootprint(_year = 2027) {
+  const { buildHubFootprint: buildFootprint } = require('./recruiting-hub-intel-store');
+  return buildFootprint();
 }
 
 module.exports = {
@@ -636,4 +498,6 @@ module.exports = {
   buildHubPositions,
   buildHubHeatIndex,
   buildHubMovementFeed,
+  buildHubBattleBoard,
+  buildHubFootprint,
 };

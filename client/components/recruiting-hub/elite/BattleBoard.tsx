@@ -1,0 +1,100 @@
+'use client';
+
+import React, { useCallback } from 'react';
+import {
+  fetchRecruitingHubBattleBoard,
+  type RhHubBattleBoardItem,
+} from '@/lib/recruiting-hub-elite-api';
+import { getBattleColor } from '@/lib/recruiting-hub-scoring';
+import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
+
+const DIFFICULTY_LABELS: Record<RhHubBattleBoardItem['battleDifficulty'], string> = {
+  easy: 'Easy',
+  moderate: 'Moderate',
+  hard: 'Hard',
+  flip: 'Flip Watch',
+  longshot: 'Longshot',
+};
+
+function trendSymbol(trend: RhHubBattleBoardItem['trend']): string {
+  if (trend === 'up') return '▲';
+  if (trend === 'down') return '▼';
+  return '—';
+}
+
+function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactElement {
+  const ufColor = battle.battleColor ?? getBattleColor(battle.ufScore);
+  return (
+    <article className="rh-card rh-battle-board-card" data-testid={`rh-battle-board-${battle.id}`}>
+      <div className="rh-battle-board-card__head">
+        <div>
+          <a href={`/vault/recruiting/player/${encodeURIComponent(battle.id)}`} className="rh-player-name">
+            {battle.name}
+          </a>
+          <div className="rh-player-pos">
+            {battle.position} · {battle.class} class
+          </div>
+        </div>
+        <div className="rh-battle-board-card__badges">
+          <span className={`rh-badge rh-badge--battle-${battle.battleDifficulty}`}>
+            {DIFFICULTY_LABELS[battle.battleDifficulty]}
+          </span>
+          <span className={`rh-movement rh-movement--${battle.trend}`}>{trendSymbol(battle.trend)}</span>
+        </div>
+      </div>
+
+      <div className={`rh-battle-board-card__uf rh-battle-board-card__uf--${ufColor}`}>
+        <span>UF battle score</span>
+        <strong>{battle.ufScore}</strong>
+      </div>
+
+      <div className="rh-battle-board-card__competitors">
+        {battle.competitors.map((c) => (
+          <div key={`${battle.id}-${c.school}`} className="rh-battle-board-competitor">
+            <span className="rh-battle-board-competitor__logo">{c.logo}</span>
+            <div className="rh-battle-board-competitor__meta">
+              <span className="rh-battle-board-competitor__school">{c.school}</span>
+              <span className="rh-battle-board-competitor__score">
+                {c.score} <span className={`rh-movement rh-movement--${c.trend}`}>{trendSymbol(c.trend)}</span>
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {battle.nextVisit ? <div className="rh-battle-board-card__visit">Next visit: {battle.nextVisit}</div> : null}
+      <div className="rh-battle-board-card__intel">{battle.intel}</div>
+    </article>
+  );
+}
+
+export function BattleBoard(): React.ReactElement {
+  const loadBoard = useCallback(() => fetchRecruitingHubBattleBoard(), []);
+  const { data, loading, error } = useRecruitingHubQuery<RhHubBattleBoardItem[]>(loadBoard);
+
+  return (
+    <>
+      <div className="rh-section-header">
+        <div className="rh-section-title">Battle Board</div>
+        <div className="rh-section-subtitle">UF&apos;s position in each priority recruiting battle.</div>
+      </div>
+      {loading ? (
+        <div className="rh-skeleton" data-testid="rh-elite-battle-board" aria-hidden="true" />
+      ) : !data ? (
+        <section className="rh-card" data-testid="rh-elite-battle-board">
+          <p className="rh-empty">{error ? 'Could not load battle board.' : 'Battle board updating — check back shortly.'}</p>
+        </section>
+      ) : !data.length ? (
+        <section className="rh-card" data-testid="rh-elite-battle-board">
+          <p className="rh-empty">Battle board updating — check back shortly.</p>
+        </section>
+      ) : (
+        <section className="rh-battle-board-grid" data-testid="rh-elite-battle-board">
+          {data.map((battle) => (
+            <BattleCard key={battle.id} battle={battle} />
+          ))}
+        </section>
+      )}
+    </>
+  );
+}

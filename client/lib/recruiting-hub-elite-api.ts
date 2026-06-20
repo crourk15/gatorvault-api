@@ -87,9 +87,81 @@ export type RhHubMovementFeedItem = {
   timestamp: string;
   name: string;
   position: string;
+  class: number;
   event: 'up' | 'down' | 'visit' | 'offer' | 'intel';
   summary: string;
   profileUrl: string;
+};
+
+export type RhHubBattleBoardItem = {
+  id: string;
+  name: string;
+  position: string;
+  class: number;
+  battleDifficulty: 'easy' | 'moderate' | 'hard' | 'flip' | 'longshot';
+  battleColor?: 'blue' | 'orange' | 'red';
+  trend: 'up' | 'down' | 'flat';
+  competitors: Array<{
+    school: string;
+    logo: string;
+    score: number;
+    trend: 'up' | 'down' | 'flat';
+  }>;
+  ufScore: number;
+  nextVisit: string | null;
+  intel: string;
+};
+
+export type RhHubFootprintPlayer = {
+  id: string;
+  name: string;
+  position: string;
+  class: number;
+  status: 'commit' | 'target';
+  ufScore: number;
+  competitorScore: number;
+  pinLat?: number | null;
+  pinLng?: number | null;
+};
+
+export type RhHubFootprintStaff = {
+  staffId: string;
+  name: string;
+  role: string;
+  assignedPlayers: number;
+  wins: number;
+  losses: number;
+};
+
+export type RhHubFootprintState = {
+  state: string;
+  targets: number;
+  commits: number;
+  offers: number;
+  visits: number;
+  ufScore: number;
+  pipelineScore: number;
+  momentum: 'up' | 'down' | 'flat';
+  topPlayers: RhHubFootprintPlayer[];
+  staffActivity: RhHubFootprintStaff[];
+};
+
+export type RhHubFootprintPin = {
+  id: string;
+  name: string;
+  state: string;
+  lat: number;
+  lng: number;
+  status: 'commit' | 'target';
+  ufScore: number;
+  pinType: 'commit' | 'target' | 'portal' | 'battle';
+};
+
+export type RhHubFootprintResponse = {
+  ok?: boolean;
+  meta?: Record<string, unknown>;
+  states: RhHubFootprintState[];
+  pins?: RhHubFootprintPin[];
 };
 
 const HUB_YEAR = 2027;
@@ -149,6 +221,17 @@ export async function fetchRecruitingHubMovementFeed(year = HUB_YEAR): Promise<R
     `/api/recruiting/hub/movement-feed?year=${year}`
   );
   return data.items ?? [];
+}
+
+export async function fetchRecruitingHubBattleBoard(year = HUB_YEAR): Promise<RhHubBattleBoardItem[]> {
+  const data = await apiFetch<{ ok?: boolean; items?: RhHubBattleBoardItem[] }>(
+    `/api/recruiting/hub/battle-board?year=${year}`
+  );
+  return data.items ?? [];
+}
+
+export async function fetchRecruitingHubFootprint(year = HUB_YEAR): Promise<RhHubFootprintResponse> {
+  return apiFetch<RhHubFootprintResponse>(`/api/recruiting/hub/footprint?year=${year}`);
 }
 
 export const RECRUITING_HUB_ELITE_YEAR = HUB_YEAR;

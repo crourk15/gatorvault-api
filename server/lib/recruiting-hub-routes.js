@@ -269,6 +269,8 @@ function mountRecruitingHubRoutes(app) {
     buildHubPositions,
     buildHubHeatIndex,
     buildHubMovementFeed,
+    buildHubBattleBoard,
+    buildHubFootprint,
   } = require('./recruiting-hub-elite');
 
   function parseHubYear(req) {
@@ -358,6 +360,28 @@ function mountRecruitingHubRoutes(app) {
       const cacheKey = `hub:elite:movement-feed:${year}`;
       const { value } = await hubCache.wrap(cacheKey, () => buildHubMovementFeed(year));
       return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/hub/battle-board', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `hub:elite:battle-board:${year}`;
+      const { value } = await hubCache.wrap(cacheKey, () => buildHubBattleBoard(year));
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/hub/footprint', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `hub:elite:footprint:${year}`;
+      const { value } = await hubCache.wrap(cacheKey, () => buildHubFootprint(year));
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), ...value });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
