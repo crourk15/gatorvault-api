@@ -1,6 +1,5 @@
 /**
- * Recruiting Hub Elite Chrome — WOW parity (white cards, blue text, orange chrome)
- * Scoped under .rh-elite-chrome to avoid clashing with legacy RH modules.
+ * WOW Recruiting Hub Elite — shared chrome (scoped under .rh-elite-chrome)
  */
 
 .rh-elite-chrome {
@@ -47,12 +46,27 @@
 
 /* Card base */
 .rh-elite-chrome .rh-card {
+  position: relative;
   background: var(--card-bg);
   color: var(--card-text);
   border-radius: 10px;
   box-shadow: var(--card-shadow);
   padding: 20px 22px;
   border-top: 4px solid var(--gator-orange);
+  overflow: hidden;
+}
+
+.rh-elite-chrome .rh-card-watermark {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 3rem;
+  font-weight: 800;
+  opacity: 0.05;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Badges */
@@ -91,40 +105,129 @@
   color: var(--muted-text);
 }
 
-/* Hero strip */
+/* Hero — Recruiting War Room */
 .rh-elite-chrome .rh-hero-strip {
-  background: #111827;
-  border-radius: 10px;
-  padding: 16px 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0021a5, #1d4ed8);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  color: #ffffff;
 }
 
-.rh-elite-chrome .rh-hero-main {
+.rh-elite-chrome .rh-hero-sweep {
+  position: absolute;
+  top: -40%;
+  left: -20%;
+  width: 160%;
+  height: 160%;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent);
+  transform: translateX(-40%);
+  animation: rh-hero-sweep 12s linear infinite;
+  pointer-events: none;
+}
+
+.rh-elite-chrome .rh-hero-watermark {
+  position: absolute;
+  right: 20px;
+  bottom: 14px;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 800;
+  opacity: 0.08;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+}
+
+.rh-elite-chrome .rh-hero-top {
+  position: relative;
+  z-index: 1;
   display: flex;
-  flex-direction: column;
-  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .rh-elite-chrome .rh-hero-title {
   margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-  color: #ffffff;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .rh-elite-chrome .rh-hero-subtitle {
   margin: 4px 0 0;
   font-size: 14px;
-  color: #d1d5db;
+  opacity: 0.9;
 }
 
 .rh-elite-chrome .rh-hero-badge {
-  margin-left: 16px;
+  margin-left: auto;
   flex-shrink: 0;
+}
+
+.rh-elite-chrome .rh-hero-badge--pulse {
+  animation: rh-badge-pulse 6s ease-in-out infinite;
+}
+
+.rh-elite-chrome .rh-hero-ticker {
+  position: relative;
+  z-index: 1;
+  margin-top: 12px;
+  font-size: 13px;
+  opacity: 0.9;
+  white-space: nowrap;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.rh-elite-chrome .rh-hero-ticker-track {
+  display: inline-flex;
+  gap: 18px;
+  animation: rh-hero-ticker-scroll 32s linear infinite;
+}
+
+.rh-elite-chrome .rh-hero-ticker-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.rh-elite-chrome .rh-hero-ticker-sep {
+  color: var(--gator-orange);
+  margin: 0 4px;
+}
+
+@keyframes rh-hero-sweep {
+  0% {
+    transform: translateX(-40%);
+  }
+  100% {
+    transform: translateX(40%);
+  }
+}
+
+@keyframes rh-hero-ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes rh-badge-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: none;
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 6px rgba(250, 70, 22, 0.18);
+  }
 }
 
 /* Class overview */
@@ -147,16 +250,32 @@
   color: var(--muted-text);
 }
 
+.rh-elite-chrome .rh-metric-value-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .rh-elite-chrome .rh-metric-value {
   margin: 0;
   font-size: 16px;
   font-weight: 800;
 }
 
+.rh-elite-chrome .rh-metric-spark {
+  display: block;
+  opacity: 0.85;
+}
+
 .rh-elite-chrome .rh-metric-trend {
   margin: 4px 0 0;
   font-size: 11px;
   color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-metric-trend-arrow {
+  font-weight: 700;
+  color: var(--gator-orange);
 }
 
 /* Commit board */
@@ -179,12 +298,11 @@
 }
 
 .rh-elite-chrome .rh-commit-card {
-  position: relative;
   background: var(--card-bg);
   color: var(--card-text);
   border-radius: 10px;
   box-shadow: var(--card-shadow);
-  padding: 16px 18px;
+  padding: 18px 20px;
   border-top: 4px solid var(--gator-orange);
   transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
@@ -197,13 +315,12 @@
 .rh-elite-chrome .rh-commit-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 6px;
 }
 
 .rh-elite-chrome .rh-commit-name {
-  margin: 0;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--card-text);
   text-decoration: none;
@@ -214,14 +331,13 @@
 }
 
 .rh-elite-chrome .rh-commit-pos {
-  margin: 2px 0 0;
   font-size: 12px;
   color: var(--muted-text);
 }
 
 .rh-elite-chrome .rh-commit-body {
-  margin: 6px 0 8px;
   font-size: 13px;
+  margin: 6px 0 8px;
 }
 
 .rh-elite-chrome .rh-commit-footer {
@@ -232,7 +348,7 @@
   color: var(--muted-text);
 }
 
-/* Battles & movement */
+/* Battles */
 .rh-elite-chrome .rh-battle-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -250,26 +366,25 @@
   color: var(--card-text);
   border-radius: 10px;
   box-shadow: var(--card-shadow);
-  padding: 16px 18px;
+  padding: 18px 20px;
   border-top: 4px solid var(--gator-orange);
 }
 
 .rh-elite-chrome .rh-battle-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
 }
 
 .rh-elite-chrome .rh-battle-name {
-  margin: 0;
   font-size: 14px;
   font-weight: 700;
 }
 
 .rh-elite-chrome .rh-battle-body {
-  margin: 6px 0 8px;
   font-size: 13px;
+  margin: 6px 0 8px;
 }
 
 .rh-elite-chrome .rh-battle-footer {
@@ -309,13 +424,11 @@
 }
 
 .rh-elite-chrome .rh-position-label {
-  margin: 0 0 4px;
   font-size: 13px;
   font-weight: 700;
 }
 
 .rh-elite-chrome .rh-position-meta {
-  margin: 0 0 6px;
   font-size: 12px;
   color: var(--muted-text);
 }

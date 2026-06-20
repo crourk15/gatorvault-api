@@ -1,32 +1,15 @@
 'use client';
 
-import React from 'react';
-import type { RhBattleView } from '@/components/recruiting-hub/elite/rh-elite-utils';
+import React, { useCallback } from 'react';
+import { fetchRecruitingHubBattles, type RhHubBattle } from '@/lib/recruiting-hub-elite-api';
+import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
 
-type Props = {
-  battles: RhBattleView[];
-  loading?: boolean;
-};
+export function RecruitingBattlesMovement(): React.ReactElement | null {
+  const loadBattles = useCallback(() => fetchRecruitingHubBattles(), []);
+  const { data, loading } = useRecruitingHubQuery<RhHubBattle[]>(loadBattles);
 
-function BattleCard({ battle }: { battle: RhBattleView }): React.ReactElement {
-  return (
-    <article className="rh-battle-card">
-      <div className="rh-battle-header">
-        <div className="rh-battle-name">
-          {battle.name} · {battle.position}
-        </div>
-        <span className="rh-badge">{battle.tag}</span>
-      </div>
-      <div className="rh-battle-body">{battle.note}</div>
-      <div className="rh-battle-footer">
-        <span>UF % {battle.ufPercent}</span>
-        <span>{battle.movement}</span>
-      </div>
-    </article>
-  );
-}
+  if (!data && !loading) return null;
 
-export function RecruitingBattlesMovement({ battles, loading }: Props): React.ReactElement {
   return (
     <>
       <div className="rh-section-header">
@@ -35,14 +18,26 @@ export function RecruitingBattlesMovement({ battles, loading }: Props): React.Re
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-battles" aria-hidden="true" />
-      ) : battles.length === 0 ? (
+      ) : !data?.length ? (
         <section className="rh-card" data-testid="rh-elite-battles">
           <p className="rh-empty">Battle intel updating — check back shortly.</p>
         </section>
       ) : (
         <section className="rh-battle-grid" data-testid="rh-elite-battles">
-          {battles.map((battle) => (
-            <BattleCard key={battle.id} battle={battle} />
+          {data.map((b) => (
+            <article key={b.id} className="rh-battle-card">
+              <div className="rh-battle-header">
+                <div className="rh-battle-name">
+                  {b.name} · {b.position}
+                </div>
+                <span className="rh-badge">{b.tag}</span>
+              </div>
+              <div className="rh-battle-body">{b.note}</div>
+              <div className="rh-battle-footer">
+                <span>UF % {b.ufPercent}</span>
+                <span>{b.movement}</span>
+              </div>
+            </article>
           ))}
         </section>
       )}

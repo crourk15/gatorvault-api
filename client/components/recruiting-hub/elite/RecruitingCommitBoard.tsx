@@ -1,35 +1,15 @@
 'use client';
 
-import React from 'react';
-import type { RhCommitView } from '@/components/recruiting-hub/elite/rh-elite-utils';
+import React, { useCallback } from 'react';
+import { fetchRecruitingHubCommits, type RhHubCommit } from '@/lib/recruiting-hub-elite-api';
+import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
 
-type Props = {
-  commits: RhCommitView[];
-  loading?: boolean;
-};
+export function RecruitingCommitBoard(): React.ReactElement | null {
+  const loadCommits = useCallback(() => fetchRecruitingHubCommits(), []);
+  const { data, loading } = useRecruitingHubQuery<RhHubCommit[]>(loadCommits);
 
-function CommitCard({ commit }: { commit: RhCommitView }): React.ReactElement {
-  return (
-    <article className="rh-commit-card">
-      <div className="rh-commit-header">
-        <div>
-          <a href={commit.href} className="rh-commit-name">
-            {commit.name}
-          </a>
-          <div className="rh-commit-pos">{commit.position}</div>
-        </div>
-        {commit.statusBadge ? <span className="rh-badge">{commit.statusBadge}</span> : null}
-      </div>
-      <div className="rh-commit-body">{commit.rankNote}</div>
-      <div className="rh-commit-footer">
-        <span>Rating {commit.rating}</span>
-        <span>Committed {commit.commitDate}</span>
-      </div>
-    </article>
-  );
-}
+  if (!data && !loading) return null;
 
-export function RecruitingCommitBoard({ commits, loading }: Props): React.ReactElement {
   return (
     <>
       <div className="rh-section-header">
@@ -38,14 +18,29 @@ export function RecruitingCommitBoard({ commits, loading }: Props): React.ReactE
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-commit-board" aria-hidden="true" />
-      ) : commits.length === 0 ? (
+      ) : !data?.length ? (
         <section className="rh-card" data-testid="rh-elite-commit-board">
           <p className="rh-empty">No commits loaded for this class yet.</p>
         </section>
       ) : (
         <section className="rh-commit-grid" data-testid="rh-elite-commit-board">
-          {commits.map((commit) => (
-            <CommitCard key={commit.id} commit={commit} />
+          {data.map((c) => (
+            <article key={c.id} className="rh-commit-card">
+              <div className="rh-commit-header">
+                <div>
+                  <a href={c.profileUrl} className="rh-commit-name">
+                    {c.name}
+                  </a>
+                  <div className="rh-commit-pos">{c.position}</div>
+                </div>
+                {c.statusBadge ? <span className="rh-badge">{c.statusBadge}</span> : null}
+              </div>
+              <div className="rh-commit-body">{c.rankNote}</div>
+              <div className="rh-commit-footer">
+                <span>Rating {c.rating}</span>
+                <span>Committed {c.commitDate}</span>
+              </div>
+            </article>
           ))}
         </section>
       )}

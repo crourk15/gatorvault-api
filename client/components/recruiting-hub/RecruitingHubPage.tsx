@@ -30,15 +30,7 @@ export function RecruitingHubPage(): React.ReactElement {
         </div>
       ) : null}
 
-      {showContent ? (
-        <RecruitingHubCommandCenter
-          b27={data.b27}
-          movementSummary={data.movementSummary}
-          staffDashboard={data.staffDashboard}
-          rising={data.rising}
-          cooling={data.cooling}
-        />
-      ) : null}
+      {showContent ? <RecruitingHubCommandCenter /> : null}
 
       <RecruitingHubFooter />
     </div>

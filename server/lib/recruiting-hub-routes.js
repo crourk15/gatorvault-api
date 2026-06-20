@@ -259,6 +259,74 @@ function mountRecruitingHubRoutes(app) {
       return res.status(500).json({ ok: false, error: err.message });
     }
   });
+
+  const {
+    buildHubTicker,
+    buildHubClassOverview,
+    buildHubCommits,
+    buildHubBattles,
+    buildHubPositions,
+  } = require('./recruiting-hub-elite');
+
+  function parseHubYear(req) {
+    const year = parseInt(String(req.query.year || '2027'), 10);
+    return Number.isFinite(year) ? year : 2027;
+  }
+
+  app.get('/api/recruiting/hub/ticker', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `hub:elite:ticker:${year}`;
+      const { value } = await hubCache.wrap(cacheKey, () => buildHubTicker(year));
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/hub/class-overview', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `hub:elite:class-overview:${year}`;
+      const { value } = await hubCache.wrap(cacheKey, () => buildHubClassOverview(year));
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), ...value });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/hub/commits', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `hub:elite:commits:${year}`;
+      const { value } = await hubCache.wrap(cacheKey, () => buildHubCommits(year));
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/hub/battles', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `hub:elite:battles:${year}`;
+      const { value } = await hubCache.wrap(cacheKey, () => buildHubBattles(year));
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/hub/positions', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `hub:elite:positions:${year}`;
+      const { value } = await hubCache.wrap(cacheKey, () => buildHubPositions(year));
+      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 }
 
 module.exports = { mountRecruitingHubRoutes, buildClassPayload, mapPlayerToHub, clearHubCache, buildHighPriorityIntel };

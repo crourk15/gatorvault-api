@@ -17,7 +17,6 @@ import '@/lib/vault-shell.css';
 import '@/lib/gv-ui-cleanup.css';
 import '@/styles/hub-unified-theme.css';
 import '@/lib/recruiting-hub-elite.css';
-import '@/lib/recruiting-hub.css';
 import '@/lib/recruiting-hub-command-center.css';
 import '@/lib/futurecast-lab-command-center.css';
 import '@/lib/futurecast-premium.css';
