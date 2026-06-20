@@ -13,6 +13,8 @@ const liveStore = require('./live-store');
 const { invalidateRecruitingIntelCaches } = require('./recruiting-intel-cache');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { slugify } = require('./slug');
+const { enrichIntelCompetitors } = require('./recruiting-competitor-extract');
+const { recordBeatDigDeeper } = require('./recruiting-dig-deeper-ingest');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'beat-writer-ingest-snapshot.json');
@@ -1071,7 +1073,7 @@ async function processBeatVisitIntelRow(row, snapshot) {
   };
   const player = await store.upsertPlayer(playerPatch);
 
-  const intelResult = await intelStore.addIntel({
+  const enrichedIntel = enrichIntelCompetitors({
     playerId: String(row.on3Id || player.on3Id || player.slug),
     playerSlug: player.slug,
     playerName: player.name,
@@ -1099,10 +1101,14 @@ async function processBeatVisitIntelRow(row, snapshot) {
     identityConfirmationMode: enrichment.confirmation?.mode || enrichment.identityPatch?.identityResolutionMode
   });
 
+  const intelResult = await intelStore.addIntel(enrichedIntel);
+
   if (!intelResult.created && intelResult.duplicate) {
     snapshot.fingerprints[row.fingerprint] = row.timestamp;
     return { skipped: true, reason: 'intel_exists' };
   }
+
+  await recordBeatDigDeeper(row, player, enrichedIntel, 'auto:beat-writer');
 
   if (intelResult.item?.id && enrichment.mergedSnapshot) {
     await identityLookup.persistIdentityToIntel(

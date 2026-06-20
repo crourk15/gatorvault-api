@@ -56,6 +56,12 @@ function FootprintTooltip({ state }: { state: RhHubFootprintState }): React.Reac
             <dd>{state.ufScore}</dd>
           </div>
         ) : null}
+        {state.competitorPressure != null && state.competitorPressure > 0 ? (
+          <div>
+            <dt>Competitor pressure</dt>
+            <dd>{state.competitorPressure} schools</dd>
+          </div>
+        ) : null}
       </dl>
       {state.topPlayers.length > 0 ? (
         <ul className="rh-footprint-tooltip__players">
@@ -69,9 +75,10 @@ function FootprintTooltip({ state }: { state: RhHubFootprintState }): React.Reac
       ) : null}
       {state.staffActivity.length > 0 ? (
         <div className="rh-footprint-tooltip__staff">
-          {state.staffActivity.slice(0, 2).map((s) => (
+          {state.staffActivity.slice(0, 3).map((s) => (
             <span key={s.staffId}>
-              {s.name}: {s.assignedPlayers} assigned
+              {s.name} ({s.role}): {s.assignedPlayers} assigned
+              {s.wins + s.losses > 0 ? ` · ${s.wins}W/${s.losses}L` : ''}
             </span>
           ))}
         </div>

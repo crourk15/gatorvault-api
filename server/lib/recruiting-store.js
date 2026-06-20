@@ -4,6 +4,7 @@ const { slugify } = require('./slug');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { commitFingerprint, intelFingerprint } = require('./commit-fingerprint');
 const { isVisitEventType } = require('./gv-classification');
+const { normalizePlayerGeo } = require('./recruiting-geo-normalize');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const PLAYERS_PATH = path.join(DATA_DIR, 'players.json');
@@ -150,8 +151,17 @@ function normalizePlayer(raw) {
     headliner: !!(raw.headliner ?? raw.is_headliner ?? raw.isUFtarget),
     ufProbability: raw.ufProbability != null ? Number(raw.ufProbability) : raw.uf_probability != null ? Number(raw.uf_probability) : null,
     fitScore: raw.fitScore != null ? Number(raw.fitScore) : raw.fit_score != null ? Number(raw.fit_score) : null,
+    staff_lead_id: raw.staff_lead_id || raw.staffLeadId || null,
+    secondary_recruiter_id: raw.secondary_recruiter_id || raw.secondaryRecruiterId || null,
+    hometownCity: raw.hometownCity || raw.hometown_city || null,
+    hometownState: raw.hometownState || raw.hometown_state || raw.state || null,
+    stateFips: raw.stateFips || raw.state_fips || null,
+    pinLat: raw.pinLat != null ? Number(raw.pinLat) : raw.lat != null ? Number(raw.lat) : null,
+    pinLng: raw.pinLng != null ? Number(raw.pinLng) : raw.lng != null ? Number(raw.lng) : null,
     updatedAt: raw.updatedAt || raw.updated_at || nowIso()
   };
+  const geoPatch = normalizePlayerGeo({ ...raw, ...player });
+  Object.assign(player, geoPatch);
   if (player.ratingOverride != null && player.ratingOverride !== '') {
     player.displayRating = Number(player.ratingOverride);
     player.ratingIsOverride = true;
@@ -311,10 +321,43 @@ async function resolvePlayerKey(key) {
   return p ? normalizePlayer(p) : null;
 }
 
+function mergeVisitOfferArrays(existingArr, incomingArr, keyFn) {
+  const existing = Array.isArray(existingArr) ? existingArr : [];
+  const incoming = Array.isArray(incomingArr) ? incomingArr : [];
+  if (!incoming.length) return existing.length ? existing : undefined;
+  const map = new Map();
+  for (const item of existing) {
+    const key = keyFn(item);
+    if (key) map.set(key, item);
+  }
+  for (const item of incoming) {
+    const key = keyFn(item);
+    if (key) map.set(key, item);
+  }
+  return [...map.values()];
+}
+
+function visitArrayKey(item) {
+  if (typeof item === 'string') return item.trim().toLowerCase();
+  const school = String(item?.school || item?.visitSchool || item?.host || 'Florida').trim().toLowerCase();
+  const date = String(item?.date || item?.visitDate || item?.visitStart || '').slice(0, 10);
+  const type = String(item?.visitType || item?.type || item?.eventType || 'visit').trim().toLowerCase();
+  return `${school}|${date}|${type}`;
+}
+
+function offerArrayKey(item) {
+  if (typeof item === 'string') return item.trim().toLowerCase();
+  const school = String(item?.school || item?.schoolName || item?.name || '').trim().toLowerCase();
+  const date = String(item?.date || item?.offerDate || '').slice(0, 10);
+  const type = String(item?.offerType || item?.type || 'offer').trim().toLowerCase();
+  return `${school}|${date}|${type}`;
+}
+
 function preservePlayerFields(existing, incoming) {
   const identityValidator = require('./identity-record-validator');
+  const { mergeCompetitorArrays } = require('./recruiting-competitor-merge');
   const merged = { ...existing, ...incoming };
-  ['natlRank', 'posRank', 'stateRank', 'rating', 'ratingOverride', 'vaultGrade', 'vaultGradeUpdatedAt', 'stars', 'htWt', 'school', 'on3Id', 'commitDate', 'classYear'].forEach((field) => {
+  ['natlRank', 'posRank', 'stateRank', 'rating', 'ratingOverride', 'vaultGrade', 'vaultGradeUpdatedAt', 'stars', 'htWt', 'school', 'on3Id', 'commitDate', 'classYear', 'staff_lead_id', 'secondary_recruiter_id', 'hometownCity', 'hometownState', 'stateFips', 'pinLat', 'pinLng'].forEach((field) => {
     if (merged[field] == null && existing[field] != null) merged[field] = existing[field];
   });
   if (merged.school && !identityValidator.isValidSchoolField(merged.school)) {
@@ -325,6 +368,19 @@ function preservePlayerFields(existing, incoming) {
     merged.skinny = existing.skinny && !identityValidator.validatePlayerIdentityRecord({ slug: merged.slug, name: merged.name, pos: merged.pos, classYear: merged.classYear, school: merged.school, skinny: existing.skinny }).errors.includes('truncated_skinny') ? existing.skinny : null;
   }
   if (incoming.headliner == null && existing.headliner != null) merged.headliner = existing.headliner;
+
+  const mergedCompetitors = mergeCompetitorArrays(existing.competitors, incoming.competitors);
+  if (mergedCompetitors) merged.competitors = mergedCompetitors;
+  else if (Array.isArray(existing.competitors) && existing.competitors.length) merged.competitors = existing.competitors;
+
+  const mergedVisits = mergeVisitOfferArrays(existing.visits, incoming.visits, visitArrayKey);
+  if (mergedVisits) merged.visits = mergedVisits;
+  else if (Array.isArray(existing.visits) && existing.visits.length) merged.visits = existing.visits;
+
+  const mergedOffers = mergeVisitOfferArrays(existing.offers, incoming.offers, offerArrayKey);
+  if (mergedOffers) merged.offers = mergedOffers;
+  else if (Array.isArray(existing.offers) && existing.offers.length) merged.offers = existing.offers;
+
   merged.updatedAt = nowIso();
   return merged;
 }
@@ -875,6 +931,10 @@ module.exports = {
   isFloridaCommit,
   isCommittedAnywhere,
   normalizePlayer,
+  preservePlayerFields,
+  mergeVisitOfferArrays,
+  visitArrayKey,
+  offerArrayKey,
   getStoreInfo,
   getAllPlayers,
   getPlayerBySlug,

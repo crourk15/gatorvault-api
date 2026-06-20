@@ -30,7 +30,7 @@ services:
       - key: ON3_INGEST_INTERVAL_MS
         value: "120000"
       - key: ON3_CLASS_YEARS
-        value: "2026,2027"
+        value: "2026,2027,2028,2029"
       - key: ON3_ORG_SLUG
         value: "florida-gators"
       - key: ON3_SITE_BASE

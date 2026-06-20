@@ -46,7 +46,7 @@ function extractCompetingSchools(player) {
     }))
     .filter((p) => p.school)
     .sort((a, b) => b.percent - a.percent);
-  return preds.map((p, i) => ({ school: p.school, rank: i + 1 }));
+  return preds.map((p, i) => ({ school: p.school, rank: i + 1, percent: p.percent }));
 }
 
 function normalizePredictionRow(row, classYear, sourceLabel) {

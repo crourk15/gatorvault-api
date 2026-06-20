@@ -40,9 +40,12 @@ function HeatTargetCard({ target }: { target: RhHubHeatTarget }): React.ReactEle
         />
       </div>
       <div className="rh-heat-meta">
-        <span>UF %: {target.ufPercent}</span>
+        <span>UF %: {target.ufPercent != null ? target.ufPercent : '—'}</span>
         <span>
-          Battle: UF {target.battle.uf} / {target.battle.competitor} {target.battle.competitorName}
+          Battle:{' '}
+          {target.battle.uf != null || target.battle.competitor != null || target.battle.competitorName
+            ? `UF ${target.battle.uf ?? '—'} / ${target.battle.competitor ?? '—'} ${target.battle.competitorName ?? ''}`.trim()
+            : '—'}
         </span>
       </div>
       {target.nextVisit ? <div className="rh-heat-visit">Next visit: {target.nextVisit}</div> : null}

@@ -17,6 +17,7 @@ const { intelFingerprint } = require('./commit-fingerprint');
 const eligibility = require('./rivals-prediction-eligibility');
 const futurecastStore = require('./futurecast-store');
 const postgresSync = require('./postgres-futurecast-sync');
+const { mergeCompetitorsOnPlayer } = require('./recruiting-competitor-merge');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'rivals-pm-snapshot.json');
@@ -341,6 +342,29 @@ async function queueAutoposter(row, intelId) {
   }
 }
 
+function rivalsCompetitorEntries(row) {
+  const entries = [];
+  const updatedAt = row.timestamp || new Date().toISOString();
+  for (const comp of row.competitingSchools || []) {
+    const school = comp?.school || '';
+    if (!school || /florida|\bgators\b|\buf\b/i.test(school)) continue;
+    entries.push({
+      school,
+      score: comp.percent != null ? Math.round(Number(comp.percent)) : null,
+      source: 'rivals_pm',
+      updatedAt,
+      trend: 'flat',
+    });
+  }
+  return entries;
+}
+
+async function mergeRivalsCompetitors(row, player) {
+  const entries = rivalsCompetitorEntries(row);
+  if (!entries.length) return null;
+  return mergeCompetitorsOnPlayer(player.slug, entries);
+}
+
 async function processPrediction(row, snapshot, options = {}) {
   if (!row?.fingerprint || !row.playerName) return { skipped: true, reason: 'invalid' };
 
@@ -403,11 +427,14 @@ async function processPrediction(row, snapshot, options = {}) {
     rivalsLastPrediction: row.timestamp,
     rivalsAnalyst: row.analystName,
     rivalsConfidence: row.confidence,
+    ufProbability:
+      row.confidence != null ? Number(row.confidence) : existing?.ufProbability ?? null,
     rivalsArticleUrl: row.articleUrl,
     skinny: copy.skinny,
     profileNote: copy.profileNote
   };
   const player = await store.upsertPlayer(playerPatch);
+  await mergeRivalsCompetitors(row, player);
   writeFuturecastPrediction(player, row, predictionEvent);
   await syncRivalsPredictionToPostgres(player, row, predictionEvent);
 

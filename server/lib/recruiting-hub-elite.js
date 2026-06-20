@@ -3,7 +3,6 @@
  */
 const store = require('./recruiting-store');
 const { enrichBoard } = require('./recruiting-board-enrich');
-const { buildHeatCheck } = require('./heat-check-store');
 
 const POSITION_ORDER = ['QB', 'RB', 'WR', 'TE', 'OL', 'OT', 'OG', 'C', 'DL', 'EDGE', 'LB', 'CB', 'S', 'ATH', 'K', 'P'];
 
@@ -21,12 +20,6 @@ function parseUfPct(raw) {
   if (raw == null || !Number.isFinite(Number(raw))) return 0;
   const num = Number(raw);
   return Math.min(100, Math.max(0, Math.round(num <= 1 ? num * 100 : num)));
-}
-
-function futureCastTag(pct) {
-  if (pct >= 70) return 'Lean UF';
-  if (pct >= 34) return 'Battle';
-  return 'Lean Elsewhere';
 }
 
 function trendDisplay(trend) {
@@ -119,25 +112,14 @@ async function buildHubTicker(year = 2027) {
   if (rank) items.push(`${year} class trending nationally — UF at #${rank}`);
   if (chip != null) items.push(`Blue chip % at ${chip}% and climbing`);
   if (commits.length) items.push(`${commits.length} commits locked for ${year}`);
-  items.push('Battles heating up on the board — movement intel live');
 
-  try {
-    const heat = await buildHeatCheck();
-    for (const row of (heat.rising || []).slice(0, 2)) {
-      const label = row.headline || row.triggerLabel || `${row.playerName} trending up`;
-      items.push(label);
-    }
-  } catch {
-    /* optional heat feed */
+  const { buildHubMovementFeed } = require('./recruiting-hub-data');
+  const feed = await buildHubMovementFeed();
+  for (const row of feed.slice(0, 4 - items.length)) {
+    if (row.summary) items.push(row.summary);
   }
 
-  const fallbacks = [
-    'Staff locked in for summer evals and camps',
-    'FutureCast tracking multiple UF leaners',
-    'Portal watch active — movement on the board',
-  ];
-
-  return [...items, ...fallbacks].slice(0, 4);
+  return items.slice(0, 4);
 }
 
 async function buildHubClassOverview(year = 2027) {
@@ -274,54 +256,12 @@ async function buildHubClassOverviewAll() {
 }
 
 async function buildHubBattles(year = 2027) {
-  const enriched = await loadEnrichedBoard(year);
-  const targets = enriched.targets || [];
-  const battles = [];
-
-  for (const player of targets) {
-    const pct = parseUfPct(player.ufProbability);
-    if (pct < 34) continue;
-    battles.push({
-      id: player.slug || player.name,
-      name: player.name,
-      position: playerPos(player),
-      ufPercent: `${pct}%`,
-      tag: futureCastTag(pct),
-      note: player.notePreview ?? player.notes ?? player.skinny ?? 'Key battle on the board.',
-      movement:
-        player.movementDirection === 'up'
-          ? 'Trending up'
-          : player.movementDirection === 'down'
-            ? 'Trending down'
-            : pct >= 70
-              ? 'Stable'
-              : 'Stable',
-    });
-  }
-
-  battles.sort((a, b) => parseInt(b.ufPercent, 10) - parseInt(a.ufPercent, 10));
-
-  if (battles.length < 4) {
-    try {
-      const heat = await buildHeatCheck();
-      for (const row of heat.rising || []) {
-        if (battles.length >= 6) break;
-        battles.push({
-          id: row.playerSlug || row.playerName,
-          name: row.playerName,
-          position: '—',
-          ufPercent: '—',
-          tag: 'Battle',
-          note: row.headline ?? row.triggerLabel ?? 'Movement heating up.',
-          movement: 'Trending up',
-        });
-      }
-    } catch {
-      /* optional */
-    }
-  }
-
-  return battles.slice(0, 6);
+  const hubData = require('./recruiting-hub-data');
+  const dataset = await hubData.loadHubDataset({ classYears: [year] });
+  const players = [...dataset.players.values()].filter(
+    (p) => !p.isCommit && Number(p.classYear) === year
+  );
+  return hubData.buildBattlesListRows(players);
 }
 
 async function buildHubPositions(year = 2027) {
@@ -367,126 +307,29 @@ async function buildHubPositions(year = 2027) {
   }));
 }
 
-function movementArrow(player) {
-  const dir = player.movementDirection;
-  if (dir === 'up') return 'up';
-  if (dir === 'down') return 'down';
-  return 'flat';
-}
-
-function computeHeatScore(player) {
-  const uf = parseUfPct(player.ufProbability);
-  const fit = Number(player.fitScore);
-  let heat = Math.max(uf, Number.isFinite(fit) ? Math.round(fit) : 0);
-
-  if (player.tier === 'TOP') heat += 12;
-  else if (player.tier === 'HIGH') heat += 6;
-
-  const natl = player.natlRank ?? player.natl;
-  if (natl != null && Number(natl) <= 100) heat += 12;
-  else if (natl != null && Number(natl) <= 300) heat += 6;
-
-  if (player.movementDirection === 'up') heat += 14;
-  else if (player.movementDirection === 'down') heat -= 10;
-
-  if (player.headliner) heat += 8;
-
-  return Math.min(100, Math.max(0, Math.round(heat)));
-}
-
-function resolveBattle(player) {
-  const uf = parseUfPct(player.ufProbability);
-  const leader = player.leaderSchool ?? player.predictionLeader ?? player.topSchool ?? null;
-  const leaderName =
-    typeof leader === 'string'
-      ? leader
-      : leader?.name || leader?.school || 'Field';
-  const isUfLeader = /florida|gators|\buf\b/i.test(String(leaderName));
-  const competitor = isUfLeader
-    ? Math.max(100 - uf, 8)
-    : Math.min(Math.max(100 - uf, 20), 95);
-  return {
-    uf,
-    competitor,
-    competitorName: isUfLeader ? 'Field' : String(leaderName).slice(0, 24),
-  };
-}
-
-function formatNextVisit(player) {
-  if (!player.visitStart) return null;
-  const d = new Date(player.visitStart);
-  if (Number.isNaN(d.getTime())) return String(player.visitStart);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
-function shortInsiderNote(player) {
-  const note = player.notePreview ?? player.skinny ?? player.notes;
-  if (!note || !String(note).trim()) return null;
-  const text = String(note).trim();
-  return text.length > 120 ? `${text.slice(0, 117)}…` : text;
-}
 
 async function buildHubHeatIndex(year = 2027) {
-  const enriched = await loadEnrichedBoard(year);
-  const targets = (enriched.targets || []).filter(
-    (p) => p.tier === 'TOP' || p.tier === 'HIGH' || parseUfPct(p.ufProbability) >= 34
+  const hubData = require('./recruiting-hub-data');
+  const dataset = await hubData.loadHubDataset({ classYears: [year] });
+  const players = [...dataset.players.values()].filter(
+    (p) => !p.isCommit && Number(p.classYear) === year
   );
-
-  const scored = targets.map((player) => ({
-    id: player.slug || player.name,
-    name: player.name,
-    position: playerPos(player),
-    heat: computeHeatScore(player),
-    movement: movementArrow(player),
-    ufPercent: parseUfPct(player.ufProbability),
-    battle: resolveBattle(player),
-    nextVisit: formatNextVisit(player),
-    insiderNote: shortInsiderNote(player),
-    profileUrl: profileUrl(player),
-  }));
-
-  scored.sort((a, b) => b.heat - a.heat);
-
-  if (scored.length < 8) {
-    try {
-      const heat = await buildHeatCheck();
-      for (const row of heat.rising || []) {
-        if (scored.length >= 12) break;
-        if (scored.some((s) => s.id === row.playerSlug || s.name === row.playerName)) continue;
-        scored.push({
-          id: row.playerSlug || row.playerName,
-          name: row.playerName,
-          position: row.position || '—',
-          heat: Math.min(100, 55 + (row.score || 0)),
-          movement: 'up',
-          ufPercent: 0,
-          battle: { uf: 0, competitor: 50, competitorName: 'Field' },
-          nextVisit: null,
-          insiderNote: row.headline ?? row.triggerLabel ?? null,
-          profileUrl: profileUrl({ slug: row.playerSlug, name: row.playerName }),
-        });
-      }
-    } catch {
-      /* optional heat feed */
-    }
-  }
-
-  return scored.slice(0, 12);
+  return hubData.buildHeatIndexRows(players);
 }
 
 async function buildHubMovementFeed(_year = 2027) {
-  const { buildHubMovementFeed: buildCuratedFeed } = require('./recruiting-hub-intel-store');
-  return buildCuratedFeed();
+  const hubData = require('./recruiting-hub-data');
+  return hubData.buildHubMovementFeed();
 }
 
 async function buildHubBattleBoard(_year = 2027) {
-  const { buildHubBattleBoard: buildBoard } = require('./recruiting-hub-intel-store');
-  return buildBoard();
+  const hubData = require('./recruiting-hub-data');
+  return hubData.buildHubBattleBoard();
 }
 
-async function buildHubFootprint(_year = 2027) {
-  const { buildHubFootprint: buildFootprint } = require('./recruiting-hub-intel-store');
-  return buildFootprint();
+async function buildHubFootprint(year = 2027) {
+  const hubData = require('./recruiting-hub-data');
+  return hubData.buildHubFootprint(year);
 }
 
 module.exports = {

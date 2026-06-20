@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-30T00:00:00.000Z",
+  "assignments": {
+    "kamauri-whitfield": {
+      "staff_lead_id": "harris",
+      "secondary_recruiter_id": "chris-prescott"
+    },
+    "davin-davidson": {
+      "staff_lead_id": "chris-prescott"
+    },
+    "devoun-kendrick": {
+      "staff_lead_id": "drew-hughes",
+      "secondary_recruiter_id": "cody-collins"
+    },
+    "tramond-collins": {
+      "staff_lead_id": "harris"
+    },
+    "marquis-evans": {
+      "staff_lead_id": "drew-hughes"
+    },
+    "easton-royal": {
+      "staff_lead_id": "chris-prescott",
+      "secondary_recruiter_id": "harris"
+    },
+    "anthony-jennings": {
+      "staff_lead_id": "cody-collins"
+    },
+    "kamarion-johnson": {
+      "staff_lead_id": "harris"
+    },
+    "jalen-brewster": {
+      "staff_lead_id": "drew-hughes"
+    },
+    "andre-alexander": {
+      "staff_lead_id": "chris-prescott"
+    },
+    "braxton-rein": {
+      "staff_lead_id": "drew-hughes",
+      "secondary_recruiter_id": "nick-mcdonald"
+    },
+    "jordon-gorham": {
+      "staff_lead_id": "cody-collins"
+    },
+    "izayah-vickers": {
+      "staff_lead_id": "harris"
+    },
+    "cain-van-norden": {
+      "staff_lead_id": "chris-prescott"
+    },
+    "maxwell-hiller": {
+      "staff_lead_id": "drew-hughes"
+    }
+  }
+}

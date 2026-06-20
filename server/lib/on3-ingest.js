@@ -2,6 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const store = require('./recruiting-store');
 const on3 = require('./on3-client');
+const on3Recruit = require('./on3-recruit-client');
+const visitLogStore = require('./recruiting-visit-log-store');
+const offerLogStore = require('./recruiting-offer-log-store');
+const { mergeCompetitorsOnPlayer } = require('./recruiting-competitor-merge');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 const { clearHeatCheckCache } = require('./heat-check-store');
 const { commitFingerprint } = require('./commit-fingerprint');
@@ -343,6 +347,178 @@ async function fireRankingChange(classYear, rankings, prev) {
   return { fired: true, eventType: 'ranking_change', classYear, eventId: event.id };
 }
 
+function teamNameFromOn3(team) {
+  return team?.fullName || team?.name || team?.abbreviation || '';
+}
+
+function resolvePlayerSlugFromOn3(player, byOn3Id) {
+  const on3Id = String(player?.key || player?.recruitmentKey || player?.on3Id || '');
+  if (on3Id && byOn3Id.has(on3Id)) return byOn3Id.get(on3Id).slug;
+  const rawSlug = player?.slug || store.slugify(player?.fullName || player?.name || '');
+  return String(rawSlug).replace(/-\d+$/, '') || store.slugify(player?.fullName || player?.name || '');
+}
+
+function extractOn3ProfileVisits(profile) {
+  const visits = [];
+  const list = Array.isArray(profile.visits) ? profile.visits : profile.visits?.list || [];
+  for (const v of list) {
+    const school = teamNameFromOn3(v.organization || v.team || v.school);
+    if (!school) continue;
+    visits.push({
+      school,
+      visitType: v.official ? 'official_visit' : 'unofficial_visit',
+      date: v.date || v.visitDate || null,
+      source: 'on3',
+    });
+  }
+  return visits;
+}
+
+function extractOn3ProfileOffers(topTeams, classYear) {
+  const teams = on3Recruit.getYearTopTeams(topTeams, classYear);
+  const offers = [];
+  for (const t of teams) {
+    if (on3Recruit.isHighSchoolOrg(t)) continue;
+    const school = teamNameFromOn3(t.team);
+    if (!school || on3Recruit.isFloridaTeam(t)) continue;
+    const status = String(t.status || '');
+    if (!/offer/i.test(status)) continue;
+    offers.push({
+      school,
+      offerType: status || 'offer',
+      date: t.dateAdded || t.date || null,
+      source: 'on3',
+    });
+  }
+  return offers;
+}
+
+function extractOn3CompetitorEntries(topTeams, classYear) {
+  const updatedAt = new Date().toISOString();
+  return on3Recruit
+    .getYearTopTeams(topTeams, classYear)
+    .filter((t) => !on3Recruit.isHighSchoolOrg(t) && !on3Recruit.isFloridaTeam(t))
+    .sort((a, b) => (Number(b.percent) || 0) - (Number(a.percent) || 0))
+    .slice(0, 5)
+    .map((t) => ({
+      school: teamNameFromOn3(t.team),
+      score: t.percent != null ? Math.round(Number(t.percent) * 10) / 10 : null,
+      source: 'on3',
+      updatedAt,
+      trend: 'flat',
+    }))
+    .filter((e) => e.school);
+}
+
+async function syncOn3VisitOfferIntel(classYears, options = {}) {
+  const profileLimit =
+    options.profileLimit || parseInt(process.env.ON3_PROFILE_SYNC_LIMIT || '40', 10);
+  const results = { visitLogs: 0, offerLogs: 0, playersUpdated: 0, profilesFetched: 0, errors: [] };
+  const allPlayers = await store.getAllPlayers();
+  const byOn3Id = new Map(allPlayers.filter((p) => p.on3Id).map((p) => [String(p.on3Id), p]));
+
+  for (const year of classYears) {
+    try {
+      const teamVisits = await on3Recruit.fetchTeamVisits(year);
+      for (const v of teamVisits) {
+        const player = v.player || {};
+        const slug = resolvePlayerSlugFromOn3(player, byOn3Id);
+        if (!slug) continue;
+        const official = v.official === true || /official/i.test(String(v.visitStatus || ''));
+        const visitType = official ? 'official_visit' : 'unofficial_visit';
+        const reportedAt = new Date().toISOString();
+        const logResult = await visitLogStore.appendVisitLog({
+          playerSlug: slug,
+          playerId: player.key || player.recruitmentKey || null,
+          playerName: player.fullName || player.name,
+          school: 'Florida',
+          visitType,
+          date: v.visitDate || reportedAt,
+          source: 'on3',
+          reportedAt,
+        });
+        if (logResult.created) results.visitLogs += 1;
+
+        const existing = await store.getPlayerBySlug(slug);
+        const visitRecord = { school: 'Florida', visitType, date: v.visitDate || null, source: 'on3' };
+        await store.upsertPlayer({
+          slug,
+          name: player.fullName || player.name || existing?.name,
+          classYear: year,
+          on3Id: player.key || player.recruitmentKey || existing?.on3Id,
+          visits: store.mergeVisitOfferArrays(existing?.visits, [visitRecord], store.visitArrayKey) || [visitRecord],
+        });
+        results.playersUpdated += 1;
+      }
+    } catch (e) {
+      results.errors.push({ year, stage: 'teamVisits', error: e.message });
+    }
+  }
+
+  const targets = allPlayers
+    .filter((p) => classYears.includes(Number(p.classYear)))
+    .filter((p) => p.on3Slug || p.on3Id)
+    .slice(0, profileLimit);
+
+  await on3Recruit.mapPool(targets, 3, async (player) => {
+    try {
+      const recruitSlug =
+        player.on3Slug ||
+        `${store.slugify(player.name)}${player.on3Id ? `-${player.on3Id}` : ''}`;
+      const profile = await on3Recruit.fetchRecruitProfile(recruitSlug);
+      if (!profile || profile.error) {
+        results.errors.push({ slug: player.slug, stage: 'profile', error: profile?.error || 'empty' });
+        return;
+      }
+      results.profilesFetched += 1;
+      const classYear = player.classYear || profile.classYear;
+      const visitRecords = extractOn3ProfileVisits(profile);
+      const offerRecords = extractOn3ProfileOffers(profile.topTeams, classYear);
+      const competitorEntries = extractOn3CompetitorEntries(profile.topTeams, classYear);
+
+      for (const visit of visitRecords) {
+        const logResult = await visitLogStore.appendVisitLog({
+          playerSlug: player.slug,
+          playerId: player.on3Id,
+          playerName: player.name,
+          ...visit,
+          reportedAt: profile.fetchedAt,
+        });
+        if (logResult.created) results.visitLogs += 1;
+      }
+      for (const offer of offerRecords) {
+        const logResult = await offerLogStore.appendOfferLog({
+          playerSlug: player.slug,
+          playerId: player.on3Id,
+          ...offer,
+          reportedAt: profile.fetchedAt,
+        });
+        if (logResult.created) results.offerLogs += 1;
+      }
+
+      const existing = await store.getPlayerBySlug(player.slug);
+      const patch = { slug: player.slug };
+      if (visitRecords.length) {
+        patch.visits = store.mergeVisitOfferArrays(existing?.visits, visitRecords, store.visitArrayKey);
+      }
+      if (offerRecords.length) {
+        patch.offers = store.mergeVisitOfferArrays(existing?.offers, offerRecords, store.offerArrayKey);
+      }
+      if (Object.keys(patch).length > 1) {
+        await store.upsertPlayer(patch);
+        results.playersUpdated += 1;
+      }
+      if (competitorEntries.length) {
+        await mergeCompetitorsOnPlayer(player.slug, competitorEntries);
+      }
+    } catch (e) {
+      results.errors.push({ slug: player.slug, stage: 'profile', error: e.message });
+    }
+  });
+
+  return results;
+}
+
 function parseClassYears(input) {
   const raw = input || process.env.ON3_CLASS_YEARS || '2026,2027';
   return String(raw)
@@ -603,6 +779,14 @@ async function runOn3Ingest(options = {}) {
     urls: result.urls
   });
 
+  try {
+    if (process.env.ON3_VISIT_OFFER_SYNC !== 'false') {
+      result.visitOfferSync = await syncOn3VisitOfferIntel(classYears, options);
+    }
+  } catch (e) {
+    result.errors.push({ type: 'visit_offer_sync', error: e.message });
+  }
+
   console.log('[on3-ingest] complete', {
     fired: result.fired.length,
     skipped: result.skipped.length,
@@ -628,6 +812,7 @@ function getIngestStatus() {
 module.exports = {
   runOn3Ingest,
   syncPortalFromOn3,
+  syncOn3VisitOfferIntel,
   getIngestStatus,
   loadSnapshot,
   SNAPSHOT_PATH

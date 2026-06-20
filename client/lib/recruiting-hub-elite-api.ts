@@ -71,11 +71,11 @@ export type RhHubHeatTarget = {
   position: string;
   heat: number;
   movement: 'up' | 'down' | 'flat';
-  ufPercent: number;
+  ufPercent: number | null;
   battle: {
-    uf: number;
-    competitor: number;
-    competitorName: string;
+    uf: number | null;
+    competitor: number | null;
+    competitorName: string | null;
   };
   nextVisit: string | null;
   insiderNote?: string | null;
@@ -142,6 +142,7 @@ export type RhHubFootprintState = {
   ufScore: number | null;
   pipelineScore: number;
   momentum: 'up' | 'down' | 'flat';
+  competitorPressure?: number;
   topPlayers: RhHubFootprintPlayer[];
   staffActivity: RhHubFootprintStaff[];
 };

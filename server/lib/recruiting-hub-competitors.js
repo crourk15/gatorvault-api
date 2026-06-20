@@ -49,6 +49,7 @@ function parseLeaderName(field) {
 function extractRealCompetitors(player, intelRows = []) {
   const map = new Map();
   const slug = String(player.slug || '').toLowerCase();
+  const hasPlayerCompetitors = Array.isArray(player.competitors) && player.competitors.length > 0;
 
   for (const entry of player.competitors || []) {
     if (typeof entry === 'string') {
@@ -77,24 +78,26 @@ function extractRealCompetitors(player, intelRows = []) {
     }
   }
 
-  for (const row of intelRows) {
-    const rowSlug = String(row.playerSlug || row.player_slug || '').toLowerCase();
-    if (rowSlug !== slug) continue;
+  if (!hasPlayerCompetitors) {
+    for (const row of intelRows) {
+      const rowSlug = String(row.playerSlug || row.player_slug || '').toLowerCase();
+      if (rowSlug !== slug) continue;
 
-    if (row.predictionSchool && !isFloridaSchool(row.predictionSchool)) {
-      addCompetitor(map, row.predictionSchool, row.confidencePct, row.movementDelta > 0 ? 'up' : row.movementDelta < 0 ? 'down' : 'flat');
-    }
-    if (row.nextVisitSchool && !isFloridaSchool(row.nextVisitSchool)) {
-      addCompetitor(map, row.nextVisitSchool, null);
-    }
-    if (row.competitorSchool && !isFloridaSchool(row.competitorSchool)) {
-      addCompetitor(map, row.competitorSchool, row.competitorScore ?? null);
-    }
-    if (Array.isArray(row.competitorMentions)) {
-      for (const mention of row.competitorMentions) {
-        const name = typeof mention === 'string' ? mention : mention?.school || mention?.name;
-        const score = typeof mention === 'object' ? mention?.score ?? mention?.pct : null;
-        if (name) addCompetitor(map, name, score);
+      if (row.predictionSchool && !isFloridaSchool(row.predictionSchool)) {
+        addCompetitor(map, row.predictionSchool, row.confidencePct, row.movementDelta > 0 ? 'up' : row.movementDelta < 0 ? 'down' : 'flat');
+      }
+      if (row.nextVisitSchool && !isFloridaSchool(row.nextVisitSchool)) {
+        addCompetitor(map, row.nextVisitSchool, null);
+      }
+      if (row.competitorSchool && !isFloridaSchool(row.competitorSchool)) {
+        addCompetitor(map, row.competitorSchool, row.competitorScore ?? null);
+      }
+      if (Array.isArray(row.competitorMentions)) {
+        for (const mention of row.competitorMentions) {
+          const name = typeof mention === 'string' ? mention : mention?.school || mention?.name;
+          const score = typeof mention === 'object' ? mention?.score ?? mention?.pct : null;
+          if (name) addCompetitor(map, name, score);
+        }
       }
     }
   }

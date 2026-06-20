@@ -10,6 +10,8 @@ const intelStore = require('./recruiting-intel-store');
 const liveStore = require('./live-store');
 const { clearHeatCheckCache } = require('./heat-check-store');
 const { buildOn3ProfileUrl } = require('./on3-urls');
+const { enrichIntelCompetitors } = require('./recruiting-competitor-extract');
+const { recordBeatDigDeeper } = require('./recruiting-dig-deeper-ingest');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'visit-intel-snapshot.json');
@@ -217,7 +219,7 @@ async function processVisitIntelRow(row, snapshot) {
   };
   const player = await store.upsertPlayer(playerPatch);
 
-  const intelResult = await intelStore.addIntel({
+  const enrichedIntel = enrichIntelCompetitors({
     playerId: String(row.on3Id || player.on3Id || player.slug),
     playerSlug: player.slug,
     playerName: player.name,
@@ -229,15 +231,21 @@ async function processVisitIntelRow(row, snapshot) {
     source: row.source,
     sourceHandle: row.sourceHandle,
     detail: row.detail,
+    text: row.text || row.detail,
     fingerprint: row.fingerprint,
     cancelledSchool: row.cancelledSchool || 'Florida',
     nextVisitSchool: row.nextVisitSchool
   });
 
+  const intelResult = await intelStore.addIntel(enrichedIntel);
+
   if (!intelResult.created && intelResult.duplicate) {
     snapshot.fingerprints[row.fingerprint] = row.timestamp;
     return { skipped: true, reason: 'intel_exists' };
   }
+
+  const digSource = row.sourceType === 'manual' ? row.source : 'beat_visit_intel';
+  await recordBeatDigDeeper(row, player, enrichedIntel, digSource);
 
   await store.createEvent({
     playerId: player.id,
