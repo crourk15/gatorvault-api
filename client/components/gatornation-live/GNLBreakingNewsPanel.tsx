@@ -2,6 +2,8 @@
 
 import React from 'react';
 import type { BreakingNewsItem } from '@/lib/gatornation-live-types';
+import { GNLModuleHead } from '@/components/gatornation-live/GNLModuleHead';
+import { GNLDashBadge } from '@/components/gatornation-live/GNLDashBadge';
 
 function formatTime(iso: string): string {
   const d = new Date(iso);
@@ -18,10 +20,7 @@ export function GNLBreakingNewsPanel({ item }: Props): React.ReactElement | null
 
   return (
     <article className="gv-gnl-elite-card gv-gnl-elite-breaking" data-testid="gnl-breaking-news">
-      <header className="gv-gnl-elite-card__head">
-        <h2 className="gv-gnl-elite-card__title">Breaking News</h2>
-      </header>
-      <span className="gv-gnl-elite-breaking__tag">BREAKING</span>
+      <GNLModuleHead title="Breaking News" badge={<GNLDashBadge label="BREAKING" tone="breaking" pulse />} />
       <p className="gv-gnl-elite-breaking__text">{item.text}</p>
       <p className="gv-gnl-elite-breaking__meta">
         {formatTime(item.timestamp)} · {item.source}

@@ -3,6 +3,8 @@
 import React from 'react';
 import type { PodcastCardProps } from '@/lib/gatornation-live-types';
 import { resolvePodcastLogo, resolvePodcastLogoFallback } from '@/lib/podcast-catalog';
+import { GNLModuleHead } from '@/components/gatornation-live/GNLModuleHead';
+import { GNLDashBadge } from '@/components/gatornation-live/GNLDashBadge';
 
 function formatTime(iso?: string | null): string {
   if (!iso) return 'Recently';
@@ -21,10 +23,12 @@ export function GNLPodcastSpotlight({ podcasts, updatedAt }: Props): React.React
 
   return (
     <section className="gv-gnl-elite-card gv-gnl-elite-podcasts" data-testid="gnl-podcast-spotlight">
-      <header className="gv-gnl-elite-card__head">
-        <h2 className="gv-gnl-elite-card__title">Podcast Spotlight</h2>
-        <p className="gv-gnl-elite-card__sub">Latest episodes from the GatorNation network</p>
-      </header>
+      <GNLModuleHead
+        title="Podcast Spotlight"
+        subtitle="Latest episodes from the GatorNation network"
+        badge={<GNLDashBadge label="PODCAST" tone="podcast" />}
+        count={`${cards.length} shows`}
+      />
       <div className="gv-gnl-elite-podcasts__grid">
         {cards.map((pod, idx) => {
           const key = pod.id ?? pod.title ?? String(idx);

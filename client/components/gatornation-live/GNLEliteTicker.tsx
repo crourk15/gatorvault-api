@@ -3,8 +3,20 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { LiveTickerItem } from '@/lib/gatornation-live-api';
 import type { TickerTag } from '@/lib/gatornation-live-types';
+import { GNLDashBadge } from '@/components/gatornation-live/GNLDashBadge';
+import { GNLModuleHead } from '@/components/gatornation-live/GNLModuleHead';
 
 const TAG_SLUG: Record<TickerTag, string> = {
+  BREAKING: 'breaking',
+  VISIT: 'visit',
+  COMMIT: 'commit',
+  PORTAL: 'portal',
+  RUMOR: 'rumor',
+  TEAM: 'team',
+  PODCAST: 'podcast',
+};
+
+const TAG_TONE: Record<TickerTag, 'breaking' | 'visit' | 'commit' | 'portal' | 'rumor' | 'team' | 'podcast'> = {
   BREAKING: 'breaking',
   VISIT: 'visit',
   COMMIT: 'commit',
@@ -82,36 +94,38 @@ export function GNLEliteTicker({ items, refreshKey }: Props): React.ReactElement
       aria-label="Live ticker"
       data-testid="gnl-ticker"
     >
-      <header className="gv-gnl-elite-card__head">
-        <h2 className="gv-gnl-elite-card__title">Live Ticker</h2>
-        <p className="gv-gnl-elite-card__sub">Real-time intel across recruiting, portal, and the beat</p>
-      </header>
+      <GNLModuleHead
+        title="Live Ticker"
+        subtitle="Real-time intel across recruiting, portal, and the beat"
+        badge={<GNLDashBadge label="LIVE" tone="live" pulse />}
+        count={`${display.length} updates`}
+      />
       <div className="gv-gnl-elite-ticker__track">
         {display.map((item, idx) => {
           const key = itemKey(item);
           return (
-          <a
-            key={`${key}_${idx}`}
-            href={item.url || '/gator-nation-live'}
-            className={[
-              'gv-gnl-elite-ticker__item',
-              `gv-gnl-elite-ticker__item--${TAG_SLUG[item.type]}`,
-              newKeys.has(key) ? 'gv-gnl-elite-ticker__item--new' : '',
-            ]
-              .filter(Boolean)
-              .join(' ')}
-          >
-            <p className="gv-gnl-elite-ticker__line">
-              <span className="gv-gnl-elite-ticker__tag">[{item.type}]</span>
-              <span className="gv-gnl-elite-ticker__text">{item.text}</span>
-            </p>
-            <div className="gv-gnl-elite-ticker__meta">
-              <span className="gv-gnl-elite-ticker__source">{item.source}</span>
-              {item.timestamp ? (
-                <span className="gv-gnl-elite-ticker__timestamp">{formatTime(item.timestamp)}</span>
-              ) : null}
-            </div>
-          </a>
+            <a
+              key={`${key}_${idx}`}
+              href={item.url || '/gator-nation-live'}
+              className={[
+                'gv-gnl-elite-ticker__item',
+                `gv-gnl-elite-ticker__item--${TAG_SLUG[item.type]}`,
+                newKeys.has(key) ? 'gv-gnl-elite-ticker__item--new' : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            >
+              <div className="gv-gnl-elite-ticker__line">
+                <GNLDashBadge label={item.type} tone={TAG_TONE[item.type]} />
+                <span className="gv-gnl-elite-ticker__text">{item.text}</span>
+              </div>
+              <div className="gv-gnl-elite-ticker__meta">
+                <span className="gv-gnl-elite-ticker__source">{item.source}</span>
+                {item.timestamp ? (
+                  <span className="gv-gnl-elite-ticker__timestamp">{formatTime(item.timestamp)}</span>
+                ) : null}
+              </div>
+            </a>
           );
         })}
       </div>

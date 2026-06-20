@@ -24,7 +24,7 @@ export function HomePremiumSection({
         <h2 className="uf-premium-section__title">{title}</h2>
         <span className="uf-premium-section__underline" aria-hidden="true" />
       </header>
-      {children}
+      <div className="uf-premium-section__modules">{children}</div>
       {ctaLabel && ctaHref ? (
         <div className="uf-premium-section__cta">
           <a href={ctaHref} className="uf-premium-cta uf-premium-cta--primary">

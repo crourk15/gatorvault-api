@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import type { GnlGameDay } from '@/lib/gatornation-live-types';
+import { GNLModuleHead } from '@/components/gatornation-live/GNLModuleHead';
+import { GNLDashBadge } from '@/components/gatornation-live/GNLDashBadge';
 
 function plural(n: number, word: string): string {
   return `${n} ${word}${n === 1 ? '' : 's'}`;
@@ -50,10 +52,11 @@ export function GNLGameDayCountdown({ game }: Props): React.ReactElement | null 
 
   return (
     <article className="gv-gnl-elite-card gv-gnl-elite-gameday" data-testid="gnl-gameday-countdown">
-      <header className="gv-gnl-elite-card__head">
-        <h2 className="gv-gnl-elite-card__title">Game Day</h2>
-        <p className="gv-gnl-elite-card__sub">{game.venue}</p>
-      </header>
+      <GNLModuleHead
+        title="Game Day"
+        subtitle={game.venue}
+        badge={<GNLDashBadge label="GAMEDAY" tone="team" />}
+      />
       <div className="gv-gnl-elite-gameday__matchup">
         <div className="gv-gnl-elite-gameday__team">
           <span className="gv-gnl-elite-gameday__badge gv-gnl-elite-gameday__badge--uf">UF</span>

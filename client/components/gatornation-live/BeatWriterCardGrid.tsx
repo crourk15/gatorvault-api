@@ -2,6 +2,8 @@
 
 import React from 'react';
 import type { LivePanelProps } from '@/lib/gatornation-live-types';
+import { GNLModuleHead } from '@/components/gatornation-live/GNLModuleHead';
+import { GNLDashBadge } from '@/components/gatornation-live/GNLDashBadge';
 
 type BeatItem = LivePanelProps['items'][number];
 
@@ -32,8 +34,12 @@ export function BeatWriterCardGrid({ title, description, items }: Props): React.
 
   return (
     <div className="gv-gnl-beat-grid" data-testid="gnl-beat-writer-grid" id="beat-writers">
-      <h2 className="gv-gnl-card__title">{title}</h2>
-      {description ? <p className="gv-gnl-card__subtitle">{description}</p> : null}
+      <GNLModuleHead
+        title={title}
+        subtitle={description}
+        badge={<GNLDashBadge label="BEAT" tone="beat" />}
+        count={cards.length ? `${cards.length} highlights` : '0 highlights'}
+      />
       <div className="gv-gnl-beat-grid__cards">
         {cards.length === 0 ? (
           <p className="gv-gnl-panel__secondary">Nothing active right now.</p>

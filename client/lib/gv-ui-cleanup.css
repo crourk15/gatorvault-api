@@ -1095,7 +1095,8 @@ body {
 
 /* ── Vault home: flush under nav (overrides vault-shell__main inset) ── */
 .gv-vault-shell--home .gv-vault-shell__body,
-.gv-vault-shell__main:has(.gv-home) {
+.gv-vault-shell__main:has(.gv-home),
+.gv-vault-shell__main:has(.uf-premium-home) {
   margin: 0 !important;
   padding-top: 0 !important;
   padding-left: 0 !important;
@@ -1103,11 +1104,13 @@ body {
 }
 
 .gv-vault-shell--home .gv-vault-shell__main,
-.gv-vault-shell__main:has(.gv-home) {
+.gv-vault-shell__main:has(.gv-home),
+.gv-vault-shell__main:has(.uf-premium-home) {
   padding: 0 !important;
 }
 
 #gv-vault-root:has(.gv-home),
+#gv-vault-root:has(.uf-premium-home),
 #gv-vault-root:has(.gv-vault-shell--home) {
   margin: 0;
   padding: 0;
@@ -1115,7 +1118,8 @@ body {
 
 @media (max-width: 767px) {
   .gv-vault-shell--home .gv-vault-shell__main,
-  .gv-vault-shell__main:has(.gv-home) {
+  .gv-vault-shell__main:has(.gv-home),
+  .gv-vault-shell__main:has(.uf-premium-home) {
     padding-bottom: var(--gv-mobile-nav-height) !important;
   }
 }

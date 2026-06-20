@@ -6,7 +6,11 @@ import { GNL_COPY } from '@/lib/gatornation-live-types';
 import { SITE_ROUTES } from '@/lib/site-routes';
 
 /** UF Premium GatorNation Live hero — full-width blue gradient, centered copy. */
-export function GNLPageHero(): React.ReactElement {
+export function GNLPageHero({
+  metrics = [],
+}: {
+  metrics?: { label: string; value: string }[];
+}): React.ReactElement {
   const seconds = Math.round(LIVE_HUB_REFRESH_MS / 1000);
 
   return (
@@ -30,6 +34,16 @@ export function GNLPageHero(): React.ReactElement {
           <span className="gv-gnl-hero__live-dot" aria-hidden="true" />
           {GNL_COPY.hero.liveBadge(seconds)}
         </p>
+        {metrics.length > 0 ? (
+          <div className="gv-gnl-hero__metrics" aria-label="Live dashboard metrics">
+            {metrics.map((metric) => (
+              <div key={metric.label} className="gv-gnl-hero__metric">
+                <span className="gv-gnl-hero__metric-value">{metric.value}</span>
+                <span className="gv-gnl-hero__metric-label">{metric.label}</span>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       <div className="gv-gnl-hero__energy-bar" aria-hidden="true" />

@@ -84,6 +84,16 @@ export function GatorNationLivePage(): React.ReactElement {
     return () => window.removeEventListener('pagehide', persist);
   }, []);
 
+  const heroMetrics = [
+    { label: 'Ticker items', value: String(bundle.ticker.length || '—') },
+    { label: 'Beat highlights', value: String(bundle.panels.beatWriterHighlights.length || '0') },
+    {
+      label: 'Breaking',
+      value: bundle.breakingNews?.text ? 'Active' : 'Clear',
+    },
+    { label: 'Podcasts', value: String(bundle.podcasts.length || '4') },
+  ];
+
   return (
     <div
       className="gv-gnl gv-gnl-shell gv-gnl-shell--elite uf-premium-gnl gv-live-feed"
@@ -100,7 +110,7 @@ export function GatorNationLivePage(): React.ReactElement {
         </div>
       )}
 
-      <GNLPageHero />
+      <GNLPageHero metrics={heroMetrics} />
       <GNLLiveFeedModule bundle={bundle} loading={loading} refreshKey={bundle.refreshedAt ?? `${pollSeq}`} />
     </div>
   );
