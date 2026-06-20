@@ -31,7 +31,7 @@ type Props = {
   game: GnlGameDay | null;
 };
 
-export function GNLGameDayCountdown({ game }: Props): React.ReactElement | null {
+export function GNLGameDayCountdown({ game }: Props): React.ReactElement {
   const [remaining, setRemaining] = useState<number | null>(null);
 
   useEffect(() => {
@@ -48,14 +48,30 @@ export function GNLGameDayCountdown({ game }: Props): React.ReactElement | null 
     return () => clearInterval(id);
   }, [game?.kickoffIso]);
 
-  if (!game) return null;
+  if (!game) {
+    return (
+      <article
+        className="gv-gnl-elite-card gv-gnl-elite-gameday gv-gnl-elite-gameday--empty"
+        data-testid="gnl-gameday-countdown"
+      >
+        <GNLModuleHead
+          title="Game Day"
+          subtitle="2026 schedule"
+          badge={<GNLDashBadge label="GAME DAY" tone="gameday" />}
+          count="No game"
+        />
+        <p className="gv-gnl-elite-gameday__kickoff">No upcoming game on the calendar.</p>
+      </article>
+    );
+  }
 
   return (
     <article className="gv-gnl-elite-card gv-gnl-elite-gameday" data-testid="gnl-gameday-countdown">
       <GNLModuleHead
         title="Game Day"
         subtitle={game.venue}
-        badge={<GNLDashBadge label="GAMEDAY" tone="team" />}
+        badge={<GNLDashBadge label="GAME DAY" tone="gameday" />}
+        count={game.kickoffLabel}
       />
       <div className="gv-gnl-elite-gameday__matchup">
         <div className="gv-gnl-elite-gameday__team">

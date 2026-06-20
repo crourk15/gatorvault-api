@@ -29,6 +29,12 @@
   overflow-x: hidden;
 }
 
+.uf-premium-gnl.gv-gnl,
+.uf-premium-gnl.gv-gnl-shell {
+  background: var(--uf-page-bg);
+  color: rgba(255, 255, 255, 0.92);
+}
+
 .gv-vault-shell__main:has(.uf-premium-gnl),
 .gv-vault-shell--home .gv-vault-shell__main:has(.uf-premium-gnl) {
   padding: 0;
@@ -154,6 +160,7 @@
 }
 
 .uf-premium-gnl .gv-gnl-hero__metric {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -161,8 +168,26 @@
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(0, 0, 0, 0.22);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--uf-card-shadow);
   text-align: left;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.uf-premium-gnl .gv-gnl-hero__metric::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--uf-orange);
+}
+
+.uf-premium-gnl .gv-gnl-hero__metric:hover {
+  border-color: rgba(250, 70, 22, 0.45);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.55);
+  transform: translateY(-1px);
 }
 
 .uf-premium-gnl .gv-gnl-hero__metric-value {
@@ -443,6 +468,12 @@
   border-color: rgba(250, 70, 22, 0.35);
 }
 
+.uf-premium-gnl .gv-gnl-dash-badge--gameday {
+  color: var(--uf-orange);
+  background: rgba(250, 70, 22, 0.12);
+  border-color: rgba(250, 70, 22, 0.45);
+}
+
 .uf-premium-gnl .gv-gnl-dash-badge--neutral {
   color: var(--uf-card-text-muted);
   background: rgba(0, 26, 51, 0.06);
@@ -486,7 +517,7 @@
   border-radius: 12px;
   border: 1px solid rgba(0, 26, 51, 0.12);
   background: var(--uf-card-surface);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--uf-card-shadow);
   text-decoration: none;
   color: var(--uf-card-text);
   transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
@@ -892,6 +923,15 @@
   border-radius: var(--uf-card-radius) var(--uf-card-radius) 0 0;
 }
 
+.uf-premium-gnl .gv-gnl-beat-card__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--gnl-divider);
+}
+
 .uf-premium-gnl .gv-gnl-beat-card__writer {
   color: var(--uf-blue);
 }
@@ -1006,6 +1046,8 @@
 }
 
 /* FutureCast Lab parity — white panels, dark typography on navy canvas */
+.gv-app-shell:has(.uf-premium-gnl),
+.gv-app-shell__main:has(.uf-premium-gnl),
 .gv-vault-shell:has(.uf-premium-gnl),
 .gv-vault-shell__main:has(.uf-premium-gnl),
 #gv-vault-root:has(.uf-premium-gnl) {
@@ -1089,4 +1131,77 @@
 
 .uf-premium-gnl .gv-gnl-beat-card__text {
   color: var(--uf-card-text);
+}
+
+.uf-premium-gnl .gv-gnl-beat-grid__empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 140px;
+  padding: var(--uf-module-gap);
+  border-radius: var(--uf-card-radius);
+  border: 1px dashed var(--gnl-divider);
+  background: rgba(0, 26, 51, 0.03);
+  text-align: center;
+}
+
+.uf-premium-gnl .gv-gnl-beat-grid__empty-hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--uf-card-text-muted);
+}
+
+.uf-premium-gnl .gv-gnl-elite-breaking--empty {
+  border-color: var(--uf-card-border-color);
+}
+
+.uf-premium-gnl .gv-gnl-elite-breaking--empty::before {
+  background: var(--uf-orange);
+}
+
+.uf-premium-gnl .gv-gnl-elite-breaking__text--empty {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--uf-card-text-muted);
+}
+
+.uf-premium-gnl .gv-gnl-elite-gameday--empty {
+  justify-content: flex-start;
+}
+
+.uf-premium-gnl .gv-gnl-elite-gameday--empty .gv-gnl-elite-gameday__kickoff {
+  margin-top: var(--uf-inner-gap);
+  font-weight: 600;
+}
+
+/* Win over legacy gatornation-live.css / vault-gatornation-live.css */
+.uf-premium-gnl.gv-gnl.gv-gnl-shell {
+  background: var(--uf-page-bg);
+}
+
+.uf-premium-gnl .gv-gnl-beat-card {
+  border-top: none;
+}
+
+.uf-premium-gnl .gv-gnl-beat-grid__empty {
+  position: relative;
+  box-shadow: var(--uf-card-shadow);
+  border-style: solid;
+  border-color: var(--uf-card-border-color);
+}
+
+.uf-premium-gnl .gv-gnl-beat-grid__empty::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--uf-orange);
+  border-radius: var(--uf-card-radius) var(--uf-card-radius) 0 0;
 }

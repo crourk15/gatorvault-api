@@ -1,4 +1,5 @@
 import React from 'react';
+import '@/lib/uf-premium-gnl.css';
 import { VaultPillarSsrMarkers } from '@/components/vault/VaultPillarSsrMarkers';
 
 export default function VaultLiveLayout({

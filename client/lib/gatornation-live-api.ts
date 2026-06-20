@@ -379,11 +379,13 @@ export async function fetchLiveHubBundle(force = false): Promise<LiveHubBundle> 
   const beat = dash?.beat?.posts ?? [];
   const ticker = buildLiveDashboardTicker(feedItems);
   const refreshedAt = dash?.refreshedAt ?? dash?.updatedAt ?? new Date().toISOString();
+  const shows = dash?.podcasts?.shows ?? [];
+  const podcasts = shows.length > 0 ? normalizePodcasts(shows) : DEFAULT_PODCASTS;
 
   return {
     ticker,
     feed: [],
-    podcasts: normalizePodcasts(dash?.podcasts?.shows ?? []),
+    podcasts,
     panels: buildLivePanels(feedItems, beat),
     snapshot: {
       commits: 0,

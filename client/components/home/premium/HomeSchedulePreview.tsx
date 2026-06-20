@@ -17,9 +17,10 @@ export function HomeSchedulePreview({ data, loading }: Props): React.ReactElemen
 
   if (!next) {
     return (
-      <p className="uf-premium-empty" data-testid="home-schedule-preview">
-        2026 schedule loading — check back for kickoff times and ticket links.
-      </p>
+      <article className="uf-premium-card uf-premium-card--schedule" data-testid="home-schedule-preview">
+        <h3 className="uf-premium-card__title">Next Game</h3>
+        <p className="uf-premium-empty">2026 schedule loading — check back for kickoff times and ticket links.</p>
+      </article>
     );
   }
 

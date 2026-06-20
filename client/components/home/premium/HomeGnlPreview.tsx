@@ -2,8 +2,6 @@
 
 import React from 'react';
 import type { HomeGnlItem } from '@/lib/vault-home-api';
-import { SITE_ROUTES } from '@/lib/site-routes';
-
 type Props = {
   items: HomeGnlItem[];
   loading?: boolean;
@@ -57,12 +55,6 @@ export function HomeGnlPreview({ items, loading }: Props): React.ReactElement {
             </li>
           )}
         </ul>
-        <a
-          href={SITE_ROUTES.gatorNationLive}
-          className="uf-premium-cta uf-premium-cta--primary uf-premium-cta--block"
-        >
-          Open GatorNation Live
-        </a>
       </article>
     </div>
   );

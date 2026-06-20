@@ -6,6 +6,8 @@ type Props = {
   title: string;
   ctaLabel?: string;
   ctaHref?: string;
+  badge?: React.ReactNode;
+  count?: string;
   children: React.ReactNode;
   testId?: string;
 };
@@ -15,13 +17,23 @@ export function HomePremiumSection({
   title,
   ctaLabel,
   ctaHref,
+  badge,
+  count,
   children,
   testId,
 }: Props): React.ReactElement {
   return (
     <section className="uf-premium-section" data-testid={testId}>
       <header className="uf-premium-section__head">
-        <h2 className="uf-premium-section__title">{title}</h2>
+        <div className="uf-premium-section__title-row">
+          <h2 className="uf-premium-section__title">{title}</h2>
+          {(badge || count) && (
+            <div className="uf-premium-section__badges">
+              {badge}
+              {count ? <span className="uf-premium-section__count">{count}</span> : null}
+            </div>
+          )}
+        </div>
         <span className="uf-premium-section__underline" aria-hidden="true" />
       </header>
       <div className="uf-premium-section__modules">{children}</div>

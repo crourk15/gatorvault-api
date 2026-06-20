@@ -1,9 +1,13 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import '@/lib/gatornation-live.css';
 import '@/lib/uf-premium-gnl.css';
-import { fetchLiveHubBundle, LIVE_HUB_REFRESH_MS, type LiveHubBundle } from '@/lib/gatornation-live-api';
+import {
+  DEFAULT_PODCASTS,
+  fetchLiveHubBundle,
+  LIVE_HUB_REFRESH_MS,
+  type LiveHubBundle,
+} from '@/lib/gatornation-live-api';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
 import { LIVE_STATE_KEY } from '@/components/vault/live/live-feed-utils';
 import { UiError } from '@/components/site/UiMessage';
@@ -13,7 +17,7 @@ import { GNLLiveFeedModule } from '@/components/gatornation-live/GNLLiveFeedModu
 const EMPTY_BUNDLE: LiveHubBundle = {
   ticker: [],
   feed: [],
-  podcasts: [],
+  podcasts: DEFAULT_PODCASTS,
   panels: { visitsNow: [], portalBuzz: [], beatWriterHighlights: [], staffNotes: [] },
   snapshot: {
     commits: 0,
@@ -84,6 +88,8 @@ export function GatorNationLivePage(): React.ReactElement {
     return () => window.removeEventListener('pagehide', persist);
   }, []);
 
+  const podcastCount = bundle.podcasts.length > 0 ? bundle.podcasts.length : DEFAULT_PODCASTS.length;
+
   const heroMetrics = [
     { label: 'Ticker items', value: String(bundle.ticker.length || '—') },
     { label: 'Beat highlights', value: String(bundle.panels.beatWriterHighlights.length || '0') },
@@ -91,7 +97,7 @@ export function GatorNationLivePage(): React.ReactElement {
       label: 'Breaking',
       value: bundle.breakingNews?.text ? 'Active' : 'Clear',
     },
-    { label: 'Podcasts', value: String(bundle.podcasts.length || '4') },
+    { label: 'Podcasts', value: String(podcastCount) },
   ];
 
   return (

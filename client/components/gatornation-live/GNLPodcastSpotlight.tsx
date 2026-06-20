@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { PodcastCardProps } from '@/lib/gatornation-live-types';
+import { DEFAULT_PODCASTS } from '@/lib/gatornation-live-api';
 import { resolvePodcastLogo, resolvePodcastLogoFallback } from '@/lib/podcast-catalog';
 import { GNLModuleHead } from '@/components/gatornation-live/GNLModuleHead';
 import { GNLDashBadge } from '@/components/gatornation-live/GNLDashBadge';
@@ -19,7 +20,8 @@ type Props = {
 };
 
 export function GNLPodcastSpotlight({ podcasts, updatedAt }: Props): React.ReactElement {
-  const cards = podcasts.slice(0, 4);
+  const source = podcasts.length > 0 ? podcasts : DEFAULT_PODCASTS;
+  const cards = source.slice(0, 4);
 
   return (
     <section className="gv-gnl-elite-card gv-gnl-elite-podcasts" data-testid="gnl-podcast-spotlight">

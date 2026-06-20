@@ -27,6 +27,7 @@ import '@/lib/mobile-native-framework.css';
 
 import '@/lib/mobile-native-framework.css';
 import '@/lib/uf-premium-mobile.css';
+import '@/lib/uf-premium-gnl.css';
 
 export default function AppLayout({
   children,

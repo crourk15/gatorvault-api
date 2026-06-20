@@ -10,6 +10,7 @@ import {
 import { fetchTeamHubBundle, type TeamHubBundle } from '@/lib/team-hub-api';
 import { useVaultDataReload } from '@/lib/vault-navigation';
 import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
+import { SITE_ROUTES } from '@/lib/site-routes';
 import { HomePremiumHero } from '@/components/home/premium/HomePremiumHero';
 import { HomePremiumTicker } from '@/components/home/premium/HomePremiumTicker';
 import { HomePremiumSection } from '@/components/home/premium/HomePremiumSection';
@@ -90,12 +91,7 @@ export function HomePremiumPage(): React.ReactElement {
       <HomePremiumTicker ticker={bundle.ticker} loading={loading && !bundle.ticker} />
 
       <div className="uf-premium-home__frame">
-        <HomePremiumSection
-          title="Recruiting Hub"
-          ctaLabel="Explore Recruiting Hub"
-          ctaHref={VAULT_PILLAR_ROUTES.recruiting}
-          testId="home-section-recruiting"
-        >
+        <HomePremiumSection title="Recruiting Hub" testId="home-section-recruiting">
           <HomeRecruitingPreview
             snapshot={bundle.recruiting}
             movement={bundle.movement}
@@ -104,12 +100,7 @@ export function HomePremiumPage(): React.ReactElement {
           />
         </HomePremiumSection>
 
-        <HomePremiumSection
-          title="FutureCast"
-          ctaLabel="Open FutureCast"
-          ctaHref={VAULT_PILLAR_ROUTES.futurecast}
-          testId="home-section-futurecast"
-        >
+        <HomePremiumSection title="FutureCast" testId="home-section-futurecast">
           <HomeFutureCastPreview movement={bundle.movement} loading={loading && !bundle.movement} />
         </HomePremiumSection>
 
@@ -143,7 +134,12 @@ export function HomePremiumPage(): React.ReactElement {
           <HomeSchedulePreview data={bundle.schedule} loading={loading && !bundle.schedule} />
         </HomePremiumSection>
 
-        <HomePremiumSection title="GatorNation Live" testId="home-section-gnl">
+        <HomePremiumSection
+          title="GatorNation Live"
+          ctaLabel="Open GatorNation Live"
+          ctaHref={SITE_ROUTES.gatorNationLive}
+          testId="home-section-gnl"
+        >
           <HomeGnlPreview
             items={buildHomeGnlItems(bundle.ticker)}
             loading={loading && !bundle.ticker}

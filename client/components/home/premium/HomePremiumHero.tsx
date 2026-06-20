@@ -24,6 +24,9 @@ export function HomePremiumHero(): React.ReactElement {
           <a href={VAULT_PILLAR_ROUTES.futurecast} className="uf-premium-cta uf-premium-cta--primary">
             FutureCast
           </a>
+          <a href={VAULT_PILLAR_ROUTES.team} className="uf-premium-cta uf-premium-cta--secondary">
+            Team Page
+          </a>
         </div>
       </div>
     </section>

@@ -12,6 +12,7 @@ type BadgeTone =
   | 'team'
   | 'podcast'
   | 'beat'
+  | 'gameday'
   | 'neutral';
 
 type Props = {

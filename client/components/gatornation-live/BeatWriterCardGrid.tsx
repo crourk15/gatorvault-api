@@ -42,7 +42,10 @@ export function BeatWriterCardGrid({ title, description, items }: Props): React.
       />
       <div className="gv-gnl-beat-grid__cards">
         {cards.length === 0 ? (
-          <p className="gv-gnl-panel__secondary">Nothing active right now.</p>
+          <div className="gv-gnl-beat-grid__empty" aria-live="polite">
+            <p className="gv-gnl-panel__secondary">Nothing active right now.</p>
+            <p className="gv-gnl-beat-grid__empty-hint">Beat writer posts appear here when the feed updates.</p>
+          </div>
         ) : (
           cards.map((item, idx) => (
             <article key={`${item.writerName ?? item.source}_${idx}`} className="gv-gnl-beat-card gv-gnl-beat-card--x">

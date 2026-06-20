@@ -16,7 +16,7 @@ type Props = {
 };
 
 /** Elite UF Premium GNL body — ticker, beat writers, podcasts, breaking, game day. */
-export function GNLLiveFeedModule({ bundle, loading, refreshKey }: Props): React.ReactElement {
+export function GNLLiveFeedModule({ bundle, loading: _loading, refreshKey }: Props): React.ReactElement {
   const beatItems = useMemo(
     () => bundle.panels.beatWriterHighlights.filter((item) => item.text?.trim()),
     [bundle.panels.beatWriterHighlights]
@@ -25,14 +25,10 @@ export function GNLLiveFeedModule({ bundle, loading, refreshKey }: Props): React
   return (
     <div className="gv-gnl-elite" aria-label="GatorNation Live modules" data-testid="gnl-live-feed-module">
       <div className="gv-gnl__frame gv-gnl-elite__stack">
-        {loading && bundle.ticker.length === 0 ? (
-          <div className="gv-gnl-elite-skeleton" aria-hidden="true" />
-        ) : (
-          <GNLEliteTicker
-            items={bundle.ticker}
-            refreshKey={refreshKey ?? bundle.refreshedAt ?? bundle.updatedAt}
-          />
-        )}
+        <GNLEliteTicker
+          items={bundle.ticker}
+          refreshKey={refreshKey ?? bundle.refreshedAt ?? bundle.updatedAt}
+        />
 
         <section className="gv-gnl-elite-card gv-gnl-elite-beat">
           <BeatWriterCardGrid
