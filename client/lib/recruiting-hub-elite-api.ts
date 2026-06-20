@@ -65,6 +65,33 @@ export type RhHubPositionRoom = {
   note: string;
 };
 
+export type RhHubHeatTarget = {
+  id: string;
+  name: string;
+  position: string;
+  heat: number;
+  movement: 'up' | 'down' | 'flat';
+  ufPercent: number;
+  battle: {
+    uf: number;
+    competitor: number;
+    competitorName: string;
+  };
+  nextVisit: string | null;
+  insiderNote?: string | null;
+  profileUrl: string;
+};
+
+export type RhHubMovementFeedItem = {
+  id: string;
+  timestamp: string;
+  name: string;
+  position: string;
+  event: 'up' | 'down' | 'visit' | 'offer' | 'intel';
+  summary: string;
+  profileUrl: string;
+};
+
 const HUB_YEAR = 2027;
 
 export async function fetchRecruitingHubTicker(year = HUB_YEAR): Promise<string[]> {
@@ -106,6 +133,20 @@ export async function fetchRecruitingHubBattles(year = HUB_YEAR): Promise<RhHubB
 export async function fetchRecruitingHubPositions(year = HUB_YEAR): Promise<RhHubPositionRoom[]> {
   const data = await apiFetch<{ ok?: boolean; items?: RhHubPositionRoom[] }>(
     `/api/recruiting/hub/positions?year=${year}`
+  );
+  return data.items ?? [];
+}
+
+export async function fetchRecruitingHubHeatIndex(year = HUB_YEAR): Promise<RhHubHeatTarget[]> {
+  const data = await apiFetch<{ ok?: boolean; items?: RhHubHeatTarget[] }>(
+    `/api/recruiting/hub/heat-index?year=${year}`
+  );
+  return data.items ?? [];
+}
+
+export async function fetchRecruitingHubMovementFeed(year = HUB_YEAR): Promise<RhHubMovementFeedItem[]> {
+  const data = await apiFetch<{ ok?: boolean; items?: RhHubMovementFeedItem[] }>(
+    `/api/recruiting/hub/movement-feed?year=${year}`
   );
   return data.items ?? [];
 }

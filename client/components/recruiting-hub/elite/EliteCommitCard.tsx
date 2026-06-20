@@ -2,7 +2,6 @@
 
 import React from 'react';
 import type { RhHubCommit } from '@/lib/recruiting-hub-elite-api';
-import { playerProfilePath } from '@/lib/player-routes';
 
 type Props = {
   commit: RhHubCommit;
@@ -21,7 +20,6 @@ function DetailRow({ label, value }: { label: string; value: React.ReactNode }):
 
 export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
   const isActive = year >= 2027;
-  const profileHref = playerProfilePath(commit.id, 'HIGH_SCHOOL', true, commit.name, 'recruiting');
 
   return (
     <article className="rh-commit-card rh-elite-commit-card">
@@ -57,10 +55,6 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
       <DetailRow label="Player comp" value={commit.playerComp} />
       <DetailRow label="GatorVault Grade" value={commit.gvGrade} />
       <DetailRow label="NIL estimate" value={commit.nilEstimate ?? 'N/A'} />
-
-      <a href={profileHref} className="rh-elite-commit-profile-link">
-        View profile →
-      </a>
 
       <div className="rh-commit-footer">
         <span>Rating {commit.rating}</span>

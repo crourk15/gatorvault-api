@@ -367,6 +367,266 @@ async function buildHubPositions(year = 2027) {
   }));
 }
 
+function movementArrow(player) {
+  const dir = player.movementDirection;
+  if (dir === 'up') return 'up';
+  if (dir === 'down') return 'down';
+  return 'flat';
+}
+
+function computeHeatScore(player) {
+  const uf = parseUfPct(player.ufProbability);
+  const fit = Number(player.fitScore);
+  let heat = Math.max(uf, Number.isFinite(fit) ? Math.round(fit) : 0);
+
+  if (player.tier === 'TOP') heat += 12;
+  else if (player.tier === 'HIGH') heat += 6;
+
+  const natl = player.natlRank ?? player.natl;
+  if (natl != null && Number(natl) <= 100) heat += 12;
+  else if (natl != null && Number(natl) <= 300) heat += 6;
+
+  if (player.movementDirection === 'up') heat += 14;
+  else if (player.movementDirection === 'down') heat -= 10;
+
+  if (player.headliner) heat += 8;
+
+  return Math.min(100, Math.max(0, Math.round(heat)));
+}
+
+function resolveBattle(player) {
+  const uf = parseUfPct(player.ufProbability);
+  const leader = player.leaderSchool ?? player.predictionLeader ?? player.topSchool ?? null;
+  const leaderName =
+    typeof leader === 'string'
+      ? leader
+      : leader?.name || leader?.school || 'Field';
+  const isUfLeader = /florida|gators|\buf\b/i.test(String(leaderName));
+  const competitor = isUfLeader
+    ? Math.max(100 - uf, 8)
+    : Math.min(Math.max(100 - uf, 20), 95);
+  return {
+    uf,
+    competitor,
+    competitorName: isUfLeader ? 'Field' : String(leaderName).slice(0, 24),
+  };
+}
+
+function formatNextVisit(player) {
+  if (!player.visitStart) return null;
+  const d = new Date(player.visitStart);
+  if (Number.isNaN(d.getTime())) return String(player.visitStart);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function shortInsiderNote(player) {
+  const note = player.notePreview ?? player.skinny ?? player.notes;
+  if (!note || !String(note).trim()) return null;
+  const text = String(note).trim();
+  return text.length > 120 ? `${text.slice(0, 117)}…` : text;
+}
+
+async function buildHubHeatIndex(year = 2027) {
+  const enriched = await loadEnrichedBoard(year);
+  const targets = (enriched.targets || []).filter(
+    (p) => p.tier === 'TOP' || p.tier === 'HIGH' || parseUfPct(p.ufProbability) >= 34
+  );
+
+  const scored = targets.map((player) => ({
+    id: player.slug || player.name,
+    name: player.name,
+    position: playerPos(player),
+    heat: computeHeatScore(player),
+    movement: movementArrow(player),
+    ufPercent: parseUfPct(player.ufProbability),
+    battle: resolveBattle(player),
+    nextVisit: formatNextVisit(player),
+    insiderNote: shortInsiderNote(player),
+    profileUrl: profileUrl(player),
+  }));
+
+  scored.sort((a, b) => b.heat - a.heat);
+
+  if (scored.length < 8) {
+    try {
+      const heat = await buildHeatCheck();
+      for (const row of heat.rising || []) {
+        if (scored.length >= 12) break;
+        if (scored.some((s) => s.id === row.playerSlug || s.name === row.playerName)) continue;
+        scored.push({
+          id: row.playerSlug || row.playerName,
+          name: row.playerName,
+          position: row.position || '—',
+          heat: Math.min(100, 55 + (row.score || 0)),
+          movement: 'up',
+          ufPercent: 0,
+          battle: { uf: 0, competitor: 50, competitorName: 'Field' },
+          nextVisit: null,
+          insiderNote: row.headline ?? row.triggerLabel ?? null,
+          profileUrl: profileUrl({ slug: row.playerSlug, name: row.playerName }),
+        });
+      }
+    } catch {
+      /* optional heat feed */
+    }
+  }
+
+  return scored.slice(0, 12);
+}
+
+function mapMovementEventType(raw) {
+  const et = String(raw || '').toLowerCase();
+  if (/visit/.test(et)) return 'visit';
+  if (et === 'offer' || /offer/.test(et)) return 'offer';
+  if (/rise|up|trend|momentum|flip/.test(et)) return 'up';
+  if (/fall|down|cool|slip/.test(et)) return 'down';
+  return 'intel';
+}
+
+function feedItemFromIntel(row, playerMeta) {
+  const slug = String(row.playerSlug || row.player_slug || playerMeta?.slug || '').trim();
+  const name =
+    String(row.playerName || row.player_name || playerMeta?.name || slug || 'Target').trim();
+  const ts = row.reportedAt || row.timestamp || row.createdAt || new Date().toISOString();
+  const event = mapMovementEventType(row.eventType || row.type || row.detail);
+  const summary =
+    String(row.text || row.detail || row.headline || 'Insider movement tracked on the board.').trim();
+
+  return {
+    id: String(row.id || row.fingerprint || `${slug}-${ts}`),
+    timestamp: ts,
+    name,
+    position: playerMeta?.position || row.position || '—',
+    event,
+    summary,
+    profileUrl: profileUrl({ slug, name }),
+  };
+}
+
+async function buildHubMovementFeed(year = 2027) {
+  const enriched = await loadEnrichedBoard(year);
+  const bySlug = new Map();
+  for (const p of [...(enriched.targets || []), ...(enriched.commits || [])]) {
+    if (p.slug) bySlug.set(String(p.slug).toLowerCase(), p);
+  }
+
+  const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const items = [];
+
+  try {
+    const { buildRecruitingMovementIntelPayload } = require('../api/recruiting/movement-intel.ts');
+    const payload = await buildRecruitingMovementIntelPayload();
+    for (const alert of payload.alerts || []) {
+      const ts = alert.timestamp || new Date().toISOString();
+      if (new Date(ts).getTime() < cutoff) continue;
+      const event =
+        alert.type === 'VISIT'
+          ? 'visit'
+          : alert.type === 'OFFER'
+            ? 'offer'
+            : alert.type === 'PREDICTION_SHIFT'
+              ? 'up'
+              : 'intel';
+      items.push({
+        id: alert.id,
+        timestamp: ts,
+        name: alert.player,
+        position: '—',
+        event,
+        summary: alert.detail,
+        profileUrl: '/vault/recruiting',
+      });
+    }
+
+    for (const bucket of [payload.risers, payload.fallers, payload.volatile]) {
+      for (const row of bucket || []) {
+        const slug = String(row.slug || '').toLowerCase();
+        const meta = bySlug.get(slug);
+        const ts = row.lastUpdate || new Date().toISOString();
+        if (new Date(ts).getTime() < cutoff) continue;
+        items.push({
+          id: row.id || slug,
+          timestamp: ts,
+          name: row.name,
+          position: row.position || playerPos(meta || {}),
+          event:
+            row.movementType === 'FALL' ? 'down' : row.movementType === 'RISE' ? 'up' : 'intel',
+          summary: `${row.name} — UF ${row.ufProb}% (${row.delta >= 0 ? '+' : ''}${row.delta} 7d)`,
+          profileUrl: profileUrl(meta || { slug: row.slug, name: row.name }),
+        });
+      }
+    }
+  } catch {
+    /* fallback below */
+  }
+
+  try {
+    const gm2 = require('./gm2');
+    const { intel } = gm2.getPublicIntel({ limit: 80, subsystem: 'recruiting-hub' });
+    for (const row of intel) {
+      const ts = row.reportedAt || row.timestamp || row.createdAt;
+      if (!ts || new Date(ts).getTime() < cutoff) continue;
+      const slug = String(row.playerSlug || '').toLowerCase();
+      const meta = bySlug.get(slug);
+      items.push(feedItemFromIntel(row, meta));
+    }
+  } catch {
+    /* optional */
+  }
+
+  for (const player of enriched.targets || []) {
+    if (player.movementDirection !== 'up' && player.movementDirection !== 'down') continue;
+    items.push({
+      id: `${player.slug}-movement`,
+      timestamp: new Date().toISOString(),
+      name: player.name,
+      position: playerPos(player),
+      event: player.movementDirection === 'up' ? 'up' : 'down',
+      summary:
+        player.notePreview ??
+        player.skinny ??
+        (player.movementDirection === 'up'
+          ? 'Momentum building on the board.'
+          : 'Cooling on the recruiting trail.'),
+      profileUrl: profileUrl(player),
+    });
+  }
+
+  const seen = new Set();
+  const deduped = [];
+  for (const item of items.sort(
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  )) {
+    const key = `${item.id}-${item.summary.slice(0, 40)}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    deduped.push(item);
+    if (deduped.length >= 25) break;
+  }
+
+  if (deduped.length < 5) {
+    try {
+      const heat = await buildHeatCheck();
+      for (const row of heat.rising || []) {
+        if (deduped.length >= 12) break;
+        deduped.push({
+          id: `heat-${row.playerSlug || row.playerName}`,
+          timestamp: row.updatedAt || new Date().toISOString(),
+          name: row.playerName,
+          position: row.position || '—',
+          event: 'up',
+          summary: row.headline ?? row.triggerLabel ?? 'Momentum building on the board.',
+          profileUrl: profileUrl({ slug: row.playerSlug, name: row.playerName }),
+        });
+      }
+    } catch {
+      /* optional */
+    }
+  }
+
+  return deduped.slice(0, 25);
+}
+
 module.exports = {
   buildHubTicker,
   buildHubClassOverview,
@@ -374,4 +634,6 @@ module.exports = {
   buildHubCommits,
   buildHubBattles,
   buildHubPositions,
+  buildHubHeatIndex,
+  buildHubMovementFeed,
 };

@@ -6,7 +6,8 @@ import { RecruitingHeroStrip } from '@/components/recruiting-hub/elite/Recruitin
 import { SigningDayTracker } from '@/components/recruiting-hub/elite/SigningDayTracker';
 import { ClassCards } from '@/components/recruiting-hub/elite/ClassCards';
 import { RecruitingClassOverview } from '@/components/recruiting-hub/elite/RecruitingClassOverview';
-import { RecruitingCommitBoard } from '@/components/recruiting-hub/elite/RecruitingCommitBoard';
+import { TopTargetsHeatIndex } from '@/components/recruiting-hub/elite/TopTargetsHeatIndex';
+import { MovementIntelFeed } from '@/components/recruiting-hub/elite/MovementIntelFeed';
 import { RecruitingBattlesMovement } from '@/components/recruiting-hub/elite/RecruitingBattlesMovement';
 import { RecruitingPositionSnapshot } from '@/components/recruiting-hub/elite/RecruitingPositionSnapshot';
 
@@ -18,7 +19,8 @@ export function RecruitingHubElite(): React.ReactElement {
       <SigningDayTracker />
       <ClassCards />
       <RecruitingClassOverview />
-      <RecruitingCommitBoard />
+      <TopTargetsHeatIndex />
+      <MovementIntelFeed />
       <RecruitingBattlesMovement />
       <RecruitingPositionSnapshot />
     </div>
