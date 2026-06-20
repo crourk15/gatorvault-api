@@ -14,6 +14,7 @@ const DIFFICULTY_LABELS: Record<RhHubBattleBoardItem['battleDifficulty'], string
   hard: 'Hard',
   flip: 'Flip Watch',
   longshot: 'Longshot',
+  unknown: 'Unknown',
 };
 
 function trendSymbol(trend: RhHubBattleBoardItem['trend']): string {
@@ -23,7 +24,9 @@ function trendSymbol(trend: RhHubBattleBoardItem['trend']): string {
 }
 
 function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactElement {
-  const ufColor = battle.battleColor ?? getBattleColor(battle.ufScore);
+  const ufColor =
+    battle.battleColor ?? (battle.ufScore != null ? getBattleColor(battle.ufScore) : null);
+
   return (
     <article className="rh-card rh-battle-board-card" data-testid={`rh-battle-board-${battle.id}`}>
       <div className="rh-battle-board-card__head">
@@ -43,27 +46,34 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
         </div>
       </div>
 
-      <div className={`rh-battle-board-card__uf rh-battle-board-card__uf--${ufColor}`}>
+      <div
+        className={`rh-battle-board-card__uf${ufColor ? ` rh-battle-board-card__uf--${ufColor}` : ' rh-battle-board-card__uf--unknown'}`}
+      >
         <span>UF battle score</span>
-        <strong>{battle.ufScore}</strong>
+        <strong>{battle.ufScore != null ? battle.ufScore : '—'}</strong>
       </div>
 
-      <div className="rh-battle-board-card__competitors">
-        {battle.competitors.map((c) => (
-          <div key={`${battle.id}-${c.school}`} className="rh-battle-board-competitor">
-            <span className="rh-battle-board-competitor__logo">{c.logo}</span>
-            <div className="rh-battle-board-competitor__meta">
-              <span className="rh-battle-board-competitor__school">{c.school}</span>
-              <span className="rh-battle-board-competitor__score">
-                {c.score} <span className={`rh-movement rh-movement--${c.trend}`}>{trendSymbol(c.trend)}</span>
-              </span>
+      {battle.competitors.length > 0 ? (
+        <div className="rh-battle-board-card__competitors">
+          {battle.competitors.map((c) => (
+            <div key={`${battle.id}-${c.school}`} className="rh-battle-board-competitor">
+              <span className="rh-battle-board-competitor__logo">{c.logo}</span>
+              <div className="rh-battle-board-competitor__meta">
+                <span className="rh-battle-board-competitor__school">{c.school}</span>
+                <span className="rh-battle-board-competitor__score">
+                  {c.score != null ? c.score : '—'}{' '}
+                  <span className={`rh-movement rh-movement--${c.trend}`}>{trendSymbol(c.trend)}</span>
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="rh-battle-board-card__no-competitors">No competitor data on file</div>
+      )}
 
       {battle.nextVisit ? <div className="rh-battle-board-card__visit">Next visit: {battle.nextVisit}</div> : null}
-      <div className="rh-battle-board-card__intel">{battle.intel}</div>
+      {battle.intel ? <div className="rh-battle-board-card__intel">{battle.intel}</div> : null}
     </article>
   );
 }
@@ -86,7 +96,7 @@ export function BattleBoard(): React.ReactElement {
         </section>
       ) : !data.length ? (
         <section className="rh-card" data-testid="rh-elite-battle-board">
-          <p className="rh-empty">Battle board updating — check back shortly.</p>
+          <p className="rh-empty">No battle data available — waiting on real competitor and UF score records.</p>
         </section>
       ) : (
         <section className="rh-battle-board-grid" data-testid="rh-elite-battle-board">

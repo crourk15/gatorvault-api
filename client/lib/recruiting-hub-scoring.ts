@@ -4,7 +4,8 @@
 
 export type BattleColor = 'blue' | 'orange' | 'red';
 
-export function getBattleColor(ufScore: number): BattleColor {
+export function getBattleColor(ufScore: number | null): BattleColor | null {
+  if (ufScore == null || !Number.isFinite(ufScore)) return null;
   if (ufScore >= 70) return 'blue';
   if (ufScore >= 40) return 'orange';
   return 'red';
@@ -12,11 +13,12 @@ export function getBattleColor(ufScore: number): BattleColor {
 
 export function getPinColor(
   pinType: 'commit' | 'target' | 'portal' | 'battle',
-  ufScore: number,
+  ufScore: number | null,
   battleDifficulty?: string
 ): string {
   if (pinType === 'commit') return '#0021A5';
   if (battleDifficulty === 'flip' || pinType === 'battle') return '#9333EA';
+  if (ufScore == null) return '#9CA3AF';
   if (ufScore >= 50) return '#F97316';
   if (ufScore < 40) return '#DC2626';
   return '#F97316';
@@ -32,10 +34,4 @@ export function getOutlineColor(ufScore: number): string {
   if (ufScore >= 70) return '#0021A5';
   if (ufScore >= 40) return '#F97316';
   return '#DC2626';
-}
-
-export function momentumSymbol(momentum: 'up' | 'down' | 'flat'): string {
-  if (momentum === 'up') return '▲';
-  if (momentum === 'down') return '▼';
-  return '→';
 }

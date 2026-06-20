@@ -1,27 +1,27 @@
 'use client';
 
 import React from 'react';
+import { Marker } from 'react-simple-maps';
 import type { RhHubFootprintPin } from '@/lib/recruiting-hub-elite-api';
 import { getPinColor } from '@/lib/recruiting-hub-scoring';
-import { projectLatLng } from './us-state-centroids';
 
 type Props = {
   pins: RhHubFootprintPin[];
-  width: number;
-  height: number;
 };
 
-export function TargetPinsLayer({ pins, width, height }: Props): React.ReactElement {
+export function TargetPinsLayer({ pins }: Props): React.ReactElement {
   return (
     <g className="rh-footprint-pins">
       {pins.map((pin) => {
-        const { x, y } = projectLatLng(pin.lat, pin.lng, width, height);
-        const color = getPinColor(pin.pinType, pin.ufScore);
+        const fill = getPinColor(pin.pinType, pin.ufScore ?? 0);
         return (
-          <g key={pin.id} className="rh-footprint-pin" transform={`translate(${x}, ${y})`}>
-            <circle r={5} fill={color} stroke="#ffffff" strokeWidth={1.2} />
-            <title>{`${pin.name} · ${pin.state} · UF ${pin.ufScore}`}</title>
-          </g>
+          <Marker key={pin.id} coordinates={[pin.lng, pin.lat]}>
+            <circle r={4.5} fill={fill} stroke="#ffffff" strokeWidth={1} className="rh-footprint-pin">
+              <title>
+                {pin.name} ({pin.state}) — {pin.status}
+              </title>
+            </circle>
+          </Marker>
         );
       })}
     </g>

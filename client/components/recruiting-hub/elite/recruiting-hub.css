@@ -1256,6 +1256,12 @@
   color: #991b1b;
 }
 
+.rh-elite-chrome .rh-badge--battle-unknown {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+  color: #4b5563;
+}
+
 .rh-elite-chrome .rh-battle-board-card__uf {
   display: flex;
   justify-content: space-between;
@@ -1334,6 +1340,16 @@
   color: #dc2626;
 }
 
+.rh-elite-chrome .rh-battle-board-card__uf--unknown strong {
+  color: var(--muted-text);
+}
+
+.rh-elite-chrome .rh-battle-board-card__no-competitors {
+  font-size: 12px;
+  color: var(--muted-text);
+  margin-bottom: 10px;
+}
+
 .rh-elite-chrome .rh-battle-board-card__uf--blue {
   border-left: 3px solid #0021a5;
   padding-left: 8px;
@@ -1377,40 +1393,15 @@
   display: block;
   width: 100%;
   height: auto;
+  background: #111827;
 }
 
-.rh-elite-chrome .rh-footprint-map__bg {
-  fill: #111827;
+.rh-elite-chrome .rh-footprint-state-path {
+  transition: fill-opacity 0.15s ease, stroke 0.15s ease;
 }
 
-.rh-elite-chrome .rh-footprint-state-circle {
-  cursor: pointer;
-  transition: stroke-width 0.15s ease, fill-opacity 0.15s ease;
-}
-
-.rh-elite-chrome .rh-footprint-state-label {
-  fill: #ffffff;
-  font-size: 11px;
-  font-weight: 700;
+.rh-elite-chrome .rh-footprint-pin {
   pointer-events: none;
-}
-
-.rh-elite-chrome .rh-footprint-momentum-label {
-  fill: #ffffff;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.rh-elite-chrome .rh-footprint-momentum-label--up {
-  fill: #22c55e;
-}
-
-.rh-elite-chrome .rh-footprint-momentum-label--down {
-  fill: #ef4444;
-}
-
-.rh-elite-chrome .rh-footprint-momentum-label--flat {
-  fill: #9ca3af;
 }
 
 .rh-elite-chrome .rh-footprint-map__sidebar {
@@ -1501,8 +1492,22 @@
   background: #dc2626;
 }
 
-.rh-elite-chrome .rh-footprint-legend__swatch--purple {
-  background: #9333ea;
+.rh-elite-chrome .rh-footprint-legend__swatch--gray {
+  background: #9ca3af;
+}
+
+.rh-elite-chrome .rh-footprint-legend__swatch--pin-commit {
+  background: #0021a5;
+  border-radius: 999px;
+  width: 10px;
+  height: 10px;
+}
+
+.rh-elite-chrome .rh-footprint-legend__swatch--pin-target {
+  background: #f97316;
+  border-radius: 999px;
+  width: 10px;
+  height: 10px;
 }
 
 .rh-elite-chrome .rh-footprint-legend__hint {

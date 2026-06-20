@@ -1,26 +1,30 @@
 'use client';
 
 import React, { useCallback, useState } from 'react';
+import { ComposableMap, Geographies } from 'react-simple-maps';
 import {
   fetchRecruitingHubFootprint,
   type RhHubFootprintState,
 } from '@/lib/recruiting-hub-elite-api';
 import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
-import { momentumSymbol } from '@/lib/recruiting-hub-scoring';
 import { StateHeatLayer } from './StateHeatLayer';
 import { TargetPinsLayer } from './TargetPinsLayer';
 import { BattleDifficultyLayer } from './BattleDifficultyLayer';
-import { MomentumLayer } from './MomentumLayer';
+import { US_MAP_GEO_URL } from './state-geo-utils';
 
 const MAP_WIDTH = 960;
 const MAP_HEIGHT = 520;
 
+function momentumLabel(momentum: RhHubFootprintState['momentum']): string {
+  if (momentum === 'up') return 'Gaining';
+  if (momentum === 'down') return 'Slipping';
+  return 'Holding';
+}
+
 function FootprintTooltip({ state }: { state: RhHubFootprintState }): React.ReactElement {
   return (
     <div className="rh-footprint-tooltip">
-      <div className="rh-footprint-tooltip__title">
-        {state.state} {momentumSymbol(state.momentum)}
-      </div>
+      <div className="rh-footprint-tooltip__title">{state.state}</div>
       <dl className="rh-footprint-tooltip__stats">
         <div>
           <dt>Targets</dt>
@@ -39,19 +43,26 @@ function FootprintTooltip({ state }: { state: RhHubFootprintState }): React.Reac
           <dd>{state.visits}</dd>
         </div>
         <div>
-          <dt>UF Score</dt>
-          <dd>{state.ufScore}</dd>
+          <dt>Momentum</dt>
+          <dd>{momentumLabel(state.momentum)}</dd>
         </div>
         <div>
           <dt>Pipeline</dt>
           <dd>{state.pipelineScore}</dd>
         </div>
+        {state.ufScore != null ? (
+          <div>
+            <dt>UF Score</dt>
+            <dd>{state.ufScore}</dd>
+          </div>
+        ) : null}
       </dl>
       {state.topPlayers.length > 0 ? (
         <ul className="rh-footprint-tooltip__players">
           {state.topPlayers.slice(0, 3).map((p) => (
             <li key={p.id}>
-              {p.name} · {p.position} · UF {p.ufScore}
+              {p.name} · {p.position}
+              {p.ufScore != null ? ` · UF ${p.ufScore}` : ''}
             </li>
           ))}
         </ul>
@@ -83,7 +94,7 @@ export function RecruitingFootprintMap(): React.ReactElement {
       <div className="rh-section-header">
         <div className="rh-section-title">Recruiting Footprint Map</div>
         <div className="rh-section-subtitle">
-          Geographic pipeline intelligence — targets, commits, battles, and momentum by state.
+          UF recruiting pipeline by state — real targets, commits, visits, and battles.
         </div>
       </div>
 
@@ -101,30 +112,27 @@ export function RecruitingFootprintMap(): React.ReactElement {
         <section className="rh-card rh-footprint-map" data-testid="rh-elite-footprint">
           <div className="rh-footprint-map__layout">
             <div className="rh-footprint-map__canvas-wrap">
-              <svg
-                viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
+              <ComposableMap
+                projection="geoAlbersUsa"
+                width={MAP_WIDTH}
+                height={MAP_HEIGHT}
                 className="rh-footprint-map__svg"
-                role="img"
-                aria-label="United States recruiting footprint map"
               >
-                <rect
-                  x={0}
-                  y={0}
-                  width={MAP_WIDTH}
-                  height={MAP_HEIGHT}
-                  className="rh-footprint-map__bg"
-                />
-                <StateHeatLayer
-                  states={states}
-                  width={MAP_WIDTH}
-                  height={MAP_HEIGHT}
-                  hoveredState={hoveredState}
-                  onHover={setHoveredState}
-                />
-                <BattleDifficultyLayer states={states} width={MAP_WIDTH} height={MAP_HEIGHT} />
-                <TargetPinsLayer pins={pins} width={MAP_WIDTH} height={MAP_HEIGHT} />
-                <MomentumLayer states={states} width={MAP_WIDTH} height={MAP_HEIGHT} />
-              </svg>
+                <Geographies geography={US_MAP_GEO_URL}>
+                  {({ geographies }) => (
+                    <>
+                      <StateHeatLayer
+                        geographies={geographies}
+                        states={states}
+                        hoveredState={hoveredState}
+                        onHover={setHoveredState}
+                      />
+                      <BattleDifficultyLayer geographies={geographies} states={states} />
+                    </>
+                  )}
+                </Geographies>
+                <TargetPinsLayer pins={pins} />
+              </ComposableMap>
             </div>
             <aside className="rh-footprint-map__sidebar">
               {activeState ? (
@@ -135,22 +143,40 @@ export function RecruitingFootprintMap(): React.ReactElement {
                   <ul className="rh-footprint-legend__list">
                     <li>
                       <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--blue" />
-                      Commit / UF strong (≥70)
+                      State fill — high pipeline activity
                     </li>
                     <li>
                       <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--orange" />
-                      UF lean / contested
+                      State fill — moderate activity
+                    </li>
+                    <li>
+                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--gray" />
+                      No recruiting activity
+                    </li>
+                    <li>
+                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--blue" />
+                      Border — UF strong (score ≥70)
+                    </li>
+                    <li>
+                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--orange" />
+                      Border — contested (40–69)
                     </li>
                     <li>
                       <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--red" />
-                      Trailing (&lt;40)
+                      Border — trailing (&lt;40)
                     </li>
                     <li>
-                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--purple" />
-                      Flip watch / battle
+                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--pin-commit" />
+                      Pin — commit
+                    </li>
+                    <li>
+                      <span className="rh-footprint-legend__swatch rh-footprint-legend__swatch--pin-target" />
+                      Pin — target / battle
                     </li>
                   </ul>
-                  <p className="rh-footprint-legend__hint">Hover a state for targets, commits, and pipeline stats.</p>
+                  <p className="rh-footprint-legend__hint">
+                    Hover a colored state for targets, commits, offers, visits, momentum, and pipeline score.
+                  </p>
                   <div className="rh-footprint-summary">
                     <span>{states.length} active states</span>
                     <span>{pins.length} map pins</span>

@@ -15,6 +15,11 @@ const {
   getBattleColor,
   normalizePipelineScore,
 } = require('./recruiting-hub-scoring');
+const {
+  extractRealCompetitors,
+  topCompetitorScore,
+  resolveStrictUfScore,
+} = require('./recruiting-hub-competitors');
 
 const HUB_CLASS_YEARS = [2027, 2028, 2029];
 const FEED_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
@@ -252,7 +257,7 @@ function mapIntelToFeedItem(row, meta) {
   };
 }
 
-const RECENT_VISIT_MS = 2 * 24 * 60 * 60 * 1000;
+const RECENT_VISIT_MS = 14 * 24 * 60 * 60 * 1000;
 
 function startOfDay(d) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -311,6 +316,42 @@ function boardInsiderIntelItem(meta, note) {
   };
 }
 
+function boardCompetitorChangeItem(meta, row) {
+  const school =
+    row.predictionSchool ||
+    row.nextVisitSchool ||
+    row.competitorSchool ||
+    'competitor';
+  return {
+    id: `board-competitor-${meta.slug}-${row.fingerprint || row.id}`,
+    timestamp: row.reportedAt || row.timestamp || row.createdAt || new Date().toISOString(),
+    name: meta.name,
+    position: meta.position,
+    class: meta.classYear,
+    event: mapIntelEventType(row),
+    summary: `${meta.name} — battle movement (${school})`,
+    profileUrl: meta.profileUrl,
+  };
+}
+
+function hasRecordedOffer(player) {
+  if (countFloridaOffers(player) > 0) return true;
+  const ov = String(player.ufOvStatus || '').toUpperCase();
+  return ov.includes('OFFER');
+}
+
+function boardOfferItem(meta) {
+  return {
+    id: `board-offer-${meta.slug}`,
+    timestamp: new Date().toISOString(),
+    name: meta.name,
+    position: meta.position,
+    class: meta.classYear,
+    event: 'offer',
+    summary: `${meta.name} — UF offer on record`,
+    profileUrl: meta.profileUrl,
+  };
+}
 function boardMovementItem(meta) {
   const summary =
     meta.notePreview ??
@@ -333,6 +374,7 @@ function boardMovementItem(meta) {
 
 async function buildHubMovementFeed() {
   const pool = await loadHubRecruitingPool();
+  const rawMap = loadRawPlayerMap();
   const cutoff = Date.now() - FEED_WINDOW_MS;
   const rows = intelStore.listIntel({ limit: 600 });
   const items = [];
@@ -351,6 +393,8 @@ async function buildHubMovementFeed() {
   for (const meta of pool.values()) {
     if (meta.isCommit) continue;
     if (covered.has(meta.slug)) continue;
+    const raw = rawMap.get(String(meta.slug).toLowerCase()) || {};
+    const merged = { ...raw, ...meta };
 
     if (isRelevantVisit(meta.visitStart)) {
       items.push(boardVisitItem(meta));
@@ -358,9 +402,29 @@ async function buildHubMovementFeed() {
       continue;
     }
 
-    const note = shortNote(meta);
-    if (note && isRecruitingNote(note) && qualifiesInsiderIntel(meta)) {
-      items.push(boardInsiderIntelItem(meta, note));
+    if (hasRecordedOffer(merged)) {
+      items.push(boardOfferItem(meta));
+      covered.add(meta.slug);
+      continue;
+    }
+
+    const slugIntel = rows.filter(
+      (r) => String(r.playerSlug || r.player_slug || '').toLowerCase() === String(meta.slug).toLowerCase()
+    );
+    const competitorRow = slugIntel.find((row) => {
+      const ts = new Date(row.reportedAt || row.timestamp || row.createdAt).getTime();
+      if (!Number.isFinite(ts) || ts < cutoff) return false;
+      const et = String(row.eventType || '').toLowerCase();
+      return (
+        et === 'prediction_change' ||
+        et === 'rivals_futurecast' ||
+        et === 'prediction' ||
+        row.predictionSchool ||
+        row.nextVisitSchool
+      );
+    });
+    if (competitorRow) {
+      items.push(boardCompetitorChangeItem(meta, competitorRow));
       covered.add(meta.slug);
       continue;
     }
@@ -577,13 +641,9 @@ function classifyIntelSentiment(row) {
   return null;
 }
 
-function topCompetitorScore(player, ufScore) {
-  const leader = player.leaderSchool ?? player.predictionLeader ?? player.topSchool ?? null;
-  const leaderName = typeof leader === 'string' ? leader : leader?.name || leader?.school || null;
-  if (leaderName && !isFloridaSchool(leaderName)) {
-    return Math.min(95, Math.max(100 - ufScore, ufScore - 5));
-  }
-  return Math.max(8, Math.min(88, Math.round(100 - ufScore)));
+function topCompetitorScoreForPlayer(player, intelRows) {
+  const competitors = extractRealCompetitors(player, intelRows);
+  return topCompetitorScore(competitors);
 }
 
 async function loadHubFootprintPlayers() {
@@ -696,19 +756,12 @@ async function buildHubFootprint() {
     bucket.visits += visitCount;
 
     const inputs = deriveUfScoreInputs(player, playerIntel);
-    const ufScore =
-      player.ufProbability != null && Number(player.ufProbability) > 0
-        ? parseUfPct(player.ufProbability)
-        : calcUfScore(
-            inputs.interestLevel,
-            inputs.visitScore,
-            inputs.staffPriority,
-            inputs.intelConfidence,
-            inputs.timelineFit
-          );
-    bucket.ufScores.push(ufScore);
+    void inputs;
+    const ufScore = resolveStrictUfScore(player, playerIntel);
+    if (ufScore != null) bucket.ufScores.push(ufScore);
 
-    const competitorScore = topCompetitorScore(player, ufScore);
+    const competitors = extractRealCompetitors(player, playerIntel);
+    const competitorScore = topCompetitorScore(competitors);
     const trend =
       player.movementDirection === 'up'
         ? 'up'
@@ -726,7 +779,10 @@ async function buildHubFootprint() {
       competitorScore,
       trend,
       isPortal: player._footprintKind === 'portal',
-      battleDifficulty: getBattleDifficulty(ufScore, competitorScore, trend),
+      battleDifficulty:
+        ufScore != null && competitorScore != null
+          ? getBattleDifficulty(ufScore, competitorScore, trend)
+          : 'unknown',
       pinLat: player.pinLat ?? player.lat ?? null,
       pinLng: player.pinLng ?? player.lng ?? null,
     });
@@ -768,9 +824,14 @@ async function buildHubFootprint() {
   const states = [];
 
   for (const bucket of stateBuckets.values()) {
+    const hasActivity =
+      bucket.targets + bucket.commits + bucket.offers + bucket.visits > 0 ||
+      bucket.positiveIntel + bucket.negativeIntel > 0;
+    if (!hasActivity) continue;
+
     const ufScore = bucket.ufScores.length
       ? Math.round(bucket.ufScores.reduce((a, b) => a + b, 0) / bucket.ufScores.length)
-      : 0;
+      : null;
 
     const rawPipeline =
       bucket.commits * 10 +
@@ -781,13 +842,14 @@ async function buildHubFootprint() {
       bucket.negativeIntel * 5;
 
     const pipelineScore = normalizePipelineScore(rawPipeline);
+    if (pipelineScore <= 0 && !hasActivity) continue;
 
     let momentum = 'flat';
     if (bucket.positiveIntel > bucket.negativeIntel) momentum = 'up';
     else if (bucket.negativeIntel > bucket.positiveIntel) momentum = 'down';
 
     const topPlayers = [...bucket.playerRecords]
-      .sort((a, b) => b.ufScore - a.ufScore)
+      .sort((a, b) => (b.ufScore ?? -1) - (a.ufScore ?? -1))
       .slice(0, 5)
       .map(({ trend, isPortal, battleDifficulty, ...rest }) => {
         void trend;
@@ -853,53 +915,13 @@ async function buildHubFootprint() {
   };
 }
 
-function battleDifficulty(uf, meta, topCompetitor) {
-  const trend =
-    meta.movementDirection === 'up'
-      ? 'up'
-      : meta.movementDirection === 'down'
-        ? 'down'
-        : 'flat';
-  return getBattleDifficulty(uf, topCompetitor ?? Math.max(8, 100 - uf), trend);
-}
-
-function competitorTrend(score, meta) {
-  if (meta.movementDirection === 'down' && score > meta.ufScore) return 'up';
-  if (meta.movementDirection === 'up' && score < meta.ufScore) return 'down';
-  return 'flat';
-}
-
-function buildCompetitors(meta, ufScore) {
-  const leader = meta.leaderSchool;
-  const leaderName =
-    typeof leader === 'string' ? leader : leader?.name || leader?.school || null;
-  const competitors = [];
-
-  if (leaderName && !isFloridaSchool(leaderName)) {
-    const score = Math.min(95, Math.max(100 - ufScore, ufScore - 5));
-    competitors.push({
-      school: String(leaderName).slice(0, 28),
-      logo: schoolInitials(leaderName),
-      score,
-      trend: 'flat',
-    });
-  }
-
-  const defaults = ['Florida State', 'Georgia', 'Miami'];
-  for (const school of defaults) {
-    if (competitors.length >= 3) break;
-    if (competitors.some((c) => c.school === school)) continue;
-    if (isFloridaSchool(school)) continue;
-    const score = Math.max(8, Math.min(88, Math.round(100 - ufScore - competitors.length * 6)));
-    competitors.push({
-      school,
-      logo: schoolInitials(school),
-      score,
-      trend: competitorTrend(score, { ...meta, ufScore }),
-    });
-  }
-
-  return competitors.slice(0, 3);
+function buildCompetitors(player, intelRows) {
+  return extractRealCompetitors(player, intelRows).map((c) => ({
+    school: c.school,
+    logo: c.logo,
+    score: c.score,
+    trend: c.trend || 'flat',
+  }));
 }
 
 async function buildHubBattleBoard() {
@@ -916,19 +938,11 @@ async function buildHubBattleBoard() {
       (r) => String(r.playerSlug || r.player_slug || '').toLowerCase() === String(meta.slug).toLowerCase()
     );
 
-    const inputs = deriveUfScoreInputs(merged, slugIntel);
-    const ufScore =
-      meta.ufProbability != null && Number(meta.ufProbability) > 0
-        ? parseUfPct(meta.ufProbability)
-        : calcUfScore(
-            inputs.interestLevel,
-            inputs.visitScore,
-            inputs.staffPriority,
-            inputs.intelConfidence,
-            inputs.timelineFit
-          );
+    const ufScore = resolveStrictUfScore(merged, slugIntel);
+    const competitors = buildCompetitors(merged, slugIntel);
+    const topCompetitor = topCompetitorScore(competitors);
 
-    if (ufScore < 20 && meta.tier !== 'TOP' && meta.tier !== 'HIGH') continue;
+    if (ufScore == null && !competitors.length) continue;
 
     const trend =
       meta.movementDirection === 'up'
@@ -937,25 +951,27 @@ async function buildHubBattleBoard() {
           ? 'down'
           : 'flat';
 
-    const competitors = buildCompetitors(meta, ufScore);
-    const topCompetitor = competitors.length ? competitors[0].score : Math.max(8, 100 - ufScore);
+    const intel = shortNote(meta);
 
     rows.push({
       id: meta.slug,
       name: meta.name,
       position: meta.position,
       class: meta.classYear,
-      battleDifficulty: battleDifficulty(ufScore, meta, topCompetitor),
-      battleColor: getBattleColor(ufScore),
+      battleDifficulty:
+        ufScore != null && topCompetitor != null
+          ? getBattleDifficulty(ufScore, topCompetitor, trend)
+          : 'unknown',
+      battleColor: ufScore != null ? getBattleColor(ufScore) : null,
       trend,
       competitors,
       ufScore,
       nextVisit: formatNextVisit(meta),
-      intel: shortNote(meta) || 'Battle tracking active on the board.',
+      intel: intel || null,
     });
   }
 
-  rows.sort((a, b) => b.ufScore - a.ufScore);
+  rows.sort((a, b) => (b.ufScore ?? -1) - (a.ufScore ?? -1));
   return rows.slice(0, 12);
 }
 

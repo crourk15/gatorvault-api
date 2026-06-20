@@ -159,8 +159,10 @@ function resolveUfScore(player, intelRows = []) {
 }
 
 function getBattleDifficulty(ufScore, topCompetitorScore, trend) {
-  const uf = Number(ufScore) || 0;
-  const top = Number(topCompetitorScore) || 0;
+  if (ufScore == null || topCompetitorScore == null) return 'unknown';
+  const uf = Number(ufScore);
+  const top = Number(topCompetitorScore);
+  if (!Number.isFinite(uf) || !Number.isFinite(top)) return 'unknown';
   const gap = uf - top;
 
   if (uf >= 80 && gap >= 20 && trend !== 'down') return 'easy';
@@ -172,7 +174,8 @@ function getBattleDifficulty(ufScore, topCompetitorScore, trend) {
 }
 
 function getBattleColor(ufScore) {
-  const uf = Number(ufScore) || 0;
+  if (ufScore == null || !Number.isFinite(Number(ufScore))) return null;
+  const uf = Number(ufScore);
   if (uf >= 70) return 'blue';
   if (uf >= 40) return 'orange';
   return 'red';
@@ -245,4 +248,5 @@ module.exports = {
   calcStaffImpact,
   normalizePipelineScore,
   parseUfPct,
+  isFloridaSchool,
 };

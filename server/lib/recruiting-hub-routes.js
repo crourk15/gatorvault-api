@@ -386,6 +386,21 @@ function mountRecruitingHubRoutes(app) {
       return res.status(500).json({ ok: false, error: err.message });
     }
   });
+
+  app.post('/api/recruiting/hub/refresh', async (req, res) => {
+    try {
+      const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.CRON_SECRET || '';
+      const isCron = cronSecret && req.headers['x-monitoring-cron'] === cronSecret;
+      if (!isCron && process.env.NODE_ENV === 'production') {
+        return res.status(403).json({ ok: false, error: 'Forbidden' });
+      }
+      const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
+      const result = await refreshRecruitingHubCaches();
+      return res.json({ ok: true, meta: hubMeta(), ...result });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 }
 
 module.exports = { mountRecruitingHubRoutes, buildClassPayload, mapPlayerToHub, clearHubCache, buildHighPriorityIntel };

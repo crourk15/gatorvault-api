@@ -98,18 +98,18 @@ export type RhHubBattleBoardItem = {
   name: string;
   position: string;
   class: number;
-  battleDifficulty: 'easy' | 'moderate' | 'hard' | 'flip' | 'longshot';
-  battleColor?: 'blue' | 'orange' | 'red';
+  battleDifficulty: 'easy' | 'moderate' | 'hard' | 'flip' | 'longshot' | 'unknown';
+  battleColor?: 'blue' | 'orange' | 'red' | null;
   trend: 'up' | 'down' | 'flat';
   competitors: Array<{
     school: string;
     logo: string;
-    score: number;
+    score: number | null;
     trend: 'up' | 'down' | 'flat';
   }>;
-  ufScore: number;
+  ufScore: number | null;
   nextVisit: string | null;
-  intel: string;
+  intel: string | null;
 };
 
 export type RhHubFootprintPlayer = {
@@ -118,8 +118,8 @@ export type RhHubFootprintPlayer = {
   position: string;
   class: number;
   status: 'commit' | 'target';
-  ufScore: number;
-  competitorScore: number;
+  ufScore: number | null;
+  competitorScore: number | null;
   pinLat?: number | null;
   pinLng?: number | null;
 };
@@ -139,7 +139,7 @@ export type RhHubFootprintState = {
   commits: number;
   offers: number;
   visits: number;
-  ufScore: number;
+  ufScore: number | null;
   pipelineScore: number;
   momentum: 'up' | 'down' | 'flat';
   topPlayers: RhHubFootprintPlayer[];
@@ -153,7 +153,7 @@ export type RhHubFootprintPin = {
   lat: number;
   lng: number;
   status: 'commit' | 'target';
-  ufScore: number;
+  ufScore: number | null;
   pinType: 'commit' | 'target' | 'portal' | 'battle';
 };
 

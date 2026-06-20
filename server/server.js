@@ -1149,6 +1149,12 @@ app.listen(PORT, () => {
         }
       })
       .catch((err) => console.warn('[headlines] purge skipped:', err.message));
+    try {
+      const { scheduleRecruitingHubRefresh } = require('./lib/recruiting-hub-refresh');
+      scheduleRecruitingHubRefresh();
+    } catch (e) {
+      console.warn('[recruiting-hub] refresh scheduler skipped:', e.message);
+    }
   } catch (e) {
     console.warn('Recruiting API: failed to init', e.message);
   }
