@@ -7,7 +7,7 @@
 # `main` is the single source of truth — Render will redeploy automatically on push.
 
 services:
-  - type: web
+    - type: web
     name: gatorvault-api
     runtime: node
     plan: free
@@ -19,6 +19,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      ...
+
       - key: SITE_URL
         value: https://gatorvaultinsider.com
       - key: NEXT_PUBLIC_API_BASE
