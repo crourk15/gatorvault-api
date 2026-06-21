@@ -106,12 +106,28 @@ function isFloridaCommit(p) {
   if (!p) return false;
   const status = String(p.status || '').toLowerCase();
   const committedTo = String(p.committedTo || p.committed_to || '').trim();
-  if (!((status === 'committed' || status === 'commit') && /^florida$/i.test(committedTo))) {
-    return false;
-  }
+  const ufCommitted =
+    ['committed', 'commit', 'signed', 'enrolled'].includes(status) &&
+    /^florida$/i.test(committedTo);
+  if (!ufCommitted) return false;
   if (p.protected === true) return true;
+  // Live Supabase store is source of truth — all UF commits in DB count for hub/board.
+  if (initSupabase()) return true;
   const { isVerifiedHubCommit } = require('./recruiting-verified-commits');
   return isVerifiedHubCommit(p);
+}
+
+/** Hub commit list — UF commits for a class year from recruiting store (Supabase or JSON). */
+async function getHubCommits(classYear) {
+  const year = parseInt(classYear, 10);
+  const players = await getAllPlayers();
+  return players
+    .filter((p) => Number(p.classYear) === year && isFloridaCommit(p))
+    .sort((a, b) => {
+      const ra = a.natlRank ?? a.natl ?? 9999;
+      const rb = b.natlRank ?? b.natl ?? 9999;
+      return ra - rb;
+    });
 }
 
 function isCommittedAnywhere(p) {
@@ -1039,6 +1055,7 @@ module.exports = {
   clearEvents,
   deleteEventsMatching,
   getBoard,
+  getHubCommits,
   getPortalBoard,
   selectPortalHeadliner,
   fireRecruitingEvent,

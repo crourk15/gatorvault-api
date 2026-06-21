@@ -133,23 +133,16 @@ async function buildHubClassOverview(year = 2027) {
   let rising = 0;
   let falling = 0;
   try {
-    const { buildMovementSummaryPayload } = require('../api/recruiting/movement-summary.ts');
-    const summary = await buildMovementSummaryPayload();
-    rising = summary.rising ?? 0;
-    falling = summary.falling ?? 0;
+  const { buildMovementSummaryPayload } = require('../api/recruiting/movement-summary.ts');
+  const summary = await buildMovementSummaryPayload();
+  rising = summary.rising ?? 0;
+  falling = summary.falling ?? 0;
   } catch {
     rising = targets.filter((p) => p.movementDirection === 'up').length;
     falling = targets.filter((p) => p.movementDirection === 'down').length;
   }
 
-  const { countVerifiedHubCommits } = require('./recruiting-verified-commits');
-  const store = require('./recruiting-store');
-  const allPlayers = await store.getAllPlayers();
-  const hubYear = Number(year);
-  const commitCount =
-    hubYear >= 2027 && hubYear <= 2029
-      ? countVerifiedHubCommits(allPlayers, hubYear)
-      : commits.length;
+  const commitCount = commits.length;
 
   const rankTrend = trendFromDelta(falling - rising);
   const chipTrend = chip != null && chip >= 70 ? 'up' : 'stable';
@@ -245,14 +238,12 @@ function mapHubCommit(player, classYear) {
 }
 
 async function buildHubCommits(year = 2027) {
-  const enriched = await loadEnrichedBoard(year);
-  const commits = [...(enriched.commits || [])].sort((a, b) => {
-    const ra = a.natlRank ?? a.natl ?? 9999;
-    const rb = b.natlRank ?? b.natl ?? 9999;
-    return ra - rb;
-  });
+  const commits = await store.getHubCommits(year);
+  const { enrichBoard } = require('./recruiting-board-enrich');
+  const enriched = enrichBoard({ classYear: year, commits, targets: [], rankings: null }, false);
+  const rows = enriched.commits || commits;
 
-  return commits.map((player) => mapHubCommit(player, year));
+  return rows.map((player) => mapHubCommit(player, year));
 }
 
 async function buildHubClassOverviewAll() {
