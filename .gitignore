@@ -17,6 +17,8 @@ server/futurecast/index.html
 server/futurecast/index.txt
 server/futurecast/stock/
 server/futurecast/snapshots/
+server/hub-snapshot/
+server/page-snapshot/
 server/player/index.html
 server/player/index.txt
 server/staff/
