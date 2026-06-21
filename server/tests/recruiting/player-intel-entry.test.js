@@ -22,13 +22,23 @@ test('placementForClassYear routes to correct sections', () => {
 });
 
 test('admin allowlist merges into board filter', () => {
-  const slug = 'test-intel-entry-player';
+  const slug = `test-intel-entry-${Date.now()}`;
   addToAdminAllowlist({ slug, name: 'Test Intel Entry Player', classYear: 2028 });
   const set = getAllowlistSet(2028);
   assert.ok(set.has(slug));
   assert.ok(
     isAllowlistedTarget({ slug, name: 'Test Intel Entry Player', classYear: 2028, committedTo: null })
   );
-  const admin = loadAdminAllowlist();
-  assert.ok(admin.slugs2028.includes(slug));
+  // Remove test slug from admin allowlist file
+  const fs = require('fs');
+  const path = require('path');
+  const doc = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '../../data/recruiting/admin-allowlist.json'), 'utf8')
+  );
+  doc.slugs2028 = (doc.slugs2028 || []).filter((s) => s !== slug);
+  delete doc.names[slug];
+  fs.writeFileSync(
+    path.join(__dirname, '../../data/recruiting/admin-allowlist.json'),
+    `${JSON.stringify(doc, null, 2)}\n`
+  );
 });

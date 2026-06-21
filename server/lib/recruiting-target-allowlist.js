@@ -156,6 +156,7 @@ function validateStoreTargets(players) {
   const errors = [];
   for (const p of players || []) {
     if (p.category !== 'target') continue;
+    if (!isActiveUfTarget(p)) continue;
     const year = parseInt(p.classYear || p.class_year, 10);
     if (year !== 2027 && year !== 2028) continue;
     const slug = canonicalTargetSlug(p.slug || slugify(p.name));

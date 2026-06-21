@@ -15,7 +15,7 @@ async function main() {
     stars: 4,
     rating: 91,
     natlRank: 285,
-    category: 'target',
+    category: 'recruit',
     status: 'committed',
     committedTo: 'Miami',
     on3Source: 'manual-cleanup',
