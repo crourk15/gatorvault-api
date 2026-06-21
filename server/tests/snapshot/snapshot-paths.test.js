@@ -34,6 +34,8 @@ function snapshotPathForApi(apiPath) {
     '/api/content/published': `${PAGE_SNAPSHOT_ROOT}/articles/published.json`,
     '/api/film-room/catalog': `${PAGE_SNAPSHOT_ROOT}/film-room/catalog.json`,
     '/api/nil/dashboard': `${PAGE_SNAPSHOT_ROOT}/nil/dashboard.json`,
+    '/api/staff/dashboard': `${PAGE_SNAPSHOT_ROOT}/home/staff-dashboard.json`,
+    '/api/futurecast/heatmap': `${PAGE_SNAPSHOT_ROOT}/futurecast/movement-intel.json`,
     '/api/betting/lines': `${PAGE_SNAPSHOT_ROOT}/game-zone/betting-lines.json`,
     '/api/roster/players': `${PAGE_SNAPSHOT_ROOT}/teams/roster-players.json`,
     '/api/team/coaching-staff': `${PAGE_SNAPSHOT_ROOT}/teams/coaching-staff.json`,

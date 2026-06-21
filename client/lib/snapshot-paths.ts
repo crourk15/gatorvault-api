@@ -39,7 +39,10 @@ function pageSnapshotPath(path: string, params: URLSearchParams): string | null 
   if (path === '/api/content/published') return `${root}/articles/published.json`;
   if (path === '/api/film-room/catalog') return `${root}/film-room/catalog.json`;
   if (path === '/api/nil/dashboard') return `${root}/nil/dashboard.json`;
+  if (path === '/api/staff/dashboard') return `${root}/home/staff-dashboard.json`;
   if (path === '/api/betting/lines') return `${root}/game-zone/betting-lines.json`;
+  if (path === '/api/futurecast/heatmap') return `${root}/futurecast/movement-intel.json`;
+  if (path === '/api/recruiting/movement-intel') return `${root}/futurecast/movement-intel.json`;
   if (path === '/api/roster/players') return `${root}/teams/roster-players.json`;
   if (path === '/api/team/coaching-staff') return `${root}/teams/coaching-staff.json`;
 

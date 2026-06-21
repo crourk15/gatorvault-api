@@ -137,7 +137,18 @@ export interface MovementHeatmapResponse {
 }
 
 export async function fetchMovementHeatmap(): Promise<MovementHeatmapResponse> {
-  return predictionsApiFetch<MovementHeatmapResponse>('/api/futurecast/heatmap');
+  const data = await snapshotFirstFetch('/api/futurecast/heatmap', () =>
+    snapshotLiveFetch<{ heatmap?: MovementHeatmapResponse } & MovementHeatmapResponse>(
+      '/api/futurecast/heatmap'
+    )
+  );
+  if (data.buckets?.length) {
+    return { buckets: data.buckets, windowDays: data.windowDays ?? 7 };
+  }
+  return {
+    buckets: data.heatmap?.buckets ?? [],
+    windowDays: data.heatmap?.windowDays ?? 7,
+  };
 }
 
 export async function fetchPlayerPredictions(

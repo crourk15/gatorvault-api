@@ -148,42 +148,52 @@ async function buildFuturecastSnapshots() {
     });
   }
 
-  const specs = [
-    { file: 'futurecast/home.json', endpoint: 'futurecast/home', handler: () => require('../api/futurecast/home').handleGetFutureCastHome, query: {} },
-    { file: 'futurecast/class-2027.json', endpoint: 'futurecast/class', handler: () => require('../api/futurecast/class').handleGetFutureCastClass, query: { year: '2027' } },
-    { file: 'futurecast/predictions-2027-limit6.json', endpoint: 'futurecast/predictions', handler: () => require('../api/futurecast/predictions-route').handleGetFutureCastPredictions, query: { year: '2027', limit: '6' } },
-    { file: 'futurecast/predictions-2027-limit24.json', endpoint: 'futurecast/predictions', handler: () => require('../api/futurecast/predictions-route').handleGetFutureCastPredictions, query: { year: '2027', limit: '24' } },
-    { file: 'futurecast/master-board.json', endpoint: 'futurecast/master-board', handler: () => require('../api/futurecast/master-board').handleGetFutureCastMasterBoard, query: {} },
-    { file: 'futurecast/trending.json', endpoint: 'futurecast/trending', handler: () => require('../api/futurecast/trending-board').handleGetFutureCastTrendingBoard, query: {} },
-    { file: 'futurecast/movement-intel.json', endpoint: 'futurecast/movement-intel', handler: () => require('../api/futurecast/movement-intel').handleGetFutureCastMovementIntel, query: {} },
-    { file: 'futurecast/staff-notes-2027.json', endpoint: 'futurecast/staff-notes', handler: () => require('../api/futurecast/staff-notes').handleGetFutureCastStaffNotes, query: { year: '2027' } },
-    { file: 'futurecast/high-priority-2027.json', endpoint: 'futurecast/high-priority', handler: () => require('../api/futurecast/high-priority').handleGetFutureCastHighPriority, query: { year: '2027' } },
-    { file: 'futurecast/stock.json', endpoint: 'futurecast/stock', handler: () => require('../api/futurecast/stock').handleGetStockBoard, query: {} },
-    { file: 'futurecast/snapshots.json', endpoint: 'futurecast/snapshots', handler: () => require('../api/futurecast/snapshots').handleGetMovementSnapshots, query: {} },
-    { file: 'futurecast/targets-2027.json', endpoint: 'futurecast/targets', handler: () => require('../api/futurecast/commits-targets').handleGetFutureCastTargets, query: { class_year: '2027', limit: '50' } },
-    { file: 'futurecast/underclassmen.json', endpoint: 'futurecast/underclassmen', handler: () => require('../api/futurecast/underclassmen').handleGetFutureCastUnderclassmen, query: { years: '2028,2029,2030' } },
-  ];
+  const fcBuilders = require('./futurecast-snapshot-builders');
+  const payloads = await fcBuilders.buildAllFuturecastSnapshotPayloads();
 
   let built = 0;
   let degraded = 0;
 
-  for (const spec of specs) {
+  for (const [file, data] of Object.entries(payloads)) {
+    if (data == null) continue;
+    const endpoint = file.replace(/^futurecast\//, 'futurecast/').replace(/\.json$/, '');
+    try {
+      if (typeof data.error === 'string') {
+        throw new Error(data.error);
+      }
+      writeJson(file, wrap(endpoint, data));
+      built += 1;
+    } catch (err) {
+      degraded += 1;
+      console.warn('[page-snapshot] futurecast', file, err.message);
+    }
+  }
+
+  const handlerSpecs = [
+    {
+      file: 'futurecast/staff-notes-2027.json',
+      endpoint: 'futurecast/staff-notes',
+      handler: () => require('../api/futurecast/staff-notes').handleGetFutureCastStaffNotes,
+      query: { year: '2027' },
+    },
+    {
+      file: 'futurecast/underclassmen.json',
+      endpoint: 'futurecast/underclassmen',
+      handler: () => require('../api/futurecast/underclassmen').handleGetFutureCastUnderclassmen,
+      query: { years: '2028,2029,2030' },
+    },
+  ];
+
+  for (const spec of handlerSpecs) {
     try {
       const handler = spec.handler();
       const data = await invokeHandler(handler, spec.query);
+      if (typeof data?.error === 'string') throw new Error(data.error);
       writeJson(spec.file, wrap(spec.endpoint, data, spec.query));
       built += 1;
     } catch (err) {
       degraded += 1;
       console.warn('[page-snapshot] futurecast', spec.endpoint, err.message);
-      writeJson(
-        spec.file,
-        wrap(
-          spec.endpoint,
-          { unavailable: true, degraded: true, items: [], players: [] },
-          { ...spec.query, degraded: true, error: err.message }
-        )
-      );
     }
   }
 

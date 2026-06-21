@@ -38,6 +38,8 @@ export interface StaffDashboardResponse {
 }
 
 export async function fetchStaffDashboard(): Promise<StaffDashboardResponse> {
-  const { apiFetch } = await import('./api-fetch');
-  return apiFetch<StaffDashboardResponse>('/api/staff/dashboard');
+  const { snapshotFirstFetch, snapshotLiveFetch } = await import('./snapshot-fetch');
+  return snapshotFirstFetch('/api/staff/dashboard', () =>
+    snapshotLiveFetch<StaffDashboardResponse>('/api/staff/dashboard')
+  );
 }

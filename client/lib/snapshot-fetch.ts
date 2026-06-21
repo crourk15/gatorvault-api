@@ -4,12 +4,24 @@
 import { apiFetch, type ApiFetchInit } from './api-fetch';
 import { snapshotPathForApi } from './snapshot-paths';
 
+function snapshotPayloadUsable(body: unknown): boolean {
+  if (body == null || typeof body !== 'object') return false;
+  const record = body as Record<string, unknown>;
+  if (typeof record.error === 'string' && record.error.length > 0) return false;
+  if (record.unavailable === true && record.degraded === true) return false;
+  return true;
+}
+
 export async function fetchSnapshotJson<T>(snapPath: string): Promise<T> {
   const res = await fetch(snapPath, { headers: { Accept: 'application/json' }, cache: 'no-store' });
   if (!res.ok) {
     throw new Error(`Snapshot unavailable (${res.status})`);
   }
-  return (await res.json()) as T;
+  const body = (await res.json()) as T;
+  if (!snapshotPayloadUsable(body)) {
+    throw new Error('Snapshot payload unusable');
+  }
+  return body;
 }
 
 /** Snapshot-first: return CDN JSON immediately; fire live fetch in background when mapped. */
