@@ -46,7 +46,6 @@ const SHORT_TTL_ROUTES = [
   { prefix: '/api/recruiting/movement-window', maxAge: 300, sMaxAge: 300 },
   { prefix: '/api/recruiting/movement-summary', maxAge: 300, sMaxAge: 300 },
   { prefix: '/api/recruiting/competing-deltas', maxAge: 300, sMaxAge: 300 },
-  { prefix: '/api/recruiting/hub/', maxAge: 60, sMaxAge: 60 },
   { prefix: '/api/player/full-profile', maxAge: 60, sMaxAge: 120 },
   { prefix: '/api/player/resolve', maxAge: 300, sMaxAge: 600 },
   { prefix: '/api/roster/players', maxAge: 45 },

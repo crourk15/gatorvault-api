@@ -2,7 +2,11 @@
 
 import React, { useCallback } from 'react';
 import Link from 'next/link';
-import { fetchRecruitingHubClassOverview, type RhHubClassOverview } from '@/lib/recruiting-hub-elite-api';
+import {
+  fetchRecruitingHubClassOverviewAll,
+  type RhHubClassOverview,
+  type RhHubClassOverviewByYear,
+} from '@/lib/recruiting-hub-elite-api';
 import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
 
 const CLASS_YEARS = [2026, 2027, 2028] as const;
@@ -53,19 +57,13 @@ function ClassCard({
   );
 }
 
-function useClassOverview(year: ClassYear) {
-  const load = useCallback(() => fetchRecruitingHubClassOverview(year), [year]);
-  return useRecruitingHubQuery<RhHubClassOverview>(load);
-}
-
 export function ClassCards(): React.ReactElement {
-  const y2026 = useClassOverview(2026);
-  const y2027 = useClassOverview(2027);
-  const y2028 = useClassOverview(2028);
-  const byYear: Record<ClassYear, ReturnType<typeof useClassOverview>> = {
-    2026: y2026,
-    2027: y2027,
-    2028: y2028,
+  const load = useCallback(() => fetchRecruitingHubClassOverviewAll(), []);
+  const { data: allClasses, loading, error } = useRecruitingHubQuery<RhHubClassOverviewByYear>(load);
+  const byYear: Record<ClassYear, RhHubClassOverview | null> = {
+    2026: allClasses?.[2026] ?? null,
+    2027: allClasses?.[2027] ?? null,
+    2028: allClasses?.[2028] ?? null,
   };
 
   return (
@@ -80,9 +78,9 @@ export function ClassCards(): React.ReactElement {
             <ClassCard
               key={year}
               year={year}
-              data={byYear[year].data}
-              loading={byYear[year].loading}
-              error={byYear[year].error}
+              data={byYear[year]}
+              loading={loading}
+              error={error}
             />
           ))}
         </div>

@@ -25,6 +25,12 @@
   status = 200
   force = true
 
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-store, must-revalidate"
+    Netlify-CDN-Cache-Control = "no-store"
+
 # Vault SPA fallback — detailed per-route rewrites live in server/_redirects (generated at build).
 # This catch-all only applies when no more-specific rule matches.
 [[redirects]]

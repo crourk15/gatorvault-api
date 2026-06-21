@@ -62,24 +62,43 @@ async function apiFetchOnce<T>(url: string, init: RequestInit, timeoutMs: number
 
   try {
     const res = await fetch(url, { ...init, signal: controller.signal });
-    const body = (await res.json()) as T & { status?: string; error?: string; unavailable?: boolean };
+    const text = await res.text();
+    let body: (T & { status?: string; error?: string; unavailable?: boolean }) | null = null;
+    if (text) {
+      try {
+        body = JSON.parse(text) as T & { status?: string; error?: string; unavailable?: boolean };
+      } catch {
+        if (!res.ok && API_FETCH_RETRY_STATUSES.has(res.status)) {
+          throw new ApiFetchError('API unavailable', { status: res.status, unavailable: true });
+        }
+        throw new ApiFetchError('Invalid response from server.', { status: res.status });
+      }
+    } else if (!res.ok && API_FETCH_RETRY_STATUSES.has(res.status)) {
+      throw new ApiFetchError('API unavailable', { status: res.status, unavailable: true });
+    }
     if (body?.status === 'building') {
       throw new ApiFetchError('Hub warming up', { status: 503, unavailable: true });
     }
     if (!res.ok) {
       let message = 'Something went wrong loading data. Please try again.';
-      let unavailable = false;
+      let unavailable = API_FETCH_RETRY_STATUSES.has(res.status);
       if (body?.unavailable) unavailable = true;
       if (body?.error && !/https?:\/\//i.test(body.error)) {
         message = body.error;
       }
       throw new ApiFetchError(message, { status: res.status, unavailable });
     }
+    if (body == null) {
+      throw new ApiFetchError('Empty response from server.', { status: res.status, unavailable: true });
+    }
     return body as T;
   } catch (err) {
     if (err instanceof ApiFetchError) throw err;
     if (err instanceof DOMException && err.name === 'AbortError') {
       throw new ApiFetchError('Request timed out. Please try again.', { timedOut: true });
+    }
+    if (isRetryableError(err)) {
+      throw new ApiFetchError(String((err as Error).message || 'Network error'), { unavailable: true });
     }
     throw err;
   } finally {

@@ -82,6 +82,7 @@ app.get('/api/ping', (req, res) => {
 app.use('/api', (req, res, next) => {
   if (!apiRoutesReady && req.path !== '/ping') {
     res.set('Retry-After', '5');
+    res.set('Cache-Control', 'no-store, must-revalidate');
     return res.status(503).json({ ok: false, error: 'API warming up', unavailable: true });
   }
   next();
