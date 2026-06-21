@@ -158,8 +158,8 @@ services:
     schedule: "*/5 * * * *"
     runtime: node
     region: oregon
-    command: node server/scripts/render-keepalive-ping.js
-    envVars:
+    startCommand: node server/scripts/render-keepalive-ping.js
+     envVars:
       - key: KEEPALIVE_URL
         value: https://gatorvault-api.onrender.com/health
       - key: KEEPALIVE_PING_URL
@@ -174,7 +174,7 @@ services:
     schedule: "0 */6 * * *"
     runtime: node
     region: oregon
-    command: node server/scripts/render-hub-refresh-cron.js
+ startCommand: node server/scripts/render-hub-refresh-cron.js
     envVars:
       - key: HUB_REFRESH_URL
         value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?geoBackfill=true
