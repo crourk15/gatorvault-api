@@ -11,6 +11,9 @@ require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }
 
 const API = 'https://api.render.com/v1';
 const SERVICE_NAME = 'gatorvault-api';
+const CRON_SERVICES = ['gatorvault-api-recruiting-ingest', 'gatorvault-api-hub-refresh'];
+
+const CRON_SYNC_KEYS = ['MONITORING_CRON_SECRET', 'INGEST_CRON_SECRET', 'NEXT_PUBLIC_API_BASE'];
 
 const SYNC_KEYS = [
   'EMAILJS_USER_ID',
@@ -26,7 +29,12 @@ const SYNC_KEYS = [
   'OPS_ADMIN_PIN',
   'BEEHIIV_API_KEY',
   'BEEHIIV_PUBLICATION_ID',
-  'BEEHIIV_AUTOMATION_ID'
+  'BEEHIIV_AUTOMATION_ID',
+  'SUPABASE_URL',
+  'SUPABASE_SERVICE_KEY',
+  'DATABASE_URL',
+  'MONITORING_CRON_SECRET',
+  'INGEST_CRON_SECRET',
 ];
 
 const { PIPELINE_ACTIVATION_ENV } = require('../lib/pipeline-activation-env');
@@ -59,10 +67,21 @@ async function api(path, opts = {}) {
   return body;
 }
 
-async function findService() {
-  const rows = await api(`/services?name=${encodeURIComponent(SERVICE_NAME)}&limit=20`);
-  const found = (rows || []).find((row) => (row.service || row).name === SERVICE_NAME);
+async function findService(name) {
+  const rows = await api(`/services?name=${encodeURIComponent(name)}&limit=20`);
+  const found = (rows || []).find((row) => (row.service || row).name === name);
   return found ? (found.service || found) : null;
+}
+
+async function syncServiceEnv(svc, updates, label) {
+  console.log(`\n${label}:`, svc.id, svc.serviceDetails?.url || svc.name);
+  for (const u of updates) {
+    console.log(`  ${u.key}: ${mask(u.value)}`);
+    await api(`/services/${svc.id}/env-vars/${encodeURIComponent(u.key)}`, {
+      method: 'PUT',
+      body: JSON.stringify({ value: u.value })
+    });
+  }
 }
 
 function mask(val) {
@@ -73,10 +92,8 @@ function mask(val) {
 
 async function main() {
   const doDeploy = process.argv.includes('--deploy');
-  const svc = await findService();
+  const svc = await findService(SERVICE_NAME);
   if (!svc) throw new Error(`Service ${SERVICE_NAME} not found`);
-
-  console.log('Service:', svc.id, svc.serviceDetails?.url || `https://${SERVICE_NAME}.onrender.com`);
 
   const existing = await api(`/services/${svc.id}/env-vars?limit=100`);
   const byKey = {};
@@ -104,13 +121,26 @@ async function main() {
     process.exit(1);
   }
 
-  console.log('\nSyncing env vars:');
-  for (const u of updates) {
-    console.log(`  ${u.key}: ${mask(u.value)}`);
-    await api(`/services/${svc.id}/env-vars/${encodeURIComponent(u.key)}`, {
-      method: 'PUT',
-      body: JSON.stringify({ value: u.value })
-    });
+  console.log('\nSyncing env vars to gatorvault-api:');
+  await syncServiceEnv(svc, updates, 'Service');
+
+  const cronSecret = env.MONITORING_CRON_SECRET || env.INGEST_CRON_SECRET;
+  if (cronSecret) {
+    for (const cronName of CRON_SERVICES) {
+      const cronSvc = await findService(cronName);
+      if (!cronSvc) {
+        console.warn(`Cron service not found (skip): ${cronName}`);
+        continue;
+      }
+      const cronUpdates = CRON_SYNC_KEYS.map((k) => {
+        if (k === 'MONITORING_CRON_SECRET' || k === 'INGEST_CRON_SECRET') {
+          return { key: k, value: cronSecret };
+        }
+        const val = env[k] || (k === 'NEXT_PUBLIC_API_BASE' ? 'https://gatorvault-api.onrender.com' : null);
+        return val ? { key: k, value: String(val) } : null;
+      }).filter(Boolean);
+      await syncServiceEnv(cronSvc, cronUpdates, `Cron ${cronName}`);
+    }
   }
 
   console.log('\nEnv sync complete.');

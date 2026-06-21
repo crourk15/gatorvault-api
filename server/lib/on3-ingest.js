@@ -816,6 +816,25 @@ async function runOn3Ingest(options = {}) {
     result.errors.push({ type: 'demote_unverified_commits', error: e.message });
   }
 
+  try {
+    if (process.env.ALLOWLIST_TARGET_SYNC !== 'false') {
+      const { syncAllowlistTargetsFromOn3, syncAllowlistTargetsFromRivals } = require('./allowlist-target-sync');
+      result.allowlistOn3Sync = await syncAllowlistTargetsFromOn3(options);
+      result.allowlistRivalsSync = await syncAllowlistTargetsFromRivals();
+    }
+  } catch (e) {
+    result.errors.push({ type: 'allowlist_target_sync', error: e.message });
+  }
+
+  try {
+    if (process.env.RECRUITING_HUB_REFRESH_AFTER_INGEST === 'true') {
+      const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
+      result.hubRefresh = await refreshRecruitingHubCaches({ geoBackfill: false });
+    }
+  } catch (e) {
+    result.errors.push({ type: 'hub_refresh_after_ingest', error: e.message });
+  }
+
   console.log('[on3-ingest] complete', {
     fired: result.fired.length,
     skipped: result.skipped.length,

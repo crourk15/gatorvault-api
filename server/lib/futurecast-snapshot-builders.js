@@ -1,13 +1,9 @@
 /**
- * Build FutureCast page snapshots from recruiting store + allowlist (no Postgres required).
+ * Build FutureCast page snapshots from recruiting store (DB/Supabase when configured).
  */
 const FUTURECAST_CLASS_YEAR = 2027;
 const MOVEMENT_WINDOW_DAYS = 7;
-
-function isFloridaSchool(value) {
-  const v = String(value || '').toLowerCase();
-  return /\bflorida\b|\bgators\b|\buf\b/.test(v);
-}
+const { isFloridaSchool, isActiveUfTarget } = require('./recruiting-target-filters');
 
 function buildHeatmap(players, windowDays = MOVEMENT_WINDOW_DAYS) {
   let upCount = 0;
@@ -28,24 +24,20 @@ function buildHeatmap(players, windowDays = MOVEMENT_WINDOW_DAYS) {
 
 async function loadOfflineBoardPlayers() {
   const store = require('./recruiting-store');
-  const { ALLOWLIST_2027, CANONICAL_TARGET_NAMES } = require('./recruiting-target-allowlist');
-  const { filterBlockedRecruits } = require('./recruiting-blocked-players');
+  const { CANONICAL_TARGET_NAMES } = require('./recruiting-target-allowlist');
   const { loadRecruitingRankings } = require('./load-recruiting-rankings');
+  const { getLiveBoardTargets } = require('./live-board-targets');
 
-  const allowed = new Set(
-    filterBlockedRecruits(ALLOWLIST_2027.map((slug) => ({ slug }))).map((p) =>
-      String(p.slug).toLowerCase()
-    )
-  );
   const rankings = loadRecruitingRankings();
   const board = await store.getBoard(FUTURECAST_CLASS_YEAR);
+  const liveTargets = await getLiveBoardTargets(FUTURECAST_CLASS_YEAR);
   const seen = new Set();
   const players = [];
 
-  function pushPlayer(p, { requireAllowlist }) {
+  function pushPlayer(p, { requireActiveTarget }) {
     const slug = String(p.slug || '').toLowerCase();
     if (!slug || seen.has(slug)) return;
-    if (requireAllowlist && !allowed.has(slug)) return;
+    if (requireActiveTarget && !isActiveUfTarget(p)) return;
     seen.add(slug);
     const rank = rankings.get(slug);
     const committedTo = p.committedTo ?? p.committed_to ?? null;
@@ -84,39 +76,13 @@ async function loadOfflineBoardPlayers() {
   }
 
   for (const p of board.commits || []) {
-    pushPlayer(p, { requireAllowlist: false });
+    pushPlayer(p, { requireActiveTarget: false });
   }
-  for (const p of board.targets || []) {
-    pushPlayer(p, { requireAllowlist: true });
-  }
-
-  for (const slug of allowed) {
-    if (seen.has(slug)) continue;
-    const rank = rankings.get(slug);
-    players.push({
-      id: slug,
-      slug,
-      name: CANONICAL_TARGET_NAMES[slug] || slug,
-      classYear: FUTURECAST_CLASS_YEAR,
-      position: rank?.position || 'ATH',
-      school: null,
-      composite: Number(rank?.compositeScore || 0),
-      stars: Number(rank?.stars || 0),
-      natlRank: rank?.nationalRank ?? null,
-      posRank: rank?.positionRank ?? null,
-      stateRank: rank?.stateRank ?? null,
-      ufConfidence: 55,
-      fitScore: null,
-      trendDelta7d: 0,
-      volatility7d: 0.1,
-      priority: 'medium',
-      committedTo: null,
-      competingSchools: [],
-      predictors: [],
-    });
+  for (const p of liveTargets) {
+    pushPlayer(p, { requireActiveTarget: true });
   }
 
-  return players;
+  return players.filter((p) => isActiveUfTarget(p) || isFloridaSchool(p.committedTo));
 }
 
 function boardPlayerToFeedRow(p) {
@@ -242,15 +208,15 @@ async function buildFutureCastHomePayload() {
   const heatmap = buildHeatmap(players);
   const commits = players.filter((p) => isFloridaSchool(p.committedTo)).map(boardPlayerToFeedRow);
   const targets = players
-    .filter((p) => !isFloridaSchool(p.committedTo))
+    .filter(isActiveUfTarget)
     .map(boardPlayerToFeedRow)
     .sort((a, b) => (b.ufProbability ?? 0) - (a.ufProbability ?? 0));
   const trendingUp = players
-    .filter((p) => (p.trendDelta7d ?? 0) > 0 && !isFloridaSchool(p.committedTo))
+    .filter((p) => (p.trendDelta7d ?? 0) > 0 && isActiveUfTarget(p))
     .map(boardPlayerToFeedRow)
     .sort((a, b) => (b.delta ?? 0) - (a.delta ?? 0));
   const trendingDown = players
-    .filter((p) => (p.trendDelta7d ?? 0) < 0 && !isFloridaSchool(p.committedTo))
+    .filter((p) => (p.trendDelta7d ?? 0) < 0 && isActiveUfTarget(p))
     .map(boardPlayerToFeedRow)
     .sort((a, b) => (a.delta ?? 0) - (b.delta ?? 0));
 
@@ -282,9 +248,9 @@ async function buildMasterBoardPayload(players) {
   const trendingDown = [...players]
     .filter((p) => (p.trendDelta7d ?? 0) < 0)
     .sort((a, b) => (a.trendDelta7d ?? 0) - (b.trendDelta7d ?? 0));
-  const activeTargets = players.filter((p) => !isFloridaSchool(p.committedTo));
+  const activeTargets = players.filter(isActiveUfTarget);
   const highPriority = [...players]
-    .filter((p) => p.priority === 'high')
+    .filter((p) => p.priority === 'high' && isActiveUfTarget(p))
     .sort((a, b) => (b.ufConfidence ?? 0) - (a.ufConfidence ?? 0));
 
   return {
@@ -328,7 +294,7 @@ async function buildMasterBoardPayload(players) {
 }
 
 async function buildMovementIntelPayload(players) {
-  const activeTargets = players.filter((p) => !isFloridaSchool(p.committedTo));
+  const activeTargets = players.filter(isActiveUfTarget);
   const heatmap = buildHeatmap(activeTargets);
   const risers = activeTargets
     .filter((p) => (p.trendDelta7d ?? 0) > 0)
@@ -365,7 +331,7 @@ async function buildMovementIntelPayload(players) {
 
 async function buildPredictionsPayload(players, limit) {
   const predictions = players
-    .filter((p) => !isFloridaSchool(p.committedTo))
+    .filter(isActiveUfTarget)
     .map(boardPlayerToFeedRow)
     .sort((a, b) => (b.ufProbability ?? 0) - (a.ufProbability ?? 0))
     .slice(0, limit);
@@ -379,7 +345,7 @@ async function buildPredictionsPayload(players, limit) {
 }
 
 async function buildStockPayload(players) {
-  const active = players.filter((p) => !isFloridaSchool(p.committedTo));
+  const active = players.filter(isActiveUfTarget);
   const stockUp = active
     .filter((p) => (p.trendDelta7d ?? 0) > 0)
     .map(boardPlayerToFeedRow)
@@ -416,7 +382,7 @@ async function buildHighPriorityPayload(players) {
 
 async function buildTargetsPayload(players) {
   const targets = players
-    .filter((p) => !isFloridaSchool(p.committedTo))
+    .filter(isActiveUfTarget)
     .map(boardPlayerToHighPriority);
   return {
     class_year: FUTURECAST_CLASS_YEAR,

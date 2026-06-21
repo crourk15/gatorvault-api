@@ -32,9 +32,8 @@ import { sendCachedJson } from './response-cache';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const { filterAllowlistedTargets } = require('../../lib/recruiting-target-allowlist');
 const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players');
-const TARGET_BOARD_PATH = path.join(__dirname, '../../data/recruiting/2027-target-board.json');
+const { isActiveUfTarget } = require('../../lib/recruiting-target-filters');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 
 export type VisitBadgeType = 'OV' | 'UV' | 'Game Day' | 'Junior Day' | 'Spring Visit';
@@ -168,19 +167,31 @@ function buildVisitHistory(
   return visits;
 }
 
-function loadTargetBoard(): TargetBoardEntry[] {
-  try {
-    const raw = JSON.parse(fs.readFileSync(TARGET_BOARD_PATH, 'utf8')) as {
-      targets?: TargetBoardEntry[];
-    };
-    const allowlisted = filterAllowlistedTargets(
-      (raw.targets ?? []).map((t) => ({ ...t, classYear: FUTURECAST_CLASS_YEAR })),
-      FUTURECAST_CLASS_YEAR
-    );
-    return filterBlockedRecruits(allowlisted);
-  } catch {
-    return [];
-  }
+async function loadTargetBoardFromStore(): Promise<TargetBoardEntry[]> {
+  const store = require('../../lib/recruiting-store');
+  const board = await store.getBoard(FUTURECAST_CLASS_YEAR);
+  return filterBlockedRecruits(
+    (board.targets || []).map((p: Record<string, unknown>) => ({
+      slug: String(p.slug || ''),
+      name: String(p.name || ''),
+      pos: p.pos as string | undefined,
+      school: p.school as string | undefined,
+      htWt: p.htWt as string | undefined,
+      stars: p.stars as number | undefined,
+      rating: p.rating as number | undefined,
+      natlRank: p.natlRank as number | undefined,
+      posRank: p.posRank as number | undefined,
+      stateRank: p.stateRank as number | undefined,
+      headliner: Boolean(p.headliner),
+      committedTo: (p.committedTo as string | null) ?? null,
+      skinny: p.skinny as string | undefined,
+      ufOvStatus: p.ufOvStatus as string | null | undefined,
+      visitStart: p.visitStart as string | null | undefined,
+      visitEnd: p.visitEnd as string | null | undefined,
+      ufProbability: p.ufProbability as number | undefined,
+      classYear: FUTURECAST_CLASS_YEAR,
+    }))
+  ).filter((t: TargetBoardEntry) => isActiveUfTarget(t));
 }
 
 function loadRecruitingBySlug(): Map<string, RecruitingPlayerRow> {
@@ -231,7 +242,7 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const rankings = loadRecruitingRankings();
       const recruitingBySlug = loadRecruitingBySlug();
       const insiderBySlug = loadInsiderNotesBySlug();
-      const targets = loadTargetBoard();
+      const targets = await loadTargetBoardFromStore();
 
       let rows = await listPredictions({
         class_year: classYear,

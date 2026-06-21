@@ -3,6 +3,7 @@
  * No fallback, mock, synthetic, or AI-generated names.
  */
 const { slugify } = require('./slug');
+const { isActiveUfTarget } = require('./recruiting-target-filters');
 
 /** Locked 2027 target slugs */
 const ALLOWLIST_2027 = [
@@ -13,7 +14,6 @@ const ALLOWLIST_2027 = [
   'adryan-cole',
   'tranard-roberts',
   'jordan-christie',
-  'andre-hyppolite',
   'kyren-caldwell',
   'tk-cunningham',
   'kamauri-whitfield',
@@ -104,10 +104,26 @@ const SLUG_ALIASES = {
   't-k-cunningham': 'tk-cunningham',
 };
 
-const BY_YEAR = {
-  2027: new Set(ALLOWLIST_2027),
-  2028: new Set(ALLOWLIST_2028),
-};
+function loadAdminAllowlistSlugs() {
+  try {
+    return require('./admin-allowlist-store').loadAdminAllowlist();
+  } catch {
+    return { slugs2027: [], slugs2028: [], names: {} };
+  }
+}
+
+function getAllowlistSet(classYear) {
+  const year = parseInt(classYear, 10);
+  const admin = loadAdminAllowlistSlugs();
+  const base = year === 2027 ? ALLOWLIST_2027 : year === 2028 ? ALLOWLIST_2028 : [];
+  const extra = year === 2027 ? admin.slugs2027 : year === 2028 ? admin.slugs2028 : [];
+  return new Set([...base, ...extra].map((s) => canonicalTargetSlug(s)));
+}
+
+function getMergedCanonicalNames() {
+  const admin = loadAdminAllowlistSlugs();
+  return { ...CANONICAL_TARGET_NAMES, ...(admin.names || {}) };
+}
 
 const ALL_ALLOWED = new Set([...ALLOWLIST_2027, ...ALLOWLIST_2028]);
 
@@ -119,19 +135,18 @@ function canonicalTargetSlug(rawSlug) {
 function isAllowlistedTarget(player) {
   if (!player) return false;
   const year = parseInt(player.classYear || player.class_year, 10);
-  const set = BY_YEAR[year];
-  if (!set) return false;
+  const set = getAllowlistSet(year);
+  if (!set.size) return false;
   const slug = canonicalTargetSlug(player.slug || slugify(player.name));
   return set.has(slug);
 }
 
 function filterAllowlistedTargets(targets, classYear) {
-  const store = require('./recruiting-store');
   const year = parseInt(classYear, 10);
-  const set = BY_YEAR[year];
-  if (!set) return [];
+  const set = getAllowlistSet(year);
+  if (!set.size) return [];
   return (targets || []).filter((p) => {
-    if (store.isFloridaCommit(p)) return false;
+    if (!isActiveUfTarget(p)) return false;
     const slug = canonicalTargetSlug(p.slug || slugify(p.name));
     return set.has(slug);
   });
@@ -144,8 +159,8 @@ function validateStoreTargets(players) {
     const year = parseInt(p.classYear || p.class_year, 10);
     if (year !== 2027 && year !== 2028) continue;
     const slug = canonicalTargetSlug(p.slug || slugify(p.name));
-    const set = BY_YEAR[year];
-    if (!set || !set.has(slug)) {
+    const set = getAllowlistSet(year);
+    if (!set.size || !set.has(slug)) {
       errors.push({
         slug,
         name: p.name,
@@ -163,6 +178,9 @@ module.exports = {
   CANONICAL_TARGET_NAMES,
   ALL_ALLOWED,
   canonicalTargetSlug,
+  loadAdminAllowlistSlugs,
+  getAllowlistSet,
+  getMergedCanonicalNames,
   isAllowlistedTarget,
   filterAllowlistedTargets,
   validateStoreTargets,

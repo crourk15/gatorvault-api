@@ -2,12 +2,13 @@
  * Runtime live-board targets — sourced from recruiting store getBoard(), not static allowlists.
  */
 const store = require('./recruiting-store');
+const { isActiveUfTarget, isFloridaSchool } = require('./recruiting-target-filters');
 
 function isFloridaCommit(player) {
   const to = String(player?.committedTo || player?.committed_to || '').toLowerCase();
   const status = String(player?.status || '').toLowerCase();
   if (!(status === 'committed' || status === 'commit')) return false;
-  return /\bflorida\b|\bgators\b|\buf\b/.test(to);
+  return isFloridaSchool(to);
 }
 
 /**
@@ -33,7 +34,7 @@ async function getLiveBoard(classYear = 2027) {
  */
 async function getLiveBoardTargets(classYear = 2027) {
   const board = await getLiveBoard(classYear);
-  return (board.targets || []).filter((p) => !isFloridaCommit(p));
+  return (board.targets || []).filter(isActiveUfTarget);
 }
 
 /**

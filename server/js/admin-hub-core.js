@@ -24,6 +24,7 @@
     feedback: '/admin-feedback.html?embed=1',
     monitoring: '/admin-monitoring.html?embed=1',
     'recruiting-alerts': '/recruiting-admin.html?embed=1',
+    'player-intel': '/player-intel-entry.html?embed=1',
     board: '/recruiting-board.html?embed=1',
     content: '/content-admin.html?embed=1',
     community: '/community-admin.html?embed=1',
@@ -104,6 +105,7 @@
       desc: 'Players, vault grades, targets, visits, commitments, intel',
       panels: [
         { id: 'alerts', label: 'Alerts & Live', embed: 'recruiting-alerts' },
+        { id: 'player-intel', label: 'Player Intel Entry', embed: 'player-intel' },
         { id: 'monitoring', label: 'Monitoring', embed: 'monitoring' },
         { id: 'vault-grades', label: 'Vault Grades Manager', inline: true }
       ]

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GatorVault — Player Intel Entry</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root { --bg:#030712; --panel:#0b1220; --border:#1e293b; --text:#e8edf5; --muted:#8b9bb4; --orange:#fa4616; --green:#22c55e; --red:#ef4444; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text)}
+    header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between}
+    h1{margin:0;font-family:Oswald,sans-serif;font-size:1.15rem;letter-spacing:.04em}
+    .sub{font-size:.75rem;color:var(--muted)}
+    main{padding:1rem 1.25rem 3rem;max-width:960px;margin:0 auto}
+    input,button,select{font:inherit}
+    input,select{background:var(--panel);border:1px solid #334155;color:var(--text);padding:.55rem .75rem;border-radius:.5rem;width:100%}
+    button{background:var(--orange);color:#fff;border:0;padding:.55rem .9rem;border-radius:.5rem;cursor:pointer;font-weight:600}
+    button.secondary{background:#334155}
+    button:disabled{opacity:.5;cursor:not-allowed}
+    .panel{background:var(--panel);border:1px solid var(--border);border-radius:.85rem;padding:1rem;margin-bottom:1rem}
+    .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
+    @media(max-width:720px){.grid{grid-template-columns:1fr}}
+    label{display:block;font-size:.7rem;color:var(--muted);text-transform:uppercase;margin-bottom:.25rem}
+    .field{margin-bottom:.75rem}
+    .actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+    .pin-gate{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem}
+    .pin-card{background:var(--panel);border:1px solid var(--border);border-radius:1rem;padding:1.5rem;max-width:380px;width:100%}
+    .hidden{display:none!important}
+    .ok{color:var(--green);font-size:.85rem}
+    .err{color:var(--red);font-size:.85rem}
+    pre{background:#020617;border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.72rem;overflow:auto;max-height:360px}
+    .meta{font-size:.8rem;color:var(--muted);line-height:1.5}
+    a{color:#60a5fa}
+  </style>
+</head>
+<body>
+  <div id="pin-gate" class="pin-gate">
+    <div class="pin-card">
+      <h1>Player Intel Entry</h1>
+      <p class="sub" style="margin:.5rem 0 1rem">Admin PIN required.</p>
+      <input id="gate-pin" type="password" placeholder="Admin PIN" autocomplete="off" style="margin-bottom:.75rem" />
+      <button id="gate-unlock" style="width:100%">Unlock</button>
+      <p id="gate-err" class="hidden err">Invalid PIN</p>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <header>
+      <div>
+        <h1>Player Intel Entry</h1>
+        <div class="sub">Name + class + offer → On3 profile, boards, snapshots</div>
+      </div>
+      <input id="pin" type="password" placeholder="PIN" autocomplete="off" style="width:140px" />
+    </header>
+    <main>
+      <div class="panel">
+        <div class="grid">
+          <div class="field">
+            <label>Player name</label>
+            <input id="name" type="text" placeholder="e.g. Jalen Brewster" />
+          </div>
+          <div class="field">
+            <label>Class year</label>
+            <select id="classYear">
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+              <option value="2029">2029</option>
+              <option value="2030">2030</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>UF offer?</label>
+            <select id="offer">
+              <option value="yes">Yes — Florida offer</option>
+              <option value="no">No offer yet</option>
+            </select>
+          </div>
+        </div>
+        <label style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;text-transform:none;color:var(--text);margin-top:.5rem">
+          <input id="rebuildSnapshots" type="checkbox" checked style="width:auto" />
+          Rebuild page + hub snapshots after save
+        </label>
+        <div class="actions">
+          <button id="preview" class="secondary">Preview On3 match</button>
+          <button id="submit">Create / update player intel</button>
+        </div>
+        <p id="status" class="meta" style="margin-top:.75rem"></p>
+      </div>
+
+      <div class="panel hidden" id="result-panel">
+        <h2 style="margin:0 0 .5rem;font-size:.95rem">Result</h2>
+        <div id="summary" class="meta"></div>
+        <pre id="json-out"></pre>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      var SESSION = 'gv_admin_pin';
+      var API = (function () {
+        var host = (location.hostname || '').toLowerCase();
+        if (host === 'localhost' || host === '127.0.0.1') return 'http://localhost:3000';
+        return location.origin;
+      })();
+
+      function pin() { return document.getElementById('pin').value.trim(); }
+
+      function headers() {
+        return {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'X-Recruiting-Pin': pin()
+        };
+      }
+
+      function payload() {
+        return {
+          pin: pin(),
+          name: document.getElementById('name').value.trim(),
+          classYear: parseInt(document.getElementById('classYear').value, 10),
+          offer: document.getElementById('offer').value === 'yes' ? 'uf' : 'no',
+          rebuildSnapshots: document.getElementById('rebuildSnapshots').checked
+        };
+      }
+
+      function showResult(data, ok) {
+        document.getElementById('result-panel').classList.remove('hidden');
+        var summary = document.getElementById('summary');
+        if (ok && data.slug) {
+          summary.innerHTML =
+            '<span class="ok">Saved ' + data.name + ' (' + data.slug + ')</span><br>' +
+            'Section: <strong>' + (data.placement && data.placement.section) + '</strong><br>' +
+            (data.profileUrl ? '<a href="' + data.profileUrl + '" target="_blank" rel="noopener">Open profile →</a>' : '');
+        } else if (ok && data.preview) {
+          summary.innerHTML =
+            '<span class="ok">Preview match: ' + data.name + ' (' + data.slug + ')</span><br>' +
+            'Would land in: <strong>' + (data.placement && data.placement.section) + '</strong>';
+        } else {
+          summary.innerHTML = '<span class="err">' + (data.error || 'Request failed') + '</span>';
+        }
+        document.getElementById('json-out').textContent = JSON.stringify(data, null, 2);
+      }
+
+      async function post(path, body) {
+        var res = await fetch(API + path, { method: 'POST', headers: headers(), body: JSON.stringify(body) });
+        var data = await res.json().catch(function () { return { error: 'Invalid JSON' }; });
+        if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+        return data;
+      }
+
+      document.getElementById('gate-unlock').onclick = function () {
+        var p = document.getElementById('gate-pin').value.trim();
+        if (!p) return;
+        document.getElementById('pin').value = p;
+        sessionStorage.setItem(SESSION, p);
+        document.getElementById('pin-gate').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+      };
+
+      var saved = sessionStorage.getItem(SESSION);
+      if (saved) {
+        document.getElementById('pin').value = saved;
+        document.getElementById('pin-gate').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+      }
+
+      document.getElementById('preview').onclick = async function () {
+        var status = document.getElementById('status');
+        status.textContent = 'Fetching On3 preview…';
+        try {
+          var data = await post('/api/admin/player-intel/preview', payload());
+          showResult(data, true);
+          status.textContent = 'Preview ready.';
+        } catch (e) {
+          status.textContent = '';
+          showResult({ error: e.message }, false);
+        }
+      };
+
+      document.getElementById('submit').onclick = async function () {
+        var btn = document.getElementById('submit');
+        var status = document.getElementById('status');
+        btn.disabled = true;
+        status.textContent = 'Running full intel pipeline (On3 → store → boards → snapshots)…';
+        try {
+          var data = await post('/api/admin/player-intel/entry', payload());
+          showResult(data, true);
+          status.textContent = 'Complete — player intel updated across boards.';
+        } catch (e) {
+          status.textContent = '';
+          showResult({ error: e.message }, false);
+        } finally {
+          btn.disabled = false;
+        }
+      };
+    })();
+  </script>
+</body>
+</html>

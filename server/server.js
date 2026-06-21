@@ -27,6 +27,7 @@ const { mountQaRoutes } = require('./lib/qa-routes');
 const { mountProductIntelRoutes } = require('./lib/product-intel/product-intel-routes');
 const { mountGm2Routes } = require('./lib/gm2/gm2-routes');
 const { mountVaultGradeAdminRoutes } = require('./lib/vault-grade-admin-routes');
+const { mountPlayerIntelEntryRoutes } = require('./lib/player-intel-entry-routes');
 const { apiMonitorMiddleware } = require('./lib/api-monitor');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
@@ -157,6 +158,7 @@ mountSelfRunnerRoutes(app);
 mountGm2Routes(app);
 require('./lib/insider-articles-routes').mountInsiderArticlesRoutes(app);
 mountVaultGradeAdminRoutes(app);
+mountPlayerIntelEntryRoutes(app);
 try {
   require('./lib/futurecast-players-routes').mountFutureCastPlayersRoutes(app);
 } catch (err) {

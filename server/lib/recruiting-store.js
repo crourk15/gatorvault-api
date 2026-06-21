@@ -34,9 +34,13 @@ function initSupabase() {
 
 function getStoreInfo() {
   const sb = initSupabase();
+  const hasDb = !!(process.env.DATABASE_URL && String(process.env.DATABASE_URL).trim());
   return {
     mode: sb ? 'supabase' : 'json',
+    /** Recruiting players/events — Supabase `players` table or local JSON. */
     supabaseConfigured: !!(process.env.SUPABASE_URL && (process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY)),
+    /** FutureCast predictions/movement — Postgres via DATABASE_URL (separate from recruiting store). */
+    futurecastDbConfigured: hasDb,
     paths: sb
       ? null
       : {

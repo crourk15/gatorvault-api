@@ -462,8 +462,10 @@ function mountRecruitingRoutes(app) {
 
   app.post('/api/recruiting/ingest', async (req, res) => {
     try {
+      const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.INGEST_CRON_SECRET || '';
+      const isCron = cronSecret && req.headers['x-monitoring-cron'] === cronSecret;
       const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.get('X-Ingest-Secret') || '');
-      if (pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
+      if (!isCron && pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
         return res.status(401).json({ ok: false, error: 'Invalid ingest secret' });
       }
       const classYears = req.body.classYears
@@ -490,8 +492,10 @@ function mountRecruitingRoutes(app) {
 
   app.post('/api/recruiting/rivals-pm/ingest', async (req, res) => {
     try {
+      const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.INGEST_CRON_SECRET || '';
+      const isCron = cronSecret && req.headers['x-monitoring-cron'] === cronSecret;
       const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.get('X-Ingest-Secret') || '');
-      if (pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
+      if (!isCron && pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
         return res.status(401).json({ ok: false, error: 'Invalid ingest secret' });
       }
       const force = req.body.force === true || req.query.force === 'true';

@@ -6,6 +6,7 @@ import { playerProfileRoute } from '@/lib/vault-route-map';
 import { FutureCastTargetCard } from '@/components/futurecast/FutureCastTargetCard';
 import { FutureCastPanelShell } from './primitives';
 import { futureCastPlayerToLabTarget } from './fc-lab-types';
+import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
 
 type Props = {
   masterBoard: MasterBoardResponse;
@@ -14,10 +15,7 @@ type Props = {
 
 export function FutureCastTargetsPanel({ masterBoard, bare }: Props): React.ReactElement {
   const rows = [...masterBoard.players]
-    .filter((p) => {
-      const committed = p.committedTo ?? '';
-      return !committed || !/\bflorida\b|\bgators\b/i.test(String(committed));
-    })
+    .filter((p) => isActiveUfTarget(p))
     .sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1))
     .slice(0, 10)
     .map(futureCastPlayerToLabTarget);

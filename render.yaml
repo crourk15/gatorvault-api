@@ -151,6 +151,14 @@ services:
         value: "21600000"
       - key: DATABASE_URL
         sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: ALLOWLIST_TARGET_SYNC
+        value: "true"
+      - key: RECRUITING_HUB_REFRESH_AFTER_INGEST
+        value: "true"
 
   - type: cron
     name: gatorvault-api-keepalive
@@ -165,6 +173,20 @@ services:
         value: https://gatorvault-api.onrender.com/api/ping
       - key: KEEPALIVE_HUB_URL
         value: https://gatorvault-api.onrender.com/api/recruiting/hub/class-overview?year=2027
+
+  - type: cron
+    name: gatorvault-api-recruiting-ingest
+    schedule: "0 */2 * * *"
+    runtime: node
+    region: oregon
+    startCommand: node server/scripts/render-recruiting-ingest-cron.js
+    envVars:
+      - key: NEXT_PUBLIC_API_BASE
+        value: https://gatorvault-api.onrender.com
+      - key: RIVALS_PM_INGEST_ENABLED
+        value: "true"
+      - key: MONITORING_CRON_SECRET
+        sync: false
 
   - type: cron
     name: gatorvault-api-hub-refresh

@@ -27,6 +27,7 @@ const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { ALLOWLIST_2027, CANONICAL_TARGET_NAMES } = require('../../lib/recruiting-target-allowlist');
 const { filterBlockedRecruits, isBlockedRecruit } = require('../../lib/recruiting-blocked-players');
+const { isFloridaSchool, isActiveUfTarget, isCommittedElsewhere } = require('../../lib/recruiting-target-filters');
 
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 const EARLY_WATCHLIST_PATH = path.join(__dirname, '../../data/futurecast/early-watchlist.json');
@@ -37,11 +38,6 @@ function targetBoardPath(classYear: number): string {
 const RIVALS_PREDICTIONS_PATH = path.join(__dirname, '../../data/war-room/rivals-predictions.json');
 const MOVEMENT_WINDOW_DAYS = 7;
 export const UNDERCLASSMEN_MOVEMENT_WINDOW_DAYS = 30;
-
-function isFloridaSchool(value: string | null | undefined): boolean {
-  if (!value) return false;
-  return /\bflorida\b|\bgators\b/i.test(String(value).replace(/\s+/g, ' ').trim());
-}
 
 function seedCommittedTo(seed: Record<string, unknown>): string | null {
   const raw = seed.committedTo ?? seed.committed_to ?? null;
@@ -321,6 +317,10 @@ export async function loadBoardPlayersForSlugs(
 
     const seed = seedMeta.get(slug) ?? {};
     const recruiting = await loadRecruitingPlayer(slug);
+    if (recruiting && !isActiveUfTarget(recruiting)) continue;
+    if (!recruiting && seedCommittedTo(seed) && isCommittedElsewhere({ committedTo: seedCommittedTo(seed) })) {
+      continue;
+    }
     const rank = rankings.get(slug);
     const stock = stockBySlug.get(slug);
     const model = predictionBySlug.get(slug);
@@ -424,17 +424,17 @@ export async function buildMasterBoardPayload() {
     .filter((p) => (p.trendDelta7d ?? 0) < 0)
     .sort((a, b) => (a.trendDelta7d ?? 0) - (b.trendDelta7d ?? 0));
 
-  const activeTargets = players.filter((p) => !isFloridaSchool(p.committedTo ?? null));
+  const activeTargets = players.filter(isActiveUfTarget);
 
   const highVolatility = [...activeTargets]
     .filter((p) => p.volatility7d >= 0.15)
     .sort((a, b) => b.volatility7d - a.volatility7d);
 
   const highPriority = [...players]
-    .filter((p) => p.priority === 'high')
+    .filter((p) => p.priority === 'high' && isActiveUfTarget(p))
     .sort((a, b) => (b.ufConfidence ?? 0) - (a.ufConfidence ?? 0));
 
-  const commitWatch = [...players]
+  const commitWatch = [...activeTargets]
     .filter((p) => (p.ufConfidence ?? 0) >= 50 && (p.trendDelta7d ?? 0) > 0)
     .sort(
       (a, b) =>
@@ -511,7 +511,7 @@ export async function buildTrendingBoardPayload() {
 
 export async function buildMovementIntelPayload() {
   const players = await loadAllowlistedBoardPlayers();
-  const activeTargets = players.filter((p) => !isFloridaSchool(p.committedTo ?? null));
+  const activeTargets = players.filter(isActiveUfTarget);
   const heatmap = buildHeatmap(activeTargets);
 
   const risers = activeTargets
