@@ -17,7 +17,6 @@ services:
     startCommand: npm start
     healthCheckPath: /health
     envVars:
-      -     envVars:
       - key: NODE_ENV
         value: production
       - key: SITE_URL
@@ -26,7 +25,6 @@ services:
         value: https://gatorvault-api.onrender.com
       - key: EMAIL_PROVIDER
         value: emailjs
-
       - key: ON3_INGEST_ENABLED
         value: "true"
       - key: ON3_INGEST_INTERVAL_MS
@@ -154,8 +152,7 @@ services:
       - key: DATABASE_URL
         sync: false
 
-  # Keep the API warm on Render free tier (spin-down after ~15 min idle).
-    - type: cron
+  - type: cron
     name: gatorvault-api-keepalive
     schedule: "*/5 * * * *"
     runtime: node
@@ -169,10 +166,7 @@ services:
       - key: KEEPALIVE_HUB_URL
         value: https://gatorvault-api.onrender.com/api/recruiting/hub/class-overview?year=2027
 
-
-
-  # Rebuild recruiting hub JSON caches on a schedule (and after cold wake via keepalive hub ping).
-    - type: cron
+  - type: cron
     name: gatorvault-api-hub-refresh
     schedule: "0 */6 * * *"
     runtime: node
@@ -183,5 +177,4 @@ services:
         value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?geoBackfill=true
       - key: MONITORING_CRON_SECRET
         sync: false
-
 
