@@ -1,4 +1,4 @@
-import { getApiBase } from './big-board-api';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 
 export type PublishedArticle = {
   id: string;
@@ -27,10 +27,9 @@ export type PublishedFeedResponse = {
 };
 
 export async function fetchPublishedFeed(): Promise<PublishedFeedResponse> {
-  const base = getApiBase();
-  const res = await fetch(`${base}/api/content/published`, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Published content failed (${res.status})`);
-  const data = (await res.json()) as PublishedFeedResponse;
+  const data = await snapshotFirstFetch('/api/content/published', () =>
+    snapshotLiveFetch<PublishedFeedResponse>('/api/content/published')
+  );
   return {
     articles: data.articles ?? [],
     storylines: data.storylines ?? [],

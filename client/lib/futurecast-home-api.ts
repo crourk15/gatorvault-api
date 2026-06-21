@@ -1,8 +1,8 @@
 /**
- * FutureCast homepage API — live endpoints only (no static JSON).
- * 2027 cycle · client cache · timeout · stale-data guard.
+ * FutureCast homepage API — snapshot-first with live revalidation.
  */
-import { getApiBase } from './big-board-api';
+import { apiFetch, ApiFetchError } from './api-fetch';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FeedPrediction, PredictorLeaderboardEntry } from './predictions-api';
 import type { MovementHeatmapBucket } from './predictions-api';
 
@@ -240,32 +240,22 @@ function writeClientCache(bundle: FutureCastWidgetBundle): void {
   }
 }
 
-async function fetchWithTimeout(url: string, timeoutMs = FUTURECAST_FETCH_TIMEOUT_MS): Promise<Response> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
+async function fetchJson<T>(apiPath: string): Promise<T> {
   try {
-    return await fetch(url, { signal: controller.signal, cache: 'default' });
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-async function fetchJson<T>(url: string): Promise<T> {
-  try {
-    const res = await fetchWithTimeout(url);
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
-      const msg = (body as { error?: string }).error || `API ${res.status}`;
-      const code = res.status === 502 || res.status === 503 ? 'offline' : 'error';
-      throw new FutureCastApiError(msg, code, res.status);
-    }
-    return res.json() as Promise<T>;
+    return await snapshotFirstFetch(apiPath, () => snapshotLiveFetch<T>(apiPath), {
+      timeoutMs: FUTURECAST_FETCH_TIMEOUT_MS,
+      retries: 2,
+      retryDelayMs: 2000,
+    });
   } catch (err) {
-    if (err instanceof FutureCastApiError) throw err;
-    if (err instanceof DOMException && err.name === 'AbortError') {
-      throw new FutureCastApiError('Request timed out', 'timeout');
+    if (err instanceof ApiFetchError) {
+      const code =
+        err.timedOut === true ? 'timeout' : err.status === 502 || err.status === 503 ? 'offline' : 'error';
+      throw new FutureCastApiError(err.message, code, err.status);
     }
-    throw err;
+    if (err instanceof FutureCastApiError) throw err;
+    const msg = err instanceof Error ? err.message : 'Request failed';
+    throw new FutureCastApiError(msg, 'error');
   }
 }
 
@@ -275,18 +265,16 @@ export async function fetchFutureCastHome(
   const params = new URLSearchParams();
   if (commitSort === 'stability') params.set('commitSort', 'stability');
   const qs = params.toString();
-  const data = await fetchJson<FutureCastHomeResponse>(
-    `${getApiBase()}/api/futurecast/home${qs ? `?${qs}` : ''}`
-  );
+  const apiPath = `/api/futurecast/home${qs ? `?${qs}` : ''}`;
+  const data = await fetchJson<FutureCastHomeResponse>(apiPath);
   return sanitizeFutureCastHome(data).data;
 }
 
 export async function fetchFutureCastClass(
   year = FUTURECAST_WIDGET_YEAR
 ): Promise<FutureCastClassResponse> {
-  const data = await fetchJson<FutureCastClassResponse>(
-    `${getApiBase()}/api/futurecast/class?year=${year}`
-  );
+  const apiPath = `/api/futurecast/class?year=${year}`;
+  const data = await fetchJson<FutureCastClassResponse>(apiPath);
   return sanitizeFutureCastClass(data);
 }
 
@@ -295,9 +283,8 @@ export async function fetchFutureCastPredictions(
   limit = 6
 ): Promise<FutureCastPredictionsResponse> {
   const params = new URLSearchParams({ year: String(year), limit: String(limit) });
-  const data = await fetchJson<FutureCastPredictionsResponse>(
-    `${getApiBase()}/api/futurecast/predictions?${params}`
-  );
+  const apiPath = `/api/futurecast/predictions?${params}`;
+  const data = await fetchJson<FutureCastPredictionsResponse>(apiPath);
   return sanitizeFutureCastPredictions(data).data;
 }
 
@@ -319,14 +306,13 @@ export async function loadFutureCastWidgetBundle(options?: {
   let staleFiltered = 0;
 
   try {
+    const homePath = '/api/futurecast/home';
+    const classPath = `/api/futurecast/class?year=${FUTURECAST_WIDGET_YEAR}`;
+    const predPath = `/api/futurecast/predictions?year=${FUTURECAST_WIDGET_YEAR}&limit=${predictionsLimit}`;
     const [homeRaw, classRaw, predRaw] = await Promise.all([
-      fetchJson<FutureCastHomeResponse>(`${getApiBase()}/api/futurecast/home`),
-      fetchJson<FutureCastClassResponse>(
-        `${getApiBase()}/api/futurecast/class?year=${FUTURECAST_WIDGET_YEAR}`
-      ),
-      fetchJson<FutureCastPredictionsResponse>(
-        `${getApiBase()}/api/futurecast/predictions?year=${FUTURECAST_WIDGET_YEAR}&limit=${predictionsLimit}`
-      ),
+      fetchJson<FutureCastHomeResponse>(homePath),
+      fetchJson<FutureCastClassResponse>(classPath),
+      fetchJson<FutureCastPredictionsResponse>(predPath),
     ]);
 
     const homeSan = sanitizeFutureCastHome(homeRaw);

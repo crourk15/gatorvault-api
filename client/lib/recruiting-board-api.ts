@@ -2,6 +2,7 @@
  * Recruiting board API — /api/recruiting/board
  */
 import { apiFetch } from './api-fetch';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import { filterBlockedRecruits } from './recruiting-blocked-players';
 
 export type RecruitingBoardTier = 'TOP' | 'HIGH' | 'MEDIUM' | 'LOW' | 'EVAL';
@@ -88,8 +89,9 @@ export async function fetchRecruitingBoard(
   staffMode = false
 ): Promise<RecruitingBoardResponse> {
   const staff = staffMode ? '&mode=staff' : '';
-  const data = await apiFetch<RecruitingBoardResponse>(
-    `/api/recruiting/board?class=${classYear}${staff}`
+  const path = `/api/recruiting/board?class=${classYear}${staff}`;
+  const data = await snapshotFirstFetch(path, () =>
+    snapshotLiveFetch<RecruitingBoardResponse>(path)
   );
   return sanitizeRecruitingBoard(data);
 }

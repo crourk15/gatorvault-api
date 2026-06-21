@@ -1,5 +1,5 @@
-import { getApiBase } from './big-board-api';
 import { fetchRosterPlayers, type RosterPlayer } from './roster-api';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import {
   FALLBACK_COACHES,
   TEAM_ACHIEVEMENTS,
@@ -71,12 +71,10 @@ function mapRosterPlayer(p: RosterPlayer): TeamPlayer {
 }
 
 async function fetchCoachingStaff(): Promise<Coach[]> {
-  const base = getApiBase();
-  const url = base ? `${base}/api/team/coaching-staff` : '/data/coaching-staff.json';
   try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(String(res.status));
-    const data = (await res.json()) as StaffApiResponse;
+    const data = await snapshotFirstFetch('/api/team/coaching-staff', () =>
+      snapshotLiveFetch<StaffApiResponse>('/api/team/coaching-staff')
+    );
     const coaching: Coach[] = (data.coaches ?? []).map((c) => ({
       id: c.id,
       initials: coachInitials(c.name),
@@ -112,10 +110,8 @@ async function fetchDepthChartMeta(): Promise<{
   updatedAt?: string;
   units?: { offense?: number; defense?: number };
 } | null> {
-  const base = getApiBase();
-  const url = base ? `${base}/data/roster/depth-chart-meta.json` : '/data/roster/depth-chart-meta.json';
   try {
-    const res = await fetch(url);
+    const res = await fetch('/data/roster/depth-chart-meta.json');
     if (!res.ok) return null;
     return (await res.json()) as {
       playerCount?: number;

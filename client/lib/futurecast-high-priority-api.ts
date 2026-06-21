@@ -2,7 +2,7 @@
  * High Priority Targets API — /api/futurecast/high-priority
  * Response types: server/types/futurecast-elite-api.ts
  */
-import { apiFetch } from './api-fetch';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 export const HIGH_PRIORITY_YEAR = 2027;
@@ -100,8 +100,9 @@ export function writeHighPriorityCache(payload: HighPriorityResponse): void {
 export async function fetchHighPriorityTargets(
   year = HIGH_PRIORITY_YEAR
 ): Promise<HighPriorityResponse> {
+  const path = `/api/futurecast/high-priority?year=${year}`;
   try {
-    return await apiFetch<HighPriorityResponse>(`/api/futurecast/high-priority?year=${year}`);
+    return await snapshotFirstFetch(path, () => snapshotLiveFetch<HighPriorityResponse>(path));
   } catch (err) {
     const stale = readStaleHighPriorityCache();
     if (stale) return stale;

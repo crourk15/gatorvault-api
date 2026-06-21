@@ -1,4 +1,4 @@
-import { apiFetch } from './api-fetch';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type {
   MasterBoardResponse,
   MovementIntelResponse,
@@ -7,17 +7,24 @@ import type {
 } from './futurecast-board-types';
 
 export async function fetchFutureCastMasterBoard(): Promise<MasterBoardResponse> {
-  return apiFetch<MasterBoardResponse>('/api/futurecast/master-board');
+  return snapshotFirstFetch('/api/futurecast/master-board', () =>
+    snapshotLiveFetch<MasterBoardResponse>('/api/futurecast/master-board')
+  );
 }
 
 export async function fetchFutureCastTrendingBoard(): Promise<TrendingBoardResponse> {
-  return apiFetch<TrendingBoardResponse>('/api/futurecast/trending');
+  return snapshotFirstFetch('/api/futurecast/trending', () =>
+    snapshotLiveFetch<TrendingBoardResponse>('/api/futurecast/trending')
+  );
 }
 
 export async function fetchFutureCastMovementIntel(): Promise<MovementIntelResponse> {
-  return apiFetch<MovementIntelResponse>('/api/futurecast/movement-intel');
+  return snapshotFirstFetch('/api/futurecast/movement-intel', () =>
+    snapshotLiveFetch<MovementIntelResponse>('/api/futurecast/movement-intel')
+  );
 }
 
 export async function fetchFutureCastStaffNotesBoard(year = 2027): Promise<StaffNotesResponse> {
-  return apiFetch<StaffNotesResponse>(`/api/futurecast/staff-notes?year=${year}`);
+  const path = `/api/futurecast/staff-notes?year=${year}`;
+  return snapshotFirstFetch(path, () => snapshotLiveFetch<StaffNotesResponse>(path));
 }

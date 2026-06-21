@@ -1,4 +1,4 @@
-import { getApiBase } from './big-board-api';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 
 export type NilProgramRow = {
   id: string;
@@ -68,9 +68,8 @@ function normalizeDashboard(raw: NilDashboard): NilDashboard {
 }
 
 export async function fetchNilDashboard(): Promise<NilDashboard> {
-  const base = getApiBase();
-  const res = await fetch(`${base}/api/nil/dashboard`, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`NIL dashboard failed (${res.status})`);
-  const data = (await res.json()) as { dashboard?: NilDashboard };
+  const data = await snapshotFirstFetch('/api/nil/dashboard', () =>
+    snapshotLiveFetch<{ dashboard?: NilDashboard }>('/api/nil/dashboard')
+  );
   return normalizeDashboard(data.dashboard ?? {});
 }

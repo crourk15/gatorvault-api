@@ -1,7 +1,8 @@
 /**
- * FutureCast Predictions API client.
+ * FutureCast Predictions API client — snapshot-first live revalidation.
  */
 import { apiFetch } from './api-fetch';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { RankingFields } from '@/types/futurecast';
 
 export type PredictionSourceType = 'MODEL' | 'STAFF' | 'FAN' | 'BLENDED';
@@ -105,7 +106,9 @@ export async function fetchPredictionsFeed(
 }
 
 export async function fetchStockBoard(): Promise<StockBoardResponse> {
-  return predictionsApiFetch<StockBoardResponse>('/api/futurecast/stock');
+  return snapshotFirstFetch('/api/futurecast/stock', () =>
+    snapshotLiveFetch<StockBoardResponse>('/api/futurecast/stock')
+  );
 }
 
 export interface MovementSnapshotsResponse {
@@ -118,7 +121,9 @@ export interface MovementSnapshotsResponse {
 }
 
 export async function fetchMovementSnapshots(): Promise<MovementSnapshotsResponse> {
-  return predictionsApiFetch<MovementSnapshotsResponse>('/api/futurecast/snapshots');
+  return snapshotFirstFetch('/api/futurecast/snapshots', () =>
+    snapshotLiveFetch<MovementSnapshotsResponse>('/api/futurecast/snapshots')
+  );
 }
 
 export interface MovementHeatmapBucket {

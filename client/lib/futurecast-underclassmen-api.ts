@@ -1,4 +1,5 @@
 import { apiFetch } from './api-fetch';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastPlayer } from './futurecast-board-types';
 
 export type UnderclassmenTier = 'target' | 'watchlist';
@@ -41,7 +42,8 @@ export async function fetchFutureCastUnderclassmen(
   years: number[] = [2028, 2029, 2030]
 ): Promise<UnderclassmenResponse> {
   const qs = years.length ? `?years=${years.join(',')}` : '';
-  return apiFetch<UnderclassmenResponse>(`/api/futurecast/underclassmen${qs}`).catch(() => EMPTY);
+  const path = `/api/futurecast/underclassmen${qs}`;
+  return snapshotFirstFetch(path, () => snapshotLiveFetch<UnderclassmenResponse>(path)).catch(() => EMPTY);
 }
 
 export async function fetchFutureCastEarlyWatchlist(minYear = 2028): Promise<UnderclassmenResponse> {

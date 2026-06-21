@@ -1,4 +1,4 @@
-import { getApiBase } from './big-board-api';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 
 export interface FilmRoomCatalogItem {
   id: string;
@@ -20,9 +20,9 @@ export interface FilmRoomCatalog {
 }
 
 export async function fetchFilmRoomCatalog(): Promise<FilmRoomCatalog> {
-  const res = await fetch(`${getApiBase()}/api/film-room/catalog`);
-  if (!res.ok) throw new Error(`Film Room catalog ${res.status}`);
-  const data = (await res.json()) as FilmRoomCatalog;
+  const data = await snapshotFirstFetch('/api/film-room/catalog', () =>
+    snapshotLiveFetch<FilmRoomCatalog>('/api/film-room/catalog')
+  );
   return { categories: data.categories, items: data.items ?? [] };
 }
 

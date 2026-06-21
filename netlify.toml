@@ -37,6 +37,12 @@
     Cache-Control = "public, max-age=300, stale-while-revalidate=600"
     Netlify-CDN-Cache-Control = "public, max-age=300, stale-while-revalidate=600"
 
+[[headers]]
+  for = "/page-snapshot/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300, stale-while-revalidate=600"
+    Netlify-CDN-Cache-Control = "public, max-age=300, stale-while-revalidate=600"
+
 # Vault SPA fallback — detailed per-route rewrites live in server/_redirects (generated at build).
 # This catch-all only applies when no more-specific rule matches.
 [[redirects]]
@@ -136,36 +142,6 @@
     Cache-Control = "no-store, no-cache, must-revalidate"
     Pragma = "no-cache"
     Netlify-CDN-Cache-Control = "no-store"
-
-[[headers]]
-  for = "/api/futurecast/home"
-  [headers.values]
-    Cache-Control = "public, max-age=300, s-maxage=600, stale-while-revalidate=60"
-
-[[headers]]
-  for = "/api/futurecast/class"
-  [headers.values]
-    Cache-Control = "public, max-age=300, s-maxage=600, stale-while-revalidate=60"
-
-[[headers]]
-  for = "/api/futurecast/predictions"
-  [headers.values]
-    Cache-Control = "public, max-age=300, s-maxage=600, stale-while-revalidate=60"
-
-[[headers]]
-  for = "/api/futurecast/staff-notes"
-  [headers.values]
-    Cache-Control = "public, max-age=300, s-maxage=600, stale-while-revalidate=60"
-
-[[headers]]
-  for = "/api/futurecast/high-priority"
-  [headers.values]
-    Cache-Control = "public, max-age=300, s-maxage=600, stale-while-revalidate=60"
-
-[[headers]]
-  for = "/api/recruits/*"
-  [headers.values]
-    Cache-Control = "public, max-age=300, s-maxage=600, stale-while-revalidate=60"
 
 [[headers]]
   for = "/css/*"

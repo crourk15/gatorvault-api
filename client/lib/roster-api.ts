@@ -1,4 +1,4 @@
-import { getApiBase } from './big-board-api';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 
 export interface RosterPlayer {
   id: string;
@@ -26,18 +26,20 @@ export interface RosterPlayer {
 }
 
 export async function fetchRosterPlayers(): Promise<RosterPlayer[]> {
-  const res = await fetch(`${getApiBase()}/api/roster/players`);
-  if (!res.ok) throw new Error(`Roster API ${res.status}`);
-  const data = (await res.json()) as { players?: RosterPlayer[] };
+  const data = await snapshotFirstFetch('/api/roster/players', () =>
+    snapshotLiveFetch<{ players?: RosterPlayer[] }>('/api/roster/players')
+  );
   return data.players ?? [];
 }
 
 export async function fetchRosterPlayerBySlug(slug: string): Promise<RosterPlayer | null> {
-  const res = await fetch(`${getApiBase()}/api/roster/players/${encodeURIComponent(slug)}`);
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`Roster player API ${res.status}`);
-  const data = (await res.json()) as { player?: RosterPlayer };
-  return data.player ?? null;
+  const path = `/api/roster/players/${encodeURIComponent(slug)}`;
+  try {
+    const data = await snapshotLiveFetch<{ player?: RosterPlayer }>(path);
+    return data.player ?? null;
+  } catch {
+    return null;
+  }
 }
 
 /** Roster players who arrived before portal era or are mis-tagged — hide portal badge */

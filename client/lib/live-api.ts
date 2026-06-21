@@ -1,4 +1,4 @@
-import { getApiBase } from './big-board-api';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import {
   catalogPlatformsFromStreams,
   findPodcastCatalogEntry,
@@ -98,16 +98,15 @@ export async function fetchLiveDashboard(
   limit = 40,
   options: { force?: boolean } = {}
 ): Promise<LiveDashboard> {
-  const qs = new URLSearchParams({ limit: String(limit), _t: String(Date.now()) });
+  const qs = new URLSearchParams({ limit: String(limit) });
   if (options.force) qs.set('refresh', '1');
-  const res = await fetch(`${getApiBase()}/api/live/dashboard?${qs.toString()}`, {
-    cache: 'no-store',
-  });
-  if (!res.ok) throw new Error(`Live dashboard ${res.status}`);
-  const data = (await res.json()) as LiveDashboard & {
+  const path = `/api/live/dashboard?${qs.toString()}`;
+
+  const data = await snapshotFirstFetch(path, () => snapshotLiveFetch<LiveDashboard & {
     ok?: boolean;
     podcasts?: { shows?: Record<string, unknown>[] };
-  };
+  }>(path));
+
   const rawShows = data.podcasts?.shows ?? [];
   return {
     feed: data.feed ?? [],

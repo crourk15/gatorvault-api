@@ -1,7 +1,6 @@
 /**
  * Vault home page data layer — cached fetches for /vault homepage.
  */
-import { getApiBase } from './big-board-api';
 import { fetchStaffDashboard, type StaffDashboardResponse } from './staff-api';
 import {
   fetchMovementHeatmap,
@@ -18,6 +17,7 @@ import { fetchTeamHubBundle } from './team-hub-api';
 import { fetchRosterPlayers } from './roster-api';
 import type { DepthChartPosition } from './team-hub-types';
 import { loadAlertPrefs, loadLocalRecentAlerts } from './alert-prefs';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 
 export const HOME_REFRESH = {
   hero: 5 * 60_000,
@@ -232,9 +232,7 @@ function writeCache<T>(slot: CacheSlot<T>, data: T): T {
 }
 
 async function fetchJson<T>(path: string): Promise<T> {
-  const res = await fetch(`${getApiBase()}${path}`, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`${path} ${res.status}`);
-  return (await res.json()) as T;
+  return snapshotFirstFetch(path, () => snapshotLiveFetch<T>(path));
 }
 
 export async function fetchLiveTicker(force = false): Promise<TickerResponse> {

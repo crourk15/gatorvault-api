@@ -1,4 +1,4 @@
-import { getApiBase } from './big-board-api';
+import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 
 export type BettingGame = {
   id?: string;
@@ -26,8 +26,7 @@ export type BettingLinesResponse = {
 };
 
 export async function fetchBettingLines(): Promise<BettingLinesResponse> {
-  const base = getApiBase();
-  const res = await fetch(`${base}/api/betting/lines`, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Betting lines failed (${res.status})`);
-  return (await res.json()) as BettingLinesResponse;
+  return snapshotFirstFetch('/api/betting/lines', () =>
+    snapshotLiveFetch<BettingLinesResponse>('/api/betting/lines')
+  );
 }

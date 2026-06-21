@@ -1,0 +1,1 @@
+{"ok":true,"status":"ready","meta":{"generatedAt":"2026-06-21T14:25:09.967Z","snapshot":true,"endpoint":"futurecast/home","source":"build-page-snapshots"},"error":"DATABASE_URL (or SUPABASE_DATABASE_URL) is required for FutureCast DB access"}

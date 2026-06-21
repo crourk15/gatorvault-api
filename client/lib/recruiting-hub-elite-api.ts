@@ -1,7 +1,11 @@
 /**
  * Recruiting Hub Elite API — /api/recruiting/hub/*
  */
-import { apiFetch } from './api-fetch';
+import {
+  DEFAULT_SNAPSHOT_FETCH_OPTS,
+  snapshotFirstFetch,
+  snapshotLiveFetch,
+} from './snapshot-fetch';
 
 export type RhHubClassOverview = {
   classRank: string;
@@ -166,49 +170,15 @@ export type RhHubFootprintResponse = {
 };
 
 const HUB_YEAR = 2027;
-const HUB_FETCH_OPTS = { retries: 3, retryDelayMs: 2000, timeoutMs: 12_000 } as const;
+const HUB_FETCH_OPTS = DEFAULT_SNAPSHOT_FETCH_OPTS;
 
-function hubSnapshotPath(apiPath: string): string | null {
-  if (typeof window === 'undefined') return null;
-  const normalized = apiPath.startsWith('/') ? apiPath : `/${apiPath}`;
-  if (normalized === '/api/recruiting/hub/class-overview/all') {
-    return '/hub-snapshot/class-overview-all.json';
-  }
-  const match = normalized.match(/^\/api\/recruiting\/hub\/([^/?]+)(?:\?year=(\d+))?/);
-  if (!match) return null;
-  const [, endpoint, yearParam] = match;
-  const year = yearParam || String(HUB_YEAR);
-  return `/hub-snapshot/${year}/${endpoint}.json`;
-}
-
-async function fetchHubSnapshot<T>(apiPath: string): Promise<T> {
-  const snapPath = hubSnapshotPath(apiPath);
-  if (!snapPath) {
-    throw new Error('No hub snapshot for this endpoint');
-  }
-  const res = await fetch(snapPath, { headers: { Accept: 'application/json' }, cache: 'no-store' });
-  if (!res.ok) {
-    throw new Error(`Hub snapshot unavailable (${res.status})`);
-  }
-  return (await res.json()) as T;
-}
-
-async function fetchHubLive<T>(path: string): Promise<T> {
-  return apiFetch<T>(path, HUB_FETCH_OPTS);
+function fetchHubLive<T>(path: string): Promise<T> {
+  return snapshotLiveFetch<T>(path, HUB_FETCH_OPTS);
 }
 
 /** Snapshot-first for instant paint; live API revalidates in background when available. */
 function fetchHub<T>(path: string): Promise<T> {
-  const snapPath = hubSnapshotPath(path);
-  if (snapPath) {
-    return fetchHubSnapshot<T>(path)
-      .then((snapshot) => {
-        void fetchHubLive<T>(path).catch(() => {});
-        return snapshot;
-      })
-      .catch(() => fetchHubLive<T>(path));
-  }
-  return fetchHubLive<T>(path);
+  return snapshotFirstFetch(path, () => fetchHubLive<T>(path), HUB_FETCH_OPTS);
 }
 
 export async function fetchRecruitingHubTicker(year = HUB_YEAR): Promise<string[]> {

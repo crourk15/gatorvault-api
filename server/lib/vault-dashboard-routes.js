@@ -99,7 +99,7 @@ function cached(key, builder) {
 
 function getFilmRoomLatest() {
   try {
-    const filmRoom = require('./film-room');
+    const filmRoom = require('./film-room-feed');
     const catalog = filmRoom.buildFilmRoomCatalog();
     return (catalog.items || []).slice(0, 8).map((item) => ({
       id: item.id,
@@ -206,16 +206,7 @@ function buildPersonalizedHints(req) {
 function mountVaultDashboardRoutes(app) {
   app.get('/api/live/ticker', (req, res) => {
     try {
-      const payload = cached('ticker', () => {
-        const items = buildTickerItems();
-        return {
-          ok: true,
-          items,
-          storyline: buildStoryline(items),
-          hotToday: buildHotCarousel(items),
-          updatedAt: nowIso(),
-        };
-      });
+      const payload = cached('ticker', buildTickerPayload);
       return res.status(200).json(payload);
     } catch (err) {
       return res.status(200).json({
@@ -231,8 +222,8 @@ function mountVaultDashboardRoutes(app) {
 
   app.get('/api/content/latest', (req, res) => {
     try {
-      const payload = cached('content', buildLatestContent);
-      return res.status(200).json({ ok: true, ...payload });
+      const payload = cached('content', () => buildContentLatestPayload());
+      return res.status(200).json(payload);
     } catch (err) {
       return res.status(200).json({
         ok: true,
@@ -265,4 +256,23 @@ function mountVaultDashboardRoutes(app) {
   });
 }
 
-module.exports = { mountVaultDashboardRoutes };
+function buildTickerPayload() {
+  const items = buildTickerItems();
+  return {
+    ok: true,
+    items,
+    storyline: buildStoryline(items),
+    hotToday: buildHotCarousel(items),
+    updatedAt: nowIso(),
+  };
+}
+
+function buildContentLatestPayload() {
+  return { ok: true, ...buildLatestContent() };
+}
+
+module.exports = {
+  mountVaultDashboardRoutes,
+  buildTickerPayload,
+  buildContentLatestPayload,
+};

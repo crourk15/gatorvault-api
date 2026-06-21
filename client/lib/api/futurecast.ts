@@ -1,7 +1,8 @@
 /**
  * FutureCast page API — unified client layer for /vault/futurecast.
  */
-import { apiFetch, ApiFetchError } from '@/lib/api-fetch';
+import { ApiFetchError } from '@/lib/api-fetch';
+import { snapshotFirstFetch, snapshotLiveFetch } from '@/lib/snapshot-fetch';
 import { fetchFutureCastMasterBoard } from '@/lib/futurecast-board-api';
 import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
 import {
@@ -111,9 +112,8 @@ export async function fetchFutureCastTargets(
   year = FUTURECAST_WIDGET_YEAR,
   limit = 50
 ): Promise<FutureCastTargetsResponse> {
-  return apiFetch<FutureCastTargetsResponse>(
-    `/api/futurecast/targets?class_year=${year}&limit=${limit}`
-  );
+  const path = `/api/futurecast/targets?class_year=${year}&limit=${limit}`;
+  return snapshotFirstFetch(path, () => snapshotLiveFetch<FutureCastTargetsResponse>(path));
 }
 
 function avgUfProbability(players: Array<{ ufProbability?: number | null; confidence?: number }>): number {

@@ -48,7 +48,8 @@
     "keepalive:ping": "node scripts/render-keepalive-ping.js",
     "hub-refresh:cron": "node scripts/render-hub-refresh-cron.js",
     "verify:deployment": "node scripts/verify-deployment.js",
-    "test:recruiting": "node --test tests/recruiting/*.test.js"
+    "test:recruiting": "node --test tests/recruiting/*.test.js",
+    "test:snapshot": "node --test tests/snapshot/*.test.js"
   },
   "engines": {
     "node": ">=18"
