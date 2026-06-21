@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const { parseRssItems } = require('./rss-parse');
 const store = require('./live-store');
 const beatFilters = require('./beat-writer-filters');
+const ingestGate = require('./beat-recruiting-ingest-gate');
 const { shouldIncludeBeatPost } = beatFilters;
 
 const NITTER_BASES = (process.env.NITTER_BASES || 'https://nitter.poast.org,https://nitter.privacydev.net')
@@ -190,7 +191,7 @@ async function fetchWriterPosts(writer, { maxPosts = 10 } = {}) {
 /** Fetch last N posts per writer directly (for late-ingest sweep). */
 async function fetchAllWriterPostsFresh({ maxPostsPerWriter = 20 } = {}) {
   const tokenStatus = await validateXBearerToken({ force: false });
-  const writers = store.loadWriters();
+  const writers = store.loadWriters().filter(isAllowedFetchWriter);
   const all = [];
   let errors = 0;
 
@@ -287,10 +288,19 @@ async function purgeNonFloridaBeatContent({ refreshDashboard = true } = {}) {
   return { cacheResult, feedResult, refreshed };
 }
 
+function isAllowedFetchWriter(writer) {
+  return ingestGate.isAllowedIngestAccount({
+    handle: writer.handle,
+    writerId: writer.id,
+    writerName: writer.name,
+    outlet: writer.outlet,
+  });
+}
+
 async function refreshBeatStream() {
   const tokenStatus = await validateXBearerToken({ force: false });
   const cache = store.loadBeatCache();
-  const writers = store.loadWriters();
+  const writers = store.loadWriters().filter(isAllowedFetchWriter);
   const hasBearer = !!getXBearerToken() && tokenStatus.ok;
 
   const all = [];

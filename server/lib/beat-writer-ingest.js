@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { getBeatPosts } = require('./live-beat');
 const beatFilters = require('./beat-writer-filters');
+const ingestGate = require('./beat-recruiting-ingest-gate');
 const cancelParser = require('./beat-visit-intel-parser');
 const store = require('./recruiting-store');
 const intelStore = require('./recruiting-intel-store');
@@ -103,18 +104,7 @@ function saveSnapshot(doc) {
 }
 
 function isVisitIngestWriter(post) {
-  const handle = String(post.handle || post.writerId || '').toLowerCase();
-  if (VISIT_INGEST_HANDLES.has(handle)) return true;
-  if (beatFilters.isTrustedBeatWriter(post)) return true;
-  const writer = String(post.writerName || post.outlet || '').toLowerCase();
-  return (
-    /harden|bender|gatorsonline|gators online|swamp247|graham hall|de la torre|goldkamp|goodall|alderman|holland|ivins|simmons|fawcett|gatorsterritory|insidethegators|on3recruits|rivalsportal/i.test(
-      writer
-    ) ||
-    /harden|bender|gatorsonline|swamp247|grahamhall|nickdelatorre|thomasgoldkamp|blake_alderman|ejholland|andrew_ivins|chadsimmons|on3recruits|rivalsportal|gatorsterritory|insidethegators/i.test(
-      handle
-    )
-  );
+  return ingestGate.isAllowedIngestAccount(post);
 }
 
 function logBeatPostSkip(post, reason, category = 'filtered') {
@@ -335,82 +325,16 @@ function extractVisitPlayerName(text) {
 function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
   const prefilter = require('./beat-intel-prefilter');
   const text = String(post.text || '').trim();
-  const trusted = isVisitIngestWriter(post);
 
   if (!text) {
     if (logSkips) logBeatPostSkip(post, 'empty_text', 'non_player_intel');
     return null;
   }
-  if (!isRecruitingIntelPost(text, post)) {
-    if (logSkips) logBeatPostSkip(post, 'no_recruiting_signal', 'filtered');
-    return null;
-  }
-  if (!trusted) {
-    if (logSkips) logBeatPostSkip(post, 'untrusted_writer', 'filtered');
-    return null;
-  }
-  if (!beatFilters.shouldIncludeBeatPost(post)) {
-    if (logSkips) logBeatPostSkip(post, 'beat_filter_blocked', 'filtered');
-    return null;
-  }
-  if (!beatFilters.isFloridaRelevantPost(post)) {
-    if (logSkips) logBeatPostSkip(post, 'non_florida', 'filtered');
-    return null;
-  }
-  if (prefilter.isGenericNonPlayerIntel(text) && !prefilter.hasStrongRecruitingSignals(text, post)) {
-    if (logSkips) logBeatPostSkip(post, 'generic_phrase', 'non_player_intel');
-    prefilter.logNonPlayerIntel({ text, reason: 'generic_phrase', source: post.handle || post.writerName });
-    return null;
-  }
 
-  const programGate = prefilter.evaluateProgramNewsEligibility(text, { post });
-  if (programGate.eligible) {
-    const timestamp = post.publishedAt || new Date().toISOString();
-    const handle = String(post.handle || '').toLowerCase() || 'beat';
-    const day = timestamp.slice(0, 10);
-    const postKey = String(post.id || post.url || day).replace(/[^a-z0-9_-]/gi, '').slice(0, 32);
-    const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
-    return {
-      triggerType: 'program_news',
-      programNewsType: programGate.programNewsType,
-      playerName: null,
-      playerSlug: null,
-      on3Id: null,
-      eventType: 'program_news',
-      status: 'Program news',
-      detail: text.replace(/\s+/g, ' ').slice(0, 280),
-      timestamp,
-      articleUrl: post.url || null,
-      source: analystName,
-      sourceHandle: post.handle || null,
-      sourceType: 'beat',
-      fingerprint: `program_news_${programGate.programNewsType}_${day}_${handle}_${postKey}`
-    };
-  }
-
-  const teamGate = prefilter.evaluateTeamEventEligibility(text, { post });
-  if (teamGate.eligible) {
-    const timestamp = post.publishedAt || new Date().toISOString();
-    const handle = String(post.handle || '').toLowerCase() || 'beat';
-    const day = timestamp.slice(0, 10);
-    const postKey = String(post.id || post.url || day).replace(/[^a-z0-9_-]/gi, '').slice(0, 32);
-    const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
-    return {
-      triggerType: 'team_event',
-      teamEventType: teamGate.teamEventType,
-      playerName: null,
-      playerSlug: null,
-      on3Id: null,
-      eventType: 'team_event',
-      status: 'Team update',
-      detail: text.replace(/\s+/g, ' ').slice(0, 280),
-      timestamp,
-      articleUrl: post.url || null,
-      source: analystName,
-      sourceHandle: post.handle || null,
-      sourceType: 'beat',
-      fingerprint: `team_event_${teamGate.teamEventType}_${day}_${handle}_${postKey}`
-    };
+  const strict = ingestGate.evaluateStrictRecruitingIngestGate(post, text);
+  if (!strict.pass) {
+    if (logSkips) logBeatPostSkip(post, strict.reason, 'filtered');
+    return null;
   }
 
   let playerName = extractVisitPlayerName(text);

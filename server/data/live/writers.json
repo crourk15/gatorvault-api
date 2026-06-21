@@ -20,5 +20,7 @@
   { "id": "on3recruits", "name": "On3 Recruits", "handle": "On3Recruits", "outlet": "On3" },
   { "id": "rivalsportal", "name": "Rivals Portal", "handle": "RivalsPortal", "outlet": "Rivals" },
   { "id": "gatorsterritory", "name": "Gators Territory", "handle": "GatorsTerritory", "outlet": "Gators Territory" },
-  { "id": "insidethegators", "name": "Inside the Gators", "handle": "InsideTheGators", "outlet": "Inside the Gators" }
+  { "id": "insidethegators", "name": "Inside the Gators", "handle": "InsideTheGators", "outlet": "Inside the Gators" },
+  { "id": "gatorsfb", "name": "Florida Gators Football", "handle": "GatorsFB", "outlet": "UF Official" },
+  { "id": "floridagators", "name": "Florida Gators", "handle": "FloridaGators", "outlet": "UF Official" }
 ]
