@@ -31,6 +31,12 @@
     Cache-Control = "no-store, must-revalidate"
     Netlify-CDN-Cache-Control = "no-store"
 
+[[headers]]
+  for = "/hub-snapshot/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300, stale-while-revalidate=600"
+    Netlify-CDN-Cache-Control = "public, max-age=300, stale-while-revalidate=600"
+
 # Vault SPA fallback — detailed per-route rewrites live in server/_redirects (generated at build).
 # This catch-all only applies when no more-specific rule matches.
 [[redirects]]

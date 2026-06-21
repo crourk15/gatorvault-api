@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 /**
- * Render cron keep-alive — pings the API so the free-tier web service stays warm.
+ * Render cron keep-alive — wakes cold free-tier instances and keeps them warm.
  * Schedule: every 5 minutes (see render.yaml cron service).
+ *
+ * Cold spin-down returns fast 503 (~50ms). This script retries for up to 3 minutes
+ * with long per-request timeouts so the instance actually boots.
  */
 
 const HEALTH_URL =
@@ -15,71 +18,72 @@ const HUB_URL =
   'https://gatorvault-api.onrender.com/api/recruiting/hub/class-overview?year=2027';
 
 const RETRY_STATUSES = new Set([502, 503, 504, 429]);
-const MAX_ATTEMPTS = 4;
-const RETRY_MS = 3000;
+const WAKE_WINDOW_MS = parseInt(process.env.KEEPALIVE_WAKE_MS || '180000', 10);
+const WAKE_INTERVAL_MS = parseInt(process.env.KEEPALIVE_WAKE_INTERVAL_MS || '5000', 10);
+const REQUEST_TIMEOUT_MS = parseInt(process.env.KEEPALIVE_TIMEOUT_MS || '90000', 10);
 
-async function pingOnce(url, label) {
+async function sleep(ms) {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function pingOnce(url) {
   const started = Date.now();
   const res = await fetch(url, {
     method: 'GET',
-    headers: { Accept: 'application/json', 'User-Agent': 'gatorvault-keepalive/1.0' },
-    signal: AbortSignal.timeout(25000),
+    headers: { Accept: 'application/json', 'User-Agent': 'gatorvault-keepalive/2.0' },
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   });
-  const elapsed = Date.now() - started;
-  let body = null;
-  try {
-    body = await res.json();
-  } catch {
-    body = null;
-  }
-  if (!res.ok) {
-    const err = new Error(`${label} HTTP ${res.status} (${elapsed}ms)`);
-    err.status = res.status;
-    err.body = body;
-    throw err;
-  }
-  return { ok: true, status: res.status, elapsed, body };
+  return { ok: res.ok, status: res.status, elapsed: Date.now() - started, res };
 }
 
-async function pingWithRetry(url, label) {
-  let lastErr;
-  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt += 1) {
+async function wakeUntilReady(url, label) {
+  const deadline = Date.now() + WAKE_WINDOW_MS;
+  let lastStatus = 0;
+  let attempts = 0;
+
+  while (Date.now() < deadline) {
+    attempts += 1;
     try {
-      return await pingOnce(url, label);
+      const result = await pingOnce(url);
+      lastStatus = result.status;
+      if (result.ok) {
+        return { status: result.status, elapsedMs: result.elapsed, attempts };
+      }
+      if (!RETRY_STATUSES.has(result.status)) {
+        throw new Error(`${label} HTTP ${result.status} (${result.elapsed}ms)`);
+      }
     } catch (err) {
-      lastErr = err;
       const status = err.status || 0;
-      const retryable =
-        attempt < MAX_ATTEMPTS - 1 &&
-        (RETRY_STATUSES.has(status) ||
-          /timeout|ECONNRESET|ECONNREFUSED|fetch failed|network/i.test(String(err.message || '')));
-      if (!retryable) break;
-      await new Promise((resolve) => setTimeout(resolve, RETRY_MS * (attempt + 1)));
+      if (status && !RETRY_STATUSES.has(status)) {
+        throw err;
+      }
     }
+    await sleep(WAKE_INTERVAL_MS);
   }
-  throw lastErr;
+
+  throw new Error(`${label} wake failed after ${attempts} attempts (last HTTP ${lastStatus})`);
+}
+
+async function tryPing(url, label) {
+  try {
+    return await wakeUntilReady(url, label);
+  } catch (err) {
+    console.warn(`[keepalive] ${label} skipped:`, err.message);
+    return null;
+  }
 }
 
 async function main() {
-  const health = await pingWithRetry(HEALTH_URL, 'health');
-  let ping = null;
-  let hub = null;
-  try {
-    ping = await pingWithRetry(PING_URL, 'api/ping');
-  } catch (err) {
-    console.warn('[keepalive] api/ping failed after health ok:', err.message);
-  }
-  try {
-    hub = await pingWithRetry(HUB_URL, 'hub/class-overview');
-  } catch (err) {
-    console.warn('[keepalive] hub warm ping failed:', err.message);
-  }
+  const health = await wakeUntilReady(HEALTH_URL, 'health');
+  const ping = await tryPing(PING_URL, 'api/ping');
+  const hub = await tryPing(HUB_URL, 'hub/class-overview');
+
   console.log(
     '[keepalive] ok',
     JSON.stringify({
-      health: { status: health.status, elapsedMs: health.elapsed },
-      ping: ping ? { status: ping.status, elapsedMs: ping.elapsed } : null,
-      hub: hub ? { status: hub.status, elapsedMs: hub.elapsed, hubStatus: hub.body?.status ?? null } : null,
+      health,
+      ping,
+      hub,
       at: new Date().toISOString(),
     })
   );
