@@ -25,6 +25,19 @@
   status = 200
   force = true
 
+# Static snapshots disabled — all data loads from live API
+[[redirects]]
+  from = "/hub-snapshot/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/page-snapshot/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
 [[headers]]
   for = "/api/*"
   [headers.values]
@@ -34,14 +47,18 @@
 [[headers]]
   for = "/hub-snapshot/*"
   [headers.values]
-    Cache-Control = "public, max-age=300, stale-while-revalidate=600"
-    Netlify-CDN-Cache-Control = "public, max-age=300, stale-while-revalidate=600"
+    Cache-Control = "no-store, no-cache, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
+    Netlify-CDN-Cache-Control = "no-store"
 
 [[headers]]
   for = "/page-snapshot/*"
   [headers.values]
-    Cache-Control = "public, max-age=300, stale-while-revalidate=600"
-    Netlify-CDN-Cache-Control = "public, max-age=300, stale-while-revalidate=600"
+    Cache-Control = "no-store, no-cache, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
+    Netlify-CDN-Cache-Control = "no-store"
 
 # Vault SPA fallback — detailed per-route rewrites live in server/_redirects (generated at build).
 # This catch-all only applies when no more-specific rule matches.

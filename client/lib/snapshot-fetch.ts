@@ -1,7 +1,8 @@
 /**
- * Snapshot-first fetch — instant Netlify CDN paint, live API revalidates in background.
+ * Data fetch — live API only in production (see data-mode.ts).
  */
 import { apiFetch, type ApiFetchInit } from './api-fetch';
+import { LIVE_DATA_ONLY } from './data-mode';
 import { snapshotPathForApi } from './snapshot-paths';
 
 function snapshotPayloadUsable(body: unknown): boolean {
@@ -24,12 +25,15 @@ export async function fetchSnapshotJson<T>(snapPath: string): Promise<T> {
   return body;
 }
 
-/** Snapshot-first: return CDN JSON immediately; fire live fetch in background when mapped. */
+/** Live API fetch; snapshot CDN path used only when LIVE_DATA_ONLY is false. */
 export function snapshotFirstFetch<T>(
   apiPath: string,
   liveFetch: () => Promise<T>,
-  init?: ApiFetchInit
+  _init?: ApiFetchInit
 ): Promise<T> {
+  if (LIVE_DATA_ONLY) {
+    return liveFetch();
+  }
   const snapPath = snapshotPathForApi(apiPath);
   if (snapPath) {
     return fetchSnapshotJson<T>(snapPath)
@@ -42,7 +46,7 @@ export function snapshotFirstFetch<T>(
   return liveFetch();
 }
 
-/** Live API via apiFetch — used as background revalidation target. */
+/** Live API via apiFetch. */
 export function snapshotLiveFetch<T>(apiPath: string, init?: ApiFetchInit): Promise<T> {
   return apiFetch<T>(apiPath, init);
 }

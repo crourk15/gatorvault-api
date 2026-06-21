@@ -17,6 +17,8 @@ const TARGETS = [
   path.join(clientDir, 'node_modules', '.cache', 'gv-next'),
   path.join(serverDir, '_next'),
   path.join(serverDir, 'js', 'vault-chunks'),
+  path.join(serverDir, 'page-snapshot'),
+  path.join(serverDir, 'hub-snapshot'),
 ];
 
 function rm(dir) {

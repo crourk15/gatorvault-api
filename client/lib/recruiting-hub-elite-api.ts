@@ -176,7 +176,7 @@ function fetchHubLive<T>(path: string): Promise<T> {
   return snapshotLiveFetch<T>(path, HUB_FETCH_OPTS);
 }
 
-/** Snapshot-first for instant paint; live API revalidates in background when available. */
+/** Live recruiting hub API (no static snapshot fallback). */
 function fetchHub<T>(path: string): Promise<T> {
   return snapshotFirstFetch(path, () => fetchHubLive<T>(path), HUB_FETCH_OPTS);
 }

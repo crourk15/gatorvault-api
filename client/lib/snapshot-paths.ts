@@ -1,7 +1,9 @@
 /**
- * Maps live API paths to Netlify static snapshot JSON paths.
+ * Maps live API paths to Netlify static snapshot JSON paths (disabled when LIVE_DATA_ONLY).
  * Hub snapshots: /hub-snapshot/* · Page snapshots: /page-snapshot/*
  */
+import { LIVE_DATA_ONLY } from './data-mode';
+
 export const PAGE_SNAPSHOT_ROOT = '/page-snapshot';
 export const HUB_SNAPSHOT_ROOT = '/hub-snapshot';
 const HUB_YEAR = 2027;
@@ -82,7 +84,7 @@ function pageSnapshotPath(path: string, params: URLSearchParams): string | null 
 
 /** Resolve static snapshot path for a same-origin API path (client only). */
 export function snapshotPathForApi(apiPath: string): string | null {
-  if (typeof window === 'undefined') return null;
+  if (LIVE_DATA_ONLY || typeof window === 'undefined') return null;
   const { path, params } = splitPathQuery(apiPath);
   return hubSnapshotPath(path, params) ?? pageSnapshotPath(path, params);
 }
