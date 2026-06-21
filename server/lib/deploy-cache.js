@@ -24,6 +24,14 @@ function invalidateAllOnDeploy() {
   ) {
     cleared.push('live-dashboard');
   }
+  if (
+    safeClear('recruiting-hub', () => {
+      const mod = require('./recruiting-hub-cache');
+      if (typeof mod.clearHubCache === 'function') mod.clearHubCache();
+    })
+  ) {
+    cleared.push('recruiting-hub');
+  }
   console.log('[deploy-cache] invalidated:', cleared.length ? cleared.join(', ') : 'none');
   return { cleared, at: new Date().toISOString() };
 }

@@ -21,6 +21,13 @@ module.exports = (app) => {
       dashboard = { ready: false };
     }
 
+    let hub = null;
+    try {
+      hub = require('./recruiting-hub-cache').getMeta();
+    } catch {
+      hub = { ready: false };
+    }
+
     try {
       deploy = require('./deploy-monitor').loadDeployState();
     } catch {
@@ -49,14 +56,16 @@ module.exports = (app) => {
 
     const platformOk = guardian?.ok === true;
     const dashboardReady = dashboard?.ready === true;
+    const hubReady = hub?.ready === true;
     const ok = platformOk;
 
     const body = {
       ok,
-      status: !platformOk ? 'degraded' : dashboardReady ? 'ok' : 'warming',
+      status: !platformOk ? 'degraded' : dashboardReady && hubReady ? 'ok' : 'warming',
       time: Date.now(),
-      ready: dashboardReady,
+      ready: dashboardReady && hubReady,
       dashboard,
+      hub,
       deploy: {
         apiVersion,
         apiCommit: deploy?.api?.commit || process.env.RENDER_GIT_COMMIT || null,

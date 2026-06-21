@@ -143,13 +143,19 @@ services:
         sync: false
       - key: RENDER_DEPLOY_HOOK_URL
         sync: false
+      - key: HUB_BOOT_WARM_DELAY_MS
+        value: "10000"
+      - key: HUB_CACHE_REFRESH_MS
+        value: "240000"
+      - key: HUB_REFRESH_INTERVAL_MS
+        value: "21600000"
       - key: DATABASE_URL
         sync: false
 
   # Keep the API warm on Render free tier (spin-down after ~15 min idle).
   - type: cron
     name: gatorvault-api-keepalive
-    schedule: "*/12 * * * *"
+    schedule: "*/5 * * * *"
     region: oregon
     rootDir: server
     buildCommand: npm install
@@ -159,3 +165,19 @@ services:
         value: https://gatorvault-api.onrender.com/health
       - key: KEEPALIVE_PING_URL
         value: https://gatorvault-api.onrender.com/api/ping
+      - key: KEEPALIVE_HUB_URL
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/class-overview?year=2027
+
+  # Rebuild recruiting hub JSON caches on a schedule (and after cold wake via keepalive hub ping).
+  - type: cron
+    name: gatorvault-api-hub-refresh
+    schedule: "0 */6 * * *"
+    region: oregon
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-hub-refresh-cron.js
+    envVars:
+      - key: HUB_REFRESH_URL
+        value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?geoBackfill=true
+      - key: MONITORING_CRON_SECRET
+        sync: false

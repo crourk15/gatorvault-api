@@ -166,20 +166,25 @@ export type RhHubFootprintResponse = {
 };
 
 const HUB_YEAR = 2027;
+const HUB_FETCH_OPTS = { retries: 12, retryDelayMs: 2500, timeoutMs: 20_000 } as const;
+
+function fetchHub<T>(path: string): Promise<T> {
+  return apiFetch<T>(path, HUB_FETCH_OPTS);
+}
 
 export async function fetchRecruitingHubTicker(year = HUB_YEAR): Promise<string[]> {
-  const data = await apiFetch<{ ok?: boolean; items?: string[] }>(
+  const data = await fetchHub<{ ok?: boolean; items?: string[] }>(
     `/api/recruiting/hub/ticker?year=${year}`
   );
   return data.items ?? [];
 }
 
 export async function fetchRecruitingHubClassOverview(year = HUB_YEAR): Promise<RhHubClassOverview> {
-  return apiFetch<RhHubClassOverview>(`/api/recruiting/hub/class-overview?year=${year}`);
+  return fetchHub<RhHubClassOverview>(`/api/recruiting/hub/class-overview?year=${year}`);
 }
 
 export async function fetchRecruitingHubClassOverviewAll(): Promise<RhHubClassOverviewByYear> {
-  const data = await apiFetch<Record<string, RhHubClassOverview> & { ok?: boolean }>(
+  const data = await fetchHub<Record<string, RhHubClassOverview> & { ok?: boolean }>(
     '/api/recruiting/hub/class-overview/all'
   );
   return {
@@ -190,49 +195,49 @@ export async function fetchRecruitingHubClassOverviewAll(): Promise<RhHubClassOv
 }
 
 export async function fetchRecruitingHubCommits(year = HUB_YEAR): Promise<RhHubCommit[]> {
-  const data = await apiFetch<{ ok?: boolean; items?: RhHubCommit[] }>(
+  const data = await fetchHub<{ ok?: boolean; items?: RhHubCommit[] }>(
     `/api/recruiting/hub/commits?year=${year}`
   );
   return data.items ?? [];
 }
 
 export async function fetchRecruitingHubBattles(year = HUB_YEAR): Promise<RhHubBattle[]> {
-  const data = await apiFetch<{ ok?: boolean; items?: RhHubBattle[] }>(
+  const data = await fetchHub<{ ok?: boolean; items?: RhHubBattle[] }>(
     `/api/recruiting/hub/battles?year=${year}`
   );
   return data.items ?? [];
 }
 
 export async function fetchRecruitingHubPositions(year = HUB_YEAR): Promise<RhHubPositionRoom[]> {
-  const data = await apiFetch<{ ok?: boolean; items?: RhHubPositionRoom[] }>(
+  const data = await fetchHub<{ ok?: boolean; items?: RhHubPositionRoom[] }>(
     `/api/recruiting/hub/positions?year=${year}`
   );
   return data.items ?? [];
 }
 
 export async function fetchRecruitingHubHeatIndex(year = HUB_YEAR): Promise<RhHubHeatTarget[]> {
-  const data = await apiFetch<{ ok?: boolean; items?: RhHubHeatTarget[] }>(
+  const data = await fetchHub<{ ok?: boolean; items?: RhHubHeatTarget[] }>(
     `/api/recruiting/hub/heat-index?year=${year}`
   );
   return data.items ?? [];
 }
 
 export async function fetchRecruitingHubMovementFeed(year = HUB_YEAR): Promise<RhHubMovementFeedItem[]> {
-  const data = await apiFetch<{ ok?: boolean; items?: RhHubMovementFeedItem[] }>(
+  const data = await fetchHub<{ ok?: boolean; items?: RhHubMovementFeedItem[] }>(
     `/api/recruiting/hub/movement-feed?year=${year}`
   );
   return data.items ?? [];
 }
 
 export async function fetchRecruitingHubBattleBoard(year = HUB_YEAR): Promise<RhHubBattleBoardItem[]> {
-  const data = await apiFetch<{ ok?: boolean; items?: RhHubBattleBoardItem[] }>(
+  const data = await fetchHub<{ ok?: boolean; items?: RhHubBattleBoardItem[] }>(
     `/api/recruiting/hub/battle-board?year=${year}`
   );
   return data.items ?? [];
 }
 
 export async function fetchRecruitingHubFootprint(year = HUB_YEAR): Promise<RhHubFootprintResponse> {
-  return apiFetch<RhHubFootprintResponse>(`/api/recruiting/hub/footprint?year=${year}`);
+  return fetchHub<RhHubFootprintResponse>(`/api/recruiting/hub/footprint?year=${year}`);
 }
 
 export const RECRUITING_HUB_ELITE_YEAR = HUB_YEAR;

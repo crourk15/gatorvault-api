@@ -1,10 +1,13 @@
 /**
  * Daily refresh for Recruiting Command Center hub caches.
  */
-const DAY_MS = 24 * 60 * 60 * 1000;
+const REFRESH_INTERVAL_MS = parseInt(
+  process.env.HUB_REFRESH_INTERVAL_MS || String(6 * 60 * 60 * 1000),
+  10
+);
 
 async function refreshRecruitingHubCaches(options = {}) {
-  const { clearHubCache } = require('./recruiting-hub-routes');
+  const { clearHubCache, warmEliteHubCaches } = require('./recruiting-hub-cache');
   const { syncStaffAssignments } = require('./recruiting-staff-assignments');
   const { restoreVerifiedHubCommitsInStore } = require('./recruiting-verified-commits');
   const {
@@ -64,6 +67,11 @@ async function refreshRecruitingHubCaches(options = {}) {
   void heatIndex;
   void battles;
 
+  let warmMeta = null;
+  if (options.warmAfter !== false) {
+    warmMeta = await warmEliteHubCaches(options.warmOptions);
+  }
+
   return {
     refreshedAt: new Date().toISOString(),
     restoredVerifiedCommits,
@@ -73,15 +81,16 @@ async function refreshRecruitingHubCaches(options = {}) {
     footprintStateCount: footprint.states?.length ?? 0,
     staffAssignedCount: staffSync.staffAssignedCount ?? 0,
     geoNormalizedCount,
+    hubCache: warmMeta,
   };
 }
 
 function scheduleRecruitingHubRefresh() {
   const tick = () => {
-    refreshRecruitingHubCaches()
+    refreshRecruitingHubCaches({ geoBackfill: process.env.HUB_REFRESH_GEO_BACKFILL === 'true' })
       .then((result) => {
         console.log(
-          '[recruiting-hub] daily refresh:',
+          '[recruiting-hub] scheduled refresh:',
           result.enrichedPlayerCount,
           'players,',
           result.battleBoardCount,
@@ -89,16 +98,22 @@ function scheduleRecruitingHubRefresh() {
           result.movementFeedCount,
           'intel,',
           result.footprintStateCount,
-          'states'
+          'states,',
+          result.hubCache?.warmKeyCount ?? 0,
+          'cache keys'
         );
       })
       .catch((err) => {
-        console.warn('[recruiting-hub] daily refresh failed:', err.message);
+        console.warn('[recruiting-hub] scheduled refresh failed:', err.message);
       });
   };
 
-  setInterval(tick, DAY_MS);
-  console.log('[recruiting-hub] daily refresh scheduled (every 24h)');
+  setInterval(tick, REFRESH_INTERVAL_MS);
+  console.log(
+    '[recruiting-hub] refresh scheduled every',
+    Math.round(REFRESH_INTERVAL_MS / 3600000),
+    'h'
+  );
 }
 
 module.exports = {

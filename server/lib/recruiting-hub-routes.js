@@ -6,10 +6,7 @@ require('tsx/cjs');
 const store = require('./recruiting-store');
 const gm2 = require('./gm2');
 const { enrichBoard } = require('./recruiting-board-enrich');
-const { createMemoryCache } = require('./memory-cache');
-
-const HUB_CACHE_MS = 5 * 60 * 1000;
-const hubCache = createMemoryCache(HUB_CACHE_MS);
+const { hubCache, clearHubCache, sendHubJson } = require('./recruiting-hub-cache');
 
 function avgStars(players) {
   if (!players.length) return 0;
@@ -142,8 +139,8 @@ async function buildHighPriorityIntel(limit = 12) {
   return items;
 }
 
-function clearHubCache() {
-  hubCache.clear();
+function clearHubCacheExport() {
+  clearHubCache();
 }
 
 function mountRecruitingHubRoutes(app) {
@@ -282,8 +279,13 @@ function mountRecruitingHubRoutes(app) {
     try {
       const year = parseHubYear(req);
       const cacheKey = `hub:elite:ticker:${year}`;
-      const { value } = await hubCache.wrap(cacheKey, () => buildHubTicker(year));
-      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'ticker',
+        builder: () => buildHubTicker(year),
+        hubMeta,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -292,8 +294,13 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/hub/class-overview/all', async (req, res) => {
     try {
       const cacheKey = 'hub:elite:class-overview:all';
-      const { value } = await hubCache.wrap(cacheKey, () => buildHubClassOverviewAll());
-      return res.json({ ok: true, meta: hubMeta({ cacheKey }), ...value });
+      return sendHubJson(res, {
+        cacheKey,
+        endpoint: 'class-overview-all',
+        builder: () => buildHubClassOverviewAll(),
+        spread: true,
+        hubMeta,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -303,8 +310,14 @@ function mountRecruitingHubRoutes(app) {
     try {
       const year = parseHubYear(req);
       const cacheKey = `hub:elite:class-overview:${year}`;
-      const { value } = await hubCache.wrap(cacheKey, () => buildHubClassOverview(year));
-      return res.json({ ok: true, meta: hubMeta({ cacheKey }), ...value });
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'class-overview',
+        builder: () => buildHubClassOverview(year),
+        spread: true,
+        hubMeta,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -314,8 +327,13 @@ function mountRecruitingHubRoutes(app) {
     try {
       const year = parseHubYear(req);
       const cacheKey = `hub:elite:commits:${year}`;
-      const { value } = await hubCache.wrap(cacheKey, () => buildHubCommits(year));
-      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'commits',
+        builder: () => buildHubCommits(year),
+        hubMeta,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -325,8 +343,13 @@ function mountRecruitingHubRoutes(app) {
     try {
       const year = parseHubYear(req);
       const cacheKey = `hub:elite:battles:${year}`;
-      const { value } = await hubCache.wrap(cacheKey, () => buildHubBattles(year));
-      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'battles',
+        builder: () => buildHubBattles(year),
+        hubMeta,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -336,8 +359,13 @@ function mountRecruitingHubRoutes(app) {
     try {
       const year = parseHubYear(req);
       const cacheKey = `hub:elite:positions:${year}`;
-      const { value } = await hubCache.wrap(cacheKey, () => buildHubPositions(year));
-      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'positions',
+        builder: () => buildHubPositions(year),
+        hubMeta,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -347,8 +375,13 @@ function mountRecruitingHubRoutes(app) {
     try {
       const year = parseHubYear(req);
       const cacheKey = `hub:elite:heat-index:${year}`;
-      const { value } = await hubCache.wrap(cacheKey, () => buildHubHeatIndex(year));
-      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'heat-index',
+        builder: () => buildHubHeatIndex(year),
+        hubMeta,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -358,8 +391,13 @@ function mountRecruitingHubRoutes(app) {
     try {
       const year = parseHubYear(req);
       const cacheKey = `hub:elite:movement-feed:${year}`;
-      const { value } = await hubCache.wrap(cacheKey, () => buildHubMovementFeed(year));
-      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'movement-feed',
+        builder: () => buildHubMovementFeed(year),
+        hubMeta,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -369,8 +407,13 @@ function mountRecruitingHubRoutes(app) {
     try {
       const year = parseHubYear(req);
       const cacheKey = `hub:elite:battle-board:${year}`;
-      const { value } = await hubCache.wrap(cacheKey, () => buildHubBattleBoard(year));
-      return res.json({ ok: true, meta: hubMeta({ cacheKey }), items: value });
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'battle-board',
+        builder: () => buildHubBattleBoard(year),
+        hubMeta,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -380,8 +423,14 @@ function mountRecruitingHubRoutes(app) {
     try {
       const year = parseHubYear(req);
       const cacheKey = `hub:elite:footprint:${year}`;
-      const { value } = await hubCache.wrap(cacheKey, () => buildHubFootprint(year));
-      return res.json({ ok: true, meta: hubMeta({ cacheKey }), ...value });
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'footprint',
+        builder: () => buildHubFootprint(year),
+        spread: true,
+        hubMeta,
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
@@ -405,4 +454,4 @@ function mountRecruitingHubRoutes(app) {
   });
 }
 
-module.exports = { mountRecruitingHubRoutes, buildClassPayload, mapPlayerToHub, clearHubCache, buildHighPriorityIntel };
+module.exports = { mountRecruitingHubRoutes, buildClassPayload, mapPlayerToHub, clearHubCache: clearHubCacheExport, buildHighPriorityIntel };

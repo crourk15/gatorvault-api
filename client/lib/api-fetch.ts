@@ -62,21 +62,20 @@ async function apiFetchOnce<T>(url: string, init: RequestInit, timeoutMs: number
 
   try {
     const res = await fetch(url, { ...init, signal: controller.signal });
+    const body = (await res.json()) as T & { status?: string; error?: string; unavailable?: boolean };
+    if (body?.status === 'building') {
+      throw new ApiFetchError('Hub warming up', { status: 503, unavailable: true });
+    }
     if (!res.ok) {
       let message = 'Something went wrong loading data. Please try again.';
       let unavailable = false;
-      try {
-        const body = (await res.json()) as { error?: string; unavailable?: boolean };
-        if (body.unavailable) unavailable = true;
-        if (body.error && !/https?:\/\//i.test(body.error)) {
-          message = body.error;
-        }
-      } catch {
-        /* ignore */
+      if (body?.unavailable) unavailable = true;
+      if (body?.error && !/https?:\/\//i.test(body.error)) {
+        message = body.error;
       }
       throw new ApiFetchError(message, { status: res.status, unavailable });
     }
-    return res.json() as Promise<T>;
+    return body as T;
   } catch (err) {
     if (err instanceof ApiFetchError) throw err;
     if (err instanceof DOMException && err.name === 'AbortError') {

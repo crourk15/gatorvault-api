@@ -1177,6 +1177,12 @@ console.log('GatorVault server running on port', PORT);
     } catch (e) {
       console.warn('[recruiting-hub] refresh scheduler skipped:', e.message);
     }
+    try {
+      const { scheduleHubBootPipeline } = require('./lib/recruiting-hub-cache');
+      scheduleHubBootPipeline();
+    } catch (e) {
+      console.warn('[recruiting-hub] boot warm skipped:', e.message);
+    }
   } catch (e) {
     console.warn('Recruiting API: failed to init', e.message);
   }

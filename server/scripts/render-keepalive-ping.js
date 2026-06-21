@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Render cron keep-alive — pings the API so the free-tier web service stays warm.
- * Schedule: every 10–14 minutes (see render.yaml cron service).
+ * Schedule: every 5 minutes (see render.yaml cron service).
  */
 const fetch = require('node-fetch');
 
@@ -11,6 +11,9 @@ const HEALTH_URL =
   'https://gatorvault-api.onrender.com/health';
 const PING_URL =
   process.env.KEEPALIVE_PING_URL || 'https://gatorvault-api.onrender.com/api/ping';
+const HUB_URL =
+  process.env.KEEPALIVE_HUB_URL ||
+  'https://gatorvault-api.onrender.com/api/recruiting/hub/class-overview?year=2027';
 
 const RETRY_STATUSES = new Set([502, 503, 504, 429]);
 const MAX_ATTEMPTS = 4;
@@ -61,16 +64,23 @@ async function pingWithRetry(url, label) {
 async function main() {
   const health = await pingWithRetry(HEALTH_URL, 'health');
   let ping = null;
+  let hub = null;
   try {
     ping = await pingWithRetry(PING_URL, 'api/ping');
   } catch (err) {
     console.warn('[keepalive] api/ping failed after health ok:', err.message);
+  }
+  try {
+    hub = await pingWithRetry(HUB_URL, 'hub/class-overview');
+  } catch (err) {
+    console.warn('[keepalive] hub warm ping failed:', err.message);
   }
   console.log(
     '[keepalive] ok',
     JSON.stringify({
       health: { status: health.status, elapsedMs: health.elapsed },
       ping: ping ? { status: ping.status, elapsedMs: ping.elapsed } : null,
+      hub: hub ? { status: hub.status, elapsedMs: hub.elapsed, hubStatus: hub.body?.status ?? null } : null,
       at: new Date().toISOString(),
     })
   );

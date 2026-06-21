@@ -46,6 +46,7 @@
     "restore:recruiting": "node scripts/restore-recruiting-from-backup.js",
     "validate:intel-store": "node scripts/validate-intel-store.js",
     "keepalive:ping": "node scripts/render-keepalive-ping.js",
+    "hub-refresh:cron": "node scripts/render-hub-refresh-cron.js",
     "test:recruiting": "node --test tests/recruiting/*.test.js"
   },
   "engines": {
