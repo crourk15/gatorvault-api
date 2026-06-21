@@ -413,7 +413,7 @@ async function enterPlayerIntel(input) {
   }
 
   let snapshots = null;
-  if (input.rebuildSnapshots !== false) {
+  if (input.rebuildSnapshots === true) {
     snapshots = await rebuildRecruitingSnapshots();
     steps.push({ step: 'snapshot_rebuild', elapsedMs: snapshots.elapsedMs });
   }

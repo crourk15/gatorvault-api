@@ -12,6 +12,27 @@ const EVENTS_PATH = path.join(DATA_DIR, 'events.json');
 const RANKINGS_PATH = path.join(DATA_DIR, 'rankings.json');
 
 let supabase = null;
+let supabaseFallbackReason = null;
+
+function isSupabaseUnavailableError(error) {
+  if (!error) return false;
+  const msg = String(error.message || error.details || error.hint || error).toLowerCase();
+  const code = String(error.code || '');
+  return (
+    code === 'PGRST205' ||
+    code === '42P01' ||
+    msg.includes('schema cache') ||
+    msg.includes('could not find the table') ||
+    (msg.includes('relation') && msg.includes('does not exist'))
+  );
+}
+
+function disableSupabase(reason) {
+  if (supabase === false) return;
+  supabaseFallbackReason = reason || 'unavailable';
+  supabase = false;
+  console.warn('[recruiting] Supabase unavailable — using local JSON store:', supabaseFallbackReason);
+}
 
 function initSupabase() {
   if (supabase !== null) return supabase;
@@ -37,6 +58,7 @@ function getStoreInfo() {
   const hasDb = !!(process.env.DATABASE_URL && String(process.env.DATABASE_URL).trim());
   return {
     mode: sb ? 'supabase' : 'json',
+    supabaseFallbackReason,
     /** Recruiting players/events — Supabase `players` table or local JSON. */
     supabaseConfigured: !!(process.env.SUPABASE_URL && (process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY)),
     /** FutureCast predictions/movement — Postgres via DATABASE_URL (separate from recruiting store). */
@@ -291,8 +313,16 @@ async function getAllPlayers() {
   let players;
   if (sb) {
     const { data, error } = await sb.from('players').select('*').order('updated_at', { ascending: false });
-    if (error) throw error;
-    players = (data || []).map(rowToPlayer);
+    if (error) {
+      if (isSupabaseUnavailableError(error)) {
+        disableSupabase(error.message);
+        players = (await loadPlayersLocal()).map(normalizePlayer);
+      } else {
+        throw error;
+      }
+    } else {
+      players = (data || []).map(rowToPlayer);
+    }
   } else {
     players = (await loadPlayersLocal()).map(normalizePlayer);
   }
@@ -303,8 +333,15 @@ async function getPlayerBySlug(slug) {
   const sb = initSupabase();
   if (sb) {
     const { data, error } = await sb.from('players').select('*').eq('slug', slug).maybeSingle();
-    if (error) throw error;
-    return rowToPlayer(data);
+    if (error) {
+      if (isSupabaseUnavailableError(error)) {
+        disableSupabase(error.message);
+      } else {
+        throw error;
+      }
+    } else {
+      return rowToPlayer(data);
+    }
   }
   const players = await loadPlayersLocal();
   const p = players.find((x) => x.slug === slug);
@@ -322,8 +359,15 @@ async function resolvePlayerKey(key) {
   const sb = initSupabase();
   if (sb) {
     const { data, error } = await sb.from('players').select('*').eq('on3_id', raw).maybeSingle();
-    if (error) throw error;
-    return rowToPlayer(data);
+    if (error) {
+      if (isSupabaseUnavailableError(error)) {
+        disableSupabase(error.message);
+      } else {
+        throw error;
+      }
+    } else {
+      return rowToPlayer(data);
+    }
   }
   const players = await loadPlayersLocal();
   const p = players.find((x) => String(x.on3Id || '') === raw);
@@ -426,17 +470,24 @@ async function upsertPlayer(player, options = {}) {
   const sb = initSupabase();
   if (sb) {
     const { data, error } = await sb.from('players').upsert(playerToRow(normalized), { onConflict: 'slug' }).select().single();
-    if (error) throw error;
-    const saved = rowToPlayer(data);
-    await syncIdentityPatterns(saved);
-    try {
-      require('./scouting-update-engine').queuePlayerScoutingRefresh(saved.slug, {
-        reason: 'recruiting_player_update'
-      });
-    } catch {
-      /* optional */
+    if (error) {
+      if (isSupabaseUnavailableError(error)) {
+        disableSupabase(error.message);
+      } else {
+        throw error;
+      }
+    } else {
+      const saved = rowToPlayer(data);
+      await syncIdentityPatterns(saved);
+      try {
+        require('./scouting-update-engine').queuePlayerScoutingRefresh(saved.slug, {
+          reason: 'recruiting_player_update'
+        });
+      } catch {
+        /* optional */
+      }
+      return saved;
     }
-    return saved;
   }
   const players = await loadPlayersLocal();
   const idx = players.findIndex((p) => p.slug === normalized.slug);
@@ -470,15 +521,22 @@ async function getRankings() {
   const sb = initSupabase();
   if (sb) {
     const { data, error } = await sb.from('class_rankings').select('*');
-    if (error) throw error;
-    return (data || []).map((r) => ({
-      classYear: r.class_year,
-      nationalRank: r.national_rank,
-      secRank: r.sec_rank,
-      classScore: r.class_score != null ? Number(r.class_score) : null,
-      source: r.source,
-      updatedAt: r.updated_at
-    }));
+    if (error) {
+      if (isSupabaseUnavailableError(error)) {
+        disableSupabase(error.message);
+      } else {
+        throw error;
+      }
+    } else {
+      return (data || []).map((r) => ({
+        classYear: r.class_year,
+        nationalRank: r.national_rank,
+        secRank: r.sec_rank,
+        classScore: r.class_score != null ? Number(r.class_score) : null,
+        source: r.source,
+        updatedAt: r.updated_at
+      }));
+    }
   }
   return await loadRankingsLocal();
 }
@@ -502,8 +560,15 @@ async function upsertRanking(ranking) {
       source: row.source,
       updated_at: row.updatedAt
     }, { onConflict: 'class_year' });
-    if (error) throw error;
-    return row;
+    if (error) {
+      if (isSupabaseUnavailableError(error)) {
+        disableSupabase(error.message);
+      } else {
+        throw error;
+      }
+    } else {
+      return row;
+    }
   }
   const rankings = await loadRankingsLocal();
   const idx = rankings.findIndex((r) => r.classYear === row.classYear);
@@ -519,8 +584,15 @@ async function getEvents({ since, limit = 50 } = {}) {
     let q = sb.from('recruiting_events').select('*').order('created_at', { ascending: false }).limit(limit);
     if (since) q = q.gt('created_at', new Date(since).toISOString());
     const { data, error } = await q;
-    if (error) throw error;
-    return (data || []).map(normalizeEvent);
+    if (error) {
+      if (isSupabaseUnavailableError(error)) {
+        disableSupabase(error.message);
+      } else {
+        throw error;
+      }
+    } else {
+      return (data || []).map(normalizeEvent);
+    }
   }
   let events = await loadEventsLocal();
   if (since) {
@@ -680,20 +752,27 @@ async function createEvent(event) {
       payload: row.payload,
       source: row.source
     }).select().single();
-    if (error) throw error;
-    return normalizeEvent({
-      id: data.id,
-      player_id: data.player_id,
-      player_slug: data.player_slug,
-      event_type: data.event_type,
-      title: data.title,
-      detail: data.detail,
-      skinny: data.skinny,
-      class_year: data.class_year,
-      payload: data.payload,
-      source: data.source,
-      created_at: data.created_at
-    });
+    if (error) {
+      if (isSupabaseUnavailableError(error)) {
+        disableSupabase(error.message);
+      } else {
+        throw error;
+      }
+    } else {
+      return normalizeEvent({
+        id: data.id,
+        player_id: data.player_id,
+        player_slug: data.player_slug,
+        event_type: data.event_type,
+        title: data.title,
+        detail: data.detail,
+        skinny: data.skinny,
+        class_year: data.class_year,
+        payload: data.payload,
+        source: data.source,
+        created_at: data.created_at
+      });
+    }
   }
   const events = await loadEventsLocal();
   events.unshift(row);

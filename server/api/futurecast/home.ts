@@ -77,12 +77,21 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
         status: 'ACTIVE',
         lifecycle: 'HS',
         limit: 500,
+      }).catch((err) => {
+        console.warn('[futurecast/home] predictions unavailable:', err instanceof Error ? err.message : err);
+        return [];
       }),
       listStockBoardRows(MOVEMENT_WINDOW_DAYS, {
         lifecycle: 'HS',
         class_year: FUTURECAST_CLASS_YEAR,
+      }).catch((err) => {
+        console.warn('[futurecast/home] movement rows unavailable:', err instanceof Error ? err.message : err);
+        return [];
       }),
-      listPortalCandidates({ class_year: FUTURECAST_CLASS_YEAR }),
+      listPortalCandidates({ class_year: FUTURECAST_CLASS_YEAR }).catch((err) => {
+        console.warn('[futurecast/home] portal rows unavailable:', err instanceof Error ? err.message : err);
+        return [];
+      }),
     ]);
 
     const modelRows = dedupeFeedRows(filterModelPredictionsOnly(predictionRows));

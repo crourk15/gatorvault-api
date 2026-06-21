@@ -287,12 +287,18 @@ export async function loadBoardPlayersForSlugs(
     listStockBoardRows(movementWindowDays, {
       lifecycle: 'HS',
       class_year: classYear,
+    }).catch((err) => {
+      console.warn('[allowlist-board] stock board unavailable:', err instanceof Error ? err.message : err);
+      return [];
     }),
     listPredictions({
       class_year: classYear,
       status: 'ACTIVE',
       lifecycle: 'HS',
       limit: 500,
+    }).catch((err) => {
+      console.warn('[allowlist-board] predictions unavailable:', err instanceof Error ? err.message : err);
+      return [];
     }),
   ]);
 
