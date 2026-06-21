@@ -34,9 +34,15 @@ function verifyBoot({ alert = false } = {}) {
     logMount(route.id);
   }
 
+  const fs = require('fs');
+  const path = require('path');
   for (const id of manifest.SIDE_EFFECT_ROUTERS) {
-    require('../' + id.replace(/^lib\//, '').replace(/\.js$/, ''));
-    logMount(id.replace(/^lib\//, '').replace(/\.js$/, ''));
+    const rel = id.replace(/^lib\//, '');
+    const full = path.join(__dirname, '..', rel);
+    if (!fs.existsSync(full)) {
+      throw new Error(`[guardian] Boot blocked: side-effect router missing ${id}`);
+    }
+    logMount(rel.replace(/\.js$/, ''));
   }
 
   const health = systemHealth.checkAllSystems();

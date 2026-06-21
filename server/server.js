@@ -72,6 +72,29 @@ app.use(apiMonitorMiddleware());
 
 require('./lib/health')(app);
 
+const PORT = process.env.PORT || 3000;
+let apiRoutesReady = false;
+
+app.get('/api/ping', (req, res) => {
+  res.json({ ok: true, ts: Date.now(), ready: apiRoutesReady });
+});
+
+app.use('/api', (req, res, next) => {
+  if (!apiRoutesReady && req.path !== '/ping') {
+    res.set('Retry-After', '5');
+    return res.status(503).json({ ok: false, error: 'API warming up', unavailable: true });
+  }
+  next();
+});
+
+app.listen(PORT, () => {
+  console.log('[boot] early listen on port', PORT);
+  // Yield so Render /health probes succeed before synchronous route wiring runs.
+  setTimeout(wireApplication, 50);
+});
+
+function wireApplication() {
+
 app.get('/highlight/:slug', (req, res) => {
   res.sendFile(path.join(__dirname, 'highlight.html'));
 });
@@ -139,7 +162,6 @@ try {
   console.warn('[futurecast] Players API not mounted:', err.message);
 }
 
-const PORT = process.env.PORT || 3000;
 const DIGEST_TOKEN = process.env.DIGEST_TOKEN || null;
 const SESSION_SECRET = process.env.SESSION_SECRET || 'change-me-in-production';
 const TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000;
@@ -757,8 +779,6 @@ app.post('/api/digest', async (req, res) => {
   }
 });
 
-app.get('/api/ping', (req, res) => res.json({ ok: true, ts: Date.now() }));
-
 app.get('/api/email-status', async (req, res) => {
   const providers = getEmailProviders();
   const privateKeySet = !!getEmailJsPrivateKey();
@@ -1068,29 +1088,31 @@ try {
   require('./lib/guardian/boot-guardian').verifyBoot({
     alert: process.env.NODE_ENV === 'production'
   });
-  console.log('[guardian] boot verified, starting server...');
+  console.log('[guardian] boot verified, routes ready');
 } catch (err) {
   console.error(err.message || err);
   if (process.env.GUARDIAN_BOOT_LENIENT === 'true') {
-    console.warn('[guardian] GUARDIAN_BOOT_LENIENT=true — starting server despite boot verification failure');
+    console.warn('[guardian] GUARDIAN_BOOT_LENIENT=true — continuing despite boot verification failure');
   } else {
+    console.error('[guardian] boot verification failed after early listen — continuing in degraded mode');
     require('./lib/guardian/guardian-alerts')
       .alertGuardian({
         type: 'boot_failed',
         severity: 'critical',
-        title: 'API boot failed',
+        title: 'API boot degraded',
         message: String(err.message || err).slice(0, 500),
         notifySms: true
       })
       .catch(() => {});
-    process.exit(1);
   }
 }
 
-app.listen(PORT, () => {
-  const providers = getEmailProviders();
-  console.log('🚀 API server started with commit:', process.env.RENDER_GIT_COMMIT || process.env.GV_BUILD || 'dev');
-  console.log('GatorVault server running on port', PORT);
+apiRoutesReady = true;
+global.__GV_API_ROUTES_READY__ = true;
+console.log('[boot] API routes ready');
+const providers = getEmailProviders();
+console.log('🚀 API server started with commit:', process.env.RENDER_GIT_COMMIT || process.env.GV_BUILD || 'dev');
+console.log('GatorVault server running on port', PORT);
   try {
     const deployCache = require('./lib/deploy-cache');
     const inv = deployCache.invalidateAllOnDeploy();
@@ -1381,4 +1403,5 @@ app.listen(PORT, () => {
   } catch (e) {
     console.warn('[guardian] runtime watchdog failed to start', e.message);
   }
-});
+
+} // wireApplication
