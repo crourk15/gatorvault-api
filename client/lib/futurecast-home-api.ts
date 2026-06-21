@@ -7,7 +7,7 @@ import type { FeedPrediction, PredictorLeaderboardEntry } from './predictions-ap
 import type { MovementHeatmapBucket } from './predictions-api';
 
 export const FUTURECAST_WIDGET_YEAR = 2027;
-export const FUTURECAST_FETCH_TIMEOUT_MS = 8_000;
+export const FUTURECAST_FETCH_TIMEOUT_MS = 25_000;
 export const FUTURECAST_CLIENT_CACHE_TTL_MS = 5 * 60_000;
 export const FUTURECAST_STALE_CACHE_MAX_MS = 24 * 60 * 60_000;
 
@@ -244,7 +244,7 @@ async function fetchJson<T>(apiPath: string): Promise<T> {
   try {
     return await snapshotFirstFetch(apiPath, () => snapshotLiveFetch<T>(apiPath), {
       timeoutMs: FUTURECAST_FETCH_TIMEOUT_MS,
-      retries: 2,
+      retries: 3,
       retryDelayMs: 2000,
     });
   } catch (err) {

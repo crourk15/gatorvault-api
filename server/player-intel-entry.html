@@ -143,7 +143,7 @@
         document.getElementById('json-out').textContent = JSON.stringify(data, null, 2);
       }
 
-      async function post(path, body) {
+      async function postOnce(path, body) {
         var res = await fetch(API + path, { method: 'POST', headers: headers(), body: JSON.stringify(body) });
         var text = await res.text();
         var data;
@@ -158,6 +158,22 @@
         }
         if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
         return data;
+      }
+
+      async function post(path, body) {
+        var lastErr;
+        for (var attempt = 0; attempt < 5; attempt++) {
+          try {
+            return await postOnce(path, body);
+          } catch (err) {
+            lastErr = err;
+            var msg = String(err && err.message ? err.message : err);
+            var retry = /503|502|504|unavailable|warming|cold|html instead of json/i.test(msg);
+            if (!retry || attempt >= 4) throw err;
+            await new Promise(function (resolve) { setTimeout(resolve, 2000 * (attempt + 1)); });
+          }
+        }
+        throw lastErr;
       }
 
       document.getElementById('gate-unlock').onclick = function () {

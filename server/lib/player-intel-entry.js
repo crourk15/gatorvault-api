@@ -413,6 +413,13 @@ async function enterPlayerIntel(input) {
   }
 
   let snapshots = null;
+  try {
+    const { warmEliteHubCaches } = require('./recruiting-hub-cache');
+    const warm = await warmEliteHubCaches();
+    steps.push({ step: 'hub_cache_warm', ok: true, warmed: warm?.warmed ?? warm?.keys?.length ?? null });
+  } catch (err) {
+    steps.push({ step: 'hub_cache_warm', ok: false, error: err.message });
+  }
   if (input.rebuildSnapshots === true) {
     snapshots = await rebuildRecruitingSnapshots();
     steps.push({ step: 'snapshot_rebuild', elapsedMs: snapshots.elapsedMs });
