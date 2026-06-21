@@ -3,6 +3,14 @@
 
 create extension if not exists "pgcrypto";
 
+create or replace function set_updated_at()
+returns trigger as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$ language plpgsql;
+
 create table if not exists class_rankings (
   class_year smallint primary key,
   national_rank smallint,
@@ -28,7 +36,7 @@ create table if not exists players (
   in_state boolean default false,
   category text not null default 'recruit' check (category in ('recruit', 'portal', 'target')),
   status text not null default 'committed' check (status in (
-    'target', 'committed', 'enrolled', 'decommitted', 'flipped', 'portal_in', 'portal_out'
+    'target', 'uncommitted', 'committed', 'enrolled', 'signed', 'decommitted', 'flipped', 'portal_in', 'portal_out'
   )),
   committed_to text default 'Florida',
   from_school text,
@@ -83,15 +91,6 @@ drop trigger if exists recruiting_identity_patterns_updated_at on recruiting_ide
 create trigger recruiting_identity_patterns_updated_at
   before update on recruiting_identity_patterns
   for each row execute function set_updated_at();
-
--- Auto-update players.updated_at
-create or replace function set_updated_at()
-returns trigger as $$
-begin
-  new.updated_at = now();
-  return new;
-end;
-$$ language plpgsql;
 
 drop trigger if exists players_updated_at on players;
 create trigger players_updated_at

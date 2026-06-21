@@ -132,7 +132,9 @@ function normalizeClassYear(raw) {
 function normalizePlayer(raw) {
   const slug = raw.slug || slugify(raw.name);
   const committedTo = raw.committedTo ?? raw.committed_to ?? null;
-  const status = raw.status ?? (isFloridaCommit({ status: 'committed', committedTo }) ? 'committed' : null);
+  const statusRaw = raw.status ?? (isFloridaCommit({ status: 'committed', committedTo }) ? 'committed' : null);
+  let status = statusRaw;
+  if (String(status || '').toLowerCase() === 'commit') status = 'committed';
   let category = raw.category ?? null;
   if (!category) {
     category = isFloridaCommit({ status: status || 'committed', committedTo: committedTo || 'Florida' })
