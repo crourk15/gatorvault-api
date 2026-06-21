@@ -198,7 +198,9 @@ function loadSeedMeta(classYear = FUTURECAST_CLASS_YEAR): Map<string, Record<str
     for (const p of players) {
       if (Number(p.classYear) !== classYear) continue;
       const slug = String(p.slug || '').toLowerCase();
-      if (slug && !map.has(slug)) map.set(slug, p);
+      if (!slug) continue;
+      const existing = map.get(slug) || {};
+      map.set(slug, { ...existing, ...p });
     }
   } catch {
     /* optional */

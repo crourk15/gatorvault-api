@@ -23,6 +23,7 @@ async function main() {
   }
 
   console.log('[recruiting-pipeline] Rebuilding snapshots…');
+  require('./sync-target-board-from-store');
   result.snapshots = await rebuildRecruitingSnapshots();
 
   console.log('[recruiting-pipeline] complete', JSON.stringify({

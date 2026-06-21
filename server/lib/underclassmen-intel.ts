@@ -143,12 +143,13 @@ function earlyMetaForSlug(slug: string): EarlyWatchEntry | undefined {
 }
 
 async function resolveClassYear(slug: string, entry?: EarlyWatchEntry): Promise<number | null> {
+  const recruiting = await getRecruitingPlayerBySlug(slug);
+  const storeYear = Number(recruiting?.classYear ?? 0);
+  if (isUnderclassmenClassYear(storeYear)) return storeYear;
   if (entry?.classYear && isUnderclassmenClassYear(Number(entry.classYear))) {
     return Number(entry.classYear);
   }
-  const recruiting = await getRecruitingPlayerBySlug(slug);
-  const year = Number(recruiting?.classYear ?? 0);
-  return isUnderclassmenClassYear(year) ? year : null;
+  return null;
 }
 
 function synthesizeMovementHistory(
@@ -298,7 +299,13 @@ function buildMinimalBoardPlayer(
 ): FutureCastBoardPlayer | null {
   const board = loadTargetBoardEntry(slug, classYear);
   if (!entry?.slug && !entry?.name && !board?.name) return null;
-  const position = String(board?.pos || board?.position || '').trim().toUpperCase();
+  const position = String(
+    entry?.pos ||
+      entry?.position ||
+      board?.pos ||
+      board?.position ||
+      ''
+  ).trim().toUpperCase();
   return {
     id: intelUuidForSlug(slug),
     slug,
@@ -334,7 +341,13 @@ async function buildSeedBoardPlayerFromRecruiting(
   if (!recruiting && !board && !entry?.name) return null;
 
   const position = String(
-    recruiting?.position || recruiting?.pos || board?.pos || board?.position || ''
+    recruiting?.position ||
+      recruiting?.pos ||
+      entry?.pos ||
+      entry?.position ||
+      board?.pos ||
+      board?.position ||
+      ''
   )
     .trim()
     .toUpperCase();
