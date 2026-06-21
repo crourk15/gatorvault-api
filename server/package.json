@@ -47,6 +47,7 @@
     "validate:intel-store": "node scripts/validate-intel-store.js",
     "keepalive:ping": "node scripts/render-keepalive-ping.js",
     "hub-refresh:cron": "node scripts/render-hub-refresh-cron.js",
+    "verify:deployment": "node scripts/verify-deployment.js",
     "test:recruiting": "node --test tests/recruiting/*.test.js"
   },
   "engines": {

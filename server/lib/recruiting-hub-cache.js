@@ -29,13 +29,22 @@ function withTimeout(promise, ms, label) {
   ]);
 }
 
+function getHubStatus() {
+  if (warming) return 'warming';
+  if (ready) return 'ready';
+  return 'building';
+}
+
 function getMeta() {
   return {
     ready,
+    status: getHubStatus(),
     warming,
     lastWarmAt,
+    lastRefresh: lastWarmAt,
     lastWarmError,
     warmKeyCount,
+    cacheSize: warmKeyCount,
     cacheTtlMs: HUB_CACHE_MS,
     buildTimeoutMs: BUILD_TIMEOUT_MS,
   };

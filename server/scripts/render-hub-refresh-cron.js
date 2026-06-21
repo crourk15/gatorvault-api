@@ -4,8 +4,6 @@
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
-const fetch = require('node-fetch');
-
 const REFRESH_URL =
   process.env.HUB_REFRESH_URL ||
   'https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?geoBackfill=true';
@@ -29,7 +27,7 @@ async function postRefresh() {
       'User-Agent': 'gatorvault-hub-refresh-cron/1.0',
     },
     body: '{}',
-    timeout: 120000,
+    signal: AbortSignal.timeout(120000),
   });
   const elapsed = Date.now() - started;
   let body = null;

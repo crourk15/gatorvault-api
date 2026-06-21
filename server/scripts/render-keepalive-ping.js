@@ -3,7 +3,6 @@
  * Render cron keep-alive — pings the API so the free-tier web service stays warm.
  * Schedule: every 5 minutes (see render.yaml cron service).
  */
-const fetch = require('node-fetch');
 
 const HEALTH_URL =
   process.env.KEEPALIVE_URL ||
@@ -24,7 +23,7 @@ async function pingOnce(url, label) {
   const res = await fetch(url, {
     method: 'GET',
     headers: { Accept: 'application/json', 'User-Agent': 'gatorvault-keepalive/1.0' },
-    timeout: 25000,
+    signal: AbortSignal.timeout(25000),
   });
   const elapsed = Date.now() - started;
   let body = null;
