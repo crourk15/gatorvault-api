@@ -169,15 +169,16 @@ services:
 
 
   # Rebuild recruiting hub JSON caches on a schedule (and after cold wake via keepalive hub ping).
-  - type: cron
+    - type: cron
     name: gatorvault-api-hub-refresh
     schedule: "0 */6 * * *"
     runtime: node
     region: oregon
- startCommand: node server/scripts/render-hub-refresh-cron.js
+    startCommand: node server/scripts/render-hub-refresh-cron.js
     envVars:
       - key: HUB_REFRESH_URL
         value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?geoBackfill=true
       - key: MONITORING_CRON_SECRET
         sync: false
+
 
