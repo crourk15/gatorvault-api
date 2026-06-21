@@ -153,7 +153,7 @@ services:
         sync: false
 
   # Keep the API warm on Render free tier (spin-down after ~15 min idle).
-  -   - type: cron
+  - type: cron
     name: gatorvault-api-keepalive
     schedule: "*/5 * * * *"
     runtime: node
@@ -169,7 +169,7 @@ services:
 
 
   # Rebuild recruiting hub JSON caches on a schedule (and after cold wake via keepalive hub ping).
-  -   - type: cron
+  - type: cron
     name: gatorvault-api-hub-refresh
     schedule: "0 */6 * * *"
     runtime: node
