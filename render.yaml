@@ -17,17 +17,16 @@ services:
     startCommand: npm start
     healthCheckPath: /health
     envVars:
+      -     envVars:
       - key: NODE_ENV
         value: production
-
-      ...
-
       - key: SITE_URL
         value: https://gatorvaultinsider.com
       - key: NEXT_PUBLIC_API_BASE
         value: https://gatorvault-api.onrender.com
       - key: EMAIL_PROVIDER
         value: emailjs
+
       - key: ON3_INGEST_ENABLED
         value: "true"
       - key: ON3_INGEST_INTERVAL_MS
