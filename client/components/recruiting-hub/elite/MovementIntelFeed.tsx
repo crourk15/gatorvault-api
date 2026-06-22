@@ -5,6 +5,7 @@ import type { RhHubMovementFeedItem } from '@/lib/recruiting-hub-elite-api';
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
 import { fetchMovementIntel } from '@/lib/recruiting-ui-api';
 import { playerHref } from '@/lib/player-link';
+import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 
 const EVENT_LABELS: Record<RhHubMovementFeedItem['event'], string> = {
   up: 'Trending Up',
@@ -41,6 +42,8 @@ function movementIntelToFeed(data: MovementIntelResponse | null): RhHubMovementF
       id: alert.id,
       timestamp: alert.timestamp,
       name: alert.player,
+      position: '—',
+      class: ACTIVE_RECRUITING_CLASS_YEAR,
       profileUrl: '#',
       event: alertEvent(alert.type),
       summary: alert.detail,
@@ -52,6 +55,8 @@ function movementIntelToFeed(data: MovementIntelResponse | null): RhHubMovementF
       id: `rise-${riser.id}`,
       timestamp: riser.lastUpdate,
       name: riser.name,
+      position: riser.position,
+      class: ACTIVE_RECRUITING_CLASS_YEAR,
       profileUrl: playerHref({ slug: riser.slug, id: riser.id, name: riser.name }, 'recruiting', 'HIGH_SCHOOL'),
       event: 'up',
       summary: `UF ${riser.ufProb}% (+${riser.delta}% 7d) · ${riser.position}`,
@@ -63,6 +68,8 @@ function movementIntelToFeed(data: MovementIntelResponse | null): RhHubMovementF
       id: `fall-${faller.id}`,
       timestamp: faller.lastUpdate,
       name: faller.name,
+      position: faller.position,
+      class: ACTIVE_RECRUITING_CLASS_YEAR,
       profileUrl: playerHref({ slug: faller.slug, id: faller.id, name: faller.name }, 'recruiting', 'HIGH_SCHOOL'),
       event: 'down',
       summary: `UF ${faller.ufProb}% (${faller.delta}% 7d) · ${faller.position}`,
