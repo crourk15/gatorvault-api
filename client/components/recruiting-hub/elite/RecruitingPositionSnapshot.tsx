@@ -3,16 +3,20 @@
 import React, { useEffect, useState } from 'react';
 import type { RhHubPositionRoom } from '@/lib/recruiting-hub-elite-api';
 import { fetchPositionSnapshot } from '@/lib/recruiting-ui-api';
-import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 
 export function RecruitingPositionSnapshot(): React.ReactElement {
+  const { activeYear } = useRecruitingClassYear();
   const [data, setData] = useState<RhHubPositionRoom[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    void fetchPositionSnapshot(ACTIVE_RECRUITING_CLASS_YEAR)
+    setLoading(true);
+    setError(false);
+    setData(null);
+    void fetchPositionSnapshot(activeYear)
       .then((res) => {
         if (!cancelled) setData(res.items ?? []);
       })
@@ -25,13 +29,13 @@ export function RecruitingPositionSnapshot(): React.ReactElement {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeYear]);
 
   return (
     <>
       <div className="rh-section-header">
         <div className="rh-section-title">Position Room Snapshot</div>
-        <div className="rh-section-subtitle">Commits and key targets by position.</div>
+        <div className="rh-section-subtitle">{activeYear} class — commits and key targets by position.</div>
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-position-snapshot" aria-hidden="true" />

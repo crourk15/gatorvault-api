@@ -661,6 +661,29 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }
 
+.rh-elite-chrome .rh-class-card--active {
+  box-shadow: 0 0 0 2px var(--gator-orange), var(--card-shadow);
+}
+
+.rh-elite-chrome .rh-class-card__focus {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.rh-elite-chrome .rh-class-card__focus:focus-visible {
+  outline: 2px solid var(--gator-orange);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
 .rh-elite-chrome .rh-class-card__watermark {
   position: absolute;
   right: 14px;

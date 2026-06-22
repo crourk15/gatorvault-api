@@ -10,6 +10,8 @@ import {
 import { RECRUITING_HUB_ELITE_YEAR } from '@/lib/recruiting-hub-elite-api';
 import type { RhHubClassOverview, RhHubHeroPayload } from '@/lib/recruiting-hub-elite-api';
 import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
+import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
+import { RECRUITING_CLASS_YEARS, parseRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { initGvHydrate, scheduleHeroHydration, releaseHeroHydrationGate } from '@/lib/gv-hydrate';
 
 declare global {
@@ -25,7 +27,7 @@ const FALLBACK_TICKER = [
   'Battles heating up — movement intel live',
 ];
 
-const CLASS_YEARS = [2026, 2027, 2028] as const;
+const CLASS_YEARS = RECRUITING_CLASS_YEARS;
 
 function heroFromWindow(): RhHubHeroPayload | null {
   if (typeof window === 'undefined') return null;
@@ -60,18 +62,22 @@ function HeroMetrics({ overview }: { overview: RhHubClassOverview | null | undef
 
 type RecruitingHeroStripProps = {
   year?: number;
-  onYearChange?: (year: number) => void;
 };
 
-export function RecruitingHeroStrip({
-  year = RECRUITING_HUB_ELITE_YEAR,
-  onYearChange,
-}: RecruitingHeroStripProps): React.ReactElement {
+export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: RecruitingHeroStripProps): React.ReactElement {
   const { data } = useRecruitingHubBundleContext();
+  const { activeYear, setActiveYear } = useRecruitingClassYear();
   const seeded = heroFromWindow();
-  const [activeYear, setActiveYear] = useState(seeded?.year ?? year);
   const [yearOverview, setYearOverview] = useState<RhHubClassOverview | null>(null);
   const [metricsLoading, setMetricsLoading] = useState(true);
+
+  useEffect(() => {
+    if (year !== RECRUITING_HUB_ELITE_YEAR) setActiveYear(parseRecruitingClassYear(year));
+  }, [year, setActiveYear]);
+
+  useEffect(() => {
+    if (seeded?.year) setActiveYear(parseRecruitingClassYear(seeded.year));
+  }, [seeded?.year, setActiveYear]);
 
   useEffect(() => {
     let cancelled = false;
@@ -103,10 +109,9 @@ export function RecruitingHeroStrip({
 
   const handleYear = useCallback(
     (nextYear: number) => {
-      setActiveYear(nextYear);
-      onYearChange?.(nextYear);
+      setActiveYear(parseRecruitingClassYear(nextYear));
     },
-    [onYearChange]
+    [setActiveYear]
   );
 
   return (

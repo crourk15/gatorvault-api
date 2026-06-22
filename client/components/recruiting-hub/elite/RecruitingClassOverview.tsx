@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import type { RhHubClassOverview } from '@/lib/recruiting-hub-elite-api';
 import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
-import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 
 function MetricSparkline({ values }: { values: number[] }): React.ReactElement {
   const max = Math.max(...values, 1);
@@ -61,13 +61,17 @@ function Metric({
 }
 
 export function RecruitingClassOverview(): React.ReactElement {
+  const { activeYear } = useRecruitingClassYear();
   const [overview, setOverview] = useState<RhHubClassOverview | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    void fetchClassMetrics(ACTIVE_RECRUITING_CLASS_YEAR)
+    setLoading(true);
+    setError(false);
+    setOverview(null);
+    void fetchClassMetrics(activeYear)
       .then((data) => {
         if (!cancelled) setOverview(data);
       })
@@ -80,7 +84,7 @@ export function RecruitingClassOverview(): React.ReactElement {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeYear]);
 
   const sparks = overview?.sparklines;
 
@@ -88,7 +92,7 @@ export function RecruitingClassOverview(): React.ReactElement {
     <>
       <div className="rh-section-header">
         <div className="rh-section-title">Class Overview</div>
-        <div className="rh-section-subtitle">Snapshot of UF&apos;s current recruiting class.</div>
+        <div className="rh-section-subtitle">Snapshot of UF&apos;s {activeYear} recruiting class.</div>
       </div>
       <section className="rh-card rh-card--watermark" data-testid="rh-elite-class-overview">
         <span className="rh-card-watermark" aria-hidden="true">

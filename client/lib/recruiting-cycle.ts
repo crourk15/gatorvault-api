@@ -5,6 +5,22 @@
  */
 export const ACTIVE_RECRUITING_CLASS_YEAR = 2027;
 
+export const RECRUITING_CLASS_YEARS = [2026, 2027, 2028] as const;
+
+export type RecruitingClassYear = (typeof RECRUITING_CLASS_YEARS)[number];
+
+export function isRecruitingClassYear(year: number): year is RecruitingClassYear {
+  return (RECRUITING_CLASS_YEARS as readonly number[]).includes(year);
+}
+
+export function parseRecruitingClassYear(
+  value: unknown,
+  fallback: RecruitingClassYear = ACTIVE_RECRUITING_CLASS_YEAR
+): RecruitingClassYear {
+  const year = parseInt(String(value ?? ''), 10);
+  return isRecruitingClassYear(year) ? year : fallback;
+}
+
 export type SigningCalendar = {
   classYear: number;
   esp: {

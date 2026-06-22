@@ -13,6 +13,8 @@ import { RecruitingFootprintMap } from '@/components/recruiting-hub/elite/footpr
 import { RecruitingBattlesMovement } from '@/components/recruiting-hub/elite/RecruitingBattlesMovement';
 import { RecruitingPositionSnapshot } from '@/components/recruiting-hub/elite/RecruitingPositionSnapshot';
 import { RecruitingHubBundleProvider } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
+import { RecruitingClassYearProvider } from '@/components/recruiting-hub/elite/RecruitingClassYearProvider';
+import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { LazyHubSection } from '@/components/recruiting-hub/elite/LazyHubSection';
 import { useRecruitingHubBundle } from '@/components/recruiting-hub/elite/useRecruitingHubBundle';
 import { initGvHydrate } from '@/lib/gv-hydrate';
@@ -22,11 +24,16 @@ type Props = {
   deferHero?: boolean;
   /** When true, skip outer rh-frame wrapper (parent shell provides chrome). */
   embedded?: boolean;
+  /** Initial class year tab (2026/2027/2028). */
+  initialYear?: number;
 };
 
-/** WOW Recruiting Hub Elite — War Room vertical layout. */
-export function RecruitingHubElite({ deferHero = false, embedded = false }: Props): React.ReactElement {
-  const bundle = useRecruitingHubBundle();
+function RecruitingHubEliteContent({
+  deferHero = false,
+  embedded = false,
+}: Omit<Props, 'initialYear'>): React.ReactElement {
+  const { activeYear } = useRecruitingClassYear();
+  const bundle = useRecruitingHubBundle(activeYear);
 
   React.useEffect(() => {
     initGvHydrate();
@@ -73,5 +80,18 @@ export function RecruitingHubElite({ deferHero = false, embedded = false }: Prop
         </div>
       )}
     </RecruitingHubBundleProvider>
+  );
+}
+
+/** WOW Recruiting Hub Elite — War Room vertical layout. */
+export function RecruitingHubElite({
+  deferHero = false,
+  embedded = false,
+  initialYear,
+}: Props): React.ReactElement {
+  return (
+    <RecruitingClassYearProvider initialYear={initialYear}>
+      <RecruitingHubEliteContent deferHero={deferHero} embedded={embedded} />
+    </RecruitingClassYearProvider>
   );
 }

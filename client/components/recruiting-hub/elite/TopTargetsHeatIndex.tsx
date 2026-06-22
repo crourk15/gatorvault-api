@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import type { RhHubHeatTarget } from '@/lib/recruiting-hub-elite-api';
 import { fetchHeatIndex } from '@/lib/recruiting-ui-api';
-import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 
 function heatBandClass(heat: number): string {
   if (heat >= 70) return 'rh-heat-fill--hot';
@@ -56,13 +56,17 @@ function HeatTargetCard({ target }: { target: RhHubHeatTarget }): React.ReactEle
 }
 
 export function TopTargetsHeatIndex(): React.ReactElement {
+  const { activeYear } = useRecruitingClassYear();
   const [data, setData] = useState<RhHubHeatTarget[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    void fetchHeatIndex(ACTIVE_RECRUITING_CLASS_YEAR)
+    setLoading(true);
+    setError(false);
+    setData(null);
+    void fetchHeatIndex(activeYear)
       .then((res) => {
         if (!cancelled) setData(res.items ?? []);
       })
@@ -75,13 +79,15 @@ export function TopTargetsHeatIndex(): React.ReactElement {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeYear]);
 
   return (
     <>
       <div className="rh-section-header">
         <div className="rh-section-title">Top Targets Heat Index</div>
-        <div className="rh-section-subtitle">Real-time momentum on Florida&apos;s priority targets.</div>
+        <div className="rh-section-subtitle">
+          {activeYear} class — real-time momentum on Florida&apos;s priority targets.
+        </div>
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-heat-index" aria-hidden="true" />

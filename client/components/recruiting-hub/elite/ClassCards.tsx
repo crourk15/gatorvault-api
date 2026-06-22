@@ -4,48 +4,61 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import type { RhHubClassOverview } from '@/lib/recruiting-hub-elite-api';
 import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
-
-const CLASS_YEARS = [2026, 2027, 2028] as const;
-
-type ClassYear = (typeof CLASS_YEARS)[number];
+import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
+import { RECRUITING_CLASS_YEARS, type RecruitingClassYear } from '@/lib/recruiting-cycle';
 
 function ClassCard({
   year,
   data,
   loading,
   error,
+  isActive,
+  onFocus,
 }: {
-  year: ClassYear;
+  year: RecruitingClassYear;
   data: RhHubClassOverview | null;
   loading: boolean;
   error: boolean;
+  isActive: boolean;
+  onFocus: (year: RecruitingClassYear) => void;
 }): React.ReactElement {
   return (
-    <article className="rh-class-card" data-testid={`rh-class-card-${year}`}>
-      <span className="rh-class-card__watermark" aria-hidden="true">
-        UF
-      </span>
-      <h3 className="rh-class-card__title">{year} Class</h3>
-      {loading ? (
-        <div className="rh-skeleton rh-class-card__skeleton" aria-hidden="true" />
-      ) : !data ? (
-        <p className="rh-empty">{error ? 'Could not load class data.' : 'Class data unavailable.'}</p>
-      ) : (
-        <dl className="rh-class-card__stats">
-          <div>
-            <dt>Commits</dt>
-            <dd>{data.commits}</dd>
-          </div>
-          <div>
-            <dt>Blue chip %</dt>
-            <dd>{data.blueChip}</dd>
-          </div>
-          <div>
-            <dt>Avg rating</dt>
-            <dd>{data.avgRating}</dd>
-          </div>
-        </dl>
-      )}
+    <article
+      className={`rh-class-card${isActive ? ' rh-class-card--active' : ''}`}
+      data-testid={`rh-class-card-${year}`}
+      data-active={isActive ? 'true' : 'false'}
+    >
+      <button
+        type="button"
+        className="rh-class-card__focus"
+        aria-pressed={isActive}
+        onClick={() => onFocus(year)}
+      >
+        <span className="rh-class-card__watermark" aria-hidden="true">
+          UF
+        </span>
+        <h3 className="rh-class-card__title">{year} Class</h3>
+        {loading ? (
+          <div className="rh-skeleton rh-class-card__skeleton" aria-hidden="true" />
+        ) : !data ? (
+          <p className="rh-empty">{error ? 'Could not load class data.' : 'Class data unavailable.'}</p>
+        ) : (
+          <dl className="rh-class-card__stats">
+            <div>
+              <dt>Commits</dt>
+              <dd>{data.commits}</dd>
+            </div>
+            <div>
+              <dt>Blue chip %</dt>
+              <dd>{data.blueChip}</dd>
+            </div>
+            <div>
+              <dt>Avg rating</dt>
+              <dd>{data.avgRating}</dd>
+            </div>
+          </dl>
+        )}
+      </button>
       <Link href={`/vault/recruiting/${year}`} className="rh-class-card__link">
         View commits →
       </Link>
@@ -54,7 +67,8 @@ function ClassCard({
 }
 
 export function ClassCards(): React.ReactElement {
-  const [byYear, setByYear] = useState<Record<ClassYear, RhHubClassOverview | null>>({
+  const { activeYear, setActiveYear } = useRecruitingClassYear();
+  const [byYear, setByYear] = useState<Record<RecruitingClassYear, RhHubClassOverview | null>>({
     2026: null,
     2027: null,
     2028: null,
@@ -67,7 +81,7 @@ export function ClassCards(): React.ReactElement {
     setLoading(true);
     setError(false);
     void Promise.all(
-      CLASS_YEARS.map((year) =>
+      RECRUITING_CLASS_YEARS.map((year) =>
         fetchClassMetrics(year)
           .then((data) => ({ year, data }))
           .catch(() => ({ year, data: null }))
@@ -75,7 +89,10 @@ export function ClassCards(): React.ReactElement {
     )
       .then((results) => {
         if (cancelled) return;
-        const next = { 2026: null, 2027: null, 2028: null } as Record<ClassYear, RhHubClassOverview | null>;
+        const next = { 2026: null, 2027: null, 2028: null } as Record<
+          RecruitingClassYear,
+          RhHubClassOverview | null
+        >;
         for (const { year, data } of results) {
           next[year] = data;
         }
@@ -94,17 +111,21 @@ export function ClassCards(): React.ReactElement {
     <>
       <div className="rh-section-header">
         <div className="rh-section-title">Recruiting Classes</div>
-        <div className="rh-section-subtitle">Quick access to each class overview.</div>
+        <div className="rh-section-subtitle">
+          Tap a class to focus the hub on {activeYear} — or open commits for any year.
+        </div>
       </div>
       <section className="rh-class-cards" data-testid="rh-class-cards" aria-label="Recruiting class cards">
         <div className="rh-class-cards__grid">
-          {CLASS_YEARS.map((year) => (
+          {RECRUITING_CLASS_YEARS.map((year) => (
             <ClassCard
               key={year}
               year={year}
               data={byYear[year]}
               loading={loading}
               error={error}
+              isActive={year === activeYear}
+              onFocus={setActiveYear}
             />
           ))}
         </div>

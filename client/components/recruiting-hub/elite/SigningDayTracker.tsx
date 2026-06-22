@@ -8,7 +8,7 @@ import {
   type SigningEventConfig,
   type SigningCountdown,
 } from '@/components/recruiting-hub/elite/signing-day-utils';
-import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 
 function SigningEventCard({
   event,
@@ -57,6 +57,7 @@ function SigningEventCard({
 }
 
 export function SigningDayTracker(): React.ReactElement {
+  const { activeYear } = useRecruitingClassYear();
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
@@ -64,7 +65,7 @@ export function SigningDayTracker(): React.ReactElement {
     return () => window.clearInterval(id);
   }, []);
 
-  const signingEvents = getSigningEvents(ACTIVE_RECRUITING_CLASS_YEAR);
+  const signingEvents = getSigningEvents(activeYear);
   const espCountdown = getSigningCountdown(signingEvents.esp, now);
   const nsdCountdown = getSigningCountdown(signingEvents.nsd, now);
 
@@ -73,7 +74,7 @@ export function SigningDayTracker(): React.ReactElement {
       <div className="rh-section-header">
         <div className="rh-section-title">Signing Day Tracker</div>
         <div className="rh-section-subtitle">
-          Class of {ACTIVE_RECRUITING_CLASS_YEAR} · ESP and NSD countdowns
+          Class of {activeYear} · ESP and NSD countdowns
         </div>
       </div>
       <section className="rh-card rh-signing-tracker" data-testid="rh-signing-day-tracker">

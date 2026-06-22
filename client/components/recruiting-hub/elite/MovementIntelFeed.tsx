@@ -5,7 +5,7 @@ import type { RhHubMovementFeedItem } from '@/lib/recruiting-hub-elite-api';
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
 import { fetchMovementIntel } from '@/lib/recruiting-ui-api';
 import { playerHref } from '@/lib/player-link';
-import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 
 const EVENT_LABELS: Record<RhHubMovementFeedItem['event'], string> = {
   up: 'Trending Up',
@@ -33,7 +33,10 @@ function alertEvent(type: string): RhHubMovementFeedItem['event'] {
   return 'intel';
 }
 
-function movementIntelToFeed(data: MovementIntelResponse | null): RhHubMovementFeedItem[] {
+function movementIntelToFeed(
+  data: MovementIntelResponse | null,
+  classYear: number
+): RhHubMovementFeedItem[] {
   if (!data) return [];
   const items: RhHubMovementFeedItem[] = [];
 
@@ -43,7 +46,7 @@ function movementIntelToFeed(data: MovementIntelResponse | null): RhHubMovementF
       timestamp: alert.timestamp,
       name: alert.player,
       position: '—',
-      class: ACTIVE_RECRUITING_CLASS_YEAR,
+      class: classYear,
       profileUrl: '#',
       event: alertEvent(alert.type),
       summary: alert.detail,
@@ -56,7 +59,7 @@ function movementIntelToFeed(data: MovementIntelResponse | null): RhHubMovementF
       timestamp: riser.lastUpdate,
       name: riser.name,
       position: riser.position,
-      class: ACTIVE_RECRUITING_CLASS_YEAR,
+      class: classYear,
       profileUrl: playerHref({ slug: riser.slug, id: riser.id, name: riser.name }, 'recruiting', 'HIGH_SCHOOL'),
       event: 'up',
       summary: `UF ${riser.ufProb}% (+${riser.delta}% 7d) · ${riser.position}`,
@@ -69,7 +72,7 @@ function movementIntelToFeed(data: MovementIntelResponse | null): RhHubMovementF
       timestamp: faller.lastUpdate,
       name: faller.name,
       position: faller.position,
-      class: ACTIVE_RECRUITING_CLASS_YEAR,
+      class: classYear,
       profileUrl: playerHref({ slug: faller.slug, id: faller.id, name: faller.name }, 'recruiting', 'HIGH_SCHOOL'),
       event: 'down',
       summary: `UF ${faller.ufProb}% (${faller.delta}% 7d) · ${faller.position}`,
@@ -82,6 +85,7 @@ function movementIntelToFeed(data: MovementIntelResponse | null): RhHubMovementF
 }
 
 export function MovementIntelFeed(): React.ReactElement {
+  const { activeYear } = useRecruitingClassYear();
   const [payload, setPayload] = useState<MovementIntelResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -103,7 +107,7 @@ export function MovementIntelFeed(): React.ReactElement {
     };
   }, []);
 
-  const data = useMemo(() => movementIntelToFeed(payload), [payload]);
+  const data = useMemo(() => movementIntelToFeed(payload, activeYear), [payload, activeYear]);
 
   return (
     <>

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import type { RhHubBattleBoardItem } from '@/lib/recruiting-hub-elite-api';
 import { getBattleColor } from '@/lib/recruiting-hub-scoring';
 import { fetchRecruitingBattles } from '@/lib/recruiting-ui-api';
-import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 
 const DIFFICULTY_LABELS: Record<RhHubBattleBoardItem['battleDifficulty'], string> = {
   easy: 'Easy',
@@ -77,13 +77,17 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
 }
 
 export function BattleBoard(): React.ReactElement {
+  const { activeYear } = useRecruitingClassYear();
   const [data, setData] = useState<RhHubBattleBoardItem[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    void fetchRecruitingBattles(ACTIVE_RECRUITING_CLASS_YEAR)
+    setLoading(true);
+    setError(false);
+    setData(null);
+    void fetchRecruitingBattles(activeYear)
       .then((res) => {
         if (!cancelled) setData(res.items ?? []);
       })
@@ -96,13 +100,15 @@ export function BattleBoard(): React.ReactElement {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeYear]);
 
   return (
     <>
       <div className="rh-section-header">
         <div className="rh-section-title">Battle Board</div>
-        <div className="rh-section-subtitle">UF&apos;s position in each priority recruiting battle.</div>
+        <div className="rh-section-subtitle">
+          {activeYear} class — UF&apos;s position in each priority recruiting battle.
+        </div>
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-battle-board" aria-hidden="true" />

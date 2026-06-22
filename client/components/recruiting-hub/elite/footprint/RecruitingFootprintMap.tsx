@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ComposableMap, Geographies } from 'react-simple-maps';
 import type { RhHubFootprintResponse, RhHubFootprintState } from '@/lib/recruiting-hub-elite-api';
 import { fetchRecruitingFootprint } from '@/lib/recruiting-ui-api';
-import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { StateHeatLayer } from './StateHeatLayer';
 import { TargetPinsLayer } from './TargetPinsLayer';
 import { BattleDifficultyLayer } from './BattleDifficultyLayer';
@@ -86,6 +86,7 @@ function FootprintTooltip({ state }: { state: RhHubFootprintState }): React.Reac
 }
 
 export function RecruitingFootprintMap(): React.ReactElement {
+  const { activeYear } = useRecruitingClassYear();
   const [footprint, setFootprint] = useState<RhHubFootprintResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -93,7 +94,10 @@ export function RecruitingFootprintMap(): React.ReactElement {
 
   useEffect(() => {
     let cancelled = false;
-    void fetchRecruitingFootprint(ACTIVE_RECRUITING_CLASS_YEAR)
+    setLoading(true);
+    setError(false);
+    setFootprint(null);
+    void fetchRecruitingFootprint(activeYear)
       .then((data) => {
         if (!cancelled) setFootprint(data);
       })
@@ -106,7 +110,7 @@ export function RecruitingFootprintMap(): React.ReactElement {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeYear]);
 
   const states = footprint?.states ?? [];
   const pins = footprint?.pins ?? [];
@@ -117,7 +121,7 @@ export function RecruitingFootprintMap(): React.ReactElement {
       <div className="rh-section-header">
         <div className="rh-section-title">Recruiting Footprint Map</div>
         <div className="rh-section-subtitle">
-          UF recruiting pipeline by state — real targets, commits, visits, and battles.
+          {activeYear} class — UF recruiting pipeline by state, targets, commits, visits, and battles.
         </div>
       </div>
 

@@ -3,16 +3,20 @@
 import React, { useEffect, useState } from 'react';
 import type { RhHubBattle } from '@/lib/recruiting-hub-elite-api';
 import { fetchBattlesAndMovement } from '@/lib/recruiting-ui-api';
-import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 
 export function RecruitingBattlesMovement(): React.ReactElement {
+  const { activeYear } = useRecruitingClassYear();
   const [data, setData] = useState<RhHubBattle[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    void fetchBattlesAndMovement(ACTIVE_RECRUITING_CLASS_YEAR)
+    setLoading(true);
+    setError(false);
+    setData(null);
+    void fetchBattlesAndMovement(activeYear)
       .then((res) => {
         if (!cancelled) setData(res.battles ?? []);
       })
@@ -25,13 +29,13 @@ export function RecruitingBattlesMovement(): React.ReactElement {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [activeYear]);
 
   return (
     <>
       <div className="rh-section-header">
         <div className="rh-section-title">Battles &amp; Movement</div>
-        <div className="rh-section-subtitle">Key recruit battles and trend lines.</div>
+        <div className="rh-section-subtitle">{activeYear} class — key recruit battles and trend lines.</div>
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-battles" aria-hidden="true" />
