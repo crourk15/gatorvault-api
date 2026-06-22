@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Ensure vault static HTML includes hydration boot script + critical CSS before React scripts.
+ * Ensure vault static HTML includes hydration boot script + critical CSS.
+ * Boot must run AFTER #gv-vault-root so the SSR snapshot is captured on mobile Safari.
  */
 const fs = require('fs');
 const path = require('path');
@@ -14,9 +15,8 @@ const vaultDir = path.join(serverDir, 'vault');
 
 const BOOT_TAG = `<script data-gv-hydration-boot="">${VAULT_HYDRATION_BOOT_SCRIPT}</script>`;
 const CSS_TAG = `<style data-gv-hydration-css="">${VAULT_HYDRATION_CRITICAL_CSS}</style>`;
-/** Wake Render API while JS chunks download — before React mounts. */
 const API_WARM_TAG =
-  '<script data-gv-api-warm="">(function(){try{var p=function(u){fetch(u,{cache:"no-store",credentials:"same-origin"}).catch(function(){})};p("/api/health");p("/api/ping");p("/api/recruiting/hub/ticker?year=2027")}catch(e){}})();</script>';
+  '<script data-gv-api-warm="">(function(){try{var run=function(){try{var p=function(u){fetch(u,{cache:"no-store",credentials:"same-origin"}).catch(function(){})};p("/api/health");p("/api/ping");p("/api/recruiting/hub/ticker?year=2027")}catch(e){}};if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",run,{once:true})}else{run()}}catch(e){}})();</script>';
 
 function walkVaultHtml(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
@@ -28,8 +28,39 @@ function walkVaultHtml(dir, out = []) {
   return out;
 }
 
-function firstScriptIndex(html) {
-  return html.search(/<script[\s>]/i);
+function stripExistingBoot(html) {
+  return html
+    .replace(/<script data-gv-api-warm="">[\s\S]*?<\/script>/gi, '')
+    .replace(/<script data-gv-hydration-boot="">[\s\S]*?<\/script>/gi, '');
+}
+
+function insertAfterVaultRoot(html, insertion) {
+  const marker = 'id="gv-vault-root"';
+  const start = html.indexOf(marker);
+  if (start < 0) {
+    if (html.includes('</body>')) return html.replace('</body>', `${insertion}</body>`);
+    return html + insertion;
+  }
+  let idx = html.indexOf('>', start) + 1;
+  let depth = 1;
+  while (idx < html.length && depth > 0) {
+    const nextOpen = html.indexOf('<div', idx);
+    const nextClose = html.indexOf('</div>', idx);
+    if (nextClose < 0) break;
+    if (nextOpen >= 0 && nextOpen < nextClose) {
+      depth += 1;
+      idx = nextOpen + 4;
+    } else {
+      depth -= 1;
+      if (depth === 0) {
+        const at = nextClose + 6;
+        return html.slice(0, at) + insertion + html.slice(at);
+      }
+      idx = nextClose + 6;
+    }
+  }
+  if (html.includes('</body>')) return html.replace('</body>', `${insertion}</body>`);
+  return html + insertion;
 }
 
 function patchHtml(html) {
@@ -40,17 +71,14 @@ function patchHtml(html) {
     else next = CSS_TAG + next;
   }
 
-  if (!next.includes('data-gv-hydration-boot')) {
-    const scriptIdx = firstScriptIndex(next);
-    if (scriptIdx >= 0) {
-      next = next.slice(0, scriptIdx) + API_WARM_TAG + BOOT_TAG + next.slice(scriptIdx);
-    } else if (next.includes('</body>')) {
-      next = next.replace('</body>', `${API_WARM_TAG}${BOOT_TAG}</body>`);
-    } else {
-      next += API_WARM_TAG + BOOT_TAG;
-    }
-  } else if (!next.includes('data-gv-api-warm')) {
-    next = next.replace(BOOT_TAG, API_WARM_TAG + BOOT_TAG);
+  next = stripExistingBoot(next);
+
+  if (next.includes('id="gv-vault-root"')) {
+    next = insertAfterVaultRoot(next, API_WARM_TAG + BOOT_TAG);
+  } else if (next.includes('</body>')) {
+    next = next.replace('</body>', `${API_WARM_TAG}${BOOT_TAG}</body>`);
+  } else {
+    next += API_WARM_TAG + BOOT_TAG;
   }
 
   if (next.includes('id="gv-vault-root"') && !next.includes('data-hydrating="true"')) {
@@ -76,4 +104,4 @@ function injectVaultHydrationGuard() {
 
 injectVaultHydrationGuard();
 
-module.exports = { injectVaultHydrationGuard };
+module.exports = { injectVaultHydrationGuard, insertAfterVaultRoot, patchHtml };

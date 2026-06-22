@@ -33,8 +33,8 @@ function cacheBustScript(buildId) {
     `if(p&&p!==b&&!/[?&]gv-cache-reload=1/.test(location.search)&&!sessionStorage.getItem("gv-cache-reloaded")){` +
     `sessionStorage.setItem("gv-cache-reloaded","1");` +
     `var reload=function(){var u=new URL(location.href);u.searchParams.set("gv-cache-reload","1");location.replace(u.toString())};` +
-    `if(document.getElementById("gv-vault-root")||document.querySelector(".home-wow-hero,.gv-landing-hero")){` +
-    `requestAnimationFrame(function(){setTimeout(reload,120)})}else{reload()}` +
+    `var maybeReload=function(){if(document.getElementById("gv-vault-root")||document.querySelector(".home-wow-hero,.gv-landing-hero")){requestAnimationFrame(function(){setTimeout(reload,120)})}else{reload()}};` +
+    `if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",maybeReload,{once:true})}else{maybeReload()}` +
     `}` +
     `}catch(e){}})();</script>`
   );

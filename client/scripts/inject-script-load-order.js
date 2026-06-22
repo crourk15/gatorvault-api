@@ -2,7 +2,8 @@
 /**
  * Fix blank Vault screens: Next export puts async React chunks in <head>, so they can
  * execute before #gv-vault-root and self.__next_f exist. Move all bundle scripts to the
- * end of <body> in source order, strip async, and keep webpack immediately before __next_f.
+ * end of <body> in source order, strip async/defer, remove head script preloads, and
+ * keep webpack immediately before __next_f.
  */
 const fs = require('fs');
 const path = require('path');
@@ -12,12 +13,19 @@ const serverDir = path.join(__dirname, '..', '..', 'server');
 const EXTERNAL_SRC =
   /<script\b([^>]*\bsrc=["'](?:\/js\/vault-chunks\/|\/_next\/static\/chunks\/)[^"']+["'][^>]*)>\s*<\/script>/gi;
 
+const HEAD_SCRIPT_PRELOAD =
+  /<link\b[^>]*\bas=["']script["'][^>]*\bhref=["'](?:\/js\/vault-chunks\/|\/_next\/static\/chunks\/)[^"']+["'][^>]*>/gi;
+
 function isWebpackTag(tag) {
   return /webpack-[^"']+\.js/i.test(tag);
 }
 
-function stripAsync(tag) {
-  return tag.replace(/\sasync(?:=(?:["'][^"']*["']|[^\s>]+))?/gi, '');
+function isPolyfillTag(tag) {
+  return /polyfills-[^"']+\.js/i.test(tag) || /\bnoModule\b/i.test(tag);
+}
+
+function stripAsyncDefer(tag) {
+  return tag.replace(/\s(?:async|defer)(?:=(?:["'][^"']*["']|[^\s>]+))?/gi, '');
 }
 
 function walkHtml(dir, out = []) {
@@ -58,14 +66,19 @@ function extractNextInlineScripts(html) {
   return { html: next, tags };
 }
 
+function removeHeadScriptPreloads(html) {
+  return html.replace(new RegExp(HEAD_SCRIPT_PRELOAD.source, 'gi'), '');
+}
+
 function patchHtml(html) {
-  if (!EXTERNAL_SRC.test(html)) {
+  let next = removeHeadScriptPreloads(html);
+
+  if (!EXTERNAL_SRC.test(next)) {
     EXTERNAL_SRC.lastIndex = 0;
-    return html;
+    return next;
   }
   EXTERNAL_SRC.lastIndex = 0;
 
-  let next = html;
   const pass1 = extractExternalScripts(next);
   next = pass1.html;
   const pass2 = extractNextInlineScripts(next);
@@ -73,12 +86,13 @@ function patchHtml(html) {
 
   if (!pass1.tags.length) return html;
 
-  const normalized = pass1.tags.map(stripAsync);
+  const normalized = pass1.tags.map(stripAsyncDefer);
   const webpack = normalized.filter(isWebpackTag);
-  const chunks = normalized.filter((t) => !isWebpackTag(t));
+  const polyfills = normalized.filter((t) => isPolyfillTag(t) && !isWebpackTag(t));
+  const chunks = normalized.filter((t) => !isWebpackTag(t) && !isPolyfillTag(t));
 
-  /** Chunks register modules first; webpack runtime runs them; __next_f bootstraps last. */
-  const block = [...chunks, ...webpack, ...pass2.tags].join('');
+  /** Sync chunks register modules; webpack runs them; nomodule polyfills are legacy-only; __next_f bootstraps last. */
+  const block = [...chunks, ...webpack, ...polyfills, ...pass2.tags].join('');
   if (next.includes('</body>')) {
     return next.replace('</body>', `${block}</body>`);
   }

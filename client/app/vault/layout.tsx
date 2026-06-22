@@ -68,10 +68,6 @@ export default function VaultLayout({
           __html: `${vaultShellCriticalCss}${VAULT_HYDRATION_CRITICAL_CSS}`,
         }}
       />
-      <script
-        data-gv-hydration-boot=""
-        dangerouslySetInnerHTML={{ __html: VAULT_HYDRATION_BOOT_SCRIPT }}
-      />
       <div id="gv-vault-root" data-hydrating="true">
         <VaultHydrationGuard />
         <VaultErrorBoundary>
@@ -81,6 +77,10 @@ export default function VaultLayout({
           </VaultNavigationProvider>
         </VaultErrorBoundary>
       </div>
+      <script
+        data-gv-hydration-boot=""
+        dangerouslySetInnerHTML={{ __html: VAULT_HYDRATION_BOOT_SCRIPT }}
+      />
     </>
   );
 }

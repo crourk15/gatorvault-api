@@ -282,6 +282,19 @@ function checkVaultHydrationGuard(root) {
     if (!html.includes('data-gv-hydration-css') && !html.includes(VAULT_HYDRATION_CSS_SNIPPET)) {
       errors.push(`[G] ${page.id} missing hydration critical CSS`);
     }
+    const rootIdx = html.indexOf('id="gv-vault-root"');
+    const bootIdx = html.indexOf('data-gv-hydration-boot');
+    if (rootIdx >= 0 && bootIdx >= 0 && bootIdx < rootIdx) {
+      errors.push(`[G] ${page.id} hydration boot runs before gv-vault-root (SSR snapshot never captured)`);
+    }
+    if (/<link[^>]+as=["']script["'][^>]+(?:vault-chunks|_next\/static\/chunks)/i.test(html)) {
+      errors.push(`[G] ${page.id} has head script preload for React chunks (mobile Safari race)`);
+    }
+    const chunkScripts = html.match(/<script[^>]+src=["'](?:\/js\/vault-chunks\/|\/_next\/static\/chunks\/)[^"']+["'][^>]*>/gi) || [];
+    const badAsync = chunkScripts.filter((tag) => /\basync\b/i.test(tag) || /\bdefer\b/i.test(tag));
+    if (badAsync.length) {
+      errors.push(`[G] ${page.id} has ${badAsync.length} async/defer React chunk script(s)`);
+    }
   }
   return errors;
 }
