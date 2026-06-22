@@ -150,7 +150,24 @@ function buildReplacementMap(serverDir) {
         const publicPath = publishVaultChunk(serverDir, src, flat);
         map.set(`/_next/static/chunks/${name}`, publicPath);
         if (flat !== name) map.set(`/_next/static/chunks/${flat}`, publicPath);
+        map.set(`static/chunks/${name}`, publicPath.replace(/^\//, ''));
+        if (flat !== name) map.set(`static/chunks/${flat}`, publicPath.replace(/^\//, ''));
       }
+    }
+    for (const name of fs.readdirSync(chunksDir)) {
+      if (!name.endsWith('.js')) continue;
+      if (
+        name.startsWith('main-app-') ||
+        name.startsWith('main-entry-') ||
+        name.startsWith('mentry-') ||
+        name.startsWith('r-')
+      ) {
+        continue;
+      }
+      const src = path.join(chunksDir, name);
+      if (!fs.statSync(src).isFile()) continue;
+      // RSC flight embeds bare static/chunks/*.js (no /_next/ prefix) for shared webpack bundles.
+      map.set(`static/chunks/${name}`, `/_next/static/chunks/${name}`);
     }
   }
 
@@ -206,8 +223,31 @@ function vaultPublicPathForAppRel(relFromApp, vaultChunks) {
   return null;
 }
 
+function listRootStaticChunkNames(serverDir) {
+  const names = new Set();
+  const chunksDir = path.join(serverDir, '_next', 'static', 'chunks');
+  if (!fs.existsSync(chunksDir)) return names;
+  for (const name of fs.readdirSync(chunksDir)) {
+    if (!name.endsWith('.js')) continue;
+    const full = path.join(chunksDir, name);
+    if (fs.statSync(full).isFile()) names.add(name);
+  }
+  return names;
+}
+
+/** Regex fallback: rewrite bare static/chunks/*.js refs (RSC flight, no /_next/ prefix). */
+function sweepContentUnmappedStaticChunkRefs(content, rootChunks) {
+  return content.replace(
+    /(^|["'\s])static\/chunks\/(?!app\/|routes\/)([^"'\\?\s]+\.js)/g,
+    (match, prefix, name) => {
+      if (!rootChunks.has(name)) return match;
+      return `${prefix}/_next/static/chunks/${name}`;
+    }
+  );
+}
+
 /** Regex fallback: rewrite any remaining app/routes chunk refs when vault chunk exists. */
-function sweepContentUnmappedAppChunkRefs(content, vaultChunks) {
+function sweepContentUnmappedAppChunkRefs(content, vaultChunks, rootChunks) {
   let next = content;
   next = next.replace(/\/_next\/static\/chunks\/(app|routes)\/([^"'\\?\s]+)/g, (match, _sub, rel) => {
     const publicPath = vaultPublicPathForAppRel(rel, vaultChunks);
@@ -218,17 +258,19 @@ function sweepContentUnmappedAppChunkRefs(content, vaultChunks) {
     if (!publicPath) return match;
     return `${prefix}${publicPath}`;
   });
+  next = sweepContentUnmappedStaticChunkRefs(next, rootChunks);
   return next;
 }
 
 function sweepUnmappedAppChunkRefs(serverDir) {
   const vaultChunks = listVaultChunkFilenames(serverDir);
+  const rootChunks = listRootStaticChunkNames(serverDir);
   let filesUpdated = 0;
 
   walkFiles(serverDir, (file) => {
     if (!/\.(html|txt|js|json)$/.test(file)) return;
     const raw = fs.readFileSync(file, 'utf8');
-    let updated = sweepContentUnmappedAppChunkRefs(raw, vaultChunks);
+    let updated = sweepContentUnmappedAppChunkRefs(raw, vaultChunks, rootChunks);
     updated = normalizeAbsoluteVaultChunkRefs(updated);
     if (updated !== raw) {
       fs.writeFileSync(file, updated);
@@ -347,6 +389,7 @@ module.exports = {
   VAULT_CHUNKS_DIR,
   assertNoUnrewrittenAppChunkRefs,
   sweepUnmappedAppChunkRefs,
+  sweepContentUnmappedStaticChunkRefs,
   normalizeAbsoluteVaultChunkRefs,
   assertAbsoluteVaultChunkRefs,
 };
