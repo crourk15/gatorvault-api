@@ -20,6 +20,27 @@
   # Skip Netlify build-cache restore — stale .next/_next/static caused mismatched layout chunk hashes.
   NETLIFY_SKIP_BUILD_CACHE = "true"
 
+# Disable Netlify post-processing — optimization layer rewrites HTML/RSC with stale chunk hashes.
+[build.processing]
+  skip_processing = true
+
+[build.processing.html]
+  pretty_urls = false
+  skip = true
+
+[build.processing.js]
+  minify = false
+  bundle = false
+  skip = true
+
+[build.processing.css]
+  minify = false
+  skip = true
+
+[build.processing.images]
+  compress = false
+  skip = true
+
 # Proxy API through same origin — no external API URLs in the browser
 [[redirects]]
   from = "/api/*"
