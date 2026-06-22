@@ -233,8 +233,18 @@ function listVaultChunkFilenames(serverDir) {
   return names;
 }
 
+function ensureAppChunkRelJs(rel) {
+  const normalized = String(rel || '').replace(/\\/g, '/').replace(/\/+$/, '');
+  return normalized.endsWith('.js') ? normalized : `${normalized}.js`;
+}
+
+function nestedVaultChunkPublicPath(relFromApp) {
+  const nested = ensureAppChunkRelJs(relFromApp).replace(/^\(app\)\//, '');
+  return `/${VAULT_CHUNKS_DIR}/${nested}`;
+}
+
 function vaultPublicPathForAppRel(relFromApp, vaultChunks) {
-  const normalized = relFromApp.replace(/\\/g, '/').replace(/\\+$/, '');
+  const normalized = ensureAppChunkRelJs(relFromApp);
   const relCandidates = [
     normalized,
     decodeChunkRefPath(normalized),
@@ -252,7 +262,7 @@ function vaultPublicPathForAppRel(relFromApp, vaultChunks) {
       }
     }
   }
-  return null;
+  return nestedVaultChunkPublicPath(normalized);
 }
 
 function vaultPublicPathForMentry(name, vaultChunks) {
@@ -295,10 +305,16 @@ function sweepContentUnmappedBareStaticChunkRefs(content, vaultChunks) {
 
 /** Regex fallback: rewrite bare static/chunks/app/... refs in HTML/RSC flight (no /_next/ prefix). */
 function sweepContentUnmappedStaticAppChunkRefs(content) {
-  return content.replace(
+  let next = content.replace(
     /\bstatic\/chunks\/app\/([A-Za-z0-9/_-]+)\.js\b/g,
     `/${VAULT_CHUNKS_DIR}/$1.js`
   );
+  // RSC flight often embeds app chunk ids without a .js suffix before the closing quote.
+  next = next.replace(
+    /\bstatic\/chunks\/app\/([A-Za-z0-9/_-]+)(?=["'\\s,[\]|\\]|$)/g,
+    (_, relPath) => `/${VAULT_CHUNKS_DIR}/${relPath}.js`
+  );
+  return next;
 }
 
 /** Regex fallback: rewrite any remaining app/routes chunk refs when vault chunk exists. */
@@ -307,11 +323,11 @@ function sweepContentUnmappedAppChunkRefs(content, vaultChunks) {
   next = sweepContentUnmappedStaticAppChunkRefs(next);
   next = next.replace(/\/_next\/static\/chunks\/(app|routes)\/([^"'\\?\s]+)/g, (match, _sub, rel) => {
     const publicPath = vaultPublicPathForAppRel(rel, vaultChunks);
-    return publicPath || match;
+    return publicPath || nestedVaultChunkPublicPath(rel);
   });
   next = next.replace(/static\/chunks\/(app|routes)\/([^"'\\?\s]+)/g, (match, _sub, rel) => {
     const publicPath = vaultPublicPathForAppRel(rel, vaultChunks);
-    return publicPath || match;
+    return publicPath || nestedVaultChunkPublicPath(rel);
   });
   next = next.replace(/\/_next\/static\/chunks\/main-(app|entry)-([^"'\\?\s]+)/g, (match, _kind, rest) => {
     const publicPath = vaultPublicPathForMentry(`main-${_kind}-${rest}`, vaultChunks);
