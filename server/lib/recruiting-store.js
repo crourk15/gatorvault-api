@@ -431,6 +431,7 @@ async function getAllPlayers() {
 }
 
 async function getPlayerBySlug(slug) {
+  const { applyEditorialPositionToPlayer } = require('./recruiting-editorial-positions');
   const sb = initSupabase();
   if (sb) {
     const { data, error } = await sb.from('players').select('*').eq('slug', slug).maybeSingle();
@@ -441,12 +442,12 @@ async function getPlayerBySlug(slug) {
         throw error;
       }
     } else {
-      return rowToPlayer(data);
+      return applyEditorialPositionToPlayer(rowToPlayer(data));
     }
   }
   const players = await loadPlayersLocal();
   const p = players.find((x) => x.slug === slug);
-  return p ? normalizePlayer(p) : null;
+  return p ? applyEditorialPositionToPlayer(normalizePlayer(p)) : null;
 }
 
 /** Resolve recruiting player by slug or On3 id (hub links sometimes pass numeric ids). */
@@ -568,9 +569,11 @@ async function upsertPlayer(player, options = {}) {
     normalized.category = 'target';
     if (normalized.status === 'committed') normalized.status = 'uncommitted';
   }
+  const { applyEditorialPositionToPlayer } = require('./recruiting-editorial-positions');
+  const savedPlayer = applyEditorialPositionToPlayer(normalized);
   const sb = initSupabase();
   if (sb) {
-    const { data, error } = await sb.from('players').upsert(playerToRow(normalized), { onConflict: 'slug' }).select().single();
+    const { data, error } = await sb.from('players').upsert(playerToRow(savedPlayer), { onConflict: 'slug' }).select().single();
     if (error) {
       if (isSupabaseUnavailableError(error)) {
         disableSupabase(error.message);
@@ -578,7 +581,7 @@ async function upsertPlayer(player, options = {}) {
         throw error;
       }
     } else {
-      const saved = rowToPlayer(data);
+      const saved = applyEditorialPositionToPlayer(rowToPlayer(data));
       await syncIdentityPatterns(saved);
       try {
         require('./scouting-update-engine').queuePlayerScoutingRefresh(saved.slug, {
@@ -591,11 +594,11 @@ async function upsertPlayer(player, options = {}) {
     }
   }
   const players = await loadPlayersLocal();
-  const idx = players.findIndex((p) => p.slug === normalized.slug);
-  if (idx >= 0) players[idx] = preservePlayerFields(players[idx], normalized);
-  else players.push({ ...normalized, updatedAt: nowIso() });
+  const idx = players.findIndex((p) => p.slug === savedPlayer.slug);
+  if (idx >= 0) players[idx] = preservePlayerFields(players[idx], savedPlayer);
+  else players.push({ ...savedPlayer, updatedAt: nowIso() });
   await savePlayersLocal(players);
-  const saved = idx >= 0 ? players[idx] : normalized;
+  const saved = idx >= 0 ? players[idx] : savedPlayer;
   await syncIdentityPatterns(saved);
   try {
     require('./scouting-update-engine').queuePlayerScoutingRefresh(saved.slug, {

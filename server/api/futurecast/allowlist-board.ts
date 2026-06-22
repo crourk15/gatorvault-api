@@ -375,17 +375,17 @@ export async function loadBoardPlayersForSlugs(
         ? Math.round(Number(model.ufFitScore))
         : null;
 
-    const position = String(
-      recruiting?.pos ||
-        recruiting?.position ||
-        rank?.position ||
-        seed.pos ||
-        seed.position ||
-        model?.position ||
-        ''
-    )
-      .trim()
-      .toUpperCase();
+    const position = (() => {
+      const editorial = require('../../lib/recruiting-editorial-positions');
+      return editorial.resolveFutureCastPosition({
+        slug,
+        classYear: resolvedClassYear,
+        recruiting,
+        seed,
+        rank,
+        model,
+      });
+    })();
 
     players.push({
       id: model?.playerId ?? (isUnderclassmenClassYear(resolvedClassYear) ? intelUuidForSlug(slug) : slug),

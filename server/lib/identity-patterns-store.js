@@ -203,6 +203,8 @@ async function pruneStalePatternEntries(validSlugs) {
 
 async function syncPatternsForPlayer(player) {
   if (!player?.slug || !player?.name) return null;
+  const { applyEditorialPositionToPlayer } = require('./recruiting-editorial-positions');
+  player = applyEditorialPositionToPlayer(player);
   const identityValidator = require('./identity-record-validator');
   const playerValidation = identityValidator.validatePlayerIdentityRecord(player);
   if (!playerValidation.valid) {
