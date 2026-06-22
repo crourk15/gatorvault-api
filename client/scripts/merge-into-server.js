@@ -11,6 +11,7 @@ const {
   rewriteNextChunkPathsForNetlify,
   assertNoUnrewrittenAppChunkRefs,
   sweepUnmappedAppChunkRefs,
+  canonicalizeNestedAppChunkRefs,
 } = require('./rewrite-next-chunk-paths');
 
 const outDir = path.join(__dirname, '..', 'out');
@@ -154,6 +155,10 @@ if (resweep.filesUpdated) {
   console.log(`[netlify] Re-swept ${resweep.filesUpdated} files for unmapped App Router chunk refs`);
 }
 assertNoUnrewrittenAppChunkRefs(serverDir);
+const canon = canonicalizeNestedAppChunkRefs(serverDir);
+if (canon.filesUpdated) {
+  console.log(`[netlify] Canonicalized stale nested app chunk refs in ${canon.filesUpdated} files`);
+}
 verifyExports();
 verifyChunks();
 

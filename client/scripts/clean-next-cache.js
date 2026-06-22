@@ -17,6 +17,7 @@ if (fs.existsSync(nextDir)) {
 const extraRoots = [
   path.join(clientDir, 'out'),
   path.join(clientDir, 'node_modules', '.cache', 'gv-next'),
+  path.join(clientDir, 'node_modules', '.cache', 'next'),
 ];
 
 for (const dir of extraRoots) {
