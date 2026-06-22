@@ -2,12 +2,6 @@
  * FutureCast Lab — prediction-engine data map (FutureCast APIs only).
  */
 import { fetchFutureCastHome, type FutureCastHomeResponse } from './futurecast-home-api';
-import {
-  fetchFutureCastMasterBoard,
-  fetchFutureCastMovementIntel,
-  fetchFutureCastStaffNotesBoard,
-  fetchFutureCastTrendingBoard,
-} from './futurecast-board-api';
 import type {
   MasterBoardResponse,
   MovementIntelResponse,
@@ -22,8 +16,19 @@ import {
   fetchFutureCastUnderclassmen,
   type UnderclassmenPlayer,
 } from './futurecast-underclassmen-api';
+import { fetchWithWarmPoll } from './api-warm-poll';
+import { snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch';
 
 const EMPTY_STOCK: StockBoardResponse = { stockUp: [], stockDown: [], windowDays: 7 };
+const LAB_FETCH_OPTS = DEFAULT_SNAPSHOT_FETCH_OPTS;
+
+function warmFetch<T>(path: string): Promise<T> {
+  return fetchWithWarmPoll(() => snapshotLiveFetch<T>(path, LAB_FETCH_OPTS));
+}
+
+function settled<T>(result: PromiseSettledResult<T>, fallback: T): T {
+  return result.status === 'fulfilled' ? result.value : fallback;
+}
 
 export type FutureCastLabDataMap = {
   masterBoard: MasterBoardResponse;
@@ -58,29 +63,71 @@ function buildMetrics(master: MasterBoardResponse): FutureCastHeroMetrics {
 }
 
 export async function loadFutureCastLabData(): Promise<FutureCastLabDataMap> {
-  const [master, trending, movement, staffNotes, home, stock, highPriority, underclassmenPayload] =
-    await Promise.all([
-    fetchFutureCastMasterBoard(),
-    fetchFutureCastTrendingBoard(),
-    fetchFutureCastMovementIntel(),
-    fetchFutureCastStaffNotesBoard(),
-    fetchFutureCastHome(),
-    fetchStockBoard().catch(() => EMPTY_STOCK),
-    fetchHighPriorityTargets().catch(() => ({
-      players: [],
-      classYear: 2027,
-      count: 0,
-      updatedAt: new Date().toISOString(),
-    })),
-    fetchFutureCastUnderclassmen([2028, 2029, 2030]).catch(() => ({
-      ok: true,
-      updatedAt: new Date().toISOString(),
-      years: [2028, 2029, 2030],
-      classes: {},
-      players: [],
-      empty: true,
-    })),
-  ]);
+  const master = await warmFetch<MasterBoardResponse>('/api/futurecast/master-board');
+
+  const [trendingR, movementR, staffR, homeR, stockR, highPriorityR, underclassmenR] =
+    await Promise.allSettled([
+      warmFetch<TrendingBoardResponse>('/api/futurecast/trending'),
+      warmFetch<MovementIntelResponse>('/api/futurecast/movement-intel'),
+      warmFetch<StaffNotesResponse>('/api/futurecast/staff-notes?year=2027'),
+      warmFetch<FutureCastHomeResponse>('/api/futurecast/home'),
+      fetchStockBoard().catch(() => EMPTY_STOCK),
+      fetchHighPriorityTargets().catch(() => ({
+        players: [],
+        classYear: 2027,
+        count: 0,
+        updatedAt: new Date().toISOString(),
+      })),
+      fetchFutureCastUnderclassmen([2028, 2029, 2030]).catch(() => ({
+        ok: true,
+        updatedAt: new Date().toISOString(),
+        years: [2028, 2029, 2030],
+        classes: {},
+        players: [],
+        empty: true,
+      })),
+    ]);
+
+  const trending = settled(trendingR, { classYear: 2027, updatedAt: '', trendingUp: [], trendingDown: [] });
+  const movement = settled(movementR, {
+    classYear: 2027,
+    updatedAt: '',
+    movementHeatmap: { upCount: 0, downCount: 0, flatCount: 0 },
+    heatmap: { buckets: [], windowDays: 7 },
+    risers: [],
+    fallers: [],
+    highVolatility: [],
+    stable: [],
+    fitScoreLeaders: [],
+    fitScoreRisks: [],
+    alerts: [],
+  });
+  const staffNotes = settled(staffR, { classYear: 2027, updatedAt: '', totalNotes: 0, count: 0, notes: [] });
+  const home = settled(homeR, {
+    classYear: 2027,
+    commitSort: 'fit',
+    heatmap: { buckets: [], windowDays: 7 },
+    commits: [],
+    topTargets: [],
+    trendingUp: [],
+    trendingDown: [],
+    portalWatchlist: [],
+  });
+  const stock = settled(stockR, EMPTY_STOCK);
+  const highPriority = settled(highPriorityR, {
+    players: [],
+    classYear: 2027,
+    count: 0,
+    updatedAt: new Date().toISOString(),
+  });
+  const underclassmenPayload = settled(underclassmenR, {
+    ok: true,
+    updatedAt: new Date().toISOString(),
+    years: [2028, 2029, 2030],
+    classes: {},
+    players: [],
+    empty: true,
+  });
 
   return {
     masterBoard: master,

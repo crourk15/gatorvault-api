@@ -2,24 +2,29 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { loadFutureCastLabData, type FutureCastLabDataMap } from '@/lib/futurecast-lab-data';
+import { userFacingLoadError } from '@/lib/api-warm-poll';
 
 const LAB_POLL_MS = 90_000;
 
 export type FutureCastLabData = FutureCastLabDataMap & {
   loading: boolean;
   refreshing: boolean;
+  warming: boolean;
   error: string | null;
+  reload: () => void;
 };
 
 export function useFutureCastLabData(): FutureCastLabData {
   const [data, setData] = useState<FutureCastLabDataMap | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [warming, setWarming] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) {
       setLoading(true);
+      setWarming(true);
       setError(null);
     } else {
       setRefreshing(true);
@@ -30,11 +35,15 @@ export function useFutureCastLabData(): FutureCastLabData {
       setError(null);
     } catch (err) {
       if (isInitial) {
-        setError(err instanceof Error ? err.message : 'Failed to load FutureCast Lab.');
+        setError(userFacingLoadError(err, 'Failed to load FutureCast Lab.'));
       }
     } finally {
-      if (isInitial) setLoading(false);
-      else setRefreshing(false);
+      if (isInitial) {
+        setLoading(false);
+        setWarming(false);
+      } else {
+        setRefreshing(false);
+      }
     }
   }, []);
 
@@ -111,6 +120,8 @@ export function useFutureCastLabData(): FutureCastLabData {
     ...empty,
     loading,
     refreshing,
+    warming,
     error,
+    reload: () => void load(true),
   };
 }

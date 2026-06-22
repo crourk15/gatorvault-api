@@ -6,7 +6,7 @@ import {
   RECRUITING_HUB_ELITE_YEAR,
   type RhHubBundle,
 } from '@/lib/recruiting-hub-elite-api';
-import { ApiFetchError } from '@/lib/api-fetch';
+import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import type { RecruitingHubBundleState } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { initGvHydrate } from '@/lib/gv-hydrate';
 
@@ -39,31 +39,9 @@ function initHubMonitor(year: number): number {
   return start;
 }
 
-async function sleep(ms: number): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function isWarmRetry(err: unknown): boolean {
-  if (!(err instanceof ApiFetchError)) return false;
-  if (err.timedOut || err.unavailable) return true;
-  if (err.status === 503) return true;
-  return /warming|building/i.test(err.message);
-}
-
 /** Poll hub bundle while API warms — avoids empty hub on cold Render wake. */
 async function fetchHubBundleWithWarmPoll(year: number): Promise<RhHubBundle> {
-  const maxAttempts = 6;
-  let lastErr: unknown;
-  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
-    try {
-      return await fetchRecruitingHubBundle(year);
-    } catch (err) {
-      lastErr = err;
-      if (attempt >= maxAttempts - 1 || !isWarmRetry(err)) break;
-      await sleep(2_000);
-    }
-  }
-  throw lastErr;
+  return fetchWithWarmPoll(() => fetchRecruitingHubBundle(year));
 }
 
 /** Single /api/recruiting/hub/bundle fetch for the elite landing page. */

@@ -1,5 +1,5 @@
 /**
- * Wake Render API before first user interaction.
+ * Wake Render API before page data fetches — critical on cold start after idle.
  */
 import { apiFetch } from './api-fetch';
 
@@ -10,8 +10,12 @@ export function warmVaultApi(): void {
   warmed = true;
 
   const ping = (path: string) => {
-    void apiFetch(path, { timeoutMs: 12_000 }).catch(() => {});
+    void apiFetch(path, { timeoutMs: 15_000, retries: 2, retryDelayMs: 2_000 }).catch(() => {});
   };
+
+  // Immediate wake — do not defer to idle; page fetches can start in parallel.
+  ping('/api/health');
+  ping('/api/recruiting/hub/ticker?year=2027');
 
   if (typeof window.requestIdleCallback === 'function') {
     window.requestIdleCallback(
@@ -19,12 +23,12 @@ export function warmVaultApi(): void {
         ping('/api/recruiting/intel/high-priority');
         ping('/api/staff/dashboard');
       },
-      { timeout: 4000 }
+      { timeout: 1500 }
     );
   } else {
     window.setTimeout(() => {
       ping('/api/recruiting/intel/high-priority');
       ping('/api/staff/dashboard');
-    }, 800);
+    }, 400);
   }
 }

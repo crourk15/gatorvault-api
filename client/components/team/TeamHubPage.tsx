@@ -7,7 +7,7 @@ import { fetchFutureCastMasterBoard } from '@/lib/futurecast-board-api';
 import type { Coach, DepthChartTab, Era } from '@/lib/team-hub-types';
 import type { RosterFilter } from '@/lib/team-hub-data';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
-import { UiError } from '@/components/site/UiMessage';
+import { UiWarming } from '@/components/site/UiMessage';
 import { CoachingStaffModal, EraDetailModal } from '@/components/team/CoachingStaffModal';
 import { TeamElitePageShell } from '@/components/team/premium/TeamElitePageShell';
 import { TeamPremiumHero } from '@/components/team/premium/TeamPremiumHero';
@@ -53,7 +53,7 @@ export function TeamHubPage(): React.ReactElement {
   const [bundle, setBundle] = useState<TeamHubBundle>(EMPTY_BUNDLE);
   const [loading, setLoading] = useState(true);
   const [pipelineLoading, setPipelineLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [warming, setWarming] = useState(true);
   const [rosterFilter, setRosterFilter] = useState<RosterFilter>('All');
   const [dcTab, setDcTab] = useState<DepthChartTab>('offense');
   const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
@@ -72,7 +72,7 @@ export function TeamHubPage(): React.ReactElement {
     if (isInitial) {
       setLoading(true);
       setPipelineLoading(true);
-      setError(null);
+      setWarming(true);
     }
     try {
       const [hub, board, fcBoard] = await Promise.all([
@@ -82,10 +82,11 @@ export function TeamHubPage(): React.ReactElement {
       ]);
       setBundle(hub);
       setPipelinePreview(buildPipelinePreview(board, fcBoard));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load team hub.');
     } finally {
-      if (isInitial) setLoading(false);
+      if (isInitial) {
+        setLoading(false);
+        setWarming(false);
+      }
       setPipelineLoading(false);
     }
   }, []);
@@ -121,7 +122,7 @@ export function TeamHubPage(): React.ReactElement {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [loading, error]);
+  }, [loading]);
 
   const scrollToSection = useCallback((tab: TeamPremiumTabId) => {
     setActiveTab(tab);
@@ -162,7 +163,7 @@ export function TeamHubPage(): React.ReactElement {
 
     sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
-  }, [loading, error]);
+  }, [loading]);
 
   const dcPositions =
     dcTab === 'offense'
@@ -176,9 +177,9 @@ export function TeamHubPage(): React.ReactElement {
 
   return (
     <TeamElitePageShell>
-      {error && !loading ? (
+      {warming && loading && bundle.roster.length === 0 ? (
         <div className="rh-frame rh-cc-page team-premium-cc-page">
-          <UiError message={error} retry={() => void load(true)} backHref="/vault" backLabel="← Home" />
+          <UiWarming />
         </div>
       ) : (
         <>

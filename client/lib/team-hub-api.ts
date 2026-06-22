@@ -1,5 +1,6 @@
-import { fetchRosterPlayers, type RosterPlayer } from './roster-api';
-import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
+import { type RosterPlayer } from './roster-api';
+import { snapshotFirstFetch, snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch';
+import { fetchWithWarmPoll } from './api-warm-poll';
 import {
   FALLBACK_COACHES,
   TEAM_ACHIEVEMENTS,
@@ -138,15 +139,16 @@ function countRosterUnits(roster: TeamPlayer[]): { offense: number; defense: num
 
 export async function fetchTeamHubBundle(): Promise<TeamHubBundle> {
   const [rosterResult, coaches, meta] = await Promise.allSettled([
-    fetchRosterPlayers(),
+    fetchWithWarmPoll(() =>
+      snapshotLiveFetch<{ players?: RosterPlayer[] }>('/api/roster/players', DEFAULT_SNAPSHOT_FETCH_OPTS).then(
+        (data) => (data.players ?? []).map(mapRosterPlayer).sort((a, b) => a.name.localeCompare(b.name))
+      )
+    ).catch(() => [] as TeamPlayer[]),
     fetchCoachingStaff(),
     fetchDepthChartMeta(),
   ]);
 
-  const roster =
-    rosterResult.status === 'fulfilled'
-      ? rosterResult.value.map(mapRosterPlayer).sort((a, b) => a.name.localeCompare(b.name))
-      : [];
+  const roster = rosterResult.status === 'fulfilled' ? rosterResult.value : [];
 
   const depthChart = TEAM_DEPTH_CHART;
   const metaData = meta.status === 'fulfilled' ? meta.value : null;

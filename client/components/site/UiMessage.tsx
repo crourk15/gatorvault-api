@@ -47,3 +47,18 @@ export function UiEmpty({
     </div>
   );
 }
+
+export function UiWarming({
+  title = 'Waking up GatorVault servers…',
+  hint = 'First load after idle can take up to 30 seconds. Hang tight.',
+}: {
+  title?: string;
+  hint?: string;
+}): React.ReactElement {
+  return (
+    <div className="gv-ui-message gv-ui-message--empty" role="status" aria-live="polite" aria-busy="true">
+      <h2 className="gv-ui-message__title">{title}</h2>
+      <p className="gv-ui-message__hint">{hint}</p>
+    </div>
+  );
+}

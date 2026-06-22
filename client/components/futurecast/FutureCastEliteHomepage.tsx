@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { UiError } from '@/components/site/UiMessage';
+import { UiError, UiWarming } from '@/components/site/UiMessage';
 import { FutureCastLabPageDesktop } from './lab/FutureCastLabPageDesktop';
 import { FutureCastLabPageMobile } from './mobile/FutureCastLabPageMobile';
 import { FutureCastLabAnchors } from './lab/FutureCastLabAnchors';
@@ -21,17 +21,24 @@ export function FutureCastEliteHomepage(): React.ReactElement {
     }
   }, [lab.loading]);
 
-  if (lab.loading && !lab.masterBoard.players.length) {
+  if ((lab.loading || lab.warming) && !lab.masterBoard.players.length) {
     return (
       <div className="rh-cc-page rh-frame" data-testid="fc-elite-loading" aria-busy="true">
-        <div className="rh-cc-skeleton" style={{ minHeight: 280, borderRadius: 12 }} />
+        <UiWarming />
+        <div className="rh-cc-skeleton" style={{ minHeight: 280, borderRadius: 12, marginTop: 16 }} />
         <div className="rh-cc-skeleton" style={{ minHeight: 200, borderRadius: 12, marginTop: 16 }} />
-        <div className="rh-cc-skeleton" style={{ minHeight: 160, borderRadius: 12, marginTop: 16 }} />
       </div>
     );
   }
   if (lab.error && !lab.masterBoard.players.length) {
-    return <UiError message={lab.error} />;
+    return (
+      <UiError
+        message={lab.error}
+        retry={lab.reload}
+        backHref="/vault"
+        backLabel="← Vault Home"
+      />
+    );
   }
 
   return (
