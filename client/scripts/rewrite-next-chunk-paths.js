@@ -78,17 +78,24 @@ function encodeDynamicPath(rel) {
 }
 
 function addChunkMappings(map, rel, publicPath) {
-  map.set(`/_next/static/chunks/app/${rel}`, publicPath);
-  map.set(`/_next/static/chunks/routes/${rel}`, publicPath);
-  map.set(`/_next/static/chunks/${flatChunkName(rel)}`, publicPath);
-  map.set(`static/chunks/app/${rel}`, publicPath.replace(/^\//, ''));
+  const relVariants = [rel];
+  if (rel.startsWith('(app)/')) relVariants.push(rel.slice('(app)/'.length));
+  else relVariants.push(`(app)/${rel}`);
 
-  const encoded = encodeDynamicPath(rel);
-  if (encoded !== rel) {
-    map.set(`/_next/static/chunks/app/${encoded}`, publicPath);
-    map.set(`/_next/static/chunks/routes/${encoded}`, publicPath);
-    map.set(`static/chunks/app/${encoded}`, publicPath.replace(/^\//, ''));
+  for (const variant of relVariants) {
+    map.set(`/_next/static/chunks/app/${variant}`, publicPath);
+    map.set(`/_next/static/chunks/routes/${variant}`, publicPath);
+    map.set(`static/chunks/app/${variant}`, publicPath.replace(/^\//, ''));
+
+    const encoded = encodeDynamicPath(variant);
+    if (encoded !== variant) {
+      map.set(`/_next/static/chunks/app/${encoded}`, publicPath);
+      map.set(`/_next/static/chunks/routes/${encoded}`, publicPath);
+      map.set(`static/chunks/app/${encoded}`, publicPath.replace(/^\//, ''));
+    }
   }
+
+  map.set(`/_next/static/chunks/${flatChunkName(rel)}`, publicPath);
 }
 
 function publishVaultChunk(serverDir, sourceFile, flatName) {
@@ -219,7 +226,12 @@ function listVaultChunkFilenames(serverDir) {
 
 function vaultPublicPathForAppRel(relFromApp, vaultChunks) {
   const normalized = relFromApp.replace(/\\/g, '/').replace(/\\+$/, '');
-  for (const rel of [normalized, decodeChunkRefPath(normalized)]) {
+  const relCandidates = [
+    normalized,
+    decodeChunkRefPath(normalized),
+    normalized.startsWith('(app)/') ? normalized.slice('(app)/'.length) : `(app)/${normalized}`,
+  ];
+  for (const rel of relCandidates) {
     const flat = flatChunkName(rel);
     if (vaultChunks.has(flat)) return `/${VAULT_CHUNKS_DIR}/${flat}`;
   }
@@ -291,8 +303,26 @@ function sweepContentUnmappedAppChunkRefs(content, vaultChunks) {
     const publicPath = vaultPublicPathForMentry(`main-${_kind}-${rest}`, vaultChunks);
     return publicPath || match;
   });
+  next = next.replace(/\/_next\/static\/chunks\/([^"'\\?\s]+\.js)/g, (match, name) => {
+    const publicPath = vaultPublicPathForBareChunk(name, vaultChunks);
+    return publicPath || match;
+  });
   next = sweepContentUnmappedBareStaticChunkRefs(next, vaultChunks);
   return next;
+}
+
+function findUnrewrittenChunkRefs(content) {
+  const refs = [];
+  const patterns = [
+    /\/_next\/static\/chunks\/(?:app|routes)\/[^"'\\?\s]+/g,
+    /\/_next\/static\/chunks\/main-(?:app|entry)-[^"'\\?\s]+/g,
+    /(?:^|["'\s,[])static\/chunks\/(?:app|routes)\/[^"'\\?\s]+/g,
+    /(?:^|["'\s,[])static\/chunks\/(?!app\/|routes\/|main-app-|main-entry-)[^"'\\?\s]+\.js/g,
+  ];
+  for (const re of patterns) {
+    for (const match of content.matchAll(re)) refs.push(match[0]);
+  }
+  return refs;
 }
 
 function sweepUnmappedAppChunkRefs(serverDir) {
@@ -380,6 +410,8 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
     const raw = fs.readFileSync(file, 'utf8');
     let updated = applyReplacements(stripRscChunkRefEscapes(raw), map);
     updated = normalizeAbsoluteVaultChunkRefs(updated);
+    updated = sweepContentUnmappedAppChunkRefs(updated, listVaultChunkFilenames(serverDir));
+    updated = normalizeAbsoluteVaultChunkRefs(updated);
     if (updated !== raw) {
       fs.writeFileSync(file, updated);
       filesUpdated++;
@@ -397,22 +429,22 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
 /** Fail build if HTML/RSC payloads still reference App Router chunk paths Netlify CDN drops. */
 function assertNoUnrewrittenAppChunkRefs(serverDir) {
   const offenders = [];
-  const badPatterns = [
-    /\/_next\/static\/chunks\/(?:app|routes)\//,
-    /\/_next\/static\/chunks\/main-(?:app|entry)-/,
-    /(?:^|["'\s])static\/chunks\/(?:app|routes)\//,
-    /static\/chunks\/(?!$)/,
-  ];
+  const samples = [];
   walkFiles(serverDir, (file) => {
     const rel = path.relative(serverDir, file).replace(/\\/g, '/');
     if (!shouldAssertChunkRefs(rel)) return;
     const raw = fs.readFileSync(file, 'utf8');
-    if (badPatterns.some((re) => re.test(raw))) offenders.push(rel);
+    const refs = findUnrewrittenChunkRefs(raw);
+    if (refs.length) {
+      offenders.push(rel);
+      if (samples.length < 5) samples.push(`${rel}: ${refs[0]}`);
+    }
   });
   if (offenders.length) {
     throw new Error(
       `[rewrite-next-chunk-paths] Unrewritten App Router chunk refs in HTML/RSC — ` +
-        `${offenders.slice(0, 8).join(', ')}${offenders.length > 8 ? ` (+${offenders.length - 8} more)` : ''}`
+        `${offenders.slice(0, 8).join(', ')}${offenders.length > 8 ? ` (+${offenders.length - 8} more)` : ''}` +
+        (samples.length ? ` e.g. ${samples.join('; ')}` : '')
     );
   }
 }

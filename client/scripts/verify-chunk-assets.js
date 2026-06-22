@@ -12,6 +12,7 @@ function extractNextAssets(html) {
     let rel = match[0].replace(/^\//, '').replace(/\\+$/, '');
     if (rel.endsWith('\\')) rel = rel.slice(0, -1);
     assets.add(rel);
+    if (rel.startsWith('js/vault-chunks/')) assets.add(`/${rel}`);
   }
   return assets;
 }
