@@ -19,6 +19,7 @@ let lastWarmAt = null;
 let lastWarmError = null;
 let warmKeyCount = 0;
 let refreshTimer = null;
+const inflightBuilds = new Map();
 
 function withTimeout(promise, ms, label) {
   return Promise.race([
@@ -146,6 +147,29 @@ function scheduleAsyncWarm() {
   });
 }
 
+function startInflightBuild(cacheKey, builderFn, timeoutMs) {
+  const existing = inflightBuilds.get(cacheKey);
+  if (existing) return existing;
+
+  const buildPromise = (async () => {
+    const buildStart = Date.now();
+    try {
+      const value = await withTimeout(builderFn(), timeoutMs, cacheKey);
+      const buildMs = Date.now() - buildStart;
+      hubCache.set(cacheKey, value);
+      ready = true;
+      warmKeyCount += 1;
+      console.log(`[recruiting-hub-cache] build ${cacheKey} ${buildMs}ms hit=false`);
+      return { value, buildMs };
+    } finally {
+      inflightBuilds.delete(cacheKey);
+    }
+  })();
+
+  inflightBuilds.set(cacheKey, buildPromise);
+  return buildPromise;
+}
+
 async function serveCached(cacheKey, builderFn, options = {}) {
   const timeoutMs = options.timeoutMs ?? BUILD_TIMEOUT_MS;
   const hit = hubCache.get(cacheKey);
@@ -159,16 +183,25 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     return { status: 'ready', value: stale, hit: true, stale: true };
   }
 
+  const inflight = inflightBuilds.get(cacheKey);
+  if (inflight) {
+    try {
+      const { value, buildMs } = await withTimeout(inflight, timeoutMs, cacheKey);
+      return { status: 'ready', value, hit: false, stale: false, buildMs };
+    } catch (err) {
+      console.warn('[recruiting-hub-cache] build timeout/miss', cacheKey, err.message);
+      scheduleAsyncWarm();
+      return { status: 'building', hit: false, reason: err.message };
+    }
+  }
+
   if (warming) {
     return { status: 'building', hit: false };
   }
 
   try {
-    const value = await withTimeout(builderFn(), timeoutMs, cacheKey);
-    hubCache.set(cacheKey, value);
-    ready = true;
-    warmKeyCount += 1;
-    return { status: 'ready', value, hit: false, stale: false };
+    const { value, buildMs } = await startInflightBuild(cacheKey, builderFn, timeoutMs);
+    return { status: 'ready', value, hit: false, stale: false, buildMs };
   } catch (err) {
     console.warn('[recruiting-hub-cache] build timeout/miss', cacheKey, err.message);
     scheduleAsyncWarm();
@@ -196,7 +229,13 @@ async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = fa
     return res.status(200).json(buildingResponse({ endpoint, year, cacheKey }));
   }
 
-  const meta = hubMeta({ cacheKey, hubReady: isReady(), cacheHit: result.hit });
+  const meta = hubMeta({
+    cacheKey,
+    hubReady: isReady(),
+    cacheHit: result.hit,
+    cacheStale: result.stale ?? false,
+    ...(result.buildMs != null ? { buildMs: result.buildMs } : {}),
+  });
   if (spread) {
     return res.json({ ok: true, status: 'ready', meta, ...result.value });
   }
@@ -214,7 +253,12 @@ function scheduleBackgroundRefresh() {
 }
 
 function scheduleHubBootPipeline() {
-  const bootDelay = parseInt(process.env.HUB_BOOT_WARM_DELAY_MS || '10000', 10);
+  const bootDelay = parseInt(process.env.HUB_BOOT_WARM_DELAY_MS || '0', 10);
+  setImmediate(() => {
+    warmEliteHubCaches().catch((err) => {
+      console.warn('[recruiting-hub-cache] boot warm failed:', err.message);
+    });
+  });
   setTimeout(() => {
     const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
     const geoBackfill = process.env.HUB_BOOT_GEO_BACKFILL === 'true';
@@ -228,7 +272,7 @@ function scheduleHubBootPipeline() {
       });
   }, bootDelay);
   scheduleBackgroundRefresh();
-  console.log('[recruiting-hub] boot warm scheduled in', bootDelay, 'ms; background every', REFRESH_MS, 'ms');
+  console.log('[recruiting-hub] boot warm immediate; refresh pipeline in', bootDelay, 'ms; background every', REFRESH_MS, 'ms');
 }
 
 module.exports = {

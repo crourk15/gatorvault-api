@@ -82,6 +82,10 @@
   background: #fff7ed;
 }
 
+.rh-elite-chrome .rh-lazy-section {
+  display: block;
+}
+
 .rh-elite-chrome .rh-skeleton {
   min-height: 120px;
   border-radius: 10px;

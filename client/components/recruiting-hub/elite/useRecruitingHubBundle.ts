@@ -8,6 +8,12 @@ import {
 } from '@/lib/recruiting-hub-elite-api';
 import type { RecruitingHubBundleState } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 
+declare global {
+  interface Window {
+    __GV_HUB__?: { bundleLoadMs: number; year: number; ok: boolean };
+  }
+}
+
 /** Single /api/recruiting/hub/bundle fetch for the elite landing page. */
 export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): RecruitingHubBundleState {
   const [data, setData] = useState<RhHubBundle | null>(null);
@@ -21,8 +27,16 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
       setLoading(true);
       setError(false);
       try {
+        const t0 = performance.now();
         const bundle = await fetchRecruitingHubBundle(year);
+        const bundleLoadMs = Math.round(performance.now() - t0);
         if (cancelled) return;
+        if (typeof window !== 'undefined') {
+          window.__GV_HUB__ = { bundleLoadMs, year, ok: true };
+        }
+        if (process.env.NODE_ENV !== 'production') {
+          console.info(`[recruiting-hub] bundle loaded in ${bundleLoadMs}ms`);
+        }
         setData(bundle);
         setLoading(false);
       } catch {

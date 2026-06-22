@@ -255,7 +255,13 @@ function enrichHubPlayer(rawPlayer, ctx = {}) {
   };
 }
 
-async function loadHubDataset(options = {}) {
+const hubDatasetInflight = new Map();
+
+function classYearsCacheKey(classYears) {
+  return JSON.stringify([...classYears].sort((a, b) => a - b));
+}
+
+async function loadHubDatasetOnce(options = {}) {
   const classYears = options.classYears || DEFAULT_CLASS_YEARS;
   const rawMap = loadRawPlayerMap();
   const intelRows = intelStore.listIntel({ limit: 2000 });
@@ -332,6 +338,19 @@ async function loadHubDataset(options = {}) {
     offerLogs,
     loadedAt: new Date().toISOString(),
   };
+}
+
+async function loadHubDataset(options = {}) {
+  const classYears = options.classYears || DEFAULT_CLASS_YEARS;
+  const key = classYearsCacheKey(classYears);
+  const inflight = hubDatasetInflight.get(key);
+  if (inflight) return inflight;
+
+  const promise = loadHubDatasetOnce({ classYears }).finally(() => {
+    hubDatasetInflight.delete(key);
+  });
+  hubDatasetInflight.set(key, promise);
+  return promise;
 }
 
 function buildBattleBoardRows(enrichedPlayers) {
