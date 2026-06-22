@@ -27,6 +27,16 @@ export type RhHubClassOverview = {
 
 export type RhHubClassOverviewByYear = Record<number, RhHubClassOverview>;
 
+export type RhHubHeroPayload = {
+  year: number;
+  title: string;
+  subtitle: string;
+  classYears: number[];
+  ticker: string[];
+  classOverview: RhHubClassOverview;
+  classOverviewAll?: RhHubClassOverviewByYear;
+};
+
 export type RhHubCommit = {
   id: string;
   name: string;
@@ -265,6 +275,25 @@ export async function fetchRecruitingHubBattleBoard(year = HUB_YEAR): Promise<Rh
 
 export async function fetchRecruitingHubFootprint(year = HUB_YEAR): Promise<RhHubFootprintResponse> {
   return fetchHub<RhHubFootprintResponse>(`/api/recruiting/hub/footprint?year=${year}`);
+}
+
+/** Lightweight hero payload — one round trip before bundle. */
+export async function fetchRecruitingHubHero(year = HUB_YEAR): Promise<RhHubHeroPayload> {
+  type RawHero = RhHubHeroPayload & { ok?: boolean };
+  const raw = await snapshotFirstFetch(
+    `/api/recruiting/hub/hero?year=${year}`,
+    () => snapshotLiveFetch<RawHero>(`/api/recruiting/hub/hero?year=${year}`, HUB_FETCH_OPTS),
+    HUB_FETCH_OPTS
+  );
+  return {
+    year: raw.year ?? year,
+    title: raw.title ?? 'Recruiting Command Center',
+    subtitle: raw.subtitle ?? "UF's class, movement, and battles—one place.",
+    classYears: raw.classYears ?? [2026, 2027, 2028],
+    ticker: raw.ticker ?? [],
+    classOverview: raw.classOverview,
+    classOverviewAll: raw.classOverviewAll,
+  };
 }
 
 /** Load all elite hub sections in one round trip. */

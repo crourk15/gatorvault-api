@@ -139,6 +139,7 @@ require('./stamp-build-meta.js');
 require('./inject-cache-bust.js');
 require('./inject-vault-shell-css.js');
 require('./inject-vault-hydration-guard.js');
+require('./inject-recruiting-hub-preload.js');
 require('./inject-qa-markers.js');
 require('./inject-landing-export.js');
 require('./generate-vault-route-manifest.js');

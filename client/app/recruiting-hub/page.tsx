@@ -1,8 +1,12 @@
-'use client';
-
 import React from 'react';
-import { VaultRecruitingHubPage } from '@/components/vault/VaultRecruitingHubPage';
+import { RecruitingHubHeadLinks } from '@/components/recruiting-hub/elite/RecruitingHubHeadLinks';
+import { RecruitingHubPage } from '@/components/recruiting-hub/RecruitingHubPage';
 
 export default function RecruitingHubRoute(): React.ReactElement {
-  return <VaultRecruitingHubPage />;
+  return (
+    <>
+      <RecruitingHubHeadLinks />
+      <RecruitingHubPage />
+    </>
+  );
 }

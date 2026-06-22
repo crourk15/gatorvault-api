@@ -97,6 +97,7 @@ async function warmEliteHubCaches(options = {}) {
 
     for (const year of years) {
       jobs.push([`hub:elite:bundle:${year}`, () => elite.buildHubBundle(year), year]);
+      jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year), year]);
       jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year), year]);
       jobs.push([`hub:elite:class-overview:${year}`, () => elite.buildHubClassOverview(year), year]);
       jobs.push([`hub:elite:commits:${year}`, () => elite.buildHubCommits(year), year]);

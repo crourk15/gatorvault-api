@@ -268,6 +268,7 @@ function mountRecruitingHubRoutes(app) {
     buildHubMovementFeed,
     buildHubBattleBoard,
     buildHubFootprint,
+    buildHubHero,
     buildHubBundle,
   } = require('./recruiting-hub-elite');
 
@@ -275,6 +276,23 @@ function mountRecruitingHubRoutes(app) {
     const year = parseInt(String(req.query.year || '2027'), 10);
     return Number.isFinite(year) ? year : 2027;
   }
+
+  app.get('/api/recruiting/hub/hero', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `hub:elite:hero:${year}`;
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'hero',
+        builder: () => buildHubHero(year),
+        spread: true,
+        hubMeta,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 
   app.get('/api/recruiting/hub/bundle', async (req, res) => {
     try {

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { initGvHydrate } from '@/lib/gv-hydrate';
 
 type LazyHubSectionProps = {
   children: React.ReactNode;
@@ -8,27 +9,38 @@ type LazyHubSectionProps = {
   minHeight?: number;
   className?: string;
   testId?: string;
+  /** top-fold = idle hydrate; below-fold = IntersectionObserver (default). */
+  priority?: 'top-fold' | 'below-fold';
 };
 
-/** Below-fold hub section — mounts when near viewport. */
+/** Hub section — top-fold idle hydrate or below-fold when near viewport. */
 export function LazyHubSection({
   children,
   minHeight = 120,
   className,
   testId,
+  priority = 'below-fold',
 }: LazyHubSectionProps): React.ReactElement {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    initGvHydrate();
+    const id = testId ?? `rh-lazy-${Math.random().toString(36).slice(2, 8)}`;
+
+    if (priority === 'top-fold') {
+      window.__GV_HYDRATE__?.(id, () => setVisible(true), 'top-fold');
+      return undefined;
+    }
+
     const el = ref.current;
-    if (!el || visible) return;
+    if (!el || visible) return undefined;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) {
-          setVisible(true);
           observer.disconnect();
+          window.__GV_HYDRATE__?.(id, () => setVisible(true), 'below-fold');
         }
       },
       { rootMargin: '200px' }
@@ -36,7 +48,7 @@ export function LazyHubSection({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [visible]);
+  }, [priority, testId, visible]);
 
   if (visible) {
     return <>{children}</>;

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import './recruiting-hub.css';
-import { RecruitingHeroStrip } from '@/components/recruiting-hub/elite/RecruitingHeroStrip';
+import { RecruitingHeroHydrator, RecruitingHeroStripInline } from '@/components/recruiting-hub/elite/RecruitingHeroStrip';
 import { SigningDayTracker } from '@/components/recruiting-hub/elite/SigningDayTracker';
 import { ClassCards } from '@/components/recruiting-hub/elite/ClassCards';
 import { RecruitingClassOverview } from '@/components/recruiting-hub/elite/RecruitingClassOverview';
@@ -15,18 +15,33 @@ import { RecruitingPositionSnapshot } from '@/components/recruiting-hub/elite/Re
 import { RecruitingHubBundleProvider } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { LazyHubSection } from '@/components/recruiting-hub/elite/LazyHubSection';
 import { useRecruitingHubBundle } from '@/components/recruiting-hub/elite/useRecruitingHubBundle';
+import { initGvHydrate } from '@/lib/gv-hydrate';
+
+type Props = {
+  /** When true, SSR hero partial is rendered by the page shell — skip duplicate strip. */
+  deferHero?: boolean;
+  /** When true, skip outer rh-frame wrapper (parent shell provides chrome). */
+  embedded?: boolean;
+};
 
 /** WOW Recruiting Hub Elite — War Room vertical layout. */
-export function RecruitingHubElite(): React.ReactElement {
+export function RecruitingHubElite({ deferHero = false, embedded = false }: Props): React.ReactElement {
   const bundle = useRecruitingHubBundle();
 
-  return (
-    <RecruitingHubBundleProvider value={bundle}>
-      <div className="rh-frame rh-elite-chrome" data-testid="rh-elite-chrome">
-        <RecruitingHeroStrip />
-        <SigningDayTracker />
+  React.useEffect(() => {
+    initGvHydrate();
+  }, []);
+
+  const content = (
+    <>
+      {deferHero ? <RecruitingHeroHydrator /> : <RecruitingHeroStripInline />}
+      <SigningDayTracker />
+      <LazyHubSection priority="top-fold" testId="rh-lazy-class-cards">
         <ClassCards />
+      </LazyHubSection>
+      <LazyHubSection priority="top-fold" testId="rh-lazy-class-overview-bridge">
         <RecruitingClassOverview />
+      </LazyHubSection>
         <LazyHubSection testId="rh-lazy-heat-index">
           <TopTargetsHeatIndex />
         </LazyHubSection>
@@ -45,7 +60,18 @@ export function RecruitingHubElite(): React.ReactElement {
         <LazyHubSection testId="rh-lazy-position-snapshot">
           <RecruitingPositionSnapshot />
         </LazyHubSection>
-      </div>
+    </>
+  );
+
+  return (
+    <RecruitingHubBundleProvider value={bundle}>
+      {embedded ? (
+        content
+      ) : (
+        <div className="rh-frame rh-elite-chrome" data-testid="rh-elite-chrome">
+          {content}
+        </div>
+      )}
     </RecruitingHubBundleProvider>
   );
 }

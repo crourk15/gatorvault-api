@@ -2,7 +2,7 @@
 
 import React from 'react';
 import './recruiting-hub.css';
-import { RecruitingHeroStrip } from '@/components/recruiting-hub/elite/RecruitingHeroStrip';
+import { RecruitingHeroStripInline } from '@/components/recruiting-hub/elite/RecruitingHeroStrip';
 import { EliteCommitBoard } from '@/components/recruiting-hub/elite/EliteCommitBoard';
 
 type Props = {
@@ -13,7 +13,7 @@ export function EliteClassPage({ year }: Props): React.ReactElement {
   return (
     <div className="rh-page rh-page--elite mobile-app" data-testid={`vault-recruiting-${year}`}>
       <div className="rh-frame rh-elite-chrome">
-        <RecruitingHeroStrip />
+        <RecruitingHeroStripInline />
         <p className="rh-elite-back-link">
           <a href="/vault/recruiting">← Command Center</a>
         </p>

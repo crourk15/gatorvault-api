@@ -1,13 +1,15 @@
-'use client';
-
 import React from 'react';
-import { RecruitingHubElite } from '@/components/recruiting-hub/elite/RecruitingHubElite';
+import { RecruitingHubHeroSsr } from '@/components/recruiting-hub/elite/RecruitingHubHeroSsr';
+import { RecruitingHubCommandCenterClient } from '@/components/recruiting-hub/command-center/RecruitingHubCommandCenterClient';
 
-/** Recruiting Hub command center — War Room elite vertical chrome. */
+/** Recruiting Hub command center — SSR hero + client elite sections. */
 export function RecruitingHubCommandCenter(): React.ReactElement {
   return (
     <div className="rh-cc-page" data-testid="rh-command-center">
-      <RecruitingHubElite />
+      <div className="rh-frame rh-elite-chrome" data-testid="rh-elite-chrome">
+        <RecruitingHubHeroSsr />
+        <RecruitingHubCommandCenterClient deferHero />
+      </div>
     </div>
   );
 }

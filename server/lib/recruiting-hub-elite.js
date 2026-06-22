@@ -332,6 +332,27 @@ async function buildHubFootprint(year = 2027) {
   return hubData.buildHubFootprint(year);
 }
 
+const HERO_CLASS_YEARS = [2026, 2027, 2028];
+
+/** Lightweight hero payload — title, year tabs, summary metrics, ticker only. */
+async function buildHubHero(year = 2027) {
+  const [ticker, classOverview, classOverviewAll] = await Promise.all([
+    buildHubTicker(year),
+    buildHubClassOverview(year),
+    buildHubClassOverviewAll(),
+  ]);
+
+  return {
+    year,
+    title: 'Recruiting Command Center',
+    subtitle: "UF's class, movement, and battles—one place.",
+    classYears: HERO_CLASS_YEARS,
+    ticker,
+    classOverview,
+    classOverviewAll,
+  };
+}
+
 /** Single payload for Recruiting Hub elite landing — one cache key, one client fetch. */
 async function buildHubBundle(year = 2027) {
   const [
@@ -384,5 +405,6 @@ module.exports = {
   buildHubMovementFeed,
   buildHubBattleBoard,
   buildHubFootprint,
+  buildHubHero,
   buildHubBundle,
 };
