@@ -1214,12 +1214,22 @@ console.log('GatorVault server running on port', PORT);
   }
   try {
     const intelStore = require('./lib/recruiting-intel-store');
-    const ghost = intelStore.reconcileGhostQueuedIntel();
-    if (ghost.cleared) {
-      console.warn('[startup] cleared', ghost.cleared, 'ghost xPostQueued intel flag(s)');
-    }
+    intelStore
+      .initIntelStore()
+      .then((info) => console.log('[intel-store] ready', info))
+      .catch((err) => console.warn('[intel-store] init failed:', err.message))
+      .finally(() => {
+        try {
+          const ghost = intelStore.reconcileGhostQueuedIntel();
+          if (ghost.cleared) {
+            console.warn('[startup] cleared', ghost.cleared, 'ghost xPostQueued intel flag(s)');
+          }
+        } catch (e) {
+          console.warn('[startup] intel reconcile skipped:', e.message);
+        }
+      });
   } catch (e) {
-    console.warn('[startup] intel reconcile skipped:', e.message);
+    console.warn('[startup] intel init skipped:', e.message);
   }
   try {
     startOn3IngestScheduler();

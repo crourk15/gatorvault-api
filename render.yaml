@@ -91,6 +91,14 @@ services:
         sync: false
       - key: X_AUTOPOST_ENABLED
         value: "true"
+      - key: X_PIPELINES_ENABLED
+        value: "true"
+      - key: X_SCHEDULED_JOBS_ENABLED
+        value: "true"
+      - key: X_GM2_REWRITE_ENABLED
+        value: "true"
+      - key: X_INTEL_REWRITE_ENABLED
+        value: "true"
       - key: X_AUTOPOST_INTERVAL_MS
         value: "60000"
       - key: X_AUTOPOST_REPLY_ENABLED
@@ -173,6 +181,18 @@ services:
         value: https://gatorvault-api.onrender.com/api/ping
       - key: KEEPALIVE_HUB_URL
         value: https://gatorvault-api.onrender.com/api/recruiting/hub/class-overview?year=2027
+
+  - type: cron
+    name: gatorvault-api-beat-ingest
+    schedule: "*/10 * * * *"
+    runtime: node
+    region: oregon
+    startCommand: node server/scripts/render-beat-ingest-cron.js
+    envVars:
+      - key: NEXT_PUBLIC_API_BASE
+        value: https://gatorvault-api.onrender.com
+      - key: MONITORING_CRON_SECRET
+        sync: false
 
   - type: cron
     name: gatorvault-api-recruiting-ingest

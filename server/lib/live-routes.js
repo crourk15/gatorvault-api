@@ -180,7 +180,11 @@ function mountLiveRoutes(app) {
 
   app.post('/api/live/refresh', async (req, res) => {
     const pin = pinFromReq(req);
-    const isCron = req.headers['x-live-cron'] === process.env.LIVE_CRON_SECRET;
+    const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.INGEST_CRON_SECRET || '';
+    const isCron =
+      req.headers['x-live-cron'] === process.env.LIVE_CRON_SECRET ||
+      (cronSecret && req.headers['x-monitoring-cron'] === cronSecret) ||
+      (cronSecret && req.headers['x-ingest-secret'] === cronSecret);
     if (!isCron && !verifyAdminPin(pin)) {
       return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
     }

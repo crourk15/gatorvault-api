@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Render cron — trigger On3/Rivals ingest + hub cache refresh on schedule.
+ * Render cron — beat writer + visit intel + live dashboard refresh.
+ * Requires MONITORING_CRON_SECRET (or INGEST_CRON_SECRET) and X_BEARER_TOKEN on the web service.
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
@@ -21,10 +22,10 @@ async function postIngest(path, body = {}) {
       'Content-Type': 'application/json',
       'X-Ingest-Secret': CRON_SECRET,
       'x-monitoring-cron': CRON_SECRET,
-      'User-Agent': 'gatorvault-recruiting-ingest-cron/1.0',
+      'User-Agent': 'gatorvault-beat-ingest-cron/1.0',
     },
     body: JSON.stringify(body),
-    signal: AbortSignal.timeout(180000),
+    signal: AbortSignal.timeout(240000),
   });
   let payload = null;
   try {
@@ -41,33 +42,27 @@ async function postIngest(path, body = {}) {
 }
 
 async function main() {
-  const on3 = await postIngest('/api/recruiting/ingest', {});
-  let rivals = null;
-  if (process.env.RIVALS_PM_INGEST_ENABLED !== 'false') {
-    rivals = await postIngest('/api/recruiting/rivals-pm/ingest', {});
-  }
-  const hub = await postIngest('/api/recruiting/hub/refresh?geoBackfill=true', {});
-
-  let beat = null;
-  try {
-    beat = await postIngest('/api/recruiting/beat-writer/ingest', {});
-  } catch (err) {
-    console.warn('[recruiting-ingest-cron] beat-writer skipped:', err.message);
-  }
+  const live = await postIngest('/api/live/refresh', {});
+  const beatWriter = await postIngest('/api/recruiting/beat-writer/ingest', {});
+  const beatVisit = await postIngest('/api/recruiting/beat-visit/ingest', {});
 
   console.log(
-    '[recruiting-ingest-cron] ok',
-    JSON.stringify({
-      on3Fired: on3?.fired?.length ?? 0,
-      rivalsProcessed: rivals?.processedCount ?? null,
-      hubEnriched: hub?.enrichedPlayerCount ?? null,
-      beatProcessed: beat?.processedCount ?? beat?.processed?.length ?? null,
-      at: new Date().toISOString(),
-    })
+    '[beat-ingest-cron] ok',
+    JSON.stringify(
+      {
+        beatPosts: live?.result?.beat?.postCount ?? live?.dashboard?.beat?.postCount ?? null,
+        beatWriterProcessed: beatWriter?.processedCount ?? beatWriter?.processed?.length ?? null,
+        beatVisitProcessed: beatVisit?.processedCount ?? beatVisit?.processed?.length ?? null,
+        at: new Date().toISOString(),
+      },
+      null,
+      0
+    )
   );
 }
 
 main().catch((err) => {
-  console.error('[recruiting-ingest-cron] failed:', err.message);
+  console.error('[beat-ingest-cron] failed:', err.message);
+  if (err.payload) console.error(JSON.stringify(err.payload));
   process.exit(1);
 });

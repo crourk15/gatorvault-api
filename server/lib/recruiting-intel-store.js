@@ -9,6 +9,12 @@ const { isVisitEventType } = require('./gv-classification');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const INTEL_PATH = path.join(DATA_DIR, 'intel.json');
+const persistence = require('./recruiting-intel-persistence');
+
+/** In-memory doc — primary read path; synced to Postgres when DATABASE_URL is set. */
+let memoryDoc = null;
+let persistChain = Promise.resolve();
+let initPromise = null;
 
 function nowIso() {
   return new Date().toISOString();
@@ -27,14 +33,61 @@ function writeJson(filePath, data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
-function loadIntelDoc() {
+function loadIntelDocFromJson() {
   return readJson(INTEL_PATH, { version: 1, updatedAt: null, items: [] });
+}
+
+function queuePostgresPersist(doc) {
+  if (!persistence.isEnabled()) return;
+  const items = [...(doc.items || [])];
+  persistChain = persistChain
+    .then(() => persistence.replaceAll(items))
+    .catch((err) => console.warn('[intel-store] postgres persist failed:', err.message));
 }
 
 function saveIntelDoc(doc) {
   doc.updatedAt = nowIso();
+  memoryDoc = doc;
   writeJson(INTEL_PATH, doc);
+  queuePostgresPersist(doc);
   return doc;
+}
+
+function loadIntelDoc() {
+  if (memoryDoc) return memoryDoc;
+  memoryDoc = loadIntelDocFromJson();
+  return memoryDoc;
+}
+
+/** Boot: load Postgres intel (durable) or seed Postgres from JSON. */
+async function initIntelStore() {
+  if (initPromise) return initPromise;
+  initPromise = (async () => {
+    if (!persistence.isEnabled()) {
+      memoryDoc = loadIntelDocFromJson();
+      return { mode: 'json', count: (memoryDoc.items || []).length };
+    }
+    await persistence.ensureTable();
+    const fromDb = await persistence.loadAll();
+    if (fromDb.length > 0) {
+      memoryDoc = { version: 1, updatedAt: nowIso(), items: fromDb };
+      writeJson(INTEL_PATH, memoryDoc);
+      return { mode: 'postgres', count: fromDb.length };
+    }
+    const jsonDoc = loadIntelDocFromJson();
+    if (jsonDoc.items?.length) {
+      await persistence.replaceAll(jsonDoc.items);
+      memoryDoc = jsonDoc;
+      return { mode: 'postgres-seeded-from-json', count: jsonDoc.items.length };
+    }
+    memoryDoc = { version: 1, updatedAt: nowIso(), items: [] };
+    return { mode: 'postgres-empty', count: 0 };
+  })();
+  return initPromise;
+}
+
+async function flushIntelStore() {
+  await persistChain;
 }
 
 function inferUfRelevant(raw = {}) {
@@ -401,6 +454,9 @@ async function purgeIneligibleIntel() {
   if (removed.length) {
     doc.items = kept;
     saveIntelDoc(doc);
+    if (persistence.isEnabled()) {
+      await persistence.deleteFingerprints(removed.map((i) => i.fingerprint).filter(Boolean));
+    }
   }
   return {
     removed: removed.length,
@@ -420,6 +476,12 @@ function removeIntelMatching(predicate) {
   if (removed.length) {
     doc.items = kept;
     saveIntelDoc(doc);
+    if (persistence.isEnabled()) {
+      const fps = removed.map((i) => i.fingerprint).filter(Boolean);
+      void persistence.deleteFingerprints(fps).catch((err) =>
+        console.warn('[intel-store] postgres delete failed:', err.message)
+      );
+    }
   }
   return { removed: removed.length, kept: kept.length, removedItems: removed };
 }
@@ -446,6 +508,9 @@ module.exports = {
   INTEL_PATH,
   loadIntelDoc,
   saveIntelDoc,
+  initIntelStore,
+  flushIntelStore,
+  getIntelStoreInfo: () => persistence.getStoreInfo(),
   listIntel,
   getHistoryForPlayer,
   addIntel,
