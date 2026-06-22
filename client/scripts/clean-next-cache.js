@@ -1,17 +1,27 @@
-/** Remove stale Next build dirs (OneDrive .next races on Windows). */
+#!/usr/bin/env node
+/**
+ * Hard-delete Next.js build output before production builds.
+ * Prevents stale RSC flight refs to old app-router chunk hashes.
+ */
 const fs = require('fs');
 const path = require('path');
 
-const roots = [
-  path.join(__dirname, '..', '.next'),
-  path.join(__dirname, '..', 'out'),
-  path.join(__dirname, '..', 'node_modules', '.cache', 'gv-next'),
+const clientDir = path.join(__dirname, '..');
+const nextDir = path.join(clientDir, '.next');
+
+if (fs.existsSync(nextDir)) {
+  console.log('[clean-next-cache] Removing .next directory…');
+  fs.rmSync(nextDir, { recursive: true, force: true });
+}
+
+const extraRoots = [
+  path.join(clientDir, 'out'),
+  path.join(clientDir, 'node_modules', '.cache', 'gv-next'),
 ];
 
-for (const dir of roots) {
-  try {
-    fs.rmSync(dir, { recursive: true, force: true });
-  } catch {
-    /* ignore */
-  }
+for (const dir of extraRoots) {
+  if (!fs.existsSync(dir)) continue;
+  const rel = path.relative(clientDir, dir);
+  console.log(`[clean-next-cache] Removing ${rel}…`);
+  fs.rmSync(dir, { recursive: true, force: true });
 }
