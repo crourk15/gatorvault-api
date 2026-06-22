@@ -3405,7 +3405,7 @@
   {
     "slug": "andre-alexander",
     "name": "Andre Alexander",
-    "pos": "DL",
+    "pos": "LB",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -3481,7 +3481,7 @@
   {
     "slug": "anthony-howard-jr",
     "name": "Anthony Howard Jr.",
-    "pos": "TE",
+    "pos": "HB",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -3522,7 +3522,7 @@
   {
     "slug": "armani-strong",
     "name": "Armani Strong",
-    "pos": "ATH",
+    "pos": "WR",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -3639,7 +3639,7 @@
   {
     "slug": "brady-quinn",
     "name": "Brady Quinn",
-    "pos": "LB",
+    "pos": "QB",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -3680,7 +3680,7 @@
   {
     "slug": "braxton-rein",
     "name": "Braxton Rein",
-    "pos": "WR",
+    "pos": "TE",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -3756,7 +3756,7 @@
   {
     "slug": "bryce-willingham",
     "name": "Bryce Willingham",
-    "pos": "S",
+    "pos": "CB",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -3838,7 +3838,7 @@
   {
     "slug": "bubba-brown",
     "name": "Bubba Brown",
-    "pos": "LB",
+    "pos": "WR",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -3920,7 +3920,7 @@
   {
     "slug": "dominick-harris-payne",
     "name": "Dominick Harris-Payne",
-    "pos": "DL",
+    "pos": "CB",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -3961,7 +3961,7 @@
   {
     "slug": "gabriel-player",
     "name": "Gabriel Player",
-    "pos": "OL",
+    "pos": "LB",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -4002,7 +4002,7 @@
   {
     "slug": "izayah-vickers",
     "name": "Izayah Vickers",
-    "pos": "S",
+    "pos": "CB",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -4078,7 +4078,7 @@
   {
     "slug": "john-matthews",
     "name": "John Matthews",
-    "pos": "CB",
+    "pos": "WR",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -4195,11 +4195,11 @@
   {
     "slug": "kahmaree-crumity",
     "name": "Kahmaree Crumity",
-    "pos": "RB",
+    "pos": "CB",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
-    "stars": 4,
+    "stars": 3,
     "rating": 98,
     "natlRank": 376,
     "posRank": 17,
@@ -4318,7 +4318,7 @@
   {
     "slug": "pj-evans",
     "name": "PJ Evans",
-    "pos": "ATH",
+    "pos": "IOL",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -4359,7 +4359,7 @@
   {
     "slug": "prince-che",
     "name": "Prince Che",
-    "pos": "TE",
+    "pos": "DL",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -4400,7 +4400,7 @@
   {
     "slug": "quinton-rolle-jr",
     "name": "Quinton Rolle Jr.",
-    "pos": "QB",
+    "pos": "CB",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -4482,7 +4482,7 @@
   {
     "slug": "tristian-henderson",
     "name": "Tristian Henderson",
-    "pos": "OL",
+    "pos": "EDGE",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
@@ -4523,7 +4523,7 @@
   {
     "slug": "tristin-gaines",
     "name": "Tristin Gaines",
-    "pos": "TE",
+    "pos": "QB",
     "classYear": 2028,
     "school": "Florida HS pipeline",
     "state": "FL",
