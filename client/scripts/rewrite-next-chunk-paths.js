@@ -101,14 +101,28 @@ function publishVaultChunk(serverDir, sourceFile, flatName) {
 
 function collectAppChunks(chunksDir) {
   const collected = [];
+  const seen = new Set();
   for (const sub of ['app', 'routes']) {
     const dir = path.join(chunksDir, sub);
     if (!fs.existsSync(dir)) continue;
     walkFiles(dir, (file) => {
       if (!file.endsWith('.js')) return;
       const rel = path.relative(dir, file).replace(/\\/g, '/');
+      if (seen.has(rel)) return;
+      seen.add(rel);
       collected.push({ file, rel, flat: flatChunkName(rel) });
     });
+    // Root layout-*.js (and siblings) must be mapped — walkFiles covers these; readdir is a
+    // fallback for platforms where nested walk ordering differs from HTML/RSC chunk refs.
+    for (const name of fs.readdirSync(dir)) {
+      if (!name.endsWith('.js')) continue;
+      const file = path.join(dir, name);
+      if (!fs.statSync(file).isFile()) continue;
+      const rel = name.replace(/\\/g, '/');
+      if (seen.has(rel)) continue;
+      seen.add(rel);
+      collected.push({ file, rel, flat: flatChunkName(rel) });
+    }
   }
   return collected;
 }
@@ -164,6 +178,65 @@ function applyReplacements(content, map) {
     if (next.includes(from)) next = next.split(from).join(to);
   }
   return next;
+}
+
+function decodeChunkRefPath(rel) {
+  try {
+    return decodeURIComponent(rel);
+  } catch {
+    return rel;
+  }
+}
+
+function listVaultChunkFilenames(serverDir) {
+  const dir = path.join(serverDir, VAULT_CHUNKS_DIR);
+  const names = new Set();
+  if (!fs.existsSync(dir)) return names;
+  for (const name of fs.readdirSync(dir)) {
+    if (name.endsWith('.js')) names.add(name);
+  }
+  return names;
+}
+
+function vaultPublicPathForAppRel(relFromApp, vaultChunks) {
+  for (const rel of [relFromApp, decodeChunkRefPath(relFromApp)]) {
+    const flat = flatChunkName(rel);
+    if (vaultChunks.has(flat)) return `/${VAULT_CHUNKS_DIR}/${flat}`;
+  }
+  return null;
+}
+
+/** Regex fallback: rewrite any remaining app/routes chunk refs when vault chunk exists. */
+function sweepContentUnmappedAppChunkRefs(content, vaultChunks) {
+  let next = content;
+  next = next.replace(/\/_next\/static\/chunks\/(app|routes)\/([^"'\\?\s]+)/g, (match, _sub, rel) => {
+    const publicPath = vaultPublicPathForAppRel(rel, vaultChunks);
+    return publicPath || match;
+  });
+  next = next.replace(/(^|["'\s])static\/chunks\/(app|routes)\/([^"'\\?\s]+)/g, (match, prefix, _sub, rel) => {
+    const publicPath = vaultPublicPathForAppRel(rel, vaultChunks);
+    if (!publicPath) return match;
+    return `${prefix}${publicPath}`;
+  });
+  return next;
+}
+
+function sweepUnmappedAppChunkRefs(serverDir) {
+  const vaultChunks = listVaultChunkFilenames(serverDir);
+  let filesUpdated = 0;
+
+  walkFiles(serverDir, (file) => {
+    if (!/\.(html|txt|js|json)$/.test(file)) return;
+    const raw = fs.readFileSync(file, 'utf8');
+    let updated = sweepContentUnmappedAppChunkRefs(raw, vaultChunks);
+    updated = normalizeAbsoluteVaultChunkRefs(updated);
+    if (updated !== raw) {
+      fs.writeFileSync(file, updated);
+      filesUpdated++;
+    }
+  });
+
+  return { filesUpdated };
 }
 
 /** Webpack publicPath is /_next/ — RSC chunk refs must be root-absolute (/js/vault-chunks/). */
@@ -238,6 +311,9 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
     }
   });
 
+  const sweep = sweepUnmappedAppChunkRefs(serverDir);
+  filesUpdated += sweep.filesUpdated;
+
   assertAbsoluteVaultChunkRefs(serverDir);
 
   return { filesUpdated, flatChunks: map.size, vaultChunksDir: VAULT_CHUNKS_DIR };
@@ -270,6 +346,7 @@ module.exports = {
   flatChunkName,
   VAULT_CHUNKS_DIR,
   assertNoUnrewrittenAppChunkRefs,
+  sweepUnmappedAppChunkRefs,
   normalizeAbsoluteVaultChunkRefs,
   assertAbsoluteVaultChunkRefs,
 };

@@ -7,7 +7,11 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const vaultMap = require('../lib/routes-vault.cjs');
 const { verifyChunkAssets } = require('./verify-chunk-assets');
-const { rewriteNextChunkPathsForNetlify, assertNoUnrewrittenAppChunkRefs } = require('./rewrite-next-chunk-paths');
+const {
+  rewriteNextChunkPathsForNetlify,
+  assertNoUnrewrittenAppChunkRefs,
+  sweepUnmappedAppChunkRefs,
+} = require('./rewrite-next-chunk-paths');
 
 const outDir = path.join(__dirname, '..', 'out');
 const serverDir = path.join(__dirname, '..', '..', 'server');
@@ -143,6 +147,10 @@ require('./inject-recruiting-hub-preload.js');
 require('./inject-qa-markers.js');
 require('./inject-landing-export.js');
 require('./generate-vault-route-manifest.js');
+const resweep = sweepUnmappedAppChunkRefs(serverDir);
+if (resweep.filesUpdated) {
+  console.log(`[netlify] Re-swept ${resweep.filesUpdated} files for unmapped App Router chunk refs`);
+}
 assertNoUnrewrittenAppChunkRefs(serverDir);
 verifyExports();
 verifyChunks();
