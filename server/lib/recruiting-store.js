@@ -102,6 +102,11 @@ function isTestPlayer(p) {
 
 const { isBlockedRecruit: isBlockedPlayer } = require('./recruiting-blocked-players');
 
+function isHubCommittedStatus(p) {
+  if (!p) return false;
+  return String(p.status || '').toLowerCase() === 'committed';
+}
+
 function isHubFloridaCommitStatus(p) {
   if (!p) return false;
   const status = String(p.status || '').toLowerCase();
@@ -113,12 +118,9 @@ function isHubFloridaCommitStatus(p) {
 }
 
 function isFloridaCommit(p) {
-  if (!isHubFloridaCommitStatus(p)) return false;
-  if (p.protected === true) return true;
-  // Live Supabase store is source of truth — all UF commits in DB count for hub/board.
-  if (initSupabase()) return true;
-  const { isVerifiedHubCommit } = require('./recruiting-verified-commits');
-  return isVerifiedHubCommit(p);
+  if (!p) return false;
+  if (p.protected === true) return isHubFloridaCommitStatus(p);
+  return isHubCommittedStatus(p);
 }
 
 function sortHubCommits(players) {
@@ -133,7 +135,11 @@ function filterHubCommitPlayers(players, classYear) {
   const year = parseInt(classYear, 10);
   return sortHubCommits(
     (players || []).filter(
-      (p) => !isTestPlayer(p) && !isBlockedPlayer(p) && Number(p.classYear) === year && isHubFloridaCommitStatus(p)
+      (p) =>
+        !isTestPlayer(p) &&
+        !isBlockedPlayer(p) &&
+        Number(p.classYear) === year &&
+        isHubCommittedStatus(p)
     )
   );
 }
@@ -147,8 +153,7 @@ async function queryHubCommitsFromSupabase(classYear) {
     .from('players')
     .select('*')
     .eq('class_year', year)
-    .in('status', ['committed', 'commit'])
-    .ilike('committed_to', 'florida')
+    .eq('status', 'committed')
     .order('natl_rank', { ascending: true, nullsFirst: false });
 
   if (error) {
@@ -175,8 +180,7 @@ async function queryHubCommitsFromDatabase(classYear) {
       `SELECT *
        FROM players
        WHERE class_year = $1
-         AND lower(status) IN ('committed', 'commit')
-         AND lower(committed_to) = 'florida'
+         AND lower(status) = 'committed'
        ORDER BY natl_rank NULLS LAST`,
       [year]
     );
@@ -198,13 +202,7 @@ async function getHubCommits(classYear) {
   if (fromDatabase) return fromDatabase;
 
   const players = await getAllPlayers();
-  return players
-    .filter((p) => Number(p.classYear) === year && isFloridaCommit(p))
-    .sort((a, b) => {
-      const ra = a.natlRank ?? a.natl ?? 9999;
-      const rb = b.natlRank ?? b.natl ?? 9999;
-      return ra - rb;
-    });
+  return filterHubCommitPlayers(players, year);
 }
 
 function isCommittedAnywhere(p) {
@@ -879,9 +877,9 @@ async function getBoard(classYear) {
   const { filterAllowlistedTargets } = require('./recruiting-target-allowlist');
   const players = await getAllPlayers();
   const year = parseInt(classYear, 10);
-  const commits = players.filter((p) => Number(p.classYear) === year && isFloridaCommit(p));
+  const commits = await getHubCommits(year);
   const rawTargets = players.filter(
-    (p) => Number(p.classYear) === year && p.category === 'target' && !isFloridaCommit(p)
+    (p) => Number(p.classYear) === year && p.category === 'target' && !isHubCommittedStatus(p)
   );
   const targets = filterAllowlistedTargets(rawTargets, year);
   const rankings = (await getRankings()).find((r) => Number(r.classYear) === year) || null;

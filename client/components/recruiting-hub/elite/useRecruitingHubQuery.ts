@@ -1,12 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ApiFetchError } from '@/lib/api-fetch';
 
-const POLL_MS = 3000;
-const MAX_POLL_MS = 180_000;
-
-/** Hub query with warm-up polling — keeps skeleton visible until data loads. */
+/** Hub query — single fast fetch, fail immediately on error. */
 export function useRecruitingHubQuery<T>(fetcher: () => Promise<T>): {
   data: T | null;
   loading: boolean;
@@ -18,11 +14,8 @@ export function useRecruitingHubQuery<T>(fetcher: () => Promise<T>): {
 
   useEffect(() => {
     let cancelled = false;
-    let pollTimer: ReturnType<typeof setTimeout> | null = null;
-    const started = Date.now();
 
-    async function runAttempt(): Promise<void> {
-      if (cancelled) return;
+    async function run(): Promise<void> {
       setLoading(true);
       setError(false);
       try {
@@ -30,27 +23,16 @@ export function useRecruitingHubQuery<T>(fetcher: () => Promise<T>): {
         if (cancelled) return;
         setData(result);
         setLoading(false);
-      } catch (err) {
+      } catch {
         if (cancelled) return;
-        const warming =
-          err instanceof ApiFetchError &&
-          (err.unavailable === true || err.status === 503 || err.timedOut === true);
-        const elapsed = Date.now() - started;
-        if (warming && elapsed < MAX_POLL_MS) {
-          pollTimer = setTimeout(() => {
-            void runAttempt();
-          }, POLL_MS);
-          return;
-        }
         setError(true);
         setLoading(false);
       }
     }
 
-    void runAttempt();
+    void run();
     return () => {
       cancelled = true;
-      if (pollTimer) clearTimeout(pollTimer);
     };
   }, [fetcher]);
 

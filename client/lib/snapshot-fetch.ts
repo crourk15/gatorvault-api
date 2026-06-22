@@ -52,7 +52,6 @@ export function snapshotLiveFetch<T>(apiPath: string, init?: ApiFetchInit): Prom
 }
 
 export const DEFAULT_SNAPSHOT_FETCH_OPTS = {
-  retries: 3,
-  retryDelayMs: 2000,
-  timeoutMs: 25_000,
+  retries: 0,
+  timeoutMs: 5_000,
 } as const satisfies ApiFetchInit;

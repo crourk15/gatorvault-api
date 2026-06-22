@@ -1,14 +1,14 @@
 /**
  * Same-origin API fetch — never exposes external API hostnames in the UI.
- * Retries 502/503 cold-start failures with QA-matched backoff.
+ * Single fast attempt; API is stable in production.
  */
 import { getApiBase } from './big-board-api';
 
-/** Per-attempt timeout — matches QA_FETCH_TIMEOUT_MS (25s). */
-export const API_FETCH_TIMEOUT_MS = 25_000;
-/** Retry count — matches QA_LIVE_DASHBOARD_RETRIES (4 attempts total). */
-export const API_FETCH_RETRIES = 3;
-/** Base delay between retries — matches QA_LIVE_DASHBOARD_RETRY_MS (3s). */
+/** Per-attempt timeout — fail fast so pages don't hang on cold errors. */
+export const API_FETCH_TIMEOUT_MS = 5_000;
+/** No automatic retries — one fetch per request. */
+export const API_FETCH_RETRIES = 0;
+/** Unused when retries is 0; kept for explicit overrides. */
 export const API_FETCH_RETRY_MS = 3_000;
 export const API_FETCH_RETRY_STATUSES = new Set([502, 503, 504, 429]);
 

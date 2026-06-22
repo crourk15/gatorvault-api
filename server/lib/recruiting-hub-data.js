@@ -286,13 +286,16 @@ async function loadHubDataset(options = {}) {
   }
 
   for (const year of classYears) {
-    const board = await store.getBoard(year);
-    const enriched = enrichBoard(board, false);
+    const commits = await store.getHubCommits(year);
+    const { enrichBoard } = require('./recruiting-board-enrich');
+    const enriched = enrichBoard({ classYear: year, commits, targets: [], rankings: null }, false);
     for (const p of enriched.commits || []) {
       if (!p.slug) continue;
       addPlayer(p, { classYear: p.classYear || year, isCommit: true, isTarget: false });
     }
-    for (const p of enriched.targets || []) {
+    const board = await store.getBoard(year);
+    const enrichedBoard = enrichBoard(board, false);
+    for (const p of enrichedBoard.targets || []) {
       if (!p.slug) continue;
       addPlayer(p, { classYear: p.classYear || year, isCommit: false, isTarget: true });
     }
