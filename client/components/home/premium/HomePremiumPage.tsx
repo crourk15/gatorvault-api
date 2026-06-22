@@ -15,9 +15,10 @@ import { useVaultDataReload } from '@/lib/vault-navigation';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { HomeCommandCenter } from '@/components/home/premium/command/HomeCommandCenter';
 import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
+import { fetchFutureCastHome, type FutureCastHomeResponse } from '@/lib/futurecast-home-api';
 import {
   buildBeatPosts,
-  buildFutureCastTargets,
+  buildFutureCastTargetsFromHome,
   buildGameDayView,
   buildHeroTickerItems,
   mapClassMetricsToHomeView,
@@ -43,6 +44,7 @@ export function HomePremiumPage(): React.ReactElement {
   const [classMetrics, setClassMetrics] = useState<Awaited<ReturnType<typeof fetchClassMetrics>> | null>(
     null
   );
+  const [futureCastHome, setFutureCastHome] = useState<FutureCastHomeResponse | null>(null);
   const [beatItems, setBeatItems] = useState<LivePanelProps['items']>([]);
   const [loading, setLoading] = useState(true);
 
@@ -51,15 +53,17 @@ export function HomePremiumPage(): React.ReactElement {
     try {
       const fetchHome = () =>
         fetchWithWarmPoll(() => fetchHomeBundle(!isInitial), { maxAttempts: 8, delayMs: 2_500 });
-      const [home, recruitingBoard, live, metrics] = await Promise.all([
+      const [home, recruitingBoard, live, metrics, fcHome] = await Promise.all([
         fetchHome(),
         fetchWithWarmPoll(() => fetchRecruitingBoard(2027), { maxAttempts: 6 }).catch(() => null),
         fetchWithWarmPoll(() => fetchLiveHubBundle(!isInitial), { maxAttempts: 6 }).catch(() => null),
         fetchWithWarmPoll(() => fetchClassMetrics(), { maxAttempts: 6 }).catch(() => null),
+        fetchWithWarmPoll(() => fetchFutureCastHome(), { maxAttempts: 6 }).catch(() => null),
       ]);
       setBundle(home);
       setBoard(recruitingBoard);
       setClassMetrics(metrics);
+      setFutureCastHome(fcHome);
       const highlights = filterExcludedPortalClassItems(
         live?.panels.beatWriterHighlights.filter((item) => item.text?.trim()) ?? [],
         (item) => item.text,
@@ -97,8 +101,8 @@ export function HomePremiumPage(): React.ReactElement {
   );
 
   const futureCastTargets = useMemo(
-    () => buildFutureCastTargets(bundle.movement, board),
-    [bundle.movement, board]
+    () => buildFutureCastTargetsFromHome(futureCastHome, bundle.movement, board),
+    [futureCastHome, bundle.movement, board]
   );
 
   const beatPosts = useMemo(() => buildBeatPosts(beatItems), [beatItems]);

@@ -2,6 +2,8 @@ import type { HomeBundle } from '@/lib/vault-home-api';
 import type { RecruitingSnapshot } from '@/lib/vault-home-api';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
 import type { RecruitingBoardResponse, RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
+import type { FutureCastHomeResponse } from '@/lib/futurecast-home-api';
+import type { FeedPrediction } from '@/lib/predictions-api';
 import type { LivePanelProps } from '@/lib/gatornation-live-types';
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
 
@@ -360,6 +362,61 @@ export function buildFutureCastTargets(
     });
 
   return fromBoard.length ? fromBoard : fromMovement;
+}
+
+function ufPctFromPrediction(p: FeedPrediction): number {
+  if (p.ufProbability != null) {
+    const raw = p.ufProbability;
+    return Math.min(100, Math.max(0, Math.round(raw <= 1 ? raw * 100 : raw)));
+  }
+  if (p.confidence != null) {
+    const raw = p.confidence;
+    return Math.min(100, Math.max(0, Math.round(raw <= 1 ? raw * 100 : raw)));
+  }
+  if (p.ufFitScore != null) {
+    return Math.min(100, Math.max(0, Math.round(p.ufFitScore * 100)));
+  }
+  return 0;
+}
+
+function mapPredictionToTarget(p: FeedPrediction, idx: number): HomeFutureCastTargetView {
+  const ufPctNum = ufPctFromPrediction(p);
+  const delta = p.delta ?? 0;
+  return {
+    id: p.playerSlug || p.playerId || p.id || String(idx),
+    name: p.fullName,
+    position: p.position || '—',
+    ufPercent: `${ufPctNum}%`,
+    ufPctNum,
+    tag: futureCastTag(ufPctNum),
+    movement: trendFromDelta(delta),
+  };
+}
+
+/** Prefer Postgres FutureCast home API; fall back to staff movement + board. */
+export function buildFutureCastTargetsFromHome(
+  home: FutureCastHomeResponse | null,
+  movement: StaffDashboardResponse | null,
+  board: RecruitingBoardResponse | null
+): HomeFutureCastTargetView[] {
+  const candidates = [
+    ...(home?.topTargets ?? []),
+    ...(home?.trendingUp ?? []),
+    ...(home?.trendingDown ?? []),
+  ];
+  const seen = new Set<string>();
+  const fromHome: HomeFutureCastTargetView[] = [];
+  for (const row of candidates) {
+    const id = row.playerSlug || row.playerId || row.id;
+    if (!id || seen.has(id)) continue;
+    const mapped = mapPredictionToTarget(row, fromHome.length);
+    if (mapped.ufPctNum <= 0) continue;
+    seen.add(id);
+    fromHome.push(mapped);
+    if (fromHome.length >= 6) break;
+  }
+  if (fromHome.length >= 1) return fromHome;
+  return buildFutureCastTargets(movement, board);
 }
 
 export function buildBeatPosts(items: LivePanelProps['items']): HomeBeatPostView[] {

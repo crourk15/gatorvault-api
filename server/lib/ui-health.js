@@ -81,11 +81,10 @@ function buildUiHealthReport(options = {}) {
 
   const staleThresholdMs = parseInt(process.env.UI_HEALTH_STALE_MS || String(30 * 60 * 1000), 10);
   const issues = [];
-  if (!hub.ready) issues.push('hub_cache_not_ready');
+  if (!hub.ready && hub.status !== 'ready') issues.push('hub_cache_not_ready');
   if (intelAgeMs != null && intelAgeMs > staleThresholdMs * 4) issues.push('intel_stale');
   if (podcastAgeMs != null && podcastAgeMs > staleThresholdMs * 2) issues.push('podcasts_stale');
-  if (caches.classSnapshot.status === 'miss') issues.push('class_metrics_miss');
-  if (caches.heatIndex.status === 'miss') issues.push('heat_index_miss');
+  // Per-key cache misses are informational only — Render may serve health from a cold worker.
 
   return {
     ok: issues.length === 0,
