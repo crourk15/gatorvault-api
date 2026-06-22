@@ -8,11 +8,13 @@ function createMemoryCache(defaultTtlMs = 60_000) {
   function get(key) {
     const hit = store.get(key);
     if (!hit) return null;
-    if (hit.expires <= Date.now()) {
-      store.delete(key);
-      return null;
-    }
+    if (hit.expires <= Date.now()) return null;
     return hit.value;
+  }
+
+  /** Last cached value even after TTL — for stale-while-revalidate. */
+  function getStale(key) {
+    return store.get(key)?.value ?? null;
   }
 
   function set(key, value, ttlMs = defaultTtlMs) {
@@ -35,7 +37,7 @@ function createMemoryCache(defaultTtlMs = 60_000) {
     store.clear();
   }
 
-  return { get, set, wrap, remove, clear };
+  return { get, getStale, set, wrap, remove, clear };
 }
 
 module.exports = { createMemoryCache };

@@ -145,10 +145,30 @@ function scheduleAsyncWarm() {
   });
 }
 
+function refreshCacheKey(cacheKey, builderFn) {
+  if (warming) return;
+  setImmediate(() => {
+    withTimeout(builderFn(), BUILD_TIMEOUT_MS, cacheKey)
+      .then((value) => {
+        hubCache.set(cacheKey, value);
+        ready = true;
+      })
+      .catch((err) => {
+        console.warn('[recruiting-hub-cache] background refresh failed', cacheKey, err.message);
+      });
+  });
+}
+
 async function serveCached(cacheKey, builderFn) {
   const hit = hubCache.get(cacheKey);
   if (hit != null) {
-    return { status: 'ready', value: hit, hit: true };
+    return { status: 'ready', value: hit, hit: true, stale: false };
+  }
+
+  const stale = hubCache.getStale(cacheKey);
+  if (stale != null) {
+    refreshCacheKey(cacheKey, builderFn);
+    return { status: 'ready', value: stale, hit: true, stale: true };
   }
 
   if (warming) {
@@ -160,7 +180,7 @@ async function serveCached(cacheKey, builderFn) {
     hubCache.set(cacheKey, value);
     ready = true;
     warmKeyCount += 1;
-    return { status: 'ready', value, hit: false };
+    return { status: 'ready', value, hit: false, stale: false };
   } catch (err) {
     console.warn('[recruiting-hub-cache] build timeout/miss', cacheKey, err.message);
     scheduleAsyncWarm();

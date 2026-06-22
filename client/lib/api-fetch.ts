@@ -8,6 +8,8 @@ import { getApiBase } from './big-board-api';
 export const API_FETCH_TIMEOUT_MS = 5_000;
 /** No automatic retries — one fetch per request. */
 export const API_FETCH_RETRIES = 0;
+/** DevTools probe: `window.__GV_FETCH__` on the live site should match this profile. */
+export const API_FETCH_PROFILE = 'fast-v1' as const;
 /** Unused when retries is 0; kept for explicit overrides. */
 export const API_FETCH_RETRY_MS = 3_000;
 export const API_FETCH_RETRY_STATUSES = new Set([502, 503, 504, 429]);
@@ -17,6 +19,20 @@ export type ApiFetchInit = RequestInit & {
   retries?: number;
   retryDelayMs?: number;
 };
+
+declare global {
+  interface Window {
+    __GV_FETCH__?: { profile: string; timeoutMs: number; retries: number };
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.__GV_FETCH__ = {
+    profile: API_FETCH_PROFILE,
+    timeoutMs: API_FETCH_TIMEOUT_MS,
+    retries: API_FETCH_RETRIES,
+  };
+}
 
 export class ApiFetchError extends Error {
   readonly status?: number;
