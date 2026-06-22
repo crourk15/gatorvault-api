@@ -22,13 +22,13 @@ export function userFacingLoadError(err: unknown, fallback = 'Could not load dat
   return err instanceof Error ? err.message : fallback;
 }
 
-/** Poll while Render cold-starts — avoids hard error on first vault visit after idle. */
+/** Poll while Render cold-starts — premium tier waits longer before showing errors. */
 export async function fetchWithWarmPoll<T>(
   fn: () => Promise<T>,
   opts?: { maxAttempts?: number; delayMs?: number }
 ): Promise<T> {
-  const maxAttempts = opts?.maxAttempts ?? 6;
-  const delayMs = opts?.delayMs ?? 2_000;
+  const maxAttempts = opts?.maxAttempts ?? 10;
+  const delayMs = opts?.delayMs ?? 2_500;
   let lastErr: unknown;
   for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
     try {

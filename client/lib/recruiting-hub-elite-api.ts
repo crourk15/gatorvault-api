@@ -198,7 +198,7 @@ export type RhHubBundle = {
 const HUB_YEAR = ACTIVE_RECRUITING_CLASS_YEAR;
 const HUB_FETCH_OPTS = DEFAULT_SNAPSHOT_FETCH_OPTS;
 /** Bundle builds more on cold start — poll while hub warms. */
-export const HUB_BUNDLE_FETCH_OPTS = { retries: 2, timeoutMs: 12_000, retryDelayMs: 2_000 } as const;
+export const HUB_BUNDLE_FETCH_OPTS = { retries: 3, timeoutMs: 25_000, retryDelayMs: 2_500 } as const;
 
 function fetchHubLive<T>(path: string): Promise<T> {
   return snapshotLiveFetch<T>(path, HUB_FETCH_OPTS);

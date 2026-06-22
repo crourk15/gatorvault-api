@@ -149,6 +149,7 @@ require('./inject-vault-hydration-guard.js');
 require('./inject-recruiting-hub-preload.js');
 require('./inject-qa-markers.js');
 require('./inject-landing-export.js');
+require('./sync-next-build-id-all.js');
 require('./generate-vault-route-manifest.js');
 const resweep = sweepUnmappedAppChunkRefs(serverDir);
 if (resweep.filesUpdated) {

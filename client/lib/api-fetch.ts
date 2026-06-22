@@ -4,13 +4,13 @@
  */
 import { getApiBase } from './big-board-api';
 
-/** Per-attempt timeout — Render cold starts can exceed 5s after idle. */
-export const API_FETCH_TIMEOUT_MS = 12_000;
+/** Per-attempt timeout — stay under Netlify's ~26s proxy limit while allowing Render wake. */
+export const API_FETCH_TIMEOUT_MS = 25_000;
 /** Retry transient 502/503/504 and timeouts while API wakes. */
-export const API_FETCH_RETRIES = 2;
+export const API_FETCH_RETRIES = 3;
 /** DevTools probe: `window.__GV_FETCH__` on the live site should match this profile. */
-export const API_FETCH_PROFILE = 'warm-v2-retry' as const;
-export const API_FETCH_RETRY_MS = 2_000;
+export const API_FETCH_PROFILE = 'warm-v3-premium' as const;
+export const API_FETCH_RETRY_MS = 2_500;
 export const API_FETCH_RETRY_STATUSES = new Set([502, 503, 504, 429]);
 
 export type ApiFetchInit = RequestInit & {

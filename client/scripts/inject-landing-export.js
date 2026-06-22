@@ -134,4 +134,9 @@ function injectLandingExport() {
 
 injectLandingExport();
 
-module.exports = { injectLandingExport, findHomeLayoutChunkHref, readNextBuildId };
+module.exports = {
+  injectLandingExport,
+  findHomeLayoutChunkHref,
+  readNextBuildId,
+  syncBuildIdInHtml,
+};

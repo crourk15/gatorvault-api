@@ -10,12 +10,17 @@ const serverDir = path.join(__dirname, '..', '..', 'server');
 
 function readBuildId() {
   const manifestPath = path.join(serverDir, 'build-manifest.json');
-  if (!fs.existsSync(manifestPath)) return `t${Date.now().toString(36)}`;
-  try {
-    return JSON.parse(fs.readFileSync(manifestPath, 'utf8')).buildId || `t${Date.now().toString(36)}`;
-  } catch {
-    return `t${Date.now().toString(36)}`;
+  if (fs.existsSync(manifestPath)) {
+    try {
+      const id = JSON.parse(fs.readFileSync(manifestPath, 'utf8')).buildId;
+      if (id) return id;
+    } catch {
+      /* fall through */
+    }
   }
+  const fromNext = require('./inject-landing-export.js').readNextBuildId();
+  if (fromNext) return fromNext;
+  return `t${Date.now().toString(36)}`;
 }
 
 function cacheBustScript(buildId) {
@@ -25,7 +30,12 @@ function cacheBustScript(buildId) {
     `var p=localStorage.getItem(k);localStorage.setItem(k,b);` +
     `if("serviceWorker"in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister()})})}` +
     `if("caches"in window){caches.keys().then(function(keys){keys.forEach(function(n){caches.delete(n)})})}` +
-    `if(p&&p!==b&&!/[?&]gv-cache-reload=1/.test(location.search)){var u=new URL(location.href);u.searchParams.set("gv-cache-reload","1");location.replace(u.toString())}` +
+    `if(p&&p!==b&&!/[?&]gv-cache-reload=1/.test(location.search)&&!sessionStorage.getItem("gv-cache-reloaded")){` +
+    `sessionStorage.setItem("gv-cache-reloaded","1");` +
+    `var reload=function(){var u=new URL(location.href);u.searchParams.set("gv-cache-reload","1");location.replace(u.toString())};` +
+    `if(document.getElementById("gv-vault-root")||document.querySelector(".home-wow-hero,.gv-landing-hero")){` +
+    `requestAnimationFrame(function(){setTimeout(reload,120)})}else{reload()}` +
+    `}` +
     `}catch(e){}})();</script>`
   );
 }

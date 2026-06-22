@@ -12,6 +12,7 @@ import { fetchLiveHubBundle } from '@/lib/gatornation-live-api';
 import type { LivePanelProps } from '@/lib/gatornation-live-types';
 import { filterExcludedPortalClassItems } from '@/lib/portal-class-filter';
 import { useVaultDataReload } from '@/lib/vault-navigation';
+import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { HomeCommandCenter } from '@/components/home/premium/command/HomeCommandCenter';
 import {
   buildBeatPosts,
@@ -44,10 +45,12 @@ export function HomePremiumPage(): React.ReactElement {
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) setLoading(true);
     try {
+      const fetchHome = () =>
+        fetchWithWarmPoll(() => fetchHomeBundle(!isInitial), { maxAttempts: 8, delayMs: 2_500 });
       const [home, recruitingBoard, live] = await Promise.all([
-        fetchHomeBundle(!isInitial),
-        fetchRecruitingBoard(2027).catch(() => null),
-        fetchLiveHubBundle(!isInitial).catch(() => null),
+        fetchHome(),
+        fetchWithWarmPoll(() => fetchRecruitingBoard(2027), { maxAttempts: 6 }).catch(() => null),
+        fetchWithWarmPoll(() => fetchLiveHubBundle(!isInitial), { maxAttempts: 6 }).catch(() => null),
       ]);
       setBundle(home);
       setBoard(recruitingBoard);

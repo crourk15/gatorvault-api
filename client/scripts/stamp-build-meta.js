@@ -22,13 +22,18 @@ function gitShort(commit) {
 }
 
 const commit = gitCommit();
-const buildId = gitShort(commit) || `t${Date.now().toString(36)}`;
+const { readNextBuildId } = require('./inject-landing-export.js');
+const nextBuildId = readNextBuildId();
+const gitShortId = gitShort(commit) || `t${Date.now().toString(36)}`;
+/** Single cache-bust id: git short + Next build folder (matches inject-cache-bust). */
+const buildId = nextBuildId ? `${gitShortId}-${nextBuildId.slice(0, 8)}` : gitShortId;
 const builtAt = new Date().toISOString();
 
 const manifest = {
   version: 1,
   buildId,
   commit,
+  nextBuildId: nextBuildId || null,
   builtAt,
   site: 'gatorvaultinsider.com',
   pipeline: 'netlify',

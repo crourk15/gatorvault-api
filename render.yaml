@@ -10,7 +10,7 @@ services:
   - type: web
     name: gatorvault-api
     runtime: node
-    plan: free
+    plan: starter
     region: oregon
     rootDir: server
     buildCommand: npm install
@@ -170,7 +170,7 @@ services:
 
   - type: cron
     name: gatorvault-api-keepalive
-    schedule: "*/5 * * * *"
+    schedule: "*/2 * * * *"
     runtime: node
     region: oregon
     startCommand: node server/scripts/render-keepalive-ping.js

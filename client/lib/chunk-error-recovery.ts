@@ -1,5 +1,5 @@
 const RETRY_PREFIX = 'gv-chunk-retry:';
-const MAX_CHUNK_RETRIES = 2;
+const MAX_CHUNK_RETRIES = 3;
 
 /** True when a failed script/chunk load likely caused the error. */
 export function isChunkLoadError(err: unknown): boolean {

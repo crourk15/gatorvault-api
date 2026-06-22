@@ -7,6 +7,7 @@ import { GatorVaultWordmark } from '@/components/brand/GatorVaultWordmark';
 import { VaultNavLink } from '@/components/vault/VaultNavLink';
 import { useVaultNavigation } from '@/components/vault/VaultNavigationProvider';
 import { warmVaultApi } from '@/lib/vault-api-warmup';
+import { recoverFromChunkError, isChunkLoadError } from '@/lib/chunk-error-recovery';
 import { MobileBackToTop } from '@/components/vault/MobileBackToTop';
 import { AppMenuProvider } from '@/components/shell/AppMenuContext';
 import { AppMenuDrawer } from '@/components/shell/AppMenuDrawer';
@@ -126,6 +127,17 @@ function VaultShellInner({ children }: { children: React.ReactNode }): React.Rea
 
   useEffect(() => {
     warmVaultApi();
+  }, []);
+
+  useEffect(() => {
+    const onError = (event: ErrorEvent): void => {
+      const msg = String(event.message || '');
+      if (isChunkLoadError(msg) || /vault-chunks|_next\/static/i.test(String(event.filename || ''))) {
+        recoverFromChunkError();
+      }
+    };
+    window.addEventListener('error', onError);
+    return () => window.removeEventListener('error', onError);
   }, []);
 
   useEffect(() => {

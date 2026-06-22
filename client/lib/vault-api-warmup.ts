@@ -13,7 +13,8 @@ export function warmVaultApi(): void {
     void apiFetch(path, { timeoutMs: 15_000, retries: 2, retryDelayMs: 2_000 }).catch(() => {});
   };
 
-  // Immediate wake — do not defer to idle; page fetches can start in parallel.
+  // Immediate wake — health/ping first; hub ticker primes recruiting cache.
+  ping('/api/ping');
   ping('/api/health');
   ping('/api/recruiting/hub/ticker?year=2027');
 
