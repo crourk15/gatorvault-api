@@ -206,11 +206,11 @@ function main() {
   console.log('[validate-intel-store] intel items:', (intelDoc.items || []).length);
   console.log('[validate-intel-store] 2027 verified UF commits:', uf2027);
 
-  if (uf2027 !== 3) {
+  if (uf2027 !== 4) {
     errors.push({
       file: 'players.json',
       reason: 'wrong_2027_commit_count',
-      detail: `expected 3, got ${uf2027}`,
+      detail: `expected 4, got ${uf2027}`,
     });
   }
 

@@ -3682,5 +3682,43 @@
       "recruiting_notes": "UF Commit No. 23 — locked at 100% FutureCast probability.",
       "discovery_score": null
     }
+  },
+  {
+    "id": null,
+    "full_name": "Aaron McWilliams",
+    "slug": "aaron-mcwilliams",
+    "class_year": 2027,
+    "position": "K",
+    "status": "COMMITTED",
+    "lifecycle": "commit",
+    "height": 71,
+    "weight": 185,
+    "hometown": "Sharpsburg",
+    "state": "GA",
+    "high_school": "East Coweta",
+    "stars": 0,
+    "composite_rating": null,
+    "ranking_national": null,
+    "ranking_position": null,
+    "ranking_state": null,
+    "committed_to": "Florida",
+    "high_school_profile": {
+      "offers": [
+        {
+          "school": "Florida",
+          "date": "2026-06-22"
+        }
+      ],
+      "stats": {
+        "stars": 0,
+        "rating": null,
+        "natl_rank": null,
+        "pos_rank": null,
+        "state_rank": null,
+        "on3_id": "280848"
+      },
+      "recruiting_notes": "UF Commit No. 24 — combo kicker/punter from East Coweta.",
+      "discovery_score": null
+    }
   }
 ]

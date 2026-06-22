@@ -8,7 +8,7 @@ const HUB_CLASS_YEARS = new Set([2027, 2028, 2029]);
 
 /** Locked verified UF commit slugs by class year */
 const VERIFIED_UF_COMMITS_BY_YEAR = {
-  2027: new Set(['tre-geathers', 'jaydee-lane', 'ellis-mcgaskin']),
+  2027: new Set(['tre-geathers', 'jaydee-lane', 'ellis-mcgaskin', 'aaron-mcwilliams']),
   2028: new Set(),
   2029: new Set(),
 };
@@ -52,17 +52,22 @@ function looksLikeFloridaCommit(player) {
   return (status === 'committed' || status === 'commit') && /^florida$/i.test(committedTo);
 }
 
+/** Flip targets who committed elsewhere — preserve external school when demoting false UF commits. */
+const HUB_EXTERNAL_COMMIT_BY_SLUG = {
+  'easton-royal': 'Texas',
+};
+
 /** Demote unverified On3-style commits back to targets for hub classes. */
 function demoteUnverifiedHubCommit(player) {
   if (!player || !looksLikeFloridaCommit(player)) return player;
-  if (player.protected === true) return player;
   const year = Number(player.classYear ?? player.class_year);
   if (!isHubClassYear(year)) return player;
   if (isVerifiedUfCommitSlug(playerSlug(player), year)) return player;
 
+  const slug = playerSlug(player);
   const out = { ...player };
   out.status = 'uncommitted';
-  out.committedTo = null;
+  out.committedTo = HUB_EXTERNAL_COMMIT_BY_SLUG[slug] || null;
   out.commitDate = null;
   out.category = 'target';
   out.lifecycle = out.lifecycle === 'commit' ? 'target' : out.lifecycle;

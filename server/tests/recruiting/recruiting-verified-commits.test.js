@@ -9,8 +9,8 @@ const {
 } = require('../../lib/recruiting-verified-commits');
 const store = require('../../lib/recruiting-store');
 
-test('verified 2027 UF commits are only tre-geathers, jaydee-lane, ellis-mcgaskin', () => {
-  const verified = ['tre-geathers', 'jaydee-lane', 'ellis-mcgaskin'];
+test('verified 2027 UF commits are only tre-geathers, jaydee-lane, ellis-mcgaskin, aaron-mcwilliams', () => {
+  const verified = ['tre-geathers', 'jaydee-lane', 'ellis-mcgaskin', 'aaron-mcwilliams'];
   for (const slug of verified) {
     assert.equal(
       isVerifiedHubCommit({ slug, classYear: 2027, status: 'committed', committedTo: 'Florida' }),
@@ -24,7 +24,7 @@ test('verified 2027 UF commits are only tre-geathers, jaydee-lane, ellis-mcgaski
   );
 });
 
-test('isFloridaCommit respects verified allowlist for 2027 in JSON mode', () => {
+test('isFloridaCommit uses status committed for hub classes in JSON mode', () => {
   const originalSupabase = process.env.SUPABASE_URL;
   delete process.env.SUPABASE_URL;
   delete require.cache[require.resolve('../../lib/recruiting-store')];
@@ -46,6 +46,10 @@ test('isFloridaCommit respects verified allowlist for 2027 in JSON mode', () => 
   );
   assert.equal(
     jsonStore.isFloridaCommit({ slug: 'maxwell-hiller', classYear: 2027, status: 'committed', committedTo: 'Florida' }),
+    true
+  );
+  assert.equal(
+    jsonStore.isFloridaCommit({ slug: 'maxwell-hiller', classYear: 2027, status: 'target', committedTo: null }),
     false
   );
 
@@ -54,7 +58,7 @@ test('isFloridaCommit respects verified allowlist for 2027 in JSON mode', () => 
   delete require.cache[require.resolve('../../lib/recruiting-store')];
 });
 
-test('getHubCommits reads committed Florida rows from DATABASE_URL when Supabase client is absent', async () => {
+test('getHubCommits returns only verified Florida commits from DATABASE_URL when Supabase client is absent', async () => {
   require('dotenv').config({ path: require('path').join(__dirname, '..', '..', '.env') });
   if (!process.env.DATABASE_URL) {
     console.log('skip: DATABASE_URL not configured');
@@ -62,14 +66,20 @@ test('getHubCommits reads committed Florida rows from DATABASE_URL when Supabase
   }
   delete process.env.SUPABASE_URL;
   delete require.cache[require.resolve('../../lib/recruiting-store')];
+  delete require.cache[require.resolve('../../lib/recruiting-verified-commits')];
   const jsonStore = require('../../lib/recruiting-store');
+  const { isVerifiedHubCommit } = require('../../lib/recruiting-verified-commits');
   const commits = await jsonStore.getHubCommits(2027);
   assert.ok(Array.isArray(commits));
-  assert.ok(commits.length >= 3);
   for (const player of commits) {
-    assert.match(String(player.committedTo || ''), /florida/i);
-    assert.match(String(player.status || '').toLowerCase(), /^(committed|commit)$/);
+    assert.equal(String(player.committedTo || '').toLowerCase(), 'florida');
+    assert.equal(isVerifiedHubCommit(player), true, player.slug);
   }
+  assert.equal(
+    commits.some((p) => String(p.slug || '').toLowerCase() === 'easton-royal'),
+    false,
+    'easton-royal must not appear as a UF commit'
+  );
   delete require.cache[require.resolve('../../lib/recruiting-store')];
 });
 
@@ -95,17 +105,32 @@ test('validateVerifiedCommits flags unverified rows', () => {
   assert.equal(errors[0].slug, 'fake-commit');
 });
 
-test('countVerifiedHubCommits returns 3 for canonical store slugs', () => {
+test('countVerifiedHubCommits returns 4 for canonical store slugs', () => {
   const count = countVerifiedHubCommits(
     [
       { slug: 'tre-geathers', classYear: 2027, status: 'commit', committedTo: 'Florida' },
       { slug: 'jaydee-lane', classYear: 2027, status: 'committed', committedTo: 'Florida' },
       { slug: 'ellis-mcgaskin', classYear: 2027, status: 'committed', committedTo: 'Florida' },
+      { slug: 'aaron-mcwilliams', classYear: 2027, status: 'committed', committedTo: 'Florida' },
       { slug: 'aamaury-fountain', classYear: 2027, status: 'committed', committedTo: 'Florida' },
     ],
     2027
   );
-  assert.equal(count, 3);
+  assert.equal(count, 4);
+});
+
+test('demoteUnverifiedHubCommit preserves Texas commit for protected flip target easton-royal', () => {
+  const demoted = demoteUnverifiedHubCommit({
+    slug: 'easton-royal',
+    classYear: 2027,
+    status: 'committed',
+    committedTo: 'Florida',
+    category: 'recruit',
+    protected: true,
+  });
+  assert.equal(demoted.status, 'uncommitted');
+  assert.equal(demoted.committedTo, 'Texas');
+  assert.equal(demoted.category, 'target');
 });
 
 test('applyVerifiedHubCommit restores demoted verified slug', () => {

@@ -131,6 +131,14 @@ function sortHubCommits(players) {
   });
 }
 
+function isHubUfCommitPlayer(p) {
+  if (!isHubFloridaCommitStatus(p)) return false;
+  const { isVerifiedHubCommit, isHubClassYear } = require('./recruiting-verified-commits');
+  const year = Number(p.classYear);
+  if (isHubClassYear(year)) return isVerifiedHubCommit(p);
+  return true;
+}
+
 function filterHubCommitPlayers(players, classYear) {
   const year = parseInt(classYear, 10);
   return sortHubCommits(
@@ -139,7 +147,7 @@ function filterHubCommitPlayers(players, classYear) {
         !isTestPlayer(p) &&
         !isBlockedPlayer(p) &&
         Number(p.classYear) === year &&
-        isHubCommittedStatus(p)
+        isHubUfCommitPlayer(p)
     )
   );
 }
