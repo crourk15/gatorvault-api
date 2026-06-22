@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
-  SIGNING_EVENTS,
+  getSigningEvents,
   getSigningCountdown,
   type SigningEventConfig,
   type SigningCountdown,
 } from '@/components/recruiting-hub/elite/signing-day-utils';
+import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 
 function SigningEventCard({
   event,
@@ -63,19 +64,22 @@ export function SigningDayTracker(): React.ReactElement {
     return () => window.clearInterval(id);
   }, []);
 
-  const espCountdown = getSigningCountdown(SIGNING_EVENTS.esp, now);
-  const nsdCountdown = getSigningCountdown(SIGNING_EVENTS.nsd, now);
+  const signingEvents = getSigningEvents(ACTIVE_RECRUITING_CLASS_YEAR);
+  const espCountdown = getSigningCountdown(signingEvents.esp, now);
+  const nsdCountdown = getSigningCountdown(signingEvents.nsd, now);
 
   return (
     <>
       <div className="rh-section-header">
         <div className="rh-section-title">Signing Day Tracker</div>
-        <div className="rh-section-subtitle">Stay locked in on when Gators sign their class.</div>
+        <div className="rh-section-subtitle">
+          Class of {ACTIVE_RECRUITING_CLASS_YEAR} · ESP and NSD countdowns
+        </div>
       </div>
       <section className="rh-card rh-signing-tracker" data-testid="rh-signing-day-tracker">
         <div className="rh-signing-tracker__grid">
-          <SigningEventCard event={SIGNING_EVENTS.esp} countdown={espCountdown} />
-          <SigningEventCard event={SIGNING_EVENTS.nsd} countdown={nsdCountdown} />
+          <SigningEventCard event={signingEvents.esp} countdown={espCountdown} />
+          <SigningEventCard event={signingEvents.nsd} countdown={nsdCountdown} />
         </div>
       </section>
     </>

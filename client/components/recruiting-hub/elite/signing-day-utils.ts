@@ -1,3 +1,9 @@
+import {
+  ACTIVE_RECRUITING_CLASS_YEAR,
+  getSigningCalendar,
+  type SigningCalendar,
+} from '@/lib/recruiting-cycle';
+
 export type SigningEventId = 'esp' | 'nsd';
 
 export type SigningEventConfig = {
@@ -7,34 +13,10 @@ export type SigningEventConfig = {
   liveBadge: string;
   linkLabel: string;
   linkHref: string;
+  classYear: number;
   start: Date;
   end: Date;
   dateLabel: string;
-};
-
-export const SIGNING_EVENTS: Record<SigningEventId, SigningEventConfig> = {
-  esp: {
-    id: 'esp',
-    label: 'Early Signing Period (ESP)',
-    badge: 'Primary Signing Window',
-    liveBadge: 'LIVE SIGNING WINDOW',
-    linkLabel: 'Expected signees →',
-    linkHref: '/vault/recruiting/signing/esp',
-    start: new Date('2026-12-16T00:00:00'),
-    end: new Date('2026-12-19T00:00:00'),
-    dateLabel: 'December 16–18, 2026',
-  },
-  nsd: {
-    id: 'nsd',
-    label: 'National Signing Day (NSD)',
-    badge: 'Final Signatures',
-    liveBadge: 'LIVE SIGNING WINDOW',
-    linkLabel: 'Remaining targets →',
-    linkHref: '/vault/recruiting/signing/nsd',
-    start: new Date('2026-02-04T00:00:00'),
-    end: new Date('2026-02-05T00:00:00'),
-    dateLabel: 'February 4, 2026',
-  },
 };
 
 export type SigningCountdown = {
@@ -44,6 +26,51 @@ export type SigningCountdown = {
   hours: number;
   targetLabel: string;
 };
+
+function buildSigningEventConfig(
+  calendar: SigningCalendar,
+  id: SigningEventId
+): SigningEventConfig {
+  if (id === 'esp') {
+    return {
+      id,
+      label: 'Early Signing Period (ESP)',
+      badge: 'Primary Signing Window',
+      liveBadge: 'LIVE SIGNING WINDOW',
+      linkLabel: 'Expected signees →',
+      linkHref: '/vault/recruiting/signing/esp',
+      classYear: calendar.classYear,
+      start: calendar.esp.start,
+      end: calendar.esp.end,
+      dateLabel: calendar.esp.dateLabel,
+    };
+  }
+
+  return {
+    id,
+    label: 'National Signing Day (NSD)',
+    badge: 'Final Signatures',
+    liveBadge: 'LIVE SIGNING WINDOW',
+    linkLabel: 'Remaining targets →',
+    linkHref: '/vault/recruiting/signing/nsd',
+    classYear: calendar.classYear,
+    start: calendar.nsd.start,
+    end: calendar.nsd.end,
+    dateLabel: calendar.nsd.dateLabel,
+  };
+}
+
+/** Signing windows for the active recruiting cycle (defaults to class of 2027). */
+export function getSigningEvents(classYear = ACTIVE_RECRUITING_CLASS_YEAR): Record<SigningEventId, SigningEventConfig> {
+  const calendar = getSigningCalendar(classYear);
+  return {
+    esp: buildSigningEventConfig(calendar, 'esp'),
+    nsd: buildSigningEventConfig(calendar, 'nsd'),
+  };
+}
+
+/** @deprecated use getSigningEvents() — kept for callers that expect a static object. */
+export const SIGNING_EVENTS = getSigningEvents();
 
 export function getSigningCountdown(event: SigningEventConfig, now = new Date()): SigningCountdown {
   const { start, end } = event;

@@ -7,21 +7,20 @@ import { formatRank } from '@/lib/recruiting-board-utils';
 import { playerProfilePath, recruitingProfileLifecycle } from '@/lib/player-routes';
 import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
 import {
-  SIGNING_EVENTS,
+  getSigningEvents,
   getSigningCountdown,
   type SigningEventId,
 } from '@/components/recruiting-hub/elite/signing-day-utils';
+import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 import { displayRating, positionLabel, ufPercent, type EnrichedCommitPlayer } from '@/components/recruiting-hub/elite/class-commit-utils';
 import './recruiting-hub.css';
-
-const SIGNING_YEAR = 2027;
 
 type SigningPayload = {
   players: EnrichedCommitPlayer[];
 };
 
 async function loadSigningPlayers(eventId: SigningEventId): Promise<SigningPayload> {
-  const board = await fetchRecruitingBoard(SIGNING_YEAR);
+  const board = await fetchRecruitingBoard(ACTIVE_RECRUITING_CLASS_YEAR);
   const commits = new Set((board.commits ?? []).map((p) => p.slug));
   const targets = (board.targets ?? []) as EnrichedCommitPlayer[];
 
@@ -44,7 +43,7 @@ type Props = {
 };
 
 export function SigningDayPage({ eventId }: Props): React.ReactElement {
-  const event = SIGNING_EVENTS[eventId];
+  const event = getSigningEvents(ACTIVE_RECRUITING_CLASS_YEAR)[eventId];
   const load = useCallback(() => loadSigningPlayers(eventId), [eventId]);
   const { data, loading, error } = useRecruitingHubQuery(load);
   const countdown = getSigningCountdown(event);

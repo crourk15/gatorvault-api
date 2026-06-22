@@ -6,6 +6,7 @@ import {
   snapshotFirstFetch,
   snapshotLiveFetch,
 } from './snapshot-fetch';
+import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 
 export type RhHubClassOverview = {
   classRank: string;
@@ -169,7 +170,7 @@ export type RhHubFootprintResponse = {
   pins?: RhHubFootprintPin[];
 };
 
-const HUB_YEAR = 2027;
+const HUB_YEAR = ACTIVE_RECRUITING_CLASS_YEAR;
 const HUB_FETCH_OPTS = DEFAULT_SNAPSHOT_FETCH_OPTS;
 
 function fetchHubLive<T>(path: string): Promise<T> {
