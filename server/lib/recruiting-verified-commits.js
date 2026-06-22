@@ -1,6 +1,7 @@
 /**
- * Editorial verified UF commits — only these slugs count as Florida commits
- * for active hub classes (2027–2029). On3 snapshot rows alone do not qualify.
+ * Editorial verified UF commits — minimum slugs restored after On3 ingest demotion.
+ * Hub commit lists use all Florida commits; this allowlist prevents false ingest rows
+ * from sticking while ensuring known commits are never demoted.
  */
 const { slugify } = require('./slug');
 
@@ -56,6 +57,11 @@ function looksLikeFloridaCommit(player) {
 const HUB_EXTERNAL_COMMIT_BY_SLUG = {
   'easton-royal': 'Texas',
 };
+
+function isHubExternalCommitFlipTarget(player) {
+  const slug = playerSlug(player);
+  return Object.prototype.hasOwnProperty.call(HUB_EXTERNAL_COMMIT_BY_SLUG, slug);
+}
 
 /** Demote unverified On3-style commits back to targets for hub classes. */
 function demoteUnverifiedHubCommit(player) {
@@ -156,6 +162,8 @@ module.exports = {
   isVerifiedUfCommitSlug,
   isVerifiedHubCommit,
   looksLikeFloridaCommit,
+  isHubExternalCommitFlipTarget,
+  HUB_EXTERNAL_COMMIT_BY_SLUG,
   demoteUnverifiedHubCommit,
   applyVerifiedHubCommit,
   restoreVerifiedHubCommitsInStore,

@@ -133,10 +133,8 @@ function sortHubCommits(players) {
 
 function isHubUfCommitPlayer(p) {
   if (!isHubFloridaCommitStatus(p)) return false;
-  const { isVerifiedHubCommit, isHubClassYear } = require('./recruiting-verified-commits');
-  const year = Number(p.classYear);
-  if (isHubClassYear(year)) return isVerifiedHubCommit(p);
-  return true;
+  const { isHubExternalCommitFlipTarget } = require('./recruiting-verified-commits');
+  return !isHubExternalCommitFlipTarget(p);
 }
 
 function filterHubCommitPlayers(players, classYear) {
@@ -161,7 +159,8 @@ async function queryHubCommitsFromSupabase(classYear) {
     .from('players')
     .select('*')
     .eq('class_year', year)
-    .eq('status', 'committed')
+    .ilike('committed_to', 'florida')
+    .in('status', ['committed', 'commit', 'signed', 'enrolled'])
     .order('natl_rank', { ascending: true, nullsFirst: false });
 
   if (error) {
@@ -188,7 +187,8 @@ async function queryHubCommitsFromDatabase(classYear) {
       `SELECT *
        FROM players
        WHERE class_year = $1
-         AND lower(status) = 'committed'
+         AND lower(committed_to) = 'florida'
+         AND lower(status) IN ('committed', 'commit', 'signed', 'enrolled')
        ORDER BY natl_rank NULLS LAST`,
       [year]
     );

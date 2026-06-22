@@ -58,27 +58,26 @@ test('isFloridaCommit uses status committed for hub classes in JSON mode', () =>
   delete require.cache[require.resolve('../../lib/recruiting-store')];
 });
 
-test('getHubCommits returns only verified Florida commits from DATABASE_URL when Supabase client is absent', async () => {
-  require('dotenv').config({ path: require('path').join(__dirname, '..', '..', '.env') });
-  if (!process.env.DATABASE_URL) {
-    console.log('skip: DATABASE_URL not configured');
-    return;
-  }
+test('getHubCommits returns all Florida commits for hub class years', async () => {
   delete process.env.SUPABASE_URL;
+  delete process.env.DATABASE_URL;
   delete require.cache[require.resolve('../../lib/recruiting-store')];
-  delete require.cache[require.resolve('../../lib/recruiting-verified-commits')];
   const jsonStore = require('../../lib/recruiting-store');
-  const { isVerifiedHubCommit } = require('../../lib/recruiting-verified-commits');
   const commits = await jsonStore.getHubCommits(2027);
   assert.ok(Array.isArray(commits));
+  assert.ok(commits.length >= 20, `expected full 2027 class, got ${commits.length}`);
   for (const player of commits) {
     assert.equal(String(player.committedTo || '').toLowerCase(), 'florida');
-    assert.equal(isVerifiedHubCommit(player), true, player.slug);
   }
   assert.equal(
     commits.some((p) => String(p.slug || '').toLowerCase() === 'easton-royal'),
     false,
     'easton-royal must not appear as a UF commit'
+  );
+  assert.equal(
+    commits.some((p) => String(p.slug || '').toLowerCase() === 'maxwell-hiller'),
+    true,
+    'maxwell-hiller and other UF commits should appear'
   );
   delete require.cache[require.resolve('../../lib/recruiting-store')];
 });
