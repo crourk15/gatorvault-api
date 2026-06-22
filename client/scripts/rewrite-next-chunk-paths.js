@@ -77,6 +77,10 @@ function encodeDynamicPath(rel) {
   return rel.replace(/\[/g, '%5B').replace(/\]/g, '%5D');
 }
 
+function appChunkNestedRel(rel) {
+  return rel.replace(/^\(app\)\//, '');
+}
+
 function addChunkMappings(map, rel, publicPath) {
   const relVariants = [rel];
   if (rel.startsWith('(app)/')) relVariants.push(rel.slice('(app)/'.length));
@@ -98,11 +102,16 @@ function addChunkMappings(map, rel, publicPath) {
   map.set(`/_next/static/chunks/${flatChunkName(rel)}`, publicPath);
 }
 
-function publishVaultChunk(serverDir, sourceFile, flatName) {
+function publishVaultChunk(serverDir, sourceFile, flatName, mirrorNestedRel = null) {
   const destDir = path.join(serverDir, VAULT_CHUNKS_DIR);
   fs.mkdirSync(destDir, { recursive: true });
   const dest = path.join(destDir, flatName);
   fs.copyFileSync(sourceFile, dest);
+  if (mirrorNestedRel) {
+    const mirrorDest = path.join(destDir, mirrorNestedRel);
+    fs.mkdirSync(path.dirname(mirrorDest), { recursive: true });
+    fs.copyFileSync(sourceFile, mirrorDest);
+  }
   return `/${VAULT_CHUNKS_DIR}/${flatName}`;
 }
 
@@ -144,7 +153,7 @@ function buildReplacementMap(serverDir) {
   const map = new Map();
 
   for (const { file, rel, flat } of collectAppChunks(chunksDir)) {
-    const publicPath = publishVaultChunk(serverDir, file, flat);
+    const publicPath = publishVaultChunk(serverDir, file, flat, appChunkNestedRel(rel));
     addChunkMappings(map, rel, publicPath);
   }
 
@@ -284,9 +293,18 @@ function sweepContentUnmappedBareStaticChunkRefs(content, vaultChunks) {
   return next;
 }
 
+/** Regex fallback: rewrite bare static/chunks/app/... refs in HTML/RSC flight (no /_next/ prefix). */
+function sweepContentUnmappedStaticAppChunkRefs(content) {
+  return content.replace(
+    /\bstatic\/chunks\/app\/([A-Za-z0-9/_-]+)\.js\b/g,
+    `/${VAULT_CHUNKS_DIR}/$1.js`
+  );
+}
+
 /** Regex fallback: rewrite any remaining app/routes chunk refs when vault chunk exists. */
 function sweepContentUnmappedAppChunkRefs(content, vaultChunks) {
   let next = stripRscChunkRefEscapes(content);
+  next = sweepContentUnmappedStaticAppChunkRefs(next);
   next = next.replace(/\/_next\/static\/chunks\/(app|routes)\/([^"'\\?\s]+)/g, (match, _sub, rel) => {
     const publicPath = vaultPublicPathForAppRel(rel, vaultChunks);
     return publicPath || match;
@@ -455,6 +473,7 @@ module.exports = {
   VAULT_CHUNKS_DIR,
   assertNoUnrewrittenAppChunkRefs,
   sweepUnmappedAppChunkRefs,
+  sweepContentUnmappedStaticAppChunkRefs,
   sweepContentUnmappedBareStaticChunkRefs,
   normalizeAbsoluteVaultChunkRefs,
   assertAbsoluteVaultChunkRefs,
