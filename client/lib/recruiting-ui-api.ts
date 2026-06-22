@@ -10,7 +10,10 @@ import type {
   RhHubBattle,
   RhHubBattleBoardItem,
   RhHubClassOverview,
+  RhHubFootprintResponse,
+  RhHubHeatTarget,
   RhHubMovementFeedItem,
+  RhHubPositionRoom,
 } from './recruiting-hub-elite-api';
 import type { MovementIntelResponse } from './movement-intel-types';
 import type { PodcastCardProps } from './gatornation-live-types';
@@ -72,6 +75,26 @@ export type BattlesResponse = {
   meta?: { lastUpdated?: string };
 };
 
+export type HeatIndexResponse = {
+  ok?: boolean;
+  status?: string;
+  items: RhHubHeatTarget[];
+  meta?: { lastUpdated?: string };
+};
+
+export type PositionsResponse = {
+  ok?: boolean;
+  status?: string;
+  items: RhHubPositionRoom[];
+  meta?: { lastUpdated?: string };
+};
+
+export type FootprintResponse = RhHubFootprintResponse & {
+  ok?: boolean;
+  status?: string;
+  meta?: { lastUpdated?: string };
+};
+
 export type PodcastsResponse = {
   ok?: boolean;
   shows: PodcastShow[];
@@ -112,6 +135,33 @@ export function fetchRecruitingBattles(
   const path = `/api/recruiting/battles${yearQuery(year)}`;
   return snapshotFirstFetch(path, () =>
     snapshotLiveFetch<BattlesResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS)
+  );
+}
+
+export function fetchHeatIndex(
+  year = ACTIVE_RECRUITING_CLASS_YEAR
+): Promise<HeatIndexResponse> {
+  const path = `/api/recruiting/heat-index${yearQuery(year)}`;
+  return snapshotFirstFetch(path, () =>
+    snapshotLiveFetch<HeatIndexResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS)
+  );
+}
+
+export function fetchPositionSnapshot(
+  year = ACTIVE_RECRUITING_CLASS_YEAR
+): Promise<PositionsResponse> {
+  const path = `/api/recruiting/positions${yearQuery(year)}`;
+  return snapshotFirstFetch(path, () =>
+    snapshotLiveFetch<PositionsResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS)
+  );
+}
+
+export function fetchRecruitingFootprint(
+  year = ACTIVE_RECRUITING_CLASS_YEAR
+): Promise<FootprintResponse> {
+  const path = `/api/recruiting/footprint${yearQuery(year)}`;
+  return snapshotFirstFetch(path, () =>
+    snapshotLiveFetch<FootprintResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS)
   );
 }
 

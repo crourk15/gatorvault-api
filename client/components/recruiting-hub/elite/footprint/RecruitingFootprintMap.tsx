@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ComposableMap, Geographies } from 'react-simple-maps';
-import type { RhHubFootprintState } from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
+import type { RhHubFootprintResponse, RhHubFootprintState } from '@/lib/recruiting-hub-elite-api';
+import { fetchRecruitingFootprint } from '@/lib/recruiting-ui-api';
+import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 import { StateHeatLayer } from './StateHeatLayer';
 import { TargetPinsLayer } from './TargetPinsLayer';
 import { BattleDifficultyLayer } from './BattleDifficultyLayer';
@@ -85,9 +86,27 @@ function FootprintTooltip({ state }: { state: RhHubFootprintState }): React.Reac
 }
 
 export function RecruitingFootprintMap(): React.ReactElement {
-  const { data, loading, error } = useRecruitingHubBundleContext();
-  const footprint = data?.footprint;
+  const [footprint, setFootprint] = useState<RhHubFootprintResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [hoveredState, setHoveredState] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchRecruitingFootprint(ACTIVE_RECRUITING_CLASS_YEAR)
+      .then((data) => {
+        if (!cancelled) setFootprint(data);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const states = footprint?.states ?? [];
   const pins = footprint?.pins ?? [];

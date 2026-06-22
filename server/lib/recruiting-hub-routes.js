@@ -351,6 +351,55 @@ function mountRecruitingHubRoutes(app) {
     }
   });
 
+  app.get('/api/recruiting/heat-index', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `recruiting:heat-index:${year}`;
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'heat-index',
+        builder: () => buildHubHeatIndex(year),
+        hubMeta,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/positions', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `recruiting:positions:${year}`;
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'positions',
+        builder: () => buildHubPositions(year),
+        hubMeta,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/footprint', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `recruiting:footprint:${year}`;
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'footprint',
+        builder: () => buildHubFootprint(year),
+        spread: true,
+        hubMeta,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/recruiting/intel/beat', async (req, res) => {
     try {
       const limit = parseInt(String(req.query.limit || '5'), 10);

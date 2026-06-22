@@ -1,11 +1,31 @@
 'use client';
 
-import React from 'react';
-import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
+import React, { useEffect, useState } from 'react';
+import type { RhHubPositionRoom } from '@/lib/recruiting-hub-elite-api';
+import { fetchPositionSnapshot } from '@/lib/recruiting-ui-api';
+import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 
 export function RecruitingPositionSnapshot(): React.ReactElement {
-  const { data: bundle, loading, error } = useRecruitingHubBundleContext();
-  const data = bundle?.positions;
+  const [data, setData] = useState<RhHubPositionRoom[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchPositionSnapshot(ACTIVE_RECRUITING_CLASS_YEAR)
+      .then((res) => {
+        if (!cancelled) setData(res.items ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <>

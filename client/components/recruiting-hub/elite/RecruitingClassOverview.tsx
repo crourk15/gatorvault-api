@@ -1,7 +1,9 @@
 'use client';
 
-import React from 'react';
-import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
+import React, { useEffect, useState } from 'react';
+import type { RhHubClassOverview } from '@/lib/recruiting-hub-elite-api';
+import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
+import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 
 function MetricSparkline({ values }: { values: number[] }): React.ReactElement {
   const max = Math.max(...values, 1);
@@ -59,8 +61,27 @@ function Metric({
 }
 
 export function RecruitingClassOverview(): React.ReactElement {
-  const { data, loading, error } = useRecruitingHubBundleContext();
-  const overview = data?.classOverview;
+  const [overview, setOverview] = useState<RhHubClassOverview | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchClassMetrics(ACTIVE_RECRUITING_CLASS_YEAR)
+      .then((data) => {
+        if (!cancelled) setOverview(data);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const sparks = overview?.sparklines;
 
   return (

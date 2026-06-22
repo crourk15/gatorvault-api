@@ -81,6 +81,21 @@ function clearHubCache() {
   lastWarmError = null;
 }
 
+function removeHubCacheKeys(keys) {
+  if (!Array.isArray(keys) || !keys.length) return 0;
+  let removed = 0;
+  for (const key of keys) {
+    if (key) {
+      hubCache.remove(key);
+      removed += 1;
+    }
+  }
+  if (removed > 0 && warmKeyCount > 0) {
+    warmKeyCount = Math.max(0, warmKeyCount - removed);
+  }
+  return removed;
+}
+
 async function warmEliteHubCaches(options = {}) {
   if (warming) return getMeta();
   warming = true;
@@ -118,6 +133,9 @@ async function warmEliteHubCaches(options = {}) {
         const { buildBattlesAndMovement } = require('./recruiting-ui-api');
         return buildBattlesAndMovement(year);
       }, year]);
+      jobs.push([`recruiting:heat-index:${year}`, () => elite.buildHubHeatIndex(year), year]);
+      jobs.push([`recruiting:positions:${year}`, () => elite.buildHubPositions(year), year]);
+      jobs.push([`recruiting:footprint:${year}`, () => elite.buildHubFootprint(year), year]);
       jobs.push([`hub:elite:bundle:${year}`, () => elite.buildHubBundle(year), year]);
       jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year), year]);
       jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year), year]);
@@ -302,6 +320,7 @@ module.exports = {
   hubCache,
   HUB_CACHE_MS,
   clearHubCache,
+  removeHubCacheKeys,
   warmEliteHubCaches,
   scheduleAsyncWarm,
   serveCached,

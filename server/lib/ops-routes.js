@@ -80,6 +80,19 @@ function mountOpsRoutes(app) {
     }
   });
 
+  app.get('/api/ops/ui-health', (req, res) => {
+    try {
+      const { buildUiHealthReport } = require('./ui-health');
+      const year = parseInt(String(req.query.year || ''), 10);
+      const report = buildUiHealthReport({
+        year: Number.isFinite(year) ? year : undefined,
+      });
+      return res.status(report.ok ? 200 : 503).json(report);
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/ops/logs', (req, res) => {
     if (!requireOpsAuth(req, res)) return;
     try {

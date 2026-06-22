@@ -120,6 +120,11 @@ function savePodcastCache(cache) {
   writeJson(PODCAST_CACHE_PATH, cache);
 }
 
+function clearPodcastCache() {
+  const prev = loadPodcastCache();
+  savePodcastCache({ shows: prev.shows || [], fetchedAt: null, errors: [] });
+}
+
 /** @returns {string|null} */
 function normalizeFeedUrl(url) {
   if (url == null || url === '') return null;
@@ -279,6 +284,7 @@ module.exports = {
   saveBeatCache,
   loadPodcastCache,
   savePodcastCache,
+  clearPodcastCache,
   normalizeFeedUrl,
   normalizeFeedItem,
   loadPlayerIndex,

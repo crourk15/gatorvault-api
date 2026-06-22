@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { RhHubHeatTarget } from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
+import { fetchHeatIndex } from '@/lib/recruiting-ui-api';
+import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 
 function heatBandClass(heat: number): string {
   if (heat >= 70) return 'rh-heat-fill--hot';
@@ -55,8 +56,26 @@ function HeatTargetCard({ target }: { target: RhHubHeatTarget }): React.ReactEle
 }
 
 export function TopTargetsHeatIndex(): React.ReactElement {
-  const { data: bundle, loading, error } = useRecruitingHubBundleContext();
-  const data = bundle?.heatIndex;
+  const [data, setData] = useState<RhHubHeatTarget[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchHeatIndex(ACTIVE_RECRUITING_CLASS_YEAR)
+      .then((res) => {
+        if (!cancelled) setData(res.items ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <>
