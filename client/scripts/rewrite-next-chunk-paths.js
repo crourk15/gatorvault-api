@@ -77,8 +77,63 @@ function encodeDynamicPath(rel) {
   return rel.replace(/\[/g, '%5B').replace(/\]/g, '%5D');
 }
 
+function copyRecursive(src, dest) {
+  if (!fs.existsSync(src)) return;
+  fs.mkdirSync(dest, { recursive: true });
+  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+    const from = path.join(src, entry.name);
+    const to = path.join(dest, entry.name);
+    if (entry.isDirectory()) copyRecursive(from, to);
+    else fs.copyFileSync(from, to);
+  }
+}
+
+/** Mirror _next/static/chunks/app/** → js/vault-chunks/app/** (preserves nested route paths). */
+function publishAppChunkTree(serverDir, chunksDir) {
+  const appSrc = path.join(chunksDir, 'app');
+  const appDest = path.join(serverDir, VAULT_CHUNKS_DIR, 'app');
+  if (!fs.existsSync(appSrc)) return 0;
+  copyRecursive(appSrc, appDest);
+  mirrorAppChunkAliases(appDest);
+  let count = 0;
+  walkFiles(appDest, (file) => {
+    if (file.endsWith('.js')) count += 1;
+  });
+  return count;
+}
+
+/** RSC refs omit route groups and URL-encode dynamic segments — mirror those alias paths. */
+function mirrorAppChunkAliases(appDest) {
+  const files = [];
+  walkFiles(appDest, (file) => {
+    if (file.endsWith('.js')) files.push(file);
+  });
+  for (const file of files) {
+    const rel = path.relative(appDest, file).replace(/\\/g, '/');
+    const aliases = new Set();
+    const withoutGroups = rel.replace(/^\((app|marketing|home)\)\//, '');
+    if (withoutGroups !== rel) aliases.add(withoutGroups);
+    for (const candidate of [rel, withoutGroups]) {
+      const encoded = encodeDynamicPath(candidate);
+      if (encoded !== candidate) aliases.add(encoded);
+    }
+    for (const alias of aliases) {
+      if (alias === rel) continue;
+      const altDest = path.join(appDest, alias);
+      if (fs.existsSync(altDest)) continue;
+      fs.mkdirSync(path.dirname(altDest), { recursive: true });
+      fs.copyFileSync(file, altDest);
+    }
+  }
+}
+
 function appChunkNestedRel(rel) {
   return rel.replace(/^\(app\)\//, '');
+}
+
+function bareStaticAppChunkPublicPath(sub, relFromApp) {
+  const nested = ensureAppChunkRelJs(appChunkNestedRel(relFromApp));
+  return `/${VAULT_CHUNKS_DIR}/${sub}/${nested}`;
 }
 
 function addChunkMappings(map, rel, publicPath) {
@@ -89,29 +144,30 @@ function addChunkMappings(map, rel, publicPath) {
   for (const variant of relVariants) {
     map.set(`/_next/static/chunks/app/${variant}`, publicPath);
     map.set(`/_next/static/chunks/routes/${variant}`, publicPath);
-    map.set(`static/chunks/app/${variant}`, publicPath.replace(/^\//, ''));
+    const nestedRel = ensureAppChunkRelJs(appChunkNestedRel(variant));
+    const nestedAppPublic = `/${VAULT_CHUNKS_DIR}/app/${nestedRel}`;
+    map.set(`static/chunks/app/${variant}`, nestedAppPublic.replace(/^\//, ''));
+    map.set(`static/chunks/app/${nestedRel}`, nestedAppPublic.replace(/^\//, ''));
 
     const encoded = encodeDynamicPath(variant);
     if (encoded !== variant) {
       map.set(`/_next/static/chunks/app/${encoded}`, publicPath);
       map.set(`/_next/static/chunks/routes/${encoded}`, publicPath);
-      map.set(`static/chunks/app/${encoded}`, publicPath.replace(/^\//, ''));
+      const nestedEncoded = ensureAppChunkRelJs(appChunkNestedRel(encoded));
+      const nestedEncodedPublic = `/${VAULT_CHUNKS_DIR}/app/${nestedEncoded}`;
+      map.set(`static/chunks/app/${encoded}`, nestedEncodedPublic.replace(/^\//, ''));
+      map.set(`static/chunks/app/${nestedEncoded}`, nestedEncodedPublic.replace(/^\//, ''));
     }
   }
 
   map.set(`/_next/static/chunks/${flatChunkName(rel)}`, publicPath);
 }
 
-function publishVaultChunk(serverDir, sourceFile, flatName, mirrorNestedRel = null) {
+function publishVaultChunk(serverDir, sourceFile, flatName) {
   const destDir = path.join(serverDir, VAULT_CHUNKS_DIR);
   fs.mkdirSync(destDir, { recursive: true });
   const dest = path.join(destDir, flatName);
   fs.copyFileSync(sourceFile, dest);
-  if (mirrorNestedRel) {
-    const mirrorDest = path.join(destDir, mirrorNestedRel);
-    fs.mkdirSync(path.dirname(mirrorDest), { recursive: true });
-    fs.copyFileSync(sourceFile, mirrorDest);
-  }
   return `/${VAULT_CHUNKS_DIR}/${flatName}`;
 }
 
@@ -153,9 +209,11 @@ function buildReplacementMap(serverDir) {
   const map = new Map();
 
   for (const { file, rel, flat } of collectAppChunks(chunksDir)) {
-    const publicPath = publishVaultChunk(serverDir, file, flat, appChunkNestedRel(rel));
+    const publicPath = publishVaultChunk(serverDir, file, flat);
     addChunkMappings(map, rel, publicPath);
   }
+
+  const appTreeFiles = publishAppChunkTree(serverDir, chunksDir);
 
   if (fs.existsSync(chunksDir)) {
     for (const name of fs.readdirSync(chunksDir)) {
@@ -203,7 +261,7 @@ function buildReplacementMap(serverDir) {
     }
   }
 
-  return map;
+  return { map, appTreeFiles };
 }
 
 function applyReplacements(content, map) {
@@ -238,11 +296,6 @@ function ensureAppChunkRelJs(rel) {
   return normalized.endsWith('.js') ? normalized : `${normalized}.js`;
 }
 
-function nestedVaultChunkPublicPath(relFromApp) {
-  const nested = ensureAppChunkRelJs(relFromApp).replace(/^\(app\)\//, '');
-  return `/${VAULT_CHUNKS_DIR}/${nested}`;
-}
-
 function vaultPublicPathForAppRel(relFromApp, vaultChunks) {
   const normalized = ensureAppChunkRelJs(relFromApp);
   const relCandidates = [
@@ -262,7 +315,7 @@ function vaultPublicPathForAppRel(relFromApp, vaultChunks) {
       }
     }
   }
-  return nestedVaultChunkPublicPath(normalized);
+  return bareStaticAppChunkPublicPath('app', normalized);
 }
 
 function vaultPublicPathForMentry(name, vaultChunks) {
@@ -307,12 +360,12 @@ function sweepContentUnmappedBareStaticChunkRefs(content, vaultChunks) {
 function sweepContentUnmappedStaticAppChunkRefs(content) {
   let next = content.replace(
     /\bstatic\/chunks\/app\/([A-Za-z0-9/_-]+)\.js\b/g,
-    `/${VAULT_CHUNKS_DIR}/$1.js`
+    `/${VAULT_CHUNKS_DIR}/app/$1.js`
   );
   // RSC flight often embeds app chunk ids without a .js suffix before the closing quote.
   next = next.replace(
     /\bstatic\/chunks\/app\/([A-Za-z0-9/_-]+)(?=["'\\s,[\]|\\]|$)/g,
-    (_, relPath) => `/${VAULT_CHUNKS_DIR}/${relPath}.js`
+    (_, relPath) => `/${VAULT_CHUNKS_DIR}/app/${relPath}.js`
   );
   return next;
 }
@@ -321,13 +374,13 @@ function sweepContentUnmappedStaticAppChunkRefs(content) {
 function sweepContentUnmappedAppChunkRefs(content, vaultChunks) {
   let next = stripRscChunkRefEscapes(content);
   next = sweepContentUnmappedStaticAppChunkRefs(next);
-  next = next.replace(/\/_next\/static\/chunks\/(app|routes)\/([^"'\\?\s]+)/g, (match, _sub, rel) => {
+  next = next.replace(/\/_next\/static\/chunks\/(app|routes)\/([^"'\\?\s]+)/g, (match, sub, rel) => {
     const publicPath = vaultPublicPathForAppRel(rel, vaultChunks);
-    return publicPath || nestedVaultChunkPublicPath(rel);
+    if (publicPath && sub !== 'app') return publicPath;
+    return bareStaticAppChunkPublicPath(sub, rel);
   });
-  next = next.replace(/static\/chunks\/(app|routes)\/([^"'\\?\s]+)/g, (match, _sub, rel) => {
-    const publicPath = vaultPublicPathForAppRel(rel, vaultChunks);
-    return publicPath || nestedVaultChunkPublicPath(rel);
+  next = next.replace(/static\/chunks\/(app|routes)\/([^"'\\?\s]+)/g, (match, sub, rel) => {
+    return bareStaticAppChunkPublicPath(sub, rel);
   });
   next = next.replace(/\/_next\/static\/chunks\/main-(app|entry)-([^"'\\?\s]+)/g, (match, _kind, rest) => {
     const publicPath = vaultPublicPathForMentry(`main-${_kind}-${rest}`, vaultChunks);
@@ -405,7 +458,7 @@ function assertAbsoluteVaultChunkRefs(serverDir) {
 }
 
 function rewriteNextChunkPathsForNetlify(serverDir) {
-  const map = buildReplacementMap(serverDir);
+  const { map, appTreeFiles } = buildReplacementMap(serverDir);
   let filesUpdated = 0;
 
   walkFiles(path.join(serverDir, '_next'), (file) => {
@@ -457,7 +510,7 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
 
   assertAbsoluteVaultChunkRefs(serverDir);
 
-  return { filesUpdated, flatChunks: map.size, vaultChunksDir: VAULT_CHUNKS_DIR };
+  return { filesUpdated, flatChunks: map.size, vaultChunksDir: VAULT_CHUNKS_DIR, appTreeFiles };
 }
 
 /** Fail build if HTML/RSC payloads still reference App Router chunk paths Netlify CDN drops. */

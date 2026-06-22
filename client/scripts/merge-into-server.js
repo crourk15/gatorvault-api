@@ -137,7 +137,9 @@ require('./generate-redirects.js');
 rmRecursive(nextDir);
 copyRecursive(outDir, serverDir);
 const netlifyPaths = rewriteNextChunkPathsForNetlify(serverDir);
-console.log(`[netlify] Published vault route chunks to js/vault-chunks/ (${netlifyPaths.flatChunks} bundles, ${netlifyPaths.filesUpdated} refs updated)`);
+console.log(
+  `[netlify] Published vault route chunks to js/vault-chunks/ (${netlifyPaths.flatChunks} bundles, ${netlifyPaths.appTreeFiles} nested app chunks, ${netlifyPaths.filesUpdated} refs updated)`
+);
 assertNoUnrewrittenAppChunkRefs(serverDir);
 require('./stamp-build-meta.js');
 require('./inject-cache-bust.js');
