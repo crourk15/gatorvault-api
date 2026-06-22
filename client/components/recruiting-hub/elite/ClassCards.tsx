@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import type { RhHubClassOverview } from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
+import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
 
 const CLASS_YEARS = [2026, 2027, 2028] as const;
 
@@ -54,13 +54,41 @@ function ClassCard({
 }
 
 export function ClassCards(): React.ReactElement {
-  const { data, loading, error } = useRecruitingHubBundleContext();
-  const allClasses = data?.classOverviewAll;
-  const byYear: Record<ClassYear, RhHubClassOverview | null> = {
-    2026: allClasses?.[2026] ?? null,
-    2027: allClasses?.[2027] ?? null,
-    2028: allClasses?.[2028] ?? null,
-  };
+  const [byYear, setByYear] = useState<Record<ClassYear, RhHubClassOverview | null>>({
+    2026: null,
+    2027: null,
+    2028: null,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(false);
+    void Promise.all(
+      CLASS_YEARS.map((year) =>
+        fetchClassMetrics(year)
+          .then((data) => ({ year, data }))
+          .catch(() => ({ year, data: null }))
+      )
+    )
+      .then((results) => {
+        if (cancelled) return;
+        const next = { 2026: null, 2027: null, 2028: null } as Record<ClassYear, RhHubClassOverview | null>;
+        for (const { year, data } of results) {
+          next[year] = data;
+        }
+        setByYear(next);
+        setError(results.every((r) => !r.data));
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <>

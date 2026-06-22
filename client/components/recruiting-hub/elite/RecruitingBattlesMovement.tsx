@@ -1,11 +1,31 @@
 'use client';
 
-import React from 'react';
-import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
+import React, { useEffect, useState } from 'react';
+import type { RhHubBattle } from '@/lib/recruiting-hub-elite-api';
+import { fetchBattlesAndMovement } from '@/lib/recruiting-ui-api';
+import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 
 export function RecruitingBattlesMovement(): React.ReactElement {
-  const { data: bundle, loading, error } = useRecruitingHubBundleContext();
-  const data = bundle?.battles;
+  const [data, setData] = useState<RhHubBattle[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchBattlesAndMovement(ACTIVE_RECRUITING_CLASS_YEAR)
+      .then((res) => {
+        if (!cancelled) setData(res.battles ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <>
@@ -17,11 +37,11 @@ export function RecruitingBattlesMovement(): React.ReactElement {
         <div className="rh-skeleton" data-testid="rh-elite-battles" aria-hidden="true" />
       ) : !data ? (
         <section className="rh-card" data-testid="rh-elite-battles">
-          <p className="rh-empty">{error ? 'Could not load battle intel.' : 'Battle intel updating — check back shortly.'}</p>
+          <p className="rh-empty">{error ? 'Could not load battle intel.' : 'Battle intel unavailable.'}</p>
         </section>
       ) : !data.length ? (
         <section className="rh-card" data-testid="rh-elite-battles">
-          <p className="rh-empty">Battle intel updating — check back shortly.</p>
+          <p className="rh-empty">No battle intel available yet.</p>
         </section>
       ) : (
         <section className="rh-battle-grid" data-testid="rh-elite-battles">

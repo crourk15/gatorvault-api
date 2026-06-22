@@ -56,7 +56,7 @@ export interface SocialFeedLane {
   posts: BeatPost[];
 }
 
-function normalizePodcastShow(raw: Record<string, unknown>): PodcastShow {
+export function normalizePodcastShow(raw: Record<string, unknown>): PodcastShow {
   const id = String(raw.id ?? '');
   const title = String(raw.title ?? raw.name ?? 'Podcast');
   const catalog = findPodcastCatalogEntry(id || title);

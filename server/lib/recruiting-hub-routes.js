@@ -118,6 +118,10 @@ function mapIntelFromIntelRow(intel, player) {
 }
 
 async function buildHighPriorityIntel(limit = 12) {
+  const intelStore = require('./recruiting-intel-store');
+  if (typeof intelStore.initIntelStore === 'function') {
+    await intelStore.initIntelStore().catch(() => {});
+  }
   const { intel } = gm2.getPublicIntel({ limit: Math.max(limit, 50), subsystem: 'recruiting-hub' });
   const allPlayers = await store.getAllPlayers();
   const bySlug = new Map();
@@ -227,8 +231,26 @@ function mountRecruitingHubRoutes(app) {
     }
   });
 
-  const { handleGetRecruitingMovementIntel } = require('../api/recruiting/movement-intel.ts');
-  app.get('/api/recruiting/movement-intel', handleGetRecruitingMovementIntel);
+  const { buildRecruitingMovementIntelPayload } = require('../api/recruiting/movement-intel.ts');
+  app.get('/api/recruiting/movement-intel', async (req, res) => {
+    try {
+      const force = req.query.force === '1' || req.query.force === 'true';
+      const cacheKey = 'recruiting:movement';
+      let value;
+      if (force) {
+        value = await buildRecruitingMovementIntelPayload();
+      } else {
+        const result = await hubCache.wrap(cacheKey, () => buildRecruitingMovementIntelPayload());
+        value = result.value;
+      }
+      return res.json({
+        ...value,
+        meta: hubMeta({ cacheKey, forced: force, lastUpdated: value.lastUpdated || new Date().toISOString() }),
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 
   const { handleGetMovementWindow } = require('../api/recruiting/movement-window.ts');
   app.get('/api/recruiting/movement-window', handleGetMovementWindow);
@@ -276,6 +298,81 @@ function mountRecruitingHubRoutes(app) {
     const year = parseInt(String(req.query.year || '2027'), 10);
     return Number.isFinite(year) ? year : 2027;
   }
+
+  const { buildBeatIntelItems, buildBattlesAndMovement } = require('./recruiting-ui-api');
+
+  app.get('/api/recruiting/class-metrics', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `hub:class:snapshot:${year}`;
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'class-metrics',
+        builder: () => buildHubClassOverview(year),
+        spread: true,
+        hubMeta,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/battles', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `recruiting:battles:${year}`;
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'battles',
+        builder: () => buildHubBattleBoard(year),
+        hubMeta,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/battles-and-movement', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `recruiting:battles-and-movement:${year}`;
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'battles-and-movement',
+        builder: () => buildBattlesAndMovement(year),
+        spread: true,
+        hubMeta,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/recruiting/intel/beat', async (req, res) => {
+    try {
+      const limit = parseInt(String(req.query.limit || '5'), 10);
+      const force = req.query.force === '1' || req.query.force === 'true';
+      const cacheKey = 'hub:intel:beat';
+      let items;
+      if (force) {
+        items = await buildBeatIntelItems(limit);
+      } else {
+        const result = await hubCache.wrap(cacheKey, () => buildBeatIntelItems(limit));
+        items = result.value;
+      }
+      return res.json({
+        ok: true,
+        meta: hubMeta({ cacheKey, forced: force, lastUpdated: new Date().toISOString() }),
+        items,
+        lastUpdated: new Date().toISOString(),
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 
   app.get('/api/recruiting/hub/hero', async (req, res) => {
     try {

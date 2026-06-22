@@ -140,10 +140,21 @@ function mountLiveRoutes(app) {
     }
   });
 
-  app.get('/api/live/podcasts', (req, res) => {
+  app.get('/api/live/podcasts', async (req, res) => {
     try {
-      const { getPodcastHub } = require('./live-podcasts');
-      return res.json({ ok: true, ...getPodcastHub() });
+      const { getPodcastHub, refreshPodcasts } = require('./live-podcasts');
+      const staleMs = parseInt(process.env.PODCAST_STALE_MS || String(30 * 60 * 1000), 10);
+      const force = req.query.refresh === '1' || req.query.refresh === 'true';
+      let hub = getPodcastHub();
+      const age = hub.fetchedAt ? Date.now() - new Date(hub.fetchedAt).getTime() : Infinity;
+      if (force || age > staleMs) {
+        try {
+          hub = await refreshPodcasts();
+        } catch (refreshErr) {
+          console.warn('[live/podcasts] RSS refresh failed:', refreshErr.message);
+        }
+      }
+      return res.json({ ok: true, cacheKey: 'live:podcasts', ...hub });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }

@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { PodcastCardProps } from '@/lib/gatornation-live-types';
 import { DEFAULT_PODCASTS } from '@/lib/gatornation-live-api';
+import { fetchLivePodcasts } from '@/lib/recruiting-ui-api';
 import { resolvePodcastLogo, resolvePodcastLogoFallback } from '@/lib/podcast-catalog';
 import { GNLModuleHead } from '@/components/gatornation-live/GNLModuleHead';
 import { GNLDashBadge } from '@/components/gatornation-live/GNLDashBadge';
@@ -15,11 +16,34 @@ function formatTime(iso?: string | null): string {
 }
 
 type Props = {
-  podcasts: PodcastCardProps[];
+  podcasts?: PodcastCardProps[];
   updatedAt?: string | null;
 };
 
-export function GNLPodcastSpotlight({ podcasts, updatedAt }: Props): React.ReactElement {
+export function GNLPodcastSpotlight({ podcasts: propPodcasts, updatedAt: propUpdatedAt }: Props): React.ReactElement {
+  const [podcasts, setPodcasts] = useState<PodcastCardProps[]>(propPodcasts ?? []);
+  const [updatedAt, setUpdatedAt] = useState<string | null | undefined>(propUpdatedAt);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchLivePodcasts()
+      .then((items) => {
+        if (!cancelled && items.length > 0) {
+          setPodcasts(items);
+          setUpdatedAt(new Date().toISOString());
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (propPodcasts?.length) setPodcasts(propPodcasts);
+    if (propUpdatedAt) setUpdatedAt(propUpdatedAt);
+  }, [propPodcasts, propUpdatedAt]);
+
   const source = podcasts.length > 0 ? podcasts : DEFAULT_PODCASTS;
   const cards = source.slice(0, 4);
 

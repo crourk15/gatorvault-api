@@ -14,12 +14,13 @@ import { filterExcludedPortalClassItems } from '@/lib/portal-class-filter';
 import { useVaultDataReload } from '@/lib/vault-navigation';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { HomeCommandCenter } from '@/components/home/premium/command/HomeCommandCenter';
+import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
 import {
   buildBeatPosts,
   buildFutureCastTargets,
   buildGameDayView,
   buildHeroTickerItems,
-  buildRecruitingMetricsView,
+  mapClassMetricsToHomeView,
 } from '@/components/home/premium/command/home-command-utils';
 
 const EMPTY_BUNDLE: HomeBundle = {
@@ -39,6 +40,9 @@ const EMPTY_BUNDLE: HomeBundle = {
 export function HomePremiumPage(): React.ReactElement {
   const [bundle, setBundle] = useState<HomeBundle>(EMPTY_BUNDLE);
   const [board, setBoard] = useState<RecruitingBoardResponse | null>(null);
+  const [classMetrics, setClassMetrics] = useState<Awaited<ReturnType<typeof fetchClassMetrics>> | null>(
+    null
+  );
   const [beatItems, setBeatItems] = useState<LivePanelProps['items']>([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,13 +51,15 @@ export function HomePremiumPage(): React.ReactElement {
     try {
       const fetchHome = () =>
         fetchWithWarmPoll(() => fetchHomeBundle(!isInitial), { maxAttempts: 8, delayMs: 2_500 });
-      const [home, recruitingBoard, live] = await Promise.all([
+      const [home, recruitingBoard, live, metrics] = await Promise.all([
         fetchHome(),
         fetchWithWarmPoll(() => fetchRecruitingBoard(2027), { maxAttempts: 6 }).catch(() => null),
         fetchWithWarmPoll(() => fetchLiveHubBundle(!isInitial), { maxAttempts: 6 }).catch(() => null),
+        fetchWithWarmPoll(() => fetchClassMetrics(), { maxAttempts: 6 }).catch(() => null),
       ]);
       setBundle(home);
       setBoard(recruitingBoard);
+      setClassMetrics(metrics);
       const highlights = filterExcludedPortalClassItems(
         live?.panels.beatWriterHighlights.filter((item) => item.text?.trim()) ?? [],
         (item) => item.text,
@@ -86,8 +92,8 @@ export function HomePremiumPage(): React.ReactElement {
   const gameDay = useMemo(() => buildGameDayView(), []);
 
   const recruitingMetrics = useMemo(
-    () => buildRecruitingMetricsView(bundle.recruiting, board, bundle.movement),
-    [bundle.recruiting, bundle.movement, board]
+    () => mapClassMetricsToHomeView(classMetrics),
+    [classMetrics]
   );
 
   const futureCastTargets = useMemo(

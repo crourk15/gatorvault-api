@@ -9,6 +9,7 @@ import {
 } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { RECRUITING_HUB_ELITE_YEAR } from '@/lib/recruiting-hub-elite-api';
 import type { RhHubClassOverview, RhHubHeroPayload } from '@/lib/recruiting-hub-elite-api';
+import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
 import { initGvHydrate, scheduleHeroHydration, releaseHeroHydrationGate } from '@/lib/gv-hydrate';
 
 declare global {
@@ -69,13 +70,34 @@ export function RecruitingHeroStrip({
   const { data } = useRecruitingHubBundleContext();
   const seeded = heroFromWindow();
   const [activeYear, setActiveYear] = useState(seeded?.year ?? year);
+  const [yearOverview, setYearOverview] = useState<RhHubClassOverview | null>(null);
+  const [metricsLoading, setMetricsLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    setMetricsLoading(true);
+    void fetchClassMetrics(activeYear)
+      .then((res) => {
+        if (!cancelled) setYearOverview(res);
+      })
+      .catch(() => {
+        if (!cancelled) setYearOverview(null);
+      })
+      .finally(() => {
+        if (!cancelled) setMetricsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeYear]);
 
   const tickerItems = data?.ticker?.length
     ? data.ticker
     : seeded?.ticker?.length
       ? seeded.ticker
       : FALLBACK_TICKER;
-  const overview = data?.classOverview ?? seeded?.classOverview ?? null;
+  const overview =
+    yearOverview ?? data?.classOverview ?? seeded?.classOverview ?? null;
   const title = seeded?.title ?? 'Recruiting Command Center';
   const subtitle = seeded?.subtitle ?? "UF's class, movement, and battles—one place.";
 
@@ -114,7 +136,7 @@ export function RecruitingHeroStrip({
         </div>
         <span className="rh-badge rh-hero-badge rh-hero-badge--pulse">WAR ROOM</span>
       </div>
-      <HeroMetrics overview={overview} />
+      <HeroMetrics overview={metricsLoading && !overview ? null : overview} />
       <div className="rh-hero-ticker" aria-label="Recruiting intel ticker">
         <div className="rh-hero-ticker-track">
           {tickerItems.map((item, idx) => (

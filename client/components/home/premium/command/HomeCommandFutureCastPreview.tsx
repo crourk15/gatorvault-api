@@ -82,7 +82,12 @@ export function HomeCommandFutureCastPreview({ targets, loading }: Props): React
         {loading ? (
           <div className="home-wow-skeleton" aria-hidden="true" />
         ) : slides.length === 0 ? (
-          <p className="home-wow-empty">FutureCast targets updating — check back shortly.</p>
+          <div className="home-wow-fc-empty">
+            <p className="home-wow-empty">Top UF leaners from the FutureCast model.</p>
+            <a href={VAULT_PILLAR_ROUTES.futurecast} className="home-wow-cta-link">
+              Open FutureCast Lab →
+            </a>
+          </div>
         ) : (
           <>
             <div className="home-wow-fc-carousel">{active ? <TargetSlide target={active} /> : null}</div>

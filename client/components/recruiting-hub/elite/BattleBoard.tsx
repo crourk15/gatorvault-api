@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import type { RhHubBattleBoardItem } from '@/lib/recruiting-hub-elite-api';
 import { getBattleColor } from '@/lib/recruiting-hub-scoring';
-import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
+import { fetchRecruitingBattles } from '@/lib/recruiting-ui-api';
+import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 
 const DIFFICULTY_LABELS: Record<RhHubBattleBoardItem['battleDifficulty'], string> = {
   easy: 'Easy',
@@ -76,8 +77,26 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
 }
 
 export function BattleBoard(): React.ReactElement {
-  const { data: bundle, loading, error } = useRecruitingHubBundleContext();
-  const data = bundle?.battleBoard;
+  const [data, setData] = useState<RhHubBattleBoardItem[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchRecruitingBattles(ACTIVE_RECRUITING_CLASS_YEAR)
+      .then((res) => {
+        if (!cancelled) setData(res.items ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <>
@@ -89,7 +108,7 @@ export function BattleBoard(): React.ReactElement {
         <div className="rh-skeleton" data-testid="rh-elite-battle-board" aria-hidden="true" />
       ) : !data ? (
         <section className="rh-card" data-testid="rh-elite-battle-board">
-          <p className="rh-empty">{error ? 'Could not load battle board.' : 'Battle board updating — check back shortly.'}</p>
+          <p className="rh-empty">{error ? 'Could not load battle board.' : 'Battle board unavailable.'}</p>
         </section>
       ) : !data.length ? (
         <section className="rh-card" data-testid="rh-elite-battle-board">

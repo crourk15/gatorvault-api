@@ -1,8 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { RhHubMovementFeedItem } from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
+import type { MovementIntelResponse } from '@/lib/movement-intel-types';
+import { fetchMovementIntel } from '@/lib/recruiting-ui-api';
+import { playerHref } from '@/lib/player-link';
 
 const EVENT_LABELS: Record<RhHubMovementFeedItem['event'], string> = {
   up: 'Trending Up',
@@ -23,9 +25,78 @@ function formatFeedTime(timestamp: string): string {
   });
 }
 
+function alertEvent(type: string): RhHubMovementFeedItem['event'] {
+  const t = type.toLowerCase();
+  if (t.includes('visit')) return 'visit';
+  if (t.includes('offer')) return 'offer';
+  return 'intel';
+}
+
+function movementIntelToFeed(data: MovementIntelResponse | null): RhHubMovementFeedItem[] {
+  if (!data) return [];
+  const items: RhHubMovementFeedItem[] = [];
+
+  for (const alert of data.alerts ?? []) {
+    items.push({
+      id: alert.id,
+      timestamp: alert.timestamp,
+      name: alert.player,
+      profileUrl: '#',
+      event: alertEvent(alert.type),
+      summary: alert.detail,
+    });
+  }
+
+  for (const riser of data.risers ?? []) {
+    items.push({
+      id: `rise-${riser.id}`,
+      timestamp: riser.lastUpdate,
+      name: riser.name,
+      profileUrl: playerHref({ slug: riser.slug, id: riser.id, name: riser.name }, 'recruiting', 'HIGH_SCHOOL'),
+      event: 'up',
+      summary: `UF ${riser.ufProb}% (+${riser.delta}% 7d) · ${riser.position}`,
+    });
+  }
+
+  for (const faller of (data.fallers ?? []).slice(0, 4)) {
+    items.push({
+      id: `fall-${faller.id}`,
+      timestamp: faller.lastUpdate,
+      name: faller.name,
+      profileUrl: playerHref({ slug: faller.slug, id: faller.id, name: faller.name }, 'recruiting', 'HIGH_SCHOOL'),
+      event: 'down',
+      summary: `UF ${faller.ufProb}% (${faller.delta}% 7d) · ${faller.position}`,
+    });
+  }
+
+  return items
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    .slice(0, 16);
+}
+
 export function MovementIntelFeed(): React.ReactElement {
-  const { data: bundle, loading, error } = useRecruitingHubBundleContext();
-  const data = bundle?.movementFeed;
+  const [payload, setPayload] = useState<MovementIntelResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchMovementIntel()
+      .then((res) => {
+        if (!cancelled) setPayload(res);
+      })
+      .catch(() => {
+        if (!cancelled) setError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const data = useMemo(() => movementIntelToFeed(payload), [payload]);
 
   return (
     <>
@@ -35,13 +106,11 @@ export function MovementIntelFeed(): React.ReactElement {
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-movement-feed" aria-hidden="true" />
-      ) : !data ? (
-        <section className="rh-card" data-testid="rh-elite-movement-feed">
-          <p className="rh-empty">{error ? 'Could not load movement intel.' : 'Movement feed updating — check back shortly.'}</p>
-        </section>
       ) : !data.length ? (
         <section className="rh-card" data-testid="rh-elite-movement-feed">
-          <p className="rh-empty">Movement feed updating — check back shortly.</p>
+          <p className="rh-empty">
+            {error ? 'Could not load movement intel.' : 'No movement intel available yet.'}
+          </p>
         </section>
       ) : (
         <section className="rh-feed" data-testid="rh-elite-movement-feed">

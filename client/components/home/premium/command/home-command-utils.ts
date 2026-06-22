@@ -160,6 +160,97 @@ export function buildHeroTickerItems(bundle: HomeBundle | null): string[] {
   return [...combined, ...fallbacks].slice(0, 4);
 }
 
+export function mapClassMetricsToHomeView(
+  metrics: {
+    classRank?: string;
+    blueChip?: string;
+    commits?: string;
+    avgRating?: string;
+    trendRank?: string;
+    trendBlueChip?: string;
+    trendCommits?: string;
+    trendRating?: string;
+    sparklines?: {
+      classRank?: number[];
+      blueChip?: number[];
+      commits?: number[];
+      avgRating?: number[];
+    };
+    meta?: { lastUpdated?: string; generatedAt?: string };
+  } | null
+): HomeRecruitingMetricsView {
+  if (!metrics) {
+    return buildRecruitingMetricsView(null, null, null);
+  }
+
+  const trendFromStr = (s?: string): MetricTrend => {
+    if (!s) return 'stable';
+    const lower = s.toLowerCase();
+    if (lower.includes('rise') || lower === 'up') return 'up';
+    if (lower.includes('fall') || lower === 'down') return 'down';
+    return 'stable';
+  };
+
+  const classRank = metrics.classRank ?? '—';
+  const blueChip = metrics.blueChip ?? '—';
+  const commits = metrics.commits ?? '—';
+  const avgRatingLabel = metrics.avgRating ?? '—';
+  const classTrend = trendFromStr(metrics.trendRank);
+  const blueChipTrend = trendFromStr(metrics.trendBlueChip);
+  const commitTrend = trendFromStr(metrics.trendCommits);
+  const ratingTrend = trendFromStr(metrics.trendRating);
+
+  const updatedAt = metrics.meta?.lastUpdated ?? metrics.meta?.generatedAt;
+  const updatedLabel = updatedAt
+    ? `Updated ${new Date(updatedAt).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+      })}`
+    : 'Updated recently';
+
+  const sparks = metrics.sparklines ?? {};
+
+  return {
+    classRank,
+    blueChip,
+    commits,
+    avgRating: avgRatingLabel,
+    updatedLabel,
+    blocks: [
+      {
+        label: 'Class rank',
+        value: classRank,
+        trend: classTrend,
+        trendLabel: trendLabel(classTrend),
+        sparkline: sparks.classRank?.length ? sparks.classRank : buildSparkline(10, classTrend),
+      },
+      {
+        label: 'Blue chip %',
+        value: blueChip,
+        trend: blueChipTrend,
+        trendLabel: trendLabel(blueChipTrend),
+        sparkline: sparks.blueChip?.length ? sparks.blueChip : buildSparkline(60, blueChipTrend),
+      },
+      {
+        label: 'Commits',
+        value: commits,
+        trend: commitTrend,
+        trendLabel: trendLabel(commitTrend),
+        sparkline: sparks.commits?.length ? sparks.commits : buildSparkline(18, commitTrend),
+      },
+      {
+        label: 'Avg rating',
+        value: avgRatingLabel,
+        trend: ratingTrend,
+        trendLabel: trendLabel(ratingTrend),
+        sparkline: sparks.avgRating?.length ? sparks.avgRating : buildSparkline(10, ratingTrend),
+      },
+    ],
+  };
+}
+
 export function buildRecruitingMetricsView(
   recruiting: RecruitingSnapshot | null,
   board: RecruitingBoardResponse | null,

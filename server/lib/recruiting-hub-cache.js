@@ -93,9 +93,31 @@ async function warmEliteHubCaches(options = {}) {
     const elite = require('./recruiting-hub-elite');
     const jobs = [
       ['hub:elite:class-overview:all', () => elite.buildHubClassOverviewAll(), null],
+      ['hub:intel:high-priority', async () => {
+        const gm2 = require('./gm2');
+        const intelStore = require('./recruiting-intel-store');
+        if (typeof intelStore.initIntelStore === 'function') {
+          await intelStore.initIntelStore().catch(() => {});
+        }
+        return gm2.getPublicIntel({ limit: 50, subsystem: 'recruiting-hub' }).intel ?? [];
+      }, null],
+      ['recruiting:movement', () => {
+        const { buildRecruitingMovementIntelPayload } = require('../api/recruiting/movement-intel.ts');
+        return buildRecruitingMovementIntelPayload();
+      }, null],
+      ['hub:intel:beat', () => {
+        const { buildBeatIntelItems } = require('./recruiting-ui-api');
+        return buildBeatIntelItems(5);
+      }, null],
     ];
 
     for (const year of years) {
+      jobs.push([`hub:class:snapshot:${year}`, () => elite.buildHubClassOverview(year), year]);
+      jobs.push([`recruiting:battles:${year}`, () => elite.buildHubBattleBoard(year), year]);
+      jobs.push([`recruiting:battles-and-movement:${year}`, () => {
+        const { buildBattlesAndMovement } = require('./recruiting-ui-api');
+        return buildBattlesAndMovement(year);
+      }, year]);
       jobs.push([`hub:elite:bundle:${year}`, () => elite.buildHubBundle(year), year]);
       jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year), year]);
       jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year), year]);
