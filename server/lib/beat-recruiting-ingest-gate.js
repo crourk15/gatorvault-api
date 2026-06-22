@@ -5,8 +5,9 @@
  * 2. Football signal in text
  * 3. Recruiting signal in text
  * 4. Class year 2027+ in text
- * 5. UF mention in text
+ * 5. UF mention or locked UF target name in text
  * 6. Player first + last name in text
+ * 7. No rival-program mention without UF context
  */
 const beatFilters = require('./beat-writer-filters');
 
@@ -58,7 +59,6 @@ const RECRUITING_TERMS = [
 ];
 
 const CLASS_YEAR_RE = /20(27|28|29|30|31|32)/;
-const UF_MENTION_RE = /(Florida|UF|Gators|GatorNation|Gator)/i;
 const PLAYER_NAME_RE = /\b[A-Z][a-z]+ [A-Z][a-z]+\b/;
 
 function normalizeHandle(post) {
@@ -66,10 +66,7 @@ function normalizeHandle(post) {
 }
 
 function isUfOfficialAccount(post) {
-  const handle = normalizeHandle(post);
-  if (UF_OFFICIAL_HANDLES.has(handle)) return true;
-  const outlet = String(post?.outlet || post?.writerName || '').toLowerCase();
-  return /\buf official\b|florida gators football\b|@gatorsfb\b/i.test(outlet);
+  return beatFilters.isUfOfficialAccount(post);
 }
 
 /** Rule 1 — beat writers + UF official accounts only. */
@@ -100,7 +97,11 @@ function matchesClassYear(text) {
 }
 
 function matchesUfMention(text) {
-  return UF_MENTION_RE.test(text);
+  return beatFilters.hasUfIngestContext({ text }, text);
+}
+
+function passesOtherProgramGate(text) {
+  return !beatFilters.mentionsOtherProgramWithoutUf(text);
 }
 
 function matchesPlayerName(text) {
@@ -118,6 +119,13 @@ function evaluateStrictRecruitingIngestGate(post, text) {
   if (!isAllowedIngestAccount(post)) {
     return { pass: false, reason: 'disallowed_account', failedRule: 1 };
   }
+  if (!beatFilters.passesStrictUfOnlyFilter(post, body)) {
+    return {
+      pass: false,
+      reason: beatFilters.strictUfOnlyBlockReason(post, body),
+      failedRule: 1,
+    };
+  }
   if (!matchesFootball(body)) {
     return { pass: false, reason: 'no_football_signal', failedRule: 2 };
   }
@@ -129,6 +137,9 @@ function evaluateStrictRecruitingIngestGate(post, text) {
   }
   if (!matchesUfMention(body)) {
     return { pass: false, reason: 'no_uf_mention', failedRule: 5 };
+  }
+  if (!passesOtherProgramGate(body)) {
+    return { pass: false, reason: 'other_program_without_uf', failedRule: 5 };
   }
   if (!matchesPlayerName(body)) {
     return { pass: false, reason: 'no_player_name', failedRule: 6 };
@@ -145,7 +156,6 @@ module.exports = {
   FOOTBALL_TERMS,
   RECRUITING_TERMS,
   CLASS_YEAR_RE,
-  UF_MENTION_RE,
   PLAYER_NAME_RE,
   isUfOfficialAccount,
   isAllowedIngestAccount,
@@ -153,6 +163,7 @@ module.exports = {
   matchesRecruiting,
   matchesClassYear,
   matchesUfMention,
+  passesOtherProgramGate,
   matchesPlayerName,
   evaluateStrictRecruitingIngestGate,
   passesStrictRecruitingIngestGate,

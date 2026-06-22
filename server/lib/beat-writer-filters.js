@@ -12,6 +12,40 @@ const NATIONAL_UF_ONLY_HANDLES = new Set([
   'stevewiltfong'
 ]);
 
+/** Multi-program / aggregate feeds — require UF context or a locked UF target name. */
+const REQUIRES_UF_CONTEXT_HANDLES = new Set([
+  ...NATIONAL_UF_ONLY_HANDLES,
+  'ejhollandon3',
+  'on3recruits',
+  'rivalsportal'
+]);
+
+/** Primary beat writers for rival programs — blocked unless UF is also mentioned. */
+const OTHER_PROGRAM_REPORTER_HANDLES = new Set([
+  'andyhaggard',
+  'stateoftheu',
+  'caneswatch',
+  'tomahawknation',
+  'noles247',
+  'dawgsports',
+  'georgiadogs',
+  'bamainsider',
+  'rolltide',
+  'lsufootball',
+  'volswire',
+  'gamecocksonline'
+]);
+
+const UF_OFFICIAL_HANDLES = new Set([
+  'gatorsfb',
+  'floridagators',
+  'ufootball',
+  'uf_football',
+  'floridafootball',
+  'gatorfootball',
+  'ufathletics'
+]);
+
 const TRUSTED_HANDLES = new Set([
   'corey_bender',
   'blake_alderman',
@@ -47,7 +81,7 @@ const BEAT_RECRUITING_INGEST_HANDLES = new Set([
 ]);
 
 const TRUSTED_PATTERN =
-  /bender|alderman|niebuhr|simmons|fawcett|harden|abolverdi|gatorsonline|ivins|wiltfong|power|gators breakdown|holland|gatorsterritory|insidethegators|on3recruits|rivalsportal/i;
+  /bender|alderman|niebuhr|simmons|fawcett|harden|abolverdi|gatorsonline|ivins|wiltfong|power|gators breakdown|gatorsterritory|insidethegators|on3recruits|rivalsportal/i;
 
 const MOMENTUM_KEYWORDS = [
   'trending up',
@@ -70,7 +104,7 @@ const UF_COACH_STAFF_RE =
 
 /** Other programs — block when UF is not mentioned. */
 const OTHER_PROGRAM_RE =
-  /\b(florida state|\bfsu\b|seminoles|\bgeorgia\b|\buga\b|bulldogs|\balabama\b|crimson tide|\bauburn\b|tigers|\blsu\b|\btennessee\b|volunteers|ole miss|mississippi state|south carolina|\bclemson\b|\bmiami\b|\bcanes\b|texas a&m|\baggies\b|ohio state|\bmichigan\b|\bnotre dame\b|\boklahoma\b|\btexas\b|\bpenn state\b)\b/i;
+  /\b(florida state|\bfsu\b|seminoles|\bgeorgia\b|\buga\b|bulldogs|\balabama\b|crimson tide|\bauburn\b|\blsu\b|\btennessee\b|volunteers|ole miss|mississippi state|south carolina|\bclemson\b|\bmiami\b|\bcanes\b|\bhurricanes\b|texas a&m|\baggies\b|ohio state|\bmichigan\b|\bnotre dame\b|\boklahoma\b|\btexas longhorns\b|\bpenn state\b)\b/i;
 
 const NATIONAL_ROUNDUP_RE =
   /\b(top \d+|national roundup|around the country|across the sec|sec update|national recruiting|recruiting roundup)\b/i;
@@ -183,10 +217,83 @@ function isFloridaRelatedPost(post) {
   return isFloridaRelevantPost(post);
 }
 
+function normalizeHandle(post) {
+  return String(post?.handle || post?.writerId || '').toLowerCase().replace(/^@/, '');
+}
+
+function isUfOfficialAccount(post) {
+  const handle = normalizeHandle(post);
+  if (UF_OFFICIAL_HANDLES.has(handle)) return true;
+  const outlet = String(post?.outlet || post?.writerName || '').toLowerCase();
+  return /\buf official\b|florida gators football\b|@gatorsfb\b/i.test(outlet);
+}
+
+function isOtherProgramReporter(post) {
+  const handle = normalizeHandle(post);
+  if (OTHER_PROGRAM_REPORTER_HANDLES.has(handle)) return true;
+  const outlet = String(post?.outlet || post?.writerName || '').toLowerCase();
+  return /\bmiami\b|\bcanes\b|\bseminoles\b|\bfsu\b|\bbulldogs\b|\bcrimson tide\b|\broll tide\b|\blsu tigers\b/i.test(
+    outlet
+  );
+}
+
+function requiresUfContextReporter(post) {
+  const handle = normalizeHandle(post);
+  return REQUIRES_UF_CONTEXT_HANDLES.has(handle) || isOtherProgramReporter(post);
+}
+
+function mentionsOtherProgram(text) {
+  return OTHER_PROGRAM_RE.test(String(text || ''));
+}
+
+function mentionsOtherProgramWithoutUf(text) {
+  const t = String(text || '');
+  if (!mentionsOtherProgram(t)) return false;
+  return !isFloridaRelevant(t);
+}
+
+let _ufTargetNamePatterns = null;
+
+function getUfTargetNamePatterns() {
+  if (_ufTargetNamePatterns) return _ufTargetNamePatterns;
+  let names = [];
+  try {
+    const allowlist = require('./recruiting-target-allowlist');
+    names = Object.values(allowlist.getMergedCanonicalNames?.() || allowlist.CANONICAL_TARGET_NAMES || {});
+  } catch {
+    names = [];
+  }
+  _ufTargetNamePatterns = names
+    .map((name) => String(name || '').trim())
+    .filter((name) => name.length >= 5)
+    .map((name) => new RegExp(`\\b${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i'));
+  return _ufTargetNamePatterns;
+}
+
+function matchesUfTargetNameInText(text) {
+  const t = String(text || '');
+  if (!t.trim()) return false;
+  return getUfTargetNamePatterns().some((re) => re.test(t));
+}
+
+function hasUfIngestContext(post, text) {
+  return isFloridaRelevantPost(post) || matchesUfTargetNameInText(text);
+}
+
+function strictUfOnlyBlockReason(post, text) {
+  if (isSteveWiltfongPost(post) && !matchesExplicitUfKeywords(text) && !postUrls(post).some(isFloridaRelatedUrl)) {
+    return 'wiltfong_non_uf_keywords';
+  }
+  if (isOtherProgramReporter(post) && !hasUfIngestContext(post, text)) return 'rival_program_reporter';
+  if (mentionsOtherProgramWithoutUf(text)) return 'other_program_without_uf';
+  if (!hasUfIngestContext(post, text)) return 'missing_uf_context';
+  return 'hard_block_non_uf';
+}
+
 function isHardBlockedNonUfContent(text) {
   const t = String(text || '');
   if (isFloridaRelevant(t)) return false;
-  if (OTHER_PROGRAM_RE.test(t) && RECRUITING_SIGNAL_RE.test(t)) return true;
+  if (mentionsOtherProgramWithoutUf(t)) return true;
   if (NATIONAL_ROUNDUP_RE.test(t)) return true;
   if (/\b(commits? to|committed to|flips? to|pledges? to|signs? with)\b/i.test(t) && OTHER_PROGRAM_RE.test(t)) {
     return true;
@@ -194,29 +301,47 @@ function isHardBlockedNonUfContent(text) {
   return false;
 }
 
+/** Strict UF-only gate for beat ingest + Movement Intel surfacing. */
+function passesStrictUfOnlyFilter(post, text) {
+  const body = `${text || ''} ${post?.summary || ''} ${post?.title || ''}`.trim();
+  if (!body) return false;
+
+  if (isUfOfficialAccount(post) && isFloridaRelevant(body)) return true;
+  if (isHardBlockedNonUfContent(body)) return false;
+  if (mentionsOtherProgramWithoutUf(body)) return false;
+
+  if (isSteveWiltfongPost(post)) {
+    const explicit = matchesExplicitUfKeywords(body) || postUrls(post).some(isFloridaRelatedUrl);
+    if (!explicit) return false;
+  }
+
+  if (requiresUfContextReporter(post) && !hasUfIngestContext(post, body)) return false;
+
+  return hasUfIngestContext(post, body);
+}
+
 function shouldIncludeBeatPost(post, options = {}) {
   const onBlock = typeof options.onBlock === 'function' ? options.onBlock : null;
   const text = `${post.text || ''} ${post.summary || ''} ${post.title || ''}`;
 
-  if (isHardBlockedNonUfContent(text)) {
-    if (onBlock) onBlock(post, 'hard_block_non_uf');
+  if (!passesStrictUfOnlyFilter(post, text)) {
+    if (onBlock) onBlock(post, strictUfOnlyBlockReason(post, text));
     return false;
   }
 
-  if (isSteveWiltfongPost(post)) {
-    const explicit = matchesExplicitUfKeywords(text) || postUrls(post).some(isFloridaRelatedUrl);
-    if (!explicit) {
-      if (onBlock) onBlock(post, 'wiltfong_non_uf_keywords');
-      return false;
-    }
-  } else if (isNationalUfOnlyReporter(post)) {
-    if (!isFloridaRelevantPost(post)) {
-      if (onBlock) onBlock(post, 'non_florida');
-      return false;
-    }
-  }
-
   return true;
+}
+
+function filterUfOnlyIntelRows(rows) {
+  return (rows || []).filter((row) => {
+    const detail = String(row?.detail || row?.text || row?.summary || '');
+    if (!detail.trim()) return false;
+    const post = {
+      handle: row?.sourceHandle || row?.source_handle || null,
+      text: detail,
+    };
+    return passesStrictUfOnlyFilter(post, detail);
+  });
 }
 
 function isTrustedBeatWriter(post) {
@@ -258,9 +383,15 @@ module.exports = {
   FLORIDA_URL_RE,
   MOMENTUM_KEYWORDS,
   NATIONAL_UF_ONLY_HANDLES,
+  REQUIRES_UF_CONTEXT_HANDLES,
+  OTHER_PROGRAM_REPORTER_HANDLES,
+  UF_OFFICIAL_HANDLES,
   TRUSTED_HANDLES,
   BEAT_RECRUITING_INGEST_HANDLES,
   isNationalUfOnlyReporter,
+  isOtherProgramReporter,
+  requiresUfContextReporter,
+  isUfOfficialAccount,
   isChadSimmonsPost,
   isHayesFawcettPost,
   isCharlesPowerPost,
@@ -271,6 +402,13 @@ module.exports = {
   isFloridaRelevantPost,
   isFloridaRelatedText,
   isFloridaRelatedPost,
+  mentionsOtherProgram,
+  mentionsOtherProgramWithoutUf,
+  matchesUfTargetNameInText,
+  hasUfIngestContext,
+  passesStrictUfOnlyFilter,
+  strictUfOnlyBlockReason,
+  filterUfOnlyIntelRows,
   isHardBlockedNonUfContent,
   shouldIncludeBeatPost,
   isTrustedBeatWriter,

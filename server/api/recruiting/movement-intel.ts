@@ -181,7 +181,11 @@ function loadPublicIntel(): IntelRow[] {
   const gm2 = require('../../lib/gm2') as {
     getPublicIntel: (opts: { limit: number; subsystem: string }) => { intel: IntelRow[] };
   };
-  return gm2.getPublicIntel({ limit: 200, subsystem: 'recruiting-movement-intel' }).intel ?? [];
+  const beatFilters = require('../../lib/beat-writer-filters') as {
+    filterUfOnlyIntelRows: (rows: IntelRow[]) => IntelRow[];
+  };
+  const intel = gm2.getPublicIntel({ limit: 200, subsystem: 'recruiting-movement-intel' }).intel ?? [];
+  return beatFilters.filterUfOnlyIntelRows(intel);
 }
 
 export async function buildRecruitingMovementIntelPayload(): Promise<{

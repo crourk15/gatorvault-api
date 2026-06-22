@@ -26,7 +26,11 @@ function loadPublicIntelCount(): number {
   const gm2 = require('../../lib/gm2') as {
     getPublicIntel: (opts: { limit: number; subsystem: string }) => { intel: unknown[] };
   };
-  return gm2.getPublicIntel({ limit: 200, subsystem: 'recruiting-movement-intel' }).intel?.length ?? 0;
+  const beatFilters = require('../../lib/beat-writer-filters') as {
+    filterUfOnlyIntelRows: (rows: unknown[]) => unknown[];
+  };
+  const intel = gm2.getPublicIntel({ limit: 200, subsystem: 'recruiting-movement-intel' }).intel ?? [];
+  return beatFilters.filterUfOnlyIntelRows(intel).length;
 }
 
 function groupIntelByPlayer(intel: Record<string, unknown>[]): Map<string, Record<string, unknown>[]> {
@@ -60,7 +64,12 @@ export async function buildMovementSummaryPayload(): Promise<{
   const gm2 = require('../../lib/gm2') as {
     getPublicIntel: (opts: { limit: number; subsystem: string }) => { intel: Record<string, unknown>[] };
   };
-  const intel = gm2.getPublicIntel({ limit: 200, subsystem: 'recruiting-movement-intel' }).intel ?? [];
+  const beatFilters = require('../../lib/beat-writer-filters') as {
+    filterUfOnlyIntelRows: (rows: Record<string, unknown>[]) => Record<string, unknown>[];
+  };
+  const intel = beatFilters.filterUfOnlyIntelRows(
+    gm2.getPublicIntel({ limit: 200, subsystem: 'recruiting-movement-intel' }).intel ?? []
+  );
   const intelByPlayer = groupIntelByPlayer(intel);
 
   let rising = 0;

@@ -39,13 +39,20 @@ function saveIntelDoc(doc) {
 
 function inferUfRelevant(raw = {}) {
   if (raw.ufRelevant === false) return false;
-  if (raw.ufRelevant === true) return true;
+
+  const beatFilters = require('./beat-writer-filters');
   const detail = String(raw.detail || raw.text || raw.summary || '');
-  const et = String(raw.eventType || raw.event_type || '').toLowerCase();
-  if (/florida|gators|\buf\b|gainesville/i.test(detail)) return true;
-  if (['official_visit', 'unofficial_visit', 'commit', 'flip', 'portal_in', 'offer', 'prediction', 'prediction_change'].includes(et)) return true;
-  if (/rivals_pm|rivals pm|prediction machine|futurecast/i.test(String(raw.source || ''))) return true;
-  return raw.directlyInvolvesUF !== false;
+  const post = {
+    handle: raw.sourceHandle || raw.source_handle || null,
+    text: detail,
+    summary: raw.summary || null,
+    title: raw.title || null,
+  };
+
+  if (beatFilters.mentionsOtherProgramWithoutUf(detail)) return false;
+  if (beatFilters.passesStrictUfOnlyFilter(post, detail)) return true;
+
+  return false;
 }
 
 function normalizeIntel(raw) {

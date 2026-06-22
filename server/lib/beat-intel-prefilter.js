@@ -577,6 +577,25 @@ async function guardBeatPost(post, { subsystem = 'autoposter' } = {}) {
     };
   }
 
+  const beatFilters = require('./beat-writer-filters');
+  if (!beatFilters.passesStrictUfOnlyFilter(post, text)) {
+    const reason = beatFilters.strictUfOnlyBlockReason(post, text);
+    logNonPlayerIntel({
+      text,
+      reason,
+      source: post?.handle || post?.writerName || post?.outlet,
+      subsystem: `${subsystem}:uf-only-filter`
+    });
+    return {
+      eligible: false,
+      skip: buildNonPlayerSkipPayload({
+        reason,
+        category: 'filtered',
+        triggerPhrase: text.slice(0, 160)
+      })
+    };
+  }
+
   const sportClassifier = require('./x-autoposter-sport-classifier');
   const sportSkip = sportClassifier.guardFootballOnly(text, post);
   if (sportSkip) {

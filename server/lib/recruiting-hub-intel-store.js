@@ -163,6 +163,14 @@ function isCuratedHubIntel(row, pool) {
   if (BLOCKED_SUMMARY.test(summary)) return false;
   if (/^https?:\/\//i.test(summary) && !row.playerName) return false;
 
+  try {
+    const beatFilters = require('./beat-writer-filters');
+    const post = { handle: row.sourceHandle || row.source_handle, text: summary };
+    if (!beatFilters.passesStrictUfOnlyFilter(post, summary)) return false;
+  } catch {
+    return false;
+  }
+
   return true;
 }
 

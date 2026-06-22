@@ -36,13 +36,13 @@ describe('beat-recruiting-ingest-gate', () => {
     assert.equal(result.reason, 'class_year_below_2027');
   });
 
-  it('rejects posts without UF mention', () => {
+  it('rejects posts without UF mention or locked target name', () => {
     const result = gate.evaluateStrictRecruitingIngestGate({
       ...GOOD_POST,
-      text: '2027 WR Easton Royal will take an official visit to Texas from June 11–13.',
+      text: '2027 WR John Smith will take an official visit to Texas from June 11–13.',
     });
     assert.equal(result.pass, false);
-    assert.equal(result.reason, 'no_uf_mention');
+    assert.ok(['no_uf_mention', 'missing_uf_context', 'other_program_without_uf'].includes(result.reason));
   });
 
   it('rejects posts without a player name', () => {
