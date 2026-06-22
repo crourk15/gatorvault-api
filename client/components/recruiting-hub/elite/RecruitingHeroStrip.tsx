@@ -9,7 +9,7 @@ import {
 } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { RECRUITING_HUB_ELITE_YEAR } from '@/lib/recruiting-hub-elite-api';
 import type { RhHubClassOverview, RhHubHeroPayload } from '@/lib/recruiting-hub-elite-api';
-import { initGvHydrate, scheduleHeroHydration } from '@/lib/gv-hydrate';
+import { initGvHydrate, scheduleHeroHydration, releaseHeroHydrationGate } from '@/lib/gv-hydrate';
 
 declare global {
   interface Window {
@@ -140,7 +140,10 @@ let heroRoot: Root | null = null;
 /** Mount interactive hero into SSR shell after bundle loads. */
 export function hydrateRecruitingHero(bundleState: RecruitingHubBundleState): void {
   const host = document.querySelector('[data-hydrate="hero"]:not([data-hydrated="true"])');
-  if (!host) return;
+  if (!host) {
+    releaseHeroHydrationGate('hero-host-missing');
+    return;
+  }
 
   const t0 = performance.now();
   heroRoot?.unmount();
@@ -152,6 +155,7 @@ export function hydrateRecruitingHero(bundleState: RecruitingHubBundleState): vo
   );
   host.setAttribute('data-hydrated', 'true');
   host.classList.remove('hero-skeleton');
+  releaseHeroHydrationGate('hydrated');
 
   const hydrationMs = Math.round(performance.now() - t0);
   const hub = window.__GV_HUB__;

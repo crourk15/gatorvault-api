@@ -56,6 +56,13 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
     setIsNavigating(false);
   }, [pathname]);
 
+  /** Prevent stuck pointer-events:none if client navigation never completes. */
+  useEffect(() => {
+    if (!isNavigating) return;
+    const timer = window.setTimeout(() => setIsNavigating(false), 5_000);
+    return () => window.clearTimeout(timer);
+  }, [isNavigating]);
+
   useEffect(() => {
     warmVaultBottomNavRoutes(pathname);
   }, [pathname]);

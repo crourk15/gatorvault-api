@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { RouteErrorFallback } from '@/components/errors/RouteErrorFallback';
+import { tryRecoverFromChunkError } from '@/lib/chunk-error-recovery';
 
 type Props = { children: React.ReactNode };
 type State = { error: Error | null };
@@ -15,6 +16,7 @@ export class VaultErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: Error, info: React.ErrorInfo): void {
     console.error('[VaultErrorBoundary]', error.message, info.componentStack);
+    if (tryRecoverFromChunkError(error)) return;
   }
 
   private retry = (): void => {

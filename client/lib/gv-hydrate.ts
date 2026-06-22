@@ -20,13 +20,45 @@ declare global {
 }
 
 const PRIORITY_ORDER: GvHydratePriority[] = ['hero', 'top-fold', 'below-fold', 'analytics'];
+/** Unblock lower-priority hydration if hero mount stalls. */
+const HERO_GATE_RELEASE_MS = 8_000;
+
+let heroGateReleased = false;
+let heroGateTimer: number | null = null;
 
 function runIdle(fn: () => void): void {
   if (typeof requestIdleCallback === 'function') {
-    requestIdleCallback(() => fn());
+    requestIdleCallback(() => fn(), { timeout: 1_500 });
     return;
   }
   setTimeout(fn, 1);
+}
+
+/** Force-open hydration queue when hero SSR exists but React mount never completes. */
+export function releaseHeroHydrationGate(reason = 'timeout'): void {
+  if (heroGateReleased) return;
+  heroGateReleased = true;
+  if (typeof document !== 'undefined') {
+    const heroHost = document.querySelector('[data-hydrate="hero"]');
+    if (heroHost && !heroHost.hasAttribute('data-hydrated')) {
+      heroHost.setAttribute('data-hydrated', 'skipped');
+      heroHost.setAttribute('data-hydrate-reason', reason);
+    }
+  }
+  const queue = window.__GV_HYDRATE_QUEUE__;
+  if (queue) {
+    const heroIdx = queue.findIndex((job) => job.priority === 'hero');
+    if (heroIdx !== -1) queue.splice(heroIdx, 1);
+  }
+  runIdle(flushQueue);
+}
+
+function scheduleHeroGateRelease(): void {
+  if (heroGateReleased || heroGateTimer != null || typeof window === 'undefined') return;
+  heroGateTimer = window.setTimeout(() => {
+    heroGateTimer = null;
+    releaseHeroHydrationGate('hero-gate-timeout');
+  }, HERO_GATE_RELEASE_MS);
 }
 
 function recordTiming(id: string, enqueuedAt: number): void {
@@ -41,10 +73,12 @@ function recordTiming(id: string, enqueuedAt: number): void {
 }
 
 function heroBlocksProgress(): boolean {
+  if (heroGateReleased) return false;
   if (typeof document === 'undefined') return false;
   const heroPending = window.__GV_HYDRATE_QUEUE__?.some((job) => job.priority === 'hero');
   const heroHost = document.querySelector('[data-hydrate="hero"]');
   const heroNeedsHydration = Boolean(heroHost && !heroHost.hasAttribute('data-hydrated'));
+  if (heroNeedsHydration || heroPending) scheduleHeroGateRelease();
   return Boolean(heroPending || heroNeedsHydration);
 }
 
@@ -69,6 +103,12 @@ function flushQueue(): void {
 /** Install window.__GV_HYDRATE__ once — hero after bundle, idle for top-fold, IO for below-fold. */
 export function initGvHydrate(): void {
   if (typeof window === 'undefined' || window.__GV_HYDRATE__) return;
+
+  heroGateReleased = false;
+  if (heroGateTimer != null) {
+    clearTimeout(heroGateTimer);
+    heroGateTimer = null;
+  }
 
   window.__GV_HYDRATE_QUEUE__ = [];
   window.__GV_HYDRATE_TIMINGS__ = {};

@@ -27,27 +27,32 @@ export function LazyHubSection({
   useEffect(() => {
     initGvHydrate();
     const id = testId ?? `rh-lazy-${Math.random().toString(36).slice(2, 8)}`;
+    let observer: IntersectionObserver | null = null;
 
     if (priority === 'top-fold') {
       window.__GV_HYDRATE__?.(id, () => setVisible(true), 'top-fold');
-      return undefined;
+    } else {
+      const el = ref.current;
+      if (el && !visible) {
+        observer = new IntersectionObserver(
+          ([entry]) => {
+            if (entry?.isIntersecting) {
+              observer?.disconnect();
+              window.__GV_HYDRATE__?.(id, () => setVisible(true), 'below-fold');
+            }
+          },
+          { rootMargin: '200px' }
+        );
+        observer.observe(el);
+      }
     }
 
-    const el = ref.current;
-    if (!el || visible) return undefined;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          observer.disconnect();
-          window.__GV_HYDRATE__?.(id, () => setVisible(true), 'below-fold');
-        }
-      },
-      { rootMargin: '200px' }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
+    /** Safety net — never leave a section as skeleton forever. */
+    const fallback = window.setTimeout(() => setVisible(true), 12_000);
+    return () => {
+      observer?.disconnect();
+      window.clearTimeout(fallback);
+    };
   }, [priority, testId, visible]);
 
   if (visible) {

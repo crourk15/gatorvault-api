@@ -6,10 +6,10 @@ import { getApiBase } from './big-board-api';
 
 /** Per-attempt timeout — fail fast so pages don't hang on cold errors. */
 export const API_FETCH_TIMEOUT_MS = 5_000;
-/** No automatic retries — one fetch per request. */
-export const API_FETCH_RETRIES = 0;
+/** No automatic retries by default — one retry on transient failures for reliability. */
+export const API_FETCH_RETRIES = 1;
 /** DevTools probe: `window.__GV_FETCH__` on the live site should match this profile. */
-export const API_FETCH_PROFILE = 'fast-v1' as const;
+export const API_FETCH_PROFILE = 'fast-v1-retry' as const;
 /** Unused when retries is 0; kept for explicit overrides. */
 export const API_FETCH_RETRY_MS = 3_000;
 export const API_FETCH_RETRY_STATUSES = new Set([502, 503, 504, 429]);

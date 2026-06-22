@@ -61,10 +61,15 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
     }
 
     var heroUrl = '/api/recruiting/hub/hero?year=${safeYear}';
-    fetch(heroUrl, { credentials: 'same-origin' })
-      .then(function(res) { return res.ok ? res.json() : null; })
-      .then(function(body) { paintHero(body && body.ok !== false ? body : null); })
-      .catch(function() {});
+    function loadHero(attempt) {
+      fetch(heroUrl, { credentials: 'same-origin' })
+        .then(function(res) { return res.ok ? res.json() : null; })
+        .then(function(body) { paintHero(body && body.ok !== false ? body : null); })
+        .catch(function() {
+          if (attempt < 1) setTimeout(function() { loadHero(attempt + 1); }, 1500);
+        });
+    }
+    loadHero(0);
   } catch (e) {}
 })();`;
 }
