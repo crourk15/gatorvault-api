@@ -1,11 +1,7 @@
 'use client';
 
-import React, { useCallback } from 'react';
-import {
-  fetchRecruitingHubClassOverview,
-  type RhHubClassOverview,
-} from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
+import React from 'react';
+import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 
 function MetricSparkline({ values }: { values: number[] }): React.ReactElement {
   const max = Math.max(...values, 1);
@@ -63,10 +59,9 @@ function Metric({
 }
 
 export function RecruitingClassOverview(): React.ReactElement {
-  const loadOverview = useCallback(() => fetchRecruitingHubClassOverview(), []);
-  const { data, loading, error } = useRecruitingHubQuery<RhHubClassOverview>(loadOverview);
-
-  const sparks = data?.sparklines;
+  const { data, loading, error } = useRecruitingHubBundleContext();
+  const overview = data?.classOverview;
+  const sparks = overview?.sparklines;
 
   return (
     <>
@@ -80,14 +75,14 @@ export function RecruitingClassOverview(): React.ReactElement {
         </span>
         {loading ? (
           <div className="rh-skeleton" aria-hidden="true" />
-        ) : !data ? (
+        ) : !overview ? (
           <p className="rh-empty">{error ? 'Could not load class overview.' : 'Class overview unavailable.'}</p>
         ) : (
           <div className="rh-metrics-row">
-            <Metric label="Class rank" value={data.classRank} trend={data.trendRank} sparkline={sparks?.classRank} />
-            <Metric label="Blue chip %" value={data.blueChip} trend={data.trendBlueChip} sparkline={sparks?.blueChip} />
-            <Metric label="Commits" value={data.commits} trend={data.trendCommits} sparkline={sparks?.commits} />
-            <Metric label="Avg rating" value={data.avgRating} trend={data.trendRating} sparkline={sparks?.avgRating} />
+            <Metric label="Class rank" value={overview.classRank} trend={overview.trendRank} sparkline={sparks?.classRank} />
+            <Metric label="Blue chip %" value={overview.blueChip} trend={overview.trendBlueChip} sparkline={sparks?.blueChip} />
+            <Metric label="Commits" value={overview.commits} trend={overview.trendCommits} sparkline={sparks?.commits} />
+            <Metric label="Avg rating" value={overview.avgRating} trend={overview.trendRating} sparkline={sparks?.avgRating} />
           </div>
         )}
       </section>

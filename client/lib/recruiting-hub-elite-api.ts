@@ -170,8 +170,25 @@ export type RhHubFootprintResponse = {
   pins?: RhHubFootprintPin[];
 };
 
+/** Full Recruiting Hub elite landing payload — one request replaces ~10 hub calls. */
+export type RhHubBundle = {
+  year: number;
+  ticker: string[];
+  classOverview: RhHubClassOverview;
+  classOverviewAll: RhHubClassOverviewByYear;
+  commits: RhHubCommit[];
+  battles: RhHubBattle[];
+  positions: RhHubPositionRoom[];
+  heatIndex: RhHubHeatTarget[];
+  movementFeed: RhHubMovementFeedItem[];
+  battleBoard: RhHubBattleBoardItem[];
+  footprint: RhHubFootprintResponse;
+};
+
 const HUB_YEAR = ACTIVE_RECRUITING_CLASS_YEAR;
 const HUB_FETCH_OPTS = DEFAULT_SNAPSHOT_FETCH_OPTS;
+/** Bundle builds more on cold start — still single attempt, no retries. */
+export const HUB_BUNDLE_FETCH_OPTS = { retries: 0, timeoutMs: 10_000 } as const;
 
 function fetchHubLive<T>(path: string): Promise<T> {
   return snapshotLiveFetch<T>(path, HUB_FETCH_OPTS);
@@ -248,6 +265,29 @@ export async function fetchRecruitingHubBattleBoard(year = HUB_YEAR): Promise<Rh
 
 export async function fetchRecruitingHubFootprint(year = HUB_YEAR): Promise<RhHubFootprintResponse> {
   return fetchHub<RhHubFootprintResponse>(`/api/recruiting/hub/footprint?year=${year}`);
+}
+
+/** Load all elite hub sections in one round trip. */
+export async function fetchRecruitingHubBundle(year = HUB_YEAR): Promise<RhHubBundle> {
+  type RawBundle = RhHubBundle & { ok?: boolean; status?: string; meta?: unknown };
+  const raw = await snapshotFirstFetch(
+    `/api/recruiting/hub/bundle?year=${year}`,
+    () => snapshotLiveFetch<RawBundle>(`/api/recruiting/hub/bundle?year=${year}`, HUB_BUNDLE_FETCH_OPTS),
+    HUB_BUNDLE_FETCH_OPTS
+  );
+  return {
+    year: raw.year ?? year,
+    ticker: raw.ticker ?? [],
+    classOverview: raw.classOverview,
+    classOverviewAll: raw.classOverviewAll ?? {},
+    commits: raw.commits ?? [],
+    battles: raw.battles ?? [],
+    positions: raw.positions ?? [],
+    heatIndex: raw.heatIndex ?? [],
+    movementFeed: raw.movementFeed ?? [],
+    battleBoard: raw.battleBoard ?? [],
+    footprint: raw.footprint ?? { states: [], pins: [] },
+  };
 }
 
 export const RECRUITING_HUB_ELITE_YEAR = HUB_YEAR;

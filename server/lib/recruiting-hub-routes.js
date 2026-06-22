@@ -268,12 +268,32 @@ function mountRecruitingHubRoutes(app) {
     buildHubMovementFeed,
     buildHubBattleBoard,
     buildHubFootprint,
+    buildHubBundle,
   } = require('./recruiting-hub-elite');
 
   function parseHubYear(req) {
     const year = parseInt(String(req.query.year || '2027'), 10);
     return Number.isFinite(year) ? year : 2027;
   }
+
+  app.get('/api/recruiting/hub/bundle', async (req, res) => {
+    try {
+      const year = parseHubYear(req);
+      const cacheKey = `hub:elite:bundle:${year}`;
+      const bundleTimeoutMs = parseInt(process.env.HUB_BUNDLE_BUILD_TIMEOUT_MS || '45000', 10);
+      return sendHubJson(res, {
+        cacheKey,
+        year,
+        endpoint: 'bundle',
+        builder: () => buildHubBundle(year),
+        spread: true,
+        hubMeta,
+        timeoutMs: bundleTimeoutMs,
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
 
   app.get('/api/recruiting/hub/ticker', async (req, res) => {
     try {

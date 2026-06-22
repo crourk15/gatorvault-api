@@ -1,12 +1,9 @@
 'use client';
 
-import React, { useCallback } from 'react';
-import {
-  fetchRecruitingHubBattleBoard,
-  type RhHubBattleBoardItem,
-} from '@/lib/recruiting-hub-elite-api';
+import React from 'react';
+import type { RhHubBattleBoardItem } from '@/lib/recruiting-hub-elite-api';
 import { getBattleColor } from '@/lib/recruiting-hub-scoring';
-import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
+import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 
 const DIFFICULTY_LABELS: Record<RhHubBattleBoardItem['battleDifficulty'], string> = {
   easy: 'Easy',
@@ -79,8 +76,8 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
 }
 
 export function BattleBoard(): React.ReactElement {
-  const loadBoard = useCallback(() => fetchRecruitingHubBattleBoard(), []);
-  const { data, loading, error } = useRecruitingHubQuery<RhHubBattleBoardItem[]>(loadBoard);
+  const { data: bundle, loading, error } = useRecruitingHubBundleContext();
+  const data = bundle?.battleBoard;
 
   return (
     <>

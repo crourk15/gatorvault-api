@@ -1,13 +1,9 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import {
-  fetchRecruitingHubClassOverviewAll,
-  type RhHubClassOverview,
-  type RhHubClassOverviewByYear,
-} from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
+import type { RhHubClassOverview } from '@/lib/recruiting-hub-elite-api';
+import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 
 const CLASS_YEARS = [2026, 2027, 2028] as const;
 
@@ -58,8 +54,8 @@ function ClassCard({
 }
 
 export function ClassCards(): React.ReactElement {
-  const load = useCallback(() => fetchRecruitingHubClassOverviewAll(), []);
-  const { data: allClasses, loading, error } = useRecruitingHubQuery<RhHubClassOverviewByYear>(load);
+  const { data, loading, error } = useRecruitingHubBundleContext();
+  const allClasses = data?.classOverviewAll;
   const byYear: Record<ClassYear, RhHubClassOverview | null> = {
     2026: allClasses?.[2026] ?? null,
     2027: allClasses?.[2027] ?? null,

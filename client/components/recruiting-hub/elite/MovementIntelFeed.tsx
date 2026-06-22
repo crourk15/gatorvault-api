@@ -1,11 +1,8 @@
 'use client';
 
-import React, { useCallback } from 'react';
-import {
-  fetchRecruitingHubMovementFeed,
-  type RhHubMovementFeedItem,
-} from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
+import React from 'react';
+import type { RhHubMovementFeedItem } from '@/lib/recruiting-hub-elite-api';
+import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 
 const EVENT_LABELS: Record<RhHubMovementFeedItem['event'], string> = {
   up: 'Trending Up',
@@ -27,8 +24,8 @@ function formatFeedTime(timestamp: string): string {
 }
 
 export function MovementIntelFeed(): React.ReactElement {
-  const loadFeed = useCallback(() => fetchRecruitingHubMovementFeed(), []);
-  const { data, loading, error } = useRecruitingHubQuery<RhHubMovementFeedItem[]>(loadFeed);
+  const { data: bundle, loading, error } = useRecruitingHubBundleContext();
+  const data = bundle?.movementFeed;
 
   return (
     <>

@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useCallback } from 'react';
-import { fetchRecruitingHubPositions, type RhHubPositionRoom } from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
+import React from 'react';
+import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 
 export function RecruitingPositionSnapshot(): React.ReactElement {
-  const loadPositions = useCallback(() => fetchRecruitingHubPositions(), []);
-  const { data, loading, error } = useRecruitingHubQuery<RhHubPositionRoom[]>(loadPositions);
+  const { data: bundle, loading, error } = useRecruitingHubBundleContext();
+  const data = bundle?.positions;
 
   return (
     <>

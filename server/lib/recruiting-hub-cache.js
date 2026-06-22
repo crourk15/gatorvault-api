@@ -95,6 +95,7 @@ async function warmEliteHubCaches(options = {}) {
     ];
 
     for (const year of years) {
+      jobs.push([`hub:elite:bundle:${year}`, () => elite.buildHubBundle(year), year]);
       jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year), year]);
       jobs.push([`hub:elite:class-overview:${year}`, () => elite.buildHubClassOverview(year), year]);
       jobs.push([`hub:elite:commits:${year}`, () => elite.buildHubCommits(year), year]);
@@ -145,21 +146,8 @@ function scheduleAsyncWarm() {
   });
 }
 
-function refreshCacheKey(cacheKey, builderFn) {
-  if (warming) return;
-  setImmediate(() => {
-    withTimeout(builderFn(), BUILD_TIMEOUT_MS, cacheKey)
-      .then((value) => {
-        hubCache.set(cacheKey, value);
-        ready = true;
-      })
-      .catch((err) => {
-        console.warn('[recruiting-hub-cache] background refresh failed', cacheKey, err.message);
-      });
-  });
-}
-
-async function serveCached(cacheKey, builderFn) {
+async function serveCached(cacheKey, builderFn, options = {}) {
+  const timeoutMs = options.timeoutMs ?? BUILD_TIMEOUT_MS;
   const hit = hubCache.get(cacheKey);
   if (hit != null) {
     return { status: 'ready', value: hit, hit: true, stale: false };
@@ -167,7 +155,7 @@ async function serveCached(cacheKey, builderFn) {
 
   const stale = hubCache.getStale(cacheKey);
   if (stale != null) {
-    refreshCacheKey(cacheKey, builderFn);
+    refreshCacheKey(cacheKey, builderFn, timeoutMs);
     return { status: 'ready', value: stale, hit: true, stale: true };
   }
 
@@ -176,7 +164,7 @@ async function serveCached(cacheKey, builderFn) {
   }
 
   try {
-    const value = await withTimeout(builderFn(), BUILD_TIMEOUT_MS, cacheKey);
+    const value = await withTimeout(builderFn(), timeoutMs, cacheKey);
     hubCache.set(cacheKey, value);
     ready = true;
     warmKeyCount += 1;
@@ -188,8 +176,22 @@ async function serveCached(cacheKey, builderFn) {
   }
 }
 
-async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = false, hubMeta }) {
-  const result = await serveCached(cacheKey, builder);
+function refreshCacheKey(cacheKey, builderFn, timeoutMs = BUILD_TIMEOUT_MS) {
+  if (warming) return;
+  setImmediate(() => {
+    withTimeout(builderFn(), timeoutMs, cacheKey)
+      .then((value) => {
+        hubCache.set(cacheKey, value);
+        ready = true;
+      })
+      .catch((err) => {
+        console.warn('[recruiting-hub-cache] background refresh failed', cacheKey, err.message);
+      });
+  });
+}
+
+async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = false, hubMeta, timeoutMs }) {
+  const result = await serveCached(cacheKey, builder, { timeoutMs });
   if (result.status === 'building') {
     return res.status(200).json(buildingResponse({ endpoint, year, cacheKey }));
   }

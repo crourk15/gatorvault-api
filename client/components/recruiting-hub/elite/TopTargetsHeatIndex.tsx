@@ -1,11 +1,8 @@
 'use client';
 
-import React, { useCallback } from 'react';
-import {
-  fetchRecruitingHubHeatIndex,
-  type RhHubHeatTarget,
-} from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
+import React from 'react';
+import type { RhHubHeatTarget } from '@/lib/recruiting-hub-elite-api';
+import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 
 function heatBandClass(heat: number): string {
   if (heat >= 70) return 'rh-heat-fill--hot';
@@ -58,8 +55,8 @@ function HeatTargetCard({ target }: { target: RhHubHeatTarget }): React.ReactEle
 }
 
 export function TopTargetsHeatIndex(): React.ReactElement {
-  const loadHeat = useCallback(() => fetchRecruitingHubHeatIndex(), []);
-  const { data, loading, error } = useRecruitingHubQuery<RhHubHeatTarget[]>(loadHeat);
+  const { data: bundle, loading, error } = useRecruitingHubBundleContext();
+  const data = bundle?.heatIndex;
 
   return (
     <>

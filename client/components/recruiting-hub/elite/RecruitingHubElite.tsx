@@ -12,21 +12,27 @@ import { BattleBoard } from '@/components/recruiting-hub/elite/BattleBoard';
 import { RecruitingFootprintMap } from '@/components/recruiting-hub/elite/footprint/RecruitingFootprintMap';
 import { RecruitingBattlesMovement } from '@/components/recruiting-hub/elite/RecruitingBattlesMovement';
 import { RecruitingPositionSnapshot } from '@/components/recruiting-hub/elite/RecruitingPositionSnapshot';
+import { RecruitingHubBundleProvider } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
+import { useRecruitingHubBundle } from '@/components/recruiting-hub/elite/useRecruitingHubBundle';
 
 /** WOW Recruiting Hub Elite — War Room vertical layout. */
 export function RecruitingHubElite(): React.ReactElement {
+  const bundle = useRecruitingHubBundle();
+
   return (
-    <div className="rh-frame rh-elite-chrome" data-testid="rh-elite-chrome">
-      <RecruitingHeroStrip />
-      <SigningDayTracker />
-      <ClassCards />
-      <RecruitingClassOverview />
-      <TopTargetsHeatIndex />
-      <MovementIntelFeed />
-      <BattleBoard />
-      <RecruitingFootprintMap />
-      <RecruitingBattlesMovement />
-      <RecruitingPositionSnapshot />
-    </div>
+    <RecruitingHubBundleProvider value={bundle}>
+      <div className="rh-frame rh-elite-chrome" data-testid="rh-elite-chrome">
+        <RecruitingHeroStrip />
+        <SigningDayTracker />
+        <ClassCards />
+        <RecruitingClassOverview />
+        <TopTargetsHeatIndex />
+        <MovementIntelFeed />
+        <BattleBoard />
+        <RecruitingFootprintMap />
+        <RecruitingBattlesMovement />
+        <RecruitingPositionSnapshot />
+      </div>
+    </RecruitingHubBundleProvider>
   );
 }

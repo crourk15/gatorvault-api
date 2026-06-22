@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useCallback } from 'react';
-import { fetchRecruitingHubTicker } from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
+import React from 'react';
+import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 
 const FALLBACK_TICKER = [
   '2027 class trending nationally — UF in the mix',
@@ -12,9 +11,8 @@ const FALLBACK_TICKER = [
 ];
 
 export function RecruitingHeroStrip(): React.ReactElement {
-  const loadTicker = useCallback(() => fetchRecruitingHubTicker(), []);
-  const { data } = useRecruitingHubQuery(loadTicker);
-  const tickerItems = data && data.length > 0 ? data : FALLBACK_TICKER;
+  const { data } = useRecruitingHubBundleContext();
+  const tickerItems = data?.ticker?.length ? data.ticker : FALLBACK_TICKER;
 
   return (
     <section className="rh-hero-strip" aria-label="Recruiting War Room">

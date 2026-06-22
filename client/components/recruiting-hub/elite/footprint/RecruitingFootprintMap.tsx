@@ -1,12 +1,9 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { ComposableMap, Geographies } from 'react-simple-maps';
-import {
-  fetchRecruitingHubFootprint,
-  type RhHubFootprintState,
-} from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
+import type { RhHubFootprintState } from '@/lib/recruiting-hub-elite-api';
+import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { StateHeatLayer } from './StateHeatLayer';
 import { TargetPinsLayer } from './TargetPinsLayer';
 import { BattleDifficultyLayer } from './BattleDifficultyLayer';
@@ -88,12 +85,12 @@ function FootprintTooltip({ state }: { state: RhHubFootprintState }): React.Reac
 }
 
 export function RecruitingFootprintMap(): React.ReactElement {
-  const loadFootprint = useCallback(() => fetchRecruitingHubFootprint(), []);
-  const { data, loading, error } = useRecruitingHubQuery(loadFootprint);
+  const { data, loading, error } = useRecruitingHubBundleContext();
+  const footprint = data?.footprint;
   const [hoveredState, setHoveredState] = useState<string | null>(null);
 
-  const states = data?.states ?? [];
-  const pins = data?.pins ?? [];
+  const states = footprint?.states ?? [];
+  const pins = footprint?.pins ?? [];
   const activeState = hoveredState ? states.find((s) => s.state === hoveredState) : null;
 
   return (
@@ -107,7 +104,7 @@ export function RecruitingFootprintMap(): React.ReactElement {
 
       {loading ? (
         <div className="rh-skeleton rh-footprint-skeleton" data-testid="rh-elite-footprint" aria-hidden="true" />
-      ) : !data || error ? (
+      ) : !footprint || error ? (
         <section className="rh-card" data-testid="rh-elite-footprint">
           <p className="rh-empty">Could not load recruiting footprint map.</p>
         </section>

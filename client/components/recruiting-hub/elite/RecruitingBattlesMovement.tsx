@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useCallback } from 'react';
-import { fetchRecruitingHubBattles, type RhHubBattle } from '@/lib/recruiting-hub-elite-api';
-import { useRecruitingHubQuery } from '@/components/recruiting-hub/elite/useRecruitingHubQuery';
+import React from 'react';
+import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 
 export function RecruitingBattlesMovement(): React.ReactElement {
-  const loadBattles = useCallback(() => fetchRecruitingHubBattles(), []);
-  const { data, loading, error } = useRecruitingHubQuery<RhHubBattle[]>(loadBattles);
+  const { data: bundle, loading, error } = useRecruitingHubBundleContext();
+  const data = bundle?.battles;
 
   return (
     <>

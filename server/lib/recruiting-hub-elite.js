@@ -332,6 +332,47 @@ async function buildHubFootprint(year = 2027) {
   return hubData.buildHubFootprint(year);
 }
 
+/** Single payload for Recruiting Hub elite landing — one cache key, one client fetch. */
+async function buildHubBundle(year = 2027) {
+  const [
+    ticker,
+    classOverview,
+    classOverviewAll,
+    commits,
+    battles,
+    positions,
+    heatIndex,
+    movementFeed,
+    battleBoard,
+    footprint,
+  ] = await Promise.all([
+    buildHubTicker(year),
+    buildHubClassOverview(year),
+    buildHubClassOverviewAll(),
+    buildHubCommits(year),
+    buildHubBattles(year),
+    buildHubPositions(year),
+    buildHubHeatIndex(year),
+    buildHubMovementFeed(year),
+    buildHubBattleBoard(year),
+    buildHubFootprint(year),
+  ]);
+
+  return {
+    year,
+    ticker,
+    classOverview,
+    classOverviewAll,
+    commits,
+    battles,
+    positions,
+    heatIndex,
+    movementFeed,
+    battleBoard,
+    footprint,
+  };
+}
+
 module.exports = {
   buildHubTicker,
   buildHubClassOverview,
@@ -343,4 +384,5 @@ module.exports = {
   buildHubMovementFeed,
   buildHubBattleBoard,
   buildHubFootprint,
+  buildHubBundle,
 };
