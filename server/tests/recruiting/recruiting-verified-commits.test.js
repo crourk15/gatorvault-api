@@ -24,13 +24,18 @@ test('verified 2027 UF commits are only tre-geathers, jaydee-lane, ellis-mcgaski
   );
 });
 
-test('isFloridaCommit respects verified allowlist for 2027', () => {
+test('isFloridaCommit respects verified allowlist for 2027 in JSON mode', () => {
+  const originalSupabase = process.env.SUPABASE_URL;
+  delete process.env.SUPABASE_URL;
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+  const jsonStore = require('../../lib/recruiting-store');
+
   assert.equal(
-    store.isFloridaCommit({ slug: 'ellis-mcgaskin', classYear: 2027, status: 'committed', committedTo: 'Florida' }),
+    jsonStore.isFloridaCommit({ slug: 'ellis-mcgaskin', classYear: 2027, status: 'committed', committedTo: 'Florida' }),
     true
   );
   assert.equal(
-    store.isFloridaCommit({
+    jsonStore.isFloridaCommit({
       slug: 'maxwell-hiller',
       classYear: 2027,
       status: 'committed',
@@ -40,9 +45,32 @@ test('isFloridaCommit respects verified allowlist for 2027', () => {
     true
   );
   assert.equal(
-    store.isFloridaCommit({ slug: 'maxwell-hiller', classYear: 2027, status: 'committed', committedTo: 'Florida' }),
+    jsonStore.isFloridaCommit({ slug: 'maxwell-hiller', classYear: 2027, status: 'committed', committedTo: 'Florida' }),
     false
   );
+
+  if (originalSupabase) process.env.SUPABASE_URL = originalSupabase;
+  else delete process.env.SUPABASE_URL;
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+});
+
+test('getHubCommits reads committed Florida rows from DATABASE_URL when Supabase client is absent', async () => {
+  require('dotenv').config({ path: require('path').join(__dirname, '..', '..', '.env') });
+  if (!process.env.DATABASE_URL) {
+    console.log('skip: DATABASE_URL not configured');
+    return;
+  }
+  delete process.env.SUPABASE_URL;
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+  const jsonStore = require('../../lib/recruiting-store');
+  const commits = await jsonStore.getHubCommits(2027);
+  assert.ok(Array.isArray(commits));
+  assert.ok(commits.length >= 3);
+  for (const player of commits) {
+    assert.match(String(player.committedTo || ''), /florida/i);
+    assert.match(String(player.status || '').toLowerCase(), /^(committed|commit)$/);
+  }
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
 });
 
 test('demoteUnverifiedHubCommit clears false commits', () => {

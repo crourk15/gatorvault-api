@@ -102,14 +102,18 @@ function isTestPlayer(p) {
 
 const { isBlockedRecruit: isBlockedPlayer } = require('./recruiting-blocked-players');
 
-function isFloridaCommit(p) {
+function isHubFloridaCommitStatus(p) {
   if (!p) return false;
   const status = String(p.status || '').toLowerCase();
   const committedTo = String(p.committedTo || p.committed_to || '').trim();
-  const ufCommitted =
+  return (
     ['committed', 'commit', 'signed', 'enrolled'].includes(status) &&
-    /^florida$/i.test(committedTo);
-  if (!ufCommitted) return false;
+    /^florida$/i.test(committedTo)
+  );
+}
+
+function isFloridaCommit(p) {
+  if (!isHubFloridaCommitStatus(p)) return false;
   if (p.protected === true) return true;
   // Live Supabase store is source of truth — all UF commits in DB count for hub/board.
   if (initSupabase()) return true;
@@ -117,9 +121,82 @@ function isFloridaCommit(p) {
   return isVerifiedHubCommit(p);
 }
 
-/** Hub commit list — UF commits for a class year from recruiting store (Supabase or JSON). */
+function sortHubCommits(players) {
+  return players.slice().sort((a, b) => {
+    const ra = a.natlRank ?? a.natl ?? 9999;
+    const rb = b.natlRank ?? b.natl ?? 9999;
+    return ra - rb;
+  });
+}
+
+function filterHubCommitPlayers(players, classYear) {
+  const year = parseInt(classYear, 10);
+  return sortHubCommits(
+    (players || []).filter(
+      (p) => !isTestPlayer(p) && !isBlockedPlayer(p) && Number(p.classYear) === year && isHubFloridaCommitStatus(p)
+    )
+  );
+}
+
+async function queryHubCommitsFromSupabase(classYear) {
+  const year = parseInt(classYear, 10);
+  const sb = initSupabase();
+  if (!sb) return null;
+
+  const { data, error } = await sb
+    .from('players')
+    .select('*')
+    .eq('class_year', year)
+    .in('status', ['committed', 'commit'])
+    .ilike('committed_to', 'florida')
+    .order('natl_rank', { ascending: true, nullsFirst: false });
+
+  if (error) {
+    if (isSupabaseUnavailableError(error)) {
+      disableSupabase(error.message);
+      return null;
+    }
+    throw error;
+  }
+
+  return filterHubCommitPlayers((data || []).map(rowToPlayer), year);
+}
+
+async function queryHubCommitsFromDatabase(classYear) {
+  const url = process.env.DATABASE_URL && String(process.env.DATABASE_URL).trim();
+  if (!url || initSupabase()) return null;
+
+  const year = parseInt(classYear, 10);
+  const { Client } = require('pg');
+  const client = new Client({ connectionString: url, ssl: { rejectUnauthorized: false } });
+  try {
+    await client.connect();
+    const { rows } = await client.query(
+      `SELECT *
+       FROM players
+       WHERE class_year = $1
+         AND lower(status) IN ('committed', 'commit')
+         AND lower(committed_to) = 'florida'
+       ORDER BY natl_rank NULLS LAST`,
+      [year]
+    );
+    return filterHubCommitPlayers(rows.map(rowToPlayer), year);
+  } finally {
+    await client.end().catch(() => {});
+  }
+}
+
+/** Hub commit list — UF commits for a class year (Supabase/Postgres query, JSON fallback). */
 async function getHubCommits(classYear) {
   const year = parseInt(classYear, 10);
+  if (!Number.isFinite(year)) return [];
+
+  const fromSupabase = await queryHubCommitsFromSupabase(year);
+  if (fromSupabase) return fromSupabase;
+
+  const fromDatabase = await queryHubCommitsFromDatabase(year);
+  if (fromDatabase) return fromDatabase;
+
   const players = await getAllPlayers();
   return players
     .filter((p) => Number(p.classYear) === year && isFloridaCommit(p))
@@ -1035,6 +1112,7 @@ async function upsertTargetFromVisitIntel(intel) {
 module.exports = {
   slugify,
   isFloridaCommit,
+  isHubFloridaCommitStatus,
   isCommittedAnywhere,
   normalizePlayer,
   preservePlayerFields,

@@ -9,7 +9,7 @@ const REFRESH_INTERVAL_MS = parseInt(
 async function refreshRecruitingHubCaches(options = {}) {
   const { clearHubCache, warmEliteHubCaches } = require('./recruiting-hub-cache');
   const { syncStaffAssignments } = require('./recruiting-staff-assignments');
-  const { restoreVerifiedHubCommitsInStore } = require('./recruiting-verified-commits');
+  const store = require('./recruiting-store');
   const {
     loadHubDataset,
     buildBattleBoardRows,
@@ -19,7 +19,8 @@ async function refreshRecruitingHubCaches(options = {}) {
     buildBattlesListRows,
   } = require('./recruiting-hub-data');
 
-  const restoredVerifiedCommits = await restoreVerifiedHubCommitsInStore();
+  const restoredVerifiedCommits =
+    store.storageMode() === 'supabase' ? 0 : await require('./recruiting-verified-commits').restoreVerifiedHubCommitsInStore();
   const staffSync = await syncStaffAssignments();
 
   let geoNormalizedCount = 0;

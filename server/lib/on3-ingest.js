@@ -230,9 +230,10 @@ async function demoteUnverifiedHubCommitsInStore() {
 
 async function syncBoardCommitsToPlayers(commits) {
   const { isVerifiedHubCommit } = require('./recruiting-verified-commits');
+  const useVerifiedAllowlist = store.storageMode() !== 'supabase';
   let synced = 0;
   for (const p of commits || []) {
-    if (!isVerifiedHubCommit(p)) continue;
+    if (useVerifiedAllowlist && !isVerifiedHubCommit(p)) continue;
     const existing = await findExistingPlayer(p);
     const slug = existing?.slug || store.slugify(p.name);
     await store.upsertPlayer({
@@ -809,9 +810,11 @@ async function runOn3Ingest(options = {}) {
   }
 
   try {
-    result.demotedUnverifiedCommits = await demoteUnverifiedHubCommitsInStore();
-    const { restoreVerifiedHubCommitsInStore } = require('./recruiting-verified-commits');
-    result.restoredVerifiedCommits = await restoreVerifiedHubCommitsInStore();
+    if (store.storageMode() !== 'supabase') {
+      result.demotedUnverifiedCommits = await demoteUnverifiedHubCommitsInStore();
+      const { restoreVerifiedHubCommitsInStore } = require('./recruiting-verified-commits');
+      result.restoredVerifiedCommits = await restoreVerifiedHubCommitsInStore();
+    }
   } catch (e) {
     result.errors.push({ type: 'demote_unverified_commits', error: e.message });
   }
