@@ -17,6 +17,8 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # Skip Netlify build-cache restore — stale .next/_next/static caused mismatched layout chunk hashes.
+  NETLIFY_SKIP_BUILD_CACHE = "true"
 
 # Proxy API through same origin — no external API URLs in the browser
 [[redirects]]
