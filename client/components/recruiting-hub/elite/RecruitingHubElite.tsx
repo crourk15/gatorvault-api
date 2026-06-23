@@ -37,6 +37,7 @@ function RecruitingHubEliteContent({
 
   React.useEffect(() => {
     initGvHydrate();
+    document.querySelector('[data-testid="rh-elite-chrome"]')?.setAttribute('data-rh-client-ready', 'true');
   }, []);
 
   const content = (

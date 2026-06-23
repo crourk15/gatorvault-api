@@ -61,6 +61,13 @@ export function TeamHubPage(): React.ReactElement {
   const [activeTab, setActiveTab] = useState<TeamPremiumTabId>('overview');
   const [pipelinePreview, setPipelinePreview] = useState(() => buildPipelinePreview(null, null));
   const [pipelineFullVisible, setPipelineFullVisible] = useState(false);
+  const [warmingExpired, setWarmingExpired] = useState(false);
+
+  useEffect(() => {
+    const ms = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches ? 6000 : 9000;
+    const timer = window.setTimeout(() => setWarmingExpired(true), ms);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   useVaultPageRestore('team', (saved) => {
     if (saved.rosterFilter && typeof saved.rosterFilter === 'string') {
@@ -174,10 +181,11 @@ export function TeamHubPage(): React.ReactElement {
 
   const heroMetrics = useMemo(() => computeHeroMetrics(bundle), [bundle]);
   const suppressPipelinePreview = pipelineFullVisible || activeTab === 'recruiting-pipeline';
+  const showWarmingGate = warming && loading && bundle.roster.length === 0 && !warmingExpired;
 
   return (
     <TeamElitePageShell>
-      {warming && loading && bundle.roster.length === 0 ? (
+      {showWarmingGate ? (
         <div className="rh-frame rh-cc-page team-premium-cc-page">
           <UiWarming />
         </div>

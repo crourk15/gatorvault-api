@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react';
 import type { RhHubClassOverview } from '@/lib/recruiting-hub-elite-api';
 import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
+import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
+import { warmPollProfile } from '@/lib/warm-poll-profile';
+import { readBootClassMetrics } from '@/lib/recruiting-hub-boot-read';
 
 function MetricSparkline({ values }: { values: number[] }): React.ReactElement {
   const max = Math.max(...values, 1);
@@ -62,27 +65,44 @@ function Metric({
 
 export function RecruitingClassOverview(): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
-  const [overview, setOverview] = useState<RhHubClassOverview | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [overview, setOverview] = useState<RhHubClassOverview | null>(() => readBootClassMetrics(activeYear));
+  const [loading, setLoading] = useState(() => !readBootClassMetrics(activeYear));
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
+    const seeded = readBootClassMetrics(activeYear);
+    setOverview(seeded);
+    setLoading(!seeded);
     setError(false);
-    setOverview(null);
-    void fetchClassMetrics(activeYear)
+    void fetchWithWarmPoll(() => fetchClassMetrics(activeYear), warmPollProfile())
       .then((data) => {
         if (!cancelled) setOverview(data);
       })
       .catch(() => {
-        if (!cancelled) setError(true);
+        if (!cancelled && !seeded) setError(true);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
     return () => {
       cancelled = true;
+    };
+  }, [activeYear]);
+
+  useEffect(() => {
+    const onBoot = () => {
+      const seeded = readBootClassMetrics(activeYear);
+      if (seeded) {
+        setOverview(seeded);
+        setLoading(false);
+      }
+    };
+    window.addEventListener('gv-hub-boot', onBoot);
+    window.addEventListener('gv-hero-boot', onBoot);
+    return () => {
+      window.removeEventListener('gv-hub-boot', onBoot);
+      window.removeEventListener('gv-hero-boot', onBoot);
     };
   }, [activeYear]);
 

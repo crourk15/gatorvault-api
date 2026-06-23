@@ -34,6 +34,7 @@ export function AppMenuDrawer(): React.ReactElement {
         aria-label="Close menu"
         aria-hidden={!isOpen}
         tabIndex={isOpen ? 0 : -1}
+        data-vault-menu-close
         onClick={closeMenu}
       />
       <aside
@@ -44,7 +45,7 @@ export function AppMenuDrawer(): React.ReactElement {
       >
         <div className="gv-app-menu__head">
           <h2 className="gv-app-menu__title">Menu</h2>
-          <button type="button" className="gv-app-menu__close" onClick={closeMenu}>
+          <button type="button" className="gv-app-menu__close" data-vault-menu-close onClick={closeMenu}>
             Close
           </button>
         </div>

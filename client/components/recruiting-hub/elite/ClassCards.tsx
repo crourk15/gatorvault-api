@@ -6,6 +6,9 @@ import type { RhHubClassOverview } from '@/lib/recruiting-hub-elite-api';
 import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { RECRUITING_CLASS_YEARS, type RecruitingClassYear } from '@/lib/recruiting-cycle';
+import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
+import { warmPollProfile } from '@/lib/warm-poll-profile';
+import { readBootClassMetricsByYear } from '@/lib/recruiting-hub-boot-read';
 
 function ClassCard({
   year,
@@ -68,23 +71,34 @@ function ClassCard({
 
 export function ClassCards(): React.ReactElement {
   const { activeYear, setActiveYear } = useRecruitingClassYear();
-  const [byYear, setByYear] = useState<Record<RecruitingClassYear, RhHubClassOverview | null>>({
-    2026: null,
-    2027: null,
-    2028: null,
+  const [byYear, setByYear] = useState<Record<RecruitingClassYear, RhHubClassOverview | null>>(() => {
+    const boot = readBootClassMetricsByYear();
+    return {
+      2026: boot[2026] ?? null,
+      2027: boot[2027] ?? null,
+      2028: boot[2028] ?? null,
+    };
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !RECRUITING_CLASS_YEARS.some((y) => readBootClassMetricsByYear()[y]));
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
+    const boot = readBootClassMetricsByYear();
+    const hasBoot = RECRUITING_CLASS_YEARS.some((y) => boot[y]);
+    setByYear({
+      2026: boot[2026] ?? null,
+      2027: boot[2027] ?? null,
+      2028: boot[2028] ?? null,
+    });
+    setLoading(!hasBoot);
     setError(false);
+    const poll = warmPollProfile();
     void Promise.all(
       RECRUITING_CLASS_YEARS.map((year) =>
-        fetchClassMetrics(year)
+        fetchWithWarmPoll(() => fetchClassMetrics(year), poll)
           .then((data) => ({ year, data }))
-          .catch(() => ({ year, data: null }))
+          .catch(() => ({ year, data: boot[year] ?? null }))
       )
     )
       .then((results) => {
@@ -104,6 +118,25 @@ export function ClassCards(): React.ReactElement {
       });
     return () => {
       cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const onBoot = () => {
+      const boot = readBootClassMetricsByYear();
+      if (!RECRUITING_CLASS_YEARS.some((y) => boot[y])) return;
+      setByYear({
+        2026: boot[2026] ?? null,
+        2027: boot[2027] ?? null,
+        2028: boot[2028] ?? null,
+      });
+      setLoading(false);
+    };
+    window.addEventListener('gv-hub-boot', onBoot);
+    window.addEventListener('gv-hero-boot', onBoot);
+    return () => {
+      window.removeEventListener('gv-hub-boot', onBoot);
+      window.removeEventListener('gv-hero-boot', onBoot);
     };
   }, []);
 

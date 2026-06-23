@@ -94,6 +94,28 @@
   animation: rh-elite-shimmer 1.2s infinite;
 }
 
+.rh-elite-chrome .rh-card .rh-skeleton,
+.rh-elite-chrome .rh-class-card .rh-skeleton,
+.rh-elite-chrome .rh-class-card__skeleton {
+  min-height: 72px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 33, 165, 0.07) 25%,
+    rgba(0, 33, 165, 0.14) 50%,
+    rgba(0, 33, 165, 0.07) 75%
+  );
+  background-size: 200% 100%;
+}
+
+.rh-elite-chrome[data-rh-client-ready='true'] [data-rh-boot-root] {
+  display: none;
+}
+
+.rh-elite-chrome .rh-boot-loading[data-rh-boot-painted='true'] .rh-metric-value,
+.rh-elite-chrome .rh-boot-loading[data-rh-boot-painted='true'] .rh-class-card__stats dd {
+  color: var(--card-text, #0f172a);
+}
+
 @keyframes rh-elite-shimmer {
   from {
     background-position: 200% 0;

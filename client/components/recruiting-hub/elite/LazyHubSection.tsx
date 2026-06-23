@@ -47,7 +47,7 @@ export function LazyHubSection({
 
     const isMobile =
       typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
-    const fallbackMs = isMobile ? 4_000 : 12_000;
+    const fallbackMs = isMobile ? 2_000 : 8_000;
     const fallback = window.setTimeout(() => setVisible(true), fallbackMs);
     return () => {
       observer?.disconnect();
