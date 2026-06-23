@@ -7,6 +7,7 @@ import {
   type RhHubBundle,
 } from '@/lib/recruiting-hub-elite-api';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
+import { warmPollProfile } from '@/lib/warm-poll-profile';
 import type { RecruitingHubBundleState } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { initGvHydrate } from '@/lib/gv-hydrate';
 
@@ -41,7 +42,7 @@ function initHubMonitor(year: number): number {
 
 /** Poll hub bundle while API warms — avoids empty hub on cold Render wake. */
 async function fetchHubBundleWithWarmPoll(year: number): Promise<RhHubBundle> {
-  return fetchWithWarmPoll(() => fetchRecruitingHubBundle(year));
+  return fetchWithWarmPoll(() => fetchRecruitingHubBundle(year), warmPollProfile());
 }
 
 /** Single /api/recruiting/hub/bundle fetch for the elite landing page. */

@@ -22,33 +22,33 @@ export function LazyHubSection({
   priority = 'below-fold',
 }: LazyHubSectionProps): React.ReactElement {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(priority === 'top-fold');
 
   useEffect(() => {
+    if (priority === 'top-fold') return undefined;
+
     initGvHydrate();
     const id = testId ?? `rh-lazy-${Math.random().toString(36).slice(2, 8)}`;
     let observer: IntersectionObserver | null = null;
+    const el = ref.current;
 
-    if (priority === 'top-fold') {
-      window.__GV_HYDRATE__?.(id, () => setVisible(true), 'top-fold');
-    } else {
-      const el = ref.current;
-      if (el && !visible) {
-        observer = new IntersectionObserver(
-          ([entry]) => {
-            if (entry?.isIntersecting) {
-              observer?.disconnect();
-              window.__GV_HYDRATE__?.(id, () => setVisible(true), 'below-fold');
-            }
-          },
-          { rootMargin: '200px' }
-        );
-        observer.observe(el);
-      }
+    if (el && !visible) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry?.isIntersecting) {
+            observer?.disconnect();
+            window.__GV_HYDRATE__?.(id, () => setVisible(true), 'below-fold');
+          }
+        },
+        { rootMargin: '200px' }
+      );
+      observer.observe(el);
     }
 
-    /** Safety net — never leave a section as skeleton forever. */
-    const fallback = window.setTimeout(() => setVisible(true), 12_000);
+    const isMobile =
+      typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
+    const fallbackMs = isMobile ? 4_000 : 12_000;
+    const fallback = window.setTimeout(() => setVisible(true), fallbackMs);
     return () => {
       observer?.disconnect();
       window.clearTimeout(fallback);

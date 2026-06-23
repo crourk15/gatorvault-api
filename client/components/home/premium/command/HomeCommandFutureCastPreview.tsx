@@ -82,7 +82,7 @@ export function HomeCommandFutureCastPreview({ targets, loading }: Props): React
         {loading ? (
           <>
             <div className="home-wow-skeleton home-wow-skeleton--overlay" data-home-boot-skeleton aria-hidden="true" />
-            <div className="home-wow-fc-slide" data-home-boot-body hidden>
+            <div className="home-wow-fc-slide home-wow-boot-body" data-home-boot-body>
               <div className="home-wow-fc-silhouette" aria-hidden="true" data-fc-pos>
                 —
               </div>

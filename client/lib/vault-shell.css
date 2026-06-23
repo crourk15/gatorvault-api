@@ -11,7 +11,7 @@
 [hidden].gv-vault-shell,
 [hidden].gv-vault-ssr-marker,
 .gv-vault-ssr-marker[hidden],
-.gv-vault-shell__main > [hidden] {
+.gv-vault-shell__main > [hidden]:not([data-home-boot-body]) {
   display: none !important;
   min-height: 0 !important;
   height: 0 !important;
@@ -337,10 +337,14 @@ body.gv-live-page-active .gv-vault-shell__main {
     transition: transform 0.2s ease;
     border-right: 1px solid rgba(0, 48, 135, 0.35);
     box-shadow: 8px 0 24px rgba(0, 0, 0, 0.35);
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .gv-vault-shell__sidebar.is-open {
     transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
   }
 
   .gv-vault-shell__backdrop {

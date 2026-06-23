@@ -22,7 +22,13 @@
 
 @media (max-width: 767px) {
   .home-wow-page {
-    padding: 24px 16px 40px;
+    padding: 20px 16px calc(48px + env(safe-area-inset-bottom, 0));
+  }
+
+  .home-wow-page__frame {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
   }
 }
 

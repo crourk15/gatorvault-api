@@ -21,7 +21,10 @@ declare global {
 
 const PRIORITY_ORDER: GvHydratePriority[] = ['hero', 'top-fold', 'below-fold', 'analytics'];
 /** Unblock lower-priority hydration if hero mount stalls. */
-const HERO_GATE_RELEASE_MS = 8_000;
+function heroGateReleaseMs(): number {
+  if (typeof window === 'undefined') return 8_000;
+  return window.matchMedia('(max-width: 767px)').matches ? 4_000 : 8_000;
+}
 
 let heroGateReleased = false;
 let heroGateTimer: number | null = null;
@@ -58,7 +61,7 @@ function scheduleHeroGateRelease(): void {
   heroGateTimer = window.setTimeout(() => {
     heroGateTimer = null;
     releaseHeroHydrationGate('hero-gate-timeout');
-  }, HERO_GATE_RELEASE_MS);
+  }, heroGateReleaseMs());
 }
 
 function recordTiming(id: string, enqueuedAt: number): void {

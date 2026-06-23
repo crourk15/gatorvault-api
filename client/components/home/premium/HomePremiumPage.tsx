@@ -7,6 +7,7 @@ import { fetchRecruitingBoard, type RecruitingBoardResponse } from '@/lib/recrui
 import { fetchRecruitingHubTicker } from '@/lib/recruiting-hub-elite-api';
 import { useVaultDataReload } from '@/lib/vault-navigation';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
+import { warmPollProfile } from '@/lib/warm-poll-profile';
 import { HomeCommandCenter } from '@/components/home/premium/command/HomeCommandCenter';
 import {
   fetchBeatIntel,
@@ -68,17 +69,22 @@ export function HomePremiumPage(): React.ReactElement {
   }, [classMetrics]);
 
   const load = useCallback(async (isInitial: boolean) => {
-    if (isInitial) setLoading(true);
+    if (isInitial && readBootMetrics()) {
+      setLoading(false);
+    } else if (isInitial) {
+      setLoading(true);
+    }
+    const poll = warmPollProfile();
     try {
       const year = ACTIVE_RECRUITING_CLASS_YEAR;
       const [ticker, intel, movement, beat, recruitingBoard, metrics, fcHome] = await Promise.all([
-        fetchWithWarmPoll(() => fetchRecruitingHubTicker(year), { maxAttempts: 6 }).catch(() => []),
-        fetchWithWarmPoll(() => fetchHighPriorityIntel(), { maxAttempts: 6 }).catch(() => []),
-        fetchWithWarmPoll(() => fetchMovementIntel(), { maxAttempts: 6 }).catch(() => null),
-        fetchWithWarmPoll(() => fetchBeatIntel(), { maxAttempts: 6 }).catch(() => []),
-        fetchWithWarmPoll(() => fetchRecruitingBoard(year), { maxAttempts: 6 }).catch(() => null),
-        fetchWithWarmPoll(() => fetchClassMetrics(), { maxAttempts: 6 }).catch(() => null),
-        fetchWithWarmPoll(() => fetchFutureCastHome(), { maxAttempts: 6 }).catch(() => null),
+        fetchWithWarmPoll(() => fetchRecruitingHubTicker(year), poll).catch(() => []),
+        fetchWithWarmPoll(() => fetchHighPriorityIntel(), poll).catch(() => []),
+        fetchWithWarmPoll(() => fetchMovementIntel(), poll).catch(() => null),
+        fetchWithWarmPoll(() => fetchBeatIntel(), poll).catch(() => []),
+        fetchWithWarmPoll(() => fetchRecruitingBoard(year), poll).catch(() => null),
+        fetchWithWarmPoll(() => fetchClassMetrics(), poll).catch(() => null),
+        fetchWithWarmPoll(() => fetchFutureCastHome(), poll).catch(() => null),
       ]);
       setHubTicker(ticker);
       setHpIntel(intel);

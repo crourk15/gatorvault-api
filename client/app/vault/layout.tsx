@@ -6,7 +6,6 @@ import { VaultNavigationProvider } from '@/components/vault/VaultNavigationProvi
 import { VaultRouteGate } from '@/components/VaultRouteGate';
 import { VaultHydrationGuard } from '@/components/vault/VaultHydrationGuard';
 import {
-  VAULT_HYDRATION_BOOT_SCRIPT,
   VAULT_HYDRATION_CRITICAL_CSS,
 } from '@/lib/vault-hydration-guard.js';
 import '@/styles/index.css';
@@ -77,10 +76,7 @@ export default function VaultLayout({
           </VaultNavigationProvider>
         </VaultErrorBoundary>
       </div>
-      <script
-        data-gv-hydration-boot=""
-        dangerouslySetInnerHTML={{ __html: VAULT_HYDRATION_BOOT_SCRIPT }}
-      />
+      {/* Hydration boot injected post-build by inject-vault-hydration-guard.js (after #gv-vault-root). */}
     </>
   );
 }
