@@ -6,7 +6,7 @@ import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
-import { readBootClassMetrics } from '@/lib/recruiting-hub-boot-read';
+import { readBootClassMetrics, hideRhBootSection } from '@/lib/recruiting-hub-boot-read';
 
 function MetricSparkline({ values }: { values: number[] }): React.ReactElement {
   const max = Math.max(...values, 1);
@@ -63,7 +63,7 @@ function Metric({
   );
 }
 
-export function RecruitingClassOverview(): React.ReactElement {
+export function RecruitingClassOverview(): React.ReactElement | null {
   const { activeYear } = useRecruitingClassYear();
   const [overview, setOverview] = useState<RhHubClassOverview | null>(() => readBootClassMetrics(activeYear));
   const [loading, setLoading] = useState(() => !readBootClassMetrics(activeYear));
@@ -106,7 +106,13 @@ export function RecruitingClassOverview(): React.ReactElement {
     };
   }, [activeYear]);
 
+  useEffect(() => {
+    if (overview) hideRhBootSection('class-overview');
+  }, [overview]);
+
   const sparks = overview?.sparklines;
+
+  if (loading && !overview) return null;
 
   return (
     <>

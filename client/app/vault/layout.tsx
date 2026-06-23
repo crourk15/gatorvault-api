@@ -8,6 +8,7 @@ import { VaultHydrationGuard } from '@/components/vault/VaultHydrationGuard';
 import {
   VAULT_HYDRATION_CRITICAL_CSS,
 } from '@/lib/vault-hydration-guard.js';
+import { VAULT_MENU_BOOT_SCRIPT } from '@/lib/vault-menu-boot.js';
 import '@/styles/index.css';
 import '@/lib/gv-design-system.css';
 import '@/lib/gatorvault-brand.css';
@@ -76,7 +77,10 @@ export default function VaultLayout({
           </VaultNavigationProvider>
         </VaultErrorBoundary>
       </div>
-      {/* Hydration boot injected post-build by inject-vault-hydration-guard.js (after #gv-vault-root). */}
+      <script
+        data-gv-menu-boot=""
+        dangerouslySetInnerHTML={{ __html: VAULT_MENU_BOOT_SCRIPT }}
+      />
     </>
   );
 }

@@ -8,7 +8,7 @@ const VAULT_HYDRATION_BOOT_SCRIPT =
   'function restore(){if(!window.__GV_SSR_VAULT_HTML__)return false;' +
   'try{var wrap=document.createElement("div");wrap.innerHTML=window.__GV_SSR_VAULT_HTML__;var fresh=wrap.firstElementChild;if(!fresh)return false;' +
   'var cur=document.getElementById("gv-vault-root");if(cur){cur.replaceWith(fresh)}else{var anchor=document.querySelector("script[src*=\\"vault-chunks\\"],script[src*=\\"_next/static/chunks\\"]");document.body.insertBefore(fresh,anchor||null)}' +
-  'fresh.removeAttribute("data-hydrating");return true}catch(e){return false}}' +
+  'fresh.removeAttribute("data-hydrating");window.dispatchEvent(new CustomEvent("gv-vault-restored"));if(window.__GV_MENU_BIND__)window.__GV_MENU_BIND__();return true}catch(e){return false}}' +
   'function rootBlank(){var r=document.getElementById("gv-vault-root");if(!r)return true;var m=mainEl();if(!m)return true;if(m.querySelector("[data-home-boot-painted],[data-hydrate=hero]:not(.hero-skeleton)"))return false;return m.childElementCount===0}' +
   'function guard(){if(rootBlank()){if(restore()){console.warn("[VaultHydrationGuard] restored SSR snapshot")}return}' +
   'var r=document.getElementById("gv-vault-root");if(r&&!r.hasAttribute("data-gv-hydrated")){r.removeAttribute("data-hydrating")}}' +

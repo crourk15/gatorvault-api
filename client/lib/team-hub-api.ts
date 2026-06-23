@@ -1,6 +1,7 @@
 import { type RosterPlayer } from './roster-api';
 import { snapshotFirstFetch, snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch';
 import { fetchWithWarmPoll } from './api-warm-poll';
+import { warmPollProfile } from './warm-poll-profile';
 import {
   FALLBACK_COACHES,
   TEAM_ACHIEVEMENTS,
@@ -139,10 +140,12 @@ function countRosterUnits(roster: TeamPlayer[]): { offense: number; defense: num
 
 export async function fetchTeamHubBundle(): Promise<TeamHubBundle> {
   const [rosterResult, coaches, meta] = await Promise.allSettled([
-    fetchWithWarmPoll(() =>
-      snapshotLiveFetch<{ players?: RosterPlayer[] }>('/api/roster/players', DEFAULT_SNAPSHOT_FETCH_OPTS).then(
-        (data) => (data.players ?? []).map(mapRosterPlayer).sort((a, b) => a.name.localeCompare(b.name))
-      )
+    fetchWithWarmPoll(
+      () =>
+        snapshotLiveFetch<{ players?: RosterPlayer[] }>('/api/roster/players', DEFAULT_SNAPSHOT_FETCH_OPTS).then(
+          (data) => (data.players ?? []).map(mapRosterPlayer).sort((a, b) => a.name.localeCompare(b.name))
+        ),
+      warmPollProfile()
     ).catch(() => [] as TeamPlayer[]),
     fetchCoachingStaff(),
     fetchDepthChartMeta(),

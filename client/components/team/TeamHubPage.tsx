@@ -7,7 +7,6 @@ import { fetchFutureCastMasterBoard } from '@/lib/futurecast-board-api';
 import type { Coach, DepthChartTab, Era } from '@/lib/team-hub-types';
 import type { RosterFilter } from '@/lib/team-hub-data';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
-import { UiWarming } from '@/components/site/UiMessage';
 import { CoachingStaffModal, EraDetailModal } from '@/components/team/CoachingStaffModal';
 import { TeamElitePageShell } from '@/components/team/premium/TeamElitePageShell';
 import { TeamPremiumHero } from '@/components/team/premium/TeamPremiumHero';
@@ -53,7 +52,6 @@ export function TeamHubPage(): React.ReactElement {
   const [bundle, setBundle] = useState<TeamHubBundle>(EMPTY_BUNDLE);
   const [loading, setLoading] = useState(true);
   const [pipelineLoading, setPipelineLoading] = useState(true);
-  const [warming, setWarming] = useState(true);
   const [rosterFilter, setRosterFilter] = useState<RosterFilter>('All');
   const [dcTab, setDcTab] = useState<DepthChartTab>('offense');
   const [selectedCoach, setSelectedCoach] = useState<Coach | null>(null);
@@ -61,13 +59,6 @@ export function TeamHubPage(): React.ReactElement {
   const [activeTab, setActiveTab] = useState<TeamPremiumTabId>('overview');
   const [pipelinePreview, setPipelinePreview] = useState(() => buildPipelinePreview(null, null));
   const [pipelineFullVisible, setPipelineFullVisible] = useState(false);
-  const [warmingExpired, setWarmingExpired] = useState(false);
-
-  useEffect(() => {
-    const ms = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches ? 6000 : 9000;
-    const timer = window.setTimeout(() => setWarmingExpired(true), ms);
-    return () => window.clearTimeout(timer);
-  }, []);
 
   useVaultPageRestore('team', (saved) => {
     if (saved.rosterFilter && typeof saved.rosterFilter === 'string') {
@@ -79,7 +70,6 @@ export function TeamHubPage(): React.ReactElement {
     if (isInitial) {
       setLoading(true);
       setPipelineLoading(true);
-      setWarming(true);
     }
     try {
       const [hub, board, fcBoard] = await Promise.all([
@@ -92,7 +82,6 @@ export function TeamHubPage(): React.ReactElement {
     } finally {
       if (isInitial) {
         setLoading(false);
-        setWarming(false);
       }
       setPipelineLoading(false);
     }
@@ -181,40 +170,31 @@ export function TeamHubPage(): React.ReactElement {
 
   const heroMetrics = useMemo(() => computeHeroMetrics(bundle), [bundle]);
   const suppressPipelinePreview = pipelineFullVisible || activeTab === 'recruiting-pipeline';
-  const showWarmingGate = warming && loading && bundle.roster.length === 0 && !warmingExpired;
 
   return (
     <TeamElitePageShell>
-      {showWarmingGate ? (
-        <div className="rh-frame rh-cc-page team-premium-cc-page">
-          <UiWarming />
-        </div>
-      ) : (
-        <>
-          <TeamPremiumHero metrics={heroMetrics} loading={loading && bundle.roster.length === 0} />
-          <div className="team-premium-subnav-wrap rh-frame">
-            <TeamPremiumSubNav active={activeTab} onSelect={scrollToSection} />
-          </div>
-          <div className="rh-frame rh-cc-page team-premium-cc-page">
-            <TeamOverviewSection
-              bundle={bundle}
-              pipelinePreview={pipelinePreview}
-              suppressPipelinePreview={suppressPipelinePreview}
-            />
-            <TeamRosterSection
-              roster={bundle.roster}
-              filter={rosterFilter}
-              onFilterChange={setRosterFilter}
-              loading={loading && bundle.roster.length === 0}
-            />
-            <TeamDepthChartSection dcTab={dcTab} onTabChange={setDcTab} positions={dcPositions} />
-            <StaffCardGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} />
-            <TeamIdentityPremiumSection />
-            <ProgramHistoryGrid eras={bundle.eras} onSelectEra={setSelectedEra} />
-            <TeamRecruitingPipelineSection data={pipelinePreview} loading={pipelineLoading} />
-          </div>
-        </>
-      )}
+      <TeamPremiumHero metrics={heroMetrics} loading={loading && bundle.roster.length === 0} />
+      <div className="team-premium-subnav-wrap rh-frame">
+        <TeamPremiumSubNav active={activeTab} onSelect={scrollToSection} />
+      </div>
+      <div className="rh-frame rh-cc-page team-premium-cc-page">
+        <TeamOverviewSection
+          bundle={bundle}
+          pipelinePreview={pipelinePreview}
+          suppressPipelinePreview={suppressPipelinePreview}
+        />
+        <TeamRosterSection
+          roster={bundle.roster}
+          filter={rosterFilter}
+          onFilterChange={setRosterFilter}
+          loading={loading && bundle.roster.length === 0}
+        />
+        <TeamDepthChartSection dcTab={dcTab} onTabChange={setDcTab} positions={dcPositions} />
+        <StaffCardGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} />
+        <TeamIdentityPremiumSection />
+        <ProgramHistoryGrid eras={bundle.eras} onSelectEra={setSelectedEra} />
+        <TeamRecruitingPipelineSection data={pipelinePreview} loading={pipelineLoading} />
+      </div>
 
       <CoachingStaffModal coach={selectedCoach} onClose={() => setSelectedCoach(null)} />
       <EraDetailModal era={selectedEra} onClose={() => setSelectedEra(null)} />

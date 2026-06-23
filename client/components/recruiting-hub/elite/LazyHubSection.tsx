@@ -27,6 +27,13 @@ export function LazyHubSection({
   useEffect(() => {
     if (priority === 'top-fold') return undefined;
 
+    const isMobile =
+      typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
+    if (isMobile) {
+      setVisible(true);
+      return undefined;
+    }
+
     initGvHydrate();
     const id = testId ?? `rh-lazy-${Math.random().toString(36).slice(2, 8)}`;
     let observer: IntersectionObserver | null = null;
@@ -45,8 +52,6 @@ export function LazyHubSection({
       observer.observe(el);
     }
 
-    const isMobile =
-      typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
     const fallbackMs = isMobile ? 2_000 : 8_000;
     const fallback = window.setTimeout(() => setVisible(true), fallbackMs);
     return () => {

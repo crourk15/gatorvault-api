@@ -146,6 +146,7 @@ require('./stamp-build-meta.js');
 require('./inject-cache-bust.js');
 require('./inject-vault-shell-css.js');
 require('./inject-vault-hydration-guard.js');
+require('./inject-vault-menu-boot.js');
 require('./inject-recruiting-hub-preload.js');
 require('./inject-qa-markers.js');
 require('./inject-landing-export.js');
@@ -163,6 +164,15 @@ if (canon.filesUpdated) {
 }
 verifyExports();
 verifyChunks();
+
+const mobileBoot = spawnSync(process.execPath, [path.join(__dirname, 'verify-mobile-boot-html.js')], {
+  stdio: 'inherit',
+  cwd: path.join(__dirname, '..'),
+});
+if (mobileBoot.status !== 0) {
+  console.error('[netlify] mobile boot HTML verification failed — blocking publish');
+  process.exit(mobileBoot.status || 1);
+}
 
 const hydrationStability = spawnSync(
   process.execPath,

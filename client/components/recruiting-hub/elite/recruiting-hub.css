@@ -107,8 +107,10 @@
   background-size: 200% 100%;
 }
 
-.rh-elite-chrome[data-rh-client-ready='true'] [data-rh-boot-root] {
-  display: none;
+.rh-elite-chrome [data-rh-boot-root] [hidden],
+.rh-elite-chrome [data-rh-boot][hidden],
+.rh-elite-chrome [data-rh-boot-root] .rh-section-header[hidden] {
+  display: none !important;
 }
 
 .rh-elite-chrome .rh-boot-loading[data-rh-boot-painted='true'] .rh-metric-value,

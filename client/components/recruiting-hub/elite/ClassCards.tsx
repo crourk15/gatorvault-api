@@ -8,7 +8,7 @@ import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { RECRUITING_CLASS_YEARS, type RecruitingClassYear } from '@/lib/recruiting-cycle';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
-import { readBootClassMetricsByYear } from '@/lib/recruiting-hub-boot-read';
+import { readBootClassMetricsByYear, hideRhBootClassCards } from '@/lib/recruiting-hub-boot-read';
 
 function ClassCard({
   year,
@@ -69,7 +69,7 @@ function ClassCard({
   );
 }
 
-export function ClassCards(): React.ReactElement {
+export function ClassCards(): React.ReactElement | null {
   const { activeYear, setActiveYear } = useRecruitingClassYear();
   const [byYear, setByYear] = useState<Record<RecruitingClassYear, RhHubClassOverview | null>>(() => {
     const boot = readBootClassMetricsByYear();
@@ -139,6 +139,14 @@ export function ClassCards(): React.ReactElement {
       window.removeEventListener('gv-hero-boot', onBoot);
     };
   }, []);
+
+  const hasAnyData = RECRUITING_CLASS_YEARS.some((y) => byYear[y]);
+
+  useEffect(() => {
+    if (hasAnyData) hideRhBootClassCards();
+  }, [hasAnyData]);
+
+  if (loading && !hasAnyData) return null;
 
   return (
     <>

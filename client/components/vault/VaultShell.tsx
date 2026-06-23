@@ -14,7 +14,6 @@ import { AppMenuDrawer } from '@/components/shell/AppMenuDrawer';
 import { LivePulseFab } from '@/components/shell/LivePulseFab';
 import { PremiumNavIcon, type PremiumNavIconId } from '@/components/shell/PremiumNavIcons';
 import { useAppMenu } from '@/components/shell/AppMenuContext';
-import { vaultMenuBootScript } from '@/lib/vault-menu-boot';
 
 function sidebarActive(pathname: string, href: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
@@ -93,7 +92,7 @@ function VaultBottomNav({ pathname }: { pathname: string }): React.ReactElement 
         className={`gv-vault-bottom-nav__item${menuOpen ? ' is-menu-open' : ''}`}
         aria-expanded={menuOpen}
         aria-controls="gv-app-menu-drawer"
-        data-vault-menu-toggle
+        data-vault-menu-toggle=""
       >
         <span className="gv-vault-bottom-nav__icon" aria-hidden="true">
           <PremiumNavIcon id="menu" />
@@ -155,11 +154,6 @@ function VaultShellInner({ children }: { children: React.ReactNode }): React.Rea
         dangerouslySetInnerHTML={{
           __html:
             '.gv-hub-tabs--scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}.gv-vault-bottom-nav{padding-bottom:env(safe-area-inset-bottom,0)}',
-        }}
-      />
-      <script
-        dangerouslySetInnerHTML={{
-          __html: vaultMenuBootScript(),
         }}
       />
       <header className="gv-vault-shell__header">
