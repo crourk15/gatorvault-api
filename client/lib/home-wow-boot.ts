@@ -66,6 +66,35 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
         card.setAttribute('data-home-boot-painted', 'futurecast');
       }
 
+      function paintBeat(items) {
+        if (!items || !items.length) return;
+        window.__GV_HOME_WOW__.beatItems = items;
+        var section = document.querySelector('[data-home-boot="beat-highlights"]');
+        if (!section) return;
+        var cards = section.querySelectorAll('[data-beat-card]');
+        items.slice(0, 3).forEach(function(item, idx) {
+          var card = cards[idx];
+          if (!card) return;
+          var initials = (item.writerName || 'BW').split(' ').map(function(w) { return w[0]; }).join('').slice(0, 2).toUpperCase();
+          var nameNode = card.querySelector('[data-beat-name]');
+          var outletNode = card.querySelector('[data-beat-outlet]');
+          var textNode = card.querySelector('[data-beat-text]');
+          var timeNode = card.querySelector('[data-beat-time]');
+          var urlNode = card.querySelector('[data-beat-url]');
+          var avatarNode = card.querySelector('[data-beat-avatar]');
+          if (nameNode) nameNode.textContent = item.writerName || 'Beat Writer';
+          if (outletNode) outletNode.textContent = item.source || 'UF Beat';
+          if (textNode) textNode.textContent = item.text || '';
+          if (timeNode) timeNode.textContent = item.timestamp ? new Date(item.timestamp).toLocaleDateString() : 'Recently';
+          if (urlNode) urlNode.href = item.url || '#';
+          if (avatarNode) avatarNode.textContent = initials;
+          card.hidden = false;
+        });
+        var skeleton = section.querySelector('[data-home-boot-skeleton]');
+        if (skeleton) skeleton.style.display = 'none';
+        section.setAttribute('data-home-boot-painted', 'beat');
+      }
+
       function mapFcTarget(row) {
         var pct = row.ufProbability != null ? row.ufProbability : row.confidence;
         if (pct == null) return null;
@@ -80,25 +109,29 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
 
       Promise.all([
         fetchJson('/api/recruiting/class-metrics?year=' + year, 0).catch(function() { return null; }),
-        fetchJson('/api/futurecast/home', 0).catch(function() { return null; })
+        fetchJson('/api/futurecast/home', 0).catch(function() { return null; }),
+        fetchJson('/api/recruiting/intel/beat?limit=3', 0).catch(function() { return null; })
       ]).then(function(results) {
         var metrics = results[0];
         if (metrics && metrics.status !== 'building') paintMetrics(metrics);
         var home = results[1];
-        if (!home) return;
-        var pool = [].concat(home.topTargets || [], home.trendingUp || [], home.trendingDown || []);
-        var targets = [];
-        var seen = {};
-        for (var i = 0; i < pool.length; i += 1) {
-          var mapped = mapFcTarget(pool[i]);
-          if (!mapped) continue;
-          var key = pool[i].playerSlug || pool[i].playerId || pool[i].id || mapped.name;
-          if (seen[key]) continue;
-          seen[key] = true;
-          targets.push(mapped);
-          if (targets.length >= 3) break;
+        if (home) {
+          var pool = [].concat(home.topTargets || [], home.trendingUp || [], home.trendingDown || []);
+          var targets = [];
+          var seen = {};
+          for (var i = 0; i < pool.length; i += 1) {
+            var mapped = mapFcTarget(pool[i]);
+            if (!mapped) continue;
+            var key = pool[i].playerSlug || pool[i].playerId || pool[i].id || mapped.name;
+            if (seen[key]) continue;
+            seen[key] = true;
+            targets.push(mapped);
+            if (targets.length >= 3) break;
+          }
+          paintFutureCast(targets);
         }
-        paintFutureCast(targets);
+        var beat = results[2];
+        if (beat && beat.items && beat.items.length) paintBeat(beat.items);
         window.dispatchEvent(new CustomEvent('gv-home-wow-boot'));
       });
     } catch (e) {}

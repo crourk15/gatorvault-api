@@ -14,7 +14,6 @@ import { AppMenuDrawer } from '@/components/shell/AppMenuDrawer';
 import { LivePulseFab } from '@/components/shell/LivePulseFab';
 import { PremiumNavIcon, type PremiumNavIconId } from '@/components/shell/PremiumNavIcons';
 import { useAppMenu } from '@/components/shell/AppMenuContext';
-import { useMobileViewport } from '@/lib/use-mobile-viewport';
 
 function sidebarActive(pathname: string, href: string): boolean {
   const p = pathname.replace(/\/$/, '') || '/';
@@ -67,11 +66,8 @@ function NavLink({
   );
 }
 
-function VaultBottomNav({ pathname }: { pathname: string }): React.ReactElement | null {
+function VaultBottomNav({ pathname }: { pathname: string }): React.ReactElement {
   const { isOpen: menuOpen, toggleMenu } = useAppMenu();
-  const isMobile = useMobileViewport();
-
-  if (!isMobile) return null;
 
   const navLabel = (label: string) => label.replace('GatorNation Live', 'GNL Live').replace(' Hub', '');
 

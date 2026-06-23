@@ -33,6 +33,7 @@ declare global {
     __GV_HOME_WOW__?: {
       metrics?: Awaited<ReturnType<typeof fetchClassMetrics>>;
       futureCastTargets?: unknown[];
+      beatItems?: BeatIntelItem[];
     };
   }
 }
@@ -42,18 +43,24 @@ function readBootMetrics(): Awaited<ReturnType<typeof fetchClassMetrics>> | null
   return window.__GV_HOME_WOW__?.metrics ?? null;
 }
 
+function readBootBeat(): BeatIntelItem[] {
+  if (typeof window === 'undefined') return [];
+  return window.__GV_HOME_WOW__?.beatItems ?? [];
+}
+
 /** Vault home — WOW command center (hero → gameday → strip → recruiting → FC → beat). */
 export function HomePremiumPage(): React.ReactElement {
   const [hubTicker, setHubTicker] = useState<string[]>([]);
   const [hpIntel, setHpIntel] = useState<HighPriorityIntelItem[]>([]);
   const [movementIntel, setMovementIntel] = useState<MovementIntelResponse | null>(null);
-  const [beatIntel, setBeatIntel] = useState<BeatIntelItem[]>([]);
+  const [beatIntel, setBeatIntel] = useState<BeatIntelItem[]>(readBootBeat);
   const [board, setBoard] = useState<RecruitingBoardResponse | null>(null);
   const [classMetrics, setClassMetrics] = useState<Awaited<ReturnType<typeof fetchClassMetrics>> | null>(
     readBootMetrics
   );
   const [futureCastHome, setFutureCastHome] = useState<FutureCastHomeResponse | null>(null);
   const [loading, setLoading] = useState(() => !readBootMetrics());
+  const [beatReady, setBeatReady] = useState(() => readBootBeat().length > 0);
 
   useEffect(() => {
     function applyBootCache(): void {
@@ -61,6 +68,10 @@ export function HomePremiumPage(): React.ReactElement {
       if (boot?.metrics && !classMetrics) {
         setClassMetrics(boot.metrics);
         setLoading(false);
+      }
+      if (boot?.beatItems?.length) {
+        setBeatIntel(boot.beatItems);
+        setBeatReady(true);
       }
     }
     applyBootCache();
@@ -94,7 +105,10 @@ export function HomePremiumPage(): React.ReactElement {
       setClassMetrics(metrics);
       setFutureCastHome(fcHome);
     } finally {
-      if (isInitial) setLoading(false);
+      if (isInitial) {
+        setLoading(false);
+        setBeatReady(true);
+      }
     }
   }, []);
 
@@ -142,6 +156,7 @@ export function HomePremiumPage(): React.ReactElement {
         futureCastTargets={futureCastTargets}
         beatPosts={beatPosts}
         loading={loading}
+        beatLoading={!beatReady}
       />
     </div>
   );

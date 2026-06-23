@@ -664,6 +664,13 @@
   width: 18px;
 }
 
+@media (max-width: 767px) {
+  .home-wow-beat-grid,
+  .home-wow-beat-grid--boot {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 /* Beat grid */
 .home-wow-beat-grid {
   display: grid;

@@ -21,6 +21,7 @@ type Props = {
   futureCastTargets: HomeFutureCastTargetView[];
   beatPosts: HomeBeatPostView[];
   loading?: boolean;
+  beatLoading?: boolean;
 };
 
 /** WOW home command center — hero → gameday → strip → recruiting → FutureCast → beat writers. */
@@ -31,6 +32,7 @@ export function HomeCommandCenter({
   futureCastTargets,
   beatPosts,
   loading,
+  beatLoading,
 }: Props): React.ReactElement {
   return (
     <div className="home-wow-page__frame">
@@ -39,7 +41,7 @@ export function HomeCommandCenter({
       <HomeCommandLiveStrip />
       <HomeCommandRecruitingSnapshot metrics={recruitingMetrics} loading={loading} />
       <HomeCommandFutureCastPreview targets={futureCastTargets} loading={loading} />
-      <HomeCommandBeatHighlights posts={beatPosts} loading={loading} />
+      <HomeCommandBeatHighlights posts={beatPosts} loading={beatLoading ?? loading} />
     </div>
   );
 }
