@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 /**
  * Render cron — beat writer + visit intel + live dashboard refresh.
- * Requires MONITORING_CRON_SECRET (or INGEST_CRON_SECRET) and X_BEARER_TOKEN on the web service.
+ * Production-hardened: API warm check, retries, soft per-step failures, always exit 0.
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+
+const { runIngestSteps } = require('../lib/ingest-cron-client');
 
 const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || process.env.API_BASE || 'https://gatorvault-api.onrender.com').replace(
   /\/$/,
@@ -11,58 +13,58 @@ const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || process.env.API_BASE || 'h
 );
 const CRON_SECRET = process.env.MONITORING_CRON_SECRET || process.env.INGEST_CRON_SECRET || process.env.CRON_SECRET || '';
 
-async function postIngest(path, body = {}) {
+const STEPS = [
+  {
+    name: 'live-refresh',
+    path: '/api/live/refresh',
+    summarize: (r) => ({
+      beatPosts: r?.result?.beat?.postCount ?? r?.dashboard?.beat?.posts?.length ?? null,
+      beatError: r?.result?.beat?.error ?? null,
+      podcastErrors: r?.result?.podcasts?.errors?.length ?? null,
+    }),
+  },
+  {
+    name: 'beat-writer',
+    path: '/api/recruiting/beat-writer/ingest',
+    summarize: (r) => ({
+      processedCount: r?.processedCount ?? r?.processed?.length ?? null,
+      errors: r?.errors?.length ?? 0,
+      softFailure: r?.softFailure === true,
+    }),
+  },
+  {
+    name: 'beat-visit',
+    path: '/api/recruiting/beat-visit/ingest',
+    summarize: (r) => ({
+      processedCount: r?.processedCount ?? r?.processed?.length ?? null,
+      errors: r?.errors?.length ?? 0,
+      softFailure: r?.softFailure === true,
+    }),
+  },
+];
+
+async function runIngest() {
   if (!CRON_SECRET) {
-    throw new Error('MONITORING_CRON_SECRET or INGEST_CRON_SECRET is not set');
+    console.error('[beat-ingest-cron] MONITORING_CRON_SECRET or INGEST_CRON_SECRET is not set');
+    return { ok: false, error: 'missing_cron_secret' };
   }
-  const res = await fetch(`${API_BASE}${path}`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'X-Ingest-Secret': CRON_SECRET,
-      'x-monitoring-cron': CRON_SECRET,
-      'User-Agent': 'gatorvault-beat-ingest-cron/1.0',
-    },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(240000),
+
+  return runIngestSteps({
+    apiBase: API_BASE,
+    cronSecret: CRON_SECRET,
+    steps: STEPS,
+    warm: true,
+    logPrefix: 'beat-ingest-cron',
   });
-  let payload = null;
+}
+
+(async () => {
   try {
-    payload = await res.json();
-  } catch {
-    payload = null;
+    const summary = await runIngest();
+    console.log('[beat-ingest-cron] complete', JSON.stringify(summary, null, 0));
+  } catch (err) {
+    console.error('[beat-ingest-cron] unhandled error:', err.message);
+    if (err.stack) console.error(err.stack);
   }
-  if (!res.ok) {
-    const err = new Error(`${path} HTTP ${res.status}`);
-    err.payload = payload;
-    throw err;
-  }
-  return payload;
-}
-
-async function main() {
-  const live = await postIngest('/api/live/refresh', {});
-  const beatWriter = await postIngest('/api/recruiting/beat-writer/ingest', {});
-  const beatVisit = await postIngest('/api/recruiting/beat-visit/ingest', {});
-
-  console.log(
-    '[beat-ingest-cron] ok',
-    JSON.stringify(
-      {
-        beatPosts: live?.result?.beat?.postCount ?? live?.dashboard?.beat?.postCount ?? null,
-        beatWriterProcessed: beatWriter?.processedCount ?? beatWriter?.processed?.length ?? null,
-        beatVisitProcessed: beatVisit?.processedCount ?? beatVisit?.processed?.length ?? null,
-        at: new Date().toISOString(),
-      },
-      null,
-      0
-    )
-  );
-}
-
-main().catch((err) => {
-  console.error('[beat-ingest-cron] failed:', err.message);
-  if (err.payload) console.error(JSON.stringify(err.payload));
-  process.exit(1);
-});
+  process.exit(0);
+})();

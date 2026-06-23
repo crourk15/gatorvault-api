@@ -246,11 +246,16 @@ async function refreshLiveDashboard({ beat = true, podcasts = true, recruiting =
             type: item.type
           })
       );
-    } catch {
-      /* optional */
+    } catch (e) {
+      console.warn('[live-aggregator] purge soft failure:', e.message);
     }
-    results.recruiting = await ingestRecruitingEvents();
-    results.intel = await ingestRecruitingIntel();
+    try {
+      results.recruiting = await ingestRecruitingEvents();
+      results.intel = await ingestRecruitingIntel();
+    } catch (e) {
+      console.warn('[live-aggregator] recruiting ingest soft failure:', e.message);
+      results.recruitingError = e.message;
+    }
   }
   results.content = ingestPublishedContent();
   try {

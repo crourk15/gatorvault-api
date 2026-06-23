@@ -530,7 +530,7 @@ function mountRecruitingRoutes(app) {
       return res.json({ ok: true, ...result });
     } catch (err) {
       console.error('beat-visit ingest error', err);
-      return res.status(500).json({ ok: false, error: err.message });
+      return res.status(200).json({ ok: false, softFailure: true, error: err.message, cached: true });
     }
   });
 
@@ -549,7 +549,7 @@ function mountRecruitingRoutes(app) {
       return res.json({ ok: true, ...result });
     } catch (err) {
       console.error('beat-writer ingest error', err);
-      return res.status(500).json({ ok: false, error: err.message });
+      return res.status(200).json({ ok: false, softFailure: true, error: err.message, cached: true });
     }
   });
 

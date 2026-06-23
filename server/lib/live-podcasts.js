@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const { parseRssItems } = require('./rss-parse');
+const { withRetries } = require('./ingest-resilience');
 const store = require('./live-store');
 
 function buildPlatforms(podcast) {
@@ -18,8 +19,18 @@ async function resolveFeedUrl(podcast) {
   if (podcast.rssUrl) return podcast.rssUrl;
   if (!podcast.appleId) return null;
   try {
-    const res = await fetch(`https://itunes.apple.com/lookup?id=${podcast.appleId}`);
-    const json = await res.json();
+    const json = await withRetries(
+      async () => {
+        const res = await fetch(`https://itunes.apple.com/lookup?id=${podcast.appleId}`);
+        if (!res.ok) {
+          const err = new Error(`iTunes lookup HTTP ${res.status}`);
+          err.status = res.status;
+          throw err;
+        }
+        return res.json();
+      },
+      { label: `iTunes lookup ${podcast.appleId}`, attempts: 3 }
+    );
     return json.results?.[0]?.feedUrl || null;
   } catch (e) {
     return null;
@@ -31,11 +42,20 @@ async function fetchPodcastShow(podcast) {
   if (!feedUrl) {
     return { ...podcast, feedUrl: null, episodes: [], error: 'No RSS URL' };
   }
-  const res = await fetch(feedUrl, {
-    headers: { 'User-Agent': 'GatorVaultLive/1.0', Accept: 'application/rss+xml, application/xml' }
-  });
-  if (!res.ok) throw new Error(`RSS ${res.status}`);
-  const xml = await res.text();
+  const xml = await withRetries(
+    async () => {
+      const res = await fetch(feedUrl, {
+        headers: { 'User-Agent': 'GatorVaultLive/1.0', Accept: 'application/rss+xml, application/xml' }
+      });
+      if (!res.ok) {
+        const err = new Error(`RSS ${res.status}`);
+        err.status = res.status;
+        throw err;
+      }
+      return res.text();
+    },
+    { label: `podcast RSS ${podcast.id}`, attempts: 3 }
+  );
   const channelImage =
     (xml.match(/<image>[\s\S]*?<url>([^<]+)<\/url>/i) || [])[1] ||
     (xml.match(/<itunes:image[^>]+href=["']([^"']+)["']/i) || [])[1];

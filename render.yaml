@@ -182,6 +182,8 @@ services:
       - key: KEEPALIVE_HUB_URL
         value: https://gatorvault-api.onrender.com/api/recruiting/hub/class-overview?year=2027
 
+  # Beat ingest cron — hardened with API warm check, retries, soft failures (always exit 0).
+  # Optional future: move to a dedicated worker service to isolate from API deploys.
   - type: cron
     name: gatorvault-api-beat-ingest
     schedule: "*/10 * * * *"

@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const { parseRssItems } = require('./rss-parse');
+const { withRetries } = require('./ingest-resilience');
 const store = require('./live-store');
 const beatFilters = require('./beat-writer-filters');
 const ingestGate = require('./beat-recruiting-ingest-gate');
@@ -93,42 +94,71 @@ function getXTokenStatus() {
 }
 
 async function fetchText(url, timeoutMs = 12000) {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
-  try {
-    const res = await fetch(url, {
-      signal: ctrl.signal,
-      headers: {
-        'User-Agent': 'GatorVaultLive/1.0 (+https://gatorvaultinsider.com)',
-        Accept: 'application/rss+xml, application/xml, text/xml, */*'
+  return withRetries(
+    async () => {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+      try {
+        const res = await fetch(url, {
+          signal: ctrl.signal,
+          headers: {
+            'User-Agent': 'GatorVaultLive/1.0 (+https://gatorvaultinsider.com)',
+            Accept: 'application/rss+xml, application/xml, text/xml, */*'
+          }
+        });
+        if (!res.ok) {
+          const err = new Error(`HTTP ${res.status}`);
+          err.status = res.status;
+          throw err;
+        }
+        return await res.text();
+      } finally {
+        clearTimeout(timer);
       }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.text();
-  } finally {
-    clearTimeout(timer);
-  }
+    },
+    { label: `fetch ${url}`, attempts: 3, baseDelayMs: 1000 }
+  );
 }
 
 async function fetchXUserTimeline(handle, { maxPosts = 10 } = {}) {
   const headers = xAuthHeaders();
   if (!headers) return null;
-  const userRes = await fetch(
-    `https://api.twitter.com/2/users/by/username/${encodeURIComponent(handle)}?user.fields=profile_image_url`,
-    { headers }
+
+  const userJson = await withRetries(
+    async () => {
+      const userRes = await fetch(
+        `https://api.twitter.com/2/users/by/username/${encodeURIComponent(handle)}?user.fields=profile_image_url`,
+        { headers }
+      );
+      if (!userRes.ok) {
+        const err = new Error(`X user lookup ${userRes.status}`);
+        err.status = userRes.status;
+        throw err;
+      }
+      return userRes.json();
+    },
+    { label: `X user @${handle}`, attempts: 3, baseDelayMs: 1000 }
   );
-  if (!userRes.ok) throw new Error(`X user lookup ${userRes.status}`);
-  const userJson = await userRes.json();
+
   const userId = userJson.data?.id;
   if (!userId) return [];
 
   const maxResults = Math.min(100, Math.max(5, maxPosts));
-  const tweetsRes = await fetch(
-    `https://api.twitter.com/2/users/${userId}/tweets?max_results=${maxResults}&tweet.fields=created_at,entities&exclude=retweets,replies`,
-    { headers }
+  const tweetsJson = await withRetries(
+    async () => {
+      const tweetsRes = await fetch(
+        `https://api.twitter.com/2/users/${userId}/tweets?max_results=${maxResults}&tweet.fields=created_at,entities&exclude=retweets,replies`,
+        { headers }
+      );
+      if (!tweetsRes.ok) {
+        const err = new Error(`X tweets ${tweetsRes.status}`);
+        err.status = tweetsRes.status;
+        throw err;
+      }
+      return tweetsRes.json();
+    },
+    { label: `X tweets @${handle}`, attempts: 3, baseDelayMs: 1000 }
   );
-  if (!tweetsRes.ok) throw new Error(`X tweets ${tweetsRes.status}`);
-  const tweetsJson = await tweetsRes.json();
   const writer = store.loadWriters().find((w) => w.handle.toLowerCase() === handle.toLowerCase());
   return (tweetsJson.data || []).map((t) => {
     const attachmentUrls = (t.entities?.urls || []).map((u) => u.expanded_url || u.url).filter(Boolean);
@@ -148,6 +178,9 @@ async function fetchXUserTimeline(handle, { maxPosts = 10 } = {}) {
 }
 
 async function fetchNitterRss(handle, { maxPosts = 8 } = {}) {
+  const cached = (store.loadBeatCache().posts || []).filter(
+    (p) => String(p.handle || '').toLowerCase() === String(handle).toLowerCase()
+  );
   let lastErr = null;
   for (const base of NITTER_BASES) {
     try {
@@ -169,6 +202,7 @@ async function fetchNitterRss(handle, { maxPosts = 8 } = {}) {
       lastErr = e;
     }
   }
+  if (cached.length) return cached;
   throw lastErr || new Error('Nitter unavailable');
 }
 
@@ -298,8 +332,24 @@ function isAllowedFetchWriter(writer) {
 }
 
 async function refreshBeatStream() {
-  const tokenStatus = await validateXBearerToken({ force: false });
   const cache = store.loadBeatCache();
+  try {
+    return await refreshBeatStreamInner(cache);
+  } catch (err) {
+    console.warn('[live-beat] refresh soft failure, keeping cache:', err.message);
+    const purgedExisting = filterBeatPosts(cache.posts || []);
+    return {
+      postCount: purgedExisting.kept.length,
+      source: cache.source || 'cache',
+      error: err.message,
+      softFailure: true,
+      cached: true,
+    };
+  }
+}
+
+async function refreshBeatStreamInner(cache) {
+  const tokenStatus = await validateXBearerToken({ force: false });
   const writers = store.loadWriters().filter(isAllowedFetchWriter);
   const hasBearer = !!getXBearerToken() && tokenStatus.ok;
 

@@ -203,7 +203,20 @@ function mountLiveRoutes(app) {
       const result = await refreshLiveDashboard();
       return res.json({ ok: true, result, dashboard: getDashboard() });
     } catch (err) {
-      return res.status(500).json({ ok: false, error: err.message });
+      console.error('[live/refresh] soft failure:', err.message);
+      let dashboard = null;
+      try {
+        dashboard = getDashboard();
+      } catch (e) {
+        dashboard = null;
+      }
+      return res.status(200).json({
+        ok: false,
+        softFailure: true,
+        error: err.message,
+        dashboard,
+        cached: true,
+      });
     }
   });
 
