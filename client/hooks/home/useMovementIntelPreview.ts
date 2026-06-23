@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { fetchHomeMovementIntel, fetchMovementPreview } from '@/lib/vault-home-api';
+import { fetchMovementIntel } from '@/lib/recruiting-ui-api';
 import { movementDelta7d } from '@/lib/movement-intel-types';
 
 export type MovementPlayer = {
@@ -16,24 +16,14 @@ export type MovementPreview = {
   volatile: MovementPlayer[];
 };
 
-function mapStaff(
-  rows: { id: string; slug?: string; name: string; delta?: number; delta7d?: number }[]
-): MovementPlayer[] {
-  return rows.map((p) => ({
-    slug: p.slug || p.id,
-    name: p.name,
-    delta: p.delta7d ?? p.delta ?? 0,
-  }));
-}
-
 export function useMovementIntelPreview(): MovementPreview | null {
   const [movement, setMovement] = useState<MovementPreview | null>(null);
 
   useEffect(() => {
     let cancelled = false;
 
-    void Promise.all([fetchHomeMovementIntel(), fetchMovementPreview()])
-      .then(([intel, staff]) => {
+    void fetchMovementIntel()
+      .then((intel) => {
         if (cancelled) return;
         setMovement({
           risers:
@@ -41,19 +31,19 @@ export function useMovementIntelPreview(): MovementPreview | null {
               slug: p.slug || p.id,
               name: p.name,
               delta: movementDelta7d(p),
-            })) ?? mapStaff(staff.topRisers),
+            })) ?? [],
           fallers:
             intel.fallers?.slice(0, 6).map((p) => ({
               slug: p.slug || p.id,
               name: p.name,
               delta: movementDelta7d(p),
-            })) ?? mapStaff(staff.topFallers),
+            })) ?? [],
           volatile:
             intel.volatile?.slice(0, 6).map((p) => ({
               slug: p.slug || p.id,
               name: p.name,
               delta: movementDelta7d(p),
-            })) ?? mapStaff(staff.highVolatility),
+            })) ?? [],
         });
       })
       .catch(() => {

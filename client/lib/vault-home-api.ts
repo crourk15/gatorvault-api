@@ -748,7 +748,49 @@ export async function fetchHomeIntelPreview(force = false): Promise<
   const { mapBoardTargetToHighPriorityIntelItem } = await import(
     '@/components/recruiting-hub/utils/intelMapping'
   );
-  const board = await fetchRecruitingBoard(2027).catch(() => null);
-  const targets = board?.targets?.slice(0, 6) ?? [];
-  return targets.map((player, index) => mapBoardTargetToHighPriorityIntelItem(player, index));
+  const { fetchHighPriorityIntel } = await import('./recruiting-ui-api');
+  const [intel, board] = await Promise.all([
+    fetchHighPriorityIntel(),
+    fetchRecruitingBoard(2027).catch(() => null),
+  ]);
+
+  if (!board?.targets?.length) {
+    return intel.slice(0, 6).map((item, index) => ({
+      id: item.id,
+      slug: String(item.playerSlug || item.playerId || item.id),
+      name: item.text.split('—')[0]?.trim() || 'UF Target',
+      position: '—',
+      classYear: 2027,
+      ufProb: item.ufProbability,
+      delta7d: 0,
+      intelType: 'HEAT' as const,
+      intelLabel: 'High priority',
+      intelSummary: item.text,
+      analystSignals: [],
+      lastUpdated: item.timestamp,
+    }));
+  }
+
+  const bySlug = new Map(
+    (board.targets ?? []).map((player) => [player.slug, player])
+  );
+  return intel.slice(0, 6).map((item, index) => {
+    const slug = String(item.playerSlug || item.playerId || '');
+    const player = bySlug.get(slug);
+    if (player) return mapBoardTargetToHighPriorityIntelItem(player, index);
+    return {
+      id: item.id,
+      slug: slug || item.id,
+      name: item.text.split('—')[0]?.trim() || 'UF Target',
+      position: '—',
+      classYear: 2027,
+      ufProb: item.ufProbability,
+      delta7d: 0,
+      intelType: 'HEAT' as const,
+      intelLabel: 'High priority',
+      intelSummary: item.text,
+      analystSignals: [],
+      lastUpdated: item.timestamp,
+    };
+  });
 }

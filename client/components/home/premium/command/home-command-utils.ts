@@ -1,10 +1,12 @@
-import type { HomeBundle } from '@/lib/vault-home-api';
 import type { RecruitingSnapshot } from '@/lib/vault-home-api';
 import type { StaffDashboardResponse } from '@/lib/staff-api';
 import type { RecruitingBoardResponse, RecruitingBoardPlayer } from '@/lib/recruiting-board-api';
 import type { FutureCastHomeResponse } from '@/lib/futurecast-home-api';
 import type { FeedPrediction } from '@/lib/predictions-api';
 import type { LivePanelProps } from '@/lib/gatornation-live-types';
+import type { BeatIntelItem, HighPriorityIntelItem } from '@/lib/recruiting-ui-api';
+import type { MovementIntelResponse } from '@/lib/movement-intel-types';
+import { movementDelta7d } from '@/lib/movement-intel-types';
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
 
 export const NEXT_GAME_KICKOFF_ISO = '2026-09-05T19:45:00-04:00';
@@ -143,23 +145,45 @@ export function buildGameDayView(): HomeGameDayView {
   };
 }
 
-export function buildHeroTickerItems(bundle: HomeBundle | null): string[] {
-  const fromTicker = (bundle?.ticker?.items ?? [])
+export type HomeTrustTickerInput = {
+  hubTicker: string[];
+  hpIntel: HighPriorityIntelItem[];
+  movement: MovementIntelResponse | null;
+};
+
+const HOME_TICKER_FALLBACKS = [
+  '2027 class trending nationally — UF in the mix',
+  'FutureCast leans UF for multiple blue-chip targets',
+  'Staff locked in for summer evals and camps',
+  'GatorNation Live — real-time pulse from the Swamp',
+] as const;
+
+/** Postgres-backed hero ticker — hub ticker, high-priority intel, movement alerts. */
+export function buildHeroTickerFromTrust(input: HomeTrustTickerInput): string[] {
+  const fromHub = input.hubTicker.map((item) => item.trim()).filter(Boolean).slice(0, 4);
+  const fromHp = input.hpIntel
     .map((item) => item.text?.trim())
     .filter(Boolean)
-    .slice(0, 4);
+    .slice(0, 2);
+  const fromAlerts = (input.movement?.alerts ?? [])
+    .map((alert) => {
+      const detail = alert.detail?.trim();
+      if (!detail) return '';
+      return alert.player ? `${alert.player}: ${detail}` : detail;
+    })
+    .filter(Boolean)
+    .slice(0, 2);
+  const fromRisers = (input.movement?.risers ?? [])
+    .slice(0, 2)
+    .map((player) => {
+      const ufPct = Math.round(player.ufProb <= 1 ? player.ufProb * 100 : player.ufProb);
+      return `${player.name} rising — UF at ${ufPct}%`;
+    });
 
-  const storyline = bundle?.ticker?.storyline?.trim();
-  const fallbacks = [
-    '2027 class trending nationally — UF in the mix',
-    'FutureCast leans UF for multiple blue-chip targets',
-    'Staff locked in for summer evals and camps',
-    'GatorNation Live — real-time pulse from the Swamp',
-  ];
-
-  const combined = [...fromTicker];
-  if (storyline) combined.push(storyline);
-  return [...combined, ...fallbacks].slice(0, 4);
+  const combined = [...fromHub, ...fromHp, ...fromAlerts, ...fromRisers];
+  const unique = [...new Set(combined)].slice(0, 6);
+  if (unique.length > 0) return unique;
+  return [...HOME_TICKER_FALLBACKS];
 }
 
 export function mapClassMetricsToHomeView(
@@ -393,10 +417,53 @@ function mapPredictionToTarget(p: FeedPrediction, idx: number): HomeFutureCastTa
   };
 }
 
-/** Prefer Postgres FutureCast home API; fall back to staff movement + board. */
+function buildFutureCastTargetsFromBoard(
+  board: RecruitingBoardResponse | null
+): HomeFutureCastTargetView[] {
+  return boardPlayers(board)
+    .filter((p) => parseUfPct(p) > 0)
+    .sort((a, b) => parseUfPct(b) - parseUfPct(a))
+    .slice(0, 6)
+    .map((p) => {
+      const ufPctNum = parseUfPct(p);
+      const dir = p.movementDirection ?? 'flat';
+      return {
+        id: p.slug || p.name,
+        name: p.name,
+        position: p.position ?? p.pos ?? '—',
+        ufPercent: `${ufPctNum}%`,
+        ufPctNum,
+        tag: futureCastTag(ufPctNum),
+        movement: dir === 'up' ? 'up' : dir === 'down' ? 'down' : 'stable',
+      } satisfies HomeFutureCastTargetView;
+    });
+}
+
+function buildFutureCastTargetsFromMovementIntel(
+  movement: MovementIntelResponse | null
+): HomeFutureCastTargetView[] {
+  return (movement?.risers ?? []).slice(0, 6).map((player, idx) => {
+    const ufPctNum = Math.min(
+      100,
+      Math.max(0, Math.round(player.ufProb <= 1 ? player.ufProb * 100 : player.ufProb))
+    );
+    const delta = movementDelta7d(player);
+    return {
+      id: player.slug || player.id || String(idx),
+      name: player.name,
+      position: player.position || '—',
+      ufPercent: `${ufPctNum}%`,
+      ufPctNum,
+      tag: futureCastTag(ufPctNum),
+      movement: trendFromDelta(delta),
+    };
+  });
+}
+
+/** Prefer Postgres FutureCast home API; fall back to movement intel risers + board. */
 export function buildFutureCastTargetsFromHome(
   home: FutureCastHomeResponse | null,
-  movement: StaffDashboardResponse | null,
+  movement: MovementIntelResponse | null,
   board: RecruitingBoardResponse | null
 ): HomeFutureCastTargetView[] {
   const candidates = [
@@ -416,7 +483,23 @@ export function buildFutureCastTargetsFromHome(
     if (fromHome.length >= 6) break;
   }
   if (fromHome.length >= 1) return fromHome;
-  return buildFutureCastTargets(movement, board);
+
+  const fromMovement = buildFutureCastTargetsFromMovementIntel(movement);
+  if (fromMovement.length >= 1) return fromMovement;
+
+  return buildFutureCastTargetsFromBoard(board);
+}
+
+export function buildBeatPostsFromIntel(items: BeatIntelItem[]): HomeBeatPostView[] {
+  return items.slice(0, 3).map((item) => ({
+    id: item.id,
+    writerName: item.writerName || 'Beat Writer',
+    outlet: item.source || 'UF Beat',
+    text: item.text,
+    timestamp: item.timestamp || '',
+    xUrl: item.url ?? '#',
+    badge: 'Beat Writer',
+  }));
 }
 
 export function buildBeatPosts(items: LivePanelProps['items']): HomeBeatPostView[] {

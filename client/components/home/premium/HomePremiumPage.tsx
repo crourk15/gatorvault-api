@@ -2,74 +2,64 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import '@/lib/home-wow.css';
-import {
-  fetchHomeBundle,
-  HOME_REFRESH,
-  type HomeBundle,
-} from '@/lib/vault-home-api';
+import { HOME_REFRESH } from '@/lib/vault-home-api';
 import { fetchRecruitingBoard, type RecruitingBoardResponse } from '@/lib/recruiting-board-api';
-import { fetchLiveHubBundle } from '@/lib/gatornation-live-api';
-import type { LivePanelProps } from '@/lib/gatornation-live-types';
-import { filterExcludedPortalClassItems } from '@/lib/portal-class-filter';
+import { fetchRecruitingHubTicker } from '@/lib/recruiting-hub-elite-api';
 import { useVaultDataReload } from '@/lib/vault-navigation';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { HomeCommandCenter } from '@/components/home/premium/command/HomeCommandCenter';
-import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
-import { fetchFutureCastHome, type FutureCastHomeResponse } from '@/lib/futurecast-home-api';
 import {
-  buildBeatPosts,
+  fetchBeatIntel,
+  fetchClassMetrics,
+  fetchHighPriorityIntel,
+  fetchMovementIntel,
+  type BeatIntelItem,
+  type HighPriorityIntelItem,
+} from '@/lib/recruiting-ui-api';
+import { fetchFutureCastHome, type FutureCastHomeResponse } from '@/lib/futurecast-home-api';
+import type { MovementIntelResponse } from '@/lib/movement-intel-types';
+import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
+import {
+  buildBeatPostsFromIntel,
   buildFutureCastTargetsFromHome,
   buildGameDayView,
-  buildHeroTickerItems,
+  buildHeroTickerFromTrust,
   mapClassMetricsToHomeView,
 } from '@/components/home/premium/command/home-command-utils';
 
-const EMPTY_BUNDLE: HomeBundle = {
-  ticker: null,
-  movement: null,
-  content: null,
-  recruiting: null,
-  momentumPct: 0,
-  personalized: null,
-  portal: null,
-  team: null,
-  nil: null,
-  schedule: null,
-};
-
 /** Vault home — WOW command center (hero → gameday → strip → recruiting → FC → beat). */
 export function HomePremiumPage(): React.ReactElement {
-  const [bundle, setBundle] = useState<HomeBundle>(EMPTY_BUNDLE);
+  const [hubTicker, setHubTicker] = useState<string[]>([]);
+  const [hpIntel, setHpIntel] = useState<HighPriorityIntelItem[]>([]);
+  const [movementIntel, setMovementIntel] = useState<MovementIntelResponse | null>(null);
+  const [beatIntel, setBeatIntel] = useState<BeatIntelItem[]>([]);
   const [board, setBoard] = useState<RecruitingBoardResponse | null>(null);
   const [classMetrics, setClassMetrics] = useState<Awaited<ReturnType<typeof fetchClassMetrics>> | null>(
     null
   );
   const [futureCastHome, setFutureCastHome] = useState<FutureCastHomeResponse | null>(null);
-  const [beatItems, setBeatItems] = useState<LivePanelProps['items']>([]);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) setLoading(true);
     try {
-      const fetchHome = () =>
-        fetchWithWarmPoll(() => fetchHomeBundle(!isInitial), { maxAttempts: 8, delayMs: 2_500 });
-      const [home, recruitingBoard, live, metrics, fcHome] = await Promise.all([
-        fetchHome(),
-        fetchWithWarmPoll(() => fetchRecruitingBoard(2027), { maxAttempts: 6 }).catch(() => null),
-        fetchWithWarmPoll(() => fetchLiveHubBundle(!isInitial), { maxAttempts: 6 }).catch(() => null),
+      const year = ACTIVE_RECRUITING_CLASS_YEAR;
+      const [ticker, intel, movement, beat, recruitingBoard, metrics, fcHome] = await Promise.all([
+        fetchWithWarmPoll(() => fetchRecruitingHubTicker(year), { maxAttempts: 6 }).catch(() => []),
+        fetchWithWarmPoll(() => fetchHighPriorityIntel(), { maxAttempts: 6 }).catch(() => []),
+        fetchWithWarmPoll(() => fetchMovementIntel(), { maxAttempts: 6 }).catch(() => null),
+        fetchWithWarmPoll(() => fetchBeatIntel(), { maxAttempts: 6 }).catch(() => []),
+        fetchWithWarmPoll(() => fetchRecruitingBoard(year), { maxAttempts: 6 }).catch(() => null),
         fetchWithWarmPoll(() => fetchClassMetrics(), { maxAttempts: 6 }).catch(() => null),
         fetchWithWarmPoll(() => fetchFutureCastHome(), { maxAttempts: 6 }).catch(() => null),
       ]);
-      setBundle(home);
+      setHubTicker(ticker);
+      setHpIntel(intel);
+      setMovementIntel(movement);
+      setBeatIntel(beat);
       setBoard(recruitingBoard);
       setClassMetrics(metrics);
       setFutureCastHome(fcHome);
-      const highlights = filterExcludedPortalClassItems(
-        live?.panels.beatWriterHighlights.filter((item) => item.text?.trim()) ?? [],
-        (item) => item.text,
-        (item) => ({ source: item.source })
-      );
-      setBeatItems(highlights);
     } finally {
       if (isInitial) setLoading(false);
     }
@@ -92,7 +82,10 @@ export function HomePremiumPage(): React.ReactElement {
     };
   }, [load]);
 
-  const heroTickerItems = useMemo(() => buildHeroTickerItems(bundle), [bundle]);
+  const heroTickerItems = useMemo(
+    () => buildHeroTickerFromTrust({ hubTicker, hpIntel, movement: movementIntel }),
+    [hubTicker, hpIntel, movementIntel]
+  );
   const gameDay = useMemo(() => buildGameDayView(), []);
 
   const recruitingMetrics = useMemo(
@@ -101,11 +94,11 @@ export function HomePremiumPage(): React.ReactElement {
   );
 
   const futureCastTargets = useMemo(
-    () => buildFutureCastTargetsFromHome(futureCastHome, bundle.movement, board),
-    [futureCastHome, bundle.movement, board]
+    () => buildFutureCastTargetsFromHome(futureCastHome, movementIntel, board),
+    [futureCastHome, movementIntel, board]
   );
 
-  const beatPosts = useMemo(() => buildBeatPosts(beatItems), [beatItems]);
+  const beatPosts = useMemo(() => buildBeatPostsFromIntel(beatIntel), [beatIntel]);
 
   return (
     <div className="home-wow-page" data-testid="vault-home-premium">
