@@ -116,6 +116,17 @@ function mountCommunityRoutes(app) {
     }
   });
 
+  app.post('/api/community/thread/:id/flag', (req, res) => {
+    const session = requireSession(req, res);
+    if (!session) return;
+    try {
+      const flag = store.flagThread(session, req.params.id, req.body.reason);
+      return res.json({ ok: true, flag });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/community/live-rooms', (req, res) => {
     try {
       return res.json({ ok: true, rooms: store.getLiveRooms() });

@@ -494,6 +494,28 @@ function flagPost(session, postId, reason) {
   return flag;
 }
 
+function flagThread(session, threadId, reason) {
+  const flags = loadFlags();
+  const flag = {
+    id: newId('flg'),
+    postId: null,
+    threadId,
+    reason: reason || 'review',
+    reporterEmail: session.email,
+    status: 'open',
+    createdAt: nowIso()
+  };
+  const threads = loadThreads();
+  const idx = threads.findIndex((t) => t.id === threadId && !t.deleted);
+  if (idx >= 0) {
+    threads[idx].flagged = true;
+    saveThreads(threads);
+  }
+  flags.unshift(flag);
+  saveFlags(flags);
+  return flag;
+}
+
 function getOpenFlags() {
   return loadFlags().filter((f) => f.status === 'open');
 }
@@ -545,6 +567,7 @@ module.exports = {
   adminDeleteThread,
   adminDeletePost,
   flagPost,
+  flagThread,
   getOpenFlags,
   resolveFlag,
   adminUpdateCategory,

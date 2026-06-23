@@ -1,9 +1,19 @@
 import { getApiBase } from './big-board-api';
+import { loadSession } from './auth-api';
+import type { ReportReasonId } from './community-ugc';
+
+export type CommunityAuthor = {
+  displayName?: string;
+  avatarUrl?: string | null;
+  tier?: string;
+  isFounding?: boolean;
+};
 
 export type CommunityCategory = {
   id: string;
   slug: string;
-  label: string;
+  name?: string;
+  label?: string;
   description?: string;
 };
 
@@ -13,20 +23,28 @@ export type CommunityThread = {
   body?: string;
   categorySlug?: string;
   categoryLabel?: string;
+  authorId?: string;
   authorEmail?: string;
   authorDisplay?: string;
+  author?: CommunityAuthor | null;
   replyCount?: number;
   viewCount?: number;
   pinned?: boolean;
   featured?: boolean;
+  flagged?: boolean;
   createdAt?: string;
   lastActivityAt?: string;
+  category?: { name?: string; slug?: string } | null;
 };
 
 export type CommunityPost = {
   id: string;
   body: string;
+  authorId?: string;
+  authorEmail?: string;
   authorDisplay?: string;
+  author?: CommunityAuthor | null;
+  flagged?: boolean;
   createdAt?: string;
 };
 
@@ -34,6 +52,8 @@ export type CommunityPulse = {
   threadCount?: number;
   postCount?: number;
   activeToday?: number;
+  repliesToday?: number;
+  trending?: number;
   topCategory?: string;
 };
 
@@ -42,8 +62,24 @@ export type LiveRoom = {
   title: string;
   description?: string;
   scheduledAt?: string;
+  startsAt?: string;
   status?: string;
 };
+
+function authHeaders(json = false): HeadersInit {
+  const session = loadSession();
+  const headers: Record<string, string> = { Accept: 'application/json' };
+  if (json) headers['Content-Type'] = 'application/json';
+  if (session?.token) headers.Authorization = `Bearer ${session.token}`;
+  return headers;
+}
+
+export function communityAuthorLabel(item: {
+  author?: CommunityAuthor | null;
+  authorDisplay?: string;
+}): string {
+  return item.author?.displayName || item.authorDisplay || 'Member';
+}
 
 export async function fetchCommunityCategories(): Promise<CommunityCategory[]> {
   const base = getApiBase();
@@ -67,6 +103,7 @@ export async function fetchCommunityThreads(opts: {
   const res = await fetch(`${base}/api/community/threads${qs ? `?${qs}` : ''}`, {
     cache: 'no-store',
     credentials: 'include',
+    headers: authHeaders(),
   });
   if (!res.ok) throw new Error(`Community threads failed (${res.status})`);
   const data = (await res.json()) as { threads?: CommunityThread[] };
@@ -81,6 +118,7 @@ export async function fetchCommunityThread(id: string): Promise<{
   const res = await fetch(`${base}/api/community/thread/${encodeURIComponent(id)}`, {
     cache: 'no-store',
     credentials: 'include',
+    headers: authHeaders(),
   });
   if (!res.ok) throw new Error(`Thread not found (${res.status})`);
   const data = (await res.json()) as { thread?: CommunityThread; posts?: CommunityPost[] };
@@ -112,12 +150,40 @@ export async function createCommunityThread(input: {
   const base = getApiBase();
   const res = await fetch(`${base}/api/community/thread`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: authHeaders(true),
     credentials: 'include',
     body: JSON.stringify(input),
   });
   if (!res.ok) {
     const data = (await res.json().catch(() => ({}))) as { error?: string };
     throw new Error(data.error ?? `Could not post thread (${res.status})`);
+  }
+}
+
+export async function flagCommunityPost(postId: string, reason: ReportReasonId): Promise<void> {
+  const base = getApiBase();
+  const res = await fetch(`${base}/api/community/post/${encodeURIComponent(postId)}/flag`, {
+    method: 'POST',
+    headers: authHeaders(true),
+    credentials: 'include',
+    body: JSON.stringify({ reason }),
+  });
+  if (!res.ok) {
+    const data = (await res.json().catch(() => ({}))) as { error?: string };
+    throw new Error(data.error ?? `Could not report post (${res.status})`);
+  }
+}
+
+export async function flagCommunityThread(threadId: string, reason: ReportReasonId): Promise<void> {
+  const base = getApiBase();
+  const res = await fetch(`${base}/api/community/thread/${encodeURIComponent(threadId)}/flag`, {
+    method: 'POST',
+    headers: authHeaders(true),
+    credentials: 'include',
+    body: JSON.stringify({ reason }),
+  });
+  if (!res.ok) {
+    const data = (await res.json().catch(() => ({}))) as { error?: string };
+    throw new Error(data.error ?? `Could not report thread (${res.status})`);
   }
 }

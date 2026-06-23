@@ -1,23 +1,47 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Card, Chip, PageLayout, PageSection } from '@/components/brand';
+import { CommunityConfirmModal } from '@/components/community/CommunityConfirmModal';
+import { CommunityPostActions } from '@/components/community/CommunityPostActions';
+import { CommunityReportModal } from '@/components/community/CommunityReportModal';
+import { CommunityToastProvider, useCommunityToast } from '@/components/community/CommunityToast';
 import {
+  communityAuthorLabel,
   createCommunityThread,
   fetchCommunityCategories,
   fetchCommunityPulse,
   fetchCommunityThread,
   fetchCommunityThreads,
   fetchLiveRooms,
+  flagCommunityPost,
+  flagCommunityThread,
   type CommunityCategory,
   type CommunityPost,
   type CommunityPulse,
   type CommunityThread,
   type LiveRoom,
 } from '@/lib/community-api';
+import {
+  blockUserEmail,
+  isEmailBlocked,
+  loadBlockedEmails,
+  unblockUserEmail,
+  type ReportReasonId,
+} from '@/lib/community-ugc';
+import { loadSession } from '@/lib/auth-api';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 type SortId = 'trending' | 'recent' | 'active' | 'replies';
+
+type ReportTarget =
+  | { kind: 'post'; post: CommunityPost }
+  | { kind: 'thread'; thread: CommunityThread };
+
+type BlockTarget = {
+  email: string;
+  displayName: string;
+};
 
 const TRENDING_TOPICS = ['QB battle 2026', 'Portal targets', 'Georgia week', 'NIL rankings', 'Depth chart'];
 
@@ -35,7 +59,12 @@ function timeAgo(iso?: string): string {
   return `${Math.floor(h / 24)}d ago`;
 }
 
-export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: string } = {}): React.ReactElement {
+function threadCategoryLabel(thread: CommunityThread): string {
+  return thread.category?.name || thread.categoryLabel || thread.categorySlug || 'General';
+}
+
+function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string }): React.ReactElement {
+  const { pushToast } = useCommunityToast();
   const [sort, setSort] = useState<SortId>('trending');
   const [category, setCategory] = useState('');
   const [categories, setCategories] = useState<CommunityCategory[]>([]);
@@ -43,6 +72,7 @@ export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: stri
   const [pulse, setPulse] = useState<CommunityPulse | null>(null);
   const [rooms, setRooms] = useState<LiveRoom[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedThread, setSelectedThread] = useState<CommunityThread | null>(null);
   const [selectedPosts, setSelectedPosts] = useState<CommunityPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +82,28 @@ export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: stri
   const [newCategory, setNewCategory] = useState('locker');
   const [posting, setPosting] = useState(false);
   const [postError, setPostError] = useState<string | null>(null);
+  const [blockedEmails, setBlockedEmails] = useState<string[]>([]);
+  const [reportTarget, setReportTarget] = useState<ReportTarget | null>(null);
+  const [blockTarget, setBlockTarget] = useState<BlockTarget | null>(null);
+  const [moderationLoading, setModerationLoading] = useState(false);
+
+  const session = useMemo(() => loadSession(), []);
+  const viewerEmail = session?.email ?? null;
+  const canModerate = Boolean(viewerEmail);
+
+  useEffect(() => {
+    if (viewerEmail) setBlockedEmails(loadBlockedEmails(viewerEmail));
+  }, [viewerEmail]);
+
+  const requireSignIn = useCallback((): boolean => {
+    if (viewerEmail) return true;
+    pushToast({
+      kind: 'error',
+      title: 'Sign in required',
+      body: 'Sign in to report or block community members.',
+    });
+    return false;
+  }, [pushToast, viewerEmail]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -77,10 +129,13 @@ export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: stri
 
   const openThread = useCallback(async (id: string) => {
     setSelectedId(id);
+    setSelectedThread(null);
     try {
       const data = await fetchCommunityThread(id);
+      setSelectedThread(data.thread);
       setSelectedPosts(data.posts);
     } catch {
+      setSelectedThread(null);
       setSelectedPosts([]);
     }
   }, []);
@@ -113,6 +168,105 @@ export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: stri
       setPosting(false);
     }
   };
+
+  const isAuthorBlocked = useCallback(
+    (authorEmail?: string | null) => isEmailBlocked(viewerEmail, authorEmail, blockedEmails),
+    [blockedEmails, viewerEmail],
+  );
+
+  const isOwnAuthor = useCallback(
+    (authorEmail?: string | null) =>
+      Boolean(viewerEmail && authorEmail && viewerEmail.toLowerCase() === authorEmail.toLowerCase()),
+    [viewerEmail],
+  );
+
+  const handleReportOpen = (target: ReportTarget) => {
+    if (!requireSignIn()) return;
+    setReportTarget(target);
+  };
+
+  const handleReportSubmit = async (reason: ReportReasonId) => {
+    if (!reportTarget) return;
+    setModerationLoading(true);
+    try {
+      if (reportTarget.kind === 'post') {
+        await flagCommunityPost(reportTarget.post.id, reason);
+        setSelectedPosts((prev) =>
+          prev.map((p) => (p.id === reportTarget.post.id ? { ...p, flagged: true } : p)),
+        );
+      } else {
+        await flagCommunityThread(reportTarget.thread.id, reason);
+        setSelectedThread((prev) =>
+          prev && prev.id === reportTarget.thread.id ? { ...prev, flagged: true } : prev,
+        );
+      }
+      setReportTarget(null);
+      pushToast({
+        kind: 'success',
+        title: 'Report submitted',
+        body: 'Thanks — our team will review this content.',
+      });
+    } catch (err) {
+      pushToast({
+        kind: 'error',
+        title: 'Could not submit report',
+        body: err instanceof Error ? err.message : 'Please try again.',
+      });
+    } finally {
+      setModerationLoading(false);
+    }
+  };
+
+  const handleBlockOpen = (target: BlockTarget) => {
+    if (!requireSignIn()) return;
+    setBlockTarget(target);
+  };
+
+  const handleBlockConfirm = () => {
+    if (!blockTarget || !viewerEmail) return;
+    const next = blockUserEmail(viewerEmail, blockTarget.email);
+    setBlockedEmails(next);
+    setBlockTarget(null);
+    pushToast({
+      kind: 'success',
+      title: 'User blocked',
+      body: `${blockTarget.displayName} will no longer appear in your feed.`,
+    });
+  };
+
+  const handleUnblock = (email: string, displayName: string) => {
+    if (!viewerEmail) return;
+    const next = unblockUserEmail(viewerEmail, email);
+    setBlockedEmails(next);
+    pushToast({
+      kind: 'success',
+      title: 'User unblocked',
+      body: `${displayName} is visible again.`,
+    });
+  };
+
+  const reportTargetLabel =
+    reportTarget?.kind === 'post'
+      ? `a reply by ${communityAuthorLabel(reportTarget.post)}`
+      : reportTarget?.kind === 'thread'
+        ? `the thread “${reportTarget.thread.title}”`
+        : '';
+
+  const renderBlockedPlaceholder = (displayName: string, email?: string) => (
+    <div className="gv-community__post gv-community__post--blocked">
+      <p className="gv-community__blocked-label">Blocked member</p>
+      <p className="gv-community__blocked-body">Content from {displayName} is hidden.</p>
+      {email && viewerEmail ? (
+        <button
+          type="button"
+          className="gv-community__action-btn"
+          onClick={() => handleUnblock(email, displayName)}
+        >
+          Unblock
+        </button>
+      ) : null}
+    </div>
+  );
 
   return (
     <PageLayout
@@ -166,7 +320,7 @@ export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: stri
               <option value="">All categories</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.slug}>
-                  {c.label}
+                  {c.label || c.name}
                 </option>
               ))}
             </select>
@@ -198,7 +352,7 @@ export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: stri
               >
                 {categories.map((c) => (
                   <option key={c.id} value={c.slug}>
-                    {c.label}
+                    {c.label || c.name}
                   </option>
                 ))}
               </select>
@@ -214,20 +368,111 @@ export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: stri
             <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
           )}
 
-          {!loading && !error && selectedId && (
+          {!loading && !error && selectedId && !selectedThread && (
             <div className="gv-community__thread-detail">
-              <button type="button" className="gv-film-back" onClick={() => setSelectedId(null)}>
+              <button
+                type="button"
+                className="gv-film-back"
+                onClick={() => {
+                  setSelectedId(null);
+                  setSelectedPosts([]);
+                }}
+              >
+                ← All threads
+              </button>
+              <p className="gv-page-status">Loading thread…</p>
+            </div>
+          )}
+
+          {!loading && !error && selectedId && selectedThread && (
+            <div className="gv-community__thread-detail">
+              <button
+                type="button"
+                className="gv-film-back"
+                onClick={() => {
+                  setSelectedId(null);
+                  setSelectedThread(null);
+                  setSelectedPosts([]);
+                }}
+              >
                 ← All threads
               </button>
               <ul className="gv-community__posts">
-                {selectedPosts.map((p) => (
-                  <li key={p.id} className="gv-community__post">
-                    <p className="gv-community__post-author">{p.authorDisplay || 'Member'}</p>
-                    <p className="gv-community__post-body">{p.body}</p>
-                    <p className="gv-community__post-meta">{timeAgo(p.createdAt)}</p>
-                  </li>
-                ))}
-                {selectedPosts.length === 0 && <UiEmpty message="No replies yet." />}
+                <li
+                  className={`gv-community__post${selectedThread.flagged ? ' gv-community__post--flagged' : ''}${
+                    isAuthorBlocked(selectedThread.authorEmail) ? ' gv-community__post--blocked-author' : ''
+                  }`}
+                >
+                  {isAuthorBlocked(selectedThread.authorEmail) ? (
+                    renderBlockedPlaceholder(
+                      communityAuthorLabel(selectedThread),
+                      selectedThread.authorEmail,
+                    )
+                  ) : (
+                    <>
+                      <div className="gv-community__post-head">
+                        <p className="gv-community__post-author">{communityAuthorLabel(selectedThread)}</p>
+                        <CommunityPostActions
+                          canModerate={canModerate}
+                          isOwnContent={isOwnAuthor(selectedThread.authorEmail)}
+                          isBlockedAuthor={isAuthorBlocked(selectedThread.authorEmail)}
+                          flagged={selectedThread.flagged}
+                          onReport={() => handleReportOpen({ kind: 'thread', thread: selectedThread })}
+                          onBlock={() =>
+                            handleBlockOpen({
+                              email: selectedThread.authorEmail || '',
+                              displayName: communityAuthorLabel(selectedThread),
+                            })
+                          }
+                        />
+                      </div>
+                      <h3 className="gv-community__thread-op-title">{selectedThread.title}</h3>
+                      <p className="gv-community__post-body">{selectedThread.body}</p>
+                      <p className="gv-community__post-meta">
+                        {threadCategoryLabel(selectedThread)} · {timeAgo(selectedThread.createdAt)}
+                      </p>
+                    </>
+                  )}
+                </li>
+                {selectedPosts.map((p) => {
+                  const blocked = isAuthorBlocked(p.authorEmail);
+                  return (
+                    <li
+                      key={p.id}
+                      className={`gv-community__post${p.flagged ? ' gv-community__post--flagged' : ''}${
+                        blocked ? ' gv-community__post--blocked-author' : ''
+                      }`}
+                    >
+                      {blocked ? (
+                        renderBlockedPlaceholder(communityAuthorLabel(p), p.authorEmail)
+                      ) : (
+                        <>
+                          <div className="gv-community__post-head">
+                            <p className="gv-community__post-author">{communityAuthorLabel(p)}</p>
+                            <CommunityPostActions
+                              canModerate={canModerate}
+                              isOwnContent={isOwnAuthor(p.authorEmail)}
+                              isBlockedAuthor={blocked}
+                              flagged={p.flagged}
+                              onReport={() => handleReportOpen({ kind: 'post', post: p })}
+                              onBlock={() =>
+                                handleBlockOpen({
+                                  email: p.authorEmail || '',
+                                  displayName: communityAuthorLabel(p),
+                                })
+                              }
+                            />
+                          </div>
+                          <p className="gv-community__post-body">{p.body}</p>
+                          <p className="gv-community__post-meta">{timeAgo(p.createdAt)}</p>
+                        </>
+                      )}
+                    </li>
+                  );
+                })}
+                {selectedPosts.length === 0 && !selectedThread.body && (
+                  <UiEmpty message="No replies yet." />
+                )}
               </ul>
             </div>
           )}
@@ -235,20 +480,32 @@ export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: stri
           {!loading && !error && !selectedId && (
             <PageSection title="Threads">
               <ul className="gv-community__threads">
-                {threads.map((t) => (
-                  <li key={t.id}>
-                    <button type="button" className="gv-community__thread-row" onClick={() => void openThread(t.id)}>
-                      <span className="gv-community__thread-title">
-                        {t.pinned ? '📌 ' : ''}
-                        {t.title}
-                      </span>
-                      <span className="gv-community__thread-meta">
-                        {t.categoryLabel || t.categorySlug || 'General'} · {t.replyCount ?? 0} replies ·{' '}
-                        {timeAgo(t.lastActivityAt || t.createdAt)}
-                      </span>
-                    </button>
-                  </li>
-                ))}
+                {threads.map((t) => {
+                  const blockedAuthor = isAuthorBlocked(t.authorEmail);
+                  return (
+                    <li key={t.id}>
+                      <button
+                        type="button"
+                        className={`gv-community__thread-row${blockedAuthor ? ' gv-community__thread-row--blocked' : ''}${
+                          t.flagged ? ' gv-community__thread-row--flagged' : ''
+                        }`}
+                        onClick={() => void openThread(t.id)}
+                      >
+                        <span className="gv-community__thread-title">
+                          {t.pinned ? '📌 ' : ''}
+                          {t.title}
+                          {blockedAuthor ? (
+                            <span className="gv-community__blocked-chip">Blocked author</span>
+                          ) : null}
+                        </span>
+                        <span className="gv-community__thread-meta">
+                          {threadCategoryLabel(t)} · {t.replyCount ?? 0} replies ·{' '}
+                          {timeAgo(t.lastActivityAt || t.createdAt)}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
                 {threads.length === 0 && <UiEmpty message="No threads yet — start the conversation." />}
               </ul>
             </PageSection>
@@ -256,6 +513,26 @@ export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: stri
         </div>
 
         <aside className="gv-community__aside">
+          {blockedEmails.length > 0 ? (
+            <section className="gv-community__panel">
+              <h2 className="gv-vault-alerts__section-title">Blocked members</h2>
+              <ul className="gv-community__blocked-list">
+                {blockedEmails.map((email) => (
+                  <li key={email} className="gv-community__blocked-list-item">
+                    <span>{email}</span>
+                    <button
+                      type="button"
+                      className="gv-community__action-btn"
+                      onClick={() => handleUnblock(email, email)}
+                    >
+                      Unblock
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
           <section className="gv-community__panel">
             <h2 className="gv-vault-alerts__section-title">Recruiting Q&amp;A</h2>
             <Card>
@@ -269,8 +546,10 @@ export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: stri
               <div key={r.id} className="gv-community__room">
                 <p className="gv-community__room-title">{r.title}</p>
                 {r.description ? <p className="gv-community__room-desc">{r.description}</p> : null}
-                {r.scheduledAt ? (
-                  <p className="gv-community__room-meta">{new Date(r.scheduledAt).toLocaleString()}</p>
+                {r.scheduledAt || r.startsAt ? (
+                  <p className="gv-community__room-meta">
+                    {new Date(r.scheduledAt || r.startsAt || '').toLocaleString()}
+                  </p>
                 ) : null}
               </div>
             ))}
@@ -282,16 +561,12 @@ export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: stri
             {pulse ? (
               <div className="gv-community__pulse-grid">
                 <div className="gv-recruit-stat">
-                  <span>Threads</span>
-                  <strong>{pulse.threadCount ?? '—'}</strong>
+                  <span>Replies today</span>
+                  <strong>{pulse.repliesToday ?? '—'}</strong>
                 </div>
                 <div className="gv-recruit-stat">
-                  <span>Posts</span>
-                  <strong>{pulse.postCount ?? '—'}</strong>
-                </div>
-                <div className="gv-recruit-stat">
-                  <span>Active today</span>
-                  <strong>{pulse.activeToday ?? '—'}</strong>
+                  <span>Trending</span>
+                  <strong>{pulse.trending ?? '—'}</strong>
                 </div>
               </div>
             ) : (
@@ -300,6 +575,37 @@ export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: stri
           </section>
         </aside>
       </div>
+
+      <CommunityReportModal
+        open={Boolean(reportTarget)}
+        targetLabel={reportTargetLabel}
+        loading={moderationLoading}
+        onClose={() => setReportTarget(null)}
+        onSubmit={(reason) => void handleReportSubmit(reason)}
+      />
+
+      <CommunityConfirmModal
+        open={Boolean(blockTarget)}
+        title="Block this member?"
+        description={
+          blockTarget
+            ? `You will no longer see posts from ${blockTarget.displayName}. You can unblock them anytime from the sidebar.`
+            : undefined
+        }
+        confirmLabel="Block user"
+        confirmTone="danger"
+        loading={moderationLoading}
+        onCancel={() => setBlockTarget(null)}
+        onConfirm={handleBlockConfirm}
+      />
     </PageLayout>
+  );
+}
+
+export function VaultCommunityPage({ initialThreadId }: { initialThreadId?: string } = {}): React.ReactElement {
+  return (
+    <CommunityToastProvider>
+      <VaultCommunityPageInner initialThreadId={initialThreadId} />
+    </CommunityToastProvider>
   );
 }
