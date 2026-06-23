@@ -10,6 +10,7 @@ import {
   type PaymentTierId,
 } from '@/lib/auth-api';
 import { PRICING_TIERS } from '@/lib/pricing-tiers';
+import { LegalSiteLinks } from '@/components/site/LegalSiteLinks';
 
 type Mode = 'signin' | 'signup';
 
@@ -196,7 +197,17 @@ export function JoinPage(): React.ReactElement {
           {mode === 'signup' && (
             <label className="gv-join__terms">
               <input type="checkbox" checked={terms} onChange={(e) => setTerms(e.target.checked)} />
-              <span>I agree to the membership terms and privacy policy.</span>
+              <span>
+                I agree to the{' '}
+                <a href="/terms/" target="_blank" rel="noopener noreferrer">
+                  membership terms
+                </a>{' '}
+                and{' '}
+                <a href="/privacy/" target="_blank" rel="noopener noreferrer">
+                  privacy policy
+                </a>
+                .
+              </span>
             </label>
           )}
 
@@ -219,6 +230,7 @@ export function JoinPage(): React.ReactElement {
         <p className="gv-join__back">
           <a href="/">← Back to home</a>
         </p>
+        <LegalSiteLinks className="gv-join__legal gv-legal-links" />
       </div>
     </div>
   );

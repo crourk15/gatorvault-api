@@ -10,6 +10,7 @@ import { PricingSection } from './PricingSection';
 import { FreeVsInsider } from './FreeVsInsider';
 import { WelcomeStickyCTA } from './FooterCTA';
 import { OperatorAccessFooter } from './OperatorAccessFooter';
+import { LegalSiteLinks } from '@/components/site/LegalSiteLinks';
 
 /** Elite marketing landing — served at / and /welcome/. */
 export function MarketingWelcomePage(): React.ReactElement {
@@ -23,6 +24,9 @@ export function MarketingWelcomePage(): React.ReactElement {
       <FreeVsInsider />
       <LandingFinalCTA />
       <WelcomeStickyCTA />
+      <footer className="gv-marketing-legal-footer">
+        <LegalSiteLinks />
+      </footer>
       <OperatorAccessFooter />
     </>
   );

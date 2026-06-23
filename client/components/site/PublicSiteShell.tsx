@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { GatorVaultSiteNav } from '@/components/site/GatorVaultSiteNav';
+import { LegalSiteLinks } from '@/components/site/LegalSiteLinks';
 
 export function PublicSiteShell({
   children,
@@ -16,6 +17,7 @@ export function PublicSiteShell({
       <main className={marketing ? 'gv-marketing-main' : 'gv-site-main'}>{children}</main>
       {!marketing && (
         <footer className="gv-site-footer">
+          <LegalSiteLinks />
           <a href="/">← Back to GatorVault</a>
         </footer>
       )}
