@@ -213,6 +213,16 @@
   animation: home-wow-shimmer 1.2s infinite;
 }
 
+.home-wow-card .home-wow-skeleton--overlay {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+  z-index: 1;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(0, 33, 165, 0.06) 25%, rgba(0, 33, 165, 0.12) 50%, rgba(0, 33, 165, 0.06) 75%);
+  background-size: 200% 100%;
+}
+
 @keyframes home-wow-shimmer {
   from {
     background-position: 200% 0;

@@ -78,9 +78,26 @@ export function HomeCommandFutureCastPreview({ targets, loading }: Props): React
         <h2 className="home-wow-section-title">FutureCast Preview</h2>
         <p className="home-wow-section-subtitle">Top UF leaners from the FutureCast model.</p>
       </div>
-      <section className="home-wow-card" data-testid="home-futurecast-preview">
+      <section className="home-wow-card" data-testid="home-futurecast-preview" data-home-boot="futurecast-preview">
         {loading ? (
-          <div className="home-wow-skeleton" aria-hidden="true" />
+          <>
+            <div className="home-wow-skeleton home-wow-skeleton--overlay" data-home-boot-skeleton aria-hidden="true" />
+            <div className="home-wow-fc-slide" data-home-boot-body hidden>
+              <div className="home-wow-fc-silhouette" aria-hidden="true" data-fc-pos>
+                —
+              </div>
+              <div className="home-wow-fc-ring-wrap">
+                <span className="home-wow-fc-ring-label" data-fc-pct>
+                  —
+                </span>
+              </div>
+              <div className="home-wow-fc-body">
+                <p className="home-wow-fc-name" data-fc-name>
+                  Loading targets…
+                </p>
+              </div>
+            </div>
+          </>
         ) : slides.length === 0 ? (
           <div className="home-wow-fc-empty">
             <p className="home-wow-empty">Top UF leaners from the FutureCast model.</p>

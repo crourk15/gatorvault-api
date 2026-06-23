@@ -303,6 +303,10 @@
   color: #ffffff;
 }
 
+.rh-elite-chrome .rh-hero-metrics:not(.hero-skeleton__metrics) .rh-hero-metric__value {
+  color: #ffffff;
+}
+
 /* Class overview */
 .rh-elite-chrome .rh-metrics-row {
   display: grid;

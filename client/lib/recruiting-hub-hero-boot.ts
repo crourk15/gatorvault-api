@@ -23,6 +23,8 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
       var root = document.querySelector('[data-hydrate="hero"]');
       if (!root) return;
       root.classList.remove('hero-skeleton');
+      var metricsWrap = root.querySelector('.rh-hero-metrics');
+      if (metricsWrap) metricsWrap.classList.remove('hero-skeleton__metrics');
 
       var title = root.querySelector('[data-hero-field="title"]');
       var subtitle = root.querySelector('[data-hero-field="subtitle"]');

@@ -27,6 +27,20 @@ import {
   mapClassMetricsToHomeView,
 } from '@/components/home/premium/command/home-command-utils';
 
+declare global {
+  interface Window {
+    __GV_HOME_WOW__?: {
+      metrics?: Awaited<ReturnType<typeof fetchClassMetrics>>;
+      futureCastTargets?: unknown[];
+    };
+  }
+}
+
+function readBootMetrics(): Awaited<ReturnType<typeof fetchClassMetrics>> | null {
+  if (typeof window === 'undefined') return null;
+  return window.__GV_HOME_WOW__?.metrics ?? null;
+}
+
 /** Vault home — WOW command center (hero → gameday → strip → recruiting → FC → beat). */
 export function HomePremiumPage(): React.ReactElement {
   const [hubTicker, setHubTicker] = useState<string[]>([]);
@@ -35,10 +49,23 @@ export function HomePremiumPage(): React.ReactElement {
   const [beatIntel, setBeatIntel] = useState<BeatIntelItem[]>([]);
   const [board, setBoard] = useState<RecruitingBoardResponse | null>(null);
   const [classMetrics, setClassMetrics] = useState<Awaited<ReturnType<typeof fetchClassMetrics>> | null>(
-    null
+    readBootMetrics
   );
   const [futureCastHome, setFutureCastHome] = useState<FutureCastHomeResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !readBootMetrics());
+
+  useEffect(() => {
+    function applyBootCache(): void {
+      const boot = window.__GV_HOME_WOW__;
+      if (boot?.metrics && !classMetrics) {
+        setClassMetrics(boot.metrics);
+        setLoading(false);
+      }
+    }
+    applyBootCache();
+    window.addEventListener('gv-home-wow-boot', applyBootCache);
+    return () => window.removeEventListener('gv-home-wow-boot', applyBootCache);
+  }, [classMetrics]);
 
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) setLoading(true);

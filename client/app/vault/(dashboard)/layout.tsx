@@ -10,8 +10,8 @@ export default function VaultHomeLayout({
   return (
     <>
       <VaultPillarSsrMarkers testId="vault-home" className="gv-home" />
-      <HomeWowBootScript />
       {children}
+      <HomeWowBootScript />
     </>
   );
 }

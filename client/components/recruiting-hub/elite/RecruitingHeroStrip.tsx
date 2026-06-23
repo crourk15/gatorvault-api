@@ -83,7 +83,9 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
 
   useEffect(() => {
     let cancelled = false;
-    setMetricsLoading(true);
+    const hasSeed =
+      seeded?.classOverview && parseRecruitingClassYear(seeded.year ?? year) === activeYear;
+    if (!hasSeed) setMetricsLoading(true);
     void fetchClassMetrics(activeYear)
       .then((res) => {
         if (!cancelled) setYearOverview(res);

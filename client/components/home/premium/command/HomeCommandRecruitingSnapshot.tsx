@@ -71,7 +71,7 @@ export function HomeCommandRecruitingSnapshot({ metrics, loading }: Props): Reac
         </span>
         {loading ? (
           <>
-            <div className="home-wow-skeleton" data-home-boot-skeleton aria-hidden="true" />
+            <div className="home-wow-skeleton home-wow-skeleton--overlay" data-home-boot-skeleton aria-hidden="true" />
             <div data-home-boot-body>
               <div className="home-wow-metrics-row">
                 {BOOT_METRICS.map((item) => (
