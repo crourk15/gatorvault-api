@@ -29,6 +29,7 @@ const VAULT_MENU_BOOT_SCRIPT =
   'var backdrop=ev.target.closest(".gv-app-menu__backdrop");' +
   'if(backdrop){setOpen(false);return;}' +
   'var toggle=ev.target.closest("[data-vault-menu-toggle],button[aria-controls=\\"gv-app-menu-drawer\\"]");' +
+  'if(toggle&&toggle.hasAttribute("data-vault-menu-react"))return;' +
   'if(toggle){ev.preventDefault();setOpen(!open);}' +
   '},true);' +
   'document.addEventListener("keydown",function(ev){if(ev.key==="Escape"&&open)setOpen(false);});' +

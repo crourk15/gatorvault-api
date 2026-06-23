@@ -2,6 +2,24 @@
  * Full app menu — secondary destinations opened from bottom-nav Menu item.
  */
 import { SITE_ROUTES, TOP_NAV_ITEMS, type SiteSectionId } from './site-routes';
+import { VAULT_PILLAR_ROUTES } from './vault-route-map';
+
+/** Canonical /vault/* paths — keep users in VaultShell (Home must not fall through to `/`). */
+const VAULT_PATH_BY_SECTION: Record<SiteSectionId, string> = {
+  dashboard: `${VAULT_PILLAR_ROUTES.home}/`,
+  recruiting: `${VAULT_PILLAR_ROUTES.recruiting}/`,
+  futurecast: `${VAULT_PILLAR_ROUTES.futurecast}/`,
+  team: `${VAULT_PILLAR_ROUTES.team}/`,
+  gatorNationLive: `${VAULT_PILLAR_ROUTES.liveFeed}/`,
+  schedule: `${VAULT_PILLAR_ROUTES.schedule}/`,
+  filmRoom: `${VAULT_PILLAR_ROUTES.filmRoom}/`,
+  gameWeek: '/vault/game-week/',
+  liveScores: '/vault/live-scores/',
+  articles: `${VAULT_PILLAR_ROUTES.articles}/`,
+  community: `${VAULT_PILLAR_ROUTES.community}/`,
+  gameZone: '/vault/game-zone/',
+  nil: `${VAULT_PILLAR_ROUTES.nil}/`,
+};
 
 export type AppMenuItem = {
   id: string;
@@ -34,7 +52,7 @@ export function getAppMenuSections(inVault: boolean): AppMenuSection[] {
   const more: AppMenuItem[] = overflowPillars.map((item) => ({
     id: item.id,
     label: item.label,
-    href: item.href,
+    href: inVault ? VAULT_PATH_BY_SECTION[item.id] : item.href,
   }));
 
   const account: AppMenuItem[] = [

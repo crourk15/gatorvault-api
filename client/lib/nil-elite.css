@@ -850,6 +850,73 @@
     display: none;
   }
 
+  .gv-nil-page {
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  .nil-cc-page,
+  .nil-cc-page .rh-cc-main,
+  .nil-cc-page .rh-cc-col,
+  .nil-cc-page .rh-frame {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .nil-bleed {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .nil-rank-table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+  }
+
+  .nil-rank-table-wrap::after {
+    content: 'Swipe for full rankings →';
+    display: block;
+    padding: 6px 14px 10px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(0, 33, 165, 0.55);
+    text-align: right;
+  }
+
+  .nil-rank-table thead th:first-child,
+  .nil-rank-table tbody td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--nil-card-bg);
+    box-shadow: 4px 0 8px rgba(0, 26, 51, 0.06);
+  }
+
+  .nil-rank-table thead th:first-child {
+    background: rgba(0, 33, 165, 0.06);
+  }
+
+  .nil-rank-table tbody tr.is-uf td:first-child {
+    background: rgba(250, 70, 22, 0.08);
+  }
+
+  .nil-feed__item {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .nil-feed__text {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
   .nil-metrics__track {
     display: flex;
     flex-direction: row;

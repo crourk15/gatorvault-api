@@ -13,6 +13,7 @@ const PROOF_ROUTES = [
   { slug: 'vault-film-room', path: '/vault/film-room/', label: 'Film Room', alias: '/vault/film/' },
   { slug: 'vault-articles', path: '/vault/articles/', label: 'Articles' },
   { slug: 'vault-nil', path: '/vault/nil/', label: 'NIL' },
+  { slug: 'vault-game-zone', path: '/vault/game-zone/', label: 'Game Zone' },
   { slug: 'vault-podcasts', path: '/vault/live/podcasts/', label: 'Podcasts', fallback: '/vault/live/' },
   { slug: 'vault-tickets', path: '/vault/tickets/', label: 'Tickets' },
 ];
@@ -154,6 +155,16 @@ const SECTION_CHECKLIST = [
   },
 ];
 
+/** Mobile layout + bottom-nav integrity (overflow, home route, menu reliability). */
+const LAYOUT_NAV_CHECKS = [
+  { id: 'nil-no-overflow', path: '/vault/nil/', label: 'NIL — no horizontal page overflow' },
+  { id: 'game-zone-no-overflow', path: '/vault/game-zone/', label: 'Game Zone — no horizontal page overflow' },
+  { id: 'nil-table-scroll', path: '/vault/nil/', label: 'NIL — rankings table scrolls in container' },
+  { id: 'nil-home-vault', path: '/vault/nil/', label: 'Home from NIL stays in vault' },
+  { id: 'nil-menu-stress', path: '/vault/nil/', label: 'NIL — menu open/close 3×' },
+  { id: 'game-zone-menu-stress', path: '/vault/game-zone/', label: 'Game Zone — menu open/close 3×' },
+];
+
 const GLOBAL_FORBIDDEN = [
   'Waking up GatorVault',
   'Minified React error #423',
@@ -164,5 +175,6 @@ module.exports = {
   PROOF_ROUTES,
   RECORDING_ROUTES,
   SECTION_CHECKLIST,
+  LAYOUT_NAV_CHECKS,
   GLOBAL_FORBIDDEN,
 };

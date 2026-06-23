@@ -20,11 +20,11 @@ const MENU_ROUTES = [
   { id: 'community', path: '/vault/community/', label: 'Community' },
   { id: 'game-zone', path: '/vault/game-zone/', label: 'Game Zone' },
   { id: 'nil', path: '/vault/nil/', label: 'NIL' },
-  { id: 'podcasts', path: '/vault/live/', label: 'Podcasts (GNL)' },
+  { id: 'podcasts', path: '/vault/live/', label: 'Podcasts (GNL)', skipGotoIfSamePath: true },
   { id: 'apparel', path: '/vault/apparel/', label: 'Shop & Apparel' },
   { id: 'membership', path: '/vault/membership/', label: 'Membership' },
   { id: 'alerts', path: '/vault/alerts/', label: 'My Alerts' },
-  { id: 'tickets', path: '/vault/schedule/', label: 'Tickets (Schedule)' },
+  { id: 'tickets', path: '/vault/tickets/', label: 'Tickets', fallback: '/vault/schedule/' },
 ];
 
 /** Text that must never persist after settle on any page. */
@@ -179,12 +179,12 @@ const ROUTE_CHECKS = {
     sections: [{ sel: '[data-testid="vault-alerts"]', label: 'Alerts page', minText: 40 }],
   },
   tickets: {
-    root: '[data-testid="schedule-hero"], [data-testid="vault-schedule"]',
+    root: '[data-testid="schedule-hero"], [data-testid="vault-schedule"], [data-testid="vault-tickets"]',
     minBodyText: 150,
     sections: [
       {
-        sel: '[data-testid="schedule-hero"], [data-testid="vault-schedule"]:not(.gv-vault-ssr-marker)',
-        label: 'Tickets → Schedule',
+        sel: '[data-testid="schedule-hero"], [data-testid="vault-schedule"]:not(.gv-vault-ssr-marker), [data-testid="vault-tickets"]',
+        label: 'Tickets page',
         minText: 40,
       },
     ],

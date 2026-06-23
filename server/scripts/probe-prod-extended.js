@@ -2,10 +2,10 @@
 /** Extended production probe — stale bundles, UX/mobile CSS, bundle scan */
 const base = 'https://gatorvaultinsider.com';
 const stale = [
-  '/_next/static/chunks/7397-22ed9012456f13e7.js',
+  '/_next//js/vault-chunks/7397-22ed9012456f13e7.js',
   '/_next/static/css/f5473cd2ebaa6cd2.css',
   '/js/vault-chunks/r-vault-team-page-e97f60aeb392f5a1.js',
-  '/_next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js',
+  '/_next//js/vault-chunks/vault/team/page-c0c882d656dad2ee.js',
 ];
 const uxCss = [
   'overflow-x: auto',

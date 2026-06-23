@@ -67,7 +67,13 @@ function NavLink({
 }
 
 function VaultBottomNav({ pathname }: { pathname: string }): React.ReactElement {
-  const { isOpen: menuOpen } = useAppMenu();
+  const { isOpen: menuOpen, toggleMenu } = useAppMenu();
+  const menuBtnRef = React.useRef<HTMLButtonElement>(null);
+
+  React.useEffect(() => {
+    menuBtnRef.current?.setAttribute('data-vault-menu-react', '');
+    return () => menuBtnRef.current?.removeAttribute('data-vault-menu-react');
+  }, []);
 
   const navLabel = (label: string) => label.replace('GatorNation Live', 'GNL Live').replace(' Hub', '');
 
@@ -88,11 +94,13 @@ function VaultBottomNav({ pathname }: { pathname: string }): React.ReactElement 
         </VaultNavLink>
       ))}
       <button
+        ref={menuBtnRef}
         type="button"
         className={`gv-vault-bottom-nav__item${menuOpen ? ' is-menu-open' : ''}`}
         aria-expanded={menuOpen}
         aria-controls="gv-app-menu-drawer"
         data-vault-menu-toggle=""
+        onClick={toggleMenu}
       >
         <span className="gv-vault-bottom-nav__icon" aria-hidden="true">
           <PremiumNavIcon id="menu" />
@@ -158,7 +166,7 @@ function VaultShellInner({ children }: { children: React.ReactNode }): React.Rea
       />
       <header className="gv-vault-shell__header">
         <div className="gv-vault-shell__header-start">
-          <VaultNavLink href={inVault ? '/vault' : '/'} className="gv-vault-shell__brand">
+          <VaultNavLink href={inVault ? '/vault/' : '/'} className="gv-vault-shell__brand">
             <GatorVaultWordmark height={28} className="gv-vault-shell__wordmark" />
           </VaultNavLink>
         </div>

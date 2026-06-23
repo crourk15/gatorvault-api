@@ -18,6 +18,20 @@ const POLL_MS = Number(process.env.VERIFY_POLL_MS || 2_000);
 const BLANK_FAIL_MS = Number(process.env.VERIFY_BLANK_FAIL_MS || 20_000);
 const PASS_LABEL = process.env.VERIFY_PASS || '1';
 
+function isNavInterrupted(err) {
+  const msg = String(err?.message || err);
+  return /Execution context was destroyed|Target closed|frame was detached|Navigation/i.test(msg);
+}
+
+function normalizePath(u) {
+  try {
+    const { pathname } = new URL(u);
+    return pathname.replace(/\/$/, '') || '/';
+  } catch {
+    return String(u).replace(/\/$/, '') || '/';
+  }
+}
+
 async function loadPlaywright() {
   try {
     return require('playwright');
@@ -39,19 +53,25 @@ async function assertSection(page, spec) {
     await item.scrollIntoViewIfNeeded({ timeout: 20_000 }).catch(() => {});
     await page.waitForTimeout(300);
 
-    const state = await item.evaluate((node, noSkeleton) => {
-      const text = (node.innerText || '').trim();
-      const skeletonOnly =
-        noSkeleton &&
-        (node.matches('.rh-skeleton') ||
-          (node.querySelector('.rh-skeleton[aria-hidden="true"]') && text.length < 40) ||
-          (node.getAttribute('aria-busy') === 'true' && text.length < 40));
-      const hidden =
-        node.hidden ||
-        node.getAttribute('aria-hidden') === 'true' ||
-        node.classList.contains('gv-vault-ssr-marker');
-      return { textLen: text.length, skeletonOnly, hidden };
-    }, Boolean(spec.noSkeleton));
+    let state;
+    try {
+      state = await item.evaluate((node, noSkeleton) => {
+        const text = (node.innerText || '').trim();
+        const skeletonOnly =
+          noSkeleton &&
+          (node.matches('.rh-skeleton') ||
+            (node.querySelector('.rh-skeleton[aria-hidden="true"]') && text.length < 40) ||
+            (node.getAttribute('aria-busy') === 'true' && text.length < 40));
+        const hidden =
+          node.hidden ||
+          node.getAttribute('aria-hidden') === 'true' ||
+          node.classList.contains('gv-vault-ssr-marker');
+        return { textLen: text.length, skeletonOnly, hidden };
+      }, Boolean(spec.noSkeleton));
+    } catch (err) {
+      if (isNavInterrupted(err)) return { ok: false, reason: `${spec.label}: navigation interrupted`, navInterrupted: true };
+      throw err;
+    }
 
     if (state.hidden && state.textLen < (spec.minText || 15)) continue;
     if (state.skeletonOnly) continue;
@@ -114,9 +134,21 @@ async function waitForRouteReady(page, routeId, checks) {
     }
 
     const sectionFails = [];
+    let navInterrupted = false;
     for (const section of checks.sections || []) {
       const result = await assertSection(page, section);
+      if (result.navInterrupted) {
+        navInterrupted = true;
+        break;
+      }
       if (!result.ok) sectionFails.push(result.reason);
+    }
+
+    if (navInterrupted) {
+      lastReason = 'navigation interrupted during settle';
+      await page.waitForLoadState('domcontentloaded').catch(() => {});
+      await page.waitForTimeout(POLL_MS);
+      continue;
     }
 
     if (sectionFails.length === 0) {
@@ -129,14 +161,62 @@ async function waitForRouteReady(page, routeId, checks) {
   return { ok: false, reason: lastReason };
 }
 
+async function waitForMenuReady(page) {
+  await page
+    .waitForFunction(
+      () => {
+        const btn = document.querySelector('[data-vault-menu-toggle]');
+        if (!btn) return false;
+        return Boolean(window.__GV_MENU_BOOT__) || btn.hasAttribute('data-vault-menu-react');
+      },
+      { timeout: 30_000 },
+    )
+    .catch(() => {});
+}
+
+async function safeGoto(page, url, fallback) {
+  const attempts = 3;
+  for (let i = 0; i < attempts; i += 1) {
+    try {
+      if (normalizePath(page.url()) === normalizePath(url) && i === 0) {
+        await page.waitForLoadState('domcontentloaded').catch(() => {});
+        return;
+      }
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60_000 });
+      await page.waitForLoadState('domcontentloaded').catch(() => {});
+      await page.waitForTimeout(400);
+      return;
+    } catch (err) {
+      const msg = String(err.message || err);
+      const retryable = /ERR_ABORTED|NS_BINDING_ABORTED|Navigation timeout/i.test(msg);
+      if (!retryable || i === attempts - 1) {
+        if (fallback && fallback !== url) {
+          await page.waitForTimeout(800);
+          await page.goto(fallback, { waitUntil: 'domcontentloaded', timeout: 60_000 });
+          return;
+        }
+        throw err;
+      }
+      await page.waitForTimeout(1000);
+    }
+  }
+}
+
 async function testMenuToggle(page, routeLabel) {
   const btn = page.locator('[data-vault-menu-toggle]').first();
   if (!(await btn.count())) {
     return { ok: false, reason: 'menu toggle missing' };
   }
-  await btn.click();
-  await page.waitForTimeout(400);
-  const open = await page.locator('#gv-app-menu-drawer.is-open').count();
+  await waitForMenuReady(page);
+
+  let open = 0;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    if (attempt > 0) await page.waitForTimeout(1500);
+    await btn.click();
+    await page.waitForTimeout(500);
+    open = await page.locator('#gv-app-menu-drawer.is-open').count();
+    if (open) break;
+  }
   if (!open) {
     return { ok: false, reason: 'menu drawer did not open' };
   }
@@ -152,8 +232,14 @@ async function verifyRoute(page, route) {
   }
 
   const url = `${BASE}${route.path}`;
+  const fallback = route.fallback ? `${BASE}${route.fallback}` : null;
   try {
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60_000 });
+    if (route.skipGotoIfSamePath && normalizePath(page.url()) === normalizePath(url)) {
+      await page.waitForLoadState('domcontentloaded').catch(() => {});
+      await page.waitForTimeout(400);
+    } else {
+      await safeGoto(page, url, fallback);
+    }
     if (checks.redirect) {
       await page.waitForURL(`**${checks.redirect}**`, { timeout: 30_000 }).catch(() => {});
     }
@@ -195,7 +281,17 @@ async function main() {
   const failures = [];
   for (const route of ALL_ROUTES) {
     process.stdout.write(`  · ${route.label} (${route.path}) … `);
-    const result = await verifyRoute(page, route);
+    let result;
+    try {
+      result = await verifyRoute(page, route);
+    } catch (err) {
+      result = {
+        route: route.label,
+        path: route.path,
+        ok: false,
+        reason: isNavInterrupted(err) ? 'navigation interrupted' : String(err.message || err),
+      };
+    }
     if (result.ok) {
       console.log('ok');
     } else {

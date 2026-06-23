@@ -24,7 +24,7 @@ const REACT_LANDING_MARKERS = [
 const WELCOME_LANDING_MARKERS = [
   'data-testid="welcome-page"',
   '/_next/static/',
-  'js/vault-chunks/r-welcome-page',
+  '/js/vault-chunks/r-welcome-page',
 ];
 
 function isReactMarketingIndex(html) {

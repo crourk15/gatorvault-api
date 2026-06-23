@@ -320,6 +320,16 @@
   transform: translateX(-50%) scale(0.96);
 }
 
+body:has(#gv-app-menu-drawer.is-open) .gv-live-pulse-fab {
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.gv-vault-bottom-nav__item[data-vault-menu-toggle] {
+  position: relative;
+  z-index: 2;
+}
+
 .gv-live-pulse-fab__icon svg {
   width: 24px;
   height: 24px;

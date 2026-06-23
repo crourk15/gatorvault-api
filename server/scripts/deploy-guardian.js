@@ -190,7 +190,7 @@ function checkReactChunkAssets() {
     missing.slice(0, 8).forEach((rel) => errors.push(`[assets] missing: ${rel}`));
   }
   // verifyChunkAssets strips leading "/" — match js/vault-chunks/ not /js/vault-chunks/
-  const vaultRefs = assets.filter((a) => a.includes('js/vault-chunks/'));
+  const vaultRefs = assets.filter((a) => a.includes('/js/vault-chunks/'));
   if (vaultRefs.length === 0) {
     errors.push('[assets] HTML exports missing js/vault-chunks/ script references');
   }

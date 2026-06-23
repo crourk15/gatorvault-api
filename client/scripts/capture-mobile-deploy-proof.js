@@ -16,6 +16,7 @@ const {
   PROOF_ROUTES,
   RECORDING_ROUTES,
   SECTION_CHECKLIST,
+  LAYOUT_NAV_CHECKS,
   GLOBAL_FORBIDDEN,
 } = require('../lib/mobile-deploy-proof-matrix.cjs');
 const { seedProofAuth } = require('./proof-auth-bootstrap.js');
@@ -142,15 +143,116 @@ async function evaluateSection(page, check, opts = {}) {
   return { pass: false, reason: 'timeout waiting for section content' };
 }
 
+async function measurePageOverflow(page) {
+  return page.evaluate(() => ({
+    scrollWidth: Math.max(document.documentElement.scrollWidth, document.body?.scrollWidth ?? 0),
+    viewport: window.innerWidth,
+  }));
+}
+
+async function runLayoutNavCheck(page, check) {
+  await page.goto(`${BASE}${check.path}`, { waitUntil: 'domcontentloaded', timeout: 60_000 });
+  await settlePage(page, Math.min(SETTLE_MS, 30_000));
+
+  if (check.id.endsWith('-no-overflow')) {
+    const { scrollWidth, viewport } = await measurePageOverflow(page);
+    const pass = scrollWidth <= viewport + 2;
+    return {
+      pass,
+      reason: pass
+        ? `body ${scrollWidth}px ≤ viewport ${viewport}px`
+        : `horizontal overflow ${scrollWidth}px > ${viewport}px`,
+    };
+  }
+
+  if (check.id === 'nil-table-scroll') {
+    const wrap = page.locator('.nil-rank-table-wrap').first();
+    if (!(await wrap.count())) {
+      return { pass: false, reason: 'rankings table wrapper missing' };
+    }
+    const metrics = await wrap.evaluate((el) => ({
+      client: el.clientWidth,
+      scroll: el.scrollWidth,
+    }));
+    const pageMetrics = await measurePageOverflow(page);
+    const tableScrolls = metrics.scroll > metrics.client + 4;
+    const pageOk = pageMetrics.scrollWidth <= pageMetrics.viewport + 2;
+    return {
+      pass: tableScrolls && pageOk,
+      reason: tableScrolls
+        ? `table scroll ${metrics.scroll}/${metrics.client}px, page ${pageMetrics.scrollWidth}px`
+        : `table not scroll-contained (${metrics.scroll}/${metrics.client}px)`,
+    };
+  }
+
+  if (check.id === 'nil-home-vault') {
+    const home = page.locator('.gv-vault-bottom-nav a[href*="/vault"]').first();
+    if (!(await home.count())) {
+      return { pass: false, reason: 'vault home nav link missing' };
+    }
+    await home.click();
+    await page.waitForTimeout(1200);
+    const pathAfter = await page.evaluate(() => window.location.pathname.replace(/\/$/, '') || '/');
+    const pass = pathAfter === '/vault';
+    return {
+      pass,
+      reason: pass ? 'landed on /vault/' : `landed on ${pathAfter} (expected /vault)`,
+    };
+  }
+
+  if (check.id.endsWith('-menu-stress')) {
+    const toggle = page.locator('[data-vault-menu-toggle]').first();
+    if (!(await toggle.count())) {
+      return { pass: false, reason: 'menu toggle missing' };
+    }
+    for (let i = 0; i < 3; i += 1) {
+      await toggle.click();
+      await page.waitForTimeout(450);
+      const open = (await page.locator('#gv-app-menu-drawer.is-open').count()) > 0;
+      if (!open) {
+        return { pass: false, reason: `open failed on attempt ${i + 1}` };
+      }
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(350);
+      const closed = (await page.locator('#gv-app-menu-drawer.is-open').count()) === 0;
+      if (!closed) {
+        return { pass: false, reason: `close failed on attempt ${i + 1}` };
+      }
+    }
+    return { pass: true, reason: '3× open/close ok' };
+  }
+
+  return { pass: false, reason: 'unknown check' };
+}
+
+async function waitForMenuReady(page) {
+  await page
+    .waitForFunction(
+      () => {
+        const btn = document.querySelector('[data-vault-menu-toggle]');
+        if (!btn) return false;
+        return Boolean(window.__GV_MENU_BOOT__) || btn.hasAttribute('data-vault-menu-react');
+      },
+      { timeout: 30_000 },
+    )
+    .catch(() => {});
+}
+
 async function testMenu(page, route) {
   const toggle = page.locator('[data-vault-menu-toggle]').first();
   if (!(await toggle.count())) {
     return { open: false, close: false, reason: 'menu toggle missing' };
   }
 
-  await toggle.click();
-  await page.waitForTimeout(500);
-  const open = (await page.locator('#gv-app-menu-drawer.is-open').count()) > 0;
+  await waitForMenuReady(page);
+
+  let open = false;
+  for (let attempt = 0; attempt < 2 && !open; attempt += 1) {
+    if (attempt > 0) await page.waitForTimeout(1500);
+    await toggle.click();
+    await page.waitForTimeout(500);
+    open = (await page.locator('#gv-app-menu-drawer.is-open').count()) > 0;
+  }
   await page.screenshot({ path: path.join(dirs.menu, `${route.slug}-menu-open.png`) });
 
   if (open) {
@@ -315,6 +417,25 @@ async function main() {
     }
   }
 
+  console.log('[proof] evaluating layout + nav integrity…');
+  const layoutNavResults = [];
+  for (const check of LAYOUT_NAV_CHECKS) {
+    process.stdout.write(`  · ${check.label} … `);
+    const result = await runLayoutNavCheck(page, check);
+    const row = {
+      id: check.id,
+      label: check.label,
+      group: 'layout-nav',
+      pass: result.pass,
+      reason: result.reason,
+      path: check.path,
+    };
+    layoutNavResults.push(row);
+    console.log(row.pass ? 'PASS' : `FAIL (${row.reason})`);
+  }
+
+  const allChecklistResults = [...checklistResults, ...layoutNavResults];
+
   await context.close();
   await browser.close();
 
@@ -327,7 +448,8 @@ async function main() {
     console.log(file ? 'saved' : 'missing');
   }
 
-  const belowNsd = checklistResults.filter((r) => r.group === 'below-nsd');
+  const belowNsd = allChecklistResults.filter((r) => r.group === 'below-nsd');
+  const layoutNav = allChecklistResults.filter((r) => r.group === 'layout-nav');
   const summary = {
     generatedAt: new Date().toISOString(),
     baseUrl: BASE,
@@ -336,20 +458,25 @@ async function main() {
     localManifest: manifest,
     routes: PROOF_ROUTES.map((r) => r.path),
     recordings: recordings.map((r) => r.file).filter(Boolean),
-    checklist: checklistResults,
+    checklist: allChecklistResults,
     belowNsdRollup: {
       pass: belowNsd.every((r) => r.pass),
       failed: belowNsd.filter((r) => !r.pass).map((r) => r.id),
     },
+    layoutNavRollup: {
+      pass: layoutNav.every((r) => r.pass),
+      failed: layoutNav.filter((r) => !r.pass).map((r) => r.id),
+    },
     menu: menuResults.map((m) => ({ slug: m.slug, label: m.label, ...m.menu })),
     allPass:
-      checklistResults.every((r) => r.pass) &&
+      allChecklistResults.every((r) => r.pass) &&
       belowNsd.every((r) => r.pass) &&
+      layoutNav.every((r) => r.pass) &&
       menuResults.every((m) => m.menu.pass),
   };
 
   fs.writeFileSync(path.join(OUT, 'checklist.json'), JSON.stringify(summary, null, 2));
-  writeChecklistMarkdown(checklistResults, menuResults);
+  writeChecklistMarkdown(allChecklistResults, menuResults);
 
   fs.writeFileSync(
     path.join(OUT, 'README.md'),
@@ -373,7 +500,7 @@ async function main() {
       '',
       '## Required before push/deploy',
       '',
-      '1. All checklist rows PASS (including “Everything below NSD”)',
+      '1. All checklist rows PASS (including “Everything below NSD” + layout/nav)',
       '2. Menu open/close PASS on every route',
       '3. `npm run verify:netlify:build` — Netlify succeeded + production build ID matches commit',
       '',

@@ -210,6 +210,25 @@
   }
 }
 
+@media (max-width: 767px) {
+  .gv-page-layout,
+  .gv-page-layout__body,
+  .gv-page-section {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .gv-vault-shell__main:has([data-testid='vault-game-zone']),
+  .gv-vault-shell__main:has([data-testid='vault-nil']) {
+    overflow-x: clip;
+  }
+
+  [data-testid='vault-game-zone'] .gv-page-layout__body,
+  [data-testid='vault-nil'] .nil-cc-page {
+    overflow-x: clip;
+  }
+}
+
 /* ── Trend arrows ── */
 .gv-trend {
   font-weight: 800;

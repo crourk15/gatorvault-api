@@ -1,0 +1,76 @@
+2:I[80540,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","1427","/js/vault-chunks/1427-36e0b70300e678b9.js","3941","/js/vault-chunks/3941-436f4bd0786d77bc.js","4194","/js/vault-chunks/4194-606940e14479d183.js","2305","/js/vault-chunks/r-(app)-recruiting-page-ef3341bb35d73691.js"],"RecruitingHubPageChrome"]
+4:I[10814,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","1427","/js/vault-chunks/1427-36e0b70300e678b9.js","3941","/js/vault-chunks/3941-436f4bd0786d77bc.js","4194","/js/vault-chunks/4194-606940e14479d183.js","2305","/js/vault-chunks/r-(app)-recruiting-page-ef3341bb35d73691.js"],"RecruitingHubCommandCenterClient"]
+5:I[4707,[],""]
+6:I[36423,[],""]
+7:I[30859,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","7833","/js/vault-chunks/7833-8de56d5aed9d5ea4.js","5814","/js/vault-chunks/r-(app)-layout-8504f95207ef0feb.js"],"AppRouteGate"]
+8:I[41045,["7648","/js/vault-chunks/7648-9dea628b13e4ebc3.js","7833","/js/vault-chunks/7833-8de56d5aed9d5ea4.js","5814","/js/vault-chunks/r-(app)-layout-8504f95207ef0feb.js"],"AppShell"]
+9:I[94885,["3185","/js/vault-chunks/r-layout-d093cf9053ce56f7.js"],"AppProviders"]
+3:T9e0,(function(){
+  try {
+    var start = performance.now();
+    window.__GV_HUB__ = window.__GV_HUB__ || {};
+    window.__GV_HUB__.start = start;
+    window.__GV_HUB__.year = 2027;
+
+    function paintHero(data) {
+      if (!data) return;
+      window.__GV_HERO__ = data;
+      window.__GV_HUB__.heroRenderMs = Math.round(performance.now() - start);
+      var root = document.querySelector('[data-hydrate="hero"]');
+      if (!root) return;
+      root.classList.remove('hero-skeleton');
+
+      var title = root.querySelector('[data-hero-field="title"]');
+      var subtitle = root.querySelector('[data-hero-field="subtitle"]');
+      if (title && data.title) title.textContent = data.title;
+      if (subtitle && data.subtitle) subtitle.textContent = data.subtitle;
+
+      var years = data.classYears || [2026, 2027, 2028];
+      var yearRow = root.querySelector('[data-hero-field="year-tabs"]');
+      if (yearRow) {
+        yearRow.innerHTML = years.map(function(y) {
+          var active = y === (data.year || 2027);
+          return '<button type="button" class="rh-hero-year-tab' + (active ? ' is-active' : '') + '" data-year="' + y + '" disabled>' + y + '</button>';
+        }).join('');
+      }
+
+      var metrics = data.classOverview || {};
+      var fields = [
+        ['classRank', 'class-rank'],
+        ['blueChip', 'blue-chip'],
+        ['commits', 'commits'],
+        ['avgRating', 'avg-rating']
+      ];
+      fields.forEach(function(pair) {
+        var node = root.querySelector('[data-hero-metric="' + pair[1] + '"]');
+        if (node && metrics[pair[0]] != null) node.textContent = metrics[pair[0]];
+      });
+
+      var tickerTrack = root.querySelector('[data-hero-field="ticker-track"]');
+      var items = (data.ticker && data.ticker.length) ? data.ticker : [];
+      if (tickerTrack && items.length) {
+        var html = items.map(function(item) {
+          return '<span class="rh-hero-ticker-item">' + item + '<span class="rh-hero-ticker-sep">·</span></span>';
+        }).join('');
+        tickerTrack.innerHTML = html + html;
+      }
+    }
+
+    var heroUrl = '/api/recruiting/hub/hero?year=2027';
+    function loadHero(attempt) {
+      fetch(heroUrl, { credentials: 'same-origin' })
+        .then(function(res) { return res.ok ? res.json() : null; })
+        .then(function(body) { paintHero(body && body.ok !== false ? body : null); })
+        .catch(function() {
+          if (attempt < 1) setTimeout(function() { loadHero(attempt + 1); }, 1500);
+        });
+    }
+    loadHero(0);
+  } catch (e) {}
+})();a:{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"}
+b:{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"}
+c:{"display":"inline-block"}
+d:{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0}
+0:["L5BUDx99oNaPYjO4mGdbD",[[["",{"children":["(app)",{"children":["recruiting",{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",{"children":["(app)",{"children":["recruiting",{"children":["__PAGE__",{},[["$L1",["$","$L2",null,{"children":["$","div",null,{"className":"rh-cc-page","data-testid":"rh-command-center","children":["$","div",null,{"className":"rh-frame rh-elite-chrome","data-testid":"rh-elite-chrome","children":[[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$3"}}],["$","section",null,{"className":"rh-hero-strip hero-skeleton","data-hydrate":"hero","aria-label":"Recruiting War Room","children":[["$","div",null,{"className":"rh-hero-sweep","aria-hidden":"true"}],["$","div",null,{"className":"rh-hero-watermark","aria-hidden":"true","children":"GATORS"}],["$","div",null,{"className":"rh-hero-top","children":[["$","div",null,{"children":[["$","div",null,{"className":"rh-hero-title","data-hero-field":"title","children":"Recruiting Command Center"}],["$","div",null,{"className":"rh-hero-subtitle","data-hero-field":"subtitle","children":"UF's class, movement, and battles—one place."}],["$","div",null,{"className":"rh-hero-year-tabs","data-hero-field":"year-tabs","role":"tablist","aria-label":"Class year","children":[["$","button","2026",{"type":"button","className":"rh-hero-year-tab","data-year":2026,"disabled":true,"children":2026}],["$","button","2027",{"type":"button","className":"rh-hero-year-tab is-active","data-year":2027,"disabled":true,"children":2027}],["$","button","2028",{"type":"button","className":"rh-hero-year-tab","data-year":2028,"disabled":true,"children":2028}]]}]]}],["$","span",null,{"className":"rh-badge rh-hero-badge rh-hero-badge--pulse","children":"WAR ROOM"}]]}],["$","div",null,{"className":"rh-hero-metrics hero-skeleton__metrics","aria-label":"Class summary metrics","children":[["$","div",null,{"className":"rh-hero-metric","children":[["$","span",null,{"className":"rh-hero-metric__label","children":"Class rank"}],["$","span",null,{"className":"rh-hero-metric__value","data-hero-metric":"class-rank","children":"—"}]]}],["$","div",null,{"className":"rh-hero-metric","children":[["$","span",null,{"className":"rh-hero-metric__label","children":"Blue chip %"}],["$","span",null,{"className":"rh-hero-metric__value","data-hero-metric":"blue-chip","children":"—"}]]}],["$","div",null,{"className":"rh-hero-metric","children":[["$","span",null,{"className":"rh-hero-metric__label","children":"Commits"}],["$","span",null,{"className":"rh-hero-metric__value","data-hero-metric":"commits","children":"—"}]]}],["$","div",null,{"className":"rh-hero-metric","children":[["$","span",null,{"className":"rh-hero-metric__label","children":"Avg rating"}],["$","span",null,{"className":"rh-hero-metric__value","data-hero-metric":"avg-rating","children":"—"}]]}]]}],["$","div",null,{"className":"rh-hero-ticker","aria-label":"Recruiting intel ticker","children":["$","div",null,{"className":"rh-hero-ticker-track","data-hero-field":"ticker-track","children":[[["$","span","0",{"className":"rh-hero-ticker-item","children":["2027 class trending nationally — UF in the mix",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}],["$","span","1",{"className":"rh-hero-ticker-item","children":["Blue chip % rising on the board",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}],["$","span","2",{"className":"rh-hero-ticker-item","children":["Staff locked in for summer evals",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}],["$","span","3",{"className":"rh-hero-ticker-item","children":["Battles heating up — movement intel live",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}]],[["$","span","dup-0",{"className":"rh-hero-ticker-item","children":["2027 class trending nationally — UF in the mix",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}],["$","span","dup-1",{"className":"rh-hero-ticker-item","children":["Blue chip % rising on the board",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}],["$","span","dup-2",{"className":"rh-hero-ticker-item","children":["Staff locked in for summer evals",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}],["$","span","dup-3",{"className":"rh-hero-ticker-item","children":["Battles heating up — movement intel live",["$","span",null,{"className":"rh-hero-ticker-sep","children":"·"}]]}]]]}]}]]}]],["$","$L4",null,{"deferHero":true}]]}]}]}],[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/2f34856e26966951.css","precedence":"next","crossOrigin":"$undefined"}]]],null],null]},[null,["$","$L5",null,{"parallelRouterKey":"children","segmentPath":["children","(app)","children","recruiting","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/09c4a14a1897fae8.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/fca2b81e4f619f62.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/64b50828dccf08cd.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/a8fe1a20ab38f79a.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","4",{"rel":"stylesheet","href":"/_next/static/css/3f52c8abae2610fd.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","5",{"rel":"stylesheet","href":"/_next/static/css/d50045ffce982ba3.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","6",{"rel":"stylesheet","href":"/_next/static/css/a219e8c5c499e1b8.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","7",{"rel":"stylesheet","href":"/_next/static/css/a53c0c98006da83d.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","8",{"rel":"stylesheet","href":"/_next/static/css/22709dcd7577cafc.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","9",{"rel":"stylesheet","href":"/_next/static/css/d3e6ec8ecfae196c.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","10",{"rel":"stylesheet","href":"/_next/static/css/3e6678b431edbe27.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","11",{"rel":"stylesheet","href":"/_next/static/css/182aada6f1d2c744.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","12",{"rel":"stylesheet","href":"/_next/static/css/3cc9113f28351800.css","precedence":"next","crossOrigin":"$undefined"}]],[["$","$L7",null,{}],["$","$L8",null,{"children":["$","$L5",null,{"parallelRouterKey":"children","segmentPath":["children","(app)","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":"404"}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]]],null],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/73686baa7e8e7ff9.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"/_next/static/css/0b76d5d2160fdaa8.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","2",{"rel":"stylesheet","href":"/_next/static/css/9aaf170a6eeea464.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","3",{"rel":"stylesheet","href":"/_next/static/css/b799eacc7000fb11.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","4",{"rel":"stylesheet","href":"/_next/static/css/6f0e6d39b157e693.css","precedence":"next","crossOrigin":"$undefined"}],["$","link","5",{"rel":"stylesheet","href":"/_next/static/css/0c417f3c61b21d1d.css","precedence":"next","crossOrigin":"$undefined"}]],["$","html",null,{"lang":"en","data-theme":"dark","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}})();"}}],["$","link",null,{"href":"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@600;700;800&display=swap","rel":"stylesheet"}]]}],["$","body",null,{"className":"fc-body gv-body","children":["$","$L9",null,{"children":["$","$L5",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L6",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$a","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$b","children":"404"}],["$","div",null,{"style":"$c","children":["$","h2",null,{"style":"$d","children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[]}]}]}]]}]],null],null],["$Le",null]]]]
+e:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1, viewport-fit=cover"}],["$","meta","1",{"charSet":"utf-8"}]]
+1:null

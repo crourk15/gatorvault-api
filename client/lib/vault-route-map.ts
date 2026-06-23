@@ -30,7 +30,7 @@ export type PlayerProfileContext = 'recruiting' | 'futurecast' | 'roster';
 
 /** Six vault pillars + home */
 export const VAULT_PILLAR_ROUTES = {
-  home: '/vault',
+  home: '/vault/',
   recruiting: '/vault/recruiting',
   futurecast: '/vault/futurecast',
   team: '/vault/team',
