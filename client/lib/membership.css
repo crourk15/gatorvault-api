@@ -141,3 +141,104 @@
   color: rgba(255, 255, 255, 0.65);
   font-size: 0.9375rem;
 }
+
+.gv-membership__section-title {
+  margin: 0 0 0.65rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.gv-membership__manage {
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.gv-membership__manage a {
+  color: #fa4616;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.gv-membership__danger {
+  margin: 1.5rem 0;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  background: rgba(69, 10, 10, 0.35);
+}
+
+.gv-membership__warn {
+  margin: 0 0 0.85rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: #fde68a;
+}
+
+.gv-membership__danger-btn {
+  margin-top: 0.35rem;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.65);
+  background: rgba(127, 29, 29, 0.45);
+  color: #fecaca;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.gv-membership__danger-btn.is-confirm {
+  background: rgba(185, 28, 28, 0.85);
+  color: #fff;
+}
+
+.gv-membership__danger-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.gv-membership__danger-form {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.gv-membership__field {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.gv-membership__field input {
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font-size: 0.9375rem;
+}
+
+.gv-membership__danger-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.gv-membership__danger-cancel {
+  padding: 0.55rem 0.85rem;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.gv-membership__cards .gv-membership__section-title {
+  margin-bottom: 0.85rem;
+}

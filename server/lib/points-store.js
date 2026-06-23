@@ -85,8 +85,19 @@ function setPoints(email, points) {
   return { points: next, tier: pointsTierFromPoints(next), ...nextPointsTierInfo(next) };
 }
 
+function deleteUserPoints(email) {
+  const key = normalizeEmail(email);
+  if (!key) return false;
+  const doc = readDoc();
+  if (!doc.users?.[key]) return false;
+  delete doc.users[key];
+  writeDoc(doc);
+  return true;
+}
+
 module.exports = {
   getUserPoints,
   awardPoints,
-  setPoints
+  setPoints,
+  deleteUserPoints,
 };

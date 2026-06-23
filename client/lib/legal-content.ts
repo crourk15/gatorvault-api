@@ -69,7 +69,8 @@ export const PRIVACY_POLICY: LegalDocument = {
       heading: 'Data retention and deletion',
       paragraphs: [
         'We retain account information while your membership is active and for a reasonable period afterward for legal, security, and operational purposes.',
-        `You may request account deletion or a copy of your data by emailing ${CONTACT_EMAIL}. We will verify ownership of the account before processing requests.`,
+        'Signed-in members can delete their account from Membership in the Vault (/vault/membership/). Deletion removes login credentials, membership profile data, and Vault Points. Community posts may remain visible with the author shown as "Deleted member."',
+        `You may also request account deletion or a copy of your data by emailing ${CONTACT_EMAIL}. We will verify ownership of the account before processing requests.`,
       ],
     },
     {

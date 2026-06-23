@@ -176,3 +176,27 @@ export async function loginAccount(opts: {
   }
   return normalizeSession(res.data.session);
 }
+
+export async function deleteAccount(opts: {
+  password: string;
+  confirm: string;
+}): Promise<void> {
+  const session = loadSession();
+  if (!session?.token) {
+    throw new Error('Sign in to delete your account.');
+  }
+  const base = getApiBase();
+  const res = await fetch(`${base}/api/account/delete`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.token}`,
+    },
+    body: JSON.stringify(opts),
+  });
+  const data = (await res.json()) as { ok?: boolean; error?: string };
+  if (!res.ok || !data.ok) {
+    throw new Error(data.error || 'Could not delete account.');
+  }
+  clearSession();
+}

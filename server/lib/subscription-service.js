@@ -66,8 +66,11 @@ function buildSubscriptionStatus(user) {
     billing: {
       appleIapEnabled: process.env.APPLE_IAP_VERIFICATION_ENABLED === 'true',
       webCheckoutEnabled: false,
-      manageInAppHint: 'Subscriptions purchased in the iOS app are managed in the App Store → Subscriptions.',
+      manageInAppHint: 'Subscriptions purchased in the iOS app are managed in Settings → Apple ID → Subscriptions.',
+      manageWebHint:
+        'For billing questions, tier changes, or cancellation help before iOS billing is live, email support.',
       supportEmail: 'support@gatorvaultinsider.com',
+      accountDeletionPath: '/vault/membership/#delete-account',
     },
   };
 }

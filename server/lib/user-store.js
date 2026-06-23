@@ -32,10 +32,22 @@ function updateUser(email, patch) {
   return users[idx];
 }
 
+function deleteUser(email) {
+  const normalized = String(email || '').trim().toLowerCase();
+  if (!normalized) return false;
+  const users = loadUsers();
+  const idx = users.findIndex((u) => u.email === normalized);
+  if (idx < 0) return false;
+  users.splice(idx, 1);
+  saveUsers(users);
+  return true;
+}
+
 module.exports = {
   USERS_PATH,
   loadUsers,
   saveUsers,
   findUserByEmail,
   updateUser,
+  deleteUser,
 };

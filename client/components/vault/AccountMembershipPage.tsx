@@ -3,12 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { loadSession } from '@/lib/auth-api';
+import { isNativeApp } from '@/lib/api-base';
 import {
   fetchSubscriptionCatalog,
   fetchSubscriptionStatus,
   type SubscriptionCatalog,
   type SubscriptionStatus,
 } from '@/lib/subscription-api';
+import { AccountDeletePanel } from '@/components/vault/AccountDeletePanel';
 import '@/lib/membership.css';
 
 function statusBadge(status: SubscriptionStatus | null): React.ReactElement {
@@ -27,6 +29,7 @@ export function AccountMembershipPage(): React.ReactElement {
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const native = isNativeApp();
 
   useEffect(() => {
     const session = loadSession();
@@ -67,11 +70,14 @@ export function AccountMembershipPage(): React.ReactElement {
     );
   }
 
+  const supportEmail = status?.billing.supportEmail || 'support@gatorvaultinsider.com';
+
   return (
     <div className="gv-membership" data-testid="vault-membership">
-      <h1 className="gv-membership__title">Membership</h1>
+      <h1 className="gv-membership__title">Membership &amp; account</h1>
       <p className="gv-membership__sub">
-        Manage your Insider tier, trial, and billing. iOS app subscriptions are managed through the App Store.
+        View your Insider tier, trial status, and billing options. Account deletion is available below
+        for App Store compliance.
       </p>
 
       {error ? <p className="gv-membership__error">{error}</p> : null}
@@ -80,7 +86,7 @@ export function AccountMembershipPage(): React.ReactElement {
         <section className="gv-membership__status" aria-label="Current membership">
           <div className="gv-membership__status-row">
             {statusBadge(status)}
-            <span className="gv-membership__badge">{status.tier.toUpperCase()} tier</span>
+            <span className="gv-membership__badge">{String(status.tier).toUpperCase()} tier</span>
           </div>
           <p className="gv-membership__meta">
             {status.paid
@@ -102,38 +108,71 @@ export function AccountMembershipPage(): React.ReactElement {
         </section>
       ) : null}
 
+      <section className="gv-membership__manage" aria-label="Manage subscription">
+        <h2 className="gv-membership__section-title">Manage subscription</h2>
+        {native || status?.subscription?.source === 'apple' ? (
+          <p className="gv-membership__meta">{status?.billing.manageInAppHint}</p>
+        ) : (
+          <>
+            <p className="gv-membership__meta">
+              {status?.billing.manageWebHint ||
+                'Web checkout is not available yet. Email support for billing help, tier changes, or cancellation.'}
+            </p>
+            <p className="gv-membership__meta">
+              <a href={`mailto:${supportEmail}?subject=GatorVault%20membership%20help`}>
+                Email {supportEmail}
+              </a>
+              {' · '}
+              <Link href="/terms/">Membership Terms</Link>
+            </p>
+          </>
+        )}
+        {catalog?.iosPurchaseReady ? (
+          <p className="gv-membership__meta">
+            Subscribe in the GatorVault iOS app when in-app purchase is enabled. Purchases are processed
+            by Apple.
+          </p>
+        ) : (
+          <p className="gv-membership__meta">
+            iOS in-app purchase is coming soon. Until then, contact support if you need billing help.
+          </p>
+        )}
+      </section>
+
       <section className="gv-membership__cards" aria-label="Available plans">
+        <h2 className="gv-membership__section-title">Insider tiers</h2>
         {(catalog?.tiers || []).map((tier) => (
           <article
             key={tier.id}
             className={`gv-membership__card${status?.tier === tier.id ? ' is-current' : ''}`}
           >
             <div className="gv-membership__card-head">
-              <h2 className="gv-membership__card-name">
+              <h3 className="gv-membership__card-name">
                 {tier.icon} {tier.name}
                 {tier.popular ? ' · Popular' : ''}
-              </h2>
+              </h3>
               <p className="gv-membership__card-price">${tier.monthlyUsd.toFixed(2)}/mo</p>
             </div>
             <p className="gv-membership__card-note">
-              App Store: {tier.products.monthly}
+              App Store product: {tier.products.monthly}
               {status?.tier === tier.id ? ' · Your current tier' : ''}
             </p>
           </article>
         ))}
       </section>
 
+      {status?.email ? (
+        <AccountDeletePanel
+          email={status.email}
+          paid={status.paid}
+          subscriptionSource={status.subscription?.source}
+        />
+      ) : null}
+
       <section className="gv-membership__cta">
         <p>
-          {catalog?.iosPurchaseReady
-            ? 'Subscribe in the GatorVault iOS app. Purchases are processed by Apple.'
-            : 'iOS in-app purchase is coming soon (Step 3b). Until then, contact support if you need billing help.'}
-        </p>
-        <p>
           Questions:{' '}
-          <a href={`mailto:${status?.billing.supportEmail || 'support@gatorvaultinsider.com'}`}>
-            {status?.billing.supportEmail || 'support@gatorvaultinsider.com'}
-          </a>
+          <a href={`mailto:${supportEmail}`}>{supportEmail}</a>
           {' · '}
           <Link href="/terms/">Terms</Link>
           {' · '}

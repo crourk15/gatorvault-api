@@ -205,6 +205,8 @@ function enrichThreadWithAuthor(thread, categoryMap, users) {
     };
     enriched.badge = badge.badge;
     enriched.badgeClass = badge.badgeClass;
+  } else if (thread.authorId) {
+    enriched.author = { displayName: 'Deleted member', avatarUrl: null, tier: null, isFounding: false };
   }
   return enriched;
 }

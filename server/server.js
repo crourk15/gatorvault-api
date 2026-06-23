@@ -35,6 +35,7 @@ const { effectiveTier, isAdminAccount } = require('./lib/session-auth');
 const { loadUsers, saveUsers, findUserByEmail } = require('./lib/user-store');
 const { hasPaidAccess, buildSessionFields } = require('./lib/subscription-service');
 const { mountSubscriptionRoutes } = require('./lib/subscription-routes');
+const { mountAccountRoutes } = require('./lib/account-routes');
 const pipelineGuards = require('./lib/pipeline-guards');
 
 const fetch = require('node-fetch');
@@ -152,6 +153,7 @@ mountMediaIngestRoutes(app);
 mountWarRoomRoutes(app);
 mountPlatformRoutes(app);
 mountSubscriptionRoutes(app);
+mountAccountRoutes(app);
 mountXAutoposterRoutes(app);
 mountMonitoringRoutes(app);
 mountAdminRoutes(app);

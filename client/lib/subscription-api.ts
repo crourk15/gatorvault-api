@@ -39,7 +39,9 @@ export type SubscriptionStatus = {
     appleIapEnabled: boolean;
     webCheckoutEnabled: boolean;
     manageInAppHint: string;
+    manageWebHint?: string;
     supportEmail: string;
+    accountDeletionPath?: string;
   };
 };
 
