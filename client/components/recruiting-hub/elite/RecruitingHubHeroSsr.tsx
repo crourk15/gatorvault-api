@@ -18,11 +18,6 @@ export function RecruitingHubHeroSsr({
 }): React.ReactElement {
   return (
     <>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: recruitingHubHeroBootScript(year),
-        }}
-      />
       <section
         className="rh-hero-strip hero-skeleton"
         data-hydrate="hero"
@@ -99,6 +94,11 @@ export function RecruitingHubHeroSsr({
           </div>
         </div>
       </section>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: recruitingHubHeroBootScript(year),
+        }}
+      />
     </>
   );
 }
