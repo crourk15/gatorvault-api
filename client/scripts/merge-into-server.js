@@ -169,10 +169,19 @@ const mobileBoot = spawnSync(process.execPath, [path.join(__dirname, 'verify-mob
   stdio: 'inherit',
   cwd: path.join(__dirname, '..'),
 });
-if (mobileBoot.status !== 0) {
-  console.error('[netlify] mobile boot HTML verification failed — blocking publish');
-  process.exit(mobileBoot.status || 1);
-}
+  if (mobileBoot.status !== 0) {
+    console.error('[netlify] mobile boot HTML verification failed — blocking publish');
+    process.exit(mobileBoot.status || 1);
+  }
+
+  const rscFlight = spawnSync(process.execPath, [path.join(__dirname, 'verify-rsc-flight-integrity.js')], {
+    stdio: 'inherit',
+    cwd: path.join(__dirname, '..'),
+  });
+  if (rscFlight.status !== 0) {
+    console.error('[netlify] RSC flight integrity check failed — blocking publish');
+    process.exit(rscFlight.status || 1);
+  }
 
 const hydrationStability = spawnSync(
   process.execPath,

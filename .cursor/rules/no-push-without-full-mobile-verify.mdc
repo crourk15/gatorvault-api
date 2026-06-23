@@ -1,0 +1,87 @@
+---
+description: Block push/deploy until full mobile proof package passes every route and section
+alwaysApply: true
+---
+
+# No push or deploy without full mobile proof
+
+## Policy
+
+**Do not push, deploy, or declare the app ready** until the entire vault app is tested on real mobile (375×812, JS enabled) — not just Recruiting hero, not just the menu, not SSR-only screenshots.
+
+## Required proof package
+
+Run after local `npm run build:netlify` merge:
+
+```bash
+npm run proof:mobile:deploy
+```
+
+Output: `proof/mobile-deploy-proof/`
+
+### Screenshots (every route)
+
+- `/vault/`
+- `/vault/recruiting/`
+- `/vault/team/`
+- `/vault/futurecast/`
+- `/vault/schedule/`
+- `/vault/film-room/` (user path: `/vault/film/`)
+- `/vault/articles/`
+- `/vault/nil/`
+- `/vault/live/podcasts/` (user path: `/vault/podcasts/`)
+- `/vault/tickets/`
+
+Plus **menu open + menu closed** screenshot on each route.
+
+### Screen recordings (cold load)
+
+- `/vault/` loading (~15s)
+- `/vault/recruiting/` loading (~15s)
+- `/vault/team/` loading (~18s)
+
+### Section checklist (pass/fail)
+
+| Section | Where |
+|---------|-------|
+| Roster | Team |
+| Depth chart | Team |
+| Staff | Team |
+| Pipeline | Team |
+| Movement | Recruiting |
+| Beat intel | Home |
+| GNL | Live feed |
+| FutureCast | FutureCast page |
+| Class cards | Recruiting |
+| Everything below NSD | Heat, movement, battle board, footprint, battles, position snapshot |
+
+All rows must **PASS** in `CHECKLIST.md` and `checklist.json`.
+
+### Automated verification
+
+`proof:mobile:deploy` also runs **3 consecutive passes** of `verify:mobile:full`.
+
+### After Netlify deploy
+
+```bash
+npm run verify:netlify:build
+```
+
+Confirms:
+
+1. Latest Netlify deploy state is `ready` (when `NETLIFY_AUTH_TOKEN` + `NETLIFY_SITE_ID` set)
+2. Production `gatorvault-build` meta matches local `server/build-manifest.json` commit
+
+## Blockers
+
+- Any checklist FAIL
+- Menu fails to open/close on any route
+- Blank pages, eternal skeletons, "Loading roster…", React #423
+- Production build ID does not match commit
+
+## Workflow
+
+1. Fix failures locally until `npm run proof:mobile:deploy` passes
+2. Push only when user explicitly requests
+3. After Netlify build completes: `npm run verify:netlify:build`
+4. Share `proof/mobile-deploy-proof/` with user before claiming deploy success

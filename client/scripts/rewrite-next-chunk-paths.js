@@ -395,11 +395,20 @@ function vaultPublicPathForBareChunk(name, vaultChunks) {
   return null;
 }
 
-/** RSC flight escapes closing quotes: static/chunks/foo.js\" */
+/** In __next_f flight data, numeric webpack chunks must use static/chunks/ (webpack d.p=/_next/). */
+function revertNumericWebpackChunksInRscFlight(content) {
+  return content.replace(
+    /,\\"\/js\/vault-chunks\/(\d+-[a-f0-9]+\.js)\\"/g,
+    ',\\"static/chunks/$1\\"'
+  );
+}
+
+/** Remove only erroneous *double* backslashes before quotes — never strip valid JSON \\" in __next_f. */
 function stripRscChunkRefEscapes(content) {
   return content
-    .replace(/(static\/chunks\/[^"'\\]+?\.js)\\+(?=["'])/g, '$1')
-    .replace(/(\/_next\/static\/chunks\/[^"'\\]+?\.js)\\+(?=["'])/g, '$1');
+    .replace(/(static\/chunks\/[^"'\\]+?\.js)\\\\+(?=["'])/g, '$1\\')
+    .replace(/(\/_next\/static\/chunks\/[^"'\\]+?\.js)\\\\+(?=["'])/g, '$1\\')
+    .replace(/(\/js\/vault-chunks\/[^"'\\]+?\.js)\\\\+(?=["'])/g, '$1\\');
 }
 
 /** Regex fallback: rewrite bare static/chunks/*.js refs in RSC flight (no /_next/ prefix). */
@@ -476,7 +485,6 @@ function findUnrewrittenChunkRefs(content) {
     /\/_next\/static\/chunks\/(?:app|routes)\/[^"'\\?\s]+/g,
     /\/_next\/static\/chunks\/main-(?:app|entry)-[^"'\\?\s]+/g,
     /(?:^|["'\s,[])static\/chunks\/(?:app|routes)\/[^"'\\?\s]+/g,
-    /(?:^|["'\s,[])static\/chunks\/(?!app\/|routes\/|main-app-|main-entry-)[^"'\\?\s]+\.js/g,
   ];
   for (const re of patterns) {
     for (const match of content.matchAll(re)) refs.push(match[0]);
@@ -495,6 +503,9 @@ function sweepUnmappedAppChunkRefs(serverDir, nestedIndex) {
     let updated = stripRscChunkRefEscapes(raw);
     updated = sweepContentUnmappedAppChunkRefs(updated, vaultChunks, index);
     updated = normalizeAbsoluteVaultChunkRefs(updated);
+    if (/\.(html|txt)$/.test(file)) {
+      updated = revertNumericWebpackChunksInRscFlight(updated);
+    }
     if (updated !== raw) {
       fs.writeFileSync(file, updated);
       filesUpdated++;
@@ -580,6 +591,7 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
     updated = normalizeAbsoluteVaultChunkRefs(updated);
     updated = sweepContentUnmappedAppChunkRefs(updated, listVaultChunkFilenames(serverDir), nestedAppChunkIndex);
     updated = normalizeAbsoluteVaultChunkRefs(updated);
+    updated = revertNumericWebpackChunksInRscFlight(updated);
     if (updated !== raw) {
       fs.writeFileSync(file, updated);
       filesUpdated++;
@@ -629,5 +641,6 @@ module.exports = {
   sweepContentUnmappedStaticAppChunkRefs,
   sweepContentUnmappedBareStaticChunkRefs,
   normalizeAbsoluteVaultChunkRefs,
+  revertNumericWebpackChunksInRscFlight,
   assertAbsoluteVaultChunkRefs,
 };

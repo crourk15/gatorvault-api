@@ -9,7 +9,7 @@ export function warmPollProfile(): { maxAttempts: number; delayMs: number } {
     'connection' in navigator &&
     Boolean((navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection?.saveData);
   if (mobile || slow) {
-    return { maxAttempts: 4, delayMs: 1_200 };
+    return { maxAttempts: 8, delayMs: 2_000 };
   }
   return { maxAttempts: 6, delayMs: 2_500 };
 }

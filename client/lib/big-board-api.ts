@@ -44,10 +44,11 @@ export interface BigBoardResponse {
 export function getApiBase(): string {
   if (typeof window !== 'undefined') {
     const host = window.location.hostname;
-    if (host === 'localhost' || host === '127.0.0.1') {
+    const port = window.location.port;
+    // Next dev server (port 3000) — static Netlify mirror proxies /api on other local ports
+    if ((host === 'localhost' || host === '127.0.0.1') && port === '3000') {
       return 'http://localhost:3000';
     }
-    // Same-origin — Netlify proxies /api/* to the backend
     return '';
   }
   const fromEnv = process.env.NEXT_PUBLIC_API_BASE;
