@@ -1,9 +1,14 @@
-import { Capacitor } from '@capacitor/core';
-
 const PRODUCTION_SITE = 'https://gatorvaultinsider.com';
 
+declare global {
+  interface Window {
+    Capacitor?: { isNativePlatform?: () => boolean };
+  }
+}
+
+/** True in Capacitor WebView — reads injected runtime, no @capacitor/core import. */
 export function isNativeApp(): boolean {
-  return typeof window !== 'undefined' && Capacitor.isNativePlatform();
+  return typeof window !== 'undefined' && window.Capacitor?.isNativePlatform?.() === true;
 }
 
 /** API / site origin — native apps call production; web uses same-origin on Netlify. */

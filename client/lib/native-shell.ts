@@ -1,6 +1,3 @@
-import { App } from '@capacitor/app';
-import { SplashScreen } from '@capacitor/splash-screen';
-import { StatusBar, Style } from '@capacitor/status-bar';
 import { isNativeApp } from '@/lib/api-base';
 
 let initialized = false;
@@ -11,6 +8,12 @@ export async function initNativeShell(): Promise<void> {
   initialized = true;
 
   document.documentElement.classList.add('gv-native-app');
+
+  const [{ App }, { SplashScreen }, { StatusBar, Style }] = await Promise.all([
+    import('@capacitor/app'),
+    import('@capacitor/splash-screen'),
+    import('@capacitor/status-bar'),
+  ]);
 
   try {
     await StatusBar.setStyle({ style: Style.Dark });
