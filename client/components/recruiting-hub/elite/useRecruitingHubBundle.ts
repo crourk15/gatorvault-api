@@ -10,22 +10,7 @@ import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
 import type { RecruitingHubBundleState } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { initGvHydrate } from '@/lib/gv-hydrate';
-
-declare global {
-  interface Window {
-    __GV_HUB__?: {
-      start: number;
-      year: number;
-      ok: boolean;
-      bundleLoadMs?: number;
-      heroRenderMs?: number;
-      hydrationMs?: number;
-      bundleToHeroMs?: number;
-      hydrationQueueMs?: Record<string, number>;
-    };
-    __GV_HYDRATE_TIMINGS__?: Record<string, number>;
-  }
-}
+import '@/lib/recruiting-hub-window';
 
 function initHubMonitor(year: number): number {
   if (typeof window === 'undefined') return 0;

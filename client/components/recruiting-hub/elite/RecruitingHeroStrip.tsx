@@ -13,12 +13,7 @@ import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { RECRUITING_CLASS_YEARS, parseRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { initGvHydrate, scheduleHeroHydration, releaseHeroHydrationGate } from '@/lib/gv-hydrate';
-
-declare global {
-  interface Window {
-    __GV_HERO__?: RhHubHeroPayload;
-  }
-}
+import '@/lib/recruiting-hub-window';
 
 const FALLBACK_TICKER = [
   '2027 class trending nationally — UF in the mix',

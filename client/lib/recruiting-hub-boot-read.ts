@@ -1,18 +1,6 @@
 import type { RhHubClassOverview } from '@/lib/recruiting-hub-elite-api';
 import type { RecruitingClassYear } from '@/lib/recruiting-cycle';
-
-declare global {
-  interface Window {
-    __GV_HUB__?: {
-      year?: number;
-      metricsByYear?: Partial<Record<RecruitingClassYear, RhHubClassOverview>>;
-    };
-    __GV_HERO__?: {
-      year?: number;
-      classOverview?: RhHubClassOverview;
-    };
-  }
-}
+import '@/lib/recruiting-hub-window';
 
 export function readBootClassMetrics(year: number): RhHubClassOverview | null {
   if (typeof window === 'undefined') return null;
