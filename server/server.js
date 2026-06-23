@@ -31,7 +31,10 @@ const { mountPlayerIntelEntryRoutes } = require('./lib/player-intel-entry-routes
 const { apiMonitorMiddleware } = require('./lib/api-monitor');
 const { ensurePublishedSeed, auditPublishedArticles } = require('./lib/content-store');
 const communityStore = require('./lib/community-store');
-const { effectiveTier } = require('./lib/session-auth');
+const { effectiveTier, isAdminAccount } = require('./lib/session-auth');
+const { loadUsers, saveUsers, findUserByEmail } = require('./lib/user-store');
+const { hasPaidAccess, buildSessionFields } = require('./lib/subscription-service');
+const { mountSubscriptionRoutes } = require('./lib/subscription-routes');
 const pipelineGuards = require('./lib/pipeline-guards');
 
 const fetch = require('node-fetch');
@@ -142,6 +145,7 @@ mountInterviewsRoutes(app);
 mountMediaIngestRoutes(app);
 mountWarRoomRoutes(app);
 mountPlatformRoutes(app);
+mountSubscriptionRoutes(app);
 mountXAutoposterRoutes(app);
 mountMonitoringRoutes(app);
 mountAdminRoutes(app);
@@ -189,19 +193,6 @@ function verifyTestPin(pin) {
 
 if (process.env.SENDGRID_API_KEY) {
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-}
-
-function loadUsers() {
-  try {
-    return JSON.parse(fs.readFileSync(USERS_PATH, 'utf8'));
-  } catch (e) {
-    return [];
-  }
-}
-
-function saveUsers(users) {
-  fs.mkdirSync(path.dirname(USERS_PATH), { recursive: true });
-  fs.writeFileSync(USERS_PATH, JSON.stringify(users, null, 2));
 }
 
 function hashPassword(password) {
@@ -490,7 +481,6 @@ app.post('/api/register', async (req, res) => {
     }
 
     const token = signSession({ email, tier, name, exp: Date.now() + TOKEN_TTL_MS });
-    const pts = pointsStore.getUserPoints(email);
     return res.json({
       ok: true,
       emailSent,
@@ -501,15 +491,8 @@ app.post('/api/register', async (req, res) => {
       welcomeEmail: ONBOARDING_SEQUENCE[0],
       session: {
         token,
-        email,
-        tier,
-        name,
-        trialEnd: trialEndStr,
-        trialEndISO: trialEnd.toISOString(),
-        createdAt: user.createdAt,
-        points: pts.points,
-        pointsTier: pts.tier
-      }
+        ...buildSessionFields(user, pointsStore),
+      },
     });
   } catch (err) {
     console.error('register error', err);
@@ -533,36 +516,23 @@ app.post('/api/login', async (req, res) => {
 
     const trialEndDate = user.trialEnd ? new Date(user.trialEnd) : null;
     const trialExpired = trialEndDate ? trialEndDate.getTime() <= Date.now() : false;
-    if (trialExpired && !user.paid) {
+    if (trialExpired && !hasPaidAccess(user)) {
       return res.status(402).json({
         ok: false,
-        error: 'Your 30-day free trial has ended. Add a payment method to restore access.',
+        error: 'Your 30-day free trial has ended. Restore access from Membership or the iOS app.',
         trialExpired: true,
-        trialEnd: trialEndDate.toISOString()
+        trialEnd: trialEndDate.toISOString(),
+        membershipUrl: `${SITE_URL}/vault/membership/`,
       });
     }
 
     const token = signSession({ email: user.email, tier: user.tier, name: user.name, exp: Date.now() + TOKEN_TTL_MS });
-    const trialEnd = trialEndDate
-      ? trialEndDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-      : null;
-    const pts = pointsStore.getUserPoints(user.email);
-    const tier = effectiveTier({ email: user.email, tier: user.tier });
-
     return res.json({
       ok: true,
       session: {
         token,
-        email: user.email,
-        tier,
-        name: user.name,
-        trialEnd,
-        trialEndISO: user.trialEnd || null,
-        createdAt: user.createdAt || null,
-        daysLeft: trialEndDate ? Math.max(0, Math.ceil((trialEndDate - Date.now()) / (24 * 60 * 60 * 1000))) : null,
-        points: pts.points,
-        pointsTier: pts.tier
-      }
+        ...buildSessionFields(user, pointsStore),
+      },
     });
   } catch (err) {
     console.error('login error', err);
@@ -605,6 +575,13 @@ app.get('/api/session', (req, res) => {
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : req.query.token;
   const session = verifySession(token);
   if (!session) return res.status(401).json({ ok: false, error: 'Session expired. Sign in again.' });
+  const user = findUserByEmail(session.email);
+  if (user) {
+    return res.json({
+      ok: true,
+      session: buildSessionFields(user, pointsStore),
+    });
+  }
   const pts = pointsStore.getUserPoints(session.email);
   return res.json({
     ok: true,
@@ -613,8 +590,10 @@ app.get('/api/session', (req, res) => {
       tier: effectiveTier(session),
       name: session.name,
       points: pts.points,
-      pointsTier: pts.tier
-    }
+      pointsTier: pts.tier,
+      paid: isAdminAccount(session.email),
+      accessActive: isAdminAccount(session.email),
+    },
   });
 });
 
@@ -720,8 +699,8 @@ app.post('/api/trial-status', (req, res) => {
       ok: true,
       trialEndISO: user.trialEnd || null,
       daysLeft,
-      expired: trialEndDate ? trialEndDate.getTime() <= Date.now() && !user.paid : false,
-      paid: !!user.paid
+      expired: trialEndDate ? trialEndDate.getTime() <= Date.now() && !hasPaidAccess(user) : false,
+      paid: hasPaidAccess(user)
     });
   } catch (err) {
     return res.status(500).json({ ok: false, error: err.message });

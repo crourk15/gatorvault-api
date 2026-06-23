@@ -1,0 +1,143 @@
+.gv-membership {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2.5rem;
+}
+
+.gv-membership__title {
+  margin: 0 0 0.35rem;
+  font-family: Oswald, Inter, sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+}
+
+.gv-membership__sub {
+  margin: 0 0 1.25rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.gv-membership__status {
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(250, 70, 22, 0.35);
+  background: rgba(10, 22, 40, 0.85);
+}
+
+.gv-membership__status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.gv-membership__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: rgba(250, 70, 22, 0.15);
+  color: #ffb899;
+}
+
+.gv-membership__badge.is-active {
+  background: rgba(34, 197, 94, 0.15);
+  color: #86efac;
+}
+
+.gv-membership__badge.is-warning {
+  background: rgba(234, 179, 8, 0.15);
+  color: #fde68a;
+}
+
+.gv-membership__meta {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.gv-membership__cards {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.gv-membership__card {
+  padding: 1rem 1.05rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.gv-membership__card.is-current {
+  border-color: rgba(250, 70, 22, 0.55);
+  box-shadow: 0 0 0 1px rgba(250, 70, 22, 0.15);
+}
+
+.gv-membership__card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin-bottom: 0.35rem;
+}
+
+.gv-membership__card-name {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.gv-membership__card-price {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.gv-membership__card-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.58);
+  line-height: 1.5;
+}
+
+.gv-membership__cta {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(0, 26, 51, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gv-membership__cta p {
+  margin: 0 0 0.65rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.gv-membership__cta a {
+  color: #fa4616;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.gv-membership__error {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  background: rgba(127, 29, 29, 0.35);
+  color: #fecaca;
+  font-size: 0.875rem;
+}
+
+.gv-membership__loading {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.9375rem;
+}

@@ -1,11 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import React from 'react';
+import { AccountMembershipPage } from '@/components/vault/AccountMembershipPage';
 
-/** Membership entry — same join flow as /join (no ?next= loop). */
-export default function VaultMembershipPage(): null {
-  useEffect(() => {
-    window.location.replace('/join');
-  }, []);
-  return null;
+export default function VaultMembershipRoute(): React.ReactElement {
+  return <AccountMembershipPage />;
 }

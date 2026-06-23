@@ -42,6 +42,7 @@ export function JoinPage(): React.ReactElement {
   const [password, setPassword] = useState('');
   const [terms, setTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [trialMembershipHref, setTrialMembershipHref] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -67,6 +68,7 @@ export function JoinPage(): React.ReactElement {
 
   const handleSignIn = async () => {
     setError(null);
+    setTrialMembershipHref(null);
     if (!email.trim() || !password) {
       setError('Enter your email and password.');
       return;
@@ -77,7 +79,13 @@ export function JoinPage(): React.ReactElement {
       saveSession(session);
       redirectAfterAuth();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Sign in failed.');
+      const trialErr = err as Error & { trialExpired?: boolean; membershipUrl?: string };
+      if (trialErr.trialExpired) {
+        setError(trialErr.message);
+        setTrialMembershipHref(trialErr.membershipUrl || '/vault/membership/');
+      } else {
+        setError(err instanceof Error ? err.message : 'Sign in failed.');
+      }
     } finally {
       setLoading(false);
     }
@@ -211,7 +219,17 @@ export function JoinPage(): React.ReactElement {
             </label>
           )}
 
-          {error ? <p className="gv-join__error">{error}</p> : null}
+          {error ? (
+            <p className="gv-join__error">
+              {error}
+              {trialMembershipHref ? (
+                <>
+                  {' '}
+                  <a href={trialMembershipHref}>View membership →</a>
+                </>
+              ) : null}
+            </p>
+          ) : null}
           {success ? <p className="gv-join__success">{success}</p> : null}
 
           <button

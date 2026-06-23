@@ -10,8 +10,15 @@ export type AuthSession = {
   trialEndISO?: string;
   createdAt?: string;
   daysLeft?: number | null;
+  paid?: boolean;
+  accessActive?: boolean;
   points?: number;
   pointsTier?: string;
+  subscription?: {
+    source?: string | null;
+    status?: string | null;
+    productId?: string | null;
+  } | null;
 };
 
 const SESSION_KEY = 'gv_session';
@@ -156,8 +163,12 @@ export async function loginAccount(opts: {
     opts
   );
   if (res.status === 402 && res.data.trialExpired) {
-    const err = new Error(res.data.error || 'Your trial has ended.') as Error & { trialExpired?: boolean };
+    const err = new Error(res.data.error || 'Your trial has ended.') as Error & {
+      trialExpired?: boolean;
+      membershipUrl?: string;
+    };
     err.trialExpired = true;
+    err.membershipUrl = (res.data as { membershipUrl?: string }).membershipUrl || '/vault/membership/';
     throw err;
   }
   if (!res.ok || !res.data.session) {
