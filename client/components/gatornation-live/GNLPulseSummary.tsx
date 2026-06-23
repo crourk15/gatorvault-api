@@ -195,19 +195,11 @@ export function GNLPulseSummary({ bundle }: Props): React.ReactElement {
     };
   }, []);
 
-  const ticker = useMemo(
-    () =>
-      filterExcludedPortalClassItems(
-        bundle.ticker,
-        (item) => item.text,
-        (item) => ({ type: item.type, source: item.source })
-      ),
-    [bundle.ticker]
-  );
+  const ticker = bundle.ticker ?? [];
 
   const cells = useMemo(
     () => ({
-      storyline: pickStoryline(ticker),
+      storyline: pickStoryline(ticker) ?? pickStoryline(bundle.ticker),
       recruiting: pickRecruitingFromIntel(highPriority) ?? pickRecruitingFallback(ticker, bundle),
       beatQuote: pickBeatQuoteFromIntel(beatIntel) ?? pickBeatQuoteFallback(bundle),
       portalNote: pickPortalNote(bundle),

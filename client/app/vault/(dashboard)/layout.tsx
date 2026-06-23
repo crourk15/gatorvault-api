@@ -1,5 +1,6 @@
 import React from 'react';
 import { VaultPillarSsrMarkers } from '@/components/vault/VaultPillarSsrMarkers';
+import { HomeWowBootScript } from '@/components/home/premium/HomeWowBootScript';
 
 export default function VaultHomeLayout({
   children,
@@ -9,6 +10,7 @@ export default function VaultHomeLayout({
   return (
     <>
       <VaultPillarSsrMarkers testId="vault-home" className="gv-home" />
+      <HomeWowBootScript />
       {children}
     </>
   );

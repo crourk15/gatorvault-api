@@ -62,11 +62,17 @@ export function recruitingHubHeroBootScript(year = RECRUITING_HUB_HERO_YEAR): st
 
     var heroUrl = '/api/recruiting/hub/hero?year=${safeYear}';
     function loadHero(attempt) {
-      fetch(heroUrl, { credentials: 'same-origin' })
-        .then(function(res) { return res.ok ? res.json() : null; })
-        .then(function(body) { paintHero(body && body.ok !== false ? body : null); })
+      fetch(heroUrl, { credentials: 'same-origin', cache: 'no-store' })
+        .then(function(res) {
+          if (!res.ok) throw new Error('hero ' + res.status);
+          return res.json();
+        })
+        .then(function(body) {
+          if (body && body.status === 'building') throw new Error('hero building');
+          paintHero(body && body.ok !== false ? body : null);
+        })
         .catch(function() {
-          if (attempt < 1) setTimeout(function() { loadHero(attempt + 1); }, 1500);
+          if (attempt < 8) setTimeout(function() { loadHero(attempt + 1); }, 2500);
         });
     }
     loadHero(0);

@@ -13,7 +13,7 @@ const VAULT_HYDRATION_BOOT_SCRIPT =
   'function guard(){if(rootBlank()){if(restore()){console.warn("[VaultHydrationGuard] restored SSR snapshot")}return}' +
   'var r=document.getElementById("gv-vault-root");if(r&&!r.hasAttribute("data-gv-hydrated")){r.removeAttribute("data-hydrating")}}' +
   'function arm(){if(window.__gvHydrationTimeout){clearTimeout(window.__gvHydrationTimeout)}window.__gvHydrationTimeout=window.setTimeout(guard,3000)}' +
-  'function boot(){capture();arm()}' +
+  'function boot(){capture();arm();setTimeout(capture,3500)}' +
   'if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",boot,{once:true})}else{boot()}' +
   'window.addEventListener("error",function(ev){var msg=String(ev.message||"");var file=String(ev.filename||"");' +
   'if(/hydration|Hydration|did not match|Minified React error #(418|423|425|422)/i.test(msg)||/vault-chunks|_next\\/static\\/chunks/i.test(file)){' +

@@ -35,10 +35,10 @@ export function useRecruitingClassYear(): {
   activeYear: RecruitingClassYear;
   setActiveYear: (year: RecruitingClassYear) => void;
 } {
-  const activeYear = useSyncExternalStore(
+  const activeYear = useSyncExternalStore<RecruitingClassYear>(
     subscribeRecruitingClassYear,
     getRecruitingClassYearSnapshot,
-    () => ACTIVE_RECRUITING_CLASS_YEAR
+    (): RecruitingClassYear => ACTIVE_RECRUITING_CLASS_YEAR
   );
   const setActiveYear = useCallback((year: RecruitingClassYear) => {
     setRecruitingClassYearStore(year);

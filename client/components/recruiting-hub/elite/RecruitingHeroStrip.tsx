@@ -68,8 +68,10 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
   const { data } = useRecruitingHubBundleContext();
   const { activeYear, setActiveYear } = useRecruitingClassYear();
   const seeded = heroFromWindow();
-  const [yearOverview, setYearOverview] = useState<RhHubClassOverview | null>(null);
-  const [metricsLoading, setMetricsLoading] = useState(true);
+  const [yearOverview, setYearOverview] = useState<RhHubClassOverview | null>(
+    () => seeded?.classOverview ?? null
+  );
+  const [metricsLoading, setMetricsLoading] = useState(() => !seeded?.classOverview);
 
   useEffect(() => {
     if (year !== RECRUITING_HUB_ELITE_YEAR) setActiveYear(parseRecruitingClassYear(year));
@@ -203,7 +205,8 @@ export function RecruitingHeroHydrator(): null {
   }, []);
 
   useEffect(() => {
-    if (bundle.loading) return;
+    const seededHero = heroFromWindow();
+    if (bundle.loading && !seededHero?.classOverview) return;
     scheduleHeroHydration(() => hydrateRecruitingHero(bundle));
   }, [bundle.loading, bundle.data, bundle.error]);
 
