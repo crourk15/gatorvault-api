@@ -1,0 +1,52 @@
+workflows:
+  ios-release:
+    name: iOS Release Build
+    max_build_duration: 60
+    environment:
+      vars:
+        XCODE_WORKSPACE: "client/ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+        BUNDLE_ID: "com.gatorvaultinsider.app"
+      node: latest
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install Node dependencies
+        script: |
+          cd client
+          npm ci
+      - name: Build Next.js web bundle
+        script: |
+          cd client
+          npm run build
+      - name: Capacitor sync (copy web → iOS)
+        script: |
+          cd client
+          npx cap sync ios
+      - name: Install CocoaPods
+        script: |
+          cd client/ios/App
+          pod install
+      - name: Xcode archive build
+        script: |
+          xcodebuild \
+            -workspace "$XCODE_WORKSPACE" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Release \
+            -archivePath build/App.xcarchive \
+            archive
+          xcodebuild \
+            -exportArchive \
+            -archivePath build/App.xcarchive \
+            -exportOptionsPlist exportOptions.plist \
+            -exportPath build
+    artifacts:
+      - client/ios/App/build/*.ipa
+      - client/ios/App/build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_API_KEY
+        key_id: $APP_STORE_KEY_ID
+        issuer_id: $APP_STORE_ISSUER_ID
+        submit_to_testflight: true
+        submit_to_app_store: false
