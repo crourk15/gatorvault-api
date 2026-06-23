@@ -41,20 +41,9 @@ export interface BigBoardResponse {
   players: BigBoardPlayer[];
 }
 
-export function getApiBase(): string {
-  if (typeof window !== 'undefined') {
-    const host = window.location.hostname;
-    const port = window.location.port;
-    // Next dev server (port 3000) — static Netlify mirror proxies /api on other local ports
-    if ((host === 'localhost' || host === '127.0.0.1') && port === '3000') {
-      return 'http://localhost:3000';
-    }
-    return '';
-  }
-  const fromEnv = process.env.NEXT_PUBLIC_API_BASE;
-  if (fromEnv) return fromEnv.replace(/\/$/, '');
-  return '';
-}
+import { getApiBase } from './api-base';
+
+export { getApiBase };
 
 export function buildBigBoardUrl(query: BigBoardQuery = {}): string {
   const params = new URLSearchParams();

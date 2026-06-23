@@ -58,7 +58,13 @@ app.use((req, res, next) => {
     'http://127.0.0.1:3000'
   ];
   const isNetlifyPreview = origin && /\.netlify\.app$/i.test(origin);
-  if (origin && (allowed.includes(origin) || isNetlifyPreview)) {
+  const isCapacitorNative =
+    origin &&
+    (origin === 'capacitor://localhost' ||
+      origin === 'ionic://localhost' ||
+      origin === 'https://localhost' ||
+      origin === 'http://localhost');
+  if (origin && (allowed.includes(origin) || isNetlifyPreview || isCapacitorNative)) {
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Vary', 'Origin');
   } else {

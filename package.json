@@ -34,7 +34,9 @@
     "run:x-autoposter": "npm run run:x-autoposter --prefix server",
     "sync:portal": "npm run sync:portal --prefix server",
     "ensure:film-room": "npm run ensure:film-room --prefix server",
-    "seed:recruiting": "npm run seed:recruiting --prefix server"
+    "seed:recruiting": "npm run seed:recruiting --prefix server",
+    "mobile:sync": "npm run build --prefix client && npm run cap:sync --prefix client",
+    "mobile:ios": "npm run cap:ios --prefix client"
   },
   "engines": {
     "node": ">=18"

@@ -1,0 +1,22 @@
+/* Capacitor iOS shell — safe areas and touch polish (web unchanged without .gv-native-app). */
+html.gv-native-app {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html.gv-native-app body {
+  overscroll-behavior-y: none;
+}
+
+html.gv-native-app .gv-vault-shell__header {
+  padding-top: env(safe-area-inset-top, 0);
+}
+
+html.gv-native-app .gv-vault-bottom-nav {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 0px);
+}
+
+html.gv-native-app .gv-site-footer,
+html.gv-native-app .gv-marketing-legal-footer {
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+}
