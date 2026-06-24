@@ -3,12 +3,16 @@ workflows:
     name: iOS Release Build
     max_build_duration: 60
     instance_type: mac_mini_m2
-    # Rename to match your Codemagic App Store Connect integration (Team settings → Integrations).
     integrations:
       app_store_connect: codemagic
     environment:
-      # No ios_signing block — Codemagic requires either distribution_type+bundle_identifier
-      # OR provisioning_profiles. Signing is handled via fetch-signing-files in scripts.
+      # Certificate + profile must exist in Codemagic → Code signing identities.
+      # Create App Store profile at developer.apple.com, then Fetch profiles in Codemagic.
+      ios_signing:
+        certificates:
+          - certificate: gatorvault_appstore
+        provisioning_profiles:
+          - profile: gatorvault_appstore_profile
       vars:
         XCODE_SCHEME: App
         BUNDLE_ID: com.gatorvaultinsider.app
@@ -27,21 +31,8 @@ workflows:
         script: |
           cd client/ios/App
           pod install
-      - name: Fetch signing files and configure code signing
-        script: |
-          set -e
-          keychain initialize
-          FETCH_ARGS=(--type IOS_APP_STORE --create --verbose)
-          if [ -n "${CERTIFICATE_PRIVATE_KEY:-}" ]; then
-            CERT_KEY_PATH="$CM_BUILD_DIR/cert_key.pem"
-            printf '%s\n' "$CERTIFICATE_PRIVATE_KEY" > "$CERT_KEY_PATH"
-            FETCH_ARGS+=(--certificate-key=@file:"$CERT_KEY_PATH")
-          else
-            echo "WARN: CERTIFICATE_PRIVATE_KEY not set — --create may fail if no App Store profile exists yet."
-          fi
-          app-store-connect fetch-signing-files "$BUNDLE_ID" "${FETCH_ARGS[@]}"
-          keychain add-certificates
-          xcode-project use-profiles
+      - name: Set up code signing settings on Xcode project
+        script: xcode-project use-profiles
       - name: Build IPA for App Store
         script: |
           xcode-project build-ipa \
