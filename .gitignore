@@ -26,3 +26,4 @@ gatorvault-api/
 server/.env
 server/data/users.json
 proof/
+.codemagic/
