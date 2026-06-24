@@ -25,11 +25,7 @@ export function LazyHubSection({
   const [visible, setVisible] = useState(priority === 'top-fold');
 
   useEffect(() => {
-    if (priority === 'top-fold') return undefined;
-
-    const isMobile =
-      typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
-    if (isMobile) {
+    if (priority === 'top-fold') {
       setVisible(true);
       return undefined;
     }
@@ -52,6 +48,8 @@ export function LazyHubSection({
       observer.observe(el);
     }
 
+    const isMobile =
+      typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
     const fallbackMs = isMobile ? 2_000 : 8_000;
     const fallback = window.setTimeout(() => setVisible(true), fallbackMs);
     return () => {

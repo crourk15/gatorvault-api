@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import type { RhHubBattleBoardItem } from '@/lib/recruiting-hub-elite-api';
 import { getBattleColor } from '@/lib/recruiting-hub-scoring';
 import { fetchRecruitingBattles } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
+import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
 
 const DIFFICULTY_LABELS: Record<RhHubBattleBoardItem['battleDifficulty'], string> = {
   easy: 'Easy',
@@ -78,29 +79,15 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
 
 export function BattleBoard(): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
-  const [data, setData] = useState<RhHubBattleBoardItem[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(false);
-    setData(null);
-    void fetchRecruitingBattles(activeYear)
-      .then((res) => {
-        if (!cancelled) setData(res.items ?? []);
-      })
-      .catch(() => {
-        if (!cancelled) setError(true);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [activeYear]);
+  const selectBattles = useCallback((b: { battleBoard: RhHubBattleBoardItem[] }) => b.battleBoard, []);
+  const fetchBattles = useCallback(async (year: number) => {
+    const res = await fetchRecruitingBattles(year);
+    return res.items ?? [];
+  }, []);
+  const { data, loading, error } = useHubBundleSection({
+    select: selectBattles,
+    fetchFallback: fetchBattles,
+  });
 
   return (
     <>

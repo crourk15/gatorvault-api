@@ -4,9 +4,10 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   loadFutureCastLabData,
   loadFutureCastLabPrimary,
-  loadFutureCastLabSecondary,
+  loadFutureCastLabSecondaryRaw,
   type FutureCastLabDataMap,
 } from '@/lib/futurecast-lab-data';
+import { deriveHeatLevel } from '@/lib/api/futurecast';
 import { userFacingLoadError } from '@/lib/api-warm-poll';
 
 const LAB_POLL_MS = 90_000;
@@ -85,7 +86,7 @@ export function useFutureCastLabData(): FutureCastLabData {
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) {
       setLoading(true);
-      setSecondaryLoading(false);
+      setSecondaryLoading(true);
       setWarming(true);
       setError(null);
     } else {
@@ -93,20 +94,17 @@ export function useFutureCastLabData(): FutureCastLabData {
     }
     try {
       if (isInitial) {
-        const primary = await loadFutureCastLabPrimary();
-        setData((prev) => ({
-          ...(prev ?? EMPTY_LAB_DATA),
+        const [primary, secondaryRaw] = await Promise.all([
+          loadFutureCastLabPrimary(),
+          loadFutureCastLabSecondaryRaw(),
+        ]);
+        setData({
+          ...EMPTY_LAB_DATA,
           ...primary,
-        }));
-        setLoading(false);
-        setSecondaryLoading(true);
-
-        const secondary = await loadFutureCastLabSecondary(primary.masterBoard);
-        setData((prev) => ({
-          ...(prev ?? EMPTY_LAB_DATA),
-          ...primary,
-          ...secondary,
-        }));
+          ...secondaryRaw,
+          heatLevel: deriveHeatLevel(secondaryRaw.home, secondaryRaw.stock),
+          lastUpdated: primary.lastUpdated ?? secondaryRaw.movementIntel.updatedAt ?? null,
+        });
         setError(null);
       } else {
         const next = await loadFutureCastLabData();

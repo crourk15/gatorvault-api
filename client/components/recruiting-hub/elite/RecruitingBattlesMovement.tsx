@@ -1,35 +1,22 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import type { RhHubBattle } from '@/lib/recruiting-hub-elite-api';
 import { fetchBattlesAndMovement } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
+import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
 
 export function RecruitingBattlesMovement(): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
-  const [data, setData] = useState<RhHubBattle[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(false);
-    setData(null);
-    void fetchBattlesAndMovement(activeYear)
-      .then((res) => {
-        if (!cancelled) setData(res.battles ?? []);
-      })
-      .catch(() => {
-        if (!cancelled) setError(true);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [activeYear]);
+  const selectBattles = useCallback((b: { battles: RhHubBattle[] }) => b.battles, []);
+  const fetchBattles = useCallback(async (year: number) => {
+    const res = await fetchBattlesAndMovement(year);
+    return res.battles ?? [];
+  }, []);
+  const { data, loading, error } = useHubBundleSection({
+    select: selectBattles,
+    fetchFallback: fetchBattles,
+  });
 
   return (
     <>

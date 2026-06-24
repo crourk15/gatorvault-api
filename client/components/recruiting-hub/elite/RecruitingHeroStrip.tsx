@@ -78,6 +78,16 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
 
   useEffect(() => {
     let cancelled = false;
+    const fromBundle =
+      data?.year === activeYear
+        ? data.classOverview
+        : data?.classOverviewAll?.[activeYear as 2026 | 2027 | 2028];
+    if (fromBundle) {
+      setYearOverview(fromBundle);
+      setMetricsLoading(false);
+      return;
+    }
+
     const hasSeed =
       seeded?.classOverview && parseRecruitingClassYear(seeded.year ?? year) === activeYear;
     if (!hasSeed) setMetricsLoading(true);
@@ -94,7 +104,7 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
     return () => {
       cancelled = true;
     };
-  }, [activeYear]);
+  }, [activeYear, data?.classOverview, data?.classOverviewAll, data?.year, seeded?.classOverview, seeded?.year, year]);
 
   const tickerItems = data?.ticker?.length
     ? data.ticker
@@ -102,7 +112,10 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
       ? seeded.ticker
       : FALLBACK_TICKER;
   const overview =
-    yearOverview ?? data?.classOverview ?? seeded?.classOverview ?? null;
+    yearOverview ??
+    (data?.year === activeYear ? data.classOverview : data?.classOverviewAll?.[activeYear as 2026 | 2027 | 2028]) ??
+    seeded?.classOverview ??
+    null;
   const title = seeded?.title ?? 'Recruiting Command Center';
   const subtitle = seeded?.subtitle ?? "UF's class, movement, and battles—one place.";
 

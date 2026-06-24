@@ -1,35 +1,22 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import type { RhHubPositionRoom } from '@/lib/recruiting-hub-elite-api';
 import { fetchPositionSnapshot } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
+import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
 
 export function RecruitingPositionSnapshot(): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
-  const [data, setData] = useState<RhHubPositionRoom[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(false);
-    setData(null);
-    void fetchPositionSnapshot(activeYear)
-      .then((res) => {
-        if (!cancelled) setData(res.items ?? []);
-      })
-      .catch(() => {
-        if (!cancelled) setError(true);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [activeYear]);
+  const selectPositions = useCallback((b: { positions: RhHubPositionRoom[] }) => b.positions, []);
+  const fetchPositions = useCallback(async (year: number) => {
+    const res = await fetchPositionSnapshot(year);
+    return res.items ?? [];
+  }, []);
+  const { data, loading, error } = useHubBundleSection({
+    select: selectPositions,
+    fetchFallback: fetchPositions,
+  });
 
   return (
     <>

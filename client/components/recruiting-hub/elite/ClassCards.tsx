@@ -8,6 +8,7 @@ import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { RECRUITING_CLASS_YEARS, type RecruitingClassYear } from '@/lib/recruiting-cycle';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
+import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { readBootClassMetricsByYear, hideRhBootClassCards } from '@/lib/recruiting-hub-boot-read';
 
 function ClassCard({
@@ -71,6 +72,7 @@ function ClassCard({
 
 export function ClassCards(): React.ReactElement | null {
   const { activeYear, setActiveYear } = useRecruitingClassYear();
+  const { data: bundle, loading: bundleLoading } = useRecruitingHubBundleContext();
   const [byYear, setByYear] = useState<Record<RecruitingClassYear, RhHubClassOverview | null>>(() => {
     const boot = readBootClassMetricsByYear();
     return {
@@ -85,12 +87,28 @@ export function ClassCards(): React.ReactElement | null {
   useEffect(() => {
     let cancelled = false;
     const boot = readBootClassMetricsByYear();
+    const all = bundle?.classOverviewAll;
+    if (all) {
+      setByYear({
+        2026: all[2026] ?? boot[2026] ?? null,
+        2027: all[2027] ?? boot[2027] ?? null,
+        2028: all[2028] ?? boot[2028] ?? null,
+      });
+      setLoading(false);
+      setError(false);
+      return;
+    }
+
     const hasBoot = RECRUITING_CLASS_YEARS.some((y) => boot[y]);
     setByYear({
       2026: boot[2026] ?? null,
       2027: boot[2027] ?? null,
       2028: boot[2028] ?? null,
     });
+    if (bundleLoading) {
+      setLoading(!hasBoot);
+      return;
+    }
     setLoading(!hasBoot);
     setError(false);
     const poll = warmPollProfile();
@@ -119,7 +137,7 @@ export function ClassCards(): React.ReactElement | null {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [bundle?.classOverviewAll, bundleLoading]);
 
   useEffect(() => {
     const onBoot = () => {

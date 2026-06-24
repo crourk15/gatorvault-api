@@ -65,6 +65,17 @@ function buildMetrics(master: MasterBoardResponse): FutureCastHeroMetrics {
 export async function loadFutureCastLabSecondary(
   master: MasterBoardResponse
 ): Promise<Omit<FutureCastLabDataMap, 'masterBoard' | 'summary' | 'metrics'>> {
+  const secondary = await loadFutureCastLabSecondaryRaw();
+  return {
+    ...secondary,
+    heatLevel: deriveHeatLevel(secondary.home, secondary.stock),
+    lastUpdated: master.updatedAt ?? secondary.movementIntel.updatedAt ?? null,
+  };
+}
+
+async function loadFutureCastLabSecondaryRaw(): Promise<
+  Omit<FutureCastLabDataMap, 'masterBoard' | 'summary' | 'metrics' | 'heatLevel' | 'lastUpdated'>
+> {
   const [trendingR, movementR, staffR, homeR, stockR, highPriorityR, underclassmenR] =
     await Promise.allSettled([
       warmFetch<TrendingBoardResponse>('/api/futurecast/trending'),
@@ -135,8 +146,6 @@ export async function loadFutureCastLabSecondary(
     staffNotes,
     home,
     stock,
-    heatLevel: deriveHeatLevel(home, stock),
-    lastUpdated: master.updatedAt ?? movement.updatedAt ?? null,
     highPriority: highPriority.players ?? [],
     underclassmen: underclassmenPayload.players ?? [],
   };
@@ -154,8 +163,17 @@ export async function loadFutureCastLabPrimary(): Promise<
   };
 }
 
+export { loadFutureCastLabSecondaryRaw };
+
 export async function loadFutureCastLabData(): Promise<FutureCastLabDataMap> {
-  const primary = await loadFutureCastLabPrimary();
-  const secondary = await loadFutureCastLabSecondary(primary.masterBoard);
-  return { ...primary, ...secondary };
+  const [primary, secondaryRaw] = await Promise.all([
+    loadFutureCastLabPrimary(),
+    loadFutureCastLabSecondaryRaw(),
+  ]);
+  return {
+    ...primary,
+    ...secondaryRaw,
+    heatLevel: deriveHeatLevel(secondaryRaw.home, secondaryRaw.stock),
+    lastUpdated: primary.lastUpdated ?? secondaryRaw.movementIntel.updatedAt ?? null,
+  };
 }

@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import type { RhHubHeatTarget } from '@/lib/recruiting-hub-elite-api';
 import { fetchHeatIndex } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
+import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
 
 function heatBandClass(heat: number): string {
   if (heat >= 70) return 'rh-heat-fill--hot';
@@ -57,29 +58,18 @@ function HeatTargetCard({ target }: { target: RhHubHeatTarget }): React.ReactEle
 
 export function TopTargetsHeatIndex(): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
-  const [data, setData] = useState<RhHubHeatTarget[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(false);
-    setData(null);
-    void fetchHeatIndex(activeYear)
-      .then((res) => {
-        if (!cancelled) setData(res.items ?? []);
-      })
-      .catch(() => {
-        if (!cancelled) setError(true);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [activeYear]);
+  const selectHeat = useCallback((b: { heatIndex: RhHubHeatTarget[] }) => b.heatIndex, []);
+  const fetchHeat = useCallback(
+    async (year: number) => {
+      const res = await fetchHeatIndex(year);
+      return res.items ?? [];
+    },
+    []
+  );
+  const { data, loading, error } = useHubBundleSection({
+    select: selectHeat,
+    fetchFallback: fetchHeat,
+  });
 
   return (
     <>

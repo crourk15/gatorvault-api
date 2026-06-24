@@ -6,6 +6,7 @@ import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
+import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { readBootClassMetrics, hideRhBootSection } from '@/lib/recruiting-hub-boot-read';
 
 function MetricSparkline({ values }: { values: number[] }): React.ReactElement {
@@ -65,6 +66,7 @@ function Metric({
 
 export function RecruitingClassOverview(): React.ReactElement | null {
   const { activeYear } = useRecruitingClassYear();
+  const { data: bundle, loading: bundleLoading } = useRecruitingHubBundleContext();
   const [overview, setOverview] = useState<RhHubClassOverview | null>(() => readBootClassMetrics(activeYear));
   const [loading, setLoading] = useState(() => !readBootClassMetrics(activeYear));
   const [error, setError] = useState(false);
@@ -72,7 +74,22 @@ export function RecruitingClassOverview(): React.ReactElement | null {
   useEffect(() => {
     let cancelled = false;
     const seeded = readBootClassMetrics(activeYear);
+    const fromBundle =
+      bundle?.year === activeYear
+        ? bundle.classOverview
+        : bundle?.classOverviewAll?.[activeYear as 2026 | 2027 | 2028];
+    if (fromBundle) {
+      setOverview(fromBundle);
+      setLoading(false);
+      setError(false);
+      return;
+    }
+
     setOverview(seeded);
+    if (bundleLoading) {
+      setLoading(!seeded);
+      return;
+    }
     setLoading(!seeded);
     setError(false);
     void fetchWithWarmPoll(() => fetchClassMetrics(activeYear), warmPollProfile())
@@ -88,7 +105,7 @@ export function RecruitingClassOverview(): React.ReactElement | null {
     return () => {
       cancelled = true;
     };
-  }, [activeYear]);
+  }, [activeYear, bundle, bundleLoading]);
 
   useEffect(() => {
     const onBoot = () => {

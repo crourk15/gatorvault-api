@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ComposableMap, Geographies } from 'react-simple-maps';
 import type { RhHubFootprintResponse, RhHubFootprintState } from '@/lib/recruiting-hub-elite-api';
 import { fetchRecruitingFootprint } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
+import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
 import { StateHeatLayer } from './StateHeatLayer';
 import { TargetPinsLayer } from './TargetPinsLayer';
 import { BattleDifficultyLayer } from './BattleDifficultyLayer';
@@ -87,30 +88,13 @@ function FootprintTooltip({ state }: { state: RhHubFootprintState }): React.Reac
 
 export function RecruitingFootprintMap(): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
-  const [footprint, setFootprint] = useState<RhHubFootprintResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const selectFootprint = useCallback((b: { footprint: RhHubFootprintResponse }) => b.footprint, []);
+  const fetchFootprint = useCallback((year: number) => fetchRecruitingFootprint(year), []);
+  const { data: footprint, loading, error } = useHubBundleSection({
+    select: selectFootprint,
+    fetchFallback: fetchFootprint,
+  });
   const [hoveredState, setHoveredState] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(false);
-    setFootprint(null);
-    void fetchRecruitingFootprint(activeYear)
-      .then((data) => {
-        if (!cancelled) setFootprint(data);
-      })
-      .catch(() => {
-        if (!cancelled) setError(true);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [activeYear]);
 
   const states = footprint?.states ?? [];
   const pins = footprint?.pins ?? [];

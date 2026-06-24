@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import type { RhHubMovementFeedItem } from '@/lib/recruiting-hub-elite-api';
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
 import { fetchMovementIntel } from '@/lib/recruiting-ui-api';
 import { playerHref } from '@/lib/player-link';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
+import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
 
 const EVENT_LABELS: Record<RhHubMovementFeedItem['event'], string> = {
   up: 'Trending Up',
@@ -86,28 +87,17 @@ function movementIntelToFeed(
 
 export function MovementIntelFeed(): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
-  const [payload, setPayload] = useState<MovementIntelResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    void fetchMovementIntel()
-      .then((res) => {
-        if (!cancelled) setPayload(res);
-      })
-      .catch(() => {
-        if (!cancelled) setError(true);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
+  const selectFeed = useCallback((b: { movementFeed: RhHubMovementFeedItem[] }) => b.movementFeed, []);
+  const fetchFeed = useCallback(async (year: number) => {
+    const res = await fetchMovementIntel();
+    return movementIntelToFeed(res, year);
   }, []);
+  const { data, loading, error } = useHubBundleSection({
+    select: selectFeed,
+    fetchFallback: fetchFeed,
+  });
 
-  const data = useMemo(() => movementIntelToFeed(payload, activeYear), [payload, activeYear]);
+  const items = useMemo(() => data ?? [], [data]);
 
   return (
     <>
@@ -117,7 +107,7 @@ export function MovementIntelFeed(): React.ReactElement {
       </div>
       {loading ? (
         <div className="rh-skeleton" data-testid="rh-elite-movement-feed" aria-hidden="true" />
-      ) : !data.length ? (
+      ) : !items.length ? (
         <section className="rh-card" data-testid="rh-elite-movement-feed">
           <p className="rh-empty">
             {error ? 'Could not load movement intel.' : 'No movement intel available yet.'}
@@ -125,7 +115,7 @@ export function MovementIntelFeed(): React.ReactElement {
         </section>
       ) : (
         <section className="rh-feed" data-testid="rh-elite-movement-feed">
-          {data.map((item) => (
+          {items.map((item) => (
             <article key={item.id} className="rh-feed-item">
               <div className="rh-feed-time">{formatFeedTime(item.timestamp)}</div>
               <div className="rh-flex-between">
