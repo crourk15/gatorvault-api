@@ -1,6 +1,7 @@
 # App Store Review Notes (GatorVault Insider)
 
-Use in **App Store Connect -> App Review Information -> Notes**. Full checklist: `docs/APP_STORE_METADATA.md`.
+**Full Connect copy (description, keywords, screenshots):** `docs/APP_STORE_CONNECT.md`  
+**Metadata checklist:** `docs/APP_STORE_METADATA.md`
 
 ## Support
 
@@ -43,6 +44,28 @@ Members-only community at `/vault/community/`. Signed-in users can **report** th
 ## Account deletion
 
 `/vault/membership/#delete-account` — password plus type `DELETE`.
+
+### Notes for reviewer (paste into App Store Connect)
+
+```
+GatorVault Insider — demo account has War Room tier (full access until StoreKit live).
+
+SIGN IN: https://gatorvaultinsider.com/join/
+
+REVIEW PATHS
+1. FutureCast — /vault/futurecast/
+2. Recruiting — /vault/recruiting/
+3. Team — /vault/team/
+4. Community — /vault/community/ → open thread → Report / Block user
+5. Membership — /vault/membership/ (do NOT delete demo account; delete UI at #delete-account)
+6. Legal — /privacy/ and /terms/ (no sign-in required)
+
+UGC: Signed-in members can report posts and block users. Reports stored server-side.
+Account deletion: password + type DELETE at /vault/membership/#delete-account
+Support: support@gatorvaultinsider.com
+```
+
+Full listing copy (description, keywords): see `docs/APP_STORE_CONNECT.md`.
 
 ## Subscriptions
 
