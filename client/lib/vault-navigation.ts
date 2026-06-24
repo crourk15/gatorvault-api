@@ -1,9 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
-import { prefetchVaultHref, warmVaultBottomNavRoutes, warmVaultPlayerRoute, warmVaultRoute } from '@/lib/vault-preload';
+import { prefetchVaultHref, warmVaultBottomNavRoutes, warmVaultDrawerRoutes, warmVaultPlayerRoute, warmVaultRoute } from '@/lib/vault-preload';
 
-export { prefetchVaultHref, warmVaultBottomNavRoutes, warmVaultPlayerRoute, warmVaultRoute };
+export { prefetchVaultHref, warmVaultBottomNavRoutes, warmVaultDrawerRoutes, warmVaultPlayerRoute, warmVaultRoute };
 
 const STATE_PREFIX = 'gv-vault-state:';
 

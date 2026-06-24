@@ -2,7 +2,7 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { prefetchVaultHref, notifyVaultNavigation, warmVaultBottomNavRoutes, warmVaultPlayerRoute } from '@/lib/vault-navigation';
+import { prefetchVaultHref, notifyVaultNavigation, warmVaultBottomNavRoutes, warmVaultDrawerRoutes, warmVaultPlayerRoute } from '@/lib/vault-navigation';
 import { isVaultClientNavHref, vaultNavPathsEqual } from '@/lib/vault-nav-utils';
 import { isPlayerProfileHref, playerSlugFromHref, prefetchFullProfile } from '@/lib/player-full-profile-api';
 
@@ -65,6 +65,7 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
 
   useEffect(() => {
     warmVaultBottomNavRoutes(pathname);
+    warmVaultDrawerRoutes(pathname);
   }, [pathname]);
 
   const prefetchedProfiles = useRef(new Set<string>());

@@ -183,6 +183,13 @@ export function warmVaultPlayerRoute(href: string): void {
   warmVaultRoute(href);
 }
 
+/** Drawer / menu routes — community, membership, FutureCast hub. */
+export const VAULT_DRAWER_WARM_ROUTES = [
+  '/vault/futurecast',
+  '/vault/community',
+  '/vault/membership',
+] as const;
+
 /** Preload bottom-nav pillar routes after shell mount. */
 export function warmVaultBottomNavRoutes(currentPath?: string): void {
   if (typeof window === 'undefined') return;
@@ -194,6 +201,21 @@ export function warmVaultBottomNavRoutes(currentPath?: string): void {
   scheduleIdle(() => {
     targets.forEach((href, index) => {
       window.setTimeout(() => warmVaultRoute(href), index * 100);
+    });
+  });
+}
+
+/** Preload secondary routes opened from the vault menu (UGC, membership, FutureCast). */
+export function warmVaultDrawerRoutes(currentPath?: string): void {
+  if (typeof window === 'undefined') return;
+  const active = currentPath ? normalizeVaultPath(currentPath) : null;
+  const targets = VAULT_DRAWER_WARM_ROUTES.map((href) => normalizeVaultPath(href)).filter(
+    (href) => href !== active
+  );
+
+  scheduleIdle(() => {
+    targets.forEach((href, index) => {
+      window.setTimeout(() => warmVaultRoute(href), 400 + index * 120);
     });
   });
 }

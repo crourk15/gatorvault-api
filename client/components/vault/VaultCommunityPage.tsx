@@ -6,14 +6,12 @@ import { CommunityConfirmModal } from '@/components/community/CommunityConfirmMo
 import { CommunityPostActions } from '@/components/community/CommunityPostActions';
 import { CommunityReportModal } from '@/components/community/CommunityReportModal';
 import { CommunityToastProvider, useCommunityToast } from '@/components/community/CommunityToast';
+import { CommunityPageSkeleton, CommunityThreadSkeleton } from '@/components/community/CommunityPageSkeleton';
 import {
   communityAuthorLabel,
   createCommunityThread,
-  fetchCommunityCategories,
-  fetchCommunityPulse,
+  fetchCommunityPageData,
   fetchCommunityThread,
-  fetchCommunityThreads,
-  fetchLiveRooms,
   flagCommunityPost,
   flagCommunityThread,
   type CommunityCategory,
@@ -22,6 +20,8 @@ import {
   type CommunityThread,
   type LiveRoom,
 } from '@/lib/community-api';
+import { fetchWithWarmPoll, userFacingLoadError } from '@/lib/api-warm-poll';
+import { warmPollProfile } from '@/lib/warm-poll-profile';
 import {
   blockUserEmail,
   isEmailBlocked,
@@ -30,7 +30,7 @@ import {
   type ReportReasonId,
 } from '@/lib/community-ugc';
 import { loadSession } from '@/lib/auth-api';
-import { UiEmpty, UiError } from '@/components/site/UiMessage';
+import { UiEmpty, UiError, UiWarming } from '@/components/site/UiMessage';
 
 type SortId = 'trending' | 'recent' | 'active' | 'replies';
 
@@ -75,6 +75,8 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const [selectedThread, setSelectedThread] = useState<CommunityThread | null>(null);
   const [selectedPosts, setSelectedPosts] = useState<CommunityPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [warming, setWarming] = useState(false);
+  const [threadLoading, setThreadLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -107,36 +109,40 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
 
   const load = useCallback(async () => {
     setLoading(true);
+    setWarming(true);
     setError(null);
     try {
-      const [cats, rows, pulseData, liveRooms] = await Promise.all([
-        fetchCommunityCategories(),
-        fetchCommunityThreads({ sort, category: category || undefined, limit: 40 }),
-        fetchCommunityPulse(),
-        fetchLiveRooms(),
-      ]);
-      setCategories(cats);
-      setThreads(rows);
-      setPulse(pulseData);
-      setRooms(liveRooms);
-      if (cats.length && !newCategory) setNewCategory(cats[0].slug);
+      const data = await fetchCommunityPageData({
+        sort,
+        category: category || undefined,
+        limit: 40,
+      });
+      setCategories(data.categories);
+      setThreads(data.threads);
+      setPulse(data.pulse);
+      setRooms(data.rooms);
+      if (data.categories.length && !newCategory) setNewCategory(data.categories[0].slug);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load community.');
+      setError(userFacingLoadError(err, 'Could not load community.'));
     } finally {
       setLoading(false);
+      setWarming(false);
     }
   }, [sort, category, newCategory]);
 
   const openThread = useCallback(async (id: string) => {
     setSelectedId(id);
     setSelectedThread(null);
+    setThreadLoading(true);
     try {
-      const data = await fetchCommunityThread(id);
+      const data = await fetchWithWarmPoll(() => fetchCommunityThread(id), warmPollProfile());
       setSelectedThread(data.thread);
       setSelectedPosts(data.posts);
     } catch {
       setSelectedThread(null);
       setSelectedPosts([]);
+    } finally {
+      setThreadLoading(false);
     }
   }, []);
 
@@ -363,12 +369,37 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
             </div>
           )}
 
-          {loading && <p className="gv-page-status">Loading threads…</p>}
+          {loading && (
+            <div className="gv-community__loading" role="status" aria-live="polite" aria-busy="true">
+              {warming ? <UiWarming hint="Loading threads and community pulse." /> : null}
+              <CommunityPageSkeleton />
+            </div>
+          )}
           {error && !loading && (
             <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
           )}
 
-          {!loading && !error && selectedId && !selectedThread && (
+          {!loading && !error && selectedId && threadLoading && (
+            <div className="gv-community__thread-detail">
+              <button
+                type="button"
+                className="gv-film-back"
+                onClick={() => {
+                  setSelectedId(null);
+                  setSelectedPosts([]);
+                  setThreadLoading(false);
+                }}
+              >
+                ← All threads
+              </button>
+              <p className="gv-page-status" role="status" aria-live="polite" aria-busy="true">
+                Loading thread…
+              </p>
+              <CommunityThreadSkeleton />
+            </div>
+          )}
+
+          {!loading && !error && selectedId && !selectedThread && !threadLoading && (
             <div className="gv-community__thread-detail">
               <button
                 type="button"
@@ -380,7 +411,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
               >
                 ← All threads
               </button>
-              <p className="gv-page-status">Loading thread…</p>
+              <UiEmpty message="Could not load this thread." hint="Try again or pick another thread." />
             </div>
           )}
 

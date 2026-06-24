@@ -1,5 +1,7 @@
-import { getApiBase } from './big-board-api';
+import { apiFetch } from './api-fetch';
+import { fetchWithWarmPoll } from './api-warm-poll';
 import { loadSession } from './auth-api';
+import { warmPollProfile } from './warm-poll-profile';
 import type { ReportReasonId } from './community-ugc';
 
 export type CommunityAuthor = {
@@ -66,12 +68,26 @@ export type LiveRoom = {
   status?: string;
 };
 
+export type CommunityPageData = {
+  categories: CommunityCategory[];
+  threads: CommunityThread[];
+  pulse: CommunityPulse;
+  rooms: LiveRoom[];
+};
+
 function authHeaders(json = false): HeadersInit {
   const session = loadSession();
   const headers: Record<string, string> = { Accept: 'application/json' };
   if (json) headers['Content-Type'] = 'application/json';
   if (session?.token) headers.Authorization = `Bearer ${session.token}`;
   return headers;
+}
+
+function communityFetchInit(json = false): RequestInit {
+  return {
+    credentials: 'include',
+    headers: authHeaders(json),
+  };
 }
 
 export function communityAuthorLabel(item: {
@@ -82,10 +98,10 @@ export function communityAuthorLabel(item: {
 }
 
 export async function fetchCommunityCategories(): Promise<CommunityCategory[]> {
-  const base = getApiBase();
-  const res = await fetch(`${base}/api/community/categories`, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Community categories failed (${res.status})`);
-  const data = (await res.json()) as { categories?: CommunityCategory[] };
+  const data = await apiFetch<{ categories?: CommunityCategory[] }>(
+    '/api/community/categories',
+    communityFetchInit(),
+  );
   return data.categories ?? [];
 }
 
@@ -94,19 +110,15 @@ export async function fetchCommunityThreads(opts: {
   category?: string;
   limit?: number;
 } = {}): Promise<CommunityThread[]> {
-  const base = getApiBase();
   const params = new URLSearchParams();
   if (opts.sort) params.set('sort', opts.sort);
   if (opts.category) params.set('category', opts.category);
   if (opts.limit) params.set('limit', String(opts.limit));
   const qs = params.toString();
-  const res = await fetch(`${base}/api/community/threads${qs ? `?${qs}` : ''}`, {
-    cache: 'no-store',
-    credentials: 'include',
-    headers: authHeaders(),
-  });
-  if (!res.ok) throw new Error(`Community threads failed (${res.status})`);
-  const data = (await res.json()) as { threads?: CommunityThread[] };
+  const data = await apiFetch<{ threads?: CommunityThread[] }>(
+    `/api/community/threads${qs ? `?${qs}` : ''}`,
+    communityFetchInit(),
+  );
   return data.threads ?? [];
 }
 
@@ -114,32 +126,39 @@ export async function fetchCommunityThread(id: string): Promise<{
   thread: CommunityThread;
   posts: CommunityPost[];
 }> {
-  const base = getApiBase();
-  const res = await fetch(`${base}/api/community/thread/${encodeURIComponent(id)}`, {
-    cache: 'no-store',
-    credentials: 'include',
-    headers: authHeaders(),
-  });
-  if (!res.ok) throw new Error(`Thread not found (${res.status})`);
-  const data = (await res.json()) as { thread?: CommunityThread; posts?: CommunityPost[] };
+  const data = await apiFetch<{ thread?: CommunityThread; posts?: CommunityPost[] }>(
+    `/api/community/thread/${encodeURIComponent(id)}`,
+    communityFetchInit(),
+  );
   if (!data.thread) throw new Error('Thread not found');
   return { thread: data.thread, posts: data.posts ?? [] };
 }
 
 export async function fetchCommunityPulse(): Promise<CommunityPulse> {
-  const base = getApiBase();
-  const res = await fetch(`${base}/api/community/pulse`, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Community pulse failed (${res.status})`);
-  const data = (await res.json()) as { pulse?: CommunityPulse };
+  const data = await apiFetch<{ pulse?: CommunityPulse }>('/api/community/pulse', communityFetchInit());
   return data.pulse ?? {};
 }
 
 export async function fetchLiveRooms(): Promise<LiveRoom[]> {
-  const base = getApiBase();
-  const res = await fetch(`${base}/api/community/live-rooms`, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Live rooms failed (${res.status})`);
-  const data = (await res.json()) as { rooms?: LiveRoom[] };
+  const data = await apiFetch<{ rooms?: LiveRoom[] }>('/api/community/live-rooms', communityFetchInit());
   return data.rooms ?? [];
+}
+
+/** Load community hub data with warm-poll while Render wakes. */
+export async function fetchCommunityPageData(opts: {
+  sort?: string;
+  category?: string;
+  limit?: number;
+} = {}): Promise<CommunityPageData> {
+  return fetchWithWarmPoll(async () => {
+    const [categories, threads, pulse, rooms] = await Promise.all([
+      fetchCommunityCategories(),
+      fetchCommunityThreads(opts),
+      fetchCommunityPulse(),
+      fetchLiveRooms(),
+    ]);
+    return { categories, threads, pulse, rooms };
+  }, warmPollProfile());
 }
 
 export async function createCommunityThread(input: {
@@ -147,43 +166,25 @@ export async function createCommunityThread(input: {
   body: string;
   category?: string;
 }): Promise<void> {
-  const base = getApiBase();
-  const res = await fetch(`${base}/api/community/thread`, {
+  await apiFetch('/api/community/thread', {
+    ...communityFetchInit(true),
     method: 'POST',
-    headers: authHeaders(true),
-    credentials: 'include',
     body: JSON.stringify(input),
   });
-  if (!res.ok) {
-    const data = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(data.error ?? `Could not post thread (${res.status})`);
-  }
 }
 
 export async function flagCommunityPost(postId: string, reason: ReportReasonId): Promise<void> {
-  const base = getApiBase();
-  const res = await fetch(`${base}/api/community/post/${encodeURIComponent(postId)}/flag`, {
+  await apiFetch(`/api/community/post/${encodeURIComponent(postId)}/flag`, {
+    ...communityFetchInit(true),
     method: 'POST',
-    headers: authHeaders(true),
-    credentials: 'include',
     body: JSON.stringify({ reason }),
   });
-  if (!res.ok) {
-    const data = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(data.error ?? `Could not report post (${res.status})`);
-  }
 }
 
 export async function flagCommunityThread(threadId: string, reason: ReportReasonId): Promise<void> {
-  const base = getApiBase();
-  const res = await fetch(`${base}/api/community/thread/${encodeURIComponent(threadId)}/flag`, {
+  await apiFetch(`/api/community/thread/${encodeURIComponent(threadId)}/flag`, {
+    ...communityFetchInit(true),
     method: 'POST',
-    headers: authHeaders(true),
-    credentials: 'include',
     body: JSON.stringify({ reason }),
   });
-  if (!res.ok) {
-    const data = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(data.error ?? `Could not report thread (${res.status})`);
-  }
 }

@@ -49,8 +49,8 @@ export function UiEmpty({
 }
 
 export function UiWarming({
-  title = 'Waking up GatorVault servers…',
-  hint = 'First load after idle can take up to 30 seconds. Hang tight.',
+  title = 'Connecting to GatorVault…',
+  hint = 'First load after idle can take a few seconds. Hang tight.',
 }: {
   title?: string;
   hint?: string;

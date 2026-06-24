@@ -17,12 +17,16 @@ export function warmVaultApi(): void {
   ping('/api/ping');
   ping('/api/health');
   ping('/api/recruiting/hub/ticker?year=2027');
+  ping('/api/community/categories');
+  ping('/api/community/pulse');
+  ping('/api/subscription/catalog');
 
   if (typeof window.requestIdleCallback === 'function') {
     window.requestIdleCallback(
       () => {
         ping('/api/recruiting/intel/high-priority');
         ping('/api/staff/dashboard');
+        ping('/api/community/threads?limit=1');
       },
       { timeout: 1500 }
     );
@@ -30,6 +34,7 @@ export function warmVaultApi(): void {
     window.setTimeout(() => {
       ping('/api/recruiting/intel/high-priority');
       ping('/api/staff/dashboard');
+      ping('/api/community/threads?limit=1');
     }, 400);
   }
 }

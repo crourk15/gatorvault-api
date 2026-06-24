@@ -2138,6 +2138,49 @@ body.gv-community-modal-open {
   overflow: hidden;
 }
 
+.gv-community__loading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.gv-community__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gv-community__skeleton-row {
+  height: 3.25rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(90deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+  background-size: 200% 100%;
+  animation: gv-community-shimmer 1.4s ease-in-out infinite;
+}
+
+.gv-community__skeleton-row--wide {
+  height: 4rem;
+}
+
+.gv-community__skeleton-row--short {
+  width: 55%;
+  height: 2.5rem;
+}
+
+.gv-community__skeleton--thread {
+  margin-top: 0.75rem;
+}
+
+@keyframes gv-community-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
 .gv-game-zone__hero {
   display: flex;
   align-items: flex-start;
