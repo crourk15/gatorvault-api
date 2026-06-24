@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { UiError, UiWarming } from '@/components/site/UiMessage';
+import { UiError } from '@/components/site/UiMessage';
+import { FutureCastLabSkeleton, FutureCastPanelSkeleton } from './FutureCastLabSkeleton';
 import { FutureCastLabPageDesktop } from './lab/FutureCastLabPageDesktop';
 import { FutureCastLabPageMobile } from './mobile/FutureCastLabPageMobile';
 import { FutureCastLabAnchors } from './lab/FutureCastLabAnchors';
@@ -19,16 +20,10 @@ export function FutureCastEliteHomepage(): React.ReactElement {
     if (el) {
       window.requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
     }
-  }, [lab.loading]);
+  }, [lab.loading, lab.secondaryLoading]);
 
   if ((lab.loading || lab.warming) && !lab.masterBoard.players.length) {
-    return (
-      <div className="rh-cc-page rh-frame" data-testid="fc-elite-loading" aria-busy="true">
-        <UiWarming />
-        <div className="rh-cc-skeleton" style={{ minHeight: 280, borderRadius: 12, marginTop: 16 }} />
-        <div className="rh-cc-skeleton" style={{ minHeight: 200, borderRadius: 12, marginTop: 16 }} />
-      </div>
-    );
+    return <FutureCastLabSkeleton warming={lab.warming} />;
   }
   if (lab.error && !lab.masterBoard.players.length) {
     return (
@@ -43,7 +38,11 @@ export function FutureCastEliteHomepage(): React.ReactElement {
 
   return (
     <>
-      {isDesktop ? <FutureCastLabPageDesktop data={lab} /> : <FutureCastLabPageMobile data={lab} />}
+      {isDesktop ? (
+        <FutureCastLabPageDesktop lab={lab} PanelSkeleton={FutureCastPanelSkeleton} />
+      ) : (
+        <FutureCastLabPageMobile lab={lab} PanelSkeleton={FutureCastPanelSkeleton} />
+      )}
       <FutureCastLabAnchors />
     </>
   );

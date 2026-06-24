@@ -10,13 +10,26 @@ Use in **App Store Connect -> App Review Information -> Notes**. Full checklist:
 
 ## Demo account (App Review)
 
-Provision a reviewer account before submission. Enter credentials **only** in App Store Connect (not in git):
+Enter credentials **only** in App Store Connect (not in git):
 
-- Email: appreview@gatorvaultinsider.com (create via `/join` or operator grant)
+- Email: `appreview@gatorvaultinsider.com`
 - Password: App Store Connect secure field
-- Tier: Film Room or War Room recommended
+- Tier: War Room (granted via admin API until StoreKit live)
 
-Until StoreKit is live (Step 3b), grant paid tier with `POST /api/subscription/admin/grant` and `EMAIL_TEST_PIN` if needed.
+### Provision on production
+
+```bash
+SUBSCRIPTION_ADMIN_PIN=... APP_REVIEW_PASSWORD=... node scripts/provision-app-review-account.js
+```
+
+The script registers the account if missing, grants War Room tier, and prints the email only. Store the password in App Store Connect.
+
+### Reviewer walkthrough
+
+1. Sign in at `/join` or `/vault/login/`
+2. Open **Community** → open any thread → **Report** / **Block user**
+3. Open **Membership** → scroll to **Delete account** (do not delete the review account)
+4. Privacy `/privacy/` and Terms `/terms/` load without auth
 
 ## UGC moderation
 

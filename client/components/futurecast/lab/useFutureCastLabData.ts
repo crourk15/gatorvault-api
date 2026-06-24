@@ -1,13 +1,73 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { loadFutureCastLabData, type FutureCastLabDataMap } from '@/lib/futurecast-lab-data';
+import {
+  loadFutureCastLabData,
+  loadFutureCastLabPrimary,
+  loadFutureCastLabSecondary,
+  type FutureCastLabDataMap,
+} from '@/lib/futurecast-lab-data';
 import { userFacingLoadError } from '@/lib/api-warm-poll';
 
 const LAB_POLL_MS = 90_000;
 
+const EMPTY_LAB_DATA: FutureCastLabDataMap = {
+  masterBoard: {
+    classYear: 2027,
+    updatedAt: '',
+    movementHeatmap: { upCount: 0, downCount: 0, flatCount: 0 },
+    heatmap: { buckets: [], windowDays: 7 },
+    ufConfidenceAverage: 0,
+    confidenceSparkline: [],
+    commitWatch: [],
+    highPriority: { playerIds: [], players: [] },
+    movementSummary: {
+      risers: [],
+      fallers: [],
+      highVolatility: [],
+      riserPlayers: [],
+      fallerPlayers: [],
+      volatilePlayers: [],
+    },
+    players: [],
+  },
+  trendingBoard: { classYear: 2027, updatedAt: '', trendingUp: [], trendingDown: [] },
+  movementIntel: {
+    classYear: 2027,
+    updatedAt: '',
+    movementHeatmap: { upCount: 0, downCount: 0, flatCount: 0 },
+    heatmap: { buckets: [], windowDays: 7 },
+    risers: [],
+    fallers: [],
+    highVolatility: [],
+    stable: [],
+    fitScoreLeaders: [],
+    fitScoreRisks: [],
+    alerts: [],
+  },
+  staffNotes: { classYear: 2027, updatedAt: '', totalNotes: 0, count: 0, notes: [] },
+  home: {
+    classYear: 2027,
+    commitSort: 'fit',
+    heatmap: { buckets: [], windowDays: 7 },
+    commits: [],
+    topTargets: [],
+    trendingUp: [],
+    trendingDown: [],
+    portalWatchlist: [],
+  },
+  stock: { stockUp: [], stockDown: [], windowDays: 7 },
+  summary: { classYear: 2027, commitCount: 0, targetCount: 0, nationalRank: null },
+  metrics: { avgUFProbability: 0, highPriorityCount: 0, activePredictions: 0 },
+  heatLevel: 'warm',
+  lastUpdated: null,
+  highPriority: [],
+  underclassmen: [],
+};
+
 export type FutureCastLabData = FutureCastLabDataMap & {
   loading: boolean;
+  secondaryLoading: boolean;
   refreshing: boolean;
   warming: boolean;
   error: string | null;
@@ -17,6 +77,7 @@ export type FutureCastLabData = FutureCastLabDataMap & {
 export function useFutureCastLabData(): FutureCastLabData {
   const [data, setData] = useState<FutureCastLabDataMap | null>(null);
   const [loading, setLoading] = useState(true);
+  const [secondaryLoading, setSecondaryLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [warming, setWarming] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,15 +85,34 @@ export function useFutureCastLabData(): FutureCastLabData {
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) {
       setLoading(true);
+      setSecondaryLoading(false);
       setWarming(true);
       setError(null);
     } else {
       setRefreshing(true);
     }
     try {
-      const next = await loadFutureCastLabData();
-      setData(next);
-      setError(null);
+      if (isInitial) {
+        const primary = await loadFutureCastLabPrimary();
+        setData((prev) => ({
+          ...(prev ?? EMPTY_LAB_DATA),
+          ...primary,
+        }));
+        setLoading(false);
+        setSecondaryLoading(true);
+
+        const secondary = await loadFutureCastLabSecondary(primary.masterBoard);
+        setData((prev) => ({
+          ...(prev ?? EMPTY_LAB_DATA),
+          ...primary,
+          ...secondary,
+        }));
+        setError(null);
+      } else {
+        const next = await loadFutureCastLabData();
+        setData(next);
+        setError(null);
+      }
     } catch (err) {
       if (isInitial) {
         setError(userFacingLoadError(err, 'Failed to load FutureCast Lab.'));
@@ -40,6 +120,7 @@ export function useFutureCastLabData(): FutureCastLabData {
     } finally {
       if (isInitial) {
         setLoading(false);
+        setSecondaryLoading(false);
         setWarming(false);
       } else {
         setRefreshing(false);
@@ -62,63 +143,12 @@ export function useFutureCastLabData(): FutureCastLabData {
     };
   }, [load]);
 
-  const empty = data ?? {
-    masterBoard: {
-      classYear: 2027,
-      updatedAt: '',
-      movementHeatmap: { upCount: 0, downCount: 0, flatCount: 0 },
-      heatmap: { buckets: [], windowDays: 7 },
-      ufConfidenceAverage: 0,
-      confidenceSparkline: [],
-      commitWatch: [],
-      highPriority: { playerIds: [], players: [] },
-      movementSummary: {
-        risers: [],
-        fallers: [],
-        highVolatility: [],
-        riserPlayers: [],
-        fallerPlayers: [],
-        volatilePlayers: [],
-      },
-      players: [],
-    },
-    trendingBoard: { classYear: 2027, updatedAt: '', trendingUp: [], trendingDown: [] },
-    movementIntel: {
-      classYear: 2027,
-      updatedAt: '',
-      movementHeatmap: { upCount: 0, downCount: 0, flatCount: 0 },
-      heatmap: { buckets: [], windowDays: 7 },
-      risers: [],
-      fallers: [],
-      highVolatility: [],
-      stable: [],
-      fitScoreLeaders: [],
-      fitScoreRisks: [],
-      alerts: [],
-    },
-    staffNotes: { classYear: 2027, updatedAt: '', totalNotes: 0, count: 0, notes: [] },
-    home: {
-      classYear: 2027,
-      commitSort: 'fit',
-      heatmap: { buckets: [], windowDays: 7 },
-      commits: [],
-      topTargets: [],
-      trendingUp: [],
-      trendingDown: [],
-      portalWatchlist: [],
-    },
-    stock: { stockUp: [], stockDown: [], windowDays: 7 },
-    summary: { classYear: 2027, commitCount: 0, targetCount: 0, nationalRank: null },
-    metrics: { avgUFProbability: 0, highPriorityCount: 0, activePredictions: 0 },
-    heatLevel: 'warm' as const,
-    lastUpdated: null,
-    highPriority: [],
-    underclassmen: [],
-  };
+  const snapshot = data ?? EMPTY_LAB_DATA;
 
   return {
-    ...empty,
+    ...snapshot,
     loading,
+    secondaryLoading,
     refreshing,
     warming,
     error,

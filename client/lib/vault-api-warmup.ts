@@ -18,6 +18,7 @@ export function warmVaultApi(): void {
   ping('/api/health');
   ping('/api/recruiting/hub/ticker?year=2027');
   ping('/api/recruiting/hub/bundle?year=2027');
+  ping('/api/futurecast/master-board');
   ping('/api/roster/players?limit=1');
   ping('/api/team/coaching-staff');
   ping('/api/community/categories');

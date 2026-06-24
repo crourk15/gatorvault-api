@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import type { FutureCastLabDataMap } from '@/lib/futurecast-lab-data';
+import type { FutureCastLabData } from '@/components/futurecast/lab/useFutureCastLabData';
+import type { FutureCastPanelSkeleton } from '@/components/futurecast/FutureCastLabSkeleton';
 import { FUTURECAST_LAB_ANCHORS } from '@/lib/vault-route-map';
 import { FutureCastHero } from './FutureCastHero';
 import { FutureCastTargetsPanel } from './FutureCastTargetsPanel';
@@ -14,11 +15,15 @@ import { FutureCastLiveFeed } from './FutureCastLiveFeed';
 import { FutureCastExtendedModules } from './FutureCastExtendedModules';
 
 type Props = {
-  data: FutureCastLabDataMap;
+  lab: FutureCastLabData;
+  PanelSkeleton: typeof FutureCastPanelSkeleton;
 };
 
 /** Desktop FutureCast Lab — UF Premium command center (RH 2-column grid). */
-export function FutureCastLabPageDesktop({ data }: Props): React.ReactElement {
+export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.ReactElement {
+  const data = lab;
+  const pending = lab.secondaryLoading;
+
   return (
     <div className="rh-cc-page fc-lab-cc-page" data-testid="fc-lab-page-desktop">
       <section id={FUTURECAST_LAB_ANCHORS.overview}>
@@ -38,10 +43,18 @@ export function FutureCastLabPageDesktop({ data }: Props): React.ReactElement {
             <FutureCastTargetsPanel masterBoard={data.masterBoard} />
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.movement}>
-            <FutureCastMovementPanel movementIntel={data.movementIntel} />
+            {pending ? (
+              <PanelSkeleton minHeight={280} />
+            ) : (
+              <FutureCastMovementPanel movementIntel={data.movementIntel} />
+            )}
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.signals}>
-            <FutureCastAnalystSignals staffNotes={data.staffNotes} masterBoard={data.masterBoard} />
+            {pending ? (
+              <PanelSkeleton minHeight={220} />
+            ) : (
+              <FutureCastAnalystSignals staffNotes={data.staffNotes} masterBoard={data.masterBoard} />
+            )}
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.positions}>
             <FutureCastPositionBreakdown
@@ -53,32 +66,48 @@ export function FutureCastLabPageDesktop({ data }: Props): React.ReactElement {
 
         <div className="rh-cc-col rh-cc-col--right">
           <section id={FUTURECAST_LAB_ANCHORS.trending}>
-            <FutureCastBattlesPanel masterBoard={data.masterBoard} trendingBoard={data.trendingBoard} />
+            {pending ? (
+              <PanelSkeleton minHeight={260} />
+            ) : (
+              <FutureCastBattlesPanel masterBoard={data.masterBoard} trendingBoard={data.trendingBoard} />
+            )}
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.portal}>
-            <FutureCastPortalCrossView
-              portalPlayers={data.home.portalWatchlist ?? []}
-              masterBoard={data.masterBoard}
-            />
+            {pending ? (
+              <PanelSkeleton minHeight={200} />
+            ) : (
+              <FutureCastPortalCrossView
+                portalPlayers={data.home.portalWatchlist ?? []}
+                masterBoard={data.masterBoard}
+              />
+            )}
           </section>
           <section id="fc-lab-extended">
-            <FutureCastExtendedModules
-              masterBoard={data.masterBoard}
-              trendingBoard={data.trendingBoard}
-              movementIntel={data.movementIntel}
-              highPriority={data.highPriority}
-              underclassmen={data.underclassmen}
-            />
+            {pending ? (
+              <PanelSkeleton minHeight={320} />
+            ) : (
+              <FutureCastExtendedModules
+                masterBoard={data.masterBoard}
+                trendingBoard={data.trendingBoard}
+                movementIntel={data.movementIntel}
+                highPriority={data.highPriority}
+                underclassmen={data.underclassmen}
+              />
+            )}
           </section>
         </div>
       </div>
 
       <section id={FUTURECAST_LAB_ANCHORS.feed}>
-        <FutureCastLiveFeed
-          masterBoard={data.masterBoard}
-          staffNotes={data.staffNotes}
-          movementIntel={data.movementIntel}
-        />
+        {pending ? (
+          <PanelSkeleton minHeight={180} />
+        ) : (
+          <FutureCastLiveFeed
+            masterBoard={data.masterBoard}
+            staffNotes={data.staffNotes}
+            movementIntel={data.movementIntel}
+          />
+        )}
       </section>
     </div>
   );

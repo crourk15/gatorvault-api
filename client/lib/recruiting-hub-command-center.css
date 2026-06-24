@@ -1194,6 +1194,44 @@
   }
 }
 
+/* FutureCast Lab cold-start skeletons */
+.fc-lab-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--gv-fog, #e5e7eb) 25%,
+    rgba(255, 255, 255, 0.9) 50%,
+    var(--gv-fog, #e5e7eb) 75%
+  );
+  background-size: 200% 100%;
+  animation: rh-cc-shimmer 1.4s ease infinite;
+  border-radius: var(--gv-radius-sm, 8px);
+}
+
+.fc-lab-skeleton--hero {
+  min-height: 220px;
+  margin-bottom: 16px;
+}
+
+.fc-lab-skeleton__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.fc-lab-skeleton--panel {
+  min-height: 200px;
+}
+
+.fc-lab-skeleton--tall {
+  min-height: 280px;
+}
+
+@media (max-width: 1023px) {
+  .fc-lab-skeleton__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── Mobile & tablet: vertical command center (not hidden) ── */
 @media (max-width: 1023px) {
   .rh-cc-page {
