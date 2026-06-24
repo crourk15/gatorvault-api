@@ -15,27 +15,42 @@ Use this after App Store Connect metadata is ready. Builds run on Codemagic Mac 
 3. Download the `.p8` file (one-time download)
 4. Note **Issuer ID** and **Key ID**
 
-## Step 2 — Codemagic integration
+## Step 2 — Codemagic integration (Personal Account)
 
-1. Codemagic → **Team settings** → **Integrations** → **App Store Connect**
-2. Add integration (name it e.g. `codemagic` — must match `codemagic.yaml`)
-3. Paste Issuer ID, Key ID, and `.p8` contents
+1. Codemagic → **Settings** (left sidebar) → **Integrations** → **Developer Portal**
+2. Add key named **`codemagic`** (must match `codemagic.yaml`)
+3. Paste Issuer ID, Key ID `5H84AX8C73`, and upload `.p8`
 
-## Step 3 — iOS code signing
+## Step 3 — Certificate private key (required once)
 
-Codemagic → your app → **Settings** → **Code signing identities**
+`fetch-signing-files --create` needs a distribution key stored in Codemagic:
 
-Option A (recommended): **Automatic** — Codemagic fetches/creates distribution cert + profile using the API key above.
+1. Generate on Windows (PowerShell):
 
-Option B: Upload your own **Apple Distribution** certificate + **App Store** provisioning profile for `com.gatorvaultinsider.app`.
+```powershell
+openssl genrsa -out ios_distribution_private_key.pem 2048
+```
 
-## Step 4 — Start a build
+2. Codemagic → **gatorvault-api** → **Environment variables**
+3. Add group `code-signing` with secret **`CERTIFICATE_PRIVATE_KEY`** = full PEM contents (including BEGIN/END lines)
+4. Add to `codemagic.yaml` under `environment.groups` if not using UI automatic cert
+
+**Or** in app **Distribution → iOS code signing → Generate certificate** (Codemagic manages the key for you).
+
+## Step 4 — iOS code signing in app
+
+1. Open **gatorvault-api** (not just Builds)
+2. **Distribution** or **Code signing identities**
+3. **Automatic** + key **`codemagic`** + bundle `com.gatorvaultinsider.app`
+4. **Generate certificate** → **Fetch profile** (App Store) → **Save**
+
+## Step 5 — Start a build
 
 1. Push latest `main` (includes `codemagic.yaml`)
 2. Codemagic → **GatorVault** → workflow **iOS Release Build** → **Start new build**
 3. First build may take 15–30 min (npm + Next build + archive)
 
-## Step 5 — After build succeeds
+## Step 6 — After build succeeds
 
 1. Connect → **TestFlight** tab → wait for build **Processing** → **Ready to Submit** (5–30 min)
 2. **Distribution** → **1.0 Prepare for Submission** → **Build** → **+** → select build **1.0 (1)**
@@ -47,7 +62,7 @@ Option B: Upload your own **Apple Distribution** certificate + **App Store** pro
 | Error | Fix |
 |-------|-----|
 | Integration not found | Rename integration in Codemagic to match `integrations.app_store_connect` in `codemagic.yaml` |
-| No signing certificate | Enable automatic code signing in Codemagic app settings |
+| No matching profiles found | Add `CERTIFICATE_PRIVATE_KEY` env var OR Generate certificate in app Distribution settings; rebuild after yaml fix on `main` |
 | Bundle ID mismatch | Must be `com.gatorvaultinsider.app` |
 | Build fails on `npm run build` | Check Codemagic build log; fix Next.js errors |
 | Upload OK but no build in Connect | Wait 30 min; check email for Apple processing errors |
