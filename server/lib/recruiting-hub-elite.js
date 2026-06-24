@@ -249,7 +249,7 @@ async function buildHubCommits(year = 2027) {
 async function buildHubClassOverviewAll() {
   const years = [2026, 2027, 2028];
   const entries = await Promise.all(
-    years.map(async (year) => [year, await buildHubClassOverview(year)] as const)
+    years.map(async (year) => [year, await buildHubClassOverview(year)])
   );
   return Object.fromEntries(entries);
 }
