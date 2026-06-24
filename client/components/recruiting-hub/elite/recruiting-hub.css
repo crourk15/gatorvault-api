@@ -86,6 +86,10 @@
   display: block;
 }
 
+.rh-elite-chrome .rh-hub-warming {
+  margin: 0 0 12px;
+}
+
 .rh-elite-chrome .rh-skeleton {
   min-height: 120px;
   border-radius: 10px;

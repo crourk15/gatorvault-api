@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   fetchRecruitingHubBundle,
   RECRUITING_HUB_ELITE_YEAR,
@@ -34,7 +34,11 @@ async function fetchHubBundleWithWarmPoll(year: number): Promise<RhHubBundle> {
 export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): RecruitingHubBundleState {
   const [data, setData] = useState<RhHubBundle | null>(null);
   const [loading, setLoading] = useState(true);
+  const [warming, setWarming] = useState(true);
   const [error, setError] = useState(false);
+  const [reloadToken, setReloadToken] = useState(0);
+
+  const reload = useCallback(() => setReloadToken((token) => token + 1), []);
 
   useEffect(() => {
     let cancelled = false;
@@ -42,6 +46,7 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
 
     async function run(): Promise<void> {
       setLoading(true);
+      setWarming(true);
       setError(false);
       try {
         const t0 = performance.now();
@@ -65,14 +70,17 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
           console.info(`[recruiting-hub] bundle loaded in ${bundleLoadMs}ms`);
         }
         setData(bundle);
-        setLoading(false);
       } catch {
         if (cancelled) return;
         if (typeof window !== 'undefined') {
           window.__GV_HUB__ = { ...window.__GV_HUB__, start, year, ok: false };
         }
         setError(true);
-        setLoading(false);
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+          setWarming(false);
+        }
       }
     }
 
@@ -80,7 +88,7 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
     return () => {
       cancelled = true;
     };
-  }, [year]);
+  }, [year, reloadToken]);
 
-  return { data, loading, error };
+  return { data, loading, warming, error, reload };
 }

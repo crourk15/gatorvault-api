@@ -183,11 +183,13 @@ export function warmVaultPlayerRoute(href: string): void {
   warmVaultRoute(href);
 }
 
-/** Drawer / menu routes — community, membership, FutureCast hub. */
+/** Drawer / menu routes — community, membership, FutureCast, team, recruiting. */
 export const VAULT_DRAWER_WARM_ROUTES = [
   '/vault/futurecast',
   '/vault/community',
   '/vault/membership',
+  '/vault/team',
+  '/vault/recruiting',
 ] as const;
 
 /** Preload bottom-nav pillar routes after shell mount. */

@@ -17,6 +17,7 @@ import { RecruitingClassYearProvider } from '@/components/recruiting-hub/elite/R
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { LazyHubSection } from '@/components/recruiting-hub/elite/LazyHubSection';
 import { useRecruitingHubBundle } from '@/components/recruiting-hub/elite/useRecruitingHubBundle';
+import { UiError, UiWarming } from '@/components/site/UiMessage';
 import { initGvHydrate } from '@/lib/gv-hydrate';
 
 type Props = {
@@ -41,6 +42,19 @@ function RecruitingHubEliteContent({
 
   const content = (
     <>
+      {bundle.loading && bundle.warming ? (
+        <div className="rh-hub-warming" role="status" aria-live="polite" aria-busy="true">
+          <UiWarming hint="Loading class metrics and board data." />
+        </div>
+      ) : null}
+      {bundle.error && !bundle.loading ? (
+        <UiError
+          message="Could not load recruiting hub. The servers may still be waking up."
+          retry={bundle.reload}
+          backHref="/vault"
+          backLabel="← Vault"
+        />
+      ) : null}
       {deferHero ? <RecruitingHeroHydrator /> : <RecruitingHeroStripInline />}
       <SigningDayTracker />
       <LazyHubSection priority="top-fold" testId="rh-lazy-class-cards">

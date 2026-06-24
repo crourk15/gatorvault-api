@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { TeamHeroMetricsSkeleton } from './TeamPageSkeleton';
 import type { TeamHeroMetric } from './team-premium-types';
 
 type Props = {
@@ -9,10 +10,6 @@ type Props = {
 };
 
 export function TeamPremiumHero({ metrics, loading }: Props): React.ReactElement {
-  const rows = loading
-    ? Array.from({ length: 6 }, (_, i) => ({ id: `sk-${i}`, label: '—', value: '—' }))
-    : metrics;
-
   return (
     <section
       className="rh-elite-desktop-only team-premium-hero rh-cc-hero team-premium-bleed"
@@ -28,12 +25,16 @@ export function TeamPremiumHero({ metrics, loading }: Props): React.ReactElement
           </p>
         </div>
         <div className="rh-cc-hero__metrics team-premium-hero__metrics" aria-label="Team command metrics">
-          {rows.map((m) => (
-            <div key={m.id} className="rh-cc-hero__metric team-premium-hero__metric">
-              <span className="rh-cc-hero__metric-value team-premium-hero__metric-value">{m.value}</span>
-              <span className="rh-cc-hero__metric-label team-premium-hero__metric-label">{m.label}</span>
-            </div>
-          ))}
+          {loading ? (
+            <TeamHeroMetricsSkeleton />
+          ) : (
+            metrics.map((m) => (
+              <div key={m.id} className="rh-cc-hero__metric team-premium-hero__metric">
+                <span className="rh-cc-hero__metric-value team-premium-hero__metric-value">{m.value}</span>
+                <span className="rh-cc-hero__metric-label team-premium-hero__metric-label">{m.label}</span>
+              </div>
+            ))
+          )}
         </div>
       </div>
       <div className="team-premium-hero__accent" aria-hidden="true" />

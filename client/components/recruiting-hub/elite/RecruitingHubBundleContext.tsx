@@ -6,13 +6,17 @@ import type { RhHubBundle } from '@/lib/recruiting-hub-elite-api';
 export type RecruitingHubBundleState = {
   data: RhHubBundle | null;
   loading: boolean;
+  warming: boolean;
   error: boolean;
+  reload: () => void;
 };
 
 const RecruitingHubBundleContext = createContext<RecruitingHubBundleState>({
   data: null,
   loading: true,
+  warming: true,
   error: false,
+  reload: () => {},
 });
 
 export function RecruitingHubBundleProvider({

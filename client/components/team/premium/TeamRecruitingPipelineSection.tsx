@@ -3,6 +3,7 @@
 import React from 'react';
 import type { PipelinePreviewData } from './team-premium-types';
 import { TeamPremiumModule } from './TeamPremiumModule';
+import { TeamPipelineSkeleton } from './TeamPageSkeleton';
 import { PipelineMap } from './PipelineMap';
 import { PipelineCommitsList } from './PipelineCommitsList';
 import { PipelineTargetsList } from './PipelineTargetsList';
@@ -21,12 +22,18 @@ export function TeamRecruitingPipelineSection({ data, loading }: Props): React.R
         subtitle="2027 class — commits, targets, and state footprint"
         stamp={loading ? 'Loading…' : '2027 Board'}
       >
-        <PipelineMetricsRow avgFitScore={data.avgFitScore} avgFutureCastProb={data.avgFutureCastProb} />
-        <div className="team-pipeline-layout">
-          <PipelineMap states={data.stateCounts} />
-          <PipelineCommitsList commits={data.topCommits} />
-          <PipelineTargetsList targets={data.topTargets} />
-        </div>
+        {loading ? (
+          <TeamPipelineSkeleton />
+        ) : (
+          <>
+            <PipelineMetricsRow avgFitScore={data.avgFitScore} avgFutureCastProb={data.avgFutureCastProb} />
+            <div className="team-pipeline-layout">
+              <PipelineMap states={data.stateCounts} />
+              <PipelineCommitsList commits={data.topCommits} />
+              <PipelineTargetsList targets={data.topTargets} />
+            </div>
+          </>
+        )}
       </TeamPremiumModule>
     </div>
   );

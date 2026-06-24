@@ -51,6 +51,7 @@ function tabFromHash(): TeamPremiumTabId {
 export function TeamHubPage(): React.ReactElement {
   const [bundle, setBundle] = useState<TeamHubBundle>(EMPTY_BUNDLE);
   const [loading, setLoading] = useState(true);
+  const [warming, setWarming] = useState(true);
   const [pipelineLoading, setPipelineLoading] = useState(true);
   const [rosterFilter, setRosterFilter] = useState<RosterFilter>('All');
   const [dcTab, setDcTab] = useState<DepthChartTab>('offense');
@@ -69,6 +70,7 @@ export function TeamHubPage(): React.ReactElement {
   const load = useCallback(async (isInitial: boolean) => {
     if (isInitial) {
       setLoading(true);
+      setWarming(true);
       setPipelineLoading(true);
     }
     try {
@@ -82,6 +84,7 @@ export function TeamHubPage(): React.ReactElement {
     } finally {
       if (isInitial) {
         setLoading(false);
+        setWarming(false);
       }
       setPipelineLoading(false);
     }
@@ -188,6 +191,7 @@ export function TeamHubPage(): React.ReactElement {
           filter={rosterFilter}
           onFilterChange={setRosterFilter}
           loading={loading && bundle.roster.length === 0}
+          warming={warming}
         />
         <TeamDepthChartSection dcTab={dcTab} onTabChange={setDcTab} positions={dcPositions} />
         <StaffCardGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} />
