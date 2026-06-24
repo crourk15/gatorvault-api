@@ -28,7 +28,7 @@ function redirectAfterAuth(): void {
     /* private mode */
   }
   const next = new URLSearchParams(window.location.search).get('next');
-  const dest = safeAuthRedirectPath(next, '/vault');
+  const dest = safeAuthRedirectPath(next, '/vault/');
   window.setTimeout(() => {
     window.location.href = dest;
   }, 150);
@@ -56,7 +56,7 @@ export function JoinPage(): React.ReactElement {
     void verifyStoredSession().then((session) => {
       if (cancelled) return;
       if (!session?.email || !session?.token) return;
-      if (params.get('mode') === 'signin') return;
+      if (params.get('reauth') === '1') return;
       redirectAfterAuth();
     });
     return () => {

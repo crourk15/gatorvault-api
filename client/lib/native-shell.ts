@@ -2,10 +2,13 @@ import { isNativeApp } from '@/lib/api-base';
 
 let initialized = false;
 
-/** Capacitor-only boot: status bar, splash hide, safe-area class, back-button hook. */
+/** Capacitor-only boot: status bar, splash hide, safe-area class, native routing fixes. */
 export async function initNativeShell(): Promise<void> {
   if (!isNativeApp() || initialized) return;
   initialized = true;
+
+  const { runNativeAppEntry } = await import('@/lib/native-app-entry');
+  runNativeAppEntry();
 
   document.documentElement.classList.add('gv-native-app');
 

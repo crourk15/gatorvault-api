@@ -3,12 +3,12 @@ export const WELCOME_LINKS = {
   join: '/join',
   signIn: '/join?mode=signin',
   insider: '/insider',
-  vault: '/vault',
-  futurecast: '/vault/futurecast',
-  recruiting: '/vault/recruiting',
-  recruitingHub: '/recruiting-hub',
-  filmRoom: '/vault/film-room',
-  gatorNationLive: '/vault/live',
+  vault: '/vault/',
+  futurecast: '/vault/futurecast/',
+  recruiting: '/vault/recruiting/',
+  recruitingHub: '/vault/recruiting/',
+  filmRoom: '/vault/film-room/',
+  gatorNationLive: '/vault/live/',
 } as const;
 
 export const WELCOME_CARD_HREFS: Record<string, string> = {

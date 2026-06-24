@@ -33,7 +33,7 @@ export const AUTH_ONLY_PATHS = [
 ] as const;
 
 /** Safe post-auth destination; strips membership/login/callback loops. */
-export function safeAuthRedirectPath(next?: string | null, fallback = '/vault'): string {
+export function safeAuthRedirectPath(next?: string | null, fallback = '/vault/'): string {
   const candidate = (next || '').trim();
   if (!candidate.startsWith('/')) return fallback;
   const path = candidate.replace(/\/$/, '') || '/';
