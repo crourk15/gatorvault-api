@@ -26,6 +26,7 @@ workflows:
           cd client
           npm ci
           npm run build
+          export CAPACITOR_SERVER_URL=https://gatorvaultinsider.com/join/?mode=signin&next=/vault/
           npx cap sync ios
       - name: Install CocoaPods
         script: |

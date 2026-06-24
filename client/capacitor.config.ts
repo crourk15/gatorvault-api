@@ -1,10 +1,13 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 /**
- * GatorVault iOS shell — bundles `out/` from Next static export.
- * Optional: CAPACITOR_SERVER_URL=https://gatorvaultinsider.com for live WebView dev.
+ * GatorVault iOS shell.
+ * Release builds set CAPACITOR_SERVER_URL=https://gatorvaultinsider.com so the WebView
+ * loads the live site (avoids bundled static path routing issues in Capacitor).
  */
-const liveServerUrl = process.env.CAPACITOR_SERVER_URL?.trim();
+const liveServerUrl =
+  process.env.CAPACITOR_SERVER_URL?.trim() ||
+  (process.env.CAPACITOR_LIVE === '1' ? 'https://gatorvaultinsider.com' : '');
 
 const config: CapacitorConfig = {
   appId: 'com.gatorvaultinsider.app',
