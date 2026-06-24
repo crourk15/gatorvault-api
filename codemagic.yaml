@@ -7,9 +7,11 @@ workflows:
     integrations:
       app_store_connect: codemagic
     environment:
+      # Certificate uploaded in Codemagic → Code signing identities (reference: gatorvault_appstore).
+      # Do NOT set distribution_type/bundle_identifier here — that requires a pre-uploaded profile.
       ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.gatorvaultinsider.app
+        certificates:
+          - certificate: gatorvault_appstore
       vars:
         XCODE_SCHEME: App
         BUNDLE_ID: com.gatorvaultinsider.app
@@ -30,11 +32,13 @@ workflows:
           pod install
       - name: Fetch signing files and configure code signing
         script: |
+          set -e
           keychain initialize
+          keychain add-certificates
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
             --type IOS_APP_STORE \
-            --create
-          keychain add-certificates
+            --create \
+            --verbose
           xcode-project use-profiles
       - name: Build IPA for App Store
         script: |
