@@ -33,7 +33,7 @@ export function joinHref(nextPath?: string, mode: 'signin' | 'signup' = 'signup'
   if (mode === 'signin') params.set('mode', 'signin');
   if (nextPath && nextPath.startsWith('/')) params.set('next', nextPath);
   const q = params.toString();
-  return q ? `/join?${q}` : '/join';
+  return q ? `/join/?${q}` : '/join/';
 }
 
 /** Logged-out → sign-in with return path; logged-in → vault route. */

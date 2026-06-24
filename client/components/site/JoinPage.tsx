@@ -11,6 +11,7 @@ import {
 } from '@/lib/auth-api';
 import { PRICING_TIERS } from '@/lib/pricing-tiers';
 import { LegalSiteLinks } from '@/components/site/LegalSiteLinks';
+import { isNativeApp } from '@/lib/api-base';
 
 type Mode = 'signin' | 'signup';
 
@@ -29,8 +30,12 @@ function redirectAfterAuth(): void {
   }
   const next = new URLSearchParams(window.location.search).get('next');
   const dest = safeAuthRedirectPath(next, '/vault/');
+  const target =
+    isNativeApp() || window.location.hostname === 'gatorvaultinsider.com'
+      ? new URL(dest, 'https://gatorvaultinsider.com').href
+      : dest;
   window.setTimeout(() => {
-    window.location.href = dest;
+    window.location.replace(target);
   }, 150);
 }
 
@@ -45,6 +50,7 @@ export function JoinPage(): React.ReactElement {
   const [trialMembershipHref, setTrialMembershipHref] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
+  const native = isNativeApp();
 
   useEffect(() => {
     setTier(tierFromQuery());
@@ -243,11 +249,13 @@ export function JoinPage(): React.ReactElement {
         </div>
 
         <p className="gv-join__guest">
-          <a href="/vault">Preview the Vault</a> (limited access)
+          <a href="/vault/">Preview the Vault</a> (limited access)
         </p>
-        <p className="gv-join__back">
-          <a href="/">← Back to home</a>
-        </p>
+        {!native ? (
+          <p className="gv-join__back">
+            <a href="/vault/">Enter Vault</a>
+          </p>
+        ) : null}
         <LegalSiteLinks className="gv-join__legal gv-legal-links" />
       </div>
     </div>

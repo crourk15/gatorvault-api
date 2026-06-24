@@ -6,8 +6,6 @@ workflows:
     integrations:
       app_store_connect: codemagic
     environment:
-      # Certificate + profile must exist in Codemagic → Code signing identities.
-      # Create App Store profile at developer.apple.com, then Fetch profiles in Codemagic.
       ios_signing:
         certificates:
           - certificate: gatorvault_appstore
@@ -26,8 +24,13 @@ workflows:
           cd client
           npm ci
           npm run build
-          export CAPACITOR_SERVER_URL=https://gatorvaultinsider.com/join/?mode=signin&next=/vault/
           npx cap sync ios
+      - name: Verify iOS loads live vault URL (not bundled landing)
+        script: |
+          set -e
+          CFG="client/ios/App/App/capacitor.config.json"
+          grep -q 'gatorvaultinsider.com/vault' "$CFG" || (echo "ERROR: capacitor.config.json missing live server.url" && cat "$CFG" && exit 1)
+          echo "OK: Capacitor server.url points at live vault"
       - name: Install CocoaPods
         script: |
           cd client/ios/App

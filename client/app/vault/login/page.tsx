@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 export default function VaultLoginPage(): null {
   useEffect(() => {
     const search = typeof window !== 'undefined' ? window.location.search : '';
-    window.location.replace(`/join?mode=signin${search ? `&${search.slice(1)}` : ''}`);
+    window.location.replace(`/join/?mode=signin${search ? `&${search.slice(1)}` : ''}`);
   }, []);
   return null;
 }

@@ -1,5 +1,7 @@
-﻿import { isNativeApp } from '@/lib/api-base';
+import { isNativeApp } from '@/lib/api-base';
 import { loadSession } from '@/lib/auth-api';
+
+const SITE = 'https://gatorvaultinsider.com';
 
 export function normalizeStaticExportHref(href: string): string {
   if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) {
@@ -7,7 +9,7 @@ export function normalizeStaticExportHref(href: string): string {
   }
   if (href.startsWith('http://') || href.startsWith('https://')) return href;
   try {
-    const url = new URL(href, 'https://gatorvaultinsider.com');
+    const url = new URL(href, SITE);
     let path = url.pathname || '/';
     const last = path.split('/').filter(Boolean).pop() ?? '';
     if (!last.includes('.') && !path.endsWith('/')) path = `${path}/`;
@@ -17,25 +19,37 @@ export function normalizeStaticExportHref(href: string): string {
   }
 }
 
+function toAbsolute(path: string): string {
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return new URL(path, SITE).href;
+}
+
+function isMarketingPath(pathname: string): boolean {
+  const p = pathname.replace(/\/$/, '') || '/';
+  return p === '/' || p === '/welcome' || p === '/insider';
+}
+
 export function nativeBootRedirect(): string | null {
   if (!isNativeApp()) return null;
   const path = (window.location.pathname || '/').replace(/\/$/, '') || '/';
-  if (path !== '/' && path !== '/welcome') return null;
+  if (!isMarketingPath(path)) return null;
   const session = loadSession();
-  if (session?.email && session?.token) return '/vault/';
-  return '/join/?mode=signin&next=/vault/';
+  const rel =
+    session?.email && session?.token
+      ? '/vault/'
+      : '/join/?mode=signin&next=/vault/';
+  return toAbsolute(rel);
 }
 
 export function runNativeAppEntry(): void {
   if (!isNativeApp()) return;
+
   const boot = nativeBootRedirect();
-  if (boot) {
-    const here = `${window.location.pathname}${window.location.search}`;
-    if (here !== boot) {
-      window.location.replace(boot);
-      return;
-    }
+  if (boot && window.location.href !== boot) {
+    window.location.replace(boot);
+    return;
   }
+
   document.addEventListener(
     'click',
     (event) => {
@@ -43,10 +57,23 @@ export function runNativeAppEntry(): void {
       if (!anchor) return;
       const raw = anchor.getAttribute('href');
       if (!raw) return;
+
+      try {
+        const url = new URL(raw, SITE);
+        const p = url.pathname.replace(/\/$/, '') || '/';
+        if (isMarketingPath(p)) {
+          event.preventDefault();
+          window.location.href = nativeBootRedirect() ?? toAbsolute('/vault/');
+          return;
+        }
+      } catch {
+        /* ignore malformed href */
+      }
+
       const normalized = normalizeStaticExportHref(raw);
       if (normalized !== raw) {
         event.preventDefault();
-        window.location.href = normalized;
+        window.location.href = toAbsolute(normalized);
       }
     },
     true

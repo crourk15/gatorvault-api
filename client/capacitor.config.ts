@@ -1,13 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
-/**
- * GatorVault iOS shell.
- * Release builds set CAPACITOR_SERVER_URL=https://gatorvaultinsider.com so the WebView
- * loads the live site (avoids bundled static path routing issues in Capacitor).
- */
-const liveServerUrl =
-  process.env.CAPACITOR_SERVER_URL?.trim() ||
-  (process.env.CAPACITOR_LIVE === '1' ? 'https://gatorvaultinsider.com' : '');
+/** Live site entry for iOS TestFlight/App Store — bundled static paths break in Capacitor. */
+const LIVE_APP_URL = 'https://gatorvaultinsider.com/vault/';
+const useBundledAssets = process.env.CAPACITOR_USE_BUNDLE === '1';
 
 const config: CapacitorConfig = {
   appId: 'com.gatorvaultinsider.app',
@@ -19,11 +14,12 @@ const config: CapacitorConfig = {
     scrollEnabled: true,
     allowsLinkPreview: false,
   },
-  ...(liveServerUrl
+  ...(!useBundledAssets
     ? {
         server: {
-          url: liveServerUrl,
+          url: LIVE_APP_URL,
           cleartext: false,
+          androidScheme: 'https',
         },
       }
     : {}),

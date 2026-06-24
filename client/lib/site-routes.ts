@@ -198,7 +198,7 @@ export function siteGateRedirect(pathname: string, loggedIn: boolean): string | 
   for (const base of gated) {
     if (p === base || p.startsWith(`${base}/`)) {
       const params = new URLSearchParams({ mode: 'signin', next: p });
-      return `/join?${params.toString()}`;
+      return `/join/?${params.toString()}`;
     }
   }
   return null;
