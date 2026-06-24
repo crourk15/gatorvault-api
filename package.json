@@ -36,7 +36,9 @@
     "ensure:film-room": "npm run ensure:film-room --prefix server",
     "seed:recruiting": "npm run seed:recruiting --prefix server",
     "mobile:sync": "npm run build --prefix client && npm run cap:sync --prefix client",
-    "mobile:ios": "npm run cap:ios --prefix client"
+    "mobile:ios": "npm run cap:ios --prefix client",
+    "capture:app-store-screenshots": "node scripts/capture-app-store-screenshots.js",
+    "trigger:codemagic:ios": "node scripts/trigger-codemagic-ios.js"
   },
   "engines": {
     "node": ">=18"

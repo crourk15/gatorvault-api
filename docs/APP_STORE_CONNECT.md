@@ -2,6 +2,8 @@
 
 Paste-ready values for App Store Connect. Screenshots: docs/app-store-screenshots/. Subscriptions: docs/APP_STORE_SUBSCRIPTIONS.md.
 
+**Remaining Connect steps (Age Rating, App Privacy, Pricing):** `docs/APP_STORE_CONNECT_REMAINING.md`
+
 ## App information
 
 | Field | Value |
@@ -69,7 +71,8 @@ Upload from docs/app-store-screenshots/: 01-futurecast through 06-live-feed (390
 
 - [x] Demo account provisioned
 - [ ] Password in Connect only
-- [ ] 6 screenshots uploaded
+- [x] 6 screenshots captured (`docs/app-store-screenshots/`, `npm run capture:app-store-screenshots`)
+- [ ] 6 screenshots uploaded to Connect
 - [ ] Description + review notes pasted
 - [ ] App Privacy questionnaire
 - [ ] Subscriptions (when Developer account active)

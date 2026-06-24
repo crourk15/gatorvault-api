@@ -1,0 +1,69 @@
+=== GatorVault Insider - App Store Connect paste sheet ===
+Open Version 1.0 -> English (U.S.) and paste each block below.
+
+--- Promotional Text (170 chars, optional) ---
+Florida Gators football intel: FutureCast, recruiting, roster depth, live pulse, and member community - all in one app.
+
+--- Description ---
+GatorVault Insider is the membership hub for Florida Gators football fans - FutureCast predictions, recruiting intel, team roster and depth, live pulse, and member community.
+
+WHAT YOU GET
+- FutureCast Lab - commit likelihood, movement intel, and competing schools
+- Recruiting Hub - class overview, commits, targets, and battles
+- Team Command Center - roster, depth chart, staff, and program history
+- GatorNation Live - real-time pulse and insider feed
+- Member community - threads, debate, and game-week talk
+
+COMMUNITY SAFETY
+Signed-in members can report inappropriate posts and block other members. Reports are reviewed by our team. See our Privacy Policy and Terms for details.
+
+--- Keywords (100 chars max) ---
+florida,gators,football,recruiting,sec,college,sports,uf,gatorvault,futurecast
+
+--- Support URL ---
+https://gatorvaultinsider.com/
+
+--- Marketing URL (optional) ---
+https://gatorvaultinsider.com/
+
+--- Version ---
+1.0
+
+--- Copyright ---
+2026 GatorVault Insider
+
+--- App Information (separate page) ---
+Subtitle: UF Football Intel Hub
+Primary category: Sports
+Secondary category: News (optional)
+Privacy Policy URL: https://gatorvaultinsider.com/privacy/
+
+--- App Review Information ---
+Sign-in required: Yes
+Username: appreview@gatorvaultinsider.com
+Password: (enter your demo password in Connect only - never commit)
+
+Notes for reviewer:
+GatorVault Insider - demo account has War Room tier (full access until StoreKit live).
+
+SIGN IN: https://gatorvaultinsider.com/join/
+
+REVIEW PATHS
+1. FutureCast - /vault/futurecast/
+2. Recruiting - /vault/recruiting/
+3. Team - /vault/team/
+4. Community - /vault/community/ -> open thread -> Report / Block user
+5. Membership - /vault/membership/ (do NOT delete demo account; delete UI at #delete-account)
+6. Legal - /privacy/ and /terms/ (no sign-in)
+
+UGC moderation: report + block. Account deletion: password + type DELETE.
+Support: support@gatorvaultinsider.com
+
+--- Screenshots (6.5 inch Display slot) ---
+Upload PNGs from docs/app-store-screenshots/ in order:
+01-futurecast.png
+02-recruiting.png
+03-team.png
+04-community.png
+05-membership.png
+06-live-feed.png

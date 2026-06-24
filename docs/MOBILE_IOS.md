@@ -67,4 +67,4 @@ Unset `CAPACITOR_SERVER_URL` for bundled (offline shell) builds.
 
 ## Windows note
 
-You can commit and edit the Capacitor project on Windows. **Building and submitting requires a Mac.**
+You can commit and edit the Capacitor project on Windows. **Building and submitting requires a Mac** — or use **Codemagic** (`docs/CODEMAGIC_IOS.md`, root `codemagic.yaml`).
