@@ -801,6 +801,11 @@ async function runOn3Ingest(options = {}) {
   try {
     if (process.env.ON3_VISIT_OFFER_SYNC !== 'false') {
       result.visitOfferSync = await syncOn3VisitOfferIntel(classYears, options);
+      const visitLogsCreated = result.visitOfferSync?.visitLogs ?? 0;
+      if (visitLogsCreated > 0) {
+        const { clearFuturecastCacheSafe } = require('./recruiting-intel-cache');
+        clearFuturecastCacheSafe();
+      }
     }
   } catch (e) {
     result.errors.push({ type: 'visit_offer_sync', error: e.message });

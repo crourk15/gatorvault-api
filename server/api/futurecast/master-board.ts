@@ -8,7 +8,8 @@ import { sendCachedJson } from './response-cache';
 
 export const handleGetFutureCastMasterBoard = asyncHandler(async (_req: Request, res: Response) => {
   try {
-    await sendCachedJson(res, 'futurecast:master-board', buildMasterBoardPayload);
+    const { masterBoardCacheKey } = require('../../lib/futurecast-cache-keys');
+    await sendCachedJson(res, masterBoardCacheKey(), buildMasterBoardPayload);
   } catch (err) {
     handlePredictionsApiError(res, err);
   }

@@ -80,6 +80,30 @@ function buildMetrics(master: MasterBoardResponse): FutureCastHeroMetrics {
   };
 }
 
+function countUpcomingVisitIntel(visitIntel: HighPriorityPlayer[]): number {
+  const today = new Date().toISOString().slice(0, 10);
+  return visitIntel.filter((p) => {
+    if (p.visitVerified === false) return false;
+    if (String(p.ufOvStatus || '').toLowerCase() === 'completed') return false;
+    if (p.visitStart && String(p.visitStart).slice(0, 10) < today) return false;
+    return Boolean(p.visitStart) || p.visitVerified === true;
+  }).length;
+}
+
+export function enrichHeroMetrics(
+  base: FutureCastHeroMetrics,
+  visitIntel: HighPriorityPlayer[],
+  visitRecap: VisitRecapRow[],
+  flipWatch: FlipWatchRow[]
+): FutureCastHeroMetrics {
+  return {
+    ...base,
+    visitIntelCount: countUpcomingVisitIntel(visitIntel),
+    visitRecapCount: visitRecap.length,
+    flipWatchCount: flipWatch.length,
+  };
+}
+
 export async function loadFutureCastLabSecondary(
   master: MasterBoardResponse
 ): Promise<Omit<FutureCastLabDataMap, 'masterBoard' | 'summary' | 'metrics'>> {
@@ -184,6 +208,7 @@ export async function loadFutureCastLabData(): Promise<FutureCastLabDataMap> {
   return {
     ...primary,
     ...secondaryRaw,
+    metrics: enrichHeroMetrics(primary.metrics, secondaryRaw.visitIntel, secondaryRaw.visitRecap, secondaryRaw.flipWatch),
     heatLevel: deriveHeatLevel(secondaryRaw.home, secondaryRaw.stock),
     lastUpdated: primary.lastUpdated ?? secondaryRaw.movementIntel.updatedAt ?? null,
   };

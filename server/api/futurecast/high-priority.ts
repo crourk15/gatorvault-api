@@ -264,7 +264,8 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       return;
     }
 
-    const cacheKey = `futurecast:high-priority:v2:${classYear}`;
+    const { highPriorityCacheKey } = require('../../lib/futurecast-cache-keys');
+    const cacheKey = highPriorityCacheKey(classYear);
 
     await sendCachedJson(res, cacheKey, async () => {
       const rankings = loadRecruitingRankings();

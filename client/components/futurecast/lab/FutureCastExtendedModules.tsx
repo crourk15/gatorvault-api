@@ -224,8 +224,19 @@ export function FutureCastExtendedModules({
         })
       );
     }
+    for (const row of flipWatch.slice(0, 3)) {
+      raw.push(
+        buildIntelFeedItem({
+          id: `flip-${row.slug}`,
+          playerName: row.name,
+          headline: `${row.name} (${row.committedShort}) — UF OV flip watch`,
+          timestamp: row.visitStart ?? movementIntel.updatedAt,
+          category: 'Flip Watch',
+        })
+      );
+    }
     return dedupeIntelFeedItems(raw, 8);
-  }, [movementIntel]);
+  }, [movementIntel, flipWatch]);
 
   const fitLeaders = highPriority.slice(0, 3);
 

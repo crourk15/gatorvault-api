@@ -47,6 +47,8 @@ async function refreshRecruitingHubCaches(options = {}) {
   }
 
   clearHubCache();
+  const { clearFuturecastCacheSafe } = require('./recruiting-intel-cache');
+  clearFuturecastCacheSafe();
 
   const dataset = await loadHubDataset();
   const players = [...dataset.players.values()];

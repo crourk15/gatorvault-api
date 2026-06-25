@@ -140,6 +140,18 @@ export function FutureCastHero({
                   {HEAT_LABELS[heatLevel]}
                 </strong>
               </div>
+              {metrics.flipWatchCount != null && metrics.flipWatchCount > 0 ? (
+                <div className="fc-lab-hero__metric rh-cc-hero__metric">
+                  <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Flip Watch</span>
+                  <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.flipWatchCount}</strong>
+                </div>
+              ) : null}
+              {metrics.visitRecapCount != null && metrics.visitRecapCount > 0 ? (
+                <div className="fc-lab-hero__metric rh-cc-hero__metric">
+                  <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">OV Recap</span>
+                  <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.visitRecapCount}</strong>
+                </div>
+              ) : null}
             </div>
             <p className="fc-lab-hero__updated">Updated {updatedLabel}</p>
           </div>

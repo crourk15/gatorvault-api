@@ -30,6 +30,9 @@ export type FutureCastHeroMetrics = {
   avgUFProbability: number;
   highPriorityCount: number;
   activePredictions: number;
+  visitIntelCount?: number;
+  visitRecapCount?: number;
+  flipWatchCount?: number;
 };
 
 export type FutureCastPageSummary = {

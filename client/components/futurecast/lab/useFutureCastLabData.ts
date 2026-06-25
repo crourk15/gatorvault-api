@@ -5,6 +5,7 @@ import {
   loadFutureCastLabData,
   loadFutureCastLabPrimary,
   loadFutureCastLabSecondaryRaw,
+  enrichHeroMetrics,
   type FutureCastLabDataMap,
 } from '@/lib/futurecast-lab-data';
 import { deriveHeatLevel } from '@/lib/api/futurecast';
@@ -105,6 +106,12 @@ export function useFutureCastLabData(): FutureCastLabData {
           ...EMPTY_LAB_DATA,
           ...primary,
           ...secondaryRaw,
+          metrics: enrichHeroMetrics(
+            primary.metrics,
+            secondaryRaw.visitIntel,
+            secondaryRaw.visitRecap,
+            secondaryRaw.flipWatch
+          ),
           heatLevel: deriveHeatLevel(secondaryRaw.home, secondaryRaw.stock),
           lastUpdated: primary.lastUpdated ?? secondaryRaw.movementIntel.updatedAt ?? null,
         });
