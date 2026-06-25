@@ -4,9 +4,10 @@
  */
 import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
-import { HIGH_PRIORITY_CACHE_KEY } from './futurecast-cache-keys';
 
-export { HIGH_PRIORITY_CACHE_KEY };
+/** Bump when high-priority payload shape changes (align with server/api/futurecast/cache-keys.ts). */
+export const FUTURECAST_CLIENT_CACHE_VERSION = 6;
+export const HIGH_PRIORITY_CACHE_KEY = `gv:futurecast:high-priority:v${FUTURECAST_CLIENT_CACHE_VERSION}`;
 export const HIGH_PRIORITY_YEAR = 2027;
 export const HIGH_PRIORITY_CACHE_TTL_MS = 5 * 60_000;
 export const HIGH_PRIORITY_STALE_CACHE_MAX_MS = 24 * 60 * 60_000;

@@ -29,6 +29,7 @@ import {
   FUTURECAST_CLASS_YEAR,
 } from './feed-filters';
 import { sendCachedJson } from './response-cache';
+import { highPriorityCacheKey } from './cache-keys';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -264,7 +265,6 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       return;
     }
 
-    const { highPriorityCacheKey } = require('../../lib/futurecast-cache-keys');
     const cacheKey = highPriorityCacheKey(classYear);
 
     await sendCachedJson(res, cacheKey, async () => {
