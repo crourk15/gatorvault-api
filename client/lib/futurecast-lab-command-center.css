@@ -1329,6 +1329,83 @@
   white-space: nowrap;
 }
 
+.fc-flip-score {
+  margin-top: 0.5rem;
+}
+
+.fc-flip-score__head {
+  margin-bottom: 0.35rem;
+}
+
+.fc-flip-score__pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.fc-flip-score--hot {
+  background: linear-gradient(135deg, #c8102e 0%, #fa4616 100%);
+}
+
+.fc-flip-score--warm {
+  background: linear-gradient(135deg, #fa4616 0%, #ffb347 100%);
+}
+
+.fc-flip-score--watch {
+  background: linear-gradient(135deg, var(--uf-blue, #0021a5) 0%, #3366cc 100%);
+}
+
+.fc-flip-score--low {
+  background: #64748b;
+}
+
+.fc-flip-score__stack {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.fc-flip-score__bar {
+  display: grid;
+  grid-template-columns: 2.75rem 1fr 2rem;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.fc-flip-score__bar-label,
+.fc-flip-score__bar-val {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.fc-flip-score__bar-val {
+  text-align: right;
+  color: #1a1a1a;
+}
+
+.fc-flip-score__bar-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(0, 33, 165, 0.12);
+  overflow: hidden;
+}
+
+.fc-flip-score__bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--uf-blue, #0021a5), #fa4616);
+}
+
+.fc-flip-score--compact .fc-flip-score__stack {
+  display: none;
+}
+
 .fc-lab-panel-shell .fc-lab-ext-list__row span,
 .fc-lab-panel-shell .fc-lab-ext-list__link span {
   display: block;

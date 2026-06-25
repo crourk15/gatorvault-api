@@ -37,6 +37,7 @@ const { isActiveUfTarget } = require('../../lib/recruiting-target-filters');
 const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields, buildVerifiedVisitRecapRows, getVisitIntelBoardSnapshot } = require('../../lib/visit-intel-utils');
 const { resolveUfProbability, loadRivalsUfPctBySlug } = require('../../lib/uf-probability-utils');
 const { buildFlipWatchRows } = require('../../lib/flip-watch-utils');
+const intelStore = require('../../lib/recruiting-intel-store');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 const TARGET_BOARD_SEED_PATH = path.join(__dirname, '../../data/recruiting/2027-target-board.json');
 
@@ -421,7 +422,10 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         limit: 12,
         prioritySlugs: targetSlugs,
       });
-      const flipWatch = buildFlipWatchRows(playersWithVerifiedVisits, visitRecap, { visitLogs });
+      const flipWatch = buildFlipWatchRows(playersWithVerifiedVisits, visitRecap, {
+        visitLogs,
+        intelRows: intelStore.loadIntelDoc().items || [],
+      });
       const visitBoardSnapshot = getVisitIntelBoardSnapshot(visitLogs);
 
       const lastUpdated = new Date().toISOString();

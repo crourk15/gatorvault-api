@@ -12,6 +12,7 @@ const {
   applyVerifiedVisitFields,
 } = require("./visit-intel-utils");
 const { resolveUfProbability } = require("./uf-probability-utils");
+const intelStore = require("./recruiting-intel-store");
 
 const TARGET_BOARD_PATH = path.join(__dirname, "../data/recruiting/2027-target-board.json");
 
@@ -102,7 +103,12 @@ async function buildFutureCastIntelAlerts(options = {}) {
     limit: 12,
     prioritySlugs,
   });
-  const flipWatch = buildFlipWatchRows(players, visitRecap, { visitLogs, asOf, limit: 8 });
+  const flipWatch = buildFlipWatchRows(players, visitRecap, {
+    visitLogs,
+    asOf,
+    limit: 8,
+    intelRows: intelStore.loadIntelDoc().items || [],
+  });
   const visitIntel = buildVerifiedVisitIntelRows(players, visitLogs);
 
   const today = asOf.toISOString().slice(0, 10);
@@ -122,7 +128,7 @@ async function buildFutureCastIntelAlerts(options = {}) {
         slug: row.slug,
         name: row.name,
         type: "flip_watch",
-        message: `${row.name} (${row.committedShort}) — UF OV flip watch`,
+        message: `${row.name} (${row.committedShort}) — Flip score ${row.flipScore ?? "—"} · UF ${row.ufProbability ?? "—"}%`,
         createdAt: row.visitEnd || row.visitStart,
         category: "Flip Watch",
       })

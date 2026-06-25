@@ -6,6 +6,7 @@ const {
   getVerifiedFloridaVisitWindow,
   todayYmd,
 } = require("./visit-intel-utils");
+const { computeFlipWatchScore } = require("./flip-watch-score");
 
 function isFloridaCommit(school) {
   return /\bflorida\b|\bgators\b|\buf\b/i.test(String(school || ""));
@@ -39,7 +40,11 @@ function indexCompletedVerifiedRecap(visitRecap, visitLogs, asOf = new Date()) {
   return recapBySlug;
 }
 
-function buildFlipWatchRows(players, visitRecap, { visitLogs = null, asOf = new Date(), limit = 8 } = {}) {
+function buildFlipWatchRows(
+  players,
+  visitRecap,
+  { visitLogs = null, asOf = new Date(), limit = 8, intelRows = [] } = {}
+) {
   const recapBySlug = indexCompletedVerifiedRecap(visitRecap, visitLogs, asOf);
 
   return (players || [])
@@ -49,7 +54,7 @@ function buildFlipWatchRows(players, visitRecap, { visitLogs = null, asOf = new 
     })
     .map((p) => {
       const recap = recapBySlug.get(String(p.slug || "").toLowerCase());
-      return {
+      const base = {
         slug: p.slug,
         name: p.name,
         committedTo: p.committedTo,
@@ -61,8 +66,9 @@ function buildFlipWatchRows(players, visitRecap, { visitLogs = null, asOf = new 
         visitEnd: recap?.visitEnd ?? null,
         visitSourceLabel: recap?.visitSourceLabel ?? formatVisitSourceLabel(recap?.visitSource),
       };
+      return { ...base, ...computeFlipWatchScore(base, { intelRows, asOf }) };
     })
-    .sort((a, b) => (b.ufProbability ?? 0) - (a.ufProbability ?? 0))
+    .sort((a, b) => (b.flipScore ?? 0) - (a.flipScore ?? 0) || (b.ufProbability ?? 0) - (a.ufProbability ?? 0))
     .slice(0, limit);
 }
 

@@ -12,6 +12,7 @@ import {
 } from '@/lib/recruiting-intel-feed';
 import { FutureCastPanelShell } from './primitives';
 import { GatorVaultConfirmedBadge } from './GatorVaultConfirmedBadge';
+import { FlipWatchScoreStack } from './FlipWatchScoreStack';
 import { ufPctFromFc, isBattleTarget } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 
@@ -85,7 +86,14 @@ function ModuleList({
   items,
   empty,
 }: {
-  items: Array<{ key: string; primary: string; meta: string; href?: string; badge?: React.ReactNode }>;
+  items: Array<{
+    key: string;
+    primary: string;
+    meta: string;
+    href?: string;
+    badge?: React.ReactNode;
+    extra?: React.ReactNode;
+  }>;
   empty: string;
 }): React.ReactElement {
   if (!items.length) return <p className="rh-cc-empty">{empty}</p>;
@@ -100,6 +108,7 @@ function ModuleList({
                 {item.badge}
               </div>
               <span>{item.meta}</span>
+              {item.extra}
             </a>
           ) : (
             <>
@@ -108,6 +117,7 @@ function ModuleList({
                 {item.badge}
               </div>
               <span>{item.meta}</span>
+              {item.extra}
             </>
           )}
         </li>
@@ -246,7 +256,7 @@ export function FutureCastExtendedModules({
         buildIntelFeedItem({
           id: `flip-${row.slug}`,
           playerName: row.name,
-          headline: `${row.name} (${row.committedShort}) — UF OV flip watch`,
+          headline: `${row.name} (${row.committedShort}) — Flip ${row.flipScore ?? '—'}${row.flipScoreLabel ? ` · ${row.flipScoreLabel}` : ''}`,
           timestamp: row.visitStart ?? movementIntel.updatedAt,
           category: 'Flip Watch',
         })
@@ -388,7 +398,7 @@ export function FutureCastExtendedModules({
 
       <FutureCastPanelShell
         title="Flip Watch"
-        sub="Committed elsewhere after a verified UF official visit — flip pressure lane."
+        sub="Committed elsewhere after a verified UF official visit — composite flip score from UF %, OV recency, rival commit, and beat sentiment."
         testId="fc-lab-flip-watch"
       >
         <ModuleList
@@ -398,6 +408,7 @@ export function FutureCastExtendedModules({
             primary: row.name,
             badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
             meta: `${row.committedShort} commit · OV ${row.visitStart ?? '—'}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''} · UF ${formatUfDisplay(row)}`,
+            extra: <FlipWatchScoreStack row={row} />,
             href: playerProfileRoute(row.slug, 'futurecast'),
           }))}
         />
