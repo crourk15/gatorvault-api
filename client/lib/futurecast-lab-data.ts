@@ -11,7 +11,12 @@ import type {
 import type { FutureCastHeatLevel, FutureCastHeroMetrics, FutureCastPageSummary } from './api/futurecast';
 import { deriveHeatLevel } from './api/futurecast';
 import { fetchStockBoard, type StockBoardResponse } from './predictions-api';
-import { fetchHighPriorityTargets, type HighPriorityPlayer, type VisitRecapRow } from './futurecast-high-priority-api';
+import {
+  fetchHighPriorityTargets,
+  type HighPriorityPlayer,
+  type HighPriorityResponse,
+  type VisitRecapRow,
+} from './futurecast-high-priority-api';
 import {
   fetchFutureCastUnderclassmen,
   type UnderclassmenPlayer,
@@ -20,6 +25,14 @@ import { fetchWithWarmPoll } from './api-warm-poll';
 import { snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch';
 
 const EMPTY_STOCK: StockBoardResponse = { stockUp: [], stockDown: [], windowDays: 7 };
+const EMPTY_HIGH_PRIORITY: HighPriorityResponse = {
+  players: [],
+  classYear: 2027,
+  count: 0,
+  updatedAt: new Date().toISOString(),
+  visitIntel: [],
+  visitRecap: [],
+};
 const LAB_FETCH_OPTS = DEFAULT_SNAPSHOT_FETCH_OPTS;
 
 function warmFetch<T>(path: string): Promise<T> {
@@ -85,12 +98,7 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
       warmFetch<StaffNotesResponse>('/api/futurecast/staff-notes?year=2027'),
       warmFetch<FutureCastHomeResponse>('/api/futurecast/home'),
       fetchStockBoard().catch(() => EMPTY_STOCK),
-      fetchHighPriorityTargets().catch(() => ({
-        players: [],
-        classYear: 2027,
-        count: 0,
-        updatedAt: new Date().toISOString(),
-      })),
+      fetchHighPriorityTargets().catch(() => EMPTY_HIGH_PRIORITY),
       fetchFutureCastUnderclassmen([2028, 2029, 2030]).catch(() => ({
         ok: true,
         updatedAt: new Date().toISOString(),
@@ -127,12 +135,7 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     portalWatchlist: [],
   });
   const stock = settled(stockR, EMPTY_STOCK);
-  const highPriority = settled(highPriorityR, {
-    players: [],
-    classYear: 2027,
-    count: 0,
-    updatedAt: new Date().toISOString(),
-  });
+  const highPriority = settled(highPriorityR, EMPTY_HIGH_PRIORITY);
   const underclassmenPayload = settled(underclassmenR, {
     ok: true,
     updatedAt: new Date().toISOString(),
