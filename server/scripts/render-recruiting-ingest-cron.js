@@ -34,6 +34,11 @@ function buildSteps() {
     summarize: (r) => ({ enrichedPlayerCount: r?.enrichedPlayerCount ?? null }),
   });
   steps.push({
+    name: 'portal-sync',
+    path: '/api/recruiting/portal/sync',
+    summarize: (r) => ({ synced: r?.synced ?? r?.portal?.count ?? null }),
+  });
+  steps.push({
     name: 'beat-writer',
     path: '/api/recruiting/beat-writer/ingest',
     summarize: (r) => ({

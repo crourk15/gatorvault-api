@@ -1395,6 +1395,12 @@ console.log('GatorVault server running on port', PORT);
       .catch((e) => console.warn('[product-intel] deploy-boot recompute skipped:', e.message));
   }, 5000);
   try {
+    const { startPlatformMaintenanceSchedulers } = require('./lib/platform-maintenance-scheduler');
+    startPlatformMaintenanceSchedulers();
+  } catch (e) {
+    console.warn('[platform] maintenance schedulers failed to start', e.message);
+  }
+  try {
     const { startQaScheduler } = require('./lib/qa/qa-runner');
     startQaScheduler();
   } catch (e) {

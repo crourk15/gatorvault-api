@@ -33,7 +33,7 @@ const JOBS = {
   'portal-ingest': {
     label: 'Portal sync (On3)',
     subsystem: 'cron:portal-ingest',
-    schedule: 'Boot + manual',
+    schedule: 'Boot + every 6h + Render cron',
     async run(opts = {}) {
       const { syncPortalFromOn3 } = require('./on3-ingest');
       return syncPortalFromOn3({ force: true, ...opts });
@@ -42,7 +42,7 @@ const JOBS = {
   'nil-refresh': {
     label: 'NIL dashboard refresh',
     subsystem: 'cron:nil-ingest',
-    schedule: 'Static seed + manual',
+    schedule: 'Every 6h + Render platform-ops cron',
     async run() {
       const nilStore = require('./nil-store');
       const dash = nilStore.buildDashboard();
@@ -119,7 +119,7 @@ const JOBS = {
   'depth-chart-refresh': {
     label: 'Depth chart / roster refresh',
     subsystem: 'cron:depth-chart',
-    schedule: 'Manual (DEPTH_CHART_ENABLED)',
+    schedule: 'Every 6h (DEPTH_CHART_ENABLED)',
     async run() {
       const { refreshDepthChart } = require('./depth-chart-jobs');
       return refreshDepthChart();
@@ -128,7 +128,7 @@ const JOBS = {
   'game-zone-refresh': {
     label: 'Game Zone lines refresh',
     subsystem: 'cron:game-zone',
-    schedule: 'Manual (GAME_ZONE_ENABLED)',
+    schedule: 'Every 6h (GAME_ZONE_ENABLED)',
     async run() {
       const { refreshLines } = require('./betting-lines');
       return refreshLines();

@@ -20,6 +20,7 @@ function collectAdminPins() {
     process.env.X_AUTOPOST_PIN,
     process.env.MEDIA_INGEST_PIN,
     process.env.INGEST_CRON_SECRET,
+    process.env.MONITORING_CRON_SECRET,
     process.env.MONITORING_SECRET,
     process.env.EMAIL_TEST_PIN,
     'GV2026admin'

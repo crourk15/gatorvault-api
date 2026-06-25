@@ -5,13 +5,12 @@ const opsAlerts = require('./ops-alerts');
 const deployMonitor = require('./deploy-monitor');
 const { buildOpsStatusReport } = require('./ops-status');
 
-const { verifyAdminPin, primaryAdminPin, pinFromReq, normalizePin } = require('./admin-pin');
-const CRON_SECRET = process.env.INGEST_CRON_SECRET || primaryAdminPin();
+const { verifyAdminPin, pinFromReq, normalizePin } = require('./admin-pin');
+const { isIngestCronAuthorized } = require('./ingest-cron-auth');
 
 function requireOpsAuth(req, res) {
   const secret = pinFromReq(req);
-  const isCron = req.headers['x-monitoring-cron'] === CRON_SECRET;
-  if (!isCron && !verifyAdminPin(secret)) {
+  if (!isIngestCronAuthorized(req) && !verifyAdminPin(secret)) {
     res.status(401).json({ ok: false, error: 'Admin PIN required' });
     return false;
   }

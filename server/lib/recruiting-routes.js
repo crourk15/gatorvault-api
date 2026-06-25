@@ -16,6 +16,7 @@ const { mountRecruitingHubRoutes } = require('./recruiting-hub-routes');
 const boardCache = createMemoryCache(parseInt(process.env.RECRUITING_BOARD_CACHE_MS || '45000', 10));
 
 const { verifyAdminPin, primaryAdminPin, pinFromReq: adminPinFromReq } = require('./admin-pin');
+const { requireIngestCronAuth, isIngestCronAuthorized } = require('./ingest-cron-auth');
 const RECRUITING_ADMIN_PIN = primaryAdminPin();
 const INGEST_CRON_SECRET = process.env.INGEST_CRON_SECRET || RECRUITING_ADMIN_PIN;
 
@@ -462,12 +463,7 @@ function mountRecruitingRoutes(app) {
 
   app.post('/api/recruiting/ingest', async (req, res) => {
     try {
-      const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.INGEST_CRON_SECRET || '';
-      const isCron = cronSecret && req.headers['x-monitoring-cron'] === cronSecret;
-      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.get('X-Ingest-Secret') || '');
-      if (!isCron && pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
-        return res.status(401).json({ ok: false, error: 'Invalid ingest secret' });
-      }
+      if (!requireIngestCronAuth(req, res)) return;
       const classYears = req.body.classYears
         ? String(req.body.classYears).split(',').map((y) => parseInt(y.trim(), 10)).filter(Boolean)
         : undefined;
@@ -492,12 +488,7 @@ function mountRecruitingRoutes(app) {
 
   app.post('/api/recruiting/rivals-pm/ingest', async (req, res) => {
     try {
-      const cronSecret = process.env.MONITORING_CRON_SECRET || process.env.INGEST_CRON_SECRET || '';
-      const isCron = cronSecret && req.headers['x-monitoring-cron'] === cronSecret;
-      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.get('X-Ingest-Secret') || '');
-      if (!isCron && pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
-        return res.status(401).json({ ok: false, error: 'Invalid ingest secret' });
-      }
+      if (!requireIngestCronAuth(req, res)) return;
       const force = req.body.force === true || req.query.force === 'true';
       const backfill =
         req.body.backfill === true ||
@@ -517,10 +508,7 @@ function mountRecruitingRoutes(app) {
 
   app.post('/api/recruiting/beat-visit/ingest', async (req, res) => {
     try {
-      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.get('X-Ingest-Secret') || '');
-      if (pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
-        return res.status(401).json({ ok: false, error: 'Invalid ingest secret' });
-      }
+      if (!requireIngestCronAuth(req, res)) return;
       if (req.body.row && req.body.row.playerName) {
         const result = await ingestManualVisitIntel(req.body.row);
         return res.json({ ok: true, ...result });
@@ -536,10 +524,7 @@ function mountRecruitingRoutes(app) {
 
   app.post('/api/recruiting/beat-writer/ingest', async (req, res) => {
     try {
-      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.get('X-Ingest-Secret') || '');
-      if (pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
-        return res.status(401).json({ ok: false, error: 'Invalid ingest secret' });
-      }
+      if (!requireIngestCronAuth(req, res)) return;
       if (req.body.row && req.body.row.playerName) {
         const result = await ingestManualBeatVisitIntel(req.body.row);
         return res.json({ ok: true, ...result });
@@ -693,10 +678,7 @@ function mountRecruitingRoutes(app) {
 
   app.post('/api/recruiting/portal/sync', async (req, res) => {
     try {
-      const pin = String(req.body.pin || req.get('X-Recruiting-Pin') || req.get('X-Ingest-Secret') || '');
-      if (pin !== INGEST_CRON_SECRET && !verifyAdminPin(pin)) {
-        return res.status(401).json({ ok: false, error: 'Invalid ingest secret' });
-      }
+      if (!requireIngestCronAuth(req, res)) return;
       const year = req.body.year ? parseInt(req.body.year, 10) : 2026;
       const result = await syncPortalFromOn3({ classYear: year, force: true });
       const portal = await store.getPortalBoard();
