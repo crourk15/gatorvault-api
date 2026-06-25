@@ -28,8 +28,7 @@ import {
   filterModelPredictionsOnly,
   FUTURECAST_CLASS_YEAR,
 } from './feed-filters';
-import { sendCachedJson } from './response-cache';
-import { highPriorityCacheKey } from './cache-keys';
+import { sendCachedJson, highPriorityCacheKey } from './response-cache';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

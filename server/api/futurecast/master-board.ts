@@ -4,8 +4,7 @@
 import type { Request, Response } from 'express';
 import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
 import { buildMasterBoardPayload } from './allowlist-board';
-import { sendCachedJson } from './response-cache';
-import { masterBoardCacheKey } from './cache-keys';
+import { sendCachedJson, masterBoardCacheKey } from './response-cache';
 
 export const handleGetFutureCastMasterBoard = asyncHandler(async (_req: Request, res: Response) => {
   try {

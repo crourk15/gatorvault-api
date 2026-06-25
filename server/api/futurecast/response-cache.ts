@@ -10,6 +10,17 @@ const { createMemoryCache } = require('../../lib/memory-cache');
 const CACHE_TTL_MS = 60_000;
 const cache = createMemoryCache(CACHE_TTL_MS);
 
+/** Bump when high-priority or master-board payload shape changes. */
+export const FUTURECAST_API_CACHE_VERSION = 3;
+
+export function highPriorityCacheKey(classYear: number | string): string {
+  return `futurecast:high-priority:v${FUTURECAST_API_CACHE_VERSION}:${classYear}`;
+}
+
+export function masterBoardCacheKey(): string {
+  return `futurecast:master-board:v${FUTURECAST_API_CACHE_VERSION}`;
+}
+
 export async function sendCachedJson(
   res: Response,
   cacheKey: string,
