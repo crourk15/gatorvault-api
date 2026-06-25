@@ -6,7 +6,7 @@ import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 export const HIGH_PRIORITY_YEAR = 2027;
-export const HIGH_PRIORITY_CACHE_KEY = 'gv:futurecast:high-priority:v2';
+export const HIGH_PRIORITY_CACHE_KEY = 'gv:futurecast:high-priority:v3';
 export const HIGH_PRIORITY_CACHE_TTL_MS = 5 * 60_000;
 export const HIGH_PRIORITY_STALE_CACHE_MAX_MS = 24 * 60 * 60_000;
 
@@ -20,6 +20,19 @@ export interface VisitBadge {
 export interface HighPriorityPredictor {
   name: string;
   score: number;
+}
+
+export interface FlipWatchRow {
+  slug: string;
+  name: string;
+  committedTo: string;
+  committedShort: string;
+  ufProbability: number | null;
+  ufProbabilityLabel?: string | null;
+  ufProbabilityLowConfidence?: boolean;
+  visitStart: string | null;
+  visitEnd: string | null;
+  visitSourceLabel?: string | null;
 }
 
 export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
@@ -54,6 +67,9 @@ export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
   visitSourceLabel?: string | null;
   trendHistory: Array<{ date: string; confidence: number }>;
   predictors: HighPriorityPredictor[];
+  ufProbabilitySource?: string;
+  ufProbabilityLabel?: string | null;
+  ufProbabilityLowConfidence?: boolean;
 }
 
 export interface VisitRecapRow {
@@ -82,6 +98,8 @@ export interface HighPriorityResponse {
   players: HighPriorityPlayer[];
   visitIntel?: HighPriorityPlayer[];
   visitRecap?: VisitRecapRow[];
+  flipWatch?: FlipWatchRow[];
+  flipWatchCount?: number;
 }
 
 function readHighPriorityCacheEntry(maxAgeMs: number): HighPriorityResponse | null {

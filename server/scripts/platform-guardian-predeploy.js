@@ -10,13 +10,53 @@
 const { verifyPlatformWiring } = require('../lib/guardian/platform-wiring');
 const { verifyBlueprints } = require('../lib/guardian/blueprint-validator');
 const { alertGuardian } = require('../lib/guardian/guardian-alerts');
+const fs = require('node:fs');
+const path = require('node:path');
+
+function runVerifyServerModules() {
+  const root = path.join(__dirname, '..');
+  const modules = [
+    'lib/visit-intel-utils.js',
+    'lib/uf-probability-utils.js',
+    'lib/flip-watch-utils.js',
+    'lib/x-autoposter-visit-guard.js',
+  ];
+  const errors = [];
+  for (const rel of modules) {
+    const file = path.join(root, rel);
+    try {
+      const buf = fs.readFileSync(file);
+      if (buf[0] === 0xff && buf[1] === 0xfe) {
+        throw new Error('UTF-16 LE encoding detected');
+      }
+      if (buf.includes(0)) {
+        throw new Error('NUL bytes detected — likely UTF-16');
+      }
+      require(file);
+    } catch (err) {
+      errors.push(`${rel}: ${err.message}`);
+    }
+  }
+  return { ok: errors.length === 0, errors };
+}
+
+async function runSmokeChecks() {
+  const errors = [];
+  const { runVerifyVisitIntelApi } = require('./verify-visit-intel-api');
+  const visitIntel = runVerifyVisitIntelApi();
+  if (!visitIntel.ok) errors.push('visit-intel-api smoke failed');
+  const modules = runVerifyServerModules();
+  if (!modules.ok) errors.push(...modules.errors);
+  return errors;
+}
 
 async function main() {
   const jsonOut = process.argv.includes('--json');
   const wiring = verifyPlatformWiring({ simulate: true });
   const blueprints = verifyBlueprints({ criticalOnly: true });
-  const ok = wiring.ok && blueprints.ok;
-  const errors = [...wiring.errors, ...blueprints.errors];
+  const smokeErrors = await runSmokeChecks();
+  const ok = wiring.ok && blueprints.ok && smokeErrors.length === 0;
+  const errors = [...wiring.errors, ...blueprints.errors, ...smokeErrors];
 
   const result = {
     ok,
@@ -35,6 +75,7 @@ async function main() {
       '  Blueprints:',
       blueprints.ok ? 'OK' : `${blueprints.errors.length} error(s)`
     );
+    console.log('  Smoke:', smokeErrors.length ? `${smokeErrors.length} error(s)` : 'OK');
     if (errors.length) {
       for (const err of errors) console.error('  ✗', err);
     } else {

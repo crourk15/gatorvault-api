@@ -13,6 +13,7 @@ import { deriveHeatLevel } from './api/futurecast';
 import { fetchStockBoard, type StockBoardResponse } from './predictions-api';
 import {
   fetchHighPriorityTargets,
+  type FlipWatchRow,
   type HighPriorityPlayer,
   type HighPriorityResponse,
   type VisitRecapRow,
@@ -32,6 +33,7 @@ const EMPTY_HIGH_PRIORITY: HighPriorityResponse = {
   updatedAt: new Date().toISOString(),
   visitIntel: [],
   visitRecap: [],
+  flipWatch: [],
 };
 const LAB_FETCH_OPTS = DEFAULT_SNAPSHOT_FETCH_OPTS;
 
@@ -57,6 +59,7 @@ export type FutureCastLabDataMap = {
   highPriority: HighPriorityPlayer[];
   visitIntel: HighPriorityPlayer[];
   visitRecap: VisitRecapRow[];
+  flipWatch: FlipWatchRow[];
   underclassmen: UnderclassmenPlayer[];
 };
 
@@ -154,6 +157,7 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     highPriority: highPriority.players ?? [],
     visitIntel: highPriority.visitIntel ?? [],
     visitRecap: highPriority.visitRecap ?? [],
+    flipWatch: highPriority.flipWatch ?? [],
     underclassmen: underclassmenPayload.players ?? [],
   };
 }

@@ -51,3 +51,57 @@ describe("visit-intel-utils", () => {
     assert.equal(isUpcomingVisitIntel(player, asOf), true);
   });
 });
+
+describe("uf-probability-utils", () => {
+  const { resolveUfProbability } = require("../lib/uf-probability-utils");
+
+  it("prefers model over store and rivals", () => {
+    assert.equal(resolveUfProbability({ modelPct: 62, storePct: 38 }).value, 62);
+    assert.equal(resolveUfProbability({ modelPct: 0, storePct: 38 }).value, 38);
+    assert.equal(
+      resolveUfProbability({ predictors: [{ name: "Rivals PM", score: 48 }] }).value,
+      48
+    );
+  });
+
+  it("labels low-confidence estimates for 3-star targets", () => {
+    const resolved = resolveUfProbability({ stars: 3 });
+    assert.equal(resolved.source, "estimate");
+    assert.equal(resolved.label, "Est.");
+    assert.equal(resolved.value, 15);
+  });
+});
+
+describe("flip-watch-utils", () => {
+  const { buildFlipWatchRows, prioritizeVisitRecapForTargets } = require("../lib/flip-watch-utils");
+
+  it("surfaces committed-elsewhere players with verified UF OV recap", () => {
+    const recap = [
+      {
+        slug: "jalen-brewster",
+        name: "Brewster",
+        visitStart: "2026-06-11",
+        visitEnd: "2026-06-13",
+        visitSourceLabel: "On3",
+      },
+    ];
+    const players = [
+      { slug: "jalen-brewster", name: "Brewster", committedTo: "Texas Tech", ufProbability: 38 },
+      { slug: "kamauri-whitfield", name: "Whitfield", committedTo: "Florida", ufProbability: 62 },
+    ];
+    const flip = buildFlipWatchRows(players, recap);
+    assert.equal(flip.length, 1);
+    assert.equal(flip[0].committedShort, "Texas");
+  });
+
+  it("prioritizes target-board slugs in recap ordering", () => {
+    const sorted = prioritizeVisitRecapForTargets(
+      [
+        { slug: "other", visitStart: "2026-06-20" },
+        { slug: "target-a", visitStart: "2026-06-11" },
+      ],
+      ["target-a"]
+    );
+    assert.equal(sorted[0].slug, "target-a");
+  });
+});

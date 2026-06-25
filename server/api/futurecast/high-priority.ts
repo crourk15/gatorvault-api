@@ -35,7 +35,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players');
 const { isActiveUfTarget } = require('../../lib/recruiting-target-filters');
 const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields, buildVerifiedVisitRecapRows, getVisitIntelBoardSnapshot } = require('../../lib/visit-intel-utils');
+const { resolveUfProbability } = require('../../lib/uf-probability-utils');
+const { buildFlipWatchRows, prioritizeVisitRecapForTargets } = require('../../lib/flip-watch-utils');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
+const RIVALS_PREDICTIONS_PATH = path.join(__dirname, '../../data/war-room/rivals-predictions.json');
 
 export type VisitBadgeType = 'OV' | 'UV' | 'Game Day' | 'Junior Day' | 'Spring Visit';
 
@@ -67,6 +70,9 @@ export interface HighPriorityPlayer {
   natlRank: number | null;
   posRank: number | null;
   ufProbability: number;
+  ufProbabilitySource?: string;
+  ufProbabilityLabel?: string | null;
+  ufProbabilityLowConfidence?: boolean;
   movementDelta: number;
   delta7d: number;
   fitScore: number;
@@ -131,12 +137,6 @@ interface WarRoomBreakdown {
 function parseYear(raw: unknown): number {
   const n = parseInt(String(raw ?? ''), 10);
   return Number.isFinite(n) ? n : FUTURECAST_CLASS_YEAR;
-}
-
-function toPercent(value: number | null | undefined): number {
-  if (value == null || !Number.isFinite(value)) return 0;
-  const n = Number(value);
-  return n <= 1 ? Math.round(n * 1000) / 10 : Math.round(n * 10) / 10;
 }
 
 function notePreview(text: string | null | undefined, max = 120): string | null {
@@ -213,6 +213,29 @@ function loadRecruitingBySlug(): Map<string, RecruitingPlayerRow> {
   return map;
 }
 
+function isFloridaSchool(name: string | null | undefined): boolean {
+  return /\bflorida\b|\bgators\b/i.test(String(name || ''));
+}
+
+function loadRivalsUfPctBySlug(): Map<string, number> {
+  const map = new Map<string, number>();
+  try {
+    const doc = JSON.parse(fs.readFileSync(RIVALS_PREDICTIONS_PATH, 'utf8')) as {
+      predictions?: Array<{ playerSlug?: string; predictionSchool?: string; confidence?: number }>;
+    };
+    for (const row of doc.predictions ?? []) {
+      if (!isFloridaSchool(row.predictionSchool)) continue;
+      const slug = String(row.playerSlug || '').toLowerCase();
+      if (!slug) continue;
+      const conf = Number(row.confidence) || 0;
+      map.set(slug, Math.max(map.get(slug) ?? 0, conf));
+    }
+  } catch {
+    /* optional */
+  }
+  return map;
+}
+
 function loadInsiderNotesBySlug(): Map<string, string> {
   const map = new Map<string, string>();
   try {
@@ -248,6 +271,8 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const recruitingBySlug = loadRecruitingBySlug();
       const insiderBySlug = loadInsiderNotesBySlug();
       const targets = await loadTargetBoardFromStore();
+      const rivalsUfBySlug = loadRivalsUfPctBySlug();
+      const targetSlugs = targets.map((t) => t.slug);
 
       const visitLogStore = require('../../lib/recruiting-visit-log-store');
       const visitLogs = visitLogStore.loadDoc().items || [];
@@ -293,11 +318,26 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         const positionRank = rank?.positionRank ?? target.posRank ?? null;
         const stateRank = rank?.stateRank ?? target.stateRank ?? null;
 
-        const modelPct = toPercent(model?.confidence ?? model?.ufProbability);
-        const storePct = toPercent(
-          target.ufProbability ?? recruiting?.ufProbability ?? recruiting?.futurecastProbability
-        );
-        const ufProbability = modelPct > 0 ? modelPct : storePct;
+        const predictors: HighPriorityPredictor[] = [];
+        if (model?.predictorId) {
+          predictors.push({
+            name: PREDICTOR_NAMES[model.predictorId] ?? model.predictorId,
+            score: Math.round(model.confidence),
+          });
+        }
+        const rivalsUf = rivalsUfBySlug.get(slug.toLowerCase()) ?? 0;
+        if (rivalsUf > 0) {
+          predictors.push({ name: 'Rivals PM', score: rivalsUf });
+        }
+
+        const resolvedUf = resolveUfProbability({
+          modelPct: model?.confidence ?? model?.ufProbability,
+          storePct: target.ufProbability ?? recruiting?.ufProbability ?? recruiting?.futurecastProbability,
+          predictors,
+          stars: target.stars ?? rank?.stars ?? null,
+          headliner: Boolean(target.headliner),
+        });
+        const ufProbability = resolvedUf.value;
         const delta7d = delta7dBySlug.get(slug) ?? model?.delta ?? 0;
         const movementDelta = delta7d;
         const fitScore = Math.round(model?.ufFitScore ?? target.rating ?? compositeScore ?? 0);
@@ -320,14 +360,6 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
           confidence: h.confidence,
         }));
 
-        const predictors: HighPriorityPredictor[] = [];
-        if (model?.predictorId) {
-          predictors.push({
-            name: PREDICTOR_NAMES[model.predictorId] ?? model.predictorId,
-            score: Math.round(model.confidence),
-          });
-        }
-
         return {
           id: slug,
           slug,
@@ -346,6 +378,9 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
           natlRank: nationalRank,
           posRank: positionRank,
           ufProbability,
+          ufProbabilitySource: resolvedUf.source,
+          ufProbabilityLabel: resolvedUf.label,
+          ufProbabilityLowConfidence: resolvedUf.lowConfidence,
           movementDelta,
           delta7d,
           fitScore,
@@ -380,7 +415,9 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const top10 = sorted.slice(0, 10);
 
       const visitIntel = buildVerifiedVisitIntelRows(playersWithVerifiedVisits, visitLogs);
-      const visitRecap = buildVerifiedVisitRecapRows(playersWithVerifiedVisits, visitLogs);
+      const visitRecapRaw = buildVerifiedVisitRecapRows(playersWithVerifiedVisits, visitLogs);
+      const visitRecap = prioritizeVisitRecapForTargets(visitRecapRaw, targetSlugs);
+      const flipWatch = buildFlipWatchRows(playersWithVerifiedVisits, visitRecap);
       const visitBoardSnapshot = getVisitIntelBoardSnapshot(visitLogs);
 
       const lastUpdated = new Date().toISOString();
@@ -389,12 +426,14 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         count: top10.length,
         visitIntelCount: visitIntel.length,
         visitRecapCount: visitRecap.length,
+        flipWatchCount: flipWatch.length,
         visitBoardSnapshot,
         updatedAt: lastUpdated,
         lastUpdated,
         players: top10,
         visitIntel,
         visitRecap,
+        flipWatch,
       };
     });
   } catch (err) {
