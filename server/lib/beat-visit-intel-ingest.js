@@ -282,11 +282,20 @@ async function processVisitIntelRow(row, snapshot) {
   const autopost = await queueAutoposter({ ...row, playerSlug: player.slug }, intelResult.item?.id);
   snapshot.fingerprints[row.fingerprint] = row.timestamp;
 
+  let push = { sent: 0, skipped: true };
+  try {
+    const { dispatchVisitCancelledPush } = require('./push-alert-service');
+    push = await dispatchVisitCancelledPush({ ...row, playerSlug: player.slug });
+  } catch (err) {
+    push = { sent: 0, skipped: true, reason: err.message };
+  }
+
   return {
     processed: true,
     player: player.slug,
     source: row.source,
     autopost,
+    push,
     fingerprint: row.fingerprint
   };
 }

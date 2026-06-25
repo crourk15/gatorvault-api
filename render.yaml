@@ -47,6 +47,14 @@ services:
         value: "60000"
       - key: SESSION_SECRET
         generateValue: true
+      - key: PUSH_ALERTS_ENABLED
+        value: "true"
+      - key: VAPID_SUBJECT
+        value: "mailto:support@gatorvaultinsider.com"
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
       - key: EMAILJS_USER_ID
         sync: false
       - key: EMAILJS_PRIVATE_KEY

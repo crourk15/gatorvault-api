@@ -116,7 +116,17 @@ async function handleNewVerifiedVisitLogs(logs = [], options = {}) {
       queue = await queueUpcomingVisitPost(log);
     }
 
-    if (!dryRun && fp && queue.queued) {
+    let push = { sent: 0, skipped: true, reason: dryRun ? "dry_run" : "skipped" };
+    if (!dryRun) {
+      try {
+        const { dispatchVisitScheduledPush } = require("./push-alert-service");
+        push = await dispatchVisitScheduledPush(log);
+      } catch (err) {
+        push = { sent: 0, skipped: true, reason: err.message };
+      }
+    }
+
+    if (!dryRun && fp && (queue.queued || (push.sent || 0) > 0)) {
       seen.add(fp);
     }
 
@@ -127,6 +137,9 @@ async function handleNewVerifiedVisitLogs(logs = [], options = {}) {
       queued: Boolean(queue.queued),
       queueReason: queue.reason || null,
       queueItemId: queue.item?.id || null,
+      pushSent: push.sent || 0,
+      pushSkipped: Boolean(push.skipped),
+      pushReason: push.reason || null,
     });
   }
 

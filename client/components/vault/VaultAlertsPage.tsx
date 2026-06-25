@@ -15,6 +15,7 @@ import {
   type LocalRecentAlert,
 } from '@/lib/alert-prefs';
 import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
+import { subscribeVisitPush } from '@/lib/push-alerts-api';
 import { playerProfilePath } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
@@ -55,6 +56,7 @@ export function VaultAlertsPage(): React.ReactElement {
   const [localAlerts, setLocalAlerts] = useState<LocalRecentAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [pushStatus, setPushStatus] = useState<string | null>(null);
 
   useEffect(() => {
     setPrefs(loadAlertPrefs());
@@ -108,6 +110,23 @@ export function VaultAlertsPage(): React.ReactElement {
     saveAlertPrefs(prefs);
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
+
+    const wantsPush = prefs.method === 'push' || prefs.method === 'both';
+    if (wantsPush && prefs.types.visit) {
+      void subscribeVisitPush(true).then((out) => {
+        if (out.ok) {
+          setPushStatus('Visit push alerts enabled for this device.');
+        } else if (out.reason === 'denied') {
+          setPushStatus('Browser blocked notifications — enable them in site settings.');
+        } else if (out.reason === 'sign_in') {
+          setPushStatus('Sign in to enable push alerts.');
+        } else if (out.reason === 'membership') {
+          setPushStatus('Active membership required for push alerts.');
+        } else if (out.reason === 'disabled') {
+          setPushStatus('Push alerts are not configured on the server yet.');
+        }
+      });
+    }
   };
 
   const addPlayer = () => {
@@ -150,7 +169,7 @@ export function VaultAlertsPage(): React.ReactElement {
         <section className="gv-vault-alerts__prefs">
           <h2 className="gv-vault-alerts__section-title">What You Want to Hear About</h2>
           <p className="gv-vault-alerts__section-hint">
-            Tap a category to subscribe. Use Save Preferences for delivery settings.
+            Tap a category to subscribe. Verified UF official visit pushes only — no rumor alerts.
           </p>
 
           <div className="gv-alert-toggles">
@@ -238,6 +257,7 @@ export function VaultAlertsPage(): React.ReactElement {
           <button type="button" className="gv-alert-save-btn" onClick={handleSave}>
             {saved ? 'Preferences Saved ✓' : 'Save Preferences'}
           </button>
+          {pushStatus ? <p className="gv-vault-alerts__section-hint">{pushStatus}</p> : null}
         </section>
 
         <section className="gv-vault-alerts__feed">

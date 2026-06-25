@@ -36,6 +36,7 @@ const { effectiveTier, isAdminAccount } = require('./lib/session-auth');
 const { loadUsers, saveUsers, findUserByEmail } = require('./lib/user-store');
 const { hasPaidAccess, buildSessionFields } = require('./lib/subscription-service');
 const { mountSubscriptionRoutes } = require('./lib/subscription-routes');
+const { mountPushAlertRoutes } = require('./lib/push-alert-routes');
 const { mountAccountRoutes } = require('./lib/account-routes');
 const pipelineGuards = require('./lib/pipeline-guards');
 
@@ -73,7 +74,7 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
   }
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Recruiting-Pin, X-Roster-Pin, X-Ingest-Secret, X-Content-Pin, X-Community-Pin, X-Live-Pin, X-Live-Cron, X-War-Room-Pin, X-X-Autopost-Pin, X-X-Cron, X-Media-Ingest-Pin, X-Monitoring-Secret, X-Monitoring-Cron, X-Ops-Pin');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
@@ -154,6 +155,7 @@ mountMediaIngestRoutes(app);
 mountWarRoomRoutes(app);
 mountPlatformRoutes(app);
 mountSubscriptionRoutes(app);
+mountPushAlertRoutes(app);
 mountAccountRoutes(app);
 mountXAutoposterRoutes(app);
 mountMonitoringRoutes(app);

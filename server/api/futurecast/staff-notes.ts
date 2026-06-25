@@ -94,23 +94,16 @@ function isStale2026(classYear: number | null, b: WarRoomBreakdown): boolean {
 }
 
 function hasNoteContent(b: WarRoomBreakdown): boolean {
-  return Boolean(
-    b.insiderNotes?.trim() ||
-      b.staffNotes?.trim() ||
-      b.projection?.trim() ||
-      b.recruitingStory?.trim()
-  );
+  const { pickStaffNoteText } = require('../../lib/staff-note-picker');
+  return Boolean(pickStaffNoteText(b));
 }
 
 function serializeStaffNote(b: WarRoomBreakdown, metaMap: Map<string, RecruitingMeta>) {
+  const { pickStaffNoteText } = require('../../lib/staff-note-picker');
   const meta = metaMap.get(b.playerSlug);
   const classYear = resolveClassYear(b, meta);
-  const note =
-    b.staffNotes?.trim() ||
-    b.insiderNotes?.trim() ||
-    b.projection?.trim() ||
-    b.recruitingStory?.trim() ||
-    '';
+  const note = pickStaffNoteText(b);
+  if (!note) return null;
 
   return {
     playerSlug: b.playerSlug,
@@ -151,8 +144,9 @@ export const handleGetFutureCastStaffNotes = asyncHandler(async (req: Request, r
       const notes = all
         .map((b) => {
           const entry = serializeStaffNote(b, metaMap);
-          return { entry, raw: b };
+          return entry ? { entry, raw: b } : null;
         })
+        .filter((row): row is { entry: ReturnType<typeof serializeStaffNote>; raw: WarRoomBreakdown } => row !== null)
         .filter(({ entry, raw }) => {
           if (isStale2026(entry.classYear, raw)) {
             staleFiltered += 1;
