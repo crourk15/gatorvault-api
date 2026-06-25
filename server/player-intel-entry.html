@@ -33,6 +33,7 @@
     .meta{font-size:.8rem;color:var(--muted);line-height:1.5}
     a{color:#60a5fa}
   </style>
+  <script src="/js/admin-embed.js?v=3"></script>
 </head>
 <body>
   <div id="pin-gate" class="pin-gate">
@@ -96,7 +97,6 @@
     </main>
   </div>
 
-  <script src="/js/admin-embed.js?v=1"></script>
   <script>
     (function () {
       var SESSION = 'gv_admin_pin';
@@ -106,7 +106,11 @@
         return location.origin;
       })();
 
-      function pin() { return document.getElementById('pin').value.trim(); }
+      function pin() {
+        if (window.GVAdminEmbed) return GVAdminEmbed.getPin();
+        var el = document.getElementById('pin');
+        return (el && el.value ? el.value.trim() : '') || sessionStorage.getItem(SESSION) || '';
+      }
 
       function headers() {
         return {
@@ -177,20 +181,40 @@
         throw lastErr;
       }
 
+      window.__gvAdminEmbedUnlock = function (p) {
+        if (!p) return;
+        document.getElementById('pin').value = p;
+        document.getElementById('gate-pin').value = p;
+        sessionStorage.setItem(SESSION, p);
+        document.getElementById('pin-gate').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+      };
+
       document.getElementById('gate-unlock').onclick = function () {
         var p = document.getElementById('gate-pin').value.trim();
         if (!p) return;
+        if (window.GVAdminEmbed) {
+          GVAdminEmbed.verifyPin(p, function (ok) {
+            if (ok) GVAdminEmbed.applyPin(p);
+            else document.getElementById('gate-err').classList.remove('hidden');
+          });
+          return;
+        }
         document.getElementById('pin').value = p;
         sessionStorage.setItem(SESSION, p);
         document.getElementById('pin-gate').classList.add('hidden');
         document.getElementById('app').classList.remove('hidden');
       };
 
-      var saved = sessionStorage.getItem(SESSION);
-      if (saved) {
-        document.getElementById('pin').value = saved;
-        document.getElementById('pin-gate').classList.add('hidden');
-        document.getElementById('app').classList.remove('hidden');
+      if (window.GVAdminEmbed) {
+        GVAdminEmbed.whenReady(function () { /* session inherited from hub */ });
+      } else {
+        var saved = sessionStorage.getItem(SESSION);
+        if (saved) {
+          document.getElementById('pin').value = saved;
+          document.getElementById('pin-gate').classList.add('hidden');
+          document.getElementById('app').classList.remove('hidden');
+        }
       }
 
       document.getElementById('preview').onclick = async function () {

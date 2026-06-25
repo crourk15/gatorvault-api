@@ -49,6 +49,7 @@
     .nav{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
     .nav a{padding:.4rem .7rem;border-radius:.5rem;background:var(--panel);border:1px solid var(--border);font-size:.8rem}
   </style>
+  <script src="/js/admin-embed.js?v=3"></script>
 </head>
 <body>
   <div id="pin-gate" class="pin-gate">
@@ -174,7 +175,14 @@
     function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
     function fmtTime(iso){if(!iso)return '—';try{return new Date(iso).toLocaleString();}catch(e){return iso;}}
 
-    function pin(){return document.getElementById('pin').value.trim();}
+    function pin(){
+      if (window.GVAdminEmbed) return GVAdminEmbed.getPin();
+      var el = document.getElementById('pin');
+      return (el && el.value ? el.value.trim() : '') ||
+        sessionStorage.getItem('gv_admin_pin') ||
+        sessionStorage.getItem('gv_ops_pin') ||
+        '';
+    }
     function headers(){
       return {'Content-Type':'application/json','X-Ops-Pin':pin(),'X-Recruiting-Pin':pin()};
     }
@@ -448,41 +456,51 @@
     }
 
     function unlock(){
-      var p=document.getElementById('gate-pin').value.trim();
-      fetch(API+'/api/ops/status?pin='+encodeURIComponent(p))
-        .then(function(r){
-          return r.text().then(function(text){
-            if(text.trim().indexOf('<!DOCTYPE')===0||text.trim().indexOf('<html')===0){
-              throw new Error('API unavailable (HTTP '+r.status+'). Received HTML instead of JSON — check Render deploy or Netlify /api proxy.');
-            }
-            var j={};
-            try{j=text?JSON.parse(text):{};}catch(e){
-              throw new Error('API returned an invalid response (HTTP '+r.status+').');
-            }
-            if(r.status===401)throw new Error('Invalid PIN');
-            return{status:r.status,body:j};
-          });
-        })
-        .then(function(res){
-          var j=res.body;
-          if(j.error)throw new Error(j.error);
-          if(res.status!==200||!j.tiles)throw new Error('Invalid PIN');
+      var p=document.getElementById('gate-pin').value.trim() || pin();
+      if (!p) return;
+      var verify = window.GVAdminEmbed && GVAdminEmbed.verifyPin
+        ? function (pin, cb) { GVAdminEmbed.verifyPin(pin, cb); }
+        : function (pin, cb) {
+            fetch(API+'/api/ops/verify-pin',{
+              method:'POST',
+              headers:{'Content-Type':'application/json','X-Ops-Pin':pin,'X-Recruiting-Pin':pin},
+              body:JSON.stringify({pin:pin})
+            }).then(function(r){return r.json();}).then(function(j){cb(!!(j&&j.ok));}).catch(function(){cb(false);});
+          };
+      verify(p, function(ok){
+        if (!ok) {
+          document.getElementById('gate-err').textContent='Invalid PIN';
+          document.getElementById('gate-err').classList.remove('hidden');
+          return;
+        }
+        if (window.GVAdminEmbed) GVAdminEmbed.applyPin(p);
+        else {
           document.getElementById('pin').value=p;
           sessionStorage.setItem('gv_ops_pin',p);
+          sessionStorage.setItem('gv_admin_pin',p);
           document.getElementById('pin-gate').classList.add('hidden');
           document.getElementById('app').classList.remove('hidden');
-          loadStatus(false);
-          loadInsiderArticles();
-          loadPatternStats();
-          if(location.hash==='#insider-articles'){
-            document.getElementById('insider-articles-panel').scrollIntoView({behavior:'smooth'});
-          }
-        })
-        .catch(function(e){
-          document.getElementById('gate-err').textContent=e.message||'Invalid PIN';
-          document.getElementById('gate-err').classList.remove('hidden');
-        });
+        }
+        document.getElementById('gate-err').classList.add('hidden');
+        loadStatus(false);
+        loadInsiderArticles();
+        loadPatternStats();
+        if(location.hash==='#insider-articles'){
+          document.getElementById('insider-articles-panel').scrollIntoView({behavior:'smooth'});
+        }
+      });
     }
+
+    window.__gvAdminEmbedUnlock = function(p) {
+      if (!p) return;
+      document.getElementById('pin').value = p;
+      document.getElementById('gate-pin').value = p;
+      document.getElementById('pin-gate').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+      loadStatus(false);
+      loadInsiderArticles();
+      loadPatternStats();
+    };
 
     document.getElementById('gate-unlock').addEventListener('click',unlock);
     document.getElementById('gate-pin').addEventListener('keydown',function(e){if(e.key==='Enter')unlock();});
@@ -664,15 +682,20 @@
 
     setInterval(function(){if(!document.getElementById('app').classList.contains('hidden'))loadStatus(false);},90000);
 
-    (function(){
-      var saved=sessionStorage.getItem('gv_ops_pin');
+    if (window.GVAdminEmbed) {
+      GVAdminEmbed.whenReady(function () {
+        loadStatus(false);
+        loadInsiderArticles();
+        loadPatternStats();
+      });
+    } else {
+      var saved=sessionStorage.getItem('gv_admin_pin')||sessionStorage.getItem('gv_ops_pin');
       if(saved){
         document.getElementById('gate-pin').value=saved;
         document.getElementById('pin').value=saved;
         unlock();
       }
-    })();
+    }
   </script>
-  <script src="/js/admin-embed.js"></script>
 </body>
 </html>

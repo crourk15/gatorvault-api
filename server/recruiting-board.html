@@ -47,6 +47,7 @@
     a{color:#60a5fa}
     .badge{display:inline-block;font-size:.65rem;padding:.12rem .4rem;border-radius:.3rem;background:#334155;margin-left:.25rem}
   </style>
+  <script src="/js/admin-embed.js?v=3"></script>
 </head>
 <body>
   <div id="pin-gate" class="pin-gate">
@@ -164,7 +165,14 @@
     var state = { players: [], selectedSlug: null };
 
     function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-    function pin(){return document.getElementById('pin').value.trim();}
+    function pin(){
+      if (window.GVAdminEmbed) return GVAdminEmbed.getPin();
+      var el = document.getElementById('pin');
+      return (el && el.value ? el.value.trim() : '') ||
+        sessionStorage.getItem('gv_admin_pin') ||
+        sessionStorage.getItem('gv_ops_pin') ||
+        '';
+    }
     function headers(){return {'Content-Type':'application/json','X-Ops-Pin':pin(),'X-Recruiting-Pin':pin()};}
 
     function nameIncomplete(name){
@@ -364,9 +372,11 @@
       loadPlayers();
     };
 
-    document.addEventListener('gv-admin-embed-unlock', function(e) {
-      if (e.detail && e.detail.pin) window.__gvAdminEmbedUnlock(e.detail.pin);
-    });
+    if (window.GVAdminEmbed) {
+      GVAdminEmbed.whenReady(function (p) {
+        if (p) window.__gvAdminEmbedUnlock(p);
+      });
+    }
 
     document.getElementById('gate-unlock').addEventListener('click', unlock);
     document.getElementById('gate-pin').addEventListener('keydown', function(e){ if(e.key==='Enter') unlock(); });
@@ -381,7 +391,8 @@
     });
 
     (function init(){
-      var saved = sessionStorage.getItem('gv_ops_pin');
+      if (window.GVAdminEmbed && GVAdminEmbed.getPin()) return;
+      var saved = sessionStorage.getItem('gv_admin_pin') || sessionStorage.getItem('gv_ops_pin');
       var params = new URLSearchParams(location.search);
       if(params.get('slug')) state.selectedSlug = params.get('slug');
       if(saved){
@@ -390,6 +401,5 @@
       }
     })();
   </script>
-  <script src="/js/admin-embed.js"></script>
 </body>
 </html>

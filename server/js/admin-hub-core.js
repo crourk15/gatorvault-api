@@ -481,7 +481,9 @@
 
   function postPinToIframe(iframe) {
     if (!iframe || !iframe.contentWindow) return;
-    iframe.contentWindow.postMessage({ type: 'gv-admin-pin', pin: pin() }, '*');
+    var p = pin();
+    if (!p) return;
+    iframe.contentWindow.postMessage({ type: 'gv-admin-pin', pin: p }, '*');
   }
 
   function loadIframe(panelEl, src) {
@@ -498,7 +500,15 @@
       iframe.setAttribute('data-src', fullSrc);
       iframe.src = fullSrc;
     }
-    iframe.onload = function () { postPinToIframe(iframe); };
+    iframe.onload = function () {
+      postPinToIframe(iframe);
+      var attempts = 0;
+      var timer = setInterval(function () {
+        postPinToIframe(iframe);
+        attempts += 1;
+        if (attempts >= 8) clearInterval(timer);
+      }, 250);
+    };
     postPinToIframe(iframe);
   }
 

@@ -1,5 +1,5 @@
 /**
- * Admin Hub ? command center dashboard (overview panel).
+ * Admin Hub — command center dashboard (overview panel).
  */
 (function (global) {
   function esc(s) {
@@ -31,7 +31,7 @@
       + '<p class="hub-dash-sub">System health, pipelines, and recommended actions</p></div>'
       + '<button type="button" class="hub-btn secondary hub-dash-refresh" id="hub-dash-refresh">Refresh</button>'
       + '</div>'
-      + '<div id="hub-dash-loading" class="hub-dash-loading">Loading overview?</div>'
+      + '<div id="hub-dash-loading" class="hub-dash-loading">Loading overview…</div>'
       + '<div id="hub-dash-body" class="hidden"></div>'
       + '</div>';
 
@@ -81,7 +81,7 @@
         .join('');
 
       if (!issueHtml) {
-        issueHtml = '<li class="hub-issue hub-st-green"><span class="hub-issue-num">?</span><div class="hub-issue-body"><strong>All clear</strong><span>No critical issues detected</span></div></li>';
+        issueHtml = '<li class="hub-issue hub-st-green"><span class="hub-issue-num">✓</span><div class="hub-issue-body"><strong>All clear</strong><span>No critical issues detected</span></div></li>';
       }
 
       var moduleCards = Object.keys(data.moduleHealth || {})
@@ -119,7 +119,7 @@
       }).join('');
 
       var qaPass = data.qa && data.qa.pass;
-      var qaLine = qaPass ? '? Last crawl passed' : '? Failures detected';
+      var qaLine = qaPass ? '✓ Last crawl passed' : '✗ Failures detected';
 
       body.innerHTML =
         '<div class="hub-dash-grid">'
@@ -135,13 +135,13 @@
 
         + '<section class="hub-card"><h3>QA Monitor</h3>'
         + '<p class="hub-meta">' + qaLine + '</p>'
-        + '<p class="hub-meta">Failed: ' + esc(data.qa && data.qa.failed != null ? data.qa.failed : '?') + '</p>'
+        + '<p class="hub-meta">Failed: ' + esc(data.qa && data.qa.failed != null ? data.qa.failed : '—') + '</p>'
         + '<button type="button" class="hub-btn secondary" data-dash-route="#qa/monitor">Open QA</button>'
         + '<button type="button" class="hub-btn" data-dash-action="qa-run" style="margin-left:8px">Run crawl</button>'
         + '</section>'
 
         + '<section class="hub-card"><h3>Product Health</h3>'
-        + '<p class="hub-meta">Score: ' + esc(data.productIntel && data.productIntel.overall != null ? data.productIntel.overall : '?') + '</p>'
+        + '<p class="hub-meta">Score: ' + esc(data.productIntel && data.productIntel.overall != null ? data.productIntel.overall : '—') + '</p>'
         + '<p class="hub-meta">Open fixes: ' + esc(data.productIntel && data.productIntel.fixQueueOpen != null ? data.productIntel.fixQueueOpen : 0) + '</p>'
         + '<button type="button" class="hub-btn secondary" data-dash-route="#product-intel/health">Open</button>'
         + '</section>'

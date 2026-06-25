@@ -31,6 +31,7 @@
     .hidden{display:none!important}
     @media(max-width:640px){table,thead,tbody,th,td,tr{display:block}thead{display:none}tr{margin-bottom:12px;border:1px solid #1e293b;border-radius:8px;padding:8px}td{display:block;padding:4px 8px}td::before{content:attr(data-label);font-size:10px;text-transform:uppercase;color:#64748b;display:block}}
   </style>
+  <script src="/js/admin-embed.js?v=3"></script>
 </head>
 <body>
   <div id="admin-pin-gate" class="admin-pin-ov">
@@ -66,9 +67,11 @@
   </div>
 
   <script>
-    var API = location.hostname === 'localhost' || location.hostname === '127.0.0.1'
-      ? 'http://localhost:3000'
-      : 'https://gatorvault-api.onrender.com';
+    var API = (window.GVAdminEmbed && GVAdminEmbed.apiBase)
+      ? GVAdminEmbed.apiBase()
+      : (location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+        ? 'http://localhost:3000'
+        : location.origin);
     var SESSION_KEY = 'gv_admin_pin';
     var data = { submissions: [], suggestions: [], surveys: [] };
 
@@ -76,7 +79,11 @@
       return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
-    function pin() { return document.getElementById('pin').value.trim(); }
+    function pin() {
+      if (window.GVAdminEmbed) return GVAdminEmbed.getPin();
+      var el = document.getElementById('pin');
+      return (el && el.value ? el.value.trim() : '') || sessionStorage.getItem(SESSION_KEY) || '';
+    }
 
     function renderTable(items, cols, emptyMsg) {
       if (!items.length) return '<div class="empty">' + emptyMsg + '</div>';
@@ -135,21 +142,38 @@
     }
 
     function unlock(p) {
-      sessionStorage.setItem(SESSION_KEY, p);
-      document.getElementById('pin').value = p;
-      document.getElementById('admin-pin-gate').classList.add('hidden');
-      document.getElementById('app').classList.remove('hidden');
+      if (!p) p = pin();
+      if (!p) return;
+      if (window.GVAdminEmbed) GVAdminEmbed.applyPin(p);
+      else {
+        sessionStorage.setItem(SESSION_KEY, p);
+        document.getElementById('pin').value = p;
+        document.getElementById('admin-pin-gate').classList.add('hidden');
+        document.getElementById('app').classList.remove('hidden');
+      }
       load();
     }
 
+    window.__gvAdminEmbedUnlock = function (p) {
+      unlock(p);
+    };
+
     document.getElementById('gate-submit').addEventListener('click', function () {
       var p = document.getElementById('gate-pin').value.trim();
-      fetch(API + '/api/feedback/admin/list?pin=' + encodeURIComponent(p))
-        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
-        .then(function (res) {
-          if (res.ok && res.j.ok) unlock(p);
-          else document.getElementById('gate-err').classList.remove('hidden');
-        });
+      if (!p) return;
+      document.getElementById('gate-err').classList.add('hidden');
+      var verify = window.GVAdminEmbed && GVAdminEmbed.verifyPin
+        ? function (pin, cb) { GVAdminEmbed.verifyPin(pin, cb); }
+        : function (pin, cb) {
+            fetch(API + '/api/feedback/admin/list?pin=' + encodeURIComponent(pin))
+              .then(function (r) { return r.json().then(function (j) { return { ok: r.ok && j.ok }; }); })
+              .then(function (res) { cb(res.ok); })
+              .catch(function () { cb(false); });
+          };
+      verify(p, function (ok) {
+        if (ok) unlock(p);
+        else document.getElementById('gate-err').classList.remove('hidden');
+      });
     });
 
     document.getElementById('refresh').addEventListener('click', load);
@@ -165,15 +189,13 @@
       });
     });
 
-    (function () {
+    if (window.GVAdminEmbed) {
+      GVAdminEmbed.whenReady(function () { load(); });
+    } else {
       var saved = sessionStorage.getItem(SESSION_KEY);
-      if (saved) {
-        document.getElementById('gate-pin').value = saved;
-        document.getElementById('gate-submit').click();
-      }
-    })();
+      if (saved) unlock(saved);
+    }
   </script>
   <script src="/gv-feedback.js?v=1" defer></script>
-  <script src="/js/admin-embed.js"></script>
 </body>
 </html>
