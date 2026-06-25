@@ -28,6 +28,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { ALLOWLIST_2027, CANONICAL_TARGET_NAMES } = require('../../lib/recruiting-target-allowlist');
 const { filterBlockedRecruits, isBlockedRecruit } = require('../../lib/recruiting-blocked-players');
 const { isFloridaSchool, isActiveUfTarget, isCommittedElsewhere } = require('../../lib/recruiting-target-filters');
+const { resolveCommitmentOverride } = require('../../lib/commitment-prediction-override');
 
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 const EARLY_WATCHLIST_PATH = path.join(__dirname, '../../data/futurecast/early-watchlist.json');
@@ -110,6 +111,8 @@ export interface FutureCastBoardPlayer {
   committedTo?: string | null;
   predictors?: Array<{ name: string; score: number }>;
   competingSchools?: Array<{ name: string; pct: number }>;
+  ufPredictionSuppressed?: boolean;
+  commitmentStatus?: string | null;
 }
 
 export interface MovementHeatmapData {
@@ -325,8 +328,18 @@ export async function loadBoardPlayersForSlugs(
 
     const seed = seedMeta.get(slug) ?? {};
     const recruiting = await loadRecruitingPlayer(slug);
-    if (recruiting && !isActiveUfTarget(recruiting)) continue;
-    if (!recruiting && seedCommittedTo(seed) && isCommittedElsewhere({ committedTo: seedCommittedTo(seed) })) {
+    const override = resolveCommitmentOverride(
+      recruiting
+        ? { ...recruiting, slug }
+        : {
+            slug,
+            committedTo: seedCommittedTo(seed),
+            insiderNotes: seed.insiderNotes,
+            staffNotes: seed.staffNotes,
+          }
+    );
+    if (recruiting && !isActiveUfTarget(recruiting) && !override) continue;
+    if (!recruiting && seedCommittedTo(seed) && isCommittedElsewhere({ committedTo: seedCommittedTo(seed) }) && !override) {
       continue;
     }
     const rank = rankings.get(slug);
@@ -360,20 +373,26 @@ export async function loadBoardPlayersForSlugs(
           : 0;
 
     const committedTo =
+      override?.committedTo ??
       (recruiting?.committedTo as string | null) ??
       seedCommittedTo(seed) ??
       model?.committedTo ??
       null;
     const ufCommitted = isFloridaSchool(committedTo);
-    let ufConfidence = toPercentOrNull(model?.confidence ?? model?.ufProbability);
+    let ufConfidence = override ? null : toPercentOrNull(model?.confidence ?? model?.ufProbability);
     if (ufCommitted) ufConfidence = 100;
 
-    const competingSchools = resolveCompetingSchools(rivalsSchools.get(slug));
-    const predictors = rivalsPredictors(slug, competingSchools);
-    const fitScore =
-      model?.ufFitScore != null && Number.isFinite(Number(model.ufFitScore))
+    const competingSchools = override ? [] : resolveCompetingSchools(rivalsSchools.get(slug));
+    const predictors = override ? [] : rivalsPredictors(slug, competingSchools);
+    const fitScore = override
+      ? null
+      : model?.ufFitScore != null && Number.isFinite(Number(model.ufFitScore))
         ? Math.round(Number(model.ufFitScore))
         : null;
+    const trendDelta7dResolved = override
+      ? 0
+      : trendDelta7d;
+    const volatility7dResolved = override ? 0 : volatility7d;
 
     const position = (() => {
       const editorial = require('../../lib/recruiting-editorial-positions');
@@ -403,12 +422,14 @@ export async function loadBoardPlayersForSlugs(
       stateRank: rank?.stateRank ?? (recruiting?.stateRank as number) ?? (seed.stateRank as number) ?? null,
       ufConfidence,
       fitScore,
-      trendDelta7d,
-      volatility7d,
-      priority: resolvePriority(ufConfidence, fitScore),
+      trendDelta7d: trendDelta7dResolved,
+      volatility7d: volatility7dResolved,
+      priority: override ? 'low' : resolvePriority(ufConfidence, fitScore),
       committedTo,
       predictors,
       competingSchools,
+      ufPredictionSuppressed: Boolean(override),
+      commitmentStatus: override?.commitmentStatus ?? null,
     });
   }
 
@@ -422,23 +443,24 @@ export async function loadAllowlistedBoardPlayers(): Promise<FutureCastBoardPlay
 
 export async function buildMasterBoardPayload() {
   const players = await loadAllowlistedBoardPlayers();
-  const heatmap = buildHeatmap(players);
+  const activePredictions = players.filter((p) => !p.ufPredictionSuppressed);
+  const heatmap = buildHeatmap(activePredictions);
 
-  const trendingUp = [...players]
+  const trendingUp = [...activePredictions]
     .filter((p) => (p.trendDelta7d ?? 0) > 0)
     .sort((a, b) => (b.trendDelta7d ?? 0) - (a.trendDelta7d ?? 0));
 
-  const trendingDown = [...players]
+  const trendingDown = [...activePredictions]
     .filter((p) => (p.trendDelta7d ?? 0) < 0)
     .sort((a, b) => (a.trendDelta7d ?? 0) - (b.trendDelta7d ?? 0));
 
-  const activeTargets = players.filter(isActiveUfTarget);
+  const activeTargets = activePredictions.filter(isActiveUfTarget);
 
   const highVolatility = [...activeTargets]
     .filter((p) => p.volatility7d >= 0.15)
     .sort((a, b) => b.volatility7d - a.volatility7d);
 
-  const highPriority = [...players]
+  const highPriority = [...activePredictions]
     .filter((p) => p.priority === 'high' && isActiveUfTarget(p))
     .sort((a, b) => (b.ufConfidence ?? 0) - (a.ufConfidence ?? 0));
 
@@ -460,13 +482,15 @@ export async function buildMasterBoardPayload() {
     }));
 
   const ufConfidenceAverage =
-    players.length > 0
+    activePredictions.length > 0
       ? Math.round(
-          (players.reduce((sum, p) => sum + (p.ufConfidence ?? 0), 0) / players.length) * 10
+          (activePredictions.reduce((sum, p) => sum + (p.ufConfidence ?? 0), 0) /
+            activePredictions.length) *
+            10
         ) / 10
       : 0;
 
-  const confidenceSparkline = players.slice(0, 12).map((p) => p.ufConfidence ?? 0);
+  const confidenceSparkline = activePredictions.slice(0, 12).map((p) => p.ufConfidence ?? 0);
 
   return {
     classYear: FUTURECAST_CLASS_YEAR,
@@ -504,7 +528,7 @@ export async function buildMasterBoardPayload() {
 }
 
 export async function buildTrendingBoardPayload() {
-  const players = await loadAllowlistedBoardPlayers();
+  const players = (await loadAllowlistedBoardPlayers()).filter((p) => !p.ufPredictionSuppressed);
   return {
     classYear: FUTURECAST_CLASS_YEAR,
     updatedAt: new Date().toISOString(),
@@ -519,7 +543,7 @@ export async function buildTrendingBoardPayload() {
 
 export async function buildMovementIntelPayload() {
   const players = await loadAllowlistedBoardPlayers();
-  const activeTargets = players.filter(isActiveUfTarget);
+  const activeTargets = players.filter((p) => isActiveUfTarget(p) && !p.ufPredictionSuppressed);
   const heatmap = buildHeatmap(activeTargets);
 
   const risers = activeTargets

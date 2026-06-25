@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const { fetchText } = require('./qa/qa-utils');
 const { slugify } = require('./slug');
 
 const SITE = process.env.ON3_SITE_BASE || 'https://www.on3.com';
@@ -34,9 +34,12 @@ function defaultHeaders(classYear) {
 }
 
 async function fetchNextPageProps(url, classYear) {
-  const res = await fetch(url, { headers: defaultHeaders(classYear), timeout: 45000 });
-  const html = await res.text();
-  if (!res.ok) throw new Error(`On3 HTTP ${res.status} for ${url}`);
+  const retries = Math.max(0, parseInt(process.env.ON3_FETCH_RETRIES || '3', 10) || 3);
+  const { text: html } = await fetchText(url, {
+    headers: defaultHeaders(classYear),
+    retries,
+    timeout: parseInt(process.env.ON3_FETCH_TIMEOUT_MS || '45000', 10) || 45000,
+  });
   const match = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
   if (!match) throw new Error('On3 page missing __NEXT_DATA__');
   return JSON.parse(match[1])?.props?.pageProps || null;

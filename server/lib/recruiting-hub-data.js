@@ -27,6 +27,11 @@ const {
   normalizePlayerGeo,
 } = require('./recruiting-geo-normalize');
 const { isCuratedHubIntel, loadHubRecruitingPool } = require('./recruiting-hub-intel-store');
+const {
+  applyCommitmentPredictionOverride,
+  isUfPredictionSuppressed,
+  filterMovementIntelForPlayer,
+} = require('./commitment-prediction-override');
 
 const DEFAULT_CLASS_YEARS = [2027, 2028, 2029];
 const FEED_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
@@ -230,7 +235,7 @@ function enrichHubPlayer(rawPlayer, ctx = {}) {
         : 'flat';
   const geoPatch = normalizePlayerGeo(rawPlayer);
 
-  return {
+  const enriched = {
     ...rawPlayer,
     slug,
     position: playerPos(rawPlayer),
@@ -253,6 +258,8 @@ function enrichHubPlayer(rawPlayer, ctx = {}) {
     profileUrl: rawPlayer.profileUrl || profileUrl(rawPlayer),
     trend,
   };
+
+  return applyCommitmentPredictionOverride(enriched);
 }
 
 const hubDatasetInflight = new Map();
@@ -384,6 +391,7 @@ function buildHeatIndexRows(enrichedPlayers) {
     .filter(
       (p) =>
         !p.isCommit &&
+        !p.ufPredictionSuppressed &&
         (p.tier === 'TOP' || p.tier === 'HIGH' || (p.ufScore != null && p.ufScore >= 34))
     )
     .map((player) => ({
@@ -405,7 +413,7 @@ function buildHeatIndexRows(enrichedPlayers) {
 
 function buildBattlesListRows(enrichedPlayers) {
   const battles = enrichedPlayers
-    .filter((p) => !p.isCommit && p.ufScore != null && p.ufScore >= 34)
+    .filter((p) => !p.isCommit && !p.ufPredictionSuppressed && p.ufScore != null && p.ufScore >= 34)
     .map((player) => {
       const note = player.notePreview ?? player.notes ?? player.skinny ?? null;
       if (!note || !String(note).trim()) return null;
@@ -612,6 +620,13 @@ function boardMovementItem(meta) {
   };
 }
 
+function isHubPlayerSuppressed(slug, rawMap, pool) {
+  const key = String(slug || '').toLowerCase();
+  const raw = rawMap.get(key) || {};
+  const meta = pool.get(key) || {};
+  return isUfPredictionSuppressed({ ...raw, ...meta, slug: key });
+}
+
 async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}) {
   const pool = await loadHubRecruitingPool();
   const rawMap = loadRawPlayerMap();
@@ -634,7 +649,10 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}) {
     if (!isCuratedHubIntel(row, pool)) continue;
     const slug = String(row.playerSlug).toLowerCase();
     const meta = pool.get(slug);
-    items.push(mapIntelToFeedItem(row, meta));
+    const playerCtx = { ...(rawMap.get(slug) || {}), ...(meta || {}), slug };
+    const filtered = filterMovementIntelForPlayer([row], playerCtx);
+    if (!filtered.length) continue;
+    items.push(mapIntelToFeedItem(filtered[0], meta));
     covered.add(slug);
   }
 
@@ -695,6 +713,7 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}) {
       continue;
     }
 
+    if (isHubPlayerSuppressed(meta.slug, rawMap, pool)) continue;
     if (meta.movementDirection !== 'up' && meta.movementDirection !== 'down') continue;
     items.push(boardMovementItem(meta));
     covered.add(meta.slug);

@@ -30,6 +30,8 @@ export type FutureCastPlayer = {
   committedTo?: string | null;
   predictors?: Array<{ name: string; score: number }>;
   competingSchools?: Array<{ name: string; pct: number }>;
+  ufPredictionSuppressed?: boolean;
+  commitmentStatus?: string | null;
 };
 
 export type MovementHeatmap = {
@@ -117,11 +119,13 @@ export type StaffNote = {
   posRank?: number | null;
   stateRank?: number | null;
   /** Fit % (Scheme Match). */
-  fitScore?: number;
-  trendDelta7d?: number;
+  fitScore?: number | null;
+  trendDelta7d?: number | null;
   staffNotes?: string | null;
   insiderNotes?: string | null;
   projection?: string | null;
+  ufPredictionSuppressed?: boolean;
+  commitmentStatus?: string | null;
 };
 
 export type StaffNotesResponse = {

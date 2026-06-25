@@ -2,6 +2,7 @@
  * Real competitor extraction — no default schools or synthetic scores.
  */
 const { parseUfPct, isFloridaSchool: isFloridaSchoolScoring } = require('./recruiting-hub-scoring');
+const { resolveCommitmentOverride } = require('./commitment-prediction-override');
 
 function isFloridaSchool(value) {
   return isFloridaSchoolScoring(value);
@@ -168,6 +169,8 @@ function hasRealStaffPriority(player) {
 }
 
 function resolveStrictUfScore(player, intelRows = []) {
+  if (resolveCommitmentOverride(player)) return null;
+
   const pct = parseUfPct(player.ufProbability);
   if (pct != null && pct > 0) return pct;
 

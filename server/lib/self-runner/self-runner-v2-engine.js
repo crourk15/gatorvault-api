@@ -7,6 +7,7 @@ const schemaValidator = require('./schema-validator');
 const contextPatch = require('./context-patch-generator');
 const multiFile = require('./multi-file-patcher');
 const warRoom = require('./war-room-intelligence');
+const commitmentIntel = require('../allowlist-target-sync');
 const autoposterGuard = require('./autoposter-guard');
 const learning = require('./learning-loop');
 const modes = require('./self-runner-modes');
@@ -103,13 +104,15 @@ function runPlatformScan(opts = {}) {
   const htmlIssues = scanHtmlBlueprint();
   const cssIssues = scanCssBlueprint();
   const warRoomIntel = warRoom.runWarRoomIntelligence();
+  const commitment = commitmentIntel.runCommitmentIntelligence();
 
   const allIssues = [
     ...feedIntegrity.issues,
     ...htmlIssues,
     ...cssIssues,
     ...schema.violations.map((v) => issueFromViolation(v, 'schema')),
-    ...warRoomIntel.violations.map((v) => issueFromViolation(v, 'war-room'))
+    ...warRoomIntel.violations.map((v) => issueFromViolation(v, 'war-room')),
+    ...commitment.violations.map((v) => issueFromViolation(v, 'commitment'))
   ];
 
   allIssues.forEach((issue) => logger.log.issue({ scanId: id, checkId: issue.checkId, severity: issue.severity }));
@@ -147,6 +150,13 @@ function runPlatformScan(opts = {}) {
     });
   });
 
+  commitment.patches.forEach((p) => {
+    rawPatches.push({
+      issue: issueFromViolation({ issue: 'commitment_sync_stale', detail: p.suggestedFix, severity: 'high' }, 'commitment'),
+      patch: p
+    });
+  });
+
   const multiPatches = multiFile.mergePatches(rawPatches);
   const safePatches = multiPatches.filter((p) => {
     const safety = autoposterGuard.validatePatchSafety({ patch: p });
@@ -172,6 +182,8 @@ function runPlatformScan(opts = {}) {
     blockedPatchCount: multiPatches.filter((p) => p.blocked).length,
     schemaCritical: schema.criticalCount,
     staleScouting: warRoomIntel.stale.length,
+    staleCommitments: commitment.stale.length,
+    commitmentIngestIssues: commitment.ingestIssues.length,
     missingWarRoomCards: warRoomIntel.missing.length,
     issues: allIssues,
     patches: safePatches,

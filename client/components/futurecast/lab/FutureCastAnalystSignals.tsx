@@ -19,11 +19,12 @@ type SignalCard = {
   name: string;
   position: string;
   analyst: string;
-  pick: 'UF' | 'Other';
-  confidencePct: number;
-  rpmPct: number;
+  pick: 'UF' | 'Other' | 'Suppressed';
+  confidencePct: number | null;
+  rpmPct: number | null;
   summary: string;
   timestamp: string;
+  suppressed?: boolean;
 };
 
 function buildSignals(staffNotes: StaffNotesResponse, masterBoard: MasterBoardResponse): SignalCard[] {
@@ -32,6 +33,27 @@ function buildSignals(staffNotes: StaffNotesResponse, masterBoard: MasterBoardRe
 
   for (const note of staffNotes.notes.slice(0, 12)) {
     const player = bySlug.get(note.playerSlug);
+    const suppressed = Boolean(note.ufPredictionSuppressed || player?.ufPredictionSuppressed);
+    const status =
+      note.commitmentStatus ||
+      player?.commitmentStatus ||
+      'Committed elsewhere — UF prediction suppressed';
+    if (suppressed) {
+      cards.push({
+        id: note.id ?? `${note.playerSlug}-${note.updatedAt}`,
+        slug: note.playerSlug,
+        name: note.playerName,
+        position: note.position ?? player?.position ?? '—',
+        analyst: 'Staff Notes',
+        pick: 'Suppressed',
+        confidencePct: null,
+        rpmPct: null,
+        summary: status,
+        timestamp: note.updatedAt ?? note.createdAt ?? staffNotes.updatedAt,
+        suppressed: true,
+      });
+      continue;
+    }
     const ufPct = player ? ufPctFromFc(player.ufConfidence) : 50;
     cards.push({
       id: note.id ?? `${note.playerSlug}-${note.updatedAt}`,
@@ -49,6 +71,7 @@ function buildSignals(staffNotes: StaffNotesResponse, masterBoard: MasterBoardRe
 
   for (const p of masterBoard.highPriority.players.slice(0, 6)) {
     if (cards.length >= 8) break;
+    if (p.ufPredictionSuppressed) continue;
     const pct = ufPctFromFc(p.ufConfidence);
     cards.push({
       id: `model-${p.slug}`,
@@ -80,13 +103,24 @@ function SignalCardView({ card }: { card: SignalCard }): React.ReactElement {
         {card.name}
       </a>
       <p className="fc-lab-signal-card__meta">
-        {card.position} · Pick: <strong>{card.pick}</strong>
+        {card.position} ·{' '}
+        {card.suppressed ? (
+          <strong>{card.summary}</strong>
+        ) : (
+          <>
+            Pick: <strong>{card.pick}</strong>
+          </>
+        )}
       </p>
-      <div className="fc-lab-signal-card__metrics">
-        <span className="fc-lab-signal-card__metric">Confidence {card.confidencePct}%</span>
-        <span className="fc-lab-signal-card__metric">UF RPM {card.rpmPct}%</span>
-      </div>
-      <AnalystConfidenceMeter value={card.confidencePct} label="Signal strength" />
+      {!card.suppressed ? (
+        <>
+          <div className="fc-lab-signal-card__metrics">
+            <span className="fc-lab-signal-card__metric">Confidence {card.confidencePct}%</span>
+            <span className="fc-lab-signal-card__metric">UF RPM {card.rpmPct}%</span>
+          </div>
+          <AnalystConfidenceMeter value={card.confidencePct ?? 0} label="Signal strength" />
+        </>
+      ) : null}
       <p className="fc-lab-signal-card__summary">{card.summary}</p>
     </article>
   );

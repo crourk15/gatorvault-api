@@ -15,6 +15,7 @@ const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { ALLOWLIST_2027 } = require('../../lib/recruiting-target-allowlist');
 const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players');
+const { resolveCommitmentOverride } = require('../../lib/commitment-prediction-override');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 
 interface RecruitingMeta {
@@ -179,15 +180,29 @@ export const handleGetFutureCastStaffNotes = asyncHandler(async (req: Request, r
         notes.filter((n) => allowedSet.has(String(n.playerSlug || '').toLowerCase()))
       );
 
-      let playerBySlug: Map<string, { fitScore: number; trendDelta7d: number; priority: string }> =
-        new Map();
+      let playerBySlug: Map<
+        string,
+        {
+          fitScore: number | null;
+          trendDelta7d: number | null;
+          priority: string;
+          ufPredictionSuppressed?: boolean;
+          commitmentStatus?: string | null;
+        }
+      > = new Map();
       try {
         const { loadAllowlistedBoardPlayers } = await import('./allowlist-board');
         const boardPlayers = await loadAllowlistedBoardPlayers();
         playerBySlug = new Map(
           boardPlayers.map((p) => [
             p.slug,
-            { fitScore: p.fitScore, trendDelta7d: p.trendDelta7d, priority: p.priority },
+            {
+              fitScore: p.fitScore,
+              trendDelta7d: p.trendDelta7d,
+              priority: p.priority,
+              ufPredictionSuppressed: p.ufPredictionSuppressed,
+              commitmentStatus: p.commitmentStatus,
+            },
           ])
         );
       } catch {
@@ -196,6 +211,27 @@ export const handleGetFutureCastStaffNotes = asyncHandler(async (req: Request, r
 
       const enrichedNotes = filteredNotes.map((note) => {
         const board = playerBySlug.get(String(note.playerSlug || '').toLowerCase());
+        const override = resolveCommitmentOverride({
+          slug: note.playerSlug,
+          insiderNotes: note.insiderNotes,
+          staffNotes: note.staffNotes,
+          recruitingStory: note.recruitingStory,
+        });
+        if (board?.ufPredictionSuppressed || override) {
+          const status =
+            board?.commitmentStatus ||
+            override?.commitmentStatus ||
+            'Committed elsewhere — UF prediction suppressed';
+          return {
+            ...note,
+            fitScore: null,
+            trendDelta7d: null,
+            priority: 'low',
+            ufPredictionSuppressed: true,
+            commitmentStatus: status,
+            notePreview: status,
+          };
+        }
         return board
           ? { ...note, fitScore: board.fitScore, trendDelta7d: board.trendDelta7d, priority: board.priority }
           : note;

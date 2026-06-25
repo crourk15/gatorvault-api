@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const { fetchText } = require('./qa/qa-utils');
 const { buildOn3ProfileUrl } = require('./on3-urls');
 
 const ORG = process.env.ON3_ORG_SLUG || 'florida-gators';
@@ -21,9 +21,12 @@ function defaultHeaders(classYear) {
 }
 
 async function fetchHtml(url, classYear) {
-  const res = await fetch(url, { headers: defaultHeaders(classYear), timeout: 45000 });
-  const text = await res.text();
-  if (!res.ok) throw new Error(`On3 HTTP ${res.status} for ${url}`);
+  const retries = Math.max(0, parseInt(process.env.ON3_FETCH_RETRIES || '3', 10) || 3);
+  const { text } = await fetchText(url, {
+    headers: defaultHeaders(classYear),
+    retries,
+    timeout: parseInt(process.env.ON3_FETCH_TIMEOUT_MS || '45000', 10) || 45000,
+  });
   return text;
 }
 

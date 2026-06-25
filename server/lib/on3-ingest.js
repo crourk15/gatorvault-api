@@ -817,7 +817,12 @@ async function runOn3Ingest(options = {}) {
   }
 
   try {
-    if (process.env.ALLOWLIST_TARGET_SYNC !== 'false') {
+    if (process.env.COMMITMENT_SYNC !== 'false') {
+      const { reconcileCommitments } = require('./allowlist-target-sync');
+      result.commitmentSync = await reconcileCommitments(options);
+      result.allowlistOn3Sync = result.commitmentSync.on3;
+      result.allowlistRivalsSync = result.commitmentSync.rivalsCache;
+    } else if (process.env.ALLOWLIST_TARGET_SYNC !== 'false') {
       const { syncAllowlistTargetsFromOn3, syncAllowlistTargetsFromRivals } = require('./allowlist-target-sync');
       result.allowlistOn3Sync = await syncAllowlistTargetsFromOn3(options);
       result.allowlistRivalsSync = await syncAllowlistTargetsFromRivals();
@@ -841,7 +846,7 @@ async function runOn3Ingest(options = {}) {
   }
 
   try {
-    if (process.env.RECRUITING_HUB_REFRESH_AFTER_INGEST === 'true') {
+    if (process.env.RECRUITING_HUB_REFRESH_AFTER_INGEST === 'true' && !result.commitmentSync?.hubRefresh) {
       const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
       result.hubRefresh = await refreshRecruitingHubCaches({ geoBackfill: false });
     }
