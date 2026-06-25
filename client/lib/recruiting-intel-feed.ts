@@ -6,6 +6,7 @@ import { timeAgo } from '@/components/vault/live/live-feed-utils';
 export type IntelFeedCategory =
   | 'Movement'
   | 'Visit'
+  | 'Flip Watch'
   | 'Offer'
   | 'Commit'
   | 'Portal'
@@ -44,6 +45,7 @@ export function classifyIntelCategory(blob: string): IntelFeedCategory {
   if (/\bportal|\btransfer\b/.test(t)) return 'Portal';
   if (/\bnil\b/.test(t)) return 'NIL';
   if (/\bvisit|\bov\b|\bon campus\b|\bjunior day\b/.test(t)) return 'Visit';
+  if (/\bflip watch|\bflip\b/.test(t)) return 'Flip Watch';
   if (/\boffer\b/.test(t)) return 'Offer';
   if (/\bstaff|\binsider|\bnote\b/.test(t)) return 'Staff Note';
   if (/\bmovement|\btrend|\brpm|\bprediction|\bvolatile|\bheating|\bcooling\b/.test(t)) {
@@ -59,6 +61,8 @@ export function categoryIcon(category: IntelFeedCategory, volatile = false): str
       return '🔵';
     case 'Visit':
       return '📍';
+    case 'Flip Watch':
+      return '🔄';
     case 'Offer':
       return '🎯';
     case 'Portal':
