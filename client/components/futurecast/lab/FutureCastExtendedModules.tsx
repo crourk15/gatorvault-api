@@ -235,8 +235,32 @@ export function FutureCastExtendedModules({
         })
       );
     }
+    for (const row of visitRecap.slice(0, 3)) {
+      raw.push(
+        buildIntelFeedItem({
+          id: `recap-${row.slug}-${row.visitStart}`,
+          playerName: row.name,
+          headline: `${row.name} — verified UF OV completed (${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ''})`,
+          timestamp: row.visitEnd ?? row.visitStart,
+          category: 'Visit',
+          source: row.visitSourceLabel ?? undefined,
+        })
+      );
+    }
+    for (const p of upcomingVisitIntel.slice(0, 2)) {
+      raw.push(
+        buildIntelFeedItem({
+          id: `ov-up-${p.slug}`,
+          playerName: p.name,
+          headline: `Upcoming UF OV: ${p.name} (${p.visitStart ?? 'TBD'}${p.visitEnd ? `–${p.visitEnd}` : ''})`,
+          timestamp: p.visitStart ?? movementIntel.updatedAt,
+          category: 'Visit',
+          source: p.visitSourceLabel ?? undefined,
+        })
+      );
+    }
     return dedupeIntelFeedItems(raw, 8);
-  }, [movementIntel, flipWatch]);
+  }, [movementIntel, flipWatch, visitRecap, upcomingVisitIntel]);
 
   const fitLeaders = highPriority.slice(0, 3);
 

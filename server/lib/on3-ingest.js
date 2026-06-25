@@ -801,10 +801,15 @@ async function runOn3Ingest(options = {}) {
   try {
     if (process.env.ON3_VISIT_OFFER_SYNC !== 'false') {
       result.visitOfferSync = await syncOn3VisitOfferIntel(classYears, options);
-      const visitLogsCreated = result.visitOfferSync?.visitLogs ?? 0;
-      if (visitLogsCreated > 0) {
-        const { clearFuturecastCacheSafe } = require('./recruiting-intel-cache');
-        clearFuturecastCacheSafe();
+      const sync = result.visitOfferSync || {};
+      const visitIntelDirty =
+        (sync.visitLogs ?? 0) > 0 || (sync.offerLogs ?? 0) > 0 || (sync.playersUpdated ?? 0) > 0;
+      if (visitIntelDirty) {
+        const { reconcileVisitIntelInStore } = require('./expire-stale-visit-intel');
+        result.visitIntelReconcile = await reconcileVisitIntelInStore().catch((err) => {
+          console.warn('[on3-ingest] visit intel reconcile failed:', err?.message || err);
+          return { expired: 0, error: err?.message || String(err) };
+        });
       }
     }
   } catch (e) {

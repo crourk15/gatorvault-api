@@ -48,3 +48,4 @@ npm run visit-intel:reconcile -- --remote --dry-run   # production smoke
 - Uses `recruiting-store.upsertPlayer()` — works in `storageMode() === 'supabase'`
 - Visit **logs** remain append-only; reconcile only fixes denormalized player fields
 - After On3/beat ingest adds visit logs, run reconcile (automatic via ingest hub refresh or 3h cron)
+- **On3 ingest:** after `syncOn3VisitOfferIntel` when visit logs, offers, or player visit fields change, runs `reconcileVisitIntelInStore()` inline (Phase C)
