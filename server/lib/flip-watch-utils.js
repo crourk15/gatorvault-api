@@ -43,31 +43,49 @@ function indexCompletedVerifiedRecap(visitRecap, visitLogs, asOf = new Date()) {
 function buildFlipWatchRows(
   players,
   visitRecap,
-  { visitLogs = null, asOf = new Date(), limit = 8, intelRows = [] } = {}
+  {
+    visitLogs = null,
+    asOf = new Date(),
+    limit = 8,
+    intelRows = [],
+    commitBySlug = null,
+    ufBySlug = null,
+    nameBySlug = null,
+  } = {}
 ) {
   const recapBySlug = indexCompletedVerifiedRecap(visitRecap, visitLogs, asOf);
+  const playerBySlug = new Map(
+    (players || []).map((p) => [String(p.slug || "").toLowerCase(), p])
+  );
+  const slugKeys = new Set([...playerBySlug.keys(), ...recapBySlug.keys()]);
+  if (commitBySlug && typeof commitBySlug.get === "function") {
+    for (const [slug, commit] of commitBySlug.entries()) {
+      if (commit && !isFloridaCommit(commit)) slugKeys.add(String(slug).toLowerCase());
+    }
+  }
 
-  return (players || [])
-    .filter((p) => {
-      if (!p.committedTo || isFloridaCommit(p.committedTo)) return false;
-      return recapBySlug.has(String(p.slug || "").toLowerCase());
-    })
-    .map((p) => {
-      const recap = recapBySlug.get(String(p.slug || "").toLowerCase());
+  return [...slugKeys]
+    .map((slug) => {
+      const p = playerBySlug.get(slug);
+      const recap = recapBySlug.get(slug);
+      if (!recap) return null;
+      const committedTo = p?.committedTo ?? commitBySlug?.get(slug) ?? null;
+      if (!committedTo || isFloridaCommit(committedTo)) return null;
       const base = {
-        slug: p.slug,
-        name: p.name,
-        committedTo: p.committedTo,
-        committedShort: shortSchoolName(p.committedTo),
-        ufProbability: p.ufProbability ?? null,
-        ufProbabilityLabel: p.ufProbabilityLabel ?? null,
-        ufProbabilityLowConfidence: Boolean(p.ufProbabilityLowConfidence),
+        slug: p?.slug || recap.slug,
+        name: p?.name || recap.name || nameBySlug?.get(slug) || slug,
+        committedTo,
+        committedShort: shortSchoolName(committedTo),
+        ufProbability: p?.ufProbability ?? ufBySlug?.get(slug) ?? null,
+        ufProbabilityLabel: p?.ufProbabilityLabel ?? null,
+        ufProbabilityLowConfidence: Boolean(p?.ufProbabilityLowConfidence),
         visitStart: recap?.visitStart ?? null,
         visitEnd: recap?.visitEnd ?? null,
         visitSourceLabel: recap?.visitSourceLabel ?? formatVisitSourceLabel(recap?.visitSource),
       };
       return { ...base, ...computeFlipWatchScore(base, { intelRows, asOf }) };
     })
+    .filter(Boolean)
     .sort((a, b) => (b.flipScore ?? 0) - (a.flipScore ?? 0) || (b.ufProbability ?? 0) - (a.ufProbability ?? 0))
     .slice(0, limit);
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import type { MasterBoardResponse, MovementIntelResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
+import type { MasterBoardResponse, MovementIntelResponse, StaffNotesResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer, VisitRecapRow, FlipWatchRow } from '@/lib/futurecast-high-priority-api';
 import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
 import {
@@ -13,6 +13,7 @@ import {
 import { FutureCastPanelShell } from './primitives';
 import { GatorVaultConfirmedBadge } from './GatorVaultConfirmedBadge';
 import { FlipWatchScoreStack } from './FlipWatchScoreStack';
+import { PlayerIntelTimelineStrip } from './PlayerIntelTimelineStrip';
 import { ufPctFromFc, isBattleTarget } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 
@@ -20,6 +21,7 @@ type Props = {
   masterBoard: MasterBoardResponse;
   trendingBoard: TrendingBoardResponse;
   movementIntel: MovementIntelResponse;
+  staffNotes: StaffNotesResponse;
   highPriority: HighPriorityPlayer[];
   visitIntel?: HighPriorityPlayer[];
   visitRecap?: VisitRecapRow[];
@@ -168,6 +170,7 @@ export function FutureCastExtendedModules({
   masterBoard,
   trendingBoard,
   movementIntel,
+  staffNotes,
   highPriority,
   visitIntel = [],
   visitRecap = [],
@@ -391,6 +394,7 @@ export function FutureCastExtendedModules({
             primary: row.name,
             badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
             meta: `OV ${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''}${row.ufProbability != null ? ` · UF ${formatUfDisplay({ ufProbability: row.ufProbability, ufProbabilityLabel: null })}` : ''}`,
+            extra: <PlayerIntelTimelineStrip slug={row.slug} staffNotes={staffNotes} />,
             href: playerProfileRoute(row.slug, 'futurecast'),
           }))}
         />
@@ -408,7 +412,12 @@ export function FutureCastExtendedModules({
             primary: row.name,
             badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
             meta: `${row.committedShort} commit · OV ${row.visitStart ?? '—'}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''} · UF ${formatUfDisplay(row)}`,
-            extra: <FlipWatchScoreStack row={row} />,
+            extra: (
+              <>
+                <FlipWatchScoreStack row={row} />
+                <PlayerIntelTimelineStrip slug={row.slug} staffNotes={staffNotes} />
+              </>
+            ),
             href: playerProfileRoute(row.slug, 'futurecast'),
           }))}
         />

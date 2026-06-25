@@ -84,6 +84,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
                 visitIntel={data.visitIntel}
                 visitRecap={data.visitRecap}
                 flipWatch={data.flipWatch}
+                staffNotes={data.staffNotes}
                 underclassmen={data.underclassmen}
               />
             )}

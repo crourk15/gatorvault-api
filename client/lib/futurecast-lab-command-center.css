@@ -1406,6 +1406,20 @@
   display: none;
 }
 
+.fc-player-intel-timeline {
+  margin: 0.35rem 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.fc-player-intel-timeline__label {
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--uf-blue, #0021a5);
+}
+
 .fc-lab-panel-shell .fc-lab-ext-list__row span,
 .fc-lab-panel-shell .fc-lab-ext-list__link span {
   display: block;

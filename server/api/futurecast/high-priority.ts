@@ -422,9 +422,39 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         limit: 12,
         prioritySlugs: targetSlugs,
       });
+
+      const commitBySlug = new Map<string, string>();
+      const ufBySlug = new Map<string, number | null>();
+      const nameBySlug = new Map<string, string>();
+      for (const [slug, seed] of targetSeedBySlug.entries()) {
+        const recruiting = recruitingBySlug.get(slug);
+        const committedTo = resolveCommittedTo(seed, recruiting, seed);
+        const key = slug.toLowerCase();
+        if (committedTo) commitBySlug.set(key, committedTo);
+        nameBySlug.set(key, seed.name);
+        const model = predictionBySlug.get(slug);
+        const resolvedUf = resolveUfProbability({
+          modelPct: model?.confidence ?? model?.ufProbability,
+          storePct: seed.ufProbability ?? recruiting?.ufProbability ?? recruiting?.futurecastProbability,
+          predictors: [],
+          stars: seed.stars ?? null,
+          headliner: Boolean(seed.headliner),
+        });
+        ufBySlug.set(key, resolvedUf.value);
+      }
+      for (const p of playersWithVerifiedVisits) {
+        const key = String(p.slug || '').toLowerCase();
+        ufBySlug.set(key, p.ufProbability ?? ufBySlug.get(key) ?? null);
+        nameBySlug.set(key, p.name);
+        if (p.committedTo) commitBySlug.set(key, p.committedTo);
+      }
+
       const flipWatch = buildFlipWatchRows(playersWithVerifiedVisits, visitRecap, {
         visitLogs,
         intelRows: intelStore.loadIntelDoc().items || [],
+        commitBySlug,
+        ufBySlug,
+        nameBySlug,
       });
       const visitBoardSnapshot = getVisitIntelBoardSnapshot(visitLogs);
 

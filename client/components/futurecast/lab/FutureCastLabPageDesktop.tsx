@@ -94,6 +94,7 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
                 visitIntel={data.visitIntel}
                 visitRecap={data.visitRecap}
                 flipWatch={data.flipWatch}
+                staffNotes={data.staffNotes}
                 underclassmen={data.underclassmen}
               />
             )}

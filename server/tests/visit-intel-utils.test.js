@@ -143,6 +143,43 @@ describe("flip-watch-utils", () => {
     assert.equal(flip[0].committedShort, "Texas");
   });
 
+  it("includes flip targets dropped from active board when commit map + visit logs match", () => {
+    const visitLogs = [
+      {
+        playerSlug: "easton-royal",
+        playerName: "Easton Royal",
+        source: "on3",
+        visitType: "official_visit",
+        school: "Florida",
+        date: "2026-06-11",
+      },
+      {
+        playerSlug: "jalen-brewster",
+        playerName: "Jalen Brewster",
+        source: "on3",
+        visitType: "official_visit",
+        school: "Florida",
+        date: "2026-06-11",
+      },
+    ];
+    const players = [
+      { slug: "jalen-brewster", name: "Jalen Brewster", committedTo: "Texas", ufProbability: 38 },
+    ];
+    const commitBySlug = new Map([
+      ["easton-royal", "Texas"],
+      ["jalen-brewster", "Texas"],
+    ]);
+    const flip = buildFlipWatchRows(players, [], {
+      visitLogs,
+      commitBySlug,
+      nameBySlug: new Map([["easton-royal", "Easton Royal"]]),
+      ufBySlug: new Map([["easton-royal", 48]]),
+      asOf: new Date("2026-06-22T12:00:00Z"),
+    });
+    assert.equal(flip.length, 2);
+    assert.equal(flip[0].slug, "easton-royal");
+  });
+
   it("prioritizes target-board slugs in recap ordering", () => {
     const sorted = prioritizeVisitRecapForTargets(
       [
