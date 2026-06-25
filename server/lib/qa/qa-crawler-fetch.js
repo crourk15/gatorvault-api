@@ -30,7 +30,9 @@ function readLocalAsset(rel) {
 }
 
 function staticHtmlForSection(section) {
-  if (section.page === '/admin') return readLocalAsset('admin.html') || readLocalAsset('index.html');
+  if (section.page === '/admin' || section.page === '/admin/hub') {
+    return readLocalAsset('admin.html') || readLocalAsset('index.html');
+  }
   if (section.page && section.page.startsWith('/vault')) {
     const rel = `${section.page.replace(/^\//, '')}/index.html`;
     return readLocalAsset(rel) || readLocalAsset('vault/index.html') || readLocalAsset('index.html');
@@ -176,7 +178,9 @@ async function fetchSectionPlaywright(page, section, viewport) {
   });
 
   if (section.isAdmin) {
-    await page.goto(`${config.SITE_URL}/admin`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    const adminPath = section.page || '/admin/hub';
+    await page.goto(`${config.SITE_URL}${adminPath}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    await page.waitForSelector('#admin-pin-gate, #hub-shell', { timeout: 20000 }).catch(() => {});
     await page.waitForTimeout(1500);
   } else if (section.page && section.page !== '/') {
     await page.goto(`${config.SITE_URL}${section.page}`, { waitUntil: 'domcontentloaded', timeout: 45000 });
@@ -215,7 +219,9 @@ async function fetchSectionPlaywright(page, section, viewport) {
     label: section.label,
     page: section.page || '/',
     viewport,
-    url: section.isAdmin ? `${config.SITE_URL}/admin` : `${config.SITE_URL}${section.page || '/vault'}`,
+    url: section.isAdmin
+      ? `${config.SITE_URL}${section.page || '/admin/hub'}`
+      : `${config.SITE_URL}${section.page || '/vault'}`,
     fetchedAt: new Date().toISOString(),
     hydrated: true,
     source: 'playwright',

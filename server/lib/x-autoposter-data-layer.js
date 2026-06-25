@@ -30,7 +30,12 @@ function resolveIntelTimestamp(intel) {
     intel.sourceEventCreatedAt ||
     intel.eventTimestamp ||
     intel.publishedAt ||
+    intel.postedAt ||
+    intel.created_at ||
     intel.createdAt ||
+    intel.date ||
+    intel.fetchedAt ||
+    intel.reportedAt ||
     null;
   if (!raw) return null;
   const ms = new Date(raw).getTime();

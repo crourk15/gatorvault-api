@@ -463,6 +463,52 @@ async function evaluateBeatIntelEligibility(
       triggerPhrase: phrase.slice(0, 160)
     };
   }
+
+  try {
+    const ingestGate = require('./beat-recruiting-ingest-gate');
+    const syncHit = ingestGate.resolvePlayerFromTextSync(phrase);
+    if (syncHit?.playerName && isValidPlayerName(syncHit.playerName)) {
+      return {
+        eligible: true,
+        playerName: syncHit.playerName,
+        playerSlug: syncHit.playerSlug || resolvedSlug,
+        matchMode: syncHit.matchMode || 'roster_sync',
+        triggerPhrase: phrase.slice(0, 160)
+      };
+    }
+  } catch {
+    /* optional */
+  }
+
+  try {
+    const store = require('./recruiting-store');
+    const candidates = require('./x-autoposter-copy').extractAllPlayerNameCandidates(phrase);
+    const all = await store.getAllPlayers();
+    const postSpec = require('./x-autoposter-post-spec');
+    for (const candidate of candidates) {
+      let best = null;
+      let bestScore = 0;
+      for (const p of all) {
+        const score = Math.max(postSpec.textSimilarity(candidate, p.name), postSpec.jaccardSimilarity(candidate, p.name));
+        if (score >= 0.82 && score > bestScore) {
+          bestScore = score;
+          best = p;
+        }
+      }
+      if (best?.name && isValidPlayerName(best.name)) {
+        return {
+          eligible: true,
+          playerName: best.name,
+          playerSlug: best.slug,
+          matchMode: 'fuzzy_roster',
+          triggerPhrase: phrase.slice(0, 160)
+        };
+      }
+    }
+  } catch {
+    /* optional */
+  }
+
   return {
     eligible: false,
     reason: partial && isSingleTokenName(partial) ? 'single_name_only' : 'no_identifiable_player',

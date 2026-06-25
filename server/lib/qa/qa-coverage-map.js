@@ -99,10 +99,10 @@ const SITE_SECTIONS = [
   },
   {
     id: 'admin-hub',
-    label: 'Admin Hub',
-    page: '/admin',
-    areas: ['pin', 'session', 'routing', 'errors'],
-    selectors: ['#pin', 'admin-hub-core', 'GatorVault'],
+    label: 'Admin Hub v10',
+    page: '/admin/hub',
+    areas: ['login', 'navigation', 'panels'],
+    selectors: ['#admin-pin-gate', '#gate-pin', '#hub-shell', '.hub-sidebar', '.hub-nav'],
     isAdmin: true
   },
   {
@@ -150,6 +150,8 @@ const LOCAL_ASSETS = [
   'vault/live-feed/index.html',
   'vault/film-room/index.html',
   'vault/schedule/index.html',
+  'admin.html',
+  'admin-login.html',
   'js/admin-hub-core.js',
   'admin-product-intel.html',
   'admin-qa.html'

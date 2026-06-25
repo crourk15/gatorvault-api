@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-23T20:52:12.399Z",
+  "updatedAt": "2026-06-25T11:49:43.857Z",
   "api": {
     "service": "render",
     "timestamp": "2026-06-21T01:59:20.492Z",
@@ -22,7 +22,7 @@
   "lastGuardianCheck": {
     "ok": true,
     "phase": "pre",
-    "checkedAt": "2026-06-23T20:52:12.397Z",
+    "checkedAt": "2026-06-25T11:49:43.856Z",
     "errors": []
   },
   "lastFailedCheck": {

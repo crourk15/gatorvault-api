@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Card, GridLayout, PageLayout, PageSection, TabBar } from '@/components/brand';
+import { Card, PageLayout, PageSection, TabBar } from '@/components/brand';
 import {
   FILM_HUB_ORDER,
   fetchFilmRoomCatalog,
@@ -78,6 +78,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
       title="Film Room"
       subtitle="Scheme breakdowns, press conferences, and verified coaching analysis."
       testId="vault-film-room"
+      className="gv-film-room"
     >
       <TabBar
         options={HUB_TABS}
@@ -85,6 +86,27 @@ export function VaultFilmRoomPage(): React.ReactElement {
         onChange={setHub}
         aria-label="Film room categories"
       />
+
+      <PageSection title="Categories" subtitle="Select a film hub">
+        <div className="gv-film-hub-grid" role="list" aria-label="Film room categories">
+          {FILM_HUB_ORDER.map((name) => (
+            <button
+              key={name}
+              type="button"
+              role="listitem"
+              className={`gv-film-hub-card${hub === name ? ' is-active' : ''}`}
+              onClick={() => setHub(name)}
+              aria-pressed={hub === name}
+            >
+              <span className="gv-film-hub-card__icon" aria-hidden="true">
+                {HUB_ICONS[name] ?? '📺'}
+              </span>
+              <h3 className="gv-film-hub-card__title">{name}</h3>
+              <p className="gv-film-hub-card__count">{hubCounts[name] ?? 0} lessons</p>
+            </button>
+          ))}
+        </div>
+      </PageSection>
 
       {loading && <p className="gv-page-status">Loading Film Room…</p>}
       {error && !loading && (
@@ -137,18 +159,6 @@ export function VaultFilmRoomPage(): React.ReactElement {
           {items.length === 0 && (
             <UiEmpty message="Film Room catalog is empty." hint="Run ensure:film-room on the API." />
           )}
-
-          <PageSection title="Hub Overview">
-            <GridLayout cols={3}>
-              {FILM_HUB_ORDER.map((name) => (
-                <Card key={name} onClick={() => setHub(name)}>
-                  <span style={{ fontSize: '1.5rem' }}>{HUB_ICONS[name] ?? '📺'}</span>
-                  <h3 className="gv-type-h3" style={{ margin: '0.35rem 0' }}>{name}</h3>
-                  <p style={{ margin: 0, opacity: 0.75 }}>{hubCounts[name] ?? 0} lessons</p>
-                </Card>
-              ))}
-            </GridLayout>
-          </PageSection>
         </>
       )}
     </PageLayout>

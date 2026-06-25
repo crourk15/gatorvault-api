@@ -225,10 +225,13 @@ async function buildElitePlayerPost(input = {}) {
     beatText: input.beatText || input.intel?.detail || null,
     detail: input.beatText || input.intel?.detail || null,
     timestamp:
+      require('./x-autoposter-data-layer').resolveIntelTimestamp(input.intel || input) ||
       input.intel?.timestamp ||
       input.intel?.sourceEventCreatedAt ||
       input.intel?.publishedAt ||
+      input.intel?.created_at ||
       input.intel?.createdAt ||
+      input.publishedAt ||
       null,
     eventType: input.intel?.eventType,
     source: input.intel?.source || input.source,

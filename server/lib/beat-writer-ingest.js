@@ -263,7 +263,7 @@ function parseSchool(text) {
 }
 
 function parseClassYear(text) {
-  const m = String(text || '').match(/\b(202[6-9]|2030)\b/);
+  const m = String(text || '').match(/\b(202[6-9]|203[0-5])\b/);
   return m ? parseInt(m[1], 10) : null;
 }
 
@@ -322,6 +322,24 @@ function extractVisitPlayerName(text) {
   return prefilter.extractCleanFullName(t);
 }
 
+function resolvePostTimestamp(post) {
+  const candidates = [
+    post?.publishedAt,
+    post?.created_at,
+    post?.createdAt,
+    post?.timestamp,
+    post?.date,
+    post?.fetchedAt,
+    post?.reportedAt
+  ];
+  for (const raw of candidates) {
+    if (!raw) continue;
+    const ms = new Date(raw).getTime();
+    if (!Number.isNaN(ms)) return new Date(ms).toISOString();
+  }
+  return new Date().toISOString();
+}
+
 function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
   const prefilter = require('./beat-intel-prefilter');
   const text = String(post.text || '').trim();
@@ -343,6 +361,12 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     const fallback = copy.extractPlayerFromText(text);
     if (fallback && isUsableExtractedName(fallback)) playerName = fallback;
   }
+  if (!playerName || !isUsableExtractedName(playerName)) {
+    const syncHit = ingestGate.resolvePlayerFromTextSync(text);
+    if (syncHit?.playerName && isUsableExtractedName(syncHit.playerName)) {
+      playerName = syncHit.playerName;
+    }
+  }
   if ((!playerName || !isUsableExtractedName(playerName)) && !prefilter.hasStrongRecruitingSignals(text, post)) {
     if (logSkips) logBeatPostSkip(post, 'no_identifiable_player', 'non_player_intel');
     prefilter.logNonPlayerIntel({ text, reason: 'no_identifiable_player', source: post.handle || post.writerName });
@@ -361,18 +385,28 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     school: parseSchool(text) || parseCollegeSchool(text)
   });
 
-  const timestamp = post.publishedAt || new Date().toISOString();
+  const timestamp = resolvePostTimestamp(post);
   const handle = String(post.handle || '').toLowerCase() || 'beat';
   const day = timestamp.slice(0, 10);
   const postKey = String(post.id || post.url || day).replace(/[^a-z0-9_-]/gi, '').slice(0, 32);
+  const syncRoster = ingestGate.resolvePlayerFromTextSync(text);
   const resolvedName =
-    playerName && isUsableExtractedName(playerName) ? playerName : playerName || 'Unknown prospect';
+    playerName && isUsableExtractedName(playerName)
+      ? playerName
+      : syncRoster?.playerName && isUsableExtractedName(syncRoster.playerName)
+        ? syncRoster.playerName
+        : playerName || 'Unknown prospect';
   const slugBase =
     playerName && isUsableExtractedName(playerName)
       ? slugify(resolvedName)
-      : `beat-pending-${handle}-${postKey}`;
+      : syncRoster?.playerSlug || `beat-pending-${handle}-${postKey}`;
   const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
-  const classYear = parseClassYear(text) || vagueClues?.classYear || 2027;
+  const classYear =
+    parseClassYear(text) ||
+    syncRoster?.classYear ||
+    ingestGate.matchRosterByName(resolvedName)?.classYear ||
+    vagueClues?.classYear ||
+    2028;
   const pos = parsePosition(text) || vagueClues?.pos || '';
   const school = parseSchool(text) || parseCollegeSchool(text) || vagueClues?.school || '';
   const visitDate = parseVisitDate(text);
@@ -535,6 +569,9 @@ async function queueAutoposter(row, intelItem, built) {
       sourceEventType: isProgramNews ? 'program_news' : isTeamEvent ? 'team_event' : row.eventType,
       sourceIntelId: intelItem?.id,
       sourceEventCreatedAt: row.timestamp || intelItem?.timestamp || null,
+      sourcePublishedAt: row.timestamp || null,
+      publishedAt: row.timestamp || null,
+      timestamp: row.timestamp || null,
       situation: built.validationMeta?.situation || postSpec.detectSituation(built.text, row.eventType),
       scheduledAt: new Date(Date.now() + (isProgramNews ? 60 : 2) * 60 * 1000).toISOString(),
       status: 'pending',

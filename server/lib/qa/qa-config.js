@@ -38,7 +38,11 @@ const PUBLIC_PAGES = [
     path: '/',
     markers: ['data-testid="landing-page"', 'GatorVault', 'gv-landing']
   },
-  { id: 'admin-hub', path: '/admin', markers: ['GatorVault', 'admin-hub-core'] }
+  {
+    id: 'admin-hub',
+    path: '/admin/hub',
+    markers: ['GatorVault Admin Hub', 'id="hub-shell"', 'admin-hub-core.js', 'hub-sidebar']
+  }
 ];
 
 /** React vault pages — derived from vault-route-map (routes-vault.cjs). */

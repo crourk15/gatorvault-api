@@ -23,7 +23,7 @@ describe('beat-writer UF-only filter', () => {
   it('allows EJ Holland tweet with Florida context', () => {
     const post = {
       ...EJ_HOLLAND,
-      text: '2027 WR Easton Royal will take an official visit to Florida from June 11–13.',
+      text: '2028 WR Easton Royal will take an official visit to Florida from June 11–13.',
     };
     assert.equal(beatFilters.shouldIncludeBeatPost(post), true);
     assert.equal(gate.evaluateStrictRecruitingIngestGate(post, post.text).pass, true);
@@ -33,7 +33,7 @@ describe('beat-writer UF-only filter', () => {
     const post = {
       handle: 'corey_bender',
       writerName: 'Corey Bender',
-      text: '2027 WR Easton Royal is set for an official visit this weekend.',
+      text: '2028 WR Easton Royal is set for an official visit this weekend.',
     };
     assert.equal(beatFilters.passesStrictUfOnlyFilter(post, post.text), true);
   });
@@ -52,9 +52,19 @@ describe('beat-writer UF-only filter', () => {
     const post = {
       handle: 'corey_bender',
       writerName: 'Corey Bender',
-      text: 'Florida and Miami are battling for 2027 WR Easton Royal after his OV in Gainesville.',
+      text: 'Florida and Miami are battling for 2028 WR Easton Royal after his OV in Gainesville.',
     };
     assert.equal(beatFilters.shouldIncludeBeatPost(post), true);
+  });
+
+  it('allows UF mention inside quotes with rival program in same tweet', () => {
+    const post = {
+      handle: 'corey_bender',
+      writerName: 'Corey Bender',
+      text: 'Georgia is pushing hard, but "Florida is very much in the mix" for 2028 WR Hudson West.',
+    };
+    assert.equal(beatFilters.passesStrictUfOnlyFilter(post, post.text), true);
+    assert.equal(beatFilters.mentionsOtherProgramWithoutUf(post.text, post), false);
   });
 
   it('blocks rival-program reporter without UF context', () => {

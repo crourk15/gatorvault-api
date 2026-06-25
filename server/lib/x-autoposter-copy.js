@@ -32,27 +32,83 @@ const PLAYER_INTEL_SIGNALS = [
   /\bstaff loves\b/i
 ];
 
-const NAME_CHUNK = `[A-Z][A-Za-z'.-]+(?:\\s+[A-Z][A-Za-z'.-]+){0,2}`;
+const NAME_PART = `[A-Z][A-Za-z'.-]+`;
+const NAME_SUFFIX = `(?:\\s+(?:Jr\\.?|Sr\\.?|II|III|IV|V))?`;
+const NAME_CHUNK = `${NAME_PART}(?:\\s+${NAME_PART}){1,2}${NAME_SUFFIX}`;
+const POS_TOKEN = `(?:QB|RB|WR|TE|OL|OT|OG|C|DL|DT|DE|EDGE|LB|CB|S|ATH|K|P)`;
+
+function titleCaseToken(word) {
+  return String(word || '')
+    .split(/([-'])/)
+    .map((part) => {
+      if (part === '-' || part === "'") return part;
+      if (!part) return part;
+      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+    })
+    .join('');
+}
+
+/** Normalize lowercase beat tweets so name regexes can match. */
+function normalizeTextForNameExtract(text) {
+  let t = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!t || t !== t.toLowerCase()) return t;
+
+  t = t.replace(
+    /\b(20\d{2})\s+(?:(\d+-star)\s+)?(qb|rb|wr|te|ol|ot|og|c|dl|dt|de|edge|lb|cb|s|ath|k|p)\s+([a-z'.-]+(?:\s+[a-z'.-]+){0,2}(?:\s+(?:jr\.?|sr\.?|ii|iii|iv|v))?)\b/gi,
+    (_, yr, star, pos, name) =>
+      `${yr}${star ? ` ${star}` : ''} ${pos.toUpperCase()} ${name
+        .split(/\s+/)
+        .map(titleCaseToken)
+        .join(' ')}`
+  );
+  t = t.replace(
+    /\b([a-z'.-]+)\s+([a-z'.-]+(?:\s+[a-z'.-]+)?(?:\s+(?:jr\.?|sr\.?|ii|iii|iv|v))?)\s+(is|has|will|was|to)\b/gi,
+    (_, a, b, verb) => `${titleCaseToken(a)} ${b.split(/\s+/).map(titleCaseToken).join(' ')} ${verb}`
+  );
+  return t;
+}
+
+function extractAllPlayerNameCandidates(text) {
+  const variants = [String(text || ''), normalizeTextForNameExtract(text)].filter(Boolean);
+  const seen = new Set();
+  const hits = [];
+  for (const t of variants) {
+    const re = new RegExp(`\\b(${NAME_CHUNK})\\b`, 'g');
+    let m;
+    while ((m = re.exec(t))) {
+      const name = m[1]?.trim();
+      if (!name || seen.has(name.toLowerCase())) continue;
+      seen.add(name.toLowerCase());
+      if (isValidPlayerName(name)) hits.push(name);
+    }
+  }
+  return hits;
+}
 
 function extractPlayerFromText(text) {
-  const t = String(text || '');
+  const variants = [String(text || ''), normalizeTextForNameExtract(text)].filter(Boolean);
   const patterns = [
-    new RegExp(`\\b(?:Class of )?(20\\d{2})\\s+(?:\\d+-Star\\s+)?(?:[A-Z]{1,4}\\s+)(${NAME_CHUNK})\\b`),
-    new RegExp(`\\b(?:Class of 20\\d{2})\\s+(?:\\d+-Star\\s+)?(?:[A-Z]{1,4}\\s+)?(${NAME_CHUNK})\\b`),
-    new RegExp(`\\b(?:BREAKING:)\\s*(?:Class of 20\\d{2}\\s+)?(?:\\d+-Star\\s+)?(?:[A-Z]{1,4}\\s+)?(${NAME_CHUNK})\\b`),
+    new RegExp(`\\b(?:Class of )?(20\\d{2})\\s+(?:\\d+-Star\\s+)?(?:${POS_TOKEN}\\s+)(${NAME_CHUNK})\\b`),
+    new RegExp(`\\b(?:Class of 20\\d{2})\\s+(?:\\d+-Star\\s+)?(?:${POS_TOKEN}\\s+)?(${NAME_CHUNK})\\b`),
+    new RegExp(`\\b(?:BREAKING:)\\s*(?:Class of 20\\d{2}\\s+)?(?:\\d+-Star\\s+)?(?:${POS_TOKEN}\\s+)?(${NAME_CHUNK})\\b`),
+    new RegExp(`\\b(?:${POS_TOKEN})\\s+(${NAME_CHUNK})\\b`),
     new RegExp(`\\b(?:pick|prediction|forecast)\\s+for\\s+(${NAME_CHUNK})\\b`, 'i'),
     new RegExp(`\\bfor\\s+(${NAME_CHUNK})\\s+to\\s+Florida\\b`, 'i'),
     new RegExp(`\\b(${NAME_CHUNK})\\s+(?:has|have)\\s+(?:committed|cancelled|canceled|decommitted|flipped|enrolled|signed)\\b`),
-    new RegExp(`\\b(${NAME_CHUNK})\\s+(?:will|to)\\s+(?:now\\s+)?(?:visit|take)\\b`)
+    new RegExp(`\\b(${NAME_CHUNK})\\s+(?:will|to)\\s+(?:now\\s+)?(?:visit|take|officially)\\b`),
+    new RegExp(`["'](${NAME_CHUNK})["']`),
+    new RegExp(`\\b(${NAME_CHUNK})\\s*,\\s*(?:a|the)?\\s*(?:20\\d{2}|${POS_TOKEN})\\b`),
+    new RegExp(`\\b(?:target|prospect|recruit|commit|flip|visit(?:er)?)\\s+(${NAME_CHUNK})\\b`, 'i')
   ];
-  for (const re of patterns) {
-    const m = t.match(re);
-    const name = (m?.[2] || m?.[1])?.trim();
-    if (name && isValidPlayerName(name)) return name;
+  for (const t of variants) {
+    for (const re of patterns) {
+      const m = t.match(re);
+      const name = (m?.[2] || m?.[1])?.trim();
+      if (name && isValidPlayerName(name)) return name;
+    }
+    const candidates = extractAllPlayerNameCandidates(t);
+    if (candidates.length) return candidates[0];
   }
-  const m = t.match(new RegExp(`\\b(${NAME_CHUNK})\\b`));
-  const fallback = m?.[1]?.trim() || null;
-  if (fallback && isValidPlayerName(fallback)) return fallback;
   return null;
 }
 
@@ -540,6 +596,8 @@ module.exports = {
   SITE_URL,
   isValidPlayerName,
   extractPlayerFromText,
+  extractAllPlayerNameCandidates,
+  normalizeTextForNameExtract,
   hasPlayerSpecificIntel,
   isGeneralBeatCommentary,
   isPredictionMachinePost,

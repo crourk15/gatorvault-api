@@ -246,10 +246,27 @@ function mentionsOtherProgram(text) {
   return OTHER_PROGRAM_RE.test(String(text || ''));
 }
 
-function mentionsOtherProgramWithoutUf(text) {
+function hasUfContextInText(text, post = null) {
+  const t = String(text || '');
+  if (!t.trim()) return false;
+  if (isFloridaRelevant(t)) return true;
+  if (matchesUfTargetNameInText(t)) return true;
+  if (/"[^"]*(?:florida|gators|\buf\b|gainesville|the swamp)[^"]*"/i.test(t)) return true;
+  if (/'[^']*(?:florida|gators|\buf\b|gainesville|the swamp)[^']*'/i.test(t)) return true;
+  if (post && postUrls(post).some(isFloridaRelatedUrl)) return true;
+  return t
+    .split(/[.!?]+/)
+    .some((sentence) => isFloridaRelevant(sentence) || matchesUfTargetNameInText(sentence));
+}
+
+function mentionsOtherProgramWithoutUf(text, post = null) {
   const t = String(text || '');
   if (!mentionsOtherProgram(t)) return false;
-  return !isFloridaRelevant(t);
+  return !hasUfContextInText(t, post);
+}
+
+function hasUfIngestContext(post, text) {
+  return isFloridaRelevantPost(post) || hasUfContextInText(text, post);
 }
 
 let _ufTargetNamePatterns = null;
@@ -276,24 +293,20 @@ function matchesUfTargetNameInText(text) {
   return getUfTargetNamePatterns().some((re) => re.test(t));
 }
 
-function hasUfIngestContext(post, text) {
-  return isFloridaRelevantPost(post) || matchesUfTargetNameInText(text);
-}
-
 function strictUfOnlyBlockReason(post, text) {
   if (isSteveWiltfongPost(post) && !matchesExplicitUfKeywords(text) && !postUrls(post).some(isFloridaRelatedUrl)) {
     return 'wiltfong_non_uf_keywords';
   }
   if (isOtherProgramReporter(post) && !hasUfIngestContext(post, text)) return 'rival_program_reporter';
-  if (mentionsOtherProgramWithoutUf(text)) return 'other_program_without_uf';
+  if (mentionsOtherProgramWithoutUf(text, post)) return 'other_program_without_uf';
   if (!hasUfIngestContext(post, text)) return 'missing_uf_context';
   return 'hard_block_non_uf';
 }
 
-function isHardBlockedNonUfContent(text) {
+function isHardBlockedNonUfContent(text, post = null) {
   const t = String(text || '');
   if (isFloridaRelevant(t)) return false;
-  if (mentionsOtherProgramWithoutUf(t)) return true;
+  if (mentionsOtherProgramWithoutUf(t, post)) return true;
   if (NATIONAL_ROUNDUP_RE.test(t)) return true;
   if (/\b(commits? to|committed to|flips? to|pledges? to|signs? with)\b/i.test(t) && OTHER_PROGRAM_RE.test(t)) {
     return true;
@@ -307,8 +320,8 @@ function passesStrictUfOnlyFilter(post, text) {
   if (!body) return false;
 
   if (isUfOfficialAccount(post) && isFloridaRelevant(body)) return true;
-  if (isHardBlockedNonUfContent(body)) return false;
-  if (mentionsOtherProgramWithoutUf(body)) return false;
+  if (isHardBlockedNonUfContent(body, post)) return false;
+  if (mentionsOtherProgramWithoutUf(body, post)) return false;
 
   if (isSteveWiltfongPost(post)) {
     const explicit = matchesExplicitUfKeywords(body) || postUrls(post).some(isFloridaRelatedUrl);
@@ -404,6 +417,7 @@ module.exports = {
   isFloridaRelatedPost,
   mentionsOtherProgram,
   mentionsOtherProgramWithoutUf,
+  hasUfContextInText,
   matchesUfTargetNameInText,
   hasUfIngestContext,
   passesStrictUfOnlyFilter,

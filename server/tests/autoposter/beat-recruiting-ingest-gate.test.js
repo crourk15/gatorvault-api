@@ -4,7 +4,7 @@ const gate = require('../../lib/beat-recruiting-ingest-gate');
 const { parseBeatPostForVisitIntel } = require('../../lib/beat-writer-ingest');
 
 const GOOD_POST = {
-  text: '2027 WR Easton Royal will take an official visit to Florida from June 11–13.',
+  text: '2028 WR Easton Royal will take an official visit to Florida from June 11–13.',
   handle: 'ttjharden8',
   writerName: 'Tyler Harden',
   publishedAt: '2026-06-10T12:00:00.000Z',
@@ -12,7 +12,7 @@ const GOOD_POST = {
 };
 
 describe('beat-recruiting-ingest-gate', () => {
-  it('passes a valid 2027 UF recruiting beat tweet', () => {
+  it('passes a valid 2028 UF recruiting beat tweet', () => {
     const result = gate.evaluateStrictRecruitingIngestGate(GOOD_POST);
     assert.equal(result.pass, true);
   });
@@ -27,13 +27,38 @@ describe('beat-recruiting-ingest-gate', () => {
     assert.equal(result.reason, 'disallowed_account');
   });
 
-  it('rejects posts without class year 2027+', () => {
+  it('allows posts without explicit class year when other gates pass', () => {
+    const result = gate.evaluateStrictRecruitingIngestGate({
+      ...GOOD_POST,
+      text: 'WR Easton Royal will take an official visit to Florida from June 11–13.',
+    });
+    assert.equal(result.pass, true);
+  });
+
+  it('rejects posts with explicit class year 2026', () => {
     const result = gate.evaluateStrictRecruitingIngestGate({
       ...GOOD_POST,
       text: '2026 WR Easton Royal commits to Florida.',
     });
     assert.equal(result.pass, false);
     assert.equal(result.reason, 'class_year_below_2027');
+  });
+
+  it('rejects posts with explicit class year 2029', () => {
+    const result = gate.evaluateStrictRecruitingIngestGate({
+      ...GOOD_POST,
+      text: '2029 WR Easton Royal will take an official visit to Florida.',
+    });
+    assert.equal(result.pass, false);
+    assert.equal(result.reason, 'class_year_below_2027');
+  });
+
+  it('allows 2028 recruiting intel', () => {
+    const result = gate.evaluateStrictRecruitingIngestGate({
+      ...GOOD_POST,
+      text: '2028 WR Phoenix Evans will take an official visit to Florida this weekend.',
+    });
+    assert.equal(result.pass, true);
   });
 
   it('rejects posts without UF mention or locked target name', () => {
@@ -48,7 +73,7 @@ describe('beat-recruiting-ingest-gate', () => {
   it('rejects posts without a player name', () => {
     const result = gate.evaluateStrictRecruitingIngestGate({
       ...GOOD_POST,
-      text: '2027 recruiting class visit weekend for Florida football.',
+      text: '2028 recruiting class visit weekend for Florida football.',
     });
     assert.equal(result.pass, false);
     assert.equal(result.reason, 'no_player_name');
@@ -68,7 +93,14 @@ describe('beat-recruiting-ingest-gate', () => {
     const row = parseBeatPostForVisitIntel(GOOD_POST, { logSkips: false });
     assert.ok(row);
     assert.equal(row.playerName, 'Easton Royal');
-    assert.equal(row.classYear, 2027);
+    assert.equal(row.classYear, 2028);
+  });
+
+  it('extracts player names with suffixes and POS prefixes', () => {
+    const copy = require('../../lib/x-autoposter-copy');
+    assert.equal(copy.extractPlayerFromText('2028 RB Lorenzo McMullen Jr. will visit Florida.'), 'Lorenzo McMullen Jr');
+    assert.equal(copy.extractPlayerFromText('2028 WR Davin Davidson is set for an OV to Gainesville.'), 'Davin Davidson');
+    assert.equal(copy.extractPlayerFromText('RB Hudson West has Florida in his top five.'), 'Hudson West');
   });
 
   it('parseBeatPostForVisitIntel drops generic beat fluff', () => {

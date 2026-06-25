@@ -57,7 +57,7 @@ async function runFilmRoomStructureChecks() {
 
   checks.push(
     await check('pages:react-film-room', 'pages', 'React Film Room production markers', async () => {
-      const text = await fetchSiteBundleText(config.SITE_URL, '/vault/film-room');
+      const text = await fetchSiteBundleText(config.SITE_URL, '/vault/film-room', { htmlOnly: false, maxAssets: 8 });
       const required = [
         'data-testid="vault-film-room"',
         'gv-film-hub-grid',

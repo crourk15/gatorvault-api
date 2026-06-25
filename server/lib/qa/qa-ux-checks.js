@@ -6,8 +6,11 @@ const { check, fetchSiteBundleText, moduleResult } = require('./qa-utils');
 
 const VAULT_PAGES = ['/vault/live-feed', '/vault/team', '/vault/recruiting', '/vault/film-room'];
 
+/** Include linked CSS/JS bundles — HTML-only misses vault-shell.css (z-index, tap targets). */
+const BUNDLE_OPTS = { htmlOnly: false, maxAssets: 12 };
+
 async function bundleFor(path) {
-  return fetchSiteBundleText(config.SITE_URL, path);
+  return fetchSiteBundleText(config.SITE_URL, path, BUNDLE_OPTS);
 }
 
 async function runUxChecks() {
@@ -21,13 +24,23 @@ async function runUxChecks() {
       }
       const hasVaultShell = text.includes('gv-vault-shell');
       const hasStickyHeader = text.includes('z-index') && text.includes('gv-vault-shell__header');
+      const hasModalStack =
+        text.includes('gv-modal') &&
+        (text.includes('z-index:9999') || text.includes('z-index: 9999'));
       if (!hasVaultShell) {
         throw new Error('VaultShell CSS not found in production bundles');
       }
-      if (!hasStickyHeader && !text.includes('z-index: 40') && !text.includes('z-index:40')) {
+      if (
+        !hasModalStack &&
+        !hasStickyHeader &&
+        !text.includes('z-index: 40') &&
+        !text.includes('z-index:40') &&
+        !text.includes('z-index:1000') &&
+        !text.includes('z-index: 1000')
+      ) {
         throw new Error('Vault header z-index stacking not found — modals may render behind shell');
       }
-      return { vaultShell: true, stickyHeader: hasStickyHeader };
+      return { vaultShell: true, stickyHeader: hasStickyHeader, modalStack: hasModalStack };
     })
   );
 

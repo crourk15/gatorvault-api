@@ -4,12 +4,17 @@
  * 1. Allowed account (UF beat writers + UF official)
  * 2. Football signal in text
  * 3. Recruiting signal in text
- * 4. Class year 2027+ in text
+ * 4. Class year 2028+ (2029/2030 blocked unless override; missing year allowed — infer from roster)
  * 5. UF mention or locked UF target name in text
- * 6. Player first + last name in text
+ * 6. Player first + last name in text (regex + extractor + roster sync)
  * 7. No rival-program mention without UF context
  */
+const fs = require('fs');
+const path = require('path');
 const beatFilters = require('./beat-writer-filters');
+const { extractPlayerFromText, extractAllPlayerNameCandidates } = require('./x-autoposter-copy');
+const { isValidPlayerName } = require('./x-autoposter-player-context');
+const { slugify } = require('./slug');
 
 /** UF official program accounts (lowercase handles). */
 const UF_OFFICIAL_HANDLES = new Set([
@@ -58,8 +63,92 @@ const RECRUITING_TERMS = [
   'top 10',
 ];
 
-const CLASS_YEAR_RE = /20(27|28|29|30|31|32)/;
-const PLAYER_NAME_RE = /\b[A-Z][a-z]+ [A-Z][a-z]+\b/;
+const CLASS_YEAR_RE = /20(?:28|29|30|31|32)/;
+const PLAYER_NAME_RE = /\b[A-Z][a-z]+(?:\s+[A-Z][a-z'-]+){1,2}(?:\s+(?:Jr\.?|Sr\.?|II|III|IV|V))?\b/;
+
+const PLAYERS_PATH = path.join(__dirname, '..', 'data', 'recruiting', 'players.json');
+const FUZZY_THRESHOLD = 0.82;
+let rosterCache = null;
+let rosterCacheAt = 0;
+
+function loadRosterPlayers() {
+  if (rosterCache && Date.now() - rosterCacheAt < 60_000) return rosterCache;
+  try {
+    const raw = JSON.parse(fs.readFileSync(PLAYERS_PATH, 'utf8'));
+    rosterCache = Array.isArray(raw) ? raw : raw.players || Object.values(raw.players || raw) || [];
+  } catch {
+    rosterCache = [];
+  }
+  rosterCacheAt = Date.now();
+  return rosterCache;
+}
+
+function nameSimilarity(a, b) {
+  const postSpec = require('./x-autoposter-post-spec');
+  return Math.max(postSpec.textSimilarity(a, b), postSpec.jaccardSimilarity(a, b));
+}
+
+function matchRosterByName(name) {
+  const key = String(name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (!key) return null;
+  const players = loadRosterPlayers();
+  const exact = players.find((p) => String(p.name || '').toLowerCase().replace(/[^a-z0-9]/g, '') === key);
+  if (exact) return exact;
+  let best = null;
+  let bestScore = 0;
+  for (const p of players) {
+    const score = nameSimilarity(name, p.name);
+    if (score >= FUZZY_THRESHOLD && score > bestScore) {
+      bestScore = score;
+      best = p;
+    }
+  }
+  return best;
+}
+
+function extractClassYears(text) {
+  const years = [];
+  const re = /\b(20(?:2[0-9]|3[0-5]))\b/g;
+  let m;
+  while ((m = re.exec(String(text || '')))) years.push(parseInt(m[1], 10));
+  return years;
+}
+
+function resolvePlayerFromTextSync(text) {
+  const t = String(text || '').trim();
+  if (!t) return null;
+  let name = extractPlayerFromText(t);
+  if (!name) name = extractAllPlayerNameCandidates(t)[0] || null;
+  if (!name) {
+    try {
+      const allowlist = require('./recruiting-target-allowlist');
+      const names = Object.values(allowlist.getMergedCanonicalNames?.() || allowlist.CANONICAL_TARGET_NAMES || {});
+      for (const n of names) {
+        const re = new RegExp(`\\b${String(n).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+        if (re.test(t)) {
+          name = n;
+          break;
+        }
+      }
+    } catch {
+      /* optional */
+    }
+  }
+  if (!name) return null;
+  const roster = matchRosterByName(name);
+  if (roster?.name) {
+    return {
+      playerName: roster.name,
+      playerSlug: roster.slug || slugify(roster.name),
+      classYear: roster.classYear != null ? Number(roster.classYear) : null,
+      matchMode: 'roster_sync'
+    };
+  }
+  if (isValidPlayerName(name)) {
+    return { playerName: name, playerSlug: slugify(name), classYear: null, matchMode: 'text_extract' };
+  }
+  return null;
+}
 
 function normalizeHandle(post) {
   return String(post?.handle || post?.writerId || '').toLowerCase().replace(/^@/, '');
@@ -92,20 +181,27 @@ function matchesRecruiting(text) {
   return RECRUITING_TERMS.some((term) => hay.includes(term));
 }
 
-function matchesClassYear(text) {
-  return CLASS_YEAR_RE.test(text);
+function matchesClassYear(text, post = null) {
+  const years = extractClassYears(text);
+  if (!years.length) return true;
+  const allowFuture = post?.manualClassYearOverride || process.env.BEAT_INGEST_ALLOW_CLASS_2029 === 'true';
+  if (years.some((y) => y >= 2029) && !allowFuture) return false;
+  if (years.some((y) => y <= 2027)) return false;
+  return true;
 }
 
-function matchesUfMention(text) {
-  return beatFilters.hasUfIngestContext({ text }, text);
+function matchesUfMention(text, post) {
+  return beatFilters.hasUfIngestContext(post || { text }, text);
 }
 
-function passesOtherProgramGate(text) {
-  return !beatFilters.mentionsOtherProgramWithoutUf(text);
+function passesOtherProgramGate(text, post) {
+  return !beatFilters.mentionsOtherProgramWithoutUf(text, post);
 }
 
 function matchesPlayerName(text) {
-  return PLAYER_NAME_RE.test(text);
+  if (extractPlayerFromText(text)) return true;
+  if (PLAYER_NAME_RE.test(text)) return true;
+  return Boolean(resolvePlayerFromTextSync(text)?.playerName);
 }
 
 /**
@@ -132,13 +228,13 @@ function evaluateStrictRecruitingIngestGate(post, text) {
   if (!matchesRecruiting(body)) {
     return { pass: false, reason: 'no_recruiting_signal', failedRule: 3 };
   }
-  if (!matchesClassYear(body)) {
+  if (!matchesClassYear(body, post)) {
     return { pass: false, reason: 'class_year_below_2027', failedRule: 4 };
   }
-  if (!matchesUfMention(body)) {
+  if (!matchesUfMention(body, post)) {
     return { pass: false, reason: 'no_uf_mention', failedRule: 5 };
   }
-  if (!passesOtherProgramGate(body)) {
+  if (!passesOtherProgramGate(body, post)) {
     return { pass: false, reason: 'other_program_without_uf', failedRule: 5 };
   }
   if (!matchesPlayerName(body)) {
@@ -167,4 +263,7 @@ module.exports = {
   matchesPlayerName,
   evaluateStrictRecruitingIngestGate,
   passesStrictRecruitingIngestGate,
+  extractClassYears,
+  resolvePlayerFromTextSync,
+  matchRosterByName
 };

@@ -1309,8 +1309,13 @@ body.gv-live-page-active .gv-vault-shell__main {
   color: inherit;
 }
 
-.gv-film-hub-card:hover {
+.gv-film-hub-card:hover,
+.gv-film-hub-card.is-active {
   border-color: rgba(250, 70, 22, 0.45);
+}
+
+.gv-film-hub-card.is-active {
+  background: rgba(250, 70, 22, 0.08);
 }
 
 .gv-film-hub-card__icon {

@@ -79,8 +79,14 @@
       "allowDetectors": ["landing-dark"]
     },
     "/admin": {
-      "fetchPath": "/admin",
-      "requiredClasses": ["admin-hub-core", "hub-sidebar"],
+      "fetchPath": "/admin/hub",
+      "requiredClasses": ["hub-sidebar", "hub-nav"],
+      "forbiddenDetectors": ["trial-promo", "monolith-vpane"],
+      "allowDetectors": ["admin-neutral"]
+    },
+    "/admin/hub": {
+      "fetchPath": "/admin/hub",
+      "requiredClasses": ["hub-sidebar", "hub-nav"],
       "forbiddenDetectors": ["trial-promo", "monolith-vpane"],
       "allowDetectors": ["admin-neutral"]
     }

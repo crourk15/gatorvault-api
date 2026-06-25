@@ -27,15 +27,29 @@ function isUsableBeatLine(line) {
   return true;
 }
 
+const NAME_SUFFIXES = new Set(['jr', 'jr.', 'sr', 'sr.', 'ii', 'iii', 'iv', 'v']);
+
+function coreNameParts(name) {
+  return String(name || '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter((p) => !NAME_SUFFIXES.has(p.toLowerCase()));
+}
+
 function isValidPlayerName(name) {
   if (!name || typeof name !== 'string') return false;
   const trimmed = name.trim();
-  if (trimmed.length < 4 || trimmed.length > 48) return false;
+  if (trimmed.length < 4 || trimmed.length > 56) return false;
   const parts = trimmed.split(/\s+/).filter(Boolean);
-  if (parts.length < 2) return false;
-  if (parts.some((p) => INVALID_NAME_PARTS.has(p.toLowerCase()))) return false;
+  const core = coreNameParts(trimmed);
+  if (core.length < 2) return false;
+  if (core.some((p) => INVALID_NAME_PARTS.has(p.toLowerCase()))) return false;
   if (parts.some((p) => /https?|www|\.com/i.test(p))) return false;
-  if (!parts.every((p) => /^[A-Za-z][A-Za-z'-]{1,}$/.test(p))) return false;
+  for (const p of parts) {
+    if (NAME_SUFFIXES.has(p.toLowerCase())) continue;
+    if (!/^[A-Za-z][A-Za-z'-]{0,}$/.test(p.replace(/\./g, ''))) return false;
+  }
   return true;
 }
 

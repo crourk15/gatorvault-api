@@ -374,9 +374,14 @@ function resolveEventTimestamp(item) {
   const candidates = [
     item.sourceEventCreatedAt,
     item.sourcePublishedAt,
+    item.publishedAt,
+    item.timestamp,
     item.eventTimestamp,
     item.intelTimestamp,
-    item.createdAt
+    item.created_at,
+    item.createdAt,
+    item.reportedAt,
+    item.fetchedAt
   ];
   for (const raw of candidates) {
     if (!raw) continue;
