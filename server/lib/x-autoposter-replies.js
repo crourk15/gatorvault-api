@@ -8,6 +8,7 @@ const beatFilters = require('./beat-writer-filters');
 const { intelFingerprint } = require('./commit-fingerprint');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
+const FUTURECAST_VISITS_URL = `${SITE_URL}/vault/futurecast#visits`;
 const REPLY_ENABLED = process.env.X_AUTOPOST_REPLY_ENABLED === 'true';
 const MAX_BEAT_REPLIES = parseInt(process.env.X_AUTOPOST_MAX_BEAT_REPLIES || '2', 10);
 
@@ -55,10 +56,10 @@ function buildThreadReply(item) {
     return `Full ${player} intel + film in the Vault 🐊 ${SITE_URL}`;
   }
   if (item.intelType === 'official_visit' && player) {
-    return `${player} visit tracked live — Heat Check + recruiting board updated 🐊 ${SITE_URL}`;
+    return `${player} visit tracked live — FutureCast visit intel updated 🐊 ${FUTURECAST_VISITS_URL}`;
   }
   if (/official visit|visit to gainesville|gainesville/.test(text)) {
-    return `Visit intel live in GatorVault Heat Check 🐊 ${SITE_URL}`;
+    return `Visit intel live on the FutureCast board 🐊 ${FUTURECAST_VISITS_URL}`;
   }
   return `More Gators recruiting intel in the Vault 🐊 ${SITE_URL}`;
 }

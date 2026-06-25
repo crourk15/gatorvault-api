@@ -8,6 +8,8 @@ const validation = require('./x-autoposter-validation');
 const { isValidPlayerName } = playerContext;
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
+const FUTURECAST_VISITS_URL = `${SITE_URL}/vault/futurecast#visits`;
+const FUTURECAST_BOARD_URL = `${SITE_URL}/vault/futurecast#master-board`;
 
 const BROKEN_COPY_PATTERNS = [
   /\bour own pi\b/i,
@@ -148,12 +150,34 @@ function extractVerifiedPatchFromBeatText(text) {
   };
 }
 
+/** Deep-link X posts to the FutureCast section that matches the intel type. */
+function resolveAutoposterSiteUrl(meta = {}, bodyText = '') {
+  const text = String(bodyText || meta.beatText || '').toLowerCase();
+  const et = String(meta.eventType || meta.triggerType || meta.teamEventType || '').toLowerCase();
+  if (
+    et.includes('visit') ||
+    /visit intel|official visit|\bov\b|visit window|visit tracked/.test(text)
+  ) {
+    return FUTURECAST_VISITS_URL;
+  }
+  if (/futurecast board|futurecast update|futurecast puts uf|full tracker/.test(text)) {
+    return FUTURECAST_BOARD_URL;
+  }
+  if (/futurecast|visit intel|2027 visit/.test(text)) {
+    return FUTURECAST_VISITS_URL;
+  }
+  return SITE_URL;
+}
+
 function appendSite(text, meta = {}) {
   const body = template.finalizeAutoposterCopy(template.stripEmojisHashtags(text), meta);
   if (!body) return '';
-  const urlBit = SITE_URL.replace('https://', '');
-  if (body.includes(urlBit)) return template.enforceTweetLimit(body, 280, meta);
-  const withUrl = `${body}\n${SITE_URL}`;
+  const landing = resolveAutoposterSiteUrl(meta, body);
+  const urlBit = landing.replace('https://', '');
+  if (body.includes(urlBit) || body.includes(SITE_URL.replace('https://', ''))) {
+    return template.enforceTweetLimit(body, 280, meta);
+  }
+  const withUrl = `${body}\n${landing}`;
   return withUrl.length <= 280 ? withUrl : template.enforceTweetLimit(body, 280, meta);
 }
 
@@ -594,6 +618,9 @@ function isBrokenCopy(text, meta = {}) {
 
 module.exports = {
   SITE_URL,
+  FUTURECAST_VISITS_URL,
+  FUTURECAST_BOARD_URL,
+  resolveAutoposterSiteUrl,
   isValidPlayerName,
   extractPlayerFromText,
   extractAllPlayerNameCandidates,

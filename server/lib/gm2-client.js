@@ -5,11 +5,13 @@
 const { GM2_REWRITE_PROMPT } = require('./autoposter/gm2-rewrite-prompt');
 const pipelineGuards = require('./pipeline-guards');
 
-function appendGvCta(text) {
+function appendGvCta(text, meta = {}) {
   if (process.env.X_AUTOPOST_GV_CTA_ENABLED !== 'true') return text;
   const body = String(text || '').trim();
   if (!body || /gatorvault/i.test(body)) return body;
-  return `${body} Full FutureCast board on GatorVault.`;
+  const site = process.env.SITE_URL || 'https://gatorvaultinsider.com';
+  const landing = `${site}/vault/futurecast#visits`;
+  return `${body} Full tracker at ${landing.replace('https://', '')}.`;
 }
 
 function formatVisitLabel(visitType) {

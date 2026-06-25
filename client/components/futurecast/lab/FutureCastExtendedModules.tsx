@@ -12,7 +12,7 @@ import {
 } from '@/lib/recruiting-intel-feed';
 import { FutureCastPanelShell } from './primitives';
 import { ufPctFromFc, isBattleTarget } from './fc-lab-types';
-import { playerProfileRoute } from '@/lib/vault-route-map';
+import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 
 type Props = {
   masterBoard: MasterBoardResponse;
@@ -272,9 +272,10 @@ export function FutureCastExtendedModules({
         />
       </FutureCastPanelShell>
 
+      <section id={FUTURECAST_LAB_ANCHORS.visits}>
       <FutureCastPanelShell
-        title="Commitment Timeline Predictor"
-        sub="Visit windows and projected decision windows."
+        title="2027 Visit Intel"
+        sub="Official visit windows, OV status, and projected decision timing on the FutureCast board."
         testId="fc-lab-timeline"
       >
         <ModuleList
@@ -292,6 +293,7 @@ export function FutureCastExtendedModules({
             }))}
         />
       </FutureCastPanelShell>
+      </section>
 
       <FutureCastPanelShell title="30-Day Trend Engine" sub="Rolling UF probability movers (30d window)." testId="fc-lab-trend-30">
         <div className="fc-lab-trend-grid">

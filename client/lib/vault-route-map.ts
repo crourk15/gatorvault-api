@@ -104,6 +104,7 @@ export const FILM_ROOM_SEGMENT_PATHS: Record<FilmRoomSegment, string> = {
 export const FUTURECAST_LAB_ANCHORS = {
   overview: 'overview',
   masterBoard: 'master-board',
+  visits: 'visits',
   trending: 'trending',
   signals: 'signals',
   movement: 'movement',
@@ -131,6 +132,7 @@ export const FUTURECAST_SEGMENT_PATHS: Record<FutureCastSegment, string> = {
 export const FUTURECAST_LAB_SECTIONS = [
   { id: FUTURECAST_LAB_ANCHORS.overview, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.overview), shortLabel: 'Overview' },
   { id: FUTURECAST_LAB_ANCHORS.masterBoard, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.masterBoard), shortLabel: 'Targets' },
+  { id: FUTURECAST_LAB_ANCHORS.visits, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.visits), shortLabel: 'Visits' },
   { id: FUTURECAST_LAB_ANCHORS.trending, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.trending), shortLabel: 'Battles' },
   { id: FUTURECAST_LAB_ANCHORS.signals, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.signals), shortLabel: 'Signals' },
   { id: FUTURECAST_LAB_ANCHORS.movement, href: futureCastLabHref(FUTURECAST_LAB_ANCHORS.movement), shortLabel: 'Movement' },
