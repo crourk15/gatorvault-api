@@ -29,6 +29,7 @@ const { ALLOWLIST_2027, CANONICAL_TARGET_NAMES } = require('../../lib/recruiting
 const { filterBlockedRecruits, isBlockedRecruit } = require('../../lib/recruiting-blocked-players');
 const { isFloridaSchool, isActiveUfTarget, isCommittedElsewhere } = require('../../lib/recruiting-target-filters');
 const { resolveCommitmentOverride } = require('../../lib/commitment-prediction-override');
+const { resolveUfProbability, loadRivalsUfPctBySlug } = require('../../lib/uf-probability-utils');
 
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 const EARLY_WATCHLIST_PATH = path.join(__dirname, '../../data/futurecast/early-watchlist.json');
@@ -285,6 +286,7 @@ export async function loadBoardPlayersForSlugs(
   const rankings = loadRecruitingRankings();
   const seedMeta = loadSeedMeta(classYear);
   const rivalsSchools = loadRivalsCompetingSchools();
+  const rivalsUfBySlug = loadRivalsUfPctBySlug();
 
   const [stockRowsRaw, predictionRows] = await Promise.all([
     listStockBoardRows(movementWindowDays, {
@@ -379,7 +381,35 @@ export async function loadBoardPlayersForSlugs(
       model?.committedTo ??
       null;
     const ufCommitted = isFloridaSchool(committedTo);
-    let ufConfidence = override ? null : toPercentOrNull(model?.confidence ?? model?.ufProbability);
+    const ufPredictors: Array<{ name: string; score: number }> = [];
+    if (model?.predictorId) {
+      ufPredictors.push({
+        name: String(model.predictorId),
+        score: Math.round(Number(model.confidence) || 0),
+      });
+    }
+    const rivalsUf = rivalsUfBySlug.get(slug) ?? 0;
+    if (rivalsUf > 0) {
+      ufPredictors.push({ name: 'Rivals PM', score: rivalsUf });
+    }
+    const storePct =
+      (seed.ufProbability as number | undefined) ??
+      (recruiting?.ufProbability as number | undefined) ??
+      (recruiting?.futurecastProbability as number | undefined);
+    const resolvedUf = override
+      ? null
+      : resolveUfProbability({
+          modelPct: model?.confidence ?? model?.ufProbability,
+          storePct,
+          predictors: ufPredictors,
+          stars: Number(rank?.stars ?? recruiting?.stars ?? seed.stars ?? 0) || null,
+          headliner: Boolean(seed.headliner),
+        });
+    let ufConfidence = override
+      ? null
+      : resolvedUf && (resolvedUf.value > 0 || resolvedUf.lowConfidence)
+        ? resolvedUf.value
+        : null;
     if (ufCommitted) ufConfidence = 100;
 
     const competingSchools = override ? [] : resolveCompetingSchools(rivalsSchools.get(slug));

@@ -206,14 +206,38 @@ function countVerifiedCompletedVisits(visitLogs, asOf = new Date()) {
 }
 
 function buildVerifiedVisitRecapRows(players, visitLogs, asOf = new Date(), opts = {}) {
-  const limit = opts.limit || 8;
+  const limit = opts.limit || 12;
+  const prioritySlugs = opts.prioritySlugs || [];
+  const poolLimit = prioritySlugs.length ? Math.max(limit * 4, 48) : Math.max(limit * 2, 16);
   const classYear = opts.classYear || 2027;
-  const recap = listRecentVerifiedFloridaOfficialVisits(visitLogs, { classYear, limit: limit * 2, asOf }).filter((row) => row.completed);
-  const playerBySlug = new Map((players || []).map((pl) => [String(pl.slug || "").toLowerCase(), pl]));
-  return recap.slice(0, limit).map((row) => {
-    const player = playerBySlug.get(String(row.slug || "").toLowerCase());
-    return { slug: row.slug, name: row.name || player?.name || row.slug, visitStart: row.visitStart, visitEnd: row.visitEnd, visitSource: row.source, visitSourceLabel: formatVisitSourceLabel(row.source), ufProbability: player?.ufProbability ?? null };
+  const recap = listRecentVerifiedFloridaOfficialVisits(visitLogs, {
+    classYear,
+    limit: poolLimit,
+    asOf,
+  }).filter((row) => row.completed);
+  const playerBySlug = new Map((players || []).map((pl) => [String(pl.slug || '').toLowerCase(), pl]));
+  let rows = recap.map((row) => {
+    const player = playerBySlug.get(String(row.slug || '').toLowerCase());
+    return {
+      slug: row.slug,
+      name: row.name || player?.name || row.slug,
+      visitStart: row.visitStart,
+      visitEnd: row.visitEnd,
+      visitSource: row.source,
+      visitSourceLabel: formatVisitSourceLabel(row.source),
+      ufProbability: player?.ufProbability ?? null,
+    };
   });
+  if (prioritySlugs.length) {
+    const slugSet = new Set(prioritySlugs.map((s) => String(s).toLowerCase()));
+    rows.sort((a, b) => {
+      const aPri = slugSet.has(String(a.slug || '').toLowerCase()) ? 1 : 0;
+      const bPri = slugSet.has(String(b.slug || '').toLowerCase()) ? 1 : 0;
+      if (aPri !== bPri) return bPri - aPri;
+      return String(b.visitStart || '').localeCompare(String(a.visitStart || ''));
+    });
+  }
+  return rows.slice(0, limit);
 }
 
 function getVisitIntelBoardSnapshot(visitLogs, asOf = new Date()) {

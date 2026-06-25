@@ -54,9 +54,35 @@ function formatUfProbabilityDisplay(resolved) {
   return `${pct}%`;
 }
 
+function isFloridaSchool(name) {
+  return /\bflorida\b|\bgators\b/i.test(String(name || ""));
+}
+
+function loadRivalsUfPctBySlug(predictionsPath) {
+  const file =
+    predictionsPath ||
+    path.join(__dirname, "../data/war-room/rivals-predictions.json");
+  const map = new Map();
+  try {
+    const doc = JSON.parse(fs.readFileSync(file, "utf8"));
+    for (const row of doc.predictions || []) {
+      if (!isFloridaSchool(row.predictionSchool)) continue;
+      const slug = String(row.playerSlug || "").toLowerCase();
+      if (!slug) continue;
+      const conf = Number(row.confidence) || 0;
+      map.set(slug, Math.max(map.get(slug) || 0, conf));
+    }
+  } catch {
+    /* optional */
+  }
+  return map;
+}
+
 module.exports = {
   toPercent,
   pickRivalsPmScore,
   resolveUfProbability,
   formatUfProbabilityDisplay,
+  isFloridaSchool,
+  loadRivalsUfPctBySlug,
 };

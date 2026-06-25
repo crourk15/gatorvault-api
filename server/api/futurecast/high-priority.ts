@@ -35,10 +35,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players');
 const { isActiveUfTarget } = require('../../lib/recruiting-target-filters');
 const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields, buildVerifiedVisitRecapRows, getVisitIntelBoardSnapshot } = require('../../lib/visit-intel-utils');
-const { resolveUfProbability } = require('../../lib/uf-probability-utils');
-const { buildFlipWatchRows, prioritizeVisitRecapForTargets } = require('../../lib/flip-watch-utils');
+const { resolveUfProbability, loadRivalsUfPctBySlug } = require('../../lib/uf-probability-utils');
+const { buildFlipWatchRows } = require('../../lib/flip-watch-utils');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
-const RIVALS_PREDICTIONS_PATH = path.join(__dirname, '../../data/war-room/rivals-predictions.json');
 
 export type VisitBadgeType = 'OV' | 'UV' | 'Game Day' | 'Junior Day' | 'Spring Visit';
 
@@ -206,29 +205,6 @@ function loadRecruitingBySlug(): Map<string, RecruitingPlayerRow> {
     for (const p of players) {
       if (p.slug) map.set(p.slug, p);
       if (p.id) map.set(p.id, p);
-    }
-  } catch {
-    /* optional */
-  }
-  return map;
-}
-
-function isFloridaSchool(name: string | null | undefined): boolean {
-  return /\bflorida\b|\bgators\b/i.test(String(name || ''));
-}
-
-function loadRivalsUfPctBySlug(): Map<string, number> {
-  const map = new Map<string, number>();
-  try {
-    const doc = JSON.parse(fs.readFileSync(RIVALS_PREDICTIONS_PATH, 'utf8')) as {
-      predictions?: Array<{ playerSlug?: string; predictionSchool?: string; confidence?: number }>;
-    };
-    for (const row of doc.predictions ?? []) {
-      if (!isFloridaSchool(row.predictionSchool)) continue;
-      const slug = String(row.playerSlug || '').toLowerCase();
-      if (!slug) continue;
-      const conf = Number(row.confidence) || 0;
-      map.set(slug, Math.max(map.get(slug) ?? 0, conf));
     }
   } catch {
     /* optional */
@@ -415,9 +391,11 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const top10 = sorted.slice(0, 10);
 
       const visitIntel = buildVerifiedVisitIntelRows(playersWithVerifiedVisits, visitLogs);
-      const visitRecapRaw = buildVerifiedVisitRecapRows(playersWithVerifiedVisits, visitLogs);
-      const visitRecap = prioritizeVisitRecapForTargets(visitRecapRaw, targetSlugs);
-      const flipWatch = buildFlipWatchRows(playersWithVerifiedVisits, visitRecap);
+      const visitRecap = buildVerifiedVisitRecapRows(playersWithVerifiedVisits, visitLogs, new Date(), {
+        limit: 12,
+        prioritySlugs: targetSlugs,
+      });
+      const flipWatch = buildFlipWatchRows(playersWithVerifiedVisits, visitRecap, { visitLogs });
       const visitBoardSnapshot = getVisitIntelBoardSnapshot(visitLogs);
 
       const lastUpdated = new Date().toISOString();

@@ -38,6 +38,19 @@ describe("visit-intel-utils", () => {
     assert.equal(recap[0].visitSourceLabel, "On3");
   });
 
+  it("prioritizes target-board slugs in recap when pool is larger than limit", () => {
+    const logs = [
+      { playerSlug: "jd-jackson", playerName: "JD Jackson", source: "on3", visitType: "official_visit", school: "Florida", date: "2026-06-19" },
+      { playerSlug: "jalen-brewster", playerName: "Brewster", source: "on3", visitType: "official_visit", school: "Florida", date: "2026-06-11" },
+    ];
+    const recap = buildVerifiedVisitRecapRows([], logs, asOf, {
+      limit: 1,
+      prioritySlugs: ["jalen-brewster"],
+    });
+    assert.equal(recap.length, 1);
+    assert.equal(recap[0].slug, "jalen-brewster");
+  });
+
   it("clears unverified player visit fields", () => {
     const player = { slug: "x", name: "X", visitStart: "2026-07-10", visitEnd: "2026-07-12", ufOvStatus: "scheduled", visitVerified: true };
     const out = applyVerifiedVisitFields(player, [], asOf);
@@ -89,7 +102,19 @@ describe("flip-watch-utils", () => {
       { slug: "jalen-brewster", name: "Brewster", committedTo: "Texas Tech", ufProbability: 38 },
       { slug: "kamauri-whitfield", name: "Whitfield", committedTo: "Florida", ufProbability: 62 },
     ];
-    const flip = buildFlipWatchRows(players, recap);
+    const flip = buildFlipWatchRows(players, recap, {
+      visitLogs: [
+        {
+          playerSlug: "jalen-brewster",
+          playerName: "Brewster",
+          source: "on3",
+          visitType: "official_visit",
+          school: "Florida",
+          date: "2026-06-11",
+        },
+      ],
+      asOf: new Date("2026-06-22T12:00:00Z"),
+    });
     assert.equal(flip.length, 1);
     assert.equal(flip[0].committedShort, "Texas");
   });

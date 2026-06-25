@@ -1,7 +1,11 @@
 /**
  * Flip Watch — committed elsewhere + verified UF official visit completed.
  */
-const { formatVisitSourceLabel } = require("./visit-intel-utils");
+const {
+  formatVisitSourceLabel,
+  getVerifiedFloridaVisitWindow,
+  todayYmd,
+} = require("./visit-intel-utils");
 
 function isFloridaCommit(school) {
   return /\bflorida\b|\bgators\b|\buf\b/i.test(String(school || ""));
@@ -13,10 +17,30 @@ function shortSchoolName(school) {
   return raw.replace(/\bUniversity\b/gi, "").trim().split(/\s+/)[0] || raw;
 }
 
-function buildFlipWatchRows(players, visitRecap, { limit = 8 } = {}) {
+function indexCompletedVerifiedRecap(visitRecap, visitLogs, asOf = new Date()) {
   const recapBySlug = new Map(
     (visitRecap || []).map((row) => [String(row.slug || "").toLowerCase(), row])
   );
+  const today = todayYmd(asOf);
+  for (const entry of visitLogs || []) {
+    const window = getVerifiedFloridaVisitWindow(entry);
+    if (!window || window.visitEnd >= today) continue;
+    const slug = String(entry.playerSlug || "").toLowerCase();
+    if (!slug || recapBySlug.has(slug)) continue;
+    recapBySlug.set(slug, {
+      slug: entry.playerSlug,
+      name: entry.playerName || entry.playerSlug,
+      visitStart: window.visitStart,
+      visitEnd: window.visitEnd,
+      visitSource: window.source,
+      visitSourceLabel: formatVisitSourceLabel(window.source),
+    });
+  }
+  return recapBySlug;
+}
+
+function buildFlipWatchRows(players, visitRecap, { visitLogs = null, asOf = new Date(), limit = 8 } = {}) {
+  const recapBySlug = indexCompletedVerifiedRecap(visitRecap, visitLogs, asOf);
 
   return (players || [])
     .filter((p) => {
@@ -57,6 +81,7 @@ function prioritizeVisitRecapForTargets(visitRecap, prioritySlugs, { limit = 12 
 module.exports = {
   isFloridaCommit,
   shortSchoolName,
+  indexCompletedVerifiedRecap,
   buildFlipWatchRows,
   prioritizeVisitRecapForTargets,
 };
