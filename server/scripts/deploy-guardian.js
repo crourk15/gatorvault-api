@@ -38,6 +38,7 @@ const REQUIRED_HTML_ROUTES = [
   '_next/static',
   'build-manifest.json',
   'js/vault-chunks',
+  'push-sw.js',
   MONOLITH_ARCHIVE_HTML,
 ];
 
@@ -57,6 +58,27 @@ const FORBIDDEN_VAULT_MONOLITH = [
 const CORE_API_PROBES = [
   { id: 'futurecast-home', path: '/api/futurecast/home' },
   { id: 'futurecast-staff-notes', path: '/api/futurecast/staff-notes?year=2027' },
+  {
+    id: 'futurecast-high-priority',
+    path: '/api/futurecast/high-priority?year=2027',
+    validate(body) {
+      if (!body || typeof body !== 'object') return 'invalid JSON body';
+      if (!Array.isArray(body.players)) return 'missing players[]';
+      if (!Array.isArray(body.flipWatch)) return 'missing flipWatch[]';
+      if (!Array.isArray(body.visitRecap)) return 'missing visitRecap[]';
+      return null;
+    },
+  },
+  {
+    id: 'push-config',
+    path: '/api/push/config',
+    validate(body) {
+      if (!body || typeof body !== 'object') return 'invalid JSON body';
+      if (typeof body.enabled !== 'boolean') return 'missing enabled boolean';
+      if (body.enabled && !body.publicKey) return 'enabled but missing publicKey';
+      return null;
+    },
+  },
   { id: 'portal-players', path: '/api/portal/players?limit=5' },
   { id: 'recruiting-board', path: '/api/recruiting/board' },
   { id: 'roster-players', path: '/api/roster/players' },
@@ -209,6 +231,13 @@ async function checkApiProbes() {
     const r = await timedFetch(url);
     if (!r.ok || r.status >= 500) {
       errors.push(`[api] ${probe.id} failed: ${r.error || `HTTP ${r.status}`} (${url})`);
+      continue;
+    }
+    if (typeof probe.validate === 'function') {
+      const validationError = probe.validate(r.body);
+      if (validationError) {
+        errors.push(`[api] ${probe.id} invalid: ${validationError} (${url})`);
+      }
     }
   }
 

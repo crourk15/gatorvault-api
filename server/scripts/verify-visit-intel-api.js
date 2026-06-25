@@ -52,6 +52,31 @@ function runVerifyVisitIntelApi() {
   ) {
     failed++;
   }
+  if (
+    !check('push-alert-service', () => {
+      const { pushEnabled, buildScheduledPayload, buildCancelledPayload } = require('../lib/push-alert-service');
+      assert.equal(typeof buildScheduledPayload, 'function');
+      assert.equal(typeof buildCancelledPayload, 'function');
+      assert.equal(typeof pushEnabled, 'function');
+    })
+  ) {
+    failed++;
+  }
+  if (
+    !check('staff-note-picker', () => {
+      const { pickStaffNoteText } = require('../lib/staff-note-picker');
+      assert.equal(typeof pickStaffNoteText, 'function');
+      assert.equal(
+        pickStaffNoteText({
+          playerName: 'Test Player',
+          insiderNotes: 'Reports View All Reports -> Test Player Scouting Summary The real note.',
+        }),
+        'Test Player Scouting Summary The real note.'
+      );
+    })
+  ) {
+    failed++;
+  }
   return { ok: failed === 0, failed };
 }
 

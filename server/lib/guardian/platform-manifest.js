@@ -21,7 +21,10 @@ module.exports = {
     'lib/live-dashboard-cache.js',
     'lib/recruiting-routes.js',
     'lib/ops-routes.js',
-    'lib/qa-routes.js'
+    'lib/qa-routes.js',
+    'lib/push-alert-service.js',
+    'lib/push-alert-routes.js',
+    'lib/staff-note-picker.js'
   ],
 
   /** Route modules server.js must wire — file path relative to server root, expected export. */

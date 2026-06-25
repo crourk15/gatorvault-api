@@ -20,6 +20,9 @@ function runVerifyServerModules() {
     'lib/uf-probability-utils.js',
     'lib/flip-watch-utils.js',
     'lib/x-autoposter-visit-guard.js',
+    'lib/push-alert-service.js',
+    'lib/push-alert-routes.js',
+    'lib/staff-note-picker.js',
   ];
   const errors = [];
   for (const rel of modules) {
@@ -45,6 +48,15 @@ async function runSmokeChecks() {
   const { runVerifyVisitIntelApi } = require('./verify-visit-intel-api');
   const visitIntel = runVerifyVisitIntelApi();
   if (!visitIntel.ok) errors.push('visit-intel-api smoke failed');
+
+  const { runVerifyAutoposterGuard } = require('./verify-autoposter-guard');
+  const autoposter = runVerifyAutoposterGuard();
+  if (!autoposter.ok) errors.push('autoposter-guard smoke failed');
+
+  const { runEncodingCheck } = require('./encoding-check');
+  const encoding = runEncodingCheck();
+  if (!encoding.ok) errors.push(...encoding.errors.map((e) => `encoding: ${e}`));
+
   const modules = runVerifyServerModules();
   if (!modules.ok) errors.push(...modules.errors);
   return errors;

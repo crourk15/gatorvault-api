@@ -26,6 +26,26 @@ const VAULT_SMOKE_PATHS = [
   '/vault/schedule',
 ];
 
+async function fetchJsonCheck(label, url, { validate } = {}) {
+  try {
+    const res = await fetch(url, { redirect: 'follow', headers: { 'User-Agent': CRAWLER_UA } });
+    let body = null;
+    try {
+      body = await res.json();
+    } catch {
+      body = null;
+    }
+    if (!res.ok) return { ok: false, label, error: `HTTP ${res.status}`, url };
+    if (typeof validate === 'function') {
+      const validationError = validate(body);
+      if (validationError) return { ok: false, label, error: validationError, url };
+    }
+    return { ok: true, label, status: res.status, url };
+  } catch (err) {
+    return { ok: false, label, error: err.message, url };
+  }
+}
+
 async function fetchCheck(label, url, { allow404 = false, expectIncludes = [], headers = {} } = {}) {
   try {
     const res = await fetch(url, { redirect: 'follow', headers });
@@ -70,6 +90,34 @@ async function main() {
     }),
     await fetchCheck('api-futurecast-high-priority', `${API_URL}/api/futurecast/high-priority?year=2027`, {
       expectIncludes: ['players', 'priorityScore', 'compositeScore'],
+    }),
+    await fetchJsonCheck('api-futurecast-visit-intel', `${API_URL}/api/futurecast/high-priority?year=2027`, {
+      validate(body) {
+        if (!Array.isArray(body?.flipWatch)) return 'missing flipWatch[]';
+        if (!Array.isArray(body?.visitRecap)) return 'missing visitRecap[]';
+        return null;
+      },
+    }),
+    await fetchJsonCheck('api-push-config', `${API_URL}/api/push/config`, {
+      validate(body) {
+        if (typeof body?.enabled !== 'boolean') return 'missing enabled boolean';
+        if (body.enabled && !body.publicKey) return 'enabled but missing publicKey';
+        return null;
+      },
+    }),
+    await fetchJsonCheck('site-push-config-proxy', `${SITE_URL}/api/push/config`, {
+      validate(body) {
+        if (typeof body?.enabled !== 'boolean') return 'missing enabled boolean';
+        return null;
+      },
+    }),
+    await fetchCheck('push-service-worker', `${SITE_URL}/push-sw.js`, {
+      headers: { 'User-Agent': CRAWLER_UA },
+      expectIncludes: ['gv-visit-intel', 'showNotification'],
+    }),
+    await fetchCheck('vault-alerts-page', `${SITE_URL}/vault/alerts/`, {
+      headers: { 'User-Agent': CRAWLER_UA },
+      expectIncludes: ['Verified UF official visit', 'vault-alerts'],
     }),
     await fetchCheck('api-recruits-2027', `${API_URL}/api/recruits/2027`, {
       expectIncludes: ['ok', 'recruits', 'compositeScore'],
