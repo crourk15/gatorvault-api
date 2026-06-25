@@ -280,6 +280,9 @@
 /highlight/*  /highlight.html  200
 /article/*  /article.html  200
 /admin  /admin.html  200
+/admin/hub  /admin.html  200
+/admin/hub/*  /admin.html  200
+/admin/login  /admin-login.html  200
 /admin/qa  /admin-qa.html  200
 /admin/embed/qa  /admin-qa.html  200
 /admin/product-health  /admin-product-intel.html  200

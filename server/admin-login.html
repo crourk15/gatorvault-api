@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>GatorVault ? Admin Login</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    *{box-sizing:border-box}
+    :root{--bg:#030712;--panel:#0b1220;--border:#1e3a5f;--text:#e2e8f0;--muted:#94a3b8;--orange:#FA4616}
+    body{margin:0;min-height:100vh;font-family:Inter,system-ui,sans-serif;background:radial-gradient(ellipse at 20% 0%,#0a1628,#030712 55%);color:var(--text);display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:32px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.45)}
+    .brand{font-family:Oswald,sans-serif;font-size:1.5rem;color:var(--orange);letter-spacing:.06em;margin:0 0 6px}
+    .sub{color:var(--muted);font-size:14px;line-height:1.5;margin:0 0 24px}
+    label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+    input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid #334155;background:#111827;color:#f8fafc;font:inherit;margin-bottom:8px}
+    button{width:100%;border:0;border-radius:10px;padding:13px;font-weight:700;cursor:pointer;background:var(--orange);color:#fff;font-size:14px;margin-top:12px;min-height:48px}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .err{color:#f87171;font-size:13px;margin:8px 0 0;min-height:18px}
+    .foot{margin-top:20px;font-size:12px;color:var(--muted);text-align:center}
+    .foot a{color:#93c5fd}
+  </style>
+</head>
+<body>
+  <div class="card" role="main">
+    <h1 class="brand">?? GatorVault Admin</h1>
+    <p class="sub">One login for the entire command center ? QA, recruiting, team, content, GM, and Self-Runner.</p>
+    <label for="login-pin">Admin PIN</label>
+    <input id="login-pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Enter operator PIN">
+    <p id="login-err" class="err"></p>
+    <button type="button" id="login-submit">Sign in to Admin Hub</button>
+    <p class="foot">Protected area ? <a href="/">Return to site</a></p>
+  </div>
+  <script>
+    (function () {
+      var SESSION_KEY = 'gv_admin_pin';
+      var OPS_KEY = 'gv_ops_pin';
+
+      function apiBase() {
+        var host = (location.hostname || '').toLowerCase();
+        if (host === 'localhost' || host === '127.0.0.1') return 'http://localhost:3000';
+        return location.origin;
+      }
+
+      function nextUrl() {
+        var params = new URLSearchParams(location.search);
+        var next = params.get('next') || '/admin/hub';
+        if (next.indexOf('/admin/login') === 0) next = '/admin/hub';
+        return next;
+      }
+
+      function verifyPin(pin, cb) {
+        var API = apiBase();
+        fetch(API + '/api/ops/verify-pin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Ops-Pin': pin, 'X-Recruiting-Pin': pin },
+          body: JSON.stringify({ pin: pin })
+        })
+          .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+          .then(function (x) {
+            if (x.ok && x.j && x.j.ok) return cb(true);
+            return fetch(API + '/api/ops/status?pin=' + encodeURIComponent(pin), {
+              headers: { 'X-Ops-Pin': pin, 'X-Recruiting-Pin': pin }
+            })
+              .then(function (r) { return r.json(); })
+              .then(function (j) { cb(!!(j && j.ok)); })
+              .catch(function () { cb(false); });
+          })
+          .catch(function () { cb(false); });
+      }
+
+      var saved = sessionStorage.getItem(SESSION_KEY) || sessionStorage.getItem(OPS_KEY);
+      if (saved) {
+        verifyPin(saved, function (ok) {
+          if (ok) location.replace(nextUrl());
+        });
+      }
+
+      var btn = document.getElementById('login-submit');
+      var input = document.getElementById('login-pin');
+      var err = document.getElementById('login-err');
+
+      btn.addEventListener('click', function () {
+        var p = input.value.trim();
+        if (!p) return;
+        err.textContent = '';
+        btn.disabled = true;
+        verifyPin(p, function (ok) {
+          btn.disabled = false;
+          if (ok) {
+            sessionStorage.setItem(SESSION_KEY, p);
+            sessionStorage.setItem(OPS_KEY, p);
+            location.replace(nextUrl());
+          } else {
+            err.textContent = 'Invalid PIN. Use your OPS_ADMIN_PIN or RECRUITING_ADMIN_PIN from Render.';
+          }
+        });
+      });
+
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') btn.click();
+      });
+    })();
+  </script>
+</body>
+</html>

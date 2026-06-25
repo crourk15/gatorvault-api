@@ -7,28 +7,8 @@ const mobileBehaviorStore = require('./qa/qa-mobile-behavior-store');
 const { runQaCrawl } = require('./qa/qa-runner');
 const { runMobileBehaviorChecks } = require('./qa/qa-mobile-behavior-checks');
 
-const ADMIN_PIN =
-  process.env.OPS_ADMIN_PIN ||
-  process.env.RECRUITING_ADMIN_PIN ||
-  process.env.EMAIL_TEST_PIN ||
-  'GV2026admin';
-const CRON_SECRET = process.env.INGEST_CRON_SECRET || ADMIN_PIN;
-
-function verifyAdminPin(pin) {
-  return !!pin && pin === ADMIN_PIN;
-}
-
-function pinFromReq(req) {
-  return (
-    req.headers['x-ops-pin'] ||
-    req.headers['x-monitoring-secret'] ||
-    req.headers['x-recruiting-pin'] ||
-    req.headers['x-ingest-secret'] ||
-    req.headers['x-monitoring-cron'] ||
-    req.body?.pin ||
-    req.query?.pin
-  );
-}
+const { verifyAdminPin, pinFromReq } = require('./admin-pin');
+const CRON_SECRET = process.env.INGEST_CRON_SECRET || process.env.OPS_ADMIN_PIN || 'GV2026admin';
 
 function requireQaAuth(req, res) {
   const secret = pinFromReq(req);
@@ -46,12 +26,12 @@ function mountQaRoutes(app) {
 
   app.get('/admin/qa', (req, res) => {
     if (req.query.embed === '1') return res.sendFile(qaPage);
-    return res.redirect(302, '/admin#qa/monitor');
+    return res.redirect(302, '/admin/hub#qa/monitor');
   });
 
   app.get('/admin/qa/mobile-behavior', (req, res) => {
     if (req.query.embed === '1') return res.sendFile(qaMobilePage);
-    return res.redirect(302, '/admin#qa/mobile-behavior');
+    return res.redirect(302, '/admin/hub#qa/mobile-behavior');
   });
 
   app.get('/api/qa/dashboard', (req, res) => {

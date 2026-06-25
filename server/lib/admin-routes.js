@@ -3,21 +3,21 @@ const fs = require('fs');
 
 /** Legacy admin URLs → unified hub hash routes */
 const ADMIN_HUB_REDIRECTS = [
-  ['/admin/feedback', '/admin#feedback'],
-  ['/admin/monitoring', '/admin#recruiting/monitoring'],
-  ['/admin/ops', '/admin#dashboard'],
-  ['/admin/ops/gm2', '/admin#gm2/integrity'],
-  ['/admin/ops/identity-patterns', '/admin#gm2/identity'],
-  ['/vault/ops', '/admin#dashboard'],
-  ['/recruiting-admin.html', '/admin#recruiting/alerts'],
-  ['/content-admin.html', '/admin#content/content-accuracy'],
-  ['/community-admin.html', '/admin#community/moderation'],
-  ['/war-room-admin.html', '/admin#team/board'],
-  ['/admin-feedback.html', '/admin#feedback/inbox'],
-  ['/admin-monitoring.html', '/admin#recruiting/monitoring'],
-  ['/admin-ops.html', '/admin#dashboard'],
-  ['/admin-ops-gm2.html', '/admin#gm2/integrity'],
-  ['/admin-ops-identity-patterns.html', '/admin#gm2/identity']
+  ['/admin/feedback', '/admin/hub#feedback'],
+  ['/admin/monitoring', '/admin/hub#recruiting/monitoring'],
+  ['/admin/ops', '/admin/hub#dashboard'],
+  ['/admin/ops/gm2', '/admin/hub#gm2/integrity'],
+  ['/admin/ops/identity-patterns', '/admin/hub#gm2/identity'],
+  ['/vault/ops', '/admin/hub#dashboard'],
+  ['/recruiting-admin.html', '/admin/hub#recruiting/alerts'],
+  ['/content-admin.html', '/admin/hub#content/content-accuracy'],
+  ['/community-admin.html', '/admin/hub#community/moderation'],
+  ['/war-room-admin.html', '/admin/hub#team/board'],
+  ['/admin-feedback.html', '/admin/hub#feedback/inbox'],
+  ['/admin-monitoring.html', '/admin/hub#recruiting/monitoring'],
+  ['/admin-ops.html', '/admin/hub#dashboard/overview'],
+  ['/admin-ops-gm2.html', '/admin/hub#gm2/integrity'],
+  ['/admin-ops-identity-patterns.html', '/admin/hub#gm2/identity']
 ];
 
 /** Embed panel pages (served to iframes inside the hub) */
@@ -43,8 +43,18 @@ function mountAdminRoutes(app) {
   const boardPublic = path.join(root, 'recruiting-board', 'index.html');
   const hubPage = path.join(root, 'admin.html');
 
+  const loginPage = path.join(root, 'admin-login.html');
+
   app.get('/admin', (req, res) => {
     res.sendFile(hubPage);
+  });
+
+  app.get('/admin/hub', (req, res) => {
+    res.sendFile(hubPage);
+  });
+
+  app.get('/admin/login', (req, res) => {
+    res.sendFile(loginPage);
   });
 
   app.get('/admin/embed/:page', (req, res) => {
@@ -97,12 +107,12 @@ function mountAdminRoutes(app) {
 
   app.get('/admin/recruiting', (req, res) => {
     if (req.query.embed === '1') return res.sendFile(path.join(root, 'recruiting-admin.html'));
-    return res.redirect(302, '/admin#recruiting/alerts');
+    return res.redirect(302, '/admin/hub#recruiting/alerts');
   });
 
   app.get('/admin/recruiting-board', (req, res) => {
     if (req.query.embed === '1') return res.sendFile(boardPage);
-    return res.redirect(302, '/admin#team/board');
+    return res.redirect(302, '/admin/hub#team/board');
   });
 }
 

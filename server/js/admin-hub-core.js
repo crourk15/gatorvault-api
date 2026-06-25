@@ -14,6 +14,8 @@
 
   var API = resolveAdminApiBase();
   var _hubInitialized = false;
+  var _moduleHealth = {};
+  var _healthPollTimer = null;
 
   var EMBED_SRC = {
     ops: '/admin-ops.html?embed=1',
@@ -58,8 +60,9 @@
       id: 'dashboard',
       label: 'Dashboard',
       icon: '📊',
-      desc: 'System health, autoposter, GM alerts, repair queue',
+      desc: 'Command center — system health, top issues, pipelines, recommended actions',
       panels: [
+        { id: 'overview', label: 'Command Center', inline: true },
         { id: 'ops', label: 'Operations', embed: 'ops' }
       ]
     },
@@ -67,7 +70,7 @@
       id: 'gm2',
       label: 'GM',
       icon: '🛡️',
-      desc: 'Re-run modules, rules engine, identity resolution, ingest integrity',
+      desc: 'Roster, scholarships, depth chart, re-run modules, identity resolution',
       panels: [
         { id: 'rerun', label: 'Re-run Modules', inline: true },
         { id: 'integrity', label: 'GM Integrity', embed: 'gm2' },
@@ -78,21 +81,14 @@
       id: 'product-intel',
       label: 'Product Health',
       icon: '🧠',
-      desc: 'Platform intelligence — scores, fix queue, daily & weekly reports',
+      desc: 'API uptime, latency, error rates, deploy status, fix queue',
       panels: [{ id: 'health', label: 'Product Intelligence', embed: 'product-intel' }]
-    },
-    {
-      id: 'self-runner',
-      label: 'Self-Runner',
-      icon: '🤖',
-      desc: 'Auto-fix proposals — approve before apply, deploy, and QA validation',
-      panels: [{ id: 'pending', label: 'Pending Fixes', embed: 'self-runner' }]
     },
     {
       id: 'qa',
       label: 'QA Monitor',
-      icon: '🛡️',
-      desc: '24/7 crawler — pages, API, content, UX integrity',
+      icon: '🔍',
+      desc: '24/7 crawler — pass/fail, broken pages, UX integrity',
       panels: [
         { id: 'monitor', label: 'QA Dashboard', embed: 'qa' },
         { id: 'mobile-behavior', label: 'Mobile Behavior', embed: 'qa-mobile' }
@@ -102,10 +98,9 @@
       id: 'recruiting',
       label: 'Recruiting Admin',
       icon: '🎯',
-      desc: 'Players, vault grades, targets, visits, commitments, intel',
+      desc: 'Classes, boards, intel, predictions, hub bundle inputs, pipeline status',
       panels: [
         { id: 'alerts', label: 'Alerts & Live', embed: 'recruiting-alerts' },
-        { id: 'player-intel', label: 'Player Intel Entry', embed: 'player-intel' },
         { id: 'monitoring', label: 'Monitoring', embed: 'monitoring' },
         { id: 'vault-grades', label: 'Vault Grades Manager', inline: true }
       ]
@@ -114,7 +109,7 @@
       id: 'team',
       label: 'Team Admin',
       icon: '🐊',
-      desc: 'Depth chart, roster, coaching staff, team history, film room',
+      desc: 'Schedule, opponents, depth chart, staff, film room, game zone',
       panels: [
         { id: 'board', label: 'Roster & Board', embed: 'board' },
         { id: 'vault-grades', label: 'Vault Grades Manager', inline: true }
@@ -124,7 +119,7 @@
       id: 'content',
       label: 'Content & Media',
       icon: '📺',
-      desc: 'Film room, legacy videos, pressers, podcasts, headlines',
+      desc: 'Articles, War Room, videos, assets, draft/publish, featured slots',
       panels: [
         { id: 'content-accuracy', label: 'Content Accuracy', embed: 'content' },
         { id: 'insider-articles', label: 'Insider Articles', embed: 'ops', hash: '#insider-articles' }
@@ -134,24 +129,199 @@
       id: 'community',
       label: 'Community Admin',
       icon: '💬',
-      desc: 'Threads, flags, reports, categories',
+      desc: 'Comments, moderation queue, bans, engagement metrics',
       panels: [{ id: 'moderation', label: 'Moderation Queue', embed: 'community' }]
     },
     {
       id: 'feedback',
       label: 'Feedback & Support',
       icon: '📬',
-      desc: 'Feedback inbox, bug reports, feature requests',
+      desc: 'User feedback, bug reports, support tickets, status tracking',
       panels: [{ id: 'inbox', label: 'Feedback Inbox', embed: 'feedback' }]
     },
     {
       id: 'settings',
       label: 'Settings',
       icon: '⚙️',
-      desc: 'Branding, theme, permissions, API keys',
+      desc: 'Global config, feature flags, admin users, security, color system',
       panels: [{ id: 'platform', label: 'Platform Settings', inline: true }]
+    },
+    {
+      id: 'player-intel',
+      label: 'Player Intel Entry',
+      icon: '⚡',
+      desc: 'Fast form — player selector, event type, source, notes → intel store + hub snapshot',
+      panels: [{ id: 'entry', label: 'Intel Entry', embed: 'player-intel' }]
+    },
+    {
+      id: 'self-runner',
+      label: 'Self-Runner',
+      icon: '🤖',
+      desc: 'Smart automation — monitor, detect, suggest fixes across the entire stack',
+      panels: [{ id: 'pending', label: 'Pending Fixes', embed: 'self-runner' }]
     }
   ];
+
+  function loginUrl() {
+    var next = location.pathname + (location.hash || '#dashboard/overview');
+    return '/admin/login?next=' + encodeURIComponent(next);
+  }
+
+  function redirectToLogin() {
+    location.replace(loginUrl());
+  }
+
+  function healthDotClass(status) {
+    if (status === 'red') return 'hub-health-red';
+    if (status === 'yellow') return 'hub-health-yellow';
+    return 'hub-health-green';
+  }
+
+  function applyModuleHealth(map) {
+    _moduleHealth = map || {};
+    document.querySelectorAll('.hub-nav-btn').forEach(function (btn) {
+      var id = btn.getAttribute('data-section');
+      var dot = btn.querySelector('.hub-health-dot');
+      if (!dot) return;
+      var st = _moduleHealth[id] || 'green';
+      dot.className = 'hub-health-dot ' + healthDotClass(st);
+    });
+    var envEl = document.getElementById('hub-env-badge');
+    if (envEl && _moduleHealth._environment) {
+      envEl.textContent = _moduleHealth._environment === 'prod' ? 'Prod' : 'Stage';
+      envEl.className = 'hub-env-badge ' + (_moduleHealth._environment === 'prod' ? 'hub-env-prod' : 'hub-env-stage');
+    }
+    var alertBtn = document.getElementById('hub-alerts-btn');
+    if (alertBtn && _moduleHealth._alertCount != null) {
+      var n = _moduleHealth._alertCount;
+      alertBtn.setAttribute('data-count', n > 0 ? String(n) : '');
+      alertBtn.title = n > 0 ? (n + ' alert(s)') : 'No alerts';
+    }
+  }
+
+  function pollModuleHealth() {
+    if (!pin()) return;
+    apiGet('/api/admin/hub/module-health?pin=' + encodeURIComponent(pin()))
+      .then(function (j) {
+        if (j && j.moduleHealth) {
+          var merged = Object.assign({}, j.moduleHealth);
+          merged._environment = j.environment;
+          merged._alertCount = j.alertCount;
+          applyModuleHealth(merged);
+        }
+      })
+      .catch(function () { /* silent */ });
+  }
+
+  function startHealthPoll() {
+    pollModuleHealth();
+    if (_healthPollTimer) clearInterval(_healthPollTimer);
+    _healthPollTimer = setInterval(pollModuleHealth, 60000);
+  }
+
+  function navigateFromHash(routeStr) {
+    if (!routeStr) return;
+    var r = String(routeStr).replace(/^#/, '');
+    var parts = r.split('/');
+    setRoute(parts[0] || 'dashboard', parts[1] || null);
+    renderRoute();
+  }
+
+  function wireGlobalSearch() {
+    var input = document.getElementById('hub-global-search');
+    var resultsEl = document.getElementById('hub-search-results');
+    if (!input || !resultsEl) return;
+    var timer = null;
+
+    function hideResults() {
+      resultsEl.classList.add('hidden');
+      resultsEl.innerHTML = '';
+    }
+
+    function renderResults(items) {
+      if (!items || !items.length) {
+        resultsEl.innerHTML = '<div class="hub-search-empty">No results</div>';
+        resultsEl.classList.remove('hidden');
+        return;
+      }
+      resultsEl.innerHTML = items.map(function (item) {
+        var route = item.route || '';
+        var type = item.type || 'item';
+        return '<button type="button" class="hub-search-item" data-route="' + route + '" data-href="' + (item.href || '') + '">'
+          + '<span class="hub-search-type">' + type + '</span>'
+          + '<strong>' + (item.title || item.name || item.id) + '</strong>'
+          + (item.subtitle ? '<span>' + item.subtitle + '</span>' : '')
+          + '</button>';
+      }).join('');
+      resultsEl.classList.remove('hidden');
+      resultsEl.querySelectorAll('.hub-search-item').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var href = btn.getAttribute('data-href');
+          var route = btn.getAttribute('data-route');
+          hideResults();
+          input.value = '';
+          if (route) navigateFromHash(route);
+          else if (href) window.open(href, '_blank');
+        });
+      });
+    }
+
+    input.addEventListener('input', function () {
+      clearTimeout(timer);
+      var q = input.value.trim();
+      if (q.length < 2) { hideResults(); return; }
+      timer = setTimeout(function () {
+        apiGet('/api/admin/hub/search?q=' + encodeURIComponent(q) + '&pin=' + encodeURIComponent(pin()))
+          .then(function (j) {
+            var list = [];
+            if (j.results) {
+              if (j.results.players) list = list.concat(j.results.players);
+              if (j.results.articles) list = list.concat(j.results.articles);
+              if (j.results.users) list = list.concat(j.results.users);
+              if (Array.isArray(j.results)) list = j.results;
+            }
+            renderResults(list);
+          })
+          .catch(function () { hideResults(); });
+      }, 250);
+    });
+
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') hideResults();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!resultsEl.contains(e.target) && e.target !== input) hideResults();
+    });
+  }
+
+  function wireAlertsPanel() {
+    var btn = document.getElementById('hub-alerts-btn');
+    var panel = document.getElementById('hub-alerts-panel');
+    if (!btn || !panel) return;
+    btn.addEventListener('click', function () {
+      panel.classList.toggle('hidden');
+      if (panel.classList.contains('hidden')) return;
+      panel.innerHTML = '<p class="hub-meta">Loading alerts…</p>';
+      apiGet('/api/admin/hub/overview?pin=' + encodeURIComponent(pin()))
+        .then(function (j) {
+          var alerts = j.alerts || [];
+          if (!alerts.length) {
+            panel.innerHTML = '<p class="hub-meta">No active alerts</p>';
+            return;
+          }
+          panel.innerHTML = alerts.map(function (a) {
+            return '<div class="hub-alert-item">'
+              + '<strong>' + (a.title || a.message || 'Alert') + '</strong>'
+              + (a.detail || a.message ? '<span>' + (a.detail || a.message) + '</span>' : '')
+              + '</div>';
+          }).join('');
+        })
+        .catch(function (e) {
+          panel.innerHTML = '<p class="err">' + e.message + '</p>';
+        });
+    });
+  }
 
   function pin() {
     return sessionStorage.getItem(SESSION_KEY) || '';
@@ -280,7 +450,7 @@
     var p = location.pathname.replace(/\/$/, '') || '/admin';
     var leg = LEGACY_PATHS[p];
     if (leg && !location.hash) {
-      location.replace('/admin#' + leg.section + (leg.panel ? '/' + leg.panel : ''));
+      location.replace('/admin/hub#' + leg.section + (leg.panel ? '/' + leg.panel : ''));
       return true;
     }
     return false;
@@ -299,7 +469,9 @@
       return { section: 'product-intel', panel: 'health' };
     }
     var parts = hash.split('/');
-    return { section: parts[0] || 'dashboard', panel: parts[1] || null };
+    var section = parts[0] || 'dashboard';
+    var panel = parts[1] || (section === 'dashboard' ? 'overview' : null);
+    return { section: section, panel: panel };
   }
 
   function setRoute(sectionId, panelId) {
@@ -523,7 +695,7 @@
       btn.type = 'button';
       btn.className = 'hub-nav-btn';
       btn.setAttribute('data-section', sec.id);
-      btn.innerHTML = '<span class="hub-nav-icon">' + sec.icon + '</span><span class="hub-nav-label">' + sec.label + '</span>';
+      btn.innerHTML = '<span class="hub-health-dot hub-health-green"></span><span class="hub-nav-icon">' + sec.icon + '</span><span class="hub-nav-label">' + sec.label + '</span>';
       btn.addEventListener('click', function () { setRoute(sec.id, sec.panels[0] && sec.panels[0].id); renderRoute(); });
       navEl.appendChild(btn);
 
@@ -572,6 +744,9 @@
       }
     });
 
+    wireGlobalSearch();
+    wireAlertsPanel();
+    startHealthPoll();
     renderRoute();
   }
 
@@ -602,7 +777,16 @@
           panelEl.setAttribute('data-rendered', '1');
           if (panelId === 'rerun') renderGmRerunPanel(panelEl);
           else if (panelId === 'vault-grades') renderVaultGradesPanel(panelEl);
-          else renderSettingsPanel(panelEl);
+          else if (panelId === 'overview' && global.GVAdminDashboard) {
+            panelEl.setAttribute('data-rendered', '1');
+            GVAdminDashboard.render(panelEl, {
+              apiGet: apiGet,
+              apiPost: apiPost,
+              pin: pin,
+              onNavigate: navigateFromHash
+            });
+          }
+          else if (panelId === 'platform') renderSettingsPanel(panelEl);
         }
         return;
       }
@@ -619,7 +803,8 @@
     p = String(p || '').trim();
     sessionStorage.setItem(SESSION_KEY, p);
     sessionStorage.setItem(OPS_SESSION_KEY, p);
-    document.getElementById('admin-pin-gate').classList.add('hidden');
+    var gate = document.getElementById('admin-pin-gate');
+    if (gate) gate.classList.add('hidden');
     document.getElementById('hub-shell').classList.remove('hidden');
     initHub();
   }
@@ -627,8 +812,9 @@
   function lockAdmin() {
     sessionStorage.removeItem(SESSION_KEY);
     sessionStorage.removeItem(OPS_SESSION_KEY);
+    if (_healthPollTimer) clearInterval(_healthPollTimer);
     _hubInitialized = false;
-    location.reload();
+    location.replace('/admin/login');
   }
 
   function wireGate() {
@@ -637,6 +823,30 @@
     var gateBtn = document.getElementById('gate-submit');
     var gateInput = document.getElementById('gate-pin');
     var gateErr = document.getElementById('gate-err');
+    var useDedicatedLogin = location.pathname.indexOf('/admin/login') < 0;
+
+    var lockBtn = document.getElementById('hub-lock');
+    if (lockBtn) lockBtn.addEventListener('click', lockAdmin);
+
+    var saved = sessionStorage.getItem(SESSION_KEY) || sessionStorage.getItem(OPS_SESSION_KEY);
+    if (saved) {
+      verifyPin(saved, function (ok) {
+        if (ok) {
+          unlockAdmin(saved);
+        } else {
+          sessionStorage.removeItem(SESSION_KEY);
+          sessionStorage.removeItem(OPS_SESSION_KEY);
+          if (useDedicatedLogin) redirectToLogin();
+        }
+      });
+      return;
+    }
+
+    if (useDedicatedLogin) {
+      redirectToLogin();
+      return;
+    }
+
     if (!gateBtn || !gateInput) return;
 
     gateBtn.addEventListener('click', function () {
@@ -657,21 +867,6 @@
     gateInput.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') gateBtn.click();
     });
-
-    var lockBtn = document.getElementById('hub-lock');
-    if (lockBtn) lockBtn.addEventListener('click', lockAdmin);
-
-    var saved = sessionStorage.getItem(SESSION_KEY) || sessionStorage.getItem(OPS_SESSION_KEY);
-    if (saved) {
-      verifyPin(saved, function (ok) {
-        if (ok) {
-          unlockAdmin(saved);
-        } else {
-          sessionStorage.removeItem(SESSION_KEY);
-          sessionStorage.removeItem(OPS_SESSION_KEY);
-        }
-      });
-    }
   }
 
   global.GVAdminHub = {
