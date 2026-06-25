@@ -827,6 +827,20 @@ async function runOn3Ingest(options = {}) {
   }
 
   try {
+    if (store.storageMode() !== 'supabase') {
+      const { demoteNonAllowlistedTargets } = require('./recruiting-target-allowlist');
+      const players = await store.getAllPlayers();
+      const demoted = demoteNonAllowlistedTargets(players);
+      if (demoted > 0) {
+        fs.writeFileSync(store.PLAYERS_PATH, `${JSON.stringify(players, null, 2)}\n`);
+        result.demotedNonAllowlistedTargets = demoted;
+      }
+    }
+  } catch (e) {
+    result.errors.push({ type: 'demote_non_allowlisted_targets', error: e.message });
+  }
+
+  try {
     if (process.env.RECRUITING_HUB_REFRESH_AFTER_INGEST === 'true') {
       const { refreshRecruitingHubCaches } = require('./recruiting-hub-refresh');
       result.hubRefresh = await refreshRecruitingHubCaches({ geoBackfill: false });

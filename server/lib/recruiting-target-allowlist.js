@@ -173,6 +173,24 @@ function validateStoreTargets(players) {
   return errors;
 }
 
+/** Demote board targets that are not on Charles' allow-list (keeps row, removes from target board). */
+function demoteNonAllowlistedTargets(players) {
+  let demoted = 0;
+  for (const p of players || []) {
+    if (p.category !== 'target') continue;
+    if (!isActiveUfTarget(p)) continue;
+    const year = parseInt(p.classYear || p.class_year, 10);
+    if (year !== 2027 && year !== 2028) continue;
+    const slug = canonicalTargetSlug(p.slug || slugify(p.name));
+    const set = getAllowlistSet(year);
+    if (set.size && set.has(slug)) continue;
+    p.category = 'recruit';
+    if (!p.status || p.status === 'target') p.status = 'uncommitted';
+    demoted += 1;
+  }
+  return demoted;
+}
+
 module.exports = {
   ALLOWLIST_2027,
   ALLOWLIST_2028,
@@ -185,4 +203,5 @@ module.exports = {
   isAllowlistedTarget,
   filterAllowlistedTargets,
   validateStoreTargets,
+  demoteNonAllowlistedTargets,
 };
