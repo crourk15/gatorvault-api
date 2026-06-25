@@ -4,6 +4,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FutureCastSubNav } from '@/components/site/FutureCastSubNav';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
+import {
+  GatorVaultConfirmedBadge,
+  isVerifiedVisitAlertCategory,
+} from '@/components/futurecast/lab/GatorVaultConfirmedBadge';
 import { playerProfilePath } from '@/lib/player-routes';
 import { usePathname } from '@/lib/use-pathname';
 import { isVaultPath } from '@/lib/vault-routes';
@@ -84,9 +88,14 @@ export function AlertsFeed({ showSubNav = true }: { showSubNav?: boolean }): Rea
       <div className="fc-alerts__list">
         {alerts.map((alert) => (
           <article key={alert.id} className="fc-alerts__item">
-            <a href={playerProfilePath(alert.playerSlug, alert.lifecycle, inVault)} className="fc-alerts__message">
-              {alert.message}
-            </a>
+            <div className="fc-alerts__item-head">
+              <a href={playerProfilePath(alert.playerSlug, alert.lifecycle, inVault)} className="fc-alerts__message">
+                {alert.message}
+              </a>
+              {isVerifiedVisitAlertCategory(alert.category, alert.type) ? (
+                <GatorVaultConfirmedBadge compact />
+              ) : null}
+            </div>
             <p className="fc-alerts__meta">
               {alert.category ?? alert.type}
               {alert.playerName ? ` · ${alert.playerName}` : ''}

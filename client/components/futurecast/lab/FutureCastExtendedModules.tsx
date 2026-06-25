@@ -11,6 +11,7 @@ import {
   type IntelFeedItem,
 } from '@/lib/recruiting-intel-feed';
 import { FutureCastPanelShell } from './primitives';
+import { GatorVaultConfirmedBadge } from './GatorVaultConfirmedBadge';
 import { ufPctFromFc, isBattleTarget } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 
@@ -84,7 +85,7 @@ function ModuleList({
   items,
   empty,
 }: {
-  items: Array<{ key: string; primary: string; meta: string; href?: string }>;
+  items: Array<{ key: string; primary: string; meta: string; href?: string; badge?: React.ReactNode }>;
   empty: string;
 }): React.ReactElement {
   if (!items.length) return <p className="rh-cc-empty">{empty}</p>;
@@ -94,12 +95,18 @@ function ModuleList({
         <li key={item.key} className="fc-lab-ext-list__row">
           {item.href ? (
             <a href={item.href} className="fc-lab-ext-list__link">
-              <strong>{item.primary}</strong>
+              <div className="fc-lab-ext-list__head">
+                <strong>{item.primary}</strong>
+                {item.badge}
+              </div>
               <span>{item.meta}</span>
             </a>
           ) : (
             <>
-              <strong>{item.primary}</strong>
+              <div className="fc-lab-ext-list__head">
+                <strong>{item.primary}</strong>
+                {item.badge}
+              </div>
               <span>{item.meta}</span>
             </>
           )}
@@ -122,7 +129,12 @@ function SmartAlertsPanel({ alerts }: { alerts: IntelFeedItem[] }): React.ReactE
                 {a.icon}
               </span>
               <div className="fc-lab-alert-list__body">
-                <p className="fc-lab-alert-list__headline">{a.headline}</p>
+                <p className="fc-lab-alert-list__headline">
+                  {a.headline}
+                  {a.category === 'Visit' || a.category === 'Flip Watch' ? (
+                    <GatorVaultConfirmedBadge sourceLabel={a.source} compact />
+                  ) : null}
+                </p>
                 <p className="fc-lab-alert-list__meta">
                   <span className="fc-lab-alert-list__cat">{a.category}</span>
                   {' · '}
@@ -348,6 +360,7 @@ export function FutureCastExtendedModules({
           items={upcomingVisitIntel.slice(0, 6).map((p) => ({
               key: p.slug,
               primary: p.name,
+              badge: p.visitVerified !== false ? <GatorVaultConfirmedBadge sourceLabel={p.visitSourceLabel} compact /> : undefined,
               meta: p.visitStart
                 ? `OV ${p.visitStart}${p.visitEnd ? `–${p.visitEnd}` : ''}${p.visitSourceLabel ? ` · ${p.visitSourceLabel}` : ''} · UF ${formatUfDisplay(p)}`
                 : `${p.ufOvStatus ?? 'Visit intel'}${p.visitSourceLabel ? ` · ${p.visitSourceLabel}` : ''} · UF ${formatUfDisplay(p)}`,
@@ -366,6 +379,7 @@ export function FutureCastExtendedModules({
           items={visitRecap.slice(0, 6).map((row) => ({
             key: `recap-${row.slug}-${row.visitStart}`,
             primary: row.name,
+            badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
             meta: `OV ${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''}${row.ufProbability != null ? ` · UF ${formatUfDisplay({ ufProbability: row.ufProbability, ufProbabilityLabel: null })}` : ''}`,
             href: playerProfileRoute(row.slug, 'futurecast'),
           }))}
@@ -382,6 +396,7 @@ export function FutureCastExtendedModules({
           items={flipWatch.slice(0, 6).map((row) => ({
             key: `flip-${row.slug}`,
             primary: row.name,
+            badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
             meta: `${row.committedShort} commit · OV ${row.visitStart ?? '—'}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''} · UF ${formatUfDisplay(row)}`,
             href: playerProfileRoute(row.slug, 'futurecast'),
           }))}

@@ -1302,6 +1302,33 @@
   color: var(--fc-panel-text, #1a1a1a) !important;
 }
 
+.fc-lab-ext-list__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fc-lab-ext-list__head strong {
+  display: inline !important;
+}
+
+.gv-badge--confirmed {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: #fff;
+  background: linear-gradient(135deg, var(--uf-blue, #0021a5) 0%, #0039c7 100%);
+  box-shadow: 0 1px 4px rgba(0, 33, 165, 0.28);
+  white-space: nowrap;
+}
+
 .fc-lab-panel-shell .fc-lab-ext-list__row span,
 .fc-lab-panel-shell .fc-lab-ext-list__link span {
   display: block;
@@ -1413,6 +1440,10 @@
 .fc-lab-panel-shell .fc-lab-alert-list__headline {
   margin: 0;
   color: var(--fc-panel-text, #1a1a1a) !important;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .fc-lab-panel-shell .fc-lab-alert-list__meta {

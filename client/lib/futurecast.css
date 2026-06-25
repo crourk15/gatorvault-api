@@ -1916,6 +1916,13 @@
   background: #1f242c;
 }
 
+.fc-alerts__item-head {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .fc-alerts__message {
   color: #fff;
   font-weight: 500;
