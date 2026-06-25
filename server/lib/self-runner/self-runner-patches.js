@@ -3,6 +3,7 @@
  */
 const path = require('path');
 const reactBp = require('./blueprint/react-blueprint');
+const modes = require('./self-runner-modes');
 
 const SERVER_ROOT = path.join(__dirname, '..', '..');
 
@@ -70,6 +71,13 @@ function isEligible(issue) {
   if (issue.manualOnly) return false;
   const retired = ELIGIBILITY.find((r) => r.test(issue) && r.eligible === false);
   if (retired) return false;
+  const patchType = resolvePatchType(issue);
+  if (modes.isV3OpsOnly() && patchType && modes.isPatchBlocked(patchType)) return false;
+  if (modes.isV3OpsOnly() && patchType && !modes.V3_ALLOWED_PATCH_TYPES.has(patchType)) {
+    if (/^react-/.test(patchType) || ['layout-overflow', 'panel-layering', 'background-theme', 'missing-content', 'ordering-fix'].includes(patchType)) {
+      return false;
+    }
+  }
   return ELIGIBILITY.some((r) => r.test(issue) && r.eligible !== false);
 }
 
@@ -88,7 +96,10 @@ function classifyIneligibility(issue) {
   if (!patchType) {
     return { eligible: false, reason: 'no_eligibility_rule', detail: issue.checkId || issue.id };
   }
-  return { eligible: true, reason: 'matched', patchType };
+  if (modes.isV3OpsOnly() && modes.isPatchBlocked(patchType)) {
+    return { eligible: false, reason: 'v3_ops_only_blocked', detail: patchType };
+  }
+  return { eligible: true, reason: 'matched', patchType, fixType: modes.inferFixType(patchType, issue.checkId) };
 }
 
 function fallbackForUrl(url) {

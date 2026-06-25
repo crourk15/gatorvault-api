@@ -1,6 +1,26 @@
 {
-  "version": "4.0.0",
+  "version": "5.0.0",
+  "engine": "self-runner-v3",
   "architecture": "react",
+  "v3": {
+    "enabled": true,
+    "opsOnly": true,
+    "defaultMode": "scan-only",
+    "autoHealFixTypes": ["data", "config", "cron", "ingest"],
+    "blockedFixTypes": ["layout", "code"],
+    "verification": {
+      "qaCrawlAfterApply": true,
+      "recomputeProductHealth": true,
+      "rollbackOnHealthDrop": true,
+      "healthDropThreshold": 2
+    },
+    "confidenceBands": {
+      "never_auto": [0, 40],
+      "propose_only": [40, 70],
+      "guarded_auto": [70, 90],
+      "fully_trusted": [90, 100]
+    }
+  },
   "retiredPatchTypes": [
     "html-hook",
     "html-hook-v2",
@@ -8,7 +28,25 @@
     "background-theme",
     "missing-content",
     "team-content",
-    "component-variant"
+    "component-variant",
+    "react-component",
+    "react-route",
+    "react-component-review",
+    "react-css",
+    "react-rebuild",
+    "layout-overflow",
+    "panel-layering",
+    "ordering-fix"
+  ],
+  "allowedPatchTypes": [
+    "feed-dedup-v2",
+    "film-source-url",
+    "schema-field-v2",
+    "war-room-refresh",
+    "war-room-missing-card",
+    "queue-scouting-refresh",
+    "multi-file-v2",
+    "autoposter-force-run"
   ],
   "forbiddenFiles": [
     "legacy-index.html",
@@ -27,42 +65,14 @@
     "verify-hooks"
   ],
   "reactPatchTypes": {
-    "react-route": {
-      "risk": "medium",
-      "files": ["client/lib/routes.js", "netlify.toml"]
-    },
-    "react-component": {
-      "risk": "medium",
-      "files": ["client/components/vault/"]
-    },
-    "react-css": {
-      "risk": "low",
-      "files": ["client/lib/vault-shell.css"]
-    },
-    "react-slug": {
-      "risk": "medium",
-      "files": ["client/lib/slug.ts", "client/lib/player-routes.ts"]
-    },
-    "react-api-path": {
-      "risk": "low",
-      "files": ["client/lib/*-api.ts"]
-    },
-    "react-rebuild": {
-      "risk": "low",
-      "files": ["server/vault/"]
-    },
-    "feed-dedup-v2": {
-      "risk": "low",
-      "files": ["data/live/feed-items.json"]
-    },
-    "film-source-url": {
-      "risk": "low",
-      "files": ["data/film-room-knowledge/"]
-    },
-    "schema-field-v2": {
-      "risk": "low",
-      "files": ["data/"]
-    }
+    "react-route": { "risk": "medium", "v3Blocked": true },
+    "react-component": { "risk": "medium", "v3Blocked": true },
+    "react-css": { "risk": "low", "v3Blocked": true },
+    "react-slug": { "risk": "medium", "v3Blocked": true },
+    "react-rebuild": { "risk": "low", "v3Blocked": true },
+    "feed-dedup-v2": { "risk": "low", "fixType": "data", "files": ["data/live/feed-items.json"] },
+    "film-source-url": { "risk": "low", "fixType": "data", "files": ["data/film-room-knowledge/"] },
+    "schema-field-v2": { "risk": "low", "fixType": "data", "files": ["data/"] }
   },
   "validatorRules": {
     "component": ["testid", "export", "hydration"],
@@ -71,13 +81,9 @@
     "layout": ["scrollContainer", "safeArea", "modalZIndex"]
   },
   "explainerTemplates": {
-    "missing-component": "React component {component} missing or not exported at {route}",
-    "broken-route": "Route {route} missing from client/lib/routes.js or static export",
-    "invalid-slug": "Player slug mismatch — fix client/lib/slug.ts and player-routes.ts",
-    "missing-prop": "Required prop missing in {component}",
-    "hydration-mismatch": "Hydration boundary mismatch on {route} — check SSG vs client state",
-    "missing-scroll": "Add scroll container classes to client/lib/vault-shell.css",
-    "missing-safe-area": "Add safe-area-inset padding for mobile Safari in vault-shell.css",
-    "modal-layering": "Fix modal z-index stacking in VaultShell + vault-shell.css"
+    "missing-component": "React component {component} missing — manual fix required (v3 does not auto-edit TSX)",
+    "broken-route": "Route {route} missing — manual fix required",
+    "feed-integrity": "Repair data/live/feed-items.json via feed-dedup-v2 playbook",
+    "uuid-mismatch": "Resolve slug→UUID before DB write — see data-uuid-integrity playbook"
   }
 }

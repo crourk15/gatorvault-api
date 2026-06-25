@@ -13,6 +13,7 @@ const logger = require('./self-runner-logger');
 const blueprint = require('./blueprint/canonical-blueprint');
 const v2 = require('./self-runner-v2-engine');
 const autoposterGuard = require('./autoposter-guard');
+const modes = require('./self-runner-modes');
 const { pinFromReq, verifyAdminPin } = require('../ops-routes');
 
 function requireAuth(req, res) {
@@ -69,6 +70,16 @@ async function runApproveFlow(fixId, pin) {
     return { ok: false, error: 'noop_patch_ignored', message: 'Patch is a no-op or generic Self-Runner template — ignored.' };
   }
 
+  const proposeGate = modes.canProposePatch(fix);
+  if (!proposeGate.ok) {
+    queue.markStatus(fixId, 'rejected', { rejectedAt: new Date().toISOString(), reason: proposeGate.reason });
+    return { ok: false, error: proposeGate.reason, message: 'Patch blocked by Self-Runner v3 safety gates.' };
+  }
+
+  const productStore = require('../product-intel/product-intel-store');
+  const scoring = require('../product-intel/product-intel-scoring');
+  const healthBefore = scoring.computeOverallScore?.(productStore.readDoc()) ?? null;
+
   queue.markStatus(fixId, 'applying', { approvedAt: new Date().toISOString(), approvedBy: 'admin' });
   learning.recordDecision({ action: 'approved', fix });
   logger.log.approve({ fixId, patchType: fix.patchType, files: fix.filesToModify });
@@ -98,6 +109,28 @@ async function runApproveFlow(fixId, pin) {
   }
 
   if (validation.issueResolved && validation.ok !== false) {
+    const healthAfter = scoring.computeOverallScore?.(productStore.readDoc()) ?? null;
+    if (healthBefore != null && healthAfter != null && healthAfter < healthBefore - 2) {
+      if (fix.playbookId && modes.recordLearningEvent) {
+        modes.recordLearningEvent({ playbookId: fix.playbookId, outcome: 'health_dropped', fixId, patchType: fix.patchType });
+      }
+      queue.markStatus(fixId, 'failed', {
+        error: 'health_regression_after_fix',
+        applyResult,
+        deployResult,
+        validation,
+        healthBefore,
+        healthAfter,
+        phase: 'verify'
+      });
+      return { ok: false, phase: 'verify', error: 'health_regression', healthBefore, healthAfter, validation };
+    }
+    if (fix.playbookId && modes.recordLearningEvent) {
+      modes.recordLearningEvent({ playbookId: fix.playbookId, outcome: 'qa_passed', fixId, patchType: fix.patchType });
+      if (healthAfter != null && healthBefore != null && healthAfter > healthBefore) {
+        modes.recordLearningEvent({ playbookId: fix.playbookId, outcome: 'health_improved', fixId, patchType: fix.patchType });
+      }
+    }
     queue.markStatus(fixId, 'completed', {
       applyResult,
       deployResult,
@@ -182,6 +215,50 @@ function mountSelfRunnerRoutes(app) {
     }
   });
 
+  app.get('/api/self-runner/v3/status', async (req, res) => {
+    if (!requireAuth(req, res)) return;
+    try {
+      const scan = await modes.runV3Scan();
+      return res.json({ ok: true, ...engine.healthSummary(), v3: scan });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/self-runner/v3/playbooks', (req, res) => {
+    if (!requireAuth(req, res)) return;
+    try {
+      return res.json({ ok: true, playbooks: modes.listPlaybooksWithConfidence(), mode: modes.currentMode() });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.get('/api/self-runner/v3/learning', (req, res) => {
+    if (!requireAuth(req, res)) return;
+    try {
+      const doc = modes.readConfidenceDoc();
+      return res.json({
+        ok: true,
+        confidence: doc,
+        feedback: learning.readFeedback(),
+        playbooks: modes.listPlaybooksWithConfidence()
+      });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/self-runner/v3/scan', async (req, res) => {
+    if (!requireAuth(req, res)) return;
+    try {
+      const scan = await modes.runV3Scan();
+      return res.json({ ok: true, ...scan });
+    } catch (err) {
+      return res.status(500).json({ ok: false, error: err.message });
+    }
+  });
+
   app.get('/api/self-runner/health', (req, res) => {
     try {
       return res.json({ ok: true, ...engine.healthSummary() });
@@ -256,7 +333,10 @@ function mountSelfRunnerRoutes(app) {
           console.warn('[self-runner] generate: QA crawl failed, using latest run:', qaErr.message);
         }
       }
-      const result = await engine.generateProposalsFromProductIntel({ logEmpty: true });
+      const result = await engine.generateProposalsFromProductIntel({
+        fullScan: req.body?.fullScan !== false,
+        logEmpty: true
+      });
       return res.json({
         ok: true,
         ...result,

@@ -79,6 +79,39 @@ function guardIntelForPipeline(rawIntel) {
   return normalizeIntel(rawIntel);
 }
 
+const MEMORY_LIMIT_MB = parseInt(process.env.MEMORY_GUARD_RSS_MB || '420', 10);
+const MEMORY_WARN_MB = parseInt(process.env.MEMORY_GUARD_WARN_MB || '360', 10);
+
+function rssMb() {
+  return Math.round(process.memoryUsage().rss / 1024 / 1024);
+}
+
+function memorySnapshot() {
+  const rss = rssMb();
+  return {
+    rssMb: rss,
+    heapMb: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+    limitMb: MEMORY_LIMIT_MB,
+    underPressure: rss >= MEMORY_LIMIT_MB
+  };
+}
+
+function isMemoryUnderPressure(thresholdMb = MEMORY_LIMIT_MB) {
+  return rssMb() >= thresholdMb;
+}
+
+function shouldSkipHeavyJob(label, thresholdMb = MEMORY_LIMIT_MB) {
+  const rss = rssMb();
+  if (rss >= thresholdMb) {
+    console.warn(`[memory-guard] skip ${label} — RSS ${rss}MB >= ${thresholdMb}MB limit`);
+    return true;
+  }
+  if (rss >= MEMORY_WARN_MB) {
+    console.warn(`[memory-guard] RSS ${rss}MB elevated before ${label}`);
+  }
+  return false;
+}
+
 module.exports = {
   DEFAULT_INTEL,
   pipelinesEnabled,
@@ -90,5 +123,10 @@ module.exports = {
   scheduledJobsEnabled,
   guardScheduledJobStart,
   normalizeIntel,
-  guardIntelForPipeline
+  guardIntelForPipeline,
+  MEMORY_LIMIT_MB,
+  rssMb,
+  memorySnapshot,
+  isMemoryUnderPressure,
+  shouldSkipHeavyJob
 };

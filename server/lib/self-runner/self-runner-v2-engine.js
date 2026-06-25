@@ -97,14 +97,15 @@ function scanCssBlueprint() {
 function runPlatformScan(opts = {}) {
   const id = scanId();
   const startedAt = new Date().toISOString();
-  logger.log.scan({ scanId: id, mode: modes.currentMode() });
+  const lightweight = opts.lightweight === true;
+  logger.log.scan({ scanId: id, mode: modes.currentMode(), lightweight });
 
-  const schema = schemaValidator.validateAllDataFiles();
+  const schema = lightweight ? { violations: [], criticalCount: 0 } : schemaValidator.validateAllDataFiles();
   const feedIntegrity = scanFeedIntegrity();
-  const htmlIssues = scanHtmlBlueprint();
-  const cssIssues = scanCssBlueprint();
-  const warRoomIntel = warRoom.runWarRoomIntelligence();
-  const commitment = commitmentIntel.runCommitmentIntelligence();
+  const htmlIssues = modes.isV3OpsOnly() || lightweight ? [] : scanHtmlBlueprint();
+  const cssIssues = modes.isV3OpsOnly() || lightweight ? [] : scanCssBlueprint();
+  const warRoomIntel = lightweight ? { violations: [], patches: [], stale: [], missing: [] } : warRoom.runWarRoomIntelligence();
+  const commitment = lightweight ? { violations: [], patches: [], stale: [], ingestIssues: [] } : commitmentIntel.runCommitmentIntelligence();
 
   const allIssues = [
     ...feedIntegrity.issues,
@@ -127,13 +128,13 @@ function runPlatformScan(opts = {}) {
     if (feedPatch) rawPatches.push({ issue: feedIntegrity.issues[0], patch: feedPatch });
   }
 
-  if (htmlIssues.length) {
+  if (!modes.isV3OpsOnly() && htmlIssues.length) {
     const missing = contextPatch.scanHtmlHooks();
     const htmlPatch = contextPatch.buildHtmlHookPatch(missing);
     if (htmlPatch) rawPatches.push({ issue: htmlIssues[0], patch: htmlPatch });
   }
 
-  if (cssIssues.length) {
+  if (!modes.isV3OpsOnly() && cssIssues.length) {
     const cssPatch = contextPatch.buildCssTokenPatchV2(contextPatch.scanCssTokens());
     if (cssPatch) rawPatches.push({ issue: cssIssues[0], patch: cssPatch });
   }
@@ -159,6 +160,7 @@ function runPlatformScan(opts = {}) {
 
   const multiPatches = multiFile.mergePatches(rawPatches);
   const safePatches = multiPatches.filter((p) => {
+    if (modes.isPatchBlocked(p.patchType)) return false;
     const safety = autoposterGuard.validatePatchSafety({ patch: p });
     if (!safety.ok) {
       p.blocked = true;

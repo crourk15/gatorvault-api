@@ -106,7 +106,7 @@ async function validateFix(fix, opts = {}) {
     intel = { ok: false, error: err.message };
   }
 
-  await engine.generateProposalsFromProductIntel();
+  await engine.generateProposalsFromProductIntel({ skipV2Scan: true, skipV3Scan: true });
 
   const qaPass = run.pass;
   const checkPass = remoteCheck?.pass ?? null;

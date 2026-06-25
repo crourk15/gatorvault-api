@@ -15,6 +15,10 @@ async function runQaCrawl(opts = {}) {
   if (running && !opts.force) {
     return { ok: false, skipped: true, reason: 'qa_crawl_in_progress' };
   }
+  const memoryGuard = require('../pipeline-guards');
+  if (memoryGuard.shouldSkipHeavyJob('qa-crawl')) {
+    return { ok: false, skipped: true, reason: 'memory_pressure', memory: memoryGuard.memorySnapshot() };
+  }
   running = true;
   const startedAt = new Date().toISOString();
   const t0 = Date.now();
@@ -71,12 +75,20 @@ async function runQaCrawl(opts = {}) {
     }
 
     try {
-      if (process.env.SELF_RUNNER_ENABLED !== 'false') {
+      if (process.env.SELF_RUNNER_ENABLED !== 'false' && !memoryGuard.shouldSkipHeavyJob('self-runner-post-qa')) {
         const selfRunner = require('../self-runner/self-runner-engine');
-        const gen = await selfRunner.generateProposalsFromProductIntel();
-        if (gen.created?.length) {
-          console.log('[self-runner] generated', gen.created.length, 'pending fix proposal(s)');
-        }
+        const deferMs = parseInt(process.env.SELF_RUNNER_POST_QA_DELAY_MS || '45000', 10);
+        setTimeout(() => {
+          if (memoryGuard.shouldSkipHeavyJob('self-runner-post-qa-deferred')) return;
+          selfRunner
+            .generateProposalsFromProductIntel({ skipV2Scan: true, skipV3Scan: true })
+            .then((gen) => {
+              if (gen.created?.length) {
+                console.log('[self-runner] generated', gen.created.length, 'pending fix proposal(s)');
+              }
+            })
+            .catch((err) => console.warn('[self-runner] proposal generation skipped:', err.message));
+        }, deferMs);
       }
     } catch (srErr) {
       console.warn('[self-runner] proposal generation skipped:', srErr.message);

@@ -26,6 +26,21 @@ function existingPendingForIssue(sourceIssueId) {
 }
 
 async function generateProposalsFromProductIntel(opts = {}) {
+  const memoryGuard = require('../pipeline-guards');
+  if (memoryGuard.shouldSkipHeavyJob('self-runner-generate')) {
+    return {
+      created: [],
+      skipped: [{ reason: 'memory_pressure' }],
+      pending: queue.listByStatus('pending').length,
+      log: { summary: 'skipped_memory_pressure', at: new Date().toISOString() },
+      memory: memoryGuard.memorySnapshot()
+    };
+  }
+
+  const fullScan = opts.fullScan === true;
+  const skipV2 = opts.skipV2Scan === true || !fullScan || process.env.SELF_RUNNER_V2_SCAN === 'false';
+  const skipV3 = opts.skipV3Scan === true || !fullScan;
+
   const piDoc = productStore.readDoc();
   const openFixes = (piDoc.fixQueue || []).filter((f) => !f.resolved);
   const qaDoc = qaStore.readDoc();
@@ -139,9 +154,9 @@ async function generateProposalsFromProductIntel(opts = {}) {
     `[self-runner] generate complete: ${created.length} created, ${skipped.length} skipped, ${result.pending} pending total`
   );
 
-  if (modes.shouldPropose() && process.env.SELF_RUNNER_V2_SCAN !== 'false') {
+  if (!skipV2 && modes.shouldPropose() && process.env.SELF_RUNNER_V2_SCAN !== 'false') {
     try {
-      const scan = await v2.runPlatformScanAndEnqueue({ enqueue: true });
+      const scan = await v2.runPlatformScanAndEnqueue({ enqueue: true, lightweight: !fullScan });
       created.push(...(scan.enqueue?.created || []));
       result.v2Scan = {
         scanId: scan.scanId,
@@ -161,6 +176,14 @@ async function generateProposalsFromProductIntel(opts = {}) {
       queue.writeDoc(doc);
     } catch (err) {
       logger.log.error('v2_scan_failed', { detail: err.message });
+    }
+  }
+
+  if (!skipV3 && modes.isV3Enabled()) {
+    try {
+      result.v3Scan = await modes.runV3Scan();
+    } catch (err) {
+      logger.log.error('v3_scan_failed', { detail: err.message });
     }
   }
 
@@ -197,7 +220,12 @@ function healthSummary() {
 
   return {
     enabled: process.env.SELF_RUNNER_ENABLED !== 'false',
+    engineVersion: modes.isV3Enabled() ? '3.0.0' : '2.0.0',
     mode: modes.currentMode(),
+    modeConfig: modes.getModeConfig(),
+    v3Enabled: modes.isV3Enabled(),
+    v3OpsOnly: modes.isV3OpsOnly(),
+    playbooks: modes.isV3Enabled() ? modes.listPlaybooksWithConfidence() : [],
     v2Enabled: process.env.SELF_RUNNER_V2_SCAN !== 'false',
     queue: q,
     eligibleOpenIssues: eligible,
@@ -221,5 +249,6 @@ module.exports = {
   findCheckInRun,
   healthSummary,
   runPlatformScan: v2.runPlatformScan,
-  runPlatformScanAndEnqueue: v2.runPlatformScanAndEnqueue
+  runPlatformScanAndEnqueue: v2.runPlatformScanAndEnqueue,
+  runV3Scan: modes.runV3Scan
 };

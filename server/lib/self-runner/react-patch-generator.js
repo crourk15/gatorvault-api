@@ -5,6 +5,7 @@ const fs = require('fs');
 const reactBp = require('./blueprint/react-blueprint');
 const patches = require('./self-runner-patches');
 const dedupeEngine = require('./dedupe-engine');
+const modes = require('./self-runner-modes');
 
 const VAULT_CSS_SNIPPETS = {
   'ux:scroll-containers': `
@@ -270,6 +271,10 @@ function generateReactPatch(issue, checkDetails) {
 
   if (/film-sources|film-source/.test(checkId)) {
     return buildFilmSourcePatch(issue, checkDetails);
+  }
+
+  if (modes.isV3OpsOnly()) {
+    return null;
   }
 
   if (/slug|player-profile|pages:react.*player/.test(checkId)) {

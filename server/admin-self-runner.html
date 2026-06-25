@@ -81,23 +81,24 @@
 </head>
 <body>
   <header>
-    <h1>🤖 Self-Runner 2.0</h1>
+    <h1>🤖 Self-Runner v3</h1>
     <div class="row">
       <input id="pin" type="password" placeholder="Admin PIN" autocomplete="off">
       <button id="refresh" class="secondary">Refresh</button>
       <button id="scan" class="secondary">Platform Scan</button>
+      <button id="v3scan" class="secondary">V3 Signals</button>
       <button id="generate" class="secondary">Generate Proposals</button>
     </div>
   </header>
   <main>
     <p class="status" id="status">Enter admin PIN and refresh.</p>
     <div class="banner">
-      <strong>Self-Runner 2.0 — Assisted mode:</strong> Nothing is applied until you click <em>Approve</em>.
-      Platform Scan validates blueprint HTML/JSON/CSS, War Room data, and Autoposter guards.
-      Approve runs: apply patch → optional redeploy hook → QA crawl → Product Health recompute.
-      Reject feeds the learning loop (<code>selfRunnerFeedback.json</code>).
+      <strong>Self-Runner v3 — Governed auto-healing:</strong> Detect → Diagnose → Propose → Safely Apply → Verify → Learn.
+      Ops/data fixes only (cron, UUID, ingest, feed dedupe, autoposter, War Room). React/HTML blueprint patches are disabled.
+      Modes: <em>scan-only</em> (default), <em>assisted</em>, <em>guarded-apply</em>, <em>full-auto-heal</em> (opt-in per subsystem).
     </div>
     <p class="summary" id="health-summary"></p>
+    <div id="playbooks-panel" class="banner hidden" style="margin-top:0"></div>
     <p class="summary" id="summary"></p>
     <div class="tabs" id="tabs">
       <button type="button" class="active" data-status="pending">Pending</button>
@@ -181,7 +182,11 @@
         + '<span class="sev-' + esc(fix.severity) + '">' + esc(fix.severity) + '</span>'
         + '<span class="pill">' + esc(fix.impact) + '</span>'
         + '<span class="pill">' + esc(fix.patchType) + '</span>'
-        + (fix.v2 ? '<span class="pill v2">v2</span>' : '')
+        + (fix.fixType ? '<span class="pill">fix:' + esc(fix.fixType) + '</span>' : '')
+        + (fix.playbookLabel ? '<span class="pill v2">' + esc(fix.playbookLabel) + '</span>' : '')
+        + (fix.confidence != null ? '<span class="pill">conf:' + esc(fix.confidence) + '</span>' : '')
+        + (fix.autoHealEligible ? '<span class="pill" style="color:var(--ok)">auto-ok</span>' : '')
+        + (fix.v3 ? '<span class="pill v2">v3</span>' : (fix.v2 ? '<span class="pill v2">v2</span>' : ''))
         + (fix.blocked ? '<span class="pill blocked">blocked</span>' : '')
         + '</div></div></div>'
         + '<p style="font-size:.8125rem;margin:.35rem 0">' + esc(fix.suggestedFix) + '</p>'
@@ -202,10 +207,30 @@
         .then(function (data) {
           if (!data.ok) return;
           document.getElementById('health-summary').textContent =
-            'Mode: ' + (data.mode || 'assisted')
-            + ' · v2 scan: ' + (data.v2Enabled !== false ? 'on' : 'off')
+            'Engine: ' + (data.engineVersion || '3.0.0')
+            + ' · Mode: ' + (data.mode || 'scan-only')
+            + ' · v3 ops-only: ' + (data.v3OpsOnly ? 'on' : 'off')
             + ' · ' + (data.eligibleOpenIssues || 0) + ' eligible PI issues'
             + ' · overall health ' + (data.productIntelOverall ?? '—');
+          return loadPlaybooks();
+        })
+        .catch(function () {});
+    }
+
+    function loadPlaybooks() {
+      var p = pin();
+      if (!p) return Promise.resolve();
+      return fetch(API + '/api/self-runner/v3/playbooks?pin=' + encodeURIComponent(p), { headers: headers() })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (!data.ok || !data.playbooks || !data.playbooks.length) return;
+          var el = document.getElementById('playbooks-panel');
+          el.classList.remove('hidden');
+          el.innerHTML = '<strong>Trusted playbooks</strong><div style="margin-top:.5rem;display:flex;flex-wrap:wrap;gap:.35rem">'
+            + data.playbooks.map(function (pb) {
+              return '<span class="pill" title="' + esc(pb.label) + '">' + esc(pb.id) + ' · ' + esc(pb.confidence) + ' · ' + esc(pb.band) + '</span>';
+            }).join('')
+            + '</div>';
         })
         .catch(function () {});
     }
@@ -312,6 +337,19 @@
         })
         .catch(function (e) { document.getElementById('status').textContent = e.message; });
     });
+    document.getElementById('v3scan').addEventListener('click', function () {
+      document.getElementById('status').textContent = 'Running v3 signal scan…';
+      fetch(API + '/api/self-runner/v3/scan', {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify({ pin: pin() })
+      }).then(function (r) { return r.json(); })
+        .then(function (data) {
+          document.getElementById('status').textContent = 'V3 scan — ' + (data.issueCount || 0) + ' verified signal(s)';
+          return loadHealth();
+        })
+        .catch(function (e) { document.getElementById('status').textContent = e.message; });
+    });
     document.getElementById('generate').addEventListener('click', function () {
       document.getElementById('status').textContent = 'Generating proposals…';
       fetch(API + '/api/self-runner/generate', {
@@ -321,7 +359,8 @@
       }).then(function (r) { return r.json(); })
         .then(function (data) {
           var v2 = data.v2Scan ? (' · v2: ' + (data.v2Scan.enqueued || 0) + ' enqueued') : '';
-          document.getElementById('status').textContent = 'Created ' + (data.created?.length || 0) + ' proposal(s)' + v2;
+          var v3 = data.v3Scan ? (' · v3 signals: ' + (data.v3Scan.issueCount || 0)) : '';
+          document.getElementById('status').textContent = 'Created ' + (data.created?.length || 0) + ' proposal(s)' + v2 + v3;
           return loadPending();
         });
     });

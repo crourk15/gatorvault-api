@@ -4,6 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const logger = require('./self-runner-logger');
+const modes = require('./self-runner-modes');
 
 const SERVER_ROOT = path.join(__dirname, '..', '..');
 const FEEDBACK_PATH = path.join(SERVER_ROOT, 'data', 'ops', 'selfRunnerFeedback.json');
@@ -52,11 +53,17 @@ function recordDecision({ action, fix, reason }) {
     if (entry.patchType && !doc.patterns.acceptedPatchTypes.includes(entry.patchType)) {
       doc.patterns.acceptedPatchTypes.push(entry.patchType);
     }
+    if (fix?.playbookId && modes.recordLearningEvent) {
+      modes.recordLearningEvent({ playbookId: fix.playbookId, outcome: action === 'completed' ? 'fix_succeeded' : 'coder_approved', fixId: fix.id, patchType: fix.patchType });
+    }
   } else if (action === 'rejected') {
     doc.rejected.unshift(entry);
     if (doc.rejected.length > 500) doc.rejected.length = 500;
     if (entry.patchType && !doc.patterns.rejectedPatchTypes.includes(entry.patchType)) {
       doc.patterns.rejectedPatchTypes.push(entry.patchType);
+    }
+    if (fix?.playbookId && modes.recordLearningEvent) {
+      modes.recordLearningEvent({ playbookId: fix.playbookId, outcome: 'coder_rejected', fixId: fix.id, patchType: fix.patchType, reason });
     }
     if (entry.hadPlaceholder) doc.patterns.blockPlaceholderComments = true;
     if (/placeholder/i.test(reason || '')) doc.patterns.blockPlaceholderComments = true;

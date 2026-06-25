@@ -130,11 +130,11 @@ services:
       - key: QA_CRAWLER_INTERVAL_MS
         value: "300000"
       - key: QA_CRAWLER_BOOT_DELAY_MS
-        value: "45000"
+        value: "180000"
       - key: PRODUCT_INTEL_ENABLED
         value: "true"
       - key: PRODUCT_INTEL_BOOT_DELAY_MS
-        value: "120000"
+        value: "180000"
       - key: PRODUCT_INTEL_RECOMPUTE_INTERVAL_MS
         value: "300000"
       - key: QA_FETCH_TIMEOUT_MS
@@ -144,7 +144,13 @@ services:
       - key: QA_FETCH_RETRIES
         value: "3"
       - key: QA_SITE_FETCH_CONCURRENCY
-        value: "3"
+        value: "2"
+      - key: SELF_RUNNER_V2_SCAN
+        value: "false"
+      - key: SELF_RUNNER_POST_QA_DELAY_MS
+        value: "45000"
+      - key: MEMORY_GUARD_RSS_MB
+        value: "420"
       - key: QA_BUNDLE_HTML_ONLY
         value: "true"
       - key: QA_LIVE_DASHBOARD_RETRIES

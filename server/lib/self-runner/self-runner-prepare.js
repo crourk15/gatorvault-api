@@ -8,6 +8,7 @@ const contextPatch = require('./context-patch-generator');
 const reactPatch = require('./react-patch-generator');
 const reactBp = require('./blueprint/react-blueprint');
 const autoposterGuard = require('./autoposter-guard');
+const modes = require('./self-runner-modes');
 
 function nextId(seq) {
   return `sr_fix_${String(seq).padStart(3, '0')}`;
@@ -383,25 +384,24 @@ function preparePatch(issue, checkDetails) {
   if (/retired-monolith|^pages:(team-hooks|film-room-hooks)$/.test(checkId)) return null;
 
   const patchType = patches.resolvePatchType(issue);
-  if (!patchType && !templates.resolveRuleId(issue)) {
-    const reactOnly = reactPatch.generateReactPatch(issue, checkDetails);
-    if (!reactOnly?.edits?.length) return null;
-  }
+  if (modes.isV3OpsOnly() && patchType && modes.isPatchBlocked(patchType)) return null;
 
-  let built = reactPatch.generateReactPatch(issue, checkDetails);
-
-  if (!built && (patchType === 'feed-dedup-v2' || /feed-dedup|autoposter-dedup/.test(checkId))) {
+  let built = null;
+  if (/feed-dedup|autoposter-dedup/.test(checkId)) {
     built = buildFeedDedupPatch(issue, checkDetails);
-  } else if (!built && patchType === 'film-source-url') {
+  } else if (patchType === 'film-source-url' || /film-sources/.test(checkId)) {
     built = buildFilmSourcePatch(issue, checkDetails);
-  } else if (!built && patchType === 'schema-field-v2') {
+  } else if (patchType === 'schema-field-v2') {
     built = contextPatch.generateContextPatch(issue, checkDetails);
+  } else if (!modes.isV3OpsOnly()) {
+    built = reactPatch.generateReactPatch(issue, checkDetails);
+    if (!built && patchType === 'feed-dedup-v2') built = buildFeedDedupPatch(issue, checkDetails);
+    if (!built) built = buildFromTemplate(issue, checkDetails);
+    if (!built || !built.edits?.length) built = contextPatch.generateContextPatch(issue, checkDetails);
+  } else {
+    built = reactPatch.generateReactPatch(issue, checkDetails);
   }
 
-  if (!built) built = buildFromTemplate(issue, checkDetails);
-  if (!built || !built.edits?.length) {
-    built = contextPatch.generateContextPatch(issue, checkDetails);
-  }
   if (!built || !built.edits?.length) return null;
 
   built.edits = (built.edits || []).filter((e) => !reactBp.isForbiddenEdit(e));
@@ -426,8 +426,7 @@ function prepareFixProposal(issue, { seq, checkDetails } = {}) {
 
   const id = nextId(seq);
   const piProposal = issue.proposal || null;
-
-  return {
+  const base = {
     id,
     sourceIssueId: issue.id,
     checkId: issue.checkId,
@@ -468,6 +467,7 @@ function prepareFixProposal(issue, { seq, checkDetails } = {}) {
     completedAt: null,
     rejectedAt: null
   };
+  return modes.enrichProposal(base, issue);
 }
 
 /** Rule metadata for failure reports — React vault architecture. */

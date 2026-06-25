@@ -69,17 +69,7 @@ async function startProductIntelScheduler() {
     } catch (err) {
       console.warn('[product-intel] boot recompute skipped:', err.message);
     }
-    try {
-      if (process.env.SELF_RUNNER_ENABLED !== 'false') {
-        const selfRunner = require('../self-runner/self-runner-engine');
-        const gen = await selfRunner.generateProposalsFromProductIntel();
-        if (gen.created?.length) {
-          console.log('[self-runner] boot — generated', gen.created.length, 'proposal(s)');
-        }
-      }
-    } catch (err) {
-      console.warn('[self-runner] boot generate skipped:', err.message);
-    }
+    /* Self-Runner proposals run deferred after QA crawl — avoid stacking heavy scans at boot */
   }, bootDelay);
 
   setInterval(() => {
