@@ -51,6 +51,8 @@
     "hub-refresh:cron": "node scripts/render-hub-refresh-cron.js",
     "visit-intel:reconcile": "node scripts/run-visit-intel-reconcile.js",
     "visit-intel:reconcile:cron": "node scripts/render-visit-intel-reconcile-cron.js",
+    "visit-intel:recap": "node scripts/run-visit-intel-recap.js",
+    "visit-intel:recap:cron": "node scripts/render-visit-intel-recap-cron.js",
     "verify:deployment": "node scripts/verify-deployment.js",
     "test:recruiting": "node --test tests/recruiting/*.test.js",
     "test:ingest": "node --test tests/ingest-resilience.test.js",

@@ -432,7 +432,7 @@ function extractOn3CompetitorEntries(topTeams, classYear) {
 async function syncOn3VisitOfferIntel(classYears, options = {}) {
   const profileLimit =
     options.profileLimit || parseInt(process.env.ON3_PROFILE_SYNC_LIMIT || '40', 10);
-  const results = { visitLogs: 0, offerLogs: 0, playersUpdated: 0, profilesFetched: 0, errors: [] };
+  const results = { visitLogs: 0, offerLogs: 0, playersUpdated: 0, profilesFetched: 0, errors: [], createdVisitLogs: [] };
   const allPlayers = await store.getAllPlayers();
   const byOn3Id = new Map(allPlayers.filter((p) => p.on3Id).map((p) => [String(p.on3Id), p]));
 
@@ -456,7 +456,10 @@ async function syncOn3VisitOfferIntel(classYears, options = {}) {
           source: 'on3',
           reportedAt,
         });
-        if (logResult.created) results.visitLogs += 1;
+        if (logResult.created) {
+          results.visitLogs += 1;
+          results.createdVisitLogs.push(logResult.item);
+        }
 
         const existing = await store.getPlayerBySlug(slug);
         const visitRecord = { school: 'Florida', visitType, date: v.visitDate || null, source: 'on3' };
@@ -503,7 +506,10 @@ async function syncOn3VisitOfferIntel(classYears, options = {}) {
           ...visit,
           reportedAt: profile.fetchedAt,
         });
-        if (logResult.created) results.visitLogs += 1;
+        if (logResult.created) {
+          results.visitLogs += 1;
+          results.createdVisitLogs.push(logResult.item);
+        }
       }
       for (const offer of offerRecords) {
         const logResult = await offerLogStore.appendOfferLog({
@@ -810,6 +816,13 @@ async function runOn3Ingest(options = {}) {
           console.warn('[on3-ingest] visit intel reconcile failed:', err?.message || err);
           return { expired: 0, error: err?.message || String(err) };
         });
+        if ((sync.createdVisitLogs || []).length) {
+          const { handleNewVerifiedVisitLogs } = require('./visit-intel-ingest-hooks');
+          result.visitIntelIngestAlerts = await handleNewVerifiedVisitLogs(sync.createdVisitLogs).catch((err) => {
+            console.warn('[on3-ingest] visit intel ingest alerts failed:', err?.message || err);
+            return { processed: 0, queued: 0, error: err?.message || String(err) };
+          });
+        }
       }
     }
   } catch (e) {

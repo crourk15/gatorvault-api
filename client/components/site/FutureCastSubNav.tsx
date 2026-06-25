@@ -15,6 +15,8 @@ const SUB_LINKS: { id: FutureCastSegment; label: string }[] = [
   { id: 'staff', label: 'Staff Notes' },
 ];
 
+const ALERTS_HREF = '/vault/futurecast/alerts';
+
 export type FutureCastSubId = FutureCastSegment;
 
 export function FutureCastSubNav({
@@ -45,6 +47,13 @@ export function FutureCastSubNav({
           {link.label}
         </a>
       ))}
+      <a
+        href={ALERTS_HREF}
+        className={`fc-futurecast-nav__link${pathname?.includes('/futurecast/alerts') ? ' is-active' : ''}`}
+        data-testid="fc-alerts-nav"
+      >
+        Alerts
+      </a>
     </nav>
   );
 }

@@ -243,6 +243,19 @@ const JOBS = {
       });
     }
   },
+  'visit-intel-recap': {
+    label: 'FutureCast weekly verified OV recap (+ optional X queue)',
+    subsystem: 'cron:visit-intel-recap',
+    schedule: 'Mondays 14:00 UTC Render cron',
+    async run(opts = {}) {
+      const { runVisitIntelRecap } = require('./visit-intel-recap');
+      return runVisitIntelRecap({
+        dryRun: opts.dryRun === true,
+        queueX: opts.queueX !== false,
+        asOf: opts.asOf,
+      });
+    }
+  },
   'self-runner-purge-legacy-dedupe': {
     label: 'Reject legacy addDedupeRule Self-Runner proposals',
     subsystem: 'self-runner:cleanup',

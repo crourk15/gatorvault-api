@@ -133,6 +133,11 @@ function SmartAlertsPanel({ alerts }: { alerts: IntelFeedItem[] }): React.ReactE
           ))}
         </ul>
       )}
+      <p className="fc-lab-panel-footer">
+        <a href="/vault/futurecast/alerts" data-testid="fc-lab-alerts-view-all">
+          View all alerts →
+        </a>
+      </p>
     </FutureCastPanelShell>
   );
 }
