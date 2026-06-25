@@ -1223,6 +1223,14 @@ console.log('GatorVault server running on port', PORT);
     console.warn('[startup] intel init skipped:', e.message);
   }
   try {
+    require('./lib/push-alert-service')
+      .initPushAlertStore()
+      .then((info) => console.log('[push-store] ready', info))
+      .catch((err) => console.warn('[push-store] init failed:', err.message));
+  } catch (e) {
+    console.warn('[startup] push store init skipped:', e.message);
+  }
+  try {
     startOn3IngestScheduler();
   } catch (e) {
     console.warn('On3 ingest scheduler failed to start', e.message);

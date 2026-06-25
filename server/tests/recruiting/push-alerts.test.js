@@ -5,7 +5,9 @@ const {
   buildScheduledPayload,
   buildCancelledPayload,
   pushEnabled,
+  normalizePrefs,
 } = require("../../lib/push-alert-service");
+const { subscriberMatchesPayload } = require("../../lib/push-alert-filters");
 
 describe("staff-note-picker", () => {
   it("prefers scouting summary for Easton Royal", () => {
@@ -74,5 +76,26 @@ describe("push-alert-service payloads", () => {
     assert.equal(pushEnabled(), false);
     process.env.VAPID_PUBLIC_KEY = prevPub;
     process.env.VAPID_PRIVATE_KEY = prevPriv;
+  });
+});
+
+describe("push-alert filters", () => {
+  it("allows all visits when followPlayers is empty", () => {
+    assert.equal(
+      subscriberMatchesPayload({ prefs: { followPlayers: [] } }, { playerSlug: "easton-royal" }),
+      true
+    );
+  });
+
+  it("matches tracked player by slug or name", () => {
+    const sub = { prefs: { followPlayers: ["Easton Royal"] } };
+    assert.equal(subscriberMatchesPayload(sub, { playerSlug: "easton-royal", playerName: "Easton Royal" }), true);
+    assert.equal(subscriberMatchesPayload(sub, { playerSlug: "jalen-brewster", playerName: "Jalen Brewster" }), false);
+  });
+
+  it("normalizes followPlayers on subscribe prefs", () => {
+    const prefs = normalizePrefs({ visit: true, followPlayers: [" Easton Royal ", "Easton Royal", ""] });
+    assert.deepEqual(prefs.followPlayers, ["Easton Royal"]);
+    assert.equal(prefs.visit, true);
   });
 });

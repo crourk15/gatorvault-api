@@ -31,7 +31,8 @@ export async function fetchPushConfig(): Promise<PushConfig> {
 }
 
 export async function subscribeVisitPush(
-  visitEnabled: boolean
+  visitEnabled: boolean,
+  followPlayers: string[] = []
 ): Promise<{ ok: boolean; reason?: string }> {
   if (typeof window === 'undefined' || !('serviceWorker' in navigator) || !('PushManager' in window)) {
     return { ok: false, reason: 'unsupported' };
@@ -63,7 +64,38 @@ export async function subscribeVisitPush(
     headers: authHeaders(true),
     body: JSON.stringify({
       subscription: subscription.toJSON(),
-      prefs: { visit: visitEnabled },
+      prefs: { visit: visitEnabled, followPlayers },
+    }),
+  });
+
+  if (res.status === 401) return { ok: false, reason: 'sign_in' };
+  if (res.status === 403) return { ok: false, reason: 'membership' };
+  if (!res.ok) return { ok: false, reason: 'server' };
+
+  return { ok: true };
+}
+
+/** Refresh server prefs for an existing push subscription (tracked players, visit toggle). */
+export async function syncVisitPushPrefs(options: {
+  visit: boolean;
+  followPlayers: string[];
+}): Promise<{ ok: boolean; reason?: string }> {
+  if (typeof window === 'undefined' || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+    return { ok: false, reason: 'unsupported' };
+  }
+
+  const registration = await navigator.serviceWorker.getRegistration('/push-sw.js');
+  const subscription = await registration?.pushManager.getSubscription();
+  if (!subscription) {
+    return subscribeVisitPush(options.visit, options.followPlayers);
+  }
+
+  const res = await fetch(`${getApiBase()}/api/push/subscribe`, {
+    method: 'POST',
+    headers: authHeaders(true),
+    body: JSON.stringify({
+      subscription: subscription.toJSON(),
+      prefs: { visit: options.visit, followPlayers: options.followPlayers },
     }),
   });
 

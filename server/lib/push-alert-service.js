@@ -8,9 +8,24 @@ const { getSessionFromReq } = require('./session-auth');
 const { findUserByEmail } = require('./user-store');
 const { hasPaidAccess, trialState } = require('./subscription-service');
 const { getVerifiedFloridaVisitWindow } = require('./visit-intel-utils');
+const persistence = require('./push-subscription-persistence');
+const { subscriberMatchesPayload } = require('./push-alert-filters');
 
 const STORE_PATH = path.join(__dirname, '../data/ops/push-subscriptions.json');
 const SITE_URL = (process.env.SITE_URL || 'https://gatorvaultinsider.com').replace(/\/$/, '');
+let initPromise = null;
+
+function normalizeFollowPlayers(list) {
+  if (!Array.isArray(list)) return [];
+  return [...new Set(list.map((entry) => String(entry || '').trim()).filter(Boolean))].slice(0, 24);
+}
+
+function normalizePrefs(prefs = {}) {
+  return {
+    visit: prefs.visit !== false,
+    followPlayers: normalizeFollowPlayers(prefs.followPlayers),
+  };
+}
 
 function readStore() {
   try {
@@ -20,11 +35,16 @@ function readStore() {
   }
 }
 
-function writeStore(doc) {
+function writeStore(doc, { syncPostgres = true } = {}) {
   fs.mkdirSync(path.dirname(STORE_PATH), { recursive: true });
   doc.dispatchFingerprints = (doc.dispatchFingerprints || []).slice(0, 500);
   doc.updatedAt = new Date().toISOString();
   fs.writeFileSync(STORE_PATH, JSON.stringify(doc, null, 2));
+  if (syncPostgres && persistence.isEnabled()) {
+    persistence.persistDoc(doc).catch((err) => {
+      console.warn('[push-store] postgres sync failed:', err.message);
+    });
+  }
 }
 
 function vapidConfigured() {
@@ -66,9 +86,7 @@ function upsertSubscription(email, subscription, prefs = {}) {
     email: String(email).toLowerCase(),
     endpoint,
     keys: subscription.keys || {},
-    prefs: {
-      visit: prefs.visit !== false,
-    },
+    prefs: normalizePrefs(prefs),
     updatedAt: new Date().toISOString(),
   };
 
@@ -94,7 +112,7 @@ function updateSubscriptionPrefs(email, endpoint, prefs) {
     (s) => s.endpoint === endpoint && s.email === String(email).toLowerCase()
   );
   if (!row) return { ok: false, error: 'not_found' };
-  row.prefs = { ...row.prefs, ...prefs };
+  row.prefs = normalizePrefs({ ...row.prefs, ...prefs });
   row.updatedAt = new Date().toISOString();
   writeStore(store);
   return { ok: true };
@@ -146,6 +164,7 @@ function buildScheduledPayload(log) {
     tag: log.fingerprint || `visit_scheduled|${log.playerSlug}|${log.date}`,
     type: 'visit_scheduled',
     playerSlug: log.playerSlug || null,
+    playerName: name,
   };
 }
 
@@ -159,6 +178,7 @@ function buildCancelledPayload(row) {
     tag: row.fingerprint || `visit_cancelled|${row.playerSlug}`,
     type: 'visit_cancelled',
     playerSlug: row.playerSlug || null,
+    playerName: name,
   };
 }
 
@@ -173,7 +193,7 @@ async function sendPushToSubscribers(payload, options = {}) {
     return { ok: true, skipped: true, reason: 'already_dispatched', fingerprint };
   }
 
-  const recipients = eligibleRecipients();
+  const recipients = eligibleRecipients().filter((sub) => subscriberMatchesPayload(sub, payload));
   let sent = 0;
   let failed = 0;
   const dead = [];
@@ -254,6 +274,29 @@ function requirePushSession(req, res) {
   return { session, user };
 }
 
+async function initPushAlertStore() {
+  if (initPromise) return initPromise;
+  initPromise = (async () => {
+    if (!persistence.isEnabled()) {
+      const doc = readStore();
+      return { mode: 'json', subscriptions: (doc.subscriptions || []).length };
+    }
+    await persistence.ensureTables();
+    const fromDb = await persistence.loadDoc();
+    if (fromDb && (fromDb.subscriptions || []).length) {
+      writeStore(fromDb, { syncPostgres: false });
+      return { mode: 'postgres', subscriptions: fromDb.subscriptions.length };
+    }
+    const local = readStore();
+    if ((local.subscriptions || []).length) {
+      await persistence.replaceDoc(local);
+      return { mode: 'postgres-seeded-from-json', subscriptions: local.subscriptions.length };
+    }
+    return { mode: 'postgres-empty', subscriptions: 0 };
+  })();
+  return initPromise;
+}
+
 module.exports = {
   pushEnabled,
   getPublicConfig,
@@ -267,5 +310,7 @@ module.exports = {
   requirePushSession,
   eligibleRecipients,
   alreadyDispatched,
+  initPushAlertStore,
   STORE_PATH,
+  normalizePrefs,
 };

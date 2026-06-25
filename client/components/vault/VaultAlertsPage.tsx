@@ -15,7 +15,7 @@ import {
   type LocalRecentAlert,
 } from '@/lib/alert-prefs';
 import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
-import { subscribeVisitPush } from '@/lib/push-alerts-api';
+import { syncVisitPushPrefs } from '@/lib/push-alerts-api';
 import { playerProfilePath } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
@@ -113,9 +113,16 @@ export function VaultAlertsPage(): React.ReactElement {
 
     const wantsPush = prefs.method === 'push' || prefs.method === 'both';
     if (wantsPush && prefs.types.visit) {
-      void subscribeVisitPush(true).then((out) => {
+      void syncVisitPushPrefs({
+        visit: true,
+        followPlayers: prefs.followPlayers,
+      }).then((out) => {
         if (out.ok) {
-          setPushStatus('Visit push alerts enabled for this device.');
+          setPushStatus(
+            prefs.followPlayers.length
+              ? `Visit pushes enabled for ${prefs.followPlayers.length} tracked player(s) on this device.`
+              : 'Visit push alerts enabled for all verified UF OVs on this device.'
+          );
         } else if (out.reason === 'denied') {
           setPushStatus('Browser blocked notifications — enable them in site settings.');
         } else if (out.reason === 'sign_in') {

@@ -22,6 +22,8 @@ function runVerifyServerModules() {
     'lib/x-autoposter-visit-guard.js',
     'lib/push-alert-service.js',
     'lib/push-alert-routes.js',
+    'lib/push-subscription-persistence.js',
+    'lib/push-alert-filters.js',
     'lib/staff-note-picker.js',
   ];
   const errors = [];
