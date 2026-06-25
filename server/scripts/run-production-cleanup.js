@@ -53,6 +53,8 @@ function authHeaders() {
     headers['X-Ingest-Secret'] = CRON_SECRET;
   } else if (PIN) {
     headers['x-ops-pin'] = PIN;
+    headers['X-Recruiting-Pin'] = PIN;
+    headers['X-Ingest-Secret'] = PIN;
   }
   return headers;
 }
