@@ -163,6 +163,17 @@ export function FutureCastExtendedModules({
     [underclassmen]
   );
 
+  /** Upcoming verified OVs only — never show completed/cleared rows in this panel. */
+  const upcomingVisitIntel = useMemo(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    return visitIntel.filter((p) => {
+      if (p.visitVerified === false) return false;
+      if (String(p.ufOvStatus || '').toLowerCase() === 'completed') return false;
+      if (p.visitStart && String(p.visitStart).slice(0, 10) < today) return false;
+      return Boolean(p.visitStart) || p.visitVerified === true;
+    });
+  }, [visitIntel]);
+
   const trend30 = useMemo(() => {
     const up = trendingBoard.trendingUp.slice(0, 5);
     const down = trendingBoard.trendingDown.slice(0, 5);
@@ -284,7 +295,7 @@ export function FutureCastExtendedModules({
       >
         <ModuleList
           empty="No verified upcoming official visits on file."
-          items={visitIntel.slice(0, 6).map((p) => ({
+          items={upcomingVisitIntel.slice(0, 6).map((p) => ({
               key: p.slug,
               primary: p.name,
               meta: p.visitStart
