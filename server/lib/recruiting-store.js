@@ -94,6 +94,12 @@ function nowIso() {
   return new Date().toISOString();
 }
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function isValidUuid(value) {
+  return UUID_RE.test(String(value || '').trim());
+}
+
 function isTestPlayer(p) {
   const slug = String(p.slug || '').toLowerCase();
   const name = String(p.name || '').toLowerCase();
@@ -308,8 +314,7 @@ function normalizePlayer(raw) {
 }
 
 function playerToRow(p) {
-  return {
-    id: p.id,
+  const row = {
     slug: p.slug,
     name: p.name,
     pos: p.pos,
@@ -333,6 +338,25 @@ function playerToRow(p) {
     stars_display: p.starsDisplay,
     updated_at: p.updatedAt
   };
+  if (isValidUuid(p.id)) row.id = p.id;
+  return row;
+}
+
+async function resolveSupabasePlayerUuid(playerSlug, playerId) {
+  if (isValidUuid(playerId)) return playerId;
+  const slug = String(playerSlug || '').trim();
+  if (!slug) return null;
+  const sb = initSupabase();
+  if (!sb) return null;
+  const { data, error } = await sb.from('players').select('id').eq('slug', slug).maybeSingle();
+  if (error) {
+    if (isSupabaseUnavailableError(error)) {
+      disableSupabase(error.message);
+      return null;
+    }
+    throw error;
+  }
+  return isValidUuid(data?.id) ? data.id : null;
 }
 
 function rowToPlayer(row) {
@@ -845,8 +869,9 @@ async function createEvent(event) {
   }
   const sb = initSupabase();
   if (sb) {
+    const playerUuid = await resolveSupabasePlayerUuid(row.playerSlug, row.playerId);
     const { data, error } = await sb.from('recruiting_events').insert({
-      player_id: row.playerId,
+      player_id: playerUuid,
       player_slug: row.playerSlug,
       event_type: row.eventType,
       title: row.title,
@@ -1034,7 +1059,7 @@ async function fireRecruitingEvent({ eventType, player, skinny, detail, source, 
   };
 
   const event = await createEvent({
-    playerId: saved.id,
+    playerId: isValidUuid(saved.id) ? saved.id : null,
     playerSlug: saved.slug,
     eventType,
     title: titles[eventType] || `Recruiting update: ${saved.name}`,
@@ -1120,6 +1145,7 @@ async function upsertTargetFromVisitIntel(intel) {
 
 module.exports = {
   slugify,
+  isValidUuid,
   isFloridaCommit,
   isHubFloridaCommitStatus,
   isCommittedAnywhere,
