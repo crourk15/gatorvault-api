@@ -12,10 +12,13 @@ export interface FutureCastAlert {
   lifecycle?: string | null;
   createdAt: string;
   seen: boolean;
+  category?: string;
 }
 
 export async function fetchAlerts(limit = 50): Promise<FutureCastAlert[]> {
   const { apiFetch } = await import('./api-fetch');
-  const data = await apiFetch<{ alerts: FutureCastAlert[] }>(`/api/alerts?limit=${limit}`);
+  const data = await apiFetch<{ alerts: FutureCastAlert[] }>(
+    `/api/futurecast/alerts?limit=${limit}`
+  );
   return data.alerts;
 }

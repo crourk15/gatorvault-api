@@ -19,6 +19,7 @@ import { handleGetFutureCastMovementIntel } from './movement-intel';
 import { handleGetFutureCastPlayer } from './player-detail';
 import { handleGetFutureCastHealth } from './health';
 import { handlePostVisitIntelReconcile } from './visit-intel-reconcile';
+import { handleGetFutureCastAlerts } from './alerts';
 import {
   handleGetFutureCastEarlyWatchlist,
   handleGetFutureCastUnderclassmen,
@@ -33,6 +34,7 @@ export function mountFutureCastFeatureRoutes(app: Express): void {
   app.get('/api/futurecast/predictions', handleGetFutureCastPredictions);
   app.get('/api/futurecast/staff-notes', handleGetFutureCastStaffNotes);
   app.get('/api/futurecast/high-priority', handleGetFutureCastHighPriority);
+  app.get('/api/futurecast/alerts', handleGetFutureCastAlerts);
   app.get('/api/futurecast/master-board', handleGetFutureCastMasterBoard);
   app.get('/api/futurecast/trending', handleGetFutureCastTrendingBoard);
   app.get('/api/futurecast/movement-intel', handleGetFutureCastMovementIntel);

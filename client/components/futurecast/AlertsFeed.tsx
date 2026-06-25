@@ -11,7 +11,7 @@ import '@/lib/futurecast.css';
 
 const REFRESH_MS = 60_000;
 
-export function AlertsFeed(): React.ReactElement {
+export function AlertsFeed({ showSubNav = true }: { showSubNav?: boolean }): React.ReactElement {
   const pathname = usePathname();
   const inVault = isVaultPath(pathname);
   const [alerts, setAlerts] = useState<FutureCastAlert[]>([]);
@@ -56,7 +56,7 @@ export function AlertsFeed(): React.ReactElement {
   if (loading) {
     return (
       <div className="fc-alerts-wrap">
-        <FutureCastSubNav />
+        {showSubNav ? <FutureCastSubNav /> : null}
         <p className="fc-alerts__status">Loading alerts…</p>
       </div>
     );
@@ -65,7 +65,7 @@ export function AlertsFeed(): React.ReactElement {
   if (error) {
     return (
       <div className="fc-alerts-wrap">
-        <FutureCastSubNav />
+        {showSubNav ? <FutureCastSubNav /> : null}
         <UiError
           title="Alerts unavailable"
           message={error}
@@ -79,7 +79,7 @@ export function AlertsFeed(): React.ReactElement {
 
   return (
     <div className="fc-alerts-wrap" data-testid="alerts-page">
-      <FutureCastSubNav />
+      {showSubNav ? <FutureCastSubNav /> : null}
       <h1 className="fc-alerts__title">Alerts</h1>
       <div className="fc-alerts__list">
         {alerts.map((alert) => (
@@ -88,12 +88,13 @@ export function AlertsFeed(): React.ReactElement {
               {alert.message}
             </a>
             <p className="fc-alerts__meta">
-              {alert.type} · {alert.playerName}
+              {alert.category ?? alert.type}
+              {alert.playerName ? ` · ${alert.playerName}` : ''}
             </p>
           </article>
         ))}
         {alerts.length === 0 && (
-          <UiEmpty message="No players found for this category yet." hint="Alerts appear when model confidence or fit scores move." />
+          <UiEmpty message="No alerts yet." hint="Flip watch, verified visits, and movement signals appear here when intel updates." />
         )}
       </div>
     </div>

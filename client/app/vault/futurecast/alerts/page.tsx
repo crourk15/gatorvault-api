@@ -1,7 +1,13 @@
 'use client';
 
-import { FutureCastSectionRedirect } from '@/components/futurecast/FutureCastSectionRedirect';
+import React from 'react';
+import { FutureCastElitePageShell } from '@/components/futurecast/FutureCastElitePageShell';
+import { AlertsFeed } from '@/components/futurecast/AlertsFeed';
 
-export default function VaultFutureCastAlertsRedirect() {
-  return <FutureCastSectionRedirect href="/vault/futurecast#feed" />;
+export default function VaultFutureCastAlertsPage(): React.ReactElement {
+  return (
+    <FutureCastElitePageShell segment="master" testId="vault-futurecast-alerts-page">
+      <AlertsFeed showSubNav={false} />
+    </FutureCastElitePageShell>
+  );
 }

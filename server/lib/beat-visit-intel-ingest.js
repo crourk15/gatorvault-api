@@ -342,7 +342,14 @@ async function runBeatVisitIntelIngest({ force = false, manualRows = [] } = {}) 
   }
 
   saveSnapshot(snapshot);
-  if (results.processed.length) clearHeatCheckCache();
+  if (results.processed.length) {
+    clearHeatCheckCache();
+    const { reconcileVisitIntelInStore } = require('./expire-stale-visit-intel');
+    results.visitIntelReconcile = await reconcileVisitIntelInStore().catch((err) => {
+      console.warn('[beat-visit-intel] reconcile failed:', err?.message || err);
+      return { expired: 0, error: err?.message || String(err) };
+    });
+  }
 
   return {
     ok: true,
@@ -357,7 +364,14 @@ async function ingestManualVisitIntel(row) {
   const snapshot = loadSnapshot();
   const out = await processVisitIntelRow(row, snapshot);
   saveSnapshot(snapshot);
-  if (out.processed) clearHeatCheckCache();
+  if (out.processed) {
+    clearHeatCheckCache();
+    const { reconcileVisitIntelInStore } = require('./expire-stale-visit-intel');
+    out.visitIntelReconcile = await reconcileVisitIntelInStore().catch((err) => {
+      console.warn('[beat-visit-intel] manual reconcile failed:', err?.message || err);
+      return { expired: 0, error: err?.message || String(err) };
+    });
+  }
   return out;
 }
 
