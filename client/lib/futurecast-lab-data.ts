@@ -42,6 +42,7 @@ export type FutureCastLabDataMap = {
   heatLevel: FutureCastHeatLevel;
   lastUpdated: string | null;
   highPriority: HighPriorityPlayer[];
+  visitIntel: HighPriorityPlayer[];
   underclassmen: UnderclassmenPlayer[];
 };
 
@@ -147,6 +148,7 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     home,
     stock,
     highPriority: highPriority.players ?? [],
+    visitIntel: highPriority.visitIntel ?? [],
     underclassmen: underclassmenPayload.players ?? [],
   };
 }

@@ -34,6 +34,7 @@ const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players');
 const { isActiveUfTarget } = require('../../lib/recruiting-target-filters');
+const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields } = require('../../lib/visit-intel-utils');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 
 export type VisitBadgeType = 'OV' | 'UV' | 'Game Day' | 'Junior Day' | 'Spring Visit';
@@ -113,6 +114,7 @@ interface RecruitingPlayerRow {
   visitStart?: string | null;
   visitEnd?: string | null;
   ufProbability?: number | null;
+  futurecastProbability?: number | null;
 }
 
 interface WarRoomBreakdown {
@@ -244,6 +246,9 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const insiderBySlug = loadInsiderNotesBySlug();
       const targets = await loadTargetBoardFromStore();
 
+      const visitLogStore = require('../../lib/recruiting-visit-log-store');
+      const visitLogs = visitLogStore.loadDoc().items || [];
+
       let rows = await listPredictions({
         class_year: classYear,
         status: 'ACTIVE',
@@ -285,7 +290,11 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         const positionRank = rank?.positionRank ?? target.posRank ?? null;
         const stateRank = rank?.stateRank ?? target.stateRank ?? null;
 
-        const ufProbability = toPercent(model?.confidence ?? model?.ufProbability ?? target.ufProbability);
+        const modelPct = toPercent(model?.confidence ?? model?.ufProbability);
+        const storePct = toPercent(
+          target.ufProbability ?? recruiting?.ufProbability ?? recruiting?.futurecastProbability
+        );
+        const ufProbability = modelPct > 0 ? modelPct : storePct;
         const delta7d = delta7dBySlug.get(slug) ?? model?.delta ?? 0;
         const movementDelta = delta7d;
         const fitScore = Math.round(model?.ufFitScore ?? target.rating ?? compositeScore ?? 0);
@@ -351,16 +360,32 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         };
       });
 
-      const sorted = [...players].sort((a, b) => b.priorityScore - a.priorityScore);
+      const playersWithVerifiedVisits = players.map((p) => {
+        const verified = applyVerifiedVisitFields(p, visitLogs);
+        return {
+          ...p,
+          visitStart: verified.visitStart,
+          visitEnd: verified.visitEnd,
+          ufOvStatus: verified.ufOvStatus,
+          visitVerified: verified.visitVerified,
+          visitSource: verified.visitSource ?? null,
+        };
+      });
+
+      const sorted = [...playersWithVerifiedVisits].sort((a, b) => b.priorityScore - a.priorityScore);
       const top10 = sorted.slice(0, 10);
+
+      const visitIntel = buildVerifiedVisitIntelRows(playersWithVerifiedVisits, visitLogs);
 
       const lastUpdated = new Date().toISOString();
       return {
         classYear,
         count: top10.length,
+        visitIntelCount: visitIntel.length,
         updatedAt: lastUpdated,
         lastUpdated,
         players: top10,
+        visitIntel,
       };
     });
   } catch (err) {

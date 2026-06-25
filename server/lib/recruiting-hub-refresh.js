@@ -9,6 +9,7 @@ const REFRESH_INTERVAL_MS = parseInt(
 async function refreshRecruitingHubCaches(options = {}) {
   const { clearHubCache, warmEliteHubCaches } = require('./recruiting-hub-cache');
   const { syncStaffAssignments } = require('./recruiting-staff-assignments');
+  const { expireStaleVisitIntelInStore } = require('./expire-stale-visit-intel');
   const store = require('./recruiting-store');
   const {
     loadHubDataset,
@@ -21,6 +22,10 @@ async function refreshRecruitingHubCaches(options = {}) {
 
   const restoredVerifiedCommits =
     store.storageMode() === 'supabase' ? 0 : await require('./recruiting-verified-commits').restoreVerifiedHubCommitsInStore();
+  const visitExpire = await expireStaleVisitIntelInStore().catch((err) => {
+    console.warn('[hub-refresh] visit intel expire failed:', err?.message || err);
+    return { expired: 0 };
+  });
   const staffSync = await syncStaffAssignments();
 
   let geoNormalizedCount = 0;
@@ -76,6 +81,7 @@ async function refreshRecruitingHubCaches(options = {}) {
   return {
     refreshedAt: new Date().toISOString(),
     restoredVerifiedCommits,
+    visitIntelExpired: visitExpire.expired ?? 0,
     enrichedPlayerCount: dataset.players.size,
     battleBoardCount: battleBoard.length,
     movementFeedCount: movementFeed.length,

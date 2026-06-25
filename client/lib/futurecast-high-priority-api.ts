@@ -56,9 +56,11 @@ export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
 export interface HighPriorityResponse {
   classYear: number;
   count: number;
+  visitIntelCount?: number;
   updatedAt: string;
   lastUpdated?: string;
   players: HighPriorityPlayer[];
+  visitIntel?: HighPriorityPlayer[];
 }
 
 function readHighPriorityCacheEntry(maxAgeMs: number): HighPriorityResponse | null {

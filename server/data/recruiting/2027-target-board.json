@@ -35,9 +35,6 @@
       "committedTo": "Texas",
       "skinny": "Official visit to UF June 11–13; Texas commit but Florida pushing hard.",
       "headliner": true,
-      "ufOvStatus": "scheduled",
-      "visitStart": "2026-06-11",
-      "visitEnd": "2026-06-13",
       "ufProbability": 0.48
     },
     {
@@ -55,9 +52,6 @@
       "committedTo": null,
       "skinny": "4★ CB · official visit June 11–13",
       "headliner": true,
-      "ufOvStatus": "scheduled",
-      "visitStart": "2026-06-11",
-      "visitEnd": "2026-06-13",
       "ufProbability": 0.55,
       "state": "IL"
     },

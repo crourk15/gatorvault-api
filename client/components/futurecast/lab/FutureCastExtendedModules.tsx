@@ -19,6 +19,7 @@ type Props = {
   trendingBoard: TrendingBoardResponse;
   movementIntel: MovementIntelResponse;
   highPriority: HighPriorityPlayer[];
+  visitIntel?: HighPriorityPlayer[];
   underclassmen: UnderclassmenPlayer[];
 };
 
@@ -131,6 +132,7 @@ export function FutureCastExtendedModules({
   trendingBoard,
   movementIntel,
   highPriority,
+  visitIntel = [],
   underclassmen,
 }: Props): React.ReactElement {
   const activeTargets = useMemo(
@@ -275,15 +277,12 @@ export function FutureCastExtendedModules({
       <section id={FUTURECAST_LAB_ANCHORS.visits}>
       <FutureCastPanelShell
         title="2027 Visit Intel"
-        sub="Official visit windows, OV status, and projected decision timing on the FutureCast board."
+        sub="On3- and beat-verified official visit windows only. Unconfirmed schedules are not listed."
         testId="fc-lab-timeline"
       >
         <ModuleList
-          empty="No visit windows scheduled."
-          items={highPriority
-            .filter((p) => p.visitStart || p.ufOvStatus)
-            .slice(0, 6)
-            .map((p) => ({
+          empty="No verified upcoming official visits on file."
+          items={visitIntel.slice(0, 6).map((p) => ({
               key: p.slug,
               primary: p.name,
               meta: p.visitStart
