@@ -2,6 +2,17 @@
   "version": 1,
   "alerts": [
     {
+      "id": "decommit_block_kennedee-jackson_1782333726896",
+      "type": "commit_mismatch",
+      "title": "Commit mismatch detected for Kennedee Jackson. Event blocked.",
+      "detail": "Commit mismatch detected for Kennedee Jackson. Player missing from On3 2027 board snapshot — NOT a verified decommit. Event blocked.",
+      "playerSlug": "kennedee-jackson",
+      "playerName": "Kennedee Jackson",
+      "reason": "missing_from_board",
+      "createdAt": "2026-06-24T20:42:06.896Z",
+      "read": false
+    },
+    {
       "id": "decommit_block_jaydee-lane_1781022857402",
       "type": "commit_mismatch",
       "title": "Commit mismatch detected for Jaydee Lane. Event blocked.",
@@ -402,5 +413,5 @@
       "read": false
     }
   ],
-  "updatedAt": "2026-06-09T16:34:17.402Z"
+  "updatedAt": "2026-06-24T20:42:06.896Z"
 }

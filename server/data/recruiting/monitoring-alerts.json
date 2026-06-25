@@ -2,6 +2,133 @@
   "version": 1,
   "alerts": [
     {
+      "id": "mon_1782334321979_pas3x",
+      "timestamp": 1782334321979,
+      "at": "2026-06-24T20:52:01.979Z",
+      "level": "warning",
+      "type": "ingest_mismatch",
+      "eventType": "commits",
+      "player": "Class 2030",
+      "playerSlug": null,
+      "reason": null,
+      "detail": "No commits found in On3 page data — check playerList path or DOM change",
+      "source": "on3",
+      "meta": {
+        "year": 2030,
+        "errorType": "commits",
+        "unexpectedBoardRefresh": false
+      }
+    },
+    {
+      "id": "mon_1782334321978_xd24w",
+      "timestamp": 1782334321978,
+      "at": "2026-06-24T20:52:01.978Z",
+      "level": "warning",
+      "type": "ingest_mismatch",
+      "eventType": "commits",
+      "player": "Class 2029",
+      "playerSlug": null,
+      "reason": null,
+      "detail": "No commits found in On3 page data — check playerList path or DOM change",
+      "source": "on3",
+      "meta": {
+        "year": 2029,
+        "errorType": "commits",
+        "unexpectedBoardRefresh": false
+      }
+    },
+    {
+      "id": "mon_1782334321972_hrv0p",
+      "timestamp": 1782334321973,
+      "at": "2026-06-24T20:52:01.973Z",
+      "level": "warning",
+      "type": "ingest_mismatch",
+      "eventType": "commits",
+      "player": "Class 2028",
+      "playerSlug": null,
+      "reason": null,
+      "detail": "No commits found in On3 page data — check playerList path or DOM change",
+      "source": "on3",
+      "meta": {
+        "year": 2028,
+        "errorType": "commits",
+        "unexpectedBoardRefresh": false
+      }
+    },
+    {
+      "id": "mon_1782333726899_w9uwg",
+      "timestamp": 1782333726899,
+      "at": "2026-06-24T20:42:06.899Z",
+      "level": "info",
+      "type": "ingest_mismatch",
+      "eventType": "decommit",
+      "player": "Kennedee Jackson",
+      "playerSlug": "kennedee-jackson",
+      "reason": "missing_from_board",
+      "detail": "Player missing from snapshot — event blocked",
+      "source": "on3",
+      "meta": {
+        "year": 2027,
+        "key": "on3:284256",
+        "snapshotAbsence": true,
+        "trigger": "missing_from_board"
+      }
+    },
+    {
+      "id": "mon_1782333725983_wu0yl",
+      "timestamp": 1782333725983,
+      "at": "2026-06-24T20:42:05.983Z",
+      "level": "warning",
+      "type": "ingest_mismatch",
+      "eventType": "commits",
+      "player": "Class 2030",
+      "playerSlug": null,
+      "reason": null,
+      "detail": "No commits found in On3 page data — check playerList path or DOM change",
+      "source": "on3",
+      "meta": {
+        "year": 2030,
+        "errorType": "commits",
+        "unexpectedBoardRefresh": false
+      }
+    },
+    {
+      "id": "mon_1782333725982_g3e72",
+      "timestamp": 1782333725982,
+      "at": "2026-06-24T20:42:05.982Z",
+      "level": "warning",
+      "type": "ingest_mismatch",
+      "eventType": "commits",
+      "player": "Class 2029",
+      "playerSlug": null,
+      "reason": null,
+      "detail": "No commits found in On3 page data — check playerList path or DOM change",
+      "source": "on3",
+      "meta": {
+        "year": 2029,
+        "errorType": "commits",
+        "unexpectedBoardRefresh": false
+      }
+    },
+    {
+      "id": "mon_1782333725976_gar18",
+      "timestamp": 1782333725976,
+      "at": "2026-06-24T20:42:05.976Z",
+      "level": "warning",
+      "type": "ingest_mismatch",
+      "eventType": "commits",
+      "player": "Class 2028",
+      "playerSlug": null,
+      "reason": null,
+      "detail": "No commits found in On3 page data — check playerList path or DOM change",
+      "source": "on3",
+      "meta": {
+        "year": 2028,
+        "errorType": "commits",
+        "unexpectedBoardRefresh": false
+      }
+    },
+    {
       "id": "mon_1781025937058_tzr2x",
       "timestamp": 1781025937058,
       "at": "2026-06-09T17:25:37.058Z",
@@ -16,5 +143,5 @@
       "meta": null
     }
   ],
-  "updatedAt": "2026-06-09T17:25:37.061Z"
+  "updatedAt": "2026-06-24T20:52:01.980Z"
 }

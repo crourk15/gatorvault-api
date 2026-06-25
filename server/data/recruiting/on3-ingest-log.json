@@ -1,5 +1,47 @@
 [
   {
+    "ts": "2026-06-24T20:52:05.686Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 0,
+    "errors": 3,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 0,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
+    "ts": "2026-06-24T20:42:07.359Z",
+    "level": "info",
+    "baseline": false,
+    "fired": 1,
+    "errors": 4,
+    "parsedCounts": {
+      "2026": 49,
+      "2027": 24,
+      "2028": 0,
+      "2029": 0,
+      "2030": 0
+    },
+    "urls": [
+      "https://www.on3.com/college/florida-gators/football/2026/commits/",
+      "https://www.on3.com/college/florida-gators/football/2027/commits/",
+      "https://www.on3.com/college/florida-gators/football/2028/commits/",
+      "https://www.on3.com/college/florida-gators/football/2029/commits/",
+      "https://www.on3.com/college/florida-gators/football/2030/commits/"
+    ]
+  },
+  {
     "ts": "2026-06-11T17:53:03.361Z",
     "level": "info",
     "baseline": false,
@@ -680,20 +722,6 @@
   },
   {
     "ts": "2026-06-09T20:53:39.213Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T20:51:39.464Z",
-    "level": "info",
-    "baseline": false,
-    "fired": 0,
-    "errors": 0
-  },
-  {
-    "ts": "2026-06-09T20:49:39.424Z",
     "level": "info",
     "baseline": false,
     "fired": 0,

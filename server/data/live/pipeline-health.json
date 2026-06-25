@@ -1,11 +1,12 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-12T03:22:46.687Z",
-  "lastLiveRefresh": "2026-06-12T03:22:46.686Z",
-  "lastArticlePull": "2026-06-12T03:22:46.686Z",
+  "updatedAt": "2026-06-21T01:59:25.858Z",
+  "lastLiveRefresh": "2026-06-21T01:59:25.858Z",
+  "lastArticlePull": "2026-06-21T01:59:25.858Z",
   "lastBeatPull": null,
+  "lastBeatLateIngest": null,
   "lastPodcastPull": "2026-06-11T17:53:06.587Z",
-  "lastRecruitingIngest": "2026-06-12T03:22:46.686Z",
+  "lastRecruitingIngest": "2026-06-21T01:59:25.858Z",
   "lastError": null,
   "lastLiveRefreshError": null
 }

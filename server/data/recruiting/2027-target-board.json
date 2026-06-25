@@ -17,7 +17,8 @@
       "committedTo": null,
       "skinny": "4★ athlete with UF offer; Rivals PM trending Florida at 60% confidence.",
       "headliner": true,
-      "ufProbability": 0.62
+      "ufProbability": 0.62,
+      "state": "GA"
     },
     {
       "slug": "easton-royal",
@@ -57,13 +58,14 @@
       "ufOvStatus": "scheduled",
       "visitStart": "2026-06-11",
       "visitEnd": "2026-06-13",
-      "ufProbability": 0.55
+      "ufProbability": 0.55,
+      "state": "IL"
     },
     {
       "slug": "jalen-brewster",
       "name": "Jalen Brewster",
       "pos": "DL",
-      "school": "Lake Dallas, TX",
+      "school": "Lake Dallas HS, TX",
       "htWt": "6-5 / 280",
       "stars": 5,
       "rating": 98.1,
@@ -71,10 +73,11 @@
       "posRank": 2,
       "stateRank": 2,
       "inState": false,
-      "committedTo": null,
+      "committedTo": "Texas Tech Red Raiders",
       "skinny": "5★ DL — national priority; UF among top schools monitoring.",
       "headliner": true,
-      "ufProbability": 0.38
+      "ufProbability": 0.38,
+      "state": "TX"
     }
   ]
 }

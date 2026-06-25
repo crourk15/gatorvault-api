@@ -2,6 +2,15 @@
   "version": 1,
   "entries": [
     {
+      "at": "2026-06-24T20:42:06.893Z",
+      "action": "blocked",
+      "reason": "missing_from_board",
+      "playerName": "Kennedee Jackson",
+      "playerSlug": "kennedee-jackson",
+      "classYear": 2027,
+      "trigger": "missing_from_board"
+    },
+    {
       "at": "2026-06-09T16:34:17.399Z",
       "action": "blocked",
       "reason": "unverified_on3_ingest",
@@ -20,5 +29,5 @@
       "trigger": "missing_from_board"
     }
   ],
-  "updatedAt": "2026-06-09T16:34:17.399Z"
+  "updatedAt": "2026-06-24T20:42:06.893Z"
 }

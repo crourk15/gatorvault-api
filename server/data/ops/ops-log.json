@@ -1774,17 +1774,17 @@
           {
             "id": "crawler:404",
             "module": "crawler",
-            "message": "Deploy missing asset _next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js from client build to Netlify",
+            "message": "Deploy missing asset _next//js/vault-chunks/vault/team/page-c0c882d656dad2ee.js from client build to Netlify",
             "url": "/",
-            "repro": "Deploy missing asset _next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js from client build to Netlify",
+            "repro": "Deploy missing asset _next//js/vault-chunks/vault/team/page-c0c882d656dad2ee.js from client build to Netlify",
             "details": {
               "classification": "404-detected",
               "ruleId": "F3",
               "severity": "high",
               "severityScore": 60,
               "confidence": 95,
-              "selector": "_next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js",
-              "domPath": "_next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js",
+              "selector": "_next//js/vault-chunks/vault/team/page-c0c882d656dad2ee.js",
+              "domPath": "_next//js/vault-chunks/vault/team/page-c0c882d656dad2ee.js",
               "screenshot": null,
               "sectionId": "static-assets"
             },
@@ -2351,17 +2351,17 @@
           {
             "id": "crawler:404",
             "module": "crawler",
-            "message": "Deploy missing asset _next/static/chunks/main-app-d31b18b0e93be254.js to Netlify",
+            "message": "Deploy missing asset _next//js/vault-chunks/main-app-d31b18b0e93be254.js to Netlify",
             "url": "/",
-            "repro": "Deploy missing asset _next/static/chunks/main-app-d31b18b0e93be254.js to Netlify",
+            "repro": "Deploy missing asset _next//js/vault-chunks/main-app-d31b18b0e93be254.js to Netlify",
             "details": {
               "classification": "404-detected",
               "ruleId": "F3",
               "severity": "high",
               "severityScore": 60,
               "confidence": 95,
-              "selector": "_next/static/chunks/main-app-d31b18b0e93be254.js",
-              "domPath": "_next/static/chunks/main-app-d31b18b0e93be254.js",
+              "selector": "_next//js/vault-chunks/main-app-d31b18b0e93be254.js",
+              "domPath": "_next//js/vault-chunks/main-app-d31b18b0e93be254.js",
               "screenshot": null,
               "sectionId": "homepage"
             },

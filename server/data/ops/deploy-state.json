@@ -1,35 +1,35 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-19T16:51:24.743Z",
+  "updatedAt": "2026-06-23T20:52:12.399Z",
   "api": {
     "service": "render",
-    "timestamp": "2026-06-12T03:22:29.088Z",
+    "timestamp": "2026-06-21T01:59:20.492Z",
     "commit": null,
     "branch": null,
     "deployId": null,
-    "nodeEnv": "development",
+    "nodeEnv": "production",
     "version": null
   },
   "frontend": {
     "service": "netlify",
-    "timestamp": "2026-06-12T03:22:29.089Z",
-    "commit": "7ef1db5",
+    "timestamp": "2026-06-21T01:59:20.504Z",
+    "commit": "fbfa3d34b4bc6b07f69b98557776c897943befd7",
     "deployId": null,
     "site": "gatorvaultinsider.com",
-    "version": "7ef1db5",
+    "version": "fbfa3d3",
     "syncedFromApi": false
   },
   "lastGuardianCheck": {
     "ok": true,
     "phase": "pre",
-    "checkedAt": "2026-06-19T16:51:24.740Z",
+    "checkedAt": "2026-06-23T20:52:12.397Z",
     "errors": []
   },
   "lastFailedCheck": {
     "type": "guardian-pre",
-    "at": "2026-06-16T17:39:54.496Z",
+    "at": "2026-06-22T14:52:10.573Z",
     "errors": [
-      "[routing] netlify.toml duplicates /vault rewrites — remove them (use server/_redirects only)"
+      "[assets] HTML exports missing js/vault-chunks/ script references"
     ]
   },
   "lastSmokeTest": {

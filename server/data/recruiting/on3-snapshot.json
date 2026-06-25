@@ -983,25 +983,6 @@
           "skinny": "",
           "sourceStatus": "Committed"
         },
-        "on3:284256": {
-          "on3Id": "284256",
-          "name": "Kennedee Jackson",
-          "pos": "OT",
-          "classYear": 2027,
-          "school": "Lithonia, GA",
-          "htWt": "6-5.5 / 301",
-          "stars": 4,
-          "rating": 92.85688405797102,
-          "natlRank": 98,
-          "posRank": 9,
-          "stateRank": 8,
-          "inState": false,
-          "status": "committed",
-          "commitDate": "2026-06-02",
-          "committedTo": "Florida",
-          "skinny": "",
-          "sourceStatus": "Committed"
-        },
         "on3:241889": {
           "on3Id": "241889",
           "name": "Elijah Hutcheson",
@@ -1144,7 +1125,7 @@
           "htWt": "5-9 / 195",
           "stars": 4,
           "rating": 91.3054347826087,
-          "natlRank": 181,
+          "natlRank": 182,
           "posRank": 12,
           "stateRank": 19,
           "inState": false,
@@ -1163,9 +1144,9 @@
           "htWt": "5-11 / 180",
           "stars": 4,
           "rating": 90.48623188405797,
-          "natlRank": 246,
+          "natlRank": 247,
           "posRank": 27,
-          "stateRank": 21,
+          "stateRank": 22,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-01-24",
@@ -1182,9 +1163,9 @@
           "htWt": "5-11 / 160",
           "stars": 4,
           "rating": 89.9927536231884,
-          "natlRank": 294,
+          "natlRank": 296,
           "posRank": 47,
-          "stateRank": 25,
+          "stateRank": 26,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-04-25",
@@ -1201,7 +1182,7 @@
           "htWt": "6-3.5 / 260",
           "stars": 4,
           "rating": 89.67826086956522,
-          "natlRank": 316,
+          "natlRank": 320,
           "posRank": 33,
           "stateRank": 2,
           "inState": false,
@@ -1220,7 +1201,7 @@
           "htWt": "6-4.5 / 235",
           "stars": 4,
           "rating": 89.33333333333333,
-          "natlRank": 349,
+          "natlRank": 354,
           "posRank": 20,
           "stateRank": 7,
           "inState": false,
@@ -1239,8 +1220,8 @@
           "htWt": "6-0 / 185",
           "stars": 4,
           "rating": 89.33333333333333,
-          "natlRank": 351,
-          "posRank": 12,
+          "natlRank": 356,
+          "posRank": 13,
           "stateRank": 40,
           "inState": false,
           "status": "committed",
@@ -1258,7 +1239,7 @@
           "htWt": "5-11.5 / 210",
           "stars": 4,
           "rating": 89.32608695652173,
-          "natlRank": 354,
+          "natlRank": 360,
           "posRank": 32,
           "stateRank": 18,
           "inState": false,
@@ -1277,9 +1258,9 @@
           "htWt": "6-5 / 230",
           "stars": 3,
           "rating": 88.7,
-          "natlRank": 418,
-          "posRank": 25,
-          "stateRank": 18,
+          "natlRank": 427,
+          "posRank": 26,
+          "stateRank": 19,
           "inState": false,
           "status": "committed",
           "commitDate": "2026-02-24",
@@ -1296,9 +1277,9 @@
           "htWt": "6-2.5 / 295",
           "stars": 3,
           "rating": 88.03333333333333,
-          "natlRank": 517,
-          "posRank": 55,
-          "stateRank": 43,
+          "natlRank": 533,
+          "posRank": 56,
+          "stateRank": 44,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-05-06",
@@ -1315,12 +1296,31 @@
           "htWt": "6-2 / 170",
           "stars": 3,
           "rating": 88.01594202898552,
-          "natlRank": 519,
-          "posRank": 45,
+          "natlRank": 535,
+          "posRank": 48,
           "stateRank": 12,
           "inState": false,
           "status": "committed",
           "commitDate": "2026-05-05",
+          "committedTo": "Florida",
+          "skinny": "",
+          "sourceStatus": "Committed"
+        },
+        "on3:249231": {
+          "on3Id": "249231",
+          "name": "Tre Geathers",
+          "pos": "LB",
+          "classYear": 2027,
+          "school": "Charlotte, NC",
+          "htWt": "6-1.5 / 195",
+          "stars": 3,
+          "rating": 87.73333333333333,
+          "natlRank": 577,
+          "posRank": 50,
+          "stateRank": 20,
+          "inState": false,
+          "status": "committed",
+          "commitDate": "2026-06-18",
           "committedTo": "Florida",
           "skinny": "",
           "sourceStatus": "Committed"
@@ -1334,9 +1334,9 @@
           "htWt": "6-7 / 299",
           "stars": 3,
           "rating": 87.7,
-          "natlRank": 578,
-          "posRank": 62,
-          "stateRank": 13,
+          "natlRank": 605,
+          "posRank": 64,
+          "stateRank": 14,
           "inState": false,
           "status": "committed",
           "commitDate": "2026-05-15",
@@ -1353,12 +1353,31 @@
           "htWt": "6-4 / 300",
           "stars": 3,
           "rating": 87.7,
-          "natlRank": 582,
-          "posRank": 64,
+          "natlRank": 608,
+          "posRank": 66,
           "stateRank": 48,
           "inState": true,
           "status": "committed",
           "commitDate": "2026-04-27",
+          "committedTo": "Florida",
+          "skinny": "",
+          "sourceStatus": "Committed"
+        },
+        "on3:280848": {
+          "on3Id": "280848",
+          "name": "Aaron McWilliams",
+          "pos": "K",
+          "classYear": 2027,
+          "school": "Sharpsburg, GA",
+          "htWt": "5-11 / 185",
+          "stars": 3,
+          "rating": 80,
+          "natlRank": 2114,
+          "posRank": 3,
+          "stateRank": 223,
+          "inState": false,
+          "status": "committed",
+          "commitDate": "2026-06-22",
           "committedTo": "Florida",
           "skinny": "",
           "sourceStatus": "Committed"
@@ -1372,9 +1391,9 @@
           "htWt": "6-1 / 220",
           "stars": 3,
           "rating": 80,
-          "natlRank": 1808,
+          "natlRank": 2120,
           "posRank": 2,
-          "stateRank": 36,
+          "stateRank": 43,
           "inState": false,
           "status": "committed",
           "commitDate": "2026-06-08",
@@ -1385,14 +1404,26 @@
       },
       "rankings": {
         "classYear": 2027,
-        "nationalRank": 5,
+        "nationalRank": 6,
         "secRank": 3,
-        "classScore": 92.386635559392,
+        "classScore": 91.61502454418,
         "source": "on3"
       }
+    },
+    "2028": {
+      "commits": {},
+      "rankings": null
+    },
+    "2029": {
+      "commits": {},
+      "rankings": null
+    },
+    "2030": {
+      "commits": {},
+      "rankings": null
     }
   },
-  "lastRun": "2026-06-11T17:53:02.301Z",
+  "lastRun": "2026-06-24T20:52:01.972Z",
   "commitFingerprints": {
     "175389|florida|2025-08-11": {
       "commitDate": "2025-08-11",
@@ -1830,6 +1861,1075 @@
       "commitDate": null,
       "registeredAt": "2026-06-11T15:47:15.486Z",
       "source": "players"
+    },
+    "280848|florida|2026-06-22": {
+      "commitDate": "2026-06-22",
+      "registeredAt": "2026-06-24T20:42:05.993Z",
+      "source": "players"
+    },
+    "tre-geathers|florida|2026-06-18": {
+      "commitDate": "2026-06-18",
+      "registeredAt": "2026-06-24T20:42:05.993Z",
+      "source": "players"
+    },
+    "249231|florida|2026-06-18": {
+      "commitDate": "2026-06-18",
+      "registeredAt": "2026-06-24T20:42:06.888Z",
+      "source": "fired_alert"
+    },
+    "284896|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "104740|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "158787|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "148032|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "26276|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "147134|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "95983|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "155254|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "177233|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "113148|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "1381|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "260059|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "241427|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "239969|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "239264|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "260236|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "242640|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "260790|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180857|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "237563|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "161951|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180659|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "240070|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180755|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "242674|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "249207|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "176135|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "239838|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "261542|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "155994|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "240129|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "162655|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "152539|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180261|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "178343|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "155705|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "239168|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "154345|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "235910|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "176673|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "236861|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "242367|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "259124|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "163130|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "242606|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "244018|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "178394|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180318|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "238977|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "176752|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "155982|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "244083|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "176736|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "239957|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "157290|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "242409|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "150590|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "245931|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "179982|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "248657|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "175133|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "244142|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180379|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "242925|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "240387|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "176514|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "240275|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "175732|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "176928|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "242354|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "242037|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "236048|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "238147|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "237766|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180106|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "236125|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "159202|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180443|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "240431|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "248163|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "154995|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "175134|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "155353|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "174189|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "175227|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "243036|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "176523|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "238625|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "243559|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "240530|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "240153|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "152407|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "239204|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180127|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "237700|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "174355|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "178924|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "239107|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "236385|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "155001|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "246497|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180777|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180947|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "175735|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "153292|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "238441|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "245222|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "240288|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "244118|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "178346|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180804|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "179554|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "236870|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "239823|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "238605|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "239764|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "177264|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "163152|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "180803|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "176903|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "240556|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "177030|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "239728|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "153291|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "242450|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "162935|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "154687|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "235961|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "236358|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.994Z",
+      "source": "players"
+    },
+    "236177|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "238065|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "159239|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "176378|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "241369|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "240516|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "179356|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "180751|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "240307|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "161981|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "153994|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "157992|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "235954|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "180167|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "238597|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "176059|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "238188|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "158209|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "241290|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "241257|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "155550|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "157524|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "175348|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "157156|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "153047|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "175231|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "157245|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "180195|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "236849|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "178386|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "163096|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "145121|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "156666|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "154332|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "180661|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "236059|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "157303|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "153698|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "176513|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "238028|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "177973|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "238578|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "162286|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "236862|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "176619|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "152445|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "151750|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "174742|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "174764|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "174415|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "284727|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "176663|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "155898|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "243364|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "154170|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "154123|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "152419|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "158477|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "150068|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "152350|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "178868|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "176953|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "156045|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "175462|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "155351|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "176693|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "152583|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "177612|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "177304|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "152234|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "155939|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "157927|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "161979|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "161862|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "159308|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "154572|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "157190|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "155665|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "154131|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    },
+    "151142|florida|": {
+      "commitDate": null,
+      "registeredAt": "2026-06-24T20:52:01.995Z",
+      "source": "players"
+    }
+  },
+  "firedAlerts": {
+    "249231|florida|2026-06-18": {
+      "eventType": "commit",
+      "commitDate": "2026-06-18",
+      "fingerprint": "249231|florida|2026-06-18",
+      "eventId": null,
+      "firedAt": "2026-06-24T20:42:06.888Z"
     }
   }
 }

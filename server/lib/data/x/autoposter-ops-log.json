@@ -2,6 +2,54 @@
   "version": 1,
   "entries": [
     {
+      "ts": "2026-06-21T17:02:13.628Z",
+      "type": "rewrite_success",
+      "action": "rewrite_success",
+      "details": {
+        "playerName": "Easton Royal",
+        "attempts": 1,
+        "wordCount": 85,
+        "mode": "stub"
+      },
+      "timestamp": "2026-06-21T17:02:13.628Z"
+    },
+    {
+      "ts": "2026-06-21T17:02:13.616Z",
+      "type": "rewrite_success",
+      "action": "rewrite_success",
+      "details": {
+        "playerName": "Easton Royal",
+        "attempts": 1,
+        "wordCount": 99,
+        "mode": "stub"
+      },
+      "timestamp": "2026-06-21T17:02:13.616Z"
+    },
+    {
+      "ts": "2026-06-21T12:43:23.906Z",
+      "type": "rewrite_success",
+      "action": "rewrite_success",
+      "details": {
+        "playerName": "Easton Royal",
+        "attempts": 1,
+        "wordCount": 85,
+        "mode": "stub"
+      },
+      "timestamp": "2026-06-21T12:43:23.906Z"
+    },
+    {
+      "ts": "2026-06-21T12:42:17.829Z",
+      "type": "rewrite_success",
+      "action": "rewrite_success",
+      "details": {
+        "playerName": "Easton Royal",
+        "attempts": 1,
+        "wordCount": 85,
+        "mode": "stub"
+      },
+      "timestamp": "2026-06-21T12:42:17.829Z"
+    },
+    {
       "ts": "2026-06-19T18:51:38.940Z",
       "type": "rewrite_success",
       "action": "rewrite_success",
@@ -170,5 +218,5 @@
       "timestamp": "2026-06-17T13:43:41.426Z"
     }
   ],
-  "updatedAt": "2026-06-19T18:51:38.940Z"
+  "updatedAt": "2026-06-21T17:02:13.629Z"
 }

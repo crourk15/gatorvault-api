@@ -888,8 +888,8 @@
               "severity": "high",
               "severityScore": 60,
               "confidence": 95,
-              "selector": "js/vault-chunks/r-vault-team-page-e97f60aeb392f5a1.js",
-              "domPath": "js/vault-chunks/r-vault-team-page-e97f60aeb392f5a1.js",
+              "selector": "/js/vault-chunks/r-vault-team-page-e97f60aeb392f5a1.js",
+              "domPath": "/js/vault-chunks/r-vault-team-page-e97f60aeb392f5a1.js",
               "screenshot": null,
               "sectionId": "static-assets"
             },
@@ -1160,7 +1160,7 @@
       "severity": "error",
       "type": "qa_regression",
       "title": "QA Crawler FAILED — 17 check(s)",
-      "message": "Run qa_1781371285361 at 2026-06-13T17:21:46.524Z\nDuration: 21163ms\nModules: api=PASS, content=PASS, integrity=PASS, pages=PASS, ux=FAIL, browser=PASS, visual-integrity=FAIL, mobile-behavior=PASS, crawler=FAIL\n\n• *ux/ux:scroll-containers*: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n  URL: /\n  Repro: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n• *ux/ux:modal-zindex*: Vault header z-index stacking not found — modals may render behind shell\n  URL: /\n  Repro: Vault header z-index stacking not found — modals may render behind shell\n• *crawler/crawler:404*: Deploy missing asset _next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js from client build to Netlify\n  URL: /\n  Repro: Deploy missing asset _next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js from client build to Netlify\n• *crawler/crawler:pressers-missing*: Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage\n  URL: /vault/film-room\n  Repro: Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage\n• *crawler/crawler:highlights-missing*: Verify Film Room catalog includes Highlights hub category\n  URL: /vault/film-room\n  Repro: Verify Film Room catalog includes Highlights hub category\n• *ux/ux:tap-targets*: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n  URL: /\n  Repro: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n• *ux/ux:mobile-safari*: Mobile Safari safe-area/viewport meta incomplete in vault bundle\n  URL: /\n  Repro: Mobile Safari safe-area/viewport meta incomplete in vault bundle\n• *visual-integrity/visual-integrity:live-feed-layout*: Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row\n  URL: /\n  Repro: Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row",
+      "message": "Run qa_1781371285361 at 2026-06-13T17:21:46.524Z\nDuration: 21163ms\nModules: api=PASS, content=PASS, integrity=PASS, pages=PASS, ux=FAIL, browser=PASS, visual-integrity=FAIL, mobile-behavior=PASS, crawler=FAIL\n\n• *ux/ux:scroll-containers*: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n  URL: /\n  Repro: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n• *ux/ux:modal-zindex*: Vault header z-index stacking not found — modals may render behind shell\n  URL: /\n  Repro: Vault header z-index stacking not found — modals may render behind shell\n• *crawler/crawler:404*: Deploy missing asset _next//js/vault-chunks/vault/team/page-c0c882d656dad2ee.js from client build to Netlify\n  URL: /\n  Repro: Deploy missing asset _next//js/vault-chunks/vault/team/page-c0c882d656dad2ee.js from client build to Netlify\n• *crawler/crawler:pressers-missing*: Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage\n  URL: /vault/film-room\n  Repro: Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage\n• *crawler/crawler:highlights-missing*: Verify Film Room catalog includes Highlights hub category\n  URL: /vault/film-room\n  Repro: Verify Film Room catalog includes Highlights hub category\n• *ux/ux:tap-targets*: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n  URL: /\n  Repro: Mobile tap target patterns missing: min-height:44px, min-h-[44px], touch-action:manipulation, -webkit-tap-highlight-color\n• *ux/ux:mobile-safari*: Mobile Safari safe-area/viewport meta incomplete in vault bundle\n  URL: /\n  Repro: Mobile Safari safe-area/viewport meta incomplete in vault bundle\n• *visual-integrity/visual-integrity:live-feed-layout*: Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row\n  URL: /\n  Repro: Live Feed layout classes missing: gv-live-ticker, gv-live-feed__row",
       "subsystem": "qa:crawler",
       "dedupeKey": "qa-fail-17-ux:scroll-containers",
       "meta": {
@@ -1207,17 +1207,17 @@
           {
             "id": "crawler:404",
             "module": "crawler",
-            "message": "Deploy missing asset _next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js from client build to Netlify",
+            "message": "Deploy missing asset _next//js/vault-chunks/vault/team/page-c0c882d656dad2ee.js from client build to Netlify",
             "url": "/",
-            "repro": "Deploy missing asset _next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js from client build to Netlify",
+            "repro": "Deploy missing asset _next//js/vault-chunks/vault/team/page-c0c882d656dad2ee.js from client build to Netlify",
             "details": {
               "classification": "404-detected",
               "ruleId": "F3",
               "severity": "high",
               "severityScore": 60,
               "confidence": 95,
-              "selector": "_next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js",
-              "domPath": "_next/static/chunks/app/vault/team/page-c0c882d656dad2ee.js",
+              "selector": "_next//js/vault-chunks/vault/team/page-c0c882d656dad2ee.js",
+              "domPath": "_next//js/vault-chunks/vault/team/page-c0c882d656dad2ee.js",
               "screenshot": null,
               "sectionId": "static-assets"
             },
@@ -1740,7 +1740,7 @@
       "severity": "error",
       "type": "qa_regression",
       "title": "QA Crawler FAILED — 13 check(s)",
-      "message": "Run qa_1781368712378 at 2026-06-13T16:39:09.076Z\nDuration: 36698ms\nModules: api=PASS, content=PASS, integrity=FAIL, pages=PASS, ux=FAIL, browser=PASS, visual-integrity=FAIL, mobile-behavior=PASS, crawler=FAIL\n\n• *ux/ux:scroll-containers*: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n  URL: /\n  Repro: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n• *integrity/integrity:react-exports*: Run client build + merge-into-server.js to export vault routes\n  URL: /\n  Repro: Run client build + merge-into-server.js to export vault routes\n• *integrity/integrity:react-markers*: 3 React marker(s) missing from local static exports\n  URL: /\n  Repro: 3 React marker(s) missing from local static exports\n• *ux/ux:modal-zindex*: Vault header z-index stacking not found — modals may render behind shell\n  URL: /\n  Repro: Vault header z-index stacking not found — modals may render behind shell\n• *crawler/crawler:404*: Deploy missing asset _next/static/chunks/main-app-d31b18b0e93be254.js to Netlify\n  URL: /\n  Repro: Deploy missing asset _next/static/chunks/main-app-d31b18b0e93be254.js to Netlify\n• *crawler/crawler:pressers-missing*: Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage\n  URL: /vault/film-room\n  Repro: Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage\n• *crawler/crawler:highlights-missing*: Verify Film Room catalog includes Highlights hub category\n  URL: /vault/film-room\n  Repro: Verify Film Room catalog includes Highlights hub category\n• *crawler/crawler:api-latency*: Restore API endpoint health on Render\n  URL: /\n  Repro: Restore API endpoint health on Render",
+      "message": "Run qa_1781368712378 at 2026-06-13T16:39:09.076Z\nDuration: 36698ms\nModules: api=PASS, content=PASS, integrity=FAIL, pages=PASS, ux=FAIL, browser=PASS, visual-integrity=FAIL, mobile-behavior=PASS, crawler=FAIL\n\n• *ux/ux:scroll-containers*: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n  URL: /\n  Repro: Scroll container CSS missing — need hub tab scroll + overflow rules (1/4)\n• *integrity/integrity:react-exports*: Run client build + merge-into-server.js to export vault routes\n  URL: /\n  Repro: Run client build + merge-into-server.js to export vault routes\n• *integrity/integrity:react-markers*: 3 React marker(s) missing from local static exports\n  URL: /\n  Repro: 3 React marker(s) missing from local static exports\n• *ux/ux:modal-zindex*: Vault header z-index stacking not found — modals may render behind shell\n  URL: /\n  Repro: Vault header z-index stacking not found — modals may render behind shell\n• *crawler/crawler:404*: Deploy missing asset _next//js/vault-chunks/main-app-d31b18b0e93be254.js to Netlify\n  URL: /\n  Repro: Deploy missing asset _next//js/vault-chunks/main-app-d31b18b0e93be254.js to Netlify\n• *crawler/crawler:pressers-missing*: Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage\n  URL: /vault/film-room\n  Repro: Add UF Press Conferences to FILM_HUB_ORDER in VaultFilmRoomPage\n• *crawler/crawler:highlights-missing*: Verify Film Room catalog includes Highlights hub category\n  URL: /vault/film-room\n  Repro: Verify Film Room catalog includes Highlights hub category\n• *crawler/crawler:api-latency*: Restore API endpoint health on Render\n  URL: /\n  Repro: Restore API endpoint health on Render",
       "subsystem": "qa:crawler",
       "dedupeKey": "qa-fail-13-ux:scroll-containers",
       "meta": {
@@ -1825,17 +1825,17 @@
           {
             "id": "crawler:404",
             "module": "crawler",
-            "message": "Deploy missing asset _next/static/chunks/main-app-d31b18b0e93be254.js to Netlify",
+            "message": "Deploy missing asset _next//js/vault-chunks/main-app-d31b18b0e93be254.js to Netlify",
             "url": "/",
-            "repro": "Deploy missing asset _next/static/chunks/main-app-d31b18b0e93be254.js to Netlify",
+            "repro": "Deploy missing asset _next//js/vault-chunks/main-app-d31b18b0e93be254.js to Netlify",
             "details": {
               "classification": "404-detected",
               "ruleId": "F3",
               "severity": "high",
               "severityScore": 60,
               "confidence": 95,
-              "selector": "_next/static/chunks/main-app-d31b18b0e93be254.js",
-              "domPath": "_next/static/chunks/main-app-d31b18b0e93be254.js",
+              "selector": "_next//js/vault-chunks/main-app-d31b18b0e93be254.js",
+              "domPath": "_next//js/vault-chunks/main-app-d31b18b0e93be254.js",
               "screenshot": null,
               "sectionId": "homepage"
             },
