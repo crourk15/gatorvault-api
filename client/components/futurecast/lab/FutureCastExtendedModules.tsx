@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import type { MasterBoardResponse, MovementIntelResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
-import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import type { HighPriorityPlayer, VisitRecapRow } from '@/lib/futurecast-high-priority-api';
 import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
 import {
   buildIntelFeedItem,
@@ -20,6 +20,7 @@ type Props = {
   movementIntel: MovementIntelResponse;
   highPriority: HighPriorityPlayer[];
   visitIntel?: HighPriorityPlayer[];
+  visitRecap?: VisitRecapRow[];
   underclassmen: UnderclassmenPlayer[];
 };
 
@@ -133,6 +134,7 @@ export function FutureCastExtendedModules({
   movementIntel,
   highPriority,
   visitIntel = [],
+  visitRecap = [],
   underclassmen,
 }: Props): React.ReactElement {
   const activeTargets = useMemo(
@@ -286,10 +288,26 @@ export function FutureCastExtendedModules({
               key: p.slug,
               primary: p.name,
               meta: p.visitStart
-                ? `OV ${p.visitStart}${p.visitEnd ? `–${p.visitEnd}` : ''} · UF ${Math.round(p.ufProbability ?? 0)}%`
-                : `${p.ufOvStatus ?? 'Visit intel'} · UF ${Math.round(p.ufProbability ?? 0)}%`,
+                ? `OV ${p.visitStart}${p.visitEnd ? `–${p.visitEnd}` : ''}${p.visitSourceLabel ? ` · ${p.visitSourceLabel}` : ''} · UF ${Math.round(p.ufProbability ?? 0)}%`
+                : `${p.ufOvStatus ?? 'Visit intel'}${p.visitSourceLabel ? ` · ${p.visitSourceLabel}` : ''} · UF ${Math.round(p.ufProbability ?? 0)}%`,
               href: playerProfileRoute(p.slug, 'futurecast'),
             }))}
+        />
+      </FutureCastPanelShell>
+
+      <FutureCastPanelShell
+        title="Verified OV Recap"
+        sub="Completed official visits with On3 or beat verification."
+        testId="fc-lab-visit-recap"
+      >
+        <ModuleList
+          empty="No verified completed official visits on file."
+          items={visitRecap.slice(0, 6).map((row) => ({
+            key: `recap-${row.slug}-${row.visitStart}`,
+            primary: row.name,
+            meta: `OV ${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''}${row.ufProbability != null ? ` · UF ${Math.round(row.ufProbability)}%` : ''}`,
+            href: playerProfileRoute(row.slug, 'futurecast'),
+          }))}
         />
       </FutureCastPanelShell>
       </section>

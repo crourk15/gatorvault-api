@@ -92,6 +92,7 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
                 movementIntel={data.movementIntel}
                 highPriority={data.highPriority}
                 visitIntel={data.visitIntel}
+                visitRecap={data.visitRecap}
                 underclassmen={data.underclassmen}
               />
             )}

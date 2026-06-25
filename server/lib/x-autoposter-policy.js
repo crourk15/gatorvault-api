@@ -4,6 +4,7 @@
  */
 const { TRUSTED_REPORTERS } = require('./content-validator');
 const quality = require('./x-autoposter-validation');
+const visitGuard = require('./x-autoposter-visit-guard');
 const { GM2_REWRITE_PROMPT } = require('./autoposter/gm2-rewrite-prompt');
 const insiderToneGuide = require('./autoposter/insider-tone');
 const postingEngineRules = require('./autoposter/posting-engine');
@@ -149,6 +150,15 @@ function validatePostContent(item) {
       field: 'text',
       type: 'format',
       message: 'Posts must use the insider template — no emojis, hashtags, or headline-only copy.'
+    });
+  }
+
+  const visitGate = visitGuard.evaluateVisitIntelPostGate({ text });
+  if (!visitGate.allow && !visitGate.skipped) {
+    errors.push({
+      field: 'text',
+      type: 'visit_intel_gate',
+      message: visitGate.message || 'Visit intel promotion blocked: no verified upcoming UF official visits on FutureCast.'
     });
   }
 

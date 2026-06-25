@@ -34,7 +34,7 @@ const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players');
 const { isActiveUfTarget } = require('../../lib/recruiting-target-filters');
-const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields } = require('../../lib/visit-intel-utils');
+const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields, buildVerifiedVisitRecapRows, getVisitIntelBoardSnapshot } = require('../../lib/visit-intel-utils');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 
 export type VisitBadgeType = 'OV' | 'UV' | 'Game Day' | 'Junior Day' | 'Spring Visit';
@@ -79,6 +79,9 @@ export interface HighPriorityPlayer {
   ufOvStatus: string | null;
   visitStart: string | null;
   visitEnd: string | null;
+  visitVerified?: boolean;
+  visitSource?: string | null;
+  visitSourceLabel?: string | null;
   trendHistory: Array<{ date: string; confidence: number }>;
   predictors: HighPriorityPredictor[];
 }
@@ -369,6 +372,7 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
           ufOvStatus: verified.ufOvStatus,
           visitVerified: verified.visitVerified,
           visitSource: verified.visitSource ?? null,
+          visitSourceLabel: verified.visitSourceLabel ?? null,
         };
       });
 
@@ -376,16 +380,21 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const top10 = sorted.slice(0, 10);
 
       const visitIntel = buildVerifiedVisitIntelRows(playersWithVerifiedVisits, visitLogs);
+      const visitRecap = buildVerifiedVisitRecapRows(playersWithVerifiedVisits, visitLogs);
+      const visitBoardSnapshot = getVisitIntelBoardSnapshot(visitLogs);
 
       const lastUpdated = new Date().toISOString();
       return {
         classYear,
         count: top10.length,
         visitIntelCount: visitIntel.length,
+        visitRecapCount: visitRecap.length,
+        visitBoardSnapshot,
         updatedAt: lastUpdated,
         lastUpdated,
         players: top10,
         visitIntel,
+        visitRecap,
       };
     });
   } catch (err) {

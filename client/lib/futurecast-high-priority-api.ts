@@ -49,18 +49,39 @@ export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
   ufOvStatus: string | null;
   visitStart: string | null;
   visitEnd: string | null;
+  visitVerified?: boolean;
+  visitSource?: string | null;
+  visitSourceLabel?: string | null;
   trendHistory: Array<{ date: string; confidence: number }>;
   predictors: HighPriorityPredictor[];
+}
+
+export interface VisitRecapRow {
+  slug: string;
+  name: string;
+  visitStart: string;
+  visitEnd: string;
+  visitSource?: string | null;
+  visitSourceLabel?: string | null;
+  ufProbability?: number | null;
+}
+
+export interface VisitBoardSnapshot {
+  upcomingCount: number;
+  recapCount: number;
 }
 
 export interface HighPriorityResponse {
   classYear: number;
   count: number;
   visitIntelCount?: number;
+  visitRecapCount?: number;
+  visitBoardSnapshot?: VisitBoardSnapshot;
   updatedAt: string;
   lastUpdated?: string;
   players: HighPriorityPlayer[];
   visitIntel?: HighPriorityPlayer[];
+  visitRecap?: VisitRecapRow[];
 }
 
 function readHighPriorityCacheEntry(maxAgeMs: number): HighPriorityResponse | null {

@@ -117,6 +117,7 @@ function applyVerifiedVisitFields(player, visitLogs, asOf = new Date()) {
         player?.ufOvStatus === 'scheduled' || player?.ufOvStatus === 'visit' ? 'completed' : player?.ufOvStatus ?? null,
       visitVerified: false,
       visitSource: null,
+      visitSourceLabel: null,
     };
   }
   return {
@@ -126,6 +127,7 @@ function applyVerifiedVisitFields(player, visitLogs, asOf = new Date()) {
     ufOvStatus: 'scheduled',
     visitVerified: true,
     visitSource: verified.source,
+    visitSourceLabel: formatVisitSourceLabel(verified.source),
   };
 }
 
@@ -161,6 +163,62 @@ function listRecentVerifiedFloridaOfficialVisits(visitLogs, { classYear = 2027, 
     .slice(0, limit);
 }
 
+
+function formatVisitSourceLabel(source) {
+  const src = String(source || "").toLowerCase();
+  if (src === "on3") return "On3";
+  if (src === "manual") return "Manual";
+  if (src === "rivals_pm") return "Rivals";
+  if (/beat/.test(src)) return "Beat verified";
+  return source ? String(source) : "Verified";
+}
+
+function dedupeVisitWindowKey(entry, window) {
+  return String(entry.playerSlug || "").toLowerCase() + "|" + window.visitStart;
+}
+
+function countVerifiedUpcomingVisits(visitLogs, asOf = new Date()) {
+  const today = todayYmd(asOf);
+  const seen = new Set();
+  let count = 0;
+  for (const entry of visitLogs || []) {
+    const window = getVerifiedFloridaVisitWindow(entry);
+    if (!window) continue;
+    const key = dedupeVisitWindowKey(entry, window);
+    if (seen.has(key)) continue;
+    if (window.visitEnd >= today || window.visitStart >= today) { seen.add(key); count += 1; }
+  }
+  return count;
+}
+
+function countVerifiedCompletedVisits(visitLogs, asOf = new Date()) {
+  const today = todayYmd(asOf);
+  const seen = new Set();
+  let count = 0;
+  for (const entry of visitLogs || []) {
+    const window = getVerifiedFloridaVisitWindow(entry);
+    if (!window) continue;
+    const key = dedupeVisitWindowKey(entry, window);
+    if (seen.has(key)) continue;
+    if (window.visitEnd < today) { seen.add(key); count += 1; }
+  }
+  return count;
+}
+
+function buildVerifiedVisitRecapRows(players, visitLogs, asOf = new Date(), opts = {}) {
+  const limit = opts.limit || 8;
+  const classYear = opts.classYear || 2027;
+  const recap = listRecentVerifiedFloridaOfficialVisits(visitLogs, { classYear, limit: limit * 2, asOf }).filter((row) => row.completed);
+  const playerBySlug = new Map((players || []).map((pl) => [String(pl.slug || "").toLowerCase(), pl]));
+  return recap.slice(0, limit).map((row) => {
+    const player = playerBySlug.get(String(row.slug || "").toLowerCase());
+    return { slug: row.slug, name: row.name || player?.name || row.slug, visitStart: row.visitStart, visitEnd: row.visitEnd, visitSource: row.source, visitSourceLabel: formatVisitSourceLabel(row.source), ufProbability: player?.ufProbability ?? null };
+  });
+}
+
+function getVisitIntelBoardSnapshot(visitLogs, asOf = new Date()) {
+  return { upcomingCount: countVerifiedUpcomingVisits(visitLogs, asOf), recapCount: countVerifiedCompletedVisits(visitLogs, asOf) };
+}
 module.exports = {
   VERIFIED_VISIT_SOURCES,
   todayYmd,
@@ -176,4 +234,9 @@ module.exports = {
   buildVerifiedVisitIntelRows,
   countUpcomingVisitIntel,
   listRecentVerifiedFloridaOfficialVisits,
+  formatVisitSourceLabel,
+  countVerifiedUpcomingVisits,
+  countVerifiedCompletedVisits,
+  buildVerifiedVisitRecapRows,
+  getVisitIntelBoardSnapshot,
 };

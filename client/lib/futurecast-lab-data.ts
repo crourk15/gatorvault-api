@@ -11,7 +11,7 @@ import type {
 import type { FutureCastHeatLevel, FutureCastHeroMetrics, FutureCastPageSummary } from './api/futurecast';
 import { deriveHeatLevel } from './api/futurecast';
 import { fetchStockBoard, type StockBoardResponse } from './predictions-api';
-import { fetchHighPriorityTargets, type HighPriorityPlayer } from './futurecast-high-priority-api';
+import { fetchHighPriorityTargets, type HighPriorityPlayer, type VisitRecapRow } from './futurecast-high-priority-api';
 import {
   fetchFutureCastUnderclassmen,
   type UnderclassmenPlayer,
@@ -43,6 +43,7 @@ export type FutureCastLabDataMap = {
   lastUpdated: string | null;
   highPriority: HighPriorityPlayer[];
   visitIntel: HighPriorityPlayer[];
+  visitRecap: VisitRecapRow[];
   underclassmen: UnderclassmenPlayer[];
 };
 
@@ -149,6 +150,7 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     stock,
     highPriority: highPriority.players ?? [],
     visitIntel: highPriority.visitIntel ?? [],
+    visitRecap: highPriority.visitRecap ?? [],
     underclassmen: underclassmenPayload.players ?? [],
   };
 }

@@ -3,6 +3,7 @@
  */
 const store = require('./x-autoposter-store');
 const policy = require('./x-autoposter-policy');
+const visitGuard = require('./x-autoposter-visit-guard');
 const { getBeatPosts } = require('./live-beat');
 const beatFilters = require('./beat-writer-filters');
 const { intelFingerprint } = require('./commit-fingerprint');
@@ -55,11 +56,16 @@ function buildThreadReply(item) {
   if (/commit|flip|decommit/.test(text) && player) {
     return `Full ${player} intel + film in the Vault 🐊 ${SITE_URL}`;
   }
+  let visitReply = null;
   if (item.intelType === 'official_visit' && player) {
-    return `${player} visit tracked live — FutureCast visit intel updated 🐊 ${FUTURECAST_VISITS_URL}`;
+    visitReply = `${player} visit tracked live — FutureCast visit intel updated 🐊 ${FUTURECAST_VISITS_URL}`;
+  } else if (/official visit|visit to gainesville|gainesville/.test(text)) {
+    visitReply = `Visit intel live on the FutureCast board 🐊 ${FUTURECAST_VISITS_URL}`;
   }
-  if (/official visit|visit to gainesville|gainesville/.test(text)) {
-    return `Visit intel live on the FutureCast board 🐊 ${FUTURECAST_VISITS_URL}`;
+  if (visitReply) {
+    const gate = visitGuard.evaluateVisitIntelPostGate({ text: visitReply });
+    if (gate.allow || gate.skipped) return visitReply;
+    return `More Gators recruiting intel in the Vault 🐊 ${SITE_URL}`;
   }
   return `More Gators recruiting intel in the Vault 🐊 ${SITE_URL}`;
 }
