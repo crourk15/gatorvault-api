@@ -236,10 +236,6 @@ async function serveCached(cacheKey, builderFn, options = {}) {
     }
   }
 
-  if (warming) {
-    return { status: 'building', hit: false };
-  }
-
   try {
     const { value, buildMs } = await startInflightBuild(cacheKey, builderFn, timeoutMs);
     return { status: 'ready', value, hit: false, stale: false, buildMs };
