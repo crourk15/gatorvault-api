@@ -92,7 +92,9 @@
       var up = data.uptime || {};
       var last = data.lastRun || {};
       var build = data.crawlerBuild || {};
-      var buildLabel = build.short ? ('build ' + build.short + ' · ' + (build.assetSource || 'production-html')) : '—';
+      var buildLabel = build.frontendBuildId
+        ? ('vault ' + (build.frontendShort || build.frontendBuildId) + ' · api ' + (build.apiShort || build.short || '—'))
+        : (build.short ? ('build ' + build.short + ' · ' + (build.assetSource || 'production-html')) : '—');
       el.innerHTML = [
         stat('Uptime', (up.percent != null ? up.percent + '%' : '—'), 'ok'),
         stat('Checks', up.checks || 0, ''),

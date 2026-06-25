@@ -17,7 +17,8 @@ const IPHONE_UA =
 const ANDROID_UA =
   'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36';
 
-const LOCAL_INDEX = path.join(__dirname, '..', '..', 'index.html');
+const LOCAL_VAULT_INDEX = path.join(__dirname, '..', '..', 'vault', 'index.html');
+const LOCAL_BUILD_MANIFEST = path.join(__dirname, '..', '..', 'build-manifest.json');
 
 async function getPlaywright() {
   try {
@@ -41,7 +42,13 @@ function issue(type, screen, description, suggestedFix, extra) {
 
 function readLocalBuildStamp() {
   try {
-    const html = fs.readFileSync(LOCAL_INDEX, 'utf8');
+    const manifest = JSON.parse(fs.readFileSync(LOCAL_BUILD_MANIFEST, 'utf8'));
+    if (manifest?.buildId) return manifest.buildId;
+  } catch {
+    /* fall through */
+  }
+  try {
+    const html = fs.readFileSync(LOCAL_VAULT_INDEX, 'utf8');
     const m =
       html.match(/<meta\s+name="gatorvault-build"\s+content="([^"]+)"/i) ||
       html.match(/<meta\s+name="gv-build"\s+content="([^"]+)"/i);
@@ -52,7 +59,10 @@ function readLocalBuildStamp() {
 }
 
 async function readProductionBuildStamp() {
-  const { text } = await fetchText(config.SITE_URL, { timeout: 20000 });
+  const { text } = await fetchText(`${config.SITE_URL}/vault/?_=${Date.now()}`, {
+    timeout: config.VAULT_FETCH_TIMEOUT_MS,
+    vault: true,
+  });
   const m =
     text.match(/<meta\s+name="gatorvault-build"\s+content="([^"]+)"/i) ||
     text.match(/<meta\s+name="gv-build"\s+content="([^"]+)"/i);
@@ -564,8 +574,8 @@ async function checkStaleHtml() {
       issue(
         'stale-html',
         'Global',
-        'Production index.html missing build stamp (gatorvault-build or gv-build)',
-        'Ensure stamp-build-meta.js runs during Netlify build',
+        'Production /vault HTML build stamp missing (gatorvault-build or gv-build)',
+        'Ensure stamp-build-meta.js runs during Netlify build and /vault/* rewrites return 200 HTML',
         { flowId, severity: 'high', details: { local } }
       )
     );

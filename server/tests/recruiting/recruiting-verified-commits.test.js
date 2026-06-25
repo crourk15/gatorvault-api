@@ -82,6 +82,20 @@ test('getHubCommits returns all Florida commits for hub class years', async () =
   delete require.cache[require.resolve('../../lib/recruiting-store')];
 });
 
+test('demoteUnverifiedHubCommit preserves on3 board sync commits', () => {
+  const kept = demoteUnverifiedHubCommit({
+    slug: 'elijah-hutcheson',
+    classYear: 2027,
+    status: 'committed',
+    committedTo: 'Florida',
+    category: 'recruit',
+    on3Source: 'on3-board-sync',
+    protected: true,
+  });
+  assert.equal(kept.status, 'committed');
+  assert.equal(kept.committedTo, 'Florida');
+});
+
 test('demoteUnverifiedHubCommit clears false commits', () => {
   const demoted = demoteUnverifiedHubCommit({
     slug: 'aamaury-fountain',

@@ -17,9 +17,50 @@ const PRODUCTION_HTML_PATHS = [
   '/vault/recruiting',
   '/vault/futurecast',
   '/vault/live',
+  '/vault/live-feed',
   '/vault/film-room',
   '/vault/schedule',
 ];
+
+async function verifyVaultRedirectHtml() {
+  const issues = [];
+  const base = config.SITE_URL.replace(/\/$/, '');
+  for (const pagePath of PRODUCTION_HTML_PATHS) {
+    try {
+      const { status, text } = await fetchText(`${base}${pagePath}?_=${Date.now()}`, { vault: true });
+      const hasBuild = /<meta\s+name="gatorvault-build"\s+content="[^"]+"/i.test(text || '');
+      const hasShell = /gv-vault-shell|data-testid="vault-/i.test(text || '');
+      if (status !== 200 || !hasBuild || !hasShell) {
+        issues.push({
+          ruleId: 'F2',
+          checkId: 'crawler:vault-redirect',
+          sectionId: pagePath,
+          page: pagePath,
+          selector: 'gatorvault-build',
+          domPath: pagePath,
+          severity: 'high',
+          confidence: 95,
+          message: `Vault redirect did not return 200 HTML for ${pagePath} (status=${status}, build=${hasBuild}, shell=${hasShell})`,
+          recommendedFix: 'Verify server/_redirects 200 rewrites and Netlify deploy for /vault/*',
+        });
+      }
+    } catch (err) {
+      issues.push({
+        ruleId: 'F2',
+        checkId: 'crawler:vault-redirect',
+        sectionId: pagePath,
+        page: pagePath,
+        selector: pagePath,
+        domPath: pagePath,
+        severity: 'high',
+        confidence: 90,
+        message: `Vault redirect fetch failed for ${pagePath}: ${err.message}`,
+        recommendedFix: 'Check Netlify /vault/* rewrites and crawler fetch timeout/retries',
+      });
+    }
+  }
+  return issues;
+}
 
 function collectHtmlFiles() {
   const cfg = loadCrawlerConfig();
@@ -86,6 +127,10 @@ function collectLocalHtmlAssets() {
 
 async function analyze404Assets() {
   const issues = [];
+  if (config.SCAN_PRODUCTION !== false) {
+    const redirectIssues = await verifyVaultRedirectHtml();
+    issues.push(...redirectIssues);
+  }
   const useProductionHtml = config.SCAN_PRODUCTION !== false;
   const allAssets = useProductionHtml
     ? await collectProductionHtmlAssets()
@@ -160,4 +205,4 @@ async function analyze404Assets() {
   return issues.slice(0, 10);
 }
 
-module.exports = { analyze404Assets, extractAssets, collectHtmlFiles, shouldSkipAsset };
+module.exports = { analyze404Assets, extractAssets, collectHtmlFiles, shouldSkipAsset, verifyVaultRedirectHtml };

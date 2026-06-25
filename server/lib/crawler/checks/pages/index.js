@@ -15,23 +15,11 @@ async function checkPage(page, viewport) {
   const base = config.SITE_URL.replace(/\/$/, '');
   const url = `${base}${page.path}`;
   const headers = viewport === 'mobile' ? { 'User-Agent': MOBILE_UA } : {};
-  const { text: html } = await require('../../../qa/qa-utils').fetchText(url, { headers });
-  const scripts = [];
-  const re = /<script[^>]+src=["']([^"']+)["']/gi;
-  let m;
-  while ((m = re.exec(html))) {
-    if (m[1] && !m[1].includes('google') && !m[1].includes('cdn.jsdelivr')) scripts.push(m[1]);
-  }
-  let text = html;
-  for (const src of scripts.slice(0, 8)) {
-    const scriptUrl = src.startsWith('http') ? src : `${base}${src.startsWith('/') ? '' : '/'}${src}`;
-    try {
-      const { text: js } = await require('../../../qa/qa-utils').fetchText(scriptUrl, { headers });
-      text += '\n' + js;
-    } catch {
-      /* skip */
-    }
-  }
+  const { text: html } = await require('../../../qa/qa-utils').fetchText(url, {
+    headers,
+    vault: page.path.startsWith('/vault'),
+  });
+  const text = html;
   const missing = (page.markers || []).filter((marker) => !text.includes(marker));
   if (missing.length) {
     const err = new Error(`Missing React markers on ${page.path} (${viewport}): ${missing.join(', ')}`);

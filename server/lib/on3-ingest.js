@@ -229,11 +229,8 @@ async function demoteUnverifiedHubCommitsInStore() {
 }
 
 async function syncBoardCommitsToPlayers(commits) {
-  const { isVerifiedHubCommit } = require('./recruiting-verified-commits');
-  const useVerifiedAllowlist = store.storageMode() !== 'supabase';
   let synced = 0;
   for (const p of commits || []) {
-    if (useVerifiedAllowlist && !isVerifiedHubCommit(p)) continue;
     const existing = await findExistingPlayer(p);
     const slug = existing?.slug || store.slugify(p.name);
     await store.upsertPlayer({
@@ -258,7 +255,7 @@ async function syncBoardCommitsToPlayers(commits) {
       on3Id: p.on3Id,
       on3Slug: p.on3Slug || existing?.on3Slug || null,
       on3ProfileUrl: buildOn3ProfileUrl({ ...p, slug }),
-      on3Source: p.on3Source || existing?.on3Source || null,
+      on3Source: 'on3-board-sync',
       skinny: buildSkinny(p),
       starsDisplay: starsDisplay(p.stars),
       updatedAt: new Date().toISOString()

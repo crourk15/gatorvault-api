@@ -22,18 +22,19 @@ async function runModuleChecks(opts = {}) {
     return { api, modules: { api } };
   }
 
-  const [api, content, integrityBase, pages, ux, browser, visualIntegrity, mobileBehavior, sectionIntegrity] =
-    await Promise.all([
-      runApiChecks(),
-      runContentChecks(),
-      runIntegrityChecks(),
-      runPageChecks(),
-      runUxChecks(),
-      runBrowserChecks(),
-      runVisualIntegrityChecks({ local: config.SCAN_LOCAL !== false }),
-      runMobileBehaviorChecks(),
-      runSectionChecks()
-    ]);
+  // Stagger Netlify-heavy modules to avoid premature-close under parallel load.
+  const [api, content] = await Promise.all([runApiChecks(), runContentChecks()]);
+  const pages = await runPageChecks();
+  const [ux, visualIntegrity] = await Promise.all([
+    runUxChecks(),
+    runVisualIntegrityChecks({ local: config.SCAN_LOCAL !== false }),
+  ]);
+  const [integrityBase, sectionIntegrity, browser, mobileBehavior] = await Promise.all([
+    runIntegrityChecks(),
+    runSectionChecks(),
+    runBrowserChecks(),
+    runMobileBehaviorChecks(),
+  ]);
 
   const integrity = {
     module: 'integrity',

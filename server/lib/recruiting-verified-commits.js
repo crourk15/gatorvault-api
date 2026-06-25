@@ -68,9 +68,23 @@ function demoteUnverifiedHubCommit(player) {
   if (!player || !looksLikeFloridaCommit(player)) return player;
   const year = Number(player.classYear ?? player.class_year);
   if (!isHubClassYear(year)) return player;
-  if (isVerifiedUfCommitSlug(playerSlug(player), year)) return player;
 
   const slug = playerSlug(player);
+  if (isHubExternalCommitFlipTarget(player)) {
+    const out = { ...player };
+    out.status = 'uncommitted';
+    out.committedTo = HUB_EXTERNAL_COMMIT_BY_SLUG[slug] || null;
+    out.commitDate = null;
+    out.category = 'target';
+    out.lifecycle = out.lifecycle === 'commit' ? 'target' : out.lifecycle;
+    out.pipelineState = out.pipelineState === 'committed' || out.pipelineState === 'commit' ? 'target' : out.pipelineState;
+    if (out.ufProbability == null) out.ufProbability = null;
+    return out;
+  }
+
+  if (isVerifiedUfCommitSlug(slug, year)) return player;
+  if (player.protected === true || player.on3Source === 'on3-board-sync') return player;
+
   const out = { ...player };
   out.status = 'uncommitted';
   out.committedTo = HUB_EXTERNAL_COMMIT_BY_SLUG[slug] || null;

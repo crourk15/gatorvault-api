@@ -138,7 +138,15 @@ services:
       - key: PRODUCT_INTEL_RECOMPUTE_INTERVAL_MS
         value: "300000"
       - key: QA_FETCH_TIMEOUT_MS
-        value: "25000"
+        value: "45000"
+      - key: QA_VAULT_FETCH_TIMEOUT_MS
+        value: "45000"
+      - key: QA_FETCH_RETRIES
+        value: "3"
+      - key: QA_SITE_FETCH_CONCURRENCY
+        value: "3"
+      - key: QA_BUNDLE_HTML_ONLY
+        value: "true"
       - key: QA_LIVE_DASHBOARD_RETRIES
         value: "4"
       - key: QA_LIVE_DASHBOARD_RETRY_MS

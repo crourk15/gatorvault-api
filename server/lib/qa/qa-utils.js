@@ -4,6 +4,44 @@
 const fetch = require('node-fetch');
 const config = require('./qa-config');
 
+const CRAWLER_UA = 'gatorvault-qa-crawler/2.0 (+https://gatorvaultinsider.com)';
+
+function isRetryableFetchError(message) {
+  return /abort|timeout|ECONNRESET|ECONNREFUSED|premature close|invalid response body|fetch failed|network|socket hang up|UND_ERR|body timeout/i.test(
+    String(message || '')
+  );
+}
+
+function defaultFetchHeaders(extra = {}) {
+  return {
+    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Cache-Control': 'no-cache',
+    Pragma: 'no-cache',
+    'User-Agent': CRAWLER_UA,
+    ...extra,
+  };
+}
+
+function resolveFetchTimeout(url, opts = {}) {
+  if (opts.timeout) return opts.timeout;
+  const isVault = opts.vault || /\/vault(\/|$)/.test(String(url || ''));
+  return isVault ? config.VAULT_FETCH_TIMEOUT_MS : config.FETCH_TIMEOUT_MS;
+}
+
+async function mapPool(items, worker, concurrency = 3) {
+  const results = new Array(items.length);
+  let index = 0;
+  const runners = Array.from({ length: Math.max(1, Math.min(concurrency, items.length)) }, async () => {
+    while (index < items.length) {
+      const i = index;
+      index += 1;
+      results[i] = await worker(items[i], i);
+    }
+  });
+  await Promise.all(runners);
+  return results;
+}
+
 function check(id, module, label, fn) {
   return Promise.resolve()
     .then(fn)
@@ -27,7 +65,7 @@ function check(id, module, label, fn) {
 }
 
 async function fetchJson(url, opts = {}) {
-  const timeout = opts.timeout || config.FETCH_TIMEOUT_MS;
+  const timeout = resolveFetchTimeout(url, opts);
   const retries = opts.retries ?? 0;
   const retryDelayMs = opts.retryDelayMs ?? 2500;
   const retryStatuses = new Set(opts.retryOn || [502, 503, 504, 429, 0]);
@@ -39,7 +77,7 @@ async function fetchJson(url, opts = {}) {
     try {
       const r = await fetch(url, {
         method: opts.method || 'GET',
-        headers: { Accept: 'application/json', ...(opts.headers || {}) },
+        headers: defaultFetchHeaders({ Accept: 'application/json', ...(opts.headers || {}) }),
         signal: controller ? controller.signal : undefined
       });
       const text = await r.text();
@@ -67,8 +105,7 @@ async function fetchJson(url, opts = {}) {
       const status = err.details?.status || 0;
       const retryable =
         attempt < retries &&
-        (retryStatuses.has(status) ||
-          /abort|timeout|ECONNRESET|ECONNREFUSED|fetch failed|network/i.test(String(err.message || '')));
+        (retryStatuses.has(status) || isRetryableFetchError(err.message));
       if (retryable) {
         await new Promise((resolve) => setTimeout(resolve, retryDelayMs * (attempt + 1)));
         continue;
@@ -120,49 +157,94 @@ async function waitForApiWarmup() {
 }
 
 async function fetchText(url, opts = {}) {
-  const timeout = opts.timeout || config.FETCH_TIMEOUT_MS;
-  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-  const timer = controller ? setTimeout(() => controller.abort(), timeout) : null;
-  try {
-    const r = await fetch(url, {
-      method: 'GET',
-      headers: { Accept: 'text/html', ...(opts.headers || {}) },
-      signal: controller ? controller.signal : undefined
-    });
-    const text = await r.text();
-    if (!r.ok) {
-      const err = new Error(`HTTP ${r.status} ${url}`);
-      err.url = url;
-      throw err;
-    }
-    return { status: r.status, text, url };
-  } finally {
-    if (timer) clearTimeout(timer);
-  }
-}
+  const timeout = resolveFetchTimeout(url, opts);
+  const retries = opts.retries ?? config.FETCH_RETRIES;
+  const retryDelayMs = opts.retryDelayMs ?? config.FETCH_RETRY_DELAY_MS;
+  let lastErr;
 
-async function headUrl(url) {
-  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-  const timer = controller ? setTimeout(() => controller.abort(), config.FETCH_TIMEOUT_MS) : null;
-  try {
-    const r = await fetch(url, { method: 'HEAD', signal: controller ? controller.signal : undefined });
-    if (r.ok || r.status === 403 || r.status === 405) return { ok: true, status: r.status, url };
-    return { ok: false, status: r.status, url };
-  } catch (e) {
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = controller ? setTimeout(() => controller.abort(), timeout) : null;
     try {
-      const r2 = await fetch(url, {
+      const r = await fetch(url, {
         method: 'GET',
-        headers: { Range: 'bytes=0-0' },
+        headers: defaultFetchHeaders(opts.headers || {}),
         signal: controller ? controller.signal : undefined
       });
-      if (r2.ok || r2.status === 206 || r2.status === 403) return { ok: true, status: r2.status, url };
-      return { ok: false, status: r2.status, url, error: e.message };
-    } catch (e2) {
-      return { ok: false, status: 0, url, error: e2.message || e.message };
+      const text = await r.text();
+      if (!r.ok) {
+        const err = new Error(`HTTP ${r.status} ${url}`);
+        err.url = url;
+        if (attempt < retries && [429, 502, 503, 504].includes(r.status)) {
+          lastErr = err;
+          await new Promise((resolve) => setTimeout(resolve, retryDelayMs * (attempt + 1)));
+          continue;
+        }
+        throw err;
+      }
+      return { status: r.status, text, url };
+    } catch (err) {
+      lastErr = err;
+      if (attempt < retries && isRetryableFetchError(err.message)) {
+        await new Promise((resolve) => setTimeout(resolve, retryDelayMs * (attempt + 1)));
+        continue;
+      }
+      throw err;
+    } finally {
+      if (timer) clearTimeout(timer);
     }
-  } finally {
-    if (timer) clearTimeout(timer);
   }
+  throw lastErr;
+}
+
+async function headUrl(url, opts = {}) {
+  const timeout = resolveFetchTimeout(url, opts);
+  const retries = opts.retries ?? config.FETCH_RETRIES;
+  const retryDelayMs = opts.retryDelayMs ?? config.FETCH_RETRY_DELAY_MS;
+  let lastErr;
+
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const timer = controller ? setTimeout(() => controller.abort(), timeout) : null;
+    try {
+      const r = await fetch(url, {
+        method: 'HEAD',
+        headers: defaultFetchHeaders(opts.headers || {}),
+        signal: controller ? controller.signal : undefined
+      });
+      if (r.ok || r.status === 403 || r.status === 405) return { ok: true, status: r.status, url };
+      if (attempt < retries && [429, 502, 503, 504].includes(r.status)) {
+        await new Promise((resolve) => setTimeout(resolve, retryDelayMs * (attempt + 1)));
+        continue;
+      }
+      return { ok: false, status: r.status, url };
+    } catch (e) {
+      lastErr = e;
+      try {
+        const r2 = await fetch(url, {
+          method: 'GET',
+          headers: defaultFetchHeaders({ Range: 'bytes=0-0', ...(opts.headers || {}) }),
+          signal: controller ? controller.signal : undefined
+        });
+        if (r2.ok || r2.status === 206 || r2.status === 403) return { ok: true, status: r2.status, url };
+        if (attempt < retries && isRetryableFetchError(e.message)) {
+          await new Promise((resolve) => setTimeout(resolve, retryDelayMs * (attempt + 1)));
+          continue;
+        }
+        return { ok: false, status: r2.status, url, error: e.message };
+      } catch (e2) {
+        lastErr = e2;
+        if (attempt < retries && isRetryableFetchError(e2.message || e.message)) {
+          await new Promise((resolve) => setTimeout(resolve, retryDelayMs * (attempt + 1)));
+          continue;
+        }
+        return { ok: false, status: 0, url, error: e2.message || e.message };
+      }
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+  }
+  return { ok: false, status: 0, url, error: lastErr?.message || 'fetch failed' };
 }
 
 function extractUrls(text) {
@@ -199,9 +281,15 @@ function extractVaultShellCssHrefs(html) {
   return hrefs;
 }
 
-async function fetchSiteBundleText(siteUrl, pagePath) {
+async function fetchSiteBundleText(siteUrl, pagePath, opts = {}) {
   const base = siteUrl.replace(/\/$/, '');
-  const { text: html } = await fetchText(`${base}${pagePath}`);
+  const path = pagePath.startsWith('/') ? pagePath : `/${pagePath}`;
+  const htmlOnly = opts.htmlOnly ?? config.BUNDLE_HTML_ONLY;
+  const { text: html } = await fetchText(`${base}${path}`, { vault: true, ...opts });
+  if (htmlOnly) {
+    return html;
+  }
+
   const assets = [];
   const vaultShellCss = extractVaultShellCssHrefs(html);
   const scriptRe = /<script[^>]+src=["']([^"']+)["']/gi;
@@ -222,23 +310,28 @@ async function fetchSiteBundleText(siteUrl, pagePath) {
       toLoad.push(href);
     }
   }
+  const maxAssets = opts.maxAssets ?? 4;
   for (const href of assets) {
-    if (toLoad.length >= 12 + vaultShellCss.length) break;
+    if (toLoad.length >= maxAssets + vaultShellCss.length) break;
     if (!seen.has(href)) {
       seen.add(href);
       toLoad.push(href);
     }
   }
   let bundled = html;
-  for (const src of toLoad) {
-    const url = src.startsWith('http') ? src : `${base}${src.startsWith('/') ? '' : '/'}${src}`;
-    try {
-      const { text } = await fetchText(url);
-      bundled += '\n' + text;
-    } catch {
-      /* skip */
-    }
-  }
+  await mapPool(
+    toLoad,
+    async (src) => {
+      const url = src.startsWith('http') ? src : `${base}${src.startsWith('/') ? '' : '/'}${src}`;
+      try {
+        const { text } = await fetchText(url, { vault: true, ...opts });
+        bundled += '\n' + text;
+      } catch {
+        /* skip optional assets */
+      }
+    },
+    config.SITE_FETCH_CONCURRENCY
+  );
   return bundled;
 }
 
@@ -251,5 +344,8 @@ module.exports = {
   headUrl,
   extractUrls,
   moduleResult,
-  fetchSiteBundleText
+  fetchSiteBundleText,
+  mapPool,
+  isRetryableFetchError,
+  defaultFetchHeaders,
 };
