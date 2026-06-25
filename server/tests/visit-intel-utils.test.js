@@ -83,6 +83,12 @@ describe("uf-probability-utils", () => {
     assert.equal(resolved.label, "Est.");
     assert.equal(resolved.value, 15);
   });
+
+  it("loads rivals UF pct map without throwing", () => {
+    const { loadRivalsUfPctBySlug } = require("../lib/uf-probability-utils");
+    const map = loadRivalsUfPctBySlug();
+    assert.ok(map instanceof Map);
+  });
 });
 
 describe("flip-watch-utils", () => {

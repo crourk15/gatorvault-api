@@ -1,6 +1,9 @@
 /**
  * UF probability truth chain — model → store → Rivals PM → labeled estimate.
  */
+const fs = require('node:fs');
+const path = require('node:path');
+
 function toPercent(value) {
   if (value == null || Number.isNaN(Number(value))) return 0;
   const n = Number(value);
