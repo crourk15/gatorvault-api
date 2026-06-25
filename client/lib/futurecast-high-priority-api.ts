@@ -6,7 +6,7 @@ import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 export const HIGH_PRIORITY_YEAR = 2027;
-export const HIGH_PRIORITY_CACHE_KEY = 'gv:futurecast:high-priority:v4';
+export const HIGH_PRIORITY_CACHE_KEY = 'gv:futurecast:high-priority:v5';
 export const HIGH_PRIORITY_CACHE_TTL_MS = 5 * 60_000;
 export const HIGH_PRIORITY_STALE_CACHE_MAX_MS = 24 * 60 * 60_000;
 

@@ -38,6 +38,7 @@ const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields, buildVerifiedVisi
 const { resolveUfProbability, loadRivalsUfPctBySlug } = require('../../lib/uf-probability-utils');
 const { buildFlipWatchRows } = require('../../lib/flip-watch-utils');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
+const TARGET_BOARD_SEED_PATH = path.join(__dirname, '../../data/recruiting/2027-target-board.json');
 
 export type VisitBadgeType = 'OV' | 'UV' | 'Game Day' | 'Junior Day' | 'Spring Visit';
 
@@ -212,6 +213,29 @@ function loadRecruitingBySlug(): Map<string, RecruitingPlayerRow> {
   return map;
 }
 
+function loadTargetSeedBySlug(): Map<string, TargetBoardEntry> {
+  const map = new Map<string, TargetBoardEntry>();
+  try {
+    const doc = JSON.parse(fs.readFileSync(TARGET_BOARD_SEED_PATH, 'utf8')) as {
+      targets?: TargetBoardEntry[];
+    };
+    for (const target of doc.targets ?? []) {
+      if (target.slug) map.set(target.slug, target);
+    }
+  } catch {
+    /* optional */
+  }
+  return map;
+}
+
+function resolveCommittedTo(
+  target: TargetBoardEntry,
+  recruiting: RecruitingPlayerRow | undefined,
+  seed: TargetBoardEntry | undefined
+): string | null {
+  return target.committedTo ?? recruiting?.committedTo ?? seed?.committedTo ?? null;
+}
+
 function loadInsiderNotesBySlug(): Map<string, string> {
   const map = new Map<string, string>();
   try {
@@ -240,11 +264,12 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       return;
     }
 
-    const cacheKey = `futurecast:high-priority:${classYear}`;
+    const cacheKey = `futurecast:high-priority:v2:${classYear}`;
 
     await sendCachedJson(res, cacheKey, async () => {
       const rankings = loadRecruitingRankings();
       const recruitingBySlug = loadRecruitingBySlug();
+      const targetSeedBySlug = loadTargetSeedBySlug();
       const insiderBySlug = loadInsiderNotesBySlug();
       const targets = await loadTargetBoardFromStore();
       const rivalsUfBySlug = loadRivalsUfPctBySlug();
@@ -285,6 +310,7 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const players: HighPriorityPlayer[] = targets.map((target) => {
         const slug = target.slug;
         const recruiting = recruitingBySlug.get(slug);
+        const seed = targetSeedBySlug.get(slug);
         const model = predictionBySlug.get(slug);
         const rank = rankings.get(slug);
         const insiderNotes = insiderBySlug.get(slug) ?? null;
@@ -345,7 +371,7 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
           htWt: target.htWt ?? null,
           stars: target.stars ?? rank?.stars ?? null,
           headliner: Boolean(target.headliner),
-          committedTo: target.committedTo ?? null,
+          committedTo: resolveCommittedTo(target, recruiting, seed),
           compositeScore: compositeScore ?? 0,
           nationalRank,
           positionRank,

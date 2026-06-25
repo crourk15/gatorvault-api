@@ -125,6 +125,24 @@ describe("flip-watch-utils", () => {
     assert.equal(flip[0].committedShort, "Texas");
   });
 
+  it("includes flip targets when commit lives on recruiting row only", () => {
+    const recap = [
+      {
+        slug: "easton-royal",
+        name: "Easton Royal",
+        visitStart: "2026-06-11",
+        visitEnd: "2026-06-13",
+        visitSourceLabel: "On3",
+      },
+    ];
+    const players = [
+      { slug: "easton-royal", name: "Easton Royal", committedTo: "Texas", ufProbability: 48 },
+    ];
+    const flip = buildFlipWatchRows(players, recap);
+    assert.equal(flip.length, 1);
+    assert.equal(flip[0].committedShort, "Texas");
+  });
+
   it("prioritizes target-board slugs in recap ordering", () => {
     const sorted = prioritizeVisitRecapForTargets(
       [
