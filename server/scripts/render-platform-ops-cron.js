@@ -19,6 +19,7 @@ const DEFAULT_JOBS = [
   'game-zone-refresh',
   'nil-refresh',
   'qa-crawler',
+  'visit-intel-reconcile',
   'x-autoposter-run',
   'beat-late-ingest'
 ];

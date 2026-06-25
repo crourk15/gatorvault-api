@@ -13,6 +13,7 @@ const EXPECTED_SERVICES = [
   { name: 'gatorvault-api', type: 'web' },
   { name: 'gatorvault-api-keepalive', type: 'cron' },
   { name: 'gatorvault-api-hub-refresh', type: 'cron' },
+  { name: 'gatorvault-api-visit-intel-reconcile', type: 'cron' },
 ];
 
 const WEB_REQUIRED_ENV = [
@@ -25,6 +26,7 @@ const WEB_REQUIRED_ENV = [
 ];
 
 const HUB_CRON_REQUIRED_ENV = ['HUB_REFRESH_URL', 'MONITORING_CRON_SECRET'];
+const VISIT_INTEL_CRON_REQUIRED_ENV = ['VISIT_INTEL_RECONCILE_URL', 'MONITORING_CRON_SECRET'];
 
 const ENDPOINTS = [
   { label: 'Render /health', url: `${RENDER_BASE}/health`, maxMs: 3000, expectOk: true },
@@ -171,7 +173,14 @@ async function main() {
       record(true, `Render service: ${exp.name} (${svc.id}, ${svc.type || exp.type}, ${svc.suspended === 'suspended' ? 'suspended' : 'active'})`);
 
       const env = await getEnvVars(svc.id);
-      const required = exp.name === 'gatorvault-api-hub-refresh' ? HUB_CRON_REQUIRED_ENV : exp.name === 'gatorvault-api' ? WEB_REQUIRED_ENV : ['KEEPALIVE_URL'];
+      const required =
+        exp.name === 'gatorvault-api-hub-refresh'
+          ? HUB_CRON_REQUIRED_ENV
+          : exp.name === 'gatorvault-api-visit-intel-reconcile'
+            ? VISIT_INTEL_CRON_REQUIRED_ENV
+            : exp.name === 'gatorvault-api'
+              ? WEB_REQUIRED_ENV
+              : ['KEEPALIVE_URL'];
       for (const k of required) {
         const val = env[k];
         record(!!val, `${exp.name} env ${k}: ${val ? 'set' : 'MISSING'}`);

@@ -44,6 +44,14 @@ function runVerifyVisitIntelApi() {
   ) {
     failed++;
   }
+  if (
+    !check('visit-intel-reconcile', () => {
+      const { reconcileVisitIntelInStore } = require('../lib/expire-stale-visit-intel');
+      assert.equal(typeof reconcileVisitIntelInStore, 'function');
+    })
+  ) {
+    failed++;
+  }
   return { ok: failed === 0, failed };
 }
 

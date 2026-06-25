@@ -9,7 +9,7 @@ const REFRESH_INTERVAL_MS = parseInt(
 async function refreshRecruitingHubCaches(options = {}) {
   const { clearHubCache, warmEliteHubCaches } = require('./recruiting-hub-cache');
   const { syncStaffAssignments } = require('./recruiting-staff-assignments');
-  const { expireStaleVisitIntelInStore } = require('./expire-stale-visit-intel');
+  const { reconcileVisitIntelInStore } = require('./expire-stale-visit-intel');
   const store = require('./recruiting-store');
   const {
     loadHubDataset,
@@ -22,8 +22,8 @@ async function refreshRecruitingHubCaches(options = {}) {
 
   const restoredVerifiedCommits =
     store.storageMode() === 'supabase' ? 0 : await require('./recruiting-verified-commits').restoreVerifiedHubCommitsInStore();
-  const visitExpire = await expireStaleVisitIntelInStore().catch((err) => {
-    console.warn('[hub-refresh] visit intel expire failed:', err?.message || err);
+  const visitExpire = await reconcileVisitIntelInStore().catch((err) => {
+    console.warn('[hub-refresh] visit intel reconcile failed:', err?.message || err);
     return { expired: 0 };
   });
   const staffSync = await syncStaffAssignments();

@@ -33,6 +33,7 @@ const RECOVERY_JOBS = [
   'depth-chart-refresh',
   'game-zone-refresh',
   'qa-crawler',
+  'visit-intel-reconcile',
   'self-runner-scan',
   'ops-healthcheck'
 ];

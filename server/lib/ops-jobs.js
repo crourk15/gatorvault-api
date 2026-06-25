@@ -231,6 +231,18 @@ const JOBS = {
       };
     }
   },
+  'visit-intel-reconcile': {
+    label: 'FutureCast visit intel reconcile (Supabase + JSON store)',
+    subsystem: 'cron:visit-intel-reconcile',
+    schedule: 'Every 3h Render cron + hub refresh + platform-ops',
+    async run(opts = {}) {
+      const { reconcileVisitIntelInStore } = require('./expire-stale-visit-intel');
+      return reconcileVisitIntelInStore({
+        dryRun: opts.dryRun === true,
+        asOf: opts.asOf,
+      });
+    }
+  },
   'self-runner-purge-legacy-dedupe': {
     label: 'Reject legacy addDedupeRule Self-Runner proposals',
     subsystem: 'self-runner:cleanup',

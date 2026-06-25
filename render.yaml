@@ -247,6 +247,18 @@ services:
         sync: false
 
   - type: cron
+    name: gatorvault-api-visit-intel-reconcile
+    schedule: "15 */3 * * *"
+    runtime: node
+    region: oregon
+    startCommand: node server/scripts/render-visit-intel-reconcile-cron.js
+    envVars:
+      - key: VISIT_INTEL_RECONCILE_URL
+        value: https://gatorvault-api.onrender.com/api/futurecast/visit-intel/reconcile
+      - key: MONITORING_CRON_SECRET
+        sync: false
+
+  - type: cron
     name: gatorvault-api-platform-ops
     schedule: "30 */2 * * *"
     runtime: node
