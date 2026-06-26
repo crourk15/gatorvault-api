@@ -1,12 +1,15 @@
 /**
- * Weekly verified UF OV recap email for subscribers (Email / Both + weekly roundup).
+ * Verified UF OV email alerts — instant scheduled/cancelled + weekly recap digest.
  */
 const { isEmailJsReady, getEmailJsConfig } = require("./emailjs-config");
 const { sendEmailViaEmailJS } = require("./emailjs-server");
 const {
   listEligibleVisitDigestRecipients,
+  listEligibleVisitInstantRecipients,
   filterRecapRowsForSubscriber,
 } = require("./alert-email-prefs-service");
+const { subscriberMatchesPayload } = require("./push-alert-filters");
+const { getVerifiedFloridaVisitWindow } = require("./visit-intel-utils");
 
 const SITE_URL = (process.env.SITE_URL || "https://gatorvaultinsider.com").replace(/\/$/, "");
 const STATE_PATH = require("path").join(__dirname, "../data/ops/visit-intel-email-state.json");
@@ -14,9 +17,10 @@ const fs = require("fs");
 
 function readState() {
   try {
-    return JSON.parse(fs.readFileSync(STATE_PATH, "utf8"));
+    const state = JSON.parse(fs.readFileSync(STATE_PATH, "utf8"));
+    return { version: 1, digests: [], instant: [], ...state };
   } catch {
-    return { version: 1, digests: [] };
+    return { version: 1, digests: [], instant: [] };
   }
 }
 
@@ -60,6 +64,143 @@ async function sendSubscriberDigestEmail(to, subject, html) {
     },
   });
   return { sent: true };
+}
+
+function formatVisitWindow(log) {
+  const window = getVerifiedFloridaVisitWindow(log);
+  if (!window) return log?.date || null;
+  if (window.visitStart === window.visitEnd) return window.visitStart;
+  return `${window.visitStart}–${window.visitEnd}`;
+}
+
+function buildVisitInstantEmailHtml({ headline, detail }) {
+  return [
+    `<p>${headline}</p>`,
+    detail ? `<p>${detail}</p>` : "",
+    `<p><a href="${SITE_URL}/vault/futurecast#visits">Open FutureCast Visit Intel →</a></p>`,
+    `<p style="color:#666;font-size:12px;">GatorVault verified On3 / beat-confirmed visit intel only.</p>`,
+  ]
+    .filter(Boolean)
+    .join("");
+}
+
+function buildVisitScheduledEmailHtml(log) {
+  const name = log.playerName || log.playerSlug;
+  const when = formatVisitWindow(log);
+  return buildVisitInstantEmailHtml({
+    headline: `<strong>${name}</strong> has a verified UF official visit on the calendar.`,
+    detail: when ? `Visit window: ${when}.` : null,
+  });
+}
+
+function buildVisitCancelledEmailHtml(row) {
+  const name = row.playerName || row.playerSlug;
+  const next = row.nextVisitSchool ? ` · now visiting ${row.nextVisitSchool}` : "";
+  return buildVisitInstantEmailHtml({
+    headline: `<strong>${name}</strong> cancelled his official visit to Florida${next}.`,
+    detail: "We will update FutureCast as new verified visit intel is confirmed.",
+  });
+}
+
+function instantFingerprintAlreadySent(fingerprint) {
+  if (!fingerprint) return false;
+  const state = readState();
+  return (state.instant || []).includes(fingerprint);
+}
+
+function markInstantFingerprintSent(fingerprint) {
+  if (!fingerprint) return;
+  const state = readState();
+  state.instant = [fingerprint, ...(state.instant || [])].slice(0, 500);
+  writeState(state);
+}
+
+async function dispatchVisitInstantEmail(payload, options = {}) {
+  const fingerprint = payload?.fingerprint || payload?.tag;
+  if (!fingerprint) return { ok: false, skipped: true, reason: "missing_fingerprint" };
+
+  if (options.dryRun) {
+    const recipients = await listEligibleVisitInstantRecipients();
+    const filtered = recipients.filter((recipient) =>
+      subscriberMatchesPayload({ prefs: recipient.prefs }, payload)
+    );
+    return { ok: true, dryRun: true, fingerprint, wouldSend: filtered.length };
+  }
+
+  if (instantFingerprintAlreadySent(fingerprint)) {
+    return { ok: true, skipped: true, reason: "already_dispatched", fingerprint };
+  }
+
+  if (!isEmailJsReady()) {
+    return { ok: false, skipped: true, reason: "email_not_configured", fingerprint };
+  }
+
+  const recipients = await listEligibleVisitInstantRecipients();
+  const filtered = recipients.filter((recipient) =>
+    subscriberMatchesPayload({ prefs: recipient.prefs }, payload)
+  );
+
+  if (!filtered.length) {
+    return { ok: true, skipped: true, reason: "no_instant_subscribers", fingerprint };
+  }
+
+  let sent = 0;
+  const errors = [];
+  for (const recipient of filtered) {
+    try {
+      const out = await sendSubscriberDigestEmail(recipient.email, payload.subject, payload.html);
+      if (out.sent) sent += 1;
+    } catch (err) {
+      errors.push({ email: recipient.email, error: err.message });
+    }
+  }
+
+  if (sent > 0) markInstantFingerprintSent(fingerprint);
+
+  return {
+    ok: true,
+    fingerprint,
+    recipients: filtered.length,
+    sent,
+    errors,
+  };
+}
+
+async function dispatchVisitScheduledEmail(log, options = {}) {
+  if (!log?.playerSlug) return { ok: false, skipped: true, reason: "invalid_log" };
+  const name = log.playerName || log.playerSlug;
+  const fingerprint = log.fingerprint || `visit_scheduled|${log.playerSlug}|${log.date}`;
+  return dispatchVisitInstantEmail(
+    {
+      subject: `Verified UF OV scheduled — ${name}`,
+      html: buildVisitScheduledEmailHtml(log),
+      fingerprint,
+      tag: fingerprint,
+      type: "visit_scheduled",
+      playerSlug: log.playerSlug,
+      playerName: name,
+    },
+    options
+  );
+}
+
+async function dispatchVisitCancelledEmail(row, options = {}) {
+  if (!row?.playerSlug) return { ok: false, skipped: true, reason: "invalid_row" };
+  if (row.identityConfirmed === false) return { ok: false, skipped: true, reason: "unverified" };
+  const name = row.playerName || row.playerSlug;
+  const fingerprint = row.fingerprint || `visit_cancelled|${row.playerSlug}`;
+  return dispatchVisitInstantEmail(
+    {
+      subject: `Verified UF OV cancelled — ${name}`,
+      html: buildVisitCancelledEmailHtml(row),
+      fingerprint,
+      tag: fingerprint,
+      type: "visit_cancelled",
+      playerSlug: row.playerSlug,
+      playerName: name,
+    },
+    options
+  );
 }
 
 async function sendVisitIntelWeeklyDigest({ recapRows, weekKey, dryRun = false }) {
@@ -122,5 +263,9 @@ async function sendVisitIntelWeeklyDigest({ recapRows, weekKey, dryRun = false }
 
 module.exports = {
   buildVisitRecapEmailHtml,
+  buildVisitScheduledEmailHtml,
+  buildVisitCancelledEmailHtml,
   sendVisitIntelWeeklyDigest,
+  dispatchVisitScheduledEmail,
+  dispatchVisitCancelledEmail,
 };

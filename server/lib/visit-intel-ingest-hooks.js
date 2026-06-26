@@ -126,7 +126,17 @@ async function handleNewVerifiedVisitLogs(logs = [], options = {}) {
       }
     }
 
-    if (!dryRun && fp && (queue.queued || (push.sent || 0) > 0)) {
+    let email = { sent: 0, skipped: true, reason: dryRun ? "dry_run" : "skipped" };
+    if (!dryRun) {
+      try {
+        const { dispatchVisitScheduledEmail } = require("./visit-intel-email-digest");
+        email = await dispatchVisitScheduledEmail(log);
+      } catch (err) {
+        email = { sent: 0, skipped: true, reason: err.message };
+      }
+    }
+
+    if (!dryRun && fp && (queue.queued || (push.sent || 0) > 0 || (email.sent || 0) > 0)) {
       seen.add(fp);
     }
 
@@ -140,6 +150,9 @@ async function handleNewVerifiedVisitLogs(logs = [], options = {}) {
       pushSent: push.sent || 0,
       pushSkipped: Boolean(push.skipped),
       pushReason: push.reason || null,
+      emailSent: email.sent || 0,
+      emailSkipped: Boolean(email.skipped),
+      emailReason: email.reason || null,
     });
   }
 

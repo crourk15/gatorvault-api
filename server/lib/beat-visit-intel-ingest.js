@@ -290,12 +290,25 @@ async function processVisitIntelRow(row, snapshot) {
     push = { sent: 0, skipped: true, reason: err.message };
   }
 
+  let email = { sent: 0, skipped: true };
+  try {
+    const { dispatchVisitCancelledEmail } = require('./visit-intel-email-digest');
+    email = await dispatchVisitCancelledEmail({
+      ...row,
+      playerSlug: player.slug,
+      playerName: player.name,
+    });
+  } catch (err) {
+    email = { sent: 0, skipped: true, reason: err.message };
+  }
+
   return {
     processed: true,
     player: player.slug,
     source: row.source,
     autopost,
     push,
+    email,
     fingerprint: row.fingerprint
   };
 }
