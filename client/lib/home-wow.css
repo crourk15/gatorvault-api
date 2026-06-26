@@ -250,6 +250,12 @@
   align-items: center;
   gap: 18px;
   margin-bottom: 0;
+  position: relative;
+}
+
+.home-wow-gameday-card--in-season {
+  border-color: var(--home-gator-orange);
+  box-shadow: 0 0 0 1px rgba(250, 166, 26, 0.25);
 }
 
 .home-wow-gameday-logo-wrap {
@@ -343,6 +349,17 @@
   color: var(--home-gator-blue);
   background: #fff7ed;
   animation: home-badge-pulse 6s ease-in-out infinite;
+}
+
+.home-wow-gameday-link {
+  margin: 0 0 0 auto;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.home-wow-gameday-link a {
+  color: var(--home-gator-blue);
+  text-decoration: none;
 }
 
 @keyframes home-badge-pulse {

@@ -1,17 +1,19 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { HomeGameDayView } from '@/components/home/premium/command/home-command-utils';
 import {
   computeKickoffProgress,
   gameDayBadge,
 } from '@/components/home/premium/command/home-command-utils';
+import { isFootballSeason } from '@/lib/recruiting-cycle';
 
 type Props = {
   game: HomeGameDayView;
 };
 
 export function HomeCommandGameDay({ game }: Props): React.ReactElement {
+  const inSeason = useMemo(() => isFootballSeason(), []);
   const [countdown, setCountdown] = useState('');
   const [progress, setProgress] = useState(0);
   const [badge, setBadge] = useState<string | null>(null);
@@ -31,10 +33,15 @@ export function HomeCommandGameDay({ game }: Props): React.ReactElement {
   return (
     <>
       <div className="home-wow-section-header">
-        <h2 className="home-wow-section-title">GameDay Countdown</h2>
-        <p className="home-wow-section-subtitle">Next kickoff, front and center.</p>
+        <h2 className="home-wow-section-title">{inSeason ? 'Game Week' : 'GameDay Countdown'}</h2>
+        <p className="home-wow-section-subtitle">
+          {inSeason ? 'Matchup prep, kickoff intel, and live scores.' : 'Next kickoff, front and center.'}
+        </p>
       </div>
-      <section className="home-wow-card home-wow-gameday-card" data-testid="home-gameday-countdown">
+      <section
+        className={`home-wow-card home-wow-gameday-card${inSeason ? ' home-wow-gameday-card--in-season' : ''}`}
+        data-testid="home-gameday-countdown"
+      >
         <div className="home-wow-gameday-logo-wrap">
           <span className="home-wow-gameday-logo-watermark" aria-hidden="true">
             UF
@@ -53,6 +60,11 @@ export function HomeCommandGameDay({ game }: Props): React.ReactElement {
           </div>
         </div>
         {badge ? <div className="home-wow-gameday-badge">{badge}</div> : null}
+        {inSeason ? (
+          <p className="home-wow-gameday-link">
+            <a href="/vault/game-week/">Open Game Week →</a>
+          </p>
+        ) : null}
       </section>
     </>
   );

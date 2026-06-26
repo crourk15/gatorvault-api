@@ -12,8 +12,9 @@ import {
   type CommitSort,
   type FutureCastHomeResponse,
 } from '@/lib/futurecast-home-api';
-import { resolvePortalSeason, shouldShowPortalWatchlist, getPortalSeasonState } from '@/lib/recruiting-cycle';
+import { resolvePortalSeason, shouldShowPortalWatchlist, getPortalSeasonState, primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { PortalSeasonDormantCard } from '@/components/futurecast/lab/FutureCastPortalCrossView';
+import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
 import type { FeedPrediction } from '@/lib/predictions-api';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 import { usePathname } from '@/lib/use-pathname';
@@ -281,13 +282,11 @@ export function FutureCastHomepage({ mode = 'full' }: { mode?: 'full' | 'master'
 
       {(mode === 'full' || mode === 'master') && !shouldShowPortalWatchlist(getPortalSeasonState()) && (
         <Section
-          title="2028 Early Discovery"
+          title={`${primaryRecruitingClassYear()} Early Discovery`}
           subtitle="Underclassmen ranked by discovery score — Vault est. ratings until On3 sync"
           testId="home-early-discovery"
         >
-          <p className="fc-home-section__footer-link">
-            <a href="/vault/futurecast/big-board">Open Early Discovery board →</a>
-          </p>
+          <EarlyDiscoveryPreview query={{ class_year_gte: primaryRecruitingClassYear(), limit: 6 }} />
         </Section>
       )}
 
