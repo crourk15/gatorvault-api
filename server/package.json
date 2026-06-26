@@ -16,6 +16,7 @@
     "deploy:smoke": "node scripts/deploy-smoke-post.js",
     "verify:deployment": "node scripts/verify-deployment.js",
     "seed:recruiting": "node scripts/seed-recruiting.js",
+    "sync:editorial-positions": "node scripts/sync-underclassmen-editorial-positions.js",
     "ingest:on3": "node scripts/run-on3-ingest.js",
     "ingest:on3:baseline": "node scripts/run-on3-ingest.js --baseline",
     "verify:x": "node scripts/verify-x-autoposter.js",

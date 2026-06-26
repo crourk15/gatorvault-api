@@ -79,6 +79,19 @@ async function main() {
       updatedAt: new Date().toISOString(),
     };
     if (editorial.stars != null) patch.stars = editorial.stars;
+    if (editorial.school) patch.school = editorial.school;
+    if (editorial.state) {
+      patch.state = editorial.state;
+      patch.hometownState = editorial.state;
+    }
+    if (editorial.natlRank != null) patch.natlRank = editorial.natlRank;
+    if (editorial.posRank != null) patch.posRank = editorial.posRank;
+    if (editorial.stateRank != null) patch.stateRank = editorial.stateRank;
+    if (editorial.rating != null) {
+      patch.rating = editorial.rating;
+      patch.displayRating = editorial.rating;
+    }
+    if (editorial.inState != null) patch.inState = editorial.inState;
 
     const saved = await store.upsertPlayer(patch, { subsystem: 'editorial-position-sync' });
     await upsertPlayerPostgres(saved || patch);

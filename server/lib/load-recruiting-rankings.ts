@@ -17,6 +17,7 @@ export interface PlayerRankingEntry {
   ratingSource: RecruitingRatingSource | null;
   school: string | null;
   inState: boolean;
+  position: string | null;
 }
 
 export function resolveRatingSource(on3Source: unknown): RecruitingRatingSource {
@@ -55,6 +56,7 @@ export function loadRecruitingRankings(): Map<string, PlayerRankingEntry> {
       id?: string;
       slug?: string;
       on3Id?: string;
+      pos?: string;
       rating?: number;
       natlRank?: number;
       posRank?: number;
@@ -78,6 +80,7 @@ export function loadRecruitingRankings(): Map<string, PlayerRankingEntry> {
         ratingSource: resolveRatingSource(p.on3Source),
         school: p.school ?? null,
         inState: Boolean(p.inState) || String(p.state || '').toUpperCase() === 'FL',
+        position: p.pos ? String(p.pos).trim().toUpperCase() : null,
       };
 
       const keys = new Set<string>();

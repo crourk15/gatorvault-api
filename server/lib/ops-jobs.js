@@ -314,6 +314,21 @@ const JOBS = {
       });
     }
   },
+  'editorial-younger-prospects-sync': {
+    label: 'Sync locked 2028 Younger Prospects editorial board to store + Postgres',
+    subsystem: 'cron:editorial-younger-prospects',
+    schedule: 'On demand via ops:futurecast',
+    async run() {
+      const { spawnSync } = require('child_process');
+      const path = require('path');
+      const result = spawnSync(
+        process.execPath,
+        [path.join(__dirname, '..', 'scripts', 'sync-underclassmen-editorial-positions.js')],
+        { cwd: path.join(__dirname, '..'), stdio: 'inherit' }
+      );
+      return { ok: result.status === 0 };
+    }
+  },
   'portal-intelligence': {
     label: 'Daily portal likelihood recompute for college/portal candidates',
     subsystem: 'cron:portal-intelligence',

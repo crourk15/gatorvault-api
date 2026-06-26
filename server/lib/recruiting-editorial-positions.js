@@ -25,6 +25,7 @@ const EDITORIAL_2028_YOUNGER_PROSPECTS = new Set([
   'gabriel-player',
   'prince-che',
   'brady-quinn',
+  'malakhi-dudley',
 ]);
 
 const TARGET_BOARD_PATH = path.join(__dirname, '..', 'data', 'recruiting', '2028-target-board.json');
@@ -46,6 +47,13 @@ function loadBoardFile() {
         pos: row.pos ? String(row.pos).trim().toUpperCase() : null,
         stars: row.stars != null ? Number(row.stars) : null,
         classYear: 2028,
+        school: row.school ? String(row.school).trim() : null,
+        state: row.state ? String(row.state).trim().toUpperCase() : null,
+        natlRank: row.natlRank != null ? Number(row.natlRank) : null,
+        posRank: row.posRank != null ? Number(row.posRank) : null,
+        stateRank: row.stateRank != null ? Number(row.stateRank) : null,
+        rating: row.rating != null ? Number(row.rating) : null,
+        inState: row.inState != null ? Boolean(row.inState) : null,
       });
     }
     cachedMap = map;
@@ -75,9 +83,29 @@ function applyEditorialPositionToPlayer(player) {
   if (!editorial?.pos) return player;
   const out = { ...player };
   out.pos = editorial.pos;
+  out.position = editorial.pos;
   if (editorial.stars != null && Number.isFinite(editorial.stars)) {
     out.stars = editorial.stars;
   }
+  if (editorial.school) out.school = editorial.school;
+  if (editorial.state) {
+    out.state = editorial.state;
+    out.hometownState = editorial.state;
+  }
+  if (editorial.natlRank != null && Number.isFinite(editorial.natlRank)) {
+    out.natlRank = editorial.natlRank;
+  }
+  if (editorial.posRank != null && Number.isFinite(editorial.posRank)) {
+    out.posRank = editorial.posRank;
+  }
+  if (editorial.stateRank != null && Number.isFinite(editorial.stateRank)) {
+    out.stateRank = editorial.stateRank;
+  }
+  if (editorial.rating != null && Number.isFinite(editorial.rating)) {
+    out.rating = editorial.rating;
+    out.displayRating = editorial.rating;
+  }
+  if (editorial.inState != null) out.inState = editorial.inState;
   return out;
 }
 

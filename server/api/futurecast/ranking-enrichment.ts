@@ -44,8 +44,11 @@ export function enrichWithRankings<T extends Record<string, unknown>>(
 ): T & RankingFields {
   const r = lookupRanking(player);
   const compositeScore = r?.compositeScore ?? 0;
+  const { applyEditorialPositionToPlayer } = require('../lib/recruiting-editorial-positions') as {
+    applyEditorialPositionToPlayer: (p: Record<string, unknown>) => Record<string, unknown>;
+  };
 
-  return {
+  const merged = {
     ...player,
     compositeScore,
     nationalRank: r?.nationalRank ?? null,
@@ -58,7 +61,20 @@ export function enrichWithRankings<T extends Record<string, unknown>>(
     natlRank: r?.nationalRank ?? (player.natlRank as number | null | undefined) ?? null,
     posRank: r?.positionRank ?? (player.posRank as number | null | undefined) ?? null,
     stars: r?.stars ?? (player.stars as number | null | undefined) ?? null,
+    position:
+      r?.position ??
+      (player.position as string | null | undefined) ??
+      (player.pos as string | null | undefined) ??
+      null,
+    pos:
+      r?.position ??
+      (player.pos as string | null | undefined) ??
+      (player.position as string | null | undefined) ??
+      null,
+    state: (player.state as string | null | undefined) ?? null,
   };
+
+  return applyEditorialPositionToPlayer(merged) as T & RankingFields;
 }
 
 export function enrichFeedPlayers<T extends Record<string, unknown>>(

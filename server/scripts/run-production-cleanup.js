@@ -35,6 +35,7 @@ const FUTURECAST_JOBS = [
     options: { classYear: Number(process.env.ALLOWLIST_ON3_RANKINGS_CLASS_YEAR || 2028) },
   },
   { jobId: 'early-discovery', options: { classYearGte: 2028 } },
+  { jobId: 'editorial-younger-prospects-sync', options: {} },
 ];
 
 const RECOVERY_JOBS = [

@@ -8,9 +8,9 @@ const {
   EDITORIAL_2028_YOUNGER_PROSPECTS,
 } = require('../../lib/recruiting-editorial-positions');
 
-test('lists 18 editorial younger prospect slugs', () => {
-  assert.equal(EDITORIAL_2028_YOUNGER_PROSPECTS.size, 18);
-  assert.equal(listEditorial2028YoungerProspects().length, 18);
+test('lists 19 editorial younger prospect slugs', () => {
+  assert.equal(EDITORIAL_2028_YOUNGER_PROSPECTS.size, 19);
+  assert.equal(listEditorial2028YoungerProspects().length, 19);
 });
 
 test('andre-alexander editorial position is LB', () => {
@@ -24,7 +24,30 @@ test('kahmaree-crumity editorial position is CB with 3 stars', () => {
   assert.equal(row?.stars, 3);
 });
 
-test('applyEditorialPositionToPlayer overrides ingest pos', () => {
+test('malakhi-dudley editorial position is OT at Heritage (GA)', () => {
+  const row = getEditorialPosition('malakhi-dudley', 2028);
+  assert.equal(row?.pos, 'OT');
+  assert.equal(row?.school, 'Heritage High School, GA');
+  assert.equal(row?.state, 'GA');
+  assert.equal(row?.natlRank, 204);
+});
+
+test('applyEditorialPositionToPlayer overrides ingest pos and school', () => {
+  const out = applyEditorialPositionToPlayer({
+    slug: 'malakhi-dudley',
+    classYear: 2028,
+    pos: 'QB',
+    position: 'QB',
+    school: 'Florida HS pipeline',
+    state: 'FL',
+  });
+  assert.equal(out.pos, 'OT');
+  assert.equal(out.position, 'OT');
+  assert.equal(out.school, 'Heritage High School, GA');
+  assert.equal(out.state, 'GA');
+});
+
+test('applyEditorialPositionToPlayer overrides tristin-gaines pos', () => {
   const out = applyEditorialPositionToPlayer({
     slug: 'tristin-gaines',
     classYear: 2028,
