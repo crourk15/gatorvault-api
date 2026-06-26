@@ -67,6 +67,7 @@ const EMPTY_LAB_DATA: FutureCastLabDataMap = {
   visitIntel: [],
   visitRecap: [],
   flipWatch: [],
+  movementNarratives: [],
   underclassmen: [],
 };
 

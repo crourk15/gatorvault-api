@@ -16,6 +16,7 @@ import {
   type FlipWatchRow,
   type HighPriorityPlayer,
   type HighPriorityResponse,
+  type MovementNarrativeRow,
   type VisitRecapRow,
 } from './futurecast-high-priority-api';
 import {
@@ -34,6 +35,7 @@ const EMPTY_HIGH_PRIORITY: HighPriorityResponse = {
   visitIntel: [],
   visitRecap: [],
   flipWatch: [],
+  movementNarratives: [],
 };
 const LAB_FETCH_OPTS = DEFAULT_SNAPSHOT_FETCH_OPTS;
 
@@ -60,6 +62,7 @@ export type FutureCastLabDataMap = {
   visitIntel: HighPriorityPlayer[];
   visitRecap: VisitRecapRow[];
   flipWatch: FlipWatchRow[];
+  movementNarratives: MovementNarrativeRow[];
   underclassmen: UnderclassmenPlayer[];
 };
 
@@ -182,6 +185,7 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     visitIntel: highPriority.visitIntel ?? [],
     visitRecap: highPriority.visitRecap ?? [],
     flipWatch: highPriority.flipWatch ?? [],
+    movementNarratives: highPriority.movementNarratives ?? [],
     underclassmen: underclassmenPayload.players ?? [],
   };
 }

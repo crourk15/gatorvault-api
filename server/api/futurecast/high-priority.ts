@@ -449,13 +449,29 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         if (p.committedTo) commitBySlug.set(key, p.committedTo);
       }
 
-      const flipWatch = buildFlipWatchRows(playersWithVerifiedVisits, visitRecap, {
+      const flipWatchRaw = buildFlipWatchRows(playersWithVerifiedVisits, visitRecap, {
         visitLogs,
         intelRows: intelStore.loadIntelDoc().items || [],
         commitBySlug,
         ufBySlug,
         nameBySlug,
       });
+      const movementNarrativeLib = require('../../lib/movement-narrative');
+      const visitRecapEnriched = movementNarrativeLib.enrichVisitRecapRows(
+        visitRecap,
+        visitLogs,
+        delta7dBySlug
+      );
+      const flipWatch = movementNarrativeLib.enrichFlipWatchRows(
+        flipWatchRaw,
+        visitLogs,
+        delta7dBySlug
+      );
+      const movementNarratives = movementNarrativeLib.buildNarrativeFeed(
+        playersWithVerifiedVisits,
+        visitLogs,
+        delta7dBySlug
+      );
       const visitBoardSnapshot = getVisitIntelBoardSnapshot(visitLogs);
 
       const lastUpdated = new Date().toISOString();
@@ -470,8 +486,9 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         lastUpdated,
         players: top10,
         visitIntel,
-        visitRecap,
+        visitRecap: visitRecapEnriched,
         flipWatch,
+        movementNarratives,
       };
     });
   } catch (err) {

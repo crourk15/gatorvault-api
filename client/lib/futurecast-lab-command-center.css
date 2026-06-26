@@ -1313,6 +1313,14 @@
   display: inline !important;
 }
 
+.fc-lab-movement-narrative {
+  margin: 4px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  color: var(--fc-accent, #006747);
+  font-weight: 500;
+}
+
 .gv-badge--confirmed {
   display: inline-flex;
   align-items: center;

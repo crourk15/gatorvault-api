@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import type { MasterBoardResponse, MovementIntelResponse, StaffNotesResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
-import type { HighPriorityPlayer, VisitRecapRow, FlipWatchRow } from '@/lib/futurecast-high-priority-api';
+import type { HighPriorityPlayer, VisitRecapRow, FlipWatchRow, MovementNarrativeRow } from '@/lib/futurecast-high-priority-api';
 import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
 import {
   buildIntelFeedItem,
@@ -26,6 +26,7 @@ type Props = {
   visitIntel?: HighPriorityPlayer[];
   visitRecap?: VisitRecapRow[];
   flipWatch?: FlipWatchRow[];
+  movementNarratives?: MovementNarrativeRow[];
   underclassmen: UnderclassmenPlayer[];
 };
 
@@ -69,6 +70,11 @@ function formatUnderclassmenMeta(p: UnderclassmenPlayer): string {
   const fit = formatMetric(p.fitScore);
   const stars = Number(p.stars) > 0 ? `${Number(p.stars)}★` : '—★';
   return `${tierLabel} · UF ${uf} · Fit ${fit}${formatEarlyMovement(p)}${formatCompetitorLabel(p)} · ${stars}`;
+}
+
+function MovementNarrativeLine({ text }: { text: string | null | undefined }): React.ReactElement | null {
+  if (!text) return null;
+  return <p className="fc-lab-movement-narrative">{text}</p>;
 }
 
 function FitBar({ label, value }: { label: string; value: number }): React.ReactElement {
@@ -175,6 +181,7 @@ export function FutureCastExtendedModules({
   visitIntel = [],
   visitRecap = [],
   flipWatch = [],
+  movementNarratives = [],
   underclassmen,
 }: Props): React.ReactElement {
   const activeTargets = useMemo(
@@ -213,6 +220,20 @@ export function FutureCastExtendedModules({
       return Boolean(p.visitStart) || p.visitVerified === true;
     });
   }, [visitIntel]);
+
+  const narrativeBySlug = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const row of movementNarratives) {
+      if (row.movementNarrative) map.set(row.slug, row.movementNarrative);
+    }
+    for (const row of visitRecap) {
+      if (row.movementNarrative) map.set(row.slug, row.movementNarrative);
+    }
+    for (const row of flipWatch) {
+      if (row.movementNarrative) map.set(row.slug, row.movementNarrative);
+    }
+    return map;
+  }, [movementNarratives, visitRecap, flipWatch]);
 
   const trend30 = useMemo(() => {
     const up = trendingBoard.trendingUp.slice(0, 5);
@@ -259,7 +280,9 @@ export function FutureCastExtendedModules({
         buildIntelFeedItem({
           id: `flip-${row.slug}`,
           playerName: row.name,
-          headline: `${row.name} (${row.committedShort}) — Flip ${row.flipScore ?? '—'}${row.flipScoreLabel ? ` · ${row.flipScoreLabel}` : ''}`,
+          headline: row.movementNarrative
+            ? `${row.name} (${row.committedShort}) — ${row.movementNarrative}`
+            : `${row.name} (${row.committedShort}) — Flip ${row.flipScore ?? '—'}${row.flipScoreLabel ? ` · ${row.flipScoreLabel}` : ''}`,
           timestamp: row.visitStart ?? movementIntel.updatedAt,
           category: 'Flip Watch',
         })
@@ -270,10 +293,23 @@ export function FutureCastExtendedModules({
         buildIntelFeedItem({
           id: `recap-${row.slug}-${row.visitStart}`,
           playerName: row.name,
-          headline: `${row.name} — verified UF OV completed (${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ''})`,
+          headline: row.movementNarrative
+            ? `${row.name} — ${row.movementNarrative}`
+            : `${row.name} — verified UF OV completed (${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ''})`,
           timestamp: row.visitEnd ?? row.visitStart,
           category: 'Visit',
           source: row.visitSourceLabel ?? undefined,
+        })
+      );
+    }
+    for (const row of movementNarratives.slice(0, 3)) {
+      raw.push(
+        buildIntelFeedItem({
+          id: `move-${row.slug}`,
+          playerName: row.name,
+          headline: `${row.name} — ${row.movementNarrative}`,
+          timestamp: movementIntel.updatedAt,
+          category: 'Movement',
         })
       );
     }
@@ -290,7 +326,7 @@ export function FutureCastExtendedModules({
       );
     }
     return dedupeIntelFeedItems(raw, 8);
-  }, [movementIntel, flipWatch, visitRecap, upcomingVisitIntel]);
+  }, [movementIntel, flipWatch, visitRecap, upcomingVisitIntel, movementNarratives]);
 
   const fitLeaders = highPriority.slice(0, 3);
 
@@ -394,7 +430,12 @@ export function FutureCastExtendedModules({
             primary: row.name,
             badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
             meta: `OV ${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''}${row.ufProbability != null ? ` · UF ${formatUfDisplay({ ufProbability: row.ufProbability, ufProbabilityLabel: null })}` : ''}`,
-            extra: <PlayerIntelTimelineStrip slug={row.slug} staffNotes={staffNotes} />,
+            extra: (
+              <>
+                <MovementNarrativeLine text={row.movementNarrative} />
+                <PlayerIntelTimelineStrip slug={row.slug} staffNotes={staffNotes} />
+              </>
+            ),
             href: playerProfileRoute(row.slug, 'futurecast'),
           }))}
         />
@@ -414,6 +455,7 @@ export function FutureCastExtendedModules({
             meta: `${row.committedShort} commit · OV ${row.visitStart ?? '—'}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''} · UF ${formatUfDisplay(row)}`,
             extra: (
               <>
+                <MovementNarrativeLine text={row.movementNarrative} />
                 <FlipWatchScoreStack row={row} />
                 <PlayerIntelTimelineStrip slug={row.slug} staffNotes={staffNotes} />
               </>
@@ -434,6 +476,7 @@ export function FutureCastExtendedModules({
                 key: `up-${p.slug}`,
                 primary: p.name,
                 meta: `${formatTrendDelta(p.trendDelta7d)} · UF ${ufPctFromFc(p.ufConfidence)}%`,
+                extra: <MovementNarrativeLine text={narrativeBySlug.get(p.slug)} />,
               }))}
             />
           </div>
@@ -445,6 +488,7 @@ export function FutureCastExtendedModules({
                 key: `dn-${p.slug}`,
                 primary: p.name,
                 meta: `${formatTrendDelta(p.trendDelta7d)} · UF ${ufPctFromFc(p.ufConfidence)}%`,
+                extra: <MovementNarrativeLine text={narrativeBySlug.get(p.slug)} />,
               }))}
             />
           </div>

@@ -6,7 +6,7 @@ import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 /** Bump when high-priority payload shape changes (align with server/api/futurecast/response-cache.ts). */
-export const FUTURECAST_CLIENT_CACHE_VERSION = 8;
+export const FUTURECAST_CLIENT_CACHE_VERSION = 9;
 export const HIGH_PRIORITY_CACHE_KEY = `gv:futurecast:high-priority:v${FUTURECAST_CLIENT_CACHE_VERSION}`;
 export const HIGH_PRIORITY_YEAR = 2027;
 export const HIGH_PRIORITY_CACHE_TTL_MS = 5 * 60_000;
@@ -45,6 +45,13 @@ export interface FlipWatchRow {
   flipScore?: number;
   flipScoreLabel?: string | null;
   flipScoreStack?: FlipWatchScoreStack;
+  movementNarrative?: string | null;
+}
+
+export interface MovementNarrativeRow {
+  slug: string;
+  name: string;
+  movementNarrative: string;
 }
 
 export interface HighPriorityPlayer extends FutureCastEliteCoreMetrics {
@@ -92,6 +99,7 @@ export interface VisitRecapRow {
   visitSource?: string | null;
   visitSourceLabel?: string | null;
   ufProbability?: number | null;
+  movementNarrative?: string | null;
 }
 
 export interface VisitBoardSnapshot {
@@ -112,6 +120,7 @@ export interface HighPriorityResponse {
   visitRecap?: VisitRecapRow[];
   flipWatch?: FlipWatchRow[];
   flipWatchCount?: number;
+  movementNarratives?: MovementNarrativeRow[];
 }
 
 function readHighPriorityCacheEntry(maxAgeMs: number): HighPriorityResponse | null {
