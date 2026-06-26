@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { FlipWatchRow, MovementNarrativeRow, VisitRecapRow } from '@/lib/futurecast-high-priority-api';
+import { formatUfPercentWithLabel } from '@/lib/futurecast-elite-metrics';
 import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
 
 type Props = {
@@ -86,7 +87,9 @@ export function HomeCommandVisitIntelPreview({
                     <p className="home-wow-visit-intel__meta">
                       {topFlip.committedShort}
                       {topFlip.flipScore != null ? ` · Flip ${topFlip.flipScore}` : ''}
-                      {topFlip.ufProbability != null ? ` · UF ${topFlip.ufProbability}%` : ''}
+                      {topFlip.ufProbability != null
+                        ? ` · UF ${formatUfPercentWithLabel(topFlip.ufProbability, topFlip.ufProbabilityLabel)}`
+                        : ''}
                       {formatOvRange(topFlip) ? ` · ${formatOvRange(topFlip)}` : ''}
                     </p>
                     <MovementNarrativeLine text={topFlip.movementNarrative} />
@@ -101,6 +104,9 @@ export function HomeCommandVisitIntelPreview({
                     <p className="home-wow-visit-intel__meta">
                       {formatOvRange(topRecap)}
                       {topRecap.visitSourceLabel ? ` · ${topRecap.visitSourceLabel}` : ''}
+                      {topRecap.ufProbability != null
+                        ? ` · UF ${formatUfPercentWithLabel(topRecap.ufProbability, topRecap.ufProbabilityLabel)}`
+                        : ''}
                     </p>
                     <MovementNarrativeLine text={topRecap.movementNarrative} />
                   </div>
