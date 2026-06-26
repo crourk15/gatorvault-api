@@ -21,6 +21,10 @@ export function minimalRecruitPlayer(slug: string, name: string): RecruitingBoar
 export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlayer {
   const composite = p.compositeScore ?? undefined;
   const isLiveOn3 = p.ratingSource === 'on3';
+  const fitPending = p.ufFitScore == null || p.ufFitScore <= 0;
+  const signalLine = p.signalCount ? ` · ${p.signalCount} signals` : '';
+  const statusLine = p.ufStatus ? ` · UF ${p.ufStatus}` : '';
+  const fitLine = fitPending ? ' · UF Fit pending' : '';
   return {
     slug: p.slug,
     name: p.fullName,
@@ -42,7 +46,7 @@ export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlay
     heatLabel: 'Discovery',
     ratingLabel: isLiveOn3 ? 'Composite' : 'Vault est.',
     showIndustryRanks: isLiveOn3,
-    skinny: `Discovery score ${p.discoveryScore}${p.signalCount ? ` · ${p.signalCount} signals` : ''}${p.ufStatus ? ` · UF ${p.ufStatus}` : ''}`,
+    skinny: `Discovery score ${p.discoveryScore}${signalLine}${statusLine}${fitLine}`,
   };
 }
 

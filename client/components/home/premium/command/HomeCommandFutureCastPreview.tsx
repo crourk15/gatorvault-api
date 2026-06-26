@@ -8,6 +8,7 @@ import {
   primaryRecruitingClassYear,
   shouldShowPortalWatchlist,
 } from '@/lib/recruiting-cycle';
+import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
 
 type Props = {
   targets: HomeFutureCastTargetView[];
@@ -117,6 +118,18 @@ export function HomeCommandFutureCastPreview({ targets, loading }: Props): React
                 </p>
               </div>
             </div>
+          </>
+        ) : discoveryFocus ? (
+          <>
+            <EarlyDiscoveryPreview
+              query={{ class_year_gte: discoveryYear, limit: 3 }}
+              footerHref="/vault/futurecast/big-board"
+              footerLabel={`Open ${discoveryYear} Early Discovery board →`}
+            />
+            <p className="home-wow-fc-subnote">
+              2027 targets and movement intel on{' '}
+              <a href={VAULT_PILLAR_ROUTES.futurecast}>FutureCast Lab</a>.
+            </p>
           </>
         ) : slides.length === 0 ? (
           <div className="home-wow-fc-empty">
