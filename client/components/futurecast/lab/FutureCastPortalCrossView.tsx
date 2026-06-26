@@ -3,6 +3,8 @@
 import React, { useMemo } from 'react';
 import type { MasterBoardResponse } from '@/lib/futurecast-board-types';
 import type { PortalWatchlistHomePlayer } from '@/lib/futurecast-home-api';
+import type { PortalSeasonState } from '@/lib/recruiting-cycle';
+import { portalDormantMessage, resolvePortalSeason } from '@/lib/recruiting-cycle';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 import { FitScoreBadge, FutureCastPanelShell, UfProbBar } from './primitives';
 import { ufPctFromFc } from './fc-lab-types';
@@ -10,6 +12,7 @@ import { ufPctFromFc } from './fc-lab-types';
 type Props = {
   portalPlayers: PortalWatchlistHomePlayer[];
   masterBoard: MasterBoardResponse;
+  portalSeason?: PortalSeasonState | null;
   bare?: boolean;
 };
 
@@ -25,7 +28,16 @@ type CrossRow = {
   fitScore: number | null;
 };
 
-export function FutureCastPortalCrossView({ portalPlayers, masterBoard, bare }: Props): React.ReactElement {
+export function FutureCastPortalCrossView({
+  portalPlayers,
+  masterBoard,
+  portalSeason,
+  bare,
+}: Props): React.ReactElement {
+  const season = useMemo(
+    () => resolvePortalSeason(portalSeason, portalPlayers.length),
+    [portalSeason, portalPlayers.length]
+  );
   const boardBySlug = useMemo(
     () => new Map(masterBoard.players.map((p) => [p.slug, p])),
     [masterBoard]
@@ -60,7 +72,9 @@ export function FutureCastPortalCrossView({ portalPlayers, masterBoard, bare }: 
       }
       testId="fc-lab-portal-cross"
     >
-      {rows.length === 0 ? (
+      {!season.showUi && rows.length === 0 ? (
+        <PortalSeasonDormantCard portalSeason={season} />
+      ) : rows.length === 0 ? (
         <p className="rh-cc-empty">No portal watchlist entries loaded.</p>
       ) : (
         <div className="fc-lab-portal-list">
@@ -85,5 +99,28 @@ export function FutureCastPortalCrossView({ portalPlayers, masterBoard, bare }: 
         </div>
       )}
     </FutureCastPanelShell>
+  );
+}
+
+type DormantProps = {
+  portalSeason?: PortalSeasonState | null;
+  className?: string;
+  testId?: string;
+};
+
+export function PortalSeasonDormantCard({
+  portalSeason,
+  className = 'rh-cc-empty fc-portal-dormant',
+  testId = 'fc-portal-dormant',
+}: DormantProps): React.ReactElement {
+  const state = resolvePortalSeason(portalSeason, 0);
+  return (
+    <div className={className} data-testid={testId} data-portal-phase={state.phase}>
+      <p className="fc-portal-dormant__title">Portal watchlist is in offseason mode</p>
+      <p className="fc-portal-dormant__text">{portalDormantMessage(state)}</p>
+      {state.nextWindowStart ? (
+        <p className="fc-portal-dormant__meta">Next window: {state.nextWindowStart}</p>
+      ) : null}
+    </div>
   );
 }

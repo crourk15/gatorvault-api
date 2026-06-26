@@ -2,13 +2,18 @@
 
 import React from 'react';
 import type { PortalWatchlistHomePlayer } from '@/lib/futurecast-home-api';
+import type { PortalSeasonState } from '@/lib/recruiting-cycle';
+import { resolvePortalSeason } from '@/lib/recruiting-cycle';
+import { PortalSeasonDormantCard } from '@/components/futurecast/lab/FutureCastPortalCrossView';
 import { playerProfileRoute } from '@/lib/vault-route-map';
 
 type Props = {
   portalPlayers: PortalWatchlistHomePlayer[];
+  portalSeason?: PortalSeasonState | null;
 };
 
-export function FutureCastPortalWatchlist({ portalPlayers }: Props): React.ReactElement {
+export function FutureCastPortalWatchlist({ portalPlayers, portalSeason }: Props): React.ReactElement {
+  const season = resolvePortalSeason(portalSeason, portalPlayers.length);
   const rows = portalPlayers.slice(0, 12);
 
   return (
@@ -16,7 +21,9 @@ export function FutureCastPortalWatchlist({ portalPlayers }: Props): React.React
       <h2 className="futurecast-page__section-title">Portal Watchlist</h2>
       <p className="futurecast-page__section-sub">Transfer targets with UF landing likelihood and fit signals.</p>
 
-      {rows.length === 0 ? (
+      {!season.showUi && rows.length === 0 ? (
+        <PortalSeasonDormantCard portalSeason={season} className="fc-empty fc-portal-dormant" />
+      ) : rows.length === 0 ? (
         <p className="fc-empty">No portal watchlist entries loaded.</p>
       ) : (
         <div className="fc-hscroll">

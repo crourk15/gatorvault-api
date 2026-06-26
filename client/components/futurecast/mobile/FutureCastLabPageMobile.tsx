@@ -97,6 +97,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
               <FutureCastPortalCrossView
                 portalPlayers={data.home.portalWatchlist ?? []}
                 masterBoard={data.masterBoard}
+                portalSeason={data.home.portalSeason}
               />
             )}
           </section>

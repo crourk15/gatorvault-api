@@ -12,6 +12,8 @@ import {
   type CommitSort,
   type FutureCastHomeResponse,
 } from '@/lib/futurecast-home-api';
+import { resolvePortalSeason } from '@/lib/recruiting-cycle';
+import { PortalSeasonDormantCard } from '@/components/futurecast/lab/FutureCastPortalCrossView';
 import type { FeedPrediction } from '@/lib/predictions-api';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 import { usePathname } from '@/lib/use-pathname';
@@ -277,7 +279,24 @@ export function FutureCastHomepage({ mode = 'full' }: { mode?: 'full' | 'master'
       </Section>
       )}
 
-      {(mode === 'full' || mode === 'master') && (
+      {(mode === 'full' || mode === 'master') && (() => {
+        const portalSeason = resolvePortalSeason(
+          data.portalSeason,
+          data.portalWatchlist.length
+        );
+        if (!portalSeason.showUi && data.portalWatchlist.length === 0) {
+          return (
+            <Section
+              title="Portal Watchlist"
+              subtitle="Transfer intel — seasonal"
+              testId="home-portal"
+            >
+              <PortalSeasonDormantCard portalSeason={portalSeason} className="fc-empty fc-portal-dormant" />
+            </Section>
+          );
+        }
+        if (!portalSeason.showUi) return null;
+        return (
       <Section
         title="Portal Watchlist"
         subtitle={`${data.classYear} portal candidates — college & transfer targets only`}
@@ -294,7 +313,8 @@ export function FutureCastHomepage({ mode = 'full' }: { mode?: 'full' | 'master'
           <EmptySection message="No portal candidates on the watchlist." />
         )}
       </Section>
-      )}
+        );
+      })()}
     </div>
   );
 }

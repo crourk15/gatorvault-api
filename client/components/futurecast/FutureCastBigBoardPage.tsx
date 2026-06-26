@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { BigBoardGrid } from '@/components/futurecast/BigBoardGrid';
 import { EarlyDiscoveryGrid } from '@/components/futurecast/EarlyDiscoveryGrid';
 import { UfFitWatchlistGrid } from '@/components/futurecast/UfFitWatchlistGrid';
@@ -9,11 +9,12 @@ import {
   type BigBoardLifecycle,
   type BigBoardQuery,
 } from '@/lib/big-board-api';
+import { getPortalSeasonState, shouldShowPortalWatchlist } from '@/lib/recruiting-cycle';
 import { playerProfilePath } from '@/lib/player-routes';
 
 type BigBoardTabId = 'top-targets' | 'early-discovery' | 'portal-watchlist' | 'rank';
 
-const TABS: { id: BigBoardTabId; label: string }[] = [
+const ALL_TABS: { id: BigBoardTabId; label: string }[] = [
   { id: 'rank', label: 'Intelligence Rank' },
   { id: 'top-targets', label: 'Top Targets' },
   { id: 'early-discovery', label: 'Early Discovery' },
@@ -22,6 +23,10 @@ const TABS: { id: BigBoardTabId; label: string }[] = [
 
 const CLASS_YEARS = [2027, 2028, 2029];
 const POSITIONS = ['', 'QB', 'RB', 'WR', 'TE', 'OL', 'DL', 'EDGE', 'LB', 'CB', 'S', 'ATH'];
+
+function defaultBigBoardTab(): BigBoardTabId {
+  return shouldShowPortalWatchlist(getPortalSeasonState()) ? 'top-targets' : 'early-discovery';
+}
 
 function tabQuery(tab: BigBoardTabId, classYear: number, position: string): BigBoardQuery {
   const preset = TAB_SORT[tab === 'rank' ? 'rank' : tab] ?? TAB_SORT.rank;
@@ -36,9 +41,26 @@ function tabQuery(tab: BigBoardTabId, classYear: number, position: string): BigB
 }
 
 export function FutureCastBigBoardPage(): React.ReactElement {
-  const [classYear, setClassYear] = useState(2027);
+  const portalSeason = useMemo(() => getPortalSeasonState(), []);
+  const tabs = useMemo(
+    () =>
+      ALL_TABS.filter(
+        (tab) => tab.id !== 'portal-watchlist' || shouldShowPortalWatchlist(portalSeason)
+      ),
+    [portalSeason]
+  );
+  const [classYear, setClassYear] = useState(
+    shouldShowPortalWatchlist(portalSeason) ? 2027 : 2028
+  );
   const [position, setPosition] = useState('');
-  const [activeTab, setActiveTab] = useState<BigBoardTabId>('top-targets');
+  const [activeTab, setActiveTab] = useState<BigBoardTabId>(defaultBigBoardTab());
+
+  useEffect(() => {
+    if (activeTab === 'portal-watchlist' && !shouldShowPortalWatchlist(portalSeason)) {
+      setActiveTab('early-discovery');
+      setClassYear(2028);
+    }
+  }, [activeTab, portalSeason]);
 
   const classYearOptions =
     activeTab === 'early-discovery' ? CLASS_YEARS.filter((y) => y >= 2028) : CLASS_YEARS;
@@ -83,7 +105,7 @@ export function FutureCastBigBoardPage(): React.ReactElement {
       </header>
 
       <nav className="fc-futurecast-nav" aria-label="Big Board tabs" style={{ marginBottom: '1rem' }}>
-        {TABS.map((tab) => (
+        {tabs.map((tab) => (
           <button
             key={tab.id}
             type="button"
@@ -98,6 +120,12 @@ export function FutureCastBigBoardPage(): React.ReactElement {
       {activeTab === 'early-discovery' ? (
         <p className="rh-elite-section__sub" style={{ margin: '0 0 0.75rem' }}>
           Early Discovery ranks {classYear}+ underclassmen by discovery score (Vault est. ratings until On3 sync).
+        </p>
+      ) : null}
+
+      {!shouldShowPortalWatchlist(portalSeason) ? (
+        <p className="rh-elite-section__sub" style={{ margin: '0 0 0.75rem' }} data-testid="fc-portal-offseason-note">
+          {portalSeason.label}
         </p>
       ) : null}
 

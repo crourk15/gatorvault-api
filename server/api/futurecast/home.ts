@@ -30,6 +30,10 @@ import {
   getAllowlistSlugSet,
   loadAllowlistedBoardPlayers,
 } from './allowlist-board';
+import {
+  getPortalSeasonState,
+  shouldShowPortalWatchlist,
+} from '../../lib/recruiting-cycle.ts';
 
 const ALLOWED_SLUGS = getAllowlistSlugSet();
 
@@ -195,9 +199,12 @@ export const handleGetFutureCastHome = asyncHandler(async (req: Request, res: Re
 
     const sortedCommits = sortCommits(commits, commitSort);
     const allowlistHeatmap = buildHeatmapResponse(await loadAllowlistedBoardPlayers());
+    const portalSeason = getPortalSeasonState();
     return {
       classYear: FUTURECAST_CLASS_YEAR,
       commitSort,
+      portalSeason,
+      portalWatchlistVisible: shouldShowPortalWatchlist(portalSeason, portalWatchlist.length),
       heatmap: {
         buckets: allowlistHeatmap.buckets,
         windowDays: allowlistHeatmap.windowDays,

@@ -6,6 +6,9 @@ import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FeedPrediction, PredictorLeaderboardEntry } from './predictions-api';
 import type { MovementHeatmapBucket } from './predictions-api';
 
+import type { PortalSeasonState } from './recruiting-cycle';
+
+export type { PortalCyclePhase, PortalSeasonState } from './recruiting-cycle';
 export const FUTURECAST_WIDGET_YEAR = 2027;
 export const FUTURECAST_FETCH_TIMEOUT_MS = 5_000;
 export const FUTURECAST_CLIENT_CACHE_TTL_MS = 5 * 60_000;
@@ -73,6 +76,8 @@ export interface FutureCastHomeResponse {
   trendingUp: FeedPrediction[];
   trendingDown: FeedPrediction[];
   portalWatchlist: PortalWatchlistHomePlayer[];
+  portalSeason?: PortalSeasonState;
+  portalWatchlistVisible?: boolean;
 }
 
 export interface FutureCastWidgetBundle {

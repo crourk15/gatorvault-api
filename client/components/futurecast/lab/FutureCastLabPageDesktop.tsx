@@ -79,6 +79,7 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
               <FutureCastPortalCrossView
                 portalPlayers={data.home.portalWatchlist ?? []}
                 masterBoard={data.masterBoard}
+                portalSeason={data.home.portalSeason}
               />
             )}
           </section>
