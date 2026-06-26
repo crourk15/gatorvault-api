@@ -60,6 +60,46 @@ async function fetchCheck(label, url, { allow404 = false, expectIncludes = [], h
   }
 }
 
+async function checkAlertsFlipWatchUfAlignment() {
+  const label = 'api-futurecast-alerts-uf';
+  try {
+    const [alertsRes, hpRes] = await Promise.all([
+      fetch(`${API_URL}/api/futurecast/alerts`, { headers: { 'User-Agent': CRAWLER_UA } }),
+      fetch(`${API_URL}/api/futurecast/high-priority?year=2027`, { headers: { 'User-Agent': CRAWLER_UA } }),
+    ]);
+    const alertsBody = await alertsRes.json();
+    const hpBody = await hpRes.json();
+    if (!alertsRes.ok) return { ok: false, label, error: `alerts HTTP ${alertsRes.status}`, url: `${API_URL}/api/futurecast/alerts` };
+    if (!hpRes.ok) return { ok: false, label, error: `high-priority HTTP ${hpRes.status}`, url: `${API_URL}/api/futurecast/high-priority?year=2027` };
+
+    const alerts = Array.isArray(alertsBody) ? alertsBody : alertsBody.alerts || [];
+    const flipAlerts = alerts.filter((a) => a.type === 'flip_watch');
+    if (!flipAlerts.length) return { ok: false, label, error: 'no flip_watch alerts', url: `${API_URL}/api/futurecast/alerts` };
+
+    const ufZero = flipAlerts.filter((a) => /UF 0%/.test(String(a.message || '')));
+    if (ufZero.length) return { ok: false, label, error: 'flip_watch includes UF 0%', url: `${API_URL}/api/futurecast/alerts` };
+
+    const hpBySlug = new Map((hpBody.flipWatch || []).map((row) => [String(row.slug || '').toLowerCase(), row]));
+    for (const alert of flipAlerts) {
+      const slug = String(alert.playerSlug || '').toLowerCase();
+      const hp = hpBySlug.get(slug);
+      if (!hp || hp.ufProbability == null) continue;
+      const expected = `UF ${hp.ufProbability}%`;
+      if (!String(alert.message || '').includes(expected)) {
+        return {
+          ok: false,
+          label,
+          error: `${slug} alert missing ${expected} (got: ${alert.message})`,
+          url: `${API_URL}/api/futurecast/alerts`,
+        };
+      }
+    }
+    return { ok: true, label, url: `${API_URL}/api/futurecast/alerts` };
+  } catch (err) {
+    return { ok: false, label, error: err.message, url: `${API_URL}/api/futurecast/alerts` };
+  }
+}
+
 async function main() {
   const checks = [];
 
@@ -152,6 +192,8 @@ async function main() {
       expectIncludes: ['buildId'],
     })
   );
+
+  checks.push(await checkAlertsFlipWatchUfAlignment());
 
   const htmlRes = await fetch(`${SITE_URL}/vault/futurecast/`);
   const html = await htmlRes.text();
