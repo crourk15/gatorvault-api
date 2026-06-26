@@ -69,20 +69,23 @@ async function fetchTeamVisits(classYear) {
   return flattenVisits(pp);
 }
 
-async function fetchRecruitProfile(recruitSlug) {
+async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
   if (!recruitSlug) return null;
+  const year = parseInt(classYear, 10) || 2027;
   const url = pageUrl(`/rivals/${recruitSlug.replace(/^\//, '')}/`);
   let pp;
   try {
-    pp = await fetchNextPageProps(url);
+    pp = await fetchNextPageProps(url, year);
   } catch (e) {
     return { slug: recruitSlug, error: e.message };
   }
   if (!pp) return null;
 
   const recruitment =
-    (pp.recruitments || []).find((r) => r.year === 2027 || r.year === 2026) ||
+    (pp.recruitments || []).find((r) => Number(r.year) === year) ||
+    (pp.recruitments || []).find((r) => r.year === 2028 || r.year === 2027 || r.year === 2026) ||
     (pp.recruitments || [])[0];
+  const rating = pp.rankingsPlayer || recruitment?.rating || {};
 
   return {
     slug: recruitSlug,
@@ -92,7 +95,14 @@ async function fetchRecruitProfile(recruitSlug) {
       recruitment?.positionAbbreviation ||
       pp.personSports?.[0]?.position?.abbr ||
       '',
-    classYear: recruitment?.year || 2027,
+    classYear: recruitment?.year || year,
+    school: pp.player?.highSchoolName || pp.player?.highSchool?.name || null,
+    state: pp.player?.homeTown?.stateAbbr || pp.player?.hometown?.stateAbbr || null,
+    stars: rating.stars ?? rating.consensusStars ?? null,
+    rating: rating.consensusRating ?? rating.rating ?? rating.consensusRatingValue ?? null,
+    natlRank: rating.nationalRank ?? rating.consensusNationalRank ?? null,
+    posRank: rating.positionRank ?? rating.consensusPositionRank ?? null,
+    stateRank: rating.stateRank ?? rating.consensusStateRank ?? null,
     topTeams: pp.topTeams?.list || [],
     visits: pp.visits?.list || pp.visits || [],
     recruitments: pp.recruitments || [],

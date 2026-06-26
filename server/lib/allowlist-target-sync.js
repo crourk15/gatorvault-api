@@ -60,7 +60,7 @@ function profilePatchFromOn3(profile, classYear) {
   const committedTo = commit ? teamNameFromOn3(commit.team) : null;
   const ufCommitted = commit && on3Recruit.isFloridaTeam(commit);
 
-  return {
+  const patch = {
     name: profile.name,
     pos: profile.pos || null,
     classYear: profile.classYear || classYear,
@@ -70,6 +70,19 @@ function profilePatchFromOn3(profile, classYear) {
     commitDate: commit?.committedDate || null,
     on3Source: 'on3-allowlist-sync',
   };
+
+  if (profile.school) patch.school = profile.school;
+  if (profile.state) patch.state = profile.state;
+  if (profile.rating != null && Number.isFinite(Number(profile.rating))) {
+    patch.rating = Number(profile.rating);
+    patch.stars = profile.stars ?? patch.stars ?? null;
+    patch.natlRank = profile.natlRank ?? null;
+    patch.posRank = profile.posRank ?? null;
+    patch.stateRank = profile.stateRank ?? null;
+    patch.on3Source = 'on3-board-sync';
+  }
+
+  return patch;
 }
 
 async function syncSlugFromOn3(slug, classYear) {
@@ -84,7 +97,7 @@ async function syncSlugFromOn3(slug, classYear) {
       `${store.slugify(p.name || playerName)}${p.on3Id ? `-${p.on3Id}` : ''}`;
     let profilePatch = {};
     try {
-      const profile = await on3Recruit.fetchRecruitProfile(recruitSlug);
+      const profile = await on3Recruit.fetchRecruitProfile(recruitSlug, classYear);
       if (profile && !profile.error) {
         profilePatch = profilePatchFromOn3(profile, classYear);
       }
@@ -98,9 +111,10 @@ async function syncSlugFromOn3(slug, classYear) {
     await store.upsertPlayer({
       ...existing,
       ...p,
+      ...profilePatch,
       slug,
       classYear,
-      name: p.name || playerName,
+      name: p.name || profilePatch.name || playerName,
       pos: profilePatch.pos || p.pos || existing?.pos,
       committedTo: ufCommitted ? 'Florida' : committedTo,
       status: committedTo ? 'committed' : 'uncommitted',
@@ -108,7 +122,7 @@ async function syncSlugFromOn3(slug, classYear) {
       commitDate: profilePatch.commitDate ?? p.commitDate ?? existing?.commitDate ?? null,
       commitmentSyncAt: new Date().toISOString(),
       commitmentSource: profilePatch.committedTo ? 'on3-allowlist-sync' : existing?.commitmentSource || null,
-      on3Source: 'on3-allowlist-sync',
+      on3Source: profilePatch.on3Source || 'on3-allowlist-sync',
       updatedAt: new Date().toISOString(),
     });
 
@@ -118,6 +132,7 @@ async function syncSlugFromOn3(slug, classYear) {
       ok: true,
       committedTo: committedTo || null,
       pos: profilePatch.pos || p.pos || null,
+      ranked: profilePatch.on3Source === 'on3-board-sync',
     };
   }
 
@@ -126,8 +141,11 @@ async function syncSlugFromOn3(slug, classYear) {
 
 async function syncAllowlistTargetsFromOn3(options = {}) {
   const limit = options.limit || parseInt(process.env.ALLOWLIST_SYNC_LIMIT || '0', 10) || 0;
-  const jobs = allowlistJobs();
-  const results = { updated: 0, committedElsewhere: 0, skipped: 0, failed: [] };
+  let jobs = allowlistJobs();
+  if (options.classYear) {
+    jobs = jobs.filter((job) => job.classYear === Number(options.classYear));
+  }
+  const results = { updated: 0, ranked: 0, committedElsewhere: 0, skipped: 0, failed: [] };
 
   for (let i = 0; i < jobs.length; i += 1) {
     if (limit > 0 && i >= limit) break;
@@ -136,6 +154,7 @@ async function syncAllowlistTargetsFromOn3(options = {}) {
       const row = await syncSlugFromOn3(slug, classYear);
       if (row.ok) {
         results.updated += 1;
+        if (row.ranked) results.ranked += 1;
         if (row.committedTo && !isFloridaSchool(row.committedTo)) {
           results.committedElsewhere += 1;
         }

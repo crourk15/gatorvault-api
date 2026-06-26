@@ -5,6 +5,7 @@ import type { Request, Response } from 'express';
 import { createRequire } from 'node:module';
 import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
 import { enrichWithRankings } from './ranking-enrichment';
+import { expandPositionFilter, parsePositionFilter } from './position-filter';
 
 const require = createRequire(import.meta.url);
 
@@ -25,15 +26,26 @@ export async function listEarlyDiscoveryPlayers(opts: {
   classYearGte?: number;
   minDiscoveryScore?: number;
   minUfFitScore?: number;
+  position?: string;
   limit?: number;
 }) {
   const {
     classYearGte = 2028,
     minDiscoveryScore = 0,
     minUfFitScore = 0,
+    position,
     limit = 100,
   } = opts;
   const { db } = require('../../models/db.ts');
+
+  const params: unknown[] = [classYearGte, minDiscoveryScore, minUfFitScore];
+  let positionClause = '';
+  if (position) {
+    params.push(expandPositionFilter(position));
+    positionClause = ` AND upper(COALESCE(p.position, '')) = ANY($${params.length}::text[])`;
+  }
+  params.push(limit);
+  const limitParam = `$${params.length}`;
 
   const { rows } = await db.query(
     `
@@ -61,10 +73,11 @@ export async function listEarlyDiscoveryPlayers(opts: {
       AND p.status = 'HS'
       AND COALESCE(hs.discovery_score, 0) >= $2
       AND COALESCE(uf.uf_fit_score, 0) >= $3
+      ${positionClause}
     ORDER BY hs.discovery_score DESC NULLS LAST, p.stars DESC NULLS LAST, p.full_name ASC
-    LIMIT $4
+    LIMIT ${limitParam}
     `,
-    [classYearGte, minDiscoveryScore, minUfFitScore, limit]
+    params
   );
 
   return rows.map((row: Record<string, unknown>, index: number) =>
@@ -93,18 +106,21 @@ export const handleGetEarlyDiscovery = asyncHandler(async (req: Request, res: Re
       parseOptionalInt(req.query.min_discovery_score ?? req.query.minDiscoveryScore, 'min_discovery_score') ?? 0;
     const minUfFitScore =
       parseOptionalInt(req.query.min_uf_fit_score ?? req.query.minUfFitScore, 'min_uf_fit_score') ?? 0;
+    const position = parsePositionFilter(req.query.position);
     const limit = parseLimit(req.query.limit);
 
     const players = await listEarlyDiscoveryPlayers({
       classYearGte,
       minDiscoveryScore,
       minUfFitScore,
+      position,
       limit,
     });
 
     res.json({
       ok: true,
       classYearGte,
+      position: position ?? null,
       count: players.length,
       players,
       updatedAt: new Date().toISOString(),

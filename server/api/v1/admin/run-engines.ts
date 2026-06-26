@@ -45,6 +45,21 @@ export const handleRunPortalIntel = asyncHandler(async (req: Request, res: Respo
   res.json({ ok: true, result });
 });
 
+export const handleRunAllowlistOn3Sync = asyncHandler(async (req: Request, res: Response) => {
+  if (!isEngineAuthorized(req)) {
+    res.status(403).json({ ok: false, error: 'Forbidden' });
+    return;
+  }
+  const { syncAllowlistTargetsFromOn3 } = require('../../../lib/allowlist-target-sync.js');
+  const classYear = Number(req.body?.classYear ?? req.query.class_year ?? 2028) || 2028;
+  const limit = Number(req.body?.limit ?? req.query.limit ?? 0) || 0;
+  const result = await syncAllowlistTargetsFromOn3({
+    classYear,
+    limit: limit > 0 ? limit : undefined,
+  });
+  res.json({ ok: true, classYear, result });
+});
+
 export const handleRunUfFitRecompute = asyncHandler(async (req: Request, res: Response) => {
   if (!isEngineAuthorized(req)) {
     res.status(403).json({ ok: false, error: 'Forbidden' });
@@ -74,6 +89,7 @@ export const handleRunUfFitRecompute = asyncHandler(async (req: Request, res: Re
 export function mountAdminEngineRoutes(app: Express): void {
   app.post('/api/admin/engines/early-discovery/run', handleRunEarlyDiscovery);
   app.post('/api/admin/engines/portal-intelligence/run', handleRunPortalIntel);
+  app.post('/api/admin/engines/allowlist-on3/sync', handleRunAllowlistOn3Sync);
   app.post('/api/admin/engines/uf-fit/recompute', handleRunUfFitRecompute);
   console.log('[admin-engines] mounted /api/admin/engines/*');
 }

@@ -50,6 +50,13 @@ const ENDPOINTS = [
     maxMs: 8000,
     expectStatus: 403,
   },
+  {
+    label: 'Early Discovery 2028',
+    url: `${RENDER_BASE}/api/futurecast/early-discovery?class_year_gte=2028&min_discovery_score=50&limit=5`,
+    maxMs: 15000,
+    expectOk: true,
+    minCount: 1,
+  },
 ];
 
 const key = process.env.RENDER_API_KEY;
@@ -129,8 +136,11 @@ async function probeEndpoint(spec) {
       body = null;
     }
     const statusOk = spec.expectStatus != null ? res.status === spec.expectStatus : res.ok === spec.expectOk;
+    const countOk =
+      spec.minCount == null || (body && typeof body.count === 'number' && body.count >= spec.minCount);
     const pass =
       statusOk &&
+      countOk &&
       ms <= spec.maxMs &&
       (spec.expectStatus != null ||
         (spec.label.includes('health') && body?.alive !== false) ||
@@ -141,6 +151,7 @@ async function probeEndpoint(spec) {
     );
     if (!pass && ms > spec.maxMs) issues.push(`${spec.label}: slow (${ms}ms > ${spec.maxMs}ms budget)`);
     if (!statusOk) issues.push(`${spec.label}: HTTP ${res.status}`);
+    if (!countOk) issues.push(`${spec.label}: count ${body?.count ?? 0} < ${spec.minCount}`);
     return { ms, status: res.status, body };
   } catch (err) {
     record(false, `${spec.label}: ${err.message} (${Date.now() - t0}ms)`);

@@ -29,13 +29,13 @@ export interface EarlyDiscoveryQuery {
   class_year_gte?: number;
   min_discovery_score?: number;
   limit?: number;
-  /** Client-side filter only (not sent to API until server supports ?position=). */
   position?: string;
 }
 
 export interface EarlyDiscoveryResponse {
   ok: boolean;
   classYearGte: number;
+  position?: string | null;
   count: number;
   players: EarlyDiscoveryPlayer[];
   updatedAt: string;
@@ -46,6 +46,7 @@ function buildParams(query: EarlyDiscoveryQuery): string {
   if (query.class_year_gte != null) params.set('class_year_gte', String(query.class_year_gte));
   if (query.min_discovery_score != null) params.set('min_discovery_score', String(query.min_discovery_score));
   if (query.limit != null) params.set('limit', String(query.limit));
+  if (query.position) params.set('position', query.position);
   const qs = params.toString();
   return qs ? '?' + qs : '';
 }

@@ -14,15 +14,6 @@ export interface EarlyDiscoveryGridProps {
   onPlayerClick?: (player: EarlyDiscoveryPlayer) => void;
 }
 
-function filterByPosition(
-  list: EarlyDiscoveryPlayer[],
-  position?: string
-): EarlyDiscoveryPlayer[] {
-  if (!position) return list;
-  const pos = position.toUpperCase();
-  return list.filter((p) => (p.position || '').toUpperCase() === pos);
-}
-
 export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridProps): React.ReactElement {
   const classYearGte = query.class_year_gte;
   const minDiscoveryScore = query.min_discovery_score;
@@ -45,6 +36,7 @@ export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridP
           class_year_gte: classYearGte,
           min_discovery_score: minDiscoveryScore,
           limit,
+          position,
         });
         if (cancelled) return;
         setFetched(data.players ?? []);
@@ -61,12 +53,12 @@ export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridP
     return () => {
       cancelled = true;
     };
-  }, [classYearGte, minDiscoveryScore, limit]);
+  }, [classYearGte, minDiscoveryScore, limit, position]);
 
-  const players = useMemo(() => {
-    const filtered = filterByPosition(fetched, position);
-    return filtered.map((p, index) => ({ ...p, rank: index + 1 }));
-  }, [fetched, position]);
+  const players = useMemo(
+    () => fetched.map((p, index) => ({ ...p, rank: index + 1 })),
+    [fetched]
+  );
 
   if (!hasLoaded && !error) {
     return <div className="fc-big-board-empty">Loading Early Discovery…</div>;
