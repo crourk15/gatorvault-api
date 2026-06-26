@@ -15,6 +15,7 @@ const SUB_LINKS: { id: FutureCastSegment; label: string }[] = [
   { id: 'staff', label: 'Staff Notes' },
 ];
 
+const BIG_BOARD_HREF = '/vault/futurecast/big-board';
 const ALERTS_HREF = '/vault/futurecast/alerts';
 
 export type FutureCastSubId = FutureCastSegment;
@@ -47,6 +48,13 @@ export function FutureCastSubNav({
           {link.label}
         </a>
       ))}
+      <a
+        href={BIG_BOARD_HREF}
+        className={`fc-futurecast-nav__link${pathname?.includes('/futurecast/big-board') ? ' is-active' : ''}`}
+        data-testid="fc-big-board-nav"
+      >
+        Big Board
+      </a>
       <a
         href={ALERTS_HREF}
         className={`fc-futurecast-nav__link${pathname?.includes('/futurecast/alerts') ? ' is-active' : ''}`}

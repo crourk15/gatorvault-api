@@ -179,6 +179,25 @@ async function main() {
         return null;
       },
     }),
+    await fetchJsonCheck('api-big-board', `${API_URL}/api/big-board?class_year=2027&limit=5`, {
+      validate(body) {
+        if (!Array.isArray(body?.players)) return 'missing players[] on /api/big-board';
+        if (!body.players.length) return 'big-board returned zero players';
+        const sample = body.players[0];
+        if (sample.ufFitScore == null && sample.rank == null) return 'big-board player missing ufFitScore/rank';
+        return null;
+      },
+    }),
+    await fetchJsonCheck('api-uf-fit-watchlist', `${API_URL}/api/uf-fit/watchlist?class_year=2027&limit=5`, {
+      validate(body) {
+        if (!Array.isArray(body?.players)) return 'missing players[] on /api/uf-fit/watchlist';
+        return null;
+      },
+    }),
+    await fetchCheck('vault-futurecast-big-board', `${SITE_URL}/vault/futurecast/big-board/`, {
+      headers: { 'User-Agent': CRAWLER_UA },
+      expectIncludes: ['FutureCast Big Board', 'vault-futurecast-big-board'],
+    }),
     await fetchJsonCheck('api-players-slug-futurecast', `${API_URL}/api/players/slug/raheem-floyd`, {
       validate(body) {
         if (!body?.player?.slug) return 'missing player.slug on /api/players/slug/:slug';

@@ -50,6 +50,7 @@ const REQUIRED_EXPORTS = [
   'vault/futurecast/stock/index.html',
   'vault/futurecast/snapshots/index.html',
   'vault/futurecast/alerts/index.html',
+  'vault/futurecast/big-board/index.html',
   'vault/futurecast/staff/index.html',
   'vault/recruiting-board/index.html',
   'vault/portal/player/index.html',
