@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Early Discovery API — 2028+ underclassmen ranked by discovery_score.
  */
 import { getApiBase } from './api-base';
@@ -22,6 +22,8 @@ export interface EarlyDiscoveryQuery {
   class_year_gte?: number;
   min_discovery_score?: number;
   limit?: number;
+  /** Client-side filter only (not sent to API until server supports ?position=). */
+  position?: string;
 }
 
 export interface EarlyDiscoveryResponse {

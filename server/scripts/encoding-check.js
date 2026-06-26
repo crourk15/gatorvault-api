@@ -4,7 +4,15 @@ const { execSync } = require("node:child_process");
 
 const ROOT = path.join(__dirname, "..", "..");
 
-const TRACKED_PREFIXES = ["server/lib/", "client/lib/", "client/public/"];
+const TRACKED_PREFIXES = [
+  'server/lib/',
+  'server/api/futurecast/',
+  'server/api/v1/admin/',
+  'server/engines/futurecast/',
+  'client/lib/',
+  'client/components/futurecast/',
+  'client/public/',
+];
 const TRACKED_EXTS = new Set([".js", ".ts", ".tsx"]);
 
 function encodingIssue(filePath, buf) {
@@ -53,9 +61,12 @@ function walk(dir, exts, out = []) {
 
 function fallbackFiles() {
   const files = [];
-  walk(path.join(ROOT, "server", "lib"), new Set([".js"]), files);
-  walk(path.join(ROOT, "client", "lib"), new Set([".ts", ".tsx", ".js"]), files);
-  walk(path.join(ROOT, "client", "public"), new Set([".js"]), files);
+  walk(path.join(ROOT, 'server', 'lib'), new Set(['.js']), files);
+  walk(path.join(ROOT, 'server', 'api', 'futurecast'), new Set(['.ts']), files);
+  walk(path.join(ROOT, 'server', 'engines', 'futurecast'), new Set(['.ts']), files);
+  walk(path.join(ROOT, 'client', 'lib'), new Set(['.ts', '.tsx', '.js']), files);
+  walk(path.join(ROOT, 'client', 'components', 'futurecast'), new Set(['.ts', '.tsx']), files);
+  walk(path.join(ROOT, 'client', 'public'), new Set(['.js']), files);
   return files;
 }
 

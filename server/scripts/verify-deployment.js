@@ -14,6 +14,9 @@ const EXPECTED_SERVICES = [
   { name: 'gatorvault-api-keepalive', type: 'cron' },
   { name: 'gatorvault-api-hub-refresh', type: 'cron' },
   { name: 'gatorvault-api-visit-intel-reconcile', type: 'cron' },
+  { name: 'gatorvault-api-uf-fit-seed', type: 'cron', requiredEnv: ['DATABASE_URL'] },
+  { name: 'gatorvault-api-early-discovery', type: 'cron', requiredEnv: ['DATABASE_URL'] },
+  { name: 'gatorvault-api-portal-intelligence', type: 'cron', requiredEnv: ['MONITORING_CRON_SECRET', 'PORTAL_INTEL_RUN_URL'] },
 ];
 
 const WEB_REQUIRED_ENV = [
@@ -35,10 +38,17 @@ const ENDPOINTS = [
   { label: 'Netlify /api/ping', url: `${NETLIFY_BASE}/api/ping`, maxMs: 8000, expectOk: true },
   { label: 'Netlify /api/health', url: `${NETLIFY_BASE}/api/health`, maxMs: 20000, expectOk: true },
   {
-    label: 'Hub class-overview 2027',
-    url: `${RENDER_BASE}/api/recruiting/hub/class-overview?year=2027`,
+    label: 'FutureCast health',
+    url: `${RENDER_BASE}/api/futurecast/health`,
     maxMs: 15000,
     expectOk: true,
+  },
+  {
+    label: 'Admin engines mounted',
+    url: `${RENDER_BASE}/api/admin/engines/portal-intelligence/run`,
+    method: 'POST',
+    maxMs: 8000,
+    expectStatus: 403,
   },
 ];
 
@@ -107,6 +117,7 @@ async function probeEndpoint(spec) {
   const timer = setTimeout(() => ctrl.abort(), Math.max(spec.maxMs * 2, 30000));
   try {
     const res = await fetch(spec.url, {
+      method: spec.method || 'GET',
       signal: ctrl.signal,
       headers: { Accept: 'application/json', 'User-Agent': 'gatorvault-verify/1.0' },
     });
@@ -117,16 +128,19 @@ async function probeEndpoint(spec) {
     } catch {
       body = null;
     }
+    const statusOk = spec.expectStatus != null ? res.status === spec.expectStatus : res.ok === spec.expectOk;
     const pass =
-      res.ok === spec.expectOk &&
+      statusOk &&
       ms <= spec.maxMs &&
-      (spec.label.includes('health') && body?.alive !== false || !spec.label.includes('/health') || body?.ok !== false);
+      (spec.expectStatus != null ||
+        (spec.label.includes('health') && body?.alive !== false) ||
+        body?.ok !== false);
     record(
       pass,
       `${spec.label}: HTTP ${res.status}, ${ms}ms${body?.ready != null ? `, ready=${body.ready}` : ''}${body?.hub?.status ? `, hub=${body.hub.status}` : ''}${body?.status === 'building' ? ', building' : ''}`
     );
     if (!pass && ms > spec.maxMs) issues.push(`${spec.label}: slow (${ms}ms > ${spec.maxMs}ms budget)`);
-    if (!res.ok) issues.push(`${spec.label}: HTTP ${res.status}`);
+    if (!statusOk) issues.push(`${spec.label}: HTTP ${res.status}`);
     return { ms, status: res.status, body };
   } catch (err) {
     record(false, `${spec.label}: ${err.message} (${Date.now() - t0}ms)`);
@@ -174,13 +188,14 @@ async function main() {
 
       const env = await getEnvVars(svc.id);
       const required =
-        exp.name === 'gatorvault-api-hub-refresh'
+        exp.requiredEnv ||
+        (exp.name === 'gatorvault-api-hub-refresh'
           ? HUB_CRON_REQUIRED_ENV
           : exp.name === 'gatorvault-api-visit-intel-reconcile'
             ? VISIT_INTEL_CRON_REQUIRED_ENV
             : exp.name === 'gatorvault-api'
               ? WEB_REQUIRED_ENV
-              : ['KEEPALIVE_URL'];
+              : ['KEEPALIVE_URL']);
       for (const k of required) {
         const val = env[k];
         record(!!val, `${exp.name} env ${k}: ${val ? 'set' : 'MISSING'}`);

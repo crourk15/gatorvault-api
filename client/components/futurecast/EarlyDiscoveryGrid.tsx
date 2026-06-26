@@ -15,6 +15,7 @@ export interface EarlyDiscoveryGridProps {
 }
 
 export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridProps): React.ReactElement {
+  const { position, ...apiQuery } = query;
   const [players, setPlayers] = useState<EarlyDiscoveryPlayer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,15 +24,20 @@ export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridP
     setLoading(true);
     setError(null);
     try {
-      const data = await fetchEarlyDiscovery(query);
-      setPlayers(data.players ?? []);
+      const data = await fetchEarlyDiscovery(apiQuery);
+      let list = data.players ?? [];
+      if (position) {
+        const pos = position.toUpperCase();
+        list = list.filter((p) => (p.position || '').toUpperCase() === pos);
+      }
+      setPlayers(list.map((p, index) => ({ ...p, rank: index + 1 })));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load Early Discovery');
       setPlayers([]);
     } finally {
       setLoading(false);
     }
-  }, [query]);
+  }, [apiQuery, position]);
 
   useEffect(() => {
     void load();

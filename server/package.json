@@ -11,6 +11,7 @@
     "deploy:guardian": "node scripts/deploy-guardian.js --phase=pre --api",
     "deploy:guardian:static": "node scripts/deploy-guardian.js --phase=pre --static --skip-api",
     "deploy:smoke": "node scripts/deploy-smoke-post.js",
+    "verify:deployment": "node scripts/verify-deployment.js",
     "seed:recruiting": "node scripts/seed-recruiting.js",
     "ingest:on3": "node scripts/run-on3-ingest.js",
     "ingest:on3:baseline": "node scripts/run-on3-ingest.js --baseline",

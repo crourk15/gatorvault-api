@@ -114,6 +114,7 @@ export function FutureCastBigBoardPage(): React.ReactElement {
             class_year_gte: earlyDiscoveryClassGte,
             min_discovery_score: 50,
             limit: 100,
+            position: position || undefined,
           }}
           onPlayerClick={(player) => openPlayer(player.slug, 'HS', player.fullName)}
         />
