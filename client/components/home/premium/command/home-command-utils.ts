@@ -5,7 +5,7 @@ import type { FutureCastHomeResponse } from '@/lib/futurecast-home-api';
 import type { FeedPrediction } from '@/lib/predictions-api';
 import type { LivePanelProps } from '@/lib/gatornation-live-types';
 import type { BeatIntelItem, HighPriorityIntelItem } from '@/lib/recruiting-ui-api';
-import type { FlipWatchRow, VisitRecapRow } from '@/lib/futurecast-high-priority-api';
+import type { FlipWatchRow, MovementNarrativeRow, VisitRecapRow } from '@/lib/futurecast-high-priority-api';
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
 import { movementDelta7d } from '@/lib/movement-intel-types';
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
@@ -152,6 +152,7 @@ export type HomeTrustTickerInput = {
   movement: MovementIntelResponse | null;
   flipWatch?: FlipWatchRow[];
   visitRecap?: VisitRecapRow[];
+  movementNarratives?: MovementNarrativeRow[];
 };
 
 const HOME_TICKER_FALLBACKS = [
@@ -182,15 +183,21 @@ export function buildHeroTickerFromTrust(input: HomeTrustTickerInput): string[] 
       const ufPct = Math.round(player.ufProb <= 1 ? player.ufProb * 100 : player.ufProb);
       return `${player.name} rising — UF at ${ufPct}%`;
     });
+  const fromNarratives = (input.movementNarratives ?? [])
+    .slice(0, 3)
+    .map((row) => (row.movementNarrative ? `${row.name} — ${row.movementNarrative}` : ''))
+    .filter(Boolean);
   const fromFlipWatch = (input.flipWatch ?? [])
     .slice(0, 2)
     .map((row) => {
+      if (row.movementNarrative) return `${row.name} — ${row.movementNarrative}`;
       const score = row.flipScore != null ? ` · Flip ${row.flipScore}` : '';
       return `Flip Watch: ${row.name} (${row.committedShort})${score}`;
     });
   const fromVisitRecap = (input.visitRecap ?? [])
     .slice(0, 2)
     .map((row) => {
+      if (row.movementNarrative) return `${row.name} — ${row.movementNarrative}`;
       const range =
         row.visitEnd && row.visitEnd !== row.visitStart
           ? `${row.visitStart}–${row.visitEnd}`
@@ -200,6 +207,7 @@ export function buildHeroTickerFromTrust(input: HomeTrustTickerInput): string[] 
 
   const combined = [
     ...fromHub,
+    ...fromNarratives,
     ...fromFlipWatch,
     ...fromVisitRecap,
     ...fromHp,

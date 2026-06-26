@@ -152,6 +152,12 @@ export function FutureCastHero({
                   <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.visitRecapCount}</strong>
                 </div>
               ) : null}
+              {metrics.movementNarrativesCount != null && metrics.movementNarrativesCount > 0 ? (
+                <div className="fc-lab-hero__metric rh-cc-hero__metric">
+                  <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Movement</span>
+                  <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.movementNarrativesCount}</strong>
+                </div>
+              ) : null}
             </div>
             <p className="fc-lab-hero__updated">Updated {updatedLabel}</p>
           </div>

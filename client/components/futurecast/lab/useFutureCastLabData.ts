@@ -111,7 +111,8 @@ export function useFutureCastLabData(): FutureCastLabData {
             primary.metrics,
             secondaryRaw.visitIntel,
             secondaryRaw.visitRecap,
-            secondaryRaw.flipWatch
+            secondaryRaw.flipWatch,
+            secondaryRaw.movementNarratives
           ),
           heatLevel: deriveHeatLevel(secondaryRaw.home, secondaryRaw.stock),
           lastUpdated: primary.lastUpdated ?? secondaryRaw.movementIntel.updatedAt ?? null,

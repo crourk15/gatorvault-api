@@ -8,7 +8,7 @@ import { HomeCommandRecruitingSnapshot } from '@/components/home/premium/command
 import { HomeCommandFutureCastPreview } from '@/components/home/premium/command/HomeCommandFutureCastPreview';
 import { HomeCommandVisitIntelPreview } from '@/components/home/premium/command/HomeCommandVisitIntelPreview';
 import { HomeCommandBeatHighlights } from '@/components/home/premium/command/HomeCommandBeatHighlights';
-import type { FlipWatchRow, VisitRecapRow } from '@/lib/futurecast-high-priority-api';
+import type { FlipWatchRow, MovementNarrativeRow, VisitRecapRow } from '@/lib/futurecast-high-priority-api';
 import type {
   HomeBeatPostView,
   HomeFutureCastTargetView,
@@ -23,6 +23,7 @@ type Props = {
   futureCastTargets: HomeFutureCastTargetView[];
   flipWatch: FlipWatchRow[];
   visitRecap: VisitRecapRow[];
+  movementNarratives: MovementNarrativeRow[];
   beatPosts: HomeBeatPostView[];
   loading?: boolean;
   beatLoading?: boolean;
@@ -36,6 +37,7 @@ export function HomeCommandCenter({
   futureCastTargets,
   flipWatch,
   visitRecap,
+  movementNarratives,
   beatPosts,
   loading,
   beatLoading,
@@ -46,7 +48,12 @@ export function HomeCommandCenter({
       <HomeCommandGameDay game={gameDay} />
       <HomeCommandLiveStrip />
       <HomeCommandRecruitingSnapshot metrics={recruitingMetrics} loading={loading} />
-      <HomeCommandVisitIntelPreview flipWatch={flipWatch} visitRecap={visitRecap} loading={loading} />
+      <HomeCommandVisitIntelPreview
+        flipWatch={flipWatch}
+        visitRecap={visitRecap}
+        movementNarratives={movementNarratives}
+        loading={loading}
+      />
       <HomeCommandFutureCastPreview targets={futureCastTargets} loading={loading} />
       <HomeCommandBeatHighlights posts={beatPosts} loading={beatLoading ?? loading} />
     </div>

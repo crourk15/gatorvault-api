@@ -97,13 +97,15 @@ export function enrichHeroMetrics(
   base: FutureCastHeroMetrics,
   visitIntel: HighPriorityPlayer[],
   visitRecap: VisitRecapRow[],
-  flipWatch: FlipWatchRow[]
+  flipWatch: FlipWatchRow[],
+  movementNarratives: MovementNarrativeRow[] = []
 ): FutureCastHeroMetrics {
   return {
     ...base,
     visitIntelCount: countUpcomingVisitIntel(visitIntel),
     visitRecapCount: visitRecap.length,
     flipWatchCount: flipWatch.length,
+    movementNarrativesCount: movementNarratives.length,
   };
 }
 
@@ -212,7 +214,13 @@ export async function loadFutureCastLabData(): Promise<FutureCastLabDataMap> {
   return {
     ...primary,
     ...secondaryRaw,
-    metrics: enrichHeroMetrics(primary.metrics, secondaryRaw.visitIntel, secondaryRaw.visitRecap, secondaryRaw.flipWatch),
+    metrics: enrichHeroMetrics(
+      primary.metrics,
+      secondaryRaw.visitIntel,
+      secondaryRaw.visitRecap,
+      secondaryRaw.flipWatch,
+      secondaryRaw.movementNarratives
+    ),
     heatLevel: deriveHeatLevel(secondaryRaw.home, secondaryRaw.stock),
     lastUpdated: primary.lastUpdated ?? secondaryRaw.movementIntel.updatedAt ?? null,
   };

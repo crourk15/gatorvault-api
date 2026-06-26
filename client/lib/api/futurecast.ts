@@ -33,6 +33,7 @@ export type FutureCastHeroMetrics = {
   visitIntelCount?: number;
   visitRecapCount?: number;
   flipWatchCount?: number;
+  movementNarrativesCount?: number;
 };
 
 export type FutureCastPageSummary = {

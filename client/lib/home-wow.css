@@ -723,6 +723,19 @@
   color: var(--home-gator-blue);
 }
 
+.home-wow-visit-intel__badge--movement {
+  background: rgba(250, 70, 22, 0.12);
+  color: var(--home-gator-orange);
+}
+
+.home-wow-visit-intel__narrative {
+  margin: 6px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  font-weight: 600;
+  color: var(--home-gator-orange);
+}
+
 .home-wow-visit-intel__name {
   margin: 0;
   font-size: 0.9375rem;

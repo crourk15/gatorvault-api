@@ -22,6 +22,7 @@ import {
   fetchHighPriorityTargets,
   type FlipWatchRow,
   type HighPriorityResponse,
+  type MovementNarrativeRow,
   type VisitRecapRow,
 } from '@/lib/futurecast-high-priority-api';
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
@@ -147,6 +148,10 @@ export function HomePremiumPage(): React.ReactElement {
     () => highPriority?.visitRecap ?? [],
     [highPriority]
   );
+  const movementNarratives = useMemo<MovementNarrativeRow[]>(
+    () => highPriority?.movementNarratives ?? [],
+    [highPriority]
+  );
 
   const heroTickerItems = useMemo(
     () =>
@@ -156,8 +161,9 @@ export function HomePremiumPage(): React.ReactElement {
         movement: movementIntel,
         flipWatch,
         visitRecap,
+        movementNarratives,
       }),
-    [hubTicker, hpIntel, movementIntel, flipWatch, visitRecap]
+    [hubTicker, hpIntel, movementIntel, flipWatch, visitRecap, movementNarratives]
   );
   const gameDay = useMemo(() => buildGameDayView(), []);
 
@@ -182,6 +188,7 @@ export function HomePremiumPage(): React.ReactElement {
         futureCastTargets={futureCastTargets}
         flipWatch={flipWatch}
         visitRecap={visitRecap}
+        movementNarratives={movementNarratives}
         beatPosts={beatPosts}
         loading={loading}
         beatLoading={!beatReady}
