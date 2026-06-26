@@ -12,6 +12,8 @@ const {
   CANONICAL_TARGET_NAMES,
   canonicalTargetSlug,
 } = require('./recruiting-target-allowlist');
+const { applyEditorialPositionToPlayer } = require('./recruiting-editorial-positions');
+const { isPlaceholderSchool } = require('./recruiting-placeholder-school');
 const { isFloridaSchool, isActiveUfTarget, isCommittedElsewhere } = require('./recruiting-target-filters');
 const monitoring = require('./recruiting-monitoring');
 
@@ -108,7 +110,7 @@ async function syncSlugFromOn3(slug, classYear) {
     const committedTo = profilePatch.committedTo ?? p.committedTo ?? existing?.committedTo ?? null;
     const ufCommitted = committedTo && isFloridaSchool(committedTo);
 
-    await store.upsertPlayer({
+    let merged = applyEditorialPositionToPlayer({
       ...existing,
       ...p,
       ...profilePatch,
@@ -125,6 +127,16 @@ async function syncSlugFromOn3(slug, classYear) {
       on3Source: profilePatch.on3Source || 'on3-allowlist-sync',
       updatedAt: new Date().toISOString(),
     });
+
+    if (
+      isPlaceholderSchool(merged.school) &&
+      existing?.school &&
+      !isPlaceholderSchool(existing.school)
+    ) {
+      merged.school = existing.school;
+    }
+
+    await store.upsertPlayer(merged);
 
     return {
       slug,

@@ -11,6 +11,7 @@ import {
   starsDisplay,
 } from '@/lib/recruiting-board-utils';
 import { playerProfilePath, recruitingProfileLifecycle } from '@/lib/player-routes';
+import { formatRecruitSchoolLabel } from '@/lib/recruiting-display-utils';
 
 export type ClassicCardVariant = 'commit' | 'target';
 
@@ -58,7 +59,7 @@ function heatMeter(pct: number, label = 'UF interest'): React.ReactElement {
 }
 
 function schoolLine(player: ClassicRecruitCardPlayer): string {
-  const school = player.school?.trim();
+  const school = formatRecruitSchoolLabel(player.school);
   const city = (player as { city?: string }).city?.trim();
   const state = player.state?.trim();
   const parts: string[] = [];

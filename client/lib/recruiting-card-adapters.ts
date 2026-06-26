@@ -9,6 +9,7 @@ import type { PortalWatchlistHomePlayer } from './futurecast-home-api';
 import type { PortalWatchlistPlayer } from './portal-api';
 import type { UfFitWatchlistPlayer } from './uf-fit-api';
 import type { EarlyDiscoveryPlayer } from './early-discovery-api';
+import { formatRecruitSchoolLabel } from './recruiting-display-utils';
 import type { StaffDashboardPlayer } from './staff-api';
 import type { PortalIncomingPlayer } from './recruiting-api';
 import { ensurePlayerSlug } from './slug';
@@ -40,7 +41,7 @@ export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlay
     stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
     fitScore: p.ufFitScore ?? undefined,
     ufStatus: p.ufStatus ?? undefined,
-    school: p.school ?? undefined,
+    school: formatRecruitSchoolLabel(p.school ?? undefined) ?? undefined,
     inState: p.inState ?? undefined,
     heatPct: p.discoveryScore > 0 ? p.discoveryScore : undefined,
     heatLabel: 'Discovery',
