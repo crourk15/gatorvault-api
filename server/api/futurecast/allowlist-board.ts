@@ -29,7 +29,7 @@ const { ALLOWLIST_2027, CANONICAL_TARGET_NAMES } = require('../../lib/recruiting
 const { filterBlockedRecruits, isBlockedRecruit } = require('../../lib/recruiting-blocked-players');
 const { isFloridaSchool, isActiveUfTarget, isCommittedElsewhere } = require('../../lib/recruiting-target-filters');
 const { resolveCommitmentOverride } = require('../../lib/commitment-prediction-override');
-const { resolveUfProbability, loadRivalsUfPctBySlug } = require('../../lib/uf-probability-utils');
+const { resolveUfProbability, loadUfPctPredictorsBySlug } = require('../../lib/uf-probability-utils');
 
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 const EARLY_WATCHLIST_PATH = path.join(__dirname, '../../data/futurecast/early-watchlist.json');
@@ -102,6 +102,9 @@ export interface FutureCastBoardPlayer {
   stateRank?: number | null;
   /** UF % (Likelihood) — FutureCast commit likelihood for Florida. Null when unknown. */
   ufConfidence: number | null;
+  ufProbabilitySource?: string;
+  ufProbabilityLabel?: string | null;
+  ufProbabilityLowConfidence?: boolean;
   /** Fit % (Scheme Match) — scheme, roster, and athletic fit. Null when unknown. */
   fitScore: number | null;
   /** Rolling UF probability delta for movementWindowDays. Null when unknown. */
@@ -286,7 +289,7 @@ export async function loadBoardPlayersForSlugs(
   const rankings = loadRecruitingRankings();
   const seedMeta = loadSeedMeta(classYear);
   const rivalsSchools = loadRivalsCompetingSchools();
-  const rivalsUfBySlug = loadRivalsUfPctBySlug();
+  const predictorsBySlug = loadUfPctPredictorsBySlug();
 
   const [stockRowsRaw, predictionRows] = await Promise.all([
     listStockBoardRows(movementWindowDays, {
@@ -388,9 +391,8 @@ export async function loadBoardPlayersForSlugs(
         score: Math.round(Number(model.confidence) || 0),
       });
     }
-    const rivalsUf = rivalsUfBySlug.get(slug) ?? 0;
-    if (rivalsUf > 0) {
-      ufPredictors.push({ name: 'Rivals PM', score: rivalsUf });
+    for (const ext of predictorsBySlug.get(slug) || []) {
+      ufPredictors.push(ext);
     }
     const storePct =
       (seed.ufProbability as number | undefined) ??
@@ -451,6 +453,9 @@ export async function loadBoardPlayersForSlugs(
       posRank: rank?.positionRank ?? (recruiting?.posRank as number) ?? (seed.posRank as number) ?? null,
       stateRank: rank?.stateRank ?? (recruiting?.stateRank as number) ?? (seed.stateRank as number) ?? null,
       ufConfidence,
+      ufProbabilitySource: resolvedUf?.source,
+      ufProbabilityLabel: resolvedUf?.label ?? null,
+      ufProbabilityLowConfidence: Boolean(resolvedUf?.lowConfidence),
       fitScore,
       trendDelta7d: trendDelta7dResolved,
       volatility7d: volatility7dResolved,

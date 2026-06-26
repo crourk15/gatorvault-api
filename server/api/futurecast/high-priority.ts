@@ -469,7 +469,16 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         visitRecap,
         visitLogs,
         mergedDelta7dBySlug
-      );
+      ).map((row) => {
+        const player = playersWithVerifiedVisits.find(
+          (p) => String(p.slug || '').toLowerCase() === String(row.slug || '').toLowerCase()
+        );
+        return {
+          ...row,
+          ufProbability: row.ufProbability ?? player?.ufProbability ?? null,
+          ufProbabilityLabel: player?.ufProbabilityLabel ?? null,
+        };
+      });
       const flipWatch = movementNarrativeLib.enrichFlipWatchRows(
         flipWatchRaw,
         visitLogs,

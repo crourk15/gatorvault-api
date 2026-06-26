@@ -21,6 +21,9 @@ export type FutureCastPlayer = {
   stateRank?: number | null;
   /** UF % (Likelihood) — see futurecast-elite-metrics.ts. Board field; high-priority API uses ufProbability. */
   ufConfidence: number | null;
+  ufProbabilitySource?: string;
+  ufProbabilityLabel?: string | null;
+  ufProbabilityLowConfidence?: boolean;
   /** Fit % (Scheme Match) — scheme, roster, and athletic fit. */
   fitScore: number | null;
   trendDelta7d: number | null;

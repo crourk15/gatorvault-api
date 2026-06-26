@@ -2332,6 +2332,16 @@ body.gv-nav-menu-open {
   grid-column: span 1;
 }
 
+.gv-hp-card__metric-source {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #86efac;
+}
+
 .gv-uf-trend-sparkline {
   display: flex;
   align-items: center;

@@ -433,7 +433,7 @@ export function FutureCastExtendedModules({
             key: `recap-${row.slug}-${row.visitStart}`,
             primary: row.name,
             badge: <GatorVaultConfirmedBadge sourceLabel={row.visitSourceLabel} compact />,
-            meta: `OV ${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''}${row.ufProbability != null ? ` · UF ${formatUfDisplay({ ufProbability: row.ufProbability, ufProbabilityLabel: null })}` : ''}`,
+            meta: `OV ${row.visitStart}${row.visitEnd ? `–${row.visitEnd}` : ''}${row.visitSourceLabel ? ` · ${row.visitSourceLabel}` : ''}${row.ufProbability != null ? ` · UF ${formatUfDisplay({ ufProbability: row.ufProbability, ufProbabilityLabel: row.ufProbabilityLabel ?? null })}` : ''}`,
             extra: (
               <>
                 <MovementNarrativeLine text={row.movementNarrative} />

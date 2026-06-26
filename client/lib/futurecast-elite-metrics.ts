@@ -71,6 +71,16 @@ export function formatUfPercent(value: number | null | undefined): string {
   return `${normalizePercent(value)}%`;
 }
 
+/** e.g. "On3 RPM 48%" or "72%" when no source label */
+export function formatUfPercentWithLabel(
+  value: number | null | undefined,
+  label?: string | null
+): string {
+  const pct = formatUfPercent(value);
+  if (label) return `${label} ${pct}`;
+  return pct;
+}
+
 export function formatStaffPercent(value: number): string {
   return `${Math.round(value)}%`;
 }

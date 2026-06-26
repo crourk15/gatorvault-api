@@ -92,6 +92,9 @@ export function HighPriorityTargetCard({
           <div className="gv-hp-card__metric gv-hp-card__metric--uf">
             <span className="gv-hp-card__metric-label">{FC_METRIC_LABELS.uf}</span>
             <strong>{formatUfPercent(player.ufProbability)}</strong>
+            {player.ufProbabilityLabel ? (
+              <span className="gv-hp-card__metric-source">{player.ufProbabilityLabel}</span>
+            ) : null}
             {!compact ? <UfTrendSparkline values={trendValues} /> : null}
           </div>
           <div className="gv-hp-card__metric">

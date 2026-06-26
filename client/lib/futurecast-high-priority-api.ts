@@ -99,6 +99,7 @@ export interface VisitRecapRow {
   visitSource?: string | null;
   visitSourceLabel?: string | null;
   ufProbability?: number | null;
+  ufProbabilityLabel?: string | null;
   movementNarrative?: string | null;
 }
 

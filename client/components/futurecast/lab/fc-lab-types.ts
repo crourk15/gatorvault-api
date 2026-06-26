@@ -9,6 +9,7 @@ export type FcLabTarget = {
   school: string | null;
   classYear: number;
   ufProbability: number | null;
+  ufProbabilityLabel?: string | null;
   delta7d: number | null;
   fitScore: number | null;
   modelPct: number | null;
@@ -34,6 +35,7 @@ export function futureCastPlayerToLabTarget(p: FutureCastPlayer): FcLabTarget {
     school: p.school ?? null,
     classYear: p.classYear,
     ufProbability: ufConfidence,
+    ufProbabilityLabel: p.ufProbabilityLabel ?? null,
     delta7d: p.trendDelta7d,
     fitScore: p.fitScore,
     modelPct: ufConfidence,
