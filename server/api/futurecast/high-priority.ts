@@ -433,28 +433,73 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
 
       const commitBySlug = new Map<string, string>();
       const ufBySlug = new Map<string, number | null>();
+      const ufLabelBySlug = new Map<string, string | null>();
+      const ufLowConfidenceBySlug = new Map<string, boolean>();
       const nameBySlug = new Map<string, string>();
+
+      const resolveSlugUfMeta = (slug: string) => {
+        const recruiting = recruitingBySlug.get(slug);
+        const seed = targetSeedBySlug.get(slug);
+        const model = predictionBySlug.get(slug);
+        const key = slug.toLowerCase();
+        const predictors: HighPriorityPredictor[] = [];
+        if (model?.predictorId) {
+          predictors.push({
+            name: PREDICTOR_NAMES[model.predictorId] ?? model.predictorId,
+            score: Math.round(model.confidence),
+          });
+        }
+        for (const ext of predictorsBySlug.get(key) || []) {
+          predictors.push(ext);
+        }
+        return resolveUfProbability({
+          modelPct: model?.confidence ?? model?.ufProbability,
+          storePct:
+            seed?.ufProbability ??
+            recruiting?.ufProbability ??
+            recruiting?.futurecastProbability,
+          predictors,
+          stars: seed?.stars ?? recruiting?.stars ?? null,
+          headliner: Boolean(seed?.headliner),
+        });
+      };
+
+      const storeResolvedUf = (slug: string, resolved: ReturnType<typeof resolveUfProbability>) => {
+        const key = slug.toLowerCase();
+        ufBySlug.set(key, resolved.value);
+        ufLabelBySlug.set(key, resolved.label);
+        ufLowConfidenceBySlug.set(key, resolved.lowConfidence);
+      };
+
       for (const [slug, seed] of targetSeedBySlug.entries()) {
         const recruiting = recruitingBySlug.get(slug);
         const committedTo = resolveCommittedTo(seed, recruiting, seed);
         const key = slug.toLowerCase();
         if (committedTo) commitBySlug.set(key, committedTo);
         nameBySlug.set(key, seed.name);
-        const model = predictionBySlug.get(slug);
-        const resolvedUf = resolveUfProbability({
-          modelPct: model?.confidence ?? model?.ufProbability,
-          storePct: seed.ufProbability ?? recruiting?.ufProbability ?? recruiting?.futurecastProbability,
-          predictors: [],
-          stars: seed.stars ?? null,
-          headliner: Boolean(seed.headliner),
-        });
-        ufBySlug.set(key, resolvedUf.value);
+        storeResolvedUf(slug, resolveSlugUfMeta(slug));
       }
       for (const p of playersWithVerifiedVisits) {
         const key = String(p.slug || '').toLowerCase();
         ufBySlug.set(key, p.ufProbability ?? ufBySlug.get(key) ?? null);
+        ufLabelBySlug.set(key, p.ufProbabilityLabel ?? ufLabelBySlug.get(key) ?? null);
+        ufLowConfidenceBySlug.set(
+          key,
+          p.ufProbabilityLowConfidence ?? ufLowConfidenceBySlug.get(key) ?? false
+        );
         nameBySlug.set(key, p.name);
         if (p.committedTo) commitBySlug.set(key, p.committedTo);
+      }
+      for (const row of visitRecap) {
+        const slug = String(row.slug || '');
+        if (!slug) continue;
+        const key = slug.toLowerCase();
+        const recruiting = recruitingBySlug.get(slug);
+        if (recruiting?.committedTo) commitBySlug.set(key, recruiting.committedTo);
+        if (recruiting?.name) nameBySlug.set(key, recruiting.name);
+        if (ufLabelBySlug.get(key) == null) {
+          storeResolvedUf(slug, resolveSlugUfMeta(slug));
+        }
       }
 
       const flipWatchRaw = buildFlipWatchRows(playersWithVerifiedVisits, visitRecap, {
@@ -462,6 +507,8 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         intelRows: intelStore.loadIntelDoc().items || [],
         commitBySlug,
         ufBySlug,
+        ufLabelBySlug,
+        ufLowConfidenceBySlug,
         nameBySlug,
       });
       const movementNarrativeLib = require('../../lib/movement-narrative');
@@ -476,7 +523,8 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         return {
           ...row,
           ufProbability: row.ufProbability ?? player?.ufProbability ?? null,
-          ufProbabilityLabel: player?.ufProbabilityLabel ?? null,
+          ufProbabilityLabel:
+            player?.ufProbabilityLabel ?? ufLabelBySlug.get(String(row.slug || '').toLowerCase()) ?? null,
         };
       });
       const flipWatch = movementNarrativeLib.enrichFlipWatchRows(
@@ -490,7 +538,12 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
         return {
           ...row,
           ufProbability: row.ufProbability ?? player?.ufProbability ?? null,
-          ufProbabilityLabel: player?.ufProbabilityLabel ?? null,
+          ufProbabilityLabel:
+            player?.ufProbabilityLabel ?? ufLabelBySlug.get(String(row.slug || '').toLowerCase()) ?? null,
+          ufProbabilityLowConfidence:
+            player?.ufProbabilityLowConfidence ??
+            ufLowConfidenceBySlug.get(String(row.slug || '').toLowerCase()) ??
+            false,
         };
       });
       const movementNarratives = movementNarrativeLib.buildNarrativeFeed(

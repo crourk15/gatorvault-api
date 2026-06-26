@@ -50,6 +50,8 @@ function buildFlipWatchRows(
     intelRows = [],
     commitBySlug = null,
     ufBySlug = null,
+    ufLabelBySlug = null,
+    ufLowConfidenceBySlug = null,
     nameBySlug = null,
   } = {}
 ) {
@@ -77,8 +79,11 @@ function buildFlipWatchRows(
         committedTo,
         committedShort: shortSchoolName(committedTo),
         ufProbability: p?.ufProbability ?? ufBySlug?.get(slug) ?? null,
-        ufProbabilityLabel: p?.ufProbabilityLabel ?? null,
-        ufProbabilityLowConfidence: Boolean(p?.ufProbabilityLowConfidence),
+        ufProbabilityLabel:
+          p?.ufProbabilityLabel ?? ufLabelBySlug?.get(slug) ?? null,
+        ufProbabilityLowConfidence: Boolean(
+          p?.ufProbabilityLowConfidence ?? ufLowConfidenceBySlug?.get(slug)
+        ),
         visitStart: recap?.visitStart ?? null,
         visitEnd: recap?.visitEnd ?? null,
         visitSourceLabel: recap?.visitSourceLabel ?? formatVisitSourceLabel(recap?.visitSource),

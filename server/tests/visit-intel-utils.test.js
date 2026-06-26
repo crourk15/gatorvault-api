@@ -180,6 +180,27 @@ describe("flip-watch-utils", () => {
     assert.equal(flip[0].slug, "easton-royal");
   });
 
+  it("uses ufLabelBySlug when player row is missing from active board", () => {
+    const recap = [
+      {
+        slug: "easton-royal",
+        name: "Easton Royal",
+        visitStart: "2026-06-11",
+        visitEnd: "2026-06-13",
+        visitSourceLabel: "On3",
+      },
+    ];
+    const flip = buildFlipWatchRows([], recap, {
+      commitBySlug: new Map([["easton-royal", "Texas"]]),
+      ufBySlug: new Map([["easton-royal", 38]]),
+      ufLabelBySlug: new Map([["easton-royal", "On3 RPM"]]),
+      ufLowConfidenceBySlug: new Map([["easton-royal", false]]),
+      nameBySlug: new Map([["easton-royal", "Easton Royal"]]),
+    });
+    assert.equal(flip.length, 1);
+    assert.equal(flip[0].ufProbabilityLabel, "On3 RPM");
+  });
+
   it("prioritizes target-board slugs in recap ordering", () => {
     const sorted = prioritizeVisitRecapForTargets(
       [
