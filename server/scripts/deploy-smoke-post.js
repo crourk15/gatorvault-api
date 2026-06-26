@@ -199,6 +199,8 @@ async function main() {
       validate(body) {
         if (!body?.ok) return 'early-discovery not ok';
         if (!Array.isArray(body?.players)) return 'missing players[] on /api/futurecast/early-discovery';
+        const withScore = body.players.filter((p) => Number(p.discoveryScore) >= 50);
+        if (!withScore.length) return 'no 2028 early-discovery player with discoveryScore >= 50 (run engine:early-discovery)';
         return null;
       },
     }),

@@ -1,15 +1,13 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import {
-  BigBoardGrid,
-} from '@/components/futurecast/BigBoardGrid';
+import { BigBoardGrid } from '@/components/futurecast/BigBoardGrid';
+import { EarlyDiscoveryGrid } from '@/components/futurecast/EarlyDiscoveryGrid';
 import { UfFitWatchlistGrid } from '@/components/futurecast/UfFitWatchlistGrid';
 import {
   TAB_SORT,
   type BigBoardLifecycle,
   type BigBoardQuery,
-  type BigBoardSort,
 } from '@/lib/big-board-api';
 import { playerProfilePath } from '@/lib/player-routes';
 
@@ -25,11 +23,7 @@ const TABS: { id: BigBoardTabId; label: string }[] = [
 const CLASS_YEARS = [2027, 2028, 2029];
 const POSITIONS = ['', 'QB', 'RB', 'WR', 'TE', 'OL', 'DL', 'EDGE', 'LB', 'CB', 'S', 'ATH'];
 
-function tabQuery(
-  tab: BigBoardTabId,
-  classYear: number,
-  position: string
-): BigBoardQuery {
+function tabQuery(tab: BigBoardTabId, classYear: number, position: string): BigBoardQuery {
   const preset = TAB_SORT[tab === 'rank' ? 'rank' : tab] ?? TAB_SORT.rank;
   return {
     class_year: classYear,
@@ -51,6 +45,12 @@ export function FutureCastBigBoardPage(): React.ReactElement {
     [activeTab, classYear, position]
   );
 
+  const earlyDiscoveryClassGte = Math.max(classYear, 2028);
+
+  const openPlayer = (slug: string, lifecycle: BigBoardLifecycle, fullName: string) => {
+    window.location.href = playerProfilePath(slug, lifecycle, true, fullName, 'futurecast');
+  };
+
   return (
     <div className="rh-frame" data-testid="vault-futurecast-big-board">
       <header style={{ marginBottom: '1rem' }}>
@@ -62,11 +62,7 @@ export function FutureCastBigBoardPage(): React.ReactElement {
         </p>
       </header>
 
-      <nav
-        className="fc-futurecast-nav"
-        aria-label="Big Board tabs"
-        style={{ marginBottom: '1rem' }}
-      >
+      <nav className="fc-futurecast-nav" aria-label="Big Board tabs" style={{ marginBottom: '1rem' }}>
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -112,18 +108,21 @@ export function FutureCastBigBoardPage(): React.ReactElement {
             limit: 100,
           }}
         />
+      ) : activeTab === 'early-discovery' ? (
+        <EarlyDiscoveryGrid
+          query={{
+            class_year_gte: earlyDiscoveryClassGte,
+            min_discovery_score: 50,
+            limit: 100,
+          }}
+          onPlayerClick={(player) => openPlayer(player.slug, 'HS', player.fullName)}
+        />
       ) : (
         <BigBoardGrid
           query={query}
-          onPlayerClick={(player) => {
-            window.location.href = playerProfilePath(
-              player.slug,
-              player.lifecycle as BigBoardLifecycle,
-              true,
-              player.fullName,
-              'futurecast'
-            );
-          }}
+          onPlayerClick={(player) =>
+            openPlayer(player.slug, player.lifecycle as BigBoardLifecycle, player.fullName)
+          }
         />
       )}
     </div>

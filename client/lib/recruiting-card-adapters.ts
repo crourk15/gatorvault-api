@@ -8,6 +8,7 @@ import type { RecruitingBoardPlayer } from './recruiting-board-api';
 import type { PortalWatchlistHomePlayer } from './futurecast-home-api';
 import type { PortalWatchlistPlayer } from './portal-api';
 import type { UfFitWatchlistPlayer } from './uf-fit-api';
+import type { EarlyDiscoveryPlayer } from './early-discovery-api';
 import type { StaffDashboardPlayer } from './staff-api';
 import type { PortalIncomingPlayer } from './recruiting-api';
 import { ensurePlayerSlug } from './slug';
@@ -15,6 +16,20 @@ import type { ClassicCardVariant } from '@/components/vault/ClassicRecruitCard';
 
 export function minimalRecruitPlayer(slug: string, name: string): RecruitingBoardPlayer {
   return { slug, name, tier: 'HIGH' };
+}
+
+export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlayer {
+  return {
+    slug: p.slug,
+    name: p.fullName,
+    tier: p.ufStatus === 'TARGET' ? 'HIGH' : 'MEDIUM',
+    position: p.position ?? undefined,
+    classYear: p.classYear,
+    stars: p.stars ?? 0,
+    fitScore: p.discoveryScore,
+    ufProbability: p.discoveryScore > 0 ? Math.min(1, p.discoveryScore / 100) : 0,
+    skinny: `Discovery ${p.discoveryScore}${p.ufStatus ? ` · UF ${p.ufStatus}` : ''}${p.signalCount ? ` · ${p.signalCount} signals` : ''}`,
+  };
 }
 
 export function fromBigBoard(p: BigBoardPlayer): RecruitingBoardPlayer {
