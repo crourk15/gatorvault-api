@@ -53,6 +53,22 @@ function runVerifyVisitIntelApi() {
     failed++;
   }
   if (
+    !check('visit-intel-email-digest', () => {
+      const {
+        buildVisitScheduledEmailHtml,
+        dispatchVisitScheduledEmail,
+        sendVisitIntelDailyDigest,
+      } = require('../lib/visit-intel-email-digest');
+      const { wantsEmailVisitInstant } = require('../lib/alert-email-prefs-service');
+      assert.equal(typeof buildVisitScheduledEmailHtml, 'function');
+      assert.equal(typeof dispatchVisitScheduledEmail, 'function');
+      assert.equal(typeof sendVisitIntelDailyDigest, 'function');
+      assert.equal(wantsEmailVisitInstant({ method: 'email', visit: true, freq: 'instant' }), true);
+    })
+  ) {
+    failed++;
+  }
+  if (
     !check('push-alert-service', () => {
       const { pushEnabled, buildScheduledPayload, buildCancelledPayload } = require('../lib/push-alert-service');
       assert.equal(typeof buildScheduledPayload, 'function');

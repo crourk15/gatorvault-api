@@ -279,6 +279,18 @@ services:
         sync: false
 
   - type: cron
+    name: gatorvault-api-visit-intel-daily-digest
+    schedule: "0 14 * * *"
+    runtime: node
+    region: oregon
+    startCommand: node server/scripts/render-visit-intel-daily-digest-cron.js
+    envVars:
+      - key: VISIT_INTEL_DAILY_DIGEST_URL
+        value: https://gatorvault-api.onrender.com/api/futurecast/visit-intel/daily-digest
+      - key: MONITORING_CRON_SECRET
+        sync: false
+
+  - type: cron
     name: gatorvault-api-platform-ops
     schedule: "30 */2 * * *"
     runtime: node

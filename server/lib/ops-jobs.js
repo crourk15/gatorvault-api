@@ -256,6 +256,18 @@ const JOBS = {
       });
     }
   },
+  'visit-intel-daily-digest': {
+    label: 'FutureCast daily verified OV email digest',
+    subsystem: 'cron:visit-intel-daily-digest',
+    schedule: 'Daily 14:00 UTC Render cron',
+    async run(opts = {}) {
+      const { runVisitIntelDailyDigest } = require('./visit-intel-recap');
+      return runVisitIntelDailyDigest({
+        dryRun: opts.dryRun === true,
+        asOf: opts.asOf,
+      });
+    }
+  },
   'self-runner-purge-legacy-dedupe': {
     label: 'Reject legacy addDedupeRule Self-Runner proposals',
     subsystem: 'self-runner:cleanup',

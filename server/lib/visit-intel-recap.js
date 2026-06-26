@@ -85,6 +85,62 @@ function buildWeekendRecapRows(asOfInput = new Date(), windowDays = 7) {
   };
 }
 
+function buildDailyDigestRows(asOfInput = new Date()) {
+  const asOf = asOfInput instanceof Date ? asOfInput : new Date(asOfInput);
+  const visitLogs = visitLogStore.loadDoc().items || [];
+  const yesterday = new Date(asOf);
+  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+  const sinceYmd = yesterday.toISOString().slice(0, 10);
+  const dayKey = asOf.toISOString().slice(0, 10);
+  const prioritySlugs = loadPrioritySlugs();
+  const recapRows = buildVerifiedVisitRecapRows([], visitLogs, asOf, {
+    limit: 12,
+    prioritySlugs,
+    classYear: 2027,
+  }).filter((row) => row.visitEnd >= sinceYmd || row.visitStart >= dayKey);
+
+  return {
+    visitLogs,
+    recapRows,
+    boardSnapshot: getVisitIntelBoardSnapshot(visitLogs, asOf),
+    dayKey,
+    sinceYmd,
+  };
+}
+
+async function runVisitIntelDailyDigest(options = {}) {
+  const asOf = options.asOf ? new Date(options.asOf) : new Date();
+  const dryRun = Boolean(options.dryRun);
+  const built = buildDailyDigestRows(asOf);
+
+  if (!built.recapRows.length) {
+    return {
+      ok: true,
+      skipped: true,
+      reason: "no_digest_rows",
+      dayKey: built.dayKey,
+      dryRun,
+    };
+  }
+
+  const { sendVisitIntelDailyDigest } = require("./visit-intel-email-digest");
+  const emailDigest = await sendVisitIntelDailyDigest({
+    recapRows: built.recapRows,
+    dayKey: built.dayKey,
+    dryRun,
+  });
+
+  return {
+    ok: true,
+    dryRun,
+    dayKey: built.dayKey,
+    recapCount: built.recapRows.length,
+    boardSnapshot: built.boardSnapshot,
+    recapRows: built.recapRows,
+    emailDigest,
+  };
+}
+
 function buildRecapPostText(recapRows) {
   const n = recapRows.length;
   if (!n) return null;
@@ -222,7 +278,9 @@ async function runVisitIntelRecap(options = {}) {
 
 module.exports = {
   buildWeekendRecapRows,
+  buildDailyDigestRows,
   buildRecapPostText,
   runVisitIntelRecap,
+  runVisitIntelDailyDigest,
   isoWeekKey,
 };

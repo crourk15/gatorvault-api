@@ -8,10 +8,13 @@ const {
 } = require("../../lib/alert-email-prefs-service");
 const {
   buildVisitRecapEmailHtml,
+  buildVisitDailyEmailHtml,
   buildVisitScheduledEmailHtml,
   buildVisitCancelledEmailHtml,
   dispatchVisitScheduledEmail,
+  sendVisitIntelDailyDigest,
 } = require("../../lib/visit-intel-email-digest");
+const { runVisitIntelDailyDigest } = require("../../lib/visit-intel-recap");
 
 describe("alert-email-prefs-service", () => {
   it("detects weekly visit digest eligibility", () => {
@@ -44,6 +47,17 @@ describe("alert-email-prefs-service", () => {
     );
     assert.equal(
       wantsEmailVisitInstant({ method: "push", visit: true, freq: "instant" }),
+      false
+    );
+  });
+
+  it("detects daily visit digest eligibility", () => {
+    assert.equal(
+      wantsEmailVisitDigest({ method: "email", visit: true, freq: "daily" }),
+      true
+    );
+    assert.equal(
+      wantsEmailVisitDigest({ method: "email", visit: true, freq: "instant" }),
       false
     );
   });
@@ -118,5 +132,29 @@ describe("visit-intel-email-digest", () => {
     );
     assert.equal(out.ok, true);
     assert.equal(out.dryRun, true);
+  });
+
+  it("builds daily digest html", () => {
+    const html = buildVisitDailyEmailHtml(
+      [{ name: "Easton Royal", visitStart: "2026-06-01", visitEnd: "2026-06-03", visitSourceLabel: "On3" }],
+      "2026-06-22"
+    );
+    assert.match(html, /2026-06-22/);
+    assert.match(html, /Easton Royal/);
+  });
+
+  it("sendVisitIntelDailyDigest dryRun does not throw", async () => {
+    const out = await sendVisitIntelDailyDigest({
+      recapRows: [{ name: "Easton Royal", visitStart: "2026-06-01", visitEnd: "2026-06-03" }],
+      dayKey: "2099-01-01",
+      dryRun: true,
+    });
+    assert.equal(out.ok, true);
+    assert.equal(out.dryRun, true);
+  });
+
+  it("runVisitIntelDailyDigest dryRun does not throw", async () => {
+    const out = await runVisitIntelDailyDigest({ dryRun: true, asOf: "2026-06-22" });
+    assert.equal(out.ok, true);
   });
 });

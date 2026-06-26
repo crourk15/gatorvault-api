@@ -18,9 +18,9 @@ const fs = require("fs");
 function readState() {
   try {
     const state = JSON.parse(fs.readFileSync(STATE_PATH, "utf8"));
-    return { version: 1, digests: [], instant: [], ...state };
+    return { version: 1, digests: [], dailyDigests: [], instant: [], ...state };
   } catch {
-    return { version: 1, digests: [], instant: [] };
+    return { version: 1, digests: [], dailyDigests: [], instant: [] };
   }
 }
 
@@ -39,6 +39,22 @@ function buildVisitRecapEmailHtml(recapRows, weekKey) {
     .join("");
   return [
     `<p>Your GatorVault verified UF official visit recap for <strong>${weekKey}</strong>:</p>`,
+    `<ul>${items}</ul>`,
+    `<p><a href="${SITE_URL}/vault/futurecast#visits">Open FutureCast Visit Intel →</a></p>`,
+    `<p style="color:#666;font-size:12px;">Verified On3 / beat-confirmed OVs only — no rumor alerts.</p>`,
+  ].join("");
+}
+
+function buildVisitDailyEmailHtml(recapRows, dayKey) {
+  const items = recapRows
+    .slice(0, 12)
+    .map(
+      (row) =>
+        `<li><strong>${row.name}</strong> — ${row.visitStart}${row.visitEnd && row.visitEnd !== row.visitStart ? `–${row.visitEnd}` : ""} (${row.visitSourceLabel || "Verified"})</li>`
+    )
+    .join("");
+  return [
+    `<p>Your GatorVault verified UF visit intel digest for <strong>${dayKey}</strong>:</p>`,
     `<ul>${items}</ul>`,
     `<p><a href="${SITE_URL}/vault/futurecast#visits">Open FutureCast Visit Intel →</a></p>`,
     `<p style="color:#666;font-size:12px;">Verified On3 / beat-confirmed OVs only — no rumor alerts.</p>`,
@@ -203,6 +219,72 @@ async function dispatchVisitCancelledEmail(row, options = {}) {
   );
 }
 
+async function sendVisitIntelDailyDigest({ recapRows, dayKey, dryRun = false }) {
+  if (!Array.isArray(recapRows) || !recapRows.length || !dayKey) {
+    return { ok: true, skipped: true, reason: "no_recap_rows" };
+  }
+
+  const state = readState();
+  const alreadySent = (state.dailyDigests || []).some((d) => d.dayKey === dayKey);
+  if (alreadySent) {
+    return { ok: true, skipped: true, reason: "already_sent_today", dayKey };
+  }
+
+  const recipients = await listEligibleVisitDigestRecipients({ freq: "daily" });
+  if (!recipients.length) {
+    return dryRun
+      ? { ok: true, dryRun: true, dayKey, wouldSend: 0, recipients: 0 }
+      : { ok: true, skipped: true, reason: "no_email_subscribers", dayKey };
+  }
+
+  let sent = 0;
+  let skippedEmpty = 0;
+  const errors = [];
+
+  for (const recipient of recipients) {
+    const rows = filterRecapRowsForSubscriber(recapRows, recipient.prefs);
+    if (!rows.length) {
+      skippedEmpty += 1;
+      continue;
+    }
+    const subject = `GatorVault verified visit intel — ${dayKey}`;
+    const html = buildVisitDailyEmailHtml(rows, dayKey);
+    if (dryRun) {
+      sent += 1;
+      continue;
+    }
+    try {
+      const out = await sendSubscriberDigestEmail(recipient.email, subject, html);
+      if (out.sent) sent += 1;
+    } catch (err) {
+      errors.push({ email: recipient.email, error: err.message });
+    }
+  }
+
+  if (!dryRun && sent > 0) {
+    state.dailyDigests = state.dailyDigests || [];
+    state.dailyDigests.unshift({
+      dayKey,
+      sentAt: new Date().toISOString(),
+      sent,
+      skippedEmpty,
+      errors: errors.length,
+    });
+    state.dailyDigests = state.dailyDigests.slice(0, 90);
+    writeState(state);
+  }
+
+  return {
+    ok: true,
+    dayKey,
+    dryRun,
+    recipients: recipients.length,
+    sent,
+    skippedEmpty,
+    errors,
+  };
+}
+
 async function sendVisitIntelWeeklyDigest({ recapRows, weekKey, dryRun = false }) {
   if (!Array.isArray(recapRows) || !recapRows.length || !weekKey) {
     return { ok: true, skipped: true, reason: "no_recap_rows" };
@@ -263,9 +345,11 @@ async function sendVisitIntelWeeklyDigest({ recapRows, weekKey, dryRun = false }
 
 module.exports = {
   buildVisitRecapEmailHtml,
+  buildVisitDailyEmailHtml,
   buildVisitScheduledEmailHtml,
   buildVisitCancelledEmailHtml,
   sendVisitIntelWeeklyDigest,
+  sendVisitIntelDailyDigest,
   dispatchVisitScheduledEmail,
   dispatchVisitCancelledEmail,
 };

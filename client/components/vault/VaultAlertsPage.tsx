@@ -128,7 +128,13 @@ export function VaultAlertsPage(): React.ReactElement {
               ? prefs.followPlayers.length
                 ? `Weekly verified OV emails enabled for ${prefs.followPlayers.length} tracked player(s).`
                 : 'Weekly verified OV recap emails enabled.'
-              : 'Email alert preferences saved.'
+              : prefs.freq === 'daily'
+                ? prefs.followPlayers.length
+                  ? `Daily verified OV emails enabled for ${prefs.followPlayers.length} tracked player(s).`
+                  : 'Daily verified OV digest emails enabled.'
+                : prefs.freq === 'instant'
+                  ? 'Instant verified OV emails enabled — you will be emailed on schedule/cancel events.'
+                  : 'Email alert preferences saved.'
           );
         } else if (out.reason === 'sign_in') {
           setPushStatus('Sign in to enable email alerts.');
