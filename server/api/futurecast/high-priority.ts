@@ -35,7 +35,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players');
 const { isActiveUfTarget } = require('../../lib/recruiting-target-filters');
 const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields, buildVerifiedVisitRecapRows, getVisitIntelBoardSnapshot } = require('../../lib/visit-intel-utils');
-const { resolveUfProbability, loadRivalsUfPctBySlug } = require('../../lib/uf-probability-utils');
+const { resolveUfProbability, loadUfPctPredictorsBySlug } = require('../../lib/uf-probability-utils');
 const { buildFlipWatchRows } = require('../../lib/flip-watch-utils');
 const intelStore = require('../../lib/recruiting-intel-store');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
@@ -273,7 +273,7 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const targetSeedBySlug = loadTargetSeedBySlug();
       const insiderBySlug = loadInsiderNotesBySlug();
       const targets = await loadTargetBoardFromStore();
-      const rivalsUfBySlug = loadRivalsUfPctBySlug();
+      const predictorsBySlug = loadUfPctPredictorsBySlug();
       const targetSlugs = targets.map((t) => t.slug);
 
       const visitLogStore = require('../../lib/recruiting-visit-log-store');
@@ -335,9 +335,8 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
             score: Math.round(model.confidence),
           });
         }
-        const rivalsUf = rivalsUfBySlug.get(slug.toLowerCase()) ?? 0;
-        if (rivalsUf > 0) {
-          predictors.push({ name: 'Rivals PM', score: rivalsUf });
+        for (const ext of predictorsBySlug.get(slug.toLowerCase()) || []) {
+          predictors.push(ext);
         }
 
         const resolvedUf = resolveUfProbability({

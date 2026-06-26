@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-26T02:34:57.447Z",
+  "entries": [
+    {
+      "playerSlug": "easton-royal",
+      "playerName": "Easton Royal",
+      "classYear": 2027,
+      "ufPct": 1,
+      "priorUfPct": 48,
+      "profileUrl": "https://www.on3.com/rivals/easton-royal-243862/",
+      "source": "On3 RPM � UF",
+      "syncedAt": "2026-06-26T02:34:57.377Z"
+    },
+    {
+      "playerSlug": "raheem-floyd",
+      "playerName": "Raheem Floyd",
+      "classYear": 2027,
+      "ufPct": 97,
+      "priorUfPct": 55,
+      "profileUrl": "https://www.on3.com/rivals/raheem-floyd-242853/",
+      "source": "On3 RPM � UF",
+      "syncedAt": "2026-06-26T02:34:57.388Z"
+    },
+    {
+      "playerSlug": "jalen-brewster",
+      "playerName": "Jalen Brewster",
+      "classYear": 2027,
+      "ufPct": 2,
+      "priorUfPct": 38,
+      "profileUrl": "https://www.on3.com/rivals/jalen-brewster-242708/",
+      "source": "On3 RPM � UF",
+      "syncedAt": "2026-06-26T02:34:57.442Z"
+    }
+  ]
+}

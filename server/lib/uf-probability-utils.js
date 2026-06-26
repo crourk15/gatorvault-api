@@ -21,6 +21,24 @@ function pickRivalsPmScore(predictors) {
   return 0;
 }
 
+function pickOn3RpmScore(predictors) {
+  for (const p of predictors || []) {
+    const name = String(p?.name || "").toLowerCase();
+    if (name.includes("on3") && Number(p.score) > 0) {
+      return toPercent(p.score);
+    }
+  }
+  return 0;
+}
+
+function pickExternalPmScore(predictors) {
+  const rivals = pickRivalsPmScore(predictors);
+  if (rivals > 0) return { value: rivals, source: "rivals_pm", label: "Rivals PM" };
+  const on3 = pickOn3RpmScore(predictors);
+  if (on3 > 0) return { value: on3, source: "on3_rpm", label: "On3 RPM" };
+  return null;
+}
+
 function resolveUfProbability({
   modelPct = 0,
   storePct = 0,
@@ -30,7 +48,6 @@ function resolveUfProbability({
 } = {}) {
   const model = toPercent(modelPct);
   const store = toPercent(storePct);
-  const rivals = pickRivalsPmScore(predictors);
 
   if (model > 0) {
     return { value: model, source: "model", label: null, lowConfidence: false };
@@ -38,8 +55,14 @@ function resolveUfProbability({
   if (store > 0) {
     return { value: store, source: "store", label: null, lowConfidence: false };
   }
-  if (rivals > 0) {
-    return { value: rivals, source: "rivals_pm", label: "Rivals PM", lowConfidence: false };
+  const external = pickExternalPmScore(predictors);
+  if (external) {
+    return {
+      value: external.value,
+      source: external.source,
+      label: external.label,
+      lowConfidence: false,
+    };
   }
   if (headliner || (stars != null && Number(stars) >= 4)) {
     return { value: 25, source: "estimate", label: "Est.", lowConfidence: true };
@@ -61,7 +84,7 @@ function isFloridaSchool(name) {
   return /\bflorida\b|\bgators\b/i.test(String(name || ""));
 }
 
-function loadRivalsUfPctBySlug(predictionsPath) {
+function loadRivalsOnlyUfPctBySlug(predictionsPath) {
   const file =
     predictionsPath ||
     path.join(__dirname, "../data/war-room/rivals-predictions.json");
@@ -81,11 +104,74 @@ function loadRivalsUfPctBySlug(predictionsPath) {
   return map;
 }
 
+function loadRivalsUfPctBySlug(predictionsPath) {
+  const map = loadRivalsOnlyUfPctBySlug(predictionsPath);
+  try {
+    const on3Path = path.join(__dirname, "../data/war-room/on3-rpm-allowlist.json");
+    const doc = JSON.parse(fs.readFileSync(on3Path, "utf8"));
+    for (const row of doc.entries || []) {
+      const slug = String(row.playerSlug || "").toLowerCase();
+      if (!slug || map.has(slug)) continue;
+      const conf = Number(row.ufPct ?? row.confidence) || 0;
+      if (conf > 0) map.set(slug, conf);
+    }
+  } catch {
+    /* optional */
+  }
+  return map;
+}
+
+function loadUfPctPredictorsBySlug(rivalsPath, on3Path) {
+  const rivals = loadRivalsOnlyUfPctBySlug(rivalsPath);
+  const map = new Map();
+  for (const [slug, score] of rivals) {
+    map.set(slug, [{ name: "Rivals PM", score }]);
+  }
+  try {
+    const file =
+      on3Path || path.join(__dirname, "../data/war-room/on3-rpm-allowlist.json");
+    const doc = JSON.parse(fs.readFileSync(file, "utf8"));
+    for (const row of doc.entries || []) {
+      const slug = String(row.playerSlug || "").toLowerCase();
+      if (!slug || map.has(slug)) continue;
+      const conf = Number(row.ufPct ?? row.confidence) || 0;
+      if (conf > 0) map.set(slug, [{ name: "On3 RPM", score: conf }]);
+    }
+  } catch {
+    /* optional */
+  }
+  return map;
+}
+
+function loadOn3RpmPriorBySlug(on3Path) {
+  const map = new Map();
+  try {
+    const file =
+      on3Path || path.join(__dirname, "../data/war-room/on3-rpm-allowlist.json");
+    const doc = JSON.parse(fs.readFileSync(file, "utf8"));
+    for (const row of doc.entries || []) {
+      const slug = String(row.playerSlug || "").toLowerCase();
+      if (!slug) continue;
+      const prior = row.priorUfPct;
+      if (prior == null || !Number.isFinite(Number(prior))) continue;
+      map.set(slug, Number(prior));
+    }
+  } catch {
+    /* optional */
+  }
+  return map;
+}
+
 module.exports = {
   toPercent,
   pickRivalsPmScore,
+  pickOn3RpmScore,
+  pickExternalPmScore,
   resolveUfProbability,
   formatUfProbabilityDisplay,
   isFloridaSchool,
+  loadRivalsOnlyUfPctBySlug,
   loadRivalsUfPctBySlug,
+  loadUfPctPredictorsBySlug,
+  loadOn3RpmPriorBySlug,
 };

@@ -3,7 +3,7 @@
  */
 const fs = require("fs");
 const path = require("path");
-const { resolveUfProbability, loadRivalsUfPctBySlug } = require("./uf-probability-utils");
+const { resolveUfProbability, loadUfPctPredictorsBySlug, loadOn3RpmPriorBySlug } = require("./uf-probability-utils");
 
 const BOARD_PATH = path.join(__dirname, "..", "data", "recruiting", "2027-target-board.json");
 
@@ -23,10 +23,9 @@ function normalizeUuid(id) {
     : null;
 }
 
-function resolveTargetUfPct(target, recruiting, rivalsUfBySlug) {
+function resolveTargetUfPct(target, recruiting, predictorsBySlug) {
   const slug = String(target.slug || "").toLowerCase();
-  const rivalsScore = rivalsUfBySlug.get(slug) ?? 0;
-  const predictors = rivalsScore > 0 ? [{ name: "Rivals PM", score: rivalsScore }] : [];
+  const predictors = predictorsBySlug.get(slug) || [];
   const resolved = resolveUfProbability({
     modelPct: 0,
     storePct: target.ufProbability ?? recruiting?.ufProbability ?? recruiting?.futurecastProbability,
@@ -37,7 +36,12 @@ function resolveTargetUfPct(target, recruiting, rivalsUfBySlug) {
   return resolved.value > 0 ? resolved.value : null;
 }
 
-function resolvePriorUfPct(slug, recruiting, futurecastRow) {
+function resolvePriorUfPct(slug, recruiting, futurecastRow, on3PriorBySlug) {
+  const on3Prior = on3PriorBySlug?.get(String(slug || "").toLowerCase());
+  if (on3Prior != null && Number.isFinite(Number(on3Prior))) {
+    const n = Number(on3Prior);
+    return n <= 1 ? Math.round(n * 100) : Math.round(n);
+  }
   const prior = futurecastRow?.priorConfidence ?? recruiting?.priorConfidence ?? null;
   if (prior == null || !Number.isFinite(Number(prior))) return null;
   const n = Number(prior);
@@ -48,7 +52,8 @@ async function loadTargetSnapshots() {
   const targets = loadTargetBoard();
   const recruitingStore = require("./recruiting-store");
   const futurecastStore = require("./futurecast-store");
-  const rivalsUfBySlug = loadRivalsUfPctBySlug();
+  const predictorsBySlug = loadUfPctPredictorsBySlug();
+  const on3PriorBySlug = loadOn3RpmPriorBySlug();
   const rows = [];
 
   for (const target of targets) {
@@ -56,14 +61,14 @@ async function loadTargetSnapshots() {
     if (!slug) continue;
     const recruiting = recruitingStore.findBySlug(slug);
     const futurecastRow = futurecastStore.getByPlayerId(slug);
-    const ufPct = resolveTargetUfPct(target, recruiting, rivalsUfBySlug);
+    const ufPct = resolveTargetUfPct(target, recruiting, predictorsBySlug);
     if (ufPct == null) continue;
     rows.push({
       slug,
       name: target.name || slug,
       ufPct,
       playerId: normalizeUuid(recruiting?.id),
-      priorUfPct: resolvePriorUfPct(slug, recruiting, futurecastRow),
+      priorUfPct: resolvePriorUfPct(slug, recruiting, futurecastRow, on3PriorBySlug),
     });
   }
 

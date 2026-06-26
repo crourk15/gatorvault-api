@@ -29,14 +29,17 @@ function writeState(state) {
   fs.writeFileSync(STATE_PATH, JSON.stringify({ ...state, updatedAt: new Date().toISOString() }, null, 2));
 }
 
+function formatDigestRecapItem(row) {
+  const dates = `${row.visitStart}${row.visitEnd && row.visitEnd !== row.visitStart ? `–${row.visitEnd}` : ""}`;
+  const base = `<strong>${row.name}</strong> — ${dates} (${row.visitSourceLabel || "Verified"})`;
+  if (row.movementNarrative) {
+    return `<li>${base}<br/><span style="color:#1a5c1a;font-size:13px;">${row.movementNarrative}</span></li>`;
+  }
+  return `<li>${base}</li>`;
+}
+
 function buildVisitRecapEmailHtml(recapRows, weekKey) {
-  const items = recapRows
-    .slice(0, 12)
-    .map(
-      (row) =>
-        `<li><strong>${row.name}</strong> — ${row.visitStart}${row.visitEnd && row.visitEnd !== row.visitStart ? `–${row.visitEnd}` : ""} (${row.visitSourceLabel || "Verified"})</li>`
-    )
-    .join("");
+  const items = recapRows.slice(0, 12).map(formatDigestRecapItem).join("");
   return [
     `<p>Your GatorVault verified UF official visit recap for <strong>${weekKey}</strong>:</p>`,
     `<ul>${items}</ul>`,
@@ -46,13 +49,7 @@ function buildVisitRecapEmailHtml(recapRows, weekKey) {
 }
 
 function buildVisitDailyEmailHtml(recapRows, dayKey) {
-  const items = recapRows
-    .slice(0, 12)
-    .map(
-      (row) =>
-        `<li><strong>${row.name}</strong> — ${row.visitStart}${row.visitEnd && row.visitEnd !== row.visitStart ? `–${row.visitEnd}` : ""} (${row.visitSourceLabel || "Verified"})</li>`
-    )
-    .join("");
+  const items = recapRows.slice(0, 12).map(formatDigestRecapItem).join("");
   return [
     `<p>Your GatorVault verified UF visit intel digest for <strong>${dayKey}</strong>:</p>`,
     `<ul>${items}</ul>`,
@@ -344,6 +341,7 @@ async function sendVisitIntelWeeklyDigest({ recapRows, weekKey, dryRun = false }
 }
 
 module.exports = {
+  formatDigestRecapItem,
   buildVisitRecapEmailHtml,
   buildVisitDailyEmailHtml,
   buildVisitScheduledEmailHtml,

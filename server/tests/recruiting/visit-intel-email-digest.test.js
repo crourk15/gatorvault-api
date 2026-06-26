@@ -96,6 +96,20 @@ describe("visit-intel-email-digest", () => {
     assert.match(html, /futurecast#visits/);
   });
 
+  it("includes movement narrative lines in digest html", () => {
+    const row = {
+      name: "Jalen Brewster",
+      visitStart: "2026-06-11",
+      visitEnd: "2026-06-13",
+      visitSourceLabel: "On3",
+      movementNarrative: "UF +6% (7d) since verified OV (Jun 11–Jun 13)",
+    };
+    const daily = buildVisitDailyEmailHtml([row], "2026-06-22");
+    const weekly = buildVisitRecapEmailHtml([row], "2026-W25");
+    assert.match(daily, /UF \+6% \(7d\)/);
+    assert.match(weekly, /UF \+6% \(7d\)/);
+  });
+
   it("builds scheduled and cancelled instant html", () => {
     const scheduled = buildVisitScheduledEmailHtml({
       playerSlug: "easton-royal",

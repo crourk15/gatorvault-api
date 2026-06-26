@@ -280,6 +280,19 @@ const JOBS = {
       });
     }
   },
+  'on3-rpm-allowlist-sync': {
+    label: 'On3 RPM UF % gap-fill for allowlist targets missing Rivals PM',
+    subsystem: 'cron:on3-rpm-allowlist',
+    schedule: 'Daily after uf-trend-snapshot or on demand',
+    async run(opts = {}) {
+      const { syncAllowlistOn3Rpm } = require('./on3-rpm-allowlist');
+      return syncAllowlistOn3Rpm({
+        dryRun: opts.dryRun === true,
+        fetch: opts.fetch !== false,
+        classYear: opts.classYear,
+      });
+    }
+  },
   'self-runner-purge-legacy-dedupe': {
     label: 'Reject legacy addDedupeRule Self-Runner proposals',
     subsystem: 'self-runner:cleanup',

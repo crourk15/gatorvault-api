@@ -108,6 +108,17 @@ function buildDailyDigestRows(asOfInput = new Date()) {
   };
 }
 
+function enrichRecapRowsWithMovementNarratives(recapRows, asOf = new Date()) {
+  if (!Array.isArray(recapRows) || !recapRows.length) return recapRows || [];
+  const { enrichVisitRecapRows } = require("./movement-narrative");
+  const ufTrendSnapshot = require("./uf-trend-snapshot");
+  const visitLogs = visitLogStore.loadDoc().items || [];
+  const slugs = recapRows.map((r) => r.slug).filter(Boolean);
+  const snapshotDelta = ufTrendSnapshot.buildDelta7dBySlug(slugs, asOf);
+  const merged = ufTrendSnapshot.mergeDelta7dMaps(new Map(), snapshotDelta, slugs);
+  return enrichVisitRecapRows(recapRows, visitLogs, merged, asOf);
+}
+
 async function runVisitIntelDailyDigest(options = {}) {
   const asOf = options.asOf ? new Date(options.asOf) : new Date();
   const dryRun = Boolean(options.dryRun);
@@ -123,9 +134,11 @@ async function runVisitIntelDailyDigest(options = {}) {
     };
   }
 
+  const enrichedRows = enrichRecapRowsWithMovementNarratives(built.recapRows, asOf);
+
   const { sendVisitIntelDailyDigest } = require("./visit-intel-email-digest");
   const emailDigest = await sendVisitIntelDailyDigest({
-    recapRows: built.recapRows,
+    recapRows: enrichedRows,
     dayKey: built.dayKey,
     dryRun,
   });
@@ -134,9 +147,9 @@ async function runVisitIntelDailyDigest(options = {}) {
     ok: true,
     dryRun,
     dayKey: built.dayKey,
-    recapCount: built.recapRows.length,
+    recapCount: enrichedRows.length,
     boardSnapshot: built.boardSnapshot,
-    recapRows: built.recapRows,
+    recapRows: enrichedRows,
     emailDigest,
   };
 }
@@ -195,10 +208,12 @@ async function maybeSendEmailDigest(result, built, options = {}) {
   const dryRun = Boolean(options.dryRun);
   const sendEmail = options.sendEmail !== false;
   if (!sendEmail || !built.recapRows.length) return;
+  const asOf = options.asOf ? new Date(options.asOf) : new Date();
+  const enrichedRows = enrichRecapRowsWithMovementNarratives(built.recapRows, asOf);
   try {
     const { sendVisitIntelWeeklyDigest } = require("./visit-intel-email-digest");
     result.emailDigest = await sendVisitIntelWeeklyDigest({
-      recapRows: built.recapRows,
+      recapRows: enrichedRows,
       weekKey: built.weekKey,
       dryRun,
     });
@@ -279,6 +294,7 @@ async function runVisitIntelRecap(options = {}) {
 module.exports = {
   buildWeekendRecapRows,
   buildDailyDigestRows,
+  enrichRecapRowsWithMovementNarratives,
   buildRecapPostText,
   runVisitIntelRecap,
   runVisitIntelDailyDigest,
