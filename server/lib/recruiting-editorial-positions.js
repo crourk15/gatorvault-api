@@ -4,6 +4,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { isPlaceholderSchool } = require('./recruiting-placeholder-school');
 
 /** Younger Prospects — Charles' corrected 2028 positions (18 slugs). */
 const EDITORIAL_2028_YOUNGER_PROSPECTS = new Set([
@@ -87,7 +88,7 @@ function applyEditorialPositionToPlayer(player) {
   if (editorial.stars != null && Number.isFinite(editorial.stars)) {
     out.stars = editorial.stars;
   }
-  if (editorial.school) out.school = editorial.school;
+  if (editorial.school && !isPlaceholderSchool(editorial.school)) out.school = editorial.school;
   if (editorial.state) {
     out.state = editorial.state;
     out.hometownState = editorial.state;

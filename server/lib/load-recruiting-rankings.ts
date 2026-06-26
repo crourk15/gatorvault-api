@@ -7,6 +7,19 @@ import { fileURLToPath } from 'node:url';
 
 export type RecruitingRatingSource = 'on3' | 'seed';
 
+const PLACEHOLDER_RECRUIT_SCHOOL = 'florida hs pipeline';
+
+function isPlaceholderRecruitSchool(school?: string | null): boolean {
+  const s = String(school ?? '').trim().toLowerCase();
+  return !s || s === PLACEHOLDER_RECRUIT_SCHOOL || s === 'florida hs pipelines';
+}
+
+function resolveSchoolLabel(raw?: string | null): string | null {
+  if (isPlaceholderRecruitSchool(raw)) return null;
+  const trimmed = String(raw ?? '').trim();
+  return trimmed || null;
+}
+
 export interface PlayerRankingEntry {
   compositeScore: number | null;
   nationalRank: number | null;
@@ -28,6 +41,33 @@ export function resolveRatingSource(on3Source: unknown): RecruitingRatingSource 
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PLAYERS_PATH = path.join(__dirname, '../data/recruiting/players.json');
+const BOARD_PATH = path.join(__dirname, '../data/recruiting/2028-target-board.json');
+
+interface BoardRow {
+  slug?: string;
+  school?: string | null;
+  state?: string | null;
+  inState?: boolean;
+  rating?: number | null;
+  natlRank?: number | null;
+  posRank?: number | null;
+  stateRank?: number | null;
+  stars?: number | null;
+}
+
+function loadEditorialBoardIndex(): Map<string, BoardRow> {
+  const index = new Map<string, BoardRow>();
+  try {
+    const board = JSON.parse(fs.readFileSync(BOARD_PATH, 'utf8')) as { targets?: BoardRow[] };
+    for (const row of board.targets || []) {
+      const slug = indexKey(row.slug);
+      if (slug) index.set(slug, row);
+    }
+  } catch {
+    /* optional */
+  }
+  return index;
+}
 
 const CACHE_TTL_MS = 60_000;
 let cachedIndex: Map<string, PlayerRankingEntry> | null = null;
@@ -50,6 +90,7 @@ export function loadRecruitingRankings(): Map<string, PlayerRankingEntry> {
   }
 
   const index = new Map<string, PlayerRankingEntry>();
+  const editorial = loadEditorialBoardIndex();
 
   try {
     const players = JSON.parse(fs.readFileSync(PLAYERS_PATH, 'utf8')) as Array<{
@@ -70,16 +111,23 @@ export function loadRecruitingRankings(): Map<string, PlayerRankingEntry> {
     }>;
 
     for (const p of players) {
+      const slugKey = indexKey(p.slug);
+      const board = slugKey ? editorial.get(slugKey) : undefined;
+      const school =
+        resolveSchoolLabel(p.school) ??
+        resolveSchoolLabel(board?.school) ??
+        null;
+      const state = String(p.state || board?.state || '').trim().toUpperCase() || null;
       const entry: PlayerRankingEntry = {
-        compositeScore: normalizeComposite(p.rating),
-        nationalRank: p.natlRank ?? null,
-        positionRank: p.posRank ?? null,
-        stateRank: p.stateRank ?? null,
-        stars: p.stars ?? null,
+        compositeScore: normalizeComposite(p.rating ?? board?.rating),
+        nationalRank: p.natlRank ?? board?.natlRank ?? null,
+        positionRank: p.posRank ?? board?.posRank ?? null,
+        stateRank: p.stateRank ?? board?.stateRank ?? null,
+        stars: p.stars ?? board?.stars ?? null,
         classYear: p.classYear ?? null,
         ratingSource: resolveRatingSource(p.on3Source),
-        school: p.school ?? null,
-        inState: Boolean(p.inState) || String(p.state || '').toUpperCase() === 'FL',
+        school,
+        inState: board?.inState != null ? Boolean(board.inState) : state === 'FL',
         position: p.pos ? String(p.pos).trim().toUpperCase() : null,
       };
 

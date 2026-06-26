@@ -69,6 +69,14 @@ async function fetchTeamVisits(classYear) {
   return flattenVisits(pp);
 }
 
+function stateFromHighSchoolSlug(slug) {
+  const parts = String(slug || '')
+    .split('-')
+    .filter(Boolean);
+  const last = parts[parts.length - 1];
+  return /^[a-z]{2}$/i.test(last) ? last.toUpperCase() : null;
+}
+
 async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
   if (!recruitSlug) return null;
   const year = parseInt(classYear, 10) || 2027;
@@ -87,6 +95,16 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
     (pp.recruitments || [])[0];
   const rating = pp.rankingsPlayer || recruitment?.rating || {};
 
+  const highSchool = pp.player?.highSchool || null;
+  const schoolName = pp.player?.highSchoolName || highSchool?.name || null;
+  const state =
+    pp.player?.homeTown?.stateAbbr ||
+    pp.player?.hometown?.stateAbbr ||
+    pp.player?.hometown?.state?.abbreviation ||
+    pp.player?.homeTown?.state?.abbreviation ||
+    stateFromHighSchoolSlug(highSchool?.slug) ||
+    null;
+
   return {
     slug: recruitSlug,
     name: pp.player?.fullName || nameFromSlug(recruitSlug) || recruitSlug,
@@ -96,8 +114,10 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
       pp.personSports?.[0]?.position?.abbr ||
       '',
     classYear: recruitment?.year || year,
-    school: pp.player?.highSchoolName || pp.player?.highSchool?.name || null,
-    state: pp.player?.homeTown?.stateAbbr || pp.player?.hometown?.stateAbbr || null,
+    school: schoolName,
+    highSchoolSlug: highSchool?.slug || null,
+    state,
+    hometownCity: pp.player?.homeTown?.city || pp.player?.hometown?.city || null,
     stars: rating.stars ?? rating.consensusStars ?? null,
     rating: rating.consensusRating ?? rating.rating ?? rating.consensusRatingValue ?? null,
     natlRank: rating.nationalRank ?? rating.consensusNationalRank ?? null,
@@ -184,5 +204,6 @@ module.exports = {
   isHighSchoolOrg,
   mapPool,
   resolveRecruitSlug,
-  slugify
+  slugify,
+  stateFromHighSchoolSlug,
 };

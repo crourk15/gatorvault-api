@@ -330,11 +330,12 @@ async function rebuildPlayerIdentityFromOn3(slug, options = {}) {
     }
   }
 
+  const { isPlaceholderSchool } = require('./recruiting-placeholder-school');
+
   const school =
     sanitizeSchoolField(snap?.highSchool) ||
-    sanitizeSchoolField(snap?.hometownState) ||
     sanitizeSchoolField(canonical?.school) ||
-    sanitizeSchoolField(existing?.school);
+    (!isPlaceholderSchool(existing?.school) ? sanitizeSchoolField(existing?.school) : null);
 
   const cleanPlayer = sanitizePlayerFieldsForStore({
     slug: targetSlug,

@@ -18,6 +18,7 @@
     "seed:recruiting": "node scripts/seed-recruiting.js",
     "sync:editorial-positions": "node scripts/sync-underclassmen-editorial-positions.js",
     "sync:allowlist-on3": "node scripts/run-allowlist-on3-sync.js",
+    "sync:allowlist-schools": "node scripts/backfill-allowlist-schools.js --class-year=2028",
     "audit:placeholder-schools": "node scripts/audit-placeholder-schools.js",
     "ingest:on3": "node scripts/run-on3-ingest.js",
     "ingest:on3:baseline": "node scripts/run-on3-ingest.js --baseline",
