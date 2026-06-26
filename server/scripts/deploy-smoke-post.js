@@ -183,14 +183,15 @@ async function main() {
       validate(body) {
         if (!Array.isArray(body?.players)) return 'missing players[] on /api/big-board';
         if (!body.players.length) return 'big-board returned zero players';
-        const sample = body.players[0];
-        if (sample.ufFitScore == null && sample.rank == null) return 'big-board player missing ufFitScore/rank';
+        const withFit = body.players.filter((p) => Number(p.ufFitScore) >= 50);
+        if (!withFit.length) return 'no 2027 big-board player with ufFitScore >= 50 (run seed:uf-fit)';
         return null;
       },
     }),
     await fetchJsonCheck('api-uf-fit-watchlist', `${API_URL}/api/uf-fit/watchlist?class_year=2027&limit=5`, {
       validate(body) {
         if (!Array.isArray(body?.players)) return 'missing players[] on /api/uf-fit/watchlist';
+        if (!body.players.length) return 'uf-fit watchlist empty for 2027 (run seed:uf-fit)';
         return null;
       },
     }),
