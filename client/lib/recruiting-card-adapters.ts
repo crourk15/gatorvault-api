@@ -35,6 +35,7 @@ export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlay
     posRank: isLiveOn3 ? (p.positionRank ?? undefined) : undefined,
     stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
     fitScore: p.ufFitScore ?? undefined,
+    ufStatus: p.ufStatus ?? undefined,
     heatPct: p.discoveryScore > 0 ? p.discoveryScore : undefined,
     heatLabel: 'Discovery',
     ratingLabel: isLiveOn3 ? 'Composite' : 'Vault est.',

@@ -4221,6 +4221,18 @@ a.gv-live-feed__row-title:hover {
   color: #fa4616;
 }
 
+.gv-rb-card__status--eval {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.gv-rb-card__status--priority {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #fbbf24;
+}
+
 /* Classic GatorNation Live (X-style) */
 .gv-live-feed--classic .gv-live-dot {
   display: inline-block;

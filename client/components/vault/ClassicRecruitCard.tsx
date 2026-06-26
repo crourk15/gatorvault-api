@@ -26,6 +26,17 @@ function movementArrow(dir?: 'up' | 'down' | 'flat'): React.ReactNode {
   return null;
 }
 
+function targetStatusChip(player: ClassicRecruitCardPlayer): { label: string; className: string } {
+  const status = String(player.ufStatus || '').toUpperCase();
+  if (status === 'EVAL') {
+    return { label: '📋 Eval', className: 'gv-rb-card__status--eval' };
+  }
+  if (status === 'PRIORITY') {
+    return { label: '⭐ Priority', className: 'gv-rb-card__status--priority' };
+  }
+  return { label: '🎯 Target', className: 'gv-rb-card__status--target' };
+}
+
 function visitBadge(player: ClassicRecruitCardPlayer): string | null {
   const ov = String(player.ufOvStatus || '').toLowerCase();
   if (ov.includes('scheduled') || player.visitStart) return '🔥 Visit Scheduled';
@@ -95,6 +106,7 @@ export function ClassicRecruitCard({
   const isCommit = variant === 'commit' || Boolean(player.isCommittedToUF);
   const resolvedVariant: ClassicCardVariant = isCommit ? 'commit' : 'target';
   const natl = rank ?? player.natlRank ?? player.natl;
+  const statusChip = targetStatusChip(player);
 
   return (
     <article
@@ -142,7 +154,7 @@ export function ClassicRecruitCard({
           {resolvedVariant === 'commit' ? (
             <span className="gv-rb-card__status gv-rb-card__status--commit">🟢 Committed</span>
           ) : (
-            <span className="gv-rb-card__status gv-rb-card__status--target">🎯 Target</span>
+            <span className={`gv-rb-card__status ${statusChip.className}`}>{statusChip.label}</span>
           )}
           {player.commitDate && (
             <span className="gv-rb-card__commit-date">{formatCommitDate(player.commitDate)}</span>
@@ -163,8 +175,8 @@ export function ClassicRecruitCard({
 
         <div className="gv-rb-card__badges">
           {visit && <span className="gv-rb-card__badge gv-rb-card__badge--visit">{visit}</span>}
-          {player.fitScore != null && (
-            <span className="gv-rb-card__badge">Fit {Number(player.fitScore).toFixed(1)}</span>
+          {player.fitScore != null && player.fitScore > 0 && (
+            <span className="gv-rb-card__badge">UF Fit {Math.round(Number(player.fitScore))}</span>
           )}
           {player.staffGrade && <span className="gv-rb-card__badge">Staff {player.staffGrade}</span>}
         </div>

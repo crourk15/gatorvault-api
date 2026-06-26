@@ -48,6 +48,7 @@ export interface RecruitingBoardPlayer {
   commitDate?: string | null;
   inState?: boolean;
   movementDirection?: 'up' | 'down' | 'flat';
+  ufStatus?: string | null;
   /** Card display overrides (Early Discovery, etc.) */
   heatPct?: number;
   heatLabel?: string;

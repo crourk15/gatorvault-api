@@ -25,7 +25,11 @@ function load2028BoardBySlug() {
 async function runEarlyDiscoveryJob({ classYearGte = 2028, dryRun = false } = {}) {
   const { db } = require("../models/db.ts");
   const { updateDiscoveryScore } = require("../models/highschool-profile.ts");
-  const { upsertUFSpecificProfile } = require("../models/uf-specific-profile.ts");
+  const {
+    getUFSpecificProfileByPlayerId,
+    updateUfStatus,
+    upsertUFSpecificProfile,
+  } = require("../models/uf-specific-profile.ts");
 
   const boardBySlug = load2028BoardBySlug();
 
@@ -84,12 +88,20 @@ async function runEarlyDiscoveryJob({ classYearGte = 2028, dryRun = false } = {}
       });
 
       if (score >= 60) {
-        await upsertUFSpecificProfile({
-          player_id: row.id,
-          uf_status: score >= 75 ? "TARGET" : "EVAL",
-          uf_fit_score: null,
-          metadata: { earlyDiscovery: true, discoveryScore: score },
-        }).catch(() => null);
+        const ufStatus = score >= 75 ? "TARGET" : "EVAL";
+        const promoteUfStatus = async () => {
+          const existing = await getUFSpecificProfileByPlayerId(row.id);
+          if (existing) {
+            await updateUfStatus(row.id, ufStatus);
+            return;
+          }
+          await upsertUFSpecificProfile({
+            player_id: row.id,
+            uf_status: ufStatus,
+            metadata: { earlyDiscovery: true, discoveryScore: score },
+          });
+        };
+        await promoteUfStatus().catch(() => null);
         promoted += 1;
       }
     }
