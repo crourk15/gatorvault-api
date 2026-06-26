@@ -299,6 +299,13 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const delta7dBySlug = new Map(
         rollingRows.map((row) => [row.slug, row.delta7d])
       );
+      const ufTrendSnapshot = require('../../lib/uf-trend-snapshot');
+      const snapshotDeltaBySlug = ufTrendSnapshot.buildDelta7dBySlug(targetSlugs);
+      const mergedDelta7dBySlug = ufTrendSnapshot.mergeDelta7dMaps(
+        delta7dBySlug,
+        snapshotDeltaBySlug,
+        targetSlugs
+      );
 
       const predictionBySlug = new Map<string, (typeof serialized)[number]>();
       for (const p of serialized) {
@@ -341,7 +348,7 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
           headliner: Boolean(target.headliner),
         });
         const ufProbability = resolvedUf.value;
-        const delta7d = delta7dBySlug.get(slug) ?? model?.delta ?? 0;
+        const delta7d = mergedDelta7dBySlug.get(slug) ?? model?.delta ?? 0;
         const movementDelta = delta7d;
         const fitScore = Math.round(model?.ufFitScore ?? target.rating ?? compositeScore ?? 0);
         const staffConfidence = Math.round(
@@ -460,17 +467,17 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       const visitRecapEnriched = movementNarrativeLib.enrichVisitRecapRows(
         visitRecap,
         visitLogs,
-        delta7dBySlug
+        mergedDelta7dBySlug
       );
       const flipWatch = movementNarrativeLib.enrichFlipWatchRows(
         flipWatchRaw,
         visitLogs,
-        delta7dBySlug
+        mergedDelta7dBySlug
       );
       const movementNarratives = movementNarrativeLib.buildNarrativeFeed(
         playersWithVerifiedVisits,
         visitLogs,
-        delta7dBySlug
+        mergedDelta7dBySlug
       );
       const visitBoardSnapshot = getVisitIntelBoardSnapshot(visitLogs);
 

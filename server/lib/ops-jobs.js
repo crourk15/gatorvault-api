@@ -268,6 +268,18 @@ const JOBS = {
       });
     }
   },
+  'uf-trend-snapshot': {
+    label: 'FutureCast daily UF % trend snapshots',
+    subsystem: 'cron:uf-trend-snapshot',
+    schedule: 'Daily 15:00 UTC Render cron',
+    async run(opts = {}) {
+      const { runDailyUfTrendSnapshot } = require('./uf-trend-snapshot');
+      return runDailyUfTrendSnapshot({
+        dryRun: opts.dryRun === true,
+        asOf: opts.asOf,
+      });
+    }
+  },
   'self-runner-purge-legacy-dedupe': {
     label: 'Reject legacy addDedupeRule Self-Runner proposals',
     subsystem: 'self-runner:cleanup',

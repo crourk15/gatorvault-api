@@ -95,6 +95,15 @@ function runVerifyVisitIntelApi() {
     failed++;
   }
   if (
+    !check('uf-trend-snapshot', () => {
+      const { computeDelta7d, buildDelta7dBySlug } = require('../lib/uf-trend-snapshot');
+      assert.equal(typeof computeDelta7d, 'function');
+      assert.equal(typeof buildDelta7dBySlug, 'function');
+    })
+  ) {
+    failed++;
+  }
+  if (
     !check('push-alert-service', () => {
       const { pushEnabled, buildScheduledPayload, buildCancelledPayload } = require('../lib/push-alert-service');
       assert.equal(typeof buildScheduledPayload, 'function');

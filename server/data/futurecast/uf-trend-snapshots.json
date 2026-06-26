@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-26T01:59:19.311Z",
+  "snapshots": {
+    "kamauri-whitfield": [
+      {
+        "date": "2026-06-19",
+        "ufPct": 56
+      },
+      {
+        "date": "2026-06-26",
+        "ufPct": 62
+      }
+    ],
+    "easton-royal": [
+      {
+        "date": "2026-06-19",
+        "ufPct": 42
+      },
+      {
+        "date": "2026-06-26",
+        "ufPct": 48
+      }
+    ],
+    "raheem-floyd": [
+      {
+        "date": "2026-06-19",
+        "ufPct": 49
+      },
+      {
+        "date": "2026-06-26",
+        "ufPct": 55
+      }
+    ],
+    "jalen-brewster": [
+      {
+        "date": "2026-06-19",
+        "ufPct": 32
+      },
+      {
+        "date": "2026-06-26",
+        "ufPct": 38
+      }
+    ]
+  }
+}

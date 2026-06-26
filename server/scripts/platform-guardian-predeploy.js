@@ -29,6 +29,8 @@ function runVerifyServerModules() {
     'lib/alert-email-prefs-service.js',
     'lib/visit-intel-email-digest.js',
     'lib/movement-narrative.js',
+    'lib/uf-trend-snapshot.js',
+    'lib/uf-trend-snapshot-build.js',
   ];
   const errors = [];
   for (const rel of modules) {
