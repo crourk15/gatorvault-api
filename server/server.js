@@ -163,6 +163,13 @@ mountXAutoposterRoutes(app);
 mountMonitoringRoutes(app);
 mountAdminRoutes(app);
 mountAdminHubRoutes(app);
+try {
+  require('tsx/cjs');
+  const { mountAdminEngineRoutes } = require('./api/v1/admin/run-engines.ts');
+  mountAdminEngineRoutes(app);
+} catch (err) {
+  console.warn('[admin-engines] not mounted:', err.message);
+}
 mountFilmRoomKnowledgeRoutes(app);
 mountNilRoutes(app);
 mountOpsRoutes(app);

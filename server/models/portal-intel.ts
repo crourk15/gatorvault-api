@@ -161,11 +161,17 @@ export async function listPortalCandidates(
 
   const where = `WHERE ${conditions.join(' AND ')}`;
 
+  let limitSql = '';
+  if (filters.limit != null && filters.limit > 0) {
+    limitSql = ` LIMIT $${idx++}`;
+    params.push(filters.limit);
+  }
+
   const { rows } = await db.query<PortalIntelDbRow>(
     `
     ${PORTAL_INTEL_SELECT}
     ${where}
-    ORDER BY p.class_year DESC, p.full_name ASC
+    ORDER BY p.class_year DESC, p.full_name ASC${limitSql}
     `,
     params
   );
