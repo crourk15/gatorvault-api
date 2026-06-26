@@ -326,3 +326,27 @@ services:
       - key: MONITORING_CRON_SECRET
         sync: false
 
+  - type: cron
+    name: gatorvault-api-uf-fit-seed
+    schedule: "0 4 * * 0"
+    runtime: node
+    region: oregon
+    startCommand: node server/scripts/render-uf-fit-seed-cron.js
+    envVars:
+      - key: UF_FIT_SEED_CLASS_YEAR
+        value: "2027"
+      - key: DATABASE_URL
+        sync: false
+
+  - type: cron
+    name: gatorvault-api-early-discovery
+    schedule: "0 5 * * 0"
+    runtime: node
+    region: oregon
+    startCommand: node server/scripts/render-early-discovery-cron.js
+    envVars:
+      - key: EARLY_DISCOVERY_CLASS_YEAR_GTE
+        value: "2028"
+      - key: DATABASE_URL
+        sync: false
+

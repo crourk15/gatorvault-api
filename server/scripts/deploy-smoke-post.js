@@ -195,6 +195,13 @@ async function main() {
         return null;
       },
     }),
+    await fetchJsonCheck('api-early-discovery', `${API_URL}/api/futurecast/early-discovery?class_year_gte=2028&limit=5`, {
+      validate(body) {
+        if (!body?.ok) return 'early-discovery not ok';
+        if (!Array.isArray(body?.players)) return 'missing players[] on /api/futurecast/early-discovery';
+        return null;
+      },
+    }),
     await fetchCheck('vault-futurecast-big-board', `${SITE_URL}/vault/futurecast/big-board/`, {
       headers: { 'User-Agent': CRAWLER_UA },
       expectIncludes: ['FutureCast Big Board', 'vault-futurecast-big-board'],

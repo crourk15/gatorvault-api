@@ -280,6 +280,32 @@ const JOBS = {
       });
     }
   },
+  'uf-fit-seed': {
+    label: 'Weekly UF Fit sub-score seed for target board',
+    subsystem: 'cron:uf-fit-seed',
+    schedule: 'Weekly Sunday 04:00 UTC Render cron',
+    async run(opts = {}) {
+      const { spawnSync } = require('child_process');
+      const path = require('path');
+      const classYear = opts.classYear || 2027;
+      const args = ['--import', 'tsx', path.join(__dirname, 'seed-uf-fit-scores.js'), `--class-year=${classYear}`];
+      if (opts.dryRun === true) args.push('--dry-run');
+      const result = spawnSync(process.execPath, args, { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
+      return { ok: result.status === 0, classYear, dryRun: opts.dryRun === true };
+    }
+  },
+  'early-discovery': {
+    label: 'Weekly Early Discovery score recompute (2028+ HS)',
+    subsystem: 'cron:early-discovery',
+    schedule: 'Weekly Sunday 05:00 UTC Render cron',
+    async run(opts = {}) {
+      const { runEarlyDiscoveryJob } = require('../lib/early-discovery-run.js');
+      return runEarlyDiscoveryJob({
+        classYearGte: opts.classYearGte || 2028,
+        dryRun: opts.dryRun === true,
+      });
+    }
+  },
   'on3-rpm-allowlist-sync': {
     label: 'On3 RPM UF % gap-fill for allowlist targets missing Rivals PM',
     subsystem: 'cron:on3-rpm-allowlist',
