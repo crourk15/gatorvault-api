@@ -44,7 +44,7 @@ export function enrichWithRankings<T extends Record<string, unknown>>(
 ): T & RankingFields {
   const r = lookupRanking(player);
   const compositeScore = r?.compositeScore ?? 0;
-  const { applyEditorialPositionToPlayer } = require('../lib/recruiting-editorial-positions') as {
+  const { applyEditorialPositionToPlayer } = require('../../lib/recruiting-editorial-positions') as {
     applyEditorialPositionToPlayer: (p: Record<string, unknown>) => Record<string, unknown>;
   };
 
