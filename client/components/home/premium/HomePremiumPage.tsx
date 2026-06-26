@@ -18,6 +18,12 @@ import {
   type HighPriorityIntelItem,
 } from '@/lib/recruiting-ui-api';
 import { fetchFutureCastHome, type FutureCastHomeResponse } from '@/lib/futurecast-home-api';
+import {
+  fetchHighPriorityTargets,
+  type FlipWatchRow,
+  type HighPriorityResponse,
+  type VisitRecapRow,
+} from '@/lib/futurecast-high-priority-api';
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
 import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 import {
@@ -59,6 +65,7 @@ export function HomePremiumPage(): React.ReactElement {
     readBootMetrics
   );
   const [futureCastHome, setFutureCastHome] = useState<FutureCastHomeResponse | null>(null);
+  const [highPriority, setHighPriority] = useState<HighPriorityResponse | null>(null);
   const [loading, setLoading] = useState(() => !readBootMetrics());
   const [beatReady, setBeatReady] = useState(() => readBootBeat().length > 0);
 
@@ -88,15 +95,17 @@ export function HomePremiumPage(): React.ReactElement {
     const poll = warmPollProfile();
     try {
       const year = ACTIVE_RECRUITING_CLASS_YEAR;
-      const [ticker, intel, movement, beat, recruitingBoard, metrics, fcHome] = await Promise.all([
-        fetchWithWarmPoll(() => fetchRecruitingHubTicker(year), poll).catch(() => []),
-        fetchWithWarmPoll(() => fetchHighPriorityIntel(), poll).catch(() => []),
-        fetchWithWarmPoll(() => fetchMovementIntel(), poll).catch(() => null),
-        fetchWithWarmPoll(() => fetchBeatIntel(), poll).catch(() => []),
-        fetchWithWarmPoll(() => fetchRecruitingBoard(year), poll).catch(() => null),
-        fetchWithWarmPoll(() => fetchClassMetrics(), poll).catch(() => null),
-        fetchWithWarmPoll(() => fetchFutureCastHome(), poll).catch(() => null),
-      ]);
+      const [ticker, intel, movement, beat, recruitingBoard, metrics, fcHome, hpTargets] =
+        await Promise.all([
+          fetchWithWarmPoll(() => fetchRecruitingHubTicker(year), poll).catch(() => []),
+          fetchWithWarmPoll(() => fetchHighPriorityIntel(), poll).catch(() => []),
+          fetchWithWarmPoll(() => fetchMovementIntel(), poll).catch(() => null),
+          fetchWithWarmPoll(() => fetchBeatIntel(), poll).catch(() => []),
+          fetchWithWarmPoll(() => fetchRecruitingBoard(year), poll).catch(() => null),
+          fetchWithWarmPoll(() => fetchClassMetrics(), poll).catch(() => null),
+          fetchWithWarmPoll(() => fetchFutureCastHome(), poll).catch(() => null),
+          fetchWithWarmPoll(() => fetchHighPriorityTargets(year), poll).catch(() => null),
+        ]);
       setHubTicker(ticker);
       setHpIntel(intel);
       setMovementIntel(movement);
@@ -104,6 +113,7 @@ export function HomePremiumPage(): React.ReactElement {
       setBoard(recruitingBoard);
       setClassMetrics(metrics);
       setFutureCastHome(fcHome);
+      setHighPriority(hpTargets);
     } finally {
       if (isInitial) {
         setLoading(false);
@@ -129,9 +139,25 @@ export function HomePremiumPage(): React.ReactElement {
     };
   }, [load]);
 
+  const flipWatch = useMemo<FlipWatchRow[]>(
+    () => highPriority?.flipWatch ?? [],
+    [highPriority]
+  );
+  const visitRecap = useMemo<VisitRecapRow[]>(
+    () => highPriority?.visitRecap ?? [],
+    [highPriority]
+  );
+
   const heroTickerItems = useMemo(
-    () => buildHeroTickerFromTrust({ hubTicker, hpIntel, movement: movementIntel }),
-    [hubTicker, hpIntel, movementIntel]
+    () =>
+      buildHeroTickerFromTrust({
+        hubTicker,
+        hpIntel,
+        movement: movementIntel,
+        flipWatch,
+        visitRecap,
+      }),
+    [hubTicker, hpIntel, movementIntel, flipWatch, visitRecap]
   );
   const gameDay = useMemo(() => buildGameDayView(), []);
 
@@ -154,6 +180,8 @@ export function HomePremiumPage(): React.ReactElement {
         gameDay={gameDay}
         recruitingMetrics={recruitingMetrics}
         futureCastTargets={futureCastTargets}
+        flipWatch={flipWatch}
+        visitRecap={visitRecap}
         beatPosts={beatPosts}
         loading={loading}
         beatLoading={!beatReady}

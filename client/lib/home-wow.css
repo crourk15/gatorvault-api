@@ -664,6 +664,83 @@
   width: 18px;
 }
 
+/* Verified visit intel preview */
+.home-wow-visit-intel__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.home-wow-visit-intel__stat {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.home-wow-visit-intel__stat strong {
+  color: var(--home-gator-blue);
+  margin-left: 4px;
+}
+
+.home-wow-visit-intel__list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.home-wow-visit-intel__row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(0, 33, 165, 0.04);
+  border: 1px solid rgba(0, 33, 165, 0.08);
+}
+
+.home-wow-visit-intel__badge {
+  flex-shrink: 0;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.home-wow-visit-intel__badge--flip {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.home-wow-visit-intel__badge--recap {
+  background: #eff6ff;
+  color: var(--home-gator-blue);
+}
+
+.home-wow-visit-intel__name {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--home-card-text);
+}
+
+.home-wow-visit-intel__meta {
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.home-wow-visit-intel__empty {
+  padding: 8px 0;
+}
+
 @media (max-width: 767px) {
   .home-wow-beat-grid,
   .home-wow-beat-grid--boot {

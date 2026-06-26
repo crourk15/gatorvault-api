@@ -5,6 +5,7 @@ import type { FutureCastHomeResponse } from '@/lib/futurecast-home-api';
 import type { FeedPrediction } from '@/lib/predictions-api';
 import type { LivePanelProps } from '@/lib/gatornation-live-types';
 import type { BeatIntelItem, HighPriorityIntelItem } from '@/lib/recruiting-ui-api';
+import type { FlipWatchRow, VisitRecapRow } from '@/lib/futurecast-high-priority-api';
 import type { MovementIntelResponse } from '@/lib/movement-intel-types';
 import { movementDelta7d } from '@/lib/movement-intel-types';
 import { SCHEDULE_GAMES } from '@/lib/schedule-data';
@@ -149,6 +150,8 @@ export type HomeTrustTickerInput = {
   hubTicker: string[];
   hpIntel: HighPriorityIntelItem[];
   movement: MovementIntelResponse | null;
+  flipWatch?: FlipWatchRow[];
+  visitRecap?: VisitRecapRow[];
 };
 
 const HOME_TICKER_FALLBACKS = [
@@ -179,8 +182,30 @@ export function buildHeroTickerFromTrust(input: HomeTrustTickerInput): string[] 
       const ufPct = Math.round(player.ufProb <= 1 ? player.ufProb * 100 : player.ufProb);
       return `${player.name} rising — UF at ${ufPct}%`;
     });
+  const fromFlipWatch = (input.flipWatch ?? [])
+    .slice(0, 2)
+    .map((row) => {
+      const score = row.flipScore != null ? ` · Flip ${row.flipScore}` : '';
+      return `Flip Watch: ${row.name} (${row.committedShort})${score}`;
+    });
+  const fromVisitRecap = (input.visitRecap ?? [])
+    .slice(0, 2)
+    .map((row) => {
+      const range =
+        row.visitEnd && row.visitEnd !== row.visitStart
+          ? `${row.visitStart}–${row.visitEnd}`
+          : row.visitStart;
+      return `Verified OV: ${row.name} (${range})`;
+    });
 
-  const combined = [...fromHub, ...fromHp, ...fromAlerts, ...fromRisers];
+  const combined = [
+    ...fromHub,
+    ...fromFlipWatch,
+    ...fromVisitRecap,
+    ...fromHp,
+    ...fromAlerts,
+    ...fromRisers,
+  ];
   const unique = [...new Set(combined)].slice(0, 6);
   if (unique.length > 0) return unique;
   return [...HOME_TICKER_FALLBACKS];
