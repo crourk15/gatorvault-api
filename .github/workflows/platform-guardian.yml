@@ -23,6 +23,8 @@ jobs:
           cache-dependency-path: server/package.json
       - name: Install dependencies
         run: npm ci || npm install
+      - name: Encoding + FutureCast mount guard
+        run: node scripts/encoding-check.js --mount
       - name: Platform guardian pre-deploy (wiring + blueprints + schemas)
         run: node scripts/platform-guardian-predeploy.js --json
       - name: Block deploy if guardian fails

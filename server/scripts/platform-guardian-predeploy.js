@@ -62,9 +62,11 @@ async function runSmokeChecks() {
   const autoposter = runVerifyAutoposterGuard();
   if (!autoposter.ok) errors.push('autoposter-guard smoke failed');
 
-  const { runEncodingCheck } = require('./encoding-check');
+  const { runEncodingCheck, runFutureCastMountCheck } = require('./encoding-check');
   const encoding = runEncodingCheck();
   if (!encoding.ok) errors.push(...encoding.errors.map((e) => `encoding: ${e}`));
+  const mount = runFutureCastMountCheck();
+  if (!mount.ok) errors.push(...mount.errors);
 
   const modules = runVerifyServerModules();
   if (!modules.ok) errors.push(...modules.errors);

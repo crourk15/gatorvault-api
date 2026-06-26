@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+# Block UTF-16 source files and broken FutureCast API mounts before commit.
+set -e
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
+node server/scripts/encoding-check.js --staged --mount

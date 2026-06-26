@@ -10,6 +10,8 @@
     "clean:publish": "node scripts/clean-publish-artifacts.js",
     "deploy:netlify:full": "node scripts/deploy-netlify-full.js",
     "deploy:netlify:local": "node scripts/deploy-netlify-full.js --skip-deploy --skip-purge",
+    "verify:encoding": "node server/scripts/encoding-check.js --mount",
+    "hooks:install": "node server/scripts/install-git-hooks.js",
     "deploy:guardian": "node server/scripts/deploy-guardian.js --phase=pre --api",
     "deploy:guardian:static": "node server/scripts/deploy-guardian.js --phase=pre --static --skip-api",
     "deploy:smoke": "node server/scripts/deploy-smoke-post.js",
