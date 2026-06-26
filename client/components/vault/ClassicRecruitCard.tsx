@@ -11,7 +11,7 @@ import {
   starsDisplay,
 } from '@/lib/recruiting-board-utils';
 import { playerProfilePath, recruitingProfileLifecycle } from '@/lib/player-routes';
-import { formatRecruitSchoolLabel } from '@/lib/recruiting-display-utils';
+import { formatRecruitSchoolLine } from '@/lib/recruiting-display-utils';
 
 export type ClassicCardVariant = 'commit' | 'target';
 
@@ -59,14 +59,8 @@ function heatMeter(pct: number, label = 'UF interest'): React.ReactElement {
 }
 
 function schoolLine(player: ClassicRecruitCardPlayer): string {
-  const school = formatRecruitSchoolLabel(player.school);
   const city = (player as { city?: string }).city?.trim();
-  const state = player.state?.trim();
-  const parts: string[] = [];
-  if (school) parts.push(school);
-  if (city) parts.push(city);
-  if (state) parts.push(state);
-  return parts.length ? parts.join(' · ') : '—';
+  return formatRecruitSchoolLine(player.school, player.state, city);
 }
 
 /** Classic rating-hero card — no headshots, no initials. Vault-wide default. */
