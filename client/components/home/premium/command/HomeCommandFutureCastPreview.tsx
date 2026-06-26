@@ -1,8 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import type { HomeFutureCastTargetView } from '@/components/home/premium/command/home-command-utils';
 import { VAULT_PILLAR_ROUTES } from '@/lib/vault-route-map';
+import {
+  getPortalSeasonState,
+  primaryRecruitingClassYear,
+  shouldShowPortalWatchlist,
+} from '@/lib/recruiting-cycle';
 
 type Props = {
   targets: HomeFutureCastTargetView[];
@@ -61,6 +66,15 @@ function TargetSlide({ target }: { target: HomeFutureCastTargetView }): React.Re
 export function HomeCommandFutureCastPreview({ targets, loading }: Props): React.ReactElement {
   const [activeIndex, setActiveIndex] = useState(0);
   const slides = targets.slice(0, 6);
+  const discoveryFocus = useMemo(
+    () => !shouldShowPortalWatchlist(getPortalSeasonState()),
+    []
+  );
+  const discoveryYear = primaryRecruitingClassYear();
+  const labHref = discoveryFocus ? '/vault/futurecast/big-board' : VAULT_PILLAR_ROUTES.futurecast;
+  const labLabel = discoveryFocus
+    ? `Open ${discoveryYear} Early Discovery →`
+    : 'Open FutureCast Lab →';
 
   useEffect(() => {
     if (slides.length <= 1) return undefined;
@@ -75,8 +89,14 @@ export function HomeCommandFutureCastPreview({ targets, loading }: Props): React
   return (
     <>
       <div className="home-wow-section-header">
-        <h2 className="home-wow-section-title">FutureCast Preview</h2>
-        <p className="home-wow-section-subtitle">Top UF leaners from the FutureCast model.</p>
+        <h2 className="home-wow-section-title">
+          {discoveryFocus ? `${discoveryYear} Early Discovery` : 'FutureCast Preview'}
+        </h2>
+        <p className="home-wow-section-subtitle">
+          {discoveryFocus
+            ? '2027 board plus underclassmen ranked by discovery score — Vault est. until On3 sync.'
+            : 'Top UF leaners from the FutureCast model.'}
+        </p>
       </div>
       <section className="home-wow-card" data-testid="home-futurecast-preview" data-home-boot="futurecast-preview">
         {loading ? (
@@ -101,8 +121,8 @@ export function HomeCommandFutureCastPreview({ targets, loading }: Props): React
         ) : slides.length === 0 ? (
           <div className="home-wow-fc-empty">
             <p className="home-wow-empty">Top UF leaners from the FutureCast model.</p>
-            <a href={VAULT_PILLAR_ROUTES.futurecast} className="home-wow-cta-link">
-              Open FutureCast Lab →
+            <a href={labHref} className="home-wow-cta-link">
+              {labLabel}
             </a>
           </div>
         ) : (
@@ -122,8 +142,8 @@ export function HomeCommandFutureCastPreview({ targets, loading }: Props): React
                 ))}
               </div>
             ) : null}
-            <a href={VAULT_PILLAR_ROUTES.futurecast} className="home-wow-cta-link">
-              Open FutureCast Lab →
+            <a href={labHref} className="home-wow-cta-link">
+              {labLabel}
             </a>
           </>
         )}

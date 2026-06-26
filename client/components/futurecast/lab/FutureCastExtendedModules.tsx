@@ -17,6 +17,12 @@ import { UfTrendSparkline } from '@/components/futurecast/UfTrendSparkline';
 import { PlayerIntelTimelineStrip } from './PlayerIntelTimelineStrip';
 import { ufPctFromFc, isBattleTarget } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
+import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
+import {
+  getPortalSeasonState,
+  primaryRecruitingClassYear,
+  shouldShowPortalWatchlist,
+} from '@/lib/recruiting-cycle';
 
 type Props = {
   masterBoard: MasterBoardResponse;
@@ -330,9 +336,33 @@ export function FutureCastExtendedModules({
   }, [movementIntel, flipWatch, visitRecap, upcomingVisitIntel, movementNarratives]);
 
   const fitLeaders = highPriority.slice(0, 3);
+  const discoveryFocus = useMemo(
+    () => !shouldShowPortalWatchlist(getPortalSeasonState()),
+    []
+  );
+  const discoveryYear = primaryRecruitingClassYear();
 
   return (
     <>
+      {discoveryFocus ? (
+        <FutureCastPanelShell
+          title={`${discoveryYear} Early Discovery`}
+          sub="Underclassmen ranked by discovery score — Vault est. ratings until On3 sync."
+          testId="fc-lab-early-discovery"
+          action={
+            <a href="/vault/futurecast/big-board" className="rh-cc-link">
+              Full board →
+            </a>
+          }
+        >
+          <EarlyDiscoveryPreview
+            query={{ class_year_gte: discoveryYear, limit: 4 }}
+            footerHref="/vault/futurecast/big-board"
+            footerLabel="Open Early Discovery board →"
+          />
+        </FutureCastPanelShell>
+      ) : null}
+
       <FutureCastPanelShell
         title="Younger Prospects — Underclassmen Watchboard"
         sub="2028–2030 early intel from FutureCast discovery pipeline."
