@@ -365,10 +365,12 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
               100
           ) / 100;
 
-        const trendHistory = (historyMap.get(model?.playerId ?? '') ?? []).map((h) => ({
+        const pgTrendHistory = (historyMap.get(model?.playerId ?? '') ?? []).map((h) => ({
           date: h.date,
           confidence: h.confidence,
         }));
+        const snapshotTrendHistory = ufTrendSnapshot.buildTrendHistoryForSlug(slug);
+        const trendHistory = ufTrendSnapshot.mergeTrendHistories(pgTrendHistory, snapshotTrendHistory);
 
         return {
           id: slug,

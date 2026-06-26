@@ -6,6 +6,8 @@ const {
   upsertSnapshot,
   computeDelta7d,
   buildDelta7dBySlug,
+  buildTrendHistoryForSlug,
+  mergeTrendHistories,
   mergeDelta7dMaps,
   backfillBaseline,
   SNAPSHOT_PATH,
@@ -28,6 +30,19 @@ describe("uf-trend-snapshot", () => {
     assert.equal(merged.get("merge-player"), 8);
   });
 
+  it("builds 30d trend history from snapshots", () => {
+    upsertSnapshot("trend-player", 42, "2026-06-19");
+    upsertSnapshot("trend-player", 48, "2026-06-26");
+    const history = buildTrendHistoryForSlug("trend-player", {
+      asOf: new Date("2026-06-26T12:00:00Z"),
+    });
+    assert.equal(history.length, 2);
+    assert.equal(history[0].confidence, 42);
+    assert.equal(history[1].confidence, 48);
+    const merged = mergeTrendHistories([], history);
+    assert.equal(merged.length, 2);
+  });
+
   it("backfills baseline pair", () => {
     backfillBaseline("baseline-player", {
       currentPct: 62,
@@ -39,7 +54,7 @@ describe("uf-trend-snapshot", () => {
 
   it("cleans test snapshots", () => {
     const doc = JSON.parse(fs.readFileSync(SNAPSHOT_PATH, "utf8"));
-    for (const slug of ["test-player", "merge-player", "baseline-player"]) {
+    for (const slug of ["test-player", "merge-player", "baseline-player", "trend-player"]) {
       delete doc.snapshots[slug];
     }
     fs.writeFileSync(SNAPSHOT_PATH, JSON.stringify(doc, null, 2));

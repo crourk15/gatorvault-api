@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TrendingIndicator } from '@/components/futurecast/TrendingIndicator';
+import { UfTrendSparkline } from '@/components/futurecast/UfTrendSparkline';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import {
   FC_METRIC_LABELS,
@@ -43,6 +44,10 @@ export function HighPriorityTargetCard({
         : '—';
   const fitTone = fitMeterTone(player.fitScore);
   const note = player.notePreview ?? player.skinny;
+  const trendValues = useMemo(
+    () => (player.trendHistory ?? []).map((point) => point.confidence),
+    [player.trendHistory]
+  );
 
   return (
     <article
@@ -84,9 +89,10 @@ export function HighPriorityTargetCard({
         )}
 
         <div className="gv-hp-card__metrics">
-          <div className="gv-hp-card__metric">
+          <div className="gv-hp-card__metric gv-hp-card__metric--uf">
             <span className="gv-hp-card__metric-label">{FC_METRIC_LABELS.uf}</span>
             <strong>{formatUfPercent(player.ufProbability)}</strong>
+            {!compact ? <UfTrendSparkline values={trendValues} /> : null}
           </div>
           <div className="gv-hp-card__metric">
             <span className="gv-hp-card__metric-label">{FC_METRIC_LABELS.staff}</span>

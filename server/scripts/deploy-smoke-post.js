@@ -96,6 +96,8 @@ async function main() {
         if (!Array.isArray(body?.flipWatch)) return 'missing flipWatch[]';
         if (!Array.isArray(body?.visitRecap)) return 'missing visitRecap[]';
         if (!Array.isArray(body?.movementNarratives)) return 'missing movementNarratives[]';
+        const withTrend = (body.players || []).some((p) => (p.trendHistory || []).length >= 2);
+        if (!withTrend) return 'no player trendHistory with >= 2 points';
         return null;
       },
     }),

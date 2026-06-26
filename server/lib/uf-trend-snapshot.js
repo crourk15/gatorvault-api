@@ -94,6 +94,33 @@ function computeDelta7d(slug, asOf = new Date()) {
   return Math.round((now - ago) * 10) / 10;
 }
 
+const TREND_HISTORY_DAYS = 30;
+
+function buildTrendHistoryForSlug(slug, { days = TREND_HISTORY_DAYS, asOf = new Date() } = {}) {
+  const cutoff = daysAgoYmd(days, asOf);
+  const today = ymd(asOf);
+  return listSnapshots(slug)
+    .filter((row) => row.date >= cutoff && row.date <= today)
+    .map((row) => ({ date: row.date, confidence: row.ufPct }));
+}
+
+function mergeTrendHistories(primary = [], supplement = []) {
+  const byDate = new Map();
+  for (const row of primary || []) {
+    const date = String(row?.date || "").slice(0, 10);
+    if (!date || !Number.isFinite(Number(row?.confidence))) continue;
+    byDate.set(date, Math.round(Number(row.confidence)));
+  }
+  for (const row of supplement || []) {
+    const date = String(row?.date || "").slice(0, 10);
+    if (!date || !Number.isFinite(Number(row?.confidence))) continue;
+    if (!byDate.has(date)) byDate.set(date, Math.round(Number(row.confidence)));
+  }
+  return [...byDate.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([date, confidence]) => ({ date, confidence }));
+}
+
 function buildDelta7dBySlug(slugs, asOf = new Date()) {
   const map = new Map();
   for (const slug of slugs || []) {
@@ -283,11 +310,14 @@ async function backfillUfTrendSnapshots(options = {}) {
 module.exports = {
   SNAPSHOT_PATH,
   DELTA_WINDOW_DAYS,
+  TREND_HISTORY_DAYS,
   readDoc,
   upsertSnapshot,
   listSnapshots,
   computeDelta7d,
   buildDelta7dBySlug,
+  buildTrendHistoryForSlug,
+  mergeTrendHistories,
   mergeDelta7dMaps,
   backfillBaseline,
   runDailyUfTrendSnapshot,

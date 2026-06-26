@@ -2328,6 +2328,35 @@ body.gv-nav-menu-open {
   color: #fff;
 }
 
+.gv-hp-card__metric--uf {
+  grid-column: span 1;
+}
+
+.gv-uf-trend-sparkline {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  color: #64748b;
+}
+
+.gv-uf-trend-sparkline--up {
+  color: #4ade80;
+}
+
+.gv-uf-trend-sparkline--down {
+  color: #f87171;
+}
+
+.gv-uf-trend-sparkline__label {
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.85;
+}
+
 .gv-hp-card__fit-head {
   display: flex;
   justify-content: space-between;

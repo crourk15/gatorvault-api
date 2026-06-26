@@ -96,9 +96,10 @@ function runVerifyVisitIntelApi() {
   }
   if (
     !check('uf-trend-snapshot', () => {
-      const { computeDelta7d, buildDelta7dBySlug } = require('../lib/uf-trend-snapshot');
+      const { computeDelta7d, buildDelta7dBySlug, buildTrendHistoryForSlug } = require('../lib/uf-trend-snapshot');
       assert.equal(typeof computeDelta7d, 'function');
       assert.equal(typeof buildDelta7dBySlug, 'function');
+      assert.equal(typeof buildTrendHistoryForSlug, 'function');
     })
   ) {
     failed++;

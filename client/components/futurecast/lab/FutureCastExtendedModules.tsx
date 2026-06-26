@@ -13,6 +13,7 @@ import {
 import { FutureCastPanelShell } from './primitives';
 import { GatorVaultConfirmedBadge } from './GatorVaultConfirmedBadge';
 import { FlipWatchScoreStack } from './FlipWatchScoreStack';
+import { UfTrendSparkline } from '@/components/futurecast/UfTrendSparkline';
 import { PlayerIntelTimelineStrip } from './PlayerIntelTimelineStrip';
 import { ufPctFromFc, isBattleTarget } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
@@ -376,6 +377,9 @@ export function FutureCastExtendedModules({
               <FitBar label="Scheme / Fit" value={p.fitScore ?? 0} />
               <FitBar label="Staff confidence" value={p.staffConfidence ?? 0} />
               <FitBar label="UF likelihood" value={p.ufProbability ?? 0} />
+              {(p.trendHistory?.length ?? 0) >= 2 ? (
+                <UfTrendSparkline values={p.trendHistory.map((point) => point.confidence)} />
+              ) : null}
               <FitBar label="Momentum" value={Math.max(0, Math.min(100, (p.movementDelta ?? 0) + 50))} />
             </div>
           ))
