@@ -294,9 +294,18 @@ const JOBS = {
         .filter((n) => Number.isFinite(n) && n > 0);
       const results = [];
       for (const classYear of classYears) {
-        const args = ['--import', 'tsx', path.join(__dirname, 'seed-uf-fit-scores.js'), `--class-year=${classYear}`];
+        const args = [
+          '--import',
+          'tsx',
+          path.join(__dirname, '..', 'scripts', 'seed-uf-fit-scores.js'),
+          `--class-year=${classYear}`,
+        ];
         if (opts.dryRun === true) args.push('--dry-run');
-        const result = spawnSync(process.execPath, args, { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
+        const result = spawnSync(process.execPath, args, {
+          cwd: path.join(__dirname, '..'),
+          stdio: 'inherit',
+          env: process.env,
+        });
         results.push({ classYear, ok: result.status === 0 });
       }
       return { ok: results.every((r) => r.ok), results, dryRun: opts.dryRun === true };
