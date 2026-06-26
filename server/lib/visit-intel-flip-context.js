@@ -72,11 +72,11 @@ function buildFlipWatchUfMaps({
   for (const p of players || []) {
     const key = String(p.slug || "").toLowerCase();
     if (!key) continue;
-    ufBySlug.set(key, p.ufProbability ?? ufBySlug.get(key) ?? null);
-    ufLabelBySlug.set(key, p.ufProbabilityLabel ?? ufLabelBySlug.get(key) ?? null);
+    ufBySlug.set(key, ufBySlug.get(key) ?? p.ufProbability ?? null);
+    ufLabelBySlug.set(key, ufLabelBySlug.get(key) ?? p.ufProbabilityLabel ?? null);
     ufLowConfidenceBySlug.set(
       key,
-      p.ufProbabilityLowConfidence ?? ufLowConfidenceBySlug.get(key) ?? false
+      ufLowConfidenceBySlug.get(key) ?? p.ufProbabilityLowConfidence ?? false
     );
     if (p.name) nameBySlug.set(key, p.name);
     if (p.committedTo) commitBySlug.set(key, p.committedTo);

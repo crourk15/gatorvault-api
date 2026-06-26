@@ -131,6 +131,14 @@ async function main() {
       headers: { 'User-Agent': CRAWLER_UA },
       expectIncludes: ['Verified UF official visit', 'vault-alerts'],
     }),
+    await fetchJsonCheck('api-futurecast-health', `${API_URL}/api/futurecast/health`, {
+      validate(body) {
+        if (!body?.ok) return 'futurecast health not ok';
+        if (!body?.connected) return 'postgres not connected';
+        if ((body.players || 0) < 400) return `expected >=400 players, got ${body.players}`;
+        return null;
+      },
+    }),
     await fetchJsonCheck('api-players-slug-futurecast', `${API_URL}/api/players/slug/raheem-floyd`, {
       validate(body) {
         if (!body?.player?.slug) return 'missing player.slug on /api/players/slug/:slug';

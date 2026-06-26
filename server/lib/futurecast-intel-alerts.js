@@ -12,7 +12,11 @@ const {
 } = require("./visit-intel-utils");
 const { formatUfProbabilityDisplay } = require("./uf-probability-utils");
 const { buildFlipWatchWithUfContext } = require("./visit-intel-flip-context");
+const { loadFuturecastPredictionBySlug } = require("./load-futurecast-prediction-by-slug");
 const intelStore = require("./recruiting-intel-store");
+
+const PREDICTOR_NAMES = { system: "FutureCast Model" };
+const FUTURECAST_CLASS_YEAR = 2027;
 
 const TARGET_BOARD_PATH = path.join(__dirname, "../data/recruiting/2027-target-board.json");
 
@@ -92,10 +96,13 @@ async function buildFutureCastIntelAlerts(options = {}) {
   );
 
   const { buildResolveSlugUfMeta, loadUfPctPredictorsBySlug } = require("./visit-intel-flip-context");
+  const predictionBySlug = await loadFuturecastPredictionBySlug(FUTURECAST_CLASS_YEAR);
   const resolveSlugUfMeta = buildResolveSlugUfMeta({
     recruitingBySlug,
     targetSeedBySlug,
     predictorsBySlug: loadUfPctPredictorsBySlug(),
+    predictionBySlug,
+    predictorNames: PREDICTOR_NAMES,
   });
 
   const players = seedEntries.map((target) => {
@@ -133,6 +140,8 @@ async function buildFutureCastIntelAlerts(options = {}) {
     intelRows: intelStore.loadIntelDoc().items || [],
     recruitingBySlug,
     targetSeedBySlug,
+    predictionBySlug,
+    predictorNames: PREDICTOR_NAMES,
   });
 
   const visitIntel = buildVerifiedVisitIntelRows(players, visitLogs);
