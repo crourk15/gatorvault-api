@@ -23,6 +23,8 @@ export interface EarlyDiscoveryPlayer {
   positionRank?: number | null;
   stateRank?: number | null;
   ratingSource?: RecruitingRatingSource | null;
+  school?: string | null;
+  inState?: boolean;
 }
 
 export interface EarlyDiscoveryQuery {

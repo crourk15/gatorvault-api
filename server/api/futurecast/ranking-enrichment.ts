@@ -13,6 +13,8 @@ export interface RankingFields {
   positionRank: number | null;
   stateRank: number | null;
   ratingSource: RecruitingRatingSource | null;
+  school: string | null;
+  inState: boolean;
   rating?: number | null;
   natlRank?: number | null;
   posRank?: number | null;
@@ -50,6 +52,8 @@ export function enrichWithRankings<T extends Record<string, unknown>>(
     positionRank: r?.positionRank ?? null,
     stateRank: r?.stateRank ?? null,
     ratingSource: r?.ratingSource ?? null,
+    school: r?.school ?? null,
+    inState: r?.inState ?? false,
     rating: r?.compositeScore ?? (player.rating as number | null | undefined) ?? null,
     natlRank: r?.nationalRank ?? (player.natlRank as number | null | undefined) ?? null,
     posRank: r?.positionRank ?? (player.posRank as number | null | undefined) ?? null,

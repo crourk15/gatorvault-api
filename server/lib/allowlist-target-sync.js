@@ -168,7 +168,18 @@ async function syncAllowlistTargetsFromOn3(options = {}) {
   }
 
   console.log('[allowlist-sync] On3 complete', results);
+  clearRankingIndexCache();
   return results;
+}
+
+function clearRankingIndexCache() {
+  try {
+    require('tsx/cjs');
+    const { clearRecruitingRankingsCache } = require('../lib/load-recruiting-rankings.ts');
+    clearRecruitingRankingsCache();
+  } catch {
+    /* optional */
+  }
 }
 
 function loadRivalsCommittedBySlug() {

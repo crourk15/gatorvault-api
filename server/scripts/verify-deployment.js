@@ -15,6 +15,7 @@ const EXPECTED_SERVICES = [
   { name: 'gatorvault-api-hub-refresh', type: 'cron' },
   { name: 'gatorvault-api-visit-intel-reconcile', type: 'cron' },
   { name: 'gatorvault-api-uf-fit-seed', type: 'cron', requiredEnv: ['DATABASE_URL'] },
+  { name: 'gatorvault-api-allowlist-on3-rankings', type: 'cron', requiredEnv: ['MONITORING_CRON_SECRET'] },
   { name: 'gatorvault-api-early-discovery', type: 'cron', requiredEnv: ['DATABASE_URL'] },
   { name: 'gatorvault-api-portal-intelligence', type: 'cron', requiredEnv: ['MONITORING_CRON_SECRET', 'PORTAL_INTEL_RUN_URL'] },
 ];

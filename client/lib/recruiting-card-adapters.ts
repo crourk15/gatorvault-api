@@ -36,6 +36,8 @@ export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlay
     stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
     fitScore: p.ufFitScore ?? undefined,
     ufStatus: p.ufStatus ?? undefined,
+    school: p.school ?? undefined,
+    inState: p.inState ?? undefined,
     heatPct: p.discoveryScore > 0 ? p.discoveryScore : undefined,
     heatLabel: 'Discovery',
     ratingLabel: isLiveOn3 ? 'Composite' : 'Vault est.',
@@ -154,14 +156,27 @@ export function fromPortalWatchlist(
 }
 
 export function fromUfFitWatchlist(p: UfFitWatchlistPlayer): RecruitingBoardPlayer {
+  const isLiveOn3 = p.ratingSource === 'on3';
+  const composite = p.compositeScore ?? undefined;
   return {
     slug: p.slug,
     name: p.fullName,
     tier: 'HIGH',
     position: p.position,
     classYear: p.classYear,
-    natlRank: p.rank,
+    school: p.school ?? undefined,
+    inState: p.inState ?? undefined,
+    stars: p.stars ?? undefined,
+    rating: composite,
+    displayRating: composite,
+    natlRank: isLiveOn3 ? (p.nationalRank ?? undefined) : undefined,
+    posRank: isLiveOn3 ? (p.positionRank ?? undefined) : undefined,
+    stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
     fitScore: p.ufFitScore,
+    heatPct: p.ufFitScore > 0 ? p.ufFitScore : undefined,
+    heatLabel: 'UF Fit',
+    ratingLabel: isLiveOn3 ? 'Composite' : composite != null ? 'Vault est.' : undefined,
+    showIndustryRanks: isLiveOn3,
     movementDirection: p.fitDelta > 0 ? 'up' : p.fitDelta < 0 ? 'down' : 'flat',
     skinny: `UF Fit ${p.ufFitScore} · Δ ${p.fitDelta >= 0 ? '+' : ''}${p.fitDelta} · Vol ${p.fitVolatility}`,
   };

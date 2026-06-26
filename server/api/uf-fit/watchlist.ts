@@ -14,6 +14,7 @@ import {
   parseScoreBound,
   parseUfFitSort,
 } from './utils-api';
+import { enrichWithRankings } from '../futurecast/ranking-enrichment';
 
 export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -62,10 +63,12 @@ export const handleGetUfFitWatchlist = asyncHandler(async (req: Request, res: Re
       }
     });
 
-    const players = enriched.slice(0, limit).map((p, index) => ({
-      ...p,
-      rank: index + 1,
-    }));
+    const players = enriched.slice(0, limit).map((p, index) =>
+      enrichWithRankings({
+        ...p,
+        rank: index + 1,
+      })
+    );
 
     res.json({ players });
   } catch (err) {

@@ -2,6 +2,7 @@
  * UF Fit Intelligence API client.
  */
 import { getApiBase } from './big-board-api';
+import type { RecruitingRatingSource } from './early-discovery-api';
 
 export type FitTier = 'elite' | 'strong' | 'moderate' | 'low';
 export type UfFitWatchlistSort = 'ufFitScore' | 'fitDelta' | 'fitVolatility';
@@ -18,6 +19,14 @@ export interface UfFitWatchlistPlayer {
   fitVolatility: number;
   rank: number;
   lifecycle?: string | null;
+  compositeScore?: number;
+  nationalRank?: number | null;
+  positionRank?: number | null;
+  stateRank?: number | null;
+  stars?: number | null;
+  ratingSource?: RecruitingRatingSource | null;
+  school?: string | null;
+  inState?: boolean;
 }
 
 export interface UfFitHistoryPoint {
