@@ -131,6 +131,12 @@ async function main() {
       headers: { 'User-Agent': CRAWLER_UA },
       expectIncludes: ['Verified UF official visit', 'vault-alerts'],
     }),
+    await fetchJsonCheck('api-players-slug-futurecast', `${API_URL}/api/players/slug/raheem-floyd`, {
+      validate(body) {
+        if (!body?.player?.slug) return 'missing player.slug on /api/players/slug/:slug';
+        return null;
+      },
+    }),
     await fetchCheck('api-recruits-2027', `${API_URL}/api/recruits/2027`, {
       expectIncludes: ['ok', 'recruits', 'compositeScore'],
     }),

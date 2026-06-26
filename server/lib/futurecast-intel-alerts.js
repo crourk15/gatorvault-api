@@ -5,13 +5,13 @@ const fs = require("fs");
 const path = require("path");
 const store = require("./recruiting-store");
 const visitLogStore = require("./recruiting-visit-log-store");
-const { buildFlipWatchRows } = require("./flip-watch-utils");
 const {
   buildVerifiedVisitRecapRows,
   buildVerifiedVisitIntelRows,
   applyVerifiedVisitFields,
 } = require("./visit-intel-utils");
-const { resolveUfProbability } = require("./uf-probability-utils");
+const { formatUfProbabilityDisplay } = require("./uf-probability-utils");
+const { buildFlipWatchWithUfContext } = require("./visit-intel-flip-context");
 const intelStore = require("./recruiting-intel-store");
 
 const TARGET_BOARD_PATH = path.join(__dirname, "../data/recruiting/2027-target-board.json");
@@ -40,6 +40,14 @@ function loadRecruitingBySlug() {
   return map;
 }
 
+function loadTargetSeedBySlug(entries) {
+  const map = new Map();
+  for (const target of entries || []) {
+    if (target?.slug) map.set(target.slug, target);
+  }
+  return map;
+}
+
 function resolveCommittedTo(target, recruiting) {
   return (
     target?.committedTo ||
@@ -63,11 +71,19 @@ function alertRow({ id, slug, name, type, message, createdAt, category }) {
   };
 }
 
+function formatFlipWatchUf(row) {
+  return formatUfProbabilityDisplay({
+    value: row.ufProbability,
+    label: row.ufProbabilityLabel,
+  });
+}
+
 async function buildFutureCastIntelAlerts(options = {}) {
   const asOf = options.asOf ? new Date(options.asOf) : new Date();
   const visitLogs = visitLogStore.loadDoc().items || [];
   const seedEntries = loadTargetBoardEntries();
   const recruitingBySlug = loadRecruitingBySlug();
+  const targetSeedBySlug = loadTargetSeedBySlug(seedEntries);
   const prioritySlugs = seedEntries.map((t) => t.slug).filter(Boolean);
 
   const storePlayers = await store.getAllPlayers();
@@ -75,16 +91,20 @@ async function buildFutureCastIntelAlerts(options = {}) {
     storePlayers.filter((p) => p.slug).map((p) => [String(p.slug).toLowerCase(), p])
   );
 
+  const { buildResolveSlugUfMeta, loadUfPctPredictorsBySlug } = require("./visit-intel-flip-context");
+  const resolveSlugUfMeta = buildResolveSlugUfMeta({
+    recruitingBySlug,
+    targetSeedBySlug,
+    predictorsBySlug: loadUfPctPredictorsBySlug(),
+  });
+
   const players = seedEntries.map((target) => {
-    const slug = String(target.slug || "").toLowerCase();
-    const recruiting = recruitingBySlug.get(slug);
-    const stored = storeBySlug.get(slug);
+    const slug = String(target.slug || "");
+    const key = slug.toLowerCase();
+    const recruiting = recruitingBySlug.get(key);
+    const stored = storeBySlug.get(key);
     const committedTo = resolveCommittedTo(stored || target, recruiting);
-    const resolvedUf = resolveUfProbability({
-      slug: target.slug,
-      ufProbability: stored?.ufProbability ?? target.ufProbability,
-      rivalsUfPct: null,
-    });
+    const resolvedUf = resolveSlugUfMeta(slug);
     const base = {
       slug: target.slug,
       name: target.name,
@@ -103,12 +123,18 @@ async function buildFutureCastIntelAlerts(options = {}) {
     limit: 12,
     prioritySlugs,
   });
-  const flipWatch = buildFlipWatchRows(players, visitRecap, {
+
+  const { flipWatch } = buildFlipWatchWithUfContext({
+    players,
+    visitRecap,
     visitLogs,
     asOf,
     limit: 8,
     intelRows: intelStore.loadIntelDoc().items || [],
+    recruitingBySlug,
+    targetSeedBySlug,
   });
+
   const visitIntel = buildVerifiedVisitIntelRows(players, visitLogs);
 
   const today = asOf.toISOString().slice(0, 10);
@@ -128,7 +154,7 @@ async function buildFutureCastIntelAlerts(options = {}) {
         slug: row.slug,
         name: row.name,
         type: "flip_watch",
-        message: `${row.name} (${row.committedShort}) — Flip score ${row.flipScore ?? "—"} · UF ${row.ufProbability ?? "—"}%`,
+        message: `${row.name} (${row.committedShort}) — Flip score ${row.flipScore ?? "—"} · UF ${formatFlipWatchUf(row)}`,
         createdAt: row.visitEnd || row.visitStart,
         category: "Flip Watch",
       })

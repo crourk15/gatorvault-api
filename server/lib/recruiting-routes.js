@@ -195,10 +195,40 @@ function mountRecruitingRoutes(app) {
 
   app.get('/api/players/:slug', async (req, res) => {
     try {
+      const slug = String(req.params.slug || '').trim();
+      if (!slug) return res.status(400).json({ ok: false, error: 'slug required' });
+
+      const { tryPostgresPlayerBySlug } = require('./player-by-slug-read');
+      const pgHit = await tryPostgresPlayerBySlug(slug);
+
       const gm2 = require('./gm2');
-      const player = await store.getPlayerBySlug(req.params.slug);
-      if (!player) return res.status(404).json({ ok: false, error: 'Player not found' });
-      if (gm2.isPlayerQuarantined(player.slug)) {
+      let player = await store.getPlayerBySlug(slug);
+      if (!player && !pgHit) return res.status(404).json({ ok: false, error: 'Player not found' });
+
+      if (!player && pgHit) {
+        res.setHeader('X-GatorVault-Player-Source', 'postgres');
+        return res.json({
+          ok: true,
+          player: {
+            slug: pgHit.player.slug,
+            name: pgHit.player.fullName,
+            classYear: pgHit.player.classYear,
+            pos: pgHit.player.position,
+            position: pgHit.player.position,
+          },
+          events: [],
+          futurecastPlayer: {
+            id: pgHit.player.id,
+            slug: pgHit.player.slug,
+            fullName: pgHit.player.fullName,
+            classYear: pgHit.player.classYear,
+            position: pgHit.player.position,
+            source: pgHit.source,
+          },
+        });
+      }
+
+      if (player && gm2.isPlayerQuarantined(player.slug)) {
         return res.status(404).json({ ok: false, error: 'Player unavailable' });
       }
       const storeEvents = (await store.getEvents({ limit: 20 }))
@@ -235,7 +265,26 @@ function mountRecruitingRoutes(app) {
       const events = [...intelEvents, ...filtered.events]
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 20);
-      return res.json({ ok: true, player: filtered.player, events });
+      if (pgHit) {
+        res.setHeader('X-GatorVault-Player-Source', 'postgres+json-store');
+      }
+      return res.json({
+        ok: true,
+        player: filtered.player,
+        events,
+        ...(pgHit
+          ? {
+              futurecastPlayer: {
+                id: pgHit.player.id,
+                slug: pgHit.player.slug,
+                fullName: pgHit.player.fullName,
+                classYear: pgHit.player.classYear,
+                position: pgHit.player.position,
+                source: pgHit.source,
+              },
+            }
+          : {}),
+      });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });
     }
