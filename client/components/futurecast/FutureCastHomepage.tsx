@@ -12,7 +12,7 @@ import {
   type CommitSort,
   type FutureCastHomeResponse,
 } from '@/lib/futurecast-home-api';
-import { resolvePortalSeason } from '@/lib/recruiting-cycle';
+import { resolvePortalSeason, shouldShowPortalWatchlist, getPortalSeasonState } from '@/lib/recruiting-cycle';
 import { PortalSeasonDormantCard } from '@/components/futurecast/lab/FutureCastPortalCrossView';
 import type { FeedPrediction } from '@/lib/predictions-api';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
@@ -277,6 +277,18 @@ export function FutureCastHomepage({ mode = 'full' }: { mode?: 'full' | 'master'
           <EmptySection message="No fallers in the current window." />
         )}
       </Section>
+      )}
+
+      {(mode === 'full' || mode === 'master') && !shouldShowPortalWatchlist(getPortalSeasonState()) && (
+        <Section
+          title="2028 Early Discovery"
+          subtitle="Underclassmen ranked by discovery score — Vault est. ratings until On3 sync"
+          testId="home-early-discovery"
+        >
+          <p className="fc-home-section__footer-link">
+            <a href="/vault/futurecast/big-board">Open Early Discovery board →</a>
+          </p>
+        </Section>
       )}
 
       {(mode === 'full' || mode === 'master') && (() => {

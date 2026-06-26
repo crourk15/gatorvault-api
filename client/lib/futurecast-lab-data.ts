@@ -25,6 +25,7 @@ import {
 } from './futurecast-underclassmen-api';
 import { fetchWithWarmPoll } from './api-warm-poll';
 import { snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch';
+import { primaryRecruitingClassYear } from './recruiting-cycle';
 
 const EMPTY_STOCK: StockBoardResponse = { stockUp: [], stockDown: [], windowDays: 7 };
 const EMPTY_HIGH_PRIORITY: HighPriorityResponse = {
@@ -123,11 +124,12 @@ export async function loadFutureCastLabSecondary(
 async function loadFutureCastLabSecondaryRaw(): Promise<
   Omit<FutureCastLabDataMap, 'masterBoard' | 'summary' | 'metrics' | 'heatLevel' | 'lastUpdated'>
 > {
+  const focusYear = primaryRecruitingClassYear();
   const [trendingR, movementR, staffR, homeR, stockR, highPriorityR, underclassmenR] =
     await Promise.allSettled([
       warmFetch<TrendingBoardResponse>('/api/futurecast/trending'),
       warmFetch<MovementIntelResponse>('/api/futurecast/movement-intel'),
-      warmFetch<StaffNotesResponse>('/api/futurecast/staff-notes?year=2027'),
+      warmFetch<StaffNotesResponse>(`/api/futurecast/staff-notes?year=${focusYear}`),
       warmFetch<FutureCastHomeResponse>('/api/futurecast/home'),
       fetchStockBoard().catch(() => EMPTY_STOCK),
       fetchHighPriorityTargets().catch(() => EMPTY_HIGH_PRIORITY),
@@ -155,7 +157,7 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     fitScoreRisks: [],
     alerts: [],
   });
-  const staffNotes = settled(staffR, { classYear: 2027, updatedAt: '', totalNotes: 0, count: 0, notes: [] });
+  const staffNotes = settled(staffR, { classYear: focusYear, updatedAt: '', totalNotes: 0, count: 0, notes: [] });
   const home = settled(homeR, {
     classYear: 2027,
     commitSort: 'fit',

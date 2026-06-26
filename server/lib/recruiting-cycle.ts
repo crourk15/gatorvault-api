@@ -115,3 +115,12 @@ export function resolvePortalSeason(
     showUi: shouldShowPortalWatchlist(state, candidateCount),
   };
 }
+
+export function primaryRecruitingClassYear(at: Date = new Date()): number {
+  const state = getPortalSeasonState(at);
+  return shouldShowPortalWatchlist(state) ? 2027 : 2028;
+}
+
+export function shouldRunPortalIntelJob(at: Date = new Date()): boolean {
+  return getPortalSeasonState(at).active;
+}

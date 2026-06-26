@@ -317,8 +317,17 @@ const JOBS = {
   'portal-intelligence': {
     label: 'Daily portal likelihood recompute for college/portal candidates',
     subsystem: 'cron:portal-intelligence',
-    schedule: 'Daily 06:00 UTC Render cron',
+    schedule: 'Portal windows only (Dec–Jan, Apr–May); skipped off-season',
     async run(opts = {}) {
+      const { shouldRunPortalIntelJob } = require('./recruiting-cycle.ts');
+      if (opts.force !== true && process.env.PORTAL_INTEL_FORCE_RUN !== 'true' && !shouldRunPortalIntelJob()) {
+        return {
+          ok: true,
+          skipped: true,
+          reason: 'portal-window-closed',
+          at: new Date().toISOString(),
+        };
+      }
       require('tsx/cjs');
       const { runPortalIntelJob } = require('../engines/futurecast/portal-intel/pipeline.ts');
       return runPortalIntelJob({

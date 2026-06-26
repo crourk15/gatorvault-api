@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 /**
  * Render cron — POST portal intelligence (Supabase + JSON store).
+ * Skips off-season runs unless PORTAL_INTEL_FORCE_RUN=true.
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+
+const { shouldRunPortalIntelJob } = require('../lib/recruiting-cycle.ts');
 
 const RECONCILE_URL =
   process.env.PORTAL_INTEL_RUN_URL ||
@@ -63,6 +66,14 @@ async function postWithRetry() {
     }
   }
   throw lastErr;
+}
+
+if (process.env.PORTAL_INTEL_FORCE_RUN !== 'true' && !shouldRunPortalIntelJob()) {
+  console.log(
+    '[portal-intel-cron] skipped — portal window closed',
+    JSON.stringify({ at: new Date().toISOString() })
+  );
+  process.exit(0);
 }
 
 postWithRetry()

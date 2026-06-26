@@ -8,6 +8,7 @@ import type {
 } from '@/lib/api/futurecast';
 import type { MasterBoardResponse, MovementIntelResponse } from '@/lib/futurecast-board-types';
 import { formatRelativeUpdated } from '@/components/recruiting-hub/utils/formatDate';
+import { getPortalSeasonState, shouldShowPortalWatchlist } from '@/lib/recruiting-cycle';
 import {
   BattleHeatMeter,
   PositionVolatilityHeatmap,
@@ -108,6 +109,8 @@ export function FutureCastHero({
   }, [masterBoard.players]);
 
   const updatedLabel = lastUpdated ? formatRelativeUpdated(lastUpdated) : 'just now';
+  const portalSeason = useMemo(() => getPortalSeasonState(), []);
+  const portalFocusOffseason = !shouldShowPortalWatchlist(portalSeason);
 
   return (
     <section className="fc-lab-hero fc-lab-bleed" data-testid="fc-lab-hero">
@@ -118,9 +121,17 @@ export function FutureCastHero({
             <p className="fc-lab-hero__eyebrow rh-cc-hero__eyebrow">FutureCast Command Center</p>
             <h1 className="fc-lab-hero__title rh-cc-hero__title">UF FUTURECAST LAB</h1>
             <p className="fc-lab-hero__sub rh-cc-hero__sub">
-              Commit likelihood, movement intel, fit scores, and competing schools for UF&apos;s top
-              targets.
+              {portalFocusOffseason
+                ? '2027 board intel plus 2028 Early Discovery — discovery scores, Vault est. ratings, and UF fit while portal intel is dormant.'
+                : "Commit likelihood, movement intel, fit scores, and competing schools for UF's top targets."}
             </p>
+            {portalFocusOffseason ? (
+              <p className="fc-lab-hero__cta">
+                <a href="/vault/futurecast/big-board" className="rh-cc-link">
+                  Open 2028 Early Discovery board →
+                </a>
+              </p>
+            ) : null}
             <div className="fc-lab-hero__metrics rh-cc-hero__metrics">
               <div className="fc-lab-hero__metric fc-lab-hero__metric--rank rh-cc-hero__metric rh-cc-hero__metric--rank">
                 <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">High Priority</span>

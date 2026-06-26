@@ -1,6 +1,6 @@
 /**
  * Recruiting / transfer portal cycle — UTC calendar for seasonal UI.
- * Mirror of server/shared/recruiting-cycle.ts
+ * Keep client/lib/recruiting-cycle.ts in sync when changing windows.
  */
 
 export type PortalCyclePhase =
@@ -28,6 +28,7 @@ function utcParts(at: Date): { year: number; month: number; day: number } {
   };
 }
 
+/** NCAA-style portal windows + football-season offseason for FutureCast UI. */
 export function getPortalSeasonState(at: Date = new Date()): PortalSeasonState {
   const { year, month, day } = utcParts(at);
 
@@ -105,22 +106,13 @@ export function portalDormantMessage(state: PortalSeasonState): string {
   return state.label;
 }
 
-export function resolvePortalSeason(
-  apiSeason?: PortalSeasonState | null,
-  candidateCount = 0
-): PortalSeasonState & { showUi: boolean } {
-  const state = apiSeason ?? getPortalSeasonState();
-  return {
-    ...state,
-    showUi: shouldShowPortalWatchlist(state, candidateCount),
-  };
-}
-
+/** Primary board class during portal dormancy vs active portal windows. */
 export function primaryRecruitingClassYear(at: Date = new Date()): number {
   const state = getPortalSeasonState(at);
   return shouldShowPortalWatchlist(state) ? 2027 : 2028;
 }
 
+/** Skip portal-intel cron/ops when the transfer window is closed. */
 export function shouldRunPortalIntelJob(at: Date = new Date()): boolean {
   return getPortalSeasonState(at).active;
 }
