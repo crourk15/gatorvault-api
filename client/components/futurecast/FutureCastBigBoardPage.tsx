@@ -40,12 +40,22 @@ export function FutureCastBigBoardPage(): React.ReactElement {
   const [position, setPosition] = useState('');
   const [activeTab, setActiveTab] = useState<BigBoardTabId>('top-targets');
 
+  const classYearOptions =
+    activeTab === 'early-discovery' ? CLASS_YEARS.filter((y) => y >= 2028) : CLASS_YEARS;
+
+  const handleTabChange = (tab: BigBoardTabId) => {
+    setActiveTab(tab);
+    if (tab === 'early-discovery' && classYear < 2028) {
+      setClassYear(2028);
+    }
+  };
+
   const query = useMemo(
     () => tabQuery(activeTab, classYear, position),
     [activeTab, classYear, position]
   );
 
-  const earlyDiscoveryClassGte = Math.max(classYear, 2028);
+  const earlyDiscoveryClassGte = activeTab === 'early-discovery' ? classYear : Math.max(classYear, 2028);
 
   const earlyDiscoveryQuery = useMemo(
     () => ({
@@ -78,16 +88,16 @@ export function FutureCastBigBoardPage(): React.ReactElement {
             key={tab.id}
             type="button"
             className={`fc-futurecast-nav__link${activeTab === tab.id ? ' is-active' : ''}`}
-            onClick={() => setActiveTab(tab.id)}
+            onClick={() => handleTabChange(tab.id)}
           >
             {tab.label}
           </button>
         ))}
       </nav>
 
-      {activeTab === 'early-discovery' && classYear < 2028 ? (
+      {activeTab === 'early-discovery' ? (
         <p className="rh-elite-section__sub" style={{ margin: '0 0 0.75rem' }}>
-          Early Discovery covers class of 2028 and later (showing {earlyDiscoveryClassGte}+).
+          Early Discovery ranks {classYear}+ underclassmen by discovery score (Vault est. ratings until On3 sync).
         </p>
       ) : null}
 
@@ -95,7 +105,7 @@ export function FutureCastBigBoardPage(): React.ReactElement {
         <label>
           Class
           <select value={classYear} onChange={(e) => setClassYear(Number(e.target.value))}>
-            {CLASS_YEARS.map((y) => (
+            {classYearOptions.map((y) => (
               <option key={y} value={y}>
                 {y}
               </option>

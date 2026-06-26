@@ -4,6 +4,7 @@
 import {
   loadRecruitingRankings,
   type PlayerRankingEntry,
+  type RecruitingRatingSource,
 } from '../../lib/load-recruiting-rankings';
 
 export interface RankingFields {
@@ -11,6 +12,7 @@ export interface RankingFields {
   nationalRank: number | null;
   positionRank: number | null;
   stateRank: number | null;
+  ratingSource: RecruitingRatingSource | null;
   rating?: number | null;
   natlRank?: number | null;
   posRank?: number | null;
@@ -47,6 +49,7 @@ export function enrichWithRankings<T extends Record<string, unknown>>(
     nationalRank: r?.nationalRank ?? null,
     positionRank: r?.positionRank ?? null,
     stateRank: r?.stateRank ?? null,
+    ratingSource: r?.ratingSource ?? null,
     rating: r?.compositeScore ?? (player.rating as number | null | undefined) ?? null,
     natlRank: r?.nationalRank ?? (player.natlRank as number | null | undefined) ?? null,
     posRank: r?.positionRank ?? (player.posRank as number | null | undefined) ?? null,

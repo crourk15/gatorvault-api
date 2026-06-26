@@ -48,6 +48,11 @@ export interface RecruitingBoardPlayer {
   commitDate?: string | null;
   inState?: boolean;
   movementDirection?: 'up' | 'down' | 'flat';
+  /** Card display overrides (Early Discovery, etc.) */
+  heatPct?: number;
+  heatLabel?: string;
+  ratingLabel?: string;
+  showIndustryRanks?: boolean;
   category?: string;
   portalStatus?: 'in' | 'target' | 'out' | string;
   predictionSchools?: { school: string; pct: number }[];

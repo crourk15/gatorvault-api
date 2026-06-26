@@ -5,6 +5,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+export type RecruitingRatingSource = 'on3' | 'seed';
+
 export interface PlayerRankingEntry {
   compositeScore: number | null;
   nationalRank: number | null;
@@ -12,6 +14,13 @@ export interface PlayerRankingEntry {
   stateRank: number | null;
   stars: number | null;
   classYear: number | null;
+  ratingSource: RecruitingRatingSource | null;
+}
+
+export function resolveRatingSource(on3Source: unknown): RecruitingRatingSource {
+  const s = String(on3Source ?? '').trim().toLowerCase();
+  if (s === 'on3-board-sync' || s.startsWith('http')) return 'on3';
+  return 'seed';
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -50,6 +59,7 @@ export function loadRecruitingRankings(): Map<string, PlayerRankingEntry> {
       stateRank?: number;
       stars?: number;
       classYear?: number;
+      on3Source?: string | null;
     }>;
 
     for (const p of players) {
@@ -60,6 +70,7 @@ export function loadRecruitingRankings(): Map<string, PlayerRankingEntry> {
         stateRank: p.stateRank ?? null,
         stars: p.stars ?? null,
         classYear: p.classYear ?? null,
+        ratingSource: resolveRatingSource(p.on3Source),
       };
 
       const keys = new Set<string>();

@@ -3,6 +3,8 @@
  */
 import { getApiBase } from './api-base';
 
+export type RecruitingRatingSource = 'on3' | 'seed';
+
 export interface EarlyDiscoveryPlayer {
   id: string;
   slug: string;
@@ -20,6 +22,7 @@ export interface EarlyDiscoveryPlayer {
   nationalRank?: number | null;
   positionRank?: number | null;
   stateRank?: number | null;
+  ratingSource?: RecruitingRatingSource | null;
 }
 
 export interface EarlyDiscoveryQuery {

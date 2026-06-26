@@ -20,6 +20,7 @@ export function minimalRecruitPlayer(slug: string, name: string): RecruitingBoar
 
 export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlayer {
   const composite = p.compositeScore ?? undefined;
+  const isLiveOn3 = p.ratingSource === 'on3';
   return {
     slug: p.slug,
     name: p.fullName,
@@ -30,11 +31,14 @@ export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlay
     stars: p.stars ?? 0,
     rating: composite,
     displayRating: composite,
-    natlRank: p.nationalRank ?? undefined,
-    posRank: p.positionRank ?? undefined,
-    stateRank: p.stateRank ?? undefined,
+    natlRank: isLiveOn3 ? (p.nationalRank ?? undefined) : undefined,
+    posRank: isLiveOn3 ? (p.positionRank ?? undefined) : undefined,
+    stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
     fitScore: p.ufFitScore ?? undefined,
-    ufProbability: p.discoveryScore > 0 ? Math.min(1, p.discoveryScore / 100) : 0,
+    heatPct: p.discoveryScore > 0 ? p.discoveryScore : undefined,
+    heatLabel: 'Discovery',
+    ratingLabel: isLiveOn3 ? 'Composite' : 'Vault est.',
+    showIndustryRanks: isLiveOn3,
     skinny: `Discovery score ${p.discoveryScore}${p.signalCount ? ` · ${p.signalCount} signals` : ''}${p.ufStatus ? ` · UF ${p.ufStatus}` : ''}`,
   };
 }

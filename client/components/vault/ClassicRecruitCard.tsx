@@ -33,10 +33,11 @@ function visitBadge(player: ClassicRecruitCardPlayer): string | null {
   return null;
 }
 
-function heatMeter(pct: number): React.ReactElement {
+function heatMeter(pct: number, label = 'UF interest'): React.ReactElement {
   const clamped = Math.min(100, Math.max(0, pct));
   return (
-    <div className="gv-rb-card__heat" aria-label={`UF interest ${clamped}%`}>
+    <div className="gv-rb-card__heat" aria-label={`${label} ${clamped}%`}>
+      <span className="gv-rb-card__heat-label">{label}</span>
       <div className="gv-rb-card__heat-track">
         <div className="gv-rb-card__heat-fill" style={{ width: `${clamped}%` }} />
       </div>
@@ -76,15 +77,20 @@ export function ClassicRecruitCard({
     rawRating != null && Number(rawRating) > 0
       ? formatCompositeRating(rawRating)
       : null;
+  const ratingLabel = player.ratingLabel ?? 'Composite';
   const pos = playerPos(player as RecruitingBoardPlayer);
   const visit = visitBadge(player);
   const skinny = player.skinny || player.profileNote || player.notePreview || player.notes;
   const heatPct =
-    player.ufProbability != null
-      ? Math.round(Number(player.ufProbability) * 100)
-      : player.fitScore != null
-        ? Math.round(Number(player.fitScore) * 100)
-        : null;
+    player.heatPct != null
+      ? Math.round(Number(player.heatPct))
+      : player.ufProbability != null
+        ? Math.round(Number(player.ufProbability) * 100)
+        : player.fitScore != null
+          ? Math.round(Number(player.fitScore) * 100)
+          : null;
+  const heatLabel = player.heatLabel ?? 'UF interest';
+  const showIndustryRanks = player.showIndustryRanks !== false;
   const predictions = player.predictionSchools?.slice(0, 2) ?? [];
   const isCommit = variant === 'commit' || Boolean(player.isCommittedToUF);
   const resolvedVariant: ClassicCardVariant = isCommit ? 'commit' : 'target';
@@ -102,9 +108,9 @@ export function ClassicRecruitCard({
           </span>
         )}
         <div className="gv-rb-card__hero">
-          <div className="gv-rb-card__rating-badge" aria-label={`Composite rating ${ratingStr}`}>
+          <div className="gv-rb-card__rating-badge" aria-label={`${ratingLabel} ${ratingStr ?? 'unrated'}`}>
             <span className="gv-rb-card__rating-value">{ratingStr ?? '—'}</span>
-            <span className="gv-rb-card__rating-label">Composite</span>
+            <span className="gv-rb-card__rating-label">{ratingLabel}</span>
           </div>
           <div className="gv-rb-card__hero-meta">
             {player.stars ? (
@@ -126,9 +132,11 @@ export function ClassicRecruitCard({
 
         {player.htWt ? <p className="gv-rb-card__htwt">{player.htWt}</p> : null}
 
-        <p className="gv-rb-card__ranks">
-          NATL {formatRank(natl)} · POS {formatRank(player.posRank)} · ST {formatRank(player.stateRank)}
-        </p>
+        {showIndustryRanks ? (
+          <p className="gv-rb-card__ranks">
+            NATL {formatRank(natl)} · POS {formatRank(player.posRank)} · ST {formatRank(player.stateRank)}
+          </p>
+        ) : null}
 
         <div className="gv-rb-card__status-row">
           {resolvedVariant === 'commit' ? (
@@ -151,7 +159,7 @@ export function ClassicRecruitCard({
           </div>
         )}
 
-        {resolvedVariant === 'target' && heatPct != null && heatMeter(heatPct)}
+        {resolvedVariant === 'target' && heatPct != null && heatMeter(heatPct, heatLabel)}
 
         <div className="gv-rb-card__badges">
           {visit && <span className="gv-rb-card__badge gv-rb-card__badge--visit">{visit}</span>}
