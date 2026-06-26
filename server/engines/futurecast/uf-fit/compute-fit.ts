@@ -7,15 +7,15 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { UF_FIT_WEIGHTS, type UfFitSubScores } from './weights';
-import { getPlayerById, listPlayers } from '../../../models/player';
+import { getPlayerById, getPlayerBySlug, listPlayers } from '../../../models/player';
 import { upsertUFSpecificProfile } from '../../../models/uf-specific-profile';
 
 const require = createRequire(import.meta.url);
 const { buildUfFitSeedProfile } = require('../../../lib/uf-fit-score-seed.js');
 const { loadFuturecastPredictionBySlug } = require('../../../lib/load-futurecast-prediction-by-slug.js');
+const { loadTargetBoardBySlug } = require('../../../lib/target-board-path.js');
 
 const serverRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../..');
-const TARGET_BOARD_PATH = path.join(serverRoot, 'data/recruiting/2027-target-board.json');
 const RECRUITING_PLAYERS_PATH = path.join(serverRoot, 'data/recruiting/players.json');
 
 export interface UfFitSeedBatchOptions {
@@ -34,21 +34,6 @@ export interface UfFitSeedBatchResult {
   skipped: number;
   ufFitScore?: number;
   samples: Array<{ slug: string; uf_fit_score: number | null; uf_status: string | null }>;
-}
-
-function loadTargetBoardBySlug(): Map<string, Record<string, unknown>> {
-  const map = new Map<string, Record<string, unknown>>();
-  try {
-    const doc = JSON.parse(fs.readFileSync(TARGET_BOARD_PATH, 'utf8')) as {
-      targets?: Array<{ slug?: string }>;
-    };
-    for (const row of doc.targets || []) {
-      if (row?.slug) map.set(String(row.slug).toLowerCase(), row as Record<string, unknown>);
-    }
-  } catch {
-    /* optional */
-  }
-  return map;
 }
 
 function loadRecruitingBySlug(): Map<string, Record<string, unknown>> {
@@ -100,12 +85,33 @@ async function seedOnePlayer(
   return { upserted: true, skipped: false, profile };
 }
 
+async function listSeedCandidates(
+  classYear: number,
+  targetBySlug: Map<string, Record<string, unknown>>,
+  limit?: number
+): Promise<Array<{ id: string; slug: string; class_year: number; state: string | null }>> {
+  const fromBoard: Array<{ id: string; slug: string; class_year: number; state: string | null }> = [];
+  for (const slug of targetBySlug.keys()) {
+    const player = await getPlayerBySlug(slug);
+    if (!player || player.class_year !== classYear || player.status !== 'HS') continue;
+    fromBoard.push(player);
+  }
+  if (fromBoard.length > 0) {
+    return limit != null && limit > 0 ? fromBoard.slice(0, limit) : fromBoard;
+  }
+  let players = await listPlayers({ class_year: classYear, status: 'HS' });
+  if (limit != null && limit > 0) {
+    players = players.slice(0, limit);
+  }
+  return players;
+}
+
 export async function runUfFitSeedBatch(
   opts: UfFitSeedBatchOptions = {}
 ): Promise<UfFitSeedBatchResult> {
   const classYear = opts.classYear ?? 2027;
   const dryRun = opts.dryRun ?? false;
-  const targetBySlug = loadTargetBoardBySlug();
+  const targetBySlug = loadTargetBoardBySlug(classYear, serverRoot);
   const recruitingBySlug = loadRecruitingBySlug();
   const predictionBySlug = await loadFuturecastPredictionBySlug(classYear);
   const maps = { targetBySlug, recruitingBySlug, predictionBySlug };
@@ -137,10 +143,7 @@ export async function runUfFitSeedBatch(
     return { ok: true, dryRun, classYear, candidates, upserted, skipped, ufFitScore, samples };
   }
 
-  let players = await listPlayers({ class_year: classYear, status: 'HS' });
-  if (opts.limit != null && opts.limit > 0) {
-    players = players.slice(0, opts.limit);
-  }
+  let players = await listSeedCandidates(classYear, targetBySlug, opts.limit);
   candidates = players.length;
 
   for (const player of players) {

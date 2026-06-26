@@ -333,6 +333,8 @@ services:
     region: oregon
     startCommand: node server/scripts/render-uf-fit-seed-cron.js
     envVars:
+      - key: UF_FIT_SEED_CLASS_YEARS
+        value: "2027,2028"
       - key: UF_FIT_SEED_CLASS_YEAR
         value: "2027"
       - key: DATABASE_URL

@@ -287,11 +287,19 @@ const JOBS = {
     async run(opts = {}) {
       const { spawnSync } = require('child_process');
       const path = require('path');
-      const classYear = opts.classYear || 2027;
-      const args = ['--import', 'tsx', path.join(__dirname, 'seed-uf-fit-scores.js'), `--class-year=${classYear}`];
-      if (opts.dryRun === true) args.push('--dry-run');
-      const result = spawnSync(process.execPath, args, { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
-      return { ok: result.status === 0, classYear, dryRun: opts.dryRun === true };
+      const yearsRaw = opts.classYears || process.env.UF_FIT_SEED_CLASS_YEARS || '2027,2028';
+      const classYears = String(yearsRaw)
+        .split(',')
+        .map((s) => Number(String(s).trim()))
+        .filter((n) => Number.isFinite(n) && n > 0);
+      const results = [];
+      for (const classYear of classYears) {
+        const args = ['--import', 'tsx', path.join(__dirname, 'seed-uf-fit-scores.js'), `--class-year=${classYear}`];
+        if (opts.dryRun === true) args.push('--dry-run');
+        const result = spawnSync(process.execPath, args, { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
+        results.push({ classYear, ok: result.status === 0 });
+      }
+      return { ok: results.every((r) => r.ok), results, dryRun: opts.dryRun === true };
     }
   },
   'early-discovery': {

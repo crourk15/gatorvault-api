@@ -51,10 +51,20 @@ export const handleRunUfFitRecompute = asyncHandler(async (req: Request, res: Re
     return;
   }
   const playerId = typeof req.body?.player_id === 'string' ? req.body.player_id : undefined;
-  const classYear = Number(req.body?.classYear ?? req.query.class_year ?? 2027) || 2027;
+  const classYear = Number(req.body?.classYear ?? req.query.class_year ?? 2028) || 2028;
   if (!playerId && (req.body?.seed === true || req.query.seed === 'true')) {
-    const result = await runUfFitRecompute({ classYear, dryRun: parseDryRun(req) });
-    res.json({ ok: true, mode: 'seed', classYear, result });
+    const yearsRaw = req.body?.classYears ?? req.query.class_years;
+    const classYears = yearsRaw
+      ? String(yearsRaw)
+          .split(',')
+          .map((y: string) => Number(y.trim()))
+          .filter((n: number) => Number.isFinite(n) && n > 0)
+      : [2027, 2028];
+    const results = [];
+    for (const year of classYears) {
+      results.push(await runUfFitRecompute({ classYear: year, dryRun: parseDryRun(req) }));
+    }
+    res.json({ ok: true, mode: 'seed', classYears, results });
     return;
   }
   const result = await runUfFitRecompute({ playerId, classYear, dryRun: parseDryRun(req) });

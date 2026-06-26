@@ -28,6 +28,8 @@
     "qa:crawl": "node scripts/run-qa-crawler.js",
     "migrate:players": "npx tsx migrators/migrate-players.ts",
     "seed:uf-fit": "node --import tsx scripts/seed-uf-fit-scores.js",
+    "seed:uf-fit:2028": "node --import tsx scripts/seed-uf-fit-scores.js --class-year=2028",
+    "seed:uf-fit:all": "node --import tsx scripts/seed-uf-fit-scores.js --class-years=2027,2028",
     "engine:early-discovery": "node --import tsx scripts/run-early-discovery.js",
     "engine:portal-intelligence": "node --import tsx scripts/run-portal-intel.js",
     "migrate:predictions": "npx tsx migrators/run-migration.ts migrations/011_create_predictions_table.sql",
