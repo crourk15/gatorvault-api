@@ -37,6 +37,7 @@ const { loadUsers, saveUsers, findUserByEmail } = require('./lib/user-store');
 const { hasPaidAccess, buildSessionFields } = require('./lib/subscription-service');
 const { mountSubscriptionRoutes } = require('./lib/subscription-routes');
 const { mountPushAlertRoutes } = require('./lib/push-alert-routes');
+const { mountAlertEmailRoutes } = require('./lib/alert-email-routes');
 const { mountAccountRoutes } = require('./lib/account-routes');
 const pipelineGuards = require('./lib/pipeline-guards');
 
@@ -156,6 +157,7 @@ mountWarRoomRoutes(app);
 mountPlatformRoutes(app);
 mountSubscriptionRoutes(app);
 mountPushAlertRoutes(app);
+mountAlertEmailRoutes(app);
 mountAccountRoutes(app);
 mountXAutoposterRoutes(app);
 mountMonitoringRoutes(app);
@@ -1229,6 +1231,14 @@ console.log('GatorVault server running on port', PORT);
       .catch((err) => console.warn('[push-store] init failed:', err.message));
   } catch (e) {
     console.warn('[startup] push store init skipped:', e.message);
+  }
+  try {
+    require('./lib/alert-email-prefs-service')
+      .initAlertEmailPrefsStore()
+      .then((info) => console.log('[alert-email] ready', info))
+      .catch((err) => console.warn('[alert-email] init failed:', err.message));
+  } catch (e) {
+    console.warn('[startup] alert email init skipped:', e.message);
   }
   try {
     startOn3IngestScheduler();

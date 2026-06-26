@@ -25,6 +25,9 @@ function runVerifyServerModules() {
     'lib/push-subscription-persistence.js',
     'lib/push-alert-filters.js',
     'lib/staff-note-picker.js',
+    'lib/alert-email-persistence.js',
+    'lib/alert-email-prefs-service.js',
+    'lib/visit-intel-email-digest.js',
   ];
   const errors = [];
   for (const rel of modules) {

@@ -16,6 +16,7 @@ import {
 } from '@/lib/alert-prefs';
 import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
 import { syncVisitPushPrefs } from '@/lib/push-alerts-api';
+import { syncEmailAlertPrefs } from '@/lib/alert-email-api';
 import { playerProfilePath } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
@@ -112,6 +113,31 @@ export function VaultAlertsPage(): React.ReactElement {
     setTimeout(() => setSaved(false), 2500);
 
     const wantsPush = prefs.method === 'push' || prefs.method === 'both';
+    const wantsEmail = prefs.method === 'email' || prefs.method === 'both';
+
+    if (wantsEmail && prefs.types.visit) {
+      void syncEmailAlertPrefs({
+        method: prefs.method,
+        freq: prefs.freq,
+        visit: true,
+        followPlayers: prefs.followPlayers,
+      }).then((out) => {
+        if (out.ok && !wantsPush) {
+          setPushStatus(
+            prefs.freq === 'weekly'
+              ? prefs.followPlayers.length
+                ? `Weekly verified OV emails enabled for ${prefs.followPlayers.length} tracked player(s).`
+                : 'Weekly verified OV recap emails enabled.'
+              : 'Email alert preferences saved.'
+          );
+        } else if (out.reason === 'sign_in') {
+          setPushStatus('Sign in to enable email alerts.');
+        } else if (out.reason === 'membership') {
+          setPushStatus('Active membership required for email alerts.');
+        }
+      });
+    }
+
     if (wantsPush && prefs.types.visit) {
       void syncVisitPushPrefs({
         visit: true,
@@ -176,7 +202,8 @@ export function VaultAlertsPage(): React.ReactElement {
         <section className="gv-vault-alerts__prefs">
           <h2 className="gv-vault-alerts__section-title">What You Want to Hear About</h2>
           <p className="gv-vault-alerts__section-hint">
-            Tap a category to subscribe. Verified UF official visit pushes only — no rumor alerts.
+            Tap a category to subscribe. Verified UF official visit alerts only — no rumor alerts.
+            Weekly roundup emails send after each verified OV weekend recap.
           </p>
 
           <div className="gv-alert-toggles">

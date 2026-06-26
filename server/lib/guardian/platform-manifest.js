@@ -26,7 +26,10 @@ module.exports = {
     'lib/push-alert-routes.js',
     'lib/push-subscription-persistence.js',
     'lib/push-alert-filters.js',
-    'lib/staff-note-picker.js'
+    'lib/staff-note-picker.js',
+    'lib/alert-email-persistence.js',
+    'lib/alert-email-prefs-service.js',
+    'lib/visit-intel-email-digest.js'
   ],
 
   /** Route modules server.js must wire — file path relative to server root, expected export. */

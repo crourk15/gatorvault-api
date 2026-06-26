@@ -135,6 +135,22 @@ async function queueRecapPost(text, meta = {}) {
   return { queued: true, item: out.item, fingerprint };
 }
 
+async function maybeSendEmailDigest(result, built, options = {}) {
+  const dryRun = Boolean(options.dryRun);
+  const sendEmail = options.sendEmail !== false;
+  if (!sendEmail || !built.recapRows.length) return;
+  try {
+    const { sendVisitIntelWeeklyDigest } = require("./visit-intel-email-digest");
+    result.emailDigest = await sendVisitIntelWeeklyDigest({
+      recapRows: built.recapRows,
+      weekKey: built.weekKey,
+      dryRun,
+    });
+  } catch (err) {
+    result.emailDigest = { ok: false, error: err.message };
+  }
+}
+
 async function runVisitIntelRecap(options = {}) {
   const asOf = options.asOf ? new Date(options.asOf) : new Date();
   const dryRun = Boolean(options.dryRun);
@@ -167,11 +183,13 @@ async function runVisitIntelRecap(options = {}) {
   if (alreadyPosted) {
     result.skipped = true;
     result.reason = "already_posted_this_week";
+    await maybeSendEmailDigest(result, built, options);
     return result;
   }
 
   if (dryRun || !queueX) {
     result.wouldQueue = Boolean(text);
+    await maybeSendEmailDigest(result, built, options);
     return result;
   }
 
@@ -198,6 +216,7 @@ async function runVisitIntelRecap(options = {}) {
     clearFuturecastCacheSafe();
   }
 
+  await maybeSendEmailDigest(result, built, options);
   return result;
 }
 
