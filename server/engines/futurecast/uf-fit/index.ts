@@ -7,6 +7,8 @@ import { computeUfFitForPlayer, computeUfFitBatch } from './compute-fit';
 export interface UfFitRecomputeOptions {
   playerId?: string;
   dryRun?: boolean;
+  classYear?: number;
+  limit?: number;
 }
 
 export interface UfFitRecomputeResult {
@@ -15,10 +17,14 @@ export interface UfFitRecomputeResult {
 
 export async function runUfFitRecompute(opts: UfFitRecomputeOptions = {}): Promise<UfFitRecomputeResult> {
   if (opts.playerId) {
-    await computeUfFitForPlayer(opts.playerId);
+    await computeUfFitForPlayer(opts.playerId, { dryRun: opts.dryRun });
     return { playersUpdated: 1 };
   }
-  return computeUfFitBatch();
+  return computeUfFitBatch({
+    classYear: opts.classYear,
+    dryRun: opts.dryRun,
+    limit: opts.limit,
+  });
 }
 
 export { computeUfFitForPlayer, computeUfFitBatch };

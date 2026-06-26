@@ -306,6 +306,19 @@ const JOBS = {
       });
     }
   },
+  'portal-intelligence': {
+    label: 'Daily portal likelihood recompute for college/portal candidates',
+    subsystem: 'cron:portal-intelligence',
+    schedule: 'Daily 06:00 UTC Render cron',
+    async run(opts = {}) {
+      require('tsx/cjs');
+      const { runPortalIntelJob } = require('../engines/futurecast/portal-intel/pipeline.ts');
+      return runPortalIntelJob({
+        limit: opts.limit || 200,
+        dryRun: opts.dryRun === true,
+      });
+    }
+  },
   'on3-rpm-allowlist-sync': {
     label: 'On3 RPM UF % gap-fill for allowlist targets missing Rivals PM',
     subsystem: 'cron:on3-rpm-allowlist',

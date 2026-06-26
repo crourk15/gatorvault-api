@@ -350,3 +350,17 @@ services:
       - key: DATABASE_URL
         sync: false
 
+  - type: cron
+    name: gatorvault-api-portal-intelligence
+    schedule: "0 6 * * *"
+    runtime: node
+    region: oregon
+    startCommand: node server/scripts/render-portal-intel-cron.js
+    envVars:
+      - key: PORTAL_INTEL_RUN_URL
+        value: https://gatorvault-api.onrender.com/api/admin/engines/portal-intelligence/run
+      - key: PORTAL_INTEL_LIMIT
+        value: "200"
+      - key: MONITORING_CRON_SECRET
+        sync: false
+

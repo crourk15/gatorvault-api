@@ -51,25 +51,13 @@ export const handleRunUfFitRecompute = asyncHandler(async (req: Request, res: Re
     return;
   }
   const playerId = typeof req.body?.player_id === 'string' ? req.body.player_id : undefined;
+  const classYear = Number(req.body?.classYear ?? req.query.class_year ?? 2027) || 2027;
   if (!playerId && (req.body?.seed === true || req.query.seed === 'true')) {
-    const { spawnSync } = require('child_process');
-    const pathMod = require('path');
-    const classYear = Number(req.body?.classYear ?? req.query.class_year ?? 2027) || 2027;
-    const script = pathMod.join(__dirname, '../../../scripts/seed-uf-fit-scores.js');
-    const run = spawnSync(process.execPath, ['--import', 'tsx', script, `--class-year=${classYear}`], {
-      cwd: pathMod.join(__dirname, '../../..'),
-      encoding: 'utf8',
-    });
-    res.json({
-      ok: run.status === 0,
-      mode: 'seed',
-      classYear,
-      stdout: run.stdout?.slice(-2000) || '',
-      stderr: run.stderr?.slice(-500) || '',
-    });
+    const result = await runUfFitRecompute({ classYear, dryRun: parseDryRun(req) });
+    res.json({ ok: true, mode: 'seed', classYear, result });
     return;
   }
-  const result = await runUfFitRecompute({ playerId, dryRun: parseDryRun(req) });
+  const result = await runUfFitRecompute({ playerId, classYear, dryRun: parseDryRun(req) });
   res.json({ ok: true, result });
 });
 
