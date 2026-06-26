@@ -72,8 +72,8 @@ export function EarlyDiscoveryPreview({
   return (
     <>
       <div className="fc-home-card-grid gv-rb-grid" data-testid="early-discovery-preview">
-        {players.map((player, index) => (
-          <ClassicRecruitCard key={player.slug} player={player} variant="target" rank={index + 1} />
+        {players.map((player) => (
+          <ClassicRecruitCard key={player.slug} player={player} variant="target" />
         ))}
       </div>
       <p className="fc-home-section__footer-link">
