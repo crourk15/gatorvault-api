@@ -15,6 +15,11 @@ import {
   parseSort,
 } from './utils-api';
 import { enrichFeedPlayers } from '../futurecast/ranking-enrichment';
+import {
+  boardFetchMultiplier,
+  filterBoardEligiblePlayers,
+  rerankBoardPlayers,
+} from './board-filters';
 
 export const handleGetBigBoard = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -26,7 +31,9 @@ export const handleGetBigBoard = asyncHandler(async (req: Request, res: Response
     const limit = parseLimit(req.query.limit, 200, 500);
 
     const raw = await listBigBoardPlayers({ class_year, position, lifecycle });
-    const players = enrichFeedPlayers(buildBigBoard(raw, sort, order, limit));
+    const built = buildBigBoard(raw, sort, order, boardFetchMultiplier(limit));
+    const eligible = filterBoardEligiblePlayers(enrichFeedPlayers(built));
+    const players = rerankBoardPlayers(eligible).slice(0, limit);
 
     res.json({ players });
   } catch (err) {

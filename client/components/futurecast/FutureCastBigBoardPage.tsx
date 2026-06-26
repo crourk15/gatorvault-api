@@ -75,6 +75,12 @@ export function FutureCastBigBoardPage(): React.ReactElement {
         ))}
       </nav>
 
+      {activeTab === 'early-discovery' && classYear < 2028 ? (
+        <p className="rh-elite-section__sub" style={{ margin: '0 0 0.75rem' }}>
+          Early Discovery covers class of 2028 and later (showing {earlyDiscoveryClassGte}+).
+        </p>
+      ) : null}
+
       <div className="fc-big-board-toolbar">
         <label>
           Class

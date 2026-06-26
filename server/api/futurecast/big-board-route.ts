@@ -14,6 +14,11 @@ import {
   parseSort,
 } from '../big-board/utils-api';
 import { enrichFeedPlayers } from './ranking-enrichment';
+import {
+  boardFetchMultiplier,
+  filterBoardEligiblePlayers,
+  rerankBoardPlayers,
+} from '../big-board/board-filters';
 
 export const handleGetFutureCastBigBoard = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -28,12 +33,14 @@ export const handleGetFutureCastBigBoard = asyncHandler(async (req: Request, res
       position,
       lifecycle: 'HS',
     });
-    const players = buildBigBoard(raw, sort, order, limit);
+    const built = buildBigBoard(raw, sort, order, boardFetchMultiplier(limit));
+    const eligible = filterBoardEligiblePlayers(enrichFeedPlayers(built));
+    const players = rerankBoardPlayers(eligible).slice(0, limit);
 
     res.json({
       lifecycle: 'HIGH_SCHOOL',
       classYear: class_year ?? null,
-      players: enrichFeedPlayers(players),
+      players,
     });
   } catch (err) {
     handleApiError(res, err);

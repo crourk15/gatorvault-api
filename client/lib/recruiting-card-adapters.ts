@@ -19,16 +19,23 @@ export function minimalRecruitPlayer(slug: string, name: string): RecruitingBoar
 }
 
 export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlayer {
+  const composite = p.compositeScore ?? undefined;
   return {
     slug: p.slug,
     name: p.fullName,
     tier: p.ufStatus === 'TARGET' ? 'HIGH' : 'MEDIUM',
     position: p.position ?? undefined,
     classYear: p.classYear,
+    state: p.state ?? undefined,
     stars: p.stars ?? 0,
-    fitScore: p.discoveryScore,
+    rating: composite,
+    displayRating: composite,
+    natlRank: p.nationalRank ?? undefined,
+    posRank: p.positionRank ?? undefined,
+    stateRank: p.stateRank ?? undefined,
+    fitScore: p.ufFitScore ?? undefined,
     ufProbability: p.discoveryScore > 0 ? Math.min(1, p.discoveryScore / 100) : 0,
-    skinny: `Discovery ${p.discoveryScore}${p.ufStatus ? ` · UF ${p.ufStatus}` : ''}${p.signalCount ? ` · ${p.signalCount} signals` : ''}`,
+    skinny: `Discovery score ${p.discoveryScore}${p.signalCount ? ` · ${p.signalCount} signals` : ''}${p.ufStatus ? ` · UF ${p.ufStatus}` : ''}`,
   };
 }
 
@@ -41,9 +48,9 @@ export function fromBigBoard(p: BigBoardPlayer): RecruitingBoardPlayer {
     classYear: p.classYear,
     rating: p.compositeScore ?? p.rating ?? 0,
     displayRating: p.compositeScore ?? p.rating ?? 0,
-    natlRank: p.nationalRank ?? p.natlRank ?? p.rank ?? 0,
-    posRank: p.positionRank ?? p.posRank ?? 0,
-    stateRank: p.stateRank ?? 0,
+    natlRank: p.nationalRank ?? p.natlRank ?? undefined,
+    posRank: p.positionRank ?? p.posRank ?? undefined,
+    stateRank: p.stateRank ?? undefined,
     stars: p.stars ?? 0,
     fitScore: p.ufFitScore ?? 0,
     ufProbability: p.ufFitScore > 0
@@ -52,7 +59,9 @@ export function fromBigBoard(p: BigBoardPlayer): RecruitingBoardPlayer {
     skinny:
       p.portalLikelihood > 0
         ? `Portal likelihood ${p.portalLikelihood}% · ${p.signalCount} signals`
-        : `${p.signalCount} FutureCast signals`,
+        : p.signalCount > 0
+          ? `${p.signalCount} FutureCast signals`
+          : undefined,
   };
 }
 

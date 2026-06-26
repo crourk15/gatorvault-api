@@ -60,7 +60,6 @@ export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridP
           <ClassicRecruitCard
             player={fromEarlyDiscovery(player)}
             variant="target"
-            rank={player.rank}
           />
         );
         if (!onPlayerClick) {

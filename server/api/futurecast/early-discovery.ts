@@ -4,6 +4,7 @@
 import type { Request, Response } from 'express';
 import { createRequire } from 'node:module';
 import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
+import { enrichWithRankings } from './ranking-enrichment';
 
 const require = createRequire(import.meta.url);
 
@@ -66,20 +67,22 @@ export async function listEarlyDiscoveryPlayers(opts: {
     [classYearGte, minDiscoveryScore, minUfFitScore, limit]
   );
 
-  return rows.map((row: Record<string, unknown>, index: number) => ({
-    id: row.id,
-    slug: row.slug,
-    fullName: row.full_name,
-    classYear: row.class_year,
-    position: row.position,
-    state: row.state,
-    stars: row.stars,
-    discoveryScore: Number(row.discovery_score) || 0,
-    ufFitScore: row.uf_fit_score != null ? Number(row.uf_fit_score) : null,
-    ufStatus: row.uf_status,
-    signalCount: Number(row.signal_count) || 0,
-    rank: index + 1,
-  }));
+  return rows.map((row: Record<string, unknown>, index: number) =>
+    enrichWithRankings({
+      id: row.id,
+      slug: row.slug,
+      fullName: row.full_name,
+      classYear: row.class_year,
+      position: row.position,
+      state: row.state,
+      stars: row.stars,
+      discoveryScore: Number(row.discovery_score) || 0,
+      ufFitScore: row.uf_fit_score != null ? Number(row.uf_fit_score) : null,
+      ufStatus: row.uf_status,
+      signalCount: Number(row.signal_count) || 0,
+      rank: index + 1,
+    })
+  );
 }
 
 export const handleGetEarlyDiscovery = asyncHandler(async (req: Request, res: Response) => {

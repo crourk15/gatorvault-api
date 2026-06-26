@@ -16,6 +16,10 @@ export interface EarlyDiscoveryPlayer {
   ufStatus: string | null;
   signalCount: number;
   rank: number;
+  compositeScore?: number;
+  nationalRank?: number | null;
+  positionRank?: number | null;
+  stateRank?: number | null;
 }
 
 export interface EarlyDiscoveryQuery {
