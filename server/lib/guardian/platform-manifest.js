@@ -29,7 +29,9 @@ module.exports = {
     'lib/staff-note-picker.js',
     'lib/alert-email-persistence.js',
     'lib/alert-email-prefs-service.js',
-    'lib/visit-intel-email-digest.js'
+    'lib/visit-intel-email-digest.js',
+    'lib/movement-narrative.js',
+    'lib/alert-email-routes.js',
   ],
 
   /** Route modules server.js must wire — file path relative to server root, expected export. */

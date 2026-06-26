@@ -53,6 +53,32 @@ function runVerifyVisitIntelApi() {
     failed++;
   }
   if (
+    !check('movement-narrative', () => {
+      const { buildMovementNarrative } = require('../lib/movement-narrative');
+      assert.equal(typeof buildMovementNarrative, 'function');
+      const text = buildMovementNarrative({
+        delta7d: 6,
+        visitStart: '2026-06-01',
+        visitEnd: '2026-06-01',
+      });
+      assert.match(text, /UF \+6%/);
+    })
+  ) {
+    failed++;
+  }
+  if (
+    !check('visit-intel-daily-digest', () => {
+      const { runVisitIntelDailyDigest, buildDailyDigestRows } = require('../lib/visit-intel-recap');
+      const { sendVisitIntelDailyDigest, buildVisitDailyEmailHtml } = require('../lib/visit-intel-email-digest');
+      assert.equal(typeof runVisitIntelDailyDigest, 'function');
+      assert.equal(typeof buildDailyDigestRows, 'function');
+      assert.equal(typeof sendVisitIntelDailyDigest, 'function');
+      assert.match(buildVisitDailyEmailHtml([], '2026-06-22'), /2026-06-22/);
+    })
+  ) {
+    failed++;
+  }
+  if (
     !check('visit-intel-email-digest', () => {
       const {
         buildVisitScheduledEmailHtml,

@@ -66,6 +66,7 @@ const CORE_API_PROBES = [
       if (!Array.isArray(body.players)) return 'missing players[]';
       if (!Array.isArray(body.flipWatch)) return 'missing flipWatch[]';
       if (!Array.isArray(body.visitRecap)) return 'missing visitRecap[]';
+      if (!Array.isArray(body.movementNarratives)) return 'missing movementNarratives[]';
       return null;
     },
   },

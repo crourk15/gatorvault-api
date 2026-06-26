@@ -28,6 +28,7 @@ function runVerifyServerModules() {
     'lib/alert-email-persistence.js',
     'lib/alert-email-prefs-service.js',
     'lib/visit-intel-email-digest.js',
+    'lib/movement-narrative.js',
   ];
   const errors = [];
   for (const rel of modules) {
