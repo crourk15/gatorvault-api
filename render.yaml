@@ -337,6 +337,12 @@ services:
     envVars:
       - key: NEXT_PUBLIC_API_BASE
         value: https://gatorvault-api.onrender.com
+      - key: PLATFORM_OPS_WEEKLY_JOBS
+        value: uf-fit-seed,early-discovery,allowlist-on3-rankings
+      - key: UF_FIT_SEED_CLASS_YEARS
+        value: "2027,2028"
+      - key: ALLOWLIST_ON3_RANKINGS_CLASS_YEAR
+        value: "2028"
       - key: MONITORING_CRON_SECRET
         sync: false
 

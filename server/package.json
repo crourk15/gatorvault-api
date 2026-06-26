@@ -8,6 +8,7 @@
     "dev": "nodemon server.js",
     "verify:encoding": "node scripts/encoding-check.js --mount",
     "hooks:install": "node scripts/install-git-hooks.js",
+    "ops:futurecast": "node scripts/run-production-cleanup.js --futurecast",
     "verify:wiring": "node scripts/platform-guardian-predeploy.js",
     "guardian:predeploy": "node scripts/platform-guardian-predeploy.js",
     "deploy:guardian": "node scripts/deploy-guardian.js --phase=pre --api",

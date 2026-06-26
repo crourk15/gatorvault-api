@@ -16,8 +16,8 @@ const RETRY_MS = 5000;
 
 async function postSync() {
   if (!CRON_SECRET) throw new Error("MONITORING_CRON_SECRET (or CRON_SECRET) is not set");
-  const url = `${SYNC_URL}?class_year=${encodeURIComponent(CLASS_YEAR)}`;
   const started = Date.now();
+  const url = `${SYNC_URL}?class_year=${encodeURIComponent(CLASS_YEAR)}`;
   const res = await fetch(url, {
     method: "POST",
     headers: {

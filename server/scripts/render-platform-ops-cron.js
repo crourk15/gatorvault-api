@@ -24,7 +24,52 @@ const DEFAULT_JOBS = [
   'beat-late-ingest'
 ];
 
-async function runJob(jobId) {
+const DEFAULT_WEEKLY_JOBS = [
+  { jobId: 'uf-fit-seed', options: { classYears: process.env.UF_FIT_SEED_CLASS_YEARS || '2027,2028' } },
+  { jobId: 'early-discovery', options: { classYearGte: 2028 } },
+  {
+    jobId: 'allowlist-on3-rankings',
+    options: { classYear: Number(process.env.ALLOWLIST_ON3_RANKINGS_CLASS_YEAR || 2028) },
+  },
+];
+
+function defaultWeeklyOptions(jobId) {
+  switch (jobId) {
+    case 'uf-fit-seed':
+      return { classYears: process.env.UF_FIT_SEED_CLASS_YEARS || '2027,2028' };
+    case 'early-discovery':
+      return { classYearGte: 2028 };
+    case 'allowlist-on3-rankings':
+      return { classYear: Number(process.env.ALLOWLIST_ON3_RANKINGS_CLASS_YEAR || 2028) };
+    default:
+      return {};
+  }
+}
+
+function parseJobSpecs(raw) {
+  if (!raw) return [];
+  return raw
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((jobId) => ({ jobId, options: defaultWeeklyOptions(jobId) }));
+}
+
+function weeklyJobSpecs() {
+  const parsed = parseJobSpecs(process.env.PLATFORM_OPS_WEEKLY_JOBS);
+  if (parsed.length) return parsed;
+  return DEFAULT_WEEKLY_JOBS;
+}
+
+function shouldRunWeeklyFallback() {
+  if (process.env.PLATFORM_OPS_SKIP_WEEKLY === 'true') return false;
+  const day = new Date().getUTCDay();
+  const hour = new Date().getUTCHours();
+  // Sunday 18:xx UTC — after dedicated UF Fit / Early Discovery / allowlist crons.
+  return day === 0 && hour === 18;
+}
+
+async function runJob(jobId, options = {}) {
   const res = await fetch(`${API_BASE}/api/ops/run-job`, {
     method: 'POST',
     headers: {
@@ -34,7 +79,7 @@ async function runJob(jobId) {
       'X-Ingest-Secret': CRON_SECRET,
       'User-Agent': 'gatorvault-platform-ops-cron/1.0'
     },
-    body: JSON.stringify({ jobId }),
+    body: JSON.stringify({ jobId, options }),
     signal: AbortSignal.timeout(600000)
   });
   let payload = null;
@@ -49,6 +94,20 @@ async function runJob(jobId) {
     throw err;
   }
   return payload;
+}
+
+async function runJobSpec(spec, summary) {
+  const { jobId, options = {} } = spec;
+  try {
+    const result = await runJob(jobId, options);
+    const failed = result?.ok === false;
+    summary.jobs.push({ jobId, ok: !failed, result: result?.result || result, options });
+    if (failed) summary.failures.push({ jobId, error: result?.error || 'ok:false' });
+  } catch (err) {
+    console.error(`[platform-ops-cron] soft failure — ${jobId}:`, err.message);
+    summary.failures.push({ jobId, error: err.message });
+    summary.jobs.push({ jobId, ok: false, error: err.message, options });
+  }
 }
 
 async function main() {
@@ -66,15 +125,13 @@ async function main() {
   summary.warm = await warmApi(API_BASE);
 
   for (const jobId of jobs) {
-    try {
-      const result = await runJob(jobId);
-      const failed = result?.ok === false;
-      summary.jobs.push({ jobId, ok: !failed, result: result?.result || result });
-      if (failed) summary.failures.push({ jobId, error: result?.error || 'ok:false' });
-    } catch (err) {
-      console.error(`[platform-ops-cron] soft failure — ${jobId}:`, err.message);
-      summary.failures.push({ jobId, error: err.message });
-      summary.jobs.push({ jobId, ok: false, error: err.message });
+    await runJobSpec({ jobId }, summary);
+  }
+
+  if (shouldRunWeeklyFallback()) {
+    summary.weeklyFallback = true;
+    for (const spec of weeklyJobSpecs()) {
+      await runJobSpec(spec, summary);
     }
   }
 

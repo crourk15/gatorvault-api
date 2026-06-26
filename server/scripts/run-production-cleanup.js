@@ -4,6 +4,8 @@
  * Usage:
  *   node scripts/run-production-cleanup.js [jobId]
  *   node scripts/run-production-cleanup.js --recover
+ *   node scripts/run-production-cleanup.js --futurecast
+ *   node scripts/run-production-cleanup.js --futurecast --dry-run
  * Requires RECRUITING_ADMIN_PIN, OPS_ADMIN_PIN, or MONITORING_CRON_SECRET in server/.env
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
@@ -22,6 +24,18 @@ const PIN =
   process.env.RECRUITING_ADMIN_PIN ||
   process.env.EMAIL_TEST_PIN ||
   primaryAdminPin();
+
+const FUTURECAST_JOBS = [
+  {
+    jobId: 'uf-fit-seed',
+    options: { classYears: process.env.UF_FIT_SEED_CLASS_YEARS || '2027,2028' },
+  },
+  {
+    jobId: 'allowlist-on3-rankings',
+    options: { classYear: Number(process.env.ALLOWLIST_ON3_RANKINGS_CLASS_YEAR || 2028) },
+  },
+  { jobId: 'early-discovery', options: { classYearGte: 2028 } },
+];
 
 const RECOVERY_JOBS = [
   'recruiting-ingest',
@@ -71,11 +85,40 @@ async function post(path, body = {}) {
   return { status: res.status, ok: res.ok, payload };
 }
 
-async function runJob(jobId) {
+async function runJob(jobId, options = {}) {
   console.log(`POST ${API}/api/ops/run-job jobId=${jobId}`);
-  const out = await post('/api/ops/run-job', { jobId, options: {} });
+  const out = await post('/api/ops/run-job', { jobId, options });
   console.log(JSON.stringify(out.payload, null, 2));
   return out.ok && out.payload?.ok !== false;
+}
+
+async function runFuturecastOps() {
+  if (process.argv.includes('--dry-run')) {
+    console.log(JSON.stringify({ ok: true, dryRun: true, jobs: FUTURECAST_JOBS }, null, 2));
+    return;
+  }
+  if (!CRON_SECRET && !PIN) {
+    console.error('Set MONITORING_CRON_SECRET or OPS_ADMIN_PIN in server/.env');
+    process.exit(1);
+  }
+  console.log('[futurecast-prod-ops] warming API…');
+  const warm = await warmApi(API);
+  console.log('[futurecast-prod-ops] warm:', warm.ok ? 'ok' : warm.error || 'degraded');
+
+  let failures = 0;
+  for (const spec of FUTURECAST_JOBS) {
+    const ok = await runJob(spec.jobId, spec.options);
+    if (!ok) failures += 1;
+  }
+  if (failures) {
+    console.error(`[futurecast-prod-ops] ${failures} job(s) failed`);
+    process.exit(1);
+  }
+  console.log('[futurecast-prod-ops] complete');
+}
+
+async function runJobLegacy(jobId) {
+  return runJob(jobId, {});
 }
 
 async function recoverAll() {
@@ -96,7 +139,7 @@ async function recoverAll() {
     console.log(`[ops-recovery] ${step.name}:`, ok ? 'ok' : out.payload?.error || out.status);
   }
   for (const jobId of RECOVERY_JOBS) {
-    const ok = await runJob(jobId);
+    const ok = await runJobLegacy(jobId);
     if (!ok) failures += 1;
   }
   console.log('[ops-recovery] complete failures=', failures);
@@ -104,6 +147,9 @@ async function recoverAll() {
 }
 
 async function main() {
+  if (process.argv.includes('--futurecast')) {
+    return runFuturecastOps();
+  }
   if (process.argv.includes('--recover')) {
     return recoverAll();
   }
@@ -113,7 +159,7 @@ async function main() {
   }
 
   const jobId = process.argv[2] || 'post-deploy-feed-cleanup';
-  const ok = await runJob(jobId);
+  const ok = await runJobLegacy(jobId);
   if (!ok) process.exit(1);
 }
 

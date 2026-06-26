@@ -340,6 +340,23 @@ const JOBS = {
       });
     }
   },
+  'allowlist-on3-rankings': {
+    label: 'On3 composite + rank sync for UF allowlist targets',
+    subsystem: 'cron:allowlist-on3-rankings',
+    schedule: 'Weekly Sunday 16:00 UTC Render cron + platform-ops fallback',
+    async run(opts = {}) {
+      const { syncAllowlistTargetsFromOn3 } = require('./allowlist-target-sync.js');
+      const classYear = Number(
+        opts.classYear || process.env.ALLOWLIST_ON3_RANKINGS_CLASS_YEAR || 2028
+      );
+      const limit = Number(opts.limit || 0);
+      const result = await syncAllowlistTargetsFromOn3({
+        classYear,
+        limit: limit > 0 ? limit : undefined,
+      });
+      return { ok: true, classYear, result };
+    }
+  },
   'self-runner-purge-legacy-dedupe': {
     label: 'Reject legacy addDedupeRule Self-Runner proposals',
     subsystem: 'self-runner:cleanup',
