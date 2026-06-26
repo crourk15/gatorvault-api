@@ -33,6 +33,7 @@ module.exports = {
     'lib/movement-narrative.js',
     'lib/uf-trend-snapshot.js',
     'lib/uf-trend-snapshot-build.js',
+    'lib/on3-rpm-allowlist.js',
     'lib/alert-email-routes.js',
   ],
 

@@ -22,6 +22,7 @@ import { handlePostVisitIntelReconcile } from './visit-intel-reconcile';
 import { handlePostVisitIntelRecap } from './visit-intel-recap';
 import { handlePostVisitIntelDailyDigest } from './visit-intel-daily-digest';
 import { handlePostUfTrendSnapshot } from './uf-trend-snapshot';
+import { handlePostOn3RpmSync } from './on3-rpm-sync';
 import { handleGetFutureCastAlerts } from './alerts';
 import {
   handleGetFutureCastEarlyWatchlist,
@@ -35,6 +36,7 @@ export function mountFutureCastFeatureRoutes(app: Express): void {
   app.post('/api/futurecast/visit-intel/recap', handlePostVisitIntelRecap);
   app.post('/api/futurecast/visit-intel/daily-digest', handlePostVisitIntelDailyDigest);
   app.post('/api/futurecast/uf-trend/snapshot', handlePostUfTrendSnapshot);
+  app.post('/api/futurecast/on3-rpm/sync', handlePostOn3RpmSync);
   app.get('/api/futurecast/home', handleGetFutureCastHome);
   app.get('/api/futurecast/class', handleGetFutureCastClass);
   app.get('/api/futurecast/predictions', handleGetFutureCastPredictions);

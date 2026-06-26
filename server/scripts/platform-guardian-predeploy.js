@@ -31,6 +31,7 @@ function runVerifyServerModules() {
     'lib/movement-narrative.js',
     'lib/uf-trend-snapshot.js',
     'lib/uf-trend-snapshot-build.js',
+    'lib/on3-rpm-allowlist.js',
   ];
   const errors = [];
   for (const rel of modules) {

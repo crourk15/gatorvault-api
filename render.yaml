@@ -303,6 +303,18 @@ services:
         sync: false
 
   - type: cron
+    name: gatorvault-api-on3-rpm-allowlist-sync
+    schedule: "30 15 * * *"
+    runtime: node
+    region: oregon
+    startCommand: node server/scripts/render-on3-rpm-allowlist-cron.js
+    envVars:
+      - key: ON3_RPM_SYNC_URL
+        value: https://gatorvault-api.onrender.com/api/futurecast/on3-rpm/sync
+      - key: MONITORING_CRON_SECRET
+        sync: false
+
+  - type: cron
     name: gatorvault-api-platform-ops
     schedule: "30 */2 * * *"
     runtime: node
