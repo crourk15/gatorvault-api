@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   fetchEarlyDiscovery,
   type EarlyDiscoveryPlayer,
@@ -14,39 +14,64 @@ export interface EarlyDiscoveryGridProps {
   onPlayerClick?: (player: EarlyDiscoveryPlayer) => void;
 }
 
-export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridProps): React.ReactElement {
-  const { position, ...apiQuery } = query;
-  const [players, setPlayers] = useState<EarlyDiscoveryPlayer[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+function filterByPosition(
+  list: EarlyDiscoveryPlayer[],
+  position?: string
+): EarlyDiscoveryPlayer[] {
+  if (!position) return list;
+  const pos = position.toUpperCase();
+  return list.filter((p) => (p.position || '').toUpperCase() === pos);
+}
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await fetchEarlyDiscovery(apiQuery);
-      let list = data.players ?? [];
-      if (position) {
-        const pos = position.toUpperCase();
-        list = list.filter((p) => (p.position || '').toUpperCase() === pos);
-      }
-      setPlayers(list.map((p, index) => ({ ...p, rank: index + 1 })));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load Early Discovery');
-      setPlayers([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [apiQuery, position]);
+export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridProps): React.ReactElement {
+  const classYearGte = query.class_year_gte;
+  const minDiscoveryScore = query.min_discovery_score;
+  const limit = query.limit;
+  const position = query.position;
+
+  const [fetched, setFetched] = useState<EarlyDiscoveryPlayer[]>([]);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    let cancelled = false;
 
-  if (loading) {
+    async function load() {
+      setError(null);
+      setIsRefreshing(true);
+      try {
+        const data = await fetchEarlyDiscovery({
+          class_year_gte: classYearGte,
+          min_discovery_score: minDiscoveryScore,
+          limit,
+        });
+        if (cancelled) return;
+        setFetched(data.players ?? []);
+        setHasLoaded(true);
+      } catch (err) {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : 'Failed to load Early Discovery');
+      } finally {
+        if (!cancelled) setIsRefreshing(false);
+      }
+    }
+
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [classYearGte, minDiscoveryScore, limit]);
+
+  const players = useMemo(() => {
+    const filtered = filterByPosition(fetched, position);
+    return filtered.map((p, index) => ({ ...p, rank: index + 1 }));
+  }, [fetched, position]);
+
+  if (!hasLoaded && !error) {
     return <div className="fc-big-board-empty">Loading Early Discovery…</div>;
   }
-  if (error) {
+  if (error && !players.length) {
     return <div className="fc-big-board-error">{error}</div>;
   }
   if (!players.length) {
@@ -54,7 +79,11 @@ export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridP
   }
 
   return (
-    <div className="gv-rb-grid" data-testid="early-discovery-grid">
+    <div
+      className="gv-rb-grid"
+      data-testid="early-discovery-grid"
+      data-refreshing={isRefreshing ? 'true' : undefined}
+    >
       {players.map((player) => {
         const card = (
           <ClassicRecruitCard

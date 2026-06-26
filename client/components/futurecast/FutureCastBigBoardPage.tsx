@@ -47,6 +47,16 @@ export function FutureCastBigBoardPage(): React.ReactElement {
 
   const earlyDiscoveryClassGte = Math.max(classYear, 2028);
 
+  const earlyDiscoveryQuery = useMemo(
+    () => ({
+      class_year_gte: earlyDiscoveryClassGte,
+      min_discovery_score: 50,
+      limit: 100,
+      position: position || undefined,
+    }),
+    [earlyDiscoveryClassGte, position]
+  );
+
   const openPlayer = (slug: string, lifecycle: BigBoardLifecycle, fullName: string) => {
     window.location.href = playerProfilePath(slug, lifecycle, true, fullName, 'futurecast');
   };
@@ -116,12 +126,7 @@ export function FutureCastBigBoardPage(): React.ReactElement {
         />
       ) : activeTab === 'early-discovery' ? (
         <EarlyDiscoveryGrid
-          query={{
-            class_year_gte: earlyDiscoveryClassGte,
-            min_discovery_score: 50,
-            limit: 100,
-            position: position || undefined,
-          }}
+          query={earlyDiscoveryQuery}
           onPlayerClick={(player) => openPlayer(player.slug, 'HS', player.fullName)}
         />
       ) : (
