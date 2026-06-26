@@ -26,7 +26,7 @@
     "generate:og": "node scripts/generate-og-assets.js",
     "qa:crawl": "node scripts/run-qa-crawler.js",
     "migrate:players": "npx tsx migrators/migrate-players.ts",
-    "seed:uf-fit": "node scripts/seed-uf-fit-scores.js",
+    "seed:uf-fit": "node --import tsx scripts/seed-uf-fit-scores.js",
     "migrate:predictions": "npx tsx migrators/run-migration.ts migrations/011_create_predictions_table.sql",
     "migrate:predictions-delta": "npx tsx migrators/run-migration.ts migrations/012_add_predictions_delta.sql",
     "migrate:predictions-delta:psql": "psql \"$env:DATABASE_URL\" -f migrations/012_add_predictions_delta.sql",

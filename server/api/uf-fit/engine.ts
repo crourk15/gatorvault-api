@@ -77,6 +77,14 @@ function round1(n: number): number {
   return Math.round(n * 10) / 10;
 }
 
+/** Postgres timestamptz may arrive as Date — normalize to YYYY-MM-DD. */
+function isoDateYmd(value: string | Date | null | undefined): string {
+  if (value == null) return '';
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  const s = String(value);
+  return s.length >= 10 ? s.slice(0, 10) : s;
+}
+
 /** Component breakdown (scheme 0–40, culture 0–30, need 0–20, staff 0–10). */
 export function computeUfFitComponents(input: UfFitIntelInput): UfFitComponents {
   const schemeFit = ((input.scheme_score ?? 0) / 100) * COMPONENT_MAX.scheme;
@@ -152,14 +160,14 @@ export function buildUfFitHistory(input: UfFitIntelInput, currentScore: number):
     const weight = SIGNAL_TYPE_WEIGHTS[sig.signal_type] ?? 5;
     running = clamp100(running + Math.round(weight * 0.35));
     points.push({
-      date: sig.created_at.slice(0, 10),
+      date: isoDateYmd(sig.created_at),
       score: running,
     });
   }
 
   if (input.score_computed_at) {
     points.push({
-      date: input.score_computed_at.slice(0, 10),
+      date: isoDateYmd(input.score_computed_at),
       score: currentScore,
     });
   } else if (points.length) {
