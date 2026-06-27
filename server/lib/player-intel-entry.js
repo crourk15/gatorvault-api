@@ -120,9 +120,25 @@ async function resolveRecruitIdentity(name, classYear) {
 
   let pageProps = null;
   let extended = {};
-  if (recruitSlug) {
-    pageProps = await fetchOn3PageProps(recruitSlug, year);
+  let recruitSlugResolved = recruitSlug;
+  if (recruitSlugResolved) {
+    pageProps = await fetchOn3PageProps(recruitSlugResolved, year);
     if (pageProps) extended = parseOn3Extended(pageProps, year);
+  }
+  if (!pageProps) {
+    const { discoverOn3RecruitSlug } = require('./on3-recruit-discovery');
+    const discovered = await discoverOn3RecruitSlug(baseSlug, {
+      name: trimmed,
+      classYear: year,
+      player: existing,
+    });
+    if (discovered?.recruitSlug) {
+      recruitSlugResolved = discovered.recruitSlug;
+      pageProps =
+        discovered.profile?.pageProps ||
+        (await fetchOn3PageProps(recruitSlugResolved, year));
+      if (pageProps) extended = parseOn3Extended(pageProps, year);
+    }
   }
 
   const slug = canonicalEntrySlug({
@@ -144,7 +160,7 @@ async function resolveRecruitIdentity(name, classYear) {
       confidence: s.confidence,
     })),
     on3: extended,
-    recruitSlug,
+    recruitSlug: recruitSlugResolved,
   };
 }
 

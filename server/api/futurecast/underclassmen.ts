@@ -19,7 +19,7 @@ import {
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const { ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist');
+const { getAllowlistSet } = require('../../lib/recruiting-target-allowlist');
 
 const EARLY_WATCHLIST_PATH = path.join(__dirname, '../../data/futurecast/early-watchlist.json');
 const DEFAULT_YEARS = [2028, 2029, 2030] as const;
@@ -102,7 +102,7 @@ function bucketForYear(
 
 async function slugsForYear(classYear: number): Promise<string[]> {
   if (classYear === 2028) {
-    return ALLOWLIST_2028.map((s: string) => String(s).toLowerCase());
+    return [...getAllowlistSet(2028)].map((s: string) => String(s).toLowerCase());
   }
 
   const entries = loadEarlyWatchEntries().filter((e) => Number(e.classYear) === classYear);

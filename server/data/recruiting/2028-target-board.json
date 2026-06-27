@@ -376,6 +376,21 @@
       "inState": true,
       "committedTo": null,
       "ufProbability": 0.32
+    },
+    {
+      "slug": "zyon-robinson",
+      "name": "Zyon Robinson",
+      "pos": "WR",
+      "school": "McEachern, GA",
+      "state": "GA",
+      "stars": 4,
+      "rating": 91.77028985507248,
+      "natlRank": 103,
+      "posRank": 16,
+      "stateRank": 15,
+      "inState": false,
+      "committedTo": null,
+      "ufProbability": 0.02
     }
   ]
 }

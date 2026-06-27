@@ -1,7 +1,7 @@
 /**
  * Discovery-score enrichment for 2028 underclassmen watchboard (Early Discovery parity).
  */
-const { ALLOWLIST_2028 } = require('./recruiting-target-allowlist');
+const { getAllowlistSet } = require('./recruiting-target-allowlist');
 const { loadTargetBoardBySlug } = require('./target-board-path');
 const {
   buildAllowlistDiscoveryRow,
@@ -29,7 +29,7 @@ async function loadDiscoveryEnrichmentBySlug(classYear = 2028) {
   try {
     require('tsx/cjs');
     const { db } = require('../models/db.ts');
-    const slugs = ALLOWLIST_2028.map((s) => String(s).toLowerCase());
+    const slugs = [...getAllowlistSet(2028)].map((s) => String(s).toLowerCase());
     const { rows } = await db.query(
       `
       SELECT
@@ -62,7 +62,7 @@ async function loadDiscoveryEnrichmentBySlug(classYear = 2028) {
   }
 
   const boardBySlug = loadTargetBoardBySlug(2028);
-  for (const slug of ALLOWLIST_2028) {
+  for (const slug of getAllowlistSet(2028)) {
     const key = String(slug).toLowerCase();
     const boardRow = boardBySlug.get(key);
     if (!boardRow) continue;

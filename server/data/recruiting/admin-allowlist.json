@@ -1,7 +1,11 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-26T00:44:57.010Z",
+  "updatedAt": "2026-06-27T14:41:27.039Z",
   "slugs2027": [],
-  "slugs2028": [],
-  "names": {}
+  "slugs2028": [
+    "zyon-robinson"
+  ],
+  "names": {
+    "zyon-robinson": "Zyon Robinson"
+  }
 }
