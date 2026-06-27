@@ -9,6 +9,7 @@ import {
   shouldShowPortalWatchlist,
 } from '@/lib/recruiting-cycle';
 import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
+import { TargetBoardPreview } from '@/components/futurecast/TargetBoardPreview';
 
 type Props = {
   targets: HomeFutureCastTargetView[];
@@ -126,6 +127,11 @@ export function HomeCommandFutureCastPreview({ targets, loading }: Props): React
               footerHref="/vault/futurecast/big-board"
               footerLabel={`Open ${discoveryYear} Early Discovery board →`}
             />
+            <div className="home-wow-fc-target-strip" data-testid="home-2028-targets">
+              <p className="home-wow-fc-strip-label">2028 UF Targets</p>
+              <p className="home-wow-fc-strip-sub">Locked allowlist — On3 ranks and UF likelihood.</p>
+              <TargetBoardPreview classYear={2028} limit={3} />
+            </div>
             <p className="home-wow-fc-subnote">
               2027 targets and movement intel on{' '}
               <a href={VAULT_PILLAR_ROUTES.futurecast}>FutureCast Lab</a>.

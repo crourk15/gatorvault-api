@@ -921,6 +921,26 @@
   text-decoration: underline;
 }
 
+.home-wow-fc-target-strip {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.home-wow-fc-strip-label {
+  margin: 0 0 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--home-text, #fff);
+}
+
+.home-wow-fc-strip-sub {
+  margin: 0 0 10px;
+  font-size: 0.75rem;
+  color: var(--home-muted, rgba(255, 255, 255, 0.55));
+  line-height: 1.4;
+}
+
 .home-wow-fc-subnote {
   margin: 12px 0 0;
   font-size: 0.75rem;

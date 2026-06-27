@@ -15,6 +15,7 @@ import {
 import { resolvePortalSeason, shouldShowPortalWatchlist, getPortalSeasonState, primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { PortalSeasonDormantCard } from '@/components/futurecast/lab/FutureCastPortalCrossView';
 import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
+import { TargetBoardPreview } from '@/components/futurecast/TargetBoardPreview';
 import type { FeedPrediction } from '@/lib/predictions-api';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 import { usePathname } from '@/lib/use-pathname';
@@ -287,6 +288,16 @@ export function FutureCastHomepage({ mode = 'full' }: { mode?: 'full' | 'master'
           testId="home-early-discovery"
         >
           <EarlyDiscoveryPreview query={{ class_year_gte: primaryRecruitingClassYear(), limit: 6 }} />
+        </Section>
+      )}
+
+      {(mode === 'full' || mode === 'master') && !shouldShowPortalWatchlist(getPortalSeasonState()) && (
+        <Section
+          title="2028 UF Targets"
+          subtitle="Locked allowlist — full target board with On3 ranks and UF likelihood"
+          testId="home-2028-targets"
+        >
+          <TargetBoardPreview classYear={2028} limit={6} />
         </Section>
       )}
 

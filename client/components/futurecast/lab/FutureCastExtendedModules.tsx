@@ -18,6 +18,7 @@ import { PlayerIntelTimelineStrip } from './PlayerIntelTimelineStrip';
 import { ufPctFromFc, isBattleTarget } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
+import { TargetBoardPreview } from '@/components/futurecast/TargetBoardPreview';
 import {
   getPortalSeasonState,
   primaryRecruitingClassYear,
@@ -360,6 +361,21 @@ export function FutureCastExtendedModules({
             footerHref="/vault/futurecast/big-board"
             footerLabel="Open Early Discovery board →"
           />
+        </FutureCastPanelShell>
+      ) : null}
+
+      {discoveryFocus ? (
+        <FutureCastPanelShell
+          title="2028 UF Targets"
+          sub="Locked allowlist — On3 ranks, composite, and UF likelihood."
+          testId="fc-lab-2028-targets"
+          action={
+            <a href="/vault/recruiting/2028/targets" className="rh-cc-link">
+              Full board →
+            </a>
+          }
+        >
+          <TargetBoardPreview classYear={2028} limit={4} />
         </FutureCastPanelShell>
       ) : null}
 

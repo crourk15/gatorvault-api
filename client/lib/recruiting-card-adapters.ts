@@ -9,6 +9,7 @@ import type { PortalWatchlistHomePlayer } from './futurecast-home-api';
 import type { PortalWatchlistPlayer } from './portal-api';
 import type { UfFitWatchlistPlayer } from './uf-fit-api';
 import type { EarlyDiscoveryPlayer } from './early-discovery-api';
+import type { UnderclassmenPlayer } from './futurecast-underclassmen-api';
 import { formatRecruitSchoolLabel } from './recruiting-display-utils';
 import type { StaffDashboardPlayer } from './staff-api';
 import type { PortalIncomingPlayer } from './recruiting-api';
@@ -17,6 +18,44 @@ import type { ClassicCardVariant } from '@/components/vault/ClassicRecruitCard';
 
 export function minimalRecruitPlayer(slug: string, name: string): RecruitingBoardPlayer {
   return { slug, name, tier: 'HIGH' };
+}
+
+export function fromUnderclassmenTarget(p: UnderclassmenPlayer): RecruitingBoardPlayer {
+  const composite = p.composite > 0 ? p.composite : undefined;
+  const isLiveOn3 = (p.natlRank ?? 0) > 0 && (p.composite ?? 0) > 0;
+  const ufPct = p.ufConfidence ?? null;
+  return {
+    slug: p.slug,
+    name: p.name,
+    tier: 'HIGH',
+    position: p.position,
+    classYear: p.classYear,
+    state: p.state ?? undefined,
+    stars: p.stars ?? 0,
+    rating: composite,
+    displayRating: composite,
+    natlRank: isLiveOn3 ? (p.natlRank ?? undefined) : undefined,
+    posRank: isLiveOn3 ? (p.posRank ?? undefined) : undefined,
+    stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
+    fitScore: p.fitScore ?? undefined,
+    ufProbability: ufPct != null && ufPct > 0 ? ufPct / 100 : undefined,
+    ufStatus: 'TARGET',
+    school: formatRecruitSchoolLabel(p.school ?? undefined) ?? undefined,
+    inState: p.state === 'FL',
+    heatPct: ufPct != null && ufPct > 0 ? ufPct : undefined,
+    heatLabel: 'UF likelihood',
+    ratingLabel: isLiveOn3 ? 'Composite' : composite != null ? 'Vault est.' : undefined,
+    showIndustryRanks: isLiveOn3,
+    movementDirection:
+      p.trendDelta7d != null
+        ? p.trendDelta7d > 0
+          ? 'up'
+          : p.trendDelta7d < 0
+            ? 'down'
+            : 'flat'
+        : undefined,
+    skinny: p.tier === 'target' ? 'Locked UF target' : 'Underclassmen watchlist',
+  };
 }
 
 export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlayer {
