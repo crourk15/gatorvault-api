@@ -959,6 +959,40 @@ function startRivalsPmIngestScheduler() {
   console.log('Rivals PM ingest: enabled (every', Math.round(intervalMs / 1000), 's)');
 }
 
+
+let _gvAllowlistFcBootStarted = false;
+function startAllowlistFuturecastBootProvision() {
+  if (!process.env.DATABASE_URL && !process.env.SUPABASE_DATABASE_URL) return;
+  if (_gvAllowlistFcBootStarted) return;
+  _gvAllowlistFcBootStarted = true;
+  const bootDelay = Math.max(
+    45000,
+    parseInt(process.env.ALLOWLIST_FC_BOOT_DELAY_MS || '120000', 10) || 120000
+  );
+  setTimeout(() => {
+    const opsMonitor = require('./lib/ops-monitor');
+    opsMonitor
+      .wrapJob('allowlist-futurecast-provision', 'cron:allowlist-futurecast-provision', () => {
+        const { runAllowlistFuturecastProvision } = require('./lib/allowlist-futurecast-provision');
+        return runAllowlistFuturecastProvision({ classYear: 2028 });
+      })
+      .then((r) => {
+        console.log(
+          '[allowlist-fc-provision] boot run — provisioned',
+          r.provisioned || 0,
+          'skipped',
+          r.skipped || 0,
+          'failed',
+          r.failed || 0,
+          'of',
+          r.total || 0
+        );
+      })
+      .catch((err) => console.warn('[allowlist-fc-provision] boot run failed:', err.message));
+  }, bootDelay);
+  console.log('Allowlist FutureCast provision: boot run scheduled in', Math.round(bootDelay / 1000), 's');
+}
+
 let _gvBeatLateIngestStarted = false;
 function startBeatLateIngestScheduler() {
   if (!pipelineGuards.guardScheduledJobStart('beat-late-ingest')) return;

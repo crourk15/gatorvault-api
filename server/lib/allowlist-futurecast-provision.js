@@ -64,10 +64,18 @@ async function resolveSeedConfidence(slug, pgPlayer) {
   }
 
   const recruiting = await store.getPlayerBySlug(canonical);
+  const boardRow = load2028BoardRow(canonical);
+  const boardPct = toPercent(boardRow?.ufProbability);
   const storePct = toPercent(
     recruiting?.ufProbability ?? recruiting?.ufRpmPct ?? recruiting?.futurecastProbability
   );
-  if (storePct > 0) return { confidence: storePct, source: 'store' };
+  const mergedPct = Math.max(storePct, boardPct);
+  if (mergedPct >= 10) {
+    return {
+      confidence: mergedPct,
+      source: storePct >= boardPct && storePct >= 10 ? 'store' : 'board',
+    };
+  }
 
   const { getUFSpecificProfileByPlayerId } = loadModels();
   const ufProfile = await getUFSpecificProfileByPlayerId(pgPlayer.id);
@@ -170,6 +178,19 @@ async function ensureAllowlistPostgresPlayer(slug, classYear) {
   return player;
 }
 
+async function syncAllowlistSlugAliases(pgPlayer, classYear) {
+  const { ensurePlayerSlugAlias } = loadModels();
+  const canonical = normalizeAllowlistSlug(pgPlayer.slug, classYear);
+  if (String(pgPlayer.slug || '').toLowerCase() !== canonical) {
+    await ensurePlayerSlugAlias(pgPlayer.id, canonical, true);
+  }
+  const forward = loadCanonicalOn3SlugMap();
+  const on3Slug = String(forward[canonical] || '').toLowerCase();
+  if (on3Slug && on3Slug !== canonical) {
+    await ensurePlayerSlugAlias(pgPlayer.id, on3Slug, false);
+  }
+}
+
 async function provisionAllowlistPredictionForSlug(slug, classYear, options = {}) {
   const key = String(slug || '').toLowerCase();
   if (!key) return { slug: key, ok: false, reason: 'missing_slug' };
@@ -192,6 +213,7 @@ async function provisionAllowlistPredictionForSlug(slug, classYear, options = {}
     }
   }
   if (!pgPlayer) return { slug: key, ok: false, reason: 'player_not_in_postgres' };
+  await syncAllowlistSlugAliases(pgPlayer, classYear);
   if (Number(pgPlayer.class_year) !== Number(classYear)) {
     return { slug: key, ok: false, reason: 'class_year_mismatch', classYear: pgPlayer.class_year };
   }
@@ -201,6 +223,13 @@ async function provisionAllowlistPredictionForSlug(slug, classYear, options = {}
   }
 
   if (await hasAllowlistSeedPrediction(pgPlayer.id)) {
+    const existingSeed = await resolveSeedConfidence(key, pgPlayer);
+    if (existingSeed?.confidence > 0 && !options.dryRun) {
+      await ensureMovementWindowBaseline(pgPlayer.id, existingSeed.confidence, {
+        priorConfidence: Math.max(1, existingSeed.confidence - BASELINE_GAP),
+        windowDays: options.windowDays || 30,
+      });
+    }
     return { slug: key, ok: true, skipped: true, reason: 'allowlist_seed_present' };
   }
 
