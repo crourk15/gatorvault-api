@@ -33,7 +33,7 @@ describe('Phase 3 unified hub data', () => {
   });
 
   it('buildBattleContext never returns competitorName Field', async () => {
-    const dataset = await loadHubDataset({ classYears: [2027, 2028, 2029] });
+    const dataset = await loadHubDataset({ classYears: [2027, 2028] });
     for (const player of dataset.players.values()) {
       const ctx = buildBattleContext(player);
       assert.notEqual(ctx.competitorName, 'Field');
@@ -81,6 +81,38 @@ describe('Phase 3 unified hub data', () => {
       assert.notEqual(row.ufPercent, '—');
       assert.match(row.ufPercent, /^\d+%$/);
     }
+  });
+
+  it('buildHubBattleBoard respects class year filter', async () => {
+    const hubData = require('../../lib/recruiting-hub-data');
+    const board2027 = await hubData.buildHubBattleBoard(2027);
+    const board2028 = await hubData.buildHubBattleBoard(2028);
+
+    assert.ok(board2027.length > 0, 'expected 2027 battle board rows');
+    for (const row of board2027) {
+      assert.equal(Number(row.class), 2027, `2027 board should not include ${row.name} (${row.class})`);
+    }
+    for (const row of board2028) {
+      assert.equal(Number(row.class), 2028, `2028 board should not include ${row.name} (${row.class})`);
+    }
+
+    const overlap = board2027.filter((row) => board2028.some((other) => other.id === row.id));
+    assert.equal(overlap.length, 0, 'battle boards for adjacent years should not share slugs');
+  });
+
+  it('committed elsewhere players surface a competitor school', () => {
+    const { extractRealCompetitors } = require('../../lib/recruiting-hub-competitors');
+    const competitors = extractRealCompetitors(
+      {
+        slug: 'easton-royal-test',
+        name: 'Easton Royal',
+        committedTo: 'Texas',
+        status: 'Committed Elsewhere',
+        ufProbability: 48,
+      },
+      []
+    );
+    assert.ok(competitors.some((c) => /texas/i.test(c.school)), 'expected Texas as competitor');
   });
 
   it('buildBattlesListRows skips rows without real intel notes', () => {
@@ -152,7 +184,7 @@ describe('movement feed visit logs', () => {
     });
 
     const hubData = require('../../lib/recruiting-hub-data');
-    const dataset = await hubData.loadHubDataset({ classYears: [2027, 2028, 2029] });
+    const dataset = await hubData.loadHubDataset({ classYears: [2027, 2028] });
     const feed = await hubData.buildMovementFeedItems([...dataset.players.values()], dataset.intelRows, {
       visitLogs: visitLogStoreFresh.listVisitLogs({ limit: 200 }),
       offerLogs: [],

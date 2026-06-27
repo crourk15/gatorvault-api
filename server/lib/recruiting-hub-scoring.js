@@ -158,11 +158,19 @@ function resolveUfScore(player, intelRows = []) {
   );
 }
 
-function getBattleDifficulty(ufScore, topCompetitorScore, trend) {
-  if (ufScore == null || topCompetitorScore == null) return 'unknown';
+function getBattleDifficulty(ufScore, topCompetitorScore, trend, options = {}) {
+  const committedElsewhere = Boolean(options.committedElsewhere);
+  if (ufScore == null) return 'unknown';
   const uf = Number(ufScore);
+  if (!Number.isFinite(uf)) return 'unknown';
+
+  if (topCompetitorScore == null) {
+    if (committedElsewhere) return uf >= 45 ? 'flip' : 'longshot';
+    return 'unknown';
+  }
+
   const top = Number(topCompetitorScore);
-  if (!Number.isFinite(uf) || !Number.isFinite(top)) return 'unknown';
+  if (!Number.isFinite(top)) return committedElsewhere ? 'flip' : 'unknown';
   const gap = uf - top;
 
   if (uf >= 80 && gap >= 20 && trend !== 'down') return 'easy';

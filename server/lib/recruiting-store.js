@@ -137,10 +137,33 @@ function sortHubCommits(players) {
   });
 }
 
-function isHubUfCommitPlayer(p) {
+function isOfficialRecruitingCommit(p, classYear) {
+  if (p.on3Source === 'on3-board-sync') return true;
+  if (p.protected === true) return true;
+  const { isVerifiedUfCommitSlug } = require('./recruiting-verified-commits');
+  const slug = String(p.slug || '').toLowerCase();
+  if (isVerifiedUfCommitSlug(slug, classYear)) return true;
+  const src = String(p.on3Source || '');
+  if (/on3\.com.*\/commits\//i.test(src)) return true;
+  return false;
+}
+
+function isHubUfCommitPlayer(p, classYear) {
   if (!isHubFloridaCommitStatus(p)) return false;
   const { isHubExternalCommitFlipTarget } = require('./recruiting-verified-commits');
-  return !isHubExternalCommitFlipTarget(p);
+  if (isHubExternalCommitFlipTarget(p)) return false;
+
+  const year = Number(classYear);
+  const status = String(p.status || '').toLowerCase();
+  const calendarYear = new Date().getFullYear();
+
+  // Enrolled / signed classes — exclude stale "committed" rows from bad ingest
+  if (Number.isFinite(year) && year <= calendarYear) {
+    return ['enrolled', 'signed'].includes(status);
+  }
+
+  // Active recruiting classes — On3 board sync + editorial/protected commits only
+  return isOfficialRecruitingCommit(p, year);
 }
 
 function filterHubCommitPlayers(players, classYear) {
@@ -151,7 +174,7 @@ function filterHubCommitPlayers(players, classYear) {
         !isTestPlayer(p) &&
         !isBlockedPlayer(p) &&
         Number(p.classYear) === year &&
-        isHubUfCommitPlayer(p)
+        isHubUfCommitPlayer(p, year)
     )
   );
 }

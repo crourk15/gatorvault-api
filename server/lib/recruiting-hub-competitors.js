@@ -41,6 +41,17 @@ function addCompetitor(map, name, score, trend = 'flat') {
   if (trend !== 'flat') existing.trend = trend;
 }
 
+function extractCommittedElsewhere(player) {
+  const school = player.committedTo ?? player.school;
+  if (!school || isFloridaSchool(school)) return null;
+  const status = String(player.status || player.ufOvStatus || '').toLowerCase();
+  if (status.includes('commit') && !isFloridaSchool(school)) return normalizeSchoolName(school);
+  if (player.committedTo && !isFloridaSchool(player.committedTo)) {
+    return normalizeSchoolName(player.committedTo);
+  }
+  return null;
+}
+
 function parseLeaderName(field) {
   if (!field) return null;
   if (typeof field === 'string') return field.trim() || null;
@@ -68,6 +79,11 @@ function extractRealCompetitors(player, intelRows = []) {
   for (const field of [player.leaderSchool, player.predictionLeader, player.topSchool]) {
     const name = parseLeaderName(field);
     if (name) addCompetitor(map, name, null);
+  }
+
+  const committedElsewhere = extractCommittedElsewhere(player);
+  if (committedElsewhere) {
+    addCompetitor(map, committedElsewhere, 75);
   }
 
   const rivals = player.rivalsLastPrediction;

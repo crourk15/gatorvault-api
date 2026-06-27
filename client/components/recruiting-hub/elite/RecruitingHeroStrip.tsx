@@ -163,7 +163,7 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
             </span>
           ))}
           {tickerItems.map((item, idx) => (
-            <span key={`dup-${idx}`} className="rh-hero-ticker-item">
+            <span key={`dup-${idx}`} className="rh-hero-ticker-item" aria-hidden="true">
               {item}
               <span className="rh-hero-ticker-sep">·</span>
             </span>

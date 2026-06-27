@@ -47,18 +47,19 @@ function groupIntelByPlayer(intel: Record<string, unknown>[]): Map<string, Recor
   return map;
 }
 
-export async function buildMovementSummaryPayload(): Promise<{
+export async function buildMovementSummaryPayload(classYear = 2027): Promise<{
   rising: number;
   falling: number;
   volatile: number;
   lastUpdated: string;
 }> {
+  const year = Number(classYear) || 2027;
   const boosts = await listCompetingVolatilityBoosts(ROLLING_MOVEMENT_WINDOW_DAYS).catch(
     () => new Map<string, number>()
   );
   const items = await filterMovementRowsToLiveTargets(
     filterMovementIntelRollingRows(await listRollingMovement(MOVEMENT_FILTERS, boosts)),
-    2027
+    year
   );
 
   const gm2 = require('../../lib/gm2') as {

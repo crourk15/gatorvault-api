@@ -110,11 +110,11 @@ async function buildHubTicker(year = 2027) {
   const items = [];
 
   if (rank) items.push(`${year} class trending nationally — UF at #${rank}`);
-  if (chip != null) items.push(`Blue chip % at ${chip}% and climbing`);
+  if (chip != null) items.push(`Blue chip % at ${chip}%`);
   if (commits.length) items.push(`${commits.length} commits locked for ${year}`);
 
   const { buildHubMovementFeed } = require('./recruiting-hub-data');
-  const feed = await buildHubMovementFeed();
+  const feed = await buildHubMovementFeed(year);
   for (const row of feed.slice(0, 4 - items.length)) {
     if (row.summary) items.push(row.summary);
   }
@@ -134,7 +134,7 @@ async function buildHubClassOverview(year = 2027) {
   let falling = 0;
   try {
   const { buildMovementSummaryPayload } = require('../api/recruiting/movement-summary.ts');
-  const summary = await buildMovementSummaryPayload();
+  const summary = await buildMovementSummaryPayload(year);
   rising = summary.rising ?? 0;
   falling = summary.falling ?? 0;
   } catch {
@@ -144,8 +144,8 @@ async function buildHubClassOverview(year = 2027) {
 
   const commitCount = commits.length;
 
-  const rankTrend = trendFromDelta(falling - rising);
-  const chipTrend = chip != null && chip >= 70 ? 'up' : 'stable';
+  const rankTrend = trendFromDelta(rising - falling);
+  const chipTrend = rising > falling ? 'up' : falling > rising ? 'down' : 'stable';
   const commitTrend = commitCount > 0 ? 'up' : 'stable';
   const ratingTrend = rising >= 2 ? 'up' : rising === 0 && falling > 0 ? 'down' : 'stable';
 
@@ -316,14 +316,14 @@ async function buildHubHeatIndex(year = 2027) {
   return hubData.buildHeatIndexRows(players);
 }
 
-async function buildHubMovementFeed(_year = 2027) {
+async function buildHubMovementFeed(year = 2027) {
   const hubData = require('./recruiting-hub-data');
-  return hubData.buildHubMovementFeed();
+  return hubData.buildHubMovementFeed(year);
 }
 
-async function buildHubBattleBoard(_year = 2027) {
+async function buildHubBattleBoard(year = 2027) {
   const hubData = require('./recruiting-hub-data');
-  return hubData.buildHubBattleBoard();
+  return hubData.buildHubBattleBoard(year);
 }
 
 async function buildHubFootprint(year = 2027) {

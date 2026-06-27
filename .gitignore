@@ -24,6 +24,8 @@ server/player/index.txt
 server/staff/
 gatorvault-api/
 server/.env
+server/apple-app-site-association
+server/.well-known/
 server/data/users.json
 proof/
 .codemagic/

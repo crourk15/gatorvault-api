@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "npm install --prefix server",
     "build:futurecast": "npm run build:render --prefix client",
-    "build:netlify": "node scripts/clean-publish-artifacts.js && node server/scripts/validate-target-allowlist.js && npm ci --prefix client && node client/scripts/verify-recruiting-cycle-exports.js && npm run build --prefix client && node client/scripts/generate-redirects.js && node client/scripts/merge-into-server.js && node server/scripts/validate-target-allowlist.js",
+    "build:netlify": "node scripts/clean-publish-artifacts.js && node server/scripts/validate-target-allowlist.js && npm ci --prefix client && node client/scripts/verify-recruiting-cycle-exports.js && npm run build --prefix client && node client/scripts/generate-redirects.js && node client/scripts/merge-into-server.js && node client/scripts/generate-aasa.js && node server/scripts/validate-target-allowlist.js",
     "clean:publish": "node scripts/clean-publish-artifacts.js",
     "deploy:netlify:full": "node scripts/deploy-netlify-full.js",
     "deploy:netlify:local": "node scripts/deploy-netlify-full.js --skip-deploy --skip-purge",

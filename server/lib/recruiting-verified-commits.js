@@ -1,6 +1,6 @@
 /**
  * Editorial verified UF commits — minimum slugs restored after On3 ingest demotion.
- * Hub commit lists use all Florida commits; this allowlist prevents false ingest rows
+ * Hub commit lists use official On3 board sync + enrolled/signed rows only.
  * from sticking while ensuring known commits are never demoted.
  */
 const { slugify } = require('./slug');

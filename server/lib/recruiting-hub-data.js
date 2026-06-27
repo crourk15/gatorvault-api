@@ -33,7 +33,7 @@ const {
   filterMovementIntelForPlayer,
 } = require('./commitment-prediction-override');
 
-const DEFAULT_CLASS_YEARS = [2027, 2028, 2029];
+const DEFAULT_CLASS_YEARS = [2026, 2027, 2028];
 const FEED_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 const RECENT_VISIT_MS = 14 * 24 * 60 * 60 * 1000;
 const MOMENTUM_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
@@ -141,6 +141,27 @@ function movementArrow(player) {
   return 'flat';
 }
 
+function deriveMovementTrend(rawPlayer, intelRows) {
+  if (rawPlayer.movementDirection === 'up' || rawPlayer.interestMeter === 'rising') return 'up';
+  if (rawPlayer.movementDirection === 'down' || rawPlayer.interestMeter === 'falling') return 'down';
+
+  const slug = String(rawPlayer.slug || '').toLowerCase();
+  for (const row of intelRows) {
+    if (String(row.playerSlug || row.player_slug || '').toLowerCase() !== slug) continue;
+    const delta = Number(row.movementDelta);
+    if (Number.isFinite(delta) && delta !== 0) return delta > 0 ? 'up' : 'down';
+    const et = String(row.eventType || '').toLowerCase();
+    if (et === 'momentum_up' || et === 'flip_watch') return 'up';
+    if (et === 'momentum_down') return 'down';
+  }
+  return 'flat';
+}
+
+function isCommittedElsewhere(player) {
+  const school = player.committedTo ?? null;
+  return Boolean(school && !isFloridaSchool(school));
+}
+
 function futureCastTag(pct) {
   if (pct == null) return 'Battle';
   if (pct >= 70) return 'Lean UF';
@@ -227,12 +248,8 @@ function enrichHubPlayer(rawPlayer, ctx = {}) {
   const ufScore = resolveStrictUfScore(rawPlayer, intelRows);
   const competitors = buildCompetitors(rawPlayer, intelRows);
   const topComp = topCompetitorScore(competitors);
-  const trend =
-    rawPlayer.movementDirection === 'up'
-      ? 'up'
-      : rawPlayer.movementDirection === 'down'
-        ? 'down'
-        : 'flat';
+  const trend = deriveMovementTrend(rawPlayer, intelRows);
+  const committedElsewhere = isCommittedElsewhere(rawPlayer);
   const geoPatch = normalizePlayerGeo(rawPlayer);
 
   const enriched = {
@@ -243,7 +260,11 @@ function enrichHubPlayer(rawPlayer, ctx = {}) {
     competitors,
     topCompetitorScore: topComp,
     battleDifficulty:
-      ufScore != null && topComp != null ? getBattleDifficulty(ufScore, topComp, trend) : 'unknown',
+      ufScore != null && topComp != null
+        ? getBattleDifficulty(ufScore, topComp, trend, { committedElsewhere })
+        : ufScore != null && committedElsewhere
+          ? getBattleDifficulty(ufScore, null, trend, { committedElsewhere })
+          : 'unknown',
     battleColor: ufScore != null ? getBattleColor(ufScore) : null,
     movementEvents: buildMovementEvents(rawPlayer, intelRows, visitLogs, offerLogs),
     geo: {
@@ -425,9 +446,9 @@ function buildBattlesListRows(enrichedPlayers) {
         tag: futureCastTag(player.ufScore),
         note: String(note).trim(),
         movement:
-          player.movementDirection === 'up'
+          player.trend === 'up' || player.movementDirection === 'up'
             ? 'Trending up'
-            : player.movementDirection === 'down'
+            : player.trend === 'down' || player.movementDirection === 'down'
               ? 'Trending down'
               : player.ufScore >= 70
                 ? 'Stable'
@@ -627,7 +648,29 @@ function isHubPlayerSuppressed(slug, rawMap, pool) {
   return isUfPredictionSuppressed({ ...raw, ...meta, slug: key });
 }
 
-async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}) {
+function resolveFeedMeta(slug, pool, rawMap) {
+  const meta = pool.get(slug);
+  if (meta) return meta;
+  const raw = rawMap.get(slug);
+  if (!raw) return null;
+  return {
+    slug,
+    name: raw.name || slug.replace(/-/g, ' '),
+    position: playerPos(raw),
+    classYear: raw.classYear ?? null,
+    profileUrl: profileUrl(raw),
+    isCommit: false,
+  };
+}
+
+function feedMatchesClassYear(item, classYear) {
+  if (classYear == null) return true;
+  if (item.class == null) return true;
+  return Number(item.class) === Number(classYear);
+}
+
+async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, options = {}) {
+  const focusYear = options.classYear != null ? Number(options.classYear) : null;
   const pool = await loadHubRecruitingPool();
   const rawMap = loadRawPlayerMap();
   const cutoff = Date.now() - FEED_WINDOW_MS;
@@ -648,7 +691,9 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}) {
     if (!Number.isFinite(ts) || ts < cutoff) continue;
     if (!isCuratedHubIntel(row, pool)) continue;
     const slug = String(row.playerSlug).toLowerCase();
-    const meta = pool.get(slug);
+    const meta = resolveFeedMeta(slug, pool, rawMap);
+    if (!meta) continue;
+    if (focusYear != null && Number(meta.classYear) !== focusYear) continue;
     const playerCtx = { ...(rawMap.get(slug) || {}), ...(meta || {}), slug };
     const filtered = filterMovementIntelForPlayer([row], playerCtx);
     if (!filtered.length) continue;
@@ -659,8 +704,9 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}) {
   for (const log of visitLogs) {
     const slug = String(log.playerSlug || '').toLowerCase();
     if (!slug || covered.has(slug)) continue;
-    const meta = pool.get(slug);
-    if (meta?.isCommit) continue;
+    const meta = resolveFeedMeta(slug, pool, rawMap);
+    if (!meta || meta.isCommit) continue;
+    if (focusYear != null && Number(meta.classYear) !== focusYear) continue;
     items.push(mapVisitLogFeedItem(log, meta));
     covered.add(slug);
   }
@@ -668,14 +714,16 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}) {
   for (const log of offerLogs) {
     const slug = String(log.playerSlug || '').toLowerCase();
     if (!slug || covered.has(slug)) continue;
-    const meta = pool.get(slug);
-    if (meta?.isCommit) continue;
+    const meta = resolveFeedMeta(slug, pool, rawMap);
+    if (!meta || meta.isCommit) continue;
+    if (focusYear != null && Number(meta.classYear) !== focusYear) continue;
     items.push(mapOfferLogFeedItem(log, meta));
     covered.add(slug);
   }
 
   for (const meta of pool.values()) {
     if (meta.isCommit) continue;
+    if (focusYear != null && Number(meta.classYear) !== focusYear) continue;
     if (covered.has(meta.slug)) continue;
     const raw = rawMap.get(String(meta.slug).toLowerCase()) || {};
     const merged = { ...raw, ...meta };
@@ -726,9 +774,14 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}) {
   for (const item of items.sort(
     (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   )) {
-    const key = `${item.id}:${item.summary.slice(0, 48)}`;
+    const slugKey = String(item.name || '')
+      .toLowerCase()
+      .replace(/\s+/g, '-');
+    const day = new Date(item.timestamp).toDateString();
+    const key = `${slugKey}:${item.event}:${day}:${item.summary.slice(0, 64)}`;
     if (seen.has(key)) continue;
     seen.add(key);
+    if (!feedMatchesClassYear(item, focusYear)) continue;
     deduped.push(item);
     if (deduped.length >= 25) break;
   }
@@ -997,18 +1050,22 @@ function buildFootprintPayload(enrichedPlayers, intelRows, logs = {}) {
   };
 }
 
-async function buildHubMovementFeed() {
-  const dataset = await loadHubDataset();
+async function buildHubMovementFeed(year = 2027) {
+  const focusYear = Number(year) || 2027;
+  const dataset = await loadHubDataset({ classYears: [focusYear] });
   return buildMovementFeedItems([...dataset.players.values()], dataset.intelRows, {
     visitLogs: dataset.visitLogs,
     offerLogs: dataset.offerLogs,
-  });
+  }, { classYear: focusYear });
 }
 
-async function buildHubBattleBoard() {
-  const dataset = await loadHubDataset();
+async function buildHubBattleBoard(year = 2027) {
+  const focusYear = Number(year) || 2027;
+  const dataset = await loadHubDataset({ classYears: [focusYear] });
   return buildBattleBoardRows(
-    [...dataset.players.values()].filter((p) => !p.isCommit)
+    [...dataset.players.values()].filter(
+      (p) => !p.isCommit && Number(p.classYear) === focusYear
+    )
   );
 }
 

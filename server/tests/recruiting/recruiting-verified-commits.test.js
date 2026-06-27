@@ -68,6 +68,10 @@ test('getHubCommits returns all Florida commits for hub class years', async () =
   assert.ok(commits.length >= 20, `expected full 2027 class, got ${commits.length}`);
   for (const player of commits) {
     assert.equal(String(player.committedTo || '').toLowerCase(), 'florida');
+    assert.ok(
+      player.on3Source === 'on3-board-sync' || player.protected === true,
+      `${player.slug} should be an official On3 board commit`
+    );
   }
   assert.equal(
     commits.some((p) => String(p.slug || '').toLowerCase() === 'easton-royal'),
@@ -79,6 +83,22 @@ test('getHubCommits returns all Florida commits for hub class years', async () =
     true,
     'maxwell-hiller and other UF commits should appear'
   );
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+});
+
+test('getHubCommits 2026 counts enrolled or signed only', async () => {
+  delete process.env.SUPABASE_URL;
+  delete process.env.DATABASE_URL;
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+  const jsonStore = require('../../lib/recruiting-store');
+  const commits = await jsonStore.getHubCommits(2026);
+  assert.ok(commits.length > 0 && commits.length <= 35, `expected enrolled class size, got ${commits.length}`);
+  for (const player of commits) {
+    assert.ok(
+      ['enrolled', 'signed'].includes(String(player.status || '').toLowerCase()),
+      `${player.slug} should be enrolled/signed, not stale committed`
+    );
+  }
   delete require.cache[require.resolve('../../lib/recruiting-store')];
 });
 

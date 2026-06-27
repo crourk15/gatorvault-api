@@ -5,7 +5,7 @@ const store = require('./recruiting-store');
 const { enrichBoard } = require('./recruiting-board-enrich');
 const { STAFF_DIRECTORY } = require('./recruiting-staff-directory');
 
-const HUB_CLASS_YEARS = [2027, 2028, 2029];
+const HUB_CLASS_YEARS = [2026, 2027, 2028];
 const VERIFIED_SOURCES = new Set(['on3', 'manual', 'rivals_pm', 'auto:beat-writer']);
 
 const BLOCKED_SOURCE =
