@@ -80,8 +80,9 @@ export async function listEarlyDiscoveryPlayers(opts: {
     params
   );
 
-  return rows.map((row: Record<string, unknown>, index: number) =>
-    enrichWithRankings({
+  const { mergeAllowlistIntoDiscovery } = require('../../lib/early-discovery-allowlist-merge');
+  const mergedRows = mergeAllowlistIntoDiscovery(
+    rows.map((row: Record<string, unknown>) => ({
       id: row.id,
       slug: row.slug,
       fullName: row.full_name,
@@ -93,9 +94,11 @@ export async function listEarlyDiscoveryPlayers(opts: {
       ufFitScore: row.uf_fit_score != null ? Number(row.uf_fit_score) : null,
       ufStatus: row.uf_status,
       signalCount: Number(row.signal_count) || 0,
-      rank: index + 1,
-    })
+    })),
+    { classYearGte, minDiscoveryScore, minUfFitScore, position, limit }
   );
+
+  return mergedRows.map((row) => enrichWithRankings(row));
 }
 
 export const handleGetEarlyDiscovery = asyncHandler(async (req: Request, res: Response) => {

@@ -217,6 +217,17 @@ async function main() {
         return null;
       },
     }),
+    await fetchJsonCheck('api-recruiting-board-2028', `${API_URL}/api/recruiting/board?class=2028`, {
+      validate(body) {
+        if (!Array.isArray(body?.targets)) return 'missing targets[] on 2028 recruiting board';
+        if (body.targets.length < 20) return `expected >=20 2028 targets, got ${body.targets.length}`;
+        const withUf = body.targets.filter((p) => Number(p.ufProbability) > 0);
+        const withFit = body.targets.filter((p) => Number(p.fitScore) > 0);
+        if (!withUf.length) return '2028 recruiting targets missing ufProbability (check target-board-enrich)';
+        if (!withFit.length) return '2028 recruiting targets missing fitScore (check target-board-enrich)';
+        return null;
+      },
+    }),
     await fetchCheck('vault-futurecast-big-board', `${SITE_URL}/vault/futurecast/big-board/`, {
       headers: { 'User-Agent': CRAWLER_UA },
       expectIncludes: ['FutureCast Big Board', 'vault-futurecast-big-board'],

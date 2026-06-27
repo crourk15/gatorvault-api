@@ -6,6 +6,8 @@ require("tsx/cjs");
 const fs = require("fs");
 const path = require("path");
 const { computeDiscoveryScore } = require("./early-discovery-score.js");
+const { ALLOWLIST_2028 } = require("./recruiting-target-allowlist");
+const { ALLOWLIST_DISCOVERY_FLOOR } = require("./early-discovery-allowlist-merge");
 
 const BOARD_2028_PATH = path.join(__dirname, "../data/recruiting/2028-target-board.json");
 
@@ -32,6 +34,7 @@ async function runEarlyDiscoveryJob({ classYearGte = 2028, dryRun = false } = {}
   } = require("../models/uf-specific-profile.ts");
 
   const boardBySlug = load2028BoardBySlug();
+  const allowlist2028 = new Set(ALLOWLIST_2028.map((s) => String(s).toLowerCase()));
 
   const { rows: players } = await db.query(
     `
@@ -68,12 +71,15 @@ async function runEarlyDiscoveryJob({ classYearGte = 2028, dryRun = false } = {}
     const slugKey = String(row.slug || "").toLowerCase();
     const seed = boardBySlug.get(slugKey);
     const inFlorida = String(row.state || seed?.state || "").toUpperCase() === "FL" || Boolean(seed?.inState);
-    const score = computeDiscoveryScore({
-      signalTypes: row.signal_types || [],
-      stars: seed?.stars ?? row.stars,
-      rating: seed?.rating ?? row.composite_rating,
-      inFlorida,
-    });
+    const score = Math.max(
+      computeDiscoveryScore({
+        signalTypes: row.signal_types || [],
+        stars: seed?.stars ?? row.stars,
+        rating: seed?.rating ?? row.composite_rating,
+        inFlorida,
+      }),
+      Number(row.class_year) === 2028 && allowlist2028.has(slugKey) ? ALLOWLIST_DISCOVERY_FLOOR : 0
+    );
 
     if (!dryRun) {
       await updateDiscoveryScore(row.id, score).catch(async () => {
