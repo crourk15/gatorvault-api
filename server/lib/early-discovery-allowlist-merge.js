@@ -5,6 +5,7 @@ const { ALLOWLIST_2028 } = require('./recruiting-target-allowlist');
 const { loadTargetBoardBySlug } = require('./target-board-path');
 const { computeDiscoveryScore } = require('./early-discovery-score');
 const { mergeBoardSeed } = require('./target-board-enrich');
+const { resolveFutureCastPosition } = require('./recruiting-editorial-positions');
 
 const ALLOWLIST_DISCOVERY_FLOOR = 72;
 
@@ -57,7 +58,12 @@ function buildAllowlistDiscoveryRow(boardRow, classYear) {
     slug,
     fullName: merged.name || boardRow.name || slug,
     classYear,
-    position: merged.pos || merged.position || boardRow.pos || boardRow.position || null,
+    position: resolveFutureCastPosition({
+      slug,
+      classYear,
+      seed: boardRow,
+      recruiting: merged,
+    }) || merged.pos || merged.position || boardRow.pos || null,
     state: merged.state || boardRow.state || null,
     stars: merged.stars ?? boardRow.stars ?? null,
     discoveryScore,

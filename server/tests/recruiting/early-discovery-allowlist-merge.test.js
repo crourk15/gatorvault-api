@@ -60,6 +60,12 @@ test('buildAllowlistDiscoveryRow includes ufProbability from board seed', () => 
   assert.ok(Number(row.ufProbability) > 0 && Number(row.ufProbability) <= 1);
 });
 
+test('buildAllowlistDiscoveryRow uses TE for kaleb-ballard', () => {
+  const boardBySlug = require('../../lib/target-board-path').loadTargetBoardBySlug(2028, path.join(__dirname, '../..'));
+  const row = buildAllowlistDiscoveryRow(boardBySlug.get('kaleb-ballard'), 2028);
+  assert.equal(row.position, 'TE');
+});
+
 test('mergeAllowlistIntoDiscovery skips merge for 2029-only queries', () => {
   const input = [{ id: 'x', slug: 'only-one', fullName: 'Only One', classYear: 2029, discoveryScore: 80, signalCount: 0 }];
   const merged = mergeAllowlistIntoDiscovery(input, { classYearGte: 2029, limit: 100 });

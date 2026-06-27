@@ -5315,7 +5315,7 @@
   {
     "slug": "kaleb-ballard",
     "name": "Kaleb Ballard",
-    "pos": "QB",
+    "pos": "TE",
     "classYear": 2028,
     "school": "Wetumpka, AL",
     "state": "AL",
@@ -5337,8 +5337,8 @@
       "Decision speed vs. disguised coverages",
       "Consistency on deep-ball accuracy"
     ],
-    "schemeFit": "Spread passing quarterback who can distribute on rhythm and extend when structure breaks down.",
-    "projection": "SEC-caliber signal-caller with starter trajectory in Billy Napier's system.",
+    "schemeFit": "Move tight end with inline blocking and seam-route upside in Billy Napier's system.",
+    "projection": "SEC-caliber tight end with red-zone and attach-package value.",
     "fitScore": 88,
     "futurecastProbability": null,
     "pipelineState": "uncommitted",
@@ -5349,7 +5349,7 @@
     "offerList": [],
     "playerComp": null,
     "positionGrade": "A",
-    "evaluationSummary": "4★ QB · unranked · Wetumpka, AL",
+    "evaluationSummary": "4★ TE · Wetumpka, AL",
     "profileTier": "uf-premium",
     "profileEnrichedAt": "2026-06-19T16:32:52.696Z",
     "id": "kaleb-ballard",
@@ -5386,7 +5386,8 @@
     "pinLat": 27.766279,
     "pinLng": -81.686783,
     "displayRating": 92.63260869565217,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "position": "TE"
   },
   {
     "slug": "malakhi-dudley",

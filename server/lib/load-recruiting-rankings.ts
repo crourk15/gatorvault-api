@@ -39,6 +39,20 @@ export function resolveRatingSource(on3Source: unknown): RecruitingRatingSource 
   return 'seed';
 }
 
+function editorialPosition(slug: string | undefined, fallback: string | null): string | null {
+  if (!slug) return fallback;
+  try {
+    const { getEditorialPosition } = require('./recruiting-editorial-positions') as {
+      getEditorialPosition: (s: string, y?: number) => { pos?: string | null } | null;
+    };
+    const row = getEditorialPosition(slug, 2028);
+    if (row?.pos) return row.pos;
+  } catch {
+    /* optional */
+  }
+  return fallback;
+}
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PLAYERS_PATH = path.join(__dirname, '../data/recruiting/players.json');
 const BOARD_PATH = path.join(__dirname, '../data/recruiting/2028-target-board.json');
@@ -132,7 +146,7 @@ export function loadRecruitingRankings(): Map<string, PlayerRankingEntry> {
             : 'seed',
         school,
         inState: board?.inState != null ? Boolean(board.inState) : state === 'FL',
-        position: p.pos ? String(p.pos).trim().toUpperCase() : null,
+        position: editorialPosition(slugKey ?? undefined, p.pos ? String(p.pos).trim().toUpperCase() : null),
       };
 
       const keys = new Set<string>();

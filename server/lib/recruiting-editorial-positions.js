@@ -5,8 +5,9 @@
 const fs = require('fs');
 const path = require('path');
 const { isPlaceholderSchool } = require('./recruiting-placeholder-school');
+const { ALLOWLIST_2028 } = require('./recruiting-target-allowlist');
 
-/** Younger Prospects — Charles' corrected 2028 positions (18 slugs). */
+/** @deprecated Use ALLOWLIST_2028 + board file — kept for listEditorial2028YoungerProspects(). */
 const EDITORIAL_2028_YOUNGER_PROSPECTS = new Set([
   'andre-alexander',
   'tristin-gaines',
@@ -42,7 +43,7 @@ function loadBoardFile() {
     const map = new Map();
     for (const row of board.targets || []) {
       const slug = String(row.slug || '').toLowerCase();
-      if (!slug || !EDITORIAL_2028_YOUNGER_PROSPECTS.has(slug)) continue;
+      if (!slug || !ALLOWLIST_2028.includes(slug)) continue;
       map.set(slug, {
         slug,
         pos: row.pos ? String(row.pos).trim().toUpperCase() : null,
@@ -69,7 +70,7 @@ function loadBoardFile() {
 
 function isEditorialPositionSlug(slug, classYear = 2028) {
   const s = String(slug || '').toLowerCase();
-  return Number(classYear) === 2028 && EDITORIAL_2028_YOUNGER_PROSPECTS.has(s);
+  return Number(classYear) === 2028 && ALLOWLIST_2028.includes(s);
 }
 
 function getEditorialPosition(slug, classYear = 2028) {

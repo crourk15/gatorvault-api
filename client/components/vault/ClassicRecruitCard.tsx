@@ -100,7 +100,7 @@ export function ClassicRecruitCard({
   const predictions = player.predictionSchools?.slice(0, 2) ?? [];
   const isCommit = variant === 'commit' || Boolean(player.isCommittedToUF);
   const resolvedVariant: ClassicCardVariant = isCommit ? 'commit' : 'target';
-  const natl = rank ?? player.natlRank ?? player.natl;
+  const natl = player.natlRank ?? player.natl;
   const statusChip = targetStatusChip(player);
 
   return (
@@ -142,6 +142,7 @@ export function ClassicRecruitCard({
         {showIndustryRanks ? (
           <p className="gv-rb-card__ranks">
             NATL {formatRank(natl)} · POS {formatRank(player.posRank)} · ST {formatRank(player.stateRank)}
+            {rank != null ? ` · Intel #${formatRank(rank)}` : ''}
           </p>
         ) : null}
 
