@@ -587,6 +587,21 @@ function mountRecruitingRoutes(app) {
     }
   });
 
+  app.post('/api/recruiting/uf-on3-news/discover', async (req, res) => {
+    try {
+      if (!requireIngestCronAuth(req, res)) return;
+      const { runUfOn3NewsDiscovery } = require('./uf-on3-news-discovery');
+      const force = req.body.force === true || req.query.force === 'true';
+      const dryRun = req.body.dryRun === true || req.query.dryRun === 'true';
+      const classYear = parseInt(req.body.classYear || req.query.classYear || '2028', 10);
+      const result = await runUfOn3NewsDiscovery({ classYear, force, dryRun });
+      return res.json({ ok: true, ...result });
+    } catch (err) {
+      console.error('uf-on3-news discovery error', err);
+      return res.status(200).json({ ok: false, softFailure: true, error: err.message, cached: true });
+    }
+  });
+
   app.get('/api/recruiting/identity/overrides', (req, res) => {
     const pin = String(req.query.pin || req.get('X-Recruiting-Pin') || '');
     if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid admin pin' });

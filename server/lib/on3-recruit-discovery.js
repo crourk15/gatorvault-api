@@ -50,6 +50,11 @@ const PERSON_SLUG_NOISE = new Set([
   'florida', 'gators', 'gator', 'teams', 'team', 'news', 'star', 'stars', 'major', 'contender', 'contenders',
   'interest', 'priority', 'top', 'high', 'school', 'football', 'recruiting', 'visit', 'official', 'unofficial',
 ]);
+const POS_SLUG_PREFIX = new Set([
+  'wr', 'qb', 'rb', 'te', 'ol', 'ot', 'og', 'c', 'dl', 'dt', 'de', 'edge', 'lb', 'cb', 's', 'ath', 'k', 'p',
+  'safety', 'receiver', 'back', 'end', 'tackle', 'guard', 'center', 'linebacker', 'cornerback', 'quarterback',
+  'athlete', 'ranked', 'no',
+]);
 
 function extractOn3RecruitSlug(url) {
   const m = String(url || '').match(ON3_RIVALS_RE);
@@ -86,6 +91,7 @@ function isLikelyPersonSlug(slug) {
   if (/^\d+$/.test(last)) return parts.length >= 3;
   if (US_STATE_ABBR.has(last)) return false;
   if (parts.some((p) => PERSON_SLUG_NOISE.has(p))) return false;
+  if (POS_SLUG_PREFIX.has(parts[0])) return false;
   return parts.every((p) => /^[a-z]{2,}$/.test(p));
 }
 
@@ -109,6 +115,34 @@ function parseOn3NewsArticleSlug(pathSlug) {
   }
 
   m = slug.match(
+    /(\d)-star-(wide-receiver|running-back|quarterback|tight-end|linebacker|defensive-end|defensive-tackle|cornerback|safety|athlete|offensive-tackle|offensive-guard|center)-([a-z0-9-]+)$/i
+  );
+  if (m) {
+    const playerSlug = m[3].replace(/-\d+$/, '');
+    if (!isLikelyPersonSlug(playerSlug)) return null;
+    return {
+      playerSlug,
+      playerName: slugToPlayerName(playerSlug),
+      stars: parseInt(m[1], 10),
+      pos: ON3_POS_WORD[m[2].toLowerCase()] || null,
+      classYear: null,
+    };
+  }
+
+  m = slug.match(/\bno-\d+-(wr|qb|rb|te|ol|ot|og|c|dl|dt|de|edge|lb|cb|s|ath|k|p)-([a-z0-9-]+)$/i);
+  if (m) {
+    const playerSlug = m[2].replace(/-\d+$/, '');
+    if (!isLikelyPersonSlug(playerSlug)) return null;
+    return {
+      playerSlug,
+      playerName: slugToPlayerName(playerSlug),
+      stars: null,
+      pos: m[1].toUpperCase(),
+      classYear: null,
+    };
+  }
+
+  m = slug.match(
     /\b(202[6-9]|203[0-5])-(\d)-star-(wide-receiver|running-back|quarterback|tight-end|linebacker|defensive-end|defensive-tackle|cornerback|safety|athlete|offensive-tackle|offensive-guard|center)-([a-z0-9-]+)/i
   );
   if (m) {
@@ -121,23 +155,6 @@ function parseOn3NewsArticleSlug(pathSlug) {
       pos: ON3_POS_WORD[m[3].toLowerCase()] || null,
       classYear: parseInt(m[1], 10),
     };
-  }
-
-  for (let len = 3; len >= 2; len -= 1) {
-    const candidate = slug
-      .split('-')
-      .slice(-len)
-      .join('-')
-      .replace(/-\d+$/, '');
-    if (isLikelyPersonSlug(candidate)) {
-      return {
-        playerSlug: candidate,
-        playerName: slugToPlayerName(candidate),
-        stars: null,
-        pos: null,
-        classYear: null,
-      };
-    }
   }
 
   return null;

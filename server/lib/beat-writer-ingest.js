@@ -1241,6 +1241,14 @@ async function runBeatLateIngestSweep() {
     logSkips: true
   });
 
+  let newsDiscovery = null;
+  try {
+    const { runUfOn3NewsDiscovery } = require('./uf-on3-news-discovery');
+    newsDiscovery = await runUfOn3NewsDiscovery({ classYear: 2028, maxArticles: 25 });
+  } catch (err) {
+    newsDiscovery = { ok: false, error: err.message };
+  }
+
   return {
     ok: true,
     sweep: true,
@@ -1249,6 +1257,7 @@ async function runBeatLateIngestSweep() {
     recentPosts: recentPosts.length,
     fetchErrors: fresh.fetchErrors,
     tokenStatus: fresh.tokenStatus,
+    newsDiscovery,
     ...result
   };
 }

@@ -76,6 +76,15 @@ const JOBS = {
       return runBeatLateIngestSweep(opts);
     }
   },
+  'uf-on3-news-discovery': {
+    label: 'UF On3 team news discovery',
+    subsystem: 'cron:uf-on3-news-discovery',
+    schedule: 'With beat-late-ingest sweep',
+    async run(opts = {}) {
+      const { runUfOn3NewsDiscovery } = require('./uf-on3-news-discovery');
+      return runUfOn3NewsDiscovery(opts);
+    }
+  },
   'beat-visit-ingest': {
     label: 'Beat visit cancel ingest',
     subsystem: 'cron:beat-visit-ingest',
