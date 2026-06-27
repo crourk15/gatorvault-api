@@ -36,6 +36,10 @@ function eliteClassOverviewAllCacheKey() {
   return `hub:elite:class-overview:${HUB_METRICS_CACHE_REV}:all`;
 }
 
+function eliteBundleCacheKey(year) {
+  return `hub:elite:bundle:${HUB_METRICS_CACHE_REV}:${year}`;
+}
+
 function withTimeout(promise, ms, label) {
   return Promise.race([
     Promise.resolve(promise),
@@ -151,7 +155,7 @@ async function warmEliteHubCaches(options = {}) {
       jobs.push([`recruiting:heat-index:${year}`, () => elite.buildHubHeatIndex(year), year]);
       jobs.push([`recruiting:positions:${year}`, () => elite.buildHubPositions(year), year]);
       jobs.push([`recruiting:footprint:${year}`, () => elite.buildHubFootprint(year), year]);
-      jobs.push([`hub:elite:bundle:${year}`, () => elite.buildHubBundle(year), year]);
+      jobs.push([eliteBundleCacheKey(year), () => elite.buildHubBundle(year), year]);
       jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year), year]);
       jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year), year]);
       jobs.push([eliteClassOverviewCacheKey(year), () => elite.buildHubClassOverview(year), year]);
@@ -334,6 +338,7 @@ module.exports = {
   classSnapshotCacheKey,
   eliteClassOverviewCacheKey,
   eliteClassOverviewAllCacheKey,
+  eliteBundleCacheKey,
   clearHubCache,
   removeHubCacheKeys,
   warmEliteHubCaches,

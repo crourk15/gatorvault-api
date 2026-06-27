@@ -13,6 +13,7 @@ const {
   classSnapshotCacheKey,
   eliteClassOverviewCacheKey,
   eliteClassOverviewAllCacheKey,
+  eliteBundleCacheKey,
 } = require('./recruiting-hub-cache');
 
 function avgStars(players) {
@@ -450,7 +451,7 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/hub/bundle', async (req, res) => {
     try {
       const year = parseHubYear(req);
-      const cacheKey = `hub:elite:bundle:${year}`;
+      const cacheKey = eliteBundleCacheKey(year);
       const bundleTimeoutMs = parseInt(process.env.HUB_BUNDLE_BUILD_TIMEOUT_MS || '45000', 10);
       return sendHubJson(res, {
         cacheKey,

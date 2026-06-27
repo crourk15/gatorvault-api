@@ -164,7 +164,33 @@ export function ClassCards(): React.ReactElement | null {
     if (hasAnyData) hideRhBootClassCards();
   }, [hasAnyData]);
 
-  if (loading && !hasAnyData) return null;
+  if (loading && !hasAnyData) {
+    return (
+      <>
+        <div className="rh-section-header">
+          <div className="rh-section-title">Recruiting Classes</div>
+          <div className="rh-section-subtitle">
+            Tap a class to focus the hub on {activeYear} — or open commits for any year.
+          </div>
+        </div>
+        <section className="rh-class-cards" data-testid="rh-class-cards" aria-label="Recruiting class cards">
+          <div className="rh-class-cards__grid">
+            {RECRUITING_CLASS_YEARS.map((year) => (
+              <ClassCard
+                key={year}
+                year={year}
+                data={null}
+                loading
+                error={false}
+                isActive={year === activeYear}
+                onFocus={setActiveYear}
+              />
+            ))}
+          </div>
+        </section>
+      </>
+    );
+  }
 
   return (
     <>
