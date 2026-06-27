@@ -356,6 +356,10 @@ export async function loadBoardPlayersForSlugs(
   const movementWindowDays = options.movementWindowDays ?? MOVEMENT_WINDOW_DAYS;
   const allowedSlugs = [...new Set(slugs.map((s) => String(s).toLowerCase()).filter(Boolean))];
   const allowedSet = new Set(allowedSlugs);
+  const { buildAllowlistSlugAliasLookup } = require('../../lib/allowlist-slug-aliases');
+  const aliasLookup = buildAllowlistSlugAliasLookup(allowedSlugs, classYear);
+  const resolveCanonical = (rowSlug: string) =>
+    aliasLookup.get(String(rowSlug || '').toLowerCase());
   const rankings = loadRecruitingRankings();
   const seedMeta = loadSeedMeta(classYear);
   const earlyWatchMeta = loadEarlyWatchlistMeta();
@@ -382,17 +386,27 @@ export async function loadBoardPlayersForSlugs(
   ]);
 
   const stockRows = filterMovementIntelStockRows(stockRowsRaw).filter((row) =>
-    allowedSet.has(String(row.slug || '').toLowerCase())
+    Boolean(resolveCanonical(String(row.slug || '').toLowerCase()))
   );
-  const stockBySlug = new Map(stockRows.map((row) => [String(row.slug).toLowerCase(), row]));
+  const stockBySlug = new Map<string, (typeof stockRows)[0]>();
+  for (const row of stockRows) {
+    const canonical = resolveCanonical(String(row.slug || '').toLowerCase());
+    if (canonical && allowedSet.has(canonical) && !stockBySlug.has(canonical)) {
+      stockBySlug.set(canonical, row);
+    }
+  }
 
   const modelRows = dedupeFeedRows(filterModelPredictionsOnly(predictionRows)).filter((row) =>
-    allowedSet.has(String(row.slug || '').toLowerCase())
+    Boolean(resolveCanonical(String(row.slug || row.playerSlug || '').toLowerCase()))
   );
   const serialized = await serializeFeedRowsWithVolatility(modelRows);
-  const predictionBySlug = new Map(
-    serialized.map((row) => [String(row.playerSlug || '').toLowerCase(), row])
-  );
+  const predictionBySlug = new Map<string, (typeof serialized)[0]>();
+  for (const row of serialized) {
+    const canonical = resolveCanonical(String(row.playerSlug || '').toLowerCase());
+    if (canonical && allowedSet.has(canonical) && !predictionBySlug.has(canonical)) {
+      predictionBySlug.set(canonical, row);
+    }
+  }
 
   const playerIds = serialized.map((p) => p.playerId).filter(Boolean);
   const historyMap = await listMovementHistoryByPlayerIds(playerIds, movementWindowDays);

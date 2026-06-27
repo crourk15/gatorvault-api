@@ -6,6 +6,11 @@ require('tsx/cjs');
 
 const store = require('./recruiting-store');
 const { getAllowlistSet } = require('./recruiting-target-allowlist');
+const {
+  normalizeAllowlistSlug,
+  buildAllowlistSlugAliasLookup,
+} = require('./allowlist-slug-aliases');
+const { loadCanonicalOn3SlugMap } = require('./on3-recruit-discovery');
 const { toPercent, loadRivalsOnlyUfPctBySlug } = require('./uf-probability-utils');
 
 const ON3_RPM_PATH = require('path').join(__dirname, '..', 'data', 'war-room', 'on3-rpm-allowlist.json');
@@ -30,6 +35,7 @@ function loadOn3RpmBySlug() {
 function loadModels() {
   return {
     ...require('../models/player.ts'),
+    ...require('../models/player-slug.ts'),
     ...require('../models/predictions.ts'),
     ...require('../models/uf-specific-profile.ts'),
   };
@@ -52,7 +58,11 @@ async function resolveSeedConfidence(slug, pgPlayer) {
   const ufPct = toPercent(ufProfile?.uf_commit_probability);
   if (ufPct > 0) return { confidence: ufPct, source: 'uf_profile' };
 
-  const on3Rpm = loadOn3RpmBySlug().get(slug);
+  const forward = loadCanonicalOn3SlugMap();
+  const on3Key = String(forward[slug] || '').toLowerCase();
+  const on3Rpm =
+    loadOn3RpmBySlug().get(slug) ||
+    (on3Key ? loadOn3RpmBySlug().get(on3Key) : undefined);
   if (on3Rpm > 0) return { confidence: on3Rpm, source: 'on3_rpm' };
 
   const stars = Number(recruiting?.stars ?? pgPlayer.stars ?? 0) || 0;
@@ -84,6 +94,21 @@ async function hasAllowlistSeedPrediction(playerId) {
   );
 }
 
+async function findPostgresPlayerForAllowlistSlug(slug, classYear) {
+  const { getPlayerBySlug, getPlayerById, resolvePostgresPlayerBySlug } = loadModels();
+  const canonical = normalizeAllowlistSlug(slug, classYear);
+  const lookup = buildAllowlistSlugAliasLookup([canonical], classYear);
+  for (const alias of lookup.keys()) {
+    const player = await getPlayerBySlug(alias);
+    if (player) return player;
+  }
+  const resolved = await resolvePostgresPlayerBySlug(canonical);
+  if (resolved?.playerId) {
+    return (await getPlayerById(resolved.playerId)) || null;
+  }
+  return null;
+}
+
 async function provisionAllowlistPredictionForSlug(slug, classYear, options = {}) {
   const key = String(slug || '').toLowerCase();
   if (!key) return { slug: key, ok: false, reason: 'missing_slug' };
@@ -92,7 +117,7 @@ async function provisionAllowlistPredictionForSlug(slug, classYear, options = {}
   if (!dbUrl) return { slug: key, ok: false, reason: 'no_database' };
 
   const { getPlayerBySlug, upsertActiveModelPrediction, ensureMovementWindowBaseline } = loadModels();
-  const pgPlayer = await getPlayerBySlug(key);
+  const pgPlayer = await findPostgresPlayerForAllowlistSlug(key, classYear);
   if (!pgPlayer) return { slug: key, ok: false, reason: 'player_not_in_postgres' };
   if (Number(pgPlayer.class_year) !== Number(classYear)) {
     return { slug: key, ok: false, reason: 'class_year_mismatch', classYear: pgPlayer.class_year };

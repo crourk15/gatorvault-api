@@ -166,7 +166,16 @@ async function resolveRecruitIdentity(name, classYear) {
 
 function canonicalEntrySlug({ merged, existing, extended, baseSlug }) {
   if (existing?.slug) return existing.slug;
-  if (merged.playerSlug && /\-\d+$/.test(merged.playerSlug)) return merged.playerSlug;
+  const parsed = String(merged.playerSlug || '').trim().toLowerCase();
+  if (parsed && !/-\d+$/.test(parsed)) return parsed;
+  const { normalizeAllowlistSlug } = require('./allowlist-slug-aliases');
+  if (parsed && /-\d+$/.test(parsed)) {
+    const normalized = normalizeAllowlistSlug(parsed);
+    if (normalized) return normalized;
+    return parsed;
+  }
+  const nameSlug = store.slugify(merged.playerName || baseSlug).replace(/-\d+$/, '');
+  if (nameSlug) return nameSlug;
   if (extended.on3Slug && extended.on3Id) return `${store.slugify(merged.playerName || baseSlug)}-${extended.on3Id}`;
   if (extended.on3Slug) return String(extended.on3Slug).replace(/^\//, '');
   return baseSlug;

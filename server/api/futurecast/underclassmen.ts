@@ -125,6 +125,13 @@ async function loadMovementEnrichmentBySlug(
   const slugSet = new Set(slugs.map((s) => String(s).toLowerCase()).filter(Boolean));
   if (!slugSet.size) return new Map();
 
+  const { buildAllowlistSlugAliasLookup } = require('../../lib/allowlist-slug-aliases') as {
+    buildAllowlistSlugAliasLookup: (slugs: string[], year: number) => Map<string, string>;
+  };
+  const aliasLookup = buildAllowlistSlugAliasLookup([...slugSet], classYear);
+  const resolveCanonical = (rowSlug: string) =>
+    aliasLookup.get(String(rowSlug || '').toLowerCase());
+
   const [stockRowsRaw, predictionRows] = await Promise.all([
     listStockBoardRows(windowDays, { lifecycle: 'HS', class_year: classYear }).catch((err) => {
       console.warn(
@@ -148,17 +155,23 @@ async function loadMovementEnrichmentBySlug(
   ]);
 
   const stockRows = filterMovementIntelStockRows(stockRowsRaw).filter((row) =>
-    slugSet.has(String(row.slug || '').toLowerCase())
+    Boolean(resolveCanonical(String(row.slug || '').toLowerCase()))
   );
-  const stockBySlug = new Map(stockRows.map((row) => [String(row.slug).toLowerCase(), row]));
+  const stockBySlug = new Map<string, (typeof stockRows)[0]>();
+  for (const row of stockRows) {
+    const canonical = resolveCanonical(String(row.slug || '').toLowerCase());
+    if (canonical && !stockBySlug.has(canonical)) stockBySlug.set(canonical, row);
+  }
 
   const modelRows = dedupeFeedRows(filterModelPredictionsOnly(predictionRows)).filter((row) =>
-    slugSet.has(String(row.slug || '').toLowerCase())
+    Boolean(resolveCanonical(String(row.slug || row.playerSlug || '').toLowerCase()))
   );
   const serialized = await serializeFeedRowsWithVolatility(modelRows);
-  const predictionBySlug = new Map(
-    serialized.map((row) => [String(row.playerSlug || '').toLowerCase(), row])
-  );
+  const predictionBySlug = new Map<string, (typeof serialized)[0]>();
+  for (const row of serialized) {
+    const canonical = resolveCanonical(String(row.playerSlug || '').toLowerCase());
+    if (canonical && !predictionBySlug.has(canonical)) predictionBySlug.set(canonical, row);
+  }
 
   const playerIds = serialized.map((p) => p.playerId).filter(Boolean);
   const historyMap = await listMovementHistoryByPlayerIds(playerIds, windowDays);
@@ -206,7 +219,13 @@ function applyMovementEnrichment<
 
 async function slugsForYear(classYear: number): Promise<string[]> {
   if (classYear === 2028) {
-    return [...getAllowlistSet(2028)].map((s: string) => String(s).toLowerCase());
+    const { dedupeAllowlistSlugs } = require('../../lib/allowlist-slug-aliases') as {
+      dedupeAllowlistSlugs: (slugs: string[], year: number) => string[];
+    };
+    return dedupeAllowlistSlugs(
+      [...getAllowlistSet(2028)].map((s: string) => String(s).toLowerCase()),
+      2028
+    );
   }
 
   const entries = loadEarlyWatchEntries().filter((e) => Number(e.classYear) === classYear);
