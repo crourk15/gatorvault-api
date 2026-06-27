@@ -53,6 +53,7 @@ export function FutureCastBigBoardPage(): React.ReactElement {
     shouldShowPortalWatchlist(portalSeason) ? 2027 : 2028
   );
   const [position, setPosition] = useState('');
+  const [minDiscoveryScore, setMinDiscoveryScore] = useState(50);
   const [activeTab, setActiveTab] = useState<BigBoardTabId>(defaultBigBoardTab());
 
   useEffect(() => {
@@ -82,11 +83,11 @@ export function FutureCastBigBoardPage(): React.ReactElement {
   const earlyDiscoveryQuery = useMemo(
     () => ({
       class_year_gte: earlyDiscoveryClassGte,
-      min_discovery_score: 50,
+      min_discovery_score: minDiscoveryScore,
       limit: 100,
       position: position || undefined,
     }),
-    [earlyDiscoveryClassGte, position]
+    [earlyDiscoveryClassGte, minDiscoveryScore, position]
   );
 
   const openPlayer = (slug: string, lifecycle: BigBoardLifecycle, fullName: string) => {
@@ -150,6 +151,20 @@ export function FutureCastBigBoardPage(): React.ReactElement {
             ))}
           </select>
         </label>
+        {activeTab === 'early-discovery' ? (
+          <label>
+            Min discovery
+            <select
+              value={minDiscoveryScore}
+              onChange={(e) => setMinDiscoveryScore(Number(e.target.value))}
+            >
+              <option value={70}>70+</option>
+              <option value={50}>50+</option>
+              <option value={40}>40+</option>
+              <option value={0}>All scored</option>
+            </select>
+          </label>
+        ) : null}
       </div>
 
       {activeTab === 'top-targets' ? (

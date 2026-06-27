@@ -124,6 +124,12 @@
   color: #94a3b8;
 }
 
+.fc-big-board-summary {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
 .fc-big-board-error { color: #f87171; }
 
 .fc-signal-pill {

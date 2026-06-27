@@ -204,6 +204,19 @@ async function main() {
         return null;
       },
     }),
+    await fetchJsonCheck('api-futurecast-high-priority-2028', `${API_URL}/api/futurecast/high-priority?year=2028`, {
+      validate(body) {
+        if (!Array.isArray(body?.players)) return 'missing players[] on 2028 high-priority';
+        if (body.players.length < 5) return `expected >=5 2028 HP players, got ${body.players.length}`;
+        const withUf = body.players.filter((p) => Number(p.ufProbability) > 0);
+        const withFit = body.players.filter((p) => Number(p.fitScore) > 0);
+        if (!withUf.length) return '2028 HP players missing ufProbability (check allowlist-board merge)';
+        if (!withFit.length) return '2028 HP players missing fitScore (check allowlist-board merge)';
+        const ufValues = new Set(withUf.map((p) => Number(p.ufProbability)));
+        if (ufValues.size < 2) return '2028 HP ufProbability not varied (expected seeded allowlist values)';
+        return null;
+      },
+    }),
     await fetchCheck('vault-futurecast-big-board', `${SITE_URL}/vault/futurecast/big-board/`, {
       headers: { 'User-Agent': CRAWLER_UA },
       expectIncludes: ['FutureCast Big Board', 'vault-futurecast-big-board'],

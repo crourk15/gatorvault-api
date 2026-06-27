@@ -23,7 +23,7 @@ type SignalCard = {
   name: string;
   position: string;
   analyst: string;
-  pick: 'UF' | 'Other' | 'Suppressed';
+  pick: 'UF' | 'Open' | 'Suppressed';
   confidencePct: number | null;
   rpmPct: number | null;
   summary: string;
@@ -47,9 +47,13 @@ function buildSignals(
   const modelTimestamp = discoveryFocus && highPriority.length
     ? staffNotes.updatedAt || new Date().toISOString()
     : masterBoard.updatedAt;
+  const discoverySlugs = discoveryFocus
+    ? new Set(highPriority.map((p) => p.slug.toLowerCase()))
+    : null;
   const cards: SignalCard[] = [];
 
   for (const note of staffNotes.notes.slice(0, 12)) {
+    if (discoverySlugs && !discoverySlugs.has(note.playerSlug.toLowerCase())) continue;
     const player = bySlug.get(note.playerSlug);
     const suppressed = Boolean(note.ufPredictionSuppressed || player?.ufPredictionSuppressed);
     const status =
@@ -79,7 +83,7 @@ function buildSignals(
       name: note.playerName,
       position: note.position ?? player?.position ?? '—',
       analyst: 'Staff Notes',
-      pick: ufPct >= 50 ? 'UF' : 'Other',
+      pick: ufPct >= 50 ? 'UF' : 'Open',
       confidencePct: ufPct,
       rpmPct: ufPct,
       summary: note.notePreview ?? note.note ?? note.staffNotes ?? 'FutureCast staff activity.',
@@ -97,7 +101,7 @@ function buildSignals(
       name: p.name,
       position: p.position,
       analyst: 'FutureCast Model',
-      pick: pct >= 50 ? 'UF' : 'Other',
+      pick: pct >= 50 ? 'UF' : 'Open',
       confidencePct: pct,
       rpmPct: pct,
       summary: `Model projection ${pct}% for ${p.name}.`,
@@ -161,7 +165,7 @@ export function FutureCastAnalystSignals({
     ? `Analyst Signals — ${focusYear} Discovery`
     : 'Analyst Signals — FutureCast Activity';
   const sub = discoveryFocus
-    ? 'Staff notes and model signals for the 2028 discovery cycle.'
+    ? 'Model signals for locked 2028 allowlist targets during early discovery.'
     : 'Staff notes and FutureCast model signals — prediction engine only.';
 
   return (

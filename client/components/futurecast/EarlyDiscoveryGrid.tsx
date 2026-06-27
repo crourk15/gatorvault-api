@@ -71,34 +71,45 @@ export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridP
   }
 
   return (
-    <div
-      className="gv-rb-grid"
-      data-testid="early-discovery-grid"
-      data-refreshing={isRefreshing ? 'true' : undefined}
-    >
-      {players.map((player) => {
-        const card = (
-          <ClassicRecruitCard
-            player={fromEarlyDiscovery(player)}
-            variant="target"
-          />
-        );
-        if (!onPlayerClick) {
-          return <div key={player.id}>{card}</div>;
-        }
-        return (
-          <button
-            key={player.id}
-            type="button"
-            className="gv-rb-card-button"
-            onClick={() => onPlayerClick(player)}
-            data-testid="player-card"
-            data-slug={player.slug}
-          >
-            {card}
-          </button>
-        );
-      })}
-    </div>
+    <>
+      <p className="fc-big-board-summary" data-testid="early-discovery-summary">
+        {players.length} prospect{players.length === 1 ? '' : 's'}
+        {classYearGte != null ? ` · Class ${classYearGte}+` : ''}
+        {minDiscoveryScore != null && minDiscoveryScore > 0
+          ? ` · Discovery score ≥ ${minDiscoveryScore}`
+          : ''}
+        {position ? ` · ${position}` : ''}
+      </p>
+      <div
+        className="gv-rb-grid"
+        data-testid="early-discovery-grid"
+        data-refreshing={isRefreshing ? 'true' : undefined}
+      >
+        {players.map((player) => {
+          const card = (
+            <ClassicRecruitCard
+              player={fromEarlyDiscovery(player)}
+              variant="target"
+              rank={player.rank}
+            />
+          );
+          if (!onPlayerClick) {
+            return <div key={player.id}>{card}</div>;
+          }
+          return (
+            <button
+              key={player.id}
+              type="button"
+              className="gv-rb-card-button"
+              onClick={() => onPlayerClick(player)}
+              data-testid="player-card"
+              data-slug={player.slug}
+            >
+              {card}
+            </button>
+          );
+        })}
+      </div>
+    </>
   );
 }
