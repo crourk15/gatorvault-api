@@ -55,9 +55,10 @@ export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridP
     };
   }, [classYearGte, minDiscoveryScore, limit, position]);
 
-  const players = useMemo(
-    () => fetched.map((p, index) => ({ ...p, rank: index + 1 })),
-    [fetched]
+  const players = useMemo(() => fetched, [fetched]);
+  const allowlistCount = useMemo(
+    () => players.filter((p) => p.allowlistTarget).length,
+    [players]
   );
 
   if (!hasLoaded && !error) {
@@ -78,6 +79,7 @@ export function EarlyDiscoveryGrid({ query, onPlayerClick }: EarlyDiscoveryGridP
         {minDiscoveryScore != null && minDiscoveryScore > 0
           ? ` · Discovery score ≥ ${minDiscoveryScore}`
           : ''}
+        {allowlistCount > 0 ? ` · ${allowlistCount} locked UF targets` : ''}
         {position ? ` · ${position}` : ''}
       </p>
       <div

@@ -62,8 +62,37 @@ function buildAllowlistDiscoveryRow(boardRow, classYear) {
     stars: merged.stars ?? boardRow.stars ?? null,
     discoveryScore,
     ufFitScore: merged.fitScore ?? null,
+    ufProbability: merged.ufProbability ?? null,
     ufStatus: 'TARGET',
     signalCount: 0,
+    allowlistTarget: true,
+  };
+}
+
+function enrichAllowlistRow(row, boardRow) {
+  const merged = boardRow
+    ? mergeBoardSeed(
+        {
+          slug: row.slug,
+          name: row.fullName,
+          pos: row.position,
+          classYear: row.classYear,
+          stars: row.stars,
+          state: row.state,
+          ufProbability: row.ufProbability,
+          fitScore: row.ufFitScore,
+        },
+        boardRow,
+        2028
+      )
+    : null;
+  return {
+    ...row,
+    allowlistTarget: true,
+    discoveryScore: Math.max(Number(row.discoveryScore) || 0, ALLOWLIST_DISCOVERY_FLOOR),
+    ufStatus: row.ufStatus || 'TARGET',
+    ufFitScore: row.ufFitScore ?? merged?.fitScore ?? null,
+    ufProbability: row.ufProbability ?? merged?.ufProbability ?? null,
   };
 }
 
@@ -85,13 +114,7 @@ function mergeAllowlistIntoDiscovery(players, opts = {}) {
     const key = String(slug).toLowerCase();
     const existing = bySlug.get(key);
     if (existing) {
-      if (Number(existing.discoveryScore) < ALLOWLIST_DISCOVERY_FLOOR) {
-        bySlug.set(key, {
-          ...existing,
-          discoveryScore: ALLOWLIST_DISCOVERY_FLOOR,
-          ufStatus: existing.ufStatus || 'TARGET',
-        });
-      }
+      bySlug.set(key, enrichAllowlistRow(existing, boardBySlug.get(key)));
       continue;
     }
 

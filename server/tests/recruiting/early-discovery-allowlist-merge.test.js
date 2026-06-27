@@ -4,7 +4,9 @@ const allowlist = require('../../lib/recruiting-target-allowlist');
 const {
   mergeAllowlistIntoDiscovery,
   ALLOWLIST_DISCOVERY_FLOOR,
+  buildAllowlistDiscoveryRow,
 } = require('../../lib/early-discovery-allowlist-merge');
+const path = require('node:path');
 
 test('mergeAllowlistIntoDiscovery backfills all 2028 allowlist slugs', () => {
   const merged = mergeAllowlistIntoDiscovery([], {
@@ -20,7 +22,9 @@ test('mergeAllowlistIntoDiscovery backfills all 2028 allowlist slugs', () => {
   }
   const sample = merged.find((p) => p.slug === 'brysen-wright');
   assert.ok(sample);
+  assert.equal(sample.allowlistTarget, true);
   assert.ok(Number(sample.discoveryScore) >= ALLOWLIST_DISCOVERY_FLOOR);
+  assert.ok(Number(sample.ufProbability) > 0);
   assert.equal(sample.ufStatus, 'TARGET');
 });
 
@@ -45,7 +49,15 @@ test('mergeAllowlistIntoDiscovery raises floor for existing low-score rows', () 
   );
   const row = merged.find((p) => p.slug === 'bryce-willingham');
   assert.ok(row);
+  assert.equal(row.allowlistTarget, true);
   assert.ok(Number(row.discoveryScore) >= ALLOWLIST_DISCOVERY_FLOOR);
+});
+
+test('buildAllowlistDiscoveryRow includes ufProbability from board seed', () => {
+  const boardBySlug = require('../../lib/target-board-path').loadTargetBoardBySlug(2028, path.join(__dirname, '../..'));
+  const row = buildAllowlistDiscoveryRow(boardBySlug.get('brysen-wright'), 2028);
+  assert.equal(row.allowlistTarget, true);
+  assert.ok(Number(row.ufProbability) > 0 && Number(row.ufProbability) <= 1);
 });
 
 test('mergeAllowlistIntoDiscovery skips merge for 2029-only queries', () => {

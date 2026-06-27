@@ -1,9 +1,9 @@
 {
   "running": false,
   "phase": "done",
-  "startedAt": "2026-06-24T23:55:29.606Z",
-  "finishedAt": "2026-06-24T23:55:34.150Z",
-  "updatedAt": "2026-06-24T23:55:34.151Z",
+  "startedAt": "2026-06-27T01:42:46.894Z",
+  "finishedAt": "2026-06-27T01:42:55.062Z",
+  "updatedAt": "2026-06-27T01:42:55.064Z",
   "progress": {
     "index": 1,
     "total": 1,
@@ -12,14 +12,19 @@
   "lastRun": {
     "ok": true,
     "reason": "recruiting_player_update",
-    "startedAt": "2026-06-24T23:55:29.226Z",
-    "finishedAt": "2026-06-24T23:55:34.150Z",
+    "startedAt": "2026-06-27T01:42:45.767Z",
+    "finishedAt": "2026-06-27T01:42:55.062Z",
     "total": 1,
-    "updated": 1,
+    "updated": 0,
     "unchanged": 0,
-    "blank": 0,
-    "errors": [],
-    "updatesAdded": 1
+    "blank": 1,
+    "errors": [
+      {
+        "slug": "kahmaree-crumity",
+        "error": "scoutingDb.importLegacyBreakdown is not a function"
+      }
+    ],
+    "updatesAdded": 0
   },
   "error": null
 }

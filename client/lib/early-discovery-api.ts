@@ -25,6 +25,10 @@ export interface EarlyDiscoveryPlayer {
   ratingSource?: RecruitingRatingSource | null;
   school?: string | null;
   inState?: boolean;
+  /** Locked 2028 UF allowlist target (pinned in discovery feed). */
+  allowlistTarget?: boolean;
+  /** UF likelihood 0–1 for allowlist targets. */
+  ufProbability?: number | null;
 }
 
 export interface EarlyDiscoveryQuery {

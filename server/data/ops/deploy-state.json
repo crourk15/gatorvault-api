@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-25T11:49:43.857Z",
+  "updatedAt": "2026-06-27T04:37:28.043Z",
   "api": {
     "service": "render",
     "timestamp": "2026-06-21T01:59:20.492Z",
@@ -22,19 +22,73 @@
   "lastGuardianCheck": {
     "ok": true,
     "phase": "pre",
-    "checkedAt": "2026-06-25T11:49:43.856Z",
+    "checkedAt": "2026-06-26T01:59:49.644Z",
     "errors": []
   },
   "lastFailedCheck": {
-    "type": "guardian-pre",
-    "at": "2026-06-22T14:52:10.573Z",
+    "type": "smoke-test",
+    "at": "2026-06-26T14:27:06.584Z",
     "errors": [
-      "[assets] HTML exports missing js/vault-chunks/ script references"
+      {
+        "label": "api-futurecast-home",
+        "error": "HTTP 404",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/home"
+      },
+      {
+        "label": "api-futurecast-staff-notes",
+        "error": "HTTP 404",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/staff-notes?year=2027"
+      },
+      {
+        "label": "api-futurecast-high-priority",
+        "error": "HTTP 404",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/high-priority?year=2027"
+      },
+      {
+        "label": "api-futurecast-visit-intel",
+        "error": "HTTP 404",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/high-priority?year=2027"
+      },
+      {
+        "label": "api-futurecast-health",
+        "error": "HTTP 404",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/health"
+      },
+      {
+        "label": "api-big-board",
+        "error": "HTTP 404",
+        "url": "https://gatorvault-api.onrender.com/api/big-board?class_year=2027&limit=5"
+      },
+      {
+        "label": "api-uf-fit-watchlist",
+        "error": "HTTP 404",
+        "url": "https://gatorvault-api.onrender.com/api/uf-fit/watchlist?class_year=2027&limit=5"
+      },
+      {
+        "label": "api-early-discovery",
+        "error": "HTTP 404",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/early-discovery?class_year_gte=2028&limit=5"
+      },
+      {
+        "label": "api-players-slug-futurecast",
+        "error": "HTTP 404",
+        "url": "https://gatorvault-api.onrender.com/api/players/slug/raheem-floyd"
+      },
+      {
+        "label": "api-recruits-2027",
+        "error": "HTTP 404",
+        "url": "https://gatorvault-api.onrender.com/api/recruits/2027"
+      },
+      {
+        "label": "api-futurecast-alerts-uf",
+        "error": "alerts HTTP 404",
+        "url": "https://gatorvault-api.onrender.com/api/futurecast/alerts"
+      }
     ]
   },
   "lastSmokeTest": {
     "ok": true,
-    "checkedAt": "2026-06-19T15:23:58.022Z",
+    "checkedAt": "2026-06-27T04:37:27.999Z",
     "failed": [],
     "site": "https://gatorvaultinsider.com"
   }

@@ -204,6 +204,18 @@ async function main() {
         return null;
       },
     }),
+    await fetchJsonCheck('api-early-discovery-allowlist', `${API_URL}/api/futurecast/early-discovery?class_year_gte=2028&min_discovery_score=50&limit=100`, {
+      validate(body) {
+        if (!Array.isArray(body?.players)) return 'missing players[] on 2028 early-discovery allowlist merge';
+        if (body.players.length < 20) return `expected >=20 2028 early-discovery players, got ${body.players.length}`;
+        const allowlist = body.players.filter((p) => p.allowlistTarget === true);
+        if (allowlist.length < 20) return `expected >=20 allowlistTarget rows, got ${allowlist.length}`;
+        const brysen = body.players.find((p) => p.slug === 'brysen-wright');
+        if (!brysen?.allowlistTarget) return 'brysen-wright missing allowlistTarget in early-discovery';
+        if (Number(brysen.ufProbability) <= 0) return 'brysen-wright missing ufProbability in early-discovery allowlist merge';
+        return null;
+      },
+    }),
     await fetchJsonCheck('api-futurecast-high-priority-2028', `${API_URL}/api/futurecast/high-priority?year=2028`, {
       validate(body) {
         if (!Array.isArray(body?.players)) return 'missing players[] on 2028 high-priority';

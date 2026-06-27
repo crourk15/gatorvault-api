@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-24T23:55:34.142Z",
+  "updatedAt": "2026-06-27T01:42:46.974Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -12873,6 +12873,678 @@
       "nflProjection": null,
       "featured": true,
       "updatedAt": "2026-06-24T20:55:56.406Z"
+    },
+    "tristin-gaines": {
+      "playerSlug": "tristin-gaines",
+      "playerName": "Tristin Gaines",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Sam Spiegelman",
+          "writerId": "spiegelman",
+          "outlet": "On3",
+          "url": "https://www.on3.com/rivals/tristin-gaines-260667/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "After a closer look at updated film and live evaluations at various offseason events, the Rivals300 for the 2028 class has been updated."
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "After a closer look at updated film and live evaluations at various offseason events, the Rivals300 for the 2028 class has been updated.  Rivals has",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:40.945Z"
+    },
+    "jordon-gorham": {
+      "playerSlug": "jordon-gorham",
+      "playerName": "Jordan Gorham",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Chad Simmons",
+          "writerId": "simmons",
+          "outlet": "On3",
+          "url": "https://www.on3.com/rivals/jordon-gorham-259816/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "It is still early, but Jordan Gorham’s recruitment is starting to take shape, and one visit made a statement.",
+        "The 2028 four-star wide receiver at"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "It is still early, but Jordan Gorham’s recruitment is starting to take shape, and one visit made a statement.  The 2028 four-star wide receiver at",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:45.460Z"
+    },
+    "anthony-howard-jr": {
+      "playerSlug": "anthony-howard-jr",
+      "playerName": "Anthony Howard Jr",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Chad Simmons",
+          "writerId": "simmons",
+          "outlet": "On3",
+          "url": "https://www.on3.com/rivals/anthony-howard-jr-243380/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "Anthony Howard is one of the more intriguing running backs in the 2028 class, and his recruitment is just getting started."
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Anthony Howard is one of the more intriguing running backs in the 2028 class, and his recruitment is just getting started.  The IMG Academy standout,",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:46.958Z"
+    },
+    "pj-evans": {
+      "playerSlug": "pj-evans",
+      "playerName": "Pj Evans",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3",
+          "url": "https://www.on3.com/rivals/pj-evans-248892/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "Football prospects from the 2028 recruiting cycle are beginning to pop up on college radars.",
+        "Now that the season is well behind us and the off-season"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Football prospects from the 2028 recruiting cycle are beginning to pop up on college radars. Now that the season is well behind us and the off-season",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:46.444Z"
+    },
+    "braxton-rein": {
+      "playerSlug": "braxton-rein",
+      "playerName": "Braxton Rein",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Andrew Ivins",
+          "writerId": "ivins",
+          "outlet": "247Sports",
+          "url": "https://247sports.com/player/braxton-rein-46152758/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "s Braxton Rein High School Starrs Mill (HS) Baylor School (HS) Pos TE Height 6-6 Weight 230"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "s Braxton Rein High School Starrs Mill (HS) Baylor School (HS) Pos TE Height 6-6 Weight 230",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:39.821Z"
+    },
+    "andre-alexander": {
+      "playerSlug": "andre-alexander",
+      "playerName": "Andre Alexander",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Sam Spiegelman",
+          "writerId": "spiegelman",
+          "outlet": "On3",
+          "url": "https://www.on3.com",
+          "publishedAt": "2026-06-26"
+        }
+      ],
+      "strengths": [
+        "Jerrell Bridges saw his recruitment reach new heights this spring and summer.",
+        "The touted three-star linebacker from Midlothian (Texas) High School"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Jerrell Bridges saw his recruitment reach new heights this spring and summer.  The touted three-star linebacker from Midlothian (Texas) High School",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-26T20:27:51.031Z"
+    },
+    "izayah-vickers": {
+      "playerSlug": "izayah-vickers",
+      "playerName": "Izayah Vickers",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Sam Spiegelman",
+          "writerId": "spiegelman",
+          "outlet": "On3",
+          "url": "https://www.on3.com",
+          "publishedAt": "2026-06-26"
+        }
+      ],
+      "strengths": [
+        "Jerrell Bridges saw his recruitment reach new heights this spring and summer.",
+        "The touted three-star linebacker from Midlothian (Texas) High School"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Jerrell Bridges saw his recruitment reach new heights this spring and summer.  The touted three-star linebacker from Midlothian (Texas) High School",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-26T20:27:51.515Z"
+    },
+    "tristian-henderson": {
+      "playerSlug": "tristian-henderson",
+      "playerName": "Tristian Henderson",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Chad Simmons",
+          "writerId": "simmons",
+          "outlet": "On3",
+          "url": "https://www.on3.com/rivals/tristian-henderson-261828/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "Georgia added another in-state commitment over the weekend with offensive lineman Abram Eisenhower, but that was just part of a loaded few days in"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Georgia added another in-state commitment over the weekend with offensive lineman Abram Eisenhower, but that was just part of a loaded few days in",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:40.500Z"
+    },
+    "john-matthews": {
+      "playerSlug": "john-matthews",
+      "playerName": "John Matthews",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Corey Bender",
+          "writerId": "bender",
+          "outlet": "On3",
+          "url": "https://www.on3.com/rivals/john-matthews-260548/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "Florida has been involved with Newnan (Ga.) 4-star wide receiver John Matthews since offering him back in January.",
+        "As expected, that relationship"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Florida has been involved with Newnan (Ga.) 4-star wide receiver John Matthews since offering him back in January. As expected, that relationship",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:43.288Z"
+    },
+    "quinton-rolle-jr": {
+      "playerSlug": "quinton-rolle-jr",
+      "playerName": "Quinton Rolle Jr.",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Sam Spiegelman",
+          "writerId": "spiegelman",
+          "outlet": "On3",
+          "url": "https://www.on3.com",
+          "publishedAt": "2026-06-26"
+        }
+      ],
+      "strengths": [
+        "Jerrell Bridges saw his recruitment reach new heights this spring and summer.",
+        "The touted three-star linebacker from Midlothian (Texas) High School"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Jerrell Bridges saw his recruitment reach new heights this spring and summer.  The touted three-star linebacker from Midlothian (Texas) High School",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-26T20:27:54.036Z"
+    },
+    "bubba-brown": {
+      "playerSlug": "bubba-brown",
+      "playerName": "Bubba Brown",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Cody Bellaire",
+          "writerId": "bellaire",
+          "outlet": "On3",
+          "url": "https://www.on3.com/rivals/bubba-brown-250868/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "– Thursday morning, 120 of the best prospects in the country arrived at Nike Headquarters, ready to go head-to-head with each other"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "BEAVERTON, Ore. – Thursday morning, 120 of the best prospects in the country arrived at Nike Headquarters, ready to go head-to-head with each other",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:36.437Z"
+    },
+    "kahmaree-crumity": {
+      "playerSlug": "kahmaree-crumity",
+      "playerName": "Kahmaree Crumity",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Sam Spiegelman",
+          "writerId": "spiegelman",
+          "outlet": "On3",
+          "url": "https://www.on3.com",
+          "publishedAt": "2026-06-26"
+        }
+      ],
+      "strengths": [
+        "Jerrell Bridges saw his recruitment reach new heights this spring and summer.",
+        "The touted three-star linebacker from Midlothian (Texas) High School"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Jerrell Bridges saw his recruitment reach new heights this spring and summer.  The touted three-star linebacker from Midlothian (Texas) High School",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-26T20:27:53.156Z"
+    },
+    "bryce-willingham": {
+      "playerSlug": "bryce-willingham",
+      "playerName": "Bryce Willingham",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Sam Spiegelman",
+          "writerId": "spiegelman",
+          "outlet": "On3",
+          "url": "https://www.on3.com",
+          "publishedAt": "2026-06-26"
+        }
+      ],
+      "strengths": [
+        "Jerrell Bridges saw his recruitment reach new heights this spring and summer.",
+        "The touted three-star linebacker from Midlothian (Texas) High School"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Jerrell Bridges saw his recruitment reach new heights this spring and summer.  The touted three-star linebacker from Midlothian (Texas) High School",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-26T20:27:55.052Z"
+    },
+    "prince-che": {
+      "playerSlug": "prince-che",
+      "playerName": "Prince Che",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3",
+          "url": "https://www.on3.com/rivals/prince-che-280932/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "Rivals has updated its Rivals300 football prospect rankings for the 2028 cycle, following the initial release in March."
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Rivals has updated its Rivals300 football prospect rankings for the 2028 cycle, following the initial release in March.  We've spent",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:34.987Z"
+    },
+    "armani-strong": {
+      "playerSlug": "armani-strong",
+      "playerName": "Armani Strong",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Sam Spiegelman",
+          "writerId": "spiegelman",
+          "outlet": "On3",
+          "url": "https://www.on3.com",
+          "publishedAt": "2026-06-26"
+        }
+      ],
+      "strengths": [
+        "Jerrell Bridges saw his recruitment reach new heights this spring and summer.",
+        "The touted three-star linebacker from Midlothian (Texas) High School"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Jerrell Bridges saw his recruitment reach new heights this spring and summer.  The touted three-star linebacker from Midlothian (Texas) High School",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-26T20:27:55.573Z"
+    },
+    "dominick-harris-payne": {
+      "playerSlug": "dominick-harris-payne",
+      "playerName": "Dominick Harris-Payne",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Sam Spiegelman",
+          "writerId": "spiegelman",
+          "outlet": "On3",
+          "url": "https://www.on3.com",
+          "publishedAt": "2026-06-26"
+        }
+      ],
+      "strengths": [
+        "Jerrell Bridges saw his recruitment reach new heights this spring and summer.",
+        "The touted three-star linebacker from Midlothian (Texas) High School"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Jerrell Bridges saw his recruitment reach new heights this spring and summer.  The touted three-star linebacker from Midlothian (Texas) High School",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-26T20:27:56.614Z"
+    },
+    "gabriel-player": {
+      "playerSlug": "gabriel-player",
+      "playerName": "Gabriel Player",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Sam Spiegelman",
+          "writerId": "spiegelman",
+          "outlet": "On3",
+          "url": "https://www.on3.com",
+          "publishedAt": "2026-06-26"
+        }
+      ],
+      "strengths": [
+        "Jerrell Bridges saw his recruitment reach new heights this spring and summer.",
+        "The touted three-star linebacker from Midlothian (Texas) High School"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Jerrell Bridges saw his recruitment reach new heights this spring and summer.  The touted three-star linebacker from Midlothian (Texas) High School",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-26T20:27:56.801Z"
+    },
+    "brady-quinn": {
+      "playerSlug": "brady-quinn",
+      "playerName": "Brady Quinn",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Andrew Ivins",
+          "writerId": "ivins",
+          "outlet": "247Sports",
+          "url": "https://247sports.com/Player/brady-quinn-46148149/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "s Brady Quinn Pos QB Height 6-1 Weight 195 Timeline Prospect Info High School Chaminade-Madonna City Hollywood, FL Class 2028 Player Rating i 247Sports 87 QB 35 FL 55 247Sports Composite&reg; 0.8950 Natl. 314 QB 22 FL 46 Your Prediction Manage Predictions Make a Prediction Crystal Ball&reg; Predictions No Crystal Ball predictions at this time. College List Offer Interest Recruited By Roster Outlook Visit 28 Offers 0 Visits 0 Coach Visits Arkansas (Edit) Cool - 7 QB, 1 Commits - Florida (Edit) Cool - 6 QB, 1 Commits - Florida State (Edit) Cool - 6 QB, 1 Commits - Indiana (Edit) Cool P Tino Sunseri 4 QB, 1 Commits - Kentucky (Edit) Cool P Joe Sloan 3 QB, 1 Commits - View complete team list Add Interests Manage Interests 28 Offers 0 Visits 0 Coach Visits Add Video Scouting Report H.S. Athletic Background 2024: As a freshman starter, posted a 9-3 record while leading First Baptist Academy to the regional finals of Florida's 1A playoffs. Completed 176 of 316 passes (55.7%) for 2,549 yards with 33 TD and 9 INT. Participated in December's FBU Freshman All-American Bowl where he was named a top performer by 247Sports after completing 6 of 14 passes for 64 yards and rushing for 43 yards and a score. -Andrew Ivins Add Timeline Events Timeline Add Stats Stats Year 2024 TOTAL PaAtt Cmp PaYds PaTD Int 316 176 2549 33 9 316 176 2549 33 9 Add Photos View all articles CBS Sports Digital YouTube Facebook X Instagram TikTok CBS Sports Betting Podcast Newsletter Text Alert About Contact Us Advertisers Help Center Careers Privacy Policy Minors&apos; Privacy Policy California Notice Terms of Use Subscription Terms cbsoptanon.ot.showPreferenceCenter()}>Your Privacy Choices &copy; 2005-2026 CBS INTERACTIVE ALL RIGHTS RESERVED. CBS Sports is a registered trademark of CBS Broadcasting Inc. 247Sports is a registered service mark of CBT Sports, LLC. Scout is a registered service mark of CBS 247 Inc. Fans Only is a registered service mark of CSTV Online, Inc. The content on this site is for entertainment purposes only and 247Sports makes no representation or warranty as to the accuracy of the information given or the outcome of any game or event. There is no gambling offered on this site. This site contains commercial content and 247Sports may be compensated for the links provided on this site."
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "s Brady Quinn Pos QB Height 6-1 Weight 195 Timeline Prospect Info High School Chaminade-Madonna City Hollywood, FL Class 2028 Player Rating i 247Sports 87 QB 35 FL 55 247Sports Composite&reg; 0.8950 Natl. 314 QB 22 FL 46 Your Prediction Manage Predictions Make a Prediction Crystal Ball&reg; Predictions No Crystal Ball predictions at this time. College List Offer Interest Recruited By Roster Outlook Visit 28 Offers 0 Visits 0 Coach Visits Arkansas (Edit) Cool - 7 QB, 1 Commits - Florida (Edit) Cool - 6 QB, 1 Commits - Florida State (Edit) Cool - 6 QB, 1 Commits - Indiana (Edit) Cool P Tino Sunseri 4 QB, 1 Commits - Kentucky (Edit) Cool P Joe Sloan 3 QB, 1 Commits - View complete team list Add Interests Manage Interests 28 Offers 0 Visits 0 Coach Visits Add Video Scouting Report H.S. Athletic Background 2024: As a freshman starter, posted a 9-3 record while leading First Baptist Academy to the regional finals of Florida's 1A playoffs. Completed 176 of 316 passes (55.7%) for 2,549 yards with 33 TD and 9 INT. Participated in December's FBU Freshman All-American Bowl where he was named a top performer by 247Sports after completing 6 of 14 passes for 64 yards and rushing for 43 yards and a score. -Andrew Ivins Add Timeline Events Timeline Add Stats Stats Year 2024 TOTAL PaAtt Cmp PaYds PaTD Int 316 176 2549 33 9 316 176 2549 33 9 Add Photos View all articles CBS Sports Digital YouTube Facebook X Instagram TikTok CBS Sports Betting Podcast Newsletter Text Alert About Contact Us Advertisers Help Center Careers Privacy Policy Minors&apos; Privacy Policy California Notice Terms of Use Subscription Terms cbsoptanon.ot.showPreferenceCenter()}>Your Privacy Choices &copy; 2005-2026 CBS INTERACTIVE ALL RIGHTS RESERVED. CBS Sports is a registered trademark of CBS Broadcasting Inc. 247Sports is a registered service mark of CBT Sports, LLC. Scout is a registered service mark of CBS 247 Inc. Fans Only is a registered service mark of CSTV Online, Inc. The content on this site is for entertainment purposes only and 247Sports makes no representation or warranty as to the accuracy of the information given or the outcome of any game or event. There is no gambling offered on this site. This site contains commercial content and 247Sports may be compensated for the links provided on this site. Timer List",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:43.762Z"
+    },
+    "kaleb-ballard": {
+      "playerSlug": "kaleb-ballard",
+      "playerName": "Kaleb Ballard",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Corey Bender",
+          "writerId": "bender",
+          "outlet": "On3",
+          "url": "https://www.on3.com/rivals/kaleb-ballard-286499/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "Wetumpka (Ala.) 4-star 2028 tight end Kaleb Ballard left Gainesville with a clearer picture of what the Florida Gators are building."
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Wetumpka (Ala.) 4-star 2028 tight end Kaleb Ballard left Gainesville with a clearer picture of what the Florida Gators are building.  Rivals' No.",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:32.454Z"
+    },
+    "brysen-wright": {
+      "playerSlug": "brysen-wright",
+      "playerName": "Brysen Wright",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3",
+          "url": "https://www.on3.com/rivals/brysen-wright-242341/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "Reports View All Reports → Brysen Wright Scouting Summary CP Charles Power 03/23/26 The most imposing wide receiver prospect early on in the 2028 cycle.",
+        "Has a readymade build that would not look out of place on a college football field as a fifteen-year-old.",
+        "Measures in at 6-foot-3.5, 210 pounds and tests well in the combine setting.",
+        "Was the most dominant pass-catcher we saw on the 7-on-7 circuit entering his sophomore season, consistently turning in outstanding performances against upperclass competition.",
+        "Shows early signs of possessing transcendent ball skills, with the ability to make incredible in-air adjustments, contorting his body to come down with difficult grabs.",
+        "Possesses extremely strong hands and consistently dunks on defenders in jump ball situations.",
+        "Looked to take a positive step with his speed and route-running, showing the ability to earn separation.",
+        "Had a good sophomore season, catching 46 passes for 983 yards and 10 touchdowns while coming down with five interceptions as a safety."
+      ],
+      "weaknesses": [
+        "Will need to continue developing his overall skill set and ability to separate as a route-runner."
+      ],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Reports View All Reports → Brysen Wright Scouting Summary CP Charles Power 03/23/26 The most imposing wide receiver prospect early on in the 2028 cycle. Has a readymade build that would not look out of place on a college football field as a fifteen-year-old. Measures in at 6-foot-3.5, 210 pounds and tests well in the combine setting. Was the most dominant pass-catcher we saw on the 7-on-7 circuit entering his sophomore season, consistently turning in outstanding performances against upperclass competition. Shows early signs of possessing transcendent ball skills, with the ability to make incredible in-air adjustments, contorting his body to come down with difficult grabs. Possesses extremely strong hands and consistently dunks on defenders in jump ball situations. Looked to take a positive step with his speed and route-running, showing the ability to earn separation. Had a good sophomore season, catching 46 passes for 983 yards and 10 touchdowns while coming down with five interceptions as a safety. Will need to continue developing his overall skill set and ability to separate as a route-runner.",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:33.488Z"
+    },
+    "asher-ghioto": {
+      "playerSlug": "asher-ghioto",
+      "playerName": "Asher Ghioto",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Andrew Ivins",
+          "writerId": "ivins",
+          "outlet": "247Sports",
+          "url": "https://247sports.com/Player/asher-ghioto-46147706/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "s Asher Ghioto Pos Edge Height 6-5 Weight 240 Timeline Prospect Info High School The Bolles School City Jacksonville, FL Class 2028 Play Watch Highlights Player Rating i 247Sports 94 Natl. 6 Edge 2 FL 4 247Sports Composite&reg; 0.9975 Natl. 3 Edge 1 FL 3 Your Prediction Manage Predictions Make a Prediction Crystal Ball&reg; Predictions No Crystal Ball predictions at this time. College List Offer Interest Recruited By Roster Outlook Visit 63 Offers 0 Visits 0 Coach Visits Clemson (Edit) Warm P Chris Rumph S Nick Eason 6 Edge, 3 Commits - Miami (Edit) Warm P Jason Taylor 10 Edge, 3 Commits - Texas A&M (Edit) Warm - 13 Edge, 3 Commits - Alabama (Edit) Cool - 13 Edge, 1 Commits - Arkansas (Edit) Cool - 14 Edge, 2 Commits - View complete team list Add Interests Manage Interests 63 Offers 0 Visits 0 Coach Visits Add Video Accolades adidas Polynesian Bowl Roster Scouting Report Evaluated 08/13/2025 Andrew Ivins Director of Scouting -Overachiving defender that brings it every snap. -Should offer alignment flex and could fit into both odd or even fronts. -Calculated with his hands and will get into secondary moves. -Displays impressive get-off and initial quickness for age. -Shifts weight well in heat of battle and will clear his hips. -Owns one of the better developmental foundations early on in 2028 cycle. Athletic Background Multi-sport athlete. –––– FOOTBALL 2024: MaxPreps Freshman All-American. Credited with 66 tackles (21 TFL), 15 QBH and 7 sacks at the Bolles School. Participated in December's FBU Freshman All-American Bowl where he was named a top performer by 247Sports. -Andrew Ivins Add Timeline Events Timeline Add Stats Stats Year 2025 2024 TOTAL Tck TFL Sk PBU FF FR FRTD Int 84 35 23 2 1 1 1 1 66 21 7 1 - 1 - - 150 56 30 3 1 2 1 1 Add Photos View all articles CBS Sports Digital YouTube Facebook X Instagram TikTok CBS Sports Betting Podcast Newsletter Text Alert About Contact Us Advertisers Help Center Careers Privacy Policy Minors&apos; Privacy Policy California Notice Terms of Use Subscription Terms cbsoptanon.ot.showPreferenceCenter()}>Your Privacy Choices &copy; 2005-2026 CBS INTERACTIVE ALL RIGHTS RESERVED. CBS Sports is a registered trademark of CBS Broadcasting Inc. 247Sports is a registered service mark of CBT Sports, LLC. Scout is a registered service mark of CBS 247 Inc. Fans Only is a registered service mark of CSTV Online, Inc. The content on this site is for entertainment purposes only and 247Sports makes no representation or warranty as to the accuracy of the information given or the outcome of any game or event. There is no gambling offered on this site. This site contains commercial content and 247Sports may be compensated for the links provided on this site."
+      ],
+      "weaknesses": [
+        "–––– TRACK & FIELD Had limited discus reps as a 9th grader."
+      ],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "s Asher Ghioto Pos Edge Height 6-5 Weight 240 Timeline Prospect Info High School The Bolles School City Jacksonville, FL Class 2028 Play Watch Highlights Player Rating i 247Sports 94 Natl. 6 Edge 2 FL 4 247Sports Composite&reg; 0.9975 Natl. 3 Edge 1 FL 3 Your Prediction Manage Predictions Make a Prediction Crystal Ball&reg; Predictions No Crystal Ball predictions at this time. College List Offer Interest Recruited By Roster Outlook Visit 63 Offers 0 Visits 0 Coach Visits Clemson (Edit) Warm P Chris Rumph S Nick Eason 6 Edge, 3 Commits - Miami (Edit) Warm P Jason Taylor 10 Edge, 3 Commits - Texas A&M (Edit) Warm - 13 Edge, 3 Commits - Alabama (Edit) Cool - 13 Edge, 1 Commits - Arkansas (Edit) Cool - 14 Edge, 2 Commits - View complete team list Add Interests Manage Interests 63 Offers 0 Visits 0 Coach Visits Add Video Accolades adidas Polynesian Bowl Roster Scouting Report Evaluated 08/13/2025 Andrew Ivins Director of Scouting -Overachiving defender that brings it every snap. -Should offer alignment flex and could fit into both odd or even fronts. -Calculated with his hands and will get into secondary moves. -Displays impressive get-off and initial quickness for age. -Shifts weight well in heat of battle and will clear his hips. -Owns one of the better developmental foundations early on in 2028 cycle. H.S. Athletic Background Multi-sport athlete. –––– TRACK & FIELD Had limited discus reps as a 9th grader. –––– FOOTBALL 2024: MaxPreps Freshman All-American. Credited with 66 tackles (21 TFL), 15 QBH and 7 sacks at the Bolles School. Participated in December's FBU Freshman All-American Bowl where he was named a top performer by 247Sports. -Andrew Ivins Add Timeline Events Timeline Add Stats Stats Year 2025 2024 TOTAL Tck TFL Sk PBU FF FR FRTD Int 84 35 23 2 1 1 1 1 66 21 7 1 - 1 - - 150 56 30 3 1 2 1 1 Add Photos View all articles CBS Sports Digital YouTube Facebook X Instagram TikTok CBS Sports Betting Podcast Newsletter Text Alert About Contact Us Advertisers Help Center Careers Privacy Policy Minors&apos; Privacy Policy California Notice Terms of Use Subscription Terms cbsoptanon.ot.showPreferenceCenter()}>Your Privacy Choices &copy; 2005-2026 CBS INTERACTIVE ALL RIGHTS RESERVED. CBS Sports is a registered trademark of CBS Broadcasting Inc. 247Sports is a registered service mark of CBT Sports, LLC. Scout is a registered service mark of CBS 247 Inc. Fans Only is a registered service mark of CSTV Online, Inc. The content on this site is for entertainment purposes only and 247Sports makes no representation or warranty as to the accuracy of the information given or the outcome of any game or event. There is no gambling offered on this site. This site contains commercial content and 247Sports may be compensated for the links provided on this site. Timer List",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:37.485Z"
+    },
+    "cassell-cruickshank": {
+      "playerSlug": "cassell-cruickshank",
+      "playerName": "Cassell Cruickshank",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Cody Bellaire",
+          "writerId": "bellaire",
+          "outlet": "On3",
+          "url": "https://www.on3.com/rivals/cassell-cruickshank-282316/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "Report View All Reports → Cassell Cruickshank Scouting Summary CB Cody Bellaire 03/23/26 Long edge defender with prototypical physical and athletic traits to rush the passer and play at the point of attack.",
+        "Has the frame to add substantial mass and get stronger.",
+        "Attacks tackles with impressive burst off the line of scrimmage combined with violent hands.",
+        "Great understanding of leverage and pad level given his size."
+      ],
+      "weaknesses": [
+        "Will need to continue developing pass rush arsenal but has every physical and athletic gift for a coach to mold and develop."
+      ],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Report View All Reports → Cassell Cruickshank Scouting Summary CB Cody Bellaire 03/23/26 Long edge defender with prototypical physical and athletic traits to rush the passer and play at the point of attack. Has the frame to add substantial mass and get stronger. Attacks tackles with impressive burst off the line of scrimmage combined with violent hands. Great understanding of leverage and pad level given his size. Will need to continue developing pass rush arsenal but has every physical and athletic gift for a coach to mold and develop.",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:34.544Z"
+    },
+    "malakhi-dudley": {
+      "playerSlug": "malakhi-dudley",
+      "playerName": "Malakhi Dudley",
+      "playerType": "target",
+      "verified": true,
+      "sources": [
+        {
+          "writer": "Chad Simmons",
+          "writerId": "simmons",
+          "outlet": "On3",
+          "url": "https://www.on3.com/rivals/malakhi-dudley-244236/",
+          "publishedAt": "2026-06-27"
+        }
+      ],
+      "strengths": [
+        "Under Armour made stops in Orlando, Dallas and Phoenix before making its way back to the South.",
+        "Talent from Alabama, Georgia, South Carolina,"
+      ],
+      "weaknesses": [],
+      "comparison": null,
+      "schemeFit": null,
+      "staffNotes": null,
+      "projection": null,
+      "insiderNotes": "Under Armour made stops in Orlando, Dallas and Phoenix before making its way back to the South. Talent from Alabama, Georgia, South Carolina,",
+      "recruitingStory": null,
+      "nflProjection": null,
+      "featured": false,
+      "updatedAt": "2026-06-27T01:42:38.101Z"
     }
   }
 }

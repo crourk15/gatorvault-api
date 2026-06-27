@@ -65,10 +65,12 @@ export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlay
   const signalLine = p.signalCount ? ` · ${p.signalCount} signals` : '';
   const statusLine = p.ufStatus ? ` · UF ${p.ufStatus}` : '';
   const fitLine = fitPending ? ' · UF Fit pending' : '';
+  const allowlist = p.allowlistTarget === true;
+  const ufFrac = p.ufProbability ?? undefined;
   return {
     slug: p.slug,
     name: p.fullName,
-    tier: p.ufStatus === 'TARGET' ? 'HIGH' : 'MEDIUM',
+    tier: allowlist || p.ufStatus === 'TARGET' ? 'HIGH' : 'MEDIUM',
     position: p.position ?? undefined,
     classYear: p.classYear,
     state: p.state ?? undefined,
@@ -79,14 +81,22 @@ export function fromEarlyDiscovery(p: EarlyDiscoveryPlayer): RecruitingBoardPlay
     posRank: isLiveOn3 ? (p.positionRank ?? undefined) : undefined,
     stateRank: isLiveOn3 ? (p.stateRank ?? undefined) : undefined,
     fitScore: p.ufFitScore ?? undefined,
+    ufProbability: ufFrac,
     ufStatus: p.ufStatus ?? undefined,
     school: formatRecruitSchoolLabel(p.school ?? undefined) ?? undefined,
     inState: p.inState ?? undefined,
-    heatPct: p.discoveryScore > 0 ? p.discoveryScore : undefined,
-    heatLabel: 'Discovery',
+    heatPct:
+      allowlist && ufFrac != null
+        ? Math.round(ufFrac * 100)
+        : p.discoveryScore > 0
+          ? p.discoveryScore
+          : undefined,
+    heatLabel: allowlist && ufFrac != null ? 'UF likelihood' : 'Discovery',
     ratingLabel: isLiveOn3 ? 'Composite' : 'Vault est.',
     showIndustryRanks: isLiveOn3,
-    skinny: `Discovery score ${p.discoveryScore}${signalLine}${statusLine}${fitLine}`,
+    skinny: allowlist
+      ? `Locked UF target · Discovery ${p.discoveryScore}${fitLine}`
+      : `Discovery score ${p.discoveryScore}${signalLine}${statusLine}${fitLine}`,
   };
 }
 

@@ -2,6 +2,59 @@
   "version": 1,
   "events": [
     {
+      "id": "gm2_1782505664576_fb1ka",
+      "at": "2026-06-26T20:27:44.576Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "editorial-position-sync",
+      "playerSlug": "quinton-rolle-jr",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1782505664566_ecf9i",
+      "at": "2026-06-26T20:27:44.566Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "quinton-rolle-jr",
+      "reason": "invalid_player_on_write",
+      "source": "editorial-position-sync"
+    },
+    {
+      "id": "gm2_1782505598171_lblql",
+      "at": "2026-06-26T20:26:38.171Z",
+      "layer": "sil",
+      "action": "allow",
+      "subsystem": "editorial-position-sync",
+      "playerSlug": "quinton-rolle-jr",
+      "reason": "healed_partial_identity",
+      "errors": [
+        "invalid_school"
+      ]
+    },
+    {
+      "id": "gm2_1782505598166_msykn",
+      "at": "2026-06-26T20:26:38.166Z",
+      "layer": "auto-repair",
+      "action": "needs_resolution",
+      "playerSlug": "quinton-rolle-jr",
+      "reason": "invalid_player_on_write",
+      "source": "editorial-position-sync"
+    },
+    {
+      "id": "gm2_1782396114201_pgh5v",
+      "at": "2026-06-25T14:01:54.201Z",
+      "layer": "re",
+      "action": "reject",
+      "feature": "visit_recap",
+      "subsystem": "recruiting-hub",
+      "reason": "not_public_intel",
+      "playerSlug": "amare-patterson",
+      "fingerprint": "visit_cancel_amare-patterson_2026-06-09_hayes_fawcett"
+    },
+    {
       "id": "gm2_1782334719910_vax0g",
       "at": "2026-06-24T20:58:39.910Z",
       "layer": "re",
@@ -5203,61 +5256,7 @@
       "playerSlug": "joakim-gouda",
       "reason": "invalid_player_on_write",
       "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1782334411267_gsv7y",
-      "at": "2026-06-24T20:53:31.267Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "terrance-smith",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
-      "id": "gm2_1782334411261_h48xf",
-      "at": "2026-06-24T20:53:31.261Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "terrance-smith",
-      "reason": "invalid_player_on_write",
-      "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1782334411204_1r4gw",
-      "at": "2026-06-24T20:53:31.204Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "isaac-mcneil",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
-    },
-    {
-      "id": "gm2_1782334411198_9j15n",
-      "at": "2026-06-24T20:53:31.198Z",
-      "layer": "auto-repair",
-      "action": "needs_resolution",
-      "playerSlug": "isaac-mcneil",
-      "reason": "invalid_player_on_write",
-      "source": "recruiting-store"
-    },
-    {
-      "id": "gm2_1782334411094_dmi8m",
-      "at": "2026-06-24T20:53:31.094Z",
-      "layer": "sil",
-      "action": "allow",
-      "subsystem": "recruiting-store",
-      "playerSlug": "aiking-hall",
-      "reason": "healed_partial_identity",
-      "errors": [
-        "invalid_school"
-      ]
     }
   ],
-  "updatedAt": "2026-06-24T20:58:39.910Z"
+  "updatedAt": "2026-06-26T20:27:44.578Z"
 }

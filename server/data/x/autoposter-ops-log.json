@@ -2,6 +2,15 @@
   "version": 1,
   "entries": [
     {
+      "ts": "2026-06-25T15:26:22.016Z",
+      "action": "rewrite_success",
+      "subsystem": "rewrite-engine",
+      "playerName": "Easton Royal",
+      "attempts": 1,
+      "wordCount": 85,
+      "mode": "stub"
+    },
+    {
       "ts": "2026-06-21T17:02:13.626Z",
       "action": "rewrite_success",
       "subsystem": "rewrite-engine",
@@ -173,5 +182,5 @@
       "mode": "stub"
     }
   ],
-  "updatedAt": "2026-06-21T17:02:13.627Z"
+  "updatedAt": "2026-06-25T15:26:22.276Z"
 }
