@@ -16,6 +16,8 @@ const { buildOn3ProfileUrl } = require('./on3-urls');
 const { slugify } = require('./slug');
 const { enrichIntelCompetitors } = require('./recruiting-competitor-extract');
 const { recordBeatDigDeeper } = require('./recruiting-dig-deeper-ingest');
+const { enterPlayerIntel } = require('./player-intel-entry');
+const { getAllowlistSet } = require('./recruiting-target-allowlist');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'beat-writer-ingest-snapshot.json');
@@ -342,7 +344,9 @@ function resolvePostTimestamp(post) {
 
 function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
   const prefilter = require('./beat-intel-prefilter');
+  const { parseOn3BeatUrlIdentity } = require('./on3-recruit-discovery');
   const text = String(post.text || '').trim();
+  const urlIdentity = parseOn3BeatUrlIdentity(text, post.url);
 
   if (!text) {
     if (logSkips) logBeatPostSkip(post, 'empty_text', 'non_player_intel');
@@ -355,7 +359,11 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     return null;
   }
 
-  let playerName = extractVisitPlayerName(text);
+  let playerName =
+    urlIdentity?.playerName && isUsableExtractedName(urlIdentity.playerName)
+      ? urlIdentity.playerName
+      : null;
+  if (!playerName) playerName = extractVisitPlayerName(text);
   if (!playerName || !isUsableExtractedName(playerName)) {
     const copy = require('./x-autoposter-copy');
     const fallback = copy.extractPlayerFromText(text);
@@ -367,21 +375,25 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
       playerName = syncHit.playerName;
     }
   }
-  if ((!playerName || !isUsableExtractedName(playerName)) && !prefilter.hasStrongRecruitingSignals(text, post)) {
+  if (
+    (!playerName || !isUsableExtractedName(playerName)) &&
+    !urlIdentity?.playerSlug &&
+    !prefilter.hasStrongRecruitingSignals(text, post)
+  ) {
     if (logSkips) logBeatPostSkip(post, 'no_identifiable_player', 'non_player_intel');
     prefilter.logNonPlayerIntel({ text, reason: 'no_identifiable_player', source: post.handle || post.writerName });
     return null;
   }
   if (!playerName || !isUsableExtractedName(playerName)) {
-    playerName = prefilter.extractCleanFullName(text) || null;
+    playerName = urlIdentity?.playerName || prefilter.extractCleanFullName(text) || null;
   }
 
   const resolver = require('./contextual-identity-resolver');
   const vagueClues = resolver.parseVagueClues(text, {
     playerName: playerName || '',
-    stars: parseStars(text),
-    pos: parsePosition(text),
-    classYear: parseClassYear(text),
+    stars: urlIdentity?.stars || parseStars(text),
+    pos: urlIdentity?.pos || parsePosition(text),
+    classYear: urlIdentity?.classYear || parseClassYear(text),
     school: parseSchool(text) || parseCollegeSchool(text)
   });
 
@@ -395,33 +407,37 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
       ? playerName
       : syncRoster?.playerName && isUsableExtractedName(syncRoster.playerName)
         ? syncRoster.playerName
-        : playerName || 'Unknown prospect';
-  const slugBase =
-    playerName && isUsableExtractedName(playerName)
+        : urlIdentity?.playerName || playerName || 'Unknown prospect';
+  const slugBase = urlIdentity?.playerSlug
+    ? urlIdentity.playerSlug
+    : playerName && isUsableExtractedName(playerName)
       ? slugify(resolvedName)
       : syncRoster?.playerSlug || `beat-pending-${handle}-${postKey}`;
   const analystName = post.writerName || post.outlet || post.handle || 'Beat writer';
   const classYear =
+    urlIdentity?.classYear ||
     parseClassYear(text) ||
     syncRoster?.classYear ||
     ingestGate.matchRosterByName(resolvedName)?.classYear ||
     vagueClues?.classYear ||
     2028;
-  const pos = parsePosition(text) || vagueClues?.pos || '';
+  const pos = urlIdentity?.pos || parsePosition(text) || vagueClues?.pos || '';
   const school = parseSchool(text) || parseCollegeSchool(text) || vagueClues?.school || '';
   const visitDate = parseVisitDate(text);
   const visitWindow = parseVisitWindow(text);
   const eventType = resolveRecruitingEventType(text);
+  const on3ArticleUrl = urlIdentity?.on3ArticleUrl || null;
 
   return {
     playerName: resolvedName,
     playerSlug: slugBase,
     on3Id: null,
+    on3RecruitSlug: urlIdentity?.on3RecruitSlug || null,
     classYear,
     pos,
     school,
     highSchool: school,
-    stars: parseStars(text) || vagueClues?.stars || null,
+    stars: urlIdentity?.stars || parseStars(text) || vagueClues?.stars || null,
     eventType,
     status: buildRecruitingStatus(eventType, text),
     visitStart: visitWindow.visitStart || visitDate,
@@ -431,10 +447,11 @@ function parseBeatPostForVisitIntel(post, { logSkips = true } = {}) {
     text: text.replace(/\s+/g, ' ').slice(0, 280),
     detail: text.replace(/\s+/g, ' ').slice(0, 280),
     timestamp,
-    articleUrl: post.url || null,
+    articleUrl: on3ArticleUrl || post.url || null,
     source: analystName,
     sourceHandle: post.handle || null,
     sourceType: 'beat',
+    on3UrlIdentity: urlIdentity?.source || null,
     fingerprint: `beat_${eventType}_${slugBase}_${day}_${handle}`
   };
 }
@@ -766,6 +783,38 @@ function parseCollegeSchool(text) {
   return resolver.parseVagueClues(text).school;
 }
 
+function needsBeatProspectProvision(existing, classYear) {
+  const year = parseInt(classYear, 10);
+  if (!Number.isFinite(year) || year < 2027 || year > 2030) return false;
+  if (!existing) return true;
+  const slug = String(existing.slug || '').toLowerCase();
+  if (!existing.on3Id && !existing.on3Slug) return true;
+  if (!existing.stars && !existing.natlRank) return true;
+  if (year === 2028 && slug && !getAllowlistSet(2028).has(slug)) return true;
+  return false;
+}
+
+async function provisionBeatProspect({ playerName, classYear, trustedWriter = false }) {
+  if (!trustedWriter) return { skipped: true, reason: 'untrusted_writer' };
+  const year = parseInt(classYear, 10);
+  if (!Number.isFinite(year) || year < 2027 || year > 2030) {
+    return { skipped: true, reason: 'class_year_out_of_scope' };
+  }
+  const trimmed = String(playerName || '').trim();
+  if (!trimmed) return { skipped: true, reason: 'missing_name' };
+  try {
+    const result = await enterPlayerIntel({
+      name: trimmed,
+      classYear: year,
+      offer: false,
+      rebuildSnapshots: false,
+    });
+    return { skipped: false, ok: true, slug: result.slug, steps: result.steps };
+  } catch (err) {
+    return { skipped: false, ok: false, error: err.message };
+  }
+}
+
 async function processBeatVisitIntelRow(row, snapshot) {
   if (!row?.fingerprint) return { skipped: true, reason: 'invalid' };
 
@@ -989,46 +1038,69 @@ async function processBeatVisitIntelRow(row, snapshot) {
   row.playerName = recheck.playerName || confirmedName;
   row.playerSlug = recheck.playerSlug || confirmedSlug;
 
+  let playerBase = existing;
+  if (needsBeatProspectProvision(existing, row.classYear) && trustedWriter) {
+    const provision = await provisionBeatProspect({
+      playerName: row.playerName,
+      classYear: row.classYear,
+      trustedWriter,
+    });
+    if (provision.ok) {
+      const provisioned = await store.getPlayerBySlug(provision.slug || row.playerSlug);
+      if (provisioned) {
+        playerBase = provisioned;
+        row.playerSlug = provisioned.slug;
+        row.playerName = provisioned.name;
+        row.on3Id = provisioned.on3Id || row.on3Id;
+        row.pos = row.pos || provisioned.pos;
+        row.stars = row.stars || provisioned.stars;
+        row.natlRank = row.natlRank || provisioned.natlRank;
+        row.school = row.school || provisioned.school;
+        row.classYear = row.classYear || provisioned.classYear;
+      }
+    }
+  }
+
   const mergedPlayer = {
-    ...(existing || {}),
+    ...(playerBase || {}),
     slug: row.playerSlug,
     name: row.playerName,
-    pos: row.pos || existing?.pos,
-    classYear: row.classYear || existing?.classYear,
-    school: row.school || existing?.school,
-    stars: row.stars || existing?.stars,
-    natlRank: row.natlRank || existing?.natlRank,
-    committedTo: existing?.committedTo || null
+    pos: row.pos || playerBase?.pos,
+    classYear: row.classYear || playerBase?.classYear,
+    school: row.school || playerBase?.school,
+    stars: row.stars || playerBase?.stars,
+    natlRank: row.natlRank || playerBase?.natlRank,
+    committedTo: playerBase?.committedTo || null
   };
   const copy = require('./recruiting-alert-templates').buildRecruitingCopy({
     player: mergedPlayer,
-    existing,
+    existing: playerBase,
     eventType: row.eventType,
     row
   });
   const identityValidator = require('./identity-record-validator');
   const safeSchool =
     identityValidator.sanitizeSchoolField(row.school) ||
-    identityValidator.sanitizeSchoolField(existing?.school) ||
+    identityValidator.sanitizeSchoolField(playerBase?.school) ||
     null;
   const playerPatch = {
     slug: row.playerSlug,
     name: row.playerName,
-    pos: row.pos || existing?.pos,
-    classYear: row.classYear || existing?.classYear,
+    pos: row.pos || playerBase?.pos,
+    classYear: row.classYear || playerBase?.classYear,
     school: safeSchool,
     fromSchool:
       identityValidator.sanitizeSchoolField(row.highSchool, { allowCollege: true }) ||
-      identityValidator.sanitizeSchoolField(existing?.fromSchool, { allowCollege: true }) ||
+      identityValidator.sanitizeSchoolField(playerBase?.fromSchool, { allowCollege: true }) ||
       null,
-    on3Id: row.on3Id || existing?.on3Id,
-    on3ProfileUrl: existing?.on3ProfileUrl || buildOn3ProfileUrl(existing || row),
-    stars: row.stars || existing?.stars,
+    on3Id: row.on3Id || playerBase?.on3Id,
+    on3ProfileUrl: playerBase?.on3ProfileUrl || buildOn3ProfileUrl(playerBase || row),
+    stars: row.stars || playerBase?.stars,
     category: 'target',
-    status: existing?.status || 'uncommitted',
-    ufOvStatus: row.eventType === 'official_visit' ? 'scheduled' : existing?.ufOvStatus || 'visit',
-    visitStart: row.visitStart || existing?.visitStart,
-    visitEnd: row.visitEnd || existing?.visitEnd,
+    status: playerBase?.status || 'uncommitted',
+    ufOvStatus: row.eventType === 'official_visit' ? 'scheduled' : playerBase?.ufOvStatus || 'visit',
+    visitStart: row.visitStart || playerBase?.visitStart,
+    visitEnd: row.visitEnd || playerBase?.visitEnd,
     skinny: copy.skinny,
     profileNote: copy.profileNote
   };
@@ -1280,6 +1352,8 @@ module.exports = {
   isVisitSchedulePost,
   isRecruitingIntelPost,
   logBeatPostSkip,
+  needsBeatProspectProvision,
+  provisionBeatProspect,
   VISIT_INGEST_HANDLES,
   SNAPSHOT_PATH
 };

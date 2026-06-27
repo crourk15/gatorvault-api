@@ -3,6 +3,7 @@
  */
 const ingest = require('../lib/beat-writer-ingest');
 const cancelParser = require('../lib/beat-visit-intel-parser');
+const { parseOn3BeatUrlIdentity } = require('../lib/on3-recruit-discovery');
 
 function assert(label, condition) {
   if (!condition) {
@@ -67,6 +68,33 @@ assert('parses offer intel from Alderman', offerParsed && offerParsed.eventType 
 assert('extracts offer player name', offerParsed && offerParsed.playerName === 'Marcus Williams');
 
 assert('recruiting intel detector catches offers', ingest.isRecruitingIntelPost(offerPost.text, offerPost));
+
+assert('new 2028 prospect needs provision', ingest.needsBeatProspectProvision(null, 2028));
+assert('incomplete stub needs provision', ingest.needsBeatProspectProvision({ slug: 'zyon-robinson' }, 2028));
+const fullAllowlisted = { slug: 'kaleb-ballard', on3Id: '123', stars: 4, natlRank: 50 };
+assert('complete allowlisted player skips provision', !ingest.needsBeatProspectProvision(fullAllowlisted, 2028));
+
+const zyonUrl =
+  'https://on3.com/teams/florida-gators/news/florida-gators-are-a-major-contender-for-4-star-wr-zyon-robinson/';
+const zyonFromUrl = parseOn3BeatUrlIdentity(`DETAILS: ${zyonUrl} (On3+).`, null);
+assert('parses Zyon slug from On3 news URL', zyonFromUrl && zyonFromUrl.playerSlug === 'zyon-robinson');
+assert('parses Zyon name from On3 news URL', zyonFromUrl && zyonFromUrl.playerName === 'Zyon Robinson');
+assert('parses WR + 4-star from On3 news URL', zyonFromUrl && zyonFromUrl.pos === 'WR' && zyonFromUrl.stars === 4);
+
+const benderZyonPost = {
+  handle: 'Corey_Bender',
+  writerName: 'Corey Bender',
+  outlet: 'On3',
+  text:
+    '"I talk to them daily; every day we talk." With three coaches in hot pursuit, Florida has wasted no time making one of the top 2028 WRs feel like a major priority. Safe to say the interest is mutual... DETAILS: https://on3.com/teams/florida-gators/news/florida-gators-are-a-major-contender-for-4-star-wr-zyon-robinson/ (On3+).',
+  publishedAt: '2026-06-22T18:00:00.000Z',
+  url: 'https://x.com/Corey_Bender/status/zyon-test'
+};
+const benderZyonParsed = ingest.parseBeatPostForVisitIntel(benderZyonPost, { logSkips: false });
+assert('parses vague Bender tweet via On3 URL', benderZyonParsed && benderZyonParsed.playerSlug === 'zyon-robinson');
+assert('extracts Zyon Robinson from vague Bender tweet', benderZyonParsed && benderZyonParsed.playerName === 'Zyon Robinson');
+assert('uses On3 article URL for intel link', benderZyonParsed && benderZyonParsed.articleUrl === zyonUrl);
+assert('infers 2028 class year from Bender tweet', benderZyonParsed && benderZyonParsed.classYear === 2028);
 
 if (process.exitCode) {
   console.error('\nBeat writer ingest tests failed.');

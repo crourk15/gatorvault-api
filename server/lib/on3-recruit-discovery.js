@@ -24,10 +24,156 @@ function loadCanonicalOn3SlugMap() {
 }
 
 const ON3_RIVALS_RE = /on3\.com\/rivals\/([a-z0-9-]+-\d+)\/?/i;
+const ON3_URL_IN_TEXT_RE = /https?:\/\/(?:www\.)?on3\.com\/[^\s)\]"'<>]+/gi;
+const ON3_NEWS_PATH_RE = /on3\.com\/(?:teams\/[^/]+\/)?news\/([^/?#]+)/i;
+const ON3_POS_WORD = {
+  'wide-receiver': 'WR',
+  'running-back': 'RB',
+  'quarterback': 'QB',
+  'tight-end': 'TE',
+  'linebacker': 'LB',
+  'defensive-end': 'DE',
+  'defensive-tackle': 'DT',
+  'cornerback': 'CB',
+  safety: 'S',
+  athlete: 'ATH',
+  'offensive-tackle': 'OT',
+  'offensive-guard': 'OG',
+  center: 'C',
+};
+const US_STATE_ABBR = new Set([
+  'al', 'ak', 'az', 'ar', 'ca', 'co', 'ct', 'de', 'fl', 'ga', 'hi', 'ia', 'id', 'il', 'in', 'ks', 'ky', 'la',
+  'ma', 'md', 'me', 'mi', 'mn', 'mo', 'ms', 'mt', 'nc', 'nd', 'ne', 'nh', 'nj', 'nm', 'nv', 'ny', 'oh', 'ok',
+  'or', 'pa', 'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'va', 'vt', 'wa', 'wi', 'wv', 'wy', 'dc',
+]);
+const PERSON_SLUG_NOISE = new Set([
+  'florida', 'gators', 'gator', 'teams', 'team', 'news', 'star', 'stars', 'major', 'contender', 'contenders',
+  'interest', 'priority', 'top', 'high', 'school', 'football', 'recruiting', 'visit', 'official', 'unofficial',
+]);
 
 function extractOn3RecruitSlug(url) {
   const m = String(url || '').match(ON3_RIVALS_RE);
   return m ? m[1].toLowerCase() : null;
+}
+
+function extractOn3UrlsFromText(text) {
+  return [...new Set(String(text || '').match(ON3_URL_IN_TEXT_RE) || [])];
+}
+
+function cleanOn3Url(url) {
+  return String(url || '')
+    .replace(/[\s)\]"'<>]+$/g, '')
+    .replace(/\?$/, '');
+}
+
+function slugToPlayerName(slug) {
+  const base = String(slug || '')
+    .replace(/-\d+$/, '')
+    .trim();
+  return base
+    .split('-')
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+function isLikelyPersonSlug(slug) {
+  const parts = String(slug || '')
+    .split('-')
+    .filter(Boolean);
+  if (parts.length < 2 || parts.length > 4) return false;
+  const last = parts[parts.length - 1];
+  if (/^\d+$/.test(last)) return parts.length >= 3;
+  if (US_STATE_ABBR.has(last)) return false;
+  if (parts.some((p) => PERSON_SLUG_NOISE.has(p))) return false;
+  return parts.every((p) => /^[a-z]{2,}$/.test(p));
+}
+
+function parseOn3NewsArticleSlug(pathSlug) {
+  const slug = String(pathSlug || '')
+    .toLowerCase()
+    .replace(/\/$/, '');
+  if (!slug) return null;
+
+  let m = slug.match(/(\d)-star-(wr|qb|rb|te|ol|ot|og|c|dl|dt|de|edge|lb|cb|s|ath|k|p)-([a-z0-9-]+)$/i);
+  if (m) {
+    const playerSlug = m[3].replace(/-\d+$/, '');
+    if (!isLikelyPersonSlug(playerSlug)) return null;
+    return {
+      playerSlug,
+      playerName: slugToPlayerName(playerSlug),
+      stars: parseInt(m[1], 10),
+      pos: m[2].toUpperCase(),
+      classYear: null,
+    };
+  }
+
+  m = slug.match(
+    /\b(202[6-9]|203[0-5])-(\d)-star-(wide-receiver|running-back|quarterback|tight-end|linebacker|defensive-end|defensive-tackle|cornerback|safety|athlete|offensive-tackle|offensive-guard|center)-([a-z0-9-]+)/i
+  );
+  if (m) {
+    const playerSlug = m[4].replace(/-\d+$/, '');
+    if (!isLikelyPersonSlug(playerSlug)) return null;
+    return {
+      playerSlug,
+      playerName: slugToPlayerName(playerSlug),
+      stars: parseInt(m[2], 10),
+      pos: ON3_POS_WORD[m[3].toLowerCase()] || null,
+      classYear: parseInt(m[1], 10),
+    };
+  }
+
+  for (let len = 3; len >= 2; len -= 1) {
+    const candidate = slug
+      .split('-')
+      .slice(-len)
+      .join('-')
+      .replace(/-\d+$/, '');
+    if (isLikelyPersonSlug(candidate)) {
+      return {
+        playerSlug: candidate,
+        playerName: slugToPlayerName(candidate),
+        stars: null,
+        pos: null,
+        classYear: null,
+      };
+    }
+  }
+
+  return null;
+}
+
+function parseOn3BeatUrlIdentity(text, postUrl) {
+  const urls = extractOn3UrlsFromText(text).map(cleanOn3Url);
+  if (postUrl && /on3\.com/i.test(postUrl)) urls.push(cleanOn3Url(postUrl));
+
+  for (const url of urls) {
+    const rivalsSlug = extractOn3RecruitSlug(url);
+    if (rivalsSlug) {
+      const playerSlug = rivalsSlug.replace(/-\d+$/, '');
+      return {
+        playerSlug,
+        playerName: slugToPlayerName(playerSlug),
+        on3RecruitSlug: rivalsSlug,
+        on3ArticleUrl: url,
+        source: 'on3_rivals_url',
+      };
+    }
+
+    const newsMatch = url.match(ON3_NEWS_PATH_RE);
+    if (newsMatch) {
+      const parsed = parseOn3NewsArticleSlug(newsMatch[1]);
+      if (parsed) {
+        return {
+          ...parsed,
+          on3ArticleUrl: url,
+          source: 'on3_news_url',
+        };
+      }
+    }
+  }
+
+  return null;
 }
 
 function normalizeNameKey(name) {
@@ -197,6 +343,9 @@ module.exports = {
   formatRecruitSchoolLabel,
   resolveStoredOn3Slug,
   extractOn3RecruitSlug,
+  extractOn3UrlsFromText,
+  parseOn3NewsArticleSlug,
+  parseOn3BeatUrlIdentity,
   loadCanonicalOn3SlugMap,
   ON3_SLUG_MAP_PATH,
 };

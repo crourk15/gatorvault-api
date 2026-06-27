@@ -176,9 +176,16 @@ function matchesFootball(text) {
   return FOOTBALL_TERMS.some((term) => hay.includes(term));
 }
 
-function matchesRecruiting(text) {
+function matchesRecruiting(text, post = null) {
   const hay = text.toLowerCase();
-  return RECRUITING_TERMS.some((term) => hay.includes(term));
+  if (RECRUITING_TERMS.some((term) => hay.includes(term))) return true;
+  try {
+    const { parseOn3BeatUrlIdentity } = require('./on3-recruit-discovery');
+    if (parseOn3BeatUrlIdentity(text, post?.url)?.playerSlug) return true;
+  } catch {
+    /* optional */
+  }
+  return false;
 }
 
 function matchesClassYear(text, post = null) {
@@ -198,10 +205,17 @@ function passesOtherProgramGate(text, post) {
   return !beatFilters.mentionsOtherProgramWithoutUf(text, post);
 }
 
-function matchesPlayerName(text) {
+function matchesPlayerName(text, post = null) {
   if (extractPlayerFromText(text)) return true;
   if (PLAYER_NAME_RE.test(text)) return true;
-  return Boolean(resolvePlayerFromTextSync(text)?.playerName);
+  if (resolvePlayerFromTextSync(text)?.playerName) return true;
+  try {
+    const { parseOn3BeatUrlIdentity } = require('./on3-recruit-discovery');
+    if (parseOn3BeatUrlIdentity(text, post?.url)?.playerSlug) return true;
+  } catch {
+    /* optional */
+  }
+  return false;
 }
 
 /**
@@ -225,7 +239,7 @@ function evaluateStrictRecruitingIngestGate(post, text) {
   if (!matchesFootball(body)) {
     return { pass: false, reason: 'no_football_signal', failedRule: 2 };
   }
-  if (!matchesRecruiting(body)) {
+  if (!matchesRecruiting(body, post)) {
     return { pass: false, reason: 'no_recruiting_signal', failedRule: 3 };
   }
   if (!matchesClassYear(body, post)) {
@@ -237,7 +251,7 @@ function evaluateStrictRecruitingIngestGate(post, text) {
   if (!passesOtherProgramGate(body, post)) {
     return { pass: false, reason: 'other_program_without_uf', failedRule: 5 };
   }
-  if (!matchesPlayerName(body)) {
+  if (!matchesPlayerName(body, post)) {
     return { pass: false, reason: 'no_player_name', failedRule: 6 };
   }
   return { pass: true, reason: 'ok' };
