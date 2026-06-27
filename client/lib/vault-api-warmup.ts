@@ -5,6 +5,7 @@ import { apiFetch } from './api-fetch';
 import { ACTIVE_RECRUITING_CLASS_YEAR, RECRUITING_CLASS_YEARS } from './recruiting-cycle';
 
 let warmed = false;
+const warmedRecruitingApi = new Set<number>();
 
 function hubYearFromPath(path: string): number {
   const match = path.match(/\/vault\/recruiting\/(\d{4})(?:\/|$)/);
@@ -15,6 +16,23 @@ function hubYearFromPath(path: string): number {
     }
   }
   return ACTIVE_RECRUITING_CLASS_YEAR;
+}
+
+/** Prime recruiting hub API caches before navigation — safe to call on hover/touch. */
+export function warmRecruitingHubApi(year = ACTIVE_RECRUITING_CLASS_YEAR): void {
+  if (typeof window === 'undefined') return;
+  if (warmedRecruitingApi.has(year)) return;
+  warmedRecruitingApi.add(year);
+
+  const ping = (apiPath: string) => {
+    void apiFetch(apiPath, { timeoutMs: 15_000, retries: 2, retryDelayMs: 2_000 }).catch(() => {});
+  };
+
+  ping(`/api/recruiting/hub/bundle?year=${year}`);
+  for (const classYear of RECRUITING_CLASS_YEARS) {
+    ping(`/api/recruiting/class-metrics?year=${classYear}`);
+  }
+  ping(`/api/recruiting/hub/ticker?year=${year}`);
 }
 
 export function warmVaultApi(): void {

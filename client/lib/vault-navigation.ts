@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { prefetchVaultHref, warmVaultBottomNavRoutes, warmVaultDrawerRoutes, warmVaultPlayerRoute, warmVaultRoute } from '@/lib/vault-preload';
 
 export { prefetchVaultHref, warmVaultBottomNavRoutes, warmVaultDrawerRoutes, warmVaultPlayerRoute, warmVaultRoute };
+export { warmRecruitingHubApi } from '@/lib/vault-api-warmup';
 
 const STATE_PREFIX = 'gv-vault-state:';
 

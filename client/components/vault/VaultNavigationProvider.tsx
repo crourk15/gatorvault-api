@@ -2,7 +2,7 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { prefetchVaultHref, notifyVaultNavigation, warmVaultBottomNavRoutes, warmVaultDrawerRoutes, warmVaultPlayerRoute } from '@/lib/vault-navigation';
+import { prefetchVaultHref, notifyVaultNavigation, warmVaultBottomNavRoutes, warmVaultDrawerRoutes, warmVaultPlayerRoute, warmRecruitingHubApi } from '@/lib/vault-navigation';
 import { isVaultClientNavHref, vaultNavPathsEqual } from '@/lib/vault-nav-utils';
 import { isPlayerProfileHref, playerSlugFromHref, prefetchFullProfile } from '@/lib/player-full-profile-api';
 
@@ -72,6 +72,9 @@ export function VaultNavigationProvider({ children }: Props): React.ReactElement
 
   const warmPlayerLink = useCallback((href: string) => {
     const path = href.split('?')[0].split('#')[0];
+    if (path.startsWith('/vault/recruiting')) {
+      warmRecruitingHubApi();
+    }
     if (isPlayerProfileHref(path)) {
       warmVaultPlayerRoute(path);
       const slug = playerSlugFromHref(path);

@@ -100,10 +100,32 @@ export function useFutureCastLabData(): FutureCastLabData {
     }
     try {
       if (isInitial) {
-        const [primary, secondaryRaw] = await Promise.all([
-          loadFutureCastLabPrimary(),
-          loadFutureCastLabSecondaryRaw(),
-        ]);
+        const primary = await loadFutureCastLabPrimary();
+        const partialOverlay = applyDiscoverySeasonOverlay(primary, {
+          trendingBoard: EMPTY_LAB_DATA.trendingBoard,
+          movementIntel: EMPTY_LAB_DATA.movementIntel,
+          staffNotes: EMPTY_LAB_DATA.staffNotes,
+          home: EMPTY_LAB_DATA.home,
+          stock: EMPTY_LAB_DATA.stock,
+          highPriority: [],
+          highPriorityClosing: [],
+          visitIntel: [],
+          visitRecap: [],
+          flipWatch: [],
+          movementNarratives: [],
+          underclassmen: [],
+        });
+        setData({
+          ...EMPTY_LAB_DATA,
+          ...primary,
+          ...partialOverlay,
+          heatLevel: 'warm',
+          lastUpdated: primary.lastUpdated,
+        });
+        setLoading(false);
+        setWarming(false);
+
+        const secondaryRaw = await loadFutureCastLabSecondaryRaw();
         const discoveryOverlay = applyDiscoverySeasonOverlay(primary, secondaryRaw);
         setData({
           ...EMPTY_LAB_DATA,

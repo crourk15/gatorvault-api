@@ -55,3 +55,34 @@ export function TeamPipelineSkeleton(): React.ReactElement {
     </div>
   );
 }
+
+export function TeamOverviewSkeleton(): React.ReactElement {
+  return (
+    <div className="team-premium-skeleton team-premium-skeleton--overview" aria-hidden="true" data-testid="team-overview-skeleton">
+      <div className="team-premium-skeleton__grid">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="team-premium-skeleton__block team-premium-skeleton__block--tall" />
+        ))}
+      </div>
+      <div className="team-premium-skeleton__row team-premium-skeleton__row--wide" />
+      <div className="team-premium-skeleton__row" />
+    </div>
+  );
+}
+
+export function TeamDepthChartSkeleton(): React.ReactElement {
+  return (
+    <div className="team-premium-skeleton team-premium-skeleton--depth" aria-hidden="true" data-testid="team-depth-skeleton">
+      <div className="team-premium-skeleton__filters">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <span key={i} className="team-premium-skeleton__pill" />
+        ))}
+      </div>
+      <div className="team-premium-skeleton__grid">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="team-premium-skeleton__card" />
+        ))}
+      </div>
+    </div>
+  );
+}

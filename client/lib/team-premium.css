@@ -1048,6 +1048,21 @@
   animation: team-premium-shimmer 1.4s ease-in-out infinite;
 }
 
+.team-premium-page .team-premium-skeleton__block--tall {
+  min-height: 7rem;
+}
+
+.team-premium-page .team-premium-skeleton--overview .team-premium-skeleton__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .team-premium-page .team-premium-skeleton--overview .team-premium-skeleton__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 @keyframes team-premium-shimmer {
   0% {
     background-position: 100% 0;

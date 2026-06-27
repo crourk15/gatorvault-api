@@ -173,10 +173,11 @@ export function TeamHubPage(): React.ReactElement {
 
   const heroMetrics = useMemo(() => computeHeroMetrics(bundle), [bundle]);
   const suppressPipelinePreview = pipelineFullVisible || activeTab === 'recruiting-pipeline';
+  const pageLoading = loading && bundle.roster.length === 0;
 
   return (
     <TeamElitePageShell>
-      <TeamPremiumHero metrics={heroMetrics} loading={loading && bundle.roster.length === 0} />
+      <TeamPremiumHero metrics={heroMetrics} loading={pageLoading} />
       <div className="team-premium-subnav-wrap rh-frame">
         <TeamPremiumSubNav active={activeTab} onSelect={scrollToSection} />
       </div>
@@ -185,15 +186,21 @@ export function TeamHubPage(): React.ReactElement {
           bundle={bundle}
           pipelinePreview={pipelinePreview}
           suppressPipelinePreview={suppressPipelinePreview}
+          loading={pageLoading}
         />
         <TeamRosterSection
           roster={bundle.roster}
           filter={rosterFilter}
           onFilterChange={setRosterFilter}
-          loading={loading && bundle.roster.length === 0}
+          loading={pageLoading}
           warming={warming}
         />
-        <TeamDepthChartSection dcTab={dcTab} onTabChange={setDcTab} positions={dcPositions} />
+        <TeamDepthChartSection
+          dcTab={dcTab}
+          onTabChange={setDcTab}
+          positions={dcPositions}
+          loading={pageLoading}
+        />
         <StaffCardGrid coaches={bundle.coaches} onSelectCoach={setSelectedCoach} />
         <TeamIdentityPremiumSection />
         <ProgramHistoryGrid eras={bundle.eras} onSelectEra={setSelectedEra} />

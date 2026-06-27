@@ -13,21 +13,34 @@ import {
   computeSnapshotMetrics,
 } from './team-premium-metrics';
 import type { TeamHubBundle } from '@/lib/team-hub-api';
+import { TeamOverviewSkeleton } from './TeamPageSkeleton';
 
 type Props = {
   bundle: TeamHubBundle;
   pipelinePreview: PipelinePreviewData;
   suppressPipelinePreview?: boolean;
+  loading?: boolean;
 };
 
 export function TeamOverviewSection({
   bundle,
   pipelinePreview,
   suppressPipelinePreview = false,
+  loading = false,
 }: Props): React.ReactElement {
   const snapshot = computeSnapshotMetrics();
   const rooms = computePositionRoomHealth();
   const portal: PortalSnapshotData = computePortalSnapshot(bundle);
+
+  if (loading) {
+    return (
+      <div className="team-premium-section" id="overview" data-section="overview">
+        <TeamPremiumModule title="Team Snapshot" subtitle="Program analytics at a glance">
+          <TeamOverviewSkeleton />
+        </TeamPremiumModule>
+      </div>
+    );
+  }
 
   return (
     <div className="team-premium-section" id="overview" data-section="overview">
