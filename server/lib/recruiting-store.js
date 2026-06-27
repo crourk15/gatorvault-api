@@ -387,9 +387,7 @@ function playerToRow(p) {
     profile_note: p.profileNote,
     on3_id: p.on3Id,
     on3_slug: p.on3Slug,
-    on3_profile_url: p.on3ProfileUrl,
-    on3_source: p.on3Source,
-    protected: p.protected === true ? true : undefined,
+    // on3_profile_url, on3_source, protected omitted — not in prod Supabase schema yet.
     stars_display: p.starsDisplay,
     updated_at: p.updatedAt
   };

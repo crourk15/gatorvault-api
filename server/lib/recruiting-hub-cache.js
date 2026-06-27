@@ -3,6 +3,9 @@
  */
 const { createMemoryCache } = require('./memory-cache');
 
+/** Bump when HS-only class commit metrics logic changes. */
+const HUB_METRICS_CACHE_REV = 'hs1';
+
 const HUB_CACHE_MS = parseInt(process.env.HUB_CACHE_MS || String(5 * 60 * 1000), 10);
 const BUILD_TIMEOUT_MS = parseInt(process.env.HUB_BUILD_TIMEOUT_MS || '20000', 10);
 const REFRESH_MS = parseInt(process.env.HUB_CACHE_REFRESH_MS || String(Math.max(HUB_CACHE_MS - 60_000, 120_000)), 10);
@@ -20,6 +23,18 @@ let lastWarmError = null;
 let warmKeyCount = 0;
 let refreshTimer = null;
 const inflightBuilds = new Map();
+
+function classSnapshotCacheKey(year) {
+  return `hub:class:snapshot:${HUB_METRICS_CACHE_REV}:${year}`;
+}
+
+function eliteClassOverviewCacheKey(year) {
+  return `hub:elite:class-overview:${HUB_METRICS_CACHE_REV}:${year}`;
+}
+
+function eliteClassOverviewAllCacheKey() {
+  return `hub:elite:class-overview:${HUB_METRICS_CACHE_REV}:all`;
+}
 
 function withTimeout(promise, ms, label) {
   return Promise.race([
@@ -107,7 +122,7 @@ async function warmEliteHubCaches(options = {}) {
   try {
     const elite = require('./recruiting-hub-elite');
     const jobs = [
-      ['hub:elite:class-overview:all', () => elite.buildHubClassOverviewAll(), null],
+      [eliteClassOverviewAllCacheKey(), () => elite.buildHubClassOverviewAll(), null],
       ['hub:intel:high-priority', async () => {
         const gm2 = require('./gm2');
         const intelStore = require('./recruiting-intel-store');
@@ -127,7 +142,7 @@ async function warmEliteHubCaches(options = {}) {
     ];
 
     for (const year of years) {
-      jobs.push([`hub:class:snapshot:${year}`, () => elite.buildHubClassOverview(year), year]);
+      jobs.push([classSnapshotCacheKey(year), () => elite.buildHubClassOverview(year), year]);
       jobs.push([`recruiting:battles:${year}`, () => elite.buildHubBattleBoard(year), year]);
       jobs.push([`recruiting:battles-and-movement:${year}`, () => {
         const { buildBattlesAndMovement } = require('./recruiting-ui-api');
@@ -139,7 +154,7 @@ async function warmEliteHubCaches(options = {}) {
       jobs.push([`hub:elite:bundle:${year}`, () => elite.buildHubBundle(year), year]);
       jobs.push([`hub:elite:hero:${year}`, () => elite.buildHubHero(year), year]);
       jobs.push([`hub:elite:ticker:${year}`, () => elite.buildHubTicker(year), year]);
-      jobs.push([`hub:elite:class-overview:${year}`, () => elite.buildHubClassOverview(year), year]);
+      jobs.push([eliteClassOverviewCacheKey(year), () => elite.buildHubClassOverview(year), year]);
       jobs.push([`hub:elite:commits:${year}`, () => elite.buildHubCommits(year), year]);
       jobs.push([`hub:elite:battles:${year}`, () => elite.buildHubBattles(year), year]);
       jobs.push([`hub:elite:positions:${year}`, () => elite.buildHubPositions(year), year]);
@@ -315,6 +330,10 @@ function scheduleHubBootPipeline() {
 module.exports = {
   hubCache,
   HUB_CACHE_MS,
+  HUB_METRICS_CACHE_REV,
+  classSnapshotCacheKey,
+  eliteClassOverviewCacheKey,
+  eliteClassOverviewAllCacheKey,
   clearHubCache,
   removeHubCacheKeys,
   warmEliteHubCaches,

@@ -6,7 +6,14 @@ require('tsx/cjs');
 const store = require('./recruiting-store');
 const gm2 = require('./gm2');
 const { enrichBoard } = require('./recruiting-board-enrich');
-const { hubCache, clearHubCache, sendHubJson } = require('./recruiting-hub-cache');
+const {
+  hubCache,
+  clearHubCache,
+  sendHubJson,
+  classSnapshotCacheKey,
+  eliteClassOverviewCacheKey,
+  eliteClassOverviewAllCacheKey,
+} = require('./recruiting-hub-cache');
 
 function avgStars(players) {
   if (!players.length) return 0;
@@ -304,7 +311,7 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/class-metrics', async (req, res) => {
     try {
       const year = parseHubYear(req);
-      const cacheKey = `hub:class:snapshot:${year}`;
+      const cacheKey = classSnapshotCacheKey(year);
       return sendHubJson(res, {
         cacheKey,
         year,
@@ -477,7 +484,7 @@ function mountRecruitingHubRoutes(app) {
 
   app.get('/api/recruiting/hub/class-overview/all', async (req, res) => {
     try {
-      const cacheKey = 'hub:elite:class-overview:all';
+      const cacheKey = eliteClassOverviewAllCacheKey();
       return sendHubJson(res, {
         cacheKey,
         endpoint: 'class-overview-all',
@@ -493,7 +500,7 @@ function mountRecruitingHubRoutes(app) {
   app.get('/api/recruiting/hub/class-overview', async (req, res) => {
     try {
       const year = parseHubYear(req);
-      const cacheKey = `hub:elite:class-overview:${year}`;
+      const cacheKey = eliteClassOverviewCacheKey(year);
       return sendHubJson(res, {
         cacheKey,
         year,

@@ -14,15 +14,22 @@ function clearHubCacheSafe() {
 
 function invalidateUiCacheKeys() {
   try {
-    const { removeHubCacheKeys, scheduleAsyncWarm } = require('./recruiting-hub-cache');
+    const {
+      removeHubCacheKeys,
+      scheduleAsyncWarm,
+      classSnapshotCacheKey,
+      eliteClassOverviewCacheKey,
+      eliteClassOverviewAllCacheKey,
+    } = require('./recruiting-hub-cache');
     const years = String(process.env.HUB_WARM_YEARS || '2026,2027,2028,2029')
       .split(',')
       .map((y) => parseInt(y.trim(), 10))
       .filter((y) => Number.isFinite(y));
-    const keys = ['recruiting:movement', 'hub:intel:high-priority', 'hub:intel:beat'];
+    const keys = ['recruiting:movement', 'hub:intel:high-priority', 'hub:intel:beat', eliteClassOverviewAllCacheKey()];
     for (const year of years) {
       keys.push(
-        `hub:class:snapshot:${year}`,
+        classSnapshotCacheKey(year),
+        eliteClassOverviewCacheKey(year),
         `recruiting:battles:${year}`,
         `recruiting:battles-and-movement:${year}`,
         `recruiting:heat-index:${year}`,

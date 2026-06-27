@@ -23,6 +23,9 @@ export function warmVaultApi(): void {
   if (!onRecruitingHub) {
     ping('/api/recruiting/hub/ticker?year=2027');
     ping('/api/recruiting/hub/bundle?year=2027');
+    for (const year of [2026, 2027, 2028]) {
+      ping(`/api/recruiting/class-metrics?year=${year}`);
+    }
   }
   if (!onFutureCast) {
     ping('/api/futurecast/master-board');

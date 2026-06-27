@@ -1,7 +1,7 @@
 /**
  * Public UI data freshness — surfaces cache + ingest ages for recruiting/live modules.
  */
-const { getMeta, hubCache } = require('./recruiting-hub-cache');
+const { getMeta, hubCache, classSnapshotCacheKey } = require('./recruiting-hub-cache');
 
 const DEFAULT_PRIMARY_YEAR = parseInt(process.env.ACTIVE_RECRUITING_CLASS_YEAR || '2027', 10);
 
@@ -62,7 +62,7 @@ function buildUiHealthReport(options = {}) {
     movement: 'recruiting:movement',
     highPriorityIntel: 'hub:intel:high-priority',
     beatIntel: 'hub:intel:beat',
-    classSnapshot: `hub:class:snapshot:${primaryYear}`,
+    classSnapshot: classSnapshotCacheKey(primaryYear),
     battles: `recruiting:battles:${primaryYear}`,
     battlesAndMovement: `recruiting:battles-and-movement:${primaryYear}`,
     heatIndex: `recruiting:heat-index:${primaryYear}`,

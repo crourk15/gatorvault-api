@@ -545,7 +545,7 @@ async function syncOn3VisitOfferIntel(classYears, options = {}) {
 }
 
 function parseClassYears(input) {
-  const raw = input || process.env.ON3_CLASS_YEARS || '2026,2027';
+  const raw = input || process.env.ON3_CLASS_YEARS || '2026,2027,2028';
   return String(raw)
     .split(',')
     .map((y) => parseInt(y.trim(), 10))
