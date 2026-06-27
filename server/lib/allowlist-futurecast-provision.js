@@ -5,15 +5,18 @@
 require('tsx/cjs');
 
 const store = require('./recruiting-store');
-const { getAllowlistSet } = require('./recruiting-target-allowlist');
+const { getAllowlistSet, getMergedCanonicalNames } = require('./recruiting-target-allowlist');
 const {
   normalizeAllowlistSlug,
   buildAllowlistSlugAliasLookup,
+  dedupeAllowlistSlugs,
 } = require('./allowlist-slug-aliases');
 const { loadCanonicalOn3SlugMap } = require('./on3-recruit-discovery');
 const { toPercent, loadRivalsOnlyUfPctBySlug } = require('./uf-probability-utils');
 
-const ON3_RPM_PATH = require('path').join(__dirname, '..', 'data', 'war-room', 'on3-rpm-allowlist.json');
+const path = require('path');
+const ON3_RPM_PATH = path.join(__dirname, '..', 'data', 'war-room', 'on3-rpm-allowlist.json');
+const BOARD_2028_PATH = path.join(__dirname, '..', 'data', 'recruiting', '2028-target-board.json');
 const PREDICTOR_ID = 'allowlist_seed';
 const BASELINE_GAP = 4;
 
@@ -41,13 +44,26 @@ function loadModels() {
   };
 }
 
+function load2028BoardRow(slug) {
+  try {
+    const doc = JSON.parse(require('fs').readFileSync(BOARD_2028_PATH, 'utf8'));
+    return (
+      (doc.targets || []).find((t) => String(t.slug || '').toLowerCase() === String(slug).toLowerCase()) ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+
 async function resolveSeedConfidence(slug, pgPlayer) {
+  const canonical = normalizeAllowlistSlug(slug, pgPlayer.class_year);
   const rivalsOnly = loadRivalsOnlyUfPctBySlug();
-  if (rivalsOnly.has(slug)) {
-    return { confidence: rivalsOnly.get(slug), source: 'rivals_pm' };
+  if (rivalsOnly.has(canonical)) {
+    return { confidence: rivalsOnly.get(canonical), source: 'rivals_pm' };
   }
 
-  const recruiting = await store.getPlayerBySlug(slug);
+  const recruiting = await store.getPlayerBySlug(canonical);
   const storePct = toPercent(
     recruiting?.ufProbability ?? recruiting?.ufRpmPct ?? recruiting?.futurecastProbability
   );
@@ -59,9 +75,9 @@ async function resolveSeedConfidence(slug, pgPlayer) {
   if (ufPct > 0) return { confidence: ufPct, source: 'uf_profile' };
 
   const forward = loadCanonicalOn3SlugMap();
-  const on3Key = String(forward[slug] || '').toLowerCase();
+  const on3Key = String(forward[canonical] || '').toLowerCase();
   const on3Rpm =
-    loadOn3RpmBySlug().get(slug) ||
+    loadOn3RpmBySlug().get(canonical) ||
     (on3Key ? loadOn3RpmBySlug().get(on3Key) : undefined);
   if (on3Rpm > 0) return { confidence: on3Rpm, source: 'on3_rpm' };
 
@@ -109,6 +125,51 @@ async function findPostgresPlayerForAllowlistSlug(slug, classYear) {
   return null;
 }
 
+async function ensureAllowlistPostgresPlayer(slug, classYear) {
+  const existing = await findPostgresPlayerForAllowlistSlug(slug, classYear);
+  if (existing) return existing;
+
+  const canonical = normalizeAllowlistSlug(slug, classYear);
+  const names = getMergedCanonicalNames();
+  const recruiting = await store.getPlayerBySlug(canonical);
+  const boardRow = load2028BoardRow(canonical);
+  const fullName =
+    String(recruiting?.name || boardRow?.name || names[canonical] || canonical).trim() || canonical;
+  const position = String(recruiting?.pos || recruiting?.position || boardRow?.pos || 'ATH')
+    .trim()
+    .toUpperCase();
+
+  const { upsertPlayer, ensurePlayerSlugAlias } = loadModels();
+  const player = await upsertPlayer({
+    slug: canonical,
+    full_name: fullName,
+    position,
+    class_year: Number(classYear),
+    status: 'HS',
+    state: recruiting?.state || boardRow?.state || null,
+    high_school: recruiting?.school || recruiting?.highSchool || boardRow?.school || null,
+    stars: Number(recruiting?.stars ?? boardRow?.stars ?? 0) || null,
+    composite_rating:
+      recruiting?.rating != null
+        ? Number(recruiting.rating)
+        : boardRow?.rating != null
+          ? Number(boardRow.rating)
+          : null,
+    ranking_national: recruiting?.natlRank ?? boardRow?.natlRank ?? null,
+    ranking_position: recruiting?.posRank ?? boardRow?.posRank ?? null,
+    ranking_state: recruiting?.stateRank ?? boardRow?.stateRank ?? null,
+  });
+
+  await ensurePlayerSlugAlias(player.id, canonical, true);
+  const forward = loadCanonicalOn3SlugMap();
+  const on3Slug = String(recruiting?.on3Slug || forward[canonical] || '').toLowerCase();
+  if (on3Slug && on3Slug !== canonical) {
+    await ensurePlayerSlugAlias(player.id, on3Slug, false);
+  }
+
+  return player;
+}
+
 async function provisionAllowlistPredictionForSlug(slug, classYear, options = {}) {
   const key = String(slug || '').toLowerCase();
   if (!key) return { slug: key, ok: false, reason: 'missing_slug' };
@@ -116,8 +177,20 @@ async function provisionAllowlistPredictionForSlug(slug, classYear, options = {}
   const dbUrl = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
   if (!dbUrl) return { slug: key, ok: false, reason: 'no_database' };
 
-  const { getPlayerBySlug, upsertActiveModelPrediction, ensureMovementWindowBaseline } = loadModels();
-  const pgPlayer = await findPostgresPlayerForAllowlistSlug(key, classYear);
+  const { upsertActiveModelPrediction, ensureMovementWindowBaseline } = loadModels();
+  let pgPlayer = await findPostgresPlayerForAllowlistSlug(key, classYear);
+  if (!pgPlayer && !options.dryRun) {
+    try {
+      pgPlayer = await ensureAllowlistPostgresPlayer(key, classYear);
+    } catch (err) {
+      return {
+        slug: key,
+        ok: false,
+        reason: 'postgres_upsert_failed',
+        error: err instanceof Error ? err.message : String(err),
+      };
+    }
+  }
   if (!pgPlayer) return { slug: key, ok: false, reason: 'player_not_in_postgres' };
   if (Number(pgPlayer.class_year) !== Number(classYear)) {
     return { slug: key, ok: false, reason: 'class_year_mismatch', classYear: pgPlayer.class_year };
@@ -177,7 +250,10 @@ async function runAllowlistFuturecastProvision(options = {}) {
   const slugs =
     Array.isArray(options.slugs) && options.slugs.length
       ? options.slugs.map((s) => String(s).toLowerCase())
-      : [...getAllowlistSet(classYear)].map((s) => String(s).toLowerCase());
+      : dedupeAllowlistSlugs(
+          [...getAllowlistSet(classYear)].map((s) => String(s).toLowerCase()),
+          classYear
+        );
 
   const results = {
     ok: true,
@@ -222,5 +298,6 @@ module.exports = {
   runAllowlistFuturecastProvision,
   provisionAllowlistPredictionForSlug,
   resolveSeedConfidence,
+  ensureAllowlistPostgresPlayer,
   PREDICTOR_ID,
 };
