@@ -2,8 +2,10 @@
 
 import React, { useMemo } from 'react';
 import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
+import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { FutureCastPanelShell } from './primitives';
-import { ufPctFromFc } from './fc-lab-types';
+import { isDiscoverySeasonFocus, ufPctFromFc } from './fc-lab-types';
 
 type PositionBucket = {
   position: string;
@@ -15,12 +17,49 @@ type PositionBucket = {
 
 type Props = {
   players: FutureCastPlayer[];
+  highPriority?: HighPriorityPlayer[];
   activePredictions?: number;
   bare?: boolean;
 };
 
-export function FutureCastPositionBreakdown({ players, activePredictions, bare }: Props): React.ReactElement {
+export function FutureCastPositionBreakdown({
+  players,
+  highPriority = [],
+  activePredictions,
+  bare,
+}: Props): React.ReactElement {
+  const discoveryFocus = useMemo(() => isDiscoverySeasonFocus(), []);
+  const focusYear = primaryRecruitingClassYear();
+
   const buckets = useMemo(() => {
+    if (discoveryFocus && highPriority.length) {
+      const map = new Map<string, HighPriorityPlayer[]>();
+      for (const p of highPriority) {
+        const pos = p.position || 'Other';
+        const list = map.get(pos) ?? [];
+        list.push(p);
+        map.set(pos, list);
+      }
+
+      const result: PositionBucket[] = [];
+      for (const [position, list] of map) {
+        const avgUfProb = Math.round(
+          list.reduce((acc, p) => acc + ufPctFromFc(p.ufProbability), 0) / list.length
+        );
+        const avgVolatility = Math.round(
+          list.reduce((acc, p) => acc + Math.abs(p.delta7d ?? 0), 0) / list.length
+        );
+        result.push({
+          position,
+          count: list.length,
+          avgUfProb,
+          avgVolatility,
+          activePredictions: list.filter((p) => ufPctFromFc(p.ufProbability) > 0).length,
+        });
+      }
+      return result.sort((a, b) => b.count - a.count);
+    }
+
     const map = new Map<string, FutureCastPlayer[]>();
     for (const p of players) {
       const pos = p.position || 'Other';
@@ -47,13 +86,20 @@ export function FutureCastPositionBreakdown({ players, activePredictions, bare }
     }
 
     return result.sort((a, b) => b.count - a.count);
-  }, [players]);
+  }, [discoveryFocus, highPriority, players]);
+
+  const title = discoveryFocus
+    ? `Position Breakdown — ${focusYear} UF Targets`
+    : 'Position Breakdown — UF FutureCast';
+  const sub = discoveryFocus
+    ? 'Average UF likelihood and movement by position on the 2028 allowlist board.'
+    : 'Average UF probability, active predictions, and volatility by position.';
 
   return (
     <FutureCastPanelShell
       bare={bare}
-      title="Position Breakdown — UF FutureCast"
-      sub="Average UF probability, active predictions, and volatility by position."
+      title={title}
+      sub={sub}
       testId="fc-lab-position-breakdown"
     >
       {buckets.length === 0 ? (

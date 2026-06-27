@@ -50,7 +50,11 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
             {pending ? (
               <PanelSkeleton minHeight={240} />
             ) : (
-              <FutureCastBattlesPanel masterBoard={data.masterBoard} trendingBoard={data.trendingBoard} />
+              <FutureCastBattlesPanel
+                masterBoard={data.masterBoard}
+                trendingBoard={data.trendingBoard}
+                highPriority={data.highPriority}
+              />
             )}
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.movement}>
@@ -70,6 +74,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
           <section id={FUTURECAST_LAB_ANCHORS.positions}>
             <FutureCastPositionBreakdown
               players={data.masterBoard.players}
+              highPriority={data.highPriority}
               activePredictions={data.metrics.activePredictions}
             />
           </section>

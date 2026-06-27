@@ -60,6 +60,7 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
           <section id={FUTURECAST_LAB_ANCHORS.positions}>
             <FutureCastPositionBreakdown
               players={data.masterBoard.players}
+              highPriority={data.highPriority}
               activePredictions={data.metrics.activePredictions}
             />
           </section>
@@ -70,7 +71,11 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
             {pending ? (
               <PanelSkeleton minHeight={260} />
             ) : (
-              <FutureCastBattlesPanel masterBoard={data.masterBoard} trendingBoard={data.trendingBoard} />
+              <FutureCastBattlesPanel
+                masterBoard={data.masterBoard}
+                trendingBoard={data.trendingBoard}
+                highPriority={data.highPriority}
+              />
             )}
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.portal}>

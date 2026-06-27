@@ -2,20 +2,28 @@
 
 import React, { useMemo, useState } from 'react';
 import type { MasterBoardResponse, TrendingBoardResponse } from '@/lib/futurecast-board-types';
+import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
+import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import {
   CompetingSchoolsBar,
   FutureCastPanelShell,
   MovementBadge,
   UfProbBar,
 } from './primitives';
-import { futureCastPlayerToLabTarget, ufPctFromFc } from './fc-lab-types';
+import {
+  futureCastPlayerToLabTarget,
+  highPriorityToLabTarget,
+  isDiscoverySeasonFocus,
+  ufPctFromFc,
+} from './fc-lab-types';
 
 type Tab = 'battles' | 'lean-uf' | 'lean-elsewhere';
 
 type Props = {
   masterBoard: MasterBoardResponse;
   trendingBoard: TrendingBoardResponse;
+  highPriority?: HighPriorityPlayer[];
   bare?: boolean;
 };
 
@@ -66,8 +74,15 @@ function BattleRow({ player, tab }: { player: ReturnType<typeof futureCastPlayer
   );
 }
 
-export function FutureCastBattlesPanel({ masterBoard, trendingBoard, bare }: Props): React.ReactElement {
+export function FutureCastBattlesPanel({
+  masterBoard,
+  trendingBoard,
+  highPriority = [],
+  bare,
+}: Props): React.ReactElement {
   const [tab, setTab] = useState<Tab>('battles');
+  const discoveryFocus = useMemo(() => isDiscoverySeasonFocus(), []);
+  const focusYear = primaryRecruitingClassYear();
 
   const pool = useMemo(() => {
     const merged = [
@@ -90,23 +105,36 @@ export function FutureCastBattlesPanel({ masterBoard, trendingBoard, bare }: Pro
       'lean-uf': [],
       'lean-elsewhere': [],
     };
-    for (const p of pool) {
-      const lab = futureCastPlayerToLabTarget(p);
-      result[classifyTab(ufPctFromFc(lab.ufProbability))].push(lab);
+    if (discoveryFocus && highPriority.length) {
+      for (const p of highPriority) {
+        const lab = highPriorityToLabTarget(p);
+        result[classifyTab(ufPctFromFc(lab.ufProbability))].push(lab);
+      }
+    } else {
+      for (const p of pool) {
+        const lab = futureCastPlayerToLabTarget(p);
+        result[classifyTab(ufPctFromFc(lab.ufProbability))].push(lab);
+      }
     }
     for (const key of Object.keys(result) as Tab[]) {
       result[key].sort((a, b) => ufPctFromFc(b.ufProbability) - ufPctFromFc(a.ufProbability));
     }
     return result;
-  }, [pool]);
+  }, [discoveryFocus, highPriority, pool]);
 
   const rows = buckets[tab].slice(0, 8);
+  const title = discoveryFocus
+    ? `${focusYear} Battles & Leaning Targets`
+    : 'Battles & Leaning Targets';
+  const sub = discoveryFocus
+    ? 'Allowlist targets bucketed by UF likelihood during early discovery.'
+    : 'Trending board buckets — battles, lean UF, and lean elsewhere.';
 
   return (
     <FutureCastPanelShell
       bare={bare}
-      title="Battles & Leaning Targets"
-      sub="Trending board buckets — battles, lean UF, and lean elsewhere."
+      title={title}
+      sub={sub}
       testId="fc-lab-battles"
     >
       <div className="rh-cc-tabs" role="tablist" aria-label="Battle categories">
@@ -125,7 +153,11 @@ export function FutureCastBattlesPanel({ masterBoard, trendingBoard, bare }: Pro
       </div>
       <div className="fc-lab-battle-list" role="tabpanel">
         {rows.length === 0 ? (
-          <p className="rh-cc-empty">No targets in this bucket yet.</p>
+          <p className="rh-cc-empty">
+            {discoveryFocus
+              ? `No ${focusYear} targets in this bucket yet.`
+              : 'No targets in this bucket yet.'}
+          </p>
         ) : (
           rows.map((p) => <BattleRow key={p.slug} player={p} tab={tab} />)
         )}
