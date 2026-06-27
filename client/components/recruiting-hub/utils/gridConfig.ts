@@ -58,7 +58,7 @@ export function gridConfigForTab(
       return {
         players: b28.targets,
         title: '2028 Targets',
-        emptyMessage: 'No 2028 targets yet — early discovery board coming soon.',
+        emptyMessage: 'No 2028 UF targets loaded yet.',
       };
     case 'commits-2027':
     default:
