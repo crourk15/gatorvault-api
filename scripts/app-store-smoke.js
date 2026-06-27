@@ -37,6 +37,24 @@ async function main() {
       headers: { Authorization: 'Bearer ' + tok },
     });
     threads.ok ? pass('community-api', 'threads ok') : fail('community-api', String(threads.status));
+    if (threads.ok) {
+      const threadsBody = await threads.json();
+      const first = threadsBody.threads?.[0];
+      if (first?.id) {
+        const flagRes = await fetch(API + '/api/community/thread/' + encodeURIComponent(first.id) + '/flag', {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + tok, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reason: 'spam' }),
+        });
+        if (flagRes.ok || flagRes.status === 409) {
+          pass('community-flag', flagRes.status === 409 ? 'duplicate ok' : 'flag ok');
+        } else {
+          fail('community-flag', String(flagRes.status));
+        }
+      } else {
+        pass('community-flag', 'no threads to flag');
+      }
+    }
     const sub = await fetch(API + '/api/subscription/status', {
       headers: { Authorization: 'Bearer ' + tok },
     });

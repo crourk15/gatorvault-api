@@ -112,7 +112,8 @@ function mountCommunityRoutes(app) {
       const flag = store.flagPost(session, req.params.id, req.body.reason);
       return res.json({ ok: true, flag });
     } catch (err) {
-      return res.status(400).json({ ok: false, error: err.message });
+      const status = err.statusCode || 400;
+      return res.status(status).json({ ok: false, error: err.message });
     }
   });
 
@@ -123,7 +124,8 @@ function mountCommunityRoutes(app) {
       const flag = store.flagThread(session, req.params.id, req.body.reason);
       return res.json({ ok: true, flag });
     } catch (err) {
-      return res.status(400).json({ ok: false, error: err.message });
+      const status = err.statusCode || 400;
+      return res.status(status).json({ ok: false, error: err.message });
     }
   });
 

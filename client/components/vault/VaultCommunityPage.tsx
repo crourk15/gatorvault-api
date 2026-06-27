@@ -9,6 +9,7 @@ import { CommunityToastProvider, useCommunityToast } from '@/components/communit
 import { CommunityPageSkeleton, CommunityThreadSkeleton } from '@/components/community/CommunityPageSkeleton';
 import {
   communityAuthorLabel,
+  createCommunityReply,
   createCommunityThread,
   fetchCommunityPageData,
   fetchCommunityThread,
@@ -84,6 +85,9 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const [newCategory, setNewCategory] = useState('locker');
   const [posting, setPosting] = useState(false);
   const [postError, setPostError] = useState<string | null>(null);
+  const [replyBody, setReplyBody] = useState('');
+  const [replyPosting, setReplyPosting] = useState(false);
+  const [replyError, setReplyError] = useState<string | null>(null);
   const [blockedEmails, setBlockedEmails] = useState<string[]>([]);
   const [reportTarget, setReportTarget] = useState<ReportTarget | null>(null);
   const [blockTarget, setBlockTarget] = useState<BlockTarget | null>(null);
@@ -133,6 +137,9 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
   const openThread = useCallback(async (id: string) => {
     setSelectedId(id);
     setSelectedThread(null);
+    setSelectedPosts([]);
+    setReplyBody('');
+    setReplyError(null);
     setThreadLoading(true);
     try {
       const data = await fetchWithWarmPoll(() => fetchCommunityThread(id), warmPollProfile());
@@ -175,6 +182,23 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
     }
   };
 
+  const submitReply = async () => {
+    if (!selectedThread?.id || !replyBody.trim()) return;
+    if (!requireSignIn()) return;
+    setReplyPosting(true);
+    setReplyError(null);
+    try {
+      await createCommunityReply(selectedThread.id, replyBody.trim());
+      setReplyBody('');
+      await openThread(selectedThread.id);
+      await load();
+    } catch (err) {
+      setReplyError(err instanceof Error ? err.message : 'Could not post reply.');
+    } finally {
+      setReplyPosting(false);
+    }
+  };
+
   const isAuthorBlocked = useCallback(
     (authorEmail?: string | null) => isEmailBlocked(viewerEmail, authorEmail, blockedEmails),
     [blockedEmails, viewerEmail],
@@ -213,10 +237,20 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
         body: 'Thanks — our team will review this content.',
       });
     } catch (err) {
+      const message = err instanceof Error ? err.message : 'Please try again.';
+      if (/already reported/i.test(message)) {
+        setReportTarget(null);
+        pushToast({
+          kind: 'success',
+          title: 'Already reported',
+          body: 'Our team is reviewing this content.',
+        });
+        return;
+      }
       pushToast({
         kind: 'error',
         title: 'Could not submit report',
-        body: err instanceof Error ? err.message : 'Please try again.',
+        body: message,
       });
     } finally {
       setModerationLoading(false);
@@ -505,6 +539,35 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
                   <UiEmpty message="No replies yet." />
                 )}
               </ul>
+              {selectedThread.locked ? (
+                <p className="gv-community__reply-locked">This thread is locked — new replies are disabled.</p>
+              ) : viewerEmail ? (
+                <div className="gv-community__form gv-community__reply-form">
+                  <label className="gv-community__reply-label" htmlFor="community-reply-body">
+                    Reply to thread
+                  </label>
+                  <textarea
+                    id="community-reply-body"
+                    className="gv-alert-input gv-community__textarea"
+                    placeholder="Add your reply…"
+                    value={replyBody}
+                    onChange={(e) => setReplyBody(e.target.value)}
+                    maxLength={4000}
+                    rows={4}
+                  />
+                  {replyError ? <p className="gv-community__post-error">{replyError}</p> : null}
+                  <button
+                    type="button"
+                    className="gv-community__new-btn"
+                    disabled={replyPosting || !replyBody.trim()}
+                    onClick={() => void submitReply()}
+                  >
+                    {replyPosting ? 'Posting…' : 'Post reply'}
+                  </button>
+                </div>
+              ) : (
+                <p className="gv-community__reply-signin">Sign in to reply to this thread.</p>
+              )}
             </div>
           )}
 

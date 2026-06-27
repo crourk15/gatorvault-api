@@ -1,6 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const { slugify } = require('./slug');
+const {
+  normalizeReportReason,
+  hasDuplicateOpenFlag,
+  flagValidationError,
+} = require('./community-flag-utils');
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'community');
 const USERS_PATH = path.join(DATA_DIR, 'users.json');
@@ -473,11 +478,18 @@ function adminDeletePost(id) {
 
 function flagPost(session, postId, reason) {
   const flags = loadFlags();
+  const normalizedReason = normalizeReportReason(reason);
+  if (!normalizedReason) {
+    throw flagValidationError('Invalid report reason.', 400);
+  }
+  if (hasDuplicateOpenFlag(flags, { reporterEmail: session.email, postId })) {
+    throw flagValidationError('You already reported this content.', 409);
+  }
   const flag = {
     id: newId('flg'),
     postId,
     threadId: null,
-    reason: reason || 'review',
+    reason: normalizedReason,
     reporterEmail: session.email,
     status: 'open',
     createdAt: nowIso()
@@ -496,11 +508,18 @@ function flagPost(session, postId, reason) {
 
 function flagThread(session, threadId, reason) {
   const flags = loadFlags();
+  const normalizedReason = normalizeReportReason(reason);
+  if (!normalizedReason) {
+    throw flagValidationError('Invalid report reason.', 400);
+  }
+  if (hasDuplicateOpenFlag(flags, { reporterEmail: session.email, threadId })) {
+    throw flagValidationError('You already reported this content.', 409);
+  }
   const flag = {
     id: newId('flg'),
     postId: null,
     threadId,
-    reason: reason || 'review',
+    reason: normalizedReason,
     reporterEmail: session.email,
     status: 'open',
     createdAt: nowIso()

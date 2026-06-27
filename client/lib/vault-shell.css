@@ -1755,6 +1755,23 @@ a.gv-live-item__title:hover {
   min-height: 4rem;
 }
 
+.gv-community__reply-form {
+  margin-top: 1rem;
+}
+
+.gv-community__reply-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.gv-community__reply-locked,
+.gv-community__reply-signin {
+  margin: 1rem 0 0;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+}
+
 .gv-community__post-error {
   font-size: 0.8125rem;
   color: #f87171;

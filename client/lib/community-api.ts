@@ -33,6 +33,7 @@ export type CommunityThread = {
   viewCount?: number;
   pinned?: boolean;
   featured?: boolean;
+  locked?: boolean;
   flagged?: boolean;
   createdAt?: string;
   lastActivityAt?: string;
@@ -170,6 +171,14 @@ export async function createCommunityThread(input: {
     ...communityFetchInit(true),
     method: 'POST',
     body: JSON.stringify(input),
+  });
+}
+
+export async function createCommunityReply(threadId: string, body: string): Promise<void> {
+  await apiFetch(`/api/community/thread/${encodeURIComponent(threadId)}/reply`, {
+    ...communityFetchInit(true),
+    method: 'POST',
+    body: JSON.stringify({ body }),
   });
 }
 
