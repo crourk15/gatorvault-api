@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 /**
  * Render cron — platform maintenance jobs via /api/ops/run-job.
- * Runs even when in-process schedulers miss ticks (cold start, deploy, etc.).
+ * Soft-fails per job; always exit 0 so Render does not alert on partial maintenance failures.
  */
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+try {
+  require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+} catch {
+  /* dotenv optional on Render — env vars are injected directly */
+}
 
-const { warmApi } = require('../lib/ingest-resilience');
+const { withRetries, isTransientError, warmApi } = require('../lib/ingest-resilience');
 
 const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || process.env.API_BASE || 'https://gatorvault-api.onrender.com').replace(
   /\/$/,
@@ -13,15 +17,16 @@ const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || process.env.API_BASE || 'h
 );
 const CRON_SECRET = process.env.MONITORING_CRON_SECRET || process.env.INGEST_CRON_SECRET || process.env.CRON_SECRET || '';
 
+const JOB_TIMEOUT_MS = parseInt(process.env.PLATFORM_OPS_JOB_TIMEOUT_MS || '120000', 10);
+const MAX_RUNTIME_MS = parseInt(process.env.PLATFORM_OPS_MAX_RUNTIME_MS || '600000', 10);
+
+/** Light jobs only — heavy / duplicate work lives on dedicated crons or in-process schedulers. */
 const DEFAULT_JOBS = [
   'portal-ingest',
   'depth-chart-refresh',
   'game-zone-refresh',
   'nil-refresh',
-  'qa-crawler',
-  'visit-intel-reconcile',
   'x-autoposter-run',
-  'beat-late-ingest'
 ];
 
 const DEFAULT_WEEKLY_JOBS = [
@@ -65,39 +70,66 @@ function shouldRunWeeklyFallback() {
   if (process.env.PLATFORM_OPS_SKIP_WEEKLY === 'true') return false;
   const day = new Date().getUTCDay();
   const hour = new Date().getUTCHours();
-  // Sunday 18:xx UTC — after dedicated UF Fit / Early Discovery / allowlist crons.
   return day === 0 && hour === 18;
 }
 
-async function runJob(jobId, options = {}) {
-  const res = await fetch(`${API_BASE}/api/ops/run-job`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'x-monitoring-cron': CRON_SECRET,
-      'X-Ingest-Secret': CRON_SECRET,
-      'User-Agent': 'gatorvault-platform-ops-cron/1.0'
-    },
-    body: JSON.stringify({ jobId, options }),
-    signal: AbortSignal.timeout(600000)
-  });
-  let payload = null;
-  try {
-    payload = await res.json();
-  } catch {
-    payload = null;
-  }
-  if (!res.ok) {
-    const err = new Error(`${jobId} HTTP ${res.status}`);
-    err.payload = payload;
-    throw err;
-  }
-  return payload;
+function runtimeBudgetExceeded(deadline) {
+  return Date.now() >= deadline;
 }
 
-async function runJobSpec(spec, summary) {
+async function runJob(jobId, options = {}) {
+  if (!CRON_SECRET) {
+    throw new Error('MONITORING_CRON_SECRET or INGEST_CRON_SECRET is not set');
+  }
+
+  return withRetries(
+    async () => {
+      const res = await fetch(`${API_BASE}/api/ops/run-job`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-monitoring-cron': CRON_SECRET,
+          'X-Ingest-Secret': CRON_SECRET,
+          'User-Agent': 'gatorvault-platform-ops-cron/2.0',
+        },
+        body: JSON.stringify({ jobId, options }),
+        signal: AbortSignal.timeout(JOB_TIMEOUT_MS),
+      });
+      let payload = null;
+      try {
+        payload = await res.json();
+      } catch {
+        payload = null;
+      }
+      if (!res.ok) {
+        const err = new Error(`${jobId} HTTP ${res.status}`);
+        err.status = res.status;
+        err.payload = payload;
+        throw err;
+      }
+      if (payload && payload.ok === false && payload.softFailure !== true) {
+        const err = new Error(payload.error || `${jobId} returned ok:false`);
+        err.payload = payload;
+        throw err;
+      }
+      return payload;
+    },
+    {
+      label: jobId,
+      attempts: 2,
+      shouldRetry: (err) => isTransientError(err) || [502, 503, 504, 429, 408].includes(err.status),
+    }
+  );
+}
+
+async function runJobSpec(spec, summary, deadline) {
   const { jobId, options = {} } = spec;
+  if (runtimeBudgetExceeded(deadline)) {
+    summary.skipped.push({ jobId, reason: 'runtime_budget_exceeded' });
+    return;
+  }
+
   try {
     const result = await runJob(jobId, options);
     const failed = result?.ok === false;
@@ -105,6 +137,7 @@ async function runJobSpec(spec, summary) {
     if (failed) summary.failures.push({ jobId, error: result?.error || 'ok:false' });
   } catch (err) {
     console.error(`[platform-ops-cron] soft failure — ${jobId}:`, err.message);
+    if (err.payload) console.error(JSON.stringify(err.payload));
     summary.failures.push({ jobId, error: err.message });
     summary.jobs.push({ jobId, ok: false, error: err.message, options });
   }
@@ -113,7 +146,7 @@ async function runJobSpec(spec, summary) {
 async function main() {
   if (!CRON_SECRET) {
     console.error('[platform-ops-cron] MONITORING_CRON_SECRET or INGEST_CRON_SECRET is not set');
-    process.exit(0);
+    return { ok: false, error: 'missing_cron_secret' };
   }
 
   const jobs = String(process.env.PLATFORM_OPS_JOBS || DEFAULT_JOBS.join(','))
@@ -121,25 +154,44 @@ async function main() {
     .map((s) => s.trim())
     .filter(Boolean);
 
-  const summary = { jobs: [], failures: [], startedAt: new Date().toISOString() };
+  const deadline = Date.now() + MAX_RUNTIME_MS;
+  const summary = {
+    jobs: [],
+    failures: [],
+    skipped: [],
+    startedAt: new Date().toISOString(),
+    jobTimeoutMs: JOB_TIMEOUT_MS,
+    maxRuntimeMs: MAX_RUNTIME_MS,
+  };
+
   summary.warm = await warmApi(API_BASE);
+  if (!summary.warm.ok) {
+    console.warn('[platform-ops-cron] API not warm after health checks; continuing with retries');
+  }
 
   for (const jobId of jobs) {
-    await runJobSpec({ jobId }, summary);
+    await runJobSpec({ jobId }, summary, deadline);
   }
 
   if (shouldRunWeeklyFallback()) {
     summary.weeklyFallback = true;
     for (const spec of weeklyJobSpecs()) {
-      await runJobSpec(spec, summary);
+      await runJobSpec(spec, summary, deadline);
     }
   }
 
   summary.finishedAt = new Date().toISOString();
   summary.ok = summary.failures.length === 0;
-  console.log('[platform-ops-cron] complete', JSON.stringify(summary));
+  return summary;
 }
 
-main().catch((err) => {
-  console.error('[platform-ops-cron] unhandled:', err.message);
-}).finally(() => process.exit(0));
+(async () => {
+  try {
+    const summary = await main();
+    console.log('[platform-ops-cron] complete', JSON.stringify(summary));
+  } catch (err) {
+    console.error('[platform-ops-cron] unhandled:', err.message);
+    if (err.stack) console.error(err.stack);
+  }
+  process.exit(0);
+})();

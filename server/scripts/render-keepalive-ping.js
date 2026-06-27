@@ -89,7 +89,11 @@ async function main() {
   );
 }
 
-main().catch((err) => {
-  console.error('[keepalive] failed:', err.message);
-  process.exit(1);
-});
+(async () => {
+  try {
+    await main();
+  } catch (err) {
+    console.error('[keepalive] failed:', err.message);
+  }
+  process.exit(0);
+})();

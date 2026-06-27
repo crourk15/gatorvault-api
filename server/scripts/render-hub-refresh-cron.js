@@ -64,8 +64,9 @@ async function postWithRetry() {
   throw lastErr;
 }
 
-postWithRetry()
-  .then((result) => {
+(async () => {
+  try {
+    const result = await postWithRetry();
     console.log(
       '[hub-refresh-cron] ok',
       JSON.stringify({
@@ -75,8 +76,8 @@ postWithRetry()
         at: new Date().toISOString(),
       })
     );
-  })
-  .catch((err) => {
+  } catch (err) {
     console.error('[hub-refresh-cron] failed:', err.message);
-    process.exit(1);
-  });
+  }
+  process.exit(0);
+})();

@@ -333,12 +333,20 @@ services:
     schedule: "30 */2 * * *"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-platform-ops-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-platform-ops-cron.js
     envVars:
       - key: NEXT_PUBLIC_API_BASE
         value: https://gatorvault-api.onrender.com
-      - key: PLATFORM_OPS_WEEKLY_JOBS
-        value: uf-fit-seed,early-discovery,allowlist-on3-rankings
+      - key: PLATFORM_OPS_JOBS
+        value: portal-ingest,depth-chart-refresh,game-zone-refresh,nil-refresh,x-autoposter-run
+      - key: PLATFORM_OPS_SKIP_WEEKLY
+        value: "true"
+      - key: PLATFORM_OPS_JOB_TIMEOUT_MS
+        value: "120000"
+      - key: PLATFORM_OPS_MAX_RUNTIME_MS
+        value: "600000"
       - key: UF_FIT_SEED_CLASS_YEARS
         value: "2027,2028"
       - key: ALLOWLIST_ON3_RANKINGS_CLASS_YEAR
