@@ -27,6 +27,16 @@ function mergePatch(existing, patch) {
   return out;
 }
 
+function formatAllowlistEvalSummary(player) {
+  const stars = Number(player?.stars) || 0;
+  const pos = String(player?.pos || player?.position || 'ATH').trim().toUpperCase();
+  const natlRank = player?.natlRank ?? player?.natl_rank;
+  const natlPart = Number.isFinite(Number(natlRank)) ? `#${natlRank} natl` : 'unranked';
+  const school = player?.school;
+  if (!school || isPlaceholderSchool(school)) return null;
+  return `${stars}★ ${pos} · ${natlPart} · ${school}`;
+}
+
 function persistAllowlistPlayerToJson(slug, patch) {
   if (!slug || !patch?.school || isPlaceholderSchool(patch.school)) {
     return { slug, ok: false, reason: 'missing_school' };
@@ -36,19 +46,22 @@ function persistAllowlistPlayerToJson(slug, patch) {
   const idx = players.findIndex((p) => String(p.slug).toLowerCase() === String(slug).toLowerCase());
   if (idx >= 0) {
     players[idx] = mergePatch(players[idx], patch);
+    const summary = formatAllowlistEvalSummary(players[idx]);
+    if (summary) players[idx].evaluationSummary = summary;
   } else {
-    players.push(
-      mergePatch(
-        {
-          slug,
-          name: patch.name || slug,
-          classYear: patch.classYear || 2028,
-          category: 'target',
-          status: 'uncommitted',
-        },
-        patch
-      )
+    const merged = mergePatch(
+      {
+        slug,
+        name: patch.name || slug,
+        classYear: patch.classYear || 2028,
+        category: 'target',
+        status: 'uncommitted',
+      },
+      patch
     );
+    const summary = formatAllowlistEvalSummary(merged);
+    if (summary) merged.evaluationSummary = summary;
+    players.push(merged);
   }
   writeJson(store.PLAYERS_PATH, players);
 
@@ -86,4 +99,5 @@ function persistAllowlistPlayerToJson(slug, patch) {
 module.exports = {
   BOARD_PATH,
   persistAllowlistPlayerToJson,
+  formatAllowlistEvalSummary,
 };
