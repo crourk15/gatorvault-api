@@ -47,14 +47,22 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
             {pending ? (
               <PanelSkeleton minHeight={280} />
             ) : (
-              <FutureCastMovementPanel movementIntel={data.movementIntel} />
+              <FutureCastMovementPanel
+                movementIntel={data.movementIntel}
+                highPriority={data.highPriority}
+                underclassmen={data.underclassmen}
+              />
             )}
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.signals}>
             {pending ? (
               <PanelSkeleton minHeight={220} />
             ) : (
-              <FutureCastAnalystSignals staffNotes={data.staffNotes} masterBoard={data.masterBoard} />
+              <FutureCastAnalystSignals
+                staffNotes={data.staffNotes}
+                masterBoard={data.masterBoard}
+                highPriority={data.highPriority}
+              />
             )}
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.positions}>
@@ -118,6 +126,8 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
             masterBoard={data.masterBoard}
             staffNotes={data.staffNotes}
             movementIntel={data.movementIntel}
+            highPriority={data.highPriority}
+            underclassmen={data.underclassmen}
           />
         )}
       </section>

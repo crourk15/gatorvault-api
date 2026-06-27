@@ -173,3 +173,69 @@ export function underclassmenToFitLeader(p: UnderclassmenPlayer): HighPriorityPl
     predictors: (p.predictors ?? []).map((x) => ({ name: x.name, score: x.score })),
   };
 }
+
+export function highPriorityToBoardPlayer(p: HighPriorityPlayer): FutureCastPlayer {
+  return {
+    id: p.id,
+    slug: p.slug,
+    name: p.name,
+    classYear: p.classYear ?? primaryRecruitingClassYear(),
+    position: p.position,
+    school: p.school,
+    composite: p.compositeScore ?? 0,
+    stars: p.stars ?? 0,
+    ufConfidence: p.ufProbability,
+    ufProbabilityLabel: p.ufProbabilityLabel ?? null,
+    ufProbabilityLowConfidence: p.ufProbabilityLowConfidence ?? false,
+    fitScore: p.fitScore ?? null,
+    trendDelta7d: p.delta7d ?? p.movementDelta ?? null,
+    volatility7d: Math.abs(p.delta7d ?? p.movementDelta ?? 0),
+    priority: 'high',
+    committedTo: p.committedTo,
+  };
+}
+
+export type DiscoveryMovementBuckets = {
+  risers: FutureCastPlayer[];
+  fallers: FutureCastPlayer[];
+  highVolatility: FutureCastPlayer[];
+};
+
+/** Discovery-season movement buckets from 2028 underclassmen targets or high-priority fallback. */
+export function discoveryMovementBuckets(
+  underclassmen: UnderclassmenPlayer[],
+  highPriority: HighPriorityPlayer[]
+): DiscoveryMovementBuckets {
+  const focusYear = primaryRecruitingClassYear();
+  const targets = underclassmenTargetsForYear(underclassmen, focusYear);
+  const pool: FutureCastPlayer[] = targets.length
+    ? targets
+    : highPriority.map(highPriorityToBoardPlayer);
+
+  const risers = pool
+    .filter((p) => (p.trendDelta7d ?? 0) > 0)
+    .sort((a, b) => (b.trendDelta7d ?? 0) - (a.trendDelta7d ?? 0));
+  const fallers = pool
+    .filter((p) => (p.trendDelta7d ?? 0) < 0)
+    .sort((a, b) => (a.trendDelta7d ?? 0) - (b.trendDelta7d ?? 0));
+  const highVolatility = [...pool]
+    .sort(
+      (a, b) =>
+        (b.volatility7d ?? Math.abs(b.trendDelta7d ?? 0)) -
+        (a.volatility7d ?? Math.abs(a.trendDelta7d ?? 0))
+    )
+    .filter((p) => (p.volatility7d ?? 0) > 0 || Math.abs(p.trendDelta7d ?? 0) > 0);
+
+  if (!risers.length && !fallers.length && !highVolatility.length) {
+    const leaders = targets.length
+      ? [...targets].sort((a, b) => (b.discoveryScore ?? 0) - (a.discoveryScore ?? 0))
+      : [...pool].sort((a, b) => (b.ufConfidence ?? 0) - (a.ufConfidence ?? 0));
+    return { risers: leaders.slice(0, 8), fallers: [], highVolatility: leaders.slice(0, 8) };
+  }
+
+  return {
+    risers: risers.slice(0, 8),
+    fallers: fallers.slice(0, 8),
+    highVolatility: highVolatility.slice(0, 8),
+  };
+}

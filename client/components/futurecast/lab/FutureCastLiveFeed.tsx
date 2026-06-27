@@ -2,12 +2,20 @@
 
 import React, { useMemo } from 'react';
 import type { MasterBoardResponse, MovementIntelResponse, StaffNotesResponse } from '@/lib/futurecast-board-types';
+import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
 import {
   buildIntelFeedItem,
   dedupeIntelFeedItems,
   formatIntelTimestamp,
 } from '@/lib/recruiting-intel-feed';
-import { ufPctFromFc } from './fc-lab-types';
+import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
+import {
+  discoveryMovementBuckets,
+  isDiscoverySeasonFocus,
+  ufPctFromFc,
+  underclassmenTargetsForYear,
+} from './fc-lab-types';
 
 function formatTrendDelta(value: number | null | undefined): string {
   if (value == null || Number.isNaN(value)) return 'TBD';
@@ -19,79 +27,143 @@ type Props = {
   masterBoard: MasterBoardResponse;
   staffNotes: StaffNotesResponse;
   movementIntel: MovementIntelResponse;
+  highPriority?: HighPriorityPlayer[];
+  underclassmen?: UnderclassmenPlayer[];
 };
 
 export function FutureCastLiveFeed({
   masterBoard,
   staffNotes,
   movementIntel,
+  highPriority = [],
+  underclassmen = [],
 }: Props): React.ReactElement {
   const items = useMemo(() => {
+    const discoveryFocus = isDiscoverySeasonFocus();
+    const focusYear = primaryRecruitingClassYear();
     const raw = [];
-    const bySlug = new Map(masterBoard.players.map((p) => [p.slug, p]));
 
-    for (const p of masterBoard.players.slice(0, 4)) {
-      if (p.committedTo && /\bflorida\b|\bgators\b/i.test(String(p.committedTo))) continue;
-      const pct = ufPctFromFc(p.ufConfidence);
-      raw.push(
-        buildIntelFeedItem({
-          id: `fc-model-${p.slug}`,
-          playerName: p.name,
-          headline: `FutureCast model → UF ${pct}% for ${p.name} (${p.position})`,
-          timestamp: masterBoard.updatedAt,
-          category: 'Movement',
-        })
-      );
-    }
+    if (discoveryFocus && highPriority.length) {
+      const bySlug = new Map(highPriority.map((p) => [p.slug, p]));
+      for (const p of highPriority.slice(0, 4)) {
+        if (p.committedTo && /\bflorida\b|\bgators\b/i.test(String(p.committedTo))) continue;
+        const pct = ufPctFromFc(p.ufProbability);
+        raw.push(
+          buildIntelFeedItem({
+            id: `fc-hp-${p.slug}`,
+            playerName: p.name,
+            headline: `${focusYear} UF target → ${pct}% likelihood for ${p.name} (${p.position})`,
+            timestamp: staffNotes.updatedAt || new Date().toISOString(),
+            category: 'Movement',
+          })
+        );
+      }
 
-    for (const riser of movementIntel.risers.slice(0, 2)) {
-      raw.push(
-        buildIntelFeedItem({
-          id: `fc-rise-${riser.slug}`,
-          playerName: riser.name,
-          headline: `Prediction trending up for ${riser.name} (${formatTrendDelta(riser.trendDelta7d)})`,
-          timestamp: movementIntel.updatedAt,
-          category: 'Movement',
-        })
-      );
-    }
+      const discoveryTargets = underclassmenTargetsForYear(underclassmen, focusYear);
+      for (const p of discoveryTargets.slice(0, 2)) {
+        raw.push(
+          buildIntelFeedItem({
+            id: `fc-disc-${p.slug}`,
+            playerName: p.name,
+            headline: `Early Discovery #${p.discoveryScore ?? '—'} — ${p.name} (${p.position})`,
+            timestamp: staffNotes.updatedAt || new Date().toISOString(),
+            category: 'Update',
+          })
+        );
+      }
 
-    for (const note of staffNotes.notes.slice(0, 3)) {
-      const player = bySlug.get(note.playerSlug);
-      const pct = player ? ufPctFromFc(player.ufConfidence) : null;
-      raw.push(
-        buildIntelFeedItem({
-          id: `fc-note-${note.playerSlug}-${note.notePreview || note.note}`,
-          playerName: note.playerName,
-          headline: `Staff note on ${note.playerName}${pct != null ? ` — UF ${pct}%` : ''}: ${note.notePreview ?? note.note ?? 'Updated'}`,
-          timestamp: staffNotes.updatedAt,
-          category: 'Staff Note',
-        })
-      );
-    }
+      for (const note of staffNotes.notes.slice(0, 4)) {
+        const player = bySlug.get(note.playerSlug);
+        const pct = player ? ufPctFromFc(player.ufProbability) : null;
+        raw.push(
+          buildIntelFeedItem({
+            id: `fc-note-${note.playerSlug}-${note.notePreview || note.note}`,
+            playerName: note.playerName,
+            headline: `Staff note on ${note.playerName}${pct != null ? ` — UF ${pct}%` : ''}: ${note.notePreview ?? note.note ?? 'Updated'}`,
+            timestamp: staffNotes.updatedAt,
+            category: 'Staff Note',
+          })
+        );
+      }
 
-    for (const alert of movementIntel.alerts.slice(0, 2)) {
-      raw.push(
-        buildIntelFeedItem({
-          id: alert.id,
-          headline: alert.message,
-          timestamp: alert.createdAt,
-          category: 'Movement',
-          volatile: /volatile|spike/i.test(alert.message),
-        })
-      );
-    }
+      const discoveryMove = discoveryMovementBuckets(underclassmen, highPriority);
+      for (const riser of discoveryMove.risers.slice(0, 2)) {
+        raw.push(
+          buildIntelFeedItem({
+            id: `fc-rise-${riser.slug}`,
+            playerName: riser.name,
+            headline: `${focusYear} discovery leader — ${riser.name} (${riser.position})`,
+            timestamp: staffNotes.updatedAt || movementIntel.updatedAt,
+            category: 'Update',
+          })
+        );
+      }
+    } else {
+      const bySlug = new Map(masterBoard.players.map((p) => [p.slug, p]));
 
-    for (const faller of movementIntel.fallers.slice(0, 1)) {
-      raw.push(
-        buildIntelFeedItem({
-          id: `fc-fall-${faller.slug}`,
-          playerName: faller.name,
-          headline: `Prediction cooling on ${faller.name} (${formatTrendDelta(faller.trendDelta7d)})`,
-          timestamp: movementIntel.updatedAt,
-          category: 'Movement',
-        })
-      );
+      for (const p of masterBoard.players.slice(0, 4)) {
+        if (p.committedTo && /\bflorida\b|\bgators\b/i.test(String(p.committedTo))) continue;
+        const pct = ufPctFromFc(p.ufConfidence);
+        raw.push(
+          buildIntelFeedItem({
+            id: `fc-model-${p.slug}`,
+            playerName: p.name,
+            headline: `FutureCast model → UF ${pct}% for ${p.name} (${p.position})`,
+            timestamp: masterBoard.updatedAt,
+            category: 'Movement',
+          })
+        );
+      }
+
+      for (const riser of movementIntel.risers.slice(0, 2)) {
+        raw.push(
+          buildIntelFeedItem({
+            id: `fc-rise-${riser.slug}`,
+            playerName: riser.name,
+            headline: `Prediction trending up for ${riser.name} (${formatTrendDelta(riser.trendDelta7d)})`,
+            timestamp: movementIntel.updatedAt,
+            category: 'Movement',
+          })
+        );
+      }
+
+      for (const note of staffNotes.notes.slice(0, 3)) {
+        const player = bySlug.get(note.playerSlug);
+        const pct = player ? ufPctFromFc(player.ufConfidence) : null;
+        raw.push(
+          buildIntelFeedItem({
+            id: `fc-note-${note.playerSlug}-${note.notePreview || note.note}`,
+            playerName: note.playerName,
+            headline: `Staff note on ${note.playerName}${pct != null ? ` — UF ${pct}%` : ''}: ${note.notePreview ?? note.note ?? 'Updated'}`,
+            timestamp: staffNotes.updatedAt,
+            category: 'Staff Note',
+          })
+        );
+      }
+
+      for (const alert of movementIntel.alerts.slice(0, 2)) {
+        raw.push(
+          buildIntelFeedItem({
+            id: alert.id,
+            headline: alert.message,
+            timestamp: alert.createdAt,
+            category: 'Movement',
+            volatile: /volatile|spike/i.test(alert.message),
+          })
+        );
+      }
+
+      for (const faller of movementIntel.fallers.slice(0, 1)) {
+        raw.push(
+          buildIntelFeedItem({
+            id: `fc-fall-${faller.slug}`,
+            playerName: faller.name,
+            headline: `Prediction cooling on ${faller.name} (${formatTrendDelta(faller.trendDelta7d)})`,
+            timestamp: movementIntel.updatedAt,
+            category: 'Movement',
+          })
+        );
+      }
     }
 
     const deduped = dedupeIntelFeedItems(raw, 16);
@@ -99,14 +171,16 @@ export function FutureCastLiveFeed({
       deduped.push(
         buildIntelFeedItem({
           id: 'fc-feed-placeholder',
-          headline: 'FutureCast Lab live — predictions refresh every 90 seconds',
+          headline: discoveryFocus
+            ? `${focusYear} FutureCast Lab live — discovery data refreshes every 90 seconds`
+            : 'FutureCast Lab live — predictions refresh every 90 seconds',
           category: 'Update',
         })
       );
     }
 
     return deduped;
-  }, [masterBoard, movementIntel, staffNotes.notes, staffNotes.updatedAt]);
+  }, [masterBoard, movementIntel, staffNotes.notes, staffNotes.updatedAt, highPriority, underclassmen]);
 
   return (
     <section className="rh-cc-feed fc-lab-feed fc-lab-bleed" data-testid="fc-lab-live-feed">

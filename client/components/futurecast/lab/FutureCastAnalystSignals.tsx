@@ -1,15 +1,18 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import type { MasterBoardResponse, StaffNotesResponse } from '@/lib/futurecast-board-types';
+import type { FutureCastPlayer, MasterBoardResponse, StaffNotesResponse } from '@/lib/futurecast-board-types';
+import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { formatIntelUpdated } from '@/components/recruiting-hub/utils/formatDate';
 import { playerProfileRoute } from '@/lib/vault-route-map';
+import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { AnalystConfidenceMeter, FutureCastPanelShell } from './primitives';
-import { ufPctFromFc } from './fc-lab-types';
+import { highPriorityToBoardPlayer, isDiscoverySeasonFocus, ufPctFromFc } from './fc-lab-types';
 
 type Props = {
   staffNotes: StaffNotesResponse;
   masterBoard: MasterBoardResponse;
+  highPriority?: HighPriorityPlayer[];
   bare?: boolean;
 };
 
@@ -27,8 +30,22 @@ type SignalCard = {
   suppressed?: boolean;
 };
 
-function buildSignals(staffNotes: StaffNotesResponse, masterBoard: MasterBoardResponse): SignalCard[] {
-  const bySlug = new Map(masterBoard.players.map((p) => [p.slug, p]));
+function buildSignals(
+  staffNotes: StaffNotesResponse,
+  masterBoard: MasterBoardResponse,
+  highPriority: HighPriorityPlayer[],
+  discoveryFocus: boolean
+): SignalCard[] {
+  const boardPlayers: FutureCastPlayer[] = discoveryFocus && highPriority.length
+    ? highPriority.map(highPriorityToBoardPlayer)
+    : masterBoard.players;
+  const bySlug = new Map(boardPlayers.map((p) => [p.slug, p]));
+  const modelPool: FutureCastPlayer[] = discoveryFocus && highPriority.length
+    ? highPriority.map(highPriorityToBoardPlayer)
+    : masterBoard.highPriority.players;
+  const modelTimestamp = discoveryFocus && highPriority.length
+    ? staffNotes.updatedAt || new Date().toISOString()
+    : masterBoard.updatedAt;
   const cards: SignalCard[] = [];
 
   for (const note of staffNotes.notes.slice(0, 12)) {
@@ -69,7 +86,7 @@ function buildSignals(staffNotes: StaffNotesResponse, masterBoard: MasterBoardRe
     });
   }
 
-  for (const p of masterBoard.highPriority.players.slice(0, 6)) {
+  for (const p of modelPool.slice(0, 6)) {
     if (cards.length >= 8) break;
     if (p.ufPredictionSuppressed) continue;
     const pct = ufPctFromFc(p.ufConfidence);
@@ -83,7 +100,7 @@ function buildSignals(staffNotes: StaffNotesResponse, masterBoard: MasterBoardRe
       confidencePct: pct,
       rpmPct: pct,
       summary: `Model projection ${pct}% for ${p.name}.`,
-      timestamp: masterBoard.updatedAt,
+      timestamp: modelTimestamp,
     });
   }
 
@@ -126,17 +143,31 @@ function SignalCardView({ card }: { card: SignalCard }): React.ReactElement {
   );
 }
 
-export function FutureCastAnalystSignals({ staffNotes, masterBoard, bare }: Props): React.ReactElement {
+export function FutureCastAnalystSignals({
+  staffNotes,
+  masterBoard,
+  highPriority = [],
+  bare,
+}: Props): React.ReactElement {
+  const discoveryFocus = useMemo(() => isDiscoverySeasonFocus(), []);
+  const focusYear = primaryRecruitingClassYear();
   const signals = useMemo(
-    () => buildSignals(staffNotes, masterBoard),
-    [staffNotes, masterBoard]
+    () => buildSignals(staffNotes, masterBoard, highPriority, discoveryFocus),
+    [staffNotes, masterBoard, highPriority, discoveryFocus]
   );
+
+  const title = discoveryFocus
+    ? `Analyst Signals — ${focusYear} Discovery`
+    : 'Analyst Signals — FutureCast Activity';
+  const sub = discoveryFocus
+    ? 'Staff notes and model signals for the 2028 discovery cycle.'
+    : 'Staff notes and FutureCast model signals — prediction engine only.';
 
   return (
     <FutureCastPanelShell
       bare={bare}
-      title="Analyst Signals — FutureCast Activity"
-      sub="Staff notes and FutureCast model signals — prediction engine only."
+      title={title}
+      sub={sub}
       testId="fc-lab-analyst-signals"
       action={
         staffNotes.updatedAt ? (

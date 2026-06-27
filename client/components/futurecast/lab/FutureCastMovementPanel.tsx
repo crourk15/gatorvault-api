@@ -1,15 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { FutureCastPlayer, MovementIntelResponse } from '@/lib/futurecast-board-types';
+import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
+import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
 import { futureCastLabHref, FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
+import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { FutureCastPanelShell, MovementBadge, MovementSparkline, UfProbBar } from './primitives';
-import { ufPctFromFc } from './fc-lab-types';
+import { discoveryMovementBuckets, isDiscoverySeasonFocus, ufPctFromFc } from './fc-lab-types';
 
 type Tab = 'risers' | 'fallers' | 'volatile';
 
 type Props = {
   movementIntel: MovementIntelResponse;
+  highPriority?: HighPriorityPlayer[];
+  underclassmen?: UnderclassmenPlayer[];
   bare?: boolean;
 };
 
@@ -42,21 +47,44 @@ function MovementRow({ player, tone }: { player: FutureCastPlayer; tone: Tab }):
   );
 }
 
-export function FutureCastMovementPanel({ movementIntel, bare }: Props): React.ReactElement {
+export function FutureCastMovementPanel({
+  movementIntel,
+  highPriority = [],
+  underclassmen = [],
+  bare,
+}: Props): React.ReactElement {
   const [tab, setTab] = useState<Tab>('risers');
+  const discoveryFocus = useMemo(() => isDiscoverySeasonFocus(), []);
+  const focusYear = primaryRecruitingClassYear();
+  const discoveryBuckets = useMemo(
+    () => discoveryMovementBuckets(underclassmen, highPriority),
+    [underclassmen, highPriority]
+  );
 
-  const rows =
-    tab === 'risers'
+  const rows = discoveryFocus
+    ? tab === 'risers'
+      ? discoveryBuckets.risers
+      : tab === 'fallers'
+        ? discoveryBuckets.fallers
+        : discoveryBuckets.highVolatility
+    : tab === 'risers'
       ? movementIntel.risers
       : tab === 'fallers'
         ? movementIntel.fallers
         : movementIntel.highVolatility;
 
+  const title = discoveryFocus
+    ? `${focusYear} Discovery Movement`
+    : 'FutureCast Movement — 7-Day Window';
+  const sub = discoveryFocus
+    ? '2028 allowlist and discovery leaders until 7-day UF deltas populate.'
+    : 'FutureCast movement window — risers, fallers, and volatile targets.';
+
   return (
     <FutureCastPanelShell
       bare={bare}
-      title="FutureCast Movement — 7-Day Window"
-      sub="FutureCast movement window — risers, fallers, and volatile targets."
+      title={title}
+      sub={sub}
       action={
         <a href={futureCastLabHref(FUTURECAST_LAB_ANCHORS.movement)} className="rh-cc-link">
           Full movement intel →
@@ -80,7 +108,11 @@ export function FutureCastMovementPanel({ movementIntel, bare }: Props): React.R
       </div>
       <div className="rh-cc-move-list" role="tabpanel">
         {rows.length === 0 ? (
-          <p className="rh-cc-empty">No movement in this bucket yet.</p>
+          <p className="rh-cc-empty">
+            {discoveryFocus
+              ? `No ${focusYear} movement in this bucket yet.`
+              : 'No movement in this bucket yet.'}
+          </p>
         ) : (
           rows.slice(0, 8).map((item) => <MovementRow key={item.id} player={item} tone={tab} />)
         )}
