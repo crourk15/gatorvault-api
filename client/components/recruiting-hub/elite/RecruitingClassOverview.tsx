@@ -5,6 +5,7 @@ import type { RhHubClassOverview } from '@/lib/recruiting-hub-elite-api';
 import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { classCommitMetricLabel } from '@/lib/recruiting-cycle';
+import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
 import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { readBootClassMetrics, hideRhBootSection } from '@/lib/recruiting-hub-boot-read';
