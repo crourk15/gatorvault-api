@@ -125,7 +125,11 @@ export function loadRecruitingRankings(): Map<string, PlayerRankingEntry> {
         stateRank: p.stateRank ?? board?.stateRank ?? null,
         stars: p.stars ?? board?.stars ?? null,
         classYear: p.classYear ?? null,
-        ratingSource: resolveRatingSource(p.on3Source),
+        ratingSource:
+          resolveRatingSource(p.on3Source) === 'on3' ||
+          (board?.natlRank != null && Number(board.natlRank) > 0)
+            ? 'on3'
+            : 'seed',
         school,
         inState: board?.inState != null ? Boolean(board.inState) : state === 'FL',
         position: p.pos ? String(p.pos).trim().toUpperCase() : null,

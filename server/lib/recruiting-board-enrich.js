@@ -4,6 +4,7 @@
 const { slugify } = require('./slug');
 const { filterBlockedRecruits } = require('./recruiting-blocked-players');
 const { getBreakdownBySlug } = require('./war-room-store');
+const { enrichTargetsWithBoardSeed } = require('./target-board-enrich');
 const TIER_LABELS = {
   TOP: 'Top Priorities',
   HIGH: 'High Interest',
@@ -121,8 +122,12 @@ function enrichPlayer(player, isCommit, staffMode) {
 }
 
 function enrichBoard(board, staffMode = false) {
+  const classYear = parseInt(board.classYear, 10) || 2027;
+  const allowlist = require('./recruiting-target-allowlist');
+  const rawTargets = filterBlockedRecruits(board.targets || []);
+  const seededTargets = enrichTargetsWithBoardSeed(rawTargets, classYear, allowlist);
   const commits = filterBlockedRecruits(board.commits || []).map((p) => enrichPlayer(p, true, staffMode));
-  const targets = filterBlockedRecruits(board.targets || []).map((p) => enrichPlayer(p, false, staffMode));
+  const targets = seededTargets.map((p) => enrichPlayer(p, false, staffMode));
   const players = [...commits, ...targets];
 
   const tiers = ['TOP', 'HIGH', 'MEDIUM', 'LOW', 'EVAL'].map((tier) => ({
