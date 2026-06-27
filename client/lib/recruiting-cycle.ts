@@ -20,6 +20,21 @@ export function parseRecruitingClassYear(
   return isRecruitingClassYear(year) ? year : fallback;
 }
 
+/** HS signing-class metric label — portal tracked separately. */
+export function classCommitMetricLabel(
+  classYear: number,
+  now: Date = new Date()
+): 'Signees' | 'Commits' {
+  return classYear <= now.getFullYear() ? 'Signees' : 'Commits';
+}
+
+export function classCommitLinkLabel(
+  classYear: number,
+  now: Date = new Date()
+): string {
+  return classYear <= now.getFullYear() ? 'View signees →' : 'View commits →';
+}
+
 export type SigningCalendar = {
   classYear: number;
   esp: {

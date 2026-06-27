@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import type { RhHubClassOverview } from '@/lib/recruiting-hub-elite-api';
 import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
-import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
+import { classCommitMetricLabel } from '@/lib/recruiting-cycle';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
 import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
 import { readBootClassMetrics, hideRhBootSection } from '@/lib/recruiting-hub-boot-read';
@@ -149,7 +149,12 @@ export function RecruitingClassOverview(): React.ReactElement | null {
           <div className="rh-metrics-row">
             <Metric label="Class rank" value={overview.classRank} trend={overview.trendRank} sparkline={sparks?.classRank} />
             <Metric label="Blue chip %" value={overview.blueChip} trend={overview.trendBlueChip} sparkline={sparks?.blueChip} />
-            <Metric label="Commits" value={overview.commits} trend={overview.trendCommits} sparkline={sparks?.commits} />
+            <Metric
+              label={overview.commitLabel ?? classCommitMetricLabel(activeYear)}
+              value={overview.commits}
+              trend={overview.trendCommits}
+              sparkline={sparks?.commits}
+            />
             <Metric label="Avg rating" value={overview.avgRating} trend={overview.trendRating} sparkline={sparks?.avgRating} />
           </div>
         )}

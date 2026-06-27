@@ -12,6 +12,8 @@ export type RhHubClassOverview = {
   classRank: string;
   blueChip: string;
   commits: string;
+  /** "Signees" for signed/on-campus classes; "Commits" for active cycles. */
+  commitLabel?: string;
   avgRating: string;
   trendRank: string;
   trendBlueChip: string;

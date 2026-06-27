@@ -11,7 +11,7 @@ import { RECRUITING_HUB_ELITE_YEAR } from '@/lib/recruiting-hub-elite-api';
 import type { RhHubClassOverview, RhHubHeroPayload } from '@/lib/recruiting-hub-elite-api';
 import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
-import { RECRUITING_CLASS_YEARS, parseRecruitingClassYear } from '@/lib/recruiting-cycle';
+import { RECRUITING_CLASS_YEARS, parseRecruitingClassYear, classCommitMetricLabel } from '@/lib/recruiting-cycle';
 import { initGvHydrate, scheduleHeroHydration, releaseHeroHydrationGate } from '@/lib/gv-hydrate';
 import '@/lib/recruiting-hub-window';
 
@@ -44,12 +44,19 @@ function HeroMetric({
   );
 }
 
-function HeroMetrics({ overview }: { overview: RhHubClassOverview | null | undefined }): React.ReactElement {
+function HeroMetrics({
+  overview,
+  activeYear,
+}: {
+  overview: RhHubClassOverview | null | undefined;
+  activeYear: number;
+}): React.ReactElement {
+  const commitLabel = overview?.commitLabel ?? classCommitMetricLabel(activeYear);
   return (
     <div className="rh-hero-metrics" aria-label="Class summary metrics">
       <HeroMetric label="Class rank" value={overview?.classRank ?? '—'} />
       <HeroMetric label="Blue chip %" value={overview?.blueChip ?? '—'} />
-      <HeroMetric label="Commits" value={overview?.commits ?? '—'} />
+      <HeroMetric label={commitLabel} value={overview?.commits ?? '—'} />
       <HeroMetric label="Avg rating" value={overview?.avgRating ?? '—'} />
     </div>
   );
@@ -153,7 +160,7 @@ export function RecruitingHeroStrip({ year = RECRUITING_HUB_ELITE_YEAR }: Recrui
         </div>
         <span className="rh-badge rh-hero-badge rh-hero-badge--pulse">WAR ROOM</span>
       </div>
-      <HeroMetrics overview={metricsLoading && !overview ? null : overview} />
+      <HeroMetrics overview={metricsLoading && !overview ? null : overview} activeYear={activeYear} />
       <div className="rh-hero-ticker" aria-label="Recruiting intel ticker">
         <div className="rh-hero-ticker-track">
           {tickerItems.map((item, idx) => (

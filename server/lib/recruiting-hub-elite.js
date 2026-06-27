@@ -101,17 +101,23 @@ async function loadEnrichedBoard(year) {
   return enrichBoard(board, false);
 }
 
+function classCommitMetricLabel(year) {
+  const calendarYear = new Date().getFullYear();
+  return Number(year) <= calendarYear ? 'Signees' : 'Commits';
+}
+
 async function buildHubTicker(year = 2027) {
   const enriched = await loadEnrichedBoard(year);
   const commits = enriched.commits || [];
   const targets = enriched.targets || [];
   const rank = enriched.rankings?.nationalRank;
-  const chip = blueChipPct([...commits, ...targets]);
+  const chip = blueChipPct(commits);
   const items = [];
+  const countLabel = classCommitMetricLabel(year).toLowerCase();
 
   if (rank) items.push(`${year} class trending nationally — UF at #${rank}`);
   if (chip != null) items.push(`Blue chip % at ${chip}%`);
-  if (commits.length) items.push(`${commits.length} commits locked for ${year}`);
+  if (commits.length) items.push(`${commits.length} ${countLabel} locked for ${year}`);
 
   const { buildHubMovementFeed } = require('./recruiting-hub-data');
   const feed = await buildHubMovementFeed(year);
@@ -126,9 +132,8 @@ async function buildHubClassOverview(year = 2027) {
   const enriched = await loadEnrichedBoard(year);
   const commits = enriched.commits || [];
   const targets = enriched.targets || [];
-  const pool = [...commits, ...targets];
-  const chip = blueChipPct(pool);
-  const avg = avgRating(pool);
+  const chip = blueChipPct(commits);
+  const avg = avgRating(commits);
 
   let rising = 0;
   let falling = 0;
@@ -153,6 +158,7 @@ async function buildHubClassOverview(year = 2027) {
     classRank: enriched.rankings?.nationalRank != null ? `#${enriched.rankings.nationalRank}` : '—',
     blueChip: chip != null ? `${chip}%` : '—',
     commits: commitCount ? String(commitCount) : '—',
+    commitLabel: classCommitMetricLabel(year),
     avgRating: avg != null ? formatRating(avg) : '—',
     trendRank: trendDisplay(rankTrend),
     trendBlueChip: trendDisplay(chipTrend),

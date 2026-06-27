@@ -86,20 +86,40 @@ test('getHubCommits returns all Florida commits for hub class years', async () =
   delete require.cache[require.resolve('../../lib/recruiting-store')];
 });
 
-test('getHubCommits 2026 counts enrolled or signed only', async () => {
+test('getHubHsCommits 2026 excludes portal signees', async () => {
   delete process.env.SUPABASE_URL;
   delete process.env.DATABASE_URL;
   delete require.cache[require.resolve('../../lib/recruiting-store')];
+  delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
   const jsonStore = require('../../lib/recruiting-store');
+  const all = await jsonStore.getHubCommits(2026);
+  const hs = await jsonStore.getHubHsCommits(2026);
+  assert.ok(hs.length > 0 && hs.length < all.length, 'HS commits should be a subset of all hub commits');
+  assert.ok(hs.every((p) => String(p.category).toLowerCase() !== 'portal'));
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+  delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
+});
+
+test('getHubCommits 2026 merges On3 snapshot board commits', async () => {
+  delete process.env.SUPABASE_URL;
+  delete process.env.DATABASE_URL;
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+  delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
+  const jsonStore = require('../../lib/recruiting-store');
+  const { countSnapshotHubCommits } = require('../../lib/on3-snapshot-commits');
   const commits = await jsonStore.getHubCommits(2026);
-  assert.ok(commits.length > 0 && commits.length <= 35, `expected enrolled class size, got ${commits.length}`);
+  const expected = countSnapshotHubCommits(2026);
+  assert.ok(expected > 0, 'snapshot should define 2026 commits');
+  assert.ok(commits.length >= expected - 5 && commits.length <= expected,
+    `2026 hub commits should track On3 snapshot (${commits.length} vs ${expected})`);
   for (const player of commits) {
     assert.ok(
-      ['enrolled', 'signed'].includes(String(player.status || '').toLowerCase()),
-      `${player.slug} should be enrolled/signed, not stale committed`
+      player.on3Source === 'on3-board-sync' || player.on3Id,
+      `${player.slug} should be an On3 board commit`
     );
   }
   delete require.cache[require.resolve('../../lib/recruiting-store')];
+  delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
 });
 
 test('demoteUnverifiedHubCommit preserves on3 board sync commits', () => {

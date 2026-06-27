@@ -143,8 +143,24 @@ function isOfficialRecruitingCommit(p, classYear) {
   const { isVerifiedUfCommitSlug } = require('./recruiting-verified-commits');
   const slug = String(p.slug || '').toLowerCase();
   if (isVerifiedUfCommitSlug(slug, classYear)) return true;
-  const src = String(p.on3Source || '');
+  const src = String(p.on3Source || p.on3_source || '');
   if (/on3\.com.*\/commits\//i.test(src)) return true;
+
+  const year = Number(classYear);
+  const calendarYear = new Date().getFullYear();
+  if (Number.isFinite(year) && year <= calendarYear) return false;
+
+  // Active recruiting classes — Supabase often drops on3_source on read
+  const status = String(p.status || '').toLowerCase();
+  const cat = String(p.category || '').toLowerCase();
+  if (
+    p.on3Id &&
+    /^florida$/i.test(String(p.committedTo || p.committed_to || '')) &&
+    ['committed', 'commit', 'signed', 'enrolled'].includes(status) &&
+    (cat === 'recruit' || cat === 'portal' || !cat)
+  ) {
+    return true;
+  }
   return false;
 }
 
@@ -154,15 +170,6 @@ function isHubUfCommitPlayer(p, classYear) {
   if (isHubExternalCommitFlipTarget(p)) return false;
 
   const year = Number(classYear);
-  const status = String(p.status || '').toLowerCase();
-  const calendarYear = new Date().getFullYear();
-
-  // Enrolled / signed classes — exclude stale "committed" rows from bad ingest
-  if (Number.isFinite(year) && year <= calendarYear) {
-    return ['enrolled', 'signed'].includes(status);
-  }
-
-  // Active recruiting classes — On3 board sync + editorial/protected commits only
   return isOfficialRecruitingCommit(p, year);
 }
 
@@ -177,6 +184,14 @@ function filterHubCommitPlayers(players, classYear) {
         isHubUfCommitPlayer(p, year)
     )
   );
+}
+
+function isHubHsCommitPlayer(p) {
+  return String(p?.category || 'recruit').toLowerCase() !== 'portal';
+}
+
+function filterHubHsCommitPlayers(players) {
+  return (players || []).filter(isHubHsCommitPlayer);
 }
 
 async function queryHubCommitsFromSupabase(classYear) {
@@ -232,14 +247,27 @@ async function getHubCommits(classYear) {
   const year = parseInt(classYear, 10);
   if (!Number.isFinite(year)) return [];
 
+  const { getSnapshotHubCommits, mergeCommitPlayerLists } = require('./on3-snapshot-commits');
+
+  let fromStore = null;
   const fromSupabase = await queryHubCommitsFromSupabase(year);
-  if (fromSupabase) return fromSupabase;
+  if (fromSupabase) fromStore = fromSupabase;
+  if (!fromStore) {
+    const fromDatabase = await queryHubCommitsFromDatabase(year);
+    if (fromDatabase) fromStore = fromDatabase;
+  }
+  if (!fromStore) {
+    const players = await getAllPlayers();
+    fromStore = filterHubCommitPlayers(players, year);
+  }
 
-  const fromDatabase = await queryHubCommitsFromDatabase(year);
-  if (fromDatabase) return fromDatabase;
+  const merged = mergeCommitPlayerLists(getSnapshotHubCommits(year), fromStore);
+  return filterHubCommitPlayers(merged, year);
+}
 
-  const players = await getAllPlayers();
-  return filterHubCommitPlayers(players, year);
+/** HS signing-class commits only — excludes portal signees (portal has its own board). */
+async function getHubHsCommits(classYear) {
+  return filterHubHsCommitPlayers(await getHubCommits(classYear));
 }
 
 function isCommittedAnywhere(p) {
@@ -358,6 +386,10 @@ function playerToRow(p) {
     skinny: p.skinny,
     profile_note: p.profileNote,
     on3_id: p.on3Id,
+    on3_slug: p.on3Slug,
+    on3_profile_url: p.on3ProfileUrl,
+    on3_source: p.on3Source,
+    protected: p.protected === true ? true : undefined,
     stars_display: p.starsDisplay,
     updated_at: p.updatedAt
   };
@@ -406,6 +438,10 @@ function rowToPlayer(row) {
     skinny: row.skinny,
     profile_note: row.profile_note,
     on3_id: row.on3_id,
+    on3_slug: row.on3_slug,
+    on3_profile_url: row.on3_profile_url,
+    on3_source: row.on3_source,
+    protected: row.protected,
     stars_display: row.stars_display,
     updated_at: row.updated_at
   });
@@ -936,7 +972,7 @@ async function getBoard(classYear) {
   const { filterAllowlistedTargets } = require('./recruiting-target-allowlist');
   const players = await getAllPlayers();
   const year = parseInt(classYear, 10);
-  const commits = await getHubCommits(year);
+  const commits = await getHubHsCommits(year);
   const rawTargets = players.filter(
     (p) => Number(p.classYear) === year && p.category === 'target' && !isHubCommittedStatus(p)
   );
@@ -1192,6 +1228,8 @@ module.exports = {
   deleteEventsMatching,
   getBoard,
   getHubCommits,
+  getHubHsCommits,
+  isHubHsCommitPlayer,
   getPortalBoard,
   selectPortalHeadliner,
   fireRecruitingEvent,

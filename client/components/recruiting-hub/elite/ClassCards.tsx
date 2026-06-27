@@ -5,7 +5,7 @@ import Link from 'next/link';
 import type { RhHubClassOverview } from '@/lib/recruiting-hub-elite-api';
 import { fetchClassMetrics } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
-import { RECRUITING_CLASS_YEARS, type RecruitingClassYear } from '@/lib/recruiting-cycle';
+import { RECRUITING_CLASS_YEARS, type RecruitingClassYear, classCommitMetricLabel, classCommitLinkLabel } from '@/lib/recruiting-cycle';
 import { fetchWithWarmPoll } from '@/lib/api-warm-poll';
 import { warmPollProfile } from '@/lib/warm-poll-profile';
 import { useRecruitingHubBundleContext } from '@/components/recruiting-hub/elite/RecruitingHubBundleContext';
@@ -49,7 +49,7 @@ function ClassCard({
         ) : (
           <dl className="rh-class-card__stats">
             <div>
-              <dt>Commits</dt>
+              <dt>{data.commitLabel ?? classCommitMetricLabel(year)}</dt>
               <dd>{data.commits}</dd>
             </div>
             <div>
@@ -64,7 +64,7 @@ function ClassCard({
         )}
       </button>
       <Link href={`/vault/recruiting/${year}`} className="rh-class-card__link">
-        View commits →
+        {classCommitLinkLabel(year)}
       </Link>
     </article>
   );
