@@ -84,6 +84,16 @@ function normalizeSchool(school) {
     .trim();
 }
 
+function isCollegeOnlySchoolLabel(school) {
+  const s = normalizeSchool(school);
+  const core = s.replace(/,\s*[A-Z]{2}$/i, '').trim();
+  if (!COLLEGE_ONLY_RES.test(s) && !COLLEGE_ONLY_RES.test(core)) return false;
+  if (/\b(?:HS|High|Academy|Prep|School)\b/i.test(s)) return false;
+  // Miami Central / Miami Northwestern — HS names, not University of Miami shorthand.
+  if (/^Miami\s+(?!FL$)\S+/i.test(core)) return false;
+  return true;
+}
+
 function isValidSchoolField(school, { allowCollege = false } = {}) {
   const s = normalizeSchool(school);
   if (s.length < 3) return false;
@@ -91,7 +101,7 @@ function isValidSchoolField(school, { allowCollege = false } = {}) {
   if (CORRUPTED_SCHOOL_RES.some((re) => re.test(s))) return false;
   const words = s.split(/\s+/);
   if (words.length > 8 && !/\b(?:High School|HS|Academy|Prep|Christian|School)\b/i.test(s)) return false;
-  if (!allowCollege && COLLEGE_ONLY_RES.test(s) && !/\b(?:HS|High|Academy|Prep|School)\b/i.test(s)) {
+  if (!allowCollege && isCollegeOnlySchoolLabel(s)) {
     return false;
   }
   return true;

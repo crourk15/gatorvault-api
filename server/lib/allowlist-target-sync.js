@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const store = require('./recruiting-store');
 const on3Recruit = require('./on3-recruit-client');
-const { rebuildPlayerIdentityFromOn3 } = require('./identity-record-validator');
+const { rebuildPlayerIdentityFromOn3, validatePlayerIdentityRecord } = require('./identity-record-validator');
 const {
   ALLOWLIST_2027,
   ALLOWLIST_2028,
@@ -89,7 +89,154 @@ function profilePatchFromOn3(profile, classYear) {
   return patch;
 }
 
+function localJsonPlayer(slug) {
+  try {
+    return store.findBySlug(slug);
+  } catch {
+    return null;
+  }
+}
+
+function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, classYear, playerName) {
+  const committedTo = profilePatch.committedTo ?? existing?.committedTo ?? localPlayer?.committedTo ?? null;
+  const ufCommitted = committedTo && isFloridaSchool(committedTo);
+  let merged = applyEditorialPositionToPlayer({
+    ...localPlayer,
+    ...existing,
+    ...profilePatch,
+    slug,
+    classYear,
+    name: profilePatch.name || existing?.name || localPlayer?.name || playerName,
+    pos: profilePatch.pos || existing?.pos || localPlayer?.pos,
+    committedTo: ufCommitted ? 'Florida' : committedTo,
+    status: committedTo ? 'committed' : 'uncommitted',
+    category: committedTo ? 'recruit' : 'target',
+    commitDate: profilePatch.commitDate ?? existing?.commitDate ?? localPlayer?.commitDate ?? null,
+    commitmentSyncAt: new Date().toISOString(),
+    commitmentSource: profilePatch.committedTo ? 'on3-allowlist-sync' : existing?.commitmentSource || null,
+    on3Source: profilePatch.on3Source || 'on3-allowlist-sync',
+    updatedAt: new Date().toISOString(),
+  });
+
+  if (
+    isPlaceholderSchool(merged.school) &&
+    localPlayer?.school &&
+    !isPlaceholderSchool(localPlayer.school)
+  ) {
+    merged.school = localPlayer.school;
+  }
+  if (
+    isPlaceholderSchool(merged.school) &&
+    existing?.school &&
+    !isPlaceholderSchool(existing.school)
+  ) {
+    merged.school = existing.school;
+  }
+  return merged;
+}
+
+async function buildProfilePatchFromDiscovery(slug, classYear, existing, playerName) {
+  const discovery = await discoverOn3RecruitSlug(slug, {
+    classYear,
+    player: existing,
+    name: playerName,
+    pos: existing?.pos || null,
+  });
+
+  if (discovery.profile && !discovery.profile.error) {
+    const profilePatch = profilePatchFromOn3(discovery.profile, classYear);
+    const schoolPatch = profileToSchoolPatch(discovery.profile);
+    return {
+      profilePatch: { ...profilePatch, ...schoolPatch },
+      source: discovery.source,
+    };
+  }
+
+  if (discovery.recruitSlug) {
+    try {
+      const profile = await on3Recruit.fetchRecruitProfile(discovery.recruitSlug, classYear);
+      if (profile && !profile.error) {
+        const profilePatch = profilePatchFromOn3(profile, classYear);
+        return {
+          profilePatch: { ...profilePatch, ...profileToSchoolPatch(profile) },
+          source: discovery.source || 'stored_slug',
+        };
+      }
+    } catch {
+      /* optional */
+    }
+  }
+
+  return { profilePatch: {}, source: discovery.source || null };
+}
+
+async function syncSlugFromOn3Fast(slug, classYear) {
+  const existing = await store.getPlayerBySlug(slug);
+  const localPlayer = localJsonPlayer(slug);
+  const playerName = CANONICAL_TARGET_NAMES[slug] || existing?.name || localPlayer?.name || slug;
+  const { profilePatch } = await buildProfilePatchFromDiscovery(slug, classYear, existing, playerName);
+
+  if (!profilePatch.school && localPlayer?.school && !isPlaceholderSchool(localPlayer.school)) {
+    profilePatch.school = localPlayer.school;
+  }
+  if (!profilePatch.state && (localPlayer?.state || existing?.state)) {
+    profilePatch.state = localPlayer?.state || existing?.state;
+  }
+  for (const field of ['natlRank', 'posRank', 'stateRank', 'rating', 'stars']) {
+    if (profilePatch[field] == null && localPlayer?.[field] != null) {
+      profilePatch[field] = localPlayer[field];
+    }
+  }
+
+  const merged = mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, classYear, playerName);
+  const validation = validatePlayerIdentityRecord(merged);
+  if (!validation.valid || isPlaceholderSchool(merged.school)) {
+    return null;
+  }
+
+  await store.upsertPlayer(merged);
+  if (merged.school && !isPlaceholderSchool(merged.school)) {
+    persistAllowlistPlayerToJson(slug, {
+      name: merged.name,
+      pos: merged.pos,
+      classYear: merged.classYear,
+      school: merged.school,
+      state: merged.state ?? merged.hometownState ?? null,
+      inState: merged.inState,
+      rating: merged.rating,
+      natlRank: merged.natlRank,
+      posRank: merged.posRank,
+      stateRank: merged.stateRank,
+      stars: merged.stars,
+      on3Source: merged.on3Source,
+      on3Slug: merged.on3Slug,
+      on3Id: merged.on3Id,
+    });
+  }
+
+  const committedTo = merged.committedTo || null;
+  return {
+    slug,
+    classYear,
+    ok: true,
+    fast: true,
+    committedTo,
+    pos: merged.pos || null,
+    ranked: merged.on3Source === 'on3-board-sync',
+  };
+}
+
 async function syncSlugFromOn3(slug, classYear) {
+  const fastPathEnabled = process.env.ALLOWLIST_SYNC_FAST_PATH !== 'false';
+  if (fastPathEnabled) {
+    try {
+      const fast = await syncSlugFromOn3Fast(slug, classYear);
+      if (fast?.ok) return fast;
+    } catch {
+      /* fall back to full identity rebuild */
+    }
+  }
+
   const existing = await store.getPlayerBySlug(slug);
   const playerName = CANONICAL_TARGET_NAMES[slug] || existing?.name || slug;
 
@@ -199,15 +346,17 @@ async function syncAllowlistTargetsFromOn3(options = {}) {
   if (options.classYear) {
     jobs = jobs.filter((job) => job.classYear === Number(options.classYear));
   }
-  const results = { updated: 0, ranked: 0, committedElsewhere: 0, skipped: 0, failed: [] };
+  const results = { updated: 0, ranked: 0, committedElsewhere: 0, skipped: 0, failed: [], fast: 0 };
 
   for (let i = 0; i < jobs.length; i += 1) {
     if (limit > 0 && i >= limit) break;
     const { slug, classYear } = jobs[i];
+    let row = null;
     try {
-      const row = await syncSlugFromOn3(slug, classYear);
+      row = await syncSlugFromOn3(slug, classYear);
       if (row.ok) {
         results.updated += 1;
+        if (row.fast) results.fast += 1;
         if (row.ranked) results.ranked += 1;
         if (row.committedTo && !isFloridaSchool(row.committedTo)) {
           results.committedElsewhere += 1;
@@ -218,7 +367,10 @@ async function syncAllowlistTargetsFromOn3(options = {}) {
     } catch (err) {
       results.failed.push({ slug, classYear, ok: false, error: err.message });
     }
-    if (i < jobs.length - 1) await sleep(DELAY_MS);
+    if (i < jobs.length - 1) {
+      const delay = row?.fast ? Math.min(DELAY_MS, 150) : DELAY_MS;
+      await sleep(delay);
+    }
   }
 
   console.log('[allowlist-sync] On3 complete', results);
