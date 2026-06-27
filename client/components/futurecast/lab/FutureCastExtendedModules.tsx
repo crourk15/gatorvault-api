@@ -68,12 +68,16 @@ function formatEarlyMovement(p: UnderclassmenPlayer): string {
   return ` · Δ${pct > 0 ? '+' : ''}${pct}%`;
 }
 
-function formatUnderclassmenMeta(p: UnderclassmenPlayer): string {
-  const tierLabel = p.tier === 'watchlist' ? 'Watch' : 'Target';
+function formatUnderclassmenMeta(p: UnderclassmenPlayer, discoveryFocus = false): string {
+  const tierLabel = p.allowlistTarget ? 'Locked UF target' : p.tier === 'watchlist' ? 'Watch' : 'Target';
   const uf = formatMetric(p.ufConfidence);
   const fit = formatMetric(p.fitScore);
   const stars = Number(p.stars) > 0 ? `${Number(p.stars)}★` : '—★';
-  return `${tierLabel} · UF ${uf} · Fit ${fit}${formatEarlyMovement(p)}${formatCompetitorLabel(p)} · ${stars}`;
+  const discovery =
+    discoveryFocus && p.discoveryScore != null && Number.isFinite(Number(p.discoveryScore))
+      ? ` · Discovery ${Math.round(Number(p.discoveryScore))}`
+      : '';
+  return `${tierLabel} · UF ${uf} · Fit ${fit}${discovery}${formatEarlyMovement(p)}${formatCompetitorLabel(p)} · ${stars}`;
 }
 
 function MovementNarrativeLine({ text }: { text: string | null | undefined }): React.ReactElement | null {
@@ -254,9 +258,15 @@ export function FutureCastExtendedModules({
     () =>
       underclassmen
         .filter((p) => (Number(p.classYear) || 0) >= 2028)
-        .sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1))
+        .sort((a, b) => {
+          if (discoveryFocus) {
+            const discDiff = Number(b.discoveryScore ?? 0) - Number(a.discoveryScore ?? 0);
+            if (discDiff !== 0) return discDiff;
+          }
+          return (Number(b.ufConfidence) || 0) - (Number(a.ufConfidence) || 0);
+        })
         .slice(0, 12),
-    [underclassmen]
+    [underclassmen, discoveryFocus]
   );
 
   /** Upcoming verified OVs only — never show completed/cleared rows in this panel. */
@@ -415,15 +425,23 @@ export function FutureCastExtendedModules({
 
       <FutureCastPanelShell
         title="Younger Prospects — Underclassmen Watchboard"
-        sub="2028–2030 early intel from FutureCast discovery pipeline."
+        sub={
+          discoveryFocus
+            ? 'Locked 2028 UF targets ranked by Early Discovery score — same pipeline as the Big Board.'
+            : '2028–2030 early intel from FutureCast discovery pipeline.'
+        }
         testId="fc-lab-underclassmen"
       >
         <ModuleList
-          empty="No underclassmen watchlist loaded."
+          empty={
+            discoveryFocus
+              ? 'No 2028 Early Discovery targets loaded.'
+              : 'No underclassmen watchlist loaded.'
+          }
           items={youngerProspects.map((p) => ({
             key: p.slug,
             primary: `${p.name} · ${p.position && p.position !== 'TBD' ? p.position : 'TBD'} · '${String(p.classYear || '').slice(2) || 'TBD'}`,
-            meta: formatUnderclassmenMeta(p),
+            meta: formatUnderclassmenMeta(p, discoveryFocus),
             href: playerProfileRoute(p.slug, 'futurecast'),
           }))}
         />

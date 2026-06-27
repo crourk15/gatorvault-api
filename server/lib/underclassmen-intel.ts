@@ -466,6 +466,16 @@ export async function buildUnderclassmenIntelForSlug(
     classYear === 2030 || entry?.tier === 'watchlist' ? 'watchlist' : 'target';
   const trendDelta7d = player.trendDelta7d;
   const ufConfidence = player.ufConfidence;
+
+  let discoveryScore: number | null = entry?.discoveryScore ?? null;
+  if (classYear === 2028) {
+    const { loadDiscoveryEnrichmentBySlug } = require('./underclassmen-discovery-enrich') as {
+      loadDiscoveryEnrichmentBySlug: (year: number) => Promise<Map<string, { discoveryScore?: number }>>;
+    };
+    discoveryScore =
+      (await loadDiscoveryEnrichmentBySlug(2028)).get(normalized)?.discoveryScore ?? discoveryScore;
+  }
+
   const movementHistory =
     ufConfidence != null && trendDelta7d != null
       ? synthesizeMovementHistory(ufConfidence, trendDelta7d)
@@ -479,7 +489,7 @@ export async function buildUnderclassmenIntelForSlug(
     tier,
     ufProbability: ufConfidence,
     fitScore: player.fitScore,
-    discoveryScore: entry?.discoveryScore ?? null,
+    discoveryScore,
     volatilityScore: player.volatility7d,
     priority: player.priority,
     committedTo: player.committedTo ?? null,

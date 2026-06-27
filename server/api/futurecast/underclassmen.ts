@@ -31,6 +31,8 @@ export type UnderclassmenPlayer = import('./allowlist-board').FutureCastBoardPla
   discoveryScore?: number | null;
   /** Rolling UF Δ% from FutureCast movement engine (30d window). */
   earlyMovement?: number | null;
+  /** Locked 2028 UF target on Early Discovery allowlist. */
+  allowlistTarget?: boolean;
 };
 
 export type UnderclassmenClassBucket = {
@@ -99,11 +101,7 @@ function bucketForYear(
 }
 
 async function slugsForYear(classYear: number): Promise<string[]> {
-  const { getLiveBoardTargets } = require('../../lib/live-board-targets');
   if (classYear === 2028) {
-    const live = await getLiveBoardTargets(2028);
-    const liveSlugs = live.map((t: { slug?: string }) => String(t.slug || '').toLowerCase()).filter(Boolean);
-    if (liveSlugs.length) return liveSlugs;
     return ALLOWLIST_2028.map((s: string) => String(s).toLowerCase());
   }
 
@@ -112,11 +110,21 @@ async function slugsForYear(classYear: number): Promise<string[]> {
 }
 
 export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YEARS]): Promise<UnderclassmenResponse> {
+  const {
+    loadDiscoveryEnrichmentBySlug,
+    applyDiscoveryEnrichment,
+    buildAllowlistWatchboardFallback,
+    sortUnderclassmenForWatchboard,
+  } = require('../../lib/underclassmen-discovery-enrich');
+
   const earlyMeta = new Map(
     loadEarlyWatchEntries()
       .filter((e) => e.slug)
       .map((e) => [String(e.slug).toLowerCase(), e])
   );
+
+  const discoveryBySlug =
+    years.includes(2028) ? await loadDiscoveryEnrichmentBySlug(2028) : new Map();
 
   const classes: Record<string, UnderclassmenClassBucket> = {};
   const flat: UnderclassmenPlayer[] = [];
@@ -128,7 +136,21 @@ export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YE
       continue;
     }
 
-    const enriched = await loadUnderclassmenBoardPlayers(year, slugs);
+    let enriched = await loadUnderclassmenBoardPlayers(year, slugs);
+    const enrichedSlugs = new Set(enriched.map((p) => p.slug.toLowerCase()));
+
+    if (year === 2028) {
+      for (const slug of slugs) {
+        const key = String(slug).toLowerCase();
+        if (enrichedSlugs.has(key)) continue;
+        const fallback = buildAllowlistWatchboardFallback(key, discoveryBySlug.get(key));
+        if (fallback) {
+          enriched.push(fallback);
+          enrichedSlugs.add(key);
+        }
+      }
+    }
+
     const targets: UnderclassmenPlayer[] = [];
     const watchlist: UnderclassmenPlayer[] = [];
 
@@ -136,11 +158,19 @@ export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YE
       const entry = earlyMeta.get(player.slug);
       const tier: UnderclassmenTier =
         year === 2030 || entry?.tier === 'watchlist' ? 'watchlist' : 'target';
+      const discoveryMeta =
+        year === 2028 ? discoveryBySlug.get(player.slug.toLowerCase()) : undefined;
+      const merged = applyDiscoveryEnrichment(player, discoveryMeta);
       const row: UnderclassmenPlayer = {
-        ...player,
+        ...merged,
         tier,
-        discoveryScore: entry?.discoveryScore ?? null,
-        earlyMovement: player.trendDelta7d,
+        discoveryScore:
+          discoveryMeta?.discoveryScore ??
+          entry?.discoveryScore ??
+          merged.discoveryScore ??
+          null,
+        earlyMovement: merged.trendDelta7d,
+        allowlistTarget: year === 2028 ? Boolean(discoveryMeta?.allowlistTarget) : merged.allowlistTarget,
       };
       if (tier === 'watchlist') watchlist.push(row);
       else targets.push(row);
@@ -158,7 +188,7 @@ export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YE
     updatedAt,
     years,
     classes,
-    players: flat.sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1)),
+    players: sortUnderclassmenForWatchboard(flat),
     empty,
     message: empty ? 'No underclassmen intel loaded for requested years.' : undefined,
   };

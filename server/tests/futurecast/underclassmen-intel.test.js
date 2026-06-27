@@ -47,3 +47,15 @@ describe('buildUnderclassmenIntelForSlug', () => {
     assert.equal(bundle, null);
   });
 });
+
+describe('underclassmen discovery enrich', () => {
+  it('loads discovery scores for all 2028 allowlist slugs', async () => {
+    const { loadDiscoveryEnrichmentBySlug, buildAllowlistWatchboardFallback } = require('../../lib/underclassmen-discovery-enrich');
+    const { ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist');
+    const map = await loadDiscoveryEnrichmentBySlug(2028);
+    assert.equal(map.size, ALLOWLIST_2028.length);
+    assert.ok(map.get('kaleb-ballard')?.discoveryScore >= 72);
+    const row = buildAllowlistWatchboardFallback('kaleb-ballard', map.get('kaleb-ballard'));
+    assert.equal(row?.position, 'TE');
+  });
+});
