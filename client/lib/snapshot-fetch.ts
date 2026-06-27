@@ -1,7 +1,13 @@
 /**
  * Data fetch — live API only in production (see data-mode.ts).
  */
-import { apiFetch, type ApiFetchInit } from './api-fetch';
+import {
+  apiFetch,
+  API_FETCH_TIMEOUT_MS,
+  API_FETCH_RETRIES,
+  API_FETCH_RETRY_MS,
+  type ApiFetchInit,
+} from './api-fetch';
 import { LIVE_DATA_ONLY } from './data-mode';
 import { snapshotPathForApi } from './snapshot-paths';
 
@@ -51,8 +57,9 @@ export function snapshotLiveFetch<T>(apiPath: string, init?: ApiFetchInit): Prom
   return apiFetch<T>(apiPath, init);
 }
 
+/** Match warm-v3-premium apiFetch profile — snapshot callers were stuck on 12s/2 retries. */
 export const DEFAULT_SNAPSHOT_FETCH_OPTS = {
-  retries: 2,
-  timeoutMs: 12_000,
-  retryDelayMs: 2_000,
+  retries: API_FETCH_RETRIES,
+  timeoutMs: API_FETCH_TIMEOUT_MS,
+  retryDelayMs: API_FETCH_RETRY_MS,
 } as const satisfies ApiFetchInit;
