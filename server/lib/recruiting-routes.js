@@ -602,6 +602,20 @@ function mountRecruitingRoutes(app) {
     }
   });
 
+  app.post('/api/futurecast/allowlist/provision-predictions', async (req, res) => {
+    try {
+      if (!requireIngestCronAuth(req, res)) return;
+      const { runAllowlistFuturecastProvision } = require('./allowlist-futurecast-provision');
+      const dryRun = req.body.dryRun === true || req.query.dryRun === 'true';
+      const classYear = parseInt(req.body.classYear || req.query.classYear || '2028', 10);
+      const result = await runAllowlistFuturecastProvision({ classYear, dryRun });
+      return res.json(result);
+    } catch (err) {
+      console.error('allowlist futurecast provision error', err);
+      return res.status(200).json({ ok: false, softFailure: true, error: err.message, cached: true });
+    }
+  });
+
   app.get('/api/recruiting/identity/overrides', (req, res) => {
     const pin = String(req.query.pin || req.get('X-Recruiting-Pin') || '');
     if (!verifyAdminPin(pin)) return res.status(401).json({ ok: false, error: 'Invalid admin pin' });

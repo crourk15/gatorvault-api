@@ -426,6 +426,17 @@ async function enterPlayerIntel(input) {
   if (Number(saved.classYear) === 2028) {
     upsert2028TargetBoardSeed(saved);
     steps.push({ step: '2028_target_board_seed', slug: saved.slug });
+    try {
+      const { provisionAllowlistPredictionForSlug } = require('./allowlist-futurecast-provision');
+      const fcSeed = await provisionAllowlistPredictionForSlug(saved.slug, 2028);
+      steps.push({ step: 'futurecast_prediction_seed', ...fcSeed });
+    } catch (err) {
+      steps.push({
+        step: 'futurecast_prediction_seed',
+        ok: false,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
   }
 
   let snapshots = null;

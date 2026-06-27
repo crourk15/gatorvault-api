@@ -332,6 +332,18 @@ const JOBS = {
       });
     }
   },
+  'allowlist-futurecast-provision': {
+    label: 'Seed MODEL predictions for 2028 allowlist (movement deltas)',
+    subsystem: 'cron:allowlist-futurecast-provision',
+    schedule: 'After early-discovery or on demand',
+    async run(opts = {}) {
+      const { runAllowlistFuturecastProvision } = require('./allowlist-futurecast-provision');
+      return runAllowlistFuturecastProvision({
+        classYear: opts.classYear || 2028,
+        dryRun: opts.dryRun === true,
+      });
+    }
+  },
   'editorial-younger-prospects-sync': {
     label: 'Sync locked 2028 Younger Prospects editorial board to store + Postgres',
     subsystem: 'cron:editorial-younger-prospects',

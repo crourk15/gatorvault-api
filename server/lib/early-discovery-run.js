@@ -127,6 +127,19 @@ async function runEarlyDiscoveryJob({ classYearGte = 2028, dryRun = false } = {}
     targetPromotions: samples.filter((s) => s.discoveryScore >= 75).length,
     signalsCreated: 0,
     samples,
+    futurecastProvision: dryRun
+      ? null
+      : await (async () => {
+          try {
+            const { runAllowlistFuturecastProvision } = require('./allowlist-futurecast-provision');
+            return await runAllowlistFuturecastProvision({ classYear: 2028, dryRun: false });
+          } catch (err) {
+            return {
+              ok: false,
+              error: err instanceof Error ? err.message : String(err),
+            };
+          }
+        })(),
   };
 }
 
