@@ -150,17 +150,6 @@ function isOfficialRecruitingCommit(p, classYear) {
   const calendarYear = new Date().getFullYear();
   if (Number.isFinite(year) && year <= calendarYear) return false;
 
-  // Active recruiting classes — Supabase often drops on3_source on read
-  const status = String(p.status || '').toLowerCase();
-  const cat = String(p.category || '').toLowerCase();
-  if (
-    p.on3Id &&
-    /^florida$/i.test(String(p.committedTo || p.committed_to || '')) &&
-    ['committed', 'commit', 'signed', 'enrolled'].includes(status) &&
-    (cat === 'recruit' || cat === 'portal' || !cat)
-  ) {
-    return true;
-  }
   return false;
 }
 
@@ -192,6 +181,26 @@ function isHubHsCommitPlayer(p) {
 
 function filterHubHsCommitPlayers(players) {
   return (players || []).filter(isHubHsCommitPlayer);
+}
+
+function filterSnapshotAuthoritativeCommits(players, snapshotCommits, classYear) {
+  if (!snapshotCommits?.length) return players;
+  const year = parseInt(classYear, 10);
+  const snapshotSlugs = new Set(
+    snapshotCommits.map((p) => String(p.slug || '').toLowerCase()).filter(Boolean)
+  );
+  const snapshotOn3Ids = new Set(
+    snapshotCommits.map((p) => (p.on3Id ? String(p.on3Id) : null)).filter(Boolean)
+  );
+  const { isVerifiedUfCommitSlug } = require('./recruiting-verified-commits');
+  return (players || []).filter((p) => {
+    const slug = String(p.slug || '').toLowerCase();
+    if (snapshotSlugs.has(slug)) return true;
+    if (p.on3Id && snapshotOn3Ids.has(String(p.on3Id))) return true;
+    if (p.on3Source === 'on3-board-sync' || p.protected === true) return true;
+    if (isVerifiedUfCommitSlug(slug, year)) return true;
+    return false;
+  });
 }
 
 async function queryHubCommitsFromSupabase(classYear) {
@@ -249,6 +258,8 @@ async function getHubCommits(classYear) {
 
   const { getSnapshotHubCommits, mergeCommitPlayerLists } = require('./on3-snapshot-commits');
 
+  const snapshotCommits = getSnapshotHubCommits(year);
+
   let fromStore = null;
   const fromSupabase = await queryHubCommitsFromSupabase(year);
   if (fromSupabase) fromStore = fromSupabase;
@@ -261,8 +272,10 @@ async function getHubCommits(classYear) {
     fromStore = filterHubCommitPlayers(players, year);
   }
 
-  const merged = mergeCommitPlayerLists(getSnapshotHubCommits(year), fromStore);
-  return filterHubCommitPlayers(merged, year);
+  const merged = mergeCommitPlayerLists(snapshotCommits, fromStore);
+  let filtered = filterHubCommitPlayers(merged, year);
+  filtered = filterSnapshotAuthoritativeCommits(filtered, snapshotCommits, year);
+  return filtered;
 }
 
 /** HS signing-class commits only — excludes portal signees (portal has its own board). */
@@ -386,8 +399,7 @@ function playerToRow(p) {
     skinny: p.skinny,
     profile_note: p.profileNote,
     on3_id: p.on3Id,
-    on3_slug: p.on3Slug,
-    // on3_profile_url, on3_source, protected omitted — not in prod Supabase schema yet.
+    // on3_slug, on3_profile_url, on3_source, protected omitted — not in prod Supabase schema yet.
     stars_display: p.starsDisplay,
     updated_at: p.updatedAt
   };

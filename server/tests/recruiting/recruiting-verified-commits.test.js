@@ -186,6 +186,47 @@ test('demoteUnverifiedHubCommit preserves Texas commit for protected flip target
   assert.equal(demoted.category, 'target');
 });
 
+test('getHubCommits ignores stale store rows when On3 snapshot defines the class board', async () => {
+  delete process.env.SUPABASE_URL;
+  delete process.env.DATABASE_URL;
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+  delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
+  const jsonStore = require('../../lib/recruiting-store');
+  const { countSnapshotHubCommits } = require('../../lib/on3-snapshot-commits');
+  const expected = countSnapshotHubCommits(2027);
+  assert.ok(expected > 0, 'snapshot should define 2027 commits');
+
+  const originalGetAll = jsonStore.getAllPlayers;
+  jsonStore.getAllPlayers = async () => {
+    const base = await originalGetAll();
+    const bloated = [];
+    for (let i = 0; i < 200; i += 1) {
+      bloated.push({
+        slug: `stale-fake-commit-${i}`,
+        name: `Stale Fake ${i}`,
+        classYear: 2027,
+        status: 'committed',
+        committedTo: 'Florida',
+        category: 'recruit',
+        on3Id: String(900000 + i),
+        stars: 3,
+      });
+    }
+    return base.concat(bloated);
+  };
+
+  const commits = await jsonStore.getHubCommits(2027);
+  assert.equal(
+    commits.length,
+    expected,
+    `bloated store must not inflate 2027 commits (${commits.length} vs ${expected})`
+  );
+
+  jsonStore.getAllPlayers = originalGetAll;
+  delete require.cache[require.resolve('../../lib/recruiting-store')];
+  delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
+});
+
 test('applyVerifiedHubCommit restores demoted verified slug', () => {
   const restored = applyVerifiedHubCommit({
     slug: 'jaydee-lane',
