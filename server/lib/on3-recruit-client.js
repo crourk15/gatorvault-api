@@ -94,6 +94,10 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
     (pp.recruitments || []).find((r) => r.year === 2028 || r.year === 2027 || r.year === 2026) ||
     (pp.recruitments || [])[0];
   const rating = pp.rankingsPlayer || recruitment?.rating || {};
+  const topTeamsRaw = pp.topTeams?.list || pp.topTeams || [];
+  const classYearResolved = recruitment?.year || year;
+  const topTeamForYear =
+    topTeamsRaw.find((t) => Number(t.year) === Number(classYearResolved)) || topTeamsRaw[0];
 
   const highSchool = pp.player?.highSchool || null;
   const schoolName = pp.player?.highSchoolName || highSchool?.name || null;
@@ -108,11 +112,17 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
   return {
     slug: recruitSlug,
     name: pp.player?.fullName || nameFromSlug(recruitSlug) || recruitSlug,
-    pos:
+    pos: String(
       pp.player?.positionAbbr ||
-      recruitment?.positionAbbreviation ||
-      pp.personSports?.[0]?.position?.abbr ||
-      '',
+        recruitment?.positionAbbreviation ||
+        rating?.positionAbbr ||
+        rating?.position?.abbr ||
+        topTeamForYear?.positionAbbreviation ||
+        pp.personSports?.[0]?.position?.abbr ||
+        ''
+    )
+      .trim()
+      .toUpperCase(),
     classYear: recruitment?.year || year,
     school: schoolName,
     highSchoolSlug: highSchool?.slug || null,

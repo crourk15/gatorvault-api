@@ -25,6 +25,7 @@ players.forEach((p) => {
   const src = on3BySlug[p.slug];
   if (!src) return;
   const fields = [
+    ['pos', 'pos'],
     ['natlRank', 'natlRank'],
     ['posRank', 'posRank'],
     ['stateRank', 'stateRank'],

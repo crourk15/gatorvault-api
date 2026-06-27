@@ -169,6 +169,10 @@ function profileToSchoolPatch(profile) {
     inState: state === 'FL',
   };
 
+  if (profile.pos) {
+    patch.pos = String(profile.pos).trim().toUpperCase();
+  }
+
   if (profile.rating != null && Number.isFinite(Number(profile.rating))) {
     patch.rating = Number(profile.rating);
     patch.stars = profile.stars ?? null;

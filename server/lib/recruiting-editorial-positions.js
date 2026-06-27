@@ -1,6 +1,7 @@
 /**
- * Editorial position overrides for locked underclassmen (Younger Prospects board).
- * Source of truth: server/data/recruiting/2028-target-board.json for listed slugs.
+ * 2028 allowlist profile fallbacks from target-board seed.
+ * On3-synced recruiting store fields win for position (see allowlist-target-sync).
+ * Board JSON is used only when On3 has not populated pos yet.
  */
 const fs = require('fs');
 const path = require('path');
@@ -84,8 +85,10 @@ function applyEditorialPositionToPlayer(player) {
   const editorial = getEditorialPosition(player.slug, player.classYear ?? player.class_year);
   if (!editorial?.pos) return player;
   const out = { ...player };
-  out.pos = editorial.pos;
-  out.position = editorial.pos;
+  if (editorial.pos && !out.pos) {
+    out.pos = editorial.pos;
+    out.position = editorial.pos;
+  }
   if (editorial.stars != null && Number.isFinite(editorial.stars)) {
     out.stars = editorial.stars;
   }
@@ -111,11 +114,9 @@ function applyEditorialPositionToPlayer(player) {
   return out;
 }
 
-/** FutureCast board position — editorial JSON wins for locked 2028 younger prospects. */
+/** FutureCast board position — On3/recruiting store first; board seed is fallback only. */
 function resolveFutureCastPosition({ slug, classYear, recruiting, seed, rank, model }) {
-  const editorial = getEditorialPosition(slug, classYear);
-  if (editorial?.pos) return editorial.pos;
-  return String(
+  const storePos = String(
     recruiting?.pos ||
       recruiting?.position ||
       rank?.position ||
@@ -126,6 +127,9 @@ function resolveFutureCastPosition({ slug, classYear, recruiting, seed, rank, mo
   )
     .trim()
     .toUpperCase();
+  if (storePos) return storePos;
+  const editorial = getEditorialPosition(slug, classYear);
+  return editorial?.pos || '';
 }
 
 function listEditorial2028YoungerProspects() {

@@ -45,12 +45,10 @@ test('malakhi-dudley editorial position is OT at Heritage (GA)', () => {
   assert.equal(row?.natlRank, 204);
 });
 
-test('applyEditorialPositionToPlayer overrides ingest pos and school', () => {
+test('applyEditorialPositionToPlayer fills missing pos from board seed', () => {
   const out = applyEditorialPositionToPlayer({
     slug: 'malakhi-dudley',
     classYear: 2028,
-    pos: 'QB',
-    position: 'QB',
     school: 'Florida HS pipeline',
     state: 'FL',
   });
@@ -60,20 +58,33 @@ test('applyEditorialPositionToPlayer overrides ingest pos and school', () => {
   assert.equal(out.state, 'GA');
 });
 
-test('applyEditorialPositionToPlayer overrides tristin-gaines pos', () => {
+test('applyEditorialPositionToPlayer does not override On3-synced pos', () => {
+  const out = applyEditorialPositionToPlayer({
+    slug: 'malakhi-dudley',
+    classYear: 2028,
+    pos: 'OT',
+    position: 'OT',
+    on3Source: 'on3-allowlist-sync',
+    school: 'Heritage High School, GA',
+  });
+  assert.equal(out.pos, 'OT');
+});
+
+test('applyEditorialPositionToPlayer does not override store pos with stale board value', () => {
   const out = applyEditorialPositionToPlayer({
     slug: 'tristin-gaines',
     classYear: 2028,
-    pos: 'TE',
+    pos: 'QB',
+    on3Source: 'on3-board-sync',
   });
   assert.equal(out.pos, 'QB');
 });
 
-test('resolveFutureCastPosition prefers editorial over store pos', () => {
+test('resolveFutureCastPosition prefers recruiting store over editorial board', () => {
   const pos = resolveFutureCastPosition({
     slug: 'pj-evans',
     classYear: 2028,
-    recruiting: { pos: 'ATH' },
+    recruiting: { pos: 'IOL' },
     seed: { pos: 'ATH' },
     rank: null,
     model: { position: 'WR' },
@@ -81,12 +92,12 @@ test('resolveFutureCastPosition prefers editorial over store pos', () => {
   assert.equal(pos, 'IOL');
 });
 
-test('resolveFutureCastPosition uses board TE for kaleb-ballard', () => {
+test('resolveFutureCastPosition falls back to board seed when store pos missing', () => {
   const pos = resolveFutureCastPosition({
     slug: 'kaleb-ballard',
     classYear: 2028,
-    recruiting: { pos: 'QB' },
-    seed: { pos: 'TE' },
+    recruiting: null,
+    seed: null,
     rank: null,
     model: null,
   });
