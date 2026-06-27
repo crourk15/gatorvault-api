@@ -118,6 +118,36 @@ async function hasAllowlistSeedPrediction(playerId) {
   );
 }
 
+async function getActiveModelConfidence(playerId, predictorId) {
+  const { listPredictionsByPlayerId } = loadModels();
+  const preds = await listPredictionsByPlayerId(playerId);
+  const row = preds.find(
+    (r) =>
+      String(r.source_type || '').toUpperCase() === 'MODEL' &&
+      String(r.predictor_id || '') === predictorId &&
+      String(r.status || '').toUpperCase() === 'ACTIVE'
+  );
+  return row ? Math.round(Number(row.confidence) || 0) : 0;
+}
+
+async function resolveProvisionConfidence(slug, pgPlayer) {
+  const seed = await resolveSeedConfidence(slug, pgPlayer);
+  const rivalsConf = await getActiveModelConfidence(pgPlayer.id, 'rivals_pm');
+  const allowlistConf = await getActiveModelConfidence(pgPlayer.id, PREDICTOR_ID);
+  const confidence = Math.max(seed?.confidence ?? 0, rivalsConf, allowlistConf);
+  return { confidence, seed, rivalsConf, allowlistConf };
+}
+
+async function repairMovementBaseline(pgPlayer, confidence, options = {}) {
+  if (!confidence || confidence <= 0 || options.dryRun) return null;
+  const { ensureMovementWindowBaseline } = loadModels();
+  const windowDays = options.windowDays || 30;
+  return ensureMovementWindowBaseline(pgPlayer.id, confidence, {
+    priorConfidence: Math.max(1, confidence - BASELINE_GAP),
+    windowDays,
+  });
+}
+
 async function findPostgresPlayerForAllowlistSlug(slug, classYear) {
   const { getPlayerBySlug, getPlayerById, resolvePostgresPlayerBySlug } = loadModels();
   const canonical = normalizeAllowlistSlug(slug, classYear);
@@ -219,18 +249,40 @@ async function provisionAllowlistPredictionForSlug(slug, classYear, options = {}
   }
 
   if (await hasRivalsPmPrediction(pgPlayer.id)) {
-    return { slug: key, ok: true, skipped: true, reason: 'rivals_pm_present' };
+    const { confidence } = await resolveProvisionConfidence(key, pgPlayer);
+    const windowDelta = await repairMovementBaseline(pgPlayer, confidence, options);
+    return {
+      slug: key,
+      ok: true,
+      skipped: true,
+      reason: 'rivals_pm_present',
+      confidence,
+      windowDelta,
+    };
   }
 
   if (await hasAllowlistSeedPrediction(pgPlayer.id)) {
-    const existingSeed = await resolveSeedConfidence(key, pgPlayer);
-    if (existingSeed?.confidence > 0 && !options.dryRun) {
-      await ensureMovementWindowBaseline(pgPlayer.id, existingSeed.confidence, {
-        priorConfidence: Math.max(1, existingSeed.confidence - BASELINE_GAP),
-        windowDays: options.windowDays || 30,
+    const { confidence, seed, allowlistConf } = await resolveProvisionConfidence(key, pgPlayer);
+    const effectiveConfidence = confidence;
+    if (seed && seed.confidence > allowlistConf && !options.dryRun) {
+      await upsertActiveModelPrediction({
+        player_id: pgPlayer.id,
+        school: 'Florida',
+        confidence: seed.confidence,
+        source_type: 'MODEL',
+        predictor_id: PREDICTOR_ID,
       });
     }
-    return { slug: key, ok: true, skipped: true, reason: 'allowlist_seed_present' };
+    const windowDelta = await repairMovementBaseline(pgPlayer, effectiveConfidence, options);
+    return {
+      slug: key,
+      ok: true,
+      skipped: true,
+      reason: 'allowlist_seed_present',
+      confidence: effectiveConfidence,
+      source: seed?.source,
+      windowDelta,
+    };
   }
 
   const seed = await resolveSeedConfidence(key, pgPlayer);

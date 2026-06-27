@@ -180,7 +180,7 @@ function dateKeyDaysAgo(days: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-/** Seed a baseline history row so window_delta reflects prior vs current confidence. */
+/** Seed or repair baseline history so window_delta reflects prior vs current confidence. */
 export async function ensureMovementWindowBaseline(
   playerId: string,
   currentConfidence: number,
@@ -194,21 +194,10 @@ export async function ensureMovementWindowBaseline(
   const current = Math.round(Number(currentConfidence));
   if (prior == null || prior === current) return null;
 
-  const { rows } = await db.query<{ has_baseline: boolean }>(
-    `
-    SELECT EXISTS (
-      SELECT 1
-      FROM futurecast.prediction_history ph
-      WHERE ph.player_id = $1
-        AND ph.date <= CURRENT_DATE - $2::int
-    ) AS has_baseline
-    `,
-    [playerId, windowDays]
-  );
-  if (rows[0]?.has_baseline) return current - prior;
-
-  await insertPredictionHistoryForDate(playerId, dateKeyDaysAgo(windowDays), prior);
-  await insertPredictionHistoryForDate(playerId, new Date().toISOString().slice(0, 10), current);
+  const baselineDate = dateKeyDaysAgo(windowDays);
+  const today = new Date().toISOString().slice(0, 10);
+  await insertPredictionHistoryForDate(playerId, baselineDate, prior);
+  await insertPredictionHistoryForDate(playerId, today, current);
   return current - prior;
 }
 
