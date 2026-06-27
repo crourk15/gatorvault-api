@@ -16,6 +16,7 @@ import {
   VolatilityIndex,
 } from './primitives';
 import {
+  computeDiscoveryVolatilityMetrics,
   futureCastPlayerToLabTarget,
   highPriorityToLabTarget,
   isBattleTarget,
@@ -93,14 +94,13 @@ export function FutureCastHero({
     return Math.max(classified, fromSummary > 0 ? Math.min(classified + 1, 12) : classified);
   }, [discoveryFocus, highPriority, masterBoard]);
 
+  const discoveryVolatility = useMemo(
+    () => (discoveryFocus && highPriority.length ? computeDiscoveryVolatilityMetrics(highPriority) : null),
+    [discoveryFocus, highPriority]
+  );
+
   const volatilityScore = useMemo(() => {
-    if (discoveryFocus && highPriority.length) {
-      return Math.round(
-        highPriority.reduce((acc, p) => acc + Math.abs(p.delta7d ?? 0), 0) /
-          Math.max(1, highPriority.length) *
-          4
-      );
-    }
+    if (discoveryVolatility) return discoveryVolatility.score;
     const volatile = movementIntel.highVolatility.length;
     if (volatile > 0) return Math.min(100, volatile * 8 + 10);
     return Math.round(
@@ -108,9 +108,10 @@ export function FutureCastHero({
         Math.max(1, masterBoard.players.length) *
         4
     );
-  }, [discoveryFocus, highPriority, masterBoard.players, movementIntel.highVolatility.length]);
+  }, [discoveryVolatility, masterBoard.players, movementIntel.highVolatility.length]);
 
   const volatilePositions = useMemo(() => {
+    if (discoveryVolatility) return discoveryVolatility.hotPositions;
     const byPos = new Map<string, number>();
     for (const p of movementIntel.highVolatility) {
       byPos.set(p.position, (byPos.get(p.position) ?? 0) + 1);
@@ -120,18 +121,14 @@ export function FutureCastHero({
       .slice(0, 2)
       .map(([pos]) => pos);
     return ranked.length ? ranked.join(', ') : 'CB, WR';
-  }, [movementIntel.highVolatility]);
+  }, [discoveryVolatility, movementIntel.highVolatility]);
 
   const positionHeatmap = useMemo(() => {
-    const source = discoveryFocus && highPriority.length
-      ? highPriority.map((p) => ({
-          position: p.position,
-          trendDelta7d: p.delta7d ?? 0,
-        }))
-      : masterBoard.players.map((p) => ({
-          position: p.position,
-          trendDelta7d: p.trendDelta7d ?? 0,
-        }));
+    if (discoveryVolatility) return discoveryVolatility.positionHeatmap;
+    const source = masterBoard.players.map((p) => ({
+      position: p.position,
+      trendDelta7d: p.trendDelta7d ?? 0,
+    }));
     const byPos = new Map<string, { count: number; vol: number }>();
     for (const p of source) {
       const cur = byPos.get(p.position) ?? { count: 0, vol: 0 };
@@ -147,7 +144,7 @@ export function FutureCastHero({
       }))
       .sort((a, b) => b.intensity - a.intensity)
       .slice(0, 6);
-  }, [discoveryFocus, highPriority, masterBoard.players]);
+  }, [discoveryVolatility, masterBoard.players]);
 
   const updatedLabel = lastUpdated ? formatRelativeUpdated(lastUpdated) : 'just now';
   const meterLabel = discoveryFocus

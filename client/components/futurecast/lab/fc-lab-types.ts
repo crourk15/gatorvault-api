@@ -195,6 +195,73 @@ export function highPriorityToBoardPlayer(p: HighPriorityPlayer): FutureCastPlay
   };
 }
 
+export type DiscoveryVolatilityMetrics = {
+  score: number;
+  hotPositions: string;
+  positionHeatmap: Array<{ position: string; count: number; intensity: number }>;
+};
+
+/** Volatility + position heat when 7d UF deltas are flat during early discovery. */
+export function computeDiscoveryVolatilityMetrics(
+  players: HighPriorityPlayer[]
+): DiscoveryVolatilityMetrics {
+  if (!players.length) {
+    return { score: 0, hotPositions: '—', positionHeatmap: [] };
+  }
+
+  const avgDelta =
+    players.reduce((acc, p) => acc + Math.abs(p.delta7d ?? p.movementDelta ?? 0), 0) / players.length;
+
+  const byPos = new Map<string, { count: number; vol: number; battles: number }>();
+  const ufPcts: number[] = [];
+
+  for (const p of players) {
+    const uf = ufPctFromFc(p.ufProbability);
+    ufPcts.push(uf);
+    const delta = Math.abs(p.delta7d ?? p.movementDelta ?? 0);
+    const pos = p.position || '—';
+    const cur = byPos.get(pos) ?? { count: 0, vol: 0, battles: 0 };
+    cur.count += 1;
+    cur.vol += delta > 0 ? delta : (p.fitScore ?? 50) / 10;
+    if (isBattleTarget(uf)) cur.battles += 1;
+    byPos.set(pos, cur);
+  }
+
+  let score: number;
+  if (avgDelta > 0) {
+    score = Math.min(100, Math.round(avgDelta * 4));
+  } else {
+    const mean = ufPcts.reduce((a, b) => a + b, 0) / ufPcts.length;
+    const ufSpread = Math.sqrt(
+      ufPcts.reduce((acc, v) => acc + (v - mean) ** 2, 0) / ufPcts.length
+    );
+    const battleTotal = [...byPos.values()].reduce((acc, c) => acc + c.battles, 0);
+    score = Math.min(100, Math.round(battleTotal * 5 + ufSpread * 0.75));
+  }
+
+  const positionHeatmap = [...byPos.entries()]
+    .map(([position, { count, vol, battles }]) => ({
+      position,
+      count,
+      intensity:
+        avgDelta > 0 ? (count > 0 ? vol / count : 0) : battles * 10 + vol / Math.max(1, count),
+    }))
+    .sort((a, b) => b.intensity - a.intensity)
+    .slice(0, 6);
+
+  const hotPositions = positionHeatmap
+    .slice(0, 2)
+    .map((c) => c.position)
+    .filter((pos) => pos && pos !== '—')
+    .join(', ');
+
+  return {
+    score,
+    hotPositions: hotPositions || '—',
+    positionHeatmap,
+  };
+}
+
 export type DiscoveryMovementBuckets = {
   risers: FutureCastPlayer[];
   fallers: FutureCastPlayer[];
