@@ -50,7 +50,7 @@
     {
       "slug": "cassell-cruickshank",
       "name": "Cassell Cruickshank",
-      "pos": "ATH",
+      "pos": "EDGE",
       "school": "E E Smith, NC",
       "state": "NC",
       "stars": 4,
@@ -125,7 +125,7 @@
     {
       "slug": "xander-edwards",
       "name": "Xander Edwards",
-      "pos": "CB",
+      "pos": "RB",
       "school": "The Bolles School, FL",
       "state": "FL",
       "stars": 4,
@@ -365,7 +365,7 @@
     {
       "slug": "anthony-howard-jr",
       "name": "Anthony Howard Jr.",
-      "pos": "HB",
+      "pos": "RB",
       "school": "IMG Academy, FL",
       "state": "FL",
       "stars": 3,
