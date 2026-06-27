@@ -9,13 +9,25 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
-import { asyncHandler, handlePredictionsApiError } from '../predictions/utils-api';
+import {
+  calculateVolatility,
+  listMovementHistoryByPlayerIds,
+  listPredictions,
+  listStockBoardRows,
+} from '../../models/predictions';
+import { asyncHandler, handlePredictionsApiError, serializeFeedRowsWithVolatility } from '../predictions/utils-api';
 import { sendCachedJson } from './response-cache';
 import {
   buildUnderclassmenIntelForSlug,
   loadUnderclassmenBoardPlayers,
   type UnderclassmenIntelBundle,
 } from '../../lib/underclassmen-intel';
+import {
+  dedupeFeedRows,
+  filterModelPredictionsOnly,
+  filterMovementIntelStockRows,
+} from './feed-filters';
+import { UNDERCLASSMEN_MOVEMENT_WINDOW_DAYS } from './allowlist-board';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -100,6 +112,98 @@ function bucketForYear(
   };
 }
 
+type MovementEnrichment = {
+  trendDelta7d: number | null;
+  volatility7d: number;
+};
+
+async function loadMovementEnrichmentBySlug(
+  classYear: number,
+  slugs: string[],
+  windowDays = UNDERCLASSMEN_MOVEMENT_WINDOW_DAYS
+): Promise<Map<string, MovementEnrichment>> {
+  const slugSet = new Set(slugs.map((s) => String(s).toLowerCase()).filter(Boolean));
+  if (!slugSet.size) return new Map();
+
+  const [stockRowsRaw, predictionRows] = await Promise.all([
+    listStockBoardRows(windowDays, { lifecycle: 'HS', class_year: classYear }).catch((err) => {
+      console.warn(
+        '[underclassmen] stock board unavailable:',
+        err instanceof Error ? err.message : err
+      );
+      return [];
+    }),
+    listPredictions({
+      class_year: classYear,
+      status: 'ACTIVE',
+      lifecycle: 'HS',
+      limit: 500,
+    }).catch((err) => {
+      console.warn(
+        '[underclassmen] predictions unavailable:',
+        err instanceof Error ? err.message : err
+      );
+      return [];
+    }),
+  ]);
+
+  const stockRows = filterMovementIntelStockRows(stockRowsRaw).filter((row) =>
+    slugSet.has(String(row.slug || '').toLowerCase())
+  );
+  const stockBySlug = new Map(stockRows.map((row) => [String(row.slug).toLowerCase(), row]));
+
+  const modelRows = dedupeFeedRows(filterModelPredictionsOnly(predictionRows)).filter((row) =>
+    slugSet.has(String(row.slug || '').toLowerCase())
+  );
+  const serialized = await serializeFeedRowsWithVolatility(modelRows);
+  const predictionBySlug = new Map(
+    serialized.map((row) => [String(row.playerSlug || '').toLowerCase(), row])
+  );
+
+  const playerIds = serialized.map((p) => p.playerId).filter(Boolean);
+  const historyMap = await listMovementHistoryByPlayerIds(playerIds, windowDays);
+
+  const out = new Map<string, MovementEnrichment>();
+  for (const slug of slugSet) {
+    const stock = stockBySlug.get(slug);
+    const model = predictionBySlug.get(slug);
+    const trendRaw =
+      stock?.window_delta != null
+        ? Number(stock.window_delta)
+        : model?.delta != null
+          ? Number(model.delta)
+          : null;
+    const trendDelta7d =
+      trendRaw != null && Number.isFinite(trendRaw)
+        ? Math.round(trendRaw * 1000) / 1000
+        : null;
+    const history = model?.playerId ? historyMap.get(model.playerId) ?? [] : [];
+    const volatility7d =
+      history.length > 0
+        ? Math.round(calculateVolatility(history) * 100) / 100
+        : trendDelta7d != null
+          ? Math.round(Math.abs(trendDelta7d) * 100) / 100
+          : 0;
+
+    out.set(slug, { trendDelta7d, volatility7d });
+  }
+
+  return out;
+}
+
+function applyMovementEnrichment<
+  T extends { slug: string; trendDelta7d?: number | null; volatility7d?: number },
+>(player: T, movement?: MovementEnrichment): T {
+  if (!movement) return player;
+  const trendDelta7d =
+    player.trendDelta7d != null ? player.trendDelta7d : movement.trendDelta7d;
+  const volatility7d =
+    player.volatility7d != null && player.volatility7d > 0
+      ? player.volatility7d
+      : movement.volatility7d;
+  return { ...player, trendDelta7d, volatility7d };
+}
+
 async function slugsForYear(classYear: number): Promise<string[]> {
   if (classYear === 2028) {
     return [...getAllowlistSet(2028)].map((s: string) => String(s).toLowerCase());
@@ -137,6 +241,11 @@ export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YE
     }
 
     let enriched = await loadUnderclassmenBoardPlayers(year, slugs);
+    const movementBySlug = await loadMovementEnrichmentBySlug(
+      year,
+      slugs,
+      UNDERCLASSMEN_MOVEMENT_WINDOW_DAYS
+    );
     const enrichedSlugs = new Set(enriched.map((p) => p.slug.toLowerCase()));
 
     if (year === 2028) {
@@ -161,15 +270,30 @@ export async function buildUnderclassmenPayload(years: number[] = [...DEFAULT_YE
       const discoveryMeta =
         year === 2028 ? discoveryBySlug.get(player.slug.toLowerCase()) : undefined;
       const merged = applyDiscoveryEnrichment(player, discoveryMeta);
+      const withMovement = applyMovementEnrichment(
+        merged,
+        movementBySlug.get(player.slug.toLowerCase())
+      );
+      const trendDelta7d =
+        withMovement.trendDelta7d ??
+        (entry?.earlyMovement != null ? Number(entry.earlyMovement) : null);
+      const volatility7d =
+        withMovement.volatility7d != null && withMovement.volatility7d > 0
+          ? withMovement.volatility7d
+          : trendDelta7d != null
+            ? Math.round(Math.abs(trendDelta7d) * 100) / 100
+            : withMovement.volatility7d;
       const row: UnderclassmenPlayer = {
-        ...merged,
+        ...withMovement,
+        trendDelta7d,
+        volatility7d,
         tier,
         discoveryScore:
           discoveryMeta?.discoveryScore ??
           entry?.discoveryScore ??
           merged.discoveryScore ??
           null,
-        earlyMovement: merged.trendDelta7d,
+        earlyMovement: trendDelta7d,
         allowlistTarget: year === 2028 ? Boolean(discoveryMeta?.allowlistTarget) : merged.allowlistTarget,
       };
       if (tier === 'watchlist') watchlist.push(row);
