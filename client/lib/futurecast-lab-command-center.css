@@ -100,6 +100,33 @@
   max-width: 28rem;
 }
 
+.fc-lab-hero__cycle-toggle {
+  margin-top: var(--gv-space-4, 16px);
+  flex-wrap: wrap;
+  gap: var(--gv-space-2, 8px);
+}
+
+.fc-lab-hero__cycle-toggle .rh-cc-tabs__btn {
+  color: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.fc-lab-hero__cycle-toggle .rh-cc-tabs__btn.is-active {
+  background: rgba(250, 70, 22, 0.22);
+  border-color: var(--gv-orange, #fa4616);
+  color: #fff;
+}
+
+.fc-lab-cycle-toggle__hub {
+  margin-left: auto;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.fc-lab-hero__cta {
+  margin: var(--gv-space-3, 12px) 0 0;
+}
+
 .fc-lab-hero__metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

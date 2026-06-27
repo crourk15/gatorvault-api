@@ -7,7 +7,8 @@ import { formatIntelUpdated } from '@/components/recruiting-hub/utils/formatDate
 import { playerProfileRoute } from '@/lib/vault-route-map';
 import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { AnalystConfidenceMeter, FutureCastPanelShell } from './primitives';
-import { highPriorityToBoardPlayer, isDiscoverySeasonFocus, ufPctFromFc } from './fc-lab-types';
+import { highPriorityToBoardPlayer, ufPctFromFc } from './fc-lab-types';
+import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 
 type Props = {
   staffNotes: StaffNotesResponse;
@@ -149,8 +150,8 @@ export function FutureCastAnalystSignals({
   highPriority = [],
   bare,
 }: Props): React.ReactElement {
-  const discoveryFocus = useMemo(() => isDiscoverySeasonFocus(), []);
-  const focusYear = primaryRecruitingClassYear();
+  const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
+  const focusYear = discoveryFocus ? 2028 : 2027;
   const signals = useMemo(
     () => buildSignals(staffNotes, masterBoard, highPriority, discoveryFocus),
     [staffNotes, masterBoard, highPriority, discoveryFocus]

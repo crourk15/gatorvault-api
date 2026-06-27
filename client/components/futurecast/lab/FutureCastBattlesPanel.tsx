@@ -14,9 +14,9 @@ import {
 import {
   futureCastPlayerToLabTarget,
   highPriorityToLabTarget,
-  isDiscoverySeasonFocus,
   ufPctFromFc,
 } from './fc-lab-types';
+import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 
 type Tab = 'battles' | 'lean-uf' | 'lean-elsewhere';
 
@@ -81,8 +81,8 @@ export function FutureCastBattlesPanel({
   bare,
 }: Props): React.ReactElement {
   const [tab, setTab] = useState<Tab>('battles');
-  const discoveryFocus = useMemo(() => isDiscoverySeasonFocus(), []);
-  const focusYear = primaryRecruitingClassYear();
+  const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
+  const focusYear = discoveryFocus ? 2028 : 2027;
 
   const pool = useMemo(() => {
     const merged = [

@@ -1,10 +1,20 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { FUTURECAST_LAB_SECTIONS } from '@/lib/vault-route-map';
+import React, { useEffect, useMemo, useState } from 'react';
+import { FUTURECAST_LAB_ANCHORS, FUTURECAST_LAB_SECTIONS } from '@/lib/vault-route-map';
+import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 
 export function FutureCastLabAnchors(): React.ReactElement {
   const [visible, setVisible] = useState(false);
+  const { discoveryView } = useFutureCastLabCycle();
+
+  const sections = useMemo(
+    () =>
+      FUTURECAST_LAB_SECTIONS.filter(
+        (section) => discoveryView || section.id !== FUTURECAST_LAB_ANCHORS.visits
+      ),
+    [discoveryView]
+  );
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 480);
@@ -24,7 +34,7 @@ export function FutureCastLabAnchors(): React.ReactElement {
       aria-label="FutureCast Lab section navigation"
     >
       <div className="fc-lab-anchors__sections">
-        {FUTURECAST_LAB_SECTIONS.map((section) => (
+        {sections.map((section) => (
           <a key={section.id} href={section.href} className="fc-lab-anchors__btn">
             {section.shortLabel}
           </a>

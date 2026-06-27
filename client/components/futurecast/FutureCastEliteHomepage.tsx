@@ -6,6 +6,7 @@ import { FutureCastLabSkeleton, FutureCastPanelSkeleton } from './FutureCastLabS
 import { FutureCastLabPageDesktop } from './lab/FutureCastLabPageDesktop';
 import { FutureCastLabPageMobile } from './mobile/FutureCastLabPageMobile';
 import { FutureCastLabAnchors } from './lab/FutureCastLabAnchors';
+import { FutureCastLabCycleProvider } from './lab/FutureCastLabCycleContext';
 import { useFutureCastLabData } from './lab/useFutureCastLabData';
 import { useIsCommandCenterDesktop } from '@/hooks/useIsCommandCenterDesktop';
 
@@ -37,13 +38,13 @@ export function FutureCastEliteHomepage(): React.ReactElement {
   }
 
   return (
-    <>
+    <FutureCastLabCycleProvider>
       {isDesktop ? (
         <FutureCastLabPageDesktop lab={lab} PanelSkeleton={FutureCastPanelSkeleton} />
       ) : (
         <FutureCastLabPageMobile lab={lab} PanelSkeleton={FutureCastPanelSkeleton} />
       )}
       <FutureCastLabAnchors />
-    </>
+    </FutureCastLabCycleProvider>
   );
 }

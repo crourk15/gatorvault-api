@@ -9,7 +9,6 @@ import type {
 import type { MasterBoardResponse, MovementIntelResponse } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { formatRelativeUpdated } from '@/components/recruiting-hub/utils/formatDate';
-import { getPortalSeasonState, shouldShowPortalWatchlist, primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import {
   BattleHeatMeter,
   PositionVolatilityHeatmap,
@@ -20,9 +19,10 @@ import {
   futureCastPlayerToLabTarget,
   highPriorityToLabTarget,
   isBattleTarget,
-  isDiscoverySeasonFocus,
   ufPctFromFc,
 } from './fc-lab-types';
+import { FutureCastLabCycleToggle } from './FutureCastLabCycleToggle';
+import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 
 const HEAT_LABELS: Record<FutureCastHeatLevel, string> = {
   hot: 'Hot cycle',
@@ -48,8 +48,18 @@ export function FutureCastHero({
   highPriority = [],
   lastUpdated,
 }: Props): React.ReactElement {
-  const discoveryFocus = useMemo(() => isDiscoverySeasonFocus(), []);
-  const focusYear = primaryRecruitingClassYear();
+  const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
+  const focusYear = discoveryFocus ? 2028 : 2027;
+
+  const displayMetrics = useMemo(() => {
+    if (discoveryFocus) return metrics;
+    return {
+      ...metrics,
+      avgUFProbability: Math.round(masterBoard.ufConfidenceAverage ?? metrics.avgUFProbability),
+      highPriorityCount: masterBoard.highPriority.players.length,
+      activePredictions: masterBoard.players.length,
+    };
+  }, [discoveryFocus, metrics, masterBoard]);
 
   const top10 = useMemo(() => {
     if (discoveryFocus && highPriority.length) {
@@ -65,9 +75,9 @@ export function FutureCastHero({
   }, [discoveryFocus, highPriority, masterBoard.players]);
 
   const top10Avg = useMemo(() => {
-    if (!top10.length) return metrics.avgUFProbability;
+    if (!top10.length) return displayMetrics.avgUFProbability;
     return Math.round(top10.reduce((acc, p) => acc + ufPctFromFc(p.ufProbability), 0) / top10.length);
-  }, [top10, metrics.avgUFProbability]);
+  }, [top10, displayMetrics.avgUFProbability]);
 
   const avgDelta = useMemo(() => {
     if (!top10.length) return 0;
@@ -140,8 +150,6 @@ export function FutureCastHero({
   }, [discoveryFocus, highPriority, masterBoard.players]);
 
   const updatedLabel = lastUpdated ? formatRelativeUpdated(lastUpdated) : 'just now';
-  const portalSeason = useMemo(() => getPortalSeasonState(), []);
-  const portalFocusOffseason = !shouldShowPortalWatchlist(portalSeason);
   const meterLabel = discoveryFocus
     ? `Commit Likelihood — Top ${focusYear} Targets`
     : 'Commit Likelihood — Top Targets';
@@ -155,29 +163,36 @@ export function FutureCastHero({
             <p className="fc-lab-hero__eyebrow rh-cc-hero__eyebrow">FutureCast Command Center</p>
             <h1 className="fc-lab-hero__title rh-cc-hero__title">UF FUTURECAST LAB</h1>
             <p className="fc-lab-hero__sub rh-cc-hero__sub">
-              {portalFocusOffseason
+              {discoveryFocus
                 ? `${focusYear} Early Discovery plus locked 2028 UF targets — discovery scores, On3 ranks, and fit while portal intel is dormant.`
-                : "Commit likelihood, movement intel, fit scores, and competing schools for UF's top targets."}
+                : '2027 closing class — commit likelihood, movement intel, visit windows, and flip watch for UF targets.'}
             </p>
-            {portalFocusOffseason ? (
+            <FutureCastLabCycleToggle className="fc-lab-hero__cycle-toggle" />
+            {discoveryFocus ? (
               <p className="fc-lab-hero__cta">
                 <a href="/vault/futurecast/big-board" className="rh-cc-link">
                   Open 2028 Early Discovery board →
                 </a>
               </p>
-            ) : null}
+            ) : (
+              <p className="fc-lab-hero__cta">
+                <a href="/vault/recruiting/2027/targets" className="rh-cc-link">
+                  Open 2027 targets in Recruiting Hub →
+                </a>
+              </p>
+            )}
             <div className="fc-lab-hero__metrics rh-cc-hero__metrics">
               <div className="fc-lab-hero__metric fc-lab-hero__metric--rank rh-cc-hero__metric rh-cc-hero__metric--rank">
                 <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">High Priority</span>
-                <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.highPriorityCount}</strong>
+                <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{displayMetrics.highPriorityCount}</strong>
               </div>
               <div className="fc-lab-hero__metric rh-cc-hero__metric">
                 <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Active Predictions</span>
-                <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.activePredictions}</strong>
+                <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{displayMetrics.activePredictions}</strong>
               </div>
               <div className="fc-lab-hero__metric rh-cc-hero__metric">
                 <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Avg UF %</span>
-                <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.avgUFProbability}%</strong>
+                <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{displayMetrics.avgUFProbability}%</strong>
               </div>
               <div className="fc-lab-hero__metric rh-cc-hero__metric">
                 <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Cycle Heat</span>
@@ -185,19 +200,19 @@ export function FutureCastHero({
                   {HEAT_LABELS[heatLevel]}
                 </strong>
               </div>
-              {metrics.flipWatchCount != null && metrics.flipWatchCount > 0 ? (
+              {!discoveryFocus && metrics.flipWatchCount != null && metrics.flipWatchCount > 0 ? (
                 <div className="fc-lab-hero__metric rh-cc-hero__metric">
                   <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Flip Watch</span>
                   <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.flipWatchCount}</strong>
                 </div>
               ) : null}
-              {metrics.visitRecapCount != null && metrics.visitRecapCount > 0 ? (
+              {!discoveryFocus && metrics.visitRecapCount != null && metrics.visitRecapCount > 0 ? (
                 <div className="fc-lab-hero__metric rh-cc-hero__metric">
                   <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">OV Recap</span>
                   <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.visitRecapCount}</strong>
                 </div>
               ) : null}
-              {metrics.movementNarrativesCount != null && metrics.movementNarrativesCount > 0 ? (
+              {!discoveryFocus && metrics.movementNarrativesCount != null && metrics.movementNarrativesCount > 0 ? (
                 <div className="fc-lab-hero__metric rh-cc-hero__metric">
                   <span className="fc-lab-hero__metric-label rh-cc-hero__metric-label">Movement</span>
                   <strong className="fc-lab-hero__metric-value rh-cc-hero__metric-value">{metrics.movementNarrativesCount}</strong>

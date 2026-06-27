@@ -19,11 +19,7 @@ import { ufPctFromFc, isBattleTarget } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
 import { TargetBoardPreview } from '@/components/futurecast/TargetBoardPreview';
-import {
-  getPortalSeasonState,
-  primaryRecruitingClassYear,
-  shouldShowPortalWatchlist,
-} from '@/lib/recruiting-cycle';
+import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 
 type Props = {
   masterBoard: MasterBoardResponse;
@@ -192,11 +188,8 @@ export function FutureCastExtendedModules({
   movementNarratives = [],
   underclassmen,
 }: Props): React.ReactElement {
-  const discoveryFocus = useMemo(
-    () => !shouldShowPortalWatchlist(getPortalSeasonState()),
-    []
-  );
-  const discoveryYear = primaryRecruitingClassYear();
+  const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
+  const discoveryYear = discoveryFocus ? 2028 : 2027;
 
   const activeTargets = useMemo(
     () =>
@@ -509,6 +502,8 @@ export function FutureCastExtendedModules({
         />
       </FutureCastPanelShell>
 
+      {!discoveryFocus ? (
+      <>
       <section id={FUTURECAST_LAB_ANCHORS.visits}>
       <FutureCastPanelShell
         title="2027 Visit Intel"
@@ -607,6 +602,19 @@ export function FutureCastExtendedModules({
       </FutureCastPanelShell>
 
       <SmartAlertsPanel alerts={smartAlerts} />
+      </>
+      ) : (
+        <FutureCastPanelShell
+          title="2027 Closing Class Intel"
+          sub="Visit intel, flip watch, and 30-day trends for the closing class. Switch to 2027 Closing Class above."
+          testId="fc-lab-closing-class-hint"
+        >
+          <p className="rh-cc-empty">
+            2027 visit, flip, and trend panels are hidden during 2028 discovery view. Use the{' '}
+            <strong>2027 Closing Class</strong> toggle in the hero to load master-board intel.
+          </p>
+        </FutureCastPanelShell>
+      )}
     </>
   );
 }

@@ -5,7 +5,8 @@ import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { FutureCastPanelShell } from './primitives';
-import { isDiscoverySeasonFocus, ufPctFromFc } from './fc-lab-types';
+import { ufPctFromFc } from './fc-lab-types';
+import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 
 type PositionBucket = {
   position: string;
@@ -28,8 +29,8 @@ export function FutureCastPositionBreakdown({
   activePredictions,
   bare,
 }: Props): React.ReactElement {
-  const discoveryFocus = useMemo(() => isDiscoverySeasonFocus(), []);
-  const focusYear = primaryRecruitingClassYear();
+  const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
+  const focusYear = discoveryFocus ? 2028 : 2027;
 
   const buckets = useMemo(() => {
     if (discoveryFocus && highPriority.length) {

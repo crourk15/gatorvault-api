@@ -9,13 +9,12 @@ import {
   dedupeIntelFeedItems,
   formatIntelTimestamp,
 } from '@/lib/recruiting-intel-feed';
-import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import {
   discoveryMovementBuckets,
-  isDiscoverySeasonFocus,
   ufPctFromFc,
   underclassmenTargetsForYear,
 } from './fc-lab-types';
+import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 
 function formatTrendDelta(value: number | null | undefined): string {
   if (value == null || Number.isNaN(value)) return 'TBD';
@@ -38,9 +37,10 @@ export function FutureCastLiveFeed({
   highPriority = [],
   underclassmen = [],
 }: Props): React.ReactElement {
+  const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
+
   const items = useMemo(() => {
-    const discoveryFocus = isDiscoverySeasonFocus();
-    const focusYear = primaryRecruitingClassYear();
+    const focusYear = discoveryFocus ? 2028 : 2027;
     const raw = [];
 
     if (discoveryFocus && highPriority.length) {
@@ -180,7 +180,7 @@ export function FutureCastLiveFeed({
     }
 
     return deduped;
-  }, [masterBoard, movementIntel, staffNotes.notes, staffNotes.updatedAt, highPriority, underclassmen]);
+  }, [masterBoard, movementIntel, staffNotes.notes, staffNotes.updatedAt, highPriority, underclassmen, discoveryFocus]);
 
   return (
     <section className="rh-cc-feed fc-lab-feed fc-lab-bleed" data-testid="fc-lab-live-feed">

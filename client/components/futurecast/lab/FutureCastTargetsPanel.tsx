@@ -4,14 +4,13 @@ import React, { useMemo } from 'react';
 import type { MasterBoardResponse } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { playerProfileRoute } from '@/lib/vault-route-map';
-import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { FutureCastTargetCard } from '@/components/futurecast/FutureCastTargetCard';
 import { FutureCastPanelShell } from './primitives';
 import {
   futureCastPlayerToLabTarget,
   highPriorityToLabTarget,
-  isDiscoverySeasonFocus,
 } from './fc-lab-types';
+import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 import { isActiveUfTarget } from '@/lib/recruiting-target-filters';
 
 type Props = {
@@ -21,8 +20,8 @@ type Props = {
 };
 
 export function FutureCastTargetsPanel({ masterBoard, highPriority = [], bare }: Props): React.ReactElement {
-  const discoveryFocus = useMemo(() => isDiscoverySeasonFocus(), []);
-  const focusYear = primaryRecruitingClassYear();
+  const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
+  const focusYear = discoveryFocus ? 2028 : 2027;
 
   const rows = useMemo(() => {
     if (discoveryFocus && highPriority.length) {

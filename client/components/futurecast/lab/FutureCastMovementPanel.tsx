@@ -7,7 +7,8 @@ import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
 import { futureCastLabHref, FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import { FutureCastPanelShell, MovementBadge, MovementSparkline, UfProbBar } from './primitives';
-import { discoveryMovementBuckets, isDiscoverySeasonFocus, ufPctFromFc } from './fc-lab-types';
+import { discoveryMovementBuckets, ufPctFromFc } from './fc-lab-types';
+import { useFutureCastLabCycle } from './FutureCastLabCycleContext';
 
 type Tab = 'risers' | 'fallers' | 'volatile';
 
@@ -54,8 +55,8 @@ export function FutureCastMovementPanel({
   bare,
 }: Props): React.ReactElement {
   const [tab, setTab] = useState<Tab>('risers');
-  const discoveryFocus = useMemo(() => isDiscoverySeasonFocus(), []);
-  const focusYear = primaryRecruitingClassYear();
+  const { discoveryView: discoveryFocus } = useFutureCastLabCycle();
+  const focusYear = discoveryFocus ? 2028 : 2027;
   const discoveryBuckets = useMemo(
     () => discoveryMovementBuckets(underclassmen, highPriority),
     [underclassmen, highPriority]

@@ -151,6 +151,60 @@ function resolvePriority(ufConfidence: number | null, fitScore: number | null): 
   return 'low';
 }
 
+function firstPositiveStorePct(...values: Array<number | null | undefined>): number | undefined {
+  for (const value of values) {
+    if (value == null || !Number.isFinite(Number(value))) continue;
+    if (Number(value) > 0) return Number(value);
+  }
+  return undefined;
+}
+
+function resolveBoardFitScore(input: {
+  override: boolean;
+  classYear: number;
+  slug: string;
+  model: { ufFitScore?: number | null; confidence?: number | null; ufProbability?: number | null } | undefined;
+  seed: Record<string, unknown>;
+  recruiting: Record<string, unknown> | null;
+  rank: { stars?: number | null; nationalRank?: number | null } | undefined;
+}): number | null {
+  if (input.override) return null;
+
+  const modelFit = input.model?.ufFitScore;
+  if (modelFit != null && Number.isFinite(Number(modelFit))) {
+    return Math.round(Number(modelFit));
+  }
+
+  for (const raw of [
+    input.seed.fitScore,
+    input.recruiting?.fitScore,
+    input.recruiting?.ufFitScore,
+  ]) {
+    if (raw != null && Number.isFinite(Number(raw)) && Number(raw) > 0) {
+      return Math.round(Number(raw));
+    }
+  }
+
+  if (!isUnderclassmenClassYear(input.classYear)) return null;
+
+  try {
+    const { buildUfFitSeedProfile } = require('../../lib/uf-fit-score-seed');
+    const profile = buildUfFitSeedProfile({
+      playerId: intelUuidForSlug(input.slug),
+      slug: input.slug,
+      classYear: input.classYear,
+      state: String(input.recruiting?.state ?? input.seed.state ?? ''),
+      targetSeed: input.seed,
+      recruiting: input.recruiting,
+      modelPred: input.model ?? null,
+    });
+    const score = profile?.uf_fit_score;
+    return score != null && Number.isFinite(Number(score)) ? Math.round(Number(score)) : null;
+  } catch {
+    return null;
+  }
+}
+
 async function loadRecruitingPlayer(slug: string): Promise<Record<string, unknown> | null> {
   try {
     const store = require('../../lib/recruiting-store');
@@ -207,7 +261,22 @@ function loadSeedMeta(classYear = FUTURECAST_CLASS_YEAR): Map<string, Record<str
       const slug = String(p.slug || '').toLowerCase();
       if (!slug) continue;
       const existing = map.get(slug) || {};
-      map.set(slug, { ...existing, ...p });
+      const merged: Record<string, unknown> = { ...existing, ...p };
+      if (
+        (p.ufProbability == null || Number(p.ufProbability) <= 0) &&
+        existing.ufProbability != null &&
+        Number(existing.ufProbability) > 0
+      ) {
+        merged.ufProbability = existing.ufProbability;
+      }
+      if (
+        (p.fitScore == null || Number(p.fitScore) <= 0) &&
+        existing.fitScore != null &&
+        Number(existing.fitScore) > 0
+      ) {
+        merged.fitScore = existing.fitScore;
+      }
+      map.set(slug, merged);
     }
   } catch {
     /* optional */
@@ -288,6 +357,7 @@ export async function loadBoardPlayersForSlugs(
   const allowedSet = new Set(allowedSlugs);
   const rankings = loadRecruitingRankings();
   const seedMeta = loadSeedMeta(classYear);
+  const earlyWatchMeta = loadEarlyWatchlistMeta();
   const rivalsSchools = loadRivalsCompetingSchools();
   const predictorsBySlug = loadUfPctPredictorsBySlug();
 
@@ -331,7 +401,7 @@ export async function loadBoardPlayersForSlugs(
   for (const slug of allowedSlugs) {
     if (isBlockedRecruit({ slug })) continue;
 
-    const seed = seedMeta.get(slug) ?? {};
+    const seed = { ...(earlyWatchMeta.get(slug) ?? {}), ...(seedMeta.get(slug) ?? {}) };
     const recruiting = await loadRecruitingPlayer(slug);
     const override = resolveCommitmentOverride(
       recruiting
@@ -394,10 +464,11 @@ export async function loadBoardPlayersForSlugs(
     for (const ext of predictorsBySlug.get(slug) || []) {
       ufPredictors.push(ext);
     }
-    const storePct =
-      (seed.ufProbability as number | undefined) ??
-      (recruiting?.ufProbability as number | undefined) ??
-      (recruiting?.futurecastProbability as number | undefined);
+    const storePct = firstPositiveStorePct(
+      seed.ufProbability as number | undefined,
+      recruiting?.ufProbability as number | undefined,
+      recruiting?.futurecastProbability as number | undefined
+    );
     const resolvedUf = override
       ? null
       : resolveUfProbability({
@@ -416,11 +487,15 @@ export async function loadBoardPlayersForSlugs(
 
     const competingSchools = override ? [] : resolveCompetingSchools(rivalsSchools.get(slug));
     const predictors = override ? [] : rivalsPredictors(slug, competingSchools);
-    const fitScore = override
-      ? null
-      : model?.ufFitScore != null && Number.isFinite(Number(model.ufFitScore))
-        ? Math.round(Number(model.ufFitScore))
-        : null;
+    const fitScore = resolveBoardFitScore({
+      override: Boolean(override),
+      classYear: resolvedClassYear,
+      slug,
+      model,
+      seed,
+      recruiting,
+      rank,
+    });
     const trendDelta7dResolved = override
       ? 0
       : trendDelta7d;
