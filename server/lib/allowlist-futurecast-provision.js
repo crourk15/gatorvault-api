@@ -73,6 +73,17 @@ async function hasRivalsPmPrediction(playerId) {
   );
 }
 
+async function hasAllowlistSeedPrediction(playerId) {
+  const { listPredictionsByPlayerId } = loadModels();
+  const preds = await listPredictionsByPlayerId(playerId);
+  return preds.some(
+    (row) =>
+      String(row.source_type || '').toUpperCase() === 'MODEL' &&
+      String(row.predictor_id || '') === PREDICTOR_ID &&
+      String(row.status || '').toUpperCase() === 'ACTIVE'
+  );
+}
+
 async function provisionAllowlistPredictionForSlug(slug, classYear, options = {}) {
   const key = String(slug || '').toLowerCase();
   if (!key) return { slug: key, ok: false, reason: 'missing_slug' };
@@ -89,6 +100,10 @@ async function provisionAllowlistPredictionForSlug(slug, classYear, options = {}
 
   if (await hasRivalsPmPrediction(pgPlayer.id)) {
     return { slug: key, ok: true, skipped: true, reason: 'rivals_pm_present' };
+  }
+
+  if (await hasAllowlistSeedPrediction(pgPlayer.id)) {
+    return { slug: key, ok: true, skipped: true, reason: 'allowlist_seed_present' };
   }
 
   const seed = await resolveSeedConfidence(key, pgPlayer);

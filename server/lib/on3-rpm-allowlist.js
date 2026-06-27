@@ -8,8 +8,11 @@ const { buildOn3ProfileUrl } = require("./on3-urls");
 const { toPercent } = require("./uf-probability-utils");
 
 const DATA_PATH = path.join(__dirname, "..", "data", "war-room", "on3-rpm-allowlist.json");
-const BOARD_PATH = path.join(__dirname, "..", "data", "recruiting", "2027-target-board.json");
-const CLASS_YEAR = 2027;
+const DEFAULT_CLASS_YEAR = 2027;
+
+function boardPathForClassYear(classYear) {
+  return path.join(__dirname, "..", "data", "recruiting", `${classYear}-target-board.json`);
+}
 
 function readDoc() {
   try {
@@ -30,11 +33,17 @@ function writeDoc(doc) {
   fs.writeFileSync(DATA_PATH, JSON.stringify(doc, null, 2));
 }
 
-function loadTargetBoard() {
+function loadTargetBoard(classYear = DEFAULT_CLASS_YEAR) {
   try {
-    const doc = JSON.parse(fs.readFileSync(BOARD_PATH, "utf8"));
+    const doc = JSON.parse(fs.readFileSync(boardPathForClassYear(classYear), "utf8"));
     return doc.targets || [];
   } catch {
+    if (Number(classYear) === 2028) {
+      const { getAllowlistSet } = require("./recruiting-target-allowlist");
+      const { loadTargetBoardBySlug } = require("./target-board-path");
+      const board = loadTargetBoardBySlug(2028);
+      return [...getAllowlistSet(2028)].map((slug) => board.get(String(slug).toLowerCase()) || { slug });
+    }
     return [];
   }
 }
@@ -44,7 +53,7 @@ function entryBySlug(doc, slug) {
   return (doc.entries || []).find((row) => String(row.playerSlug || "").toLowerCase() === key) || null;
 }
 
-function resolveUfPctFromProfile(profile, classYear = CLASS_YEAR) {
+function resolveUfPctFromProfile(profile, classYear = DEFAULT_CLASS_YEAR) {
   if (!profile || profile.error) return null;
   const uf = on3.getFloridaTeam(profile.topTeams, classYear);
   const pct = uf?.prediction;
@@ -64,11 +73,11 @@ function resolveRecruitSlugForTarget(target, recruiting) {
 
 async function syncAllowlistOn3Rpm(options = {}) {
   const dryRun = Boolean(options.dryRun);
-  const classYear = options.classYear || CLASS_YEAR;
+  const classYear = options.classYear || DEFAULT_CLASS_YEAR;
   const rivalsOnly = require("./uf-probability-utils").loadRivalsOnlyUfPctBySlug();
   const recruitingStore = require("./recruiting-store");
   const doc = readDoc();
-  const targets = loadTargetBoard();
+  const targets = loadTargetBoard(classYear);
   const results = [];
   const limit = Math.max(1, parseInt(process.env.ON3_RPM_SYNC_CONCURRENCY || "2", 10) || 2);
 

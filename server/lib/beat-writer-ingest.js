@@ -1249,6 +1249,14 @@ async function runBeatLateIngestSweep() {
     newsDiscovery = { ok: false, error: err.message };
   }
 
+  let futurecastProvision = null;
+  try {
+    const { runAllowlistFuturecastProvision } = require('./allowlist-futurecast-provision');
+    futurecastProvision = await runAllowlistFuturecastProvision({ classYear: 2028 });
+  } catch (err) {
+    futurecastProvision = { ok: false, error: err.message };
+  }
+
   return {
     ok: true,
     sweep: true,
@@ -1258,6 +1266,7 @@ async function runBeatLateIngestSweep() {
     fetchErrors: fresh.fetchErrors,
     tokenStatus: fresh.tokenStatus,
     newsDiscovery,
+    futurecastProvision,
     ...result
   };
 }
