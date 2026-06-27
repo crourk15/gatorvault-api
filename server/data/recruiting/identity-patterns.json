@@ -3385,7 +3385,7 @@
         "248 4 star LB",
         "248 four star LB"
       ],
-      "updatedAt": "2026-06-27T01:42:27.797Z"
+      "updatedAt": "2026-06-27T13:33:14.025Z"
     },
     "braxton-rein": {
       "slug": "braxton-rein",
@@ -3427,7 +3427,7 @@
         "288 3 star TE",
         "288 three star TE"
       ],
-      "updatedAt": "2026-06-27T01:42:30.428Z"
+      "updatedAt": "2026-06-27T13:33:18.713Z"
     },
     "izayah-vickers": {
       "slug": "izayah-vickers",
@@ -3464,7 +3464,7 @@
         "272 4 star CB",
         "272 four star CB"
       ],
-      "updatedAt": "2026-06-27T01:42:29.280Z"
+      "updatedAt": "2026-06-27T13:33:16.735Z"
     },
     "jordon-gorham": {
       "slug": "jordon-gorham",
@@ -3506,7 +3506,7 @@
         "368 3 star WR",
         "368 three star WR"
       ],
-      "updatedAt": "2026-06-27T01:42:37.193Z"
+      "updatedAt": "2026-06-27T13:33:26.926Z"
     },
     "andre-hyppolite": {
       "slug": "andre-hyppolite",
@@ -3563,7 +3563,7 @@
       "school": "The Bolles School, FL",
       "commitSchool": null,
       "class": 2028,
-      "natlRank": null,
+      "natlRank": 216,
       "patterns": [
         "4 star EDGE Asher",
         "4-star EDGE Asher",
@@ -3589,9 +3589,13 @@
         "2028 EDGE Asher",
         "2028 4-star EDGE",
         "2028 four-star EDGE",
-        "2028 Asher Ghioto"
+        "2028 Asher Ghioto",
+        "#216 Asher",
+        "top 216 EDGE Asher",
+        "216 4 star EDGE",
+        "216 four star EDGE"
       ],
-      "updatedAt": "2026-06-27T01:42:25.669Z"
+      "updatedAt": "2026-06-27T13:33:11.044Z"
     },
     "aaron-mcwilliams": {
       "slug": "aaron-mcwilliams",
@@ -3671,49 +3675,49 @@
         "312 4 star QB",
         "312 four star QB"
       ],
-      "updatedAt": "2026-06-27T01:42:31.898Z"
+      "updatedAt": "2026-06-27T13:33:20.855Z"
     },
     "anthony-howard-jr": {
       "slug": "anthony-howard-jr",
       "name": "Anthony Howard Jr",
       "stars": 3,
-      "position": "HB",
+      "position": "RB",
       "school": "IMG Academy, FL",
       "commitSchool": null,
       "class": 2028,
       "natlRank": 392,
       "patterns": [
-        "3 star HB Anthony",
-        "3-star HB Anthony",
-        "three star HB Anthony",
-        "three-star HB Anthony",
-        "3 star HB Howard Jr",
-        "3-star HB Howard Jr",
-        "three star HB Howard Jr",
-        "three-star HB Howard Jr",
+        "3 star RB Anthony",
+        "3-star RB Anthony",
+        "three star RB Anthony",
+        "three-star RB Anthony",
+        "3 star RB Howard Jr",
+        "3-star RB Howard Jr",
+        "three star RB Howard Jr",
+        "three-star RB Howard Jr",
         "IMG Academy, FL 3 star",
         "IMG Academy, FL three star",
-        "IMG Academy, FL HB",
+        "IMG Academy, FL RB",
         "Anthony Howard Jr",
         "Howard Jr",
-        "3 star HB",
-        "3-star HB",
-        "three star HB",
-        "three-star HB",
-        "HB Anthony",
-        "HB Howard Jr",
+        "3 star RB",
+        "3-star RB",
+        "three star RB",
+        "three-star RB",
+        "RB Anthony",
+        "RB Howard Jr",
         "3 star IMG Academy, FL commit",
         "three star IMG Academy, FL commit",
-        "2028 HB Anthony",
-        "2028 3-star HB",
-        "2028 three-star HB",
+        "2028 RB Anthony",
+        "2028 3-star RB",
+        "2028 three-star RB",
         "2028 Anthony Howard Jr",
         "#392 Anthony",
-        "top 392 HB Anthony",
-        "392 3 star HB",
-        "392 three star HB"
+        "top 392 RB Anthony",
+        "392 3 star RB",
+        "392 three star RB"
       ],
-      "updatedAt": "2026-06-27T01:42:38.874Z"
+      "updatedAt": "2026-06-27T13:33:29.245Z"
     },
     "pj-evans": {
       "slug": "pj-evans",
@@ -3755,7 +3759,7 @@
         "384 3 star IOL",
         "384 three star IOL"
       ],
-      "updatedAt": "2026-06-27T01:42:38.276Z"
+      "updatedAt": "2026-06-27T13:33:28.517Z"
     },
     "kahmaree-crumity": {
       "slug": "kahmaree-crumity",
@@ -3797,7 +3801,7 @@
         "376 3 star CB",
         "376 three star CB"
       ],
-      "updatedAt": "2026-06-27T01:42:37.741Z"
+      "updatedAt": "2026-06-27T13:33:27.462Z"
     },
     "quinton-rolle-jr": {
       "slug": "quinton-rolle-jr",
@@ -3839,7 +3843,7 @@
         "360 4 star CB",
         "360 four star CB"
       ],
-      "updatedAt": "2026-06-27T01:42:36.419Z"
+      "updatedAt": "2026-06-27T13:33:25.998Z"
     },
     "tristian-henderson": {
       "slug": "tristian-henderson",
@@ -3881,7 +3885,7 @@
         "320 3 star EDGE",
         "320 three star EDGE"
       ],
-      "updatedAt": "2026-06-27T01:42:32.346Z"
+      "updatedAt": "2026-06-27T13:33:21.812Z"
     },
     "bryce-willingham": {
       "slug": "bryce-willingham",
@@ -3923,7 +3927,7 @@
         "352 4 star CB",
         "352 four star CB"
       ],
-      "updatedAt": "2026-06-27T01:42:35.721Z"
+      "updatedAt": "2026-06-27T13:33:24.974Z"
     },
     "john-matthews": {
       "slug": "john-matthews",
@@ -3965,7 +3969,7 @@
         "344 3 star WR",
         "344 three star WR"
       ],
-      "updatedAt": "2026-06-27T01:42:35.203Z"
+      "updatedAt": "2026-06-27T13:33:23.941Z"
     },
     "armani-strong": {
       "slug": "armani-strong",
@@ -4007,7 +4011,7 @@
         "304 3 star WR",
         "304 three star WR"
       ],
-      "updatedAt": "2026-06-27T01:42:31.421Z"
+      "updatedAt": "2026-06-27T13:33:20.023Z"
     },
     "bubba-brown": {
       "slug": "bubba-brown",
@@ -4049,7 +4053,7 @@
         "256 4 star WR",
         "256 four star WR"
       ],
-      "updatedAt": "2026-06-27T01:42:28.288Z"
+      "updatedAt": "2026-06-27T13:33:15.234Z"
     },
     "dominick-harris-payne": {
       "slug": "dominick-harris-payne",
@@ -4091,7 +4095,7 @@
         "328 3 star CB",
         "328 three star CB"
       ],
-      "updatedAt": "2026-06-27T01:42:33.826Z"
+      "updatedAt": "2026-06-27T13:33:22.355Z"
     },
     "gabriel-player": {
       "slug": "gabriel-player",
@@ -4133,7 +4137,7 @@
         "240 4 star LB",
         "240 four star LB"
       ],
-      "updatedAt": "2026-06-27T01:42:27.329Z"
+      "updatedAt": "2026-06-27T13:33:13.110Z"
     },
     "prince-che": {
       "slug": "prince-che",
@@ -4175,7 +4179,7 @@
         "232 4 star DL",
         "232 four star DL"
       ],
-      "updatedAt": "2026-06-27T01:42:26.879Z"
+      "updatedAt": "2026-06-27T13:33:12.647Z"
     },
     "brady-quinn": {
       "slug": "brady-quinn",
@@ -4217,7 +4221,7 @@
         "336 3 star QB",
         "336 three star QB"
       ],
-      "updatedAt": "2026-06-27T01:42:34.414Z"
+      "updatedAt": "2026-06-27T13:33:22.967Z"
     },
     "tre-geathers": {
       "slug": "tre-geathers",
@@ -4261,39 +4265,43 @@
       "slug": "kaleb-ballard",
       "name": "Kaleb Ballard",
       "stars": 4,
-      "position": "QB",
+      "position": "TE",
       "school": "Wetumpka, AL",
       "commitSchool": null,
       "class": 2028,
-      "natlRank": null,
+      "natlRank": 200,
       "patterns": [
-        "4 star QB Kaleb",
-        "4-star QB Kaleb",
-        "four star QB Kaleb",
-        "four-star QB Kaleb",
-        "4 star QB Ballard",
-        "4-star QB Ballard",
-        "four star QB Ballard",
-        "four-star QB Ballard",
+        "4 star TE Kaleb",
+        "4-star TE Kaleb",
+        "four star TE Kaleb",
+        "four-star TE Kaleb",
+        "4 star TE Ballard",
+        "4-star TE Ballard",
+        "four star TE Ballard",
+        "four-star TE Ballard",
         "Wetumpka, AL 4 star",
         "Wetumpka, AL four star",
-        "Wetumpka, AL QB",
+        "Wetumpka, AL TE",
         "Kaleb Ballard",
         "Ballard",
-        "4 star QB",
-        "4-star QB",
-        "four star QB",
-        "four-star QB",
-        "QB Kaleb",
-        "QB Ballard",
+        "4 star TE",
+        "4-star TE",
+        "four star TE",
+        "four-star TE",
+        "TE Kaleb",
+        "TE Ballard",
         "4 star Wetumpka, AL commit",
         "four star Wetumpka, AL commit",
-        "2028 QB Kaleb",
-        "2028 4-star QB",
-        "2028 four-star QB",
-        "2028 Kaleb Ballard"
+        "2028 TE Kaleb",
+        "2028 4-star TE",
+        "2028 four-star TE",
+        "2028 Kaleb Ballard",
+        "#200 Kaleb",
+        "top 200 TE Kaleb",
+        "200 4 star TE",
+        "200 four star TE"
       ],
-      "updatedAt": "2026-06-27T01:42:24.253Z"
+      "updatedAt": "2026-06-27T13:33:09.089Z"
     },
     "brysen-wright": {
       "slug": "brysen-wright",
@@ -4303,7 +4311,7 @@
       "school": "Mandarin, FL",
       "commitSchool": null,
       "class": 2028,
-      "natlRank": null,
+      "natlRank": 208,
       "patterns": [
         "5 star WR Brysen",
         "5-star WR Brysen",
@@ -4329,85 +4337,97 @@
         "2028 WR Brysen",
         "2028 5-star WR",
         "2028 five-star WR",
-        "2028 Brysen Wright"
+        "2028 Brysen Wright",
+        "#208 Brysen",
+        "top 208 WR Brysen",
+        "208 5 star WR",
+        "208 five star WR"
       ],
-      "updatedAt": "2026-06-27T01:42:25.224Z"
+      "updatedAt": "2026-06-27T13:33:10.433Z"
     },
     "cassell-cruickshank": {
       "slug": "cassell-cruickshank",
       "name": "Cassell Cruickshank",
       "stars": 4,
-      "position": "ATH",
+      "position": "EDGE",
       "school": "E E Smith, NC",
       "commitSchool": null,
       "class": 2028,
-      "natlRank": null,
+      "natlRank": 224,
       "patterns": [
-        "4 star ATH Cassell",
-        "4-star ATH Cassell",
-        "four star ATH Cassell",
-        "four-star ATH Cassell",
-        "4 star ATH Cruickshank",
-        "4-star ATH Cruickshank",
-        "four star ATH Cruickshank",
-        "four-star ATH Cruickshank",
+        "4 star EDGE Cassell",
+        "4-star EDGE Cassell",
+        "four star EDGE Cassell",
+        "four-star EDGE Cassell",
+        "4 star EDGE Cruickshank",
+        "4-star EDGE Cruickshank",
+        "four star EDGE Cruickshank",
+        "four-star EDGE Cruickshank",
         "E E Smith, NC 4 star",
         "E E Smith, NC four star",
-        "E E Smith, NC ATH",
+        "E E Smith, NC EDGE",
         "Cassell Cruickshank",
         "Cruickshank",
-        "4 star ATH",
-        "4-star ATH",
-        "four star ATH",
-        "four-star ATH",
-        "ATH Cassell",
-        "ATH Cruickshank",
+        "4 star EDGE",
+        "4-star EDGE",
+        "four star EDGE",
+        "four-star EDGE",
+        "EDGE Cassell",
+        "EDGE Cruickshank",
         "4 star E E Smith, NC commit",
         "four star E E Smith, NC commit",
-        "2028 ATH Cassell",
-        "2028 4-star ATH",
-        "2028 four-star ATH",
-        "2028 Cassell Cruickshank"
+        "2028 EDGE Cassell",
+        "2028 4-star EDGE",
+        "2028 four-star EDGE",
+        "2028 Cassell Cruickshank",
+        "#224 Cassell",
+        "top 224 EDGE Cassell",
+        "224 4 star EDGE",
+        "224 four star EDGE"
       ],
-      "updatedAt": "2026-06-27T01:42:26.202Z"
+      "updatedAt": "2026-06-27T13:33:11.533Z"
     },
     "xander-edwards": {
       "slug": "xander-edwards",
       "name": "Xander Edwards",
       "stars": 4,
-      "position": "CB",
+      "position": "RB",
       "school": "The Bolles School, FL",
       "commitSchool": null,
       "class": 2028,
-      "natlRank": null,
+      "natlRank": 264,
       "patterns": [
-        "4 star CB Xander",
-        "4-star CB Xander",
-        "four star CB Xander",
-        "four-star CB Xander",
-        "4 star CB Edwards",
-        "4-star CB Edwards",
-        "four star CB Edwards",
-        "four-star CB Edwards",
+        "4 star RB Xander",
+        "4-star RB Xander",
+        "four star RB Xander",
+        "four-star RB Xander",
+        "4 star RB Edwards",
+        "4-star RB Edwards",
+        "four star RB Edwards",
+        "four-star RB Edwards",
         "The Bolles School, FL 4 star",
         "The Bolles School, FL four star",
-        "The Bolles School, FL CB",
+        "The Bolles School, FL RB",
         "Xander Edwards",
         "Edwards",
-        "4 star CB",
-        "4-star CB",
-        "four star CB",
-        "four-star CB",
-        "CB Xander",
-        "CB Edwards",
+        "4 star RB",
+        "4-star RB",
+        "four star RB",
+        "four-star RB",
+        "RB Xander",
+        "RB Edwards",
         "4 star The Bolles School, FL commit",
         "four star The Bolles School, FL commit",
-        "2028 CB Xander",
-        "2028 4-star CB",
-        "2028 four-star CB",
-        "2028 Xander Edwards"
+        "2028 RB Xander",
+        "2028 4-star RB",
+        "2028 four-star RB",
+        "2028 Xander Edwards",
+        "#264 Xander",
+        "top 264 RB Xander",
+        "264 4 star RB",
+        "264 four star RB"
       ],
-      "updatedAt": "2026-06-27T01:42:28.724Z"
+      "updatedAt": "2026-06-27T13:33:15.877Z"
     },
     "malakhi-dudley": {
       "slug": "malakhi-dudley",
@@ -4449,7 +4469,7 @@
         "204 4 star OT",
         "204 four star OT"
       ],
-      "updatedAt": "2026-06-27T01:42:29.951Z"
+      "updatedAt": "2026-06-27T13:33:17.658Z"
     },
     "taihj-moore": {
       "slug": "taihj-moore",
@@ -4459,7 +4479,7 @@
       "school": "Deland, FL",
       "commitSchool": null,
       "class": 2028,
-      "natlRank": null,
+      "natlRank": 296,
       "patterns": [
         "4 star RB Taihj",
         "4-star RB Taihj",
@@ -4485,9 +4505,13 @@
         "2028 RB Taihj",
         "2028 4-star RB",
         "2028 four-star RB",
-        "2028 Taihj Moore"
+        "2028 Taihj Moore",
+        "#296 Taihj",
+        "top 296 RB Taihj",
+        "296 4 star RB",
+        "296 four star RB"
       ],
-      "updatedAt": "2026-06-27T01:42:30.925Z"
+      "updatedAt": "2026-06-27T13:33:19.358Z"
     },
     "tj-shanahan": {
       "slug": "tj-shanahan",
@@ -4528,5 +4552,5 @@
       "updatedAt": "2026-06-24T20:52:09.044Z"
     }
   },
-  "updatedAt": "2026-06-27T01:42:38.874Z"
+  "updatedAt": "2026-06-27T13:33:29.246Z"
 }
