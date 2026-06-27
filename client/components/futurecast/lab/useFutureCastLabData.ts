@@ -5,7 +5,7 @@ import {
   loadFutureCastLabData,
   loadFutureCastLabPrimary,
   loadFutureCastLabSecondaryRaw,
-  enrichHeroMetrics,
+  applyDiscoverySeasonOverlay,
   type FutureCastLabDataMap,
 } from '@/lib/futurecast-lab-data';
 import { deriveHeatLevel } from '@/lib/api/futurecast';
@@ -103,17 +103,12 @@ export function useFutureCastLabData(): FutureCastLabData {
           loadFutureCastLabPrimary(),
           loadFutureCastLabSecondaryRaw(),
         ]);
+        const discoveryOverlay = applyDiscoverySeasonOverlay(primary, secondaryRaw);
         setData({
           ...EMPTY_LAB_DATA,
           ...primary,
           ...secondaryRaw,
-          metrics: enrichHeroMetrics(
-            primary.metrics,
-            secondaryRaw.visitIntel,
-            secondaryRaw.visitRecap,
-            secondaryRaw.flipWatch,
-            secondaryRaw.movementNarratives
-          ),
+          ...discoveryOverlay,
           heatLevel: deriveHeatLevel(secondaryRaw.home, secondaryRaw.stock),
           lastUpdated: primary.lastUpdated ?? secondaryRaw.movementIntel.updatedAt ?? null,
         });

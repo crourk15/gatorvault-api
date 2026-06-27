@@ -7,6 +7,7 @@ import type {
   FutureCastPageSummary,
 } from '@/lib/api/futurecast';
 import type { MasterBoardResponse, MovementIntelResponse } from '@/lib/futurecast-board-types';
+import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import { formatRelativeUpdated } from '@/components/recruiting-hub/utils/formatDate';
 import { getPortalSeasonState, shouldShowPortalWatchlist, primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import {
@@ -15,7 +16,13 @@ import {
   UfProbabilityBarHero,
   VolatilityIndex,
 } from './primitives';
-import { futureCastPlayerToLabTarget, ufPctFromFc } from './fc-lab-types';
+import {
+  futureCastPlayerToLabTarget,
+  highPriorityToLabTarget,
+  isBattleTarget,
+  isDiscoverySeasonFocus,
+  ufPctFromFc,
+} from './fc-lab-types';
 
 const HEAT_LABELS: Record<FutureCastHeatLevel, string> = {
   hot: 'Hot cycle',
@@ -23,16 +30,13 @@ const HEAT_LABELS: Record<FutureCastHeatLevel, string> = {
   cold: 'Cool cycle',
 };
 
-function isBattleTarget(ufPct: number): boolean {
-  return ufPct >= 34 && ufPct < 67;
-}
-
 type Props = {
   summary: FutureCastPageSummary;
   metrics: FutureCastHeroMetrics;
   heatLevel: FutureCastHeatLevel;
   masterBoard: MasterBoardResponse;
   movementIntel: MovementIntelResponse;
+  highPriority?: HighPriorityPlayer[];
   lastUpdated?: string | null;
 };
 
@@ -41,16 +45,24 @@ export function FutureCastHero({
   heatLevel,
   masterBoard,
   movementIntel,
+  highPriority = [],
   lastUpdated,
 }: Props): React.ReactElement {
-  const top10 = useMemo(
-    () =>
-      [...masterBoard.players]
-        .sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1))
+  const discoveryFocus = useMemo(() => isDiscoverySeasonFocus(), []);
+  const focusYear = primaryRecruitingClassYear();
+
+  const top10 = useMemo(() => {
+    if (discoveryFocus && highPriority.length) {
+      return [...highPriority]
+        .sort((a, b) => (b.priorityScore ?? 0) - (a.priorityScore ?? 0))
         .slice(0, 10)
-        .map(futureCastPlayerToLabTarget),
-    [masterBoard.players]
-  );
+        .map(highPriorityToLabTarget);
+    }
+    return [...masterBoard.players]
+      .sort((a, b) => (b.ufConfidence ?? -1) - (a.ufConfidence ?? -1))
+      .slice(0, 10)
+      .map(futureCastPlayerToLabTarget);
+  }, [discoveryFocus, highPriority, masterBoard.players]);
 
   const top10Avg = useMemo(() => {
     if (!top10.length) return metrics.avgUFProbability;
@@ -63,12 +75,22 @@ export function FutureCastHero({
   }, [top10]);
 
   const battleCount = useMemo(() => {
+    if (discoveryFocus && highPriority.length) {
+      return highPriority.filter((p) => isBattleTarget(ufPctFromFc(p.ufProbability))).length;
+    }
     const fromSummary = masterBoard.movementSummary.riserPlayers.length;
     const classified = masterBoard.players.filter((p) => isBattleTarget(ufPctFromFc(p.ufConfidence))).length;
     return Math.max(classified, fromSummary > 0 ? Math.min(classified + 1, 12) : classified);
-  }, [masterBoard]);
+  }, [discoveryFocus, highPriority, masterBoard]);
 
   const volatilityScore = useMemo(() => {
+    if (discoveryFocus && highPriority.length) {
+      return Math.round(
+        highPriority.reduce((acc, p) => acc + Math.abs(p.delta7d ?? 0), 0) /
+          Math.max(1, highPriority.length) *
+          4
+      );
+    }
     const volatile = movementIntel.highVolatility.length;
     if (volatile > 0) return Math.min(100, volatile * 8 + 10);
     return Math.round(
@@ -76,7 +98,7 @@ export function FutureCastHero({
         Math.max(1, masterBoard.players.length) *
         4
     );
-  }, [masterBoard.players, movementIntel.highVolatility.length]);
+  }, [discoveryFocus, highPriority, masterBoard.players, movementIntel.highVolatility.length]);
 
   const volatilePositions = useMemo(() => {
     const byPos = new Map<string, number>();
@@ -91,11 +113,20 @@ export function FutureCastHero({
   }, [movementIntel.highVolatility]);
 
   const positionHeatmap = useMemo(() => {
+    const source = discoveryFocus && highPriority.length
+      ? highPriority.map((p) => ({
+          position: p.position,
+          trendDelta7d: p.delta7d ?? 0,
+        }))
+      : masterBoard.players.map((p) => ({
+          position: p.position,
+          trendDelta7d: p.trendDelta7d ?? 0,
+        }));
     const byPos = new Map<string, { count: number; vol: number }>();
-    for (const p of masterBoard.players) {
+    for (const p of source) {
       const cur = byPos.get(p.position) ?? { count: 0, vol: 0 };
       cur.count += 1;
-      cur.vol += Math.abs(p.trendDelta7d ?? 0);
+      cur.vol += Math.abs(p.trendDelta7d);
       byPos.set(p.position, cur);
     }
     return [...byPos.entries()]
@@ -106,12 +137,14 @@ export function FutureCastHero({
       }))
       .sort((a, b) => b.intensity - a.intensity)
       .slice(0, 6);
-  }, [masterBoard.players]);
+  }, [discoveryFocus, highPriority, masterBoard.players]);
 
   const updatedLabel = lastUpdated ? formatRelativeUpdated(lastUpdated) : 'just now';
   const portalSeason = useMemo(() => getPortalSeasonState(), []);
   const portalFocusOffseason = !shouldShowPortalWatchlist(portalSeason);
-  const focusYear = primaryRecruitingClassYear();
+  const meterLabel = discoveryFocus
+    ? `Commit Likelihood — Top ${focusYear} Targets`
+    : 'Commit Likelihood — Top Targets';
 
   return (
     <section className="fc-lab-hero fc-lab-bleed" data-testid="fc-lab-hero">
@@ -178,7 +211,7 @@ export function FutureCastHero({
             <UfProbabilityBarHero
               value={top10Avg}
               delta7d={avgDelta}
-              label="Commit Likelihood — Top Targets"
+              label={meterLabel}
             />
           </div>
 

@@ -36,6 +36,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
           heatLevel={data.heatLevel}
           masterBoard={data.masterBoard}
           movementIntel={data.movementIntel}
+          highPriority={data.highPriority}
           lastUpdated={data.lastUpdated}
         />
       </section>
@@ -43,7 +44,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
       <div className="rh-cc-main rh-frame">
         <div className="rh-cc-col">
           <section id={FUTURECAST_LAB_ANCHORS.masterBoard}>
-            <FutureCastTargetsPanel masterBoard={data.masterBoard} />
+            <FutureCastTargetsPanel masterBoard={data.masterBoard} highPriority={data.highPriority} />
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.trending}>
             {pending ? (

@@ -1,6 +1,12 @@
 import type { FutureCastPlayer } from '@/lib/futurecast-board-types';
 import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 import type { UnderclassmenPlayer } from '@/lib/futurecast-underclassmen-api';
+import type { FutureCastHeroMetrics, FutureCastPageSummary } from '@/lib/api/futurecast';
+import {
+  getPortalSeasonState,
+  primaryRecruitingClassYear,
+  shouldShowPortalWatchlist,
+} from '@/lib/recruiting-cycle';
 
 /** Normalized target row for FutureCast Lab UI modules. */
 export type FcLabTarget = {
@@ -48,6 +54,27 @@ export function futureCastPlayerToLabTarget(p: FutureCastPlayer): FcLabTarget {
   };
 }
 
+export function highPriorityToLabTarget(p: HighPriorityPlayer): FcLabTarget {
+  const committed = p.committedTo ?? null;
+  const uf = isFloridaCommit(committed) ? 100 : p.ufProbability;
+  return {
+    id: p.id,
+    slug: p.slug,
+    name: p.name,
+    position: p.position,
+    school: p.school ?? null,
+    classYear: p.classYear ?? primaryRecruitingClassYear(),
+    ufProbability: uf,
+    ufProbabilityLabel: p.ufProbabilityLabel ?? null,
+    delta7d: p.delta7d ?? p.movementDelta ?? null,
+    fitScore: p.fitScore ?? null,
+    modelPct: p.staffConfidence ?? uf,
+    stars: p.stars ?? null,
+    committedTo: committed,
+    predictors: (p.predictors ?? []).map((x) => ({ name: x.name, score: x.score })),
+  };
+}
+
 export function ufPctFromFc(raw: number | null | undefined): number {
   if (raw == null) return 0;
   return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
@@ -56,6 +83,45 @@ export function ufPctFromFc(raw: number | null | undefined): number {
 /** UF probability in the contested battle band (34–66%). */
 export function isBattleTarget(ufPct: number): boolean {
   return ufPct >= 34 && ufPct < 67;
+}
+
+export function isDiscoverySeasonFocus(at: Date = new Date()): boolean {
+  return !shouldShowPortalWatchlist(getPortalSeasonState(at));
+}
+
+export function overlayDiscoverySeasonLabState(
+  summary: FutureCastPageSummary,
+  metrics: FutureCastHeroMetrics,
+  highPriority: HighPriorityPlayer[]
+): { summary: FutureCastPageSummary; metrics: FutureCastHeroMetrics } {
+  if (!isDiscoverySeasonFocus()) {
+    return { summary, metrics };
+  }
+  const focusYear = primaryRecruitingClassYear();
+  const count = highPriority.length;
+  const avgUf = count
+    ? Math.round(
+        highPriority.reduce((acc, p) => acc + ufPctFromFc(p.ufProbability), 0) / count
+      )
+    : metrics.avgUFProbability;
+  return {
+    summary: {
+      ...summary,
+      classYear: focusYear,
+      targetCount: count,
+      commitCount: 0,
+    },
+    metrics: {
+      ...metrics,
+      highPriorityCount: count,
+      activePredictions: count,
+      avgUFProbability: avgUf,
+      visitIntelCount: 0,
+      visitRecapCount: 0,
+      flipWatchCount: 0,
+      movementNarrativesCount: 0,
+    },
+  };
 }
 
 export function underclassmenTargetsForYear(

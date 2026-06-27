@@ -26,6 +26,7 @@ import {
 import { fetchWithWarmPoll } from './api-warm-poll';
 import { snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch';
 import { primaryRecruitingClassYear } from './recruiting-cycle';
+import { overlayDiscoverySeasonLabState } from '@/components/futurecast/lab/fc-lab-types';
 
 const EMPTY_STOCK: StockBoardResponse = { stockUp: [], stockDown: [], windowDays: 7 };
 const EMPTY_HIGH_PRIORITY: HighPriorityResponse = {
@@ -211,21 +212,33 @@ export async function loadFutureCastLabPrimary(): Promise<
 
 export { loadFutureCastLabSecondaryRaw };
 
+export function applyDiscoverySeasonOverlay(
+  primary: Pick<FutureCastLabDataMap, 'masterBoard' | 'summary' | 'metrics' | 'lastUpdated'>,
+  secondaryRaw: Omit<
+    FutureCastLabDataMap,
+    'masterBoard' | 'summary' | 'metrics' | 'heatLevel' | 'lastUpdated'
+  >
+): Pick<FutureCastLabDataMap, 'summary' | 'metrics'> {
+  const enriched = enrichHeroMetrics(
+    primary.metrics,
+    secondaryRaw.visitIntel,
+    secondaryRaw.visitRecap,
+    secondaryRaw.flipWatch,
+    secondaryRaw.movementNarratives
+  );
+  return overlayDiscoverySeasonLabState(primary.summary, enriched, secondaryRaw.highPriority);
+}
+
 export async function loadFutureCastLabData(): Promise<FutureCastLabDataMap> {
   const [primary, secondaryRaw] = await Promise.all([
     loadFutureCastLabPrimary(),
     loadFutureCastLabSecondaryRaw(),
   ]);
+  const discoveryOverlay = applyDiscoverySeasonOverlay(primary, secondaryRaw);
   return {
     ...primary,
     ...secondaryRaw,
-    metrics: enrichHeroMetrics(
-      primary.metrics,
-      secondaryRaw.visitIntel,
-      secondaryRaw.visitRecap,
-      secondaryRaw.flipWatch,
-      secondaryRaw.movementNarratives
-    ),
+    ...discoveryOverlay,
     heatLevel: deriveHeatLevel(secondaryRaw.home, secondaryRaw.stock),
     lastUpdated: primary.lastUpdated ?? secondaryRaw.movementIntel.updatedAt ?? null,
   };
