@@ -5,9 +5,9 @@ const { ALLOWLIST_2028 } = require('./recruiting-target-allowlist');
 const { loadTargetBoardBySlug } = require('./target-board-path');
 const {
   buildAllowlistDiscoveryRow,
+  getAllowlistDiscoveryFields,
   ALLOWLIST_DISCOVERY_FLOOR,
 } = require('./early-discovery-allowlist-merge');
-const { resolveFutureCastPosition } = require('./recruiting-editorial-positions');
 
 /**
  * @typedef {object} DiscoveryEnrichment
@@ -15,6 +15,7 @@ const { resolveFutureCastPosition } = require('./recruiting-editorial-positions'
  * @property {number | null} ufFitScore
  * @property {number | null} ufProbability
  * @property {boolean} allowlistTarget
+ * @property {string | null} [position]
  */
 
 /**
@@ -67,6 +68,7 @@ async function loadDiscoveryEnrichmentBySlug(classYear = 2028) {
     if (!boardRow) continue;
 
     const seedRow = buildAllowlistDiscoveryRow(boardRow, 2028);
+    const fields = getAllowlistDiscoveryFields(key, 2028);
     const existing = map.get(key);
     const discoveryScore = Math.max(
       Number(existing?.discoveryScore) || 0,
@@ -81,6 +83,7 @@ async function loadDiscoveryEnrichmentBySlug(classYear = 2028) {
         existing?.ufProbability ??
         (seedRow.ufProbability != null ? Number(seedRow.ufProbability) : null),
       allowlistTarget: true,
+      position: fields?.position ?? existing?.position ?? null,
     });
   }
 
@@ -104,13 +107,14 @@ function applyDiscoveryEnrichment(player, enrichment) {
     fitScore: player.fitScore ?? enrichment.ufFitScore ?? null,
     ufConfidence: player.ufConfidence ?? ufFromBoard,
     allowlistTarget: enrichment.allowlistTarget ?? player.allowlistTarget ?? false,
+    position: enrichment.position ?? player.position,
   };
 }
 
 /**
  * Build a minimal watchboard row from allowlist discovery seed when board enrichment skipped a slug.
  * @param {string} slug
- * @param {import('./early-discovery-allowlist-merge').DiscoveryEnrichment} enrichment
+ * @param {DiscoveryEnrichment | undefined} enrichment
  */
 function buildAllowlistWatchboardFallback(slug, enrichment) {
   const boardBySlug = loadTargetBoardBySlug(2028);
@@ -125,15 +129,9 @@ function buildAllowlistWatchboardFallback(slug, enrichment) {
         ? Math.round(Number(seedRow.ufProbability) * 100)
         : null;
 
+  const fields = getAllowlistDiscoveryFields(slug, 2028);
   const position =
-    resolveFutureCastPosition({
-      slug: seedRow.slug,
-      classYear: 2028,
-      seed: boardRow,
-      recruiting: boardRow,
-    }) ||
-    seedRow.position ||
-    'TBD';
+    enrichment?.position ?? fields?.position ?? seedRow.position ?? 'TBD';
 
   return {
     id: seedRow.id || seedRow.slug,

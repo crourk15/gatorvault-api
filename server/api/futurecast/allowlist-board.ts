@@ -25,8 +25,9 @@ import { intelUuidForSlug, isUnderclassmenClassYear } from '../../lib/underclass
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const { ALLOWLIST_2027, CANONICAL_TARGET_NAMES } = require('../../lib/recruiting-target-allowlist');
+const { ALLOWLIST_2027, ALLOWLIST_2028, CANONICAL_TARGET_NAMES } = require('../../lib/recruiting-target-allowlist');
 const { filterBlockedRecruits, isBlockedRecruit } = require('../../lib/recruiting-blocked-players');
+const { loadTargetBoardBySlug } = require('../../lib/target-board-path');
 const { isFloridaSchool, isActiveUfTarget, isCommittedElsewhere } = require('../../lib/recruiting-target-filters');
 const { resolveCommitmentOverride } = require('../../lib/commitment-prediction-override');
 const { resolveUfProbability, loadUfPctPredictorsBySlug } = require('../../lib/uf-probability-utils');
@@ -502,6 +503,15 @@ export async function loadBoardPlayersForSlugs(
     const volatility7dResolved = override ? 0 : volatility7d;
 
     const position = (() => {
+      const key = String(slug).toLowerCase();
+      if (resolvedClassYear === 2028 && ALLOWLIST_2028.includes(key)) {
+        const boardRow = loadTargetBoardBySlug(2028).get(key);
+        if (boardRow) {
+          const { getAllowlistDiscoveryFields } = require('../../lib/early-discovery-allowlist-merge');
+          const discoveryFields = getAllowlistDiscoveryFields(key, 2028);
+          if (discoveryFields?.position) return String(discoveryFields.position).trim().toUpperCase();
+        }
+      }
       const editorial = require('../../lib/recruiting-editorial-positions');
       return editorial.resolveFutureCastPosition({
         slug,

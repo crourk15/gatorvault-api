@@ -75,6 +75,21 @@ function buildAllowlistDiscoveryRow(boardRow, classYear) {
   };
 }
 
+/** Early Discovery board fields for a locked 2028 allowlist slug. */
+function getAllowlistDiscoveryFields(slug, classYear = 2028) {
+  const key = String(slug || '').toLowerCase();
+  const boardRow = loadTargetBoardBySlug(classYear).get(key);
+  if (!boardRow) return null;
+  const row = buildAllowlistDiscoveryRow(boardRow, classYear);
+  return {
+    discoveryScore: row.discoveryScore,
+    position: row.position ? String(row.position).trim().toUpperCase() : null,
+    ufFitScore: row.ufFitScore ?? null,
+    ufProbability: row.ufProbability ?? null,
+    allowlistTarget: true,
+  };
+}
+
 function enrichAllowlistRow(row, boardRow) {
   const merged = boardRow
     ? mergeBoardSeed(
@@ -147,4 +162,5 @@ module.exports = {
   ALLOWLIST_DISCOVERY_FLOOR,
   mergeAllowlistIntoDiscovery,
   buildAllowlistDiscoveryRow,
+  getAllowlistDiscoveryFields,
 };

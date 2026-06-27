@@ -50,12 +50,15 @@ describe('buildUnderclassmenIntelForSlug', () => {
 
 describe('underclassmen discovery enrich', () => {
   it('loads discovery scores for all 2028 allowlist slugs', async () => {
-    const { loadDiscoveryEnrichmentBySlug, buildAllowlistWatchboardFallback } = require('../../lib/underclassmen-discovery-enrich');
+    const { loadDiscoveryEnrichmentBySlug, buildAllowlistWatchboardFallback, applyDiscoveryEnrichment } = require('../../lib/underclassmen-discovery-enrich');
     const { ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist');
     const map = await loadDiscoveryEnrichmentBySlug(2028);
     assert.equal(map.size, ALLOWLIST_2028.length);
     assert.ok(map.get('kaleb-ballard')?.discoveryScore >= 72);
+    assert.equal(map.get('kaleb-ballard')?.position, 'TE');
     const row = buildAllowlistWatchboardFallback('kaleb-ballard', map.get('kaleb-ballard'));
     assert.equal(row?.position, 'TE');
+    const patched = applyDiscoveryEnrichment({ slug: 'kaleb-ballard', position: 'QB' }, map.get('kaleb-ballard'));
+    assert.equal(patched.position, 'TE');
   });
 });
