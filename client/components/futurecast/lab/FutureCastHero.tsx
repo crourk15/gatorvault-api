@@ -8,7 +8,7 @@ import type {
 } from '@/lib/api/futurecast';
 import type { MasterBoardResponse, MovementIntelResponse } from '@/lib/futurecast-board-types';
 import { formatRelativeUpdated } from '@/components/recruiting-hub/utils/formatDate';
-import { getPortalSeasonState, shouldShowPortalWatchlist } from '@/lib/recruiting-cycle';
+import { getPortalSeasonState, shouldShowPortalWatchlist, primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 import {
   BattleHeatMeter,
   PositionVolatilityHeatmap,
@@ -111,6 +111,7 @@ export function FutureCastHero({
   const updatedLabel = lastUpdated ? formatRelativeUpdated(lastUpdated) : 'just now';
   const portalSeason = useMemo(() => getPortalSeasonState(), []);
   const portalFocusOffseason = !shouldShowPortalWatchlist(portalSeason);
+  const focusYear = primaryRecruitingClassYear();
 
   return (
     <section className="fc-lab-hero fc-lab-bleed" data-testid="fc-lab-hero">
@@ -122,7 +123,7 @@ export function FutureCastHero({
             <h1 className="fc-lab-hero__title rh-cc-hero__title">UF FUTURECAST LAB</h1>
             <p className="fc-lab-hero__sub rh-cc-hero__sub">
               {portalFocusOffseason
-                ? '2027 board intel plus 2028 Early Discovery — discovery scores, Vault est. ratings, and UF fit while portal intel is dormant.'
+                ? `${focusYear} Early Discovery plus locked 2028 UF targets — discovery scores, On3 ranks, and fit while portal intel is dormant.`
                 : "Commit likelihood, movement intel, fit scores, and competing schools for UF's top targets."}
             </p>
             {portalFocusOffseason ? (

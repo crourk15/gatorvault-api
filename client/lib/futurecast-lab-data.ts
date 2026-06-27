@@ -132,7 +132,10 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
       warmFetch<StaffNotesResponse>(`/api/futurecast/staff-notes?year=${focusYear}`),
       warmFetch<FutureCastHomeResponse>('/api/futurecast/home'),
       fetchStockBoard().catch(() => EMPTY_STOCK),
-      fetchHighPriorityTargets().catch(() => EMPTY_HIGH_PRIORITY),
+      fetchHighPriorityTargets(focusYear).catch(() => ({
+        ...EMPTY_HIGH_PRIORITY,
+        classYear: focusYear,
+      })),
       fetchFutureCastUnderclassmen([2028, 2029, 2030]).catch(() => ({
         ok: true,
         updatedAt: new Date().toISOString(),

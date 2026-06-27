@@ -38,8 +38,13 @@ const { buildVerifiedVisitIntelRows, applyVerifiedVisitFields, buildVerifiedVisi
 const { resolveUfProbability, loadUfPctPredictorsBySlug } = require('../../lib/uf-probability-utils');
 const { buildFlipWatchRows } = require('../../lib/flip-watch-utils');
 const intelStore = require('../../lib/recruiting-intel-store');
+const { ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist');
+const { loadUnderclassmenBoardPlayers } = require('../../lib/underclassmen-intel');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 const TARGET_BOARD_SEED_PATH = path.join(__dirname, '../../data/recruiting/2027-target-board.json');
+
+/** Underclassmen years served by the high-priority endpoint (2027 uses legacy board pipeline). */
+export const HIGH_PRIORITY_UNDERCLASSMEN_YEARS = [2028] as const;
 
 export type VisitBadgeType = 'OV' | 'UV' | 'Game Day' | 'Junior Day' | 'Spring Visit';
 
@@ -57,6 +62,7 @@ export interface HighPriorityPlayer {
   id: string;
   slug: string;
   name: string;
+  classYear?: number | null;
   position: string;
   school: string | null;
   htWt: string | null;
@@ -257,15 +263,128 @@ function loadInsiderNotesBySlug(): Map<string, string> {
   return map;
 }
 
+function ufPctFromBoard(value: number | null | undefined): number {
+  if (value == null || !Number.isFinite(value)) return 0;
+  const n = Number(value);
+  return n <= 1 ? Math.round(n * 100) : Math.round(n);
+}
+
+function isUnderclassmenHighPriorityYear(classYear: number): boolean {
+  return (HIGH_PRIORITY_UNDERCLASSMEN_YEARS as readonly number[]).includes(classYear);
+}
+
+async function loadUnderclassmenHighPrioritySlugs(classYear: number): Promise<string[]> {
+  const { getLiveBoardTargets } = require('../../lib/live-board-targets');
+  if (classYear === 2028) {
+    const live = await getLiveBoardTargets(2028);
+    const liveSlugs = live
+      .map((t: { slug?: string }) => String(t.slug || '').toLowerCase())
+      .filter(Boolean);
+    if (liveSlugs.length) return liveSlugs;
+    return ALLOWLIST_2028.map((s: string) => String(s).toLowerCase());
+  }
+  return [];
+}
+
+function boardPlayerToHighPriority(
+  p: import('./allowlist-board').FutureCastBoardPlayer
+): HighPriorityPlayer {
+  const ufProbability = ufPctFromBoard(p.ufConfidence);
+  const fitScore = Math.round(p.fitScore ?? 0);
+  const delta7d = p.trendDelta7d ?? 0;
+  const staffConfidence =
+    fitScore > 0 ? Math.min(100, Math.round(fitScore * 0.85)) : Math.round(ufProbability * 0.85);
+  const priorityScore =
+    Math.round(
+      (ufProbability * 0.5 +
+        fitScore * 0.2 +
+        staffConfidence * 0.2 +
+        Math.max(0, delta7d) * 0.1) *
+        100
+    ) / 100;
+
+  return {
+    id: p.id,
+    slug: p.slug,
+    name: p.name,
+    classYear: p.classYear,
+    position: p.position,
+    school: p.school ?? null,
+    htWt: null,
+    stars: p.stars ?? null,
+    headliner: false,
+    committedTo: p.committedTo ?? null,
+    compositeScore: p.composite ?? 0,
+    nationalRank: p.natlRank ?? null,
+    positionRank: p.posRank ?? null,
+    stateRank: p.stateRank ?? null,
+    rating: p.composite ?? null,
+    natlRank: p.natlRank ?? null,
+    posRank: p.posRank ?? null,
+    ufProbability,
+    ufProbabilitySource: p.ufProbabilitySource,
+    ufProbabilityLabel: p.ufProbabilityLabel ?? null,
+    ufProbabilityLowConfidence: p.ufProbabilityLowConfidence ?? false,
+    movementDelta: delta7d,
+    delta7d,
+    fitScore,
+    staffConfidence,
+    priorityScore,
+    insiderNotes: null,
+    notePreview: null,
+    skinny: null,
+    visitHistory: [],
+    ufOvStatus: null,
+    visitStart: null,
+    visitEnd: null,
+    trendHistory: [],
+    predictors: (p.predictors ?? []).map((x) => ({ name: x.name, score: x.score })),
+  };
+}
+
+async function buildUnderclassmenHighPriorityPayload(classYear: number) {
+  const slugs = await loadUnderclassmenHighPrioritySlugs(classYear);
+  const board = slugs.length ? await loadUnderclassmenBoardPlayers(classYear, slugs) : [];
+  const sorted = board
+    .map(boardPlayerToHighPriority)
+    .sort((a, b) => b.priorityScore - a.priorityScore);
+  const top10 = sorted.slice(0, 10);
+  const lastUpdated = new Date().toISOString();
+  const visitBoardSnapshot = getVisitIntelBoardSnapshot([]);
+
+  return {
+    classYear,
+    count: top10.length,
+    visitIntelCount: 0,
+    visitRecapCount: 0,
+    flipWatchCount: 0,
+    visitBoardSnapshot,
+    updatedAt: lastUpdated,
+    lastUpdated,
+    players: top10,
+    visitIntel: [],
+    visitRecap: [],
+    flipWatch: [],
+    movementNarratives: [],
+  };
+}
+
 export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request, res: Response) => {
   try {
     const classYear = parseYear(req.query.year ?? req.query.class_year);
-    if (classYear !== FUTURECAST_CLASS_YEAR) {
-      res.status(400).json({ error: `Only ${FUTURECAST_CLASS_YEAR} cycle is supported` });
+    if (classYear !== FUTURECAST_CLASS_YEAR && !isUnderclassmenHighPriorityYear(classYear)) {
+      res.status(400).json({
+        error: `Only ${FUTURECAST_CLASS_YEAR} and ${HIGH_PRIORITY_UNDERCLASSMEN_YEARS.join('/')} cycles are supported`,
+      });
       return;
     }
 
     const cacheKey = highPriorityCacheKey(classYear);
+
+    if (isUnderclassmenHighPriorityYear(classYear)) {
+      await sendCachedJson(res, cacheKey, () => buildUnderclassmenHighPriorityPayload(classYear));
+      return;
+    }
 
     await sendCachedJson(res, cacheKey, async () => {
       const rankings = loadRecruitingRankings();

@@ -15,7 +15,7 @@ import { GatorVaultConfirmedBadge } from './GatorVaultConfirmedBadge';
 import { FlipWatchScoreStack } from './FlipWatchScoreStack';
 import { UfTrendSparkline } from '@/components/futurecast/UfTrendSparkline';
 import { PlayerIntelTimelineStrip } from './PlayerIntelTimelineStrip';
-import { ufPctFromFc, isBattleTarget, underclassmenTargetsForYear, underclassmenToFitLeader } from './fc-lab-types';
+import { ufPctFromFc, isBattleTarget, underclassmenTargetsForYear } from './fc-lab-types';
 import { FUTURECAST_LAB_ANCHORS, playerProfileRoute } from '@/lib/vault-route-map';
 import { EarlyDiscoveryPreview } from '@/components/futurecast/EarlyDiscoveryPreview';
 import { TargetBoardPreview } from '@/components/futurecast/TargetBoardPreview';
@@ -226,28 +226,24 @@ export function FutureCastExtendedModules({
 
   const fitLeaders = useMemo(() => {
     if (discoveryFocus) {
-      return targets2028
-        .filter((p) => (p.fitScore ?? 0) > 0)
+      return [...highPriority]
         .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0))
-        .slice(0, 3)
-        .map(underclassmenToFitLeader);
+        .slice(0, 3);
     }
     return highPriority.slice(0, 3);
-  }, [discoveryFocus, targets2028, highPriority]);
+  }, [discoveryFocus, highPriority]);
 
   const sciLeaders = useMemo(() => {
     if (discoveryFocus) {
-      return targets2028
-        .slice()
+      return [...highPriority]
         .sort((a, b) => (b.fitScore ?? 0) - (a.fitScore ?? 0))
-        .slice(0, 6)
-        .map(underclassmenToFitLeader);
+        .slice(0, 6);
     }
     return highPriority
       .slice()
       .sort((a, b) => (b.staffConfidence ?? 0) - (a.staffConfidence ?? 0))
       .slice(0, 6);
-  }, [discoveryFocus, targets2028, highPriority]);
+  }, [discoveryFocus, highPriority]);
 
   const youngerProspects = useMemo(
     () =>

@@ -6,9 +6,10 @@ import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
 import type { FutureCastEliteCoreMetrics } from './futurecast-elite-api-types';
 
 /** Bump when high-priority payload shape changes (align with server/api/futurecast/response-cache.ts). */
-export const FUTURECAST_CLIENT_CACHE_VERSION = 9;
+export const FUTURECAST_CLIENT_CACHE_VERSION = 10;
 export const HIGH_PRIORITY_CACHE_KEY = `gv:futurecast:high-priority:v${FUTURECAST_CLIENT_CACHE_VERSION}`;
 export const HIGH_PRIORITY_YEAR = 2027;
+export const HIGH_PRIORITY_UNDERCLASSMEN_YEARS = [2028] as const;
 export const HIGH_PRIORITY_CACHE_TTL_MS = 5 * 60_000;
 export const HIGH_PRIORITY_STALE_CACHE_MAX_MS = 24 * 60 * 60_000;
 
@@ -124,10 +125,10 @@ export interface HighPriorityResponse {
   movementNarratives?: MovementNarrativeRow[];
 }
 
-function readHighPriorityCacheEntry(maxAgeMs: number): HighPriorityResponse | null {
+function readHighPriorityCacheEntry(maxAgeMs: number, year = HIGH_PRIORITY_YEAR): HighPriorityResponse | null {
   if (typeof window === 'undefined') return null;
   try {
-    const raw = localStorage.getItem(HIGH_PRIORITY_CACHE_KEY);
+    const raw = localStorage.getItem(`${HIGH_PRIORITY_CACHE_KEY}:${year}`);
     if (!raw) return null;
     const { savedAt, payload } = JSON.parse(raw) as {
       savedAt: number;
@@ -140,19 +141,20 @@ function readHighPriorityCacheEntry(maxAgeMs: number): HighPriorityResponse | nu
   }
 }
 
-export function readHighPriorityCache(): HighPriorityResponse | null {
-  return readHighPriorityCacheEntry(HIGH_PRIORITY_CACHE_TTL_MS);
+export function readHighPriorityCache(year = HIGH_PRIORITY_YEAR): HighPriorityResponse | null {
+  return readHighPriorityCacheEntry(HIGH_PRIORITY_CACHE_TTL_MS, year);
 }
 
-export function readStaleHighPriorityCache(): HighPriorityResponse | null {
-  return readHighPriorityCacheEntry(HIGH_PRIORITY_STALE_CACHE_MAX_MS);
+export function readStaleHighPriorityCache(year = HIGH_PRIORITY_YEAR): HighPriorityResponse | null {
+  return readHighPriorityCacheEntry(HIGH_PRIORITY_STALE_CACHE_MAX_MS, year);
 }
 
 export function writeHighPriorityCache(payload: HighPriorityResponse): void {
   if (typeof window === 'undefined') return;
+  const year = payload.classYear ?? HIGH_PRIORITY_YEAR;
   try {
     localStorage.setItem(
-      HIGH_PRIORITY_CACHE_KEY,
+      `${HIGH_PRIORITY_CACHE_KEY}:${year}`,
       JSON.stringify({ savedAt: Date.now(), payload })
     );
   } catch {
@@ -167,7 +169,7 @@ export async function fetchHighPriorityTargets(
   try {
     return await snapshotFirstFetch(path, () => snapshotLiveFetch<HighPriorityResponse>(path));
   } catch (err) {
-    const stale = readStaleHighPriorityCache();
+    const stale = readStaleHighPriorityCache(year);
     if (stale) return stale;
     throw err;
   }

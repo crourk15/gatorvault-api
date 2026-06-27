@@ -9,6 +9,7 @@ import {
   type HighPriorityPlayer,
   type HighPriorityResponse,
 } from '@/lib/futurecast-high-priority-api';
+import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
 
 const REFRESH_MS = 60_000;
 const TOP_N = 3;
@@ -24,14 +25,17 @@ function WidgetSkeleton(): React.ReactElement {
 }
 
 export function HomepageHighPriorityWidget(): React.ReactElement {
-  const [players, setPlayers] = useState<HighPriorityPlayer[]>(() => readHighPriorityCache()?.players ?? []);
+  const focusYear = primaryRecruitingClassYear();
+  const [players, setPlayers] = useState<HighPriorityPlayer[]>(
+    () => readHighPriorityCache(focusYear)?.players ?? []
+  );
   const [loading, setLoading] = useState(!players.length);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async (isBackground: boolean) => {
     if (!isBackground && !players.length) setLoading(true);
     try {
-      const data: HighPriorityResponse = await fetchHighPriorityTargets();
+      const data: HighPriorityResponse = await fetchHighPriorityTargets(focusYear);
       setPlayers(data.players.slice(0, TOP_N));
       writeHighPriorityCache(data);
       setError(null);
@@ -42,7 +46,7 @@ export function HomepageHighPriorityWidget(): React.ReactElement {
     } finally {
       setLoading(false);
     }
-  }, [players.length]);
+  }, [focusYear, players.length]);
 
   useEffect(() => {
     let cancelled = false;
@@ -81,14 +85,14 @@ export function HomepageHighPriorityWidget(): React.ReactElement {
     <section className="gv-hp-widget" data-testid="homepage-high-priority-widget">
       <header className="gv-hp-widget__head">
         <h3>High Priority Targets</h3>
-        <p>Top {TOP_N} UF board priorities · 2027 cycle</p>
+        <p>Top {TOP_N} UF board priorities · {focusYear} cycle</p>
       </header>
       <div className="gv-hp-widget__grid">
         {players.map((p, i) => (
           <HighPriorityTargetCard key={p.slug} player={p} rank={i + 1} compact />
         ))}
       </div>
-      <a href="/vault/recruiting/priority" className="gv-hp-widget__link">
+      <a href={focusYear >= 2028 ? '/vault/recruiting/2028/targets' : '/vault/recruiting/priority'} className="gv-hp-widget__link">
         View full priority board →
       </a>
     </section>

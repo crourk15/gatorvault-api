@@ -11,7 +11,7 @@ const CACHE_TTL_MS = 60_000;
 const cache = createMemoryCache(CACHE_TTL_MS);
 
 /** Bump when high-priority or master-board payload shape changes. */
-export const FUTURECAST_API_CACHE_VERSION = 6;
+export const FUTURECAST_API_CACHE_VERSION = 7;
 
 export function highPriorityCacheKey(classYear: number | string): string {
   return `futurecast:high-priority:v${FUTURECAST_API_CACHE_VERSION}:${classYear}`;
