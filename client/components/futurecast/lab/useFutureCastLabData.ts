@@ -64,6 +64,7 @@ const EMPTY_LAB_DATA: FutureCastLabDataMap = {
   heatLevel: 'warm',
   lastUpdated: null,
   highPriority: [],
+  highPriorityClosing: [],
   visitIntel: [],
   visitRecap: [],
   flipWatch: [],

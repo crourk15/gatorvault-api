@@ -2,6 +2,7 @@
 
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { primaryRecruitingClassYear } from '@/lib/recruiting-cycle';
+import type { HighPriorityPlayer } from '@/lib/futurecast-high-priority-api';
 
 export type FutureCastLabCycle = 2027 | 2028;
 
@@ -52,4 +53,13 @@ export function useFutureCastLabCycle(): FutureCastLabCycleContextValue {
     };
   }
   return ctx;
+}
+
+/** Pick discovery (2028) or closing-class (2027) high-priority rows for the active Lab cycle. */
+export function useResolvedLabHighPriority(
+  discovery: HighPriorityPlayer[],
+  closing: HighPriorityPlayer[]
+): HighPriorityPlayer[] {
+  const { discoveryView } = useFutureCastLabCycle();
+  return discoveryView ? discovery : closing;
 }

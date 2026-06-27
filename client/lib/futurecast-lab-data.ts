@@ -25,7 +25,8 @@ import {
 } from './futurecast-underclassmen-api';
 import { fetchWithWarmPoll } from './api-warm-poll';
 import { snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch';
-import { primaryRecruitingClassYear } from './recruiting-cycle';
+import { ACTIVE_RECRUITING_CLASS_YEAR, primaryRecruitingClassYear } from './recruiting-cycle';
+import { HIGH_PRIORITY_YEAR } from './futurecast-high-priority-api';
 import { overlayDiscoverySeasonLabState } from '@/components/futurecast/lab/fc-lab-types';
 
 const EMPTY_STOCK: StockBoardResponse = { stockUp: [], stockDown: [], windowDays: 7 };
@@ -60,7 +61,10 @@ export type FutureCastLabDataMap = {
   metrics: FutureCastHeroMetrics;
   heatLevel: FutureCastHeatLevel;
   lastUpdated: string | null;
+  /** High-priority targets for the active discovery class (2028 in portal dormancy). */
   highPriority: HighPriorityPlayer[];
+  /** High-priority targets for the closing class (2027). */
+  highPriorityClosing: HighPriorityPlayer[];
   visitIntel: HighPriorityPlayer[];
   visitRecap: VisitRecapRow[];
   flipWatch: FlipWatchRow[];
@@ -125,17 +129,24 @@ export async function loadFutureCastLabSecondary(
 async function loadFutureCastLabSecondaryRaw(): Promise<
   Omit<FutureCastLabDataMap, 'masterBoard' | 'summary' | 'metrics' | 'heatLevel' | 'lastUpdated'>
 > {
-  const focusYear = primaryRecruitingClassYear();
-  const [trendingR, movementR, staffR, homeR, stockR, highPriorityR, underclassmenR] =
+  const discoveryYear = primaryRecruitingClassYear();
+  const closingYear = HIGH_PRIORITY_YEAR;
+  const [trendingR, movementR, staffR, homeR, stockR, discoveryHpR, closingHpR, underclassmenR] =
     await Promise.allSettled([
       warmFetch<TrendingBoardResponse>('/api/futurecast/trending'),
       warmFetch<MovementIntelResponse>('/api/futurecast/movement-intel'),
-      warmFetch<StaffNotesResponse>(`/api/futurecast/staff-notes?year=${focusYear}`),
+      warmFetch<StaffNotesResponse>(
+        `/api/futurecast/staff-notes?year=${ACTIVE_RECRUITING_CLASS_YEAR}`
+      ),
       warmFetch<FutureCastHomeResponse>('/api/futurecast/home'),
       fetchStockBoard().catch(() => EMPTY_STOCK),
-      fetchHighPriorityTargets(focusYear).catch(() => ({
+      fetchHighPriorityTargets(discoveryYear).catch(() => ({
         ...EMPTY_HIGH_PRIORITY,
-        classYear: focusYear,
+        classYear: discoveryYear,
+      })),
+      fetchHighPriorityTargets(closingYear).catch(() => ({
+        ...EMPTY_HIGH_PRIORITY,
+        classYear: closingYear,
       })),
       fetchFutureCastUnderclassmen([2028, 2029, 2030]).catch(() => ({
         ok: true,
@@ -161,7 +172,13 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     fitScoreRisks: [],
     alerts: [],
   });
-  const staffNotes = settled(staffR, { classYear: focusYear, updatedAt: '', totalNotes: 0, count: 0, notes: [] });
+  const staffNotes = settled(staffR, {
+    classYear: ACTIVE_RECRUITING_CLASS_YEAR,
+    updatedAt: '',
+    totalNotes: 0,
+    count: 0,
+    notes: [],
+  });
   const home = settled(homeR, {
     classYear: 2027,
     commitSort: 'fit',
@@ -173,7 +190,14 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     portalWatchlist: [],
   });
   const stock = settled(stockR, EMPTY_STOCK);
-  const highPriority = settled(highPriorityR, EMPTY_HIGH_PRIORITY);
+  const discoveryHighPriority = settled(discoveryHpR, {
+    ...EMPTY_HIGH_PRIORITY,
+    classYear: discoveryYear,
+  });
+  const closingHighPriority = settled(closingHpR, {
+    ...EMPTY_HIGH_PRIORITY,
+    classYear: closingYear,
+  });
   const underclassmenPayload = settled(underclassmenR, {
     ok: true,
     updatedAt: new Date().toISOString(),
@@ -189,11 +213,12 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     staffNotes,
     home,
     stock,
-    highPriority: highPriority.players ?? [],
-    visitIntel: highPriority.visitIntel ?? [],
-    visitRecap: highPriority.visitRecap ?? [],
-    flipWatch: highPriority.flipWatch ?? [],
-    movementNarratives: highPriority.movementNarratives ?? [],
+    highPriority: discoveryHighPriority.players ?? [],
+    highPriorityClosing: closingHighPriority.players ?? [],
+    visitIntel: closingHighPriority.visitIntel ?? [],
+    visitRecap: closingHighPriority.visitRecap ?? [],
+    flipWatch: closingHighPriority.flipWatch ?? [],
+    movementNarratives: closingHighPriority.movementNarratives ?? [],
     underclassmen: underclassmenPayload.players ?? [],
   };
 }

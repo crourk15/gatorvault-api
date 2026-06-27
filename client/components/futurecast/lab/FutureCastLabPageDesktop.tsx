@@ -4,6 +4,7 @@ import React from 'react';
 import type { FutureCastLabData } from '@/components/futurecast/lab/useFutureCastLabData';
 import type { FutureCastPanelSkeleton } from '@/components/futurecast/FutureCastLabSkeleton';
 import { FUTURECAST_LAB_ANCHORS } from '@/lib/vault-route-map';
+import { useResolvedLabHighPriority } from './FutureCastLabCycleContext';
 import { FutureCastHero } from './FutureCastHero';
 import { FutureCastTargetsPanel } from './FutureCastTargetsPanel';
 import { FutureCastBattlesPanel } from './FutureCastBattlesPanel';
@@ -23,6 +24,7 @@ type Props = {
 export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.ReactElement {
   const data = lab;
   const pending = lab.secondaryLoading;
+  const highPriority = useResolvedLabHighPriority(data.highPriority, data.highPriorityClosing);
 
   return (
     <div className="rh-cc-page fc-lab-cc-page" data-testid="fc-lab-page-desktop">
@@ -33,7 +35,7 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
           heatLevel={data.heatLevel}
           masterBoard={data.masterBoard}
           movementIntel={data.movementIntel}
-          highPriority={data.highPriority}
+          highPriority={highPriority}
           lastUpdated={data.lastUpdated}
         />
       </section>
@@ -41,7 +43,7 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
       <div className="rh-cc-main rh-frame">
         <div className="rh-cc-col rh-cc-col--left">
           <section id={FUTURECAST_LAB_ANCHORS.masterBoard}>
-            <FutureCastTargetsPanel masterBoard={data.masterBoard} highPriority={data.highPriority} />
+            <FutureCastTargetsPanel masterBoard={data.masterBoard} highPriority={highPriority} />
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.movement}>
             {pending ? (
@@ -49,7 +51,7 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
             ) : (
               <FutureCastMovementPanel
                 movementIntel={data.movementIntel}
-                highPriority={data.highPriority}
+                highPriority={highPriority}
                 underclassmen={data.underclassmen}
               />
             )}
@@ -61,14 +63,14 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
               <FutureCastAnalystSignals
                 staffNotes={data.staffNotes}
                 masterBoard={data.masterBoard}
-                highPriority={data.highPriority}
+                highPriority={highPriority}
               />
             )}
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.positions}>
             <FutureCastPositionBreakdown
               players={data.masterBoard.players}
-              highPriority={data.highPriority}
+              highPriority={highPriority}
               activePredictions={data.metrics.activePredictions}
             />
           </section>
@@ -82,7 +84,7 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
               <FutureCastBattlesPanel
                 masterBoard={data.masterBoard}
                 trendingBoard={data.trendingBoard}
-                highPriority={data.highPriority}
+                highPriority={highPriority}
               />
             )}
           </section>
@@ -105,7 +107,7 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
                 masterBoard={data.masterBoard}
                 trendingBoard={data.trendingBoard}
                 movementIntel={data.movementIntel}
-                highPriority={data.highPriority}
+                highPriority={highPriority}
                 visitIntel={data.visitIntel}
                 visitRecap={data.visitRecap}
                 flipWatch={data.flipWatch}
@@ -126,7 +128,7 @@ export function FutureCastLabPageDesktop({ lab, PanelSkeleton }: Props): React.R
             masterBoard={data.masterBoard}
             staffNotes={data.staffNotes}
             movementIntel={data.movementIntel}
-            highPriority={data.highPriority}
+            highPriority={highPriority}
             underclassmen={data.underclassmen}
           />
         )}

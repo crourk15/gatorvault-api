@@ -4,6 +4,7 @@ import React from 'react';
 import type { FutureCastLabData } from '@/components/futurecast/lab/useFutureCastLabData';
 import type { FutureCastPanelSkeleton } from '@/components/futurecast/FutureCastLabSkeleton';
 import { FUTURECAST_LAB_ANCHORS } from '@/lib/vault-route-map';
+import { useResolvedLabHighPriority } from '@/components/futurecast/lab/FutureCastLabCycleContext';
 import { FutureCastHero } from '@/components/futurecast/lab/FutureCastHero';
 import { FutureCastTargetsPanel } from '@/components/futurecast/lab/FutureCastTargetsPanel';
 import { FutureCastBattlesPanel } from '@/components/futurecast/lab/FutureCastBattlesPanel';
@@ -26,6 +27,7 @@ type Props = {
 export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.ReactElement {
   const data = lab;
   const pending = lab.secondaryLoading;
+  const highPriority = useResolvedLabHighPriority(data.highPriority, data.highPriorityClosing);
 
   return (
     <div className="rh-cc-page fc-lab-cc-page" data-testid="fc-lab-page-mobile">
@@ -36,7 +38,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
           heatLevel={data.heatLevel}
           masterBoard={data.masterBoard}
           movementIntel={data.movementIntel}
-          highPriority={data.highPriority}
+          highPriority={highPriority}
           lastUpdated={data.lastUpdated}
         />
       </section>
@@ -44,7 +46,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
       <div className="rh-cc-main rh-frame">
         <div className="rh-cc-col">
           <section id={FUTURECAST_LAB_ANCHORS.masterBoard}>
-            <FutureCastTargetsPanel masterBoard={data.masterBoard} highPriority={data.highPriority} />
+            <FutureCastTargetsPanel masterBoard={data.masterBoard} highPriority={highPriority} />
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.trending}>
             {pending ? (
@@ -53,7 +55,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
               <FutureCastBattlesPanel
                 masterBoard={data.masterBoard}
                 trendingBoard={data.trendingBoard}
-                highPriority={data.highPriority}
+                highPriority={highPriority}
               />
             )}
           </section>
@@ -63,7 +65,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
             ) : (
               <FutureCastMovementPanel
                 movementIntel={data.movementIntel}
-                highPriority={data.highPriority}
+                highPriority={highPriority}
                 underclassmen={data.underclassmen}
               />
             )}
@@ -75,14 +77,14 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
               <FutureCastAnalystSignals
                 staffNotes={data.staffNotes}
                 masterBoard={data.masterBoard}
-                highPriority={data.highPriority}
+                highPriority={highPriority}
               />
             )}
           </section>
           <section id={FUTURECAST_LAB_ANCHORS.positions}>
             <FutureCastPositionBreakdown
               players={data.masterBoard.players}
-              highPriority={data.highPriority}
+              highPriority={highPriority}
               activePredictions={data.metrics.activePredictions}
             />
           </section>
@@ -94,7 +96,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
                 masterBoard={data.masterBoard}
                 trendingBoard={data.trendingBoard}
                 movementIntel={data.movementIntel}
-                highPriority={data.highPriority}
+                highPriority={highPriority}
                 visitIntel={data.visitIntel}
                 visitRecap={data.visitRecap}
                 flipWatch={data.flipWatch}
@@ -126,7 +128,7 @@ export function FutureCastLabPageMobile({ lab, PanelSkeleton }: Props): React.Re
             masterBoard={data.masterBoard}
             staffNotes={data.staffNotes}
             movementIntel={data.movementIntel}
-            highPriority={data.highPriority}
+            highPriority={highPriority}
             underclassmen={data.underclassmen}
           />
         )}
