@@ -75,7 +75,6 @@ function mergeWarRoomFields(player, enriched) {
     playerComp,
     insiderNotes: notesOk ? String(evaluatorNotes).trim() : enriched.insiderNotes || null,
     evaluatorNotes,
-    skinny: enriched.skinny || (notesOk ? String(evaluatorNotes).slice(0, 280) : null),
     profileNote: enriched.profileNote || breakdown.recruitingStory || null,
   };
 }

@@ -104,9 +104,15 @@ function distinctIntel(primary, playerName, ...candidates) {
   return null;
 }
 
+function isRankLineBlurb(text, playerName) {
+  const s = String(text || '').trim();
+  if (!s || s.length > 140) return false;
+  return !isGenericBeatArticle(s, playerName);
+}
+
 function rankNote(player) {
-  const preview = firstVerifiedIntel(player, ['skinny', 'notePreview'], player.name);
-  if (preview) return preview;
+  const skinny = player.skinny ? String(player.skinny).trim() : '';
+  if (skinny && isRankLineBlurb(skinny, player.name)) return skinny;
   return fallbackCommitBlurb(player);
 }
 
