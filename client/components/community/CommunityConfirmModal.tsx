@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 
 type Props = {
   open: boolean;
@@ -27,8 +28,7 @@ export function CommunityConfirmModal({
 }: Props): React.ReactElement | null {
   useEffect(() => {
     if (!open) return;
-    document.body.classList.add('gv-community-modal-open');
-    return () => document.body.classList.remove('gv-community-modal-open');
+    return lockBodyScroll();
   }, [open]);
 
   if (!open) return null;

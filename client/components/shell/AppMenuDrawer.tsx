@@ -6,6 +6,7 @@ import { usePathname } from '@/lib/use-pathname';
 import { getAppMenuSections } from '@/lib/app-menu-routes';
 import { isVaultPath } from '@/lib/vault-routes';
 import { useAppMenu } from '@/components/shell/AppMenuContext';
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 
 export function AppMenuDrawer(): React.ReactElement {
   const pathname = usePathname();
@@ -19,11 +20,7 @@ export function AppMenuDrawer(): React.ReactElement {
 
   useEffect(() => {
     if (!isOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = prev;
-    };
+    return lockBodyScroll();
   }, [isOpen]);
 
   return (

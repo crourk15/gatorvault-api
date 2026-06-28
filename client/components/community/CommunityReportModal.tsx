@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { REPORT_REASONS, type ReportReasonId } from '@/lib/community-ugc';
 
 type Props = {
@@ -22,9 +23,8 @@ export function CommunityReportModal({
 
   useEffect(() => {
     if (!open) return;
-    document.body.classList.add('gv-community-modal-open');
     setReason('inappropriate');
-    return () => document.body.classList.remove('gv-community-modal-open');
+    return lockBodyScroll();
   }, [open]);
 
   if (!open) return null;

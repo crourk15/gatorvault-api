@@ -261,6 +261,17 @@ body.gv-team-modal-open .gv-vault-bottom-nav {
   z-index: 1;
 }
 
+body.gv-scroll-locked {
+  overflow: hidden;
+  touch-action: none;
+}
+
+body.gv-scroll-locked .gv-vault-shell__header,
+body.gv-scroll-locked .gv-vault-shell__sidebar,
+body.gv-scroll-locked .gv-vault-bottom-nav {
+  z-index: 1;
+}
+
 body.gv-live-page-active .gv-vault-shell__main {
   overflow: visible;
 }
@@ -2156,8 +2167,59 @@ a.gv-live-item__title:hover {
   margin: 2px 0 0;
 }
 
-body.gv-community-modal-open {
+body.gv-community-modal-open,
+body.gv-scroll-locked {
   overflow: hidden;
+  touch-action: none;
+}
+
+@media (max-width: 767px) {
+  .gv-community__action-btn,
+  .gv-community-modal__btn,
+  .gv-community-modal__close {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .gv-community__action-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .gv-community-modal__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+  }
+
+  .gv-community-modal__btn {
+    flex: 1 1 auto;
+    min-width: min(100%, 8rem);
+    padding: 0.625rem 1rem;
+  }
+
+  .gv-community-modal__actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .gv-community-modal-overlay {
+    padding:
+      max(1rem, env(safe-area-inset-top, 0))
+      max(1rem, env(safe-area-inset-right, 0))
+      max(1rem, env(safe-area-inset-bottom, 0))
+      max(1rem, env(safe-area-inset-left, 0));
+  }
+
+  .gv-community__new-btn,
+  .gv-community__select {
+    min-height: 44px;
+  }
+
+  .gv-community__post-actions {
+    gap: 0.5rem;
+  }
 }
 
 .gv-community__loading {

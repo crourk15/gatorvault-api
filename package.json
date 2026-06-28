@@ -28,6 +28,7 @@
     "proof:mobile:deploy": "node client/scripts/run-mobile-deploy-proof.js",
     "verify:netlify:build": "node client/scripts/verify-netlify-build-match.js",
     "verify:cold-start:api": "node client/scripts/verify-cold-start-api.js",
+    "verify:mobile:hardening": "node client/scripts/verify-mobile-hardening.js",
     "deploy:render": "node server/scripts/deploy-render.js --deploy --clear-cache",
     "start": "npm start --prefix server",
     "dev": "npm run dev --prefix server",

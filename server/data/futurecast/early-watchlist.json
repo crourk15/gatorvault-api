@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-21T18:00:00.000Z",
+  "updatedAt": "2026-06-27T23:35:24.107Z",
   "description": "FutureCast early discovery — 2030 watchlist only (2028 targets live in recruiting store + allowlist)",
   "entries": [
     {
@@ -17,7 +17,12 @@
       "fitScore": 68,
       "discoveryScore": 58,
       "earlyMovement": 0.01,
-      "competingSchools": [{ "name": "Florida", "pct": 15 }]
+      "competingSchools": [
+        {
+          "name": "Florida",
+          "pct": 15
+        }
+      ]
     },
     {
       "slug": "young-fl-wr-2030",
@@ -32,8 +37,13 @@
       "ufProbability": 0.15,
       "fitScore": 65,
       "discoveryScore": 55,
-      "earlyMovement": 0.0,
-      "competingSchools": [{ "name": "Florida", "pct": 12 }]
+      "earlyMovement": 0,
+      "competingSchools": [
+        {
+          "name": "Florida",
+          "pct": 12
+        }
+      ]
     },
     {
       "slug": "young-fl-ath-2030",
@@ -49,7 +59,16 @@
       "fitScore": 70,
       "discoveryScore": 62,
       "earlyMovement": 0.02,
-      "competingSchools": [{ "name": "Florida", "pct": 18 }, { "name": "Florida State", "pct": 14 }]
+      "competingSchools": [
+        {
+          "name": "Florida",
+          "pct": 18
+        },
+        {
+          "name": "Florida State",
+          "pct": 14
+        }
+      ]
     },
     {
       "slug": "young-fl-dl-2030",
@@ -60,12 +79,17 @@
       "school": "Carol City HS, FL",
       "state": "FL",
       "stars": 3,
-      "rating": 86.0,
+      "rating": 86,
       "ufProbability": 0.2,
       "fitScore": 67,
       "discoveryScore": 60,
       "earlyMovement": 0.01,
-      "competingSchools": [{ "name": "Florida", "pct": 16 }]
+      "competingSchools": [
+        {
+          "name": "Florida",
+          "pct": 16
+        }
+      ]
     },
     {
       "slug": "young-fl-lb-2030",
@@ -80,8 +104,13 @@
       "ufProbability": 0.17,
       "fitScore": 64,
       "discoveryScore": 57,
-      "earlyMovement": 0.0,
-      "competingSchools": [{ "name": "Florida", "pct": 14 }]
+      "earlyMovement": 0,
+      "competingSchools": [
+        {
+          "name": "Florida",
+          "pct": 14
+        }
+      ]
     },
     {
       "slug": "young-fl-rb-2030",
@@ -97,7 +126,25 @@
       "fitScore": 66,
       "discoveryScore": 59,
       "earlyMovement": 0.01,
-      "competingSchools": [{ "name": "Florida", "pct": 15 }]
+      "competingSchools": [
+        {
+          "name": "Florida",
+          "pct": 15
+        }
+      ]
+    },
+    {
+      "slug": "tyzon-swann",
+      "name": "Tyzon Swann",
+      "classYear": 2028,
+      "tier": "target",
+      "pos": "ATH",
+      "school": "",
+      "state": null,
+      "stars": 4,
+      "rating": 96.0263440860215,
+      "ufProbability": null,
+      "fitScore": null
     }
   ]
 }

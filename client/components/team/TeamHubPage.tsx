@@ -7,6 +7,7 @@ import { fetchFutureCastMasterBoard } from '@/lib/futurecast-board-api';
 import type { Coach, DepthChartTab, Era } from '@/lib/team-hub-types';
 import type { RosterFilter } from '@/lib/team-hub-data';
 import { saveVaultPageState, useVaultDataReload, useVaultPageRestore } from '@/lib/vault-navigation';
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { CoachingStaffModal, EraDetailModal } from '@/components/team/CoachingStaffModal';
 import { TeamElitePageShell } from '@/components/team/premium/TeamElitePageShell';
 import { TeamPremiumHero } from '@/components/team/premium/TeamPremiumHero';
@@ -107,8 +108,9 @@ export function TeamHubPage(): React.ReactElement {
   }, [rosterFilter]);
 
   useEffect(() => {
-    document.body.classList.toggle('gv-team-modal-open', Boolean(selectedCoach || selectedEra));
-    return () => document.body.classList.remove('gv-team-modal-open');
+    const open = Boolean(selectedCoach || selectedEra);
+    if (!open) return;
+    return lockBodyScroll();
   }, [selectedCoach, selectedEra]);
 
   useEffect(() => {

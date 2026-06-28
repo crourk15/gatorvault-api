@@ -314,6 +314,7 @@ function VaultCommunityPageInner({ initialThreadId }: { initialThreadId?: string
       title="Community"
       subtitle="Member-led talk, game week analysis, recruiting debate, and insider reaction."
       testId="vault-community"
+      className="gv-community mobile-app"
     >
       <div className="gv-community__layout">
         <div className="gv-community__main">

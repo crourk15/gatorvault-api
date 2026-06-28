@@ -391,6 +391,21 @@
       "inState": false,
       "committedTo": null,
       "ufProbability": 0.02
+    },
+    {
+      "slug": "tyzon-swann",
+      "name": "Tyzon Swann",
+      "pos": "ATH",
+      "school": "Florida HS pipeline",
+      "state": "FL",
+      "stars": 4,
+      "rating": 96.0263440860215,
+      "natlRank": null,
+      "posRank": 2,
+      "stateRank": 1,
+      "inState": false,
+      "committedTo": null,
+      "ufProbability": 0.09
     }
   ]
 }
