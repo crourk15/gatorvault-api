@@ -44,6 +44,11 @@ export function homeWowBootScript(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
         if (skeleton) skeleton.style.display = 'none';
         var body = card.querySelector('[data-home-boot-body]');
         if (body) body.hidden = false;
+        var row = card.querySelector('.home-wow-metrics-row');
+        if (row) {
+          row.style.removeProperty('display');
+          row.hidden = false;
+        }
         card.setAttribute('data-home-boot-painted', 'metrics');
       }
 

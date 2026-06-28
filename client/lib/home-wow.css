@@ -477,6 +477,11 @@
   margin-top: 4px;
 }
 
+/* Boot + CSR handoff must never leave snapshot metrics collapsed (inline display:none). */
+[data-testid='home-recruiting-snapshot'] .home-wow-metrics-row {
+  display: grid !important;
+}
+
 @media (max-width: 767px) {
   .home-wow-metrics-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));

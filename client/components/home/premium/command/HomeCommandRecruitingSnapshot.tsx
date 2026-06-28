@@ -59,6 +59,17 @@ function MetricBlock({
 }
 
 export function HomeCommandRecruitingSnapshot({ metrics, loading }: Props): React.ReactElement {
+  const metricsRowRef = React.useRef<HTMLDivElement>(null);
+  const hasLiveMetrics = metrics.blocks.some((block) => block.value !== '—');
+
+  React.useEffect(() => {
+    if (loading && !hasLiveMetrics) return;
+    const row = metricsRowRef.current;
+    if (!row) return;
+    row.style.removeProperty('display');
+    row.hidden = false;
+  }, [loading, hasLiveMetrics, metrics]);
+
   return (
     <>
       <div className="home-wow-section-header">
@@ -69,34 +80,30 @@ export function HomeCommandRecruitingSnapshot({ metrics, loading }: Props): Reac
         <span className="home-wow-card-watermark" aria-hidden="true">
           UF
         </span>
-        {loading ? (
-          <>
-            <div className="home-wow-skeleton home-wow-skeleton--overlay" data-home-boot-skeleton aria-hidden="true" />
-            <div data-home-boot-body>
-              <div className="home-wow-metrics-row">
-                {BOOT_METRICS.map((item) => (
+        {loading && !hasLiveMetrics ? (
+          <div className="home-wow-skeleton home-wow-skeleton--overlay" data-home-boot-skeleton aria-hidden="true" />
+        ) : null}
+        <div data-home-boot-body hidden={loading && !hasLiveMetrics ? true : undefined}>
+          <div className="home-wow-metrics-row" ref={metricsRowRef}>
+            {loading && !hasLiveMetrics
+              ? BOOT_METRICS.map((item) => (
                   <div className="home-wow-metric-block" key={item.key}>
                     <p className="home-wow-metric-label">{item.label}</p>
                     <p className="home-wow-metric-value" data-home-metric={item.key}>
                       —
                     </p>
                   </div>
+                ))
+              : metrics.blocks.map((block) => (
+                  <MetricBlock key={block.label} block={block} updatedLabel={metrics.updatedLabel} />
                 ))}
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="home-wow-metrics-row">
-              {metrics.blocks.map((block) => (
-                <MetricBlock key={block.label} block={block} updatedLabel={metrics.updatedLabel} />
-              ))}
-            </div>
-            <a href={VAULT_PILLAR_ROUTES.recruiting} className="home-wow-cta-link">
-              View full Recruiting Command Center →
-            </a>
-          </>
-        )}
+          </div>
+        </div>
+        {!loading || hasLiveMetrics ? (
+          <a href={VAULT_PILLAR_ROUTES.recruiting} className="home-wow-cta-link">
+            View full Recruiting Command Center →
+          </a>
+        ) : null}
       </section>
     </>
   );
