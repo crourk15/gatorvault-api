@@ -36,6 +36,24 @@ const MAX_INTEL_AGE_MS = parseInt(
   10
 );
 
+/** Recruiting commit sources eligible for X autopost (On3 board + beat-verified allowlist). */
+const COMMIT_EVENT_SOURCES = new Set(['on3', 'hayes_fawcett', 'rivals_beat', 'allowlist-commit-ingest']);
+
+function isCommitAutopostEvent(ev) {
+  return ev && ['commit', 'flip'].includes(String(ev.eventType || '')) && COMMIT_EVENT_SOURCES.has(String(ev.source || ''));
+}
+
+function commitSourceMeta(ev) {
+  const src = String(ev?.source || 'on3');
+  if (src === 'hayes_fawcett') {
+    return { label: 'Hayes Fawcett', url: 'https://x.com/hayesfawcett3', queueSource: 'auto:hayes-commit' };
+  }
+  if (src === 'rivals_beat') {
+    return { label: 'Rivals', url: SITE_URL, queueSource: 'auto:rivals-commit' };
+  }
+  return { label: 'On3', url: ON3_PORTAL, queueSource: 'auto:on3-event' };
+}
+
 function attachNewsMeta(row, built) {
   if (!row || !built) return row;
   return {
@@ -83,7 +101,8 @@ function commitAlreadyQueued(fp, items) {
 }
 
 async function buildNewsFromEvent(ev) {
-  const built = await copy.buildRecruitingEventCopyAsync(ev, { source: 'On3' });
+  const meta = commitSourceMeta(ev);
+  const built = await copy.buildRecruitingEventCopyAsync(ev, { source: meta.label });
   if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
   const player = ev.payload?.player || { slug: ev.playerSlug };
   const fp = commitFingerprint(player);
@@ -93,9 +112,10 @@ async function buildNewsFromEvent(ev) {
       category: 'news',
       topic: ev.eventType?.startsWith('portal') ? 'portal' : 'recruiting',
       urgencyLabel: ev.eventType?.startsWith('portal') ? 'portal' : 'commitment',
+      postUrgency: 'breaking',
       sourceEventType: ev.eventType,
-      sources: [{ label: 'On3', url: ON3_PORTAL }],
-      source: 'auto:on3-event',
+      sources: [{ label: meta.label, url: meta.url }],
+      source: meta.queueSource,
       commitFingerprint: fp,
       intelFingerprint: fp,
       sourceEventId: ev.id,
@@ -434,7 +454,7 @@ async function collectFreshPostCandidates() {
     const events = await recruitingStore.getEvents({ limit: 50 });
     const cutoff = Date.now() - MAX_COMMIT_EVENT_AGE_MS;
     for (const ev of events
-      .filter((e) => e.source === 'on3' && ['commit', 'flip'].includes(e.eventType))
+      .filter((e) => isCommitAutopostEvent(e))
       .filter((e) => !String(e.title || '').includes('ranking'))
       .filter((e) => new Date(e.createdAt).getTime() >= cutoff)
       .slice(0, 5)) {
@@ -581,6 +601,73 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
   };
 }
 
+/**
+ * Queue a UF commit/flip for X immediately after ingest (On3 or beat-verified allowlist).
+ * Accepts a persisted recruiting event or a synthetic payload from allowlist ingest.
+ */
+async function queueCommitEventAutopost(input, { urgent = true } = {}) {
+  if (!pipelineGuards.autopostEnabled()) {
+    return { queued: false, reason: 'autoposter_disabled' };
+  }
+
+  const player = input.payload?.player || input.player || null;
+  const eventType = input.eventType || (input.event?.eventType) || 'commit';
+  const source = input.source || input.event?.source || 'on3';
+  const ev = {
+    id: input.id || input.event?.id || null,
+    eventType,
+    source,
+    playerSlug: input.playerSlug || player?.slug || null,
+    title: input.title || input.event?.title || null,
+    skinny: input.skinny || input.event?.skinny || null,
+    detail: input.detail || input.event?.detail || null,
+    createdAt: input.createdAt || input.event?.createdAt || new Date().toISOString(),
+    payload: { player: player || input.payload?.player },
+  };
+
+  if (!isCommitAutopostEvent(ev)) {
+    return { queued: false, reason: 'ineligible_source', source: ev.source };
+  }
+
+  const doc = store.loadQueue();
+  const fp = commitFingerprint(player || { slug: ev.playerSlug });
+  if (fp && commitAlreadyQueued(fp, doc.items)) {
+    return { queued: false, reason: 'duplicate', commitFingerprint: fp };
+  }
+
+  const raw = await buildNewsFromEvent(ev);
+  if (!raw) return { queued: false, reason: 'invalid_copy' };
+
+  const scored = await finalizeNewsCandidate({
+    ...raw,
+    postUrgency: urgent ? 'breaking' : raw.postUrgency,
+    scheduledAt: new Date(Date.now() + (urgent ? 60 : 120) * 1000).toISOString(),
+    status: 'pending',
+  });
+  if (!scored) return { queued: false, reason: 'quality_gate' };
+
+  if (similarPostQueued(scored.text, doc.items)) {
+    return { queued: false, reason: 'similar_post' };
+  }
+
+  const gm2 = require('./gm2');
+  if (!gm2.filterAutoposterCandidate(scored)) {
+    return { queued: false, reason: 'gm2_rejected' };
+  }
+
+  const check = policy.validatePostContent(scored);
+  if (!check.valid) return { queued: false, reason: 'policy', errors: check.errors };
+
+  const out = store.enqueuePost({
+    ...scored,
+    qualityScore: scored.qualityScore ?? check.scored?.score ?? null,
+    qualityBreakdown: scored.qualityBreakdown ?? check.scored?.breakdown ?? null,
+    sourceConfidence: scored.sourceConfidence ?? check.scored?.sourceConfidence ?? null,
+  });
+
+  return { queued: true, item: out.item, commitFingerprint: fp };
+}
+
 module.exports = {
   refillAutoposterQueue,
   collectFreshPostCandidates,
@@ -591,5 +678,8 @@ module.exports = {
   fingerprintAlreadyQueued,
   buildNewsFromIntel,
   buildNewsFromBeatPost,
-  buildMomentumFromBeat
+  buildMomentumFromBeat,
+  queueCommitEventAutopost,
+  isCommitAutopostEvent,
+  COMMIT_EVENT_SOURCES,
 };

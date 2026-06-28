@@ -16,7 +16,7 @@ const { applyEditorialPositionToPlayer } = require('./recruiting-editorial-posit
 const { isPlaceholderSchool } = require('./recruiting-placeholder-school');
 const { discoverOn3RecruitSlug, profileToSchoolPatch } = require('./on3-recruit-discovery');
 const { persistAllowlistPlayerToJson, applyAllowlistIntelSkinny } = require('./allowlist-school-persist');
-const { isFloridaSchool, isActiveUfTarget, isCommittedElsewhere } = require('./recruiting-target-filters');
+const { isFloridaSchool, isActiveUfTarget, isCommittedElsewhere, applyHeadlinerRules, effectiveStars } = require('./recruiting-target-filters');
 const monitoring = require('./recruiting-monitoring');
 
 const DELAY_MS = Math.max(250, parseInt(process.env.ON3_INGEST_DELAY_MS || '450', 10) || 450);
@@ -76,6 +76,11 @@ function profilePatchFromOn3(profile, classYear) {
   const commit = on3Recruit.getCollegeCommit(profile.topTeams, classYear);
   const committedTo = commit ? teamNameFromOn3(commit.team) : null;
   const ufCommitted = commit && on3Recruit.isFloridaTeam(commit);
+  const rp = profile.rankingsPlayer || {};
+  const starCandidates = [rp.consensusStars, rp.stars, profile.stars]
+    .map((n) => Number(n))
+    .filter((n) => Number.isFinite(n) && n > 0);
+  const stars = starCandidates.length ? Math.max(...starCandidates) : profile.stars ?? null;
 
   const patch = {
     name: profile.name,
@@ -86,16 +91,18 @@ function profilePatchFromOn3(profile, classYear) {
     category: committedTo ? 'recruit' : 'target',
     commitDate: commit?.committedDate || null,
     on3Source: 'on3-allowlist-sync',
+    stars,
+    consensusStars: rp.consensusStars ?? null,
+    natlRank: rp.consensusOverallRank ?? rp.consensusNationalRank ?? profile.natlRank ?? null,
+    posRank: rp.consensusPositionRank ?? rp.positionRank ?? profile.posRank ?? null,
+    stateRank: rp.consensusStateRank ?? rp.stateRank ?? profile.stateRank ?? null,
   };
 
   if (profile.school) patch.school = profile.school;
   if (profile.state) patch.state = profile.state;
-  if (profile.rating != null && Number.isFinite(Number(profile.rating))) {
-    patch.rating = Number(profile.rating);
-    patch.stars = profile.stars ?? patch.stars ?? null;
-    patch.natlRank = profile.natlRank ?? null;
-    patch.posRank = profile.posRank ?? null;
-    patch.stateRank = profile.stateRank ?? null;
+  const rating = profile.rating ?? rp.consensusRating ?? rp.rating ?? null;
+  if (rating != null && Number.isFinite(Number(rating))) {
+    patch.rating = Number(rating);
     patch.on3Source = 'on3-board-sync';
   }
 
@@ -127,7 +134,10 @@ function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, cl
     commitDate: profilePatch.commitDate ?? existing?.commitDate ?? localPlayer?.commitDate ?? null,
     commitmentSyncAt: new Date().toISOString(),
     commitmentSource: profilePatch.committedTo ? 'on3-allowlist-sync' : existing?.commitmentSource || null,
-    on3Source: profilePatch.on3Source || 'on3-allowlist-sync',
+    on3Source: profilePatch.on3Source || existing?.on3Source || 'on3-allowlist-sync',
+    on3Slug: profilePatch.on3Slug ?? existing?.on3Slug ?? localPlayer?.on3Slug ?? null,
+    on3ProfileUrl: profilePatch.on3ProfileUrl ?? existing?.on3ProfileUrl ?? localPlayer?.on3ProfileUrl ?? null,
+    ufOvStatus: profilePatch.ufOvStatus ?? existing?.ufOvStatus ?? localPlayer?.ufOvStatus ?? null,
     updatedAt: new Date().toISOString(),
   });
 
@@ -145,7 +155,7 @@ function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, cl
   ) {
     merged.school = existing.school;
   }
-  return applyCanonicalFixup(slug, merged);
+  return applyHeadlinerRules(applyCanonicalFixup(slug, merged));
 }
 
 async function buildProfilePatchFromDiscovery(slug, classYear, existing, playerName) {
@@ -651,6 +661,332 @@ function runCommitmentIntelligence() {
   };
 }
 
+const { commitFingerprint } = require('./commit-fingerprint');
+const { buildOn3ProfileUrl } = require('./on3-urls');
+const { isAllowlistedTarget } = require('./recruiting-target-allowlist');
+const on3Client = require('./on3-client');
+const { clearHubCache } = require('./recruiting-hub-cache');
+const { clearHeatCheckCache } = require('./heat-check-store');
+const { normalizeIntelTimestamp } = require('./commit-fingerprint');
+const TARGET_BOARD_2028 = path.join(store.DATA_DIR, '2028-target-board.json');
+const ALLOWLIST_SLUGS_2028 = path.join(store.DATA_DIR, 'on3-allowlist-slugs-2028.json');
+const BEAT_COMMIT_SNAPSHOT = path.join(store.DATA_DIR, 'allowlist-commit-ingest-snapshot.json');
+
+function loadOn3RecruitSlug(slug, classYear) {
+  if (parseInt(classYear, 10) !== 2028) return null;
+  const doc = readJson(ALLOWLIST_SLUGS_2028, { slugs: {} });
+  return doc.slugs?.[slug] || null;
+}
+
+function buildCommitSkinny(player) {
+  const bits = [
+    player.pos,
+    player.stars ? `${player.stars}-star` : null,
+    player.school,
+    player.natlRank ? `#${player.natlRank} natl` : null,
+  ].filter(Boolean);
+  return bits.join(' | ');
+}
+
+function patchTargetBoardCommit(slug, patch) {
+  const doc = readJson(TARGET_BOARD_2028, { targets: [] });
+  let updated = false;
+  doc.targets = (doc.targets || []).map((t) => {
+    if (canonicalTargetSlug(t.slug) !== canonicalTargetSlug(slug)) return t;
+    updated = true;
+    return { ...t, ...patch };
+  });
+  if (updated) {
+    doc.updatedAt = new Date().toISOString();
+    writeJson(TARGET_BOARD_2028, doc);
+  }
+  return updated;
+}
+
+function patchOn3SnapshotCommit(classYear, player) {
+  const snapshot = readJson(ON3_SNAPSHOT, { initialized: false, years: {}, commitFingerprints: {} });
+  snapshot.years = snapshot.years || {};
+  snapshot.years[classYear] = snapshot.years[classYear] || { commits: {}, rankings: null };
+  const key = on3Client.playerKey(player);
+  if (!key) return false;
+  snapshot.years[classYear].commits[key] = {
+    on3Id: player.on3Id,
+    name: player.name,
+    pos: player.pos,
+    classYear: player.classYear,
+    school: player.school,
+    htWt: player.htWt || '',
+    stars: player.stars,
+    rating: player.rating,
+    natlRank: player.natlRank,
+    posRank: player.posRank,
+    stateRank: player.stateRank,
+    inState: player.inState,
+    status: 'committed',
+    commitDate: player.commitDate,
+    committedTo: 'Florida',
+    skinny: player.skinny || '',
+    sourceStatus: 'Committed',
+  };
+  const fp = commitFingerprint(player);
+  if (fp) {
+    snapshot.commitFingerprints = snapshot.commitFingerprints || {};
+    snapshot.commitFingerprints[fp] = {
+      commitDate: player.commitDate || null,
+      registeredAt: new Date().toISOString(),
+      source: 'allowlist_commit_ingest',
+    };
+  }
+  writeJson(ON3_SNAPSHOT, snapshot);
+  return true;
+}
+
+async function fireAllowlistCommitEvent({ player, existing, source, detail }) {
+  const slug = player.slug || store.slugify(player.name);
+  const wasTarget =
+    existing &&
+    (existing.category === 'target' ||
+      existing.status === 'target' ||
+      existing.status === 'uncommitted' ||
+      (existing.committedTo && existing.committedTo !== 'Florida'));
+  const eventType = wasTarget && existing?.committedTo !== 'Florida' ? 'flip' : 'commit';
+  const copy = require('./recruiting-alert-templates').buildRecruitingCopy({
+    player: { ...player, committedTo: 'Florida' },
+    eventType,
+    row: { detail },
+  });
+  return store.fireRecruitingEvent({
+    eventType,
+    player: {
+      slug,
+      name: player.name,
+      pos: player.pos,
+      classYear: player.classYear,
+      school: player.school,
+      stars: player.stars,
+      rating: player.rating,
+      natlRank: player.natlRank,
+      posRank: player.posRank,
+      stateRank: player.stateRank,
+      inState: player.inState,
+      category: 'recruit',
+      on3Id: player.on3Id,
+      commitDate: player.commitDate || null,
+      committedTo: 'Florida',
+      headliner: player.headliner || false,
+      skinny: copy.skinny || buildCommitSkinny(player),
+      profileNote: copy.profileNote,
+    },
+    skinny: copy.skinny || buildCommitSkinny(player),
+    detail: detail || copy.profileNote,
+    source: source || 'rivals_beat',
+  });
+}
+
+async function ingestAllowlistCommit(opts = {}) {
+  const slug = canonicalTargetSlug(opts.slug);
+  if (!slug) throw new Error('slug required');
+
+  const existing = await store.findBySlug(slug);
+  const classYear = parseInt(opts.classYear || existing?.classYear || 2028, 10);
+  if (!isAllowlistedTarget(existing || { slug, classYear })) {
+    throw new Error(`Not on Charles allowlist: ${slug} (${classYear})`);
+  }
+
+  const on3Slug = existing?.on3Slug || loadOn3RecruitSlug(slug, classYear);
+  if (!on3Slug) throw new Error(`Missing On3 recruit slug for ${slug}`);
+
+  const profile = await on3Recruit.fetchRecruitProfile(on3Slug, classYear);
+  if (!profile || profile.error) {
+    throw new Error(profile?.error || `On3 profile fetch failed for ${on3Slug}`);
+  }
+
+  const profilePatch = profilePatchFromOn3(profile, classYear);
+  const ufCommitted = profilePatch.committedTo === 'Florida';
+  const commitDate =
+    opts.commitDate ||
+    (profilePatch.commitDate ? String(profilePatch.commitDate).slice(0, 10) : null) ||
+    existing?.commitDate ||
+    new Date().toISOString().slice(0, 10);
+
+  if (!ufCommitted && !opts.commitDate && !opts.forceAlert) {
+    return { ok: false, slug, reason: 'on3_not_committed_to_uf', profileFetched: true };
+  }
+
+  let player = mergeAllowlistPlayerPatch(
+    existing,
+    localJsonPlayer(slug),
+    {
+      ...profilePatch,
+      committedTo: 'Florida',
+      status: 'committed',
+      category: 'recruit',
+      commitDate,
+      on3Slug,
+      on3Id: String(profile.rankingsPlayer?.playerId || existing?.on3Id || on3Slug.split('-').pop()),
+      on3ProfileUrl: buildOn3ProfileUrl({ slug, on3Id: existing?.on3Id, on3Slug }),
+      on3Source: opts.source === 'on3' ? 'on3-profile-sync' : 'allowlist-commit-ingest',
+      protected: true,
+      skinny: buildCommitSkinny({ ...profilePatch, commitDate }),
+    },
+    slug,
+    classYear,
+    CANONICAL_TARGET_NAMES[slug] || profile.name
+  );
+
+  if (opts.dryRun) return { ok: true, dryRun: true, slug, player };
+
+  await store.upsertPlayer(player);
+  persistAllowlistPlayerToJson(player);
+  patchOn3SnapshotCommit(classYear, player);
+  patchTargetBoardCommit(slug, {
+    committedTo: 'Florida',
+    stars: player.stars,
+    natlRank: player.natlRank,
+    headliner: player.headliner || false,
+  });
+
+  let eventResult = null;
+  let autopostResult = null;
+  const alreadyCommitted =
+    existing?.status === 'committed' &&
+    existing?.committedTo === 'Florida' &&
+    existing?.commitDate === commitDate;
+
+  const eventSource = opts.source || (ufCommitted ? 'on3' : 'hayes_fawcett');
+  const eventDetail =
+    opts.detail ||
+    `${player.name} committed to Florida${commitDate ? ` (${commitDate})` : ''}.`;
+
+  if (!alreadyCommitted || opts.forceAlert) {
+    try {
+      eventResult = await fireAllowlistCommitEvent({
+        player,
+        existing,
+        source: eventSource,
+        detail: eventDetail,
+      });
+    } catch (e) {
+      if (!/duplicate|already exists/i.test(e.message)) throw e;
+      eventResult = { skipped: true, reason: e.message };
+    }
+  }
+
+  try {
+    const { queueCommitEventAutopost } = require('./x-autoposter-fill');
+    const savedPlayer = eventResult?.player || player;
+    const wasTarget =
+      existing &&
+      (existing.category === 'target' ||
+        existing.status === 'target' ||
+        existing.status === 'uncommitted');
+    autopostResult = await queueCommitEventAutopost(
+      {
+        eventType: wasTarget && existing?.committedTo !== 'Florida' ? 'flip' : 'commit',
+        source: eventSource,
+        player: savedPlayer,
+        detail: eventDetail,
+        skinny: savedPlayer?.skinny || buildCommitSkinny(savedPlayer),
+        event: eventResult?.event || null,
+        createdAt: new Date().toISOString(),
+      },
+      { urgent: true }
+    );
+  } catch (e) {
+    autopostResult = { queued: false, reason: e.message };
+  }
+
+  clearHubCache();
+  clearHeatCheckCache();
+
+  return {
+    ok: true,
+    slug,
+    classYear,
+    stars: effectiveStars(player),
+    headliner: !!player.headliner,
+    commitDate,
+    on3Verified: ufCommitted,
+    event: eventResult,
+    autopost: autopostResult,
+  };
+}
+
+const FL_COMMIT_RES = [
+  /\b(?:committed|commits|verbally committed|pledged|pledges)\s+to\s+(?:the\s+)?(?:florida|gators|\buf\b)\b/i,
+  /\b(?:flips?|flipped)\s+to\s+(?:the\s+)?(?:florida|gators|\buf\b)\b/i,
+];
+
+function parseBeatCommitPosts(posts) {
+  const out = [];
+  const seen = new Set();
+  for (const post of posts || []) {
+    const handle = String(post?.handle || '').toLowerCase();
+    if (!/hayesfawcett3|chadsimmons_|corey_bender|gatorsonline|stevewiltfong|charlespower/.test(handle)) {
+      continue;
+    }
+    const text = String(post.text || '').trim();
+    if (!text || !FL_COMMIT_RES.some((re) => re.test(text))) continue;
+    const lower = text.toLowerCase();
+    let matchedSlug = null;
+    for (const [slug, displayName] of Object.entries(CANONICAL_TARGET_NAMES)) {
+      const parts = String(displayName).toLowerCase().split(/\s+/).filter(Boolean);
+      if (parts.length < 2) continue;
+      if (lower.includes(parts[0]) && lower.includes(parts[parts.length - 1])) {
+        matchedSlug = canonicalTargetSlug(slug);
+        break;
+      }
+    }
+    if (!matchedSlug) continue;
+    const publishedAt = post.publishedAt || post.timestamp || new Date().toISOString();
+    const fp = `beat_commit_${matchedSlug}_${normalizeIntelTimestamp(publishedAt)}`;
+    if (seen.has(fp)) continue;
+    seen.add(fp);
+    out.push({
+      slug: matchedSlug,
+      source: handle === 'hayesfawcett3' ? 'hayes_fawcett' : 'rivals_beat',
+      detail: text.slice(0, 600),
+      fingerprint: fp,
+    });
+  }
+  return out;
+}
+
+async function scanBeatCommitQueue({ posts, force = false } = {}) {
+  const { getBeatPosts } = require('./live-beat');
+  const beat = posts ? { posts } : getBeatPosts(80);
+  const candidates = parseBeatCommitPosts(beat.posts || []);
+  const snapshot = readJson(BEAT_COMMIT_SNAPSHOT, { fingerprints: {}, lastRun: null });
+  const results = { queued: candidates.length, ingested: [], skipped: [], errors: [] };
+
+  for (const row of candidates) {
+    if (!force && snapshot.fingerprints[row.fingerprint]) {
+      results.skipped.push({ slug: row.slug, reason: 'snapshot' });
+      continue;
+    }
+    try {
+      const out = await ingestAllowlistCommit({
+        slug: row.slug,
+        source: row.source,
+        detail: row.detail,
+        forceAlert: true,
+      });
+      if (out.ok) {
+        snapshot.fingerprints[row.fingerprint] = { slug: row.slug, ingestedAt: new Date().toISOString() };
+        results.ingested.push(out);
+      } else {
+        results.skipped.push({ slug: row.slug, reason: out.reason || 'not_committed' });
+      }
+    } catch (e) {
+      results.errors.push({ slug: row.slug, error: e.message });
+    }
+  }
+
+  snapshot.lastRun = new Date().toISOString();
+  writeJson(BEAT_COMMIT_SNAPSHOT, snapshot);
+  return results;
+}
+
 module.exports = {
   syncAllowlistTargetsFromOn3,
   syncAllowlistTargetsFromRivals,
@@ -660,6 +996,8 @@ module.exports = {
   getCommitmentSyncStatus,
   detectStaleCommitmentSync,
   detectIngestFailures,
+  ingestAllowlistCommit,
+  scanBeatCommitQueue,
   STATE_PATH,
   STALE_HOURS,
 };

@@ -1411,7 +1411,27 @@
       }
     },
     "2028": {
-      "commits": {},
+      "commits": {
+        "on3:284115": {
+          "on3Id": "284115",
+          "name": "Armani Strong",
+          "pos": "WR",
+          "classYear": 2028,
+          "school": "Chaminade-Madonna Prep, FL",
+          "htWt": "",
+          "stars": 3,
+          "rating": 90.17717391304348,
+          "natlRank": 304,
+          "posRank": 39,
+          "stateRank": 34,
+          "inState": true,
+          "status": "committed",
+          "commitDate": "2026-06-28",
+          "committedTo": "Florida",
+          "skinny": "WR | 4-star | Chaminade-Madonna Prep | #210 natl",
+          "sourceStatus": "Committed"
+        }
+      },
       "rankings": null
     },
     "2029": {
@@ -1423,7 +1443,7 @@
       "rankings": null
     }
   },
-  "lastRun": "2026-06-24T20:52:01.972Z",
+  "lastRun": "2026-06-27T21:03:12.574Z",
   "commitFingerprints": {
     "175389|florida|2025-08-11": {
       "commitDate": "2025-08-11",
@@ -2921,6 +2941,11 @@
       "commitDate": null,
       "registeredAt": "2026-06-24T20:52:01.995Z",
       "source": "players"
+    },
+    "284115|florida|2026-06-28": {
+      "commitDate": "2026-06-28",
+      "registeredAt": "2026-06-28T19:19:05.821Z",
+      "source": "allowlist_commit_ingest"
     }
   },
   "firedAlerts": {

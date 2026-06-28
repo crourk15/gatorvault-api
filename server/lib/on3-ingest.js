@@ -169,7 +169,12 @@ async function shouldSkipCommitAlert(eventType, player, snapshot) {
 
   const slug = store.slugify(player.name);
   const gate = shouldAlertNewCommit(player, snapshot);
-  if (!gate.alert) {
+  const { isAllowlistedTarget } = require('./recruiting-target-allowlist');
+  const allowlistUfCommit =
+    isAllowlistedTarget({ ...player, slug }) &&
+    String(player.committedTo || 'Florida').toLowerCase().includes('florida');
+
+  if (!gate.alert && !allowlistUfCommit) {
     return {
       reason: gate.reason,
       fingerprint: gate.fingerprint,
@@ -326,6 +331,25 @@ async function firePlayerEvent(eventType, player, extra, snapshot) {
     const result = await store.fireRecruitingEvent(payload);
     if (['commit', 'flip', 'decommit'].includes(resolvedType)) {
       saveFiredAlert(snapshot, player, resolvedType, result.event?.id);
+    }
+    if (['commit', 'flip'].includes(resolvedType)) {
+      try {
+        const { queueCommitEventAutopost } = require('./x-autoposter-fill');
+        await queueCommitEventAutopost(
+          {
+            eventType: resolvedType,
+            source: 'on3',
+            player: result.player,
+            skinny: payload.skinny,
+            detail: payload.detail,
+            event: result.event,
+            createdAt: new Date().toISOString(),
+          },
+          { urgent: true }
+        );
+      } catch {
+        /* optional */
+      }
     }
     return { fired: true, eventType: resolvedType, slug, eventId: result.event?.id };
   } catch (e) {

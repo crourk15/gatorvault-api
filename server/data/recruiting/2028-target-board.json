@@ -209,8 +209,9 @@
       "posRank": 39,
       "stateRank": 34,
       "inState": true,
-      "committedTo": null,
-      "ufProbability": 0.41000000000000003
+      "committedTo": "Florida",
+      "ufProbability": 0.41000000000000003,
+      "headliner": false
     },
     {
       "slug": "tristin-gaines",
@@ -396,8 +397,8 @@
       "slug": "tyzon-swann",
       "name": "Tyzon Swann",
       "pos": "ATH",
-      "school": "Florida HS pipeline",
-      "state": "FL",
+      "school": "Henry E. Lackey, GA",
+      "state": "GA",
       "stars": 4,
       "rating": 96.0263440860215,
       "natlRank": null,
@@ -407,5 +408,6 @@
       "committedTo": null,
       "ufProbability": 0.09
     }
-  ]
+  ],
+  "updatedAt": "2026-06-28T19:19:05.827Z"
 }

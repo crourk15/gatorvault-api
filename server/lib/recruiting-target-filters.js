@@ -35,10 +35,61 @@ function filterActiveUfTargets(players) {
   return (players || []).filter(isActiveUfTarget);
 }
 
+function effectiveStars(player) {
+  const stars = Math.max(
+    Number(player?.stars) || 0,
+    Number(player?.consensusStars) || 0,
+    Number(player?.starsDisplay) || 0
+  );
+  return stars || null;
+}
+
+function isFloridaPlayer(player) {
+  if (player?.inState === true) return true;
+  const state = String(player?.state || player?.hometownState || '').toUpperCase();
+  if (state === 'FL') return true;
+  return /,\s*FL\b/i.test(String(player?.school || ''));
+}
+
+function hadUfVisit(player) {
+  const status = String(player?.ufOvStatus || '').toLowerCase();
+  if (status === 'completed' || status === 'scheduled' || status === 'confirmed') return true;
+  if (player?.visitStart || player?.visitEnd) return true;
+  return false;
+}
+
+/** 4-star+ in-state allowlist targets with UF campus touch become hub headliners. */
+function shouldAutoHeadliner(player) {
+  if (!player) return false;
+  if (player.headliner === true) return true;
+  try {
+    const { isAllowlistedTarget } = require('./recruiting-target-allowlist');
+    if (!isAllowlistedTarget(player)) return false;
+  } catch {
+    /* optional */
+  }
+  const year = parseInt(player.classYear || player.class_year, 10);
+  if (year !== 2028) return false;
+  const stars = effectiveStars(player);
+  if (!stars || stars < 4) return false;
+  if (!isFloridaPlayer(player)) return false;
+  if (!hadUfVisit(player)) return false;
+  const pos = String(player.pos || '').toUpperCase();
+  return /^(WR|RB|QB|TE|EDGE|DL|CB|S|ATH|OL|OT|OG|C|LB)$/.test(pos);
+}
+
+function applyHeadlinerRules(player) {
+  if (!player) return player;
+  return shouldAutoHeadliner(player) ? { ...player, headliner: true } : player;
+}
+
 module.exports = {
   isFloridaSchool,
   resolveCommittedTo,
   isCommittedElsewhere,
   isActiveUfTarget,
   filterActiveUfTargets,
+  effectiveStars,
+  shouldAutoHeadliner,
+  applyHeadlinerRules,
 };

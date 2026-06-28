@@ -1332,6 +1332,13 @@ async function runBeatWriterIngest({ force = false, manualRows = [], posts = nul
   if (results.processed.length) invalidateRecruitingIntelCaches();
 
   try {
+    const { scanBeatCommitQueue } = require('./allowlist-target-sync');
+    results.commitIngest = await scanBeatCommitQueue({ posts: posts || undefined });
+  } catch (e) {
+    results.errors.push({ stage: 'beat_commit', error: e.message });
+  }
+
+  try {
     const { queuePlayerScoutingRefresh } = require('./scouting-update-engine');
     const slugs = new Set(
       results.processed.map((p) => p.playerSlug || p.player || p.slug).filter(Boolean)

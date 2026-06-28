@@ -907,8 +907,13 @@ async function hasExistingIntelFingerprint(fp) {
 }
 
 async function createEvent(event) {
+  const draft = {
+    id: event.id || `evt_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    ...event,
+    createdAt: event.createdAt || nowIso(),
+  };
   const gm2 = require('./gm2');
-  const ingress = gm2.ingestEvent(event, { subsystem: 'recruiting-store' });
+  const ingress = gm2.ingestEvent(draft, { subsystem: 'recruiting-store' });
   if (ingress.action === 'reject' || ingress.action === 'quarantine') {
     console.log('[recruiting-store] GM2 blocked event:', ingress.reason, event.playerSlug, event.eventType);
     return null;
@@ -962,14 +967,12 @@ async function createEvent(event) {
   }
 
   const row = normalizeEvent({
-    id: `evt_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-    ...event,
+    ...draft,
     payload: {
-      ...(event.payload || {}),
+      ...(draft.payload || {}),
       ...(fp ? { commitFingerprint: fp } : {}),
       ...(intelFp ? { intelFingerprint: intelFp } : {})
     },
-    createdAt: nowIso()
   });
   if ((row.source || 'manual') === 'manual' && (await isDuplicateEvent(row))) {
     return row;

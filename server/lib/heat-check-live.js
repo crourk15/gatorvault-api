@@ -8,6 +8,12 @@ const on3 = require('./on3-recruit-client');
 
 const HISTORY_PATH = path.join(store.DATA_DIR, 'heat-check-history.json');
 const CLASS_YEAR = parseInt(process.env.HEAT_CHECK_CLASS_YEAR || '2027', 10);
+
+function parseHeatCheckClassYears() {
+  const raw = process.env.HEAT_CHECK_CLASS_YEARS || String(CLASS_YEAR);
+  const years = [...new Set(raw.split(',').map((y) => parseInt(y.trim(), 10)).filter(Boolean))];
+  return years.length ? years : [CLASS_YEAR];
+}
 const MAX_PROFILES = parseInt(process.env.HEAT_CHECK_MAX_PROFILES || '35', 10);
 const FETCH_CONCURRENCY = parseInt(process.env.HEAT_CHECK_CONCURRENCY || '6', 10);
 
@@ -122,13 +128,50 @@ async function discoverRecruitSlugs(classYear) {
     if (slug) slugs.push(slug);
   }
 
+  try {
+    const { getAllowlistSet } = require('./recruiting-target-allowlist');
+    const allowlist = getAllowlistSet(classYear);
+    let slugMap = {};
+    try {
+      slugMap = JSON.parse(
+        fs.readFileSync(path.join(store.DATA_DIR, 'on3-allowlist-slugs-2028.json'), 'utf8')
+      ).slugs || {};
+    } catch {
+      slugMap = {};
+    }
+    for (const slug of allowlist) {
+      slugs.push(slugMap[slug] || slug);
+    }
+  } catch {
+    /* optional */
+  }
+
   for (const intel of intelStore.listIntel({ limit: 50 })) {
     if (intel.playerSlug) slugs.push(intel.playerSlug);
   }
 
   const unique = [...new Set(slugs.filter(Boolean))];
   const prioritized = unique.slice(0, MAX_PROFILES);
-  return { slugs: prioritized, visitCount: visits.length };
+  return { slugs: prioritized, visitCount: visits.length, classYear };
+}
+
+async function discoverRecruitSlugsMulti(years) {
+  const slugEntries = [];
+  let visitCount = 0;
+  for (const year of years) {
+    const d = await discoverRecruitSlugs(year);
+    visitCount += d.visitCount;
+    for (const slug of d.slugs) slugEntries.push({ slug, classYear: year });
+  }
+  const seen = new Set();
+  const merged = [];
+  for (const entry of slugEntries) {
+    const key = entry.slug;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    merged.push(entry);
+  }
+  return { entries: merged.slice(0, MAX_PROFILES), visitCount };
 }
 
 function pickManualVisitIntel(manualIntel) {
@@ -169,8 +212,15 @@ function parseBeatIntel(beatPosts) {
     }
     if (/\b(uf|florida|gators)\b.*\b(lead|leading|favorite|top choice)\b|\b(lead|leading|favorite)\b.*\b(uf|florida|gators)\b/.test(lower)) {
       intel.push({ type: 'uf_leads', insider, text, url: post.url, publishedAt: post.publishedAt });
-    } else if (/trending|momentum|flip|commit soon|decision|visiting|official/.test(lower) && /florida|gators|\buf\b/.test(lower)) {
+    } else     if (/trending|momentum|flip|commit soon|decision|visiting|official/.test(lower) && /florida|gators|\buf\b/.test(lower)) {
       intel.push({ type: 'uf_leads', insider, text, url: post.url, publishedAt: post.publishedAt });
+    }
+    if (
+      /(?:committed|commits|verbally committed|pledged|flips?\s+to)\s+(?:to\s+)?(?:the\s+)?(?:florida|gators|\buf\b)/i.test(
+        text
+      )
+    ) {
+      intel.push({ type: 'uf_commit', insider, text, url: post.url, publishedAt: post.publishedAt });
     }
     if (/futurecast|prediction machine|prediction logged|expert pick|forecast|crystal ball|prediction|rpm|247|wiltfong|bender|alderman|ivins|power|simmons|fawcett|harden/.test(lower)) {
       intel.push({ type: 'prediction', insider, text, url: post.url, publishedAt: post.publishedAt });
@@ -509,21 +559,30 @@ async function buildLiveHeatCheck() {
   const historyDoc = loadHistory();
   const beat = getBeatPosts(60);
   const beatIntel = parseBeatIntel(beat.posts);
+  const classYears = parseHeatCheckClassYears();
 
-  let discovery = { slugs: [], visitCount: 0 };
+  let discovery = { entries: [], visitCount: 0 };
   let errors = [];
 
   try {
-    discovery = await discoverRecruitSlugs(CLASS_YEAR);
+    discovery = await discoverRecruitSlugsMulti(classYears);
   } catch (e) {
     errors.push({ stage: 'visits', error: e.message });
   }
 
-  const profiles = await on3.mapPool(discovery.slugs, FETCH_CONCURRENCY, async (slug) => {
+  try {
+    const { scanBeatCommitQueue } = require('./allowlist-target-sync');
+    await scanBeatCommitQueue({ posts: beat.posts });
+  } catch (e) {
+    errors.push({ stage: 'beat_commit', error: e.message });
+  }
+
+  const profiles = await on3.mapPool(discovery.entries, FETCH_CONCURRENCY, async (entry) => {
     try {
-      return await on3.fetchRecruitProfile(slug);
+      const profile = await on3.fetchRecruitProfile(entry.slug, entry.classYear || CLASS_YEAR);
+      return profile ? { ...profile, _classYear: entry.classYear || CLASS_YEAR } : null;
     } catch (e) {
-      errors.push({ slug, error: e.message });
+      errors.push({ slug: entry.slug, error: e.message });
       return null;
     }
   });
@@ -571,10 +630,10 @@ async function buildLiveHeatCheck() {
     cooling,
     updatedAt: new Date().toISOString(),
     meta: {
-      classYear: CLASS_YEAR,
+      classYear: classYears.length === 1 ? classYears[0] : classYears,
       profilesFetched: profiles.filter(Boolean).length,
       visitCandidates: discovery.visitCount,
-      slugsDiscovered: discovery.slugs.length,
+      slugsDiscovered: discovery.entries.length,
       excludedCommitted,
       beatPostsScanned: (beat.posts || []).length,
       fetchMs: Date.now() - started,

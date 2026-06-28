@@ -647,7 +647,7 @@ export async function buildMasterBoardPayload() {
     commitWatch,
     highPriority: {
       playerIds: highPriority.map((p) => p.id),
-      players: highPriority.slice(0, 10),
+      players: highPriority.slice(0, 18),
     },
     movementSummary: {
       risers: trendingUp.slice(0, 8).map((p) => p.id),

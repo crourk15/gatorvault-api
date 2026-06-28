@@ -45,6 +45,8 @@ const TARGET_BOARD_SEED_PATH = path.join(__dirname, '../../data/recruiting/2027-
 
 /** Underclassmen years served by the high-priority endpoint (2027 uses legacy board pipeline). */
 export const HIGH_PRIORITY_UNDERCLASSMEN_YEARS = [2028] as const;
+/** Top N allowlist targets surfaced for 2028+ high-priority board. */
+export const HIGH_PRIORITY_UNDERCLASSMEN_LIMIT = 18;
 
 export type VisitBadgeType = 'OV' | 'UV' | 'Game Day' | 'Junior Day' | 'Spring Visit';
 
@@ -348,7 +350,7 @@ async function buildUnderclassmenHighPriorityPayload(classYear: number) {
   const sorted = board
     .map(boardPlayerToHighPriority)
     .sort((a, b) => b.priorityScore - a.priorityScore);
-  const top10 = sorted.slice(0, 10);
+  const top10 = sorted.slice(0, HIGH_PRIORITY_UNDERCLASSMEN_LIMIT);
   const lastUpdated = new Date().toISOString();
   const visitBoardSnapshot = getVisitIntelBoardSnapshot([]);
 
@@ -542,7 +544,7 @@ export const handleGetFutureCastHighPriority = asyncHandler(async (req: Request,
       });
 
       const sorted = [...playersWithVerifiedVisits].sort((a, b) => b.priorityScore - a.priorityScore);
-      const top10 = sorted.slice(0, 10);
+      const top10 = sorted.slice(0, HIGH_PRIORITY_UNDERCLASSMEN_LIMIT);
 
       const visitIntel = buildVerifiedVisitIntelRows(playersWithVerifiedVisits, visitLogs);
       const visitRecap = buildVerifiedVisitRecapRows(playersWithVerifiedVisits, visitLogs, new Date(), {
