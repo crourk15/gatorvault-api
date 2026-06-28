@@ -2,7 +2,7 @@
 /**
  * Render cron — POST visit intel reconcile (Supabase + JSON store).
  */
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+require('./render-cron-env');
 
 const RECONCILE_URL =
   process.env.VISIT_INTEL_RECONCILE_URL ||

@@ -221,7 +221,9 @@ services:
     schedule: "*/10 * * * *"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-beat-ingest-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-beat-ingest-cron.js
     envVars:
       - key: NEXT_PUBLIC_API_BASE
         value: https://gatorvault-api.onrender.com
@@ -233,7 +235,9 @@ services:
     schedule: "0 */2 * * *"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-recruiting-ingest-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-recruiting-ingest-cron.js
     envVars:
       - key: NEXT_PUBLIC_API_BASE
         value: https://gatorvault-api.onrender.com
@@ -247,7 +251,9 @@ services:
     schedule: "0 */6 * * *"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-hub-refresh-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-hub-refresh-cron.js
     envVars:
       - key: HUB_REFRESH_URL
         value: https://gatorvault-api.onrender.com/api/recruiting/hub/refresh?geoBackfill=true
@@ -259,7 +265,9 @@ services:
     schedule: "15 */3 * * *"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-visit-intel-reconcile-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-visit-intel-reconcile-cron.js
     envVars:
       - key: VISIT_INTEL_RECONCILE_URL
         value: https://gatorvault-api.onrender.com/api/futurecast/visit-intel/reconcile
@@ -271,7 +279,9 @@ services:
     schedule: "0 14 * * 1"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-visit-intel-recap-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-visit-intel-recap-cron.js
     envVars:
       - key: VISIT_INTEL_RECAP_URL
         value: https://gatorvault-api.onrender.com/api/futurecast/visit-intel/recap
@@ -283,7 +293,9 @@ services:
     schedule: "0 14 * * *"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-visit-intel-daily-digest-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-visit-intel-daily-digest-cron.js
     envVars:
       - key: VISIT_INTEL_DAILY_DIGEST_URL
         value: https://gatorvault-api.onrender.com/api/futurecast/visit-intel/daily-digest
@@ -295,7 +307,9 @@ services:
     schedule: "0 15 * * *"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-uf-trend-snapshot-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-uf-trend-snapshot-cron.js
     envVars:
       - key: UF_TREND_SNAPSHOT_URL
         value: https://gatorvault-api.onrender.com/api/futurecast/uf-trend/snapshot
@@ -307,7 +321,9 @@ services:
     schedule: "30 15 * * *"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-on3-rpm-allowlist-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-on3-rpm-allowlist-cron.js
     envVars:
       - key: ON3_RPM_SYNC_URL
         value: https://gatorvault-api.onrender.com/api/futurecast/on3-rpm/sync
@@ -319,7 +335,9 @@ services:
     schedule: "0 16 * * 0"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-allowlist-on3-rankings-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-allowlist-on3-rankings-cron.js
     envVars:
       - key: ALLOWLIST_ON3_RANKINGS_URL
         value: https://gatorvault-api.onrender.com/api/admin/engines/allowlist-on3/sync
@@ -359,7 +377,9 @@ services:
     schedule: "0 4 * * 0"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-uf-fit-seed-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-uf-fit-seed-cron.js
     envVars:
       - key: UF_FIT_SEED_CLASS_YEARS
         value: "2027,2028"
@@ -373,7 +393,9 @@ services:
     schedule: "0 5 * * 0"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-early-discovery-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-early-discovery-cron.js
     envVars:
       - key: EARLY_DISCOVERY_CLASS_YEAR_GTE
         value: "2028"
@@ -385,7 +407,9 @@ services:
     schedule: "0 6 * * *"
     runtime: node
     region: oregon
-    startCommand: node server/scripts/render-portal-intel-cron.js
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node scripts/render-portal-intel-cron.js
     envVars:
       - key: PORTAL_INTEL_RUN_URL
         value: https://gatorvault-api.onrender.com/api/admin/engines/portal-intelligence/run

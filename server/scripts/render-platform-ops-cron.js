@@ -4,9 +4,9 @@
  * Soft-fails per job; always exit 0 so Render does not alert on partial maintenance failures.
  */
 try {
-  require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+  require('./render-cron-env');
 } catch {
-  /* dotenv optional on Render — env vars are injected directly */
+  /* optional on Render */
 }
 
 const { withRetries, isTransientError, warmApi } = require('../lib/ingest-resilience');

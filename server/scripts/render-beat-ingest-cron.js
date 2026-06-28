@@ -3,7 +3,7 @@
  * Render cron — beat writer + visit intel + live dashboard refresh.
  * Production-hardened: API warm check, retries, soft per-step failures, always exit 0.
  */
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+require('./render-cron-env');
 
 const { runIngestSteps } = require('../lib/ingest-cron-client');
 

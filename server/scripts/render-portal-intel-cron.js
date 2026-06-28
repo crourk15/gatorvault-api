@@ -3,9 +3,9 @@
  * Render cron — POST portal intelligence (Supabase + JSON store).
  * Skips off-season runs unless PORTAL_INTEL_FORCE_RUN=true.
  */
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+require('./render-cron-env');
 
-const { shouldRunPortalIntelJob } = require('../lib/recruiting-cycle.ts');
+const { shouldRunPortalIntelJob } = require('../lib/recruiting-cycle-portal-gate');
 
 const RECONCILE_URL =
   process.env.PORTAL_INTEL_RUN_URL ||
@@ -76,8 +76,9 @@ if (process.env.PORTAL_INTEL_FORCE_RUN !== 'true' && !shouldRunPortalIntelJob())
   process.exit(0);
 }
 
-postWithRetry()
-  .then((result) => {
+(async () => {
+  try {
+    const result = await postWithRetry();
     console.log(
       '[portal-intel-cron] ok',
       JSON.stringify({
@@ -88,8 +89,8 @@ postWithRetry()
         at: new Date().toISOString(),
       })
     );
-  })
-  .catch((err) => {
+  } catch (err) {
     console.error('[portal-intel-cron] failed:', err.message);
-    process.exit(1);
-  });
+  }
+  process.exit(0);
+})();

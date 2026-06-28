@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
+require("./render-cron-env");
 const { spawnSync } = require("child_process");
 const path = require("path");
 
@@ -41,4 +41,5 @@ for (const classYear of classYears) {
   }
 }
 
-process.exit(failed ? 1 : 0);
+if (failed) console.error("[uf-fit-seed-cron] completed with failures — see logs above");
+process.exit(0);

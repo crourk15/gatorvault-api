@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Render cron keep-alive — wakes cold free-tier instances and keeps them warm.
- * Schedule: every 5 minutes (see render.yaml cron service).
+ * Schedule: every 2 minutes (see render.yaml cron service).
  *
  * Cold spin-down returns fast 503 (~50ms). This script retries for up to 3 minutes
  * with long per-request timeouts so the instance actually boots.

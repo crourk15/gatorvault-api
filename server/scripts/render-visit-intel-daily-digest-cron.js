@@ -2,7 +2,7 @@
 /**
  * Render cron — daily verified OV email digest for Email/Both + Daily Digest subscribers.
  */
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+require('./render-cron-env');
 
 const DIGEST_URL =
   process.env.VISIT_INTEL_DAILY_DIGEST_URL ||

@@ -2,7 +2,7 @@
 /**
  * Render cron — weekly On3 composite + rank sync for UF allowlist targets.
  */
-require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
+require('./render-cron-env');
 
 const SYNC_URL =
   process.env.ALLOWLIST_ON3_RANKINGS_URL ||

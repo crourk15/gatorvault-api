@@ -2,7 +2,7 @@
 /**
  * Render cron — POST hub refresh so elite caches rebuild on a schedule.
  */
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+require('./render-cron-env');
 
 const REFRESH_URL =
   process.env.HUB_REFRESH_URL ||

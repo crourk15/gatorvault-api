@@ -2,7 +2,7 @@
 /**
  * Render cron — On3 RPM UF % gap-fill for allowlist targets missing Rivals PM.
  */
-require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
+require('./render-cron-env');
 
 const SYNC_URL =
   process.env.ON3_RPM_SYNC_URL ||

@@ -2,7 +2,7 @@
 /**
  * Render cron — Monday weekly verified OV recap (optional X queue).
  */
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+require('./render-cron-env');
 
 const RECAP_URL =
   process.env.VISIT_INTEL_RECAP_URL ||

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
+require("./render-cron-env");
 const { spawnSync } = require("child_process");
 const path = require("path");
 const CLASS_YEAR_GTE = process.env.EARLY_DISCOVERY_CLASS_YEAR_GTE || "2028";

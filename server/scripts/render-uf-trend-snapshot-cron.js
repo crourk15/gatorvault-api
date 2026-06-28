@@ -2,7 +2,7 @@
 /**
  * Render cron — daily UF % trend snapshots for allowlist targets.
  */
-require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
+require('./render-cron-env');
 
 const SNAPSHOT_URL =
   process.env.UF_TREND_SNAPSHOT_URL ||
