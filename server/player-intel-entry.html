@@ -28,6 +28,7 @@
     .pin-card{background:var(--panel);border:1px solid var(--border);border-radius:1rem;padding:1.5rem;max-width:380px;width:100%}
     .hidden{display:none!important}
     .ok{color:var(--green);font-size:.85rem}
+    .warn{color:#fbbf24;font-size:.85rem;font-weight:600}
     .err{color:var(--red);font-size:.85rem}
     pre{background:#020617;border:1px solid var(--border);border-radius:.5rem;padding:.75rem;font-size:.72rem;overflow:auto;max-height:360px}
     .meta{font-size:.8rem;color:var(--muted);line-height:1.5}
@@ -140,8 +141,10 @@
             (data.profileUrl ? '<a href="' + data.profileUrl + '" target="_blank" rel="noopener">Open profile →</a>' : '');
         } else if (ok && data.preview) {
           summary.innerHTML =
-            '<span class="ok">Preview match: ' + data.name + ' (' + data.slug + ')</span><br>' +
-            'Would land in: <strong>' + (data.placement && data.placement.section) + '</strong>';
+            '<span class="warn">Preview only — nothing saved yet.</span><br>' +
+            'Match: <strong>' + data.name + ' (' + data.slug + ')</strong><br>' +
+            'Would land in: <strong>' + (data.placement && data.placement.section) + '</strong><br>' +
+            'Click <strong>Create / update player intel</strong> to publish to allowlist + boards.';
         } else {
           summary.innerHTML = '<span class="err">' + (data.error || 'Request failed') + '</span>';
         }
@@ -223,7 +226,7 @@
         try {
           var data = await post('/api/admin/player-intel/preview', payload());
           showResult(data, true);
-          status.textContent = 'Preview ready.';
+          status.textContent = 'Preview ready — review JSON, then click Create / update to publish.';
         } catch (e) {
           status.textContent = '';
           showResult({ error: e.message }, false);
