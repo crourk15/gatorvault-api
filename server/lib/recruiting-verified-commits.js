@@ -83,7 +83,7 @@ function demoteUnverifiedHubCommit(player) {
   }
 
   if (isVerifiedUfCommitSlug(slug, year)) return player;
-  if (player.protected === true || player.on3Source === 'on3-board-sync') return player;
+  if (player.protected === true) return player;
 
   const out = { ...player };
   out.status = 'uncommitted';

@@ -122,7 +122,7 @@ test('getHubCommits 2026 merges On3 snapshot board commits', async () => {
   delete require.cache[require.resolve('../../lib/on3-snapshot-commits')];
 });
 
-test('demoteUnverifiedHubCommit preserves on3 board sync commits', () => {
+test('demoteUnverifiedHubCommit preserves protected on3 board sync commits', () => {
   const kept = demoteUnverifiedHubCommit({
     slug: 'elijah-hutcheson',
     classYear: 2027,
@@ -134,6 +134,20 @@ test('demoteUnverifiedHubCommit preserves on3 board sync commits', () => {
   });
   assert.equal(kept.status, 'committed');
   assert.equal(kept.committedTo, 'Florida');
+});
+
+test('demoteUnverifiedHubCommit clears false UF commit on allowlist on3-board-sync target', () => {
+  const demoted = demoteUnverifiedHubCommit({
+    slug: 'kyren-caldwell',
+    classYear: 2027,
+    status: 'committed',
+    committedTo: 'Florida',
+    category: 'recruit',
+    on3Source: 'on3-board-sync',
+  });
+  assert.equal(demoted.status, 'uncommitted');
+  assert.equal(demoted.committedTo, null);
+  assert.equal(demoted.category, 'target');
 });
 
 test('demoteUnverifiedHubCommit clears false commits', () => {
