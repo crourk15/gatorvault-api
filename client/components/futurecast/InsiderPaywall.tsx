@@ -12,6 +12,8 @@ type Props = {
   className?: string;
   hideGate?: boolean;
   variant?: 'gate' | 'overlay';
+  message?: string;
+  ctaLabel?: string;
 };
 
 export function InsiderPaywall({
@@ -22,6 +24,8 @@ export function InsiderPaywall({
   className = '',
   hideGate = false,
   variant = 'gate',
+  message = 'Film Room unlocks full FutureCast — UF confidence, fit scores, movement intel, and staff notes.',
+  ctaLabel = 'Unlock FutureCast Insider',
 }: Props): React.ReactElement {
   const insider = isFutureCastInsider();
 
@@ -37,11 +41,9 @@ export function InsiderPaywall({
         </div>
         <div className="gv-paywall-overlay">
           <img src="/icons/lock.svg" alt="" className="gv-paywall-lock-icon" />
-          <p className="gv-paywall-text">
-            Film Room unlocks full FutureCast confidence, movement intel, and staff notes.
-          </p>
+          <p className="gv-paywall-text">{message}</p>
           <a href="/join?tier=film" className="gv-paywall-cta">
-            Unlock FutureCast Insider
+            {ctaLabel}
           </a>
         </div>
       </div>
@@ -51,7 +53,14 @@ export function InsiderPaywall({
   return (
     <div className={`gv-insider-paywall ${className}`.trim()}>
       {teaser ?? children}
-      {!hideGate ? <FutureCastInsiderCTA limit={limit} total={total} /> : null}
+      {!hideGate ? (
+        <FutureCastInsiderCTA
+          limit={limit}
+          total={total}
+          message={message}
+          ctaLabel={ctaLabel}
+        />
+      ) : null}
     </div>
   );
 }

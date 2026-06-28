@@ -2,9 +2,10 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Chip, GridLayout, PageLayout, PageSection, TabBar } from '@/components/brand';
+import { InsiderPaywall } from '@/components/futurecast/InsiderPaywall';
 import { DYNAMIC_PATH_PATTERNS, segmentFromPath } from '@/lib/dynamic-path-parser';
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
-import { SITE_ROUTES, gameWeekRoute } from '@/lib/site-routes';
+import { SITE_ROUTES } from '@/lib/site-routes';
 import { usePathname } from '@/lib/use-pathname';
 import { isFilmRoomInsider } from '@/lib/futurecast-insider';
 
@@ -110,6 +111,79 @@ function GameCard({ game }: { game: ScheduleGame }): React.ReactElement {
   );
 }
 
+const GAME_WEEK_PAYWALL = {
+  message:
+    'Game Week unlocks matchup intel, opponent film prep, swing-player notes, and GatorVault predictions.',
+  ctaLabel: 'Unlock Game Week + Film Room',
+} as const;
+
+function GameWeekTabPanel({
+  tab,
+  game,
+}: {
+  tab: string;
+  game: ScheduleGame;
+}): React.ReactElement {
+  if (tab === 'intel') {
+    return (
+      <InsiderPaywall variant="overlay" {...GAME_WEEK_PAYWALL}>
+        <GameCard game={game} />
+      </InsiderPaywall>
+    );
+  }
+  if (tab === 'depth') {
+    return (
+      <InsiderPaywall variant="overlay" {...GAME_WEEK_PAYWALL}>
+        <PageSection title="Projected Depth Chart">
+          <Card>
+            <p>Orange = projected starter · Blue = backup</p>
+            <GridLayout cols={3}>
+              {['QB Jones Jr.', 'RB Baugh', 'WR Singleton Jr.', 'TE Graham', 'LT Frazier', 'EDGE Woods'].map(
+                (p, i) => (
+                  <div key={p} className={i % 2 === 0 ? 'gv-gw-starter' : 'gv-gw-backup'}>
+                    {p}
+                  </div>
+                )
+              )}
+            </GridLayout>
+          </Card>
+        </PageSection>
+      </InsiderPaywall>
+    );
+  }
+  if (tab === 'scout') {
+    return (
+      <InsiderPaywall variant="overlay" {...GAME_WEEK_PAYWALL}>
+        <PageSection title="Scouting Report">
+          <Card>
+            <p>{game.film}</p>
+            {game.filmLessonId ? (
+              <p style={{ marginTop: '1rem' }}>
+                <Button href={`/vault/film-room/?lesson=${encodeURIComponent(game.filmLessonId)}`}>
+                  Film Room breakdown
+                </Button>
+              </p>
+            ) : null}
+          </Card>
+        </PageSection>
+      </InsiderPaywall>
+    );
+  }
+  return (
+    <InsiderPaywall variant="overlay" {...GAME_WEEK_PAYWALL}>
+      <PageSection title="Prediction Panel">
+        <Card variant="accent">
+          <p className="gv-type-number" style={{ fontSize: '2rem', color: 'var(--gv-orange)' }}>
+            {game.pred}
+          </p>
+          <p>UF win probability: {game.ufPct}%</p>
+          <Button href={SITE_ROUTES.gameZone}>Open Game Zone</Button>
+        </Card>
+      </PageSection>
+    </InsiderPaywall>
+  );
+}
+
 export function VaultGameWeekPage(): React.ReactElement {
   const pathname = usePathname();
   const insider = isFilmRoomInsider();
@@ -160,48 +234,8 @@ export function VaultGameWeekPage(): React.ReactElement {
 
       <TabBar options={TABS} active={tab} onChange={setTab} aria-label="Game week sections" />
 
-      {tab === 'intel' && <GameCard game={game} />}
-      {tab === 'depth' && (
-        <PageSection title="Projected Depth Chart">
-          <Card>
-            <p>Orange = projected starter · Blue = backup</p>
-            <GridLayout cols={3}>
-              {['QB Jones Jr.', 'RB Baugh', 'WR Singleton Jr.', 'TE Graham', 'LT Frazier', 'EDGE Woods'].map(
-                (p, i) => (
-                  <div key={p} className={i % 2 === 0 ? 'gv-gw-starter' : 'gv-gw-backup'}>
-                    {p}
-                  </div>
-                )
-              )}
-            </GridLayout>
-          </Card>
-        </PageSection>
-      )}
-      {tab === 'scout' && (
-        <PageSection title="Scouting Report">
-          <Card>
-            <p>{game.film}</p>
-            {game.filmLessonId ? (
-              <p style={{ marginTop: '1rem' }}>
-                <Button href={`/vault/film-room/?lesson=${encodeURIComponent(game.filmLessonId)}`}>
-                  Film Room breakdown
-                </Button>
-              </p>
-            ) : null}
-          </Card>
-        </PageSection>
-      )}
-      {tab === 'pred' && (
-        <PageSection title="Prediction Panel">
-          <Card variant="accent">
-            <p className="gv-type-number" style={{ fontSize: '2rem', color: 'var(--gv-orange)' }}>
-              {game.pred}
-            </p>
-            <p>UF win probability: {game.ufPct}%</p>
-            <Button href={SITE_ROUTES.gameZone}>Open Game Zone</Button>
-          </Card>
-        </PageSection>
-      )}
+      <GameWeekTabPanel tab={tab} game={game} />
+
       {!insider ? (
         <a href="/join?tier=film" className="gv-paywall-sticky-cta">
           Unlock Game Week + Film Room · from $9.99/mo
