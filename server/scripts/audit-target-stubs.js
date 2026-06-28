@@ -72,7 +72,7 @@ async function main() {
   }
 
   const board2027 = await store.getBoard(2027);
-  for (const slug of ['jalen-brewster', 'kaleb-exume']) {
+  for (const slug of ['jalen-brewster']) {
     if (!board2027.targets.some((p) => p.slug === slug)) {
       failures.push(`${slug} missing from 2027 live board`);
     }

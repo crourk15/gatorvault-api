@@ -18,7 +18,6 @@ const ALLOWLIST_2027 = [
   'tk-cunningham',
   'kamauri-whitfield',
   'jameer-cantrell',
-  'kaleb-exume',
   'elijah-guertin',
   'james-bethea',
 ];
@@ -67,7 +66,6 @@ const CANONICAL_TARGET_NAMES = {
   'tk-cunningham': 'T.K. Cunningham',
   'kamauri-whitfield': 'Kamauri Whitfield',
   'jameer-cantrell': 'Jameer Cantrell',
-  'kaleb-exume': 'Kaleb Exume',
   'elijah-guertin': 'Elijah Guertin',
   'james-bethea': 'James Bethea',
   'kaleb-ballard': 'Kaleb Ballard',
