@@ -13,9 +13,24 @@
   color: #fff;
 }
 
-.fvi-table {
+.fvi-subtitle {
+  margin: 12px auto 0;
+  max-width: 560px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.fvi-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   margin: 24px auto 0;
-  max-width: 720px;
+  max-width: 960px;
+  padding-bottom: 4px;
+}
+
+.fvi-table {
+  min-width: 640px;
   display: grid;
   gap: 12px;
 }
@@ -23,7 +38,7 @@
 .fvi-header,
 .fvi-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr repeat(4, 1fr);
   gap: 8px;
   padding: 12px;
   background: var(--gv-deep-navy, #0a1a2f);
@@ -33,6 +48,12 @@
   text-align: left;
   align-items: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.fvi-row > div:not(:first-child),
+.fvi-header > div:not(:first-child) {
+  text-align: center;
+  font-size: 0.9rem;
 }
 
 .fvi-header {
@@ -60,8 +81,7 @@
 @media (max-width: 640px) {
   .fvi-header,
   .fvi-row {
-    grid-template-columns: 1.5fr 1fr 1fr;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     padding: 10px;
   }
 }

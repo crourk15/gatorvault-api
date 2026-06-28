@@ -29,8 +29,8 @@ export function FutureCastElitePageShell({ segment, testId, children }: Props): 
       </div>
       {children}
       {!insider ? (
-        <a href="/join" className="gv-paywall-sticky-cta">
-          Unlock FutureCast Insider · Try FREE for 30 days
+        <a href="/join?tier=film" className="gv-paywall-sticky-cta">
+          Unlock FutureCast Insider · Film Room from $9.99/mo
         </a>
       ) : null}
     </div>

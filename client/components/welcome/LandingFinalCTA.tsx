@@ -13,8 +13,8 @@ export function LandingFinalCTA(): React.ReactElement {
           Join now and get instant access to recruiting intel, FutureCast, film, and insider tools.
         </p>
         <div className="gv-final-buttons">
-          <Button href={WELCOME_LINKS.insider} variant="primary">
-            Become an Insider
+          <Button href="/join?tier=film" variant="primary">
+            Join GatorVault
           </Button>
           <Button href={WELCOME_LINKS.vault} variant="secondary">
             Enter Vault

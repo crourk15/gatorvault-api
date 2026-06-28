@@ -38,9 +38,9 @@ export function InsiderPaywall({
         <div className="gv-paywall-overlay">
           <img src="/icons/lock.svg" alt="" className="gv-paywall-lock-icon" />
           <p className="gv-paywall-text">
-            FutureCast Insider unlocks full confidence, movement intel, and staff notes.
+            Film Room unlocks full FutureCast confidence, movement intel, and staff notes.
           </p>
-          <a href="/join" className="gv-paywall-cta">
+          <a href="/join?tier=film" className="gv-paywall-cta">
             Unlock FutureCast Insider
           </a>
         </div>

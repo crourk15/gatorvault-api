@@ -25,6 +25,7 @@ const PAYMENT_TIERS = {
     level: 1,
     features: [
       'Everything in Locker Room',
+      'FutureCast probabilities + movement intel',
       'Weekly Scheme School',
       'Play of the Week Breakdown',
       'Player Development Tracker',
@@ -106,6 +107,7 @@ const PAYMENT_GATED = {
   recruiting_basic: 'locker',
   portal_basic: 'locker',
   film_room_full: 'film',
+  futurecast_full: 'film',
   knowledge_engine: 'film',
   scheme_library: 'film',
   concept_breakdowns: 'film',

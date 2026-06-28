@@ -14,7 +14,8 @@ export function LandingHeroElite(): React.ReactElement {
         <div className="gv-hero-left">
           <h1 className="gv-hero-title">Built for Gator Nation.</h1>
           <p className="gv-hero-sub">
-            Verified intel. Real-time updates. Elite recruiting tools for Florida fans who refuse to guess.
+            For Gator fans who love the program and want recruiting in one place — without the rumor
+            chase.
           </p>
           <div className="gv-hero-cta-row">
             <Button href={WELCOME_LINKS.join} variant="primary">
@@ -24,6 +25,10 @@ export function LandingHeroElite(): React.ReactElement {
               Explore Recruiting
             </Button>
           </div>
+          <p className="gv-hero-trust">
+            On3-sourced intel, kept current. We&apos;re fans too — just trying to make sense of the class
+            together.
+          </p>
           <p className="gv-hero-micro">Cancel anytime. Instant access.</p>
         </div>
 

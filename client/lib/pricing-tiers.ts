@@ -1,4 +1,4 @@
-import type { PaymentTierId } from './auth-api';
+import { effectiveTier, type AuthSession, type PaymentTierId } from './auth-api';
 
 export type PricingTier = {
   id: PaymentTierId;
@@ -10,6 +10,36 @@ export type PricingTier = {
   features: string[];
 };
 
+/** Mirrors server `TIER_LEVELS` in session-auth.js */
+export const TIER_LEVELS: Record<PaymentTierId, number> = {
+  locker: 0,
+  film: 1,
+  war: 2,
+};
+
+export function tierLevel(tier: string | null | undefined): number {
+  const t = String(tier || '').toLowerCase();
+  if (t === 'war' || t === 'elite') return TIER_LEVELS.war;
+  if (t === 'film') return TIER_LEVELS.film;
+  return TIER_LEVELS.locker;
+}
+
+export function hasPaymentTier(
+  sessionOrTier: AuthSession | string | null | undefined,
+  minTier: PaymentTierId,
+): boolean {
+  const tier =
+    sessionOrTier && typeof sessionOrTier === 'object'
+      ? effectiveTier(sessionOrTier)
+      : sessionOrTier;
+  return tierLevel(tier) >= tierLevel(minTier);
+}
+
+export function formatMonthlyPrice(amount: number): string {
+  return `$${amount.toFixed(2)} / month`;
+}
+
+/** Canonical paid tiers — keep aligned with server/lib/access-config.js */
 export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'locker',
@@ -18,11 +48,10 @@ export const PRICING_TIERS: PricingTier[] = [
     monthly: 4.99,
     annual: 3.99,
     features: [
-      'Premium articles',
-      'Depth chart',
-      'Press conferences',
-      'Highlights',
+      'Premium articles + depth chart',
+      'Press conferences & highlights',
       'Basic recruiting + portal updates',
+      'Live feed (read-only)',
     ],
   },
   {
@@ -34,10 +63,9 @@ export const PRICING_TIERS: PricingTier[] = [
     popular: true,
     features: [
       'Everything in Locker Room',
-      'Weekly Scheme School',
-      'Play of the Week breakdowns',
-      'Recruit fit evaluations',
-      'Matchup spotlight',
+      'Film Room breakdowns + Scheme School',
+      'FutureCast probabilities + movement intel',
+      'Recruit fit evaluations + matchup spotlight',
     ],
   },
   {
@@ -48,11 +76,94 @@ export const PRICING_TIERS: PricingTier[] = [
     annual: 15.99,
     features: [
       'Everything in Film Room',
-      'Full War Room intel',
-      'Heat Check access',
-      'Insider recruiting intel',
-      'Portal intel + priority alerts',
+      'Full War Room intel + Heat Check',
+      'Insider recruiting intel + staff notes',
+      'Portal + NIL tracker (full access)',
     ],
+  },
+];
+
+export type FeatureAccessCell = '—' | 'Limited' | 'Basic' | 'Read-only' | 'Teaser' | 'Full' | 'Yes';
+
+export type FeatureComparisonRow = {
+  feature: string;
+  free: FeatureAccessCell;
+  locker: FeatureAccessCell;
+  film: FeatureAccessCell;
+  war: FeatureAccessCell;
+};
+
+/** Welcome / insider feature matrix — lowest tier that unlocks each row is implicit in columns. */
+export const FEATURE_COMPARISON_ROWS: FeatureComparisonRow[] = [
+  {
+    feature: 'Recruiting Hub',
+    free: 'Limited',
+    locker: 'Full',
+    film: 'Full',
+    war: 'Full',
+  },
+  {
+    feature: 'Player Profiles',
+    free: 'Limited',
+    locker: 'Basic',
+    film: 'Full',
+    war: 'Full',
+  },
+  {
+    feature: 'Live Feed',
+    free: 'Read-only',
+    locker: 'Read-only',
+    film: 'Read-only',
+    war: 'Full',
+  },
+  {
+    feature: 'FutureCast',
+    free: 'Teaser',
+    locker: 'Teaser',
+    film: 'Full',
+    war: 'Full',
+  },
+  {
+    feature: 'Film Room',
+    free: '—',
+    locker: '—',
+    film: 'Full',
+    war: 'Full',
+  },
+  {
+    feature: 'War Room Intel',
+    free: '—',
+    locker: '—',
+    film: '—',
+    war: 'Full',
+  },
+  {
+    feature: 'Heat Check',
+    free: '—',
+    locker: '—',
+    film: '—',
+    war: 'Full',
+  },
+  {
+    feature: 'Insider Chat',
+    free: '—',
+    locker: '—',
+    film: '—',
+    war: 'Yes',
+  },
+  {
+    feature: 'NIL Tracker',
+    free: 'Limited',
+    locker: 'Limited',
+    film: 'Limited',
+    war: 'Full',
+  },
+  {
+    feature: 'Portal Tracker',
+    free: 'Limited',
+    locker: 'Basic',
+    film: 'Basic',
+    war: 'Full',
   },
 ];
 

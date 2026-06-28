@@ -166,6 +166,15 @@
   color: var(--gv-storm);
 }
 
+.gv-hero-trust {
+  font-family: var(--gv-font);
+  font-size: 15px;
+  line-height: 1.45;
+  max-width: 520px;
+  margin: 0 0 8px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
 .gv-hero-right {
   grid-column: span 6;
   display: flex;
@@ -324,7 +333,16 @@
   font-size: var(--gv-text-h2);
   font-weight: 700;
   color: var(--gv-blue);
-  margin: 0 0 32px;
+  margin: 0 0 16px;
+}
+
+.gv-social-lead {
+  max-width: 640px;
+  margin: 0 auto 32px;
+  font-family: var(--gv-font);
+  font-size: var(--gv-text-body);
+  line-height: 1.6;
+  color: var(--gv-graphite);
 }
 
 .gv-social-metrics {
@@ -336,13 +354,14 @@
 }
 
 .gv-social-metric {
-  min-width: 140px;
+  min-width: 180px;
+  max-width: 220px;
 }
 
 .gv-social-number {
   display: block;
   font-family: var(--gv-font);
-  font-size: var(--gv-text-number);
+  font-size: 2rem;
   font-weight: 700;
   color: var(--gv-blue);
   line-height: 1.1;

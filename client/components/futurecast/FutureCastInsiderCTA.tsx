@@ -10,7 +10,7 @@ type Props = {
 };
 
 export function FutureCastInsiderCTA({
-  message = 'Unlock full FutureCast Insider for UF confidence, fit scores, movement intel, and staff notes.',
+  message = 'Film Room unlocks full FutureCast — UF confidence, fit scores, movement intel, and staff notes.',
   limit,
   total,
 }: Props): React.ReactElement | null {
@@ -26,7 +26,7 @@ export function FutureCastInsiderCTA({
         {prefix}
         {message}
       </p>
-      <a href="/join" className="gv-paywall-cta">
+      <a href="/join?tier=film" className="gv-paywall-cta">
         Unlock FutureCast Insider
       </a>
     </div>

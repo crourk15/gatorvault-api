@@ -3,45 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import '@/lib/pricing-section.css';
-
-const TIERS = [
-  {
-    id: 'locker' as const,
-    name: 'Locker Room',
-    price: '$4.99 / month',
-    features: [
-      'Recruiting Hub',
-      'Live Feed (read-only)',
-      'Directory Access',
-      'Basic Player Profiles',
-    ],
-    featured: false,
-  },
-  {
-    id: 'film' as const,
-    name: 'Film Room',
-    price: '$9.99 / month',
-    features: [
-      'Everything in Locker Room',
-      'Film Room Breakdowns',
-      'Advanced Player Profiles',
-      'FutureCast Predictions',
-    ],
-    featured: true,
-  },
-  {
-    id: 'war' as const,
-    name: 'War Room',
-    price: '$19.99 / month',
-    features: [
-      'Everything in Film Room',
-      'Insider Intel',
-      'War Room Chat',
-      'NIL + Portal Tracker (full)',
-    ],
-    featured: false,
-  },
-] as const;
+import { formatMonthlyPrice, PRICING_TIERS } from '@/lib/pricing-tiers';
 
 export function PricingSection(): React.ReactElement {
   return (
@@ -49,14 +11,16 @@ export function PricingSection(): React.ReactElement {
       <h2>Choose Your Plan</h2>
       <p className="pricing-subtitle">Simple pricing. Cancel anytime.</p>
       <div className="pricing-grid">
-        {TIERS.map((tier) => (
+        {PRICING_TIERS.map((tier) => (
           <div
             key={tier.name}
-            className={`pricing-card${tier.featured ? ' popular gv-pricing-tier--featured' : ''}`}
+            className={`pricing-card${tier.popular ? ' popular gv-pricing-tier--featured' : ''}`}
           >
-            {tier.featured ? <div className="popular-badge">Most Popular</div> : null}
-            <h3>{tier.name}</h3>
-            <p className="price">{tier.price}</p>
+            {tier.popular ? <div className="popular-badge">Most Popular</div> : null}
+            <h3>
+              {tier.icon} {tier.name}
+            </h3>
+            <p className="price">{formatMonthlyPrice(tier.monthly)}</p>
             <ul>
               {tier.features.map((feature) => (
                 <li key={feature}>✓ {feature}</li>
