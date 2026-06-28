@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-27T23:36:20.964Z",
+  "updatedAt": "2026-06-28T01:52:41.480Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -125,7 +125,7 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/easton-royal-243862/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -140,7 +140,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": true,
-      "updatedAt": "2026-06-27T21:06:09.328Z"
+      "updatedAt": "2026-06-28T01:50:01.849Z"
     },
     "aaron-mcwilliams": {
       "playerSlug": "aaron-mcwilliams",
@@ -5522,7 +5522,7 @@
     "jalen-brewster": {
       "playerSlug": "jalen-brewster",
       "playerName": "Jalen Brewster",
-      "playerType": "commit",
+      "playerType": "target",
       "verified": true,
       "sources": [
         {
@@ -5530,7 +5530,7 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/jalen-brewster-242708/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -5545,8 +5545,8 @@
       "insiderNotes": "Many of the nation’s top high school football prospects have made their college decisions.   As summer winds down, it won’t be long before nearly",
       "recruitingStory": null,
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-27T21:06:08.575Z"
+      "featured": false,
+      "updatedAt": "2026-06-28T01:52:41.450Z"
     },
     "james-bethea": {
       "playerSlug": "james-bethea",

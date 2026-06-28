@@ -617,6 +617,12 @@ function preservePlayerFields(existing, incoming) {
   }
   if (incoming.headliner == null && existing.headliner != null) merged.headliner = existing.headliner;
 
+  if (String(incoming.status || '').toLowerCase() === 'uncommitted') {
+    merged.committedTo = incoming.committedTo ?? null;
+    merged.fromSchool = incoming.fromSchool ?? null;
+    merged.commitDate = incoming.commitDate ?? null;
+  }
+
   const mergedCompetitors = mergeCompetitorArrays(existing.competitors, incoming.competitors);
   if (mergedCompetitors) merged.competitors = mergedCompetitors;
   else if (Array.isArray(existing.competitors) && existing.competitors.length) merged.competitors = existing.competitors;

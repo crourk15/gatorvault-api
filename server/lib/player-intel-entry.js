@@ -324,6 +324,9 @@ function buildPlayerPatch(resolved, hasOffer, existing) {
   } else {
     patch.category = 'target';
     patch.status = 'uncommitted';
+    patch.committedTo = null;
+    patch.fromSchool = null;
+    patch.commitDate = null;
   }
 
   patch = applyUfOffer(patch, hasOffer);

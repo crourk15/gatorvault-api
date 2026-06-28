@@ -1,13 +1,20 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-27T23:35:23.116Z",
-  "slugs2027": [],
+  "updatedAt": "2026-06-28T01:51:44.923Z",
+  "slugs2027": [
+    "easton-royal",
+    "jalen-brewster",
+    "kaleb-exume"
+  ],
   "slugs2028": [
     "zyon-robinson",
     "tyzon-swann"
   ],
   "names": {
     "zyon-robinson": "Zyon Robinson",
-    "tyzon-swann": "Tyzon Swann"
+    "tyzon-swann": "Tyzon Swann",
+    "easton-royal": "Easton Royal",
+    "jalen-brewster": "Jalen Brewster",
+    "kaleb-exume": "Kaleb Exume"
   }
 }

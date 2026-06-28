@@ -3,9 +3,11 @@
 /**
  * Find 2027/2028 players with UF recruiting signals who are NOT on the live target board.
  * Common cause: preview-only intel entry or demoted non-allowlisted category.
+ * Committed-elsewhere allowlist names are expected off the active board.
  */
 const store = require('../lib/recruiting-store');
 const { getAllowlistSet, canonicalTargetSlug } = require('../lib/recruiting-target-allowlist');
+const { isCommittedElsewhere } = require('../lib/recruiting-target-filters');
 
 function hasUfSignal(player) {
   if (!player) return false;
@@ -20,6 +22,7 @@ function hasUfSignal(player) {
 }
 
 function stubReason(player, onAllowlist) {
+  if (isCommittedElsewhere(player)) return 'committed_elsewhere';
   if (player.category !== 'target') return 'wrong_category';
   if (!onAllowlist) return 'not_allowlisted';
   return 'not_on_live_board';
@@ -41,6 +44,9 @@ async function main() {
       if (!hasUfSignal(player)) continue;
 
       const onAllowlist = allowSet.has(canonicalTargetSlug(slug));
+      const reason = stubReason(player, onAllowlist);
+      if (reason === 'committed_elsewhere') continue;
+
       rows.push({
         slug,
         name: player.name,
@@ -48,7 +54,7 @@ async function main() {
         category: player.category,
         status: player.status,
         onAllowlist,
-        reason: stubReason(player, onAllowlist),
+        reason,
       });
     }
   }
@@ -63,6 +69,13 @@ async function main() {
       row.slug,
       '(' + row.category + ', allowlist=' + row.onAllowlist + ', reason=' + row.reason + ')'
     );
+  }
+
+  const board2027 = await store.getBoard(2027);
+  for (const slug of ['jalen-brewster', 'kaleb-exume']) {
+    if (!board2027.targets.some((p) => p.slug === slug)) {
+      failures.push(`${slug} missing from 2027 live board`);
+    }
   }
 
   const tyzon = rows.find((r) => r.slug === 'tyzon-swann');
