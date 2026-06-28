@@ -5,12 +5,15 @@ import { Card, PageLayout, PageSection, TabBar } from '@/components/brand';
 import {
   FILM_HUB_ORDER,
   fetchFilmRoomCatalog,
+  fetchFilmRoomLesson,
   type FilmRoomCatalogItem,
+  type FilmRoomLessonDetail,
 } from '@/lib/film-room-api';
 import {
   filmRoomHubFromSegment,
   parseFilmRoomSegmentFromPath,
 } from '@/lib/vault-route-map';
+import { isFilmRoomInsider } from '@/lib/futurecast-insider';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
 
 const HUB_TABS = FILM_HUB_ORDER.map((name) => ({
@@ -26,10 +29,79 @@ const HUB_ICONS: Record<string, string> = {
   Highlights: '⭐',
 };
 
+function youtubeEmbedUrl(item: FilmRoomCatalogItem): string | null {
+  if (item.embedUrl) return item.embedUrl;
+  const id = item.youtubeId;
+  if (id) return `https://www.youtube.com/embed/${id}`;
+  const url = item.sourceUrl || '';
+  const match = url.match(/(?:youtu\.be\/|v=)([\w-]{11})/);
+  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+}
+
+function FilmLessonViewer({
+  item,
+  detail,
+  loading,
+  onClose,
+}: {
+  item: FilmRoomCatalogItem;
+  detail: FilmRoomLessonDetail | null;
+  loading: boolean;
+  onClose: () => void;
+}): React.ReactElement {
+  const embed = youtubeEmbedUrl(item);
+  const body = detail?.body || item.body;
+  const summary = detail?.summary || item.dek;
+
+  return (
+    <PageSection title={item.title} subtitle={item.source || 'Verified coaching source'}>
+      <button type="button" className="gv-film-lesson__back" onClick={onClose}>
+        ← Back to catalog
+      </button>
+      {loading ? <p className="gv-page-status">Loading lesson…</p> : null}
+      {summary ? <p className="gv-film-lesson__dek">{summary}</p> : null}
+      {embed ? (
+        <div className="gv-film-lesson__embed">
+          <iframe
+            title={item.title}
+            src={embed}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      ) : null}
+      {body ? (
+        <div className="gv-film-lesson__body">
+          {body.split(/\n\n+/).map((para) => (
+            <p key={para.slice(0, 40)}>{para}</p>
+          ))}
+        </div>
+      ) : null}
+      {!embed && !body && !loading ? (
+        <UiEmpty message="Lesson content is being verified." hint="Check back after the next knowledge sync." />
+      ) : null}
+      {item.sourceUrl ? (
+        <a
+          href={item.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="gv-film-lesson__link"
+        >
+          View original source →
+        </a>
+      ) : null}
+    </PageSection>
+  );
+}
+
 export function VaultFilmRoomPage(): React.ReactElement {
   const [items, setItems] = useState<FilmRoomCatalogItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<FilmRoomCatalogItem | null>(null);
+  const [lessonDetail, setLessonDetail] = useState<FilmRoomLessonDetail | null>(null);
+  const [lessonLoading, setLessonLoading] = useState(false);
+  const insider = isFilmRoomInsider();
   const [hub, setHub] = useState<string>(() => {
     const seg = parseFilmRoomSegmentFromPath();
     return seg ? filmRoomHubFromSegment(seg) : FILM_HUB_ORDER[0];
@@ -57,6 +129,37 @@ export function VaultFilmRoomPage(): React.ReactElement {
   useEffect(() => {
     void load();
   }, [load]);
+
+  const openLesson = useCallback(
+    async (item: FilmRoomCatalogItem) => {
+      if (item.locked || !insider) {
+        window.location.href = '/join?tier=film';
+        return;
+      }
+      setSelected(item);
+      setLessonDetail(null);
+      if (item.body || item.youtubeId || item.embedUrl) return;
+      if (!item.knowledgeEngine) return;
+      setLessonLoading(true);
+      try {
+        const detail = await fetchFilmRoomLesson(item.id);
+        setLessonDetail(detail);
+      } catch {
+        setLessonDetail(null);
+      } finally {
+        setLessonLoading(false);
+      }
+    },
+    [insider]
+  );
+
+  useEffect(() => {
+    if (loading || !items.length) return;
+    const lessonId = new URLSearchParams(window.location.search).get('lesson');
+    if (!lessonId) return;
+    const match = items.find((i) => i.id === lessonId);
+    if (match) void openLesson(match);
+  }, [loading, items, openLesson]);
 
   const hubCounts = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -87,69 +190,63 @@ export function VaultFilmRoomPage(): React.ReactElement {
         aria-label="Film room categories"
       />
 
-      <PageSection title="Categories" subtitle="Select a film hub">
-        <div className="gv-film-hub-grid" role="list" aria-label="Film room categories">
-          {FILM_HUB_ORDER.map((name) => (
-            <button
-              key={name}
-              type="button"
-              role="listitem"
-              className={`gv-film-hub-card${hub === name ? ' is-active' : ''}`}
-              onClick={() => setHub(name)}
-              aria-pressed={hub === name}
-            >
-              <span className="gv-film-hub-card__icon" aria-hidden="true">
-                {HUB_ICONS[name] ?? '📺'}
-              </span>
-              <h3 className="gv-film-hub-card__title">{name}</h3>
-              <p className="gv-film-hub-card__count">{hubCounts[name] ?? 0} lessons</p>
-            </button>
-          ))}
-        </div>
-      </PageSection>
+      {!selected ? (
+        <PageSection title="Categories" subtitle="Select a film hub">
+          <div className="gv-film-hub-grid" role="list" aria-label="Film room categories">
+            {FILM_HUB_ORDER.map((name) => (
+              <button
+                key={name}
+                type="button"
+                role="listitem"
+                className={`gv-film-hub-card${hub === name ? ' is-active' : ''}`}
+                onClick={() => setHub(name)}
+                aria-pressed={hub === name}
+              >
+                <span className="gv-film-hub-card__icon" aria-hidden="true">
+                  {HUB_ICONS[name] ?? '📺'}
+                </span>
+                <h3 className="gv-film-hub-card__title">{name}</h3>
+                <p className="gv-film-hub-card__count">{hubCounts[name] ?? 0} lessons</p>
+              </button>
+            ))}
+          </div>
+        </PageSection>
+      ) : null}
 
       {loading && <p className="gv-page-status">Loading Film Room…</p>}
       {error && !loading && (
         <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
       )}
 
-      {!loading && !error && (
+      {!loading && !error && selected ? (
+        <FilmLessonViewer
+          item={selected}
+          detail={lessonDetail}
+          loading={lessonLoading}
+          onClose={() => {
+            setSelected(null);
+            setLessonDetail(null);
+          }}
+        />
+      ) : null}
+
+      {!loading && !error && !selected ? (
         <>
           <PageSection
             title={hub}
             subtitle={`${hubCounts[hub] ?? 0} lessons · ${HUB_ICONS[hub] ?? '📺'}`}
           >
-            <div className="gv-film-diagram" aria-hidden="true">
-              <svg viewBox="0 0 400 200" className="gv-film-diagram__svg">
-                <line x1="40" y1="100" x2="360" y2="100" stroke="var(--gv-orange)" strokeWidth="2" strokeDasharray="6 4" />
-                <circle cx="120" cy="100" r="24" fill="none" stroke="var(--gv-orange)" strokeWidth="2" />
-                <circle cx="200" cy="60" r="20" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" />
-                <circle cx="280" cy="100" r="24" fill="none" stroke="var(--gv-orange)" strokeWidth="2" />
-                <text x="200" y="180" textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="12">
-                  Chalkboard schematic preview
-                </text>
-              </svg>
-            </div>
-
             <div className="gv-film-lessons">
               {filtered.map((item) => (
-                <Card key={item.id} className="gv-film-lesson">
-                  <h3 className="gv-film-lesson__title">{item.title}</h3>
-                  {item.dek ? <p className="gv-film-lesson__dek">{item.dek}</p> : null}
-                  <p className="gv-film-lesson__meta">
-                    {item.source || 'Verified source'}
-                    {item.locked ? ' · 🔒 Film tier' : ''}
-                  </p>
-                  {item.sourceUrl && !item.locked ? (
-                    <a
-                      href={item.sourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="gv-film-lesson__link"
-                    >
-                      Open source →
-                    </a>
-                  ) : null}
+                <Card key={item.id} className="gv-film-lesson gv-film-lesson--clickable">
+                  <button type="button" className="gv-film-lesson__open" onClick={() => void openLesson(item)}>
+                    <h3 className="gv-film-lesson__title">{item.title}</h3>
+                    {item.dek ? <p className="gv-film-lesson__dek">{item.dek}</p> : null}
+                    <p className="gv-film-lesson__meta">
+                      {item.source || 'Verified source'}
+                      {item.locked || !insider ? ' · 🔒 Film tier' : ' · Tap to open'}
+                    </p>
+                  </button>
                 </Card>
               ))}
               {filtered.length === 0 && <UiEmpty message="No lessons in this category yet." />}
@@ -157,10 +254,19 @@ export function VaultFilmRoomPage(): React.ReactElement {
           </PageSection>
 
           {items.length === 0 && (
-            <UiEmpty message="Film Room catalog is empty." hint="Run ensure:film-room on the API." />
+            <UiEmpty
+              message="Film Room catalog is empty."
+              hint="Knowledge lessons sync from the verified coaching database on the API."
+            />
           )}
         </>
-      )}
+      ) : null}
+
+      {!insider ? (
+        <a href="/join?tier=film" className="gv-paywall-sticky-cta">
+          Unlock Film Room + FutureCast · from $9.99/mo
+        </a>
+      ) : null}
     </PageLayout>
   );
 }

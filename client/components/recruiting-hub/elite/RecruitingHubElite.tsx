@@ -16,6 +16,7 @@ import { RecruitingHubBundleProvider } from '@/components/recruiting-hub/elite/R
 import { RecruitingClassYearProvider } from '@/components/recruiting-hub/elite/RecruitingClassYearProvider';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { LazyHubSection } from '@/components/recruiting-hub/elite/LazyHubSection';
+import { EliteCommitBoard } from '@/components/recruiting-hub/elite/EliteCommitBoard';
 import { useRecruitingHubBundle } from '@/components/recruiting-hub/elite/useRecruitingHubBundle';
 import { UiError, UiWarming } from '@/components/site/UiMessage';
 import { initGvHydrate } from '@/lib/gv-hydrate';
@@ -57,6 +58,9 @@ function RecruitingHubEliteContent({
       ) : null}
       {deferHero ? <RecruitingHeroHydrator /> : <RecruitingHeroStripInline />}
       <SigningDayTracker />
+      <LazyHubSection priority="top-fold" testId="rh-lazy-commit-board">
+        <EliteCommitBoard year={activeYear} />
+      </LazyHubSection>
       <LazyHubSection priority="top-fold" testId="rh-lazy-class-cards">
         <ClassCards />
       </LazyHubSection>

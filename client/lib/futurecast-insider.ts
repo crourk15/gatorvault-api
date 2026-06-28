@@ -7,3 +7,6 @@ export function isFutureCastInsider(session?: AuthSession | null): boolean {
   if (!s?.email) return false;
   return hasPaymentTier(s, 'film');
 }
+
+/** Film Room + Game Week — same Film tier gate as FutureCast. */
+export const isFilmRoomInsider = isFutureCastInsider;
