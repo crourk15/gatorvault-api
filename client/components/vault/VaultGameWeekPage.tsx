@@ -6,6 +6,7 @@ import { DYNAMIC_PATH_PATTERNS, segmentFromPath } from '@/lib/dynamic-path-parse
 import { SCHEDULE_GAMES, type ScheduleGame } from '@/lib/schedule-data';
 import { SITE_ROUTES, gameWeekRoute } from '@/lib/site-routes';
 import { usePathname } from '@/lib/use-pathname';
+import { isFilmRoomInsider } from '@/lib/futurecast-insider';
 
 const TABS = [
   { id: 'intel', label: 'Game Week Intel' },
@@ -87,6 +88,16 @@ function GameCard({ game }: { game: ScheduleGame }): React.ReactElement {
         <div>
           <h3 className="gv-type-h3">Film Notes</h3>
           <p>{game.film}</p>
+          {game.filmLessonId ? (
+            <p style={{ marginTop: '0.75rem' }}>
+              <a
+                href={`/vault/film-room/?lesson=${encodeURIComponent(game.filmLessonId)}`}
+                className="gv-film-lesson__link"
+              >
+                Open Film Room opponent prep →
+              </a>
+            </p>
+          ) : null}
         </div>
       </GridLayout>
       <div className="gv-game-card__pred">
@@ -101,6 +112,7 @@ function GameCard({ game }: { game: ScheduleGame }): React.ReactElement {
 
 export function VaultGameWeekPage(): React.ReactElement {
   const pathname = usePathname();
+  const insider = isFilmRoomInsider();
   const urlGameId = useMemo(
     () => segmentFromPath(pathname, DYNAMIC_PATH_PATTERNS.gameWeekGame),
     [pathname]
@@ -167,7 +179,16 @@ export function VaultGameWeekPage(): React.ReactElement {
       )}
       {tab === 'scout' && (
         <PageSection title="Scouting Report">
-          <Card>{game.film}</Card>
+          <Card>
+            <p>{game.film}</p>
+            {game.filmLessonId ? (
+              <p style={{ marginTop: '1rem' }}>
+                <Button href={`/vault/film-room/?lesson=${encodeURIComponent(game.filmLessonId)}`}>
+                  Film Room breakdown
+                </Button>
+              </p>
+            ) : null}
+          </Card>
         </PageSection>
       )}
       {tab === 'pred' && (
@@ -181,6 +202,11 @@ export function VaultGameWeekPage(): React.ReactElement {
           </Card>
         </PageSection>
       )}
+      {!insider ? (
+        <a href="/join?tier=film" className="gv-paywall-sticky-cta">
+          Unlock Game Week + Film Room · from $9.99/mo
+        </a>
+      ) : null}
     </PageLayout>
   );
 }

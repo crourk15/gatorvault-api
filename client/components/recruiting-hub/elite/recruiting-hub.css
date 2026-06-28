@@ -1269,6 +1269,33 @@
   text-decoration: underline;
 }
 
+.rh-elite-chrome .rh-heat-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.rh-elite-chrome .rh-heat-fc-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-text);
+  text-decoration: none;
+}
+
+.rh-elite-chrome .rh-heat-fc-link:hover {
+  color: var(--gator-orange);
+}
+
+.gv-hp-card__fc-link {
+  display: block;
+  margin: 0 1rem 1rem;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gator-orange);
+  text-decoration: none;
+}
+
 .rh-elite-chrome .rh-feed {
   display: flex;
   flex-direction: column;

@@ -18,7 +18,13 @@ function movementSymbol(movement: RhHubHeatTarget['movement']): string {
   return '—';
 }
 
-function HeatTargetCard({ target }: { target: RhHubHeatTarget }): React.ReactElement {
+function HeatTargetCard({
+  target,
+  showFutureCastLink,
+}: {
+  target: RhHubHeatTarget;
+  showFutureCastLink: boolean;
+}): React.ReactElement {
   return (
     <article className="rh-card rh-heat-card" data-testid={`rh-heat-${target.id}`}>
       <div className="rh-flex-between">
@@ -49,9 +55,16 @@ function HeatTargetCard({ target }: { target: RhHubHeatTarget }): React.ReactEle
       </div>
       {target.nextVisit ? <div className="rh-heat-visit">Next visit: {target.nextVisit}</div> : null}
       {target.insiderNote ? <div className="rh-heat-note">{target.insiderNote}</div> : null}
-      <a href={target.profileUrl} className="rh-heat-profile-link">
-        Full profile →
-      </a>
+      <div className="rh-heat-links">
+        <a href={target.profileUrl} className="rh-heat-profile-link">
+          Recruiting profile →
+        </a>
+        {showFutureCastLink ? (
+          <a href={`/vault/futurecast/player/${encodeURIComponent(target.id)}`} className="rh-heat-fc-link">
+            FutureCast intel →
+          </a>
+        ) : null}
+      </div>
     </article>
   );
 }
@@ -92,7 +105,7 @@ export function TopTargetsHeatIndex(): React.ReactElement {
       ) : (
         <section className="rh-grid-2col" data-testid="rh-elite-heat-index">
           {data.map((target) => (
-            <HeatTargetCard key={target.id} target={target} />
+            <HeatTargetCard key={target.id} target={target} showFutureCastLink={activeYear >= 2027} />
           ))}
         </section>
       )}

@@ -386,7 +386,11 @@ function buildBattleBoardRows(enrichedPlayers) {
 
   for (const player of enrichedPlayers) {
     if (player.isCommit) continue;
-    if (player.ufScore == null && !(player.competitors || []).length) continue;
+    const heat = computeHeatScore(player);
+    const isPriority =
+      player.tier === 'TOP' || player.tier === 'HIGH' || heat >= 45;
+    const hasBattle = player.ufScore != null || (player.competitors || []).length;
+    if (!hasBattle && !isPriority) continue;
 
     rows.push({
       id: player.slug,
@@ -397,7 +401,7 @@ function buildBattleBoardRows(enrichedPlayers) {
       battleColor: player.battleColor,
       trend: player.trend || 'flat',
       competitors: player.competitors || [],
-      ufScore: player.ufScore,
+      ufScore: player.ufScore ?? (isPriority ? heat : null),
       nextVisit: player.nextVisit,
       intel: shortNote(player) || null,
     });

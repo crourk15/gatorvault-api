@@ -57,6 +57,7 @@ export function vaultGateRedirect(pathname: string, loggedIn: boolean): string |
   if (loggedIn) return null;
   const p = pathname.replace(/\/$/, '') || '/';
   if (p.startsWith('/vault/futurecast')) return joinHref('/vault/futurecast', 'signin');
+  if (p.startsWith('/vault/game-week')) return joinHref('/vault/game-week', 'signin');
   if (p.startsWith('/vault/recruiting')) return joinHref(p, 'signin');
   if (p.startsWith('/vault/film-room')) return joinHref('/vault/film-room', 'signin');
   return null;
@@ -67,6 +68,7 @@ export function navActiveId(pathname: string): MainNavId | null {
   if (p === '/welcome' || p === '/') return 'home';
   if (p === '/insider' || p.startsWith('/join')) return 'insider';
   if (p.startsWith('/vault/futurecast') || p.startsWith('/futurecast')) return 'futurecast';
+  if (p.startsWith('/vault/game-week')) return 'filmRoom';
   if (p.startsWith('/vault/recruiting') || p.startsWith('/recruiting')) return 'recruiting';
   if (p.startsWith('/vault/film-room')) return 'filmRoom';
   if (p.startsWith('/vault')) return 'futurecast';

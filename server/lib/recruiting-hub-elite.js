@@ -34,17 +34,6 @@ function trendFromDelta(delta) {
   return 'stable';
 }
 
-function buildSparkline(base, trend) {
-  const points = 7;
-  const values = [];
-  for (let i = 0; i < points; i += 1) {
-    const progress = i / (points - 1);
-    const drift = trend === 'up' ? progress * 12 : trend === 'down' ? (1 - progress) * 12 : 0;
-    values.push(Math.max(0, Math.round(base - 6 + drift + (i % 2 === 0 ? 1 : 0))));
-  }
-  return values;
-}
-
 function blueChipPct(players) {
   if (!players.length) return null;
   const blue = players.filter((p) => (Number(p.stars) || 0) >= 4).length;
@@ -165,10 +154,10 @@ async function buildHubClassOverview(year = 2027) {
     trendCommits: trendDisplay(commitTrend),
     trendRating: trendDisplay(ratingTrend),
     sparklines: {
-      classRank: buildSparkline(enriched.rankings?.nationalRank ?? 10, rankTrend === 'up' ? 'down' : rankTrend),
-      blueChip: buildSparkline(chip ?? 60, chipTrend),
-      commits: buildSparkline(commitCount || 18, commitTrend),
-      avgRating: buildSparkline(Math.round((avg ?? 90) - 80), ratingTrend),
+      classRank: null,
+      blueChip: null,
+      commits: null,
+      avgRating: null,
     },
   };
 }
@@ -195,10 +184,6 @@ function formatNilEstimate(player) {
     }
     return String(raw);
   }
-  const stars = Number(player.stars) || 0;
-  if (stars >= 5) return '$400K–$750K';
-  if (stars >= 4) return '$75K–$250K';
-  if (stars >= 3) return '$15K–$75K';
   return null;
 }
 
