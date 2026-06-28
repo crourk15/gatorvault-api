@@ -11,7 +11,7 @@ const quarantine = require('./quarantine-store');
 const coachIdentity = require('../official-coach-identity');
 const decisionLog = require('./decision-log');
 const feedDedup = require('../live-feed-dedup');
-const { GM2_FEATURES, GM2_ACTIONS, VERIFIED_COMMIT_SOURCES } = require('./types');
+const { GM2_FEATURES, GM2_ACTIONS, VERIFIED_COMMIT_SOURCES, TRUSTED_SOURCES } = require('./types');
 
 function isQuarantined(record) {
   const slug = record?.playerSlug || record?.slug || record?.payload?.player?.slug;
@@ -74,6 +74,9 @@ function rulesForHeatCheckPlayer(player, intelRows = []) {
 function rulesForAutoposter(candidate) {
   if (isQuarantined(candidate)) return { allow: false, reason: 'player_quarantined' };
   if (publicAlerts().isBrewsterFalseQueueItem(candidate)) return { allow: false, reason: 'false_commit_queue' };
+  if (candidate.verifiedCommit || candidate.validationMeta?.verifiedCommit) {
+    return { allow: true };
+  }
   const et = String(candidate.intelType || candidate.eventType || candidate.sourceEventType || '').toLowerCase();
   const trigger = String(candidate.triggerType || '').toLowerCase();
   if (trigger === 'program_news' || et === 'program_news') {
@@ -83,8 +86,15 @@ function rulesForAutoposter(candidate) {
     return { allow: true };
   }
   const src = String(candidate.source || '').toLowerCase();
-  if (['commit', 'flip'].includes(et) && !VERIFIED_COMMIT_SOURCES.has(src)) {
-    return { allow: false, reason: 'unverified_commit_autopost' };
+  const eventSrc = String(
+    candidate.sourceEventSource || candidate.validationMeta?.sourceEvent || ''
+  ).toLowerCase();
+  if (['commit', 'flip'].includes(et)) {
+    const verified =
+      VERIFIED_COMMIT_SOURCES.has(src) ||
+      VERIFIED_COMMIT_SOURCES.has(eventSrc) ||
+      TRUSTED_SOURCES.has(eventSrc);
+    if (!verified) return { allow: false, reason: 'unverified_commit_autopost' };
   }
   if (/beat/.test(src) && !candidate.identityConfirmed) {
     return { allow: false, reason: 'unverified_beat_autopost' };

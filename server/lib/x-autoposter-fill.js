@@ -123,7 +123,9 @@ async function buildNewsFromEvent(ev) {
       intelFingerprint: fp,
       sourceEventId: ev.id,
       sourceEventCreatedAt: ev.createdAt,
-      playerName: built.playerName || player.name || null
+      playerName: built.playerName || player.name || null,
+      verifiedCommit: built.verifiedCommit || built.validationMeta?.verifiedCommit || null,
+      sourceEventSource: ev.source || null,
     },
     built
   );
@@ -203,6 +205,17 @@ function prepareNewsCandidate(raw) {
   }
 
   const gate = validation.passesNewsQualityGate(raw);
+  const verifiedCommit = raw.verifiedCommit || raw.validationMeta?.verifiedCommit;
+  if (!gate.pass && verifiedCommit && !(gate.scored?.hardSkips?.length)) {
+  return {
+    ...raw,
+    qualityScore: Math.max(gate.scored?.score ?? 0, validation.POSTING_THRESHOLD || 85),
+    qualityBreakdown: gate.scored?.breakdown ?? null,
+    sourceConfidence: gate.scored?.sourceConfidence ?? validation.SOURCE_CONFIDENCE_REQUIRED ?? 100,
+    situation: raw.situation || postSpec.detectSituation(raw.text, raw.sourceEventType || raw.intelType),
+    verifiedCommit: true,
+  };
+  }
   if (!gate.pass) return null;
   return {
     ...raw,
@@ -659,7 +672,11 @@ async function queueCommitEventAutopost(input, { urgent = true } = {}) {
   }
 
   const check = policy.validatePostContent(scored);
-  if (!check.valid) return { queued: false, reason: 'policy', errors: check.errors };
+  const verifiedCommit = scored.verifiedCommit || scored.validationMeta?.verifiedCommit;
+  const policyBlocked =
+    !check.valid &&
+    !(verifiedCommit && check.errors.every((e) => e.type === 'below_threshold' || e.rule === 'score'));
+  if (policyBlocked) return { queued: false, reason: 'policy', errors: check.errors };
 
   const out = store.enqueuePost({
     ...scored,

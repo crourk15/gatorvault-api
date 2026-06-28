@@ -92,6 +92,7 @@ function normalizeItem(raw, { validate = true } = {}) {
     teamEventType: raw.teamEventType || null,
     programNewsType: raw.programNewsType || null,
     identityConfirmed: raw.identityConfirmed === true ? true : raw.identityConfirmed === false ? false : undefined,
+    verifiedCommit: raw.verifiedCommit === true || raw.validationMeta?.verifiedCommit === true,
     monitoringFallback: raw.monitoringFallback === true,
     clusterFingerprint: raw.clusterFingerprint || null,
     clusterMeta: raw.clusterMeta || null

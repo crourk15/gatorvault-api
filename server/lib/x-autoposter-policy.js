@@ -186,7 +186,11 @@ function validatePostContent(item) {
       });
     }
     const qualityCheck = quality.validateNewsPostQuality(item);
-    if (!qualityCheck.valid) {
+    const verifiedCommit = item.verifiedCommit || item.validationMeta?.verifiedCommit;
+    if (
+      !qualityCheck.valid &&
+      !(verifiedCommit && qualityCheck.errors.every((e) => e.type === 'below_threshold' || e.rule === 'score'))
+    ) {
       errors.push(...qualityCheck.errors.map((e) => ({ ...e, field: e.field || e.rule || 'quality' })));
     }
     if (action === 'quote' && !item.quoteTweetUrl && !item.quoteTweetId) {
