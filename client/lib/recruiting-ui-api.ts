@@ -3,9 +3,9 @@
  */
 import {
   DEFAULT_SNAPSHOT_FETCH_OPTS,
-  snapshotFirstFetch,
   snapshotLiveFetch,
 } from './snapshot-fetch';
+import { fetchWithWarmPoll } from './api-warm-poll';
 import type {
   RhHubBattle,
   RhHubBattleBoardItem,
@@ -106,100 +106,75 @@ function yearQuery(year = ACTIVE_RECRUITING_CLASS_YEAR): string {
   return `?year=${year}`;
 }
 
+function warmFetch<T>(path: string): Promise<T> {
+  return fetchWithWarmPoll(() => snapshotLiveFetch<T>(path, DEFAULT_SNAPSHOT_FETCH_OPTS));
+}
+
 export function fetchClassMetrics(
   year = ACTIVE_RECRUITING_CLASS_YEAR
 ): Promise<ClassMetricsResponse> {
   const path = `/api/recruiting/class-metrics${yearQuery(year)}`;
-  return snapshotFirstFetch(path, () =>
-    snapshotLiveFetch<ClassMetricsResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS)
-  );
+  return warmFetch<ClassMetricsResponse>(path);
 }
 
 export function fetchRecruitingClassYear(year: number): Promise<ClassYearResponse> {
   const path = `/api/recruiting/class/${year}`;
-  return snapshotFirstFetch(path, () =>
-    snapshotLiveFetch<ClassYearResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS)
-  );
+  return warmFetch<ClassYearResponse>(path);
 }
 
 export function fetchMovementIntel(): Promise<MovementIntelResponse> {
-  const path = '/api/recruiting/movement-intel';
-  return snapshotFirstFetch(path, () =>
-    snapshotLiveFetch<MovementIntelResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS)
-  );
+  return warmFetch<MovementIntelResponse>('/api/recruiting/movement-intel');
 }
 
 export function fetchRecruitingBattles(
   year = ACTIVE_RECRUITING_CLASS_YEAR
 ): Promise<BattlesResponse> {
   const path = `/api/recruiting/battles${yearQuery(year)}`;
-  return snapshotFirstFetch(path, () =>
-    snapshotLiveFetch<BattlesResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS)
-  );
+  return warmFetch<BattlesResponse>(path);
 }
 
 export function fetchHeatIndex(
   year = ACTIVE_RECRUITING_CLASS_YEAR
 ): Promise<HeatIndexResponse> {
   const path = `/api/recruiting/heat-index${yearQuery(year)}`;
-  return snapshotFirstFetch(path, () =>
-    snapshotLiveFetch<HeatIndexResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS)
-  );
+  return warmFetch<HeatIndexResponse>(path);
 }
 
 export function fetchPositionSnapshot(
   year = ACTIVE_RECRUITING_CLASS_YEAR
 ): Promise<PositionsResponse> {
   const path = `/api/recruiting/positions${yearQuery(year)}`;
-  return snapshotFirstFetch(path, () =>
-    snapshotLiveFetch<PositionsResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS)
-  );
+  return warmFetch<PositionsResponse>(path);
 }
 
 export function fetchRecruitingFootprint(
   year = ACTIVE_RECRUITING_CLASS_YEAR
 ): Promise<FootprintResponse> {
   const path = `/api/recruiting/footprint${yearQuery(year)}`;
-  return snapshotFirstFetch(path, () =>
-    snapshotLiveFetch<FootprintResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS)
-  );
+  return warmFetch<FootprintResponse>(path);
 }
 
 export function fetchBattlesAndMovement(
   year = ACTIVE_RECRUITING_CLASS_YEAR
 ): Promise<BattlesAndMovementResponse> {
   const path = `/api/recruiting/battles-and-movement${yearQuery(year)}`;
-  return snapshotFirstFetch(path, () =>
-    snapshotLiveFetch<BattlesAndMovementResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS)
-  );
+  return warmFetch<BattlesAndMovementResponse>(path);
 }
 
 export function fetchHighPriorityIntel(): Promise<HighPriorityIntelItem[]> {
-  const path = '/api/recruiting/intel/high-priority';
-  return snapshotFirstFetch(path, async () => {
-    const res = await snapshotLiveFetch<{ items: HighPriorityIntelItem[] }>(
-      path,
-      DEFAULT_SNAPSHOT_FETCH_OPTS
-    );
-    return res.items ?? [];
-  });
+  return warmFetch<{ items: HighPriorityIntelItem[] }>('/api/recruiting/intel/high-priority').then(
+    (res) => res.items ?? []
+  );
 }
 
 export function fetchBeatIntel(): Promise<BeatIntelItem[]> {
-  const path = '/api/recruiting/intel/beat';
-  return snapshotFirstFetch(path, async () => {
-    const res = await snapshotLiveFetch<{ items: BeatIntelItem[] }>(
-      path,
-      DEFAULT_SNAPSHOT_FETCH_OPTS
-    );
-    return res.items ?? [];
-  });
+  return warmFetch<{ items: BeatIntelItem[] }>('/api/recruiting/intel/beat').then(
+    (res) => res.items ?? []
+  );
 }
 
 export function fetchLivePodcasts(): Promise<PodcastCardProps[]> {
-  const path = '/api/live/podcasts';
-  return snapshotFirstFetch(path, async () => {
-    const res = await snapshotLiveFetch<PodcastsResponse>(path, DEFAULT_SNAPSHOT_FETCH_OPTS);
+  return warmFetch<PodcastsResponse>('/api/live/podcasts').then((res) => {
     const shows = (res.shows ?? []).map((show) =>
       normalizePodcastShow(show as unknown as Record<string, unknown>)
     );

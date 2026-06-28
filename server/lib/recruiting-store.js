@@ -279,7 +279,7 @@ async function getHubCommits(classYear) {
   return filtered;
 }
 
-/** Merge nil + other JSON-only intel when Supabase rows omit extended fields. */
+/** Merge JSON store fields when Supabase rows lag behind allowlist ingest. */
 function overlayJsonIntelFields(players) {
   let local;
   try {
@@ -297,6 +297,17 @@ function overlayJsonIntelFields(players) {
       patch.nilEstimate = Number(src.nilEstimate ?? src.nilValue);
       patch.nilSource = src.nilSource || 'on3-profile';
     }
+    if (src.headliner === true && !p.headliner) patch.headliner = true;
+    const localStars = Number(src.stars) || Number(src.consensusStars) || 0;
+    const rowStars = Number(p.stars) || Number(p.consensusStars) || 0;
+    if (localStars > rowStars) {
+      patch.stars = localStars;
+      if (src.consensusStars != null) patch.consensusStars = src.consensusStars;
+    }
+    if (src.natlRank != null && (p.natlRank == null || Number(src.natlRank) < Number(p.natlRank))) {
+      patch.natlRank = src.natlRank;
+    }
+    if (src.skinny && String(src.skinny).trim()) patch.skinny = src.skinny;
     return Object.keys(patch).length ? { ...p, ...patch } : p;
   });
 }

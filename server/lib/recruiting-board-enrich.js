@@ -75,7 +75,12 @@ function mergeWarRoomFields(player, enriched) {
     playerComp,
     insiderNotes: notesOk ? String(evaluatorNotes).trim() : enriched.insiderNotes || null,
     evaluatorNotes,
-    profileNote: enriched.profileNote || breakdown.recruitingStory || null,
+    profileNote:
+      enriched.profileNote ||
+      (breakdown.recruitingStory &&
+      !isGenericBeatArticle(String(breakdown.recruitingStory), enriched.name)
+        ? breakdown.recruitingStory
+        : null),
   };
 }
 

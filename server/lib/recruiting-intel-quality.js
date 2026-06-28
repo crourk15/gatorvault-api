@@ -87,6 +87,15 @@ const JUNK_INTEL_PATTERNS = [
   /still have room to climb in/i,
   /Beginning Thursday,\s*Florida will host/i,
   /Several of the Gators[''] commitments/i,
+  /^On (Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday),/i,
+  /The Florida Gators have their (first )?commitment for the \d{4} cycle/i,
+  /\b(has committed|commits|committed on (Sunday|Saturday|Monday|Tuesday|Wednesday|Thursday|Friday))\b/i,
+  /\bflipped (his|her|their)? commitment to (the )?(Florida|Gators|\bUF\b)\b/i,
+  /\b\d-star (wide )?receiver\b.*\bcommitted\b/i,
+  /Ole Miss is stacking talent/i,
+  /The Longhorns are one of the hottest teams on the recruiting trail/i,
+  /The Rebels' newest addition is/i,
+  /Texas bolstered its top-\d+ recruiting class/i,
 ];
 
 const SCOUTING_TRAIT_KEYWORDS =
@@ -108,6 +117,10 @@ const SCOUTING_TRAIT_REJECT = [
   /clearer picture of where it stands/i,
   /^In some of those battles/i,
   /^\S+\s*\([A-Za-z.]+\)\s+\S+\s+(safety|quarterback|cornerback|linebacker|receiver|running back|tight end|offensive|defensive)\s*$/i,
+  /^On (Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday),/i,
+  /\b(has committed|commits|committed on)\b/i,
+  /first commitment for the \d{4} cycle/i,
+  /\b\d-star (wide )?receiver\b/i,
 ];
 
 function playerLastName(name) {
@@ -123,10 +136,6 @@ function isGenericBeatArticle(text, playerName) {
   const s = String(text || '').trim();
   if (!s || s.length < 10) return true;
   if (JUNK_INTEL_PATTERNS.some((re) => re.test(s))) return true;
-  const last = playerLastName(playerName);
-  if (last && last.length > 2 && new RegExp(`\\b${last.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(s)) {
-    return false;
-  }
   if (/^The Florida Gators\b/i.test(s)) return true;
   if (/^Miami is still working\b/i.test(s)) return true;
   if (/^Florida's offensive line class\b/i.test(s)) return true;
@@ -134,6 +143,15 @@ function isGenericBeatArticle(text, playerName) {
   if (/^Florida tight end commit\b/i.test(s)) return true;
   if (/^When this week is over\b/i.test(s)) return true;
   if (/^It['']s another important official visit week\b/i.test(s)) return true;
+  const last = playerLastName(playerName);
+  if (last && last.length > 2 && new RegExp(`\\b${last.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(s)) {
+    if (/\b(first commitment for the \d{4} cycle|committed on (Sunday|Saturday|Monday))\b/i.test(s)) {
+      return true;
+    }
+    if (/^\bOn (Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday),/i.test(s)) return true;
+    if (/\b(has committed|commits|flipped (his|her|their)? commitment)\b/i.test(s)) return true;
+    return false;
+  }
   return false;
 }
 

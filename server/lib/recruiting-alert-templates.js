@@ -17,7 +17,7 @@ function sanitizeSourceText(text) {
 
 function starPrefix(stars) {
   const n = parseInt(stars, 10);
-  return n >= 1 && n <= 5 ? `${n}${STAR}` : '';
+  return n >= 1 && n <= 5 ? `${n}-star` : '';
 }
 
 function posLabel(pos) {

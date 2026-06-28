@@ -249,11 +249,17 @@ function deleteBreakdown(slug) {
 }
 
 function scoutingEntryToBreakdown(entry) {
+  const { isGenericBeatArticle, isVerifiedScoutingTrait } = require('./recruiting-intel-quality');
+  const playerName = entry.playerName || '';
+  const summaryRaw = String(entry.scoutingSummary || '').trim();
+  const summaryOk = summaryRaw && !isGenericBeatArticle(summaryRaw, playerName);
   const typedUpdates = Array.isArray(entry.updates) ? entry.updates : [];
-  const sents = String(entry.scoutingSummary || '')
-    .split(/(?<=[.!?])\s+/)
-    .map((s) => s.trim())
-    .filter((s) => s.length > 20);
+  const sents = summaryOk
+    ? summaryRaw
+        .split(/(?<=[.!?])\s+/)
+        .map((s) => s.trim())
+        .filter((s) => s.length > 20 && !isGenericBeatArticle(s, playerName))
+    : [];
   const fromUpdates = {
     strengths: typedUpdates.filter((u) => u.type === 'Strengths').map((u) => u.content),
     weaknesses: typedUpdates.filter((u) => u.type === 'Weaknesses').map((u) => u.content),
@@ -267,8 +273,13 @@ function scoutingEntryToBreakdown(entry) {
         /\b(question|need to|will need|remains a|lack of|concern|limited)\b/i.test(s)
       );
   const strengthHints = fromUpdates.strengths.length
-    ? fromUpdates.strengths
-    : sents.filter((s) => !weaknessHints.includes(s) && s.length > 25);
+    ? fromUpdates.strengths.filter((s) => isVerifiedScoutingTrait(String(s), playerName))
+    : sents.filter(
+        (s) =>
+          !weaknessHints.includes(s) &&
+          s.length > 25 &&
+          isVerifiedScoutingTrait(s, playerName)
+      );
 
   return {
     playerSlug: entry.playerSlug,
@@ -295,9 +306,10 @@ function scoutingEntryToBreakdown(entry) {
       fromUpdates.projection ||
       sents.find((s) => /project|upside|impact|ceiling|floor/i.test(s)) ||
       null,
-    insiderNotes: entry.scoutingSummary,
+    insiderNotes: summaryOk ? summaryRaw : null,
     recruitingStory: null,
-    nflProjection: entry.sourceType === 'NFL' ? entry.scoutingSummary.slice(0, 600) : null,
+    nflProjection:
+      entry.sourceType === 'NFL' && summaryOk ? summaryRaw.slice(0, 600) : null,
     updatedAt: entry.timestamp,
     scoutingUpdates: typedUpdates.slice(0, 20)
   };

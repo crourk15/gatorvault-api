@@ -85,7 +85,7 @@ function fallbackCommitBlurb(player) {
   const pos = playerPos(player);
   const stars = effectiveStars(player) || 0;
   const parts = [];
-  if (stars) parts.push(`${stars}★ ${pos}`);
+  if (stars) parts.push(`${stars}-star ${pos}`);
   const natl = player.natlRank ?? player.natl;
   if (natl != null) parts.push(`#${natl} natl`);
   const state = player.stateRank;
