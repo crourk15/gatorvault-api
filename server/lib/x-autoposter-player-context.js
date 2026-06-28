@@ -736,9 +736,12 @@ async function buildPlayerNewsPost({
       body
     });
     if (elite?.ok && elite.text) return elite;
+    const commitLike =
+      /commit|flip/.test(String(intel?.eventType || intel?.sourceEventType || newsEvent || '').toLowerCase()) ||
+      /committed to florida|flipped to florida/.test(String(newsEvent || '').toLowerCase());
     if (elite?.skipped && elite.reason === 'no_usable_signal') {
-      /* fall through to legacy only if we have full identity path */
-    } else if (elite?.ok === false && elite.reason !== 'missing_player_identity') {
+      /* fall through to legacy template path */
+    } else if (elite?.ok === false && elite.reason !== 'missing_player_identity' && !commitLike) {
       /* elite attempted but failed — do not emit generic legacy copy */
       return null;
     }

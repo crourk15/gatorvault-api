@@ -535,6 +535,36 @@ async function buildMomentumCopyAsync(post) {
   return newsPayloadFromBuilt(built);
 }
 
+function buildVerifiedCommitEventCopy(ev, { source = 'On3' } = {}) {
+  const player = ev.payload?.player || null;
+  const playerName = player?.name || null;
+  if (!playerName || !isValidPlayerName(playerName)) return null;
+  const et = String(ev.eventType || 'commit').toLowerCase();
+  if (!['commit', 'flip'].includes(et)) return null;
+
+  const postSpec = require('./x-autoposter-post-spec');
+  const patch = playerContext.verifiedPatchFromPlayer(player);
+  const ctx = playerContext.formatPlayerContext({ ...player, ...patch, name: playerName });
+  if (!ctx?.name || !ctx?.pos) return null;
+
+  const situation = et === 'flip' ? 'commitment' : 'commitment';
+  const composed = postSpec.composeStructuredPost(ctx, situation, {});
+  if (!composed?.text || !composed.templateBlocks?.context || !composed.templateBlocks?.insider) {
+    return null;
+  }
+
+  const text = appendSite(composed.text, { postKind: 'recruiting', triggerType: et });
+  const payload = {
+    text,
+    playerName,
+    templateBlocks: composed.templateBlocks,
+    validationMeta: { verifiedCommit: true },
+    verifiedCommit: true,
+  };
+  if (isBrokenCopy(text, payload)) return null;
+  return payload;
+}
+
 async function buildRecruitingEventCopyAsync(ev, { source = 'On3' } = {}) {
   const player = ev.payload?.player || null;
   const playerName = player?.name || null;
@@ -542,6 +572,11 @@ async function buildRecruitingEventCopyAsync(ev, { source = 'On3' } = {}) {
   const newsEvent = playerContext.newsEventForRecruitingEvent(ev);
   if (!newsEvent) return null;
   const isPortal = ['portal_in', 'portal_out'].includes(String(ev.eventType || '').toLowerCase());
+  const beatText = template
+    .stripEmojisHashtags(
+      [ev.title, ev.skinny, ev.detail, ev.payload?.summary].filter(Boolean).join('. ')
+    )
+    .trim();
   const built = await playerContext.buildPlayerNewsPost({
     source,
     newsEvent,
@@ -550,7 +585,7 @@ async function buildRecruitingEventCopyAsync(ev, { source = 'On3' } = {}) {
     patch: playerContext.verifiedPatchFromPlayer(player),
     postKind: isPortal ? 'portal' : 'recruiting',
     portalStatus: isPortal ? 'Portal' : undefined,
-    beatText: [ev.title, ev.skinny, ev.detail, ev.payload?.summary].filter(Boolean).join('. '),
+    beatText,
     headline: ev.title || null,
     body: ev.skinny || ev.detail || null,
     intel: {
@@ -563,7 +598,11 @@ async function buildRecruitingEventCopyAsync(ev, { source = 'On3' } = {}) {
       playerName,
     },
   });
-  return newsPayloadFromBuilt(built);
+  let payload = newsPayloadFromBuilt(built);
+  if ((!payload?.text || isBrokenCopy(payload.text, payload)) && !isPortal) {
+    payload = buildVerifiedCommitEventCopy(ev, { source });
+  }
+  return payload;
 }
 
 async function buildPortalHeadlinerCopyAsync(headliner) {
@@ -621,7 +660,14 @@ function isBrokenCopy(text, meta = {}) {
   if (blocks.insider && require('./x-autoposter-prediction').isBarePredictionLine(blocks.insider)) return true;
   if (blocks.context && require('./x-autoposter-prediction').isBarePredictionLine(blocks.context)) return true;
   const beatText = meta.validationMeta?.beatText || meta.beatText || null;
-  if (beatText && validation.hasExcessiveSourceOverlap(t, beatText)) return true;
+  if (
+    beatText &&
+    !meta.validationMeta?.verifiedCommit &&
+    !meta.verifiedCommit &&
+    validation.hasExcessiveSourceOverlap(t, beatText)
+  ) {
+    return true;
+  }
   return false;
 }
 
@@ -647,6 +693,7 @@ module.exports = {
   buildIntelCopyAsync,
   buildMomentumCopyAsync,
   buildRecruitingEventCopyAsync,
+  buildVerifiedCommitEventCopy,
   buildPortalHeadlinerCopyAsync,
   buildArticleCopyAsync,
   isBrokenCopy

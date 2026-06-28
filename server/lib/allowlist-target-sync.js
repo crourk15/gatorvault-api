@@ -15,7 +15,11 @@ const {
 const { applyEditorialPositionToPlayer } = require('./recruiting-editorial-positions');
 const { isPlaceholderSchool } = require('./recruiting-placeholder-school');
 const { discoverOn3RecruitSlug, profileToSchoolPatch } = require('./on3-recruit-discovery');
-const { persistAllowlistPlayerToJson, applyAllowlistIntelSkinny } = require('./allowlist-school-persist');
+const {
+  persistAllowlistPlayerToJson,
+  applyAllowlistIntelSkinny,
+  formatAllowlistEvalSummary,
+} = require('./allowlist-school-persist');
 const { isFloridaSchool, isActiveUfTarget, isCommittedElsewhere, applyHeadlinerRules, effectiveStars } = require('./recruiting-target-filters');
 const monitoring = require('./recruiting-monitoring');
 
@@ -838,10 +842,13 @@ async function ingestAllowlistCommit(opts = {}) {
     CANONICAL_TARGET_NAMES[slug] || profile.name
   );
 
+  const evalSummary = formatAllowlistEvalSummary(player);
+  if (evalSummary) player.evaluationSummary = evalSummary;
+
   if (opts.dryRun) return { ok: true, dryRun: true, slug, player };
 
   await store.upsertPlayer(player);
-  persistAllowlistPlayerToJson(player);
+  persistAllowlistPlayerToJson(slug, player);
   patchOn3SnapshotCommit(classYear, player);
   patchTargetBoardCommit(slug, {
     committedTo: 'Florida',

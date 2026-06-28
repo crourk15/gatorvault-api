@@ -2868,14 +2868,18 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-28T20:15:03.166Z",
+    "updatedAt": "2026-06-28T23:18:19.359Z",
     "state": "FL",
     "displayRating": 90.17717391304348,
     "ratingIsOverride": false,
-    "evaluationSummary": "3★ WR · #304 natl · Chaminade-Madonna Prep, FL",
+    "evaluationSummary": "4★ WR · #210 natl · Chaminade-Madonna Prep, FL",
     "nilValue": null,
     "nilEstimate": null,
-    "nilSource": null
+    "nilSource": null,
+    "consensusStars": 4,
+    "protected": true,
+    "commitmentSyncAt": "2026-06-28T23:18:19.094Z",
+    "commitmentSource": "on3-allowlist-sync"
   },
   {
     "id": "asher-ghioto",

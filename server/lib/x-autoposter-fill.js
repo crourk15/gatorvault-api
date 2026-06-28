@@ -102,7 +102,10 @@ function commitAlreadyQueued(fp, items) {
 
 async function buildNewsFromEvent(ev) {
   const meta = commitSourceMeta(ev);
-  const built = await copy.buildRecruitingEventCopyAsync(ev, { source: meta.label });
+  let built = await copy.buildRecruitingEventCopyAsync(ev, { source: meta.label });
+  if ((!built?.text || copy.isBrokenCopy(built.text, built)) && !['portal_in', 'portal_out'].includes(String(ev.eventType || '').toLowerCase())) {
+    built = copy.buildVerifiedCommitEventCopy(ev, { source: meta.label });
+  }
   if (!built?.text || copy.isBrokenCopy(built.text, built)) return null;
   const player = ev.payload?.player || { slug: ev.playerSlug };
   const fp = commitFingerprint(player);

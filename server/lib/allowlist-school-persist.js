@@ -55,7 +55,7 @@ function applyAllowlistIntelSkinny(player) {
   if (!isPlaceholderSkinny(player.skinny)) return player;
   const summary = formatAllowlistEvalSummary(player);
   if (!summary) return player;
-  return { ...player, skinny: summary, evaluationSummary: player.evaluationSummary || summary };
+  return { ...player, skinny: summary, evaluationSummary: summary };
 }
 
 function persistAllowlistPlayerToJson(slug, patch) {
