@@ -50,6 +50,15 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
+.fvi-table--public .fvi-header,
+.fvi-table--public .fvi-row {
+  grid-template-columns: 2fr repeat(3, 1fr);
+}
+
+.fvi-table--public {
+  min-width: 520px;
+}
+
 .fvi-row > div:not(:first-child),
 .fvi-header > div:not(:first-child) {
   text-align: center;

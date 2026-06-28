@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { HomepageFutureCastWidget } from '@/components/site/HomepageFutureCastWidget';
 import { HomepageHighPriorityWidget } from '@/components/site/HomepageHighPriorityWidget';
 import { LandingNavLink } from '@/components/site/LandingNavLink';
-import { LANDING_FEATURES, PRICING_TIERS } from '@/lib/pricing-tiers';
+import { LANDING_FEATURES, publicPricingTiers } from '@/lib/pricing-tiers';
 
 export function LandingPage(): React.ReactElement {
   const [annual, setAnnual] = useState(false);
@@ -113,7 +113,7 @@ export function LandingPage(): React.ReactElement {
             🎟️ FREE 30-DAY TRIAL — NO CARD REQUIRED
           </p>
           <div className="gv-landing-pricing">
-            {PRICING_TIERS.map((tier) => (
+            {publicPricingTiers().map((tier) => (
               <article
                 key={tier.id}
                 className={`gv-landing-price-card${tier.popular ? ' is-popular' : ''}`}

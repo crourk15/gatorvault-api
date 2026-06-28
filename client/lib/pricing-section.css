@@ -27,6 +27,11 @@
   gap: 24px;
 }
 
+.pricing-grid--duo {
+  max-width: 820px;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+}
+
 .pricing-card {
   background: var(--gv-deep-navy, #0a1a2f);
   border: 1px solid var(--gv-steel-blue, #1b3a57);
@@ -138,5 +143,9 @@
 @media (max-width: 640px) {
   .pricing-section {
     padding: 44px 16px;
+  }
+
+  .pricing-grid--duo {
+    grid-template-columns: 1fr;
   }
 }

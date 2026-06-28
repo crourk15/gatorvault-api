@@ -39,7 +39,10 @@ export function formatMonthlyPrice(amount: number): string {
   return `$${amount.toFixed(2)} / month`;
 }
 
-/** Canonical paid tiers — keep aligned with server/lib/access-config.js */
+/**
+ * All payment tiers (billing + access). War stays in the system for early insiders / ?tier=war.
+ * Public marketing surfaces use `publicPricingTiers()` — Locker + Film only (Option A).
+ */
 export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'locker',
@@ -48,10 +51,10 @@ export const PRICING_TIERS: PricingTier[] = [
     monthly: 4.99,
     annual: 3.99,
     features: [
-      'Premium articles + depth chart',
-      'Press conferences & highlights',
-      'Basic recruiting + portal updates',
-      'Live feed (read-only)',
+      'Recruiting board + 2027 targets',
+      'Portal tracker + visit intel',
+      'NIL snapshot + live feed',
+      'Depth chart + team hub',
     ],
   },
   {
@@ -63,9 +66,9 @@ export const PRICING_TIERS: PricingTier[] = [
     popular: true,
     features: [
       'Everything in Locker Room',
-      'Film Room breakdowns + Scheme School',
-      'FutureCast probabilities + movement intel',
-      'Recruit fit evaluations + matchup spotlight',
+      'FutureCast — UF probabilities & movement',
+      'Fit scores, staff notes & signal intel',
+      'Film Room breakdowns + Game Week',
     ],
   },
   {
@@ -76,93 +79,88 @@ export const PRICING_TIERS: PricingTier[] = [
     annual: 15.99,
     features: [
       'Everything in Film Room',
-      'Full War Room intel + Heat Check',
-      'Insider recruiting intel + staff notes',
-      'Portal + NIL tracker (full access)',
+      'Early-access insider layer (in development)',
     ],
   },
 ];
 
+/** Two-tier public offer — welcome, insider landing, legacy marketing page. */
+export function publicPricingTiers(): PricingTier[] {
+  return PRICING_TIERS.filter((t) => t.id === 'locker' || t.id === 'film');
+}
+
+export function findPricingTier(id: PaymentTierId): PricingTier {
+  return PRICING_TIERS.find((t) => t.id === id) ?? PRICING_TIERS[1];
+}
+
 export type FeatureAccessCell = '—' | 'Limited' | 'Basic' | 'Read-only' | 'Teaser' | 'Full' | 'Yes';
 
-export type FeatureComparisonRow = {
+export type PublicFeatureComparisonRow = {
   feature: string;
   free: FeatureAccessCell;
   locker: FeatureAccessCell;
   film: FeatureAccessCell;
-  war: FeatureAccessCell;
 };
 
-/** Welcome / insider feature matrix — lowest tier that unlocks each row is implicit in columns. */
-export const FEATURE_COMPARISON_ROWS: FeatureComparisonRow[] = [
+/** Free vs Locker vs Film — public two-tier compare table. */
+export const PUBLIC_FEATURE_COMPARISON_ROWS: PublicFeatureComparisonRow[] = [
   {
     feature: 'Recruiting Hub',
     free: 'Limited',
     locker: 'Full',
     film: 'Full',
-    war: 'Full',
   },
   {
-    feature: 'Player Profiles',
+    feature: 'Portal Tracker',
     free: 'Limited',
-    locker: 'Basic',
+    locker: 'Full',
     film: 'Full',
-    war: 'Full',
   },
   {
-    feature: 'Live Feed',
-    free: 'Read-only',
-    locker: 'Read-only',
-    film: 'Read-only',
-    war: 'Full',
+    feature: 'NIL Tracker',
+    free: 'Limited',
+    locker: 'Full',
+    film: 'Full',
+  },
+  {
+    feature: 'Heat Check',
+    free: 'Full',
+    locker: 'Full',
+    film: 'Full',
   },
   {
     feature: 'FutureCast',
     free: 'Teaser',
     locker: 'Teaser',
     film: 'Full',
-    war: 'Full',
   },
   {
-    feature: 'Film Room',
+    feature: 'Staff Notes',
     free: '—',
     locker: '—',
     film: 'Full',
-    war: 'Full',
   },
   {
-    feature: 'War Room Intel',
+    feature: 'Film Room + Game Week',
+    free: '—',
+    locker: '—',
+    film: 'Full',
+  },
+];
+
+/** @deprecated Internal — full matrix incl. War for admin/docs. */
+export type FeatureComparisonRow = PublicFeatureComparisonRow & {
+  war: FeatureAccessCell;
+};
+
+/** @deprecated Use PUBLIC_FEATURE_COMPARISON_ROWS on marketing pages. */
+export const FEATURE_COMPARISON_ROWS: FeatureComparisonRow[] = [
+  ...PUBLIC_FEATURE_COMPARISON_ROWS.map((row) => ({ ...row, war: 'Full' as const })),
+  {
+    feature: 'War Room Scouting',
     free: '—',
     locker: '—',
     film: '—',
-    war: 'Full',
-  },
-  {
-    feature: 'Heat Check',
-    free: '—',
-    locker: '—',
-    film: '—',
-    war: 'Full',
-  },
-  {
-    feature: 'Insider Chat',
-    free: '—',
-    locker: '—',
-    film: '—',
-    war: 'Yes',
-  },
-  {
-    feature: 'NIL Tracker',
-    free: 'Limited',
-    locker: 'Limited',
-    film: 'Limited',
-    war: 'Full',
-  },
-  {
-    feature: 'Portal Tracker',
-    free: 'Limited',
-    locker: 'Basic',
-    film: 'Basic',
     war: 'Full',
   },
 ];

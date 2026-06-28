@@ -3,15 +3,19 @@
 import React from 'react';
 import Link from 'next/link';
 import '@/lib/pricing-section.css';
-import { formatMonthlyPrice, PRICING_TIERS } from '@/lib/pricing-tiers';
+import { formatMonthlyPrice, publicPricingTiers } from '@/lib/pricing-tiers';
 
 export function PricingSection(): React.ReactElement {
+  const tiers = publicPricingTiers();
+
   return (
     <section className="pricing-section" id="pricing" data-testid="welcome-pricing">
       <h2>Choose Your Plan</h2>
-      <p className="pricing-subtitle">Simple pricing. Cancel anytime.</p>
-      <div className="pricing-grid">
-        {PRICING_TIERS.map((tier) => (
+      <p className="pricing-subtitle">
+        Two plans built for how Gator fans follow recruiting. 30-day free trial — no card required.
+      </p>
+      <div className="pricing-grid pricing-grid--duo">
+        {tiers.map((tier) => (
           <div
             key={tier.name}
             className={`pricing-card${tier.popular ? ' popular gv-pricing-tier--featured' : ''}`}

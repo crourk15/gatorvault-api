@@ -9,7 +9,7 @@ import {
   safeAuthRedirectPath,
   type PaymentTierId,
 } from '@/lib/auth-api';
-import { PRICING_TIERS } from '@/lib/pricing-tiers';
+import { findPricingTier, publicPricingTiers, PRICING_TIERS } from '@/lib/pricing-tiers';
 import { LegalSiteLinks } from '@/components/site/LegalSiteLinks';
 import { isNativeApp } from '@/lib/api-base';
 
@@ -70,7 +70,9 @@ export function JoinPage(): React.ReactElement {
     };
   }, []);
 
-  const tierMeta = PRICING_TIERS.find((t) => t.id === tier) ?? PRICING_TIERS[1];
+  const tierMeta = findPricingTier(tier);
+  const publicTiers = publicPricingTiers();
+  const warTier = PRICING_TIERS.find((t) => t.id === 'war');
 
   const handleSignIn = async () => {
     setError(null);
@@ -160,18 +162,32 @@ export function JoinPage(): React.ReactElement {
         </div>
 
         {mode === 'signup' && (
-          <div className="gv-join__tier-row">
-            {PRICING_TIERS.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                className={`gv-join__tier${tier === t.id ? ' is-active' : ''}`}
-                onClick={() => setTier(t.id)}
-              >
-                {t.icon} {t.name}
-              </button>
-            ))}
-          </div>
+          <>
+            <div className="gv-join__tier-row">
+              {publicTiers.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  className={`gv-join__tier${tier === t.id ? ' is-active' : ''}`}
+                  onClick={() => setTier(t.id)}
+                >
+                  {t.icon} {t.name}
+                </button>
+              ))}
+            </div>
+            {warTier && tier === 'war' ? (
+              <p className="gv-join__tier-note">
+                {warTier.icon} {warTier.name} — early access tier selected.
+              </p>
+            ) : warTier ? (
+              <p className="gv-join__tier-note">
+                <button type="button" className="gv-join__tier-link" onClick={() => setTier('war')}>
+                  War Room early access
+                </button>{' '}
+                — for existing insiders only.
+              </p>
+            ) : null}
+          </>
         )}
 
         <div className="gv-join__form">

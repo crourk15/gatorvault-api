@@ -11,11 +11,10 @@ const PAYMENT_TIERS = {
     icon: '🏟️',
     level: 0,
     features: [
-      'Basic premium articles',
-      'Depth chart',
-      'Press conferences',
-      'Highlights',
-      'Basic recruiting + portal updates'
+      'Recruiting board + 2027 targets',
+      'Portal tracker + visit intel',
+      'NIL snapshot + live feed',
+      'Depth chart + team hub'
     ]
   },
   film: {
@@ -25,15 +24,9 @@ const PAYMENT_TIERS = {
     level: 1,
     features: [
       'Everything in Locker Room',
-      'FutureCast probabilities + movement intel',
-      'Weekly Scheme School',
-      'Play of the Week Breakdown',
-      'Player Development Tracker',
-      'Recruit Fit Evaluations',
-      'Matchup Spotlight',
-      'Film Room Q&A',
-      '"What the Coaches See" positional insights',
-      '"Why This Matters" micro-lessons'
+      'FutureCast — UF probabilities & movement',
+      'Fit scores, staff notes & signal intel',
+      'Film Room breakdowns + Game Week'
     ]
   },
   war: {
@@ -43,12 +36,7 @@ const PAYMENT_TIERS = {
     level: 2,
     features: [
       'Everything in Film Room',
-      'Full War Room intel',
-      'Heat Check (full access)',
-      'Momentum shifts',
-      'Insider recruiting intel',
-      'Portal intel',
-      'Priority notifications'
+      'Early-access insider layer (in development)'
     ]
   }
 };

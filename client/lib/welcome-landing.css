@@ -377,11 +377,34 @@
   letter-spacing: normal;
 }
 
-.gv-social-chips {
+.gv-social-pills {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
+}
+
+.gv-social-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-family: var(--gv-font);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.gv-social-pill--orange {
+  background: var(--gv-orange);
+  color: #fff;
+  border: 1px solid var(--gv-orange);
+}
+
+.gv-social-pill--blue {
+  background: var(--gv-blue);
+  color: #fff;
+  border: 1px solid var(--gv-blue);
 }
 
 /* ===========================
