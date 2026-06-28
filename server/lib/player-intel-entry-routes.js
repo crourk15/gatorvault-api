@@ -1,5 +1,6 @@
 const { verifyAdminPin, pinFromReq } = require('./admin-pin');
 const { previewPlayerIntel, enterPlayerIntel } = require('./player-intel-entry');
+const { syncSlugsFromJson } = require('./sync-json-players-to-store');
 const store = require('./recruiting-store');
 
 function mountPlayerIntelEntryRoutes(app) {
@@ -37,6 +38,20 @@ function mountPlayerIntelEntryRoutes(app) {
       }
       const result = await enterPlayerIntel({ name, classYear, offer, rebuildSnapshots });
       return res.json(result);
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message });
+    }
+  });
+
+  app.post('/api/admin/recruiting/sync-json-slugs', async (req, res) => {
+    if (!verifyAdminPin(pinFromReq(req)) && !verifyAdminPin(req.body?.pin)) {
+      return res.status(401).json({ ok: false, error: 'Invalid admin PIN' });
+    }
+    try {
+      const slugs = Array.isArray(req.body?.slugs) ? req.body.slugs : [];
+      const warmHub = req.body?.warmHub !== false;
+      const result = await syncSlugsFromJson(slugs, { warmHub });
+      return res.json({ ok: result.ok, ...result });
     } catch (err) {
       return res.status(400).json({ ok: false, error: err.message });
     }
