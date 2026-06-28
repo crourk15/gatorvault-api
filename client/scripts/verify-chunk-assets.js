@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const ASSET_RE = /\/(?:_next\/static|js\/vault-chunks)\/[^"'\s<>]+/g;
+const ASSET_RE = /\/(?:_next\/static|js\/vault-chunks)\/[^"'\s<>]+\.(?:js|css|woff2?|map)/g;
 
 function extractNextAssets(html) {
   const assets = new Set();

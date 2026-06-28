@@ -296,6 +296,23 @@ function ensureAppChunkRelJs(rel) {
   return normalized.endsWith('.js') ? normalized : `${normalized}.js`;
 }
 
+/** True when rel looks like a full webpack app chunk (route/name-HASH.js), not a flight segment fragment. */
+function looksLikeCompleteWebpackChunkRel(rel) {
+  const normalized = ensureAppChunkRelJs(String(rel || '').replace(/\\/g, '/'));
+  return /(?:^|\/)[^/]+-[a-f0-9]{8,}\.js$/i.test(normalized);
+}
+
+/**
+ * Next.js splits __next_f flight strings at script tag boundaries, sometimes mid chunk path
+ * (e.g. layout-HASH.js → "…/vault/la" + "yout-HASH.js"). Rejoin before chunk rewrites.
+ */
+function repairSplitChunkRefsInRscFlight(content) {
+  return content.replace(
+    /((?:\/js\/vault-chunks|\/_next\/static\/chunks|static\/chunks)\/(?:app|routes)\/[A-Za-z0-9/_%-]*?)([a-z]{1,6})"\]\)<\/script><script>self\.__next_f\.push\(\[1,"([a-z][a-z0-9-]*-[a-f0-9]{8,}\.js)/g,
+    (_, prefix, head, tail) => `${prefix}${head}${tail}`
+  );
+}
+
 /** Route key without webpack content hash: vault/layout-501318… → vault/layout */
 function appChunkRouteKey(relFromAppDir) {
   const normalized = String(relFromAppDir || '').replace(/\\/g, '/');
@@ -433,12 +450,16 @@ function sweepContentUnmappedBareStaticChunkRefs(content, vaultChunks) {
 function sweepContentUnmappedStaticAppChunkRefs(content, nestedIndex) {
   let next = content.replace(
     /\bstatic\/chunks\/app\/([A-Za-z0-9/_%-]+)\.js\b/g,
-    (match, relPath) =>
-      resolveNestedAppChunkRef(nestedIndex, relPath) || `/${VAULT_CHUNKS_DIR}/app/${relPath}.js`
+    (match, relPath) => {
+      if (!looksLikeCompleteWebpackChunkRel(relPath)) return match;
+      return resolveNestedAppChunkRef(nestedIndex, relPath) || `/${VAULT_CHUNKS_DIR}/app/${relPath}.js`;
+    }
   );
   // RSC flight often embeds app chunk ids without a .js suffix before the closing quote.
+  // Require webpack content hash — do not match at flight segment boundaries ($) or we split
+  // "layout-HASH" into bogus "la.js" + orphan "yout-HASH" across __next_f script tags.
   next = next.replace(
-    /\bstatic\/chunks\/app\/([A-Za-z0-9/_%-]+)(?=["'\\s,[\]|\\]|$)/g,
+    /\bstatic\/chunks\/app\/([A-Za-z0-9/_%-]+-[a-f0-9]{8,})(?=["'\\s,[\]|\\])/g,
     (_, relPath) =>
       resolveNestedAppChunkRef(nestedIndex, relPath) ||
       `/${VAULT_CHUNKS_DIR}/app/${ensureAppChunkRelJs(relPath)}`
@@ -446,7 +467,10 @@ function sweepContentUnmappedStaticAppChunkRefs(content, nestedIndex) {
   // Fix already-rewritten refs that still carry a stale webpack hash.
   next = next.replace(
     /\/js\/vault-chunks\/app\/([A-Za-z0-9/_%-]+\.js)/g,
-    (match, relPath) => resolveNestedAppChunkRef(nestedIndex, relPath) || match
+    (match, relPath) => {
+      if (!looksLikeCompleteWebpackChunkRel(relPath)) return match;
+      return resolveNestedAppChunkRef(nestedIndex, relPath) || match;
+    }
   );
   return next;
 }
@@ -456,11 +480,13 @@ function sweepContentUnmappedAppChunkRefs(content, vaultChunks, nestedIndex) {
   let next = stripRscChunkRefEscapes(content);
   next = sweepContentUnmappedStaticAppChunkRefs(next, nestedIndex);
   next = next.replace(/\/_next\/static\/chunks\/(app|routes)\/([^"'\\?\s]+)/g, (match, sub, rel) => {
+    if (!looksLikeCompleteWebpackChunkRel(rel)) return match;
     const publicPath = vaultPublicPathForAppRel(rel, vaultChunks);
     if (publicPath && sub !== 'app') return publicPath;
     return nestedAppChunkPublicPath(nestedIndex, sub, rel);
   });
   next = next.replace(/static\/chunks\/(app|routes)\/([^"'\\?\s]+)/g, (match, sub, rel) => {
+    if (!looksLikeCompleteWebpackChunkRel(rel)) return match;
     return nestedAppChunkPublicPath(nestedIndex, sub, rel);
   });
   next = next.replace(/\/_next\/static\/chunks\/main-(app|entry)-([^"'\\?\s]+)/g, (match, _kind, rest) => {
@@ -500,7 +526,7 @@ function sweepUnmappedAppChunkRefs(serverDir, nestedIndex) {
   walkFiles(serverDir, (file) => {
     if (!/\.(html|txt|js|json)$/.test(file)) return;
     const raw = fs.readFileSync(file, 'utf8');
-    let updated = stripRscChunkRefEscapes(raw);
+    let updated = repairSplitChunkRefsInRscFlight(stripRscChunkRefEscapes(raw));
     updated = sweepContentUnmappedAppChunkRefs(updated, vaultChunks, index);
     updated = normalizeAbsoluteVaultChunkRefs(updated);
     if (/\.(html|txt)$/.test(file)) {
@@ -587,7 +613,9 @@ function rewriteNextChunkPathsForNetlify(serverDir) {
   walkFiles(serverDir, (file) => {
     if (!/\.(html|txt)$/.test(file)) return;
     const raw = fs.readFileSync(file, 'utf8');
-    let updated = applyReplacements(stripRscChunkRefEscapes(raw), map);
+    let updated = repairSplitChunkRefsInRscFlight(stripRscChunkRefEscapes(raw));
+    updated = applyReplacements(updated, map);
+    updated = repairSplitChunkRefsInRscFlight(updated);
     updated = normalizeAbsoluteVaultChunkRefs(updated);
     updated = sweepContentUnmappedAppChunkRefs(updated, listVaultChunkFilenames(serverDir), nestedAppChunkIndex);
     updated = normalizeAbsoluteVaultChunkRefs(updated);
@@ -643,4 +671,5 @@ module.exports = {
   normalizeAbsoluteVaultChunkRefs,
   revertNumericWebpackChunksInRscFlight,
   assertAbsoluteVaultChunkRefs,
+  repairSplitChunkRefsInRscFlight,
 };

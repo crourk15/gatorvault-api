@@ -9,6 +9,10 @@ const CORRUPT_PATTERNS = [
   { re: /\/js\/vault-chunks\/[^"'\\]+?\.js",\\"/g, label: 'broken vault-chunk close quote' },
   { re: /static\/chunks\/[^"'\\]+?\.js",\\"/g, label: 'broken static-chunk close quote' },
   { re: /,\\"\/js\/vault-chunks\/\d+-[a-f0-9]+\.js\\"/g, label: 'numeric chunk must use static/chunks in RSC flight' },
+  {
+    re: /\/js\/vault-chunks\/app\/[^"'\\]+?\/[a-z]{1,3}\.js"\]\)<\/script>/g,
+    label: 'truncated app chunk ref split across __next_f flight segments',
+  },
 ];
 
 let failed = false;
