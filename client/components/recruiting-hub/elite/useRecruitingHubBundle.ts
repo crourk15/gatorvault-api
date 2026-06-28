@@ -12,6 +12,34 @@ import type { RecruitingHubBundleState } from '@/components/recruiting-hub/elite
 import { initGvHydrate } from '@/lib/gv-hydrate';
 import '@/lib/recruiting-hub-window';
 
+const HUB_BUNDLE_CACHE_PREFIX = 'gv_hub_bundle_v1';
+const HUB_BUNDLE_CACHE_TTL_MS = 30 * 60 * 1000;
+
+function readHubBundleCache(year: number): RhHubBundle | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = sessionStorage.getItem(`${HUB_BUNDLE_CACHE_PREFIX}:${year}`);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { at: number; bundle: RhHubBundle };
+    if (!parsed?.bundle || Date.now() - parsed.at > HUB_BUNDLE_CACHE_TTL_MS) return null;
+    return parsed.bundle;
+  } catch {
+    return null;
+  }
+}
+
+function writeHubBundleCache(year: number, bundle: RhHubBundle): void {
+  if (typeof window === 'undefined') return;
+  try {
+    sessionStorage.setItem(
+      `${HUB_BUNDLE_CACHE_PREFIX}:${year}`,
+      JSON.stringify({ at: Date.now(), bundle })
+    );
+  } catch {
+    /* sessionStorage quota */
+  }
+}
+
 function initHubMonitor(year: number): number {
   if (typeof window === 'undefined') return 0;
   const start = window.__GV_HUB__?.start ?? performance.now();
@@ -32,9 +60,9 @@ async function fetchHubBundleWithWarmPoll(year: number): Promise<RhHubBundle> {
 
 /** Single /api/recruiting/hub/bundle fetch for the elite landing page. */
 export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): RecruitingHubBundleState {
-  const [data, setData] = useState<RhHubBundle | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [warming, setWarming] = useState(true);
+  const [data, setData] = useState<RhHubBundle | null>(() => readHubBundleCache(year));
+  const [loading, setLoading] = useState(() => readHubBundleCache(year) == null);
+  const [warming, setWarming] = useState(() => readHubBundleCache(year) == null);
   const [error, setError] = useState(false);
   const [reloadToken, setReloadToken] = useState(0);
 
@@ -43,16 +71,26 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
   useEffect(() => {
     let cancelled = false;
     const start = initHubMonitor(year);
+    const cached = readHubBundleCache(year);
+    if (cached) {
+      setData(cached);
+      setLoading(false);
+      setWarming(false);
+    }
 
     async function run(): Promise<void> {
-      setLoading(true);
-      setWarming(true);
+      const hadCache = cached != null;
+      if (!hadCache) {
+        setLoading(true);
+        setWarming(true);
+      }
       setError(false);
       try {
         const t0 = performance.now();
         const bundle = await fetchHubBundleWithWarmPoll(year);
         const bundleLoadMs = Math.round(performance.now() - t0);
         if (cancelled) return;
+        writeHubBundleCache(year, bundle);
         if (typeof window !== 'undefined') {
           window.__GV_HUB__ = {
             ...window.__GV_HUB__,
@@ -72,10 +110,16 @@ export function useRecruitingHubBundle(year = RECRUITING_HUB_ELITE_YEAR): Recrui
         setData(bundle);
       } catch {
         if (cancelled) return;
-        if (typeof window !== 'undefined') {
-          window.__GV_HUB__ = { ...window.__GV_HUB__, start, year, ok: false };
+        const fallback = readHubBundleCache(year);
+        if (fallback) {
+          setData(fallback);
+          setError(false);
+        } else {
+          if (typeof window !== 'undefined') {
+            window.__GV_HUB__ = { ...window.__GV_HUB__, start, year, ok: false };
+          }
+          setError(true);
         }
-        setError(true);
       } finally {
         if (!cancelled) {
           setLoading(false);

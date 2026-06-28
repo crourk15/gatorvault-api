@@ -3,6 +3,7 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 
 const https = require('https');
+const { warmApi, withRetries } = require('../lib/ingest-resilience');
 const { ALLOWLIST_2027, ALLOWLIST_2028 } = require('../lib/recruiting-target-allowlist');
 const { loadPlayersJson } = require('../lib/sync-json-players-to-store');
 const { isCommittedElsewhere } = require('../lib/recruiting-target-filters');
@@ -71,6 +72,21 @@ function postJson(path, body, pin) {
   });
 }
 
+async function postJsonWithRetry(path, body, pin) {
+  return withRetries(
+    async () => {
+      const res = await postJson(path, body, pin);
+      if ([502, 503, 504, 429].includes(res.status)) {
+        const err = new Error(`sync HTTP ${res.status}`);
+        err.status = res.status;
+        throw err;
+      }
+      return res;
+    },
+    { label: 'sync-json-slugs', attempts: 5, baseDelayMs: 3000 }
+  );
+}
+
 async function main() {
   if (!PIN) {
     console.error('[sync-allowlist-json-to-prod] Set RECRUITING_ADMIN_PIN or ADMIN_PASSWORD');
@@ -82,8 +98,22 @@ async function main() {
     process.exit(1);
   }
   console.log('[sync-allowlist-json-to-prod] api=' + API + ' slugs=' + SLUGS.join(','));
-  const res = await postJson('/api/admin/recruiting/sync-json-slugs', { slugs: SLUGS, pin: PIN, warmHub: true }, PIN);
-  console.log(JSON.stringify(res.json || res.raw, null, 2));
+  const warm = await warmApi(API, { attempts: 4, waitMs: 5000, timeoutMs: 90000 });
+  if (!warm.ok) {
+    console.warn('[sync-allowlist-json-to-prod] API warm check did not pass; continuing with retries');
+  }
+  const res = await postJsonWithRetry(
+    '/api/admin/recruiting/sync-json-slugs',
+    { slugs: SLUGS, pin: PIN, warmHub: true },
+    PIN
+  );
+  if (res.json) {
+    console.log(JSON.stringify(res.json, null, 2));
+  } else if (typeof res.raw === 'string' && res.raw.length < 4000) {
+    console.log(res.raw);
+  } else {
+    console.log('[sync-allowlist-json-to-prod] response status', res.status, '(non-JSON body omitted)');
+  }
   if (res.status !== 200 || !res.json?.ok) process.exit(1);
 }
 
