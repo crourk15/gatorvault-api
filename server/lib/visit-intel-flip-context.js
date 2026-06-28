@@ -94,6 +94,20 @@ function buildFlipWatchUfMaps({
     }
   }
 
+  // Off-board commits (e.g. removed from target seed after committing elsewhere) still
+  // qualify for flip watch when visit logs show a completed verified UF OV.
+  for (const [slug, recruiting] of recruitingBySlug.entries()) {
+    const key = String(slug || "").toLowerCase();
+    if (!key) continue;
+    const committedTo =
+      recruiting?.committedTo ?? recruiting?.commitment ?? null;
+    if (committedTo) commitBySlug.set(key, committedTo);
+    if (recruiting?.name) nameBySlug.set(key, recruiting.name);
+    if (ufLabelBySlug.get(key) == null) {
+      storeResolvedUf(slug, resolveSlugUfMeta(slug));
+    }
+  }
+
   return {
     commitBySlug,
     ufBySlug,

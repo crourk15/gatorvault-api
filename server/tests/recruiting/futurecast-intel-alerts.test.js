@@ -13,13 +13,13 @@ describe("futurecast-intel-alerts", () => {
     assert.ok(flipAlerts.length >= 1, "expected at least one flip_watch alert");
 
     const easton = flipAlerts.find((a) => a.playerSlug === "easton-royal");
-    const brewster = flipAlerts.find((a) => a.playerSlug === "jalen-brewster");
-    assert.ok(easton, "expected easton-royal flip alert");
-    assert.ok(brewster, "expected jalen-brewster flip alert");
+    assert.ok(easton, "expected easton-royal flip alert (committed elsewhere + completed UF OV)");
     assert.match(easton.message, /UF \d+%/, "easton flip alert should include UF percent");
-    assert.match(brewster.message, /UF \d+%/, "brewster flip alert should include UF percent");
     assert.doesNotMatch(easton.message, /UF 0%/, "easton flip alert should not show UF 0%");
-    assert.doesNotMatch(brewster.message, /UF 0%/, "brewster flip alert should not show UF 0%");
+    assert.ok(
+      !flipAlerts.some((a) => a.playerSlug === "jalen-brewster"),
+      "uncommitted targets should not appear in flip watch"
+    );
   });
 
   it("matches high-priority flip-watch UF for shared slugs", async () => {
