@@ -140,11 +140,11 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
       ),
       warmFetch<FutureCastHomeResponse>('/api/futurecast/home'),
       fetchStockBoard().catch(() => EMPTY_STOCK),
-      fetchHighPriorityTargets(discoveryYear).catch(() => ({
+      fetchHighPriorityTargets(discoveryYear).catch((): HighPriorityResponse => ({
         ...EMPTY_HIGH_PRIORITY,
         classYear: discoveryYear,
       })),
-      fetchHighPriorityTargets(closingYear).catch(() => ({
+      fetchHighPriorityTargets(closingYear).catch((): HighPriorityResponse => ({
         ...EMPTY_HIGH_PRIORITY,
         classYear: closingYear,
       })),
@@ -190,11 +190,11 @@ async function loadFutureCastLabSecondaryRaw(): Promise<
     portalWatchlist: [],
   });
   const stock = settled(stockR, EMPTY_STOCK);
-  const discoveryHighPriority = settled(discoveryHpR, {
+  const discoveryHighPriority: HighPriorityResponse = settled(discoveryHpR, {
     ...EMPTY_HIGH_PRIORITY,
     classYear: discoveryYear,
   });
-  const closingHighPriority = settled(closingHpR, {
+  const closingHighPriority: HighPriorityResponse = settled(closingHpR, {
     ...EMPTY_HIGH_PRIORITY,
     classYear: closingYear,
   });
