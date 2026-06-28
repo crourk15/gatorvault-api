@@ -607,6 +607,43 @@ function boardOfferItem(meta) {
   };
 }
 
+function commitFeedTimestamp(meta, raw = {}) {
+  const date = raw.commitDate || meta.commitDate;
+  if (date) {
+    const parsed = new Date(date);
+    if (!Number.isNaN(parsed.getTime())) return parsed.toISOString();
+  }
+  const updated = raw.updatedAt || meta.updatedAt;
+  if (updated) {
+    const parsed = new Date(updated);
+    if (!Number.isNaN(parsed.getTime())) return parsed.toISOString();
+  }
+  return new Date().toISOString();
+}
+
+function mapCommitFeedItem(meta, raw = {}) {
+  const stars = Number(raw.stars || meta.stars) || null;
+  const rank = raw.natlRank ?? meta.natlRank;
+  const pos = meta.position || raw.pos || 'prospect';
+  const rankNote =
+    rank != null && Number.isFinite(Number(rank))
+      ? ` · #${rank} natl`
+      : stars
+        ? ` · ${stars}-star ${pos}`
+        : '';
+  const headliner = raw.headliner || meta.headliner ? ' · Headliner' : '';
+  return {
+    id: `commit-${meta.slug}`,
+    timestamp: commitFeedTimestamp(meta, raw),
+    name: meta.name,
+    position: meta.position,
+    class: meta.classYear,
+    event: 'commit',
+    summary: `${meta.name} — commits to Florida${rankNote}${headliner}`,
+    profileUrl: meta.profileUrl,
+  };
+}
+
 function boardCompetitorChangeItem(meta, row) {
   const school =
     row.predictionSchool ||
@@ -703,6 +740,30 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
     if (!filtered.length) continue;
     items.push(mapIntelToFeedItem(filtered[0], meta));
     covered.add(slug);
+  }
+
+  if (focusYear != null) {
+    const commits = await store.getHubCommits(focusYear);
+    for (const raw of commits || []) {
+      const slug = String(raw.slug || '').toLowerCase();
+      if (!slug || covered.has(slug)) continue;
+      if (!isFloridaSchool(raw.committedTo)) continue;
+      const ts = new Date(commitFeedTimestamp({}, raw)).getTime();
+      if (!Number.isFinite(ts) || ts < cutoff) continue;
+      const meta = {
+        slug,
+        name: raw.name,
+        position: playerPos(raw),
+        classYear: Number(raw.classYear) || focusYear,
+        profileUrl: profileUrl(raw),
+        headliner: raw.headliner,
+        stars: raw.stars,
+        natlRank: raw.natlRank,
+        commitDate: raw.commitDate,
+      };
+      items.push(mapCommitFeedItem(meta, raw));
+      covered.add(slug);
+    }
   }
 
   for (const log of visitLogs) {

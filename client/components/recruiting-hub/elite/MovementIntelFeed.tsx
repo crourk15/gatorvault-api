@@ -13,6 +13,7 @@ const EVENT_LABELS: Record<RhHubMovementFeedItem['event'], string> = {
   visit: 'Visit Update',
   offer: 'Offer',
   intel: 'Intel',
+  commit: 'Commit',
 };
 
 function formatFeedTime(timestamp: string): string {

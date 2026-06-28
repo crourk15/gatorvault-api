@@ -1348,6 +1348,13 @@
   color: var(--gator-blue);
 }
 
+.rh-elite-chrome .rh-badge--event-commit {
+  background: #e8f4ea;
+  border-color: var(--gator-orange);
+  color: var(--gator-blue);
+  font-weight: 700;
+}
+
 .rh-elite-chrome .rh-badge--event-intel {
   background: #f5f3ff;
   border-color: #7c3aed;

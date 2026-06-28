@@ -106,7 +106,7 @@ export type RhHubMovementFeedItem = {
   name: string;
   position: string;
   class: number;
-  event: 'up' | 'down' | 'visit' | 'offer' | 'intel';
+  event: 'up' | 'down' | 'visit' | 'offer' | 'intel' | 'commit';
   summary: string;
   profileUrl: string;
 };
