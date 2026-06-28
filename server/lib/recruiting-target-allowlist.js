@@ -7,7 +7,6 @@ const { isActiveUfTarget } = require('./recruiting-target-filters');
 
 /** Locked 2027 target slugs */
 const ALLOWLIST_2027 = [
-  'easton-royal',
   'jalen-brewster',
   'raheem-floyd',
   'marquis-evans',

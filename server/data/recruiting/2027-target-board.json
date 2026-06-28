@@ -21,23 +21,6 @@
       "state": "GA"
     },
     {
-      "slug": "easton-royal",
-      "name": "Easton Royal",
-      "pos": "WR",
-      "school": "Brother Martin HS, New Orleans LA",
-      "htWt": "6-0 / 175",
-      "stars": 4,
-      "rating": 90,
-      "natlRank": 120,
-      "posRank": 18,
-      "stateRank": 8,
-      "inState": false,
-      "committedTo": "Texas",
-      "skinny": "Official visit to UF June 11–13; Texas commit but Florida pushing hard.",
-      "headliner": true,
-      "ufProbability": 0.48
-    },
-    {
       "slug": "raheem-floyd",
       "name": "Raheem Floyd",
       "pos": "CB",
@@ -67,7 +50,7 @@
       "posRank": 2,
       "stateRank": 2,
       "inState": false,
-      "committedTo": "Texas Tech Red Raiders",
+      "committedTo": null,
       "skinny": "5★ DL — national priority; UF among top schools monitoring.",
       "headliner": true,
       "ufProbability": 0.38,

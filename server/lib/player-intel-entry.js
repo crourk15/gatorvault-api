@@ -13,6 +13,7 @@ const { enrichRecruitingPlayer } = require('./profile-enrichment/uf-premium-enri
 const { getBreakdownBySlug, upsertBreakdown } = require('./war-room-store');
 const { rebuildRecruitingSnapshots } = require('./recruiting-snapshot-rebuild');
 const { buildOn3ProfileUrl } = require('./on3-urls');
+const { assessOn3Intel } = require('./recruiting-intel-quality');
 
 const EARLY_WATCHLIST_PATH = path.join(__dirname, '..', 'data', 'futurecast', 'early-watchlist.json');
 const TARGET_BOARD_2028_PATH = path.join(__dirname, '..', 'data', 'recruiting', '2028-target-board.json');
@@ -53,6 +54,11 @@ function parseOn3Extended(pp, classYear) {
     htWt,
     height: htWt ? htWt.split('/')[0].trim() : null,
     weight: weightLb || null,
+    school:
+      player.highSchool?.name ||
+      recruitment?.highSchool?.name ||
+      player.school?.name ||
+      null,
     pos:
       player.positionAbbr ||
       recruitment?.positionAbbreviation ||
@@ -194,7 +200,6 @@ function applyUfOffer(player, hasOffer) {
     offers,
     offerList: offers,
     ufOvStatus: player.ufOvStatus || 'OFFERED',
-    skinny: player.skinny || `${player.name} holds a Florida offer.`,
   };
 }
 
@@ -263,7 +268,7 @@ function upsert2028TargetBoardSeed(player) {
     slug: key,
     name: player.name,
     pos: player.pos || 'ATH',
-    school: player.school || 'Florida HS pipeline',
+    school: player.school || '',
     state: player.state || 'FL',
     stars: player.stars || null,
     rating: player.rating || null,
@@ -288,7 +293,7 @@ function buildPlayerPatch(resolved, hasOffer, existing) {
     name,
     classYear,
     pos: on3.pos || identity.pos || 'ATH',
-    school: identity.highSchool || identity.hometownState || on3.school || null,
+    school: on3.school || identity.highSchool || identity.hometownState || null,
     fromSchool: identity.highSchool || null,
     hometownState: identity.hometownState || null,
     state: on3.state || null,
@@ -360,6 +365,7 @@ async function ensureScoutingBreakdown(player) {
 
 async function previewPlayerIntel(input) {
   const resolved = await resolveRecruitIdentity(input.name, input.classYear);
+  const intelQuality = assessOn3Intel(resolved);
   const hasOffer = parseOfferFlag(input.offer);
   const existing = await store.getPlayerBySlug(resolved.slug);
   const patch = buildPlayerPatch(resolved, hasOffer, existing);
@@ -371,6 +377,8 @@ async function previewPlayerIntel(input) {
     name: resolved.name,
     classYear: resolved.classYear,
     hasUfOffer: hasOffer,
+    intelQuality,
+    canEnter: intelQuality.ok,
     placement,
     player: patch,
     identity: resolved.identity,
@@ -381,6 +389,10 @@ async function previewPlayerIntel(input) {
 
 async function enterPlayerIntel(input) {
   const resolved = await resolveRecruitIdentity(input.name, input.classYear);
+  const intelQuality = assessOn3Intel(resolved);
+  if (!intelQuality.ok) {
+    throw new Error(intelQuality.message);
+  }
   const hasOffer = parseOfferFlag(input.offer);
   const placement = placementForClassYear(input.classYear);
   const steps = [];
@@ -469,6 +481,7 @@ async function enterPlayerIntel(input) {
     slug: saved.slug,
     name: saved.name,
     classYear: saved.classYear,
+    intelQuality,
     placement,
     player: saved,
     steps,
@@ -483,4 +496,5 @@ module.exports = {
   parseOfferFlag,
   placementForClassYear,
   resolveRecruitIdentity,
+  assessOn3Intel,
 };

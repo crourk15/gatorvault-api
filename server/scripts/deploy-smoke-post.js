@@ -139,13 +139,13 @@ async function main() {
         const withTrend = (body.players || []).some((p) => (p.trendHistory || []).length >= 2);
         if (!withTrend) return 'no player trendHistory with >= 2 points';
         const gapFill = (body.players || []).find((p) =>
-          ['raheem-floyd', 'jalen-brewster', 'easton-royal'].includes(p.slug)
+          ['raheem-floyd', 'jalen-brewster'].includes(p.slug)
         );
         const on3Predictor = (gapFill?.predictors || []).some(
           (p) => String(p?.name || '').includes('On3') && Number(p?.score) > 0
         );
         if (!on3Predictor) {
-          return 'allowlist gap-fill target missing On3 RPM predictor (raheem-floyd/jalen-brewster/easton-royal)';
+          return 'allowlist gap-fill target missing On3 RPM predictor (raheem-floyd/jalen-brewster)';
         }
         return null;
       },

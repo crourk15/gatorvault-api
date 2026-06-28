@@ -52,6 +52,9 @@
       <div>
         <h1>Player Intel Entry</h1>
         <div class="sub">Name + class + offer → On3 profile, boards, snapshots</div>
+        <p class="warn" style="margin:.35rem 0 0;font-size:.75rem;text-transform:none">
+          Real On3 intel only — no placeholders. Preview must show a verified On3 match before save.
+        </p>
       </div>
       <input id="pin" type="password" placeholder="PIN" autocomplete="off" style="width:140px" />
     </header>
@@ -85,7 +88,7 @@
         </label>
         <div class="actions">
           <button id="preview" class="secondary">Preview On3 match</button>
-          <button id="submit">Create / update player intel</button>
+          <button id="submit" disabled>Create / update player intel</button>
         </div>
         <p id="status" class="meta" style="margin-top:.75rem"></p>
       </div>
@@ -131,20 +134,31 @@
         };
       }
 
+      var lastPreviewCanEnter = false;
+
       function showResult(data, ok) {
         document.getElementById('result-panel').classList.remove('hidden');
         var summary = document.getElementById('summary');
-        if (ok && data.slug) {
+        if (ok && data.slug && !data.preview) {
           summary.innerHTML =
             '<span class="ok">Saved ' + data.name + ' (' + data.slug + ')</span><br>' +
             'Section: <strong>' + (data.placement && data.placement.section) + '</strong><br>' +
             (data.profileUrl ? '<a href="' + data.profileUrl + '" target="_blank" rel="noopener">Open profile →</a>' : '');
         } else if (ok && data.preview) {
+          lastPreviewCanEnter = data.canEnter === true;
+          document.getElementById('submit').disabled = !lastPreviewCanEnter;
+          var iq = data.intelQuality || {};
+          var verifyLine = lastPreviewCanEnter
+            ? '<span class="ok">On3 verified — ready to save.</span>'
+            : '<span class="err">' + (iq.message || 'On3 profile not verified — cannot save.') + '</span>';
           summary.innerHTML =
             '<span class="warn">Preview only — nothing saved yet.</span><br>' +
+            verifyLine + '<br>' +
             'Match: <strong>' + data.name + ' (' + data.slug + ')</strong><br>' +
             'Would land in: <strong>' + (data.placement && data.placement.section) + '</strong><br>' +
-            'Click <strong>Create / update player intel</strong> to publish to allowlist + boards.';
+            (lastPreviewCanEnter
+              ? 'Click <strong>Create / update player intel</strong> to publish to allowlist + boards.'
+              : 'Fix the On3 match or use beat-writer ingest — placeholder intel is blocked.');
         } else {
           summary.innerHTML = '<span class="err">' + (data.error || 'Request failed') + '</span>';
         }
@@ -236,6 +250,16 @@
       document.getElementById('submit').onclick = async function () {
         var btn = document.getElementById('submit');
         var status = document.getElementById('status');
+        if (!lastPreviewCanEnter) {
+          showResult(
+            {
+              error:
+                'Run Preview first and confirm On3 verified match. Placeholder intel is blocked.',
+            },
+            false
+          );
+          return;
+        }
         btn.disabled = true;
         status.textContent = 'Running full intel pipeline (On3 → store → boards → snapshots)…';
         try {

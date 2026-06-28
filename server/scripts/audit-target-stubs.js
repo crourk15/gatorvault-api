@@ -8,6 +8,7 @@
 const store = require('../lib/recruiting-store');
 const { getAllowlistSet, canonicalTargetSlug } = require('../lib/recruiting-target-allowlist');
 const { isCommittedElsewhere } = require('../lib/recruiting-target-filters');
+const { isPlaceholderSchool, isPlaceholderSkinny } = require('../lib/recruiting-placeholder-school');
 
 function hasUfSignal(player) {
   if (!player) return false;
@@ -76,6 +77,38 @@ async function main() {
     if (!board2027.targets.some((p) => p.slug === slug)) {
       failures.push(`${slug} missing from 2027 live board`);
     }
+  }
+
+  for (const year of [2027, 2028]) {
+    const board = await store.getBoard(year);
+    const allowSet = getAllowlistSet(year);
+    for (const player of board.targets || []) {
+      const slug = String(player.slug || '').toLowerCase();
+      if (!allowSet.has(canonicalTargetSlug(slug))) continue;
+      if (isPlaceholderSkinny(player.skinny)) {
+        failures.push(`${slug} on ${year} board has placeholder/missing skinny`);
+      }
+      if (isPlaceholderSchool(player.school)) {
+        failures.push(`${slug} on ${year} board has placeholder school`);
+      }
+    }
+  }
+
+  const all = await store.getAllPlayers();
+  for (const player of all) {
+    const year = Number(player.classYear);
+    if (year !== 2027 && year !== 2028) continue;
+    const slug = String(player.slug || '').toLowerCase();
+    const allowSet = getAllowlistSet(year);
+    if (!allowSet.has(canonicalTargetSlug(slug))) continue;
+    if (isActiveTarget(player) && isPlaceholderSkinny(player.skinny)) {
+      failures.push(`${slug} allowlisted with placeholder skinny in store`);
+    }
+  }
+
+  function isActiveTarget(player) {
+    if (isCommittedElsewhere(player)) return false;
+    return player.category === 'target' && String(player.status || '').toLowerCase() !== 'committed';
   }
 
   const tyzon = rows.find((r) => r.slug === 'tyzon-swann');

@@ -4,6 +4,7 @@ const {
   buildSubscriptionStatus,
   applySubscription,
   appleVerificationConfigured,
+  verifyAppleTransaction,
 } = require('./subscription-service');
 const { findUserByEmail } = require('./user-store');
 
@@ -27,7 +28,7 @@ function mountSubscriptionRoutes(app) {
   });
 
   /** Step 3b: full StoreKit receipt / transaction verification. */
-  app.post('/api/subscription/apple/verify', (req, res) => {
+  app.post('/api/subscription/apple/verify', async (req, res) => {
     const session = getSessionFromReq(req);
     if (!session?.email) {
       return res.status(401).json({ ok: false, error: 'Sign in required.' });
@@ -57,19 +58,44 @@ function mountSubscriptionRoutes(app) {
       });
     }
 
-    // Placeholder for App Store Server API validation (Step 3b).
+    if (!transactionId) {
+      return res.status(400).json({ ok: false, error: 'transactionId is required when Apple IAP is enabled.' });
+    }
+
+    let verified;
+    try {
+      verified = await verifyAppleTransaction(transactionId);
+    } catch (err) {
+      return res.status(502).json({
+        ok: false,
+        error: err.message || 'Apple transaction verification failed.',
+      });
+    }
+
+    if (verified.productId && verified.productId !== productId) {
+      return res.status(400).json({
+        ok: false,
+        error: 'Product ID does not match verified Apple transaction.',
+        verifiedProductId: verified.productId,
+      });
+    }
+
     const user = applySubscription(session.email, {
       source: 'apple',
       status: 'active',
-      productId,
+      productId: verified.productId || productId,
       tier,
-      originalTransactionId: transactionId || null,
-      expiresAt: null,
+      originalTransactionId: verified.originalTransactionId || transactionId,
+      expiresAt: verified.expiresAt || null,
     });
 
     return res.json({
       ok: true,
       verified: true,
+      apple: {
+        transactionId: verified.transactionId,
+        environment: verified.environment,
+      },
       status: buildSubscriptionStatus(user),
     });
   });
@@ -108,15 +134,26 @@ function mountSubscriptionRoutes(app) {
     });
   });
 
-  /** App Store Server Notifications V2 — stub for Step 3b. */
-  app.post('/api/subscription/apple/notifications', (req, res) => {
+  /** App Store Server Notifications V2 — decode payload when Apple IAP is configured. */
+  app.post('/api/subscription/apple/notifications', async (req, res) => {
     if (!appleVerificationConfigured()) {
       return res.status(503).json({ ok: false, error: 'Apple notifications not configured.' });
     }
-    console.log('[subscription] apple notification received (stub)', {
-      hasSignedPayload: Boolean(req.body?.signedPayload),
-    });
-    return res.json({ ok: true, received: true });
+    try {
+      const { decodeJwsPayload } = require('./apple-iap-verify');
+      const signedPayload = String(req.body?.signedPayload || '').trim();
+      if (!signedPayload) {
+        return res.status(400).json({ ok: false, error: 'signedPayload is required.' });
+      }
+      const notification = decodeJwsPayload(signedPayload);
+      console.log('[subscription] apple notification', {
+        type: notification?.notificationType || notification?.notification_type || null,
+        subtype: notification?.subtype || null,
+      });
+      return res.json({ ok: true, received: true });
+    } catch (err) {
+      return res.status(400).json({ ok: false, error: err.message || 'Invalid notification payload.' });
+    }
   });
 }
 

@@ -121,7 +121,21 @@ function applySubscription(email, payload) {
 }
 
 function appleVerificationConfigured() {
-  return process.env.APPLE_IAP_VERIFICATION_ENABLED === 'true';
+  const { isAppleIapReady, readAppleIapConfig } = require('./apple-iap-verify');
+  return isAppleIapReady(readAppleIapConfig());
+}
+
+async function verifyAppleTransaction(transactionId) {
+  const { verifyStoreKitTransaction } = require('./apple-iap-verify');
+  const verified = await verifyStoreKitTransaction(transactionId);
+  const expiresAt =
+    verified.expiresDate != null
+      ? new Date(Number(verified.expiresDate)).toISOString()
+      : null;
+  return {
+    ...verified,
+    expiresAt,
+  };
 }
 
 module.exports = {
@@ -132,4 +146,5 @@ module.exports = {
   buildSessionFields,
   applySubscription,
   appleVerificationConfigured,
+  verifyAppleTransaction,
 };
