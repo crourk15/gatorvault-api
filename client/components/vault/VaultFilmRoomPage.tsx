@@ -14,7 +14,7 @@ import {
   parseFilmRoomSegmentFromPath,
 } from '@/lib/vault-route-map';
 import { isFilmRoomInsider } from '@/lib/futurecast-insider';
-import { UiEmpty, UiError } from '@/components/site/UiMessage';
+import { UiEmpty, UiError, UiWarming } from '@/components/site/UiMessage';
 
 const HUB_TABS = FILM_HUB_ORDER.map((name) => ({
   id: name,
@@ -176,13 +176,20 @@ export function VaultFilmRoomPage(): React.ReactElement {
   }, [items, hub]);
 
   return (
-    <PageLayout
-      theme="chalkboard"
-      title="Film Room"
-      subtitle="Scheme breakdowns, press conferences, and verified coaching analysis."
-      testId="vault-film-room"
-      className="gv-film-room"
-    >
+    <div className="rh-page rh-page--elite gv-film-room-page mobile-app" data-testid="vault-film-room-elite">
+      <PageLayout
+        theme="chalkboard"
+        title="Film Room"
+        subtitle="Scheme breakdowns, press conferences, and verified coaching analysis."
+        testId="vault-film-room"
+        className="gv-film-room rh-elite-chrome"
+      >
+        {loading ? (
+          <div className="gv-page-status" role="status" aria-live="polite" aria-busy="true">
+            <UiWarming hint="Loading film catalog…" />
+          </div>
+        ) : null}
+        {error ? <UiError message={error} retry={load} backHref="/vault" backLabel="← Vault" /> : null}
       <TabBar
         options={HUB_TABS}
         active={hub}
@@ -212,11 +219,6 @@ export function VaultFilmRoomPage(): React.ReactElement {
           </div>
         </PageSection>
       ) : null}
-
-      {loading && <p className="gv-page-status">Loading Film Room…</p>}
-      {error && !loading && (
-        <UiError message={error} retry={() => void load()} backHref="/vault" backLabel="← Vault" />
-      )}
 
       {!loading && !error && selected ? (
         <FilmLessonViewer
@@ -268,5 +270,6 @@ export function VaultFilmRoomPage(): React.ReactElement {
         </a>
       ) : null}
     </PageLayout>
+    </div>
   );
 }

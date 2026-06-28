@@ -3,6 +3,7 @@
  */
 const store = require('./recruiting-store');
 const { enrichBoard } = require('./recruiting-board-enrich');
+const { effectiveStars } = require('./recruiting-target-filters');
 
 const POSITION_ORDER = ['QB', 'RB', 'WR', 'TE', 'OL', 'OT', 'OG', 'C', 'DL', 'EDGE', 'LB', 'CB', 'S', 'ATH', 'K', 'P'];
 
@@ -36,7 +37,7 @@ function trendFromDelta(delta) {
 
 function blueChipPct(players) {
   if (!players.length) return null;
-  const blue = players.filter((p) => (Number(p.stars) || 0) >= 4).length;
+  const blue = players.filter((p) => (effectiveStars(p) || 0) >= 4).length;
   return Math.round((blue / players.length) * 100);
 }
 
@@ -68,8 +69,9 @@ function formatCommitDate(player) {
 
 function commitStatusBadge(player) {
   if (player.headliner) return 'Headliner';
-  if ((Number(player.stars) || 0) >= 5) return 'Locked';
-  if ((Number(player.stars) || 0) >= 4) return 'Solid';
+  const stars = effectiveStars(player) || 0;
+  if (stars >= 5) return 'Locked';
+  if (stars >= 4) return 'Solid';
   return undefined;
 }
 
@@ -81,7 +83,7 @@ const {
 
 function fallbackCommitBlurb(player) {
   const pos = playerPos(player);
-  const stars = Number(player.stars) || 0;
+  const stars = effectiveStars(player) || 0;
   const parts = [];
   if (stars) parts.push(`${stars}★ ${pos}`);
   const natl = player.natlRank ?? player.natl;

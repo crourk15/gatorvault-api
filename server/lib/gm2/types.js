@@ -33,6 +33,9 @@ const TRUSTED_SOURCES = new Set([
   'beat_writer',
   'beat_writer_ingest',
   'beat_visit_intel',
+  'hayes_fawcett',
+  'rivals_beat',
+  'allowlist-commit-ingest',
   'admin'
 ]);
 

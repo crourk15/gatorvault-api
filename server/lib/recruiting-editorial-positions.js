@@ -90,7 +90,10 @@ function applyEditorialPositionToPlayer(player) {
     out.position = editorial.pos;
   }
   if (editorial.stars != null && Number.isFinite(editorial.stars)) {
-    out.stars = editorial.stars;
+    const consensus = Number(out.consensusStars) || 0;
+    const current = Number(out.stars) || 0;
+    const best = Math.max(editorial.stars, current, consensus);
+    if (best > 0) out.stars = best;
   }
   if (editorial.school && !isPlaceholderSchool(editorial.school)) out.school = editorial.school;
   if (editorial.state) {

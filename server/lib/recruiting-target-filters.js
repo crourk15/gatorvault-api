@@ -62,20 +62,23 @@ function hadUfVisit(player) {
 function shouldAutoHeadliner(player) {
   if (!player) return false;
   if (player.headliner === true) return true;
+  let onAllowlist = false;
   try {
     const { isAllowlistedTarget } = require('./recruiting-target-allowlist');
-    if (!isAllowlistedTarget(player)) return false;
+    onAllowlist = isAllowlistedTarget(player);
+    if (!onAllowlist) return false;
   } catch {
-    /* optional */
+    return false;
   }
   const year = parseInt(player.classYear || player.class_year, 10);
   if (year !== 2028) return false;
   const stars = effectiveStars(player);
   if (!stars || stars < 4) return false;
   if (!isFloridaPlayer(player)) return false;
+  if (isFloridaSchool(resolveCommittedTo(player))) return true;
   if (!hadUfVisit(player)) return false;
   const pos = String(player.pos || '').toUpperCase();
-  return /^(WR|RB|QB|TE|EDGE|DL|CB|S|ATH|OL|OT|OG|C|LB)$/.test(pos);
+  return /^(WR|RB|QB|TE|EDGE|DL|CB|S|ATH|OL|OT|OG|C|LB|HB|IOL)$/.test(pos);
 }
 
 function applyHeadlinerRules(player) {

@@ -552,7 +552,16 @@ async function buildRecruitingEventCopyAsync(ev, { source = 'On3' } = {}) {
     portalStatus: isPortal ? 'Portal' : undefined,
     beatText: [ev.title, ev.skinny, ev.detail, ev.payload?.summary].filter(Boolean).join('. '),
     headline: ev.title || null,
-    body: ev.skinny || ev.detail || null
+    body: ev.skinny || ev.detail || null,
+    intel: {
+      timestamp: ev.createdAt || player?.commitDate || new Date().toISOString(),
+      sourceEventCreatedAt: ev.createdAt || null,
+      eventType: ev.eventType,
+      sourceEventType: ev.eventType,
+      source: ev.source || source,
+      playerSlug: ev.playerSlug || player?.slug,
+      playerName,
+    },
   });
   return newsPayloadFromBuilt(built);
 }

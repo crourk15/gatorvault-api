@@ -155,7 +155,10 @@ function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, cl
   ) {
     merged.school = existing.school;
   }
-  return applyHeadlinerRules(applyCanonicalFixup(slug, merged));
+  const finalized = applyHeadlinerRules(applyCanonicalFixup(slug, merged));
+  const stars = effectiveStars(finalized);
+  if (stars) finalized.stars = stars;
+  return finalized;
 }
 
 async function buildProfilePatchFromDiscovery(slug, classYear, existing, playerName) {
@@ -679,9 +682,10 @@ function loadOn3RecruitSlug(slug, classYear) {
 }
 
 function buildCommitSkinny(player) {
+  const stars = effectiveStars(player);
   const bits = [
     player.pos,
-    player.stars ? `${player.stars}-star` : null,
+    stars ? `${stars}-star` : null,
     player.school,
     player.natlRank ? `#${player.natlRank} natl` : null,
   ].filter(Boolean);
@@ -853,7 +857,7 @@ async function ingestAllowlistCommit(opts = {}) {
     existing?.committedTo === 'Florida' &&
     existing?.commitDate === commitDate;
 
-  const eventSource = opts.source || (ufCommitted ? 'on3' : 'hayes_fawcett');
+  const eventSource = ufCommitted ? 'on3' : opts.source || 'hayes_fawcett';
   const eventDetail =
     opts.detail ||
     `${player.name} committed to Florida${commitDate ? ` (${commitDate})` : ''}.`;

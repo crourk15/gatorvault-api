@@ -203,15 +203,15 @@
       "pos": "WR",
       "school": "Chaminade-Madonna Prep, FL",
       "state": "FL",
-      "stars": 3,
+      "stars": 4,
       "rating": 90.17717391304348,
-      "natlRank": 304,
+      "natlRank": 210,
       "posRank": 39,
       "stateRank": 34,
       "inState": true,
       "committedTo": "Florida",
       "ufProbability": 0.41000000000000003,
-      "headliner": false
+      "headliner": true
     },
     {
       "slug": "tristin-gaines",
@@ -409,5 +409,5 @@
       "ufProbability": 0.09
     }
   ],
-  "updatedAt": "2026-06-28T19:19:05.827Z"
+  "updatedAt": "2026-06-28T20:15:03.136Z"
 }

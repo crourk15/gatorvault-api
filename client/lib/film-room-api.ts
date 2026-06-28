@@ -1,4 +1,5 @@
-import { snapshotFirstFetch, snapshotLiveFetch } from './snapshot-fetch';
+import { snapshotFirstFetch, snapshotLiveFetch, DEFAULT_SNAPSHOT_FETCH_OPTS } from './snapshot-fetch';
+import { fetchWithWarmPoll } from './api-warm-poll';
 
 export interface FilmRoomCatalogItem {
   id: string;
@@ -39,8 +40,8 @@ export interface FilmRoomCatalog {
 }
 
 export async function fetchFilmRoomCatalog(): Promise<FilmRoomCatalog> {
-  const data = await snapshotFirstFetch('/api/film-room/catalog', () =>
-    snapshotLiveFetch<FilmRoomCatalog>('/api/film-room/catalog')
+  const data = await fetchWithWarmPoll(() =>
+    snapshotLiveFetch<FilmRoomCatalog>('/api/film-room/catalog', DEFAULT_SNAPSHOT_FETCH_OPTS)
   );
   return { categories: data.categories, items: data.items ?? [] };
 }
