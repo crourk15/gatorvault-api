@@ -76,3 +76,31 @@ export async function fetchSubscriptionStatus(): Promise<SubscriptionStatus> {
   if (!res.ok) throw new Error('Could not load membership status.');
   return res.json() as Promise<SubscriptionStatus>;
 }
+
+export async function verifyApplePurchase(input: {
+  productId: string;
+  transactionId: string;
+}): Promise<SubscriptionStatus> {
+  const res = await fetch(`${getApiBase()}/api/subscription/apple/verify`, {
+    method: 'POST',
+    headers: {
+      ...authHeaders(),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      productId: input.productId,
+      transactionId: input.transactionId,
+    }),
+  });
+  const data = (await res.json().catch(() => ({}))) as {
+    ok?: boolean;
+    error?: string;
+    hint?: string;
+    status?: SubscriptionStatus;
+  };
+  if (!res.ok) {
+    throw new Error(data.error || data.hint || 'Apple purchase verification failed.');
+  }
+  if (data.status) return data.status;
+  return fetchSubscriptionStatus();
+}

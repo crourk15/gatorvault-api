@@ -29,6 +29,7 @@
     "verify:netlify:build": "node client/scripts/verify-netlify-build-match.js",
     "verify:cold-start:api": "node client/scripts/verify-cold-start-api.js",
     "verify:mobile:hardening": "node client/scripts/verify-mobile-hardening.js",
+    "verify:ios:iap": "node client/scripts/verify-ios-iap-wiring.js",
     "audit:target-stubs": "node server/scripts/audit-target-stubs.js",
     "sync:recruiting:json-slugs": "node server/scripts/sync-allowlist-json-to-prod.js",
     "deploy:render": "node server/scripts/deploy-render.js --deploy --clear-cache",

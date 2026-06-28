@@ -162,6 +162,42 @@
   text-underline-offset: 2px;
 }
 
+.gv-membership__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+}
+
+.gv-membership__subscribe-btn,
+.gv-membership__secondary-btn {
+  margin-top: 0.75rem;
+  min-height: 44px;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.gv-membership__subscribe-btn {
+  border: none;
+  background: #fa4616;
+  color: #fff;
+}
+
+.gv-membership__secondary-btn {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.gv-membership__subscribe-btn:disabled,
+.gv-membership__secondary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .gv-membership__danger {
   margin: 1.5rem 0;
   padding: 1rem 1.1rem;

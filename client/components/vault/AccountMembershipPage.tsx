@@ -7,9 +7,18 @@ import { isNativeApp } from '@/lib/api-base';
 import {
   fetchSubscriptionCatalog,
   fetchSubscriptionStatus,
+  verifyApplePurchase,
   type SubscriptionCatalog,
   type SubscriptionStatus,
 } from '@/lib/subscription-api';
+import {
+  appAccountTokenForEmail,
+  isIosBillingAvailable,
+  openIosSubscriptionManagement,
+  purchaseIosSubscription,
+  finishIosPurchase,
+  restoreIosPurchases,
+} from '@/lib/ios-iap';
 import { AccountDeletePanel } from '@/components/vault/AccountDeletePanel';
 import '@/lib/membership.css';
 
@@ -29,6 +38,8 @@ export function AccountMembershipPage(): React.ReactElement {
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [billingReady, setBillingReady] = useState(false);
+  const [purchaseBusy, setPurchaseBusy] = useState<string | null>(null);
   const native = isNativeApp();
 
   useEffect(() => {
@@ -48,6 +59,9 @@ export function AccountMembershipPage(): React.ReactElement {
         if (cancelled) return;
         setCatalog(cat);
         setStatus(st);
+        if (native && cat.iosPurchaseReady) {
+          setBillingReady(await isIosBillingAvailable());
+        }
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : 'Could not load membership.');
@@ -61,6 +75,49 @@ export function AccountMembershipPage(): React.ReactElement {
       cancelled = true;
     };
   }, []);
+
+  async function refreshStatus(): Promise<void> {
+    const st = await fetchSubscriptionStatus();
+    setStatus(st);
+  }
+
+  async function handleSubscribe(productId: string): Promise<void> {
+    if (!status?.email) return;
+    setPurchaseBusy(productId);
+    setError(null);
+    try {
+      const token = appAccountTokenForEmail(status.email);
+      const purchase = await purchaseIosSubscription(productId, token);
+      const next = await verifyApplePurchase(purchase);
+      await finishIosPurchase(purchase.transactionId);
+      setStatus(next);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Purchase could not be completed.');
+    } finally {
+      setPurchaseBusy(null);
+    }
+  }
+
+  async function handleRestore(): Promise<void> {
+    setPurchaseBusy('restore');
+    setError(null);
+    try {
+      await restoreIosPurchases();
+      await refreshStatus();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not restore purchases.');
+    } finally {
+      setPurchaseBusy(null);
+    }
+  }
+
+  async function handleManageSubscriptions(): Promise<void> {
+    try {
+      await openIosSubscriptionManagement();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not open subscription settings.');
+    }
+  }
 
   if (loading) {
     return (
@@ -111,7 +168,30 @@ export function AccountMembershipPage(): React.ReactElement {
       <section className="gv-membership__manage" aria-label="Manage subscription">
         <h2 className="gv-membership__section-title">Manage subscription</h2>
         {native || status?.subscription?.source === 'apple' ? (
-          <p className="gv-membership__meta">{status?.billing.manageInAppHint}</p>
+          <>
+            <p className="gv-membership__meta">{status?.billing.manageInAppHint}</p>
+            {native ? (
+              <div className="gv-membership__actions">
+                <button
+                  type="button"
+                  className="gv-membership__secondary-btn"
+                  onClick={() => void handleManageSubscriptions()}
+                >
+                  Manage in App Store
+                </button>
+                {catalog?.iosPurchaseReady ? (
+                  <button
+                    type="button"
+                    className="gv-membership__secondary-btn"
+                    disabled={Boolean(purchaseBusy)}
+                    onClick={() => void handleRestore()}
+                  >
+                    {purchaseBusy === 'restore' ? 'Restoring…' : 'Restore purchases'}
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
+          </>
         ) : (
           <>
             <p className="gv-membership__meta">
@@ -127,10 +207,15 @@ export function AccountMembershipPage(): React.ReactElement {
             </p>
           </>
         )}
-        {catalog?.iosPurchaseReady ? (
+        {catalog?.iosPurchaseReady && native && billingReady ? (
           <p className="gv-membership__meta">
-            Subscribe in the GatorVault iOS app when in-app purchase is enabled. Purchases are processed
-            by Apple.
+            Subscribe below with Apple In-App Purchase. Purchases are verified with GatorVault before
+            access unlocks.
+          </p>
+        ) : catalog?.iosPurchaseReady ? (
+          <p className="gv-membership__meta">
+            Subscribe in the GatorVault iOS app when in-app purchase is enabled. Purchases are
+            processed by Apple.
           </p>
         ) : (
           <p className="gv-membership__meta">
@@ -157,6 +242,18 @@ export function AccountMembershipPage(): React.ReactElement {
               App Store product: {tier.products.monthly}
               {status?.tier === tier.id ? ' · Your current tier' : ''}
             </p>
+            {native && catalog?.iosPurchaseReady && billingReady && status?.tier !== tier.id ? (
+              <button
+                type="button"
+                className="gv-membership__subscribe-btn"
+                disabled={Boolean(purchaseBusy)}
+                onClick={() => void handleSubscribe(tier.products.monthly)}
+              >
+                {purchaseBusy === tier.products.monthly
+                  ? 'Processing…'
+                  : `Subscribe · ${tier.name}`}
+              </button>
+            ) : null}
           </article>
         ))}
       </section>

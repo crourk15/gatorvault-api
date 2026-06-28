@@ -31,6 +31,8 @@ export async function initNativeShell(): Promise<void> {
     /* ok */
   }
 
+  void initIosPurchases();
+
   void App.addListener('backButton', ({ canGoBack }) => {
     if (canGoBack) {
       window.history.back();
@@ -38,4 +40,20 @@ export async function initNativeShell(): Promise<void> {
     }
     void App.minimizeApp();
   });
+}
+
+async function initIosPurchases(): Promise<void> {
+  try {
+    const { loadSession } = await import('@/lib/auth-api');
+    const { verifyApplePurchase } = await import('@/lib/subscription-api');
+    const { initIosPurchaseListeners, finishIosPurchase } = await import('@/lib/ios-iap');
+    await initIosPurchaseListeners(async ({ productId, transactionId }) => {
+      const session = loadSession();
+      if (!session?.token) return;
+      await verifyApplePurchase({ productId, transactionId });
+      await finishIosPurchase(transactionId);
+    });
+  } catch {
+    /* plugin unavailable outside iOS build */
+  }
 }
