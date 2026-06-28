@@ -54,7 +54,7 @@ export function EliteCommitCard({ commit, year }: Props): React.ReactElement {
       <DetailRow label="Weaknesses" value={commit.weaknesses} />
       <DetailRow label="Player comp" value={commit.playerComp} />
       <DetailRow label="GatorVault Grade" value={commit.gvGrade} />
-      <DetailRow label="NIL estimate" value={commit.nilEstimate ?? 'N/A'} />
+      <DetailRow label="NIL estimate" value={commit.nilEstimate} />
 
       <div className="rh-commit-footer">
         <span>Rating {commit.rating}</span>

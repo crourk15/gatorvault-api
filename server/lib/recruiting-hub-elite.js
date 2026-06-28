@@ -73,11 +73,63 @@ function commitStatusBadge(player) {
   return undefined;
 }
 
-function rankNote(player) {
-  const preview = player.skinny ?? player.notePreview ?? player.notes ?? player.profileNote;
-  if (preview && String(preview).trim()) return String(preview).trim();
+const {
+  isGenericBeatArticle,
+  firstVerifiedIntel,
+  verifiedStrengthsList,
+} = require('./recruiting-intel-quality');
+
+function fallbackCommitBlurb(player) {
   const pos = playerPos(player);
-  return `NATL ${formatRank(player.natlRank ?? player.natl)} · POS ${formatRank(player.posRank)} (${pos})`;
+  const stars = Number(player.stars) || 0;
+  const parts = [];
+  if (stars) parts.push(`${stars}★ ${pos}`);
+  const natl = player.natlRank ?? player.natl;
+  if (natl != null) parts.push(`#${natl} natl`);
+  const state = player.stateRank;
+  if (state != null) parts.push(`#${state} in state`);
+  if (player.school) parts.push(String(player.school).trim());
+  if (parts.length) return parts.join(' · ');
+  return `NATL ${formatRank(natl)} · POS ${formatRank(player.posRank)} (${pos})`;
+}
+
+function distinctIntel(primary, playerName, ...candidates) {
+  const base = primary ? String(primary).trim() : '';
+  for (const c of candidates) {
+    if (c == null) continue;
+    const s = String(c).trim();
+    if (!s || s === base || isGenericBeatArticle(s, playerName)) continue;
+    return s;
+  }
+  return null;
+}
+
+function rankNote(player) {
+  const preview = firstVerifiedIntel(player, ['skinny', 'notePreview'], player.name);
+  if (preview) return preview;
+  return fallbackCommitBlurb(player);
+}
+
+/** Program trajectory (years 2–4) — staff projection only, never beat-article skinny. */
+function verifiedProjection(player) {
+  return firstVerifiedIntel(player, ['projection', 'earlyImpact', 'earlyImpactProjection'], player.name);
+}
+
+/** Insider scouting note — separate from projection; never duplicate rankNote body. */
+function verifiedInsiderIntel(player, rankNoteText) {
+  const intel = firstVerifiedIntel(
+    player,
+    ['insiderNotes', 'notes', 'notePreview', 'evaluatorNotes'],
+    player.name
+  );
+  if (!intel || intel === rankNoteText) return null;
+  return intel;
+}
+
+function commitMovementLabel(player) {
+  if (player.movementDirection === 'up') return 'Trending up';
+  if (player.movementDirection === 'down') return 'Trending down';
+  return null;
 }
 
 function profileUrl(player) {
@@ -188,43 +240,50 @@ function formatNilEstimate(player) {
 }
 
 function formatStrengths(player) {
-  const list = player.strengths;
-  if (Array.isArray(list) && list.length) return list.slice(0, 2).join(' · ');
-  return null;
+  return verifiedStrengthsList(player);
 }
 
 function formatWeaknesses(player) {
+  const { isVerifiedScoutingTrait } = require('./recruiting-intel-quality');
   const list = player.weaknesses;
-  if (Array.isArray(list) && list.length) return list.slice(0, 2).join(' · ');
-  return null;
+  if (!Array.isArray(list) || !list.length) return null;
+  const cleaned = list
+    .map((item) => String(item || '').trim())
+    .filter((s) => isVerifiedScoutingTrait(s, player.name));
+  return cleaned.length ? cleaned.slice(0, 2).join(' · ') : null;
 }
 
 function mapHubCommit(player, classYear) {
   const pct = parseUfPct(player.ufProbability);
   const slug = player.slug || player.name;
+  const note = rankNote(player);
+  const projection = verifiedProjection(player);
+  const insider = verifiedInsiderIntel(player, note);
+  const strengths = formatStrengths(player);
+  const isFutureCommit = classYear >= 2027;
   return {
     id: slug,
     name: player.name,
     position: playerPos(player),
     rating: formatRating(player.displayRating ?? player.rating ?? player.vaultGrade),
-    rankNote: rankNote(player),
+    rankNote: note,
     commitDate: formatCommitDate(player),
-    statusBadge: classYear >= 2027 ? commitStatusBadge(player) : 'Enrolled',
+    statusBadge: isFutureCommit ? commitStatusBadge(player) : 'Enrolled',
     profileUrl: profileUrl(player),
-    stabilityMeter: stabilityMeter(player),
-    ufPercent: pct > 0 ? `${pct}%` : '—',
-    movement: movementLabel(player),
+    stabilityMeter: isFutureCommit ? stabilityMeter(player) : null,
+    ufPercent: !isFutureCommit && pct > 0 ? `${pct}%` : null,
+    movement: isFutureCommit ? commitMovementLabel(player) : movementLabel(player),
     enrolled: classYear <= 2026,
     jerseyNumber: player.jerseyNumber ?? player.jersey ?? null,
     positionRoomFit: player.schemeFit ?? (player.fitScore != null ? `Fit ${Math.round(Number(player.fitScore))}/100` : null),
-    earlyImpactProjection: player.projection ?? player.earlyImpact ?? player.skinny ?? null,
-    strengths: formatStrengths(player),
+    earlyImpactProjection: projection,
+    strengths,
     weaknesses: formatWeaknesses(player),
     playerComp: player.playerComp ?? player.comp ?? null,
     gvGrade: formatRating(player.vaultGrade ?? player.displayRating ?? player.rating),
     nilEstimate: formatNilEstimate(player),
-    projection: player.projection ?? player.skinny ?? player.profileNote ?? null,
-    insiderIntel: player.notePreview ?? player.notes ?? player.insiderNotes ?? null,
+    projection,
+    insiderIntel: insider,
   };
 }
 

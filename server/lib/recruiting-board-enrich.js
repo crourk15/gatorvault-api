@@ -51,16 +51,23 @@ function mergeWarRoomFields(player, enriched) {
   const slug = enriched.slug || slugify(player.name);
   const breakdown = getBreakdownBySlug(slug);
   if (!breakdown) return enriched;
-  const strengths = Array.isArray(breakdown.strengths) ? breakdown.strengths.filter(Boolean) : [];
-  const weaknesses = Array.isArray(breakdown.weaknesses) ? breakdown.weaknesses.filter(Boolean) : [];
   const evaluatorNotes =
     breakdown.insiderNotes || breakdown.staffNotes || breakdown.recruitingStory || null;
+  const { isGenericBeatArticle, isVerifiedScoutingTrait } = require('./recruiting-intel-quality');
+  const notesOk =
+    evaluatorNotes && !isGenericBeatArticle(String(evaluatorNotes), enriched.name);
+  const strengths = Array.isArray(breakdown.strengths)
+    ? breakdown.strengths.filter((s) => s && isVerifiedScoutingTrait(String(s), enriched.name))
+    : [];
+  const weaknesses = Array.isArray(breakdown.weaknesses)
+    ? breakdown.weaknesses.filter((s) => s && isVerifiedScoutingTrait(String(s), enriched.name))
+    : [];
   return {
     ...enriched,
     strengths,
     weaknesses,
     evaluatorNotes,
-    skinny: enriched.skinny || (evaluatorNotes ? String(evaluatorNotes).slice(0, 280) : null),
+    skinny: enriched.skinny || (notesOk ? String(evaluatorNotes).slice(0, 280) : null),
     profileNote: enriched.profileNote || breakdown.recruitingStory || null,
   };
 }
