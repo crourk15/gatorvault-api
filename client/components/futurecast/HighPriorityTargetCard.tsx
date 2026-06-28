@@ -140,7 +140,7 @@ export function HighPriorityTargetCard({
           </ul>
         )}
       </a>
-      {!compact && player.classYear >= 2027 ? (
+      {!compact && (player.classYear ?? 0) >= 2027 ? (
         <a
           href={`/vault/futurecast/player/${encodeURIComponent(player.slug)}`}
           className="gv-hp-card__fc-link"
