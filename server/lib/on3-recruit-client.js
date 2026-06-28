@@ -77,6 +77,16 @@ function stateFromHighSchoolSlug(slug) {
   return /^[a-z]{2}$/i.test(last) ? last.toUpperCase() : null;
 }
 
+function parseOn3NilValue(raw) {
+  if (raw == null) return null;
+  if (typeof raw === 'number' && Number.isFinite(raw) && raw > 0) return Math.round(raw);
+  if (typeof raw === 'object') {
+    const total = Number(raw.totalValue ?? raw.value ?? 0);
+    if (Number.isFinite(total) && total > 0) return Math.round(total);
+  }
+  return null;
+}
+
 async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
   if (!recruitSlug) return null;
   const year = parseInt(classYear, 10) || 2027;
@@ -137,6 +147,7 @@ async function fetchRecruitProfile(recruitSlug, classYear = 2027) {
     visits: pp.visits?.list || pp.visits || [],
     recruitments: pp.recruitments || [],
     rankingsPlayer: pp.rankingsPlayer || null,
+    nilValue: parseOn3NilValue(pp.player?.nilValue ?? pp.nilValue),
     fetchedAt: new Date().toISOString()
   };
 }
@@ -213,6 +224,7 @@ module.exports = {
   isFloridaTeam,
   isHighSchoolOrg,
   mapPool,
+  parseOn3NilValue,
   resolveRecruitSlug,
   slugify,
   stateFromHighSchoolSlug,

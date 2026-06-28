@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-28T01:52:41.480Z",
+  "updatedAt": "2026-06-28T17:36:55.921Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -9,26 +9,33 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Andrew Ivins",
-          "writerId": "ivins",
-          "outlet": "247Sports",
-          "url": "https://247sports.com/player/elias-pearl-46159350/",
-          "publishedAt": "2026-06-24"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 / Rivals",
+          "url": "https://www.on3.com/rivals/elias-pearl-281377/",
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "s Florida Gators Hard Commit - 5/19/2026 Elias Pearl Pos WR Height 5-10 Weight 180"
+        "Versatile wide receiver who is both a YAC monster and technician.",
+        "Measured in at 5-foot-10, 183 pounds with plus length (6-foot-5 wing-span) at the Rivals Camp in Miami coming out of his junior season.",
+        "Tested as a top athlete at the Rivals Camp, ripping off a 4.5-second 40-yard dash, a 10 foot broad jump and 32.4-inch vertical.",
+        "Turned in a breakout junior season, accounting for over 1,300 yards and 24 touchdowns from scrimmage.",
+        "Has outstanding foundational movement skills with impressive lower body flexibility.",
+        "Able to easily stack corners off the line with his acceleration and long stride.",
+        "Long arms for his frame pair with coordination to result in a wide catch radius.",
+        "A natural hands catcher who shows high-end ball-tracking skills to locate the football over his shoulder."
       ],
       "weaknesses": [],
-      "comparison": null,
+      "comparison": "Deebo Samuel WR / 5-11.",
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "s Florida Gators Hard Commit - 5/19/2026 Elias Pearl Pos WR Height 5-10 Weight 180",
-      "recruitingStory": null,
+      "insiderNotes": "Versatile wide receiver who is both a YAC monster and technician. Measured in at 5-foot-10, 183 pounds with plus length (6-foot-5 wing-span) at the Rivals Camp in Miami coming out of his junior season. Tested as a top athlete at the Rivals Camp, ripping off a 4.5-second 40-yard dash, a 10 foot broad jump and 32.4-inch vertical. Turned in a breakout junior season, accounting for over 1,300 yards and 24 touchdowns from scrimmage. Has outstanding foundational movement skills with impressive lower body flexibility. Able to easily stack corners off the line with his acceleration and long stride. Long arms for his frame pair with coordination to result in a wide catch radius. A natural hands catcher who shows high-end ball-tracking skills to locate the football over his shoulder. One of the more dangerous wide receiver prospects after the catch in the 2027 cycle. Dynamic with the ball in his hands and maximizes yards after the catch. A slasher in space, quickly cutting to make defenders miss. Slips out of arm tackles and fights through contact. Shows his ability with the ball in his hands as a return man, taking back three kicks as a junior. May not have prototypical height, but has the skills to play all over the formation. A competitive player who makes key plays in big moments of games. Well-rounded skill set and versatility give him one of the highest floors of 2027 wide receiver prospects.",
+      "recruitingStory": "Committed to Florida on 2026-05-19 · Port Charlotte, FL",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:33.177Z"
+      "featured": false,
+      "updatedAt": "2026-06-28T17:36:41.962Z"
     },
     "maxwell-hiller": {
       "playerSlug": "maxwell-hiller",
@@ -37,26 +44,35 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 / Rivals",
           "url": "https://www.on3.com/rivals/maxwell-hiller-180637/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on"
+        "Elite interior offensive line prospect with ready-to-play size, athleticism, and physicality.",
+        "Measured in at around 6-foot-5, 305 pounds as a junior.",
+        "Arm length checks in at 32 inches or a shade under.",
+        "Registers as a plus athlete in the combine setting.",
+        "A dominant run blocker on Friday nights.",
+        "A fluid, reactive mover at the second level.",
+        "Locks on defenders and imposes his will.",
+        "Not uncommon to see him drive defensive linemen to the sideline."
       ],
-      "weaknesses": [],
-      "comparison": null,
+      "weaknesses": [
+        "Has the movement skills to play some tackle at the college level, but lack of arm length will ultimately force him inside."
+      ],
+      "comparison": "David DeCastro.",
       "schemeFit": null,
       "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on",
-      "recruitingStory": null,
+      "projection": "Elite interior offensive line prospect with ready-to-play size, athleticism, and physicality.",
+      "insiderNotes": "Elite interior offensive line prospect with ready-to-play size, athleticism, and physicality. Measured in at around 6-foot-5, 305 pounds as a junior. Arm length checks in at 32 inches or a shade under. Registers as a plus athlete in the combine setting. A dominant run blocker on Friday nights. A fluid, reactive mover at the second level. Locks on defenders and imposes his will. Not uncommon to see him drive defensive linemen to the sideline. Plays with an innate edge and level of physicality. Has the movement skills to project as a high-level pass protector. High level of coordination leads to a natural technical acuity with advanced hand placement and usage. Has the movement skills to play some tackle at the college level, but lack of arm length will ultimately force him inside. Also plays basketball. His younger brother, Colton Hiller, is a five-star basketball prospect in the 2028 cycle. Has a strong case as the most ready-to-play interior offensive line prospect in the 2027 cycle and could be primed for an instant impact at the college level.",
+      "recruitingStory": "Committed to Florida on 2026-04-08 · Coatesville, PA",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-27T21:06:08.838Z"
+      "featured": false,
+      "updatedAt": "2026-06-28T17:36:55.917Z"
     },
     "davin-davidson": {
       "playerSlug": "davin-davidson",
@@ -65,26 +81,38 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Andrew Ivins",
-          "writerId": "ivins",
-          "outlet": "247Sports",
-          "url": "https://247sports.com/player/davin-davidson-46151041/",
-          "publishedAt": "2026-06-27"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 / Rivals",
+          "url": "https://www.on3.com/rivals/davin-davidson-259412/",
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "s Florida Gators Hard Commit - 4/9/2026 Davin Davidson High School Sarasota (HS) Cardinal Mooney (HS) Pos QB Height 6-6.5 Weight 215"
+        "Towering quarterback prospect with a big-time arm and intriguing upside.",
+        "The tallest top quarterback in the 2027 cycle.",
+        "Measured in at 6-foot-6.5, 215 pounds with a 9.75-inch hand prior to his senior season.",
+        "Touts outstanding arm strength with the ability to generate a ton of zip on passes to the intermediate and deep areas of the field.",
+        "Can rip the football on a line from 30 yards out.",
+        "Shows flashes of arm dexterity.",
+        "A solid mover at his size.",
+        "Completed 64.6% of his passes for 2360 yards, 23 touchdowns against 6 interceptions while helping his team to a state title."
       ],
-      "weaknesses": [],
-      "comparison": null,
+      "weaknesses": [
+        "As a result is still early in his development in comparison with his blue-chip peers.",
+        "As a taller, longer quarterback will need to continue tightening up his mechanics and footwork.",
+        "Will also need to improve at changing speeds, as he’s primarily a fastball thrower at this point.",
+        "Has a high upside, but may be a few years away."
+      ],
+      "comparison": "Josh Freeman.",
       "schemeFit": null,
       "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "s Florida Gators Hard Commit - 4/9/2026 Davin Davidson High School Sarasota (HS) Cardinal Mooney (HS) Pos QB Height 6-6.5 Weight 215",
-      "recruitingStory": null,
+      "projection": "Towering quarterback prospect with a big-time arm and intriguing upside.",
+      "insiderNotes": "Towering quarterback prospect with a big-time arm and intriguing upside. The tallest top quarterback in the 2027 cycle. Measured in at 6-foot-6.5, 215 pounds with a 9.75-inch hand prior to his senior season. Touts outstanding arm strength with the ability to generate a ton of zip on passes to the intermediate and deep areas of the field. Can rip the football on a line from 30 yards out. Shows flashes of arm dexterity. A solid mover at his size. Completed 64.6% of his passes for 2360 yards, 23 touchdowns against 6 interceptions while helping his team to a state title. A low volume passer attempting a little over 14 passes per game and accounting for 163 total yards per game as a junior. As a result is still early in his development in comparison with his blue-chip peers. As a taller, longer quarterback will need to continue tightening up his mechanics and footwork. Will also need to improve at changing speeds, as he’s primarily a fastball thrower at this point. Should benefit greatly from increased in-game reps. Has a high upside, but may be a few years away.",
+      "recruitingStory": "Committed to Florida on 2026-04-09 · Sarasota, FL",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-27T21:06:13.352Z"
+      "featured": false,
+      "updatedAt": "2026-06-28T17:36:38.542Z"
     },
     "aamaury-fountain": {
       "playerSlug": "aamaury-fountain",
@@ -93,26 +121,37 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-06-24"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 / Rivals",
+          "url": "https://www.on3.com/rivals/aamaury-fountain-281368/",
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "Miami is still working to wrap up an elite recruiting class this cycle, but while doing that, they are getting off to a strong start in 2028 and"
+        "Big-framed cornerback with length, coordination, and coverage instincts.",
+        "Has considerable length for the position.",
+        "Uses his big frame and long arms to disrupt wide receivers off the line when working in press coverage.",
+        "Able to reroute pass-catchers with ease.",
+        "Shows smooth movement skills with the ability to flip his hips and redirect in coverage, especially for a bigger cornerback.",
+        "Shows quality natural instincts when reading routes and breaking on the football.",
+        "Able to track and locate the ball.",
+        "Physical as a run defender."
       ],
-      "weaknesses": [],
-      "comparison": null,
+      "weaknesses": [
+        "Has unverified size, but listed at around 6-foot-3, 185 pounds.",
+        "Does not have any verified athletic markers and pure top end speed remains a question.",
+        "Also older for the cycle, turning 19 years old in February of his junior year."
+      ],
+      "comparison": "Julius Brents as a prospect.",
       "schemeFit": null,
       "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Miami is still working to wrap up an elite recruiting class this cycle, but while doing that, they are getting off to a strong start in 2028 and",
-      "recruitingStory": null,
+      "projection": "Has the upside to develop into one of the top cornerback prospects in the 2027 cycle.",
+      "insiderNotes": "Big-framed cornerback with length, coordination, and coverage instincts. Has unverified size, but listed at around 6-foot-3, 185 pounds. Has considerable length for the position. Uses his big frame and long arms to disrupt wide receivers off the line when working in press coverage. Able to reroute pass-catchers with ease. Shows smooth movement skills with the ability to flip his hips and redirect in coverage, especially for a bigger cornerback. Shows quality natural instincts when reading routes and breaking on the football. Able to track and locate the ball. Physical as a run defender. Also worked at wide receiver some as a junior. Does not have any verified athletic markers and pure top end speed remains a question. Also older for the cycle, turning 19 years old in February of his junior year. Size and instincts make him an intriguing corner prospect with some remaining questions to be answered. Has the upside to develop into one of the top cornerback prospects in the 2027 cycle.",
+      "recruitingStory": "Committed to Florida on 2026-04-11 · Warner Robins, GA",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:33.674Z"
+      "featured": false,
+      "updatedAt": "2026-06-28T17:36:21.718Z"
     },
     "easton-royal": {
       "playerSlug": "easton-royal",
@@ -2121,7 +2160,7 @@
           "writerId": "bender",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/marquis-evans-250285/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -2136,7 +2175,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:09.084Z"
+      "updatedAt": "2026-06-28T03:01:51.904Z"
     },
     "nash-johnson": {
       "playerSlug": "nash-johnson",
@@ -2234,7 +2273,7 @@
           "writerId": "simmons",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/jameer-cantrell-176047/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -2250,7 +2289,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": true,
-      "updatedAt": "2026-06-27T21:05:31.378Z"
+      "updatedAt": "2026-06-28T03:01:57.362Z"
     },
     "majay-thompson": {
       "playerSlug": "majay-thompson",
@@ -2489,26 +2528,35 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 / Rivals",
           "url": "https://www.on3.com/rivals/elijah-hutcheson-241889/",
-          "publishedAt": "2026-06-24"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "Florida's offensive line class took a hit when 4-star prospect Kennedee Jackson backed off his pledge and flipped to Georgia."
+        "Offensive tackle with the frame, movement skills, and play personality that point to an encouraging developmental upside.",
+        "Measured in at north of 6-foot-5 and around 260 pounds as a junior.",
+        "Has the frame to add much more mass, particularly in the upper body.",
+        "Shows strong punch with good grip strength.",
+        "Solid mover who can work to the second level.",
+        "Capable of getting to his spots in pass protection.",
+        "Works to finish blocks with authority.",
+        "Has faced and held up well against talented competition early on in his high school career."
       ],
-      "weaknesses": [],
+      "weaknesses": [
+        "Will need to add considerable mass and continue improving his anchor as a higher-hipped offensive tackle."
+      ],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Florida's offensive line class took a hit when 4-star prospect Kennedee Jackson backed off his pledge and flipped to Georgia. As expected, that has",
-      "recruitingStory": null,
-      "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:30.865Z"
+      "projection": "Offensive tackle with the frame, movement skills, and play personality that point to an encouraging developmental upside.",
+      "insiderNotes": "Offensive tackle with the frame, movement skills, and play personality that point to an encouraging developmental upside. Measured in at north of 6-foot-5 and around 260 pounds as a junior. Has the frame to add much more mass, particularly in the upper body. Lines up at left tackle. Shows strong punch with good grip strength. Solid mover who can work to the second level. Capable of getting to his spots in pass protection. Works to finish blocks with authority. Has faced and held up well against talented competition early on in his high school career. Also plays some defensive line, showing athleticism. Transferred from Rabun Gap (Ga.) Rabun Gap-Nacoochee to Roanoke (Va.) North Cross in the middle of his junior season. Will need to add considerable mass and continue improving his anchor as a higher-hipped offensive tackle. Can also continue improving his pass set technique. Has the potential to grow into a starting offensive tackle and NFL Draft pick at the next level with continued development.",
+      "recruitingStory": "Committed to Florida on 2026-05-05 · Roanoke, VA",
+      "nflProjection": "Has the potential to grow into a starting offensive tackle and NFL Draft pick at the next level with continued development.",
+      "featured": false,
+      "updatedAt": "2026-06-28T17:36:43.550Z"
     },
     "kalib-spivey": {
       "playerSlug": "kalib-spivey",
@@ -2879,7 +2927,7 @@
           "writerId": "simmons",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/jordan-christie-239052/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -2894,7 +2942,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": true,
-      "updatedAt": "2026-06-27T21:05:09.659Z"
+      "updatedAt": "2026-06-28T03:01:53.679Z"
     },
     "elijah-haven": {
       "playerSlug": "elijah-haven",
@@ -2963,7 +3011,7 @@
           "writerId": "power",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/adryan-cole-238584/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -2978,7 +3026,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:01.984Z"
+      "updatedAt": "2026-06-28T03:01:52.405Z"
     },
     "kailib-dillard": {
       "playerSlug": "kailib-dillard",
@@ -3186,27 +3234,26 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com/rivals/kyren-caldwell-269778/",
-          "publishedAt": "2026-06-27"
+          "writer": "Andrew Ivins",
+          "writerId": "ivins",
+          "outlet": "247Sports",
+          "url": "https://247sports.com/player/kyren-caldwell-46154426/",
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "Alabama already got the ball rolling.",
-        "On Sunday, Fairburn (Ga.) Creekside cornerback Darrius White announced his commitment to the Crimson Tide,"
+        "s Kyren Caldwell Pos WR Height 6-1 Weight 175 Timeline Prospect Info High School Columbia City Lake City, FL Class 2027 Play Watch Highlights Player Rating i 247Sports 88 WR 67 FL 39 247Sports Composite&reg; 0.8833 Natl. 569 WR 73 FL 49 Your Prediction Manage Predictions Make a Prediction Crystal Ball&reg; Predictions No Lead Experts Alabama 100% 6 Med 2 Predictions Embed Commitment Watch: Announcing on Jul. 4, 2026 Scheduled Commitments College List Offer Interest Recruited By Roster Outlook Visit 24 Offers 4 Visits 0 Coach Visits Maryland (Edit) Cool - 13 WR, 4 Commits Jun 4 Mississippi State (Edit) Cool - 15 WR, 1 Commits Jun 12 Alabama (Edit) Cool - 10 WR, 1 Commits Jun 19 Auburn (Edit) Cool - 14 WR, 3 Commits - Boston College (Edit) Cool - 10 WR, 2 Commits - View complete team list Add Interests Manage Interests 24 Offers 4 Visits 0 Coach Visits Add Video Accolades The Opening Finals Roster Scouting Report H.S. Athletic Background Multi-sport athlete. –––– TRACK -District qualifier in the 100-meter dash as a 10th grader. -Top markers include 11.34 (-2.2) in the 100, 23.09 in the 200 and 53.16 in the 400. –––– FOOTBALL 2025: Finished junior season with 48 catches for 701 yards (14.6 YPC) and 8 TD. Helped Columbia reach regional semifinals of Florida’s 4A playoffs. 2024: Sophomore campaign saw him catch 32 passes for 547 yards (17.1 YPC) and 5 TD. -Andrew Ivins Add Timeline Events Timeline Add Stats Stats Year 2025 2024 TOTAL Rec RecYds RecTD 48 701 8 32 547 5 80 1248 13 Add Photos View all articles CBS Sports Digital YouTube Facebook X Instagram TikTok CBS Sports Betting Podcast Newsletter Text Alert About Contact Us Advertisers Help Center Careers Privacy Policy Minors&apos; Privacy Policy California Notice Terms of Use Subscription Terms cbsoptanon.ot.showPreferenceCenter()}>Your Privacy Choices &copy; 2005-2026 CBS INTERACTIVE ALL RIGHTS RESERVED. CBS Sports is a registered trademark of CBS Broadcasting Inc. 247Sports is a registered service mark of CBT Sports, LLC. Scout is a registered service mark of CBS 247 Inc. Fans Only is a registered service mark of CSTV Online, Inc. The content on this site is for entertainment purposes only and 247Sports makes no representation or warranty as to the accuracy of the information given or the outcome of any game or event. There is no gambling offered on this site. This site contains commercial content and 247Sports may be compensated for the links provided on this site."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "Alabama already got the ball rolling.  On Sunday, Fairburn (Ga.) Creekside cornerback Darrius White announced his commitment to the Crimson Tide,",
+      "insiderNotes": "s Kyren Caldwell Pos WR Height 6-1 Weight 175 Timeline Prospect Info High School Columbia City Lake City, FL Class 2027 Play Watch Highlights Player Rating i 247Sports 88 WR 67 FL 39 247Sports Composite&reg; 0.8833 Natl. 569 WR 73 FL 49 Your Prediction Manage Predictions Make a Prediction Crystal Ball&reg; Predictions No Lead Experts Alabama 100% 6 Med 2 Predictions Embed Commitment Watch: Announcing on Jul. 4, 2026 Scheduled Commitments College List Offer Interest Recruited By Roster Outlook Visit 24 Offers 4 Visits 0 Coach Visits Maryland (Edit) Cool - 13 WR, 4 Commits Jun 4 Mississippi State (Edit) Cool - 15 WR, 1 Commits Jun 12 Alabama (Edit) Cool - 10 WR, 1 Commits Jun 19 Auburn (Edit) Cool - 14 WR, 3 Commits - Boston College (Edit) Cool - 10 WR, 2 Commits - View complete team list Add Interests Manage Interests 24 Offers 4 Visits 0 Coach Visits Add Video Accolades The Opening Finals Roster Scouting Report H.S. Athletic Background Multi-sport athlete. –––– TRACK -District qualifier in the 100-meter dash as a 10th grader. -Top markers include 11.34 (-2.2) in the 100, 23.09 in the 200 and 53.16 in the 400. –––– FOOTBALL 2025: Finished junior season with 48 catches for 701 yards (14.6 YPC) and 8 TD. Helped Columbia reach regional semifinals of Florida’s 4A playoffs. 2024: Sophomore campaign saw him catch 32 passes for 547 yards (17.1 YPC) and 5 TD. -Andrew Ivins Add Timeline Events Timeline Add Stats Stats Year 2025 2024 TOTAL Rec RecYds RecTD 48 701 8 32 547 5 80 1248 13 Add Photos View all articles CBS Sports Digital YouTube Facebook X Instagram TikTok CBS Sports Betting Podcast Newsletter Text Alert About Contact Us Advertisers Help Center Careers Privacy Policy Minors&apos; Privacy Policy California Notice Terms of Use Subscription Terms cbsoptanon.ot.showPreferenceCenter()}>Your Privacy Choices &copy; 2005-2026 CBS INTERACTIVE ALL RIGHTS RESERVED. CBS Sports is a registered trademark of CBS Broadcasting Inc. 247Sports is a registered service mark of CBT Sports, LLC. Scout is a registered service mark of CBS 247 Inc. Fans Only is a registered service mark of CSTV Online, Inc. The content on this site is for entertainment purposes only and 247Sports makes no representation or warranty as to the accuracy of the information given or the outcome of any game or event. There is no gambling offered on this site. This site contains commercial content and 247Sports may be compensated for the links provided on this site. Timer List",
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:16.894Z"
+      "updatedAt": "2026-06-28T03:01:56.933Z"
     },
     "kaden-henderson": {
       "playerSlug": "kaden-henderson",
@@ -4173,7 +4220,7 @@
           "writerId": "bender",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/tranard-roberts-239139/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -4189,7 +4236,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:03.079Z"
+      "updatedAt": "2026-06-28T03:01:53.058Z"
     },
     "emanuel-ruffin": {
       "playerSlug": "emanuel-ruffin",
@@ -4819,7 +4866,7 @@
           "writerId": "bellaire",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/raheem-floyd-242853/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -4834,7 +4881,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:04:54.731Z"
+      "updatedAt": "2026-06-28T03:01:51.114Z"
     },
     "isaac-mcneil": {
       "playerSlug": "isaac-mcneil",
@@ -5376,7 +5423,7 @@
           "writerId": "bender",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/kamauri-whitfield-243836/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -5392,7 +5439,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:08.299Z"
+      "updatedAt": "2026-06-28T03:01:56.324Z"
     },
     "frederick-ards-iii": {
       "playerSlug": "frederick-ards-iii",
@@ -5546,7 +5593,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-28T01:52:41.450Z"
+      "updatedAt": "2026-06-28T03:06:50.627Z"
     },
     "james-bethea": {
       "playerSlug": "james-bethea",
@@ -5559,7 +5606,7 @@
           "writerId": "simmons",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/james-bethea-243832/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -5575,7 +5622,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:41.959Z"
+      "updatedAt": "2026-06-28T03:01:58.824Z"
     },
     "cooper-hackett": {
       "playerSlug": "cooper-hackett",
@@ -9581,7 +9628,7 @@
           "writerId": "ivins",
           "outlet": "247Sports",
           "url": "https://247sports.com/player/elijah-guertin-46159939/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -9596,7 +9643,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": true,
-      "updatedAt": "2026-06-27T21:05:46.282Z"
+      "updatedAt": "2026-06-28T03:01:59.365Z"
     },
     "lawrence-britt": {
       "playerSlug": "lawrence-britt",
@@ -9860,26 +9907,35 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
-          "url": "https://www.on3.com",
-          "publishedAt": "2026-06-24"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 / Rivals",
+          "url": "https://www.on3.com/rivals/cahron-wheeler-282819/",
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "Miami is still working to wrap up an elite recruiting class this cycle, but while doing that, they are getting off to a strong start in 2028 and"
+        "Big EDGE prospect with a projectable combination of size and athleticism.",
+        "Listed at 6-foot-5, 245 pounds and looks to have the frame to carry much more weight.",
+        "Lines up on the edge for his high school team, playing out of two and three point stances.",
+        "Explosion pops off the film.",
+        "Flashes a high-level first step, beating offensive tackles off the snap with ease.",
+        "Hunts quarterbacks and ball carriers with plus closing speed.",
+        "A coordinated athlete in his upper body, with quick hands and the ability to disengage.",
+        "Shows some natural power, with the ability to fire through his hips on contact."
       ],
-      "weaknesses": [],
+      "weaknesses": [
+        "Will need to continue developing and will benefit from college coaching given his notable upside."
+      ],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "Miami is still working to wrap up an elite recruiting class this cycle, but while doing that, they are getting off to a strong start in 2028 and",
-      "recruitingStory": null,
+      "projection": "Big EDGE prospect with a projectable combination of size and athleticism.",
+      "insiderNotes": "Big EDGE prospect with a projectable combination of size and athleticism. Listed at 6-foot-5, 245 pounds and looks to have the frame to carry much more weight. Lines up on the edge for his high school team, playing out of two and three point stances. Explosion pops off the film. Flashes a high-level first step, beating offensive tackles off the snap with ease. Hunts quarterbacks and ball carriers with plus closing speed. A coordinated athlete in his upper body, with quick hands and the ability to disengage. Shows some natural power, with the ability to fire through his hips on contact. Finishes with good physicality. Uses his length to disrupt passing lanes. Also lined up as a wide receiver, showing his athleticism. Doubles as a very good basketball player. Does not play top competition on the gridiron at his high school. Has more unknowns than some other national prospects given his later rise. Will need to continue developing and will benefit from college coaching given his notable upside.",
+      "recruitingStory": "Committed to Florida on 2026-06-05 · Baltimore, MD",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:33.633Z"
+      "featured": false,
+      "updatedAt": "2026-06-28T17:36:34.285Z"
     },
     "alijah-jones": {
       "playerSlug": "alijah-jones",
@@ -12876,7 +12932,7 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/tristin-gaines-260667/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -12891,7 +12947,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:59.536Z"
+      "updatedAt": "2026-06-28T03:02:18.448Z"
     },
     "jordon-gorham": {
       "playerSlug": "jordon-gorham",
@@ -12904,7 +12960,7 @@
           "writerId": "simmons",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/jordon-gorham-259816/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -12920,7 +12976,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:05.104Z"
+      "updatedAt": "2026-06-28T03:02:23.516Z"
     },
     "anthony-howard-jr": {
       "playerSlug": "anthony-howard-jr",
@@ -12933,7 +12989,7 @@
           "writerId": "simmons",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/anthony-howard-jr-243380/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -12948,7 +13004,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:05.888Z"
+      "updatedAt": "2026-06-28T03:02:25.058Z"
     },
     "pj-evans": {
       "playerSlug": "pj-evans",
@@ -12961,7 +13017,7 @@
           "writerId": "power",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/pj-evans-248892/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -12977,7 +13033,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:04.537Z"
+      "updatedAt": "2026-06-28T03:02:24.472Z"
     },
     "braxton-rein": {
       "playerSlug": "braxton-rein",
@@ -12990,7 +13046,7 @@
           "writerId": "ivins",
           "outlet": "247Sports",
           "url": "https://247sports.com/player/braxton-rein-46152758/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -13005,7 +13061,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:59.871Z"
+      "updatedAt": "2026-06-28T03:02:18.142Z"
     },
     "andre-alexander": {
       "playerSlug": "andre-alexander",
@@ -13018,23 +13074,23 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "The Longhorns are one of the hottest teams on the recruiting trail this summer.",
-        "Texas bolstered its top-10 recruiting class with another key piece"
+        "Ole Miss is stacking talent in its 2027 recruiting class.",
+        "The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after"
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Longhorns are one of the hottest teams on the recruiting trail this summer.  Texas bolstered its top-10 recruiting class with another key piece",
+      "insiderNotes": "Ole Miss is stacking talent in its 2027 recruiting class.  The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after",
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:53.891Z"
+      "updatedAt": "2026-06-28T03:02:14.708Z"
     },
     "izayah-vickers": {
       "playerSlug": "izayah-vickers",
@@ -13047,23 +13103,23 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "The Longhorns are one of the hottest teams on the recruiting trail this summer.",
-        "Texas bolstered its top-10 recruiting class with another key piece"
+        "Ole Miss is stacking talent in its 2027 recruiting class.",
+        "The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after"
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Longhorns are one of the hottest teams on the recruiting trail this summer.  Texas bolstered its top-10 recruiting class with another key piece",
+      "insiderNotes": "Ole Miss is stacking talent in its 2027 recruiting class.  The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after",
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:58.512Z"
+      "updatedAt": "2026-06-28T03:02:16.753Z"
     },
     "tristian-henderson": {
       "playerSlug": "tristian-henderson",
@@ -13076,7 +13132,7 @@
           "writerId": "simmons",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/tristian-henderson-261828/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -13091,7 +13147,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:00.174Z"
+      "updatedAt": "2026-06-28T03:02:19.067Z"
     },
     "john-matthews": {
       "playerSlug": "john-matthews",
@@ -13104,7 +13160,7 @@
           "writerId": "bender",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/john-matthews-260548/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -13120,7 +13176,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:01.148Z"
+      "updatedAt": "2026-06-28T03:02:21.066Z"
     },
     "quinton-rolle-jr": {
       "playerSlug": "quinton-rolle-jr",
@@ -13133,23 +13189,23 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "The Longhorns are one of the hottest teams on the recruiting trail this summer.",
-        "Texas bolstered its top-10 recruiting class with another key piece"
+        "Ole Miss is stacking talent in its 2027 recruiting class.",
+        "The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after"
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Longhorns are one of the hottest teams on the recruiting trail this summer.  Texas bolstered its top-10 recruiting class with another key piece",
+      "insiderNotes": "Ole Miss is stacking talent in its 2027 recruiting class.  The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after",
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:09.628Z"
+      "updatedAt": "2026-06-28T03:02:23.738Z"
     },
     "bubba-brown": {
       "playerSlug": "bubba-brown",
@@ -13162,7 +13218,7 @@
           "writerId": "bellaire",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/bubba-brown-250868/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -13177,7 +13233,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:53.600Z"
+      "updatedAt": "2026-06-28T03:02:13.586Z"
     },
     "kahmaree-crumity": {
       "playerSlug": "kahmaree-crumity",
@@ -13190,23 +13246,23 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "The Longhorns are one of the hottest teams on the recruiting trail this summer.",
-        "Texas bolstered its top-10 recruiting class with another key piece"
+        "Ole Miss is stacking talent in its 2027 recruiting class.",
+        "The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after"
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Longhorns are one of the hottest teams on the recruiting trail this summer.  Texas bolstered its top-10 recruiting class with another key piece",
+      "insiderNotes": "Ole Miss is stacking talent in its 2027 recruiting class.  The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after",
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:12.818Z"
+      "updatedAt": "2026-06-28T03:02:25.299Z"
     },
     "bryce-willingham": {
       "playerSlug": "bryce-willingham",
@@ -13219,23 +13275,23 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "The Longhorns are one of the hottest teams on the recruiting trail this summer.",
-        "Texas bolstered its top-10 recruiting class with another key piece"
+        "Ole Miss is stacking talent in its 2027 recruiting class.",
+        "The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after"
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Longhorns are one of the hottest teams on the recruiting trail this summer.  Texas bolstered its top-10 recruiting class with another key piece",
+      "insiderNotes": "Ole Miss is stacking talent in its 2027 recruiting class.  The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after",
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:07.724Z"
+      "updatedAt": "2026-06-28T03:02:24.006Z"
     },
     "prince-che": {
       "playerSlug": "prince-che",
@@ -13248,7 +13304,7 @@
           "writerId": "power",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/prince-che-280932/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -13263,7 +13319,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:52.154Z"
+      "updatedAt": "2026-06-28T03:02:11.486Z"
     },
     "armani-strong": {
       "playerSlug": "armani-strong",
@@ -13276,23 +13332,23 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "The Longhorns are one of the hottest teams on the recruiting trail this summer.",
-        "Texas bolstered its top-10 recruiting class with another key piece"
+        "Ole Miss is stacking talent in its 2027 recruiting class.",
+        "The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after"
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Longhorns are one of the hottest teams on the recruiting trail this summer.  Texas bolstered its top-10 recruiting class with another key piece",
+      "insiderNotes": "Ole Miss is stacking talent in its 2027 recruiting class.  The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after",
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:01.516Z"
+      "updatedAt": "2026-06-28T03:02:19.377Z"
     },
     "dominick-harris-payne": {
       "playerSlug": "dominick-harris-payne",
@@ -13305,23 +13361,23 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "The Longhorns are one of the hottest teams on the recruiting trail this summer.",
-        "Texas bolstered its top-10 recruiting class with another key piece"
+        "Ole Miss is stacking talent in its 2027 recruiting class.",
+        "The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after"
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Longhorns are one of the hottest teams on the recruiting trail this summer.  Texas bolstered its top-10 recruiting class with another key piece",
+      "insiderNotes": "Ole Miss is stacking talent in its 2027 recruiting class.  The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after",
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:02.403Z"
+      "updatedAt": "2026-06-28T03:02:21.408Z"
     },
     "gabriel-player": {
       "playerSlug": "gabriel-player",
@@ -13334,23 +13390,23 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "The Longhorns are one of the hottest teams on the recruiting trail this summer.",
-        "Texas bolstered its top-10 recruiting class with another key piece"
+        "Ole Miss is stacking talent in its 2027 recruiting class.",
+        "The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after"
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Longhorns are one of the hottest teams on the recruiting trail this summer.  Texas bolstered its top-10 recruiting class with another key piece",
+      "insiderNotes": "Ole Miss is stacking talent in its 2027 recruiting class.  The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after",
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:53.196Z"
+      "updatedAt": "2026-06-28T03:02:14.433Z"
     },
     "brady-quinn": {
       "playerSlug": "brady-quinn",
@@ -13363,7 +13419,7 @@
           "writerId": "ivins",
           "outlet": "247Sports",
           "url": "https://247sports.com/Player/brady-quinn-46148149/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -13378,7 +13434,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:05.361Z"
+      "updatedAt": "2026-06-28T03:02:21.581Z"
     },
     "kaleb-ballard": {
       "playerSlug": "kaleb-ballard",
@@ -13391,7 +13447,7 @@
           "writerId": "bender",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/kaleb-ballard-286499/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -13406,7 +13462,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:43.365Z"
+      "updatedAt": "2026-06-28T03:02:08.904Z"
     },
     "brysen-wright": {
       "playerSlug": "brysen-wright",
@@ -13419,7 +13475,7 @@
           "writerId": "power",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/brysen-wright-242341/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -13443,7 +13499,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:48.997Z"
+      "updatedAt": "2026-06-28T03:02:09.512Z"
     },
     "asher-ghioto": {
       "playerSlug": "asher-ghioto",
@@ -13456,7 +13512,7 @@
           "writerId": "ivins",
           "outlet": "247Sports",
           "url": "https://247sports.com/Player/asher-ghioto-46147706/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -13473,7 +13529,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:51.429Z"
+      "updatedAt": "2026-06-28T03:02:11.981Z"
     },
     "cassell-cruickshank": {
       "playerSlug": "cassell-cruickshank",
@@ -13486,7 +13542,7 @@
           "writerId": "bellaire",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/cassell-cruickshank-282316/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -13506,7 +13562,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:51.556Z"
+      "updatedAt": "2026-06-28T03:02:10.776Z"
     },
     "malakhi-dudley": {
       "playerSlug": "malakhi-dudley",
@@ -13519,7 +13575,7 @@
           "writerId": "simmons",
           "outlet": "On3",
           "url": "https://www.on3.com/rivals/malakhi-dudley-244236/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -13535,7 +13591,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:58.072Z"
+      "updatedAt": "2026-06-28T03:02:15.299Z"
     },
     "zyon-robinson": {
       "playerSlug": "zyon-robinson",
@@ -15434,23 +15490,23 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "The Longhorns are one of the hottest teams on the recruiting trail this summer.",
-        "Texas bolstered its top-10 recruiting class with another key piece"
+        "Ole Miss is stacking talent in its 2027 recruiting class.",
+        "The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after"
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Longhorns are one of the hottest teams on the recruiting trail this summer.  Texas bolstered its top-10 recruiting class with another key piece",
+      "insiderNotes": "Ole Miss is stacking talent in its 2027 recruiting class.  The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after",
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:05:54.776Z"
+      "updatedAt": "2026-06-28T03:02:16.174Z"
     },
     "jaylen-francis": {
       "playerSlug": "jaylen-francis",
@@ -15840,7 +15896,7 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
@@ -15856,7 +15912,7 @@
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T23:36:20.871Z"
+      "updatedAt": "2026-06-28T03:06:53.984Z"
     },
     "andrew-whittemore": {
       "playerSlug": "andrew-whittemore",
@@ -16304,23 +16360,23 @@
           "writerId": "spiegelman",
           "outlet": "On3",
           "url": "https://www.on3.com",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-28"
         }
       ],
       "strengths": [
-        "The Longhorns are one of the hottest teams on the recruiting trail this summer.",
-        "Texas bolstered its top-10 recruiting class with another key piece"
+        "Ole Miss is stacking talent in its 2027 recruiting class.",
+        "The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after"
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Longhorns are one of the hottest teams on the recruiting trail this summer.  Texas bolstered its top-10 recruiting class with another key piece",
+      "insiderNotes": "Ole Miss is stacking talent in its 2027 recruiting class.  The Rebels' newest addition is four-star WR Alvin Mosley, who committed on Saturday after",
       "recruitingStory": null,
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-27T21:06:00.695Z"
+      "updatedAt": "2026-06-28T03:02:20.116Z"
     }
   }
 }

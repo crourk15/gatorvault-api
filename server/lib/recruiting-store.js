@@ -275,7 +275,30 @@ async function getHubCommits(classYear) {
   const merged = mergeCommitPlayerLists(snapshotCommits, fromStore);
   let filtered = filterHubCommitPlayers(merged, year);
   filtered = filterSnapshotAuthoritativeCommits(filtered, snapshotCommits, year);
+  filtered = overlayJsonIntelFields(filtered);
   return filtered;
+}
+
+/** Merge nil + other JSON-only intel when Supabase rows omit extended fields. */
+function overlayJsonIntelFields(players) {
+  let local;
+  try {
+    local = readJson(PLAYERS_PATH, []);
+  } catch {
+    return players;
+  }
+  const bySlug = new Map(local.map((p) => [p.slug, p]));
+  return (players || []).map((p) => {
+    const src = bySlug.get(p.slug);
+    if (!src) return p;
+    const patch = {};
+    if (src.nilValue != null && p.nilValue == null) {
+      patch.nilValue = Number(src.nilValue);
+      patch.nilEstimate = Number(src.nilEstimate ?? src.nilValue);
+      patch.nilSource = src.nilSource || 'on3-profile';
+    }
+    return Object.keys(patch).length ? { ...p, ...patch } : p;
+  });
 }
 
 /** HS signing-class commits only — excludes portal signees (portal has its own board). */
@@ -360,6 +383,15 @@ function normalizePlayer(raw) {
     stateFips: raw.stateFips || raw.state_fips || null,
     pinLat: raw.pinLat != null ? Number(raw.pinLat) : raw.lat != null ? Number(raw.lat) : null,
     pinLng: raw.pinLng != null ? Number(raw.pinLng) : raw.lng != null ? Number(raw.lng) : null,
+    nilValue:
+      raw.nilValue != null && Number.isFinite(Number(raw.nilValue)) ? Number(raw.nilValue) : null,
+    nilEstimate:
+      raw.nilEstimate != null && Number.isFinite(Number(raw.nilEstimate))
+        ? Number(raw.nilEstimate)
+        : raw.nilValue != null && Number.isFinite(Number(raw.nilValue))
+          ? Number(raw.nilValue)
+          : null,
+    nilSource: raw.nilSource || raw.nil_source || null,
     updatedAt: raw.updatedAt || raw.updated_at || nowIso()
   };
   const geoPatch = normalizePlayerGeo({ ...raw, ...player });

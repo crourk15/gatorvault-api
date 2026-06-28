@@ -62,10 +62,18 @@ function mergeWarRoomFields(player, enriched) {
   const weaknesses = Array.isArray(breakdown.weaknesses)
     ? breakdown.weaknesses.filter((s) => s && isVerifiedScoutingTrait(String(s), enriched.name))
     : [];
+  const projection =
+    breakdown.projection && !isGenericBeatArticle(String(breakdown.projection), enriched.name)
+      ? String(breakdown.projection).trim()
+      : null;
+  const playerComp = breakdown.comparison || enriched.playerComp || null;
   return {
     ...enriched,
     strengths,
     weaknesses,
+    projection: projection || enriched.projection || null,
+    playerComp,
+    insiderNotes: notesOk ? String(evaluatorNotes).trim() : enriched.insiderNotes || null,
     evaluatorNotes,
     skinny: enriched.skinny || (notesOk ? String(evaluatorNotes).slice(0, 280) : null),
     profileNote: enriched.profileNote || breakdown.recruitingStory || null,
@@ -121,6 +129,8 @@ function enrichPlayer(player, isCommit, staffMode) {
     projection: player.projection || null,
     jerseyNumber: player.jerseyNumber ?? player.jersey ?? null,
     vaultGrade: player.vaultGrade ?? null,
+    nilValue: player.nilValue ?? null,
+    nilEstimate: player.nilEstimate ?? player.nilValue ?? null,
     movementDirection:
       player.movementDirection ??
       (player.interestMeter === 'rising' ? 'up' : player.interestMeter === 'falling' ? 'down' : 'flat'),

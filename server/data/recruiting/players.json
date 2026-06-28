@@ -1534,7 +1534,10 @@
     "updatedAt": "2026-06-27T21:05:57.421Z",
     "state": "FL",
     "displayRating": 92.26666666666667,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "nilValue": 377032,
+    "nilEstimate": 377032,
+    "nilSource": "on3-profile"
   },
   {
     "id": "devoun-kendrick",
@@ -2332,7 +2335,10 @@
     "updatedAt": "2026-06-27T21:05:57.619Z",
     "state": "PA",
     "displayRating": 98.54623655913979,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "nilValue": 509876,
+    "nilEstimate": 509876,
+    "nilSource": "on3-profile"
   },
   {
     "id": "peyton-miller",

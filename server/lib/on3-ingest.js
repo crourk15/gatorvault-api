@@ -256,6 +256,8 @@ async function syncBoardCommitsToPlayers(commits) {
       on3Slug: p.on3Slug || existing?.on3Slug || null,
       on3ProfileUrl: buildOn3ProfileUrl({ ...p, slug }),
       on3Source: 'on3-board-sync',
+      nilValue: p.nilValue ?? existing?.nilValue ?? null,
+      nilEstimate: p.nilValue ?? existing?.nilEstimate ?? null,
       skinny: buildSkinny(p),
       starsDisplay: starsDisplay(p.stars),
       updatedAt: new Date().toISOString()

@@ -16,6 +16,7 @@
     "deploy:smoke": "node scripts/deploy-smoke-post.js",
     "verify:deployment": "node scripts/verify-deployment.js",
     "seed:recruiting": "node scripts/seed-recruiting.js",
+    "seed:hub-intel": "node scripts/seed-hub-intel-from-on3.js --year=2027",
     "sync:editorial-positions": "node scripts/sync-underclassmen-editorial-positions.js",
     "sync:allowlist-on3": "node scripts/run-allowlist-on3-sync.js",
     "backfill:allowlist-intel-skinny": "node scripts/backfill-allowlist-intel-skinny.js",

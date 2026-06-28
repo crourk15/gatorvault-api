@@ -90,7 +90,7 @@ const JUNK_INTEL_PATTERNS = [
 ];
 
 const SCOUTING_TRAIT_KEYWORDS =
-  /\b(speed|burst|frame|hands|length|power|athletic|technique|rush|coverage|blocking|route|vision|IQ|instincts|explosive|agile|size|strength|tackle|pass|run|block|catch|throw|arm|accuracy|mobility|footwork|pad level|leverage|motor|effort|competitive|physical|wins|creates|disrupts|quick|fast|strong|violent|flexible|aware|smart|instinctive|productive|consistent|elite|plus|prototypical|scheme|versatile|instinct|balance|coordination|acceleration|change of direction|COD|wins with|plays through|high point|ball skills|pass rush|run stop|run fit|block shed|get off|first step|hip fluidity|body control|toughness|intangibles|leadership|work ethic|coachable)\b/i;
+  /\b(speed|burst|frame|hands|length|power|athletic|technique|rush|coverage|blocking|route|vision|IQ|instincts|explosive|agile|size|strength|tackle|pass|run|block|catch|throw|arm|accuracy|mobility|footwork|pad level|leverage|motor|effort|competitive|physical|wins|creates|disrupts|quick|fast|strong|violent|flexible|aware|smart|instinctive|productive|consistent|elite|plus|prototypical|scheme|versatile|instinct|balance|coordination|acceleration|change of direction|COD|wins with|plays through|high point|ball skills|pass rush|run stop|run fit|block shed|get off|first step|hip fluidity|body control|toughness|intangibles|leadership|work ethic|coachable|upside|projectable|finishes|disengage|closing speed|coordination|physicality)\b/i;
 
 const SCOUTING_TRAIT_REJECT = [
   /official visit/i,
@@ -155,7 +155,7 @@ function firstVerifiedIntel(player, fields, playerName) {
 /** Scouting trait line — not visit news or program-level beat copy. */
 function isVerifiedScoutingTrait(text, playerName) {
   const s = String(text || '').trim();
-  if (!s || s.length < 4 || s.length > 120) return false;
+  if (!s || s.length < 4 || s.length > 250) return false;
   if (isGenericBeatArticle(s, playerName)) return false;
   if (SCOUTING_TRAIT_REJECT.some((re) => re.test(s))) return false;
   return SCOUTING_TRAIT_KEYWORDS.test(s);
