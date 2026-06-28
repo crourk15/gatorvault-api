@@ -2,10 +2,11 @@
 
 import React, { useCallback } from 'react';
 import type { RhHubBattleBoardItem } from '@/lib/recruiting-hub-elite-api';
+import { fetchRecruitingHubBattleBoard } from '@/lib/recruiting-hub-elite-api';
 import { getBattleColor } from '@/lib/recruiting-hub-scoring';
-import { fetchRecruitingBattles } from '@/lib/recruiting-ui-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
+import { UiWarming } from '@/components/site/UiMessage';
 
 const DIFFICULTY_LABELS: Record<RhHubBattleBoardItem['battleDifficulty'], string> = {
   easy: 'Easy',
@@ -80,10 +81,10 @@ function BattleCard({ battle }: { battle: RhHubBattleBoardItem }): React.ReactEl
 export function BattleBoard(): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
   const selectBattles = useCallback((b: { battleBoard: RhHubBattleBoardItem[] }) => b.battleBoard, []);
-  const fetchBattles = useCallback(async (year: number) => {
-    const res = await fetchRecruitingBattles(year);
-    return res.items ?? [];
-  }, []);
+  const fetchBattles = useCallback(
+    (year: number) => fetchRecruitingHubBattleBoard(year),
+    []
+  );
   const { data, loading, error } = useHubBundleSection({
     select: selectBattles,
     fetchFallback: fetchBattles,
@@ -98,7 +99,9 @@ export function BattleBoard(): React.ReactElement {
         </div>
       </div>
       {loading ? (
-        <div className="rh-skeleton" data-testid="rh-elite-battle-board" aria-hidden="true" />
+        <div className="rh-hub-warming" role="status" aria-live="polite" aria-busy="true">
+          <UiWarming hint="Loading battle board…" />
+        </div>
       ) : !data ? (
         <section className="rh-card" data-testid="rh-elite-battle-board">
           <p className="rh-empty">{error ? 'Could not load battle board.' : 'Battle board unavailable.'}</p>

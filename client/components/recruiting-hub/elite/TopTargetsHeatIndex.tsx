@@ -2,9 +2,10 @@
 
 import React, { useCallback } from 'react';
 import type { RhHubHeatTarget } from '@/lib/recruiting-hub-elite-api';
-import { fetchHeatIndex } from '@/lib/recruiting-ui-api';
+import { fetchRecruitingHubHeatIndex } from '@/lib/recruiting-hub-elite-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
+import { UiWarming } from '@/components/site/UiMessage';
 
 function heatBandClass(heat: number): string {
   if (heat >= 70) return 'rh-heat-fill--hot';
@@ -73,10 +74,7 @@ export function TopTargetsHeatIndex(): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
   const selectHeat = useCallback((b: { heatIndex: RhHubHeatTarget[] }) => b.heatIndex, []);
   const fetchHeat = useCallback(
-    async (year: number) => {
-      const res = await fetchHeatIndex(year);
-      return res.items ?? [];
-    },
+    (year: number) => fetchRecruitingHubHeatIndex(year),
     []
   );
   const { data, loading, error } = useHubBundleSection({
@@ -93,7 +91,9 @@ export function TopTargetsHeatIndex(): React.ReactElement {
         </div>
       </div>
       {loading ? (
-        <div className="rh-skeleton" data-testid="rh-elite-heat-index" aria-hidden="true" />
+        <div className="rh-hub-warming" role="status" aria-live="polite" aria-busy="true">
+          <UiWarming hint="Loading heat index…" />
+        </div>
       ) : !data ? (
         <section className="rh-card" data-testid="rh-elite-heat-index">
           <p className="rh-empty">{error ? 'Could not load heat index.' : 'Heat index updating — check back shortly.'}</p>

@@ -81,6 +81,8 @@ const {
   verifiedStrengthsList,
 } = require('./recruiting-intel-quality');
 
+const RANK_LINE_SEP = ' | ';
+
 function fallbackCommitBlurb(player) {
   const pos = playerPos(player);
   const stars = effectiveStars(player) || 0;
@@ -91,8 +93,8 @@ function fallbackCommitBlurb(player) {
   const state = player.stateRank;
   if (state != null) parts.push(`#${state} in state`);
   if (player.school) parts.push(String(player.school).trim());
-  if (parts.length) return parts.join(' · ');
-  return `NATL ${formatRank(natl)} · POS ${formatRank(player.posRank)} (${pos})`;
+  if (parts.length) return parts.join(RANK_LINE_SEP);
+  return `NATL ${formatRank(natl)}${RANK_LINE_SEP}POS ${formatRank(player.posRank)} (${pos})`;
 }
 
 function distinctIntel(primary, playerName, ...candidates) {

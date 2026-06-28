@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from 'react';
 import { ComposableMap, Geographies } from 'react-simple-maps';
 import type { RhHubFootprintResponse, RhHubFootprintState } from '@/lib/recruiting-hub-elite-api';
-import { fetchRecruitingFootprint } from '@/lib/recruiting-ui-api';
+import { fetchRecruitingHubFootprint } from '@/lib/recruiting-hub-elite-api';
 import { useRecruitingClassYear } from '@/lib/recruiting-class-year-store';
 import { useHubBundleSection } from '@/components/recruiting-hub/elite/useHubBundleSection';
 import { StateHeatLayer } from './StateHeatLayer';
@@ -89,7 +89,10 @@ function FootprintTooltip({ state }: { state: RhHubFootprintState }): React.Reac
 export function RecruitingFootprintMap(): React.ReactElement {
   const { activeYear } = useRecruitingClassYear();
   const selectFootprint = useCallback((b: { footprint: RhHubFootprintResponse }) => b.footprint, []);
-  const fetchFootprint = useCallback((year: number) => fetchRecruitingFootprint(year), []);
+  const fetchFootprint = useCallback(
+    (year: number) => fetchRecruitingHubFootprint(year),
+    []
+  );
   const { data: footprint, loading, error } = useHubBundleSection({
     select: selectFootprint,
     fetchFallback: fetchFootprint,

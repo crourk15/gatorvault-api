@@ -6,6 +6,7 @@ import {
   snapshotFirstFetch,
   snapshotLiveFetch,
 } from './snapshot-fetch';
+import { fetchWithWarmPoll } from './api-warm-poll';
 import { ACTIVE_RECRUITING_CLASS_YEAR } from '@/lib/recruiting-cycle';
 
 export type RhHubClassOverview = {
@@ -203,7 +204,7 @@ const HUB_FETCH_OPTS = DEFAULT_SNAPSHOT_FETCH_OPTS;
 export const HUB_BUNDLE_FETCH_OPTS = { retries: 3, timeoutMs: 25_000, retryDelayMs: 2_500 } as const;
 
 function fetchHubLive<T>(path: string): Promise<T> {
-  return snapshotLiveFetch<T>(path, HUB_FETCH_OPTS);
+  return fetchWithWarmPoll(() => snapshotLiveFetch<T>(path, HUB_FETCH_OPTS));
 }
 
 /** Live recruiting hub API (no static snapshot fallback). */
