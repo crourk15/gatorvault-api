@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const store = require('./recruiting-store');
 const on3Recruit = require('./on3-recruit-client');
-const { rebuildPlayerIdentityFromOn3, validatePlayerIdentityRecord } = require('./identity-record-validator');
+const { rebuildPlayerIdentityFromOn3, validatePlayerIdentityRecord, applyCanonicalFixup } = require('./identity-record-validator');
 const {
   ALLOWLIST_2027,
   ALLOWLIST_2028,
@@ -15,7 +15,7 @@ const {
 const { applyEditorialPositionToPlayer } = require('./recruiting-editorial-positions');
 const { isPlaceholderSchool } = require('./recruiting-placeholder-school');
 const { discoverOn3RecruitSlug, profileToSchoolPatch } = require('./on3-recruit-discovery');
-const { persistAllowlistPlayerToJson } = require('./allowlist-school-persist');
+const { persistAllowlistPlayerToJson, applyAllowlistIntelSkinny } = require('./allowlist-school-persist');
 const { isFloridaSchool, isActiveUfTarget, isCommittedElsewhere } = require('./recruiting-target-filters');
 const monitoring = require('./recruiting-monitoring');
 
@@ -53,10 +53,23 @@ function sleep(ms) {
 }
 
 function allowlistJobs() {
-  return [
+  const { loadAdminAllowlist } = require('./admin-allowlist-store');
+  const admin = loadAdminAllowlist();
+  const jobs = [
     ...ALLOWLIST_2027.map((slug) => ({ slug, classYear: 2027 })),
     ...ALLOWLIST_2028.map((slug) => ({ slug, classYear: 2028 })),
   ];
+  for (const slug of admin.slugs2027 || []) {
+    if (!jobs.some((job) => job.slug === slug && job.classYear === 2027)) {
+      jobs.push({ slug, classYear: 2027 });
+    }
+  }
+  for (const slug of admin.slugs2028 || []) {
+    if (!jobs.some((job) => job.slug === slug && job.classYear === 2028)) {
+      jobs.push({ slug, classYear: 2028 });
+    }
+  }
+  return jobs;
 }
 
 function profilePatchFromOn3(profile, classYear) {
@@ -132,7 +145,7 @@ function mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, cl
   ) {
     merged.school = existing.school;
   }
-  return merged;
+  return applyCanonicalFixup(slug, merged);
 }
 
 async function buildProfilePatchFromDiscovery(slug, classYear, existing, playerName) {
@@ -188,7 +201,9 @@ async function syncSlugFromOn3Fast(slug, classYear) {
     }
   }
 
-  const merged = mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, classYear, playerName);
+  const merged = applyAllowlistIntelSkinny(
+    mergeAllowlistPlayerPatch(existing, localPlayer, profilePatch, slug, classYear, playerName)
+  );
   const validation = validatePlayerIdentityRecord(merged);
   if (!validation.valid || isPlaceholderSchool(merged.school)) {
     return null;
@@ -280,23 +295,25 @@ async function syncSlugFromOn3(slug, classYear) {
     const committedTo = profilePatch.committedTo ?? p.committedTo ?? existing?.committedTo ?? null;
     const ufCommitted = committedTo && isFloridaSchool(committedTo);
 
-    let merged = applyEditorialPositionToPlayer({
-      ...existing,
-      ...p,
-      ...profilePatch,
-      slug,
-      classYear,
-      name: p.name || profilePatch.name || playerName,
-      pos: profilePatch.pos || p.pos || existing?.pos,
-      committedTo: ufCommitted ? 'Florida' : committedTo,
-      status: committedTo ? 'committed' : 'uncommitted',
-      category: committedTo ? 'recruit' : 'target',
-      commitDate: profilePatch.commitDate ?? p.commitDate ?? existing?.commitDate ?? null,
-      commitmentSyncAt: new Date().toISOString(),
-      commitmentSource: profilePatch.committedTo ? 'on3-allowlist-sync' : existing?.commitmentSource || null,
-      on3Source: profilePatch.on3Source || 'on3-allowlist-sync',
-      updatedAt: new Date().toISOString(),
-    });
+    let merged = applyAllowlistIntelSkinny(
+      applyEditorialPositionToPlayer({
+        ...existing,
+        ...p,
+        ...profilePatch,
+        slug,
+        classYear,
+        name: p.name || profilePatch.name || playerName,
+        pos: profilePatch.pos || p.pos || existing?.pos,
+        committedTo: ufCommitted ? 'Florida' : committedTo,
+        status: committedTo ? 'committed' : 'uncommitted',
+        category: committedTo ? 'recruit' : 'target',
+        commitDate: profilePatch.commitDate ?? p.commitDate ?? existing?.commitDate ?? null,
+        commitmentSyncAt: new Date().toISOString(),
+        commitmentSource: profilePatch.committedTo ? 'on3-allowlist-sync' : existing?.commitmentSource || null,
+        on3Source: profilePatch.on3Source || 'on3-allowlist-sync',
+        updatedAt: new Date().toISOString(),
+      })
+    );
 
     if (
       isPlaceholderSchool(merged.school) &&
@@ -305,6 +322,8 @@ async function syncSlugFromOn3(slug, classYear) {
     ) {
       merged.school = existing.school;
     }
+
+    merged = applyCanonicalFixup(slug, merged);
 
     await store.upsertPlayer(merged);
 

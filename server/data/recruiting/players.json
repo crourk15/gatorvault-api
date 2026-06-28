@@ -1980,14 +1980,14 @@
     "category": "target",
     "status": "uncommitted",
     "committedTo": null,
-    "fromSchool": null,
+    "fromSchool": "Texas Tech",
     "commitDate": null,
-    "skinny": "5★ DL · #8 nationally · Lake Dallas, TX · UF official visit on calendar per On3.",
+    "skinny": "5★ DL · #8 natl · Lake Dallas, TX · UF official visit on calendar per On3.",
     "profileNote": "",
-    "on3Id": 242708,
+    "on3Id": "242708",
     "on3Slug": "jalen-brewster-242708",
     "on3ProfileUrl": "https://www.on3.com/rivals/jalen-brewster-242708/",
-    "on3Source": "player-intel-entry",
+    "on3Source": "on3-board-sync",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -2008,10 +2008,11 @@
     "stateFips": "48",
     "pinLat": 31.054487,
     "pinLng": -97.563461,
-    "updatedAt": "2026-06-28T01:52:32.835Z",
+    "updatedAt": "2026-06-28T03:06:41.900Z",
     "state": "TX",
     "displayRating": 98.62849462365591,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "5★ DL · #8 natl · Lake Dallas HS, TX"
   },
   {
     "id": "jaydee-lane",
@@ -2220,10 +2221,11 @@
     "stateFips": "12",
     "pinLat": 33.040619,
     "pinLng": -83.643074,
-    "updatedAt": "2026-06-27T21:05:57.562Z",
+    "updatedAt": "2026-06-28T03:01:48.188Z",
     "state": "FL",
     "displayRating": 87.1,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ CB · #175 natl · The First Academy, FL"
   },
   {
     "id": "marquis-evans",
@@ -2273,10 +2275,11 @@
     "stateFips": "01",
     "pinLat": 32.806671,
     "pinLng": -86.79113,
-    "updatedAt": "2026-06-27T21:05:57.590Z",
+    "updatedAt": "2026-06-28T03:01:43.794Z",
     "state": "AL",
     "displayRating": 89.37572463768115,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ EDGE · On3 AL state No. 16 · Spain Park, AL"
   },
   {
     "id": "maxwell-hiller",
@@ -2432,10 +2435,11 @@
     "stateFips": "17",
     "pinLat": 40.349457,
     "pinLng": -88.986137,
-    "updatedAt": "2026-06-27T21:04:34.781Z",
+    "updatedAt": "2026-06-28T03:01:43.028Z",
     "state": "IL",
     "displayRating": 91.42355072463768,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ CB · #200 natl · East St. Louis, IL"
   },
   {
     "id": "stive-bentley-keumajou",
@@ -2724,7 +2728,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ LB · #248 natl · IMG Academy, FL",
     "profileNote": "",
     "on3Id": "240834",
     "on3Slug": "andre-alexander-240834",
@@ -2750,10 +2754,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:44.959Z",
+    "updatedAt": "2026-06-28T03:02:04.973Z",
     "state": "FL",
     "displayRating": 92.24057971014493,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ LB · #248 natl · IMG Academy, FL"
   },
   {
     "id": "anthony-howard-jr",
@@ -2777,7 +2782,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ RB · #392 natl · IMG Academy, FL",
     "profileNote": "",
     "on3Id": "243380",
     "on3Slug": "anthony-howard-jr-243380",
@@ -2803,10 +2808,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:55.721Z",
+    "updatedAt": "2026-06-28T03:02:16.974Z",
     "state": "FL",
     "displayRating": 85.7626811594203,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ RB · #392 natl · IMG Academy, FL"
   },
   {
     "id": "armani-strong",
@@ -2830,7 +2836,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ WR · #304 natl · Chaminade-Madonna Prep, FL",
     "profileNote": "",
     "on3Id": "284115",
     "on3Slug": "armani-strong-284115",
@@ -2856,10 +2862,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:50.759Z",
+    "updatedAt": "2026-06-28T03:02:09.702Z",
     "state": "FL",
     "displayRating": 90.17717391304348,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ WR · #304 natl · Chaminade-Madonna Prep, FL"
   },
   {
     "id": "asher-ghioto",
@@ -2883,7 +2890,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ EDGE · #216 natl · The Bolles School, FL",
     "profileNote": "",
     "on3Id": "242955",
     "on3Slug": "asher-ghioto-242955",
@@ -2909,10 +2916,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:42.462Z",
+    "updatedAt": "2026-06-28T03:02:02.014Z",
     "state": "FL",
     "displayRating": 96.03709677419356,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ EDGE · #216 natl · The Bolles School, FL"
   },
   {
     "id": "brady-quinn",
@@ -2936,7 +2944,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ QB · #336 natl · Chaminade-Madonna Prep, FL",
     "profileNote": "",
     "on3Id": "241081",
     "on3Slug": "brady-quinn-241081",
@@ -2962,10 +2970,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:52.583Z",
+    "updatedAt": "2026-06-28T03:02:11.927Z",
     "state": "FL",
     "displayRating": 88.70471014492753,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ QB · #336 natl · Chaminade-Madonna Prep, FL"
   },
   {
     "id": "braxton-rein",
@@ -2989,7 +2998,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ TE · #288 natl · Baylor School, TN",
     "profileNote": "",
     "on3Id": "261614",
     "on3Slug": "braxton-rein-261614",
@@ -3015,10 +3024,11 @@
     "stateFips": "47",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:49.735Z",
+    "updatedAt": "2026-06-28T03:02:08.179Z",
     "state": "TN",
     "displayRating": 91.01268115942027,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ TE · #288 natl · Baylor School, TN"
   },
   {
     "id": "bryce-willingham",
@@ -3042,7 +3052,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ CB · #352 natl · North Atlanta, GA",
     "profileNote": "",
     "on3Id": "261593",
     "on3Slug": "bryce-willingham-261593",
@@ -3068,10 +3078,11 @@
     "stateFips": "13",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:53.477Z",
+    "updatedAt": "2026-06-28T03:02:13.883Z",
     "state": "GA",
     "displayRating": 86.46014492753623,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ CB · #352 natl · North Atlanta, GA"
   },
   {
     "id": "brysen-wright",
@@ -3095,7 +3106,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "5★ WR · #208 natl · Mandarin, FL",
     "profileNote": "",
     "on3Id": "242341",
     "on3Slug": "brysen-wright-242341",
@@ -3121,10 +3132,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:39.701Z",
+    "updatedAt": "2026-06-28T03:02:01.378Z",
     "state": "FL",
     "displayRating": 97.7731182795699,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "5★ WR · #208 natl · Mandarin, FL"
   },
   {
     "id": "bubba-brown",
@@ -3148,7 +3160,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ WR · #256 natl · Lowndes, GA",
     "profileNote": "",
     "on3Id": "250868",
     "on3Slug": "bubba-brown-250868",
@@ -3174,10 +3186,11 @@
     "stateFips": "13",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:45.515Z",
+    "updatedAt": "2026-06-28T03:02:05.504Z",
     "state": "GA",
     "displayRating": 91.91340579710146,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ WR · #256 natl · Lowndes, GA"
   },
   {
     "id": "cassell-cruickshank",
@@ -3201,7 +3214,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ EDGE · #224 natl · E E Smith, NC",
     "profileNote": "",
     "on3Id": "282316",
     "on3Slug": "cassell-cruickshank-282316",
@@ -3227,10 +3240,11 @@
     "stateFips": "37",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:43.345Z",
+    "updatedAt": "2026-06-28T03:02:02.696Z",
     "state": "NC",
     "displayRating": 95.22258064516129,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ EDGE · #224 natl · E E Smith, NC"
   },
   {
     "id": "dominick-harris-payne",
@@ -3254,7 +3268,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ CB · #328 natl · Lakeland, FL",
     "profileNote": "",
     "on3Id": "249196",
     "on3Slug": "dominick-harris-payne-249196",
@@ -3280,10 +3294,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:52.143Z",
+    "updatedAt": "2026-06-28T03:02:11.388Z",
     "state": "FL",
     "displayRating": 88.98514492753623,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ CB · #328 natl · Lakeland, FL"
   },
   {
     "id": "gabriel-player",
@@ -3307,7 +3322,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ LB · #240 natl · Eau Gallie, FL",
     "profileNote": "",
     "on3Id": "284474",
     "on3Slug": "gabriel-player-284474",
@@ -3333,10 +3348,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:44.520Z",
+    "updatedAt": "2026-06-28T03:02:04.005Z",
     "state": "FL",
     "displayRating": 93.05582047685834,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ LB · #240 natl · Eau Gallie, FL"
   },
   {
     "id": "izayah-vickers",
@@ -3360,7 +3376,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ CB · #272 natl · Florida State Univ. School, FL",
     "profileNote": "",
     "on3Id": "180246",
     "on3Slug": "izayah-vickers-180246",
@@ -3386,10 +3402,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:47.671Z",
+    "updatedAt": "2026-06-28T03:02:06.646Z",
     "state": "FL",
     "displayRating": 91.54710144927536,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ CB · #272 natl · Florida State Univ. School, FL"
   },
   {
     "id": "john-matthews",
@@ -3413,7 +3430,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ WR · #344 natl · Newnan, GA",
     "profileNote": "",
     "on3Id": "260548",
     "on3Slug": "john-matthews-260548",
@@ -3439,10 +3456,11 @@
     "stateFips": "13",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:53.012Z",
+    "updatedAt": "2026-06-28T03:02:12.990Z",
     "state": "GA",
     "displayRating": 88.381884057971,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ WR · #344 natl · Newnan, GA"
   },
   {
     "id": "jordon-gorham",
@@ -3466,7 +3484,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ WR · #368 natl · IMG Academy, FL",
     "profileNote": "",
     "on3Id": "259816",
     "on3Slug": "jordan-gorham-259816",
@@ -3492,10 +3510,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:54.498Z",
+    "updatedAt": "2026-06-28T03:02:14.972Z",
     "state": "FL",
     "displayRating": 86.31702898550725,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ WR · #368 natl · IMG Academy, FL"
   },
   {
     "id": "kahmaree-crumity",
@@ -3519,7 +3538,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ CB · #376 natl · Gadsden County, FL",
     "profileNote": "",
     "on3Id": "261839",
     "on3Slug": "kahmaree-crumity-261839",
@@ -3545,10 +3564,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:54.892Z",
+    "updatedAt": "2026-06-28T03:02:15.497Z",
     "state": "FL",
     "displayRating": 85.96739130434781,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ CB · #376 natl · Gadsden County, FL"
   },
   {
     "id": "kaleb-ballard",
@@ -3572,7 +3592,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ TE · #200 natl · Wetumpka, AL",
     "profileNote": "",
     "on3Id": "286499",
     "on3Slug": "kaleb-ballard-286499",
@@ -3598,10 +3618,11 @@
     "stateFips": "01",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:34.913Z",
+    "updatedAt": "2026-06-28T03:02:00.827Z",
     "state": "AL",
     "displayRating": 92.63260869565217,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ TE · #200 natl · Wetumpka, AL"
   },
   {
     "id": "malakhi-dudley",
@@ -3651,10 +3672,11 @@
     "stateFips": "13",
     "pinLat": 33.6678,
     "pinLng": -84.0177,
-    "updatedAt": "2026-06-27T21:05:49.331Z",
+    "updatedAt": "2026-06-28T03:02:07.225Z",
     "state": "GA",
     "displayRating": 90,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ OT · #204 natl · Heritage High School, GA"
   },
   {
     "id": "pj-evans",
@@ -3678,7 +3700,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ IOL · #384 natl · Jackson Academy, MS",
     "profileNote": "",
     "on3Id": "248892",
     "on3Slug": "pj-evans-248892",
@@ -3704,10 +3726,11 @@
     "stateFips": "28",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:55.320Z",
+    "updatedAt": "2026-06-28T03:02:16.413Z",
     "state": "MS",
     "displayRating": 85.7731884057971,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ IOL · #384 natl · Jackson Academy, MS"
   },
   {
     "id": "prince-che",
@@ -3731,7 +3754,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ DL · #232 natl · Thomas County Central, GA",
     "profileNote": "",
     "on3Id": "280932",
     "on3Slug": "prince-che-280932",
@@ -3757,10 +3780,11 @@
     "stateFips": "13",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:44.057Z",
+    "updatedAt": "2026-06-28T03:02:03.418Z",
     "state": "GA",
     "displayRating": 94.44516129032257,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ DL · #232 natl · Thomas County Central, GA"
   },
   {
     "id": "quinton-rolle-jr",
@@ -3784,7 +3808,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ CB · #360 natl · Miami Central, FL",
     "profileNote": "",
     "on3Id": "259461",
     "on3Slug": "quinton-rolle-jr-259461",
@@ -3810,10 +3834,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:54.078Z",
+    "updatedAt": "2026-06-28T03:02:14.403Z",
     "state": "FL",
     "displayRating": 86.41485507246377,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ CB · #360 natl · Miami Central, FL"
   },
   {
     "id": "taihj-moore",
@@ -3837,7 +3862,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ RB · #296 natl · Deland, FL",
     "profileNote": "",
     "on3Id": "251053",
     "on3Slug": "taihj-moore-251053",
@@ -3863,10 +3888,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:50.253Z",
+    "updatedAt": "2026-06-28T03:02:08.816Z",
     "state": "FL",
     "displayRating": 90.5072463768116,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ RB · #296 natl · Deland, FL"
   },
   {
     "id": "tristian-henderson",
@@ -3890,7 +3916,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ EDGE · #320 natl · Pine Forest, FL",
     "profileNote": "",
     "on3Id": "261828",
     "on3Slug": "tristian-henderson-261828",
@@ -3916,10 +3942,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:51.703Z",
+    "updatedAt": "2026-06-28T03:02:10.986Z",
     "state": "FL",
     "displayRating": 89.18804347826087,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ EDGE · #320 natl · Pine Forest, FL"
   },
   {
     "id": "tristin-gaines",
@@ -3943,7 +3970,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ QB · #312 natl · Waller, TX",
     "profileNote": "",
     "on3Id": "260667",
     "on3Slug": "tristin-gaines-260667",
@@ -3969,10 +3996,11 @@
     "stateFips": "48",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:51.237Z",
+    "updatedAt": "2026-06-28T03:02:10.374Z",
     "state": "TX",
     "displayRating": 89.99782608695652,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ QB · #312 natl · Waller, TX"
   },
   {
     "id": "xander-edwards",
@@ -3996,7 +4024,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ RB · #264 natl · The Bolles School, FL",
     "profileNote": "",
     "on3Id": "243859",
     "on3Slug": "xander-edwards-243859",
@@ -4022,10 +4050,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:45.898Z",
+    "updatedAt": "2026-06-28T03:02:06.138Z",
     "state": "FL",
     "displayRating": 91.63152173913043,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ RB · #264 natl · The Bolles School, FL"
   },
   {
     "id": "andre-hyppolite",
@@ -16554,7 +16583,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "4★ S · On3 GA state No. 8 · Douglas County, GA",
     "profileNote": "",
     "on3Id": "238584",
     "on3Slug": "adryan-cole-238584",
@@ -16580,10 +16609,11 @@
     "stateFips": "13",
     "pinLat": 33.040619,
     "pinLng": -83.643074,
-    "updatedAt": "2026-06-27T21:04:43.407Z",
+    "updatedAt": "2026-06-28T03:01:44.311Z",
     "state": "GA",
     "displayRating": 91.3768115942029,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ S · On3 GA state No. 8 · Douglas County, GA"
   },
   {
     "id": "elijah-guertin",
@@ -16607,7 +16637,7 @@
     "committedTo": "Penn State Nittany Lions",
     "fromSchool": null,
     "commitDate": "2026-06-14T11:09:00",
-    "skinny": "",
+    "skinny": "3★ DL · On3 RI state No. 1 · Bishop Hendricken, RI",
     "profileNote": "",
     "on3Id": "285233",
     "on3Slug": "elijah-guertin-285233",
@@ -16633,10 +16663,11 @@
     "stateFips": "44",
     "pinLat": 41.680893,
     "pinLng": -71.51178,
-    "updatedAt": "2026-06-27T21:05:20.413Z",
+    "updatedAt": "2026-06-28T03:01:49.731Z",
     "state": "RI",
     "displayRating": 89.41376811594203,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ DL · On3 RI state No. 1 · Bishop Hendricken, RI"
   },
   {
     "id": "rashaad-silver",
@@ -17232,7 +17263,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ RB · On3 FL state No. 108 · Villages Charter School, FL",
     "profileNote": "",
     "on3Id": "239139",
     "on3Slug": "tranard-roberts-239139",
@@ -17258,10 +17289,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:04:48.788Z",
+    "updatedAt": "2026-06-28T03:01:44.972Z",
     "state": "FL",
     "displayRating": 88.33333333333333,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ RB · On3 FL state No. 108 · Villages Charter School, FL"
   },
   {
     "id": "loia-valade",
@@ -21133,7 +21165,7 @@
     "committedTo": "Liberty Flames",
     "fromSchool": null,
     "commitDate": "2026-06-18T21:58:00",
-    "skinny": "",
+    "skinny": "3★ WR · On3 GA state No. 68 · Southwest DeKalb, GA",
     "profileNote": "",
     "on3Id": "239052",
     "on3Slug": "jordan-christie-239052",
@@ -21159,10 +21191,11 @@
     "stateFips": "13",
     "pinLat": 33.040619,
     "pinLng": -83.643074,
-    "updatedAt": "2026-06-27T21:05:00.292Z",
+    "updatedAt": "2026-06-28T03:01:45.577Z",
     "state": "GA",
     "displayRating": 88.06666666666666,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ WR · On3 GA state No. 68 · Southwest DeKalb, GA"
   },
   {
     "id": "carter-davis",
@@ -21654,7 +21687,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ WR · On3 FL state No. 38 · Columbia, FL",
     "profileNote": "",
     "on3Id": "269778",
     "on3Slug": "kyren-caldwell-269778",
@@ -21680,10 +21713,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:07.242Z",
+    "updatedAt": "2026-06-28T03:01:46.155Z",
     "state": "FL",
     "displayRating": 87.76666666666667,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ WR · On3 FL state No. 38 · Columbia, FL"
   },
   {
     "id": "chuck-roberts",
@@ -21967,7 +22001,7 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "",
+    "skinny": "3★ WR · On3 FL state No. 148 · Vanguard, FL",
     "profileNote": "",
     "on3Id": "243832",
     "on3Slug": "james-bethea-243832",
@@ -21993,10 +22027,11 @@
     "stateFips": "12",
     "pinLat": 27.766279,
     "pinLng": -81.686783,
-    "updatedAt": "2026-06-27T21:05:31.866Z",
+    "updatedAt": "2026-06-28T03:01:50.748Z",
     "state": "FL",
     "displayRating": 84,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ WR · On3 FL state No. 148 · Vanguard, FL"
   },
   {
     "id": "jt-geraci",
@@ -23216,7 +23251,7 @@
     "committedTo": "Arkansas Razorbacks",
     "fromSchool": null,
     "commitDate": "2026-06-19T19:44:00",
-    "skinny": "",
+    "skinny": "3★ S · On3 GA state No. 89 · Buford, GA",
     "profileNote": "",
     "on3Id": "176047",
     "on3Slug": "jameer-cantrell-176047",
@@ -23242,10 +23277,11 @@
     "stateFips": "13",
     "pinLat": 33.040619,
     "pinLng": -83.643074,
-    "updatedAt": "2026-06-27T21:05:13.206Z",
+    "updatedAt": "2026-06-28T03:01:48.943Z",
     "state": "GA",
     "displayRating": 86.8,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "3★ S · On3 GA state No. 89 · Buford, GA"
   },
   {
     "id": "judah-lancaster",
@@ -27308,10 +27344,10 @@
     "id": "tyzon-swann",
     "slug": "tyzon-swann",
     "name": "Tyzon Swann",
-    "pos": "ATH",
+    "pos": "DL",
     "classYear": 2028,
-    "school": "",
-    "htWt": "",
+    "school": "Henry E. Lackey, GA",
+    "htWt": "6-1 / 185",
     "stars": 4,
     "rating": 96.0263440860215,
     "ratingOverride": null,
@@ -27326,12 +27362,12 @@
     "committedTo": null,
     "fromSchool": null,
     "commitDate": null,
-    "skinny": "4★ ATH · On3 GA state No. 1 · 96.0 composite · Florida offer on board.",
+    "skinny": "4★ DL · On3 GA state No. 1 · Henry E. Lackey · Florida offer on board.",
     "profileNote": "",
     "on3Id": 249251,
     "on3Slug": "tyzon-swann-249251",
     "on3ProfileUrl": "https://www.on3.com/rivals/tyzon-swann-249251/",
-    "on3Source": "player-intel-entry",
+    "on3Source": "on3-board-sync",
     "rivalsLastPrediction": null,
     "rivalsAnalyst": null,
     "rivalsConfidence": null,
@@ -27347,14 +27383,16 @@
     "fitScore": 96,
     "staff_lead_id": null,
     "secondary_recruiter_id": null,
-    "hometownCity": null,
-    "hometownState": null,
-    "stateFips": null,
-    "pinLat": null,
-    "pinLng": null,
-    "updatedAt": "2026-06-27T23:35:24.065Z",
+    "hometownCity": "Henry E. Lackey",
+    "hometownState": "GA",
+    "stateFips": "13",
+    "pinLat": 33.040619,
+    "pinLng": -83.643074,
+    "state": "GA",
+    "updatedAt": "2026-06-28T03:06:42.126Z",
     "displayRating": 96.0263440860215,
-    "ratingIsOverride": false
+    "ratingIsOverride": false,
+    "evaluationSummary": "4★ DL · On3 GA state No. 1 · Henry E. Lackey, GA"
   },
   {
     "id": "antonio-thomas-jr",

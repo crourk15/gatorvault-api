@@ -310,6 +310,12 @@ function healPlayerRecord(incoming, existing = null) {
   return sanitizePlayerFieldsForStore(out);
 }
 
+function applyCanonicalFixup(slug, player) {
+  const fixup = CANONICAL_PLAYER_FIXUPS[String(slug || '').toLowerCase()] || null;
+  if (!fixup || !player) return player;
+  return healPlayerRecord({ ...player, ...fixup, slug: player.slug || slug }, player);
+}
+
 async function rebuildPlayerIdentityFromOn3(slug, options = {}) {
   const store = require('./recruiting-store');
   const intelStore = require('./recruiting-intel-store');
@@ -412,5 +418,6 @@ module.exports = {
   filterStaleVisitIntelChain,
   sanitizePlayerFieldsForStore,
   healPlayerRecord,
-  rebuildPlayerIdentityFromOn3
+  applyCanonicalFixup,
+  rebuildPlayerIdentityFromOn3,
 };

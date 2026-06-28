@@ -14,7 +14,6 @@ const ALLOWLIST_2027 = [
   'tranard-roberts',
   'jordan-christie',
   'kyren-caldwell',
-  'tk-cunningham',
   'kamauri-whitfield',
   'jameer-cantrell',
   'elijah-guertin',

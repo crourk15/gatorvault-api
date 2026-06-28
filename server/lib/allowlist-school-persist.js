@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const store = require('./recruiting-store');
-const { isPlaceholderSchool } = require('./recruiting-placeholder-school');
+const { isPlaceholderSchool, isPlaceholderSkinny } = require('./recruiting-placeholder-school');
 const { EDITORIAL_2028_YOUNGER_PROSPECTS } = require('./recruiting-editorial-positions');
 
 const BOARD_PATH = path.join(store.DATA_DIR, '2028-target-board.json');
@@ -30,11 +30,32 @@ function mergePatch(existing, patch) {
 function formatAllowlistEvalSummary(player) {
   const stars = Number(player?.stars) || 0;
   const pos = String(player?.pos || player?.position || 'ATH').trim().toUpperCase();
-  const natlRank = player?.natlRank ?? player?.natl_rank;
-  const natlPart = Number.isFinite(Number(natlRank)) ? `#${natlRank} natl` : 'unranked';
   const school = player?.school;
-  if (!school || isPlaceholderSchool(school)) return null;
-  return `${stars}★ ${pos} · ${natlPart} · ${school}`;
+  const natlRank = player?.natlRank ?? player?.natl_rank;
+  const state = String(player?.state || '').trim().toUpperCase();
+  const stateRank = player?.stateRank ?? player?.state_rank;
+  const rankPart = Number.isFinite(Number(natlRank))
+    ? `#${natlRank} natl`
+    : state && Number.isFinite(Number(stateRank))
+      ? `On3 ${state} state No. ${stateRank}`
+      : Number(player?.rating) > 0
+        ? `${Number(player.rating).toFixed(1)} composite`
+        : null;
+  if (!stars && !rankPart) return null;
+  const starPart = stars ? `${stars}★ ${pos}` : pos;
+  if (school && !isPlaceholderSchool(school)) {
+    return `${starPart} · ${rankPart || 'On3 profile'} · ${school}`;
+  }
+  if (rankPart) return `${starPart} · ${rankPart}`;
+  return null;
+}
+
+function applyAllowlistIntelSkinny(player) {
+  if (!player) return player;
+  if (!isPlaceholderSkinny(player.skinny)) return player;
+  const summary = formatAllowlistEvalSummary(player);
+  if (!summary) return player;
+  return { ...player, skinny: summary, evaluationSummary: player.evaluationSummary || summary };
 }
 
 function persistAllowlistPlayerToJson(slug, patch) {
@@ -47,7 +68,10 @@ function persistAllowlistPlayerToJson(slug, patch) {
   if (idx >= 0) {
     players[idx] = mergePatch(players[idx], patch);
     const summary = formatAllowlistEvalSummary(players[idx]);
-    if (summary) players[idx].evaluationSummary = summary;
+    if (summary) {
+      players[idx].evaluationSummary = summary;
+      if (isPlaceholderSkinny(players[idx].skinny)) players[idx].skinny = summary;
+    }
   } else {
     const merged = mergePatch(
       {
@@ -60,7 +84,10 @@ function persistAllowlistPlayerToJson(slug, patch) {
       patch
     );
     const summary = formatAllowlistEvalSummary(merged);
-    if (summary) merged.evaluationSummary = summary;
+    if (summary) {
+      merged.evaluationSummary = summary;
+      if (isPlaceholderSkinny(merged.skinny)) merged.skinny = summary;
+    }
     players.push(merged);
   }
   writeJson(store.PLAYERS_PATH, players);
@@ -100,4 +127,5 @@ module.exports = {
   BOARD_PATH,
   persistAllowlistPlayerToJson,
   formatAllowlistEvalSummary,
+  applyAllowlistIntelSkinny,
 };
