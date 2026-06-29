@@ -6,10 +6,18 @@ export function isPlaceholderRecruitSchool(school?: string | null): boolean {
   return !s || s === 'florida hs pipeline' || s === 'florida hs pipelines';
 }
 
-export function formatRecruitSchoolLabel(school?: string | null): string | null {
+export function formatRecruitSchoolLabel(
+  school?: string | null,
+  state?: string | null,
+): string | null {
   if (isPlaceholderRecruitSchool(school)) return 'School pending';
   const trimmed = String(school ?? '').trim();
-  return trimmed || null;
+  if (!trimmed) return null;
+  const st = String(state ?? '').trim().toUpperCase();
+  if (st && !new RegExp(`\\b${st}\\b`, 'i').test(trimmed)) {
+    return `${trimmed}, ${st}`;
+  }
+  return trimmed;
 }
 
 /** Build card school line without duplicating state already in the school label. */
