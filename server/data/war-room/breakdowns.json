@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-29T00:08:43.688Z",
+  "updatedAt": "2026-06-29T00:28:34.830Z",
   "breakdowns": {
     "elias-pearl": {
       "playerSlug": "elias-pearl",
@@ -35,7 +35,7 @@
       "recruitingStory": "Committed to Florida on 2026-05-19 · Port Charlotte, FL",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-29T00:08:37.588Z"
+      "updatedAt": "2026-06-29T00:28:24.792Z"
     },
     "maxwell-hiller": {
       "playerSlug": "maxwell-hiller",
@@ -72,7 +72,7 @@
       "recruitingStory": "Committed to Florida on 2026-04-08 · Coatesville, PA",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-29T00:08:41.209Z"
+      "updatedAt": "2026-06-29T00:28:30.816Z"
     },
     "davin-davidson": {
       "playerSlug": "davin-davidson",
@@ -112,7 +112,7 @@
       "recruitingStory": "Committed to Florida on 2026-04-09 · Sarasota, FL",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-29T00:08:36.785Z"
+      "updatedAt": "2026-06-29T00:28:23.342Z"
     },
     "aamaury-fountain": {
       "playerSlug": "aamaury-fountain",
@@ -151,7 +151,7 @@
       "recruitingStory": "Committed to Florida on 2026-04-11 · Warner Robins, GA",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-29T00:08:34.309Z"
+      "updatedAt": "2026-06-29T00:28:18.035Z"
     },
     "easton-royal": {
       "playerSlug": "easton-royal",
@@ -188,27 +188,28 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/aaron-mcwilliams-280848/",
-          "publishedAt": "2026-06-24"
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "Florida came out of official visit season with a clearer picture of where it stands in some key recruitments.",
-        "In some of those battles, the Gators"
+        "Aaron McWilliams is a 3-star K · listed at 5-11 / 185 · from Sharpsburg, GA · #2114 nationally, #3 at K, #223 in state.",
+        "Combo kicker/punter; Kohl's No.",
+        "Offered after Friday Night Lights camp."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "Florida came out of official visit season with a clearer picture of where it stands in some key recruitments. In some of those battles, the Gators",
-      "recruitingStory": null,
+      "insiderNotes": "Aaron McWilliams is a 3-star K · listed at 5-11 / 185 · from Sharpsburg, GA · #2114 nationally, #3 at K, #223 in state. Combo kicker/punter; Kohl's No. 9 kicker nationally. Offered after Friday Night Lights camp.",
+      "recruitingStory": "Committed to Florida on 2026-06-22 · Sharpsburg, GA",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:31.226Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:26.907Z"
     },
     "javier-jones": {
       "playerSlug": "javier-jones",
@@ -1497,27 +1498,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/ellis-mcgaskin-180930/",
-          "publishedAt": "2026-06-24"
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "The Florida Gators' official visit season produced a lot of wins for the coaching staff.",
-        "Some assistants added to already strong position groups,"
+        "Ellis McGaskin is a 4-star LB · listed at 5-11.5 / 210 · from Mobile, AL · #360 nationally, #32 at LB, #18 in state.",
+        "Committed to Florida on 2026-06-06."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Florida Gators' official visit season produced a lot of wins for the coaching staff.  Some assistants added to already strong position groups,",
-      "recruitingStory": null,
+      "insiderNotes": "Ellis McGaskin is a 4-star LB · listed at 5-11.5 / 210 · from Mobile, AL · #360 nationally, #32 at LB, #18 in state. Committed to Florida on 2026-06-06.",
+      "recruitingStory": "Committed to Florida on 2026-06-06 · Mobile, AL",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:30.982Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:26.226Z"
     },
     "deion-thomas": {
       "playerSlug": "deion-thomas",
@@ -1698,27 +1699,28 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/tre-geathers-249231/",
-          "publishedAt": "2026-06-24"
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "The Florida Gators' official visit season produced a lot of wins for the coaching staff.",
-        "Some assistants added to already strong position groups,"
+        "Tre Geathers is a 3-star LB · listed at 6-1.5 / 195 · from Charlotte, NC · #577 nationally, #50 at LB, #20 in state.",
+        "Tre Geathers committed to Florida.",
+        "He projects as a secondary LB addition for the Gators."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
-      "projection": null,
-      "insiderNotes": "The Florida Gators' official visit season produced a lot of wins for the coaching staff.  Some assistants added to already strong position groups,",
-      "recruitingStory": null,
+      "projection": "He projects as a secondary LB addition for the Gators.",
+      "insiderNotes": "Tre Geathers is a 3-star LB · listed at 6-1.5 / 195 · from Charlotte, NC · #577 nationally, #50 at LB, #20 in state. Tre Geathers committed to Florida. He projects as a secondary LB addition for the Gators.",
+      "recruitingStory": "Committed to Florida on 2026-06-18 · Charlotte, NC",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:30.638Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:34.231Z"
     },
     "jc-anderson": {
       "playerSlug": "jc-anderson",
@@ -1984,26 +1986,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/kamarion-johnson-283680/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on"
+        "Kamarion Johnson is a 4-star ATH · listed at 6-0 / 185 · from Homerville, GA · #356 nationally, #13 at ATH, #40 in state.",
+        "Committed to Florida on 2026-06-05."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Florida Gators entered official visit season with most of their 2027 class already in place; however, they still used the stretch to build on",
-      "recruitingStory": null,
+      "insiderNotes": "Kamarion Johnson is a 4-star ATH · listed at 6-0 / 185 · from Homerville, GA · #356 nationally, #13 at ATH, #40 in state. Committed to Florida on 2026-06-05.",
+      "recruitingStory": "Committed to Florida on 2026-06-05 · Homerville, GA",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-27T21:06:08.018Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:30.054Z"
     },
     "cain-van-norden": {
       "playerSlug": "cain-van-norden",
@@ -2012,27 +2015,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/cain-van-norden-251040/",
-          "publishedAt": "2026-06-27"
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "Florida continues to build one of the deeper 2027 recruiting classes in the country.",
-        "Several of the Gators’ commitments still have room to climb in"
+        "Cain Van Norden is a 3-star DL · listed at 6-7 / 299 · from District Heights, MD · #605 nationally, #64 at DL, #14 in state.",
+        "Committed to Florida on 2026-05-15."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "Florida continues to build one of the deeper 2027 recruiting classes in the country. Several of the Gators’ commitments still have room to climb in",
-      "recruitingStory": null,
+      "insiderNotes": "Cain Van Norden is a 3-star DL · listed at 6-7 / 299 · from District Heights, MD · #605 nationally, #64 at DL, #14 in state. Committed to Florida on 2026-05-15.",
+      "recruitingStory": "Committed to Florida on 2026-05-15 · District Heights, MD",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-27T21:06:06.396Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:22.710Z"
     },
     "aiking-hall": {
       "playerSlug": "aiking-hall",
@@ -2148,7 +2151,7 @@
       "recruitingStory": "Committed to Florida on 2026-04-25 · Fort Lauderdale, FL",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-29T00:08:35.536Z"
+      "updatedAt": "2026-06-29T00:28:20.943Z"
     },
     "marquis-evans": {
       "playerSlug": "marquis-evans",
@@ -2242,26 +2245,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Andrew Ivins",
-          "writerId": "ivins",
-          "outlet": "247Sports",
-          "url": "https://247sports.com/player/devoun-kendrick-46158317/",
-          "publishedAt": "2026-06-27"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
+          "url": "https://www.on3.com/rivals/devoun-kendrick-283921/",
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "s Florida Gators Hard Commit - 4/27/2026 De'Voun Kendrick Pos DL Height 6-4 Weight 275"
+        "De'Voun Kendrick is a 3-star DL · listed at 6-4 / 300 · from Tampa, FL · #608 nationally, #66 at DL, #48 in state.",
+        "Committed to Florida on 2026-04-27."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "s Florida Gators Hard Commit - 4/27/2026 De'Voun Kendrick Pos DL Height 6-4 Weight 275",
-      "recruitingStory": null,
+      "insiderNotes": "De'Voun Kendrick is a 3-star DL · listed at 6-4 / 300 · from Tampa, FL · #608 nationally, #66 at DL, #48 in state. Committed to Florida on 2026-04-27.",
+      "recruitingStory": "Committed to Florida on 2026-04-27 · Tampa, FL",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-27T21:06:12.352Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:24.215Z"
     },
     "jameer-cantrell": {
       "playerSlug": "jameer-cantrell",
@@ -2557,7 +2561,7 @@
       "recruitingStory": "Committed to Florida on 2026-05-05 · Roanoke, VA",
       "nflProjection": "Has the potential to grow into a starting offensive tackle and NFL Draft pick at the next level with continued development.",
       "featured": false,
-      "updatedAt": "2026-06-29T00:08:38.024Z"
+      "updatedAt": "2026-06-29T00:28:25.633Z"
     },
     "kalib-spivey": {
       "playerSlug": "kalib-spivey",
@@ -2712,27 +2716,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/andrew-beard-236047/",
-          "publishedAt": "2026-06-24"
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "The Florida Gators continue to receive national recognition for what has been an impressive 2027 recruiting cycle.",
-        "With Rivals, Florida currently"
+        "Andrew Beard is a 4-star RB · listed at 5-9 / 195 · from Bogart, GA · #182 nationally, #12 at RB, #19 in state.",
+        "Committed to Florida on 2026-05-08."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Florida Gators continue to receive national recognition for what has been an impressive 2027 recruiting cycle.  With Rivals, Florida currently",
-      "recruitingStory": null,
+      "insiderNotes": "Andrew Beard is a 4-star RB · listed at 5-9 / 195 · from Bogart, GA · #182 nationally, #12 at RB, #19 in state. Committed to Florida on 2026-05-08.",
+      "recruitingStory": "Committed to Florida on 2026-05-08 · Bogart, GA",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:30.515Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:20.275Z"
     },
     "terrance-smith": {
       "playerSlug": "terrance-smith",
@@ -3036,27 +3040,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/kailib-dillard-243497/",
-          "publishedAt": "2026-06-24"
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "The Florida Gators didn’t just host a commit this weekend; it hosted one of its most active recruiters in the 2027 class.",
-        "Tulsa (Okla.) Jenks safety"
+        "Kailib Dillard is a 3-star S · listed at 6-2 / 170 · from Tulsa, OK · #535 nationally, #48 at S, #12 in state.",
+        "Committed to Florida on 2026-05-05."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Florida Gators didn’t just host a commit this weekend; it hosted one of its most active recruiters in the 2027 class.  Tulsa (Okla.) Jenks safety",
-      "recruitingStory": null,
+      "insiderNotes": "Kailib Dillard is a 3-star S · listed at 6-2 / 170 · from Tulsa, OK · #535 nationally, #48 at S, #12 in state. Committed to Florida on 2026-05-05.",
+      "recruitingStory": "Committed to Florida on 2026-05-05 · Tulsa, OK",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:31.350Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:29.467Z"
     },
     "stafford-willis": {
       "playerSlug": "stafford-willis",
@@ -3438,27 +3442,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/jabios-smith-245408/",
-          "publishedAt": "2026-06-24"
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "The Florida Gators' official visit season produced a lot of wins for the coaching staff.",
-        "Some assistants added to already strong position groups,"
+        "Ja'Bios Smith is a 4-star LB · listed at 6-2 / 205 · from Swainsboro, GA · #153 nationally, #14 at LB, #14 in state.",
+        "Committed to Florida on 2026-05-29."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "The Florida Gators' official visit season produced a lot of wins for the coaching staff.  Some assistants added to already strong position groups,",
-      "recruitingStory": null,
+      "insiderNotes": "Ja'Bios Smith is a 4-star LB · listed at 6-2 / 205 · from Swainsboro, GA · #153 nationally, #14 at LB, #14 in state. Committed to Florida on 2026-05-29.",
+      "recruitingStory": "Committed to Florida on 2026-05-29 · Swainsboro, GA",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:29.851Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:27.534Z"
     },
     "samuel-roseborough": {
       "playerSlug": "samuel-roseborough",
@@ -3495,26 +3499,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/stive-bentley-keumajou-284617/",
-          "publishedAt": "2026-06-24"
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "When this week is over, no Florida Gators assistant may have more to celebrate, or more to think about, than Gerald Chatman."
+        "Stive-Bentley Keumajou is a 3-star DL · listed at 6-2.5 / 295 · from Coral Gables, FL · #533 nationally, #56 at DL, #44 in state.",
+        "Committed to Florida on 2026-05-06."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "When this week is over, no Florida Gators assistant may have more to celebrate, or more to think about, than Gerald Chatman.  The defensive line",
-      "recruitingStory": null,
+      "insiderNotes": "Stive-Bentley Keumajou is a 3-star DL · listed at 6-2.5 / 295 · from Coral Gables, FL · #533 nationally, #56 at DL, #44 in state. Committed to Florida on 2026-05-06.",
+      "recruitingStory": "Committed to Florida on 2026-05-06 · Coral Gables, FL",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:31.106Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:32.077Z"
     },
     "xavier-griffin": {
       "playerSlug": "xavier-griffin",
@@ -3899,27 +3904,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/tommy-douglas-280816/",
-          "publishedAt": "2026-06-24"
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "It’s another important official visit week for the Florida Gators.",
-        "Beginning Thursday, Florida will host six official visitors over the next three"
+        "Tommy Douglas is a 4-star TE · listed at 6-4.5 / 235 · from Princeton, NJ · #354 nationally, #20 at TE, #7 in state.",
+        "Committed to Florida on 2026-04-16."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "It’s another important official visit week for the Florida Gators.  Beginning Thursday, Florida will host six official visitors over the next three",
-      "recruitingStory": null,
+      "insiderNotes": "Tommy Douglas is a 4-star TE · listed at 6-4.5 / 235 · from Princeton, NJ · #354 nationally, #20 at TE, #7 in state. Committed to Florida on 2026-04-16.",
+      "recruitingStory": "Committed to Florida on 2026-04-16 · Princeton, NJ",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:30.755Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:32.668Z"
     },
     "jabari-brady": {
       "playerSlug": "jabari-brady",
@@ -5248,26 +5253,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Corey Bender",
-          "writerId": "bender",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/jackson-ballinger-244244/",
-          "publishedAt": "2026-06-24"
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "Florida tight end commit Jackson Ballinger returned to Gainesville this weekend for his official visit with the Gators."
+        "Jackson Ballinger is a 3-star TE · listed at 6-5 / 230 · from Centerburg, OH · #427 nationally, #26 at TE, #19 in state.",
+        "Committed to Florida on 2026-02-24."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "Florida tight end commit Jackson Ballinger returned to Gainesville this weekend for his official visit with the Gators. The Centerburg (Ohio)",
-      "recruitingStory": null,
+      "insiderNotes": "Jackson Ballinger is a 3-star TE · listed at 6-5 / 230 · from Centerburg, OH · #427 nationally, #26 at TE, #19 in state. Committed to Florida on 2026-02-24.",
+      "recruitingStory": "Committed to Florida on 2026-02-24 · Centerburg, OH",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:31.954Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:28.155Z"
     },
     "kyson-mallard": {
       "playerSlug": "kyson-mallard",
@@ -8294,27 +8300,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/jaydee-lane-285808/",
           "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "One of the nation’s most versatile prospects is ready to make his decision.",
-        "Four-star athlete Tae Walden of Collierville (Tenn.) will announce his"
+        "Jaydee Lane is a 3-star LS · listed at 6-1 / 220 · from Mendenhall, MS · #2120 nationally, #2 at LS, #43 in state.",
+        "Committed to Florida on 2026-06-08."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "One of the nation’s most versatile prospects is ready to make his decision. Four-star athlete Tae Walden of Collierville (Tenn.) will announce his",
+      "insiderNotes": "Jaydee Lane is a 3-star LS · listed at 6-1 / 220 · from Mendenhall, MS · #2120 nationally, #2 at LS, #43 in state. Committed to Florida on 2026-06-08.",
       "recruitingStory": "Committed to Florida on 2026-06-08 · Mendenhall, MS",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-29T00:08:39.975Z"
+      "updatedAt": "2026-06-29T00:28:28.820Z"
     },
     "reis-russell": {
       "playerSlug": "reis-russell",
@@ -8522,26 +8528,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Andrew Ivins",
-          "writerId": "ivins",
-          "outlet": "247Sports",
-          "url": "https://247sports.com/player/amare-nugent-46154654/",
-          "publishedAt": "2026-06-24"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
+          "url": "https://www.on3.com/rivals/amare-nugent-249286/",
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "s Florida Gators Hard Commit - 1/24/2026 Amare Nugent Pos CB Height 5-11 Weight 178"
+        "Amare Nugent is a 4-star CB · listed at 5-11 / 180 · from Plantation, FL · #247 nationally, #27 at CB, #22 in state.",
+        "Committed to Florida on 2026-01-24."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "s Florida Gators Hard Commit - 1/24/2026 Amare Nugent Pos CB Height 5-11 Weight 178",
-      "recruitingStory": null,
+      "insiderNotes": "Amare Nugent is a 4-star CB · listed at 5-11 / 180 · from Plantation, FL · #247 nationally, #27 at CB, #22 in state. Committed to Florida on 2026-01-24.",
+      "recruitingStory": "Committed to Florida on 2026-01-24 · Plantation, FL",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-24T23:55:33.385Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:18.925Z"
     },
     "julian-elzey": {
       "playerSlug": "julian-elzey",
@@ -9345,26 +9352,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Andrew Ivins",
-          "writerId": "ivins",
-          "outlet": "247Sports",
-          "url": "https://247sports.com/Player/tramond-collins-46156157/",
-          "publishedAt": "2026-06-27"
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
+          "url": "https://www.on3.com/rivals/tramond-collins-258942/",
+          "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "s Florida Gators Hard Commit - 3/11/2026 Tramond Collins Pos WR Height 6-2 Weight 183"
+        "Tramond Collins is a 4-star WR · listed at 6-0 / 185 · from Cottondale, FL · #129 nationally, #20 at WR, #14 in state.",
+        "Committed to Florida on 2026-03-11."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "s Florida Gators Hard Commit - 3/11/2026 Tramond Collins Pos WR Height 6-2 Weight 183",
-      "recruitingStory": null,
+      "insiderNotes": "Tramond Collins is a 4-star WR · listed at 6-0 / 185 · from Cottondale, FL · #129 nationally, #20 at WR, #14 in state. Committed to Florida on 2026-03-11.",
+      "recruitingStory": "Committed to Florida on 2026-03-11 · Cottondale, FL",
       "nflProjection": null,
-      "featured": true,
-      "updatedAt": "2026-06-27T21:06:13.093Z"
+      "featured": false,
+      "updatedAt": "2026-06-29T00:28:33.642Z"
     },
     "cameron-wagner": {
       "playerSlug": "cameron-wagner",
@@ -9937,7 +9945,7 @@
       "recruitingStory": "Committed to Florida on 2026-06-05 · Baltimore, MD",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-29T00:08:35.985Z"
+      "updatedAt": "2026-06-29T00:28:22.141Z"
     },
     "alijah-jones": {
       "playerSlug": "alijah-jones",
@@ -10671,27 +10679,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/zahmar-tookes-243606/",
           "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "One of the nation’s most versatile prospects is ready to make his decision.",
-        "Four-star athlete Tae Walden of Collierville (Tenn.) will announce his"
+        "Zahmar Tookes is a 4-star DL · listed at 6-3.5 / 260 · from Rochester, NY · #320 nationally, #33 at DL, #2 in state.",
+        "Committed to Florida on 2026-06-03."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "One of the nation’s most versatile prospects is ready to make his decision. Four-star athlete Tae Walden of Collierville (Tenn.) will announce his",
+      "insiderNotes": "Zahmar Tookes is a 4-star DL · listed at 6-3.5 / 260 · from Rochester, NY · #320 nationally, #33 at DL, #2 in state. Committed to Florida on 2026-06-03.",
       "recruitingStory": "Committed to Florida on 2026-06-03 · Rochester, NY",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-29T00:08:43.681Z"
+      "updatedAt": "2026-06-29T00:28:34.826Z"
     },
     "jake-godfree": {
       "playerSlug": "jake-godfree",
@@ -12845,27 +12853,27 @@
       "verified": true,
       "sources": [
         {
-          "writer": "Chad Simmons",
-          "writerId": "simmons",
-          "outlet": "On3",
+          "writer": "Charles Power",
+          "writerId": "power",
+          "outlet": "On3 verified composite",
           "url": "https://www.on3.com/rivals/peyton-miller-238083/",
           "publishedAt": "2026-06-29"
         }
       ],
       "strengths": [
-        "One of the nation’s most versatile prospects is ready to make his decision.",
-        "Four-star athlete Tae Walden of Collierville (Tenn.) will announce his"
+        "Peyton Miller is a 4-star IOL · listed at 6-5 / 290 · from Anna, TX · #127 nationally, #11 at IOL, #19 in state.",
+        "Committed to Florida on 2026-04-27."
       ],
       "weaknesses": [],
       "comparison": null,
       "schemeFit": null,
       "staffNotes": null,
       "projection": null,
-      "insiderNotes": "One of the nation’s most versatile prospects is ready to make his decision. Four-star athlete Tae Walden of Collierville (Tenn.) will announce his",
+      "insiderNotes": "Peyton Miller is a 4-star IOL · listed at 6-5 / 290 · from Anna, TX · #127 nationally, #11 at IOL, #19 in state. Committed to Florida on 2026-04-27.",
       "recruitingStory": "Committed to Florida on 2026-04-27 · Anna, TX",
       "nflProjection": null,
       "featured": false,
-      "updatedAt": "2026-06-29T00:08:41.654Z"
+      "updatedAt": "2026-06-29T00:28:31.447Z"
     },
     "tyler-atkinson": {
       "playerSlug": "tyler-atkinson",

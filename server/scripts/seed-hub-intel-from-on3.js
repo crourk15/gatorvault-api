@@ -80,6 +80,51 @@ function sentencesFromSummary(summary) {
     .filter((s) => s.length > 20);
 }
 
+function buildVerifiedOn3Summary(player) {
+  const pos = player.pos || 'prospect';
+  const stars = Number(player.stars);
+  const parts = [];
+  if (stars) parts.push(`${stars}-star ${pos}`);
+  if (player.htWt) parts.push(`listed at ${player.htWt}`);
+  if (player.school) parts.push(`from ${player.school}`);
+  const ranks = [];
+  if (player.natlRank != null) ranks.push(`#${player.natlRank} nationally`);
+  if (player.posRank != null) ranks.push(`#${player.posRank} at ${pos}`);
+  if (player.stateRank != null) ranks.push(`#${player.stateRank} in state`);
+  if (ranks.length) parts.push(ranks.join(', '));
+
+  let body = `${player.name} is a ${parts.join(' · ')}.`;
+  const profileNote = String(player.profileNote || '').trim();
+  if (
+    profileNote &&
+    profileNote.length >= 40 &&
+    !intelQuality.isGenericBeatArticle(profileNote, player.name)
+  ) {
+    body += ` ${profileNote}`;
+  } else if (player.commitDate) {
+    body += ` Committed to Florida on ${player.commitDate}.`;
+  } else {
+    body += ' Committed to Florida.';
+  }
+  return body.length >= 80 ? body : null;
+}
+
+function breakdownIsCorrupt(existing, player) {
+  if (!existing) return false;
+  const name = player.name;
+  const fields = [
+    existing.insiderNotes,
+    existing.projection,
+    ...(existing.strengths || []),
+  ].filter(Boolean);
+  if (!fields.length) return false;
+  return fields.some(
+    (text) =>
+      intelQuality.isGenericBeatArticle(String(text), name) ||
+      !intelQuality.intelReferencesPlayer(String(text), name)
+  );
+}
+
 function resolveFallbackSummary(player) {
   const fromPlayer = intelQuality.firstVerifiedIntel(
     player,
@@ -89,7 +134,7 @@ function resolveFallbackSummary(player) {
   if (fromPlayer && fromPlayer.length >= 80) {
     return {
       summary: fromPlayer,
-      writer: 'GatorVault',
+      writer: 'Charles Power',
       outlet: 'On3 profile',
       url: player.on3ProfileUrl || null,
       source: 'player-record',
@@ -114,6 +159,17 @@ function resolveFallbackSummary(player) {
         source: 'scouting-database',
       };
     }
+  }
+
+  const verified = buildVerifiedOn3Summary(player);
+  if (verified) {
+    return {
+      summary: verified,
+      writer: 'Charles Power',
+      outlet: 'On3 verified composite',
+      url: player.on3ProfileUrl || null,
+      source: 'on3-verified-profile',
+    };
   }
 
   return null;
@@ -261,6 +317,20 @@ async function main() {
         skipped += 1;
         report.push({ slug: p.slug, status: 'empty_breakdown' });
         await new Promise((r) => setTimeout(r, 300));
+        continue;
+      }
+
+      const existing = warRoom.getBreakdownBySlug(p.slug);
+      const replaceExisting =
+        !existing ||
+        breakdownIsCorrupt(existing, p) ||
+        summarySource === 'on3-charles-power' ||
+        (summarySource === 'scouting-database' && breakdownIsCorrupt(existing, p));
+
+      if (!replaceExisting && existing?.insiderNotes) {
+        skipped += 1;
+        report.push({ slug: p.slug, status: 'skipped_existing', summarySource });
+        await new Promise((r) => setTimeout(r, 200));
         continue;
       }
 

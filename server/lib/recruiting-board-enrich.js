@@ -53,11 +53,22 @@ function mergeWarRoomFields(player, enriched) {
   if (!breakdown) return enriched;
   const evaluatorNotes =
     breakdown.insiderNotes || breakdown.staffNotes || breakdown.recruitingStory || null;
-  const { isGenericBeatArticle, isVerifiedScoutingTrait } = require('./recruiting-intel-quality');
+  const {
+    isGenericBeatArticle,
+    isVerifiedScoutingTrait,
+    intelReferencesPlayer,
+  } = require('./recruiting-intel-quality');
   const notesOk =
-    evaluatorNotes && !isGenericBeatArticle(String(evaluatorNotes), enriched.name);
+    evaluatorNotes &&
+    !isGenericBeatArticle(String(evaluatorNotes), enriched.name) &&
+    intelReferencesPlayer(String(evaluatorNotes), enriched.name);
   const strengths = Array.isArray(breakdown.strengths)
-    ? breakdown.strengths.filter((s) => s && isVerifiedScoutingTrait(String(s), enriched.name))
+    ? breakdown.strengths.filter(
+        (s) =>
+          s &&
+          intelReferencesPlayer(String(s), enriched.name) &&
+          isVerifiedScoutingTrait(String(s), enriched.name)
+      )
     : [];
   const weaknesses = Array.isArray(breakdown.weaknesses)
     ? breakdown.weaknesses.filter((s) => s && isVerifiedScoutingTrait(String(s), enriched.name))

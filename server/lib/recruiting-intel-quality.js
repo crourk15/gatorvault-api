@@ -77,7 +77,7 @@ const JUNK_INTEL_PATTERNS = [
   /The Florida Gators already have a 5-star cornerstone/i,
   /getting off to a strong start in 2028/i,
   /Rivals Industry/i,
-  /One of the nation['']s most versatile prospects/i,
+  /One of the nation[''\u2019]s most versatile prospects/i,
   /The Longhorns are one of the hottest teams/i,
   /Some assistants added to already strong position groups/i,
   /^With Rivals,\s*Florida/i,
@@ -122,6 +122,14 @@ const SCOUTING_TRAIT_REJECT = [
   /first commitment for the \d{4} cycle/i,
   /\b\d-star (wide )?receiver\b/i,
 ];
+
+function intelReferencesPlayer(text, playerName) {
+  const s = String(text || '').trim();
+  if (!s) return false;
+  const last = playerLastName(playerName);
+  if (!last || last.length < 3) return true;
+  return new RegExp(`\\b${last.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(s);
+}
 
 function playerLastName(name) {
   const parts = String(name || '')
@@ -198,5 +206,6 @@ module.exports = {
   isVerifiedScoutingTrait,
   firstVerifiedIntel,
   verifiedStrengthsList,
+  intelReferencesPlayer,
   playerLastName,
 };
