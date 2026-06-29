@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-26T01:59:19.311Z",
+  "updatedAt": "2026-06-29T14:52:50.548Z",
   "snapshots": {
     "kamauri-whitfield": [
       {
@@ -8,7 +8,15 @@
         "ufPct": 56
       },
       {
+        "date": "2026-06-22",
+        "ufPct": 56
+      },
+      {
         "date": "2026-06-26",
+        "ufPct": 62
+      },
+      {
+        "date": "2026-06-29",
         "ufPct": 62
       }
     ],
@@ -28,7 +36,15 @@
         "ufPct": 49
       },
       {
+        "date": "2026-06-22",
+        "ufPct": 49
+      },
+      {
         "date": "2026-06-26",
+        "ufPct": 55
+      },
+      {
+        "date": "2026-06-29",
         "ufPct": 55
       }
     ],
@@ -38,8 +54,350 @@
         "ufPct": 32
       },
       {
+        "date": "2026-06-22",
+        "ufPct": 32
+      },
+      {
         "date": "2026-06-26",
         "ufPct": 38
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 38
+      }
+    ],
+    "kaleb-ballard": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 22
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 28
+      }
+    ],
+    "brysen-wright": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 23
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 29
+      }
+    ],
+    "asher-ghioto": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 24
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 30
+      }
+    ],
+    "cassell-cruickshank": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 25
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 31
+      }
+    ],
+    "prince-che": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 26
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 32
+      }
+    ],
+    "gabriel-player": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 27
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 33
+      }
+    ],
+    "andre-alexander": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 28
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 34
+      }
+    ],
+    "bubba-brown": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 29
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 35
+      }
+    ],
+    "xander-edwards": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 30
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 36
+      }
+    ],
+    "izayah-vickers": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 31
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 37
+      }
+    ],
+    "malakhi-dudley": [
+      {
+        "date": "2026-06-29",
+        "ufPct": 38
+      }
+    ],
+    "braxton-rein": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 33
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 39
+      }
+    ],
+    "taihj-moore": [
+      {
+        "date": "2026-06-29",
+        "ufPct": 40
+      }
+    ],
+    "armani-strong": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 35
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 41
+      }
+    ],
+    "tristin-gaines": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 36
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 42
+      }
+    ],
+    "tristian-henderson": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 37
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 43
+      }
+    ],
+    "dominick-harris-payne": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 38
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 44
+      }
+    ],
+    "brady-quinn": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 39
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 45
+      }
+    ],
+    "john-matthews": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 40
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 46
+      }
+    ],
+    "bryce-willingham": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 41
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 47
+      }
+    ],
+    "quinton-rolle-jr": [
+      {
+        "date": "2026-06-29",
+        "ufPct": 28
+      }
+    ],
+    "jordon-gorham": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 23
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 29
+      }
+    ],
+    "kahmaree-crumity": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 24
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 30
+      }
+    ],
+    "pj-evans": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 25
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 31
+      }
+    ],
+    "anthony-howard-jr": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 26
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 32
+      }
+    ],
+    "zyon-robinson": [
+      {
+        "date": "2026-06-29",
+        "ufPct": 2
+      }
+    ],
+    "tyzon-swann": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 3
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 9
+      }
+    ],
+    "marquis-evans": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 9
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 15
+      }
+    ],
+    "adryan-cole": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 19
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 25
+      }
+    ],
+    "tranard-roberts": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 9
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 15
+      }
+    ],
+    "jordan-christie": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 9
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 15
+      }
+    ],
+    "kyren-caldwell": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 9
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 15
+      }
+    ],
+    "jameer-cantrell": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 9
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 15
+      }
+    ],
+    "elijah-guertin": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 9
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 15
+      }
+    ],
+    "james-bethea": [
+      {
+        "date": "2026-06-22",
+        "ufPct": 9
+      },
+      {
+        "date": "2026-06-29",
+        "ufPct": 15
       }
     ]
   }

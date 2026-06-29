@@ -5,15 +5,20 @@ const fs = require("fs");
 const path = require("path");
 const { resolveUfProbability, loadUfPctPredictorsBySlug, loadOn3RpmPriorBySlug } = require("./uf-probability-utils");
 
-const BOARD_PATH = path.join(__dirname, "..", "data", "recruiting", "2027-target-board.json");
+const BOARD_2027_PATH = path.join(__dirname, "..", "data", "recruiting", "2027-target-board.json");
+const BOARD_2028_PATH = path.join(__dirname, "..", "data", "recruiting", "2028-target-board.json");
 
-function loadTargetBoard() {
-  try {
-    const doc = JSON.parse(fs.readFileSync(BOARD_PATH, "utf8"));
-    return doc.targets || [];
-  } catch {
-    return [];
+function loadTargetBoards() {
+  const targets = [];
+  for (const filePath of [BOARD_2027_PATH, BOARD_2028_PATH]) {
+    try {
+      const doc = JSON.parse(fs.readFileSync(filePath, "utf8"));
+      if (Array.isArray(doc.targets)) targets.push(...doc.targets);
+    } catch {
+      /* optional seed files */
+    }
   }
+  return targets;
 }
 
 function normalizeUuid(id) {
@@ -49,20 +54,23 @@ function resolvePriorUfPct(slug, recruiting, futurecastRow, on3PriorBySlug) {
 }
 
 async function loadTargetSnapshots() {
-  const targets = loadTargetBoard();
+  const { ALLOWLIST_2027, ALLOWLIST_2028 } = require("./recruiting-target-allowlist");
+  const boardTargets = loadTargetBoards();
   const recruitingStore = require("./recruiting-store");
   const futurecastStore = require("./futurecast-store");
   const predictorsBySlug = loadUfPctPredictorsBySlug();
   const on3PriorBySlug = loadOn3RpmPriorBySlug();
   const rows = [];
+  const seen = new Set();
 
-  for (const target of targets) {
+  function pushTarget(target) {
     const slug = String(target.slug || "").toLowerCase();
-    if (!slug) continue;
+    if (!slug || seen.has(slug)) return;
     const recruiting = recruitingStore.findBySlug(slug);
     const futurecastRow = futurecastStore.getByPlayerId(slug);
     const ufPct = resolveTargetUfPct(target, recruiting, predictorsBySlug);
-    if (ufPct == null) continue;
+    if (ufPct == null) return;
+    seen.add(slug);
     rows.push({
       slug,
       name: target.name || slug,
@@ -72,11 +80,17 @@ async function loadTargetSnapshots() {
     });
   }
 
+  for (const target of boardTargets) pushTarget(target);
+
+  for (const slugRaw of [...ALLOWLIST_2027, ...ALLOWLIST_2028]) {
+    pushTarget({ slug: slugRaw });
+  }
+
   return rows;
 }
 
 module.exports = {
-  loadTargetBoard,
+  loadTargetBoards,
   loadTargetSnapshots,
   resolveTargetUfPct,
 };
