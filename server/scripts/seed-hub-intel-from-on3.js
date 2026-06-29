@@ -10,6 +10,8 @@ const fs = require('fs');
 const path = require('path');
 const fetch = require('node-fetch');
 const warRoom = require('../lib/war-room-store');
+const scoutingDb = require('../lib/scouting-database');
+const intelQuality = require('../lib/recruiting-intel-quality');
 
 const PLAYERS_PATH = path.join(__dirname, '..', 'data', 'recruiting', 'players.json');
 
@@ -78,7 +80,48 @@ function sentencesFromSummary(summary) {
     .filter((s) => s.length > 20);
 }
 
-function buildBreakdown(player, summary, url, comparison) {
+function resolveFallbackSummary(player) {
+  const fromPlayer = intelQuality.firstVerifiedIntel(
+    player,
+    ['skinny', 'insiderNotes', 'notePreview', 'evaluationSummary'],
+    player.name
+  );
+  if (fromPlayer && fromPlayer.length >= 80) {
+    return {
+      summary: fromPlayer,
+      writer: 'GatorVault',
+      outlet: 'On3 profile',
+      url: player.on3ProfileUrl || null,
+      source: 'player-record',
+    };
+  }
+
+  const entry = scoutingDb.getEntryBySlug(player.slug);
+  if (entry) {
+    const candidates = [
+      entry.scoutingSummary,
+      ...(entry.updates || []).map((u) => u.content),
+    ].filter(Boolean);
+    for (const text of candidates) {
+      const body = String(text).trim();
+      if (body.length < 80) continue;
+      if (intelQuality.isGenericBeatArticle(body, player.name)) continue;
+      return {
+        summary: body,
+        writer: entry.analystName || entry.updates?.[0]?.analystName || 'On3',
+        outlet: entry.outlet || entry.updates?.[0]?.source?.split('/')?.[0]?.trim() || 'On3',
+        url: entry.sourceUrl || entry.updates?.[0]?.sourceUrl || null,
+        source: 'scouting-database',
+      };
+    }
+  }
+
+  return null;
+}
+
+function buildBreakdown(player, summary, url, comparison, sourceMeta = {}) {
+  const writer = sourceMeta.writer || 'Charles Power';
+  const outlet = sourceMeta.outlet || 'On3 / Rivals';
   const weaknessHints = sentencesFromSummary(summary).filter((s) =>
     /\b(question|need to|will need|remains a|lack of|older for|unverified|few years away|early in his development|still developing|can continue improving)\b/i.test(
       s
@@ -103,8 +146,8 @@ function buildBreakdown(player, summary, url, comparison) {
     playerType: 'commit',
     sources: [
       {
-        writer: 'Charles Power',
-        outlet: 'On3 / Rivals',
+        writer,
+        outlet,
         url,
         publishedAt: new Date().toISOString().slice(0, 10),
       },
@@ -183,14 +226,37 @@ async function main() {
         nilSynced += 1;
       }
 
-      if (!page.summary) {
+      let summary = page.summary;
+      let sourceMeta = { writer: 'Charles Power', outlet: 'On3 / Rivals' };
+      let summarySource = 'on3-charles-power';
+
+      if (!summary) {
+        const fallback = resolveFallbackSummary(p);
+        if (fallback) {
+          summary = fallback.summary;
+          sourceMeta = {
+            writer: fallback.writer,
+            outlet: fallback.outlet,
+            url: fallback.url,
+          };
+          summarySource = fallback.source;
+        }
+      }
+
+      if (!summary) {
         skipped += 1;
         report.push({ slug: p.slug, status: 'no_summary', nilValue: page.nilValue ?? null });
         await new Promise((r) => setTimeout(r, 300));
         continue;
       }
 
-      const entry = buildBreakdown(p, page.summary, page.url, page.comparison);
+      const entry = buildBreakdown(
+        p,
+        summary,
+        page.url || sourceMeta.url || null,
+        page.comparison,
+        sourceMeta
+      );
       if (!entry.strengths.length && !entry.projection && !entry.insiderNotes) {
         skipped += 1;
         report.push({ slug: p.slug, status: 'empty_breakdown' });
@@ -205,6 +271,7 @@ async function main() {
       report.push({
         slug: p.slug,
         status: 'seeded',
+        summarySource,
         strengths: entry.strengths.length,
         projection: !!entry.projection,
         nilValue: page.nilValue ?? null,

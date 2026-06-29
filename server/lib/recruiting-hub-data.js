@@ -834,11 +834,26 @@ async function buildMovementFeedItems(enrichedPlayers, intelRows, logs = {}, opt
 
   void enrichedPlayers;
 
+  const FEED_EVENT_WEIGHT = {
+    commit: 0,
+    flip: 1,
+    offer: 2,
+    visit: 3,
+    up: 4,
+    down: 5,
+    intel: 6,
+  };
+
+  function compareFeedItems(a, b) {
+    const wa = FEED_EVENT_WEIGHT[a.event] ?? 8;
+    const wb = FEED_EVENT_WEIGHT[b.event] ?? 8;
+    if (wa !== wb) return wa - wb;
+    return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+  }
+
   const seen = new Set();
   const deduped = [];
-  for (const item of items.sort(
-    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-  )) {
+  for (const item of items.sort(compareFeedItems)) {
     const slugKey = String(item.name || '')
       .toLowerCase()
       .replace(/\s+/g, '-');
