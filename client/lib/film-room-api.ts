@@ -31,6 +31,7 @@ export interface FilmRoomCatalogItem {
   videoUrl?: string | null;
   knowledgeEngine?: boolean;
   noVideo?: boolean;
+  sources?: { source_name?: string; sourceName?: string; source_url?: string; sourceUrl?: string }[];
 }
 
 export interface FilmRoomLessonDetail {

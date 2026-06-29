@@ -52,12 +52,24 @@ function FilmLessonViewer({
   const embed = youtubeEmbedUrl(item);
   const body = detail?.body || item.body;
   const summary = detail?.summary || item.dek;
+  const isSchemeIntel = item.knowledgeEngine || item.noVideo;
+  const bodyParas = body
+    ? body.split(/\n\n+/).filter((para) => para.trim() && para.trim() !== summary?.trim())
+    : [];
+  const sources = item.sources?.length
+    ? item.sources
+    : item.sourceUrl
+      ? [{ source_name: item.source, source_url: item.sourceUrl }]
+      : [];
 
   return (
     <PageSection title={item.title} subtitle={item.source || 'Verified coaching source'}>
       <button type="button" className="gv-film-lesson__back" onClick={onClose}>
         ← Back to catalog
       </button>
+      <p className="gv-film-lesson__type">
+        {embed ? 'Watch — verified film source' : isSchemeIntel ? 'Scheme intel — verified coaching analysis (no video embed)' : 'Verified source'}
+      </p>
       {loading ? <p className="gv-page-status">Loading lesson…</p> : null}
       {summary ? <p className="gv-film-lesson__dek">{summary}</p> : null}
       {embed ? (
@@ -70,25 +82,34 @@ function FilmLessonViewer({
           />
         </div>
       ) : null}
-      {body ? (
+      {bodyParas.length ? (
         <div className="gv-film-lesson__body">
-          {body.split(/\n\n+/).map((para) => (
+          {bodyParas.map((para) => (
             <p key={para.slice(0, 40)}>{para}</p>
           ))}
         </div>
       ) : null}
-      {!embed && !body && !loading ? (
+      {!embed && !bodyParas.length && !loading ? (
         <UiEmpty message="Lesson content is being verified." hint="Check back after the next knowledge sync." />
       ) : null}
-      {item.sourceUrl ? (
-        <a
-          href={item.sourceUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="gv-film-lesson__link"
-        >
-          View original source →
-        </a>
+      {sources.length ? (
+        <div className="gv-film-lesson__sources">
+          <p className="gv-film-lesson__sources-label">Verified sources</p>
+          <ul className="gv-film-lesson__sources-list">
+            {sources.map((src) => {
+              const url = src.source_url || src.sourceUrl;
+              const label = src.source_name || src.sourceName || 'Source';
+              if (!url) return null;
+              return (
+                <li key={`${label}-${url}`}>
+                  <a href={url} target="_blank" rel="noopener noreferrer" className="gv-film-lesson__link">
+                    {label} →
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       ) : null}
     </PageSection>
   );
@@ -137,6 +158,29 @@ export function VaultFilmRoomPage(): React.ReactElement {
     void load();
   }, [load, insider]);
 
+  const clearLessonFromUrl = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has('lesson')) return;
+    url.searchParams.delete('lesson');
+    const next = `${url.pathname}${url.search}${url.hash}`;
+    window.history.replaceState({}, '', next);
+  }, []);
+
+  const closeLesson = useCallback(() => {
+    setSelected(null);
+    setLessonDetail(null);
+    clearLessonFromUrl();
+  }, [clearLessonFromUrl]);
+
+  const selectHub = useCallback(
+    (nextHub: string) => {
+      setHub(nextHub);
+      if (selected) closeLesson();
+    },
+    [selected, closeLesson]
+  );
+
   const openLesson = useCallback(
     async (item: FilmRoomCatalogItem) => {
       if (!insider) {
@@ -145,6 +189,11 @@ export function VaultFilmRoomPage(): React.ReactElement {
       }
       setSelected(item);
       setLessonDetail(null);
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.set('lesson', item.id);
+        window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+      }
       if (item.body || item.youtubeId || item.embedUrl) return;
       if (!item.knowledgeEngine) return;
       setLessonLoading(true);
@@ -200,7 +249,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
       <TabBar
         options={HUB_TABS}
         active={hub}
-        onChange={setHub}
+        onChange={selectHub}
         aria-label="Film room categories"
       />
 
@@ -213,7 +262,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
                 type="button"
                 role="listitem"
                 className={`gv-film-hub-card${hub === name ? ' is-active' : ''}`}
-                onClick={() => setHub(name)}
+                onClick={() => selectHub(name)}
                 aria-pressed={hub === name}
               >
                 <span className="gv-film-hub-card__icon" aria-hidden="true">
@@ -232,10 +281,7 @@ export function VaultFilmRoomPage(): React.ReactElement {
           item={selected}
           detail={lessonDetail}
           loading={lessonLoading}
-          onClose={() => {
-            setSelected(null);
-            setLessonDetail(null);
-          }}
+          onClose={closeLesson}
         />
       ) : null}
 

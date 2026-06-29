@@ -1396,6 +1396,39 @@ body.gv-live-page-active .gv-vault-shell__main {
   margin: 0;
 }
 
+.gv-film-lesson__type {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin: 0 0 0.75rem;
+}
+
+.gv-film-lesson__sources {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.gv-film-lesson__sources-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  margin: 0 0 0.5rem;
+}
+
+.gv-film-lesson__sources-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
 .gv-film-lesson__link {
   display: inline-block;
   margin-top: 0.5rem;
