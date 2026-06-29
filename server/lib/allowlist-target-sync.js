@@ -811,8 +811,10 @@ async function ingestAllowlistCommit(opts = {}) {
 
   const profilePatch = profilePatchFromOn3(profile, classYear);
   const ufCommitted = profilePatch.committedTo === 'Florida';
+  const eventTimestamp = opts.timestamp || opts.publishedAt || null;
   const commitDate =
     opts.commitDate ||
+    (eventTimestamp ? String(eventTimestamp).slice(0, 10) : null) ||
     (profilePatch.commitDate ? String(profilePatch.commitDate).slice(0, 10) : null) ||
     existing?.commitDate ||
     new Date().toISOString().slice(0, 10);
@@ -910,7 +912,9 @@ async function ingestAllowlistCommit(opts = {}) {
           detail: eventDetail,
           skinny: savedPlayer?.skinny || buildCommitSkinny(savedPlayer),
           event: eventResult?.event || null,
-          createdAt: new Date().toISOString(),
+          createdAt: eventTimestamp || new Date().toISOString(),
+          timestamp: eventTimestamp || null,
+          publishedAt: opts.publishedAt || eventTimestamp || null,
         },
         { urgent: true }
       );
@@ -970,6 +974,8 @@ function parseBeatCommitPosts(posts) {
       source: handle === 'hayesfawcett3' ? 'hayes_fawcett' : 'rivals_beat',
       detail: text.slice(0, 600),
       fingerprint: fp,
+      publishedAt,
+      timestamp: publishedAt,
     });
   }
   return out;
@@ -993,6 +999,8 @@ async function scanBeatCommitQueue({ posts, force = false } = {}) {
         source: row.source,
         detail: row.detail,
         forceAlert: true,
+        timestamp: row.timestamp || row.publishedAt || null,
+        publishedAt: row.publishedAt || row.timestamp || null,
       });
       if (out.ok) {
         snapshot.fingerprints[row.fingerprint] = { slug: row.slug, ingestedAt: new Date().toISOString() };

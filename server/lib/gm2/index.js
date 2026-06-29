@@ -20,6 +20,14 @@ function ingestSignal(signal, { subsystem = 'unknown', skipFreshness = false } =
   return sil.runSignalIntegrityLayer(signal, { subsystem, skipFreshness });
 }
 
+function resolveIntelTimestamp(raw = {}) {
+  const direct = raw.timestamp || raw.reportedAt || raw.createdAt;
+  if (direct) return direct;
+  const commitDay = String(raw.commitDate || '').slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(commitDay)) return `${commitDay}T18:00:00.000Z`;
+  return null;
+}
+
 function ingestIntel(raw, options = {}) {
   const signal = {
     playerSlug: raw.playerSlug,
@@ -28,7 +36,8 @@ function ingestIntel(raw, options = {}) {
     eventType: raw.eventType,
     source: raw.source,
     detail: raw.detail,
-    timestamp: raw.timestamp || raw.reportedAt || raw.createdAt,
+    timestamp: resolveIntelTimestamp(raw),
+    commitDate: raw.commitDate,
     classYear: raw.classYear,
     pos: raw.pos,
     school: raw.school || raw.highSchool,

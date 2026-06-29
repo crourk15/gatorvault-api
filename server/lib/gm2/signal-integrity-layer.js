@@ -157,6 +157,14 @@ function runSignalIntegrityLayer(signal, { subsystem = 'unknown', skipFreshness 
     source: normalizeSource(signal.source),
     fingerprint: buildFingerprint(signal)
   };
+  if (!signalTimestamp(normalized)) {
+    const commitDay = String(normalized.commitDate || '').slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(commitDay)) {
+      normalized.timestamp = `${commitDay}T18:00:00.000Z`;
+    } else if (TRUSTED_SOURCES.has(normalized.source)) {
+      normalized.timestamp = new Date().toISOString();
+    }
+  }
 
   const errors = [];
   errors.push(...validateSchema(normalized));

@@ -39,6 +39,13 @@ function loadManifest() {
   return readJson('manifest.json', { version: 1 });
 }
 
+function touchManifest() {
+  const manifestPath = path.join(DATA_DIR, 'manifest.json');
+  const manifest = { ...loadManifest(), updatedAt: new Date().toISOString() };
+  fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+  return manifest.updatedAt;
+}
+
 function indexByProgramId(rows) {
   const map = {};
   for (const row of rows || []) {
@@ -115,7 +122,7 @@ function buildDashboard({ conference = 'SEC', programId = UF_ID } = {}) {
     },
     recentEvents: ufEvents,
     peers: peerSlice,
-    updatedAt: loadManifest().updatedAt
+    updatedAt: touchManifest()
   };
 }
 
@@ -153,6 +160,7 @@ function listSecRankings() {
 module.exports = {
   UF_ID,
   loadManifest,
+  touchManifest,
   loadPrograms,
   loadMetrics,
   loadRankings,

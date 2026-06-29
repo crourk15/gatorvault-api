@@ -667,6 +667,7 @@ module.exports = {
   looksLikeCityState,
   buildSnapshot,
   snapshotsMatch,
+  similarSchool,
   confirmIdentity,
   mergeMissingFields,
   collectIdentitySources,

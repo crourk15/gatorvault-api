@@ -4,6 +4,7 @@
  * Usage:
  *   node scripts/run-production-cleanup.js [jobId]
  *   node scripts/run-production-cleanup.js --recover
+ *   node scripts/run-production-cleanup.js --dashboard
  *   node scripts/run-production-cleanup.js --futurecast
  *   node scripts/run-production-cleanup.js --futurecast --dry-run
  * Requires RECRUITING_ADMIN_PIN, OPS_ADMIN_PIN, or MONITORING_CRON_SECRET in server/.env
@@ -53,6 +54,15 @@ const RECOVERY_JOBS = [
   'ops-healthcheck'
 ];
 
+const DASHBOARD_STEPS = [
+  { name: 'product-intel-recompute', path: '/api/product-intel/recompute', body: { force: true, weekly: false } },
+  { name: 'live-hub-cache', path: '/api/live/refresh' },
+  { name: 'recruiting-hub-refresh', path: '/api/recruiting/hub/refresh?geoBackfill=true' },
+  { name: 'nil-refresh', jobId: 'nil-refresh' },
+  { name: 'beat-writer-ingest', jobId: 'beat-writer-ingest' },
+  { name: 'x-autoposter-run', jobId: 'x-autoposter-run' }
+];
+
 const INGEST_STEPS = [
   { name: 'on3', path: '/api/recruiting/ingest' },
   { name: 'portal', path: '/api/recruiting/portal/sync' },
@@ -71,6 +81,7 @@ function authHeaders() {
     headers['x-ops-pin'] = PIN;
     headers['X-Recruiting-Pin'] = PIN;
     headers['X-Ingest-Secret'] = PIN;
+    headers['x-monitoring-cron'] = PIN;
   }
   return headers;
 }
@@ -147,12 +158,47 @@ async function recoverAll() {
   if (failures) process.exit(1);
 }
 
+async function runDashboardCleanup() {
+  if (!CRON_SECRET && !PIN) {
+    console.error('Set MONITORING_CRON_SECRET or OPS_ADMIN_PIN in server/.env');
+    process.exit(1);
+  }
+  console.log('[ops-dashboard] warming API…');
+  const warm = await warmApi(API);
+  console.log('[ops-dashboard] warm:', warm.ok ? 'ok' : warm.error || 'degraded');
+
+  let failures = 0;
+  for (const step of DASHBOARD_STEPS) {
+    if (step.path) {
+      console.log(`POST ${API}${step.path} (${step.name})`);
+      const out = await post(step.path, step.body || {});
+      const ok = out.ok && out.payload?.ok !== false;
+      if (!ok) failures += 1;
+      console.log(`[ops-dashboard] ${step.name}:`, ok ? 'ok' : out.payload?.error || out.status);
+      if (out.payload && step.name === 'product-intel-recompute') {
+        console.log(
+          `[ops-dashboard] product health overall=${out.payload.overall ?? '—'} fixQueue=${out.payload.fixQueue ?? '—'}`
+        );
+      }
+      continue;
+    }
+    const ok = await runJob(step.jobId, step.options || {});
+    if (!ok) failures += 1;
+    console.log(`[ops-dashboard] ${step.name}:`, ok ? 'ok' : 'failed');
+  }
+  console.log('[ops-dashboard] complete failures=', failures);
+  if (failures) process.exit(1);
+}
+
 async function main() {
   if (process.argv.includes('--futurecast')) {
     return runFuturecastOps();
   }
   if (process.argv.includes('--recover')) {
     return recoverAll();
+  }
+  if (process.argv.includes('--dashboard')) {
+    return runDashboardCleanup();
   }
   if (!PIN && !CRON_SECRET) {
     console.error('Set OPS_ADMIN_PIN or MONITORING_CRON_SECRET in server/.env');
