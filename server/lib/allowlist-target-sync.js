@@ -885,24 +885,34 @@ async function ingestAllowlistCommit(opts = {}) {
 
   try {
     const { queueCommitEventAutopost } = require('./x-autoposter-fill');
+    const { commitFingerprint } = require('./commit-fingerprint');
+    const sentLedger = require('./x-autoposter-sent-ledger');
     const savedPlayer = eventResult?.player || player;
     const wasTarget =
       existing &&
       (existing.category === 'target' ||
         existing.status === 'target' ||
         existing.status === 'uncommitted');
-    autopostResult = await queueCommitEventAutopost(
-      {
-        eventType: wasTarget && existing?.committedTo !== 'Florida' ? 'flip' : 'commit',
-        source: eventSource,
-        player: savedPlayer,
-        detail: eventDetail,
-        skinny: savedPlayer?.skinny || buildCommitSkinny(savedPlayer),
-        event: eventResult?.event || null,
-        createdAt: new Date().toISOString(),
-      },
-      { urgent: true }
-    );
+    const fp = commitFingerprint(savedPlayer);
+    if (
+      alreadyCommitted &&
+      sentLedger.hasRecentSentCommit({ slug, commitFingerprint: fp, eventType: 'commit' })
+    ) {
+      autopostResult = { queued: false, reason: 'already_posted', commitFingerprint: fp };
+    } else {
+      autopostResult = await queueCommitEventAutopost(
+        {
+          eventType: wasTarget && existing?.committedTo !== 'Florida' ? 'flip' : 'commit',
+          source: eventSource,
+          player: savedPlayer,
+          detail: eventDetail,
+          skinny: savedPlayer?.skinny || buildCommitSkinny(savedPlayer),
+          event: eventResult?.event || null,
+          createdAt: new Date().toISOString(),
+        },
+        { urgent: true }
+      );
+    }
   } catch (e) {
     autopostResult = { queued: false, reason: e.message };
   }

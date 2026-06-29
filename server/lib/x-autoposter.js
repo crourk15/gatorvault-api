@@ -317,6 +317,17 @@ async function processQueueItem(item) {
       error: null,
       validationErrors: []
     });
+    try {
+      const sentLedger = require('./x-autoposter-sent-ledger');
+      sentLedger.recordSentCommit({
+        ...workingItem,
+        status: 'sent',
+        sentAt: store.nowIso(),
+        tweetId: result.tweetId,
+      });
+    } catch {
+      /* optional */
+    }
     store.logQueueOp('post_success', { ...workingItem, status: 'sent', tweetId: result.tweetId });
     const postedAt = store.nowIso();
     freshness.recordLastPost(postedAt);

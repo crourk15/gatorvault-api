@@ -3,7 +3,8 @@
  */
 function commitPlayerId(player) {
   if (!player) return '';
-  return String(player.on3Id || player.id || player.slug || '').trim();
+  // Slug-first keeps On3 ingest + allowlist sync on the same dedupe key.
+  return String(player.slug || player.on3Id || player.id || '').trim().toLowerCase();
 }
 
 function commitSchool(player) {

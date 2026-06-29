@@ -75,6 +75,7 @@ function normalizeItem(raw, { validate = true } = {}) {
     sourceIntelId: raw.sourceIntelId || null,
     intelType: raw.intelType || null,
     playerName: raw.playerName || null,
+    playerSlug: raw.playerSlug ? String(raw.playerSlug).toLowerCase() : null,
     replyFingerprint: raw.replyFingerprint || null,
     postUrgency: raw.postUrgency || null,
     urgencyLabel: raw.urgencyLabel || null,

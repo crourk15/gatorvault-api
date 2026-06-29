@@ -16,6 +16,7 @@ const cadence = require('./x-autoposter-cadence');
 const pipelineGuards = require('./pipeline-guards');
 const validation = require('./x-autoposter-validation');
 const postSpec = require('./x-autoposter-post-spec');
+const sentLedger = require('./x-autoposter-sent-ledger');
 
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
 const ON3_PORTAL =
@@ -96,7 +97,17 @@ function similarPostQueued(text, items) {
   return hit.hit ? hit : null;
 }
 
-function commitAlreadyQueued(fp, items) {
+function commitAlreadyQueued(fp, items, meta = {}) {
+  if (
+    sentLedger.hasRecentSentCommit({
+      slug: meta.slug,
+      commitFingerprint: fp,
+      text: meta.text,
+      eventType: meta.eventType || 'commit',
+    })
+  ) {
+    return true;
+  }
   return fingerprintAlreadyQueued(fp, items);
 }
 
@@ -121,6 +132,7 @@ async function buildNewsFromEvent(ev) {
       source: meta.queueSource,
       commitFingerprint: fp,
       intelFingerprint: fp,
+      playerSlug: player.slug || ev.playerSlug || null,
       sourceEventId: ev.id,
       sourceEventCreatedAt: ev.createdAt,
       playerName: built.playerName || player.name || null,
@@ -562,7 +574,16 @@ async function refillAutoposterQueue({ minPending = 3, maxEnqueue = 5 } = {}) {
     if (added >= slots) break;
     const fp = raw.intelFingerprint || raw.commitFingerprint;
     if (fp && fingerprintAlreadyQueued(fp, doc.items)) continue;
-    if (raw.commitFingerprint && commitAlreadyQueued(raw.commitFingerprint, doc.items)) continue;
+    if (
+      raw.commitFingerprint &&
+      commitAlreadyQueued(raw.commitFingerprint, doc.items, {
+        slug: raw.playerSlug,
+        text: raw.text,
+        eventType: raw.sourceEventType,
+      })
+    ) {
+      continue;
+    }
     if (alreadyQueued(raw.text, doc.items)) continue;
     const similar = similarPostQueued(raw.text, doc.items);
     if (similar) {
@@ -646,8 +667,9 @@ async function queueCommitEventAutopost(input, { urgent = true } = {}) {
   }
 
   const doc = store.loadQueue();
+  const slug = player?.slug || ev.playerSlug || null;
   const fp = commitFingerprint(player || { slug: ev.playerSlug });
-  if (fp && commitAlreadyQueued(fp, doc.items)) {
+  if (fp && commitAlreadyQueued(fp, doc.items, { slug, eventType: ev.eventType })) {
     return { queued: false, reason: 'duplicate', commitFingerprint: fp };
   }
 
@@ -662,6 +684,9 @@ async function queueCommitEventAutopost(input, { urgent = true } = {}) {
   });
   if (!scored) return { queued: false, reason: 'quality_gate' };
 
+  if (commitAlreadyQueued(fp, doc.items, { slug, text: scored.text, eventType: ev.eventType })) {
+    return { queued: false, reason: 'duplicate', commitFingerprint: fp };
+  }
   if (similarPostQueued(scored.text, doc.items)) {
     return { queued: false, reason: 'similar_post' };
   }
