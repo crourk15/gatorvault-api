@@ -4,7 +4,7 @@
 const { createMemoryCache } = require('./memory-cache');
 
 /** Bump when HS-only class commit metrics logic changes. */
-const HUB_METRICS_CACHE_REV = 'hs2';
+const HUB_METRICS_CACHE_REV = 'hs3';
 
 const HUB_CACHE_MS = parseInt(process.env.HUB_CACHE_MS || String(5 * 60 * 1000), 10);
 const BUILD_TIMEOUT_MS = parseInt(process.env.HUB_BUILD_TIMEOUT_MS || '20000', 10);
@@ -232,7 +232,10 @@ function startInflightBuild(cacheKey, builderFn, timeoutMs) {
 
 async function serveCached(cacheKey, builderFn, options = {}) {
   const timeoutMs = options.timeoutMs ?? BUILD_TIMEOUT_MS;
-  const hit = hubCache.get(cacheKey);
+  if (options.force) {
+    hubCache.remove(cacheKey);
+  }
+  const hit = options.force ? null : hubCache.get(cacheKey);
   if (hit != null) {
     return { status: 'ready', value: hit, hit: true, stale: false };
   }
@@ -279,8 +282,8 @@ function refreshCacheKey(cacheKey, builderFn, timeoutMs = BUILD_TIMEOUT_MS) {
   });
 }
 
-async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = false, hubMeta, timeoutMs }) {
-  const result = await serveCached(cacheKey, builder, { timeoutMs });
+async function sendHubJson(res, { cacheKey, year, endpoint, builder, spread = false, hubMeta, timeoutMs, force = false }) {
+  const result = await serveCached(cacheKey, builder, { timeoutMs, force });
   if (result.status === 'building') {
     return res.status(200).json(buildingResponse({ endpoint, year, cacheKey }));
   }

@@ -78,20 +78,30 @@ function mergeWarRoomFields(player, enriched) {
       ? String(breakdown.projection).trim()
       : null;
   const playerComp = breakdown.comparison || enriched.playerComp || null;
+  const profileNote = String(enriched.profileNote || player.profileNote || '').trim();
+  const profileNoteOk =
+    profileNote && !isGenericBeatArticle(profileNote, enriched.name);
+  const profileProjection =
+    profileNoteOk && profileNote.match(/\b(?:He|She|They)\s+projects?\s+as[^.]+\./i)?.[0]?.trim() ||
+    null;
+  const fallbackInsider = profileNoteOk ? profileNote : null;
   return {
     ...enriched,
     strengths,
     weaknesses,
-    projection: projection || enriched.projection || null,
+    projection: projection || profileProjection || enriched.projection || null,
     playerComp,
-    insiderNotes: notesOk ? String(evaluatorNotes).trim() : enriched.insiderNotes || null,
+    insiderNotes: notesOk
+      ? String(evaluatorNotes).trim()
+      : fallbackInsider || enriched.insiderNotes || null,
     evaluatorNotes,
     profileNote:
-      enriched.profileNote ||
-      (breakdown.recruitingStory &&
-      !isGenericBeatArticle(String(breakdown.recruitingStory), enriched.name)
-        ? breakdown.recruitingStory
-        : null),
+      profileNoteOk
+        ? profileNote
+        : breakdown.recruitingStory &&
+            !isGenericBeatArticle(String(breakdown.recruitingStory), enriched.name)
+          ? breakdown.recruitingStory
+          : null,
   };
 }
 

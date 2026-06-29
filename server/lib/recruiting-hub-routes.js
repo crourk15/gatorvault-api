@@ -453,6 +453,7 @@ function mountRecruitingHubRoutes(app) {
       const year = parseHubYear(req);
       const cacheKey = eliteBundleCacheKey(year);
       const bundleTimeoutMs = parseInt(process.env.HUB_BUNDLE_BUILD_TIMEOUT_MS || '45000', 10);
+      const force = req.query.force === '1' || req.query.force === 'true';
       return sendHubJson(res, {
         cacheKey,
         year,
@@ -461,6 +462,7 @@ function mountRecruitingHubRoutes(app) {
         spread: true,
         hubMeta,
         timeoutMs: bundleTimeoutMs,
+        force,
       });
     } catch (err) {
       return res.status(500).json({ ok: false, error: err.message });

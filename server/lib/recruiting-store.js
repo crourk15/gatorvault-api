@@ -287,11 +287,13 @@ function overlayJsonIntelFields(players) {
   } catch {
     return players;
   }
+  const { isGenericBeatArticle } = require('./recruiting-intel-quality');
   const bySlug = new Map(local.map((p) => [p.slug, p]));
   return (players || []).map((p) => {
     const src = bySlug.get(p.slug);
     if (!src) return p;
     const patch = {};
+    const playerName = p.name || src.name || p.slug;
     if (src.nilValue != null && p.nilValue == null) {
       patch.nilValue = Number(src.nilValue);
       patch.nilEstimate = Number(src.nilEstimate ?? src.nilValue);
@@ -308,6 +310,24 @@ function overlayJsonIntelFields(players) {
       patch.natlRank = src.natlRank;
     }
     if (src.skinny && String(src.skinny).trim()) patch.skinny = src.skinny;
+    const localNote = String(src.profileNote || '').trim();
+    const remoteNote = String(p.profileNote || '').trim();
+    if (localNote) {
+      const localOk = !isGenericBeatArticle(localNote, playerName);
+      const remoteOk = remoteNote && !isGenericBeatArticle(remoteNote, playerName);
+      if (!remoteNote || (localOk && !remoteOk) || (localOk && localNote.length > remoteNote.length)) {
+        patch.profileNote = localNote;
+      }
+    }
+    if (src.evaluationSummary && String(src.evaluationSummary).trim()) {
+      patch.evaluationSummary = src.evaluationSummary;
+    }
+    if (src.htWt && String(src.htWt).trim() && !String(p.htWt || '').trim()) {
+      patch.htWt = src.htWt;
+    }
+    if (src.on3ProfileUrl && !p.on3ProfileUrl) patch.on3ProfileUrl = src.on3ProfileUrl;
+    if (src.on3Slug && !p.on3Slug) patch.on3Slug = src.on3Slug;
+    if (src.commitDate && !p.commitDate) patch.commitDate = src.commitDate;
     return Object.keys(patch).length ? { ...p, ...patch } : p;
   });
 }

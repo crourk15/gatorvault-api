@@ -13,7 +13,7 @@ import { enrichFeedPlayers } from './ranking-enrichment';
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const { ALLOWLIST_2027 } = require('../../lib/recruiting-target-allowlist');
+const { ALLOWLIST_2027, ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist');
 const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players');
 const { resolveCommitmentOverride } = require('../../lib/commitment-prediction-override');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
@@ -169,7 +169,16 @@ export const handleGetFutureCastStaffNotes = asyncHandler(async (req: Request, r
         .map(({ entry }) => entry)
         .sort((a, b) => String(a.playerName).localeCompare(String(b.playerName)));
 
-      const allowedSet = new Set(ALLOWLIST_2027.map((s: string) => s.toLowerCase()));
+      const allowlist = minYear === 2028 ? ALLOWLIST_2028 : ALLOWLIST_2027;
+      const store = require('../../lib/recruiting-store');
+      const commits = await store.getHubCommits(minYear);
+      const commitSlugs = commits
+        .map((p: { slug?: string }) => String(p.slug || '').toLowerCase())
+        .filter(Boolean);
+      const allowedSet = new Set([
+        ...allowlist.map((s: string) => s.toLowerCase()),
+        ...commitSlugs,
+      ]);
       const filteredNotes = filterBlockedRecruits(
         notes.filter((n) => allowedSet.has(String(n.playerSlug || '').toLowerCase()))
       );
