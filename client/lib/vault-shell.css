@@ -2600,6 +2600,63 @@ body.gv-scroll-locked {
   margin: 0.15rem 0 0;
 }
 
+@media (max-width: 767px) {
+  .gv-game-zone-page,
+  .gv-game-zone__hero,
+  .gv-game-zone__grid,
+  .gv-game-zone__grid--2,
+  .gv-game-zone__card,
+  .gv-game-zone__card-head,
+  .gv-game-zone__points-bar-wrap {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .gv-game-zone-page {
+    overflow-x: clip;
+  }
+
+  .gv-game-zone__score-label,
+  .gv-game-zone__card-sub,
+  .gv-game-zone__card-title {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .gv-game-zone__stat strong {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    font-size: 0.8125rem;
+  }
+
+  .gv-game-zone__tier-labels {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+    line-height: 1.3;
+  }
+
+  .gv-game-zone__tier-labels span {
+    min-width: 0;
+    flex: 1 1 auto;
+    text-align: center;
+  }
+
+  .gv-game-zone__tier-icons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .gv-game-zone__poll-btn {
+    overflow-wrap: anywhere;
+  }
+
+  .gv-game-card,
+  .gv-game-card__cols {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
 .gv-nil {
   background: var(--gv-white, #ffffff);
   color: var(--gv-graphite, #1a1a1a);

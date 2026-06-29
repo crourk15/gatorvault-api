@@ -159,6 +159,7 @@ export function VaultGameZonePage(): React.ReactElement {
       title="Game Zone"
       subtitle="Predictions, live trend signals, fan polls, and Vault point progress — sharpen your picks before kickoff."
       testId="vault-game-zone"
+      className="gv-game-zone-page"
       accent={<Chip variant="orange">Live Match Insight</Chip>}
     >
       {loading && <p className="gv-page-status">Loading game data…</p>}

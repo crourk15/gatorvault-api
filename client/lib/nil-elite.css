@@ -942,6 +942,21 @@
 
   .nil-portal-grid {
     grid-template-columns: 1fr;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .nil-portal-col {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .nil-portal-col__head strong,
+  .nil-portal-col__note,
+  .nil-portal-col__range {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .nil-player-card {

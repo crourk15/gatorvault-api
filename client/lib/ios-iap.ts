@@ -55,6 +55,24 @@ export async function restoreIosPurchases(): Promise<void> {
   await NativePurchases.restorePurchases();
 }
 
+/** Run native restore and invoke callback for each restored transaction (Step 3b). */
+export async function restoreIosPurchasesWithSync(
+  onTransaction: (payload: { productId: string; transactionId: string }) => Promise<void>
+): Promise<void> {
+  let handled = false;
+  const remove = await initIosPurchaseListeners(async (tx) => {
+    if (handled) return;
+    handled = true;
+    await onTransaction(tx);
+    remove?.();
+  });
+  try {
+    await restoreIosPurchases();
+  } finally {
+    window.setTimeout(() => remove?.(), 8000);
+  }
+}
+
 export async function openIosSubscriptionManagement(): Promise<void> {
   const { NativePurchases } = await import('@capgo/native-purchases');
   await NativePurchases.manageSubscriptions();

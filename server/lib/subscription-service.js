@@ -109,6 +109,7 @@ function applySubscription(email, payload) {
     productId: payload.productId || null,
     tier,
     originalTransactionId: payload.originalTransactionId || null,
+    appAccountToken: payload.appAccountToken || null,
     expiresAt: payload.expiresAt || null,
     updatedAt: now,
   };
@@ -118,6 +119,26 @@ function applySubscription(email, payload) {
     subscription,
   });
   return user;
+}
+
+function revokeSubscription(email, { status = 'expired', productId = null } = {}) {
+  const user = findUserByEmail(email);
+  if (!user) return null;
+  const now = new Date().toISOString();
+  const subscription = {
+    ...(user.subscription || {}),
+    source: 'apple',
+    status,
+    productId: productId || user.subscription?.productId || null,
+    tier: user.subscription?.tier || 'locker',
+    updatedAt: now,
+    expiresAt: user.subscription?.expiresAt || now,
+  };
+  return updateUser(email, {
+    paid: false,
+    tier: 'locker',
+    subscription,
+  });
 }
 
 function appleVerificationConfigured() {
@@ -145,6 +166,7 @@ module.exports = {
   buildSubscriptionStatus,
   buildSessionFields,
   applySubscription,
+  revokeSubscription,
   appleVerificationConfigured,
   verifyAppleTransaction,
 };

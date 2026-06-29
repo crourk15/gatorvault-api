@@ -22,14 +22,16 @@ const paths = [
 const doc = {
   applinks: {
     apps: [],
-    details: teamId
-      ? [
-          {
+    details: [
+      teamId
+        ? {
             appIDs: [`${teamId}.${BUNDLE_ID}`],
             paths,
+          }
+        : {
+            paths,
           },
-        ]
-      : [],
+    ],
   },
   webcredentials: teamId
     ? {

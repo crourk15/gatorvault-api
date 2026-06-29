@@ -8,6 +8,7 @@ import {
   fetchSubscriptionCatalog,
   fetchSubscriptionStatus,
   verifyApplePurchase,
+  restoreApplePurchase,
   type SubscriptionCatalog,
   type SubscriptionStatus,
 } from '@/lib/subscription-api';
@@ -17,7 +18,7 @@ import {
   openIosSubscriptionManagement,
   purchaseIosSubscription,
   finishIosPurchase,
-  restoreIosPurchases,
+  restoreIosPurchasesWithSync,
 } from '@/lib/ios-iap';
 import { AccountDeletePanel } from '@/components/vault/AccountDeletePanel';
 import '@/lib/membership.css';
@@ -102,8 +103,21 @@ export function AccountMembershipPage(): React.ReactElement {
     setPurchaseBusy('restore');
     setError(null);
     try {
-      await restoreIosPurchases();
-      await refreshStatus();
+      if (native && billingReady && status?.email) {
+        const token = appAccountTokenForEmail(status.email);
+        let synced = false;
+        await restoreIosPurchasesWithSync(async (purchase) => {
+          const next = await restoreApplePurchase({ ...purchase, appAccountToken: token });
+          await finishIosPurchase(purchase.transactionId);
+          setStatus(next);
+          synced = true;
+        });
+        if (!synced) {
+          await refreshStatus();
+        }
+      } else {
+        await refreshStatus();
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not restore purchases.');
     } finally {
