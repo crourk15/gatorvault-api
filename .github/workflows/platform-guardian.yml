@@ -32,3 +32,23 @@ jobs:
         run: |
           echo "::error::Platform guardian blocked this change — fix wiring/blueprints before merge/deploy."
           exit 1
+
+  client-netlify-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      - name: Install client dependencies
+        run: npm ci --prefix client --legacy-peer-deps
+      - name: Next.js production build (Netlify typecheck)
+        run: npm run build --prefix client
+      - name: Block deploy if client build fails
+        if: failure()
+        run: |
+          echo "::error::Client build failed — fix TypeScript/Next errors before merge/deploy."
+          exit 1

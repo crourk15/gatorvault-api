@@ -346,6 +346,25 @@ async function loadHubDatasetOnce(options = {}) {
     }
   }
 
+  const { getAllowlistSet, getMergedCanonicalNames } = require('./recruiting-target-allowlist');
+  for (const year of classYears) {
+    if (year !== 2027 && year !== 2028) continue;
+    const names = getMergedCanonicalNames();
+    for (const slug of getAllowlistSet(year)) {
+      if (seen.has(slug)) continue;
+      const raw =
+        rawMap.get(slug) ||
+        (await store.getPlayerBySlug(slug)) ||
+        {
+          slug,
+          name: names[slug] || slug.replace(/-/g, ' '),
+          classYear: year,
+          category: 'target',
+        };
+      addPlayer(raw, { classYear: year, isCommit: false, isTarget: true });
+    }
+  }
+
   const all = await store.getAllPlayers();
   for (const p of all) {
     const slug = String(p.slug || '').toLowerCase();
@@ -1106,9 +1125,18 @@ function buildFootprintPayload(enrichedPlayers, intelRows, logs = {}) {
 
     for (const rec of bucket.playerRecords) {
       const centroid = STATE_CENTROIDS[bucket.state];
-      const lat = rec.pinLat ?? centroid?.lat ?? null;
-      const lng = rec.pinLng ?? centroid?.lng ?? null;
+      let lat = rec.pinLat ?? centroid?.lat ?? null;
+      let lng = rec.pinLng ?? centroid?.lng ?? null;
       if (lat == null || lng == null) continue;
+
+      const usedCentroid = rec.pinLat == null && rec.pinLng == null && centroid;
+      if (usedCentroid) {
+        const pinIdx = bucket.playerRecords.indexOf(rec);
+        const col = pinIdx % 5;
+        const rowIdx = Math.floor(pinIdx / 5) % 5;
+        lat += (col - 2) * 0.12;
+        lng += (rowIdx - 2) * 0.12;
+      }
 
       let pinType = 'target';
       if (rec.status === 'commit') pinType = 'commit';

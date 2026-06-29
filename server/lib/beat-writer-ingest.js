@@ -19,6 +19,31 @@ const { recordBeatDigDeeper } = require('./recruiting-dig-deeper-ingest');
 const { enterPlayerIntel } = require('./player-intel-entry');
 const { getAllowlistSet } = require('./recruiting-target-allowlist');
 
+/** Skips that should retry on a later ingest pass — do not burn snapshot fingerprint. */
+const RETRYABLE_BEAT_SKIP_REASONS = new Set([
+  'identity_not_confirmed',
+  'generic_phrase',
+  'no_identifiable_player',
+  'single_name_only',
+  'empty_text',
+  'corrupted_headline',
+  'beat_structure_copy',
+]);
+
+function shouldSnapshotBeatSkip(reason) {
+  if (!reason) return true;
+  if (RETRYABLE_BEAT_SKIP_REASONS.has(String(reason))) return false;
+  if (String(reason).startsWith('identity')) return false;
+  return true;
+}
+
+function markBeatSnapshot(snapshot, row, reason) {
+  if (!shouldSnapshotBeatSkip(reason)) return;
+  if (snapshot?.fingerprints && row?.fingerprint) {
+    snapshot.fingerprints[row.fingerprint] = row.timestamp;
+  }
+}
+
 const DATA_DIR = path.join(__dirname, '..', 'data', 'recruiting');
 const SNAPSHOT_PATH = path.join(DATA_DIR, 'beat-writer-ingest-snapshot.json');
 const SITE_URL = process.env.SITE_URL || 'https://gatorvaultinsider.com';
@@ -873,7 +898,7 @@ async function processBeatVisitIntelRow(row, snapshot) {
     post: { handle: row.sourceHandle, text: row.detail, url: row.articleUrl }
   });
   if (skip) {
-    snapshot.fingerprints[row.fingerprint] = row.timestamp;
+    markBeatSnapshot(snapshot, row, skip.nonPlayerIntel?.reason || 'non_player_intel');
     logBeatPostSkip(
       { handle: row.sourceHandle, text: row.detail, url: row.articleUrl, publishedAt: row.timestamp },
       skip.nonPlayerIntel?.reason || 'non_player_intel',
@@ -893,7 +918,7 @@ async function processBeatVisitIntelRow(row, snapshot) {
     post: { handle: row.sourceHandle, text: row.detail, url: row.articleUrl }
   });
   if (!gate.eligible) {
-    snapshot.fingerprints[row.fingerprint] = row.timestamp;
+    markBeatSnapshot(snapshot, row, gate.reason);
     prefilter.logNonPlayerIntel({
       text: row.detail,
       reason: gate.reason,
@@ -946,7 +971,7 @@ async function processBeatVisitIntelRow(row, snapshot) {
   });
 
   if (!enrichment.confirmed) {
-    snapshot.fingerprints[row.fingerprint] = row.timestamp;
+    markBeatSnapshot(snapshot, row, enrichment.reason || 'identity_not_confirmed');
     if (enrichment.needs_resolution) {
       const snap = enrichment.mergedSnapshot || {};
       await intelStore.saveNeedsResolution({
@@ -1021,7 +1046,7 @@ async function processBeatVisitIntelRow(row, snapshot) {
     post: { handle: row.sourceHandle, text: row.detail, url: row.articleUrl }
   });
   if (!recheck.eligible) {
-    snapshot.fingerprints[row.fingerprint] = row.timestamp;
+    markBeatSnapshot(snapshot, row, recheck.reason);
     prefilter.logNonPlayerIntel({
       text: row.detail,
       reason: recheck.reason,
@@ -1276,10 +1301,12 @@ async function runBeatWriterIngest({ force = false, manualRows = [], posts = nul
   const results = { processed: [], skipped: [], errors: [] };
 
   try {
-    const purge = await intelStore.purgeIneligibleIntel();
-    if (purge.removed) {
-      const liveAgg = require('./live-aggregator');
-      await liveAgg.purgeNonPlayerIntelFromLiveFeed();
+    if (process.env.BEAT_INGEST_PURGE_INELIGIBLE !== 'false') {
+      const purge = await intelStore.purgeIneligibleIntel();
+      if (purge.removed) {
+        const liveAgg = require('./live-aggregator');
+        await liveAgg.purgeNonPlayerIntelFromLiveFeed();
+      }
     }
   } catch {
     /* optional */
@@ -1380,5 +1407,8 @@ module.exports = {
   needsBeatProspectProvision,
   provisionBeatProspect,
   VISIT_INGEST_HANDLES,
-  SNAPSHOT_PATH
+  SNAPSHOT_PATH,
+  shouldSnapshotBeatSkip,
+  markBeatSnapshot,
+  RETRYABLE_BEAT_SKIP_REASONS,
 };
