@@ -14,7 +14,7 @@ import { enrichFeedPlayers } from './ranking-enrichment';
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const { ALLOWLIST_2027, ALLOWLIST_2028 } = require('../../lib/recruiting-target-allowlist');
-const { filterBlockedRecruits } = require('../../lib/recruiting-blocked-players');
+const { filterBlockedRecruits, BLOCKED_PLAYER_SLUGS } = require('../../lib/recruiting-blocked-players');
 const { resolveCommitmentOverride } = require('../../lib/commitment-prediction-override');
 const RECRUITING_PLAYERS_PATH = path.join(__dirname, '../../data/recruiting/players.json');
 
@@ -133,12 +133,30 @@ export const handleGetFutureCastStaffNotes = asyncHandler(async (req: Request, r
       return;
     }
 
-    const cacheKey = `futurecast:staff-notes:${minYear}`;
+    const cacheKey = `futurecast:staff-notes:v2:${minYear}`;
 
     await sendCachedJson(res, cacheKey, async () => {
       const warRoom = require('../../lib/war-room-store');
+      const store = require('../../lib/recruiting-store');
       const metaMap = loadRecruitingMetaBySlug();
-      const all = (warRoom.getAllBreakdowns() as WarRoomBreakdown[]).filter(hasNoteContent);
+      const allowlist = minYear === 2028 ? ALLOWLIST_2028 : ALLOWLIST_2027;
+      const commits = await store.getHubCommits(minYear);
+      const commitSlugs = commits
+        .map((p: { slug?: string }) => String(p.slug || '').toLowerCase())
+        .filter(Boolean);
+      const boardSlugs = [
+        ...new Set([
+          ...allowlist.map((s: string) => String(s).toLowerCase()),
+          ...commitSlugs,
+        ]),
+      ]
+        .map((slug) => String(slug).toLowerCase())
+        .filter((slug) => !BLOCKED_PLAYER_SLUGS.has(slug));
+
+      const all = boardSlugs
+        .map((slug: string) => warRoom.getBreakdownBySlug(slug) as WarRoomBreakdown | null)
+        .filter((b): b is WarRoomBreakdown => Boolean(b))
+        .filter(hasNoteContent);
 
       let staleFiltered = 0;
       const notes = all
@@ -169,19 +187,7 @@ export const handleGetFutureCastStaffNotes = asyncHandler(async (req: Request, r
         .map(({ entry }) => entry)
         .sort((a, b) => String(a.playerName).localeCompare(String(b.playerName)));
 
-      const allowlist = minYear === 2028 ? ALLOWLIST_2028 : ALLOWLIST_2027;
-      const store = require('../../lib/recruiting-store');
-      const commits = await store.getHubCommits(minYear);
-      const commitSlugs = commits
-        .map((p: { slug?: string }) => String(p.slug || '').toLowerCase())
-        .filter(Boolean);
-      const allowedSet = new Set([
-        ...allowlist.map((s: string) => s.toLowerCase()),
-        ...commitSlugs,
-      ]);
-      const filteredNotes = filterBlockedRecruits(
-        notes.filter((n) => allowedSet.has(String(n.playerSlug || '').toLowerCase()))
-      );
+      const filteredNotes = filterBlockedRecruits(notes);
 
       let playerBySlug: Map<
         string,

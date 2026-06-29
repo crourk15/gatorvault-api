@@ -191,7 +191,17 @@ function upsertHubSeedBreakdown(slug, raw) {
 
 function getAllBreakdowns() {
   const doc = loadDoc();
-  return Object.values(doc.breakdowns);
+  const seedDoc = readJson(HUB_SEED_PATH, { breakdowns: {} });
+  const slugSet = new Set([
+    ...Object.keys(doc.breakdowns || {}),
+    ...Object.keys(seedDoc.breakdowns || {}),
+  ]);
+  const resolved = [];
+  for (const slug of slugSet) {
+    const entry = getBreakdownBySlug(slug);
+    if (entry) resolved.push(entry);
+  }
+  return resolved;
 }
 
 function rosterToBreakdownSummary(player) {
