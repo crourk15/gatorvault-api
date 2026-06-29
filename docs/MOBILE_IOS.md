@@ -60,10 +60,20 @@ Unset `CAPACITOR_SERVER_URL` for bundled (offline shell) builds.
 ## App Store checklist (later steps)
 
 - [ ] Replace placeholder icons/splash (`client/mobile/resources/`)
-- [ ] StoreKit / IAP (Step 3)
-- [ ] Push notifications (Step 5)
-- [ ] Universal links / AASA (Step 8)
-- [ ] Privacy Policy URL in App Store Connect → `/privacy/`
+- [ ] StoreKit / IAP live sandbox (Step 3b — wired, enable when Developer account active)
+
+## Web push (Step 5 — shipped on web)
+
+| Piece | Location |
+|-------|----------|
+| Service worker | `client/public/push-sw.js` |
+| Alerts UI | `/vault/alerts/` → `VaultAlertsPage.tsx` |
+| API | `POST /api/push/subscribe`, `/unsubscribe`, `GET /api/push/config` |
+| Server env | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `PUSH_ALERTS_ENABLED=true` on Render |
+
+Enable on a member account: sign in → **My Alerts** → Push + Visits → Save. Cache-bust no longer unregisters `push-sw.js`.
+
+Native iOS push requires APNs key + Capacitor plugin (Step 5b — not started).
 
 ## Windows note
 

@@ -2425,6 +2425,12 @@ body.gv-nav-menu-open {
   margin: 0.65rem 0 0;
 }
 
+.gv-hp-card__narrative {
+  margin: 0.65rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
 .gv-hp-card__predictors {
   margin: 0.5rem 0 0;
   padding: 0;

@@ -28,7 +28,7 @@ function cacheBustScript(buildId) {
   return (
     `<script data-gv-cache-bust="">(function(){try{var b="${safeId}";var k="gv-build-id";` +
     `var p=localStorage.getItem(k);localStorage.setItem(k,b);` +
-    `if("serviceWorker"in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister()})})}` +
+    `if("serviceWorker"in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){var u=(x.active&&x.active.scriptURL)||"";if(u.indexOf("push-sw.js")<0){x.unregister()}})})}` +
     `if("caches"in window){caches.keys().then(function(keys){keys.forEach(function(n){caches.delete(n)})})}` +
     `if(p&&p!==b&&!/[?&]gv-cache-reload=1/.test(location.search)&&!sessionStorage.getItem("gv-cache-reloaded")){` +
     `sessionStorage.setItem("gv-cache-reloaded","1");` +

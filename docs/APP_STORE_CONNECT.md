@@ -65,7 +65,7 @@ Support: support@gatorvaultinsider.com
 
 ## Screenshots
 
-Upload from docs/app-store-screenshots/: 01-futurecast through 06-live-feed (390x844).
+Upload from docs/app-store-screenshots/: 01-futurecast through 06-live-feed (**1284×2778**, 6.5" Display). iPad 13" slot: docs/app-store-screenshots/ipad-13/ (**2064×2752**). Validate with `npm run verify:app-store-screenshots`.
 
 ## Checklist
 

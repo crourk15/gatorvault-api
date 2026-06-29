@@ -15,7 +15,7 @@ import {
   type LocalRecentAlert,
 } from '@/lib/alert-prefs';
 import { fetchAlerts, type FutureCastAlert } from '@/lib/alerts-api';
-import { syncVisitPushPrefs } from '@/lib/push-alerts-api';
+import { syncVisitPushPrefs, unsubscribeVisitPush } from '@/lib/push-alerts-api';
 import { syncEmailAlertPrefs } from '@/lib/alert-email-api';
 import { playerProfilePath } from '@/lib/player-routes';
 import { UiEmpty, UiError } from '@/components/site/UiMessage';
@@ -163,6 +163,21 @@ export function VaultAlertsPage(): React.ReactElement {
           setPushStatus('Active membership required for push alerts.');
         } else if (out.reason === 'disabled') {
           setPushStatus('Push alerts are not configured on the server yet.');
+        }
+      });
+    } else if (!wantsPush) {
+      void unsubscribeVisitPush().then(() => {
+        setPushStatus('Push alerts disabled on this device.');
+      });
+    } else if (wantsPush && !prefs.types.visit) {
+      void syncVisitPushPrefs({
+        visit: false,
+        followPlayers: prefs.followPlayers,
+      }).then((out) => {
+        if (out.ok) {
+          setPushStatus('Visit push alerts turned off — other preferences saved.');
+        } else if (out.reason === 'sign_in') {
+          setPushStatus('Sign in to update push alert preferences.');
         }
       });
     }

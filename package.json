@@ -54,6 +54,11 @@
     "mobile:sync": "npm run build --prefix client && npm run cap:sync --prefix client",
     "mobile:ios": "npm run cap:ios --prefix client",
     "capture:app-store-screenshots": "node scripts/capture-app-store-screenshots.js",
+    "generate:ipad-screenshots": "node scripts/generate-ipad-app-store-screenshots.js",
+    "verify:app-store-screenshots": "node scripts/verify-app-store-screenshots.js",
+    "smoke:app-store": "node scripts/app-store-smoke.js",
+    "provision:app-review": "node scripts/provision-app-review-account.js",
+    "prep:app-store": "node scripts/app-store-prep.js",
     "trigger:codemagic:ios": "node scripts/trigger-codemagic-ios.js"
   },
   "engines": {

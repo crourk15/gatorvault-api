@@ -59,7 +59,7 @@ REVIEW PATHS
 UGC moderation: report + block. Account deletion: password + type DELETE.
 Support: support@gatorvaultinsider.com
 
---- Screenshots (6.5 inch Display slot) ---
+--- Screenshots (6.5 inch Display slot — 1284×2778) ---
 Upload PNGs from docs/app-store-screenshots/ in order:
 01-futurecast.png
 02-recruiting.png
@@ -67,3 +67,16 @@ Upload PNGs from docs/app-store-screenshots/ in order:
 04-community.png
 05-membership.png
 06-live-feed.png
+
+--- iPad 13 inch Display slot (2064×2752, optional) ---
+Upload from docs/app-store-screenshots/ipad-13/:
+01-futurecast-ipad-13.png
+02-recruiting-ipad-13.png
+03-team-ipad-13.png
+04-community-ipad-13.png
+05-membership-ipad-13.png
+06-live-feed-ipad-13.png
+
+--- Connect questionnaires (manual in UI) ---
+Age Rating + App Privacy answers: docs/APP_STORE_CONNECT_REMAINING.md
+Prep automation (no Apple login): npm run prep:app-store

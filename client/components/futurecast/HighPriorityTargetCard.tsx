@@ -30,10 +30,12 @@ export function HighPriorityTargetCard({
   player,
   rank,
   compact = false,
+  movementNarrative,
 }: {
   player: HighPriorityPlayer;
   rank?: number;
   compact?: boolean;
+  movementNarrative?: string | null;
 }): React.ReactElement {
   const href = playerProfilePath(player.slug, 'HIGH_SCHOOL', true, player.name, 'recruiting');
   const composite =
@@ -121,6 +123,10 @@ export function HighPriorityTargetCard({
             />
           </div>
         </div>
+
+        {!compact && movementNarrative ? (
+          <p className="rh-feed-narrative gv-hp-card__narrative">{movementNarrative}</p>
+        ) : null}
 
         {!compact && note && (
           <div className="rh-analyst-signals gv-hp-card__signals">
